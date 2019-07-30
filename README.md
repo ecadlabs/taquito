@@ -1,4 +1,4 @@
-# TypeScript library starter
+# Tezos Dapp Toolkit
 
 ### NPM scripts
 
