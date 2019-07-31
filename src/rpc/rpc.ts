@@ -6,6 +6,8 @@ const defaultChain = 'main'
 type BalanceResponse = string
 type StorageResponse = unknown
 type ScriptResponse = unknown
+type BigMapGetResponse = unknown
+type BigMapKey = { key: string; type: string }
 
 interface ContractResponse {
   manager: string
@@ -112,5 +114,26 @@ export class RpcClient {
       url: `${this.url}/chains/${this.chain}/blocks/${block}/context/contracts/${address}`,
       method: 'GET'
     })
+  }
+
+  /**
+   *
+   * @param address contract address from which we want to retrieve the big map key
+   * @param options contains generic configuration for rpc calls
+   *
+   * @see http://tezos.gitlab.io/master/api/rpc.html#post-block-id-context-contracts-contract-id-big-map-get
+   */
+  async getBigMapKey(
+    address: string,
+    key: BigMapKey,
+    { block }: { block: string } = defaultRPCOptions
+  ): Promise<BigMapGetResponse> {
+    return this.httpBackend.createRequest<BigMapGetResponse>(
+      {
+        url: `${this.url}/chains/${this.chain}/blocks/${block}/context/contracts/${address}/big_map_get`,
+        method: 'POST'
+      },
+      key
+    )
   }
 }

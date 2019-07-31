@@ -42,7 +42,7 @@ export class HttpBackend {
    *
    * @param options contains options to be passed for the HTTP request (url, method and timeout)
    */
-  createRequest<T>({ url, method, timeout }: HttpRequestOptions) {
+  createRequest<T>({ url, method, timeout }: HttpRequestOptions, data?: {}) {
     return new Promise<T>((resolve, reject) => {
       const request = this.createXHR()
       request.open(method || 'GET', url)
@@ -64,7 +64,13 @@ export class HttpBackend {
           statusText: request.statusText
         })
       }
-      request.send()
+
+      if (data) {
+        const dataStr = JSON.stringify(data)
+        request.send(dataStr)
+      } else {
+        request.send()
+      }
     })
   }
 }
