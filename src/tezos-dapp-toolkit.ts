@@ -16,6 +16,10 @@ export class TezosToolkit {
     this.setProvider(this._rpcClient)
   }
 
+  /**
+   *
+   * @param provider rpc url or rpcClient to use to interact with the Tezos network
+   */
   setProvider(provider: string | RpcClient) {
     if (typeof provider === 'string') {
       this._rpcClient = new RpcClient(provider)
@@ -26,13 +30,22 @@ export class TezosToolkit {
     this._contract = new RpcContractProvider(this._rpcClient)
   }
 
+  /**
+   * @description Provide access to tezos account management
+   */
   get tz(): TzProvider {
     return this._tz
   }
 
+  /**
+   * @description Provide access to smart contract utilities
+   */
   get contract(): ContractProvider {
     return this._contract
   }
 }
 
+/**
+ * @description Default Tezos toolkit instance
+ */
 export const Tezos = new TezosToolkit()
