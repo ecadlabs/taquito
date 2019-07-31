@@ -20,4 +20,20 @@ describe('RpcTzProvider test', () => {
       done()
     })
   })
+
+  describe('getDelegate', () => {
+    it('calls get delegate from the rpc client', async done => {
+      const mockRpcClient = {
+        getDelegate: jest.fn()
+      }
+
+      mockRpcClient.getDelegate.mockResolvedValue('KT1G393LjojNshvMdf68XQD24Hwjn7xarzNe')
+
+      const provider = new RpcTzProvider(mockRpcClient as any)
+      const result = await provider.getDelegate('test-address')
+      expect(result).toStrictEqual('KT1G393LjojNshvMdf68XQD24Hwjn7xarzNe')
+      expect(mockRpcClient.getDelegate.mock.calls[0][0]).toEqual('test-address')
+      done()
+    })
+  })
 })

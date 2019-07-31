@@ -8,4 +8,8 @@ export class RpcTzProvider implements TzProvider {
     const result = await this.rpc.getBalance(address)
     return Number(result)
   }
+
+  async getDelegate(address: string): Promise<string | null> {
+    return this.rpc.getDelegate(address)
+  }
 }

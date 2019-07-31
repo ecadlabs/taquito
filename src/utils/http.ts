@@ -22,13 +22,12 @@ interface HttpRequestOptions {
  */
 export class HttpBackend {
   private createXHR(): XMLHttpRequest {
+    // tslint:disable: strict-type-predicates
     if (
-      // tslint:disable-next-line: strict-type-predicates
       typeof process !== 'undefined' &&
-      // tslint:disable-next-line: strict-type-predicates
       process.versions != null &&
-      // tslint:disable-next-line: strict-type-predicates
       process.versions.node != null
+      // tslint:enable: strict-type-predicates
     ) {
       const NodeXHR = require('xhr2-cookies').XMLHttpRequest
       const request = new NodeXHR()

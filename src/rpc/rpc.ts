@@ -1,36 +1,17 @@
 import { HttpBackend } from '../utils/http'
+import {
+  BalanceResponse,
+  StorageResponse,
+  ScriptResponse,
+  ContractResponse,
+  BigMapKey,
+  BigMapGetResponse,
+  ManagerResponse,
+  DelegateResponse
+} from './types'
 
 const defaultRPC = 'https://tezrpc.me'
 const defaultChain = 'main'
-
-type BalanceResponse = string
-type StorageResponse = unknown
-type ScriptResponse = unknown
-type BigMapGetResponse = unknown
-type BigMapKey = { key: { bytes: string }; type: { prim: string } }
-
-interface ContractResponse {
-  manager: string
-  balance: string
-  spendable: boolean
-  delegate: Delegate
-  script: Script
-  counter: string
-}
-
-interface Script {
-  code: {}[]
-  storage: Storage
-}
-
-interface Storage {
-  prim: string
-  args: {}[]
-}
-
-interface Delegate {
-  setable: boolean
-}
 
 interface RPCOptions {
   block: string
@@ -112,6 +93,40 @@ export class RpcClient {
   ): Promise<ContractResponse> {
     return this.httpBackend.createRequest<ContractResponse>({
       url: `${this.url}/chains/${this.chain}/blocks/${block}/context/contracts/${address}`,
+      method: 'GET'
+    })
+  }
+
+  /**
+   *
+   * @param address contract address from which we want to retrieve the manager
+   * @param options contains generic configuration for rpc calls
+   *
+   * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-contracts-contract-id-manager
+   */
+  async getManager(
+    address: string,
+    { block }: { block: string } = defaultRPCOptions
+  ): Promise<ManagerResponse> {
+    return this.httpBackend.createRequest<ManagerResponse>({
+      url: `${this.url}/chains/${this.chain}/blocks/${block}/context/contracts/${address}/manager`,
+      method: 'GET'
+    })
+  }
+
+  /**
+   *
+   * @param address contract address from which we want to retrieve the delegate (baker)
+   * @param options contains generic configuration for rpc calls
+   *
+   * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-contracts-contract-id-delegate
+   */
+  async getDelegate(
+    address: string,
+    { block }: { block: string } = defaultRPCOptions
+  ): Promise<DelegateResponse> {
+    return this.httpBackend.createRequest<DelegateResponse>({
+      url: `${this.url}/chains/${this.chain}/blocks/${block}/context/contracts/${address}/delegate`,
       method: 'GET'
     })
   }

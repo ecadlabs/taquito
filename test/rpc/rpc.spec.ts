@@ -74,6 +74,32 @@ describe('RpcClient test', () => {
     })
   })
 
+  describe('getManager', () => {
+    it('query the right url', async done => {
+      await client.getManager('address')
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/context/contracts/address/manager'
+      })
+
+      done()
+    })
+  })
+
+  describe('getDelegate', () => {
+    it('query the right url', async done => {
+      await client.getDelegate('address')
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/context/contracts/address/delegate'
+      })
+
+      done()
+    })
+  })
+
   describe('getBigMapKey', () => {
     it('query the right url', async done => {
       await client.getBigMapKey('address', { key: 'test', type: 'string' } as any)
