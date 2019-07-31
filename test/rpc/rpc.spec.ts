@@ -60,4 +60,17 @@ describe('RpcClient test', () => {
       done()
     })
   })
+
+  describe('getContract', () => {
+    it('query the right url', async done => {
+      await client.getContract('address')
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/context/contracts/address'
+      })
+
+      done()
+    })
+  })
 })

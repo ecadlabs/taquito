@@ -27,7 +27,7 @@ describe('RpcContractProvider test', () => {
       const result = await rpcContractProvider.getStorage('test')
       expect(result).toEqual({
         '0': {},
-        '1': undefined,
+        '1': 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         '2': 'False',
         '3': '200'
       })

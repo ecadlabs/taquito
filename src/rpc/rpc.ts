@@ -7,6 +7,29 @@ type BalanceResponse = string
 type StorageResponse = unknown
 type ScriptResponse = unknown
 
+interface ContractResponse {
+  manager: string
+  balance: string
+  spendable: boolean
+  delegate: Delegate
+  script: Script
+  counter: string
+}
+
+interface Script {
+  code: {}[]
+  storage: Storage
+}
+
+interface Storage {
+  prim: string
+  args: {}[]
+}
+
+interface Delegate {
+  setable: boolean
+}
+
 interface RPCOptions {
   block: string
 }
@@ -70,6 +93,23 @@ export class RpcClient {
   ): Promise<ScriptResponse> {
     return this.httpBackend.createRequest<ScriptResponse>({
       url: `${this.url}/chains/${this.chain}/blocks/${block}/context/contracts/${address}/script`,
+      method: 'GET'
+    })
+  }
+
+  /**
+   *
+   * @param address contract address from which we want to retrieve
+   * @param options contains generic configuration for rpc calls
+   *
+   * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-contracts-contract-id
+   */
+  async getContract(
+    address: string,
+    { block }: { block: string } = defaultRPCOptions
+  ): Promise<ContractResponse> {
+    return this.httpBackend.createRequest<ContractResponse>({
+      url: `${this.url}/chains/${this.chain}/blocks/${block}/context/contracts/${address}`,
       method: 'GET'
     })
   }

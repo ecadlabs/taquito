@@ -5,7 +5,7 @@ export const sampleStorage = {
     {
       prim: 'Pair',
       args: [
-        { bytes: '000035e993d8c7aaa42b5e3ccd86a33390ececc73abd' },
+        { string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn' },
         { prim: 'Pair', args: [{ prim: 'False' }, { int: '200' }] }
       ]
     }
