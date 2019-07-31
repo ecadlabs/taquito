@@ -1,4 +1,4 @@
-import { Tezos } from '../dist/tezos-dapp-toolkit.umd'
+import { Tezos } from '../src/tezos-dapp-toolkit'
 
 async function example() {
   try {
