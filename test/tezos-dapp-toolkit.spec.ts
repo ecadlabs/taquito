@@ -1,5 +1,5 @@
-import { TezosToolkit } from '../../src/tezos-dapp-toolkit'
-import { RpcProvider } from '../../src/tz/rpc/rpc'
+import { TezosToolkit } from '../src/tezos-dapp-toolkit'
+import { RpcTzProvider } from '../src/tz/rpc-tz-provider'
 
 describe('TezosToolkit test', () => {
   it('is instantiable', () => {
@@ -18,6 +18,6 @@ describe('TezosToolkit test', () => {
     const toolkit = new TezosToolkit()
 
     toolkit.setProvider('test')
-    expect(toolkit.tz).toBeInstanceOf(RpcProvider)
+    expect(toolkit.tz).toBeInstanceOf(RpcTzProvider)
   })
 })
