@@ -27,7 +27,8 @@
     "test:watch": "jest --coverage --watch",
     "test:prod": "npm run lint && npm run test -- --no-cache",
     "commit": "git-cz",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "example": "cd example && ts-node example-node.ts"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
