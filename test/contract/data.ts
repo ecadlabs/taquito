@@ -35,3 +35,20 @@ export const sample = {
     }
   ]
 }
+
+export const sampleBigMapValue = {
+  prim: 'Pair',
+  args: [
+    { int: '261' },
+    [
+      {
+        prim: 'Elt',
+        args: [{ bytes: '000035e993d8c7aaa42b5e3ccd86a33390ececc73abd' }, { int: '100' }]
+      },
+      {
+        prim: 'Elt',
+        args: [{ bytes: '01c57ad825f3c2bd87ca531edd4c911598aabd3a7100' }, { int: '100' }]
+      }
+    ]
+  ]
+}

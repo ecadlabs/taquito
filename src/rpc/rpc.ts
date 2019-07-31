@@ -7,7 +7,7 @@ type BalanceResponse = string
 type StorageResponse = unknown
 type ScriptResponse = unknown
 type BigMapGetResponse = unknown
-type BigMapKey = { key: string; type: string }
+type BigMapKey = { key: { bytes: string }; type: { prim: string } }
 
 interface ContractResponse {
   manager: string

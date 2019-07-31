@@ -76,7 +76,7 @@ describe('RpcClient test', () => {
 
   describe('getBigMapKey', () => {
     it('query the right url', async done => {
-      await client.getBigMapKey('address', { key: 'test', type: 'string' })
+      await client.getBigMapKey('address', { key: 'test', type: 'string' } as any)
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'POST',
