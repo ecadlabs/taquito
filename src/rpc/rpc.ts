@@ -42,7 +42,7 @@ export class RpcClient {
 
   /**
    *
-   * @param address contract address from which we want to retrieve the balance
+   * @param address contract address from which we want to retrieve the storage
    * @param options contains generic configuration for rpc calls
    *
    * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-contracts-contract-id-storage
@@ -51,7 +51,7 @@ export class RpcClient {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<StorageResponse> {
-    return this.httpBackend.createRequest<BalanceResponse>({
+    return this.httpBackend.createRequest<StorageResponse>({
       url: `${this.url}/chains/${this.chain}/blocks/${block}/context/contracts/${address}/storage`,
       method: 'GET'
     })
@@ -59,10 +59,10 @@ export class RpcClient {
 
   /**
    *
-   * @param address contract address from which we want to retrieve the balance
+   * @param address contract address from which we want to retrieve the script
    * @param options contains generic configuration for rpc calls
    *
-   * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-contracts-contract-id-storage
+   * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-contracts-contract-id-script
    */
   async getScript(
     address: string,
