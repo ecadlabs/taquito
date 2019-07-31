@@ -78,7 +78,7 @@
     ]
   },
   "dependencies": {
-    "@ecadlabs/tezos-parser": "^0.1.5",
+    "@ecadlabs/tezos-parser": "^0.1.6",
     "xhr2-cookies": "^1.1.0"
   },
   "devDependencies": {
