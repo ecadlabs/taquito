@@ -1,4 +1,4 @@
-import { BrowserHttpBackend, HttpBackend } from '../utils/http'
+import { HttpBackend } from '../utils/http'
 
 const defaultRPC = 'https://tezrpc.me'
 const defaultChain = 'main'
@@ -43,7 +43,7 @@ export class RpcClient {
   constructor(
     private url: string = defaultRPC,
     private chain: string = defaultChain,
-    private httpBackend: HttpBackend = new BrowserHttpBackend()
+    private httpBackend: HttpBackend = new HttpBackend()
   ) {}
 
   /**

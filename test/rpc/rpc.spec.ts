@@ -13,7 +13,7 @@ describe('RpcClient test', () => {
     httpBackend = {
       createRequest: jest.fn()
     }
-    client = new RpcClient('root', 'test', httpBackend)
+    client = new RpcClient('root', 'test', httpBackend as any)
   })
 
   it('RpcClient is instantiable', () => {

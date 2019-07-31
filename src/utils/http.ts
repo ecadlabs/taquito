@@ -18,18 +18,39 @@ interface HttpRequestOptions {
 }
 
 /**
- * @description Default http backend used in browser
+ * @description Default http backend
  */
-export class BrowserHttpBackend implements HttpBackend {
+export class HttpBackend {
+  private createXHR(): XMLHttpRequest {
+    if (
+      // tslint:disable-next-line: strict-type-predicates
+      typeof process !== 'undefined' &&
+      // tslint:disable-next-line: strict-type-predicates
+      process.versions != null &&
+      // tslint:disable-next-line: strict-type-predicates
+      process.versions.node != null
+    ) {
+      const NodeXHR = require('xhr2-cookies').XMLHttpRequest
+      const request = new NodeXHR()
+      return request
+    } else {
+      return new XMLHttpRequest()
+    }
+  }
+
+  /**
+   *
+   * @param options contains options to be passed for the HTTP request (url, method and timeout)
+   */
   createRequest<T>({ url, method, timeout }: HttpRequestOptions) {
-    return new Promise<T>(function(resolve, reject) {
-      const request = new XMLHttpRequest()
+    return new Promise<T>((resolve, reject) => {
+      const request = this.createXHR()
       request.open(method || 'GET', url)
       request.setRequestHeader('Content-Type', 'application/json')
       request.timeout = timeout || defaultTimeout
       request.onload = function() {
         if (this.status >= 200 && this.status < 300) {
-          resolve(request.response)
+          resolve(JSON.parse(request.response))
         } else {
           reject({
             status: this.status,
