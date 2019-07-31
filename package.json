@@ -76,6 +76,9 @@
       "@commitlint/config-conventional"
     ]
   },
+  "dependencies": {
+    "@ecadlabs/tezos-parser": "^0.1.4"
+  },
   "devDependencies": {
     "@commitlint/cli": "^7.1.2",
     "@commitlint/config-conventional": "^7.1.2",
