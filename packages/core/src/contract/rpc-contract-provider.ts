@@ -1,6 +1,6 @@
-import { RpcClient } from '../rpc/rpc'
-import { ContractProvider, ContractSchema } from './interface'
-import { Schema } from '@ecadlabs/tezos-parser'
+import { RpcClient } from "../rpc/rpc";
+import { ContractProvider, ContractSchema } from "./interface";
+import { Schema } from "@ecadlabs/tezos-parser";
 
 export class RpcContractProvider implements ContractProvider {
   constructor(private rpc: RpcClient) {}
@@ -16,19 +16,19 @@ export class RpcContractProvider implements ContractProvider {
    */
   async getStorage<T>(contract: string, schema?: ContractSchema): Promise<T> {
     if (!schema) {
-      schema = await this.rpc.getScript(contract)
+      schema = await this.rpc.getScript(contract);
     }
 
-    let contractSchema: Schema
+    let contractSchema: Schema;
     if (schema instanceof Schema) {
-      contractSchema = schema
+      contractSchema = schema;
     } else {
-      contractSchema = Schema.fromRPCResponse({ script: schema })
+      contractSchema = Schema.fromRPCResponse({ script: schema });
     }
 
-    const storage = await this.rpc.getStorage(contract)
+    const storage = await this.rpc.getStorage(contract);
 
-    return contractSchema.Execute(storage) as T // Cast into T because only the caller can know the true type of the storage
+    return contractSchema.Execute(storage) as T; // Cast into T because only the caller can know the true type of the storage
   }
 
   /**
@@ -43,20 +43,20 @@ export class RpcContractProvider implements ContractProvider {
    */
   async getBigMapKey<T>(contract: string, key: string, schema?: ContractSchema): Promise<T> {
     if (!schema) {
-      schema = await this.rpc.getScript(contract)
+      schema = await this.rpc.getScript(contract);
     }
 
-    let contractSchema: Schema
+    let contractSchema: Schema;
     if (schema instanceof Schema) {
-      contractSchema = schema
+      contractSchema = schema;
     } else {
-      contractSchema = Schema.fromRPCResponse({ script: schema })
+      contractSchema = Schema.fromRPCResponse({ script: schema });
     }
 
-    const encodedKey = contractSchema.EncodeBigMapKey(key)
+    const encodedKey = contractSchema.EncodeBigMapKey(key);
 
-    const val = await this.rpc.getBigMapKey(contract, encodedKey)
+    const val = await this.rpc.getBigMapKey(contract, encodedKey);
 
-    return contractSchema.ExecuteOnBigMapValue(val) as T // Cast into T because only the caller can know the true type of the storage
+    return contractSchema.ExecuteOnBigMapValue(val) as T; // Cast into T because only the caller can know the true type of the storage
   }
 }

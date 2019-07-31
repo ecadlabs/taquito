@@ -1,4 +1,4 @@
-import { Tezos } from '../src/tezos-dapp-toolkit'
+import { Tezos } from '../packages/core/src/tezos-dapp-toolkit'
 
 async function example() {
   try {
@@ -11,11 +11,6 @@ async function example() {
     console.log('Getting big map key...')
     await Tezos.contract
       .getBigMapKey('KT1SawqvsVdAbDzqc4KwPpaS1S1veuFgF9AN', 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn')
-      .then(console.log)
-
-    console.log('Getting big map key...')
-    await Tezos.contract
-      .getBigMapKey('KT1P3j1VonQytW3b2SzCnGVpjdf3oWajM79E', '7569643030')
       .then(console.log)
   } catch (ex) {
     console.error(ex)

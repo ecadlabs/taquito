@@ -1,6 +1,6 @@
-import { Schema } from '@ecadlabs/tezos-parser'
+import { Schema } from "@ecadlabs/tezos-parser";
 
-export type ContractSchema = Schema | unknown
+export type ContractSchema = Schema | unknown;
 
 export interface ContractProvider {
   /**
@@ -12,7 +12,7 @@ export interface ContractProvider {
    *
    * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-contracts-contract-id-script
    */
-  getStorage<T>(contract: string, schema?: ContractSchema): Promise<T>
+  getStorage<T>(contract: string, schema?: ContractSchema): Promise<T>;
 
   /**
    *
@@ -24,5 +24,5 @@ export interface ContractProvider {
    *
    * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-contracts-contract-id-script
    */
-  getBigMapKey<T>(contract: string, key: string, schema?: ContractSchema): Promise<T>
+  getBigMapKey<T>(contract: string, key: string, schema?: ContractSchema): Promise<T>;
 }
