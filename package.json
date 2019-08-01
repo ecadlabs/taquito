@@ -7,6 +7,9 @@
     "precommit": "lerna run --concurrency 1 --stream precommit",
     "example": "cd example && ts-node example-node.ts"
   },
+  "workspaces": [
+    "packages/*"
+  ],
   "devDependencies": {
     "lerna": "^2.11.0",
     "@commitlint/cli": "^7.1.2",
@@ -44,47 +47,9 @@
     "typedoc": "^0.15.0",
     "typescript": "^3.0.3"
   },
-  "lint-staged": {
-    "packages/**/{src,test}/**/*.ts": [
-      "prettier --write",
-      "git add"
-    ]
-  },
   "config": {
     "commitizen": {
       "path": "node_modules/cz-conventional-changelog"
-    }
-  },
-  "jest": {
-    "transform": {
-      ".(ts|tsx)": "ts-jest"
-    },
-    "testEnvironment": "node",
-    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "/test/"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 90,
-        "functions": 95,
-        "lines": 95,
-        "statements": 95
-      }
-    },
-    "collectCoverageFrom": [
-      "packages/**/src/**/*.{js,ts}"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lerna run --concurrency 1 --stream precommit"
     }
   },
   "commitlint": {

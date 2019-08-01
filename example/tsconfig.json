@@ -12,8 +12,7 @@
     "emitDecoratorMetadata": true,
     "noImplicitAny": false,
     "declarationDir": "dist/types",
-    "outDir": "dist/lib",
-    "typeRoots": ["../node_modules/@types"]
+    "outDir": "dist/lib"
   },
-  "include": ["../src", "example.ts"]
+  "include": ["../packages/**/*.ts", "example-node.ts"]
 }
