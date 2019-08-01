@@ -1,11 +1,11 @@
 {
-  "name": "tezos-dapp-toolkit",
+  "name": "tezos-rpc",
   "version": "0.0.0",
   "description": "",
   "keywords": [],
-  "main": "dist/tezos-dapp-toolkit.umd.js",
-  "module": "dist/tezos-dapp-toolkit.es5.js",
-  "typings": "dist/types/tezos-dapp-toolkit.d.ts",
+  "main": "dist/tezos-rpc.umd.js",
+  "module": "dist/tezos-rpc.es5.js",
+  "typings": "dist/types/tezos-rpc.d.ts",
   "files": [
     "dist"
   ],
@@ -63,7 +63,6 @@
     ]
   },
   "dependencies": {
-    "tezos-rpc": "*",
     "@ecadlabs/tezos-parser": "^0.1.6",
     "xhr2-cookies": "^1.1.0"
   },

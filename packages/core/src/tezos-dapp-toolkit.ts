@@ -1,5 +1,5 @@
 import { TzProvider } from "./tz/interface";
-import { RpcClient } from "./rpc/rpc";
+import { RpcClient } from "tezos-rpc";
 import { ContractProvider } from "./contract/interface";
 import { RpcTzProvider } from "./tz/rpc-tz-provider";
 import { RpcContractProvider } from "./contract/rpc-contract-provider";

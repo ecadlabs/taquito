@@ -1,4 +1,4 @@
-import { RpcClient } from "../../src/rpc/rpc";
+import { RpcClient } from "../src/tezos-rpc";
 
 /**
  * RpcClient test

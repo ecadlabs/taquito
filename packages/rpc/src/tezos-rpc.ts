@@ -1,4 +1,4 @@
-import { HttpBackend } from "../utils/http";
+import { HttpBackend } from "./utils/http";
 import {
   BalanceResponse,
   StorageResponse,
