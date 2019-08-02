@@ -1,11 +1,11 @@
 {
-  "name": "tezos-rpc",
+  "name": "react-components",
   "version": "0.0.0",
   "description": "",
   "keywords": [],
-  "main": "dist/tezos-rpc.umd.js",
-  "module": "dist/tezos-rpc.es5.js",
-  "typings": "dist/types/tezos-rpc.d.ts",
+  "main": "dist/react-components.umd.js",
+  "module": "dist/react-components.es5.js",
+  "typings": "dist/types/react-components.d.ts",
   "files": [
     "dist"
   ],
@@ -65,8 +65,10 @@
     ]
   },
   "dependencies": {
+    "@types/react": "^16.8.24",
+    "react": "^16.8.6",
     "tezos-dapp-toolkit": "*",
-    "react": "^16.8.6"
+    "tezos-rpc": "*"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",

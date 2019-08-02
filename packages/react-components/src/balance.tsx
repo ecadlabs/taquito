@@ -1,10 +1,9 @@
 import React from 'react';
-
-import { Tezos } from 'tezos-dapp-toolkit';
 import { TezosContext } from './tezos-context';
 
-export class Balance extends React.Component {
-  constructor(props) {
+export class Balance extends React.Component<{ address: string }, { balance: string | null }> {
+  static contextType = TezosContext;
+  constructor(props: { address: string }) {
     super(props);
 
     this.state = {
@@ -13,21 +12,20 @@ export class Balance extends React.Component {
   }
 
   async refreshBalance() {
+    // tslint:disable-next-line: deprecation
     const balance = await this.context.tz.getBalance(this.props.address);
     this.setState({ balance });
   }
 
-  componentDidUpdate() {
-    this.refreshBalance();
+  async componentDidUpdate() {
+    await this.refreshBalance();
   }
 
-  componentDidMount() {
-    this.refreshBalance();
+  async componentDidMount() {
+    await this.refreshBalance();
   }
 
   render() {
     return <span>{this.state.balance}</span>;
   }
 }
-
-Balance.contextType = TezosContext;
