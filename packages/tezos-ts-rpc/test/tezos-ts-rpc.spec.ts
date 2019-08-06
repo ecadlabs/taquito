@@ -103,7 +103,6 @@ describe("RpcClient test", () => {
   describe("getBigMapKey", () => {
     it("query the right url", async done => {
       await client.getBigMapKey("address", { key: "test", type: "string" } as any);
-
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: "POST",
         url: "root/chains/test/blocks/head/context/contracts/address/big_map_get"
