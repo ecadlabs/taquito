@@ -3,7 +3,7 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { Balance } from '../src/balance';
 
-import { TezosToolkit } from 'tezos-dapp-toolkit';
+import { TezosToolkit } from '@tezos-ts/tezos-ts';
 import { TezosContext } from '../src/tezos-context';
 
 storiesOf('Balance', module).add('standard', () => {
