@@ -1,5 +1,7 @@
 {
   "scripts": {
+    "build": "lerna run build",
+    "bootstrap": "lerna bootstrap",
     "test": "lerna run test:prod",
     "lint": "lerna run lint",
     "commit": "git-cz",
