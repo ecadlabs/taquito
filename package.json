@@ -1,8 +1,7 @@
 {
   "scripts": {
-    "test": "jest --coverage",
-    "test:watch": "jest --coverage --watch",
-    "test:prod": "lerna run test:prod",
+    "test": "lerna run test:prod",
+    "lint": "lerna run lint",
     "commit": "git-cz",
     "precommit": "lerna run --concurrency 1 --stream precommit",
     "example": "cd example && ts-node example-node.ts"
@@ -34,6 +33,7 @@
     ]
   },
   "devDependencies": {
+    "lerna": "^3.16.4",
     "@commitlint/cli": "^7.1.2",
     "@commitlint/config-conventional": "^7.1.2",
     "@types/jest": "^23.3.2",
