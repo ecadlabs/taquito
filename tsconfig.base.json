@@ -11,5 +11,12 @@
     "noUnusedParameters": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
+  },
+  "paths": {
+    "@tezos-ts": ["packages/tezos-ts/src/tezos-ts.ts"],
+    "@tezos-ts/rpc": ["packages/tezos-ts-rpc/src/tezos-ts-rpc.ts"],
+    "@tezos-ts/react-components": [
+      "packages/tezos-ts-react-components/src/tezos-ts-react-components.ts"
+    ]
   }
 }

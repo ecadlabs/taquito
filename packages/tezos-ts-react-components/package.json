@@ -1,15 +1,15 @@
 {
-  "name": "react-components",
+  "name": "@tezos-ts/react-components",
   "version": "0.0.0",
   "description": "",
   "keywords": [],
-  "main": "dist/react-components.umd.js",
-  "module": "dist/react-components.es5.js",
-  "typings": "dist/types/react-components.d.ts",
+  "main": "dist/tezos-ts-react-components.umd.js",
+  "module": "dist/tezos-ts-react-components.es5.js",
+  "typings": "dist/types/tezos-ts-react-components.d.ts",
   "files": [
     "dist"
   ],
-  "author": "Simon Boissonneault-Robert <simrob7000@gmail.com>",
+  "author": "Simon Boissonneault-Robert <simon@ecadlabs.com>",
   "repository": {
     "type": "git",
     "url": ""
@@ -67,8 +67,8 @@
   "dependencies": {
     "@types/react": "^16.8.24",
     "react": "^16.8.6",
-    "tezos-dapp-toolkit": "*",
-    "tezos-rpc": "*"
+    "@tezos-ts/tezos-ts": "*",
+    "@tezos-ts/rpc": "*"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",

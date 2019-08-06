@@ -1,15 +1,15 @@
 {
-  "name": "tezos-dapp-toolkit",
+  "name": "@tezos-ts/tezos-ts",
   "version": "0.0.0",
   "description": "",
   "keywords": [],
-  "main": "dist/tezos-dapp-toolkit.umd.js",
-  "module": "dist/tezos-dapp-toolkit.es5.js",
-  "typings": "dist/types/tezos-dapp-toolkit.d.ts",
+  "main": "dist/tezos-ts.umd.js",
+  "module": "dist/tezos-ts.es5.js",
+  "typings": "dist/types/tezos-ts.d.ts",
   "files": [
     "dist"
   ],
-  "author": "Simon Boissonneault-Robert <simrob7000@gmail.com>",
+  "author": "Simon Boissonneault-Robert <simon@ecadlabs.com>",
   "repository": {
     "type": "git",
     "url": ""
@@ -63,7 +63,7 @@
     ]
   },
   "dependencies": {
-    "tezos-rpc": "*",
+    "@tezos-ts/rpc": "*",
     "@ecadlabs/tezos-parser": "^0.1.6",
     "xhr2-cookies": "^1.1.0"
   },

@@ -1,4 +1,4 @@
-import { RpcClient } from "tezos-rpc";
+import { RpcClient } from "@tezos-ts/rpc";
 import { ContractProvider, ContractSchema } from "./interface";
 import { Schema } from "@ecadlabs/tezos-parser";
 

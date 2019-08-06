@@ -1,4 +1,4 @@
-import { TezosToolkit } from "../src/tezos-dapp-toolkit";
+import { TezosToolkit } from "../src/tezos-ts";
 import { RpcTzProvider } from "../src/tz/rpc-tz-provider";
 import { RpcContractProvider } from "../src/contract/rpc-contract-provider";
 

@@ -7,7 +7,7 @@ import json from 'rollup-plugin-json';
 
 const pkg = require('./package.json');
 
-const libraryName = 'tezos-rpc';
+const libraryName = 'tezos-ts-rpc';
 
 export default {
   input: `src/${libraryName}.ts`,

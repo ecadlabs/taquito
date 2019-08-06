@@ -1,5 +1,5 @@
 import { TzProvider } from "./interface";
-import { RpcClient } from "tezos-rpc";
+import { RpcClient } from "@tezos-ts/rpc";
 
 export class RpcTzProvider implements TzProvider {
   constructor(private rpc: RpcClient) {}

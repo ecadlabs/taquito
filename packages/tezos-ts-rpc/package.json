@@ -1,15 +1,15 @@
 {
-  "name": "tezos-rpc",
+  "name": "@tezos-ts/rpc",
   "version": "0.0.0",
   "description": "",
   "keywords": [],
-  "main": "dist/tezos-rpc.umd.js",
-  "module": "dist/tezos-rpc.es5.js",
-  "typings": "dist/types/tezos-rpc.d.ts",
+  "main": "dist/tezos-ts-rpc.umd.js",
+  "module": "dist/tezos-ts-rpc.es5.js",
+  "typings": "dist/types/tezos-ts-rpc.d.ts",
   "files": [
     "dist"
   ],
-  "author": "Simon Boissonneault-Robert <simrob7000@gmail.com>",
+  "author": "Simon Boissonneault-Robert <simon@ecadlabs.com>",
   "repository": {
     "type": "git",
     "url": ""
