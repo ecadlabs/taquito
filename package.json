@@ -4,7 +4,8 @@
     "lint": "lerna run lint",
     "commit": "git-cz",
     "precommit": "lerna run --concurrency 1 --stream precommit",
-    "example": "cd example && ts-node example-node.ts"
+    "example": "cd example && ts-node example-node.ts",
+    "lerna": "lerna"
   },
   "workspaces": [
     "packages/*"
