@@ -25,7 +25,7 @@
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
-    "build": "tsc --module commonjs && rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file src",
+    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file src",
     "start": "rollup -c rollup.config.ts -w"
   },
   "lint-staged": {
@@ -46,6 +46,9 @@
       "tsx",
       "js"
     ],
+    "moduleNameMapper": {
+      "^@tezos-ts/rpc$": "<rootDir>/../tezos-ts-rpc/src/tezos-ts-rpc.ts"
+    },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/test/"

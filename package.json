@@ -21,6 +21,10 @@
       "tsx",
       "js"
     ],
+    "moduleNameMapper": {
+      "^@tezos-ts/rpc$": "<rootDir>/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts",
+      "^@tezos-ts/tezos-ts$": "<rootDir>/packages/tezos-ts/src/tezos-ts.ts"
+    },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/test/"

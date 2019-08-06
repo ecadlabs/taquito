@@ -11,10 +11,6 @@
     "noUnusedParameters": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "baseUrl": "packages",
-    "paths": {
-      "@tezos-ts/rpc": ["tezos-ts-rpc/src/tezos-ts-rpc.ts"],
-      "@tezos-ts/tezos-ts": ["tezos-ts/src/tezos-ts.ts"]
-    }
+    "jsx": "react"
   }
 }
