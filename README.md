@@ -11,13 +11,14 @@ This is a mono repository from which several npm packages are built and publishe
 - `npm run lint`: Lints code
 - `npm run example`: Run an example node js app that does a tour of all the functionality
 - `npm run commit`: Commit using conventional commit style
-  
+
 ## How to contribute
 
 - Install lerna globally `npm install -g lerna`
 
 - Run `npm install`
 - Run `lerna bootstrap`
+- Run `npm run build`
 
 Once you modified any project run
 
