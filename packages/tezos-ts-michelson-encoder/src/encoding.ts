@@ -1,5 +1,5 @@
 import { Buffer } from "buffer";
-import * as bs58check from "bs58check";
+const bs58check = require("bs58check");
 export function b58cencode(payload: string, prefix: Uint8Array) {
   const payloadAr = Uint8Array.from(Buffer.from(payload, "hex"));
 
