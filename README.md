@@ -25,3 +25,11 @@ Once you modified any project run
 - Run `npm run lint`
 - Run `npm run test`
 - In order to commit please use `npm run commit`
+
+## Packages overview
+
+| Package                   |                        Responsibility                         |
+| ------------------------- | :-----------------------------------------------------------: |
+| tezos-ts                  | Regroup every other library and provide higher level utility  |
+| tezos-ts-react-components |  Set of premade react components for interacting with Tezos   |
+| tezos-ts-rpc              | RPC client library, wrap every rpc endpoint in its own method |
