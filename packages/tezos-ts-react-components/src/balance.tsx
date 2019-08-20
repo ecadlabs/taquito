@@ -17,10 +17,6 @@ export class Balance extends React.Component<{ address: string }, { balance: str
     this.setState({ balance });
   }
 
-  async componentDidUpdate() {
-    await this.refreshBalance();
-  }
-
   async componentDidMount() {
     await this.refreshBalance();
   }
