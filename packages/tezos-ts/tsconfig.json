@@ -5,5 +5,5 @@
     "outDir": "./dist/lib",
     "typeRoots": ["./node_modules/@types"]
   },
-  "include": ["./src/**/*"]
+  "include": ["./src/**/*", "../../index.d.ts"]
 }

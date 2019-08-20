@@ -6,5 +6,5 @@
     "typeRoots": ["./node_modules/@types"],
     "jsx": "react"
   },
-  "include": ["./src/**/*", "index.d.ts"]
+  "include": ["./src/**/*", "../../index.d.ts"]
 }
