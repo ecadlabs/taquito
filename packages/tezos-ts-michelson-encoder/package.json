@@ -1,11 +1,11 @@
 {
-  "name": "@tezos-ts/rpc",
+  "name": "@tezos-ts/michelson-encoder",
   "version": "0.0.0",
   "description": "",
   "keywords": [],
-  "main": "dist/tezos-ts-rpc.umd.js",
-  "module": "dist/tezos-ts-rpc.es5.js",
-  "typings": "dist/types/tezos-ts-rpc.d.ts",
+  "main": "dist/tezos-ts-michelson-encoder.umd.js",
+  "module": "dist/tezos-ts-michelson-encoder.es5.js",
+  "typings": "dist/types/tezos-ts-michelson-encoder.d.ts",
   "files": [
     "dist"
   ],
@@ -55,7 +55,8 @@
     ]
   },
   "dependencies": {
-    "xhr2-cookies": "^1.1.0"
+    "buffer": "^5.2.1",
+    "bs58check": "^2.1.2"
   },
   "devDependencies": {
     "@types/jest": "^23.3.2",

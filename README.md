@@ -28,8 +28,9 @@ Once you modified any project run
 
 ## Packages overview
 
-| Package                   |                        Responsibility                         |
-| ------------------------- | :-----------------------------------------------------------: |
-| tezos-ts                  | Regroup every other library and provide higher level utility  |
-| tezos-ts-react-components |  Set of premade react components for interacting with Tezos   |
-| tezos-ts-rpc              | RPC client library, wrap every rpc endpoint in its own method |
+| Package                    |                        Responsibility                         |
+| -------------------------- | :-----------------------------------------------------------: |
+| tezos-ts                   | Regroup every other library and provide higher level utility  |
+| tezos-ts-react-components  |  Set of premade react components for interacting with Tezos   |
+| tezos-ts-rpc               | RPC client library, wrap every rpc endpoint in its own method |
+| tezos-ts-michelson-encoder | Encode/Decode storage and parameter to/from michelson format  |

@@ -14,6 +14,9 @@
     "baseUrl": "packages",
     "paths": {
       "@tezos-ts/rpc": ["tezos-ts-rpc/src/tezos-ts-rpc.ts"],
+      "@tezos-ts/michelson-encoder": [
+        "tezos-ts-michelson-encoder/src/tezos-ts-michelson-encoder.ts"
+      ],
       "@tezos-ts/tezos-ts": ["tezos-ts/src/tezos-ts.ts"]
     }
   }

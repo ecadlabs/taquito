@@ -59,8 +59,7 @@
   },
   "dependencies": {
     "@tezos-ts/rpc": "*",
-    "@ecadlabs/tezos-parser": "^0.1.6",
-    "xhr2-cookies": "^1.1.0"
+    "@tezos-ts/michelson-encoder": "*"
   },
   "devDependencies": {
     "@types/jest": "^23.3.2",
