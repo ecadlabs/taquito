@@ -63,21 +63,21 @@ export interface ConstantsResponse {
   blocks_per_commitment: number;
   blocks_per_roll_snapshot: number;
   blocks_per_voting_period: number;
-  time_between_blocks: string[];
+  time_between_blocks: BigNumber[];
   endorsers_per_block: number;
-  hard_gas_limit_per_operation: string;
-  hard_gas_limit_per_block: string;
-  proof_of_work_threshold: string;
-  tokens_per_roll: string;
+  hard_gas_limit_per_operation: BigNumber;
+  hard_gas_limit_per_block: BigNumber;
+  proof_of_work_threshold: BigNumber;
+  tokens_per_roll: BigNumber;
   michelson_maximum_type_size: number;
   seed_nonce_revelation_tip: string;
   origination_burn: string;
-  block_security_deposit: string;
-  endorsement_security_deposit: string;
-  block_reward: string;
-  endorsement_reward: string;
-  cost_per_byte: string;
-  hard_storage_limit_per_operation: string;
+  block_security_deposit: BigNumber;
+  endorsement_security_deposit: BigNumber;
+  block_reward: BigNumber;
+  endorsement_reward: BigNumber;
+  cost_per_byte: BigNumber;
+  hard_storage_limit_per_operation: BigNumber;
 }
 
 interface Script {
