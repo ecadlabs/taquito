@@ -1,4 +1,5 @@
 import { RpcTzProvider } from "../../src/tz/rpc-tz-provider";
+import BigNumber from "bignumber.js";
 
 describe("RpcTzProvider test", () => {
   it("is instantiable", () => {
@@ -11,11 +12,12 @@ describe("RpcTzProvider test", () => {
         getBalance: jest.fn()
       };
 
-      mockRpcClient.getBalance.mockResolvedValue("10000");
+      mockRpcClient.getBalance.mockResolvedValue(new BigNumber("10000"));
 
       const provider = new RpcTzProvider(mockRpcClient as any);
       const result = await provider.getBalance("test-address");
-      expect(result).toStrictEqual(10000);
+      expect(result).toBeInstanceOf(BigNumber);
+      expect(result.toString()).toStrictEqual("10000");
       expect(mockRpcClient.getBalance.mock.calls[0][0]).toEqual("test-address");
       done();
     });

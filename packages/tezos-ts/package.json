@@ -59,8 +59,9 @@
     ]
   },
   "dependencies": {
+    "@tezos-ts/michelson-encoder": "^0.0.0",
     "@tezos-ts/rpc": "^0.0.0",
-    "@tezos-ts/michelson-encoder": "^0.0.0"
+    "bignumber.js": "^9.0.0"
   },
   "devDependencies": {
     "@types/jest": "^23.3.2",
