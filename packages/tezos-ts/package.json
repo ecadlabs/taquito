@@ -25,7 +25,7 @@
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
-    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file src",
+    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts ",
     "start": "rollup -c rollup.config.ts -w"
   },
   "lint-staged": {
@@ -59,8 +59,8 @@
     ]
   },
   "dependencies": {
-    "@tezos-ts/rpc": "*",
-    "@tezos-ts/michelson-encoder": "*"
+    "@tezos-ts/rpc": "^0.0.0",
+    "@tezos-ts/michelson-encoder": "^0.0.0"
   },
   "devDependencies": {
     "@types/jest": "^23.3.2",
@@ -88,7 +88,6 @@
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
     "tslint-config-standard": "^8.0.1",
-    "typedoc": "^0.15.0",
     "typescript": "^3.0.3"
   }
 }
