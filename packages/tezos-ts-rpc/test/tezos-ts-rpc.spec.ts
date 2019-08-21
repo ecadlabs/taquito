@@ -1,4 +1,5 @@
 import { RpcClient } from "../src/tezos-ts-rpc";
+import BigNumber from "bignumber.js";
 
 /**
  * RpcClient test
@@ -29,7 +30,8 @@ describe("RpcClient test", () => {
         method: "GET",
         url: "root/chains/test/blocks/head/context/contracts/address/balance"
       });
-      expect(balance).toStrictEqual("10000");
+      expect(balance).toBeInstanceOf(BigNumber);
+      expect(balance.toString()).toEqual("10000");
 
       done();
     });
@@ -63,12 +65,16 @@ describe("RpcClient test", () => {
 
   describe("getContract", () => {
     it("query the right url", async done => {
-      await client.getContract("address");
+      httpBackend.createRequest.mockReturnValue(Promise.resolve({ balance: "10000" }));
+      const response = await client.getContract("address");
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: "GET",
         url: "root/chains/test/blocks/head/context/contracts/address"
       });
+
+      expect(response.balance).toBeInstanceOf(BigNumber);
+      expect(response.balance.toString()).toEqual("10000");
 
       done();
     });

@@ -9,6 +9,7 @@ import {
   ManagerResponse,
   DelegateResponse
 } from "./types";
+import BigNumber from "bignumber.js";
 
 const defaultRPC = "https://tezrpc.me";
 const defaultChain = "main";
@@ -49,10 +50,11 @@ export class RpcClient {
     address: string,
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<BalanceResponse> {
-    return this.httpBackend.createRequest<BalanceResponse>({
+    const balance = await this.httpBackend.createRequest<BalanceResponse>({
       url: `${this.url}/chains/${this.chain}/blocks/${block}/context/contracts/${address}/balance`,
       method: "GET"
     });
+    return new BigNumber(balance);
   }
 
   /**
@@ -100,10 +102,14 @@ export class RpcClient {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<ContractResponse> {
-    return this.httpBackend.createRequest<ContractResponse>({
+    const contractResponse = await this.httpBackend.createRequest<ContractResponse>({
       url: `${this.url}/chains/${this.chain}/blocks/${block}/context/contracts/${address}`,
       method: "GET"
     });
+    return {
+      ...contractResponse,
+      balance: new BigNumber(contractResponse.balance)
+    };
   }
 
   /**

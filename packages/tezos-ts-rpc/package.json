@@ -55,6 +55,7 @@
     ]
   },
   "dependencies": {
+    "bignumber.js": "^9.0.0",
     "xhr2-cookies": "^1.1.0"
   },
   "devDependencies": {

@@ -1,14 +1,15 @@
-export type BalanceResponse = string;
+import BigNumber from "bignumber.js";
+export type BalanceResponse = BigNumber;
 export type StorageResponse = unknown;
 export type ScriptResponse = unknown;
 export type BigMapGetResponse = unknown;
-export type ManagerResponse = unknown;
+export type ManagerResponse = string;
 export type DelegateResponse = string | null;
 export type BigMapKey = { key: { [key: string]: string }; type: { prim: string } };
 
 export interface ContractResponse {
   manager: string;
-  balance: string;
+  balance: BigNumber;
   spendable: boolean;
   delegate: Delegate;
   script: Script;
