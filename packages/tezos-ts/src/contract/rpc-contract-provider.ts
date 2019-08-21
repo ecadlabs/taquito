@@ -1,6 +1,6 @@
 import { RpcClient } from "@tezos-ts/rpc";
 import { ContractProvider, ContractSchema } from "./interface";
-import { Schema } from "@ecadlabs/tezos-parser";
+import { Schema } from "@tezos-ts/michelson-encoder";
 
 export class RpcContractProvider implements ContractProvider {
   constructor(private rpc: RpcClient) {}
@@ -10,7 +10,7 @@ export class RpcContractProvider implements ContractProvider {
    * @description Return a well formatted json object of the contract storage
    *
    * @param contract contract address you want to get the storage from
-   * @param schema optional schema can either be the contract script rpc response or a tezos-parser schema
+   * @param schema optional schema can either be the contract script rpc response or a michelson-encoder schema
    *
    * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-contracts-contract-id-script
    */
@@ -37,7 +37,7 @@ export class RpcContractProvider implements ContractProvider {
    *
    * @param contract contract address you want to get the storage from
    * @param key contract big map key to fetch value from
-   * @param schema optional schema can either be the contract script rpc response or a tezos-parser schema
+   * @param schema optional schema can either be the contract script rpc response or a michelson-encoder schema
    *
    * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-contracts-contract-id-script
    */

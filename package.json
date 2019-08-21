@@ -25,7 +25,8 @@
     ],
     "moduleNameMapper": {
       "^@tezos-ts/rpc$": "<rootDir>/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts",
-      "^@tezos-ts/tezos-ts$": "<rootDir>/packages/tezos-ts/src/tezos-ts.ts"
+      "^@tezos-ts/tezos-ts$": "<rootDir>/packages/tezos-ts/src/tezos-ts.ts",
+      "^@tezos-ts/michelson-encoder$": "<rootDir>/packages/tezos-ts-michelson-encoder/src/tezos-ts-michelson-encoder.ts"
     },
     "coveragePathIgnorePatterns": [
       "/node_modules/",

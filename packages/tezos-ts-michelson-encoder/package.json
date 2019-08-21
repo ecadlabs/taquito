@@ -1,11 +1,11 @@
 {
-  "name": "@tezos-ts/rpc",
+  "name": "@tezos-ts/michelson-encoder",
   "version": "0.0.0",
   "description": "",
   "keywords": [],
-  "main": "dist/tezos-ts-rpc.umd.js",
-  "module": "dist/tezos-ts-rpc.es5.js",
-  "typings": "dist/types/tezos-ts-rpc.d.ts",
+  "main": "dist/tezos-ts-michelson-encoder.umd.js",
+  "module": "dist/tezos-ts-michelson-encoder.es5.js",
+  "typings": "dist/types/tezos-ts-michelson-encoder.d.ts",
   "files": [
     "dist"
   ],
@@ -25,7 +25,7 @@
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
-    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file src",
+    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts",
     "start": "rollup -c rollup.config.ts -w"
   },
   "lint-staged": {
@@ -55,7 +55,8 @@
     ]
   },
   "dependencies": {
-    "xhr2-cookies": "^1.1.0"
+    "buffer": "^5.2.1",
+    "bs58check": "^2.1.2"
   },
   "devDependencies": {
     "@types/jest": "^23.3.2",
