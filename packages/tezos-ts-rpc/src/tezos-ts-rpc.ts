@@ -23,6 +23,15 @@ const defaultRPCOptions: RPCOptions = { block: "head" };
  * @description RpcClient allows interaction with Tezos network through an rpc node
  */
 export class RpcClient {
+  /**
+   *
+   * @param url rpc root url (default https://tezrpc.me)
+   * @param chain chain (default main)
+   * @param httpBackend Http backend that issue http request.
+   * You can override it by providing your own if you which to hook in the request/response
+   *
+   * @example new RpcClient('https://tezrpc.me', 'main') this will use https://tezrpc.me/chains/main
+   */
   constructor(
     private url: string = defaultRPC,
     private chain: string = defaultChain,
