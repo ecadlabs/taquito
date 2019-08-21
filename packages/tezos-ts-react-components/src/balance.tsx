@@ -1,27 +1,50 @@
 import React from 'react';
 import { TezosContext } from './tezos-context';
+import { tzFormatter } from './format';
 
-export class Balance extends React.Component<{ address: string }, { balance: string | null }> {
+export interface BalanceProps {
+  address: string;
+  format?: 'tz' | 'mtz';
+}
+
+export class Balance extends React.Component<
+  BalanceProps,
+  { balance: string | null; error: boolean }
+> {
   static contextType = TezosContext;
-  constructor(props: { address: string }) {
+  constructor(props: BalanceProps) {
     super(props);
 
     this.state = {
-      balance: null
+      balance: null,
+      error: false
     };
   }
 
   async refreshBalance() {
     // tslint:disable-next-line: deprecation
-    const balance = await this.context.tz.getBalance(this.props.address);
-    this.setState({ balance });
+    try {
+      const balance = await this.context.tz.getBalance(this.props.address);
+      this.setState({ balance, error: false });
+    } catch (ex) {
+      this.setState({ error: true });
+    }
   }
 
   async componentDidMount() {
     await this.refreshBalance();
   }
 
+  async componentDidUpdate(prevProps: BalanceProps) {
+    if (prevProps.address !== this.props.address) {
+      await this.refreshBalance();
+    }
+  }
+
   render() {
-    return <span>{this.state.balance}</span>;
+    if (this.state.error) {
+      return <span>Error fetching balance</span>;
+    }
+    return <span>{tzFormatter(this.state.balance || '', this.props.format)}</span>;
   }
 }
