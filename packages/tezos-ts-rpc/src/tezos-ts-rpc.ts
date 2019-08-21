@@ -1,4 +1,4 @@
-import { HttpBackend } from "./utils/http";
+import { HttpBackend } from './utils/http';
 import {
   BalanceResponse,
   StorageResponse,
@@ -7,18 +7,18 @@ import {
   BigMapKey,
   BigMapGetResponse,
   ManagerResponse,
-  DelegateResponse
-} from "./types";
-import BigNumber from "bignumber.js";
+  DelegateResponse,
+} from './types';
+import BigNumber from 'bignumber.js';
 
-const defaultRPC = "https://tezrpc.me";
-const defaultChain = "main";
+const defaultRPC = 'https://tezrpc.me';
+const defaultChain = 'main';
 
 interface RPCOptions {
   block: string;
 }
 
-const defaultRPCOptions: RPCOptions = { block: "head" };
+const defaultRPCOptions: RPCOptions = { block: 'head' };
 
 /***
  * @description RpcClient allows interaction with Tezos network through an rpc node
@@ -52,7 +52,7 @@ export class RpcClient {
   ): Promise<BalanceResponse> {
     const balance = await this.httpBackend.createRequest<BalanceResponse>({
       url: `${this.url}/chains/${this.chain}/blocks/${block}/context/contracts/${address}/balance`,
-      method: "GET"
+      method: 'GET',
     });
     return new BigNumber(balance);
   }
@@ -70,7 +70,7 @@ export class RpcClient {
   ): Promise<StorageResponse> {
     return this.httpBackend.createRequest<StorageResponse>({
       url: `${this.url}/chains/${this.chain}/blocks/${block}/context/contracts/${address}/storage`,
-      method: "GET"
+      method: 'GET',
     });
   }
 
@@ -87,7 +87,7 @@ export class RpcClient {
   ): Promise<ScriptResponse> {
     return this.httpBackend.createRequest<ScriptResponse>({
       url: `${this.url}/chains/${this.chain}/blocks/${block}/context/contracts/${address}/script`,
-      method: "GET"
+      method: 'GET',
     });
   }
 
@@ -104,11 +104,11 @@ export class RpcClient {
   ): Promise<ContractResponse> {
     const contractResponse = await this.httpBackend.createRequest<ContractResponse>({
       url: `${this.url}/chains/${this.chain}/blocks/${block}/context/contracts/${address}`,
-      method: "GET"
+      method: 'GET',
     });
     return {
       ...contractResponse,
-      balance: new BigNumber(contractResponse.balance)
+      balance: new BigNumber(contractResponse.balance),
     };
   }
 
@@ -125,7 +125,7 @@ export class RpcClient {
   ): Promise<ManagerResponse> {
     return this.httpBackend.createRequest<ManagerResponse>({
       url: `${this.url}/chains/${this.chain}/blocks/${block}/context/contracts/${address}/manager`,
-      method: "GET"
+      method: 'GET',
     });
   }
 
@@ -142,7 +142,7 @@ export class RpcClient {
   ): Promise<DelegateResponse> {
     return this.httpBackend.createRequest<DelegateResponse>({
       url: `${this.url}/chains/${this.chain}/blocks/${block}/context/contracts/${address}/delegate`,
-      method: "GET"
+      method: 'GET',
     });
   }
 
@@ -161,7 +161,7 @@ export class RpcClient {
     return this.httpBackend.createRequest<BigMapGetResponse>(
       {
         url: `${this.url}/chains/${this.chain}/blocks/${block}/context/contracts/${address}/big_map_get`,
-        method: "POST"
+        method: 'POST',
       },
       key
     );

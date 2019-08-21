@@ -13,7 +13,7 @@ export interface HttpBackend {
 
 interface HttpRequestOptions {
   url: string;
-  method?: "GET" | "POST";
+  method?: 'GET' | 'POST';
   timeout?: number;
 }
 
@@ -24,12 +24,12 @@ export class HttpBackend {
   private createXHR(): XMLHttpRequest {
     // tslint:disable: strict-type-predicates
     if (
-      typeof process !== "undefined" &&
+      typeof process !== 'undefined' &&
       process.versions != null &&
       process.versions.node != null
       // tslint:enable: strict-type-predicates
     ) {
-      const NodeXHR = require("xhr2-cookies").XMLHttpRequest;
+      const NodeXHR = require('xhr2-cookies').XMLHttpRequest;
       const request = new NodeXHR();
       return request;
     } else {
@@ -44,8 +44,8 @@ export class HttpBackend {
   createRequest<T>({ url, method, timeout }: HttpRequestOptions, data?: {}) {
     return new Promise<T>((resolve, reject) => {
       const request = this.createXHR();
-      request.open(method || "GET", url);
-      request.setRequestHeader("Content-Type", "application/json");
+      request.open(method || 'GET', url);
+      request.setRequestHeader('Content-Type', 'application/json');
       request.timeout = timeout || defaultTimeout;
       request.onload = function() {
         if (this.status >= 200 && this.status < 300) {
@@ -53,14 +53,14 @@ export class HttpBackend {
         } else {
           reject({
             status: this.status,
-            statusText: request.statusText
+            statusText: request.statusText,
           });
         }
       };
       request.onerror = function() {
         reject({
           status: this.status,
-          statusText: request.statusText
+          statusText: request.statusText,
         });
       };
 

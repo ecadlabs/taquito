@@ -1,7 +1,7 @@
-import { Token, TokenFactory, ComparableToken } from "../token";
+import { Token, TokenFactory, ComparableToken } from '../token';
 
 export class BytesToken extends Token implements ComparableToken {
-  static prim = "bytes";
+  static prim = 'bytes';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -14,7 +14,7 @@ export class BytesToken extends Token implements ComparableToken {
   public ToBigMapKey(val: string) {
     return {
       key: { bytes: val },
-      type: { prim: BytesToken.prim }
+      type: { prim: BytesToken.prim },
     };
   }
 

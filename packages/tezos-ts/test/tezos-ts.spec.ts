@@ -1,13 +1,13 @@
-import { TezosToolkit } from "../src/tezos-ts";
-import { RpcTzProvider } from "../src/tz/rpc-tz-provider";
-import { RpcContractProvider } from "../src/contract/rpc-contract-provider";
+import { TezosToolkit } from '../src/tezos-ts';
+import { RpcTzProvider } from '../src/tz/rpc-tz-provider';
+import { RpcContractProvider } from '../src/contract/rpc-contract-provider';
 
-describe("TezosToolkit test", () => {
-  it("is instantiable", () => {
+describe('TezosToolkit test', () => {
+  it('is instantiable', () => {
     expect(new TezosToolkit()).toBeInstanceOf(TezosToolkit);
   });
 
-  it("setProvider should change provider", () => {
+  it('setProvider should change provider', () => {
     const toolkit = new TezosToolkit();
 
     const oldTz = toolkit.tz;
@@ -17,10 +17,10 @@ describe("TezosToolkit test", () => {
     expect(toolkit.contract).not.toBe(oldContract);
   });
 
-  it("setProvider with string should create rpc provider", () => {
+  it('setProvider with string should create rpc provider', () => {
     const toolkit = new TezosToolkit();
 
-    toolkit.setProvider("test");
+    toolkit.setProvider('test');
     expect(toolkit.tz).toBeInstanceOf(RpcTzProvider);
     expect(toolkit.contract).toBeInstanceOf(RpcContractProvider);
   });

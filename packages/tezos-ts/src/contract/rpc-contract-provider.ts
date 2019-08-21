@@ -1,6 +1,6 @@
-import { RpcClient } from "@tezos-ts/rpc";
-import { ContractProvider, ContractSchema } from "./interface";
-import { Schema } from "@tezos-ts/michelson-encoder";
+import { RpcClient } from '@tezos-ts/rpc';
+import { ContractProvider, ContractSchema } from './interface';
+import { Schema } from '@tezos-ts/michelson-encoder';
 
 export class RpcContractProvider implements ContractProvider {
   constructor(private rpc: RpcClient) {}

@@ -1,7 +1,7 @@
-import { Token, TokenFactory } from "./token";
+import { Token, TokenFactory } from './token';
 
 export class PairToken extends Token {
-  static prim = "pair";
+  static prim = 'pair';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -24,7 +24,7 @@ export class PairToken extends Token {
 
     const res = {
       [leftToken.annot]: leftToken.Execute(val.args[0]),
-      ...rightValue
+      ...rightValue,
     };
     return res;
   }
@@ -42,7 +42,7 @@ export class PairToken extends Token {
 
     const res = {
       [leftToken.annot]: leftToken.ExtractSchema(),
-      ...rightValue
+      ...rightValue,
     };
     return res;
   }
