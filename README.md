@@ -4,6 +4,14 @@ Work In Progress
 
 This is a mono repository from which several npm packages are built and published.
 
+## Components overview
+
+[Demo](https://ecadlabs.github.io/tezos-ts/react-storybook)
+
+## Type Doc
+
+The type documentation is published [here](https://ecadlabs.github.io/tezos-ts/typedoc)
+
 ## NPM scripts
 
 - `npm run test`: Run tests
