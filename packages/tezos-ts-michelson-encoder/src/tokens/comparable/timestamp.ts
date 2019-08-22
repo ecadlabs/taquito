@@ -12,7 +12,7 @@ export class TimestampToken extends Token implements ComparableToken {
   }
 
   public Execute(val: any): { [key: string]: any } {
-    return val.timestamp;
+    return val.string;
   }
 
   public ExtractSchema() {
@@ -20,13 +20,13 @@ export class TimestampToken extends Token implements ComparableToken {
   }
 
   // tslint:disable-next-line: variable-name
-  public ToKey({ timestamp }: any) {
-    return timestamp;
+  public ToKey({ string }: any) {
+    return string;
   }
 
   public ToBigMapKey(val: string) {
     return {
-      key: { timestamp: val },
+      key: { string: val },
       type: { prim: TimestampToken.prim },
     };
   }
