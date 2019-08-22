@@ -1,8 +1,8 @@
-import { Token, TokenFactory, ComparableToken } from "./token";
-import { encodePubKey } from "../encoding";
+import { Token, TokenFactory, ComparableToken } from './token';
+import { encodePubKey } from '../encoding';
 
 export class BigMapToken extends Token {
-  static prim = "big_map";
+  static prim = 'big_map';
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
     protected idx: number,
@@ -21,7 +21,7 @@ export class BigMapToken extends Token {
 
   public ExtractSchema() {
     return {
-      [this.KeySchema.ExtractSchema()]: this.ValueSchema.ExtractSchema()
+      [this.KeySchema.ExtractSchema()]: this.ValueSchema.ExtractSchema(),
     };
   }
 
@@ -29,7 +29,7 @@ export class BigMapToken extends Token {
     return val.reduce((prev, current) => {
       return {
         ...prev,
-        [encodePubKey(current.key.bytes)]: this.ValueSchema.Execute(current.value)
+        [encodePubKey(current.key.bytes)]: this.ValueSchema.Execute(current.value),
       };
     }, {});
   }

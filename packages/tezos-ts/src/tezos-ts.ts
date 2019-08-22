@@ -1,8 +1,8 @@
-import { TzProvider } from "./tz/interface";
-import { RpcClient } from "@tezos-ts/rpc";
-import { ContractProvider } from "./contract/interface";
-import { RpcTzProvider } from "./tz/rpc-tz-provider";
-import { RpcContractProvider } from "./contract/rpc-contract-provider";
+import { TzProvider } from './tz/interface';
+import { RpcClient } from '@tezos-ts/rpc';
+import { ContractProvider } from './contract/interface';
+import { RpcTzProvider } from './tz/rpc-tz-provider';
+import { RpcContractProvider } from './contract/rpc-contract-provider';
 
 /**
  * @description Facade class that surfaces all of the libraries capability and allow it's configuration
@@ -21,7 +21,7 @@ export class TezosToolkit {
    * @param provider rpc url or rpcClient to use to interact with the Tezos network
    */
   setProvider(provider: string | RpcClient) {
-    if (typeof provider === "string") {
+    if (typeof provider === 'string') {
       this._rpcClient = new RpcClient(provider);
     } else {
       this._rpcClient = provider;

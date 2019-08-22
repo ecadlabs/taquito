@@ -1,7 +1,7 @@
-import { Token, TokenFactory } from "../token";
+import { Token, TokenFactory } from '../token';
 
 export class BoolToken extends Token {
-  static prim = "bool";
+  static prim = 'bool';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },

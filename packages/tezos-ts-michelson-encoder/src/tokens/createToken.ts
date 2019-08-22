@@ -1,5 +1,5 @@
-import { tokens } from "./tokens";
-import { Token } from "./token";
+import { tokens } from './tokens';
+import { Token } from './token';
 
 export function createToken(val: any, idx: number): Token {
   const t = tokens.find(x => x.prim === val.prim);

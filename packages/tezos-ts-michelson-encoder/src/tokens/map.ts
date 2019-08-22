@@ -1,7 +1,7 @@
-import { Token, TokenFactory } from "./token";
+import { Token, TokenFactory } from './token';
 
 export class MapToken extends Token {
-  static prim = "map";
+  static prim = 'map';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -23,14 +23,14 @@ export class MapToken extends Token {
     return val.reduce((prev, current) => {
       return {
         ...prev,
-        [this.KeySchema.ToKey(current.args[0])]: this.ValueSchema.Execute(current.args[1])
+        [this.KeySchema.ToKey(current.args[0])]: this.ValueSchema.Execute(current.args[1]),
       };
     }, {});
   }
 
   public ExtractSchema() {
     return {
-      [this.KeySchema.ExtractSchema()]: this.ValueSchema.ExtractSchema()
+      [this.KeySchema.ExtractSchema()]: this.ValueSchema.ExtractSchema(),
     };
   }
 }

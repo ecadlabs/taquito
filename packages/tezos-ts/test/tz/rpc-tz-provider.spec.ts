@@ -1,40 +1,40 @@
-import { RpcTzProvider } from "../../src/tz/rpc-tz-provider";
-import BigNumber from "bignumber.js";
+import { RpcTzProvider } from '../../src/tz/rpc-tz-provider';
+import BigNumber from 'bignumber.js';
 
-describe("RpcTzProvider test", () => {
-  it("is instantiable", () => {
+describe('RpcTzProvider test', () => {
+  it('is instantiable', () => {
     expect(new RpcTzProvider(null as any)).toBeInstanceOf(RpcTzProvider);
   });
 
-  describe("getBalance", () => {
-    it("calls get balance from the rpc client", async done => {
+  describe('getBalance', () => {
+    it('calls get balance from the rpc client', async done => {
       const mockRpcClient = {
-        getBalance: jest.fn()
+        getBalance: jest.fn(),
       };
 
-      mockRpcClient.getBalance.mockResolvedValue(new BigNumber("10000"));
+      mockRpcClient.getBalance.mockResolvedValue(new BigNumber('10000'));
 
       const provider = new RpcTzProvider(mockRpcClient as any);
-      const result = await provider.getBalance("test-address");
+      const result = await provider.getBalance('test-address');
       expect(result).toBeInstanceOf(BigNumber);
-      expect(result.toString()).toStrictEqual("10000");
-      expect(mockRpcClient.getBalance.mock.calls[0][0]).toEqual("test-address");
+      expect(result.toString()).toStrictEqual('10000');
+      expect(mockRpcClient.getBalance.mock.calls[0][0]).toEqual('test-address');
       done();
     });
   });
 
-  describe("getDelegate", () => {
-    it("calls get delegate from the rpc client", async done => {
+  describe('getDelegate', () => {
+    it('calls get delegate from the rpc client', async done => {
       const mockRpcClient = {
-        getDelegate: jest.fn()
+        getDelegate: jest.fn(),
       };
 
-      mockRpcClient.getDelegate.mockResolvedValue("KT1G393LjojNshvMdf68XQD24Hwjn7xarzNe");
+      mockRpcClient.getDelegate.mockResolvedValue('KT1G393LjojNshvMdf68XQD24Hwjn7xarzNe');
 
       const provider = new RpcTzProvider(mockRpcClient as any);
-      const result = await provider.getDelegate("test-address");
-      expect(result).toStrictEqual("KT1G393LjojNshvMdf68XQD24Hwjn7xarzNe");
-      expect(mockRpcClient.getDelegate.mock.calls[0][0]).toEqual("test-address");
+      const result = await provider.getDelegate('test-address');
+      expect(result).toStrictEqual('KT1G393LjojNshvMdf68XQD24Hwjn7xarzNe');
+      expect(mockRpcClient.getDelegate.mock.calls[0][0]).toEqual('test-address');
       done();
     });
   });

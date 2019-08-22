@@ -1,7 +1,7 @@
-import { Token, TokenFactory } from "./token";
+import { Token, TokenFactory } from './token';
 
 export class ContractToken extends Token {
-  static prim = "contract";
+  static prim = 'contract';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -12,7 +12,7 @@ export class ContractToken extends Token {
   }
 
   public Execute() {
-    return "";
+    return '';
   }
 
   public ExtractSchema() {

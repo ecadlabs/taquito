@@ -1,8 +1,8 @@
-import { Token, TokenFactory, ComparableToken } from "../token";
-import { b58decode, encodePubKey } from "../../encoding";
+import { Token, TokenFactory, ComparableToken } from '../token';
+import { b58decode, encodePubKey } from '../../encoding';
 
 export class AddressToken extends Token implements ComparableToken {
-  static prim = "address";
+  static prim = 'address';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -16,7 +16,7 @@ export class AddressToken extends Token implements ComparableToken {
     const decoded = b58decode(val);
     return {
       key: { bytes: decoded },
-      type: { prim: "bytes" }
+      type: { prim: 'bytes' },
     };
   }
 

@@ -1,4 +1,4 @@
-import { Schema } from "@tezos-ts/michelson-encoder";
+import { Schema } from '@tezos-ts/michelson-encoder';
 
 export type ContractSchema = Schema | unknown;
 

@@ -1,7 +1,7 @@
-import { Token, TokenFactory } from "./token";
+import { Token, TokenFactory } from './token';
 
 export class OrToken extends Token {
-  static prim = "or";
+  static prim = 'or';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -15,11 +15,11 @@ export class OrToken extends Token {
     const leftToken = this.createToken(this.val.args[0], this.idx);
     const rightToken = this.createToken(this.val.args[1], this.idx + 1);
 
-    if (val.prim === "Right") {
+    if (val.prim === 'Right') {
       return rightToken.Execute(val.args[0]);
     } else {
       return {
-        [leftToken.annot]: leftToken.Execute(val.args[0])
+        [leftToken.annot]: leftToken.Execute(val.args[0]),
       };
     }
   }
@@ -44,7 +44,7 @@ export class OrToken extends Token {
 
     return {
       ...leftValue,
-      ...rightValue
+      ...rightValue,
     };
   }
 }

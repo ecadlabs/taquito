@@ -17,13 +17,13 @@ export class Balance extends React.Component<
 
     this.state = {
       balance: null,
-      error: false
+      error: false,
     };
   }
 
   async refreshBalance() {
-    // tslint:disable-next-line: deprecation
     try {
+      // tslint:disable-next-line: deprecation
       const balance = await this.context.tz.getBalance(this.props.address);
       this.setState({ balance, error: false });
     } catch (ex) {
