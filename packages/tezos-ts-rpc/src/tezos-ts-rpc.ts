@@ -174,6 +174,8 @@ export class RpcClient {
    * @param address delegate address which we want to retrieve
    * @param options contains generic configuration for rpc calls
    *
+   * @description Fetches information about a delegate from RPC
+   *
    * @see http://tezos.gitlab.io/mainnet/api/rpc.html#get-block-id-context-delegates-pkh
    */
   async getDelegates(
