@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>HttpBackend | Tezos TS</title>
+	<title>DelegatesResponse | Tezos TS</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -59,33 +59,21 @@
 					<a href="../modules/_tezos_ts_rpc.html">@tezos-ts/rpc</a>
 				</li>
 				<li>
-					<a href="_tezos_ts_rpc.httpbackend.html">HttpBackend</a>
+					<a href="_tezos_ts_rpc.delegatesresponse.html">DelegatesResponse</a>
 				</li>
 			</ul>
-			<h1>Class HttpBackend</h1>
+			<h1>Interface DelegatesResponse</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<dl class="tsd-comment-tags">
-						<dt>description</dt>
-						<dd><p>Interface that define base methods for http backends</p>
-						</dd>
-						<dt>description</dt>
-						<dd><p>Default http backend</p>
-						</dd>
-					</dl>
-				</div>
-			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">HttpBackend</span>
+						<span class="target">DelegatesResponse</span>
 					</li>
 				</ul>
 			</section>
@@ -94,51 +82,102 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Methods</h3>
+							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="_tezos_ts_rpc.httpbackend.html#createrequest" class="tsd-kind-icon">create<wbr>Request</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_rpc.delegatesresponse.html#balance" class="tsd-kind-icon">balance</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_rpc.delegatesresponse.html#deactivated" class="tsd-kind-icon">deactivated</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_rpc.delegatesresponse.html#delegatedbalance" class="tsd-kind-icon">delegated<wbr>Balance</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_rpc.delegatesresponse.html#delegatedcontracts" class="tsd-kind-icon">delegated<wbr>Contracts</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_rpc.delegatesresponse.html#frozenbalance" class="tsd-kind-icon">frozen<wbr>Balance</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_rpc.delegatesresponse.html#frozenbalancebycycle" class="tsd-kind-icon">frozen<wbr>Balance<wbr>ByCycle</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_rpc.delegatesresponse.html#graceperiod" class="tsd-kind-icon">grace<wbr>Period</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_rpc.delegatesresponse.html#stakingbalance" class="tsd-kind-icon">staking<wbr>Balance</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
-					<a name="createrequest" class="tsd-anchor"></a>
-					<h3>create<wbr>Request</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">create<wbr>Request&lt;T&gt;<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><a href="../interfaces/_tezos_ts_rpc.httprequestoptions.html" class="tsd-signature-type">HttpRequestOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/24ecb25/packages/tezos-ts-rpc/src/utils/http.ts#L11">tezos-ts-rpc/src/utils/http.ts:11</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-							</div>
-							<h4 class="tsd-type-parameters-title">Type parameters</h4>
-							<ul class="tsd-type-parameters">
-								<li>
-									<h4>T</h4>
-								</li>
-							</ul>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>options: <a href="../interfaces/_tezos_ts_rpc.httprequestoptions.html" class="tsd-signature-type">HttpRequestOptions</a></h5>
-									<div class="tsd-comment tsd-typography">
-										<div class="lead">
-											<p>contains options to be passed for the HTTP request (url, method and timeout)</p>
-										</div>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="balance" class="tsd-anchor"></a>
+					<h3>balance</h3>
+					<div class="tsd-signature tsd-kind-icon">balance<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">BigNumber</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/24ecb25/packages/tezos-ts-rpc/src/types.ts#L28">tezos-ts-rpc/src/types.ts:28</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="deactivated" class="tsd-anchor"></a>
+					<h3>deactivated</h3>
+					<div class="tsd-signature tsd-kind-icon">deactivated<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/24ecb25/packages/tezos-ts-rpc/src/types.ts#L34">tezos-ts-rpc/src/types.ts:34</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="delegatedbalance" class="tsd-anchor"></a>
+					<h3>delegated<wbr>Balance</h3>
+					<div class="tsd-signature tsd-kind-icon">delegated<wbr>Balance<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">BigNumber</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/24ecb25/packages/tezos-ts-rpc/src/types.ts#L33">tezos-ts-rpc/src/types.ts:33</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="delegatedcontracts" class="tsd-anchor"></a>
+					<h3>delegated<wbr>Contracts</h3>
+					<div class="tsd-signature tsd-kind-icon">delegated<wbr>Contracts<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/24ecb25/packages/tezos-ts-rpc/src/types.ts#L32">tezos-ts-rpc/src/types.ts:32</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="frozenbalance" class="tsd-anchor"></a>
+					<h3>frozen<wbr>Balance</h3>
+					<div class="tsd-signature tsd-kind-icon">frozen<wbr>Balance<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">BigNumber</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/24ecb25/packages/tezos-ts-rpc/src/types.ts#L29">tezos-ts-rpc/src/types.ts:29</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="frozenbalancebycycle" class="tsd-anchor"></a>
+					<h3>frozen<wbr>Balance<wbr>ByCycle</h3>
+					<div class="tsd-signature tsd-kind-icon">frozen<wbr>Balance<wbr>ByCycle<span class="tsd-signature-symbol">:</span> <a href="_tezos_ts_rpc.frozenbalancebycycle.html" class="tsd-signature-type">Frozenbalancebycycle</a><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/24ecb25/packages/tezos-ts-rpc/src/types.ts#L30">tezos-ts-rpc/src/types.ts:30</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="graceperiod" class="tsd-anchor"></a>
+					<h3>grace<wbr>Period</h3>
+					<div class="tsd-signature tsd-kind-icon">grace<wbr>Period<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/24ecb25/packages/tezos-ts-rpc/src/types.ts#L35">tezos-ts-rpc/src/types.ts:35</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="stakingbalance" class="tsd-anchor"></a>
+					<h3>staking<wbr>Balance</h3>
+					<div class="tsd-signature tsd-kind-icon">staking<wbr>Balance<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">BigNumber</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/24ecb25/packages/tezos-ts-rpc/src/types.ts#L31">tezos-ts-rpc/src/types.ts:31</a></li>
+						</ul>
+					</aside>
 				</section>
 			</section>
 		</div>
@@ -164,50 +203,71 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="../classes/_tezos_ts_rpc.httpbackend.html" class="tsd-kind-icon">Http<wbr>Backend</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="../classes/_tezos_ts_rpc.rpcclient.html" class="tsd-kind-icon">Rpc<wbr>Client</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="_tezos_ts_rpc.contractresponse.html" class="tsd-kind-icon">Contract<wbr>Response</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported">
+						<a href="_tezos_ts_rpc.delegate.html" class="tsd-kind-icon">Delegate</a>
+					</li>
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-class tsd-parent-kind-module">
-						<a href="_tezos_ts_rpc.httpbackend.html" class="tsd-kind-icon">Http<wbr>Backend</a>
+					<li class="current tsd-kind-interface tsd-parent-kind-module">
+						<a href="_tezos_ts_rpc.delegatesresponse.html" class="tsd-kind-icon">Delegates<wbr>Response</a>
 						<ul>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
-								<a href="_tezos_ts_rpc.httpbackend.html#createrequest" class="tsd-kind-icon">create<wbr>Request</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_tezos_ts_rpc.delegatesresponse.html#balance" class="tsd-kind-icon">balance</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_tezos_ts_rpc.delegatesresponse.html#deactivated" class="tsd-kind-icon">deactivated</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_tezos_ts_rpc.delegatesresponse.html#delegatedbalance" class="tsd-kind-icon">delegated<wbr>Balance</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_tezos_ts_rpc.delegatesresponse.html#delegatedcontracts" class="tsd-kind-icon">delegated<wbr>Contracts</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_tezos_ts_rpc.delegatesresponse.html#frozenbalance" class="tsd-kind-icon">frozen<wbr>Balance</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_tezos_ts_rpc.delegatesresponse.html#frozenbalancebycycle" class="tsd-kind-icon">frozen<wbr>Balance<wbr>ByCycle</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_tezos_ts_rpc.delegatesresponse.html#graceperiod" class="tsd-kind-icon">grace<wbr>Period</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_tezos_ts_rpc.delegatesresponse.html#stakingbalance" class="tsd-kind-icon">staking<wbr>Balance</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="_tezos_ts_rpc.rpcclient.html" class="tsd-kind-icon">Rpc<wbr>Client</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported">
+						<a href="_tezos_ts_rpc.frozenbalancebycycle.html" class="tsd-kind-icon">Frozenbalancebycycle</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported">
+						<a href="_tezos_ts_rpc.httprequestoptions.html" class="tsd-kind-icon">Http<wbr>Request<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported">
+						<a href="_tezos_ts_rpc.rpcoptions.html" class="tsd-kind-icon">RPCOptions</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="../interfaces/_tezos_ts_rpc.contractresponse.html" class="tsd-kind-icon">Contract<wbr>Response</a>
+						<a href="_tezos_ts_rpc.rawdelegatesresponse.html" class="tsd-kind-icon">Raw<wbr>Delegates<wbr>Response</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported">
-						<a href="../interfaces/_tezos_ts_rpc.delegate.html" class="tsd-kind-icon">Delegate</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="../interfaces/_tezos_ts_rpc.delegatesresponse.html" class="tsd-kind-icon">Delegates<wbr>Response</a>
+						<a href="_tezos_ts_rpc.rawfrozenbalancebycycle.html" class="tsd-kind-icon">Raw<wbr>Frozenbalancebycycle</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported">
-						<a href="../interfaces/_tezos_ts_rpc.frozenbalancebycycle.html" class="tsd-kind-icon">Frozenbalancebycycle</a>
+						<a href="_tezos_ts_rpc.script.html" class="tsd-kind-icon">Script</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported">
-						<a href="../interfaces/_tezos_ts_rpc.httprequestoptions.html" class="tsd-kind-icon">Http<wbr>Request<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported">
-						<a href="../interfaces/_tezos_ts_rpc.rpcoptions.html" class="tsd-kind-icon">RPCOptions</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="../interfaces/_tezos_ts_rpc.rawdelegatesresponse.html" class="tsd-kind-icon">Raw<wbr>Delegates<wbr>Response</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported">
-						<a href="../interfaces/_tezos_ts_rpc.rawfrozenbalancebycycle.html" class="tsd-kind-icon">Raw<wbr>Frozenbalancebycycle</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported">
-						<a href="../interfaces/_tezos_ts_rpc.script.html" class="tsd-kind-icon">Script</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported">
-						<a href="../interfaces/_tezos_ts_rpc.storage.html" class="tsd-kind-icon">Storage</a>
+						<a href="_tezos_ts_rpc.storage.html" class="tsd-kind-icon">Storage</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
 						<a href="../modules/_tezos_ts_rpc.html#balanceresponse" class="tsd-kind-icon">Balance<wbr>Response</a>
