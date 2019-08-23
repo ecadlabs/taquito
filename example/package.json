@@ -1,0 +1,15 @@
+{
+  "name": "@tezos-ts/example",
+  "version": "0.0.0",
+  "description": "",
+  "main": "example-node.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "private": true,
+  "dependencies": {
+    "@tezos-ts/tezos-ts": "^0.0.0"
+  },
+  "author": "",
+  "license": "ISC"
+}

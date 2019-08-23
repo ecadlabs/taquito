@@ -1,4 +1,4 @@
-import { HttpBackend } from './utils/http';
+import { HttpBackend } from '@tezos-ts/http-utils';
 import {
   BalanceResponse,
   StorageResponse,
