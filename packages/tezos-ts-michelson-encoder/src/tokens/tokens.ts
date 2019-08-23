@@ -23,6 +23,7 @@ import { OptionToken } from './option';
 import { TimestampToken } from './comparable/timestamp';
 import { IntToken } from './comparable/int';
 import { UnitToken } from './unit';
+import { KeyToken } from './key';
 
 export const tokens = [
   PairToken,
@@ -41,4 +42,5 @@ export const tokens = [
   TimestampToken,
   IntToken,
   UnitToken,
+  KeyToken,
 ];
