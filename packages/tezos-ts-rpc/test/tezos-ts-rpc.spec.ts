@@ -65,7 +65,7 @@ describe('RpcClient test', () => {
 
   describe('getContract', () => {
     it('query the right url', async done => {
-      httpBackend.createRequest.mockReturnValue(Promise.resolve({ balance: '10000' }));
+      httpBackend.createRequest.mockResolvedValue({ balance: '10000' });
       const response = await client.getContract('address');
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
@@ -100,6 +100,71 @@ describe('RpcClient test', () => {
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
         url: 'root/chains/test/blocks/head/context/contracts/address/delegate',
+      });
+
+      done();
+    });
+  });
+
+  describe('getDelegates', () => {
+    const sampleResponse = {
+      balance: '5092341810457',
+      frozen_balance: '2155290163074',
+      frozen_balance_by_cycle: [
+        { cycle: 135, deposit: '381760000000', fees: '971071', rewards: '11843833332' },
+        { cycle: 136, deposit: '394368000000', fees: '1433657', rewards: '12200333332' },
+      ],
+      staking_balance: '20936607331513',
+      delegated_contracts: [
+        'KT1VvXEpeBpreAVpfp4V8ZujqWu2gVykwXBJ',
+        'KT1VsSxSXUkgw6zkBGgUuDXXuJs9ToPqkrCg',
+      ],
+      delegated_balance: '15908924646030',
+      deactivated: false,
+      grace_period: 146,
+    };
+
+    it('query the right url', async done => {
+      httpBackend.createRequest.mockResolvedValue(sampleResponse);
+      await client.getDelegates('address');
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/context/delegates/address',
+      });
+
+      done();
+    });
+
+    it('parse the response properly', async done => {
+      httpBackend.createRequest.mockResolvedValue(sampleResponse);
+      const response = await client.getDelegates('address');
+
+      expect(response).toEqual({
+        balance: new BigNumber('5092341810457'),
+        frozenBalance: new BigNumber('2155290163074'),
+        frozenBalanceByCycle: [
+          {
+            cycle: 135,
+            deposit: new BigNumber('381760000000'),
+            fees: new BigNumber('971071'),
+            rewards: new BigNumber('11843833332'),
+          },
+          {
+            cycle: 136,
+            deposit: new BigNumber('394368000000'),
+            fees: new BigNumber('1433657'),
+            rewards: new BigNumber('12200333332'),
+          },
+        ],
+        stakingBalance: new BigNumber('20936607331513'),
+        delegatedContracts: [
+          'KT1VvXEpeBpreAVpfp4V8ZujqWu2gVykwXBJ',
+          'KT1VsSxSXUkgw6zkBGgUuDXXuJs9ToPqkrCg',
+        ],
+        delegatedBalance: new BigNumber('15908924646030'),
+        deactivated: false,
+        gracePeriod: 146,
       });
 
       done();

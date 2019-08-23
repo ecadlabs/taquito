@@ -8,6 +8,8 @@ import {
   BigMapGetResponse,
   ManagerResponse,
   DelegateResponse,
+  DelegatesResponse,
+  RawDelegatesResponse,
 } from './types';
 import BigNumber from 'bignumber.js';
 
@@ -44,6 +46,8 @@ export class RpcClient {
    * @param address address from which we want to retrieve the balance
    * @param options contains generic configuration for rpc calls
    *
+   * @description Access the balance of a contract.
+   *
    * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-contracts-contract-id-balance
    */
   async getBalance(
@@ -62,6 +66,8 @@ export class RpcClient {
    * @param address contract address from which we want to retrieve the storage
    * @param options contains generic configuration for rpc calls
    *
+   * @description Access the data of the contract.
+   *
    * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-contracts-contract-id-storage
    */
   async getStorage(
@@ -79,6 +85,8 @@ export class RpcClient {
    * @param address contract address from which we want to retrieve the script
    * @param options contains generic configuration for rpc calls
    *
+   * @description Access the code and data of the contract.
+   *
    * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-contracts-contract-id-script
    */
   async getScript(
@@ -95,6 +103,8 @@ export class RpcClient {
    *
    * @param address contract address from which we want to retrieve
    * @param options contains generic configuration for rpc calls
+   *
+   * @description Access the complete status of a contract.
    *
    * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-contracts-contract-id
    */
@@ -117,6 +127,8 @@ export class RpcClient {
    * @param address contract address from which we want to retrieve the manager
    * @param options contains generic configuration for rpc calls
    *
+   * @description Access the manager of a contract.
+   *
    * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-contracts-contract-id-manager
    */
   async getManager(
@@ -133,6 +145,8 @@ export class RpcClient {
    *
    * @param address contract address from which we want to retrieve the delegate (baker)
    * @param options contains generic configuration for rpc calls
+   *
+   * @description Access the delegate of a contract, if any.
    *
    * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-contracts-contract-id-delegate
    */
@@ -151,6 +165,8 @@ export class RpcClient {
    * @param address contract address from which we want to retrieve the big map key
    * @param options contains generic configuration for rpc calls
    *
+   * @description Access the value associated with a key in the big map storage of the contract.
+   *
    * @see http://tezos.gitlab.io/master/api/rpc.html#post-block-id-context-contracts-contract-id-big-map-get
    */
   async getBigMapKey(
@@ -165,5 +181,42 @@ export class RpcClient {
       },
       key
     );
+  }
+
+  /**
+   *
+   * @param address delegate address which we want to retrieve
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Fetches information about a delegate from RPC.
+   *
+   * @see http://tezos.gitlab.io/mainnet/api/rpc.html#get-block-id-context-delegates-pkh
+   */
+  async getDelegates(
+    address: string,
+    { block }: { block: string } = defaultRPCOptions
+  ): Promise<DelegatesResponse> {
+    const response = await this.httpBackend.createRequest<RawDelegatesResponse>({
+      url: `${this.url}/chains/${this.chain}/blocks/${block}/context/delegates/${address}`,
+      method: 'GET',
+    });
+
+    return {
+      deactivated: response.deactivated,
+      balance: new BigNumber(response.balance),
+      frozenBalance: new BigNumber(response.frozen_balance),
+      frozenBalanceByCycle: response.frozen_balance_by_cycle.map(
+        ({ deposit, fees, rewards, ...rest }) => ({
+          ...rest,
+          deposit: new BigNumber(deposit),
+          fees: new BigNumber(fees),
+          rewards: new BigNumber(rewards),
+        })
+      ),
+      stakingBalance: new BigNumber(response.staking_balance),
+      delegatedContracts: response.delegated_contracts,
+      delegatedBalance: new BigNumber(response.delegated_balance),
+      gracePeriod: response.grace_period,
+    };
   }
 }
