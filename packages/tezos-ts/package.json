@@ -49,8 +49,8 @@
     "moduleNameMapper": {
       "^@tezos-ts/rpc$": "<rootDir>/../tezos-ts-rpc/src/tezos-ts-rpc.ts",
       "^@tezos-ts/michelson-encoder$": "<rootDir>/../tezos-ts-michelson-encoder/src/tezos-ts-michelson-encoder.ts",
-      "^@tezos-ts/http-utils$": "<rootDir>/packages/tezos-ts-http-utils/src/tezos-ts-http-utils.ts",
-      "^@tezos-ts/indexer$": "<rootDir>/packages/tezos-ts-indexer/src/tezos-ts-indexer.ts"
+      "^@tezos-ts/http-utils$": "<rootDir>/../tezos-ts-http-utils/src/tezos-ts-http-utils.ts",
+      "^@tezos-ts/indexer$": "<rootDir>/../tezos-ts-indexer/src/tezos-ts-indexer.ts"
     },
     "coveragePathIgnorePatterns": [
       "/node_modules/",

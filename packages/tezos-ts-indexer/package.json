@@ -47,7 +47,7 @@
       "js"
     ],
     "moduleNameMapper": {
-      "^@tezos-ts/http-utils$": "<rootDir>/packages/tezos-ts-http-utils/src/tezos-ts-http-utils.ts"
+      "^@tezos-ts/http-utils$": "<rootDir>/../tezos-ts-http-utils/src/tezos-ts-http-utils.ts"
     },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
