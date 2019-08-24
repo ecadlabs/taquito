@@ -80,6 +80,157 @@ export interface ConstantsResponse {
   hardStorageLimitPerOperation: BigNumber;
 }
 
+export type TimeStampMixed = Date | BigNumber;
+
+// BlockResponse interface
+// header:
+export interface BlockHeaderFull {
+  level: number;
+  proto: number;
+  predecessor: string;
+  timestamp: TimeStampMixed;
+  validation_pass: number;
+  operations_hash: string;
+  fitness: string[];
+  context: string;
+  priority: number;
+  proof_of_work_nonce: string;
+  seed_nonce_hash?: string;
+  signature: string;
+}
+
+export type InlinedEndorsementKindEnum = 'endorsement';
+
+export interface InlinedEndorsementContents {
+  kind: InlinedEndorsementKindEnum;
+  level: number;
+}
+
+export interface InlinedEndorsement {
+  branch: string;
+  operations: InlinedEndorsementContents;
+  signature?: string;
+}
+
+export type OperationEntryKindEnum =
+  | 'endorsement'
+  | 'seed_nonce_revelation'
+  | 'double_endorsement_evidence'
+  | 'double_baking_evidence'
+  | 'activate_account'
+  | 'proposals'
+  | 'ballot'
+  | 'reveal'
+  | 'transaction'
+  | 'origination'
+  | 'delegation';
+
+export interface OperationEntryContents {
+  kind: OperationEntryKindEnum;
+  level?: number;
+  nonce?: string;
+  op1?: InlinedEndorsement;
+  op2?: InlinedEndorsement;
+  bh1?: BlockHeaderFull;
+  bh2?: BlockHeaderFull;
+}
+
+export interface OperationEntryContentsAndResult {
+  kind: OperationEntryKindEnum;
+  level: number;
+}
+
+// BlockResponse interface
+// operations:
+export interface OperationEntry {
+  protocol: string;
+  chainId: string;
+  hash: string;
+  branch: string;
+  contents: (OperationEntryContents | OperationEntryContentsAndResult)[];
+  signature?: string;
+}
+
+// BlockResponse interface
+// test_chain_status:
+export interface TestChainStatus {
+  status: TestChainStatusEnum;
+  chain_id?: string;
+  genesis?: string;
+  protocol?: string;
+  expiration?: TimeStampMixed;
+}
+
+// BlockResponse interface
+// metadata: {
+//   level:
+// }
+export interface MetadataLevel {
+  level: number;
+  level_position: number;
+  cycle: number;
+  cycle_position: number;
+  voting_period: number;
+  voting_period_position: number;
+  expected_commitment: boolean;
+}
+
+// BlockResponse interface
+// metadata: {
+//   max_operation_list_length:
+// }
+export interface MaxOperationList {
+  max_size: number;
+  max_op?: number;
+}
+
+export type BalanceUpdateKindEnum = 'contract' | 'freezer';
+export type BalanceUpdateCategoryEnum = 'rewards' | 'fees' | 'deposits';
+
+// BlockResponse interface
+// metadata: {
+//   balance_updates:
+// }
+export interface OperationBalanceUpdate {
+  kind: BalanceUpdateKindEnum;
+  category?: BalanceUpdateCategoryEnum;
+  delegate?: string;
+  cycle?: number;
+  contract?: string;
+  change: BigNumber;
+}
+
+export type TestChainStatusEnum = 'not_running' | 'forking' | 'running';
+export type VotingPeriodKindEnum = 'proposal' | 'testing_vote' | 'testing' | 'promotion_vote';
+
+// BlockResponse interface
+// metadata:
+export interface Metadata {
+  protocol: string;
+  next_protocol: string;
+  test_chain_status: TestChainStatus;
+  max_operations_ttl: number;
+  max_operation_data_length: number;
+  max_block_header_length: number;
+  max_operation_list_length: MaxOperationList[];
+  baker: string;
+  level: MetadataLevel;
+  voting_period_kind: VotingPeriodKindEnum;
+  nonce_hash: string | null;
+  consumed_gas: BigNumber;
+  deactivated: string[];
+  balance_updates: OperationBalanceUpdate[];
+}
+
+export interface BlockResponse {
+  protocol: string;
+  chain_id: string;
+  hash: string;
+  header: BlockHeaderFull;
+  metadata: Metadata;
+  operations: OperationEntry[][];
+}
+
 interface Script {
   code: {}[];
   storage: Storage;
