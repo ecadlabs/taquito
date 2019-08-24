@@ -1,4 +1,5 @@
 import { HttpBackend } from './utils/http';
+import { camelCaseProps, castToBigNumber } from './utils/utils';
 import {
   BalanceResponse,
   StorageResponse,
@@ -229,9 +230,29 @@ export class RpcClient {
    * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-constants
    */
   async getConstants({ block }: RPCOptions = defaultRPCOptions): Promise<ConstantsResponse> {
-    return this.httpBackend.createRequest<ConstantsResponse>({
+    const response = await this.httpBackend.createRequest<ConstantsResponse>({
       url: `${this.url}/chains/${this.chain}/blocks/${block}/context/constants`,
       method: 'GET',
     });
+
+    const convResponse: any = camelCaseProps(response);
+    const castedResponse: any = castToBigNumber(convResponse, [
+      'timeBetweenBlocks',
+      'hardGasLimitPerOperation',
+      'hardGasLimitPerBlock',
+      'proofOfWorkThreshold',
+      'tokensPerRoll',
+      'blockSecurityDeposit',
+      'endorsementSecurityDeposit',
+      'blockReward',
+      'endorsementReward',
+      'costPerByte',
+      'hardStorageLimitPerOperation',
+    ]);
+
+    return {
+      ...(convResponse as ConstantsResponse),
+      ...(castedResponse as ConstantsResponse),
+    };
   }
 }

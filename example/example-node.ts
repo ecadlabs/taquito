@@ -1,5 +1,6 @@
 import { Tezos } from '../packages/tezos-ts/src/tezos-ts';
 import { RpcClient } from '../packages/tezos-ts-rpc/src/tezos-ts-rpc';
+import { castToString } from '../packages/tezos-ts-rpc/src/utils/utils';
 
 const provider = 'https://alphanet-node.tzscan.io';
 const client = new RpcClient(provider);
@@ -22,7 +23,12 @@ async function example() {
 
   console.log('Getting constants from head...');
   try {
-    await client.getConstants().then(console.log);
+    await client.getConstants().then(res => {
+      console.log('The output we get with BigNumbers:');
+      console.log(res);
+      console.log('Converted BigNumbers to strings for readability:');
+      console.log(castToString(res));
+    });
   } catch (ex) {
     console.error(ex);
   }

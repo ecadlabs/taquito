@@ -63,10 +63,7 @@ describe('RpcClient test', () => {
     });
   });
 
-  describe('getContract', () => {
-    it('query the right url', async done => {
-      httpBackend.createRequest.mockResolvedValue({ balance: '10000' });
-      const response = await client.getContract('address');
+
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
@@ -180,6 +177,22 @@ describe('RpcClient test', () => {
       });
 
       expect(httpBackend.createRequest.mock.calls[0][1]).toEqual({ key: 'test', type: 'string' });
+
+      done();
+    });
+  });
+
+  describe('getConstants', () => {
+    it('query the right url and casts property to BigNumber', async done => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve({ timeBetweenBlocks: '10000' }));
+      const response = await client.getConstants();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/context/constants',
+      });
+      expect(response.timeBetweenBlocks).toBeInstanceOf(BigNumber);
+      expect(response.timeBetweenBlocks.toString()).toEqual('10000');
 
       done();
     });
