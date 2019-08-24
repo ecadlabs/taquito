@@ -63,7 +63,10 @@ describe('RpcClient test', () => {
     });
   });
 
-
+  describe('getContract', () => {
+    it('query the right url', async done => {
+      httpBackend.createRequest.mockResolvedValue({ balance: '10000' });
+      const response = await client.getContract('address');
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
