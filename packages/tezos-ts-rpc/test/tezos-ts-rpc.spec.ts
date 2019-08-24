@@ -187,15 +187,43 @@ describe('RpcClient test', () => {
 
   describe('getConstants', () => {
     it('query the right url and casts property to BigNumber', async done => {
-      httpBackend.createRequest.mockReturnValue(Promise.resolve({ timeBetweenBlocks: '10000' }));
+      httpBackend.createRequest.mockReturnValue(
+        Promise.resolve({
+          proof_of_work_nonce_size: 8,
+          nonce_length: 32,
+          max_revelations_per_block: 32,
+          max_operation_data_length: 16384,
+          max_proposals_per_delegate: 20,
+          preserved_cycles: 3,
+          blocks_per_cycle: 2048,
+          blocks_per_commitment: 32,
+          blocks_per_roll_snapshot: 256,
+          blocks_per_voting_period: 8192,
+          time_between_blocks: ['30', '40'],
+          endorsers_per_block: 32,
+          hard_gas_limit_per_operation: '400000',
+          hard_gas_limit_per_block: '4000000',
+          proof_of_work_threshold: '70368744177663',
+          tokens_per_roll: '10000000000',
+          michelson_maximum_type_size: 1000,
+          seed_nonce_revelation_tip: '125000',
+          origination_size: 257,
+          block_security_deposit: '128000000',
+          endorsement_security_deposit: '16000000',
+          block_reward: '0',
+          endorsement_reward: '0',
+          cost_per_byte: '1000',
+          hard_storage_limit_per_operation: '60000',
+        })
+      );
       const response = await client.getConstants();
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
         url: 'root/chains/test/blocks/head/context/constants',
       });
-      expect(response.timeBetweenBlocks).toBeInstanceOf(BigNumber);
-      expect(response.timeBetweenBlocks.toString()).toEqual('10000');
+      expect(response.blockSecurityDeposit).toBeInstanceOf(BigNumber);
+      expect(response.blockSecurityDeposit.toString()).toEqual('128000000');
 
       done();
     });
