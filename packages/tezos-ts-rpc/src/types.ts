@@ -53,6 +53,33 @@ export interface ContractResponse {
   counter: string;
 }
 
+export interface ConstantsResponse {
+  proofOfWorkNonceSize: number;
+  nonceLength: number;
+  maxRevelationsPerBlock: number;
+  maxOperationDataLength: number;
+  preservedCycles: number;
+  blocksPerCycle: number;
+  blocksPerCommitment: number;
+  blocksPerRollSnapshot: number;
+  blocksPerVotingPeriod: number;
+  timeBetweenBlocks: BigNumber[];
+  endorsersPerBlock: number;
+  hardGasLimitPerOperation: BigNumber;
+  hardGasLimitPerBlock: BigNumber;
+  proofOfWorkThreshold: BigNumber;
+  tokensPerRoll: BigNumber;
+  michelsonMaximumTypeSize: number;
+  seedNonceRevelationTip: string;
+  originationBurn: string;
+  blockSecurityDeposit: BigNumber;
+  endorsementSecurityDeposit: BigNumber;
+  blockReward: BigNumber;
+  endorsementReward: BigNumber;
+  costPerByte: BigNumber;
+  hardStorageLimitPerOperation: BigNumber;
+}
+
 interface Script {
   code: {}[];
   storage: Storage;
