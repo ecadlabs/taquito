@@ -5,7 +5,7 @@ import json from 'rollup-plugin-json';
 
 const pkg = require('./package.json');
 
-const libraryName = 'tezos-ts-michelson-encoder';
+const libraryName = 'tezos-ts-http-utils';
 
 export default {
   input: `src/${libraryName}.ts`,

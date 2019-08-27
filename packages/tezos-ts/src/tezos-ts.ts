@@ -1,33 +1,62 @@
-import { TzProvider } from './tz/interface';
 import { RpcClient } from '@tezos-ts/rpc';
+
 import { ContractProvider } from './contract/interface';
-import { RpcTzProvider } from './tz/rpc-tz-provider';
 import { RpcContractProvider } from './contract/rpc-contract-provider';
+import { QueryProvider } from './query/interface';
+import { TzProvider } from './tz/interface';
+import { IndexerProvider } from './query/indexer-provider';
+import { RpcTzProvider } from './tz/rpc-tz-provider';
+import { IndexerClient } from '@tezos-ts/indexer';
+export interface SetProviderOptions {
+  rpc?: string | RpcClient;
+  indexer?: string | IndexerClient;
+}
 
 /**
  * @description Facade class that surfaces all of the libraries capability and allow it's configuration
  */
 export class TezosToolkit {
   private _rpcClient = new RpcClient();
+  private _indexerClient: IndexerClient = new IndexerClient();
+  private _query!: QueryProvider;
   private _tz!: TzProvider;
   private _contract!: ContractProvider;
 
   constructor() {
-    this.setProvider(this._rpcClient);
+    this.setProvider({ rpc: this._rpcClient });
   }
 
   /**
    *
-   * @param provider rpc url or rpcClient to use to interact with the Tezos network
+   * @param options rpc url or rpcClient to use to interact with the Tezos network and indexer url to use to interact with the Tezos network
    */
-  setProvider(provider: string | RpcClient) {
-    if (typeof provider === 'string') {
-      this._rpcClient = new RpcClient(provider);
+  setProvider({ rpc, indexer }: SetProviderOptions) {
+    this.setRpcProvider(rpc);
+    this.setIndexerProvider(indexer);
+  }
+
+  private setRpcProvider(rpc: SetProviderOptions['rpc']) {
+    if (typeof rpc === 'string') {
+      this._rpcClient = new RpcClient(rpc);
+    } else if (rpc instanceof RpcClient) {
+      this._rpcClient = rpc;
     } else {
-      this._rpcClient = provider;
+      this._rpcClient = new RpcClient();
     }
     this._tz = new RpcTzProvider(this._rpcClient);
     this._contract = new RpcContractProvider(this._rpcClient);
+  }
+
+  private setIndexerProvider(indexer: SetProviderOptions['indexer']) {
+    if (typeof indexer === 'string') {
+      this._indexerClient = new IndexerClient(indexer);
+    } else if (indexer instanceof IndexerClient) {
+      this._indexerClient = indexer;
+    } else {
+      this._indexerClient = new IndexerClient();
+    }
+
+    this._query = new IndexerProvider(this._indexerClient);
   }
 
   /**
@@ -42,6 +71,13 @@ export class TezosToolkit {
    */
   get contract(): ContractProvider {
     return this._contract;
+  }
+
+  /**
+   * @description Provide access to querying utilities backed by an indexer implementation
+   */
+  get query(): QueryProvider {
+    return this._query;
   }
 }
 

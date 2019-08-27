@@ -1,11 +1,11 @@
 {
-  "name": "@tezos-ts/rpc",
+  "name": "@tezos-ts/indexer",
   "version": "0.0.0",
   "description": "",
   "keywords": [],
-  "main": "dist/tezos-ts-rpc.umd.js",
-  "module": "dist/tezos-ts-rpc.es5.js",
-  "typings": "dist/types/tezos-ts-rpc.d.ts",
+  "main": "dist/tezos-ts-indexer.umd.js",
+  "module": "dist/tezos-ts-indexer.es5.js",
+  "typings": "dist/types/tezos-ts-indexer.d.ts",
   "files": [
     "dist"
   ],
@@ -59,11 +59,9 @@
   },
   "dependencies": {
     "bignumber.js": "^9.0.0",
-    "@tezos-ts/http-utils": "^0.0.0",
-    "lodash": "^4.17.15"
+    "@tezos-ts/http-utils": "^0.0.0"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.137",
     "@types/jest": "^23.3.2",
     "@types/node": "^10.14.13",
     "colors": "^1.3.2",

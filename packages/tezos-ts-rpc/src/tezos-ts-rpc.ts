@@ -1,5 +1,6 @@
-import { HttpBackend } from './utils/http';
+import { HttpBackend } from '@tezos-ts/http-utils';
 import { camelCaseProps, castToBigNumber } from './utils/utils';
+
 import {
   BalanceResponse,
   StorageResponse,
