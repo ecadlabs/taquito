@@ -15,6 +15,13 @@ export class PairToken extends Token {
     const leftToken = this.createToken(this.val.args[0], this.idx);
     const rightToken = this.createToken(this.val.args[1], this.idx + 1);
 
+    let leftValue;
+    if (leftToken instanceof PairToken) {
+      leftValue = leftToken.Execute(val.args[0]);
+    } else {
+      leftValue = { [leftToken.annot]: leftToken.Execute(val.args[0]) };
+    }
+
     let rightValue;
     if (rightToken instanceof PairToken) {
       rightValue = rightToken.Execute(val.args[1]);
@@ -23,7 +30,7 @@ export class PairToken extends Token {
     }
 
     const res = {
-      [leftToken.annot]: leftToken.Execute(val.args[0]),
+      ...leftValue,
       ...rightValue,
     };
     return res;
@@ -33,6 +40,13 @@ export class PairToken extends Token {
     const leftToken = this.createToken(this.val.args[0], this.idx);
     const rightToken = this.createToken(this.val.args[1], this.idx + 1);
 
+    let leftValue;
+    if (leftToken instanceof PairToken) {
+      leftValue = leftToken.ExtractSchema();
+    } else {
+      leftValue = { [leftToken.annot]: leftToken.ExtractSchema() };
+    }
+
     let rightValue;
     if (rightToken instanceof PairToken) {
       rightValue = rightToken.ExtractSchema();
@@ -41,7 +55,7 @@ export class PairToken extends Token {
     }
 
     const res = {
-      [leftToken.annot]: leftToken.ExtractSchema(),
+      ...leftValue,
       ...rightValue,
     };
     return res;
