@@ -59,6 +59,9 @@ All releases will be backward compatible with chain data all the way back to the
 
 Supported versions of the tezos-ts packages will be maintained for the current and next protocol versions. Teams using older versions will be encouraged to update, but if blockers exist, they are encouraged to contact us.
 
+## Releases
+
+Releases will be "rolled" by the project maintainers outside of CI infrastructure, and pushed to npmjs.org repositories and the Github releases page. All official releases will be signed by the maintainers. By doing releases from outside of the CI processes, we hope to reduce the attack surface for software supply chain attacks.
 
 ## Contributors getting started
 
