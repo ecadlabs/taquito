@@ -39,7 +39,8 @@
     "@tezos-ts/tezos-ts": "^0.0.0",
     "@types/react": "^16.8.24",
     "bignumber.js": "^9.0.0",
-    "react": "^16.8.6"
+    "react": "^16.8.6",
+    "recharts": "^1.7.1"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
@@ -50,6 +51,7 @@
     "@storybook/react": "^5.1.10",
     "@types/jest": "^23.3.2",
     "@types/node": "^10.14.14",
+    "@types/recharts": "^1.1.21",
     "@types/storybook__addon-knobs": "^5.0.3",
     "@types/storybook__react": "^4.0.2",
     "awesome-typescript-loader": "^5.2.1",
