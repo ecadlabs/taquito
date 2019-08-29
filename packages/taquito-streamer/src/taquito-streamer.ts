@@ -85,7 +85,7 @@ export class Subscription {
 }
 
 export class StreamerProvider implements SubscribeProvider {
-  constructor(private url: string = DEFAULT_STREAMER_URL) {}
+  constructor(private url: string = DEFAULT_STREAMER_URL) { }
 
   subscribe(_filter: 'head'): Subscription {
     const ws = new WS(this.url);
