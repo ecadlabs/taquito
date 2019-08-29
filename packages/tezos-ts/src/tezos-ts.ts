@@ -10,6 +10,8 @@ import { PollingSubscribeProvider } from './subscribe/polling-provider';
 import { TzProvider } from './tz/interface';
 import { RpcTzProvider } from './tz/rpc-tz-provider';
 
+export { SubscribeProvider } from './subscribe/interface';
+
 export interface SetProviderOptions {
   rpc?: string | RpcClient;
   indexer?: string | IndexerClient;
