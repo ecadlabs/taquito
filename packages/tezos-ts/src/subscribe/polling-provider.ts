@@ -5,7 +5,7 @@ class Subscription {
   private errorListeners: Array<(error: Error) => void> = [];
   private messageListeners: Array<(data: string) => void> = [];
   private closeListeners: Array<() => void> = [];
-  private interval: NodeJS.Timeout;
+  private interval: any;
 
   constructor(private readonly pollingSubscriber: PollingSubscribeProvider) {
     let previousHash = '';
