@@ -41,6 +41,16 @@ async function example() {
   } catch (ex) {
     console.error(ex);
   }
+
+  console.log('Getting block from head...');
+  try {
+    await client.getBlock().then(res => {
+      console.log('The output we get with BigNumbers:');
+      console.log(res);
+    });
+  } catch (ex) {
+    console.error(ex);
+  }
 }
 
 // tslint:disable-next-line: no-floating-promises

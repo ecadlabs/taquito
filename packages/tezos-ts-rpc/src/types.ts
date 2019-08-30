@@ -84,18 +84,18 @@ export type TimeStampMixed = Date | BigNumber;
 
 // BlockResponse interface
 // header:
-export interface BlockHeaderFull {
+export interface BlockFullHeader {
   level: number;
   proto: number;
   predecessor: string;
   timestamp: TimeStampMixed;
-  validation_pass: number;
-  operations_hash: string;
+  validationPass: number;
+  operationsHash: string;
   fitness: string[];
   context: string;
   priority: number;
-  proof_of_work_nonce: string;
-  seed_nonce_hash?: string;
+  proofOfWorkNonce: string;
+  seedNonceHash?: string;
   signature: string;
 }
 
@@ -112,33 +112,368 @@ export interface InlinedEndorsement {
   signature?: string;
 }
 
-export type OperationEntryKindEnum =
-  | 'endorsement'
-  | 'seed_nonce_revelation'
-  | 'double_endorsement_evidence'
-  | 'double_baking_evidence'
-  | 'activate_account'
-  | 'proposals'
-  | 'ballot'
+export interface MichelsonV1ExpressionBase {
+  int?: BigNumber;
+  string?: string;
+  bytes?: string;
+}
+
+export interface MichelsonV1ExpressionExtended {
+  prim: string;
+  args?: MichelsonV1ExpressionBase[];
+  annots?: string[];
+}
+
+export type MichelsonV1Expression =
+  | MichelsonV1ExpressionBase
+  | MichelsonV1ExpressionBase[]
+  | MichelsonV1ExpressionExtended;
+
+export interface ScriptedContracts {
+  code: MichelsonV1Expression;
+  storage: MichelsonV1Expression;
+}
+
+export type OperationContentsBallotEnum = 'nay' | 'yay' | 'pass';
+
+export interface OperationContentsEndorsement {
+  kind: 'endorsement';
+  level: number;
+}
+
+export interface OperationContentsRevelation {
+  kind: 'seed_nonce_revelation';
+  level: number;
+  nonce: string;
+}
+
+export interface OperationContentsDoubleEndorsement {
+  kind: 'double_endorsement_evidence';
+  op1: InlinedEndorsement;
+  op2: InlinedEndorsement;
+}
+
+export interface OperationContentsDoubleBaking {
+  kind: 'double_baking_evidence';
+  bh1: BlockFullHeader;
+  bh2: BlockFullHeader;
+}
+
+export interface OperationContentsActivateAccount {
+  kind: 'activate_account';
+  pkh: string;
+  secret: string;
+}
+
+export interface OperationContentsProposals {
+  kind: 'proposals';
+  source: string;
+  period: number;
+  proposals: string[];
+}
+
+export interface OperationContentsBallot {
+  kind: 'ballot';
+  source: string;
+  period: number;
+  proposal: string;
+  ballot: OperationContentsBallotEnum;
+}
+
+export interface OperationContentsReveal {
+  kind: 'reveal';
+  source: string;
+  fee: BigNumber;
+  counter: BigNumber;
+  gasLimit: BigNumber;
+  storageLimit: BigNumber;
+  publicKey: string;
+}
+
+export interface OperationContentsTransaction {
+  kind: 'transaction';
+  source: string;
+  fee: BigNumber;
+  counter: BigNumber;
+  gasLimit: BigNumber;
+  storageLimit: BigNumber;
+  amount: BigNumber;
+  destination: string;
+  parameters?: MichelsonV1Expression;
+}
+
+export interface OperationContentsOrigination {
+  kind: 'origination';
+  source: string;
+  fee: BigNumber;
+  counter: BigNumber;
+  gasLimit: BigNumber;
+  storageLimit: BigNumber;
+  managerPubkey: string;
+  balance: BigNumber;
+  spendable?: boolean;
+  delegatable?: boolean;
+  delegate?: string;
+  script?: ScriptedContracts;
+}
+
+export interface OperationContentsDelegation {
+  kind: 'delegation';
+  source: string;
+  fee: BigNumber;
+  counter: BigNumber;
+  gasLimit: BigNumber;
+  storageLimit: BigNumber;
+  delegate?: string;
+}
+
+export type OperationContents =
+  | OperationContentsEndorsement
+  | OperationContentsRevelation
+  | OperationContentsDoubleEndorsement
+  | OperationContentsDoubleBaking
+  | OperationContentsActivateAccount
+  | OperationContentsProposals
+  | OperationContentsBallot
+  | OperationContentsReveal
+  | OperationContentsTransaction
+  | OperationContentsOrigination
+  | OperationContentsDelegation;
+
+export type MetadataBalanceUpdatesKindEnum = 'contract' | 'freezer';
+export type MetadataBalanceUpdatesCategoryEnum = 'rewards' | 'fees' | 'deposits';
+
+export interface OperationMetadataBalanceUpdates {
+  kind: MetadataBalanceUpdatesKindEnum;
+  category?: MetadataBalanceUpdatesCategoryEnum;
+  contract?: string;
+  delegate?: string;
+  cycle?: number;
+  change: BigNumber;
+}
+
+export type OperationResultStatusEnum = 'applied' | 'failed' | 'skipped' | 'backtracked';
+
+export interface OperationResultReveal {
+  status: OperationResultStatusEnum;
+  consumedGas?: BigNumber;
+  errors?: any;
+}
+
+export interface ContractBigMapDiffItem {
+  keyHash: string;
+  key: MichelsonV1Expression;
+  value?: MichelsonV1Expression;
+}
+
+export type ContractBigMapDiff = ContractBigMapDiffItem[];
+
+export interface OperationResultTransaction {
+  status: OperationResultStatusEnum;
+  storage?: MichelsonV1Expression;
+  bigMapDiff?: ContractBigMapDiff;
+  balanceUpdates?: OperationBalanceUpdates;
+  originatedContracts?: string[];
+  consumedGas?: BigNumber;
+  storageSize?: BigNumber;
+  paidStorageSizeDiff?: BigNumber;
+  allocatedDestinationContract?: boolean;
+  errors?: any;
+}
+
+export interface OperationResultDelegation {
+  status: OperationResultStatusEnum;
+  consumedGas?: BigNumber;
+  errors?: any;
+}
+
+export interface OperationResultOrigination {
+  status: OperationResultStatusEnum;
+  balanceUpdates?: OperationBalanceUpdates;
+  originatedContracts?: string[];
+  consumedGas?: BigNumber;
+  storageSize?: BigNumber;
+  paidStorageSizeDiff?: BigNumber;
+  errors?: any;
+}
+
+export type InternalOperationResultKindEnum =
   | 'reveal'
   | 'transaction'
   | 'origination'
   | 'delegation';
 
-export interface OperationEntryContents {
-  kind: OperationEntryKindEnum;
-  level?: number;
-  nonce?: string;
-  op1?: InlinedEndorsement;
-  op2?: InlinedEndorsement;
-  bh1?: BlockHeaderFull;
-  bh2?: BlockHeaderFull;
+export type InternalOperationResultEnum =
+  | OperationResultReveal
+  | OperationResultTransaction
+  | OperationResultDelegation
+  | OperationResultOrigination;
+
+export interface InternalOperationResult {
+  kind: InternalOperationResultKindEnum;
+  source: string;
+  nonce: number;
+  amount?: BigNumber;
+  destination?: string;
+  parameters?: MichelsonV1Expression;
+  publicKey?: string;
+  managerPubkey?: string;
+  balance?: BigNumber;
+  spendable?: boolean;
+  delegatable?: boolean;
+  delegate?: string;
+  script?: ScriptedContracts;
+  result: InternalOperationResultEnum;
 }
 
-export interface OperationEntryContentsAndResult {
-  kind: OperationEntryKindEnum;
-  level: number;
+export interface OperationContentsAndResultMetadataExtended {
+  balanceUpdates: OperationMetadataBalanceUpdates[];
+  delegate: string;
+  slots: number[];
 }
+
+export interface OperationContentsAndResultMetadataReveal {
+  balanceUpdates: OperationMetadataBalanceUpdates[];
+  operationResult: OperationResultReveal;
+  internalOperationResults?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataTransaction {
+  balanceUpdates: OperationMetadataBalanceUpdates[];
+  operationResult: OperationResultTransaction;
+  internalOperationResults?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataOrigination {
+  balanceUpdates: OperationMetadataBalanceUpdates[];
+  operationResult: OperationResultOrigination;
+  internalOperationResults?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataDelegation {
+  balanceUpdates: OperationMetadataBalanceUpdates[];
+  operationResult: OperationResultDelegation;
+  internalOperationResults?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadata {
+  balanceUpdates: OperationMetadataBalanceUpdates[];
+}
+
+export interface OperationContentsAndResultEndorsement {
+  kind: 'endorsement';
+  level: number;
+  metadata: OperationContentsAndResultMetadataExtended;
+}
+
+export interface OperationContentsAndResultRevelation {
+  kind: 'seed_nonce_revelation';
+  level: number;
+  nonce: string;
+  metadata: OperationContentsAndResultMetadata;
+}
+
+export interface OperationContentsAndResultDoubleEndorsement {
+  kind: 'double_endorsement_evidence';
+  op1: InlinedEndorsement;
+  op2: InlinedEndorsement;
+  metadata: OperationContentsAndResultMetadata;
+}
+
+export interface OperationContentsAndResultDoubleBaking {
+  kind: 'double_baking_evidence';
+  bh1: BlockFullHeader;
+  bh2: BlockFullHeader;
+  metadata: OperationContentsAndResultMetadata;
+}
+
+export interface OperationContentsAndResultActivateAccount {
+  kind: 'activate_account';
+  pkh: string;
+  secret: string;
+  metadata: OperationContentsAndResultMetadata;
+}
+
+export interface OperationContentsAndResultProposals {
+  kind: 'proposals';
+  source: string;
+  period: number;
+  proposals: string[];
+  metadata: any;
+}
+
+export interface OperationContentsAndResultBallot {
+  kind: 'ballot';
+  source: string;
+  period: number;
+  proposal: string;
+  ballot: OperationContentsBallotEnum;
+  metadata: any;
+}
+
+export interface OperationContentsAndResultReveal {
+  kind: 'reveal';
+  source: string;
+  fee: BigNumber;
+  counter: BigNumber;
+  gasLimit: BigNumber;
+  storageLimit: BigNumber;
+  publicKey: string;
+  metadata: OperationContentsAndResultMetadataReveal;
+}
+
+export interface OperationContentsAndResultTransaction {
+  kind: 'transaction';
+  source: string;
+  fee: BigNumber;
+  counter: BigNumber;
+  gasLimit: BigNumber;
+  storageLimit: BigNumber;
+  amount: BigNumber;
+  destination: string;
+  parameters?: MichelsonV1Expression;
+  metadata: OperationContentsAndResultMetadataTransaction;
+}
+
+export interface OperationContentsAndResultOrigination {
+  kind: 'origination';
+  source: string;
+  fee: BigNumber;
+  counter: BigNumber;
+  gasLimit: BigNumber;
+  storageLimit: BigNumber;
+  managerPubkey: string;
+  balance: BigNumber;
+  spendable?: boolean;
+  delegatable?: boolean;
+  delegate?: string;
+  script?: ScriptedContracts;
+  metadata: OperationContentsAndResultMetadataOrigination;
+}
+
+export interface OperationContentsAndResultDelegation {
+  kind: 'delegation';
+  source: string;
+  fee: BigNumber;
+  counter: BigNumber;
+  gasLimit: BigNumber;
+  storageLimit: BigNumber;
+  delegate?: string;
+  metadata: OperationContentsAndResultMetadataDelegation;
+}
+
+export type OperationContentsAndResult =
+  | OperationContentsAndResultsEndorsement
+  | OperationContentsAndResultsRevelation
+  | OperationContentsAndResultsDoubleEndorsement
+  | OperationContentsAndResultsDoubleBaking
+  | OperationContentsAndResultsActivateAccount
+  | OperationContentsAndResultsProposals
+  | OperationContentsAndResultsBallot
+  | OperationContentsAndResultsReveal
+  | OperationContentsAndResultsTransaction
+  | OperationContentsAndResultsOrigination
+  | OperationContentsAndResultsDelegation;
 
 // BlockResponse interface
 // operations:
@@ -147,7 +482,7 @@ export interface OperationEntry {
   chainId: string;
   hash: string;
   branch: string;
-  contents: (OperationEntryContents | OperationEntryContentsAndResult)[];
+  contents: (OperationContents | OperationContentsAndResult)[];
   signature?: string;
 }
 
@@ -155,7 +490,7 @@ export interface OperationEntry {
 // test_chain_status:
 export interface TestChainStatus {
   status: TestChainStatusEnum;
-  chain_id?: string;
+  chainId?: string;
   genesis?: string;
   protocol?: string;
   expiration?: TimeStampMixed;
@@ -167,21 +502,21 @@ export interface TestChainStatus {
 // }
 export interface MetadataLevel {
   level: number;
-  level_position: number;
+  levelPosition: number;
   cycle: number;
-  cycle_position: number;
-  voting_period: number;
-  voting_period_position: number;
-  expected_commitment: boolean;
+  cyclePosition: number;
+  votingPeriod: number;
+  votingPeriodPosition: number;
+  expectedCommitment: boolean;
 }
 
 // BlockResponse interface
 // metadata: {
-//   max_operation_list_length:
+//   maxOperation_list_length:
 // }
 export interface MaxOperationList {
-  max_size: number;
-  max_op?: number;
+  maxSize: number;
+  maxOp?: number;
 }
 
 export type BalanceUpdateKindEnum = 'contract' | 'freezer';
@@ -189,9 +524,9 @@ export type BalanceUpdateCategoryEnum = 'rewards' | 'fees' | 'deposits';
 
 // BlockResponse interface
 // metadata: {
-//   balance_updates:
+//   balanceUpdates:
 // }
-export interface OperationBalanceUpdate {
+export interface OperationBalanceUpdatesItem {
   kind: BalanceUpdateKindEnum;
   category?: BalanceUpdateCategoryEnum;
   delegate?: string;
@@ -200,34 +535,36 @@ export interface OperationBalanceUpdate {
   change: BigNumber;
 }
 
+export type OperationBalanceUpdates = OperationBalanceUpdatesItem[];
+
 export type TestChainStatusEnum = 'not_running' | 'forking' | 'running';
 export type VotingPeriodKindEnum = 'proposal' | 'testing_vote' | 'testing' | 'promotion_vote';
 
 // BlockResponse interface
 // metadata:
-export interface Metadata {
+export interface BlockMetadata {
   protocol: string;
-  next_protocol: string;
-  test_chain_status: TestChainStatus;
-  max_operations_ttl: number;
-  max_operation_data_length: number;
-  max_block_header_length: number;
-  max_operation_list_length: MaxOperationList[];
+  nextProtocol: string;
+  testChainStatus: TestChainStatus;
+  maxOperationsTtl: number;
+  maxOperationDataLength: number;
+  maxBlockHeaderLength: number;
+  maxOperationListLength: MaxOperationList[];
   baker: string;
   level: MetadataLevel;
-  voting_period_kind: VotingPeriodKindEnum;
-  nonce_hash: string | null;
-  consumed_gas: BigNumber;
+  votingPeriodKind: VotingPeriodKindEnum;
+  nonceHash: string | null;
+  consumedGas: BigNumber;
   deactivated: string[];
-  balance_updates: OperationBalanceUpdate[];
+  balanceUpdates: OperationBalanceUpdates;
 }
 
 export interface BlockResponse {
   protocol: string;
-  chain_id: string;
+  chainId: string;
   hash: string;
-  header: BlockHeaderFull;
-  metadata: Metadata;
+  header: BlockFullHeader;
+  metadata: BlockMetadata;
   operations: OperationEntry[][];
 }
 
