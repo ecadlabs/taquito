@@ -80,7 +80,7 @@ export interface ConstantsResponse {
   hardStorageLimitPerOperation: BigNumber;
 }
 
-export type TimeStampMixed = Date | BigNumber;
+export type TimeStampMixed = Date | string;
 
 // BlockResponse interface
 // header:
@@ -113,7 +113,7 @@ export interface InlinedEndorsement {
 }
 
 export interface MichelsonV1ExpressionBase {
-  int?: BigNumber;
+  int?: string;
   string?: string;
   bytes?: string;
 }
@@ -183,21 +183,21 @@ export interface OperationContentsBallot {
 export interface OperationContentsReveal {
   kind: 'reveal';
   source: string;
-  fee: BigNumber;
-  counter: BigNumber;
-  gasLimit: BigNumber;
-  storageLimit: BigNumber;
+  fee: string;
+  counter: string;
+  gasLimit: string;
+  storageLimit: string;
   publicKey: string;
 }
 
 export interface OperationContentsTransaction {
   kind: 'transaction';
   source: string;
-  fee: BigNumber;
-  counter: BigNumber;
-  gasLimit: BigNumber;
-  storageLimit: BigNumber;
-  amount: BigNumber;
+  fee: string;
+  counter: string;
+  gasLimit: string;
+  storageLimit: string;
+  amount: string;
   destination: string;
   parameters?: MichelsonV1Expression;
 }
@@ -205,12 +205,12 @@ export interface OperationContentsTransaction {
 export interface OperationContentsOrigination {
   kind: 'origination';
   source: string;
-  fee: BigNumber;
-  counter: BigNumber;
-  gasLimit: BigNumber;
-  storageLimit: BigNumber;
+  fee: string;
+  counter: string;
+  gasLimit: string;
+  storageLimit: string;
   managerPubkey: string;
-  balance: BigNumber;
+  balance: string;
   spendable?: boolean;
   delegatable?: boolean;
   delegate?: string;
@@ -220,10 +220,10 @@ export interface OperationContentsOrigination {
 export interface OperationContentsDelegation {
   kind: 'delegation';
   source: string;
-  fee: BigNumber;
-  counter: BigNumber;
-  gasLimit: BigNumber;
-  storageLimit: BigNumber;
+  fee: string;
+  counter: string;
+  gasLimit: string;
+  storageLimit: string;
   delegate?: string;
 }
 
@@ -249,14 +249,14 @@ export interface OperationMetadataBalanceUpdates {
   contract?: string;
   delegate?: string;
   cycle?: number;
-  change: BigNumber;
+  change: string;
 }
 
 export type OperationResultStatusEnum = 'applied' | 'failed' | 'skipped' | 'backtracked';
 
 export interface OperationResultReveal {
   status: OperationResultStatusEnum;
-  consumedGas?: BigNumber;
+  consumedGas?: string;
   errors?: any;
 }
 
@@ -274,16 +274,16 @@ export interface OperationResultTransaction {
   bigMapDiff?: ContractBigMapDiff;
   balanceUpdates?: OperationBalanceUpdates;
   originatedContracts?: string[];
-  consumedGas?: BigNumber;
-  storageSize?: BigNumber;
-  paidStorageSizeDiff?: BigNumber;
+  consumedGas?: string;
+  storageSize?: string;
+  paidStorageSizeDiff?: string;
   allocatedDestinationContract?: boolean;
   errors?: any;
 }
 
 export interface OperationResultDelegation {
   status: OperationResultStatusEnum;
-  consumedGas?: BigNumber;
+  consumedGas?: string;
   errors?: any;
 }
 
@@ -291,9 +291,9 @@ export interface OperationResultOrigination {
   status: OperationResultStatusEnum;
   balanceUpdates?: OperationBalanceUpdates;
   originatedContracts?: string[];
-  consumedGas?: BigNumber;
-  storageSize?: BigNumber;
-  paidStorageSizeDiff?: BigNumber;
+  consumedGas?: string;
+  storageSize?: string;
+  paidStorageSizeDiff?: string;
   errors?: any;
 }
 
@@ -313,12 +313,12 @@ export interface InternalOperationResult {
   kind: InternalOperationResultKindEnum;
   source: string;
   nonce: number;
-  amount?: BigNumber;
+  amount?: string;
   destination?: string;
   parameters?: MichelsonV1Expression;
   publicKey?: string;
   managerPubkey?: string;
-  balance?: BigNumber;
+  balance?: string;
   spendable?: boolean;
   delegatable?: boolean;
   delegate?: string;
@@ -414,10 +414,10 @@ export interface OperationContentsAndResultBallot {
 export interface OperationContentsAndResultReveal {
   kind: 'reveal';
   source: string;
-  fee: BigNumber;
-  counter: BigNumber;
-  gasLimit: BigNumber;
-  storageLimit: BigNumber;
+  fee: string;
+  counter: string;
+  gasLimit: string;
+  storageLimit: string;
   publicKey: string;
   metadata: OperationContentsAndResultMetadataReveal;
 }
@@ -425,11 +425,11 @@ export interface OperationContentsAndResultReveal {
 export interface OperationContentsAndResultTransaction {
   kind: 'transaction';
   source: string;
-  fee: BigNumber;
-  counter: BigNumber;
-  gasLimit: BigNumber;
-  storageLimit: BigNumber;
-  amount: BigNumber;
+  fee: string;
+  counter: string;
+  gasLimit: string;
+  storageLimit: string;
+  amount: string;
   destination: string;
   parameters?: MichelsonV1Expression;
   metadata: OperationContentsAndResultMetadataTransaction;
@@ -438,12 +438,12 @@ export interface OperationContentsAndResultTransaction {
 export interface OperationContentsAndResultOrigination {
   kind: 'origination';
   source: string;
-  fee: BigNumber;
-  counter: BigNumber;
-  gasLimit: BigNumber;
-  storageLimit: BigNumber;
+  fee: string;
+  counter: string;
+  gasLimit: string;
+  storageLimit: string;
   managerPubkey: string;
-  balance: BigNumber;
+  balance: string;
   spendable?: boolean;
   delegatable?: boolean;
   delegate?: string;
@@ -454,10 +454,10 @@ export interface OperationContentsAndResultOrigination {
 export interface OperationContentsAndResultDelegation {
   kind: 'delegation';
   source: string;
-  fee: BigNumber;
-  counter: BigNumber;
-  gasLimit: BigNumber;
-  storageLimit: BigNumber;
+  fee: string;
+  counter: string;
+  gasLimit: string;
+  storageLimit: string;
   delegate?: string;
   metadata: OperationContentsAndResultMetadataDelegation;
 }
@@ -532,7 +532,7 @@ export interface OperationBalanceUpdatesItem {
   delegate?: string;
   cycle?: number;
   contract?: string;
-  change: BigNumber;
+  change: string;
 }
 
 export type OperationBalanceUpdates = OperationBalanceUpdatesItem[];
@@ -554,7 +554,7 @@ export interface BlockMetadata {
   level: MetadataLevel;
   votingPeriodKind: VotingPeriodKindEnum;
   nonceHash: string | null;
-  consumedGas: BigNumber;
+  consumedGas: string;
   deactivated: string[];
   balanceUpdates: OperationBalanceUpdates;
 }
