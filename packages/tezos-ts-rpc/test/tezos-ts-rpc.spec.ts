@@ -241,4 +241,145 @@ describe('RpcClient test', () => {
       done();
     });
   });
+
+  describe('getBlock', () => {
+    it('query the right url and property', async done => {
+      httpBackend.createRequest.mockReturnValue(
+        Promise.resolve({
+          protocol: 'Pt24m4xiPbLDhVgVfABUjirbmda3yohdN82Sp9FeuAXJ4eV9otd',
+          chain_id: 'NetXdQprcVkpaWU',
+          hash: 'BMJZyYF1aYafqFs7HE6i32XFy9raoye4z93dDi68jiB6swgGztx',
+          header: {
+            level: 578756,
+            proto: 4,
+            predecessor: 'BMAAqpF8w3qPSDUaGAsJXA3QQTgzeBJbRWerSvnpGjpR9ERGNEX',
+            timestamp: '2019-08-24T21:37:32Z',
+            validation_pass: 4,
+            operations_hash: 'LLoa7BV7nk6eVGiTsoMtgYegmnFrn5A1rZFPUQKzUgKHLTnc44hVu',
+            fitness: ['00', '000000000116a295'],
+            context: 'CoUqeHHzXBuizWXjsxcFHQ385ETgSyWth5CxJJt2mVpjkkDYo2W1',
+            priority: 0,
+            proof_of_work_nonce: '00000003a8df54b7',
+            signature:
+              'sigcqr3u5kY8sB8iY3CFo6FWEFb97trx92JjLnJpwQSibqwRUW3sQoHFH22E1FfpGYfgmZYxmhxrghNV5zSRqsvCSRBfmMzk',
+          },
+          metadata: {
+            protocol: 'Pt24m4xiPbLDhVgVfABUjirbmda3yohdN82Sp9FeuAXJ4eV9otd',
+            next_protocol: 'Pt24m4xiPbLDhVgVfABUjirbmda3yohdN82Sp9FeuAXJ4eV9otd',
+            test_chain_status: {
+              status: 'not_running',
+            },
+            max_operations_ttl: 60,
+            max_operation_data_length: 16384,
+            max_block_header_length: 238,
+            max_operation_list_length: [
+              {
+                max_size: 32768,
+                max_op: 32,
+              },
+              {
+                max_size: 32768,
+              },
+              {
+                max_size: 135168,
+                max_op: 132,
+              },
+              {
+                max_size: 524288,
+              },
+            ],
+            baker: 'tz1NpWrAyDL9k2Lmnyxcgr9xuJakbBxdq7FB',
+            level: {
+              level: 578756,
+              level_position: 578755,
+              cycle: 141,
+              cycle_position: 1219,
+              voting_period: 17,
+              voting_period_position: 21699,
+              expected_commitment: false,
+            },
+            voting_period_kind: 'testing_vote',
+            nonce_hash: null,
+            consumed_gas: '112200',
+            deactivated: [],
+            balance_updates: [
+              {
+                kind: 'contract',
+                contract: 'tz1NpWrAyDL9k2Lmnyxcgr9xuJakbBxdq7FB',
+                change: '-512000000',
+              },
+              {
+                kind: 'freezer',
+                category: 'deposits',
+                delegate: 'tz1NpWrAyDL9k2Lmnyxcgr9xuJakbBxdq7FB',
+                cycle: 141,
+                change: '512000000',
+              },
+              {
+                kind: 'freezer',
+                category: 'rewards',
+                delegate: 'tz1NpWrAyDL9k2Lmnyxcgr9xuJakbBxdq7FB',
+                cycle: 141,
+                change: '16000000',
+              },
+            ],
+          },
+          operations: [
+            [
+              {
+                protocol: 'Pt24m4xiPbLDhVgVfABUjirbmda3yohdN82Sp9FeuAXJ4eV9otd',
+                chain_id: 'NetXdQprcVkpaWU',
+                hash: 'oondRNZutoyWCZtXvvxKXcw8Us7ms8vhN8VUet32PopSREiMF1a',
+                branch: 'BMAAqpF8w3qPSDUaGAsJXA3QQTgzeBJbRWerSvnpGjpR9ERGNEX',
+                contents: [
+                  {
+                    kind: 'endorsement',
+                    level: 578755,
+                    metadata: {
+                      balance_updates: [
+                        {
+                          kind: 'contract',
+                          contract: 'tz1iZEKy4LaAjnTmn2RuGDf2iqdAQKnRi8kY',
+                          change: '-64000000',
+                        },
+                        {
+                          kind: 'freezer',
+                          category: 'deposits',
+                          delegate: 'tz1iZEKy4LaAjnTmn2RuGDf2iqdAQKnRi8kY',
+                          cycle: 141,
+                          change: '64000000',
+                        },
+                        {
+                          kind: 'freezer',
+                          category: 'rewards',
+                          delegate: 'tz1iZEKy4LaAjnTmn2RuGDf2iqdAQKnRi8kY',
+                          cycle: 141,
+                          change: '2000000',
+                        },
+                      ],
+                      delegate: 'tz1iZEKy4LaAjnTmn2RuGDf2iqdAQKnRi8kY',
+                      slots: [16],
+                    },
+                  },
+                ],
+                signature:
+                  'sigWXsVEVYZFkNVuJJR6PCjt4kX89jrRSxjNqcRdPPe1Bsawvjr7BeuuFjMfAhgqB84R8HmHuLKyoAhU5vngC82xjuuQuWH6',
+              },
+            ],
+          ],
+        })
+      );
+      const response = await client.getBlock();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head',
+      });
+      expect(response.operations[0][0].contents[0].metadata.balanceUpdates[0].kind).toEqual(
+        'contract'
+      );
+
+      done();
+    });
+  });
 });
