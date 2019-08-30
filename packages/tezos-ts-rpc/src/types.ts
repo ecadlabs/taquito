@@ -463,17 +463,17 @@ export interface OperationContentsAndResultDelegation {
 }
 
 export type OperationContentsAndResult =
-  | OperationContentsAndResultsEndorsement
-  | OperationContentsAndResultsRevelation
-  | OperationContentsAndResultsDoubleEndorsement
-  | OperationContentsAndResultsDoubleBaking
-  | OperationContentsAndResultsActivateAccount
-  | OperationContentsAndResultsProposals
-  | OperationContentsAndResultsBallot
-  | OperationContentsAndResultsReveal
-  | OperationContentsAndResultsTransaction
-  | OperationContentsAndResultsOrigination
-  | OperationContentsAndResultsDelegation;
+  | OperationContentsAndResultEndorsement
+  | OperationContentsAndResultRevelation
+  | OperationContentsAndResultDoubleEndorsement
+  | OperationContentsAndResultDoubleBaking
+  | OperationContentsAndResultActivateAccount
+  | OperationContentsAndResultProposals
+  | OperationContentsAndResultBallot
+  | OperationContentsAndResultReveal
+  | OperationContentsAndResultTransaction
+  | OperationContentsAndResultOrigination
+  | OperationContentsAndResultDelegation;
 
 // BlockResponse interface
 // operations:
