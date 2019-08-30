@@ -69,11 +69,8 @@ export function castToBigNumber(data: any, keys?: any): object {
 
 /**
  * Casts object/array BigNumber items to strings for readability
- * keys support lodash path notation
  * @param data input object or array
  * @param keys keys for processing or all items if not defined
- *
- * @see https://lodash.com/docs/#get
  *
  */
 export function castToString(data: any, keys?: any): object {

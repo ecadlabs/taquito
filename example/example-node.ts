@@ -45,7 +45,6 @@ async function example() {
   console.log('Getting block from head...');
   try {
     await client.getBlock().then(res => {
-      console.log('The output we get with BigNumbers:');
       console.log(res);
     });
   } catch (ex) {
