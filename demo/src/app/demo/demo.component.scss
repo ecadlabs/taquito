@@ -1,0 +1,26 @@
+.row {
+    display: flex;
+    .col {
+        min-width: 50%;
+        flex: 1;
+    }
+}
+
+.search-input {
+    min-width: 500px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.toggle-container {
+    display: flex;
+    align-items: center;
+
+    .last-block {
+        display: block;
+        margin-right: 10px;
+    }
+}

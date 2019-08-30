@@ -1,0 +1,26 @@
+<div>
+    <input class='search-input' [formControl]='addressInput' nbInput />
+</div>
+<br>
+<div>
+    <nb-card *ngIf='addressDetail$ | async as detail'>
+        <nb-card-header class='card-header'><span>Address details</span>
+            <div class='toggle-container'><span class='last-block'>Last block: {{head$ | async}}</span>
+                <nb-toggle [formControl]='autoRefreshToggle'>
+                    Auto Refresh</nb-toggle>
+            </div>
+        </nb-card-header>
+        <nb-card-body>
+            <div class='row'>
+                <div class='col'>
+                    Balance:
+                    {{detail.balance}}
+                </div>
+                <div class='col'>
+                    Storage:
+                    <ngx-json-viewer [json]="detail.storage"></ngx-json-viewer>
+                </div>
+            </div>
+        </nb-card-body>
+    </nb-card>
+</div>
