@@ -71,6 +71,8 @@ Supported versions of the tezos-ts packages will be maintained for the current a
 
 Releases will be "rolled" by the project maintainers outside of CI infrastructure, and pushed to npmjs.org repositories and the Github releases page. All official releases will be signed by the maintainers. By doing releases from outside of the CI processes, we hope to reduce the attack surface for software supply chain attacks. By making releases from outside of the CI infrastructure, we reduce some attack surface for software supply chain attacks.
 
+Releases will be (git tags and npm packages) will be signed either by [keybase/jevonearth][2] or [keybase/simrob][3]. Releases not signed, or signed by other keys should not be expected.
+
 ## Contributors getting started
 
 ### NPM scripts
@@ -96,22 +98,29 @@ Once you have modified any package run
 * Run `npm run test`
 * In order to commit please use `npm run commit`
 
-### Pull Requests
+## Reporting Issues
 
-We are happy to receive work in progress Pull Request, but we expect full test coverage and documentation for PR's in order for them to be merged.
+### Security Issues
+
+To report a security issue, please contact security@ecadlabs.com or via [keybase/jevonearth][2] on keybase.io.
+
+Reports may be encrypted using keys published on keybase.io using [keybase/jevonearth][2].
+
+### Other Issues & Feature Requests
+
+Please use the [GitHub issue tracker](https://github.com/ecadlabs/tezos-ts/issues) to report bugs or request features.
+
+## Contributions
+
+To contribute, please check the issue tracker to see if an existing issue exists for your planned contribution. If there's no Issue, please create one first, and then submit a pull request with your contribution.
+
+For a contribution to be merged, it must be well documented, come with unit tests, and integration tests where appropriate. Submitting a "work in progress" pull request for review/feedback is always welcome!
 
 ## Disclaimer
 
-THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES,
-INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS
-OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
-OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
-IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
-OF SUCH DAMAGE.
+THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 [0]: https://github.com/ecadlabs/tezos-indexer-api
 [1]: https://github.com/ecadlabs/tezos-streamer
+[2]: https://keybase.io/jevonearth
+[3]: https://keybase.io/simrob
