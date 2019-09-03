@@ -20,7 +20,7 @@ export class AddressToken extends Token implements ComparableToken {
     };
   }
 
-  public Execute(val: any): { [key: string]: any } {
+  public Execute(val: any): string {
     return val.string;
   }
 

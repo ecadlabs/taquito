@@ -1,5 +1,6 @@
 import { RpcContractProvider } from '../../src/contract/rpc-contract-provider';
 import { sample, sampleStorage, sampleBigMapValue } from './data';
+import BigNumber from 'bignumber.js';
 
 /**
  * RPCContractProvider test
@@ -30,8 +31,8 @@ describe('RpcContractProvider test', () => {
       expect(result).toEqual({
         '0': {},
         '1': 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-        '2': 'False',
-        '3': '200',
+        '2': false,
+        '3': new BigNumber('200'),
       });
       done();
     });
@@ -46,10 +47,10 @@ describe('RpcContractProvider test', () => {
         'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn'
       );
       expect(result).toEqual({
-        '0': '261',
+        '0': new BigNumber('261'),
         '1': {
-          KT1SawqvsVdAbDzqc4KwPpaS1S1veuFgF9AN: '100',
-          tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn: '100',
+          KT1SawqvsVdAbDzqc4KwPpaS1S1veuFgF9AN: new BigNumber('100'),
+          tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn: new BigNumber('100'),
         },
       });
       expect(mockRpcClient.getBigMapKey.mock.calls[0][0]).toEqual('test');

@@ -18,7 +18,7 @@ export class BytesToken extends Token implements ComparableToken {
     };
   }
 
-  public Execute(val: any): { [key: string]: any } {
+  public Execute(val: any): string {
     return val.bytes;
   }
 
