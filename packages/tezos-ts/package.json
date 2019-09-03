@@ -10,6 +10,7 @@
   "module": "dist/tezos-ts.es5.js",
   "typings": "dist/types/tezos-ts.d.ts",
   "files": [
+    "signature.json",
     "dist"
   ],
   "publishConfig": {

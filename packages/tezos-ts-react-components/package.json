@@ -11,6 +11,7 @@
   "module": "dist/tezos-ts-react-components.es5.js",
   "typings": "dist/types/tezos-ts-react-components.d.ts",
   "files": [
+    "signature.json",
     "dist"
   ],
   "publishConfig": {

@@ -11,6 +11,7 @@
   "module": "dist/tezos-ts-streamer.es5.js",
   "typings": "dist/types/tezos-ts-streamer.d.ts",
   "files": [
+    "signature.json",
     "dist"
   ],
   "publishConfig": {

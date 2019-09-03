@@ -11,6 +11,7 @@
   "module": "dist/tezos-ts-rpc.es5.js",
   "typings": "dist/types/tezos-ts-rpc.d.ts",
   "files": [
+    "signature.json",
     "dist"
   ],
   "publishConfig": {

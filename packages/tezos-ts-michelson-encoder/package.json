@@ -12,6 +12,7 @@
   "module": "dist/tezos-ts-michelson-encoder.es5.js",
   "typings": "dist/types/tezos-ts-michelson-encoder.d.ts",
   "files": [
+    "signature.json",
     "dist"
   ],
   "publishConfig": {

@@ -7,6 +7,7 @@
   "module": "dist/tezos-ts-http-utils.es5.js",
   "typings": "dist/types/tezos-ts-http-utils.d.ts",
   "files": [
+    "signature.json",
     "dist"
   ],
   "author": "Simon Boissonneault-Robert <simon@ecadlabs.com>",
