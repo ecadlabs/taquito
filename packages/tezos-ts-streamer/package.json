@@ -1,0 +1,93 @@
+{
+  "name": "@tezos-ts/streamer",
+  "version": "0.0.0",
+  "description": "",
+  "keywords": [],
+  "main": "dist/tezos-ts-streamer.umd.js",
+  "module": "dist/tezos-ts-streamer.es5.js",
+  "typings": "dist/types/tezos-ts-streamer.d.ts",
+  "files": [
+    "dist"
+  ],
+  "author": "Simon Boissonneault-Robert <simon@ecadlabs.com>",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "scripts": {
+    "test": "jest --coverage",
+    "test:watch": "jest --coverage --watch",
+    "test:prod": "npm run lint && npm run test -- --no-cache",
+    "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
+    "precommit": "lint-staged",
+    "prebuild": "rimraf dist",
+    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts ",
+    "start": "rollup -c rollup.config.ts -w"
+  },
+  "lint-staged": {
+    "{src,test}/**/*.ts": [
+      "prettier --write",
+      "tslint --fix",
+      "git add"
+    ]
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "ts-jest"
+    },
+    "testEnvironment": "node",
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "moduleNameMapper": {
+      "^@tezos-ts/http-utils$": "<rootDir>/../tezos-ts-http-utils/src/tezos-ts-http-utils.ts"
+    },
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/test/"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,ts}"
+    ]
+  },
+  "dependencies": {
+    "@tezos-ts/http-utils": "^0.0.0",
+    "bignumber.js": "^9.0.0",
+    "ws": "^7.1.2"
+  },
+  "devDependencies": {
+    "@tezos-ts/tezos-ts": "^0.0.0",
+    "@types/jest": "^23.3.2",
+    "@types/node": "^10.14.13",
+    "@types/ws": "^6.0.3",
+    "colors": "^1.3.2",
+    "coveralls": "^3.0.2",
+    "cross-env": "^5.2.0",
+    "jest": "^23.6.0",
+    "jest-config": "^23.6.0",
+    "lint-staged": "^8.0.0",
+    "lodash.camelcase": "^4.3.0",
+    "prettier": "^1.14.3",
+    "prompt": "^1.0.0",
+    "replace-in-file": "^3.4.2",
+    "rimraf": "^2.6.2",
+    "rollup": "^1.20.1",
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-sourcemaps": "^0.4.2",
+    "rollup-plugin-typescript2": "^0.22.1",
+    "shelljs": "^0.8.3",
+    "ts-jest": "^23.10.2",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.15.0",
+    "tslint-config-standard": "^8.0.1",
+    "typescript": "^3.0.3"
+  }
+}
