@@ -1,6 +1,6 @@
-[![CircleCI](https://circleci.com/gh/ecadlabs/tezos-ts.svg?style=svg)](https://circleci.com/gh/ecadlabs/tezos-ts)
-
 # Tezos Typescript Library Suite
+
+[![CircleCI](https://circleci.com/gh/ecadlabs/tezos-ts.svg?style=svg)](https://circleci.com/gh/ecadlabs/tezos-ts)
 
 ## Work In Progress / Alpha
 
@@ -11,20 +11,24 @@ Tezos Typescript Library Suite is a set of npm packages that aim to make buildin
 The goals of this library are:
 
 * Easy to use and maintain, written in idiomatic Typescript style
-* Well maintained and tested against all Tezos protocol upgrades
+* Well maintained and tested against all current, and anticipated Tezos protocols
 * Portable, does not rely on any "stack" by default, except for the canonical Tezos RPC node
 * Nightly and Continuous integration tests against official Tezos RPC nodes
 * dApp development uses cases a first class concern, empowering new developers to get results quickly
 * No dependencies on the Tezos RPC node for generating operations (Ex: not dependant on “forge” RPC method).
-* Well documented API (Typedoc)
-* [Demo Gallery](https://ecadlabs.github.io/tezos-ts/react-storybook/) for all web components
+* Well documented API using [TypeDoc](https://ecadlabs.github.io/tezos-ts/typedoc)
+* Set of ready made React components for common use-cases, with a [Demo Gallery](https://ecadlabs.github.io/tezos-ts/react-storybook/)
 * Regular versioned releases, published to npmjs.org, with a published version strategy
-* Participation in the CII Best Practices program and all requirements entailed there in:  https://bestpractices.coreinfrastructure.org/en
+* Participation in the [CII Best Practices](https://bestpractices.coreinfrastructure.org) program and all requirements entailed there in
 * Portable - This library has minimum dependencies, making it usable in any js project on the front or back end.
 * Compact - avoid bloat and keep compiled asset size low
-* Portable, allowing wallet, dApp, or backend developers to easily start using the library.
+* Portable, allowing wallet, dApp, or backend developers to start using the library quickly.
 
-This is a mono repository from which several npm packages are built and published. Packages are in the `packages/` directory, each one with its own README.
+## Project Organization
+
+`tezos-ts` is organized as a mono repository from which several npm packages are built and published. Packages are in the `packages/` directory, each one with its own README.
+
+Each package is published to npmjs.org under the `@tezos-ts` handle.
 
 | Package                                                           |                        Responsibility                         |
 | ----------------------------------------------------------------- | ------------------------------------------------------------- |
@@ -32,6 +36,8 @@ This is a mono repository from which several npm packages are built and publishe
 | [tezos-ts-react-components](packages/tezos-ts-react-components)   | React components that implement some common use cases         |
 | [tezos-ts-rpc](packages/tezos-ts-rpc)                             | RPC client library, wrap every rpc endpoint in its own method |
 | [tezos-ts-michelson-encoder](packages/tezos-ts-michelson-encoder) | Encode/Decode storage and parameters to/from michelson format |
+| [tezos-ts-indexer](packages/tezos-ts-indexer)                     | A client for the [tezos-indexer-api][0] API                   |
+| [tezos-ts-streamer](packages/tezos-ts-streamer)                   | A client for the [tezos-indexer-streamer][1] API              |
 
 ### React Components overview
 
@@ -49,7 +55,7 @@ Version releases will use "Semantic Versioning" style version numbers, but will 
 
 We plan to use SemVer style versions for tezos-ts but we will make the major version number track the current, or next version number of the Tezos economic protocol that tezos-ts supports.
 
-For example, in August 2019, the economic protocol is `004-Pt24m4xi`, and `005-PsBABY5H` is working its way through the on-chain amendment process. Therefore the current version number for tezos-ts would be `v4.0.0`. During this time, we would start working on `v5.0.0-beta.1` on the expectation (but not the assumption) that it will become our new economic protocol.
+For example, in August 2019, the economic protocol was `004-Pt24m4xi`, and `005-PsBABY5H` was (is) working its way through the on-chain amendment process. Therefore the current version number for tezos-ts would be `v4.0.0`. During this time, we would start working on `v5.0.0-beta.1` on the expectation (but not the assumption) that it will become our new economic protocol.
 
 When we know that the protocol will update to the new version AND we have implemented and tested interoperability with the new protocol (and potentially node RPC changes) we will release `v5.0.0` BEFORE the chain transitions to the new protocol.
 
@@ -57,17 +63,19 @@ It is important that the packages supporting the new protocol be released prior 
 
 During major version updates, breaking changes in the tezos-ts public APIs MAY include breaking changes, for which we will make a strong effort to announce and document in our release notes. The Minor and Patch version numbers will track SemVer norms.
 
-All releases will be backward compatible with chain data all the way back to the genesis block. Support for older Tezos node RPCs will be maintained where feasable, but will be dropped eventually. This support also depends on what versioning strategy gets adopted by the canonical Tezos node. At the time of writing this is unclear.
+All releases will be backward compatible with chain data all the way back to the genesis block. Support for older Tezos node RPCs will be maintained where feasible, but will be dropped eventually. Tezos node RPC support also depends on what versioning strategy gets adopted by the canonical Tezos node. At the time of writing this is unclear.
 
 Supported versions of the tezos-ts packages will be maintained for the current and next protocol versions. Teams using older versions will be encouraged to update, but if blockers exist, they are encouraged to contact us.
 
 ## Releases
 
-Releases will be "rolled" by the project maintainers outside of CI infrastructure, and pushed to npmjs.org repositories and the Github releases page. All official releases will be signed by the maintainers. By doing releases from outside of the CI processes, we hope to reduce the attack surface for software supply chain attacks.
+Releases will be "rolled" by the project maintainers outside of CI infrastructure, and pushed to npmjs.org repositories and the Github releases page. All official releases will be signed by the maintainers. By doing releases from outside of the CI processes, we hope to reduce the attack surface for software supply chain attacks. By making releases from outside of the CI infrastructure, we reduce some attack surface for software supply chain attacks.
 
 ## Contributors getting started
 
 ### NPM scripts
+
+See the top-level `package.json` file. Some common targets are:
 
 * `npm run test`: Run tests
 * `npm run build`: Generate bundles and typings, create docs
@@ -78,13 +86,32 @@ Releases will be "rolled" by the project maintainers outside of CI infrastructur
 ### How to contribute
 
 * Install lerna globally `npm install -g lerna`
-
 * Run `npm install`
 * Run `lerna bootstrap`
 * Run `npm run build`
 
-Once you have modified any project run
+Once you have modified any package run
 
 * Run `npm run lint`
 * Run `npm run test`
 * In order to commit please use `npm run commit`
+
+### Pull Requests
+
+We are happy to receive work in progress Pull Request, but we expect full test coverage and documentation for PR's in order for them to be merged.
+
+## Disclaimer
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS
+OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
+OF SUCH DAMAGE.
+
+[0]: https://github.com/ecadlabs/tezos-indexer-api
+[1]: https://github.com/ecadlabs/tezos-streamer
