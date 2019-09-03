@@ -1,3 +1,5 @@
+[![pkgsign status](https://us-central1-pkgsign.cloudfunctions.net/pkgsign-badge?name=@tezos-ts/tezos-ts-react-components&expectedIdentity=jevonearth)](https://github.com/RedpointGames/pkgsign)
+
 # Tezos TS React Components package
 
 `@tezos-ts/react-components` contains a set of React Components that implement common use cases for data retrieved from the Tezos blockchain.
