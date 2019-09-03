@@ -4,22 +4,22 @@
 
 ## Work In Progress / Alpha
 
-Tezos Typescript Library Suite is a set up npm packages that aim to make building on top of Tezos easier and enjoyable.
+Tezos Typescript Library Suite is a set of npm packages that aim to make building on top of Tezos easier and enjoyable.
 
 ### Goals
 
-The goals of this library are;
+The goals of this library are:
 
 * Easy to use and maintain, written in idiomatic Typescript style
 * Well maintained and tested against all Tezos protocol upgrades
-* Portable, does not rely be default on any stack outside of the canonical Tezos RPC node
+* Portable, does not rely on any "stack" by default, except for the canonical Tezos RPC node
 * Nightly and Continuous integration tests against official Tezos RPC nodes
 * dApp development uses cases a first class concern, empowering new developers to get results quickly
 * No dependencies on the Tezos RPC node for generating operations (Ex: not dependant on “forge” RPC method).
 * Well documented API (Typedoc)
 * [Demo Gallery](https://ecadlabs.github.io/tezos-ts/react-storybook/) for all web components
 * Regular versioned releases, published to npmjs.org, with a published version strategy
-* Participate in the CII Best Practices program and all requirements entailed there in:  https://bestpractices.coreinfrastructure.org/en
+* Participation in the CII Best Practices program and all requirements entailed there in:  https://bestpractices.coreinfrastructure.org/en
 * Portable - This library has minimum dependencies, making it usable in any js project on the front or back end.
 * Compact - avoid bloat and keep compiled asset size low
 * Portable, allowing wallet, dApp, or backend developers to easily start using the library.
@@ -55,9 +55,9 @@ When we know that the protocol will update to the new version AND we have implem
 
 It is important that the packages supporting the new protocol be released prior to the on-chain transition to the new economic protocol so that developers who build on top of tezos-ts have time to update and test their projects.
 
-During major version updates, breaking changes in the tezos-ts public API's MAY include breaking changes, for which we will make a strong effort to announce and document in our release notes. The Minor and Patch version numbers will track SemVer norms.
+During major version updates, breaking changes in the tezos-ts public APIs MAY include breaking changes, for which we will make a strong effort to announce and document in our release notes. The Minor and Patch version numbers will track SemVer norms.
 
-All releases will be backward compatible with chain data all the way back to the genesis block. Support for older Tezos node RPC's will be maintained where feasable, but will be dropped eventually. This support also depends on what versioning strategy gets adopted by the canonical Tezos node. At the time of writing this is unclear.
+All releases will be backward compatible with chain data all the way back to the genesis block. Support for older Tezos node RPCs will be maintained where feasable, but will be dropped eventually. This support also depends on what versioning strategy gets adopted by the canonical Tezos node. At the time of writing this is unclear.
 
 Supported versions of the tezos-ts packages will be maintained for the current and next protocol versions. Teams using older versions will be encouraged to update, but if blockers exist, they are encouraged to contact us.
 
@@ -83,7 +83,7 @@ Releases will be "rolled" by the project maintainers outside of CI infrastructur
 * Run `lerna bootstrap`
 * Run `npm run build`
 
-Once you modified any project run
+Once you have modified any project run
 
 * Run `npm run lint`
 * Run `npm run test`
