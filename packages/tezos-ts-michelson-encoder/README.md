@@ -46,7 +46,7 @@ Given the following michelson smart contract data, retrieved from a Tezos Nodes 
 
 `@tezos-ts/michelson-encoder` will give the caller this:
 
-```json
+```javascript
 {
   accounts: {},
   version: '1',
