@@ -12,6 +12,10 @@ export class OptionToken extends Token {
   }
 
   public Execute(val: any) {
+    if (val.prim === 'None') {
+      return null;
+    }
+
     const schema = this.createToken(this.val.args[0], 0);
     return schema.Execute(val.args[0]);
   }

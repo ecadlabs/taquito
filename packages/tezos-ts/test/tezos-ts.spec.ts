@@ -20,7 +20,7 @@ describe('TezosToolkit test', () => {
   it('setProvider with string should create rpc provider', () => {
     const toolkit = new TezosToolkit();
 
-    toolkit.setProvider('test');
+    toolkit.setProvider({ rpc: 'test' });
     expect(toolkit.tz).toBeInstanceOf(RpcTzProvider);
     expect(toolkit.contract).toBeInstanceOf(RpcContractProvider);
   });

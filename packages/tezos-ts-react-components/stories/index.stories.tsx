@@ -12,7 +12,7 @@ stories.addDecorator(withKnobs);
 
 function createTK() {
   const tk = new TezosToolkit();
-  tk.setProvider('https://alphanet-node.tzscan.io');
+  tk.setProvider({ rpc: 'https://alphanet-node.tzscan.io' });
   return tk;
 }
 
@@ -26,7 +26,7 @@ stories.add('default', () => {
           {
             None: undefined,
             mꜩ: 'mtz',
-            ꜩ: 'tz'
+            ꜩ: 'tz',
           },
           undefined
         )}
@@ -46,7 +46,7 @@ stories.add('mꜩ formatted', () => {
           {
             None: undefined,
             mꜩ: 'mtz',
-            ꜩ: 'tz'
+            ꜩ: 'tz',
           },
           'mtz'
         )}
@@ -66,7 +66,7 @@ stories.add('ꜩ formatted', () => {
           {
             None: undefined,
             mꜩ: 'mtz',
-            ꜩ: 'tz'
+            ꜩ: 'tz',
           },
           'tz'
         )}

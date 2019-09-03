@@ -14,5 +14,5 @@
     "declarationDir": "dist/types",
     "outDir": "dist/lib"
   },
-  "include": ["../packages/**/*.ts", "example-node.ts"]
+  "include": ["example-node.ts"]
 }

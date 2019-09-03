@@ -48,7 +48,9 @@
     ],
     "moduleNameMapper": {
       "^@tezos-ts/rpc$": "<rootDir>/../tezos-ts-rpc/src/tezos-ts-rpc.ts",
-      "^@tezos-ts/michelson-encoder$": "<rootDir>/../tezos-ts-michelson-encoder/src/tezos-ts-michelson-encoder.ts"
+      "^@tezos-ts/michelson-encoder$": "<rootDir>/../tezos-ts-michelson-encoder/src/tezos-ts-michelson-encoder.ts",
+      "^@tezos-ts/http-utils$": "<rootDir>/../tezos-ts-http-utils/src/tezos-ts-http-utils.ts",
+      "^@tezos-ts/indexer$": "<rootDir>/../tezos-ts-indexer/src/tezos-ts-indexer.ts"
     },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
@@ -61,6 +63,7 @@
   "dependencies": {
     "@tezos-ts/michelson-encoder": "^0.0.0",
     "@tezos-ts/rpc": "^0.0.0",
+    "@tezos-ts/indexer": "^0.0.0",
     "bignumber.js": "^9.0.0"
   },
   "devDependencies": {
@@ -69,18 +72,16 @@
     "colors": "^1.3.2",
     "coveralls": "^3.0.2",
     "cross-env": "^5.2.0",
-    "jest": "^23.6.0",
-    "jest-config": "^23.6.0",
+    "jest": "^24.8.0",
+    "jest-config": "^24.8.0",
     "lint-staged": "^8.0.0",
     "lodash.camelcase": "^4.3.0",
     "prettier": "^1.14.3",
     "prompt": "^1.0.0",
     "replace-in-file": "^3.4.2",
     "rimraf": "^2.6.2",
-    "rollup": "^0.67.0",
-    "rollup-plugin-commonjs": "^9.1.8",
-    "rollup-plugin-json": "^3.1.0",
-    "rollup-plugin-node-resolve": "^3.4.0",
+    "rollup": "^1.20.1",
+    "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-sourcemaps": "^0.4.2",
     "rollup-plugin-typescript2": "^0.22.1",
     "shelljs": "^0.8.3",

@@ -1,26 +1,33 @@
 const defaultTimeout = 10000;
 
-/**
- * @description Interface that define base methods for http backends
- */
-export interface HttpBackend {
-  /**
-   *
-   * @param options contains options to be passed for the HTTP request (url, method and timeout)
-   */
-  createRequest<T>(options: HttpRequestOptions): Promise<T>;
-}
-
 interface HttpRequestOptions {
   url: string;
   method?: 'GET' | 'POST';
   timeout?: number;
+  query?: { [key: string]: any };
 }
 
-/**
- * @description Default http backend
- */
 export class HttpBackend {
+  private serialize(obj?: { [key: string]: any }) {
+    if (!obj) {
+      return '';
+    }
+
+    const str = [];
+    for (const p in obj) {
+      if (obj.hasOwnProperty(p) && obj[p]) {
+        const prop = typeof obj[p].toJSON === 'function' ? obj[p].toJSON() : obj[p];
+        str.push(encodeURIComponent(p) + '=' + encodeURIComponent(prop));
+      }
+    }
+    const serialized = str.join('&');
+    if (serialized) {
+      return `?${serialized}`;
+    } else {
+      return '';
+    }
+  }
+
   private createXHR(): XMLHttpRequest {
     // tslint:disable: strict-type-predicates
     if (
@@ -41,10 +48,10 @@ export class HttpBackend {
    *
    * @param options contains options to be passed for the HTTP request (url, method and timeout)
    */
-  createRequest<T>({ url, method, timeout }: HttpRequestOptions, data?: {}) {
+  createRequest<T>({ url, method, timeout, query }: HttpRequestOptions, data?: {}) {
     return new Promise<T>((resolve, reject) => {
       const request = this.createXHR();
-      request.open(method || 'GET', url);
+      request.open(method || 'GET', `${url}${this.serialize(query)}`);
       request.setRequestHeader('Content-Type', 'application/json');
       request.timeout = timeout || defaultTimeout;
       request.onload = function() {

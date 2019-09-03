@@ -18,7 +18,9 @@
       "@tezos-ts/michelson-encoder": [
         "tezos-ts-michelson-encoder/src/tezos-ts-michelson-encoder.ts"
       ],
-      "@tezos-ts/tezos-ts": ["tezos-ts/src/tezos-ts.ts"]
+      "@tezos-ts/tezos-ts": ["tezos-ts/src/tezos-ts.ts"],
+      "@tezos-ts/indexer": ["tezos-ts-indexer/src/tezos-ts-indexer.ts"],
+      "@tezos-ts/http-utils": ["tezos-ts-http-utils/src/tezos-ts-http-utils.ts"]
     }
   }
 }

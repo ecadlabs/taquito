@@ -1,5 +1,6 @@
-import { HttpBackend } from './utils/http';
+import { HttpBackend } from '@tezos-ts/http-utils';
 import { camelCaseProps, castToBigNumber } from './utils/utils';
+
 import {
   BalanceResponse,
   StorageResponse,
@@ -12,6 +13,7 @@ import {
   DelegatesResponse,
   RawDelegatesResponse,
   ConstantsResponse,
+  BlockResponse,
 } from './types';
 import BigNumber from 'bignumber.js';
 
@@ -42,6 +44,22 @@ export class RpcClient {
     private chain: string = defaultChain,
     private httpBackend: HttpBackend = new HttpBackend()
   ) {}
+
+  /**
+   *
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Get the block's hash, its unique identifier.
+   *
+   * @see http://tezos.gitlab.io/mainnet/api/rpc.html#get-block-id-hash
+   */
+  async getBlockHash({ block }: RPCOptions = defaultRPCOptions): Promise<string> {
+    const hash = await this.httpBackend.createRequest<string>({
+      url: `${this.url}/chains/${this.chain}/blocks/${block}/hash`,
+      method: 'GET',
+    });
+    return hash;
+  }
 
   /**
    *
@@ -224,7 +242,6 @@ export class RpcClient {
 
   /**
    *
-   * @param address address from which we want to retrieve the balance
    * @param options contains generic configuration for rpc calls
    *
    * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-constants
@@ -253,6 +270,25 @@ export class RpcClient {
     return {
       ...(convResponse as ConstantsResponse),
       ...(castedResponse as ConstantsResponse),
+    };
+  }
+
+  /**
+   *
+   * @param options contains generic configuration for rpc calls
+   *
+   * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id
+   */
+  async getBlock({ block }: RPCOptions = defaultRPCOptions): Promise<BlockResponse> {
+    const response = await this.httpBackend.createRequest<BlockResponse>({
+      url: `${this.url}/chains/${this.chain}/blocks/${block}`,
+      method: 'GET',
+    });
+
+    const convResponse: any = camelCaseProps(response);
+
+    return {
+      ...(convResponse as BlockResponse),
     };
   }
 }
