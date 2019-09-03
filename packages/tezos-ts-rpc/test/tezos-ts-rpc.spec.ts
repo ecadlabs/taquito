@@ -1,5 +1,6 @@
 import { RpcClient } from '../src/tezos-ts-rpc';
 import BigNumber from 'bignumber.js';
+import { OperationContentsAndResultEndorsement } from '../src/types';
 
 /**
  * RpcClient test
@@ -362,9 +363,9 @@ describe('RpcClient test', () => {
         method: 'GET',
         url: 'root/chains/test/blocks/head',
       });
-      expect(response.operations[0][0].contents[0].metadata.balanceUpdates[0].kind).toEqual(
-        'contract'
-      );
+      const endorsement = response.operations[0][0]
+        .contents[0] as OperationContentsAndResultEndorsement;
+      expect(endorsement.metadata.balanceUpdates[0].kind).toEqual('contract');
 
       done();
     });
