@@ -1,8 +1,8 @@
 {
   "name": "@tezos-ts/tezos-ts",
   "version": "0.0.0",
-  "description": "",
-  "keywords": [],
+  "description": "High level functionality that builds upon the other packages in the Tezos Typescript Library Suite.",
+  "keywords": ["tezos", "blockchain"],
   "main": "dist/tezos-ts.umd.js",
   "module": "dist/tezos-ts.es5.js",
   "typings": "dist/types/tezos-ts.d.ts",

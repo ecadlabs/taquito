@@ -1,8 +1,8 @@
 {
   "name": "@tezos-ts/streamer",
   "version": "0.0.0",
-  "description": "",
-  "keywords": [],
+  "description": "Methods to subscribe (using a websocket) to data from the Tezos blockchain. Relies on [https://github.com/ecadlabs/tezos-streamer](https://github.com/ecadlabs/tezos-streamer) which offers a websocket API to the caller, and streams data from the Tezos blockchain",
+  "keywords": ["tezos", "blockchain", "websocket"],
   "main": "dist/tezos-ts-streamer.umd.js",
   "module": "dist/tezos-ts-streamer.es5.js",
   "typings": "dist/types/tezos-ts-streamer.d.ts",

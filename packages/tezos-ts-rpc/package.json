@@ -1,8 +1,8 @@
 {
   "name": "@tezos-ts/rpc",
   "version": "0.0.0",
-  "description": "",
-  "keywords": [],
+  "description": "Provides low level methods, and types to invoke RPC calls from a Nomadic Tezos RPC node",
+  "keywords": ["tezos", "blockchain", "rpc"],
   "main": "dist/tezos-ts-rpc.umd.js",
   "module": "dist/tezos-ts-rpc.es5.js",
   "typings": "dist/types/tezos-ts-rpc.d.ts",
