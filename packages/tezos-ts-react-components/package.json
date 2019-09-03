@@ -1,8 +1,8 @@
 {
   "name": "@tezos-ts/react-components",
   "version": "0.0.0",
-  "description": "",
-  "keywords": [],
+  "description": "React Components that implement common use cases for data retrieved from the Tezos blockchain",
+  "keywords": ["tezos", "blockchain", "react"],
   "main": "dist/tezos-ts-react-components.umd.js",
   "module": "dist/tezos-ts-react-components.es5.js",
   "typings": "dist/types/tezos-ts-react-components.d.ts",
