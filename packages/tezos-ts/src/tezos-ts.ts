@@ -9,9 +9,8 @@ import { SubscribeProvider } from './subscribe/interface';
 import { PollingSubscribeProvider } from './subscribe/polling-provider';
 import { TzProvider } from './tz/interface';
 import { RpcTzProvider } from './tz/rpc-tz-provider';
-
+import { format } from './format';
 export { SubscribeProvider } from './subscribe/interface';
-
 export interface SetProviderOptions {
   rpc?: string | RpcClient;
   indexer?: string | IndexerClient;
@@ -29,6 +28,8 @@ export class TezosToolkit {
   private _contract!: ContractProvider;
   private _stream!: SubscribeProvider;
   private _options: SetProviderOptions = {};
+
+  public readonly format = format;
 
   constructor() {
     this.setProvider({ rpc: this._rpcClient });
