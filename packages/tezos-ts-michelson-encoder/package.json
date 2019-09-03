@@ -55,8 +55,9 @@
     ]
   },
   "dependencies": {
-    "buffer": "^5.2.1",
-    "bs58check": "^2.1.2"
+    "bignumber.js": "^9.0.0",
+    "bs58check": "^2.1.2",
+    "buffer": "^5.2.1"
   },
   "devDependencies": {
     "@types/jest": "^23.3.2",

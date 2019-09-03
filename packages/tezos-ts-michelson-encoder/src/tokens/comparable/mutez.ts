@@ -1,4 +1,5 @@
 import { Token, TokenFactory, ComparableToken } from '../token';
+import BigNumber from 'bignumber.js';
 
 export class MutezToken extends Token implements ComparableToken {
   static prim = 'mutez';
@@ -12,7 +13,7 @@ export class MutezToken extends Token implements ComparableToken {
   }
 
   public Execute(val: any): { [key: string]: any } {
-    return val.int;
+    return new BigNumber(val.int);
   }
 
   public ExtractSchema() {

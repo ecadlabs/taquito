@@ -11,7 +11,7 @@ export class TimestampToken extends Token implements ComparableToken {
     super(val, idx, fac);
   }
 
-  public Execute(val: any): { [key: string]: any } {
+  public Execute(val: any): string {
     return val.string;
   }
 

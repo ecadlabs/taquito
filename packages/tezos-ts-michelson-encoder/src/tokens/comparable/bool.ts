@@ -11,8 +11,8 @@ export class BoolToken extends Token {
     super(val, idx, fac);
   }
 
-  public Execute(val: any): { [key: string]: any } {
-    return val.prim;
+  public Execute(val: any): boolean {
+    return String(val.prim).toLowerCase() === 'true' ? true : false;
   }
 
   public ExtractSchema() {
