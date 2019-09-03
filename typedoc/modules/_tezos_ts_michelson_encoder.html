@@ -66,6 +66,69 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<a href="#tezos-ts-michelson-encoder-package" id="tezos-ts-michelson-encoder-package" style="color: inherit; text-decoration: none;">
+						<h1>Tezos TS Michelson Encoder package</h1>
+					</a>
+					<p><code>@tezos-ts/michelson-encoder</code> converts michelson data and types into convenient JS/TS objects.</p>
+					<p>See the top-level project <a href="https://github.com/ecadlabs/tezos-ts">https://github.com/ecadlabs/tezos-ts</a> for details on reporting issues, contributing and versioning.</p>
+					<a href="#example" id="example" style="color: inherit; text-decoration: none;">
+						<h2>Example</h2>
+					</a>
+					<p>Given the following michelson smart contract data, retrieved from a Tezos Nodes RPC:</p>
+					<pre><code class="language-json">{
+  <span class="hljs-attr">"storage"</span>: {
+    <span class="hljs-attr">"prim"</span>: <span class="hljs-string">"Pair"</span>,
+    <span class="hljs-attr">"args"</span>: [
+      [],
+      {
+        <span class="hljs-attr">"prim"</span>: <span class="hljs-string">"Pair"</span>,
+        <span class="hljs-attr">"args"</span>: [
+          { <span class="hljs-attr">"int"</span>: <span class="hljs-string">"1"</span> },
+          {
+            <span class="hljs-attr">"prim"</span>: <span class="hljs-string">"Pair"</span>,
+            <span class="hljs-attr">"args"</span>: [
+              { <span class="hljs-attr">"int"</span>: <span class="hljs-string">"1000"</span> },
+              {
+                <span class="hljs-attr">"prim"</span>: <span class="hljs-string">"Pair"</span>,
+                <span class="hljs-attr">"args"</span>: [
+                  { <span class="hljs-attr">"string"</span>: <span class="hljs-string">"Token B"</span> },
+                  {
+                    <span class="hljs-attr">"prim"</span>: <span class="hljs-string">"Pair"</span>,
+                    <span class="hljs-attr">"args"</span>: [
+                      { <span class="hljs-attr">"string"</span>: <span class="hljs-string">"B"</span> },
+                      { <span class="hljs-attr">"string"</span>: <span class="hljs-string">"tz1ccqAEwfPgeoipnXtjAv1iucrpQv3DFmmS"</span> }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+					<p><code>@tezos-ts/michelson-encoder</code> will give the caller this:</p>
+					<pre><code class="language-javascript">{
+  <span class="hljs-attr">accounts</span>: {},
+  <span class="hljs-attr">version</span>: <span class="hljs-string">'1'</span>,
+  <span class="hljs-attr">totalSupply</span>: <span class="hljs-string">'1000'</span>,
+  <span class="hljs-attr">name</span>: <span class="hljs-string">'Token B'</span>,
+  <span class="hljs-attr">symbol</span>: <span class="hljs-string">'B'</span>,
+  <span class="hljs-attr">owner</span>: <span class="hljs-string">'tz1ccqAEwfPgeoipnXtjAv1iucrpQv3DFmmS'</span> 
+}</code></pre>
+					<a href="#api-documentation" id="api-documentation" style="color: inherit; text-decoration: none;">
+						<h2>API Documentation</h2>
+					</a>
+					<p>TypeDoc style documentation is available on-line <a href="https://ecadlabs.github.io/tezos-ts/typedoc/modules/_tezos_ts_michelson_encoder.html">here</a></p>
+					<a href="#disclaimer" id="disclaimer" style="color: inherit; text-decoration: none;">
+						<h2>Disclaimer</h2>
+					</a>
+					<p>THIS SOFTWARE IS PROVIDED &quot;AS IS&quot; AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
+				</div>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
@@ -144,7 +207,7 @@
 					<div class="tsd-signature tsd-kind-icon">Token<wbr>Factory<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/3bbf6e9/packages/tezos-ts-michelson-encoder/src/tokens/token.ts#L1">tezos-ts-michelson-encoder/src/tokens/token.ts:1</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/f374359/packages/tezos-ts-michelson-encoder/src/tokens/token.ts#L1">tezos-ts-michelson-encoder/src/tokens/token.ts:1</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -181,7 +244,7 @@
 					<div class="tsd-signature tsd-kind-icon">bs58check<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> =&nbsp;require(&#x27;bs58check&#x27;)</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/3bbf6e9/packages/tezos-ts-michelson-encoder/src/encoding.ts#L2">tezos-ts-michelson-encoder/src/encoding.ts:2</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/f374359/packages/tezos-ts-michelson-encoder/src/encoding.ts#L2">tezos-ts-michelson-encoder/src/encoding.ts:2</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -191,7 +254,7 @@
 					<div class="tsd-signature tsd-kind-icon">tokens<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><a href="../classes/_tezos_ts_michelson_encoder.nattoken.html" class="tsd-signature-type">NatToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_tezos_ts_michelson_encoder.stringtoken.html" class="tsd-signature-type">StringToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_tezos_ts_michelson_encoder.addresstoken.html" class="tsd-signature-type">AddressToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_tezos_ts_michelson_encoder.booltoken.html" class="tsd-signature-type">BoolToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_tezos_ts_michelson_encoder.contracttoken.html" class="tsd-signature-type">ContractToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_tezos_ts_michelson_encoder.listtoken.html" class="tsd-signature-type">ListToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_tezos_ts_michelson_encoder.muteztoken.html" class="tsd-signature-type">MutezToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_tezos_ts_michelson_encoder.bytestoken.html" class="tsd-signature-type">BytesToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_tezos_ts_michelson_encoder.optiontoken.html" class="tsd-signature-type">OptionToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_tezos_ts_michelson_encoder.timestamptoken.html" class="tsd-signature-type">TimestampToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_tezos_ts_michelson_encoder.inttoken.html" class="tsd-signature-type">IntToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_tezos_ts_michelson_encoder.unittoken.html" class="tsd-signature-type">UnitToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_tezos_ts_michelson_encoder.keytoken.html" class="tsd-signature-type">KeyToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_tezos_ts_michelson_encoder.pairtoken.html" class="tsd-signature-type">PairToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_tezos_ts_michelson_encoder.bigmaptoken.html" class="tsd-signature-type">BigMapToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_tezos_ts_michelson_encoder.maptoken.html" class="tsd-signature-type">MapToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_tezos_ts_michelson_encoder.ortoken.html" class="tsd-signature-type">OrToken</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[PairToken,NatToken,StringToken,BigMapToken,AddressToken,MapToken,BoolToken,OrToken,ContractToken,ListToken,MutezToken,BytesToken,OptionToken,TimestampToken,IntToken,UnitToken,KeyToken,]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/3bbf6e9/packages/tezos-ts-michelson-encoder/src/tokens/tokens.ts#L28">tezos-ts-michelson-encoder/src/tokens/tokens.ts:28</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/f374359/packages/tezos-ts-michelson-encoder/src/tokens/tokens.ts#L28">tezos-ts-michelson-encoder/src/tokens/tokens.ts:28</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -208,7 +271,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/3bbf6e9/packages/tezos-ts-michelson-encoder/src/encoding.ts#L3">tezos-ts-michelson-encoder/src/encoding.ts:3</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/f374359/packages/tezos-ts-michelson-encoder/src/encoding.ts#L3">tezos-ts-michelson-encoder/src/encoding.ts:3</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -234,7 +297,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/3bbf6e9/packages/tezos-ts-michelson-encoder/src/encoding.ts#L13">tezos-ts-michelson-encoder/src/encoding.ts:13</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/f374359/packages/tezos-ts-michelson-encoder/src/encoding.ts#L13">tezos-ts-michelson-encoder/src/encoding.ts:13</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -257,7 +320,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/3bbf6e9/packages/tezos-ts-michelson-encoder/src/tokens/createToken.ts#L4">tezos-ts-michelson-encoder/src/tokens/createToken.ts:4</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/f374359/packages/tezos-ts-michelson-encoder/src/tokens/createToken.ts#L4">tezos-ts-michelson-encoder/src/tokens/createToken.ts:4</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -283,7 +346,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/3bbf6e9/packages/tezos-ts-michelson-encoder/src/encoding.ts#L41">tezos-ts-michelson-encoder/src/encoding.ts:41</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/f374359/packages/tezos-ts-michelson-encoder/src/encoding.ts#L41">tezos-ts-michelson-encoder/src/encoding.ts:41</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
