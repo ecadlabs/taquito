@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import BigNumber from 'bignumber.js'
-BigNumber.config({ DECIMAL_PLACES: 2 })
+import { Tezos } from '@tezos-ts/tezos-ts';
 
 @Pipe({
   name: 'tz'
@@ -13,7 +13,7 @@ export class TzPipe implements PipeTransform {
       return amount;
     }
 
-    return `${new BigNumber(amount).div(Math.pow(10, 6)).toString()} ꜩ`;
+    return `${new BigNumber(Tezos.format('mutez', 'tz', amount)).toFixed(2)} ꜩ`;
   }
 
 }
