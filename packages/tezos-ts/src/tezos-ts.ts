@@ -7,6 +7,7 @@ import { TzProvider } from './tz/interface';
 import { IndexerProvider } from './query/indexer-provider';
 import { RpcTzProvider } from './tz/rpc-tz-provider';
 import { IndexerClient } from '@tezos-ts/indexer';
+import { format } from './format';
 export interface SetProviderOptions {
   rpc?: string | RpcClient;
   indexer?: string | IndexerClient;
@@ -21,6 +22,8 @@ export class TezosToolkit {
   private _query!: QueryProvider;
   private _tz!: TzProvider;
   private _contract!: ContractProvider;
+
+  public readonly format = format;
 
   constructor() {
     this.setProvider({ rpc: this._rpcClient });
