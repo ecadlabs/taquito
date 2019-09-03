@@ -25,4 +25,8 @@ export class IntToken extends Token implements ComparableToken {
       type: { prim: IntToken.prim },
     };
   }
+
+  public ToKey({ int }: any) {
+    return int;
+  }
 }

@@ -25,4 +25,8 @@ export class MutezToken extends Token implements ComparableToken {
       type: { prim: MutezToken.prim },
     };
   }
+
+  public ToKey({ int }: any) {
+    return int;
+  }
 }
