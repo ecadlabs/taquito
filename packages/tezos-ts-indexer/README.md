@@ -1,3 +1,5 @@
+[![pkgsign status](https://us-central1-pkgsign.cloudfunctions.net/pkgsign-badge?name=@tezos-ts/tezos-ts-indexer&expectedIdentity=jevonearth)](https://github.com/RedpointGames/pkgsign)
+
 # Tezos TS Indexer package
 
 `@tezos-ts/indexer` is an npm package that provides developers with convenient methods to access indexed Tezos blockchain data.
