@@ -25,4 +25,8 @@ export class NatToken extends Token implements ComparableToken {
       type: { prim: NatToken.prim },
     };
   }
+
+  public ToKey({ int }: any) {
+    return int;
+  }
 }
