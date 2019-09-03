@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Tezos, TezosToolkit } from '@tezos-ts/tezos-ts'
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, never } from 'rxjs';
 
 const provider = 'https://api.tez.ie/rpc/mainnet';
 Tezos.setProvider({ rpc: provider });
@@ -31,12 +31,12 @@ export class TezosService {
         base = {
           balance: (await this.tezos.tz.getBalance(address)).toString(),
           history: await this.tezos.query.balanceHistory(address, { limit: 20 }),
-          contract: await this.tezos['_rpcClient'].getContract(address),
+          contract: await this.tezos.rpc.getContract(address),
           storage: null,
           address,
         }
       } catch (ex) {
-        return base;
+        return {} as any;
       }
 
       try {
@@ -73,9 +73,9 @@ export class TezosService {
     tap(() => this.blockLoading$.next(true)),
     switchMap(async (head) => {
       try {
-        return this.tezos['_rpcClient'].getBlock({ block: head })
+        return this.tezos.rpc.getBlock({ block: head })
       } catch (ex) {
-        return {}
+        return {} as any
       }
     }),
     tap(() => this.blockLoading$.next(false)),

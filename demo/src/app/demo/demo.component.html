@@ -11,7 +11,8 @@
 <div>
     <nb-card *ngIf='addressDetail$ | async as detail'>
         <nb-card-header class='card-header'><span>Address details</span>
-            <div class='toggle-container'><span class='last-block'>Last block: {{head$ | async}}</span>
+            <div class='toggle-container'><span class='last-block'>Last block ({{level$ | async}}):
+                    {{head$ | async}}</span>
                 <nb-toggle [formControl]='autoRefreshToggle'>
                     Auto Refresh</nb-toggle>
             </div>

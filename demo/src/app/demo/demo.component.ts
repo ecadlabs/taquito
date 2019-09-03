@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { TezosService } from '../tezos.service';
 import { FormControl } from '@angular/forms';
 import { combineLatest } from 'rxjs';
-import { filter, startWith, map, delay, debounceTime, tap } from 'rxjs/operators';
+import { filter, startWith, map, delay, debounceTime, tap, distinctUntilChanged } from 'rxjs/operators';
 import { zip } from 'lodash';
-
 
 import * as Highcharts from 'highcharts';
 
@@ -23,6 +22,9 @@ export class DemoComponent implements OnInit {
 
   public addressDetail$ = this.tezos.addressDetail$;
   public blockDetail$ = this.tezos.lastBlock$;
+  public level$ = this.blockDetail$.pipe(map((x) => {
+    return x.header.level;
+  }));
 
   public options: any = {
     chart: {
@@ -77,6 +79,7 @@ export class DemoComponent implements OnInit {
     })
 
     this.addressDetail$.pipe(
+      distinctUntilChanged(),
       debounceTime(200),
       tap(({ history }) => {
         const serie = this.options.series[0];
