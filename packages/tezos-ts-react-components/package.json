@@ -1,6 +1,6 @@
 {
   "name": "@tezos-ts/react-components",
-  "version": "4.0.0-alpha.1",
+  "version": "4.0.0-alpha.2",
   "description": "React Components that implement common use cases for data retrieved from the Tezos blockchain",
   "keywords": [
     "tezos",
@@ -43,8 +43,8 @@
     ]
   },
   "dependencies": {
-    "@tezos-ts/rpc": "^4.0.0-alpha.1",
-    "@tezos-ts/tezos-ts": "^4.0.0-alpha.1",
+    "@tezos-ts/rpc": "^4.0.0-alpha.2",
+    "@tezos-ts/tezos-ts": "^4.0.0-alpha.2",
     "@types/react": "^16.8.24",
     "bignumber.js": "^9.0.0",
     "react": "^16.8.6",

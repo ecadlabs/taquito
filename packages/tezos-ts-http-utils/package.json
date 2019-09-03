@@ -1,6 +1,6 @@
 {
   "name": "@tezos-ts/http-utils",
-  "version": "4.0.0-alpha.1",
+  "version": "4.0.0-alpha.2",
   "description": "",
   "keywords": [],
   "main": "dist/tezos-ts-http-utils.umd.js",

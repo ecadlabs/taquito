@@ -178,7 +178,7 @@
           "typings",
           "version"
         ],
-        "sha512": "0aae21c9d42a9b772f55f4e007796c1c6bd06815d3439ae8c9c9f6daa66567a3521098a682af56f999ce4329602c210a4259fa632c1e2c23ab99d3b2c3880395"
+        "sha512": "3a614921d1c0600684ebe2ffe4fc55880fdebd19d9674b78cba3b3424efd5c05bbd136f342314a0f5285438d854dbb8126af5e1fe94ea95776e347dc39c8736e"
       }
     },
     {
@@ -186,7 +186,7 @@
       "value": {
         "packageJson": {
           "name": "@tezos-ts/tezos-ts",
-          "version": "4.0.0-alpha.1",
+          "version": "4.0.0-alpha.2",
           "description": "High level functionality that builds upon the other packages in the Tezos Typescript Library Suite.",
           "keywords": [
             "tezos",
@@ -196,6 +196,7 @@
           "module": "dist/tezos-ts.es5.js",
           "typings": "dist/types/tezos-ts.d.ts",
           "files": [
+            "signature.json",
             "dist"
           ],
           "publishConfig": {
@@ -253,9 +254,9 @@
             ]
           },
           "dependencies": {
-            "@tezos-ts/indexer": "^4.0.0-alpha.1",
-            "@tezos-ts/michelson-encoder": "^4.0.0-alpha.1",
-            "@tezos-ts/rpc": "^4.0.0-alpha.1",
+            "@tezos-ts/indexer": "^4.0.0-alpha.2",
+            "@tezos-ts/michelson-encoder": "^4.0.0-alpha.2",
+            "@tezos-ts/rpc": "^4.0.0-alpha.2",
             "bignumber.js": "^9.0.0"
           },
           "devDependencies": {
@@ -288,5 +289,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdbuIZCRAD9Qy5GYHsngAA5RAQAEGOrHSiFetRXpCCmL1T/CTM\nIPalQVqvr8xNVyzbNvWICIQvN1yWWZjrDGoui2RifijtsJcbEl78VPEDsRRUoAOH\n1Q3jmxt9NXgBnFg6cmGmXssw0z3g64Q8FoewZTuJHlFJJuFJkDiF9hiyC2+7NhPd\nDhOtp7fGE/+R5YNs+KKO2IUkpFDqYKQnaeS5pFCbvNeAsL5np1gl43yOpaX9fal/\ntFnW36bU0/iPryEedXo19TyxPZOlUJM/5+Og3mNT+x/pRYiNTo2IY9F2iAMePmNN\nSgxRCkTNBb6pgGYVb0r4tQSBPKf+igxzLStz5m6R4Go+AnnmhCKEZSMrCzLD9uaR\nl8hrmFNfb0b177r6mCO8MvzNKJzO3rghV3/chcVgGUTufgIzj1J9Invg7lE1FXj2\nEJzoXSDgHM29UkvyW2QC61vaI0L6+kIKMvmZ9ZPVsBv/Ra69xjzGgdIF4rvBmfVj\nfHgBFbSc3NmGoLQTr4TxoApYNZFJ1SL1BO595aiGqBIhGAWJ+kyLyQpRN+WSfGUo\nTnFVVqMITsCCf6909/9a9i9niCaApSWkqAyPLMt7F/gJpuNBA7DZQtrIQeX8hXlO\nEjMnFQDwfVGHsvUOG7LqoMyUcxwTeo3OlmHyFKGywr1MERrb6mo7WRYDqU28liEi\nG/09DP3EdXw/QxD+Ieo3\n=Lbkb\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdbudsCRAD9Qy5GYHsngAATTUQAFiP515dO5OGlGqoppz07XvH\nDDZJ1PAcG1RUArvJBfkm3YX9dZOsNxse/ZHXPZbmcEXqxua8O6Rg7NhPcBtBjSYa\nMVNUK1WMtOGfb4UuGQVksfQGncTIw7mVXqh3YEqrsS3MOJsfZZboM+ZcjzyMn2LL\n7pA/RyLClKVElkIJDiAbYCyC4/1PfYb0gMkj6phV0nDdx6TNXbkaHi2v9uTULQf2\nz1/WZ950halgBu6vnJBJrdxhqBq+29dl4gT+1HGNOEaH+BHT1RGhQWKBrY1x6v7A\n4zeOaV4r8N0FdzgOeyls/jG1+H8pC8xNva+7ckWF0g9k+sCyuNyoHSRJvxAdwJjC\ndiSQrG1D0A761r9R/zwkgI/jUrt3GjYJskt6gOpcpiAwtVeUVMALVCrG+YaMeRB2\nB03K9kCWrkmwnBkxlfyOlSnh2xO0ovAISssEpAPx3Rlxgmr+iUtw7e3ewf7r8DVK\nEDSEaHv6WC5LRz7qGWmdj+o0yl7chkVkWf7n+TrdEUGgm0gxduG5ZAd2o0N85FFf\nTCoj2UMQ8PMzG/p29qHqFfAh5wSZQJP4T7OyGeK5o+9Xv7KqxtdtsY4SBpwKZ7cZ\nCgrBCfyr8c6GRoOxi4AfkAMAlY8FTdA5KIJm+Jg/9AB6PusMFklpASuUBl9c71o8\nWVDJkgkFKEP9stTBNUCw\n=NCB/\n-----END PGP SIGNATURE-----\n"
 }
