@@ -116,6 +116,10 @@ export class TezosToolkit {
   get stream(): SubscribeProvider {
     return this._stream;
   }
+
+  get rpc(): RpcClient {
+    return this._rpcClient;
+  }
 }
 
 /**

@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/ecadlabs/tezos-ts.svg?style=svg)](https://circleci.com/gh/ecadlabs/tezos-ts)
+
 # Tezos Typescript Library Suite
 
 Work In Progress
