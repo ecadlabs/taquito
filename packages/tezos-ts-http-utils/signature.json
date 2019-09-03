@@ -48,6 +48,7 @@
       "value": {
         "packageJsonProperties": [
           "author",
+          "dependencies",
           "description",
           "devDependencies",
           "engines",
@@ -65,7 +66,7 @@
           "typings",
           "version"
         ],
-        "sha512": "622317313d5d874d4a3ba23cd8f0479c8fdafd22a037dbfe95a459c8e4f2539e85571938fdf64037f12424871b60e88e7d9ef06790dc193d2790e9640f88045e"
+        "sha512": "b1e675e1386775bc2a61c3c58be0f99cb03da50eb9797d588d87ccbdad978a7b050adade251d7c319832db015b18f6f380047c4af0b070f841ffe9a1691dd85c"
       }
     },
     {
@@ -73,7 +74,7 @@
       "value": {
         "packageJson": {
           "name": "@tezos-ts/http-utils",
-          "version": "4.0.0-alpha.2",
+          "version": "4.0.0-alpha.3",
           "description": "",
           "keywords": [],
           "main": "dist/tezos-ts-http-utils.umd.js",
@@ -128,6 +129,9 @@
               "src/**/*.{js,ts}"
             ]
           },
+          "dependencies": {
+            "xhr2-cookies": "^1.1.0"
+          },
           "devDependencies": {
             "@types/jest": "^23.3.2",
             "@types/node": "^10.14.13",
@@ -153,12 +157,11 @@
             "tslint": "^5.11.0",
             "tslint-config-prettier": "^1.15.0",
             "tslint-config-standard": "^8.0.1",
-            "typescript": "^3.0.3",
-            "xhr2-cookies": "^1.1.0"
+            "typescript": "^3.0.3"
           }
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdbudtCRAD9Qy5GYHsngAAKEcQAHvQZtvPkhSgjD9MANx6SscE\nkorj2SooqVjf5ObcEcgYhX2wrJrslI6UlwY8MMEQx4+4vxzdz03PqOJikfvqrh61\n/OnUkcmtk3BuZhZguqHJxmwOzF2qh1eqBELCbrAS7dWyKaCySxgxBT1pLoWQ4efO\nuHMwHxPItZXj2No+JtsBCwTWLki1FXFWzy1X5PBPeOr2IOOBiRspGrM7CQMdwtKR\nkmy/dJ+Dz8aV71/R1rFFwYEV/zGCxt/OgvN6JOa5CnW5wb/hVq+v+nq7qunDD9ob\nvMlJhOmmU5K2AFURRd+56h9Hinofoxs9xDwDgl/iU6/w/q1BHHnEoiDyjRqFPTCL\nmaMLW2RyREQCnlmpkEqdCJ4bYgmfLXdGvVOHH+euRgxP+jBtu1hT1EyYkjpbjbfc\nMFaGKv+CGvRPjnHkf5TTVRRQiYLrob5L1OkK2G24ZEpv3XHXDD7opAWpMBIKd4ic\nWMEHvMsY2z3t25TMovo+u4PQRaiE+FPCrxDYIoXLUt6GZ90QKPDKUBaHRUQWDy5D\n+qiooTrhAIU95uiylvfQ+hUBNZ4HqZkP8bI4mTvKjxJJfAHZrdHR9UUyrYyemCDW\nLZ6yBMGEJpSodDYHQnWV8B+8goe9nmOVd7UvAuAkDyHNQ8ye3Bs+BOiRON5uSQdr\nE6naNnfg+Cj5cRH/+bOW\n=pugw\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdbur0CRAD9Qy5GYHsngAAfKQQAGvAUyeuwLpbRecbd8dWlXMf\nMEKsMvUTmQ9uxrTxl9yozHo6oAEmZ/lJoRH9w8k0z1vLEmEA+9CJcI37K/I54iwr\nn4PU3beJvXnqo/12q+KaZnCKDYZQuS3cgLalLnBorJFO8ONSlAAvEp14A6qNRKlB\nupIE4Qg2jF44wQWiErsb+rpdS4NpmdUSjgxIYsb/gF60XVYtK6V+3YJN0y8dmlgI\nN8evn/2ORJpG9wqgGtEpjZROHhVOAe+LrOLoAcVv6D7SSGR6aHiWDa2bSBjqT0n3\n3rms2QGQ6TbJq4ClJWJJvsDmfSPAvsLuwccZ4tvxj3X1D7eNu48Ubo2qPGevnQeo\nuvI9m3ojcgJ7DG6Vycvzf6lkp8awlva1RruGeLQk2f63Xuum/tmWQuR469FMK16p\n4EeiSCBDVHFmT451JwyHFNePi+dnPStJm4J0YB3kGs5ho0W7JzMVxDVGQnPT+eiY\nk2UB0kUKw39u2FnnWvSvLGQSYxYe9h+uq6yUYcNbJjPvg4X57IHBnxXxjad3vFXQ\nc8sfH5InL0KGIMv9hmoMfrHWzH732ebMLic40OndhRVJSuPDc3ceoiB+iYWefDjs\nMaWKrMdpWPtEANysBvNLxzMbDSn/ullRtUdvvIvL1Vrz4O5wL1Mme6iwx5W3XtKB\npVltk3tziNNiR57gkypL\n=5WEL\n-----END PGP SIGNATURE-----\n"
 }

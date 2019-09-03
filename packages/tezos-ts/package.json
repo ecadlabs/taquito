@@ -1,6 +1,6 @@
 {
   "name": "@tezos-ts/tezos-ts",
-  "version": "4.0.0-alpha.2",
+  "version": "4.0.0-alpha.3",
   "description": "High level functionality that builds upon the other packages in the Tezos Typescript Library Suite.",
   "keywords": [
     "tezos",
@@ -68,9 +68,9 @@
     ]
   },
   "dependencies": {
-    "@tezos-ts/indexer": "^4.0.0-alpha.2",
-    "@tezos-ts/michelson-encoder": "^4.0.0-alpha.2",
-    "@tezos-ts/rpc": "^4.0.0-alpha.2",
+    "@tezos-ts/indexer": "^4.0.0-alpha.3",
+    "@tezos-ts/michelson-encoder": "^4.0.0-alpha.3",
+    "@tezos-ts/rpc": "^4.0.0-alpha.3",
     "bignumber.js": "^9.0.0"
   },
   "devDependencies": {

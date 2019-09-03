@@ -1,6 +1,6 @@
 {
   "name": "@tezos-ts/michelson-encoder",
-  "version": "4.0.0-alpha.2",
+  "version": "4.0.0-alpha.3",
   "description": "converts michelson data and types into convenient JS/TS objects",
   "keywords": [
     "tezos",
