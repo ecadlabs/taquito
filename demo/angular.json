@@ -30,9 +30,7 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": [
-              "./eztz.min.js"
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {
