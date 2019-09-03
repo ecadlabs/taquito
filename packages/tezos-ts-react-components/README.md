@@ -1,4 +1,4 @@
-[![pkgsign status](https://us-central1-pkgsign.cloudfunctions.net/pkgsign-badge?name=@tezos-ts/tezos-ts-react-components&expectedIdentity=jevonearth)](https://github.com/RedpointGames/pkgsign)
+[![pkgsign status](https://us-central1-pkgsign.cloudfunctions.net/pkgsign-badge?name=@tezos-ts/react-components&expectedIdentity=jevonearth)](https://github.com/RedpointGames/pkgsign)
 
 # Tezos TS React Components package
 
