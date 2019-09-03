@@ -51,7 +51,6 @@ export class HttpBackend {
   createRequest<T>({ url, method, timeout, query }: HttpRequestOptions, data?: {}) {
     return new Promise<T>((resolve, reject) => {
       const request = this.createXHR();
-      console.log(`${url}${this.serialize(query)}`);
       request.open(method || 'GET', `${url}${this.serialize(query)}`);
       request.setRequestHeader('Content-Type', 'application/json');
       request.timeout = timeout || defaultTimeout;

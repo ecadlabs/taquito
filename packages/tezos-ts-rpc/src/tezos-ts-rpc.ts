@@ -47,6 +47,22 @@ export class RpcClient {
 
   /**
    *
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Get the block's hash, its unique identifier.
+   *
+   * @see http://tezos.gitlab.io/mainnet/api/rpc.html#get-block-id-hash
+   */
+  async getBlockHash({ block }: RPCOptions = defaultRPCOptions): Promise<string> {
+    const hash = await this.httpBackend.createRequest<string>({
+      url: `${this.url}/chains/${this.chain}/blocks/${block}/hash`,
+      method: 'GET',
+    });
+    return hash;
+  }
+
+  /**
+   *
    * @param address address from which we want to retrieve the balance
    * @param options contains generic configuration for rpc calls
    *
