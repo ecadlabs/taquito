@@ -1,5 +1,11 @@
-<div>
+<mat-progress-bar class='progress' [class.hidden]='!(loading$ | async)' mode="query">
+</mat-progress-bar>
+<div class="controls">
     <input class='search-input' [formControl]='addressInput' nbInput />
+    <nb-select placeholder="Select Showcase" [formControl]='networkSelect'>
+        <nb-option value="https://api.tez.ie/rpc/mainnet">Mainnet</nb-option>
+        <nb-option value="https://alphanet-node.tzscan.io">Alphanet</nb-option>
+    </nb-select>
 </div>
 <br>
 <div>
@@ -13,13 +19,47 @@
         <nb-card-body>
             <div class='row'>
                 <div class='col'>
-                    Balance:
-                    {{detail.balance}}
+                    <div *ngIf='detail.balance'>
+                        Balance:
+                        {{detail.balance | tz}}
+                    </div>
+                    <div *ngIf='!detail.balance'>
+                        <p>Balance not available</p>
+                    </div>
+                    <div *ngIf='detail.contract'>
+                        Manager: {{detail.contract.manager}}<br>
+                        Counter: {{detail.contract.counter}}<br>
+                        Spendable: {{detail.contract.spendable}}
+                    </div>
+                    <div *ngIf='!detail.balance'>
+                        <p>Details not available</p>
+                    </div>
+                    <h6>Balance History</h6>
+                    <div *ngIf='detail.history?.value?.length'>
+                        <div id="chart"></div>
+                    </div>
+                    <div *ngIf='!detail.history?.value?.length'>
+                        <p>History not available</p>
+                    </div>
                 </div>
                 <div class='col'>
                     Storage:
-                    <ngx-json-viewer [json]="detail.storage"></ngx-json-viewer>
+                    <ngx-json-viewer *ngIf='detail.storage' [json]="detail.storage" [expanded]="false">
+                    </ngx-json-viewer>
+                    <div *ngIf='!detail.storage'>
+                        <p>Storage not available</p>
+                    </div>
                 </div>
+            </div>
+        </nb-card-body>
+    </nb-card>
+    <br>
+    <nb-card *ngIf='blockDetail$ | async as detail'>
+        <nb-card-header class='card-header'><span>Last block details</span>
+        </nb-card-header>
+        <nb-card-body>
+            <div class='row'>
+                <ngx-json-viewer [json]="detail" [expanded]="false"></ngx-json-viewer>
             </div>
         </nb-card-body>
     </nb-card>

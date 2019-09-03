@@ -3,7 +3,23 @@
     .col {
         min-width: 50%;
         flex: 1;
+        padding: 10px;
     }
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+.progress {
+    position: absolute;
+    left: 0px;
+    top: 0;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
 }
 
 .search-input {

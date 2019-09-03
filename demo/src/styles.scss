@@ -2,7 +2,7 @@
 @import '~@nebular/theme/styles/theming';
 @import '~@nebular/theme/styles/themes/default';
 @import '~@nebular/theme/styles/globals';
-
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 @include nb-install() {
     @include nb-theme-global();
   };
