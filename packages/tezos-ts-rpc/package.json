@@ -9,6 +9,9 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "author": "Simon Boissonneault-Robert <simon@ecadlabs.com>",
   "repository": {
     "type": "git",

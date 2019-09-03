@@ -14,6 +14,9 @@
     "type": "git",
     "url": ""
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "MIT",
   "engines": {
     "node": ">=6.0.0"
