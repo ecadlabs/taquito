@@ -97,9 +97,17 @@
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_tezos_ts_tezos_ts.tezostoolkit.html#format" class="tsd-kind-icon">format</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
 							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_tezos_ts_tezos_ts.tezostoolkit.html#contract" class="tsd-kind-icon">contract</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_tezos_ts_tezos_ts.tezostoolkit.html#query" class="tsd-kind-icon">query</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_tezos_ts_tezos_ts.tezostoolkit.html#stream" class="tsd-kind-icon">stream</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_tezos_ts_tezos_ts.tezostoolkit.html#tz" class="tsd-kind-icon">tz</a></li>
 							</ul>
 						</section>
@@ -124,12 +132,25 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/24ecb25/packages/tezos-ts/src/tezos-ts.ts#L13">tezos-ts/src/tezos-ts.ts:13</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/33c1378/packages/tezos-ts/src/tezos-ts.ts#L32">tezos-ts/src/tezos-ts.ts:32</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_tezos_ts_tezos_ts.tezostoolkit.html" class="tsd-signature-type">TezosToolkit</a></h4>
 						</li>
 					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="format" class="tsd-anchor"></a>
+					<h3>format</h3>
+					<div class="tsd-signature tsd-kind-icon">format<span class="tsd-signature-symbol">:</span> <a href="../modules/_tezos_ts_tezos_ts.html#format-1" class="tsd-signature-type">format</a><span class="tsd-signature-symbol"> =&nbsp;format</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/33c1378/packages/tezos-ts/src/tezos-ts.ts#L32">tezos-ts/src/tezos-ts.ts:32</a></li>
+						</ul>
+					</aside>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -144,7 +165,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/24ecb25/packages/tezos-ts/src/tezos-ts.ts#L43">tezos-ts/src/tezos-ts.ts:43</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/33c1378/packages/tezos-ts/src/tezos-ts.ts#L105">tezos-ts/src/tezos-ts.ts:105</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -159,6 +180,47 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="query" class="tsd-anchor"></a>
+					<h3>query</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> query<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_tezos_ts_tezos_ts.queryprovider.html" class="tsd-signature-type">QueryProvider</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/33c1378/packages/tezos-ts/src/tezos-ts.ts#L112">tezos-ts/src/tezos-ts.ts:112</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<dl class="tsd-comment-tags">
+									<dt>description</dt>
+									<dd><p>Provide access to querying utilities backed by an indexer implementation</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_tezos_ts_tezos_ts.queryprovider.html" class="tsd-signature-type">QueryProvider</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="stream" class="tsd-anchor"></a>
+					<h3>stream</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> stream<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_tezos_ts_tezos_ts.subscribeprovider.html" class="tsd-signature-type">SubscribeProvider</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/33c1378/packages/tezos-ts/src/tezos-ts.ts#L116">tezos-ts/src/tezos-ts.ts:116</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_tezos_ts_tezos_ts.subscribeprovider.html" class="tsd-signature-type">SubscribeProvider</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 					<a name="tz" class="tsd-anchor"></a>
 					<h3>tz</h3>
 					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
@@ -168,7 +230,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/24ecb25/packages/tezos-ts/src/tezos-ts.ts#L36">tezos-ts/src/tezos-ts.ts:36</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/33c1378/packages/tezos-ts/src/tezos-ts.ts#L98">tezos-ts/src/tezos-ts.ts:98</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -189,13 +251,13 @@
 					<a name="setprovider" class="tsd-anchor"></a>
 					<h3>set<wbr>Provider</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Provider<span class="tsd-signature-symbol">(</span>provider<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="_tezos_ts_rpc.rpcclient.html" class="tsd-signature-type">RpcClient</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Provider<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/24ecb25/packages/tezos-ts/src/tezos-ts.ts#L23">tezos-ts/src/tezos-ts.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/33c1378/packages/tezos-ts/src/tezos-ts.ts#L42">tezos-ts/src/tezos-ts.ts:42</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -203,10 +265,18 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>provider: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="_tezos_ts_rpc.rpcclient.html" class="tsd-signature-type">RpcClient</a></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>rpc url or rpcClient to use to interact with the Tezos network</p>
-									</div>
+									<h5>__namedParameters: <span class="tsd-signature-type">object</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter">
+											<h5>indexer<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="_tezos_ts_indexer.indexerclient.html" class="tsd-signature-type">IndexerClient</a></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>rpc<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="_tezos_ts_rpc.rpcclient.html" class="tsd-signature-type">RpcClient</a></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>stream<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_tezos_ts_tezos_ts.subscribeprovider.html" class="tsd-signature-type">SubscribeProvider</a></h5>
+										</li>
+									</ul>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -222,6 +292,12 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class=" tsd-kind-module">
+						<a href="../modules/_tezos_ts_http_utils.html">@tezos-<wbr>ts/http-<wbr>utils</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/_tezos_ts_indexer.html">@tezos-<wbr>ts/indexer</a>
+					</li>
+					<li class=" tsd-kind-module">
 						<a href="../modules/_tezos_ts_michelson_encoder.html">@tezos-<wbr>ts/michelson-<wbr>encoder</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -229,6 +305,9 @@
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="../modules/_tezos_ts_rpc.html">@tezos-<wbr>ts/rpc</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/_tezos_ts_streamer.html">@tezos-<wbr>ts/streamer</a>
 					</li>
 					<li class="current tsd-kind-module">
 						<a href="../modules/_tezos_ts_tezos_ts.html">@tezos-<wbr>ts/tezos-<wbr>ts</a>
@@ -238,10 +317,19 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="_tezos_ts_tezos_ts.indexerprovider.html" class="tsd-kind-icon">Indexer<wbr>Provider</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="_tezos_ts_tezos_ts.pollingsubscribeprovider.html" class="tsd-kind-icon">Polling<wbr>Subscribe<wbr>Provider</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="_tezos_ts_tezos_ts.rpccontractprovider.html" class="tsd-kind-icon">Rpc<wbr>Contract<wbr>Provider</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="_tezos_ts_tezos_ts.rpctzprovider.html" class="tsd-kind-icon">Rpc<wbr>TzProvider</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module tsd-is-not-exported">
+						<a href="_tezos_ts_tezos_ts.subscription.html" class="tsd-kind-icon">Subscription</a>
 					</li>
 				</ul>
 				<ul class="current">
@@ -251,8 +339,17 @@
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
 								<a href="_tezos_ts_tezos_ts.tezostoolkit.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_tezos_ts_tezos_ts.tezostoolkit.html#format" class="tsd-kind-icon">format</a>
+							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="_tezos_ts_tezos_ts.tezostoolkit.html#contract" class="tsd-kind-icon">contract</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="_tezos_ts_tezos_ts.tezostoolkit.html#query" class="tsd-kind-icon">query</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="_tezos_ts_tezos_ts.tezostoolkit.html#stream" class="tsd-kind-icon">stream</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="_tezos_ts_tezos_ts.tezostoolkit.html#tz" class="tsd-kind-icon">tz</a>
@@ -265,7 +362,25 @@
 				</ul>
 				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/_tezos_ts_tezos_ts.balancehistory.html" class="tsd-kind-icon">Balance<wbr>History</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/_tezos_ts_tezos_ts.balancehistoryoptions.html" class="tsd-kind-icon">Balance<wbr>History<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="../interfaces/_tezos_ts_tezos_ts.contractprovider.html" class="tsd-kind-icon">Contract<wbr>Provider</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/_tezos_ts_tezos_ts.queryprovider.html" class="tsd-kind-icon">Query<wbr>Provider</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/_tezos_ts_tezos_ts.setprovideroptions.html" class="tsd-kind-icon">Set<wbr>Provider<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/_tezos_ts_tezos_ts.subscribeprovider.html" class="tsd-kind-icon">Subscribe<wbr>Provider</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/_tezos_ts_tezos_ts.subscription-1.html" class="tsd-kind-icon">Subscription</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="../interfaces/_tezos_ts_tezos_ts.tzprovider.html" class="tsd-kind-icon">Tz<wbr>Provider</a>
@@ -273,8 +388,23 @@
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
 						<a href="../modules/_tezos_ts_tezos_ts.html#contractschema" class="tsd-kind-icon">Contract<wbr>Schema</a>
 					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-is-not-exported">
+						<a href="../modules/_tezos_ts_tezos_ts.html#format" class="tsd-kind-icon">Format</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-parent-kind-module tsd-is-not-exported">
+						<a href="../modules/_tezos_ts_tezos_ts.html#mtz_decimals" class="tsd-kind-icon">MTZ_<wbr>DECIMALS</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-parent-kind-module tsd-is-not-exported">
+						<a href="../modules/_tezos_ts_tezos_ts.html#tz_decimals" class="tsd-kind-icon">TZ_<wbr>DECIMALS</a>
+					</li>
 					<li class=" tsd-kind-variable tsd-parent-kind-module">
 						<a href="../modules/_tezos_ts_tezos_ts.html#tezos" class="tsd-kind-icon">Tezos</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/_tezos_ts_tezos_ts.html#format-1" class="tsd-kind-icon">format</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+						<a href="../modules/_tezos_ts_tezos_ts.html#getdecimal" class="tsd-kind-icon">get<wbr>Decimal</a>
 					</li>
 				</ul>
 			</nav>
