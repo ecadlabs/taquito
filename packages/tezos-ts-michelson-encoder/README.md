@@ -1,3 +1,5 @@
+[![pkgsign status](https://us-central1-pkgsign.cloudfunctions.net/pkgsign-badge?name=@tezos-ts/tezos-ts-michelson-encoder&expectedIdentity=jevonearth)](https://github.com/RedpointGames/pkgsign)
+
 # Tezos TS Michelson Encoder package
 
 `@tezos-ts/michelson-encoder` converts michelson data and types into convenient JS/TS objects.
