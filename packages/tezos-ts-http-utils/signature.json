@@ -1,0 +1,163 @@
+{
+  "entries": [
+    {
+      "entry": "files/v1alpha2",
+      "value": {
+        "files": [
+          {
+            "path": "dist/tezos-ts-http-utils.es5.js",
+            "sha512": "b7a9fa55178d8a0fc799206937f2f71ca3bdda1fc88987758296bc280bfe6c73c65b78f27158c0b8220b627b53626636577e47a76b6f224ec7ff841a1bdbe10b"
+          },
+          {
+            "path": "dist/lib/tezos-ts-http-utils.js",
+            "sha512": "fe7cfb6e8e05e40892378dc86f177ded0a9e7b2daf7f57a41e1db603b44f4d9cb6433e7c9314631fccacb6d94ecc8eced105a9adfdf1bde50183126c751f4e37"
+          },
+          {
+            "path": "dist/tezos-ts-http-utils.umd.js",
+            "sha512": "879f99f52db8270e1a3ac150c2668160be0eee02b9cdb49a74de9d6199ea3e0e3ae223b9d58d5ff0bac6b6ea7f32b7487e101f427ab2ee87daafb3f05596f6a6"
+          },
+          {
+            "path": "dist/tezos-ts-http-utils.es5.js.map",
+            "sha512": "7b5cade83d2dd4f1939bd1566195807c873cf27e83028d1ac1f3505c18d294613e05a1b9d21f8c0073e65fc71656d93137619eebef1163d4ef3394f8c7e955bb"
+          },
+          {
+            "path": "dist/lib/tezos-ts-http-utils.js.map",
+            "sha512": "b7ce62e2bcf03660f15be9c59da219a0c3dc67def3171e2e4e2fa1a2b7a3186e4e257a2c0f52d1b6616126be6b4ebfc700d86f65cb82dc3ab32a421a74ee7985"
+          },
+          {
+            "path": "dist/tezos-ts-http-utils.umd.js.map",
+            "sha512": "b4282b100cb7d1a912e2e315958bb40690aa099f46163cd966397e323f02ef1ddfcec6ed9dd29702eb9b12dcf3bcb4a4a4e5a717419bf615ff8224bc8d39dbb6"
+          },
+          {
+            "path": "dist/types/tezos-ts-http-utils.d.ts",
+            "sha512": "8693c1bfdf5b133a7f1b88efc6e68b4c10e11f62d95b9d7a73c12441996ec966bde4ba203c72f82bc87654534951c2a1fa5f05fbaed063af4591e70a45d8961a"
+          }
+        ]
+      }
+    },
+    {
+      "entry": "identity/v1alpha2",
+      "value": {
+        "identity": {
+          "keybaseUser": "jevonearth"
+        }
+      }
+    },
+    {
+      "entry": "npmCompatiblePackageJson/v1alpha2",
+      "value": {
+        "packageJsonProperties": [
+          "author",
+          "description",
+          "devDependencies",
+          "engines",
+          "files",
+          "jest",
+          "keywords",
+          "license",
+          "lint-staged",
+          "main",
+          "module",
+          "name",
+          "publishConfig",
+          "repository",
+          "scripts",
+          "typings",
+          "version"
+        ],
+        "sha512": "f0c436e399528e060d53adea869f4d43f0bf5fff45aff33f9159b02b6e1bda29deaa04ceb0b26daaf1ca1e199db17fe57c0b87dc71ec91124ee44ec5d8f22c8b"
+      }
+    },
+    {
+      "entry": "packageJson/v1alpha2",
+      "value": {
+        "packageJson": {
+          "name": "@tezos-ts/http-utils",
+          "version": "4.0.0-alpha.1",
+          "description": "",
+          "keywords": [],
+          "main": "dist/tezos-ts-http-utils.umd.js",
+          "module": "dist/tezos-ts-http-utils.es5.js",
+          "typings": "dist/types/tezos-ts-http-utils.d.ts",
+          "files": [
+            "dist"
+          ],
+          "author": "Simon Boissonneault-Robert <simon@ecadlabs.com>",
+          "repository": {
+            "type": "git",
+            "url": ""
+          },
+          "publishConfig": {
+            "access": "public"
+          },
+          "license": "MIT",
+          "engines": {
+            "node": ">=6.0.0"
+          },
+          "scripts": {
+            "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts'",
+            "precommit": "lint-staged",
+            "prebuild": "rimraf dist",
+            "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts ",
+            "start": "rollup -c rollup.config.ts -w"
+          },
+          "lint-staged": {
+            "{src,test}/**/*.ts": [
+              "prettier --write",
+              "tslint --fix",
+              "git add"
+            ]
+          },
+          "jest": {
+            "transform": {
+              ".(ts|tsx)": "ts-jest"
+            },
+            "testEnvironment": "node",
+            "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+            "moduleFileExtensions": [
+              "ts",
+              "tsx",
+              "js"
+            ],
+            "coveragePathIgnorePatterns": [
+              "/node_modules/",
+              "/test/"
+            ],
+            "collectCoverageFrom": [
+              "src/**/*.{js,ts}"
+            ]
+          },
+          "devDependencies": {
+            "@types/jest": "^23.3.2",
+            "@types/node": "^10.14.13",
+            "@types/superagent": "^4.1.3",
+            "colors": "^1.3.2",
+            "coveralls": "^3.0.2",
+            "cross-env": "^5.2.0",
+            "jest": "^24.8.0",
+            "jest-config": "^24.8.0",
+            "lint-staged": "^8.0.0",
+            "lodash.camelcase": "^4.3.0",
+            "prettier": "^1.14.3",
+            "prompt": "^1.0.0",
+            "replace-in-file": "^3.4.2",
+            "rimraf": "^2.6.2",
+            "rollup": "^1.20.1",
+            "rollup-plugin-json": "^4.0.0",
+            "rollup-plugin-sourcemaps": "^0.4.2",
+            "rollup-plugin-typescript2": "^0.22.1",
+            "shelljs": "^0.8.3",
+            "ts-jest": "^23.10.2",
+            "ts-node": "^7.0.1",
+            "tslint": "^5.11.0",
+            "tslint-config-prettier": "^1.15.0",
+            "tslint-config-standard": "^8.0.1",
+            "typescript": "^3.0.3",
+            "xhr2-cookies": "^1.1.0"
+          }
+        }
+      }
+    }
+  ],
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdbuIaCRAD9Qy5GYHsngAAuAMQAAC9Y7wMJFgq0x6/fMQHg1xN\nrpET+yRAZeGvGBX9DtAaihPKAKffBnoEshitxlaB11ER/dL9rL8Zk/XQLUye7Ux2\nGam8lmsGQmARZRj3qCVukIWMScdoMpkTjqXvo4bKVziqRyVjz92IaMcfNugMwutV\nOwaBEWoQiMzdDkevob4HRH8BaLslGqqpeYbyE+5kBuqBguiKja1I/7e0xCQ862gr\nyI2eKA9nRQ6o4GPqu44ZPgvtW36mAiPDxK3zE/1HVNbdq9whUEgv8rG27sb0gg8S\nTfHf/FMx+PQ0ZbHZovSzTVwtFrGYVuKQLS7c18U02y9WkE65pknAsFQ7/x+aw0y6\nWEGuIrIdp51V74vDjqxBOt/fnMFu1OoWGeY3nB0am/V5mVxXipL6KGjE4LJDwS0h\nomftb6b9MXJcxavXX/F8fe+Halplzvz2IjYG7vYFjR2p1aH+YnGqZDIlCa8WtLLy\nPTd06yROlyAlKD+4w1TCL5VWuaroUp/rpCEVH39vZG/2SXoZu4ZYtYqLjElHo85d\naDlzT7zXdSxeN7PhQj9yqg5/3NSaEa/YEDYIstowCmR3DDmYnCf5KOQzKPIsdDhS\nuUXAKnJjeq/9SHojS+ftvaT6sVJrvG6kdmM8B02y0W91PLmrYGZL5kITzuajFQSi\naUBOEpy98drz8u/kLknK\n=tHV3\n-----END PGP SIGNATURE-----\n"
+}

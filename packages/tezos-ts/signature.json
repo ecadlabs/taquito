@@ -1,0 +1,292 @@
+{
+  "entries": [
+    {
+      "entry": "files/v1alpha2",
+      "value": {
+        "files": [
+          {
+            "path": "dist/lib/format.js",
+            "sha512": "62e82153a40bb6fb22610099cb8f7df83c21c34f7f0f468c952b1d4d45615b072ed5159464b3954ea4f6ac167c056df2ab54dafe95f83b3231dd4dd3b5be224c"
+          },
+          {
+            "path": "dist/lib/query/indexer-provider.js",
+            "sha512": "18176165e95da07d68ce62cd5a088025d6247d2168b66b453ba4603589bc39a7ce6ea3a2c872502c6a2cce3e58143b4c9c0200e764edf9f7e01ef3e7bf663b73"
+          },
+          {
+            "path": "dist/lib/contract/interface.js",
+            "sha512": "84f5c8ae6d7a701b8b1694326d9791c726a48902a29042d5cbe85ed3d00adf4bd8aaa61efeac4998102d6b1960235ae8f3991f409641b9fb3096e1e0942933a1"
+          },
+          {
+            "path": "dist/lib/query/interface.js",
+            "sha512": "84f5c8ae6d7a701b8b1694326d9791c726a48902a29042d5cbe85ed3d00adf4bd8aaa61efeac4998102d6b1960235ae8f3991f409641b9fb3096e1e0942933a1"
+          },
+          {
+            "path": "dist/lib/subscribe/interface.js",
+            "sha512": "84f5c8ae6d7a701b8b1694326d9791c726a48902a29042d5cbe85ed3d00adf4bd8aaa61efeac4998102d6b1960235ae8f3991f409641b9fb3096e1e0942933a1"
+          },
+          {
+            "path": "dist/lib/tz/interface.js",
+            "sha512": "84f5c8ae6d7a701b8b1694326d9791c726a48902a29042d5cbe85ed3d00adf4bd8aaa61efeac4998102d6b1960235ae8f3991f409641b9fb3096e1e0942933a1"
+          },
+          {
+            "path": "dist/lib/subscribe/polling-provider.js",
+            "sha512": "eae709f5a9b67d4a129f0fe299c08f4ce298ed4a4ade1eceab608cfdc49d0c1c9853610e155747caaed0902100d16c87b6f7d7317cbdb5cd6ccb7b7c4a2229ee"
+          },
+          {
+            "path": "dist/lib/contract/rpc-contract-provider.js",
+            "sha512": "7c0ce2d0ea4a17428b60f6e8039ebf4c5d5610a8c0bffbc8a6229323085ced15c419219c6b3054d6de843a4ad1183b211f560c1d70dccfb7f7acc6f756132efd"
+          },
+          {
+            "path": "dist/lib/tz/rpc-tz-provider.js",
+            "sha512": "be2c3b9d59f623574b515f3e3b41a66ac350cbff24e070d7128e5ec2d751dc273f2e8155e8d64286ccd6d1cd9e195b420575cbc0f8e672d3580047e36164f31c"
+          },
+          {
+            "path": "dist/tezos-ts.es5.js",
+            "sha512": "711233b988d7f6013a8b2591cbcaff7d2ec786aa0ed1fb04e9eb9a799e77598dc1087f616e70f8b7ce57401ae8123208f4fe1ded618f54866812b4dbaad5a909"
+          },
+          {
+            "path": "dist/lib/tezos-ts.js",
+            "sha512": "96f1b4ae408ca6e19fe73f2cf7c01fc0ea4f8fab7ce965055d7ce8cc2e360410568742e4b6f77447a770dc70c42c663fd977943298234ab4d1e22b5ba59d834a"
+          },
+          {
+            "path": "dist/tezos-ts.umd.js",
+            "sha512": "ada8781f8a782ce9172a6da3ac827db610ab47e66584e3db33a375c4b0a8c8b43148c5fa225da590adf6e5a93f8c90c41fb214b5811a9e028c5abc8fb1806f1b"
+          },
+          {
+            "path": "dist/lib/format.js.map",
+            "sha512": "686952dfead100b6f8c336e93a9afb6ecde408fa7f1dab3d22a968f2f2f895bd456ceeaea5dfcd6aeaee12d0cf662672b3506f55b2795bcb51ad22e95e36094d"
+          },
+          {
+            "path": "dist/lib/query/indexer-provider.js.map",
+            "sha512": "c5991f2df9f98bf8dce1b20d20ff089ae94fdf741b632ad01b19348a1a9f4878db16495a12090a3aa8ddd98b97f51227d522cd928fd2c802672e6f1d53329698"
+          },
+          {
+            "path": "dist/lib/contract/interface.js.map",
+            "sha512": "8d480f101a811c5bd29cd1f6af12026ce88cceab676ab92f6d260e96b4012113d8ac8dca95f5c6bdee512d05ac5693c25df104a9702c2320962911e86e131669"
+          },
+          {
+            "path": "dist/lib/query/interface.js.map",
+            "sha512": "847a95f3e766fb6a69bcff5de59f56c1b3efc2b784f739707acc374de8730438027518e80568bea335904ec3fadcb37579dfe72fba903f44c2d4e5d9e2c05e45"
+          },
+          {
+            "path": "dist/lib/subscribe/interface.js.map",
+            "sha512": "57a0eea1891bb36f2340d3150393ee83b785b413e856c3ac95855d6be8c237077944e7eba4f40f48f7cb7afa4c04cadaa2225e0021c110c6269ad9bba2dccfbe"
+          },
+          {
+            "path": "dist/lib/tz/interface.js.map",
+            "sha512": "7e1d733b30ca5894d403fe5f046d3af6a6760705f2545a653902b2af96c4e40f0c187b1203912510a76f9e0d5dfafb1e61a21af629dd907667d84202a974b434"
+          },
+          {
+            "path": "dist/lib/subscribe/polling-provider.js.map",
+            "sha512": "09423f6b9934e27a7e3568c88435926d89e09c9399f58e41e0a452c0a8cdc467bf70ce625913c94822ba2a4d0b6327b6ff26474d4f08724fc42d836a042464d6"
+          },
+          {
+            "path": "dist/lib/contract/rpc-contract-provider.js.map",
+            "sha512": "f98c6862ff5524221b8da773f5770255f58b388adcc28fe894fe48957b00022f186230d4f491b67bf46ef1b07954a893bddf3a4fc4686d8a1f4035a325521c8b"
+          },
+          {
+            "path": "dist/lib/tz/rpc-tz-provider.js.map",
+            "sha512": "4661f4d095c7d0b9ae6ebb8a19026187569f4405c5c390692ddf692dfe13e4d7782d4757caa439a72edf3411cb4c247b66547ab46f381438da1a2bc6a0f31ac8"
+          },
+          {
+            "path": "dist/tezos-ts.es5.js.map",
+            "sha512": "0ef38450c256ec691dafa30d2f10894d1c8ebae0390f99c0efd898d547275958dc6ac12963bb15f76174db19c1ee96dd985019140309dfc4c92400fdfdb08b68"
+          },
+          {
+            "path": "dist/lib/tezos-ts.js.map",
+            "sha512": "66791985bd03f735fafda81774782f9d0dff2025b2d27004bc424fab7d7898dc6b0e6fbca561b9315d998d7c17ca8e1b2bf5d7ca800296021cb259b709518e81"
+          },
+          {
+            "path": "dist/tezos-ts.umd.js.map",
+            "sha512": "612bba04c168a893fbfe5e6bc6a56fed9d0429549c331d9b0343071189383a930422a76dc3ba3108a45c4245446748b4718ef98d33569562c568e11d11611ca6"
+          },
+          {
+            "path": "README.md",
+            "sha512": "c26522664da1ab8d6190b1d43663ac15d3251b334fd15f15d5d7b2a6f48a0da4b23e4f76144483fc0f3ed28654802f2d600cdaab34b56417575e4beb34800316"
+          },
+          {
+            "path": "dist/types/format.d.ts",
+            "sha512": "87f3e92f385e22f7742000c26ffeb2dc16cf88f4966fc936124bab1fb384644fe197c62eaa812be79b5f24988d190981fdb95a6c818cd46acd91cd8ab0de5275"
+          },
+          {
+            "path": "dist/types/query/indexer-provider.d.ts",
+            "sha512": "c45c9ee56555a76e18e9239c8e099e14a954a229d667d7d891c056405df87d839d4c2be3c2a8efe367742fd8681a8254e924200d11f00b8f356d34e730957bc6"
+          },
+          {
+            "path": "dist/types/contract/interface.d.ts",
+            "sha512": "1994ed19e8d4bf3a064aaa7c8de62baf2d7d80d95f7fdd6018405f40d44c721489ea289e94c6b1988d28fa0ca4737b7ae7c2672d66bac16787b2688f3eac89ab"
+          },
+          {
+            "path": "dist/types/query/interface.d.ts",
+            "sha512": "980db8c1cf0aa9af41953b301ecb3a9877760744449f7d6bdb873bab128b152202a77f4107b53a6b382739b9cd31f6287551c5604fa2e40e6b2dcede9b7879e7"
+          },
+          {
+            "path": "dist/types/subscribe/interface.d.ts",
+            "sha512": "21ab05ca14f3089eca1dc3aa3c44edd233a5311c9e5d15908f142f395ecc28522a864ac129ecc19eefb569b5889bcf9365ff6c72a6bf8451b5e471c7dc806065"
+          },
+          {
+            "path": "dist/types/tz/interface.d.ts",
+            "sha512": "b76218fb54e439f8899c86307940701a62c81403d8b7a1ed8d38d5b31d4b5e1a90a7ea702e301465b2fd200180fb131248e18747de7be6bfaa0e56c36684cfc0"
+          },
+          {
+            "path": "dist/types/subscribe/polling-provider.d.ts",
+            "sha512": "9e197ecee2c0e2a235c22fa7f8d3a75a84b8b38547f2269bb8bcd5d6dbe16876893254d2dd19a2ebb900aba896bbcfc6b40cb0feefa444d3071946dd28b643dd"
+          },
+          {
+            "path": "dist/types/contract/rpc-contract-provider.d.ts",
+            "sha512": "a9c1a8971e8e7bd63ad5af30f0f8658f91e8d613e2eb1afe5496f09e16082e3dc2579e9dfcdedc6ed9eda6ad3d8a3bb45ac562d839128866ce8d8f3b1b7842d2"
+          },
+          {
+            "path": "dist/types/tz/rpc-tz-provider.d.ts",
+            "sha512": "ae1fe0f77bb38ecac116a03a18e94ef9341789b7da25c12a4b856eb7a19404f6a7d05c3bb51dcddde16bbec342a77c5a9833a4abf448ef9fc6a5b2b555b6def8"
+          },
+          {
+            "path": "dist/types/tezos-ts.d.ts",
+            "sha512": "c16479ed3de1dea575a5c20f6a2074e0b24c20039ef73d05ae06e4b52d64adbda12faeef3efdfe0b43714897020489aa1cbc537bd6920d0f8cab6c202dcd9b5b"
+          }
+        ]
+      }
+    },
+    {
+      "entry": "identity/v1alpha2",
+      "value": {
+        "identity": {
+          "keybaseUser": "jevonearth"
+        }
+      }
+    },
+    {
+      "entry": "npmCompatiblePackageJson/v1alpha2",
+      "value": {
+        "packageJsonProperties": [
+          "author",
+          "dependencies",
+          "description",
+          "devDependencies",
+          "engines",
+          "files",
+          "jest",
+          "keywords",
+          "license",
+          "lint-staged",
+          "main",
+          "module",
+          "name",
+          "publishConfig",
+          "repository",
+          "scripts",
+          "typings",
+          "version"
+        ],
+        "sha512": "0aae21c9d42a9b772f55f4e007796c1c6bd06815d3439ae8c9c9f6daa66567a3521098a682af56f999ce4329602c210a4259fa632c1e2c23ab99d3b2c3880395"
+      }
+    },
+    {
+      "entry": "packageJson/v1alpha2",
+      "value": {
+        "packageJson": {
+          "name": "@tezos-ts/tezos-ts",
+          "version": "4.0.0-alpha.1",
+          "description": "High level functionality that builds upon the other packages in the Tezos Typescript Library Suite.",
+          "keywords": [
+            "tezos",
+            "blockchain"
+          ],
+          "main": "dist/tezos-ts.umd.js",
+          "module": "dist/tezos-ts.es5.js",
+          "typings": "dist/types/tezos-ts.d.ts",
+          "files": [
+            "dist"
+          ],
+          "publishConfig": {
+            "access": "public"
+          },
+          "author": "Simon Boissonneault-Robert <simon@ecadlabs.com>",
+          "repository": {
+            "type": "git",
+            "url": ""
+          },
+          "license": "MIT",
+          "engines": {
+            "node": ">=6.0.0"
+          },
+          "scripts": {
+            "test": "jest --coverage",
+            "test:watch": "jest --coverage --watch",
+            "test:prod": "npm run lint && npm run test -- --no-cache",
+            "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
+            "precommit": "lint-staged",
+            "prebuild": "rimraf dist",
+            "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts ",
+            "start": "rollup -c rollup.config.ts -w"
+          },
+          "lint-staged": {
+            "{src,test}/**/*.ts": [
+              "prettier --write",
+              "tslint --fix",
+              "git add"
+            ]
+          },
+          "jest": {
+            "transform": {
+              ".(ts|tsx)": "ts-jest"
+            },
+            "testEnvironment": "node",
+            "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+            "moduleFileExtensions": [
+              "ts",
+              "tsx",
+              "js"
+            ],
+            "moduleNameMapper": {
+              "^@tezos-ts/rpc$": "<rootDir>/../tezos-ts-rpc/src/tezos-ts-rpc.ts",
+              "^@tezos-ts/michelson-encoder$": "<rootDir>/../tezos-ts-michelson-encoder/src/tezos-ts-michelson-encoder.ts",
+              "^@tezos-ts/http-utils$": "<rootDir>/../tezos-ts-http-utils/src/tezos-ts-http-utils.ts",
+              "^@tezos-ts/indexer$": "<rootDir>/../tezos-ts-indexer/src/tezos-ts-indexer.ts"
+            },
+            "coveragePathIgnorePatterns": [
+              "/node_modules/",
+              "/test/"
+            ],
+            "collectCoverageFrom": [
+              "src/**/*.{js,ts}"
+            ]
+          },
+          "dependencies": {
+            "@tezos-ts/indexer": "^4.0.0-alpha.1",
+            "@tezos-ts/michelson-encoder": "^4.0.0-alpha.1",
+            "@tezos-ts/rpc": "^4.0.0-alpha.1",
+            "bignumber.js": "^9.0.0"
+          },
+          "devDependencies": {
+            "@types/jest": "^23.3.2",
+            "@types/node": "^10.14.13",
+            "colors": "^1.3.2",
+            "coveralls": "^3.0.2",
+            "cross-env": "^5.2.0",
+            "jest": "^24.8.0",
+            "jest-config": "^24.8.0",
+            "lint-staged": "^8.0.0",
+            "lodash.camelcase": "^4.3.0",
+            "prettier": "^1.14.3",
+            "prompt": "^1.0.0",
+            "replace-in-file": "^3.4.2",
+            "rimraf": "^2.6.2",
+            "rollup": "^1.20.1",
+            "rollup-plugin-json": "^4.0.0",
+            "rollup-plugin-sourcemaps": "^0.4.2",
+            "rollup-plugin-typescript2": "^0.22.1",
+            "shelljs": "^0.8.3",
+            "ts-jest": "^23.10.2",
+            "ts-node": "^7.0.1",
+            "tslint": "^5.11.0",
+            "tslint-config-prettier": "^1.15.0",
+            "tslint-config-standard": "^8.0.1",
+            "typescript": "^3.0.3"
+          }
+        }
+      }
+    }
+  ],
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdbuIZCRAD9Qy5GYHsngAA5RAQAEGOrHSiFetRXpCCmL1T/CTM\nIPalQVqvr8xNVyzbNvWICIQvN1yWWZjrDGoui2RifijtsJcbEl78VPEDsRRUoAOH\n1Q3jmxt9NXgBnFg6cmGmXssw0z3g64Q8FoewZTuJHlFJJuFJkDiF9hiyC2+7NhPd\nDhOtp7fGE/+R5YNs+KKO2IUkpFDqYKQnaeS5pFCbvNeAsL5np1gl43yOpaX9fal/\ntFnW36bU0/iPryEedXo19TyxPZOlUJM/5+Og3mNT+x/pRYiNTo2IY9F2iAMePmNN\nSgxRCkTNBb6pgGYVb0r4tQSBPKf+igxzLStz5m6R4Go+AnnmhCKEZSMrCzLD9uaR\nl8hrmFNfb0b177r6mCO8MvzNKJzO3rghV3/chcVgGUTufgIzj1J9Invg7lE1FXj2\nEJzoXSDgHM29UkvyW2QC61vaI0L6+kIKMvmZ9ZPVsBv/Ra69xjzGgdIF4rvBmfVj\nfHgBFbSc3NmGoLQTr4TxoApYNZFJ1SL1BO595aiGqBIhGAWJ+kyLyQpRN+WSfGUo\nTnFVVqMITsCCf6909/9a9i9niCaApSWkqAyPLMt7F/gJpuNBA7DZQtrIQeX8hXlO\nEjMnFQDwfVGHsvUOG7LqoMyUcxwTeo3OlmHyFKGywr1MERrb6mo7WRYDqU28liEi\nG/09DP3EdXw/QxD+Ieo3\n=Lbkb\n-----END PGP SIGNATURE-----\n"
+}

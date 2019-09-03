@@ -1,0 +1,180 @@
+{
+  "entries": [
+    {
+      "entry": "files/v1alpha2",
+      "value": {
+        "files": [
+          {
+            "path": "dist/tezos-ts-streamer.es5.js",
+            "sha512": "b2da4ae96e0c5a7f20294121064052ee66d8117fdefdfe909ed692ec7f1f429abfecc76b536910a20c37f717c609bca41822c8e77796328dba0cf89b62cf331d"
+          },
+          {
+            "path": "dist/lib/tezos-ts-streamer.js",
+            "sha512": "53c76a35785090fd35d08118d5d84592517bc92ebc93838e336c66cfbea8ab06c4bc8a7551fdf308b620c651b1023e9dae6327f67b059c864c192405e1a731e9"
+          },
+          {
+            "path": "dist/tezos-ts-streamer.umd.js",
+            "sha512": "9401cb2e8d703552656f5fdb1a0005688a1f160bd26c924ce479722b910b50043a521fdea5e28e736fba76be580cc0bfee35f0cad2b26da9a5dfc57269a4cc29"
+          },
+          {
+            "path": "dist/tezos-ts-streamer.es5.js.map",
+            "sha512": "05173f2036239c0ddfb4ffebaa20163ffe2e00be24fa376110bb8c6f8b3178f3da531fc3cefec8f14e051e281b708e6eaca6aa33a51df3f24f7700760c505327"
+          },
+          {
+            "path": "dist/lib/tezos-ts-streamer.js.map",
+            "sha512": "06ae870c3f9c850255bdf83c2307a93ae623a170dc51dfb4fb322fade2b1c76a8c54ce83a0418d7deea7cf897c1692121cab0a87054597bd6fb425c111e70349"
+          },
+          {
+            "path": "dist/tezos-ts-streamer.umd.js.map",
+            "sha512": "afa59f4585a6a8bd82b3a8fad09d9f224839da9457f48d68d702d932a533797236a1d5d74b49067e2b867145181db9e3b46129eae4a5dbb15abbae90331ce664"
+          },
+          {
+            "path": "README.md",
+            "sha512": "4745c71af50849d436b0ed7b15c67d7921b8d6df40ba078b2b7cdc2fe92e59073d23ba03740633a74c18148050351d953fc100c8a3b34b281b8204966de808a6"
+          },
+          {
+            "path": "dist/types/tezos-ts-streamer.d.ts",
+            "sha512": "dd04a6aa4fa268554d0a580cd76496ac70d4f76e234a236c04cfce72b12da3528ac5f5448566f8a076ac7a4a0e373dbac16876b52c38c8da672390a7b269a575"
+          }
+        ]
+      }
+    },
+    {
+      "entry": "identity/v1alpha2",
+      "value": {
+        "identity": {
+          "keybaseUser": "jevonearth"
+        }
+      }
+    },
+    {
+      "entry": "npmCompatiblePackageJson/v1alpha2",
+      "value": {
+        "packageJsonProperties": [
+          "author",
+          "dependencies",
+          "description",
+          "devDependencies",
+          "engines",
+          "files",
+          "jest",
+          "keywords",
+          "license",
+          "lint-staged",
+          "main",
+          "module",
+          "name",
+          "publishConfig",
+          "repository",
+          "scripts",
+          "typings",
+          "version"
+        ],
+        "sha512": "3ff3c39e339209df09bee5c92f8492b1673e2e03ccb88ee093153443447df3b6c95011f003ad7116abc7a807c5ba223297fa425877792b08a8545f184833c408"
+      }
+    },
+    {
+      "entry": "packageJson/v1alpha2",
+      "value": {
+        "packageJson": {
+          "name": "@tezos-ts/streamer",
+          "version": "4.0.0-alpha.1",
+          "description": "Methods to subscribe (using a websocket) to data from the Tezos blockchain. Relies on [https://github.com/ecadlabs/tezos-streamer](https://github.com/ecadlabs/tezos-streamer) which offers a websocket API to the caller, and streams data from the Tezos blockchain",
+          "keywords": [
+            "tezos",
+            "blockchain",
+            "websocket"
+          ],
+          "main": "dist/tezos-ts-streamer.umd.js",
+          "module": "dist/tezos-ts-streamer.es5.js",
+          "typings": "dist/types/tezos-ts-streamer.d.ts",
+          "files": [
+            "dist"
+          ],
+          "publishConfig": {
+            "access": "public"
+          },
+          "author": "Simon Boissonneault-Robert <simon@ecadlabs.com>",
+          "repository": {
+            "type": "git",
+            "url": ""
+          },
+          "license": "MIT",
+          "engines": {
+            "node": ">=6.0.0"
+          },
+          "scripts": {
+            "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
+            "precommit": "lint-staged",
+            "prebuild": "rimraf dist",
+            "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts ",
+            "start": "rollup -c rollup.config.ts -w"
+          },
+          "lint-staged": {
+            "{src,test}/**/*.ts": [
+              "prettier --write",
+              "tslint --fix",
+              "git add"
+            ]
+          },
+          "jest": {
+            "transform": {
+              ".(ts|tsx)": "ts-jest"
+            },
+            "testEnvironment": "node",
+            "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+            "moduleFileExtensions": [
+              "ts",
+              "tsx",
+              "js"
+            ],
+            "moduleNameMapper": {
+              "^@tezos-ts/http-utils$": "<rootDir>/../tezos-ts-http-utils/src/tezos-ts-http-utils.ts"
+            },
+            "coveragePathIgnorePatterns": [
+              "/node_modules/",
+              "/test/"
+            ],
+            "collectCoverageFrom": [
+              "src/**/*.{js,ts}"
+            ]
+          },
+          "dependencies": {
+            "@tezos-ts/http-utils": "^4.0.0-alpha.1",
+            "bignumber.js": "^9.0.0",
+            "ws": "^7.1.2"
+          },
+          "devDependencies": {
+            "@tezos-ts/tezos-ts": "^4.0.0-alpha.1",
+            "@types/jest": "^23.3.2",
+            "@types/node": "^10.14.13",
+            "@types/ws": "^6.0.3",
+            "colors": "^1.3.2",
+            "coveralls": "^3.0.2",
+            "cross-env": "^5.2.0",
+            "jest": "^24.8.0",
+            "jest-config": "^24.8.0",
+            "lint-staged": "^8.0.0",
+            "lodash.camelcase": "^4.3.0",
+            "prettier": "^1.14.3",
+            "prompt": "^1.0.0",
+            "replace-in-file": "^3.4.2",
+            "rimraf": "^2.6.2",
+            "rollup": "^1.20.1",
+            "rollup-plugin-json": "^4.0.0",
+            "rollup-plugin-sourcemaps": "^0.4.2",
+            "rollup-plugin-typescript2": "^0.22.1",
+            "shelljs": "^0.8.3",
+            "ts-jest": "^23.10.2",
+            "ts-node": "^7.0.1",
+            "tslint": "^5.11.0",
+            "tslint-config-prettier": "^1.15.0",
+            "tslint-config-standard": "^8.0.1",
+            "typescript": "^3.0.3"
+          }
+        }
+      }
+    }
+  ],
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdbuIeCRAD9Qy5GYHsngAAk6MQAHrhzMMLAfiQXQEohDuuJtdg\nNGbZF1ddFdtqlMrk8t4eztgTh/fRnUQWBX9bLgXTXRCHM0aloqmisNe16b/Ih5g7\nR8cRGFYkJVmZx4lLFOMyGKXBZrBerm3NpJ5CgRLXBwT2id3/kTOK/BVcG8mcimd0\n8J6+WcvJEIjuZ8uU2+yuANAZdHwKTxCnPN9fiAciuqNT3cq5pw/Z151xJLh8ej+s\nRotrBCcuX+Jk6jzD36ep40nETJaSBU9PEMWIctcqIveo3m9SLC7DPQhTxA8LLN60\nvPc3pkialbtN0tAt1Gx5ulygtrNpaptZEXwGNbbshNcHK0/W1HS3OQDLw3fS+FxI\n5NuhvSu+BXgwJ2C/ns7+wkgqKiyN7m+cFAqhJg1Tz4lkpQCsBKDf+M6rxufwsFiB\np/laUMXAQmknjIVNjU2e0i6RYXzgb87+pnBC+qIx47yEzM2KeHRF8JRWKY4BSXmn\nkPZ5nel7mUAR9tprit0a/rv0xJ0FF1bZDrFvfdzs/q4KGDlczLNsJe3EyN7XKOeK\ny6xmwVtYCgqNeW2XFsSg8fquzrldDzU0kbucLbmoAeteSJ0pAYQgIdbbXwHgM6bz\nHHb3pL9jTwr0htByaLWIh3pi1+bT9GFgHV8I0Gi0pxCBB5YcJd3F8KsZS/AELDkK\nZ1k6Xjg6epJ8fXiHsN4R\n=o9XY\n-----END PGP SIGNATURE-----\n"
+}

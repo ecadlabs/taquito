@@ -1,0 +1,468 @@
+{
+  "entries": [
+    {
+      "entry": "files/v1alpha2",
+      "value": {
+        "files": [
+          {
+            "path": "dist/lib/tokens/comparable/address.js",
+            "sha512": "8a9d494a1d55fb89fae58a1dd8964189c785f4c946bd7303190726f4ff78b35e757bc17f92d1cc26f011079146e7d7d9d97cc02d5c103b52f3dbc806fdc97c4d"
+          },
+          {
+            "path": "dist/lib/tokens/bigmap.js",
+            "sha512": "92d63b85740acd4f2a0572e12a2e82bb5449579e158028627765faf60a6b72ccad7ce1947b57fe21cb6462dd355ab24947fb0d6efc7a8e8ea383fc325fa6f48d"
+          },
+          {
+            "path": "dist/lib/tokens/comparable/bool.js",
+            "sha512": "f9ee9fa4bdfc6a8411fe6a13ce8226ca5c9a4fa25e7487babab0e13ad6b99859b545d181663f0df654a70276b8438f1c7d8fc9fc139dd5de52b6556b577c2e99"
+          },
+          {
+            "path": "dist/lib/tokens/comparable/bytes.js",
+            "sha512": "529ef987cdb17ae725ba1525d7ca429613b1618aebc113b155019a71e4af862204bdd3603b3b7b217f3960375cd2c2e71d5f3f561f94078fb6d4637dfebf2353"
+          },
+          {
+            "path": "dist/lib/tokens/contract.js",
+            "sha512": "226dd00bbf734ba49817a954163ee733069ba21505303783c6f03c4fd922b19128c2a7a912223cc250c842be335703bde487b385704f3589f82977fc14f739d9"
+          },
+          {
+            "path": "dist/lib/tokens/createToken.js",
+            "sha512": "e808d0a2a5558739ce039f2d1c8b79d293ab0a1d3b24ac2322582910fa7066da27605f23e779d15d93782e30210fdc634f27f5607a1aeb0c9f1066b8c17ad533"
+          },
+          {
+            "path": "dist/lib/encoding.js",
+            "sha512": "7f254eb049fae4d526c14d9207d692c6c552fb3e14128130613ba9d03da49531dd385f722007fc9c06b263203084d7060595c1bef289a01a2011e275ddb15f35"
+          },
+          {
+            "path": "dist/lib/tokens/comparable/int.js",
+            "sha512": "e64b68a61baf68f6c0d515104313a9524b91b1a9b4baf5b08b807790ac3c73dee27336bf08768a5107bb1341a09d44213377c446d91ef8678e6b592a58f4fa9d"
+          },
+          {
+            "path": "dist/lib/tokens/key.js",
+            "sha512": "b238536130747a8d1e048cfe7e71f36a94285c122b54b0070455c65199f497d4b60d40e01b329cd3fbd641a1ba97d4db7fe033040ca7990afef6847b9b5cf880"
+          },
+          {
+            "path": "dist/lib/tokens/list.js",
+            "sha512": "162ebe22da25bfde955ccd33c14e7369fd86e4bea6dc233fb56c002572a20e99cc384f10ed54a308177d3452af20f61c1d8603c764f3439ea2b99f93d2c59e80"
+          },
+          {
+            "path": "dist/lib/tokens/map.js",
+            "sha512": "06a0e3bd04a8e3cf929accac01362099e2d5cc5862cdaccffab187934500a3766d95805121785212be0898b636f33c42b72ff7fd3651b6e7d5e1b05826004c49"
+          },
+          {
+            "path": "dist/lib/schema/model.js",
+            "sha512": "1693ab9af8a3ffe231a898d22cb3484b2beb3f030ab42f941c1e960f6deb89a1bf959c6c5c9067b9a02df732af1e258ea0e0c101000b3fa9303d65720b4a2fe3"
+          },
+          {
+            "path": "dist/lib/tokens/comparable/mutez.js",
+            "sha512": "57479bee8dc92121c32f9fb1040cdb634aecbc7e385a0bc37e992c4ef35869e12238700395bd036095fea09234a5d2990a980b080c45a12e7282b205dc848d28"
+          },
+          {
+            "path": "dist/lib/tokens/comparable/nat.js",
+            "sha512": "dee2b73feb68b5a736a5263c30671bf67e2d45fc05221e6e67327d40c3fa3d15cc4ec9dd8bd3780fb8c7b8c84c9f628bf75852b615a72dc92465de6ac20a8b83"
+          },
+          {
+            "path": "dist/lib/tokens/option.js",
+            "sha512": "408f24de3297e6120a57233891f8c33c2add6727d1357e25277168cb273be6302f41dd60aa999f93210ef1a91f1f8c074ca18630a40e3c89c7d6e58e7541ce7c"
+          },
+          {
+            "path": "dist/lib/tokens/or.js",
+            "sha512": "4dca765e1992d7ba0c415d89012a3133dad50d214a0935eb83dda722fb110966638342c00c51cff81fb09a07d3c8cd1a98750ab8e5f81cbc57fec6e0b1cc8d7d"
+          },
+          {
+            "path": "dist/lib/tokens/pair.js",
+            "sha512": "ca9ae3892c0793b14d0c73e30f3db45c987bcd0548d06ed7f47659fea04ede4083100a4050de94dbffe5ec943f99e01636ea7dad9f8af8936758104c0ed31c7d"
+          },
+          {
+            "path": "dist/lib/schema/parameter.js",
+            "sha512": "08cb322dc77de0c0a77dd67ca49ec85e39e145023731320436dcf0baaad8910790e96d6687c244bae26b81f048f34f9fe3ef668af680717c724fd5b35d7ec9c1"
+          },
+          {
+            "path": "dist/lib/schema/storage.js",
+            "sha512": "1a225c0fa1d4e38f292f2c364b3d8b92117517294ca2d6c06dc457e4814df0ea2b4d919f5bb597a3e966673c3f59589a82a4f66fc68b09bac4e0db132d362fac"
+          },
+          {
+            "path": "dist/lib/tokens/comparable/string.js",
+            "sha512": "0c90664ab0e64836cf1601b05f499711a733c3a4f14acd56a42b8da10f119bfd88028fe1dbb405e7cdd41a05b91846001addae0d510d91f45b4e5f2bc99cde0b"
+          },
+          {
+            "path": "dist/tezos-ts-michelson-encoder.es5.js",
+            "sha512": "bd21a1540a15339eb3fdefcc3c59e812b1d31ce10a229ec21204a42e67d54c5be8e0c6c3d0f482725e3e5890b83fdab49d0c0fb53c066d43f3ec7c71c6920868"
+          },
+          {
+            "path": "dist/lib/tezos-ts-michelson-encoder.js",
+            "sha512": "8e7caeadbb670e88663d885f4340b1889f2cabe2492c53eb0ad6e440b929d13d3b847ffcacfe30cc7958ae7a55698a8071a09e3ab53831be3efc3e73633469ad"
+          },
+          {
+            "path": "dist/tezos-ts-michelson-encoder.umd.js",
+            "sha512": "066e5f0e64e02ce6c1b02d323cc90a3130fd2a6c4845bf306b80c0f0b3fdce3392ce4d1b055e0c249d8efd6671b5d844901aade0e58080c95a34709da2c9e995"
+          },
+          {
+            "path": "dist/lib/tokens/comparable/timestamp.js",
+            "sha512": "3fb89d01192e71f5c25c56757326317c0a0927710c0e5d6554c9a4315712c8c6990dcd895d7818a9d0b148bdf141c6632f17515676d2932dbac58fe10ddbca94"
+          },
+          {
+            "path": "dist/lib/tokens/token.js",
+            "sha512": "96f34eea9156753b13bdfb4d93a820a14d7b999c0dfabd3af8b045b52e188337fc78fc23894fa745c2bd8f3269b4f37881a57f064831488d1d0cfc1ec6c9ee27"
+          },
+          {
+            "path": "dist/lib/tokens/tokens.js",
+            "sha512": "cd52e3972cfbc042d1c34cac91f6e3aa7f74a194ecae4d2a1e9f70e7006f6f09ab5439b7cee7cc302614b34c9a2bea24243ad1a1d7b9f3b40a572b3ecfc1ceb3"
+          },
+          {
+            "path": "dist/lib/tokens/unit.js",
+            "sha512": "7637eecbd26b52cd0416397501dc2a4d6aafbe2dd32901559945c77e681da6d5599123f2ce0b94ccb231b32c9f8d92f5bf38b606b7c03b883c2cbb3f43e21c66"
+          },
+          {
+            "path": "dist/lib/tokens/comparable/address.js.map",
+            "sha512": "fe60a4e1a3f829e8c4a1214a49f75a7ba97949a7c294e1f0990cd87f4207ca846a9da8de9bc27cdedd0fb4cd6af4c80c3fe0038058a20a663040ebbd07026d9a"
+          },
+          {
+            "path": "dist/lib/tokens/bigmap.js.map",
+            "sha512": "4d032764ba61ad0131ac9d3fbb73cef486ae0cd350b5a47f5f746c95c336da7c8dd1ef8f640d975a64b4384df4c4e7334e1fce411b895a380aa1ea12c76c4786"
+          },
+          {
+            "path": "dist/lib/tokens/comparable/bool.js.map",
+            "sha512": "ccceb53c9cb5dca9958f53d6d4bdaa626d636da8d96eb17fdc457107d28f6251a2a26acfe589ea7be951a4a743508bd24fd557b84c3d78312c3ad092931d722b"
+          },
+          {
+            "path": "dist/lib/tokens/comparable/bytes.js.map",
+            "sha512": "aa6864e00f9a2446112a1d92d52e9367fe92944830e94e6b957156a1725e0abc23602aa943b671dc508b386a561e18cc5b957d49a3eb9b4d5d354862cbdd5833"
+          },
+          {
+            "path": "dist/lib/tokens/contract.js.map",
+            "sha512": "0f47db07dcc2cf69a7442d575ebc33c40f4a8348b7e519e0353afeeac76d98b2787c1e5a8d06197fbfe1c71b56939ed16b863265ececb5c007d30e28be9c924b"
+          },
+          {
+            "path": "dist/lib/tokens/createToken.js.map",
+            "sha512": "92328eb077aefbdf403bd0bdbdf39830bd96389638c5b921fcfa340da8fa20a014730138a72d150cbe2540371e6d278ec76478891edbab4368f90c6ec726a043"
+          },
+          {
+            "path": "dist/lib/encoding.js.map",
+            "sha512": "a71dcdec5e346513108254c79028302a77b08fa346c64edca2cc1e0df333d85eabc987f42bb4512587f6f5a323a78fe37dd31e55f3c75cb85f9c991910fb5b9b"
+          },
+          {
+            "path": "dist/lib/tokens/comparable/int.js.map",
+            "sha512": "3f9407fdc41c4a42ca31b71dec762a8a5ed8a093fb662d2aa0bddae8fffa7791a79d546fac2d1b28ed2f5dcb5ac587a08da0cc701c5853584218d7568e5d1345"
+          },
+          {
+            "path": "dist/lib/tokens/key.js.map",
+            "sha512": "0e614062d17ace6ab1d0b4ecf0f7cfca90db7770a24d48eea19a660392194c53191ec475aaf52976b23140459a14aaeb4e484cc7a362b9ec3579515a84e44148"
+          },
+          {
+            "path": "dist/lib/tokens/list.js.map",
+            "sha512": "ef6ac71ee460467976d8f048566e5cc926f40ae297a9372fce2c5e36c8881a1cf6df636fed3e0208ca1a13929de133e4463e0bd9f56bdb46c1b5df8a3a34bda0"
+          },
+          {
+            "path": "dist/lib/tokens/map.js.map",
+            "sha512": "263400fcd72ecf0fb28f7d704f62e6830d2649989a0050a2b4e59bd51db202ad1d011bb8d9f46e79b44982acdb516f1cbc4cdf5c51eecdc42fc488fc02470409"
+          },
+          {
+            "path": "dist/lib/schema/model.js.map",
+            "sha512": "bc8a09a1550381f1d2eaa75374f678e1c27febc482db147d679e46056741e287965ce45427426950ed0a5326ab0432507a664844b4277c4aeae1d3273eb241eb"
+          },
+          {
+            "path": "dist/lib/tokens/comparable/mutez.js.map",
+            "sha512": "5a6df01538cc0b5812d6f3d547487322ae109a839b3b75947c53669cac3da698e98e1a6ad76dcc78a9722f7f295cf4c888abb8e5839f0fef2cdb379369497138"
+          },
+          {
+            "path": "dist/lib/tokens/comparable/nat.js.map",
+            "sha512": "1cf69709eff9237a757f35153a03482989a2f9d7aa58d74c932431d6d9275f5f22c4b9a82b71a3aa752fe83320c86faf535b59ace6b3b2dacc6a1ae1effb4548"
+          },
+          {
+            "path": "dist/lib/tokens/option.js.map",
+            "sha512": "a5d410360a96296392f15db08e08eec11f9671f1a4e95a90b44de8e1210df5f788806143abb4f3f6049e6e16187626fabcdffcaf0563494c2eb5a6456919cecb"
+          },
+          {
+            "path": "dist/lib/tokens/or.js.map",
+            "sha512": "43b56893c55078520570c2a24a70977beaafd5c0f302fcb33a90c291654ab40b3944b46a0593dc5094f53c27ed744c119a100ffdea04b4bc34a8d630e26265de"
+          },
+          {
+            "path": "dist/lib/tokens/pair.js.map",
+            "sha512": "3ecfe4489e4ca03b3a577ed5c10a274680097ee56ce93cccf6aa12a6c5dcbcab376fc673229dd841b10fb3583e17145802975d51da0d096677f5609b1cb547ad"
+          },
+          {
+            "path": "dist/lib/schema/parameter.js.map",
+            "sha512": "59936feb713dc259b4095050e8b056470c82c097b53521b9b766b66ca97b5bace56c40de752286513365cc29e13c9276288e16527c898edf8d92ae0cf8f86d7a"
+          },
+          {
+            "path": "dist/lib/schema/storage.js.map",
+            "sha512": "0e79605e6704df1d99c6a7e9e63cf7b101da59b0d4c91546a3cf4c2e12ec896c4bf7dfa7c026e40771fcd6cc10a7351134db67fcc7c36caef0552075996343c1"
+          },
+          {
+            "path": "dist/lib/tokens/comparable/string.js.map",
+            "sha512": "9904a0cf4938a984ef2444b56f3b444d6c86e0bdb8d6ed896f43652be90840428a82488b4838dd66345ce435b719600d764150436dea4d9705b7a4bb3ddf40c2"
+          },
+          {
+            "path": "dist/tezos-ts-michelson-encoder.es5.js.map",
+            "sha512": "b310f9064c83c4472eaa06d935c149bcbf07a2f108fae9b91e7e7c47aded87aee992226f438138c36a6a1fff89e4101cb94cb9472e44c5891968806a3e2df137"
+          },
+          {
+            "path": "dist/lib/tezos-ts-michelson-encoder.js.map",
+            "sha512": "7363224e02970140256f6157ee6b5942f98150eba60c80ca9388fe3d12666c713836ff648447f8cccaa4d57f5b85b63484d632d7bd3363f0e2b501d326e64d07"
+          },
+          {
+            "path": "dist/tezos-ts-michelson-encoder.umd.js.map",
+            "sha512": "4dd4bd3d0f0714795b454e99e982d076898cd2945872b47b6195bdbf93004793822c236763a621ea11fdd4d12a5b900e94f94229c6e537d1cedfd82bdbe3fc7b"
+          },
+          {
+            "path": "dist/lib/tokens/comparable/timestamp.js.map",
+            "sha512": "1db1c8804757ac6068d19fdef2d7f61279815d67d94cee7b772bdb588c15bc56b6b985695980ec8bf15171f864474fe33f64918d83d04b29025f770251673708"
+          },
+          {
+            "path": "dist/lib/tokens/token.js.map",
+            "sha512": "3b9c9d3fa7d2b5bc49ad045db223c2507aefc7891d57bfb6fd08d2de958e44a40d961839c87baf3f06f212027bdda5adbd10d80843926cdf82a961794803445e"
+          },
+          {
+            "path": "dist/lib/tokens/tokens.js.map",
+            "sha512": "0c2389e39ab9f24d1040cb81fb30afe8ddc3e75c2fe73b9668fea1c87f095991b13b587205f7383f6410f00e8d24937c8a7cef2e3ae02fd084d303927288f07d"
+          },
+          {
+            "path": "dist/lib/tokens/unit.js.map",
+            "sha512": "b0c651c1e93e0986582e928eac902145b5b4fc3529c28f5a9f36e73180c697d03a18d2661bb8d3d32e49e78185f50418848cdee4ce963a4550f3271a112b9489"
+          },
+          {
+            "path": "README.md",
+            "sha512": "d0b9cdfa5431201647542fe12bf1c8b5aaadb6158a270b7d223c6630fb0eb78788b68d3ccf1218ed6509a4bd2665f4158dfc66072d4e15b638eeba20c46b5177"
+          },
+          {
+            "path": "dist/types/tokens/comparable/address.d.ts",
+            "sha512": "cacf00ec93f9fe094f23efb11145aa2e670e7b3e541e952238bd6b2059e568e58c4b2a874f7a54a056c372ab473bef496b7f9b3869f57112b190605c0e48a12a"
+          },
+          {
+            "path": "dist/types/tokens/bigmap.d.ts",
+            "sha512": "1526a0fbe3e22985b83681f622466a4950c3f1567876485929516283ba97a454f99fded9aa2f9cc3a418e42cc41718dde35deb27af025b8a80b9587b4d7d62d4"
+          },
+          {
+            "path": "dist/types/tokens/comparable/bool.d.ts",
+            "sha512": "ec3a44474ba8503520fd41e8c96b89bda27a0168157176d0a4d039c70c720d35f43c4d6280b749cead59828f76a69cc78c63e486aa58cafbbe490592711510f1"
+          },
+          {
+            "path": "dist/types/tokens/comparable/bytes.d.ts",
+            "sha512": "1cfd54a740816ac38bd7a42e2b1044573c3f409536a9df0af1533dc55ac8bd147a244822cf7d32f992ffca13c8024f1cb4b7f3c0ccce0f456132036a1501e87b"
+          },
+          {
+            "path": "dist/types/tokens/contract.d.ts",
+            "sha512": "e1dbc44335b9677d3866bbf86a5ceb0e22edf45e425303326fdb4c5e626f96a15c870c6b8c7d7cd0f6e36396c58d43f45fd00a684229458c7b6764215a89d76c"
+          },
+          {
+            "path": "dist/types/tokens/createToken.d.ts",
+            "sha512": "315a63e8b2c7541c65cf280e40bf7d6baff30767bfabb5152f4ebf8f3d307c12eb58e18be955c591c7c3180977810e9d8de4e76ecaea30a813322f30309acacb"
+          },
+          {
+            "path": "dist/types/encoding.d.ts",
+            "sha512": "3e4fff0a39b8a4e129a03874f38444f5923ef52274a9bb3f68f7449f58354220c60b0c193a0628b6995d1d18669c2f3c8fb837bc3d4ca4c2d733b2df5c382e78"
+          },
+          {
+            "path": "dist/types/tokens/comparable/int.d.ts",
+            "sha512": "86980ba8c73abfe3c0e5fb13bb447074bfd9d87eda05138b0917f6c322f82f94f6779bd6e3a8991de232a05cc68c54587f9616331bb72b5e95a05e53f21b0297"
+          },
+          {
+            "path": "dist/types/tokens/key.d.ts",
+            "sha512": "2723e21bc638c76459046de6d92b3086834d13001846e4b708e1821b14aed2dbca4eac1fb1ba1076b9859cdc6770de40b46c1108f1798035879e96abcc11840d"
+          },
+          {
+            "path": "dist/types/tokens/list.d.ts",
+            "sha512": "f93e974e804addbf586eaa5c11289905019ae849738a46678e534114ca36ee606a0f8595d76bada6ba2c1c109f1ce0a22b50ff6893b81541584b540953b9c85a"
+          },
+          {
+            "path": "dist/types/tokens/map.d.ts",
+            "sha512": "569b88e08f4d2f9d1e4d65e019d739ffada7e113889b31a5918413d576d74e2b960888355afcd3d3d1cb25bd5a7c924399ffb02ed689039c12c57f51efa13d43"
+          },
+          {
+            "path": "dist/types/schema/model.d.ts",
+            "sha512": "999712ff24d351ab2cd6d9392508ca9815ce0427f0182122dab172444462d04a511fe6ad5990ab5863b3e34b2b1b45ed27f8d00aef0bcf4bc7dc179d0c22c511"
+          },
+          {
+            "path": "dist/types/tokens/comparable/mutez.d.ts",
+            "sha512": "1bf77b5cae7a3ceb31bea43e2d2576043c1ebaabeeb74c0c54646bb153ce9187fd43b2ff6f0d184b9b1af3cf720ee8c6522207485a7c265a9d116ec77b5029f2"
+          },
+          {
+            "path": "dist/types/tokens/comparable/nat.d.ts",
+            "sha512": "7b3745a70f5be91db6697023b5693a39eea18f3edcd361ef88b7d8535e7a3df7f20bb5702725e62b7e3a4b7ff7d639131507c86060a65a3eb2410036aec77cb0"
+          },
+          {
+            "path": "dist/types/tokens/option.d.ts",
+            "sha512": "1e6d771114769a44b5b9f6b701eb19776041366795023353595df9a65fb8bc5493728942c7769725ce2147f3420fb7e35ff143283ccbb11976e7d680379801d5"
+          },
+          {
+            "path": "dist/types/tokens/or.d.ts",
+            "sha512": "8473144bae0cb6220dc437a1f7740985d8f809323888f8b1ec0a8e556562bde810583bda6f6ec52a662f4497a16c52853d57c975542b2e1a7d4f4fe73af0d113"
+          },
+          {
+            "path": "dist/types/tokens/pair.d.ts",
+            "sha512": "cb3651016b0ef60db1a31db5da072465cff1a03f31a80b3323bcb91cf59ce8139b1a7afcd00cd903ac234ad68e91031acdb22adf4e804466c688c6b4982f4dcc"
+          },
+          {
+            "path": "dist/types/schema/parameter.d.ts",
+            "sha512": "a71a53f945fc39f700bae3e72e147f0b6eee51a2e44030871ecc67de631661dbb20aff8946e6a094cf14a4b6847fe692c55775c8d760ba838efe1916bccb4fb0"
+          },
+          {
+            "path": "dist/types/schema/storage.d.ts",
+            "sha512": "f24de2bf283e9058c06e553558209d9f46110523641b9cb928eb10ac2a64a479f0a547da7fed3b2aa04e032b67d31ac0f6716a33f9ac55bae9860fcd6f167a36"
+          },
+          {
+            "path": "dist/types/tokens/comparable/string.d.ts",
+            "sha512": "01fe8a1b0b49a361c97b1ba3ee49cf97f62db5301970fbbcf8316d20df92b43dd1712282388b06abacb7d6f31568abc9e03adf75fa7b517d008e5b4ad6b3721e"
+          },
+          {
+            "path": "dist/types/tezos-ts-michelson-encoder.d.ts",
+            "sha512": "800d1c7b54b7ad4fc2e13d82b6a8e5c922cc8c943b414db4eaf9d6a449c2f53dd9a6666749af269505ed1762332e8b6d1ab5e5b50291fbece448042cc375be2b"
+          },
+          {
+            "path": "dist/types/tokens/comparable/timestamp.d.ts",
+            "sha512": "4fe82f1c2b402cffac826a9dbe150d798342723bd783798febef164bd5574b005b0064289e4b345e3c7edc8c5299a0f9587623b46a4616da9659f6ad6a07d293"
+          },
+          {
+            "path": "dist/types/tokens/token.d.ts",
+            "sha512": "5a5d35da4c394df69ba004cff339feede39a6b8727e21180d947026688e1a74c6783cc1c18c08e25b06b1c3ff8a49be8625856d74585e89fe8963afe6eb4e954"
+          },
+          {
+            "path": "dist/types/tokens/tokens.d.ts",
+            "sha512": "dbde4617b6f0bf40469a4a35a31664b055ff39c650cec973f66292bd0d37f97239c049bf94e2365516822ddfbfb672776dbf40a59076feb62cf736d76506088b"
+          },
+          {
+            "path": "dist/types/tokens/unit.d.ts",
+            "sha512": "4d091209ad189ec7c69aa5b8a85d6058275b0002cd7c8996ccc2371535b43cc7ff35e14b7faf14c31bbd9e733ea4fdafeb82291ddfdd41d6b2097712891ce1f8"
+          }
+        ]
+      }
+    },
+    {
+      "entry": "identity/v1alpha2",
+      "value": {
+        "identity": {
+          "keybaseUser": "jevonearth"
+        }
+      }
+    },
+    {
+      "entry": "npmCompatiblePackageJson/v1alpha2",
+      "value": {
+        "packageJsonProperties": [
+          "author",
+          "dependencies",
+          "description",
+          "devDependencies",
+          "engines",
+          "files",
+          "jest",
+          "keywords",
+          "license",
+          "lint-staged",
+          "main",
+          "module",
+          "name",
+          "publishConfig",
+          "repository",
+          "scripts",
+          "typings",
+          "version"
+        ],
+        "sha512": "bc920c12dcd4dda65dfb53f7c68a0f6f12a4d2eb2524ff505a2300700e6e98402dfb2105604b2542bf31ec194214460c79adead1754bc2596766b3ee726300cc"
+      }
+    },
+    {
+      "entry": "packageJson/v1alpha2",
+      "value": {
+        "packageJson": {
+          "name": "@tezos-ts/michelson-encoder",
+          "version": "4.0.0-alpha.1",
+          "description": "converts michelson data and types into convenient JS/TS objects",
+          "keywords": [
+            "tezos",
+            "blockchain",
+            "michelson",
+            "smart-contract"
+          ],
+          "main": "dist/tezos-ts-michelson-encoder.umd.js",
+          "module": "dist/tezos-ts-michelson-encoder.es5.js",
+          "typings": "dist/types/tezos-ts-michelson-encoder.d.ts",
+          "files": [
+            "dist"
+          ],
+          "publishConfig": {
+            "access": "public"
+          },
+          "author": "Simon Boissonneault-Robert <simon@ecadlabs.com>",
+          "repository": {
+            "type": "git",
+            "url": ""
+          },
+          "license": "MIT",
+          "engines": {
+            "node": ">=6.0.0"
+          },
+          "scripts": {
+            "test": "jest --coverage",
+            "test:watch": "jest --coverage --watch",
+            "test:prod": "npm run lint && npm run test -- --no-cache",
+            "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
+            "precommit": "lint-staged",
+            "prebuild": "rimraf dist",
+            "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts",
+            "start": "rollup -c rollup.config.ts -w"
+          },
+          "lint-staged": {
+            "{src,test}/**/*.ts": [
+              "prettier --write",
+              "tslint --fix",
+              "git add"
+            ]
+          },
+          "jest": {
+            "transform": {
+              ".(ts|tsx)": "ts-jest"
+            },
+            "testEnvironment": "node",
+            "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+            "moduleFileExtensions": [
+              "ts",
+              "tsx",
+              "js"
+            ],
+            "coveragePathIgnorePatterns": [
+              "/node_modules/",
+              "/test/"
+            ],
+            "collectCoverageFrom": [
+              "src/**/*.{js,ts}"
+            ]
+          },
+          "dependencies": {
+            "bignumber.js": "^9.0.0",
+            "bs58check": "^2.1.2",
+            "buffer": "^5.2.1"
+          },
+          "devDependencies": {
+            "@types/jest": "^23.3.2",
+            "@types/node": "^10.14.13",
+            "colors": "^1.3.2",
+            "coveralls": "^3.0.2",
+            "cross-env": "^5.2.0",
+            "jest": "^24.8.0",
+            "jest-config": "^24.8.0",
+            "lint-staged": "^8.0.0",
+            "lodash.camelcase": "^4.3.0",
+            "prettier": "^1.14.3",
+            "prompt": "^1.0.0",
+            "replace-in-file": "^3.4.2",
+            "rimraf": "^2.6.2",
+            "rollup": "^1.20.1",
+            "rollup-plugin-json": "^4.0.0",
+            "rollup-plugin-sourcemaps": "^0.4.2",
+            "rollup-plugin-typescript2": "^0.22.1",
+            "shelljs": "^0.8.3",
+            "ts-jest": "^23.10.2",
+            "ts-node": "^7.0.1",
+            "tslint": "^5.11.0",
+            "tslint-config-prettier": "^1.15.0",
+            "tslint-config-standard": "^8.0.1",
+            "typedoc": "^0.15.0",
+            "typescript": "^3.0.3"
+          }
+        }
+      }
+    }
+  ],
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdbuIbCRAD9Qy5GYHsngAAWGoQAACimM5f5gq8j+L6j1jN7rTL\nrTJOq/UgM85h9Vd4oeMa1gge6ghTLQiDN8RYNmCc1w2XqFeglRXsIOVFn5whw4Tt\nu2aFhh64pzgrpypfz85Sx4LVfxHpPgf8yDSr3Rm46x4rO0+Xi5AEkYnpxnZE6aHz\nLPpc6JqfIdO5gWrP69KVQal5VTwmia+jHkRrSKnKJ5sgG3CYuT8T+aeCbjK7H8jB\nQ4H+kZkRgnZxM88Zi2Tj5oD4f6C2nv6Co2N7L7yDGuYihcezoQG+BvZhIWweRpLy\n25jmDgiAYbMgXB6nNaxe9YOmyTm3zezXw0yj5251/WHFClitgfhqajOZK7c81TFk\npmc4nQmpDZzQbKlk0XQRPlSADo99S/vMIz0WcokZKvZOIf/uyHiNy7IQEkm9O0np\nGD0d5j6b9NW7UAQvXwqhHStwr+LvzGXCDMEOrxZrTUovkNt5XsV4Do5seLW4/u7b\nX/DMKuYmcv8a/XQhM6nPwliV38cKUyKI7RbQezf6k2svWeVhUcDCT3CRkvNaCpcN\nx/z9bKP9J2WCLZ+RpDJVHWiYKRdsg98v/q7P41H7hKkCkILRaYE70dggeLRN6YDi\n4q4ECiU9vkOXWhQVxsm2IMD1gOvbk8Ku0b4bb2Qzg5WBH2m/Yq3QU4FWC61hfIDE\nPW1nZL+reFqf1mfK3HeY\n=biv+\n-----END PGP SIGNATURE-----\n"
+}
