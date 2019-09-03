@@ -1,6 +1,6 @@
-# Tezos Typescript Library Suite
+# Tezos TS high level functions
 
-The `tezos-ts` package contains higher level functionality that builds upon the other packages in the Tezos Typescript Library Suite.
+The `@tezos-ts/tezos-ts` package contains higher level functionality that builds upon the other packages in the Tezos Typescript Library Suite.
 
 ## API Documentation
 
