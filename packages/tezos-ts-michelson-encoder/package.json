@@ -1,8 +1,13 @@
 {
   "name": "@tezos-ts/michelson-encoder",
-  "version": "0.0.0",
+  "version": "4.0.0-alpha.1",
   "description": "converts michelson data and types into convenient JS/TS objects",
-  "keywords": ["tezos", "blockchain", "michelson", "smart-contract"],
+  "keywords": [
+    "tezos",
+    "blockchain",
+    "michelson",
+    "smart-contract"
+  ],
   "main": "dist/tezos-ts-michelson-encoder.umd.js",
   "module": "dist/tezos-ts-michelson-encoder.es5.js",
   "typings": "dist/types/tezos-ts-michelson-encoder.d.ts",

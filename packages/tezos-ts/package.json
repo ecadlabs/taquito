@@ -1,8 +1,11 @@
 {
   "name": "@tezos-ts/tezos-ts",
-  "version": "0.0.0",
+  "version": "4.0.0-alpha.1",
   "description": "High level functionality that builds upon the other packages in the Tezos Typescript Library Suite.",
-  "keywords": ["tezos", "blockchain"],
+  "keywords": [
+    "tezos",
+    "blockchain"
+  ],
   "main": "dist/tezos-ts.umd.js",
   "module": "dist/tezos-ts.es5.js",
   "typings": "dist/types/tezos-ts.d.ts",
@@ -64,9 +67,9 @@
     ]
   },
   "dependencies": {
-    "@tezos-ts/michelson-encoder": "^0.0.0",
-    "@tezos-ts/rpc": "^0.0.0",
-    "@tezos-ts/indexer": "^0.0.0",
+    "@tezos-ts/indexer": "^4.0.0-alpha.1",
+    "@tezos-ts/michelson-encoder": "^4.0.0-alpha.1",
+    "@tezos-ts/rpc": "^4.0.0-alpha.1",
     "bignumber.js": "^9.0.0"
   },
   "devDependencies": {
