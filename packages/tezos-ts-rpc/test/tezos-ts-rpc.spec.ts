@@ -107,6 +107,19 @@ describe('RpcClient test', () => {
     });
   });
 
+  describe('getBlockHash', () => {
+    it('query the right url', async done => {
+      await client.getBlockHash();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/hash',
+      });
+
+      done();
+    });
+  });
+
   describe('getDelegates', () => {
     const sampleResponse = {
       balance: '5092341810457',
