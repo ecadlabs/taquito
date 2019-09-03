@@ -1,4 +1,9 @@
-export interface BalanceHistory {}
+export interface BalanceHistory {
+  level: number[];
+  timestamp: string[];
+  diff: number[];
+  value: number[];
+}
 
 export interface BalanceHistoryOptions {
   start?: string | Date;
