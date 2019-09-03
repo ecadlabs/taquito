@@ -1,4 +1,4 @@
-[![pkgsign status](https://us-central1-pkgsign.cloudfunctions.net/pkgsign-badge?name=@tezos-ts/tezos-ts-streamer&expectedIdentity=jevonearth)](https://github.com/RedpointGames/pkgsign)
+[![pkgsign status](https://us-central1-pkgsign.cloudfunctions.net/pkgsign-badge?name=@tezos-ts/streamer&expectedIdentity=jevonearth)](https://github.com/RedpointGames/pkgsign)
 
 # Tezos TS Streamer package
 
