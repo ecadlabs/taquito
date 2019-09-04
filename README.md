@@ -32,12 +32,12 @@ Each package is published to npmjs.org under the `@tezos-ts` handle.
 
 | Package                                                           |                        Responsibility                         |
 | ----------------------------------------------------------------- | ------------------------------------------------------------- |
-| [tezos-ts](packages/tezos-ts)                                     | Regroup every other library and provide higher level utility  |
-| [tezos-ts-react-components](packages/tezos-ts-react-components)   | React components that implement some common use cases         |
-| [tezos-ts-rpc](packages/tezos-ts-rpc)                             | RPC client library, wrap every rpc endpoint in its own method |
-| [tezos-ts-michelson-encoder](packages/tezos-ts-michelson-encoder) | Encode/Decode storage and parameters to/from michelson format |
-| [tezos-ts-indexer](packages/tezos-ts-indexer)                     | A client for the [tezos-indexer-api][0] API                   |
-| [tezos-ts-streamer](packages/tezos-ts-streamer)                   | A client for the [tezos-indexer-streamer][1] API              |
+| [@tezos-ts/tezos-ts](packages/tezos-ts)                                     | Regroup every other library and provide higher level utility  |
+| [@tezos-ts/react-components](packages/tezos-ts-react-components)   | React components that implement some common use cases         |
+| [@tezos-ts/rpc](packages/tezos-ts-rpc)                             | RPC client library, wrap every rpc endpoint in its own method |
+| [@tezos-ts/michelson-encoder](packages/tezos-ts-michelson-encoder) | Encode/Decode storage and parameters to/from michelson format |
+| [@tezos-ts/indexer](packages/tezos-ts-indexer)                     | A client for the [tezos-indexer-api][0] API                   |
+| [@tezos-ts/streamer](packages/tezos-ts-streamer)                   | A client for the [tezos-ts-streamer][1] API              |
 
 ### React Components overview
 
