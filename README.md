@@ -39,15 +39,15 @@ Each package is published to npmjs.org under the `@tezos-ts` handle.
 | [@tezos-ts/indexer](packages/tezos-ts-indexer)                     | A client for the [tezos-indexer-api][0] API                   |
 | [@tezos-ts/streamer](packages/tezos-ts-streamer)                   | A client for the [tezos-ts-streamer][1] API              |
 
+## API Documentation
+
+The TypeDoc style API documentation is available [here](https://ecadlabs.github.io/tezos-ts/typedoc)
+
 ### React Components overview
 
 React component demos are published using the [storybook](https://storybook.js.org) tool.
 
 They can be viewed here: [Tezos components Storybook](https://ecadlabs.github.io/tezos-ts/react-storybook)
-
-## API Documentation
-
-The TypeDoc style API documentation is available [here](https://ecadlabs.github.io/tezos-ts/typedoc)
 
 ## Versioning Strategy
 
