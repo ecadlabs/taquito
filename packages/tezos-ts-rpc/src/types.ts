@@ -6,6 +6,40 @@ export type BigMapGetResponse = unknown;
 export type ManagerResponse = string;
 export type DelegateResponse = string | null;
 
+export interface ConstructedOperation {
+  kind: string;
+  level: number;
+  nonce: string;
+  pkh: string;
+  hash: string;
+  secret: string;
+  source: string;
+  period: number;
+  proposal: string;
+  ballot: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  parameters: string;
+  balance: string;
+  spendable: boolean;
+  delegatable: boolean;
+  delegate: string;
+  amount: string;
+  destination: string;
+  public_key: string;
+  script: { code: string; storage: string };
+  manager_pubkey: string;
+}
+
+export interface OperationObject {
+  branch?: string;
+  contents?: ConstructedOperation[];
+  protocol?: string;
+  signature?: string;
+}
+
 export interface RawDelegatesResponse {
   balance: string;
   frozen_balance: string;

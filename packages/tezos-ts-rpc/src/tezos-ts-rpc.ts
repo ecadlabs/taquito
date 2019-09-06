@@ -1,6 +1,8 @@
 import { HttpBackend } from '@tezos-ts/http-utils';
 import { camelCaseProps, castToBigNumber } from './utils/utils';
 
+export * from './types';
+
 import {
   BalanceResponse,
   StorageResponse,
@@ -14,6 +16,11 @@ import {
   RawDelegatesResponse,
   ConstantsResponse,
   BlockResponse,
+  BlockMetadata,
+  BlockFullHeader,
+  OperationContents,
+  OperationObject,
+  OperationContentsAndResultMetadata,
 } from './types';
 import BigNumber from 'bignumber.js';
 
@@ -289,6 +296,106 @@ export class RpcClient {
 
     return {
       ...(convResponse as BlockResponse),
+    };
+  }
+
+  /**
+   *
+   * @param options contains generic configuration for rpc calls
+   *
+   * @see https://tezos.gitlab.io/tezos/api/rpc.html#get-block-id-header
+   */
+  async getBlockHeader({ block }: RPCOptions = defaultRPCOptions): Promise<BlockFullHeader> {
+    const response = await this.httpBackend.createRequest<BlockFullHeader>({
+      url: `${this.url}/chains/${this.chain}/blocks/${block}/header`,
+      method: 'GET',
+    });
+
+    const convResponse: any = camelCaseProps(response);
+
+    return {
+      ...convResponse,
+    };
+  }
+
+  /**
+   *
+   * @param options contains generic configuration for rpc calls
+   *
+   * @see https://tezos.gitlab.io/tezos/api/rpc.html#get-block-id-metadata
+   */
+  async getBlockMetadata({ block }: RPCOptions = defaultRPCOptions): Promise<BlockMetadata> {
+    const response = await this.httpBackend.createRequest<BlockMetadata>({
+      url: `${this.url}/chains/${this.chain}/blocks/${block}/metadata`,
+      method: 'GET',
+    });
+
+    const convResponse: any = camelCaseProps(response);
+
+    return {
+      ...convResponse,
+    };
+  }
+
+  /**
+   *
+   * @param data operation contents to forge
+   * @param options contains generic configuration for rpc calls
+   *
+   * @see https://tezos.gitlab.io/tezos/api/rpc.html#post-block-id-helpers-forge-operations
+   */
+  async forgeOperations(
+    data: { branch: string; contents: any[] },
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<string> {
+    return this.httpBackend.createRequest<string>(
+      {
+        url: `${this.url}/chains/${this.chain}/blocks/${block}/helpers/forge/operations`,
+        method: 'POST',
+      },
+      data
+    );
+  }
+
+  /**
+   *
+   * @param signedOpBytes signed bytes to inject
+   *
+   * @see https://tezos.gitlab.io/tezos/api/rpc.html#post-injection-operation
+   */
+  async injectOperation(signedOpBytes: string): Promise<string> {
+    return this.httpBackend.createRequest<any>(
+      {
+        url: `${this.url}/injection/operation`,
+        method: 'POST',
+      },
+      signedOpBytes
+    );
+  }
+
+  /**
+   *
+   * @param ops Operations to apply
+   * @param options contains generic configuration for rpc calls
+   *
+   * @see https://tezos.gitlab.io/tezos/api/rpc.html#post-block-id-helpers-preapply-operations
+   */
+  async preapplyOperations(
+    ops: OperationObject[],
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<any[]> {
+    const response = await this.httpBackend.createRequest<any>(
+      {
+        url: `${this.url}/chains/${this.chain}/blocks/${block}/helpers/preapply/operations`,
+        method: 'POST',
+      },
+      ops
+    );
+
+    const convResponse: any = camelCaseProps(response);
+
+    return {
+      ...convResponse,
     };
   }
 }
