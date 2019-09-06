@@ -6,7 +6,7 @@
     "lint": "lerna run lint",
     "commit": "git-cz",
     "precommit": "lerna run --concurrency 1 --stream precommit",
-    "example": "cd example && node -r ts-node/register --preserve-symlinks example-node.ts",
+    "example": "cd example && npm run example",
     "lerna": "lerna",
     "build-docs": "typedoc",
     "gh-pages": "gh-pages"
