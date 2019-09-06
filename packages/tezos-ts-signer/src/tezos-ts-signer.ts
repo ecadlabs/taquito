@@ -69,7 +69,6 @@ export class InMemorySigner {
     }
 
     const bytesHash = toBuffer(sodium.crypto_generichash(32, bb));
-    console.log(bb, bytesHash);
 
     return this._key.sign(bytes, bytesHash);
   }
