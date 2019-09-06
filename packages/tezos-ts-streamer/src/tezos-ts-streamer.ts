@@ -1,5 +1,5 @@
 import { SubscribeProvider } from '@tezos-ts/tezos-ts';
-import * as WS from 'ws';
+import WS from 'ws';
 
 const DEFAULT_STREAMER_URL = 'wss://api.tez.ie/streamer/mainnet/subscribe';
 
