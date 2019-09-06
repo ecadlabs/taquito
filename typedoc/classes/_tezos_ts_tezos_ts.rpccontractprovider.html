@@ -94,10 +94,21 @@
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
+							<h3>Accessors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_tezos_ts_tezos_ts.rpccontractprovider.html#rpc" class="tsd-kind-icon">rpc</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_tezos_ts_tezos_ts.rpccontractprovider.html#signer" class="tsd-kind-icon">signer</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="_tezos_ts_tezos_ts.rpccontractprovider.html#getbigmapkey" class="tsd-kind-icon">get<wbr>Big<wbr>Map<wbr>Key</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="_tezos_ts_tezos_ts.rpccontractprovider.html#getstorage" class="tsd-kind-icon">get<wbr>Storage</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_tezos_ts_tezos_ts.rpccontractprovider.html#originate" class="tsd-kind-icon">originate</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_tezos_ts_tezos_ts.rpccontractprovider.html#registerdelegate" class="tsd-kind-icon">register<wbr>Delegate</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_tezos_ts_tezos_ts.rpccontractprovider.html#setdelegate" class="tsd-kind-icon">set<wbr>Delegate</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_tezos_ts_tezos_ts.rpccontractprovider.html#transfer" class="tsd-kind-icon">transfer</a></li>
 							</ul>
 						</section>
 					</div>
@@ -109,22 +120,59 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Rpc<wbr>Contract<wbr>Provider<span class="tsd-signature-symbol">(</span>rpc<span class="tsd-signature-symbol">: </span><a href="_tezos_ts_rpc.rpcclient.html" class="tsd-signature-type">RpcClient</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_tezos_ts_tezos_ts.rpccontractprovider.html" class="tsd-signature-type">RpcContractProvider</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Rpc<wbr>Contract<wbr>Provider<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="_tezos_ts_tezos_ts.context.html" class="tsd-signature-type">Context</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_tezos_ts_tezos_ts.rpccontractprovider.html" class="tsd-signature-type">RpcContractProvider</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/e7d9739/packages/tezos-ts/src/contract/rpc-contract-provider.ts#L5">tezos-ts/src/contract/rpc-contract-provider.ts:5</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/5f2ed15/packages/tezos-ts/src/contract/rpc-contract-provider.ts#L21">tezos-ts/src/contract/rpc-contract-provider.ts:21</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>rpc: <a href="_tezos_ts_rpc.rpcclient.html" class="tsd-signature-type">RpcClient</a></h5>
+									<h5>context: <a href="_tezos_ts_tezos_ts.context.html" class="tsd-signature-type">Context</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_tezos_ts_tezos_ts.rpccontractprovider.html" class="tsd-signature-type">RpcContractProvider</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Accessors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="rpc" class="tsd-anchor"></a>
+					<h3>rpc</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> rpc<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_tezos_ts_rpc.rpcclient.html" class="tsd-signature-type">RpcClient</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/5f2ed15/packages/tezos-ts/src/contract/rpc-contract-provider.ts#L24">tezos-ts/src/contract/rpc-contract-provider.ts:24</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <a href="_tezos_ts_rpc.rpcclient.html" class="tsd-signature-type">RpcClient</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="signer" class="tsd-anchor"></a>
+					<h3>signer</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> signer<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_tezos_ts_tezos_ts.signer.html" class="tsd-signature-type">Signer</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/5f2ed15/packages/tezos-ts/src/contract/rpc-contract-provider.ts#L28">tezos-ts/src/contract/rpc-contract-provider.ts:28</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_tezos_ts_tezos_ts.signer.html" class="tsd-signature-type">Signer</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -142,7 +190,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_tezos_ts_tezos_ts.contractprovider.html">ContractProvider</a>.<a href="../interfaces/_tezos_ts_tezos_ts.contractprovider.html#getbigmapkey">getBigMapKey</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/e7d9739/packages/tezos-ts/src/contract/rpc-contract-provider.ts#L44">tezos-ts/src/contract/rpc-contract-provider.ts:44</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/5f2ed15/packages/tezos-ts/src/contract/rpc-contract-provider.ts#L68">tezos-ts/src/contract/rpc-contract-provider.ts:68</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -197,7 +245,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_tezos_ts_tezos_ts.contractprovider.html">ContractProvider</a>.<a href="../interfaces/_tezos_ts_tezos_ts.contractprovider.html#getstorage">getStorage</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/e7d9739/packages/tezos-ts/src/contract/rpc-contract-provider.ts#L17">tezos-ts/src/contract/rpc-contract-provider.ts:17</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/5f2ed15/packages/tezos-ts/src/contract/rpc-contract-provider.ts#L41">tezos-ts/src/contract/rpc-contract-provider.ts:41</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -232,6 +280,216 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="originate" class="tsd-anchor"></a>
+					<h3>originate</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">originate<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_tezos_ts_tezos_ts.operation.html" class="tsd-signature-type">Operation</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/5f2ed15/packages/tezos-ts/src/contract/rpc-contract-provider.ts#L247">tezos-ts/src/contract/rpc-contract-provider.ts:247</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<dl class="tsd-comment-tags">
+									<dt>description</dt>
+									<dd><p>Originate a new contract according to the script in parameters. Will sign and inject an operation using the current context</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>__namedParameters: <span class="tsd-signature-type">object</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter">
+											<h5>balance<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>code<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>delegatable<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>delegate<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>fee<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>gas<wbr>Limit<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>init<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>spendable<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>storage<wbr>Limit<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_tezos_ts_tezos_ts.operation.html" class="tsd-signature-type">Operation</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>An operation handle with the result from the rpc node</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="registerdelegate" class="tsd-anchor"></a>
+					<h3>register<wbr>Delegate</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">register<wbr>Delegate<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_tezos_ts_tezos_ts.operation.html" class="tsd-signature-type">Operation</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/5f2ed15/packages/tezos-ts/src/contract/rpc-contract-provider.ts#L322">tezos-ts/src/contract/rpc-contract-provider.ts:322</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<dl class="tsd-comment-tags">
+									<dt>description</dt>
+									<dd><p>Register the current address as delegate. Will sign and inject an operation using the current context</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>__namedParameters: <span class="tsd-signature-type">object</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter">
+											<h5>fee<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>gas<wbr>Limit<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>storage<wbr>Limit<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></h5>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_tezos_ts_tezos_ts.operation.html" class="tsd-signature-type">Operation</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>An operation handle with the result from the rpc node</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="setdelegate" class="tsd-anchor"></a>
+					<h3>set<wbr>Delegate</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Delegate<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_tezos_ts_tezos_ts.operation.html" class="tsd-signature-type">Operation</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/5f2ed15/packages/tezos-ts/src/contract/rpc-contract-provider.ts#L292">tezos-ts/src/contract/rpc-contract-provider.ts:292</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<dl class="tsd-comment-tags">
+									<dt>description</dt>
+									<dd><p>Set the delegate for a contract. Will sign and inject an operation using the current context</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>__namedParameters: <span class="tsd-signature-type">object</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter">
+											<h5>delegate<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>fee<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>gas<wbr>Limit<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>source<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>storage<wbr>Limit<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_tezos_ts_tezos_ts.operation.html" class="tsd-signature-type">Operation</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>An operation handle with the result from the rpc node</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="transfer" class="tsd-anchor"></a>
+					<h3>transfer</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">transfer<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_tezos_ts_tezos_ts.operation.html" class="tsd-signature-type">Operation</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/5f2ed15/packages/tezos-ts/src/contract/rpc-contract-provider.ts#L342">tezos-ts/src/contract/rpc-contract-provider.ts:342</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<dl class="tsd-comment-tags">
+									<dt>description</dt>
+									<dd><p>Transfer tz from current address to a specific address. Will sign and inject an operation using the current context</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>__namedParameters: <span class="tsd-signature-type">object</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter">
+											<h5>amount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>fee<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>gas<wbr>Limit<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>mutez<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>parameter<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>raw<wbr>Param<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>source<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>storage<wbr>Limit<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>to<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_tezos_ts_tezos_ts.operation.html" class="tsd-signature-type">Operation</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>An operation handle with the result from the rpc node</p>
 						</li>
 					</ul>
 				</section>
@@ -275,7 +533,16 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="_tezos_ts_tezos_ts.context.html" class="tsd-kind-icon">Context</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="_tezos_ts_tezos_ts.indexerprovider.html" class="tsd-kind-icon">Indexer<wbr>Provider</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="_tezos_ts_tezos_ts.noopsigner.html" class="tsd-kind-icon">Noop<wbr>Signer</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="_tezos_ts_tezos_ts.operation.html" class="tsd-kind-icon">Operation</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="_tezos_ts_tezos_ts.pollingsubscribeprovider.html" class="tsd-kind-icon">Polling<wbr>Subscribe<wbr>Provider</a>
@@ -288,11 +555,29 @@
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
 								<a href="_tezos_ts_tezos_ts.rpccontractprovider.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="_tezos_ts_tezos_ts.rpccontractprovider.html#rpc" class="tsd-kind-icon">rpc</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="_tezos_ts_tezos_ts.rpccontractprovider.html#signer" class="tsd-kind-icon">signer</a>
+							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
 								<a href="_tezos_ts_tezos_ts.rpccontractprovider.html#getbigmapkey" class="tsd-kind-icon">get<wbr>Big<wbr>Map<wbr>Key</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
 								<a href="_tezos_ts_tezos_ts.rpccontractprovider.html#getstorage" class="tsd-kind-icon">get<wbr>Storage</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_tezos_ts_tezos_ts.rpccontractprovider.html#originate" class="tsd-kind-icon">originate</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_tezos_ts_tezos_ts.rpccontractprovider.html#registerdelegate" class="tsd-kind-icon">register<wbr>Delegate</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_tezos_ts_tezos_ts.rpccontractprovider.html#setdelegate" class="tsd-kind-icon">set<wbr>Delegate</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_tezos_ts_tezos_ts.rpccontractprovider.html#transfer" class="tsd-kind-icon">transfer</a>
 							</li>
 						</ul>
 					</li>
@@ -317,16 +602,43 @@
 						<a href="../interfaces/_tezos_ts_tezos_ts.contractprovider.html" class="tsd-kind-icon">Contract<wbr>Provider</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/_tezos_ts_tezos_ts.delegateoperation.html" class="tsd-kind-icon">Delegate<wbr>Operation</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/_tezos_ts_tezos_ts.delegateparams.html" class="tsd-kind-icon">Delegate<wbr>Params</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/_tezos_ts_tezos_ts.forgedbytes.html" class="tsd-kind-icon">Forged<wbr>Bytes</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/_tezos_ts_tezos_ts.originateparams.html" class="tsd-kind-icon">Originate<wbr>Params</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/_tezos_ts_tezos_ts.originationoperation.html" class="tsd-kind-icon">Origination<wbr>Operation</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="../interfaces/_tezos_ts_tezos_ts.queryprovider.html" class="tsd-kind-icon">Query<wbr>Provider</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/_tezos_ts_tezos_ts.revealoperation.html" class="tsd-kind-icon">Reveal<wbr>Operation</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="../interfaces/_tezos_ts_tezos_ts.setprovideroptions.html" class="tsd-kind-icon">Set<wbr>Provider<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/_tezos_ts_tezos_ts.signer.html" class="tsd-kind-icon">Signer</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="../interfaces/_tezos_ts_tezos_ts.subscribeprovider.html" class="tsd-kind-icon">Subscribe<wbr>Provider</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="../interfaces/_tezos_ts_tezos_ts.subscription-1.html" class="tsd-kind-icon">Subscription</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/_tezos_ts_tezos_ts.transferoperation.html" class="tsd-kind-icon">Transfer<wbr>Operation</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/_tezos_ts_tezos_ts.transferparams.html" class="tsd-kind-icon">Transfer<wbr>Params</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="../interfaces/_tezos_ts_tezos_ts.tzprovider.html" class="tsd-kind-icon">Tz<wbr>Provider</a>
@@ -336,6 +648,9 @@
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-is-not-exported">
 						<a href="../modules/_tezos_ts_tezos_ts.html#format" class="tsd-kind-icon">Format</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="../modules/_tezos_ts_tezos_ts.html#prepareoperationparams" class="tsd-kind-icon">Prepare<wbr>Operation<wbr>Params</a>
 					</li>
 					<li class=" tsd-kind-variable tsd-parent-kind-module tsd-is-not-exported">
 						<a href="../modules/_tezos_ts_tezos_ts.html#mtz_decimals" class="tsd-kind-icon">MTZ_<wbr>DECIMALS</a>
