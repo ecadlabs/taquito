@@ -3,9 +3,15 @@
     "moduleResolution": "node",
     "target": "es5",
     "module": "es2015",
-    "lib": ["es2015", "es2016", "es2017", "dom"],
+    "lib": [
+      "es2015",
+      "es2016",
+      "es2017",
+      "dom"
+    ],
     "strict": true,
     "sourceMap": true,
+    "esModuleInterop": true,
     "declaration": true,
     "allowSyntheticDefaultImports": true,
     "noUnusedParameters": true,
@@ -14,13 +20,24 @@
     "jsx": "react",
     "baseUrl": "packages",
     "paths": {
-      "@tezos-ts/rpc": ["tezos-ts-rpc/src/tezos-ts-rpc.ts"],
+      "@tezos-ts/rpc": [
+        "tezos-ts-rpc/src/tezos-ts-rpc.ts"
+      ],
       "@tezos-ts/michelson-encoder": [
         "tezos-ts-michelson-encoder/src/tezos-ts-michelson-encoder.ts"
       ],
-      "@tezos-ts/tezos-ts": ["tezos-ts/src/tezos-ts.ts"],
-      "@tezos-ts/indexer": ["tezos-ts-indexer/src/tezos-ts-indexer.ts"],
-      "@tezos-ts/http-utils": ["tezos-ts-http-utils/src/tezos-ts-http-utils.ts"]
+      "@tezos-ts/utils": [
+        "tezos-ts-utils/src/tezos-ts-utils.ts"
+      ],
+      "@tezos-ts/tezos-ts": [
+        "tezos-ts/src/tezos-ts.ts"
+      ],
+      "@tezos-ts/indexer": [
+        "tezos-ts-indexer/src/tezos-ts-indexer.ts"
+      ],
+      "@tezos-ts/http-utils": [
+        "tezos-ts-http-utils/src/tezos-ts-http-utils.ts"
+      ]
     }
   }
 }

@@ -55,6 +55,9 @@
       "tsx",
       "js"
     ],
+    "moduleNameMapper": {
+      "^@tezos-ts/utils$": "<rootDir>/../tezos-ts-utils/src/tezos-ts-utils.ts"
+    },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/test/"
@@ -65,8 +68,7 @@
   },
   "dependencies": {
     "bignumber.js": "^9.0.0",
-    "bs58check": "^2.1.2",
-    "buffer": "^5.2.1"
+    "@tezos-ts/utils": "^4.0.0-alpha.3"
   },
   "devDependencies": {
     "@types/jest": "^23.3.2",

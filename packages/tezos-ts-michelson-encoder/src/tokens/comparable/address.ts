@@ -1,5 +1,5 @@
 import { Token, TokenFactory, ComparableToken } from '../token';
-import { b58decode, encodePubKey } from '../../encoding';
+import { b58decode, encodePubKey } from '@tezos-ts/utils';
 
 export class AddressToken extends Token implements ComparableToken {
   static prim = 'address';

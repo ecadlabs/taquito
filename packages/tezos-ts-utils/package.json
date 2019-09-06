@@ -1,16 +1,17 @@
 {
-  "name": "@tezos-ts/tezos-ts",
+  "name": "@tezos-ts/utils",
   "version": "4.0.0-alpha.3",
-  "description": "High level functionality that builds upon the other packages in the Tezos Typescript Library Suite.",
+  "description": "converts michelson data and types into convenient JS/TS objects",
   "keywords": [
     "tezos",
-    "blockchain"
+    "blockchain",
+    "michelson",
+    "smart-contract"
   ],
-  "main": "dist/tezos-ts.umd.js",
-  "module": "dist/tezos-ts.es5.js",
-  "typings": "dist/types/tezos-ts.d.ts",
+  "main": "dist/tezos-ts-utils.umd.js",
+  "module": "dist/tezos-ts-utils.es5.js",
+  "typings": "dist/types/tezos-ts-utils.d.ts",
   "files": [
-    "signature.json",
     "dist"
   ],
   "publishConfig": {
@@ -26,13 +27,10 @@
     "node": ">=6.0.0"
   },
   "scripts": {
-    "test": "jest --coverage",
-    "test:watch": "jest --coverage --watch",
-    "test:prod": "npm run lint && npm run test -- --no-cache",
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
-    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts ",
+    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts",
     "start": "rollup -c rollup.config.ts -w"
   },
   "lint-staged": {
@@ -53,13 +51,6 @@
       "tsx",
       "js"
     ],
-    "moduleNameMapper": {
-      "^@tezos-ts/rpc$": "<rootDir>/../tezos-ts-rpc/src/tezos-ts-rpc.ts",
-      "^@tezos-ts/michelson-encoder$": "<rootDir>/../tezos-ts-michelson-encoder/src/tezos-ts-michelson-encoder.ts",
-      "^@tezos-ts/http-utils$": "<rootDir>/../tezos-ts-http-utils/src/tezos-ts-http-utils.ts",
-      "^@tezos-ts/indexer$": "<rootDir>/../tezos-ts-indexer/src/tezos-ts-indexer.ts",
-      "^@tezos-ts/utils$": "<rootDir>/../tezos-ts-utils/src/tezos-ts-utils.ts"
-    },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/test/"
@@ -69,10 +60,8 @@
     ]
   },
   "dependencies": {
-    "@tezos-ts/indexer": "^4.0.0-alpha.3",
-    "@tezos-ts/michelson-encoder": "^4.0.0-alpha.3",
-    "@tezos-ts/rpc": "^4.0.0-alpha.3",
-    "bignumber.js": "^9.0.0"
+    "bs58check": "^2.1.2",
+    "buffer": "^5.2.1"
   },
   "devDependencies": {
     "@types/jest": "^23.3.2",
@@ -98,6 +87,7 @@
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
     "tslint-config-standard": "^8.0.1",
+    "typedoc": "^0.15.0",
     "typescript": "^3.0.3"
   }
 }
