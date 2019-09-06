@@ -406,10 +406,6 @@ export class RpcClient {
       ops
     );
 
-    const convResponse: any = camelCaseProps(response);
-
-    return {
-      ...convResponse,
-    };
+    return response;
   }
 }

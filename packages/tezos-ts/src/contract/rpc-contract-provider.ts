@@ -207,7 +207,7 @@ export class RpcContractProvider implements ContractProvider {
     const results = await this.rpc.preapplyOperations([forgedBytes.opOb]);
 
     if (!Array.isArray(results)) {
-      throw new Error('RPC Fail');
+      throw new Error(`RPC Fail: ${JSON.stringify(results)}`);
     }
     for (let i = 0; i < results.length; i++) {
       for (let j = 0; j < results[i].contents.length; j++) {
