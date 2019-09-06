@@ -1,4 +1,7 @@
 {
+  "name": "@tezos-ts/example",
+  "private": true,
+  "version": "4.0.0-alpha.3",
   "scripts": {
     "example:origination": "node -r ts-node/register --preserve-symlinks contract-origination.ts",
     "example": "node -r ts-node/register --preserve-symlinks example-node.ts"
