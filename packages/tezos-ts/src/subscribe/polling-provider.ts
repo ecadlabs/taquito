@@ -1,5 +1,5 @@
 import { SubscribeProvider } from './interface';
-import { RpcClient } from '@tezos-ts/rpc';
+import { Context } from '../context';
 
 class Subscription {
   private errorListeners: Array<(error: Error) => void> = [];
@@ -7,11 +7,11 @@ class Subscription {
   private closeListeners: Array<() => void> = [];
   private interval: any;
 
-  constructor(private readonly pollingSubscriber: PollingSubscribeProvider) {
+  constructor(private readonly context: Context, public readonly POLL_INTERVAL = 20000) {
     let previousHash = '';
     const poll = async () => {
       try {
-        const hash = await this.pollingSubscriber.rpc.getBlockHash();
+        const hash = await this.context.rpc.getBlockHash();
         if (hash && hash !== previousHash) {
           previousHash = hash;
           this.call(this.messageListeners, hash);
@@ -22,7 +22,7 @@ class Subscription {
     };
     this.interval = setInterval(async () => {
       await poll();
-    }, this.pollingSubscriber.POLL_INTERVAL);
+    }, this.POLL_INTERVAL);
     // tslint:disable-next-line: no-floating-promises
     poll();
   }
@@ -93,13 +93,9 @@ class Subscription {
 }
 
 export class PollingSubscribeProvider implements SubscribeProvider {
-  constructor(public rpc: RpcClient, public readonly POLL_INTERVAL = 20000) {}
+  constructor(private context: Context, public readonly POLL_INTERVAL = 20000) {}
 
   subscribe(_filter: 'head'): Subscription {
-    return new Subscription(this);
-  }
-
-  public setRPC(rpc: RpcClient) {
-    this.rpc = rpc;
+    return new Subscription(this.context, this.POLL_INTERVAL);
   }
 }

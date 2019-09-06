@@ -7,16 +7,6 @@ describe('TezosToolkit test', () => {
     expect(new TezosToolkit()).toBeInstanceOf(TezosToolkit);
   });
 
-  it('setProvider should change provider', () => {
-    const toolkit = new TezosToolkit();
-
-    const oldTz = toolkit.tz;
-    const oldContract = toolkit.contract;
-    toolkit.setProvider({} as any);
-    expect(toolkit.tz).not.toBe(oldTz);
-    expect(toolkit.contract).not.toBe(oldContract);
-  });
-
   it('setProvider with string should create rpc provider', () => {
     const toolkit = new TezosToolkit();
 

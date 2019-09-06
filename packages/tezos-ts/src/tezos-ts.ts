@@ -10,11 +10,15 @@ import { PollingSubscribeProvider } from './subscribe/polling-provider';
 import { TzProvider } from './tz/interface';
 import { RpcTzProvider } from './tz/rpc-tz-provider';
 import { format } from './format';
+import { Signer } from './signer/interface';
+import { Context } from './context';
+import { NoopSigner } from './signer/noop';
 export { SubscribeProvider } from './subscribe/interface';
 export interface SetProviderOptions {
   rpc?: string | RpcClient;
   indexer?: string | IndexerClient;
   stream?: string | SubscribeProvider;
+  signer?: Signer;
 }
 
 /**
@@ -24,10 +28,13 @@ export class TezosToolkit {
   private _rpcClient = new RpcClient();
   private _indexerClient: IndexerClient = new IndexerClient();
   private _query!: QueryProvider;
-  private _tz!: TzProvider;
-  private _contract!: ContractProvider;
   private _stream!: SubscribeProvider;
   private _options: SetProviderOptions = {};
+
+  private _context: Context = new Context();
+
+  private _tz = new RpcTzProvider(this._context);
+  private _contract = new RpcContractProvider(this._context);
 
   public readonly format = format;
 
@@ -39,10 +46,21 @@ export class TezosToolkit {
    *
    * @param options rpc url or rpcClient to use to interact with the Tezos network and indexer url to use to interact with the Tezos network
    */
-  setProvider({ rpc, indexer, stream }: SetProviderOptions) {
+  setProvider({ rpc, indexer, stream, signer }: SetProviderOptions) {
     this.setRpcProvider(rpc);
     this.setIndexerProvider(indexer);
     this.setStreamProvider(stream);
+    this.setSignerProvider(signer);
+  }
+
+  private setSignerProvider(signer: SetProviderOptions['signer']) {
+    if (!this._options.signer && typeof signer === 'undefined') {
+      this._context.signer = new NoopSigner();
+      this._options.signer = signer;
+    } else if (typeof signer !== 'undefined') {
+      this._context.signer = signer;
+      this._options.signer = signer;
+    }
   }
 
   private setRpcProvider(rpc: SetProviderOptions['rpc']) {
@@ -53,19 +71,8 @@ export class TezosToolkit {
     } else {
       this._rpcClient = new RpcClient();
     }
-
-    this._tz = new RpcTzProvider(this._rpcClient);
-    this._contract = new RpcContractProvider(this._rpcClient);
     this._options.rpc = rpc;
-
-    // Check if the stream api was initialized with the previous RPC
-    // If this is the case reinitialize with new RPC
-    if (
-      typeof this._options.stream === 'undefined' &&
-      this._stream instanceof PollingSubscribeProvider
-    ) {
-      this._stream.setRPC(this._rpcClient);
-    }
+    this._context.rpc = this._rpcClient;
   }
 
   private setIndexerProvider(indexer: SetProviderOptions['indexer']) {
@@ -83,11 +90,11 @@ export class TezosToolkit {
 
   private setStreamProvider(stream: SetProviderOptions['stream']) {
     if (typeof stream === 'string') {
-      this._stream = new PollingSubscribeProvider(new RpcClient(stream));
+      this._stream = new PollingSubscribeProvider(new Context(new RpcClient(stream)));
     } else if (typeof stream !== 'undefined') {
       this._stream = stream;
     } else {
-      this._stream = new PollingSubscribeProvider(this._rpcClient);
+      this._stream = new PollingSubscribeProvider(this._context);
     }
     this._options.stream = stream;
   }
