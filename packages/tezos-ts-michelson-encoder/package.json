@@ -54,6 +54,9 @@
       "tsx",
       "js"
     ],
+    "moduleNameMapper": {
+      "^@tezos-ts/utils$": "<rootDir>/../tezos-ts-utils/src/tezos-ts-utils.ts"
+    },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/test/"
