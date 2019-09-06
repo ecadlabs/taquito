@@ -251,6 +251,8 @@ export class RpcClient {
    *
    * @param options contains generic configuration for rpc calls
    *
+   * @description All constants
+   *
    * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-constants
    */
   async getConstants({ block }: RPCOptions = defaultRPCOptions): Promise<ConstantsResponse> {
@@ -284,6 +286,8 @@ export class RpcClient {
    *
    * @param options contains generic configuration for rpc calls
    *
+   * @description All the information about a block
+   *
    * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id
    */
   async getBlock({ block }: RPCOptions = defaultRPCOptions): Promise<BlockResponse> {
@@ -303,6 +307,8 @@ export class RpcClient {
    *
    * @param options contains generic configuration for rpc calls
    *
+   * @description The whole block header
+   *
    * @see https://tezos.gitlab.io/tezos/api/rpc.html#get-block-id-header
    */
   async getBlockHeader({ block }: RPCOptions = defaultRPCOptions): Promise<BlockFullHeader> {
@@ -321,6 +327,8 @@ export class RpcClient {
   /**
    *
    * @param options contains generic configuration for rpc calls
+   *
+   * @description All the metadata associated to the block
    *
    * @see https://tezos.gitlab.io/tezos/api/rpc.html#get-block-id-metadata
    */
@@ -342,6 +350,8 @@ export class RpcClient {
    * @param data operation contents to forge
    * @param options contains generic configuration for rpc calls
    *
+   * @description Forge an operation returning the unsigned bytes
+   *
    * @see https://tezos.gitlab.io/tezos/api/rpc.html#post-block-id-helpers-forge-operations
    */
   async forgeOperations(
@@ -361,6 +371,8 @@ export class RpcClient {
    *
    * @param signedOpBytes signed bytes to inject
    *
+   * @description Inject an operation in node and broadcast it. Returns the ID of the operation. The `signedOperationContents` should be constructed using a contextual RPCs from the latest block and signed by the client. By default, the RPC will wait for the operation to be (pre-)validated before answering. See RPCs under /blocks/prevalidation for more details on the prevalidation context.
+   *
    * @see https://tezos.gitlab.io/tezos/api/rpc.html#post-injection-operation
    */
   async injectOperation(signedOpBytes: string): Promise<string> {
@@ -377,6 +389,8 @@ export class RpcClient {
    *
    * @param ops Operations to apply
    * @param options contains generic configuration for rpc calls
+   *
+   * @description Simulate the validation of an operation
    *
    * @see https://tezos.gitlab.io/tezos/api/rpc.html#post-block-id-helpers-preapply-operations
    */
