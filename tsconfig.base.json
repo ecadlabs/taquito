@@ -37,6 +37,9 @@
       ],
       "@tezos-ts/http-utils": [
         "tezos-ts-http-utils/src/tezos-ts-http-utils.ts"
+      ],
+      "@tezos-ts/signer": [
+        "tezos-ts-signer/src/tezos-ts-signer.ts"
       ]
     }
   }
