@@ -1,11 +1,18 @@
 import { Buffer } from 'buffer';
+import { prefix } from './contants';
 const bs58check = require('bs58check');
 
 export { prefix } from './contants';
 
-export function b58cencode(payload: string | Uint8Array, prefix: Uint8Array) {
-  const payloadAr =
-    typeof payload === 'string' ? Uint8Array.from(Buffer.from(payload, 'hex')) : payload;
+/**
+ *
+ * @description Base58 encode a string or a Uint8Array and append a prefix to it
+ *
+ * @param value Value to base58 encode
+ * @param prefix prefix to append to the encoded string
+ */
+export function b58cencode(value: string | Uint8Array, prefix: Uint8Array) {
+  const payloadAr = typeof value === 'string' ? Uint8Array.from(Buffer.from(value, 'hex')) : value;
 
   const n = new Uint8Array(prefix.length + payloadAr.length);
   n.set(prefix);
@@ -14,55 +21,78 @@ export function b58cencode(payload: string | Uint8Array, prefix: Uint8Array) {
   return bs58check.encode(Buffer.from(n.buffer));
 }
 
+/**
+ *
+ * @description Base58 decode a string and remove the prefix from it
+ *
+ * @param value Value to base58 decode
+ * @param prefix prefix to remove from the decoded string
+ */
 export const b58cdecode = (enc: string, prefixArg: Uint8Array): Uint8Array =>
   bs58check.decode(enc).slice(prefixArg.length);
 
+/**
+ *
+ * @description Base58 decode a string with predefined prefix
+ *
+ * @param value Value to base58 decode
+ */
 export function b58decode(payload: string) {
   const buf: Buffer = bs58check.decode(payload);
-  const buf2hex = function(buffer: Buffer) {
-    const byteArray = new Uint8Array(buffer);
-    const hexParts = [] as any[];
-    for (let i = 0; i < byteArray.length; i++) {
-      let hex = byteArray[i].toString(16);
-      let paddedHex = ('00' + hex).slice(-2);
-      hexParts.push(paddedHex);
-    }
-    return hexParts.join('');
+
+  const prefixMap = {
+    [prefix.tz1.toString()]: '0000',
+    [prefix.tz2.toString()]: '0001',
+    [prefix.tz3.toString()]: '0002',
   };
 
-  const prefix = {
-    [new Uint8Array([6, 161, 159]).toString()]: '0000',
-    [new Uint8Array([6, 161, 161]).toString()]: '0001',
-    [new Uint8Array([6, 161, 164]).toString()]: '0002',
-  };
-
-  let pref = prefix[new Uint8Array(buf.slice(0, 3)).toString()];
+  let pref = prefixMap[new Uint8Array(buf.slice(0, 3)).toString()];
   if (pref) {
+    // tz addresses
     const hex = buf2hex(buf.slice(3));
     return pref + hex;
   } else {
+    // other (kt addresses)
     return '01' + buf2hex(buf.slice(3, 42)) + '00';
   }
 }
 
+/**
+ *
+ * @description Base58 encode a public key using predefined prefix
+ *
+ * @param value Public Key to base58 encode
+ */
 export function encodePubKey(value: string) {
   if (value.substring(0, 2) === '00') {
-    const prefix: { [key: string]: Uint8Array } = {
-      '0000': new Uint8Array([6, 161, 159]),
-      '0001': new Uint8Array([6, 161, 161]),
-      '0002': new Uint8Array([6, 161, 164]),
+    const pref: { [key: string]: Uint8Array } = {
+      '0000': prefix.tz1,
+      '0001': prefix.tz2,
+      '0002': prefix.tz3,
     };
 
-    return b58cencode(value.substring(4), prefix[value.substring(0, 4)]);
+    return b58cencode(value.substring(4), pref[value.substring(0, 4)]);
   }
 
-  return b58cencode(value.substring(2, 42), new Uint8Array([2, 90, 121]));
+  return b58cencode(value.substring(2, 42), prefix.KT);
 }
 
-export const hex2buf = (hex: string): Uint8Array =>
-  // @ts-ignore
-  new Uint8Array(hex.match(/[\da-f]{2}/gi).map(h => parseInt(h, 16)));
+/**
+ *
+ * @description Convert an hex string to a Uint8Array
+ *
+ * @param hex Hex string to convert
+ */
+export const hex2buf = (hex: string): Uint8Array => {
+  return new Uint8Array(hex.match(/[\da-f]{2}/gi)!.map(h => parseInt(h, 16)));
+};
 
+/**
+ *
+ * @description Generate a random hex nonce
+ *
+ * @param length length of the nonce
+ */
 export const hexNonce = (length: number): string => {
   const chars = '0123456789abcedf';
   let hex = '';
@@ -72,6 +102,13 @@ export const hexNonce = (length: number): string => {
   return hex;
 };
 
+/**
+ *
+ * @description Merge 2 buffers together
+ *
+ * @param b1 First buffer
+ * @param b2 Second buffer
+ */
 export const mergebuf = (b1: Uint8Array, b2: Uint8Array): Uint8Array => {
   const r = new Uint8Array(b1.length + b2.length);
   r.set(b1);
@@ -79,6 +116,12 @@ export const mergebuf = (b1: Uint8Array, b2: Uint8Array): Uint8Array => {
   return r;
 };
 
+/**
+ *
+ * @description Convert a michelson string expression to it's json representation
+ *
+ * @param mi Michelson string expression to convert to json
+ */
 export const sexp2mic = function me(mi: string): any {
   mi = mi
     .replace(/(?:@[a-z_]+)|(?:#.*$)/gm, '')
@@ -136,6 +179,12 @@ export const sexp2mic = function me(mi: string): any {
   return ret;
 };
 
+/**
+ *
+ * @description Flatten a michelson json representation to an array
+ *
+ * @param s michelson json
+ */
 export const mic2arr = function me2(s: any): any {
   let ret: any = [];
   if (Object.prototype.hasOwnProperty.call(s, 'prim')) {
@@ -179,6 +228,12 @@ export const mic2arr = function me2(s: any): any {
   return ret;
 };
 
+/**
+ *
+ * @description Convert a michelson string to it's json representation
+ *
+ * @param mi Michelson string to convert to json
+ */
 export const ml2mic = function me(mi: string): any {
   const ret = [];
   let inseq = false;
@@ -246,6 +301,12 @@ export const ml2mic = function me(mi: string): any {
   return ret;
 };
 
+/**
+ *
+ * @description Convert a buffer to an hex string
+ *
+ * @param buffer Buffer to convert
+ */
 export const buf2hex = (buffer: Buffer): string => {
   const byteArray = new Uint8Array(buffer);
   const hexParts: string[] = [];
