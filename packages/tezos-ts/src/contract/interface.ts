@@ -2,6 +2,9 @@ import { Schema } from '@tezos-ts/michelson-encoder';
 import { Operation } from './operations';
 import { OperationObject } from '@tezos-ts/rpc';
 
+/**
+ * @description Parameters for originate method
+ */
 export interface OriginateParams {
   balance?: string;
   code: string;
@@ -14,6 +17,9 @@ export interface OriginateParams {
   storageLimit?: number;
 }
 
+/**
+ * @description RPC origination operation
+ */
 export interface OriginationOperation {
   kind: 'origination';
   fee: number;
@@ -30,6 +36,9 @@ export interface OriginationOperation {
   };
 }
 
+/**
+ * @description RPC reveal operation
+ */
 export interface RevealOperation {
   kind: 'reveal';
   fee: number;
@@ -39,12 +48,18 @@ export interface RevealOperation {
   storage_limit: number;
 }
 
+/**
+ * @description Result of a forge operation contains the operation plus its encoded version
+ */
 export interface ForgedBytes {
   opbytes: string;
   opOb: OperationObject;
   counter: number;
 }
 
+/**
+ * @description Parameters for setDelegate and registerDelegate method
+ */
 export interface DelegateParams {
   source: string;
   delegate: string;
@@ -53,6 +68,9 @@ export interface DelegateParams {
   storageLimit?: number;
 }
 
+/**
+ * @description RPC delegation operation
+ */
 export interface DelegateOperation {
   kind: 'delegation';
   source?: string;
@@ -62,6 +80,9 @@ export interface DelegateOperation {
   delegate: string;
 }
 
+/**
+ * @description Parameters for transfer method
+ */
 export interface TransferParams {
   to: string;
   source?: string;
@@ -74,6 +95,9 @@ export interface TransferParams {
   rawParam?: boolean;
 }
 
+/**
+ * @description RPC transfer operation
+ */
 export interface TransferOperation {
   kind: 'transaction';
   fee: number;

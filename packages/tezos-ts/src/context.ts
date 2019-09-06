@@ -2,6 +2,9 @@ import { RpcClient } from '@tezos-ts/rpc';
 import { Signer } from './signer/interface';
 import { NoopSigner } from './signer/noop';
 
+/**
+ * @description Encapsulate common service used throughout different part of the library
+ */
 export class Context {
   constructor(
     private _rpcClient: RpcClient = new RpcClient(),
@@ -24,6 +27,9 @@ export class Context {
     this._signer = value;
   }
 
+  /**
+   * @description Create a copy of the current context. Useful when you have long running operation and you do not want a context change to affect the operation
+   */
   clone(): Context {
     return new Context(this.rpc, this.signer);
   }
