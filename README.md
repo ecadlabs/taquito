@@ -39,6 +39,8 @@ Each package is published to npmjs.org under the `@tezos-ts` handle.
 | [@tezos-ts/michelson-encoder](packages/tezos-ts-michelson-encoder) | Encode/Decode storage and parameters to/from michelson format |
 | [@tezos-ts/indexer](packages/tezos-ts-indexer)                     | A client for the [tezos-indexer-api][0] API                   |
 | [@tezos-ts/streamer](packages/tezos-ts-streamer)                   | A client for the [tezos-ts-streamer][1] API              |
+| [@tezos-ts/signer](packages/tezos-ts-signer)                   | Provide necessary function to sign using tezos keys  |
+| [@tezos-ts/utils](packages/tezos-ts-utils)                   | Provide different encoding and decoding utilities |
 
 ## API Documentation
 
