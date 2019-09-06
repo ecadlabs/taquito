@@ -2,7 +2,10 @@
   "name": "@tezos-ts/tezos-ts",
   "version": "0.0.0",
   "description": "High level functionality that builds upon the other packages in the Tezos Typescript Library Suite.",
-  "keywords": ["tezos", "blockchain"],
+  "keywords": [
+    "tezos",
+    "blockchain"
+  ],
   "main": "dist/tezos-ts.umd.js",
   "module": "dist/tezos-ts.es5.js",
   "typings": "dist/types/tezos-ts.d.ts",
@@ -53,7 +56,8 @@
       "^@tezos-ts/rpc$": "<rootDir>/../tezos-ts-rpc/src/tezos-ts-rpc.ts",
       "^@tezos-ts/michelson-encoder$": "<rootDir>/../tezos-ts-michelson-encoder/src/tezos-ts-michelson-encoder.ts",
       "^@tezos-ts/http-utils$": "<rootDir>/../tezos-ts-http-utils/src/tezos-ts-http-utils.ts",
-      "^@tezos-ts/indexer$": "<rootDir>/../tezos-ts-indexer/src/tezos-ts-indexer.ts"
+      "^@tezos-ts/indexer$": "<rootDir>/../tezos-ts-indexer/src/tezos-ts-indexer.ts",
+      "^@tezos-ts/utils$": "<rootDir>/../tezos-ts-utils/src/tezos-ts-utils.ts"
     },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
