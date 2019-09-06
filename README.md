@@ -1,6 +1,7 @@
 # Tezos Typescript Library Suite
 
 [![CircleCI](https://circleci.com/gh/ecadlabs/tezos-ts.svg?style=svg)](https://circleci.com/gh/ecadlabs/tezos-ts)
+[![codecov](https://codecov.io/gh/ecadlabs/tezos-ts/branch/master/graph/badge.svg)](https://codecov.io/gh/ecadlabs/tezos-ts)
 
 ## Work In Progress / Alpha
 

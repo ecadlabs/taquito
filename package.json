@@ -2,7 +2,7 @@
   "scripts": {
     "build": "lerna run build",
     "bootstrap": "lerna bootstrap",
-    "test": "lerna run test:prod",
+    "test": "jest --collectCoverage",
     "lint": "lerna run lint",
     "commit": "git-cz",
     "precommit": "lerna run --concurrency 1 --stream precommit",
@@ -31,6 +31,7 @@
       "^@tezos-ts/michelson-encoder$": "<rootDir>/packages/tezos-ts-michelson-encoder/src/tezos-ts-michelson-encoder.ts",
       "^@tezos-ts/http-utils$": "<rootDir>/packages/tezos-ts-http-utils/src/tezos-ts-http-utils.ts",
       "^@tezos-ts/utils$": "<rootDir>/packages/tezos-ts-utils/src/tezos-ts-utils.ts",
+      "^@tezos-ts/indexer$": "<rootDir>/packages/tezos-ts-indexer/src/tezos-ts-indexer.ts",
       "^@tezos-ts/signer$": "<rootDir>/packages/tezos-ts-signer/src/tezos-ts-signer.ts"
     },
     "coveragePathIgnorePatterns": [
