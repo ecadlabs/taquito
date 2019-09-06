@@ -1,5 +1,5 @@
 import { Token, TokenFactory, ComparableToken } from './token';
-import { encodePubKey } from '../encoding';
+import { encodePubKey } from '@tezos-ts/utils';
 
 export class BigMapToken extends Token {
   static prim = 'big_map';

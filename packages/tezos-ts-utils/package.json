@@ -1,6 +1,6 @@
 {
-  "name": "@tezos-ts/michelson-encoder",
-  "version": "0.0.0",
+  "name": "@tezos-ts/utils",
+  "version": "4.0.0-alpha.3",
   "description": "converts michelson data and types into convenient JS/TS objects",
   "keywords": [
     "tezos",
@@ -8,9 +8,9 @@
     "michelson",
     "smart-contract"
   ],
-  "main": "dist/tezos-ts-michelson-encoder.umd.js",
-  "module": "dist/tezos-ts-michelson-encoder.es5.js",
-  "typings": "dist/types/tezos-ts-michelson-encoder.d.ts",
+  "main": "dist/tezos-ts-utils.umd.js",
+  "module": "dist/tezos-ts-utils.es5.js",
+  "typings": "dist/types/tezos-ts-utils.d.ts",
   "files": [
     "dist"
   ],
@@ -63,8 +63,8 @@
     ]
   },
   "dependencies": {
-    "bignumber.js": "^9.0.0",
-    "@tezos-ts/utils": "^4.0.0-alpha.3"
+    "bs58check": "^2.1.2",
+    "buffer": "^5.2.1"
   },
   "devDependencies": {
     "@types/jest": "^23.3.2",
