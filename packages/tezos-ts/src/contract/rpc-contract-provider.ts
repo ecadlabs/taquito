@@ -1,9 +1,33 @@
-import { RpcClient } from '@tezos-ts/rpc';
-import { ContractProvider, ContractSchema } from './interface';
+import {
+  ContractProvider,
+  ContractSchema,
+  OriginateParams,
+  OriginationOperation,
+  PrepareOperationParams,
+  TransferParams,
+  TransferOperation,
+  DelegateOperation,
+  DelegateParams,
+  ForgedBytes,
+  RevealOperation,
+} from './interface';
 import { Schema } from '@tezos-ts/michelson-encoder';
+import { ml2mic, sexp2mic } from '@tezos-ts/utils';
+import { format } from '../format';
+import { Context } from '../context';
+import { Operation } from './operations';
+import { BlockResponse } from '@tezos-ts/rpc';
 
 export class RpcContractProvider implements ContractProvider {
-  constructor(private rpc: RpcClient) {}
+  constructor(private context: Context) {}
+
+  get rpc() {
+    return this.context.rpc;
+  }
+
+  get signer() {
+    return this.context.signer;
+  }
 
   /**
    *
@@ -58,5 +82,287 @@ export class RpcContractProvider implements ContractProvider {
     const val = await this.rpc.getBigMapKey(contract, encodedKey);
 
     return contractSchema.ExecuteOnBigMapValue(val) as T; // Cast into T because only the caller can know the true type of the storage
+  }
+
+  private async prepareOperation({
+    operation,
+    source,
+  }: PrepareOperationParams): Promise<ForgedBytes> {
+    let counter;
+    const counters: { [key: string]: number } = {};
+    const promises: any[] = [];
+    let requiresReveal = false;
+    let ops: PrepareOperationParams['operation'][] = [];
+    let head: BlockResponse;
+
+    promises.push(this.rpc.getBlockHeader());
+
+    if (Array.isArray(operation)) {
+      ops = [...operation];
+    } else {
+      ops = [operation];
+    }
+
+    const publicKeyHash = source || (await this.signer.publicKeyHash());
+
+    for (let i = 0; i < ops.length; i++) {
+      if (['transaction', 'origination', 'delegation'].includes(ops[i].kind)) {
+        requiresReveal = true;
+        const { counter, manager } = await this.rpc.getContract(publicKeyHash);
+        promises.push(Promise.resolve(counter));
+        promises.push(Promise.resolve(manager));
+        break;
+      }
+    }
+
+    promises.push(this.rpc.getBlockMetadata());
+
+    return Promise.all(promises).then(
+      async ([header, headCounter, manager, metadata]: any[]): Promise<any> => {
+        head = header;
+
+        const managerKey = manager;
+        if (requiresReveal && !managerKey) {
+          const reveal: RevealOperation = {
+            kind: 'reveal',
+            fee: 1420,
+            public_key: await this.signer.publicKey(),
+            source: publicKeyHash,
+            gas_limit: 10600,
+            storage_limit: 300,
+          };
+
+          ops.unshift(reveal);
+        }
+
+        counter = parseInt(headCounter, 10);
+        if (!counters[publicKeyHash] || counters[publicKeyHash] < counter) {
+          counters[publicKeyHash] = counter;
+        }
+
+        const constructOps = (cOps: PrepareOperationParams['operation'][]) =>
+          cOps.map((op: any) => {
+            // @ts-ignore
+            const constructedOp = { ...op };
+            if (['transaction', 'origination', 'delegation'].includes(op.kind)) {
+              if (typeof op.source === 'undefined') {
+                constructedOp.source = publicKeyHash;
+              }
+            }
+            if (['reveal', 'transaction', 'origination', 'delegation'].includes(op.kind)) {
+              if (typeof op.fee === 'undefined') {
+                constructedOp.fee = '0';
+              } else {
+                constructedOp.fee = `${op.fee}`;
+              }
+              if (typeof op.gas_limit === 'undefined') {
+                constructedOp.gas_limit = '0';
+              } else {
+                constructedOp.gas_limit = `${op.gas_limit}`;
+              }
+              if (typeof op.storage_limit === 'undefined') {
+                constructedOp.storage_limit = '0';
+              } else {
+                constructedOp.storage_limit = `${op.storage_limit}`;
+              }
+              if (typeof op.balance !== 'undefined') {
+                constructedOp.balance = `${constructedOp.balance}`;
+              }
+              if (typeof op.amount !== 'undefined') {
+                constructedOp.amount = `${constructedOp.amount}`;
+              }
+              const opCounter = ++counters[publicKeyHash];
+              constructedOp.counter = `${opCounter}`;
+            }
+            return constructedOp;
+          });
+
+        const branch = head.hash;
+        const contents = constructOps(ops);
+        const protocol = metadata.nextProtocol;
+
+        let remoteForgedBytes = await this.rpc.forgeOperations({ branch, contents });
+
+        return {
+          opbytes: remoteForgedBytes,
+          opOb: {
+            branch,
+            contents,
+            protocol,
+          },
+          counter,
+        };
+      }
+    );
+  }
+
+  private async signAndInject(forgedBytes: ForgedBytes) {
+    const signed = await this.signer.sign(forgedBytes.opbytes, new Uint8Array([3]));
+    forgedBytes.opbytes = signed.sbytes;
+    forgedBytes.opOb.signature = signed.prefixSig;
+
+    const opResponse: any[] = [];
+    let errors: any[] = [];
+
+    const results = await this.rpc.preapplyOperations([forgedBytes.opOb]);
+
+    if (!Array.isArray(results)) {
+      throw new Error('RPC Fail');
+    }
+    for (let i = 0; i < results.length; i++) {
+      for (let j = 0; j < results[i].contents.length; j++) {
+        opResponse.push(results[i].contents[j]);
+        const content = results[i].contents[j];
+        if (
+          'metadata' in content &&
+          typeof content.metadata.operation_result !== 'undefined' &&
+          content.metadata.operation_result.status === 'failed'
+        ) {
+          errors = errors.concat(content.metadata.operation_result.errors);
+        }
+      }
+    }
+
+    if (errors.length) {
+      // @ts-ignore
+      throw new Error(JSON.stringify({ error: 'Operation Failed', errors }));
+    }
+
+    return new Operation(
+      await this.rpc.injectOperation(forgedBytes.opbytes),
+      forgedBytes,
+      opResponse,
+      this.context.clone()
+    );
+  }
+
+  /**
+   *
+   * @description Originate a new contract according to the script in parameters. Will sign and inject an operation using the current context
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param OriginationOperation Originate operation parameter
+   */
+  async originate({
+    code,
+    init,
+    balance = '0',
+    spendable = false,
+    delegatable = false,
+    delegate,
+    fee = 10000,
+    gasLimit = 10600,
+    storageLimit = 257,
+  }: OriginateParams) {
+    const script = {
+      code: ml2mic(code),
+      storage: sexp2mic(init),
+    };
+
+    const publicKeyHash = await this.signer.publicKeyHash();
+    const operation: OriginationOperation = {
+      kind: 'origination',
+      fee,
+      gas_limit: gasLimit,
+      storage_limit: storageLimit,
+      balance: format('tz', 'mutez', balance).toString(),
+      manager_pubkey: publicKeyHash,
+      spendable,
+      delegatable,
+      script,
+    };
+
+    if (delegate) {
+      operation.delegate = delegate;
+    }
+
+    const opBytes = await this.prepareOperation({ operation, source: publicKeyHash });
+    return this.signAndInject(opBytes);
+  }
+
+  /**
+   *
+   * @description Set the delegate for a contract. Will sign and inject an operation using the current context
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param SetDelegate operation parameter
+   */
+  async setDelegate({
+    delegate,
+    source,
+    fee = 1000,
+    gasLimit = 10600,
+    storageLimit = 0,
+  }: DelegateParams) {
+    const operation: DelegateOperation = {
+      kind: 'delegation',
+      source,
+      fee,
+      gas_limit: gasLimit,
+      storage_limit: storageLimit,
+      delegate,
+    };
+    const opBytes = await this.prepareOperation({
+      operation,
+      source: source || (await this.signer.publicKeyHash()),
+    });
+    return this.signAndInject(opBytes);
+  }
+
+  /**
+   *
+   * @description Register the current address as delegate. Will sign and inject an operation using the current context
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param RegisterDelegate operation parameter
+   */
+  async registerDelegate({ fee = 1000, gasLimit = 10600, storageLimit = 0 }: any) {
+    const operation: DelegateOperation = {
+      kind: 'delegation',
+      fee,
+      gas_limit: gasLimit,
+      storage_limit: storageLimit,
+      delegate: await this.signer.publicKeyHash(),
+    };
+    const opBytes = await this.prepareOperation({ operation });
+    return this.signAndInject(opBytes);
+  }
+
+  /**
+   *
+   * @description Transfer tz from current address to a specific address. Will sign and inject an operation using the current context
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param Transfer operation parameter
+   */
+  async transfer({
+    to,
+    source,
+    amount,
+    parameter,
+    fee = 10000,
+    gasLimit = 10600,
+    storageLimit = 300,
+    mutez = false,
+    rawParam = false,
+  }: TransferParams) {
+    const operation: TransferOperation = {
+      kind: 'transaction',
+      fee,
+      gas_limit: gasLimit,
+      storage_limit: storageLimit,
+      amount: mutez ? format('tz', 'mutez', amount).toString() : amount.toString(),
+      destination: to,
+    };
+    if (parameter) {
+      operation.parameters = rawParam ? parameter : sexp2mic(parameter);
+    }
+
+    const opBytes = await this.prepareOperation({ operation, source });
+    return this.signAndInject(opBytes);
   }
 }

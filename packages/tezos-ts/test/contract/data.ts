@@ -55,3 +55,156 @@ export const sampleBigMapValue = {
     ],
   ],
 };
+
+export const miStr = `parameter int; # the participant's guess
+storage   (pair 
+                int     # the number of guesses made by participants
+                address # the address to send the winning pot to if the participants fail
+          ); 
+code {
+       # (pair parameter storage) : []
+
+       # make sure that the participant has contributed at least 1 tez
+       PUSH mutez 1000000;
+       AMOUNT;
+       IFCMPGE {} { PUSH string "You did not provide enough tez."; FAILWITH; };
+       
+       # check that the number of guesses has not been exceeded
+       UNPAIR; SWAP; # storage : parameter : []
+       DUP;          # storage : storage : parameter : []
+       CAR;          # int : storage : parameter : []
+       DIP { PUSH int 15; };
+       IFCMPLT { # check if guess is correct
+                 SWAP; # parameter : storage : []
+                 PUSH int 34;
+                 IFCMPEQ { # the participant guessed correctly, give them the tokens.
+                           SENDER;
+                           CONTRACT unit;
+                           IF_SOME {} { FAILWITH; };
+                           BALANCE;
+                           UNIT;
+                           TRANSFER_TOKENS;
+                           NIL operation; SWAP; CONS; PAIR;
+                         }
+                         { # the participant guessed incorrectly, increment the number of guesses performed.
+                           UNPAIR;
+                           PUSH int 1;
+                           ADD;
+                           PAIR;
+                           NIL operation; PAIR;
+                         };
+               } 
+               { # attempts exceeded, give winnings to the specified address
+                 DIP { DROP; }; # storage : []
+                 DUP; CDR;
+                 CONTRACT unit;
+                 IF_SOME {} { FAILWITH; };
+                 BALANCE;
+                 UNIT;
+                 TRANSFER_TOKENS;
+                 NIL operation; SWAP; CONS; PAIR;
+               };
+     };
+`;
+
+export const miSample = [
+  { prim: 'parameter', args: [{ prim: 'int', args: [] }] },
+  {
+    prim: 'storage',
+    args: [{ prim: 'pair', args: [{ prim: 'int', args: [] }, { prim: 'address', args: [] }] }],
+  },
+  {
+    prim: 'code',
+    args: [
+      [
+        { prim: 'PUSH', args: [{ prim: 'mutez', args: [] }, { int: '1000000' }] },
+        { prim: 'AMOUNT', args: [] },
+        { prim: 'IFCMPGE', args: [[]] },
+        {
+          prim: '',
+          args: [
+            [
+              {
+                prim: 'PUSH',
+                args: [{ prim: 'string', args: [] }, { string: 'You did not provide enough tez.' }],
+              },
+              { prim: 'FAILWITH', args: [] },
+            ],
+          ],
+        },
+        { prim: 'UNPAIR', args: [] },
+        { prim: 'SWAP', args: [] },
+        { prim: 'DUP', args: [] },
+        { prim: 'CAR', args: [] },
+        {
+          prim: '# int : storage : parameter : []\n       DIP',
+          args: [[{ prim: 'PUSH', args: [{ prim: 'int', args: [] }, { int: '15' }] }]],
+        },
+        {
+          prim: 'IFCMPLT',
+          args: [
+            [
+              { prim: 'SWAP', args: [] },
+              { prim: 'PUSH', args: [{ prim: 'int', args: [] }, { int: '34' }] },
+              {
+                prim: 'IFCMPEQ',
+                args: [
+                  [
+                    { prim: 'SENDER', args: [] },
+                    { prim: 'CONTRACT', args: [{ prim: 'unit', args: [] }] },
+                    { prim: 'IF_SOME', args: [[]] },
+                    { prim: '', args: [[{ prim: 'FAILWITH', args: [] }]] },
+                    { prim: 'BALANCE', args: [] },
+                    { prim: 'UNIT', args: [] },
+                    { prim: 'TRANSFER_TOKENS', args: [] },
+                    { prim: 'NIL', args: [{ prim: 'operation', args: [] }] },
+                    { prim: 'SWAP', args: [] },
+                    { prim: 'CONS', args: [] },
+                    { prim: 'PAIR', args: [] },
+                  ],
+                ],
+              },
+              {
+                prim: '',
+                args: [
+                  [
+                    { prim: 'UNPAIR', args: [] },
+                    { prim: 'PUSH', args: [{ prim: 'int', args: [] }, { int: '1' }] },
+                    { prim: 'ADD', args: [] },
+                    { prim: 'PAIR', args: [] },
+                    { prim: 'NIL', args: [{ prim: 'operation', args: [] }] },
+                    { prim: 'PAIR', args: [] },
+                  ],
+                ],
+              },
+            ],
+          ],
+        },
+        {
+          prim: '',
+          args: [
+            [
+              {
+                prim:
+                  '# attempts exceeded, give winnings to the specified address\n                 DIP',
+                args: [[{ prim: 'DROP', args: [] }]],
+              },
+              { prim: 'DUP', args: [] },
+              { prim: 'CDR', args: [] },
+              { prim: 'CONTRACT', args: [{ prim: 'unit', args: [] }] },
+              { prim: 'IF_SOME', args: [[]] },
+              { prim: '', args: [[{ prim: 'FAILWITH', args: [] }]] },
+              { prim: 'BALANCE', args: [] },
+              { prim: 'UNIT', args: [] },
+              { prim: 'TRANSFER_TOKENS', args: [] },
+              { prim: 'NIL', args: [{ prim: 'operation', args: [] }] },
+              { prim: 'SWAP', args: [] },
+              { prim: 'CONS', args: [] },
+              { prim: 'PAIR', args: [] },
+            ],
+          ],
+        },
+      ],
+    ],
+  },
+];
