@@ -15,11 +15,11 @@ export class TezBridgeSigner {
   }
 
   async publicKey(): Promise<string> {
-    throw new Error('Public key cannot be expose');
+    throw new Error('Public key cannot be exposed');
   }
 
   async secretKey(): Promise<string> {
-    throw new Error('Secret key cannot be expose');
+    throw new Error('Secret key cannot be exposed');
   }
 
   async sign(bytes: string, _watermark?: Uint8Array) {
