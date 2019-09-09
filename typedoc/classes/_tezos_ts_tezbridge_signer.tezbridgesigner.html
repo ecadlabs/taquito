@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>OperationContentsReveal | Tezos TS</title>
+	<title>TezBridgeSigner | Tezos TS</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,13 +56,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_tezos_ts_rpc.html">@tezos-ts/rpc</a>
+					<a href="../modules/_tezos_ts_tezbridge_signer.html">@tezos-ts/tezbridge-signer</a>
 				</li>
 				<li>
-					<a href="_tezos_ts_rpc.operationcontentsreveal.html">OperationContentsReveal</a>
+					<a href="_tezos_ts_tezbridge_signer.tezbridgesigner.html">TezBridgeSigner</a>
 				</li>
 			</ul>
-			<h1>Interface OperationContentsReveal</h1>
+			<h1>Class TezBridgeSigner</h1>
 		</div>
 	</div>
 </header>
@@ -73,7 +73,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">OperationContentsReveal</span>
+						<span class="target">TezBridgeSigner</span>
 					</li>
 				</ul>
 			</section>
@@ -82,91 +82,121 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Properties</h3>
+							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_rpc.operationcontentsreveal.html#counter" class="tsd-kind-icon">counter</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_rpc.operationcontentsreveal.html#fee" class="tsd-kind-icon">fee</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_rpc.operationcontentsreveal.html#gaslimit" class="tsd-kind-icon">gas<wbr>Limit</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_rpc.operationcontentsreveal.html#kind" class="tsd-kind-icon">kind</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_rpc.operationcontentsreveal.html#publickey" class="tsd-kind-icon">public<wbr>Key</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_rpc.operationcontentsreveal.html#source" class="tsd-kind-icon">source</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_rpc.operationcontentsreveal.html#storagelimit" class="tsd-kind-icon">storage<wbr>Limit</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_tezos_ts_tezbridge_signer.tezbridgesigner.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_tezos_ts_tezbridge_signer.tezbridgesigner.html#publickey" class="tsd-kind-icon">public<wbr>Key</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_tezos_ts_tezbridge_signer.tezbridgesigner.html#publickeyhash" class="tsd-kind-icon">public<wbr>Key<wbr>Hash</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_tezos_ts_tezbridge_signer.tezbridgesigner.html#secretkey" class="tsd-kind-icon">secret<wbr>Key</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_tezos_ts_tezbridge_signer.tezbridgesigner.html#sign" class="tsd-kind-icon">sign</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="counter" class="tsd-anchor"></a>
-					<h3>counter</h3>
-					<div class="tsd-signature tsd-kind-icon">counter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/fbce55d/packages/tezos-ts-rpc/src/types.ts#L221">tezos-ts-rpc/src/types.ts:221</a></li>
-						</ul>
-					</aside>
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Tez<wbr>Bridge<wbr>Signer<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_tezos_ts_tezbridge_signer.tezbridgesigner.html" class="tsd-signature-type">TezBridgeSigner</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/fbce55d/packages/tezos-ts-tezbridge-signer/src/tezos-ts-tezbridge-signer.ts#L6">tezos-ts-tezbridge-signer/src/tezos-ts-tezbridge-signer.ts:6</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <a href="_tezos_ts_tezbridge_signer.tezbridgesigner.html" class="tsd-signature-type">TezBridgeSigner</a></h4>
+						</li>
+					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="fee" class="tsd-anchor"></a>
-					<h3>fee</h3>
-					<div class="tsd-signature tsd-kind-icon">fee<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/fbce55d/packages/tezos-ts-rpc/src/types.ts#L220">tezos-ts-rpc/src/types.ts:220</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="gaslimit" class="tsd-anchor"></a>
-					<h3>gas<wbr>Limit</h3>
-					<div class="tsd-signature tsd-kind-icon">gas<wbr>Limit<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/fbce55d/packages/tezos-ts-rpc/src/types.ts#L222">tezos-ts-rpc/src/types.ts:222</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="kind" class="tsd-anchor"></a>
-					<h3>kind</h3>
-					<div class="tsd-signature tsd-kind-icon">kind<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"reveal"</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/fbce55d/packages/tezos-ts-rpc/src/types.ts#L218">tezos-ts-rpc/src/types.ts:218</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="publickey" class="tsd-anchor"></a>
 					<h3>public<wbr>Key</h3>
-					<div class="tsd-signature tsd-kind-icon">public<wbr>Key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/fbce55d/packages/tezos-ts-rpc/src/types.ts#L224">tezos-ts-rpc/src/types.ts:224</a></li>
-						</ul>
-					</aside>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">public<wbr>Key<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/fbce55d/packages/tezos-ts-tezbridge-signer/src/tezos-ts-tezbridge-signer.ts#L17">tezos-ts-tezbridge-signer/src/tezos-ts-tezbridge-signer.ts:17</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="source" class="tsd-anchor"></a>
-					<h3>source</h3>
-					<div class="tsd-signature tsd-kind-icon">source<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/fbce55d/packages/tezos-ts-rpc/src/types.ts#L219">tezos-ts-rpc/src/types.ts:219</a></li>
-						</ul>
-					</aside>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="publickeyhash" class="tsd-anchor"></a>
+					<h3>public<wbr>Key<wbr>Hash</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">public<wbr>Key<wbr>Hash<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/fbce55d/packages/tezos-ts-tezbridge-signer/src/tezos-ts-tezbridge-signer.ts#L13">tezos-ts-tezbridge-signer/src/tezos-ts-tezbridge-signer.ts:13</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="storagelimit" class="tsd-anchor"></a>
-					<h3>storage<wbr>Limit</h3>
-					<div class="tsd-signature tsd-kind-icon">storage<wbr>Limit<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/fbce55d/packages/tezos-ts-rpc/src/types.ts#L223">tezos-ts-rpc/src/types.ts:223</a></li>
-						</ul>
-					</aside>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="secretkey" class="tsd-anchor"></a>
+					<h3>secret<wbr>Key</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">secret<wbr>Key<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/fbce55d/packages/tezos-ts-tezbridge-signer/src/tezos-ts-tezbridge-signer.ts#L21">tezos-ts-tezbridge-signer/src/tezos-ts-tezbridge-signer.ts:21</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="sign" class="tsd-anchor"></a>
+					<h3>sign</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">sign<span class="tsd-signature-symbol">(</span>bytes<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, _watermark<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Uint8Array</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/fbce55d/packages/tezos-ts-tezbridge-signer/src/tezos-ts-tezbridge-signer.ts#L25">tezos-ts-tezbridge-signer/src/tezos-ts-tezbridge-signer.ts:25</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>bytes: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> _watermark: <span class="tsd-signature-type">Uint8Array</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 		</div>
@@ -188,7 +218,7 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/_tezos_ts_react_components.html">@tezos-<wbr>ts/react-<wbr>components</a>
 					</li>
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="../modules/_tezos_ts_rpc.html">@tezos-<wbr>ts/rpc</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -197,7 +227,7 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/_tezos_ts_streamer.html">@tezos-<wbr>ts/streamer</a>
 					</li>
-					<li class=" tsd-kind-module">
+					<li class="current tsd-kind-module">
 						<a href="../modules/_tezos_ts_tezbridge_signer.html">@tezos-<wbr>ts/tezbridge-<wbr>signer</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -212,34 +242,31 @@
 				<ul class="before-current">
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-module">
-						<a href="_tezos_ts_rpc.operationcontentsreveal.html" class="tsd-kind-icon">Operation<wbr>Contents<wbr>Reveal</a>
+					<li class="current tsd-kind-class tsd-parent-kind-module">
+						<a href="_tezos_ts_tezbridge_signer.tezbridgesigner.html" class="tsd-kind-icon">Tez<wbr>Bridge<wbr>Signer</a>
 						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tezos_ts_rpc.operationcontentsreveal.html#counter" class="tsd-kind-icon">counter</a>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="_tezos_ts_tezbridge_signer.tezbridgesigner.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tezos_ts_rpc.operationcontentsreveal.html#fee" class="tsd-kind-icon">fee</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_tezos_ts_tezbridge_signer.tezbridgesigner.html#publickey" class="tsd-kind-icon">public<wbr>Key</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tezos_ts_rpc.operationcontentsreveal.html#gaslimit" class="tsd-kind-icon">gas<wbr>Limit</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_tezos_ts_tezbridge_signer.tezbridgesigner.html#publickeyhash" class="tsd-kind-icon">public<wbr>Key<wbr>Hash</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tezos_ts_rpc.operationcontentsreveal.html#kind" class="tsd-kind-icon">kind</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_tezos_ts_tezbridge_signer.tezbridgesigner.html#secretkey" class="tsd-kind-icon">secret<wbr>Key</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tezos_ts_rpc.operationcontentsreveal.html#publickey" class="tsd-kind-icon">public<wbr>Key</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tezos_ts_rpc.operationcontentsreveal.html#source" class="tsd-kind-icon">source</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tezos_ts_rpc.operationcontentsreveal.html#storagelimit" class="tsd-kind-icon">storage<wbr>Limit</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_tezos_ts_tezbridge_signer.tezbridgesigner.html#sign" class="tsd-kind-icon">sign</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-variable tsd-parent-kind-module tsd-is-not-exported">
+						<a href="../modules/_tezos_ts_tezbridge_signer.html#tezbridge" class="tsd-kind-icon">tezbridge</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
