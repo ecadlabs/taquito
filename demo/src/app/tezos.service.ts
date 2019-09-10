@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Tezos, TezosToolkit } from '@tezos-ts/tezos-ts'
-import { BehaviorSubject, Observable, Subject, never } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, defer } from 'rxjs';
+import { TezBridgeSigner } from '@tezos-ts/tezbridge-signer'
 
-const provider = 'https://api.tez.ie/rpc/mainnet';
-Tezos.setProvider({ rpc: provider });
+const provider = 'https://alphanet-node.tzscan.io';
+Tezos.setProvider({ rpc: provider, });
 
-import { switchMap, map, tap, shareReplay, debounceTime } from 'rxjs/operators'
+import { switchMap, map, tap, shareReplay, debounceTime, filter } from 'rxjs/operators'
 
 @Injectable({
   providedIn: 'root'
@@ -13,13 +14,23 @@ import { switchMap, map, tap, shareReplay, debounceTime } from 'rxjs/operators'
 export class TezosService {
   private tezos: TezosToolkit = Tezos;
 
-
   public blockLoading$ = new Subject();
   public addressLoading$ = new Subject();
 
+  private _signer$ = new BehaviorSubject<TezBridgeSigner>(null);
+
+  public signingAddress$ = this._signer$.pipe(filter((x) => !!x), switchMap((signer) => {
+    return signer.publicKeyHash();
+  }), shareReplay())
+
+  public activateSigner() {
+    const signer = new TezBridgeSigner();
+    this.tezos.setProvider({ rpc: this._currentNetwork$.value, signer });
+    this._signer$.next(signer);
+  }
 
   private _currentAddress$ = new BehaviorSubject('KT1BvVxWM6cjFuJNet4R9m64VDCN2iMvjuGE');
-  private _currentNetwork$ = new BehaviorSubject('https://api.tez.ie/rpc/mainnet');
+  public _currentNetwork$ = new BehaviorSubject('https://alphanet-node.tzscan.io');
 
   public addressDetail$ = this._currentAddress$.pipe(
     debounceTime(500),
@@ -97,5 +108,19 @@ export class TezosService {
 
   public getNetwork() {
     return this._currentNetwork$.value;
+  }
+
+  public transactions = [];
+
+  public async sendTransaction({ to, amount }) {
+    const tx = await this.tezos.contract.transfer({ to, amount });
+    this.transactions.push({
+      op: tx,
+      confirmed: tx.confirmation(),
+      to,
+      amount,
+      from: await this._signer$.value.publicKeyHash(),
+    })
+    return tx;
   }
 }

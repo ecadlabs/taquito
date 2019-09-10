@@ -16,7 +16,6 @@ export class DemoComponent implements OnInit {
 
   public addressInput = new FormControl(this.tezos.getAddress());
   public autoRefreshToggle = new FormControl(true);
-  public networkSelect = new FormControl('https://api.tez.ie/rpc/mainnet');
 
   public head$ = this.tezos.latestHead$;
 
@@ -65,17 +64,13 @@ export class DemoComponent implements OnInit {
     ]
   }
 
-  public loading$ = combineLatest(this.tezos.blockLoading$, this.tezos.addressLoading$).pipe(map(([block, address]) => block || address));
-
   constructor(private tezos: TezosService) { }
 
   ngOnInit() {
     this.addressDetail$.subscribe(({ address }) => {
-      this.addressInput.patchValue(address, { emitEvent: false })
-    })
-
-    this.networkSelect.valueChanges.subscribe((val) => {
-      this.tezos.setNetwork(val);
+      if (address) {
+        this.addressInput.patchValue(address, { emitEvent: false })
+      }
     })
 
     this.addressDetail$.pipe(
@@ -96,8 +91,7 @@ export class DemoComponent implements OnInit {
         filter(() => {
           return this.autoRefreshToggle.value;
         })
-      ),
-      this.networkSelect.valueChanges.pipe(startWith({})))
+      ))
       .subscribe(([value]) => {
         this.tezos.setAddress(value);
       })

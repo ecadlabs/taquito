@@ -6,6 +6,16 @@
     </nb-layout-header>
     <nb-layout-footer></nb-layout-footer>
     <nb-layout-column>
-        <tz-demo></tz-demo>
+        <mat-progress-bar class='progress' [class.hidden]='!(loading$ | async)' mode="query">
+        </mat-progress-bar>
+        <tz-network-selector></tz-network-selector>
+        <nb-tabset>
+            <nb-tab tabTitle="Explorer">
+                <tz-demo></tz-demo>
+            </nb-tab>
+            <nb-tab tabTitle="Transaction">
+                <tz-send-transaction></tz-send-transaction>
+            </nb-tab>
+        </nb-tabset>
     </nb-layout-column>
 </nb-layout>

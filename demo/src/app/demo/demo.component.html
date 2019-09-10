@@ -1,11 +1,5 @@
-<mat-progress-bar class='progress' [class.hidden]='!(loading$ | async)' mode="query">
-</mat-progress-bar>
 <div class="controls">
     <input class='search-input' [formControl]='addressInput' nbInput />
-    <nb-select placeholder="Select Showcase" [formControl]='networkSelect'>
-        <nb-option value="https://api.tez.ie/rpc/mainnet">Mainnet</nb-option>
-        <nb-option value="https://alphanet-node.tzscan.io">Alphanet</nb-option>
-    </nb-select>
 </div>
 <br>
 <div>

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DemoComponent } from './demo.component';
-import { NbInputModule, NbCardModule, NbToggleModule, NbSelectModule } from '@nebular/theme';
+import { NbInputModule, NbCardModule, NbToggleModule, NbSelectModule, NbTabsetModule } from '@nebular/theme';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatProgressBarModule } from '@angular/material'
@@ -19,8 +19,6 @@ import { TzPipe } from './tz.pipe';
     NgxJsonViewerModule,
     ReactiveFormsModule,
     NbToggleModule,
-    NbSelectModule,
-    MatProgressBarModule,
     ChartModule
   ],
   exports: [DemoComponent]

@@ -1,0 +1,12 @@
+<nb-card [nbSpinner]='!(tx.confirmed | async)' nbSpinnerStatus="primary">
+    <nb-card-header>{{tx.op.hash}}</nb-card-header>
+    <nb-card-body>
+        From: {{tx.from}} To: {{tx.to}}
+        <br>
+        Amount: {{tx.amount}}
+        <br>
+        <ng-container *ngIf='tx.confirmed | async'>
+            Included in block: {{tx.op.includedInBlock}}
+        </ng-container>
+    </nb-card-body>
+</nb-card>

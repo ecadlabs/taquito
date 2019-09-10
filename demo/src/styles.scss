@@ -6,3 +6,12 @@
 @include nb-install() {
     @include nb-theme-global();
   };
+
+  .progress {
+    position: absolute;
+    left: 0px;
+    top: 0;
+}
+.hidden {
+  visibility: hidden;
+}
