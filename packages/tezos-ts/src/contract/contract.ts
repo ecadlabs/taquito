@@ -50,7 +50,7 @@ function computeLength(data: string | Object) {
  */
 export class Contract {
   /**
-   * @description Contains smart contract method and allow to call them
+   * @description Contains methods that are implemented by the target Tezos Smart Contract, and offers the user to call the Smart Contract methods as if they were native TS/JS methods.
    */
   public methods: { [key: string]: (...args: any[]) => ContractMethod } = {};
 
