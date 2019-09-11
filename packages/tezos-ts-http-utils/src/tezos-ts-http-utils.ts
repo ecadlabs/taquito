@@ -61,6 +61,7 @@ export class HttpBackend {
           reject({
             status: this.status,
             statusText: request.statusText,
+            body: request.response,
           });
         }
       };
@@ -68,6 +69,7 @@ export class HttpBackend {
         reject({
           status: this.status,
           statusText: request.statusText,
+          body: request.response,
         });
       };
 
