@@ -15,6 +15,10 @@ export class KeyToken extends Token {
     return val.string;
   }
 
+  public Encode(...args: any[]): any {
+    return { string: args[0] };
+  }
+
   public ExtractSchema() {
     return KeyToken.prim;
   }

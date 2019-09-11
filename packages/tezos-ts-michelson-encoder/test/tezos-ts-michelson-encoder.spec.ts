@@ -4,7 +4,11 @@ import { storage, rpcContractResponse, bigMapDiff, params, txParams } from '../d
 
 import { storage as storage2, rpcContractResponse as rpcContractResponse2 } from '../data/sample2';
 
-import { storage as storage3, rpcContractResponse as rpcContractResponse3 } from '../data/sample3';
+import {
+  storage as storage3,
+  rpcContractResponse as rpcContractResponse3,
+  params as params3,
+} from '../data/sample3';
 
 import {
   storage as storage4,
@@ -16,6 +20,11 @@ import { storage as storage5, rpcContractResponse as rpcContractResponse5 } from
 
 import { storage as storage6, rpcContractResponse as rpcContractResponse6 } from '../data/sample6';
 import { storage as storage7, rpcContractResponse as rpcContractResponse7 } from '../data/sample7';
+import {
+  storage as storage8,
+  rpcContractResponse as rpcContractResponse8,
+  params as params8,
+} from '../data/sample8';
 import BigNumber from 'bignumber.js';
 
 describe('Schema test', () => {
@@ -39,6 +48,60 @@ describe('Schema test', () => {
     });
   });
 
+  it('Should encode parameter schema properly', () => {
+    const schema = new ParameterSchema(params);
+    const result = schema.Encode('approve', 'test', '0');
+    expect(schema.isMultipleEntryPoint).toBeTruthy();
+    expect(result).toEqual({
+      prim: 'Right',
+      args: [
+        {
+          prim: 'Left',
+          args: [{ prim: 'Pair', args: [{ string: 'test' }, { int: '0' }] }],
+        },
+      ],
+    });
+  });
+
+  it('Should encode parameter schema properly', () => {
+    const schema = new ParameterSchema(params);
+    const result = schema.Encode('allowance', 'test', 'test2', 'test3');
+    expect(result).toEqual({
+      prim: 'Right',
+      args: [
+        {
+          prim: 'Right',
+          args: [
+            {
+              prim: 'Right',
+              args: [
+                {
+                  prim: 'Right',
+                  args: [
+                    {
+                      prim: 'Left',
+                      args: [
+                        {
+                          prim: 'Pair',
+                          args: [
+                            { string: 'test' },
+                            {
+                              prim: 'Pair',
+                              args: [{ string: 'test2' }, { string: 'test3' }],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+  });
   it('Should parse storage properly', () => {
     const schema = new Schema(storage);
     const s = schema.Execute(rpcContractResponse.script.storage);
@@ -129,6 +192,30 @@ describe('Schema test', () => {
     });
   });
 
+  it('Should encode parameter schema properly', () => {
+    const schema = new ParameterSchema(params3);
+    const result = schema.Encode('deposit');
+    expect(result).toEqual({
+      prim: 'Right',
+      args: [
+        {
+          prim: 'Right',
+          args: [
+            {
+              prim: 'Right',
+              args: [
+                {
+                  prim: 'Left',
+                  args: [''],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+  });
+
   it('Should parse big map properly', () => {
     const schema = new Schema(storage);
     const s = schema.ExecuteOnBigMapDiff(bigMapDiff);
@@ -200,7 +287,6 @@ describe('Schema test', () => {
         },
       });
     });
-
     it('Should parse storage properly', () => {
       const schema = new Schema(storage4);
       const storage = schema.Execute(rpcContractResponse4.script.storage);
@@ -325,6 +411,16 @@ describe('Schema test', () => {
         game: null,
         oracle_id: 'tz1Zwusa1tLQHRyB1KL1p44KjgDbi5KjNKay',
       });
+    });
+  });
+
+  describe('Sample8', () => {
+    it('Should parse storage properly', () => {
+      const schema = new ParameterSchema(params8);
+      const storage = schema.ExtractSchema();
+      expect(storage).toEqual('string');
+      expect({ string: 'test' }).toEqual(schema.Encode('test'));
+      expect(schema.isMultipleEntryPoint).toBeFalsy();
     });
   });
 });

@@ -11,6 +11,10 @@ export class UnitToken extends Token {
     super(val, idx, fac);
   }
 
+  public Encode(..._args: any[]): any {
+    return '';
+  }
+
   public Execute(): { [key: string]: any } {
     return null as any;
   }

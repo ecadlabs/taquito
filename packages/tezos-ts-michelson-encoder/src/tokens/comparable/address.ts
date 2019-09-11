@@ -20,6 +20,10 @@ export class AddressToken extends Token implements ComparableToken {
     };
   }
 
+  public Encode(...args: any[]): any {
+    return { string: args[0] };
+  }
+
   public Execute(val: any): string {
     return val.string;
   }

@@ -20,6 +20,10 @@ export class MutezToken extends Token implements ComparableToken {
     return MutezToken.prim;
   }
 
+  public Encode(...args: any[]): any {
+    return { int: String(args[0]).toString() };
+  }
+
   public ToBigMapKey(val: string) {
     return {
       key: { int: val },

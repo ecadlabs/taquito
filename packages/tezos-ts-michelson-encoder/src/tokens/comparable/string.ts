@@ -19,6 +19,10 @@ export class StringToken extends Token implements ComparableToken {
     return StringToken.prim;
   }
 
+  public Encode(...args: any[]): any {
+    return { string: args[0] };
+  }
+
   // tslint:disable-next-line: variable-name
   public ToKey({ string }: any) {
     return string;

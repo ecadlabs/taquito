@@ -20,6 +20,10 @@ export class IntToken extends Token implements ComparableToken {
     return IntToken.prim;
   }
 
+  public Encode(...args: any[]): any {
+    return { int: String(args[0]).toString() };
+  }
+
   public ToBigMapKey(val: string) {
     return {
       key: { int: val },
