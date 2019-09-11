@@ -28,4 +28,6 @@ export abstract class Token {
   public abstract ExtractSchema(): any;
 
   public abstract Execute(val: any): any;
+
+  public abstract Encode(..._args: any[]): any;
 }

@@ -15,6 +15,10 @@ export class BoolToken extends Token {
     return String(val.prim).toLowerCase() === 'true' ? true : false;
   }
 
+  public Encode(...args: any[]): any {
+    return { bool: args[0] ? 'true' : 'false' };
+  }
+
   public ExtractSchema() {
     return BoolToken.prim;
   }

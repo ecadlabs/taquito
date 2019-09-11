@@ -28,6 +28,17 @@ export class MapToken extends Token {
     }, {});
   }
 
+  public Encode(...args: any[]): any {
+    const obj = args[0][0];
+
+    return {
+      prim: 'map',
+      args: Object.keys(obj).map(key => {
+        return [this.KeySchema.Encode([key]), this.ValueSchema.Encode([obj[key]])];
+      }),
+    };
+  }
+
   public ExtractSchema() {
     return {
       [this.KeySchema.ExtractSchema()]: this.ValueSchema.ExtractSchema(),

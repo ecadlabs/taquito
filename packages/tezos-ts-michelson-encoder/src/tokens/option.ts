@@ -11,6 +11,16 @@ export class OptionToken extends Token {
     super(val, idx, fac);
   }
 
+  public Encode(...args: any[]): any {
+    const value = args[0][0];
+    if (!value) {
+      return { prim: 'None' };
+    }
+
+    const schema = this.createToken(this.val.args[0], 0);
+    return schema.Encode([value]);
+  }
+
   public Execute(val: any) {
     if (val.prim === 'None') {
       return null;

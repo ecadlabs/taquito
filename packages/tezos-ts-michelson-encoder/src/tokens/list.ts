@@ -11,6 +11,16 @@ export class ListToken extends Token {
     super(val, idx, fac);
   }
 
+  public Encode(...args: any[]): any {
+    const schema = this.createToken(this.val.args[0], 0);
+    return {
+      prim: 'list',
+      args: args.reduce((prev: any, current: any) => {
+        return [...prev, schema.Encode(current)];
+      }, []),
+    };
+  }
+
   public Execute(val: any) {
     const schema = this.createToken(this.val.args[0], 0);
     return val.reduce((prev: any, current: any) => {
