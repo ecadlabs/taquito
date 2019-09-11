@@ -13,6 +13,7 @@ describe('RpcContractProvider test', () => {
     getStorage: jest.Mock<any, any>;
     getBigMapKey: jest.Mock<any, any>;
     getBlockHeader: jest.Mock<any, any>;
+    getManagerKey: jest.Mock<any, any>;
     getBlock: jest.Mock<any, any>;
     getContract: jest.Mock<any, any>;
     getBlockMetadata: jest.Mock<any, any>;
@@ -31,6 +32,7 @@ describe('RpcContractProvider test', () => {
     mockRpcClient = {
       getBlock: jest.fn(),
       getScript: jest.fn(),
+      getManagerKey: jest.fn(),
       getStorage: jest.fn(),
       getBigMapKey: jest.fn(),
       getBlockHeader: jest.fn(),
@@ -54,6 +56,8 @@ describe('RpcContractProvider test', () => {
         level: 0,
       },
     });
+
+    mockRpcClient.getManagerKey.mockResolvedValue('test');
 
     rpcContractProvider = new RpcContractProvider(
       new Context(mockRpcClient as any, mockSigner as any)
