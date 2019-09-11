@@ -1,6 +1,7 @@
 import { Schema } from '@tezos-ts/michelson-encoder';
 import { Operation } from './operations';
 import { OperationObject } from '@tezos-ts/rpc';
+import { Contract } from './contract';
 
 /**
  * @description Parameters for originate method
@@ -177,4 +178,5 @@ export interface ContractProvider {
    * @param Transfer operation parameter
    */
   transfer(params: TransferParams): Promise<Operation>;
+  at(address: string, schema?: ContractSchema): Promise<Contract>;
 }

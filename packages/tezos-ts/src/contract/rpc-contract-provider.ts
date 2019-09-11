@@ -11,12 +11,13 @@ import {
   ForgedBytes,
   RevealOperation,
 } from './interface';
-import { Schema } from '@tezos-ts/michelson-encoder';
+import { Schema, ParameterSchema } from '@tezos-ts/michelson-encoder';
 import { ml2mic, sexp2mic } from '@tezos-ts/utils';
 import { format } from '../format';
 import { Context } from '../context';
 import { Operation } from './operations';
 import { BlockResponse } from '@tezos-ts/rpc';
+import { Contract } from './contract';
 
 export class RpcContractProvider implements ContractProvider {
   constructor(private context: Context) {}
@@ -108,9 +109,9 @@ export class RpcContractProvider implements ContractProvider {
     for (let i = 0; i < ops.length; i++) {
       if (['transaction', 'origination', 'delegation'].includes(ops[i].kind)) {
         requiresReveal = true;
-        const { counter, manager } = await this.rpc.getContract(publicKeyHash);
+        const { counter } = await this.rpc.getContract(publicKeyHash);
         promises.push(Promise.resolve(counter));
-        promises.push(Promise.resolve(manager));
+        promises.push(this.rpc.getManagerKey(publicKeyHash));
         break;
       }
     }
@@ -121,7 +122,7 @@ export class RpcContractProvider implements ContractProvider {
       async ([header, headCounter, manager, metadata]: any[]): Promise<any> => {
         head = header;
 
-        const managerKey = manager;
+        const managerKey = manager.key;
         if (requiresReveal && !managerKey) {
           const reveal: RevealOperation = {
             kind: 'reveal',
@@ -234,6 +235,15 @@ export class RpcContractProvider implements ContractProvider {
       opResponse,
       this.context.clone()
     );
+  }
+
+  async at(address: string): Promise<any> {
+    let script = await this.rpc.getScript(address);
+
+    let contractSchema: Schema = Schema.fromRPCResponse({ script });
+    let parameterSchema: ParameterSchema = ParameterSchema.fromRPCResponse({ script });
+
+    return new Contract(address, contractSchema, parameterSchema, this);
   }
 
   /**
