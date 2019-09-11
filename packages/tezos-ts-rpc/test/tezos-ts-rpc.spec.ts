@@ -94,6 +94,19 @@ describe('RpcClient test', () => {
     });
   });
 
+  describe('getManagerKey', () => {
+    it('query the right url', async done => {
+      await client.getManagerKey('address');
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/context/contracts/address/manager_key',
+      });
+
+      done();
+    });
+  });
+
   describe('getDelegate', () => {
     it('query the right url', async done => {
       await client.getDelegate('address');
