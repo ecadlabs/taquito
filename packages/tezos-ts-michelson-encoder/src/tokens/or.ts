@@ -24,6 +24,18 @@ export class OrToken extends Token {
     }
   }
 
+  public Encode(...args: any[]): any {
+    const label = args[0];
+
+    const leftToken = this.createToken(this.val.args[0], this.idx);
+    const rightToken = this.createToken(this.val.args[1], this.idx + 1);
+    if (leftToken.annot === label) {
+      return { prim: 'Left', args: [leftToken.Encode(...args.slice(1))] };
+    } else {
+      return { prim: 'Right', args: [rightToken.Encode(...args)] };
+    }
+  }
+
   public ExtractSchema(): { [key: string]: any } {
     const leftToken = this.createToken(this.val.args[0], this.idx);
     const rightToken = this.createToken(this.val.args[1], this.idx + 1);
