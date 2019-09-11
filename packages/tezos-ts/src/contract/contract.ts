@@ -8,6 +8,9 @@ interface SendParams {
   amount?: number;
 }
 
+/**
+ * @description Utility class to send smart contract operation
+ */
 class ContractMethod {
   constructor(
     private provider: ContractProvider,
@@ -17,12 +20,21 @@ class ContractMethod {
     private args: any[]
   ) {}
 
+  /**
+   * @description Get the schema of the smart contract method
+   */
   get schema() {
     return this.parameterSchema.isMultipleEntryPoint
       ? this.parameterSchema.ExtractSchema()[this.name]
       : this.parameterSchema.ExtractSchema();
   }
 
+  /**
+   *
+   * @description Send the smart contract operation
+   *
+   * @param Options generic operation parameter
+   */
   send({ fee, gasLimit, storageLimit, amount = 0 }: Partial<SendParams> = {}) {
     return this.provider.transfer({
       to: this.address,
