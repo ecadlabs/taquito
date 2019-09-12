@@ -623,6 +623,13 @@ export type CurrentProposalResponse = string | null;
 
 export type CurrentQuorumResponse = number;
 
+export interface VotesListingsResponseItem {
+  pkh: string;
+  rolls: number;
+}
+
+export type VotesListingsResponse = VotesListingsResponseItem[];
+
 interface Script {
   code: {}[];
   storage: Storage;

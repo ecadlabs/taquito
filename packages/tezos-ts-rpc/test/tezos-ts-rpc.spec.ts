@@ -717,4 +717,62 @@ describe('RpcClient test', () => {
       done();
     });
   });
+
+  describe('getVotesListings', () => {
+    it('query the right url and data', async done => {
+      httpBackend.createRequest.mockReturnValue(
+        Promise.resolve([
+          {
+            pkh: 'tz2TSvNTh2epDMhZHrw73nV9piBX7kLZ9K9m',
+            rolls: 3726,
+          },
+          {
+            pkh: 'tz2Q7Km98GPzV1JLNpkrQrSo5YUhPfDp6LmA',
+            rolls: 2,
+          },
+          {
+            pkh: 'tz2PdGc7U5tiyqPgTSgqCDct94qd6ovQwP6u',
+            rolls: 73,
+          },
+          {
+            pkh: 'tz2KrmHRWu7b7Vr3GYQ3SJ41xaW64PiqWBYm',
+            rolls: 17,
+          },
+          {
+            pkh: 'tz2JMPu9yVKuX2Au8UUbp7YrKBZJSdYhgwwu',
+            rolls: 2,
+          },
+          {
+            pkh: 'tz2FCNBrERXtaTtNX6iimR1UJ5JSDxvdHM93',
+            rolls: 233,
+          },
+          {
+            pkh: 'tz2E3BvcMiGvFEgNVdsAiwVvPHcwJDTA8wLt',
+            rolls: 14,
+          },
+          {
+            pkh: 'tz3eQFJL9Pw7EXkuEVSYTVtuwtfjhUU3xqi1',
+            rolls: 1,
+          },
+          {
+            pkh: 'tz3e7LbZvUtoXhpUD1yb6wuFodZpfYRb9nWJ',
+            rolls: 25,
+          },
+          {
+            pkh: 'tz3e75hU4EhDU3ukyJueh5v6UvEHzGwkg3yC',
+            rolls: 334,
+          },
+        ])
+      );
+      const response = await client.getVotesListings();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/votes/listings',
+      });
+      expect(response[4].pkh).toEqual('tz2JMPu9yVKuX2Au8UUbp7YrKBZJSdYhgwwu');
+
+      done();
+    });
+  });
 });
