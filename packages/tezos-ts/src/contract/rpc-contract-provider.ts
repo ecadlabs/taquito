@@ -365,7 +365,7 @@ export class RpcContractProvider implements ContractProvider {
       fee,
       gas_limit: gasLimit,
       storage_limit: storageLimit,
-      amount: mutez ? format('tz', 'mutez', amount).toString() : amount.toString(),
+      amount: mutez ? amount.toString() : format('tz', 'mutez', amount).toString(),
       destination: to,
     };
     if (parameter) {
