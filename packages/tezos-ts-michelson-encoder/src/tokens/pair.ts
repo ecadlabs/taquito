@@ -1,4 +1,5 @@
 import { Token, TokenFactory } from './token';
+import { OrToken } from './or';
 
 export class PairToken extends Token {
   static prim = 'pair';
@@ -14,6 +15,7 @@ export class PairToken extends Token {
   public Encode(...args: any[]): any {
     const leftToken = this.createToken(this.val.args[0], this.idx);
     const rightToken = this.createToken(this.val.args[1], this.idx + 1);
+
     return {
       prim: 'Pair',
       args: [leftToken.Encode(...[args[0]]), rightToken.Encode(...args.slice(1))],
@@ -28,14 +30,14 @@ export class PairToken extends Token {
     if (leftToken instanceof PairToken) {
       leftValue = leftToken.Execute(val.args[0]);
     } else {
-      leftValue = { [leftToken.annot]: leftToken.Execute(val.args[0]) };
+      leftValue = { [leftToken.annot()]: leftToken.Execute(val.args[0]) };
     }
 
     let rightValue;
     if (rightToken instanceof PairToken) {
       rightValue = rightToken.Execute(val.args[1]);
     } else {
-      rightValue = { [rightToken.annot]: rightToken.Execute(val.args[1]) };
+      rightValue = { [rightToken.annot()]: rightToken.Execute(val.args[1]) };
     }
 
     const res = {
@@ -53,14 +55,14 @@ export class PairToken extends Token {
     if (leftToken instanceof PairToken) {
       leftValue = leftToken.ExtractSchema();
     } else {
-      leftValue = { [leftToken.annot]: leftToken.ExtractSchema() };
+      leftValue = { [leftToken.annot()]: leftToken.ExtractSchema() };
     }
 
     let rightValue;
     if (rightToken instanceof PairToken) {
       rightValue = rightToken.ExtractSchema();
     } else {
-      rightValue = { [rightToken.annot]: rightToken.ExtractSchema() };
+      rightValue = { [rightToken.annot()]: rightToken.ExtractSchema() };
     }
 
     const res = {
