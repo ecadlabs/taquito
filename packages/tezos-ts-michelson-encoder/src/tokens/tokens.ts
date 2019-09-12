@@ -24,6 +24,11 @@ import { TimestampToken } from './comparable/timestamp';
 import { IntToken } from './comparable/int';
 import { UnitToken } from './unit';
 import { KeyToken } from './key';
+import { KeyHashToken } from './comparable/key_hash';
+import { SignatureToken } from './signature';
+import { LambdaToken } from './lambda';
+import { OperationToken } from './operation';
+import { SetToken } from './set';
 
 export const tokens = [
   PairToken,
@@ -43,4 +48,9 @@ export const tokens = [
   IntToken,
   UnitToken,
   KeyToken,
+  KeyHashToken,
+  SignatureToken,
+  LambdaToken,
+  OperationToken,
+  SetToken,
 ];
