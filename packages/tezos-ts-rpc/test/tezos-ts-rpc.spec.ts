@@ -655,4 +655,19 @@ describe('RpcClient test', () => {
       done();
     });
   });
+
+  describe('getBallots', () => {
+    it('query the right url and data', async done => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve({ yay: 5943, nay: 0, pass: 0 }));
+      const response = await client.getBallots();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/votes/ballots',
+      });
+      expect(response.yay).toEqual(5943);
+
+      done();
+    });
+  });
 });

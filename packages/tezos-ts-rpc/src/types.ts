@@ -611,6 +611,12 @@ export interface BallotListResponseItem {
 
 export type BallotListResponse = BallotListResponseItem[];
 
+export interface BallotsResponse {
+  yay: number;
+  nay: number;
+  pass: number;
+}
+
 interface Script {
   code: {}[];
   storage: Storage;
