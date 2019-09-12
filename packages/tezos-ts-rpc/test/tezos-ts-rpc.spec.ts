@@ -702,4 +702,19 @@ describe('RpcClient test', () => {
       done();
     });
   });
+
+  describe('getCurrentQuorum', () => {
+    it('query the right url and data', async done => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(7291));
+      const response = await client.getCurrentQuorum();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/votes/current_quorum',
+      });
+      expect(response).toEqual(7291);
+
+      done();
+    });
+  });
 });

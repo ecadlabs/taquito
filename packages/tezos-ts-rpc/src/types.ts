@@ -621,6 +621,8 @@ export type PeriodKindResponse = 'proposal' | 'testing_vote' | 'testing' | 'prom
 
 export type CurrentProposalResponse = string | null;
 
+export type CurrentQuorumResponse = number;
+
 interface Script {
   code: {}[];
   storage: Storage;

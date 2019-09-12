@@ -25,6 +25,7 @@ import {
   BallotsResponse,
   PeriodKindResponse,
   CurrentProposalResponse,
+  CurrentQuorumResponse,
 } from './types';
 import BigNumber from 'bignumber.js';
 
@@ -434,6 +435,25 @@ export class RpcClient {
   > {
     const response = await this.httpBackend.createRequest<CurrentProposalResponse>({
       url: `${this.url}/chains/${this.chain}/blocks/${block}/votes/current_proposal`,
+      method: 'GET',
+    });
+
+    return response;
+  }
+
+  /**
+   *
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Current expected quorum.
+   *
+   * @see https://tezos.gitlab.io/mainnet/api/rpc.html#get-block-id-votes-current-quorum
+   */
+  async getCurrentQuorum({ block }: RPCOptions = defaultRPCOptions): Promise<
+    CurrentQuorumResponse
+  > {
+    const response = await this.httpBackend.createRequest<CurrentQuorumResponse>({
+      url: `${this.url}/chains/${this.chain}/blocks/${block}/votes/current_quorum`,
       method: 'GET',
     });
 
