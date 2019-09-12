@@ -602,6 +602,15 @@ export interface BlockResponse {
   operations: OperationEntry[][];
 }
 
+export type BallotListResponseEnum = 'nay' | 'yay' | 'pass';
+
+export interface BallotListResponseItem {
+  pkh: string;
+  ballot: BallotListResponseEnum;
+}
+
+export type BallotListResponse = BallotListResponseItem[];
+
 interface Script {
   code: {}[];
   storage: Storage;

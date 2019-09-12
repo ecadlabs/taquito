@@ -613,4 +613,46 @@ describe('RpcClient test', () => {
       done();
     });
   });
+
+  describe('getBallotList', () => {
+    it('query the right url and data', async done => {
+      httpBackend.createRequest.mockReturnValue(
+        Promise.resolve([
+          {
+            pkh: 'tz3e75hU4EhDU3ukyJueh5v6UvEHzGwkg3yC',
+            ballot: 'yay',
+          },
+          {
+            pkh: 'tz1iJ4qgGTzyhaYEzd1RnC6duEkLBd1nzexh',
+            ballot: 'yay',
+          },
+          {
+            pkh: 'tz1hx8hMmmeyDBi6WJgpKwK4n5S2qAEpavx2',
+            ballot: 'yay',
+          },
+          {
+            pkh: 'tz1gvrUnfTfEcRW6qcgB6FJdZnAxv4HG1rj9',
+            ballot: 'yay',
+          },
+          {
+            pkh: 'tz1go7f6mEQfT2xX2LuHAqgnRGN6c2zHPf5c',
+            ballot: 'yay',
+          },
+          {
+            pkh: 'tz1gCx1V63bSaQnPZoQreqNgVLuFMzyMcqry',
+            ballot: 'yay',
+          },
+        ])
+      );
+      const response = await client.getBallotList();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/votes/ballot_list',
+      });
+      expect(response[2].pkh).toEqual('tz1hx8hMmmeyDBi6WJgpKwK4n5S2qAEpavx2');
+
+      done();
+    });
+  });
 });

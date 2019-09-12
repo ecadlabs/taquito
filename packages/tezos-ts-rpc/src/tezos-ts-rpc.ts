@@ -21,6 +21,7 @@ import {
   OperationContents,
   OperationObject,
   OperationContentsAndResultMetadata,
+  BallotListResponse,
 } from './types';
 import BigNumber from 'bignumber.js';
 
@@ -362,6 +363,23 @@ export class RpcClient {
     return {
       ...convResponse,
     };
+  }
+
+  /**
+   *
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Ballots casted so far during a voting period
+   *
+   * @see https://tezos.gitlab.io/mainnet/api/rpc.html#get-block-id-votes-ballot-list
+   */
+  async getBallotList({ block }: RPCOptions = defaultRPCOptions): Promise<BallotListResponse> {
+    const response = await this.httpBackend.createRequest<BallotListResponse>({
+      url: `${this.url}/chains/${this.chain}/blocks/${block}/votes/ballot_list`,
+      method: 'GET',
+    });
+
+    return response;
   }
 
   /**
