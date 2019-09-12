@@ -23,6 +23,7 @@ import {
   OperationContentsAndResultMetadata,
   BallotListResponse,
   BallotsResponse,
+  PeriodKindResponse,
 } from './types';
 import BigNumber from 'bignumber.js';
 
@@ -394,6 +395,25 @@ export class RpcClient {
   async getBallots({ block }: RPCOptions = defaultRPCOptions): Promise<BallotsResponse> {
     const response = await this.httpBackend.createRequest<BallotsResponse>({
       url: `${this.url}/chains/${this.chain}/blocks/${block}/votes/ballots`,
+      method: 'GET',
+    });
+
+    return response;
+  }
+
+  /**
+   *
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Sum of ballots casted so far during a voting period.
+   *
+   * @see https://tezos.gitlab.io/mainnet/api/rpc.html#get-block-id-votes-current-period-kind
+   */
+  async getCurrentPeriodKind({ block }: RPCOptions = defaultRPCOptions): Promise<
+    PeriodKindResponse
+  > {
+    const response = await this.httpBackend.createRequest<PeriodKindResponse>({
+      url: `${this.url}/chains/${this.chain}/blocks/${block}/votes/current_period_kind`,
       method: 'GET',
     });
 

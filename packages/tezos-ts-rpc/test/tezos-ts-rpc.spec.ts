@@ -670,4 +670,19 @@ describe('RpcClient test', () => {
       done();
     });
   });
+
+  describe('getCurrentPeriodKind', () => {
+    it('query the right url and data', async done => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve('testing_vote'));
+      const response = await client.getCurrentPeriodKind();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/votes/current_period_kind',
+      });
+      expect(response).toEqual('testing_vote');
+
+      done();
+    });
+  });
 });

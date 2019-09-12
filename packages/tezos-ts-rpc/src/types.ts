@@ -617,6 +617,8 @@ export interface BallotsResponse {
   pass: number;
 }
 
+export type PeriodKindResponse = 'proposal' | 'testing_vote' | 'testing' | 'promotion_vote';
+
 interface Script {
   code: {}[];
   storage: Storage;
