@@ -16,7 +16,7 @@ export class BoolToken extends Token {
   }
 
   public Encode(...args: any[]): any {
-    return { bool: args[0] ? 'true' : 'false' };
+    return args[0] ? 'true' : 'false';
   }
 
   public ExtractSchema() {

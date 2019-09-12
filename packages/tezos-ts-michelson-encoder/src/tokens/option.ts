@@ -11,14 +11,20 @@ export class OptionToken extends Token {
     super(val, idx, fac);
   }
 
+  annot(): string {
+    return Array.isArray(this.val.annots)
+      ? super.annot()
+      : this.createToken(this.val.args[0], this.idx).annot();
+  }
+
   public Encode(...args: any[]): any {
-    const value = args[0][0];
+    const value = args;
     if (!value) {
       return { prim: 'None' };
     }
 
     const schema = this.createToken(this.val.args[0], 0);
-    return schema.Encode([value]);
+    return { prim: 'Some', args: [schema.Encode(...args)] };
   }
 
   public Execute(val: any) {
@@ -31,6 +37,7 @@ export class OptionToken extends Token {
   }
 
   public ExtractSchema() {
-    return OptionToken.prim;
+    const schema = this.createToken(this.val.args[0], 0);
+    return schema.ExtractSchema();
   }
 }

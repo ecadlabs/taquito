@@ -16,7 +16,7 @@ export abstract class Token {
     protected fac: TokenFactory
   ) {}
 
-  get annot() {
+  annot() {
     return (Array.isArray(this.val.annots) ? this.val.annots[0] : String(this.idx)).replace(
       /(%|\:)(_Liq_entry_)?/,
       ''

@@ -3,6 +3,7 @@
   "private": true,
   "version": "4.0.0-beta.2",
   "scripts": {
+    "example:at": "node -r ts-node/register --preserve-symlinks contract-schema.ts",
     "example:origination": "node -r ts-node/register --preserve-symlinks contract-origination.ts",
     "example": "node -r ts-node/register --preserve-symlinks example-node.ts"
   },

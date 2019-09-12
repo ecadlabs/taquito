@@ -68,7 +68,7 @@ export class Schema {
 
     return {
       ...this.Execute(state),
-      [this.bigMap.annot]: bigMap,
+      [this.bigMap.annot()]: bigMap,
     };
   }
 }

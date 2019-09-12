@@ -19,7 +19,7 @@ export class OrToken extends Token {
       return rightToken.Execute(val.args[0]);
     } else {
       return {
-        [leftToken.annot]: leftToken.Execute(val.args[0]),
+        [leftToken.annot()]: leftToken.Execute(val.args[0]),
       };
     }
   }
@@ -29,8 +29,10 @@ export class OrToken extends Token {
 
     const leftToken = this.createToken(this.val.args[0], this.idx);
     const rightToken = this.createToken(this.val.args[1], this.idx + 1);
-    if (leftToken.annot === label) {
+    if (String(leftToken.annot()) === String(label)) {
       return { prim: 'Left', args: [leftToken.Encode(...args.slice(1))] };
+    } else if (String(rightToken.annot()) === String(label)) {
+      return { prim: 'Right', args: [rightToken.Encode(...args.slice(1))] };
     } else {
       return { prim: 'Right', args: [rightToken.Encode(...args)] };
     }
@@ -44,14 +46,14 @@ export class OrToken extends Token {
     if (leftToken instanceof OrToken) {
       leftValue = leftToken.ExtractSchema();
     } else {
-      leftValue = { [leftToken.annot]: leftToken.ExtractSchema() };
+      leftValue = { [leftToken.annot()]: leftToken.ExtractSchema() };
     }
 
     let rightValue;
     if (rightToken instanceof OrToken) {
       rightValue = rightToken.ExtractSchema();
     } else {
-      rightValue = { [rightToken.annot]: rightToken.ExtractSchema() };
+      rightValue = { [rightToken.annot()]: rightToken.ExtractSchema() };
     }
 
     return {
