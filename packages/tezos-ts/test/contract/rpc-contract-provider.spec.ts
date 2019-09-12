@@ -171,7 +171,7 @@ describe('RpcContractProvider test', () => {
       mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
       mockSigner.publicKey.mockResolvedValue('test_pub_key');
       mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
-      const result = await rpcContractProvider.transfer({ to: 'test_to', amount: 200 });
+      const result = await rpcContractProvider.transfer({ to: 'test_to', amount: 2 });
       expect(result.raw).toEqual({
         counter: 0,
         opOb: {
@@ -187,7 +187,7 @@ describe('RpcContractProvider test', () => {
               storage_limit: '300',
             },
             {
-              amount: '200',
+              amount: '2000000',
               counter: '2',
               destination: 'test_to',
               fee: '10000',
