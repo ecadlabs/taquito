@@ -21,6 +21,8 @@ import {
   OperationContents,
   OperationObject,
   OperationContentsAndResultMetadata,
+  BakingRightsQueryArguments,
+  BakingRightsResponse,
 } from './types';
 import BigNumber from 'bignumber.js';
 
@@ -355,6 +357,32 @@ export class RpcClient {
     const response = await this.httpBackend.createRequest<BlockMetadata>({
       url: `${this.url}/chains/${this.chain}/blocks/${block}/metadata`,
       method: 'GET',
+    });
+
+    const convResponse: any = camelCaseProps(response);
+
+    return {
+      ...convResponse,
+    };
+  }
+
+  /**
+   *
+   * @param options contains generic configuration for rpc calls
+   * @param args contains optional query arguments
+   *
+   * @description Retrieves the list of delegates allowed to bake a block.
+   *
+   * @see https://tezos.gitlab.io/mainnet/api/rpc.html#get-block-id-helpers-baking-rights
+   */
+  async getBakingRights(
+    { block }: RPCOptions = defaultRPCOptions,
+    args: BakingRightsQueryArguments = {}
+  ): Promise<BakingRightsResponse> {
+    const response = await this.httpBackend.createRequest<BakingRightsResponse>({
+      url: `${this.url}/chains/${this.chain}/blocks/${block}/helpers/baking_rights`,
+      method: 'GET',
+      query: args,
     });
 
     const convResponse: any = camelCaseProps(response);

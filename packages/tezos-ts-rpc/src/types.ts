@@ -602,6 +602,27 @@ export interface BlockResponse {
   operations: OperationEntry[][];
 }
 
+export type BakingRightsArgumentsDelegate = string | string[];
+export type BakingRightsArgumentsCycle = number | number[];
+export type BakingRightsArgumentsLevel = number | number[];
+
+export interface BakingRightsQueryArguments {
+  level?: BakingRightsArgumentsLevel;
+  cycle?: BakingRightsArgumentsCycle;
+  delegate?: BakingRightsArgumentsDelegate;
+  max_priority?: number;
+  all?: null;
+}
+
+export interface BakingRightsResponseItem {
+  level: number;
+  delegate: string;
+  priority: number;
+  estimatedTime?: Date;
+}
+
+export type BakingRightsResponse = BakingRightsResponseItem[];
+
 interface Script {
   code: {}[];
   storage: Storage;

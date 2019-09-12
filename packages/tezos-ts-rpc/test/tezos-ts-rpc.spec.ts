@@ -613,4 +613,42 @@ describe('RpcClient test', () => {
       done();
     });
   });
+
+  describe('getBakingRights', () => {
+    it('query the right url and data', async done => {
+      httpBackend.createRequest.mockResolvedValue([
+        {
+          level: 547387,
+          delegate: 'tz3VEZ4k6a4Wx42iyev6i2aVAptTRLEAivNN',
+          priority: 4,
+          estimated_time: '2019-08-02T09:48:56Z',
+        },
+        {
+          level: 547387,
+          delegate: 'tz1NMdMmWZN8QPB8pY4ddncACDg1cHi1xD2e',
+          priority: 8,
+          estimated_time: '2019-08-02T09:53:56Z',
+        },
+      ]);
+      const result = await client.getBakingRights(undefined, {
+        delegate: ['tz3VEZ4k6a4Wx42iyev6i2aVAptTRLEAivNN', 'tz1NMdMmWZN8QPB8pY4ddncACDg1cHi1xD2e'],
+      });
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        query: {
+          delegate: [
+            'tz3VEZ4k6a4Wx42iyev6i2aVAptTRLEAivNN',
+            'tz1NMdMmWZN8QPB8pY4ddncACDg1cHi1xD2e',
+          ],
+        },
+        url: 'root/chains/test/blocks/head/helpers/baking_rights',
+      });
+
+      expect(result[0].delegate).toEqual('tz3VEZ4k6a4Wx42iyev6i2aVAptTRLEAivNN');
+      expect(result[0].estimatedTime).toEqual('2019-08-02T09:48:56Z');
+
+      done();
+    });
+  });
 });
