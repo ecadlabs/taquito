@@ -1,6 +1,6 @@
 {
   "name": "@tezos-ts/michelson-encoder",
-  "version": "4.0.0-alpha.3",
+  "version": "4.0.0-beta.1",
   "description": "converts michelson data and types into convenient JS/TS objects",
   "keywords": [
     "tezos",
@@ -67,8 +67,8 @@
     ]
   },
   "dependencies": {
-    "bignumber.js": "^9.0.0",
-    "@tezos-ts/utils": "^4.0.0-alpha.3"
+    "@tezos-ts/utils": "^4.0.0-beta.1",
+    "bignumber.js": "^9.0.0"
   },
   "devDependencies": {
     "@types/jest": "^23.3.2",
