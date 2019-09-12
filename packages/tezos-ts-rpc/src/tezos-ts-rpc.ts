@@ -27,6 +27,7 @@ import {
   CurrentProposalResponse,
   CurrentQuorumResponse,
   VotesListingsResponse,
+  ProposalsResponse,
 } from './types';
 import BigNumber from 'bignumber.js';
 
@@ -474,6 +475,23 @@ export class RpcClient {
   > {
     const response = await this.httpBackend.createRequest<VotesListingsResponse>({
       url: `${this.url}/chains/${this.chain}/blocks/${block}/votes/listings`,
+      method: 'GET',
+    });
+
+    return response;
+  }
+
+  /**
+   *
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description List of proposals with number of supporters.
+   *
+   * @see https://tezos.gitlab.io/mainnet/api/rpc.html#get-block-id-votes-proposals
+   */
+  async getProposals({ block }: RPCOptions = defaultRPCOptions): Promise<ProposalsResponse> {
+    const response = await this.httpBackend.createRequest<ProposalsResponse>({
+      url: `${this.url}/chains/${this.chain}/blocks/${block}/votes/proposals`,
       method: 'GET',
     });
 

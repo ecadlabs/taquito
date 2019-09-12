@@ -630,6 +630,10 @@ export interface VotesListingsResponseItem {
 
 export type VotesListingsResponse = VotesListingsResponseItem[];
 
+export type ProposalsResponseItem = [string, number];
+
+export type ProposalsResponse = ProposalsResponseItem[];
+
 interface Script {
   code: {}[];
   storage: Storage;

@@ -775,4 +775,24 @@ describe('RpcClient test', () => {
       done();
     });
   });
+
+  describe('getProposals', () => {
+    it('query the right url and data', async done => {
+      httpBackend.createRequest.mockReturnValue(
+        Promise.resolve([
+          ['PsBABY5HQTSkA4297zNHfsZNKtxULfL18y95qb3m53QJiXGmrbU', 2832],
+          ['PsBABY5nk4JhdEv1N1pZbt6m6ccB9BfNqa23iKZcHBh23jmRS9f', 9492],
+        ])
+      );
+      const response = await client.getProposals();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/votes/proposals',
+      });
+      expect(response[0][1]).toEqual(2832);
+
+      done();
+    });
+  });
 });
