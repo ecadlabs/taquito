@@ -619,6 +619,8 @@ export interface BallotsResponse {
 
 export type PeriodKindResponse = 'proposal' | 'testing_vote' | 'testing' | 'promotion_vote';
 
+export type CurrentProposalResponse = string | null;
+
 interface Script {
   code: {}[];
   storage: Storage;
