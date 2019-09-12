@@ -1,15 +1,15 @@
 {
   "name": "@tezos-ts/example",
   "private": true,
-  "version": "4.0.0-beta.2",
+  "version": "4.0.0-beta.3",
   "scripts": {
     "example:at": "node -r ts-node/register --preserve-symlinks contract-schema.ts",
     "example:origination": "node -r ts-node/register --preserve-symlinks contract-origination.ts",
     "example": "node -r ts-node/register --preserve-symlinks example-node.ts"
   },
   "dependencies": {
-    "@tezos-ts/signer": "^4.0.0-beta.2",
-    "@tezos-ts/tezos-ts": "^4.0.0-beta.2"
+    "@tezos-ts/signer": "^4.0.0-beta.3",
+    "@tezos-ts/tezos-ts": "^4.0.0-beta.3"
   },
   "devDependencies": {
     "ts-node": "^8.3.0"
