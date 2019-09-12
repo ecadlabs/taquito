@@ -24,17 +24,17 @@ export class OrToken extends Token {
     }
   }
 
-  public Encode(...args: any[]): any {
-    const label = args[0];
+  public Encode(args: any[]): any {
+    const label = args[args.length - 1];
 
     const leftToken = this.createToken(this.val.args[0], this.idx);
     const rightToken = this.createToken(this.val.args[1], this.idx + 1);
     if (String(leftToken.annot()) === String(label)) {
-      return { prim: 'Left', args: [leftToken.Encode(...args.slice(1))] };
+      return { prim: 'Left', args: [leftToken.Encode(args.slice(0, args.length - 1))] };
     } else if (String(rightToken.annot()) === String(label)) {
-      return { prim: 'Right', args: [rightToken.Encode(...args.slice(1))] };
+      return { prim: 'Right', args: [rightToken.Encode(args.slice(0, args.length - 1))] };
     } else {
-      return { prim: 'Right', args: [rightToken.Encode(...args)] };
+      return { prim: 'Right', args: [rightToken.Encode(args)] };
     }
   }
 

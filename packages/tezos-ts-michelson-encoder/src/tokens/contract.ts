@@ -15,8 +15,9 @@ export class ContractToken extends Token {
     return val.string;
   }
 
-  public Encode(...args: any[]): any {
-    return { string: args[0] };
+  public Encode(args: any[]): any {
+    const val = args.pop();
+    return { string: val };
   }
 
   public ExtractSchema() {
