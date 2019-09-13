@@ -33,10 +33,10 @@ class Footer extends React.Component {
             <a href={this.docUrl('quick_start.html', this.props.language)}>
               Quick Start
             </a>
-            <a href="https://ecadlabs.github.io/tezos-ts/react-storybook">
+            <a href="/react-storybook">
               Storybook
             </a>
-            <a href="https://ecadlabs.github.io/tezos-ts/typedoc">
+            <a href="/typedoc">
               Typedoc reference
             </a>
           </div>
@@ -50,7 +50,7 @@ class Footer extends React.Component {
           </div>
           <div>
             <h5>More</h5>
-            <a href="https://github.com/">GitHub</a>
+            <a href={this.props.config.repoUrl}>GitHub</a>
             <a
               className="github-button"
               href={this.props.config.repoUrl}

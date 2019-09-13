@@ -6,7 +6,7 @@ The `@tezos-ts/tezos-ts` package contains higher level functionality that builds
 
 ## API Documentation
 
-TypeDoc style documentation is available on-line [here](https://ecadlabs.github.io/tezos-ts/typedoc/modules/_tezos_ts_tezos_ts.html)
+TypeDoc style documentation is available on-line [here](https://tezos-ts.io/typedoc/modules/_tezos_ts_tezos_ts.html)
 
 See the top-level [https://github.com/ecadlabs/tezos-ts](https://github.com/ecadlabs/tezos-ts) file for details on reporting issues, contributing and versioning.
 
