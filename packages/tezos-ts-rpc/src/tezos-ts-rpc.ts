@@ -30,6 +30,8 @@ import {
   CurrentQuorumResponse,
   VotesListingsResponse,
   ProposalsResponse,
+  EndorsingRightsQueryArguments,
+  EndorsingRightsResponse,
 } from './types';
 import BigNumber from 'bignumber.js';
 
@@ -59,7 +61,7 @@ export class RpcClient {
     private url: string = defaultRPC,
     private chain: string = defaultChain,
     private httpBackend: HttpBackend = new HttpBackend()
-  ) { }
+  ) {}
 
   /**
    *
@@ -388,6 +390,32 @@ export class RpcClient {
   ): Promise<BakingRightsResponse> {
     const response = await this.httpBackend.createRequest<BakingRightsResponse>({
       url: `${this.url}/chains/${this.chain}/blocks/${block}/helpers/baking_rights`,
+      method: 'GET',
+      query: args,
+    });
+
+    const convResponse: any = camelCaseProps(response);
+
+    return {
+      ...convResponse,
+    };
+  }
+
+  /**
+   *
+   * @param args contains optional query arguments
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Retrieves the list of delegates allowed to bake a block.
+   *
+   * @see https://tezos.gitlab.io/mainnet/api/rpc.html#get-block-id-helpers-endorsing-rights
+   */
+  async getEndorsingRights(
+    args: EndorsingRightsQueryArguments = {},
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<EndorsingRightsResponse> {
+    const response = await this.httpBackend.createRequest<EndorsingRightsResponse>({
+      url: `${this.url}/chains/${this.chain}/blocks/${block}/helpers/endorsing_rights`,
       method: 'GET',
       query: args,
     });
