@@ -630,7 +630,7 @@ describe('RpcClient test', () => {
           estimated_time: '2019-08-02T09:53:56Z',
         },
       ]);
-      const result = await client.getBakingRights(undefined, {
+      const result = await client.getBakingRights({
         delegate: ['tz3VEZ4k6a4Wx42iyev6i2aVAptTRLEAivNN', 'tz1NMdMmWZN8QPB8pY4ddncACDg1cHi1xD2e'],
       });
 
