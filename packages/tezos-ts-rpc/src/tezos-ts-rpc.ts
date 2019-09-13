@@ -21,6 +21,8 @@ import {
   OperationContents,
   OperationObject,
   OperationContentsAndResultMetadata,
+  BakingRightsQueryArguments,
+  BakingRightsResponse,
   BallotListResponse,
   BallotsResponse,
   PeriodKindResponse,
@@ -57,7 +59,7 @@ export class RpcClient {
     private url: string = defaultRPC,
     private chain: string = defaultChain,
     private httpBackend: HttpBackend = new HttpBackend()
-  ) {}
+  ) { }
 
   /**
    *
@@ -373,6 +375,31 @@ export class RpcClient {
 
   /**
    *
+   * @param args contains optional query arguments
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Retrieves the list of delegates allowed to bake a block.
+   *
+   * @see https://tezos.gitlab.io/mainnet/api/rpc.html#get-block-id-helpers-baking-rights
+   */
+  async getBakingRights(
+    args: BakingRightsQueryArguments = {},
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BakingRightsResponse> {
+    const response = await this.httpBackend.createRequest<BakingRightsResponse>({
+      url: `${this.url}/chains/${this.chain}/blocks/${block}/helpers/baking_rights`,
+      method: 'GET',
+      query: args,
+    });
+
+    const convResponse: any = camelCaseProps(response);
+
+    return {
+      ...convResponse,
+    };
+  }
+
+  /**
    * @param options contains generic configuration for rpc calls
    *
    * @description Ballots casted so far during a voting period
