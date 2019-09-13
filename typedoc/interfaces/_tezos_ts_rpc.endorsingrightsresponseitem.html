@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>BalanceHistoryOptions | Tezos TS</title>
+	<title>EndorsingRightsResponseItem | Tezos TS</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,13 +56,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_tezos_ts_tezos_ts.html">@tezos-ts/tezos-ts</a>
+					<a href="../modules/_tezos_ts_rpc.html">@tezos-ts/rpc</a>
 				</li>
 				<li>
-					<a href="_tezos_ts_tezos_ts.balancehistoryoptions.html">BalanceHistoryOptions</a>
+					<a href="_tezos_ts_rpc.endorsingrightsresponseitem.html">EndorsingRightsResponseItem</a>
 				</li>
 			</ul>
-			<h1>Interface BalanceHistoryOptions</h1>
+			<h1>Interface EndorsingRightsResponseItem</h1>
 		</div>
 	</div>
 </header>
@@ -73,7 +73,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">BalanceHistoryOptions</span>
+						<span class="target">EndorsingRightsResponseItem</span>
 					</li>
 				</ul>
 			</section>
@@ -84,9 +84,10 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_tezos_ts.balancehistoryoptions.html#end" class="tsd-kind-icon">end</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_tezos_ts.balancehistoryoptions.html#limit" class="tsd-kind-icon">limit</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_tezos_ts.balancehistoryoptions.html#start" class="tsd-kind-icon">start</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_rpc.endorsingrightsresponseitem.html#delegate" class="tsd-kind-icon">delegate</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_rpc.endorsingrightsresponseitem.html#estimatedtime" class="tsd-kind-icon">estimated<wbr>Time</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_rpc.endorsingrightsresponseitem.html#level" class="tsd-kind-icon">level</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_rpc.endorsingrightsresponseitem.html#slots" class="tsd-kind-icon">slots</a></li>
 							</ul>
 						</section>
 					</div>
@@ -95,32 +96,42 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="end" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> end</h3>
-					<div class="tsd-signature tsd-kind-icon">end<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Date</span></div>
+					<a name="delegate" class="tsd-anchor"></a>
+					<h3>delegate</h3>
+					<div class="tsd-signature tsd-kind-icon">delegate<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/203f4e8/packages/tezos-ts/src/query/interface.ts#L10">tezos-ts/src/query/interface.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/203f4e8/packages/tezos-ts-rpc/src/types.ts#L638">tezos-ts-rpc/src/types.ts:638</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="limit" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> limit</h3>
-					<div class="tsd-signature tsd-kind-icon">limit<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></div>
+					<a name="estimatedtime" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> estimated<wbr>Time</h3>
+					<div class="tsd-signature tsd-kind-icon">estimated<wbr>Time<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Date</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/203f4e8/packages/tezos-ts/src/query/interface.ts#L11">tezos-ts/src/query/interface.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/203f4e8/packages/tezos-ts-rpc/src/types.ts#L640">tezos-ts-rpc/src/types.ts:640</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="start" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> start</h3>
-					<div class="tsd-signature tsd-kind-icon">start<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Date</span></div>
+					<a name="level" class="tsd-anchor"></a>
+					<h3>level</h3>
+					<div class="tsd-signature tsd-kind-icon">level<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/203f4e8/packages/tezos-ts/src/query/interface.ts#L9">tezos-ts/src/query/interface.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/203f4e8/packages/tezos-ts-rpc/src/types.ts#L637">tezos-ts-rpc/src/types.ts:637</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="slots" class="tsd-anchor"></a>
+					<h3>slots</h3>
+					<div class="tsd-signature tsd-kind-icon">slots<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/203f4e8/packages/tezos-ts-rpc/src/types.ts#L639">tezos-ts-rpc/src/types.ts:639</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -144,7 +155,7 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/_tezos_ts_react_components.html">@tezos-<wbr>ts/react-<wbr>components</a>
 					</li>
-					<li class=" tsd-kind-module">
+					<li class="current tsd-kind-module">
 						<a href="../modules/_tezos_ts_rpc.html">@tezos-<wbr>ts/rpc</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -156,7 +167,7 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/_tezos_ts_tezbridge_signer.html">@tezos-<wbr>ts/tezbridge-<wbr>signer</a>
 					</li>
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="../modules/_tezos_ts_tezos_ts.html">@tezos-<wbr>ts/tezos-<wbr>ts</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -169,16 +180,19 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-module">
-						<a href="_tezos_ts_tezos_ts.balancehistoryoptions.html" class="tsd-kind-icon">Balance<wbr>History<wbr>Options</a>
+						<a href="_tezos_ts_rpc.endorsingrightsresponseitem.html" class="tsd-kind-icon">Endorsing<wbr>Rights<wbr>Response<wbr>Item</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tezos_ts_tezos_ts.balancehistoryoptions.html#end" class="tsd-kind-icon">end</a>
+								<a href="_tezos_ts_rpc.endorsingrightsresponseitem.html#delegate" class="tsd-kind-icon">delegate</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tezos_ts_tezos_ts.balancehistoryoptions.html#limit" class="tsd-kind-icon">limit</a>
+								<a href="_tezos_ts_rpc.endorsingrightsresponseitem.html#estimatedtime" class="tsd-kind-icon">estimated<wbr>Time</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tezos_ts_tezos_ts.balancehistoryoptions.html#start" class="tsd-kind-icon">start</a>
+								<a href="_tezos_ts_rpc.endorsingrightsresponseitem.html#level" class="tsd-kind-icon">level</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_tezos_ts_rpc.endorsingrightsresponseitem.html#slots" class="tsd-kind-icon">slots</a>
 							</li>
 						</ul>
 					</li>
