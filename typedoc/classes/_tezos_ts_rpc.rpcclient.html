@@ -100,6 +100,7 @@
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_tezos_ts_rpc.rpcclient.html#forgeoperations" class="tsd-kind-icon">forge<wbr>Operations</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_tezos_ts_rpc.rpcclient.html#getbakingrights" class="tsd-kind-icon">get<wbr>Baking<wbr>Rights</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_tezos_ts_rpc.rpcclient.html#getbalance" class="tsd-kind-icon">get<wbr>Balance</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_tezos_ts_rpc.rpcclient.html#getballotlist" class="tsd-kind-icon">get<wbr>Ballot<wbr>List</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_tezos_ts_rpc.rpcclient.html#getballots" class="tsd-kind-icon">get<wbr>Ballots</a></li>
@@ -140,7 +141,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L46">tezos-ts-rpc/src/tezos-ts-rpc.ts:46</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/6783b06/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L48">tezos-ts-rpc/src/tezos-ts-rpc.ts:48</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -195,7 +196,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L510">tezos-ts-rpc/src/tezos-ts-rpc.ts:510</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/6783b06/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L537">tezos-ts-rpc/src/tezos-ts-rpc.ts:537</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -238,6 +239,50 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getbakingrights" class="tsd-anchor"></a>
+					<h3>get<wbr>Baking<wbr>Rights</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Baking<wbr>Rights<span class="tsd-signature-symbol">(</span>args<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_tezos_ts_rpc.bakingrightsqueryarguments.html" class="tsd-signature-type">BakingRightsQueryArguments</a>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_tezos_ts_rpc.html#bakingrightsresponse" class="tsd-signature-type">BakingRightsResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/6783b06/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L385">tezos-ts-rpc/src/tezos-ts-rpc.ts:385</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<dl class="tsd-comment-tags">
+									<dt>description</dt>
+									<dd><p>Retrieves the list of delegates allowed to bake a block.</p>
+									</dd>
+									<dt>see</dt>
+									<dd><p><a href="https://tezos.gitlab.io/mainnet/api/rpc.html#get-block-id-helpers-baking-rights">https://tezos.gitlab.io/mainnet/api/rpc.html#get-block-id-helpers-baking-rights</a></p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> args: <a href="../interfaces/_tezos_ts_rpc.bakingrightsqueryarguments.html" class="tsd-signature-type">BakingRightsQueryArguments</a><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>contains optional query arguments</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> =&nbsp;defaultRPCOptions</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter">
+											<h5>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_tezos_ts_rpc.html#bakingrightsresponse" class="tsd-signature-type">BakingRightsResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="getbalance" class="tsd-anchor"></a>
 					<h3>get<wbr>Balance</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -247,7 +292,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L87">tezos-ts-rpc/src/tezos-ts-rpc.ts:87</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/6783b06/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L89">tezos-ts-rpc/src/tezos-ts-rpc.ts:89</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -291,7 +336,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L382">tezos-ts-rpc/src/tezos-ts-rpc.ts:382</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/6783b06/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L409">tezos-ts-rpc/src/tezos-ts-rpc.ts:409</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -329,7 +374,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L399">tezos-ts-rpc/src/tezos-ts-rpc.ts:399</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/6783b06/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L426">tezos-ts-rpc/src/tezos-ts-rpc.ts:426</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -367,7 +412,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L225">tezos-ts-rpc/src/tezos-ts-rpc.ts:225</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/6783b06/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L227">tezos-ts-rpc/src/tezos-ts-rpc.ts:227</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -414,7 +459,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L319">tezos-ts-rpc/src/tezos-ts-rpc.ts:319</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/6783b06/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L321">tezos-ts-rpc/src/tezos-ts-rpc.ts:321</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -452,7 +497,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L70">tezos-ts-rpc/src/tezos-ts-rpc.ts:70</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/6783b06/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L72">tezos-ts-rpc/src/tezos-ts-rpc.ts:72</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -490,7 +535,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L340">tezos-ts-rpc/src/tezos-ts-rpc.ts:340</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/6783b06/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L342">tezos-ts-rpc/src/tezos-ts-rpc.ts:342</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -528,7 +573,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L361">tezos-ts-rpc/src/tezos-ts-rpc.ts:361</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/6783b06/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L363">tezos-ts-rpc/src/tezos-ts-rpc.ts:363</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -566,7 +611,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L284">tezos-ts-rpc/src/tezos-ts-rpc.ts:284</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/6783b06/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L286">tezos-ts-rpc/src/tezos-ts-rpc.ts:286</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -604,7 +649,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L145">tezos-ts-rpc/src/tezos-ts-rpc.ts:145</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/6783b06/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L147">tezos-ts-rpc/src/tezos-ts-rpc.ts:147</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -648,7 +693,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L416">tezos-ts-rpc/src/tezos-ts-rpc.ts:416</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/6783b06/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L443">tezos-ts-rpc/src/tezos-ts-rpc.ts:443</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -686,7 +731,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L435">tezos-ts-rpc/src/tezos-ts-rpc.ts:435</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/6783b06/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L462">tezos-ts-rpc/src/tezos-ts-rpc.ts:462</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -724,7 +769,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L454">tezos-ts-rpc/src/tezos-ts-rpc.ts:454</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/6783b06/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L481">tezos-ts-rpc/src/tezos-ts-rpc.ts:481</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -762,7 +807,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L206">tezos-ts-rpc/src/tezos-ts-rpc.ts:206</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/6783b06/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L208">tezos-ts-rpc/src/tezos-ts-rpc.ts:208</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -806,7 +851,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L248">tezos-ts-rpc/src/tezos-ts-rpc.ts:248</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/6783b06/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L250">tezos-ts-rpc/src/tezos-ts-rpc.ts:250</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -850,7 +895,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L168">tezos-ts-rpc/src/tezos-ts-rpc.ts:168</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/6783b06/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L170">tezos-ts-rpc/src/tezos-ts-rpc.ts:170</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -894,7 +939,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L187">tezos-ts-rpc/src/tezos-ts-rpc.ts:187</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/6783b06/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L189">tezos-ts-rpc/src/tezos-ts-rpc.ts:189</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -938,7 +983,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L492">tezos-ts-rpc/src/tezos-ts-rpc.ts:492</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/6783b06/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L519">tezos-ts-rpc/src/tezos-ts-rpc.ts:519</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -976,7 +1021,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L126">tezos-ts-rpc/src/tezos-ts-rpc.ts:126</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/6783b06/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L128">tezos-ts-rpc/src/tezos-ts-rpc.ts:128</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1020,7 +1065,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L107">tezos-ts-rpc/src/tezos-ts-rpc.ts:107</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/6783b06/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L109">tezos-ts-rpc/src/tezos-ts-rpc.ts:109</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1064,7 +1109,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L473">tezos-ts-rpc/src/tezos-ts-rpc.ts:473</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/6783b06/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L500">tezos-ts-rpc/src/tezos-ts-rpc.ts:500</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1102,7 +1147,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L531">tezos-ts-rpc/src/tezos-ts-rpc.ts:531</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/6783b06/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L558">tezos-ts-rpc/src/tezos-ts-rpc.ts:558</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1138,7 +1183,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L550">tezos-ts-rpc/src/tezos-ts-rpc.ts:550</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/6783b06/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts#L577">tezos-ts-rpc/src/tezos-ts-rpc.ts:577</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1224,6 +1269,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_tezos_ts_rpc.rpcclient.html#forgeoperations" class="tsd-kind-icon">forge<wbr>Operations</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_tezos_ts_rpc.rpcclient.html#getbakingrights" class="tsd-kind-icon">get<wbr>Baking<wbr>Rights</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_tezos_ts_rpc.rpcclient.html#getbalance" class="tsd-kind-icon">get<wbr>Balance</a>
