@@ -31,7 +31,7 @@ jobs:
       - run: npm run lerna run build
       - run: npm run build-docs
       - run: cd packages/tezos-ts-react-components && npm run build-storybook -- -o ../../dist/react-storybook
-      - run: cd dist && touch .nojekyll
+      - run: cd dist && touch .nojekyll && echo 'tezos-ts.io' > CNAME
       - run:
           command: |
             git config user.email "ci-build@ecadlabs.com"
