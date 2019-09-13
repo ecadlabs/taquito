@@ -48,7 +48,7 @@ Tezos.query.balanceHistory('your_address')
 
 ### Transfer
 
-`Note: This require a signer to be configured`
+`Note: This requires a signer to be configured`
 
 ```js
 const op = await Tezos.contract.transfer({to: 'tz1', amount: 2})
@@ -57,7 +57,7 @@ await op.confirmation()
 
 ### Interact with a smart contract
 
-`Note: This require a signer to be configured`
+`Note: This requires a signer to be configured`
 
 ```js
 const contract = await Tezos.contract.at('your_address')
