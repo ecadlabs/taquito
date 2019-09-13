@@ -8,7 +8,7 @@ See the top-level [https://github.com/ecadlabs/tezos-ts](https://github.com/ecad
 
 ## API Documentation
 
-TypeDoc style documentation is available on-line [here](https://ecadlabs.github.io/tezos-ts/typedoc/modules/_tezos_ts_streamer.html)
+TypeDoc style documentation is available on-line [here](https://tezos-ts.io/typedoc/modules/_tezos_ts_streamer.html)
 
 ## Disclaimer
 

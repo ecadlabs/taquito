@@ -5,7 +5,7 @@ author: Simon Boissonneault-Robert
 
 ## Usage
 
-You first need to include <script src="https://www.tezbridge.com/plugin.js"></script> in your application to use this signer
+You first need to include https://www.tezbridge.com/plugin.js in your application to use this signer
 
 ```js
 import { TezBridgeSigner } from '@tezos-ts/tezbridge-signer'

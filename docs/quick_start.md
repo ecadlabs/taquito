@@ -36,7 +36,7 @@ Tezos.setProvider({signer: new TezBridgeSigner()})
 ### Get balance
 
 ```js
-Tezos.contract.getBalance('your_address')
+Tezos.tz.getBalance('your_address')
 ```
 
 ### Get balance history
@@ -51,7 +51,7 @@ Tezos.query.balanceHistory('your_address')
 `Note: This require a signer to be configured`
 
 ```js
-const op = await Tezos.contract.transfer({to: 'tz1', amount: 2'})
+const op = await Tezos.contract.transfer({to: 'tz1', amount: 2})
 await op.confirmation()
 ```
 
