@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>RawDelegatesResponse | Tezos TS</title>
+	<title>VotesListingsResponseItem | Tezos TS</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -59,10 +59,10 @@
 					<a href="../modules/_tezos_ts_rpc.html">@tezos-ts/rpc</a>
 				</li>
 				<li>
-					<a href="_tezos_ts_rpc.rawdelegatesresponse.html">RawDelegatesResponse</a>
+					<a href="_tezos_ts_rpc.voteslistingsresponseitem.html">VotesListingsResponseItem</a>
 				</li>
 			</ul>
-			<h1>Interface RawDelegatesResponse</h1>
+			<h1>Interface VotesListingsResponseItem</h1>
 		</div>
 	</div>
 </header>
@@ -73,7 +73,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">RawDelegatesResponse</span>
+						<span class="target">VotesListingsResponseItem</span>
 					</li>
 				</ul>
 			</section>
@@ -84,14 +84,8 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_rpc.rawdelegatesresponse.html#balance" class="tsd-kind-icon">balance</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_rpc.rawdelegatesresponse.html#deactivated" class="tsd-kind-icon">deactivated</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_rpc.rawdelegatesresponse.html#delegated_balance" class="tsd-kind-icon">delegated_<wbr>balance</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_rpc.rawdelegatesresponse.html#delegated_contracts" class="tsd-kind-icon">delegated_<wbr>contracts</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_rpc.rawdelegatesresponse.html#frozen_balance" class="tsd-kind-icon">frozen_<wbr>balance</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_rpc.rawdelegatesresponse.html#frozen_balance_by_cycle" class="tsd-kind-icon">frozen_<wbr>balance_<wbr>by_<wbr>cycle</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_rpc.rawdelegatesresponse.html#grace_period" class="tsd-kind-icon">grace_<wbr>period</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_rpc.rawdelegatesresponse.html#staking_balance" class="tsd-kind-icon">staking_<wbr>balance</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_rpc.voteslistingsresponseitem.html#pkh" class="tsd-kind-icon">pkh</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_rpc.voteslistingsresponseitem.html#rolls" class="tsd-kind-icon">rolls</a></li>
 							</ul>
 						</section>
 					</div>
@@ -100,82 +94,22 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="balance" class="tsd-anchor"></a>
-					<h3>balance</h3>
-					<div class="tsd-signature tsd-kind-icon">balance<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="pkh" class="tsd-anchor"></a>
+					<h3>pkh</h3>
+					<div class="tsd-signature tsd-kind-icon">pkh<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/types.ts#L44">tezos-ts-rpc/src/types.ts:44</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/types.ts#L627">tezos-ts-rpc/src/types.ts:627</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="deactivated" class="tsd-anchor"></a>
-					<h3>deactivated</h3>
-					<div class="tsd-signature tsd-kind-icon">deactivated<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<a name="rolls" class="tsd-anchor"></a>
+					<h3>rolls</h3>
+					<div class="tsd-signature tsd-kind-icon">rolls<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/types.ts#L51">tezos-ts-rpc/src/types.ts:51</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="delegated_balance" class="tsd-anchor"></a>
-					<h3>delegated_<wbr>balance</h3>
-					<div class="tsd-signature tsd-kind-icon">delegated_<wbr>balance<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/types.ts#L49">tezos-ts-rpc/src/types.ts:49</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="delegated_contracts" class="tsd-anchor"></a>
-					<h3>delegated_<wbr>contracts</h3>
-					<div class="tsd-signature tsd-kind-icon">delegated_<wbr>contracts<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/types.ts#L48">tezos-ts-rpc/src/types.ts:48</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="frozen_balance" class="tsd-anchor"></a>
-					<h3>frozen_<wbr>balance</h3>
-					<div class="tsd-signature tsd-kind-icon">frozen_<wbr>balance<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/types.ts#L45">tezos-ts-rpc/src/types.ts:45</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="frozen_balance_by_cycle" class="tsd-anchor"></a>
-					<h3>frozen_<wbr>balance_<wbr>by_<wbr>cycle</h3>
-					<div class="tsd-signature tsd-kind-icon">frozen_<wbr>balance_<wbr>by_<wbr>cycle<span class="tsd-signature-symbol">:</span> <a href="_tezos_ts_rpc.rawfrozenbalancebycycle.html" class="tsd-signature-type">RawFrozenbalancebycycle</a><span class="tsd-signature-symbol">[]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/types.ts#L46">tezos-ts-rpc/src/types.ts:46</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="grace_period" class="tsd-anchor"></a>
-					<h3>grace_<wbr>period</h3>
-					<div class="tsd-signature tsd-kind-icon">grace_<wbr>period<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/types.ts#L50">tezos-ts-rpc/src/types.ts:50</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="staking_balance" class="tsd-anchor"></a>
-					<h3>staking_<wbr>balance</h3>
-					<div class="tsd-signature tsd-kind-icon">staking_<wbr>balance<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/types.ts#L47">tezos-ts-rpc/src/types.ts:47</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/60cbb2a/packages/tezos-ts-rpc/src/types.ts#L628">tezos-ts-rpc/src/types.ts:628</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -224,31 +158,13 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-module">
-						<a href="_tezos_ts_rpc.rawdelegatesresponse.html" class="tsd-kind-icon">Raw<wbr>Delegates<wbr>Response</a>
+						<a href="_tezos_ts_rpc.voteslistingsresponseitem.html" class="tsd-kind-icon">Votes<wbr>Listings<wbr>Response<wbr>Item</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tezos_ts_rpc.rawdelegatesresponse.html#balance" class="tsd-kind-icon">balance</a>
+								<a href="_tezos_ts_rpc.voteslistingsresponseitem.html#pkh" class="tsd-kind-icon">pkh</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tezos_ts_rpc.rawdelegatesresponse.html#deactivated" class="tsd-kind-icon">deactivated</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tezos_ts_rpc.rawdelegatesresponse.html#delegated_balance" class="tsd-kind-icon">delegated_<wbr>balance</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tezos_ts_rpc.rawdelegatesresponse.html#delegated_contracts" class="tsd-kind-icon">delegated_<wbr>contracts</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tezos_ts_rpc.rawdelegatesresponse.html#frozen_balance" class="tsd-kind-icon">frozen_<wbr>balance</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tezos_ts_rpc.rawdelegatesresponse.html#frozen_balance_by_cycle" class="tsd-kind-icon">frozen_<wbr>balance_<wbr>by_<wbr>cycle</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tezos_ts_rpc.rawdelegatesresponse.html#grace_period" class="tsd-kind-icon">grace_<wbr>period</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tezos_ts_rpc.rawdelegatesresponse.html#staking_balance" class="tsd-kind-icon">staking_<wbr>balance</a>
+								<a href="_tezos_ts_rpc.voteslistingsresponseitem.html#rolls" class="tsd-kind-icon">rolls</a>
 							</li>
 						</ul>
 					</li>
