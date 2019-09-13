@@ -267,8 +267,8 @@ export class RpcContractProvider implements ContractProvider {
     storageLimit = DEFAULT_STORAGE_LIMIT.ORIGINATION,
   }: OriginateParams) {
     const script = {
-      code: ml2mic(code),
-      storage: sexp2mic(init),
+      code: Array.isArray(code) ? code : ml2mic(code),
+      storage: typeof init === 'object' ? init : sexp2mic(init),
     };
 
     const publicKeyHash = await this.signer.publicKeyHash();
