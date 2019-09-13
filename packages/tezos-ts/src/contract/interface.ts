@@ -8,8 +8,8 @@ import { Contract } from './contract';
  */
 export interface OriginateParams {
   balance?: string;
-  code: string;
-  init: string;
+  code: string | object[];
+  init: string | object;
   spendable?: boolean;
   delegatable?: boolean;
   delegate?: string;
