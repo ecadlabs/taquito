@@ -602,6 +602,78 @@ export interface BlockResponse {
   operations: OperationEntry[][];
 }
 
+export type BakingRightsArgumentsDelegate = string | string[];
+export type BakingRightsArgumentsCycle = number | number[];
+export type BakingRightsArgumentsLevel = number | number[];
+
+export interface BakingRightsQueryArguments {
+  level?: BakingRightsArgumentsLevel;
+  cycle?: BakingRightsArgumentsCycle;
+  delegate?: BakingRightsArgumentsDelegate;
+  max_priority?: number;
+  all?: null;
+}
+
+export interface BakingRightsResponseItem {
+  level: number;
+  delegate: string;
+  priority: number;
+  estimatedTime?: Date;
+}
+
+export type BakingRightsResponse = BakingRightsResponseItem[];
+
+export type EndorsingRightsArgumentsDelegate = string | string[];
+export type EndorsingRightsArgumentsCycle = number | number[];
+export type EndorsingRightsArgumentsLevel = number | number[];
+
+export interface EndorsingRightsQueryArguments {
+  level?: EndorsingRightsArgumentsLevel;
+  cycle?: EndorsingRightsArgumentsCycle;
+  delegate?: EndorsingRightsArgumentsDelegate;
+}
+
+export interface EndorsingRightsResponseItem {
+  level: number;
+  delegate: string;
+  slots: number[];
+  estimatedTime?: Date;
+}
+
+export type EndorsingRightsResponse = EndorsingRightsResponseItem[];
+
+export type BallotListResponseEnum = 'nay' | 'yay' | 'pass';
+
+export interface BallotListResponseItem {
+  pkh: string;
+  ballot: BallotListResponseEnum;
+}
+
+export type BallotListResponse = BallotListResponseItem[];
+
+export interface BallotsResponse {
+  yay: number;
+  nay: number;
+  pass: number;
+}
+
+export type PeriodKindResponse = 'proposal' | 'testing_vote' | 'testing' | 'promotion_vote';
+
+export type CurrentProposalResponse = string | null;
+
+export type CurrentQuorumResponse = number;
+
+export interface VotesListingsResponseItem {
+  pkh: string;
+  rolls: number;
+}
+
+export type VotesListingsResponse = VotesListingsResponseItem[];
+
+export type ProposalsResponseItem = [string, number];
+
+export type ProposalsResponse = ProposalsResponseItem[];
+
 interface Script {
   code: {}[];
   storage: Storage;

@@ -11,6 +11,11 @@ import BigNumber from 'bignumber.js';
  *
  */
 export function camelCaseProps(data: any): any {
+  // guarding against empty values
+  if (!data) {
+    return data;
+  }
+
   const returnArray: boolean = Array.isArray(data);
   let response: any = returnArray ? [] : {};
 

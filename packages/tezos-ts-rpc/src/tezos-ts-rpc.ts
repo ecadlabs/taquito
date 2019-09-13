@@ -21,6 +21,17 @@ import {
   OperationContents,
   OperationObject,
   OperationContentsAndResultMetadata,
+  BakingRightsQueryArguments,
+  BakingRightsResponse,
+  BallotListResponse,
+  BallotsResponse,
+  PeriodKindResponse,
+  CurrentProposalResponse,
+  CurrentQuorumResponse,
+  VotesListingsResponse,
+  ProposalsResponse,
+  EndorsingRightsQueryArguments,
+  EndorsingRightsResponse,
 } from './types';
 import BigNumber from 'bignumber.js';
 
@@ -362,6 +373,184 @@ export class RpcClient {
     return {
       ...convResponse,
     };
+  }
+
+  /**
+   *
+   * @param args contains optional query arguments
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Retrieves the list of delegates allowed to bake a block.
+   *
+   * @see https://tezos.gitlab.io/mainnet/api/rpc.html#get-block-id-helpers-baking-rights
+   */
+  async getBakingRights(
+    args: BakingRightsQueryArguments = {},
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BakingRightsResponse> {
+    const response = await this.httpBackend.createRequest<BakingRightsResponse>({
+      url: `${this.url}/chains/${this.chain}/blocks/${block}/helpers/baking_rights`,
+      method: 'GET',
+      query: args,
+    });
+
+    const convResponse: any = camelCaseProps(response);
+
+    return {
+      ...convResponse,
+    };
+  }
+
+  /**
+   *
+   * @param args contains optional query arguments
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Retrieves the list of delegates allowed to bake a block.
+   *
+   * @see https://tezos.gitlab.io/mainnet/api/rpc.html#get-block-id-helpers-endorsing-rights
+   */
+  async getEndorsingRights(
+    args: EndorsingRightsQueryArguments = {},
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<EndorsingRightsResponse> {
+    const response = await this.httpBackend.createRequest<EndorsingRightsResponse>({
+      url: `${this.url}/chains/${this.chain}/blocks/${block}/helpers/endorsing_rights`,
+      method: 'GET',
+      query: args,
+    });
+
+    const convResponse: any = camelCaseProps(response);
+
+    return {
+      ...convResponse,
+    };
+  }
+
+  /**
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Ballots casted so far during a voting period
+   *
+   * @see https://tezos.gitlab.io/mainnet/api/rpc.html#get-block-id-votes-ballot-list
+   */
+  async getBallotList({ block }: RPCOptions = defaultRPCOptions): Promise<BallotListResponse> {
+    const response = await this.httpBackend.createRequest<BallotListResponse>({
+      url: `${this.url}/chains/${this.chain}/blocks/${block}/votes/ballot_list`,
+      method: 'GET',
+    });
+
+    return response;
+  }
+
+  /**
+   *
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Sum of ballots casted so far during a voting period.
+   *
+   * @see https://tezos.gitlab.io/mainnet/api/rpc.html#get-block-id-votes-ballots
+   */
+  async getBallots({ block }: RPCOptions = defaultRPCOptions): Promise<BallotsResponse> {
+    const response = await this.httpBackend.createRequest<BallotsResponse>({
+      url: `${this.url}/chains/${this.chain}/blocks/${block}/votes/ballots`,
+      method: 'GET',
+    });
+
+    return response;
+  }
+
+  /**
+   *
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Current period kind.
+   *
+   * @see https://tezos.gitlab.io/mainnet/api/rpc.html#get-block-id-votes-current-period-kind
+   */
+  async getCurrentPeriodKind({ block }: RPCOptions = defaultRPCOptions): Promise<
+    PeriodKindResponse
+  > {
+    const response = await this.httpBackend.createRequest<PeriodKindResponse>({
+      url: `${this.url}/chains/${this.chain}/blocks/${block}/votes/current_period_kind`,
+      method: 'GET',
+    });
+
+    return response;
+  }
+
+  /**
+   *
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Current proposal under evaluation.
+   *
+   * @see https://tezos.gitlab.io/mainnet/api/rpc.html#get-block-id-votes-current-proposal
+   */
+  async getCurrentProposal({ block }: RPCOptions = defaultRPCOptions): Promise<
+    CurrentProposalResponse
+  > {
+    const response = await this.httpBackend.createRequest<CurrentProposalResponse>({
+      url: `${this.url}/chains/${this.chain}/blocks/${block}/votes/current_proposal`,
+      method: 'GET',
+    });
+
+    return response;
+  }
+
+  /**
+   *
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Current expected quorum.
+   *
+   * @see https://tezos.gitlab.io/mainnet/api/rpc.html#get-block-id-votes-current-quorum
+   */
+  async getCurrentQuorum({ block }: RPCOptions = defaultRPCOptions): Promise<
+    CurrentQuorumResponse
+  > {
+    const response = await this.httpBackend.createRequest<CurrentQuorumResponse>({
+      url: `${this.url}/chains/${this.chain}/blocks/${block}/votes/current_quorum`,
+      method: 'GET',
+    });
+
+    return response;
+  }
+
+  /**
+   *
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description List of delegates with their voting weight, in number of rolls.
+   *
+   * @see https://tezos.gitlab.io/mainnet/api/rpc.html#get-block-id-votes-listings
+   */
+  async getVotesListings({ block }: RPCOptions = defaultRPCOptions): Promise<
+    VotesListingsResponse
+  > {
+    const response = await this.httpBackend.createRequest<VotesListingsResponse>({
+      url: `${this.url}/chains/${this.chain}/blocks/${block}/votes/listings`,
+      method: 'GET',
+    });
+
+    return response;
+  }
+
+  /**
+   *
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description List of proposals with number of supporters.
+   *
+   * @see https://tezos.gitlab.io/mainnet/api/rpc.html#get-block-id-votes-proposals
+   */
+  async getProposals({ block }: RPCOptions = defaultRPCOptions): Promise<ProposalsResponse> {
+    const response = await this.httpBackend.createRequest<ProposalsResponse>({
+      url: `${this.url}/chains/${this.chain}/blocks/${block}/votes/proposals`,
+      method: 'GET',
+    });
+
+    return response;
   }
 
   /**
