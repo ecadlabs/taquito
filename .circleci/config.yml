@@ -20,6 +20,15 @@ jobs:
       - run: npm run test
       - codecov/upload:
           file: .coverage/*.json
+  integration-tests:
+    docker:
+      - image: circleci/node:8.11.4
+    steps:
+      - checkout
+      - run: npm install
+      - run: npm run lerna bootstrap
+      - run: npm run build
+      - run: cd integration-tests && npm run test
   deploy-docs:
     docker:
       - image: circleci/node:8.11.4
@@ -47,4 +56,11 @@ workflows:
           filters:
             branches:
               only: master
-
+  integration:
+    jobs:
+      - approve-tests:
+          type: approval
+      - integration-tests:
+          requires:
+            - approve-tests
+        

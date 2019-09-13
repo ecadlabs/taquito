@@ -1,0 +1,49 @@
+{
+    "scripts": {
+        "test": "jest"
+    },
+    "dependencies": {
+        "@tezos-ts/signer": "^4.0.0-beta.3",
+        "@tezos-ts/tezos-ts": "^4.0.0-beta.3"
+    },
+    "private": true,
+    "jest": {
+        "transform": {
+            ".(ts|tsx)": "ts-jest"
+        },
+        "testEnvironment": "node",
+        "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+        "moduleFileExtensions": [
+            "ts",
+            "tsx",
+            "js"
+        ],
+        "coveragePathIgnorePatterns": [
+            "/node_modules/",
+            "/test/"
+        ]
+    },
+    "devDependencies": {
+        "@types/jest": "^23.3.2",
+        "@types/node": "^10.14.13",
+        "jest": "^24.8.0",
+        "jest-config": "^24.8.0",
+        "lint-staged": "^8.0.0",
+        "ts-jest": "^24.0.2",
+        "ts-node": "^7.0.1",
+        "tslint": "^5.11.0",
+        "tslint-config-prettier": "^1.15.0",
+        "tslint-config-standard": "^8.0.1",
+        "typescript": "^3.5.3"
+    },
+    "config": {
+        "commitizen": {
+            "path": "node_modules/cz-conventional-changelog"
+        }
+    },
+    "commitlint": {
+        "extends": [
+            "@commitlint/config-conventional"
+        ]
+    }
+}

@@ -18,6 +18,10 @@
     "transform": {
       ".(ts|tsx)": "ts-jest"
     },
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/integration-tests/"
+    ],
     "testEnvironment": "node",
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
     "moduleFileExtensions": [
