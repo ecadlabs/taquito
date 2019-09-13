@@ -9,5 +9,5 @@ dist
 compiled
 .awcache
 .rpt2_cache
-docs
+website/build/
 !.vscode/extensions.json
