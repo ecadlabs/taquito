@@ -622,6 +622,37 @@ export interface BakingRightsResponseItem {
 }
 
 export type BakingRightsResponse = BakingRightsResponseItem[];
+export type BallotListResponseEnum = 'nay' | 'yay' | 'pass';
+
+export interface BallotListResponseItem {
+  pkh: string;
+  ballot: BallotListResponseEnum;
+}
+
+export type BallotListResponse = BallotListResponseItem[];
+
+export interface BallotsResponse {
+  yay: number;
+  nay: number;
+  pass: number;
+}
+
+export type PeriodKindResponse = 'proposal' | 'testing_vote' | 'testing' | 'promotion_vote';
+
+export type CurrentProposalResponse = string | null;
+
+export type CurrentQuorumResponse = number;
+
+export interface VotesListingsResponseItem {
+  pkh: string;
+  rolls: number;
+}
+
+export type VotesListingsResponse = VotesListingsResponseItem[];
+
+export type ProposalsResponseItem = [string, number];
+
+export type ProposalsResponse = ProposalsResponseItem[];
 
 interface Script {
   code: {}[];

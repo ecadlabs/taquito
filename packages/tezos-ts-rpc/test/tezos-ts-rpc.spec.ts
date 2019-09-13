@@ -647,6 +647,187 @@ describe('RpcClient test', () => {
 
       expect(result[0].delegate).toEqual('tz3VEZ4k6a4Wx42iyev6i2aVAptTRLEAivNN');
       expect(result[0].estimatedTime).toEqual('2019-08-02T09:48:56Z');
+      done();
+    });
+  });
+
+  describe('getBallotList', () => {
+    it('query the right url and data', async done => {
+      httpBackend.createRequest.mockReturnValue(
+        Promise.resolve([
+          {
+            pkh: 'tz3e75hU4EhDU3ukyJueh5v6UvEHzGwkg3yC',
+            ballot: 'yay',
+          },
+          {
+            pkh: 'tz1iJ4qgGTzyhaYEzd1RnC6duEkLBd1nzexh',
+            ballot: 'yay',
+          },
+          {
+            pkh: 'tz1hx8hMmmeyDBi6WJgpKwK4n5S2qAEpavx2',
+            ballot: 'yay',
+          },
+          {
+            pkh: 'tz1gvrUnfTfEcRW6qcgB6FJdZnAxv4HG1rj9',
+            ballot: 'yay',
+          },
+          {
+            pkh: 'tz1go7f6mEQfT2xX2LuHAqgnRGN6c2zHPf5c',
+            ballot: 'yay',
+          },
+          {
+            pkh: 'tz1gCx1V63bSaQnPZoQreqNgVLuFMzyMcqry',
+            ballot: 'yay',
+          },
+        ])
+      );
+      const response = await client.getBallotList();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/votes/ballot_list',
+      });
+      expect(response[2].pkh).toEqual('tz1hx8hMmmeyDBi6WJgpKwK4n5S2qAEpavx2');
+
+      done();
+    });
+  });
+
+  describe('getBallots', () => {
+    it('query the right url and data', async done => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve({ yay: 5943, nay: 0, pass: 0 }));
+      const response = await client.getBallots();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/votes/ballots',
+      });
+      expect(response.yay).toEqual(5943);
+
+      done();
+    });
+  });
+
+  describe('getCurrentPeriodKind', () => {
+    it('query the right url and data', async done => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve('testing_vote'));
+      const response = await client.getCurrentPeriodKind();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/votes/current_period_kind',
+      });
+      expect(response).toEqual('testing_vote');
+
+      done();
+    });
+  });
+
+  describe('getCurrentProposal', () => {
+    it('query the right url and data', async done => {
+      httpBackend.createRequest.mockReturnValue(
+        Promise.resolve('PsBABY5HQTSkA4297zNHfsZNKtxULfL18y95qb3m53QJiXGmrbU')
+      );
+      const response = await client.getCurrentProposal();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/votes/current_proposal',
+      });
+      expect(response).toEqual('PsBABY5HQTSkA4297zNHfsZNKtxULfL18y95qb3m53QJiXGmrbU');
+
+      done();
+    });
+  });
+
+  describe('getCurrentQuorum', () => {
+    it('query the right url and data', async done => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(7291));
+      const response = await client.getCurrentQuorum();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/votes/current_quorum',
+      });
+      expect(response).toEqual(7291);
+
+      done();
+    });
+  });
+
+  describe('getVotesListings', () => {
+    it('query the right url and data', async done => {
+      httpBackend.createRequest.mockReturnValue(
+        Promise.resolve([
+          {
+            pkh: 'tz2TSvNTh2epDMhZHrw73nV9piBX7kLZ9K9m',
+            rolls: 3726,
+          },
+          {
+            pkh: 'tz2Q7Km98GPzV1JLNpkrQrSo5YUhPfDp6LmA',
+            rolls: 2,
+          },
+          {
+            pkh: 'tz2PdGc7U5tiyqPgTSgqCDct94qd6ovQwP6u',
+            rolls: 73,
+          },
+          {
+            pkh: 'tz2KrmHRWu7b7Vr3GYQ3SJ41xaW64PiqWBYm',
+            rolls: 17,
+          },
+          {
+            pkh: 'tz2JMPu9yVKuX2Au8UUbp7YrKBZJSdYhgwwu',
+            rolls: 2,
+          },
+          {
+            pkh: 'tz2FCNBrERXtaTtNX6iimR1UJ5JSDxvdHM93',
+            rolls: 233,
+          },
+          {
+            pkh: 'tz2E3BvcMiGvFEgNVdsAiwVvPHcwJDTA8wLt',
+            rolls: 14,
+          },
+          {
+            pkh: 'tz3eQFJL9Pw7EXkuEVSYTVtuwtfjhUU3xqi1',
+            rolls: 1,
+          },
+          {
+            pkh: 'tz3e7LbZvUtoXhpUD1yb6wuFodZpfYRb9nWJ',
+            rolls: 25,
+          },
+          {
+            pkh: 'tz3e75hU4EhDU3ukyJueh5v6UvEHzGwkg3yC',
+            rolls: 334,
+          },
+        ])
+      );
+      const response = await client.getVotesListings();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/votes/listings',
+      });
+      expect(response[4].pkh).toEqual('tz2JMPu9yVKuX2Au8UUbp7YrKBZJSdYhgwwu');
+
+      done();
+    });
+  });
+
+  describe('getProposals', () => {
+    it('query the right url and data', async done => {
+      httpBackend.createRequest.mockReturnValue(
+        Promise.resolve([
+          ['PsBABY5HQTSkA4297zNHfsZNKtxULfL18y95qb3m53QJiXGmrbU', 2832],
+          ['PsBABY5nk4JhdEv1N1pZbt6m6ccB9BfNqa23iKZcHBh23jmRS9f', 9492],
+        ])
+      );
+      const response = await client.getProposals();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/votes/proposals',
+      });
+      expect(response[0][1]).toEqual(2832);
 
       done();
     });

@@ -6,15 +6,15 @@
         "files": [
           {
             "path": "dist/tezos-ts-rpc.es5.js",
-            "sha512": "123955cb3562b2255d8bdff87e17fecbdd53d9887f713b062f652ce627b113f9ad6ce5cfd89afc3386d7a92747334005b79b0f3121620246d1f950b09e3afd1e"
+            "sha512": "167c8649fccce7e661c2f77fa8b5e6a3187d69a02963b12d47326e5f4941c46a30d4ff93198669cdeaac65f23e2c8941d946d653ec8ec93fad843a206b2f8d0e"
           },
           {
             "path": "dist/lib/tezos-ts-rpc.js",
-            "sha512": "c67e1125b542faaba4d0cb2cf16007e52b7a72e31dbf18b00f0d12d0309e254ad8d80b7e356374b368655335e68e2d50c66f650ee8e3a0d2b463e814e2a3665c"
+            "sha512": "24d088cbc9d205ed1e76a03b1176676df748707cb9898367803faf28d237fdbcba03918c9850e663b4a8a0c2fceff7fbea63c19ea77e0770d71cc6e3f51d5b29"
           },
           {
             "path": "dist/tezos-ts-rpc.umd.js",
-            "sha512": "9e75e627fb17754c37526f88adaf71746394b108536a365c86f0d9e8c4249e6e84ceeb5a80948dfb2509d215fd36f1a2b0f69badd137f60b427ccfb93e95811c"
+            "sha512": "f837d803b72ed6400b3f04631b71cb4a092512f6512019277c01e7e639d6c60615dc4c9e821e8df25cc199c1de435481e5d5f7d7f8e00f21475b7fa0035b1820"
           },
           {
             "path": "dist/lib/types.js",
@@ -26,15 +26,15 @@
           },
           {
             "path": "dist/tezos-ts-rpc.es5.js.map",
-            "sha512": "967c779d273a6fe41fdc2634db51eefa024ebbe1f258e6d079c75b51d9f29f2df10a1fbdb3571b46700329176831f4b56642357406e11bf0a40faad1ace01072"
+            "sha512": "af5bb446c818ac13352dc11851a874075a1b9455ee6015cfec2a4db4d78edc1d8d89b049c24d1271450a9472f6799480b22971279b686ef42f1c9410d3dc0f34"
           },
           {
             "path": "dist/lib/tezos-ts-rpc.js.map",
-            "sha512": "739a985fc8fa28b96d8ff05252d0f94e3bca86c4380c356c3ad723deaad4a74ac2e4c8251f9b9bb0ccd9375fcd3f262b3163e62dc00f8c82d0c4cb9e2ff7073b"
+            "sha512": "8aa7633dee020ecc3f82a3173d00039217c191b3f613468c4ca9eb9a7ea70b74faba3e8bf24d6788e1e51f6620eb3bbb8d435c05d091bdb5c11f9b19a31db3ed"
           },
           {
             "path": "dist/tezos-ts-rpc.umd.js.map",
-            "sha512": "ecf114c2c8950b45e852f61a7ffc86215cfbd61d6a18241804403e52a0ce0e881c080e5d0337ece756ae0052a13a29e41213060b4e08a5c8327b2bdca5ac9659"
+            "sha512": "3e8dbe45b0e19f4b472cb581a6d12d5263e12bc81b9208642b38056afd5093c059b347732523f903434362a869090d98e11f44fd41cc773332d7db9a8d1fea2a"
           },
           {
             "path": "dist/lib/types.js.map",
@@ -50,7 +50,7 @@
           },
           {
             "path": "dist/types/tezos-ts-rpc.d.ts",
-            "sha512": "a54955a8d575a3bd72aba9f59e5ad4895669897ed8f560ab60936ddf3419887c984e170097fbe7ea6c377fd5ab161edd822b00d4c27ebf60db2cb5721ea05865"
+            "sha512": "04c77fb6aeb136e3e7fa70bb6e4e782b6c32441ca7f9029be5b3e6cd7093ae7ebc1f226bc4d64f6a0189fabd731fd1a850b11eb0dfa87f07d3fefede5c0e5e15"
           },
           {
             "path": "dist/types/types.d.ts",
@@ -94,7 +94,7 @@
           "typings",
           "version"
         ],
-        "sha512": "84c4f55b61c964fbce1828dad4ad08d6a27f2181bf660be5e3907fb8697994b4bdd488460e5551c39ce3839000ca48ffbe5c772be94f3f26ee7cba08581659c4"
+        "sha512": "d9bbd2f1f5ffe52d4ba3710049eb791bf2415e25499a157b1d8a33cc05ac477caf0b4c2f82e62da6c495e2062343eddd9f5e93502e76dfc8e46e7905020513e9"
       }
     },
     {
@@ -102,7 +102,7 @@
       "value": {
         "packageJson": {
           "name": "@tezos-ts/rpc",
-          "version": "4.0.0-beta.1",
+          "version": "4.0.0-beta.2",
           "description": "Provides low level methods, and types to invoke RPC calls from a Nomadic Tezos RPC node",
           "keywords": [
             "tezos",
@@ -168,7 +168,7 @@
             ]
           },
           "dependencies": {
-            "@tezos-ts/http-utils": "^4.0.0-beta.1",
+            "@tezos-ts/http-utils": "^4.0.0-beta.2",
             "bignumber.js": "^9.0.0",
             "lodash": "^4.17.15"
           },
@@ -203,5 +203,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdcsWICRAD9Qy5GYHsngAA8XAQAHtJJeMPi0+ev45ruUEgw1pW\nl2xo3iFmI00Eeqz0FRlY25BwqVbhM2+Lrvs8YGNLfh37RSh1lR2K9ZFHNNHTTJGF\niSov1OqqmxLoxi4Jy90kBKcZ0SFtW6t/PDHxar4SbU5xfr2v6hSAyxYarW+k1O/j\n+zoMVRhvQlJiHw/j2DjcPHqekCJbHyiDyVjoGZxwvtHOiqFeCR7hcobzillYB9FH\nRWvwvXZ/qrjU1Y3nHxunC71DgpXx9JtL2pvK1m763Ye8HL0+ZXWXQ755481EFW7V\nrEsuL0CJ+4NpCJNjW7x3s3J5/7yiLiN2HpG8yxPRAkCrjIOUHeVJoL14d0JxiuTW\nUsqWDUCJYXDKJ28+2kEsBPESIYAccH+RWNAKbhskEe7qFqCs8Fn7OpU5y+Z1ATp8\nbBla0tM3e4vDZVhCuxhqaZZtWkhDIlse+SjP2keumv9UngyZpjEf7pEkID6cnxrZ\n3MlB360wLlxvN1Dlvob9JEYNBV1P58nzB9hjN5QBv2jdlRfBC3q0HErjqDqbVZCQ\nJDCzL1drXAU+9o3XAkJCngmjJY5dUmQ/Rs1NmufSvESEHEZKqHoY0dDboBfm83S7\n2PfkgUuV1OpeNIctLXQvhKIcYmlaFrXgbrv9Sb3v96p+umjjVODgUbq+nwXNx0vc\nPA5ak3dSApBvMMhOjZ1K\n=vqCi\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdeVAqCRAD9Qy5GYHsngAAapgQAAd6v3iCodAsV46lQ+y2Zb9V\n6spJYSlXI3c+sBeGvJQnLzx0uFSYVNsT9i9hbOJvnrRoqOMwZboBQXbpQaEIgV20\nKzMHtsVgnxlw5I4GT/22gVAlD5JjkGWdEWUJFKF/mqeKzVxW0HdS0zTcs2fW1Wqc\ntBL5xSH5T9lP/HqwrirdfqyOSwNhZEFCqZ0zqWfsGv7bcoaaG6q1dDCV0QLn8i73\nmi/gBIppaW8XtVOrWLvwxQfRY8TEUkGMJbU+YQp1Gek7mc0VC17rR1yrKBJRxsGy\nCGav5t1Zu77tlleCHiCQSo5TrzdzzoSaLGhog9favq1VDu1RbGsMe2LbKmykZwXd\nwRidcEHxYOq6gCAODFoZgNfjEA/JTAmkSIYXlF9tednOfLuPT6u0dbG/KHf3SJfJ\n171CXfJqktKnq4AfJjNXCoUZ5nhbUNZhNWkwEPrZBsFnb+bD202pw0z3o9MNdVBt\ny0FBGeYmyXd9OgTZXisLAFPRF+nf/A6qODmbOm1k6gXh+Rz7Ar4IK248bYMLJ6UX\nZeAFUFY8TnwHPD3ftl0r6WNKFfmx0Ntlt4x7aVdgvSP7EJzdQEsazYTxCXfZbrg2\nH8+uEXsSE6vWHFZrCjNd3IN3fFCMLt6eR7D8MAc6/Z3/CUsCwtpnp1e8N66n6Wno\nEnbecUGFKS2SAcxSwEMR\n=2OXH\n-----END PGP SIGNATURE-----\n"
 }
