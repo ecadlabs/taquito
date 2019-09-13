@@ -15,21 +15,21 @@ The goals of this library are:
 * Well maintained and tested against all current, and anticipated Tezos protocols
 * Portable, does not rely on any "stack" by default, except for the canonical Tezos RPC node
 * Nightly and Continuous integration tests against official Tezos RPC nodes
-* dApp development uses cases a first class concern, empowering new developers to get results quickly
+* dApp development uses cases a first-class concern, empowering new developers to get results quickly
 * No dependencies on the Tezos RPC node for generating operations (Ex: not dependant on “forge” RPC method).
 * Well documented API using [TypeDoc](https://ecadlabs.github.io/tezos-ts/typedoc)
-* Set of ready made React components for common use-cases, with a [Demo Gallery](https://ecadlabs.github.io/tezos-ts/react-storybook/)
+* Set of ready-made React components for common use-cases, with a [Demo Gallery](https://ecadlabs.github.io/tezos-ts/react-storybook/)
 * Regular versioned releases, published to npmjs.org, with a published version strategy
-* Participation in the [CII Best Practices](https://bestpractices.coreinfrastructure.org) program and all requirements entailed there in
+* Participation in the [CII Best Practices](https://bestpractices.coreinfrastructure.org) program and all requirements entailed therein
 * Portable - This library has minimum dependencies, making it usable in any js project on the front or back end.
 * Compact - avoid bloat and keep compiled asset size low
 * Portable, allowing wallet, dApp, or backend developers to start using the library quickly.
 
 ## Project Organization
 
-`tezos-ts` is organized as a mono repository from which several npm packages are built and published. Packages are in the `packages/` directory, each one with its own README.
+`tezos-ts` is organized as a mono repository from which several npm packages are built and published. Packages are in the `packages/` directory, each one with its a README file.
 
-Each package is published to npmjs.org under the `@tezos-ts` handle.
+We publish gpg signed packages to npmjs.org under the `@tezos-ts` handle.
 
 | Package                                                           |                        Responsibility                         |
 | ----------------------------------------------------------------- | ------------------------------------------------------------- |
@@ -50,29 +50,31 @@ The TypeDoc style API documentation is available [here](https://ecadlabs.github.
 
 React component demos are published using the [storybook](https://storybook.js.org) tool.
 
-They can be viewed here: [Tezos components Storybook](https://ecadlabs.github.io/tezos-ts/react-storybook)
+View the demo components here: [Tezos components Storybook](https://ecadlabs.github.io/tezos-ts/react-storybook)
 
 ## Versioning Strategy
 
-Version releases will use "Semantic Versioning" style version numbers, but will deviate from SemVer norms when it comes to the "Major" number.
+Version releases use "Semantic Versioning" style version numbers, but deviates from SemVer norms when it comes to the "Major" number.
 
-We plan to use SemVer style versions for tezos-ts but we will make the major version number track the current, or next version number of the Tezos economic protocol that tezos-ts supports.
+We use SemVer style versions for tezos-ts, but we make the "Major" version number track against the latest Tezos economical protocol we have tested on.
 
-For example, in August 2019, the economic protocol was `004-Pt24m4xi`, and `005-PsBABY5H` was (is) working its way through the on-chain amendment process. Therefore the current version number for tezos-ts would be `v4.0.0`. During this time, we would start working on `v5.0.0-beta.1` on the expectation (but not the assumption) that it will become our new economic protocol.
+For example, in August 2019, the economic protocol was `004-Pt24m4xi`, and `005-PsBABY5H` was (is) working its way through the on-chain amendment process. Therefore the current version number for tezos-ts would be `v4.0.0`. During this time, we would start working on `v5.0.0-beta.1` on the expectation (but not the assumption) that it shall become our new economic protocol.
 
-When we know that the protocol will update to the new version AND we have implemented and tested interoperability with the new protocol (and potentially node RPC changes) we will release `v5.0.0` BEFORE the chain transitions to the new protocol.
+When we are confident that the next protocol proposal going to be promoted, AND we have implemented and tested interoperability with the new protocol (and potentially node RPC changes) we shall them release `v5.0.0` BEFORE the chain transitions to the new protocol.
 
-It is important that the packages supporting the new protocol be released prior to the on-chain transition to the new economic protocol so that developers who build on top of tezos-ts have time to update and test their projects.
+It is essential that the packages supporting the new protocol be released before the chain transitions to the new economic protocol so that developers who build on top of tezos-ts have time to update and test their projects.
 
-During major version updates, breaking changes in the tezos-ts public APIs MAY include breaking changes, for which we will make a strong effort to announce and document in our release notes. The Minor and Patch version numbers will track SemVer norms.
+During "Major" version updates, breaking changes in the tezos-ts public APIs MAY include breaking changes, for which we will make a strong effort to announce and document in our release notes. The Minor and Patch version numbers follow SemVer norms.
 
-All releases will be backward compatible with chain data all the way back to the genesis block. Support for older Tezos node RPCs will be maintained where feasible, but will be dropped eventually. Tezos node RPC support also depends on what versioning strategy gets adopted by the canonical Tezos node. At the time of writing this is unclear.
+All releases are backward compatible with chain data back to the genesis block. Support for older Tezos node RPCs is maintained where feasible but will be dropped eventually. Tezos node RPC support also depends on what versioning strategy gets adopted by the canonical Tezos node. At the time of writing, this is unclear.
 
-Supported versions of the tezos-ts packages will be maintained for the current and next protocol versions. Teams using older versions will be encouraged to update, but if blockers exist, they are encouraged to contact us.
+Supported versions of the tezos-ts packages will be maintained for the current and next protocol versions. Teams using older versions are encouraged to update, but if blockers exist, they are encouraged to contact us.
 
 ## Releases
 
-Releases will be "rolled" by the project maintainers outside of CI infrastructure, and pushed to npmjs.org repositories and the Github releases page. All official releases will be signed by the maintainers. By doing releases from outside of the CI processes, we hope to reduce the attack surface for software supply chain attacks. By making releases from outside of the CI infrastructure, we reduce some attack surface for software supply chain attacks.
+Releases are "rolled" by the project maintainers outside of CI infrastructure, and pushed to npmjs.org repositories and the Github releases page. The maintainers sign all official releases. 
+
+By doing releases from outside of the CI processes, we hope to reduce the attack surface for software supply chain attacks. By making releases from outside of the CI infrastructure, we reduce some attack surfaces for software supply chain attacks.
 
 Releases will be (git tags and npm packages) will be signed either by [keybase/jevonearth][2] or [keybase/simrob][3]. Releases not signed, or signed by other keys should not be expected.
 
@@ -115,9 +117,9 @@ Please use the [GitHub issue tracker](https://github.com/ecadlabs/tezos-ts/issue
 
 ## Contributions
 
-To contribute, please check the issue tracker to see if an existing issue exists for your planned contribution. If there's no Issue, please create one first, and then submit a pull request with your contribution.
+To contribute, please check the issue tracker to see if an existing issue exists for your planned contribution. If there's no issue, please create one first, and then submit a pull request with your contribution.
 
-For a contribution to be merged, it must be well documented, come with unit tests, and integration tests where appropriate. Submitting a "work in progress" pull request for review/feedback is always welcome!
+For a contribution to be merged, it is required to have complete documentation, come with unit tests, and integration tests where appropriate. Submitting a "work in progress" pull request for review/feedback is always welcome!
 
 ## Disclaimer
 
