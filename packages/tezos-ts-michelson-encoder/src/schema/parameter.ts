@@ -1,6 +1,7 @@
 import { createToken } from '../tokens/createToken';
 import { Token } from '../tokens/token';
 import { OrToken } from '../tokens/or';
+import { OptionToken } from '../tokens/option';
 
 export class ParameterSchema {
   private root: Token;
@@ -10,7 +11,10 @@ export class ParameterSchema {
   }
 
   get isMultipleEntryPoint() {
-    return this.root instanceof OrToken;
+    return (
+      this.root instanceof OrToken ||
+      (this.root instanceof OptionToken && this.root.subToken() instanceof OrToken)
+    );
   }
 
   get hasAnnotation() {
@@ -30,7 +34,7 @@ export class ParameterSchema {
   }
 
   Encode(...args: any[]) {
-    return this.root.Encode(...args);
+    return this.root.Encode(args.reverse());
   }
 
   ExtractSchema() {

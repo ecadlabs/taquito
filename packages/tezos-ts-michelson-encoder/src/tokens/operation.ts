@@ -16,7 +16,8 @@ export class OperationToken extends Token {
   }
 
   public Encode(...args: any[]): any {
-    return { string: args[0] };
+    const val = args.pop();
+    return { string: val };
   }
 
   public ExtractSchema() {

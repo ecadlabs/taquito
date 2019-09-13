@@ -25,13 +25,13 @@ export class BigMapToken extends Token {
     };
   }
 
-  public Encode(...args: any[]): any {
-    const obj = args[0][0];
+  public Encode(args: any[]): any {
+    const val = args.pop();
 
     return {
       prim: 'big_map',
-      args: Object.keys(obj).map(key => {
-        return [this.KeySchema.Encode([key]), this.ValueSchema.Encode([obj[key]])];
+      args: Object.keys(val).map(key => {
+        return [this.KeySchema.Encode([key]), this.ValueSchema.Encode([val[key]])];
       }),
     };
   }

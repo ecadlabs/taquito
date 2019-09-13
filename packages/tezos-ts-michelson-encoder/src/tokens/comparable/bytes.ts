@@ -18,8 +18,9 @@ export class BytesToken extends Token implements ComparableToken {
     };
   }
 
-  public Encode(...args: any[]): any {
-    return { bytes: String(args[0]).toString() };
+  public Encode(args: any[]): any {
+    const val = args.pop();
+    return { bytes: String(val).toString() };
   }
 
   public Execute(val: any): string {

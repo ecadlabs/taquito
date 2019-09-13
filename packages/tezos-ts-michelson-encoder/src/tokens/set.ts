@@ -11,11 +11,13 @@ export class SetToken extends Token {
     super(val, idx, fac);
   }
 
-  public Encode(...args: any[]): any {
+  public Encode(args: any[]): any {
+    const val = args.pop();
+
     const schema = this.createToken(this.val.args[0], 0);
     return {
       prim: 'set',
-      args: args.reduce((prev: any, current: any) => {
+      args: val.reduce((prev: any, current: any) => {
         return [...prev, schema.Encode(current)];
       }, []),
     };

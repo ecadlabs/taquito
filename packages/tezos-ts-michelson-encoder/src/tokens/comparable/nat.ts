@@ -16,8 +16,9 @@ export class NatToken extends Token implements ComparableToken {
     return new BigNumber(val.int);
   }
 
-  public Encode(...args: any[]): any {
-    return { int: String(args[0]).toString() };
+  public Encode(args: any[]): any {
+    const val = args.pop();
+    return { int: String(val).toString() };
   }
 
   public ExtractSchema() {

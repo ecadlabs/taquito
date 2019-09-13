@@ -12,13 +12,13 @@ export class PairToken extends Token {
     super(val, idx, fac);
   }
 
-  public Encode(...args: any[]): any {
+  public Encode(args: any[]): any {
     const leftToken = this.createToken(this.val.args[0], this.idx);
     const rightToken = this.createToken(this.val.args[1], this.idx + 1);
 
     return {
       prim: 'Pair',
-      args: [leftToken.Encode(...[args[0]]), rightToken.Encode(...args.slice(1))],
+      args: [leftToken.Encode(args), rightToken.Encode(args)],
     };
   }
 
