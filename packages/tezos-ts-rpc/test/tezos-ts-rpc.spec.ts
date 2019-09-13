@@ -651,6 +651,49 @@ describe('RpcClient test', () => {
     });
   });
 
+  describe('getEndorsingRights', () => {
+    it('query the right url and data', async done => {
+      httpBackend.createRequest.mockResolvedValue([
+        {
+          level: 547386,
+          delegate: 'tz3WMqdzXqRWXwyvj5Hp2H7QEepaUuS7vd9K',
+          slots: [27],
+          estimated_time: '2019-08-02T09:42:56Z',
+        },
+        {
+          level: 547386,
+          delegate: 'tz3VEZ4k6a4Wx42iyev6i2aVAptTRLEAivNN',
+          slots: [23, 12, 0],
+          estimated_time: '2019-08-02T09:42:56Z',
+        },
+        {
+          level: 547386,
+          delegate: 'tz3RB4aoyjov4KEVRbuhvQ1CKJgBJMWhaeB8',
+          slots: [31, 17, 13],
+          estimated_time: '2019-08-02T09:42:56Z',
+        },
+        {
+          level: 547386,
+          delegate: 'tz3NExpXn9aPNZPorRE4SdjJ2RGrfbJgMAaV',
+          slots: [24, 9, 1],
+          estimated_time: '2019-08-02T09:42:56Z',
+        },
+      ]);
+      const result = await client.getEndorsingRights();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        query: {},
+        url: 'root/chains/test/blocks/head/helpers/endorsing_rights',
+      });
+
+      expect(result[1].delegate).toEqual('tz3VEZ4k6a4Wx42iyev6i2aVAptTRLEAivNN');
+      expect(result[1].estimatedTime).toEqual('2019-08-02T09:42:56Z');
+      expect(result[1].slots.length).toEqual(3);
+      done();
+    });
+  });
+
   describe('getBallotList', () => {
     it('query the right url and data', async done => {
       httpBackend.createRequest.mockReturnValue(

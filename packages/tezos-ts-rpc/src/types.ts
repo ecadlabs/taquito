@@ -622,6 +622,26 @@ export interface BakingRightsResponseItem {
 }
 
 export type BakingRightsResponse = BakingRightsResponseItem[];
+
+export type EndorsingRightsArgumentsDelegate = string | string[];
+export type EndorsingRightsArgumentsCycle = number | number[];
+export type EndorsingRightsArgumentsLevel = number | number[];
+
+export interface EndorsingRightsQueryArguments {
+  level?: EndorsingRightsArgumentsLevel;
+  cycle?: EndorsingRightsArgumentsCycle;
+  delegate?: EndorsingRightsArgumentsDelegate;
+}
+
+export interface EndorsingRightsResponseItem {
+  level: number;
+  delegate: string;
+  slots: number[];
+  estimatedTime?: Date;
+}
+
+export type EndorsingRightsResponse = EndorsingRightsResponseItem[];
+
 export type BallotListResponseEnum = 'nay' | 'yay' | 'pass';
 
 export interface BallotListResponseItem {
