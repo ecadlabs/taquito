@@ -1,0 +1,11 @@
+{
+  "docs": {
+    "General": [
+      "quick_start"
+    ],
+    "Signer": [
+      "inmemory_signer",
+      "tezbridge_signer"
+    ]
+  }
+}
