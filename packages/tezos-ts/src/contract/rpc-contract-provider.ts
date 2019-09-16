@@ -21,6 +21,8 @@ import { Contract } from './contract';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from './constants';
 
 export class RpcContractProvider implements ContractProvider {
+  private counters = {};
+
   constructor(private context: Context) {}
 
   get rpc() {
@@ -91,7 +93,7 @@ export class RpcContractProvider implements ContractProvider {
     source,
   }: PrepareOperationParams): Promise<ForgedBytes> {
     let counter;
-    const counters: { [key: string]: number } = {};
+    const counters: { [key: string]: number } = this.counters;
     const promises: any[] = [];
     let requiresReveal = false;
     let ops: PrepareOperationParams['operation'][] = [];

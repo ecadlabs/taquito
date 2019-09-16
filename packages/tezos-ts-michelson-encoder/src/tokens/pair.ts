@@ -14,7 +14,12 @@ export class PairToken extends Token {
 
   public Encode(args: any[]): any {
     const leftToken = this.createToken(this.val.args[0], this.idx);
-    const rightToken = this.createToken(this.val.args[1], this.idx + 1);
+    let keyCount = 1;
+    if (leftToken instanceof PairToken) {
+      keyCount = Object.keys(leftToken.ExtractSchema()).length;
+    }
+
+    const rightToken = this.createToken(this.val.args[1], this.idx + keyCount);
 
     return {
       prim: 'Pair',
@@ -24,15 +29,16 @@ export class PairToken extends Token {
 
   public Execute(val: any): { [key: string]: any } {
     const leftToken = this.createToken(this.val.args[0], this.idx);
-    const rightToken = this.createToken(this.val.args[1], this.idx + 1);
-
+    let keyCount = 1;
     let leftValue;
     if (leftToken instanceof PairToken) {
       leftValue = leftToken.Execute(val.args[0]);
+      keyCount = Object.keys(leftToken.ExtractSchema()).length;
     } else {
       leftValue = { [leftToken.annot()]: leftToken.Execute(val.args[0]) };
     }
 
+    const rightToken = this.createToken(this.val.args[1], this.idx + keyCount);
     let rightValue;
     if (rightToken instanceof PairToken) {
       rightValue = rightToken.Execute(val.args[1]);
@@ -49,14 +55,17 @@ export class PairToken extends Token {
 
   public ExtractSchema(): any {
     const leftToken = this.createToken(this.val.args[0], this.idx);
-    const rightToken = this.createToken(this.val.args[1], this.idx + 1);
+    let keyCount = 1;
 
     let leftValue;
     if (leftToken instanceof PairToken) {
       leftValue = leftToken.ExtractSchema();
+      keyCount = Object.keys(leftValue).length;
     } else {
       leftValue = { [leftToken.annot()]: leftToken.ExtractSchema() };
     }
+
+    const rightToken = this.createToken(this.val.args[1], this.idx + keyCount);
 
     let rightValue;
     if (rightToken instanceof PairToken) {
