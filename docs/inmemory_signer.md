@@ -3,11 +3,11 @@ title: In Memory Signer
 author: Simon Boissonneault-Robert
 ---
 
-> **Warning use carefuly**
+> **Warning use carefully**
 
 In memory signer is a local signer implementation that allows you to directly use a private key in your browser.
 
-This signer implementation is mean't to be used for development and not for production use case
+This signer implementation is meant to be used for development and not for production use case
 
 ## Usage 
 
