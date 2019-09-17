@@ -1,11 +1,10 @@
 import { Tezos } from '@tezos-ts/tezos-ts';
-import { InMemorySigner } from '@tezos-ts/signer';
 
 const provider = 'https://alphanet-node.tzscan.io';
 
 async function example() {
-    const signer: any = new InMemorySigner('edsk3xkqabYfWWpcEKTWk75cRQv2bgHA3EHuuHSFH3ejqzKPx69Zh9');
-    Tezos.setProvider({ rpc: provider, signer, } as any)
+    Tezos.setProvider({ rpc: provider } as any)
+    Tezos.importKey("edsk3xkqabYfWWpcEKTWk75cRQv2bgHA3EHuuHSFH3ejqzKPx69Zh9")
 
     try {
         // const op = await Tezos.contract.transfer({ to: "tz1R726RSR2L9pYK2ALiqfdVnDZuugkrAh5o", "amount": 2000000 })
