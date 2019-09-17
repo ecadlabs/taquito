@@ -7,7 +7,6 @@ describe('Schema test', () => {
   it('Should parse storage properly', () => {
     const schema = new ParameterSchema(params10);
     const storage = schema.ExtractSchema();
-    console.log(JSON.stringify(storage));
     expect({
       args: [
         {
