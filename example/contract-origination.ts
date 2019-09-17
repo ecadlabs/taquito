@@ -4,7 +4,23 @@ const provider = 'https://alphanet-node.tzscan.io';
 
 async function example() {
     Tezos.setProvider({ rpc: provider } as any)
-    Tezos.importKey("edsk3xkqabYfWWpcEKTWk75cRQv2bgHA3EHuuHSFH3ejqzKPx69Zh9")
+    await Tezos.importKey("peqjckge.qkrrajzs@tezos.example.org", "y4BX7qS1UE", [
+        "skate",
+        "damp",
+        "faculty",
+        "morning",
+        "bring",
+        "ridge",
+        "traffic",
+        "initial",
+        "piece",
+        "annual",
+        "give",
+        "say",
+        "wrestle",
+        "rare",
+        "ability"
+    ].join(" "), "7d4c8c3796fdbf4869edb5703758f0e5831f5081")
 
     try {
         // const op = await Tezos.contract.transfer({ to: "tz1R726RSR2L9pYK2ALiqfdVnDZuugkrAh5o", "amount": 2000000 })

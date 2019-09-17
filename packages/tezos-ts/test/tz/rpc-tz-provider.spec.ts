@@ -55,13 +55,22 @@ describe('RpcTzProvider test', () => {
         injectOperation: jest.fn(),
         preapplyOperations: jest.fn(),
       };
+      // Required for operations confirmation polling
+      mockRpcClient.getBlock.mockResolvedValue({
+        operations: [[], [], [], []],
+        header: {
+          level: 0,
+        },
+      });
+
+      mockRpcClient.getManagerKey.mockResolvedValue('test');
       mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
       mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
       mockRpcClient.preapplyOperations.mockResolvedValue([]);
       mockRpcClient.getBlockMetadata.mockResolvedValue({ nextProtocol: 'test_proto' });
       mockRpcClient.forgeOperations.mockResolvedValue('test');
       const provider = new RpcTzProvider(new Context(mockRpcClient as any));
-      const result = await provider.activate('test', '1234');
+      const result = await provider.activate('test', '123');
       expect(result.raw).toEqual({
         counter: NaN,
         opOb: {
@@ -70,7 +79,7 @@ describe('RpcTzProvider test', () => {
             {
               kind: 'activate_account',
               pkh: 'test',
-              secret: '1234',
+              secret: '123',
             },
           ],
           protocol: 'test_proto',
