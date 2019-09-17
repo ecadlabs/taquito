@@ -60,7 +60,13 @@ workflows:
     jobs:
       - approve-tests:
           type: approval
+          filters:
+            branches:
+              only: master
       - integration-tests:
           requires:
             - approve-tests
+          filters:
+            branches:
+              only: master
         
