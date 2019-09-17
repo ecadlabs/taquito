@@ -1,7 +1,7 @@
 import { Schema } from '@tezos-ts/michelson-encoder';
-import { Operation } from '../operations';
+import { Operation } from '../operations/operations';
 import { Contract } from './contract';
-import { DelegateParams, OriginateParams, TransferParams } from '../types';
+import { DelegateParams, OriginateParams, TransferParams } from '../operations/types';
 
 export type ContractSchema = Schema | unknown;
 
