@@ -10,19 +10,19 @@
           },
           {
             "path": "dist/lib/ed-key.js",
-            "sha512": "8e3423d77ecc90d746f1012834179aeb36e96fbc872794cfd917774c13a6ece15410231cb8a3b49400902767c3c6c9ed352ee5cc3fc5662431d94db1d850288e"
+            "sha512": "61d1546fd95e699e8241765d7bbc444918c8af8b06cc63a897faa5c1f90346098a0ceb8efab4282913f3627b0fa67be3d56191e9f1bd7a8d920dcc30ba83cb85"
           },
           {
             "path": "dist/tezos-ts-signer.es5.js",
-            "sha512": "1d1a5b9aca895a90c911c180934b5d9ca70f196f9825c5a6c23dfc07c7c1b3b8fdc98c47e1f56d856fef8f0c2bc35d8f7404bc6f4d29ae979236b72277b34095"
+            "sha512": "83126bd486b5e1d5923871e46e0277fadfa0eb4256e4b6df93fa40c49d0e3f7c937b46f740c53fba774fb3f0c8002fe6dc3c8d5eacfaf4be577c9d2db3bafaee"
           },
           {
             "path": "dist/lib/tezos-ts-signer.js",
-            "sha512": "e343b414c377728373bcb8561321809d3d05f772109e8758935c7ffe4fc44b399337ab41ec5a9f8894201a5c135a6266d29af8212fb3322cff5fdf6058806035"
+            "sha512": "b6b6f581783c7b2f791c407608a1ca4b9c8f99ef8e4a33e14a38782f07af6f3d10efee5c644a8c09126ae47ee4b244872f044eb7a71bae46da80fa0b1be9afa8"
           },
           {
             "path": "dist/tezos-ts-signer.umd.js",
-            "sha512": "888efea4228f4a0d45c30ac9fdee75585ec80a9916b2ffd0481be2806f13abd4b48b3a5989c37f7355eec59edad91eb88d6fd42626ef38d5df61278c853b140a"
+            "sha512": "f8d3c739465d2303e814b1922fde8c62e847f817e549fc734fbfc4a34aa98b58c79e7e206f8176647a73b5892a4322e4f319300626b04e6ab397f1bd020602a6"
           },
           {
             "path": "dist/lib/ec-key.js.map",
@@ -30,19 +30,19 @@
           },
           {
             "path": "dist/lib/ed-key.js.map",
-            "sha512": "caa80b239f4d4b585de6194127dcb26407b924d08469e46b0ded54b732d70399362fa353f3464097885135946e816b00e94737280010728e2719f14e755c3e7a"
+            "sha512": "b4670356910ee91fed44f3786795ffc0f3b4832149ed344bc2db132a669a3d4eb1763eb2ca5d14b86a1cbf92f8dc62d26f76fd4415e42ace5aa9a61c2fa5af3c"
           },
           {
             "path": "dist/tezos-ts-signer.es5.js.map",
-            "sha512": "f79b5e31ab60ea48ea5a7ee6695a928711ee73b3781712a7e7c9decf6c38584616d41994d72c8e0f8e907d5f703125ecfe42861bcc7ab09b965c606b77915f25"
+            "sha512": "2f92d87f659a9d4e5b2a72df8df9985e20d4ba9e62acd2aa4c5dd26ddc8c6906df1e609ed63fe4abb2f1d50aaee0660a5fedbe4f4a4cec09c2c37bda5b5fd300"
           },
           {
             "path": "dist/lib/tezos-ts-signer.js.map",
-            "sha512": "392043d013e0f69eab2ce4ad9ceb168fa3d14a08cf9ab13281278ff4824755b093ef2fbd9c70ed53cb07fe9698f74eaa2f8a497198d1b166848958f42ef285fe"
+            "sha512": "e8d19c68623aa5958bb6b53e4b8e4c81883dc2e65b02ebd67c92f97562b347ff34794e13a8a6c4805f7d0b45e394fe51b354ed45b744610cd64c3a474a22cc9e"
           },
           {
             "path": "dist/tezos-ts-signer.umd.js.map",
-            "sha512": "9cc8cbaa053b420d46b855e1077eb7d7e7982328924af42caecbba8da7ab9d51d5317452c487fc588ef05687fa31bf05903745a98a1a47eb9cf33bd73a76812c"
+            "sha512": "97e6fff20988bc2b2e262a433cb2f8a35a89d42a0064de3218a380936b1b1e7b964968e2cbc5cb2d08d61f76a6f4748380d15e7c5addaa4d6c86b15060968209"
           },
           {
             "path": "dist/types/ec-key.d.ts",
@@ -54,7 +54,7 @@
           },
           {
             "path": "dist/types/tezos-ts-signer.d.ts",
-            "sha512": "ad277221b8ad07b5d5382e09edabe871ce420f5f3018f110588ee4a83f4db98707e470d4778ef69e62fda6a6b32c78f2ddcb6c3abbc334febce3c13a4c78e589"
+            "sha512": "fe1bd88583ab213193c23d9561fff908d4e34fe93160745da9141b250d94eb66ea8790fbe3185531853eca131f57d5b522276a5c1031b1b8f050367fd4db7e77"
           }
         ]
       }
@@ -90,7 +90,7 @@
           "typings",
           "version"
         ],
-        "sha512": "aafd6461bf07962ea3f9d9998429f16c11a40657a95900d72d9aea586f9409d5f5e990de1b9bb1a9b0d407e9fc99c4220860f6412e01dca879beccdc154ce34c"
+        "sha512": "cb24a510b12d4703a05e0f787fd16b193ffaa2d011a0e02baaea9ba9f0707795c8d8da6245e99eaee5e3ad8750981a065d58b57223985b8189709f568b94f6ac"
       }
     },
     {
@@ -98,7 +98,7 @@
       "value": {
         "packageJson": {
           "name": "@tezos-ts/signer",
-          "version": "4.0.0-beta.3",
+          "version": "4.1.0-beta.1",
           "description": "Provide signing functionality to be with tezos-ts",
           "keywords": [
             "tezos",
@@ -163,8 +163,9 @@
             ]
           },
           "dependencies": {
-            "@tezos-ts/utils": "^4.0.0-beta.3",
+            "@tezos-ts/utils": "^4.1.0-beta.1",
             "bignumber.js": "^9.0.0",
+            "bip39": "^3.0.2",
             "elliptic": "^6.5.1",
             "libsodium-wrappers": "^0.7.5",
             "pbkdf2": "^3.0.17",
@@ -204,5 +205,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdeqvVCRAD9Qy5GYHsngAA7SYQAEUcfAAxvEHDDQO4ixJDsnK7\nftDQwGXEmEhc4XUsBCBTfMpF2tXnNLNajEksIB26zyQEwJTTk77yGblcWLD9y55x\nOywhFdL39W+8dbuUjqdu8ceC0gpFHM9H08AhuL8AqOILUdxf6FJ4Pf2oUDXaHhM8\n6hSsHZQ1UUrnvG1f4T7Kwp2hkAjV5aMaOQDjl1d35qvGphuv1PYsGHo1ESNEDqHp\ntXZ0sdHSPLTFLFG3tv8S/1+VpcO1TfD1BKg9lQTnmxnrudXBg3vgkwKu0WGt78r2\nSOtJSiHOwpbrmJ5Xm0/DwEF+leAfmAQNCYBoylFrlPzDmZEc+VV744Aq3SyZL8/P\n4J3wERqeM3NOBA6MsLLNB4dhufZjWR1WsRdnnXqPSWHLrkbKXPWMRLDy9DC03+i3\nvIj2NH2AQhpj1BSVyIVluQ/0wnLhTCNYHgmSjFHtfSqEpTeDWNj7cxMRXDSJ49rq\nAvpwrKiierfvQfxMCuhqmMBg25Qj450pccXeAU7ZDzY9LSrAS66fjdLzGG+rO7nG\nf8ysYxxru41DxcAPM8u5f9arHPnJByeqlFOPryA14roKdQAJqNjiEYtopVSLoztH\nRbNYmQ+G3mOU6KhAr8mn1s7jgSzI9ao128PpTJywkMTDjtAO94HgiO8FJ4c67ZoA\naRcHrng4jv3R0v40m5zt\n=Hc3U\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdgPUYCRAD9Qy5GYHsngAAH80QAB3l0DuCyHEriRJErDVPzgmY\no+REFOj9Gn7JWnzLpWtOi6PMja1DA5mn0KORwX98MGsv/9NYZxDD8SMQBYLKCwKc\n+P+vtTLI2iYLLUE0JrSSxBjhDPqhg1Q5wey3NtUBeIh0/c3E5TwKNPRatlxTEgVR\ndR9YqnBBZWsmg/2Y8OR+QrBQ37qmWZ1am6otlxr7eJk4XOucnrc/Bc3Cq95RkO4e\nwPtBiiVf6O9Gp2q8vd0yaQlw1QS0AvX0+kvVjLdWcSQTrbET3jXCn9t/GrGj+NAH\n+jqsiN4ZN8xveRX+rcSVsbLIlRlb6aoCftLIo6E58nCzwLPotVIp8rHfv9qB0Kw+\n5xZlIPA/S06c/olb7c0fki+DdPaFz9Ju8jJYgoKlAGHupSel+0xupEjwgMOi4V8X\nHC6osw5z0zj9gr3u6VmktsypI/3raer3HLJwgRFughKjXOFHc44dM7cBrGLV3M9D\nFWww84zGkVGMKwr09rHpPgn52TGOf5YTTeswFTzeRig6S8+GwIu5nejcJCLFn1wq\njBuhY69HDvjvrAvqq67XeIzBe1KQoUFQccKGVmMs/g32GK4fkytiach2M3L2Xk37\nXaaQcnd5rQ5Xq0s/ySjDaMcb9G/XY88BDbUz3JfMSRavcqNJoVfgLfOt24RRmnuG\nhOzHjM916yHHxAkDweIQ\n=w9/g\n-----END PGP SIGNATURE-----\n"
 }

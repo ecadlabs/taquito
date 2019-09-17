@@ -1,6 +1,6 @@
 {
   "name": "@tezos-ts/signer",
-  "version": "4.0.0-beta.3",
+  "version": "4.1.0-beta.1",
   "description": "Provide signing functionality to be with tezos-ts",
   "keywords": [
     "tezos",
@@ -65,7 +65,7 @@
     ]
   },
   "dependencies": {
-    "@tezos-ts/utils": "^4.0.0-beta.3",
+    "@tezos-ts/utils": "^4.1.0-beta.1",
     "bignumber.js": "^9.0.0",
     "bip39": "^3.0.2",
     "elliptic": "^6.5.1",

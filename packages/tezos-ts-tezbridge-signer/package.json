@@ -1,6 +1,6 @@
 {
   "name": "@tezos-ts/tezbridge-signer",
-  "version": "4.0.0-beta.3",
+  "version": "4.1.0-beta.1",
   "description": "Tezbridge signer provider",
   "keywords": [
     "tezos",
@@ -60,11 +60,11 @@
     ]
   },
   "dependencies": {
-    "@tezos-ts/utils": "^4.0.0-beta.3",
+    "@tezos-ts/utils": "^4.1.0-beta.1",
     "typedarray-to-buffer": "^3.1.5"
   },
   "devDependencies": {
-    "@tezos-ts/tezos-ts": "^4.0.0-beta.3",
+    "@tezos-ts/tezos-ts": "^4.1.0-beta.1",
     "@types/jest": "^23.3.2",
     "@types/node": "^10.14.13",
     "@types/ws": "^6.0.3",
