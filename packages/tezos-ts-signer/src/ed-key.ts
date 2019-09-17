@@ -20,6 +20,10 @@ export class Tz1 {
     this._key = decrypt(b58cdecode(this.key, prefix[key.substr(0, encrypted ? 5 : 4)]));
     this._publicKey = this._key.slice(32);
 
+    if (!this._key) {
+      throw new Error('Unable to decode key');
+    }
+
     this.isInit = this.init();
   }
 

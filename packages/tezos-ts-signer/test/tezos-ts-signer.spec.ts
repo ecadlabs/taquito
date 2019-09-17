@@ -1,6 +1,34 @@
 import { InMemorySigner } from '../src/tezos-ts-signer';
 
 describe('inmemory-signer', () => {
+  it('Invalid key', async done => {
+    expect(function() {
+      const signer = new InMemorySigner('test');
+    }).toThrow('Unsupported key type');
+    done();
+  });
+
+  it('(tz1) Invalid key unable to decode', async done => {
+    expect(function() {
+      const signer = new InMemorySigner('edsk4TjJWEszkHKono7XMnepqwi37FrbVt1KCsifJeAGimxheShG');
+    }).toThrow('Invalid checksum');
+    done();
+  });
+
+  it('(tz2) Invalid key unable to decode', async done => {
+    expect(function() {
+      const signer = new InMemorySigner('spsk4TjJWEszkHKono7XMnepqwi37FrbVt1KCsifJeAGimxheShG');
+    }).toThrow('Invalid checksum');
+    done();
+  });
+
+  it('(tz3) Invalid key unable to decode', async done => {
+    expect(function() {
+      const signer = new InMemorySigner('p2sk4TjJWEszkHKono7XMnepqwi37FrbVt1KCsifJeAGimxheShG');
+    }).toThrow('Invalid checksum');
+    done();
+  });
+
   it('Tz1 64 bytes', async done => {
     const signer = new InMemorySigner(
       'edskS3DtVSbWbPD1yviMGebjYwWJtruMjDcfAZsH9uba22EzKeYhmQkkraFosFETmEMfFNVcDYQ5QbFerj9ozDKroXZ6mb5oxV'
