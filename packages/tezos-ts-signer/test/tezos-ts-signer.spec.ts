@@ -25,31 +25,32 @@ describe('inmemory-signer', () => {
     );
 
     expect(await signer.publicKeyHash()).toBe('tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu');
+    done();
   });
-  
+
   it('Invalid key', async done => {
-    expect(function() {
+    expect(function () {
       const signer = new InMemorySigner('test');
     }).toThrow('Unsupported key type');
     done();
   });
 
   it('(tz1) Invalid key unable to decode', async done => {
-    expect(function() {
+    expect(function () {
       const signer = new InMemorySigner('edsk4TjJWEszkHKono7XMnepqwi37FrbVt1KCsifJeAGimxheShG');
     }).toThrow('Invalid checksum');
     done();
   });
 
   it('(tz2) Invalid key unable to decode', async done => {
-    expect(function() {
+    expect(function () {
       const signer = new InMemorySigner('spsk4TjJWEszkHKono7XMnepqwi37FrbVt1KCsifJeAGimxheShG');
     }).toThrow('Invalid checksum');
     done();
   });
 
   it('(tz3) Invalid key unable to decode', async done => {
-    expect(function() {
+    expect(function () {
       const signer = new InMemorySigner('p2sk4TjJWEszkHKono7XMnepqwi37FrbVt1KCsifJeAGimxheShG');
     }).toThrow('Invalid checksum');
     done();
