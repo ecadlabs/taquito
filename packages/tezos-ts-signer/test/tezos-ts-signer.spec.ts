@@ -1,29 +1,56 @@
 import { InMemorySigner } from '../src/tezos-ts-signer';
 
 describe('inmemory-signer', () => {
+  it('fromFundraiser', async done => {
+    const signer = InMemorySigner.fromFundraiser(
+      'rtphpwty.yohjelcp@tezos.example.org',
+      'HMYlTEu0EF',
+      [
+        'zone',
+        'cheese',
+        'venture',
+        'sad',
+        'marriage',
+        'attitude',
+        'borrow',
+        'limit',
+        'country',
+        'agent',
+        'away',
+        'raven',
+        'nerve',
+        'laptop',
+        'oven',
+      ].join(' ')
+    );
+
+    expect(await signer.publicKeyHash()).toBe('tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu');
+    done();
+  });
+
   it('Invalid key', async done => {
-    expect(function() {
+    expect(function () {
       const signer = new InMemorySigner('test');
     }).toThrow('Unsupported key type');
     done();
   });
 
   it('(tz1) Invalid key unable to decode', async done => {
-    expect(function() {
+    expect(function () {
       const signer = new InMemorySigner('edsk4TjJWEszkHKono7XMnepqwi37FrbVt1KCsifJeAGimxheShG');
     }).toThrow('Invalid checksum');
     done();
   });
 
   it('(tz2) Invalid key unable to decode', async done => {
-    expect(function() {
+    expect(function () {
       const signer = new InMemorySigner('spsk4TjJWEszkHKono7XMnepqwi37FrbVt1KCsifJeAGimxheShG');
     }).toThrow('Invalid checksum');
     done();
   });
 
   it('(tz3) Invalid key unable to decode', async done => {
-    expect(function() {
+    expect(function () {
       const signer = new InMemorySigner('p2sk4TjJWEszkHKono7XMnepqwi37FrbVt1KCsifJeAGimxheShG');
     }).toThrow('Invalid checksum');
     done();
