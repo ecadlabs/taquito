@@ -54,6 +54,8 @@ export class InMemorySigner {
       case 'p2es':
         this._key = new Tz3(key, encrypted, decrypt);
         break;
+      default:
+        throw new Error('Unsupported key type');
     }
   }
 

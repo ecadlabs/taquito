@@ -46,6 +46,14 @@ Tezos.query.balanceHistory('your_address')
 ```
 
 
+### Import a key
+
+`This will import your private key in memory and will sign operation using this key automatically`
+
+```js
+Tezos.importKey("p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1")
+```
+
 ### Transfer
 
 `Note: This requires a signer to be configured`
