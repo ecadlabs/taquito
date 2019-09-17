@@ -1,5 +1,6 @@
 import { IndexerClient } from '@tezos-ts/indexer';
 import { RpcClient } from '@tezos-ts/rpc';
+import { InMemorySigner } from '@tezos-ts/signer';
 
 import { ContractProvider } from './contract/interface';
 import { RpcContractProvider } from './contract/rpc-contract-provider';
@@ -120,12 +121,36 @@ export class TezosToolkit {
     return this._query;
   }
 
+  /**
+   * @description Provide access to streaming utilities backed by an streamer implementation
+   */
   get stream(): SubscribeProvider {
     return this._stream;
   }
 
+  /**
+   * @description Provide access to the currently used rpc client
+   */
   get rpc(): RpcClient {
-    return this._rpcClient;
+    return this._context.rpc;
+  }
+
+  /**
+   * @description Provide access to the currently used signer
+   */
+  get signer() {
+    return this._context.signer;
+  }
+
+  /**
+   *
+   * @description Import a key to sign operation
+   *
+   * @param privateKey Key to load in memory
+   * @param passphrase If the key is encrypted passphrase to decrypt it
+   */
+  importKey(privateKey: string, passphrase?: string) {
+    this.setSignerProvider(new InMemorySigner(privateKey, passphrase));
   }
 }
 
