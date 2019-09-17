@@ -105,6 +105,7 @@
 								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/_tezos_ts_tezos_ts.indexerprovider.html" class="tsd-kind-icon">Indexer<wbr>Provider</a></li>
 								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/_tezos_ts_tezos_ts.noopsigner.html" class="tsd-kind-icon">Noop<wbr>Signer</a></li>
 								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/_tezos_ts_tezos_ts.operation.html" class="tsd-kind-icon">Operation</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/_tezos_ts_tezos_ts.operationemitter.html" class="tsd-kind-icon">Operation<wbr>Emitter</a></li>
 								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/_tezos_ts_tezos_ts.pollingsubscribeprovider.html" class="tsd-kind-icon">Polling<wbr>Subscribe<wbr>Provider</a></li>
 								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/_tezos_ts_tezos_ts.rpccontractprovider.html" class="tsd-kind-icon">Rpc<wbr>Contract<wbr>Provider</a></li>
 								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/_tezos_ts_tezos_ts.rpctzprovider.html" class="tsd-kind-icon">Rpc<wbr>TzProvider</a></li>
@@ -115,6 +116,7 @@
 						<section class="tsd-index-section ">
 							<h3>Interfaces</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/_tezos_ts_tezos_ts.activateoperation.html" class="tsd-kind-icon">Activate<wbr>Operation</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/_tezos_ts_tezos_ts.balancehistory.html" class="tsd-kind-icon">Balance<wbr>History</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/_tezos_ts_tezos_ts.balancehistoryoptions.html" class="tsd-kind-icon">Balance<wbr>History<wbr>Options</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/_tezos_ts_tezos_ts.contractprovider.html" class="tsd-kind-icon">Contract<wbr>Provider</a></li>
@@ -141,6 +143,7 @@
 								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="_tezos_ts_tezos_ts.html#contractschema" class="tsd-kind-icon">Contract<wbr>Schema</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-module tsd-is-not-exported"><a href="_tezos_ts_tezos_ts.html#format" class="tsd-kind-icon">Format</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="_tezos_ts_tezos_ts.html#prepareoperationparams" class="tsd-kind-icon">Prepare<wbr>Operation<wbr>Params</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="_tezos_ts_tezos_ts.html#rpcoperation" class="tsd-kind-icon">RPCOperation</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -170,7 +173,7 @@
 					<div class="tsd-signature tsd-kind-icon">Contract<wbr>Schema<span class="tsd-signature-symbol">:</span> <a href="../classes/_tezos_ts_michelson_encoder.schema.html" class="tsd-signature-type">Schema</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">unknown</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/1ad9ec1/packages/tezos-ts/src/contract/interface.ts#L117">tezos-ts/src/contract/interface.ts:117</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/56ab2fa/packages/tezos-ts/src/contract/interface.ts#L6">tezos-ts/src/contract/interface.ts:6</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -180,7 +183,7 @@
 					<div class="tsd-signature tsd-kind-icon">Format<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"tz"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"mtz"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"mutez"</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/1ad9ec1/packages/tezos-ts/src/format.ts#L6">tezos-ts/src/format.ts:6</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/56ab2fa/packages/tezos-ts/src/format.ts#L6">tezos-ts/src/format.ts:6</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -190,20 +193,30 @@
 					<div class="tsd-signature tsd-kind-icon">Prepare<wbr>Operation<wbr>Params<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/1ad9ec1/packages/tezos-ts/src/contract/interface.ts#L112">tezos-ts/src/contract/interface.ts:112</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/56ab2fa/packages/tezos-ts/src/operations/types.ts#L125">tezos-ts/src/operations/types.ts:125</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
 						<h4>Type declaration</h4>
 						<ul class="tsd-parameters">
 							<li class="tsd-parameter">
-								<h5>operation<span class="tsd-signature-symbol">: </span><a href="../interfaces/_tezos_ts_tezos_ts.originationoperation.html" class="tsd-signature-type">OriginationOperation</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_tezos_ts_tezos_ts.transferoperation.html" class="tsd-signature-type">TransferOperation</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_tezos_ts_tezos_ts.delegateoperation.html" class="tsd-signature-type">DelegateOperation</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_tezos_ts_tezos_ts.revealoperation.html" class="tsd-signature-type">RevealOperation</a></h5>
+								<h5>operation<span class="tsd-signature-symbol">: </span><a href="_tezos_ts_tezos_ts.html#rpcoperation" class="tsd-signature-type">RPCOperation</a><span class="tsd-signature-symbol"> | </span><a href="_tezos_ts_tezos_ts.html#rpcoperation" class="tsd-signature-type">RPCOperation</a><span class="tsd-signature-symbol">[]</span></h5>
 							</li>
 							<li class="tsd-parameter">
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> source<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
 							</li>
 						</ul>
 					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
+					<a name="rpcoperation" class="tsd-anchor"></a>
+					<h3>RPCOperation</h3>
+					<div class="tsd-signature tsd-kind-icon">RPCOperation<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_tezos_ts_tezos_ts.originationoperation.html" class="tsd-signature-type">OriginationOperation</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_tezos_ts_tezos_ts.transferoperation.html" class="tsd-signature-type">TransferOperation</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_tezos_ts_tezos_ts.delegateoperation.html" class="tsd-signature-type">DelegateOperation</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_tezos_ts_tezos_ts.revealoperation.html" class="tsd-signature-type">RevealOperation</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_tezos_ts_tezos_ts.activateoperation.html" class="tsd-signature-type">ActivateOperation</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/56ab2fa/packages/tezos-ts/src/operations/types.ts#L118">tezos-ts/src/operations/types.ts:118</a></li>
+						</ul>
+					</aside>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -214,7 +227,7 @@
 					<div class="tsd-signature tsd-kind-icon">MTZ_<wbr>DECIMALS<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">3</span><span class="tsd-signature-symbol"> =&nbsp;3</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/1ad9ec1/packages/tezos-ts/src/format.ts#L4">tezos-ts/src/format.ts:4</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/56ab2fa/packages/tezos-ts/src/format.ts#L4">tezos-ts/src/format.ts:4</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -224,7 +237,7 @@
 					<div class="tsd-signature tsd-kind-icon">TZ_<wbr>DECIMALS<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">6</span><span class="tsd-signature-symbol"> =&nbsp;6</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/1ad9ec1/packages/tezos-ts/src/format.ts#L3">tezos-ts/src/format.ts:3</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/56ab2fa/packages/tezos-ts/src/format.ts#L3">tezos-ts/src/format.ts:3</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -234,7 +247,7 @@
 					<div class="tsd-signature tsd-kind-icon">Tezos<span class="tsd-signature-symbol">:</span> <a href="../classes/_tezos_ts_tezos_ts.tezostoolkit.html" class="tsd-signature-type">TezosToolkit</a><span class="tsd-signature-symbol"> =&nbsp;new TezosToolkit()</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/1ad9ec1/packages/tezos-ts/src/tezos-ts.ts#L135">tezos-ts/src/tezos-ts.ts:135</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/56ab2fa/packages/tezos-ts/src/tezos-ts.ts#L135">tezos-ts/src/tezos-ts.ts:135</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -258,7 +271,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/1ad9ec1/packages/tezos-ts/src/contract/contract.ts#L53">tezos-ts/src/contract/contract.ts:53</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/56ab2fa/packages/tezos-ts/src/contract/contract.ts#L53">tezos-ts/src/contract/contract.ts:53</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -281,7 +294,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/1ad9ec1/packages/tezos-ts/src/format.ts#L20">tezos-ts/src/format.ts:20</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/56ab2fa/packages/tezos-ts/src/format.ts#L20">tezos-ts/src/format.ts:20</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -315,7 +328,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/1ad9ec1/packages/tezos-ts/src/format.ts#L8">tezos-ts/src/format.ts:8</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/56ab2fa/packages/tezos-ts/src/format.ts#L8">tezos-ts/src/format.ts:8</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -403,6 +416,9 @@
 						<a href="../classes/_tezos_ts_tezos_ts.operation.html" class="tsd-kind-icon">Operation</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="../classes/_tezos_ts_tezos_ts.operationemitter.html" class="tsd-kind-icon">Operation<wbr>Emitter</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="../classes/_tezos_ts_tezos_ts.pollingsubscribeprovider.html" class="tsd-kind-icon">Polling<wbr>Subscribe<wbr>Provider</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
@@ -416,6 +432,9 @@
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="../classes/_tezos_ts_tezos_ts.tezostoolkit.html" class="tsd-kind-icon">Tezos<wbr>Toolkit</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/_tezos_ts_tezos_ts.activateoperation.html" class="tsd-kind-icon">Activate<wbr>Operation</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="../interfaces/_tezos_ts_tezos_ts.balancehistory.html" class="tsd-kind-icon">Balance<wbr>History</a>
@@ -479,6 +498,9 @@
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
 						<a href="_tezos_ts_tezos_ts.html#prepareoperationparams" class="tsd-kind-icon">Prepare<wbr>Operation<wbr>Params</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="_tezos_ts_tezos_ts.html#rpcoperation" class="tsd-kind-icon">RPCOperation</a>
 					</li>
 					<li class=" tsd-kind-variable tsd-parent-kind-module tsd-is-not-exported">
 						<a href="_tezos_ts_tezos_ts.html#mtz_decimals" class="tsd-kind-icon">MTZ_<wbr>DECIMALS</a>
