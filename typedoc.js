@@ -2,6 +2,7 @@ module.exports = {
   mode: 'modules',
   out: 'dist/typedoc',
   exclude: [
+    'integration-tests/**/*.ts',
     'example/**/*.ts',
     '**/data/**',
     '**/test/**',
