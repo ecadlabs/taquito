@@ -5,7 +5,8 @@
   "scripts": {
     "example:at": "node -r ts-node/register --preserve-symlinks contract-schema.ts",
     "example:origination": "node -r ts-node/register --preserve-symlinks contract-origination.ts",
-    "example": "node -r ts-node/register --preserve-symlinks example-node.ts"
+    "example": "node -r ts-node/register --preserve-symlinks example-node.ts",
+    "example:activation": "node -r ts-node/register --preserve-symlinks example-activate.ts"
   },
   "dependencies": {
     "@tezos-ts/signer": "^4.0.0-beta.3",

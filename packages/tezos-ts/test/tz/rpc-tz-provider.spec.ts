@@ -39,4 +39,46 @@ describe('RpcTzProvider test', () => {
       done();
     });
   });
+
+  describe('activate', () => {
+    it('should produce a activate_account operation', async done => {
+      const mockRpcClient = {
+        getBlock: jest.fn(),
+        getScript: jest.fn(),
+        getManagerKey: jest.fn(),
+        getStorage: jest.fn(),
+        getBigMapKey: jest.fn(),
+        getBlockHeader: jest.fn(),
+        getBlockMetadata: jest.fn(),
+        getContract: jest.fn(),
+        forgeOperations: jest.fn(),
+        injectOperation: jest.fn(),
+        preapplyOperations: jest.fn(),
+      };
+      mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
+      mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
+      mockRpcClient.preapplyOperations.mockResolvedValue([]);
+      mockRpcClient.getBlockMetadata.mockResolvedValue({ nextProtocol: 'test_proto' });
+      mockRpcClient.forgeOperations.mockResolvedValue('test');
+      const provider = new RpcTzProvider(new Context(mockRpcClient as any));
+      const result = await provider.activate('test', '1234');
+      expect(result.raw).toEqual({
+        counter: NaN,
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              kind: 'activate_account',
+              pkh: 'test',
+              secret: '1234',
+            },
+          ],
+          protocol: 'test_proto',
+        },
+        opbytes:
+          'test00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+      });
+      done();
+    });
+  });
 });

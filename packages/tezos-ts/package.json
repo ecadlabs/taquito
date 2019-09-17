@@ -73,6 +73,7 @@
     "@tezos-ts/michelson-encoder": "^4.0.0-beta.3",
     "@tezos-ts/rpc": "^4.0.0-beta.3",
     "@tezos-ts/utils": "^4.0.0-beta.3",
+    "@tezos-ts/signer": "^4.0.0-beta.3",
     "bignumber.js": "^9.0.0"
   },
   "devDependencies": {
