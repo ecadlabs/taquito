@@ -1,6 +1,33 @@
 import { InMemorySigner } from '../src/tezos-ts-signer';
 
 describe('inmemory-signer', () => {
+  it('fromFundraiser', async done => {
+    const signer = InMemorySigner.fromFundraiser(
+      'rtphpwty.yohjelcp@tezos.example.org',
+      'HMYlTEu0EF',
+      [
+        'zone',
+        'cheese',
+        'venture',
+        'sad',
+        'marriage',
+        'attitude',
+        'borrow',
+        'limit',
+        'country',
+        'agent',
+        'away',
+        'raven',
+        'nerve',
+        'laptop',
+        'oven',
+      ].join(' ')
+    );
+
+    expect(await signer.publicKeyHash()).toBe('tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu');
+    done();
+  });
+
   it('Tz1 64 bytes', async done => {
     const signer = new InMemorySigner(
       'edskS3DtVSbWbPD1yviMGebjYwWJtruMjDcfAZsH9uba22EzKeYhmQkkraFosFETmEMfFNVcDYQ5QbFerj9ozDKroXZ6mb5oxV'

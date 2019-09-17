@@ -1,9 +1,10 @@
 import sodium from 'libsodium-wrappers';
-import { hex2buf, mergebuf } from '@tezos-ts/utils';
+import { hex2buf, mergebuf, b58cencode, prefix } from '@tezos-ts/utils';
 import toBuffer from 'typedarray-to-buffer';
 import { Tz1 } from './ed-key';
 import { Tz2, ECKey, Tz3 } from './ec-key';
 import pbkdf2 from 'pbkdf2';
+import { mnemonicToSeedSync } from 'bip39';
 
 /**
  * @description A local implementation of the signer. Will represent a Tezos account and be able to produce signature in its behalf
@@ -12,6 +13,12 @@ import pbkdf2 from 'pbkdf2';
  */
 export class InMemorySigner {
   private _key!: Tz1 | ECKey;
+
+  static fromFundraiser(email: string, password: string, mnemonic: string) {
+    let seed = mnemonicToSeedSync(mnemonic, `${email}${password}`);
+    const test = b58cencode(seed.slice(0, 32), prefix.edsk2);
+    return new InMemorySigner(test);
+  }
 
   /**
    *
