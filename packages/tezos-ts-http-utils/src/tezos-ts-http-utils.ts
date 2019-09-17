@@ -1,4 +1,4 @@
-const defaultTimeout = 10000;
+const defaultTimeout = 30000;
 
 interface HttpRequestOptions {
   url: string;
@@ -79,6 +79,11 @@ export class HttpBackend {
           });
         }
       };
+
+      request.ontimeout = function() {
+        reject(new Error(`Request timed out after: ${request.timeout}ms`));
+      };
+
       request.onerror = function() {
         reject({
           status: this.status,
