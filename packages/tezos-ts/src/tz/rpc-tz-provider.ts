@@ -1,10 +1,9 @@
-import { TzProvider } from './interface';
-import { RpcClient } from '@tezos-ts/rpc';
 import BigNumber from 'bignumber.js';
 import { Context } from '../context';
-import { ActivateOperation } from '../operations/types';
-import { Operation } from '../operations/operations';
 import { OperationEmitter } from '../operations/operation-emitter';
+import { Operation } from '../operations/operations';
+import { RPCActivateOperation } from '../operations/types';
+import { TzProvider } from './interface';
 
 export class RpcTzProvider extends OperationEmitter implements TzProvider {
   constructor(context: Context) {
@@ -20,7 +19,7 @@ export class RpcTzProvider extends OperationEmitter implements TzProvider {
   }
 
   async activate(pkh: string, secret: string) {
-    const operation: ActivateOperation = {
+    const operation: RPCActivateOperation = {
       kind: 'activate_account',
       pkh,
       secret,

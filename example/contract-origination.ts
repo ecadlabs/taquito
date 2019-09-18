@@ -24,7 +24,8 @@ async function example() {
             gasLimit: 90000,
         })
         console.log('Awaiting confirmation...')
-        await op.confirmation()
+        const contract = await op.contract()
+        console.log('Storage', await contract.storage())
         console.log("Operation hash:", op.hash, "Included in block level:", op.includedInBlock)
     } catch (ex) {
         console.error(ex)

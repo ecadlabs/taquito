@@ -2,6 +2,7 @@ import { Schema } from '@tezos-ts/michelson-encoder';
 import { Operation } from '../operations/operations';
 import { Contract } from './contract';
 import { DelegateParams, OriginateParams, TransferParams } from '../operations/types';
+import { OriginationOperation } from '../operations/origination-operation';
 
 export type ContractSchema = Schema | unknown;
 
@@ -37,7 +38,7 @@ export interface ContractProvider {
    *
    * @param OriginationOperation Originate operation parameter
    */
-  originate(contract: OriginateParams): Promise<Operation>;
+  originate(contract: OriginateParams): Promise<OriginationOperation>;
 
   /**
    *
