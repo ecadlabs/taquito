@@ -149,8 +149,45 @@ export class TezosToolkit {
    * @param privateKey Key to load in memory
    * @param passphrase If the key is encrypted passphrase to decrypt it
    */
-  importKey(privateKey: string, passphrase?: string) {
-    this.setSignerProvider(new InMemorySigner(privateKey, passphrase));
+  importKey(privateKey: string, passphrase?: string): Promise<void>;
+  /**
+   *
+   * @description Import a key using faucet/fundraiser parameter
+   *
+   * @param email Faucet email
+   * @param password Faucet password
+   * @param mnemonic Faucet mnemonic
+   * @param secret Faucet secret
+   */
+  // tslint:disable-next-line: unified-signatures
+  importKey(email: string, password: string, mnemonic: string, secret: string): Promise<void>;
+
+  async importKey(
+    privateKeyOrEmail: string,
+    passphrase?: string,
+    mnemonic?: string,
+    secret?: string
+  ): Promise<void> {
+    if (privateKeyOrEmail && passphrase && mnemonic && secret) {
+      const signer = InMemorySigner.fromFundraiser(privateKeyOrEmail, passphrase, mnemonic);
+      const pkh = await signer.publicKeyHash();
+      let op;
+      try {
+        op = await this.tz.activate(pkh, secret);
+      } catch (ex) {
+        const isInvalidActivationError = ex && ex.body && /Invalid activation/.test(ex.body);
+        if (!isInvalidActivationError) {
+          throw ex;
+        }
+      }
+      if (op) {
+        await op.confirmation();
+      }
+      this.setSignerProvider(signer);
+    } else {
+      // Fallback to regular import
+      this.setSignerProvider(new InMemorySigner(privateKeyOrEmail, passphrase));
+    }
   }
 }
 
