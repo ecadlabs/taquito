@@ -5,17 +5,17 @@ import { Context } from '../context';
 import { format } from '../format';
 import { OperationEmitter } from '../operations/operation-emitter';
 import { Operation } from '../operations/operations';
+import { OriginationOperation } from '../operations/origination-operation';
+import {
+  RPCDelegateOperation,
+  DelegateParams,
+  OriginateParams,
+  RPCOriginationOperation,
+  RPCTransferOperation,
+  TransferParams,
+} from '../operations/types';
 import { Contract } from './contract';
 import { ContractProvider, ContractSchema } from './interface';
-import {
-  OriginateParams,
-  OriginationOperation,
-  DelegateParams,
-  DelegateOperation,
-  TransferParams,
-  TransferOperation,
-  ActivateOperation,
-} from '../operations/types';
 
 export class RpcContractProvider extends OperationEmitter implements ContractProvider {
   constructor(context: Context) {
@@ -102,7 +102,7 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
     };
 
     const publicKeyHash = await this.signer.publicKeyHash();
-    const operation: OriginationOperation = {
+    const operation: RPCOriginationOperation = {
       kind: 'origination',
       fee,
       gas_limit: gasLimit,
@@ -119,7 +119,9 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
     }
 
     const opBytes = await this.prepareOperation({ operation, source: publicKeyHash });
-    return this.signAndInject(opBytes);
+
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new OriginationOperation(hash, forgedBytes, opResponse, context, this);
   }
 
   /**
@@ -137,7 +139,7 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
     gasLimit = DEFAULT_GAS_LIMIT.DELEGATION,
     storageLimit = DEFAULT_STORAGE_LIMIT.DELEGATION,
   }: DelegateParams) {
-    const operation: DelegateOperation = {
+    const operation: RPCDelegateOperation = {
       kind: 'delegation',
       source,
       fee,
@@ -149,7 +151,8 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
       operation,
       source: source || (await this.signer.publicKeyHash()),
     });
-    return this.signAndInject(opBytes);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new Operation(hash, forgedBytes, opResponse, context);
   }
 
   /**
@@ -165,7 +168,7 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
     gasLimit = DEFAULT_GAS_LIMIT.DELEGATION,
     storageLimit = DEFAULT_STORAGE_LIMIT.DELEGATION,
   }: any) {
-    const operation: DelegateOperation = {
+    const operation: RPCDelegateOperation = {
       kind: 'delegation',
       fee,
       gas_limit: gasLimit,
@@ -173,7 +176,8 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
       delegate: await this.signer.publicKeyHash(),
     };
     const opBytes = await this.prepareOperation({ operation });
-    return this.signAndInject(opBytes);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new Operation(hash, forgedBytes, opResponse, context);
   }
 
   /**
@@ -195,7 +199,7 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
     mutez = false,
     rawParam = false,
   }: TransferParams) {
-    const operation: TransferOperation = {
+    const operation: RPCTransferOperation = {
       kind: 'transaction',
       fee,
       gas_limit: gasLimit,
@@ -208,10 +212,11 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
     }
 
     const opBytes = await this.prepareOperation({ operation, source });
-    return this.signAndInject(opBytes);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new Operation(hash, forgedBytes, opResponse, context);
   }
 
-  async at(address: string): Promise<any> {
+  async at(address: string): Promise<Contract> {
     let script = await this.rpc.getScript(address);
 
     let contractSchema: Schema = Schema.fromRPCResponse({ script });

@@ -18,7 +18,7 @@ export interface OriginateParams {
 /**
  * @description RPC origination operation
  */
-export interface OriginationOperation {
+export interface RPCOriginationOperation {
   kind: 'origination';
   fee: number;
   gas_limit: number;
@@ -37,7 +37,7 @@ export interface OriginationOperation {
 /**
  * @description RPC reveal operation
  */
-export interface RevealOperation {
+export interface RPCRevealOperation {
   kind: 'reveal';
   fee: number;
   public_key: string;
@@ -69,7 +69,7 @@ export interface DelegateParams {
 /**
  * @description RPC delegation operation
  */
-export interface DelegateOperation {
+export interface RPCDelegateOperation {
   kind: 'delegation';
   source?: string;
   fee: number;
@@ -96,7 +96,7 @@ export interface TransferParams {
 /**
  * @description RPC transfer operation
  */
-export interface TransferOperation {
+export interface RPCTransferOperation {
   kind: 'transaction';
   fee: number;
   gas_limit: number;
@@ -109,18 +109,18 @@ export interface TransferOperation {
 /**
  * @description RPC activate account operation
  */
-export interface ActivateOperation {
+export interface RPCActivateOperation {
   kind: 'activate_account';
   pkh: string;
   secret: string;
 }
 
 export type RPCOperation =
-  | OriginationOperation
-  | TransferOperation
-  | DelegateOperation
-  | RevealOperation
-  | ActivateOperation;
+  | RPCOriginationOperation
+  | RPCTransferOperation
+  | RPCDelegateOperation
+  | RPCRevealOperation
+  | RPCActivateOperation;
 
 export type PrepareOperationParams = {
   operation: RPCOperation | RPCOperation[];

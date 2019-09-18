@@ -1,8 +1,7 @@
-import { Context } from '../context';
-import { PrepareOperationParams, ForgedBytes, RPCOperation, RevealOperation } from './types';
 import { BlockResponse } from '@tezos-ts/rpc';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
-import { Operation } from './operations';
+import { Context } from '../context';
+import { ForgedBytes, PrepareOperationParams, RPCOperation, RPCRevealOperation } from './types';
 
 export abstract class OperationEmitter {
   get rpc() {
@@ -53,7 +52,7 @@ export abstract class OperationEmitter {
     if (requiresReveal) {
       const managerKey = manager.key;
       if (!managerKey) {
-        const reveal: RevealOperation = {
+        const reveal: RPCRevealOperation = {
           kind: 'reveal',
           fee: DEFAULT_FEE.REVEAL,
           public_key: await this.signer.publicKey(),
@@ -156,11 +155,11 @@ export abstract class OperationEmitter {
       throw new Error(JSON.stringify({ error: 'Operation Failed', errors }));
     }
 
-    return new Operation(
-      await this.rpc.injectOperation(forgedBytes.opbytes),
+    return {
+      hash: await this.rpc.injectOperation(forgedBytes.opbytes),
       forgedBytes,
       opResponse,
-      this.context.clone()
-    );
+      context: this.context.clone(),
+    };
   }
 }
