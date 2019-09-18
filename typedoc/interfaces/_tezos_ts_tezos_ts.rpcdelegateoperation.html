@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>OriginationOperation | Tezos TS</title>
+	<title>RPCDelegateOperation | Tezos TS</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -59,10 +59,10 @@
 					<a href="../modules/_tezos_ts_tezos_ts.html">@tezos-ts/tezos-ts</a>
 				</li>
 				<li>
-					<a href="_tezos_ts_tezos_ts.originationoperation.html">OriginationOperation</a>
+					<a href="_tezos_ts_tezos_ts.rpcdelegateoperation.html">RPCDelegateOperation</a>
 				</li>
 			</ul>
-			<h1>Interface OriginationOperation</h1>
+			<h1>Interface RPCDelegateOperation</h1>
 		</div>
 	</div>
 </header>
@@ -73,7 +73,7 @@
 				<div class="tsd-comment tsd-typography">
 					<dl class="tsd-comment-tags">
 						<dt>description</dt>
-						<dd><p>RPC origination operation</p>
+						<dd><p>RPC delegation operation</p>
 						</dd>
 					</dl>
 				</div>
@@ -82,7 +82,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">OriginationOperation</span>
+						<span class="target">RPCDelegateOperation</span>
 					</li>
 				</ul>
 			</section>
@@ -93,16 +93,12 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_tezos_ts.originationoperation.html#balance" class="tsd-kind-icon">balance</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_tezos_ts.originationoperation.html#delegatable" class="tsd-kind-icon">delegatable</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_tezos_ts.originationoperation.html#delegate" class="tsd-kind-icon">delegate</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_tezos_ts.originationoperation.html#fee" class="tsd-kind-icon">fee</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_tezos_ts.originationoperation.html#gas_limit" class="tsd-kind-icon">gas_<wbr>limit</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_tezos_ts.originationoperation.html#kind" class="tsd-kind-icon">kind</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_tezos_ts.originationoperation.html#manager_pubkey" class="tsd-kind-icon">manager_<wbr>pubkey</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_tezos_ts.originationoperation.html#script" class="tsd-kind-icon">script</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_tezos_ts.originationoperation.html#spendable" class="tsd-kind-icon">spendable</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_tezos_ts.originationoperation.html#storage_limit" class="tsd-kind-icon">storage_<wbr>limit</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_tezos_ts.rpcdelegateoperation.html#delegate" class="tsd-kind-icon">delegate</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_tezos_ts.rpcdelegateoperation.html#fee" class="tsd-kind-icon">fee</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_tezos_ts.rpcdelegateoperation.html#gas_limit" class="tsd-kind-icon">gas_<wbr>limit</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_tezos_ts.rpcdelegateoperation.html#kind" class="tsd-kind-icon">kind</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_tezos_ts.rpcdelegateoperation.html#source" class="tsd-kind-icon">source</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_tezos_ts_tezos_ts.rpcdelegateoperation.html#storage_limit" class="tsd-kind-icon">storage_<wbr>limit</a></li>
 							</ul>
 						</section>
 					</div>
@@ -111,32 +107,12 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="balance" class="tsd-anchor"></a>
-					<h3>balance</h3>
-					<div class="tsd-signature tsd-kind-icon">balance<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/85e94d2/packages/tezos-ts/src/operations/types.ts#L26">tezos-ts/src/operations/types.ts:26</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="delegatable" class="tsd-anchor"></a>
-					<h3>delegatable</h3>
-					<div class="tsd-signature tsd-kind-icon">delegatable<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/85e94d2/packages/tezos-ts/src/operations/types.ts#L29">tezos-ts/src/operations/types.ts:29</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="delegate" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> delegate</h3>
-					<div class="tsd-signature tsd-kind-icon">delegate<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
+					<h3>delegate</h3>
+					<div class="tsd-signature tsd-kind-icon">delegate<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/85e94d2/packages/tezos-ts/src/operations/types.ts#L30">tezos-ts/src/operations/types.ts:30</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/e82b6c1/packages/tezos-ts/src/operations/types.ts#L78">tezos-ts/src/operations/types.ts:78</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -146,7 +122,7 @@
 					<div class="tsd-signature tsd-kind-icon">fee<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/85e94d2/packages/tezos-ts/src/operations/types.ts#L23">tezos-ts/src/operations/types.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/e82b6c1/packages/tezos-ts/src/operations/types.ts#L75">tezos-ts/src/operations/types.ts:75</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -156,58 +132,27 @@
 					<div class="tsd-signature tsd-kind-icon">gas_<wbr>limit<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/85e94d2/packages/tezos-ts/src/operations/types.ts#L24">tezos-ts/src/operations/types.ts:24</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/e82b6c1/packages/tezos-ts/src/operations/types.ts#L76">tezos-ts/src/operations/types.ts:76</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="kind" class="tsd-anchor"></a>
 					<h3>kind</h3>
-					<div class="tsd-signature tsd-kind-icon">kind<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"origination"</span></div>
+					<div class="tsd-signature tsd-kind-icon">kind<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"delegation"</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/85e94d2/packages/tezos-ts/src/operations/types.ts#L22">tezos-ts/src/operations/types.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/e82b6c1/packages/tezos-ts/src/operations/types.ts#L73">tezos-ts/src/operations/types.ts:73</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="manager_pubkey" class="tsd-anchor"></a>
-					<h3>manager_<wbr>pubkey</h3>
-					<div class="tsd-signature tsd-kind-icon">manager_<wbr>pubkey<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="source" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> source</h3>
+					<div class="tsd-signature tsd-kind-icon">source<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/85e94d2/packages/tezos-ts/src/operations/types.ts#L27">tezos-ts/src/operations/types.ts:27</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="script" class="tsd-anchor"></a>
-					<h3>script</h3>
-					<div class="tsd-signature tsd-kind-icon">script<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/85e94d2/packages/tezos-ts/src/operations/types.ts#L31">tezos-ts/src/operations/types.ts:31</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter">
-								<h5>code<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></h5>
-							</li>
-							<li class="tsd-parameter">
-								<h5>storage<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></h5>
-							</li>
-						</ul>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="spendable" class="tsd-anchor"></a>
-					<h3>spendable</h3>
-					<div class="tsd-signature tsd-kind-icon">spendable<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/85e94d2/packages/tezos-ts/src/operations/types.ts#L28">tezos-ts/src/operations/types.ts:28</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/e82b6c1/packages/tezos-ts/src/operations/types.ts#L74">tezos-ts/src/operations/types.ts:74</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -217,7 +162,7 @@
 					<div class="tsd-signature tsd-kind-icon">storage_<wbr>limit<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/85e94d2/packages/tezos-ts/src/operations/types.ts#L25">tezos-ts/src/operations/types.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/tezos-ts/blob/e82b6c1/packages/tezos-ts/src/operations/types.ts#L77">tezos-ts/src/operations/types.ts:77</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -266,37 +211,25 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-module">
-						<a href="_tezos_ts_tezos_ts.originationoperation.html" class="tsd-kind-icon">Origination<wbr>Operation</a>
+						<a href="_tezos_ts_tezos_ts.rpcdelegateoperation.html" class="tsd-kind-icon">RPCDelegate<wbr>Operation</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tezos_ts_tezos_ts.originationoperation.html#balance" class="tsd-kind-icon">balance</a>
+								<a href="_tezos_ts_tezos_ts.rpcdelegateoperation.html#delegate" class="tsd-kind-icon">delegate</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tezos_ts_tezos_ts.originationoperation.html#delegatable" class="tsd-kind-icon">delegatable</a>
+								<a href="_tezos_ts_tezos_ts.rpcdelegateoperation.html#fee" class="tsd-kind-icon">fee</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tezos_ts_tezos_ts.originationoperation.html#delegate" class="tsd-kind-icon">delegate</a>
+								<a href="_tezos_ts_tezos_ts.rpcdelegateoperation.html#gas_limit" class="tsd-kind-icon">gas_<wbr>limit</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tezos_ts_tezos_ts.originationoperation.html#fee" class="tsd-kind-icon">fee</a>
+								<a href="_tezos_ts_tezos_ts.rpcdelegateoperation.html#kind" class="tsd-kind-icon">kind</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tezos_ts_tezos_ts.originationoperation.html#gas_limit" class="tsd-kind-icon">gas_<wbr>limit</a>
+								<a href="_tezos_ts_tezos_ts.rpcdelegateoperation.html#source" class="tsd-kind-icon">source</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tezos_ts_tezos_ts.originationoperation.html#kind" class="tsd-kind-icon">kind</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tezos_ts_tezos_ts.originationoperation.html#manager_pubkey" class="tsd-kind-icon">manager_<wbr>pubkey</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tezos_ts_tezos_ts.originationoperation.html#script" class="tsd-kind-icon">script</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tezos_ts_tezos_ts.originationoperation.html#spendable" class="tsd-kind-icon">spendable</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_tezos_ts_tezos_ts.originationoperation.html#storage_limit" class="tsd-kind-icon">storage_<wbr>limit</a>
+								<a href="_tezos_ts_tezos_ts.rpcdelegateoperation.html#storage_limit" class="tsd-kind-icon">storage_<wbr>limit</a>
 							</li>
 						</ul>
 					</li>
