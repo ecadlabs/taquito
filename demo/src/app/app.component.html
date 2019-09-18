@@ -1,14 +1,15 @@
 <nb-layout>
-    <nb-layout-header>
-        <nb-actions size="small">
-            <nb-action>Tezos TS demo</nb-action>
-        </nb-actions>
-    </nb-layout-header>
-    <nb-layout-footer></nb-layout-footer>
-    <nb-layout-column>
-        <mat-progress-bar class='progress' [class.hidden]='!(loading$ | async)' mode="query">
+  <nb-layout-header>
+    <nb-actions>
+      <nb-action>Tezos TS demo</nb-action>
+    </nb-actions>
+    <tz-search-form (search)="onSearch($event)"></tz-search-form>
+  </nb-layout-header>
+  <nb-layout-column>
+    <tz-contract-state-card></tz-contract-state-card>
+
+    <!-- <mat-progress-bar class='progress' [class.hidden]='!(loading$ | async)' mode="query">
         </mat-progress-bar>
-        <tz-network-selector></tz-network-selector>
         <nb-tabset>
             <nb-tab tabTitle="Explorer">
                 <tz-demo></tz-demo>
@@ -16,6 +17,7 @@
             <nb-tab tabTitle="Transaction">
                 <tz-send-transaction></tz-send-transaction>
             </nb-tab>
-        </nb-tabset>
-    </nb-layout-column>
+        </nb-tabset> -->
+  </nb-layout-column>
+  <nb-layout-footer></nb-layout-footer>
 </nb-layout>

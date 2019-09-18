@@ -1,17 +1,28 @@
-import { Component } from '@angular/core';
-import { combineLatest } from 'rxjs';
-import { TezosService } from './tezos.service';
-import { map } from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
+
+import { TaquitoService } from './taquito.service';
 
 @Component({
   selector: 'tz-root',
   templateUrl: './app.component.html',
-  styles: []
+  styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
-  title = 'demo';
+export class AppComponent implements OnInit {
+  title = 'Tezos TS Demo';
 
-  public loading$ = combineLatest(this.tezos.blockLoading$, this.tezos.addressLoading$).pipe(map(([block, address]) => block || address));
+  // public loading$ = combineLatest(this.tezos.blockLoading$, this.tezos.addressLoading$).pipe(
+  //   map(([block, address]) => block || address)
+  // );
 
-  constructor(private tezos: TezosService) { }
+  constructor(private taquito: TaquitoService) {}
+
+  ngOnInit() {}
+
+  onSearch(event) {
+    this.taquito.setNetwork(event.network);
+
+    this.taquito.getContract(event.contract).then(contract => console.log(contract));
+
+    console.log(event);
+  }
 }

@@ -1,0 +1,13 @@
+<form [formGroup]="searchForm" (ngSubmit)="search.emit(searchForm.value)">
+  <nb-select placeholder="Select network" formControlName="network">
+    <nb-option value="https://alphanet-node.tzscan.io">Alphanet</nb-option>
+    <nb-option value="https://api.tez.ie/rpc/mainnet">Mainnet</nb-option>
+  </nb-select>
+  <input
+    class="searchbox"
+    formControlName="contract"
+    placeholder="Enter contract address"
+    nbInput
+  />
+  <button type="submit" [disabled]="!searchForm.valid" nbButton>Search</button>
+</form>

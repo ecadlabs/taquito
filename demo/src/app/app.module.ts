@@ -1,21 +1,26 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { NgModule } from '@angular/core';
+import { MatProgressBarModule } from '@angular/material';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {
+  NbActionsModule,
+  NbButtonModule,
+  NbInputModule,
+  NbLayoutModule,
+  NbTabsetModule,
+  NbThemeModule,
+} from '@nebular/theme';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NbThemeModule, NbActionsModule, NbLayoutModule, NbTabsetModule, } from '@nebular/theme';
+import { ContractStateCardModule } from './contract-state-card/contract-state-card.module';
 import { DemoModule } from './demo/demo.module';
+import { SearchFormModule } from './search-form/search-form.module';
+import { TaquitoService } from './taquito.service';
 import { TezosService } from './tezos.service';
-import { MatProgressBarModule } from '@angular/material';
-import { NetworkSelectorModule } from './network-selector/network-selector.module';
-import { SendTransactionModule } from './send-transaction/send-transaction.module';
-
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -26,10 +31,12 @@ import { SendTransactionModule } from './send-transaction/send-transaction.modul
     BrowserAnimationsModule,
     NbTabsetModule,
     MatProgressBarModule,
-    NetworkSelectorModule,
-    SendTransactionModule
+    NbInputModule,
+    NbButtonModule,
+    SearchFormModule,
+    ContractStateCardModule,
   ],
-  providers: [TezosService],
-  bootstrap: [AppComponent]
+  providers: [TezosService, TaquitoService],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
