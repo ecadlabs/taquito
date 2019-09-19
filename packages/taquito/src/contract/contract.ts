@@ -18,7 +18,7 @@ class ContractMethod {
     private parameterSchema: ParameterSchema,
     private name: string,
     private args: any[]
-  ) {}
+  ) { }
 
   /**
    * @description Get the schema of the smart contract method
@@ -63,6 +63,8 @@ function computeLength(data: string | Object) {
 export class Contract {
   /**
    * @description Contains methods that are implemented by the target Tezos Smart Contract, and offers the user to call the Smart Contract methods as if they were native TS/JS methods.
+   * NB: if the contract contains annotation it will include named properties; if not it will be indexed by a number.
+   * 
    */
   public methods: { [key: string]: (...args: any[]) => ContractMethod } = {};
 
@@ -88,12 +90,12 @@ export class Contract {
 
     if (parameterSchema.isMultipleEntryPoint) {
       Object.keys(paramSchema).forEach(smartContractMethodName => {
-        const method = function(...args: any[]) {
+        const method = function (...args: any[]) {
           const smartContractMethodSchema = paramSchema[smartContractMethodName];
           if (args.length !== computeLength(smartContractMethodSchema)) {
             throw new Error(
               `${smartContractMethodName} Received ${
-                args.length
+              args.length
               } arguments while expecting ${computeLength(
                 smartContractMethodSchema
               )} (${JSON.stringify(Object.keys(smartContractMethodSchema))})`
@@ -110,7 +112,7 @@ export class Contract {
         this.methods[smartContractMethodName] = method;
       });
     } else {
-      this.methods['main'] = function(...args: any[]) {
+      this.methods['main'] = function (...args: any[]) {
         const smartContractMethodSchema = paramSchema;
         if (args.length !== computeLength(smartContractMethodSchema)) {
           throw new Error(
@@ -125,7 +127,7 @@ export class Contract {
   }
 
   /**
-   * @description Fetch last smart contract storage
+   * @description Return a friendly representation of the smart contract storage
    */
   public storage() {
     return this.provider.getStorage(this.address, this.schema);
@@ -133,7 +135,7 @@ export class Contract {
 
   /**
    *
-   * @description Fetch a key in the big map of the smart contract
+   * @description Return a friendly representation of the smart contract big map value
    *
    * @param key BigMap key to fetch
    */
