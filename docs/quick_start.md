@@ -5,15 +5,28 @@ author: Simon Boissonneault-Robert
 
 ## Installing the library
 
-```
+```sh
 npm run install @taquito/taquito
 ```
 
 ## Import the library in your project
 
+You can access Tezos Toolkit one of two ways:
+
+*Import Tezos (a singleton object) from @tezos-ts/tezos-ts.*
+
 ```js
 import { Tezos } from '@taquito/taquito'
 ```
+
+*Import TezosToolkit from @tezos-ts/tezos-ts and instantiate it.*
+
+```js
+import { TezosToolkit } from '@taquito/taquito'
+const tezos = new TezosToolkit();
+```
+
+**NB: this approach is only required if you need to instantiate more than one toolkit.**
 
 ## Configuration
 
