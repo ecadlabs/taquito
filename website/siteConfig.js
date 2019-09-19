@@ -83,7 +83,7 @@ const siteConfig = {
 
   // Show documentation's last update time.
   // enableUpdateTime: true,
-
+  gaTrackingId: 'UA-148358030-1',
   // You may provide arbitrary config keys to be used as needed by your
   // template. For example, if you need your repo's URL...
   repoUrl: 'https://github.com/ecadlabs/taquito',
