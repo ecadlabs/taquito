@@ -130,19 +130,19 @@ class Index extends React.Component {
       return (<Block layout="fourColumn">
         {[
           {
-            content: 'Developers can get up and running using and contributing to the library quickly: Taquito is written in an idiomatic TypeScript style, and includes a set of ready-made React components.',
+            content: 'Hit the ground running using & contributing to the library quickly: Taquito is written in an idiomatic TypeScript style, and includes a set of ready-made React components.',
             image: `${baseUrl}img/tap.svg`,
             imageAlign: 'top',
             title: 'Easy to Use',
           },
           {
-            content: 'Usable in any JavaScript project on the front- or back-end with minimal dependencies, Taquito has no reliance on any stack by default (except the canonical Tezos RPC node).',
+            content: 'Perfect for any JavaScript project on the front- or back-end with minimal dependencies, Taquito has no reliance on any stack by default, except Tezos node.',
             image: `${baseUrl}img/suitecase.svg`,
             imageAlign: 'top',
             title: 'Portable',
           },
           {
-            content: 'Taquito comes complete with a well-documented API using TypeDoc, nightly and continuous integration tests against official Tezos RPC nodes, and versioned releases published to npmjs.org.',
+            content: 'Taquito comes complete with a well-documented API using TypeDoc, nightly and continuous integration tests against the Nomadic Labs Tezos node & versioned releases published to npmjs.org.',
             image: `${baseUrl}img/tools.svg`,
             imageAlign: 'top',
             title: 'Well-Supported',
