@@ -8,7 +8,7 @@ See the top-level [https://github.com/ecadlabs/taquito](https://github.com/ecadl
 
 ## API Documentation
 
-TypeDoc style documentation is available on-line [here](https://taquito.tez.ie/typedoc/modules/_tezos_ts_streamer.html)
+TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_tezos_ts_streamer.html)
 
 ## Disclaimer
 

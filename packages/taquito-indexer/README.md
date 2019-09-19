@@ -12,7 +12,7 @@ See the top-level project [https://github.com/ecadlabs/taquito](https://github.c
 
 ## API Documentation
 
-TypeDoc style documentation is available on-line [here](https://taquito.tez.ie/typedoc/modules/_tezos_ts_indexer.html)
+TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_tezos_ts_indexer.html)
 
 ## Disclaimer
 
