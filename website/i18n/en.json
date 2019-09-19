@@ -3,8 +3,11 @@
   "localized-strings": {
     "next": "Next",
     "previous": "Previous",
-    "tagline": "Tezos Typescript Library Suite is a set of npm packages that aim to make building on top of Tezos easier and enjoyable.",
+    "tagline": "A TypeScript library suite for development on the Tezos blockchain. Spicy!",
     "docs": {
+      "faq": {
+        "title": "FAQ"
+      },
       "inmemory_signer": {
         "title": "In Memory Signer"
       },
@@ -13,10 +16,16 @@
       },
       "tezbridge_signer": {
         "title": "TezBridge Signer"
+      },
+      "version": {
+        "title": "Versions"
       }
     },
     "links": {
-      "Docs": "Docs"
+      "4.1.0-beta.2": "4.1.0-beta.2",
+      "Docs": "Docs",
+      "Twitter": "Twitter",
+      "Github": "Github"
     },
     "categories": {
       "General": "General",

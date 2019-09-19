@@ -23,7 +23,7 @@ class HomeSplash extends React.Component {
 
     const ProjectTitle = () => (
       <h2 className="projectTitle">
-        {siteConfig.title}
+        <img src={baseUrl + 'img/TAQUITO.png'}></img>
         <small>{siteConfig.tagline}</small>
       </h2>
     );
@@ -50,7 +50,6 @@ class HomeSplash extends React.Component {
           <ProjectTitle siteConfig={siteConfig} />
           <PromoSection>
             <Button href={docUrl('quick_start.html')}>Quick Start</Button>
-            <Button href={'https://github.com/ecadlabs/taquito'}>Github</Button>
           </PromoSection>
         </div>
       </SplashContainer>
@@ -102,11 +101,63 @@ class Index extends React.Component {
       </Block>
     );
 
+    const Boilerplate = () => (
+      <Block background="light">
+        {[
+          {
+            content:
+              'The Taquito team has created a small sample project that checks and displays XTZ balance. Developers are invited to use this as a starting point by simply forking the https://github.com/ecadlabs/taquito-boilerplate project in GitHub.',
+            title: 'Boilerplate App',
+          },
+        ]}
+      </Block>
+    );
+
+    const CIBadging = () => (
+      <Block background="dark">
+        {[
+          {
+            content:
+              'The CII (Core Infrastructure Initiative) badging program was created by the Linux Foundation in response to previous security issues in open-source projects. We are committed to follow these best practices and earn/maintain our CII Badges.',
+            title: 'Participation in CII Badging Program',
+          },
+        ]}
+      </Block>
+    );
+
+
+    const Features = () => {
+      return (<Block layout="fourColumn">
+        {[
+          {
+            content: 'Hit the ground running using & contributing to the library quickly: Taquito is written in an idiomatic TypeScript style, and includes a set of ready-made React components.',
+            image: `${baseUrl}img/tap.svg`,
+            imageAlign: 'top',
+            title: 'Easy to Use',
+          },
+          {
+            content: 'Perfect for any JavaScript project on the front- or back-end with minimal dependencies, Taquito has no reliance on any stack by default, except Tezos node.',
+            image: `${baseUrl}img/suitecase.svg`,
+            imageAlign: 'top',
+            title: 'Portable',
+          },
+          {
+            content: 'Taquito comes complete with a well-documented API using TypeDoc, nightly and continuous integration tests against the Nomadic Labs Tezos node & versioned releases published to npmjs.org.',
+            image: `${baseUrl}img/tools.svg`,
+            imageAlign: 'top',
+            title: 'Well-Supported',
+          },
+        ]}
+      </Block>)
+    }
+
     return (
       <div>
         <HomeSplash siteConfig={siteConfig} language={language} />
         <div className="mainContainer">
-          <Description />
+          <Features></Features>
+          <CIBadging></CIBadging>
+          <Boilerplate></Boilerplate>
         </div>
       </div>
     );

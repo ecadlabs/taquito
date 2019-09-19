@@ -9,7 +9,7 @@
 // site configuration options.
 
 const siteConfig = {
-  title: 'Tezos TS', // Title for your website.
+  title: 'Taquito', // Title for your website.
   tagline: 'Tezos Typescript Library Suite is a set of npm packages that aim to make building on top of Tezos easier and enjoyable.',
   url: 'https://tezostaquito.io', // Your website URL
   baseUrl: '/', // Base URL for your project */
@@ -26,36 +26,40 @@ const siteConfig = {
 
   // For no header links in the top nav bar -> headerLinks: [],
   headerLinks: [
+    { doc: 'version', label: '4.1.0-beta.2' },
     { doc: 'quick_start', label: 'Docs' },
+    { href: "https://twitter.com/TezosTaquito", label: 'Twitter' },
+    { href: "https://github.com/ecadlabs/taquito", label: 'Github' },
   ],
 
   /* path to images for header/footer */
-  // headerIcon: 'img/favicon.ico',
   // footerIcon: 'img/favicon.ico',
-  // favicon: 'img/favicon.ico',
+  favicon: 'img/favicon.png',
+  headerIcon: 'img/favicon.png',
 
   /* Colors for website */
   colors: {
-    primaryColor: '#43876f',
-    secondaryColor: '#2e5e4d',
+    // blue 218DA5 35636E
+    // red C73D18
+    // brown A56921
+    // green 71A417
+    // beige F9E3C2
+    primaryColor: '#218DA5',
+    secondaryColor: '#35636E',
   },
 
   /* Custom fonts for website */
-  /*
   fonts: {
-    myFont: [
-      "Times New Roman",
-      "Serif"
+    titleFont: [
+      "Baloo Tammudu",
     ],
-    myOtherFont: [
-      "-apple-system",
-      "system-ui"
+    subTitleFont: [
+      "Open Sans"
     ]
   },
-  */
 
   // This copyright info is used in /core/Footer.js and blog RSS/Atom feeds.
-  copyright: `Copyright © ${new Date().getFullYear()} ECAD Labs`,
+  copyright: `Copyright © ${new Date().getFullYear()} ECAD Labs - Open Source MIT License`,
 
   highlight: {
     // Highlight.js theme to use for syntax highlighting in code blocks.
@@ -63,7 +67,11 @@ const siteConfig = {
   },
 
   // Add custom scripts here that would be placed in <script> tags.
-  scripts: ['https://buttons.github.io/buttons.js'],
+  scripts: ['https://buttons.github.io/buttons.js', {
+    src:
+      'https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js',
+    async: true,
+  }],
 
   // On page navigation for the current documentation page.
   onPageNav: 'separate',
@@ -76,14 +84,18 @@ const siteConfig = {
 
   // For sites with a sizable amount of content, set collapsible to true.
   // Expand/collapse the links and subcategories under categories.
-  // docsSideNavCollapsible: true,
 
   // Show documentation's last contributor's name.
   // enableUpdateBy: true,
-
+  defaultVersionShown: 'master',
   // Show documentation's last update time.
   // enableUpdateTime: true,
+  wrapPagesHTML: true,
   gaTrackingId: 'UA-148358030-1',
+  scrollToTop: true,
+  stylesheets: [
+    'https://fonts.googleapis.com/css?family=Baloo+Tammudu|Open+Sans:400,600,800&display=swap'
+  ],
   // You may provide arbitrary config keys to be used as needed by your
   // template. For example, if you need your repo's URL...
   repoUrl: 'https://github.com/ecadlabs/taquito',
