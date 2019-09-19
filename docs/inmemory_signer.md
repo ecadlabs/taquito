@@ -13,13 +13,13 @@ This signer implementation is meant to be used for development and not for produ
 
 ```js
 
-import { InMemorySigner } from '@tezos-ts/signer'
-import { Tezos } from '@tezos-ts/tezos-ts'
+import { InMemorySigner } from '@taquito/signer'
+import { Tezos } from '@taquito/taquito'
 
 Tezos.setProvider({signer: new InMemorySigner('you_private_key')})
 ```
 
-If you configure tezos-ts this way you will now be able to use every function that needs signing support
+If you configure taquito this way you will now be able to use every function that needs signing support
 
 `Note: Operation will be signed automatically using the signer (no prompt)`
 

@@ -11,14 +11,14 @@
 const siteConfig = {
   title: 'Tezos TS', // Title for your website.
   tagline: 'Tezos Typescript Library Suite is a set of npm packages that aim to make building on top of Tezos easier and enjoyable.',
-  url: 'https://tezos-ts.io', // Your website URL
+  url: 'https://taquito.tez.ie', // Your website URL
   baseUrl: '/', // Base URL for your project */
   // For github.io type URLs, you would set the url and baseUrl like:
   //   url: 'https://facebook.github.io',
   //   baseUrl: '/test-site/',
 
   // Used for publishing and more
-  projectName: 'tezos-ts',
+  projectName: 'taquito',
   organizationName: 'ecadlabs',
   // For top-level user or org sites, the organization is still the same.
   // e.g., for the https://JoelMarcey.github.io site, it would be set like...
@@ -86,7 +86,7 @@ const siteConfig = {
 
   // You may provide arbitrary config keys to be used as needed by your
   // template. For example, if you need your repo's URL...
-  repoUrl: 'https://github.com/ecadlabs/tezos-ts',
+  repoUrl: 'https://github.com/ecadlabs/taquito',
 };
 
 module.exports = siteConfig;

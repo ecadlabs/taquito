@@ -1,4 +1,4 @@
-import { Tezos } from '@tezos-ts/tezos-ts';
+import { Tezos } from '@taquito/taquito';
 
 const provider = 'https://alphanet-node.tzscan.io';
 
