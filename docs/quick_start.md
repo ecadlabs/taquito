@@ -6,13 +6,13 @@ author: Simon Boissonneault-Robert
 ## Installing the library
 
 ```
-npm run install @tezos-ts/tezos-ts
+npm run install @taquito/taquito
 ```
 
 ## Import the library in your project
 
 ```js
-import { Tezos } from '@tezos-ts/tezos-ts'
+import { Tezos } from '@taquito/taquito'
 ```
 
 ## Configuration
@@ -26,7 +26,7 @@ Tezos.setProvider({rpc: "your_rpc"})
 ### Changing the underlying signer
 
 ```js
-import { TezBridgeSigner } from '@tezos-ts/tezbridge-signer';
+import { TezBridgeSigner } from '@taquito/tezbridge-signer';
 
 Tezos.setProvider({signer: new TezBridgeSigner()})
 ```

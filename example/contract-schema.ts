@@ -1,5 +1,5 @@
-import { Tezos } from '@tezos-ts/tezos-ts';
-import { InMemorySigner } from '@tezos-ts/signer';
+import { Tezos } from '@taquito/taquito';
+import { InMemorySigner } from '@taquito/signer';
 
 
 async function example() {

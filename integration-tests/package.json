@@ -3,8 +3,8 @@
         "test": "jest"
     },
     "dependencies": {
-        "@tezos-ts/signer": "^4.1.0-beta.1",
-        "@tezos-ts/tezos-ts": "^4.1.0-beta.1"
+        "@taquito/signer": "^4.1.0-beta.1",
+        "@taquito/taquito": "^4.1.0-beta.1"
     },
     "private": true,
     "jest": {

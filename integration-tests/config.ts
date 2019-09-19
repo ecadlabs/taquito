@@ -1,5 +1,5 @@
-import { TezosToolkit } from '@tezos-ts/tezos-ts'
-import { InMemorySigner } from '@tezos-ts/signer';
+import { TezosToolkit } from '@taquito/taquito'
+import { InMemorySigner } from '@taquito/signer';
 const providers = (process.env['TEZOS_RPC_NODE'] && process.env['TEZOS_RPC_NODE'].split(',')) || ['http://alphanet-node.tzscan.io'];
 const signer: any = new InMemorySigner(process.env['TEZOS_SECRET_KEY'] || 'edsk3xkqabYfWWpcEKTWk75cRQv2bgHA3EHuuHSFH3ejqzKPx69Zh9');
 

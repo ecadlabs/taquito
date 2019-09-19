@@ -43,7 +43,7 @@ class Footer extends React.Component {
           <div>
             <h5>Community</h5>
             <a
-              href="https://stackoverflow.com/questions/tagged/tezos-ts"
+              href="https://stackoverflow.com/questions/tagged/taquito"
               target="_blank"
               rel="noreferrer noopener">
               Stack Overflow</a>

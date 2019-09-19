@@ -8,8 +8,8 @@ author: Simon Boissonneault-Robert
 You first need to include https://www.tezbridge.com/plugin.js in your application to use this signer
 
 ```js
-import { TezBridgeSigner } from '@tezos-ts/tezbridge-signer'
-import { Tezos } from '@tezos-ts/tezos-ts'
+import { TezBridgeSigner } from '@taquito/tezbridge-signer'
+import { Tezos } from '@taquito/taquito'
 
 Tezos.setProvider({signer: new TezBridgeSigner()})
 ```

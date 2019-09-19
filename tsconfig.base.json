@@ -20,26 +20,26 @@
     "jsx": "react",
     "baseUrl": "packages",
     "paths": {
-      "@tezos-ts/rpc": [
-        "tezos-ts-rpc/src/tezos-ts-rpc.ts"
+      "@taquito/rpc": [
+        "taquito-rpc/src/taquito-rpc.ts"
       ],
-      "@tezos-ts/michelson-encoder": [
-        "tezos-ts-michelson-encoder/src/tezos-ts-michelson-encoder.ts"
+      "@taquito/michelson-encoder": [
+        "taquito-michelson-encoder/src/taquito-michelson-encoder.ts"
       ],
-      "@tezos-ts/utils": [
-        "tezos-ts-utils/src/tezos-ts-utils.ts"
+      "@taquito/utils": [
+        "taquito-utils/src/taquito-utils.ts"
       ],
-      "@tezos-ts/tezos-ts": [
-        "tezos-ts/src/tezos-ts.ts"
+      "@taquito/taquito": [
+        "taquito/src/taquito.ts"
       ],
-      "@tezos-ts/indexer": [
-        "tezos-ts-indexer/src/tezos-ts-indexer.ts"
+      "@taquito/indexer": [
+        "taquito-indexer/src/taquito-indexer.ts"
       ],
-      "@tezos-ts/http-utils": [
-        "tezos-ts-http-utils/src/tezos-ts-http-utils.ts"
+      "@taquito/http-utils": [
+        "taquito-http-utils/src/taquito-http-utils.ts"
       ],
-      "@tezos-ts/signer": [
-        "tezos-ts-signer/src/tezos-ts-signer.ts"
+      "@taquito/signer": [
+        "taquito-signer/src/taquito-signer.ts"
       ]
     }
   }

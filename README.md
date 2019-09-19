@@ -1,7 +1,7 @@
 # Tezos Typescript Library Suite
 
-[![CircleCI](https://circleci.com/gh/ecadlabs/tezos-ts.svg?style=svg)](https://circleci.com/gh/ecadlabs/tezos-ts)
-[![codecov](https://codecov.io/gh/ecadlabs/tezos-ts/branch/master/graph/badge.svg)](https://codecov.io/gh/ecadlabs/tezos-ts)
+[![CircleCI](https://circleci.com/gh/ecadlabs/taquito.svg?style=svg)](https://circleci.com/gh/ecadlabs/taquito)
+[![codecov](https://codecov.io/gh/ecadlabs/taquito/branch/master/graph/badge.svg)](https://codecov.io/gh/ecadlabs/taquito)
 
 ## Work In Progress / Alpha
 
@@ -17,8 +17,8 @@ The goals of this library are:
 * Nightly and Continuous integration tests against official Tezos RPC nodes
 * dApp development uses cases a first-class concern, empowering new developers to get results quickly
 * No dependencies on the Tezos RPC node for generating operations (Ex: not dependant on “forge” RPC method).
-* Well documented API using [TypeDoc](https://tezos-ts.io/typedoc)
-* Set of ready-made React components for common use-cases, with a [Demo Gallery](https://tezos-ts.io/react-storybook/)
+* Well documented API using [TypeDoc](https://taquito.tez.ie/typedoc)
+* Set of ready-made React components for common use-cases, with a [Demo Gallery](https://taquito.tez.ie/react-storybook/)
 * Regular versioned releases, published to npmjs.org, with a published version strategy
 * Participation in the [CII Best Practices](https://bestpractices.coreinfrastructure.org) program and all requirements entailed therein
 * Portable - This library has minimum dependencies, making it usable in any js project on the front or back end.
@@ -27,48 +27,48 @@ The goals of this library are:
 
 ## Project Organization
 
-`tezos-ts` is organized as a mono repository from which several npm packages are built and published. Packages are in the `packages/` directory, each one with its a README file.
+`taquito` is organized as a mono repository from which several npm packages are built and published. Packages are in the `packages/` directory, each one with its a README file.
 
-We publish gpg signed packages to npmjs.org under the `@tezos-ts` handle.
+We publish gpg signed packages to npmjs.org under the `@taquito` handle.
 
 | Package                                                           |                        Responsibility                         |
 | ----------------------------------------------------------------- | ------------------------------------------------------------- |
-| [@tezos-ts/tezos-ts](packages/tezos-ts)                                     | Regroup every other library and provide higher level utility  |
-| [@tezos-ts/react-components](packages/tezos-ts-react-components)   | React components that implement some common use cases         |
-| [@tezos-ts/rpc](packages/tezos-ts-rpc)                             | RPC client library, wrap every rpc endpoint in its own method |
-| [@tezos-ts/michelson-encoder](packages/tezos-ts-michelson-encoder) | Encode/Decode storage and parameters to/from michelson format |
-| [@tezos-ts/indexer](packages/tezos-ts-indexer)                     | A client for the [tezos-indexer-api][0] API                   |
-| [@tezos-ts/streamer](packages/tezos-ts-streamer)                   | A client for the [tezos-ts-streamer][1] API              |
-| [@tezos-ts/signer](packages/tezos-ts-signer)                   | Provide necessary function to sign using tezos keys  |
-| [@tezos-ts/utils](packages/tezos-ts-utils)                   | Provide different encoding and decoding utilities |
+| [@taquito/taquito](packages/taquito)                                     | Regroup every other library and provide higher level utility  |
+| [@taquito/react-components](packages/taquito-react-components)   | React components that implement some common use cases         |
+| [@taquito/rpc](packages/taquito-rpc)                             | RPC client library, wrap every rpc endpoint in its own method |
+| [@taquito/michelson-encoder](packages/taquito-michelson-encoder) | Encode/Decode storage and parameters to/from michelson format |
+| [@taquito/indexer](packages/taquito-indexer)                     | A client for the [tezos-indexer-api][0] API                   |
+| [@taquito/streamer](packages/taquito-streamer)                   | A client for the [taquito-streamer][1] API              |
+| [@taquito/signer](packages/taquito-signer)                   | Provide necessary function to sign using tezos keys  |
+| [@taquito/utils](packages/taquito-utils)                   | Provide different encoding and decoding utilities |
 
 ## API Documentation
 
-The TypeDoc style API documentation is available [here](https://tezos-ts.io/typedoc)
+The TypeDoc style API documentation is available [here](https://taquito.tez.ie/typedoc)
 
 ### React Components overview
 
 React component demos are published using the [storybook](https://storybook.js.org) tool.
 
-View the demo components here: [Tezos components Storybook](https://tezos-ts.io/react-storybook)
+View the demo components here: [Tezos components Storybook](https://taquito.tez.ie/react-storybook)
 
 ## Versioning Strategy
 
 Version releases use "Semantic Versioning" style version numbers, but deviates from SemVer norms when it comes to the "Major" number.
 
-We use SemVer style versions for tezos-ts, but we make the "Major" version number track against the latest Tezos economical protocol we have tested on.
+We use SemVer style versions for taquito, but we make the "Major" version number track against the latest Tezos economical protocol we have tested on.
 
-For example, in August 2019, the economic protocol was `004-Pt24m4xi`, and `005-PsBABY5H` was (is) working its way through the on-chain amendment process. Therefore the current version number for tezos-ts would be `v4.0.0`. During this time, we would start working on `v5.0.0-beta.1` on the expectation (but not the assumption) that it shall become our new economic protocol.
+For example, in August 2019, the economic protocol was `004-Pt24m4xi`, and `005-PsBABY5H` was (is) working its way through the on-chain amendment process. Therefore the current version number for taquito would be `v4.0.0`. During this time, we would start working on `v5.0.0-beta.1` on the expectation (but not the assumption) that it shall become our new economic protocol.
 
 When we are confident that the next protocol proposal going to be promoted, AND we have implemented and tested interoperability with the new protocol (and potentially node RPC changes) we shall them release `v5.0.0` BEFORE the chain transitions to the new protocol.
 
-It is essential that the packages supporting the new protocol be released before the chain transitions to the new economic protocol so that developers who build on top of tezos-ts have time to update and test their projects.
+It is essential that the packages supporting the new protocol be released before the chain transitions to the new economic protocol so that developers who build on top of taquito have time to update and test their projects.
 
-During "Major" version updates, breaking changes in the tezos-ts public APIs MAY include breaking changes, for which we will make a strong effort to announce and document in our release notes. The Minor and Patch version numbers follow SemVer norms.
+During "Major" version updates, breaking changes in the taquito public APIs MAY include breaking changes, for which we will make a strong effort to announce and document in our release notes. The Minor and Patch version numbers follow SemVer norms.
 
 All releases are backward compatible with chain data back to the genesis block. Support for older Tezos node RPCs is maintained where feasible but will be dropped eventually. Tezos node RPC support also depends on what versioning strategy gets adopted by the canonical Tezos node. At the time of writing, this is unclear.
 
-Supported versions of the tezos-ts packages will be maintained for the current and next protocol versions. Teams using older versions are encouraged to update, but if blockers exist, they are encouraged to contact us.
+Supported versions of the taquito packages will be maintained for the current and next protocol versions. Teams using older versions are encouraged to update, but if blockers exist, they are encouraged to contact us.
 
 ## Releases
 
@@ -113,7 +113,7 @@ Reports may be encrypted using keys published on keybase.io using [keybase/jevon
 
 ### Other Issues & Feature Requests
 
-Please use the [GitHub issue tracker](https://github.com/ecadlabs/tezos-ts/issues) to report bugs or request features.
+Please use the [GitHub issue tracker](https://github.com/ecadlabs/taquito/issues) to report bugs or request features.
 
 ## Contributions
 

@@ -30,13 +30,13 @@
       "js"
     ],
     "moduleNameMapper": {
-      "^@tezos-ts/rpc$": "<rootDir>/packages/tezos-ts-rpc/src/tezos-ts-rpc.ts",
-      "^@tezos-ts/tezos-ts$": "<rootDir>/packages/tezos-ts/src/tezos-ts.ts",
-      "^@tezos-ts/michelson-encoder$": "<rootDir>/packages/tezos-ts-michelson-encoder/src/tezos-ts-michelson-encoder.ts",
-      "^@tezos-ts/http-utils$": "<rootDir>/packages/tezos-ts-http-utils/src/tezos-ts-http-utils.ts",
-      "^@tezos-ts/utils$": "<rootDir>/packages/tezos-ts-utils/src/tezos-ts-utils.ts",
-      "^@tezos-ts/indexer$": "<rootDir>/packages/tezos-ts-indexer/src/tezos-ts-indexer.ts",
-      "^@tezos-ts/signer$": "<rootDir>/packages/tezos-ts-signer/src/tezos-ts-signer.ts"
+      "^@taquito/rpc$": "<rootDir>/packages/taquito-rpc/src/taquito-rpc.ts",
+      "^@taquito/taquito$": "<rootDir>/packages/taquito/src/taquito.ts",
+      "^@taquito/michelson-encoder$": "<rootDir>/packages/taquito-michelson-encoder/src/taquito-michelson-encoder.ts",
+      "^@taquito/http-utils$": "<rootDir>/packages/taquito-http-utils/src/taquito-http-utils.ts",
+      "^@taquito/utils$": "<rootDir>/packages/taquito-utils/src/taquito-utils.ts",
+      "^@taquito/indexer$": "<rootDir>/packages/taquito-indexer/src/taquito-indexer.ts",
+      "^@taquito/signer$": "<rootDir>/packages/taquito-signer/src/taquito-signer.ts"
     },
     "coveragePathIgnorePatterns": [
       "/node_modules/",

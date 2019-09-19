@@ -1,6 +1,6 @@
-import { Tezos } from '../packages/tezos-ts/src/tezos-ts';
-import { RpcClient } from '../packages/tezos-ts-rpc/src/tezos-ts-rpc';
-import { castToString } from '../packages/tezos-ts-rpc/src/utils/utils';
+import { Tezos } from '../packages/taquito/src/taquito';
+import { RpcClient } from '../packages/taquito-rpc/src/taquito-rpc';
+import { castToString } from '../packages/taquito-rpc/src/utils/utils';
 
 const provider = 'https://alphanet-node.tzscan.io';
 const client = new RpcClient(provider);
