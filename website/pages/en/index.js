@@ -106,7 +106,7 @@ class Index extends React.Component {
         {[
           {
             content:
-              'The Taquito team has created a small sample project that checks and displays XTZ balance. Developers are invited to use this as a starting point by simply forking the https://github.com/ecadlabs/taquito-boilerplate-app project in GitHub.',
+              'The Taquito team has created a small sample project that checks and displays XTZ balance. Developers are invited to use this as a starting point by simply forking the https://github.com/ecadlabs/taquito-boilerplate project in GitHub.',
             title: 'Boilerplate App',
           },
         ]}
