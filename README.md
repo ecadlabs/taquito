@@ -17,8 +17,8 @@ The goals of this library are:
 * Nightly and Continuous integration tests against official Tezos RPC nodes
 * dApp development uses cases a first-class concern, empowering new developers to get results quickly
 * No dependencies on the Tezos RPC node for generating operations (Ex: not dependant on “forge” RPC method).
-* Well documented API using [TypeDoc](https://taquito.tez.ie/typedoc)
-* Set of ready-made React components for common use-cases, with a [Demo Gallery](https://taquito.tez.ie/react-storybook/)
+* Well documented API using [TypeDoc](https://tezostaquito.io/typedoc)
+* Set of ready-made React components for common use-cases, with a [Demo Gallery](https://tezostaquito.io/react-storybook/)
 * Regular versioned releases, published to npmjs.org, with a published version strategy
 * Participation in the [CII Best Practices](https://bestpractices.coreinfrastructure.org) program and all requirements entailed therein
 * Portable - This library has minimum dependencies, making it usable in any js project on the front or back end.
@@ -44,13 +44,13 @@ We publish gpg signed packages to npmjs.org under the `@taquito` handle.
 
 ## API Documentation
 
-The TypeDoc style API documentation is available [here](https://taquito.tez.ie/typedoc)
+The TypeDoc style API documentation is available [here](https://tezostaquito.io/typedoc)
 
 ### React Components overview
 
 React component demos are published using the [storybook](https://storybook.js.org) tool.
 
-View the demo components here: [Tezos components Storybook](https://taquito.tez.ie/react-storybook)
+View the demo components here: [Tezos components Storybook](https://tezostaquito.io/react-storybook)
 
 ## Versioning Strategy
 

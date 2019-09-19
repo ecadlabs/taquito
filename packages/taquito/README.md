@@ -6,7 +6,7 @@ The `@taquito/taquito` package contains higher level functionality that builds u
 
 ## API Documentation
 
-TypeDoc style documentation is available on-line [here](https://taquito.tez.ie/typedoc/modules/_tezos_ts_tezos_ts.html)
+TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_tezos_ts_tezos_ts.html)
 
 See the top-level [https://github.com/ecadlabs/taquito](https://github.com/ecadlabs/taquito) file for details on reporting issues, contributing and versioning.
 

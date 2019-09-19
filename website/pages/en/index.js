@@ -87,8 +87,8 @@ class Index extends React.Component {
               '* Nightly and Continuous integration tests against official Tezos RPC nodes\n' +
               '* dApp development uses cases a first class concern, empowering new developers to get results quickly\n' +
               '* No dependencies on the Tezos RPC node for generating operations (Ex: not dependant on “forge” RPC method).\n' +
-              '* Well documented API using [TypeDoc](https://taquito.tez.ie/typedoc)\n' +
-              '* Set of ready made React components for common use-cases, with a [Demo Gallery](https://taquito.tez.ie/react-storybook/)\n' +
+              '* Well documented API using [TypeDoc](https://tezostaquito.io/typedoc)\n' +
+              '* Set of ready made React components for common use-cases, with a [Demo Gallery](https://tezostaquito.io/react-storybook/)\n' +
               '* Regular versioned releases, published to npmjs.org, with a published version strategy\n' +
               '* Participation in the [CII Best Practices](https://bestpractices.coreinfrastructure.org) program and all requirements entailed there in\n' +
               '* Portable - This library has minimum dependencies, making it usable in any js project on the front or back end.\n' +

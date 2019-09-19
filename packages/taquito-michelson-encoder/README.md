@@ -61,7 +61,7 @@ Given the following michelson smart contract data, retrieved from a Tezos Nodes 
 
 ## API Documentation
 
-TypeDoc style documentation is available on-line [here](https://taquito.tez.ie/typedoc/modules/_tezos_ts_michelson_encoder.html)
+TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_tezos_ts_michelson_encoder.html)
 
 ## Disclaimer
 
