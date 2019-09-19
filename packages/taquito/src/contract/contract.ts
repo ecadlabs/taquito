@@ -66,27 +66,29 @@ export class Contract {
    */
   public methods: { [key: string]: (...args: any[]) => ContractMethod } = {};
 
+  public readonly schema: Schema;
+
+  public readonly parameterSchema: ParameterSchema;
+
   constructor(
     public readonly address: string,
-    public readonly schema: Schema,
-    public readonly parameterSchema: ParameterSchema,
+    public readonly script: any,
     private provider: ContractProvider
   ) {
-    this._initializeMethods(address, parameterSchema, provider);
+    this.schema = Schema.fromRPCResponse(this.script);
+    this.parameterSchema = ParameterSchema.fromRPCResponse(this.script);
+    this._initializeMethods(address, provider);
   }
 
-  private _initializeMethods(
-    address: string,
-    parameterSchema: ParameterSchema,
-    provider: ContractProvider
-  ) {
-    const paramSchema = parameterSchema.ExtractSchema();
+  private _initializeMethods(address: string, provider: ContractProvider) {
+    const parameterSchema = this.parameterSchema;
+    const paramSchema = this.parameterSchema.ExtractSchema();
 
-    if (!parameterSchema.hasAnnotation) {
+    if (!this.parameterSchema.hasAnnotation) {
       console.warn('Smart contract do not have annotation methods will be indexes.');
     }
 
-    if (parameterSchema.isMultipleEntryPoint) {
+    if (this.parameterSchema.isMultipleEntryPoint) {
       Object.keys(paramSchema).forEach(smartContractMethodName => {
         const method = function(...args: any[]) {
           const smartContractMethodSchema = paramSchema[smartContractMethodName];

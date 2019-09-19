@@ -11,7 +11,18 @@ export class Schema {
   private bigMap?: BigMapToken;
 
   static fromRPCResponse(val: any) {
-    return new Schema(val.script.code.find((x: any) => x.prim === 'storage').args[0]);
+    const storage =
+      val &&
+      val.script &&
+      val.script &&
+      Array.isArray(val.script.code) &&
+      val.script.code.find((x: any) => x.prim === 'storage');
+
+    if (!storage || !Array.isArray(storage.args)) {
+      throw new Error('Invalid rpc response passed as arguments');
+    }
+
+    return new Schema(storage.args[0]);
   }
 
   constructor(val: any) {

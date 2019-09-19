@@ -7,7 +7,17 @@ export class ParameterSchema {
   private root: Token;
 
   static fromRPCResponse(val: any) {
-    return new ParameterSchema(val.script.code.find((x: any) => x.prim === 'parameter').args[0]);
+    const parameter =
+      val &&
+      val.script &&
+      val.script &&
+      Array.isArray(val.script.code) &&
+      val.script.code.find((x: any) => x.prim === 'parameter');
+    if (!parameter || !Array.isArray(parameter.args)) {
+      throw new Error('Invalid rpc response passed as arguments');
+    }
+
+    return new ParameterSchema(parameter.args[0]);
   }
 
   get isMultipleEntryPoint() {
