@@ -12,7 +12,7 @@ export class BigMapToken extends Token {
   }
 
   get ValueSchema() {
-    return this.createToken(this.val.args![1], 0);
+    return this.createToken(this.val.args[1], 0);
   }
 
   get KeySchema(): ComparableToken {

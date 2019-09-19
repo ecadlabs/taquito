@@ -7,7 +7,7 @@ export class ParameterSchema {
   private root: Token;
 
   static fromRPCResponse(val: any) {
-    return new ParameterSchema(val.script.code.find((x: any) => x.prim === 'parameter')!.args[0]);
+    return new ParameterSchema(val.script.code.find((x: any) => x.prim === 'parameter').args[0]);
   }
 
   get isMultipleEntryPoint() {

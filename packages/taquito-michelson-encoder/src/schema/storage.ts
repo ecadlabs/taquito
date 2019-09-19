@@ -11,7 +11,7 @@ export class Schema {
   private bigMap?: BigMapToken;
 
   static fromRPCResponse(val: any) {
-    return new Schema(val.script.code.find((x: any) => x.prim === 'storage')!.args[0]);
+    return new Schema(val.script.code.find((x: any) => x.prim === 'storage').args[0]);
   }
 
   constructor(val: any) {
