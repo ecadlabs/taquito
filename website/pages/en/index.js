@@ -23,7 +23,7 @@ class HomeSplash extends React.Component {
 
     const ProjectTitle = () => (
       <h2 className="projectTitle">
-        <img src={baseUrl + 'img/TAQUITO.png'}></img>
+        <img src={baseUrl + 'img/Taquito.png'}></img>
         <small>{siteConfig.tagline}</small>
       </h2>
     );
