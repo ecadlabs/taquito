@@ -1,4 +1,4 @@
-import { ParameterSchema, Schema } from '@taquito/michelson-encoder';
+import { Schema } from '@taquito/michelson-encoder';
 import { ml2mic, sexp2mic } from '@taquito/utils';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
 import { Context } from '../context';
@@ -217,11 +217,7 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
   }
 
   async at(address: string): Promise<Contract> {
-    let script = await this.rpc.getScript(address);
-
-    let contractSchema: Schema = Schema.fromRPCResponse({ script });
-    let parameterSchema: ParameterSchema = ParameterSchema.fromRPCResponse({ script });
-
-    return new Contract(address, contractSchema, parameterSchema, this);
+    const script = await this.rpc.getScript(address);
+    return new Contract(address, script, this);
   }
 }

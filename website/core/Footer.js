@@ -39,6 +39,9 @@ class Footer extends React.Component {
             <a href="/typedoc">
               Typedoc reference
             </a>
+            {/* <a href={this.docUrl('faq.html', this.props.language)}>
+              FAQ
+            </a> */}
           </div>
           <div>
             <h5>Community</h5>
@@ -47,9 +50,16 @@ class Footer extends React.Component {
               target="_blank"
               rel="noreferrer noopener">
               Stack Overflow</a>
-          </div>
-          <div>
-            <h5>More</h5>
+            <a
+              href="https://twitter.com/TezosTaquito"
+              target="_blank"
+              rel="noreferrer noopener">
+              Twitter</a>
+            <a
+              href={this.props.config.repoUrl + '/blob/master/code-of-conduct.md'}
+              target="_blank"
+              rel="noreferrer noopener">
+              Code of conduct</a>
             <a href={this.props.config.repoUrl}>GitHub</a>
             <a
               className="github-button"
@@ -62,9 +72,22 @@ class Footer extends React.Component {
               Star
             </a>
           </div>
+          <div>
+            <h5>Contact</h5>
+            <a
+              href={this.props.config.repoUrl + '/issues'}
+              target="_blank"
+              rel="noreferrer noopener">
+              Report issues</a>
+            <a
+              href={this.props.config.repoUrl + '/blob/master/CONTRIBUTING.md'}
+              target="_blank"
+              rel="noreferrer noopener">
+              Contribute</a>
+          </div>
         </section>
         <section className="copyright">{this.props.config.copyright}</section>
-      </footer>
+      </footer >
     );
   }
 }

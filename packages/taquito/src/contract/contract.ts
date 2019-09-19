@@ -18,7 +18,7 @@ class ContractMethod {
     private parameterSchema: ParameterSchema,
     private name: string,
     private args: any[]
-  ) { }
+  ) {}
 
   /**
    * @description Get the schema of the smart contract method
@@ -64,38 +64,40 @@ export class Contract {
   /**
    * @description Contains methods that are implemented by the target Tezos Smart Contract, and offers the user to call the Smart Contract methods as if they were native TS/JS methods.
    * NB: if the contract contains annotation it will include named properties; if not it will be indexed by a number.
-   * 
+   *
    */
   public methods: { [key: string]: (...args: any[]) => ContractMethod } = {};
 
+  public readonly schema: Schema;
+
+  public readonly parameterSchema: ParameterSchema;
+
   constructor(
     public readonly address: string,
-    public readonly schema: Schema,
-    public readonly parameterSchema: ParameterSchema,
+    public readonly script: any,
     private provider: ContractProvider
   ) {
-    this._initializeMethods(address, parameterSchema, provider);
+    this.schema = Schema.fromRPCResponse(this.script);
+    this.parameterSchema = ParameterSchema.fromRPCResponse(this.script);
+    this._initializeMethods(address, provider);
   }
 
-  private _initializeMethods(
-    address: string,
-    parameterSchema: ParameterSchema,
-    provider: ContractProvider
-  ) {
-    const paramSchema = parameterSchema.ExtractSchema();
+  private _initializeMethods(address: string, provider: ContractProvider) {
+    const parameterSchema = this.parameterSchema;
+    const paramSchema = this.parameterSchema.ExtractSchema();
 
-    if (!parameterSchema.hasAnnotation) {
+    if (!this.parameterSchema.hasAnnotation) {
       console.warn('Smart contract do not have annotation methods will be indexes.');
     }
 
-    if (parameterSchema.isMultipleEntryPoint) {
+    if (this.parameterSchema.isMultipleEntryPoint) {
       Object.keys(paramSchema).forEach(smartContractMethodName => {
-        const method = function (...args: any[]) {
+        const method = function(...args: any[]) {
           const smartContractMethodSchema = paramSchema[smartContractMethodName];
           if (args.length !== computeLength(smartContractMethodSchema)) {
             throw new Error(
               `${smartContractMethodName} Received ${
-              args.length
+                args.length
               } arguments while expecting ${computeLength(
                 smartContractMethodSchema
               )} (${JSON.stringify(Object.keys(smartContractMethodSchema))})`
@@ -112,7 +114,7 @@ export class Contract {
         this.methods[smartContractMethodName] = method;
       });
     } else {
-      this.methods['main'] = function (...args: any[]) {
+      this.methods['main'] = function(...args: any[]) {
         const smartContractMethodSchema = paramSchema;
         if (args.length !== computeLength(smartContractMethodSchema)) {
           throw new Error(
