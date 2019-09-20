@@ -121,6 +121,7 @@ class Index extends React.Component {
               'The CII (Core Infrastructure Initiative) badging program was created by the Linux Foundation in response to previous security issues in open-source projects. We are committed to follow these best practices and earn/maintain our CII Badges.',
             title: 'Participation in CII Badging Program',
             image: `${baseUrl}img/cii_badge.png`,
+            imageAlign: 'right',
           },
         ]}
       </Block>
