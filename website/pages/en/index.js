@@ -106,7 +106,7 @@ class Index extends React.Component {
         {[
           {
             content:
-              'The Taquito team has created a small sample project that checks and displays XTZ balance. Developers are invited to use this as a starting point by simply forking the https://github.com/ecadlabs/taquito-boilerplate project in GitHub.',
+              'The Taquito team has created a small sample project that checks and displays XTZ balance. Developers are invited to use this as a starting point by simply forking the [Taquito Boilerplate](https://github.com/ecadlabs/taquito-boilerplate) project in GitHub.',
             title: 'Boilerplate App',
           },
         ]}
@@ -120,6 +120,8 @@ class Index extends React.Component {
             content:
               'The CII (Core Infrastructure Initiative) badging program was created by the Linux Foundation in response to previous security issues in open-source projects. We are committed to follow these best practices and earn/maintain our CII Badges.',
             title: 'Participation in CII Badging Program',
+            image: `${baseUrl}img/cii_badge.png`,
+            imageAlign: 'right',
           },
         ]}
       </Block>
@@ -163,5 +165,7 @@ class Index extends React.Component {
     );
   }
 }
+
+Index.description = 'a TypeScript library suite made available as set of npm packages aiming to make building on top of Tezos easier and more enjoyable.'
 
 module.exports = Index;
