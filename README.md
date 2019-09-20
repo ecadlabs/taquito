@@ -1,4 +1,4 @@
-# Taquito
+<span style="display:block;text-align:center">![Logo](https://tezostaquito.io/img/Taquito.png)</span>
 
 A TypeScript library suite for development on the Tezos blockchain
 
@@ -37,19 +37,19 @@ Taquito comes complete with:
 
 We publish gpg signed packages to npmjs.org under the `@taquito` handle.
 
-| High Level Packages                                                           |                        Responsibility                         |
-| ----------------------------------------------------------------- | ------------------------------------------------------------- |
-| [@taquito/taquito](packages/taquito)                                     | Regroup every other library and provide higher level utility  |
-| [@taquito/react-components](packages/taquito-react-components)   | React components that implement some common use cases         |
+| High Level Packages                                            | Responsibility                                               |
+| -------------------------------------------------------------- | ------------------------------------------------------------ |
+| [@taquito/taquito](packages/taquito)                           | Regroup every other library and provide higher level utility |
+| [@taquito/react-components](packages/taquito-react-components) | React components that implement some common use cases        |
 
-| Low Level Packages                                                           |                        Responsibility                         |
-| ----------------------------------------------------------------- | ------------------------------------------------------------- |
+| Low Level Packages                                               | Responsibility                                                |
+| ---------------------------------------------------------------- | ------------------------------------------------------------- |
 | [@taquito/rpc](packages/taquito-rpc)                             | RPC client library, wrap every rpc endpoint in its own method |
 | [@taquito/michelson-encoder](packages/taquito-michelson-encoder) | Encode/Decode storage and parameters to/from michelson format |
 | [@taquito/indexer](packages/taquito-indexer)                     | A client for the [tezos-indexer-api][0] API                   |
-| [@taquito/streamer](packages/taquito-streamer)                   | A client for the [taquito-streamer][1] API              |
-| [@taquito/signer](packages/taquito-signer)                   | Provide necessary function to sign using tezos keys  |
-| [@taquito/utils](packages/taquito-utils)                   | Provide different encoding and decoding utilities |
+| [@taquito/streamer](packages/taquito-streamer)                   | A client for the [taquito-streamer][1] API                    |
+| [@taquito/signer](packages/taquito-signer)                       | Provide necessary function to sign using tezos keys           |
+| [@taquito/utils](packages/taquito-utils)                         | Provide different encoding and decoding utilities             |
 
 ## API Documentation
 
