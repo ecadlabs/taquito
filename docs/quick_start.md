@@ -13,13 +13,13 @@ npm install @taquito/taquito
 
 You can access Tezos Toolkit one of two ways:
 
-*Import Tezos (a singleton object) from @tezos-ts/tezos-ts.*
+*Import Tezos (a singleton object) from @taquito/taquito.*
 
 ```js
 import { Tezos } from '@taquito/taquito'
 ```
 
-*Import TezosToolkit from @tezos-ts/tezos-ts and instantiate it.*
+*Import TezosToolkit from @taquito/taquito and instantiate it.*
 
 ```js
 import { TezosToolkit } from '@taquito/taquito'

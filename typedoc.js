@@ -11,7 +11,7 @@ module.exports = {
     '**/node_modules/**',
     '**/*.spec.ts'
   ],
-  name: 'Tezos TS',
+  name: 'Taquito',
   excludePrivate: true,
   skipInternal: true
 };
