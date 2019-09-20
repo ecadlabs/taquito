@@ -54,7 +54,7 @@ export class Subscription {
         this.closeListeners.push(cb);
         break;
       default:
-        console.warn(`Trying to register on an unsupported event: ${type}`);
+        throw new Error(`Trying to register on an unsupported event: ${type}`);
     }
   }
 
@@ -75,7 +75,7 @@ export class Subscription {
         this.remove(this.closeListeners, cb);
         break;
       default:
-        console.warn(`Trying to unregister on an unsupported event: ${type}`);
+        throw new Error(`Trying to unregister on an unsupported event: ${type}`);
     }
   }
 
@@ -85,7 +85,7 @@ export class Subscription {
 }
 
 export class StreamerProvider implements SubscribeProvider {
-  constructor(private url: string = DEFAULT_STREAMER_URL) { }
+  constructor(private url: string = DEFAULT_STREAMER_URL) {}
 
   subscribe(_filter: 'head'): Subscription {
     const ws = new WS(this.url);

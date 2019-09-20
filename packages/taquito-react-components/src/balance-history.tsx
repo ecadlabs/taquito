@@ -50,7 +50,6 @@ export class BalanceHistory extends React.Component<
       const { value, timestamp } = await this.context.query.balanceHistory(this.props.address, { start: new Date(this.props.start), end: new Date(this.props.end) });
       this.setState({ balance: value.map((val: number, i: number) => ({ value: val, timestamp: timestamp[i] })), error: false });
     } catch (ex) {
-      console.error(ex);
       this.setState({ error: true });
     }
   }
