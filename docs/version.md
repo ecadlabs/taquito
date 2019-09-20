@@ -3,6 +3,13 @@ title: Versions
 author: Simon Boissonneault-Robert
 ---
 
+## 4.1.0-beta.3: First beta release under the new `taquito` name
+
+- Fixes in quick-start docs
+- Remove some console.log calls
+- Improve error handling for Michelson schema creation
+- Pet the linter
+
 ## 4.1.0-beta.2
 
 ### Features
