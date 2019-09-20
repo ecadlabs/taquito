@@ -86,10 +86,6 @@ export class Contract {
     const parameterSchema = this.parameterSchema;
     const paramSchema = this.parameterSchema.ExtractSchema();
 
-    if (!this.parameterSchema.hasAnnotation) {
-      console.warn('Smart contract do not have annotation methods will be indexes.');
-    }
-
     if (this.parameterSchema.isMultipleEntryPoint) {
       Object.keys(paramSchema).forEach(smartContractMethodName => {
         const method = function(...args: any[]) {
