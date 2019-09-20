@@ -90,7 +90,6 @@ const siteConfig = {
   defaultVersionShown: 'master',
   // Show documentation's last update time.
   // enableUpdateTime: true,
-  wrapPagesHTML: true,
   gaTrackingId: 'UA-148358030-1',
   scrollToTop: true,
   stylesheets: [

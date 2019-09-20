@@ -8,6 +8,17 @@
 @media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
 }
 
+@media only screen and (max-width: 735px) {
+    .blockContent {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+    }
+    .imageAlignSide .blockImage {
+        display: block;
+    }
+}
+
 @media only screen and (min-width: 1024px) {
 }
 
@@ -18,6 +29,10 @@
 }
 
 @media only screen and (min-width: 1500px) {
+}
+
+body {
+    min-width: 100vw;
 }
 
 h1 {
@@ -35,6 +50,7 @@ h1 {
 
 .projectTitle img {
     max-width: 425px;
+    width: 80%;
 }
 
 .homeSplashFade {
