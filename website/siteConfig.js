@@ -10,7 +10,7 @@
 
 const siteConfig = {
   title: 'Taquito', // Title for your website.
-  tagline: 'Tezos Typescript Library Suite is a set of npm packages that aim to make building on top of Tezos easier and enjoyable.',
+  tagline: 'A TypeScript library suite for development on the Tezos blockchain.',
   url: 'https://tezostaquito.io', // Your website URL
   baseUrl: '/', // Base URL for your project */
   // For github.io type URLs, you would set the url and baseUrl like:

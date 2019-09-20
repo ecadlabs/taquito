@@ -1,4 +1,10 @@
 /* your custom css */
+@media (max-width: 480px) {
+    .headerTitleWithLogo {
+        display: block !important;
+    }
+}
+
 @media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
 }
 
@@ -27,6 +33,22 @@ h1 {
     font-size: 32px;
 }
 
+.projectTitle img {
+    max-width: 425px;
+}
+
+.homeSplashFade {
+    padding-top: 50px;
+}
+
+.homeContainer .homeWrapper {
+    padding: 0px 10px;
+}
+
+.mainContainer {
+    padding-top: 0px;
+}
+
 a {
     color: #218DA5;
 }
@@ -45,6 +67,12 @@ h2 {
     font-family: $subTitleFont;
     font-size: 12px;
     font-weight: bold;
+    color: #35636E;
+    border-color: #35636E;
+}
+
+.button:hover{
+    border-color: #218DA5;
 }
 
 h3 {

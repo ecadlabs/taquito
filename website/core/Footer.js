@@ -37,7 +37,7 @@ class Footer extends React.Component {
               Storybook
             </a>
             <a href="/typedoc">
-              Typedoc reference
+              TypeDoc reference
             </a>
             {/* <a href={this.docUrl('faq.html', this.props.language)}>
               FAQ
@@ -59,7 +59,7 @@ class Footer extends React.Component {
               href={this.props.config.repoUrl + '/blob/master/code-of-conduct.md'}
               target="_blank"
               rel="noreferrer noopener">
-              Code of conduct</a>
+              Code of Conduct</a>
             <a href={this.props.config.repoUrl}>GitHub</a>
             <a
               className="github-button"

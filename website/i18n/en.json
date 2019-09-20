@@ -3,7 +3,7 @@
   "localized-strings": {
     "next": "Next",
     "previous": "Previous",
-    "tagline": "A TypeScript library suite for development on the Tezos blockchain. Spicy!",
+    "tagline": "A TypeScript library suite for development on the Tezos blockchain.",
     "docs": {
       "faq": {
         "title": "FAQ"
