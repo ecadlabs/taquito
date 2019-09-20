@@ -5,31 +5,31 @@
       "value": {
         "files": [
           {
-            "path": "dist/tezos-ts-http-utils.es5.js",
-            "sha512": "0f0380de1a9a42fda3ff1b66a840774b142a0ac2ef2f2e354de7f1c2a68c2f87c302970def563846c8b4457e06305048606a1a0a7d245bb7a444344152aec775"
+            "path": "dist/taquito-http-utils.es5.js",
+            "sha512": "abf437c10a1b15bcf0da3d49f083fef79f168590358c26a619886d88f135bb93b8c71065957f143f7963f8b310c0974d95607b2d8df8d4d0885243722fc07f0d"
           },
           {
-            "path": "dist/lib/tezos-ts-http-utils.js",
-            "sha512": "7fbc564f41d34fafe075063cfd6fb5ecfa893d95015912af78213ff4d99aa889fc6687d088a62ba0cb93d3c111e580566c0f6fba68df4d0a595dc891555a7d3b"
+            "path": "dist/lib/taquito-http-utils.js",
+            "sha512": "f36e20e6f8329f48b4f5154a3b7e46988d51bf516ffaadaad582253657f4cb2af09f28418a61d2d30ab09d044493a05d02a009f6347d8181af91f9ed0d957135"
           },
           {
-            "path": "dist/tezos-ts-http-utils.umd.js",
-            "sha512": "4e1b777fa2f452d3401ed2d58001eca1f8d71cc50a8f02503cda59515497ed1f7021382fb3a99bcb010ce6f8a1c6c23d164e49133bb938b9da46771835e1751c"
+            "path": "dist/taquito-http-utils.umd.js",
+            "sha512": "f4a8f393c3e06d7e1d286284b3027fa5b4f7e62bbb9376ffff7772a27b8d047b203e0548836736ab6a11e9e74e4b4e9da0205991249221d055638971201189b9"
           },
           {
-            "path": "dist/tezos-ts-http-utils.es5.js.map",
-            "sha512": "1fff208979422a6aee05274450057fad1acf671940ec29df667d77bbdb7296c3ff981b45442198bc0633f05b38c9cb289e6e8ec82887dbe5d8b5db403d4659a8"
+            "path": "dist/taquito-http-utils.es5.js.map",
+            "sha512": "2715386d160913ae94178b44549b907e14150923ffd9efecc91cd2bf126690d1482e03ed28b853d416abe27f2dbca31b42a53a754764d9ff084c59896a39b6d9"
           },
           {
-            "path": "dist/lib/tezos-ts-http-utils.js.map",
-            "sha512": "aeb020916f85781d69b399641fb533702645d7aeefc3aed99baad9652d0f74a416014df25ab62a6c1efb97b76256e9a1b997c32e6e3f056502cd0273d6eb3951"
+            "path": "dist/lib/taquito-http-utils.js.map",
+            "sha512": "dd82e771ccb0fabe0f2b05ad50ff65e8f899f3383685f062fac3a4442cac156cb4e8cd3b2f97e6cc69bd3bf49feaa1a65d98a1dc0b68bc68260418184e17fb88"
           },
           {
-            "path": "dist/tezos-ts-http-utils.umd.js.map",
-            "sha512": "dba9e2c93d57b3ae54b1cd560a22dfa4b5215ff7cfa4693cd2d28ba9bb0ad98a3b203e7d6d9d7270d8342821ae96cf34342d030db77d83453db3da4bf223a2c8"
+            "path": "dist/taquito-http-utils.umd.js.map",
+            "sha512": "ad906defef25027f9b4cc53ce06357961044b08947b97f89041009a3fbdda1f41a3bedc50116cdc659c796ad6e4c3c22905c2815ab623bf097dc7dc611be237d"
           },
           {
-            "path": "dist/types/tezos-ts-http-utils.d.ts",
+            "path": "dist/types/taquito-http-utils.d.ts",
             "sha512": "8693c1bfdf5b133a7f1b88efc6e68b4c10e11f62d95b9d7a73c12441996ec966bde4ba203c72f82bc87654534951c2a1fa5f05fbaed063af4591e70a45d8961a"
           }
         ]
@@ -66,20 +66,20 @@
           "typings",
           "version"
         ],
-        "sha512": "fd668b74ef60846b92f824644c981db896dccf6068c9c18d1d00f574a861d744ba3dc860d285d38fa98875ac281d2739d940224e761de3789a34fb8964c255dc"
+        "sha512": "ef3376621110e82c536dcc3ca7edf5beed8b27735c1df86d3bd104e33ca22136586759c4884d1de1c683d6895481d8de59dd58a6874c60310a040bc015e93783"
       }
     },
     {
       "entry": "packageJson/v1alpha2",
       "value": {
         "packageJson": {
-          "name": "@tezos-ts/http-utils",
-          "version": "4.1.0-beta.1",
+          "name": "@taquito/http-utils",
+          "version": "4.1.0-beta.3",
           "description": "",
           "keywords": [],
-          "main": "dist/tezos-ts-http-utils.umd.js",
-          "module": "dist/tezos-ts-http-utils.es5.js",
-          "typings": "dist/types/tezos-ts-http-utils.d.ts",
+          "main": "dist/taquito-http-utils.umd.js",
+          "module": "dist/taquito-http-utils.es5.js",
+          "typings": "dist/types/taquito-http-utils.d.ts",
           "files": [
             "signature.json",
             "dist"
@@ -163,5 +163,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdgPUQCRAD9Qy5GYHsngAA+vsQAC3qpbi3xYvyb8AXNIs0ucuC\n5EkETNP0m4yN7sOEvVMK5DIHDqFakRe2WzEuzM/xuFVTLpFq3hYt+xvUVd6ssFZB\n31LE/xicpgHGZkBvVFUTtrjw1ediRfzu+0YlP6flSADtpz5qiudtx5dVgS2NEFUr\n6geQJGETJZYoRQq4o9GDREaWps0/DopcLYSA2HMHxXscxeapvJGwLVIa9BcOR9GJ\nab66p28Y2QfzzaYf09w5iOVI3ag8dAL5VV4gZKB8I7KcfKxrI7c5iKl/hINt3Z7e\nYCtVde+JwJRnSXUh4zZ/FolVPSqxMq/iQG5qjBVFVRfSZDaejwxp9sWqOAmF1N+5\n52cuV0uO+C0OtgGsqLhYtPCj0eLtMttCFeFvig4vL4YTRZ4zmuJlZVp0t6w1uE3p\nbQTzhtBXaoNBrszCGLUtPz/OBOykTKz9XxmeP95GsNRl9fZKXU8H8NPHOEGeqigu\nJAuDdApNzNUQFXzg9TwWQcTnQWsFOHlIkBV3ecza8C5Las7xdykoT8TJHEtiG0iv\ngMDywz2HW/CbVzVdsl/7R2i25MR28gj/IhmBHOSghNmJrjqbM2zLTdpLyN3Dm9dd\nX9U7ZyOD55OI9YYyviv11usEriZI2WH+KXLhnDDf+uG84wcd2EH6+BVGoa7rmlWF\nSHxq6wUuQu01eJjC1iRR\n=1Ygm\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdhQ49CRAD9Qy5GYHsngAAxGoQAAyop8bB6Ck+amyzLnNcBah9\n7eUUtQCBdFnFGAtw6/7FdFNp5S7pwplXKFAQwdFq8YvIPzbRWGeTNJXDcWKVbBPa\nTVsPqd11DoAGNRSFPBymic1dr2dYDLAP15Ber6FHB7uH0SxSafkJmlgOwEdbCLDJ\n/uHEZG4hR3UARwnD6NKWdPNclu8WJgUB331U1HJHdkfewy9uPyPO9mpqVXAorWW+\nDQW+6+12RzkmJx+EXnrmD93r4+ih0ALc7/R4+DH/rGi/clZf/EdmCE8NrP8akhul\n5xUCtknaI7ASvrFQINnXMM4pgp98f6ZymwMHX3u+eAsJozU3YrPnsBh8YoJZMpxC\nlHTe87GuVfBsoi90OGkUdSuR7cKTjl1A9UJKFNrYA31V0cs0pQE/RfIUV/KZko0E\n7rYLFySJZeJcN76fokNvQz3CIbSl61al7DMU/0WbUGolb+XCl56krR1xuqMfQQCS\neYSNiUl8XHSl8AMYYoIovWrR6VkKz45J9ylDuLXQY6PAftUjnBhzHP69CU2sDVup\nY8tF9RgBfO0RtNm1Zr41CSiZC21MvkEcILnk/E/80diyheLpP4Rl+Ghc7bQW/DYA\np8356MZUPGFPLk/pa1VBM7iuluNc2EOzb3MKnkFd9gyAdEgz2C8OFpvuvaBc+Rt0\n5ivD1F3ZAbXjwoS4u5LU\n=dTXU\n-----END PGP SIGNATURE-----\n"
 }

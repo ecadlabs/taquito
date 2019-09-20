@@ -5,36 +5,36 @@
       "value": {
         "files": [
           {
-            "path": "dist/tezos-ts-streamer.es5.js",
-            "sha512": "d2fa1f65f9ca4f3781089bd7b43a088a3a602e9325acf6b6557dbbfedacdbb204ae1ab4d70048ce68bb6d8aa8a3fba1ed371d05634d1d664dc6cce42cf972bba"
+            "path": "dist/taquito-streamer.es5.js",
+            "sha512": "dc65a2f2dfafe2d7453e2676d11b40fe6668d858c17a06e47ce4e184e2ece6d2b80f4e29126dce7dd5cb40ef2eea1fd0e77955edaec015400b556b2e0eef8846"
           },
           {
-            "path": "dist/lib/tezos-ts-streamer.js",
-            "sha512": "36368ca4c633f5d6633b76eaa2c6bb0cecdc584c6099992585157b928d36d4fcb2d43b31fbe8357d43e701e4d7fb215cc0cd87561d38bb4f4482240d37de5565"
+            "path": "dist/lib/taquito-streamer.js",
+            "sha512": "5e7db9dcefb41aa262ccd8a032cc4481d952aa6edf2f7dddd6f83be2e5049e690dc884a3400566749714ce808fc2abfb5f4a5a70fbd1c7c545aeb7c4f033e449"
           },
           {
-            "path": "dist/tezos-ts-streamer.umd.js",
-            "sha512": "68d30fcfe4afb38bb824b5d0d39df2a8c2bd319f0e2c9539212a4b58d9be68aaabab33d3eada930adafd2f6847e80bf9393aa622b9897eca9700482b196e8ecd"
+            "path": "dist/taquito-streamer.umd.js",
+            "sha512": "8064b2ca22039ee7997ef70a887d8cc493363338e387696aa4f51be6720fa943b3647ef3542582811309ea195e6633379ce1d834846f45c43d44a2d4eecfc206"
           },
           {
-            "path": "dist/tezos-ts-streamer.es5.js.map",
-            "sha512": "68503cef831925a38a268752bdac9d865bf5b944eb617910500c2b59d1b5ba1c67c7be0a686db5cf80901989d2e0fe59b4cebd1ad6854ff6baa34f5376b64826"
+            "path": "dist/taquito-streamer.es5.js.map",
+            "sha512": "0ca2d72a138cedc710cfef1af2b53d0a8ba3663130dedcc63b2a4c7dce51ff4fc7fd5a9841cb3708198a479009e1ebf896b444ba79bed2314423b2c59df94eb6"
           },
           {
-            "path": "dist/lib/tezos-ts-streamer.js.map",
-            "sha512": "4abee7e2e00eb6b77d7927a3a8594899d3ea2b1636f07116c4e4cdad8a5dd4e5486ce6095e8fa2bb797fd1ddff28c215a4af9efcca0e5747bd0e6c0d31d28304"
+            "path": "dist/lib/taquito-streamer.js.map",
+            "sha512": "448955f4f76e279b9226c0d064433d0a00cf3c08db66bd75f6dcc9d756a49630c6b29f060608bfc047d080b8764c0e4517c8f1e234093e44405827b2aea95877"
           },
           {
-            "path": "dist/tezos-ts-streamer.umd.js.map",
-            "sha512": "44e1ed0c4e042bdd055e7d370686f82f605740539015419c08bea320c8ccddc94d803d23359b3da792a7452daa888833c3da2cd0c14d3598142e1273d21c1886"
+            "path": "dist/taquito-streamer.umd.js.map",
+            "sha512": "8cb40dfc120152d35749ca7b044f2f5c30e0491d49068af37fe5af620f1cba69d357104980d68a7e3ab03530853c95afda85b4d79e65ceed73a95dc23c3be97b"
           },
           {
             "path": "README.md",
-            "sha512": "2fd8c62122375d0c4769c3ea3019771570e87b953a8c1e2260daeebc217c3648daa145b691116dcf5e7ab6c6f981eb02f4fe2a23dadc4c12c4ebd2c3d997dcea"
+            "sha512": "bac00c5b901bf4f1e503ae5b7ab2a6a0816fdd75c9520ec8eb7158c6cb602ee133de7bd468ba05bba8b17e2c288927f11e6b9af4b5d2096a406d8bfc9c7dd6c2"
           },
           {
-            "path": "dist/types/tezos-ts-streamer.d.ts",
-            "sha512": "696f0b52bab0ac18b2d5bd8b9a4427f2db47789c125f4b992b69645356def3d83e71e24bf72c75d102cf95a0fa35cb940ec23ecc0559ffb502e03c6494a53486"
+            "path": "dist/types/taquito-streamer.d.ts",
+            "sha512": "6e42da2cc4b3e0a11afb55d27161139974e368cabc3b21beb38a749b324f059b86011637bf5700f0b0a4d02631bba1b8d6c6739cf1da4eb45f69c530d774568c"
           }
         ]
       }
@@ -70,24 +70,24 @@
           "typings",
           "version"
         ],
-        "sha512": "677f05bae2adde6c817f4e4a7afa9631ef4206e78859bfa47710647fd8592487cbf6b4cb08d21dc3a04c85bae4f8bdcebc442ae4a213be9eb5fd567415674601"
+        "sha512": "091d3020517d041eb02853841fa769a65fd756841a024fc076fa91fbd6853b3737e1c588ccf53526838116f8a4199fe8eea218f77530f7cce00d20ce195c497c"
       }
     },
     {
       "entry": "packageJson/v1alpha2",
       "value": {
         "packageJson": {
-          "name": "@tezos-ts/streamer",
-          "version": "4.1.0-beta.1",
+          "name": "@taquito/streamer",
+          "version": "4.1.0-beta.3",
           "description": "Methods to subscribe (using a websocket) to data from the Tezos blockchain. Relies on [https://github.com/ecadlabs/tezos-streamer](https://github.com/ecadlabs/tezos-streamer) which offers a websocket API to the caller, and streams data from the Tezos blockchain",
           "keywords": [
             "tezos",
             "blockchain",
             "websocket"
           ],
-          "main": "dist/tezos-ts-streamer.umd.js",
-          "module": "dist/tezos-ts-streamer.es5.js",
-          "typings": "dist/types/tezos-ts-streamer.d.ts",
+          "main": "dist/taquito-streamer.umd.js",
+          "module": "dist/taquito-streamer.es5.js",
+          "typings": "dist/types/taquito-streamer.d.ts",
           "files": [
             "signature.json",
             "dist"
@@ -130,7 +130,7 @@
               "js"
             ],
             "moduleNameMapper": {
-              "^@tezos-ts/http-utils$": "<rootDir>/../tezos-ts-http-utils/src/tezos-ts-http-utils.ts"
+              "^@taquito/http-utils$": "<rootDir>/../taquito-http-utils/src/taquito-http-utils.ts"
             },
             "coveragePathIgnorePatterns": [
               "/node_modules/",
@@ -141,12 +141,12 @@
             ]
           },
           "dependencies": {
-            "@tezos-ts/http-utils": "^4.1.0-beta.1",
+            "@taquito/http-utils": "^4.1.0-beta.3",
             "bignumber.js": "^9.0.0",
             "ws": "^7.1.2"
           },
           "devDependencies": {
-            "@tezos-ts/tezos-ts": "^4.1.0-beta.1",
+            "@taquito/taquito": "^4.1.0-beta.3",
             "@types/jest": "^23.3.2",
             "@types/node": "^10.14.13",
             "@types/ws": "^6.0.3",
@@ -177,5 +177,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdgPUZCRAD9Qy5GYHsngAAbu0QAJtc80r1PDWCiM367m+l3n/s\nqNm+ouc2ViLoa49c0lTa5ApZi73sNYcSSWMcLhDZt0NchDsYVvzl53fwb+6oTAd3\nofiEGzs7HEfLg6nxJvgqgo+wUMpyeWUYYijTjjvrUSEcD05gqZjQVR5e5ozAf7AQ\nP+mShOPaXzDBaKg46vFzcCjs1T8n4rVosRcdxchIMWqtVxxerGKYxvvoYdgzEBn0\n1ADKNoaZfLI9O5RqnF9yBdJw3bVP+HFmdqdHz7nslgV5cdae3qQbbE38q8wV7H5+\nJrZAjQIEaR4XhEqrdEXFRml6R+TNtl7Jw4Ern/l0UjPD1K+rOOnroX+8KK2Kvciw\n6n32BQYAVUXABUhHqxYLx712FRjeMUfEZpTJc/y0l45kHOoMdgSciNguRLNIMtIf\nhJv7DQwobg5bdvbvyZjjl5rOMmZshGlXM2/UtNAmDxzWWr1QAePvk2793Fj38LHh\naEIpvLQQwTi52dmTdorrEQKxvrQBMJw2jpywjm+3jpoinLQpZenR8AtQQ7v8WunI\nYdrrCSOChkJGVpKAVrdahpTlfwqPpxskHyFYZv4i4KunHVzayWr/4fUzOp+tIQ+Q\nTeY5bK0VGnbxYT0Xe5QqRXBp99sQ0buXsqkFKvxvHDq6ob/fXOKXDAgirX9+fRsq\nnIQMo4lQxDs/WKkOd71y\n=CLST\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdhQ5DCRAD9Qy5GYHsngAAHgwQAFFpWIF5L390yPHldCwpM2AA\nRz1bKmbv/JBca3QMSUAQufbSRdyRjwuD+zwBsF+BaovZfprk7FyBWyfla5AaD4PX\nrm9fFYWyjSqimUNO1tZqJcJWmtqzOLxaMg71CfV9cOscGy1Dydy6MFyf4YlH9Mhg\nBzWxDxbFbVVTc5xQ4LL5h0C6PwFYA9iv9PsSitaQnyKbkzg++wJynjrElrsecd7L\nKmhS41E3uH56x6QbL7e8aM2adgE7v1MoqRKUPTLQqb8/S1rW5ZZXjoRQRheE/SKy\nb53Jauy5I+/tvOLEYn3rpyOZu2FhgNrE/1D5Jv5KK0jpxwzJFL1rWdWny6ws2G6Y\nLUzCh/WvqMTxuWMoDk6EjKvBoEbsqToDJWFoJtqxClm96fBVSZCyqaFoJb1zd1yK\ncPhAhfYH1TiAya5nWxb+R8HlcJtfMRyp8QU/XXAlns5qLgfOqUzOjK4BFAHOKCEj\n0ahEhRalIpo06YVT6wyI6UZKdNP2iNFBPBmwxRRegiRaunYfmsduqONjPPfYjDW4\nK7vnSZUAfw6jtTHpcqFNQ2LK/6QpJhbSGLxAfy8gynD65hIa0hPhWHO2RI3VSZMb\np39Sktr1xRY7glhfygWbGVr+Y3om6ripre1WmbFcAkbcOB0pKITM1ACmyKtSaC40\nR/cBbNVvYmIAPUnyyxOn\n=faMf\n-----END PGP SIGNATURE-----\n"
 }
