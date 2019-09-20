@@ -233,6 +233,8 @@ export const mic2arr = function me2(s: any): any {
  * @description Convert a michelson string to it's json representation
  *
  * @param mi Michelson string to convert to json
+ *
+ * @warn This implementation of the Michelson parser is a prototype. The current implementation is naïve. We are likely going to switch to using the Nomadic Michelson encoder in the future, as per Issue https://gitlab.com/tezos/tezos/issues/581
  */
 export const ml2mic = function me(mi: string): any {
   const ret = [];
