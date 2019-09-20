@@ -6,7 +6,7 @@ author: Simon Boissonneault-Robert
 ## Installing the library
 
 ```sh
-npm run install @taquito/taquito
+npm install @taquito/taquito
 ```
 
 ## Import the library in your project
