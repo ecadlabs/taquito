@@ -3,6 +3,9 @@ import { Token } from '../tokens/token';
 import { OrToken } from '../tokens/or';
 import { OptionToken } from '../tokens/option';
 
+/**
+ * @warn Our current smart contract abstraction feature is currently in preview. It's API is not final, and it may not cover every use case (yet). We will greatly appreciate any feedback on this feature.
+ */
 export class ParameterSchema {
   private root: Token;
 

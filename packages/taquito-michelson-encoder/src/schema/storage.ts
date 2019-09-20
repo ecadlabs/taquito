@@ -6,6 +6,9 @@ import { createToken } from '../tokens/createToken';
 
 import { RpcTransaction } from './model';
 
+/**
+ * @warn Our current smart contract abstraction feature is currently in preview. It's API is not final, and it may not cover every use case (yet). We will greatly appreciate any feedback on this feature.
+ */
 export class Schema {
   private root: Token;
   private bigMap?: BigMapToken;
