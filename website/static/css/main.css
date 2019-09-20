@@ -31,8 +31,9 @@
 @media only screen and (min-width: 1500px) {
 }
 
-body {
-    min-width: 100vw;
+.headerWrapper {
+    padding-left: 0px;
+    max-width: auto;
 }
 
 h1 {
@@ -62,6 +63,7 @@ h1 {
 }
 
 .mainContainer {
+    margin-top: 3em;
     padding-top: 0px;
 }
 
@@ -81,10 +83,11 @@ h2 {
 
 .button {
     font-family: $subTitleFont;
-    font-size: 12px;
+    font-size: 16px;
     font-weight: bold;
-    color: #35636E;
-    border-color: #35636E;
+    color: white;
+    background-color: #218DA5;
+    border-color: #218DA5;
 }
 
 .imageAlignTop .blockImage {
@@ -93,7 +96,9 @@ h2 {
 }
 
 .button:hover{
-    border-color: #218DA5;
+    color: white;
+    background-color: #35636E;
+    border-color: #35636E;
 }
 
 h3 {
