@@ -5,9 +5,6 @@
     "previous": "Previous",
     "tagline": "A TypeScript library suite for development on the Tezos blockchain.",
     "docs": {
-      "faq": {
-        "title": "FAQ"
-      },
       "inmemory_signer": {
         "title": "In Memory Signer"
       },
