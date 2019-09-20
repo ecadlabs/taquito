@@ -1,29 +1,35 @@
-# Tezos Typescript Library Suite
+# Taquito
+
+A TypeScript library suite for development on the Tezos blockchain
 
 [![CircleCI](https://circleci.com/gh/ecadlabs/taquito.svg?style=svg)](https://circleci.com/gh/ecadlabs/taquito)
 [![codecov](https://codecov.io/gh/ecadlabs/taquito/branch/master/graph/badge.svg)](https://codecov.io/gh/ecadlabs/taquito)
 
-## Work In Progress / Alpha
+_WARNING: This project is in active development. While we welcome users and feedback, please be warned that this project is a work in progress and users should proceed with caution._
 
-Tezos Typescript Library Suite is a set of npm packages that aim to make building on top of Tezos easier and enjoyable.
+## What is Taquito?
 
-### Goals
+Taquito is a TypeScript library suite made available as set of npm packages aiming to make building on top of Tezos easier and more enjoyable.
 
-The goals of this library are:
+## Benefits
 
-* Easy to use and maintain, written in idiomatic Typescript style
-* Well maintained and tested against all current, and anticipated Tezos protocols
-* Portable, does not rely on any "stack" by default, except for the canonical Tezos RPC node
-* Nightly and Continuous integration tests against official Tezos RPC nodes
-* dApp development uses cases a first-class concern, empowering new developers to get results quickly
-* No dependencies on the Tezos RPC node for generating operations (Ex: not dependant on “forge” RPC method).
-* Well documented API using [TypeDoc](https://tezostaquito.io/typedoc)
-* Set of ready-made React components for common use-cases, with a [Demo Gallery](https://tezostaquito.io/react-storybook/)
-* Regular versioned releases, published to npmjs.org, with a published version strategy
-* Participation in the [CII Best Practices](https://bestpractices.coreinfrastructure.org) program and all requirements entailed therein
-* Portable - This library has minimum dependencies, making it usable in any js project on the front or back end.
-* Compact - avoid bloat and keep compiled asset size low
-* Portable, allowing wallet, dApp, or backend developers to start using the library quickly.
+### Easy to Use
+
+Get up and running using and contributing to the library quickly: Taquito is written in an idiomatic TypeScript style, and includes a set of ready-made React components.
+
+### Portable
+
+Usable in any JavaScript project on the front- or back-end with minimal dependencies, Taquito has no reliance on any stack by default (except the canonical Tezos RPC node).
+
+### Well-Supported
+
+Taquito comes complete with:
+
+* a well-documented API using TypeDoc
+* nightly and continuous integration tests against the Tezos node
+* versioned releases published to npmjs.org
+
+---
 
 ## Project Organization
 
@@ -31,10 +37,13 @@ The goals of this library are:
 
 We publish gpg signed packages to npmjs.org under the `@taquito` handle.
 
-| Package                                                           |                        Responsibility                         |
+| High Level Packages                                                           |                        Responsibility                         |
 | ----------------------------------------------------------------- | ------------------------------------------------------------- |
 | [@taquito/taquito](packages/taquito)                                     | Regroup every other library and provide higher level utility  |
 | [@taquito/react-components](packages/taquito-react-components)   | React components that implement some common use cases         |
+
+| Low Level Packages                                                           |                        Responsibility                         |
+| ----------------------------------------------------------------- | ------------------------------------------------------------- |
 | [@taquito/rpc](packages/taquito-rpc)                             | RPC client library, wrap every rpc endpoint in its own method |
 | [@taquito/michelson-encoder](packages/taquito-michelson-encoder) | Encode/Decode storage and parameters to/from michelson format |
 | [@taquito/indexer](packages/taquito-indexer)                     | A client for the [tezos-indexer-api][0] API                   |
@@ -44,13 +53,13 @@ We publish gpg signed packages to npmjs.org under the `@taquito` handle.
 
 ## API Documentation
 
-The TypeDoc style API documentation is available [here](https://tezostaquito.io/typedoc)
+The TypeDoc style API documentation is available [here](https://taquito.tez.ie/typedoc)
 
-### React Components overview
+## React Components overview
 
 React component demos are published using the [storybook](https://storybook.js.org) tool.
 
-View the demo components here: [Tezos components Storybook](https://tezostaquito.io/react-storybook)
+View the demo components here: [Tezos components Storybook](https://taquito.tez.ie/react-storybook)
 
 ## Versioning Strategy
 
@@ -72,15 +81,15 @@ Supported versions of the taquito packages will be maintained for the current an
 
 ## Releases
 
-Releases are "rolled" by the project maintainers outside of CI infrastructure, and pushed to npmjs.org repositories and the Github releases page. The maintainers sign all official releases. 
+Releases are "rolled" by the project maintainers outside of CI infrastructure, and pushed to npmjs.org repositories and the Github releases page. The maintainers sign all official releases.
 
 By doing releases from outside of the CI processes, we hope to reduce the attack surface for software supply chain attacks. By making releases from outside of the CI infrastructure, we reduce some attack surfaces for software supply chain attacks.
 
 Releases will be (git tags and npm packages) will be signed either by [keybase/jevonearth][2] or [keybase/simrob][3]. Releases not signed, or signed by other keys should not be expected.
 
-## Contributors getting started
+## Contributors Getting Started
 
-### NPM scripts
+### NPM Scripts
 
 See the top-level `package.json` file. Some common targets are:
 
@@ -90,18 +99,20 @@ See the top-level `package.json` file. Some common targets are:
 * `npm run example`: Run an example node js app that does a tour of all the functionality
 * `npm run commit`: Commit using conventional commit style
 
-### How to contribute
+### Development Environment Setup
 
 * Install lerna globally `npm install -g lerna`
 * Run `npm install`
 * Run `lerna bootstrap`
 * Run `npm run build`
 
-Once you have modified any package run
+#### Once you have modified any package:
 
 * Run `npm run lint`
 * Run `npm run test`
 * In order to commit please use `npm run commit`
+
+---
 
 ## Reporting Issues
 
@@ -121,9 +132,11 @@ To contribute, please check the issue tracker to see if an existing issue exists
 
 For a contribution to be merged, it is required to have complete documentation, come with unit tests, and integration tests where appropriate. Submitting a "work in progress" pull request for review/feedback is always welcome!
 
+---
+
 ## Disclaimer
 
-THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, **ANY** IMPLIED WARRANTIES OF MERCHANTABILITY, **NONINFRINGEMENT** OR FITNESS FOR A PARTICULAR PURPOSE ARE **ENTIRELY** DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS **OR ANY AFFILIATED PARTIES OR ENTITIES** BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  **PERSONS USING THIS SOFTWARE DO SO ENTIRELY AT THEIR OWN RISK.**
 
 [0]: https://github.com/ecadlabs/tezos-indexer-api
 [1]: https://github.com/ecadlabs/tezos-streamer
