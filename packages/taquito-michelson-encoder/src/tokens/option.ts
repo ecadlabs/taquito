@@ -23,7 +23,7 @@ export class OptionToken extends Token {
 
   public Encode(args: any[]): any {
     const value = args;
-    if (!value) {
+    if (!value || !value[0]) {
       return { prim: 'None' };
     }
 

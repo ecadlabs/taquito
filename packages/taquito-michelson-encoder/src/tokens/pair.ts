@@ -27,57 +27,44 @@ export class PairToken extends Token {
     };
   }
 
-  public Execute(val: any): { [key: string]: any } {
+  private traversal(getLeftValue: (token: Token) => any, getRightValue: (token: Token) => any) {
     const leftToken = this.createToken(this.val.args[0], this.idx);
     let keyCount = 1;
     let leftValue;
-    if (leftToken instanceof PairToken) {
-      leftValue = leftToken.Execute(val.args[0]);
+    if (leftToken instanceof PairToken && !leftToken.hasAnnotations()) {
+      leftValue = getLeftValue(leftToken);
       keyCount = Object.keys(leftToken.ExtractSchema()).length;
     } else {
-      leftValue = { [leftToken.annot()]: leftToken.Execute(val.args[0]) };
+      leftValue = { [leftToken.annot()]: getLeftValue(leftToken) };
     }
 
     const rightToken = this.createToken(this.val.args[1], this.idx + keyCount);
     let rightValue;
-    if (rightToken instanceof PairToken) {
-      rightValue = rightToken.Execute(val.args[1]);
+    if (rightToken instanceof PairToken && !rightToken.hasAnnotations()) {
+      rightValue = getRightValue(rightToken);
     } else {
-      rightValue = { [rightToken.annot()]: rightToken.Execute(val.args[1]) };
+      rightValue = { [rightToken.annot()]: getRightValue(rightToken) };
     }
 
     const res = {
       ...leftValue,
       ...rightValue,
     };
+
     return res;
   }
 
+  public Execute(val: any): { [key: string]: any } {
+    return this.traversal(
+      leftToken => leftToken.Execute(val.args[0]),
+      rightToken => rightToken.Execute(val.args[1])
+    );
+  }
+
   public ExtractSchema(): any {
-    const leftToken = this.createToken(this.val.args[0], this.idx);
-    let keyCount = 1;
-
-    let leftValue;
-    if (leftToken instanceof PairToken) {
-      leftValue = leftToken.ExtractSchema();
-      keyCount = Object.keys(leftValue).length;
-    } else {
-      leftValue = { [leftToken.annot()]: leftToken.ExtractSchema() };
-    }
-
-    const rightToken = this.createToken(this.val.args[1], this.idx + keyCount);
-
-    let rightValue;
-    if (rightToken instanceof PairToken) {
-      rightValue = rightToken.ExtractSchema();
-    } else {
-      rightValue = { [rightToken.annot()]: rightToken.ExtractSchema() };
-    }
-
-    const res = {
-      ...leftValue,
-      ...rightValue,
-    };
-    return res;
+    return this.traversal(
+      leftToken => leftToken.ExtractSchema(),
+      rightToken => rightToken.ExtractSchema()
+    );
   }
 }

@@ -36,8 +36,18 @@ export class Schema {
     }
   }
 
+  private removeTopLevelAnnotation(obj: any) {
+    if (typeof obj === 'object' && Object.keys(obj).length === 1) {
+      return obj[Object.keys(obj)[0]];
+    }
+
+    return obj;
+  }
+
   Execute(val: any) {
-    return this.root.Execute(val);
+    const storage = this.root.Execute(val);
+
+    return this.removeTopLevelAnnotation(storage);
   }
 
   ExecuteOnBigMapDiff(diff: any) {
@@ -65,7 +75,7 @@ export class Schema {
   }
 
   ExtractSchema() {
-    return this.root.ExtractSchema();
+    return this.removeTopLevelAnnotation(this.root.ExtractSchema());
   }
 
   ComputeState(tx: RpcTransaction[], state: any) {
