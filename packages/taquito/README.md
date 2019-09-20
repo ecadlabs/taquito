@@ -1,6 +1,6 @@
 [![pkgsign status](https://us-central1-pkgsign.cloudfunctions.net/pkgsign-badge?name=@taquito/taquito&expectedIdentity=jevonearth)](https://github.com/RedpointGames/pkgsign)
 
-# Tezos TS high level functions
+# Taquito high level functions
 
 The `@taquito/taquito` package contains higher level functionality that builds upon the other packages in the Tezos Typescript Library Suite.
 

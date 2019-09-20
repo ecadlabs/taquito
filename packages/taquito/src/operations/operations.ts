@@ -12,7 +12,7 @@ export class Operation {
    *
    * @param hash Operation hash
    * @param raw Raw operation that was injected
-   * @param context Tezos ts context allowing access to rpc and signer
+   * @param context Taquito context allowing access to rpc and signer
    */
   constructor(
     public readonly hash: string,

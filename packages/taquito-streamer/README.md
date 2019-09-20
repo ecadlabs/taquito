@@ -1,6 +1,6 @@
 [![pkgsign status](https://us-central1-pkgsign.cloudfunctions.net/pkgsign-badge?name=@taquito/streamer&expectedIdentity=jevonearth)](https://github.com/RedpointGames/pkgsign)
 
-# Tezos TS Streamer package
+# Taquito Streamer package
 
 `@taquito/streamer` is an npm package that provides developers with methods to subscribe (using a websocket) to data from the Tezos blockchain. It relies on [https://github.com/ecadlabs/tezos-streamer](https://github.com/ecadlabs/tezos-streamer) which offers a websocket API to the caller, and streams data from the blockchain.
 

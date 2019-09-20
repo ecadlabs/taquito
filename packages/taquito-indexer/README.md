@@ -1,6 +1,6 @@
 [![pkgsign status](https://us-central1-pkgsign.cloudfunctions.net/pkgsign-badge?name=@taquito/indexer&expectedIdentity=jevonearth)](https://github.com/RedpointGames/pkgsign)
 
-# Tezos TS Indexer package
+# Taquito Indexer package
 
 `@taquito/indexer` is an npm package that provides developers with convenient methods to access indexed Tezos blockchain data.
 

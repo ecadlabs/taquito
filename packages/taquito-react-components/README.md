@@ -1,6 +1,6 @@
 [![pkgsign status](https://us-central1-pkgsign.cloudfunctions.net/pkgsign-badge?name=@taquito/react-components&expectedIdentity=jevonearth)](https://github.com/RedpointGames/pkgsign)
 
-# Tezos TS React Components package
+# Taquito React Components package
 
 `@taquito/react-components` contains a set of React Components that implement common use cases for data retrieved from the Tezos blockchain.
 
