@@ -48,7 +48,10 @@ export class BalanceHistory extends React.Component<
     try {
       // tslint:disable-next-line: deprecation
       const { value, timestamp } = await this.context.query.balanceHistory(this.props.address, { start: new Date(this.props.start), end: new Date(this.props.end) });
-      this.setState({ balance: value.map((val: number, i: number) => ({ value: val, timestamp: timestamp[i] })), error: false });
+      const values = value
+        .map((val: number, i: number) => ({ value: val, timestamp: timestamp[i] }))
+        .sort(({ timestamp1 }: any, { timestamp2 }: any) => timestamp1 < timestamp2 ? 1 : -1);
+      this.setState({ balance: values, error: false });
     } catch (ex) {
       this.setState({ error: true });
     }
