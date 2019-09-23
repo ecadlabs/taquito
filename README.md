@@ -89,6 +89,19 @@ By doing releases from outside of the CI processes, we hope to reduce the attack
 
 Releases will be (git tags and npm packages) will be signed either by [keybase/jevonearth][2] or [keybase/simrob][3]. Releases not signed, or signed by other keys should not be expected.
 
+## Verifying package signatures using pkgsign
+
+We sign every release using [pkgsign](https://github.com/RedpointGames/pkgsign)
+
+After installing a taquito package in your project you can use `pkgsign` to verify that the package was published by the taquito team.
+
+```sh
+// Install pkgsign globally
+npm i -g pkgsign
+
+pkgsign verify . --full
+```
+
 ## Contributors Getting Started
 
 ### NPM Scripts
