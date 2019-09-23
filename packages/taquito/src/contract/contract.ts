@@ -1,5 +1,6 @@
 import { Schema, ParameterSchema } from '@taquito/michelson-encoder';
 import { ContractProvider } from './interface';
+import { ScriptResponse } from '@taquito/rpc';
 
 interface SendParams {
   fee?: number;
@@ -74,11 +75,11 @@ export class Contract {
 
   constructor(
     public readonly address: string,
-    public readonly script: any,
+    public readonly script: ScriptResponse,
     private provider: ContractProvider
   ) {
-    this.schema = Schema.fromRPCResponse(this.script);
-    this.parameterSchema = ParameterSchema.fromRPCResponse(this.script);
+    this.schema = Schema.fromRPCResponse({ script: this.script });
+    this.parameterSchema = ParameterSchema.fromRPCResponse({ script: this.script });
     this._initializeMethods(address, provider);
   }
 
