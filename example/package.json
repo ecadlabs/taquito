@@ -5,6 +5,7 @@
   "scripts": {
     "example:at": "node -r ts-node/register --preserve-symlinks contract-schema.ts",
     "example:origination": "node -r ts-node/register --preserve-symlinks contract-origination.ts",
+    "example:origination2": "node -r ts-node/register --preserve-symlinks contract-origination2.ts",
     "example": "node -r ts-node/register --preserve-symlinks example-node.ts",
     "example:activation": "node -r ts-node/register --preserve-symlinks example-activate.ts"
   },

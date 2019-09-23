@@ -1,5 +1,5 @@
 import { RpcContractProvider } from '../../src/contract/rpc-contract-provider';
-import { sample, sampleStorage, sampleBigMapValue, miStr, miSample } from './data';
+import { sample, sampleStorage, sampleBigMapValue, miStr, miSample, ligoSample } from './data';
 import BigNumber from 'bignumber.js';
 import { Context } from '../../src/context';
 
@@ -158,6 +158,108 @@ describe('RpcContractProvider test', () => {
         },
         opbytes: 'test',
       });
+      done();
+    });
+
+    it('should not alter code and init object when they are array and object', async done => {
+      mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
+      mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
+      mockRpcClient.getBlockMetadata.mockResolvedValue({ nextProtocol: 'test_proto' });
+      mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
+      mockSigner.publicKey.mockResolvedValue('test_pub_key');
+      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+      mockRpcClient.preapplyOperations.mockResolvedValue([]);
+      const result = await rpcContractProvider.originate({
+        delegate: 'test_delegate',
+        balance: '200',
+        code: ligoSample,
+        init: { int: '0' },
+      });
+      expect(result.raw).toEqual({
+        counter: 0,
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              counter: '1',
+              fee: '1420',
+              gas_limit: '10600',
+              kind: 'reveal',
+              public_key: 'test_pub_key',
+              source: 'test_pub_key_hash',
+              storage_limit: '300',
+            },
+            {
+              balance: '200000000',
+              counter: '2',
+              delegatable: false,
+              delegate: 'test_delegate',
+              fee: '10000',
+              gas_limit: '10600',
+              kind: 'origination',
+              manager_pubkey: 'test_pub_key_hash',
+              script: {
+                code: ligoSample,
+                storage: { int: '0' },
+              },
+              source: 'test_pub_key_hash',
+              storage_limit: '257',
+              spendable: false,
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        opbytes: 'test',
+      });
+      done();
+    });
+
+    it('should not alter code and init object when they are array and object', async done => {
+      mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
+      mockRpcClient.getScript.mockResolvedValue({ code: ligoSample, storage: { int: '0' } });
+      mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
+      mockRpcClient.injectOperation.mockResolvedValue('test');
+      mockRpcClient.getBlockMetadata.mockResolvedValue({ nextProtocol: 'test_proto' });
+      mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
+      mockSigner.publicKey.mockResolvedValue('test_pub_key');
+      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+      mockRpcClient.preapplyOperations.mockResolvedValue([
+        {
+          contents: [
+            {
+              hash: 'test',
+              kind: 'origination',
+              metadata: { operation_result: { originated_contracts: ['test'] } },
+            },
+          ],
+        },
+      ]);
+      mockRpcClient.getBlock.mockResolvedValue({
+        operations: [
+          [
+            {
+              hash: 'test',
+              kind: 'origination',
+              metadata: { operation_result: { originated_contracts: ['test'] } },
+            },
+          ],
+          [],
+          [],
+          [],
+        ],
+        header: {
+          level: 0,
+        },
+      });
+      const result = await rpcContractProvider.originate({
+        delegate: 'test_delegate',
+        balance: '200',
+        code: ligoSample,
+        init: { int: '0' },
+      });
+      const contract = await result.contract();
+      expect(contract.script).toEqual({ code: ligoSample, storage: { int: '0' } });
       done();
     });
   });

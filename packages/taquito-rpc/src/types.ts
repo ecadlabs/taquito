@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 export type BalanceResponse = BigNumber;
 export type StorageResponse = unknown;
-export type ScriptResponse = unknown;
+export type ScriptResponse = { code: { prim: string; args: any[] }[]; storage: unknown };
 export type BigMapGetResponse = unknown;
 export type ManagerResponse = string;
 export type DelegateResponse = string | null;

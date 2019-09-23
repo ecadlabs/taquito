@@ -16,6 +16,7 @@ import {
 } from '../operations/types';
 import { Contract } from './contract';
 import { ContractProvider, ContractSchema } from './interface';
+import { ScriptResponse } from '@taquito/rpc';
 
 export class RpcContractProvider extends OperationEmitter implements ContractProvider {
   constructor(context: Context) {
@@ -40,7 +41,7 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
     if (schema instanceof Schema) {
       contractSchema = schema;
     } else {
-      contractSchema = Schema.fromRPCResponse({ script: schema });
+      contractSchema = Schema.fromRPCResponse({ script: schema as ScriptResponse });
     }
 
     const storage = await this.rpc.getStorage(contract);
@@ -67,7 +68,7 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
     if (schema instanceof Schema) {
       contractSchema = schema;
     } else {
-      contractSchema = Schema.fromRPCResponse({ script: schema });
+      contractSchema = Schema.fromRPCResponse({ script: schema as ScriptResponse });
     }
 
     const encodedKey = contractSchema.EncodeBigMapKey(key);

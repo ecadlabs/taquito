@@ -5,6 +5,7 @@ import { BigMapToken } from '../tokens/bigmap';
 import { createToken } from '../tokens/createToken';
 
 import { RpcTransaction } from './model';
+import { ScriptResponse } from '@taquito/rpc';
 
 /**
  * @warn Our current smart contract abstraction feature is currently in preview. It's API is not final, and it may not cover every use case (yet). We will greatly appreciate any feedback on this feature.
@@ -13,10 +14,9 @@ export class Schema {
   private root: Token;
   private bigMap?: BigMapToken;
 
-  static fromRPCResponse(val: any) {
+  static fromRPCResponse(val: { script: ScriptResponse }) {
     const storage =
       val &&
-      val.script &&
       val.script &&
       Array.isArray(val.script.code) &&
       val.script.code.find((x: any) => x.prim === 'storage');

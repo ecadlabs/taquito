@@ -2,6 +2,7 @@ import { createToken } from '../tokens/createToken';
 import { Token } from '../tokens/token';
 import { OrToken } from '../tokens/or';
 import { OptionToken } from '../tokens/option';
+import { ScriptResponse } from '@taquito/rpc';
 
 /**
  * @warn Our current smart contract abstraction feature is currently in preview. It's API is not final, and it may not cover every use case (yet). We will greatly appreciate any feedback on this feature.
@@ -9,10 +10,9 @@ import { OptionToken } from '../tokens/option';
 export class ParameterSchema {
   private root: Token;
 
-  static fromRPCResponse(val: any) {
+  static fromRPCResponse(val: { script: ScriptResponse }) {
     const parameter =
       val &&
-      val.script &&
       val.script &&
       Array.isArray(val.script.code) &&
       val.script.code.find((x: any) => x.prim === 'parameter');
