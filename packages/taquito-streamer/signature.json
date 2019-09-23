@@ -70,7 +70,7 @@
           "typings",
           "version"
         ],
-        "sha512": "699dd9d25ef96eb2361c2262090a5db8a0d57a261e771e740a0bfb1bb336cde51c40b28338ac1237a223fe434b995f9076232008ce17b9407dca06a7079b74b8"
+        "sha512": "452197a47321e6c6879bcf51e3e87866aca3175e7542193f341a4b724eb99d6fc582bbc0fa1b3883e1b88268277d0f5f16996c5c8c87ab157e1184e0d8f61e40"
       }
     },
     {
@@ -78,7 +78,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/streamer",
-          "version": "4.1.0-beta.4",
+          "version": "4.1.0-beta.5",
           "description": "Methods to subscribe (using a websocket) to data from the Tezos blockchain. Relies on [https://github.com/ecadlabs/tezos-streamer](https://github.com/ecadlabs/tezos-streamer) which offers a websocket API to the caller, and streams data from the Tezos blockchain",
           "keywords": [
             "tezos",
@@ -141,12 +141,12 @@
             ]
           },
           "dependencies": {
-            "@taquito/http-utils": "^4.1.0-beta.4",
+            "@taquito/http-utils": "^4.1.0-beta.5",
             "bignumber.js": "^9.0.0",
             "ws": "^7.1.2"
           },
           "devDependencies": {
-            "@taquito/taquito": "^4.1.0-beta.4",
+            "@taquito/taquito": "^4.1.0-beta.5",
             "@types/jest": "^23.3.2",
             "@types/node": "^10.14.13",
             "@types/ws": "^6.0.3",
@@ -177,5 +177,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdiSfECRAD9Qy5GYHsngAAqWkQAGyT7XEYpmZkHC48HvDQ6Zat\nz1288pkZsxtNMUMCEreDEwEl5RON9J7MwglG/a8EtYK+dES+RCZ1bwYhLi6U4U7R\nNLEhb8OpTb13TVfR+wzwc1QNKk1jeXAfgV3ZadtCFS6kJovXMlNGRav0Lz/j939C\n6+BW5XmWWYhsGqm3PGb+plTOGGj3ns1PdrHXtxnTAgg7YsNSUwD+h0j/4cdsYKif\nCjWxX7/oOMDXTbR5DdkgyvWjgi7m4riGMA0Vbp8L1ZAzN/jKlLlt8SgC5KqpgcZI\nOfANEjJUadyRxe14oH6y8z9/wOxq0HGI8hmx2R6uKscUs+aCswl8FinHegCcGaXH\n3gyK6Ra4X3bRW8Iq0fBrvtxsxDVXrmSseSQ9a4rFJxbWlS4Qv0nxUEg1KheJUSds\nJx4nH3f848h9S3m/cZxkrwU54Kfg6hFG4lYrqWhF7hIa5gZGsNt3RiMfxDwJdg8B\n4P5/qMM0h6QTyBG08Xk0sNf6QLl8uqlyPbYwxm4ZRyIaaWYyDctnWh8jE/dM2Q1u\nVu3vEuwOmIoD3YfhIKU/k3V8C7rEj+jZupsGzSxKB4HMkY2tztw1HeRlu+cGBvYB\nK7IDg+HHIptlUZaTX6YX3DG/csTgugb0HUn4fbvMF+AMfSbRRa0gSAN/2QWkq9Dg\n/v4bVoboKKuaPUIWie7r\n=SwTK\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdiTqECRAD9Qy5GYHsngAA40IQAFlvouHJD1Y4HMBR+7IStxhX\nVo+f5ZozSIPLxTxUcSJn38DZtie5/KO/9Zs+c2aDBAhbIqYGx5VUijTojGyUMoTw\nbrck8fSv9gbvOmWJKuaUDZI8MUj4mMzysydZRHQjsXI2s0YD/fB2yiGbLkpcIRtQ\nCbdE0y6AKl+f9IQHIPD4CcCuf6FVLuJnvkZcmUA5/714D/tZKDlu9j9zi76R6yg8\neDw6UeosY1zlckCjM8ALX92k43HPa2jUxSbUT1rvqAMkBBAi6ZtoCqRMU8SRN0GZ\njSYDSyaT+cFYSgSNIeeKVtoxhCr+bJ9PLULM0oLWICQESxf0yw/YD23W0wpnJkmY\nVe/esz1gTEIlY++9lmLsAbn3D+v9ZJ5WMe61wD6kAbi/CmuzvmgzsuvDfzhYj1I6\nVcrXRtCCpEC3vTB5ZOXFUM1jWiKJSR+3GiOMNymGXouMMBN8ORTXkxLsSlPhCetc\nNvFoNNqhMblrX6EsOXti6P3d5VCQW9VmWNCb8Z4MWCDLb/V+ztYcFEdAe+a8D3v4\n5TiEsAmjqdgTBMbtI7r46igLYYPFL4T8xAAFaS491pnLC/c592BTtHVa4/TdcV3C\nfx54Yt3TYWFaqq/XDRdDEOxNIqYTfghQBLwdNM0jeUC7XJmLf6+x8S3vnkULQoMt\nP0eQFdfg4YDJp521gd8H\n=IBAO\n-----END PGP SIGNATURE-----\n"
 }
