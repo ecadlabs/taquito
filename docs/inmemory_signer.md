@@ -9,7 +9,7 @@ In memory signer is a local signer implementation that allows you to directly us
 
 This signer implementation is meant to be used for development and not for production use case
 
-## Usage 
+## Usage
 
 ```js
 
@@ -22,4 +22,3 @@ Tezos.setProvider({signer: new InMemorySigner('you_private_key')})
 If you configure taquito this way you will now be able to use every function that needs signing support
 
 `Note: Operation will be signed automatically using the signer (no prompt)`
-

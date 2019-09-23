@@ -5,6 +5,10 @@ author: Simon Boissonneault-Robert
 
 ## Installing the library
 
+> For quick-start, you may also like to try out our template/boilerplate app [here][boilerplate]
+
+The following instructions assume you have a project already created, and you have `npm` installed and operable.
+
 ```sh
 npm install @taquito/taquito
 ```
@@ -58,7 +62,6 @@ Tezos.tz.getBalance('your_address')
 Tezos.query.balanceHistory('your_address')
 ```
 
-
 ### Import a key
 
 `This will import your private key in memory and will sign operation using this key automatically`
@@ -87,3 +90,5 @@ const operation = contract.methods.mint('tz1', 100).send({ fee: 20000 })
 
 await operation.confirmation()
 ```
+
+[boilerplate]: https://github.com/ecadlabs/taquito-boilerplate
