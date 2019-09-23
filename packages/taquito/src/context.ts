@@ -11,7 +11,7 @@ export class Context {
     private _signer: Signer = new NoopSigner()
   ) { }
 
-  get rpc() {
+  get rpc(): RpcClient {
     return this._rpcClient;
   }
 

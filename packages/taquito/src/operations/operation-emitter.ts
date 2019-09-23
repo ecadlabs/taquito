@@ -1,10 +1,10 @@
-import { BlockResponse } from '@taquito/rpc';
+import { BlockResponse, RpcClient } from '@taquito/rpc';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
 import { Context } from '../context';
 import { ForgedBytes, PrepareOperationParams, RPCOperation, RPCRevealOperation } from './types';
 
 export abstract class OperationEmitter {
-  get rpc() {
+  get rpc(): RpcClient {
     return this.context.rpc;
   }
 
@@ -12,7 +12,7 @@ export abstract class OperationEmitter {
     return this.context.signer;
   }
 
-  constructor(protected context: Context) {}
+  constructor(protected context: Context) { }
 
   protected async prepareOperation({
     operation,

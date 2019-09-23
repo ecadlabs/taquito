@@ -2,6 +2,14 @@ version: 2.1
 orbs:
   codecov: codecov/codecov@1.0.5
 jobs:
+  build:
+    docker:
+      - image: circleci/node:8.11.4
+    steps:
+      - checkout
+      - run: npm install
+      - run: npm run lerna -- bootstrap
+      - run: npm run lerna run build
   lint:
     docker:
       - image: circleci/node:8.11.4
@@ -50,6 +58,7 @@ workflows:
   version: 2
   test_and_deploy:
     jobs:
+      - build
       - lint
       - test
       - deploy-docs:
