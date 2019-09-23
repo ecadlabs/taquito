@@ -1,13 +1,15 @@
+
 <span style="display:block;text-align:center">![Logo](https://tezostaquito.io/img/Taquito.png)</span>
 
 A TypeScript library suite for development on the Tezos blockchain
 
 [![CircleCI](https://circleci.com/gh/ecadlabs/taquito.svg?style=svg)](https://circleci.com/gh/ecadlabs/taquito)
 [![codecov](https://codecov.io/gh/ecadlabs/taquito/branch/master/graph/badge.svg)](https://codecov.io/gh/ecadlabs/taquito)
+[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/3204/badge)](https://bestpractices.coreinfrastructure.org/projects/3204)
 
-_WARNING: This project is in active development. While we welcome users and feedback, please be warned that this project is a work in progress and users should proceed with caution._
+_WARNING: This project is in beta. We welcome users and feedback, please be aware that this project is a work in progress._
 
-## What is Taquito?
+## What is Taquito
 
 Taquito is a TypeScript library suite made available as set of npm packages aiming to make building on top of Tezos easier and more enjoyable.
 
@@ -114,7 +116,7 @@ See the top-level `package.json` file. Some common targets are:
 
 ---
 
-## Reporting Issues
+## Contributions / Reporting Issues
 
 ### Security Issues
 
@@ -122,11 +124,9 @@ To report a security issue, please contact security@ecadlabs.com or via [keybase
 
 Reports may be encrypted using keys published on keybase.io using [keybase/jevonearth][2].
 
-### Other Issues & Feature Requests
+### Bug or Feature Requests
 
 Please use the [GitHub issue tracker](https://github.com/ecadlabs/taquito/issues) to report bugs or request features.
-
-## Contributions
 
 To contribute, please check the issue tracker to see if an existing issue exists for your planned contribution. If there's no issue, please create one first, and then submit a pull request with your contribution.
 

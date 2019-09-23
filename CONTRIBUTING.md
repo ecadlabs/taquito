@@ -1,15 +1,7 @@
-We're really glad you're reading this, because we need volunteer developers to help this project come to fruition. 👏
+# Contributions
 
-## Instructions
+Please use the [GitHub issue tracker](https://github.com/ecadlabs/taquito/issues) to report bugs or request features.
 
-These steps will guide you through contributing to this project:
+To contribute, please check the issue tracker to see if an existing issue exists for your planned contribution. If there's no issue, please create one first, and then submit a pull request with your contribution.
 
-- Fork the repo
-- Clone it and install dependencies
-
-		git clone https://github.com/ecadlabs/typescript-library-starter
-		npm install
-
-Keep in mind that after running `npm install` the git repo is reset. So a good way to cope with this is to have a copy of the folder to push the changes, and the other to try them.
-
-Make and commit your changes. Make sure the commands npm run build and npm run test:prod are working.
+For a contribution to be merged, it is required to have complete documentation, come with unit tests, and integration tests where appropriate. Submitting a "work in progress" pull request for review/feedback is always welcome!
