@@ -138,13 +138,13 @@ class Index extends React.Component {
             title: 'Easy to Use',
           },
           {
-            content: 'Perfect for any JavaScript project on the front- or back-end with minimal dependencies, Taquito has no reliance on any stack by default, except Tezos node.',
+            content: 'Perfect for any JavaScript project on the front- or back-end with minimal dependencies, Taquito has no reliance on any stack by default, except the Nomadic Labs Tezos node.',
             image: `${baseUrl}img/suitecase.svg`,
             imageAlign: 'top',
             title: 'Portable',
           },
           {
-            content: 'Taquito comes complete with a well-documented API using TypeDoc, nightly and continuous integration tests against the Nomadic Labs Tezos node & versioned releases published to npmjs.org.',
+            content: 'Taquito comes complete with a well-documented API using TypeDoc, continuous integration tests against the NL Tezos node; versioned releases published to npmjs.org.',
             image: `${baseUrl}img/tools.svg`,
             imageAlign: 'top',
             title: 'Well-Supported',
