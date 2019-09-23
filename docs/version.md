@@ -3,6 +3,15 @@ title: Versions
 author: Simon Boissonneault-Robert
 ---
 
+## 4.1.0-beta.4: Public release of `taquito`
+
+- Add more types for the script rpc endpoint
+- New boilerplate app see: https://github.com/ecadlabs/taquito-boilerplate
+
+### Hotfix
+
+- Fix an integration bug between michelson encoder and taquito high level package. The bug was preventing the creation of smart contract abstract using RPCContractProvider.
+
 ## 4.1.0-beta.3: First beta release under the new `taquito` name
 
 - Fixes in quick-start docs
