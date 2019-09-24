@@ -57,6 +57,33 @@ class HomeSplash extends React.Component {
   }
 }
 
+
+class Users extends React.Component {
+  render() {
+    const { config: siteConfig } = this.props;
+    if ((siteConfig.users || []).length === 0) {
+      return null;
+    }
+
+    const showcase = siteConfig.users.map(user => (
+      <a href={user.infoLink} key={user.infoLink}>
+        <img src={user.image} alt={user.caption} title={user.caption} />
+      </a>
+    ));
+
+    return (
+      <Container background='dark' padding={['bottom', 'top']}>
+        <div className="showcaseSection">
+          <div className="prose">
+            <h1>Teams Building on Taquito</h1>
+          </div>
+          <div className="logos">{showcase}</div>
+        </div>
+      </Container>
+    );
+  }
+}
+
 class Index extends React.Component {
   render() {
     const { config: siteConfig, language = '' } = this.props;
@@ -108,6 +135,8 @@ class Index extends React.Component {
             content:
               'The Taquito team has created a small sample project that checks and displays XTZ balance. Developers are invited to use this as a starting point by simply forking the [Taquito Boilerplate](https://github.com/ecadlabs/taquito-boilerplate) project in GitHub.',
             title: 'Boilerplate App',
+            image: `${baseUrl}img/boilerplate_screenshot.png`,
+            imageAlign: 'left',
           },
         ]}
       </Block>
@@ -138,7 +167,7 @@ class Index extends React.Component {
             title: 'Easy to Use',
           },
           {
-            content: 'Perfect for any JavaScript project on the front- or back-end with minimal dependencies, Taquito has no reliance on any stack by default, except the Nomadic Labs Tezos node.',
+            content: 'Perfect for any JavaScript project on the front- or back-end with minimal dependencies, Taquito has no reliance on any stack by default, except the [Tezos node](https://gitlab.com/tezos/tezos).',
             image: `${baseUrl}img/suitecase.svg`,
             imageAlign: 'top',
             title: 'Portable',
@@ -160,6 +189,7 @@ class Index extends React.Component {
           <Features></Features>
           <CIBadging></CIBadging>
           <Boilerplate></Boilerplate>
+          <Users config={siteConfig}></Users>
         </div>
       </div>
     );
