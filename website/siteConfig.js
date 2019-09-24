@@ -32,10 +32,18 @@ const siteConfig = {
     { href: "https://github.com/ecadlabs/taquito", label: 'Github' },
   ],
 
+  users: [
+    {
+      caption: 'Ligo',
+      image: '/img/ligo.svg',
+      infoLink: 'https://ligolang.org/',
+    }
+  ],
+
   /* path to images for header/footer */
   // footerIcon: 'img/favicon.ico',
   favicon: 'img/favicon.png',
-  headerIcon: 'img/favicon.png',
+  headerIcon: 'img/a_taquito.png',
 
   /* Colors for website */
   colors: {
