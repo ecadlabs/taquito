@@ -1,6 +1,6 @@
 {
   "name": "@taquito/streamer",
-  "version": "4.1.0-beta.3",
+  "version": "4.1.0-beta.5",
   "description": "Methods to subscribe (using a websocket) to data from the Tezos blockchain. Relies on [https://github.com/ecadlabs/tezos-streamer](https://github.com/ecadlabs/tezos-streamer) which offers a websocket API to the caller, and streams data from the Tezos blockchain",
   "keywords": [
     "tezos",
@@ -63,12 +63,12 @@
     ]
   },
   "dependencies": {
-    "@taquito/http-utils": "^4.1.0-beta.3",
+    "@taquito/http-utils": "^4.1.0-beta.5",
     "bignumber.js": "^9.0.0",
     "ws": "^7.1.2"
   },
   "devDependencies": {
-    "@taquito/taquito": "^4.1.0-beta.3",
+    "@taquito/taquito": "^4.1.0-beta.5",
     "@types/jest": "^23.3.2",
     "@types/node": "^10.14.13",
     "@types/ws": "^6.0.3",
