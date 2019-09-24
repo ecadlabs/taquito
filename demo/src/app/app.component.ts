@@ -10,9 +10,7 @@ import { TaquitoService } from './taquito.service';
 export class AppComponent implements OnInit {
   title = 'Tezos TS Demo';
 
-  // public loading$ = combineLatest(this.tezos.blockLoading$, this.tezos.addressLoading$).pipe(
-  //   map(([block, address]) => block || address)
-  // );
+  public loading$ = this.taquito.loading$;
 
   constructor(private taquito: TaquitoService) {}
 
@@ -20,9 +18,6 @@ export class AppComponent implements OnInit {
 
   onSearch(event) {
     this.taquito.setNetwork(event.network);
-
-    this.taquito.getContract(event.contract).then(contract => console.log(contract));
-
-    console.log(event);
+    this.taquito.setContract(event.contract);
   }
 }

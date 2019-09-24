@@ -1,1 +1,29 @@
-<!-- <nb-card *ngIf="addressDetail$ | async as detail"> </nb-card> -->
+<mat-progress-bar
+  *ngIf="loading$ | async; else contract_details"
+  mode="indeterminate"
+></mat-progress-bar>
+<ng-template #contract_details>
+  <nb-card>
+    <nb-card-body>
+      <nb-tabset>
+        <nb-tab tabTitle="Account">
+          <div *ngIf="contract$ | async as contract">
+            {{ contract }}
+            <!-- Manager: {{ contract.manager }}<br />
+            Balance: {{ contract.balance | tz }}<br />
+            Spendable: {{ contract.spendable }}<br />
+            Delegatable: {{ contract.delegate.setable }} -->
+          </div>
+        </nb-tab>
+        <nb-tab tabTitle="Storage">
+          <div *ngIf="contract$ | async as contract">
+            TODO
+          </div>
+        </nb-tab>
+        <nb-tab tabTitle="Code">
+          TODO
+        </nb-tab>
+      </nb-tabset>
+    </nb-card-body>
+  </nb-card>
+</ng-template>

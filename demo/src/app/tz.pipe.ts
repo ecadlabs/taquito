@@ -1,12 +1,11 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import BigNumber from 'bignumber.js'
-import { Tezos } from '@tezos-ts/tezos-ts';
+import { Tezos } from '@taquito/taquito';
+import BigNumber from 'bignumber.js';
 
 @Pipe({
-  name: 'tz'
+  name: 'tz',
 })
 export class TzPipe implements PipeTransform {
-
   transform(amount: any, ...args: any[]): any {
     const bigNum = new BigNumber(amount);
     if (bigNum.isNaN()) {
@@ -15,5 +14,4 @@ export class TzPipe implements PipeTransform {
 
     return `${new BigNumber(Tezos.format('mutez', 'tz', amount)).toFixed(2)} ꜩ`;
   }
-
 }
