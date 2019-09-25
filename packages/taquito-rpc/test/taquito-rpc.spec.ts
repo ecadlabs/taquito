@@ -875,4 +875,19 @@ describe('RpcClient test', () => {
       done();
     });
   });
+
+  describe('getEntrypoints', () => {
+    it('query the right url and data', async done => {
+      httpBackend.createRequest.mockReturnValue({ entrypoints: {} });
+      const response = await client.getEntrypoints('test');
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/context/contracts/test/entrypoints',
+      });
+      expect(response).toEqual({ entrypoints: {} });
+
+      done();
+    });
+  });
 });
