@@ -25,7 +25,7 @@ jobs:
       - checkout
       - run: npm install
       - run: npm run lerna bootstrap
-      - run: npm run test
+      - run: npm run test -- --runInBand
       - codecov/upload:
           file: .coverage/*.json
   integration-tests:
