@@ -64,7 +64,7 @@ export class RpcClient {
     private url: string = defaultRPC,
     private chain: string = defaultChain,
     private httpBackend: HttpBackend = new HttpBackend()
-  ) {}
+  ) { }
 
   /**
    *
@@ -618,5 +618,27 @@ export class RpcClient {
     );
 
     return response;
+  }
+
+  /**
+   * 
+   * @param contract address of the contract we want to get the entrypoints of
+   * 
+   * @description Return the list of entrypoints of the contract
+   * 
+   * @see http://tezos.gitlab.io/zeronet/api/rpc.html#get-block-id-context-contracts-contract-id-entrypoints
+   * 
+   * @version 005_PsBABY5H
+   */
+  async getEntrypoints(
+    contract: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<{ entrypoints: { [key: string]: Object } }> {
+    const contractResponse = await this.httpBackend.createRequest<{ entrypoints: { [key: string]: Object } }>({
+      url: `${this.url}/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/entrypoints`,
+      method: 'GET',
+    });
+
+    return contractResponse;
   }
 }
