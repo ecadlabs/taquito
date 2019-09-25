@@ -1,4 +1,4 @@
-import { BlockResponse, RpcClient } from '@taquito/rpc';
+import { BlockHeaderResponse, RpcClient, BlockMetadata, ManagerKeyResponse } from '@taquito/rpc';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
 import { Context } from '../context';
 import { ForgedBytes, PrepareOperationParams, RPCOperation, RPCRevealOperation } from './types';
@@ -12,7 +12,7 @@ export abstract class OperationEmitter {
     return this.context.signer;
   }
 
-  constructor(protected context: Context) { }
+  constructor(protected context: Context) {}
 
   protected async prepareOperation({
     operation,
@@ -20,10 +20,15 @@ export abstract class OperationEmitter {
   }: PrepareOperationParams): Promise<ForgedBytes> {
     let counter;
     const counters: { [key: string]: number } = {};
-    const promises: any[] = [];
+    const promises: [
+      Promise<BlockHeaderResponse>,
+      Promise<BlockMetadata>,
+      Promise<string>,
+      Promise<ManagerKeyResponse | undefined>
+    ] = [] as any;
     let requiresReveal = false;
     let ops: RPCOperation[] = [];
-    let head: BlockResponse;
+    let head: BlockHeaderResponse;
 
     promises.push(this.rpc.getBlockHeader());
     promises.push(this.rpc.getBlockMetadata());
@@ -50,8 +55,8 @@ export abstract class OperationEmitter {
     head = header;
 
     if (requiresReveal) {
-      const managerKey = manager.key;
-      if (!managerKey) {
+      const haveManager = typeof manager === 'object' ? !!manager.key : !!manager;
+      if (!haveManager) {
         const reveal: RPCRevealOperation = {
           kind: 'reveal',
           fee: DEFAULT_FEE.REVEAL,

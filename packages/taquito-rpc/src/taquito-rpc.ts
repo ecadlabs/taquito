@@ -32,6 +32,9 @@ import {
   ProposalsResponse,
   EndorsingRightsQueryArguments,
   EndorsingRightsResponse,
+  ManagerKeyResponse,
+  BlockHeaderResponse,
+  RawBlockHeaderResponse,
 } from './types';
 import BigNumber from 'bignumber.js';
 
@@ -61,7 +64,7 @@ export class RpcClient {
     private url: string = defaultRPC,
     private chain: string = defaultChain,
     private httpBackend: HttpBackend = new HttpBackend()
-  ) { }
+  ) {}
 
   /**
    *
@@ -191,8 +194,8 @@ export class RpcClient {
   async getManagerKey(
     address: string,
     { block }: { block: string } = defaultRPCOptions
-  ): Promise<ManagerResponse> {
-    return this.httpBackend.createRequest<ManagerResponse>({
+  ): Promise<ManagerKeyResponse> {
+    return this.httpBackend.createRequest<ManagerKeyResponse>({
       url: `${this.url}/chains/${this.chain}/blocks/${block}/context/contracts/${address}/manager_key`,
       method: 'GET',
     });
@@ -341,8 +344,8 @@ export class RpcClient {
    *
    * @see https://tezos.gitlab.io/tezos/api/rpc.html#get-block-id-header
    */
-  async getBlockHeader({ block }: RPCOptions = defaultRPCOptions): Promise<BlockFullHeader> {
-    const response = await this.httpBackend.createRequest<BlockFullHeader>({
+  async getBlockHeader({ block }: RPCOptions = defaultRPCOptions): Promise<BlockHeaderResponse> {
+    const response = await this.httpBackend.createRequest<RawBlockHeaderResponse>({
       url: `${this.url}/chains/${this.chain}/blocks/${block}/header`,
       method: 'GET',
     });

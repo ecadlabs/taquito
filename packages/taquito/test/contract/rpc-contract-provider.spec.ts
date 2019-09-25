@@ -57,8 +57,6 @@ describe('RpcContractProvider test', () => {
       },
     });
 
-    mockRpcClient.getManagerKey.mockResolvedValue('test');
-
     rpcContractProvider = new RpcContractProvider(
       new Context(mockRpcClient as any, mockSigner as any)
     );
@@ -291,6 +289,74 @@ describe('RpcContractProvider test', () => {
             {
               amount: '2000000',
               counter: '2',
+              destination: 'test_to',
+              fee: '10000',
+              gas_limit: '10600',
+              kind: 'transaction',
+              source: 'test_pub_key_hash',
+              storage_limit: '300',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        opbytes: 'test',
+      });
+      done();
+    });
+
+    it('should omit reveal operation if manager is defined (BABY)', async done => {
+      mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
+      mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
+      mockRpcClient.preapplyOperations.mockResolvedValue([]);
+      mockRpcClient.getManagerKey.mockResolvedValue('test');
+      mockRpcClient.getBlockMetadata.mockResolvedValue({ nextProtocol: 'test_proto' });
+      mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
+      mockSigner.publicKey.mockResolvedValue('test_pub_key');
+      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+      const result = await rpcContractProvider.transfer({ to: 'test_to', amount: 2 });
+      expect(result.raw).toEqual({
+        counter: 0,
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              amount: '2000000',
+              counter: '1',
+              destination: 'test_to',
+              fee: '10000',
+              gas_limit: '10600',
+              kind: 'transaction',
+              source: 'test_pub_key_hash',
+              storage_limit: '300',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        opbytes: 'test',
+      });
+      done();
+    });
+
+    it('should omit reveal operation if manager is defined', async done => {
+      mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
+      mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
+      mockRpcClient.preapplyOperations.mockResolvedValue([]);
+      mockRpcClient.getManagerKey.mockResolvedValue({ key: 'test' });
+      mockRpcClient.getBlockMetadata.mockResolvedValue({ nextProtocol: 'test_proto' });
+      mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
+      mockSigner.publicKey.mockResolvedValue('test_pub_key');
+      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+      const result = await rpcContractProvider.transfer({ to: 'test_to', amount: 2 });
+      expect(result.raw).toEqual({
+        counter: 0,
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              amount: '2000000',
+              counter: '1',
               destination: 'test_to',
               fee: '10000',
               gas_limit: '10600',

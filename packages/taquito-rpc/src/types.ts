@@ -3,7 +3,8 @@ export type BalanceResponse = BigNumber;
 export type StorageResponse = unknown;
 export type ScriptResponse = { code: { prim: string; args: any[] }[]; storage: unknown };
 export type BigMapGetResponse = unknown;
-export type ManagerResponse = string;
+export type ManagerResponse = { manager: string };
+export type ManagerKeyResponse = string | { key: string };
 export type DelegateResponse = string | null;
 
 export interface ConstructedOperation {
@@ -686,4 +687,38 @@ interface Storage {
 
 interface Delegate {
   setable: boolean;
+}
+
+export interface RawBlockHeaderResponse {
+  protocol: string;
+  chain_id: string;
+  hash: string;
+  level: number;
+  proto: number;
+  predecessor: string;
+  timestamp: string;
+  validation_pass: number;
+  operations_hash: string;
+  fitness: string[];
+  context: string;
+  priority: number;
+  proof_of_work_nonce: string;
+  signature: string;
+}
+
+export interface BlockHeaderResponse {
+  protocol: string;
+  chainId: string;
+  hash: string;
+  level: number;
+  proto: number;
+  predecessor: string;
+  timestamp: string;
+  validationPass: number;
+  operationsHash: string;
+  fitness: string[];
+  context: string;
+  priority: number;
+  proofOfWorkNonce: string;
+  signature: string;
 }
