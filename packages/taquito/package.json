@@ -11,7 +11,8 @@
   "typings": "dist/types/taquito.d.ts",
   "files": [
     "signature.json",
-    "dist"
+    "dist",
+    "patch.js"
   ],
   "publishConfig": {
     "access": "public"
@@ -33,7 +34,8 @@
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts ",
-    "start": "rollup -c rollup.config.ts -w"
+    "start": "rollup -c rollup.config.ts -w",
+    "postinstall": "node patch.js"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [

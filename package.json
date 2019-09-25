@@ -9,8 +9,7 @@
     "example": "cd example && npm run example",
     "lerna": "lerna",
     "build-docs": "typedoc",
-    "gh-pages": "gh-pages",
-    "postinstall": "node patch.js"
+    "gh-pages": "gh-pages"
   },
   "workspaces": [
     "packages/*"
