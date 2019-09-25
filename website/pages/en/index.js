@@ -136,7 +136,7 @@ class Index extends React.Component {
               'The Taquito team has created a small sample project that checks and displays XTZ balance. Developers are invited to use this as a starting point by simply forking the [Taquito Boilerplate](https://github.com/ecadlabs/taquito-boilerplate) project in GitHub.',
             title: 'Boilerplate App',
             image: `${baseUrl}img/boilerplate_screenshot.png`,
-            imageAlign: 'left',
+            imageAlign: 'right',
           },
         ]}
       </Block>
@@ -167,13 +167,13 @@ class Index extends React.Component {
             title: 'Easy to Use',
           },
           {
-            content: 'Perfect for any JavaScript project on the front- or back-end with minimal dependencies, Taquito has no reliance on any stack by default, except the [Tezos node](https://gitlab.com/tezos/tezos).',
+            content: 'Perfect for any JavaScript project on the front- or back-end with minimal dependencies, Taquito has no reliance on any stack by default, except the <a href="https://gitlab.com/tezos/tezos" target="_blank">Tezos Node</a>.',
             image: `${baseUrl}img/suitecase.svg`,
             imageAlign: 'top',
             title: 'Portable',
           },
           {
-            content: 'Taquito comes complete with a well-documented API using TypeDoc, continuous integration tests against the NL Tezos node; versioned releases published to npmjs.org.',
+            content: 'Taquito comes complete with a well-documented API using TypeDoc, continuous integration tests against the <a href="https://gitlab.com/tezos/tezos" target="_blank">Tezos Node</a>; versioned releases published to npmjs.org.',
             image: `${baseUrl}img/tools.svg`,
             imageAlign: 'top',
             title: 'Well-Supported',
