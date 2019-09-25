@@ -1,4 +1,5 @@
 import { Token, TokenFactory } from './token';
+import { encodePubKey } from '@taquito/utils';
 
 export class ContractToken extends Token {
   static prim = 'contract';
@@ -11,8 +12,12 @@ export class ContractToken extends Token {
     super(val, idx, fac);
   }
 
-  public Execute(val: any): { [key: string]: any } {
-    return val.string;
+  public Execute(val: { bytes: string; string: string }) {
+    if (val.string) {
+      return val.string;
+    }
+
+    return encodePubKey(val.bytes);
   }
 
   public Encode(args: any[]): any {

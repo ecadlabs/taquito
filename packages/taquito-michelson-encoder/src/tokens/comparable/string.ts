@@ -12,7 +12,7 @@ export class StringToken extends Token implements ComparableToken {
   }
 
   public Execute(val: any): string {
-    return val.string;
+    return val[Object.keys(val)[0]];
   }
 
   public ExtractSchema() {

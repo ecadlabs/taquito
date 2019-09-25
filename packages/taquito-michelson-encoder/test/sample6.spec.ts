@@ -152,7 +152,7 @@ describe('Schema test', () => {
       overall_threshold: new BigNumber('4'),
       vested_balance: new BigNumber('0'),
       vesting_increment: new BigNumber('199041301565'),
-      next_payout: '2018-07-30T05:30:00Z',
+      next_payout: '2018-07-30T05:30:00.000Z',
       payout_interval: new BigNumber('2629800'),
       pour_info: {
         pour_dest: 'tz3WMqdzXqRWXwyvj5Hp2H7QEepaUuS7vd9K',
