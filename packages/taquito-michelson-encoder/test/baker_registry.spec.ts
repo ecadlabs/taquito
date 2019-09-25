@@ -2,7 +2,7 @@ import { Schema } from '../src/schema/storage';
 import { ParameterSchema } from '../src/schema/parameter';
 import { storage, params, rpcContractResponse, bigMapValue } from '../data/baker_registry';
 import BigNumber from 'bignumber.js';
-describe('Exchange contract test', () => {
+describe('Baker Registry contract test', () => {
   it('Test storage schema', () => {
     const schema = new Schema(storage);
     expect(schema.ExtractSchema()).toEqual({
