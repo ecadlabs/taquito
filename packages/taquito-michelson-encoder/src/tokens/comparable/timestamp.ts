@@ -11,8 +11,12 @@ export class TimestampToken extends Token implements ComparableToken {
     super(val, idx, fac);
   }
 
-  public Execute(val: any): string {
-    return val.string;
+  public Execute(val: { string?: string; int?: string }) {
+    if (val.string) {
+      return new Date(val.string).toISOString();
+    } else if (val.int) {
+      return new Date(Number(val.int) * 1000).toISOString();
+    }
   }
 
   public Encode(args: any[]): any {

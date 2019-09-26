@@ -1,6 +1,6 @@
 {
   "name": "@taquito/taquito",
-  "version": "4.1.0-beta.3",
+  "version": "4.1.0-beta.6",
   "description": "High level functionality that builds upon the other packages in the Tezos Typescript Library Suite.",
   "keywords": [
     "tezos",
@@ -11,7 +11,8 @@
   "typings": "dist/types/taquito.d.ts",
   "files": [
     "signature.json",
-    "dist"
+    "dist",
+    "patch.js"
   ],
   "publishConfig": {
     "access": "public"
@@ -33,7 +34,8 @@
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts ",
-    "start": "rollup -c rollup.config.ts -w"
+    "start": "rollup -c rollup.config.ts -w",
+    "postinstall": "node patch.js"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
@@ -69,11 +71,11 @@
     ]
   },
   "dependencies": {
-    "@taquito/indexer": "^4.1.0-beta.3",
-    "@taquito/michelson-encoder": "^4.1.0-beta.3",
-    "@taquito/rpc": "^4.1.0-beta.3",
-    "@taquito/signer": "^4.1.0-beta.3",
-    "@taquito/utils": "^4.1.0-beta.3",
+    "@taquito/indexer": "^4.1.0-beta.6",
+    "@taquito/michelson-encoder": "^4.1.0-beta.6",
+    "@taquito/rpc": "^4.1.0-beta.6",
+    "@taquito/signer": "^4.1.0-beta.6",
+    "@taquito/utils": "^4.1.0-beta.6",
     "bignumber.js": "^9.0.0"
   },
   "devDependencies": {

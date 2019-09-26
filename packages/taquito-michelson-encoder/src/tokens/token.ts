@@ -7,6 +7,8 @@ export interface ComparableToken extends Token {
     key: { [key: string]: string };
     type: { prim: string };
   };
+
+  ToKey(val: string): string;
 }
 
 export abstract class Token {
@@ -21,6 +23,10 @@ export abstract class Token {
       /(%|\:)(_Liq_entry_)?/,
       ''
     );
+  }
+
+  hasAnnotations() {
+    return Array.isArray(this.val.annots) && this.val.annots.length;
   }
 
   public createToken = this.fac;

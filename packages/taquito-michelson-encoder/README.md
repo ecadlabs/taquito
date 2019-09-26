@@ -1,4 +1,4 @@
-[![pkgsign status](https://us-central1-pkgsign.cloudfunctions.net/pkgsign-badge?name=@taquito/michelson-encoder&expectedIdentity=%40jevonearth)](https://github.com/RedpointGames/pkgsign)
+[![pkgsign status](https://us-central1-pkgsign.cloudfunctions.net/pkgsign-badge?name=@taquito/michelson-encoder&expectedIdentity=%40simrob)](https://github.com/RedpointGames/pkgsign)
 
 # Taquito Michelson Encoder package
 
@@ -63,7 +63,7 @@ Given the following michelson smart contract data, retrieved from a Tezos Nodes 
 
 ## API Documentation
 
-TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_tezos_ts_michelson_encoder.html)
+TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_michelson_encoder.html)
 
 ## Disclaimer
 

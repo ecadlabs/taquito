@@ -8,6 +8,10 @@
 @media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
 }
 
+.fixedHeaderContainer header img {
+    height: 70%;
+}
+
 @media only screen and (max-width: 735px) {
     .blockContent {
         display: flex;
@@ -21,9 +25,15 @@
 }
 
 @media only screen and (min-width: 1024px) {
+    .fixedHeaderContainer header {
+        padding-left: 10px;
+    }
 }
 
 @media only screen and (max-width: 1023px) {
+    .fixedHeaderContainer header img {
+        margin-left: -40%;
+    }    
 }
 
 @media only screen and (min-width: 1400px) {
@@ -37,10 +47,29 @@
     max-width: auto;
 }
 
+.mainContainer {
+    padding: 40px 0px 0px 0px;
+}
+
 h1 {
     font-family: $titleFont;
     text-transform: uppercase;
     font-size: 32px;
+}
+
+.container .wrapper .imageAlignSide {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.container .wrapper .imageAlignSide h2 {
+    
+    text-align: center;
+}
+
+.container .wrapper .imageAlignSide p {
+    max-width: 100%;
 }
 
 .headerTitle, .headerTitleWithLogo {
@@ -81,7 +110,9 @@ h2 {
     font-size: 28px;
     font-weight: 600;
 }
-
+.darkBackground a.button {
+    color: white;
+}
 .button {
     font-family: $subTitleFont;
     font-size: 16px;

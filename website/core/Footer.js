@@ -86,7 +86,7 @@ class Footer extends React.Component {
               Contribute</a>
           </div>
         </section>
-        <section className="copyright">{this.props.config.copyright}</section>
+        <section className="copyright">Sponsored by <a href='https://ligolang.org/'><img width='45' src='/img/ligo.svg' /></a> - {this.props.config.copyright}</section>
       </footer >
     );
   }

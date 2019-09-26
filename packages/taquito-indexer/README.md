@@ -1,4 +1,4 @@
-[![pkgsign status](https://us-central1-pkgsign.cloudfunctions.net/pkgsign-badge?name=@taquito/indexer&expectedIdentity=%40jevonearth)](https://github.com/RedpointGames/pkgsign)
+[![pkgsign status](https://us-central1-pkgsign.cloudfunctions.net/pkgsign-badge?name=@taquito/indexer&expectedIdentity=%40simrob)](https://github.com/RedpointGames/pkgsign)
 
 # Taquito Indexer package
 
@@ -12,7 +12,7 @@ See the top-level project [https://github.com/ecadlabs/taquito](https://github.c
 
 ## API Documentation
 
-TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_tezos_ts_indexer.html)
+TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_indexer.html)
 
 ## Disclaimer
 

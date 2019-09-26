@@ -36,16 +36,32 @@ export class Schema {
     }
   }
 
-  Execute(val: any) {
-    return this.root.Execute(val);
+  private removeTopLevelAnnotation(obj: any) {
+    if (typeof obj === 'object' && Object.keys(obj).length === 1) {
+      return obj[Object.keys(obj)[0]];
+    }
+
+    return obj;
   }
 
-  ExecuteOnBigMapDiff(diff: any) {
+  Execute(val: any) {
+    const storage = this.root.Execute(val);
+
+    return this.removeTopLevelAnnotation(storage);
+  }
+
+  ExecuteOnBigMapDiff(diff: any[]) {
     if (!this.bigMap) {
       throw new Error('No big map schema');
     }
 
-    return this.bigMap.Execute(diff);
+    if (!Array.isArray(diff)) {
+      throw new Error('Invalid big map diff. It must be an array');
+    }
+
+    const eltFormat = diff.map(({ key, value }) => ({ args: [key, value] }));
+
+    return this.bigMap.Execute(eltFormat);
   }
 
   ExecuteOnBigMapValue(key: any) {
@@ -65,7 +81,7 @@ export class Schema {
   }
 
   ExtractSchema() {
-    return this.root.ExtractSchema();
+    return this.removeTopLevelAnnotation(this.root.ExtractSchema());
   }
 
   ComputeState(tx: RpcTransaction[], state: any) {

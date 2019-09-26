@@ -6,7 +6,7 @@
         "files": [
           {
             "path": "dist/lib/balance-history.js",
-            "sha512": "65b5924a693ca9cb2fe6c9e71a04c4bea1c0040faf1b52e657833f1816f1309c85a0eaae6858185cf0bbf1e9ff0f3d40e944f14f69323c8196ff24aedee3d1e3"
+            "sha512": "5e42c9e8f633b00aeaaf359f590fd419a154714cd7f2d39f297006cc52a59d1ac54cbd51d7df226def4edc322ae6236f4a934bef605625f29c73948600c02df4"
           },
           {
             "path": "dist/lib/balance.js",
@@ -34,7 +34,7 @@
           },
           {
             "path": "dist/lib/balance-history.js.map",
-            "sha512": "ee3d59257dc0cb8df230c8fd40742388f6d935b631fe6d40f55e2627b09b8235054016b43b5e68604a6cc5b58c438ef4a43c5f445899a9035214ae3d92e08de5"
+            "sha512": "d6de8d437fd1cede09d5c34c98ca690f688a8569c6f9d9e0676b88f00a23213a94da40e8c8e4fed244c4ee2389d4c79f42b91518f4a6f97d371a6d84b73bebcd"
           },
           {
             "path": "dist/lib/balance.js.map",
@@ -62,7 +62,7 @@
           },
           {
             "path": "README.md",
-            "sha512": "98e441e5a554ca90bcc65fde1f7f5bac93e5b764b745d7a3b0180cb7df2c1d7649a6dd1dce806bcb615223c7400c7ab9ddae9d424e105eb19773d9dd00dfc60a"
+            "sha512": "22bff1b0781c1c4578d75c568cc5bd413faf61156bd917b4be253c3bea9cc036e28c66d56fcde660d2fbcb9136aa5d20fde5dd9634975ab6f969412a1f8c4c06"
           },
           {
             "path": "dist/types/balance-history.d.ts",
@@ -91,7 +91,7 @@
       "entry": "identity/v1alpha2",
       "value": {
         "identity": {
-          "keybaseUser": "jevonearth"
+          "keybaseUser": "simrob"
         }
       }
     },
@@ -117,7 +117,7 @@
           "typings",
           "version"
         ],
-        "sha512": "ff3bc980b5457137814cf470756690cd593f7d3a45780434b91ba492e046b7908352397d3e421767ebcd2dd654b2726cfe5273784c8ea84614300b7e76d13c1d"
+        "sha512": "fbbd03c4a1176879199e718d0ecab7e712135420314b2d6a84ebd3cb8c11198828dbc7910d825287f067df44e1006b544d6c03d5547de9c73a826faf27486aaa"
       }
     },
     {
@@ -125,7 +125,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/react-components",
-          "version": "4.1.0-beta.3",
+          "version": "4.1.0-beta.6",
           "description": "React Components that implement common use cases for data retrieved from the Tezos blockchain",
           "keywords": [
             "tezos",
@@ -168,8 +168,8 @@
             ]
           },
           "dependencies": {
-            "@taquito/rpc": "^4.1.0-beta.3",
-            "@taquito/taquito": "^4.1.0-beta.3",
+            "@taquito/rpc": "^4.1.0-beta.6",
+            "@taquito/taquito": "^4.1.0-beta.6",
             "@types/react": "^16.8.24",
             "bignumber.js": "^9.0.0",
             "react": "^16.8.6",
@@ -217,5 +217,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdhQ5ACRAD9Qy5GYHsngAAChAQACpS2dbDJJCHjZmKoB+QekL4\nM0MeUpnaH8iiQyjCI8+f39FODyTKbAw8WnGn65d5QNBg11NLikDBP2NW8t8KjkCE\nakqlR8K5ihL1oIx2lOsYVsh9RsN+4A8539eiplLzfu6FaGHSDdwc6DyWgTlA0Rcs\nlBX1apZlEGlz/Klbn7GDePrNo+9r78T/i5FvB25FiSIUjxlDqfrEJIgHgNBb92g9\nMIvdwY5LhyrYcVqV1+h9LtgIirHSfhT6urzof6NxFbgESWH5XKq6MznwtW4dButs\nPeYfkNwVZ351NXkYeGt9ZnyM0iy6xO2ix2/Iy614K1XZmpReCuvcmIdCyb/dzdk1\nRyDWlitB8Ql3W+rbld1XpohPsJetRENCVxQko6v2d9+K1p1mu+aT3Yd/ko7LGKNy\n0B9uCPpYBurbP5bRkAMaBSaE4QOoTXWBL6Qy87uCppDf0Bbotr0jnvhdMs+wnxYR\ntOtspPmoRSxXshAYuQwHKciRPbEQ0D0mHzUdeP7mqkiQkjDccA586GclbwnMVZxE\n+IqBiegS4bfbKPViECFEjgl+/AJzvheDwYUmBC7OP5uhXkaHMri+utvBQT0RNs7+\noSPU6vuvN8nXzH9cjtgBc1zQDJeMq8VSvw4E3KYy58jMQHBL+7En4fpaol60bQZ9\nmw2obsLuRDY+JSJpfHSL\n=UO1w\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdjMGvCRCwAkEJD2ZwqwAA4bMQAJ92WZ7G7hkRsElMCVON80Br\nQ70SfElu/JdRSbyJLlu4nkJZKnswWkcVDGB5BXW6BCFy8IfZCXJ2QJu3GIH/ZNX3\nwc6AJYMo2BqeaETnwRLN+JrhEdQmuPvZhgxWk9wJx3RH0qiNTQR31hSzHCYeYW85\nuTuSRzqrIfAF79j7vYDX9p5nmbt9H8Vr6PRXLqvevDJwrGj0jk7o/Yrxh8cGQ7JO\nNqLDpSKtTi3o158Lk30NC+aZ3eL9s70OCGlR84UNMwhAZcZU2+CaHJMJz+zDx/hB\nqHJyp/exHoHuSc5xaRyf7XvzOwk4OV3mki63Sad+tE6ljDL+1eyIqK/aNx1y6LXM\nx67Uy1nklCXWGnB3KR6Qx0egphkEHomODcoU8vR97aVrmp1eiDSBUBLbtNoh/r4M\ngdjSbJ00DzSz5o3QCE8goBDg7fx7mbVxKEBhAauacUUq5YlNoc+CRovdX3YuH018\nv0KhFrU78Fsh8sSR+J6Iyh/H1T+AMVmrSp12Knd8ePU5NLMmzEkViDD6kZPKUJNv\ntVCjBAH9wnTlrzyVB/eb71KKKIv4qPok8iagkBQSWjTTHq0cXAif0c8cLdGfB9Zo\nUdIkjSvYQmWRbVs1W8+WEkEl/0eF3GEEyFTk3eFxv9QLtrTwkE6EftaQdKUBV4SH\nJYAIT5wJ/rt5POqf0Ra5\n=6kzN\n-----END PGP SIGNATURE-----\n"
 }

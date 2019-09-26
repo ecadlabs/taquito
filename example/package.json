@@ -1,17 +1,18 @@
 {
   "name": "@taquito/example",
   "private": true,
-  "version": "4.1.0-beta.3",
+  "version": "4.1.0-beta.6",
   "scripts": {
     "example:at": "node -r ts-node/register --preserve-symlinks contract-schema.ts",
     "example:origination": "node -r ts-node/register --preserve-symlinks contract-origination.ts",
     "example:origination2": "node -r ts-node/register --preserve-symlinks contract-origination2.ts",
+    "example:origination3": "node -r ts-node/register --preserve-symlinks contract-origination3.ts",
     "example": "node -r ts-node/register --preserve-symlinks example-node.ts",
     "example:activation": "node -r ts-node/register --preserve-symlinks example-activate.ts"
   },
   "dependencies": {
-    "@taquito/signer": "^4.1.0-beta.3",
-    "@taquito/taquito": "^4.1.0-beta.3"
+    "@taquito/signer": "^4.1.0-beta.6",
+    "@taquito/taquito": "^4.1.0-beta.6"
   },
   "devDependencies": {
     "ts-node": "^8.3.0"
