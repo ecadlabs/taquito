@@ -1,7 +1,17 @@
 import { RpcContractProvider } from '../../src/contract/rpc-contract-provider';
-import { sample, sampleStorage, sampleBigMapValue, miStr, miSample, ligoSample } from './data';
+import {
+  sample,
+  sampleStorage,
+  sampleBigMapValue,
+  miStr,
+  miSample,
+  ligoSample,
+  tokenInit,
+  tokenCode,
+} from './data';
 import BigNumber from 'bignumber.js';
 import { Context } from '../../src/context';
+import { LegacyContractMethod, ContractMethod } from '../../src/contract/contract';
 
 /**
  * RPCContractProvider test
@@ -13,6 +23,7 @@ describe('RpcContractProvider test', () => {
     getStorage: jest.Mock<any, any>;
     getBigMapKey: jest.Mock<any, any>;
     getBlockHeader: jest.Mock<any, any>;
+    getEntrypoints: jest.Mock<any, any>;
     getManagerKey: jest.Mock<any, any>;
     getBlock: jest.Mock<any, any>;
     getContract: jest.Mock<any, any>;
@@ -30,6 +41,7 @@ describe('RpcContractProvider test', () => {
 
   beforeEach(() => {
     mockRpcClient = {
+      getEntrypoints: jest.fn(),
       getBlock: jest.fn(),
       getScript: jest.fn(),
       getManagerKey: jest.fn(),
@@ -459,6 +471,49 @@ describe('RpcContractProvider test', () => {
         },
         opbytes: 'test',
       });
+      done();
+    });
+  });
+
+  describe('at', () => {
+    it('should return legacy contract method for proto004', async done => {
+      mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
+      mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
+      mockRpcClient.preapplyOperations.mockResolvedValue([]);
+      mockRpcClient.getScript.mockResolvedValue({
+        code: tokenCode,
+        storage: tokenInit,
+      });
+      mockRpcClient.getBlockMetadata.mockResolvedValue({ nextProtocol: 'test_proto' });
+      mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
+      mockSigner.publicKey.mockResolvedValue('test_pub_key');
+      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+      const result = await rpcContractProvider.at('test');
+      expect(result.methods.mint('test', 100)).toBeInstanceOf(LegacyContractMethod);
+      done();
+    });
+
+    it('should return contract method for proto005', async done => {
+      mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
+      mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
+      mockRpcClient.getEntrypoints.mockResolvedValue({
+        entrypoints: {
+          mint: { prim: 'pair', args: [{ prim: 'key' }, { prim: 'nat' }] },
+        },
+      });
+      mockRpcClient.preapplyOperations.mockResolvedValue([]);
+      mockRpcClient.getScript.mockResolvedValue({
+        code: tokenCode,
+        storage: tokenInit,
+      });
+      mockRpcClient.getBlockMetadata.mockResolvedValue({
+        nextProtocol: 'PsBABY5HQTSkA4297zNHfsZNKtxULfL18y95qb3m53QJiXGmrbU',
+      });
+      mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
+      mockSigner.publicKey.mockResolvedValue('test_pub_key');
+      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+      const result = await rpcContractProvider.at('test');
+      expect(result.methods.mint('test', 100)).toBeInstanceOf(ContractMethod);
       done();
     });
   });

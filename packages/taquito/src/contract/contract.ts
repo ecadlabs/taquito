@@ -12,7 +12,49 @@ interface SendParams {
 /**
  * @description Utility class to send smart contract operation
  */
-class ContractMethod {
+export class ContractMethod {
+  constructor(
+    private provider: ContractProvider,
+    private address: string,
+    private parameterSchema: ParameterSchema,
+    private name: string,
+    private args: any[],
+    private isMultipleEntrypoint = true
+  ) {}
+
+  /**
+   * @description Get the schema of the smart contract method
+   */
+  get schema() {
+    return this.parameterSchema.ExtractSchema();
+  }
+
+  /**
+   *
+   * @description Send the smart contract operation
+   *
+   * @param Options generic operation parameter
+   */
+  send({ fee, gasLimit, storageLimit, amount = 0 }: Partial<SendParams> = {}) {
+    return this.provider.transfer({
+      to: this.address,
+      amount,
+      fee,
+      gasLimit,
+      storageLimit,
+      parameter: {
+        entrypoint: this.isMultipleEntrypoint ? this.name : 'default',
+        value: this.parameterSchema.Encode(...this.args),
+      } as any,
+      rawParam: true,
+    });
+  }
+}
+
+/**
+ * @description Utility class to send smart contract operation
+ */
+export class LegacyContractMethod {
   constructor(
     private provider: ContractProvider,
     private address: string,
@@ -67,7 +109,7 @@ export class Contract {
    * NB: if the contract contains annotation it will include named properties; if not it will be indexed by a number.
    *
    */
-  public methods: { [key: string]: (...args: any[]) => ContractMethod } = {};
+  public methods: { [key: string]: (...args: any[]) => ContractMethod | LegacyContractMethod } = {};
 
   public readonly schema: Schema;
 
@@ -76,14 +118,73 @@ export class Contract {
   constructor(
     public readonly address: string,
     public readonly script: ScriptResponse,
-    private provider: ContractProvider
+    private provider: ContractProvider,
+    private entrypoints?: { entrypoints: { [key: string]: object } }
   ) {
     this.schema = Schema.fromRPCResponse({ script: this.script });
     this.parameterSchema = ParameterSchema.fromRPCResponse({ script: this.script });
-    this._initializeMethods(address, provider);
+    if (!this.entrypoints) {
+      this._initializeMethodsLegacy(address, provider);
+    } else {
+      this._initializeMethods(address, provider, this.entrypoints.entrypoints);
+    }
   }
 
-  private _initializeMethods(address: string, provider: ContractProvider) {
+  private _initializeMethods(
+    address: string,
+    provider: ContractProvider,
+    entrypoints: { [key: string]: any }
+  ) {
+    const keys = Object.keys(entrypoints);
+    if (keys.length > 0) {
+      keys.forEach(smartContractMethodName => {
+        const method = function(...args: any[]) {
+          const smartContractMethodSchema = new ParameterSchema(
+            entrypoints[smartContractMethodName]
+          );
+          if (args.length !== computeLength(smartContractMethodSchema.ExtractSchema())) {
+            throw new Error(
+              `${smartContractMethodName} Received ${
+                args.length
+              } arguments while expecting ${computeLength(
+                smartContractMethodSchema.ExtractSchema()
+              )} (${JSON.stringify(Object.keys(smartContractMethodSchema.ExtractSchema()))})`
+            );
+          }
+          return new ContractMethod(
+            provider,
+            address,
+            smartContractMethodSchema,
+            smartContractMethodName,
+            args
+          );
+        };
+        this.methods[smartContractMethodName] = method;
+      });
+    } else {
+      const smartContractMethodSchema = this.parameterSchema;
+      const method = function(...args: any[]) {
+        if (args.length !== computeLength(smartContractMethodSchema.ExtractSchema())) {
+          throw new Error(
+            `main Received ${args.length} arguments while expecting ${computeLength(
+              smartContractMethodSchema.ExtractSchema()
+            )} (${JSON.stringify(Object.keys(smartContractMethodSchema.ExtractSchema()))})`
+          );
+        }
+        return new ContractMethod(
+          provider,
+          address,
+          smartContractMethodSchema,
+          'main',
+          args,
+          false
+        );
+      };
+      this.methods['main'] = method;
+    }
+  }
+
+  private _initializeMethodsLegacy(address: string, provider: ContractProvider) {
     const parameterSchema = this.parameterSchema;
     const paramSchema = this.parameterSchema.ExtractSchema();
 
@@ -100,7 +201,7 @@ export class Contract {
               )} (${JSON.stringify(Object.keys(smartContractMethodSchema))})`
             );
           }
-          return new ContractMethod(
+          return new LegacyContractMethod(
             provider,
             address,
             parameterSchema,

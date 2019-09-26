@@ -86,7 +86,7 @@ export interface TransferParams {
   source?: string;
   amount: number;
   fee?: number;
-  parameter?: string;
+  parameter?: string | object | { entrypoint: string; value: object };
   gasLimit?: number;
   storageLimit?: number;
   mutez?: boolean;
