@@ -61,6 +61,10 @@
             "sha512": "d197e01b133354bcf8222cc9cc8351b88bc22dfe5815a1f9197121bab69f54750cd57a2504ab69c3190c15e433d3430670e42d818f0fceb509ed07d7494a4748"
           },
           {
+            "path": "patch.js",
+            "sha512": "347c3654830bb7d2d786470d1e6e7bbd115f75e071869f4b3f3ef515fc3b5f07de4056355844ee4ce9751e711752f4bd20c97d43bf1869cf16c0d046c5bf71e3"
+          },
+          {
             "path": "dist/lib/subscribe/polling-provider.js",
             "sha512": "1dac9a82a977defc31398d1fae11d70b75301f240bb75935adf09419e3f0d53ee28cebb6293045db7250ba71d3e35dd3fa2e705389bb7f2935c95eb8328cbe5a"
           },
@@ -174,7 +178,7 @@
           },
           {
             "path": "README.md",
-            "sha512": "a1e9e6e1d4f42f40dae367a9de708e2ec6cd956220c21f80d6beacd56ac96615ba91a674c8fc2f3bdf6d64d74f950fd1f1a62aa0116576b89758279e865f0650"
+            "sha512": "06fd2f6123ac78bf60c658909125404f0cdd02a32c6fb7a4ff6e549b36ccd4610719d985057e61151ba050a143bc893aff6f2c9c5eaf5dc782bdf995ebcb53d2"
           },
           {
             "path": "dist/types/constants.d.ts",
@@ -259,7 +263,7 @@
       "entry": "identity/v1alpha2",
       "value": {
         "identity": {
-          "keybaseUser": "jevonearth"
+          "keybaseUser": "simrob"
         }
       }
     },
@@ -286,7 +290,7 @@
           "typings",
           "version"
         ],
-        "sha512": "e44841b47511658358051e8b07945f850978b33b86c4d0f30801e07ca9f1cac20d860256e6015e1959e6f3844b1c45c0892a19f308d5d811a2924908855232b1"
+        "sha512": "f09ff705cb03f075d64390fc296dcf46ecb57d098a93bf3ca8b1a462ba39592b2580071a2753381b14d2d773605ad3ad4301cc5d02c55c8ed717be27f7458d22"
       }
     },
     {
@@ -294,7 +298,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/taquito",
-          "version": "4.1.0-beta.5",
+          "version": "4.1.0-beta.6",
           "description": "High level functionality that builds upon the other packages in the Tezos Typescript Library Suite.",
           "keywords": [
             "tezos",
@@ -305,7 +309,8 @@
           "typings": "dist/types/taquito.d.ts",
           "files": [
             "signature.json",
-            "dist"
+            "dist",
+            "patch.js"
           ],
           "publishConfig": {
             "access": "public"
@@ -327,7 +332,8 @@
             "precommit": "lint-staged",
             "prebuild": "rimraf dist",
             "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts ",
-            "start": "rollup -c rollup.config.ts -w"
+            "start": "rollup -c rollup.config.ts -w",
+            "postinstall": "node patch.js"
           },
           "lint-staged": {
             "{src,test}/**/*.ts": [
@@ -363,11 +369,11 @@
             ]
           },
           "dependencies": {
-            "@taquito/indexer": "^4.1.0-beta.5",
-            "@taquito/michelson-encoder": "^4.1.0-beta.5",
-            "@taquito/rpc": "^4.1.0-beta.5",
-            "@taquito/signer": "^4.1.0-beta.5",
-            "@taquito/utils": "^4.1.0-beta.5",
+            "@taquito/indexer": "^4.1.0-beta.6",
+            "@taquito/michelson-encoder": "^4.1.0-beta.6",
+            "@taquito/rpc": "^4.1.0-beta.6",
+            "@taquito/signer": "^4.1.0-beta.6",
+            "@taquito/utils": "^4.1.0-beta.6",
             "bignumber.js": "^9.0.0"
           },
           "devDependencies": {
@@ -401,5 +407,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdiTp+CRAD9Qy5GYHsngAAQNkQAFj0hiVvQwyYxuQw+y7UZk4y\nHhT/Xj2GShnW2hH2cNTukDfjQjYahk9Xwx+EVb0qv8aL3C3KyQvMCLah2cS8xAne\nXvzGJarr1VJacQ/FyXWK7QwS1zOZwDKJt66kzZ4VVVutNZqhh+f9TtbjlhbrdBG8\ndgjPr4xC4njeuZxfN21br14BhlgPRZNiy8eGAGhJ4FKJtA6kPavLiAWStATNpA0r\nmrr+xN1fstJBTQ8NDaGP5IVQRoIiUFggfuqaUunTjK/ZoaGO8uLASlp0DSdCB8dT\nc/FvhzSwM3E9zVN0jsALBxf6H1EVrg7e+VY+kQoGrZYllc0+pQ5Ub6rqeeqma569\np0E9YTpbFcfsEHue0UyTfb7p1eMC7XrC3tXRFtnnYZUQcv2s6AE3AJXYJP+gT3Dc\nLqknHIDpHCwHGy9nZIwRvj8lkxDcvXrCiVWb0P8cJH78NrDRB/ulHkuOUrAin46m\n5lew93j1HkAS9T3zQW4E8scuCCE+1RyDvWVwYBIP0T7f/3VWq7ANJfVVuzVjyzqP\nG39/PZaXYQuoJuuWTxlHqoxxiuXnPRUiU5MF8SakJFI3t8yYW43wjYhUfuuCwYI6\nvCUrDym60i/5XGy5/bRfn0J5kegMt7ycKN1jK8OAvEg2yzY6OyhHhtifzLPBSkdi\nwM5ATweyOpKBDCfjHpug\n=g+Od\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdjMGtCRCwAkEJD2ZwqwAAM5sQADNqFmi5Z0H5iUUdv5lk5dNM\nemzUMAvWiMz6fqChjp5cRPPu2rP+TrVf+kjoSAVZ7tBjI6BUUzPHOdR4/lkYPTJH\ngDq+5k0IFyF2PIb/SGgmLq5/6ZXN+Q7XGb40404qI9/jz9sTihiEysLGijvbdnLT\nSrmFmQ7kq41TU1pYuQmsZcQh5nga0giCh+Ys6ak/1WJm7+YJ+3/Ra703Uek544JI\nfIa9eWZQnqK/q3dEwLVELzdrCUP0a/OWclj4EXTxSvUSXAwl1c7+1+MX6vlc/Shx\nf5vO4ysUU1x6Nmu/naCryjQE1elRh2/tY8Ivspnn4eFxvXYunS2OgLKLRLaKScg5\nVVoWyKobQFNL2elgX8AHCBtQMOGzaIX94/A822i3qiR+luUaILVITSKzlNZfxbBN\nKLG9Mnic5GZExBZ8V1RVF6pScM5bqyM8jT2vMcB8DppKMvWucQ+RXI1aKZNerDOG\nxtOm0zeQTYDBHV39MhdvaNPdz/oZDjkOtuuIrorKJEDLV9B0P+62mMfN8v0x6WX7\n+hAVFu+5mm/CgtVrMZpYqJ8A+uNd40K0NtjVCoMgWeDeAS7jAbXNGAElxnasac11\n06pG5e913Z/fjtsYKPjmSYyed6lGSceV08xpgbWKBWv3q2c0uD3dl1HE0H3hWjSb\nKcJFAcpNhUH94bVP6/uX\n=e2S1\n-----END PGP SIGNATURE-----\n"
 }

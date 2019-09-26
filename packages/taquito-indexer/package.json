@@ -1,6 +1,6 @@
 {
   "name": "@taquito/indexer",
-  "version": "4.1.0-beta.5",
+  "version": "4.1.0-beta.6",
   "description": "Package to access indexed Tezos blockchain data.",
   "keywords": [
     "tezos",
@@ -66,7 +66,7 @@
     ]
   },
   "dependencies": {
-    "@taquito/http-utils": "^4.1.0-beta.5",
+    "@taquito/http-utils": "^4.1.0-beta.6",
     "bignumber.js": "^9.0.0"
   },
   "devDependencies": {
