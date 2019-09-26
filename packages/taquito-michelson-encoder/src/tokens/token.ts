@@ -25,6 +25,10 @@ export abstract class Token {
     );
   }
 
+  hasAnnotations() {
+    return Array.isArray(this.val.annots) && this.val.annots.length;
+  }
+
   public createToken = this.fac;
 
   public abstract ExtractSchema(): any;
