@@ -1,5 +1,5 @@
 import { Tezos } from '@taquito/taquito';
-import { ligoSample } from '../integration-tests/data/ligo-simple-contract'
+import { voteInitSample, voteSample } from '../integration-tests/data/vote-contract'
 const provider = 'https://alphanet-node.tzscan.io';
 
 async function example() {
@@ -26,8 +26,8 @@ async function example() {
         console.log('Deploying Ligo simple contract...')
         const op = await Tezos.contract.originate({
             balance: "1",
-            code: ligoSample,
-            init: { int: "0" },
+            code: voteSample,
+            init: voteInitSample,
             fee: 30000,
             storageLimit: 2000,
             gasLimit: 90000,
