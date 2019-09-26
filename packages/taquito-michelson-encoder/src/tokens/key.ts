@@ -1,4 +1,5 @@
 import { Token, TokenFactory } from './token';
+import { encodeKey } from '@taquito/utils';
 
 export class KeyToken extends Token {
   static prim = 'key';
@@ -11,8 +12,12 @@ export class KeyToken extends Token {
     super(val, idx, fac);
   }
 
-  public Execute(val: any): { [key: string]: any } {
-    return val.string;
+  public Execute(val: { bytes: string; string: string }): string {
+    if (val.string) {
+      return val.string;
+    }
+
+    return encodeKey(val.bytes);
   }
 
   public Encode(args: any[]): any {

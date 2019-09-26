@@ -12,8 +12,8 @@ export class MutezToken extends Token implements ComparableToken {
     super(val, idx, fac);
   }
 
-  public Execute(val: any): { [key: string]: any } {
-    return new BigNumber(val.int);
+  public Execute(val: any) {
+    return new BigNumber(val[Object.keys(val)[0]]);
   }
 
   public ExtractSchema() {
