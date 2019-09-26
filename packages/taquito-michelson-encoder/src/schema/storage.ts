@@ -40,12 +40,18 @@ export class Schema {
     return this.root.Execute(val);
   }
 
-  ExecuteOnBigMapDiff(diff: any) {
+  ExecuteOnBigMapDiff(diff: any[]) {
     if (!this.bigMap) {
       throw new Error('No big map schema');
     }
 
-    return this.bigMap.Execute(diff);
+    if (!Array.isArray(diff)) {
+      throw new Error('Invalid big map diff. It must be an array');
+    }
+
+    const eltFormat = diff.map(({ key, value }) => ({ args: [key, value] }));
+
+    return this.bigMap.Execute(eltFormat);
   }
 
   ExecuteOnBigMapValue(key: any) {

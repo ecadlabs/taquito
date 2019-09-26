@@ -12,7 +12,7 @@ export class AddressToken extends Token implements ComparableToken {
     super(val, idx, fac);
   }
 
-  public ToBigMapKey(val: string) {
+  public ToBigMapKey(val: any) {
     const decoded = b58decode(val);
     return {
       key: { bytes: decoded },
@@ -25,8 +25,13 @@ export class AddressToken extends Token implements ComparableToken {
     return { string: val };
   }
 
-  public Execute(val: any): string {
-    return val.string;
+  // tslint:disable-next-line: variable-name
+  public Execute(val: { bytes: string; string: string }): string {
+    if (val.string) {
+      return val.string;
+    }
+
+    return encodePubKey(val.bytes);
   }
 
   public ExtractSchema() {
