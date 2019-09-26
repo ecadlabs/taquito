@@ -12,8 +12,8 @@ export class IntToken extends Token implements ComparableToken {
     super(val, idx, fac);
   }
 
-  public Execute(val: any): { [key: string]: any } {
-    return new BigNumber(val.int);
+  public Execute(val: { [key: string]: string }): { [key: string]: any } {
+    return new BigNumber(val[Object.keys(val)[0]]);
   }
 
   public ExtractSchema() {

@@ -40,7 +40,7 @@ export class BigMapToken extends Token {
     return val.reduce((prev, current) => {
       return {
         ...prev,
-        [encodePubKey(current.key.bytes)]: this.ValueSchema.Execute(current.value),
+        [this.KeySchema.ToKey(current.args[0])]: this.ValueSchema.Execute(current.args[1]),
       };
     }, {});
   }

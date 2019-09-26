@@ -1,4 +1,5 @@
 import { Token, TokenFactory, ComparableToken } from '../token';
+import { encodeKeyHash } from '@taquito/utils';
 
 export class KeyHashToken extends Token implements ComparableToken {
   static prim = 'key_hash';
@@ -11,8 +12,12 @@ export class KeyHashToken extends Token implements ComparableToken {
     super(val, idx, fac);
   }
 
-  public Execute(val: any): { [key: string]: any } {
-    return val.string;
+  public Execute(val: { bytes: string; string: string }): string {
+    if (val.string) {
+      return val.string;
+    }
+
+    return encodeKeyHash(val.bytes);
   }
 
   public Encode(args: any[]): any {
@@ -25,8 +30,12 @@ export class KeyHashToken extends Token implements ComparableToken {
   }
 
   // tslint:disable-next-line: variable-name
-  public ToKey({ string }: any) {
-    return string;
+  public ToKey({ string, bytes }: any) {
+    if (string) {
+      return string;
+    }
+
+    return encodeKeyHash(bytes);
   }
 
   public ToBigMapKey(val: string) {

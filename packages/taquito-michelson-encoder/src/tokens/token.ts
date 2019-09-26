@@ -7,6 +7,8 @@ export interface ComparableToken extends Token {
     key: { [key: string]: string };
     type: { prim: string };
   };
+
+  ToKey(val: string): string;
 }
 
 export abstract class Token {

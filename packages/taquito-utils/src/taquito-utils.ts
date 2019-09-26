@@ -77,6 +77,30 @@ export function encodePubKey(value: string) {
   return b58cencode(value.substring(2, 42), prefix.KT);
 }
 
+export function encodeKey(value: string) {
+  if (value[0] === '0') {
+    const pref: { [key: string]: Uint8Array } = {
+      '00': new Uint8Array([13, 15, 37, 217]),
+      '01': new Uint8Array([3, 254, 226, 86]),
+      '02': new Uint8Array([3, 178, 139, 127]),
+    };
+
+    return b58cencode(value.substring(2), pref[value.substring(0, 2)]);
+  }
+}
+
+export function encodeKeyHash(value: string) {
+  if (value[0] === '0') {
+    const pref: { [key: string]: Uint8Array } = {
+      '00': new Uint8Array([6, 161, 159]),
+      '01': new Uint8Array([6, 161, 161]),
+      '02': new Uint8Array([6, 161, 164]),
+    };
+
+    return b58cencode(value.substring(2), pref[value.substring(0, 2)]);
+  }
+}
+
 /**
  *
  * @description Convert an hex string to a Uint8Array

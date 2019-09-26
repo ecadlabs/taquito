@@ -13,7 +13,7 @@ export class NatToken extends Token implements ComparableToken {
   }
 
   public Execute(val: any): { [key: string]: any } {
-    return new BigNumber(val.int);
+    return new BigNumber(val[Object.keys(val)[0]]);
   }
 
   public Encode(args: any[]): any {

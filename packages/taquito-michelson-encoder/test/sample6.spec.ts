@@ -166,7 +166,7 @@ describe('Schema test', () => {
           vesting_increment: new BigNumber('199041301565'),
         },
         vesting_schedule: {
-          next_payout: '2018-07-30T05:30:00Z',
+          next_payout: '2018-07-30T05:30:00.000Z',
           payout_interval: new BigNumber('2629800'),
         },
       },
