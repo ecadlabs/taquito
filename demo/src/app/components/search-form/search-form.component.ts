@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'tz-search-form',
@@ -7,19 +7,12 @@ import { FormBuilder, Validators } from '@angular/forms';
   styleUrls: ['./search-form.component.scss'],
 })
 export class SearchFormComponent implements OnInit {
-  public searchForm = this.fb.group({
-    network: ['https://alphanet-node.tzscan.io', Validators.required],
-    contract: ['', Validators.required],
-  });
+  public contract = new FormControl('', Validators.required);
 
   @Output()
   public search: EventEmitter<any> = new EventEmitter();
 
-  constructor(private fb: FormBuilder) {}
+  constructor() {}
 
   ngOnInit() {}
-
-  onSubmit() {
-    this.search.emit(this.searchForm.value);
-  }
 }

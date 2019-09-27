@@ -1,0 +1,45 @@
+<nb-card>
+  <nb-card-header>New Contract</nb-card-header>
+  <nb-card-body>
+    <form [formGroup]="newContract">
+      <div id="code">
+        <label>Code</label>
+        <ace-editor
+          class="bigger ace input"
+          mode="json"
+          theme="eclipse"
+          [options]="aceOptions"
+        ></ace-editor>
+
+        <label>Inital Value</label>
+        <ace-editor
+          class="ace input"
+          mode="json"
+          theme="eclipse"
+          [options]="aceOptions"
+        ></ace-editor>
+      </div>
+      <div id="options">
+        <label for="balance">Balance</label>
+        <input nbInput id="balance" class="input" formControlName="balance" />
+
+        <label for="fee">Fee</label>
+        <input nbInput id="fee" class="input" formControlName="fee" />
+
+        <label for="gas-limit">Gas Limit</label>
+        <input nbInput id="gas-limit" class="input" formControlName="gasLimit" />
+
+        <label for="storage-limit">Storage Limit</label>
+        <input nbInput id="storage-limit" class="input" formControlName="storageLimit" />
+
+        <label for="delegate">Delegate</label>
+        <input id="delegate" class="input" nbInput formControlName="delegate" />
+
+        <nb-checkbox formControlName="delegatable">Delegatable</nb-checkbox>
+        <nb-checkbox formControlName="spendable">Spendable</nb-checkbox>
+
+        <button nbButton>Deploy</button>
+      </div>
+    </form>
+  </nb-card-body>
+</nb-card>

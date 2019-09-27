@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { TaquitoService } from './taquito.service';
 
@@ -8,16 +9,15 @@ import { TaquitoService } from './taquito.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  title = 'Tezos TS Demo';
+  title = 'Taquito Demo';
 
   public loading$ = this.taquito.loading$;
 
-  constructor(private taquito: TaquitoService) {}
+  constructor(private taquito: TaquitoService, private router: Router) {}
 
   ngOnInit() {}
 
-  onSearch(event) {
-    this.taquito.setNetwork(event.network);
-    this.taquito.setContract(event.contract);
+  onSearch(contract) {
+    this.router.navigate([contract]);
   }
 }

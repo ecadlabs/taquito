@@ -1,22 +1,14 @@
 <nb-layout>
   <nb-layout-header>
-    <nb-actions>
-      <nb-action>Tezos TS demo</nb-action>
-    </nb-actions>
+    <span class="logo">Taquito Demo</span>
+    <tz-network-select></tz-network-select>
+    <span class="divider"></span>
     <tz-search-form (search)="onSearch($event)"></tz-search-form>
+    <span class="divider"></span>
+    <a nbButton routerLink="new-contract" routerLinkActive="active">New Contract</a>
   </nb-layout-header>
   <nb-layout-column>
-    <tz-contract-state-card></tz-contract-state-card>
-
-    <!--
-        <nb-tabset>
-            <nb-tab tabTitle="Explorer">
-                <tz-demo></tz-demo>
-            </nb-tab>
-            <nb-tab tabTitle="Transaction">
-                <tz-send-transaction></tz-send-transaction>
-            </nb-tab>
-        </nb-tabset> -->
+    <router-outlet></router-outlet>
   </nb-layout-column>
   <nb-layout-footer></nb-layout-footer>
 </nb-layout>
