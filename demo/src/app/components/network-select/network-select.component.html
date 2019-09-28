@@ -1,4 +1,4 @@
-<nb-select placeholder="Select network" [formControl]="network">
-  <nb-option value="https://tezos-dev.cryptonomic-infra.tech">Alphanet</nb-option>
-  <nb-option value="https://rpc.tezrpc.me">Mainnet</nb-option>
+<nb-select [formControl]="network" placeholder="Select network">
+  <nb-option value="{{ Network.Alphanet }}">Alphanet</nb-option>
+  <nb-option value="{{ Network.Mainnet }}">Mainnet</nb-option>
 </nb-select>

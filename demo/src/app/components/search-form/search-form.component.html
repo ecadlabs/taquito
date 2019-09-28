@@ -1,6 +1,6 @@
 <form (ngSubmit)="search.emit(this.contract.value)">
   <input nbInput class="searchbox" [formControl]="contract" placeholder="Enter contract address" />
-  <button nbButton [disabled]="!contract.valid">
+  <button nbButton type="submit" [disabled]="!contract.valid">
     Search
   </button>
 </form>

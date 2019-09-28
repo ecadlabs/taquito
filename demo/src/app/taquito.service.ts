@@ -1,7 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Tezos, TezosToolkit } from '@taquito/taquito';
-import { Subject } from 'rxjs';
+import { OriginateParams } from '@taquito/taquito/dist/types/operations/types';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { shareReplay, switchMap, tap } from 'rxjs/operators';
+
+export enum Network {
+  Alphanet = 'https://tezos-dev.cryptonomic-infra.tech',
+  Mainnet = 'https://rpc.tezrpc.me',
+}
 
 @Injectable({
   providedIn: 'root',
@@ -11,16 +17,15 @@ export class TaquitoService {
 
   private currentContract$ = new Subject<string>();
 
-  public loading$ = new Subject<boolean>();
+  public loading$ = new BehaviorSubject<boolean>(false);
+
+  public network$ = new BehaviorSubject<Network>(Network.Alphanet);
 
   public contract$ = this.currentContract$.pipe(
     tap(_ => this.loading$.next(true)),
     switchMap(async address => {
       try {
         const contract = await this.taquito.contract.at(address);
-
-        console.log(contract.methods);
-        console.log(JSON.stringify(contract.methods));
 
         return {
           account: await this.taquito.rpc.getContract(address),
@@ -42,9 +47,9 @@ export class TaquitoService {
     this.currentContract$.next(address);
   }
 
-  public setNetwork(url: string) {
-    console.log(url);
-    this.taquito.setProvider({ rpc: url });
+  public setNetwork(network: Network) {
+    this.network$.next(network);
+    this.taquito.setProvider({ rpc: network });
   }
 
   public importFaucetKey() {
@@ -76,20 +81,7 @@ export class TaquitoService {
     return this.taquito.importKey(key.email, key.password, key.mnemonic.join(' '), key.secret);
   }
 
-  public originate() {
-    return this.taquito.contract.originate({
-      balance: '1',
-      code: `parameter string;
-    storage string;
-    code {CAR;
-          PUSH string "Hello ";
-          CONCAT;
-          NIL operation; PAIR};
-    `,
-      init: `"test"`,
-      fee: 30000,
-      storageLimit: 2000,
-      gasLimit: 90000,
-    });
+  public originate(contract: OriginateParams) {
+    return this.taquito.contract.originate(contract);
   }
 }

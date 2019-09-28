@@ -1,22 +1,38 @@
-<nb-card>
+<nb-card
+  [nbSpinner]="deploying$ | async"
+  nbSpinnerStatus="info"
+  nbSpinnerSize="giant"
+  nbSpinnerMessage="Deploying to {{ network$ | async }}..."
+>
   <nb-card-header>New Contract</nb-card-header>
   <nb-card-body>
-    <form [formGroup]="newContract">
+    <nb-alert
+      *ngIf="error$ | async as error"
+      status="warning"
+      closable
+      (close)="error$.next(null)"
+      >{{ error }}</nb-alert
+    >
+    <form [formGroup]="newContract" (ngSubmit)="onDeploy()">
       <div id="code">
         <label>Code</label>
         <ace-editor
           class="bigger ace input"
+          [class.disabled]="deploying$ | async"
           mode="json"
           theme="eclipse"
           [options]="aceOptions"
+          formControlName="code"
         ></ace-editor>
 
         <label>Inital Value</label>
         <ace-editor
           class="ace input"
+          [class.disabled]="deploying$ | async"
           mode="json"
           theme="eclipse"
           [options]="aceOptions"
+          formControlName="init"
         ></ace-editor>
       </div>
       <div id="options">
@@ -38,7 +54,9 @@
         <nb-checkbox formControlName="delegatable">Delegatable</nb-checkbox>
         <nb-checkbox formControlName="spendable">Spendable</nb-checkbox>
 
-        <button nbButton>Deploy</button>
+        <button nbButton type="submit" [disabled]="!newContract.valid">
+          Deploy
+        </button>
       </div>
     </form>
   </nb-card-body>

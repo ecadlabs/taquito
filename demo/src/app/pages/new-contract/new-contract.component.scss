@@ -6,6 +6,14 @@ form {
   display: flex;
 }
 
+#progress-overlay {
+  background: red;
+  display: flex;
+  z-index: 5;
+  width: 100px;
+  height: 100px;
+}
+
 #code {
   flex: 2;
   display: flex;
@@ -36,6 +44,11 @@ input {
 .ace {
   flex: 1;
   border: 1px solid #ccc;
+}
+
+.ace.disabled {
+  pointer-events: none;
+  opacity: 0.5;
 }
 
 .bigger {
