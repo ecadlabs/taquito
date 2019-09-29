@@ -12,7 +12,7 @@ export abstract class OperationEmitter {
     return this.context.signer;
   }
 
-  constructor(protected context: Context) { }
+  constructor(protected context: Context) {}
 
   protected async prepareOperation({
     operation,
@@ -55,8 +55,7 @@ export abstract class OperationEmitter {
     head = header;
 
     if (requiresReveal) {
-      const haveManager =
-        typeof manager === 'object' ? !!manager.key : !!manager;
+      const haveManager = manager && typeof manager === 'object' ? !!manager.key : !!manager;
       if (!haveManager) {
         const reveal: RPCRevealOperation = {
           kind: 'reveal',
@@ -112,6 +111,7 @@ export abstract class OperationEmitter {
         }
 
         // Protocol 005 remove these from operations content
+        console.log(metadata.nextProtocol);
         if (metadata.nextProtocol === protocols['005']) {
           delete constructedOp.manager_pubkey;
           delete constructedOp.spendable;
