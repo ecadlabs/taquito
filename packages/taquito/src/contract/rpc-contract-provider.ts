@@ -1,6 +1,6 @@
 import { Schema } from '@taquito/michelson-encoder';
 import { ml2mic, sexp2mic } from '@taquito/utils';
-import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
+import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT, protocols } from '../constants';
 import { Context } from '../context';
 import { format } from '../format';
 import { OperationEmitter } from '../operations/operation-emitter';
@@ -209,7 +209,11 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
       destination: to,
     };
     if (parameter) {
-      operation.parameters = rawParam ? parameter : sexp2mic(parameter);
+      operation.parameters = rawParam
+        ? parameter
+        : typeof parameter === 'string'
+        ? sexp2mic(parameter)
+        : parameter;
     }
 
     const opBytes = await this.prepareOperation({ operation, source });
@@ -218,7 +222,15 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
   }
 
   async at(address: string): Promise<Contract> {
-    const script = await this.rpc.getScript(address);
-    return new Contract(address, script, this);
+    // We need to check if Proto5 is activated to pick the right smart contract abstraction
+    const metadata = await this.rpc.getBlockMetadata();
+    if (metadata.nextProtocol === protocols['005']) {
+      const script = await this.rpc.getScript(address);
+      const entrypoints = await this.rpc.getEntrypoints(address);
+      return new Contract(address, script, this, entrypoints);
+    } else {
+      const script = await this.rpc.getScript(address);
+      return new Contract(address, script, this);
+    }
   }
 }

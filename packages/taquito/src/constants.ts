@@ -16,3 +16,8 @@ export enum DEFAULT_STORAGE_LIMIT {
   TRANSFER = 300,
   REVEAL = 300,
 }
+
+export const protocols = {
+  '004': 'Pt24m4xiPbLDhVgVfABUjirbmda3yohdN82Sp9FeuAXJ4eV9otd',
+  '005': 'PsBABY5HQTSkA4297zNHfsZNKtxULfL18y95qb3m53QJiXGmrbU',
+};

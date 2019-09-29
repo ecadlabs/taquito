@@ -1,5 +1,5 @@
 import { BlockHeaderResponse, RpcClient, BlockMetadata, ManagerKeyResponse } from '@taquito/rpc';
-import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
+import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT, protocols } from '../constants';
 import { Context } from '../context';
 import { ForgedBytes, PrepareOperationParams, RPCOperation, RPCRevealOperation } from './types';
 
@@ -55,7 +55,7 @@ export abstract class OperationEmitter {
     head = header;
 
     if (requiresReveal) {
-      const haveManager = typeof manager === 'object' ? !!manager.key : !!manager;
+      const haveManager = manager && typeof manager === 'object' ? !!manager.key : !!manager;
       if (!haveManager) {
         const reveal: RPCRevealOperation = {
           kind: 'reveal',
@@ -109,6 +109,14 @@ export abstract class OperationEmitter {
           const opCounter = ++counters[publicKeyHash];
           constructedOp.counter = `${opCounter}`;
         }
+
+        // Protocol 005 remove these from operations content
+        if (metadata.nextProtocol === protocols['005']) {
+          delete constructedOp.manager_pubkey;
+          delete constructedOp.spendable;
+          delete constructedOp.delegatable;
+        }
+
         return constructedOp;
       });
 
