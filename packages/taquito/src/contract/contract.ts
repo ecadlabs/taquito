@@ -221,7 +221,7 @@ export class Contract {
             )} (${JSON.stringify(Object.keys(smartContractMethodSchema))})`
           );
         }
-        return new ContractMethod(provider, address, parameterSchema, 'main', args);
+        return new LegacyContractMethod(provider, address, parameterSchema, 'main', args);
       };
     }
   }

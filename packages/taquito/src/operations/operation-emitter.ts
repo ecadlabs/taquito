@@ -111,7 +111,6 @@ export abstract class OperationEmitter {
         }
 
         // Protocol 005 remove these from operations content
-        console.log(metadata.nextProtocol);
         if (metadata.nextProtocol === protocols['005']) {
           delete constructedOp.manager_pubkey;
           delete constructedOp.spendable;
