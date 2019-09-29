@@ -1,10 +1,12 @@
 {
+    "name": "integration-tests",
     "scripts": {
         "test": "jest"
     },
+    "version": "5.0.0-alpha.1",
     "dependencies": {
-        "@taquito/signer": "^5.0.0-alpha.0",
-        "@taquito/taquito": "^5.0.0-alpha.0"
+        "@taquito/signer": "^5.0.0-alpha.1",
+        "@taquito/taquito": "^5.0.0-alpha.1"
     },
     "private": true,
     "jest": {
