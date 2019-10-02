@@ -93,13 +93,24 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
     spendable = false,
     delegatable = false,
     delegate,
+    storage,
     fee = DEFAULT_FEE.ORIGINATION,
     gasLimit = DEFAULT_GAS_LIMIT.ORIGINATION,
     storageLimit = DEFAULT_STORAGE_LIMIT.ORIGINATION,
   }: OriginateParams) {
+    const contractCode = Array.isArray(code) ? code : ml2mic(code);
+
+    let contractStorage;
+    if (storage !== undefined) {
+      const schema = new Schema(contractCode[1].args[0]);
+      contractStorage = schema.Encode(storage);
+    } else if (init) {
+      contractStorage = typeof init === 'object' ? init : sexp2mic(init);
+    }
+
     const script = {
       code: Array.isArray(code) ? code : ml2mic(code),
-      storage: typeof init === 'object' ? init : sexp2mic(init),
+      storage: contractStorage,
     };
 
     const publicKeyHash = await this.signer.publicKeyHash();

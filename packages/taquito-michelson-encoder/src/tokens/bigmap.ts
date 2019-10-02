@@ -36,6 +36,17 @@ export class BigMapToken extends Token {
     };
   }
 
+  public EncodeObject(args: any): any {
+    const val = args;
+
+    return {
+      prim: 'big_map',
+      args: Object.keys(val).map(key => {
+        return [this.KeySchema.Encode([key]), this.ValueSchema.Encode([val[key]])];
+      }),
+    };
+  }
+
   public Execute(val: any[]) {
     return val.reduce((prev, current) => {
       return {

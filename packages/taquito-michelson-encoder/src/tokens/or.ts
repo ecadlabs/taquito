@@ -1,5 +1,4 @@
 import { Token, TokenFactory } from './token';
-import { PairToken } from './pair';
 
 export class OrToken extends Token {
   static prim = 'or';
@@ -37,6 +36,39 @@ export class OrToken extends Token {
 
       if (rightToken instanceof OrToken) {
         let val = rightToken.Encode(args);
+        if (val) {
+          return { prim: 'Right', args: [val] };
+        }
+      }
+      return null;
+    }
+  }
+
+  public EncodeObject(args: any): any {
+    const label = Object.keys(args)[0];
+
+    const leftToken = this.createToken(this.val.args[0], this.idx);
+    let keyCount = 1;
+    if (leftToken instanceof OrToken) {
+      keyCount = Object.keys(leftToken.ExtractSchema()).length;
+    }
+
+    const rightToken = this.createToken(this.val.args[1], this.idx + keyCount);
+
+    if (String(leftToken.annot()) === String(label) && !(leftToken instanceof OrToken)) {
+      return { prim: 'Left', args: [leftToken.EncodeObject(args[label])] };
+    } else if (String(rightToken.annot()) === String(label) && !(rightToken instanceof OrToken)) {
+      return { prim: 'Right', args: [rightToken.EncodeObject(args[label])] };
+    } else {
+      if (leftToken instanceof OrToken) {
+        let val = leftToken.EncodeObject(args);
+        if (val) {
+          return { prim: 'Left', args: [val] };
+        }
+      }
+
+      if (rightToken instanceof OrToken) {
+        let val = rightToken.EncodeObject(args);
         if (val) {
           return { prim: 'Right', args: [val] };
         }

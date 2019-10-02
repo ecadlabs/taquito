@@ -25,6 +25,10 @@ export class MutezToken extends Token implements ComparableToken {
     return { int: String(val).toString() };
   }
 
+  public EncodeObject(val: any): any {
+    return { int: String(val).toString() };
+  }
+
   public ToBigMapKey(val: string) {
     return {
       key: { int: val },

@@ -28,7 +28,7 @@ const testStorage = {
 
 describe('Exchange contract test', () => {
   it('Test storage schema', () => {
-    const schema = new Schema(storage!.args[0]);
+    const schema = new Schema(storage!.args[0] as any);
     expect(schema.Execute(testStorage)).toEqual({
       mgr1: {
         addr: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
@@ -38,6 +38,53 @@ describe('Exchange contract test', () => {
         addr: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         key: null,
       },
+    });
+  });
+
+  it('Test storage schema', () => {
+    const schema = new Schema(storage!.args[0] as any);
+    expect(
+      schema.Encode({
+        mgr1: {
+          addr: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          key: null,
+        },
+        mgr2: {
+          addr: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          key: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+        },
+      })
+    ).toEqual({
+      args: [
+        {
+          args: [
+            {
+              string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+            },
+            {
+              prim: 'None',
+            },
+          ],
+          prim: 'Pair',
+        },
+        {
+          args: [
+            {
+              string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+            },
+            {
+              args: [
+                {
+                  string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+                },
+              ],
+              prim: 'Some',
+            },
+          ],
+          prim: 'Pair',
+        },
+      ],
+      prim: 'Pair',
     });
   });
 

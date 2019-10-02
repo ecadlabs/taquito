@@ -6,6 +6,7 @@ import { createToken } from '../tokens/createToken';
 
 import { RpcTransaction } from './model';
 import { ScriptResponse } from '@taquito/rpc';
+import { Michelson } from './types';
 
 /**
  * @warn Our current smart contract abstraction feature is currently in preview. It's API is not final, and it may not cover every use case (yet). We will greatly appreciate any feedback on this feature.
@@ -28,10 +29,10 @@ export class Schema {
     return new Schema(storage.args[0]);
   }
 
-  constructor(val: any) {
+  constructor(val: Michelson) {
     this.root = createToken(val, 0);
 
-    if (val.prim === 'pair' && val.args[0].prim === 'big_map') {
+    if (val.prim === 'pair' && Array.isArray(val.args) && val.args[0].prim === 'big_map') {
       this.bigMap = new BigMapToken(val.args[0], 0, createToken);
     }
   }
@@ -78,6 +79,10 @@ export class Schema {
     }
 
     return this.bigMap.KeySchema.ToBigMapKey(key);
+  }
+
+  Encode(_value?: any) {
+    return this.root.EncodeObject(_value);
   }
 
   ExtractSchema() {

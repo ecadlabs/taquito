@@ -1,6 +1,7 @@
 import { CONFIGS } from "./config";
 import { ligoSample } from "./data/ligo-simple-contract";
 import { tokenCode, tokenInit } from "./data/tokens";
+import { voteSample } from "./data/vote-contract";
 
 CONFIGS.forEach(({ lib, rpc }) => {
   const Tezos = lib;
@@ -30,7 +31,7 @@ CONFIGS.forEach(({ lib, rpc }) => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: ligoSample,
-        init: { int: "0" },
+        storage: 0,
         fee: 30000,
         storageLimit: 2000,
         gasLimit: 90000,
@@ -75,6 +76,29 @@ CONFIGS.forEach(({ lib, rpc }) => {
       });
 
       await opMethod.confirmation();
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+      done();
+    });
+
+    it('Token origination scenario', async (done) => {
+      const op = await Tezos.contract.originate({
+        balance: "1",
+        code: voteSample,
+        storage: {
+          mgr1: {
+            addr: await Tezos.signer.publicKeyHash(),
+          },
+          mgr2: {
+            addr: await Tezos.signer.publicKeyHash(),
+            key: await Tezos.signer.publicKeyHash(),
+          },
+        },
+        fee: 150000,
+        storageLimit: 10000,
+        gasLimit: 400000,
+      })
+      await op.confirmation()
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
       done();

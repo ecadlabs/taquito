@@ -6,7 +6,8 @@ import { OperationObject } from '@taquito/rpc';
 export interface OriginateParams {
   balance?: string;
   code: string | object[];
-  init: string | object;
+  init?: string | object;
+  storage?: any;
   spendable?: boolean;
   delegatable?: boolean;
   delegate?: string;

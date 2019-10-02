@@ -23,6 +23,10 @@ export class BytesToken extends Token implements ComparableToken {
     return { bytes: String(val).toString() };
   }
 
+  public EncodeObject(val: any) {
+    return { bytes: String(val).toString() };
+  }
+
   public Execute(val: any): string {
     return val.bytes;
   }

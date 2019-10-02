@@ -21,14 +21,29 @@ export class OptionToken extends Token {
       : this.createToken(this.val.args[0], this.idx).annot();
   }
 
-  public Encode(args: any[]): any {
+  public Encode(args: any): any {
     const value = args;
-    if (!value || !value[0]) {
+    if (
+      value === 'undefined' ||
+      value === null ||
+      (Array.isArray(value) && (value[0] === undefined || value[0] === null))
+    ) {
       return { prim: 'None' };
     }
 
     const schema = this.createToken(this.val.args[0], 0);
     return { prim: 'Some', args: [schema.Encode(args)] };
+  }
+
+  public EncodeObject(args: any): any {
+    const schema = this.createToken(this.val.args[0], 0);
+    const value = args;
+
+    if (value === 'undefined' || value === null) {
+      return { prim: 'None' };
+    }
+
+    return { prim: 'Some', args: [schema.EncodeObject(value)] };
   }
 
   public Execute(val: any) {
