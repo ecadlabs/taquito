@@ -23,7 +23,11 @@ export class NetworkSelectComponent implements OnInit, OnDestroy {
       })
     );
 
-    this.network.patchValue(Network.Alphanet);
+    this.subscriptions.add(
+      this.taquito.network$.subscribe(network => {
+        this.network.patchValue(network, { emitEvent: false });
+      })
+    );
   }
 
   ngOnDestroy() {

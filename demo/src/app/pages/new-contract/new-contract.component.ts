@@ -68,7 +68,6 @@ code {
   }
 
   displaySuccess() {
-    console.log('here');
     this.deploying$.next(false);
     this.error$.next(null);
   }

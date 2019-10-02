@@ -9,6 +9,23 @@ export enum Network {
   Mainnet = 'https://rpc.tezrpc.me',
 }
 
+export namespace Network {
+  export function valueOf(value: string): Network {
+    return Network[value.charAt(0).toUpperCase() + value.slice(1)];
+  }
+
+  //
+  // TODO This is a hacky way to get network name. Invesigate a better way to do this,
+  // similar to the way enums work in Java.
+  //
+  export function getNetwork(url: string) {
+    return {
+      'https://tezos-dev.cryptonomic-infra.tech': 'alphanet',
+      'https://rpc.tezrpc.me': 'mainnet',
+    }[url];
+  }
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -19,7 +36,7 @@ export class TaquitoService {
 
   public loading$ = new BehaviorSubject<boolean>(false);
 
-  public network$ = new BehaviorSubject<Network>(Network.Alphanet);
+  public network$ = new Subject<Network>();
 
   public contract$ = this.currentContract$.pipe(
     tap(_ => this.loading$.next(true)),
