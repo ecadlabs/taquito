@@ -5,11 +5,11 @@ import { pluck } from 'rxjs/operators';
 import { Network, TaquitoService } from 'src/app/taquito.service';
 
 @Component({
-  selector: 'tz-network-select',
-  templateUrl: './network-select.component.html',
-  styleUrls: ['./network-select.component.scss'],
+  selector: 'tz-demo',
+  templateUrl: './demo.component.html',
+  styleUrls: ['./demo.component.scss'],
 })
-export class NetworkSelectComponent implements OnInit {
+export class DemoComponent implements OnInit {
   private subscriptions = new Subscription();
 
   constructor(
@@ -19,7 +19,7 @@ export class NetworkSelectComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.route.params.pipe(pluck('network')).subscribe(network => {
+    this.route.data.pipe(pluck('network')).subscribe(network => {
       this.taquito.setNetwork(Network.valueOf(network));
     });
 
@@ -28,12 +28,17 @@ export class NetworkSelectComponent implements OnInit {
         (path, url) => `${path}/${url.path}`,
         Network.getNetwork(network)
       );
-
       this.router.navigateByUrl(path).catch(error => console.log(error));
     });
   }
 
   ngOnDestroy() {
     this.subscriptions.unsubscribe();
+  }
+
+  onSearch(contract) {
+    this.router
+      .navigate(['contracts', contract], { relativeTo: this.route })
+      .catch(error => console.log(error));
   }
 }

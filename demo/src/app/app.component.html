@@ -1,14 +1,1 @@
-<nb-layout>
-  <nb-layout-header>
-    <span class="logo">Taquito Demo</span>
-    <tz-network-select></tz-network-select>
-    <span class="divider"></span>
-    <tz-search-form (search)="onSearch($event)"></tz-search-form>
-    <span class="divider"></span>
-    <a nbButton routerLink="new-contract" routerLinkActive="active">New Contract</a>
-  </nb-layout-header>
-  <nb-layout-column>
-    <router-outlet></router-outlet>
-  </nb-layout-column>
-  <nb-layout-footer></nb-layout-footer>
-</nb-layout>
+<router-outlet></router-outlet>

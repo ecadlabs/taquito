@@ -1,7 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-
-import { TaquitoService } from './taquito.service';
 
 @Component({
   selector: 'tz-root',
@@ -11,13 +8,7 @@ import { TaquitoService } from './taquito.service';
 export class AppComponent implements OnInit {
   title = 'Taquito Demo';
 
-  public loading$ = this.taquito.loading$;
-
-  constructor(private taquito: TaquitoService, private router: Router) {}
+  constructor() {}
 
   ngOnInit() {}
-
-  onSearch(contract) {
-    this.router.navigate([contract]);
-  }
 }

@@ -1,5 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Contract } from '@taquito/taquito/dist/types/contract/contract';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -48,7 +50,12 @@ code {
   public deploying$ = new BehaviorSubject<boolean>(false);
   private subscriptions = new Subscription();
 
-  constructor(private taquito: TaquitoService, private fb: FormBuilder) {}
+  constructor(
+    private taquito: TaquitoService,
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.taquito
@@ -67,23 +74,30 @@ code {
     this.subscriptions.unsubscribe();
   }
 
-  displaySuccess() {
+  navigateTo(contract: Contract) {
     this.deploying$.next(false);
     this.error$.next(null);
+
+    this.router
+      .navigate(['..', contract.address], { relativeTo: this.route })
+      .catch(error => console.log(error));
   }
 
   displayError(error) {
+    console.error(error);
+
     this.deploying$.next(false);
-    this.error$.next(error.body.length === 0 ? 'Unable to fulfill the request.' : error.body);
+    this.error$.next(
+      error.body && error.body.length !== 0 ? error.body : 'Unable to fulfill the request.'
+    );
   }
 
   onDeploy() {
     this.deploying$.next(true);
-
     this.taquito
       .originate(this.newContract.value)
       .then(op => op.contract())
-      .then(contract => this.displaySuccess())
+      .then(contract => this.navigateTo(contract))
       .catch(error => this.displayError(error));
   }
 }

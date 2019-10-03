@@ -1,33 +1,31 @@
-<mat-progress-bar
-  *ngIf="loading$ | async; else contract_details"
-  mode="indeterminate"
-></mat-progress-bar>
-<ng-template #contract_details>
-  <nb-card>
-    <nb-card-body>
+<nb-card
+  [nbSpinner]="loading$ | async"
+  nbSpinnerStatus="info"
+  nbSpinnerSize="giant"
+  nbSpinnerMessage="Searching for {{ contractAddress$ | async }}..."
+>
+  <nb-card-body class="error-card" *ngIf="error$ | async as error; else showContract">
+    The smart contract <b>{{ contractAddress$ | async }}</b> cannot be found on
+    <b>{{ network$ | async }}</b>
+  </nb-card-body>
+  <ng-template #showContract>
+    <nb-card-body *ngIf="contract$ | async as contract">
       <nb-tabset>
         <nb-tab tabTitle="Account">
-          <div *ngIf="contract$ | async as contract">
+          <div>
             Balance: {{ contract.account.balance }}<br />
             Manager: {{ contract.account.manager }}<br />
             Spendable: {{ contract.account.spendable }}<br />
-            Delegatable: {{ contract.account.delegate.setable }}<br />
-            Methods: {{ contract.methods }}
+            Delegatable: {{ contract.account.delegate.setable }}
           </div>
         </nb-tab>
         <nb-tab tabTitle="Storage">
-          <ngx-json-viewer
-            [json]="contract.storage"
-            *ngIf="contract$ | async as contract"
-          ></ngx-json-viewer>
+          <ngx-json-viewer [json]="contract.storage"></ngx-json-viewer>
         </nb-tab>
         <nb-tab tabTitle="Script">
-          <ngx-json-viewer
-            [json]="contract.script"
-            *ngIf="contract$ | async as contract"
-          ></ngx-json-viewer>
+          <ngx-json-viewer [json]="contract.script"></ngx-json-viewer>
         </nb-tab>
       </nb-tabset>
     </nb-card-body>
-  </nb-card>
-</ng-template>
+  </ng-template>
+</nb-card>

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Tezos, TezosToolkit } from '@taquito/taquito';
 import { OriginateParams } from '@taquito/taquito/dist/types/operations/types';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { shareReplay, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, Subject, throwError } from 'rxjs';
+import { catchError, shareReplay, switchMap, tap } from 'rxjs/operators';
 
 export enum Network {
   Alphanet = 'https://tezos-dev.cryptonomic-infra.tech',
@@ -36,25 +36,27 @@ export class TaquitoService {
 
   public loading$ = new BehaviorSubject<boolean>(false);
 
-  public network$ = new Subject<Network>();
+  public network$ = new BehaviorSubject<Network>(Network.Alphanet);
+
+  public errors$ = new Subject();
 
   public contract$ = this.currentContract$.pipe(
     tap(_ => this.loading$.next(true)),
     switchMap(async address => {
-      try {
-        const contract = await this.taquito.contract.at(address);
+      const contract = await this.taquito.contract.at(address);
 
-        return {
-          account: await this.taquito.rpc.getContract(address),
-          storage: await contract.storage(),
-          getstorage: await this.taquito.contract.getStorage(address),
-          script: contract.script,
-        };
-      } catch (error) {
-        console.log(error);
-      }
+      return {
+        account: await this.taquito.rpc.getContract(address),
+        storage: await contract.storage(),
+        getstorage: await this.taquito.contract.getStorage(address),
+        script: contract.script,
+      };
+    }),
+    catchError(error => {
+      this.errors$.next(error);
+      this.loading$.next(false);
 
-      return null;
+      return throwError(error);
     }),
     tap(_ => this.loading$.next(false)),
     shareReplay()
