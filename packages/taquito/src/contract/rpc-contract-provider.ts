@@ -224,7 +224,7 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
   async at(address: string): Promise<Contract> {
     // We need to check if Proto5 is activated to pick the right smart contract abstraction
     const metadata = await this.rpc.getBlockMetadata();
-    if (metadata.nextProtocol === protocols['005']) {
+    if (this.isProto5(metadata.nextProtocol)) {
       const script = await this.rpc.getScript(address);
       const entrypoints = await this.rpc.getEntrypoints(address);
       return new Contract(address, script, this, entrypoints);
