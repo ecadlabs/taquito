@@ -88,6 +88,52 @@ describe('Exchange contract test', () => {
     });
   });
 
+  it('Test storage schema with undefined property', () => {
+    const schema = new Schema(storage!.args[0] as any);
+    expect(
+      schema.Encode({
+        mgr1: {
+          addr: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+        },
+        mgr2: {
+          addr: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          key: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+        },
+      })
+    ).toEqual({
+      args: [
+        {
+          args: [
+            {
+              string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+            },
+            {
+              prim: 'None',
+            },
+          ],
+          prim: 'Pair',
+        },
+        {
+          args: [
+            {
+              string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+            },
+            {
+              args: [
+                {
+                  string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+                },
+              ],
+              prim: 'Some',
+            },
+          ],
+          prim: 'Pair',
+        },
+      ],
+      prim: 'Pair',
+    });
+  });
+
   it('Test execute parameter', () => {
     const schema = new ParameterSchema(parameter!.args[0]);
     expect(schema.Execute({ prim: 'None' })).toEqual(null);

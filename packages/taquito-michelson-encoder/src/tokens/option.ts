@@ -24,7 +24,7 @@ export class OptionToken extends Token {
   public Encode(args: any): any {
     const value = args;
     if (
-      value === 'undefined' ||
+      value === undefined ||
       value === null ||
       (Array.isArray(value) && (value[0] === undefined || value[0] === null))
     ) {
@@ -39,7 +39,7 @@ export class OptionToken extends Token {
     const schema = this.createToken(this.val.args[0], 0);
     const value = args;
 
-    if (value === 'undefined' || value === null) {
+    if (value === undefined || value === null) {
       return { prim: 'None' };
     }
 
