@@ -115,10 +115,14 @@
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_taquito_taquito.originationoperation.html#results" class="tsd-kind-icon">results</a></li>
 							</ul>
 						</section>
-						<section class="tsd-index-section tsd-is-inherited">
+						<section class="tsd-index-section ">
 							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_taquito_taquito.originationoperation.html#consumedgas" class="tsd-kind-icon">consumed<wbr>Gas</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_taquito_taquito.originationoperation.html#errors" class="tsd-kind-icon">errors</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="_taquito_taquito.originationoperation.html#includedinblock" class="tsd-kind-icon">included<wbr>InBlock</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_taquito_taquito.originationoperation.html#storagediff" class="tsd-kind-icon">storage<wbr>Diff</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_taquito_taquito.originationoperation.html#storagesize" class="tsd-kind-icon">storage<wbr>Size</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -137,14 +141,14 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Origination<wbr>Operation<span class="tsd-signature-symbol">(</span>hash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, raw<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">__type</span>, results<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, context<span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.context.html" class="tsd-signature-type">Context</a>, contractProvider<span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.rpccontractprovider.html" class="tsd-signature-type">RpcContractProvider</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.originationoperation.html" class="tsd-signature-type">OriginationOperation</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Origination<wbr>Operation<span class="tsd-signature-symbol">(</span>hash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, raw<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">__type</span>, results<span class="tsd-signature-symbol">: </span><a href="../modules/_taquito_taquito.html#results" class="tsd-signature-type">Results</a>, context<span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.context.html" class="tsd-signature-type">Context</a>, contractProvider<span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.rpccontractprovider.html" class="tsd-signature-type">RpcContractProvider</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.originationoperation.html" class="tsd-signature-type">OriginationOperation</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_taquito_taquito.operation.html">Operation</a>.<a href="_taquito_taquito.operation.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b6492c4/packages/taquito/src/operations/origination-operation.ts#L14">taquito/src/operations/origination-operation.ts:14</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/81ae43b/packages/taquito/src/operations/origination-operation.ts#L16">taquito/src/operations/origination-operation.ts:16</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -156,7 +160,7 @@
 									<h5>raw: <span class="tsd-signature-type">__type</span></h5>
 								</li>
 								<li>
-									<h5>results: <span class="tsd-signature-type">any</span></h5>
+									<h5>results: <a href="../modules/_taquito_taquito.html#results" class="tsd-signature-type">Results</a></h5>
 								</li>
 								<li>
 									<h5>context: <a href="_taquito_taquito.context.html" class="tsd-signature-type">Context</a></h5>
@@ -179,7 +183,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_taquito_taquito.operation.html">Operation</a>.<a href="_taquito_taquito.operation.html#_foundat">_foundAt</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b6492c4/packages/taquito/src/operations/operations.ts#L7">taquito/src/operations/operations.ts:7</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/81ae43b/packages/taquito/src/operations/operations.ts#L7">taquito/src/operations/operations.ts:7</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -190,7 +194,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_taquito_taquito.operation.html">Operation</a>.<a href="_taquito_taquito.operation.html#context">context</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b6492c4/packages/taquito/src/operations/operations.ts#L21">taquito/src/operations/operations.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/81ae43b/packages/taquito/src/operations/operations.ts#L21">taquito/src/operations/operations.ts:21</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -205,7 +209,7 @@
 					<div class="tsd-signature tsd-kind-icon">contract<wbr>Address<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b6492c4/packages/taquito/src/operations/origination-operation.ts#L14">taquito/src/operations/origination-operation.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/81ae43b/packages/taquito/src/operations/origination-operation.ts#L16">taquito/src/operations/origination-operation.ts:16</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -223,7 +227,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_taquito_taquito.operation.html">Operation</a>.<a href="_taquito_taquito.operation.html#hash">hash</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b6492c4/packages/taquito/src/operations/operations.ts#L18">taquito/src/operations/operations.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/81ae43b/packages/taquito/src/operations/operations.ts#L18">taquito/src/operations/operations.ts:18</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -239,7 +243,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_taquito_taquito.operation.html">Operation</a>.<a href="_taquito_taquito.operation.html#raw">raw</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b6492c4/packages/taquito/src/operations/operations.ts#L19">taquito/src/operations/operations.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/81ae43b/packages/taquito/src/operations/operations.ts#L19">taquito/src/operations/operations.ts:19</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -255,13 +259,47 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_taquito_taquito.operation.html">Operation</a>.<a href="_taquito_taquito.operation.html#results">results</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b6492c4/packages/taquito/src/operations/operations.ts#L20">taquito/src/operations/operations.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/81ae43b/packages/taquito/src/operations/operations.ts#L20">taquito/src/operations/operations.ts:20</a></li>
 						</ul>
 					</aside>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
+			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Accessors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="consumedgas" class="tsd-anchor"></a>
+					<h3>consumed<wbr>Gas</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> consumedGas<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/81ae43b/packages/taquito/src/operations/origination-operation.ts#L39">taquito/src/operations/origination-operation.ts:39</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="errors" class="tsd-anchor"></a>
+					<h3>errors</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> errors<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/81ae43b/packages/taquito/src/operations/origination-operation.ts#L51">taquito/src/operations/origination-operation.ts:51</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
 					<a name="includedinblock" class="tsd-anchor"></a>
 					<h3>included<wbr>InBlock</h3>
@@ -273,10 +311,44 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_taquito_taquito.operation.html">Operation</a>.<a href="_taquito_taquito.operation.html#includedinblock">includedInBlock</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b6492c4/packages/taquito/src/operations/operations.ts#L8">taquito/src/operations/operations.ts:8</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/81ae43b/packages/taquito/src/operations/operations.ts#L8">taquito/src/operations/operations.ts:8</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="storagediff" class="tsd-anchor"></a>
+					<h3>storage<wbr>Diff</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> storageDiff<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/81ae43b/packages/taquito/src/operations/origination-operation.ts#L43">taquito/src/operations/origination-operation.ts:43</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="storagesize" class="tsd-anchor"></a>
+					<h3>storage<wbr>Size</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> storageSize<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/81ae43b/packages/taquito/src/operations/origination-operation.ts#L47">taquito/src/operations/origination-operation.ts:47</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -294,7 +366,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_taquito_taquito.operation.html">Operation</a>.<a href="_taquito_taquito.operation.html#confirmation">confirmation</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b6492c4/packages/taquito/src/operations/operations.ts#L33">taquito/src/operations/operations.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/81ae43b/packages/taquito/src/operations/operations.ts#L33">taquito/src/operations/operations.ts:33</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -334,7 +406,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b6492c4/packages/taquito/src/operations/origination-operation.ts#L40">taquito/src/operations/origination-operation.ts:40</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/81ae43b/packages/taquito/src/operations/origination-operation.ts#L58">taquito/src/operations/origination-operation.ts:58</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -416,8 +488,20 @@
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
 								<a href="_taquito_taquito.originationoperation.html#results" class="tsd-kind-icon">results</a>
 							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="_taquito_taquito.originationoperation.html#consumedgas" class="tsd-kind-icon">consumed<wbr>Gas</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="_taquito_taquito.originationoperation.html#errors" class="tsd-kind-icon">errors</a>
+							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
 								<a href="_taquito_taquito.originationoperation.html#includedinblock" class="tsd-kind-icon">included<wbr>InBlock</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="_taquito_taquito.originationoperation.html#storagediff" class="tsd-kind-icon">storage<wbr>Diff</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="_taquito_taquito.originationoperation.html#storagesize" class="tsd-kind-icon">storage<wbr>Size</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 								<a href="_taquito_taquito.originationoperation.html#confirmation" class="tsd-kind-icon">confirmation</a>
