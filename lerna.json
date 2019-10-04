@@ -5,5 +5,5 @@
     "integration-tests",
     "packages/*"
   ],
-  "version": "5.0.0-alpha.1"
+  "version": "5.0.1-beta.0"
 }

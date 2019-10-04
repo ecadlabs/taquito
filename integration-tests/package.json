@@ -3,10 +3,10 @@
     "scripts": {
         "test": "jest"
     },
-    "version": "5.0.0-alpha.1",
+    "version": "5.0.1-beta.0",
     "dependencies": {
-        "@taquito/signer": "^5.0.0-alpha.1",
-        "@taquito/taquito": "^5.0.0-alpha.1"
+        "@taquito/signer": "^5.0.1-beta.0",
+        "@taquito/taquito": "^5.0.1-beta.0"
     },
     "private": true,
     "jest": {
