@@ -24,6 +24,22 @@ describe('Schema test', () => {
     });
   });
 
+  it('Should encode storage properly', () => {
+    const schema = new Schema(storage);
+    const result = schema.Encode({
+      accounts: {},
+      name: 'Token B',
+      owner: 'tz1ccqAEwfPgeoipnXtjAv1iucrpQv3DFmmS',
+      symbol: 'B',
+      totalSupply: new BigNumber('1000'),
+      version: new BigNumber('1'),
+    });
+    expect(result).toEqual({
+      args: [{ prim: 'big_map', args: [] }, rpcContractResponse.script.storage.args[1]],
+      prim: 'Pair',
+    });
+  });
+
   it('Should encode parameter schema properly', () => {
     const schema = new ParameterSchema(params);
     const result = schema.Encode('approve', 'test', '0');

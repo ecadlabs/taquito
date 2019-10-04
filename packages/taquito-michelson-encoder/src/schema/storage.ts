@@ -31,7 +31,7 @@ export class Schema {
   constructor(val: any) {
     this.root = createToken(val, 0);
 
-    if (val.prim === 'pair' && val.args[0].prim === 'big_map') {
+    if (val.prim === 'pair' && Array.isArray(val.args) && val.args[0].prim === 'big_map') {
       this.bigMap = new BigMapToken(val.args[0], 0, createToken);
     }
   }
@@ -78,6 +78,14 @@ export class Schema {
     }
 
     return this.bigMap.KeySchema.ToBigMapKey(key);
+  }
+
+  Encode(_value?: any) {
+    try {
+      return this.root.EncodeObject(_value);
+    } catch (ex) {
+      throw new Error(`Unable to encode storage object. ${ex}`);
+    }
   }
 
   ExtractSchema() {

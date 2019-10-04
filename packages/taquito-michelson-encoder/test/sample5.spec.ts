@@ -13,4 +13,18 @@ describe('Schema test', () => {
       centralBank: 'tz1g3oS1UPgWFFpxrc2pEn4sgV3ky1Z6Qaz2',
     });
   });
+
+  it('Should encode storage properly', () => {
+    const schema = new Schema(storage5);
+    const result = schema.Encode({
+      '0': {},
+      totalSupply: new BigNumber('1000'),
+      approver: 'tz1g3oS1UPgWFFpxrc2pEn4sgV3ky1Z6Qaz2',
+      centralBank: 'tz1g3oS1UPgWFFpxrc2pEn4sgV3ky1Z6Qaz2',
+    });
+    expect(result).toEqual({
+      args: [{ prim: 'big_map', args: [] }, rpcContractResponse5.script.storage.args[1]],
+      prim: 'Pair',
+    });
+  });
 });

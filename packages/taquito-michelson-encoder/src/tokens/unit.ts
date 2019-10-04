@@ -11,8 +11,12 @@ export class UnitToken extends Token {
     super(val, idx, fac);
   }
 
-  public Encode(_args: any[]): any {
-    const val = _args.splice(0, 1);
+  public Encode(args: any[]): any {
+    args.pop();
+    return '';
+  }
+
+  public EncodeObject(_val: any): any {
     return '';
   }
 

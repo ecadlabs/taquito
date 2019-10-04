@@ -20,6 +20,10 @@ export class BoolToken extends Token {
     return val ? 'true' : 'false';
   }
 
+  public EncodeObject(val: any) {
+    return { prim: val ? 'True' : 'False' };
+  }
+
   public ExtractSchema() {
     return BoolToken.prim;
   }

@@ -84,6 +84,8 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
    *
    * @returns An operation handle with the result from the rpc node
    *
+   * @warn You cannot specify storage and init at the same time (use init to pass the raw michelson representation of storage)
+   *
    * @param OriginationOperation Originate operation parameter
    */
   async originate({
@@ -93,13 +95,31 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
     spendable = false,
     delegatable = false,
     delegate,
+    storage,
     fee = DEFAULT_FEE.ORIGINATION,
     gasLimit = DEFAULT_GAS_LIMIT.ORIGINATION,
     storageLimit = DEFAULT_STORAGE_LIMIT.ORIGINATION,
   }: OriginateParams) {
+    // tslint:disable-next-line: strict-type-predicates
+    if (storage !== undefined && init !== undefined) {
+      throw new Error(
+        'Storage and Init cannot be set a the same time. Please either use storage or init but not both.'
+      );
+    }
+
+    const contractCode = Array.isArray(code) ? code : ml2mic(code);
+
+    let contractStorage: object;
+    if (storage !== undefined) {
+      const schema = new Schema(contractCode[1].args[0]);
+      contractStorage = schema.Encode(storage);
+    } else {
+      contractStorage = typeof init === 'string' ? sexp2mic(init) : init;
+    }
+
     const script = {
       code: Array.isArray(code) ? code : ml2mic(code),
-      storage: typeof init === 'object' ? init : sexp2mic(init),
+      storage: contractStorage,
     };
 
     const publicKeyHash = await this.signer.publicKeyHash();

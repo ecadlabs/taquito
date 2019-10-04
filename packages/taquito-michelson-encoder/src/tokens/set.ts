@@ -30,6 +30,13 @@ export class SetToken extends Token {
     }, []);
   }
 
+  public EncodeObject(args: any): any {
+    const schema = this.createToken(this.val.args[0], 0);
+    return args.reduce((prev: any, current: any) => {
+      return [...prev, schema.EncodeObject(current)];
+    }, []);
+  }
+
   public ExtractSchema() {
     return SetToken.prim;
   }

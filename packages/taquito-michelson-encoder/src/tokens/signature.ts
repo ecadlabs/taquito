@@ -20,6 +20,10 @@ export class SignatureToken extends Token {
     return { string: val };
   }
 
+  public EncodeObject(val: any): any {
+    return { string: val };
+  }
+
   public ExtractSchema() {
     return SignatureToken.prim;
   }

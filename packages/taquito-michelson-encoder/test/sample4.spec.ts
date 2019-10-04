@@ -27,6 +27,18 @@ describe('Schema test', () => {
     });
   });
 
+  it('Should encode storage properly', () => {
+    const schema = new Schema(storage4);
+    const result = schema.Encode({
+      '0': {},
+      '1': 'tz1W8qq2VPJcbXkAMxG8zwXCbtwbDPMfTRZd',
+    });
+    expect(result).toEqual({
+      args: [{ prim: 'big_map', args: [] }, rpcContractResponse4.script.storage.args[1]],
+      prim: 'Pair',
+    });
+  });
+
   it('Should parse big map value properly', () => {
     const schema = new Schema(storage4);
     const value = schema.ExecuteOnBigMapValue(bigMapValue);
