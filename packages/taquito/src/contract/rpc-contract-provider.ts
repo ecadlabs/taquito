@@ -1,25 +1,19 @@
 import { Schema } from '@taquito/michelson-encoder';
-import { ml2mic, sexp2mic } from '@taquito/utils';
-import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT, protocols } from '../constants';
+import { ScriptResponse } from '@taquito/rpc';
+import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
 import { Context } from '../context';
-import { format } from '../format';
 import { OperationEmitter } from '../operations/operation-emitter';
 import { Operation } from '../operations/operations';
 import { OriginationOperation } from '../operations/origination-operation';
-import {
-  RPCDelegateOperation,
-  DelegateParams,
-  OriginateParams,
-  RPCOriginationOperation,
-  RPCTransferOperation,
-  TransferParams,
-} from '../operations/types';
+import { DelegateParams, OriginateParams, RPCDelegateOperation, TransferParams } from '../operations/types';
 import { Contract } from './contract';
-import { ContractProvider, ContractSchema } from './interface';
-import { ScriptResponse } from '@taquito/rpc';
+import { Estimate } from './estimate';
+import { ContractProvider, ContractSchema, EstimationProvider } from './interface';
+import { createOriginationOperation, createTransferOperation } from './prepare';
+
 
 export class RpcContractProvider extends OperationEmitter implements ContractProvider {
-  constructor(context: Context) {
+  constructor(context: Context, private estimator: EstimationProvider) {
     super(context);
   }
 
@@ -78,50 +72,61 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
     return contractSchema.ExecuteOnBigMapValue(val) as T; // Cast into T because only the caller can know the true type of the storage
   }
 
+  private async estimate<T extends { fee?: number; gasLimit?: number; storageLimit?: number }>(
+    { fee, gasLimit, storageLimit, ...rest }: T,
+    estimator: (param: T) => Promise<Estimate>
+  ) {
+    let calculatedFee = fee;
+    let calculatedGas = gasLimit;
+    let calculatedStorage = storageLimit;
+
+    if (fee === undefined || gasLimit === undefined || storageLimit === undefined) {
+      const estimation = await estimator({ fee, gasLimit, storageLimit, ...(rest as any) });
+
+      if (calculatedFee === undefined) {
+        calculatedFee = estimation.suggestedFeeMutez;
+      }
+
+      if (calculatedGas === undefined) {
+        calculatedGas = estimation.gasLimit;
+      }
+
+      if (calculatedStorage === undefined) {
+        calculatedStorage = estimation.storageLimit;
+      }
+    }
+
+    return {
+      fee: calculatedFee!,
+      gasLimit: calculatedGas!,
+      storageLimit: calculatedStorage!,
+    };
+  }
+
   /**
    *
    * @description Originate a new contract according to the script in parameters. Will sign and inject an operation using the current context
    *
    * @returns An operation handle with the result from the rpc node
    *
+   * @warn You cannot specify storage and init at the same time (use init to pass the raw michelson representation of storage)
+   *
    * @param OriginationOperation Originate operation parameter
    */
-  async originate({
-    code,
-    init,
-    balance = '0',
-    spendable = false,
-    delegatable = false,
-    delegate,
-    fee = DEFAULT_FEE.ORIGINATION,
-    gasLimit = DEFAULT_GAS_LIMIT.ORIGINATION,
-    storageLimit = DEFAULT_STORAGE_LIMIT.ORIGINATION,
-  }: OriginateParams) {
-    const script = {
-      code: Array.isArray(code) ? code : ml2mic(code),
-      storage: typeof init === 'object' ? init : sexp2mic(init),
-    };
+  async originate(params: OriginateParams) {
+    const estimate = await this.estimate(params, this.estimator.originate.bind(this.estimator));
 
     const publicKeyHash = await this.signer.publicKeyHash();
-    const operation: RPCOriginationOperation = {
-      kind: 'origination',
-      fee,
-      gas_limit: gasLimit,
-      storage_limit: storageLimit,
-      balance: format('tz', 'mutez', balance).toString(),
-      manager_pubkey: publicKeyHash,
-      spendable,
-      delegatable,
-      script,
-    };
-
-    if (delegate) {
-      operation.delegate = delegate;
-    }
-
-    const opBytes = await this.prepareOperation({ operation, source: publicKeyHash });
-
-    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    const operation = await createOriginationOperation(
+      {
+        ...params,
+        ...estimate,
+      },
+      publicKeyHash
+    );
+    const preparedOrigination = await this.prepareOperation({ operation, source: publicKeyHash });
+    const forgedOrigination = await this.forge(preparedOrigination);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(forgedOrigination);
     return new OriginationOperation(hash, forgedBytes, opResponse, context, this);
   }
 
@@ -148,7 +153,7 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
       storage_limit: storageLimit,
       delegate,
     };
-    const opBytes = await this.prepareOperation({
+    const opBytes = await this.prepareAndForge({
       operation,
       source: source || (await this.signer.publicKeyHash()),
     });
@@ -176,7 +181,7 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
       storage_limit: storageLimit,
       delegate: await this.signer.publicKeyHash(),
     };
-    const opBytes = await this.prepareOperation({ operation });
+    const opBytes = await this.prepareAndForge({ operation });
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
     return new Operation(hash, forgedBytes, opResponse, context);
   }
@@ -189,34 +194,13 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
    *
    * @param Transfer operation parameter
    */
-  async transfer({
-    to,
-    source,
-    amount,
-    parameter,
-    fee = DEFAULT_FEE.TRANSFER,
-    gasLimit = DEFAULT_GAS_LIMIT.TRANSFER,
-    storageLimit = DEFAULT_STORAGE_LIMIT.TRANSFER,
-    mutez = false,
-    rawParam = false,
-  }: TransferParams) {
-    const operation: RPCTransferOperation = {
-      kind: 'transaction',
-      fee,
-      gas_limit: gasLimit,
-      storage_limit: storageLimit,
-      amount: mutez ? amount.toString() : format('tz', 'mutez', amount).toString(),
-      destination: to,
-    };
-    if (parameter) {
-      operation.parameters = rawParam
-        ? parameter
-        : typeof parameter === 'string'
-        ? sexp2mic(parameter)
-        : parameter;
-    }
-
-    const opBytes = await this.prepareOperation({ operation, source });
+  async transfer(params: TransferParams) {
+    const estimate = await this.estimate(params, this.estimator.transfer.bind(this.estimator));
+    const operation = await createTransferOperation({
+      ...params,
+      ...estimate,
+    });
+    const opBytes = await this.prepareAndForge({ operation, source: params.source });
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
     return new Operation(hash, forgedBytes, opResponse, context);
   }

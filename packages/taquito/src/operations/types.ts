@@ -1,19 +1,29 @@
 import { OperationObject } from '@taquito/rpc';
 
-/**
- * @description Parameters for originate method
- */
-export interface OriginateParams {
+export type OriginateParamsBase = {
   balance?: string;
   code: string | object[];
-  init: string | object;
   spendable?: boolean;
   delegatable?: boolean;
   delegate?: string;
   fee?: number;
   gasLimit?: number;
   storageLimit?: number;
-}
+};
+
+/**
+ * @description Parameters for originate method
+ */
+export type OriginateParams = OriginateParamsBase &
+  (
+    | {
+        init?: never;
+        storage: any;
+      }
+    | {
+        init: string | object;
+        storage?: never;
+      });
 
 /**
  * @description RPC origination operation

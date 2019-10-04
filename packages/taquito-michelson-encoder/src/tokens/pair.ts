@@ -27,6 +27,35 @@ export class PairToken extends Token {
     };
   }
 
+  public EncodeObject(args: any): any {
+    const leftToken = this.createToken(this.val.args[0], this.idx);
+    let keyCount = 1;
+    if (leftToken instanceof PairToken) {
+      keyCount = Object.keys(leftToken.ExtractSchema()).length;
+    }
+
+    const rightToken = this.createToken(this.val.args[1], this.idx + keyCount);
+
+    let leftValue;
+    if (leftToken instanceof PairToken && !leftToken.hasAnnotations()) {
+      leftValue = args;
+    } else {
+      leftValue = args[leftToken.annot()];
+    }
+
+    let rightValue;
+    if (rightToken instanceof PairToken && !rightToken.hasAnnotations()) {
+      rightValue = args;
+    } else {
+      rightValue = args[rightToken.annot()];
+    }
+
+    return {
+      prim: 'Pair',
+      args: [leftToken.EncodeObject(leftValue), rightToken.EncodeObject(rightValue)],
+    };
+  }
+
   private traversal(getLeftValue: (token: Token) => any, getRightValue: (token: Token) => any) {
     const leftToken = this.createToken(this.val.args[0], this.idx);
     let keyCount = 1;

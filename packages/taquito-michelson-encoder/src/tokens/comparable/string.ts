@@ -24,6 +24,10 @@ export class StringToken extends Token implements ComparableToken {
     return { string: val };
   }
 
+  public EncodeObject(val: any): any {
+    return { string: val };
+  }
+
   // tslint:disable-next-line: variable-name
   public ToKey({ string }: any) {
     return string;

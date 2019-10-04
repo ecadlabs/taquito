@@ -3,8 +3,31 @@ import { Operation } from '../operations/operations';
 import { Contract } from './contract';
 import { DelegateParams, OriginateParams, TransferParams } from '../operations/types';
 import { OriginationOperation } from '../operations/origination-operation';
+import { Estimate } from './estimate';
 
 export type ContractSchema = Schema | unknown;
+
+export interface EstimationProvider {
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for an origination operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation
+   *
+   * @param OriginationOperation Originate operation parameter
+   */
+  originate(params: OriginateParams): Promise<Estimate>;
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for an transfer operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation
+   *
+   * @param TransferOperation Originate operation parameter
+   */
+  transfer({ fee, storageLimit, gasLimit, ...rest }: TransferParams): Promise<Estimate>;
+}
 
 export interface ContractProvider {
   /**

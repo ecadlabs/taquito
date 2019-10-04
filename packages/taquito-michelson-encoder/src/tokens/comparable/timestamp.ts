@@ -24,6 +24,10 @@ export class TimestampToken extends Token implements ComparableToken {
     return { string: val };
   }
 
+  public EncodeObject(val: any): any {
+    return { string: val };
+  }
+
   public ExtractSchema() {
     return TimestampToken.prim;
   }

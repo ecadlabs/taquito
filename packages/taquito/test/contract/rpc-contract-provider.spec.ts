@@ -12,6 +12,7 @@ import {
 import BigNumber from 'bignumber.js';
 import { Context } from '../../src/context';
 import { LegacyContractMethod, ContractMethod } from '../../src/contract/contract';
+import { Estimate } from '../../src/contract/estimate';
 
 /**
  * RPCContractProvider test
@@ -39,6 +40,21 @@ describe('RpcContractProvider test', () => {
     sign: jest.Mock<any, any>;
   };
 
+  let mockEstimate: {
+    originate: jest.Mock<any, any>;
+    transfer: jest.Mock<any, any>;
+  };
+
+  const revealOp = (source: string) => ({
+    counter: '1',
+    fee: '1420',
+    gas_limit: '10600',
+    kind: 'reveal',
+    public_key: 'test_pub_key',
+    source,
+    storage_limit: '300',
+  });
+
   beforeEach(() => {
     mockRpcClient = {
       getEntrypoints: jest.fn(),
@@ -61,6 +77,11 @@ describe('RpcContractProvider test', () => {
       sign: jest.fn(),
     };
 
+    mockEstimate = {
+      originate: jest.fn(),
+      transfer: jest.fn(),
+    };
+
     // Required for operations confirmation polling
     mockRpcClient.getBlock.mockResolvedValue({
       operations: [[], [], [], []],
@@ -70,8 +91,17 @@ describe('RpcContractProvider test', () => {
     });
 
     rpcContractProvider = new RpcContractProvider(
-      new Context(mockRpcClient as any, mockSigner as any)
+      new Context(mockRpcClient as any, mockSigner as any),
+      mockEstimate as any
     );
+
+    mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
+    mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
+    mockRpcClient.getBlockMetadata.mockResolvedValue({ nextProtocol: 'test_proto' });
+    mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
+    mockSigner.publicKey.mockResolvedValue('test_pub_key');
+    mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+    mockRpcClient.preapplyOperations.mockResolvedValue([]);
   });
 
   describe('getStorage', () => {
@@ -115,33 +145,21 @@ describe('RpcContractProvider test', () => {
 
   describe('originate', () => {
     it('should produce a reveal and origination operation', async done => {
-      mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
-      mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
-      mockRpcClient.getBlockMetadata.mockResolvedValue({ nextProtocol: 'test_proto' });
-      mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
-      mockSigner.publicKey.mockResolvedValue('test_pub_key');
-      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
-      mockRpcClient.preapplyOperations.mockResolvedValue([]);
       const result = await rpcContractProvider.originate({
         delegate: 'test_delegate',
         balance: '200',
         code: miStr,
         init: '{}',
+        fee: 10000,
+        gasLimit: 10600,
+        storageLimit: 257,
       });
       expect(result.raw).toEqual({
         counter: 0,
         opOb: {
           branch: 'test',
           contents: [
-            {
-              counter: '1',
-              fee: '1420',
-              gas_limit: '10600',
-              kind: 'reveal',
-              public_key: 'test_pub_key',
-              source: 'test_pub_key_hash',
-              storage_limit: '300',
-            },
+            revealOp('test_pub_key_hash'),
             {
               balance: '200000000',
               counter: '2',
@@ -171,34 +189,67 @@ describe('RpcContractProvider test', () => {
       done();
     });
 
-    it('should not alter code and init object when they are array and object', async done => {
-      mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
-      mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
-      mockRpcClient.getBlockMetadata.mockResolvedValue({ nextProtocol: 'test_proto' });
-      mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
-      mockSigner.publicKey.mockResolvedValue('test_pub_key');
-      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
-      mockRpcClient.preapplyOperations.mockResolvedValue([]);
+    it('estimate when no fees are specified', async done => {
+      const estimate = new Estimate(1000, 1000, 180);
+      mockEstimate.originate.mockResolvedValue(estimate);
+
       const result = await rpcContractProvider.originate({
         delegate: 'test_delegate',
         balance: '200',
-        code: ligoSample,
-        init: { int: '0' },
+        code: miStr,
+        init: '{}',
       });
       expect(result.raw).toEqual({
         counter: 0,
         opOb: {
           branch: 'test',
           contents: [
+            revealOp('test_pub_key_hash'),
             {
-              counter: '1',
-              fee: '1420',
-              gas_limit: '10600',
-              kind: 'reveal',
-              public_key: 'test_pub_key',
+              balance: '200000000',
+              counter: '2',
+              delegatable: false,
+              delegate: 'test_delegate',
+              fee: estimate.suggestedFeeMutez.toString(),
+              gas_limit: estimate.gasLimit.toString(),
+              kind: 'origination',
+              manager_pubkey: 'test_pub_key_hash',
+              script: {
+                code: miSample,
+                storage: {
+                  args: [],
+                  prim: '{}',
+                },
+              },
               source: 'test_pub_key_hash',
-              storage_limit: '300',
+              storage_limit: estimate.storageLimit.toString(),
+              spendable: false,
             },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        opbytes: 'test',
+      });
+      done();
+    });
+
+    it('should not alter code and init object when they are array and object', async done => {
+      const result = await rpcContractProvider.originate({
+        delegate: 'test_delegate',
+        balance: '200',
+        code: ligoSample,
+        init: { int: '0' },
+        fee: 10000,
+        gasLimit: 10600,
+        storageLimit: 257,
+      });
+      expect(result.raw).toEqual({
+        counter: 0,
+        opOb: {
+          branch: 'test',
+          contents: [
+            revealOp('test_pub_key_hash'),
             {
               balance: '200000000',
               counter: '2',
@@ -226,14 +277,8 @@ describe('RpcContractProvider test', () => {
     });
 
     it('should not alter code and init object when they are array and object', async done => {
-      mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
       mockRpcClient.getScript.mockResolvedValue({ code: ligoSample, storage: { int: '0' } });
-      mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
       mockRpcClient.injectOperation.mockResolvedValue('test');
-      mockRpcClient.getBlockMetadata.mockResolvedValue({ nextProtocol: 'test_proto' });
-      mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
-      mockSigner.publicKey.mockResolvedValue('test_pub_key');
-      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
       mockRpcClient.preapplyOperations.mockResolvedValue([
         {
           contents: [
@@ -267,6 +312,9 @@ describe('RpcContractProvider test', () => {
         balance: '200',
         code: ligoSample,
         init: { int: '0' },
+        fee: 10000,
+        gasLimit: 10600,
+        storageLimit: 257,
       });
       const contract = await result.contract();
       expect(contract.script).toEqual({ code: ligoSample, storage: { int: '0' } });
@@ -276,28 +324,19 @@ describe('RpcContractProvider test', () => {
 
   describe('transfer', () => {
     it('should produce a reveal and transaction operation', async done => {
-      mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
-      mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
-      mockRpcClient.preapplyOperations.mockResolvedValue([]);
-      mockRpcClient.getBlockMetadata.mockResolvedValue({ nextProtocol: 'test_proto' });
-      mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
-      mockSigner.publicKey.mockResolvedValue('test_pub_key');
-      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
-      const result = await rpcContractProvider.transfer({ to: 'test_to', amount: 2 });
+      const result = await rpcContractProvider.transfer({
+        to: 'test_to',
+        amount: 2,
+        fee: 10000,
+        gasLimit: 10600,
+        storageLimit: 300,
+      });
       expect(result.raw).toEqual({
         counter: 0,
         opOb: {
           branch: 'test',
           contents: [
-            {
-              counter: '1',
-              fee: '1420',
-              gas_limit: '10600',
-              kind: 'reveal',
-              public_key: 'test_pub_key',
-              source: 'test_pub_key_hash',
-              storage_limit: '300',
-            },
+            revealOp('test_pub_key_hash'),
             {
               amount: '2000000',
               counter: '2',
@@ -317,6 +356,39 @@ describe('RpcContractProvider test', () => {
       done();
     });
 
+    it('should estimate when no fee are specified', async done => {
+      const estimate = new Estimate(1000, 1000, 180);
+      mockEstimate.transfer.mockResolvedValue(estimate);
+
+      const result = await rpcContractProvider.transfer({
+        to: 'test_to',
+        amount: 2,
+      });
+      expect(result.raw).toEqual({
+        counter: 0,
+        opOb: {
+          branch: 'test',
+          contents: [
+            revealOp('test_pub_key_hash'),
+            {
+              amount: '2000000',
+              counter: '2',
+              destination: 'test_to',
+              fee: estimate.suggestedFeeMutez.toString(),
+              gas_limit: estimate.gasLimit.toString(),
+              kind: 'transaction',
+              source: 'test_pub_key_hash',
+              storage_limit: estimate.storageLimit.toString(),
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        opbytes: 'test',
+      });
+      done();
+    });
+
     it('should omit reveal operation if manager is defined (BABY)', async done => {
       mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
       mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
@@ -326,7 +398,7 @@ describe('RpcContractProvider test', () => {
       mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
       mockSigner.publicKey.mockResolvedValue('test_pub_key');
       mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
-      const result = await rpcContractProvider.transfer({ to: 'test_to', amount: 2 });
+      const result = await rpcContractProvider.transfer({ to: 'test_to', amount: 2, fee: 10000, gasLimit: 10600, storageLimit: 300 });
       expect(result.raw).toEqual({
         counter: 0,
         opOb: {
@@ -360,7 +432,7 @@ describe('RpcContractProvider test', () => {
       mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
       mockSigner.publicKey.mockResolvedValue('test_pub_key');
       mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
-      const result = await rpcContractProvider.transfer({ to: 'test_to', amount: 2 });
+      const result = await rpcContractProvider.transfer({ to: 'test_to', amount: 2, fee: 10000, gasLimit: 10600, storageLimit: 300 });
       expect(result.raw).toEqual({
         counter: 0,
         opOb: {
@@ -388,13 +460,6 @@ describe('RpcContractProvider test', () => {
 
   describe('setDelegate', () => {
     it('should produce a reveal and delegation operation', async done => {
-      mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
-      mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
-      mockRpcClient.getBlockMetadata.mockResolvedValue({ nextProtocol: 'test_proto' });
-      mockRpcClient.preapplyOperations.mockResolvedValue([]);
-      mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
-      mockSigner.publicKey.mockResolvedValue('test_pub_key');
-      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
       const result = await rpcContractProvider.setDelegate({
         source: 'test_source',
         delegate: 'test_delegate',
@@ -404,15 +469,7 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            {
-              counter: '1',
-              fee: '1420',
-              gas_limit: '10600',
-              kind: 'reveal',
-              public_key: 'test_pub_key',
-              source: 'test_source',
-              storage_limit: '300',
-            },
+            revealOp('test_source'),
             {
               delegate: 'test_delegate',
               counter: '2',
@@ -434,28 +491,13 @@ describe('RpcContractProvider test', () => {
 
   describe('registerDelegate', () => {
     it('should produce a reveal and delegation operation', async done => {
-      mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
-      mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
-      mockRpcClient.preapplyOperations.mockResolvedValue([]);
-      mockRpcClient.getBlockMetadata.mockResolvedValue({ nextProtocol: 'test_proto' });
-      mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
-      mockSigner.publicKey.mockResolvedValue('test_pub_key');
-      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
       const result = await rpcContractProvider.registerDelegate({});
       expect(result.raw).toEqual({
         counter: 0,
         opOb: {
           branch: 'test',
           contents: [
-            {
-              counter: '1',
-              fee: '1420',
-              gas_limit: '10600',
-              kind: 'reveal',
-              public_key: 'test_pub_key',
-              source: 'test_pub_key_hash',
-              storage_limit: '300',
-            },
+            revealOp('test_pub_key_hash'),
             {
               delegate: 'test_pub_key_hash',
               counter: '2',

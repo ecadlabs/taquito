@@ -20,6 +20,10 @@ export class LambdaToken extends Token {
     return { string: val };
   }
 
+  public EncodeObject(val: any): any {
+    return { string: val };
+  }
+
   public ExtractSchema() {
     const leftToken = this.createToken(this.val.args[0], this.idx);
     const rightToken = this.createToken(this.val.args[1], this.idx + 1);

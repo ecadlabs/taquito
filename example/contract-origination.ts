@@ -25,7 +25,7 @@ async function example() {
     try {
         console.log('Deploying Hello world contract...')
         const op = await Tezos.contract.originate({
-            balance: "1",
+            balance: "0",
             code: `parameter string;
             storage string;
             code {CAR;
@@ -33,13 +33,14 @@ async function example() {
                   CONCAT;
                   NIL operation; PAIR};
             `,
-            init: `"test"`,
-            fee: 30000,
-            storageLimit: 2000,
-            gasLimit: 90000,
+            init: `"test1234"`
         })
+
         console.log('Awaiting confirmation...')
         const contract = await op.contract()
+        console.log('Gas Used', op.consumedGas)
+        console.log('Storage Paid', op.storageDiff)
+        console.log('Storage Size', op.storageSize)
         console.log('Storage', await contract.storage())
         console.log("Operation hash:", op.hash, "Included in block level:", op.includedInBlock)
     } catch (ex) {

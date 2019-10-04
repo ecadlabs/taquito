@@ -886,6 +886,21 @@ describe('RpcClient test', () => {
         url: 'root/chains/test/blocks/head/context/contracts/test/entrypoints',
       });
       expect(response).toEqual({ entrypoints: {} });
+      done();
+    })
+  });
+  describe('runOperation', () => {
+    it('query the right url and data', async done => {
+      const testData = {};
+
+      await client.runOperation(testData);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'POST',
+        url: 'root/chains/test/blocks/head/helpers/scripts/run_operation',
+      });
+
+      expect(httpBackend.createRequest.mock.calls[0][1]).toEqual(testData);
 
       done();
     });

@@ -1,5 +1,7 @@
-import { BlockHeaderResponse, RpcClient, BlockMetadata, ManagerKeyResponse } from '@taquito/rpc';
+
+import { BlockHeaderResponse, RpcClient, BlockMetadata, ManagerKeyResponse, OperationObject } from '@taquito/rpc';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT, protocols } from '../constants';
+
 import { Context } from '../context';
 import { ForgedBytes, PrepareOperationParams, RPCOperation, RPCRevealOperation } from './types';
 
@@ -12,12 +14,9 @@ export abstract class OperationEmitter {
     return this.context.signer;
   }
 
-  constructor(protected context: Context) {}
+  constructor(protected context: Context) { }
 
-  protected async prepareOperation({
-    operation,
-    source,
-  }: PrepareOperationParams): Promise<ForgedBytes> {
+  protected async prepareOperation({ operation, source }: PrepareOperationParams) {
     let counter;
     const counters: { [key: string]: number } = {};
     const promises: [
@@ -124,6 +123,22 @@ export abstract class OperationEmitter {
     const contents = constructOps(ops);
     const protocol = metadata.nextProtocol;
 
+    return {
+      opOb: {
+        branch,
+        contents,
+        protocol,
+      },
+      counter,
+    };
+  }
+
+  protected async prepareAndForge(params: PrepareOperationParams) {
+    const prepared = await this.prepareOperation(params);
+    return this.forge(prepared);
+  }
+
+  protected async forge({ opOb: { branch, contents, protocol }, counter }: any) {
     let remoteForgedBytes = await this.rpc.forgeOperations({ branch, contents });
 
     return {
@@ -136,6 +151,15 @@ export abstract class OperationEmitter {
       counter,
     };
   }
+
+  protected async simulate(op: OperationObject) {
+    return {
+      opResponse: await this.rpc.runOperation(op),
+      op,
+      context: this.context.clone(),
+    };
+  }
+
   protected async signAndInject(forgedBytes: ForgedBytes) {
     const signed = await this.signer.sign(forgedBytes.opbytes, new Uint8Array([3]));
     forgedBytes.opbytes = signed.sbytes;

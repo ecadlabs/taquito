@@ -36,4 +36,6 @@ export abstract class Token {
   public abstract Execute(val: any): any;
 
   public abstract Encode(_args: any[]): any;
+
+  public abstract EncodeObject(args: any): any;
 }

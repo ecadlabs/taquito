@@ -2,7 +2,7 @@ import { IndexerClient } from '@taquito/indexer';
 import { RpcClient } from '@taquito/rpc';
 import { InMemorySigner } from '@taquito/signer';
 
-import { ContractProvider } from './contract/interface';
+import { ContractProvider, EstimationProvider } from './contract/interface';
 import { RpcContractProvider } from './contract/rpc-contract-provider';
 import { IndexerProvider } from './query/indexer-provider';
 import { QueryProvider } from './query/interface';
@@ -14,6 +14,7 @@ import { format } from './format';
 import { Signer } from './signer/interface';
 import { Context } from './context';
 import { NoopSigner } from './signer/noop';
+import { RPCEstimateProvider } from './contract/rpc-estimate-provider';
 export { SubscribeProvider } from './subscribe/interface';
 export interface SetProviderOptions {
   rpc?: string | RpcClient;
@@ -35,7 +36,8 @@ export class TezosToolkit {
   private _context: Context = new Context();
 
   private _tz = new RpcTzProvider(this._context);
-  private _contract = new RpcContractProvider(this._context);
+  private _estimate = new RPCEstimateProvider(this._context);
+  private _contract = new RpcContractProvider(this._context, this._estimate);
 
   public readonly format = format;
 
@@ -112,6 +114,13 @@ export class TezosToolkit {
    */
   get contract(): ContractProvider {
     return this._contract;
+  }
+
+  /**
+   * @description Provide access to operation estimation utilities
+   */
+  get estimate(): EstimationProvider {
+    return this._estimate;
   }
 
   /**

@@ -20,6 +20,10 @@ export class OperationToken extends Token {
     return { string: val };
   }
 
+  public EncodeObject(val: any): any {
+    return { string: val };
+  }
+
   public ExtractSchema() {
     return OperationToken.prim;
   }

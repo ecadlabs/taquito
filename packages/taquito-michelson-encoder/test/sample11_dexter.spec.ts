@@ -53,6 +53,22 @@ describe('Exchange contract test', () => {
     });
   });
 
+  it('Test storage encoding', () => {
+    const schema = new Schema(storageDexter);
+    expect(
+      schema.Encode({
+        '0': {},
+        '1': 'KT1XAMU1kn8EJLM2uqrP71Jevvkyo7yyfNTK',
+        '2': 'KT1DmCHxit2bQ2GiHVc24McY6meuJPMTrqD8',
+        '3': new BigNumber('100000000'),
+        '4': {},
+      })
+    ).toEqual({
+      prim: 'Pair',
+      args: [{ prim: 'big_map', args: [] }, rpcContractResponse.script.storage.args[1]],
+    });
+  });
+
   it('Test parameter schema', () => {
     const schema = new ParameterSchema(params);
     expect(schema.ExtractSchema()).toEqual({

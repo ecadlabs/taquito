@@ -21,6 +21,10 @@ export class NatToken extends Token implements ComparableToken {
     return { int: String(val).toString() };
   }
 
+  public EncodeObject(val: any): any {
+    return { int: String(val).toString() };
+  }
+
   public ExtractSchema() {
     return NatToken.prim;
   }

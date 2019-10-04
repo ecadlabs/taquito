@@ -641,4 +641,23 @@ export class RpcClient {
 
     return contractResponse;
   }
+  /**
+   * @param op Operation to run
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Run an operation without signature checks
+   *
+   * @see https://tezos.gitlab.io/mainnet/api/rpc.html#post-block-id-helpers-scripts-run-operation
+   */
+  async runOperation(op: OperationObject, { block }: RPCOptions = defaultRPCOptions): Promise<any> {
+    const response = await this.httpBackend.createRequest<any>(
+      {
+        url: `${this.url}/chains/${this.chain}/blocks/${block}/helpers/scripts/run_operation`,
+        method: 'POST',
+      },
+      op
+    );
+
+    return response;
+  }
 }

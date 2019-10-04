@@ -29,9 +29,14 @@ export class ListToken extends Token {
     }, []);
   }
 
+  public EncodeObject(args: any): any {
+    const schema = this.createToken(this.val.args[0], 0);
+    return args.reduce((prev: any, current: any) => {
+      return [...prev, schema.EncodeObject(current)];
+    }, []);
+  }
+
   public ExtractSchema() {
     return ListToken.prim;
-    const schema = this.createToken(this.val.args[0], 0);
-    return { [ListToken.prim]: schema.ExtractSchema() };
   }
 }

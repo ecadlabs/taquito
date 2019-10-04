@@ -18,4 +18,24 @@ describe('Schema test', () => {
       paused: false,
     });
   });
+
+  it('Should encode storage properly', () => {
+    const schema = new Schema(storage2);
+    const result = schema.Encode({
+      '0': {},
+      admin: 'tz1M9CMEtsXm3QxA7FmMU2Qh7xzsuGXVbcDr',
+      metaData: {
+        By: 'https://SmartPy.io',
+        Help: 'Use Build to define a new game board and Play to make moves',
+        'Play at':
+          'https://smartpy.io/demo/explore.html?address=KT1UvfyLytrt71jh63YV4Yex5SmbNXpWHxtg',
+        'SmartPy Template': 'https://smartpy.io/demo/index.html?template=tictactoeFactory.py',
+      },
+      paused: false,
+    });
+    expect(result).toEqual({
+      args: [{ prim: 'big_map', args: [] }, rpcContractResponse2.script.storage.args[1]],
+      prim: 'Pair',
+    });
+  });
 });
