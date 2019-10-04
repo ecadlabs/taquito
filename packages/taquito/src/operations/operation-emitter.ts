@@ -1,7 +1,11 @@
-
-import { BlockHeaderResponse, RpcClient, BlockMetadata, ManagerKeyResponse, OperationObject } from '@taquito/rpc';
+import {
+  BlockHeaderResponse,
+  BlockMetadata,
+  ManagerKeyResponse,
+  RpcClient,
+  RPCRunOperationParam,
+} from '@taquito/rpc';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT, protocols } from '../constants';
-
 import { Context } from '../context';
 import { ForgedBytes, PrepareOperationParams, RPCOperation, RPCRevealOperation } from './types';
 
@@ -14,7 +18,7 @@ export abstract class OperationEmitter {
     return this.context.signer;
   }
 
-  constructor(protected context: Context) { }
+  constructor(protected context: Context) {}
 
   protected async prepareOperation({ operation, source }: PrepareOperationParams) {
     let counter;
@@ -152,7 +156,7 @@ export abstract class OperationEmitter {
     };
   }
 
-  protected async simulate(op: OperationObject) {
+  protected async simulate(op: RPCRunOperationParam) {
     return {
       opResponse: await this.rpc.runOperation(op),
       op,

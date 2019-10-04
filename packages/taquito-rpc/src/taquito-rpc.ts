@@ -1,42 +1,39 @@
 import { HttpBackend } from '@taquito/http-utils';
-import { camelCaseProps, castToBigNumber } from './utils/utils';
-
-export * from './types';
-
+import BigNumber from 'bignumber.js';
 import {
-  BalanceResponse,
-  StorageResponse,
-  ScriptResponse,
-  ContractResponse,
-  BigMapKey,
-  BigMapGetResponse,
-  ManagerResponse,
-  DelegateResponse,
-  DelegatesResponse,
-  RawDelegatesResponse,
-  ConstantsResponse,
-  BlockResponse,
-  BlockMetadata,
-  BlockFullHeader,
-  OperationContents,
-  OperationObject,
-  OperationContentsAndResultMetadata,
   BakingRightsQueryArguments,
   BakingRightsResponse,
+  BalanceResponse,
   BallotListResponse,
   BallotsResponse,
-  PeriodKindResponse,
+  BigMapGetResponse,
+  BigMapKey,
+  BlockHeaderResponse,
+  BlockMetadata,
+  BlockResponse,
+  ConstantsResponse,
+  ContractResponse,
   CurrentProposalResponse,
   CurrentQuorumResponse,
-  VotesListingsResponse,
-  ProposalsResponse,
+  DelegateResponse,
+  DelegatesResponse,
   EndorsingRightsQueryArguments,
   EndorsingRightsResponse,
   ManagerKeyResponse,
-  BlockHeaderResponse,
+  ManagerResponse,
+  OperationObject,
+  PeriodKindResponse,
+  ProposalsResponse,
   RawBlockHeaderResponse,
+  RawDelegatesResponse,
+  RPCRunOperationParam,
+  ScriptResponse,
+  StorageResponse,
+  VotesListingsResponse,
 } from './types';
-import BigNumber from 'bignumber.js';
+import { camelCaseProps, castToBigNumber } from './utils/utils';
+
+export * from './types';
 
 const defaultRPC = 'https://tezrpc.me';
 const defaultChain = 'main';
@@ -64,7 +61,7 @@ export class RpcClient {
     private url: string = defaultRPC,
     private chain: string = defaultChain,
     private httpBackend: HttpBackend = new HttpBackend()
-  ) { }
+  ) {}
 
   /**
    *
@@ -621,20 +618,22 @@ export class RpcClient {
   }
 
   /**
-   * 
+   *
    * @param contract address of the contract we want to get the entrypoints of
-   * 
+   *
    * @description Return the list of entrypoints of the contract
-   * 
+   *
    * @see http://tezos.gitlab.io/zeronet/api/rpc.html#get-block-id-context-contracts-contract-id-entrypoints
-   * 
+   *
    * @version 005_PsBABY5H
    */
   async getEntrypoints(
     contract: string,
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<{ entrypoints: { [key: string]: Object } }> {
-    const contractResponse = await this.httpBackend.createRequest<{ entrypoints: { [key: string]: Object } }>({
+    const contractResponse = await this.httpBackend.createRequest<{
+      entrypoints: { [key: string]: Object };
+    }>({
       url: `${this.url}/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/entrypoints`,
       method: 'GET',
     });
@@ -649,7 +648,10 @@ export class RpcClient {
    *
    * @see https://tezos.gitlab.io/mainnet/api/rpc.html#post-block-id-helpers-scripts-run-operation
    */
-  async runOperation(op: OperationObject, { block }: RPCOptions = defaultRPCOptions): Promise<any> {
+  async runOperation(
+    op: RPCRunOperationParam,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<any> {
     const response = await this.httpBackend.createRequest<any>(
       {
         url: `${this.url}/chains/${this.chain}/blocks/${block}/helpers/scripts/run_operation`,
@@ -659,5 +661,12 @@ export class RpcClient {
     );
 
     return response;
+  }
+
+  async getChainId() {
+    return this.httpBackend.createRequest<string>({
+      url: `${this.url}/chains/${this.chain}/chain_id`,
+      method: 'GET',
+    });
   }
 }

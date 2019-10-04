@@ -41,6 +41,13 @@ export interface OperationObject {
   signature?: string;
 }
 
+export type RPCRunOperationParam =
+  | OperationObject
+  | {
+      operation: OperationObject;
+      chain_id: string;
+    };
+
 export interface RawDelegatesResponse {
   balance: string;
   frozen_balance: string;
@@ -579,6 +586,8 @@ export type VotingPeriodKindEnum = 'proposal' | 'testing_vote' | 'testing' | 'pr
 // metadata:
 export interface BlockMetadata {
   protocol: string;
+  // Only on Baby
+  chainId?: string;
   nextProtocol: string;
   testChainStatus: TestChainStatus;
   maxOperationsTtl: number;

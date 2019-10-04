@@ -4,6 +4,7 @@ import { createOriginationOperation, createTransferOperation } from './prepare';
 import { Estimate } from './estimate';
 import { DEFAULT_STORAGE_LIMIT } from '../constants';
 import { EstimationProvider } from './interface';
+import { RPCRunOperationParam } from '@taquito/rpc';
 
 // RPC require a signature but do not verify it
 const SIGNATURE_STUB =
@@ -44,7 +45,14 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
       opbytes,
       opOb: { branch, contents },
     } = await this.prepareAndForge({ operation: op, source: pkh });
-    const { opResponse } = await this.simulate({ branch, contents, signature: SIGNATURE_STUB });
+
+    const metadata = await this.rpc.getBlockMetadata();
+    let operation: RPCRunOperationParam = { branch, contents, signature: SIGNATURE_STUB };
+    if (this.isProto5(metadata.nextProtocol)) {
+      operation = { operation, chain_id: await this.rpc.getChainId() };
+    }
+
+    const { opResponse } = await this.simulate(operation);
     const operationResults = this.getOperationResult(opResponse, 'origination');
     const consumedGas = operationResults && operationResults.consumed_gas;
     const storageDiff = operationResults && operationResults.paid_storage_size_diff;
@@ -73,7 +81,14 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
       opbytes,
       opOb: { branch, contents },
     } = await this.prepareAndForge({ operation: op, source: pkh });
-    const { opResponse } = await this.simulate({ branch, contents, signature: SIGNATURE_STUB });
+
+    const metadata = await this.rpc.getBlockMetadata();
+    let operation: RPCRunOperationParam = { branch, contents, signature: SIGNATURE_STUB };
+    if (this.isProto5(metadata.nextProtocol)) {
+      operation = { operation, chain_id: await this.rpc.getChainId() };
+    }
+
+    const { opResponse } = await this.simulate(operation);
     const operationResults = this.getOperationResult(opResponse, 'transaction');
 
     const consumedGas = operationResults && operationResults.consumed_gas;
