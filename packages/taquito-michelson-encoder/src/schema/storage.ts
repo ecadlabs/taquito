@@ -81,7 +81,11 @@ export class Schema {
   }
 
   Encode(_value?: any) {
-    return this.root.EncodeObject(_value);
+    try {
+      return this.root.EncodeObject(_value);
+    } catch (ex) {
+      throw new Error(`Unable to encode storage object. ${ex}`);
+    }
   }
 
   ExtractSchema() {
