@@ -16,10 +16,7 @@ CONFIGS.forEach(({ lib, rpc }) => {
               CONCAT;
               NIL operation; PAIR};
         `,
-        init: `"test"`,
-        fee: 30000,
-        storageLimit: 2000,
-        gasLimit: 90000,
+        init: `"test"`
       })
       await op.confirmation()
       expect(op.hash).toBeDefined();
@@ -32,9 +29,6 @@ CONFIGS.forEach(({ lib, rpc }) => {
         balance: "1",
         code: ligoSample,
         storage: 0,
-        fee: 30000,
-        storageLimit: 2000,
-        gasLimit: 90000,
       })
       await op.confirmation()
       expect(op.hash).toBeDefined();
@@ -42,11 +36,7 @@ CONFIGS.forEach(({ lib, rpc }) => {
       const contract = await op.contract();
       const storage: any = await contract.storage()
       expect(storage.toString()).toEqual("0")
-      const opMethod = await contract.methods.main("2").send({
-        fee: 30000,
-        storageLimit: 2000,
-        gasLimit: 90000,
-      });
+      const opMethod = await contract.methods.main("2").send();
 
       await opMethod.confirmation();
       expect(op.hash).toBeDefined();
@@ -69,11 +59,7 @@ CONFIGS.forEach(({ lib, rpc }) => {
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
       const contract = await op.contract();
-      const opMethod = await contract.methods.mint(await Tezos.signer.publicKeyHash(), 100).send({
-        fee: 150000,
-        storageLimit: 10000,
-        gasLimit: 400000,
-      });
+      const opMethod = await contract.methods.mint(await Tezos.signer.publicKeyHash(), 100).send();
 
       await opMethod.confirmation();
       expect(op.hash).toBeDefined();
@@ -88,15 +74,13 @@ CONFIGS.forEach(({ lib, rpc }) => {
         storage: {
           mgr1: {
             addr: await Tezos.signer.publicKeyHash(),
+            key: null,
           },
           mgr2: {
             addr: await Tezos.signer.publicKeyHash(),
             key: await Tezos.signer.publicKeyHash(),
           },
-        },
-        fee: 150000,
-        storageLimit: 10000,
-        gasLimit: 400000,
+        }
       })
       await op.confirmation()
       expect(op.hash).toBeDefined();

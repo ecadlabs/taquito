@@ -2,6 +2,8 @@ import { Context } from '../context';
 import { RpcContractProvider } from '../contract/rpc-contract-provider';
 import { Operation } from './operations';
 
+type Results = any[];
+
 /**
  * @description Origination operation provide utility function to fetch newly originated contract
  *
@@ -16,22 +18,38 @@ export class OriginationOperation extends Operation {
   constructor(
     hash: string,
     raw: {},
-    results: any,
+    results: Results,
     context: Context,
     private contractProvider: RpcContractProvider
   ) {
     super(hash, raw, results, context);
 
-    const originationOp = Array.isArray(results) && results.find(op => op.kind === 'origination');
-
-    const originatedContracts =
-      originationOp &&
-      originationOp.metadata &&
-      originationOp.metadata.operation_result &&
-      originationOp.metadata.operation_result.originated_contracts;
+    const originatedContracts = this.operationResults && this.operationResults.originated_contracts;
     if (Array.isArray(originatedContracts)) {
       this.contractAddress = originatedContracts[0];
     }
+  }
+
+  private get operationResults() {
+    const originationOp =
+      Array.isArray(this.results) && this.results.find(op => op.kind === 'origination');
+    return originationOp && originationOp.metadata && originationOp.metadata.operation_result;
+  }
+
+  get consumedGas() {
+    return this.operationResults && this.operationResults.consumed_gas;
+  }
+
+  get storageDiff() {
+    return this.operationResults && this.operationResults.paid_storage_size_diff;
+  }
+
+  get storageSize() {
+    return this.operationResults && this.operationResults.storage_size;
+  }
+
+  get errors() {
+    return this.operationResults && this.operationResults.errors;
   }
 
   /**
