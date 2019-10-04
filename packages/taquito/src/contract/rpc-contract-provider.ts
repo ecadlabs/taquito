@@ -116,7 +116,7 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
    *
    * @returns An operation handle with the result from the rpc node
    *
-   * * @warn You cannot specify storage and init at the same time (use init to pass the raw michelson representation of storage)
+   * @warn You cannot specify storage and init at the same time (use init to pass the raw michelson representation of storage)
    *
    * @param OriginationOperation Originate operation parameter
    */
