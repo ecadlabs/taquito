@@ -122,7 +122,6 @@
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/_taquito_taquito.contractprovider.html" class="tsd-kind-icon">Contract<wbr>Provider</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/_taquito_taquito.delegateparams.html" class="tsd-kind-icon">Delegate<wbr>Params</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/_taquito_taquito.forgedbytes.html" class="tsd-kind-icon">Forged<wbr>Bytes</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/_taquito_taquito.originateparams.html" class="tsd-kind-icon">Originate<wbr>Params</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/_taquito_taquito.queryprovider.html" class="tsd-kind-icon">Query<wbr>Provider</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/_taquito_taquito.rpcactivateoperation.html" class="tsd-kind-icon">RPCActivate<wbr>Operation</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/_taquito_taquito.rpcdelegateoperation.html" class="tsd-kind-icon">RPCDelegate<wbr>Operation</a></li>
@@ -143,6 +142,8 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="_taquito_taquito.html#contractschema" class="tsd-kind-icon">Contract<wbr>Schema</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-module tsd-is-not-exported"><a href="_taquito_taquito.html#format" class="tsd-kind-icon">Format</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="_taquito_taquito.html#originateparams" class="tsd-kind-icon">Originate<wbr>Params</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="_taquito_taquito.html#originateparamsbase" class="tsd-kind-icon">Originate<wbr>Params<wbr>Base</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="_taquito_taquito.html#prepareoperationparams" class="tsd-kind-icon">Prepare<wbr>Operation<wbr>Params</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="_taquito_taquito.html#rpcoperation" class="tsd-kind-icon">RPCOperation</a></li>
 							</ul>
@@ -174,7 +175,7 @@
 					<div class="tsd-signature tsd-kind-icon">Contract<wbr>Schema<span class="tsd-signature-symbol">:</span> <a href="../classes/_taquito_michelson_encoder.schema.html" class="tsd-signature-type">Schema</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">unknown</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/a462fc4/packages/taquito/src/contract/interface.ts#L7">taquito/src/contract/interface.ts:7</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b6492c4/packages/taquito/src/contract/interface.ts#L7">taquito/src/contract/interface.ts:7</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -184,9 +185,65 @@
 					<div class="tsd-signature tsd-kind-icon">Format<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"tz"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"mtz"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"mutez"</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/a462fc4/packages/taquito/src/format.ts#L6">taquito/src/format.ts:6</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b6492c4/packages/taquito/src/format.ts#L6">taquito/src/format.ts:6</a></li>
 						</ul>
 					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
+					<a name="originateparams" class="tsd-anchor"></a>
+					<h3>Originate<wbr>Params</h3>
+					<div class="tsd-signature tsd-kind-icon">Originate<wbr>Params<span class="tsd-signature-symbol">:</span> <a href="_taquito_taquito.html#originateparamsbase" class="tsd-signature-type">OriginateParamsBase</a><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b6492c4/packages/taquito/src/operations/types.ts#L17">taquito/src/operations/types.ts:17</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<dl class="tsd-comment-tags">
+							<dt>description</dt>
+							<dd><p>Parameters for originate method</p>
+							</dd>
+						</dl>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
+					<a name="originateparamsbase" class="tsd-anchor"></a>
+					<h3>Originate<wbr>Params<wbr>Base</h3>
+					<div class="tsd-signature tsd-kind-icon">Originate<wbr>Params<wbr>Base<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b6492c4/packages/taquito/src/operations/types.ts#L3">taquito/src/operations/types.ts:3</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter">
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> balance<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+							</li>
+							<li class="tsd-parameter">
+								<h5>code<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">[]</span></h5>
+							</li>
+							<li class="tsd-parameter">
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> delegatable<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></h5>
+							</li>
+							<li class="tsd-parameter">
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> delegate<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+							</li>
+							<li class="tsd-parameter">
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> fee<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5>
+							</li>
+							<li class="tsd-parameter">
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> gas<wbr>Limit<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5>
+							</li>
+							<li class="tsd-parameter">
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> spendable<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></h5>
+							</li>
+							<li class="tsd-parameter">
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> storage<wbr>Limit<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5>
+							</li>
+						</ul>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
 					<a name="prepareoperationparams" class="tsd-anchor"></a>
@@ -194,7 +251,7 @@
 					<div class="tsd-signature tsd-kind-icon">Prepare<wbr>Operation<wbr>Params<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/a462fc4/packages/taquito/src/operations/types.ts#L125">taquito/src/operations/types.ts:125</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b6492c4/packages/taquito/src/operations/types.ts#L135">taquito/src/operations/types.ts:135</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -215,7 +272,7 @@
 					<div class="tsd-signature tsd-kind-icon">RPCOperation<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_taquito_taquito.rpcoriginationoperation.html" class="tsd-signature-type">RPCOriginationOperation</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_taquito_taquito.rpctransferoperation.html" class="tsd-signature-type">RPCTransferOperation</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_taquito_taquito.rpcdelegateoperation.html" class="tsd-signature-type">RPCDelegateOperation</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_taquito_taquito.rpcrevealoperation.html" class="tsd-signature-type">RPCRevealOperation</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_taquito_taquito.rpcactivateoperation.html" class="tsd-signature-type">RPCActivateOperation</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/a462fc4/packages/taquito/src/operations/types.ts#L118">taquito/src/operations/types.ts:118</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b6492c4/packages/taquito/src/operations/types.ts#L128">taquito/src/operations/types.ts:128</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -228,7 +285,7 @@
 					<div class="tsd-signature tsd-kind-icon">MTZ_<wbr>DECIMALS<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">3</span><span class="tsd-signature-symbol"> =&nbsp;3</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/a462fc4/packages/taquito/src/format.ts#L4">taquito/src/format.ts:4</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b6492c4/packages/taquito/src/format.ts#L4">taquito/src/format.ts:4</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -238,7 +295,7 @@
 					<div class="tsd-signature tsd-kind-icon">TZ_<wbr>DECIMALS<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">6</span><span class="tsd-signature-symbol"> =&nbsp;6</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/a462fc4/packages/taquito/src/format.ts#L3">taquito/src/format.ts:3</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b6492c4/packages/taquito/src/format.ts#L3">taquito/src/format.ts:3</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -248,7 +305,7 @@
 					<div class="tsd-signature tsd-kind-icon">Tezos<span class="tsd-signature-symbol">:</span> <a href="../classes/_taquito_taquito.tezostoolkit.html" class="tsd-signature-type">TezosToolkit</a><span class="tsd-signature-symbol"> =&nbsp;new TezosToolkit()</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/a462fc4/packages/taquito/src/taquito.ts#L197">taquito/src/taquito.ts:197</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b6492c4/packages/taquito/src/taquito.ts#L197">taquito/src/taquito.ts:197</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -272,7 +329,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/a462fc4/packages/taquito/src/contract/contract.ts#L54">taquito/src/contract/contract.ts:54</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b6492c4/packages/taquito/src/contract/contract.ts#L54">taquito/src/contract/contract.ts:54</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -295,7 +352,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/a462fc4/packages/taquito/src/format.ts#L20">taquito/src/format.ts:20</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b6492c4/packages/taquito/src/format.ts#L20">taquito/src/format.ts:20</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -329,7 +386,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/a462fc4/packages/taquito/src/format.ts#L8">taquito/src/format.ts:8</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b6492c4/packages/taquito/src/format.ts#L8">taquito/src/format.ts:8</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -453,9 +510,6 @@
 						<a href="../interfaces/_taquito_taquito.forgedbytes.html" class="tsd-kind-icon">Forged<wbr>Bytes</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="../interfaces/_taquito_taquito.originateparams.html" class="tsd-kind-icon">Originate<wbr>Params</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="../interfaces/_taquito_taquito.queryprovider.html" class="tsd-kind-icon">Query<wbr>Provider</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
@@ -499,6 +553,12 @@
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-is-not-exported">
 						<a href="_taquito_taquito.html#format" class="tsd-kind-icon">Format</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="_taquito_taquito.html#originateparams" class="tsd-kind-icon">Originate<wbr>Params</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="_taquito_taquito.html#originateparamsbase" class="tsd-kind-icon">Originate<wbr>Params<wbr>Base</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
 						<a href="_taquito_taquito.html#prepareoperationparams" class="tsd-kind-icon">Prepare<wbr>Operation<wbr>Params</a>
