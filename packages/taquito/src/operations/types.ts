@@ -17,12 +17,12 @@ export type OriginateParamsBase = {
 export type OriginateParams = OriginateParamsBase &
   (
     | {
-        init: never;
+        init?: never;
         storage: any;
       }
     | {
         init: string | object;
-        storage: never;
+        storage?: never;
       });
 
 /**
