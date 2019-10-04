@@ -142,7 +142,7 @@ describe('Origination operation', () => {
       const op = new OriginationOperation(
         'test_hash',
         {},
-        'wrong_result',
+        'wrong_result' as any,
         fakeContext,
         fakeContractProvider
       );
