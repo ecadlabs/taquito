@@ -1,8 +1,10 @@
+import { OperationContentsAndResult, OperationContentsAndResultOrigination } from '@taquito/rpc';
 import { Context } from '../context';
 import { RpcContractProvider } from '../contract/rpc-contract-provider';
 import { Operation } from './operations';
+import { ForgedBytes } from './types';
 
-type Results = any[];
+type Results = OperationContentsAndResult[];
 
 /**
  * @description Origination operation provide utility function to fetch newly originated contract
@@ -17,7 +19,7 @@ export class OriginationOperation extends Operation {
 
   constructor(
     hash: string,
-    raw: {},
+    raw: ForgedBytes,
     results: Results,
     context: Context,
     private contractProvider: RpcContractProvider
@@ -32,7 +34,8 @@ export class OriginationOperation extends Operation {
 
   private get operationResults() {
     const originationOp =
-      Array.isArray(this.results) && this.results.find(op => op.kind === 'origination');
+      Array.isArray(this.results) &&
+      (this.results.find(op => op.kind === 'origination') as OperationContentsAndResultOrigination);
     return originationOp && originationOp.metadata && originationOp.metadata.operation_result;
   }
 

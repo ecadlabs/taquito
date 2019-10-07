@@ -4151,4 +4151,4 @@ export const storage = rpcContractResponse.script.code.find(
 
 export const params = rpcContractResponse.script.code.find(
   x => x.prim === 'parameter'
-)!.args[0];
+)!.args[0] as any;

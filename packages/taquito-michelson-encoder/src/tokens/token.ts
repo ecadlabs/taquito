@@ -13,7 +13,7 @@ export interface ComparableToken extends Token {
 
 export abstract class Token {
   constructor(
-    protected val: { prim: string; args: any[]; annots: any[] },
+    protected val: { prim: string; args: any[]; annots?: any[] },
     protected idx: number,
     protected fac: TokenFactory
   ) {}

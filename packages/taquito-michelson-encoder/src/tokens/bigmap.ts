@@ -1,10 +1,9 @@
 import { Token, TokenFactory, ComparableToken } from './token';
-import { encodePubKey } from '@taquito/utils';
 
 export class BigMapToken extends Token {
   static prim = 'big_map';
   constructor(
-    protected val: { prim: string; args: any[]; annots: any[] },
+    protected val: { prim: string; args: any[]; annots?: any[] },
     protected idx: number,
     protected fac: TokenFactory
   ) {
