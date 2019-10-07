@@ -2,7 +2,7 @@ import { OperationEmitter } from '../operations/operation-emitter';
 import { OriginateParams, TransferParams } from '../operations/types';
 import { createOriginationOperation, createTransferOperation } from './prepare';
 import { Estimate } from './estimate';
-import { DEFAULT_STORAGE_LIMIT } from '../constants';
+import { DEFAULT_STORAGE_LIMIT, protocols } from '../constants';
 import { EstimationProvider } from './interface';
 import { RPCRunOperationParam } from '@taquito/rpc';
 
@@ -46,9 +46,8 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
       opOb: { branch, contents },
     } = await this.prepareAndForge({ operation: op, source: pkh });
 
-    const metadata = await this.rpc.getBlockMetadata();
     let operation: RPCRunOperationParam = { branch, contents, signature: SIGNATURE_STUB };
-    if (this.isProto5(metadata.nextProtocol)) {
+    if (await this.context.isAnyProtocolActive(protocols['005'])) {
       operation = { operation, chain_id: await this.rpc.getChainId() };
     }
 
@@ -82,9 +81,8 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
       opOb: { branch, contents },
     } = await this.prepareAndForge({ operation: op, source: pkh });
 
-    const metadata = await this.rpc.getBlockMetadata();
     let operation: RPCRunOperationParam = { branch, contents, signature: SIGNATURE_STUB };
-    if (this.isProto5(metadata.nextProtocol)) {
+    if (await this.context.isAnyProtocolActive(protocols['005'])) {
       operation = { operation, chain_id: await this.rpc.getChainId() };
     }
 
