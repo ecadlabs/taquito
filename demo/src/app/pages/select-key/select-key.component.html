@@ -1,0 +1,17 @@
+<nb-card>
+  <nb-card-header>
+    Signing Key
+    <a routerLink="/"
+      ><nb-icon nbTooltip="Close" nbTooltipPlacement="bottom" icon="close-outline"></nb-icon
+    ></a>
+  </nb-card-header>
+  <nb-card-body>
+    <nb-alert
+      *ngIf="error$ | async as error"
+      status="warning"
+      closable
+      (close)="error$.next(null)"
+      >{{ error }}</nb-alert
+    >
+  </nb-card-body>
+</nb-card>

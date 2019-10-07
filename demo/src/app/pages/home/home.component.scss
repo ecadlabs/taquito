@@ -9,6 +9,15 @@ nb-card-body {
   align-items: center;
 }
 
+.button-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.button {
+  margin: 10px 0;
+}
+
 .divider {
   min-width: 500px;
   border: 0.5px solid #ccc;
