@@ -71,13 +71,13 @@ We use SemVer style versions for taquito, but we make the "Major" version number
 
 For example, in August 2019, the economic protocol was `004-Pt24m4xi`, and `005-PsBABY5H` was (is) working its way through the on-chain amendment process. Therefore the current version number for taquito would be `v4.0.0`. During this time, we would start working on `v5.0.0-beta.1` on the expectation (but not the assumption) that it shall become our new economic protocol.
 
-When we are confident that the next protocol proposal going to be promoted, AND we have implemented and tested interoperability with the new protocol (and potentially node RPC changes) we shall them release `v5.0.0` BEFORE the chain transitions to the new protocol.
+When we are confident that the next protocol proposal is going to be promoted, AND we have implemented and tested interoperability with the new protocol (and potentially node RPC changes) we shall then release `v5.0.0` BEFORE the chain transitions to the new protocol.
 
 It is essential that the packages supporting the new protocol be released before the chain transitions to the new economic protocol so that developers who build on top of taquito have time to update and test their projects.
 
 During "Major" version updates, breaking changes in the taquito public APIs MAY include breaking changes, for which we will make a strong effort to announce and document in our release notes. The Minor and Patch version numbers follow SemVer norms.
 
-All releases are backward compatible with chain data back to the genesis block. Support for older Tezos node RPCs is maintained where feasible but will be dropped eventually. Tezos node RPC support also depends on what versioning strategy gets adopted by the canonical Tezos node. At the time of writing, this is unclear.
+All releases are backward compatible with chain data back to the genesis block. Support for older Tezos node RPCs is maintained where feasible but will be dropped eventually. Tezos node RPC support also depends on what versioning strategy gets adopted by the Tezos node developed by Nomadic Labs. At the time of writing, this is unclear.
 
 Supported versions of the taquito packages will be maintained for the current and next protocol versions. Teams using older versions are encouraged to update, but if blockers exist, they are encouraged to contact us.
 
