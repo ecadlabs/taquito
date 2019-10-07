@@ -1,6 +1,15 @@
-<form (ngSubmit)="search.emit(this.contract.value)">
-  <input nbInput class="searchbox" [formControl]="contract" placeholder="Enter contract address" />
-  <button nbButton type="submit" [disabled]="!contract.valid">
-    Search
+<form [formGroup]="findContract" (ngSubmit)="search.emit(this.findContract.value)">
+  <nb-select formControlName="network" placeholder="Select network">
+    <nb-option value="{{ Network.Alphanet }}">Alphanet</nb-option>
+    <nb-option value="{{ Network.Mainnet }}">Mainnet</nb-option>
+  </nb-select>
+  <input
+    nbInput
+    class="searchbox"
+    formControlName="contract"
+    placeholder="Enter contract address"
+  />
+  <button nbButton type="submit" [disabled]="!findContract.valid">
+    <nb-icon icon="search-outline"></nb-icon>
   </button>
 </form>

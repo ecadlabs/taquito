@@ -1,0 +1,20 @@
+nb-card {
+  height: 100%;
+}
+
+nb-card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.divider {
+  min-width: 500px;
+  border: 0.5px solid #ccc;
+  margin: 40px 0;
+}
+
+tz-search-form {
+  margin-bottom: 40px;
+}

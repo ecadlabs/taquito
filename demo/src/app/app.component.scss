@@ -1,0 +1,28 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  font-size: 1.15rem;
+  height: inherit;
+
+  img {
+    height: inherit;
+    margin-right: 10px;
+  }
+}
+
+.link {
+  text-decoration: none;
+  font-weight: bolder;
+}
+
+.link:hover {
+  filter: drop-shadow(0 0 0.1rem #ccc);
+}

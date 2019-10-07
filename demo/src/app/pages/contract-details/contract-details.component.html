@@ -1,0 +1,37 @@
+<nb-card [nbSpinner]="loading$ | async" nbSpinnerStatus="info" nbSpinnerSize="giant">
+  <nb-card-header>
+    Explore Contract
+    <a routerLink="/"
+      ><nb-icon nbTooltip="Close" nbTooltipPlacement="bottom" icon="close-outline"></nb-icon
+    ></a>
+  </nb-card-header>
+  <nb-card-body>
+    <tz-search-form
+      [network]="network$ | async"
+      [contract]="contractAddress$ | async"
+      (search)="onSearch($event)"
+    ></tz-search-form>
+    <nb-tabset *ngIf="contract$ | async as contract">
+      <nb-tab tabTitle="Account">
+        <div>
+          Balance: {{ contract.account.balance }}<br />
+          Manager: {{ contract.account.manager }}<br />
+          Spendable: {{ contract.account.spendable }}<br />
+          Delegatable: {{ contract.account.delegate.setable }}
+        </div>
+      </nb-tab>
+      <nb-tab tabTitle="Storage">
+        <ngx-json-viewer [json]="contract.storage"></ngx-json-viewer>
+      </nb-tab>
+      <nb-tab tabTitle="Script">
+        <ngx-json-viewer [json]="contract.script"></ngx-json-viewer>
+      </nb-tab>
+    </nb-tabset>
+    <div class="error" *ngIf="error$ | async">
+      <span
+        >Your search "<b>{{ contractAddress$ | async }}</b
+        >" did not match any smart contracts.</span
+      >
+    </div>
+  </nb-card-body>
+</nb-card>

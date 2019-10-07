@@ -1,30 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Tezos, TezosToolkit } from '@taquito/taquito';
 import { OriginateParams } from '@taquito/taquito/dist/types/operations/types';
-import { BehaviorSubject, Subject, throwError } from 'rxjs';
-import { catchError, shareReplay, switchMap, tap } from 'rxjs/operators';
-
-export enum Network {
-  Alphanet = 'https://tezos-dev.cryptonomic-infra.tech',
-  Mainnet = 'https://rpc.tezrpc.me',
-}
-
-export namespace Network {
-  export function valueOf(value: string): Network {
-    return Network[value.charAt(0).toUpperCase() + value.slice(1)];
-  }
-
-  //
-  // TODO This is a hacky way to get network name. Invesigate a better way to do this,
-  // similar to the way enums work in Java.
-  //
-  export function getNetwork(url: string) {
-    return {
-      'https://tezos-dev.cryptonomic-infra.tech': 'alphanet',
-      'https://rpc.tezrpc.me': 'mainnet',
-    }[url];
-  }
-}
 
 @Injectable({
   providedIn: 'root',
@@ -32,43 +8,18 @@ export namespace Network {
 export class TaquitoService {
   private taquito: TezosToolkit = Tezos;
 
-  private currentContract$ = new Subject<string>();
+  public async getContract(address: string) {
+    const contract = await this.taquito.contract.at(address);
 
-  public loading$ = new BehaviorSubject<boolean>(false);
-
-  public network$ = new BehaviorSubject<Network>(Network.Alphanet);
-
-  public errors$ = new Subject();
-
-  public contract$ = this.currentContract$.pipe(
-    tap(_ => this.loading$.next(true)),
-    switchMap(async address => {
-      const contract = await this.taquito.contract.at(address);
-
-      return {
-        account: await this.taquito.rpc.getContract(address),
-        storage: await contract.storage(),
-        getstorage: await this.taquito.contract.getStorage(address),
-        script: contract.script,
-      };
-    }),
-    catchError(error => {
-      this.errors$.next(error);
-      this.loading$.next(false);
-
-      return throwError(error);
-    }),
-    tap(_ => this.loading$.next(false)),
-    shareReplay()
-  );
-
-  public setContract(address: string) {
-    this.currentContract$.next(address);
+    return {
+      account: await this.taquito.rpc.getContract(address),
+      storage: await contract.storage(),
+      script: contract.script,
+    };
   }
 
-  public setNetwork(network: Network) {
-    this.network$.next(network);
-    this.taquito.setProvider({ rpc: network });
+  public setNetwork(url: string) {
+    this.taquito.setProvider({ rpc: url });
   }
 
   public importFaucetKey() {

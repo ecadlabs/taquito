@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Contract } from '@taquito/taquito/dist/types/contract/contract';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Network } from 'src/app/models/network.model';
 
-import { Network, TaquitoService } from '../../taquito.service';
+import { TaquitoService } from '../../taquito.service';
 
 @Component({
   selector: 'tz-new-contract',
@@ -24,10 +24,6 @@ code {
   PAIR
 };
 `;
-
-  public network$ = this.taquito.network$.pipe(
-    map(network => (network === Network.Alphanet ? 'Alphanet' : 'Mainnet'))
-  );
 
   public newContract = this.fb.group({
     code: [this.sampleCode, Validators.required],
@@ -50,19 +46,9 @@ code {
   public deploying$ = new BehaviorSubject<boolean>(false);
   private subscriptions = new Subscription();
 
-  constructor(
-    private taquito: TaquitoService,
-    private fb: FormBuilder,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {}
+  constructor(private taquito: TaquitoService, private fb: FormBuilder, private router: Router) {}
 
   ngOnInit() {
-    this.taquito
-      .importFaucetKey()
-      .then(_ => console.log('Successfully imported Faucet key.'))
-      .catch(error => console.log(error));
-
     this.subscriptions.add(
       this.deploying$.subscribe(deploying => {
         deploying ? this.newContract.disable() : this.newContract.enable();
@@ -78,9 +64,7 @@ code {
     this.deploying$.next(false);
     this.error$.next(null);
 
-    this.router
-      .navigate(['..', contract.address], { relativeTo: this.route })
-      .catch(error => console.log(error));
+    this.router.navigate(['alphanet', contract.address]).catch(error => console.log(error));
   }
 
   displayError(error) {
@@ -94,8 +78,12 @@ code {
 
   onDeploy() {
     this.deploying$.next(true);
+
+    this.taquito.setNetwork(Network.getUrl(Network.Alphanet));
+
     this.taquito
-      .originate(this.newContract.value)
+      .importFaucetKey()
+      .then(_ => this.taquito.originate(this.newContract.value))
       .then(op => op.contract())
       .then(contract => this.navigateTo(contract))
       .catch(error => this.displayError(error));

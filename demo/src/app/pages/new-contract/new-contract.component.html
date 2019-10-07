@@ -2,9 +2,14 @@
   [nbSpinner]="deploying$ | async"
   nbSpinnerStatus="info"
   nbSpinnerSize="giant"
-  nbSpinnerMessage="Deploying to {{ network$ | async }}..."
+  nbSpinnerMessage="Deploying..."
 >
-  <nb-card-header>New Contract</nb-card-header>
+  <nb-card-header>
+    New Contract
+    <a routerLink="/"
+      ><nb-icon nbTooltip="Close" nbTooltipPlacement="bottom" icon="close-outline"></nb-icon
+    ></a>
+  </nb-card-header>
   <nb-card-body>
     <nb-alert
       *ngIf="error$ | async as error"

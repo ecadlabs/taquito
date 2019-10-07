@@ -1,17 +1,10 @@
-nb-card {
-  // height: 100%;
+nb-card-header {
+  display: flex;
+  justify-content: space-between;
 }
 
 form {
   display: flex;
-}
-
-#progress-overlay {
-  background: red;
-  display: flex;
-  z-index: 5;
-  width: 100px;
-  height: 100px;
 }
 
 #code {
@@ -56,10 +49,6 @@ input {
 }
 
 label {
-  font-weight: lighter;
-}
-
-nb-checkbox {
   font-weight: lighter;
 }
 

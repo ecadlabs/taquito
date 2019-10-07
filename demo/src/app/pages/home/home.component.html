@@ -1,0 +1,10 @@
+<nb-card>
+  <nb-card-body>
+    <a nbButton size="large" routerLink="new" routerLinkActive="active">Create a New Contract</a>
+    <div class="divider"></div>
+    <h2>Explore a Smart Contract</h2>
+    <tz-search-form (search)="onSearch($event)"></tz-search-form>
+
+    <button nbButton size="large" (click)="onPickRandom()">Pick a Random Contract</button>
+  </nb-card-body>
+</nb-card>
