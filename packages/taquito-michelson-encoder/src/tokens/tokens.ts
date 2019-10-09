@@ -29,6 +29,7 @@ import { SignatureToken } from './signature';
 import { LambdaToken } from './lambda';
 import { OperationToken } from './operation';
 import { SetToken } from './set';
+import { ChainIDToken } from './chain-id';
 
 export const tokens = [
   PairToken,
@@ -53,4 +54,5 @@ export const tokens = [
   LambdaToken,
   OperationToken,
   SetToken,
+  ChainIDToken,
 ];
