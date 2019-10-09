@@ -56,10 +56,10 @@
         <label for="delegate">Delegate</label>
         <input id="delegate" class="input" nbInput formControlName="delegate" />
 
-        <nb-checkbox formControlName="delegatable">Delegatable</nb-checkbox>
-        <nb-checkbox formControlName="spendable">Spendable</nb-checkbox>
+        <label>Signer</label>
+        <tz-signer-select class="input" (error)="displayError($event)"></tz-signer-select>
 
-        <button nbButton type="submit" [disabled]="!newContract.valid">
+        <button nbButton [disabled]="!newContract.valid">
           Deploy
         </button>
       </div>

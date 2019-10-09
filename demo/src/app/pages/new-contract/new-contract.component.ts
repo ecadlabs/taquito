@@ -49,6 +49,8 @@ code {
   constructor(private taquito: TaquitoService, private fb: FormBuilder, private router: Router) {}
 
   ngOnInit() {
+    this.taquito.setNetwork(Network.getUrl(Network.Alphanet));
+
     this.subscriptions.add(
       this.deploying$.subscribe(deploying => {
         deploying ? this.newContract.disable() : this.newContract.enable();
@@ -79,11 +81,8 @@ code {
   onDeploy() {
     this.deploying$.next(true);
 
-    this.taquito.setNetwork(Network.getUrl(Network.Alphanet));
-
     this.taquito
-      .importFaucetKey()
-      .then(_ => this.taquito.originate(this.newContract.value))
+      .originate(this.newContract.value)
       .then(op => op.contract())
       .then(contract => this.navigateTo(contract))
       .catch(error => this.displayError(error));

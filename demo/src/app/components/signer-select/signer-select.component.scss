@@ -1,0 +1,20 @@
+.file-picker {
+  display: none;
+}
+
+.radio {
+  display: flex;
+}
+
+button {
+  flex: 1;
+  margin-right: 10px;
+}
+
+button:last-child {
+  margin-right: 0;
+}
+
+.selected {
+  background-color: red;
+}

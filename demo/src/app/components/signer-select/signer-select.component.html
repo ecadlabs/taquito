@@ -1,0 +1,27 @@
+<input
+  #filePicker
+  class="file-picker"
+  type="file"
+  accept=".json"
+  (change)="onReadFile($event.target.files[0])"
+/>
+<div class="radio">
+  <button
+    nbButton
+    appearance="{{ signer === Signer.Faucet ? 'outline' : 'ghost' }}"
+    type="button"
+    (click)="filePicker.click()"
+    [nbSpinner]="importing$ | async"
+    nbSpinnerStatus="info"
+  >
+    Faucet Key
+  </button>
+  <button
+    nbButton
+    appearance="{{ signer === Signer.TezBridge ? 'outline' : 'ghost' }}"
+    type="button"
+    (click)="selectTezBridgeSigner()"
+  >
+    Tez Bridge
+  </button>
+</div>

@@ -23,6 +23,7 @@
     "@nebular/eva-icons": "^4.3.1",
     "@nebular/theme": "^4.3.1",
     "@taquito/taquito": "^5.0.1-beta.0",
+    "@taquito/tezbridge-signer": "^4.1.0-beta.6",
     "angular-highcharts": "^8.0.3",
     "bignumber.js": "^9.0.0",
     "eva-icons": "^1.1.1",

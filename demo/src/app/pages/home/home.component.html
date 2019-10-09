@@ -1,13 +1,8 @@
 <nb-card>
   <nb-card-body>
-    <div class="button-group">
-      <a nbButton class="button" size="large" routerLink="signing" routerLinkActive="active"
-        >Select Signing Key</a
-      >
-      <a nbButton class="button" size="large" routerLink="new" routerLinkActive="active"
-        >Create New Contract</a
-      >
-    </div>
+    <a nbButton class="button" size="large" routerLink="new" routerLinkActive="active"
+      >Create New Contract</a
+    >
     <div class="divider"></div>
     <h2>Explore Smart Contract</h2>
     <tz-search-form (search)="onSearch($event)"></tz-search-form>

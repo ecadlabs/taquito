@@ -16,6 +16,7 @@ import {
 } from '@nebular/theme';
 import { AceEditorModule } from 'ng2-ace-editor';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
+import { SignerSelectModule } from 'src/app/components/signer-select/signer-select.module';
 
 import { NewContractComponent } from './new-contract.component';
 
@@ -37,6 +38,7 @@ import { NewContractComponent } from './new-contract.component';
     NbIconModule,
     NbTooltipModule,
     RouterModule,
+    SignerSelectModule,
   ],
   exports: [NewContractComponent],
 })

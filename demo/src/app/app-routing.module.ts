@@ -10,17 +10,11 @@ import { NewContractComponent } from './pages/new-contract/new-contract.componen
 import { NewContractModule } from './pages/new-contract/new-contract.module';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import { PageNotFoundModule } from './pages/page-not-found/page-not-found.module';
-import { SelectKeyComponent } from './pages/select-key/select-key.component';
-import { SelectKeyModule } from './pages/select-key/select-key.module';
 
 const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
-  },
-  {
-    path: 'signing',
-    component: SelectKeyComponent,
   },
   {
     path: 'new',
@@ -45,7 +39,6 @@ const routes: Routes = [
 @NgModule({
   imports: [
     HomeModule,
-    SelectKeyModule,
     NewContractModule,
     ContractDetailsModule,
     PageNotFoundModule,
