@@ -58,12 +58,12 @@ export class OriginationOperation extends Operation {
   /**
    * @description Provide the contract abstract of the newly originated contract
    */
-  async contract() {
+  async contract(confirmations?: number, interval?: number, timeout?: number) {
     if (!this.contractAddress) {
       throw new Error('No contract was originated in this operation');
     }
 
-    await this.confirmation();
+    await this.confirmation(confirmations, interval, timeout);
     return this.contractProvider.at(this.contractAddress);
   }
 }

@@ -72,6 +72,7 @@ describe('Origination operation', () => {
       rpc: {
         getBlock: jest.fn(),
       },
+      config: { ...defaultConfig },
     };
 
     fakeContext.rpc.getBlock.mockResolvedValue({
@@ -117,6 +118,24 @@ describe('Origination operation', () => {
   });
 
   describe('Contract', () => {
+    it('should return proper confirmation head', async done => {
+      const fakeContractProvider: any = {
+        at: jest.fn(),
+      };
+
+      fakeContractProvider.at.mockResolvedValue('contract');
+      const op = new OriginationOperation(
+        'test_hash',
+        {} as any,
+        successfulResult,
+        fakeContext,
+        fakeContractProvider
+      );
+      const confirmation = await op.confirmation();
+      expect(confirmation).toEqual(0);
+      done();
+    });
+
     it('should create a contract given a successful result', async done => {
       const fakeContractProvider: any = {
         at: jest.fn(),
@@ -152,6 +171,25 @@ describe('Origination operation', () => {
 
       await expect(op.contract()).rejects.toEqual(
         new Error('No contract was originated in this operation')
+      );
+      done();
+    });
+
+    it('should timeout', async done => {
+      const fakeContractProvider: any = {
+        at: jest.fn(),
+      };
+
+      fakeContractProvider.at.mockResolvedValue('contract');
+      const op = new OriginationOperation(
+        'wrong_test_hash',
+        {} as any,
+        successfulResult,
+        fakeContext,
+        fakeContractProvider
+      );
+      await expect(op.contract(12, 0.1, 0.1)).rejects.toEqual(
+        new Error('Confirmation polling timed out')
       );
       done();
     });
