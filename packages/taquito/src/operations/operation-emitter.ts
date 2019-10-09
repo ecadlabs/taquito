@@ -78,6 +78,8 @@ export abstract class OperationEmitter {
       counters[publicKeyHash] = counter;
     }
 
+    const proto005 = await this.context.isAnyProtocolActive(protocols['005']);
+
     const constructOps = (cOps: RPCOperation[]) =>
       cOps.map((op: any) => {
         // @ts-ignore
@@ -114,7 +116,7 @@ export abstract class OperationEmitter {
         }
 
         // Protocol 005 remove these from operations content
-        if (this.isProto5(metadata.nextProtocol)) {
+        if (proto005) {
           delete constructedOp.manager_pubkey;
           delete constructedOp.spendable;
           delete constructedOp.delegatable;
@@ -202,9 +204,5 @@ export abstract class OperationEmitter {
       opResponse,
       context: this.context.clone(),
     };
-  }
-
-  protected isProto5(protocol: string) {
-    return protocols['005'].indexOf(protocol) !== -1;
   }
 }
