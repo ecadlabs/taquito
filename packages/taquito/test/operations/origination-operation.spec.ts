@@ -1,7 +1,10 @@
 import { OriginationOperation } from '../../src/operations/origination-operation';
+import { ForgedBytes } from '../../src/operations/types';
+import { OperationContentsAndResult } from '@taquito/rpc';
 
 describe('Origination operation', () => {
   let fakeContext: any;
+  let fakeForgedBytes = {} as ForgedBytes;
 
   const successfulResult = [
     {
@@ -62,7 +65,7 @@ describe('Origination operation', () => {
         },
       },
     },
-  ];
+  ] as OperationContentsAndResult[];
 
   beforeEach(() => {
     fakeContext = {
@@ -84,7 +87,7 @@ describe('Origination operation', () => {
       const fakeContractProvider: any = {};
       const op = new OriginationOperation(
         'test_hash',
-        {},
+        fakeForgedBytes,
         successfulResult,
         fakeContext,
         fakeContractProvider
@@ -103,7 +106,7 @@ describe('Origination operation', () => {
       wrongResults.forEach(result => {
         const op = new OriginationOperation(
           'test_hash',
-          {},
+          fakeForgedBytes,
           result,
           fakeContext,
           fakeContractProvider
@@ -122,7 +125,7 @@ describe('Origination operation', () => {
       fakeContractProvider.at.mockResolvedValue('contract');
       const op = new OriginationOperation(
         'test_hash',
-        {},
+        fakeForgedBytes,
         successfulResult,
         fakeContext,
         fakeContractProvider
@@ -141,7 +144,7 @@ describe('Origination operation', () => {
       fakeContractProvider.at.mockResolvedValue('contract');
       const op = new OriginationOperation(
         'test_hash',
-        {},
+        fakeForgedBytes,
         'wrong_result' as any,
         fakeContext,
         fakeContractProvider
