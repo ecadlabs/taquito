@@ -1,6 +1,7 @@
 import { OriginationOperation } from '../../src/operations/origination-operation';
 import { ForgedBytes } from '../../src/operations/types';
 import { OperationContentsAndResult } from '@taquito/rpc';
+import { defaultConfig } from '../../src/context';
 
 describe('Origination operation', () => {
   let fakeContext: any;
@@ -72,6 +73,7 @@ describe('Origination operation', () => {
       rpc: {
         getBlock: jest.fn(),
       },
+      config: { ...defaultConfig },
     };
 
     fakeContext.rpc.getBlock.mockResolvedValue({
@@ -117,6 +119,24 @@ describe('Origination operation', () => {
   });
 
   describe('Contract', () => {
+    it('should return proper confirmation head', async done => {
+      const fakeContractProvider: any = {
+        at: jest.fn(),
+      };
+
+      fakeContractProvider.at.mockResolvedValue('contract');
+      const op = new OriginationOperation(
+        'test_hash',
+        {} as any,
+        successfulResult,
+        fakeContext,
+        fakeContractProvider
+      );
+      const confirmation = await op.confirmation();
+      expect(confirmation).toEqual(0);
+      done();
+    });
+
     it('should create a contract given a successful result', async done => {
       const fakeContractProvider: any = {
         at: jest.fn(),

@@ -2,7 +2,7 @@ import { IndexerClient } from '@taquito/indexer';
 import { RpcClient } from '@taquito/rpc';
 import { InMemorySigner } from '@taquito/signer';
 import { Protocols } from './constants';
-import { Context } from './context';
+import { Context, Config } from './context';
 import { ContractProvider, EstimationProvider } from './contract/interface';
 import { RpcContractProvider } from './contract/rpc-contract-provider';
 import { RPCEstimateProvider } from './contract/rpc-estimate-provider';
@@ -23,6 +23,7 @@ export interface SetProviderOptions {
   stream?: string | SubscribeProvider;
   signer?: Signer;
   protocol?: Protocols;
+  config?: Config;
 }
 
 /**
@@ -51,13 +52,14 @@ export class TezosToolkit {
    *
    * @param options rpc url or rpcClient to use to interact with the Tezos network and indexer url to use to interact with the Tezos network
    */
-  setProvider({ rpc, indexer, stream, signer, protocol }: SetProviderOptions) {
+  setProvider({ rpc, indexer, stream, signer, protocol, config }: SetProviderOptions) {
     this.setRpcProvider(rpc);
     this.setIndexerProvider(indexer);
     this.setStreamProvider(stream);
     this.setSignerProvider(signer);
 
     this._context.proto = protocol;
+    this._context.config = config as Required<Config>;
   }
 
   private setSignerProvider(signer: SetProviderOptions['signer']) {

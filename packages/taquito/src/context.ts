@@ -3,6 +3,18 @@ import { Signer } from './signer/interface';
 import { NoopSigner } from './signer/noop';
 import { Protocols } from './constants';
 
+export interface Config {
+  confirmationPollingIntervalSecond?: number;
+  confirmationPollingTimeoutSecond?: number;
+  defaultConfirmationCount?: number;
+}
+
+export const defaultConfig: Required<Config> = {
+  confirmationPollingIntervalSecond: 10,
+  defaultConfirmationCount: 0,
+  confirmationPollingTimeoutSecond: 180,
+};
+
 /**
  * @description Encapsulate common service used throughout different part of the library
  */
@@ -10,8 +22,22 @@ export class Context {
   constructor(
     private _rpcClient: RpcClient = new RpcClient(),
     private _signer: Signer = new NoopSigner(),
-    private _proto?: Protocols
-  ) {}
+    private _proto?: Protocols,
+    private _config?: Partial<Config>
+  ) {
+    this.config = _config as any;
+  }
+
+  get config(): Required<Config> {
+    return this._config as any;
+  }
+
+  set config(value: Required<Config>) {
+    this._config = {
+      ...defaultConfig,
+      ...value,
+    };
+  }
 
   get rpc(): RpcClient {
     return this._rpcClient;
