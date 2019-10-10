@@ -1,4 +1,6 @@
 import { Context } from '../context';
+import { OperationContentsAndResult } from '@taquito/rpc';
+import { ForgedBytes } from './types';
 
 /**
  * @description Utility class to interact with Tezos operations
@@ -16,8 +18,8 @@ export class Operation {
    */
   constructor(
     public readonly hash: string,
-    public readonly raw: {},
-    public readonly results: any,
+    public readonly raw: ForgedBytes,
+    public readonly results: OperationContentsAndResult[],
     protected readonly context: Context
   ) {
     // tslint:disable-next-line: no-floating-promises

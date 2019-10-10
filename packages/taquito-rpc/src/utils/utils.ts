@@ -1,40 +1,6 @@
-const camelCase = require('lodash/camelCase');
 const getByPath = require('lodash/get');
 const setByPath = require('lodash/set');
 import BigNumber from 'bignumber.js';
-
-/**
- * iterates over array/object and converts all keys to camelCase
- * @param data input object or array
- *
- * @see https://lodash.com/docs/#camelCase
- *
- */
-export function camelCaseProps(data: any): any {
-  // guarding against empty values
-  if (!data) {
-    return data;
-  }
-
-  const returnArray: boolean = Array.isArray(data);
-  let response: any = returnArray ? [] : {};
-
-  Object.entries(data).forEach(([key, value]) => {
-    if (typeof value !== 'object' || !value) {
-      response[camelCase(key)] = value;
-      return;
-    }
-
-    let entries: any = Object.entries(value as any) as [];
-    if (entries.length > 0) {
-      response[camelCase(key)] = camelCaseProps(value);
-      return;
-    }
-    response[camelCase(key)] = value;
-  });
-
-  return response;
-}
 
 /**
  * Casts object/array items to BigNumber

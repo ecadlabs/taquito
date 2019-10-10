@@ -41,8 +41,8 @@ export class Context {
     if (this._proto) {
       return protocol.includes(this._proto);
     } else {
-      const { nextProtocol } = await this.rpc.getBlockMetadata();
-      return protocol.includes(nextProtocol);
+      const { next_protocol } = await this.rpc.getBlockMetadata();
+      return protocol.includes(next_protocol);
     }
   }
 

@@ -5,7 +5,8 @@ import { BigMapToken } from '../tokens/bigmap';
 import { createToken } from '../tokens/createToken';
 
 import { RpcTransaction } from './model';
-import { ScriptResponse } from '@taquito/rpc';
+import { ScriptResponse, MichelsonV1ExpressionExtended, MichelsonV1Expression } from '@taquito/rpc';
+import { Falsy } from './types';
 
 /**
  * @warn Our current smart contract abstraction feature is currently in preview. It's API is not final, and it may not cover every use case (yet). We will greatly appreciate any feedback on this feature.
@@ -15,11 +16,11 @@ export class Schema {
   private bigMap?: BigMapToken;
 
   static fromRPCResponse(val: { script: ScriptResponse }) {
-    const storage =
+    const storage: Falsy<MichelsonV1ExpressionExtended> =
       val &&
       val.script &&
       Array.isArray(val.script.code) &&
-      val.script.code.find((x: any) => x.prim === 'storage');
+      (val.script.code.find((x: any) => x.prim === 'storage') as MichelsonV1ExpressionExtended);
 
     if (!storage || !Array.isArray(storage.args)) {
       throw new Error('Invalid rpc response passed as arguments');
@@ -28,11 +29,20 @@ export class Schema {
     return new Schema(storage.args[0]);
   }
 
-  constructor(val: any) {
+  private isExpressionExtended(
+    val: any
+  ): val is Required<Pick<MichelsonV1ExpressionExtended, 'prim' | 'args'>> {
+    return 'prim' in val && Array.isArray(val.args);
+  }
+
+  constructor(val: MichelsonV1Expression) {
     this.root = createToken(val, 0);
 
-    if (val.prim === 'pair' && Array.isArray(val.args) && val.args[0].prim === 'big_map') {
-      this.bigMap = new BigMapToken(val.args[0], 0, createToken);
+    if (this.isExpressionExtended(val) && val.prim === 'pair') {
+      const exp = val.args[0];
+      if (this.isExpressionExtended(exp) && exp.prim === 'big_map') {
+        this.bigMap = new BigMapToken(exp, 0, createToken);
+      }
     }
   }
 

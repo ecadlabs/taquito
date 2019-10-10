@@ -25,7 +25,7 @@ describe('TezosToolkit test', () => {
     mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
     mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
     mockRpcClient.preapplyOperations.mockResolvedValue([]);
-    mockRpcClient.getBlockMetadata.mockResolvedValue({ nextProtocol: 'test_proto' });
+    mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
 
     // Required for operations confirmation polling
     mockRpcClient.getBlock.mockResolvedValue({

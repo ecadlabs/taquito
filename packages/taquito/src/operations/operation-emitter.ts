@@ -1,13 +1,32 @@
 import {
   BlockHeaderResponse,
   BlockMetadata,
+  ConstructedOperation,
   ManagerKeyResponse,
+  OperationContentsAndResult,
   RpcClient,
   RPCRunOperationParam,
 } from '@taquito/rpc';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT, protocols } from '../constants';
 import { Context } from '../context';
-import { ForgedBytes, PrepareOperationParams, RPCOperation, RPCRevealOperation } from './types';
+import {
+  ForgedBytes,
+  PrepareOperationParams,
+  RPCDelegateOperation,
+  RPCOperation,
+  RPCOriginationOperation,
+  RPCRevealOperation,
+  RPCTransferOperation,
+} from './types';
+
+export interface PreparedOperation {
+  opOb: {
+    branch: string;
+    contents: ConstructedOperation[];
+    protocol: string;
+  };
+  counter: number;
+}
 
 export abstract class OperationEmitter {
   get rpc(): RpcClient {
@@ -20,7 +39,28 @@ export abstract class OperationEmitter {
 
   constructor(protected context: Context) {}
 
-  protected async prepareOperation({ operation, source }: PrepareOperationParams) {
+  private isSourceOp(
+    op: RPCOperation
+  ): op is (RPCTransferOperation | RPCOriginationOperation | RPCDelegateOperation) & {
+    source?: string;
+  } {
+    return ['transaction', 'origination', 'delegation'].includes(op.kind);
+  }
+
+  private isFeeOp(
+    op: RPCOperation
+  ): op is (
+    | RPCTransferOperation
+    | RPCOriginationOperation
+    | RPCDelegateOperation
+    | RPCRevealOperation) & { source?: string } {
+    return ['reveal', 'transaction', 'origination', 'delegation'].includes(op.kind);
+  }
+
+  protected async prepareOperation({
+    operation,
+    source,
+  }: PrepareOperationParams): Promise<PreparedOperation> {
     let counter;
     const counters: { [key: string]: number } = {};
     const promises: [
@@ -80,16 +120,16 @@ export abstract class OperationEmitter {
 
     const proto005 = await this.context.isAnyProtocolActive(protocols['005']);
 
-    const constructOps = (cOps: RPCOperation[]) =>
-      cOps.map((op: any) => {
-        // @ts-ignore
-        const constructedOp = { ...op };
-        if (['transaction', 'origination', 'delegation'].includes(op.kind)) {
+    const constructOps = (cOps: RPCOperation[]): ConstructedOperation[] =>
+      // tslint:disable strict-type-predicates
+      cOps.map((op: RPCOperation) => {
+        const constructedOp = { ...op } as ConstructedOperation;
+        if (this.isSourceOp(op)) {
           if (typeof op.source === 'undefined') {
             constructedOp.source = publicKeyHash;
           }
         }
-        if (['reveal', 'transaction', 'origination', 'delegation'].includes(op.kind)) {
+        if (this.isFeeOp(op)) {
           if (typeof op.fee === 'undefined') {
             constructedOp.fee = '0';
           } else {
@@ -105,15 +145,17 @@ export abstract class OperationEmitter {
           } else {
             constructedOp.storage_limit = `${op.storage_limit}`;
           }
-          if (typeof op.balance !== 'undefined') {
-            constructedOp.balance = `${constructedOp.balance}`;
-          }
-          if (typeof op.amount !== 'undefined') {
-            constructedOp.amount = `${constructedOp.amount}`;
-          }
           const opCounter = ++counters[publicKeyHash];
           constructedOp.counter = `${opCounter}`;
         }
+        if (op.kind === 'origination') {
+          if (typeof op.balance !== 'undefined') constructedOp.balance = `${constructedOp.balance}`;
+        }
+
+        if (op.kind === 'transaction') {
+          if (typeof op.amount !== 'undefined') constructedOp.amount = `${constructedOp.amount}`;
+        }
+        // tslint:enable strict-type-predicates
 
         // Protocol 005 remove these from operations content
         if (proto005) {
@@ -127,7 +169,7 @@ export abstract class OperationEmitter {
 
     const branch = head.hash;
     const contents = constructOps(ops);
-    const protocol = metadata.nextProtocol;
+    const protocol = metadata.next_protocol;
 
     return {
       opOb: {
@@ -144,7 +186,7 @@ export abstract class OperationEmitter {
     return this.forge(prepared);
   }
 
-  protected async forge({ opOb: { branch, contents, protocol }, counter }: any) {
+  protected async forge({ opOb: { branch, contents, protocol }, counter }: PreparedOperation) {
     let remoteForgedBytes = await this.rpc.forgeOperations({ branch, contents });
 
     return {
@@ -171,7 +213,7 @@ export abstract class OperationEmitter {
     forgedBytes.opbytes = signed.sbytes;
     forgedBytes.opOb.signature = signed.prefixSig;
 
-    const opResponse: any[] = [];
+    const opResponse: OperationContentsAndResult[] = [];
     let errors: any[] = [];
 
     const results = await this.rpc.preapplyOperations([forgedBytes.opOb]);
