@@ -124,8 +124,8 @@ export class Operation {
           filter(head => head.header.level - this._foundAt >= conf),
           first()
         )
-        .subscribe(head => {
-          resolve(head.header.level);
+        .subscribe(_ => {
+          resolve(this._foundAt + conf);
         }, reject);
     });
   }

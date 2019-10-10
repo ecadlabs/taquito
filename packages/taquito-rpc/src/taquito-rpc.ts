@@ -65,7 +65,7 @@ export class RpcClient {
     private url: string = defaultRPC,
     private chain: string = defaultChain,
     private httpBackend: HttpBackend = new HttpBackend()
-  ) {}
+  ) { }
 
   /**
    *
@@ -636,7 +636,7 @@ export class RpcClient {
   async runOperation(
     op: RPCRunOperationParam,
     { block }: RPCOptions = defaultRPCOptions
-  ): Promise<any> {
+  ): Promise<PreapplyResponse> {
     const response = await this.httpBackend.createRequest<any>(
       {
         url: `${this.url}/chains/${this.chain}/blocks/${block}/helpers/scripts/run_operation`,

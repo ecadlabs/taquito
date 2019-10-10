@@ -88,10 +88,17 @@ CONFIGS.forEach(({ lib, rpc }) => {
       done();
     });
 
-    it('Simple contract storage', async (done) => {
-      const contract = await Tezos.contract.at("KT1AsziDG3FY7qcHhYp6DwNgeDc3bf7PT4hw")
-      expect(await contract.storage()).toBe("Hello Tezos!")
+    it('Transfer and wait 2 confirmations', async (done) => {
+      const op = await Tezos.contract.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
+      const conf = await op.confirmation()
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+      console.log('Confirmed in: ', conf, op.includedInBlock)
+      const [first, second] = await Promise.all([op.confirmation(), op.confirmation(2)])
+      expect(second - first).toEqual(2)
+      // Retrying another time should be instant
+      const [first2, second2] = await Promise.all([op.confirmation(), op.confirmation(2)])
+      expect(second2 - first2).toEqual(2)
       done();
-    });
+    })
   });
 })
