@@ -4,7 +4,7 @@ import { createOriginationOperation, createTransferOperation } from './prepare';
 import { Estimate } from './estimate';
 import { DEFAULT_STORAGE_LIMIT, protocols } from '../constants';
 import { EstimationProvider } from './interface';
-import { RPCRunOperationParam } from '@taquito/rpc';
+import { RPCRunOperationParam, OperationContentsAndResult, PreapplyResponse, OperationResultOrigination, OperationContentsAndResultOrigination, OperationContentsAndResultTransaction, OperationResultTransaction } from '@taquito/rpc';
 
 // RPC require a signature but do not verify it
 const SIGNATURE_STUB =
@@ -18,9 +18,9 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     gasLimit: 800000,
   };
 
-  private getOperationResult(opResponse: any, kind: 'origination' | 'transaction') {
+  private getOperationResult(opResponse: PreapplyResponse, kind: 'origination' | 'transaction'): OperationResultTransaction | OperationResultOrigination | undefined {
     const results = opResponse.contents;
-    const originationOp = Array.isArray(results) && results.find(op => op.kind === kind);
+    const originationOp = Array.isArray(results) && results.find(op => op.kind === kind)
     return originationOp && originationOp.metadata && originationOp.metadata.operation_result;
   }
 
@@ -57,8 +57,8 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     const storageDiff = operationResults && operationResults.paid_storage_size_diff;
 
     return new Estimate(
-      consumedGas,
-      Number(storageDiff) + DEFAULT_STORAGE_LIMIT.ORIGINATION,
+      (consumedGas || 0),
+      Number(storageDiff || 0) + DEFAULT_STORAGE_LIMIT.ORIGINATION,
       opbytes.length / 2
     );
   }
@@ -91,10 +91,9 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
 
     const consumedGas = operationResults && operationResults.consumed_gas;
     const storageDiff = operationResults && operationResults.paid_storage_size_diff;
-
     return new Estimate(
-      consumedGas,
-      Number(storageDiff) + DEFAULT_STORAGE_LIMIT.TRANSFER,
+      (consumedGas || 0),
+      Number(storageDiff || 0) + DEFAULT_STORAGE_LIMIT.TRANSFER,
       opbytes.length / 2
     );
   }
