@@ -175,24 +175,5 @@ describe('Origination operation', () => {
       );
       done();
     });
-
-    it('should timeout', async done => {
-      const fakeContractProvider: any = {
-        at: jest.fn(),
-      };
-
-      fakeContractProvider.at.mockResolvedValue('contract');
-      const op = new OriginationOperation(
-        'wrong_test_hash',
-        {} as any,
-        successfulResult,
-        fakeContext,
-        fakeContractProvider
-      );
-      await expect(op.contract(12, 0.1, 0.1)).rejects.toEqual(
-        new Error('Confirmation polling timed out')
-      );
-      done();
-    });
   });
 });
