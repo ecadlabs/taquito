@@ -77,7 +77,7 @@ export class TezosToolkit {
       this._rpcClient = new RpcClient(rpc);
     } else if (rpc instanceof RpcClient) {
       this._rpcClient = rpc;
-    } else {
+    } else if (this._options.rpc === undefined) {
       this._rpcClient = new RpcClient();
     }
     this._options.rpc = rpc;
@@ -89,7 +89,7 @@ export class TezosToolkit {
       this._indexerClient = new IndexerClient(indexer);
     } else if (indexer instanceof IndexerClient) {
       this._indexerClient = indexer;
-    } else {
+    } else if (this._options.indexer === undefined) {
       this._indexerClient = new IndexerClient();
     }
 
@@ -102,7 +102,7 @@ export class TezosToolkit {
       this._stream = new PollingSubscribeProvider(new Context(new RpcClient(stream)));
     } else if (typeof stream !== 'undefined') {
       this._stream = stream;
-    } else {
+    } else if (this._options.stream === undefined) {
       this._stream = new PollingSubscribeProvider(this._context);
     }
     this._options.stream = stream;
