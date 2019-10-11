@@ -3,12 +3,13 @@ import { OperationObject } from '@taquito/rpc';
 export type OriginateParamsBase = {
   balance?: string;
   code: string | object[];
-  spendable?: boolean;
-  delegatable?: boolean;
   delegate?: string;
   fee?: number;
   gasLimit?: number;
   storageLimit?: number;
+  // Proto 004
+  spendable?: boolean;
+  delegatable?: boolean;
 };
 
 /**

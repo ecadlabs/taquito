@@ -34,11 +34,7 @@ describe('Schema test', () => {
         {
           args: [
             {
-              args: [
-                {
-                  string: '{PUSH string "hello"; CONCAT}',
-                },
-              ],
+              args: [[{ prim: 'PUSH', args: [{ string: 'hello' }] }, { prim: 'CONCAT' }]],
               prim: 'Right',
             },
           ],
@@ -46,7 +42,9 @@ describe('Schema test', () => {
         },
       ],
       prim: 'Right',
-    }).toEqual(schema.Encode('3', `{PUSH string "hello"; CONCAT}`));
+    }).toEqual(
+      schema.Encode('3', [{ prim: 'PUSH', args: [{ string: 'hello' }] }, { prim: 'CONCAT' }])
+    );
     expect(schema.isMultipleEntryPoint).toBeTruthy();
   });
 });
