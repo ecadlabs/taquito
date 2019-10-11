@@ -22,3 +22,15 @@ nb-tabset {
   align-items: center;
   flex: 1;
 }
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.column:first-child {
+  font-weight: bold;
+  min-width: 100px;
+}

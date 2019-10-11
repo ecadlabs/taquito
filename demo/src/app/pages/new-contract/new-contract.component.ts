@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Contract } from '@taquito/taquito/dist/types/contract/contract';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { NetworkSelectService } from 'src/app/components/network-select/network-select.service';
 import { Network } from 'src/app/models/network.model';
 
 import { TaquitoService } from '../../taquito.service';
@@ -42,14 +43,33 @@ code {
   };
 
   public error$ = new Subject();
-
   public deploying$ = new BehaviorSubject<boolean>(false);
+
+  private defaultSupportedNetwork = Network.Babylonnet;
+  private unsupportedNetworks = [Network.Alphanet, Network.Mainnet];
+  private selectedNetwork;
+
   private subscriptions = new Subscription();
 
-  constructor(private taquito: TaquitoService, private fb: FormBuilder, private router: Router) {}
+  constructor(
+    private networkSelect: NetworkSelectService,
+    private taquito: TaquitoService,
+    private fb: FormBuilder,
+    private router: Router
+  ) {}
 
   ngOnInit() {
-    this.taquito.setNetwork(Network.getUrl(Network.Alphanet));
+    this.networkSelect.disable(this.unsupportedNetworks, true);
+
+    this.subscriptions.add(
+      this.networkSelect.selectedNetwork$.subscribe(selection => {
+        this.selectedNetwork = selection;
+
+        if (this.unsupportedNetworks.includes(selection)) {
+          this.taquito.setNetwork(this.defaultSupportedNetwork);
+        }
+      })
+    );
 
     this.subscriptions.add(
       this.deploying$.subscribe(deploying => {
@@ -59,6 +79,7 @@ code {
   }
 
   ngOnDestroy() {
+    this.networkSelect.disable(this.unsupportedNetworks, false);
     this.subscriptions.unsubscribe();
   }
 
@@ -66,7 +87,9 @@ code {
     this.deploying$.next(false);
     this.error$.next(null);
 
-    this.router.navigate(['alphanet', contract.address]).catch(error => console.log(error));
+    this.router
+      .navigate([this.selectedNetwork, contract.address])
+      .catch(error => console.log(error));
   }
 
   displayError(error) {

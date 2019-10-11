@@ -1,0 +1,8 @@
+<nb-select status="primary" [formControl]="network" placeholder="Select network">
+  <nb-option
+    *ngFor="let option of networkOptions$ | async"
+    value="{{ option.network }}"
+    [disabled]="option.disabled"
+    >{{ option.network | titlecase }}</nb-option
+  >
+</nb-select>

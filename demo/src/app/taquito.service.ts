@@ -3,14 +3,20 @@ import { Tezos, TezosToolkit } from '@taquito/taquito';
 import { OriginateParams } from '@taquito/taquito/dist/types/operations/types';
 import { TezBridgeSigner } from '@taquito/tezbridge-signer';
 
+import { NetworkSelectService } from './components/network-select/network-select.service';
+import { Network } from './models/network.model';
+
 @Injectable({
   providedIn: 'root',
 })
 export class TaquitoService {
   private taquito: TezosToolkit = Tezos;
 
-  public setNetwork(url: string) {
-    this.taquito.setProvider({ rpc: url });
+  constructor(private networkSelect: NetworkSelectService) {}
+
+  public setNetwork(network: Network) {
+    this.networkSelect.select(network);
+    this.taquito.setProvider({ rpc: Network.getUrl(network) });
   }
 
   public importFaucetKey(key) {
@@ -23,7 +29,7 @@ export class TaquitoService {
   }
 
   public selectTezBridgeSigner() {
-    this.taquito.setProvider({ signer: new TezBridgeSigner() });
+    this.taquito.setProvider({ rpc: this.taquito.rpc, signer: new TezBridgeSigner() });
   }
 
   public originate(contract: OriginateParams) {

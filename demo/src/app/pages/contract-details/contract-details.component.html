@@ -7,17 +7,28 @@
   </nb-card-header>
   <nb-card-body>
     <tz-search-form
-      [network]="network$ | async"
-      [contract]="contractAddress$ | async"
+      [contract]="contractAddressFromUrl$ | async"
       (search)="onSearch($event)"
     ></tz-search-form>
     <nb-tabset *ngIf="contract$ | async as contract">
       <nb-tab tabTitle="Account">
         <div>
-          Balance: {{ contract.account.balance }}<br />
-          Manager: {{ contract.account.manager }}<br />
-          Spendable: {{ contract.account.spendable }}<br />
-          Delegatable: {{ contract.account.delegate.setable }}
+          <div class="row" *ngIf="contract.account.balance">
+            <span class="column">Balance</span>
+            <span class="column">{{ contract.account.balance | tz }}</span>
+          </div>
+          <div class="row" *ngIf="contract.account.manager">
+            <span class="column">Manager</span>
+            <span class="column">{{ contract.account.manager }}</span>
+          </div>
+          <div class="row" *ngIf="[true, false].includes(contract.account.spendable)">
+            <span class="column">Spendable</span>
+            <span class="column">{{ contract.account.spendable | yesno }} </span>
+          </div>
+          <div class="row" *ngIf="contract.account.delegate">
+            <span class="column">Delegatable</span>
+            <span class="column">{{ contract.account.delegate.setable | yesno }}</span>
+          </div>
         </div>
       </nb-tab>
       <nb-tab tabTitle="Storage">
@@ -29,8 +40,9 @@
     </nb-tabset>
     <div class="error" *ngIf="error$ | async">
       <span
-        >Your search "<b>{{ contractAddress$ | async }}</b
-        >" did not match any smart contracts.</span
+        >Your search "<b>{{ contractAddressFromUrl$ | async }}</b
+        >" did not match any smart contracts on <b>{{ this.network | titlecase }}</b
+        >.</span
       >
     </div>
   </nb-card-body>

@@ -6,11 +6,18 @@
   width: 100%;
 }
 
+.left-container {
+  display: flex;
+  align-items: center;
+  height: inherit;
+}
+
 .logo {
   display: flex;
   align-items: center;
   font-size: 1.15rem;
   height: inherit;
+  margin-right: 20px;
 
   img {
     height: inherit;

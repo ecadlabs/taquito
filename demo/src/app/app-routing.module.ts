@@ -12,6 +12,11 @@ import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.com
 import { PageNotFoundModule } from './pages/page-not-found/page-not-found.module';
 
 const routes: Routes = [
+  ...Network.values().map(network => ({
+    path: `${network}/:contract`,
+    component: ContractDetailsComponent,
+    data: { network: network },
+  })),
   {
     path: '',
     component: HomeComponent,
@@ -19,16 +24,6 @@ const routes: Routes = [
   {
     path: 'new',
     component: NewContractComponent,
-  },
-  {
-    path: 'alphanet/:contract',
-    data: { network: Network.Alphanet },
-    component: ContractDetailsComponent,
-  },
-  {
-    path: 'mainnet/:contract',
-    data: { network: Network.Mainnet },
-    component: ContractDetailsComponent,
   },
   {
     path: '**',

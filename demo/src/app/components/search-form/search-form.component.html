@@ -1,8 +1,9 @@
 <form [formGroup]="findContract" (ngSubmit)="search.emit(this.findContract.value)">
-  <nb-select formControlName="network" placeholder="Select network">
+  <!-- <nb-select formControlName="network" placeholder="Select network">
     <nb-option value="{{ Network.Alphanet }}">Alphanet</nb-option>
     <nb-option value="{{ Network.Mainnet }}">Mainnet</nb-option>
-  </nb-select>
+    <nb-option value="{{ Network.Babylonnet }}">Babylonnet</nb-option>
+  </nb-select> -->
   <input
     nbInput
     class="searchbox"

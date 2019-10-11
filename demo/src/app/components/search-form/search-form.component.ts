@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-
-import { Network } from '../../models/network.model';
+import { Network } from 'src/app/models/network.model';
 
 @Component({
   selector: 'tz-search-form',

@@ -7,6 +7,8 @@ import { NbButtonModule, NbIconModule, NbLayoutModule, NbThemeModule } from '@ne
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { NetworkSelectModule } from './components/network-select/network-select.module';
+import { NetworkSelectService } from './components/network-select/network-select.service';
 import { TaquitoService } from './taquito.service';
 
 @NgModule({
@@ -21,8 +23,9 @@ import { TaquitoService } from './taquito.service';
     NbEvaIconsModule,
     NbIconModule,
     RouterModule,
+    NetworkSelectModule,
   ],
-  providers: [TaquitoService],
+  providers: [TaquitoService, NetworkSelectService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

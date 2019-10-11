@@ -1,12 +1,19 @@
 <nb-card>
   <nb-card-body>
-    <a nbButton class="button" size="large" routerLink="new" routerLinkActive="active"
-      >Create New Contract</a
+    <button
+      nbButton
+      size="large"
+      (click)="onNewContract()"
+      [disabled]="disableNewContractButton$ | async"
     >
+      Create New Contract
+    </button>
     <div class="divider"></div>
     <h2>Explore Smart Contract</h2>
     <tz-search-form (search)="onSearch($event)"></tz-search-form>
 
-    <button nbButton size="large" (click)="onPickRandom()">Pick Random Contract</button>
+    <button nbButton size="large" (click)="onPickRandom()">
+      Pick Random Contract
+    </button>
   </nb-card-body>
 </nb-card>

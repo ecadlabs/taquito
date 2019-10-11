@@ -33,7 +33,10 @@ export class SignerSelectComponent implements OnInit {
 
       this.taquito
         .importFaucetKey(key)
-        .then(_ => (this.signer = Signer.Faucet))
+        .then(_ => {
+          this.importing$.next(false);
+          this.signer = Signer.Faucet;
+        })
         .catch(error => {
           this.importing$.next(false);
 
