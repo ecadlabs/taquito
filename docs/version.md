@@ -5,15 +5,15 @@ author: Simon Boissonneault-Robert
 
 ## 5.0.1-beta.2 Support for Babylon protocol update
 
-This release support Babylon/Proto005. With this release it is possible to inject operations into a chain running either `Athens/004` or `Babylon/005`.
+This release supports Babylon/Proto005. With this release, it is possible to inject operations into a chain running either `Athens/004` or `Babylon/005`.
 
-Developers have two options around operating with the blockchain during the protocol amendment. You can specify the protocol you expect to use in your provider as follows:
+Developers have two options around operating with the blockchain during the protocol amendment. First option, you can specify the protocol you expect to use in your provider as follows:
 
 ```js
 Tezos.setProvider({protocol: Protocols.PsBabyM1})
 ```
 
-Or if you do not specify the protocol in your provider, taquito will discover the current protocol before injection an operation by querying the RPC. This method requires less code, but adds an additional RPC query for every injection and is thus slightly slower.
+Second option is to not specify the protocol in your provider. Taquito will discover the current protocol before injection an operation by querying the RPC. This method requires less code, but adds an additional RPC query for every injection and is thus slightly slower.
 
 ### Misc
 
