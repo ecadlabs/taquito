@@ -1,6 +1,13 @@
 {
   "docs": {
-    "General": ["quick_start", "boilerplate"],
-    "Signer": ["inmemory_signer", "tezbridge_signer"]
+    "General": [
+      "quick_start",
+      "boilerplate",
+      "making_transfers"
+    ],
+    "Signer": [
+      "inmemory_signer",
+      "tezbridge_signer"
+    ]
   }
 }
