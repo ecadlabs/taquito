@@ -7,9 +7,9 @@ author: Simon Boissonneault-Robert
 
 In Tezos a transfer operation will transfer tokens between two addresses.
 
-When the Babylon (proto005) protocol ammendment came into affect changes in how KT1 addresses handle transfer changed. In order to transfer tokens _from_ a KT1 account, the transfer must be completed by calling the KT1's smart contract `do` method. The `do` method takes a function, and it is the logic of this function that causes the desired transfer of tokens to happen.
+When the `Babylon/proto005` protocol amendment came into affect changes in how KT1 addresses handle transfer changed. In order to transfer tokens _from_ a KT1 account, the transfer must be completed by calling the KT1's smart contract `do` method. The `do` method takes a function, and it is the logic of this function that causes the desired transfer of tokens to happen.
 
-## Transfer 1 token from a tz1 address to a tz1 address
+See [integration tests](https://github.com/ecadlabs/taquito/blob/master/integration-tests/manager-contract-scenario.spec.ts) for more code examples.
 
 This is the simplest token transfer scenario
 
