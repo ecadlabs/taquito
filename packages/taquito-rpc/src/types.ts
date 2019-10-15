@@ -1,72 +1,52 @@
 import BigNumber from 'bignumber.js';
+import {
+  BlockMetadata004,
+  ConstantsResponse004,
+  ContractResponse004,
+  EntrypointsResponse004,
+  OperationContentsAndResultOrigination004,
+  RPCRunOperationParam004,
+} from './types.004';
+import {
+  BlockMetadata005,
+  ConstantsResponse005,
+  ContractResponse005,
+  EntrypointsResponse005,
+  OperationContentsAndResultOrigination005,
+  RPCRunOperationParam005,
+} from './types.005';
+import {
+  InternalOperationResult,
+  MichelsonV1Expression,
+  OperationMetadataBalanceUpdates,
+  OperationObject,
+  OperationResultDelegation,
+  OperationResultReveal,
+  OperationResultTransaction,
+  ScriptedContracts,
+  TimeStampMixed,
+} from './types.common';
 export type BalanceResponse = BigNumber;
-export type StorageResponse = unknown;
-export type ScriptResponse = { code: { prim: string; args: any[] }[]; storage: unknown };
-export type BigMapGetResponse = unknown;
-export type ManagerResponse = string;
+export type StorageResponse = ScriptedContracts['storage'];
+export type ScriptResponse = ScriptedContracts;
+export type BigMapGetResponse = MichelsonV1Expression;
+export type ManagerResponse = { manager: string };
+export type ManagerKeyResponse = string | { key: string };
 export type DelegateResponse = string | null;
 
-export interface ConstructedOperation {
-  kind: string;
-  level: number;
-  nonce: string;
-  pkh: string;
-  hash: string;
-  secret: string;
-  source: string;
-  period: number;
-  proposal: string;
-  ballot: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  parameters: string;
-  balance: string;
-  spendable: boolean;
-  delegatable: boolean;
-  delegate: string;
-  amount: string;
-  destination: string;
-  public_key: string;
-  script: { code: string; storage: string };
-  manager_pubkey: string;
-}
+export type OperationHash = string;
 
-export interface OperationObject {
-  branch?: string;
-  contents?: ConstructedOperation[];
-  protocol?: string;
-  signature?: string;
-}
-
-export interface RawDelegatesResponse {
-  balance: string;
-  frozen_balance: string;
-  frozen_balance_by_cycle: RawFrozenbalancebycycle[];
-  staking_balance: string;
-  delegated_contracts: string[];
-  delegated_balance: string;
-  grace_period: number;
-  deactivated: boolean;
-}
-
-interface RawFrozenbalancebycycle {
-  cycle: number;
-  deposit: string;
-  fees: string;
-  rewards: string;
-}
+export type RPCRunOperationParam = RPCRunOperationParam004 | RPCRunOperationParam005;
 
 export interface DelegatesResponse {
   balance: BigNumber;
-  frozenBalance: BigNumber;
-  frozenBalanceByCycle: Frozenbalancebycycle[];
-  stakingBalance: BigNumber;
-  delegatedContracts: string[];
-  delegatedBalance: BigNumber;
+  frozen_balance: BigNumber;
+  frozen_balance_by_cycle: Frozenbalancebycycle[];
+  staking_balance: BigNumber;
+  delegated_contracts: string[];
+  delegated_balance: BigNumber;
   deactivated: boolean;
-  gracePeriod: number;
+  grace_period: number;
 }
 
 interface Frozenbalancebycycle {
@@ -78,43 +58,9 @@ interface Frozenbalancebycycle {
 
 export type BigMapKey = { key: { [key: string]: string }; type: { prim: string } };
 
-export interface ContractResponse {
-  manager: string;
-  balance: BigNumber;
-  spendable: boolean;
-  delegate: Delegate;
-  script: Script;
-  counter: string;
-}
+export type ContractResponse = ContractResponse004 | ContractResponse005;
 
-export interface ConstantsResponse {
-  proofOfWorkNonceSize: number;
-  nonceLength: number;
-  maxRevelationsPerBlock: number;
-  maxOperationDataLength: number;
-  preservedCycles: number;
-  blocksPerCycle: number;
-  blocksPerCommitment: number;
-  blocksPerRollSnapshot: number;
-  blocksPerVotingPeriod: number;
-  timeBetweenBlocks: BigNumber[];
-  endorsersPerBlock: number;
-  hardGasLimitPerOperation: BigNumber;
-  hardGasLimitPerBlock: BigNumber;
-  proofOfWorkThreshold: BigNumber;
-  tokensPerRoll: BigNumber;
-  michelsonMaximumTypeSize: number;
-  seedNonceRevelationTip: string;
-  originationBurn: string;
-  blockSecurityDeposit: BigNumber;
-  endorsementSecurityDeposit: BigNumber;
-  blockReward: BigNumber;
-  endorsementReward: BigNumber;
-  costPerByte: BigNumber;
-  hardStorageLimitPerOperation: BigNumber;
-}
-
-export type TimeStampMixed = Date | string;
+export type ConstantsResponse = ConstantsResponse004 | ConstantsResponse005;
 
 // BlockResponse interface
 // header:
@@ -123,13 +69,13 @@ export interface BlockFullHeader {
   proto: number;
   predecessor: string;
   timestamp: TimeStampMixed;
-  validationPass: number;
-  operationsHash: string;
+  validation_pass: number;
+  operations_hash: string;
   fitness: string[];
   context: string;
   priority: number;
-  proofOfWorkNonce: string;
-  seedNonceHash?: string;
+  proof_of_work_nonce: string;
+  seed_nonce_hash?: string;
   signature: string;
 }
 
@@ -144,28 +90,6 @@ export interface InlinedEndorsement {
   branch: string;
   operations: InlinedEndorsementContents;
   signature?: string;
-}
-
-export interface MichelsonV1ExpressionBase {
-  int?: string;
-  string?: string;
-  bytes?: string;
-}
-
-export interface MichelsonV1ExpressionExtended {
-  prim: string;
-  args?: MichelsonV1ExpressionBase[];
-  annots?: string[];
-}
-
-export type MichelsonV1Expression =
-  | MichelsonV1ExpressionBase
-  | MichelsonV1ExpressionBase[]
-  | MichelsonV1ExpressionExtended;
-
-export interface ScriptedContracts {
-  code: MichelsonV1Expression;
-  storage: MichelsonV1Expression;
 }
 
 export type OperationContentsBallotEnum = 'nay' | 'yay' | 'pass';
@@ -219,9 +143,9 @@ export interface OperationContentsReveal {
   source: string;
   fee: string;
   counter: string;
-  gasLimit: string;
-  storageLimit: string;
-  publicKey: string;
+  gas_limit: string;
+  storage_limit: string;
+  public_key: string;
 }
 
 export interface OperationContentsTransaction {
@@ -229,8 +153,8 @@ export interface OperationContentsTransaction {
   source: string;
   fee: string;
   counter: string;
-  gasLimit: string;
-  storageLimit: string;
+  gas_limit: string;
+  storage_limit: string;
   amount: string;
   destination: string;
   parameters?: MichelsonV1Expression;
@@ -241,9 +165,9 @@ export interface OperationContentsOrigination {
   source: string;
   fee: string;
   counter: string;
-  gasLimit: string;
-  storageLimit: string;
-  managerPubkey: string;
+  gas_limit: string;
+  storage_limit: string;
+  manager_pubkey: string;
   balance: string;
   spendable?: boolean;
   delegatable?: boolean;
@@ -256,8 +180,8 @@ export interface OperationContentsDelegation {
   source: string;
   fee: string;
   counter: string;
-  gasLimit: string;
-  storageLimit: string;
+  gas_limit: string;
+  storage_limit: string;
   delegate?: string;
 }
 
@@ -274,124 +198,32 @@ export type OperationContents =
   | OperationContentsOrigination
   | OperationContentsDelegation;
 
-export type MetadataBalanceUpdatesKindEnum = 'contract' | 'freezer';
-export type MetadataBalanceUpdatesCategoryEnum = 'rewards' | 'fees' | 'deposits';
-
-export interface OperationMetadataBalanceUpdates {
-  kind: MetadataBalanceUpdatesKindEnum;
-  category?: MetadataBalanceUpdatesCategoryEnum;
-  contract?: string;
-  delegate?: string;
-  cycle?: number;
-  change: string;
-}
-
-export type OperationResultStatusEnum = 'applied' | 'failed' | 'skipped' | 'backtracked';
-
-export interface OperationResultReveal {
-  status: OperationResultStatusEnum;
-  consumedGas?: string;
-  errors?: any;
-}
-
-export interface ContractBigMapDiffItem {
-  keyHash: string;
-  key: MichelsonV1Expression;
-  value?: MichelsonV1Expression;
-}
-
-export type ContractBigMapDiff = ContractBigMapDiffItem[];
-
-export interface OperationResultTransaction {
-  status: OperationResultStatusEnum;
-  storage?: MichelsonV1Expression;
-  bigMapDiff?: ContractBigMapDiff;
-  balanceUpdates?: OperationBalanceUpdates;
-  originatedContracts?: string[];
-  consumedGas?: string;
-  storageSize?: string;
-  paidStorageSizeDiff?: string;
-  allocatedDestinationContract?: boolean;
-  errors?: any;
-}
-
-export interface OperationResultDelegation {
-  status: OperationResultStatusEnum;
-  consumedGas?: string;
-  errors?: any;
-}
-
-export interface OperationResultOrigination {
-  status: OperationResultStatusEnum;
-  balanceUpdates?: OperationBalanceUpdates;
-  originatedContracts?: string[];
-  consumedGas?: string;
-  storageSize?: string;
-  paidStorageSizeDiff?: string;
-  errors?: any;
-}
-
-export type InternalOperationResultKindEnum =
-  | 'reveal'
-  | 'transaction'
-  | 'origination'
-  | 'delegation';
-
-export type InternalOperationResultEnum =
-  | OperationResultReveal
-  | OperationResultTransaction
-  | OperationResultDelegation
-  | OperationResultOrigination;
-
-export interface InternalOperationResult {
-  kind: InternalOperationResultKindEnum;
-  source: string;
-  nonce: number;
-  amount?: string;
-  destination?: string;
-  parameters?: MichelsonV1Expression;
-  publicKey?: string;
-  managerPubkey?: string;
-  balance?: string;
-  spendable?: boolean;
-  delegatable?: boolean;
-  delegate?: string;
-  script?: ScriptedContracts;
-  result: InternalOperationResultEnum;
-}
-
 export interface OperationContentsAndResultMetadataExtended {
-  balanceUpdates: OperationMetadataBalanceUpdates[];
+  balance_updates: OperationMetadataBalanceUpdates[];
   delegate: string;
   slots: number[];
 }
 
 export interface OperationContentsAndResultMetadataReveal {
-  balanceUpdates: OperationMetadataBalanceUpdates[];
-  operationResult: OperationResultReveal;
-  internalOperationResults?: InternalOperationResult[];
+  balance_updates: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultReveal;
+  internal_operation_results?: InternalOperationResult[];
 }
 
 export interface OperationContentsAndResultMetadataTransaction {
-  balanceUpdates: OperationMetadataBalanceUpdates[];
-  operationResult: OperationResultTransaction;
-  internalOperationResults?: InternalOperationResult[];
-}
-
-export interface OperationContentsAndResultMetadataOrigination {
-  balanceUpdates: OperationMetadataBalanceUpdates[];
-  operationResult: OperationResultOrigination;
-  internalOperationResults?: InternalOperationResult[];
+  balance_updates: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultTransaction;
+  internal_operation_results?: InternalOperationResult[];
 }
 
 export interface OperationContentsAndResultMetadataDelegation {
-  balanceUpdates: OperationMetadataBalanceUpdates[];
-  operationResult: OperationResultDelegation;
-  internalOperationResults?: InternalOperationResult[];
+  balance_updates: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultDelegation;
+  internal_operation_results?: InternalOperationResult[];
 }
 
 export interface OperationContentsAndResultMetadata {
-  balanceUpdates: OperationMetadataBalanceUpdates[];
+  balance_updates: OperationMetadataBalanceUpdates[];
 }
 
 export interface OperationContentsAndResultEndorsement {
@@ -450,9 +282,9 @@ export interface OperationContentsAndResultReveal {
   source: string;
   fee: string;
   counter: string;
-  gasLimit: string;
-  storageLimit: string;
-  publicKey: string;
+  gas_limit: string;
+  storage_limit: string;
+  public_key: string;
   metadata: OperationContentsAndResultMetadataReveal;
 }
 
@@ -461,28 +293,12 @@ export interface OperationContentsAndResultTransaction {
   source: string;
   fee: string;
   counter: string;
-  gasLimit: string;
-  storageLimit: string;
+  gas_limit: string;
+  storage_limit: string;
   amount: string;
   destination: string;
   parameters?: MichelsonV1Expression;
   metadata: OperationContentsAndResultMetadataTransaction;
-}
-
-export interface OperationContentsAndResultOrigination {
-  kind: 'origination';
-  source: string;
-  fee: string;
-  counter: string;
-  gasLimit: string;
-  storageLimit: string;
-  managerPubkey: string;
-  balance: string;
-  spendable?: boolean;
-  delegatable?: boolean;
-  delegate?: string;
-  script?: ScriptedContracts;
-  metadata: OperationContentsAndResultMetadataOrigination;
 }
 
 export interface OperationContentsAndResultDelegation {
@@ -490,11 +306,15 @@ export interface OperationContentsAndResultDelegation {
   source: string;
   fee: string;
   counter: string;
-  gasLimit: string;
-  storageLimit: string;
+  gas_limit: string;
+  storage_limit: string;
   delegate?: string;
   metadata: OperationContentsAndResultMetadataDelegation;
 }
+
+export type OperationContentsAndResultOrigination =
+  | OperationContentsAndResultOrigination004
+  | OperationContentsAndResultOrigination005;
 
 export type OperationContentsAndResult =
   | OperationContentsAndResultEndorsement
@@ -513,89 +333,18 @@ export type OperationContentsAndResult =
 // operations:
 export interface OperationEntry {
   protocol: string;
-  chainId: string;
+  chain_id: string;
   hash: string;
   branch: string;
   contents: (OperationContents | OperationContentsAndResult)[];
   signature?: string;
 }
 
-// BlockResponse interface
-// test_chain_status:
-export interface TestChainStatus {
-  status: TestChainStatusEnum;
-  chainId?: string;
-  genesis?: string;
-  protocol?: string;
-  expiration?: TimeStampMixed;
-}
-
-// BlockResponse interface
-// metadata: {
-//   level:
-// }
-export interface MetadataLevel {
-  level: number;
-  levelPosition: number;
-  cycle: number;
-  cyclePosition: number;
-  votingPeriod: number;
-  votingPeriodPosition: number;
-  expectedCommitment: boolean;
-}
-
-// BlockResponse interface
-// metadata: {
-//   maxOperation_list_length:
-// }
-export interface MaxOperationList {
-  maxSize: number;
-  maxOp?: number;
-}
-
-export type BalanceUpdateKindEnum = 'contract' | 'freezer';
-export type BalanceUpdateCategoryEnum = 'rewards' | 'fees' | 'deposits';
-
-// BlockResponse interface
-// metadata: {
-//   balanceUpdates:
-// }
-export interface OperationBalanceUpdatesItem {
-  kind: BalanceUpdateKindEnum;
-  category?: BalanceUpdateCategoryEnum;
-  delegate?: string;
-  cycle?: number;
-  contract?: string;
-  change: string;
-}
-
-export type OperationBalanceUpdates = OperationBalanceUpdatesItem[];
-
-export type TestChainStatusEnum = 'not_running' | 'forking' | 'running';
-export type VotingPeriodKindEnum = 'proposal' | 'testing_vote' | 'testing' | 'promotion_vote';
-
-// BlockResponse interface
-// metadata:
-export interface BlockMetadata {
-  protocol: string;
-  nextProtocol: string;
-  testChainStatus: TestChainStatus;
-  maxOperationsTtl: number;
-  maxOperationDataLength: number;
-  maxBlockHeaderLength: number;
-  maxOperationListLength: MaxOperationList[];
-  baker: string;
-  level: MetadataLevel;
-  votingPeriodKind: VotingPeriodKindEnum;
-  nonceHash: string | null;
-  consumedGas: string;
-  deactivated: string[];
-  balanceUpdates: OperationBalanceUpdates;
-}
+export type BlockMetadata = BlockMetadata004 | BlockMetadata005;
 
 export interface BlockResponse {
   protocol: string;
-  chainId: string;
+  chain_id: string;
   hash: string;
   header: BlockFullHeader;
   metadata: BlockMetadata;
@@ -618,7 +367,7 @@ export interface BakingRightsResponseItem {
   level: number;
   delegate: string;
   priority: number;
-  estimatedTime?: Date;
+  estimated_time?: Date;
 }
 
 export type BakingRightsResponse = BakingRightsResponseItem[];
@@ -637,7 +386,7 @@ export interface EndorsingRightsResponseItem {
   level: number;
   delegate: string;
   slots: number[];
-  estimatedTime?: Date;
+  estimated_time?: Date;
 }
 
 export type EndorsingRightsResponse = EndorsingRightsResponseItem[];
@@ -674,16 +423,45 @@ export type ProposalsResponseItem = [string, number];
 
 export type ProposalsResponse = ProposalsResponseItem[];
 
-interface Script {
-  code: {}[];
-  storage: Storage;
+export interface RawBlockHeaderResponse {
+  protocol: string;
+  chain_id: string;
+  hash: string;
+  level: number;
+  proto: number;
+  predecessor: string;
+  timestamp: string;
+  validation_pass: number;
+  operations_hash: string;
+  fitness: string[];
+  context: string;
+  priority: number;
+  proof_of_work_nonce: string;
+  signature: string;
 }
 
-interface Storage {
-  prim: string;
-  args: {}[];
+export interface BlockHeaderResponse {
+  protocol: string;
+  chain_id: string;
+  hash: string;
+  level: number;
+  proto: number;
+  predecessor: string;
+  timestamp: string;
+  validation_pass: number;
+  operations_hash: string;
+  fitness: string[];
+  context: string;
+  priority: number;
+  proof_of_work_nonce: string;
+  signature: string;
 }
 
-interface Delegate {
-  setable: boolean;
-}
+export type PreapplyParams = OperationObject[];
+export type PreapplyResponse = {
+  contents: OperationContentsAndResult[];
+};
+
+export type EntrypointsResponse = EntrypointsResponse004 | EntrypointsResponse005;
+
+export type ForgeOperationsParams = Pick<OperationObject, 'branch' | 'contents'>;

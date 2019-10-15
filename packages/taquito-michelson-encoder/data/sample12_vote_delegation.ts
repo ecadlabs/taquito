@@ -245,5 +245,5 @@ export const code = {
         }]
 }
 
-export const storage = code.code.find((x: any) => x.prim === 'storage');
-export const parameter = code.code.find((x: any) => x.prim === 'parameter');
+export const storage = code.code.find((x: any) => x.prim === 'storage') as any;
+export const parameter = code.code.find((x: any) => x.prim === 'parameter') as any;

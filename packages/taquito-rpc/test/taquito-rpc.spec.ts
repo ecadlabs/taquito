@@ -169,8 +169,8 @@ describe('RpcClient test', () => {
 
       expect(response).toEqual({
         balance: new BigNumber('5092341810457'),
-        frozenBalance: new BigNumber('2155290163074'),
-        frozenBalanceByCycle: [
+        frozen_balance: new BigNumber('2155290163074'),
+        frozen_balance_by_cycle: [
           {
             cycle: 135,
             deposit: new BigNumber('381760000000'),
@@ -184,14 +184,14 @@ describe('RpcClient test', () => {
             rewards: new BigNumber('12200333332'),
           },
         ],
-        stakingBalance: new BigNumber('20936607331513'),
-        delegatedContracts: [
+        staking_balance: new BigNumber('20936607331513'),
+        delegated_contracts: [
           'KT1VvXEpeBpreAVpfp4V8ZujqWu2gVykwXBJ',
           'KT1VsSxSXUkgw6zkBGgUuDXXuJs9ToPqkrCg',
         ],
-        delegatedBalance: new BigNumber('15908924646030'),
+        delegated_balance: new BigNumber('15908924646030'),
         deactivated: false,
-        gracePeriod: 146,
+        grace_period: 146,
       });
 
       done();
@@ -284,18 +284,18 @@ describe('RpcClient test', () => {
 
       expect(result).toEqual({
         protocol: 'Pt24m4xiPbLDhVgVfABUjirbmda3yohdN82Sp9FeuAXJ4eV9otd',
-        chainId: 'NetXdQprcVkpaWU',
+        chain_id: 'NetXdQprcVkpaWU',
         hash: 'BLjs6BSiYpwV5u6YpNHNSAqr1iuJRGDHXK3Qb6DH1ZkN8QbAitW',
         level: 596467,
         proto: 4,
         predecessor: 'BMYidfFK1tfryqoTRnAPLMonagy3f2goaw2QBpGsHF8YySQe8tU',
         timestamp: '2019-09-06T15:08:29Z',
-        validationPass: 4,
-        operationsHash: 'LLoaq9gTDXXLgKZGd6af1iwnfmmQXkJJnGn6WS6XhE7kh5AsdmFER',
+        validation_pass: 4,
+        operations_hash: 'LLoaq9gTDXXLgKZGd6af1iwnfmmQXkJJnGn6WS6XhE7kh5AsdmFER',
         fitness: ['00', '00000000011f6a7c'],
         context: 'CoWNJGqDcKWeQaiRZoo5akYwXrQBGtWAncgV9QnF16yUpAM47T5F',
         priority: 0,
-        proofOfWorkNonce: '000000036e2c8c91',
+        proof_of_work_nonce: '000000036e2c8c91',
         signature:
           'siguGHqTYQjaDMjZgDQjAXG9Fc8HnqCJceVJMUCHRbSFoJJCx3Lz9VpBy53nat4W4T1CvbzPJKKgq2YfFAGXeaXcQLbN4CFz',
       });
@@ -371,38 +371,38 @@ describe('RpcClient test', () => {
 
       expect(result).toEqual({
         protocol: 'Pt24m4xiPbLDhVgVfABUjirbmda3yohdN82Sp9FeuAXJ4eV9otd',
-        nextProtocol: 'Pt24m4xiPbLDhVgVfABUjirbmda3yohdN82Sp9FeuAXJ4eV9otd',
-        testChainStatus: {
+        next_protocol: 'Pt24m4xiPbLDhVgVfABUjirbmda3yohdN82Sp9FeuAXJ4eV9otd',
+        test_chain_status: {
           status: 'running',
-          chainId: 'NetXpqTM3MbtXCx',
+          chain_id: 'NetXpqTM3MbtXCx',
           genesis: 'BMRaLy3WBWJTdWVjosVGyYi2z4rnGxZfxqPt1RW1QMZuKUnkBuJ',
           protocol: 'PsBABY5HQTSkA4297zNHfsZNKtxULfL18y95qb3m53QJiXGmrbU',
           expiration: '2019-09-24T12:01:51Z',
         },
-        maxOperationsTtl: 60,
-        maxOperationDataLength: 16384,
-        maxBlockHeaderLength: 238,
-        maxOperationListLength: [
-          { maxSize: 32768, maxOp: 32 },
-          { maxSize: 32768 },
-          { maxSize: 135168, maxOp: 132 },
-          { maxSize: 524288 },
+        max_operations_ttl: 60,
+        max_operation_data_length: 16384,
+        max_block_header_length: 238,
+        max_operation_list_length: [
+          { max_size: 32768, max_op: 32 },
+          { max_size: 32768 },
+          { max_size: 135168, max_op: 132 },
+          { max_size: 524288 },
         ],
         baker: 'tz1Lhf4J9Qxoe3DZ2nfe8FGDnvVj7oKjnMY6',
         level: {
           level: 596469,
-          levelPosition: 596468,
+          level_position: 596468,
           cycle: 145,
-          cyclePosition: 2548,
-          votingPeriod: 18,
-          votingPeriodPosition: 6644,
-          expectedCommitment: false,
+          cycle_position: 2548,
+          voting_period: 18,
+          voting_period_position: 6644,
+          expected_commitment: false,
         },
-        votingPeriodKind: 'testing',
-        nonceHash: null,
-        consumedGas: '10200',
+        voting_period_kind: 'testing',
+        nonce_hash: null,
+        consumed_gas: '10200',
         deactivated: [],
-        balanceUpdates: [
+        balance_updates: [
           {
             kind: 'contract',
             contract: 'tz1Lhf4J9Qxoe3DZ2nfe8FGDnvVj7oKjnMY6',
@@ -466,8 +466,8 @@ describe('RpcClient test', () => {
         method: 'GET',
         url: 'root/chains/test/blocks/head/context/constants',
       });
-      expect(response.blockSecurityDeposit).toBeInstanceOf(BigNumber);
-      expect(response.blockSecurityDeposit.toString()).toEqual('128000000');
+      expect(response.block_security_deposit).toBeInstanceOf(BigNumber);
+      expect(response.block_security_deposit.toString()).toEqual('128000000');
 
       done();
     });
@@ -608,7 +608,7 @@ describe('RpcClient test', () => {
       });
       const endorsement = response.operations[0][0]
         .contents[0] as OperationContentsAndResultEndorsement;
-      expect(endorsement.metadata.balanceUpdates[0].kind).toEqual('contract');
+      expect(endorsement.metadata.balance_updates[0].kind).toEqual('contract');
 
       done();
     });
@@ -646,7 +646,7 @@ describe('RpcClient test', () => {
       });
 
       expect(result[0].delegate).toEqual('tz3VEZ4k6a4Wx42iyev6i2aVAptTRLEAivNN');
-      expect(result[0].estimatedTime).toEqual('2019-08-02T09:48:56Z');
+      expect(result[0].estimated_time).toEqual('2019-08-02T09:48:56Z');
       done();
     });
   });
@@ -688,7 +688,7 @@ describe('RpcClient test', () => {
       });
 
       expect(result[1].delegate).toEqual('tz3VEZ4k6a4Wx42iyev6i2aVAptTRLEAivNN');
-      expect(result[1].estimatedTime).toEqual('2019-08-02T09:42:56Z');
+      expect(result[1].estimated_time).toEqual('2019-08-02T09:42:56Z');
       expect(result[1].slots.length).toEqual(3);
       done();
     });
@@ -876,6 +876,19 @@ describe('RpcClient test', () => {
     });
   });
 
+  describe('getEntrypoints', () => {
+    it('query the right url and data', async done => {
+      httpBackend.createRequest.mockReturnValue({ entrypoints: {} });
+      const response = await client.getEntrypoints('test');
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/context/contracts/test/entrypoints',
+      });
+      expect(response).toEqual({ entrypoints: {} });
+      done();
+    });
+  });
   describe('runOperation', () => {
     it('query the right url and data', async done => {
       const testData = {};

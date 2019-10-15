@@ -1,9 +1,83 @@
+import { BlockResponse, OperationContentsAndResult, OperationResultStatusEnum } from '@taquito/rpc';
+import { defer, from, ReplaySubject, timer } from 'rxjs';
+import { filter, first, map, mapTo, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { Context } from '../context';
+import { ForgedBytes } from './types';
+
+interface PollingConfig {
+  timeout: number;
+  interval: number;
+}
 
 /**
  * @description Utility class to interact with Tezos operations
  */
 export class Operation {
+  private _pollingConfig$ = new ReplaySubject<PollingConfig>(1);
+
+  private _currentHeadPromise: Promise<BlockResponse> | undefined = undefined;
+
+  // Caching the current head for one second
+  private currentHead$ = defer(() => {
+    if (!this._currentHeadPromise) {
+      this._currentHeadPromise = this.context.rpc.getBlock();
+      timer(1000)
+        .pipe(first())
+        .subscribe(() => {
+          this._currentHeadPromise = undefined;
+        });
+    }
+    return from(this._currentHeadPromise);
+  });
+
+  // Polling observable that emit until timeout is reached
+  private polling$ = defer(() =>
+    this._pollingConfig$.pipe(
+      tap(({ timeout, interval }) => {
+        if (timeout <= 0) {
+          throw new Error('Timeout must be more than 0');
+        }
+
+        if (interval <= 0) {
+          throw new Error('Interval must be more than 0');
+        }
+      }),
+      map(config => ({
+        ...config,
+        timeoutAt: Math.ceil(config.timeout / config.interval) + 1,
+        count: 0,
+      })),
+      switchMap(config => timer(0, config.interval * 1000).pipe(mapTo(config))),
+      tap(config => {
+        config.count++;
+        if (config.count > config.timeoutAt) {
+          throw new Error(`Confirmation polling timed out`);
+        }
+      })
+    )
+  );
+
+  // Observable that emit once operation is seen in a block
+  private confirmed$ = this.polling$.pipe(
+    switchMap(() => this.currentHead$),
+    map(head => {
+      for (let i = 3; i >= 0; i--) {
+        head.operations[i].forEach(op => {
+          if (op.hash === this.hash) {
+            this._foundAt = head.header.level;
+          }
+        });
+      }
+
+      if (head.header.level - this._foundAt >= 0) {
+        return this._foundAt;
+      }
+    }),
+    filter(x => x !== undefined),
+    first(),
+    shareReplay()
+  );
+
   protected _foundAt = Number.POSITIVE_INFINITY;
   get includedInBlock() {
     return this._foundAt;
@@ -16,12 +90,23 @@ export class Operation {
    */
   constructor(
     public readonly hash: string,
-    public readonly raw: {},
-    public readonly results: any,
+    public readonly raw: ForgedBytes,
+    public readonly results: OperationContentsAndResult[],
     protected readonly context: Context
   ) {
-    // tslint:disable-next-line: no-floating-promises
-    this.confirmation();
+    this.confirmed$.pipe(first()).subscribe();
+  }
+
+  public get status() {
+    return (
+      this.results.map(result => {
+        if (result.metadata && result.metadata.operation_result) {
+          return result.metadata.operation_result.status as OperationResultStatusEnum;
+        } else {
+          return 'unknown';
+        }
+      })[0] || 'unknown'
+    );
   }
 
   /**
@@ -30,41 +115,30 @@ export class Operation {
    * @param interval [10] Polling interval
    * @param timeout [180] Timeout
    */
-  confirmation(confirmations: number = 0, interval: number = 10, timeout: number = 180) {
-    if (timeout <= 0) {
-      throw new Error('Timeout must be more than 0');
-    }
+  confirmation(confirmations?: number, interval?: number, timeout?: number) {
+    const {
+      defaultConfirmationCount,
+      confirmationPollingIntervalSecond,
+      confirmationPollingTimeoutSecond,
+    } = this.context.config;
+    this._pollingConfig$.next({
+      interval: interval || confirmationPollingIntervalSecond,
+      timeout: timeout || confirmationPollingTimeoutSecond,
+    } as Required<PollingConfig>);
 
-    if (interval <= 0) {
-      throw new Error('Interval must be more than 0');
-    }
+    const conf = confirmations !== undefined ? confirmations : defaultConfirmationCount;
 
-    const timeoutAt = Math.ceil(timeout / interval) + 1;
-    let count = 0;
-
-    return new Promise((resolve, reject) => {
-      const repeater = async () => {
-        const head = await this.context.rpc.getBlock();
-        count++;
-
-        for (let i = 3; i >= 0; i--) {
-          head.operations[i].forEach(op => {
-            if (op.hash === this.hash) {
-              this._foundAt = head.header.level;
-            }
-          });
-        }
-
-        if (head.header.level - this._foundAt >= confirmations) {
-          resolve(this._foundAt);
-        } else if (count >= timeoutAt) {
-          reject(new Error('Timeout'));
-        } else {
-          setTimeout(repeater, interval * 1000);
-        }
-      };
-      // tslint:disable-next-line: no-floating-promises
-      repeater();
+    return new Promise<number>((resolve, reject) => {
+      this.confirmed$
+        .pipe(
+          switchMap(() => this.polling$),
+          switchMap(() => this.currentHead$),
+          filter(head => head.header.level - this._foundAt >= conf),
+          first()
+        )
+        .subscribe(_ => {
+          resolve(this._foundAt + conf);
+        }, reject);
     });
   }
 }

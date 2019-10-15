@@ -1,26 +1,29 @@
 import { IndexerClient } from '@taquito/indexer';
 import { RpcClient } from '@taquito/rpc';
 import { InMemorySigner } from '@taquito/signer';
-
+import { Protocols } from './constants';
+import { Context, Config } from './context';
 import { ContractProvider, EstimationProvider } from './contract/interface';
 import { RpcContractProvider } from './contract/rpc-contract-provider';
+import { RPCEstimateProvider } from './contract/rpc-estimate-provider';
+import { format } from './format';
 import { IndexerProvider } from './query/indexer-provider';
 import { QueryProvider } from './query/interface';
+import { Signer } from './signer/interface';
+import { NoopSigner } from './signer/noop';
 import { SubscribeProvider } from './subscribe/interface';
 import { PollingSubscribeProvider } from './subscribe/polling-provider';
 import { TzProvider } from './tz/interface';
 import { RpcTzProvider } from './tz/rpc-tz-provider';
-import { format } from './format';
-import { Signer } from './signer/interface';
-import { Context } from './context';
-import { NoopSigner } from './signer/noop';
-import { RPCEstimateProvider } from './contract/rpc-estimate-provider';
+
 export { SubscribeProvider } from './subscribe/interface';
 export interface SetProviderOptions {
   rpc?: string | RpcClient;
   indexer?: string | IndexerClient;
   stream?: string | SubscribeProvider;
   signer?: Signer;
+  protocol?: Protocols;
+  config?: Config;
 }
 
 /**
@@ -49,11 +52,14 @@ export class TezosToolkit {
    *
    * @param options rpc url or rpcClient to use to interact with the Tezos network and indexer url to use to interact with the Tezos network
    */
-  setProvider({ rpc, indexer, stream, signer }: SetProviderOptions) {
+  setProvider({ rpc, indexer, stream, signer, protocol, config }: SetProviderOptions) {
     this.setRpcProvider(rpc);
     this.setIndexerProvider(indexer);
     this.setStreamProvider(stream);
     this.setSignerProvider(signer);
+
+    this._context.proto = protocol;
+    this._context.config = config as Required<Config>;
   }
 
   private setSignerProvider(signer: SetProviderOptions['signer']) {
@@ -71,7 +77,7 @@ export class TezosToolkit {
       this._rpcClient = new RpcClient(rpc);
     } else if (rpc instanceof RpcClient) {
       this._rpcClient = rpc;
-    } else {
+    } else if (this._options.rpc === undefined) {
       this._rpcClient = new RpcClient();
     }
     this._options.rpc = rpc;
@@ -83,7 +89,7 @@ export class TezosToolkit {
       this._indexerClient = new IndexerClient(indexer);
     } else if (indexer instanceof IndexerClient) {
       this._indexerClient = indexer;
-    } else {
+    } else if (this._options.indexer === undefined) {
       this._indexerClient = new IndexerClient();
     }
 
@@ -96,7 +102,7 @@ export class TezosToolkit {
       this._stream = new PollingSubscribeProvider(new Context(new RpcClient(stream)));
     } else if (typeof stream !== 'undefined') {
       this._stream = stream;
-    } else {
+    } else if (this._options.stream === undefined) {
       this._stream = new PollingSubscribeProvider(this._context);
     }
     this._options.stream = stream;

@@ -2,8 +2,19 @@ import { OperationEmitter } from '../operations/operation-emitter';
 import { OriginateParams, TransferParams } from '../operations/types';
 import { createOriginationOperation, createTransferOperation } from './prepare';
 import { Estimate } from './estimate';
-import { DEFAULT_STORAGE_LIMIT } from '../constants';
+import { DEFAULT_STORAGE_LIMIT, protocols, DEFAULT_GAS_LIMIT } from '../constants';
 import { EstimationProvider } from './interface';
+import {
+  RPCRunOperationParam,
+  OperationContentsAndResult,
+  PreapplyResponse,
+  OperationResultOrigination,
+  OperationContentsAndResultOrigination,
+  OperationContentsAndResultTransaction,
+  OperationResultTransaction,
+  InternalOperationResult,
+  InternalOperationResultEnum,
+} from '@taquito/rpc';
 
 // RPC require a signature but do not verify it
 const SIGNATURE_STUB =
@@ -17,10 +28,19 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     gasLimit: 800000,
   };
 
-  private getOperationResult(opResponse: any, kind: 'origination' | 'transaction') {
+  private getOperationResult(
+    opResponse: PreapplyResponse,
+    kind: 'origination' | 'transaction'
+  ): (OperationResultTransaction | OperationResultOrigination)[] {
     const results = opResponse.contents;
     const originationOp = Array.isArray(results) && results.find(op => op.kind === kind);
-    return originationOp && originationOp.metadata && originationOp.metadata.operation_result;
+    const opResult =
+      originationOp && originationOp.metadata && originationOp.metadata.operation_result;
+    const internalResult =
+      originationOp && originationOp.metadata && originationOp.metadata.internal_operation_results;
+    return [opResult, ...(internalResult || []).map(({ result }: any) => result)].filter(
+      (x: any) => !!x
+    );
   }
 
   /**
@@ -44,14 +64,25 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
       opbytes,
       opOb: { branch, contents },
     } = await this.prepareAndForge({ operation: op, source: pkh });
-    const { opResponse } = await this.simulate({ branch, contents, signature: SIGNATURE_STUB });
+
+    let operation: RPCRunOperationParam = { branch, contents, signature: SIGNATURE_STUB };
+    if (await this.context.isAnyProtocolActive(protocols['005'])) {
+      operation = { operation, chain_id: await this.rpc.getChainId() };
+    }
+
+    const { opResponse } = await this.simulate(operation);
     const operationResults = this.getOperationResult(opResponse, 'origination');
-    const consumedGas = operationResults && operationResults.consumed_gas;
-    const storageDiff = operationResults && operationResults.paid_storage_size_diff;
+
+    let totalGas = 0;
+    let totalStorage = 0;
+    operationResults.forEach(result => {
+      totalGas += Number(result.consumed_gas) || 0;
+      totalStorage += Number(result.paid_storage_size_diff) || 0;
+    });
 
     return new Estimate(
-      consumedGas,
-      Number(storageDiff) + DEFAULT_STORAGE_LIMIT.ORIGINATION,
+      totalGas || 0,
+      Number(totalStorage || 0) + DEFAULT_STORAGE_LIMIT.ORIGINATION,
       opbytes.length / 2
     );
   }
@@ -73,15 +104,24 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
       opbytes,
       opOb: { branch, contents },
     } = await this.prepareAndForge({ operation: op, source: pkh });
-    const { opResponse } = await this.simulate({ branch, contents, signature: SIGNATURE_STUB });
+
+    let operation: RPCRunOperationParam = { branch, contents, signature: SIGNATURE_STUB };
+    if (await this.context.isAnyProtocolActive(protocols['005'])) {
+      operation = { operation, chain_id: await this.rpc.getChainId() };
+    }
+
+    const { opResponse } = await this.simulate(operation);
     const operationResults = this.getOperationResult(opResponse, 'transaction');
 
-    const consumedGas = operationResults && operationResults.consumed_gas;
-    const storageDiff = operationResults && operationResults.paid_storage_size_diff;
-
+    let totalGas = 0;
+    let totalStorage = 0;
+    operationResults.forEach(result => {
+      totalGas += Number(result.consumed_gas) || 0;
+      totalStorage += Number(result.paid_storage_size_diff) || 0;
+    });
     return new Estimate(
-      consumedGas,
-      Number(storageDiff) + DEFAULT_STORAGE_LIMIT.TRANSFER,
+      totalGas || 0,
+      Number(totalStorage || 0) + DEFAULT_STORAGE_LIMIT.TRANSFER,
       opbytes.length / 2
     );
   }

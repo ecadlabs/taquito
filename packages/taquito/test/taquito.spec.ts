@@ -1,7 +1,11 @@
-import { TezosToolkit } from '../src/taquito';
+import { TezosToolkit, SetProviderOptions } from '../src/taquito';
 import { RpcTzProvider } from '../src/tz/rpc-tz-provider';
 import { RpcContractProvider } from '../src/contract/rpc-contract-provider';
 import { InMemorySigner } from '@taquito/signer';
+import { PollingSubscribeProvider } from '../src/subscribe/polling-provider';
+import { IndexerProvider } from '../src/query/indexer-provider';
+import { NoopSigner } from '../src/signer/noop';
+import { RpcClient } from '@taquito/rpc';
 
 describe('TezosToolkit test', () => {
   let mockRpcClient: any;
@@ -25,7 +29,7 @@ describe('TezosToolkit test', () => {
     mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
     mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
     mockRpcClient.preapplyOperations.mockResolvedValue([]);
-    mockRpcClient.getBlockMetadata.mockResolvedValue({ nextProtocol: 'test_proto' });
+    mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
 
     // Required for operations confirmation polling
     mockRpcClient.getBlock.mockResolvedValue({
@@ -45,6 +49,66 @@ describe('TezosToolkit test', () => {
     expect(toolkit.tz).toBeInstanceOf(RpcTzProvider);
     expect(toolkit.contract).toBeInstanceOf(RpcContractProvider);
   });
+
+  const providerKey: (keyof SetProviderOptions)[] = [
+    'signer',
+    'indexer',
+    'rpc',
+    'stream',
+    'protocol',
+    'config',
+  ];
+  providerKey
+    .filter(x => x !== 'rpc')
+    .forEach(key => {
+      it(`setting ${key} provider should not override the rpc provider`, () => {
+        toolkit = new TezosToolkit();
+        expect(toolkit.rpc).toBeInstanceOf(RpcClient);
+        toolkit.setProvider({ rpc: 'test' });
+        expect(toolkit.rpc['url']).toEqual('test');
+        toolkit.setProvider({ [key]: 'test' as any });
+        expect(toolkit.rpc['url']).toEqual('test');
+      });
+    });
+
+  providerKey
+    .filter(x => x !== 'indexer')
+    .forEach(key => {
+      it(`setting ${key} provider should not override the indexer provider`, () => {
+        expect(toolkit.query).toBeInstanceOf(IndexerProvider);
+        toolkit.setProvider({ indexer: 'test' });
+        const instance = toolkit.query;
+        expect(instance).toBeInstanceOf(IndexerProvider);
+        toolkit.setProvider({ [key]: 'test' as any });
+        expect(toolkit.query).toEqual(instance);
+      });
+    });
+
+  providerKey
+    .filter(x => x !== 'signer')
+    .forEach(key => {
+      it(`setting ${key} provider should not override the signer provider`, () => {
+        expect(toolkit.signer).toBeInstanceOf(NoopSigner);
+        toolkit.setProvider({ signer: 'test' as any });
+        const instance = toolkit.signer;
+        expect(instance).toEqual('test');
+        toolkit.setProvider({ [key]: 'test' as any });
+        expect(toolkit.signer).toEqual(instance);
+      });
+    });
+
+  providerKey
+    .filter(x => x !== 'stream')
+    .forEach(key => {
+      it(`setting ${key} provider should not override the stream provider`, () => {
+        expect(toolkit.stream).toBeInstanceOf(PollingSubscribeProvider);
+        toolkit.setProvider({ stream: 'test' as any });
+        const instance = toolkit.stream;
+        expect(instance).toBeInstanceOf(PollingSubscribeProvider);
+        toolkit.setProvider({ [key]: 'test' as any });
+        expect(toolkit.stream).toEqual(instance);
+      });
+    });
 
   it('should use InMemorySigner when importKey is called', async done => {
     expect(toolkit.signer).toEqual({});

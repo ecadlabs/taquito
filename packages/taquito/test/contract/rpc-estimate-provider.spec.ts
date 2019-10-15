@@ -61,7 +61,7 @@ describe('RPCEstimateProvider test', () => {
     mockRpcClient.getManagerKey.mockResolvedValue('test');
     mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
     mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
-    mockRpcClient.getBlockMetadata.mockResolvedValue({ nextProtocol: 'test_proto' });
+    mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
     mockRpcClient.forgeOperations.mockResolvedValue('1234');
     mockRpcClient.preapplyOperations.mockResolvedValue([]);
 

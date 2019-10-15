@@ -1,39 +1,43 @@
 import { HttpBackend } from '@taquito/http-utils';
-import { camelCaseProps, castToBigNumber } from './utils/utils';
-
-export * from './types';
-
+import BigNumber from 'bignumber.js';
 import {
-  BalanceResponse,
-  StorageResponse,
-  ScriptResponse,
-  ContractResponse,
-  BigMapKey,
-  BigMapGetResponse,
-  ManagerResponse,
-  DelegateResponse,
-  DelegatesResponse,
-  RawDelegatesResponse,
-  ConstantsResponse,
-  BlockResponse,
-  BlockMetadata,
-  BlockFullHeader,
-  OperationContents,
-  OperationObject,
-  OperationContentsAndResultMetadata,
   BakingRightsQueryArguments,
   BakingRightsResponse,
+  BalanceResponse,
   BallotListResponse,
   BallotsResponse,
-  PeriodKindResponse,
+  BigMapGetResponse,
+  BigMapKey,
+  BlockHeaderResponse,
+  BlockMetadata,
+  BlockResponse,
+  ConstantsResponse,
+  ContractResponse,
   CurrentProposalResponse,
   CurrentQuorumResponse,
-  VotesListingsResponse,
-  ProposalsResponse,
+  DelegateResponse,
+  DelegatesResponse,
   EndorsingRightsQueryArguments,
   EndorsingRightsResponse,
+  EntrypointsResponse,
+  ForgeOperationsParams,
+  ManagerKeyResponse,
+  ManagerResponse,
+  OperationHash,
+  PeriodKindResponse,
+  PreapplyParams,
+  PreapplyResponse,
+  ProposalsResponse,
+  RawBlockHeaderResponse,
+  RPCRunOperationParam,
+  ScriptResponse,
+  StorageResponse,
+  VotesListingsResponse,
 } from './types';
-import BigNumber from 'bignumber.js';
+import { castToBigNumber } from './utils/utils';
+
+export * from './types';
+export * from './types.common';
 
 const defaultRPC = 'https://tezrpc.me';
 const defaultChain = 'main';
@@ -61,7 +65,7 @@ export class RpcClient {
     private url: string = defaultRPC,
     private chain: string = defaultChain,
     private httpBackend: HttpBackend = new HttpBackend()
-  ) {}
+  ) { }
 
   /**
    *
@@ -165,6 +169,8 @@ export class RpcClient {
    * @param address contract address from which we want to retrieve the manager
    * @param options contains generic configuration for rpc calls
    *
+   * @deprecated Remove in 005
+   *
    * @description Access the manager of a contract.
    *
    * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-contracts-contract-id-manager
@@ -191,8 +197,8 @@ export class RpcClient {
   async getManagerKey(
     address: string,
     { block }: { block: string } = defaultRPCOptions
-  ): Promise<ManagerResponse> {
-    return this.httpBackend.createRequest<ManagerResponse>({
+  ): Promise<ManagerKeyResponse> {
+    return this.httpBackend.createRequest<ManagerKeyResponse>({
       url: `${this.url}/chains/${this.chain}/blocks/${block}/context/contracts/${address}/manager_key`,
       method: 'GET',
     });
@@ -253,7 +259,7 @@ export class RpcClient {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<DelegatesResponse> {
-    const response = await this.httpBackend.createRequest<RawDelegatesResponse>({
+    const response = await this.httpBackend.createRequest<DelegatesResponse>({
       url: `${this.url}/chains/${this.chain}/blocks/${block}/context/delegates/${address}`,
       method: 'GET',
     });
@@ -261,8 +267,8 @@ export class RpcClient {
     return {
       deactivated: response.deactivated,
       balance: new BigNumber(response.balance),
-      frozenBalance: new BigNumber(response.frozen_balance),
-      frozenBalanceByCycle: response.frozen_balance_by_cycle.map(
+      frozen_balance: new BigNumber(response.frozen_balance),
+      frozen_balance_by_cycle: response.frozen_balance_by_cycle.map(
         ({ deposit, fees, rewards, ...rest }) => ({
           ...rest,
           deposit: new BigNumber(deposit),
@@ -270,10 +276,10 @@ export class RpcClient {
           rewards: new BigNumber(rewards),
         })
       ),
-      stakingBalance: new BigNumber(response.staking_balance),
-      delegatedContracts: response.delegated_contracts,
-      delegatedBalance: new BigNumber(response.delegated_balance),
-      gracePeriod: response.grace_period,
+      staking_balance: new BigNumber(response.staking_balance),
+      delegated_contracts: response.delegated_contracts,
+      delegated_balance: new BigNumber(response.delegated_balance),
+      grace_period: response.grace_period,
     };
   }
 
@@ -291,23 +297,22 @@ export class RpcClient {
       method: 'GET',
     });
 
-    const convResponse: any = camelCaseProps(response);
-    const castedResponse: any = castToBigNumber(convResponse, [
-      'timeBetweenBlocks',
-      'hardGasLimitPerOperation',
-      'hardGasLimitPerBlock',
-      'proofOfWorkThreshold',
-      'tokensPerRoll',
-      'blockSecurityDeposit',
-      'endorsementSecurityDeposit',
-      'blockReward',
-      'endorsementReward',
-      'costPerByte',
-      'hardStorageLimitPerOperation',
+    const castedResponse: any = castToBigNumber(response, [
+      'time_between_blocks',
+      'hard_gas_limit_per_operation',
+      'hard_gas_limit_per_block',
+      'proof_of_work_threshold',
+      'tokens_per_roll',
+      'block_security_deposit',
+      'endorsement_security_deposit',
+      'block_reward',
+      'endorsement_reward',
+      'cost_per_byte',
+      'hard_storage_limit_per_operation',
     ]);
 
     return {
-      ...(convResponse as ConstantsResponse),
+      ...response,
       ...(castedResponse as ConstantsResponse),
     };
   }
@@ -326,11 +331,7 @@ export class RpcClient {
       method: 'GET',
     });
 
-    const convResponse: any = camelCaseProps(response);
-
-    return {
-      ...(convResponse as BlockResponse),
-    };
+    return response;
   }
 
   /**
@@ -341,17 +342,13 @@ export class RpcClient {
    *
    * @see https://tezos.gitlab.io/tezos/api/rpc.html#get-block-id-header
    */
-  async getBlockHeader({ block }: RPCOptions = defaultRPCOptions): Promise<BlockFullHeader> {
-    const response = await this.httpBackend.createRequest<BlockFullHeader>({
+  async getBlockHeader({ block }: RPCOptions = defaultRPCOptions): Promise<BlockHeaderResponse> {
+    const response = await this.httpBackend.createRequest<RawBlockHeaderResponse>({
       url: `${this.url}/chains/${this.chain}/blocks/${block}/header`,
       method: 'GET',
     });
 
-    const convResponse: any = camelCaseProps(response);
-
-    return {
-      ...convResponse,
-    };
+    return response;
   }
 
   /**
@@ -368,11 +365,7 @@ export class RpcClient {
       method: 'GET',
     });
 
-    const convResponse: any = camelCaseProps(response);
-
-    return {
-      ...convResponse,
-    };
+    return response;
   }
 
   /**
@@ -394,11 +387,7 @@ export class RpcClient {
       query: args,
     });
 
-    const convResponse: any = camelCaseProps(response);
-
-    return {
-      ...convResponse,
-    };
+    return response;
   }
 
   /**
@@ -420,11 +409,7 @@ export class RpcClient {
       query: args,
     });
 
-    const convResponse: any = camelCaseProps(response);
-
-    return {
-      ...convResponse,
-    };
+    return response;
   }
 
   /**
@@ -563,7 +548,7 @@ export class RpcClient {
    * @see https://tezos.gitlab.io/tezos/api/rpc.html#post-block-id-helpers-forge-operations
    */
   async forgeOperations(
-    data: { branch: string; contents: any[] },
+    data: ForgeOperationsParams,
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<string> {
     return this.httpBackend.createRequest<string>(
@@ -583,7 +568,7 @@ export class RpcClient {
    *
    * @see https://tezos.gitlab.io/tezos/api/rpc.html#post-injection-operation
    */
-  async injectOperation(signedOpBytes: string): Promise<string> {
+  async injectOperation(signedOpBytes: string): Promise<OperationHash> {
     return this.httpBackend.createRequest<any>(
       {
         url: `${this.url}/injection/operation`,
@@ -603,10 +588,10 @@ export class RpcClient {
    * @see https://tezos.gitlab.io/tezos/api/rpc.html#post-block-id-helpers-preapply-operations
    */
   async preapplyOperations(
-    ops: OperationObject[],
+    ops: PreapplyParams,
     { block }: RPCOptions = defaultRPCOptions
-  ): Promise<any[]> {
-    const response = await this.httpBackend.createRequest<any>(
+  ): Promise<PreapplyResponse[]> {
+    const response = await this.httpBackend.createRequest<PreapplyResponse[]>(
       {
         url: `${this.url}/chains/${this.chain}/blocks/${block}/helpers/preapply/operations`,
         method: 'POST',
@@ -619,6 +604,28 @@ export class RpcClient {
 
   /**
    *
+   * @param contract address of the contract we want to get the entrypoints of
+   *
+   * @description Return the list of entrypoints of the contract
+   *
+   * @see http://tezos.gitlab.io/zeronet/api/rpc.html#get-block-id-context-contracts-contract-id-entrypoints
+   *
+   * @version 005_PsBABY5H
+   */
+  async getEntrypoints(
+    contract: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<EntrypointsResponse> {
+    const contractResponse = await this.httpBackend.createRequest<{
+      entrypoints: { [key: string]: Object };
+    }>({
+      url: `${this.url}/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/entrypoints`,
+      method: 'GET',
+    });
+
+    return contractResponse;
+  }
+  /**
    * @param op Operation to run
    * @param options contains generic configuration for rpc calls
    *
@@ -626,7 +633,10 @@ export class RpcClient {
    *
    * @see https://tezos.gitlab.io/mainnet/api/rpc.html#post-block-id-helpers-scripts-run-operation
    */
-  async runOperation(op: OperationObject, { block }: RPCOptions = defaultRPCOptions): Promise<any> {
+  async runOperation(
+    op: RPCRunOperationParam,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<PreapplyResponse> {
     const response = await this.httpBackend.createRequest<any>(
       {
         url: `${this.url}/chains/${this.chain}/blocks/${block}/helpers/scripts/run_operation`,
@@ -636,5 +646,12 @@ export class RpcClient {
     );
 
     return response;
+  }
+
+  async getChainId() {
+    return this.httpBackend.createRequest<string>({
+      url: `${this.url}/chains/${this.chain}/chain_id`,
+      method: 'GET',
+    });
   }
 }

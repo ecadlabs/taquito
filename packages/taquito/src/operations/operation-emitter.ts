@@ -1,7 +1,38 @@
-import { BlockResponse, RpcClient, OperationObject } from '@taquito/rpc';
-import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
+import {
+  BlockHeaderResponse,
+  BlockMetadata,
+  ConstructedOperation,
+  ManagerKeyResponse,
+  OperationContentsAndResult,
+  RpcClient,
+  RPCRunOperationParam,
+} from '@taquito/rpc';
+import {
+  DEFAULT_FEE,
+  DEFAULT_GAS_LIMIT,
+  DEFAULT_STORAGE_LIMIT,
+  protocols,
+  Protocols,
+} from '../constants';
 import { Context } from '../context';
-import { ForgedBytes, PrepareOperationParams, RPCOperation, RPCRevealOperation } from './types';
+import {
+  ForgedBytes,
+  PrepareOperationParams,
+  RPCDelegateOperation,
+  RPCOperation,
+  RPCOriginationOperation,
+  RPCRevealOperation,
+  RPCTransferOperation,
+} from './types';
+
+export interface PreparedOperation {
+  opOb: {
+    branch: string;
+    contents: ConstructedOperation[];
+    protocol: string;
+  };
+  counter: number;
+}
 
 export abstract class OperationEmitter {
   get rpc(): RpcClient {
@@ -14,13 +45,39 @@ export abstract class OperationEmitter {
 
   constructor(protected context: Context) {}
 
-  protected async prepareOperation({ operation, source }: PrepareOperationParams) {
+  private isSourceOp(
+    op: RPCOperation
+  ): op is (RPCTransferOperation | RPCOriginationOperation | RPCDelegateOperation) & {
+    source?: string;
+  } {
+    return ['transaction', 'origination', 'delegation'].includes(op.kind);
+  }
+
+  private isFeeOp(
+    op: RPCOperation
+  ): op is (
+    | RPCTransferOperation
+    | RPCOriginationOperation
+    | RPCDelegateOperation
+    | RPCRevealOperation) & { source?: string } {
+    return ['reveal', 'transaction', 'origination', 'delegation'].includes(op.kind);
+  }
+
+  protected async prepareOperation({
+    operation,
+    source,
+  }: PrepareOperationParams): Promise<PreparedOperation> {
     let counter;
     const counters: { [key: string]: number } = {};
-    const promises: any[] = [];
+    const promises: [
+      Promise<BlockHeaderResponse>,
+      Promise<BlockMetadata>,
+      Promise<string>,
+      Promise<ManagerKeyResponse | undefined>
+    ] = [] as any;
     let requiresReveal = false;
     let ops: RPCOperation[] = [];
-    let head: BlockResponse;
+    let head: BlockHeaderResponse;
 
     promises.push(this.rpc.getBlockHeader());
     promises.push(this.rpc.getBlockMetadata());
@@ -47,8 +104,8 @@ export abstract class OperationEmitter {
     head = header;
 
     if (requiresReveal) {
-      const managerKey = manager.key;
-      if (!managerKey) {
+      const haveManager = manager && typeof manager === 'object' ? !!manager.key : !!manager;
+      if (!haveManager) {
         const reveal: RPCRevealOperation = {
           kind: 'reveal',
           fee: DEFAULT_FEE.REVEAL,
@@ -67,16 +124,18 @@ export abstract class OperationEmitter {
       counters[publicKeyHash] = counter;
     }
 
-    const constructOps = (cOps: RPCOperation[]) =>
-      cOps.map((op: any) => {
-        // @ts-ignore
-        const constructedOp = { ...op };
-        if (['transaction', 'origination', 'delegation'].includes(op.kind)) {
+    const proto005 = await this.context.isAnyProtocolActive(protocols['005']);
+
+    const constructOps = (cOps: RPCOperation[]): ConstructedOperation[] =>
+      // tslint:disable strict-type-predicates
+      cOps.map((op: RPCOperation) => {
+        const constructedOp = { ...op } as ConstructedOperation;
+        if (this.isSourceOp(op)) {
           if (typeof op.source === 'undefined') {
             constructedOp.source = publicKeyHash;
           }
         }
-        if (['reveal', 'transaction', 'origination', 'delegation'].includes(op.kind)) {
+        if (this.isFeeOp(op)) {
           if (typeof op.fee === 'undefined') {
             constructedOp.fee = '0';
           } else {
@@ -92,21 +151,35 @@ export abstract class OperationEmitter {
           } else {
             constructedOp.storage_limit = `${op.storage_limit}`;
           }
-          if (typeof op.balance !== 'undefined') {
-            constructedOp.balance = `${constructedOp.balance}`;
-          }
-          if (typeof op.amount !== 'undefined') {
-            constructedOp.amount = `${constructedOp.amount}`;
-          }
           const opCounter = ++counters[publicKeyHash];
           constructedOp.counter = `${opCounter}`;
         }
+        if (op.kind === 'origination') {
+          if (typeof op.balance !== 'undefined') constructedOp.balance = `${constructedOp.balance}`;
+        }
+
+        if (op.kind === 'transaction') {
+          if (proto005 && constructedOp.source.toLowerCase().startsWith('kt1')) {
+            throw new Error(`KT1 addresses are not supported as source in ${Protocols.PsBabyM1}`);
+          }
+
+          if (typeof op.amount !== 'undefined') constructedOp.amount = `${constructedOp.amount}`;
+        }
+        // tslint:enable strict-type-predicates
+
+        // Protocol 005 remove these from operations content
+        if (proto005) {
+          delete constructedOp.manager_pubkey;
+          delete constructedOp.spendable;
+          delete constructedOp.delegatable;
+        }
+
         return constructedOp;
       });
 
     const branch = head.hash;
     const contents = constructOps(ops);
-    const protocol = metadata.nextProtocol;
+    const protocol = metadata.next_protocol;
 
     return {
       opOb: {
@@ -123,7 +196,7 @@ export abstract class OperationEmitter {
     return this.forge(prepared);
   }
 
-  protected async forge({ opOb: { branch, contents, protocol }, counter }: any) {
+  protected async forge({ opOb: { branch, contents, protocol }, counter }: PreparedOperation) {
     let remoteForgedBytes = await this.rpc.forgeOperations({ branch, contents });
 
     return {
@@ -137,7 +210,7 @@ export abstract class OperationEmitter {
     };
   }
 
-  protected async simulate(op: OperationObject) {
+  protected async simulate(op: RPCRunOperationParam) {
     return {
       opResponse: await this.rpc.runOperation(op),
       op,
@@ -150,7 +223,7 @@ export abstract class OperationEmitter {
     forgedBytes.opbytes = signed.sbytes;
     forgedBytes.opOb.signature = signed.prefixSig;
 
-    const opResponse: any[] = [];
+    const opResponse: OperationContentsAndResult[] = [];
     let errors: any[] = [];
 
     const results = await this.rpc.preapplyOperations([forgedBytes.opOb]);

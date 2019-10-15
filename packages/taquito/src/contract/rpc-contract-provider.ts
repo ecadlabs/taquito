@@ -1,9 +1,7 @@
 import { Schema } from '@taquito/michelson-encoder';
 import { ScriptResponse } from '@taquito/rpc';
-import { sexp2mic } from '@taquito/utils';
-import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
+import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT, protocols } from '../constants';
 import { Context } from '../context';
-import { format } from '../format';
 import { OperationEmitter } from '../operations/operation-emitter';
 import { Operation } from '../operations/operations';
 import { OriginationOperation } from '../operations/origination-operation';
@@ -11,13 +9,12 @@ import {
   DelegateParams,
   OriginateParams,
   RPCDelegateOperation,
-  RPCTransferOperation,
   TransferParams,
 } from '../operations/types';
 import { Contract } from './contract';
+import { Estimate } from './estimate';
 import { ContractProvider, ContractSchema, EstimationProvider } from './interface';
 import { createOriginationOperation, createTransferOperation } from './prepare';
-import { Estimate } from './estimate';
 
 export class RpcContractProvider extends OperationEmitter implements ContractProvider {
   constructor(context: Context, private estimator: EstimationProvider) {
@@ -213,7 +210,14 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
   }
 
   async at(address: string): Promise<Contract> {
-    const script = await this.rpc.getScript(address);
-    return new Contract(address, script, this);
+    // We need to check if Proto5 is activated to pick the right smart contract abstraction
+    if (await this.context.isAnyProtocolActive(protocols['005'])) {
+      const script = await this.rpc.getScript(address);
+      const entrypoints = await this.rpc.getEntrypoints(address);
+      return new Contract(address, script, this, entrypoints);
+    } else {
+      const script = await this.rpc.getScript(address);
+      return new Contract(address, script, this);
+    }
   }
 }
