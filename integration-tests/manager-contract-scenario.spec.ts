@@ -36,4 +36,4 @@ CONFIGS.forEach(({ lib, rpc }) => {
             done();
         })
     })
-}
+});
