@@ -26,7 +26,7 @@ const siteConfig = {
 
   // For no header links in the top nav bar -> headerLinks: [],
   headerLinks: [
-    { doc: 'version', label: '4.1.0-beta.5' },
+    { doc: 'version', label: '5.0.1-beta.2' },
     { doc: 'quick_start', label: 'Docs' },
     { href: "https://twitter.com/TezosTaquito", label: 'Twitter' },
     { href: "https://github.com/ecadlabs/taquito", label: 'Github' },
