@@ -1,4 +1,4 @@
-import { BlockResponse, OperationContentsAndResult } from '@taquito/rpc';
+import { BlockResponse, OperationContentsAndResult, OperationResultStatusEnum } from '@taquito/rpc';
 import { defer, from, ReplaySubject, timer } from 'rxjs';
 import { filter, first, map, mapTo, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { Context } from '../context';
@@ -95,6 +95,18 @@ export class Operation {
     protected readonly context: Context
   ) {
     this.confirmed$.pipe(first()).subscribe();
+  }
+
+  public get status() {
+    return (
+      this.results.map(result => {
+        if (result.metadata && result.metadata.operation_result) {
+          return result.metadata.operation_result.status as OperationResultStatusEnum;
+        } else {
+          return 'unknown';
+        }
+      })[0] || 'unknown'
+    );
   }
 
   /**

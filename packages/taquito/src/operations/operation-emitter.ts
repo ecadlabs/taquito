@@ -7,7 +7,13 @@ import {
   RpcClient,
   RPCRunOperationParam,
 } from '@taquito/rpc';
-import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT, protocols } from '../constants';
+import {
+  DEFAULT_FEE,
+  DEFAULT_GAS_LIMIT,
+  DEFAULT_STORAGE_LIMIT,
+  protocols,
+  Protocols,
+} from '../constants';
 import { Context } from '../context';
 import {
   ForgedBytes,
@@ -153,6 +159,10 @@ export abstract class OperationEmitter {
         }
 
         if (op.kind === 'transaction') {
+          if (proto005 && constructedOp.source.toLowerCase().startsWith('kt1')) {
+            throw new Error(`KT1 addresses are not supported as source in ${Protocols.PsBabyM1}`);
+          }
+
           if (typeof op.amount !== 'undefined') constructedOp.amount = `${constructedOp.amount}`;
         }
         // tslint:enable strict-type-predicates

@@ -17,11 +17,11 @@ export class LambdaToken extends Token {
 
   public Encode(args: any[]): any {
     const val = args.pop();
-    return { string: val };
+    return val;
   }
 
   public EncodeObject(val: any): any {
-    return { string: val };
+    return val;
   }
 
   public ExtractSchema() {

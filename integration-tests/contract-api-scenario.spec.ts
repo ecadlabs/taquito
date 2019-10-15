@@ -23,7 +23,6 @@ CONFIGS.forEach(({ lib, rpc }) => {
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
       done();
     });
-
     it('Simple ligo origination scenario', async (done) => {
       const op = await Tezos.contract.originate({
         balance: "1",
@@ -34,6 +33,7 @@ CONFIGS.forEach(({ lib, rpc }) => {
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
       const contract = await op.contract();
+
       const storage: any = await contract.storage()
       expect(storage.toString()).toEqual("0")
       const opMethod = await contract.methods.main("2").send();
