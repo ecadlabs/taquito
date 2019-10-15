@@ -3,10 +3,10 @@
     "scripts": {
         "test": "jest --runInBand"
     },
-    "version": "5.0.1-beta.1",
+    "version": "5.0.1-beta.2",
     "dependencies": {
-        "@taquito/signer": "^5.0.1-beta.1",
-        "@taquito/taquito": "^5.0.1-beta.1"
+        "@taquito/signer": "^5.0.1-beta.2",
+        "@taquito/taquito": "^5.0.1-beta.2"
     },
     "private": true,
     "jest": {
