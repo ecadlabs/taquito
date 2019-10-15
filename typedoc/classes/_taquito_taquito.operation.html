@@ -115,6 +115,7 @@
 							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_taquito_taquito.operation.html#includedinblock" class="tsd-kind-icon">included<wbr>InBlock</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_taquito_taquito.operation.html#status" class="tsd-kind-icon">status</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -132,13 +133,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Operation<span class="tsd-signature-symbol">(</span>hash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, raw<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">__type</span>, results<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, context<span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.context.html" class="tsd-signature-type">Context</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.operation.html" class="tsd-signature-type">Operation</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Operation<span class="tsd-signature-symbol">(</span>hash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, raw<span class="tsd-signature-symbol">: </span><a href="../interfaces/_taquito_taquito.forgedbytes.html" class="tsd-signature-type">ForgedBytes</a>, results<span class="tsd-signature-symbol">: </span><a href="../modules/_taquito_rpc.html#operationcontentsandresult" class="tsd-signature-type">OperationContentsAndResult</a><span class="tsd-signature-symbol">[]</span>, context<span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.context.html" class="tsd-signature-type">Context</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.operation.html" class="tsd-signature-type">Operation</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/57323c7/packages/taquito/src/operations/operations.ts#L10">taquito/src/operations/operations.ts:10</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito/src/operations/operations.ts#L84">taquito/src/operations/operations.ts:84</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -154,7 +155,7 @@
 									</div>
 								</li>
 								<li>
-									<h5>raw: <span class="tsd-signature-type">__type</span></h5>
+									<h5>raw: <a href="../interfaces/_taquito_taquito.forgedbytes.html" class="tsd-signature-type">ForgedBytes</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<div class="lead">
 											<p>Raw operation that was injected</p>
@@ -162,7 +163,7 @@
 									</div>
 								</li>
 								<li>
-									<h5>results: <span class="tsd-signature-type">any</span></h5>
+									<h5>results: <a href="../modules/_taquito_rpc.html#operationcontentsandresult" class="tsd-signature-type">OperationContentsAndResult</a><span class="tsd-signature-symbol">[]</span></h5>
 								</li>
 								<li>
 									<h5>context: <a href="_taquito_taquito.context.html" class="tsd-signature-type">Context</a></h5>
@@ -186,7 +187,7 @@
 					<div class="tsd-signature tsd-kind-icon">_found<wbr>At<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;Number.POSITIVE_INFINITY</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/57323c7/packages/taquito/src/operations/operations.ts#L7">taquito/src/operations/operations.ts:7</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito/src/operations/operations.ts#L81">taquito/src/operations/operations.ts:81</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -196,7 +197,7 @@
 					<div class="tsd-signature tsd-kind-icon">context<span class="tsd-signature-symbol">:</span> <a href="_taquito_taquito.context.html" class="tsd-signature-type">Context</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/57323c7/packages/taquito/src/operations/operations.ts#L21">taquito/src/operations/operations.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito/src/operations/operations.ts#L95">taquito/src/operations/operations.ts:95</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -211,7 +212,7 @@
 					<div class="tsd-signature tsd-kind-icon">hash<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/57323c7/packages/taquito/src/operations/operations.ts#L18">taquito/src/operations/operations.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito/src/operations/operations.ts#L92">taquito/src/operations/operations.ts:92</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -223,10 +224,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="raw" class="tsd-anchor"></a>
 					<h3>raw</h3>
-					<div class="tsd-signature tsd-kind-icon">raw<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">__type</span></div>
+					<div class="tsd-signature tsd-kind-icon">raw<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_taquito_taquito.forgedbytes.html" class="tsd-signature-type">ForgedBytes</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/57323c7/packages/taquito/src/operations/operations.ts#L19">taquito/src/operations/operations.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito/src/operations/operations.ts#L93">taquito/src/operations/operations.ts:93</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -238,10 +239,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="results" class="tsd-anchor"></a>
 					<h3>results</h3>
-					<div class="tsd-signature tsd-kind-icon">results<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<div class="tsd-signature tsd-kind-icon">results<span class="tsd-signature-symbol">:</span> <a href="../modules/_taquito_rpc.html#operationcontentsandresult" class="tsd-signature-type">OperationContentsAndResult</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/57323c7/packages/taquito/src/operations/operations.ts#L20">taquito/src/operations/operations.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito/src/operations/operations.ts#L94">taquito/src/operations/operations.ts:94</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -258,10 +259,36 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/57323c7/packages/taquito/src/operations/operations.ts#L8">taquito/src/operations/operations.ts:8</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito/src/operations/operations.ts#L82">taquito/src/operations/operations.ts:82</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="status" class="tsd-anchor"></a>
+					<h3>status</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> status<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"applied"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"failed"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"skipped"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"backtracked"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"unknown"</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito/src/operations/operations.ts#L100">taquito/src/operations/operations.ts:100</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">"applied"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"failed"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"skipped"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"backtracked"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"unknown"</span>
+							</h4>
 						</li>
 					</ul>
 				</section>
@@ -272,13 +299,13 @@
 					<a name="confirmation" class="tsd-anchor"></a>
 					<h3>confirmation</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">confirmation<span class="tsd-signature-symbol">(</span>confirmations<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, interval<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, timeout<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">confirmation<span class="tsd-signature-symbol">(</span>confirmations<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span>, interval<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span>, timeout<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/57323c7/packages/taquito/src/operations/operations.ts#L33">taquito/src/operations/operations.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito/src/operations/operations.ts#L118">taquito/src/operations/operations.ts:118</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -286,25 +313,25 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> confirmations: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> confirmations: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Number of confirmation to wait for</p>
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> interval: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;10</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> interval: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Polling interval</p>
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> timeout: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;180</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> timeout: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Timeout</p>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -375,6 +402,9 @@
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="_taquito_taquito.operation.html#includedinblock" class="tsd-kind-icon">included<wbr>InBlock</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="_taquito_taquito.operation.html#status" class="tsd-kind-icon">status</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_taquito_taquito.operation.html#confirmation" class="tsd-kind-icon">confirmation</a>

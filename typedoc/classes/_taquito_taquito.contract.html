@@ -122,13 +122,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Contract<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, script<span class="tsd-signature-symbol">: </span><a href="../modules/_taquito_rpc.html#scriptresponse" class="tsd-signature-type">ScriptResponse</a>, provider<span class="tsd-signature-symbol">: </span><a href="../interfaces/_taquito_taquito.contractprovider.html" class="tsd-signature-type">ContractProvider</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.contract.html" class="tsd-signature-type">Contract</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Contract<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, script<span class="tsd-signature-symbol">: </span><a href="../modules/_taquito_rpc.html#scriptresponse" class="tsd-signature-type">ScriptResponse</a>, provider<span class="tsd-signature-symbol">: </span><a href="../interfaces/_taquito_taquito.contractprovider.html" class="tsd-signature-type">ContractProvider</a>, entrypoints<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.contract.html" class="tsd-signature-type">Contract</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/57323c7/packages/taquito/src/contract/contract.ts#L74">taquito/src/contract/contract.ts:74</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito/src/contract/contract.ts#L116">taquito/src/contract/contract.ts:116</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -141,6 +141,9 @@
 								</li>
 								<li>
 									<h5>provider: <a href="../interfaces/_taquito_taquito.contractprovider.html" class="tsd-signature-type">ContractProvider</a></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> entrypoints: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_taquito_taquito.contract.html" class="tsd-signature-type">Contract</a></h4>
@@ -156,7 +159,7 @@
 					<div class="tsd-signature tsd-kind-icon">address<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/57323c7/packages/taquito/src/contract/contract.ts#L77">taquito/src/contract/contract.ts:77</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito/src/contract/contract.ts#L119">taquito/src/contract/contract.ts:119</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -166,7 +169,7 @@
 					<div class="tsd-signature tsd-kind-icon">methods<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/57323c7/packages/taquito/src/contract/contract.ts#L70">taquito/src/contract/contract.ts:70</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito/src/contract/contract.ts#L112">taquito/src/contract/contract.ts:112</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -185,7 +188,7 @@
 								<ul class="tsd-parameters">
 									<li class="tsd-parameter-siganture">
 										<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
-											<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.contractmethod.html" class="tsd-signature-type">ContractMethod</a></li>
+											<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.contractmethod.html" class="tsd-signature-type">ContractMethod</a><span class="tsd-signature-symbol"> | </span><a href="_taquito_taquito.legacycontractmethod.html" class="tsd-signature-type">LegacyContractMethod</a></li>
 										</ul>
 										<ul class="tsd-descriptions">
 											<li class="tsd-description">
@@ -195,7 +198,10 @@
 														<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5>
 													</li>
 												</ul>
-												<h4 class="tsd-returns-title">Returns <a href="_taquito_taquito.contractmethod.html" class="tsd-signature-type">ContractMethod</a></h4>
+												<h4 class="tsd-returns-title">Returns <a href="_taquito_taquito.contractmethod.html" class="tsd-signature-type">ContractMethod</a>
+													<span class="tsd-signature-symbol"> | </span>
+													<a href="_taquito_taquito.legacycontractmethod.html" class="tsd-signature-type">LegacyContractMethod</a>
+												</h4>
 											</li>
 										</ul>
 									</li>
@@ -210,7 +216,7 @@
 					<div class="tsd-signature tsd-kind-icon">parameter<wbr>Schema<span class="tsd-signature-symbol">:</span> <a href="_taquito_michelson_encoder.parameterschema.html" class="tsd-signature-type">ParameterSchema</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/57323c7/packages/taquito/src/contract/contract.ts#L74">taquito/src/contract/contract.ts:74</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito/src/contract/contract.ts#L116">taquito/src/contract/contract.ts:116</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -220,7 +226,7 @@
 					<div class="tsd-signature tsd-kind-icon">schema<span class="tsd-signature-symbol">:</span> <a href="_taquito_michelson_encoder.schema.html" class="tsd-signature-type">Schema</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/57323c7/packages/taquito/src/contract/contract.ts#L72">taquito/src/contract/contract.ts:72</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito/src/contract/contract.ts#L114">taquito/src/contract/contract.ts:114</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -230,7 +236,7 @@
 					<div class="tsd-signature tsd-kind-icon">script<span class="tsd-signature-symbol">:</span> <a href="../modules/_taquito_rpc.html#scriptresponse" class="tsd-signature-type">ScriptResponse</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/57323c7/packages/taquito/src/contract/contract.ts#L78">taquito/src/contract/contract.ts:78</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito/src/contract/contract.ts#L120">taquito/src/contract/contract.ts:120</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -247,7 +253,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/57323c7/packages/taquito/src/contract/contract.ts#L141">taquito/src/contract/contract.ts:141</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito/src/contract/contract.ts#L242">taquito/src/contract/contract.ts:242</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -280,7 +286,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/57323c7/packages/taquito/src/contract/contract.ts#L131">taquito/src/contract/contract.ts:131</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito/src/contract/contract.ts#L232">taquito/src/contract/contract.ts:232</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">

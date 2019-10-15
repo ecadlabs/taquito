@@ -99,6 +99,8 @@
 						<section class="tsd-index-section ">
 							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="_taquito_taquito.context.html#config" class="tsd-kind-icon">config</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="_taquito_taquito.context.html#proto" class="tsd-kind-icon">proto</a></li>
 								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="_taquito_taquito.context.html#rpc" class="tsd-kind-icon">rpc</a></li>
 								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="_taquito_taquito.context.html#signer" class="tsd-kind-icon">signer</a></li>
 							</ul>
@@ -107,6 +109,7 @@
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_taquito_taquito.context.html#clone" class="tsd-kind-icon">clone</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_taquito_taquito.context.html#isanyprotocolactive" class="tsd-kind-icon">is<wbr>Any<wbr>Protocol<wbr>Active</a></li>
 							</ul>
 						</section>
 					</div>
@@ -118,13 +121,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Context<span class="tsd-signature-symbol">(</span>_rpcClient<span class="tsd-signature-symbol">?: </span><a href="_taquito_rpc.rpcclient.html" class="tsd-signature-type">RpcClient</a>, _signer<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_taquito_taquito.signer.html" class="tsd-signature-type">Signer</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.context.html" class="tsd-signature-type">Context</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Context<span class="tsd-signature-symbol">(</span>_rpcClient<span class="tsd-signature-symbol">?: </span><a href="_taquito_rpc.rpcclient.html" class="tsd-signature-type">RpcClient</a>, _signer<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_taquito_taquito.signer.html" class="tsd-signature-type">Signer</a>, _proto<span class="tsd-signature-symbol">?: </span><a href="../enums/_taquito_taquito.protocols.html" class="tsd-signature-type">Protocols</a>, _config<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_taquito.config.html" class="tsd-signature-type">Config</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.context.html" class="tsd-signature-type">Context</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/57323c7/packages/taquito/src/context.ts#L8">taquito/src/context.ts:8</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito/src/context.ts#L21">taquito/src/context.ts:21</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -135,6 +138,12 @@
 								<li>
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> _signer: <a href="../interfaces/_taquito_taquito.signer.html" class="tsd-signature-type">Signer</a><span class="tsd-signature-symbol"> =&nbsp;new NoopSigner()</span></h5>
 								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> _proto: <a href="../enums/_taquito_taquito.protocols.html" class="tsd-signature-type">Protocols</a></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> _config: <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_taquito.config.html" class="tsd-signature-type">Config</a><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_taquito_taquito.context.html" class="tsd-signature-type">Context</a></h4>
 						</li>
@@ -143,6 +152,77 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Accessors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="config" class="tsd-anchor"></a>
+					<h3>config</h3>
+					<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> config<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Required</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_taquito.config.html" class="tsd-signature-type">Config</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> config<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Required</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_taquito.config.html" class="tsd-signature-type">Config</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito/src/context.ts#L31">taquito/src/context.ts:31</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Required</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_taquito.config.html" class="tsd-signature-type">Config</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito/src/context.ts#L35">taquito/src/context.ts:35</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>value: <span class="tsd-signature-type">Required</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_taquito.config.html" class="tsd-signature-type">Config</a><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="proto" class="tsd-anchor"></a>
+					<h3>proto</h3>
+					<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> proto<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../enums/_taquito_taquito.protocols.html#pt24m4xi" class="tsd-signature-type">Pt24m4xi</a><span class="tsd-signature-symbol"> | </span><a href="../enums/_taquito_taquito.protocols.html#psbaby5h" class="tsd-signature-type">PsBABY5H</a><span class="tsd-signature-symbol"> | </span><a href="../enums/_taquito_taquito.protocols.html#psbabym1" class="tsd-signature-type">PsBabyM1</a></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> proto<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><a href="../enums/_taquito_taquito.protocols.html" class="tsd-signature-type">Protocols</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito/src/context.ts#L62">taquito/src/context.ts:62</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<a href="../enums/_taquito_taquito.protocols.html#pt24m4xi" class="tsd-signature-type">Pt24m4xi</a>
+								<span class="tsd-signature-symbol"> | </span>
+								<a href="../enums/_taquito_taquito.protocols.html#psbaby5h" class="tsd-signature-type">PsBABY5H</a>
+								<span class="tsd-signature-symbol"> | </span>
+								<a href="../enums/_taquito_taquito.protocols.html#psbabym1" class="tsd-signature-type">PsBabyM1</a>
+							</h4>
+						</li>
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito/src/context.ts#L58">taquito/src/context.ts:58</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>value: <a href="../enums/_taquito_taquito.protocols.html" class="tsd-signature-type">Protocols</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
 					<a name="rpc" class="tsd-anchor"></a>
 					<h3>rpc</h3>
@@ -154,7 +234,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/57323c7/packages/taquito/src/context.ts#L14">taquito/src/context.ts:14</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito/src/context.ts#L42">taquito/src/context.ts:42</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_taquito_rpc.rpcclient.html" class="tsd-signature-type">RpcClient</a></h4>
@@ -162,7 +242,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/57323c7/packages/taquito/src/context.ts#L18">taquito/src/context.ts:18</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito/src/context.ts#L46">taquito/src/context.ts:46</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -186,7 +266,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/57323c7/packages/taquito/src/context.ts#L22">taquito/src/context.ts:22</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito/src/context.ts#L50">taquito/src/context.ts:50</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_taquito_taquito.signer.html" class="tsd-signature-type">Signer</a></h4>
@@ -194,7 +274,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/57323c7/packages/taquito/src/context.ts#L26">taquito/src/context.ts:26</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito/src/context.ts#L54">taquito/src/context.ts:54</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -220,7 +300,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/57323c7/packages/taquito/src/context.ts#L33">taquito/src/context.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito/src/context.ts#L78">taquito/src/context.ts:78</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -231,6 +311,29 @@
 								</dl>
 							</div>
 							<h4 class="tsd-returns-title">Returns <a href="_taquito_taquito.context.html" class="tsd-signature-type">Context</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="isanyprotocolactive" class="tsd-anchor"></a>
+					<h3>is<wbr>Any<wbr>Protocol<wbr>Active</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Any<wbr>Protocol<wbr>Active<span class="tsd-signature-symbol">(</span>protocol<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito/src/context.ts#L66">taquito/src/context.ts:66</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> protocol: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -285,6 +388,12 @@
 								<a href="_taquito_taquito.context.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="_taquito_taquito.context.html#config" class="tsd-kind-icon">config</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="_taquito_taquito.context.html#proto" class="tsd-kind-icon">proto</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
 								<a href="_taquito_taquito.context.html#rpc" class="tsd-kind-icon">rpc</a>
 							</li>
 							<li class=" tsd-kind-accessor tsd-parent-kind-class">
@@ -292,6 +401,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_taquito_taquito.context.html#clone" class="tsd-kind-icon">clone</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_taquito_taquito.context.html#isanyprotocolactive" class="tsd-kind-icon">is<wbr>Any<wbr>Protocol<wbr>Active</a>
 							</li>
 						</ul>
 					</li>

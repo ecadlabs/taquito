@@ -147,7 +147,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides Component.__constructor</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/57323c7/packages/taquito-react-components/src/balance-history.tsx#L38">taquito-react-components/src/balance-history.tsx:38</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito-react-components/src/balance-history.tsx#L38">taquito-react-components/src/balance-history.tsx:38</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -170,7 +170,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from Component.context</p>
 						<ul>
-							<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:425</li>
+							<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:428</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -179,7 +179,10 @@
 							<code>React.ContextType</code> of your <code>static contextType</code>.</p>
 						</div>
 						<pre><code class="language-ts"><span class="hljs-keyword">static</span> contextType = MyContext
-context!: React.ContextType&lt;<span class="hljs-keyword">typeof</span> MyContext&gt;</code></pre>
+<span class="hljs-comment">// For TS pre-3.7:</span>
+context!: React.ContextType&lt;<span class="hljs-keyword">typeof</span> MyContext&gt;
+<span class="hljs-comment">// For TS 3.7 and above:</span>
+<span class="hljs-keyword">declare</span> context: React.ContextType&lt;<span class="hljs-keyword">typeof</span> MyContext&gt;</code></pre>
 						<dl class="tsd-comment-tags">
 							<dt>deprecated</dt>
 							<dd><p>if used without a type annotation, or without static contextType</p>
@@ -197,7 +200,7 @@ context!: React.ContextType&lt;<span class="hljs-keyword">typeof</span> MyContex
 					<aside class="tsd-sources">
 						<p>Inherited from Component.props</p>
 						<ul>
-							<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:450</li>
+							<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:453</li>
 						</ul>
 					</aside>
 				</section>
@@ -208,7 +211,7 @@ context!: React.ContextType&lt;<span class="hljs-keyword">typeof</span> MyContex
 					<aside class="tsd-sources">
 						<p>Inherited from Component.refs</p>
 						<ul>
-							<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:456</li>
+							<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:459</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -234,7 +237,7 @@ context!: React.ContextType&lt;<span class="hljs-keyword">typeof</span> MyContex
 					<aside class="tsd-sources">
 						<p>Inherited from Component.state</p>
 						<ul>
-							<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:451</li>
+							<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:454</li>
 						</ul>
 					</aside>
 				</section>
@@ -245,7 +248,7 @@ context!: React.ContextType&lt;<span class="hljs-keyword">typeof</span> MyContex
 					<aside class="tsd-sources">
 						<p>Overrides Component.contextType</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/57323c7/packages/taquito-react-components/src/balance-history.tsx#L38">taquito-react-components/src/balance-history.tsx:38</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito-react-components/src/balance-history.tsx#L38">taquito-react-components/src/balance-history.tsx:38</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -263,7 +266,7 @@ context!: React.ContextType&lt;<span class="hljs-keyword">typeof</span> MyContex
 							<aside class="tsd-sources">
 								<p>Inherited from DeprecatedLifecycle.UNSAFE_componentWillMount</p>
 								<ul>
-									<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:638</li>
+									<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:641</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -301,7 +304,7 @@ context!: React.ContextType&lt;<span class="hljs-keyword">typeof</span> MyContex
 							<aside class="tsd-sources">
 								<p>Inherited from DeprecatedLifecycle.UNSAFE_componentWillReceiveProps</p>
 								<ul>
-									<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:670</li>
+									<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:673</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -350,7 +353,7 @@ context!: React.ContextType&lt;<span class="hljs-keyword">typeof</span> MyContex
 							<aside class="tsd-sources">
 								<p>Inherited from DeprecatedLifecycle.UNSAFE_componentWillUpdate</p>
 								<ul>
-									<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:698</li>
+									<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:701</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -400,7 +403,7 @@ context!: React.ContextType&lt;<span class="hljs-keyword">typeof</span> MyContex
 							<aside class="tsd-sources">
 								<p>Inherited from ComponentLifecycle.componentDidCatch</p>
 								<ul>
-									<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:567</li>
+									<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:570</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -433,7 +436,7 @@ context!: React.ContextType&lt;<span class="hljs-keyword">typeof</span> MyContex
 							<aside class="tsd-sources">
 								<p>Overrides ComponentLifecycle.componentDidMount</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/57323c7/packages/taquito-react-components/src/balance-history.tsx#L60">taquito-react-components/src/balance-history.tsx:60</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito-react-components/src/balance-history.tsx#L60">taquito-react-components/src/balance-history.tsx:60</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -451,7 +454,7 @@ context!: React.ContextType&lt;<span class="hljs-keyword">typeof</span> MyContex
 							<aside class="tsd-sources">
 								<p>Overrides NewLifecycle.componentDidUpdate</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/57323c7/packages/taquito-react-components/src/balance-history.tsx#L64">taquito-react-components/src/balance-history.tsx:64</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito-react-components/src/balance-history.tsx#L64">taquito-react-components/src/balance-history.tsx:64</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -475,7 +478,7 @@ context!: React.ContextType&lt;<span class="hljs-keyword">typeof</span> MyContex
 							<aside class="tsd-sources">
 								<p>Inherited from DeprecatedLifecycle.componentWillMount</p>
 								<ul>
-									<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:624</li>
+									<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:627</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -512,7 +515,7 @@ context!: React.ContextType&lt;<span class="hljs-keyword">typeof</span> MyContex
 							<aside class="tsd-sources">
 								<p>Inherited from DeprecatedLifecycle.componentWillReceiveProps</p>
 								<ul>
-									<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:653</li>
+									<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:656</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -560,7 +563,7 @@ context!: React.ContextType&lt;<span class="hljs-keyword">typeof</span> MyContex
 							<aside class="tsd-sources">
 								<p>Inherited from ComponentLifecycle.componentWillUnmount</p>
 								<ul>
-									<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:562</li>
+									<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:565</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -584,7 +587,7 @@ context!: React.ContextType&lt;<span class="hljs-keyword">typeof</span> MyContex
 							<aside class="tsd-sources">
 								<p>Inherited from DeprecatedLifecycle.componentWillUpdate</p>
 								<ul>
-									<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:683</li>
+									<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:686</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -633,7 +636,7 @@ context!: React.ContextType&lt;<span class="hljs-keyword">typeof</span> MyContex
 							<aside class="tsd-sources">
 								<p>Inherited from Component.forceUpdate</p>
 								<ul>
-									<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:442</li>
+									<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:445</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -657,7 +660,7 @@ context!: React.ContextType&lt;<span class="hljs-keyword">typeof</span> MyContex
 							<aside class="tsd-sources">
 								<p>Inherited from NewLifecycle.getSnapshotBeforeUpdate</p>
 								<ul>
-									<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:603</li>
+									<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:606</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -695,7 +698,7 @@ context!: React.ContextType&lt;<span class="hljs-keyword">typeof</span> MyContex
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/57323c7/packages/taquito-react-components/src/balance-history.tsx#L47">taquito-react-components/src/balance-history.tsx:47</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito-react-components/src/balance-history.tsx#L47">taquito-react-components/src/balance-history.tsx:47</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -713,7 +716,7 @@ context!: React.ContextType&lt;<span class="hljs-keyword">typeof</span> MyContex
 							<aside class="tsd-sources">
 								<p>Overrides Component.render</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/57323c7/packages/taquito-react-components/src/balance-history.tsx#L70">taquito-react-components/src/balance-history.tsx:70</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b614d95/packages/taquito-react-components/src/balance-history.tsx#L70">taquito-react-components/src/balance-history.tsx:70</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Element</span></h4>
@@ -731,7 +734,7 @@ context!: React.ContextType&lt;<span class="hljs-keyword">typeof</span> MyContex
 							<aside class="tsd-sources">
 								<p>Inherited from Component.setState</p>
 								<ul>
-									<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:437</li>
+									<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:440</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -764,7 +767,7 @@ context!: React.ContextType&lt;<span class="hljs-keyword">typeof</span> MyContex
 							<aside class="tsd-sources">
 								<p>Inherited from ComponentLifecycle.shouldComponentUpdate</p>
 								<ul>
-									<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:557</li>
+									<li>Defined in taquito-react-components/node_modules/@types/react/index.d.ts:560</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
