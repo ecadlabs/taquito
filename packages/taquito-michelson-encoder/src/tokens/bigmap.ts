@@ -46,12 +46,26 @@ export class BigMapToken extends Token {
     };
   }
 
-  public Execute(val: any[]) {
-    return val.reduce((prev, current) => {
-      return {
-        ...prev,
-        [this.KeySchema.ToKey(current.args[0])]: this.ValueSchema.Execute(current.args[1]),
-      };
-    }, {});
+  public Execute(val: any[] | { int: string }) {
+    if (Array.isArray(val)) {
+      // Athens is returning an empty array for big map in storage
+      // Internal: In taquito v5 it is still used to decode big map diff (as if they were a regular map)
+      return val.reduce((prev, current) => {
+        return {
+          ...prev,
+          [this.KeySchema.ToKey(current.args[0])]: this.ValueSchema.Execute(current.args[1]),
+        };
+      }, {});
+    } else if ('int' in val) {
+      // Babylon is returning an int with the big map id in contract storage
+      return val.int;
+    } else {
+      // Unknown case
+      throw new Error(
+        `Big map is expecting either an array (Athens) or an object with an int property (Babylon). Got ${JSON.stringify(
+          val
+        )}`
+      );
+    }
   }
 }
