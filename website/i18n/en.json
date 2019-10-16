@@ -11,6 +11,9 @@
       "inmemory_signer": {
         "title": "In Memory Signer"
       },
+      "making_transfers": {
+        "title": "Making Transfers"
+      },
       "quick_start": {
         "title": "Quick start"
       },
@@ -22,7 +25,7 @@
       }
     },
     "links": {
-      "4.1.0-beta.5": "4.1.0-beta.5",
+      "5.0.1-beta.2": "5.0.1-beta.2",
       "Docs": "Docs",
       "Twitter": "Twitter",
       "Github": "Github"

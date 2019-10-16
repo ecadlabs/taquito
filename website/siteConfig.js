@@ -37,6 +37,11 @@ const siteConfig = {
       caption: 'Ligo',
       image: '/img/ligo.svg',
       infoLink: 'https://ligolang.org/',
+    },
+    {
+      caption: 'Tocqueville Group',
+      image: '/img/tqtezos.svg',
+      infoLink: 'https://tqtezos.com',
     }
   ],
 
