@@ -34,13 +34,23 @@ const siteConfig = {
 
   users: [
     {
+      caption: 'Tocqueville Group',
+      image: '/img/tqtezos.svg',
+      infoLink: 'https://tqtezos.com',
+    },
+    {
       caption: 'Ligo',
       image: '/img/ligo.svg',
       infoLink: 'https://ligolang.org/',
     },
     {
-      caption: 'Tocqueville Group',
-      image: '/img/tqtezos.svg',
+      caption: 'Truffle',
+      image: '/img/truffle.png',
+      infoLink: 'https://www.trufflesuite.com/',
+    },
+    {
+      caption: 'Nomadic Labs',
+      image: '/img/nomadic.png',
       infoLink: 'https://tqtezos.com',
     }
   ],
