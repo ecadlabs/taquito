@@ -33,6 +33,8 @@ import {
   ScriptResponse,
   StorageResponse,
   VotesListingsResponse,
+  PackDataParams,
+  PackDataResponse,
 } from './types';
 import { castToBigNumber } from './utils/utils';
 
@@ -65,7 +67,7 @@ export class RpcClient {
     private url: string = defaultRPC,
     private chain: string = defaultChain,
     private httpBackend: HttpBackend = new HttpBackend()
-  ) { }
+  ) {}
 
   /**
    *
@@ -625,6 +627,7 @@ export class RpcClient {
 
     return contractResponse;
   }
+
   /**
    * @param op Operation to run
    * @param options contains generic configuration for rpc calls
@@ -653,5 +656,34 @@ export class RpcClient {
       url: `${this.url}/chains/${this.chain}/chain_id`,
       method: 'GET',
     });
+  }
+
+  /**
+   *
+   * @param data Data to pack
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Computes the serialized version of some data expression using the same algorithm as script instruction PACK
+   *
+   * @example packData({ data: { string: "test" }, type: { prim: "string" } })
+   *
+   * @see http://tezos.gitlab.io/mainnet/api/rpc.html#post-block-id-helpers-scripts-pack-data
+   */
+  async packData(data: PackDataParams, { block }: RPCOptions = defaultRPCOptions) {
+    const { gas, ...rest } = await this.httpBackend.createRequest<PackDataResponse>(
+      {
+        url: `${this.url}/chains/${this.chain}/blocks/${block}/helpers/scripts/pack_data`,
+        method: 'POST',
+      },
+      data
+    );
+
+    let formattedGas = gas;
+    const tryBigNumber = new BigNumber(gas || '');
+    if (!tryBigNumber.isNaN()) {
+      formattedGas = tryBigNumber;
+    }
+
+    return { gas: formattedGas, ...rest };
   }
 }
