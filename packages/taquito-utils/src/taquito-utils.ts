@@ -1,8 +1,14 @@
 import { Buffer } from 'buffer';
 import { prefix } from './constants';
+const blake = require('blakejs');
 const bs58check = require('bs58check');
 
 export { prefix } from './constants';
+
+export function encodeExpr(value: string) {
+  const blakeHash = blake.blake2b(hex2buf(value), null, 32);
+  return b58cencode(blakeHash, prefix['expr']);
+}
 
 /**
  *

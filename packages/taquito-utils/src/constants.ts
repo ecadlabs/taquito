@@ -32,6 +32,7 @@ export const prefix: { [key: string]: Uint8Array } = {
   Co: new Uint8Array([79, 179]),
   id: new Uint8Array([153, 103]),
 
+  expr: new Uint8Array([13, 44, 64, 27]),
   // Legacy prefix
   TZ: new Uint8Array([2, 90, 121]),
 };
