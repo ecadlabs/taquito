@@ -923,7 +923,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('return a big number for gas when is big number', async done => {
+    it('return a big number for gas when it is a big number', async done => {
       httpBackend.createRequest.mockResolvedValue({ packed: 'cafe', gas: '2' });
       const response = await client.packData({
         data: { string: 'test' },

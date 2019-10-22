@@ -663,7 +663,7 @@ export class RpcClient {
    * @param data Data to pack
    * @param options contains generic configuration for rpc calls
    *
-   * @description Computes the serialized version of some data expression using the same algorithm as script instruction PACK
+   * @description Computes the serialized version of a data expression using the same algorithm as script instruction PACK
    *
    * @example packData({ data: { string: "test" }, type: { prim: "string" } })
    *
