@@ -905,4 +905,46 @@ describe('RpcClient test', () => {
       done();
     });
   });
+
+  describe('packData', () => {
+    it('query the right url and data', async done => {
+      httpBackend.createRequest.mockResolvedValue({ packed: 'cafe', gas: 'unaccounted' });
+      const response = await client.packData({
+        data: { string: 'test' },
+        type: { prim: 'string' },
+      });
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'POST',
+        url: 'root/chains/test/blocks/head/helpers/scripts/pack_data',
+      });
+      expect(response).toEqual({ packed: 'cafe', gas: 'unaccounted' });
+
+      done();
+    });
+
+    it('return a big number for gas when it is a big number', async done => {
+      httpBackend.createRequest.mockResolvedValue({ packed: 'cafe', gas: '2' });
+      const response = await client.packData({
+        data: { string: 'test' },
+        type: { prim: 'string' },
+      });
+      expect(response).toEqual({ packed: 'cafe', gas: new BigNumber(2) });
+      expect(response.gas).toBeInstanceOf(BigNumber);
+
+      done();
+    });
+
+    it('return undefined for gas when it is missing', async done => {
+      httpBackend.createRequest.mockResolvedValue({ packed: 'cafe' });
+      const response = await client.packData({
+        data: { string: 'test' },
+        type: { prim: 'string' },
+      });
+      expect(response).toEqual({ packed: 'cafe' });
+      expect(response.gas).toBeUndefined();
+
+      done();
+    });
+  });
 });

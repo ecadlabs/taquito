@@ -457,6 +457,19 @@ export interface BlockHeaderResponse {
   signature: string;
 }
 
+export interface PackDataParams {
+  data: MichelsonV1Expression;
+  type: MichelsonV1Expression;
+  gas?: BigNumber;
+}
+
+export type HexString = string;
+
+export interface PackDataResponse {
+  packed: HexString;
+  gas?: BigNumber | 'unaccounted';
+}
+
 export type PreapplyParams = OperationObject[];
 export type PreapplyResponse = {
   contents: OperationContentsAndResult[];
