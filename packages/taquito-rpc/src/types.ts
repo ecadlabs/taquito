@@ -470,6 +470,8 @@ export interface PackDataResponse {
   gas?: BigNumber | 'unaccounted';
 }
 
+export type BigMapResponse = MichelsonV1Expression | MichelsonV1Expression[];
+
 export type PreapplyParams = OperationObject[];
 export type PreapplyResponse = {
   contents: OperationContentsAndResult[];

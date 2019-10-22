@@ -35,8 +35,10 @@ import {
   VotesListingsResponse,
   PackDataParams,
   PackDataResponse,
+  BigMapResponse,
 } from './types';
 import { castToBigNumber } from './utils/utils';
+import { MichelsonV1Expression } from './types.common';
 
 export * from './types';
 export * from './types.common';
@@ -246,6 +248,27 @@ export class RpcClient {
       },
       key
     );
+  }
+
+  /**
+   *
+   * @param id Big Map ID
+   * @param expr Expression hash to query (A b58check encoded Blake2b hash of the expression (The expression can be packed using the pack_data method))
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Access the value associated with a key in a big map.
+   *
+   * @see https://tezos.gitlab.io/mainnet/api/rpc.html#get-block-id-context-big-maps-big-map-id-script-expr
+   */
+  async getBigMapExpr(
+    id: string,
+    expr: string,
+    { block }: { block: string } = defaultRPCOptions
+  ): Promise<BigMapResponse> {
+    return this.httpBackend.createRequest<BigMapResponse>({
+      url: `${this.url}/chains/${this.chain}/blocks/${block}/context/big_maps/${id}/${expr}`,
+      method: 'GET',
+    });
   }
 
   /**
