@@ -1,4 +1,10 @@
+import { MichelsonV1Expression } from '@taquito/rpc';
+
 export type TokenFactory = (val: any, idx: number) => Token;
+
+export interface Semantic {
+  [key: string]: (value: MichelsonV1Expression, schema: MichelsonV1Expression) => any;
+}
 
 export interface ComparableToken extends Token {
   ToBigMapKey(
@@ -33,7 +39,7 @@ export abstract class Token {
 
   public abstract ExtractSchema(): any;
 
-  public abstract Execute(val: any): any;
+  public abstract Execute(val: any, semantics?: Semantic): any;
 
   public abstract Encode(_args: any[]): any;
 

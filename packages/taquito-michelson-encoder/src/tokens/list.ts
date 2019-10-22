@@ -1,4 +1,4 @@
-import { Token, TokenFactory } from './token';
+import { Token, TokenFactory, Semantic } from './token';
 
 export class ListToken extends Token {
   static prim = 'list';
@@ -22,10 +22,10 @@ export class ListToken extends Token {
     };
   }
 
-  public Execute(val: any) {
+  public Execute(val: any, semantics?: Semantic) {
     const schema = this.createToken(this.val.args[0], 0);
     return val.reduce((prev: any, current: any) => {
-      return [...prev, schema.Execute(current)];
+      return [...prev, schema.Execute(current, semantics)];
     }, []);
   }
 

@@ -1,5 +1,5 @@
 import { createToken } from '../tokens/createToken';
-import { Token } from '../tokens/token';
+import { Token, Semantic } from '../tokens/token';
 import { OrToken } from '../tokens/or';
 import { OptionToken } from '../tokens/option';
 import { ScriptResponse, MichelsonV1ExpressionExtended, MichelsonV1Expression } from '@taquito/rpc';
@@ -43,8 +43,8 @@ export class ParameterSchema {
     this.root = createToken(val, 0);
   }
 
-  Execute(val: any) {
-    return this.root.Execute(val);
+  Execute(val: any, semantics?: Semantic) {
+    return this.root.Execute(val, semantics);
   }
 
   Encode(...args: any[]) {

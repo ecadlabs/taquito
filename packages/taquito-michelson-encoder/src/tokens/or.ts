@@ -1,4 +1,4 @@
-import { Token, TokenFactory } from './token';
+import { Token, TokenFactory, Semantic } from './token';
 
 export class OrToken extends Token {
   static prim = 'or';
@@ -77,7 +77,7 @@ export class OrToken extends Token {
     }
   }
 
-  public Execute(val: any): any {
+  public Execute(val: any, semantics?: Semantic): any {
     const leftToken = this.createToken(this.val.args[0], this.idx);
     let keyCount = 1;
     if (leftToken instanceof OrToken) {
@@ -86,10 +86,10 @@ export class OrToken extends Token {
     const rightToken = this.createToken(this.val.args[1], this.idx + keyCount);
 
     if (val.prim === 'Right') {
-      return rightToken.Execute(val.args[0]);
+      return rightToken.Execute(val.args[0], semantics);
     } else if (val.prim === 'Left') {
       return {
-        [leftToken.annot()]: leftToken.Execute(val.args[0]),
+        [leftToken.annot()]: leftToken.Execute(val.args[0], semantics),
       };
     } else {
       throw new Error(`Was expecting Left or Right prim but got: ${val.prim}`);

@@ -1,4 +1,4 @@
-import { Token, TokenFactory } from './token';
+import { Token, TokenFactory, Semantic } from './token';
 import { OrToken } from './or';
 
 export class PairToken extends Token {
@@ -83,10 +83,10 @@ export class PairToken extends Token {
     return res;
   }
 
-  public Execute(val: any): { [key: string]: any } {
+  public Execute(val: any, semantics?: Semantic): { [key: string]: any } {
     return this.traversal(
-      leftToken => leftToken.Execute(val.args[0]),
-      rightToken => rightToken.Execute(val.args[1])
+      leftToken => leftToken.Execute(val.args[0], semantics),
+      rightToken => rightToken.Execute(val.args[1], semantics)
     );
   }
 
