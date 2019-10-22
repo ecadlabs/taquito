@@ -49,10 +49,23 @@ export interface ContractProvider {
    * @param key contract big map key to fetch value from
    * @param schema optional schema can either be the contract script rpc response or a michelson-encoder schema
    *
+   * @deprecated Deprecated in favor of getBigMapKeyByID
+   *
    * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-contracts-contract-id-script
    */
   getBigMapKey<T>(contract: string, key: string, schema?: ContractSchema): Promise<T>;
 
+  /**
+   *
+   * @description Return a well formatted json object of a big map value
+   *
+   * @param id Big Map ID
+   * @param keyToEncode key to query (will be encoded properly according to the schema)
+   * @param schema Big Map schema (can be determined using your contract type)
+   *
+   * @see http://tezos.gitlab.io/mainnet/api/rpc.html#get-block-id-context-big-maps-big-map-id-script-expr
+   */
+  getBigMapKeyByID<T>(id: string, keyToEncode: string, schema: Schema): Promise<T>;
   /**
    *
    * @description Originate a new contract according to the script in parameters. Will sign and inject an operation using the current context
