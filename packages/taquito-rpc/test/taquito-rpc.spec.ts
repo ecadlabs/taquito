@@ -943,7 +943,18 @@ describe('RpcClient test', () => {
       });
       expect(response).toEqual({ packed: 'cafe' });
       expect(response.gas).toBeUndefined();
+      done();
+    });
+  });
 
+  describe('getBigMapExpr', () => {
+    it('query the right url and data', async done => {
+      await client.getBigMapExpr('1', '2');
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/context/big_maps/1/2',
+      });
       done();
     });
   });
