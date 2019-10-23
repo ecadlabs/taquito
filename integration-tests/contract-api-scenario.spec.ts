@@ -3,9 +3,14 @@ import { ligoSample } from "./data/ligo-simple-contract";
 import { tokenCode, tokenInit } from "./data/tokens";
 import { voteSample } from "./data/vote-contract";
 
-CONFIGS.forEach(({ lib, rpc }) => {
+CONFIGS.forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   describe(`Test contract api using: ${rpc}`, () => {
+
+    beforeEach(async (done) => {
+      await setup()
+      done()
+    })
     it('Simple origination scenario', async (done) => {
       const op = await Tezos.contract.originate({
         balance: "1",
