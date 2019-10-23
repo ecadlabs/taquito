@@ -1,4 +1,4 @@
-import { Token, TokenFactory, ComparableToken } from './token';
+import { Token, TokenFactory, ComparableToken, Semantic } from './token';
 
 export class BigMapToken extends Token {
   static prim = 'big_map';
@@ -46,7 +46,11 @@ export class BigMapToken extends Token {
     };
   }
 
-  public Execute(val: any[] | { int: string }) {
+  public Execute(val: any[] | { int: string }, semantic?: Semantic) {
+    if (semantic && semantic[BigMapToken.prim]) {
+      return semantic[BigMapToken.prim](val as any, this.val);
+    }
+
     if (Array.isArray(val)) {
       // Athens is returning an empty array for big map in storage
       // Internal: In taquito v5 it is still used to decode big map diff (as if they were a regular map)

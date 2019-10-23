@@ -1,4 +1,4 @@
-import { Token, TokenFactory } from './token';
+import { Token, TokenFactory, Semantic } from './token';
 
 export class OptionToken extends Token {
   static prim = 'option';
@@ -46,13 +46,13 @@ export class OptionToken extends Token {
     return { prim: 'Some', args: [schema.EncodeObject(value)] };
   }
 
-  public Execute(val: any) {
+  public Execute(val: any, semantics?: Semantic) {
     if (val.prim === 'None') {
       return null;
     }
 
     const schema = this.createToken(this.val.args[0], 0);
-    return schema.Execute(val.args[0]);
+    return schema.Execute(val.args[0], semantics);
   }
 
   public ExtractSchema() {

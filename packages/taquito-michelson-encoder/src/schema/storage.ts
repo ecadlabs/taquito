@@ -1,4 +1,4 @@
-import { Token } from '../tokens/token';
+import { Token, Semantic } from '../tokens/token';
 
 import { BigMapToken } from '../tokens/bigmap';
 
@@ -13,6 +13,8 @@ import { Falsy } from './types';
  */
 export class Schema {
   private root: Token;
+
+  // TODO: Should we deprecate this?
   private bigMap?: BigMapToken;
 
   static fromRPCResponse(val: { script: ScriptResponse }) {
@@ -38,7 +40,9 @@ export class Schema {
   constructor(val: MichelsonV1Expression) {
     this.root = createToken(val, 0);
 
-    if (this.isExpressionExtended(val) && val.prim === 'pair') {
+    if (this.root instanceof BigMapToken) {
+      this.bigMap = this.root;
+    } else if (this.isExpressionExtended(val) && val.prim === 'pair') {
       const exp = val.args[0];
       if (this.isExpressionExtended(exp) && exp.prim === 'big_map') {
         this.bigMap = new BigMapToken(exp, 0, createToken);
@@ -54,13 +58,13 @@ export class Schema {
     return obj;
   }
 
-  Execute(val: any) {
-    const storage = this.root.Execute(val);
+  Execute(val: any, semantics?: Semantic) {
+    const storage = this.root.Execute(val, semantics);
 
     return this.removeTopLevelAnnotation(storage);
   }
 
-  ExecuteOnBigMapDiff(diff: any[]) {
+  ExecuteOnBigMapDiff(diff: any[], semantics?: Semantic) {
     if (!this.bigMap) {
       throw new Error('No big map schema');
     }
@@ -71,15 +75,15 @@ export class Schema {
 
     const eltFormat = diff.map(({ key, value }) => ({ args: [key, value] }));
 
-    return this.bigMap.Execute(eltFormat);
+    return this.bigMap.Execute(eltFormat, semantics);
   }
 
-  ExecuteOnBigMapValue(key: any) {
+  ExecuteOnBigMapValue(key: any, semantics?: Semantic) {
     if (!this.bigMap) {
       throw new Error('No big map schema');
     }
 
-    return this.bigMap.ValueSchema.Execute(key);
+    return this.bigMap.ValueSchema.Execute(key, semantics);
   }
 
   EncodeBigMapKey(key: string) {
@@ -87,7 +91,11 @@ export class Schema {
       throw new Error('No big map schema');
     }
 
-    return this.bigMap.KeySchema.ToBigMapKey(key);
+    try {
+      return this.bigMap.KeySchema.ToBigMapKey(key);
+    } catch (ex) {
+      throw new Error('Unable to encode big map key: ' + ex);
+    }
   }
 
   Encode(_value?: any) {
@@ -102,6 +110,9 @@ export class Schema {
     return this.removeTopLevelAnnotation(this.root.ExtractSchema());
   }
 
+  /**
+   * @deprecated
+   */
   ComputeState(tx: RpcTransaction[], state: any) {
     if (!this.bigMap) {
       throw new Error('No big map schema');

@@ -1,4 +1,4 @@
-import { Token, TokenFactory } from './token';
+import { Token, TokenFactory, Semantic } from './token';
 
 export class MapToken extends Token {
   static prim = 'map';
@@ -19,11 +19,14 @@ export class MapToken extends Token {
     return this.createToken(this.val.args[0], 0) as any;
   }
 
-  public Execute(val: any[]): { [key: string]: any } {
+  public Execute(val: any[], semantics?: Semantic): { [key: string]: any } {
     return val.reduce((prev, current) => {
       return {
         ...prev,
-        [this.KeySchema.ToKey(current.args[0])]: this.ValueSchema.Execute(current.args[1]),
+        [this.KeySchema.ToKey(current.args[0])]: this.ValueSchema.Execute(
+          current.args[1],
+          semantics
+        ),
       };
     }, {});
   }
