@@ -240,6 +240,7 @@ export class Contract {
    * @param key BigMap key to fetch
    */
   public bigMap(key: string) {
+    // tslint:disable-next-line: deprecation
     return this.provider.getBigMapKey(this.address, key, this.schema);
   }
 }
