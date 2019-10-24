@@ -22,6 +22,41 @@ describe('RpcClient test', () => {
     expect(new RpcClient()).toBeInstanceOf(RpcClient);
   });
 
+  describe('Concat url properly', () => {
+    it('Should prevent double slashes given multiple trailing slashes', async done => {
+      const client = new RpcClient('root.com/test///', 'test', httpBackend as any);
+      httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
+      await client.getBalance('address');
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root.com/test/chains/test/blocks/head/context/contracts/address/balance',
+      });
+      done();
+    });
+
+    it('Should prevent double slashes given one trailing slashe', async done => {
+      const client = new RpcClient('root.com/test/', 'test', httpBackend as any);
+      httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
+      await client.getBalance('address');
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root.com/test/chains/test/blocks/head/context/contracts/address/balance',
+      });
+      done();
+    });
+
+    it('Should prevent double slashes given no trailing slash', async done => {
+      const client = new RpcClient('root.com/test', 'test', httpBackend as any);
+      httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
+      await client.getBalance('address');
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root.com/test/chains/test/blocks/head/context/contracts/address/balance',
+      });
+      done();
+    });
+  });
+
   describe('getBalance', () => {
     it('query the right url and returns a string', async done => {
       httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
