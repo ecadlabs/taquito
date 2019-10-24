@@ -92,12 +92,33 @@ CONFIGS.forEach(({ lib, rpc }) => {
       const op = await Tezos.contract.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
       const conf = await op.confirmation()
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
-      console.log('Confirmed in: ', conf, op.includedInBlock)
       const [first, second] = await Promise.all([op.confirmation(), op.confirmation(2)])
       expect(second - first).toEqual(2)
       // Retrying another time should be instant
       const [first2, second2] = await Promise.all([op.confirmation(), op.confirmation(2)])
       expect(second2 - first2).toEqual(2)
+      done();
+    })
+
+    it('Use big map abstraction for big maps', async (done) => {
+      // Deploy a contract with a big map
+      const op = await Tezos.contract.originate({
+        balance: "1",
+        code: tokenCode,
+        init: tokenInit(`${await Tezos.signer.publicKeyHash()}`),
+      })
+      const contract = await op.contract()
+
+      // Fetch the storage of the newly deployed contract
+      const storage: any = await contract.storage();
+
+      // First property is the big map abstract (The contract do not have annotations)
+      const bigMap = storage['0'];
+
+      // Fetch the key (current pkh that is running the test)
+      const bigMapValue = await bigMap.get(await Tezos.signer.publicKeyHash())
+      expect(bigMapValue['0'].toString()).toEqual("2")
+      expect(bigMapValue['1']).toEqual({})
       done();
     })
   });

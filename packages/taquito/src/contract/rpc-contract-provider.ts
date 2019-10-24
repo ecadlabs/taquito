@@ -15,6 +15,8 @@ import { Contract } from './contract';
 import { Estimate } from './estimate';
 import { ContractProvider, ContractSchema, EstimationProvider } from './interface';
 import { createOriginationOperation, createTransferOperation } from './prepare';
+import { smartContractAbstractionSemantic } from './semantic';
+import { encodeExpr } from '@taquito/utils';
 
 export class RpcContractProvider extends OperationEmitter implements ContractProvider {
   constructor(context: Context, private estimator: EstimationProvider) {
@@ -44,7 +46,7 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
 
     const storage = await this.rpc.getStorage(contract);
 
-    return contractSchema.Execute(storage) as T; // Cast into T because only the caller can know the true type of the storage
+    return contractSchema.Execute(storage, smartContractAbstractionSemantic(this)) as T; // Cast into T because only the caller can know the true type of the storage
   }
 
   /**
@@ -54,6 +56,8 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
    * @param contract contract address you want to get the storage from
    * @param key contract big map key to fetch value from
    * @param schema optional schema can either be the contract script rpc response or a michelson-encoder schema
+   *
+   * @deprecated Deprecated in favor of getBigMapKeyByID
    *
    * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-contracts-contract-id-script
    */
@@ -74,6 +78,27 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
     const val = await this.rpc.getBigMapKey(contract, encodedKey);
 
     return contractSchema.ExecuteOnBigMapValue(val) as T; // Cast into T because only the caller can know the true type of the storage
+  }
+
+  /**
+   *
+   * @description Return a well formatted json object of a big map value
+   *
+   * @param id Big Map ID
+   * @param keyToEncode key to query (will be encoded properly according to the schema)
+   * @param schema Big Map schema (can be determined using your contract type)
+   *
+   * @see http://tezos.gitlab.io/mainnet/api/rpc.html#get-block-id-context-big-maps-big-map-id-script-expr
+   */
+  async getBigMapKeyByID<T>(id: string, keyToEncode: string, schema: Schema): Promise<T> {
+    const { key, type } = schema.EncodeBigMapKey(keyToEncode);
+    const { packed } = await this.context.rpc.packData({ data: key, type });
+
+    const encodedExpr = encodeExpr(packed);
+
+    const bigMapValue = await this.context.rpc.getBigMapExpr(id.toString(), encodedExpr);
+
+    return schema.ExecuteOnBigMapValue(bigMapValue, smartContractAbstractionSemantic(this)) as T;
   }
 
   private async estimate<T extends { fee?: number; gasLimit?: number; storageLimit?: number }>(

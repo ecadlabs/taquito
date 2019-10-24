@@ -229,8 +229,8 @@ export class Contract {
   /**
    * @description Return a friendly representation of the smart contract storage
    */
-  public storage() {
-    return this.provider.getStorage(this.address, this.schema);
+  public storage<T>() {
+    return this.provider.getStorage<T>(this.address, this.schema);
   }
 
   /**
@@ -240,6 +240,7 @@ export class Contract {
    * @param key BigMap key to fetch
    */
   public bigMap(key: string) {
+    // tslint:disable-next-line: deprecation
     return this.provider.getBigMapKey(this.address, key, this.schema);
   }
 }
