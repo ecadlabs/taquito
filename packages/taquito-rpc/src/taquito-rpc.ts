@@ -8,6 +8,7 @@ import {
   BallotsResponse,
   BigMapGetResponse,
   BigMapKey,
+  BigMapResponse,
   BlockHeaderResponse,
   BlockMetadata,
   BlockResponse,
@@ -24,6 +25,8 @@ import {
   ManagerKeyResponse,
   ManagerResponse,
   OperationHash,
+  PackDataParams,
+  PackDataResponse,
   PeriodKindResponse,
   PreapplyParams,
   PreapplyResponse,
@@ -33,12 +36,8 @@ import {
   ScriptResponse,
   StorageResponse,
   VotesListingsResponse,
-  PackDataParams,
-  PackDataResponse,
-  BigMapResponse,
 } from './types';
 import { castToBigNumber } from './utils/utils';
-import { MichelsonV1Expression } from './types.common';
 
 export * from './types';
 export * from './types.common';
@@ -71,6 +70,11 @@ export class RpcClient {
     private httpBackend: HttpBackend = new HttpBackend()
   ) {}
 
+  private createURL(path: string) {
+    // Trim trailing slashes because it is assumed to be included in path
+    return `${this.url.replace(/\/+$/g, '')}${path}`;
+  }
+
   /**
    *
    * @param options contains generic configuration for rpc calls
@@ -81,7 +85,7 @@ export class RpcClient {
    */
   async getBlockHash({ block }: RPCOptions = defaultRPCOptions): Promise<string> {
     const hash = await this.httpBackend.createRequest<string>({
-      url: `${this.url}/chains/${this.chain}/blocks/${block}/hash`,
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/hash`),
       method: 'GET',
     });
     return hash;
@@ -101,7 +105,9 @@ export class RpcClient {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<BalanceResponse> {
     const balance = await this.httpBackend.createRequest<BalanceResponse>({
-      url: `${this.url}/chains/${this.chain}/blocks/${block}/context/contracts/${address}/balance`,
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/balance`
+      ),
       method: 'GET',
     });
     return new BigNumber(balance);
@@ -121,7 +127,9 @@ export class RpcClient {
     { block }: { block: string } = defaultRPCOptions
   ): Promise<StorageResponse> {
     return this.httpBackend.createRequest<StorageResponse>({
-      url: `${this.url}/chains/${this.chain}/blocks/${block}/context/contracts/${address}/storage`,
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/storage`
+      ),
       method: 'GET',
     });
   }
@@ -140,7 +148,9 @@ export class RpcClient {
     { block }: { block: string } = defaultRPCOptions
   ): Promise<ScriptResponse> {
     return this.httpBackend.createRequest<ScriptResponse>({
-      url: `${this.url}/chains/${this.chain}/blocks/${block}/context/contracts/${address}/script`,
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/script`
+      ),
       method: 'GET',
     });
   }
@@ -159,7 +169,7 @@ export class RpcClient {
     { block }: { block: string } = defaultRPCOptions
   ): Promise<ContractResponse> {
     const contractResponse = await this.httpBackend.createRequest<ContractResponse>({
-      url: `${this.url}/chains/${this.chain}/blocks/${block}/context/contracts/${address}`,
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/contracts/${address}`),
       method: 'GET',
     });
     return {
@@ -184,7 +194,9 @@ export class RpcClient {
     { block }: { block: string } = defaultRPCOptions
   ): Promise<ManagerResponse> {
     return this.httpBackend.createRequest<ManagerResponse>({
-      url: `${this.url}/chains/${this.chain}/blocks/${block}/context/contracts/${address}/manager`,
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/manager`
+      ),
       method: 'GET',
     });
   }
@@ -203,7 +215,9 @@ export class RpcClient {
     { block }: { block: string } = defaultRPCOptions
   ): Promise<ManagerKeyResponse> {
     return this.httpBackend.createRequest<ManagerKeyResponse>({
-      url: `${this.url}/chains/${this.chain}/blocks/${block}/context/contracts/${address}/manager_key`,
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/manager_key`
+      ),
       method: 'GET',
     });
   }
@@ -222,7 +236,9 @@ export class RpcClient {
     { block }: { block: string } = defaultRPCOptions
   ): Promise<DelegateResponse> {
     return this.httpBackend.createRequest<DelegateResponse>({
-      url: `${this.url}/chains/${this.chain}/blocks/${block}/context/contracts/${address}/delegate`,
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/delegate`
+      ),
       method: 'GET',
     });
   }
@@ -243,7 +259,9 @@ export class RpcClient {
   ): Promise<BigMapGetResponse> {
     return this.httpBackend.createRequest<BigMapGetResponse>(
       {
-        url: `${this.url}/chains/${this.chain}/blocks/${block}/context/contracts/${address}/big_map_get`,
+        url: this.createURL(
+          `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/big_map_get`
+        ),
         method: 'POST',
       },
       key
@@ -266,7 +284,7 @@ export class RpcClient {
     { block }: { block: string } = defaultRPCOptions
   ): Promise<BigMapResponse> {
     return this.httpBackend.createRequest<BigMapResponse>({
-      url: `${this.url}/chains/${this.chain}/blocks/${block}/context/big_maps/${id}/${expr}`,
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/big_maps/${id}/${expr}`),
       method: 'GET',
     });
   }
@@ -285,7 +303,7 @@ export class RpcClient {
     { block }: { block: string } = defaultRPCOptions
   ): Promise<DelegatesResponse> {
     const response = await this.httpBackend.createRequest<DelegatesResponse>({
-      url: `${this.url}/chains/${this.chain}/blocks/${block}/context/delegates/${address}`,
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/delegates/${address}`),
       method: 'GET',
     });
 
@@ -318,7 +336,7 @@ export class RpcClient {
    */
   async getConstants({ block }: RPCOptions = defaultRPCOptions): Promise<ConstantsResponse> {
     const response = await this.httpBackend.createRequest<ConstantsResponse>({
-      url: `${this.url}/chains/${this.chain}/blocks/${block}/context/constants`,
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/constants`),
       method: 'GET',
     });
 
@@ -352,7 +370,7 @@ export class RpcClient {
    */
   async getBlock({ block }: RPCOptions = defaultRPCOptions): Promise<BlockResponse> {
     const response = await this.httpBackend.createRequest<BlockResponse>({
-      url: `${this.url}/chains/${this.chain}/blocks/${block}`,
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}`),
       method: 'GET',
     });
 
@@ -369,7 +387,7 @@ export class RpcClient {
    */
   async getBlockHeader({ block }: RPCOptions = defaultRPCOptions): Promise<BlockHeaderResponse> {
     const response = await this.httpBackend.createRequest<RawBlockHeaderResponse>({
-      url: `${this.url}/chains/${this.chain}/blocks/${block}/header`,
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/header`),
       method: 'GET',
     });
 
@@ -386,7 +404,7 @@ export class RpcClient {
    */
   async getBlockMetadata({ block }: RPCOptions = defaultRPCOptions): Promise<BlockMetadata> {
     const response = await this.httpBackend.createRequest<BlockMetadata>({
-      url: `${this.url}/chains/${this.chain}/blocks/${block}/metadata`,
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/metadata`),
       method: 'GET',
     });
 
@@ -407,7 +425,7 @@ export class RpcClient {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<BakingRightsResponse> {
     const response = await this.httpBackend.createRequest<BakingRightsResponse>({
-      url: `${this.url}/chains/${this.chain}/blocks/${block}/helpers/baking_rights`,
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/helpers/baking_rights`),
       method: 'GET',
       query: args,
     });
@@ -429,7 +447,7 @@ export class RpcClient {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<EndorsingRightsResponse> {
     const response = await this.httpBackend.createRequest<EndorsingRightsResponse>({
-      url: `${this.url}/chains/${this.chain}/blocks/${block}/helpers/endorsing_rights`,
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/helpers/endorsing_rights`),
       method: 'GET',
       query: args,
     });
@@ -446,7 +464,7 @@ export class RpcClient {
    */
   async getBallotList({ block }: RPCOptions = defaultRPCOptions): Promise<BallotListResponse> {
     const response = await this.httpBackend.createRequest<BallotListResponse>({
-      url: `${this.url}/chains/${this.chain}/blocks/${block}/votes/ballot_list`,
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/votes/ballot_list`),
       method: 'GET',
     });
 
@@ -463,7 +481,7 @@ export class RpcClient {
    */
   async getBallots({ block }: RPCOptions = defaultRPCOptions): Promise<BallotsResponse> {
     const response = await this.httpBackend.createRequest<BallotsResponse>({
-      url: `${this.url}/chains/${this.chain}/blocks/${block}/votes/ballots`,
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/votes/ballots`),
       method: 'GET',
     });
 
@@ -482,7 +500,7 @@ export class RpcClient {
     PeriodKindResponse
   > {
     const response = await this.httpBackend.createRequest<PeriodKindResponse>({
-      url: `${this.url}/chains/${this.chain}/blocks/${block}/votes/current_period_kind`,
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/votes/current_period_kind`),
       method: 'GET',
     });
 
@@ -501,7 +519,7 @@ export class RpcClient {
     CurrentProposalResponse
   > {
     const response = await this.httpBackend.createRequest<CurrentProposalResponse>({
-      url: `${this.url}/chains/${this.chain}/blocks/${block}/votes/current_proposal`,
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/votes/current_proposal`),
       method: 'GET',
     });
 
@@ -520,7 +538,7 @@ export class RpcClient {
     CurrentQuorumResponse
   > {
     const response = await this.httpBackend.createRequest<CurrentQuorumResponse>({
-      url: `${this.url}/chains/${this.chain}/blocks/${block}/votes/current_quorum`,
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/votes/current_quorum`),
       method: 'GET',
     });
 
@@ -539,7 +557,7 @@ export class RpcClient {
     VotesListingsResponse
   > {
     const response = await this.httpBackend.createRequest<VotesListingsResponse>({
-      url: `${this.url}/chains/${this.chain}/blocks/${block}/votes/listings`,
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/votes/listings`),
       method: 'GET',
     });
 
@@ -556,7 +574,7 @@ export class RpcClient {
    */
   async getProposals({ block }: RPCOptions = defaultRPCOptions): Promise<ProposalsResponse> {
     const response = await this.httpBackend.createRequest<ProposalsResponse>({
-      url: `${this.url}/chains/${this.chain}/blocks/${block}/votes/proposals`,
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/votes/proposals`),
       method: 'GET',
     });
 
@@ -578,7 +596,7 @@ export class RpcClient {
   ): Promise<string> {
     return this.httpBackend.createRequest<string>(
       {
-        url: `${this.url}/chains/${this.chain}/blocks/${block}/helpers/forge/operations`,
+        url: this.createURL(`/chains/${this.chain}/blocks/${block}/helpers/forge/operations`),
         method: 'POST',
       },
       data
@@ -596,7 +614,7 @@ export class RpcClient {
   async injectOperation(signedOpBytes: string): Promise<OperationHash> {
     return this.httpBackend.createRequest<any>(
       {
-        url: `${this.url}/injection/operation`,
+        url: this.createURL(`/injection/operation`),
         method: 'POST',
       },
       signedOpBytes
@@ -618,7 +636,7 @@ export class RpcClient {
   ): Promise<PreapplyResponse[]> {
     const response = await this.httpBackend.createRequest<PreapplyResponse[]>(
       {
-        url: `${this.url}/chains/${this.chain}/blocks/${block}/helpers/preapply/operations`,
+        url: this.createURL(`/chains/${this.chain}/blocks/${block}/helpers/preapply/operations`),
         method: 'POST',
       },
       ops
@@ -644,7 +662,9 @@ export class RpcClient {
     const contractResponse = await this.httpBackend.createRequest<{
       entrypoints: { [key: string]: Object };
     }>({
-      url: `${this.url}/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/entrypoints`,
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/entrypoints`
+      ),
       method: 'GET',
     });
 
@@ -665,7 +685,7 @@ export class RpcClient {
   ): Promise<PreapplyResponse> {
     const response = await this.httpBackend.createRequest<any>(
       {
-        url: `${this.url}/chains/${this.chain}/blocks/${block}/helpers/scripts/run_operation`,
+        url: this.createURL(`/chains/${this.chain}/blocks/${block}/helpers/scripts/run_operation`),
         method: 'POST',
       },
       op
@@ -676,7 +696,7 @@ export class RpcClient {
 
   async getChainId() {
     return this.httpBackend.createRequest<string>({
-      url: `${this.url}/chains/${this.chain}/chain_id`,
+      url: this.createURL(`/chains/${this.chain}/chain_id`),
       method: 'GET',
     });
   }
@@ -695,7 +715,7 @@ export class RpcClient {
   async packData(data: PackDataParams, { block }: RPCOptions = defaultRPCOptions) {
     const { gas, ...rest } = await this.httpBackend.createRequest<PackDataResponse>(
       {
-        url: `${this.url}/chains/${this.chain}/blocks/${block}/helpers/scripts/pack_data`,
+        url: this.createURL(`/chains/${this.chain}/blocks/${block}/helpers/scripts/pack_data`),
         method: 'POST',
       },
       data
