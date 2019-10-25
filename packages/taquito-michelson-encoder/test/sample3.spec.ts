@@ -142,7 +142,7 @@ describe('Schema test', () => {
               args: [
                 {
                   prim: 'Left',
-                  args: [''],
+                  args: [{ prim: 'Unit' }],
                 },
               ],
             },
