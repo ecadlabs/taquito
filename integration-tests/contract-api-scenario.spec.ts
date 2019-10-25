@@ -2,6 +2,7 @@ import { CONFIGS } from "./config";
 import { ligoSample } from "./data/ligo-simple-contract";
 import { tokenCode, tokenInit } from "./data/tokens";
 import { voteSample } from "./data/vote-contract";
+import { depositContractCode, depositContractStorage } from "./data/deposit_contract";
 
 CONFIGS.forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
@@ -124,6 +125,20 @@ CONFIGS.forEach(({ lib, rpc, setup }) => {
       const bigMapValue = await bigMap.get(await Tezos.signer.publicKeyHash())
       expect(bigMapValue['0'].toString()).toEqual("2")
       expect(bigMapValue['1']).toEqual({})
+      done();
+    })
+
+    it('Test contract with unit as params', async (done) => {
+      const op = await Tezos.contract.originate({
+        balance: "1",
+        code: depositContractCode,
+        init: depositContractStorage
+      })
+      const contract = await op.contract()
+
+      const operation = await contract.methods.deposit(null).send({ amount: 1, });
+      await operation.confirmation();
+      expect(operation.status).toEqual('applied')
       done();
     })
   });
