@@ -13,11 +13,11 @@ export class UnitToken extends Token {
 
   public Encode(args: any[]): any {
     args.pop();
-    return '';
+    return { prim: 'Unit' };
   }
 
   public EncodeObject(_val: any): any {
-    return '';
+    return { prim: 'Unit' };
   }
 
   public Execute(): { [key: string]: any } {
