@@ -14,7 +14,7 @@
           },
           {
             "path": "dist/taquito-streamer.umd.js",
-            "sha512": "8064b2ca22039ee7997ef70a887d8cc493363338e387696aa4f51be6720fa943b3647ef3542582811309ea195e6633379ce1d834846f45c43d44a2d4eecfc206"
+            "sha512": "01d7cf4bb811144d0831219e6fb79cad0f80f7fe4bbeed9d13f84181cc17a50abe021094acc5fe6328b6df075c3be1aaa897d3fab4aa1938babd57377106bfd9"
           },
           {
             "path": "dist/taquito-streamer.es5.js.map",
@@ -177,5 +177,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdphLiCRAD9Qy5GYHsngAAMHcQAB7RO1CYC0DJVdxF+YnJ97Oi\nJCMVUC0EZ40qughQY+KXJxbblU9qnI1xXcciL8LX933WuS8h6FIPUGv2vZe+N6yF\nZrjraX93tdRtwLW0AvXHPdkmUbwI3DRmv/qDLQOAq7vPLCpxKPQZehTmGgJcVg+s\nN0+usLoXXB1plodmWVX9UG4621vDiCwnfxyb4OgjGLJoEW176EdFHLrt3j2XoESd\ngPhAZRDjyLj/I476BhEbtkS+OkXCrd2gNISzsyBIy8j+qypw+5KEAsfP5iwhbQR/\nm8CKeYenAuqudDYdE3m/MRmje7ibeXj6AIhjo3ZlN9/n6N6+/i4HCIln1Zg57UXj\n4942jAYAOv0SJwEfhKOQK7m2tWe/PK3flHEkexnKdpJIvrySwpSsmoYZgjNIQevW\naZ2kWD5IzS3DEXGLzPDi70q7thH3vEf/A49mgJtTubTPeU6BRh98fvhnHnw01sKo\nst8x6484fVlUD10w7TkqVTysAQYKEATG07k4MYnaZfunkjAhDtQD8Oy95x2Q8e0/\nHEnmwK6JbFu7n9YTuUJBAqd80ZmS3wUse+zuqNDBjjgkIVljom1gdJvH52OioTN1\nDiUrCy2NaGXFejjNSjpcLcTvje6zPY7kqNvZGFDwQSh/I+8MFDjAWMT2EemswpCq\nIK76dIdz3M7bAq5WgThS\n=C+pX\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdszJJCRAD9Qy5GYHsngAAvBkQABUXQdbmGregKJFQMhGbfi13\n9tWNA+Icb0M5kNpW8Juf72L1QEjETLK392mrLXH9wTYNtmmOjUMF0uTmVwq96HOB\n31kZVYu9G+8dmtVBsiV/ZLHRx9EOIbEc75N48knvAnT5Aq8v2WprlfYZ67YU8HqT\nwW5JVVcOBI0TnzOeFze0KU/bLPYdEFPjtriBRJojedgaPq8v+QvmlC9naLBp+hB/\n2MFFUhJBNOLIBefGJnzc4jqCcd0Z80foTHPMDUt2jSKspdz61h4nFkxUDgaPEi5Q\nr9wtMPHh/0vlLGDPYKewFnEVbFybsvn+Zb0eQDKWrwPNUhUREM6A0EuZLPjOf+vp\nNkUYUPmwGPfZAtz1WbSlSk5/dqTUslZo2ICLqrNqA+m1Dgjpgz2L9NjYIpnmGiky\nOn4DKswmjNhR7UXDqRyipaumEXXx7RZcZZZXO6xfD3MABgaLoL30bkmqVj98y9Lp\nrqKgwGPZ6+zLcNwLKA5Y/bzgIZQUeqfgsGEiMfuiObap/51SOrY/CrLySRPcbzLs\nDnwg7cHFdiHmWZHzsofaNC0JwjS+gtLzM1ruSRX8ANofbUwmLnqzEiOkJIRswSPK\n6tC7Zvvd0OWshC1dduHKvj+vNTQEYJ9uMTyjo4nEeIYjZ6Od4WZSHsL0dvsgY2QD\nASW189huUh8tGDO5Agc4\n=TMpn\n-----END PGP SIGNATURE-----\n"
 }

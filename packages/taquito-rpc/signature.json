@@ -6,15 +6,15 @@
         "files": [
           {
             "path": "dist/taquito-rpc.es5.js",
-            "sha512": "44d9b338d178bd1b9ee317dc0008eafb014448c5e5c27c6ef779a88ce29cf8fa0fec3bf25566e434d122969acb2432a4fca9783732acb9f4308d71258c1d4962"
+            "sha512": "feeea71de624de47957aa7deba9cfe518103d0cdae8706ad52bb1adfdf55e00d9167cd4c4a0b16dc04f4811468471bf6f9d2abdc61c4273ad38471e763ff2854"
           },
           {
             "path": "dist/lib/taquito-rpc.js",
-            "sha512": "2deb7e0706fa372e8ead46b2c6db6e8353ef5c0ca51e168160466522eecf3ff371c8c891d715112af71c985d257c1055745f8dc870888909e478b36f8542dfe0"
+            "sha512": "9358a1312df89f4116cef354cb14bc07d7f873dd0b9d7c7b2857ffb8977abbc2dc0c2d653bfc0c35caa8158ad7a1702cafd1073aefbbcaf380202d37179773d8"
           },
           {
             "path": "dist/taquito-rpc.umd.js",
-            "sha512": "9af4a3ce156a87fdfb945c9f5a2447c30020137caa77e5b79ff963fb812fcc265d64d7fc2ad4c9a6aedc4df3f5706030e5637f306df8c1afe68b5c7b5432f042"
+            "sha512": "8f892e5a0f0444c8a383a548421f0d5db73dfe702f5e723a21ef95d114124354dc4fd56624ddde049c1adb42594652df2bae78d175e55e7ab3873829007ad63b"
           },
           {
             "path": "dist/lib/types.004.js",
@@ -38,15 +38,15 @@
           },
           {
             "path": "dist/taquito-rpc.es5.js.map",
-            "sha512": "942b3426b5dd76dadb0969769a1608824808323acb5b4629baf18fbf7b2d30ad4470b6d482679eeb2383bcfaf249aa767aa9bfe8776cfd722aad9c7c628de8ba"
+            "sha512": "c71d1054e8cd32ec8e97894e8e1318b58e1d3add6aa73dced176be2840787179d7c4dc3cbef3d15eae029ad0c13d6ed35f4fe045d23dd5f8a045f2381667236b"
           },
           {
             "path": "dist/lib/taquito-rpc.js.map",
-            "sha512": "7c90a853f8627e6ca231253b64812fe1cf182d1bb6cac381809be2727e1abb013f559c48c23df9040906e6636709b254ba2b2e3147adb3d47851a765a67dba9a"
+            "sha512": "93c9519d3377d7329d65acf96158acc7f401bf450944ca615c6821e4e1a626e99b16c0e5882d651b95862619a3d68c17bed4f9d4f1676ec0c1f2023e08a8305f"
           },
           {
             "path": "dist/taquito-rpc.umd.js.map",
-            "sha512": "927fd86d2dd043409457a4561b7648ac4223125baa20a50e51e68c82f1f0c7137b990f91485891fad042e86ba55e213130edac7098bf6086afffa671fbd03923"
+            "sha512": "691e48bd343f6e18eb9f3111245062d8f7ff7b99a3f4874873da396b311e1a160243ead320f481fc9261ec5def1b148046e9587ea170740216fd9d52f6dc320d"
           },
           {
             "path": "dist/lib/types.004.js.map",
@@ -74,7 +74,7 @@
           },
           {
             "path": "dist/types/taquito-rpc.d.ts",
-            "sha512": "18d5b19ccc2356d69a1959a88ef09039ac7cf314f4a149a4be55958ee995582ba3a9d8163f24e157747b416bcf7c26fadcabbe4e5797f48246b9ec23aea487bd"
+            "sha512": "e73d92cad4d3f23984463f2789f9137a0b27c1a5ae853bb60b2a4037b7c238cde83b6691d8b6f59cbb836effdd7e570035abb51175d9e39d5d8a6f51f8d5bd2e"
           },
           {
             "path": "dist/types/types.004.d.ts",
@@ -90,7 +90,7 @@
           },
           {
             "path": "dist/types/types.d.ts",
-            "sha512": "a19339f8bd5137b42eee1095d2cdc0f461dacd0191168391e151fd1eb052a7883026899f6b3d9bc479c1a96dceb3720afb7187bd6f40d66780635b3a5a4142fd"
+            "sha512": "0ae413a4c190fe52e10953da17cd106d815871f032e8cbb82a10786bfda31870a9dfec2ebc847ce5bcf460e864296dea11b1c9350198ad537921225ef149b2af"
           },
           {
             "path": "dist/types/utils/utils.d.ts",
@@ -239,5 +239,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdphLgCRAD9Qy5GYHsngAAHggQAIYx/u3VCDoaTvvgm/iX9jB9\n1o+6Vl9haQpC3jv9s+hVB0JwnA9IADOmbOO5YpqG9bcxM2oCveZFW0kmaf8yceWm\na5Qwq+duMr6FLJY/VqTY19NmgUCGXIPSLwbd9OXzo2Ng/MCNHzikAzcFZfIyOtU+\nzqL4GE7uQcD5dZGJk/6dawVqU1UaIqnRigV7T4erpL4u5QDgcg6eBL6WyDEfYc4O\n0+k2l6fOPQ0mN/417s88yLMx7soxSQvOHjaTWUzqve2jMu0NtTCpp6eIB6EPJEqJ\nYxH9GFKZPVk5lw6wbXHb3flRKYbJWMJOZ+c7CSPpE0bm1bNj8fvuFqQFnK6sceyU\nwhCb8WeNn/JD5Clz/ulMaCnPtKo41PzL15ZMXtTRjEA57toTN5Dg7D/xbLyPNOEj\nELOkN1itodVq4YzU/WRv3TIj/kGFPWkM7kmaszUcWceJV9dLhCZFdZEVHi4H6QJZ\nGw0lre71xNG88WEGsutpwQ9iq+uwLvuP1GMARVzcWdXdHMo2ry+YCh55+gKNEBQy\n5xEb5wrIqVz8M+CgvUlitziuUCYCZs3yUZB7AvrUdO7MfZarb9s9b7tYqIMRqBDV\n0MyomnhDS/SICUI/wX8Dq5kCAEQmKCJmzCE86MPFnOMRBdeaDomm4/QN80+xNCOi\nUqNNOb25zGTI+gcExQvg\n=d4UJ\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdszJICRAD9Qy5GYHsngAA+sgQAKWj8zuZaAmWt9+djGCjB12Y\nFnrlDR3YKkPMRq+oz6U17jylkVI6O4wPknEtBLA4ZO7JeamOQtonVIUABgN3KjNd\nb1GKcC3IxNWH3yySZ1lI8LVs1y9ofpXTBiyjwnkW+lT03immC+GaxpDskAQYlfwa\nmo1A/r+bgFFFR0bqDxL/PCUlJYUr4pzYTMEbswm5VwOEJ/kbAYGDQjZDlkqtxeU5\nAJNdDpDywdYiFI68S9GJdWOwPyAsBgKuhQYzqq2gPo94UJGuZp89Ie/ye6MByqq8\n+0QDQH5tzBKj93BeVrFGjqxaT/dwE6gcW0iGHFjQOuoPqUxbv9di3OgVcOpujQTC\nscYah6SYs/pyIgaYkAisND7HfzsQB+GgP+FDxYe02Rs92PMEibP+Mo9MhV6wW0DD\nvWG1DHf0DA3WB8neSyAcdTZJLrWp9cma42eDlM//1Zi8PXoYccM7ZdRMCr/yCwF8\nhPacOYEOVIU0xh5KxJsDU8AyD7rf2Jk7cxSVx0AGaHgWW0ZI4zqToRvPSRiXnrYQ\n4ezprvuZGAm7HnwYni53De2NsbZk8x6kKp9rt3397egepNSbhi46G1vaOzUFRDqK\nTm1kaK9PZe6ygu3VYewPmQDo2pvanGArOar+wLG3zzWrLdF+CDTjL0IHKV/4ZLQY\nldnUydPK83/VH10xF3/o\n=Jvyj\n-----END PGP SIGNATURE-----\n"
 }

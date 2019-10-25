@@ -14,7 +14,7 @@
           },
           {
             "path": "dist/taquito-tezbridge-signer.umd.js",
-            "sha512": "660cb733c9ecad7c5baadd0c461ad7f3b378c39634b8e5d6097dbc00fcbac03168a7d0c1281bb5b07659acd8febc82b47e46fe942b807ee29f60ce5114dadc08"
+            "sha512": "86bbfc9841507c2389439c01cef91c86717a98e3a86fc34955fb994f0045d3f837f7c2429ed3164ea050f9b33a1bcf1824f48da6ae132f07c079ca4646d1ccbc"
           },
           {
             "path": "dist/taquito-tezbridge-signer.es5.js.map",
@@ -169,5 +169,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdphLjCRAD9Qy5GYHsngAA6IcQAEc99w9a9l/GtF6rA/P7A0za\nxKMjgL45IcN/0jdc1nj6g1pUH1w7CVc5ffDOtsc142cHamFQKhN58oSk0NjYuEhK\n0UwGr2lDPGheqFsjHA6Ie+VZ/vCXYitX/ssfoVKXON9lxfk8QEV/ySZaSHJPn496\nOM/rtc2l8GlNwBaZ15KusdxO26Mo650tELI27biUcI+YKxfP+F/6sF2NO83Lgjqc\nmYCIZVwQ3t09CGYPS9qf42OllrY7l3br0s+DTd6sjoHBaZUU8eE0oGk2j/HbcRuL\nnSMEzxGC0o45HDSTPIfhTkS1tLiukwcwdKaAb7+PveIWX56Rk7LjFCRNdlMAKb8R\n1FXZkFNxopsXeyk8KgYz1EXQi+0aO6EBlLl5m6GlUliKzMElUYhgshTkjN5GmQ0d\niXHtGc5kw2kch1XwgLo0zekx/xXar9sHcS+6DqhY9Ddpmt1Elkw/RhBsOxahrNMS\nEXoH9aHFOFs+q4DdeGa4PtyD9hgYCuaO1ld5yLoCQW+henIcRSGJ9VQajKLuJXIN\nomPb7kTo9wKs7aZwpOLLmHOj0W74DpaM0J90eMJZabYElZ3OcCvOnS07Dx/PjASu\nh0QsdSf1aXLGIVgYKIOnUrc1RmYh8I4UYbG81EWgh0Q/ObIRfB5UcgKFnn8l6r0/\nNlnMi12WEfoTdDzj2av2\n=zOI5\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdszJKCRAD9Qy5GYHsngAAngEQAG4eGIEh6Sx8C3Rb8TdufK8h\nAg9NsvoIk8nrkmYXeX77DnT5kUOm3vmM5JxhNyy/9KSUWPk9IZAzXwb/TQPuaqjn\n3cQyarKt8nqG4cGpVmJULQpdfqRBxkLUAxryWM5jJtiV54+7bf4ApydHGmO14SGC\n5xv0Ac6UIl0eGRKIynw0LgrfeTrW0kuvvylkkIC53YC/jDqgc5ZSGXj3rjnL+Ql4\nZu2uH0FTfapFfjOhwajwvJaFmqPSXHyzTjVKNvfQysdnNAmjRpPQ3ivZ8w50QukU\naZLmFVCtCVpckG8LE1jVXHgwmmIByeZZSsIuA5vWpnH79tqaGBcygIBjxAvV3ZtX\nokzC6FCa0KsNp625RZqDKRF4ViUKDdFOCinZe/9SWsFS115rfUHihHiuEPqOIUgD\n8hnt99QyrUbBUz3U7EJGp59u7ETqL/I6+2XRUWJoGD4r1Qc2sJ5WRYH8IpaCsScb\nmRMmYzvl/n3lqPbXwnIeiZ7nzShE7fKQA8ePi4GL2VKbQRC7u06gAcUiX/8oR2rQ\nTmqgv6l1Upf5mMDN2Yeg/2E3My2FItPyHWh850OtryQ8L/Iv0e8PxPwkJvhPFDAF\n32Be9JcXVY1i8sTQQISJ9jX39Nr5jRcjA8g41Nb/bd/OtBgwoLT0gSTnukdyD4eA\nys/1r8VVFItVIsYQzRKw\n=dneo\n-----END PGP SIGNATURE-----\n"
 }

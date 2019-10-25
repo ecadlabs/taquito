@@ -5,6 +5,10 @@
       "value": {
         "files": [
           {
+            "path": "dist/lib/contract/big-map.js",
+            "sha512": "1bfd6b70d934e00579ef0d7b735648a4a17ce60feb589f2d556a16688074d501f73d65ee7d901cc7d2ffd6f226c4af5bdc89e87babc79b4b292923aec27007d2"
+          },
+          {
             "path": "dist/lib/constants.js",
             "sha512": "89340d67971b2789b9a04d6ee16b32288f7336b02257923f735563a6a7753177ad6e68b5347e5fe33595edcc3fb20e95ed755e100547cdc38d4e86810409308f"
           },
@@ -14,7 +18,7 @@
           },
           {
             "path": "dist/lib/contract/contract.js",
-            "sha512": "6b5b8e5c814f8420d96001f4b6eb1e054531a1d1ea877f915dd481c8d31fb7960a1c2a066ce0b81db2e7911d8ddfd8635506308887595a03f54d7e84ae39aef3"
+            "sha512": "931b28c805ab76349b7ff3a13fdd5ee19416c3341ce734777a2d931989503f18ea48254ce1313dadaf7987a42736818ea06e2dd6b9285c3624b94f0ae9b6bd0d"
           },
           {
             "path": "dist/lib/contract/estimate.js",
@@ -82,7 +86,7 @@
           },
           {
             "path": "dist/lib/contract/rpc-contract-provider.js",
-            "sha512": "a1891b141e79575017128c9a3e21600204174ce8e104893b7175763618934a9f5cd6ecc4f88fc701ea1cbc2802e2c23bfc3d9f050572ca49f83178b64df83398"
+            "sha512": "38f8e21881039898e4d4e9bbad537bfaff90eef8902d9d213f76d0b320ff7768c515574fda6b72543194b2251f6de99f839a078eb378f160ecbb3c8f0121577b"
           },
           {
             "path": "dist/lib/contract/rpc-estimate-provider.js",
@@ -93,8 +97,12 @@
             "sha512": "461c075cdc7f896a02d2ccc6133e39731d5c2dec23480d47bdfcd7e39ea1982f4ae55f3350e76072be1ddf1e8ce876d3dc57bbbac5cc8c988f72050a5fd296ab"
           },
           {
+            "path": "dist/lib/contract/semantic.js",
+            "sha512": "fc75c24f8bda8bcb187a92712c93ca47b40ae91f6a9f3cd0aea28a25aa45a93b3c591908a1b3545455cd06e23023b375ab068e1cecaa2b0c1bdcbbdaa7816aa3"
+          },
+          {
             "path": "dist/taquito.es5.js",
-            "sha512": "0deb4345fd8e4c433b81f846f7af0dd7a42451ef3eaf3ffa28827006af757250d84d53c6af82c6cbc9a32be3fdf7a97ea79341fbbf15932124eac04eee7aec97"
+            "sha512": "fe509ea7f67a96f1a4f0de2e803be3db9d780c3931b8a3aeada8af505c8cd9170da6ba85d2891800c0d5af408c6631acfff0ab1224a86876675355f6fe925d91"
           },
           {
             "path": "dist/lib/taquito.js",
@@ -102,11 +110,15 @@
           },
           {
             "path": "dist/taquito.umd.js",
-            "sha512": "d937be09b42601aa73f829d42482d7eacc7fb774430a585e71735b6cae308d5756df004ae6aa1558c063fb369f53ade2d67f2bb5167645f69f6d898fd39a6d12"
+            "sha512": "5ee7d730cf5284db71b0bcfa66456fdf6715b2e1c75735bff82bed8ef3a8ca49074b83974ca1dda4dc5be78783a059ad61941c6e9aad3286b494af957a19979e"
           },
           {
             "path": "dist/lib/operations/types.js",
             "sha512": "9e153af0176a3eb9c340bc30c016b6fc5410466e8f4cd5ce09a73fdb98265c937c30677fbacf526ff7555c93e7da855c8a170fd76798a74693e3fdbcc182380a"
+          },
+          {
+            "path": "dist/lib/contract/big-map.js.map",
+            "sha512": "a8b4d6cecdcc22738d498c6c84fda5a42024845e1e01e02031d1601d16f68eb993e7ec39d2d79d462069c5f9237f00be143c672e98a6e88211183254e1add47f"
           },
           {
             "path": "dist/lib/constants.js.map",
@@ -118,7 +130,7 @@
           },
           {
             "path": "dist/lib/contract/contract.js.map",
-            "sha512": "748aeed2b999b9c3d86c8a8d8a23f40fb5e5e3004a95cc359bdfe25beddc5ff7bd377b685ff87508e6f9736dedd071a30dc32971dcf3a00d4cb99f1c17eb031b"
+            "sha512": "a04931b3193b5761a2fb67732b00b728675c753397538156b51cc5a324fc107c8fcfd72f916019cdfac2485f29afd52c89599c878fc2d9a05e600b4743c00e1a"
           },
           {
             "path": "dist/lib/contract/estimate.js.map",
@@ -182,7 +194,7 @@
           },
           {
             "path": "dist/lib/contract/rpc-contract-provider.js.map",
-            "sha512": "f8c4f0f8a983d75bfeccc10c41a32fd4f20a3cd66f1ad2212d6f636130b2f5d61d273d35c6acaeb82b9e9960fefab91ad97cff504ea5e0d385782073ef39e6f6"
+            "sha512": "f22fd6a73f33db2c81c3faf08cbd9fe1c67c0701cf015f30f918f15253686b96dba27ecd3f69c6356a9483926458e47b4fdd3d37e15516593da29d317dcfd870"
           },
           {
             "path": "dist/lib/contract/rpc-estimate-provider.js.map",
@@ -193,8 +205,12 @@
             "sha512": "a6e8049f565b7657d107792fb530c3d91853c98eb67297290e8c5c085d484284f08a75bac604a5ff0f0e4d95905ec1ffb234b85e0a496a50584c7d8f29d266b9"
           },
           {
+            "path": "dist/lib/contract/semantic.js.map",
+            "sha512": "4418cfb754bb17f8d915c25f45a9cbf4def7029c16c73eb198b633d0d0de7e177db2e9df1beb7b9ee3834d579d3f585033e9eebd7389e27e737a9a1d5812bb86"
+          },
+          {
             "path": "dist/taquito.es5.js.map",
-            "sha512": "ccbebbe7e297eb97de5c24af71ec5562ed83024c89b9dd8afe01423f060e66af6f989267650b6cb7f7bf3d493663c0008b3bcd4659681f4a08126c2db9e7023b"
+            "sha512": "f2ef5a6e02ddb1e0896233bf2127c4dad77153dca264b7ab9c0cdab7601eb09e0ae304d8d1fa5c2ecd3fcec924d9c918fa07d415542c2be9f869f333411e489e"
           },
           {
             "path": "dist/lib/taquito.js.map",
@@ -202,7 +218,7 @@
           },
           {
             "path": "dist/taquito.umd.js.map",
-            "sha512": "aae5aebf2e1dbfe00d7c6aad4f345826c0c4e30805ed155fc7ef3a673099063c14a2af0ace526f7e615b36f137cbab975cf21670985f0325466be76228f1b129"
+            "sha512": "38f6c6428ba88211162b0aec04ca6d47229e5933ac2ae85a9b6c67a9d3f01aba43c2a74e230513ecfa79e911c890957c15a6f8ecedf40eb8bef1965f662360b3"
           },
           {
             "path": "dist/lib/operations/types.js.map",
@@ -211,6 +227,10 @@
           {
             "path": "README.md",
             "sha512": "0955acbe453571a28e555fac60a6e5f7bffd7591d81eff42fd0658b82c05af37a165bf0248b0a696e1e037995a81731e21a6a420c328c3fccdb29640054283ab"
+          },
+          {
+            "path": "dist/types/contract/big-map.d.ts",
+            "sha512": "3377bba76366573c5a2ea3ec72eb5a19af95526227a704080820263180115017de9ead361bb5486edb4576a97d09954a2af64d97ae807a4a68d374252ab2752e"
           },
           {
             "path": "dist/types/constants.d.ts",
@@ -222,7 +242,7 @@
           },
           {
             "path": "dist/types/contract/contract.d.ts",
-            "sha512": "8cbc5fb8a15fe7e0f9b7cb7753c29ac7454561df3f8b95fb1fbb0cdefd89b79954cda98f1de5436b66b922a294fc242c1e3ebf14d3a696c4c86fe8bbcca8cf97"
+            "sha512": "124ab6f833b6b8068ca35ad77c65442bed8649fa41e98064935c7abfee83fd6ee4a663583c3708a71d186c0e9de687f7cda48ddea2da86d8d081ddf2be276151"
           },
           {
             "path": "dist/types/contract/estimate.d.ts",
@@ -238,7 +258,7 @@
           },
           {
             "path": "dist/types/contract/interface.d.ts",
-            "sha512": "7750efbe0a569788bc3c91fa81d52b8cecd84d2e6ebdb27c109241cf01a4b6d31a52cffa692c8073a405f609709cf585c593f45eff9056c5e83028ac4ae2a524"
+            "sha512": "ea4aebfb56488db6f0114caaadc00a6c715d35d59bdd91af8a7c89ebf96b7a6f488d57de74f3daf3fe3cdc678571745e9f5ec9c5424abac2fa5651b0e816b399"
           },
           {
             "path": "dist/types/query/interface.d.ts",
@@ -286,7 +306,7 @@
           },
           {
             "path": "dist/types/contract/rpc-contract-provider.d.ts",
-            "sha512": "2c8f3675c6042d59fb13d156eccb5ec9bf78c3206ce0f354dcbd8f952c34a96637bdcb15c1f8d85449f656359d2fbb2f74a0a9f1e8aef76fa5a6a062fea2942a"
+            "sha512": "f1d9462a2c91546117562c696eb08a69900f8330808c96a859e640a9bf78c23881312fe6d1ac7aeec27184caa9be73eb619a3e5516ba62e4da43848053e71cb1"
           },
           {
             "path": "dist/types/contract/rpc-estimate-provider.d.ts",
@@ -295,6 +315,10 @@
           {
             "path": "dist/types/tz/rpc-tz-provider.d.ts",
             "sha512": "b0e4aa44c5c366da2b341f77d90dc794d09a092bbdb9b7380428d77292b4aca6d43278245f04153938f66ae70405dd81a409ca8c5d615b09a0e9f14fc23f7551"
+          },
+          {
+            "path": "dist/types/contract/semantic.d.ts",
+            "sha512": "77053eae41486270a02449c35f42a3542b4ac831c4ab95734313c0124c2cbd91295cbd1141b8d3f10a63698a40e77da2e318b2435a42a49bd9d121f2127c25dc"
           },
           {
             "path": "dist/types/taquito.d.ts",
@@ -456,5 +480,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdphLbCRAD9Qy5GYHsngAARfwQAE5U/B/FLM+aEzlKLKYMqNzy\n4ps+JbpVc9DGTuE+OafD6jIiMDTjHG5B8OYpppQf6/xCQwrDj7gFDXPkmbnAsIWU\nb8x2ot/vDI2FhtgvdHr0I6vRGWVetJnDGbUh+VuYJxVmiXr4y2K4kHp+zCPodZMK\nzARcHmJxeQ1UiUfJDfclUyWZdE7/o+4e5g1ZveH281Tisi98bKmvW5wxLPpgoNlV\nYOXAH2RtkjDW8Ynl8FriEZmrJf+/KRQDLxm+EEFSGp8uji3Z7HzP0HM2rL24NGVl\naAkFb5wYh1jqJ5CnsgI9Dk1NR9Phzd3Mj9hBJ2+Q+H2l4nMLjeAzCOvl+GOxT6is\nPCwfB5QlLtyA+yT10+BVr4IQ5LHZKQ5q7jUphVgy+/AvLFMD6AmFNsZgoNMKQDtM\nusDz/r/ny4KyYE1aH4YAJMULZ2TuCvoJpHZ4HdSRfq4x3GVvk2wp4txosm8Wrr9i\nZ7Wf88RxFkMJ7ZZS1MXC6hzl1OLaxIY6Kh+Uay0t/Of7X1ksctg3DyE8+hKSN15B\nXQjAYJrGYKm6iGLEqzCuewe+qiFCOOgwUMUtyi/C82RGhTt40l7J92UWWvAIGlk8\nmC4FSAc9tdKZy66bj933fgPtS0rzlBacdngOwdugtmfUaLyjPBYr2Mdf1I9mwuA2\nps/11g0OEUREP0Uuz50C\n=dUNR\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdszJDCRAD9Qy5GYHsngAAR7cQAGo+zmPF3W514wLu78mhMuZb\nHHy+NcPXZYKNTdrVrKnG1k1/CWgxb2hZ67AEiXeDNOXuizPiCtSQtGzcTOUsE0Me\nsGyOXaQzE+J0hKG0BXL3RBJXzUvBbIyF9Rx/tmHUG5J/SzPDitRyrvy5HBfH8EGv\nascEnIJJ+w55PmwgSzdtg797Mh2sL56ZtOeBL2aqdIJ/Mnm2oMwpYSnmKUBU+ijk\naKbQWNHp1D+0c6UE9jrPVZUf3iuhbPBBu10aAXMycAWVKdULvX3rcws7KJgppDDm\nIUc3VQ82VIQsdbN2KqdM0C4Qn1tP4CjuFTiX0IBbZjriJFgzIOlPTsiYUyqSe/Y4\nlcimL+HrF39jcFsUR1A91jSc3zHGfuz9evxmIViCQXmOJ7wvuaZw3e9zmAO6c7Cw\nVXOjsiMMGKr4RwBtnhc0vKZ7p1Ae07sI5zNnjcjQ1d2qw1AmkjiUjpHPslYPQS04\nFZ/nEyE9mIYQLPgsQB4/dSTKgQQrQRP8smZxf17agOZLGDg8i9ACSA8lkn5kvCt9\nKBZOAO28N+FHMdxtPyRo8j4oHd0O3K61TGQk5HdVrsdEJWhy/oyESZfPX/IwwA2c\n9/7jyuX+l0rSEXs/XSzer8D6fLe8G+hGtODP3fa1qs4O1AzKRquMYaEYHc2vjP6j\nK2w8UU6DkEcz3blJ9Gez\n=vAxi\n-----END PGP SIGNATURE-----\n"
 }

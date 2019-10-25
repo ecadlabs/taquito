@@ -26,7 +26,7 @@
           },
           {
             "path": "dist/taquito-react-components.umd.js",
-            "sha512": "e4f32ec6fdb89bbb8915108451512f0a5951b9e7d58ec429b4cf0761cfd0e41d16f286f8e39b4a314427bbf6823381c3e39cff5b171d2ec225d956634caaf700"
+            "sha512": "0673be09acf1069fd23a51cc35c97f6d703d5fa9ccd2ed8786f42415d41a7df24e3bd3aa618e6213a35a2307c48000c29d4e90f32d7216520635baf4ab56c8c0"
           },
           {
             "path": "dist/lib/tezos-context.js",
@@ -217,5 +217,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdphLfCRAD9Qy5GYHsngAAO6sQAESbO0iC2V2W3sCE5sAEgj9d\ngugpyFIY8MZwjoQWSV9iDXaiRiqmvs1N0KuZlmQsp/ob8vwu0gTxmUVQxAraOygy\nd8EIddiczqtWoXoFMv90+WdSFUZae5PDAv8PwVNlFtZMVcbKkg7DGJC5/jDn0Y59\nhvbGPELHBwoZpnPOrvmY6ODDqa09RbgSDMUBHePmmlRqCjx2nqvxboHdkpz7ICnt\nUc09sL/iIfg+eck6FqGBkxor0ZSveZy3iHus0397qsWbwDzqt5cRMuKyXRi2JeTQ\nRKQHW1zwD149fEab69eonEif1EZAuvAgG/VvDZtUu16Shh5ABQEEaadjrZCR0Euc\nWCic9poDPmxuoxu4EaFrKK8rDccAxLTGzAI1B21+y8tfWY47o7ECWKp+dZdTGj3P\nDzwPzM2qK3VQl/yYdGtJH2isS3H3RLY0pFV0+Q5OtZ8kSeOpd0OGCwako/DWDEqZ\npQaOn519IzsZ9iTV6jLNicy6eyM44KR7Oyuf2gyjqFSKp/OlrhaCKXXbV6QOhh8C\nh9jNyyOD23+3SuZ3V9qcpUMXrqaEZyhDqoR8VLbNFVMWGW34CN0ETJxK8B1PGMEh\nTEAUfgqW3a7hEcag3ZCBTN0bDmR0e7uYHbmv6TaRqKKJ8KR0he58dn9exqr905pl\nELpKweemZibzFvmqIRMk\n=l+mD\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdszJHCRAD9Qy5GYHsngAAXuQQAISsVRVW1dBvNIKVtKiyJl+Y\n6Jyh4+3H+MEC3YCIu1AqATELRaFMjj/sTYcdaz4OOVrRXL2aK3lYskN+4rUXceoj\nOGyQqCWD+xGmSV+S6bhkoWxDkJGIj+m+qX6B9UOwppThEaGszJCLk8lsBSinDFsV\nB7STDQ0WA17mqcx6RFA1UnfPMHm6jTuC2EKUS6Ig5NuALLoUcEL5gpQ/GMb0CWPT\nrBtUy7bRUb4OBv9UJ0Zr4pFMqNAhV07An/TYpcHmS/HnbjV0UbuAls7l+FuFvDbY\nV34zhYVKrTg83whI3jrpjnyA/PQ+022f67IsztUk3PiUZ7olec/jjJGJB74Fa4TG\ns/Pjh+1BT4ld/LOWquY02DINIWWbsxpuClZKJLdNR/1FXtOo0bk4pwgweaJsiH3S\nUjEv73pkZX6RGoWVh31ciAq/5h46TvlQzmBbQGqYywA54F8YXHolDxfJ4wmL93k8\nIDj4GSf/l3b2RaggWxnX1xUTR1RzmjE1vb+Fmih5aW/dxT4uvyDvv5Ei4fppZNSp\npoPU+lFTjP/y3MQitq8EWTy7+38Y6xfA0Eun5dJr9SHsX2re9klq5fvYaHaw2Ijr\nk1mqC9VljE8cnfiKA4AVgXx0Bmmfigsklxt5oPpILTJ1oHgH9U0zb2Oad4n8dFz0\n23UuUAVClSk1ADrhH7kl\n=fCS9\n-----END PGP SIGNATURE-----\n"
 }
