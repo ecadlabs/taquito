@@ -1,3 +1,7 @@
+import { STATUS_CODE } from './status_code';
+
+export * from './status_code';
+
 const defaultTimeout = 30000;
 
 interface HttpRequestOptions {
@@ -5,6 +9,17 @@ interface HttpRequestOptions {
   method?: 'GET' | 'POST';
   timeout?: number;
   query?: { [key: string]: any };
+}
+
+export class HttpResponseError implements Error {
+  public name = 'HttpResponse';
+
+  constructor(
+    public message: string,
+    public status: STATUS_CODE,
+    public statusText: string,
+    public body: string
+  ) {}
 }
 
 export class HttpBackend {
@@ -70,13 +85,20 @@ export class HttpBackend {
       request.timeout = timeout || defaultTimeout;
       request.onload = function() {
         if (this.status >= 200 && this.status < 300) {
-          resolve(JSON.parse(request.response));
+          try {
+            resolve(JSON.parse(request.response));
+          } catch (ex) {
+            reject(new Error(`Unable to parse response: ${request.response}`));
+          }
         } else {
-          reject({
-            status: this.status,
-            statusText: request.statusText,
-            body: request.response,
-          });
+          reject(
+            new HttpResponseError(
+              `Http error response: (${this.status}) ${request.response}`,
+              this.status as STATUS_CODE,
+              request.statusText,
+              request.response
+            )
+          );
         }
       };
 
@@ -85,11 +107,14 @@ export class HttpBackend {
       };
 
       request.onerror = function() {
-        reject({
-          status: this.status,
-          statusText: request.statusText,
-          body: request.response,
-        });
+        reject(
+          new HttpResponseError(
+            `Http error response: (${this.status}) ${request.response}`,
+            this.status as STATUS_CODE,
+            request.statusText,
+            request.response
+          )
+        );
       };
 
       if (data) {
