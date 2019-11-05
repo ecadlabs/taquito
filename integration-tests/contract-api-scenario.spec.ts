@@ -3,6 +3,7 @@ import { ligoSample } from "./data/ligo-simple-contract";
 import { tokenCode, tokenInit } from "./data/tokens";
 import { voteSample } from "./data/vote-contract";
 import { depositContractCode, depositContractStorage } from "./data/deposit_contract";
+import { tokenBigmapCode } from './data/token_bigmap'
 
 CONFIGS.forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
@@ -141,5 +142,51 @@ CONFIGS.forEach(({ lib, rpc, setup }) => {
       expect(operation.status).toEqual('applied')
       done();
     })
+
+    it('Token with empty big map origination scenario', async (done) => {
+      const op = await Tezos.contract.originate({
+        balance: "1",
+        code: tokenBigmapCode,
+        storage: {
+          owner: await Tezos.signer.publicKeyHash(),
+          accounts: {},
+          totalSupply: "0"
+        }
+      })
+      await op.confirmation()
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+      done();
+    });
+
+    it('Token with big map and with initial data', async (done) => {
+      const addr = await Tezos.signer.publicKeyHash();
+
+      const initialStorage = {
+        owner: addr,
+        accounts: {
+          [addr]: {
+            balance: "1",
+            allowances: {
+              [addr]: "1"
+            }
+          }
+        },
+        totalSupply: "1"
+      }
+
+      const op = await Tezos.contract.originate({
+        balance: "1",
+        code: tokenBigmapCode,
+        storage: initialStorage
+      })
+      await op.confirmation()
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+      const contract = await op.contract()
+      const storage: any = await contract.storage()
+      expect((await storage.accounts.get(addr)).allowances[addr].toString()).toEqual(initialStorage.accounts[addr].allowances[addr])
+      done();
+    });
   });
 })

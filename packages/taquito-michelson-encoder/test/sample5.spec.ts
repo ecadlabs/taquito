@@ -23,7 +23,7 @@ describe('Schema test', () => {
       centralBank: 'tz1g3oS1UPgWFFpxrc2pEn4sgV3ky1Z6Qaz2',
     });
     expect(result).toEqual({
-      args: [{ prim: 'big_map', args: [] }, rpcContractResponse5.script.storage.args[1]],
+      args: [[], rpcContractResponse5.script.storage.args[1]],
       prim: 'Pair',
     });
   });

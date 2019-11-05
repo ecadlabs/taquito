@@ -27,23 +27,22 @@ export class BigMapToken extends Token {
   public Encode(args: any[]): any {
     const val = args.pop();
 
-    return {
-      prim: 'big_map',
-      args: Object.keys(val).map(key => {
-        return [this.KeySchema.Encode([key]), this.ValueSchema.Encode([val[key]])];
-      }),
-    };
+    return Object.keys(val).map(key => {
+      return {
+        prim: 'Elt',
+        args: [this.KeySchema.Encode([key]), this.ValueSchema.Encode([val[key]])],
+      };
+    });
   }
 
   public EncodeObject(args: any): any {
     const val = args;
-
-    return {
-      prim: 'big_map',
-      args: Object.keys(val).map(key => {
-        return [this.KeySchema.Encode([key]), this.ValueSchema.Encode([val[key]])];
-      }),
-    };
+    return Object.keys(val).map(key => {
+      return {
+        prim: 'Elt',
+        args: [this.KeySchema.EncodeObject(key), this.ValueSchema.EncodeObject(val[key])],
+      };
+    });
   }
 
   public Execute(val: any[] | { int: string }, semantic?: Semantic) {

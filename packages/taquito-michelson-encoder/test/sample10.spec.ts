@@ -6,7 +6,6 @@ import { ParameterSchema } from '../src/schema/parameter';
 describe('Schema test', () => {
   it('Should parse storage properly', () => {
     const schema = new ParameterSchema(params10);
-    const storage = schema.ExtractSchema();
     expect({
       args: [
         {
@@ -15,33 +14,30 @@ describe('Schema test', () => {
               args: [
                 {
                   args: [
-                    {
-                      args: [
-                        {
-                          args: [
-                            {
-                              int: 'atest',
-                            },
-                            {
-                              string: 'btest',
-                            },
-                          ],
-                          prim: 'Pair',
-                        },
-                        {
-                          args: [
-                            {
-                              int: 'test',
-                            },
-                            {
-                              string: 'test',
-                            },
-                          ],
-                          prim: 'Pair',
-                        },
-                      ],
-                      prim: 'list',
-                    },
+                    [
+                      {
+                        args: [
+                          {
+                            int: 'atest',
+                          },
+                          {
+                            string: 'btest',
+                          },
+                        ],
+                        prim: 'Pair',
+                      },
+                      {
+                        args: [
+                          {
+                            int: 'test',
+                          },
+                          {
+                            string: 'test',
+                          },
+                        ],
+                        prim: 'Pair',
+                      },
+                    ],
                     {
                       string: 'sig',
                     },
