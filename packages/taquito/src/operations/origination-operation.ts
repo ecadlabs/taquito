@@ -2,16 +2,21 @@ import { OperationContentsAndResult, OperationContentsAndResultOrigination } fro
 import { Context } from '../context';
 import { RpcContractProvider } from '../contract/rpc-contract-provider';
 import { Operation } from './operations';
-import { ForgedBytes } from './types';
-
-type Results = OperationContentsAndResult[];
+import {
+  ForgedBytes,
+  GasConsumingOperation,
+  StorageConsumingOperation,
+  RPCOriginationOperation,
+  FeeConsumingOperation,
+} from './types';
 
 /**
  * @description Origination operation provide utility function to fetch newly originated contract
  *
  * @warn Currently support only one origination per operation
  */
-export class OriginationOperation extends Operation {
+export class OriginationOperation extends Operation
+  implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation {
   /**
    * @description Contract address of the newly originated contract
    */
@@ -19,8 +24,9 @@ export class OriginationOperation extends Operation {
 
   constructor(
     hash: string,
+    private readonly params: RPCOriginationOperation,
     raw: ForgedBytes,
-    results: Results,
+    results: OperationContentsAndResult[],
     context: Context,
     private contractProvider: RpcContractProvider
   ) {
@@ -39,16 +45,31 @@ export class OriginationOperation extends Operation {
     return originationOp && originationOp.metadata && originationOp.metadata.operation_result;
   }
 
+  get fee() {
+    return this.params.fee;
+  }
+
+  get gasLimit() {
+    return this.params.gas_limit;
+  }
+
+  get storageLimit() {
+    return this.params.storage_limit;
+  }
+
   get consumedGas() {
-    return this.operationResults && this.operationResults.consumed_gas;
+    const consumedGas = this.operationResults && this.operationResults.consumed_gas;
+    return consumedGas ? consumedGas : undefined;
   }
 
   get storageDiff() {
-    return this.operationResults && this.operationResults.paid_storage_size_diff;
+    const storageDiff = this.operationResults && this.operationResults.paid_storage_size_diff;
+    return storageDiff ? storageDiff : undefined;
   }
 
   get storageSize() {
-    return this.operationResults && this.operationResults.storage_size;
+    const storageSize = this.operationResults && this.operationResults.storage_size;
+    return storageSize ? storageSize : undefined;
   }
 
   get errors() {

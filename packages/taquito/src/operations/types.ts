@@ -1,5 +1,20 @@
 import { OperationObject } from '@taquito/rpc';
 
+export interface GasConsumingOperation {
+  consumedGas?: string;
+  gasLimit: number;
+}
+
+export interface StorageConsumingOperation {
+  storageDiff?: string;
+  storageSize?: string;
+  storageLimit: number;
+}
+
+export interface FeeConsumingOperation {
+  fee: number;
+}
+
 export type OriginateParamsBase = {
   balance?: string;
   code: string | object[];

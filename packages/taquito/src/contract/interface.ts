@@ -1,8 +1,9 @@
 import { Schema } from '@taquito/michelson-encoder';
-import { Operation } from '../operations/operations';
-import { Contract } from './contract';
-import { DelegateParams, OriginateParams, TransferParams } from '../operations/types';
+import { DelegateOperation } from '../operations/delegate-operation';
 import { OriginationOperation } from '../operations/origination-operation';
+import { TransactionOperation } from '../operations/transaction-operation';
+import { DelegateParams, OriginateParams, TransferParams } from '../operations/types';
+import { Contract } from './contract';
 import { Estimate } from './estimate';
 
 export type ContractSchema = Schema | unknown;
@@ -84,7 +85,7 @@ export interface ContractProvider {
    *
    * @param SetDelegate operation parameter
    */
-  setDelegate(params: DelegateParams): Promise<Operation>;
+  setDelegate(params: DelegateParams): Promise<DelegateOperation>;
 
   /**
    *
@@ -94,7 +95,7 @@ export interface ContractProvider {
    *
    * @param RegisterDelegate operation parameter
    */
-  registerDelegate(params: DelegateParams): Promise<Operation>;
+  registerDelegate(params: DelegateParams): Promise<DelegateOperation>;
   /**
    *
    * @description Transfer tz from current address to a specific address. Will sign and inject an operation using the current context
@@ -103,6 +104,6 @@ export interface ContractProvider {
    *
    * @param Transfer operation parameter
    */
-  transfer(params: TransferParams): Promise<Operation>;
+  transfer(params: TransferParams): Promise<TransactionOperation>;
   at(address: string, schema?: ContractSchema): Promise<Contract>;
 }

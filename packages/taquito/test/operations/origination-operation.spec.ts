@@ -89,6 +89,7 @@ describe('Origination operation', () => {
       const fakeContractProvider: any = {};
       const op = new OriginationOperation(
         'test_hash',
+        {} as any,
         fakeForgedBytes,
         successfulResult,
         fakeContext,
@@ -108,6 +109,7 @@ describe('Origination operation', () => {
       wrongResults.forEach(result => {
         const op = new OriginationOperation(
           'test_hash',
+          {} as any,
           fakeForgedBytes,
           result,
           fakeContext,
@@ -128,6 +130,7 @@ describe('Origination operation', () => {
       const op = new OriginationOperation(
         'test_hash',
         {} as any,
+        {} as any,
         successfulResult,
         fakeContext,
         fakeContractProvider
@@ -145,6 +148,7 @@ describe('Origination operation', () => {
       fakeContractProvider.at.mockResolvedValue('contract');
       const op = new OriginationOperation(
         'test_hash',
+        {} as any,
         fakeForgedBytes,
         successfulResult,
         fakeContext,
@@ -164,6 +168,7 @@ describe('Origination operation', () => {
       fakeContractProvider.at.mockResolvedValue('contract');
       const op = new OriginationOperation(
         'test_hash',
+        {} as any,
         fakeForgedBytes,
         'wrong_result' as any,
         fakeContext,

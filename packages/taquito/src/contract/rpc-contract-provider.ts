@@ -17,6 +17,8 @@ import { ContractProvider, ContractSchema, EstimationProvider } from './interfac
 import { createOriginationOperation, createTransferOperation } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
 import { encodeExpr } from '@taquito/utils';
+import { TransactionOperation } from '../operations/transaction-operation';
+import { DelegateOperation } from '../operations/delegate-operation';
 
 export class RpcContractProvider extends OperationEmitter implements ContractProvider {
   constructor(context: Context, private estimator: EstimationProvider) {
@@ -156,7 +158,7 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
     const preparedOrigination = await this.prepareOperation({ operation, source: publicKeyHash });
     const forgedOrigination = await this.forge(preparedOrigination);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(forgedOrigination);
-    return new OriginationOperation(hash, forgedBytes, opResponse, context, this);
+    return new OriginationOperation(hash, operation, forgedBytes, opResponse, context, this);
   }
 
   /**
@@ -182,12 +184,20 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
       storage_limit: storageLimit,
       delegate,
     };
+    const sourceOrDefault = source || (await this.signer.publicKeyHash());
     const opBytes = await this.prepareAndForge({
       operation,
-      source: source || (await this.signer.publicKeyHash()),
+      source: sourceOrDefault,
     });
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
-    return new Operation(hash, forgedBytes, opResponse, context);
+    return new DelegateOperation(
+      hash,
+      operation,
+      sourceOrDefault,
+      forgedBytes,
+      opResponse,
+      context
+    );
   }
 
   /**
@@ -203,16 +213,17 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
     gasLimit = DEFAULT_GAS_LIMIT.DELEGATION,
     storageLimit = DEFAULT_STORAGE_LIMIT.DELEGATION,
   }: any) {
+    const source = await this.signer.publicKeyHash();
     const operation: RPCDelegateOperation = {
       kind: 'delegation',
       fee,
       gas_limit: gasLimit,
       storage_limit: storageLimit,
-      delegate: await this.signer.publicKeyHash(),
+      delegate: source,
     };
     const opBytes = await this.prepareAndForge({ operation });
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
-    return new Operation(hash, forgedBytes, opResponse, context);
+    return new DelegateOperation(hash, operation, source, forgedBytes, opResponse, context);
   }
 
   /**
@@ -229,9 +240,10 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
       ...params,
       ...estimate,
     });
+    const source = params.source || (await this.signer.publicKeyHash());
     const opBytes = await this.prepareAndForge({ operation, source: params.source });
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
-    return new Operation(hash, forgedBytes, opResponse, context);
+    return new TransactionOperation(hash, operation, source, forgedBytes, opResponse, context);
   }
 
   async at(address: string): Promise<Contract> {
