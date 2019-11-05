@@ -1,11 +1,10 @@
-import { Token, Semantic } from '../tokens/token';
-
+import { MichelsonV1Expression, MichelsonV1ExpressionExtended, ScriptResponse } from '@taquito/rpc';
 import { BigMapToken } from '../tokens/bigmap';
-
 import { createToken } from '../tokens/createToken';
-
+import { OrToken } from '../tokens/or';
+import { PairToken } from '../tokens/pair';
+import { Semantic, Token } from '../tokens/token';
 import { RpcTransaction } from './model';
-import { ScriptResponse, MichelsonV1ExpressionExtended, MichelsonV1Expression } from '@taquito/rpc';
 import { Falsy } from './types';
 
 /**
@@ -51,8 +50,11 @@ export class Schema {
   }
 
   private removeTopLevelAnnotation(obj: any) {
-    if (typeof obj === 'object' && Object.keys(obj).length === 1) {
-      return obj[Object.keys(obj)[0]];
+    // PairToken and OrToken can have redundant top level annotation in their storage
+    if (this.root instanceof PairToken || this.root instanceof OrToken) {
+      if (this.root.hasAnnotations() && typeof obj === 'object' && Object.keys(obj).length === 1) {
+        return obj[Object.keys(obj)[0]];
+      }
     }
 
     return obj;
