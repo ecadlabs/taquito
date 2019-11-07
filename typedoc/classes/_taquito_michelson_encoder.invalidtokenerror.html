@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>HttpResponseError | Taquito</title>
+	<title>InvalidTokenError | Taquito</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,13 +56,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_taquito_http_utils.html">@taquito/http-utils</a>
+					<a href="../modules/_taquito_michelson_encoder.html">@taquito/michelson-encoder</a>
 				</li>
 				<li>
-					<a href="_taquito_http_utils.httpresponseerror.html">HttpResponseError</a>
+					<a href="_taquito_michelson_encoder.invalidtokenerror.html">InvalidTokenError</a>
 				</li>
 			</ul>
-			<h1>Class HttpResponseError</h1>
+			<h1>Class InvalidTokenError</h1>
 		</div>
 	</div>
 </header>
@@ -73,7 +73,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">HttpResponseError</span>
+						<span class="target">InvalidTokenError</span>
 					</li>
 				</ul>
 			</section>
@@ -90,17 +90,15 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_taquito_http_utils.httpresponseerror.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_taquito_michelson_encoder.invalidtokenerror.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_taquito_http_utils.httpresponseerror.html#body" class="tsd-kind-icon">body</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_taquito_http_utils.httpresponseerror.html#message" class="tsd-kind-icon">message</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_taquito_http_utils.httpresponseerror.html#name" class="tsd-kind-icon">name</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_taquito_http_utils.httpresponseerror.html#status" class="tsd-kind-icon">status</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_taquito_http_utils.httpresponseerror.html#statustext" class="tsd-kind-icon">status<wbr>Text</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_taquito_michelson_encoder.invalidtokenerror.html#data" class="tsd-kind-icon">data</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_taquito_michelson_encoder.invalidtokenerror.html#message" class="tsd-kind-icon">message</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_taquito_michelson_encoder.invalidtokenerror.html#name" class="tsd-kind-icon">name</a></li>
 							</ul>
 						</section>
 					</div>
@@ -112,13 +110,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Http<wbr>Response<wbr>Error<span class="tsd-signature-symbol">(</span>message<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, status<span class="tsd-signature-symbol">: </span><a href="../enums/_taquito_http_utils.status_code.html" class="tsd-signature-type">STATUS_CODE</a>, statusText<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, body<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_taquito_http_utils.httpresponseerror.html" class="tsd-signature-type">HttpResponseError</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Invalid<wbr>Token<wbr>Error<span class="tsd-signature-symbol">(</span>message<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_taquito_michelson_encoder.invalidtokenerror.html" class="tsd-signature-type">InvalidTokenError</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/9b5c980/packages/taquito-http-utils/src/taquito-http-utils.ts#L15">taquito-http-utils/src/taquito-http-utils.ts:15</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/9b5c980/packages/taquito-michelson-encoder/src/tokens/createToken.ts#L5">taquito-michelson-encoder/src/tokens/createToken.ts:5</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -127,16 +125,10 @@
 									<h5>message: <span class="tsd-signature-type">string</span></h5>
 								</li>
 								<li>
-									<h5>status: <a href="../enums/_taquito_http_utils.status_code.html" class="tsd-signature-type">STATUS_CODE</a></h5>
-								</li>
-								<li>
-									<h5>statusText: <span class="tsd-signature-type">string</span></h5>
-								</li>
-								<li>
-									<h5>body: <span class="tsd-signature-type">string</span></h5>
+									<h5>data: <span class="tsd-signature-type">any</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_taquito_http_utils.httpresponseerror.html" class="tsd-signature-type">HttpResponseError</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_taquito_michelson_encoder.invalidtokenerror.html" class="tsd-signature-type">InvalidTokenError</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -144,12 +136,12 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="body" class="tsd-anchor"></a>
-					<h3>body</h3>
-					<div class="tsd-signature tsd-kind-icon">body<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="data" class="tsd-anchor"></a>
+					<h3>data</h3>
+					<div class="tsd-signature tsd-kind-icon">data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/9b5c980/packages/taquito-http-utils/src/taquito-http-utils.ts#L21">taquito-http-utils/src/taquito-http-utils.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/9b5c980/packages/taquito-michelson-encoder/src/tokens/createToken.ts#L6">taquito-michelson-encoder/src/tokens/createToken.ts:6</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -159,37 +151,17 @@
 					<div class="tsd-signature tsd-kind-icon">message<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/9b5c980/packages/taquito-http-utils/src/taquito-http-utils.ts#L18">taquito-http-utils/src/taquito-http-utils.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/9b5c980/packages/taquito-michelson-encoder/src/tokens/createToken.ts#L6">taquito-michelson-encoder/src/tokens/createToken.ts:6</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="name" class="tsd-anchor"></a>
 					<h3>name</h3>
-					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;HttpResponse&quot;</span></div>
+					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;Invalid token error&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/9b5c980/packages/taquito-http-utils/src/taquito-http-utils.ts#L15">taquito-http-utils/src/taquito-http-utils.ts:15</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="status" class="tsd-anchor"></a>
-					<h3>status</h3>
-					<div class="tsd-signature tsd-kind-icon">status<span class="tsd-signature-symbol">:</span> <a href="../enums/_taquito_http_utils.status_code.html" class="tsd-signature-type">STATUS_CODE</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/9b5c980/packages/taquito-http-utils/src/taquito-http-utils.ts#L19">taquito-http-utils/src/taquito-http-utils.ts:19</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="statustext" class="tsd-anchor"></a>
-					<h3>status<wbr>Text</h3>
-					<div class="tsd-signature tsd-kind-icon">status<wbr>Text<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/9b5c980/packages/taquito-http-utils/src/taquito-http-utils.ts#L20">taquito-http-utils/src/taquito-http-utils.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/9b5c980/packages/taquito-michelson-encoder/src/tokens/createToken.ts#L5">taquito-michelson-encoder/src/tokens/createToken.ts:5</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -201,13 +173,13 @@
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="../modules/_taquito_http_utils.html">@taquito/http-<wbr>utils</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="../modules/_taquito_indexer.html">@taquito/indexer</a>
 					</li>
-					<li class=" tsd-kind-module">
+					<li class="current tsd-kind-module">
 						<a href="../modules/_taquito_michelson_encoder.html">@taquito/michelson-<wbr>encoder</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -238,45 +210,27 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-enum tsd-parent-kind-module">
-						<a href="../enums/_taquito_http_utils.status_code.html" class="tsd-kind-icon">STATUS_<wbr>CODE</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="_taquito_http_utils.httpbackend.html" class="tsd-kind-icon">Http<wbr>Backend</a>
-					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-module">
-						<a href="_taquito_http_utils.httpresponseerror.html" class="tsd-kind-icon">Http<wbr>Response<wbr>Error</a>
+						<a href="_taquito_michelson_encoder.invalidtokenerror.html" class="tsd-kind-icon">Invalid<wbr>Token<wbr>Error</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="_taquito_http_utils.httpresponseerror.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="_taquito_michelson_encoder.invalidtokenerror.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_taquito_http_utils.httpresponseerror.html#body" class="tsd-kind-icon">body</a>
+								<a href="_taquito_michelson_encoder.invalidtokenerror.html#data" class="tsd-kind-icon">data</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_taquito_http_utils.httpresponseerror.html#message" class="tsd-kind-icon">message</a>
+								<a href="_taquito_michelson_encoder.invalidtokenerror.html#message" class="tsd-kind-icon">message</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_taquito_http_utils.httpresponseerror.html#name" class="tsd-kind-icon">name</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_taquito_http_utils.httpresponseerror.html#status" class="tsd-kind-icon">status</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_taquito_http_utils.httpresponseerror.html#statustext" class="tsd-kind-icon">status<wbr>Text</a>
+								<a href="_taquito_michelson_encoder.invalidtokenerror.html#name" class="tsd-kind-icon">name</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported">
-						<a href="../interfaces/_taquito_http_utils.httprequestoptions.html" class="tsd-kind-icon">Http<wbr>Request<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-module tsd-is-not-exported">
-						<a href="../modules/_taquito_http_utils.html#defaulttimeout" class="tsd-kind-icon">default<wbr>Timeout</a>
-					</li>
 				</ul>
 			</nav>
 		</div>
