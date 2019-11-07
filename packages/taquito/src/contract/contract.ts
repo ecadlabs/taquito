@@ -1,22 +1,8 @@
 import { Schema, ParameterSchema } from '@taquito/michelson-encoder';
 import { ContractProvider } from './interface';
 import { ScriptResponse, EntrypointsResponse } from '@taquito/rpc';
-
-export class InvalidParameterError implements Error {
-  name: string = 'Invalid parameters error';
-  message: string;
-  constructor(
-    public smartContractMethodName: string,
-    public smartContractMethodSchema: ParameterSchema,
-    public args: any[]
-  ) {
-    this.message = `${smartContractMethodName} Received ${
-      args.length
-      } arguments while expecting ${computeLength(
-        smartContractMethodSchema.ExtractSchema()
-      )} (${JSON.stringify(Object.keys(smartContractMethodSchema.ExtractSchema()))})`
-  }
-}
+import { computeLength } from './utils';
+import { InvalidParameterError } from './errors';
 
 interface SendParams {
   fee?: number;
@@ -111,14 +97,6 @@ export class LegacyContractMethod {
     });
   }
 }
-
-function computeLength(data: string | Object) {
-  if (typeof data === 'object') {
-    return Object.keys(data).length;
-  } else {
-    return 1;
-  }
-}
 /**
  * @description Smart contract abstraction
  */
@@ -165,7 +143,7 @@ export class Contract {
             entrypoints[smartContractMethodName]
           );
           if (args.length !== computeLength(smartContractMethodSchema.ExtractSchema())) {
-            throw new InvalidParameterError(smartContractMethodName, smartContractMethodSchema, args);
+            throw new InvalidParameterError(smartContractMethodName, smartContractMethodSchema.ExtractSchema(), args);
           }
 
           return new ContractMethod(
@@ -179,7 +157,7 @@ export class Contract {
         this.methods[smartContractMethodName] = method;
       });
 
-      // Deal with methods with no annotations
+      // Deal with methods with no annotations which were not discovered by the RPC endpoint
       // Methods with no annotations are discovered using parameter schema
       const anonymousMethods = Object.keys(parameterSchema.ExtractSchema()).filter((key) => Object.keys(entrypoints).indexOf(key) === -1);
       const paramSchema = parameterSchema.ExtractSchema();
@@ -207,7 +185,7 @@ export class Contract {
       const smartContractMethodSchema = this.parameterSchema;
       const method = function (...args: any[]) {
         if (args.length !== computeLength(smartContractMethodSchema.ExtractSchema())) {
-          throw new InvalidParameterError(DEFAULT_SMART_CONTRACT_METHOD_NAME, smartContractMethodSchema, args);
+          throw new InvalidParameterError(DEFAULT_SMART_CONTRACT_METHOD_NAME, smartContractMethodSchema.ExtractSchema(), args);
         }
         return new ContractMethod(
           provider,
