@@ -15,7 +15,7 @@ export class ListToken extends Token {
     const val = args.pop();
     const schema = this.createToken(this.val.args[0], 0);
     return val.reduce((prev: any, current: any) => {
-      return [...prev, schema.Encode(current)];
+      return [...prev, schema.EncodeObject(current)];
     }, []);
   }
 

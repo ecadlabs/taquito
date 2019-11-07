@@ -37,7 +37,7 @@ export class MapToken extends Token {
     return Object.keys(val).map(key => {
       return {
         prim: 'Elt',
-        args: [this.KeySchema.Encode([key]), this.ValueSchema.Encode([val[key]])],
+        args: [this.KeySchema.Encode([key]), this.ValueSchema.EncodeObject(val[key])],
       };
     });
   }

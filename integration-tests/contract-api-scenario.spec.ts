@@ -4,6 +4,7 @@ import { tokenCode, tokenInit } from "./data/tokens";
 import { voteSample } from "./data/vote-contract";
 import { depositContractCode, depositContractStorage } from "./data/deposit_contract";
 import { tokenBigmapCode } from './data/token_bigmap'
+import { collection_code } from "./data/collection_contract";
 
 CONFIGS.forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
@@ -186,6 +187,41 @@ CONFIGS.forEach(({ lib, rpc, setup }) => {
       const contract = await op.contract()
       const storage: any = await contract.storage()
       expect((await storage.accounts.get(addr)).allowances[addr].toString()).toEqual(initialStorage.accounts[addr].allowances[addr])
+      done();
+    });
+
+    it('Collection contract test', async (done) => {
+      const addr = await Tezos.signer.publicKeyHash();
+
+      const initialStorage = {
+        set1: ['1'],
+        list1: ['1'],
+        map1: { "1": "1" }
+      }
+
+      const op = await Tezos.contract.originate({
+        balance: "1",
+        code: collection_code,
+        storage: initialStorage
+      })
+      await op.confirmation()
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+      const contract = await op.contract()
+      let storage: any = await contract.storage()
+      expect(storage['set1'].map((x: any) => x.toString())).toEqual(['1'])
+      expect(storage['list1'].map((x: any) => x.toString())).toEqual(['1'])
+      expect(storage['map1']['1'].toString()).toEqual('1')
+
+      const setOp = await contract.methods['setSet'](['2']).send()
+      await setOp.confirmation();
+
+      const listOp = await contract.methods['setList'](['2']).send()
+      await listOp.confirmation();
+
+      const mapOp = await contract.methods['setMap']({ "2": "2" }).send()
+      await mapOp.confirmation();
+
       done();
     });
   });

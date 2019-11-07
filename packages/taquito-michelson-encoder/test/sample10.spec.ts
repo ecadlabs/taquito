@@ -64,7 +64,13 @@ describe('Schema test', () => {
       ],
       prim: 'Some',
     }).toEqual(
-      schema.Encode('transfer', [['btest', 'atest'], ['test', 'test']], 'sig', 'test', 'test')
+      schema.Encode(
+        'transfer',
+        [{ amount: 'atest', beneficiary: 'btest' }, { amount: 'test', beneficiary: 'test' }],
+        'sig',
+        'test',
+        'test'
+      )
     );
     expect(schema.isMultipleEntryPoint).toBeTruthy();
   });
