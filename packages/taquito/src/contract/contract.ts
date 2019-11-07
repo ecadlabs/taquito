@@ -24,14 +24,16 @@ export class ContractMethod {
     private name: string,
     private args: any[],
     private isMultipleEntrypoint = true,
-    private isAnonymous = false,
-  ) { }
+    private isAnonymous = false
+  ) {}
 
   /**
    * @description Get the schema of the smart contract method
    */
   get schema() {
-    return this.parameterSchema.ExtractSchema();
+    return this.isAnonymous
+      ? this.parameterSchema.ExtractSchema()[this.name]
+      : this.parameterSchema.ExtractSchema();
   }
 
   /**
@@ -49,7 +51,9 @@ export class ContractMethod {
       storageLimit,
       parameter: {
         entrypoint: this.isMultipleEntrypoint ? this.name : 'default',
-        value: this.isAnonymous ? this.parameterSchema.Encode(this.name, ...this.args) : this.parameterSchema.Encode(...this.args),
+        value: this.isAnonymous
+          ? this.parameterSchema.Encode(this.name, ...this.args)
+          : this.parameterSchema.Encode(...this.args),
       } as any,
       rawParam: true,
     });
@@ -66,7 +70,7 @@ export class LegacyContractMethod {
     private parameterSchema: ParameterSchema,
     private name: string,
     private args: any[]
-  ) { }
+  ) {}
 
   /**
    * @description Get the schema of the smart contract method
@@ -131,19 +135,23 @@ export class Contract {
     address: string,
     provider: ContractProvider,
     entrypoints: {
-      [key: string]: object
+      [key: string]: object;
     }
   ) {
-    const parameterSchema = this.parameterSchema
+    const parameterSchema = this.parameterSchema;
     const keys = Object.keys(entrypoints);
     if (parameterSchema.isMultipleEntryPoint) {
       keys.forEach(smartContractMethodName => {
-        const method = function (...args: any[]) {
+        const method = function(...args: any[]) {
           const smartContractMethodSchema = new ParameterSchema(
             entrypoints[smartContractMethodName]
           );
           if (args.length !== computeLength(smartContractMethodSchema.ExtractSchema())) {
-            throw new InvalidParameterError(smartContractMethodName, smartContractMethodSchema.ExtractSchema(), args);
+            throw new InvalidParameterError(
+              smartContractMethodName,
+              smartContractMethodSchema.ExtractSchema(),
+              args
+            );
           }
 
           return new ContractMethod(
@@ -159,14 +167,20 @@ export class Contract {
 
       // Deal with methods with no annotations which were not discovered by the RPC endpoint
       // Methods with no annotations are discovered using parameter schema
-      const anonymousMethods = Object.keys(parameterSchema.ExtractSchema()).filter((key) => Object.keys(entrypoints).indexOf(key) === -1);
+      const anonymousMethods = Object.keys(parameterSchema.ExtractSchema()).filter(
+        key => Object.keys(entrypoints).indexOf(key) === -1
+      );
       const paramSchema = parameterSchema.ExtractSchema();
 
       anonymousMethods.forEach(smartContractMethodName => {
-        const method = function (...args: any[]) {
+        const method = function(...args: any[]) {
           const smartContractMethodSchema = paramSchema[smartContractMethodName];
           if (args.length !== computeLength(smartContractMethodSchema)) {
-            throw new InvalidParameterError(smartContractMethodName, smartContractMethodSchema, args);
+            throw new InvalidParameterError(
+              smartContractMethodName,
+              smartContractMethodSchema,
+              args
+            );
           }
 
           return new ContractMethod(
@@ -177,15 +191,19 @@ export class Contract {
             args,
             false,
             true
-          )
-        }
+          );
+        };
         this.methods[smartContractMethodName] = method;
-      })
+      });
     } else {
       const smartContractMethodSchema = this.parameterSchema;
-      const method = function (...args: any[]) {
+      const method = function(...args: any[]) {
         if (args.length !== computeLength(smartContractMethodSchema.ExtractSchema())) {
-          throw new InvalidParameterError(DEFAULT_SMART_CONTRACT_METHOD_NAME, smartContractMethodSchema.ExtractSchema(), args);
+          throw new InvalidParameterError(
+            DEFAULT_SMART_CONTRACT_METHOD_NAME,
+            smartContractMethodSchema.ExtractSchema(),
+            args
+          );
         }
         return new ContractMethod(
           provider,
@@ -206,10 +224,14 @@ export class Contract {
 
     if (this.parameterSchema.isMultipleEntryPoint) {
       Object.keys(paramSchema).forEach(smartContractMethodName => {
-        const method = function (...args: any[]) {
+        const method = function(...args: any[]) {
           const smartContractMethodSchema = paramSchema[smartContractMethodName];
           if (args.length !== computeLength(smartContractMethodSchema)) {
-            throw new InvalidParameterError(smartContractMethodName, smartContractMethodSchema, args);
+            throw new InvalidParameterError(
+              smartContractMethodName,
+              smartContractMethodSchema,
+              args
+            );
           }
           return new LegacyContractMethod(
             provider,
@@ -222,12 +244,22 @@ export class Contract {
         this.methods[smartContractMethodName] = method;
       });
     } else {
-      this.methods[DEFAULT_SMART_CONTRACT_METHOD_NAME] = function (...args: any[]) {
+      this.methods[DEFAULT_SMART_CONTRACT_METHOD_NAME] = function(...args: any[]) {
         const smartContractMethodSchema = paramSchema;
         if (args.length !== computeLength(smartContractMethodSchema)) {
-          throw new InvalidParameterError(DEFAULT_SMART_CONTRACT_METHOD_NAME, smartContractMethodSchema, args);
+          throw new InvalidParameterError(
+            DEFAULT_SMART_CONTRACT_METHOD_NAME,
+            smartContractMethodSchema,
+            args
+          );
         }
-        return new LegacyContractMethod(provider, address, parameterSchema, DEFAULT_SMART_CONTRACT_METHOD_NAME, args);
+        return new LegacyContractMethod(
+          provider,
+          address,
+          parameterSchema,
+          DEFAULT_SMART_CONTRACT_METHOD_NAME,
+          args
+        );
       };
     }
   }
