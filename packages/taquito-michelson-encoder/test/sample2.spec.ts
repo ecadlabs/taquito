@@ -34,7 +34,7 @@ describe('Schema test', () => {
       paused: false,
     });
     expect(result).toEqual({
-      args: [{ prim: 'big_map', args: [] }, rpcContractResponse2.script.storage.args[1]],
+      args: [[], rpcContractResponse2.script.storage.args[1]],
       prim: 'Pair',
     });
   });

@@ -34,12 +34,12 @@ export class MapToken extends Token {
   public Encode(args: any[]): any {
     const val = args.pop();
 
-    return {
-      prim: 'map',
-      args: Object.keys(val).map(key => {
-        return [this.KeySchema.Encode([key]), this.ValueSchema.Encode([val[key]])];
-      }),
-    };
+    return Object.keys(val).map(key => {
+      return {
+        prim: 'Elt',
+        args: [this.KeySchema.Encode([key]), this.ValueSchema.EncodeObject(val[key])],
+      };
+    });
   }
 
   public EncodeObject(args: any): any {
@@ -47,7 +47,7 @@ export class MapToken extends Token {
     return Object.keys(val).map(key => {
       return {
         prim: 'Elt',
-        args: [this.KeySchema.Encode([key]), this.ValueSchema.Encode([val[key]])],
+        args: [this.KeySchema.EncodeObject(key), this.ValueSchema.EncodeObject(val[key])],
       };
     });
   }

@@ -65,7 +65,7 @@ describe('Exchange contract test', () => {
       })
     ).toEqual({
       prim: 'Pair',
-      args: [{ prim: 'big_map', args: [] }, rpcContractResponse.script.storage.args[1]],
+      args: [[], rpcContractResponse.script.storage.args[1]],
     });
   });
 

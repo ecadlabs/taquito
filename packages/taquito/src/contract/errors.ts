@@ -1,4 +1,4 @@
-import { computeLength } from "./utils";
+import { computeLength } from './utils';
 
 export class InvalidParameterError implements Error {
   name: string = 'Invalid parameters error';
@@ -10,8 +10,8 @@ export class InvalidParameterError implements Error {
   ) {
     this.message = `${smartContractMethodName} Received ${
       args.length
-      } arguments while expecting ${computeLength(
-        smartContractMethodSchema
-      )} (${JSON.stringify(Object.keys(smartContractMethodSchema))})`
+    } arguments while expecting ${computeLength(smartContractMethodSchema)} (${JSON.stringify(
+      Object.keys(smartContractMethodSchema)
+    )})`;
   }
 }

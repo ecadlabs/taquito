@@ -35,7 +35,7 @@ describe('Schema test', () => {
       version: new BigNumber('1'),
     });
     expect(result).toEqual({
-      args: [{ prim: 'big_map', args: [] }, rpcContractResponse.script.storage.args[1]],
+      args: [[], rpcContractResponse.script.storage.args[1]],
       prim: 'Pair',
     });
   });
