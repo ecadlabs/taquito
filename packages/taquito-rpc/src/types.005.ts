@@ -85,7 +85,7 @@ export type RPCRunOperationParam005 = {
   chain_id: string;
 };
 
-export type EntrypointsResponse005 = { entrypoints: { [key: string]: Object } };
+export type EntrypointsResponse005 = { entrypoints: { [key: string]: Object }, unreachable?: { path: ('Left' | 'Right')[] } };
 
 export interface OperationContentsAndResultOrigination005 {
   kind: 'origination';
