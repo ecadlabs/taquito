@@ -1,6 +1,6 @@
 {
   "name": "@taquito/signer",
-  "version": "5.1.0-beta.1",
+  "version": "5.2.0-beta.0",
   "description": "Provide signing functionality to be with taquito",
   "keywords": [
     "tezos",
@@ -65,7 +65,7 @@
     ]
   },
   "dependencies": {
-    "@taquito/utils": "^5.1.0-beta.1",
+    "@taquito/utils": "^5.2.0-beta.0",
     "bignumber.js": "^9.0.0",
     "bip39": "^3.0.2",
     "elliptic": "^6.5.1",
@@ -101,6 +101,6 @@
     "tslint-config-prettier": "^1.15.0",
     "tslint-config-standard": "^8.0.1",
     "typedoc": "^0.15.0",
-    "typescript": "^3.0.3"
+    "typescript": "^3.7.2"
   }
 }

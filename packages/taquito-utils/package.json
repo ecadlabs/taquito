@@ -1,6 +1,6 @@
 {
   "name": "@taquito/utils",
-  "version": "5.1.0-beta.1",
+  "version": "5.2.0-beta.0",
   "description": "converts michelson data and types into convenient JS/TS objects",
   "keywords": [
     "tezos",
@@ -89,6 +89,6 @@
     "tslint-config-prettier": "^1.15.0",
     "tslint-config-standard": "^8.0.1",
     "typedoc": "^0.15.0",
-    "typescript": "^3.0.3"
+    "typescript": "^3.7.2"
   }
 }

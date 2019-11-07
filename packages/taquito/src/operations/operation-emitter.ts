@@ -72,7 +72,7 @@ export abstract class OperationEmitter {
     const promises: [
       Promise<BlockHeaderResponse>,
       Promise<BlockMetadata>,
-      Promise<string>,
+      Promise<string | undefined>,
       Promise<ManagerKeyResponse | undefined>
     ] = [] as any;
     let requiresReveal = false;
@@ -101,6 +101,15 @@ export abstract class OperationEmitter {
     }
 
     const [header, metadata, headCounter, manager] = await Promise.all(promises);
+
+    if (!header) {
+      throw new Error('Unable to latest block header');
+    }
+
+    if (!metadata) {
+      throw new Error('Unable to fetch latest metadata');
+    }
+
     head = header;
 
     if (requiresReveal) {
@@ -119,7 +128,7 @@ export abstract class OperationEmitter {
       }
     }
 
-    counter = parseInt(headCounter, 10);
+    counter = parseInt((headCounter as string | undefined) || '0', 10);
     if (!counters[publicKeyHash] || counters[publicKeyHash] < counter) {
       counters[publicKeyHash] = counter;
     }

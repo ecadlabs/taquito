@@ -1,6 +1,6 @@
 {
   "name": "@taquito/react-components",
-  "version": "5.1.0-beta.1",
+  "version": "5.2.0-beta.0",
   "description": "React Components that implement common use cases for data retrieved from the Tezos blockchain",
   "keywords": [
     "tezos",
@@ -43,8 +43,8 @@
     ]
   },
   "dependencies": {
-    "@taquito/rpc": "^5.1.0-beta.1",
-    "@taquito/taquito": "^5.1.0-beta.1",
+    "@taquito/rpc": "^5.2.0-beta.0",
+    "@taquito/taquito": "^5.2.0-beta.0",
     "@types/react": "^16.8.24",
     "bignumber.js": "^9.0.0",
     "react": "^16.8.6",
@@ -86,6 +86,6 @@
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
     "tslint-config-standard": "^8.0.1",
-    "typescript": "^3.0.3"
+    "typescript": "^3.7.2"
   }
 }

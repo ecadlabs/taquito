@@ -70,7 +70,7 @@
           },
           {
             "path": "README.md",
-            "sha512": "b36cb4ca675118a195dc72909bb47a45fdc7e6ace50d764d3647c25ae51a0afe01307d835bd76068c0c2d6c15087382f2ec40dbc5a4e117a88326692a4d530b9"
+            "sha512": "e427944fcc05fe1701b4a8adbf356e03c0fd6f92d9a9ba0bd42d09d51852a699482cc517ab52b7f0fe34c0531a7c191b8d56a301f91fd5c373df769d0eaa77a1"
           },
           {
             "path": "dist/types/taquito-rpc.d.ts",
@@ -82,7 +82,7 @@
           },
           {
             "path": "dist/types/types.005.d.ts",
-            "sha512": "edc928c497d851ceb3581044f850580ac08db75c3d0b15a8ab7c1fa41c69e7298421b123ad0338e7b0c8a33959d4289ec1a405125b7f186a8e91ecd0d067117f"
+            "sha512": "bc42923683a6c7f4158ed9a9c0c680ead92de982e0740be70f53af5970ee59beeb0c9f741a6bca4fbb6433f0f76f906345669aaf49223c2f3a381fc74f340187"
           },
           {
             "path": "dist/types/types.common.d.ts",
@@ -103,7 +103,7 @@
       "entry": "identity/v1alpha2",
       "value": {
         "identity": {
-          "keybaseUser": "jevonearth"
+          "keybaseUser": "simrob"
         }
       }
     },
@@ -130,7 +130,7 @@
           "typings",
           "version"
         ],
-        "sha512": "c9d3a6d4b86a351b077fa59ab42a29074daa8baf13d76e28382071bbde77d410f0ab3aeaf35894914c818a7bbfc6cd8f2c5d1de9ee713752f25e28b6e9a0f03d"
+        "sha512": "56cc988d71825a8b5de36da06d52a56e1b2169659a88d92aae6cefe2e0fbd52edade4650a6687ab62d3bec813becbaca9cc7d4b9399a8a7e6b5044a91294249a"
       }
     },
     {
@@ -138,7 +138,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/rpc",
-          "version": "5.1.0-beta.1",
+          "version": "5.2.0-beta.0",
           "description": "Provides low level methods, and types to invoke RPC calls from a Nomadic Tezos RPC node",
           "keywords": [
             "tezos",
@@ -204,7 +204,7 @@
             ]
           },
           "dependencies": {
-            "@taquito/http-utils": "^5.1.0-beta.1",
+            "@taquito/http-utils": "^5.2.0-beta.0",
             "bignumber.js": "^9.0.0",
             "lodash": "^4.17.15"
           },
@@ -233,11 +233,11 @@
             "tslint": "^5.11.0",
             "tslint-config-prettier": "^1.15.0",
             "tslint-config-standard": "^8.0.1",
-            "typescript": "^3.0.3"
+            "typescript": "^3.7.2"
           }
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdsz2fCRAD9Qy5GYHsngAAWtYQAIU85KZworfx6y75qUBgSe7o\n6GYK5H84iDaB0g3i7zHCRCIwxyZvOU3T7rStjK2yytn3163IIUnOUMvYmnplQdV8\n0K2+PBypJ298nE4GNhtPmL3iRAUeuGDbiiVVCv25Qcylm+5WfN4XN1KW6mT3LHXZ\n8okkwJAl0KXHPtZmLnHYOKukN+rNsh6TSMO323A+QCVxTMvgXOTV6nHSkWbY9iGG\necEeMEZsSk6L+wtAxmrwqdAWFGxIjGeckzXPru8HlVV2l5yFTd8/AMHsOhlX9uWr\nNMiX1+Sk+lFk0THK9wIGA+BqN9mpKRnCeft1quFfiZw0XuXh8Wu5wggppa3zQtF2\nQDEJm3VoCl4MTifZ094JpNmh3cZ3+hs+ElYALB8sO+iOGH2psslRRGzc9aKXs6tr\niTQN8rrNrUenAqvBQ4taCcYRkXo3Cl2fIleSy03+uvOKg1R+AhPLor9avg8rtzdl\n3wWfgh3YJFejGWMYus981rnacNpZdX2kFiLudrYKhtNCTl1CY4pk73CPXZCfJm1X\nntDpJzsh8jVH73c9d/SuhOniwjXGhJkOteQ03VDpBBTEiZZ2vgN3ERn8Sf02Paud\nLzh7XeI2TS8VoBulSMbseK1dQHyXIjL7JgMjWY8Jumda1A1i6OrhznmXDKuVjolp\nTXkO+jaUUtLDsN9zSFDC\n=Rjrl\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdxIF6CRCwAkEJD2ZwqwAAoWYQAK9EOJICl+LRRpUWs30H0BhA\nx0bNdhWwQvz6e4rtVPKadw7TXX0KKV4AMguMVwyKplC4lsXwMnRZNGTA/PQC1u5T\nK2pL2jQfvkZ26vlyUQETW3aCxkzFiv2SRNmzjOyAs2U6blkzWv04T4Vkxbtl0SPO\n+sbma1PL1tUxwQGVa/Gpf4zDtTXKhRziFwlK8VpYN0h4rmoLEHJG1gTNEz+XoRVd\nzmeNL4W9PoqRSUlh3airV3EW71Hw3wkwHoLu+FLzhZKZNhefAQv6JWIAwPJKmNVn\npV1YR8KYZCzb3UVFCQ/AqeXWOMUbPlivUN+qUniGtDq9bg1mmaAmrru+l2NBiYXO\nJ8c0j+ALY4fOjBMmq+/DA2ECaraN4rTDMBuof+rfwdj4aQNxPe/T0mq3BWa7dAkM\n3wZB3bI9KJNQn0arqqrc7p9NVwozCVYrp+tyGMs2PKWFOYZjbivc1+hXmpIIQm10\nnaCdgzmTmoqvnKBCo0lLt/rCi0x5Ra6OY+AXlZ8mwg9BooJk3Zud9O6z507saYeZ\nJoA+nrXdz0UY9wXcWsIGHtypC4EIFzimz0xUQFZLptyYdi83iX7ZJOZwwB1QhEK8\nlAnUecHorC4uOJilPo5J6NClN8svOLlbMvK6bBzf8nINoisLRagsQIZbXxKwJ1bG\nJde6p/rmMMty/folLKZN\n=+JWH\n-----END PGP SIGNATURE-----\n"
 }
