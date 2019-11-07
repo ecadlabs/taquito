@@ -1,4 +1,4 @@
-[![pkgsign status](https://us-central1-pkgsign.cloudfunctions.net/pkgsign-badge?name=@taquito/react-components&expectedIdentity=%40jevonearth)](https://github.com/RedpointGames/pkgsign)
+[![pkgsign status](https://us-central1-pkgsign.cloudfunctions.net/pkgsign-badge?name=@taquito/react-components&expectedIdentity=%40simrob)](https://github.com/RedpointGames/pkgsign)
 
 # Taquito React Components package
 
