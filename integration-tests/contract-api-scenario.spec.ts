@@ -3,6 +3,7 @@ import { ligoSample } from "./data/ligo-simple-contract";
 import { tokenCode, tokenInit } from "./data/tokens";
 import { voteSample } from "./data/vote-contract";
 import { depositContractCode, depositContractStorage } from "./data/deposit_contract";
+import { noAnnotCode, noAnnotInit } from "./data/token_without_annotation";
 
 CONFIGS.forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
@@ -137,6 +138,20 @@ CONFIGS.forEach(({ lib, rpc, setup }) => {
       const contract = await op.contract()
 
       const operation = await contract.methods.deposit(null).send({ amount: 1, });
+      await operation.confirmation();
+      expect(operation.status).toEqual('applied')
+      done();
+    })
+
+    it('Test contract with no annotations for methods', async (done) => {
+      const op = await Tezos.contract.originate({
+        balance: "1",
+        code: noAnnotCode,
+        init: noAnnotInit(await Tezos.signer.publicKeyHash())
+      })
+      const contract = await op.contract()
+
+      const operation = await contract.methods['0'](await Tezos.signer.publicKeyHash(), 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', "1").send();
       await operation.confirmation();
       expect(operation.status).toEqual('applied')
       done();
