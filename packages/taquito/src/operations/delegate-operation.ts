@@ -1,18 +1,7 @@
-import {
-  OperationContentsAndResult,
-  OperationContentsAndResultTransaction,
-  OperationContentsAndResultDelegation,
-} from '@taquito/rpc';
+import { OperationContentsAndResult, OperationContentsAndResultDelegation } from '@taquito/rpc';
 import { Context } from '../context';
 import { Operation } from './operations';
-import {
-  ForgedBytes,
-  GasConsumingOperation,
-  StorageConsumingOperation,
-  RPCTransferOperation,
-  FeeConsumingOperation,
-  RPCDelegateOperation,
-} from './types';
+import { FeeConsumingOperation, ForgedBytes, GasConsumingOperation, RPCDelegateOperation, StorageConsumingOperation } from './types';
 
 /**
  * @description Delegation operation provide utility function to fetch newly issued delegation
@@ -32,11 +21,9 @@ export class DelegateOperation extends Operation
     super(hash, raw, results, context);
   }
 
-  private get operationResults() {
-    const delegationOp =
-      Array.isArray(this.results) &&
-      (this.results.find(op => op.kind === 'delegation') as OperationContentsAndResultDelegation);
-    return delegationOp && delegationOp.metadata && delegationOp.metadata.operation_result;
+  public get operationResults() {
+    const delegationOp = Array.isArray(this.results) ? this.results?.find(op => op.kind === 'delegation') as OperationContentsAndResultDelegation | undefined : undefined;
+    return delegationOp?.metadata?.operation_result
   }
 
   get delegate(): string {
@@ -60,11 +47,10 @@ export class DelegateOperation extends Operation
   }
 
   get consumedGas() {
-    const consumedGas = this.operationResults && this.operationResults.consumed_gas;
-    return consumedGas ? consumedGas : undefined;
+    return this.operationResults?.consumed_gas;
   }
 
   get errors() {
-    return this.operationResults && this.operationResults.errors;
+    return this.operationResults?.errors;
   }
 }

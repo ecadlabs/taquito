@@ -43,7 +43,7 @@ export abstract class OperationEmitter {
     return this.context.signer;
   }
 
-  constructor(protected context: Context) {}
+  constructor(protected context: Context) { }
 
   private isSourceOp(
     op: RPCOperation
@@ -244,11 +244,7 @@ export abstract class OperationEmitter {
       for (let j = 0; j < results[i].contents.length; j++) {
         opResponse.push(results[i].contents[j]);
         const content = results[i].contents[j];
-        if (
-          'metadata' in content &&
-          typeof content.metadata.operation_result !== 'undefined' &&
-          content.metadata.operation_result.status === 'failed'
-        ) {
+        if (content?.metadata?.operation_result?.status === 'failed') {
           errors = errors.concat(content.metadata.operation_result.errors);
         }
       }
