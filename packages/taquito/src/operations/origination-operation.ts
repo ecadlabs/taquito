@@ -31,12 +31,18 @@ export class OriginationOperation extends Operation
     private contractProvider: RpcContractProvider
   ) {
     super(hash, raw, results, context);
-    this.contractAddress = this.operationResults?.originated_contracts?.[0]
+
+    const originatedContracts = this.operationResults && this.operationResults.originated_contracts;
+    if (Array.isArray(originatedContracts)) {
+      this.contractAddress = originatedContracts[0];
+    }
   }
 
-  public get operationResults() {
-    const originationOp = Array.isArray(this.results) ? this.results?.find(op => op.kind === 'origination') as OperationContentsAndResultOrigination | undefined : undefined;
-    return originationOp?.metadata?.operation_result
+  private get operationResults() {
+    const originationOp =
+      Array.isArray(this.results) &&
+      (this.results.find(op => op.kind === 'origination') as OperationContentsAndResultOrigination);
+    return originationOp && originationOp.metadata && originationOp.metadata.operation_result;
   }
 
   get fee() {
@@ -52,19 +58,22 @@ export class OriginationOperation extends Operation
   }
 
   get consumedGas() {
-    return this.operationResults?.consumed_gas;
+    const consumedGas = this.operationResults && this.operationResults.consumed_gas;
+    return consumedGas ? consumedGas : undefined;
   }
 
   get storageDiff() {
-    return this.operationResults?.paid_storage_size_diff;
+    const storageDiff = this.operationResults && this.operationResults.paid_storage_size_diff;
+    return storageDiff ? storageDiff : undefined;
   }
 
   get storageSize() {
-    return this.operationResults?.storage_size;
+    const storageSize = this.operationResults && this.operationResults.storage_size;
+    return storageSize ? storageSize : undefined;
   }
 
   get errors() {
-    return this.operationResults?.errors;
+    return this.operationResults && this.operationResults.errors;
   }
 
   /**

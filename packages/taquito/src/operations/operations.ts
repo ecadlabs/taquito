@@ -100,7 +100,11 @@ export class Operation {
   public get status() {
     return (
       this.results.map(result => {
-        return result?.metadata?.operation_result?.status as OperationResultStatusEnum ?? 'unknown'
+        if (result.metadata && result.metadata.operation_result) {
+          return result.metadata.operation_result.status as OperationResultStatusEnum;
+        } else {
+          return 'unknown';
+        }
       })[0] || 'unknown'
     );
   }
@@ -122,7 +126,7 @@ export class Operation {
       timeout: timeout || confirmationPollingTimeoutSecond,
     } as Required<PollingConfig>);
 
-    const conf = confirmations ?? defaultConfirmationCount;
+    const conf = confirmations !== undefined ? confirmations : defaultConfirmationCount;
 
     return new Promise<number>((resolve, reject) => {
       this.confirmed$
