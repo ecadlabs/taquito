@@ -1,9 +1,8 @@
+import { MichelsonV1Expression, MichelsonV1ExpressionExtended, ScriptResponse } from '@taquito/rpc';
 import { createToken } from '../tokens/createToken';
-import { Token, Semantic } from '../tokens/token';
-import { OrToken } from '../tokens/or';
 import { OptionToken } from '../tokens/option';
-import { ScriptResponse, MichelsonV1ExpressionExtended, MichelsonV1Expression } from '@taquito/rpc';
-import { Falsy } from './types';
+import { OrToken } from '../tokens/or';
+import { Semantic, Token } from '../tokens/token';
 
 /**
  * @warn Our current smart contract abstraction feature is currently in preview. It's API is not final, and it may not cover every use case (yet). We will greatly appreciate any feedback on this feature.
@@ -11,12 +10,10 @@ import { Falsy } from './types';
 export class ParameterSchema {
   private root: Token;
 
-  static fromRPCResponse(val: { script: ScriptResponse }) {
-    const parameter: Falsy<MichelsonV1ExpressionExtended> =
-      val &&
-      val.script &&
-      Array.isArray(val.script.code) &&
-      (val.script.code.find((x: any) => x.prim === 'parameter') as MichelsonV1ExpressionExtended);
+  static fromRPCResponse(val: { script?: ScriptResponse }) {
+    const parameter = (val?.script?.code ?? []).find((x: any) => x?.prim === 'parameter') as
+      | MichelsonV1ExpressionExtended
+      | undefined;
     if (!parameter || !Array.isArray(parameter.args)) {
       throw new Error('Invalid rpc response passed as arguments');
     }
