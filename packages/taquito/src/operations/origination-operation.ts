@@ -38,11 +38,13 @@ export class OriginationOperation extends Operation
     }
   }
 
-  private get operationResults() {
+  get operationResults() {
     const originationOp =
       Array.isArray(this.results) &&
       (this.results.find(op => op.kind === 'origination') as OperationContentsAndResultOrigination);
-    return originationOp && originationOp.metadata && originationOp.metadata.operation_result;
+    const result =
+      originationOp && originationOp.metadata && originationOp.metadata.operation_result;
+    return result ? result : undefined;
   }
 
   get fee() {
