@@ -9,7 +9,6 @@ import {
   ForgedBytes,
   GasConsumingOperation,
   StorageConsumingOperation,
-  RPCTransferOperation,
   FeeConsumingOperation,
   RPCDelegateOperation,
 } from './types';
@@ -32,11 +31,12 @@ export class DelegateOperation extends Operation
     super(hash, raw, results, context);
   }
 
-  private get operationResults() {
+  get operationResults() {
     const delegationOp =
       Array.isArray(this.results) &&
       (this.results.find(op => op.kind === 'delegation') as OperationContentsAndResultDelegation);
-    return delegationOp && delegationOp.metadata && delegationOp.metadata.operation_result;
+    const result = delegationOp && delegationOp.metadata && delegationOp.metadata.operation_result;
+    return result ? result : undefined;
   }
 
   get delegate(): string {

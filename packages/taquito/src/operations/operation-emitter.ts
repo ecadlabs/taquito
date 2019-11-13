@@ -43,7 +43,7 @@ export abstract class OperationEmitter {
     return this.context.signer;
   }
 
-  constructor(protected context: Context) {}
+  constructor(protected context: Context) { }
 
   private isSourceOp(
     op: RPCOperation
@@ -128,7 +128,7 @@ export abstract class OperationEmitter {
       }
     }
 
-    counter = parseInt((headCounter as string | undefined) || '0', 10);
+    counter = parseInt(headCounter || '0', 10);
     if (!counters[publicKeyHash] || counters[publicKeyHash] < counter) {
       counters[publicKeyHash] = counter;
     }

@@ -12,6 +12,7 @@
     "strict": true,
     "sourceMap": true,
     "esModuleInterop": true,
+    "noImplicitAny": true,
     "declaration": true,
     "allowSyntheticDefaultImports": true,
     "noUnusedParameters": true,

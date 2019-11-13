@@ -1,4 +1,8 @@
-import { OperationContentsAndResult, OperationContentsAndResultTransaction } from '@taquito/rpc';
+import {
+  OperationContentsAndResult,
+  OperationContentsAndResultTransaction,
+  OperationResultTransaction,
+} from '@taquito/rpc';
 import { Context } from '../context';
 import { Operation } from './operations';
 import {
@@ -28,11 +32,13 @@ export class TransactionOperation extends Operation
     super(hash, raw, results, context);
   }
 
-  private get operationResults() {
+  get operationResults() {
     const transactionOp =
       Array.isArray(this.results) &&
       (this.results.find(op => op.kind === 'transaction') as OperationContentsAndResultTransaction);
-    return transactionOp && transactionOp.metadata && transactionOp.metadata.operation_result;
+    const result =
+      transactionOp && transactionOp.metadata && transactionOp.metadata.operation_result;
+    return result ? result : undefined;
   }
 
   get amount() {
