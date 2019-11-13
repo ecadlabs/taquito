@@ -17,9 +17,12 @@ export class Schema {
   private bigMap?: BigMapToken;
 
   static fromRPCResponse(val: { script: ScriptResponse }) {
-    const storage = (val?.script?.code ?? []).find((x: any) => x?.prim === 'storage') as
-      | MichelsonV1ExpressionExtended
-      | undefined;
+    const storage: Falsy<MichelsonV1ExpressionExtended> =
+      val &&
+      val.script &&
+      Array.isArray(val.script.code) &&
+      (val.script.code.find((x: any) => x.prim === 'storage') as MichelsonV1ExpressionExtended);
+
     if (!storage || !Array.isArray(storage.args)) {
       throw new Error('Invalid rpc response passed as arguments');
     }

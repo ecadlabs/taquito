@@ -16,7 +16,6 @@
     "allowSyntheticDefaultImports": true,
     "noUnusedParameters": true,
     "experimentalDecorators": true,
-    "noImplicitAny": true,
     "emitDecoratorMetadata": true,
     "jsx": "react",
     "baseUrl": "packages",

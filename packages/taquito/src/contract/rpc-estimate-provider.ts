@@ -28,7 +28,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     gasLimit: 800000,
   };
 
-  public getOperationResult(
+  private getOperationResult(
     opResponse: PreapplyResponse,
     kind: 'origination' | 'transaction'
   ): (OperationResultTransaction | OperationResultOrigination)[] {
@@ -76,13 +76,13 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     let totalGas = 0;
     let totalStorage = 0;
     operationResults.forEach(result => {
-      totalGas += Number(result.consumed_gas) ?? 0;
-      totalStorage += Number(result.paid_storage_size_diff) ?? 0;
+      totalGas += Number(result.consumed_gas) || 0;
+      totalStorage += Number(result.paid_storage_size_diff) || 0;
     });
 
     return new Estimate(
-      totalGas ?? 0,
-      Number(totalStorage ?? 0) + DEFAULT_STORAGE_LIMIT.ORIGINATION,
+      totalGas || 0,
+      Number(totalStorage || 0) + DEFAULT_STORAGE_LIMIT.ORIGINATION,
       opbytes.length / 2
     );
   }
@@ -116,12 +116,12 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     let totalGas = 0;
     let totalStorage = 0;
     operationResults.forEach(result => {
-      totalGas += Number(result.consumed_gas) ?? 0;
-      totalStorage += Number(result.paid_storage_size_diff) ?? 0;
+      totalGas += Number(result.consumed_gas) || 0;
+      totalStorage += Number(result.paid_storage_size_diff) || 0;
     });
     return new Estimate(
-      totalGas ?? 0,
-      Number(totalStorage ?? 0) + DEFAULT_STORAGE_LIMIT.TRANSFER,
+      totalGas || 0,
+      Number(totalStorage || 0) + DEFAULT_STORAGE_LIMIT.TRANSFER,
       opbytes.length / 2
     );
   }

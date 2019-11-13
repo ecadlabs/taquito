@@ -1,18 +1,24 @@
 import { Schema } from '@taquito/michelson-encoder';
 import { ScriptResponse } from '@taquito/rpc';
-import { encodeExpr } from '@taquito/utils';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT, protocols } from '../constants';
 import { Context } from '../context';
-import { DelegateOperation } from '../operations/delegate-operation';
 import { OperationEmitter } from '../operations/operation-emitter';
+import { Operation } from '../operations/operations';
 import { OriginationOperation } from '../operations/origination-operation';
-import { TransactionOperation } from '../operations/transaction-operation';
-import { DelegateParams, OriginateParams, RPCDelegateOperation, TransferParams } from '../operations/types';
+import {
+  DelegateParams,
+  OriginateParams,
+  RPCDelegateOperation,
+  TransferParams,
+} from '../operations/types';
 import { Contract } from './contract';
 import { Estimate } from './estimate';
 import { ContractProvider, ContractSchema, EstimationProvider } from './interface';
 import { createOriginationOperation, createTransferOperation } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
+import { encodeExpr } from '@taquito/utils';
+import { TransactionOperation } from '../operations/transaction-operation';
+import { DelegateOperation } from '../operations/delegate-operation';
 
 export class RpcContractProvider extends OperationEmitter implements ContractProvider {
   constructor(context: Context, private estimator: EstimationProvider) {
@@ -108,9 +114,17 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
     if (fee === undefined || gasLimit === undefined || storageLimit === undefined) {
       const estimation = await estimator({ fee, gasLimit, storageLimit, ...(rest as any) });
 
-      calculatedFee = calculatedFee ?? estimation.suggestedFeeMutez;
-      calculatedGas = calculatedGas ?? estimation.gasLimit;
-      calculatedStorage = calculatedStorage ?? estimation.storageLimit;
+      if (calculatedFee === undefined) {
+        calculatedFee = estimation.suggestedFeeMutez;
+      }
+
+      if (calculatedGas === undefined) {
+        calculatedGas = estimation.gasLimit;
+      }
+
+      if (calculatedStorage === undefined) {
+        calculatedStorage = estimation.storageLimit;
+      }
     }
 
     return {
@@ -170,7 +184,7 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
       storage_limit: storageLimit,
       delegate,
     };
-    const sourceOrDefault = source ?? await this.signer.publicKeyHash();
+    const sourceOrDefault = source || (await this.signer.publicKeyHash());
     const opBytes = await this.prepareAndForge({
       operation,
       source: sourceOrDefault,
@@ -226,7 +240,7 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
       ...params,
       ...estimate,
     });
-    const source = params.source ?? await this.signer.publicKeyHash();
+    const source = params.source || (await this.signer.publicKeyHash());
     const opBytes = await this.prepareAndForge({ operation, source: params.source });
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
     return new TransactionOperation(hash, operation, source, forgedBytes, opResponse, context);
