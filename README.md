@@ -51,6 +51,8 @@ We publish gpg signed packages to npmjs.org under the `@taquito` handle.
 | [@taquito/indexer](packages/taquito-indexer)                     | A client for the [tezos-indexer-api][0] API                   |
 | [@taquito/streamer](packages/taquito-streamer)                   | A client for the [taquito-streamer][1] API                    |
 | [@taquito/signer](packages/taquito-signer)                       | Provide necessary function to sign using tezos keys           |
+| [@taquito/remote-signer](packages/taquito-remote-signer)         | Provide necessary function to sign using remote signer API    |
+| [@taquito/tezbridge-signer](packages/taquito-tezbridge-signer)   | Provide necessary function to sign using TezBridge            |
 | [@taquito/utils](packages/taquito-utils)                         | Provide different encoding and decoding utilities             |
 
 ## API Documentation

@@ -3,6 +3,24 @@ title: Versions
 author: Simon Boissonneault-Robert
 ---
 
+## 5.2.0-beta.1 Remote signer package, limits, bigmap abstraction and fixes
+
+### Features
+
+- Introduction of the remote signer package, allowing Taquito to interact with the Tezos HTTP  remote signer API
+- `gasLimit`, `storageLimit` and `fees` are now surfaced on `Orgination`, `Transaction` and `Delegation` operations
+- Our HTTP backend package now throws more useful errors, which extend javascript's `Error`
+- New bigmap abstraction (released in 5.1.0-beta.1 but not announced)
+- Michelson encoder now supports injectable custom semantics (currently only for bigmap)
+- RPC: Support for the `/helpers/scripts/pack_data` endpoint
+- Utils: Now expose a function for expression encoding `encodeExpr`
+
+### Fixes
+
+- Fixed issue with single value map storage not being decoded properly
+- Fixed issue with encoding of collections as parameters and initial storage
+- Fixed issue with our smart contract abstraction not picking up methods without annotations
+
 ## 5.0.1-beta.2 Support for Babylon protocol update
 
 This release supports Babylon/Proto005. With this release, it is possible to inject operations into a chain running either `Athens/004` or `Babylon/005`.
