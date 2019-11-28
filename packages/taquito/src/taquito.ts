@@ -20,6 +20,8 @@ export * from './query/interface';
 export * from './signer/interface';
 export * from './tz/interface';
 export * from './contract';
+export * from './contract/big-map';
+
 export { SubscribeProvider } from './subscribe/interface';
 export interface SetProviderOptions {
   rpc?: string | RpcClient;
