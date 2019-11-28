@@ -1,33 +1,20 @@
 import { Schema } from '@taquito/michelson-encoder';
 import { ScriptResponse } from '@taquito/rpc';
-import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT, protocols } from '../constants';
+import { encodeExpr } from '@taquito/utils';
+import { protocols } from '../constants';
 import { Context } from '../context';
+import { DelegateOperation } from '../operations/delegate-operation';
 import { OperationEmitter } from '../operations/operation-emitter';
-import { Operation } from '../operations/operations';
 import { OriginationOperation } from '../operations/origination-operation';
-import {
-  DelegateParams,
-  OriginateParams,
-  RPCDelegateOperation,
-  TransferParams,
-  RegisterDelegateParams,
-} from '../operations/types';
+import { TransactionOperation } from '../operations/transaction-operation';
+import { DelegateParams, OriginateParams, TransferParams, RegisterDelegateParams } from '../operations/types';
 import { Contract } from './contract';
 import { Estimate } from './estimate';
 import { ContractProvider, ContractSchema, EstimationProvider } from './interface';
-import {
-  createOriginationOperation,
-  createTransferOperation,
-  createSetDelegateOperation,
-  createRegisterDelegateOperation,
-} from './prepare';
+import { createOriginationOperation, createRegisterDelegateOperation, createSetDelegateOperation, createTransferOperation } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
-import { encodeExpr } from '@taquito/utils';
-import { TransactionOperation } from '../operations/transaction-operation';
-import { DelegateOperation } from '../operations/delegate-operation';
 
 import { InvalidDelegationSource } from './errors';
-
 import { CombinedPreparer } from '../preparer/preparer';
 
 export class RpcContractProvider extends OperationEmitter implements ContractProvider {
@@ -165,9 +152,7 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
       },
       publicKeyHash
     );
-    const preparer = new CombinedPreparer(this.context)
-    const prepared = await preparer.prepare([operation], publicKeyHash);
-    // const preparedOrigination = await this.prepareOperation({ operation, source: publicKeyHash });
+    const prepared = await this.preparer.prepare([operation], publicKeyHash);
     const forgedOrigination = await this.forge(prepared);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject({ opbytes: forgedOrigination, opOb: prepared });
     return new OriginationOperation(hash, operation, forgedBytes, opResponse, context, this);
