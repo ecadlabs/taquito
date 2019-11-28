@@ -43,7 +43,7 @@ export abstract class OperationEmitter {
     return this.context.signer;
   }
 
-  constructor(protected context: Context) { }
+  constructor(protected context: Context) {}
 
   private isSourceOp(
     op: RPCOperation
@@ -59,7 +59,8 @@ export abstract class OperationEmitter {
     | RPCTransferOperation
     | RPCOriginationOperation
     | RPCDelegateOperation
-    | RPCRevealOperation) & { source?: string } {
+    | RPCRevealOperation
+  ) & { source?: string } {
     return ['reveal', 'transaction', 'origination', 'delegation'].includes(op.kind);
   }
 
@@ -96,7 +97,12 @@ export abstract class OperationEmitter {
       }
     }
 
-    const [header, metadata, headCounter, manager] = await Promise.all([blockHeaderPromise, blockMetaPromise, counterPromise, managerPromise]);
+    const [header, metadata, headCounter, manager] = await Promise.all([
+      blockHeaderPromise,
+      blockMetaPromise,
+      counterPromise,
+      managerPromise,
+    ]);
 
     if (!header) {
       throw new Error('Unable to latest block header');
@@ -202,10 +208,10 @@ export abstract class OperationEmitter {
   }
 
   protected async forge({ opOb: { branch, contents, protocol }, counter }: PreparedOperation) {
-    let remoteForgedBytes = await this.rpc.forgeOperations({ branch, contents });
+    let forgedBytes = await this.context.forger.forge({ branch, contents });
 
     return {
-      opbytes: remoteForgedBytes,
+      opbytes: forgedBytes,
       opOb: {
         branch,
         contents,

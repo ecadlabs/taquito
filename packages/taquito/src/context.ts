@@ -2,6 +2,8 @@ import { RpcClient } from '@taquito/rpc';
 import { Signer } from './signer/interface';
 import { NoopSigner } from './signer/noop';
 import { Protocols } from './constants';
+import { Forger } from './forger/interface';
+import { RpcForger } from './forger/rpc-forger';
 
 export interface Config {
   confirmationPollingIntervalSecond?: number;
@@ -19,13 +21,17 @@ export const defaultConfig: Required<Config> = {
  * @description Encapsulate common service used throughout different part of the library
  */
 export class Context {
+  private _forger: Forger;
+
   constructor(
     private _rpcClient: RpcClient = new RpcClient(),
     private _signer: Signer = new NoopSigner(),
     private _proto?: Protocols,
-    private _config?: Partial<Config>
+    private _config?: Partial<Config>,
+    forger?: Forger
   ) {
     this.config = _config as any;
+    this._forger = forger ? forger : new RpcForger(this);
   }
 
   get config(): Required<Config> {
@@ -45,6 +51,14 @@ export class Context {
 
   set rpc(value: RpcClient) {
     this._rpcClient = value;
+  }
+
+  get forger() {
+    return this._forger;
+  }
+
+  set forger(value: Forger) {
+    this._forger = value;
   }
 
   get signer() {
@@ -76,6 +90,6 @@ export class Context {
    * @description Create a copy of the current context. Useful when you have long running operation and you do not want a context change to affect the operation
    */
   clone(): Context {
-    return new Context(this.rpc, this.signer);
+    return new Context(this.rpc, this.signer, this.proto, this.config, this.forger);
   }
 }
