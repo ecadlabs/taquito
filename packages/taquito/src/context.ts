@@ -4,6 +4,8 @@ import { NoopSigner } from './signer/noop';
 import { Protocols } from './constants';
 import { Forger } from './forger/interface';
 import { RpcForger } from './forger/rpc-forger';
+import { Injector } from './injector/interface';
+import { RpcInjector } from './injector/rpc-injector';
 
 export interface Config {
   confirmationPollingIntervalSecond?: number;
@@ -22,16 +24,19 @@ export const defaultConfig: Required<Config> = {
  */
 export class Context {
   private _forger: Forger;
+  private _injector: Injector;
 
   constructor(
     private _rpcClient: RpcClient = new RpcClient(),
     private _signer: Signer = new NoopSigner(),
     private _proto?: Protocols,
     private _config?: Partial<Config>,
-    forger?: Forger
+    forger?: Forger,
+    injector?: Injector
   ) {
     this.config = _config as any;
     this._forger = forger ? forger : new RpcForger(this);
+    this._injector = injector ? injector : new RpcInjector(this);
   }
 
   get config(): Required<Config> {
@@ -51,6 +56,14 @@ export class Context {
 
   set rpc(value: RpcClient) {
     this._rpcClient = value;
+  }
+
+  get injector() {
+    return this._injector;
+  }
+
+  set injector(value: Injector) {
+    this._injector = value;
   }
 
   get forger() {
@@ -90,6 +103,6 @@ export class Context {
    * @description Create a copy of the current context. Useful when you have long running operation and you do not want a context change to affect the operation
    */
   clone(): Context {
-    return new Context(this.rpc, this.signer, this.proto, this.config, this.forger);
+    return new Context(this.rpc, this.signer, this.proto, this.config, this.forger, this._injector);
   }
 }

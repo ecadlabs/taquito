@@ -262,7 +262,7 @@ export abstract class OperationEmitter {
     }
 
     return {
-      hash: await this.rpc.injectOperation(forgedBytes.opbytes),
+      hash: await this.context.injector.inject(forgedBytes.opbytes),
       forgedBytes,
       opResponse,
       context: this.context.clone(),
