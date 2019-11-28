@@ -69,18 +69,12 @@ export abstract class OperationEmitter {
   }: PrepareOperationParams): Promise<PreparedOperation> {
     let counter;
     const counters: { [key: string]: number } = {};
-    const promises: [
-      Promise<BlockHeaderResponse>,
-      Promise<BlockMetadata>,
-      Promise<string | undefined>,
-      Promise<ManagerKeyResponse | undefined>
-    ] = [] as any;
     let requiresReveal = false;
     let ops: RPCOperation[] = [];
     let head: BlockHeaderResponse;
 
-    promises.push(this.rpc.getBlockHeader());
-    promises.push(this.rpc.getBlockMetadata());
+    const blockHeaderPromise = this.rpc.getBlockHeader();
+    const blockMetaPromise = this.rpc.getBlockMetadata();
 
     if (Array.isArray(operation)) {
       ops = [...operation];
@@ -90,17 +84,19 @@ export abstract class OperationEmitter {
 
     const publicKeyHash = source || (await this.signer.publicKeyHash());
 
+    let counterPromise: Promise<string | undefined> = Promise.resolve(undefined);
+    let managerPromise: Promise<ManagerKeyResponse | undefined> = Promise.resolve(undefined);
     for (let i = 0; i < ops.length; i++) {
       if (['transaction', 'origination', 'delegation'].includes(ops[i].kind)) {
         requiresReveal = true;
         const { counter } = await this.rpc.getContract(publicKeyHash);
-        promises.push(Promise.resolve(counter));
-        promises.push(this.rpc.getManagerKey(publicKeyHash));
+        counterPromise = Promise.resolve(counter);
+        managerPromise = this.rpc.getManagerKey(publicKeyHash);
         break;
       }
     }
 
-    const [header, metadata, headCounter, manager] = await Promise.all(promises);
+    const [header, metadata, headCounter, manager] = await Promise.all([blockHeaderPromise, blockMetaPromise, counterPromise, managerPromise]);
 
     if (!header) {
       throw new Error('Unable to latest block header');
