@@ -24,6 +24,7 @@ import {
   RPCRevealOperation,
   RPCTransferOperation,
 } from './types';
+import { CombinedPreparer } from '../preparer/preparer';
 
 export interface PreparedOperation {
   opOb: {
@@ -43,7 +44,7 @@ export abstract class OperationEmitter {
     return this.context.signer;
   }
 
-  constructor(protected context: Context) {}
+  constructor(protected context: Context) { }
 
   private isSourceOp(
     op: RPCOperation
@@ -204,22 +205,17 @@ export abstract class OperationEmitter {
   }
 
   protected async prepareAndForge(params: PrepareOperationParams) {
-    const prepared = await this.prepareOperation(params);
-    return this.forge(prepared);
+    const prepared = await new CombinedPreparer(this.context).prepare(Array.isArray(params.operation) ? params.operation : [params.operation], params.source!)
+    // const prepared = await this.prepareOperation(params);
+    const forged = await this.forge(prepared);
+    return {
+      opOb: prepared,
+      opbytes: forged,
+    }
   }
 
-  protected async forge({ opOb: { branch, contents, protocol }, counter }: PreparedOperation) {
-    let forgedBytes = await this.context.forger.forge({ branch, contents });
-
-    return {
-      opbytes: forgedBytes,
-      opOb: {
-        branch,
-        contents,
-        protocol,
-      },
-      counter,
-    };
+  protected async forge({ branch, contents }: PreparedOperation['opOb']) {
+    return this.context.forger.forge({ branch, contents });
   }
 
   protected async simulate(op: RPCRunOperationParam) {

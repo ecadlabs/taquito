@@ -25,7 +25,10 @@ import { smartContractAbstractionSemantic } from './semantic';
 import { encodeExpr } from '@taquito/utils';
 import { TransactionOperation } from '../operations/transaction-operation';
 import { DelegateOperation } from '../operations/delegate-operation';
+
 import { InvalidDelegationSource } from './errors';
+
+import { CombinedPreparer } from '../preparer/preparer';
 
 export class RpcContractProvider extends OperationEmitter implements ContractProvider {
   constructor(context: Context, private estimator: EstimationProvider) {
@@ -162,9 +165,11 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
       },
       publicKeyHash
     );
-    const preparedOrigination = await this.prepareOperation({ operation, source: publicKeyHash });
-    const forgedOrigination = await this.forge(preparedOrigination);
-    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(forgedOrigination);
+    const preparer = new CombinedPreparer(this.context)
+    const prepared = await preparer.prepare([operation], publicKeyHash);
+    // const preparedOrigination = await this.prepareOperation({ operation, source: publicKeyHash });
+    const forgedOrigination = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject({ opbytes: forgedOrigination, opOb: prepared });
     return new OriginationOperation(hash, operation, forgedBytes, opResponse, context, this);
   }
 

@@ -33,14 +33,13 @@ export type OriginateParamsBase = {
 export type OriginateParams = OriginateParamsBase &
   (
     | {
-        init?: never;
-        storage: any;
-      }
+      init?: never;
+      storage: any;
+    }
     | {
-        init: string | object;
-        storage?: never;
-      }
-  );
+      init: string | object;
+      storage?: never;
+    });
 
 /**
  * @description RPC origination operation
@@ -79,7 +78,6 @@ export interface RPCRevealOperation {
 export interface ForgedBytes {
   opbytes: string;
   opOb: OperationObject;
-  counter: number;
 }
 
 /**
