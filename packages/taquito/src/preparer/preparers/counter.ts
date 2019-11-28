@@ -32,10 +32,10 @@ export class CounterProvider {
   }
 }
 
-const counterProvider = new CounterProvider();
 
 export class CounterPreparer implements Preparer {
   async prepare(unPreparedOps: RPCOperation[], context: PreparerContext): Promise<RPCOperation[]> {
+    const counterProvider = new CounterProvider();
     for (const op of unPreparedOps as any) {
       if (['reveal', 'transaction', 'origination', 'delegation'].includes(op.kind)) {
         const it = counterProvider.for(await context.source, context.context)
