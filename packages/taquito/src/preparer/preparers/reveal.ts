@@ -2,7 +2,7 @@ import { Preparer, PreparerContext } from "../types";
 
 import { RPCOperation } from "../../operations/types";
 
-import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from "taquito/src/constants";
+import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from "../../constants";
 
 export class RevealPreparer implements Preparer {
   async prepare(unPreparedOps: RPCOperation[], context: PreparerContext): Promise<RPCOperation[]> {
