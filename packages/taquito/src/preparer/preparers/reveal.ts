@@ -11,7 +11,7 @@ export class RevealPreparer implements Preparer {
       return unPreparedOps;
     }
 
-    const manager = await context.context.rpc.getManagerKey(await context.source)
+    const manager = await context.context.rpc.getManagerKey(context.source)
     const haveManager = manager && typeof manager === 'object' ? !!manager.key : !!manager;
 
     if (haveManager) {
@@ -22,7 +22,7 @@ export class RevealPreparer implements Preparer {
       kind: 'reveal' as 'reveal',
       fee: DEFAULT_FEE.REVEAL,
       public_key: await context.context.signer.publicKey(),
-      source: await context.source,
+      source: context.source,
       gas_limit: DEFAULT_GAS_LIMIT.REVEAL,
       storage_limit: DEFAULT_STORAGE_LIMIT.REVEAL,
     }

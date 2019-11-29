@@ -28,7 +28,7 @@ export abstract class OperationEmitter {
   }
 
   protected async prepareAndForge(params: PrepareOperationParams) {
-    const prepared = await this.preparer.prepare(Array.isArray(params.operation) ? params.operation : [params.operation], params.source!)
+    const prepared = await this.preparer.prepare(Array.isArray(params.operation) ? params.operation : [params.operation], params.source)
     const forged = await this.forge(prepared);
     return {
       opOb: prepared,

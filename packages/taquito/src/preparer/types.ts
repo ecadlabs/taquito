@@ -10,6 +10,6 @@ export interface Preparer {
 export interface PreparerContext {
   metadata: Promise<BlockMetadata>;
   header: Promise<BlockHeaderResponse>;
-  source: Promise<string>;
+  source: string;
   context: Context;
 }

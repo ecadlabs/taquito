@@ -161,7 +161,6 @@ describe('RpcContractProvider test', () => {
         storageLimit: 257,
       });
       expect(result.raw).toEqual({
-        counter: 0,
         opOb: {
           branch: 'test',
           contents: [
@@ -206,7 +205,6 @@ describe('RpcContractProvider test', () => {
         init: '{}',
       });
       expect(result.raw).toEqual({
-        counter: 0,
         opOb: {
           branch: 'test',
           contents: [
@@ -251,7 +249,6 @@ describe('RpcContractProvider test', () => {
         storageLimit: 257,
       });
       expect(result.raw).toEqual({
-        counter: 0,
         opOb: {
           branch: 'test',
           contents: [
@@ -338,7 +335,6 @@ describe('RpcContractProvider test', () => {
         storageLimit: 300,
       });
       expect(result.raw).toEqual({
-        counter: 0,
         opOb: {
           branch: 'test',
           contents: [
@@ -371,7 +367,6 @@ describe('RpcContractProvider test', () => {
         amount: 2,
       });
       expect(result.raw).toEqual({
-        counter: 0,
         opOb: {
           branch: 'test',
           contents: [
@@ -412,7 +407,6 @@ describe('RpcContractProvider test', () => {
         storageLimit: 300,
       });
       expect(result.raw).toEqual({
-        counter: 0,
         opOb: {
           branch: 'test',
           contents: [
@@ -452,7 +446,6 @@ describe('RpcContractProvider test', () => {
         storageLimit: 300,
       });
       expect(result.raw).toEqual({
-        counter: 0,
         opOb: {
           branch: 'test',
           contents: [
@@ -485,7 +478,6 @@ describe('RpcContractProvider test', () => {
         delegate: 'test_delegate',
       });
       expect(result.raw).toEqual({
-        counter: 0,
         opOb: {
           branch: 'test',
           contents: [
@@ -569,7 +561,6 @@ describe('RpcContractProvider test', () => {
       mockEstimate.registerDelegate.mockResolvedValue(estimate);
       const result = await rpcContractProvider.registerDelegate({});
       expect(result.raw).toEqual({
-        counter: 0,
         opOb: {
           branch: 'test',
           contents: [

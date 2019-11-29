@@ -6,7 +6,9 @@ export class SourcePreparer implements Preparer {
   async prepare(unPreparedOps: RPCOperation[], context: PreparerContext): Promise<RPCOperation[]> {
     for (const op of unPreparedOps) {
       if (['transaction', 'origination', 'delegation'].includes(op.kind)) {
-        Object.assign(op, { source: await context.source })
+        if (!('source' in op && typeof op.source !== 'undefined')) {
+          Object.assign(op, { source: context.source })
+        }
       }
     }
 

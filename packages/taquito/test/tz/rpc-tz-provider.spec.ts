@@ -72,7 +72,6 @@ describe('RpcTzProvider test', () => {
       const provider = new RpcTzProvider(new Context(mockRpcClient as any));
       const result = await provider.activate('test', '123');
       expect(result.raw).toEqual({
-        counter: 0,
         opOb: {
           branch: 'test',
           contents: [
