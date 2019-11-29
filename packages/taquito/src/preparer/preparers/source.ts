@@ -1,17 +1,26 @@
 import { Preparer, PreparerContext } from "../types";
 
-import { RPCOperation } from "../../operations/types";
+import { RPCOperation, RPCActivateOperation, RPCRevealOperation, RPCOriginationOperation, RPCTransferOperation, RPCDelegateOperation } from "../../operations/types";
+
+type RPCOperationWithSource = RPCActivateOperation | RPCRevealOperation | ((RPCOriginationOperation
+  | RPCTransferOperation
+  | RPCDelegateOperation) & { source: string });
 
 export class SourcePreparer implements Preparer {
-  async prepare(unPreparedOps: RPCOperation[], context: PreparerContext): Promise<RPCOperation[]> {
+  async prepare(unPreparedOps: RPCOperation[], context: PreparerContext): Promise<RPCOperationWithSource[]> {
+    const results: RPCOperationWithSource[] = [];
     for (const op of unPreparedOps) {
-      if (['transaction', 'origination', 'delegation'].includes(op.kind)) {
+      if (op.kind === 'origination' || op.kind === 'transaction' || op.kind === 'delegation') {
         if (!('source' in op && typeof op.source !== 'undefined')) {
-          Object.assign(op, { source: context.source })
+          results.push(Object.assign(op, { source: context.source }))
+        } else {
+          results.push(op as RPCOperationWithSource);
         }
+      } else {
+        results.push(op);
       }
     }
 
-    return unPreparedOps;
+    return results;
   }
 }

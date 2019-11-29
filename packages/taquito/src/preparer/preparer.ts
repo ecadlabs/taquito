@@ -12,7 +12,7 @@ export class CombinedPreparer {
 
   constructor(private context: Context) { }
 
-  private preparers: Preparer[] = [new RevealPreparer(), new SourcePreparer(), new CounterPreparer(), new FeeOpPreparer(), new ProtoPreparer()];
+  private preparers: [RevealPreparer, SourcePreparer, CounterPreparer, FeeOpPreparer, ProtoPreparer] = [new RevealPreparer(), new SourcePreparer(), new CounterPreparer(), new FeeOpPreparer(), new ProtoPreparer()];
 
   async createContext(source: string): Promise<PreparerContext> {
     return {
@@ -25,10 +25,9 @@ export class CombinedPreparer {
 
   async prepare(unPreparedOps: RPCOperation[], source?: string) {
     const prepContext = await this.createContext(source || await this.context.signer.publicKeyHash());
-    let constOps: RPCOperation[] = unPreparedOps;
-    for (const prep of this.preparers) {
-      constOps = await prep.prepare(constOps, prepContext);
-    }
+    const constOps = await this.preparers.reduce(async (prev, prep) => {
+      return prep.prepare(await prev, prepContext) as Promise<RPCOperation[]>
+    }, Promise.resolve(unPreparedOps))
 
     const metadata = await prepContext.metadata;
     const header = await prepContext.header;

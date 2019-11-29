@@ -1,6 +1,6 @@
 import { Preparer, PreparerContext } from "../types";
 
-import { RPCOperation } from "../../operations/types";
+import { RPCOperation, RPCActivateOperation, RPCDelegateOperation, RPCTransferOperation, RPCRevealOperation, RPCOriginationOperation } from "../../operations/types";
 import { Context } from "../../context";
 
 export class CounterProvider {
@@ -32,17 +32,24 @@ export class CounterProvider {
   }
 }
 
+type RPCOperationWithCounter = RPCActivateOperation | ((RPCOriginationOperation
+  | RPCTransferOperation
+  | RPCDelegateOperation
+  | RPCRevealOperation) & { counter: string });
 
 export class CounterPreparer implements Preparer {
-  async prepare(unPreparedOps: RPCOperation[], context: PreparerContext): Promise<RPCOperation[]> {
+  async prepare(unPreparedOps: RPCOperation[], context: PreparerContext): Promise<RPCOperationWithCounter[]> {
     const counterProvider = new CounterProvider();
-    for (const op of unPreparedOps as any) {
-      if (['reveal', 'transaction', 'origination', 'delegation'].includes(op.kind)) {
-        const it = counterProvider.for(await context.source, context.context)
-        Object.assign(op, { counter: String((await it.next()).value) })
+    let results: RPCOperationWithCounter[] = []
+    for (const op of unPreparedOps) {
+      if (op.kind === 'reveal' || op.kind === 'transaction' || op.kind === 'origination' || op.kind === 'delegation') {
+        const it = counterProvider.for(context.source, context.context)
+        results.push(Object.assign(op, { counter: String((await it.next()).value) }))
+      } else {
+        results.push(op);
       }
     }
 
-    return unPreparedOps
+    return results;
   }
 }
