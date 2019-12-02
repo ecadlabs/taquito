@@ -4,7 +4,7 @@ import { ScriptResponse, EntrypointsResponse } from '@taquito/rpc';
 import { computeLength } from './utils';
 import { InvalidParameterError } from './errors';
 
-interface SendParams {
+export interface SendParams {
   fee?: number;
   storageLimit?: number;
   gasLimit?: number;

@@ -1,10 +1,12 @@
 import { Schema } from '@taquito/michelson-encoder';
 import { ScriptResponse } from '@taquito/rpc';
+import { encodeExpr } from '@taquito/utils';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT, protocols } from '../constants';
 import { Context } from '../context';
+import { DelegateOperation } from '../operations/delegate-operation';
 import { OperationEmitter } from '../operations/operation-emitter';
-import { Operation } from '../operations/operations';
 import { OriginationOperation } from '../operations/origination-operation';
+import { TransactionOperation } from '../operations/transaction-operation';
 import {
   DelegateParams,
   OriginateParams,
@@ -16,9 +18,6 @@ import { Estimate } from './estimate';
 import { ContractProvider, ContractSchema, EstimationProvider } from './interface';
 import { createOriginationOperation, createTransferOperation } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
-import { encodeExpr } from '@taquito/utils';
-import { TransactionOperation } from '../operations/transaction-operation';
-import { DelegateOperation } from '../operations/delegate-operation';
 
 export class RpcContractProvider extends OperationEmitter implements ContractProvider {
   constructor(context: Context, private estimator: EstimationProvider) {
