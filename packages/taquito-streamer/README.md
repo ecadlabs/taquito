@@ -1,6 +1,6 @@
 [![pkgsign status](https://us-central1-pkgsign.cloudfunctions.net/pkgsign-badge?name=@taquito/streamer&expectedIdentity=%40simrob)](https://github.com/RedpointGames/pkgsign)
 
-> Temporary un-maintained
+> Temporarily un-maintained
 
 # Taquito Streamer package
 
