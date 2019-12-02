@@ -1,6 +1,6 @@
 import { CONFIGS } from "./config";
 import { managerCode } from "./data/manager_code";
-import { transferImplicit, setDelegate, removeDelegate, transferToContract } from "./manager-lambda";
+import { MANAGER_LAMBDA } from "@taquito/taquito";
 
 CONFIGS.forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
@@ -26,15 +26,15 @@ CONFIGS.forEach(({ lib, rpc, setup }) => {
       // Transfer from contract (kt1_alice) to implicit account (tz1)
       // We pass a lambda function to the kt1_alice contracts `do` entrypoint. The lambda code causes the contract to transfer
       // the specified number (50) of mutez to the target address.
-      const opTransfer = await contract.methods.do(transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 50)).send({ amount: 0 })
+      const opTransfer = await contract.methods.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 50)).send({ amount: 0 })
       await opTransfer.confirmation();
       expect(opTransfer.status).toEqual('applied')
       // Set delegate on contract kt1_alice by passing a lambda function to kt1_alice's `do` entrypoint
-      const opSetDelegate = await contract.methods.do(setDelegate("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh")).send({ amount: 0 })
+      const opSetDelegate = await contract.methods.do(MANAGER_LAMBDA.setDelegate("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh")).send({ amount: 0 })
       await opSetDelegate.confirmation();
       expect(opSetDelegate.status).toEqual('applied')
       // Remove delegate on contract kt1_alice by passing a lambda function to kt1_alice's `do` entrypoint
-      const removeDelegateOp = await contract.methods.do(removeDelegate()).send({ amount: 0 })
+      const removeDelegateOp = await contract.methods.do(MANAGER_LAMBDA.removeDelegate()).send({ amount: 0 })
       await removeDelegateOp.confirmation();
       expect(removeDelegateOp.status).toEqual('applied')
       // Transfer from contract (kt1_alice) to contract (kt1 bob)
@@ -42,7 +42,7 @@ CONFIGS.forEach(({ lib, rpc, setup }) => {
       // lambda helper function. The transfer amount in the actual transfer operation is 0. We are not transferring the token
       // in the transfer operation, we are instructing the contract to transfer the token using the `do` entrypoint of the kt1_alice
       // contract.
-      const transferToContractOp = await contract.methods.do(transferToContract("KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK", 1)).send({ amount: 0 })
+      const transferToContractOp = await contract.methods.do(MANAGER_LAMBDA.transferToContract("KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK", 1)).send({ amount: 0 })
       await transferToContractOp.confirmation();
       expect(transferToContractOp.status).toEqual('applied')
       done();
