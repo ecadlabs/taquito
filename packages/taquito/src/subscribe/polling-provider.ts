@@ -12,7 +12,7 @@ import {
 } from 'rxjs/operators';
 import { Context } from '../context';
 import { evaluateFilter } from './filters';
-import { Filter, SubscribeProvider, Subscription } from './interface';
+import { Filter, SubscribeProvider, Subscription, OperationContent } from './interface';
 import { ObservableSubscription } from './observable-subscription';
 
 const getLastBlock = (context: Context) => {
@@ -20,12 +20,14 @@ const getLastBlock = (context: Context) => {
 };
 
 const applyFilter = (filter: Filter) =>
-  concatMap<BlockResponse, ObservableInput<OperationEntry>>(block => {
-    return new Observable<OperationEntry>(sub => {
+  concatMap<BlockResponse, ObservableInput<OperationContent>>(block => {
+    return new Observable<OperationContent>(sub => {
       for (const ops of block.operations) {
         for (const op of ops) {
-          if (evaluateFilter(op, filter)) {
-            sub.next(op);
+          for (const content of op.contents) {
+            if (evaluateFilter({hash: op.hash, ...content}, filter)) {
+              sub.next({hash: op.hash, ...content});
+            }
           }
         }
       }
@@ -48,7 +50,7 @@ export class PollingSubscribeProvider implements SubscribeProvider {
     return new ObservableSubscription(this.newBlock$.pipe(pluck('hash')));
   }
 
-  subscribeOperation(filter: Filter): Subscription<OperationEntry> {
+  subscribeOperation(filter: Filter): Subscription<OperationContent> {
     return new ObservableSubscription(this.newBlock$.pipe(applyFilter(filter)));
   }
 }

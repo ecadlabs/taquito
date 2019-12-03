@@ -12,7 +12,7 @@ describe('Evaluate OpFilter', () => {
   });
 
   it('should return true if match source filter', () => {
-    const result = evaluateOpFilter({ contents: [{ source: 'test' }] } as any, { source: 'test' });
+    const result = evaluateOpFilter({ source: 'test' } as any, { source: 'test' });
     expect(result).toBeTruthy();
   });
 
@@ -22,7 +22,7 @@ describe('Evaluate OpFilter', () => {
   });
 
   it('should return false if no match source filter', () => {
-    const result = evaluateOpFilter({ contents: [{}, { source: 'test1' }] } as any, {
+    const result = evaluateOpFilter({ source: 'test1' } as any, {
       source: 'test',
     });
     expect(result).toBeFalsy();
@@ -32,7 +32,7 @@ describe('Evaluate OpFilter', () => {
 describe('Evaluate expression', () => {
   it('should expect an or/and parameter', () => {
     expect(() => {
-      evaluateExpression({ contents: [{}, { source: 'test1' }] } as any, {} as any);
+      evaluateExpression({ source: 'test1' } as any, {} as any);
     }).toThrowError();
   });
 
@@ -46,14 +46,14 @@ describe('Evaluate expression', () => {
 
   it('or should require all filter to return true', () => {
     const result = evaluateExpression(
-      { hash: 'test1', contents: [{}, { source: 'test' }] } as any,
+      { hash: 'test1', source: 'test' } as any,
       { or: [{ source: 'test' }, { opHash: 'test' }] }
     );
     expect(result).toBeTruthy();
   });
 
   it('and should require all filter to return true', () => {
-    const result = evaluateExpression({ hash: 'test', contents: [{}, { source: 'test' }] } as any, {
+    const result = evaluateExpression({ hash: 'test', source: 'test' } as any, {
       and: [{ source: 'test', opHash: 'test' }],
     });
     expect(result).toBeTruthy();

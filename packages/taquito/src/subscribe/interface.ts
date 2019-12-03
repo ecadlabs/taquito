@@ -27,9 +27,11 @@ export type ExpressionOrOpFilter = OpFilter | FilterExpression
 
 export type Filter = ExpressionOrOpFilter | ExpressionOrOpFilter[];
 
+export type OperationContent = OperationEntry['contents'][0] & {hash: string};
+
 export interface SubscribeProvider {
   subscribe(filter: 'head'): Subscription<string>;
-  subscribeOperation(filter: Filter): Subscription<OperationEntry>;
+  subscribeOperation(filter: Filter): Subscription<OperationContent>;
 }
 
 export interface Subscription<T> {

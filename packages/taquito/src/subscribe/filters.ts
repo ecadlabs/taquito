@@ -1,10 +1,8 @@
-import { OperationEntry } from '@taquito/rpc';
+import { OpFilter, FilterExpression, Filter, OpHashFilter, SourceFilter, KindFilter, DestinationFilter, OperationContent } from './interface';
 
-import { OpFilter, FilterExpression, Filter, OpHashFilter, SourceFilter, KindFilter, DestinationFilter } from './interface';
+const opHashFilter = (op: OperationContent, filter: OpHashFilter) => op.hash === filter.opHash;
 
-const opHashFilter = (op: OperationEntry, filter: OpHashFilter) => op.hash === filter.opHash;
-
-const sourceFilter = (op: OperationEntry, filter: SourceFilter) => (op.contents || []).some(x => {
+const sourceFilter = (x: OperationContent, filter: SourceFilter) => {
   switch (x.kind) {
     case 'endorsement':
       return 'metadata' in x && x.metadata.delegate === filter.source
@@ -13,11 +11,11 @@ const sourceFilter = (op: OperationEntry, filter: SourceFilter) => (op.contents 
     default:
       return 'source' in x && x.source === filter.source
   }
-})
+}
 
-const kindFilter = (op: OperationEntry, filter: KindFilter) => (op.contents || []).some(x => 'kind' in x && x.kind === filter.kind);
+const kindFilter = (x: OperationContent, filter: KindFilter) => 'kind' in x && x.kind === filter.kind;
 
-const destinationFilter = (op: OperationEntry, filter: DestinationFilter) => (op.contents || []).some(x => {
+const destinationFilter = (x: OperationContent, filter: DestinationFilter) => {
   switch (x.kind) {
     case 'delegation':
       return x.delegate === filter.destination;
@@ -38,9 +36,9 @@ const destinationFilter = (op: OperationEntry, filter: DestinationFilter) => (op
     default:
       return false;
   }
-});
+};
 
-export const evaluateOpFilter = (op: OperationEntry, filter: OpFilter) => {
+export const evaluateOpFilter = (op: OperationContent, filter: OpFilter) => {
   if ('opHash' in filter) {
     return opHashFilter(op, filter);
   } else if ('source' in filter) {
@@ -54,7 +52,7 @@ export const evaluateOpFilter = (op: OperationEntry, filter: OpFilter) => {
   return false;
 };
 
-export const evaluateExpression = (op: OperationEntry, exp: FilterExpression): boolean => {
+export const evaluateExpression = (op: OperationContent, exp: FilterExpression): boolean => {
   if (Array.isArray(exp.and)) {
     return exp.and.every((x: OpFilter | FilterExpression) => evaluateFilter(op, x));
   } else if (Array.isArray(exp.or)) {
@@ -64,7 +62,7 @@ export const evaluateExpression = (op: OperationEntry, exp: FilterExpression): b
   }
 };
 
-export const evaluateFilter = (op: OperationEntry, filter: Filter): boolean => {
+export const evaluateFilter = (op: OperationContent, filter: Filter): boolean => {
   const filters: OpFilter[] | FilterExpression[] = [];
   if (!Array.isArray(filter)) {
     filters.push(filter as any);
