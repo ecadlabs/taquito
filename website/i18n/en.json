@@ -17,6 +17,9 @@
       "quick_start": {
         "title": "Quick start"
       },
+      "set_delegate": {
+        "title": "Set delegate"
+      },
       "tezbridge_signer": {
         "title": "TezBridge Signer"
       },
