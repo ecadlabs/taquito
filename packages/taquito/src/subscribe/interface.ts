@@ -1,8 +1,8 @@
 import { OperationEntry } from '@taquito/rpc';
 
 export type FilterExpression = {
-  or?: OpFilter[] | FilterExpression[];
-  and?: OpFilter[] | FilterExpression[];
+  or?: ExpressionOrOpFilter[];
+  and?: ExpressionOrOpFilter[];
 };
 
 export interface OpHashFilter {
@@ -23,7 +23,9 @@ export interface DestinationFilter {
 
 export type OpFilter = OpHashFilter | SourceFilter | KindFilter | DestinationFilter;
 
-export type Filter = FilterExpression | FilterExpression[] | OpFilter | OpFilter[];
+export type ExpressionOrOpFilter = OpFilter | FilterExpression
+
+export type Filter = ExpressionOrOpFilter | ExpressionOrOpFilter[];
 
 export interface SubscribeProvider {
   subscribe(filter: 'head'): Subscription<string>;
