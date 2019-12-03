@@ -19,6 +19,7 @@ import { RpcTzProvider } from './tz/rpc-tz-provider';
 export * from './query/interface';
 export * from './signer/interface';
 export * from './subscribe/interface';
+export * from './forger/interface';
 export * from './tz/interface';
 export * from './contract';
 export * from './contract/big-map';
