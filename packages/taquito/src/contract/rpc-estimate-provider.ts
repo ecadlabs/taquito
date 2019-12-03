@@ -5,7 +5,7 @@ import {
   PreapplyResponse,
   RPCRunOperationParam,
 } from '@taquito/rpc';
-import { DEFAULT_STORAGE_LIMIT, protocols } from '../constants';
+import { DEFAULT_STORAGE_LIMIT, protocols, DEFAULT_GAS_LIMIT } from '../constants';
 import { OperationEmitter } from '../operations/operation-emitter';
 import {
   DelegateParams,
@@ -53,7 +53,8 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
   private async createEstimate(
     params: PrepareOperationParams,
     kind: 'origination' | 'transaction' | 'delegation',
-    defaultStorage: number
+    defaultStorage: number,
+    minimumGas: number = 0
   ) {
     const {
       opbytes,
@@ -77,7 +78,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     });
 
     return new Estimate(
-      totalGas || 0,
+      Math.max((totalGas || 0), minimumGas),
       Number(totalStorage || 0) + defaultStorage,
       opbytes.length / 2
     );
@@ -141,7 +142,9 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     return this.createEstimate(
       { operation: op, source: sourceOrDefault },
       'delegation',
-      DEFAULT_STORAGE_LIMIT.DELEGATION
+      DEFAULT_STORAGE_LIMIT.DELEGATION,
+      // Delegation have a minimum gas cost
+      DEFAULT_GAS_LIMIT.DELEGATION
     );
   }
 
@@ -161,7 +164,9 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     return this.createEstimate(
       { operation: op, source: await this.signer.publicKeyHash() },
       'delegation',
-      DEFAULT_STORAGE_LIMIT.DELEGATION
+      DEFAULT_STORAGE_LIMIT.DELEGATION,
+      // Delegation have a minimum gas cost
+      DEFAULT_GAS_LIMIT.DELEGATION
     );
   }
 }

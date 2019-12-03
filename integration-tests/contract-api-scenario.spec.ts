@@ -55,7 +55,7 @@ CONFIGS.forEach(({ lib, rpc, setup }) => {
     });
 
     it('Set delegate with automatic estimate', async (done) => {
-      const delegate = 'tz1cSErnsmrKwonpEBtWvugwXRvjALq4q86E'
+      const delegate = 'tz1PirboZKFVqkfE45hVLpkpXaZtLk3mqC17'
       const op = await Tezos.contract.setDelegate({
         delegate,
         source: await Tezos.signer.publicKeyHash(),
