@@ -10,11 +10,17 @@ import {
   OriginateParams,
   RPCDelegateOperation,
   TransferParams,
+  RegisterDelegateParams,
 } from '../operations/types';
 import { Contract } from './contract';
 import { Estimate } from './estimate';
 import { ContractProvider, ContractSchema, EstimationProvider } from './interface';
-import { createOriginationOperation, createTransferOperation } from './prepare';
+import {
+  createOriginationOperation,
+  createTransferOperation,
+  createSetDelegateOperation,
+  createRegisterDelegateOperation,
+} from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
 import { encodeExpr } from '@taquito/utils';
 import { TransactionOperation } from '../operations/transaction-operation';
@@ -169,22 +175,10 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
    *
    * @param SetDelegate operation parameter
    */
-  async setDelegate({
-    delegate,
-    source,
-    fee = DEFAULT_FEE.DELEGATION,
-    gasLimit = DEFAULT_GAS_LIMIT.DELEGATION,
-    storageLimit = DEFAULT_STORAGE_LIMIT.DELEGATION,
-  }: DelegateParams) {
-    const operation: RPCDelegateOperation = {
-      kind: 'delegation',
-      source,
-      fee,
-      gas_limit: gasLimit,
-      storage_limit: storageLimit,
-      delegate,
-    };
-    const sourceOrDefault = source || (await this.signer.publicKeyHash());
+  async setDelegate(params: DelegateParams) {
+    const estimate = await this.estimate(params, this.estimator.setDelegate.bind(this.estimator));
+    const operation = await createSetDelegateOperation({ ...params, ...estimate });
+    const sourceOrDefault = params.source || (await this.signer.publicKeyHash());
     const opBytes = await this.prepareAndForge({
       operation,
       source: sourceOrDefault,
@@ -208,19 +202,13 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
    *
    * @param RegisterDelegate operation parameter
    */
-  async registerDelegate({
-    fee = DEFAULT_FEE.DELEGATION,
-    gasLimit = DEFAULT_GAS_LIMIT.DELEGATION,
-    storageLimit = DEFAULT_STORAGE_LIMIT.DELEGATION,
-  }: any) {
+  async registerDelegate(params: RegisterDelegateParams) {
+    const estimate = await this.estimate(
+      params,
+      this.estimator.registerDelegate.bind(this.estimator)
+    );
     const source = await this.signer.publicKeyHash();
-    const operation: RPCDelegateOperation = {
-      kind: 'delegation',
-      fee,
-      gas_limit: gasLimit,
-      storage_limit: storageLimit,
-      delegate: source,
-    };
+    const operation = await createRegisterDelegateOperation({ ...params, ...estimate }, source);
     const opBytes = await this.prepareAndForge({ operation });
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
     return new DelegateOperation(hash, operation, source, forgedBytes, opResponse, context);

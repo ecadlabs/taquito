@@ -39,7 +39,8 @@ export type OriginateParams = OriginateParamsBase &
     | {
         init: string | object;
         storage?: never;
-      });
+      }
+  );
 
 /**
  * @description RPC origination operation
@@ -82,11 +83,20 @@ export interface ForgedBytes {
 }
 
 /**
- * @description Parameters for setDelegate and registerDelegate method
+ * @description Parameters for setDelegate method
  */
 export interface DelegateParams {
   source: string;
   delegate: string;
+  fee?: number;
+  gasLimit?: number;
+  storageLimit?: number;
+}
+
+/**
+ * @description Parameters for registerDelegate method
+ */
+export interface RegisterDelegateParams {
   fee?: number;
   gasLimit?: number;
   storageLimit?: number;

@@ -43,6 +43,8 @@ describe('RpcContractProvider test', () => {
   let mockEstimate: {
     originate: jest.Mock<any, any>;
     transfer: jest.Mock<any, any>;
+    setDelegate: jest.Mock<any, any>;
+    registerDelegate: jest.Mock<any, any>;
   };
 
   const revealOp = (source: string) => ({
@@ -80,6 +82,8 @@ describe('RpcContractProvider test', () => {
     mockEstimate = {
       originate: jest.fn(),
       transfer: jest.fn(),
+      registerDelegate: jest.fn(),
+      setDelegate: jest.fn(),
     };
 
     // Required for operations confirmation polling
@@ -472,6 +476,8 @@ describe('RpcContractProvider test', () => {
 
   describe('setDelegate', () => {
     it('should produce a reveal and delegation operation', async done => {
+      const estimate = new Estimate(1000, 1000, 180);
+      mockEstimate.setDelegate.mockResolvedValue(estimate);
       const result = await rpcContractProvider.setDelegate({
         source: 'test_source',
         delegate: 'test_delegate',
@@ -485,11 +491,11 @@ describe('RpcContractProvider test', () => {
             {
               delegate: 'test_delegate',
               counter: '2',
-              fee: '1000',
-              gas_limit: '10600',
+              fee: '490',
+              gas_limit: '1100',
               kind: 'delegation',
               source: 'test_source',
-              storage_limit: '0',
+              storage_limit: '1000',
             },
           ],
           protocol: 'test_proto',
@@ -503,6 +509,8 @@ describe('RpcContractProvider test', () => {
 
   describe('registerDelegate', () => {
     it('should produce a reveal and delegation operation', async done => {
+      const estimate = new Estimate(1000, 1000, 180);
+      mockEstimate.registerDelegate.mockResolvedValue(estimate);
       const result = await rpcContractProvider.registerDelegate({});
       expect(result.raw).toEqual({
         counter: 0,
@@ -513,11 +521,11 @@ describe('RpcContractProvider test', () => {
             {
               delegate: 'test_pub_key_hash',
               counter: '2',
-              fee: '1000',
-              gas_limit: '10600',
+              fee: '490',
+              gas_limit: '1100',
               kind: 'delegation',
               source: 'test_pub_key_hash',
-              storage_limit: '0',
+              storage_limit: '1000',
             },
           ],
           protocol: 'test_proto',

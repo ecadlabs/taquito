@@ -8,6 +8,7 @@ import { tokenBigmapCode } from './data/token_bigmap'
 import { collection_code } from "./data/collection_contract";
 
 import { noAnnotCode, noAnnotInit } from "./data/token_without_annotation";
+import { DEFAULT_FEE, DEFAULT_GAS_LIMIT } from "@taquito/taquito";
 
 
 CONFIGS.forEach(({ lib, rpc, setup }) => {
@@ -35,6 +36,39 @@ CONFIGS.forEach(({ lib, rpc, setup }) => {
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
       done();
     });
+
+    it('Simple set delegate', async (done) => {
+      const delegate = 'tz1PirboZKFVqkfE45hVLpkpXaZtLk3mqC17'
+      const op = await Tezos.contract.setDelegate({
+        delegate,
+        source: await Tezos.signer.publicKeyHash(),
+        fee: DEFAULT_FEE.DELEGATION,
+        gasLimit: DEFAULT_GAS_LIMIT.DELEGATION
+      })
+      await op.confirmation()
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+
+      const account = await Tezos.rpc.getDelegate(await Tezos.signer.publicKeyHash())
+      expect(account).toEqual(delegate)
+      done();
+    });
+
+    it('Set delegate with automatic estimate', async (done) => {
+      const delegate = 'tz1cSErnsmrKwonpEBtWvugwXRvjALq4q86E'
+      const op = await Tezos.contract.setDelegate({
+        delegate,
+        source: await Tezos.signer.publicKeyHash(),
+      })
+      await op.confirmation()
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+
+      const account = await Tezos.rpc.getDelegate(await Tezos.signer.publicKeyHash())
+      expect(account).toEqual(delegate)
+      done();
+    });
+
     it('Simple ligo origination scenario', async (done) => {
       const op = await Tezos.contract.originate({
         balance: "1",
