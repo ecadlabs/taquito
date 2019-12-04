@@ -18,23 +18,23 @@
           },
           {
             "path": "dist/taquito-streamer.es5.js.map",
-            "sha512": "0ca2d72a138cedc710cfef1af2b53d0a8ba3663130dedcc63b2a4c7dce51ff4fc7fd5a9841cb3708198a479009e1ebf896b444ba79bed2314423b2c59df94eb6"
+            "sha512": "2aed0b17b04d3f058d2e000c7bbab71b3bb6258ea8cc79fbc2705f74cd70d113ec860895a4b5bc57752cee25e0138b152130310e8e0feaebaf893ca6e8f66a52"
           },
           {
             "path": "dist/lib/taquito-streamer.js.map",
-            "sha512": "448955f4f76e279b9226c0d064433d0a00cf3c08db66bd75f6dcc9d756a49630c6b29f060608bfc047d080b8764c0e4517c8f1e234093e44405827b2aea95877"
+            "sha512": "41d9664a97c35eb4e3449db97df1af7571691ad738e80dd63be85db08353413976b4ca0803e214545c147553d879861c4af0d73a1fe15098dc26838bb22ecaf0"
           },
           {
             "path": "dist/taquito-streamer.umd.js.map",
-            "sha512": "8cb40dfc120152d35749ca7b044f2f5c30e0491d49068af37fe5af620f1cba69d357104980d68a7e3ab03530853c95afda85b4d79e65ceed73a95dc23c3be97b"
+            "sha512": "d9a2d1a41f06d1dd5bf3fd8c1e3ac59c2b14cb6ce0e0ee21ba992d28ac6dd270d57167fe44b706cfc54fa02b0006552b703ec80895b20ecccd1e5fca84c07a57"
           },
           {
             "path": "README.md",
-            "sha512": "16866b3bf2e37d24531cba8a93768e6100ee020d93920e7e2a0723ac6ed2a385ebd50e79e196dd18992f06c67a6d2319a62213671d89b597babd37081af1684e"
+            "sha512": "847edaf0ac2b825dba7e09adae410635b9bb05286d0c27e0cd7801d1420a3e79c78979b86df2ae070e174a5082fe569211fb813b078332d0177138715bf8c5b7"
           },
           {
             "path": "dist/types/taquito-streamer.d.ts",
-            "sha512": "6e42da2cc4b3e0a11afb55d27161139974e368cabc3b21beb38a749b324f059b86011637bf5700f0b0a4d02631bba1b8d6c6739cf1da4eb45f69c530d774568c"
+            "sha512": "f7be4e11ae08b853383a616dfd04c68edb077abede8d3986a348d0d3737a9225979eda14c996bcbfba59b02d96cf204794e19527c22ae78a1911d92919321a46"
           }
         ]
       }
@@ -70,7 +70,7 @@
           "typings",
           "version"
         ],
-        "sha512": "283b0a099276d53acd102494354b1bef1fe24424e13ce195af21727922bb72c31e5b03f74d114499689c9e2bb1c3f3372e272ba3cac835d3cdf44a744d8c383c"
+        "sha512": "d3eaff0d3d7dcc7152e0ef9a91b3b14457c68988ba94b9efeacf2ec2eb13a41c83024fbcf5321df665473531a4f5d7e16e4d81c6569c19261ba2ff829cdaa323"
       }
     },
     {
@@ -78,7 +78,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/streamer",
-          "version": "5.2.0-beta.1",
+          "version": "5.3.0-beta.0",
           "description": "Methods to subscribe (using a websocket) to data from the Tezos blockchain. Relies on [https://github.com/ecadlabs/tezos-streamer](https://github.com/ecadlabs/tezos-streamer) which offers a websocket API to the caller, and streams data from the Tezos blockchain",
           "keywords": [
             "tezos",
@@ -141,12 +141,12 @@
             ]
           },
           "dependencies": {
-            "@taquito/http-utils": "^5.2.0-beta.1",
+            "@taquito/http-utils": "^5.3.0-beta.0",
             "bignumber.js": "^9.0.0",
             "ws": "^7.1.2"
           },
           "devDependencies": {
-            "@taquito/taquito": "^5.2.0-beta.1",
+            "@taquito/taquito": "^5.3.0-beta.0",
             "@types/jest": "^23.3.2",
             "@types/node": "^10.14.13",
             "@types/ws": "^6.0.3",
@@ -177,5 +177,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJdzG8vCRCwAkEJD2ZwqwAANagQAJzJGjgIZ7XFJ3ugwUGt/iT2\n31Ey2KmrjwHoRYSdJQNA8/LuD8bEag4Gp6sW9wILUCRFStMcJMVvcF0CyU64r0WR\nZ+FaHj+fH+MqZd7gwLMV0215Y8sHXo53wk3vgU8izCDZSzjt5CpwWPgrTu7vAEc8\n9FyBOKjDQv6nyOdOfYlPnyd5vMv6WOrzgF3NXgse9RSNGRnxqnMI9AtGVCAxHLlZ\nofp4ObR7Ac98F5cEaf80M4w0z/YMtZ1clI5oPxENA9IrJXvlVrvLQVhdAnqP6Drt\nFO9my0KTxKWXUawGxD4AIkyQd8ChvyzyfW2G9J0+76229UrC02y9vak0UxclKM8J\naNBuuAtP0p8+FCbR1yXsaPQQYD0cAwAh+p7v1JPWlGw458I8LYmXBPUOgJycozLH\naZ0UEN6Wh3ayu5CgRcy3HXjRn9tq/+C5VAfstFQyW3VmpqR7LUcZaqWM39+2C7uX\na8J3R0K9M2d2bHEZPUtxADk4bCCI5UAPjCzzo6+VX/OZzyYG532RCMrIJB49y0Bf\ngIlx+fsjOUa/RGv96ukE7SplgyUhoqaYnh8xfgVwHkPGw8bRCVXowyMboIv1mFy1\np9IfXrE1C0TdamrsFM8pwHXIFaSMvGoF/gas6QxS8lp91dYkKO6blo8LZfWkzlK+\nmJ9RzR+ChKHU9cCBfgcV\n=wTjq\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJd6ARlCRCwAkEJD2ZwqwAAxroQAEr6FSteOh/J7bt3f7rZx5ik\n62XZcv3JhNDPMXGalBvuo5A6loxQJ+57W5W7MifnJmP6yKCWRMf94Pa7eRsh2Q7H\nslEFX90l2KY1f/aQT842odE05w0GCXOqJXkcgzFEEwgFYWPP7PK6NHjGIJ9AwzTa\naq8iZlMxs0b6tOhAJGvd54nSLrF7E3mPRQ9/LaAAAqX8UrPr6m1VCCD67/VJLRqo\nhRg2LJWXBDRYSvXDwBOZsp/fEPcl7P4N4YnQHf+hAnqAbii3mAr5HgAXgwsz3Ahh\n6KhIgUQcOGwRtceAJBZsZAX6gaznGTkUArAYTg4F/RVEMVx0HpNR9oI5JWGM3+OP\nATL285bUuIzC7ISUA0r/uYbhKBm5lpAcaE/Huv9C/ECH+kdGsu/EO31RCq3/4jZR\nJGQytTrdvu33Y/ocy5cxUgxjgmMnsuTy522pyWYUYRIHN/u8YdetYSntQKHTtN8f\nwrDDeXf6Bh30XsCCrMWdEv/ce4QD0ZymIjaHwz6bneDBLJE1dvV2MR/v67CJRDLG\nFoKCipa/t+3MTRjDm7CeF8QggTGQoaUmP1NCPVLVIhadkLJotaIi+50oEyTQaOLT\n0TK/H1WtN9zyqLJrkuVB72FJpfYb+M/ebMHcO9qj37QKq6T06nWK7bTJrU6g4x7T\nTbpyZsusNNGenhONwPqT\n=Z49F\n-----END PGP SIGNATURE-----\n"
 }
