@@ -92,6 +92,8 @@
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_taquito_taquito.estimationprovider.html#originate" class="tsd-kind-icon">originate</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_taquito_taquito.estimationprovider.html#registerdelegate" class="tsd-kind-icon">register<wbr>Delegate</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_taquito_taquito.estimationprovider.html#setdelegate" class="tsd-kind-icon">set<wbr>Delegate</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_taquito_taquito.estimationprovider.html#transfer" class="tsd-kind-icon">transfer</a></li>
 							</ul>
 						</section>
@@ -110,7 +112,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/6891931/packages/taquito/src/contract/interface.ts#L20">taquito/src/contract/interface.ts:20</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/0a6dd1c/packages/taquito/src/contract/interface.ts#L25">taquito/src/contract/interface.ts:25</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -132,6 +134,68 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="registerdelegate" class="tsd-anchor"></a>
+					<h3>register<wbr>Delegate</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">register<wbr>Delegate<span class="tsd-signature-symbol">(</span>params<span class="tsd-signature-symbol">?: </span><a href="_taquito_taquito.registerdelegateparams.html" class="tsd-signature-type">RegisterDelegateParams</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_taquito_taquito.estimate.html" class="tsd-signature-type">Estimate</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/0a6dd1c/packages/taquito/src/contract/interface.ts#L55">taquito/src/contract/interface.ts:55</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<dl class="tsd-comment-tags">
+									<dt>description</dt>
+									<dd><p>Estimate gasLimit, storageLimit and fees for a delegate operation</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> params: <a href="_taquito_taquito.registerdelegateparams.html" class="tsd-signature-type">RegisterDelegateParams</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_taquito_taquito.estimate.html" class="tsd-signature-type">Estimate</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>An estimation of gasLimit, storageLimit and fees for the operation</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="setdelegate" class="tsd-anchor"></a>
+					<h3>set<wbr>Delegate</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Delegate<span class="tsd-signature-symbol">(</span>params<span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.delegateparams.html" class="tsd-signature-type">DelegateParams</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_taquito_taquito.estimate.html" class="tsd-signature-type">Estimate</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/0a6dd1c/packages/taquito/src/contract/interface.ts#L45">taquito/src/contract/interface.ts:45</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<dl class="tsd-comment-tags">
+									<dt>description</dt>
+									<dd><p>Estimate gasLimit, storageLimit and fees for a delegate operation</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>params: <a href="_taquito_taquito.delegateparams.html" class="tsd-signature-type">DelegateParams</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_taquito_taquito.estimate.html" class="tsd-signature-type">Estimate</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>An estimation of gasLimit, storageLimit and fees for the operation</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
 					<a name="transfer" class="tsd-anchor"></a>
 					<h3>transfer</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -141,7 +205,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/6891931/packages/taquito/src/contract/interface.ts#L30">taquito/src/contract/interface.ts:30</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/0a6dd1c/packages/taquito/src/contract/interface.ts#L35">taquito/src/contract/interface.ts:35</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -228,6 +292,12 @@
 						<ul>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
 								<a href="_taquito_taquito.estimationprovider.html#originate" class="tsd-kind-icon">originate</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="_taquito_taquito.estimationprovider.html#registerdelegate" class="tsd-kind-icon">register<wbr>Delegate</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="_taquito_taquito.estimationprovider.html#setdelegate" class="tsd-kind-icon">set<wbr>Delegate</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
 								<a href="_taquito_taquito.estimationprovider.html#transfer" class="tsd-kind-icon">transfer</a>
