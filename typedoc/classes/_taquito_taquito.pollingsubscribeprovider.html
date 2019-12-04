@@ -103,6 +103,7 @@
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_taquito_taquito.pollingsubscribeprovider.html#subscribe" class="tsd-kind-icon">subscribe</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_taquito_taquito.pollingsubscribeprovider.html#subscribeoperation" class="tsd-kind-icon">subscribe<wbr>Operation</a></li>
 							</ul>
 						</section>
 					</div>
@@ -120,7 +121,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/0a6dd1c/packages/taquito/src/subscribe/polling-provider.ts#L95">taquito/src/subscribe/polling-provider.ts:95</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/26f52e1/packages/taquito/src/subscribe/polling-provider.ts#L45">taquito/src/subscribe/polling-provider.ts:45</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -145,7 +146,7 @@
 					<div class="tsd-signature tsd-kind-icon">POLL_<wbr>INTERVAL<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/0a6dd1c/packages/taquito/src/subscribe/polling-provider.ts#L96">taquito/src/subscribe/polling-provider.ts:96</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/26f52e1/packages/taquito/src/subscribe/polling-provider.ts#L47">taquito/src/subscribe/polling-provider.ts:47</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -156,14 +157,14 @@
 					<a name="subscribe" class="tsd-anchor"></a>
 					<h3>subscribe</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">subscribe<span class="tsd-signature-symbol">(</span>_filter<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"head"</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.subscription.html" class="tsd-signature-type">Subscription</a></li>
+						<li class="tsd-signature tsd-kind-icon">subscribe<span class="tsd-signature-symbol">(</span>_filter<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"head"</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_taquito_taquito.subscription.html" class="tsd-signature-type">Subscription</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_taquito_taquito.subscribeprovider.html">SubscribeProvider</a>.<a href="../interfaces/_taquito_taquito.subscribeprovider.html#subscribe">subscribe</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/0a6dd1c/packages/taquito/src/subscribe/polling-provider.ts#L98">taquito/src/subscribe/polling-provider.ts:98</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/26f52e1/packages/taquito/src/subscribe/polling-provider.ts#L49">taquito/src/subscribe/polling-provider.ts:49</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -172,7 +173,31 @@
 									<h5>_filter: <span class="tsd-signature-type">"head"</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_taquito_taquito.subscription.html" class="tsd-signature-type">Subscription</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_taquito_taquito.subscription.html" class="tsd-signature-type">Subscription</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="subscribeoperation" class="tsd-anchor"></a>
+					<h3>subscribe<wbr>Operation</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">subscribe<wbr>Operation<span class="tsd-signature-symbol">(</span>filter<span class="tsd-signature-symbol">: </span><a href="../modules/_taquito_taquito.html#filter" class="tsd-signature-type">Filter</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_taquito_taquito.subscription.html" class="tsd-signature-type">Subscription</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_taquito.html#operationcontent" class="tsd-signature-type">OperationContent</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/_taquito_taquito.subscribeprovider.html">SubscribeProvider</a>.<a href="../interfaces/_taquito_taquito.subscribeprovider.html#subscribeoperation">subscribeOperation</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/26f52e1/packages/taquito/src/subscribe/polling-provider.ts#L53">taquito/src/subscribe/polling-provider.ts:53</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>filter: <a href="../modules/_taquito_taquito.html#filter" class="tsd-signature-type">Filter</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_taquito_taquito.subscription.html" class="tsd-signature-type">Subscription</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_taquito.html#operationcontent" class="tsd-signature-type">OperationContent</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -234,6 +259,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_taquito_taquito.pollingsubscribeprovider.html#subscribe" class="tsd-kind-icon">subscribe</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_taquito_taquito.pollingsubscribeprovider.html#subscribeoperation" class="tsd-kind-icon">subscribe<wbr>Operation</a>
 							</li>
 						</ul>
 					</li>
