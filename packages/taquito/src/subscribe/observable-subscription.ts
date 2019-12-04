@@ -1,28 +1,31 @@
-import WS from 'ws';
+import { Observable, Subscription as RXJSSubscription, Subject } from 'rxjs';
+import { Subscription } from './interface';
+import { takeUntil } from 'rxjs/operators';
 
-const DEFAULT_STREAMER_URL = 'wss://api.tez.ie/streamer/mainnet/subscribe';
-
-export class Subscription {
+export class ObservableSubscription<T> implements Subscription<T> {
   private errorListeners: Array<(error: Error) => void> = [];
-  private messageListeners: Array<(data: string) => void> = [];
+  private messageListeners: Array<(data: T) => void> = [];
   private closeListeners: Array<() => void> = [];
+  private completed$ = new Subject();
 
-  constructor(private readonly ws: WS) {
-    ws.onmessage = (event: WS.MessageEvent) => {
-      this.call(this.messageListeners, JSON.parse(event.data.toString()));
-    };
-    ws.onclose = (_event: WS.CloseEvent) => {
-      this.call(this.closeListeners);
-    };
-    ws.onerror = (event: WS.ErrorEvent) => {
-      this.call(this.messageListeners, event.error);
-    };
+  constructor(obs: Observable<T>) {
+    obs.pipe(takeUntil(this.completed$)).subscribe(
+      (data: T) => {
+        this.call(this.messageListeners, data);
+      },
+      error => {
+        this.call(this.errorListeners, error);
+      },
+      () => {
+        this.call(this.closeListeners);
+      }
+    );
   }
 
-  private call(listeners: Array<(val: any) => void>, value?: string | Error) {
+  private call<K>(listeners: Array<(val: K) => void>, value?: K) {
     for (const l of listeners) {
       try {
-        l(value);
+        l(value!);
       } catch (ex) {
         console.error(ex);
       }
@@ -38,7 +41,7 @@ export class Subscription {
 
   public on(type: 'error', cb: (error: Error) => void): void;
   // tslint:disable-next-line: unified-signatures
-  public on(type: 'data', cb: (data: string) => void): void;
+  public on(type: 'data', cb: (data: T) => void): void;
   public on(type: 'close', cb: () => void): void;
 
   public on(type: 'data' | 'error' | 'close', cb: any): void {
@@ -59,7 +62,7 @@ export class Subscription {
 
   public off(type: 'error', cb: (error: Error) => void): void;
   // tslint:disable-next-line: unified-signatures
-  public off(type: 'data', cb: (data: string) => void): void;
+  public off(type: 'data', cb: (data: T) => void): void;
   public off(type: 'close', cb: () => void): void;
 
   public off(type: 'data' | 'error' | 'close', cb: any): void {
@@ -79,15 +82,6 @@ export class Subscription {
   }
 
   public close() {
-    this.ws.close();
-  }
-}
-
-export class StreamerProvider {
-  constructor(private url: string = DEFAULT_STREAMER_URL) {}
-
-  subscribe(_filter: 'head'): Subscription {
-    const ws = new WS(this.url);
-    return new Subscription(ws);
+    this.completed$.next();
   }
 }

@@ -70,5 +70,5 @@ export const MANAGER_LAMBDA = {
   setDelegate,
   removeDelegate,
   transferImplicit,
-  transferToContract
-}
+  transferToContract,
+};

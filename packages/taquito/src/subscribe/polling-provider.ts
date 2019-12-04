@@ -1,101 +1,56 @@
-import { SubscribeProvider } from './interface';
+import { BlockResponse, OperationEntry } from '@taquito/rpc';
+import { from, Observable, ObservableInput, timer } from 'rxjs';
+import {
+  concatMap,
+  distinctUntilKeyChanged,
+  first,
+  map,
+  pluck,
+  publishReplay,
+  refCount,
+  switchMap,
+} from 'rxjs/operators';
 import { Context } from '../context';
+import { evaluateFilter } from './filters';
+import { Filter, SubscribeProvider, Subscription, OperationContent } from './interface';
+import { ObservableSubscription } from './observable-subscription';
 
-class Subscription {
-  private errorListeners: Array<(error: Error) => void> = [];
-  private messageListeners: Array<(data: string) => void> = [];
-  private closeListeners: Array<() => void> = [];
-  private interval: any;
+const getLastBlock = (context: Context) => {
+  return from(context.rpc.getBlock()).pipe(first());
+};
 
-  constructor(private readonly context: Context, public readonly POLL_INTERVAL = 20000) {
-    let previousHash = '';
-    const poll = async () => {
-      try {
-        const hash = await this.context.rpc.getBlockHash();
-        if (hash && hash !== previousHash) {
-          previousHash = hash;
-          this.call(this.messageListeners, hash);
+const applyFilter = (filter: Filter) =>
+  concatMap<BlockResponse, ObservableInput<OperationContent>>(block => {
+    return new Observable<OperationContent>(sub => {
+      for (const ops of block.operations) {
+        for (const op of ops) {
+          for (const content of op.contents) {
+            if (evaluateFilter({hash: op.hash, ...content}, filter)) {
+              sub.next({hash: op.hash, ...content});
+            }
+          }
         }
-      } catch (ex) {
-        this.call(this.errorListeners, ex);
       }
-    };
-    this.interval = setInterval(async () => {
-      await poll();
-    }, this.POLL_INTERVAL);
-    // tslint:disable-next-line: no-floating-promises
-    poll();
-  }
-
-  private call(listeners: Array<(val: any) => void>, value?: string | Error) {
-    for (const l of listeners) {
-      try {
-        l(value);
-      } catch (ex) {
-        console.error(ex);
-      }
-    }
-  }
-
-  private remove(listeners: Array<any>, value: any) {
-    const idx = listeners.indexOf(value);
-    if (idx !== -1) {
-      listeners.splice(idx, 1);
-    }
-  }
-
-  public on(type: 'error', cb: (error: Error) => void): void;
-  // tslint:disable-next-line: unified-signatures
-  public on(type: 'data', cb: (data: string) => void): void;
-  public on(type: 'close', cb: () => void): void;
-
-  public on(type: 'data' | 'error' | 'close', cb: any): void {
-    switch (type) {
-      case 'data':
-        this.messageListeners.push(cb);
-        break;
-      case 'error':
-        this.errorListeners.push(cb);
-        break;
-      case 'close':
-        this.closeListeners.push(cb);
-        break;
-      default:
-        throw new Error(`Trying to register on an unsupported event: ${type}`);
-    }
-  }
-
-  public off(type: 'error', cb: (error: Error) => void): void;
-  // tslint:disable-next-line: unified-signatures
-  public off(type: 'data', cb: (data: string) => void): void;
-  public off(type: 'close', cb: () => void): void;
-
-  public off(type: 'data' | 'error' | 'close', cb: any): void {
-    switch (type) {
-      case 'data':
-        this.remove(this.messageListeners, cb);
-        break;
-      case 'error':
-        this.remove(this.errorListeners, cb);
-        break;
-      case 'close':
-        this.remove(this.closeListeners, cb);
-        break;
-      default:
-        throw new Error(`Trying to unregister on an unsupported event: ${type}`);
-    }
-  }
-
-  public close() {
-    clearInterval(this.interval);
-    this.call(this.closeListeners);
-  }
-}
+      sub.complete();
+    });
+  });
 
 export class PollingSubscribeProvider implements SubscribeProvider {
+  private newBlock$ = timer(0, this.POLL_INTERVAL).pipe(
+    map(() => this.context),
+    switchMap(getLastBlock),
+    distinctUntilKeyChanged('hash'),
+    publishReplay(),
+    refCount()
+  );
+
   constructor(private context: Context, public readonly POLL_INTERVAL = 20000) {}
 
-  subscribe(_filter: 'head'): Subscription {
-    return new Subscription(this.context, this.POLL_INTERVAL);
+  subscribe(_filter: 'head'): Subscription<string> {
+    return new ObservableSubscription(this.newBlock$.pipe(pluck('hash')));
+  }
+
+  subscribeOperation(filter: Filter): Subscription<OperationContent> {
+    return new ObservableSubscription(this.newBlock$.pipe(applyFilter(filter)));
   }
 }

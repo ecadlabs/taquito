@@ -8,7 +8,8 @@
     "example:origination2": "node -r ts-node/register --preserve-symlinks contract-origination2.ts",
     "example:origination3": "node -r ts-node/register --preserve-symlinks contract-origination3.ts",
     "example": "node -r ts-node/register --preserve-symlinks example-node.ts",
-    "example:activation": "node -r ts-node/register --preserve-symlinks example-activate.ts"
+    "example:activation": "node -r ts-node/register --preserve-symlinks example-activate.ts",
+    "example:streamer": "node -r ts-node/register --preserve-symlinks example-streamer.ts"
   },
   "dependencies": {
     "@taquito/signer": "^5.2.0-beta.1",
