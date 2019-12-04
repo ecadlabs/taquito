@@ -1,4 +1,4 @@
-import { DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT, DEFAULT_FEE } from '../constants';
+import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
 import { OriginateParams, TransferParams } from '../operations/types';
 import { Estimate } from './estimate';
 import { EstimationProvider } from './interface';
@@ -37,5 +37,35 @@ export class NaiveEstimateProvider implements EstimationProvider {
     gasLimit = DEFAULT_GAS_LIMIT.TRANSFER,
   }: TransferParams) {
     return new Estimate(gasLimit, storageLimit, 162, fee);
+  }
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for a delegate operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation
+   *
+   * @param Estimate
+   */
+  async setDelegate({
+    fee = DEFAULT_FEE.DELEGATION,
+    gasLimit = DEFAULT_GAS_LIMIT.DELEGATION,
+  }): Promise<Estimate> {
+    return new Estimate(gasLimit, 0, 157, fee);
+  }
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for a delegate operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation
+   *
+   * @param Estimate
+   */
+  async registerDelegate({
+    fee = DEFAULT_FEE.DELEGATION,
+    gasLimit = DEFAULT_GAS_LIMIT.DELEGATION,
+  }): Promise<Estimate> {
+    return new Estimate(gasLimit, 0, 157, fee);
   }
 }

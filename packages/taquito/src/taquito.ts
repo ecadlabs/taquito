@@ -22,6 +22,7 @@ export * from './forger/interface';
 export * from './tz/interface';
 export * from './contract';
 export * from './contract/big-map';
+export * from './constants';
 
 export { SubscribeProvider } from './subscribe/interface';
 export interface SetProviderOptions {

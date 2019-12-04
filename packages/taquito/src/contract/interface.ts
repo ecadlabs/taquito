@@ -2,7 +2,12 @@ import { Schema } from '@taquito/michelson-encoder';
 import { DelegateOperation } from '../operations/delegate-operation';
 import { OriginationOperation } from '../operations/origination-operation';
 import { TransactionOperation } from '../operations/transaction-operation';
-import { DelegateParams, OriginateParams, TransferParams } from '../operations/types';
+import {
+  DelegateParams,
+  OriginateParams,
+  TransferParams,
+  RegisterDelegateParams,
+} from '../operations/types';
 import { Contract } from './contract';
 import { Estimate } from './estimate';
 
@@ -15,7 +20,7 @@ export interface EstimationProvider {
    *
    * @returns An estimation of gasLimit, storageLimit and fees for the operation
    *
-   * @param OriginationOperation Originate operation parameter
+   * @param Estimate
    */
   originate(params: OriginateParams): Promise<Estimate>;
 
@@ -25,9 +30,29 @@ export interface EstimationProvider {
    *
    * @returns An estimation of gasLimit, storageLimit and fees for the operation
    *
-   * @param TransferOperation Originate operation parameter
+   * @param Estimate
    */
   transfer({ fee, storageLimit, gasLimit, ...rest }: TransferParams): Promise<Estimate>;
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for a delegate operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation
+   *
+   * @param Estimate
+   */
+  setDelegate(params: DelegateParams): Promise<Estimate>;
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for a delegate operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation
+   *
+   * @param Estimate
+   */
+  registerDelegate(params?: RegisterDelegateParams): Promise<Estimate>;
 }
 
 export interface ContractProvider {
