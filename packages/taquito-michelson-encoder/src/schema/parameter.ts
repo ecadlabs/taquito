@@ -54,4 +54,8 @@ export class ParameterSchema {
   ExtractSchema() {
     return this.root.ExtractSchema();
   }
+
+  ExtractSignatures() {
+    return this.root.ExtractSignature();
+  }
 }

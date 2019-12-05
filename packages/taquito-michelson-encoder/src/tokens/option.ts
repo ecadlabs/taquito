@@ -59,4 +59,9 @@ export class OptionToken extends Token {
     const schema = this.createToken(this.val.args[0], 0);
     return schema.ExtractSchema();
   }
+
+  public ExtractSignature() {
+    const schema = this.createToken(this.val.args[0], 0);
+    return [...schema.ExtractSignature(), []];
+  }
 }

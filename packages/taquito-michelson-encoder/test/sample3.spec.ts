@@ -128,6 +128,11 @@ describe('Schema test', () => {
     expect(result).toMatchObject(rpcContractResponse3.script.storage);
   });
 
+  it('Should extract signature properly', () => {
+    const schema = new ParameterSchema(params3);
+    expect(schema.ExtractSignatures()).toContainEqual(['deposit', 'unit']);
+  });
+
   it('Should encode parameter schema properly', () => {
     const schema = new ParameterSchema(params3);
     const result = schema.Encode('deposit');

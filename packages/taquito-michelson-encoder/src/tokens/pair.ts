@@ -27,6 +27,25 @@ export class PairToken extends Token {
     };
   }
 
+  public ExtractSignature(): any {
+    const leftToken = this.createToken(this.val.args[0], this.idx);
+    let keyCount = 1;
+    if (leftToken instanceof OrToken) {
+      keyCount = Object.keys(leftToken.ExtractSchema()).length;
+    }
+
+    const rightToken = this.createToken(this.val.args[1], this.idx + keyCount);
+
+    const newSig = [];
+
+    for (const leftSig of leftToken.ExtractSignature()) {
+      for (const rightSig of rightToken.ExtractSignature()) {
+        newSig.push([...leftSig, ...rightSig]);
+      }
+    }
+
+    return newSig;
+  }
   public EncodeObject(args: any): any {
     const leftToken = this.createToken(this.val.args[0], this.idx);
     let keyCount = 1;

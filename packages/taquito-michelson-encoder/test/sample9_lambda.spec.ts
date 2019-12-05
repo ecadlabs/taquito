@@ -7,6 +7,11 @@ describe('Schema test', () => {
   it('Should parse storage properly', () => {
     const schema = new ParameterSchema(params9);
     const storage = schema.ExtractSchema();
+
+    expect(schema.ExtractSignatures()).toContainEqual(['0', 'address', 'string', 'bytes']);
+    expect(schema.ExtractSignatures()).toContainEqual(['1', 'mutez']);
+    expect(schema.ExtractSignatures()).toContainEqual(['2', 'address', 'bool']);
+
     expect(storage).toEqual({
       '0': {
         '0': 'address',

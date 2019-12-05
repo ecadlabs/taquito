@@ -277,6 +277,9 @@ describe('Exchange contract test', () => {
       },
       '1': 'address',
     });
+
+    expect(schema.ExtractSignatures()).toContainEqual(['1', 'address']);
+    expect(schema.ExtractSignatures()).toContainEqual(['0', 'address', 'address', 'nat']);
   });
 
   it('Encode parameter properly func 0', () => {

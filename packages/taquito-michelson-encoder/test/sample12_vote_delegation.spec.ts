@@ -148,4 +148,10 @@ describe('Exchange contract test', () => {
     const schema = new ParameterSchema(parameter!.args[0]);
     expect(schema.Encode('test')).toEqual({ prim: 'Some', args: [{ string: 'test' }] });
   });
+
+  it('Should extract signature properly', () => {
+    const schema = new ParameterSchema(parameter!.args[0]);
+    expect(schema.ExtractSignatures()).toContainEqual(['key_hash']);
+    expect(schema.ExtractSignatures()).toContainEqual([]);
+  });
 });

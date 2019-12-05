@@ -23,9 +23,11 @@ export class OrToken extends Token {
     const rightToken = this.createToken(this.val.args[1], this.idx + keyCount);
 
     if (String(leftToken.annot()) === String(label) && !(leftToken instanceof OrToken)) {
-      return { prim: 'Left', args: [leftToken.Encode(args.slice(0, args.length - 1))] };
+      args.pop();
+      return { prim: 'Left', args: [leftToken.Encode(args)] };
     } else if (String(rightToken.annot()) === String(label) && !(rightToken instanceof OrToken)) {
-      return { prim: 'Right', args: [rightToken.Encode(args.slice(0, args.length - 1))] };
+      args.pop();
+      return { prim: 'Right', args: [rightToken.Encode(args)] };
     } else {
       if (leftToken instanceof OrToken) {
         let val = leftToken.Encode(args);
@@ -42,6 +44,36 @@ export class OrToken extends Token {
       }
       return null;
     }
+  }
+
+  public ExtractSignature(): any {
+    const leftToken = this.createToken(this.val.args[0], this.idx);
+    let keyCount = 1;
+    if (leftToken instanceof OrToken) {
+      keyCount = Object.keys(leftToken.ExtractSchema()).length;
+    }
+
+    const rightToken = this.createToken(this.val.args[1], this.idx + keyCount);
+
+    const newSig = [];
+
+    if (leftToken instanceof OrToken) {
+      newSig.push(...leftToken.ExtractSignature());
+    } else {
+      for (const sig of leftToken.ExtractSignature()) {
+        newSig.push([leftToken.annot(), ...sig]);
+      }
+    }
+
+    if (rightToken instanceof OrToken) {
+      newSig.push(...rightToken.ExtractSignature());
+    } else {
+      for (const sig of rightToken.ExtractSignature()) {
+        newSig.push([rightToken.annot(), ...sig]);
+      }
+    }
+
+    return newSig;
   }
 
   public EncodeObject(args: any): any {
@@ -96,7 +128,11 @@ export class OrToken extends Token {
     }
   }
 
-  private traversal(getLeftValue: (token: Token) => any, getRightValue: (token: Token) => any) {
+  private traversal(
+    getLeftValue: (token: Token) => any,
+    getRightValue: (token: Token) => any,
+    concat: (left: any, right: any) => any
+  ) {
     const leftToken = this.createToken(this.val.args[0], this.idx);
     let keyCount = 1;
     let leftValue;
@@ -115,17 +151,18 @@ export class OrToken extends Token {
       rightValue = { [rightToken.annot()]: getRightValue(rightToken) };
     }
 
-    const res = {
-      ...leftValue,
-      ...rightValue,
-    };
+    const res = concat(leftValue, rightValue);
 
     return res;
   }
   public ExtractSchema(): any {
     return this.traversal(
       leftToken => leftToken.ExtractSchema(),
-      rightToken => rightToken.ExtractSchema()
+      rightToken => rightToken.ExtractSchema(),
+      (leftValue, rightValue) => ({
+        ...leftValue,
+        ...rightValue,
+      })
     );
   }
 }

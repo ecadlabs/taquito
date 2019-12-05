@@ -9,6 +9,8 @@ describe('Schema test', () => {
     expect(storage).toEqual('string');
     expect({ string: 'test' }).toEqual(schema.Encode('test'));
     expect(schema.isMultipleEntryPoint).toBeFalsy();
+
+    expect(schema.ExtractSignatures()).toContainEqual(['string']);
   });
   it('Should encode storage properly', () => {
     const schema = new Schema(storage8);

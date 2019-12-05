@@ -1,7 +1,6 @@
-import { Schema, ParameterSchema } from '@taquito/michelson-encoder';
+import { ParameterSchema, Schema } from '@taquito/michelson-encoder';
+import { EntrypointsResponse, ScriptResponse } from '@taquito/rpc';
 import { ContractProvider } from './interface';
-import { ScriptResponse, EntrypointsResponse } from '@taquito/rpc';
-import { computeLength } from './utils';
 import { InvalidParameterError } from './errors';
 
 interface SendParams {
@@ -59,6 +58,14 @@ export class ContractMethod {
     });
   }
 }
+
+const validateArgs = (args: any[], schema: ParameterSchema, name: string) => {
+  const sigs = schema.ExtractSignatures();
+
+  if (!sigs.find((x: any[]) => x.length === args.length)) {
+    throw new InvalidParameterError(name, sigs, args);
+  }
+};
 
 /**
  * @description Utility class to send smart contract operation
@@ -146,13 +153,8 @@ export class Contract {
           const smartContractMethodSchema = new ParameterSchema(
             entrypoints[smartContractMethodName]
           );
-          if (args.length !== computeLength(smartContractMethodSchema.ExtractSchema())) {
-            throw new InvalidParameterError(
-              smartContractMethodName,
-              smartContractMethodSchema.ExtractSchema(),
-              args
-            );
-          }
+
+          validateArgs(args, smartContractMethodSchema, smartContractMethodName);
 
           return new ContractMethod(
             provider,
@@ -170,19 +172,14 @@ export class Contract {
       const anonymousMethods = Object.keys(parameterSchema.ExtractSchema()).filter(
         key => Object.keys(entrypoints).indexOf(key) === -1
       );
-      const paramSchema = parameterSchema.ExtractSchema();
 
       anonymousMethods.forEach(smartContractMethodName => {
         const method = function(...args: any[]) {
-          const smartContractMethodSchema = paramSchema[smartContractMethodName];
-          if (args.length !== computeLength(smartContractMethodSchema)) {
-            throw new InvalidParameterError(
-              smartContractMethodName,
-              smartContractMethodSchema,
-              args
-            );
-          }
-
+          validateArgs(
+            [smartContractMethodName, ...args],
+            parameterSchema,
+            smartContractMethodName
+          );
           return new ContractMethod(
             provider,
             address,
@@ -198,13 +195,7 @@ export class Contract {
     } else {
       const smartContractMethodSchema = this.parameterSchema;
       const method = function(...args: any[]) {
-        if (args.length !== computeLength(smartContractMethodSchema.ExtractSchema())) {
-          throw new InvalidParameterError(
-            DEFAULT_SMART_CONTRACT_METHOD_NAME,
-            smartContractMethodSchema.ExtractSchema(),
-            args
-          );
-        }
+        validateArgs(args, parameterSchema, DEFAULT_SMART_CONTRACT_METHOD_NAME);
         return new ContractMethod(
           provider,
           address,
@@ -225,14 +216,11 @@ export class Contract {
     if (this.parameterSchema.isMultipleEntryPoint) {
       Object.keys(paramSchema).forEach(smartContractMethodName => {
         const method = function(...args: any[]) {
-          const smartContractMethodSchema = paramSchema[smartContractMethodName];
-          if (args.length !== computeLength(smartContractMethodSchema)) {
-            throw new InvalidParameterError(
-              smartContractMethodName,
-              smartContractMethodSchema,
-              args
-            );
-          }
+          validateArgs(
+            [smartContractMethodName, ...args],
+            parameterSchema,
+            smartContractMethodName
+          );
           return new LegacyContractMethod(
             provider,
             address,
@@ -245,14 +233,7 @@ export class Contract {
       });
     } else {
       this.methods[DEFAULT_SMART_CONTRACT_METHOD_NAME] = function(...args: any[]) {
-        const smartContractMethodSchema = paramSchema;
-        if (args.length !== computeLength(smartContractMethodSchema)) {
-          throw new InvalidParameterError(
-            DEFAULT_SMART_CONTRACT_METHOD_NAME,
-            smartContractMethodSchema,
-            args
-          );
-        }
+        validateArgs(args, parameterSchema, DEFAULT_SMART_CONTRACT_METHOD_NAME);
         return new LegacyContractMethod(
           provider,
           address,

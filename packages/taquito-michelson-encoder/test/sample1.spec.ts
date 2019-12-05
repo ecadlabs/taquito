@@ -154,6 +154,19 @@ describe('Schema test', () => {
     });
   });
 
+  it('Should extract signature properly', () => {
+    const schema = new ParameterSchema(params);
+    const sig = schema.ExtractSignatures();
+
+    expect(sig).toContainEqual(['allowance', 'address', 'address', 'contract']);
+    expect(sig).toContainEqual(['approve', 'address', 'nat']);
+    expect(sig).toContainEqual(['balanceOf', 'address', 'contract']);
+    expect(sig).toContainEqual(['createAccount', 'address', 'nat']);
+    expect(sig).toContainEqual(['createAccounts', 'list']);
+    expect(sig).toContainEqual(['transfer', 'address', 'nat']);
+    expect(sig).toContainEqual(['transferFrom', 'address', 'address', 'nat']);
+  });
+
   it('Should parse parameter properly', () => {
     const schema = new ParameterSchema(params);
     const s = schema.Execute(txParams);

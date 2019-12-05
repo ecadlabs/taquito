@@ -65,6 +65,10 @@ describe('Baker Registry contract test', () => {
       },
       withdraw: 'contract',
     });
+
+    expect(schema.ExtractSignatures()).toContainEqual(['set_data', 'key_hash', 'bytes', 'address']);
+    expect(schema.ExtractSignatures()).toContainEqual(['set_fees', 'mutez', 'mutez']);
+    expect(schema.ExtractSignatures()).toContainEqual(['withdraw', 'contract']);
   });
 
   it('Encode parameter schema properly', () => {
