@@ -14,6 +14,9 @@
       "making_transfers": {
         "title": "Making Transfers"
       },
+      "originate": {
+        "title": "Originating Contracts"
+      },
       "quick_start": {
         "title": "Quick start"
       },
