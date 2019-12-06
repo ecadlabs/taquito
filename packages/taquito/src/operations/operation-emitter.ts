@@ -83,7 +83,8 @@ export abstract class OperationEmitter {
       ops = [operation];
     }
 
-    const publicKeyHash = source || (await this.signer.publicKeyHash());
+    // Implicit account who emit the operation
+    const publicKeyHash = await this.signer.publicKeyHash();
 
     let counterPromise: Promise<string | undefined> = Promise.resolve(undefined);
     let managerPromise: Promise<ManagerKeyResponse | undefined> = Promise.resolve(undefined);
@@ -143,7 +144,7 @@ export abstract class OperationEmitter {
         const constructedOp = { ...op } as ConstructedOperation;
         if (this.isSourceOp(op)) {
           if (typeof op.source === 'undefined') {
-            constructedOp.source = publicKeyHash;
+            constructedOp.source = source || publicKeyHash;
           }
         }
         if (this.isFeeOp(op)) {

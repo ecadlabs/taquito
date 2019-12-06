@@ -25,6 +25,7 @@ import { smartContractAbstractionSemantic } from './semantic';
 import { encodeExpr } from '@taquito/utils';
 import { TransactionOperation } from '../operations/transaction-operation';
 import { DelegateOperation } from '../operations/delegate-operation';
+import { InvalidDelegationSource } from './errors';
 
 export class RpcContractProvider extends OperationEmitter implements ContractProvider {
   constructor(context: Context, private estimator: EstimationProvider) {
@@ -176,6 +177,11 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
    * @param SetDelegate operation parameter
    */
   async setDelegate(params: DelegateParams) {
+    // Since babylon delegation source cannot smart contract
+    if ((await this.context.isAnyProtocolActive(protocols['005'])) && /kt1/i.test(params.source)) {
+      throw new InvalidDelegationSource(params.source);
+    }
+
     const estimate = await this.estimate(params, this.estimator.setDelegate.bind(this.estimator));
     const operation = await createSetDelegateOperation({ ...params, ...estimate });
     const sourceOrDefault = params.source || (await this.signer.publicKeyHash());

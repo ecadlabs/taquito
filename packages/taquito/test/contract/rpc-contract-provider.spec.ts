@@ -13,6 +13,8 @@ import BigNumber from 'bignumber.js';
 import { Context } from '../../src/context';
 import { LegacyContractMethod, ContractMethod } from '../../src/contract/contract';
 import { Estimate } from '../../src/contract/estimate';
+import { Protocols } from '../../src/constants';
+import { InvalidDelegationSource } from '../../src/contract/errors';
 
 /**
  * RPCContractProvider test
@@ -487,7 +489,7 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_source'),
+            revealOp('test_pub_key_hash'),
             {
               delegate: 'test_delegate',
               counter: '2',
@@ -499,6 +501,60 @@ describe('RpcContractProvider test', () => {
             },
           ],
           protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        opbytes: 'test',
+      });
+      done();
+    });
+
+    it('should throw InvalidDelegationSource when setting a KT1 address in babylon', async done => {
+      const estimate = new Estimate(1000, 1000, 180);
+      mockEstimate.setDelegate.mockResolvedValue(estimate);
+      mockRpcClient.getBlockMetadata.mockResolvedValue({
+        next_protocol: Protocols.PsBabyM1,
+      });
+      let error;
+      try {
+        await rpcContractProvider.setDelegate({
+          source: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK',
+          delegate: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
+        });
+      } catch (ex) {
+        error = ex;
+      }
+      expect(error).toBeInstanceOf(InvalidDelegationSource);
+      done();
+    });
+
+    it('should accept KT1 address in athens', async done => {
+      const estimate = new Estimate(1000, 1000, 180);
+      mockEstimate.setDelegate.mockResolvedValue(estimate);
+      mockRpcClient.getBlockMetadata.mockResolvedValue({
+        next_protocol: Protocols.Pt24m4xi,
+      });
+
+      const result = await rpcContractProvider.setDelegate({
+        source: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK',
+        delegate: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
+      });
+      expect(result.raw).toEqual({
+        counter: 0,
+        opOb: {
+          branch: 'test',
+          contents: [
+            revealOp('test_pub_key_hash'),
+            {
+              delegate: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
+              counter: '2',
+              fee: '490',
+              gas_limit: '1100',
+              kind: 'delegation',
+              source: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK',
+              storage_limit: '1000',
+            },
+          ],
+          protocol: 'Pt24m4xiPbLDhVgVfABUjirbmda3yohdN82Sp9FeuAXJ4eV9otd',
           signature: 'test_sig',
         },
         opbytes: 'test',
