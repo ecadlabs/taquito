@@ -99,8 +99,8 @@
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_taquito_taquito.invalidparametererror.html#args" class="tsd-kind-icon">args</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_taquito_taquito.invalidparametererror.html#message" class="tsd-kind-icon">message</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_taquito_taquito.invalidparametererror.html#name" class="tsd-kind-icon">name</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_taquito_taquito.invalidparametererror.html#sigs" class="tsd-kind-icon">sigs</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_taquito_taquito.invalidparametererror.html#smartcontractmethodname" class="tsd-kind-icon">smart<wbr>Contract<wbr>Method<wbr>Name</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_taquito_taquito.invalidparametererror.html#smartcontractmethodschema" class="tsd-kind-icon">smart<wbr>Contract<wbr>Method<wbr>Schema</a></li>
 							</ul>
 						</section>
 					</div>
@@ -112,13 +112,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Invalid<wbr>Parameter<wbr>Error<span class="tsd-signature-symbol">(</span>smartContractMethodName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, smartContractMethodSchema<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span>, args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.invalidparametererror.html" class="tsd-signature-type">InvalidParameterError</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Invalid<wbr>Parameter<wbr>Error<span class="tsd-signature-symbol">(</span>smartContractMethodName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, sigs<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span>, args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.invalidparametererror.html" class="tsd-signature-type">InvalidParameterError</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/26f52e1/packages/taquito/src/contract/errors.ts#L5">taquito/src/contract/errors.ts:5</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/adede7f/packages/taquito/src/contract/errors.ts#L3">taquito/src/contract/errors.ts:3</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -127,7 +127,7 @@
 									<h5>smartContractMethodName: <span class="tsd-signature-type">string</span></h5>
 								</li>
 								<li>
-									<h5>smartContractMethodSchema: <span class="tsd-signature-type">object</span></h5>
+									<h5>sigs: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5>
 								</li>
 								<li>
 									<h5>args: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5>
@@ -146,7 +146,7 @@
 					<div class="tsd-signature tsd-kind-icon">args<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/26f52e1/packages/taquito/src/contract/errors.ts#L9">taquito/src/contract/errors.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/adede7f/packages/taquito/src/contract/errors.ts#L4">taquito/src/contract/errors.ts:4</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -156,7 +156,7 @@
 					<div class="tsd-signature tsd-kind-icon">message<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/26f52e1/packages/taquito/src/contract/errors.ts#L5">taquito/src/contract/errors.ts:5</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/adede7f/packages/taquito/src/contract/errors.ts#L3">taquito/src/contract/errors.ts:3</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -166,7 +166,17 @@
 					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;Invalid parameters error&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/26f52e1/packages/taquito/src/contract/errors.ts#L4">taquito/src/contract/errors.ts:4</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/adede7f/packages/taquito/src/contract/errors.ts#L2">taquito/src/contract/errors.ts:2</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="sigs" class="tsd-anchor"></a>
+					<h3>sigs</h3>
+					<div class="tsd-signature tsd-kind-icon">sigs<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/adede7f/packages/taquito/src/contract/errors.ts#L4">taquito/src/contract/errors.ts:4</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -176,17 +186,7 @@
 					<div class="tsd-signature tsd-kind-icon">smart<wbr>Contract<wbr>Method<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/26f52e1/packages/taquito/src/contract/errors.ts#L7">taquito/src/contract/errors.ts:7</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="smartcontractmethodschema" class="tsd-anchor"></a>
-					<h3>smart<wbr>Contract<wbr>Method<wbr>Schema</h3>
-					<div class="tsd-signature tsd-kind-icon">smart<wbr>Contract<wbr>Method<wbr>Schema<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/26f52e1/packages/taquito/src/contract/errors.ts#L8">taquito/src/contract/errors.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/adede7f/packages/taquito/src/contract/errors.ts#L4">taquito/src/contract/errors.ts:4</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -253,10 +253,10 @@
 								<a href="_taquito_taquito.invalidparametererror.html#name" class="tsd-kind-icon">name</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_taquito_taquito.invalidparametererror.html#smartcontractmethodname" class="tsd-kind-icon">smart<wbr>Contract<wbr>Method<wbr>Name</a>
+								<a href="_taquito_taquito.invalidparametererror.html#sigs" class="tsd-kind-icon">sigs</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_taquito_taquito.invalidparametererror.html#smartcontractmethodschema" class="tsd-kind-icon">smart<wbr>Contract<wbr>Method<wbr>Schema</a>
+								<a href="_taquito_taquito.invalidparametererror.html#smartcontractmethodname" class="tsd-kind-icon">smart<wbr>Contract<wbr>Method<wbr>Name</a>
 							</li>
 						</ul>
 					</li>
