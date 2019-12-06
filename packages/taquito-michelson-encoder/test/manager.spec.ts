@@ -15,6 +15,13 @@ describe('Schema test', () => {
     );
   });
 
+  it('Should extract signature properly', () => {
+    const schema = new ParameterSchema(doSchema);
+    expect(schema.ExtractSignatures()).toContainEqual([
+      { lambda: { parameters: 'unit', returns: 'list' } },
+    ]);
+  });
+
   it('Should parse parameter properly', () => {
     const schema = new ParameterSchema(doSchema);
     expect(

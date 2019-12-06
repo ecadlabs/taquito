@@ -6,4 +6,9 @@ describe('Contract with unit encoding', () => {
     const schema = new ParameterSchema(params);
     expect(schema.Encode('deposit', null)).toEqual({ prim: 'Left', args: [{ prim: 'Unit' }] });
   });
+
+  it('Should extract signature properly', () => {
+    const schema = new ParameterSchema(params);
+    expect(schema.ExtractSignatures()).toContainEqual(['deposit', 'unit']);
+  });
 });

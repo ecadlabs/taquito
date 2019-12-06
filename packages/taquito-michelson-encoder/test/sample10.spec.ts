@@ -66,12 +66,23 @@ describe('Schema test', () => {
     }).toEqual(
       schema.Encode(
         'transfer',
-        [{ amount: 'atest', beneficiary: 'btest' }, { amount: 'test', beneficiary: 'test' }],
+        [
+          { amount: 'atest', beneficiary: 'btest' },
+          { amount: 'test', beneficiary: 'test' },
+        ],
         'sig',
         'test',
         'test'
       )
     );
     expect(schema.isMultipleEntryPoint).toBeTruthy();
+
+    expect(schema.ExtractSignatures()).toContainEqual([
+      'transfer',
+      'list',
+      'key_hash',
+      'key',
+      'signature',
+    ]);
   });
 });

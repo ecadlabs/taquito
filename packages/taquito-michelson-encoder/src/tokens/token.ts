@@ -44,4 +44,8 @@ export abstract class Token {
   public abstract Encode(_args: any[]): any;
 
   public abstract EncodeObject(args: any): any;
+
+  public ExtractSignature() {
+    return [[this.ExtractSchema()]];
+  }
 }

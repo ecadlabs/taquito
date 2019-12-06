@@ -150,6 +150,10 @@ describe('Schema test', () => {
         signatures: 'list',
       },
     });
+
+    const signatures = schema.ExtractSignatures();
+    expect(signatures).toContainEqual(['Pour', 'signature', 'mutez']);
+    expect(signatures).toContainEqual(['Action', 'Set_delegate', 'key_hash', 'list']);
   });
 
   it('Should encode parameter properly', () => {
