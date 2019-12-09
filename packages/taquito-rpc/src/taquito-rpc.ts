@@ -42,7 +42,7 @@ import { castToBigNumber } from './utils/utils';
 export * from './types';
 export * from './types.common';
 
-const defaultRPC = 'https://tezrpc.me';
+const defaultRPC = 'https://mainnet.tezrpc.me';
 const defaultChain = 'main';
 
 interface RPCOptions {
@@ -57,12 +57,12 @@ const defaultRPCOptions: RPCOptions = { block: 'head' };
 export class RpcClient {
   /**
    *
-   * @param url rpc root url (default https://tezrpc.me)
+   * @param url rpc root url (default https://mainnet.tezrpc.me)
    * @param chain chain (default main)
    * @param httpBackend Http backend that issue http request.
    * You can override it by providing your own if you which to hook in the request/response
    *
-   * @example new RpcClient('https://tezrpc.me', 'main') this will use https://tezrpc.me/chains/main
+   * @example new RpcClient('https://mainnet.tezrpc.me', 'main') this will use https://mainnet.tezrpc.me/chains/main
    */
   constructor(
     private url: string = defaultRPC,
