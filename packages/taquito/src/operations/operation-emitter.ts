@@ -1,16 +1,37 @@
-import { ConstructedOperation, OperationContentsAndResult, RpcClient, RPCRunOperationParam } from '@taquito/rpc';
+import {
+  OperationContentsAndResult,
+  PreapplyResponse,
+  RpcClient,
+  RPCRunOperationParam,
+} from '@taquito/rpc';
 import { Context } from '../context';
 import { CombinedPreparer } from '../preparer/preparer';
+import { PreparedOperation } from '../preparer/types';
 import { ForgedBytes, PrepareOperationParams } from './types';
 
-export interface PreparedOperation {
-  opOb: {
-    branch: string;
-    contents: ConstructedOperation[];
-    protocol: string;
+export const flattenOperationContent = (results: PreapplyResponse[]) => {
+  const opResponse: OperationContentsAndResult[] = [];
+  let errors: any[] = [];
+
+  for (let i = 0; i < results.length; i++) {
+    for (let j = 0; j < results[i].contents.length; j++) {
+      opResponse.push(results[i].contents[j]);
+      const content = results[i].contents[j];
+      if (
+        'metadata' in content &&
+        typeof content.metadata.operation_result !== 'undefined' &&
+        content.metadata.operation_result.status === 'failed'
+      ) {
+        errors = errors.concat(content.metadata.operation_result.errors);
+      }
+    }
+  }
+
+  return {
+    opResponse,
+    errors,
   };
-  counter: number;
-}
+};
 
 export abstract class OperationEmitter {
   protected readonly preparer: CombinedPreparer;
@@ -24,19 +45,21 @@ export abstract class OperationEmitter {
   }
 
   constructor(protected context: Context) {
-    this.preparer = new CombinedPreparer(context)
+    this.preparer = new CombinedPreparer(context);
   }
 
   protected async prepareAndForge(params: PrepareOperationParams) {
-    const prepared = await this.preparer.prepare(Array.isArray(params.operation) ? params.operation : [params.operation], params.source)
+    const prepared = await this.preparer.prepare(
+      Array.isArray(params.operation) ? params.operation : [params.operation]
+    );
     const forged = await this.forge(prepared);
     return {
       opOb: prepared,
       opbytes: forged,
-    }
+    };
   }
 
-  protected async forge({ branch, contents }: PreparedOperation['opOb']) {
+  protected async forge({ branch, contents }: PreparedOperation) {
     return this.context.forger.forge({ branch, contents });
   }
 
@@ -52,28 +75,13 @@ export abstract class OperationEmitter {
     const signed = await this.signer.sign(forgedBytes.opbytes, new Uint8Array([3]));
     forgedBytes.opbytes = signed.sbytes;
     forgedBytes.opOb.signature = signed.prefixSig;
-
-    const opResponse: OperationContentsAndResult[] = [];
-    let errors: any[] = [];
-
     const results = await this.rpc.preapplyOperations([forgedBytes.opOb]);
 
     if (!Array.isArray(results)) {
       throw new Error(`RPC Fail: ${JSON.stringify(results)}`);
     }
-    for (let i = 0; i < results.length; i++) {
-      for (let j = 0; j < results[i].contents.length; j++) {
-        opResponse.push(results[i].contents[j]);
-        const content = results[i].contents[j];
-        if (
-          'metadata' in content &&
-          typeof content.metadata.operation_result !== 'undefined' &&
-          content.metadata.operation_result.status === 'failed'
-        ) {
-          errors = errors.concat(content.metadata.operation_result.errors);
-        }
-      }
-    }
+
+    const { opResponse, errors } = flattenOperationContent(results);
 
     if (errors.length) {
       // @ts-ignore

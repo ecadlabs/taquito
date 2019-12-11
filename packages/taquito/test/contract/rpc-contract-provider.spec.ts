@@ -531,7 +531,6 @@ describe('RpcContractProvider test', () => {
         delegate: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
       });
       expect(result.raw).toEqual({
-        counter: 0,
         opOb: {
           branch: 'test',
           contents: [

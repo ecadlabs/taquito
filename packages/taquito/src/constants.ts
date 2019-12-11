@@ -27,3 +27,17 @@ export const protocols = {
   '004': [Protocols.Pt24m4xi],
   '005': [Protocols.PsBABY5H, Protocols.PsBabyM1],
 };
+
+export enum MAGIC_BYTES {
+  Generic = 3,
+  Endorsement = 2,
+  Block = 1,
+}
+
+const mbToBuf = (x: MAGIC_BYTES) => new Uint8Array([x]);
+
+export const MAGIC_BYTES_BUF = {
+  Generic: () => mbToBuf(MAGIC_BYTES.Generic),
+  Endorsement: () => mbToBuf(MAGIC_BYTES.Endorsement),
+  Block: () => mbToBuf(MAGIC_BYTES.Block),
+};

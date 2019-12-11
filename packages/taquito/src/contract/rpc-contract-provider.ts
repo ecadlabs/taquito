@@ -7,11 +7,21 @@ import { DelegateOperation } from '../operations/delegate-operation';
 import { OperationEmitter } from '../operations/operation-emitter';
 import { OriginationOperation } from '../operations/origination-operation';
 import { TransactionOperation } from '../operations/transaction-operation';
-import { DelegateParams, OriginateParams, TransferParams, RegisterDelegateParams } from '../operations/types';
+import {
+  DelegateParams,
+  OriginateParams,
+  TransferParams,
+  RegisterDelegateParams,
+} from '../operations/types';
 import { Contract } from './contract';
 import { Estimate } from './estimate';
 import { ContractProvider, ContractSchema, EstimationProvider } from './interface';
-import { createOriginationOperation, createRegisterDelegateOperation, createSetDelegateOperation, createTransferOperation } from './prepare';
+import {
+  createOriginationOperation,
+  createRegisterDelegateOperation,
+  createSetDelegateOperation,
+  createTransferOperation,
+} from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
 
 import { InvalidDelegationSource } from './errors';
@@ -152,9 +162,12 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
       },
       publicKeyHash
     );
-    const prepared = await this.preparer.prepare([operation], publicKeyHash);
+    const prepared = await this.preparer.prepare([operation]);
     const forgedOrigination = await this.forge(prepared);
-    const { hash, context, forgedBytes, opResponse } = await this.signAndInject({ opbytes: forgedOrigination, opOb: prepared });
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject({
+      opbytes: forgedOrigination,
+      opOb: prepared,
+    });
     return new OriginationOperation(hash, operation, forgedBytes, opResponse, context, this);
   }
 

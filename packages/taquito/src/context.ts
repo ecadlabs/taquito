@@ -6,6 +6,8 @@ import { Forger } from './forger/interface';
 import { RpcForger } from './forger/rpc-forger';
 import { Injector } from './injector/interface';
 import { RpcInjector } from './injector/rpc-injector';
+import { RootPreparer } from './preparer/types';
+import { CombinedPreparer } from './preparer/preparer';
 
 export interface Config {
   confirmationPollingIntervalSecond?: number;
@@ -25,6 +27,7 @@ export const defaultConfig: Required<Config> = {
 export class Context {
   private _forger: Forger;
   private _injector: Injector;
+  private _preparer: RootPreparer;
 
   constructor(
     private _rpcClient: RpcClient = new RpcClient(),
@@ -37,6 +40,7 @@ export class Context {
     this.config = _config as any;
     this._forger = forger ? forger : new RpcForger(this);
     this._injector = injector ? injector : new RpcInjector(this);
+    this._preparer = new CombinedPreparer(this);
   }
 
   get config(): Required<Config> {
@@ -72,6 +76,10 @@ export class Context {
 
   set forger(value: Forger) {
     this._forger = value;
+  }
+
+  get preparer() {
+    return this._preparer;
   }
 
   get signer() {

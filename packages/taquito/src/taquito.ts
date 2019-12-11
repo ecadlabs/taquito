@@ -15,6 +15,9 @@ import { SubscribeProvider } from './subscribe/interface';
 import { PollingSubscribeProvider } from './subscribe/polling-provider';
 import { TzProvider } from './tz/interface';
 import { RpcTzProvider } from './tz/rpc-tz-provider';
+import { RootPreparer } from './preparer/types';
+import { Forger } from './forger/interface';
+import { Injector } from './injector/interface';
 
 export * from './query/interface';
 export * from './signer/interface';
@@ -24,6 +27,7 @@ export * from './tz/interface';
 export * from './contract';
 export * from './contract/big-map';
 export * from './constants';
+export * from './operations';
 
 export { SubscribeProvider } from './subscribe/interface';
 export interface SetProviderOptions {
@@ -157,6 +161,18 @@ export class TezosToolkit {
    */
   get rpc(): RpcClient {
     return this._context.rpc;
+  }
+
+  get preparer(): RootPreparer {
+    return this._context.preparer;
+  }
+
+  get forger(): Forger {
+    return this._context.forger;
+  }
+
+  get injector(): Injector {
+    return this._context.injector;
   }
 
   /**
