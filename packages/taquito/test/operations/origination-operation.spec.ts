@@ -79,7 +79,7 @@ describe('Origination operation', () => {
     fakeContext.rpc.getBlock.mockResolvedValue({
       operations: [[{ hash: 'test_hash' }], [], [], []],
       header: {
-        level: 0,
+        level: 200,
       },
     });
   });
@@ -136,7 +136,7 @@ describe('Origination operation', () => {
         fakeContractProvider
       );
       const confirmation = await op.confirmation();
-      expect(confirmation).toEqual(0);
+      expect(confirmation).toEqual(200);
       done();
     });
 

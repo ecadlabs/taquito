@@ -136,13 +136,13 @@ CONFIGS.forEach(({ lib, rpc, setup }) => {
 
     it('Transfer and wait 2 confirmations', async (done) => {
       const op = await Tezos.contract.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
-      const conf = await op.confirmation()
+      await op.confirmation()
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
       const [first, second] = await Promise.all([op.confirmation(), op.confirmation(2)])
-      expect(second - first).toEqual(2)
+      expect(second - first).toEqual(1)
       // Retrying another time should be instant
       const [first2, second2] = await Promise.all([op.confirmation(), op.confirmation(2)])
-      expect(second2 - first2).toEqual(2)
+      expect(second2 - first2).toEqual(1)
       done();
     })
 
