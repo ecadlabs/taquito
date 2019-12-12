@@ -25,9 +25,4 @@ export interface Signer {
    * @description Return the public key hash of the account used by the signer
    */
   publicKeyHash(): Promise<string>;
-
-  /**
-   * @description Optionally return the secret key of the account used by the signer
-   */
-  secretKey(): Promise<string | undefined>;
 }

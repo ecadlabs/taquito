@@ -10,9 +10,7 @@ export class NoopSigner implements Signer {
   async publicKeyHash() {
     return '';
   }
-  async secretKey() {
-    return '';
-  }
+
   async sign(bytes: string, _watermark?: Uint8Array) {
     return {
       bytes,

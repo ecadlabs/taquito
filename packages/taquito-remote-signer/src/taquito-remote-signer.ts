@@ -40,10 +40,6 @@ export class RemoteSigner {
     }
   }
 
-  async secretKey(): Promise<string> {
-    throw new Error('Secret key cannot be exposed');
-  }
-
   async sign(bytes: string, watermark?: Uint8Array) {
     try {
       let bb = hex2buf(bytes);

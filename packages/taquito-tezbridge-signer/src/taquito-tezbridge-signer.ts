@@ -18,10 +18,6 @@ export class TezBridgeSigner {
     throw new Error('Public key cannot be exposed');
   }
 
-  async secretKey(): Promise<string> {
-    throw new Error('Secret key cannot be exposed');
-  }
-
   async sign(bytes: string, _watermark?: Uint8Array) {
     const prefixSig = await tezbridge.request({
       method: 'raw_sign',
