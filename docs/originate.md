@@ -15,10 +15,10 @@ https://github.com/murbard/smart-contracts/blob/master/multisig/michelson/generi
 
 ### Convert the generic.tz contract to JSON
 
-We can use the tezos-cli to convert our michelson to the its JSON representation using the following command. This command relies on two files `generic.tz` and `init.tz` that must be present in your current working directory. Download the `generic.tz` from the above link, and see below for the contents of `init.tz`
+We can use the tezos-client to convert our michelson to the its JSON representation using the following command. This command relies on two files `generic.tz` and `init.tz` that must be present in your current working directory. Download the `generic.tz` from the above link, and see below for the contents of `init.tz`
 
 ```sh
-tezos originate contract generic-multisig transferring 1 from \
+tezos-client originate contract generic-multisig transferring 1 from \
    account1 running "$(cat ./generic.tz)" --init "$(cat ./init.tz)" \
    --dry-run --verbose-signing --burn-cap 2`
 ```
