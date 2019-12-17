@@ -1,5 +1,5 @@
 import { Buffer } from 'buffer';
-import { prefix } from './constants';
+import { prefix, prefixLength } from './constants';
 const blake = require('blakejs');
 const bs58check = require('bs58check');
 
@@ -8,6 +8,46 @@ export { prefix } from './constants';
 export function encodeExpr(value: string) {
   const blakeHash = blake.blake2b(hex2buf(value), null, 32);
   return b58cencode(blakeHash, prefix['expr']);
+}
+
+function validatePrefixedValue(value: string, prefixes: string[]) {
+  const match = new RegExp(`^(${prefixes.join('|')})`).exec(value);
+  if (!match || match.length === 0) {
+    return false;
+  }
+  try {
+    const decoded = b58cdecode(value, prefix[match[0]]);
+    if (decoded.length !== prefixLength[match[0]]) {
+      return false;
+    }
+    return true;
+  } catch (ex) {
+    return false;
+  }
+}
+
+export function validateAddress(value: any): boolean {
+  return validatePrefixedValue(value, ['tz1', 'tz2', 'tz3', 'KT1']);
+}
+
+export function validateChain(value: any): boolean {
+  return validatePrefixedValue(value, ['Net']);
+}
+
+export function validateContractAddress(value: any): boolean {
+  return validatePrefixedValue(value, ['KT1']);
+}
+
+export function validateKeyHash(value: any): boolean {
+  return validatePrefixedValue(value, ['tz1', 'tz2', 'tz3']);
+}
+
+export function validateSignature(value: any): boolean {
+  return validatePrefixedValue(value, ['edsig', 'spsig', 'p2sig', 'sig']);
+}
+
+export function validatePublicKey(value: any): boolean {
+  return validatePrefixedValue(value, ['edpk', 'sppk', 'p2pk']);
 }
 
 /**

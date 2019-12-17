@@ -3,12 +3,13 @@ export const prefix: { [key: string]: Uint8Array } = {
   tz2: new Uint8Array([6, 161, 161]),
   tz3: new Uint8Array([6, 161, 164]),
   KT: new Uint8Array([2, 90, 121]),
+  KT1: new Uint8Array([2, 90, 121]),
 
-  edpk: new Uint8Array([13, 15, 37, 217]),
   edsk2: new Uint8Array([13, 15, 58, 7]),
   spsk: new Uint8Array([17, 162, 224, 201]),
   p2sk: new Uint8Array([16, 81, 238, 189]),
 
+  edpk: new Uint8Array([13, 15, 37, 217]),
   sppk: new Uint8Array([3, 254, 226, 86]),
   p2pk: new Uint8Array([3, 178, 139, 127]),
 
@@ -35,4 +36,20 @@ export const prefix: { [key: string]: Uint8Array } = {
   expr: new Uint8Array([13, 44, 64, 27]),
   // Legacy prefix
   TZ: new Uint8Array([2, 90, 121]),
+};
+
+export const prefixLength: { [key: string]: number } = {
+  tz1: 20,
+  tz2: 20,
+  tz3: 20,
+  KT: 20,
+  KT1: 20,
+  edpk: 32,
+  sppk: 33,
+  p2pk: 33,
+  edsig: 64,
+  spsig: 64,
+  p2sig: 64,
+  sig: 64,
+  Net: 4,
 };
