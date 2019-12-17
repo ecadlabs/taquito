@@ -9,7 +9,7 @@ export interface Signer {
    */
   sign(
     op: {},
-    magicByte: Uint8Array
+    magicByte?: Uint8Array
   ): Promise<{
     bytes: string;
     sig: string;
