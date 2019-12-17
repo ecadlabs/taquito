@@ -3,7 +3,7 @@ import { BigMapToken } from '../tokens/bigmap';
 import { createToken } from '../tokens/createToken';
 import { OrToken } from '../tokens/or';
 import { PairToken } from '../tokens/pair';
-import { Semantic, Token } from '../tokens/token';
+import { Semantic, Token, TokenValidationError } from '../tokens/token';
 import { RpcTransaction } from './model';
 import { Falsy } from './types';
 
@@ -104,6 +104,10 @@ export class Schema {
     try {
       return this.root.EncodeObject(_value);
     } catch (ex) {
+      if (ex instanceof TokenValidationError) {
+        throw ex;
+      }
+
       throw new Error(`Unable to encode storage object. ${ex}`);
     }
   }

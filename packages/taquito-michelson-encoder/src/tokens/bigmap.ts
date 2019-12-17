@@ -1,4 +1,11 @@
-import { Token, TokenFactory, ComparableToken, Semantic } from './token';
+import { Token, TokenFactory, ComparableToken, Semantic, TokenValidationError } from './token';
+
+export class BigMapValidationError extends TokenValidationError {
+  name: string = 'BigMapValidationError';
+  constructor(public value: any, public token: BigMapToken, message: string) {
+    super(value, token, message);
+  }
+}
 
 export class BigMapToken extends Token {
   static prim = 'big_map';
@@ -24,8 +31,21 @@ export class BigMapToken extends Token {
     };
   }
 
+  private isValid(value: any): BigMapValidationError | null {
+    if (typeof value === 'object') {
+      return null;
+    }
+
+    return new BigMapValidationError(value, this, 'Value must be an object');
+  }
+
   public Encode(args: any[]): any {
     const val = args.pop();
+
+    const err = this.isValid(val);
+    if (err) {
+      throw err;
+    }
 
     return Object.keys(val).map(key => {
       return {
@@ -37,6 +57,12 @@ export class BigMapToken extends Token {
 
   public EncodeObject(args: any): any {
     const val = args;
+
+    const err = this.isValid(val);
+    if (err) {
+      throw err;
+    }
+
     return Object.keys(val).map(key => {
       return {
         prim: 'Elt',

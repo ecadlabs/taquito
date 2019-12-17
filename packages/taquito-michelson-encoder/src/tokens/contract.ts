@@ -1,5 +1,12 @@
-import { Token, TokenFactory } from './token';
-import { encodePubKey } from '@taquito/utils';
+import { encodePubKey, validateAddress } from '@taquito/utils';
+import { Token, TokenFactory, TokenValidationError } from './token';
+
+export class ContractValidationError extends TokenValidationError {
+  name: string = 'ContractValidationError';
+  constructor(public value: any, public token: ContractToken, message: string) {
+    super(value, token, message);
+  }
+}
 
 export class ContractToken extends Token {
   static prim = 'contract';
@@ -12,6 +19,15 @@ export class ContractToken extends Token {
     super(val, idx, fac);
   }
 
+  private isValid(value: any): ContractValidationError | null {
+    // tz1,tz2 and tz3 seems to be valid contract values (for Unit contract)
+    if (!validateAddress(value)) {
+      return new ContractValidationError(value, this, 'Contract address is not valid');
+    }
+
+    return null;
+  }
+
   public Execute(val: { bytes: string; string: string }) {
     if (val.string) {
       return val.string;
@@ -22,10 +38,18 @@ export class ContractToken extends Token {
 
   public Encode(args: any[]): any {
     const val = args.pop();
+    const err = this.isValid(val);
+    if (err) {
+      throw err;
+    }
     return { string: val };
   }
 
   public EncodeObject(val: any): any {
+    const err = this.isValid(val);
+    if (err) {
+      throw err;
+    }
     return { string: val };
   }
 

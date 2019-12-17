@@ -1,5 +1,5 @@
 import { createToken } from '../tokens/createToken';
-import { Token, Semantic } from '../tokens/token';
+import { Token, Semantic, TokenValidationError } from '../tokens/token';
 import { OrToken } from '../tokens/or';
 import { OptionToken } from '../tokens/option';
 import { ScriptResponse, MichelsonV1ExpressionExtended, MichelsonV1Expression } from '@taquito/rpc';
@@ -48,7 +48,15 @@ export class ParameterSchema {
   }
 
   Encode(...args: any[]) {
-    return this.root.Encode(args.reverse());
+    try {
+      return this.root.Encode(args.reverse());
+    } catch (ex) {
+      if (ex instanceof TokenValidationError) {
+        throw ex;
+      }
+
+      throw new Error(`Unable to encode storage object. ${ex}`);
+    }
   }
 
   ExtractSchema() {

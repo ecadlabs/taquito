@@ -1,5 +1,12 @@
-import { Token, TokenFactory, ComparableToken } from '../token';
+import { Token, TokenFactory, ComparableToken, TokenValidationError } from '../token';
 import BigNumber from 'bignumber.js';
+
+export class MutezValidationError extends TokenValidationError {
+  name: string = 'MutezValidationError';
+  constructor(public value: any, public token: MutezToken, message: string) {
+    super(value, token, message);
+  }
+}
 
 export class MutezToken extends Token implements ComparableToken {
   static prim = 'mutez';
@@ -20,12 +27,32 @@ export class MutezToken extends Token implements ComparableToken {
     return MutezToken.prim;
   }
 
+  private isValid(val: any): MutezValidationError | null {
+    const bigNumber = new BigNumber(val);
+    if (bigNumber.isNaN()) {
+      return new MutezValidationError(val, this, `Value is not a number: ${val}`);
+    } else {
+      return null;
+    }
+  }
+
   public Encode(args: any[]): any {
     const val = args.pop();
+
+    const err = this.isValid(val);
+    if (err) {
+      throw err;
+    }
+
     return { int: String(val).toString() };
   }
 
   public EncodeObject(val: any): any {
+    const err = this.isValid(val);
+    if (err) {
+      throw err;
+    }
+
     return { int: String(val).toString() };
   }
 
