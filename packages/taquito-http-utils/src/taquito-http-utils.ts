@@ -22,6 +22,15 @@ export class HttpResponseError implements Error {
   ) {}
 }
 
+export class HttpRequestFailed implements Error {
+  public name = 'HttpRequestFailed';
+  public message: string;
+
+  constructor(public url: string, public innerEvent: any) {
+    this.message = `Request to ${url} failed`;
+  }
+}
+
 export class HttpBackend {
   private serialize(obj?: { [key: string]: any }) {
     if (!obj) {
@@ -106,15 +115,8 @@ export class HttpBackend {
         reject(new Error(`Request timed out after: ${request.timeout}ms`));
       };
 
-      request.onerror = function() {
-        reject(
-          new HttpResponseError(
-            `Http error response: (${this.status}) ${request.response}`,
-            this.status as STATUS_CODE,
-            request.statusText,
-            request.response
-          )
-        );
+      request.onerror = function(err) {
+        reject(new HttpRequestFailed(url, err));
       };
 
       if (data) {
