@@ -15,7 +15,7 @@ export interface Config {
 
 export const defaultConfig: Required<Config> = {
   confirmationPollingIntervalSecond: 10,
-  defaultConfirmationCount: 0,
+  defaultConfirmationCount: 1,
   confirmationPollingTimeoutSecond: 180,
 };
 

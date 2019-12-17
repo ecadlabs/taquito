@@ -1,6 +1,15 @@
 import { BlockResponse, OperationContentsAndResult, OperationResultStatusEnum } from '@taquito/rpc';
 import { defer, from, ReplaySubject, timer } from 'rxjs';
-import { filter, first, map, mapTo, shareReplay, switchMap, tap } from 'rxjs/operators';
+import {
+  filter,
+  first,
+  map,
+  mapTo,
+  shareReplay,
+  switchMap,
+  switchMapTo,
+  tap,
+} from 'rxjs/operators';
 import { Context } from '../context';
 import { ForgedBytes } from './types';
 
@@ -59,7 +68,7 @@ export class Operation {
 
   // Observable that emit once operation is seen in a block
   private confirmed$ = this.polling$.pipe(
-    switchMap(() => this.currentHead$),
+    switchMapTo(this.currentHead$),
     map(head => {
       for (let i = 3; i >= 0; i--) {
         head.operations[i].forEach(op => {
@@ -116,6 +125,10 @@ export class Operation {
    * @param timeout [180] Timeout
    */
   confirmation(confirmations?: number, interval?: number, timeout?: number) {
+    if (typeof confirmations !== 'undefined' && confirmations < 1) {
+      throw new Error('Confirmation count must be at least 1');
+    }
+
     const {
       defaultConfirmationCount,
       confirmationPollingIntervalSecond,
@@ -133,11 +146,11 @@ export class Operation {
         .pipe(
           switchMap(() => this.polling$),
           switchMap(() => this.currentHead$),
-          filter(head => head.header.level - this._foundAt >= conf),
+          filter(head => head.header.level - this._foundAt >= conf - 1),
           first()
         )
         .subscribe(_ => {
-          resolve(this._foundAt + conf);
+          resolve(this._foundAt + (conf - 1));
         }, reject);
     });
   }
