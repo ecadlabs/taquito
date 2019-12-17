@@ -146,7 +146,10 @@ describe('Exchange contract test', () => {
 
   it('Test execute parameter', () => {
     const schema = new ParameterSchema(parameter!.args[0]);
-    expect(schema.Encode('test')).toEqual({ prim: 'Some', args: [{ string: 'test' }] });
+    expect(schema.Encode('tz1Zwusa1tLQHRyB1KL1p44KjgDbi5KjNKay')).toEqual({
+      prim: 'Some',
+      args: [{ string: 'tz1Zwusa1tLQHRyB1KL1p44KjgDbi5KjNKay' }],
+    });
   });
 
   it('Should extract signature properly', () => {
