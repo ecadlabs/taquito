@@ -9,8 +9,12 @@ export enum ValidationResult {
   VALID,
 }
 
-function valueIsValidKeyOf<T>(value: any, obj: T): value is keyof T {
-  return value in obj;
+export function isValidPrefix(value: any): value is Prefix {
+  if (typeof value !== 'string') {
+    return false;
+  }
+
+  return value in prefix;
 }
 
 function validatePrefixedValue(value: any, prefixes: Prefix[]) {
@@ -21,7 +25,7 @@ function validatePrefixedValue(value: any, prefixes: Prefix[]) {
 
   const prefixKey = match[0];
 
-  if (!valueIsValidKeyOf(prefixKey, prefix)) {
+  if (!isValidPrefix(prefixKey)) {
     return ValidationResult.NO_PREFIX_MATCHED;
   }
 
