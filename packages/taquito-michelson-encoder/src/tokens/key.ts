@@ -1,5 +1,5 @@
 import { Token, TokenFactory, TokenValidationError } from './token';
-import { encodeKey, validatePublicKey } from '@taquito/utils';
+import { encodeKey, validatePublicKey, ValidationResult } from '@taquito/utils';
 
 export class KeyValidationError extends TokenValidationError {
   name: string = 'KeyValidationError';
@@ -28,7 +28,7 @@ export class KeyToken extends Token {
   }
 
   private isValid(value: any): KeyValidationError | null {
-    if (!validatePublicKey(value)) {
+    if (validatePublicKey(value) !== ValidationResult.VALID) {
       return new KeyValidationError(value, this, 'Key is not valid');
     }
 

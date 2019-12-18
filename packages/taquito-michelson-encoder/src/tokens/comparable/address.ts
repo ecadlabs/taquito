@@ -1,5 +1,5 @@
 import { Token, TokenFactory, ComparableToken, TokenValidationError } from '../token';
-import { b58decode, encodePubKey, validateAddress } from '@taquito/utils';
+import { b58decode, encodePubKey, validateAddress, ValidationResult } from '@taquito/utils';
 
 export class AddressValidationError extends TokenValidationError {
   name: string = 'AddressValidationError';
@@ -28,7 +28,7 @@ export class AddressToken extends Token implements ComparableToken {
   }
 
   private isValid(value: any): AddressValidationError | null {
-    if (!validateAddress(value)) {
+    if (validateAddress(value) !== ValidationResult.VALID) {
       return new AddressValidationError(value, this, `Address is not valid: ${value}`);
     }
 

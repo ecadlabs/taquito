@@ -1,5 +1,5 @@
 import { Token, TokenFactory, ComparableToken, TokenValidationError } from '../token';
-import { encodeKeyHash, validateKeyHash } from '@taquito/utils';
+import { encodeKeyHash, validateKeyHash, ValidationResult } from '@taquito/utils';
 
 export class KeyHashValidationError extends TokenValidationError {
   name: string = 'KeyHashValidationError';
@@ -28,7 +28,7 @@ export class KeyHashToken extends Token implements ComparableToken {
   }
 
   private isValid(value: any): KeyHashValidationError | null {
-    if (!validateKeyHash(value)) {
+    if (validateKeyHash(value) !== ValidationResult.VALID) {
       return new KeyHashValidationError(value, this, `KeyHash is not valid: ${value}`);
     }
 

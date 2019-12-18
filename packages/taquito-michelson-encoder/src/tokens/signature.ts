@@ -1,5 +1,5 @@
 import { Token, TokenFactory, TokenValidationError } from './token';
-import { validateSignature } from '@taquito/utils';
+import { validateSignature, ValidationResult } from '@taquito/utils';
 
 export class SignatureValidationError extends TokenValidationError {
   name: string = 'SignatureValidationError';
@@ -24,7 +24,7 @@ export class SignatureToken extends Token {
   }
 
   private isValid(value: any): SignatureValidationError | null {
-    if (!validateSignature(value)) {
+    if (validateSignature(value) !== ValidationResult.VALID) {
       return new SignatureValidationError(value, this, 'Signature is not valid');
     }
 

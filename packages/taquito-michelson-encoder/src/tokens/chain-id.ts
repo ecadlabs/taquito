@@ -1,5 +1,5 @@
 import { Token, TokenFactory, ComparableToken, TokenValidationError } from './token';
-import { validateChain } from '@taquito/utils';
+import { validateChain, ValidationResult } from '@taquito/utils';
 
 export class ChainIDValidationError extends TokenValidationError {
   name: string = 'ChainIDValidationError';
@@ -20,7 +20,7 @@ export class ChainIDToken extends Token implements ComparableToken {
   }
 
   private isValid(value: any): ChainIDValidationError | null {
-    if (!validateChain(value)) {
+    if (validateChain(value) !== ValidationResult.VALID) {
       return new ChainIDValidationError(value, this, 'ChainID is not valid');
     }
 

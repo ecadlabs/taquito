@@ -1,4 +1,4 @@
-import { encodePubKey, validateAddress } from '@taquito/utils';
+import { encodePubKey, validateAddress, ValidationResult } from '@taquito/utils';
 import { Token, TokenFactory, TokenValidationError } from './token';
 
 export class ContractValidationError extends TokenValidationError {
@@ -21,7 +21,7 @@ export class ContractToken extends Token {
 
   private isValid(value: any): ContractValidationError | null {
     // tz1,tz2 and tz3 seems to be valid contract values (for Unit contract)
-    if (!validateAddress(value)) {
+    if (validateAddress(value) !== ValidationResult.VALID) {
       return new ContractValidationError(value, this, 'Contract address is not valid');
     }
 
