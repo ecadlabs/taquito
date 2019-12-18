@@ -1,4 +1,4 @@
-import { b58cdecode, b58cencode, buf2hex, prefix } from '@taquito/utils';
+import { b58cdecode, b58cencode, buf2hex, prefix, isValidPrefix } from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
 
 declare var tezbridge: any;
@@ -28,7 +28,13 @@ export class TezBridgeSigner {
       bytes, // Any operation bytes as string
     });
 
-    const decoded = b58cdecode(prefixSig, prefix[prefixSig.substr(0, 5)]);
+    const pref = prefixSig.substr(0, 5);
+
+    if (!isValidPrefix(pref)) {
+      throw new Error('Unsupported signature given by tezbridge: ' + prefixSig);
+    }
+
+    const decoded = b58cdecode(prefixSig, prefix[pref]);
 
     return {
       bytes,

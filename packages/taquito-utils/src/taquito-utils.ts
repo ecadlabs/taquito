@@ -5,7 +5,7 @@ const bs58check = require('bs58check');
 
 export * from './validators';
 
-export { prefix } from './constants';
+export { prefix, Prefix } from './constants';
 
 export function encodeExpr(value: string) {
   const blakeHash = blake.blake2b(hex2buf(value), null, 32);
