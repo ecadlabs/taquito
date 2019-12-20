@@ -25,7 +25,7 @@ export type OriginateParamsBase = {
   // Proto 004
   spendable?: boolean;
   delegatable?: boolean;
-};
+} & ParamsWithCounter;
 
 /**
  * @description Parameters for originate method
@@ -59,6 +59,7 @@ export interface RPCOriginationOperation {
     code: any;
     storage: any;
   };
+  counter?: string;
 }
 
 /**
@@ -71,6 +72,7 @@ export interface RPCRevealOperation {
   source: string;
   gas_limit: number;
   storage_limit: number;
+  counter?: string;
 }
 
 /**
@@ -82,10 +84,14 @@ export interface ForgedBytes {
   counter: number;
 }
 
+export interface ParamsWithCounter {
+  counter?: number;
+}
+
 /**
  * @description Parameters for setDelegate method
  */
-export interface DelegateParams {
+export interface DelegateParams extends ParamsWithCounter {
   source: string;
   delegate: string;
   fee?: number;
@@ -96,7 +102,7 @@ export interface DelegateParams {
 /**
  * @description Parameters for registerDelegate method
  */
-export interface RegisterDelegateParams {
+export interface RegisterDelegateParams extends ParamsWithCounter {
   fee?: number;
   gasLimit?: number;
   storageLimit?: number;
@@ -112,12 +118,13 @@ export interface RPCDelegateOperation {
   gas_limit: number;
   storage_limit: number;
   delegate: string;
+  counter?: string;
 }
 
 /**
  * @description Parameters for transfer method
  */
-export interface TransferParams {
+export interface TransferParams extends ParamsWithCounter {
   to: string;
   source?: string;
   amount: number;
@@ -140,6 +147,7 @@ export interface RPCTransferOperation {
   amount: string;
   destination: string;
   parameters?: any;
+  counter?: string;
 }
 
 /**

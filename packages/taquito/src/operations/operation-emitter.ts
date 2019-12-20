@@ -64,6 +64,10 @@ export abstract class OperationEmitter {
     return ['reveal', 'transaction', 'origination', 'delegation'].includes(op.kind);
   }
 
+  private isCounterOp(op: RPCOperation): op is RPCOperation & { counter?: string } {
+    return ['reveal', 'transaction', 'origination', 'delegation'].includes(op.kind);
+  }
+
   protected async prepareOperation({
     operation,
     source,
@@ -163,8 +167,6 @@ export abstract class OperationEmitter {
           } else {
             constructedOp.storage_limit = `${op.storage_limit}`;
           }
-          const opCounter = ++counters[publicKeyHash];
-          constructedOp.counter = `${opCounter}`;
         }
         if (op.kind === 'origination') {
           if (typeof op.balance !== 'undefined') constructedOp.balance = `${constructedOp.balance}`;
@@ -176,6 +178,15 @@ export abstract class OperationEmitter {
           }
 
           if (typeof op.amount !== 'undefined') constructedOp.amount = `${constructedOp.amount}`;
+        }
+
+        if (this.isCounterOp(op)) {
+          if (typeof op.counter === 'undefined') {
+            const opCounter = ++counters[publicKeyHash];
+            constructedOp.counter = `${opCounter}`;
+          } else {
+            constructedOp.counter = String(op.counter);
+          }
         }
         // tslint:enable strict-type-predicates
 

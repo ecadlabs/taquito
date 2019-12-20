@@ -41,6 +41,13 @@ export class TransactionOperation extends Operation
     return result ? result : undefined;
   }
 
+  get counter() {
+    const transaction =
+      Array.isArray(this.results) &&
+      (this.results.find(op => op.kind === 'transaction') as OperationContentsAndResultTransaction);
+    return transaction ? new BigNumber(transaction.counter) : undefined;
+  }
+
   get amount() {
     return new BigNumber(this.params.amount);
   }

@@ -134,6 +134,50 @@ CONFIGS.forEach(({ lib, rpc, setup }) => {
       done();
     });
 
+    it('Transfer using explicit counter', async (done) => {
+      try {
+        // Rejected because the counter is in the past
+        await Tezos.contract.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2, counter: 1 })
+        fail('Expected transfer to fail because counter should be in the past')
+      } catch (ex) {
+        const error = JSON.parse(ex.body)[0]
+        expect(error.id).toMatch("counter_in_the_past")
+      }
+
+      // Should pass because Taquito set the counter automatically
+      const op = await Tezos.contract.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
+      try {
+        // Will fail because Taquito fetch the wrong counter from RPC
+        // This would need to be batched with the first one to work see: https://github.com/ecadlabs/taquito/issues/177
+        // See issue: https://gitlab.com/tezos/tezos/issues/626
+        await Tezos.contract.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2.1 })
+        fail('Expected transfer to fail because RPC should provide an already existing counter')
+      } catch (ex) {
+        const error = JSON.parse(ex.body)[0]
+        expect(error.id).toMatch("failure")
+      }
+
+      try {
+        // Will fail because the node reject counter in the future
+        // This would need to be batched with the first one to work see: https://github.com/ecadlabs/taquito/issues/177
+        // See issue: https://gitlab.com/tezos/tezos/issues/36
+        await Tezos.contract.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2.1, counter: op.counter!.plus(1).toNumber() })
+        fail('Expected transfer to fail because the specified counter should be in the future')
+      } catch (ex) {
+        const error = JSON.parse(ex.body)[0]
+        expect(error.id).toMatch("counter_in_the_future")
+      }
+
+      // Operation worked
+      await op.confirmation()
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+
+      // Send transaction we new counter from RPC
+      const op2 = await Tezos.contract.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2.1 })
+      await op2.confirmation()
+      done();
+    })
+
     it('Transfer and wait 2 confirmations', async (done) => {
       const op = await Tezos.contract.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
       await op.confirmation()

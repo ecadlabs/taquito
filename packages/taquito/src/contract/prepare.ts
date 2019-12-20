@@ -24,6 +24,7 @@ export const createOriginationOperation = async (
     fee = DEFAULT_FEE.ORIGINATION,
     gasLimit = DEFAULT_GAS_LIMIT.ORIGINATION,
     storageLimit = DEFAULT_STORAGE_LIMIT.ORIGINATION,
+    counter,
   }: OriginateParams,
   publicKeyHash: string
 ) => {
@@ -59,6 +60,7 @@ export const createOriginationOperation = async (
     spendable,
     delegatable,
     script,
+    counter: typeof counter !== 'undefined' ? String(counter) : counter,
   };
 
   if (delegate) {
@@ -76,6 +78,7 @@ export const createTransferOperation = async ({
   storageLimit = DEFAULT_STORAGE_LIMIT.TRANSFER,
   mutez = false,
   rawParam = false,
+  counter,
 }: TransferParams) => {
   const operation: RPCTransferOperation = {
     kind: 'transaction',
@@ -84,6 +87,7 @@ export const createTransferOperation = async ({
     storage_limit: storageLimit,
     amount: mutez ? amount.toString() : format('tz', 'mutez', amount).toString(),
     destination: to,
+    counter: typeof counter !== 'undefined' ? String(counter) : counter,
   };
 
   if (parameter) {
@@ -102,6 +106,7 @@ export const createSetDelegateOperation = async ({
   fee = DEFAULT_FEE.DELEGATION,
   gasLimit = DEFAULT_GAS_LIMIT.DELEGATION,
   storageLimit = DEFAULT_STORAGE_LIMIT.DELEGATION,
+  counter,
 }: DelegateParams) => {
   const operation: RPCDelegateOperation = {
     kind: 'delegation',
@@ -110,6 +115,7 @@ export const createSetDelegateOperation = async ({
     gas_limit: gasLimit,
     storage_limit: storageLimit,
     delegate,
+    counter: typeof counter !== 'undefined' ? String(counter) : counter,
   };
   return operation;
 };
@@ -119,6 +125,7 @@ export const createRegisterDelegateOperation = async (
     fee = DEFAULT_FEE.DELEGATION,
     gasLimit = DEFAULT_GAS_LIMIT.DELEGATION,
     storageLimit = DEFAULT_STORAGE_LIMIT.DELEGATION,
+    counter,
   }: RegisterDelegateParams,
   source: string
 ) => {
@@ -128,5 +135,6 @@ export const createRegisterDelegateOperation = async (
     gas_limit: gasLimit,
     storage_limit: storageLimit,
     delegate: source,
+    counter: typeof counter !== 'undefined' ? String(counter) : counter,
   } as RPCDelegateOperation;
 };
