@@ -1,0 +1,53 @@
+.section {
+  padding: 72px 0;
+}
+
+.banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  background: var(--ifm-color-primary);
+  color: var(--ifm-color-primary-lightest);
+  font-size: 2em;
+  text-align: center;
+}
+
+.brandLogo {
+  max-width: 425px;
+  width: 80%;
+}
+
+.tagline {
+  margin: 0.7em 0 1.3em;
+}
+
+.quickStartButton {
+  border: 1px solid var(--ifm-color-primary-lightest);
+  display: inline-block;
+  line-height: 1.2em;
+  text-decoration: none !important;
+  text-transform: uppercase;
+  transition: background 0.3s, color 0.3s;
+  border-radius: 8px;
+  border-width: 2px;
+  color: var(--ifm-color-primary-lightest);
+  font-size: 24px;
+  font-weight: bold;
+  padding: 18px 36px;
+}
+
+.quickStartButton:hover {
+  background: var(--ifm-color-primary-lightest);
+}
+
+.bestPractices {
+  background-color: #2b3137;
+  color: var(--ifm-color-primary-lightest);
+}
+
+.centerVerticaly {
+  display: flex;
+  align-items: center;
+}
