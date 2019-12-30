@@ -13,7 +13,12 @@ import BigNumber from 'bignumber.js';
 import { Context } from '../../src/context';
 import { LegacyContractMethod, ContractMethod } from '../../src/contract/contract';
 import { Estimate } from '../../src/contract/estimate';
-import { Protocols } from '../../src/constants';
+import {
+  Protocols,
+  DEFAULT_STORAGE_LIMIT,
+  DEFAULT_FEE,
+  DEFAULT_GAS_LIMIT,
+} from '../../src/constants';
 import { InvalidDelegationSource } from '../../src/contract/errors';
 
 /**
@@ -51,12 +56,12 @@ describe('RpcContractProvider test', () => {
 
   const revealOp = (source: string) => ({
     counter: '1',
-    fee: '1420',
-    gas_limit: '10600',
+    fee: String(DEFAULT_FEE.REVEAL),
+    gas_limit: String(DEFAULT_GAS_LIMIT.REVEAL),
     kind: 'reveal',
     public_key: 'test_pub_key',
     source,
-    storage_limit: '300',
+    storage_limit: String(DEFAULT_STORAGE_LIMIT.REVEAL),
   });
 
   beforeEach(() => {
