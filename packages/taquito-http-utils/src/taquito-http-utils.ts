@@ -1,7 +1,9 @@
 import { STATUS_CODE } from './status_code';
 
+// tslint:disable: strict-type-predicates
 const isNode =
   typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
+// tslint:enable: strict-type-predicates
 
 const XMLHttpRequestCTOR = isNode ? require('xhr2-cookies').XMLHttpRequest : XMLHttpRequest;
 
