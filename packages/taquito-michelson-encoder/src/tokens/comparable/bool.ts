@@ -17,7 +17,7 @@ export class BoolToken extends Token {
 
   public Encode(args: any[]): any {
     const val = args.pop();
-    return val ? 'true' : 'false';
+    return { prim: val ? 'True' : 'False' };
   }
 
   public EncodeObject(val: any) {
