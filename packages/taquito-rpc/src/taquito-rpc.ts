@@ -183,29 +183,6 @@ export class RpcClient {
    * @param address contract address from which we want to retrieve the manager
    * @param options contains generic configuration for rpc calls
    *
-   * @deprecated Remove in 005
-   *
-   * @description Access the manager of a contract.
-   *
-   * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-contracts-contract-id-manager
-   */
-  async getManager(
-    address: string,
-    { block }: { block: string } = defaultRPCOptions
-  ): Promise<ManagerResponse> {
-    return this.httpBackend.createRequest<ManagerResponse>({
-      url: this.createURL(
-        `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/manager`
-      ),
-      method: 'GET',
-    });
-  }
-
-  /**
-   *
-   * @param address contract address from which we want to retrieve the manager
-   * @param options contains generic configuration for rpc calls
-   *
    * @description Access the manager key of a contract.
    *
    * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-contracts-contract-id-manager-key

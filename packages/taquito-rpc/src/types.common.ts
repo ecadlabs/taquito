@@ -54,14 +54,11 @@ export interface ConstructedOperation {
   storage_limit: string;
   parameters: string;
   balance: string;
-  spendable: boolean;
-  delegatable: boolean;
   delegate: string;
   amount: string;
   destination: string;
   public_key: string;
   script: { code: string; storage: string };
-  manager_pubkey: string;
 }
 
 export interface OperationObject {
@@ -124,10 +121,7 @@ export interface InternalOperationResult {
   destination?: string;
   parameters?: MichelsonV1Expression;
   public_key?: string;
-  manager_pubkey?: string;
   balance?: string;
-  spendable?: boolean;
-  delegatable?: boolean;
   delegate?: string;
   script?: ScriptedContracts;
   result: InternalOperationResultEnum;

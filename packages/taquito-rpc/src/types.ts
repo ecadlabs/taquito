@@ -1,13 +1,5 @@
 import BigNumber from 'bignumber.js';
 import {
-  BlockMetadata004,
-  ConstantsResponse004,
-  ContractResponse004,
-  EntrypointsResponse004,
-  OperationContentsAndResultOrigination004,
-  RPCRunOperationParam004,
-} from './types.004';
-import {
   BlockMetadata005,
   ConstantsResponse005,
   ContractResponse005,
@@ -36,7 +28,7 @@ export type DelegateResponse = string | null;
 
 export type OperationHash = string;
 
-export type RPCRunOperationParam = RPCRunOperationParam004 | RPCRunOperationParam005;
+export type RPCRunOperationParam = RPCRunOperationParam005;
 
 export interface DelegatesResponse {
   balance: BigNumber;
@@ -58,9 +50,9 @@ interface Frozenbalancebycycle {
 
 export type BigMapKey = { key: { [key: string]: string }; type: { prim: string } };
 
-export type ContractResponse = ContractResponse004 | ContractResponse005;
+export type ContractResponse = ContractResponse005;
 
-export type ConstantsResponse = ConstantsResponse004 | ConstantsResponse005;
+export type ConstantsResponse = ConstantsResponse005;
 
 // BlockResponse interface
 // header:
@@ -167,10 +159,7 @@ export interface OperationContentsOrigination {
   counter: string;
   gas_limit: string;
   storage_limit: string;
-  manager_pubkey: string;
   balance: string;
-  spendable?: boolean;
-  delegatable?: boolean;
   delegate?: string;
   script?: ScriptedContracts;
 }
@@ -312,9 +301,7 @@ export interface OperationContentsAndResultDelegation {
   metadata: OperationContentsAndResultMetadataDelegation;
 }
 
-export type OperationContentsAndResultOrigination =
-  | OperationContentsAndResultOrigination004
-  | OperationContentsAndResultOrigination005;
+export type OperationContentsAndResultOrigination = OperationContentsAndResultOrigination005;
 
 export type OperationContentsAndResult =
   | OperationContentsAndResultEndorsement
@@ -340,7 +327,7 @@ export interface OperationEntry {
   signature?: string;
 }
 
-export type BlockMetadata = BlockMetadata004 | BlockMetadata005;
+export type BlockMetadata = BlockMetadata005;
 
 export interface BlockResponse {
   protocol: string;
@@ -477,6 +464,6 @@ export type PreapplyResponse = {
   contents: OperationContentsAndResult[];
 };
 
-export type EntrypointsResponse = EntrypointsResponse004 | EntrypointsResponse005;
+export type EntrypointsResponse = EntrypointsResponse005;
 
 export type ForgeOperationsParams = Pick<OperationObject, 'branch' | 'contents'>;

@@ -22,9 +22,6 @@ export type OriginateParamsBase = {
   fee?: number;
   gasLimit?: number;
   storageLimit?: number;
-  // Proto 004
-  spendable?: boolean;
-  delegatable?: boolean;
 };
 
 /**
@@ -51,9 +48,6 @@ export interface RPCOriginationOperation {
   gas_limit: number;
   storage_limit: number;
   balance: string;
-  manager_pubkey: string;
-  spendable: boolean;
-  delegatable: boolean;
   delegate?: string;
   script: {
     code: any;

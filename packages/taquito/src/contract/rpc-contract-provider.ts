@@ -1,31 +1,29 @@
 import { Schema } from '@taquito/michelson-encoder';
 import { ScriptResponse } from '@taquito/rpc';
-import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT, protocols } from '../constants';
+import { encodeExpr } from '@taquito/utils';
+import { protocols } from '../constants';
 import { Context } from '../context';
+import { DelegateOperation } from '../operations/delegate-operation';
 import { OperationEmitter } from '../operations/operation-emitter';
-import { Operation } from '../operations/operations';
 import { OriginationOperation } from '../operations/origination-operation';
+import { TransactionOperation } from '../operations/transaction-operation';
 import {
   DelegateParams,
   OriginateParams,
-  RPCDelegateOperation,
-  TransferParams,
   RegisterDelegateParams,
+  TransferParams,
 } from '../operations/types';
 import { Contract } from './contract';
+import { InvalidDelegationSource } from './errors';
 import { Estimate } from './estimate';
 import { ContractProvider, ContractSchema, EstimationProvider } from './interface';
 import {
   createOriginationOperation,
-  createTransferOperation,
-  createSetDelegateOperation,
   createRegisterDelegateOperation,
+  createSetDelegateOperation,
+  createTransferOperation,
 } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
-import { encodeExpr } from '@taquito/utils';
-import { TransactionOperation } from '../operations/transaction-operation';
-import { DelegateOperation } from '../operations/delegate-operation';
-import { InvalidDelegationSource } from './errors';
 
 export class RpcContractProvider extends OperationEmitter implements ContractProvider {
   constructor(context: Context, private estimator: EstimationProvider) {
@@ -155,13 +153,10 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
     const estimate = await this.estimate(params, this.estimator.originate.bind(this.estimator));
 
     const publicKeyHash = await this.signer.publicKeyHash();
-    const operation = await createOriginationOperation(
-      {
-        ...params,
-        ...estimate,
-      },
-      publicKeyHash
-    );
+    const operation = await createOriginationOperation({
+      ...params,
+      ...estimate,
+    });
     const preparedOrigination = await this.prepareOperation({ operation, source: publicKeyHash });
     const forgedOrigination = await this.forge(preparedOrigination);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(forgedOrigination);
@@ -178,7 +173,7 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
    */
   async setDelegate(params: DelegateParams) {
     // Since babylon delegation source cannot smart contract
-    if ((await this.context.isAnyProtocolActive(protocols['005'])) && /kt1/i.test(params.source)) {
+    if (/kt1/i.test(params.source)) {
       throw new InvalidDelegationSource(params.source);
     }
 
@@ -241,14 +236,8 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
   }
 
   async at(address: string): Promise<Contract> {
-    // We need to check if Proto5 is activated to pick the right smart contract abstraction
-    if (await this.context.isAnyProtocolActive(protocols['005'])) {
-      const script = await this.rpc.getScript(address);
-      const entrypoints = await this.rpc.getEntrypoints(address);
-      return new Contract(address, script, this, entrypoints);
-    } else {
-      const script = await this.rpc.getScript(address);
-      return new Contract(address, script, this);
-    }
+    const script = await this.rpc.getScript(address);
+    const entrypoints = await this.rpc.getEntrypoints(address);
+    return new Contract(address, script, this, entrypoints);
   }
 }
