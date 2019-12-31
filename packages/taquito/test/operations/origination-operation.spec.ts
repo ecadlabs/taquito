@@ -15,10 +15,7 @@ describe('Origination operation', () => {
       counter: '1121110',
       gas_limit: '90000',
       storage_limit: '2000',
-      manager_pubkey: 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
       balance: '1000000',
-      spendable: false,
-      delegatable: false,
       script: {},
       metadata: {
         balance_updates: [
