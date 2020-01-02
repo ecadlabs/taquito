@@ -11,7 +11,7 @@ import {
 } from './data';
 import BigNumber from 'bignumber.js';
 import { Context } from '../../src/context';
-import { LegacyContractMethod, ContractMethod } from '../../src/contract/contract';
+import { ContractMethod } from '../../src/contract/contract';
 import { Estimate } from '../../src/contract/estimate';
 import {
   Protocols,
@@ -39,6 +39,7 @@ describe('RpcContractProvider test', () => {
     forgeOperations: jest.Mock<any, any>;
     injectOperation: jest.Mock<any, any>;
     preapplyOperations: jest.Mock<any, any>;
+    getChainId: jest.Mock<any, any>;
   };
 
   let mockSigner: {
@@ -78,6 +79,7 @@ describe('RpcContractProvider test', () => {
       forgeOperations: jest.fn(),
       injectOperation: jest.fn(),
       preapplyOperations: jest.fn(),
+      getChainId: jest.fn(),
     };
 
     mockSigner = {
@@ -113,6 +115,7 @@ describe('RpcContractProvider test', () => {
     mockSigner.publicKey.mockResolvedValue('test_pub_key');
     mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
     mockRpcClient.preapplyOperations.mockResolvedValue([]);
+    mockRpcClient.getChainId.mockResolvedValue('chain-id');
   });
 
   describe('getStorage', () => {
@@ -174,12 +177,10 @@ describe('RpcContractProvider test', () => {
             {
               balance: '200000000',
               counter: '2',
-              delegatable: false,
               delegate: 'test_delegate',
               fee: '10000',
               gas_limit: '10600',
               kind: 'origination',
-              manager_pubkey: 'test_pub_key_hash',
               script: {
                 code: miSample,
                 storage: {
@@ -189,7 +190,6 @@ describe('RpcContractProvider test', () => {
               },
               source: 'test_pub_key_hash',
               storage_limit: '257',
-              spendable: false,
             },
           ],
           protocol: 'test_proto',
@@ -219,12 +219,10 @@ describe('RpcContractProvider test', () => {
             {
               balance: '200000000',
               counter: '2',
-              delegatable: false,
               delegate: 'test_delegate',
               fee: estimate.suggestedFeeMutez.toString(),
               gas_limit: estimate.gasLimit.toString(),
               kind: 'origination',
-              manager_pubkey: 'test_pub_key_hash',
               script: {
                 code: miSample,
                 storage: {
@@ -234,7 +232,6 @@ describe('RpcContractProvider test', () => {
               },
               source: 'test_pub_key_hash',
               storage_limit: estimate.storageLimit.toString(),
-              spendable: false,
             },
           ],
           protocol: 'test_proto',
@@ -264,19 +261,16 @@ describe('RpcContractProvider test', () => {
             {
               balance: '200000000',
               counter: '2',
-              delegatable: false,
               delegate: 'test_delegate',
               fee: '10000',
               gas_limit: '10600',
               kind: 'origination',
-              manager_pubkey: 'test_pub_key_hash',
               script: {
                 code: ligoSample,
                 storage: { int: '0' },
               },
               source: 'test_pub_key_hash',
               storage_limit: '257',
-              spendable: false,
             },
           ],
           protocol: 'test_proto',
@@ -284,51 +278,6 @@ describe('RpcContractProvider test', () => {
         },
         opbytes: 'test',
       });
-      done();
-    });
-
-    it('should not alter code and init object when they are array and object', async done => {
-      mockRpcClient.getScript.mockResolvedValue({ code: ligoSample, storage: { int: '0' } });
-      mockRpcClient.injectOperation.mockResolvedValue('test');
-      mockRpcClient.preapplyOperations.mockResolvedValue([
-        {
-          contents: [
-            {
-              hash: 'test',
-              kind: 'origination',
-              metadata: { operation_result: { originated_contracts: ['test'] } },
-            },
-          ],
-        },
-      ]);
-      mockRpcClient.getBlock.mockResolvedValue({
-        operations: [
-          [
-            {
-              hash: 'test',
-              kind: 'origination',
-              metadata: { operation_result: { originated_contracts: ['test'] } },
-            },
-          ],
-          [],
-          [],
-          [],
-        ],
-        header: {
-          level: 0,
-        },
-      });
-      const result = await rpcContractProvider.originate({
-        delegate: 'test_delegate',
-        balance: '200',
-        code: ligoSample,
-        init: { int: '0' },
-        fee: 10000,
-        gasLimit: 10600,
-        storageLimit: 257,
-      });
-      const contract = await result.contract();
-      expect(contract.script).toEqual({ code: ligoSample, storage: { int: '0' } });
       done();
     });
   });
@@ -531,41 +480,6 @@ describe('RpcContractProvider test', () => {
       expect(error).toBeInstanceOf(InvalidDelegationSource);
       done();
     });
-
-    it('should accept KT1 address in athens', async done => {
-      const estimate = new Estimate(1000, 1000, 180);
-      mockEstimate.setDelegate.mockResolvedValue(estimate);
-      mockRpcClient.getBlockMetadata.mockResolvedValue({
-        next_protocol: Protocols.Pt24m4xi,
-      });
-
-      const result = await rpcContractProvider.setDelegate({
-        source: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK',
-        delegate: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
-      });
-      expect(result.raw).toEqual({
-        counter: 0,
-        opOb: {
-          branch: 'test',
-          contents: [
-            revealOp('test_pub_key_hash'),
-            {
-              delegate: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
-              counter: '2',
-              fee: '490',
-              gas_limit: '1100',
-              kind: 'delegation',
-              source: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK',
-              storage_limit: '1000',
-            },
-          ],
-          protocol: 'Pt24m4xiPbLDhVgVfABUjirbmda3yohdN82Sp9FeuAXJ4eV9otd',
-          signature: 'test_sig',
-        },
-        opbytes: 'test',
-      });
-      done();
-    });
   });
 
   describe('registerDelegate', () => {
@@ -599,24 +513,7 @@ describe('RpcContractProvider test', () => {
   });
 
   describe('at', () => {
-    it('should return legacy contract method for proto004', async done => {
-      mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
-      mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
-      mockRpcClient.preapplyOperations.mockResolvedValue([]);
-      mockRpcClient.getScript.mockResolvedValue({
-        code: tokenCode,
-        storage: tokenInit,
-      });
-      mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
-      mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
-      mockSigner.publicKey.mockResolvedValue('test_pub_key');
-      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
-      const result = await rpcContractProvider.at('test');
-      expect(result.methods.mint('test', 100)).toBeInstanceOf(LegacyContractMethod);
-      done();
-    });
-
-    it('should return contract method for proto005', async done => {
+    it('should return contract method', async done => {
       mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
       mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
       mockRpcClient.getEntrypoints.mockResolvedValue({

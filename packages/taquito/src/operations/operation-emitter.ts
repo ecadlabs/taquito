@@ -1,19 +1,12 @@
 import {
   BlockHeaderResponse,
-  BlockMetadata,
   ConstructedOperation,
   ManagerKeyResponse,
   OperationContentsAndResult,
   RpcClient,
   RPCRunOperationParam,
 } from '@taquito/rpc';
-import {
-  DEFAULT_FEE,
-  DEFAULT_GAS_LIMIT,
-  DEFAULT_STORAGE_LIMIT,
-  protocols,
-  Protocols,
-} from '../constants';
+import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT, Protocols } from '../constants';
 import { Context } from '../context';
 import {
   ForgedBytes,
@@ -136,8 +129,6 @@ export abstract class OperationEmitter {
       counters[publicKeyHash] = counter;
     }
 
-    const proto005 = await this.context.isAnyProtocolActive(protocols['005']);
-
     const constructOps = (cOps: RPCOperation[]): ConstructedOperation[] =>
       // tslint:disable strict-type-predicates
       cOps.map((op: RPCOperation) => {
@@ -171,20 +162,15 @@ export abstract class OperationEmitter {
         }
 
         if (op.kind === 'transaction') {
-          if (proto005 && constructedOp.source.toLowerCase().startsWith('kt1')) {
-            throw new Error(`KT1 addresses are not supported as source in ${Protocols.PsBabyM1}`);
+          if (constructedOp.source.toLowerCase().startsWith('kt1')) {
+            throw new Error(
+              `KT1 addresses are not supported as source since ${Protocols.PsBabyM1}`
+            );
           }
 
           if (typeof op.amount !== 'undefined') constructedOp.amount = `${constructedOp.amount}`;
         }
         // tslint:enable strict-type-predicates
-
-        // Protocol 005 remove these from operations content
-        if (proto005) {
-          delete constructedOp.manager_pubkey;
-          delete constructedOp.spendable;
-          delete constructedOp.delegatable;
-        }
 
         return constructedOp;
       });

@@ -12,21 +12,16 @@ import { ml2mic, sexp2mic } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { format } from '../format';
 
-export const createOriginationOperation = async (
-  {
-    code,
-    init,
-    balance = '0',
-    spendable = false,
-    delegatable = false,
-    delegate,
-    storage,
-    fee = DEFAULT_FEE.ORIGINATION,
-    gasLimit = DEFAULT_GAS_LIMIT.ORIGINATION,
-    storageLimit = DEFAULT_STORAGE_LIMIT.ORIGINATION,
-  }: OriginateParams,
-  publicKeyHash: string
-) => {
+export const createOriginationOperation = async ({
+  code,
+  init,
+  balance = '0',
+  delegate,
+  storage,
+  fee = DEFAULT_FEE.ORIGINATION,
+  gasLimit = DEFAULT_GAS_LIMIT.ORIGINATION,
+  storageLimit = DEFAULT_STORAGE_LIMIT.ORIGINATION,
+}: OriginateParams) => {
   // tslint:disable-next-line: strict-type-predicates
   if (storage !== undefined && init !== undefined) {
     throw new Error(
@@ -55,9 +50,6 @@ export const createOriginationOperation = async (
     gas_limit: gasLimit,
     storage_limit: storageLimit,
     balance: format('tz', 'mutez', balance).toString(),
-    manager_pubkey: publicKeyHash,
-    spendable,
-    delegatable,
     script,
   };
 
