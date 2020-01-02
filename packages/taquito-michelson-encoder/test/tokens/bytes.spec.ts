@@ -1,6 +1,6 @@
 import { BytesToken, BytesValidationError } from '../../src/tokens/comparable/bytes';
 
-describe('Byt5es token', () => {
+describe('Bytes token', () => {
   let token: BytesToken;
   beforeEach(() => {
     token = new BytesToken({ prim: 'bytes', args: [], annots: [] }, 0, null as any);
