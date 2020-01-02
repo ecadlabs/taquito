@@ -6,7 +6,7 @@ describe('Contract with unit encoding', () => {
     const schema = new Schema(code[1].args[0] as any);
     expect(
       schema.Encode({
-        owner: '123',
+        owner: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         totalSupply: '100',
         accounts: {},
       })
@@ -18,7 +18,7 @@ describe('Contract with unit encoding', () => {
           args: [
             [],
             {
-              string: '123',
+              string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
             },
           ],
         },
@@ -33,10 +33,10 @@ describe('Contract with unit encoding', () => {
     const schema = new Schema(code[1].args[0] as any);
     expect(
       schema.Encode({
-        owner: '123',
+        owner: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         totalSupply: '100',
         accounts: {
-          '123': {
+          tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn: {
             balance: '0',
             allowances: {},
           },
@@ -52,7 +52,7 @@ describe('Contract with unit encoding', () => {
               {
                 prim: 'Elt',
                 args: [
-                  { string: '123' },
+                  { string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn' },
                   {
                     prim: 'Pair',
                     args: [[], { int: '0' }],
@@ -61,7 +61,7 @@ describe('Contract with unit encoding', () => {
               },
             ],
             {
-              string: '123',
+              string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
             },
           ],
         },

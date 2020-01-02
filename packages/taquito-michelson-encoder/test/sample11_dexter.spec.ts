@@ -284,17 +284,24 @@ describe('Exchange contract test', () => {
 
   it('Encode parameter properly func 0', () => {
     const schema = new ParameterSchema(paramsToken);
-    expect(schema.Encode('0', 'address1', 'address2', '1')).toEqual({
+    expect(
+      schema.Encode(
+        '0',
+        'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+        'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+        '1'
+      )
+    ).toEqual({
       args: [
         {
           args: [
             {
-              string: 'address1',
+              string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
             },
             {
               args: [
                 {
-                  string: 'address2',
+                  string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
                 },
                 {
                   int: '1',
@@ -312,10 +319,10 @@ describe('Exchange contract test', () => {
 
   it('Encode parameter properly func 1', () => {
     const schema = new ParameterSchema(paramsToken);
-    expect(schema.Encode('1', 'address1')).toEqual({
+    expect(schema.Encode('1', 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn')).toEqual({
       args: [
         {
-          string: 'address1',
+          string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         },
       ],
       prim: 'Right',

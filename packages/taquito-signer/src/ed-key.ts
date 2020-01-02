@@ -1,5 +1,5 @@
 import sodium from 'libsodium-wrappers';
-import { b58cencode, b58cdecode, prefix, buf2hex } from '@taquito/utils';
+import { b58cencode, b58cdecode, prefix, buf2hex, Prefix, isValidPrefix } from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
 
 /**
@@ -17,7 +17,12 @@ export class Tz1 {
    * @param decrypt Decrypt function
    */
   constructor(private key: string, encrypted: boolean, decrypt: (k: any) => any) {
-    this._key = decrypt(b58cdecode(this.key, prefix[key.substr(0, encrypted ? 5 : 4)]));
+    const keyPrefix = key.substr(0, encrypted ? 5 : 4);
+    if (!isValidPrefix(keyPrefix)) {
+      throw new Error('key contains invalid prefix');
+    }
+
+    this._key = decrypt(b58cdecode(this.key, prefix[keyPrefix]));
     this._publicKey = this._key.slice(32);
 
     if (!this._key) {

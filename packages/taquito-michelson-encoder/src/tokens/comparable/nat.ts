@@ -1,5 +1,12 @@
-import { Token, TokenFactory, ComparableToken } from '../token';
+import { Token, TokenFactory, ComparableToken, TokenValidationError } from '../token';
 import BigNumber from 'bignumber.js';
+
+export class NatValidationError extends TokenValidationError {
+  name: string = 'NatValidationError';
+  constructor(public value: any, public token: NatToken, message: string) {
+    super(value, token, message);
+  }
+}
 
 export class NatToken extends Token implements ComparableToken {
   static prim = 'nat';
@@ -18,10 +25,32 @@ export class NatToken extends Token implements ComparableToken {
 
   public Encode(args: any[]): any {
     const val = args.pop();
+
+    const err = this.isValid(val);
+    if (err) {
+      throw err;
+    }
+
     return { int: String(val).toString() };
   }
 
+  private isValid(val: any): NatValidationError | null {
+    const bigNumber = new BigNumber(val);
+    if (bigNumber.isNaN()) {
+      return new NatValidationError(val, this, `Value is not a number: ${val}`);
+    } else if (bigNumber.isNegative()) {
+      return new NatValidationError(val, this, `Value cannot be negative: ${val}`);
+    } else {
+      return null;
+    }
+  }
+
   public EncodeObject(val: any): any {
+    const err = this.isValid(val);
+    if (err) {
+      throw err;
+    }
+
     return { int: String(val).toString() };
   }
 
