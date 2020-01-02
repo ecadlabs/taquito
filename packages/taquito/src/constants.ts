@@ -13,8 +13,8 @@ export enum DEFAULT_FEE {
 export enum DEFAULT_STORAGE_LIMIT {
   DELEGATION = 0,
   ORIGINATION = 257,
-  TRANSFER = 300,
-  REVEAL = 300,
+  TRANSFER = 257,
+  REVEAL = 0,
 }
 
 export enum Protocols {
