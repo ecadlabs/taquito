@@ -1,5 +1,16 @@
 import { MichelsonV1Expression } from '@taquito/rpc';
 
+export abstract class TokenValidationError implements Error {
+  name: string = 'ValidationError';
+  public message: string;
+
+  constructor(public value: any, public token: Token, baseMessage: string) {
+    const annot = this.token.annot();
+    const annotText = annot ? `[${annot}] ` : '';
+    this.message = `${annotText}${baseMessage}`;
+  }
+}
+
 export type TokenFactory = (val: any, idx: number) => Token;
 
 export interface Semantic {
@@ -25,10 +36,10 @@ export abstract class Token {
   ) {}
 
   annot() {
-    return (Array.isArray(this.val.annots) ? this.val.annots[0] : String(this.idx)).replace(
-      /(%|\:)(_Liq_entry_)?/,
-      ''
-    );
+    return (Array.isArray(this.val.annots) && this.val.annots.length > 0
+      ? this.val.annots[0]
+      : String(this.idx)
+    ).replace(/(%|\:)(_Liq_entry_)?/, '');
   }
 
   hasAnnotations() {

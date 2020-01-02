@@ -18,10 +18,10 @@ describe('Schema test', () => {
                       {
                         args: [
                           {
-                            int: 'atest',
+                            int: '200',
                           },
                           {
-                            string: 'btest',
+                            string: 'tz1Zwusa1tLQHRyB1KL1p44KjgDbi5KjNKay',
                           },
                         ],
                         prim: 'Pair',
@@ -29,17 +29,17 @@ describe('Schema test', () => {
                       {
                         args: [
                           {
-                            int: 'test',
+                            int: '201',
                           },
                           {
-                            string: 'test',
+                            string: 'tz1Zwusa1tLQHRyB1KL1p44KjgDbi5KjNKay',
                           },
                         ],
                         prim: 'Pair',
                       },
                     ],
                     {
-                      string: 'sig',
+                      string: 'tz1Zwusa1tLQHRyB1KL1p44KjgDbi5KjNKay',
                     },
                   ],
                   prim: 'Pair',
@@ -47,10 +47,11 @@ describe('Schema test', () => {
                 {
                   args: [
                     {
-                      string: 'test',
+                      string: 'edpkuLxx9PQD8fZ45eUzrK3BhfDZJHhBuK4Zi49DcEGANwd2rpX82t',
                     },
                     {
-                      string: 'test',
+                      string:
+                        'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg',
                     },
                   ],
                   prim: 'Pair',
@@ -67,12 +68,12 @@ describe('Schema test', () => {
       schema.Encode(
         'transfer',
         [
-          { amount: 'atest', beneficiary: 'btest' },
-          { amount: 'test', beneficiary: 'test' },
+          { amount: 200, beneficiary: 'tz1Zwusa1tLQHRyB1KL1p44KjgDbi5KjNKay' },
+          { amount: 201, beneficiary: 'tz1Zwusa1tLQHRyB1KL1p44KjgDbi5KjNKay' },
         ],
-        'sig',
-        'test',
-        'test'
+        'tz1Zwusa1tLQHRyB1KL1p44KjgDbi5KjNKay',
+        'edpkuLxx9PQD8fZ45eUzrK3BhfDZJHhBuK4Zi49DcEGANwd2rpX82t',
+        'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg'
       )
     );
     expect(schema.isMultipleEntryPoint).toBeTruthy();

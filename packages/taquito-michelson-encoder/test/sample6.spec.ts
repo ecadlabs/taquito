@@ -159,17 +159,24 @@ describe('Schema test', () => {
   it('Should encode parameter properly', () => {
     // Taken from op2FiAKSRKJAEnEsm4LAfMNYrAKApkMomJWb3VJf7AstXcWAQ7e on mainnet
     const schema = new ParameterSchema(params6);
-    expect(schema.Encode('Pour', 'edsig', 'amount')).toEqual({
+    expect(
+      schema.Encode(
+        'Pour',
+        'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg',
+        200
+      )
+    ).toEqual({
       args: [
         {
           args: [
             {
               args: [
                 {
-                  string: 'edsig',
+                  string:
+                    'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg',
                 },
                 {
-                  int: 'amount',
+                  int: '200',
                 },
               ],
               prim: 'Pair',

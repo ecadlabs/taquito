@@ -1,5 +1,5 @@
 import sodium from 'libsodium-wrappers';
-import { b58cencode, b58cdecode, prefix, buf2hex } from '@taquito/utils';
+import { b58cencode, b58cdecode, prefix, buf2hex, Prefix, isValidPrefix } from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
 import elliptic from 'elliptic';
 
@@ -38,7 +38,12 @@ export class ECKey {
     encrypted: boolean,
     decrypt: (k: any) => any
   ) {
-    this._key = decrypt(b58cdecode(this.key, prefix[key.substr(0, encrypted ? 5 : 4)]));
+    const keyPrefix = key.substr(0, encrypted ? 5 : 4);
+    if (!isValidPrefix(keyPrefix)) {
+      throw new Error('key contains invalid prefix');
+    }
+
+    this._key = decrypt(b58cdecode(this.key, prefix[keyPrefix]));
     const keyPair = new elliptic.ec(this.curve).keyFromPrivate(this._key);
     const pref =
       keyPair
