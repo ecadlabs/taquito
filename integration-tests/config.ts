@@ -1,7 +1,7 @@
 import { TezosToolkit } from '@taquito/taquito'
 import fs from 'fs'
 
-const providers = (process.env['TEZOS_RPC_NODE'] && process.env['TEZOS_RPC_NODE'].split(',')) || ['https://api.tez.ie/rpc/babylonnet'];
+const providers = (process.env['TEZOS_RPC_NODE'] && process.env['TEZOS_RPC_NODE'].split(',')) || ['https://api.tez.ie/rpc/babylonnet', 'https://api.tez.ie/rpc/carthagenet'];
 
 const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE']
 
