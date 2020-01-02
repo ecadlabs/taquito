@@ -23,7 +23,6 @@ import {
   EntrypointsResponse,
   ForgeOperationsParams,
   ManagerKeyResponse,
-  ManagerResponse,
   OperationHash,
   PackDataParams,
   PackDataResponse,
@@ -40,7 +39,6 @@ import {
 import { castToBigNumber } from './utils/utils';
 
 export * from './types';
-export * from './types.common';
 
 const defaultRPC = 'https://mainnet.tezrpc.me';
 const defaultChain = 'main';
