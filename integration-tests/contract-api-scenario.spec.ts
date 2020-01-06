@@ -10,7 +10,7 @@ import { collection_code } from "./data/collection_contract";
 import { noAnnotCode, noAnnotInit } from "./data/token_without_annotation";
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT } from "@taquito/taquito";
 import { booleanCode } from "./data/boolean_parameter";
-
+import { failwithContractCode } from "./data/failwith"
 
 CONFIGS.forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
@@ -35,6 +35,27 @@ CONFIGS.forEach(({ lib, rpc, setup }) => {
       await op.confirmation()
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+      done();
+    });
+
+    it('Failwith contract', async (done) => {
+      const op = await Tezos.contract.originate({
+        balance: "1",
+        code: failwithContractCode,
+        storage: null
+      })
+      const contract = await op.contract()
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+      expect(op.status === 'applied');
+
+      try {
+        await contract.methods.main(null).send({ fee: 20000, gasLimit: 20000, storageLimit: 0 })
+      } catch ({ message }) {
+        const ex = JSON.parse(message);
+        expect(ex.error).toEqual('Operation Failed')
+        expect(ex.errors[1].id).toMatch('michelson_v1.script_rejected')
+      }
       done();
     });
 
