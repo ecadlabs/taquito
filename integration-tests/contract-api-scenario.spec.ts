@@ -53,8 +53,10 @@ CONFIGS.forEach(({ lib, rpc, setup }) => {
         await contract.methods.main(null).send({ fee: 20000, gasLimit: 20000, storageLimit: 0 })
       } catch ({ message }) {
         const ex = JSON.parse(message);
+
         expect(ex.error).toEqual('Operation Failed')
         expect(ex.errors[1].id).toMatch('michelson_v1.script_rejected')
+        expect(ex.errors[1].with).toEqual({ string: 'test' })
       }
       done();
     });
