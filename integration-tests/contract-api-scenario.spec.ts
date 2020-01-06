@@ -10,6 +10,7 @@ import { collection_code } from "./data/collection_contract";
 import { noAnnotCode, noAnnotInit } from "./data/token_without_annotation";
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT } from "@taquito/taquito";
 import { booleanCode } from "./data/boolean_parameter";
+import { unitContractCode } from "./data/unit";
 
 
 CONFIGS.forEach(({ lib, rpc, setup }) => {
@@ -35,6 +36,52 @@ CONFIGS.forEach(({ lib, rpc, setup }) => {
       await op.confirmation()
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+      done();
+    });
+
+    it('Simple unit contract null', async (done) => {
+      const op = await Tezos.contract.originate({
+        balance: "1",
+        code: unitContractCode,
+        storage: null
+      })
+      const contract = await op.contract()
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+      expect(op.status === 'applied');
+
+      expect(await contract.storage()).toEqual(null)
+      expect(await contract.storage()).not.toEqual(undefined)
+      done();
+    });
+
+    it('Simple unit contract with undefined storage should fail', async (done) => {
+      try {
+        await Tezos.contract.originate({
+          balance: "1",
+          code: unitContractCode,
+          storage: undefined
+        })
+        fail('Originating a unit contract with storage undefined should trow')
+      } catch (ex) {
+        expect(ex).toBeTruthy();
+      }
+      done();
+    });
+
+    it('Simple unit contract with init instead of storage', async (done) => {
+      const op = await Tezos.contract.originate({
+        balance: "1",
+        code: unitContractCode,
+        init: { prim: "Unit" }
+      })
+      const contract = await op.contract()
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+      expect(op.status === 'applied');
+
+      expect(await contract.storage()).toEqual(null)
+      expect(await contract.storage()).not.toEqual(undefined)
       done();
     });
 
