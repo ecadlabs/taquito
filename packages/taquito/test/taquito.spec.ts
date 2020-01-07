@@ -6,6 +6,7 @@ import { PollingSubscribeProvider } from '../src/subscribe/polling-provider';
 import { IndexerProvider } from '../src/query/indexer-provider';
 import { NoopSigner } from '../src/signer/noop';
 import { RpcClient } from '@taquito/rpc';
+import { HttpResponseError } from '@taquito/http-utils';
 
 describe('TezosToolkit test', () => {
   let mockRpcClient: any;
@@ -24,6 +25,7 @@ describe('TezosToolkit test', () => {
       forgeOperations: jest.fn(),
       injectOperation: jest.fn(),
       preapplyOperations: jest.fn(),
+      getCommitment: jest.fn(),
     };
 
     mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
@@ -125,12 +127,9 @@ describe('TezosToolkit test', () => {
     expect(toolkit.signer).toEqual({});
     await toolkit.importKey('anEmail', 'testPassword', 'some mnemonic', 'secret');
     expect(toolkit.signer).toBeInstanceOf(InMemorySigner);
-    expect(mockRpcClient.forgeOperations).toHaveBeenCalledWith({
-      branch: 'test',
-      contents: [
-        { kind: 'activate_account', pkh: 'tz1hY6N55Br4KrPahoyNUrvSSyaYz5yaRcRW', secret: 'secret' },
-      ],
-    });
+    expect(mockRpcClient.getCommitment).toHaveBeenCalledWith(
+      'btz1N1AMSm8XDbGTf173tQTWh5k9QJ5zDFPdw'
+    );
     expect(mockRpcClient.injectOperation).toHaveBeenCalled();
     expect(await toolkit.signer.publicKeyHash()).toEqual('tz1hY6N55Br4KrPahoyNUrvSSyaYz5yaRcRW');
     done();
@@ -138,7 +137,9 @@ describe('TezosToolkit test', () => {
 
   it('should use InMemorySigner and skip activate faucet account when called with already activated account', async done => {
     // Mock RPC error when activation is already done
-    mockRpcClient.forgeOperations.mockRejectedValue({ body: 'Invalid activation' });
+    mockRpcClient.getCommitment.mockRejectedValue(
+      new HttpResponseError('test', 404, 'Not found', '')
+    );
     // Mock fake operation hash
     mockRpcClient.injectOperation.mockResolvedValue('test');
     expect(toolkit.signer).toEqual({});

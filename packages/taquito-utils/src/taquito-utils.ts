@@ -85,6 +85,12 @@ export function encodePubKey(value: string) {
   return b58cencode(value.substring(2, 42), prefix.KT);
 }
 
+export function encodeBlindedPKH(secret: string, pkh: string) {
+  const buf = b58cdecode(pkh, prefix['tz1']);
+  const blakeHash = blake.blake2b(buf, hex2buf(secret), 20);
+  return b58cencode(blakeHash, prefix['btz1']);
+}
+
 export function encodeKey(value: string) {
   if (value[0] === '0') {
     const pref: { [key: string]: Uint8Array } = {

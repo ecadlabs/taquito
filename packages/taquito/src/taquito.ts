@@ -15,6 +15,8 @@ import { SubscribeProvider } from './subscribe/interface';
 import { PollingSubscribeProvider } from './subscribe/polling-provider';
 import { TzProvider } from './tz/interface';
 import { RpcTzProvider } from './tz/rpc-tz-provider';
+import { encodeBlindedPKH } from '@taquito/utils';
+import { HttpResponseError } from '@taquito/http-utils';
 
 export * from './query/interface';
 export * from './signer/interface';
@@ -166,6 +168,20 @@ export class TezosToolkit {
     return this._context.signer;
   }
 
+  private async isActivated(pkh: string, secret: string) {
+    try {
+      await this.rpc.getCommitment(encodeBlindedPKH(secret, pkh));
+      return false;
+    } catch (ex) {
+      console.log(ex instanceof HttpResponseError);
+      if (ex && ex.name === 'HttpResponse' && ex.status === 404) {
+        return true;
+      } else {
+        throw ex;
+      }
+    }
+  }
+
   /**
    *
    * @description Import a key to sign operation
@@ -195,16 +211,8 @@ export class TezosToolkit {
     if (privateKeyOrEmail && passphrase && mnemonic && secret) {
       const signer = InMemorySigner.fromFundraiser(privateKeyOrEmail, passphrase, mnemonic);
       const pkh = await signer.publicKeyHash();
-      let op;
-      try {
-        op = await this.tz.activate(pkh, secret);
-      } catch (ex) {
-        const isInvalidActivationError = ex && ex.body && /Invalid activation/.test(ex.body);
-        if (!isInvalidActivationError) {
-          throw ex;
-        }
-      }
-      if (op) {
+      if (!(await this.isActivated(pkh, secret))) {
+        const op = await this.tz.activate(pkh, secret);
         await op.confirmation();
       }
       this.setSignerProvider(signer);

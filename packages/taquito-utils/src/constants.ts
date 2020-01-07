@@ -1,4 +1,5 @@
 export enum Prefix {
+  BTZ1 = 'btz1',
   TZ1 = 'tz1',
   TZ2 = 'tz2',
   TZ3 = 'tz3',
@@ -38,6 +39,7 @@ export enum Prefix {
 }
 
 export const prefix = {
+  [Prefix.BTZ1]: new Uint8Array([1, 2, 49, 223]),
   [Prefix.TZ1]: new Uint8Array([6, 161, 159]),
   [Prefix.TZ2]: new Uint8Array([6, 161, 161]),
   [Prefix.TZ3]: new Uint8Array([6, 161, 164]),

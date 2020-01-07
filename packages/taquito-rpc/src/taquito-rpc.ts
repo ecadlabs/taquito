@@ -704,4 +704,20 @@ export class RpcClient {
 
     return { gas: formattedGas, ...rest };
   }
+
+  async getCommitments({ block }: RPCOptions = defaultRPCOptions) {
+    return this.httpBackend.createRequest<string[]>({
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/raw/json/commitments`),
+      method: 'GET',
+    });
+  }
+
+  async getCommitment(blindedPKH: string, { block }: RPCOptions = defaultRPCOptions) {
+    return this.httpBackend.createRequest<string[]>({
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/raw/json/commitments/${blindedPKH}`
+      ),
+      method: 'GET',
+    });
+  }
 }
