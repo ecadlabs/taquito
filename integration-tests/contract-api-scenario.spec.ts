@@ -13,7 +13,7 @@ import { booleanCode } from "./data/boolean_parameter";
 import { failwithContractCode } from "./data/failwith"
 import { badCode } from "./data/badCode";
 
-CONFIGS.forEach(({ lib, rpc, setup }) => {
+CONFIGS.forEach(({ lib, rpc, setup, knownBaker }) => {
   const Tezos = lib;
   describe(`Test contract api using: ${rpc}`, () => {
 
@@ -76,7 +76,7 @@ CONFIGS.forEach(({ lib, rpc, setup }) => {
     });
 
     it('Simple set delegate', async (done) => {
-      const delegate = 'tz1PirboZKFVqkfE45hVLpkpXaZtLk3mqC17'
+      const delegate = knownBaker
       const op = await Tezos.contract.setDelegate({
         delegate,
         source: await Tezos.signer.publicKeyHash(),
@@ -93,7 +93,7 @@ CONFIGS.forEach(({ lib, rpc, setup }) => {
     });
 
     it('Set delegate with automatic estimate', async (done) => {
-      const delegate = 'tz1PirboZKFVqkfE45hVLpkpXaZtLk3mqC17'
+      const delegate = knownBaker
       const op = await Tezos.contract.setDelegate({
         delegate,
         source: await Tezos.signer.publicKeyHash(),
