@@ -11,6 +11,7 @@ import { noAnnotCode, noAnnotInit } from "./data/token_without_annotation";
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT } from "@taquito/taquito";
 import { booleanCode } from "./data/boolean_parameter";
 import { failwithContractCode } from "./data/failwith"
+import { badCode } from "./data/badCode";
 
 CONFIGS.forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
@@ -38,6 +39,16 @@ CONFIGS.forEach(({ lib, rpc, setup }) => {
       done();
     });
 
+    it('Contract with bad code', async () => {
+      expect(Tezos.contract.originate({
+        balance: "1",
+        code: badCode,
+        init: { prim: "Unit" }
+      })).rejects.toMatchObject({
+        status: 400,
+      })
+    })
+
     it('Failwith contract', async (done) => {
       const op = await Tezos.contract.originate({
         balance: "1",
@@ -50,13 +61,16 @@ CONFIGS.forEach(({ lib, rpc, setup }) => {
       expect(op.status === 'applied');
 
       try {
-        await contract.methods.main(null).send({ fee: 20000, gasLimit: 20000, storageLimit: 0 })
-      } catch ({ message }) {
-        const ex = JSON.parse(message);
+        await contract.methods.main(null).send()
+      } catch (ex) {
+        expect(ex.message).toMatch('test')
+      }
 
-        expect(ex.error).toEqual('Operation Failed')
-        expect(ex.errors[1].id).toMatch('michelson_v1.script_rejected')
-        expect(ex.errors[1].with).toEqual({ string: 'test' })
+      try {
+        // Bypass estimation
+        await contract.methods.main(null).send({ fee: 20000, gasLimit: 20000, storageLimit: 0 })
+      } catch (ex) {
+        expect(ex.message).toMatch('test')
       }
       done();
     });

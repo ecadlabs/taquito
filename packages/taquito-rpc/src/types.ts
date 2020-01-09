@@ -523,7 +523,7 @@ export type InternalOperationResultEnum =
 export interface OperationResultDelegation {
   status: OperationResultStatusEnum;
   consumed_gas?: string;
-  errors?: any;
+  errors?: TezosGenericOperationError[];
 }
 
 export interface ContractBigMapDiffItem {
@@ -533,6 +533,11 @@ export interface ContractBigMapDiffItem {
 }
 
 export type ContractBigMapDiff = ContractBigMapDiffItem[];
+
+export interface TezosGenericOperationError {
+  kind: string;
+  id: string;
+}
 
 export interface OperationResultTransaction {
   status: OperationResultStatusEnum;
@@ -544,13 +549,13 @@ export interface OperationResultTransaction {
   storage_size?: string;
   paid_storage_size_diff?: string;
   allocated_destination_contract?: boolean;
-  errors?: any;
+  errors?: TezosGenericOperationError[];
 }
 
 export interface OperationResultReveal {
   status: OperationResultStatusEnum;
   consumed_gas?: string;
-  errors?: any;
+  errors?: TezosGenericOperationError[];
 }
 
 export interface InternalOperationResult {
@@ -588,7 +593,7 @@ export interface OperationResultOrigination {
   consumed_gas?: string;
   storage_size?: string;
   paid_storage_size_diff?: string;
-  errors?: any;
+  errors?: TezosGenericOperationError[];
 }
 
 export interface OperationContentsAndResultMetadataOrigination {

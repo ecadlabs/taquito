@@ -45,6 +45,13 @@ CONFIGS.forEach(({ lib, rpc, setup }) => {
       const transferToContractOp = await contract.methods.do(MANAGER_LAMBDA.transferToContract("KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK", 1)).send({ amount: 0 })
       await transferToContractOp.confirmation();
       expect(transferToContractOp.status).toEqual('applied')
+
+      try {
+        await contract.methods.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 50 * 1000000)).send({ amount: 0 })
+        fail('Should throw during transfer with amount higher than balance')
+      } catch (ex) {
+        expect(ex.message).toMatch('balance_too_low')
+      }
       done();
     })
   })

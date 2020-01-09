@@ -8,6 +8,7 @@ import {
 } from '@taquito/rpc';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT, Protocols } from '../constants';
 import { Context } from '../context';
+import { flattenErrors, TezosOperationError } from './operation-errors';
 import {
   ForgedBytes,
   PrepareOperationParams,
@@ -222,30 +223,23 @@ export abstract class OperationEmitter {
     forgedBytes.opOb.signature = signed.prefixSig;
 
     const opResponse: OperationContentsAndResult[] = [];
-    let errors: any[] = [];
-
     const results = await this.rpc.preapplyOperations([forgedBytes.opOb]);
 
     if (!Array.isArray(results)) {
-      throw new Error(`RPC Fail: ${JSON.stringify(results)}`);
+      throw new TezosPreapplyFailureError(results);
     }
+
     for (let i = 0; i < results.length; i++) {
       for (let j = 0; j < results[i].contents.length; j++) {
         opResponse.push(results[i].contents[j]);
-        const content = results[i].contents[j];
-        if (
-          'metadata' in content &&
-          typeof content.metadata.operation_result !== 'undefined' &&
-          content.metadata.operation_result.status === 'failed'
-        ) {
-          errors = errors.concat(content.metadata.operation_result.errors);
-        }
       }
     }
 
+    const errors = flattenErrors(results);
+
     if (errors.length) {
       // @ts-ignore
-      throw new Error(JSON.stringify({ error: 'Operation Failed', errors }));
+      throw new TezosOperationError(errors);
     }
 
     return {
@@ -255,4 +249,11 @@ export abstract class OperationEmitter {
       context: this.context.clone(),
     };
   }
+}
+
+export class TezosPreapplyFailureError implements Error {
+  name: string = 'TezosPreapplyFailureError';
+  message: string = 'Preapply returned an unexpected result';
+
+  constructor(public result: any) {}
 }
