@@ -8,7 +8,7 @@ import {
 } from '@taquito/rpc';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT, Protocols } from '../constants';
 import { Context } from '../context';
-import { flattenErrors, TezosOperationError } from './operation-errors';
+import { flattenErrors, TezosOperationError, TezosPreapplyFailureError } from './operation-errors';
 import {
   ForgedBytes,
   PrepareOperationParams,
@@ -37,7 +37,7 @@ export abstract class OperationEmitter {
     return this.context.signer;
   }
 
-  constructor(protected context: Context) {}
+  constructor(protected context: Context) { }
 
   private isSourceOp(
     op: RPCOperation
@@ -249,11 +249,4 @@ export abstract class OperationEmitter {
       context: this.context.clone(),
     };
   }
-}
-
-export class TezosPreapplyFailureError implements Error {
-  name: string = 'TezosPreapplyFailureError';
-  message: string = 'Preapply returned an unexpected result';
-
-  constructor(public result: any) {}
 }

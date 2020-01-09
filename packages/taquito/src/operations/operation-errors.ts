@@ -33,6 +33,13 @@ export class TezosOperationError implements Error {
   }
 }
 
+export class TezosPreapplyFailureError implements Error {
+  name: string = 'TezosPreapplyFailureError';
+  message: string = 'Preapply returned an unexpected result';
+
+  constructor(public result: any) { }
+}
+
 /***
  * @description Flatten all error from preapply response (including internal error)
  */
