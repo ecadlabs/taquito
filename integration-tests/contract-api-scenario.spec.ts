@@ -10,9 +10,10 @@ import { collection_code } from "./data/collection_contract";
 import { noAnnotCode, noAnnotInit } from "./data/token_without_annotation";
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT } from "@taquito/taquito";
 import { booleanCode } from "./data/boolean_parameter";
+import { failwithContractCode } from "./data/failwith"
+import { badCode } from "./data/badCode";
 
-
-CONFIGS.forEach(({ lib, rpc, setup }) => {
+CONFIGS.forEach(({ lib, rpc, setup, knownBaker }) => {
   const Tezos = lib;
   describe(`Test contract api using: ${rpc}`, () => {
 
@@ -38,8 +39,44 @@ CONFIGS.forEach(({ lib, rpc, setup }) => {
       done();
     });
 
+    it('Contract with bad code', async () => {
+      expect(Tezos.contract.originate({
+        balance: "1",
+        code: badCode,
+        init: { prim: "Unit" }
+      })).rejects.toMatchObject({
+        status: 400,
+      })
+    })
+
+    it('Failwith contract', async (done) => {
+      const op = await Tezos.contract.originate({
+        balance: "1",
+        code: failwithContractCode,
+        storage: null
+      })
+      const contract = await op.contract()
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+      expect(op.status === 'applied');
+
+      try {
+        await contract.methods.main(null).send()
+      } catch (ex) {
+        expect(ex.message).toMatch('test')
+      }
+
+      try {
+        // Bypass estimation
+        await contract.methods.main(null).send({ fee: 20000, gasLimit: 20000, storageLimit: 0 })
+      } catch (ex) {
+        expect(ex.message).toMatch('test')
+      }
+      done();
+    });
+
     it('Simple set delegate', async (done) => {
-      const delegate = 'tz1PirboZKFVqkfE45hVLpkpXaZtLk3mqC17'
+      const delegate = knownBaker
       const op = await Tezos.contract.setDelegate({
         delegate,
         source: await Tezos.signer.publicKeyHash(),
@@ -56,7 +93,7 @@ CONFIGS.forEach(({ lib, rpc, setup }) => {
     });
 
     it('Set delegate with automatic estimate', async (done) => {
-      const delegate = 'tz1PirboZKFVqkfE45hVLpkpXaZtLk3mqC17'
+      const delegate = knownBaker
       const op = await Tezos.contract.setDelegate({
         delegate,
         source: await Tezos.signer.publicKeyHash(),

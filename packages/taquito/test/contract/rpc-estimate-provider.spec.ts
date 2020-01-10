@@ -2,6 +2,7 @@ import { Context } from '../../src/context';
 import { RPCEstimateProvider } from '../../src/contract/rpc-estimate-provider';
 import { miStr } from './data';
 import BigNumber from 'bignumber.js';
+import { preapplyResultFrom } from './helper';
 
 /**
  * RPCEstimateProvider test
@@ -133,6 +134,77 @@ describe('RPCEstimateProvider test', () => {
         storageLimit: 300,
       });
       expect(estimate.gasLimit).toEqual(1100);
+      done();
+    });
+
+    it('should return parsed error from RPC result', async done => {
+      const params = {
+        to: 'test_to',
+        amount: 2,
+        fee: 10000,
+        gasLimit: 10600,
+        storageLimit: 300,
+      };
+      mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
+      mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
+      mockRpcClient.runOperation.mockResolvedValue(preapplyResultFrom(params).withError()[0]);
+      mockRpcClient.getManagerKey.mockResolvedValue('test');
+      mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
+      mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
+      mockSigner.publicKey.mockResolvedValue('test_pub_key');
+      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+      await expect(estimateProvider.transfer(params)).rejects.toMatchObject({
+        id: 'proto.006-PsCARTHA.michelson_v1.script_rejected',
+        message: 'test',
+      });
+      done();
+    });
+
+    it('should return parsed error from RPC result', async done => {
+      const params = {
+        to: 'test_to',
+        amount: 2,
+        fee: 10000,
+        gasLimit: 10600,
+        storageLimit: 300,
+      };
+      mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
+      mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
+      mockRpcClient.runOperation.mockResolvedValue(
+        preapplyResultFrom(params).withBalanceTooLowError()[0]
+      );
+      mockRpcClient.getManagerKey.mockResolvedValue('test');
+      mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
+      mockSigner.publicKey.mockResolvedValue('test_pub_key');
+      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+      await expect(estimateProvider.transfer(params)).rejects.toMatchObject({
+        id: 'proto.006-PsCARTHA.contract.balance_too_low',
+        message: '(temporary) proto.006-PsCARTHA.contract.balance_too_low',
+      });
+      done();
+    });
+
+    it('should return internal error when received from preapply', async done => {
+      const params = {
+        to: 'test_to',
+        amount: 2,
+        fee: 10000,
+        gasLimit: 10600,
+        storageLimit: 300,
+      };
+      mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
+      mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
+      mockRpcClient.runOperation.mockResolvedValue(
+        preapplyResultFrom(params).withInternalError()[0]
+      );
+      mockRpcClient.getManagerKey.mockResolvedValue('test');
+      mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
+      mockSigner.publicKey.mockResolvedValue('test_pub_key');
+      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+      await expect(estimateProvider.transfer(params)).rejects.toMatchObject({
+        id: 'proto.005-PsBabyM1.gas_exhausted.operation',
+        message: '(temporary) proto.005-PsBabyM1.gas_exhausted.operation',
+      });
       done();
     });
   });
