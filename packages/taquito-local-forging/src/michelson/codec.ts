@@ -153,7 +153,7 @@ export const intEncoder: Encoder<IntValue> = ({ int }) => {
   return `00${numHex.join('')}`;
 };
 
-export const intDecoder: Decoder = (value: Uint8ArrayConsummer): IntValue => {
+export const intDecoder = (value: Uint8ArrayConsummer): IntValue => {
   let c = value.consume(1)[0];
   const hexNumber: number[] = [];
   // console.log(c);
