@@ -17,17 +17,6 @@ export interface Semantic {
   [key: string]: (value: MichelsonV1Expression, schema: MichelsonV1Expression) => any;
 }
 
-export interface ComparableToken extends Token {
-  ToBigMapKey(
-    val: string
-  ): {
-    key: { [key: string]: string };
-    type: { prim: string };
-  };
-
-  ToKey(val: string): string;
-}
-
 export abstract class Token {
   constructor(
     protected val: { prim: string; args: any[]; annots?: any[] },
@@ -58,5 +47,20 @@ export abstract class Token {
 
   public ExtractSignature() {
     return [[this.ExtractSchema()]];
+  }
+}
+
+export abstract class ComparableToken extends Token {
+  abstract ToBigMapKey(
+    val: string
+  ): {
+    key: { [key: string]: string };
+    type: { prim: string };
+  };
+
+  abstract ToKey(val: string): string;
+
+  compare(o1: string, o2: string) {
+    return o1 < o2 ? -1 : 1;
   }
 }

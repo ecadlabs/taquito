@@ -102,16 +102,6 @@ describe('Contract with unit encoding', () => {
               {
                 prim: 'Elt',
                 args: [
-                  { string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn' },
-                  {
-                    prim: 'Pair',
-                    args: [[], { int: '0' }],
-                  },
-                ],
-              },
-              {
-                prim: 'Elt',
-                args: [
                   { string: 'tz1LhS2WFCinpwUTdUb991ocL2D9Uk6FJGJK' },
                   {
                     prim: 'Pair',
@@ -119,15 +109,25 @@ describe('Contract with unit encoding', () => {
                       [
                         {
                           prim: 'Elt',
-                          args: [{ string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn' }, { int: '2' }],
+                          args: [{ string: 'tz1LhS2WFCinpwUTdUb991ocL2D9Uk6FJGJK' }, { int: '3' }],
                         },
                         {
                           prim: 'Elt',
-                          args: [{ string: 'tz1LhS2WFCinpwUTdUb991ocL2D9Uk6FJGJK' }, { int: '3' }],
+                          args: [{ string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn' }, { int: '2' }],
                         },
                       ],
                       { int: '0' },
                     ],
+                  },
+                ],
+              },
+              {
+                prim: 'Elt',
+                args: [
+                  { string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn' },
+                  {
+                    prim: 'Pair',
+                    args: [[], { int: '0' }],
                   },
                 ],
               },

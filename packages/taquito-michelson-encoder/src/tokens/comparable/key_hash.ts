@@ -8,7 +8,7 @@ export class KeyHashValidationError extends TokenValidationError {
   }
 }
 
-export class KeyHashToken extends Token implements ComparableToken {
+export class KeyHashToken extends ComparableToken {
   static prim = 'key_hash';
 
   constructor(
