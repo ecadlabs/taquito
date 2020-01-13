@@ -60,7 +60,7 @@ export default () => {
       <div className={classnames(styles.banner, styles.centered, 'margin-bottom--xl')}>
         <img className={styles.brandLogo} src={useBaseUrl('img/Taquito.png')} />
         <span className={styles.tagline}>{siteConfig.tagline}</span>
-        <div>
+        <div className={classnames('margin-bottom--lg')}>
           <Link
             className={styles.button}
             to={useBaseUrl('docs/quick_start')}>
@@ -73,6 +73,13 @@ export default () => {
             TypeDoc Reference
         </Link>
         </div>
+        <iframe
+          src="https://ghbtns.com/github-btn.html?user=ecadlabs&repo=taquito&type=star&count=true&size=large"
+          frameBorder="0"
+          scrolling="0"
+          width="130px"
+          height="30px"
+        ></iframe>
       </div>
       <div className={classnames(styles.section, 'container', 'text--center', 'margin-bottom--xl')}>
         <div className="row">
