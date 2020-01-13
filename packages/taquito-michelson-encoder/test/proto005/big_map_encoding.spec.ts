@@ -85,7 +85,10 @@ describe('Contract with unit encoding', () => {
           },
           tz1LhS2WFCinpwUTdUb991ocL2D9Uk6FJGJK: {
             balance: '0',
-            allowances: {},
+            allowances: {
+              tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn: '2',
+              tz1LhS2WFCinpwUTdUb991ocL2D9Uk6FJGJK: '3',
+            },
           },
         },
       })
@@ -112,7 +115,19 @@ describe('Contract with unit encoding', () => {
                   { string: 'tz1LhS2WFCinpwUTdUb991ocL2D9Uk6FJGJK' },
                   {
                     prim: 'Pair',
-                    args: [[], { int: '0' }],
+                    args: [
+                      [
+                        {
+                          prim: 'Elt',
+                          args: [{ string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn' }, { int: '2' }],
+                        },
+                        {
+                          prim: 'Elt',
+                          args: [{ string: 'tz1LhS2WFCinpwUTdUb991ocL2D9Uk6FJGJK' }, { int: '3' }],
+                        },
+                      ],
+                      { int: '0' },
+                    ],
                   },
                 ],
               },
