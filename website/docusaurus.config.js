@@ -45,11 +45,11 @@ module.exports = {
             },
             {
               label: 'Storybook',
-              to: 'react-storybook',
+              href: 'https://tezostaquito.io/react-storybook',
             },
             {
-              label: 'TypeDoc reference',
-              to: 'typedoc',
+              label: 'TypeDoc Reference',
+              href: 'https://tezostaquito.io/typedoc',
             },
           ],
         },

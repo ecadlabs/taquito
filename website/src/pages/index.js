@@ -68,7 +68,7 @@ export default () => {
         </Link>
           <Link
             className={styles.button}
-            to={useBaseUrl('/typedoc')}
+            href={'https://tezostaquito.io/typedoc'}
           >
             TypeDoc Reference
         </Link>
