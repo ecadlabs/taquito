@@ -27,6 +27,29 @@ const FEATURES = [
   },
 ];
 
+const USERS = [
+  {
+    caption: 'Tocqueville Group',
+    image: '/img/tqtezos.svg',
+    link: 'https://tqtezos.com',
+  },
+  {
+    caption: 'Ligo',
+    image: '/img/ligo.svg',
+    link: 'https://ligolang.org/',
+  },
+  {
+    caption: 'Truffle',
+    image: '/img/truffle.png',
+    link: 'https://www.trufflesuite.com/',
+  },
+  {
+    caption: 'Nomadic Labs',
+    image: '/img/nomadic.png',
+    link: 'https://www.nomadic-labs.com/',
+  }
+];
+
 export default () => {
   const context = useDocusaurusContext();
   const { siteConfig } = context;
@@ -34,14 +57,22 @@ export default () => {
 
   return (
     <Layout permalink="/" description={customFields.description}>
-      <div className={classnames(styles.banner, 'margin-bottom--xl')}>
+      <div className={classnames(styles.banner, styles.centered, 'margin-bottom--xl')}>
         <img className={styles.brandLogo} src={useBaseUrl('img/Taquito.png')} />
         <span className={styles.tagline}>{siteConfig.tagline}</span>
-        <Link
-          className={styles.quickStartButton}
-          to={useBaseUrl('docs/quick_start')}>
-          Quick Start
+        <div>
+          <Link
+            className={styles.button}
+            to={useBaseUrl('docs/quick_start')}>
+            Quick Start
         </Link>
+          <Link
+            className={styles.button}
+            to={useBaseUrl('/typedoc')}
+          >
+            TypeDoc Reference
+        </Link>
+        </div>
       </div>
       <div className={classnames(styles.section, 'container', 'text--center', 'margin-bottom--xl')}>
         <div className="row">
@@ -49,7 +80,7 @@ export default () => {
             <div className="col" key={key}>
               <FontAwesomeIcon icon={feature.awesomeIcon} size="6x"></FontAwesomeIcon>
               <h2 className="padding-top--md">{feature.title}</h2>
-              <p className="padding-horiz--md" dangerouslySetInnerHTML={{
+              <p dangerouslySetInnerHTML={{
                 __html: feature.description,
               }}></p>
             </div>
@@ -60,8 +91,8 @@ export default () => {
         <div className={classnames('container', 'text--center')}>
           <div className={classnames('row', styles.centerVerticaly)}>
             <div className="col">
-              <h2 className="padding-top--md">Participation in CII Badging Program</h2>
-              <p className="padding-horiz--md">The CII (Core Infrastructure Initiative) badging program was created by the Linux Foundation in response to previous security issues in open-source projects. We are committed to follow these best practices and earn/maintain our CII Badges.</p>
+              <h2>Participation in CII Badging Program</h2>
+              <p>The CII (Core Infrastructure Initiative) badging program was created by the Linux Foundation in response to previous security issues in open-source projects. We are committed to follow these best practices and earn/maintain our CII Badges.</p>
             </div>
             <div className="col">
               <img src={useBaseUrl('img/cii_badge.png')} />
@@ -73,8 +104,8 @@ export default () => {
         <div className={classnames('container', 'text--center')}>
           <div className={classnames('row', styles.centerVerticaly)}>
             <div className="col">
-              <h2 className="padding-top--md">Boilerplate App</h2>
-              <p className="padding-horiz--md">The Taquito team has created a small sample project that checks and displays XTZ balance. Developers are invited to use this as a starting point by simply forking the <a href="https://github.com/ecadlabs/taquito-boilerplate">Taquito Boilerplate</a> project in GitHub.</p>
+              <h2>Boilerplate App</h2>
+              <p>The Taquito team has created a small sample project that checks and displays XTZ balance. Developers are invited to use this as a starting point by simply forking the <a href="https://github.com/ecadlabs/taquito-boilerplate">Taquito Boilerplate</a> project in GitHub.</p>
             </div>
             <div className="col">
               <img src={useBaseUrl('img/boilerplate_screenshot.png')} />
@@ -84,14 +115,19 @@ export default () => {
       </div>
       <div className={classnames(styles.section, styles.bestPractices)}>
         <div className={classnames('container', 'text--center')}>
-          <div className={classnames('row', styles.centerVerticaly)}>
+          <div className={classnames('row')}>
             <div className="col">
-              <h2 className="padding-top--md">Participation in CII Badging Program</h2>
-              <p className="padding-horiz--md">The CII (Core Infrastructure Initiative) badging program was created by the Linux Foundation in response to previous security issues in open-source projects. We are committed to follow these best practices and earn/maintain our CII Badges.</p>
+              <h2>Teams Building on Taquito</h2>
             </div>
-            <div className="col">
-              <img src={useBaseUrl('img/cii_badge.png')} />
-            </div>
+          </div>
+          <div className={classnames('row', 'padding-top--lg', styles.centerVerticaly)}>
+            {USERS.map((user, key) => (
+              <div className={classnames('col', 'padding-bottom--md')}>
+                <a href={user.link} key={key} rel="noopener noreferrer" target="_blank">
+                  <img className={classnames(styles.userBanner)} src={useBaseUrl(user.image)} alt={user.caption} title={user.caption} />
+                </a>
+              </div>
+            ))}
           </div>
         </div>
       </div>
