@@ -1,17 +1,35 @@
 import { TezosToolkit } from '@taquito/taquito'
 import fs from 'fs'
 
-const providers = (process.env['TEZOS_RPC_NODE'] && process.env['TEZOS_RPC_NODE'].split(',')) || ['https://api.tez.ie/rpc/babylonnet'];
+const envConfig = process.env['TEZOS_RPC_NODE'];
+
+interface Config {
+  rpc: string,
+  knownBaker: string,
+  knownContract: string,
+}
+
+const providers: Config[] = envConfig ? JSON.parse(envConfig) : [{
+  rpc: 'https://api.tez.ie/rpc/carthagenet',
+  knownBaker: 'tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9',
+  knownContract: 'KT1XYa1JPKYVJYVJge89r4w2tShS8JYb1NQh'
+},
+{
+  rpc: 'https://api.tez.ie/rpc/babylonnet',
+  knownBaker: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
+  knownContract: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK'
+}
+];
 
 const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE']
 
 jest.setTimeout(60000 * 10);
 
-export const CONFIGS = providers.map((provider) => {
+export const CONFIGS = providers.map(({ rpc, knownBaker, knownContract }) => {
   const Tezos = new TezosToolkit();
-  Tezos.setProvider({ rpc: provider })
+  Tezos.setProvider({ rpc })
   return {
-    rpc: provider, lib: Tezos, setup: async () => {
+    rpc, knownBaker, knownContract, lib: Tezos, setup: async () => {
       let faucetKey = {
         email: "peqjckge.qkrrajzs@tezos.example.org",
         password: "y4BX7qS1UE", mnemonic: [
@@ -41,3 +59,4 @@ export const CONFIGS = providers.map((provider) => {
     }
   };
 });
+

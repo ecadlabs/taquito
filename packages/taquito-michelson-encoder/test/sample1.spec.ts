@@ -42,14 +42,19 @@ describe('Schema test', () => {
 
   it('Should encode parameter schema properly', () => {
     const schema = new ParameterSchema(params);
-    const result = schema.Encode('approve', 'test', '0');
+    const result = schema.Encode('approve', 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn', '0');
     expect(schema.isMultipleEntryPoint).toBeTruthy();
     expect(result).toEqual({
       prim: 'Right',
       args: [
         {
           prim: 'Left',
-          args: [{ prim: 'Pair', args: [{ string: 'test' }, { int: '0' }] }],
+          args: [
+            {
+              prim: 'Pair',
+              args: [{ string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn' }, { int: '0' }],
+            },
+          ],
         },
       ],
     });
@@ -57,7 +62,12 @@ describe('Schema test', () => {
 
   it('Should encode parameter schema properly', () => {
     const schema = new ParameterSchema(params);
-    const result = schema.Encode('allowance', 'test', 'test2', 'test3');
+    const result = schema.Encode(
+      'allowance',
+      'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+      'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+      'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D'
+    );
     expect(result).toEqual({
       prim: 'Right',
       args: [
@@ -76,10 +86,13 @@ describe('Schema test', () => {
                         {
                           prim: 'Pair',
                           args: [
-                            { string: 'test' },
+                            { string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn' },
                             {
                               prim: 'Pair',
-                              args: [{ string: 'test2' }, { string: 'test3' }],
+                              args: [
+                                { string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn' },
+                                { string: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D' },
+                              ],
                             },
                           ],
                         },

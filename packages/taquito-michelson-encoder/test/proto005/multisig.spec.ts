@@ -15,7 +15,11 @@ describe('Contract with or token inside a pair token', () => {
   it('Should encode storage properly when using empty big map', () => {
     const schema = new ParameterSchema(genericMultisig[0].args[0] as any);
 
-    expect(schema.Encode('main', '0', 'operation', removeDelegate(), ['test'])).toEqual({
+    expect(
+      schema.Encode('main', '0', 'operation', removeDelegate(), [
+        'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg',
+      ])
+    ).toEqual({
       prim: 'Right',
       args: [
         {
@@ -31,7 +35,17 @@ describe('Contract with or token inside a pair token', () => {
                 },
               ],
             },
-            [{ prim: 'Some', args: [{ string: 'test' }] }],
+            [
+              {
+                prim: 'Some',
+                args: [
+                  {
+                    string:
+                      'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg',
+                  },
+                ],
+              },
+            ],
           ],
         },
       ],

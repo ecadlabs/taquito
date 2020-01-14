@@ -1,4 +1,11 @@
-import { Token, TokenFactory, Semantic } from './token';
+import { Token, TokenFactory, Semantic, TokenValidationError } from './token';
+
+export class MapValidationError extends TokenValidationError {
+  name: string = 'MapValidationError';
+  constructor(public value: any, public token: MapToken, message: string) {
+    super(value, token, message);
+  }
+}
 
 export class MapToken extends Token {
   static prim = 'map';
@@ -19,6 +26,14 @@ export class MapToken extends Token {
     return this.createToken(this.val.args[0], 0) as any;
   }
 
+  private isValid(value: any): MapValidationError | null {
+    if (typeof value === 'object') {
+      return null;
+    }
+
+    return new MapValidationError(value, this, 'Value must be an object');
+  }
+
   public Execute(val: any[], semantics?: Semantic): { [key: string]: any } {
     return val.reduce((prev, current) => {
       return {
@@ -34,6 +49,11 @@ export class MapToken extends Token {
   public Encode(args: any[]): any {
     const val = args.pop();
 
+    const err = this.isValid(val);
+    if (err) {
+      throw err;
+    }
+
     return Object.keys(val).map(key => {
       return {
         prim: 'Elt',
@@ -44,6 +64,12 @@ export class MapToken extends Token {
 
   public EncodeObject(args: any): any {
     const val = args;
+
+    const err = this.isValid(val);
+    if (err) {
+      throw err;
+    }
+
     return Object.keys(val).map(key => {
       return {
         prim: 'Elt',

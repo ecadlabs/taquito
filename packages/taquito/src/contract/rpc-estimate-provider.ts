@@ -5,14 +5,14 @@ import {
   PreapplyResponse,
   RPCRunOperationParam,
 } from '@taquito/rpc';
-import { DEFAULT_STORAGE_LIMIT, protocols, DEFAULT_GAS_LIMIT } from '../constants';
+import { DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
 import { OperationEmitter } from '../operations/operation-emitter';
 import {
   DelegateParams,
   OriginateParams,
   PrepareOperationParams,
-  TransferParams,
   RegisterDelegateParams,
+  TransferParams,
 } from '../operations/types';
 import { Estimate } from './estimate';
 import { EstimationProvider } from './interface';
@@ -22,6 +22,7 @@ import {
   createSetDelegateOperation,
   createTransferOperation,
 } from './prepare';
+import { flattenErrors, TezosOperationError } from '../operations/operation-errors';
 
 // RPC require a signature but do not verify it
 const SIGNATURE_STUB =
@@ -29,11 +30,17 @@ const SIGNATURE_STUB =
 
 export class RPCEstimateProvider extends OperationEmitter implements EstimationProvider {
   // Maximum values defined by the protocol
-  private readonly DEFAULT_PARAMS = {
-    fee: 30000,
-    storageLimit: 60000,
-    gasLimit: 800000,
-  };
+  private async getConstants() {
+    const {
+      hard_gas_limit_per_operation,
+      hard_storage_limit_per_operation,
+    } = await this.rpc.getConstants();
+    return {
+      fee: 30000,
+      gasLimit: hard_gas_limit_per_operation.toNumber(),
+      storageLimit: hard_storage_limit_per_operation.toNumber(),
+    };
+  }
 
   private getOperationResult(
     opResponse: PreapplyResponse,
@@ -61,12 +68,20 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
       opOb: { branch, contents },
     } = await this.prepareAndForge(params);
 
-    let operation: RPCRunOperationParam = { branch, contents, signature: SIGNATURE_STUB };
-    if (await this.context.isAnyProtocolActive(protocols['005'])) {
-      operation = { operation, chain_id: await this.rpc.getChainId() };
-    }
+    let operation: RPCRunOperationParam = {
+      operation: { branch, contents, signature: SIGNATURE_STUB },
+      chain_id: await this.rpc.getChainId(),
+    };
 
     const { opResponse } = await this.simulate(operation);
+
+    const errors = flattenErrors(opResponse);
+
+    // Fail early in case of errors
+    if (errors.length) {
+      throw new TezosOperationError(errors);
+    }
+
     const operationResults = this.getOperationResult(opResponse, kind);
 
     let totalGas = 0;
@@ -78,7 +93,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     });
 
     return new Estimate(
-      Math.max((totalGas || 0), minimumGas),
+      Math.max(totalGas || 0, minimumGas),
       Number(totalStorage || 0) + defaultStorage,
       opbytes.length / 2
     );
@@ -94,13 +109,11 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    */
   async originate({ fee, storageLimit, gasLimit, ...rest }: OriginateParams) {
     const pkh = await this.signer.publicKeyHash();
-    const op = await createOriginationOperation(
-      {
-        ...rest,
-        ...this.DEFAULT_PARAMS,
-      },
-      pkh
-    );
+    const DEFAULT_PARAMS = await this.getConstants();
+    const op = await createOriginationOperation({
+      ...rest,
+      ...DEFAULT_PARAMS,
+    });
     return this.createEstimate(
       { operation: op, source: pkh },
       'origination',
@@ -117,9 +130,10 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    */
   async transfer({ fee, storageLimit, gasLimit, ...rest }: TransferParams) {
     const pkh = await this.signer.publicKeyHash();
+    const DEFAULT_PARAMS = await this.getConstants();
     const op = await createTransferOperation({
       ...rest,
-      ...this.DEFAULT_PARAMS,
+      ...DEFAULT_PARAMS,
     });
     return this.createEstimate(
       { operation: op, source: pkh },
@@ -137,7 +151,8 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    * @param Estimate
    */
   async setDelegate(params: DelegateParams) {
-    const op = await createSetDelegateOperation({ ...params, ...this.DEFAULT_PARAMS });
+    const DEFAULT_PARAMS = await this.getConstants();
+    const op = await createSetDelegateOperation({ ...params, ...DEFAULT_PARAMS });
     const sourceOrDefault = params.source || (await this.signer.publicKeyHash());
     return this.createEstimate(
       { operation: op, source: sourceOrDefault },
@@ -157,8 +172,9 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    * @param Estimate
    */
   async registerDelegate(params: RegisterDelegateParams) {
+    const DEFAULT_PARAMS = await this.getConstants();
     const op = await createRegisterDelegateOperation(
-      { ...params, ...this.DEFAULT_PARAMS },
+      { ...params, ...DEFAULT_PARAMS },
       await this.signer.publicKeyHash()
     );
     return this.createEstimate(

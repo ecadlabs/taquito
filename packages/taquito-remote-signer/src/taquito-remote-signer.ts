@@ -1,4 +1,13 @@
-import { b58cdecode, b58cencode, buf2hex, prefix, hex2buf, mergebuf } from '@taquito/utils';
+import {
+  b58cdecode,
+  b58cencode,
+  buf2hex,
+  prefix,
+  hex2buf,
+  mergebuf,
+  Prefix,
+  isValidPrefix,
+} from '@taquito/utils';
 import { HttpBackend, STATUS_CODE, HttpResponseError } from '@taquito/http-utils';
 import toBuffer from 'typedarray-to-buffer';
 import { KeyNotFoundError, OperationNotAuthorizedError, BadSigningDataError } from './errors';
@@ -55,6 +64,10 @@ export class RemoteSigner {
         buf2hex(toBuffer(bb))
       );
       let pref = signature.startsWith('sig') ? signature.substr(0, 3) : signature.substr(0, 5);
+
+      if (!isValidPrefix(pref)) {
+        throw new Error('Unsupported signature given by remote signer: ' + signature);
+      }
 
       const decoded = b58cdecode(signature, prefix[pref]);
 

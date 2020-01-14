@@ -1,5 +1,12 @@
-import { Token, TokenFactory, ComparableToken } from '../token';
+import { Token, TokenFactory, ComparableToken, TokenValidationError } from '../token';
 import BigNumber from 'bignumber.js';
+
+export class IntValidationError extends TokenValidationError {
+  name: string = 'IntValidationError';
+  constructor(public value: any, public token: IntToken, message: string) {
+    super(value, token, message);
+  }
+}
 
 export class IntToken extends Token implements ComparableToken {
   static prim = 'int';
@@ -20,12 +27,32 @@ export class IntToken extends Token implements ComparableToken {
     return IntToken.prim;
   }
 
+  private isValid(val: any): IntValidationError | null {
+    const bigNumber = new BigNumber(val);
+    if (bigNumber.isNaN()) {
+      return new IntValidationError(val, this, `Value is not a number: ${val}`);
+    } else {
+      return null;
+    }
+  }
+
   public Encode(args: any[]): any {
     const val = args.pop();
+
+    const err = this.isValid(val);
+    if (err) {
+      throw err;
+    }
+
     return { int: String(val).toString() };
   }
 
   public EncodeObject(val: any): any {
+    const err = this.isValid(val);
+    if (err) {
+      throw err;
+    }
+
     return { int: String(val).toString() };
   }
 

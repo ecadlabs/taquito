@@ -1,16 +1,12 @@
-import {
-  OperationContentsAndResult,
-  OperationContentsAndResultTransaction,
-  OperationContentsAndResultDelegation,
-} from '@taquito/rpc';
+import { OperationContentsAndResult, OperationContentsAndResultDelegation } from '@taquito/rpc';
 import { Context } from '../context';
 import { Operation } from './operations';
 import {
+  FeeConsumingOperation,
   ForgedBytes,
   GasConsumingOperation,
-  StorageConsumingOperation,
-  FeeConsumingOperation,
   RPCDelegateOperation,
+  StorageConsumingOperation,
 } from './types';
 
 /**
