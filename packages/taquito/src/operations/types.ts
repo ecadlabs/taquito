@@ -39,6 +39,11 @@ export type OriginateParams = OriginateParamsBase &
       }
   );
 
+export interface ActivationParams {
+  pkh: string;
+  secret: string;
+}
+
 /**
  * @description RPC origination operation
  */
