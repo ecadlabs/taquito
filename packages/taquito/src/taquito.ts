@@ -17,6 +17,7 @@ import { TzProvider } from './tz/interface';
 import { RpcTzProvider } from './tz/rpc-tz-provider';
 import { Forger } from './forger/interface';
 import { RpcForger } from './forger/rpc-forger';
+import { RPCBatchProvider } from './batch/rpc-batch-provider';
 
 export * from './query/interface';
 export * from './signer/interface';
@@ -26,7 +27,11 @@ export * from './tz/interface';
 export * from './contract';
 export * from './contract/big-map';
 export * from './constants';
-export { TezosOperationError, TezosOperationErrorWithMessage, TezosPreapplyFailureError } from './operations/operation-errors'
+export {
+  TezosOperationError,
+  TezosOperationErrorWithMessage,
+  TezosPreapplyFailureError,
+} from './operations/operation-errors';
 
 export { SubscribeProvider } from './subscribe/interface';
 export interface SetProviderOptions {
@@ -54,6 +59,7 @@ export class TezosToolkit {
   private _tz = new RpcTzProvider(this._context);
   private _estimate = new RPCEstimateProvider(this._context);
   private _contract = new RpcContractProvider(this._context, this._estimate);
+  private _batch = new RPCBatchProvider(this._context, this._estimate);
 
   public readonly format = format;
 
@@ -141,6 +147,8 @@ export class TezosToolkit {
   get contract(): ContractProvider {
     return this._contract;
   }
+
+  public batch = this._batch.batch.bind(this._batch);
 
   /**
    * @description Provide access to operation estimation utilities

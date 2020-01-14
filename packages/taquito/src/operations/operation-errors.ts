@@ -1,6 +1,6 @@
 import {
-  PreapplyResponse,
   MichelsonV1ExpressionBase,
+  PreapplyResponse,
   TezosGenericOperationError,
 } from '@taquito/rpc';
 
@@ -39,6 +39,28 @@ export class TezosPreapplyFailureError implements Error {
 
   constructor(public result: any) {}
 }
+
+export const flattenOperationResult = (response: PreapplyResponse | PreapplyResponse[]) => {
+  let results = Array.isArray(response) ? response : [response];
+
+  let returnedResults: any[] = [];
+  for (let i = 0; i < results.length; i++) {
+    for (let j = 0; j < results[i].contents.length; j++) {
+      const content = results[i].contents[j];
+      if ('metadata' in content && typeof content.metadata.operation_result !== 'undefined') {
+        returnedResults.push(content.metadata.operation_result);
+
+        if (Array.isArray(content.metadata.internal_operation_results)) {
+          content.metadata.internal_operation_results.forEach((x: any) =>
+            returnedResults.push(x.result)
+          );
+        }
+      }
+    }
+  }
+
+  return returnedResults;
+};
 
 /***
  * @description Flatten all error from preapply response (including internal error)
