@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import { Tezos } from '@taquito/taquito';
+import { TezosToolkit } from '@taquito/taquito';
 import Playground from '@theme/Playground';
 import classnames from 'classnames';
 import Clipboard from 'clipboard';
@@ -58,6 +58,8 @@ export default ({
   }, [button.current, target.current]);
 
   if (live) {
+    const Tezos = new TezosToolkit();
+
     return (
       <Playground
         scope={{...React, Tezos}}
