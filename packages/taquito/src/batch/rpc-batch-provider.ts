@@ -12,7 +12,6 @@ import {
   ActivationParams,
   DelegateParams,
   OriginateParams,
-  RPCActivateOperation,
   RPCDelegateOperation,
   RPCOperation,
   RPCOriginationOperation,
@@ -22,14 +21,14 @@ import {
 
 type withKind<T, K> = T & { kind: K };
 
-type withParams =
+export type withParams =
   | withKind<OriginateParams, 'origination'>
   | withKind<DelegateParams, 'delegation'>
   | withKind<TransferParams, 'transaction'>
   | withKind<ActivationParams, 'activate_account'>;
 
 export class OperationBatch extends OperationEmitter {
-  private operations: (() => Promise<RPCOperation>)[] = [];
+  private operations: withParams[] = [];
 
   constructor(context: Context, private estimator: EstimationProvider) {
     super(context);
@@ -42,15 +41,7 @@ export class OperationBatch extends OperationEmitter {
    * @param params Transfer operation parameter
    */
   withTransfer(params: TransferParams) {
-    const opFactory = async () => {
-      const estimate = await this.estimate(params, this.estimator.transfer.bind(this.estimator));
-      return createTransferOperation({
-        ...params,
-        ...estimate,
-      });
-    };
-
-    this.operations.push(opFactory);
+    this.operations.push({ kind: 'transaction', ...params });
     return this;
   }
 
@@ -71,15 +62,7 @@ export class OperationBatch extends OperationEmitter {
    * @param params Delegation operation parameter
    */
   withDelegation(params: DelegateParams) {
-    const opFactory = async () => {
-      const estimate = await this.estimate(params, this.estimator.setDelegate.bind(this.estimator));
-      return createSetDelegateOperation({
-        ...params,
-        ...estimate,
-      });
-    };
-
-    this.operations.push(opFactory);
+    this.operations.push({ kind: 'delegation', ...params });
     return this;
   }
 
@@ -90,16 +73,7 @@ export class OperationBatch extends OperationEmitter {
    * @param params Activation operation parameter
    */
   withActivation({ pkh, secret }: ActivationParams) {
-    const opFactory = async () => {
-      const operation: RPCActivateOperation = {
-        kind: 'activate_account',
-        pkh,
-        secret,
-      };
-      return operation;
-    };
-
-    this.operations.push(opFactory);
+    this.operations.push({ kind: 'activate_account', pkh, secret });
     return this;
   }
 
@@ -110,15 +84,7 @@ export class OperationBatch extends OperationEmitter {
    * @param params Origination operation parameter
    */
   withOrigination(params: OriginateParams) {
-    const opFactory = async () => {
-      const estimate = await this.estimate(params, this.estimator.originate.bind(this.estimator));
-      return createOriginationOperation({
-        ...params,
-        ...estimate,
-      });
-    };
-
-    this.operations.push(opFactory);
+    this.operations.push({ kind: 'origination', ...params });
     return this;
   }
 
@@ -128,38 +94,27 @@ export class OperationBatch extends OperationEmitter {
     return ['transaction', 'delegation', 'origination'].indexOf(op.kind) !== -1;
   }
 
-  /**
-   * @description Provide an estimate of total fees, gas and storage (does not account for reveal)
-   */
-  async getTotals() {
-    let totalGas = 0;
-    let totalStorage = 0;
-    let totalFee = 0;
-
-    const operations = await this.getOperations();
-
-    for (const op of operations) {
-      if (this.isOpWithFee(op)) {
-        totalFee += op.fee;
-        totalGas += op.gas_limit;
-        totalStorage += op.storage_limit;
-      }
+  private async getRPCOp(param: withParams) {
+    switch (param.kind) {
+      case 'transaction':
+        return createTransferOperation({
+          ...param,
+        });
+      case 'origination':
+        return createOriginationOperation({
+          ...param,
+        });
+      case 'delegation':
+        return createSetDelegateOperation({
+          ...param,
+        });
+      case 'activate_account':
+        return {
+          ...param,
+        };
+      default:
+        throw new Error(`Unsupported operation kind: ${(param as any).kind}`);
     }
-
-    return {
-      totalFee,
-      totalGas,
-      totalStorage,
-    };
-  }
-
-  private async getOperations() {
-    const operations: RPCOperation[] = [];
-    for (const opFactory of this.operations) {
-      const op = await opFactory();
-      operations.push(op);
-    }
-    return operations;
   }
 
   /**
@@ -198,14 +153,25 @@ export class OperationBatch extends OperationEmitter {
    * @param params Optionally specify the source of the operation
    */
   async send(params?: { source?: string }) {
-    const operation = await this.getOperations();
+    const estimates = await this.estimator.batch(this.operations);
+    const ops: RPCOperation[] = [];
+    let i = 0;
+    for (const op of this.operations) {
+      if (op.kind !== 'activate_account') {
+        const estimated = await this.estimate(op, async () => estimates[i]);
+        ops.push(await this.getRPCOp({ ...op, ...estimated }));
+      } else {
+        ops.push({ ...op });
+      }
+      i++;
+    }
     const source = (params && params.source) || (await this.signer.publicKeyHash());
     const opBytes = await this.prepareAndForge({
-      operation,
+      operation: ops,
       source,
     });
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
-    return new BatchOperation(hash, operation, source, forgedBytes, opResponse, context);
+    return new BatchOperation(hash, ops, source, forgedBytes, opResponse, context);
   }
 }
 

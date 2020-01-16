@@ -3,7 +3,7 @@ import { ligoSample } from "./data/ligo-simple-contract";
 import { managerCode } from "./data/manager_code";
 import { MANAGER_LAMBDA } from "@taquito/taquito";
 
-CONFIGS.forEach(({ lib, rpc, setup, knownBaker }) => {
+CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
   const Tezos = lib;
   describe(`Test batch api using: ${rpc}`, () => {
 
@@ -64,6 +64,29 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker }) => {
         .send();
       await op.confirmation();
       expect(op.status).toEqual('backtracked')
+      done();
+    })
+
+    it('Test batch from account with low balance', async (done) => {
+      const LocalTez = await createAddress();
+      const op = await Tezos.contract.transfer({ to: await LocalTez.signer.publicKeyHash(), amount: 2 });
+      await op.confirmation();
+
+      const batchOp = await LocalTez.batch([
+        {
+          kind: 'transaction',
+          to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+          amount: 1
+        },
+        {
+          kind: 'origination',
+          balance: "0",
+          code: ligoSample,
+          storage: 0,
+        }
+      ]).send()
+      await batchOp.confirmation();
+      expect(op.status).toEqual('applied')
       done();
     })
 

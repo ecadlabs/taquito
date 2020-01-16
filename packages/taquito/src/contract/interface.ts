@@ -10,6 +10,7 @@ import {
 } from '../operations/types';
 import { Contract } from './contract';
 import { Estimate } from './estimate';
+import { withParams } from '../batch/rpc-batch-provider';
 
 export type ContractSchema = Schema | unknown;
 
@@ -53,6 +54,7 @@ export interface EstimationProvider {
    * @param Estimate
    */
   registerDelegate(params?: RegisterDelegateParams): Promise<Estimate>;
+  batch(params: withParams[]): Promise<Estimate[]>;
 }
 
 export interface ContractProvider {
