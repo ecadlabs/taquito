@@ -1,8 +1,7 @@
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
-import { OriginateParams, TransferParams } from '../operations/types';
+import { OriginateParams, TransferParams, withParams } from '../operations/types';
 import { Estimate } from './estimate';
 import { EstimationProvider } from './interface';
-import { withParams } from '../batch/rpc-batch-provider';
 
 /**
  * @description Naïve implementation of an estimate provider. Will work for basic transaction but your operation risk to fail if they are more complex (smart contract interaction)

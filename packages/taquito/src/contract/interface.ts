@@ -7,10 +7,10 @@ import {
   OriginateParams,
   TransferParams,
   RegisterDelegateParams,
+  withParams,
 } from '../operations/types';
 import { Contract } from './contract';
 import { Estimate } from './estimate';
-import { withParams } from '../batch/rpc-batch-provider';
 
 export type ContractSchema = Schema | unknown;
 

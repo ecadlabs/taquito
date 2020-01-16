@@ -19,6 +19,7 @@ import {
   RegisterDelegateParams,
   TransferParams,
   RPCOperation,
+  withParams,
 } from '../operations/types';
 import { Estimate } from './estimate';
 import { EstimationProvider } from './interface';
@@ -28,7 +29,6 @@ import {
   createSetDelegateOperation,
   createTransferOperation,
 } from './prepare';
-import { withParams } from '../batch/rpc-batch-provider';
 import { DEFAULT_STORAGE_LIMIT } from '../constants';
 
 // RPC require a signature but do not verify it

@@ -1,31 +1,10 @@
 import { Context } from '../context';
 import { ContractMethod } from '../contract/contract';
 import { EstimationProvider } from '../contract/interface';
-import {
-  createOriginationOperation,
-  createSetDelegateOperation,
-  createTransferOperation,
-} from '../contract/prepare';
+import { createOriginationOperation, createSetDelegateOperation, createTransferOperation } from '../contract/prepare';
 import { BatchOperation } from '../operations/batch-operation';
 import { OperationEmitter } from '../operations/operation-emitter';
-import {
-  ActivationParams,
-  DelegateParams,
-  OriginateParams,
-  RPCDelegateOperation,
-  RPCOperation,
-  RPCOriginationOperation,
-  RPCTransferOperation,
-  TransferParams,
-} from '../operations/types';
-
-type withKind<T, K> = T & { kind: K };
-
-export type withParams =
-  | withKind<OriginateParams, 'origination'>
-  | withKind<DelegateParams, 'delegation'>
-  | withKind<TransferParams, 'transaction'>
-  | withKind<ActivationParams, 'activate_account'>;
+import { ActivationParams, DelegateParams, OriginateParams, RPCDelegateOperation, RPCOperation, RPCOriginationOperation, RPCTransferOperation, TransferParams, withParams } from '../operations/types';
 
 export class OperationBatch extends OperationEmitter {
   private operations: withParams[] = [];
@@ -176,7 +155,7 @@ export class OperationBatch extends OperationEmitter {
 }
 
 export class RPCBatchProvider {
-  constructor(private context: Context, private estimator: EstimationProvider) {}
+  constructor(private context: Context, private estimator: EstimationProvider) { }
 
   /***
    *
