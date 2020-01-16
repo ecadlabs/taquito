@@ -2,6 +2,7 @@ import { ParameterSchema, Schema } from '@taquito/michelson-encoder';
 import { EntrypointsResponse, ScriptResponse } from '@taquito/rpc';
 import { ContractProvider } from './interface';
 import { InvalidParameterError } from './errors';
+import { TransferParams } from '../operations/types';
 
 interface SendParams {
   fee?: number;
@@ -41,8 +42,17 @@ export class ContractMethod {
    *
    * @param Options generic operation parameter
    */
-  send({ fee, gasLimit, storageLimit, amount = 0 }: Partial<SendParams> = {}) {
-    return this.provider.transfer({
+  send(params: Partial<SendParams> = {}) {
+    return this.provider.transfer(this.toTransferParams(params));
+  }
+
+  toTransferParams({
+    fee,
+    gasLimit,
+    storageLimit,
+    amount = 0,
+  }: Partial<SendParams> = {}): TransferParams {
+    return {
       to: this.address,
       amount,
       fee,
@@ -55,7 +65,7 @@ export class ContractMethod {
           : this.parameterSchema.Encode(...this.args),
       } as any,
       rawParam: true,
-    });
+    };
   }
 }
 
