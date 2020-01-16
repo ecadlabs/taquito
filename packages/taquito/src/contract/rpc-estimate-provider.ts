@@ -77,7 +77,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
 
     const { opResponse } = await this.simulate(operation);
 
-    const errors = [...flattenErrors(opResponse), ...flattenErrors(opResponse, 'backtracked')];
+    const errors = [...flattenErrors(opResponse, 'backtracked'), ...flattenErrors(opResponse)];
 
     // Fail early in case of errors
     if (errors.length) {
