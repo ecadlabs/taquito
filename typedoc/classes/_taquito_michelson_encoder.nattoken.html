@@ -73,19 +73,13 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="_taquito_michelson_encoder.token.html" class="tsd-signature-type">Token</a>
+						<a href="_taquito_michelson_encoder.comparabletoken.html" class="tsd-signature-type">ComparableToken</a>
 						<ul class="tsd-hierarchy">
 							<li>
 								<span class="target">NatToken</span>
 							</li>
 						</ul>
 					</li>
-				</ul>
-			</section>
-			<section class="tsd-panel">
-				<h3>Implements</h3>
-				<ul class="tsd-hierarchy">
-					<li><a href="../interfaces/_taquito_michelson_encoder.comparabletoken.html" class="tsd-signature-type">ComparableToken</a></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -116,9 +110,10 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_taquito_michelson_encoder.nattoken.html#execute" class="tsd-kind-icon">Execute</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_taquito_michelson_encoder.nattoken.html#extractschema" class="tsd-kind-icon">Extract<wbr>Schema</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_taquito_michelson_encoder.nattoken.html#extractsignature" class="tsd-kind-icon">Extract<wbr>Signature</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_taquito_michelson_encoder.nattoken.html#tobigmapkey" class="tsd-kind-icon">To<wbr>Big<wbr>Map<wbr>Key</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_taquito_michelson_encoder.nattoken.html#tokey" class="tsd-kind-icon">To<wbr>Key</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_taquito_michelson_encoder.nattoken.html#tobigmapkey" class="tsd-kind-icon">To<wbr>Big<wbr>Map<wbr>Key</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_taquito_michelson_encoder.nattoken.html#tokey" class="tsd-kind-icon">To<wbr>Key</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_taquito_michelson_encoder.nattoken.html#annot" class="tsd-kind-icon">annot</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_taquito_michelson_encoder.nattoken.html#compare" class="tsd-kind-icon">compare</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_taquito_michelson_encoder.nattoken.html#hasannotations" class="tsd-kind-icon">has<wbr>Annotations</a></li>
 							</ul>
 						</section>
@@ -138,7 +133,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_taquito_michelson_encoder.token.html">Token</a>.<a href="_taquito_michelson_encoder.token.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/c5711ac/packages/taquito-michelson-encoder/src/tokens/comparable/nat.ts#L12">taquito-michelson-encoder/src/tokens/comparable/nat.ts:12</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/be4e9fb/packages/taquito-michelson-encoder/src/tokens/comparable/nat.ts#L12">taquito-michelson-encoder/src/tokens/comparable/nat.ts:12</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -176,10 +171,9 @@
 					<h3>create<wbr>Token</h3>
 					<div class="tsd-signature tsd-kind-icon">create<wbr>Token<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span><span class="tsd-signature-symbol"> =&nbsp;this.fac</span></div>
 					<aside class="tsd-sources">
-						<p>Implementation of <a href="../interfaces/_taquito_michelson_encoder.comparabletoken.html">ComparableToken</a>.<a href="../interfaces/_taquito_michelson_encoder.comparabletoken.html#createtoken">createToken</a></p>
 						<p>Inherited from <a href="_taquito_michelson_encoder.token.html">Token</a>.<a href="_taquito_michelson_encoder.token.html#createtoken">createToken</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/c5711ac/packages/taquito-michelson-encoder/src/tokens/token.ts#L49">taquito-michelson-encoder/src/tokens/token.ts:49</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/be4e9fb/packages/taquito-michelson-encoder/src/tokens/token.ts#L38">taquito-michelson-encoder/src/tokens/token.ts:38</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -212,10 +206,9 @@
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> fac</h3>
 					<div class="tsd-signature tsd-kind-icon">fac<span class="tsd-signature-symbol">:</span> <a href="../modules/_taquito_michelson_encoder.html#tokenfactory" class="tsd-signature-type">TokenFactory</a></div>
 					<aside class="tsd-sources">
-						<p>Implementation of <a href="../interfaces/_taquito_michelson_encoder.comparabletoken.html">ComparableToken</a>.<a href="../interfaces/_taquito_michelson_encoder.comparabletoken.html#fac">fac</a></p>
 						<p>Overrides <a href="_taquito_michelson_encoder.token.html">Token</a>.<a href="_taquito_michelson_encoder.token.html#fac">fac</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/c5711ac/packages/taquito-michelson-encoder/src/tokens/comparable/nat.ts#L17">taquito-michelson-encoder/src/tokens/comparable/nat.ts:17</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/be4e9fb/packages/taquito-michelson-encoder/src/tokens/comparable/nat.ts#L17">taquito-michelson-encoder/src/tokens/comparable/nat.ts:17</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -224,10 +217,9 @@
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> idx</h3>
 					<div class="tsd-signature tsd-kind-icon">idx<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
-						<p>Implementation of <a href="../interfaces/_taquito_michelson_encoder.comparabletoken.html">ComparableToken</a>.<a href="../interfaces/_taquito_michelson_encoder.comparabletoken.html#idx">idx</a></p>
 						<p>Overrides <a href="_taquito_michelson_encoder.token.html">Token</a>.<a href="_taquito_michelson_encoder.token.html#idx">idx</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/c5711ac/packages/taquito-michelson-encoder/src/tokens/comparable/nat.ts#L16">taquito-michelson-encoder/src/tokens/comparable/nat.ts:16</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/be4e9fb/packages/taquito-michelson-encoder/src/tokens/comparable/nat.ts#L16">taquito-michelson-encoder/src/tokens/comparable/nat.ts:16</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -236,10 +228,9 @@
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> val</h3>
 					<div class="tsd-signature tsd-kind-icon">val<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
-						<p>Implementation of <a href="../interfaces/_taquito_michelson_encoder.comparabletoken.html">ComparableToken</a>.<a href="../interfaces/_taquito_michelson_encoder.comparabletoken.html#val">val</a></p>
 						<p>Overrides <a href="_taquito_michelson_encoder.token.html">Token</a>.<a href="_taquito_michelson_encoder.token.html#val">val</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/c5711ac/packages/taquito-michelson-encoder/src/tokens/comparable/nat.ts#L15">taquito-michelson-encoder/src/tokens/comparable/nat.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/be4e9fb/packages/taquito-michelson-encoder/src/tokens/comparable/nat.ts#L15">taquito-michelson-encoder/src/tokens/comparable/nat.ts:15</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -263,7 +254,7 @@
 					<div class="tsd-signature tsd-kind-icon">prim<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;nat&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/c5711ac/packages/taquito-michelson-encoder/src/tokens/comparable/nat.ts#L12">taquito-michelson-encoder/src/tokens/comparable/nat.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/be4e9fb/packages/taquito-michelson-encoder/src/tokens/comparable/nat.ts#L12">taquito-michelson-encoder/src/tokens/comparable/nat.ts:12</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -279,10 +270,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_taquito_michelson_encoder.comparabletoken.html">ComparableToken</a>.<a href="../interfaces/_taquito_michelson_encoder.comparabletoken.html#encode">Encode</a></p>
 								<p>Overrides <a href="_taquito_michelson_encoder.token.html">Token</a>.<a href="_taquito_michelson_encoder.token.html#encode">Encode</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/c5711ac/packages/taquito-michelson-encoder/src/tokens/comparable/nat.ts#L26">taquito-michelson-encoder/src/tokens/comparable/nat.ts:26</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/be4e9fb/packages/taquito-michelson-encoder/src/tokens/comparable/nat.ts#L26">taquito-michelson-encoder/src/tokens/comparable/nat.ts:26</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -304,10 +294,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_taquito_michelson_encoder.comparabletoken.html">ComparableToken</a>.<a href="../interfaces/_taquito_michelson_encoder.comparabletoken.html#encodeobject">EncodeObject</a></p>
 								<p>Overrides <a href="_taquito_michelson_encoder.token.html">Token</a>.<a href="_taquito_michelson_encoder.token.html#encodeobject">EncodeObject</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/c5711ac/packages/taquito-michelson-encoder/src/tokens/comparable/nat.ts#L48">taquito-michelson-encoder/src/tokens/comparable/nat.ts:48</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/be4e9fb/packages/taquito-michelson-encoder/src/tokens/comparable/nat.ts#L48">taquito-michelson-encoder/src/tokens/comparable/nat.ts:48</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -331,7 +320,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_taquito_michelson_encoder.token.html">Token</a>.<a href="_taquito_michelson_encoder.token.html#execute">Execute</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/c5711ac/packages/taquito-michelson-encoder/src/tokens/comparable/nat.ts#L22">taquito-michelson-encoder/src/tokens/comparable/nat.ts:22</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/be4e9fb/packages/taquito-michelson-encoder/src/tokens/comparable/nat.ts#L22">taquito-michelson-encoder/src/tokens/comparable/nat.ts:22</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -358,10 +347,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_taquito_michelson_encoder.comparabletoken.html">ComparableToken</a>.<a href="../interfaces/_taquito_michelson_encoder.comparabletoken.html#extractschema">ExtractSchema</a></p>
 								<p>Overrides <a href="_taquito_michelson_encoder.token.html">Token</a>.<a href="_taquito_michelson_encoder.token.html#extractschema">ExtractSchema</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/c5711ac/packages/taquito-michelson-encoder/src/tokens/comparable/nat.ts#L57">taquito-michelson-encoder/src/tokens/comparable/nat.ts:57</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/be4e9fb/packages/taquito-michelson-encoder/src/tokens/comparable/nat.ts#L57">taquito-michelson-encoder/src/tokens/comparable/nat.ts:57</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -377,28 +365,27 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_taquito_michelson_encoder.comparabletoken.html">ComparableToken</a>.<a href="../interfaces/_taquito_michelson_encoder.comparabletoken.html#extractsignature">ExtractSignature</a></p>
 								<p>Inherited from <a href="_taquito_michelson_encoder.token.html">Token</a>.<a href="_taquito_michelson_encoder.token.html#extractsignature">ExtractSignature</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/c5711ac/packages/taquito-michelson-encoder/src/tokens/token.ts#L59">taquito-michelson-encoder/src/tokens/token.ts:59</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/be4e9fb/packages/taquito-michelson-encoder/src/tokens/token.ts#L48">taquito-michelson-encoder/src/tokens/token.ts:48</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">[]</span></h4>
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
 					<a name="tobigmapkey" class="tsd-anchor"></a>
 					<h3>To<wbr>Big<wbr>Map<wbr>Key</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
 						<li class="tsd-signature tsd-kind-icon">To<wbr>Big<wbr>Map<wbr>Key<span class="tsd-signature-symbol">(</span>val<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_taquito_michelson_encoder.comparabletoken.html">ComparableToken</a>.<a href="../interfaces/_taquito_michelson_encoder.comparabletoken.html#tobigmapkey">ToBigMapKey</a></p>
+								<p>Overrides <a href="_taquito_michelson_encoder.comparabletoken.html">ComparableToken</a>.<a href="_taquito_michelson_encoder.comparabletoken.html#tobigmapkey">ToBigMapKey</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/c5711ac/packages/taquito-michelson-encoder/src/tokens/comparable/nat.ts#L61">taquito-michelson-encoder/src/tokens/comparable/nat.ts:61</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/be4e9fb/packages/taquito-michelson-encoder/src/tokens/comparable/nat.ts#L61">taquito-michelson-encoder/src/tokens/comparable/nat.ts:61</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -429,17 +416,18 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
 					<a name="tokey" class="tsd-anchor"></a>
 					<h3>To<wbr>Key</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
 						<li class="tsd-signature tsd-kind-icon">To<wbr>Key<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Overrides <a href="_taquito_michelson_encoder.comparabletoken.html">ComparableToken</a>.<a href="_taquito_michelson_encoder.comparabletoken.html#tokey">ToKey</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/c5711ac/packages/taquito-michelson-encoder/src/tokens/comparable/nat.ts#L68">taquito-michelson-encoder/src/tokens/comparable/nat.ts:68</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/be4e9fb/packages/taquito-michelson-encoder/src/tokens/comparable/nat.ts#L68">taquito-michelson-encoder/src/tokens/comparable/nat.ts:68</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -466,13 +454,42 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_taquito_michelson_encoder.comparabletoken.html">ComparableToken</a>.<a href="../interfaces/_taquito_michelson_encoder.comparabletoken.html#annot">annot</a></p>
 								<p>Inherited from <a href="_taquito_michelson_encoder.token.html">Token</a>.<a href="_taquito_michelson_encoder.token.html#annot">annot</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/c5711ac/packages/taquito-michelson-encoder/src/tokens/token.ts#L38">taquito-michelson-encoder/src/tokens/token.ts:38</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/be4e9fb/packages/taquito-michelson-encoder/src/tokens/token.ts#L27">taquito-michelson-encoder/src/tokens/token.ts:27</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="compare" class="tsd-anchor"></a>
+					<h3>compare</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">compare<span class="tsd-signature-symbol">(</span>o1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, o2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">1</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">-1</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_taquito_michelson_encoder.comparabletoken.html">ComparableToken</a>.<a href="_taquito_michelson_encoder.comparabletoken.html#compare">compare</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/be4e9fb/packages/taquito-michelson-encoder/src/tokens/token.ts#L63">taquito-michelson-encoder/src/tokens/token.ts:63</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>o1: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>o2: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">1</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">-1</span>
+							</h4>
 						</li>
 					</ul>
 				</section>
@@ -485,10 +502,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_taquito_michelson_encoder.comparabletoken.html">ComparableToken</a>.<a href="../interfaces/_taquito_michelson_encoder.comparabletoken.html#hasannotations">hasAnnotations</a></p>
 								<p>Inherited from <a href="_taquito_michelson_encoder.token.html">Token</a>.<a href="_taquito_michelson_encoder.token.html#hasannotations">hasAnnotations</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/c5711ac/packages/taquito-michelson-encoder/src/tokens/token.ts#L45">taquito-michelson-encoder/src/tokens/token.ts:45</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/be4e9fb/packages/taquito-michelson-encoder/src/tokens/token.ts#L34">taquito-michelson-encoder/src/tokens/token.ts:34</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span>
@@ -581,14 +597,17 @@
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 								<a href="_taquito_michelson_encoder.nattoken.html#extractsignature" class="tsd-kind-icon">Extract<wbr>Signature</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
 								<a href="_taquito_michelson_encoder.nattoken.html#tobigmapkey" class="tsd-kind-icon">To<wbr>Big<wbr>Map<wbr>Key</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
 								<a href="_taquito_michelson_encoder.nattoken.html#tokey" class="tsd-kind-icon">To<wbr>Key</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 								<a href="_taquito_michelson_encoder.nattoken.html#annot" class="tsd-kind-icon">annot</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="_taquito_michelson_encoder.nattoken.html#compare" class="tsd-kind-icon">compare</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 								<a href="_taquito_michelson_encoder.nattoken.html#hasannotations" class="tsd-kind-icon">has<wbr>Annotations</a>
