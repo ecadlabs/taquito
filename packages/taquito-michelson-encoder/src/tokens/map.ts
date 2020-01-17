@@ -1,4 +1,4 @@
-import { Token, TokenFactory, Semantic, TokenValidationError } from './token';
+import { Token, TokenFactory, Semantic, TokenValidationError, ComparableToken } from './token';
 
 export class MapValidationError extends TokenValidationError {
   name: string = 'MapValidationError';
@@ -22,7 +22,7 @@ export class MapToken extends Token {
     return this.createToken(this.val.args[1], 0);
   }
 
-  get KeySchema(): Token & { ToKey: (x: any) => string } {
+  get KeySchema(): ComparableToken {
     return this.createToken(this.val.args[0], 0) as any;
   }
 
@@ -54,12 +54,14 @@ export class MapToken extends Token {
       throw err;
     }
 
-    return Object.keys(val).map(key => {
-      return {
-        prim: 'Elt',
-        args: [this.KeySchema.Encode([key]), this.ValueSchema.EncodeObject(val[key])],
-      };
-    });
+    return Object.keys(val)
+      .sort(this.KeySchema.compare)
+      .map(key => {
+        return {
+          prim: 'Elt',
+          args: [this.KeySchema.Encode([key]), this.ValueSchema.EncodeObject(val[key])],
+        };
+      });
   }
 
   public EncodeObject(args: any): any {
@@ -70,12 +72,14 @@ export class MapToken extends Token {
       throw err;
     }
 
-    return Object.keys(val).map(key => {
-      return {
-        prim: 'Elt',
-        args: [this.KeySchema.EncodeObject(key), this.ValueSchema.EncodeObject(val[key])],
-      };
-    });
+    return Object.keys(val)
+      .sort(this.KeySchema.compare)
+      .map(key => {
+        return {
+          prim: 'Elt',
+          args: [this.KeySchema.EncodeObject(key), this.ValueSchema.EncodeObject(val[key])],
+        };
+      });
   }
 
   public ExtractSchema() {

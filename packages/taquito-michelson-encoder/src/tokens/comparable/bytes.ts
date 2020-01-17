@@ -7,7 +7,7 @@ export class BytesValidationError extends TokenValidationError {
   }
 }
 
-export class BytesToken extends Token implements ComparableToken {
+export class BytesToken extends ComparableToken {
   static prim = 'bytes';
 
   constructor(

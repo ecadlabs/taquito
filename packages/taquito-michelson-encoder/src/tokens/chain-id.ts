@@ -8,7 +8,7 @@ export class ChainIDValidationError extends TokenValidationError {
   }
 }
 
-export class ChainIDToken extends Token implements ComparableToken {
+export class ChainIDToken extends ComparableToken {
   static prim = 'chain_id';
 
   constructor(
