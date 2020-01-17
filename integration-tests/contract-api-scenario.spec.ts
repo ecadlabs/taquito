@@ -462,7 +462,7 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker }) => {
       const oldSigner = Tezos.signer;
       Tezos.setProvider({ signer: signer2 });
 
-      // A transfer from an unrevealed account will require a an additional fee of 0.00142tz (reveal operation)
+      // A transfer from an unrevealed account will require an additional fee of 0.00142tz (reveal operation)
       const manager = await Tezos.rpc.getManagerKey(await signer2.publicKeyHash())
       const requireReveal = !manager
 
