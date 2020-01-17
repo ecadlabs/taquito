@@ -309,6 +309,64 @@ const cases: TestCase[] = [
       ],
     },
   },
+  {
+    name: 'Multiple transaction at once',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: 'reveal',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          public_key: 'edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+        },
+        {
+          kind: 'origination',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          balance: '0',
+          script: {
+            code: noAnnotCode,
+            storage: noAnnotInit('tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn'),
+          },
+        },
+        {
+          kind: 'transaction',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          parameters: {
+            entrypoint: 'default',
+            value: {
+              prim: 'Pair',
+              args: [{ bytes: '0202' }, { string: 'hello' }],
+              annots: ['%test'],
+            },
+          },
+          destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          amount: '1000',
+        },
+        {
+          kind: 'transaction',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          amount: '1000',
+        },
+      ]
+    }
+  }
 ];
 
 cases.forEach(({ name, operation }) => {

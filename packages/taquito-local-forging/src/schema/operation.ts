@@ -137,15 +137,26 @@ export const schemaDecoder = (decoders: { [key: string]: Decoder }) => (schema: 
     const valueToEncode = schema[key];
 
     if (Array.isArray(valueToEncode)) {
-      const encoder = decoders[valueToEncode[0]];
+      const decoder = decoders[valueToEncode[0]];
+
+      const decoded = [];
+      let lastLength = value.length();
+      while (value.length() > 0) {
+        decoded.push(decoder(value));
+
+        if (lastLength === value.length()) {
+          throw new Error('Unable to decode value')
+        }
+      }
+
       return {
         ...prev,
-        [key]: [encoder(value)],
+        [key]: decoded,
       };
     } else {
-      const encoder = decoders[valueToEncode];
+      const decoder = decoders[valueToEncode];
 
-      const result = encoder(value);
+      const result = decoder(value);
 
       if (result) {
         return {
