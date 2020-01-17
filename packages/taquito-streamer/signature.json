@@ -18,7 +18,7 @@
           },
           {
             "path": "dist/taquito-streamer.es5.js.map",
-            "sha512": "2aed0b17b04d3f058d2e000c7bbab71b3bb6258ea8cc79fbc2705f74cd70d113ec860895a4b5bc57752cee25e0138b152130310e8e0feaebaf893ca6e8f66a52"
+            "sha512": "c08fcc2cac57895ac92a5bbafec3a20cdf9a214d182ac0a6eeb7b38ab8db40c583a7d1cbe5a032edd8930a44ba825a6a776a4d810b003f8e46f744e05776e1d7"
           },
           {
             "path": "dist/lib/taquito-streamer.js.map",
@@ -26,7 +26,7 @@
           },
           {
             "path": "dist/taquito-streamer.umd.js.map",
-            "sha512": "d9a2d1a41f06d1dd5bf3fd8c1e3ac59c2b14cb6ce0e0ee21ba992d28ac6dd270d57167fe44b706cfc54fa02b0006552b703ec80895b20ecccd1e5fca84c07a57"
+            "sha512": "ff9aa61da33592fc7381b233268e3cac4d7899251dbd55d9e5854f7b75284d809ea40f461684f3feafe158b3e80215d3e51afcc744b0c001c65efd2b8e06332d"
           },
           {
             "path": "README.md",
@@ -70,7 +70,7 @@
           "typings",
           "version"
         ],
-        "sha512": "600960d5ef715760dbe8fb709d6a08f75f876d5b4a15ea46a38656553d5b681fba51db4e09a4df42af7b701f63aef7392998e04cc551abff57d696fb0bd02ede"
+        "sha512": "df7a0cdb722575ecd2f5ce04cd3991b98471eef7b88572ffd5d3c618dfc30b57168f6ec3a6383a41c7adedb5fbb5c180f5f483d2a48cbc07a2895722fdb403dc"
       }
     },
     {
@@ -78,7 +78,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/streamer",
-          "version": "5.3.1-beta.1",
+          "version": "6.0.0-beta.0",
           "description": "Methods to subscribe (using a websocket) to data from the Tezos blockchain. Relies on [https://github.com/ecadlabs/tezos-streamer](https://github.com/ecadlabs/tezos-streamer) which offers a websocket API to the caller, and streams data from the Tezos blockchain",
           "keywords": [
             "tezos",
@@ -141,12 +141,12 @@
             ]
           },
           "dependencies": {
-            "@taquito/http-utils": "^5.3.1-beta.1",
+            "@taquito/http-utils": "^6.0.0-beta.0",
             "bignumber.js": "^9.0.0",
             "ws": "^7.1.2"
           },
           "devDependencies": {
-            "@taquito/taquito": "^5.3.1-beta.1",
+            "@taquito/taquito": "^6.0.0-beta.0",
             "@types/jest": "^23.3.2",
             "@types/node": "^10.14.13",
             "@types/ws": "^6.0.3",
@@ -177,5 +177,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJeC44VCRCwAkEJD2ZwqwAAq4UQAHX3nuzA/FlzPHTOmb72dZOv\nOF9LQJBpr5n0C5Xg0YVvLURkWTfIRFQ8zjtjrwU+/MNOLfUVZlgecUWP/3L0dkHW\npctjfudmoQvr3sMo5O9AaernTHV9jR6V2VkNWbQmZHy6JEDWz6irdPmfdmPnPUxV\nd1TBB+S6bNXm5kOx/F/rDDniB9Psz6qh2FnbaG2IE+hDLcqWLlhwP6lnPPcThNEu\nHzcZDrdqFRlenvpSdzEEQ251v/3e612DxxPZn23ZtcJinSB/l6ymhxAGgO2vl90X\niXKCEQ5V/qRe98uIUVXePEyhpT5rLU3kuZp+tJLnwFe2s/6ggLACYFdJmye6KZjv\ncTpDLsGyU1le5r2uEhz7sUap5IOjEZnMStqW2+OFWpElXvi2NfrjmQSm/QdjwMzI\ncBLOb6PURUemM2Ooz/fEzKdgSSxnq5EL+cDRy2vRmB/dqIAOmG2Sy0i0rsxzBMaG\nWbqUrCwdPmEs/RZ/+DXGHVzsmzvnefksiqI8jtwK9G4uCY3RtNd9cXS6MDS20Fwq\no/YuWVCTDUZFu2Isav92mwnppPOHVkoZFaASnF0JUHEtjEbSjTPmunwCwuKTvrRG\nWSHHZs75m3TX7QGuczFbMM4eDfkCHeeRdSDymkcmYgq1wcnmrNDGjVZJIZjIKy8R\ngYj//UL/KUUd/zuB7W1L\n=S51I\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJeIia5CRCwAkEJD2ZwqwAAekEQAI1OGptiEpL51N+8lFjNXw+w\nUgQcBUhHWp/xwYq5Ci08vELap/WNeFBK9heS0MQDRo3SbvtQLIhcChGoF9PeHju/\n+lSCXvZko3Tzk8mgCWNPhZyoMviYU7QwEJJLGo/bXO3I9YHYW+8vIuEl5yGcsKAd\npSqYI+LznnmUUftfnbzio7LF3kTqzH6bw3UbfRhaTujSXE70aCVcGhgZmmGHOswr\nXPZINMEw26l77OvS6tYQz9cqG6aGHLckLICLYDpE+lD0E/RIUAU1KcUeZxMp2wdC\nDnZUCO1DR+x+Sl28BGMF3DhgJhHd/IwecGPQ9gL9Jhi6X5bU4MsIIRIaJfRzTUe7\n6s96amCbFebWrY52KUolNVA6BlNMZIlElRAXb0tPpcD3p7mY+HGiShoqKh6oBr1l\nRp9gRY0OmGAyWvafnBml9bImRxowtg5Uqk2N35LGJigyzsFgkVZ6FcBMLiLXzNfn\n0YS4XGZVd9bbf7nX2zIurenb12vnudIbkVapBgsJRhY+LZ42XLFjX0C3Y/edM79H\ndt66qgXaP+LijTNn9Rl31cS/Xn3kYVC/xSDF97/sqBPpNiCb9etGJTF+8EL2LnRN\nIEVhBExZH1tG6cwsVF/7gAWiv1Q0bHZd8Fj8TUq3SG7u1JnV2GJeWTsc28wKRI6O\nYn6l+hm+MwYEqsA409Cl\n=UEYX\n-----END PGP SIGNATURE-----\n"
 }

@@ -3,11 +3,11 @@
   "scripts": {
     "test": "jest --runInBand"
   },
-  "version": "5.3.1-beta.1",
+  "version": "6.0.0-beta.0",
   "dependencies": {
-    "@taquito/signer": "^5.3.1-beta.1",
-    "@taquito/taquito": "^5.3.1-beta.1",
-    "@taquito/local-forging": "^5.3.1-beta.1"
+    "@taquito/local-forging": "^6.0.0-beta.0",
+    "@taquito/signer": "^6.0.0-beta.0",
+    "@taquito/taquito": "^6.0.0-beta.0"
   },
   "private": true,
   "jest": {

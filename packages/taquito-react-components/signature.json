@@ -46,7 +46,7 @@
           },
           {
             "path": "dist/taquito-react-components.es5.js.map",
-            "sha512": "3b710d3571a1a70e6d22dbfbb4fce4ecce8bb01ab01c31ba8e5ebb7a58bf474114d30a06dfb5db162836ea6e4736a39de2ccdf629f43a4dfe0f362c7d688fe70"
+            "sha512": "b7949101946ee6fe1d77eb1b7e418bbf92b5a800a02266c5c709c459a3d4867a02de67aeb8b0ba7fce266ef05d013aaa2f7729e822c7bb99aa4325f1ede9f718"
           },
           {
             "path": "dist/lib/taquito-react-components.js.map",
@@ -54,7 +54,7 @@
           },
           {
             "path": "dist/taquito-react-components.umd.js.map",
-            "sha512": "e4473ad79cb232b3f2b5b9f5c005a1cefef022cc6bcea46e108ab637b880e0f8971cabd4dc67f4a69a461581c737eb513fc183d9a7803ba1c5011c32b9d05dff"
+            "sha512": "f5ef80a24072a6836041066413075fa4bbabccd0b2c344f5f125e29175b2e8d491bec1a7e104ee135f57304aa9a071b7044b0d9b2706d92c790ed32e0ef1a319"
           },
           {
             "path": "dist/lib/tezos-context.js.map",
@@ -117,7 +117,7 @@
           "typings",
           "version"
         ],
-        "sha512": "c95f8e9960cb0a781a820920acf177b8e58bb5475e30779852872ef41607c1ed3ce174dee8562605d44b852f1086b9aa275d9bd7359be2cc7b0ef8e31c7d4310"
+        "sha512": "dbff9ffb8e8f4df2b9a9c90725f2ec39e36f374c9916057a3077c45f8ccf0d416e0d0811928d361647c0a1d95273d34e2738dc3bdddc6395d35e57eca575a38c"
       }
     },
     {
@@ -125,7 +125,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/react-components",
-          "version": "5.3.1-beta.1",
+          "version": "6.0.0-beta.0",
           "description": "React Components that implement common use cases for data retrieved from the Tezos blockchain",
           "keywords": [
             "tezos",
@@ -168,8 +168,8 @@
             ]
           },
           "dependencies": {
-            "@taquito/rpc": "^5.3.1-beta.1",
-            "@taquito/taquito": "^5.3.1-beta.1",
+            "@taquito/rpc": "^6.0.0-beta.0",
+            "@taquito/taquito": "^6.0.0-beta.0",
             "@types/react": "^16.8.24",
             "bignumber.js": "^9.0.0",
             "react": "^16.8.6",
@@ -217,5 +217,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJeC44TCRCwAkEJD2ZwqwAA0JUQAK1ZFL5ezyJlG1N4+kvDFHWN\nceWnisG2EitOnOogUQMTHjTNeXx4Dn4Ly4MVdHqqTMyEmumDGTPWhsED8ZnFWt5L\n/WFUWuoIvt+lxcu0drvu+kXyXdr7+kcqPA4wPLQcbH62R8+GtGWWCfjMHWZzEuTH\n6xA9E9yF1Ef8915R0zEWUUyqzIJNWy290YxAGM0JDoCKRBnIl2m+WENUQNQ5Ju7K\ngifCcVa4dcmrbCrfPvc86Miv0W+oCPW8kH5OHe3X3hqmzteXbZeMy7N0IYexDeAu\nKQle6gp6D9+f+5aVpdYqQ3Ywg9c83aPBBhyH0XH7ywixgpmiyykFKm8TPZPL075P\nI6mNPWjOOZ4KbD3tBBn8M+IhOJjFFJjz6otZqRJjderh66MWffPREc3ADHF2G83s\nmKi/U505yhQNHmR+uKLbWWMcJHYW9qsmUiMDkqkkDflSLfyQPznj+e4qQTWgMlUO\n4la93OXwNIwTmTEKiungT7eNHvILDmp+3c39CzLvVMM/vMW25scQPuA9ddX03QNA\nTJoaQobe+yF0Cht/ugzVpEC65FapgVt0A+wULnJf5GYFR8JUXwUvuNsntlIQfq7V\nK6lgOBUsBlEQuYqKT1mXbL6++BjZRLtmZHcQzjDYhhaWZlFWJVuDVF7xbROO6zeU\nL1iXq/2OQA2TlWzvHTF5\n=jPXk\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJeIia3CRCwAkEJD2ZwqwAA66sQABpfmr+pplgpa4Zn7AdeDaxD\nP5CLIPGUIDqksvK0SyUFIe9eiYfbKWCRADwdJ2hHneAHAHph5rM0UOMBnsEzYsYj\nkKB9kc02Pi4ghDkN4Me5w5NameVx/cV1k623qchumkNg3tsTPU1Xd8k/4vh9DnEM\ndlASz2usT2bb3eNo7mDLSnTrflY8BJC9TMFyAHN3vH1EcKQzMKbjaPWXhBGBlWUk\n/EIxhqBvs2IvhDCndHKjpDNxG2H0mFtMPKo50iutl9aNjdRhefH+NQ53S8LK/a6I\nZlJStN7pcRUECn0Gpqnzi/Tmy3PH5e9ELE+GYt4ksx9dKLwX1wtakaOQkvYYQwn3\nwLN1ow7SgT+K2DP9qcPvSSJSgiD31S5H/u6l8p7HIyA4zYvAVKw9PVkcWcDdVdBZ\nBIQIwttiai6kiSkzsTfWb1Ukz39XZdgflacJD1iY2xPoyXr+9q300A0umhkYmyC8\nQQV3Um0cH/X4cNdYgXPIvGplXhkA2DSOHhCuH65DAxrmEKI1QFvToeO2uhD6oMtL\nXRCBdIIJQvyA1g1l1wmnkHp26LzWp13/uR5TXc8CljhuUlyN6YYm98fS5E4y2V2Q\nsqylCI+M3hDYLUURqrQTqUW9owNiiW7DX++rklI9rhLEdZtFevgB/EtBPEvRUM93\nFwuRvD6cFi+HyxvkU6OW\n=tsEH\n-----END PGP SIGNATURE-----\n"
 }
