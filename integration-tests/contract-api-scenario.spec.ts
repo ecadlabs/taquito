@@ -273,9 +273,15 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker }) => {
             allowances: {
               [addr]: "1"
             }
+          },
+          "tz1ccqAEwfPgeoipnXtjAv1iucrpQv3DFmmS": {
+            balance: "1",
+            allowances: {
+              [addr]: "1"
+            }
           }
         },
-        totalSupply: "1"
+        totalSupply: "2"
       }
 
       const op = await Tezos.contract.originate({
