@@ -13,6 +13,7 @@ const integrationTest = process.env.RUN_INTEGRATION ? test : test.skip;
 interface TestCase {
   name: string;
   operation: {};
+  expected?: {};
 }
 
 const cases: TestCase[] = [
@@ -164,6 +165,131 @@ const cases: TestCase[] = [
             value: { prim: 'Pair', args: [{ int: '2' }, { string: 'hello' }] },
           },
           destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          amount: '1000',
+        },
+      ],
+    },
+  },
+  {
+    name: 'Transaction with default entrypoint and unit parameter',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: 'transaction',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          parameters: {
+            entrypoint: 'default',
+            value: { prim: 'Unit' },
+          },
+          destination: 'KT1JHqHQdHSgWBKo6H4UfG8dw3JnZSyjGkHA',
+          amount: '1000',
+        },
+      ],
+    },
+    expected: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: 'transaction',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          destination: 'KT1JHqHQdHSgWBKo6H4UfG8dw3JnZSyjGkHA',
+          amount: '1000',
+        },
+      ],
+    },
+  },
+  {
+    name: 'Transaction with set_delegate entrypoint',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: 'transaction',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          parameters: {
+            entrypoint: 'set_delegate',
+            value: { string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn' },
+          },
+          destination: 'KT1JHqHQdHSgWBKo6H4UfG8dw3JnZSyjGkHA',
+          amount: '1000',
+        },
+      ],
+    },
+  },
+  {
+    name: 'Transaction with remove_delegate entrypoint',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: 'transaction',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          parameters: {
+            entrypoint: 'remove_delegate',
+            value: { string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn' },
+          },
+          destination: 'KT1JHqHQdHSgWBKo6H4UfG8dw3JnZSyjGkHA',
+          amount: '1000',
+        },
+      ],
+    },
+  },
+  {
+    name: 'Transaction with root entrypoint',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: 'transaction',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          parameters: {
+            entrypoint: 'root',
+            value: { string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn' },
+          },
+          destination: 'KT1JHqHQdHSgWBKo6H4UfG8dw3JnZSyjGkHA',
+          amount: '1000',
+        },
+      ],
+    },
+  },
+  {
+    name: 'Transaction with do entrypoint',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: 'transaction',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          parameters: {
+            entrypoint: 'do',
+            value: { string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn' },
+          },
+          destination: 'KT1JHqHQdHSgWBKo6H4UfG8dw3JnZSyjGkHA',
           amount: '1000',
         },
       ],
@@ -364,15 +490,17 @@ const cases: TestCase[] = [
           destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           amount: '1000',
         },
-      ]
-    }
-  }
+      ],
+    },
+  },
 ];
 
-cases.forEach(({ name, operation }) => {
+cases.forEach(({ name, operation, expected }) => {
   test(`Test: ${name}`, async done => {
     const result = encoders['manager'](operation);
-    expect(decoders['manager'](new Uint8ArrayConsumer(fromHexString(result)))).toEqual(operation);
+    expect(decoders['manager'](new Uint8ArrayConsumer(fromHexString(result)))).toEqual(
+      expected || operation
+    );
     done();
   });
 
@@ -386,7 +514,7 @@ cases.forEach(({ name, operation }) => {
 
       expect(result).toEqual(rpcResult);
       expect(decoders['manager'](new Uint8ArrayConsumer(fromHexString(result)))).toEqual(
-        operation
+        expected || operation
       );
       done();
     });
