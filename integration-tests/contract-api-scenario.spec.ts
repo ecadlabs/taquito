@@ -8,10 +8,11 @@ import { tokenBigmapCode } from './data/token_bigmap'
 import { collection_code } from "./data/collection_contract";
 
 import { noAnnotCode, noAnnotInit } from "./data/token_without_annotation";
-import { DEFAULT_FEE, DEFAULT_GAS_LIMIT } from "@taquito/taquito";
+import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, TezosToolkit, DEFAULT_STORAGE_LIMIT } from "@taquito/taquito";
 import { booleanCode } from "./data/boolean_parameter";
 import { failwithContractCode } from "./data/failwith"
 import { badCode } from "./data/badCode";
+import { InMemorySigner } from "@taquito/signer";
 import { storageContract } from "./data/storage-contract";
 
 CONFIGS.forEach(({ lib, rpc, setup, knownBaker }) => {
@@ -454,5 +455,59 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker }) => {
       done();
     })
 
+    it('Test emptying an unrevealed implicit account', async (done) => {
+      const signer2 = new InMemorySigner("p2esk2TFqgNcoT4u99ut5doGTUFNwo9x4nNvkpM6YMLqXrt4SbFdQnqLM3hoAXLMB2uZYazj6LZGvcoYzk16H6Et", "test1234")
+      const op = await Tezos.contract.transfer({ to: await signer2.publicKeyHash(), amount: 2 });
+      await op.confirmation();
+      const oldSigner = Tezos.signer;
+      Tezos.setProvider({ signer: signer2 });
+
+      // A transfer from an unrevealed account will require an additional fee of 0.00142tz (reveal operation)
+      const manager = await Tezos.rpc.getManagerKey(await signer2.publicKeyHash())
+      const requireReveal = !manager
+
+      // Only need to include reveal fees if the account is not revealed
+      const revealFee = requireReveal ? DEFAULT_FEE.REVEAL : 0;
+
+      const estimate = await Tezos.estimate.transfer({ to: await oldSigner.publicKeyHash(), amount: 1 });
+
+      // The max amount that can be sent now is the total balance minus the fees + reveal fees
+      const balance = await Tezos.tz.getBalance(await signer2.publicKeyHash())
+      const maxAmount = balance.minus(estimate.suggestedFeeMutez + revealFee).toNumber();
+      const op3 = await Tezos.contract.transfer({ to: await oldSigner.publicKeyHash(), mutez: true, amount: maxAmount, fee: estimate.suggestedFeeMutez, gasLimit: estimate.gasLimit, storageLimit: 0 })
+      await op3.confirmation();
+
+      expect((await Tezos.tz.getBalance(await signer2.publicKeyHash())).toString()).toEqual("0")
+
+      Tezos.setProvider({ signer: oldSigner });
+      done();
+    });
+
+    it('Test emptying a revealed implicit account', async (done) => {
+      const signer2 = new InMemorySigner("p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1")
+      const op = await Tezos.contract.transfer({ to: await signer2.publicKeyHash(), amount: 2 });
+      await op.confirmation();
+      const oldSigner = Tezos.signer;
+      Tezos.setProvider({ signer: signer2 });
+
+      // Sending token from the account we want to empty
+      // This will do the reveal operation automatically
+      const op2 = await Tezos.contract.transfer({ to: await oldSigner.publicKeyHash(), amount: 1 });
+      await op2.confirmation();
+
+      const estimate = await Tezos.estimate.transfer({ to: await oldSigner.publicKeyHash(), amount: 0.5 });
+
+      // Emptying the account
+      // The max amount that can be sent now is the total balance minus the fees (no need for reveal fees)
+      const balance = await Tezos.tz.getBalance(await signer2.publicKeyHash())
+      const maxAmount = balance.minus(estimate.suggestedFeeMutez).toNumber();
+      const op3 = await Tezos.contract.transfer({ to: await oldSigner.publicKeyHash(), mutez: true, amount: maxAmount, fee: estimate.suggestedFeeMutez, gasLimit: estimate.gasLimit, storageLimit: 0 })
+      await op3.confirmation();
+
+      expect((await Tezos.tz.getBalance(await signer2.publicKeyHash())).toString()).toEqual("0")
+
+      Tezos.setProvider({ signer: oldSigner });
+      done();
+    });
   });
 })
