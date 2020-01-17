@@ -1,0 +1,43 @@
+{
+  "name": "@nomadic-labs/taquito-bs",
+  "version": "1.0.5",
+  "description": "reasonml binging to taquito",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "clean": "bsb -clean-world",
+    "build": "bsb -make-world",
+    "watch": "bsb -make-world -w",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@glennsl/bs-jest": "^0.4.9",
+    "@taquito/taquito": "^5.0.1-beta.1",
+    "bs-promise-monad": "^0.4.0",
+    "bs-webapi": "^0.15.5",
+    "re-bignum": "https://gitlab.com/kinokasai/re-bignum/"
+  },
+  "peerDependencies": {
+    "@taquito/taquito": "^5.0.1-beta.1"
+  },
+  "files": [
+    "src/taquito.re",
+    "bsconfig.json"
+  ],
+  "directories": {
+    "lib": "lib"
+  },
+  "devDependencies": {
+    "@glennsl/bs-json": "^5.0.1",
+    "bs-platform": "7"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/abate/taquito-bs.git"
+  },
+  "author": "",
+  "bugs": {
+    "url": "https://gitlab.com/abate/taquito-bs/issues"
+  },
+  "homepage": "https://gitlab.com/abate/taquito-bs#readme"
+}

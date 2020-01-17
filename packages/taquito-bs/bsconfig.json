@@ -1,0 +1,25 @@
+{
+  "name": "@nomadic-labs/taquito-bs",
+  "version": "1.0.5",
+    "sources": [
+	{
+	    "dir" : "src",
+	    "subdirs" : true
+	},
+	{
+	    "dir": "__tests__",
+	    "type": "dev"
+	}
+    ],
+  "package-specs": {
+    "module": "commonjs",
+    "in-source": true
+  },
+  "suffix": ".bs.js",
+  "bs-dependencies": ["bs-promise-monad", "re-bignum", "@glennsl/bs-json"],
+  "bs-dev-dependencies": ["@glennsl/bs-jest"],
+  "warnings": {
+    "error" : "+101"
+  },
+  "refmt": 3
+}
