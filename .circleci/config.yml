@@ -42,7 +42,7 @@ jobs:
       - image: circleci/node:8.11.4
     steps:
       - checkout
-      - run: cd website && npm install && npm run build && cp -R build/taquito ../dist
+      - run: cd website && npm install && npm run build && cp -R build/. ../dist
       - run: npm install
       - run: npm run lerna -- bootstrap
       - run: npm run lerna run build
@@ -78,4 +78,4 @@ workflows:
           filters:
             branches:
               only: master
-        
+

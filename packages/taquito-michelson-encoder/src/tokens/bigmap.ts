@@ -47,12 +47,14 @@ export class BigMapToken extends Token {
       throw err;
     }
 
-    return Object.keys(val).map(key => {
-      return {
-        prim: 'Elt',
-        args: [this.KeySchema.Encode([key]), this.ValueSchema.EncodeObject(val[key])],
-      };
-    });
+    return Object.keys(val)
+      .sort(this.KeySchema.compare)
+      .map(key => {
+        return {
+          prim: 'Elt',
+          args: [this.KeySchema.Encode([key]), this.ValueSchema.EncodeObject(val[key])],
+        };
+      });
   }
 
   public EncodeObject(args: any): any {
@@ -63,12 +65,14 @@ export class BigMapToken extends Token {
       throw err;
     }
 
-    return Object.keys(val).map(key => {
-      return {
-        prim: 'Elt',
-        args: [this.KeySchema.EncodeObject(key), this.ValueSchema.EncodeObject(val[key])],
-      };
-    });
+    return Object.keys(val)
+      .sort(this.KeySchema.compare)
+      .map(key => {
+        return {
+          prim: 'Elt',
+          args: [this.KeySchema.EncodeObject(key), this.ValueSchema.EncodeObject(val[key])],
+        };
+      });
   }
 
   public Execute(val: any[] | { int: string }, semantic?: Semantic) {

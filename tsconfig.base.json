@@ -41,6 +41,9 @@
       ],
       "@taquito/signer": [
         "taquito-signer/src/taquito-signer.ts"
+      ],
+      "@taquito/local-forging": [
+        "taquito-local-forging/src/taquito-local-forging.ts"
       ]
     }
   }

@@ -13,6 +13,7 @@ import { booleanCode } from "./data/boolean_parameter";
 import { failwithContractCode } from "./data/failwith"
 import { badCode } from "./data/badCode";
 import { InMemorySigner } from "@taquito/signer";
+import { storageContract } from "./data/storage-contract";
 
 CONFIGS.forEach(({ lib, rpc, setup, knownBaker }) => {
   const Tezos = lib;
@@ -274,9 +275,34 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker }) => {
             allowances: {
               [addr]: "1"
             }
+          },
+          "tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD": {
+            balance: "1",
+            allowances: {
+              [addr]: "1"
+            }
+          },
+          "tz3YjfexGakCDeCseXFUpcXPSAN9xHxE9TH2": {
+            balance: "2",
+            allowances: {
+              KT1CDEg2oY3VfMa1neB7hK5LoVMButvivKYv: "1",
+              [addr]: "1"
+            }
+          },
+          "tz1ccqAEwfPgeoipnXtjAv1iucrpQv3DFmmS": {
+            balance: "1",
+            allowances: {
+              [addr]: "1"
+            }
+          },
+          "KT1CDEg2oY3VfMa1neB7hK5LoVMButvivKYv": {
+            balance: "1",
+            allowances: {
+              [addr]: "1"
+            }
           }
         },
-        totalSupply: "1"
+        totalSupply: "6"
       }
 
       const op = await Tezos.contract.originate({
@@ -297,9 +323,9 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker }) => {
       const addr = await Tezos.signer.publicKeyHash();
 
       const initialStorage = {
-        set1: ['1'],
+        set1: ['2', '1', '3'],
         list1: ['1'],
-        map1: { "1": "1" }
+        map1: { "2": "1", "1": "1" }
       }
 
       const op = await Tezos.contract.originate({
@@ -312,7 +338,7 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker }) => {
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
       const contract = await op.contract()
       let storage: any = await contract.storage()
-      expect(storage['set1'].map((x: any) => x.toString())).toEqual(['1'])
+      expect(storage['set1'].map((x: any) => x.toString())).toEqual(['1', '2', '3'])
       expect(storage['list1'].map((x: any) => x.toString())).toEqual(['1'])
       expect(storage['map1']['1'].toString()).toEqual('1')
 
@@ -327,7 +353,63 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker }) => {
 
       done();
     });
+    it('Storage contract', async (done) => {
+      const op = await Tezos.contract.originate({
+        balance: "1",
+        code: storageContract,
+        storage: {
+          "map1": {
+            "tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD": 1,
+            'KT1CDEg2oY3VfMa1neB7hK5LoVMButvivKYv': 2,
+            "tz3YjfexGakCDeCseXFUpcXPSAN9xHxE9TH2": 2,
+            "tz1ccqAEwfPgeoipnXtjAv1iucrpQv3DFmmS": 3,
+          },
+          "map2": {
+            "2": 1,
+            '3': 2,
+            "1": 2,
+            "4": 3,
+          },
+          "map3": {
+            "2": 1,
+            '3': 2,
+            "1": 2,
+            "4": 3,
+          },
+          "map4": {
+            "zz": 1,
+            'aa': 2,
+            "ab": 2,
+            "cc": 3,
+          },
+          "map5": {
+            "aaaa": 1,
+            "aa": 1,
+            'ab': 2,
+            "01": 2,
+            "22": 3,
+          },
+          "map6": {
+            "2": 1,
+            '3': 2,
+            "1": 2,
+            "4": 3,
+          },
+          "map7": {
+            "2018-04-23T10:26:00.996Z": 1,
+            '2017-04-23T10:26:00.996Z': 2,
+            "2019-04-23T10:26:00.996Z": 2,
+            "2015-04-23T10:26:00.996Z": 3,
+          },
+        }
+      })
 
+      const contrct = await op.contract()
+      console.log(contrct.address);
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+      done();
+    })
     it('Test contract with no annotations for methods', async (done) => {
       // Constants to replace annotations
       const ACCOUNTS = '0';

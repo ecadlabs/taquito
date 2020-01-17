@@ -8,7 +8,7 @@ export class AddressValidationError extends TokenValidationError {
   }
 }
 
-export class AddressToken extends Token implements ComparableToken {
+export class AddressToken extends ComparableToken {
   static prim = 'address';
 
   constructor(
@@ -75,5 +75,21 @@ export class AddressToken extends Token implements ComparableToken {
     }
 
     return encodePubKey(bytes);
+  }
+
+  compare(address1: string, address2: string) {
+    const isImplicit = (address: string) => {
+      return address.startsWith('tz');
+    };
+
+    if (isImplicit(address1) && isImplicit(address2)) {
+      return super.compare(address1, address2);
+    } else if (isImplicit(address1)) {
+      return -1;
+    } else if (isImplicit(address2)) {
+      return 1;
+    } else {
+      return super.compare(address1, address2);
+    }
   }
 }

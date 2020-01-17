@@ -1,0 +1,62 @@
+.section {
+  padding: 72px 0;
+}
+
+.centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.banner {
+  padding: 48px;
+  background: var(--ifm-color-primary);
+  color: var(--ifm-color-primary-lightest);
+  font-size: 2em;
+}
+
+.brandLogo {
+  max-width: 425px;
+  width: 80%;
+}
+
+.tagline {
+  margin: 0.7em 0 1.3em;
+}
+
+.button {
+  border: 1px solid var(--ifm-color-primary-lightest);
+  display: inline-block;
+  line-height: 1.2em;
+  text-decoration: none !important;
+  text-transform: uppercase;
+  transition: background 0.3s, color 0.3s;
+  border-radius: 8px;
+  border-width: 2px;
+  color: var(--ifm-color-primary-lightest);
+  font-size: 16px;
+  font-weight: bold;
+  padding: 16px 24px;
+  margin: 0 10px;
+}
+
+.button:hover {
+  background: var(--ifm-color-primary-lightest);
+}
+
+.bestPractices {
+  background-color: #2b3137;
+  color: var(--ifm-color-primary-lightest);
+}
+
+.centerVerticaly {
+  display: flex;
+  align-items: center;
+}
+
+.userBanner {
+  max-width: 250px;
+  max-height: 100px;
+}
