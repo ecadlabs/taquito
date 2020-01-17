@@ -2,7 +2,7 @@ import { CONFIGS } from "./config";
 import { managerCode } from "./data/manager_code";
 import { MANAGER_LAMBDA } from "@taquito/taquito";
 
-CONFIGS.forEach(({ lib, rpc, setup }) => {
+CONFIGS.forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
   const Tezos = lib;
 
   describe(`Manager TZ: ${rpc}`, () => {
@@ -30,7 +30,7 @@ CONFIGS.forEach(({ lib, rpc, setup }) => {
       await opTransfer.confirmation();
       expect(opTransfer.status).toEqual('applied')
       // Set delegate on contract kt1_alice by passing a lambda function to kt1_alice's `do` entrypoint
-      const opSetDelegate = await contract.methods.do(MANAGER_LAMBDA.setDelegate("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh")).send({ amount: 0 })
+      const opSetDelegate = await contract.methods.do(MANAGER_LAMBDA.setDelegate(knownBaker)).send({ amount: 0 })
       await opSetDelegate.confirmation();
       expect(opSetDelegate.status).toEqual('applied')
       // Remove delegate on contract kt1_alice by passing a lambda function to kt1_alice's `do` entrypoint
@@ -42,9 +42,16 @@ CONFIGS.forEach(({ lib, rpc, setup }) => {
       // lambda helper function. The transfer amount in the actual transfer operation is 0. We are not transferring the token
       // in the transfer operation, we are instructing the contract to transfer the token using the `do` entrypoint of the kt1_alice
       // contract.
-      const transferToContractOp = await contract.methods.do(MANAGER_LAMBDA.transferToContract("KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK", 1)).send({ amount: 0 })
+      const transferToContractOp = await contract.methods.do(MANAGER_LAMBDA.transferToContract(knownContract, 1)).send({ amount: 0 })
       await transferToContractOp.confirmation();
       expect(transferToContractOp.status).toEqual('applied')
+
+      try {
+        await contract.methods.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 50 * 1000000)).send({ amount: 0 })
+        fail('Should throw during transfer with amount higher than balance')
+      } catch (ex) {
+        expect(ex.message).toMatch('balance_too_low')
+      }
       done();
     })
   })

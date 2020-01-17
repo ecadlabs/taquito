@@ -22,6 +22,7 @@ import {
   createSetDelegateOperation,
   createTransferOperation,
 } from './prepare';
+import { flattenErrors, TezosOperationError } from '../operations/operation-errors';
 
 // RPC require a signature but do not verify it
 const SIGNATURE_STUB =
@@ -73,6 +74,14 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     };
 
     const { opResponse } = await this.simulate(operation);
+
+    const errors = flattenErrors(opResponse);
+
+    // Fail early in case of errors
+    if (errors.length) {
+      throw new TezosOperationError(errors);
+    }
+
     const operationResults = this.getOperationResult(opResponse, kind);
 
     let totalGas = 0;
