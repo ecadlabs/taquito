@@ -274,7 +274,7 @@ export const entrypointEncoder = (entrypoint: string) => {
 };
 
 export const parametersEncoder = (val: { entrypoint: string; value: MichelsonValue }) => {
-  if (!val) {
+  if (!val || (val.entrypoint === 'default' && 'prim' in val.value && val.value.prim === 'Unit')) {
     return '00';
   }
 
