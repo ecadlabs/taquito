@@ -1,5 +1,5 @@
 import { TezosToolkit } from '@taquito/taquito';
-import { Uint8ArrayConsummer } from '../src/uint8array-consummer';
+import { Uint8ArrayConsumer } from '../src/uint8array-consumer';
 import { opMappingReverse } from '../src/constants';
 import { decoders, encoders } from '../src/taquito-local-forging';
 import { genericCode, genericStorage } from './data/generic_contract';
@@ -372,7 +372,7 @@ const cases: TestCase[] = [
 cases.forEach(({ name, operation }) => {
   test(`Test: ${name}`, async done => {
     const result = encoders['manager'](operation);
-    expect(decoders['manager'](new Uint8ArrayConsummer(fromHexString(result)))).toEqual(operation);
+    expect(decoders['manager'](new Uint8ArrayConsumer(fromHexString(result)))).toEqual(operation);
     done();
   });
 
@@ -385,7 +385,7 @@ cases.forEach(({ name, operation }) => {
       const rpcResult = await Tezos.rpc.forgeOperations(operation);
 
       expect(result).toEqual(rpcResult);
-      expect(decoders['manager'](new Uint8ArrayConsummer(fromHexString(result)))).toEqual(
+      expect(decoders['manager'](new Uint8ArrayConsumer(fromHexString(result)))).toEqual(
         operation
       );
       done();

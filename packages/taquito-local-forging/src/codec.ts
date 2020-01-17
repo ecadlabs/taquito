@@ -3,28 +3,27 @@ import {
   b58cencode,
   buf2hex,
   Prefix,
-  prefix,
   prefix as prefixMap,
   prefixLength,
 } from '@taquito/utils';
 import BigNumber from 'bignumber.js';
 import { entrypointMapping, entrypointMappingReverse } from './constants';
 import { extractRequiredLen, valueDecoder, valueEncoder, MichelsonValue } from './michelson/codec';
-import { Uint8ArrayConsummer } from './uint8array-consummer';
+import { Uint8ArrayConsumer } from './uint8array-consumer';
 import { pad } from './utils';
 
 export const prefixEncoder = (prefix: Prefix) => (str: string) => {
   return buf2hex(Buffer.from(b58cdecode(str, prefixMap[prefix])));
 };
 
-export const prefixDecoder = (pre: Prefix) => (str: Uint8ArrayConsummer) => {
+export const prefixDecoder = (pre: Prefix) => (str: Uint8ArrayConsumer) => {
   const val = str.consume(prefixLength[pre]);
-  return b58cencode(val, prefix[pre]);
+  return b58cencode(val, prefixMap[pre]);
 };
 
 export const tz1Decoder = prefixDecoder(Prefix.TZ1);
 export const branchDecoder = prefixDecoder(Prefix.B);
-export const pkhDecoder = (val: Uint8ArrayConsummer) => {
+export const pkhDecoder = (val: Uint8ArrayConsumer) => {
   const prefix = val.consume(1);
 
   if (prefix[0] === 0x00) {
@@ -45,11 +44,11 @@ export const proposalEncoder = (proposal: string): string => {
   return prefixEncoder(Prefix.P)(proposal);
 };
 
-export const proposalDecoder = (proposal: Uint8ArrayConsummer): string => {
+export const proposalDecoder = (proposal: Uint8ArrayConsumer): string => {
   return prefixDecoder(Prefix.P)(proposal);
 };
 
-export const proposalsDecoder = (proposal: Uint8ArrayConsummer): string[] => {
+export const proposalsDecoder = (proposal: Uint8ArrayConsumer): string[] => {
   const proposals = [];
   proposal.consume(4);
   while (proposal.length() > 0) {
@@ -75,7 +74,7 @@ export const ballotEncoder = (ballot: string): string => {
   }
 };
 
-export const ballotDecoder = (ballot: Uint8ArrayConsummer): string => {
+export const ballotDecoder = (ballot: Uint8ArrayConsumer): string => {
   const value = ballot.consume(1);
   switch (value[0]) {
     case 0x00:
@@ -107,7 +106,7 @@ export const int32Encoder = (val: number | string): string => {
   return Buffer.from(byte).toString('hex');
 };
 
-export const int32Decoder = (val: Uint8ArrayConsummer) => {
+export const int32Decoder = (val: Uint8ArrayConsumer) => {
   const num = val.consume(4);
   let finalNum = 0;
   for (let i = 0; i < num.length; i++) {
@@ -117,12 +116,12 @@ export const int32Decoder = (val: Uint8ArrayConsummer) => {
   return finalNum;
 };
 
-export const boolDecoder = (val: Uint8ArrayConsummer): boolean => {
+export const boolDecoder = (val: Uint8ArrayConsumer): boolean => {
   const bool = val.consume(1);
   return bool[0] === 0xff;
 };
 
-export const delegateDecoder = (val: Uint8ArrayConsummer) => {
+export const delegateDecoder = (val: Uint8ArrayConsumer) => {
   const hasDelegate = boolDecoder(val);
   if (hasDelegate) {
     return pkhDecoder(val);
@@ -171,7 +170,7 @@ export const addressEncoder = (val: string): string => {
   }
 };
 
-export const publicKeyDecoder = (val: Uint8ArrayConsummer) => {
+export const publicKeyDecoder = (val: Uint8ArrayConsumer) => {
   const preamble = val.consume(1);
   switch (preamble[0]) {
     case 0x00:
@@ -185,7 +184,7 @@ export const publicKeyDecoder = (val: Uint8ArrayConsummer) => {
   }
 };
 
-export const addressDecoder = (val: Uint8ArrayConsummer) => {
+export const addressDecoder = (val: Uint8ArrayConsumer) => {
   const preamble = val.consume(1);
   switch (preamble[0]) {
     case 0x00:
@@ -222,7 +221,7 @@ export const zarithEncoder = (n: string): string => {
   return fn.join('');
 };
 
-export const zarithDecoder = (n: Uint8ArrayConsummer): string => {
+export const zarithDecoder = (n: Uint8ArrayConsumer): string => {
   let mostSignificantByte = 0;
   while (mostSignificantByte < n.length() && (n.get(mostSignificantByte) & 128) !== 0) {
     mostSignificantByte += 1;
@@ -239,7 +238,7 @@ export const zarithDecoder = (n: Uint8ArrayConsummer): string => {
   return new BigNumber(num).toString();
 };
 
-export const entrypointDecoder = (value: Uint8ArrayConsummer) => {
+export const entrypointDecoder = (value: Uint8ArrayConsumer) => {
   const preamble = pad(value.consume(1)[0], 2);
 
   if (preamble in entrypointMapping) {
@@ -250,14 +249,14 @@ export const entrypointDecoder = (value: Uint8ArrayConsummer) => {
   }
 };
 
-export const parametersDecoder = (val: Uint8ArrayConsummer) => {
+export const parametersDecoder = (val: Uint8ArrayConsumer) => {
   const preamble = val.consume(1);
   if (preamble[0] === 0x00) {
     return;
   } else {
     const encodedEntrypoint = entrypointDecoder(val);
     const params = extractRequiredLen(val);
-    const parameters = valueDecoder(new Uint8ArrayConsummer(params));
+    const parameters = valueDecoder(new Uint8ArrayConsumer(params));
     return {
       entrypoint: encodedEntrypoint,
       value: parameters,

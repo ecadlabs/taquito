@@ -1,5 +1,5 @@
 import { Decoder } from '../decoder';
-import { Uint8ArrayConsummer } from '../uint8array-consummer';
+import { Uint8ArrayConsumer } from '../uint8array-consumer';
 import { kindMapping, kindMappingReverse } from '../constants';
 
 export const ManagerOperationSchema = {
@@ -85,7 +85,7 @@ export const operationEncoder = (encoders: { [key: string]: (val: {}) => string 
 };
 
 export const operationDecoder = (decoders: { [key: string]: Decoder }) => (
-  value: Uint8ArrayConsummer
+  value: Uint8ArrayConsumer
 ) => {
   const op = value.consume(1);
 
@@ -131,7 +131,7 @@ export const schemaEncoder = (encoders: { [key: string]: (val: {}) => string }) 
 
 export const schemaDecoder = (decoders: { [key: string]: Decoder }) => (schema: {
   [key: string]: string | string[];
-}) => (value: Uint8ArrayConsummer) => {
+}) => (value: Uint8ArrayConsumer) => {
   const keys = Object.keys(schema);
   return keys.reduce((prev, key) => {
     const valueToEncode = schema[key];

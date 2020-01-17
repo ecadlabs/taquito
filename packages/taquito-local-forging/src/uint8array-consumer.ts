@@ -1,5 +1,5 @@
-export class Uint8ArrayConsummer {
-  constructor(private readonly arr: Uint8Array, private offset: number = 0) {}
+export class Uint8ArrayConsumer {
+  constructor(private readonly arr: Uint8Array, private offset: number = 0) { }
 
   public consume(count: number): Uint8Array {
     const subArr = this.arr.subarray(this.offset, this.offset + count);

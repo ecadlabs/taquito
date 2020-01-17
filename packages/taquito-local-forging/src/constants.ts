@@ -1,5 +1,6 @@
 import { pad } from './utils';
 
+// See https://tezos.gitlab.io/whitedoc/michelson.html#full-grammar
 export const opMapping: { [key: string]: string } = {
   '00': 'parameter',
   '01': 'storage',
@@ -129,6 +130,7 @@ export const opMappingReverse = (() => {
   return result;
 })();
 
+// See https://tezos.gitlab.io/api/p2p.html
 export const kindMapping: { [key: number]: string } = {
   0x04: 'activate_account',
   0x6b: 'reveal',
@@ -150,6 +152,7 @@ export const kindMappingReverse = (() => {
   return result;
 })();
 
+// See https://tezos.gitlab.io/protocols/005_babylon.html#transactions-now-have-an-entrypoint
 export const entrypointMapping: { [key: string]: string } = {
   '00': 'default',
   '01': 'root',

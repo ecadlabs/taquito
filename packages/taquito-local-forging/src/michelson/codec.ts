@@ -1,6 +1,6 @@
 import { BigNumber } from 'bignumber.js';
 import { Decoder } from '../decoder';
-import { Uint8ArrayConsummer } from '../uint8array-consummer';
+import { Uint8ArrayConsumer } from '../uint8array-consumer';
 import { Encoder } from '../taquito-local-forging';
 import { opMappingReverse, opMapping } from '../constants';
 import { pad } from '../utils';
@@ -41,13 +41,13 @@ export const scriptEncoder: Encoder<{ code: MichelsonValue; storage: MichelsonVa
   return `${pad(code.length / 2, 8)}${code}${pad(storage.length / 2, 8)}${storage}`;
 };
 
-export const scriptDecoder: Decoder = (value: Uint8ArrayConsummer) => {
+export const scriptDecoder: Decoder = (value: Uint8ArrayConsumer) => {
   const code = extractRequiredLen(value);
   const storage = extractRequiredLen(value);
 
   return {
-    code: valueDecoder(new Uint8ArrayConsummer(code)),
-    storage: valueDecoder(new Uint8ArrayConsummer(storage)),
+    code: valueDecoder(new Uint8ArrayConsumer(code)),
+    storage: valueDecoder(new Uint8ArrayConsumer(storage)),
   };
 };
 
@@ -69,7 +69,7 @@ export const valueEncoder: Encoder<MichelsonValue> = (value: MichelsonValue) => 
   throw new Error('Unexpected value');
 };
 
-export const valueDecoder: Decoder = (value: Uint8ArrayConsummer) => {
+export const valueDecoder: Decoder = (value: Uint8ArrayConsumer) => {
   const preamble = value.consume(1);
   switch (preamble[0]) {
     case 0x0a:
@@ -79,7 +79,7 @@ export const valueDecoder: Decoder = (value: Uint8ArrayConsummer) => {
     case 0x00:
       return intDecoder(value);
     case 0x02:
-      const val = new Uint8ArrayConsummer(extractRequiredLen(value));
+      const val = new Uint8ArrayConsumer(extractRequiredLen(value));
       const results = [];
       while (val.length() > 0) {
         results.push(valueDecoder(val));
@@ -90,7 +90,7 @@ export const valueDecoder: Decoder = (value: Uint8ArrayConsummer) => {
   }
 };
 
-export const extractRequiredLen = (value: Uint8ArrayConsummer, bytesLength = 4) => {
+export const extractRequiredLen = (value: Uint8ArrayConsumer, bytesLength = 4) => {
   const len = value.consume(bytesLength);
   const valueLen = parseInt(Buffer.from(len).toString('hex'), 16);
   return value.consume(valueLen);
@@ -105,7 +105,7 @@ export const bytesEncoder: Encoder<BytesValue> = value => {
   return `0a${pad(len)}${value.bytes}`;
 };
 
-export const bytesDecoder: Decoder = (value: Uint8ArrayConsummer) => {
+export const bytesDecoder: Decoder = (value: Uint8ArrayConsumer) => {
   const bytes = extractRequiredLen(value);
   return {
     bytes: Buffer.from(bytes).toString('hex'),
@@ -118,7 +118,7 @@ export const stringEncoder: Encoder<StringValue> = value => {
   return `01${pad(hexLength)}${str}`;
 };
 
-export const stringDecoder: Decoder = (value: Uint8ArrayConsummer) => {
+export const stringDecoder: Decoder = (value: Uint8ArrayConsumer) => {
   const str = extractRequiredLen(value);
   return {
     string: Buffer.from(str).toString('utf8'),
@@ -134,8 +134,8 @@ export const intEncoder: Encoder<IntValue> = ({ int }) => {
     binary.length <= 6
       ? 6
       : (binary.length - 6) % 7
-      ? binary.length + 7 - ((binary.length - 6) % 7)
-      : binary.length;
+        ? binary.length + 7 - ((binary.length - 6) % 7)
+        : binary.length;
 
   const splitted = binary.padStart(pad, '0').match(/\d{6,7}/g);
 
@@ -153,7 +153,7 @@ export const intEncoder: Encoder<IntValue> = ({ int }) => {
   return `00${numHex.join('')}`;
 };
 
-export const intDecoder = (value: Uint8ArrayConsummer): IntValue => {
+export const intDecoder = (value: Uint8ArrayConsumer): IntValue => {
   let c = value.consume(1)[0];
   const hexNumber: number[] = [];
   // console.log(c);
@@ -176,14 +176,13 @@ export const intDecoder = (value: Uint8ArrayConsummer): IntValue => {
         .padStart(i === 0 ? 6 : 7, '0')
     )
     .reverse();
-
   let num = new BigNumber(numBin.join(''), 2);
   if (isNegative) {
     num = num.times(-1);
   }
 
   return {
-    int: num.toString(),
+    int: num.toFixed(),
   };
 };
 
@@ -206,7 +205,7 @@ export const primEncoder: Encoder<PrimValue> = value => {
   return `${preamble}${op}${encodedArgs}${encodedAnnots}`;
 };
 
-export const primDecoder = (value: Uint8ArrayConsummer, preamble: Uint8Array) => {
+export const primDecoder = (value: Uint8ArrayConsumer, preamble: Uint8Array) => {
   const hasAnnot = (preamble[0] - 0x03) % 2 === 1;
   const argsCount = Math.floor((preamble[0] - 0x03) / 2);
   const op = value
@@ -250,7 +249,7 @@ export const encodeAnnots: Encoder<string[]> = (value: string[]) => {
   return `${pad(len)}${mergedAnnot}`;
 };
 
-export const decodeAnnots: Decoder = (val: Uint8ArrayConsummer): string[] => {
+export const decodeAnnots: Decoder = (val: Uint8ArrayConsumer): string[] => {
   const len = val.consume(4);
   const annotLen = parseInt(Buffer.from(len).toString('hex'), 16);
   const restOfAnnot = val.consume(annotLen);
