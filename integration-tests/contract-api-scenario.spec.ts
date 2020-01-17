@@ -354,7 +354,7 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker }) => {
       expect(operation.status).toEqual('applied')
 
       // Verify that the transfer was done as expected
-      const storage = await contract.storage()
+      const storage = await contract.storage<any>()
       let account1 = await storage[ACCOUNTS].get(ACCOUNT1_ADDRESS)
       expect(account1[BALANCE].toString()).toEqual('16')
 
