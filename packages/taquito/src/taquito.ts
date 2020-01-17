@@ -26,7 +26,13 @@ export * from './tz/interface';
 export * from './contract';
 export * from './contract/big-map';
 export * from './constants';
-export { TezosOperationError, TezosOperationErrorWithMessage, TezosPreapplyFailureError } from './operations/operation-errors'
+export { RpcForger } from './forger/rpc-forger';
+export { CompositeForger } from './forger/composite-forger';
+export {
+  TezosOperationError,
+  TezosOperationErrorWithMessage,
+  TezosPreapplyFailureError,
+} from './operations/operation-errors';
 
 export { SubscribeProvider } from './subscribe/interface';
 export interface SetProviderOptions {

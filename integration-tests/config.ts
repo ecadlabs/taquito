@@ -1,13 +1,14 @@
-import { TezosToolkit } from '@taquito/taquito'
-import { localForger } from '@taquito/local-forging'
-import fs from 'fs'
+import { localForger } from '@taquito/local-forging';
+import { CompositeForger, RpcForger, TezosToolkit } from '@taquito/taquito';
+import fs from 'fs';
 
 enum ForgerType {
   LOCAL = 'local',
-  RPC = 'rpc'
+  RPC = 'rpc',
+  COMPOSITE = 'composite'
 }
 
-const forgers: ForgerType[] = [ForgerType.LOCAL, ForgerType.RPC];
+const forgers: ForgerType[] = [ForgerType.COMPOSITE];
 const envConfig = process.env['TEZOS_RPC_NODE'];
 
 interface Config {
@@ -21,16 +22,17 @@ interface ConfigWithSetup extends Config {
   setup: () => Promise<void>
 }
 
-const providers: Config[] = envConfig ? JSON.parse(envConfig) : [{
-  rpc: 'https://api.tez.ie/rpc/carthagenet',
-  knownBaker: 'tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9',
-  knownContract: 'KT1XYa1JPKYVJYVJge89r4w2tShS8JYb1NQh',
-},
-{
-  rpc: 'https://api.tez.ie/rpc/babylonnet',
-  knownBaker: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
-  knownContract: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK'
-}
+const providers: Config[] = envConfig ? JSON.parse(envConfig) : [
+  {
+    rpc: 'https://api.tez.ie/rpc/carthagenet',
+    knownBaker: 'tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9',
+    knownContract: 'KT1XYa1JPKYVJYVJge89r4w2tShS8JYb1NQh',
+  },
+  {
+    rpc: 'https://api.tez.ie/rpc/babylonnet',
+    knownBaker: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
+    knownContract: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK'
+  }
 ];
 
 const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE']
@@ -43,6 +45,9 @@ export const CONFIGS: ConfigWithSetup[] =
       const Tezos = new TezosToolkit();
       if (forger === ForgerType.LOCAL) {
         Tezos.setProvider({ rpc, forger: localForger })
+      } else if (forger === ForgerType.COMPOSITE) {
+        const composite = new CompositeForger([new RpcForger(Tezos['_context']), localForger]);
+        Tezos.setProvider({ rpc, forger: composite })
       } else {
         Tezos.setProvider({ rpc })
       }
