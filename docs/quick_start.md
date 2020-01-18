@@ -148,19 +148,20 @@ const FAUCET_KEY = {
 };
 
 Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/babylonnet' });
+
 Tezos.importKey(
-  FAUCET_KEY.email,
-  FAUCET_KEY.password,
-  FAUCET_KEY.mnemonic.join(' '),
-  FAUCET_KEY.secret
-);
+    FAUCET_KEY.email,
+    FAUCET_KEY.password,
+    FAUCET_KEY.mnemonic.join(' '),
+    FAUCET_KEY.secret
+  )
+  .then(() => {
+    const amount = 2;
+    const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
 
-const amount = 2;
-const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
-
-render(`Transfering ${amount} ꜩ to ${address}...`);
-
-Tezos.contract.transfer({ to: address, amount: amount })
+    render(`Transfering ${amount} ꜩ to ${address}...`);
+    return Tezos.contract.transfer({ to: address, amount: amount });
+  })
   .then(op => op.confirmation())
   .then(block => render(`Block height: ${block}`))
   .catch(error => render(`Error: ${JSON.stringify(error, null, 2)}`));
@@ -197,18 +198,18 @@ const FAUCET_KEY = {
 
 Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/babylonnet' });
 Tezos.importKey(
-  FAUCET_KEY.email,
-  FAUCET_KEY.password,
-  FAUCET_KEY.mnemonic.join(' '),
-  FAUCET_KEY.secret
-);
+    FAUCET_KEY.email,
+    FAUCET_KEY.password,
+    FAUCET_KEY.mnemonic.join(' '),
+    FAUCET_KEY.secret
+  )
+  .then(() => Tezos.contract.at('KT1LjpCPTqGajeaXfLM3WV7csatSgyZcTDQ8'))
+  .then(contract => {
+    const i = 7;
 
-const i = 7;
-
-render(`Incrementing storage value by ${i}...`);
-
-Tezos.contract.at('KT1LjpCPTqGajeaXfLM3WV7csatSgyZcTDQ8')
-  .then(contract => contract.methods.increment(i).send())
+    render(`Incrementing storage value by ${i}...`);
+    return contract.methods.increment(i).send();
+  })
   .then(op => op.confirmation())
   .then(block => render(`Block height: ${block}`))
   .catch(error => render(`Error: ${JSON.stringify(error, null, 2)}`));

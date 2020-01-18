@@ -1,0 +1,61 @@
+/**
+ * Copyright (c) 2017-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+.playgroundEditorWrapper {
+  position: relative;
+}
+
+.playgroundHeader {
+  letter-spacing: 0.08rem;
+  padding: 0.75rem;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.playgroundEditorHeader {
+  background: rgb(32, 35, 42);
+  color: #999;
+}
+
+.playgroundPreviewHeader {
+  background: rgb(236, 236, 236);
+  color: rgb(109, 109, 109);
+}
+
+.playgroundPreview {
+  border: 1px solid #f0f0f0;
+  border-bottom-left-radius: var(--ifm-global-radius);
+  border-bottom-right-radius: var(--ifm-global-radius);
+  position: relative;
+  padding: 1rem;
+}
+
+.playgroundEditorWrapper:hover > .actions {
+  visibility: visible;
+  opacity: 1;
+}
+
+.actions {
+  position: absolute;
+  right: var(--ifm-pre-padding);
+  top: var(--ifm-pre-padding);
+  visibility: hidden;
+  transition: opacity 200ms ease-in-out, visibility 200ms ease-in-out,
+    bottom 200ms ease-in-out;
+  opacity: 0;
+}
+
+.button {
+  background: rgb(1, 22, 39);
+  border: 1px solid rgb(214, 222, 235);
+  border-radius: var(--ifm-global-radius);
+  color: rgb(214, 222, 235);
+  cursor: pointer;
+  line-height: 12px;
+  outline: none;
+  padding: 4px 8px;
+  margin: 0 3px;
+}
