@@ -1,3 +1,9 @@
+/*
+ * Some code in this file is originally from sotez and eztz
+ * Copyright (c) 2018 Andrew Kishino
+ * Copyright (c) 2017 Stephen Andrews
+ */
+
 import { Buffer } from 'buffer';
 import { prefix } from './constants';
 const blake = require('blakejs');

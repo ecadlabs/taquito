@@ -1,3 +1,8 @@
+/*
+ * Some code in this file is originally from sotez
+ * Copyright (c) 2018 Andrew Kishino
+ */
+
 import { pad } from './utils';
 
 // See https://tezos.gitlab.io/whitedoc/michelson.html#full-grammar

@@ -144,3 +144,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 [1]: https://github.com/ecadlabs/tezos-streamer
 [2]: https://keybase.io/jevonearth
 [3]: https://keybase.io/simrob
+
+## Credits
+
+Special thanks to these libraries which have been great references for developing Taquito
+
+- https://github.com/AndrewKishino/sotez
+- https://github.com/TezTech/eztz

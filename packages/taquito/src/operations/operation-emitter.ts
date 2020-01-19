@@ -37,7 +37,7 @@ export abstract class OperationEmitter {
     return this.context.signer;
   }
 
-  constructor(protected context: Context) { }
+  constructor(protected context: Context) {}
 
   private isSourceOp(
     op: RPCOperation
@@ -58,6 +58,7 @@ export abstract class OperationEmitter {
     return ['reveal', 'transaction', 'origination', 'delegation'].includes(op.kind);
   }
 
+  // Originally from sotez (Copyright (c) 2018 Andrew Kishino)
   protected async prepareOperation({
     operation,
     source,
