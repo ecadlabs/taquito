@@ -78,13 +78,7 @@ In order to transfer tokens from a KT1 addresses with the new `manager.tz` contr
 
 ## Transfer 0.00005 (50 mutez) tokens from a KT1 address to a tz1 address
 
-Sending 50 mutez to `tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh` from `kt1...`
-
-### Example transfer from a KT1 to a tz1 address on Athens/Proto004
-
-```js
-await Tezos.contract.transfer({ to: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh', source: 'kt1...', amount: 0.000050 })
-```
+Sending 50 mutez from `kt1...` to `tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh`.
 
 ### Example transfer from a KT1 to a tz1 address on Babylon/Proto005
 
@@ -118,12 +112,6 @@ export const transferImplicit = (key: string, mutez: number) => {
 ## Transfer 0.000001 (1 mutez) tokens from a KT1 address to a KT1 address
 
 Sending 1 mutez to `KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK` from `KT1...`
-
-### Example for Athens/Proto004
-
-```js
-await Tezos.contract.transfer({ to: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK', source: 'KT1...', amount: 0.000001 })
-```
 
 ### Example for Babylon/Proto005 or higher
 
