@@ -20,40 +20,18 @@ await Tezos.contract.transfer({ to: contract.address, amount: 1 })
 
 In the following example we will transfer 0.5ꜩ from a `tz1aaYoabvj2DQtpHz74Z83fSNjY29asdBfZ` address that will sign the operation to `tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY`.
 ```js live noInline
-// A new faucet key can be generated at https://faucet.tzalpha.net/
-const FAUCET_KEY = {
-  "mnemonic": [
-    "stone",
-    "salute",
-    "notable",
-    "found",
-    "multiply",
-    "universe",
-    "recipe",
-    "lake",
-    "north",
-    "trigger",
-    "sudden",
-    "deal",
-    "tragic",
-    "scale",
-    "few"
-  ],
-  "secret": "eaacfc029326e1dde49946c5213e21f56da20954",
-  "amount": "5788287181",
-  "pkh": "tz1aaYoabvj2DQtpHz74Z83fSNjY29asdBfZ",
-  "password": "KDkFxKTlPk",
-  "email": "kjjnurvc.bqqhoere@tezos.example.org"
-};
-
 Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/babylonnet' });
 
-Tezos.importKey(
-    FAUCET_KEY.email,
-    FAUCET_KEY.password,
-    FAUCET_KEY.mnemonic.join(' '),
-    FAUCET_KEY.secret
-  )
+render(`Fetching a private key...`);
+fetch('https://api.tez.ie/keys/babylonnet/', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer taquito-example' }
+  })
+  .then(response => response.text())
+  .then(privateKey => {
+    render(`Importing the private key...`);
+    return Tezos.importKey(privateKey);
+  })
   .then(() => {
     const amount = 0.5;
     const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
@@ -61,7 +39,10 @@ Tezos.importKey(
     render(`Transfering ${amount} ꜩ to ${address}...`);
     return Tezos.contract.transfer({ to: address, amount: amount });
   })
-  .then(op => op.confirmation())
+  .then(op => {
+    render(`Waiting for a confirmation...`);
+    return op.confirmation();
+  })
   .then(block => render(`Block height: ${block}`))
   .catch(error => render(`Error: ${JSON.stringify(error, null, 2)}`));
 ```

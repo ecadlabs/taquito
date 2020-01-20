@@ -118,43 +118,21 @@ Tezos.importKey(
 
 ### Transfer
 
-The transfer operation requires a configured signer. In this example we will use a faucet key.
+The transfer operation requires a configured signer. In this example we will use a private key that we will get from a service that was implemented for demonstration purposes and should only be used for testing and development.
 
 ```js live noInline
-// A new faucet key can be generated at https://faucet.tzalpha.net/
-const FAUCET_KEY = {
-  "mnemonic": [
-    "cart",
-    "will",
-    "page",
-    "bench",
-    "notice",
-    "leisure",
-    "penalty",
-    "medal",
-    "define",
-    "odor",
-    "ride",
-    "devote",
-    "cannon",
-    "setup",
-    "rescue"
-  ],
-  "secret": "35f266fbf0fca752da1342fdfc745a9c608e7b20",
-  "amount": "4219352756",
-  "pkh": "tz1YBMFg1nLAPxBE6djnCPbMRH5PLXQWt8Mg",
-  "password": "Fa26j580dQ",
-  "email": "jxmjvauo.guddusns@tezos.example.org"
-};
-
 Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/babylonnet' });
 
-Tezos.importKey(
-    FAUCET_KEY.email,
-    FAUCET_KEY.password,
-    FAUCET_KEY.mnemonic.join(' '),
-    FAUCET_KEY.secret
-  )
+render(`Fetching a private key...`);
+fetch('https://api.tez.ie/keys/babylonnet/', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer taquito-example' }
+  })
+  .then(response => response.text())
+  .then(privateKey => {
+    render(`Importing the private key...`);
+    return Tezos.importKey(privateKey);
+  })
   .then(() => {
     const amount = 2;
     const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
@@ -162,47 +140,30 @@ Tezos.importKey(
     render(`Transfering ${amount} ꜩ to ${address}...`);
     return Tezos.contract.transfer({ to: address, amount: amount });
   })
-  .then(op => op.confirmation())
+  .then(op => {
+    render(`Waiting for a confirmation...`);
+    return op.confirmation();
+  })
   .then(block => render(`Block height: ${block}`))
-  .catch(error => render(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch(error => render(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 ### Interact with a smart contract
 Calling smart contract operations require a configured signer, in this example we will use a faucet key. The source for the smart contract [KT1LjpCPTqGajeaXfLM3WV7csatSgyZcTDQ8][smart_contract_on_better_call_dev] used in this example can be found in a [Ligo Web IDE][smart_contract_source].
 
 ```js live noInline
-const FAUCET_KEY = {
-  "mnemonic": [
-    "join",
-    "angry",
-    "steak",
-    "input",
-    "spider",
-    "pulse",
-    "lady",
-    "damp",
-    "embrace",
-    "effort",
-    "announce",
-    "woman",
-    "garden",
-    "wood",
-    "hover"
-  ],
-  "secret": "32fe36a9cc80dfb6dde62828e02bd174438072a4",
-  "amount": "19197234016",
-  "pkh": "tz1QdWcKyBD2qY85tNxn7aQT3pVcYndgtT3R",
-  "password": "hXZ0WiIty5",
-  "email": "ohmziant.rhbmsklp@tezos.example.org"
-};
-
 Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/babylonnet' });
-Tezos.importKey(
-    FAUCET_KEY.email,
-    FAUCET_KEY.password,
-    FAUCET_KEY.mnemonic.join(' '),
-    FAUCET_KEY.secret
-  )
+
+render(`Fetching a private key...`);
+fetch('https://api.tez.ie/keys/babylonnet/', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer taquito-example' }
+  })
+  .then(response => response.text())
+  .then(privateKey => {
+    render(`Importing the private key...`);
+    return Tezos.importKey(privateKey);
+  })
   .then(() => Tezos.contract.at('KT1LjpCPTqGajeaXfLM3WV7csatSgyZcTDQ8'))
   .then(contract => {
     const i = 7;
