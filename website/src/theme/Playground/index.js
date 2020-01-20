@@ -90,24 +90,17 @@ function Playground({children, theme, transformCode, ...props}) {
           Live Editor
         </div>
         <LiveEditor />
-        <div
-          className={styles.actions}>
-          <button
-            type="button"
-            aria-label="Execute example"
-            className={styles.button}
-            onClick={handleRunCode}>
-              Run
-          </button>
-          <button
-            ref={copy}
-            type="button"
-            aria-label="Copy code to clipboard"
-            className={styles.button}
-            onClick={handleCopyCode}>
-            {showCopied ? 'Copied' : 'Copy'}
-          </button>
-        </div>
+        <button
+          ref={copy}
+          type="button"
+          aria-label="Copy code to clipboard"
+          className={classnames(
+            styles.button,
+            styles.copyButton,
+          )}
+          onClick={handleCopyCode}>
+          {showCopied ? 'Copied' : 'Copy'}
+        </button>
       </div>
       <div
         className={classnames(
@@ -115,6 +108,16 @@ function Playground({children, theme, transformCode, ...props}) {
           styles.playgroundPreviewHeader,
         )}>
         Result
+        <button
+            type="button"
+            aria-label="Execute example"
+            className={classnames(
+              styles.button,
+              styles.runButton,
+            )}
+            onClick={handleRunCode}>
+              Run code
+          </button>
       </div>
       <div className={styles.playgroundPreview}>
         <LivePreview />
