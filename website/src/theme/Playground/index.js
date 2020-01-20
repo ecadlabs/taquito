@@ -11,7 +11,6 @@ import { LiveEditor, LiveError, LivePreview, LiveProvider } from 'react-live';
 
 import styles from './styles.module.css';
 
-// import * as React from 'react';
 class SemiLiveProvider extends LiveProvider {
   constructor() {
     super();
