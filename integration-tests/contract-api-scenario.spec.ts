@@ -78,6 +78,36 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
       done();
     });
 
+    it('Failwith contract nested call', async (done) => {
+      const op = await Tezos.contract.originate({
+        balance: "1",
+        code: failwithContractCode,
+        storage: null
+      })
+      const contract = await op.contract()
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+      expect(op.status === 'applied');
+
+      const opManager = await Tezos.contract.originate({
+        balance: "1",
+        code: managerCode,
+        init: { "string": await Tezos.signer.publicKeyHash() },
+      })
+
+      const managerContract = await opManager.contract()
+      expect(opManager.hash).toBeDefined();
+      expect(opManager.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+      expect(opManager.status === 'applied');
+      try {
+        await managerContract.methods.do(MANAGER_LAMBDA.transferToContract(contract.address, 1)).send({ amount: 0 })
+        fail('Expected transfer operation to throw error')
+      } catch (ex) {
+        expect(ex.message).toMatch('test')
+      }
+      done();
+    });
+
     it('Simple set delegate', async (done) => {
       const delegate = knownBaker
       const op = await Tezos.contract.setDelegate({
