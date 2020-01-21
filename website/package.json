@@ -8,9 +8,11 @@
   "dependencies": {
     "@docusaurus/core": "^2.0.0-alpha.39",
     "@docusaurus/preset-classic": "^2.0.0-alpha.39",
+    "@docusaurus/theme-live-codeblock": "^2.0.0-alpha.39",
     "@fortawesome/fontawesome-svg-core": "^1.2.26",
     "@fortawesome/free-solid-svg-icons": "^5.12.0",
     "@fortawesome/react-fontawesome": "^0.1.8",
+    "@taquito/taquito": "next",
     "classnames": "^2.2.6",
     "react": "^16.10.2",
     "react-dom": "^16.10.2"
@@ -26,5 +28,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "devDependencies": {}
 }
