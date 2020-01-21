@@ -29,6 +29,9 @@ const SIGNATURE_STUB =
   'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg';
 
 export class RPCEstimateProvider extends OperationEmitter implements EstimationProvider {
+  private readonly ALLOCATION_STORAGE = 257;
+  private readonly ORIGINATION_STORAGE = 257;
+
   // Maximum values defined by the protocol
   private async getAccountLimits(pkh: string) {
     const balance = await this.rpc.getBalance(pkh);
@@ -91,9 +94,9 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     operationResults.forEach(result => {
       totalStorage +=
         'originated_contracts' in result && typeof result.originated_contracts !== 'undefined'
-          ? result.originated_contracts.length * 257
+          ? result.originated_contracts.length * this.ORIGINATION_STORAGE
           : 0;
-      totalStorage += 'allocated_destination_contract' in result ? 257 : 0;
+      totalStorage += 'allocated_destination_contract' in result ? this.ALLOCATION_STORAGE : 0;
       totalGas += Number(result.consumed_gas) || 0;
       totalStorage +=
         'paid_storage_size_diff' in result ? Number(result.paid_storage_size_diff) || 0 : 0;
