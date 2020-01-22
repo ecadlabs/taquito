@@ -18,6 +18,35 @@ This is the simplest token transfer scenario
 await Tezos.contract.transfer({ to: contract.address, amount: 1 })
 ```
 
+In the following example we will transfer 0.5ꜩ from a `tz1aaYoabvj2DQtpHz74Z83fSNjY29asdBfZ` address that will sign the operation to `tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY`.
+```js live noInline
+Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/babylonnet' });
+
+render(`Fetching a private key...`);
+fetch('https://api.tez.ie/keys/babylonnet/', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer taquito-example' }
+  })
+  .then(response => response.text())
+  .then(privateKey => {
+    render(`Importing the private key...`);
+    return Tezos.importKey(privateKey);
+  })
+  .then(() => {
+    const amount = 0.5;
+    const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
+
+    render(`Transfering ${amount} ꜩ to ${address}...`);
+    return Tezos.contract.transfer({ to: address, amount: amount });
+  })
+  .then(op => {
+    render(`Waiting for a confirmation...`);
+    return op.confirmation();
+  })
+  .then(block => render(`Block height: ${block}`))
+  .catch(error => render(`Error: ${JSON.stringify(error, null, 2)}`));
+```
+
 ## Transfers involving "originated" KT1 addresses
 
 Pre-`Babylon/proto005` it was common to have "script-less" KT1 addresses. This changed when the Tezos blockchain migrated to the new `Babylon/proto005` protocol.
@@ -30,13 +59,7 @@ In order to transfer tokens from a KT1 addresses with the new `manager.tz` contr
 
 ## Transfer 0.00005 (50 mutez) tokens from a KT1 address to a tz1 address
 
-Sending 50 mutez to `tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh` from `kt1...`
-
-### Example transfer from a KT1 to a tz1 address on Athens/Proto004
-
-```js
-await Tezos.contract.transfer({ to: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh', source: 'kt1...', amount: 0.000050 })
-```
+Sending 50 mutez from `kt1...` to `tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh`.
 
 ### Example transfer from a KT1 to a tz1 address on Babylon/Proto005
 
@@ -70,12 +93,6 @@ export const transferImplicit = (key: string, mutez: number) => {
 ## Transfer 0.000001 (1 mutez) tokens from a KT1 address to a KT1 address
 
 Sending 1 mutez to `KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK` from `KT1...`
-
-### Example for Athens/Proto004
-
-```js
-await Tezos.contract.transfer({ to: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK', source: 'KT1...', amount: 0.000001 })
-```
 
 ### Example for Babylon/Proto005 or higher
 

@@ -1,6 +1,9 @@
 import { localForger } from '@taquito/local-forging';
 import { CompositeForger, RpcForger, TezosToolkit } from '@taquito/taquito';
+import { b58cencode, Prefix, prefix } from '@taquito/utils';
 import fs from 'fs';
+
+const nodeCrypto = require('crypto');
 
 enum ForgerType {
   LOCAL = 'local',
@@ -19,7 +22,8 @@ interface Config {
 
 interface ConfigWithSetup extends Config {
   lib: TezosToolkit,
-  setup: () => Promise<void>
+  setup: () => Promise<void>,
+  createAddress: () => Promise<TezosToolkit>
 }
 
 const providers: Config[] = envConfig ? JSON.parse(envConfig) : [
@@ -80,10 +84,21 @@ export const CONFIGS: ConfigWithSetup[] =
           }
 
           await Tezos.importKey(faucetKey.email, faucetKey.password, faucetKey.mnemonic.join(" "), faucetKey.secret)
+        },
+        createAddress: async () => {
+          const tezos = new TezosToolkit()
+          tezos.setProvider({ rpc: rpc })
+
+          const keyBytes = new Buffer(32);
+          nodeCrypto.randomFillSync(keyBytes)
+
+          const key = b58cencode(new Uint8Array(keyBytes), prefix[Prefix.P2SK]);
+          await tezos.importKey(key);
+
+          return tezos;
         }
       };
     });
     return [...prev, ...configs]
   }, [] as ConfigWithSetup[]);
-
 
