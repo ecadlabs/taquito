@@ -43,7 +43,10 @@ export class TezosPreapplyFailureError implements Error {
 /***
  * @description Flatten all error from preapply response (including internal error)
  */
-export const flattenErrors = (response: PreapplyResponse | PreapplyResponse[]) => {
+export const flattenErrors = (
+  response: PreapplyResponse | PreapplyResponse[],
+  status = 'failed'
+) => {
   let results = Array.isArray(response) ? response : [response];
 
   let errors: TezosGenericOperationError[] = [];
@@ -54,14 +57,14 @@ export const flattenErrors = (response: PreapplyResponse | PreapplyResponse[]) =
       if ('metadata' in content) {
         if (
           typeof content.metadata.operation_result !== 'undefined' &&
-          content.metadata.operation_result.status === 'failed'
+          content.metadata.operation_result.status === status
         ) {
-          errors = errors.concat(content.metadata.operation_result.errors);
+          errors = errors.concat(content.metadata.operation_result.errors || []);
         }
         if (Array.isArray(content.metadata.internal_operation_results)) {
           for (const internalResult of content.metadata.internal_operation_results) {
-            if ('result' in internalResult && internalResult.result.status === 'failed') {
-              errors = errors.concat(internalResult.result.errors);
+            if ('result' in internalResult && internalResult.result.status === status) {
+              errors = errors.concat(internalResult.result.errors || []);
             }
           }
         }

@@ -58,6 +58,7 @@ export abstract class OperationEmitter {
     return ['reveal', 'transaction', 'origination', 'delegation'].includes(op.kind);
   }
 
+  // Originally from sotez (Copyright (c) 2018 Andrew Kishino)
   protected async prepareOperation({
     operation,
     source,

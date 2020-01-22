@@ -1,6 +1,6 @@
 import { Token, TokenFactory, ComparableToken } from '../token';
 
-export class StringToken extends Token implements ComparableToken {
+export class StringToken extends ComparableToken {
   static prim = 'string';
 
   constructor(

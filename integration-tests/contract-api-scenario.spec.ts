@@ -1,19 +1,21 @@
+import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, MANAGER_LAMBDA, TezosToolkit } from "@taquito/taquito";
+import { Contract } from "taquito/src/contract/contract";
 import { CONFIGS } from "./config";
-import { ligoSample } from "./data/ligo-simple-contract";
-import { tokenCode, tokenInit } from "./data/tokens";
-import { voteSample } from "./data/vote-contract";
-import { depositContractCode, depositContractStorage } from "./data/deposit_contract";
-
-import { tokenBigmapCode } from './data/token_bigmap'
-import { collection_code } from "./data/collection_contract";
-
-import { noAnnotCode, noAnnotInit } from "./data/token_without_annotation";
-import { DEFAULT_FEE, DEFAULT_GAS_LIMIT } from "@taquito/taquito";
-import { booleanCode } from "./data/boolean_parameter";
-import { failwithContractCode } from "./data/failwith"
 import { badCode } from "./data/badCode";
+import { booleanCode } from "./data/boolean_parameter";
+import { collection_code } from "./data/collection_contract";
+import { depositContractCode, depositContractStorage } from "./data/deposit_contract";
+import { failwithContractCode } from "./data/failwith";
+import { originate, originate2, transferImplicit2 } from "./data/lambda";
+import { ligoSample } from "./data/ligo-simple-contract";
+import { managerCode } from "./data/manager_code";
+import { tokenCode, tokenInit } from "./data/tokens";
+import { tokenBigmapCode } from './data/token_bigmap';
+import { noAnnotCode, noAnnotInit } from "./data/token_without_annotation";
+import { voteSample } from "./data/vote-contract";
+import { storageContract } from "./data/storage-contract";
 
-CONFIGS.forEach(({ lib, rpc, setup, knownBaker }) => {
+CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
   const Tezos = lib;
   describe(`Test contract api using: ${rpc}`, () => {
 
@@ -39,14 +41,15 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker }) => {
       done();
     });
 
-    it('Contract with bad code', async () => {
-      expect(Tezos.contract.originate({
+    it('Contract with bad code', async (done) => {
+      await expect(Tezos.contract.originate({
         balance: "1",
         code: badCode,
         init: { prim: "Unit" }
       })).rejects.toMatchObject({
         status: 400,
       })
+      done();
     })
 
     it('Failwith contract', async (done) => {
@@ -69,6 +72,36 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker }) => {
       try {
         // Bypass estimation
         await contract.methods.main(null).send({ fee: 20000, gasLimit: 20000, storageLimit: 0 })
+      } catch (ex) {
+        expect(ex.message).toMatch('test')
+      }
+      done();
+    });
+
+    it('Failwith contract nested call', async (done) => {
+      const op = await Tezos.contract.originate({
+        balance: "1",
+        code: failwithContractCode,
+        storage: null
+      })
+      const contract = await op.contract()
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+      expect(op.status === 'applied');
+
+      const opManager = await Tezos.contract.originate({
+        balance: "1",
+        code: managerCode,
+        init: { "string": await Tezos.signer.publicKeyHash() },
+      })
+
+      const managerContract = await opManager.contract()
+      expect(opManager.hash).toBeDefined();
+      expect(opManager.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+      expect(opManager.status === 'applied');
+      try {
+        await managerContract.methods.do(MANAGER_LAMBDA.transferToContract(contract.address, 1)).send({ amount: 0 })
+        fail('Expected transfer operation to throw error')
       } catch (ex) {
         expect(ex.message).toMatch('test')
       }
@@ -273,9 +306,34 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker }) => {
             allowances: {
               [addr]: "1"
             }
+          },
+          "tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD": {
+            balance: "1",
+            allowances: {
+              [addr]: "1"
+            }
+          },
+          "tz3YjfexGakCDeCseXFUpcXPSAN9xHxE9TH2": {
+            balance: "2",
+            allowances: {
+              KT1CDEg2oY3VfMa1neB7hK5LoVMButvivKYv: "1",
+              [addr]: "1"
+            }
+          },
+          "tz1ccqAEwfPgeoipnXtjAv1iucrpQv3DFmmS": {
+            balance: "1",
+            allowances: {
+              [addr]: "1"
+            }
+          },
+          "KT1CDEg2oY3VfMa1neB7hK5LoVMButvivKYv": {
+            balance: "1",
+            allowances: {
+              [addr]: "1"
+            }
           }
         },
-        totalSupply: "1"
+        totalSupply: "6"
       }
 
       const op = await Tezos.contract.originate({
@@ -296,9 +354,9 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker }) => {
       const addr = await Tezos.signer.publicKeyHash();
 
       const initialStorage = {
-        set1: ['1'],
+        set1: ['2', '1', '3'],
         list1: ['1'],
-        map1: { "1": "1" }
+        map1: { "2": "1", "1": "1" }
       }
 
       const op = await Tezos.contract.originate({
@@ -311,7 +369,7 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker }) => {
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
       const contract = await op.contract()
       let storage: any = await contract.storage()
-      expect(storage['set1'].map((x: any) => x.toString())).toEqual(['1'])
+      expect(storage['set1'].map((x: any) => x.toString())).toEqual(['1', '2', '3'])
       expect(storage['list1'].map((x: any) => x.toString())).toEqual(['1'])
       expect(storage['map1']['1'].toString()).toEqual('1')
 
@@ -326,7 +384,63 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker }) => {
 
       done();
     });
+    it('Storage contract', async (done) => {
+      const op = await Tezos.contract.originate({
+        balance: "1",
+        code: storageContract,
+        storage: {
+          "map1": {
+            "tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD": 1,
+            'KT1CDEg2oY3VfMa1neB7hK5LoVMButvivKYv': 2,
+            "tz3YjfexGakCDeCseXFUpcXPSAN9xHxE9TH2": 2,
+            "tz1ccqAEwfPgeoipnXtjAv1iucrpQv3DFmmS": 3,
+          },
+          "map2": {
+            "2": 1,
+            '3': 2,
+            "1": 2,
+            "4": 3,
+          },
+          "map3": {
+            "2": 1,
+            '3': 2,
+            "1": 2,
+            "4": 3,
+          },
+          "map4": {
+            "zz": 1,
+            'aa': 2,
+            "ab": 2,
+            "cc": 3,
+          },
+          "map5": {
+            "aaaa": 1,
+            "aa": 1,
+            'ab': 2,
+            "01": 2,
+            "22": 3,
+          },
+          "map6": {
+            "2": 1,
+            '3': 2,
+            "1": 2,
+            "4": 3,
+          },
+          "map7": {
+            "2018-04-23T10:26:00.996Z": 1,
+            '2017-04-23T10:26:00.996Z': 2,
+            "2019-04-23T10:26:00.996Z": 2,
+            "2015-04-23T10:26:00.996Z": 3,
+          },
+        }
+      })
 
+      const contrct = await op.contract()
+      console.log(contrct.address);
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+      done();
+    })
     it('Test contract with no annotations for methods', async (done) => {
       // Constants to replace annotations
       const ACCOUNTS = '0';
@@ -372,5 +486,255 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker }) => {
       done();
     })
 
+    it('Test emptying an unrevealed implicit account', async (done) => {
+      const LocalTez = await createAddress();
+      const op = await Tezos.contract.transfer({ to: await LocalTez.signer.publicKeyHash(), amount: 0.005 });
+      await op.confirmation();
+      // A transfer from an unrevealed account will require a an additional fee of 0.00142tz (reveal operation)
+      const manager = await Tezos.rpc.getManagerKey(await LocalTez.signer.publicKeyHash())
+      const requireReveal = !manager
+
+      // Only need to include reveal fees if the account is not revealed
+      const revealFee = requireReveal ? DEFAULT_FEE.REVEAL : 0;
+
+      const balance = await Tezos.tz.getBalance(await LocalTez.signer.publicKeyHash())
+      const estimate = await LocalTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: balance.minus(revealFee).toNumber() });
+
+      // The max amount that can be sent now is the total balance minus the fees + reveal fees (assuming the dest is already allocated)
+      const maxAmount = balance.minus(estimate.suggestedFeeMutez + revealFee).toNumber();
+      const op3 = await LocalTez.contract.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: maxAmount })
+      await op3.confirmation();
+
+      expect((await Tezos.tz.getBalance(await LocalTez.signer.publicKeyHash())).toString()).toEqual("0")
+
+      done();
+    });
+
+    it('Test emptying a revealed implicit account', async (done) => {
+      const LocalTez = await createAddress();
+      const op = await Tezos.contract.transfer({ to: await LocalTez.signer.publicKeyHash(), amount: 2 });
+      await op.confirmation();
+
+      // Sending token from the account we want to empty
+      // This will do the reveal operation automatically
+      const op2 = await LocalTez.contract.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 1 });
+      await op2.confirmation();
+
+      const estimate = await LocalTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 0.5 });
+
+      // Emptying the account
+      // The max amount that can be sent now is the total balance minus the fees (no need for reveal fees)
+      const balance = await Tezos.tz.getBalance(await LocalTez.signer.publicKeyHash())
+      const maxAmount = balance.minus(estimate.suggestedFeeMutez).toNumber();
+      const op3 = await LocalTez.contract.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: maxAmount, fee: estimate.suggestedFeeMutez, gasLimit: estimate.gasLimit, storageLimit: 0 })
+      await op3.confirmation();
+
+      expect((await Tezos.tz.getBalance(await LocalTez.signer.publicKeyHash())).toString()).toEqual("0")
+
+      done();
+    });
+  });
+
+  describe('Estimate scenario', () => {
+    let LowAmountTez: TezosToolkit;
+    let contract: Contract;
+    const amt = 2000000 + DEFAULT_FEE.REVEAL;
+
+    beforeAll(async (done) => {
+      try {
+        await setup()
+        LowAmountTez = await createAddress();
+        const pkh = await LowAmountTez.signer.publicKeyHash()
+        const transfer = await Tezos.contract.transfer({ to: pkh, mutez: true, amount: amt });
+        await transfer.confirmation();
+        const op = await Tezos.contract.originate({
+          balance: "1",
+          code: managerCode,
+          init: { "string": pkh },
+        })
+        contract = await op.contract();
+        contract = await LowAmountTez.contract.at(contract.address)
+        expect(op.status).toEqual('applied')
+      }
+      catch (ex) {
+        fail(ex.message)
+      } finally {
+        done()
+      }
+    })
+
+    test('Estimate transfer with allocated destination', async (done) => {
+      const estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 1.9 });
+      expect(estimate).toMatchObject({
+        gasLimit: 10307,
+        storageLimit: 0,
+        suggestedFeeMutez: 1384
+      });
+      done();
+    })
+
+    test('Estimate transfer with unallocated destination', async (done) => {
+      const estimate = await LowAmountTez.estimate.transfer({ to: await (await createAddress()).signer.publicKeyHash(), amount: 1.7 });
+      expect(estimate).toMatchObject({
+        gasLimit: 10307,
+        storageLimit: 257,
+        suggestedFeeMutez: 1384
+      });
+      done();
+    });
+
+    test('Estimate simple origination', async (done) => {
+      const estimate = await LowAmountTez.estimate.originate({
+        balance: "1",
+        code: ligoSample,
+        storage: 0,
+      })
+      expect(estimate).toMatchObject(
+        {
+          gasLimit: 17932,
+          storageLimit: 571,
+          suggestedFeeMutez: 2439
+        }
+      )
+      done();
+    });
+
+    test('Estimate setDelegate', async (done) => {
+      const estimate = await LowAmountTez.estimate.setDelegate({
+        delegate: knownBaker,
+        source: await LowAmountTez.signer.publicKeyHash(),
+      })
+      expect(estimate).toMatchObject({
+        gasLimit: 10100,
+        storageLimit: 0,
+        suggestedFeeMutez: 1359
+      })
+      done();
+    })
+
+    test('Estimate internal transfer to allocated implicit', async (done) => {
+      const tx = contract.methods.do(MANAGER_LAMBDA.transferImplicit(knownBaker, 50)).toTransferParams();
+      const estimate = await LowAmountTez.estimate.transfer(tx)
+      expect(estimate).toMatchObject({
+        gasLimit: 26260,
+        storageLimit: 0,
+        suggestedFeeMutez: 3052
+      })
+      done();
+    })
+
+    test('Estimate to multiple internal transfer to unallocated account', async (done) => {
+      const tx = contract.methods.do(transferImplicit2(
+        await (await createAddress()).signer.publicKeyHash(),
+        await (await createAddress()).signer.publicKeyHash(),
+        50)
+      ).toTransferParams();
+      const estimate = await LowAmountTez.estimate.transfer(tx)
+      expect(estimate).toMatchObject({
+        gasLimit: 36875,
+        storageLimit: 514,
+        suggestedFeeMutez: 4173
+      })
+      done();
+    })
+
+    test('Estimate internal origination', async (done) => {
+      const tx = contract.methods.do(originate()).toTransferParams();
+      const estimate = await LowAmountTez.estimate.transfer(tx)
+      expect(estimate).toMatchObject({
+        gasLimit: 28286,
+        storageLimit: 317,
+        suggestedFeeMutez: 3261
+      })
+      done();
+    })
+
+    test('Estimate multiple internal origination', async (done) => {
+      const tx = contract.methods.do(originate2()).toTransferParams();
+      const estimate = await LowAmountTez.estimate.transfer(tx)
+      expect(estimate).toMatchObject({
+        gasLimit: 40928,
+        storageLimit: 634,
+        suggestedFeeMutez: 4590
+      })
+      // Do the actual operation
+      const op2 = await contract.methods.do(originate2()).send();
+      await op2.confirmation();
+      done();
+    })
+  })
+
+  describe('Estimate with very low balance', () => {
+    let LowAmountTez: TezosToolkit;
+    const amt = 2000 + DEFAULT_FEE.REVEAL;
+
+    beforeAll(async (done) => {
+      await setup()
+      LowAmountTez = await createAddress();
+      const pkh = await LowAmountTez.signer.publicKeyHash()
+      const transfer = await Tezos.contract.transfer({ to: pkh, mutez: true, amount: amt });
+      await transfer.confirmation();
+      done()
+    })
+
+    it('Estimate transfer to regular address', async (done) => {
+      let estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) });
+      expect(estimate).toMatchObject({
+        gasLimit: 10307,
+        storageLimit: 0,
+        suggestedFeeMutez: 1382
+      });
+      done();
+    });
+
+    it('Estimate transfer to regular address with a fixed fee', async (done) => {
+      // fee, gasLimit and storage limit are not taken into account
+      const params = { fee: 2000, to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) }
+      let estimate = await LowAmountTez.estimate.transfer(params);
+      expect(estimate).toMatchObject({
+        gasLimit: 10307,
+        storageLimit: 0,
+        suggestedFeeMutez: 1382
+      });
+
+      await expect(LowAmountTez.contract.transfer(params)).rejects.toEqual(
+        expect.objectContaining({
+          // Not sure if it is expected according to (https://tezos.gitlab.io/api/errors.html)
+          message: expect.stringContaining('storage_error'),
+        }));
+      done();
+    });
+
+    it('Estimate transfer to regular address with unsufficient balance', async (done) => {
+      await expect(
+        LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt })
+      ).rejects.toEqual(
+        expect.objectContaining({
+          message: expect.stringContaining('balance_too_low'),
+        }));
+      done();
+    });
+
+    it('Estimate transfer to regular address with unsufficient balance to pay storage for allocation', async (done) => {
+      await expect(
+        LowAmountTez.estimate.transfer({ to: await (await createAddress()).signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) })
+      ).rejects.toEqual(
+        expect.objectContaining({
+          message: expect.stringContaining('storage_exhausted'),
+        }));
+      done();
+    });
+
+    it('Estimate origination with unsufficient balance to pay storage', async (done) => {
+      await expect(LowAmountTez.estimate.originate({
+        balance: "0",
+        code: ligoSample,
+        storage: 0,
+      })).rejects.toEqual(
+        expect.objectContaining({
+          message: expect.stringContaining('storage_exhausted'),
+        }));
+      done();
+    })
   });
 })

@@ -8,7 +8,7 @@ export class MutezValidationError extends TokenValidationError {
   }
 }
 
-export class MutezToken extends Token implements ComparableToken {
+export class MutezToken extends ComparableToken {
   static prim = 'mutez';
 
   constructor(

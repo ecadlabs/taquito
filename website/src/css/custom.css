@@ -1,0 +1,44 @@
+:root {
+  --blue-primary: #218da5;
+  --blue-secondary: #35636e;
+  --red: #c73d18;
+  --brown: #a56921;
+  --green: #71a417;
+  --beige: #f9e3c2;
+
+  --ifm-color-primary-lightest: #f2faff;
+  --ifm-color-primary-lighter: #a9d1e4;
+  --ifm-color-primary-light: #6bb2c9;
+  --ifm-color-primary: var(--blue-primary);
+  --ifm-color-primary-dark: #007fa7;
+  --ifm-color-primary-darker: #006d9b;
+  --ifm-color-primary-darkest: #005887;
+
+  --ifm-color-secondary-lightest: #f2fbff;
+  --ifm-color-secondary-lighter: #afcad2;
+  --ifm-color-secondary-light: #779ca5;
+  --ifm-color-secondary: var(--blue-secondary);
+  --ifm-color-secondary-dark: #185b82;
+  --ifm-color-secondary-darker: #0d3d89;
+  --ifm-color-secondary-darkest: #001487;
+}
+
+/*
+ * Overrides
+ */
+.navbar .navbar__brand {
+  font-family: Baloo Tammudu;
+  font-size: 1em;
+  text-transform: uppercase;
+}
+
+.navbar .navbar__logo {
+  height: 70%;
+}
+
+.docusaurus-highlight-code-line {
+  background-color: rgb(72, 77, 91);
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
+}

@@ -91,4 +91,6 @@ export const prefixLength: { [key: string]: number } = {
   [Prefix.P2SIG]: 64,
   [Prefix.SIG]: 64,
   [Prefix.NET]: 4,
+  [Prefix.B]: 32,
+  [Prefix.P]: 32,
 };

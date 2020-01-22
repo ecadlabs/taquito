@@ -1,4 +1,4 @@
-import { Token, TokenFactory, Semantic, TokenValidationError } from './token';
+import { Token, TokenFactory, Semantic, TokenValidationError, ComparableToken } from './token';
 
 export class SetValidationError extends TokenValidationError {
   name: string = 'SetValidationError';
@@ -18,6 +18,10 @@ export class SetToken extends Token {
     super(val, idx, fac);
   }
 
+  get KeySchema(): ComparableToken {
+    return this.createToken(this.val.args[0], 0) as any;
+  }
+
   private isValid(value: any): SetValidationError | null {
     if (Array.isArray(value)) {
       return null;
@@ -34,16 +38,14 @@ export class SetToken extends Token {
       throw err;
     }
 
-    const schema = this.createToken(this.val.args[0], 0);
-    return val.reduce((prev: any, current: any) => {
-      return [...prev, schema.EncodeObject(current)];
+    return val.sort(this.KeySchema.compare).reduce((prev: any, current: any) => {
+      return [...prev, this.KeySchema.EncodeObject(current)];
     }, []);
   }
 
   public Execute(val: any, semantics?: Semantic) {
-    const schema = this.createToken(this.val.args[0], 0);
     return val.reduce((prev: any, current: any) => {
-      return [...prev, schema.Execute(current, semantics)];
+      return [...prev, this.KeySchema.Execute(current, semantics)];
     }, []);
   }
 
@@ -53,9 +55,8 @@ export class SetToken extends Token {
       throw err;
     }
 
-    const schema = this.createToken(this.val.args[0], 0);
-    return args.reduce((prev: any, current: any) => {
-      return [...prev, schema.EncodeObject(current)];
+    return args.sort(this.KeySchema.compare).reduce((prev: any, current: any) => {
+      return [...prev, this.KeySchema.EncodeObject(current)];
     }, []);
   }
 

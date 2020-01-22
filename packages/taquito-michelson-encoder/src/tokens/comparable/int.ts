@@ -8,7 +8,7 @@ export class IntValidationError extends TokenValidationError {
   }
 }
 
-export class IntToken extends Token implements ComparableToken {
+export class IntToken extends ComparableToken {
   static prim = 'int';
 
   constructor(

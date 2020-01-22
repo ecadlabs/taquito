@@ -1,6 +1,6 @@
 import { Token, TokenFactory, ComparableToken } from '../token';
 
-export class TimestampToken extends Token implements ComparableToken {
+export class TimestampToken extends ComparableToken {
   static prim = 'timestamp';
 
   constructor(

@@ -15,6 +15,8 @@ import { SubscribeProvider } from './subscribe/interface';
 import { PollingSubscribeProvider } from './subscribe/polling-provider';
 import { TzProvider } from './tz/interface';
 import { RpcTzProvider } from './tz/rpc-tz-provider';
+import { Forger } from './forger/interface';
+import { RpcForger } from './forger/rpc-forger';
 
 export * from './query/interface';
 export * from './signer/interface';
@@ -32,6 +34,7 @@ export {
 
 export { SubscribeProvider } from './subscribe/interface';
 export interface SetProviderOptions {
+  forger?: Forger;
   rpc?: string | RpcClient;
   indexer?: string | IndexerClient;
   stream?: string | SubscribeProvider;
@@ -66,11 +69,12 @@ export class TezosToolkit {
    *
    * @param options rpc url or rpcClient to use to interact with the Tezos network and indexer url to use to interact with the Tezos network
    */
-  setProvider({ rpc, indexer, stream, signer, protocol, config }: SetProviderOptions) {
+  setProvider({ rpc, indexer, stream, signer, protocol, config, forger }: SetProviderOptions) {
     this.setRpcProvider(rpc);
     this.setIndexerProvider(indexer);
     this.setStreamProvider(stream);
     this.setSignerProvider(signer);
+    this.setForgerProvider(forger);
 
     this._context.proto = protocol;
     this._context.config = config as Required<Config>;
@@ -96,6 +100,12 @@ export class TezosToolkit {
     }
     this._options.rpc = rpc;
     this._context.rpc = this._rpcClient;
+  }
+
+  private setForgerProvider(forger: SetProviderOptions['forger']) {
+    const f = typeof forger === 'undefined' ? new RpcForger(this._context) : forger;
+    this._options.forger = f;
+    this._context.forger = f;
   }
 
   private setIndexerProvider(indexer: SetProviderOptions['indexer']) {

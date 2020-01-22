@@ -8,7 +8,7 @@ export class NatValidationError extends TokenValidationError {
   }
 }
 
-export class NatToken extends Token implements ComparableToken {
+export class NatToken extends ComparableToken {
   static prim = 'nat';
 
   constructor(
