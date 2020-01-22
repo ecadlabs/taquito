@@ -46,7 +46,8 @@ export const CONFIGS: ConfigWithSetup[] =
       if (forger === ForgerType.LOCAL) {
         Tezos.setProvider({ rpc, forger: localForger })
       } else if (forger === ForgerType.COMPOSITE) {
-        const composite = new CompositeForger([new RpcForger(Tezos['_context']), localForger]);
+        const rpcForger = Tezos.getFactory(RpcForger)();
+        const composite = new CompositeForger([rpcForger, localForger]);
         Tezos.setProvider({ rpc, forger: composite })
       } else {
         Tezos.setProvider({ rpc })
