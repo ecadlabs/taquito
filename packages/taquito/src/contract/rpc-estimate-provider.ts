@@ -1,25 +1,19 @@
-import {
-  OperationResultDelegation,
-  OperationResultOrigination,
-  OperationResultTransaction,
-  PreapplyResponse,
-  RPCRunOperationParam,
-} from '@taquito/rpc';
+import { PreapplyResponse, RPCRunOperationParam } from '@taquito/rpc';
 import BigNumber from 'bignumber.js';
 import { OperationEmitter } from '../operations/operation-emitter';
 import {
   flattenErrors,
-  TezosOperationError,
   flattenOperationResult,
+  TezosOperationError,
 } from '../operations/operation-errors';
 import {
   DelegateParams,
   OriginateParams,
+  ParamsWithKind,
   PrepareOperationParams,
   RegisterDelegateParams,
-  TransferParams,
   RPCOperation,
-  withParams,
+  TransferParams,
 } from '../operations/types';
 import { Estimate } from './estimate';
 import { EstimationProvider } from './interface';
@@ -29,7 +23,6 @@ import {
   createSetDelegateOperation,
   createTransferOperation,
 } from './prepare';
-import { DEFAULT_STORAGE_LIMIT } from '../constants';
 
 // RPC require a signature but do not verify it
 const SIGNATURE_STUB =
@@ -54,21 +47,6 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
         BigNumber.min(balance.dividedBy(cost_per_byte), hard_storage_limit_per_operation).toNumber()
       ),
     };
-  }
-
-  private getOperationResult(
-    opResponse: PreapplyResponse,
-    kind: 'origination' | 'transaction' | 'delegation'
-  ): (OperationResultTransaction | OperationResultOrigination | OperationResultDelegation)[] {
-    const results = opResponse.contents;
-    const originationOp = Array.isArray(results) && results.find(op => op.kind === kind);
-    const opResult =
-      originationOp && originationOp.metadata && originationOp.metadata.operation_result;
-    const internalResult =
-      originationOp && originationOp.metadata && originationOp.metadata.internal_operation_results;
-    return [opResult, ...(internalResult || []).map(({ result }: any) => result)].filter(
-      (x: any) => !!x
-    );
   }
 
   private createEstimateFromOperationContent(
@@ -185,7 +163,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     return (await this.createEstimate({ operation: op, source: sourceOrDefault }))[0];
   }
 
-  async batch(params: withParams[]) {
+  async batch(params: ParamsWithKind[]) {
     const operations: RPCOperation[] = [];
     const DEFAULT_PARAMS = await this.getAccountLimits(await this.signer.publicKeyHash());
     for (const param of params) {

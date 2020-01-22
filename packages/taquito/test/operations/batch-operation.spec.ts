@@ -242,6 +242,5 @@ describe('Batch operation', () => {
     );
     expect(op.storageDiff).toEqual('0');
     expect(op.consumedGas).toEqual(String(15285 + 15953 + 10207 + 15794 + 10000 + 15722 + 10000));
-    console.log(op.consumedGas);
   });
 });

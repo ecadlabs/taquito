@@ -2,7 +2,7 @@ import { OperationObject } from '@taquito/rpc';
 
 export type withKind<T, K> = T & { kind: K };
 
-export type withParams =
+export type ParamsWithKind =
   | withKind<OriginateParams, 'origination'>
   | withKind<DelegateParams, 'delegation'>
   | withKind<TransferParams, 'transaction'>
@@ -38,13 +38,13 @@ export type OriginateParamsBase = {
 export type OriginateParams = OriginateParamsBase &
   (
     | {
-      init?: never;
-      storage: any;
-    }
+        init?: never;
+        storage: any;
+      }
     | {
-      init: string | object;
-      storage?: never;
-    }
+        init: string | object;
+        storage?: never;
+      }
   );
 
 export interface ActivationParams {

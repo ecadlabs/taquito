@@ -1,13 +1,24 @@
 import { Context } from '../context';
 import { ContractMethod } from '../contract/contract';
 import { EstimationProvider } from '../contract/interface';
-import { createOriginationOperation, createSetDelegateOperation, createTransferOperation } from '../contract/prepare';
+import {
+  createOriginationOperation,
+  createSetDelegateOperation,
+  createTransferOperation,
+} from '../contract/prepare';
 import { BatchOperation } from '../operations/batch-operation';
 import { OperationEmitter } from '../operations/operation-emitter';
-import { ActivationParams, DelegateParams, OriginateParams, RPCDelegateOperation, RPCOperation, RPCOriginationOperation, RPCTransferOperation, TransferParams, withParams } from '../operations/types';
+import {
+  ActivationParams,
+  DelegateParams,
+  OriginateParams,
+  RPCOperation,
+  TransferParams,
+  ParamsWithKind,
+} from '../operations/types';
 
 export class OperationBatch extends OperationEmitter {
-  private operations: withParams[] = [];
+  private operations: ParamsWithKind[] = [];
 
   constructor(context: Context, private estimator: EstimationProvider) {
     super(context);
@@ -67,13 +78,7 @@ export class OperationBatch extends OperationEmitter {
     return this;
   }
 
-  private isOpWithFee(
-    op: RPCOperation
-  ): op is RPCDelegateOperation | RPCOriginationOperation | RPCTransferOperation {
-    return ['transaction', 'delegation', 'origination'].indexOf(op.kind) !== -1;
-  }
-
-  private async getRPCOp(param: withParams) {
+  private async getRPCOp(param: ParamsWithKind) {
     switch (param.kind) {
       case 'transaction':
         return createTransferOperation({
@@ -102,7 +107,7 @@ export class OperationBatch extends OperationEmitter {
    *
    * @param params Operations parameter
    */
-  with(params: withParams[]) {
+  with(params: ParamsWithKind[]) {
     for (const param of params) {
       switch (param.kind) {
         case 'transaction':
@@ -155,7 +160,7 @@ export class OperationBatch extends OperationEmitter {
 }
 
 export class RPCBatchProvider {
-  constructor(private context: Context, private estimator: EstimationProvider) { }
+  constructor(private context: Context, private estimator: EstimationProvider) {}
 
   /***
    *
@@ -163,7 +168,7 @@ export class RPCBatchProvider {
    *
    * @param params List of operation to batch together
    */
-  batch(params?: withParams[]) {
+  batch(params?: ParamsWithKind[]) {
     const batch = new OperationBatch(this.context, this.estimator);
 
     if (Array.isArray(params)) {

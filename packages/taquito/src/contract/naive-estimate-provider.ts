@@ -1,5 +1,5 @@
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
-import { OriginateParams, TransferParams, withParams } from '../operations/types';
+import { OriginateParams, TransferParams, ParamsWithKind } from '../operations/types';
 import { Estimate } from './estimate';
 import { EstimationProvider } from './interface';
 
@@ -69,7 +69,7 @@ export class NaiveEstimateProvider implements EstimationProvider {
     return new Estimate(gasLimit, 0, 157, fee);
   }
 
-  async batch(params: withParams[]) {
+  async batch(params: ParamsWithKind[]) {
     const estimates: Estimate[] = [];
     for (const param of params) {
       switch (param.kind) {
