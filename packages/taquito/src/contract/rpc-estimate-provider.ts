@@ -5,8 +5,9 @@ import {
   PreapplyResponse,
   RPCRunOperationParam,
 } from '@taquito/rpc';
-import { DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
+import BigNumber from 'bignumber.js';
 import { OperationEmitter } from '../operations/operation-emitter';
+import { flattenErrors, TezosOperationError } from '../operations/operation-errors';
 import {
   DelegateParams,
   OriginateParams,
@@ -22,23 +23,29 @@ import {
   createSetDelegateOperation,
   createTransferOperation,
 } from './prepare';
-import { flattenErrors, TezosOperationError } from '../operations/operation-errors';
 
 // RPC require a signature but do not verify it
 const SIGNATURE_STUB =
   'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg';
 
 export class RPCEstimateProvider extends OperationEmitter implements EstimationProvider {
+  private readonly ALLOCATION_STORAGE = 257;
+  private readonly ORIGINATION_STORAGE = 257;
+
   // Maximum values defined by the protocol
-  private async getConstants() {
+  private async getAccountLimits(pkh: string) {
+    const balance = await this.rpc.getBalance(pkh);
     const {
       hard_gas_limit_per_operation,
       hard_storage_limit_per_operation,
+      cost_per_byte,
     } = await this.rpc.getConstants();
     return {
-      fee: 30000,
+      fee: 0,
       gasLimit: hard_gas_limit_per_operation.toNumber(),
-      storageLimit: hard_storage_limit_per_operation.toNumber(),
+      storageLimit: Math.floor(
+        BigNumber.min(balance.dividedBy(cost_per_byte), hard_storage_limit_per_operation).toNumber()
+      ),
     };
   }
 
@@ -59,9 +66,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
 
   private async createEstimate(
     params: PrepareOperationParams,
-    kind: 'origination' | 'transaction' | 'delegation',
-    defaultStorage: number,
-    minimumGas: number = 0
+    kind: 'origination' | 'transaction' | 'delegation'
   ) {
     const {
       opbytes,
@@ -75,7 +80,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
 
     const { opResponse } = await this.simulate(operation);
 
-    const errors = flattenErrors(opResponse);
+    const errors = [...flattenErrors(opResponse, 'backtracked'), ...flattenErrors(opResponse)];
 
     // Fail early in case of errors
     if (errors.length) {
@@ -87,16 +92,17 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     let totalGas = 0;
     let totalStorage = 0;
     operationResults.forEach(result => {
+      totalStorage +=
+        'originated_contracts' in result && typeof result.originated_contracts !== 'undefined'
+          ? result.originated_contracts.length * this.ORIGINATION_STORAGE
+          : 0;
+      totalStorage += 'allocated_destination_contract' in result ? this.ALLOCATION_STORAGE : 0;
       totalGas += Number(result.consumed_gas) || 0;
       totalStorage +=
         'paid_storage_size_diff' in result ? Number(result.paid_storage_size_diff) || 0 : 0;
     });
 
-    return new Estimate(
-      Math.max(totalGas || 0, minimumGas),
-      Number(totalStorage || 0) + defaultStorage,
-      opbytes.length / 2
-    );
+    return new Estimate(totalGas || 0, Number(totalStorage || 0), opbytes.length / 2);
   }
 
   /**
@@ -109,16 +115,12 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    */
   async originate({ fee, storageLimit, gasLimit, ...rest }: OriginateParams) {
     const pkh = await this.signer.publicKeyHash();
-    const DEFAULT_PARAMS = await this.getConstants();
+    const DEFAULT_PARAMS = await this.getAccountLimits(pkh);
     const op = await createOriginationOperation({
       ...rest,
       ...DEFAULT_PARAMS,
     });
-    return this.createEstimate(
-      { operation: op, source: pkh },
-      'origination',
-      DEFAULT_STORAGE_LIMIT.ORIGINATION
-    );
+    return this.createEstimate({ operation: op, source: pkh }, 'origination');
   }
   /**
    *
@@ -130,16 +132,12 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    */
   async transfer({ fee, storageLimit, gasLimit, ...rest }: TransferParams) {
     const pkh = await this.signer.publicKeyHash();
-    const DEFAULT_PARAMS = await this.getConstants();
+    const DEFAULT_PARAMS = await this.getAccountLimits(pkh);
     const op = await createTransferOperation({
       ...rest,
       ...DEFAULT_PARAMS,
     });
-    return this.createEstimate(
-      { operation: op, source: pkh },
-      'transaction',
-      DEFAULT_STORAGE_LIMIT.TRANSFER
-    );
+    return this.createEstimate({ operation: op, source: pkh }, 'transaction');
   }
 
   /**
@@ -151,16 +149,10 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    * @param Estimate
    */
   async setDelegate(params: DelegateParams) {
-    const DEFAULT_PARAMS = await this.getConstants();
-    const op = await createSetDelegateOperation({ ...params, ...DEFAULT_PARAMS });
     const sourceOrDefault = params.source || (await this.signer.publicKeyHash());
-    return this.createEstimate(
-      { operation: op, source: sourceOrDefault },
-      'delegation',
-      DEFAULT_STORAGE_LIMIT.DELEGATION,
-      // Delegation have a minimum gas cost
-      DEFAULT_GAS_LIMIT.DELEGATION
-    );
+    const DEFAULT_PARAMS = await this.getAccountLimits(sourceOrDefault);
+    const op = await createSetDelegateOperation({ ...params, ...DEFAULT_PARAMS });
+    return this.createEstimate({ operation: op, source: sourceOrDefault }, 'delegation');
   }
 
   /**
@@ -172,17 +164,14 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    * @param Estimate
    */
   async registerDelegate(params: RegisterDelegateParams) {
-    const DEFAULT_PARAMS = await this.getConstants();
+    const DEFAULT_PARAMS = await this.getAccountLimits(await this.signer.publicKeyHash());
     const op = await createRegisterDelegateOperation(
       { ...params, ...DEFAULT_PARAMS },
       await this.signer.publicKeyHash()
     );
     return this.createEstimate(
       { operation: op, source: await this.signer.publicKeyHash() },
-      'delegation',
-      DEFAULT_STORAGE_LIMIT.DELEGATION,
-      // Delegation have a minimum gas cost
-      DEFAULT_GAS_LIMIT.DELEGATION
+      'delegation'
     );
   }
 }
