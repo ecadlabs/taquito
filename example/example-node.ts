@@ -2,7 +2,7 @@ import { Tezos } from '../packages/taquito/src/taquito';
 import { RpcClient } from '../packages/taquito-rpc/src/taquito-rpc';
 import { castToString } from '../packages/taquito-rpc/src/utils/utils';
 
-const provider = 'https://alphanet-node.tzscan.io';
+const provider = 'https://api.tez.ie/rpc/carthagenet';
 const client = new RpcClient(provider);
 
 async function example() {
