@@ -1,16 +1,16 @@
+import { HttpBackend, HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import {
   b58cdecode,
   b58cencode,
   buf2hex,
-  prefix,
   hex2buf,
-  mergebuf,
-  Prefix,
   isValidPrefix,
+  mergebuf,
+  prefix,
 } from '@taquito/utils';
-import { HttpBackend, STATUS_CODE, HttpResponseError } from '@taquito/http-utils';
 import toBuffer from 'typedarray-to-buffer';
-import { KeyNotFoundError, OperationNotAuthorizedError, BadSigningDataError } from './errors';
+import { BadSigningDataError, KeyNotFoundError, OperationNotAuthorizedError } from './errors';
+import { Signer } from '@taquito/taquito';
 
 interface PublicKeyResponse {
   public_key: string;
@@ -20,7 +20,7 @@ interface SignResponse {
   signature: string;
 }
 
-export class RemoteSigner {
+export class RemoteSigner implements Signer {
   constructor(private pkh: string, private rootUrl: string, private http = new HttpBackend()) {}
 
   async publicKeyHash(): Promise<string> {
