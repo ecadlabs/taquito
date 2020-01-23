@@ -2,7 +2,7 @@ import { IndexerClient } from '@taquito/indexer';
 import { RpcClient } from '@taquito/rpc';
 import { InMemorySigner } from '@taquito/signer';
 import { Protocols } from './constants';
-import { Context, Config } from './context';
+import { Context, Config, TaquitoProvider } from './context';
 import { ContractProvider, EstimationProvider } from './contract/interface';
 import { RpcContractProvider } from './contract/rpc-contract-provider';
 import { RPCEstimateProvider } from './contract/rpc-estimate-provider';
@@ -27,6 +27,11 @@ export * from './tz/interface';
 export * from './contract';
 export * from './contract/big-map';
 export * from './constants';
+
+export { TaquitoProvider } from './context';
+export { RpcForger } from './forger/rpc-forger';
+export { CompositeForger } from './forger/composite-forger';
+
 export {
   TezosOperationError,
   TezosOperationErrorWithMessage,
@@ -231,6 +236,12 @@ export class TezosToolkit {
       // Fallback to regular import
       this.setSignerProvider(new InMemorySigner(privateKeyOrEmail, passphrase));
     }
+  }
+
+  getFactory<T, K extends Array<any>>(ctor: TaquitoProvider<T, K>) {
+    return (...args: K) => {
+      return new ctor(this._context, ...args);
+    };
   }
 }
 
