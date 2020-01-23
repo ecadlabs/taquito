@@ -7,6 +7,7 @@ import {
   OriginateParams,
   TransferParams,
   RegisterDelegateParams,
+  ParamsWithKind,
 } from '../operations/types';
 import { Contract } from './contract';
 import { Estimate } from './estimate';
@@ -53,6 +54,7 @@ export interface EstimationProvider {
    * @param Estimate
    */
   registerDelegate(params?: RegisterDelegateParams): Promise<Estimate>;
+  batch(params: ParamsWithKind[]): Promise<Estimate[]>;
 }
 
 export interface ContractProvider {

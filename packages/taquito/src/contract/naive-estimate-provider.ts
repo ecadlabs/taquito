@@ -1,5 +1,5 @@
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
-import { OriginateParams, TransferParams } from '../operations/types';
+import { OriginateParams, TransferParams, ParamsWithKind } from '../operations/types';
 import { Estimate } from './estimate';
 import { EstimationProvider } from './interface';
 
@@ -67,5 +67,28 @@ export class NaiveEstimateProvider implements EstimationProvider {
     gasLimit = DEFAULT_GAS_LIMIT.DELEGATION,
   }): Promise<Estimate> {
     return new Estimate(gasLimit, 0, 157, fee);
+  }
+
+  async batch(params: ParamsWithKind[]) {
+    const estimates: Estimate[] = [];
+    for (const param of params) {
+      switch (param.kind) {
+        case 'transaction':
+          estimates.push(await this.transfer(param));
+          break;
+        case 'origination':
+          estimates.push(await this.originate(param));
+          break;
+        case 'delegation':
+          estimates.push(await this.setDelegate(param));
+          break;
+        case 'activate_account':
+          estimates.push(new Estimate(0, 0, 0, 0));
+          break;
+        default:
+          throw new Error(`Unsupported operation kind: ${(param as any).kind}`);
+      }
+    }
+    return estimates;
   }
 }

@@ -1,18 +1,18 @@
-import {
-  OperationResultDelegation,
-  OperationResultOrigination,
-  OperationResultTransaction,
-  PreapplyResponse,
-  RPCRunOperationParam,
-} from '@taquito/rpc';
+import { PreapplyResponse, RPCRunOperationParam } from '@taquito/rpc';
 import BigNumber from 'bignumber.js';
 import { OperationEmitter } from '../operations/operation-emitter';
-import { flattenErrors, TezosOperationError } from '../operations/operation-errors';
+import {
+  flattenErrors,
+  flattenOperationResult,
+  TezosOperationError,
+} from '../operations/operation-errors';
 import {
   DelegateParams,
   OriginateParams,
+  ParamsWithKind,
   PrepareOperationParams,
   RegisterDelegateParams,
+  RPCOperation,
   TransferParams,
 } from '../operations/types';
 import { Estimate } from './estimate';
@@ -49,25 +49,37 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     };
   }
 
-  private getOperationResult(
-    opResponse: PreapplyResponse,
-    kind: 'origination' | 'transaction' | 'delegation'
-  ): (OperationResultTransaction | OperationResultOrigination | OperationResultDelegation)[] {
-    const results = opResponse.contents;
-    const originationOp = Array.isArray(results) && results.find(op => op.kind === kind);
-    const opResult =
-      originationOp && originationOp.metadata && originationOp.metadata.operation_result;
-    const internalResult =
-      originationOp && originationOp.metadata && originationOp.metadata.internal_operation_results;
-    return [opResult, ...(internalResult || []).map(({ result }: any) => result)].filter(
-      (x: any) => !!x
-    );
+  private createEstimateFromOperationContent(
+    content: PreapplyResponse['contents'][0],
+    size: number
+  ) {
+    const operationResults = flattenOperationResult({ contents: [content] });
+    let totalGas = 0;
+    let totalStorage = 0;
+    operationResults.forEach(result => {
+      totalStorage +=
+        'originated_contracts' in result && typeof result.originated_contracts !== 'undefined'
+          ? result.originated_contracts.length * this.ORIGINATION_STORAGE
+          : 0;
+      totalStorage += 'allocated_destination_contract' in result ? this.ALLOCATION_STORAGE : 0;
+      totalGas += Number(result.consumed_gas) || 0;
+      totalStorage +=
+        'paid_storage_size_diff' in result ? Number(result.paid_storage_size_diff) || 0 : 0;
+    });
+
+    if (
+      content.kind === 'delegation' ||
+      content.kind === 'origination' ||
+      content.kind === 'reveal' ||
+      content.kind === 'transaction'
+    ) {
+      return new Estimate(totalGas || 0, Number(totalStorage || 0), size);
+    } else {
+      return new Estimate(0, 0, size, 0);
+    }
   }
 
-  private async createEstimate(
-    params: PrepareOperationParams,
-    kind: 'origination' | 'transaction' | 'delegation'
-  ) {
+  private async createEstimate(params: PrepareOperationParams) {
     const {
       opbytes,
       opOb: { branch, contents },
@@ -87,22 +99,18 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
       throw new TezosOperationError(errors);
     }
 
-    const operationResults = this.getOperationResult(opResponse, kind);
+    while (
+      opResponse.contents.length !== (Array.isArray(params.operation) ? params.operation.length : 1)
+    ) {
+      opResponse.contents.shift();
+    }
 
-    let totalGas = 0;
-    let totalStorage = 0;
-    operationResults.forEach(result => {
-      totalStorage +=
-        'originated_contracts' in result && typeof result.originated_contracts !== 'undefined'
-          ? result.originated_contracts.length * this.ORIGINATION_STORAGE
-          : 0;
-      totalStorage += 'allocated_destination_contract' in result ? this.ALLOCATION_STORAGE : 0;
-      totalGas += Number(result.consumed_gas) || 0;
-      totalStorage +=
-        'paid_storage_size_diff' in result ? Number(result.paid_storage_size_diff) || 0 : 0;
+    return opResponse.contents.map(x => {
+      return this.createEstimateFromOperationContent(
+        x,
+        opbytes.length / 2 / opResponse.contents.length
+      );
     });
-
-    return new Estimate(totalGas || 0, Number(totalStorage || 0), opbytes.length / 2);
   }
 
   /**
@@ -120,7 +128,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
       ...rest,
       ...DEFAULT_PARAMS,
     });
-    return this.createEstimate({ operation: op, source: pkh }, 'origination');
+    return (await this.createEstimate({ operation: op, source: pkh }))[0];
   }
   /**
    *
@@ -137,7 +145,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
       ...rest,
       ...DEFAULT_PARAMS,
     });
-    return this.createEstimate({ operation: op, source: pkh }, 'transaction');
+    return (await this.createEstimate({ operation: op, source: pkh }))[0];
   }
 
   /**
@@ -152,7 +160,49 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     const sourceOrDefault = params.source || (await this.signer.publicKeyHash());
     const DEFAULT_PARAMS = await this.getAccountLimits(sourceOrDefault);
     const op = await createSetDelegateOperation({ ...params, ...DEFAULT_PARAMS });
-    return this.createEstimate({ operation: op, source: sourceOrDefault }, 'delegation');
+    return (await this.createEstimate({ operation: op, source: sourceOrDefault }))[0];
+  }
+
+  async batch(params: ParamsWithKind[]) {
+    const operations: RPCOperation[] = [];
+    const DEFAULT_PARAMS = await this.getAccountLimits(await this.signer.publicKeyHash());
+    for (const param of params) {
+      switch (param.kind) {
+        case 'transaction':
+          operations.push(
+            await createTransferOperation({
+              ...param,
+              ...DEFAULT_PARAMS,
+            })
+          );
+          break;
+        case 'origination':
+          operations.push(
+            await createOriginationOperation({
+              ...param,
+              ...DEFAULT_PARAMS,
+            })
+          );
+          break;
+        case 'delegation':
+          operations.push(
+            await createSetDelegateOperation({
+              ...param,
+              ...DEFAULT_PARAMS,
+            })
+          );
+          break;
+        case 'activate_account':
+          operations.push({
+            ...param,
+            ...DEFAULT_PARAMS,
+          });
+          break;
+        default:
+          throw new Error(`Unsupported operation kind: ${(param as any).kind}`);
+      }
+    }
+    return this.createEstimate({ operation: operations });
   }
 
   /**
@@ -169,9 +219,8 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
       { ...params, ...DEFAULT_PARAMS },
       await this.signer.publicKeyHash()
     );
-    return this.createEstimate(
-      { operation: op, source: await this.signer.publicKeyHash() },
-      'delegation'
-    );
+    return (
+      await this.createEstimate({ operation: op, source: await this.signer.publicKeyHash() })
+    )[0];
   }
 }
