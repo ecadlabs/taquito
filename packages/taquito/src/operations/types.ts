@@ -1,5 +1,13 @@
 import { OperationObject } from '@taquito/rpc';
 
+export type withKind<T, K> = T & { kind: K };
+
+export type ParamsWithKind =
+  | withKind<OriginateParams, 'origination'>
+  | withKind<DelegateParams, 'delegation'>
+  | withKind<TransferParams, 'transaction'>
+  | withKind<ActivationParams, 'activate_account'>;
+
 export interface GasConsumingOperation {
   consumedGas?: string;
   gasLimit: number;
@@ -38,6 +46,11 @@ export type OriginateParams = OriginateParamsBase &
         storage?: never;
       }
   );
+
+export interface ActivationParams {
+  pkh: string;
+  secret: string;
+}
 
 /**
  * @description RPC origination operation

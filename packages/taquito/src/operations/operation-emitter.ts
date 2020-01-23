@@ -18,6 +18,7 @@ import {
   RPCRevealOperation,
   RPCTransferOperation,
 } from './types';
+import { Estimate } from '../contract/estimate';
 
 export interface PreparedOperation {
   opOb: {
@@ -215,6 +216,37 @@ export abstract class OperationEmitter {
       opResponse: await this.rpc.runOperation(op),
       op,
       context: this.context.clone(),
+    };
+  }
+
+  protected async estimate<T extends { fee?: number; gasLimit?: number; storageLimit?: number }>(
+    { fee, gasLimit, storageLimit, ...rest }: T,
+    estimator: (param: T) => Promise<Estimate>
+  ) {
+    let calculatedFee = fee;
+    let calculatedGas = gasLimit;
+    let calculatedStorage = storageLimit;
+
+    if (fee === undefined || gasLimit === undefined || storageLimit === undefined) {
+      const estimation = await estimator({ fee, gasLimit, storageLimit, ...(rest as any) });
+
+      if (calculatedFee === undefined) {
+        calculatedFee = estimation.suggestedFeeMutez;
+      }
+
+      if (calculatedGas === undefined) {
+        calculatedGas = estimation.gasLimit;
+      }
+
+      if (calculatedStorage === undefined) {
+        calculatedStorage = estimation.storageLimit;
+      }
+    }
+
+    return {
+      fee: calculatedFee!,
+      gasLimit: calculatedGas!,
+      storageLimit: calculatedStorage!,
     };
   }
 
