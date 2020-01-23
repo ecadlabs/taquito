@@ -109,43 +109,4 @@ describe('TezosToolkit test', () => {
         expect(toolkit.stream).toEqual(instance);
       });
     });
-
-  it('should use InMemorySigner when importKey is called', async done => {
-    expect(toolkit.signer).toEqual({});
-    await toolkit.importKey('p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1');
-    expect(toolkit.signer).toBeInstanceOf(InMemorySigner);
-    expect(await toolkit.signer.publicKeyHash()).toEqual('tz3Lfm6CyfSTZ7EgMckptZZGiPxzs9GK59At');
-
-    done();
-  });
-
-  it('should use InMemorySigner and activate faucet account when called with {privateKeyOrEmail, passphrase, mnemonic, secret} parameters', async done => {
-    // Mock fake operation hash
-    mockRpcClient.injectOperation.mockResolvedValue('test');
-    expect(toolkit.signer).toEqual({});
-    await toolkit.importKey('anEmail', 'testPassword', 'some mnemonic', 'secret');
-    expect(toolkit.signer).toBeInstanceOf(InMemorySigner);
-    expect(mockRpcClient.forgeOperations).toHaveBeenCalledWith({
-      branch: 'test',
-      contents: [
-        { kind: 'activate_account', pkh: 'tz1hY6N55Br4KrPahoyNUrvSSyaYz5yaRcRW', secret: 'secret' },
-      ],
-    });
-    expect(mockRpcClient.injectOperation).toHaveBeenCalled();
-    expect(await toolkit.signer.publicKeyHash()).toEqual('tz1hY6N55Br4KrPahoyNUrvSSyaYz5yaRcRW');
-    done();
-  });
-
-  it('should use InMemorySigner and skip activate faucet account when called with already activated account', async done => {
-    // Mock RPC error when activation is already done
-    mockRpcClient.forgeOperations.mockRejectedValue({ body: 'Invalid activation' });
-    // Mock fake operation hash
-    mockRpcClient.injectOperation.mockResolvedValue('test');
-    expect(toolkit.signer).toEqual({});
-    await toolkit.importKey('anEmail', 'testPassword', 'some mnemonic', 'secret');
-    expect(toolkit.signer).toBeInstanceOf(InMemorySigner);
-    expect(mockRpcClient.injectOperation).not.toHaveBeenCalled();
-    expect(await toolkit.signer.publicKeyHash()).toEqual('tz1hY6N55Br4KrPahoyNUrvSSyaYz5yaRcRW');
-    done();
-  });
 });

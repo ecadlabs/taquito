@@ -1,6 +1,7 @@
 import { localForger } from '@taquito/local-forging';
 import { CompositeForger, RpcForger, TezosToolkit } from '@taquito/taquito';
 import { b58cencode, Prefix, prefix } from '@taquito/utils';
+import { importKey } from '@taquito/signer'
 import fs from 'fs';
 
 const nodeCrypto = require('crypto');
@@ -83,7 +84,7 @@ export const CONFIGS: ConfigWithSetup[] =
             faucetKey = JSON.parse(fs.readFileSync(faucetKeyFile).toString())
           }
 
-          await Tezos.importKey(faucetKey.email, faucetKey.password, faucetKey.mnemonic.join(" "), faucetKey.secret)
+          await importKey(Tezos, faucetKey.email, faucetKey.password, faucetKey.mnemonic.join(" "), faucetKey.secret)
         },
         createAddress: async () => {
           const tezos = new TezosToolkit()
@@ -93,7 +94,7 @@ export const CONFIGS: ConfigWithSetup[] =
           nodeCrypto.randomFillSync(keyBytes)
 
           const key = b58cencode(new Uint8Array(keyBytes), prefix[Prefix.P2SK]);
-          await tezos.importKey(key);
+          await importKey(tezos, key);
 
           return tezos;
         }
