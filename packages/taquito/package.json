@@ -7,6 +7,7 @@
     "blockchain"
   ],
   "main": "dist/taquito.umd.js",
+  "unpkg": "dist/taquito.min.js",
   "module": "dist/taquito.es5.js",
   "typings": "dist/types/taquito.d.ts",
   "files": [
@@ -33,7 +34,8 @@
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
-    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts ",
+    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts && npm run build:web",
+    "build:web": "webpack",
     "start": "rollup -c rollup.config.ts -w",
     "postinstall": "node patch.js"
   },
@@ -99,11 +101,14 @@
     "rollup-plugin-sourcemaps": "^0.4.2",
     "rollup-plugin-typescript2": "^0.22.1",
     "shelljs": "^0.8.3",
+    "terser-webpack-plugin": "^2.3.1",
     "ts-jest": "^23.10.2",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
     "tslint-config-standard": "^8.0.1",
-    "typescript": "~3.6.0"
+    "typescript": "~3.6.0",
+    "webpack": "^4.41.4",
+    "webpack-cli": "^3.3.10"
   }
 }
