@@ -35,7 +35,7 @@
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts && npm run build:web",
-    "build:web": "webpack",
+    "build:web": "webpack && node update-readme.js",
     "start": "rollup -c rollup.config.ts -w",
     "postinstall": "node patch.js"
   },
@@ -109,6 +109,8 @@
     "tslint-config-standard": "^8.0.1",
     "typescript": "~3.6.0",
     "webpack": "^4.41.4",
-    "webpack-cli": "^3.3.10"
+    "webpack-assets-manifest": "^3.1.1",
+    "webpack-cli": "^3.3.10",
+    "webpack-subresource-integrity": "^1.4.0"
   }
 }
