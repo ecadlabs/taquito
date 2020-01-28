@@ -31,7 +31,6 @@ class SemiLiveProvider extends LiveProvider {
   componentDidUpdate() {
     // Override to prevent LiveProvider transpiling code on update but
     // keep the code. We will need it later.
-    this.code = this.props.code;
   }
 
   run() {
@@ -40,7 +39,7 @@ class SemiLiveProvider extends LiveProvider {
   }
 }
 
-function Playground({children, theme, transformCode, ...props}) {
+function Playground({ children, theme, transformCode, ...props }) {
   const [showCopied, setShowCopied] = useState(false);
   const live = useRef(null);
   const copy = useRef(null);
@@ -108,14 +107,14 @@ function Playground({children, theme, transformCode, ...props}) {
         )}>
         Result
         <button
-            type="button"
-            aria-label="Execute example"
-            className={classnames(
-              styles.button,
-              styles.runButton,
-            )}
-            onClick={handleRunCode}>
-              Run code
+          type="button"
+          aria-label="Execute example"
+          className={classnames(
+            styles.button,
+            styles.runButton,
+          )}
+          onClick={handleRunCode}>
+          Run code
           </button>
       </div>
       <div className={styles.playgroundPreview}>
