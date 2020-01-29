@@ -1,12 +1,11 @@
 import { TezosToolkit } from '@taquito/taquito';
-import { Uint8ArrayConsumer } from '../src/uint8array-consumer';
 import { opMappingReverse } from '../src/constants';
 import { decoders, encoders } from '../src/taquito-local-forging';
+import { Uint8ArrayConsumer } from '../src/uint8array-consumer';
 import { genericCode, genericStorage } from './data/generic_contract';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_big_map';
 import { noAnnotCode, noAnnotInit } from './data/token_without_annotations';
 import { voteInitSample, voteSample } from './data/vote_contract';
-import { fromHexString } from './utils';
 
 const integrationTest = process.env.RUN_INTEGRATION ? test : test.skip;
 
@@ -520,7 +519,7 @@ const cases: TestCase[] = [
 cases.forEach(({ name, operation, expected }) => {
   test(`Test: ${name}`, async done => {
     const result = encoders['manager'](operation);
-    expect(decoders['manager'](new Uint8ArrayConsumer(fromHexString(result)))).toEqual(
+    expect(decoders['manager'](Uint8ArrayConsumer.fromHexString(result))).toEqual(
       expected || operation
     );
     done();
@@ -535,7 +534,7 @@ cases.forEach(({ name, operation, expected }) => {
       const rpcResult = await Tezos.rpc.forgeOperations(operation);
 
       expect(result).toEqual(rpcResult);
-      expect(decoders['manager'](new Uint8ArrayConsumer(fromHexString(result)))).toEqual(
+      expect(decoders['manager'](Uint8ArrayConsumer.fromHexString(result))).toEqual(
         expected || operation
       );
       done();
