@@ -12,6 +12,7 @@ import {
   tz1Decoder,
   zarithDecoder,
 } from './codec';
+import { CODEC } from './constants';
 import { scriptDecoder } from './michelson/codec';
 import {
   ActivationSchema,
@@ -33,37 +34,38 @@ import { toHexString } from './utils';
 export type Decoder = (val: Uint8ArrayConsumer) => string | number | {} | undefined;
 
 export const decoders: { [key: string]: Decoder } = {
-  secret: val => toHexString(val.consume(20)),
-  raw: val => toHexString(val.consume(32)),
-  tz1: tz1Decoder,
-  branch: branchDecoder,
-  zarith: zarithDecoder,
-  public_key: publicKeyDecoder,
-  pkh: pkhDecoder,
-  delegate: delegateDecoder,
-  int32: int32Decoder,
-  script: scriptDecoder,
-  ballotStmt: ballotDecoder,
-  proposal: proposalDecoder,
-  proposalArr: proposalsDecoder,
-  parameters: parametersDecoder,
-  address: addressDecoder,
+  [CODEC.SECRET]: val => toHexString(val.consume(20)),
+  [CODEC.RAW]: val => toHexString(val.consume(32)),
+  [CODEC.TZ1]: tz1Decoder,
+  [CODEC.BRANCH]: branchDecoder,
+  [CODEC.ZARITH]: zarithDecoder,
+  [CODEC.PUBLIC_KEY]: publicKeyDecoder,
+  [CODEC.PKH]: pkhDecoder,
+  [CODEC.DELEGATE]: delegateDecoder,
+  [CODEC.INT32]: int32Decoder,
+  [CODEC.SCRIPT]: scriptDecoder,
+  [CODEC.BALLOT_STATEMENT]: ballotDecoder,
+  [CODEC.PROPOSAL]: proposalDecoder,
+  [CODEC.PROPOSAL_ARR]: proposalsDecoder,
+  [CODEC.PARAMETERS]: parametersDecoder,
+  [CODEC.ADDRESS]: addressDecoder,
 };
 
-decoders['operation'] = operationDecoder(decoders);
-decoders['activate_account'] = (val: Uint8ArrayConsumer) =>
+decoders[CODEC.OPERATION] = operationDecoder(decoders);
+decoders[CODEC.OP_ACTIVATE_ACCOUNT] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(ActivationSchema)(val);
-decoders['delegation'] = (val: Uint8ArrayConsumer) =>
+decoders[CODEC.OP_DELEGATION] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(DelegationSchema)(val);
-decoders['transaction'] = (val: Uint8ArrayConsumer) =>
+decoders[CODEC.OP_TRANSACTION] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(TransactionSchema)(val);
-decoders['origination'] = (val: Uint8ArrayConsumer) =>
+decoders[CODEC.OP_ORIGINATION] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(OriginationSchema)(val);
-decoders['ballot'] = (val: Uint8ArrayConsumer) => schemaDecoder(decoders)(BallotSchema)(val);
-decoders['endorsement'] = (val: Uint8ArrayConsumer) =>
+decoders[CODEC.OP_BALLOT] = (val: Uint8ArrayConsumer) => schemaDecoder(decoders)(BallotSchema)(val);
+decoders[CODEC.OP_ENDORSEMENT] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(EndorsementSchema)(val);
-decoders['seed_nonce_revelation'] = (val: Uint8ArrayConsumer) =>
+decoders[CODEC.OP_SEED_NONCE_REVELATION] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(SeedNonceRevelationSchema)(val);
-decoders['proposals'] = (val: Uint8ArrayConsumer) => schemaDecoder(decoders)(ProposalsSchema)(val);
-decoders['reveal'] = (val: Uint8ArrayConsumer) => schemaDecoder(decoders)(RevealSchema)(val);
-decoders['manager'] = schemaDecoder(decoders)(ManagerOperationSchema);
+decoders[CODEC.OP_PROPOSALS] = (val: Uint8ArrayConsumer) =>
+  schemaDecoder(decoders)(ProposalsSchema)(val);
+decoders[CODEC.OP_REVEAL] = (val: Uint8ArrayConsumer) => schemaDecoder(decoders)(RevealSchema)(val);
+decoders[CODEC.MANAGER] = schemaDecoder(decoders)(ManagerOperationSchema);
