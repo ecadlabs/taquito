@@ -12,7 +12,8 @@
   "module": "dist/taquito-utils.es5.js",
   "typings": "dist/types/taquito-utils.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "signature.json"
   ],
   "publishConfig": {
     "access": "public"
