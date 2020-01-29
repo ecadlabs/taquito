@@ -1,7 +1,7 @@
 {
   "name": "@taquito/example",
   "private": true,
-  "version": "6.0.2-beta.0",
+  "version": "6.0.3-beta.0",
   "scripts": {
     "example:at": "node -r ts-node/register --preserve-symlinks contract-schema.ts",
     "example:origination": "node -r ts-node/register --preserve-symlinks contract-origination.ts",
@@ -12,8 +12,8 @@
     "example:streamer": "node -r ts-node/register --preserve-symlinks example-streamer.ts"
   },
   "dependencies": {
-    "@taquito/signer": "^6.0.2-beta.0",
-    "@taquito/taquito": "^6.0.2-beta.0"
+    "@taquito/signer": "^6.0.3-beta.0",
+    "@taquito/taquito": "^6.0.3-beta.0"
   },
   "devDependencies": {
     "ts-node": "^8.3.0"

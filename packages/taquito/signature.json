@@ -166,7 +166,7 @@
           },
           {
             "path": "dist/taquito.min.js",
-            "sha512": "e1cead7293d0fa50a7414862de4f5c8a6dab62631131706dd8fe65d85832cc573dcc84258d8ce62e5031a6de56cf0d29f3623c274bf6c9f226fadfeaa928283e"
+            "sha512": "224bc7e273dcb6b396a34fdb9ff90bd650be20ed89ed956343172bca04080480c3b2e36c6c0cd7025889bc94e661229c1c52b40fab0122a136b8baaa86f40376"
           },
           {
             "path": "dist/taquito.umd.js",
@@ -179,10 +179,6 @@
           {
             "path": "dist/lib/operations/types.js",
             "sha512": "9e153af0176a3eb9c340bc30c016b6fc5410466e8f4cd5ce09a73fdb98265c937c30677fbacf526ff7555c93e7da855c8a170fd76798a74693e3fdbcc182380a"
-          },
-          {
-            "path": "dist/taquito.min.js.LICENSE",
-            "sha512": "b53a67c2709af55d826cfe35f6f9850631d9300942b3705d8485886ff7f913d3dd18d9b146cd189cc4486e77bc6bb0a652501223bb0e30dc4ccb93460f3c65cc"
           },
           {
             "path": "dist/lib/operations/batch-operation.js.map",
@@ -354,7 +350,7 @@
           },
           {
             "path": "README.md",
-            "sha512": "06fd2f6123ac78bf60c658909125404f0cdd02a32c6fb7a4ff6e549b36ccd4610719d985057e61151ba050a143bc893aff6f2c9c5eaf5dc782bdf995ebcb53d2"
+            "sha512": "02630e8ddb6757aea5820629e2b56eada056652ff922caf2382e49ef73c5d1103238904b4cffb953bedeacb193aa6ebe1cf9c999b9fbd730e34cd88d23bdd413"
           },
           {
             "path": "dist/types/operations/batch-operation.d.ts",
@@ -515,6 +511,10 @@
           {
             "path": "dist/types/operations/types.d.ts",
             "sha512": "c33b8861a3b0762d9aeccbd755d5c22b37004a07a408327b6fb1a5fe887df5cc08373de0b53c507143396b6a9f31a5ccc5b93bfc158d5865828e1c5f3cb7a770"
+          },
+          {
+            "path": "dist/taquito.min.js.LICENSE.txt",
+            "sha512": "c9e2abc8a4774c1904ed45b39b21f333dcda6693aa77ad2b1934abc678085f26eaec6717fe2b13b48fc66af4e5a17a7aaf8239b188a2cdcad3075ffe32887915"
           }
         ]
       }
@@ -551,7 +551,7 @@
           "unpkg",
           "version"
         ],
-        "sha512": "b37438563cc81044059eb5c2eac643ad8456b19fd836cc805b9cc4e967114d0abf30ac3c6622658114835d3bb0a3f6ff83017e3c8ba4f83e19bfe71c55f6082a"
+        "sha512": "5ee9bcb7cc7c7aa6426dd6770abb1ba4c1e03625c4664947d39c9d4d3e248b8f4f31f8c7de660489542598dcffc8a0dd119928b02bf0cef0898854de2fe7e5c1"
       }
     },
     {
@@ -559,7 +559,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/taquito",
-          "version": "6.0.2-beta.0",
+          "version": "6.0.3-beta.0",
           "description": "High level functionality that builds upon the other packages in the Tezos Typescript Library Suite.",
           "keywords": [
             "tezos",
@@ -594,7 +594,7 @@
             "precommit": "lint-staged",
             "prebuild": "rimraf dist",
             "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts && npm run build:web",
-            "build:web": "webpack",
+            "build:web": "webpack && node update-readme.js",
             "start": "rollup -c rollup.config.ts -w",
             "postinstall": "node patch.js"
           },
@@ -632,11 +632,11 @@
             ]
           },
           "dependencies": {
-            "@taquito/indexer": "^6.0.2-beta.0",
-            "@taquito/michelson-encoder": "^6.0.2-beta.0",
-            "@taquito/rpc": "^6.0.2-beta.0",
-            "@taquito/signer": "^6.0.2-beta.0",
-            "@taquito/utils": "^6.0.2-beta.0",
+            "@taquito/indexer": "^6.0.3-beta.0",
+            "@taquito/michelson-encoder": "^6.0.3-beta.0",
+            "@taquito/rpc": "^6.0.3-beta.0",
+            "@taquito/signer": "^6.0.3-beta.0",
+            "@taquito/utils": "^6.0.3-beta.0",
             "bignumber.js": "^9.0.0",
             "rxjs": "^6.5.3"
           },
@@ -668,11 +668,13 @@
             "tslint-config-standard": "^8.0.1",
             "typescript": "~3.6.0",
             "webpack": "^4.41.4",
-            "webpack-cli": "^3.3.10"
+            "webpack-assets-manifest": "^3.1.1",
+            "webpack-cli": "^3.3.10",
+            "webpack-subresource-integrity": "^1.4.0"
           }
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJeKvrECRCwAkEJD2ZwqwAAEVsQAJ7gs0eQqHh1krL3UmLH+Agx\nxdqzbyaMqPex0ps+khNNsPEIa5i5432nJEaDyLUlavAQ52dzbvk3O87/ZeowK5tS\n66mZCudROMg0Sg3uTZoFq+5yPv/YazEXCX0T/Bdls8VgPo00Q8LkIEru5FZKtwG4\nRfVE/SfLGlTqs6JpYmB+L4EFzLiYL0KIdVjJ9aD+430Wv03nsgcF3jlHvh+4W4el\n6jZoI0M+GCbpJVw74RcF3n3cJpjL2tKyD8R2q3hsB4VJkxb5BIGCL4Qdg49Y9lUw\nsk6CBxrnTxsXsLmWIQ44h6OByFj+pQi/MDY0NBgrk2DQmn31RCImJMla/B//5xM7\nA/le5hQZ2Phxg4DlTxTX4+pijZU6kNXFBJ8ecpAOu21YwKqsXzklAfp0ohThK26U\nUTgLA9ivI74aVi9dNPfK/bzDWZ0HSZVJvt3tuzyAURChhS7GoN1kUaxn045Xi2Fz\nmdYw1Yk8UCKI9MNbh6rmDCVn1RrOWboDzN9XWfdAKcRr1QD4xVuZaU62UiUMCX7K\n7RFniBl7FHYpPGn2svWJSUS1c0klKT49Ahb+V8SfhNL4ZRqSNNtixkm6MKSmyQiE\ncQStXSj+K6Xx/TSEbcbDjcRQee6muz0ZbvJEWwtMsAqBRr5Js2sk4FBtssQ+A+9c\npyRwnh/WTTj4X33QZfud\n=Vp1R\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJeMefQCRCwAkEJD2ZwqwAA5vYQAEcjsZEQ+fRe57KlqvqujSKn\n+pFw1u3Jovox/0lX218jJSt9AELLDkQzCl+wJ87yncXVfc2StLvBXvdfKqaW7CUu\nPVkW/nyjh5UCyGucH6gzWyIfqO2kgWn+CHVxyKe2GSNmcW8wtAumk0iOS9+IJ9fK\nB0roDsl9P38FPXzJmC5M0R+gwGqhtj83A30AER6MkAKjdBop3FRonh3ZrsPBhau6\nvNIZAPbCILLJ3DbTly7VQV95lMKmUmn8wlrCPLbo+IGlIgAlfZP7pPJs8iHtDIDv\nYJWyvmilvMVSZlLZdnFI5sim1i56oLDTb7IZlzHncHQjbrnUAuvmr0Ekcgz37AHN\nkIpX2pCXAbhNRRdZF45VmPDz0AGFpR75rvU/mpne8o26z7u5HGXavE+XXUyCnz47\n46XB8wJQhyvM7FOSOHtHBV1GTzmo3tpn742uwV5YdCksq6cl8X6pBETnbeVEXVIM\n9eVZDBX2xjV7HhkdRm6DhJJV5p7YUJCHcMLU10eTHr/Cn95uWaA/CpQ0hsqk7JbO\n7SarzvzDWsujrHpABMa0Y0ZFDcoLxBcvDPBWxD9msEg0ZFL/hiPrQ07WAm1vihnu\ntmnC48tILgV5JPuP1gRq/MfwrXIvV9QTB7UbfppzvJ5+W6N/ME+4Lp21B/gaXr5o\nqcCa/zek7El02fTVD8Vp\n=c26a\n-----END PGP SIGNATURE-----\n"
 }
