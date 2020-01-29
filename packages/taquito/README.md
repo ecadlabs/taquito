@@ -4,6 +4,13 @@
 
 The `@taquito/taquito` package contains higher level functionality that builds upon the other packages in the Tezos Typescript Library Suite.
 
+## CDN Bundle
+
+```html
+<script src="https://unpkg.com/@taquito/taquito@6.0.2-beta.0/dist/taquito.min.js"
+crossorigin="anonymous" integrity="sha384-gIjWpwSahQXCejt3IXr83Lxmcfe13gZX97Yp7bpdCMpX/fD0XV3V4hxRHhCVX9+k"></script>
+```
+
 ## API Documentation
 
 TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_taquito.html)

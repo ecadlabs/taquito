@@ -1,5 +1,7 @@
 const TerserPlugin = require('terser-webpack-plugin');
 const pkg = require('./package.json');
+var SriPlugin = require('webpack-subresource-integrity');
+var WebpackAssetsManifest = require('webpack-assets-manifest');
 
 module.exports = {
   mode: 'production',
@@ -8,7 +10,8 @@ module.exports = {
     library: 'taquito',
     libraryTarget: 'umd',
     path: __dirname,
-    filename: pkg.unpkg
+    filename: pkg.unpkg,
+    crossOriginLoading: 'anonymous'
   },
   node: {
     fs: 'empty'
@@ -17,4 +20,11 @@ module.exports = {
     minimize: true,
     minimizer: [new TerserPlugin()],
   },
+  plugins: [
+    new SriPlugin({
+      hashFuncNames: ['sha384'],
+      enabled: true
+    }),
+    new WebpackAssetsManifest({ integrity: true })
+  ]
 }
