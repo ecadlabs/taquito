@@ -5,6 +5,35 @@
 
 import { pad } from './utils';
 
+export enum CODEC {
+  SECRET = 'secret',
+  RAW = 'raw',
+  TZ1 = 'tz1',
+  BRANCH = 'branch',
+  ZARITH = 'zarith',
+  PUBLIC_KEY = 'public_key',
+  PKH = 'pkh',
+  DELEGATE = 'delegate',
+  SCRIPT = 'script',
+  BALLOT_STATEMENT = 'ballotStmt',
+  PROPOSAL = 'proposal',
+  PROPOSAL_ARR = 'proposalArr',
+  INT32 = 'int32',
+  PARAMETERS = 'parameters',
+  ADDRESS = 'address',
+  OPERATION = 'operation',
+  OP_ACTIVATE_ACCOUNT = 'activate_account',
+  OP_DELEGATION = 'delegation',
+  OP_TRANSACTION = 'transaction',
+  OP_ORIGINATION = 'origination',
+  OP_BALLOT = 'ballot',
+  OP_ENDORSEMENT = 'endorsement',
+  OP_SEED_NONCE_REVELATION = 'seed_nonce_revelation',
+  OP_REVEAL = 'reveal',
+  OP_PROPOSALS = 'proposals',
+  MANAGER = 'manager',
+}
+
 // See https://tezos.gitlab.io/whitedoc/michelson.html#full-grammar
 export const opMapping: { [key: string]: string } = {
   '00': 'parameter',

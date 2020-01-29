@@ -1,7 +1,6 @@
 import { TezosToolkit } from '@taquito/taquito';
 import { opMappingReverse } from '../src/constants';
-import { decoders, encoders } from '../src/taquito-local-forging';
-import { Uint8ArrayConsumer } from '../src/uint8array-consumer';
+import { localForger } from '../src/taquito-local-forging';
 import { genericCode, genericStorage } from './data/generic_contract';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_big_map';
 import { noAnnotCode, noAnnotInit } from './data/token_without_annotations';
@@ -11,7 +10,7 @@ const integrationTest = process.env.RUN_INTEGRATION ? test : test.skip;
 
 interface TestCase {
   name: string;
-  operation: {};
+  operation: any;
   expected?: {};
 }
 
@@ -518,10 +517,8 @@ const cases: TestCase[] = [
 
 cases.forEach(({ name, operation, expected }) => {
   test(`Test: ${name}`, async done => {
-    const result = encoders['manager'](operation);
-    expect(decoders['manager'](Uint8ArrayConsumer.fromHexString(result))).toEqual(
-      expected || operation
-    );
+    const result = await localForger.forge(operation);
+    expect(await localForger.parse(result)).toEqual(expected || operation);
     done();
   });
 
@@ -529,14 +526,12 @@ cases.forEach(({ name, operation, expected }) => {
     integrationTest(`Integration test: ${name} (${rpc})`, async done => {
       const Tezos = new TezosToolkit();
       Tezos.setProvider({ rpc });
-      const result = encoders['manager'](operation);
+      const result = await localForger.forge(operation);
 
       const rpcResult = await Tezos.rpc.forgeOperations(operation);
 
       expect(result).toEqual(rpcResult);
-      expect(decoders['manager'](Uint8ArrayConsumer.fromHexString(result))).toEqual(
-        expected || operation
-      );
+      expect(await localForger.parse(result)).toEqual(expected || operation);
       done();
     });
   });
