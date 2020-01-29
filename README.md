@@ -47,6 +47,7 @@ We publish gpg signed packages to npmjs.org under the `@taquito` handle.
 | Low Level Packages                                               | Responsibility                                                |
 | ---------------------------------------------------------------- | ------------------------------------------------------------- |
 | [@taquito/rpc](packages/taquito-rpc)                             | RPC client library, wrap every rpc endpoint in its own method |
+| [@taquito/local-forging](packages/taquito-local-forging)         | Local forging of Tezos operations                             |
 | [@taquito/michelson-encoder](packages/taquito-michelson-encoder) | Encode/Decode storage and parameters to/from michelson format |
 | [@taquito/indexer](packages/taquito-indexer)                     | A client for the [tezos-indexer-api][0] API                   |
 | [@taquito/streamer](packages/taquito-streamer)                   | A client for the [taquito-streamer][1] API                    |
