@@ -29,7 +29,7 @@ module.exports = {
         src: 'img/a_taquito.png'
       },
       links: [
-        { to: 'docs/version', label: '5.2.0-beta.1', position: 'right' },
+        { to: 'docs/version', label: '6.0.3-beta.0', position: 'right' },
         { to: 'docs/quick_start', label: 'Docs', position: 'right' },
         { href: "https://twitter.com/TezosTaquito", label: 'Twitter', position: 'right' },
         { href: "https://github.com/ecadlabs/taquito", label: 'GitHub', position: 'right' }

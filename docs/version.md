@@ -3,6 +3,86 @@ title: Versions
 author: Simon Boissonneault-Robert
 ---
 
+## 6.0.3-beta.0 Local Forging, Batch Ops and more
+
+This release brings several new features to Taquito. In line with our versioning policy, we have also bumped the major release number to v6 on this release, as this version has and continues to be tested against the Carthage testnet. By using this version of Taquito, your application will be compatible with both the Babylonnet protocol and the anticipated Carthage protocol. 
+
+As per our versioning policy, we have now removed support for injecting Athens operations, as that protocol is no longer in use on mainnet or in an active testnet.
+
+### Features
+
+#### Local Forging
+
+Taquito now supports Local forging of operations. This allows you to forge operations without relying on a Tezos node RPC. This feature is useful if you do not want to rely (trust) a public node, or if you want to forge & sign operations in an environment that is not accessible to the internet for security purposes.
+
+See the `@taquito/local-forging` package for the implementation.
+
+Our integration tests for local forging work by forging many test cases using the local forger and the RPC forger endpoint. We then assert that the results from both implementations are identical.
+
+#### Composite Forger
+
+A new CompositeForger API is available, that allows you to forge an operation using more than one forging method, such as nodes forge RPC and Local forger. This approach provides additional surety that your operation is correctly composed. The CompositeForger will use more than one forger to produce the operation bytes and check that the bytes from each forger are identical. If the operations differ, the API will throw an error. [#238](https://github.com/ecadlabs/taquito/pull/238)
+
+All Taquito integration tests that forge operations make use of the `CompositeForger` that relies on our local forger and the RPC based forger.
+
+#### Batch Operation API
+
+The Batch API allows you to group many operations into a single operation. Supported operations kinds are `transaction`, `origination`, `delegation` and `activate_account`.
+
+Batch operations are useful for processing operations that would otherwise need to be injected once per block.
+
+#### Taquito minified build published to [unpkg.co](http://unpkg.co)m CDN
+
+Developers can now use Taquito using a `<script>` tag instead of using a package manager such as `yarn` or `npm`
+
+All new releases of Taquito will be published to the [unpkg.com](http://unpkg.com) CDN. We will publish hash's of the CDN assets for every release, and we encourage users to make use of the [Subresource Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity) options to ensure that you are getting the correct version of Taquito.
+
+```
+    <script src="https://unpkg.com/@taquito/taquito@6.0.2-beta.0/dist/taquito.min.js"
+    crossorigin="anonymous" integrity="sha384-gIjWpwSahQXCejt3IXr83Lxmcfe13gZX97Yp7bpdCMpX/fD0XV3V4hxRHhCVX9+k"></script>
+```
+
+#### Michelson encoder validation
+
+Taquito now type checks data passed to the Michelson encoder prior to calling the RPC, providing better developer UX and faster error surfacing. See #211 for more details.
+
+#### Subscribe to operations (experimental)
+
+We have made a subscribe API that will poll the RPC behind the scenes. The API allows filtering on source/destination/hash and kind. This API may change in the future. Feedback is always welcome.
+
+### Other changes
+
+`BigMapAbstraction` is now exported from the taquito package #182
+
+`michelson-encoder` has the ability to get Taquito's representation of type definitions from a smart contract. For example, storage and entrypoint type definitions.  
+
+**BREAKING CHANGES**
+
+- WS streamer package is flagged as un-maintained.
+
+### Tests
+
+We have added many new  unit and integration tests including but not limited to multisig contract interaction scenarios, emptying of accounts, and multiple big map encoding scenarios
+
+### Fixes
+
+fix(michelson-encoder): Fix improper encoding of boolean parameters #215
+
+fix(michelson-encoder) Encoder now sorts maps and big map keys as expected by the protocol 
+
+fix(estimator) Fix fee estimation of low balance accounts.
+
+### Documentation Updates
+
+Many code snippets on the documentation site are now editable and executable directly from the browser.
+
+docs(website) Add setDelegate documentation page #193
+docs(website) Add origination documentation page #196
+
+### Acknowledgements and Thanks
+
+We wish to thank the Zengo, Kukai, TQ Group, Truffle Michael Klein, Matej Šima and anyone we have have missed. The input and feedback we get on Taquito is incredible valuable to us and we appreciate you all.
+
 ## 5.2.0-beta.1 Remote signer package, limits, bigmap abstraction and fixes
 
 ### Features
