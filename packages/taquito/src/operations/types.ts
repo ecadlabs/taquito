@@ -1,12 +1,48 @@
-import { OperationObject } from '@taquito/rpc';
+import { OperationObject, InternalOperationResultKindEnum, OpKind } from '@taquito/rpc';
 
-export type withKind<T, K> = T & { kind: K };
+export type withKind<T, K extends OpKind> = T & { kind: K };
 
 export type ParamsWithKind =
-  | withKind<OriginateParams, 'origination'>
-  | withKind<DelegateParams, 'delegation'>
-  | withKind<TransferParams, 'transaction'>
-  | withKind<ActivationParams, 'activate_account'>;
+  | withKind<OriginateParams, OpKind.ORIGINATION>
+  | withKind<DelegateParams, OpKind.DELEGATION>
+  | withKind<TransferParams, OpKind.TRANSACTION>
+  | withKind<ActivationParams, OpKind.ACTIVATION>;
+
+export const isKind = <T extends { kind: OpKind }, K extends OpKind>(
+  op: T,
+  kind: K
+): op is withKind<T, K> => {
+  return op.kind === kind;
+};
+
+export type RPCOpWithFee =
+  | RPCTransferOperation
+  | RPCOriginationOperation
+  | RPCDelegateOperation
+  | RPCRevealOperation;
+export type RPCOpWithSource =
+  | RPCTransferOperation
+  | RPCOriginationOperation
+  | RPCDelegateOperation
+  | RPCRevealOperation;
+
+export const isOpWithFee = <T extends { kind: OpKind }>(
+  op: T
+): op is withKind<T, InternalOperationResultKindEnum> => {
+  return ['transaction', 'delegation', 'origination', 'reveal'].indexOf(op.kind) !== -1;
+};
+
+export const isOpRequireReveal = <T extends { kind: OpKind }>(
+  op: T
+): op is withKind<T, Exclude<InternalOperationResultKindEnum, OpKind.REVEAL>> => {
+  return ['transaction', 'delegation', 'origination'].indexOf(op.kind) !== -1;
+};
+
+export type SourceKinds = InternalOperationResultKindEnum;
+
+export const isSourceOp = <T extends { kind: OpKind }>(op: T): op is withKind<T, SourceKinds> => {
+  return ['transaction', 'delegation', 'origination', 'reveal', 'ballot'].indexOf(op.kind) !== -1;
+};
 
 export interface GasConsumingOperation {
   consumedGas?: string;
@@ -56,12 +92,13 @@ export interface ActivationParams {
  * @description RPC origination operation
  */
 export interface RPCOriginationOperation {
-  kind: 'origination';
+  kind: OpKind.ORIGINATION;
   fee: number;
   gas_limit: number;
   storage_limit: number;
   balance: string;
   delegate?: string;
+  source?: string;
   script: {
     code: any;
     storage: any;
@@ -72,10 +109,10 @@ export interface RPCOriginationOperation {
  * @description RPC reveal operation
  */
 export interface RPCRevealOperation {
-  kind: 'reveal';
+  kind: OpKind.REVEAL;
   fee: number;
   public_key: string;
-  source: string;
+  source?: string;
   gas_limit: number;
   storage_limit: number;
 }
@@ -113,7 +150,7 @@ export interface RegisterDelegateParams {
  * @description RPC delegation operation
  */
 export interface RPCDelegateOperation {
-  kind: 'delegation';
+  kind: OpKind.DELEGATION;
   source?: string;
   fee: number;
   gas_limit: number;
@@ -140,11 +177,12 @@ export interface TransferParams {
  * @description RPC transfer operation
  */
 export interface RPCTransferOperation {
-  kind: 'transaction';
+  kind: OpKind.TRANSACTION;
   fee: number;
   gas_limit: number;
   storage_limit: number;
   amount: string;
+  source?: string;
   destination: string;
   parameters?: any;
 }
@@ -153,7 +191,7 @@ export interface RPCTransferOperation {
  * @description RPC activate account operation
  */
 export interface RPCActivateOperation {
-  kind: 'activate_account';
+  kind: OpKind.ACTIVATION;
   pkh: string;
   secret: string;
 }
