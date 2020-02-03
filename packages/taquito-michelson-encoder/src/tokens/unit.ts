@@ -1,4 +1,5 @@
 import { Token, TokenFactory } from './token';
+import { UnitValue } from '../taquito-michelson-encoder';
 
 export class UnitToken extends Token {
   static prim = 'unit';
@@ -20,8 +21,8 @@ export class UnitToken extends Token {
     return { prim: 'Unit' };
   }
 
-  public Execute(): { [key: string]: any } {
-    return null as any;
+  public Execute() {
+    return UnitValue;
   }
 
   public ExtractSchema() {
