@@ -78,6 +78,12 @@
 						<dt>warn</dt>
 						<dd><p>If running in production and dealing with tokens that have real value, it is strongly recommended to use a HSM backed signer so that private key material is not stored in memory or on disk</p>
 						</dd>
+						<dt>warn</dt>
+						<dd><p>Calling this constructor directly is discouraged as it do not await for sodium library to be loaded.</p>
+							<p>Consider doing:</p>
+							<p><code>const sodium = require(&#39;libsodium-wrappers&#39;); await sodium.ready;</code></p>
+							<p>The recommended usage is to use InMemorySigner.fromSecretKey(&#39;edsk&#39;, &#39;passphrase&#39;)</p>
+						</dd>
 					</dl>
 				</div>
 			</section>
@@ -107,6 +113,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_taquito_signer.inmemorysigner.html#secretkey" class="tsd-kind-icon">secret<wbr>Key</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_taquito_signer.inmemorysigner.html#sign" class="tsd-kind-icon">sign</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_taquito_signer.inmemorysigner.html#fromfundraiser" class="tsd-kind-icon">from<wbr>Fundraiser</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_taquito_signer.inmemorysigner.html#fromsecretkey" class="tsd-kind-icon">from<wbr>Secret<wbr>Key</a></li>
 							</ul>
 						</section>
 					</div>
@@ -124,7 +131,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/c8276af/packages/taquito-signer/src/taquito-signer.ts#L21">taquito-signer/src/taquito-signer.ts:21</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/4ded8f3/packages/taquito-signer/src/taquito-signer.ts#L34">taquito-signer/src/taquito-signer.ts:34</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -165,7 +172,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/c8276af/packages/taquito-signer/src/taquito-signer.ts#L88">taquito-signer/src/taquito-signer.ts:88</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/4ded8f3/packages/taquito-signer/src/taquito-signer.ts#L104">taquito-signer/src/taquito-signer.ts:104</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -185,7 +192,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/c8276af/packages/taquito-signer/src/taquito-signer.ts#L95">taquito-signer/src/taquito-signer.ts:95</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/4ded8f3/packages/taquito-signer/src/taquito-signer.ts#L111">taquito-signer/src/taquito-signer.ts:111</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -205,7 +212,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/c8276af/packages/taquito-signer/src/taquito-signer.ts#L102">taquito-signer/src/taquito-signer.ts:102</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/4ded8f3/packages/taquito-signer/src/taquito-signer.ts#L118">taquito-signer/src/taquito-signer.ts:118</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -225,7 +232,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/c8276af/packages/taquito-signer/src/taquito-signer.ts#L74">taquito-signer/src/taquito-signer.ts:74</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/4ded8f3/packages/taquito-signer/src/taquito-signer.ts#L88">taquito-signer/src/taquito-signer.ts:88</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -259,7 +266,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/c8276af/packages/taquito-signer/src/taquito-signer.ts#L17">taquito-signer/src/taquito-signer.ts:17</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/4ded8f3/packages/taquito-signer/src/taquito-signer.ts#L25">taquito-signer/src/taquito-signer.ts:25</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -275,6 +282,32 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_taquito_signer.inmemorysigner.html" class="tsd-signature-type">InMemorySigner</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="fromsecretkey" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> from<wbr>Secret<wbr>Key</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">from<wbr>Secret<wbr>Key<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, passphrase<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_taquito_signer.inmemorysigner.html" class="tsd-signature-type">InMemorySigner</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/4ded8f3/packages/taquito-signer/src/taquito-signer.ts#L31">taquito-signer/src/taquito-signer.ts:31</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>key: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> passphrase: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_taquito_signer.inmemorysigner.html" class="tsd-signature-type">InMemorySigner</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -351,6 +384,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
 								<a href="_taquito_signer.inmemorysigner.html#fromfundraiser" class="tsd-kind-icon">from<wbr>Fundraiser</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="_taquito_signer.inmemorysigner.html#fromsecretkey" class="tsd-kind-icon">from<wbr>Secret<wbr>Key</a>
 							</li>
 						</ul>
 					</li>
