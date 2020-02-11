@@ -1,5 +1,5 @@
 import { localForger } from '@taquito/local-forging';
-import { CompositeForger, RpcForger, TezosToolkit } from '@taquito/taquito';
+import { CompositeForger, RpcForger, TezosToolkit, Protocols } from '@taquito/taquito';
 import { b58cencode, Prefix, prefix } from '@taquito/utils';
 import fs from 'fs';
 
@@ -18,12 +18,14 @@ interface Config {
   rpc: string,
   knownBaker: string,
   knownContract: string,
+  protocol: Protocols
 }
 
 interface ConfigWithSetup extends Config {
   lib: TezosToolkit,
   setup: () => Promise<void>,
-  createAddress: () => Promise<TezosToolkit>
+  createAddress: () => Promise<TezosToolkit>,
+  protocol: Protocols
 }
 
 const providers: Config[] = envConfig ? JSON.parse(envConfig) : [
@@ -31,11 +33,13 @@ const providers: Config[] = envConfig ? JSON.parse(envConfig) : [
     rpc: 'https://api.tez.ie/rpc/carthagenet',
     knownBaker: 'tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9',
     knownContract: 'KT1XYa1JPKYVJYVJge89r4w2tShS8JYb1NQh',
+    protocol: Protocols.PsCARTHA
   },
   {
     rpc: 'https://api.tez.ie/rpc/babylonnet',
     knownBaker: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
-    knownContract: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK'
+    knownContract: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK',
+    protocol: Protocols.PsBabyM1
   }
 ];
 
@@ -45,7 +49,7 @@ jest.setTimeout(60000 * 10);
 
 export const CONFIGS: ConfigWithSetup[] =
   forgers.reduce((prev, forger: ForgerType) => {
-    const configs = providers.map(({ rpc, knownBaker, knownContract }) => {
+    const configs = providers.map(({ rpc, knownBaker, knownContract, protocol }) => {
       const Tezos = new TezosToolkit();
       if (forger === ForgerType.LOCAL) {
         Tezos.setProvider({ rpc, forger: localForger })
@@ -57,7 +61,7 @@ export const CONFIGS: ConfigWithSetup[] =
         Tezos.setProvider({ rpc })
       }
       return {
-        rpc, knownBaker, knownContract, lib: Tezos, setup: async () => {
+        rpc, knownBaker, knownContract, protocol, lib: Tezos, setup: async () => {
           let faucetKey = {
             email: "peqjckge.qkrrajzs@tezos.example.org",
             password: "y4BX7qS1UE", mnemonic: [

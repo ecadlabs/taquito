@@ -46,6 +46,14 @@ export class PairToken extends Token {
 
     return newSig;
   }
+
+  public ToBigMapKey(val: any) {
+    return {
+      key: this.EncodeObject(val),
+      type: this.typeWithoutAnnotations(),
+    };
+  }
+
   public EncodeObject(args: any): any {
     const leftToken = this.createToken(this.val.args[0], this.idx);
     let keyCount = 1;

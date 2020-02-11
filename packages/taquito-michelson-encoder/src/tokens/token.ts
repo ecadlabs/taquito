@@ -24,6 +24,27 @@ export abstract class Token {
     protected fac: TokenFactory
   ) {}
 
+  protected typeWithoutAnnotations() {
+    const removeArgsRec = (val: {
+      prim: string;
+      args: any[];
+      annots?: any[];
+    }): { prim: string; args?: any[] } => {
+      if (val.args) {
+        return {
+          prim: val.prim,
+          args: val.args.map(x => removeArgsRec(x)),
+        };
+      } else {
+        return {
+          prim: val.prim,
+        };
+      }
+    };
+
+    return removeArgsRec(this.val);
+  }
+
   annot() {
     return (Array.isArray(this.val.annots) && this.val.annots.length > 0
       ? this.val.annots[0]
