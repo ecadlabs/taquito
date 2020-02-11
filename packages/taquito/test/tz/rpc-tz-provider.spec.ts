@@ -41,6 +41,11 @@ describe('RpcTzProvider test', () => {
   });
 
   describe('activate', () => {
+    let mockSigner: {
+      publicKeyHash: jest.Mock<any, any>;
+      publicKey: jest.Mock<any, any>;
+      sign: jest.Mock<any, any>;
+    };
     it('should produce a activate_account operation', async done => {
       const mockRpcClient = {
         getBlock: jest.fn(),
@@ -63,13 +68,19 @@ describe('RpcTzProvider test', () => {
         },
       });
 
+      mockSigner = {
+        publicKeyHash: jest.fn(),
+        publicKey: jest.fn(),
+        sign: jest.fn(),
+      };
+
       mockRpcClient.getManagerKey.mockResolvedValue('test');
       mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
       mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
       mockRpcClient.preapplyOperations.mockResolvedValue([]);
       mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
       mockRpcClient.forgeOperations.mockResolvedValue('test');
-      const provider = new RpcTzProvider(new Context(mockRpcClient as any));
+      const provider = new RpcTzProvider(new Context(mockRpcClient as any, mockSigner as any));
       const result = await provider.activate('test', '123');
       expect(result.raw).toEqual({
         counter: 0,
