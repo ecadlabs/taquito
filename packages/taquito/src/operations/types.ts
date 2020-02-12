@@ -1,5 +1,7 @@
 import { OperationObject, InternalOperationResultKindEnum, OpKind } from '@taquito/rpc';
 
+export { OpKind } from '@taquito/rpc';
+
 export type withKind<T, K extends OpKind> = T & { kind: K };
 
 export type ParamsWithKind =

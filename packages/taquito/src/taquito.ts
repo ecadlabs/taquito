@@ -28,6 +28,8 @@ export * from './contract';
 export * from './contract/big-map';
 export * from './constants';
 
+export { OpKind } from './operations/types';
+
 export { TaquitoProvider } from './context';
 export { PollingSubscribeProvider } from './subscribe/polling-provider';
 export { RpcForger } from './forger/rpc-forger';

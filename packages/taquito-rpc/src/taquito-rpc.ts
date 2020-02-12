@@ -40,6 +40,8 @@ import { castToBigNumber } from './utils/utils';
 
 export * from './types';
 
+export { OpKind } from './opkind';
+
 const defaultRPC = 'https://mainnet.tezrpc.me';
 const defaultChain = 'main';
 
