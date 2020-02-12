@@ -1,4 +1,4 @@
-import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, MANAGER_LAMBDA, TezosToolkit } from "@taquito/taquito";
+import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, MANAGER_LAMBDA, TezosToolkit, Protocols } from "@taquito/taquito";
 import { Contract } from "taquito/src/contract/contract";
 import { CONFIGS } from "./config";
 import { badCode } from "./data/badCode";
@@ -14,8 +14,9 @@ import { tokenBigmapCode } from './data/token_bigmap';
 import { noAnnotCode, noAnnotInit } from "./data/token_without_annotation";
 import { voteSample } from "./data/vote-contract";
 import { storageContract } from "./data/storage-contract";
+import { mapWithPairAsKeyCode, mapWithPairAsKeyStorage } from "./data/bigmap_with_pair_as_key";
 
-CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
+CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress, protocol }) => {
   const Tezos = lib;
   describe(`Test contract api using: ${rpc}`, () => {
 
@@ -533,6 +534,22 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
 
       done();
     });
+
+    // Pair as key is only supported since proto 006
+    if (protocol === Protocols.PsCARTHA) {
+      it('Contract with pair as key', async (done) => {
+        const op = await Tezos.contract.originate({
+          balance: "0",
+          code: mapWithPairAsKeyCode,
+          init: mapWithPairAsKeyStorage
+        })
+        const contract = await op.contract()
+        const storage2 = await contract.storage<any>();
+        const value = await storage2.get({ 'test': 'test2', 'test2': 'test3' })
+        expect(value).toEqual('test')
+        done();
+      });
+    }
   });
 
   describe('Estimate scenario', () => {

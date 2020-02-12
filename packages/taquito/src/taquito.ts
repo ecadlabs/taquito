@@ -29,6 +29,7 @@ export * from './contract/big-map';
 export * from './constants';
 
 export { TaquitoProvider } from './context';
+export { PollingSubscribeProvider } from './subscribe/polling-provider';
 export { RpcForger } from './forger/rpc-forger';
 export { CompositeForger } from './forger/composite-forger';
 
@@ -217,21 +218,28 @@ export class TezosToolkit {
     secret?: string
   ): Promise<void> {
     if (privateKeyOrEmail && passphrase && mnemonic && secret) {
+      const previousSigner = this.signer;
       const signer = InMemorySigner.fromFundraiser(privateKeyOrEmail, passphrase, mnemonic);
       const pkh = await signer.publicKeyHash();
-      let op;
-      try {
-        op = await this.tz.activate(pkh, secret);
-      } catch (ex) {
-        const isInvalidActivationError = ex && ex.body && /Invalid activation/.test(ex.body);
-        if (!isInvalidActivationError) {
-          throw ex;
-        }
-      }
-      if (op) {
-        await op.confirmation();
-      }
       this.setSignerProvider(signer);
+      try {
+        let op;
+        try {
+          op = await this.tz.activate(pkh, secret);
+        } catch (ex) {
+          const isInvalidActivationError = ex && ex.body && /Invalid activation/.test(ex.body);
+          if (!isInvalidActivationError) {
+            throw ex;
+          }
+        }
+        if (op) {
+          await op.confirmation();
+        }
+      } catch (ex) {
+        // Restore to previous signer in case of error
+        this.setSignerProvider(previousSigner);
+        throw ex;
+      }
     } else {
       // Fallback to regular import
       this.setSignerProvider(new InMemorySigner(privateKeyOrEmail, passphrase));
