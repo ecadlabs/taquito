@@ -15,7 +15,9 @@ import {
   RPCOperation,
   TransferParams,
   ParamsWithKind,
+  isOpWithFee,
 } from '../operations/types';
+import { OpKind } from '@taquito/rpc';
 
 export class OperationBatch extends OperationEmitter {
   private operations: ParamsWithKind[] = [];
@@ -31,7 +33,7 @@ export class OperationBatch extends OperationEmitter {
    * @param params Transfer operation parameter
    */
   withTransfer(params: TransferParams) {
-    this.operations.push({ kind: 'transaction', ...params });
+    this.operations.push({ kind: OpKind.TRANSACTION, ...params });
     return this;
   }
 
@@ -52,7 +54,7 @@ export class OperationBatch extends OperationEmitter {
    * @param params Delegation operation parameter
    */
   withDelegation(params: DelegateParams) {
-    this.operations.push({ kind: 'delegation', ...params });
+    this.operations.push({ kind: OpKind.DELEGATION, ...params });
     return this;
   }
 
@@ -63,7 +65,7 @@ export class OperationBatch extends OperationEmitter {
    * @param params Activation operation parameter
    */
   withActivation({ pkh, secret }: ActivationParams) {
-    this.operations.push({ kind: 'activate_account', pkh, secret });
+    this.operations.push({ kind: OpKind.ACTIVATION, pkh, secret });
     return this;
   }
 
@@ -74,25 +76,25 @@ export class OperationBatch extends OperationEmitter {
    * @param params Origination operation parameter
    */
   withOrigination(params: OriginateParams) {
-    this.operations.push({ kind: 'origination', ...params });
+    this.operations.push({ kind: OpKind.ORIGINATION, ...params });
     return this;
   }
 
   private async getRPCOp(param: ParamsWithKind) {
     switch (param.kind) {
-      case 'transaction':
+      case OpKind.TRANSACTION:
         return createTransferOperation({
           ...param,
         });
-      case 'origination':
+      case OpKind.ORIGINATION:
         return createOriginationOperation({
           ...param,
         });
-      case 'delegation':
+      case OpKind.DELEGATION:
         return createSetDelegateOperation({
           ...param,
         });
-      case 'activate_account':
+      case OpKind.ACTIVATION:
         return {
           ...param,
         };
@@ -110,16 +112,16 @@ export class OperationBatch extends OperationEmitter {
   with(params: ParamsWithKind[]) {
     for (const param of params) {
       switch (param.kind) {
-        case 'transaction':
+        case OpKind.TRANSACTION:
           this.withTransfer(param);
           break;
-        case 'origination':
+        case OpKind.ORIGINATION:
           this.withOrigination(param);
           break;
-        case 'delegation':
+        case OpKind.DELEGATION:
           this.withDelegation(param);
           break;
-        case 'activate_account':
+        case OpKind.ACTIVATION:
           this.withActivation(param);
           break;
         default:
@@ -141,7 +143,7 @@ export class OperationBatch extends OperationEmitter {
     const ops: RPCOperation[] = [];
     let i = 0;
     for (const op of this.operations) {
-      if (op.kind !== 'activate_account') {
+      if (isOpWithFee(op)) {
         const estimated = await this.estimate(op, async () => estimates[i]);
         ops.push(await this.getRPCOp({ ...op, ...estimated }));
       } else {

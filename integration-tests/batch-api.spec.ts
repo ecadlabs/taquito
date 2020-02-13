@@ -1,7 +1,7 @@
 import { CONFIGS } from "./config";
 import { ligoSample } from "./data/ligo-simple-contract";
 import { managerCode } from "./data/manager_code";
-import { MANAGER_LAMBDA } from "@taquito/taquito";
+import { MANAGER_LAMBDA, OpKind } from "@taquito/taquito";
 
 CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
   const Tezos = lib;
@@ -31,12 +31,12 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
     it('Simple transfers with origination using with', async (done) => {
       const op = await Tezos.batch([
         {
-          kind: 'transaction',
+          kind: OpKind.TRANSACTION,
           to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
           amount: 2
         },
         {
-          kind: 'origination',
+          kind: OpKind.ORIGINATION,
           balance: "1",
           code: ligoSample,
           storage: 0,
@@ -74,12 +74,12 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
 
       const batchOp = await LocalTez.batch([
         {
-          kind: 'transaction',
+          kind: OpKind.TRANSACTION,
           to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
           amount: 1
         },
         {
-          kind: 'origination',
+          kind: OpKind.ORIGINATION,
           balance: "0",
           code: ligoSample,
           storage: 0,

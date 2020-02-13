@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import { OpKind } from './opkind';
 
 export type BalanceResponse = BigNumber;
 export type StorageResponse = ScriptedContracts['storage'];
@@ -47,7 +48,7 @@ export interface BlockFullHeader {
   signature: string;
 }
 
-export type InlinedEndorsementKindEnum = 'endorsement';
+export type InlinedEndorsementKindEnum = OpKind.ENDORSEMENT;
 
 export interface InlinedEndorsementContents {
   kind: InlinedEndorsementKindEnum;
@@ -63,43 +64,43 @@ export interface InlinedEndorsement {
 export type OperationContentsBallotEnum = 'nay' | 'yay' | 'pass';
 
 export interface OperationContentsEndorsement {
-  kind: 'endorsement';
+  kind: OpKind.ENDORSEMENT;
   level: number;
 }
 
 export interface OperationContentsRevelation {
-  kind: 'seed_nonce_revelation';
+  kind: OpKind.SEED_NONCE_REVELATION;
   level: number;
   nonce: string;
 }
 
 export interface OperationContentsDoubleEndorsement {
-  kind: 'double_endorsement_evidence';
+  kind: OpKind.DOUBLE_ENDORSEMENT_EVIDENCE;
   op1: InlinedEndorsement;
   op2: InlinedEndorsement;
 }
 
 export interface OperationContentsDoubleBaking {
-  kind: 'double_baking_evidence';
+  kind: OpKind.DOUBLE_BAKING_EVIDENCE;
   bh1: BlockFullHeader;
   bh2: BlockFullHeader;
 }
 
 export interface OperationContentsActivateAccount {
-  kind: 'activate_account';
+  kind: OpKind.ACTIVATION;
   pkh: string;
   secret: string;
 }
 
 export interface OperationContentsProposals {
-  kind: 'proposals';
+  kind: OpKind.PROPOSALS;
   source: string;
   period: number;
   proposals: string[];
 }
 
 export interface OperationContentsBallot {
-  kind: 'ballot';
+  kind: OpKind.BALLOT;
   source: string;
   period: number;
   proposal: string;
@@ -107,7 +108,7 @@ export interface OperationContentsBallot {
 }
 
 export interface OperationContentsReveal {
-  kind: 'reveal';
+  kind: OpKind.REVEAL;
   source: string;
   fee: string;
   counter: string;
@@ -117,7 +118,7 @@ export interface OperationContentsReveal {
 }
 
 export interface OperationContentsTransaction {
-  kind: 'transaction';
+  kind: OpKind.TRANSACTION;
   source: string;
   fee: string;
   counter: string;
@@ -129,7 +130,7 @@ export interface OperationContentsTransaction {
 }
 
 export interface OperationContentsOrigination {
-  kind: 'origination';
+  kind: OpKind.ORIGINATION;
   source: string;
   fee: string;
   counter: string;
@@ -141,7 +142,7 @@ export interface OperationContentsOrigination {
 }
 
 export interface OperationContentsDelegation {
-  kind: 'delegation';
+  kind: OpKind.DELEGATION;
   source: string;
   fee: string;
   counter: string;
@@ -192,41 +193,41 @@ export interface OperationContentsAndResultMetadata {
 }
 
 export interface OperationContentsAndResultEndorsement {
-  kind: 'endorsement';
+  kind: OpKind.ENDORSEMENT;
   level: number;
   metadata: OperationContentsAndResultMetadataExtended;
 }
 
 export interface OperationContentsAndResultRevelation {
-  kind: 'seed_nonce_revelation';
+  kind: OpKind.SEED_NONCE_REVELATION;
   level: number;
   nonce: string;
   metadata: OperationContentsAndResultMetadata;
 }
 
 export interface OperationContentsAndResultDoubleEndorsement {
-  kind: 'double_endorsement_evidence';
+  kind: OpKind.DOUBLE_ENDORSEMENT_EVIDENCE;
   op1: InlinedEndorsement;
   op2: InlinedEndorsement;
   metadata: OperationContentsAndResultMetadata;
 }
 
 export interface OperationContentsAndResultDoubleBaking {
-  kind: 'double_baking_evidence';
+  kind: OpKind.DOUBLE_BAKING_EVIDENCE;
   bh1: BlockFullHeader;
   bh2: BlockFullHeader;
   metadata: OperationContentsAndResultMetadata;
 }
 
 export interface OperationContentsAndResultActivateAccount {
-  kind: 'activate_account';
+  kind: OpKind.ACTIVATION;
   pkh: string;
   secret: string;
   metadata: OperationContentsAndResultMetadata;
 }
 
 export interface OperationContentsAndResultProposals {
-  kind: 'proposals';
+  kind: OpKind.PROPOSALS;
   source: string;
   period: number;
   proposals: string[];
@@ -234,7 +235,7 @@ export interface OperationContentsAndResultProposals {
 }
 
 export interface OperationContentsAndResultBallot {
-  kind: 'ballot';
+  kind: OpKind.BALLOT;
   source: string;
   period: number;
   proposal: string;
@@ -243,7 +244,7 @@ export interface OperationContentsAndResultBallot {
 }
 
 export interface OperationContentsAndResultReveal {
-  kind: 'reveal';
+  kind: OpKind.REVEAL;
   source: string;
   fee: string;
   counter: string;
@@ -254,7 +255,7 @@ export interface OperationContentsAndResultReveal {
 }
 
 export interface OperationContentsAndResultTransaction {
-  kind: 'transaction';
+  kind: OpKind.TRANSACTION;
   source: string;
   fee: string;
   counter: string;
@@ -267,7 +268,7 @@ export interface OperationContentsAndResultTransaction {
 }
 
 export interface OperationContentsAndResultDelegation {
-  kind: 'delegation';
+  kind: OpKind.DELEGATION;
   source: string;
   fee: string;
   counter: string;
@@ -477,42 +478,18 @@ export interface OperationBalanceUpdatesItem {
 
 export type OperationBalanceUpdates = OperationBalanceUpdatesItem[];
 
-export interface ConstructedOperation {
-  kind: string;
-  level: number;
-  nonce: string;
-  pkh: string;
-  hash: string;
-  secret: string;
-  source: string;
-  period: number;
-  proposal: string;
-  ballot: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  parameters: string;
-  balance: string;
-  delegate: string;
-  amount: string;
-  destination: string;
-  public_key: string;
-  script: { code: string; storage: string };
-}
-
 export interface OperationObject {
   branch?: string;
-  contents?: ConstructedOperation[];
+  contents?: OperationContents[];
   protocol?: string;
   signature?: string;
 }
 
 export type InternalOperationResultKindEnum =
-  | 'reveal'
-  | 'transaction'
-  | 'origination'
-  | 'delegation';
+  | OpKind.REVEAL
+  | OpKind.TRANSACTION
+  | OpKind.ORIGINATION
+  | OpKind.DELEGATION;
 
 export type InternalOperationResultEnum =
   | OperationResultReveal
@@ -687,7 +664,7 @@ export type EntrypointsResponse = {
 };
 
 export interface OperationContentsAndResultOrigination {
-  kind: 'origination';
+  kind: OpKind.ORIGINATION;
   source: string;
   fee: string;
   counter: string;

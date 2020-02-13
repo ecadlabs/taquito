@@ -1,4 +1,4 @@
-import { PreapplyResponse, RPCRunOperationParam } from '@taquito/rpc';
+import { PreapplyResponse, RPCRunOperationParam, OpKind } from '@taquito/rpc';
 import BigNumber from 'bignumber.js';
 import { OperationEmitter } from '../operations/operation-emitter';
 import {
@@ -8,6 +8,7 @@ import {
 } from '../operations/operation-errors';
 import {
   DelegateParams,
+  isOpWithFee,
   OriginateParams,
   ParamsWithKind,
   PrepareOperationParams,
@@ -67,12 +68,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
         'paid_storage_size_diff' in result ? Number(result.paid_storage_size_diff) || 0 : 0;
     });
 
-    if (
-      content.kind === 'delegation' ||
-      content.kind === 'origination' ||
-      content.kind === 'reveal' ||
-      content.kind === 'transaction'
-    ) {
+    if (isOpWithFee(content)) {
       return new Estimate(totalGas || 0, Number(totalStorage || 0), size);
     } else {
       return new Estimate(0, 0, size, 0);
@@ -168,7 +164,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     const DEFAULT_PARAMS = await this.getAccountLimits(await this.signer.publicKeyHash());
     for (const param of params) {
       switch (param.kind) {
-        case 'transaction':
+        case OpKind.TRANSACTION:
           operations.push(
             await createTransferOperation({
               ...param,
@@ -176,7 +172,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
             })
           );
           break;
-        case 'origination':
+        case OpKind.ORIGINATION:
           operations.push(
             await createOriginationOperation({
               ...param,
@@ -184,7 +180,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
             })
           );
           break;
-        case 'delegation':
+        case OpKind.DELEGATION:
           operations.push(
             await createSetDelegateOperation({
               ...param,
@@ -192,7 +188,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
             })
           );
           break;
-        case 'activate_account':
+        case OpKind.ACTIVATION:
           operations.push({
             ...param,
             ...DEFAULT_PARAMS,
