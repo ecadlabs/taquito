@@ -10,14 +10,15 @@ export interface BalanceHistoryOptions {
 }
 
 /***
- * @description RpcClient allows interaction with Tezos network through an rpc node
+ * @description IndexerClient is a client to the server counterpart https://github.com/ecadlabs/tezos-indexer-api
+ * @deprecated The IndexerClient is currently unmaintained and should be avoided until https://github.com/ecadlabs/taquito/issues/185 is addressed
  */
 export class IndexerClient {
   /**
    *
-   * @param url indexer root url (default https://mainnet.tezrpc.me)
-   * @param httpBackend Http backend that issue http request.
-   * You can override it by providing your own if you which to hook in the request/response
+   * @param url indexer root url (default https://api.tez.ie/indexer/mainnet)
+   * @param httpBackend Http backend that issues http request.
+   * You can override it by providing your own if you which to hook into the request/response
    *
    * @example new IndexerClient('https://api.tez.ie/indexer/mainnet')
    */
