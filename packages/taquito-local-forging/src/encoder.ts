@@ -11,9 +11,10 @@ import {
   publicKeyEncoder,
   tz1Encoder,
   zarithEncoder,
+  signatureEncoder,
 } from './codec';
 import { CODEC } from './constants';
-import { scriptEncoder } from './michelson/codec';
+import { scriptEncoder, valueEncoder } from './michelson/codec';
 import {
   ActivationSchema,
   BallotSchema,
@@ -47,6 +48,8 @@ export const encoders: { [key: string]: Encoder<any> } = {
   [CODEC.INT32]: int32Encoder,
   [CODEC.PARAMETERS]: parametersEncoder,
   [CODEC.ADDRESS]: addressEncoder,
+  [CODEC.MICHELSON]: valueEncoder,
+  [CODEC.SIGNATURE]: signatureEncoder,
 };
 
 encoders[CODEC.OPERATION] = operationEncoder(encoders);

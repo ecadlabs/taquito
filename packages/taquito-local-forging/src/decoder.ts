@@ -11,9 +11,10 @@ import {
   publicKeyDecoder,
   tz1Decoder,
   zarithDecoder,
+  signatureDecoder,
 } from './codec';
 import { CODEC } from './constants';
-import { scriptDecoder } from './michelson/codec';
+import { scriptDecoder, valueDecoder } from './michelson/codec';
 import {
   ActivationSchema,
   BallotSchema,
@@ -49,6 +50,8 @@ export const decoders: { [key: string]: Decoder } = {
   [CODEC.PROPOSAL_ARR]: proposalsDecoder,
   [CODEC.PARAMETERS]: parametersDecoder,
   [CODEC.ADDRESS]: addressDecoder,
+  [CODEC.MICHELSON]: valueDecoder,
+  [CODEC.SIGNATURE]: signatureDecoder
 };
 
 decoders[CODEC.OPERATION] = operationDecoder(decoders);

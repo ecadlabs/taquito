@@ -3,6 +3,10 @@ import { CODEC } from './constants';
 import { decoders } from './decoder';
 import { encoders } from './encoder';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
+import { PackDataParams, PackDataResponse } from '@taquito/rpc';
+
+import { packValue } from './pack';
+import { unpackValue } from './unpack';
 
 export { CODEC } from './constants';
 export * from './decoder';
@@ -26,8 +30,18 @@ export class LocalForger implements Forger {
     return Promise.resolve(this.codec.encoder(params));
   }
 
-  parse(hex: string): Promise<ForgeParams> {
-    return Promise.resolve(this.codec.decoder(hex) as ForgeParams);
+  parse(hex: string): Promise<any> {
+    return Promise.resolve(this.codec.decoder(hex));
+  }
+
+  pack({ data, type }: PackDataParams): Promise<PackDataResponse> {
+    return Promise.resolve({ packed: `05${packValue(data, type)}` })
+  }
+
+  unpack({ packed, type }: { packed: string, type: any }): Promise<any> {
+    const data = Uint8ArrayConsumer.fromHexString(packed);
+    data.consume(1)
+    return Promise.resolve(unpackValue(data, type))
   }
 }
 

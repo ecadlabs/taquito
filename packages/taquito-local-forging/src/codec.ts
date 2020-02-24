@@ -22,6 +22,26 @@ export const prefixDecoder = (pre: Prefix) => (str: Uint8ArrayConsumer) => {
 };
 
 export const tz1Decoder = prefixDecoder(Prefix.TZ1);
+
+export const signatureDecoder = (val: Uint8ArrayConsumer) => {
+  const sig = val.consume(64);
+  return b58cencode(sig, prefixMap[Prefix.SIG])
+}
+
+export const signatureEncoder = (val: string) => {
+  if (val.startsWith(Prefix.SIG)) {
+    return prefixEncoder(Prefix.SIG)(val)
+  } else if (val.startsWith(Prefix.EDSIG)) {
+    return prefixEncoder(Prefix.EDSIG)(val)
+  } else if (val.startsWith(Prefix.SPSIG)) {
+    return prefixEncoder(Prefix.SPSIG)(val)
+  } else if (val.startsWith(Prefix.P2SIG)) {
+    return prefixEncoder(Prefix.P2SIG)(val)
+  } else {
+    throw new Error(`Invalid signature value: ${val}`);
+  }
+}
+
 export const branchDecoder = prefixDecoder(Prefix.B);
 export const pkhDecoder = (val: Uint8ArrayConsumer) => {
   const prefix = val.consume(1);

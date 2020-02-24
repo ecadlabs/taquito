@@ -5,7 +5,22 @@
 
 import { pad } from './utils';
 
+
+export enum MichelsonType {
+  INT = 'int',
+  NAT = 'nat',
+  MUTEZ = 'mutez',
+  STRING = 'string',
+  BYTES = 'bytes',
+  ADDRESS = 'address',
+  KEY_HASH = 'key_hash',
+  SIGNATURE = 'signature',
+  PAIR = 'pair'
+}
+
+
 export enum CODEC {
+  SIGNATURE = 'signature',
   SECRET = 'secret',
   RAW = 'raw',
   TZ1 = 'tz1',
@@ -32,6 +47,7 @@ export enum CODEC {
   OP_REVEAL = 'reveal',
   OP_PROPOSALS = 'proposals',
   MANAGER = 'manager',
+  MICHELSON = 'michelson'
 }
 
 // See https://tezos.gitlab.io/whitedoc/michelson.html#full-grammar

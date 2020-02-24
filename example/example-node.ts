@@ -1,3 +1,4 @@
+// file deepcode ignore PromiseNotCaughtGeneral: File not important
 import { Tezos } from '../packages/taquito/src/taquito';
 import { RpcClient } from '../packages/taquito-rpc/src/taquito-rpc';
 import { castToString } from '../packages/taquito-rpc/src/utils/utils';
