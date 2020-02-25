@@ -5,6 +5,8 @@
 
 import { pad } from './utils';
 
+export const ENTRYPOINT_MAX_LENGTH = 31;
+
 export enum CODEC {
   SECRET = 'secret',
   RAW = 'raw',
