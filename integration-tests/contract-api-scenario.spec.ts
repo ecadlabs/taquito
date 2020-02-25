@@ -42,6 +42,26 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress, protocol }) => {
       done();
     });
 
+    it('Simple origination scenario with non ascii string', async (done) => {
+      expect.assertions(1);
+      try {
+        await Tezos.contract.originate({
+          balance: "1",
+          code: `parameter string;
+          storage string;
+          code {CAR;
+                PUSH string "Hello ";
+                CONCAT;
+                NIL operation; PAIR};
+          `,
+          init: `"Copyright ©"`
+        })
+      } catch (ex) {
+        expect(ex).toEqual(expect.objectContaining({ message: expect.stringContaining('invalidSyntacticConstantError') }))
+      }
+      done();
+    });
+
     it('Contract with bad code', async (done) => {
       await expect(Tezos.contract.originate({
         balance: "1",

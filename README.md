@@ -6,6 +6,7 @@ A TypeScript library suite for development on the Tezos blockchain
 [![CircleCI](https://circleci.com/gh/ecadlabs/taquito.svg?style=svg)](https://circleci.com/gh/ecadlabs/taquito)
 [![codecov](https://codecov.io/gh/ecadlabs/taquito/branch/master/graph/badge.svg)](https://codecov.io/gh/ecadlabs/taquito)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/3204/badge)](https://bestpractices.coreinfrastructure.org/projects/3204)
+[![npm version](https://badge.fury.io/js/%40taquito%2Ftaquito.svg)](https://badge.fury.io/js/%40taquito%2Ftaquito)
 
 _WARNING: This project is in beta. We welcome users and feedback, please be aware that this project is a work in progress._
 

@@ -59,7 +59,7 @@ export default () => {
     <Layout permalink="/" description={customFields.description}>
       <div className={classnames(styles.banner, styles.centered, 'margin-bottom--xl')}>
         <img className={styles.brandLogo} src={useBaseUrl('img/Taquito.png')} />
-        <span className={styles.tagline}>{siteConfig.tagline}</span>
+        <h1 className={styles.tagline}>{siteConfig.tagline}</h1>
         <div className={classnames('margin-bottom--lg')}>
           <Link
             className={styles.button}
