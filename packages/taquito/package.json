@@ -21,7 +21,10 @@
   "author": "Simon Boissonneault-Robert <simon@ecadlabs.com>",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git+https://github.com/ecadlabs/taquito.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ecadlabs/taquito/issues"
   },
   "license": "MIT",
   "engines": {
