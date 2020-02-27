@@ -7,7 +7,7 @@ import {
   prefixLength,
 } from '@taquito/utils';
 import BigNumber from 'bignumber.js';
-import { entrypointMapping, entrypointMappingReverse } from './constants';
+import { entrypointMapping, entrypointMappingReverse, ENTRYPOINT_MAX_LENGTH } from './constants';
 import { extractRequiredLen, valueDecoder, valueEncoder, MichelsonValue } from './michelson/codec';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
 import { pad } from './utils';
@@ -245,7 +245,15 @@ export const entrypointDecoder = (value: Uint8ArrayConsumer) => {
     return entrypointMapping[preamble];
   } else {
     const entry = extractRequiredLen(value, 1);
-    return Buffer.from(entry).toString('utf8');
+
+    const entrypoint = Buffer.from(entry).toString('utf8');
+
+    if (entrypoint.length > ENTRYPOINT_MAX_LENGTH) {
+      throw new Error(
+        `Oversized entrypoint: ${entrypoint}. The maximum length of entrypoint is ${ENTRYPOINT_MAX_LENGTH}`
+      );
+    }
+    return entrypoint;
   }
 };
 
@@ -263,11 +271,16 @@ export const parametersDecoder = (val: Uint8ArrayConsumer) => {
     };
   }
 };
-
 export const entrypointEncoder = (entrypoint: string) => {
   if (entrypoint in entrypointMappingReverse) {
     return `${entrypointMappingReverse[entrypoint]}`;
   } else {
+    if (entrypoint.length > ENTRYPOINT_MAX_LENGTH) {
+      throw new Error(
+        `Oversized entrypoint: ${entrypoint}. The maximum length of entrypoint is ${ENTRYPOINT_MAX_LENGTH}`
+      );
+    }
+
     const value = { string: entrypoint };
     return `ff${valueEncoder(value).slice(8)}`;
   }

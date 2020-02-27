@@ -10,6 +10,11 @@ A TypeScript library suite for development on the Tezos blockchain
 
 _WARNING: This project is in beta. We welcome users and feedback, please be aware that this project is a work in progress._
 
+## Official channels
+
+- <https://keybase.io/team/ecadlabs.taquito>
+- <https://tezos.stackexchange.com/questions/tagged/taquito>
+
 ## What is Taquito
 
 Taquito is a TypeScript library suite made available as set of npm packages aiming to make building on top of Tezos easier and more enjoyable.

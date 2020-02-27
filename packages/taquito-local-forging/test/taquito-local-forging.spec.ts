@@ -169,6 +169,28 @@ const cases: TestCase[] = [
     },
   },
   {
+    name: 'Transaction with maximum length entrypoint',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: 'transaction',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          parameters: {
+            entrypoint: 'Tps0RV2UISBvTV6m2z16VnfCVnN5dzX',
+            value: { prim: 'Pair', args: [{ int: '2' }, { string: 'hello' }] },
+          },
+          destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          amount: '1000',
+        },
+      ],
+    },
+  },
+  {
     name: 'Transaction with non ascii entrypoint and string',
     operation: {
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',

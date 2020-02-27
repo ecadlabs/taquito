@@ -5,6 +5,9 @@
 
 import { pad } from './utils';
 
+// See: https://tezos.gitlab.io/protocols/005_babylon.html#transactions-now-have-an-entrypoint
+export const ENTRYPOINT_MAX_LENGTH = 31;
+
 export enum CODEC {
   SECRET = 'secret',
   RAW = 'raw',
