@@ -1,4 +1,5 @@
 import { BigMapToken } from '../../src/tokens/bigmap';
+import { MichelsonMap } from '../../src/michelson-map';
 
 describe('BigMap', () => {
   it('Should use custom semantic when provided', () => {
@@ -18,7 +19,7 @@ describe('BigMap', () => {
       null as any
     );
     const result = bigMap.Execute([]);
-    expect(result).toEqual({});
+    expect(result).toEqual(new MichelsonMap());
   });
 
   it('Should use default semantic (return id) when omitted', () => {

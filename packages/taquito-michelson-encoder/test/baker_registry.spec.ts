@@ -2,6 +2,7 @@ import { Schema } from '../src/schema/storage';
 import { ParameterSchema } from '../src/schema/parameter';
 import { storage, params, rpcContractResponse, bigMapValue } from '../data/baker_registry';
 import BigNumber from 'bignumber.js';
+import { MichelsonMap } from '../src/michelson-map';
 describe('Baker Registry contract test', () => {
   it('Test storage schema', () => {
     const schema = new Schema(storage);
@@ -22,7 +23,7 @@ describe('Baker Registry contract test', () => {
   it('Decode storage properly', () => {
     const schema = new Schema(storage);
     expect(schema.Execute(rpcContractResponse.script.storage)).toEqual({
-      '0': {},
+      '0': new MichelsonMap(),
       owner: 'tz1aicu922KqrGxpdTpVdSD1Jrqz7fJiUu6L',
       signup_fee: new BigNumber('8000000'),
       update_fee: new BigNumber('1000000'),

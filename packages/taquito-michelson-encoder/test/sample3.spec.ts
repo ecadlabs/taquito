@@ -6,13 +6,14 @@ import {
 } from '../data/sample3';
 import { ParameterSchema } from '../src/schema/parameter';
 import { Schema } from '../src/schema/storage';
+import { MichelsonMap } from '../src/michelson-map';
 
 describe('Schema test', () => {
   it('Should parse storage with mutez properly', () => {
     const schema = new Schema(storage3);
     const s = schema.Execute(rpcContractResponse3.script.storage);
     expect(s).toEqual({
-      balances: {
+      balances: MichelsonMap.fromLiteral({
         KT18oQnGxZNPST7GndCN1w5o3RjCKMPRuQYb: new BigNumber('0'),
         KT1BPE6waJrv3CagjRYwtfF3ZbE4nKxCa35Q: new BigNumber('79540178'),
         KT1BgkG1u8oQ5x1nySJq9TSExZYZvuUHxG4d: new BigNumber('94738111'),
@@ -56,7 +57,7 @@ describe('Schema test', () => {
         tz1eSmgHg4Xoy2RJy2owdjGsYzj5eKxaoKYr: new BigNumber('35524185304'),
         tz1ee26q3xzbsZF4AMkzysR8CxK8eZiLRzKF: new BigNumber('48718359'),
         tz1i8p76UJXw2WJt2o2puAbrt2c36DohjuzW: new BigNumber('123799839'),
-      },
+      }),
       buyPrice: new BigNumber('1062727'),
       decimals: new BigNumber('6'),
       inBaker: new BigNumber('570674096663'),
@@ -72,7 +73,7 @@ describe('Schema test', () => {
     const schema = new Schema(storage3);
 
     const result = schema.Encode({
-      balances: {
+      balances: MichelsonMap.fromLiteral({
         KT18oQnGxZNPST7GndCN1w5o3RjCKMPRuQYb: new BigNumber('0'),
         KT1BPE6waJrv3CagjRYwtfF3ZbE4nKxCa35Q: new BigNumber('79540178'),
         KT1BgkG1u8oQ5x1nySJq9TSExZYZvuUHxG4d: new BigNumber('94738111'),
@@ -116,7 +117,7 @@ describe('Schema test', () => {
         tz1eSmgHg4Xoy2RJy2owdjGsYzj5eKxaoKYr: new BigNumber('35524185304'),
         tz1ee26q3xzbsZF4AMkzysR8CxK8eZiLRzKF: new BigNumber('48718359'),
         tz1i8p76UJXw2WJt2o2puAbrt2c36DohjuzW: new BigNumber('123799839'),
-      },
+      }),
       buyPrice: new BigNumber('1062727'),
       decimals: new BigNumber('6'),
       inBaker: new BigNumber('570674096663'),

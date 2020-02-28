@@ -54,6 +54,10 @@ export class PairToken extends Token {
     };
   }
 
+  public ToKey(val: any) {
+    return this.Execute(val);
+  }
+
   public EncodeObject(args: any): any {
     const leftToken = this.createToken(this.val.args[0], this.idx);
     let keyCount = 1;

@@ -6,6 +6,7 @@ import {
 } from '../../data/proto005/token_contract_with_bigmap';
 import { Schema } from '../../src/schema/storage';
 import BigNumber from 'bignumber.js';
+import { MichelsonMap } from '../../src/michelson-map';
 
 describe('Token contract with big map', () => {
   it('should extract schema properly', () => {
@@ -15,7 +16,10 @@ describe('Token contract with big map', () => {
         address: {
           '0': 'nat',
           '1': {
-            address: 'nat',
+            map: {
+              key: 'address',
+              value: 'nat'
+            }
           },
         },
       },
@@ -49,23 +53,23 @@ describe('Token contract with big map', () => {
 
   it('should decode big map diff properly', () => {
     const schema = Schema.fromRPCResponse(rpcContractResponse as any);
-    expect(schema.ExecuteOnBigMapDiff(bigMapDiff)).toEqual({
+    expect(schema.ExecuteOnBigMapDiff(bigMapDiff)).toEqual(MichelsonMap.fromLiteral({
       tz1Ra8yQVQN4Nd7LpPQ6UT6t3bsWWqHZ9wa6: {
         '0': new BigNumber('200'),
-        '1': {
+        '1': MichelsonMap.fromLiteral({
           tz1fPjyo55HwUAkd1xcL5vo6DGzJrkxAMpiD: new BigNumber('60'),
-        },
+        }),
       },
-    });
+    }));
   });
 
   it('should decode big map value properly', () => {
     const schema = Schema.fromRPCResponse(rpcContractResponse as any);
     expect(schema.ExecuteOnBigMapValue(bigMapValue)).toEqual({
       '0': new BigNumber('200'),
-      '1': {
+      '1': MichelsonMap.fromLiteral({
         tz1fPjyo55HwUAkd1xcL5vo6DGzJrkxAMpiD: new BigNumber('60'),
-      },
+      }),
     });
   });
 });

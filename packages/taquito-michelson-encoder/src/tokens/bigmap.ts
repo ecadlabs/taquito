@@ -1,4 +1,5 @@
 import { Token, TokenFactory, ComparableToken, Semantic, TokenValidationError } from './token';
+import { MichelsonMap } from '../michelson-map';
 
 export class BigMapValidationError extends TokenValidationError {
   name: string = 'BigMapValidationError';
@@ -32,45 +33,45 @@ export class BigMapToken extends Token {
   }
 
   private isValid(value: any): BigMapValidationError | null {
-    if (typeof value === 'object') {
+    if (value instanceof MichelsonMap) {
       return null;
     }
 
-    return new BigMapValidationError(value, this, 'Value must be an object');
+    return new BigMapValidationError(value, this, 'Value must be a MichelsonMap');
   }
 
   public Encode(args: any[]): any {
-    const val = args.pop();
+    const val: MichelsonMap<any, any> = args.pop();
 
     const err = this.isValid(val);
     if (err) {
       throw err;
     }
 
-    return Object.keys(val)
+    return Array.from(val.keys())
       .sort(this.KeySchema.compare)
       .map(key => {
         return {
           prim: 'Elt',
-          args: [this.KeySchema.Encode([key]), this.ValueSchema.EncodeObject(val[key])],
+          args: [this.KeySchema.EncodeObject(key), this.ValueSchema.EncodeObject(val.get(key))],
         };
       });
   }
 
   public EncodeObject(args: any): any {
-    const val = args;
+    const val: MichelsonMap<any, any> = args;
 
     const err = this.isValid(val);
     if (err) {
       throw err;
     }
 
-    return Object.keys(val)
+    return Array.from(val.keys())
       .sort(this.KeySchema.compare)
       .map(key => {
         return {
           prim: 'Elt',
-          args: [this.KeySchema.EncodeObject(key), this.ValueSchema.EncodeObject(val[key])],
+          args: [this.KeySchema.EncodeObject(key), this.ValueSchema.EncodeObject(val.get(key))],
         };
       });
   }
@@ -83,12 +84,14 @@ export class BigMapToken extends Token {
     if (Array.isArray(val)) {
       // Athens is returning an empty array for big map in storage
       // Internal: In taquito v5 it is still used to decode big map diff (as if they were a regular map)
-      return val.reduce((prev, current) => {
-        return {
-          ...prev,
-          [this.KeySchema.ToKey(current.args[0])]: this.ValueSchema.Execute(current.args[1]),
-        };
-      }, {});
+      const map = new MichelsonMap();
+      val.forEach((current) => {
+        map.set(this.KeySchema.ToKey(current.args[0]), this.ValueSchema.Execute(
+          current.args[1],
+        ),
+        )
+      })
+      return map;
     } else if ('int' in val) {
       // Babylon is returning an int with the big map id in contract storage
       return val.int;

@@ -20,6 +20,7 @@
     "emitDecoratorMetadata": true,
     "jsx": "react",
     "baseUrl": "packages",
+    "downlevelIteration": true,
     "paths": {
       "@taquito/rpc": [
         "taquito-rpc/src/taquito-rpc.ts"
