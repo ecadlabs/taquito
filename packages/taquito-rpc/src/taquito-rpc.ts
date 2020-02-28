@@ -98,7 +98,7 @@ export class RpcClient {
    *
    * @description Access the balance of a contract.
    *
-   * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-contracts-contract-id-balance
+   * @see http://tezos.gitlab.iog/api/rpc.html#get-block-id-context-contracts-contract-id-balance
    */
   async getBalance(
     address: string,
@@ -120,7 +120,7 @@ export class RpcClient {
    *
    * @description Access the data of the contract.
    *
-   * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-contracts-contract-id-storage
+   * @see http://tezos.gitlab.iog/api/rpc.html#get-block-id-context-contracts-contract-id-storage
    */
   async getStorage(
     address: string,
@@ -141,7 +141,7 @@ export class RpcClient {
    *
    * @description Access the code and data of the contract.
    *
-   * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-contracts-contract-id-script
+   * @see http://tezos.gitlab.iog/api/rpc.html#get-block-id-context-contracts-contract-id-script
    */
   async getScript(
     address: string,
@@ -162,7 +162,7 @@ export class RpcClient {
    *
    * @description Access the complete status of a contract.
    *
-   * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-contracts-contract-id
+   * @see http://tezos.gitlab.iog/api/rpc.html#get-block-id-context-contracts-contract-id
    */
   async getContract(
     address: string,
@@ -185,7 +185,7 @@ export class RpcClient {
    *
    * @description Access the manager key of a contract.
    *
-   * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-contracts-contract-id-manager-key
+   * @see http://tezos.gitlab.iog/api/rpc.html#get-block-id-context-contracts-contract-id-manager-key
    */
   async getManagerKey(
     address: string,
@@ -206,7 +206,7 @@ export class RpcClient {
    *
    * @description Access the delegate of a contract, if any.
    *
-   * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-contracts-contract-id-delegate
+   * @see http://tezos.gitlab.iog/api/rpc.html#get-block-id-context-contracts-contract-id-delegate
    */
   async getDelegate(
     address: string,
@@ -227,7 +227,7 @@ export class RpcClient {
    *
    * @description Access the value associated with a key in the big map storage of the contract.
    *
-   * @see http://tezos.gitlab.io/master/api/rpc.html#post-block-id-context-contracts-contract-id-big-map-get
+   * @see http://tezos.gitlab.iog/api/rpc.html#post-block-id-context-contracts-contract-id-big-map-get
    */
   async getBigMapKey(
     address: string,
@@ -309,7 +309,7 @@ export class RpcClient {
    *
    * @description All constants
    *
-   * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-constants
+   * @see http://tezos.gitlab.iog/api/rpc.html#get-block-id-context-constants
    */
   async getConstants({ block }: RPCOptions = defaultRPCOptions): Promise<ConstantsResponse> {
     const response = await this.httpBackend.createRequest<ConstantsResponse>({
@@ -343,7 +343,7 @@ export class RpcClient {
    *
    * @description All the information about a block
    *
-   * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id
+   * @see http://tezos.gitlab.iog/api/rpc.html#get-block-id
    */
   async getBlock({ block }: RPCOptions = defaultRPCOptions): Promise<BlockResponse> {
     const response = await this.httpBackend.createRequest<BlockResponse>({

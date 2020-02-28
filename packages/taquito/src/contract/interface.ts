@@ -65,7 +65,7 @@ export interface ContractProvider {
    * @param contract contract address you want to get the storage from
    * @param schema optional schema can either be the contract script rpc response or a michelson-encoder schema
    *
-   * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-contracts-contract-id-script
+   * @see http://tezos.gitlab.iog/api/rpc.html#get-block-id-context-contracts-contract-id-script
    */
   getStorage<T>(contract: string, schema?: ContractSchema): Promise<T>;
 
@@ -79,7 +79,7 @@ export interface ContractProvider {
    *
    * @deprecated Deprecated in favor of getBigMapKeyByID
    *
-   * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-contracts-contract-id-script
+   * @see http://tezos.gitlab.iog/api/rpc.html#get-block-id-context-contracts-contract-id-script
    */
   getBigMapKey<T>(contract: string, key: string, schema?: ContractSchema): Promise<T>;
 
