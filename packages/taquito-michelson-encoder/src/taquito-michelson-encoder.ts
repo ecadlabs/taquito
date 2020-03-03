@@ -4,3 +4,4 @@ export { Semantic } from './tokens/token';
 export * from './errors';
 
 export const UnitValue = Symbol();
+export * from './michelson-map';

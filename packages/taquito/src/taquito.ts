@@ -34,6 +34,12 @@ export { TaquitoProvider } from './context';
 export { PollingSubscribeProvider } from './subscribe/polling-provider';
 export { RpcForger } from './forger/rpc-forger';
 export { CompositeForger } from './forger/composite-forger';
+export {
+  MichelsonMap,
+  MichelsonMapKey,
+  MapTypecheckError,
+  UnitValue,
+} from '@taquito/michelson-encoder';
 
 export {
   TezosOperationError,

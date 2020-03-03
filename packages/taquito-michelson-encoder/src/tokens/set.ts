@@ -38,9 +38,11 @@ export class SetToken extends Token {
       throw err;
     }
 
-    return val.sort(this.KeySchema.compare).reduce((prev: any, current: any) => {
-      return [...prev, this.KeySchema.EncodeObject(current)];
-    }, []);
+    return val
+      .sort((a: any, b: any) => this.KeySchema.compare(a, b))
+      .reduce((prev: any, current: any) => {
+        return [...prev, this.KeySchema.EncodeObject(current)];
+      }, []);
   }
 
   public Execute(val: any, semantics?: Semantic) {
@@ -55,9 +57,11 @@ export class SetToken extends Token {
       throw err;
     }
 
-    return args.sort(this.KeySchema.compare).reduce((prev: any, current: any) => {
-      return [...prev, this.KeySchema.EncodeObject(current)];
-    }, []);
+    return args
+      .sort((a: any, b: any) => this.KeySchema.compare(a, b))
+      .reduce((prev: any, current: any) => {
+        return [...prev, this.KeySchema.EncodeObject(current)];
+      }, []);
   }
 
   public ExtractSchema() {

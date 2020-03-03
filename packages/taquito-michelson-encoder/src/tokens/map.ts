@@ -1,4 +1,5 @@
 import { Token, TokenFactory, Semantic, TokenValidationError, ComparableToken } from './token';
+import { MichelsonMap } from '../michelson-map';
 
 export class MapValidationError extends TokenValidationError {
   name: string = 'MapValidationError';
@@ -27,64 +28,67 @@ export class MapToken extends Token {
   }
 
   private isValid(value: any): MapValidationError | null {
-    if (typeof value === 'object') {
+    if (value instanceof MichelsonMap) {
       return null;
     }
 
-    return new MapValidationError(value, this, 'Value must be an object');
+    return new MapValidationError(value, this, 'Value must be a MichelsonMap');
   }
 
   public Execute(val: any[], semantics?: Semantic): { [key: string]: any } {
-    return val.reduce((prev, current) => {
-      return {
-        ...prev,
-        [this.KeySchema.ToKey(current.args[0])]: this.ValueSchema.Execute(
-          current.args[1],
-          semantics
-        ),
-      };
-    }, {});
+    const map = new MichelsonMap(this.val);
+
+    val.forEach(current => {
+      map.set(
+        this.KeySchema.ToKey(current.args[0]),
+        this.ValueSchema.Execute(current.args[1], semantics)
+      );
+    });
+    return map;
   }
 
   public Encode(args: any[]): any {
-    const val = args.pop();
+    const val: MichelsonMap<any, any> = args.pop();
 
     const err = this.isValid(val);
     if (err) {
       throw err;
     }
 
-    return Object.keys(val)
-      .sort(this.KeySchema.compare)
+    return Array.from(val.keys())
+      .sort((a: any, b: any) => this.KeySchema.compare(a, b))
       .map(key => {
         return {
           prim: 'Elt',
-          args: [this.KeySchema.Encode([key]), this.ValueSchema.EncodeObject(val[key])],
+          args: [this.KeySchema.EncodeObject(key), this.ValueSchema.EncodeObject(val.get(key))],
         };
       });
   }
 
   public EncodeObject(args: any): any {
-    const val = args;
+    const val: MichelsonMap<any, any> = args;
 
     const err = this.isValid(val);
     if (err) {
       throw err;
     }
 
-    return Object.keys(val)
-      .sort(this.KeySchema.compare)
+    return Array.from(val.keys())
+      .sort((a: any, b: any) => this.KeySchema.compare(a, b))
       .map(key => {
         return {
           prim: 'Elt',
-          args: [this.KeySchema.EncodeObject(key), this.ValueSchema.EncodeObject(val[key])],
+          args: [this.KeySchema.EncodeObject(key), this.ValueSchema.EncodeObject(val.get(key))],
         };
       });
   }
 
   public ExtractSchema() {
     return {
-      [this.KeySchema.ExtractSchema()]: this.ValueSchema.ExtractSchema(),
+      map: {
+        key: this.KeySchema.ExtractSchema(),
+        value: this.ValueSchema.ExtractSchema(),
+      },
     };
   }
 }
