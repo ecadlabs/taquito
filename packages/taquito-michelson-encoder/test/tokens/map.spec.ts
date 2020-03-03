@@ -116,9 +116,11 @@ describe('Map token with pair', () => {
 
       expect(result.get({ 0: 'test', 1: '1test' })).toBeInstanceOf(BigNumber);
       expect(result.get({ 0: 'test', 1: '1test' }).toString()).toEqual('2');
+      expect(result.get({ 1: '1test', 0: 'test' }).toString()).toEqual('2');
 
       expect(result.get({ 0: 'test1', 1: 'test' })).toBeInstanceOf(BigNumber);
       expect(result.get({ 0: 'test1', 1: 'test' }).toString()).toEqual('3');
+      expect(result.get({ 1: 'test', 0: 'test1' }).toString()).toEqual('3');
     });
   });
 });
@@ -132,7 +134,10 @@ describe('Map token with annotated pair', () => {
         args: [
           {
             prim: 'pair',
-            args: [{ prim: 'string', annots: ['%test'] }, { prim: 'string', annots: ['%test2'] }],
+            args: [
+              { prim: 'string', annots: ['%test'] },
+              { prim: 'string', annots: ['%test2'] },
+            ],
           },
           { prim: 'int' },
         ],
@@ -395,7 +400,7 @@ describe('Map token with complex pair', () => {
         2: 'test',
         3: 'cafe',
         4: '10',
-        5: 'true',
+        5: true,
         6: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5',
         7: '2019-09-06T15:08:29.000Z',
         8: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5',
@@ -410,7 +415,7 @@ describe('Map token with complex pair', () => {
         2: 'test',
         3: 'cafe',
         4: '10',
-        5: 'false',
+        5: false,
         6: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5',
         7: '2019-09-06T15:08:29.000Z',
         8: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5',

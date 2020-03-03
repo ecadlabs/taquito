@@ -1,5 +1,6 @@
 import { MichelsonV1Expression } from '@taquito/rpc';
 import { Schema } from './schema/storage';
+import stringify from 'fast-json-stable-stringify';
 
 export type MichelsonMapKey = Array<any> | Object | string | boolean | number;
 
@@ -87,20 +88,9 @@ export class MichelsonMap<K extends MichelsonMapKey, T extends any> {
     }
   }
 
+  // Serialize is used to produce a unique deterministic string representation for each key
   private serialize(key: K): string {
-    if (Array.isArray(key)) {
-      return key.reduce((prev, current) => {
-        return prev + current;
-      }, '');
-    } else if (typeof key === 'object') {
-      return Object.keys(key)
-        .sort()
-        .reduce((prev, current) => {
-          return prev + `@${current}#${(key as any)[current]}`;
-        }, '');
-    } else {
-      return key.toString();
-    }
+    return stringify(key);
   }
 
   *keys(): Generator<K> {
@@ -132,10 +122,15 @@ export class MichelsonMap<K extends MichelsonMapKey, T extends any> {
    *
    * @description Set a key and a value value in the MichelsonMap. If the key already exists override the existing value.
    *
-   * @example map.set({0: "test", 1: "test1"}, "myValue")
+   * @example map.set("myKey", "myValue") // Using a string as key
    *
-   * @warn Depending on the key type the same key can be represented in multiple different way which could cause runtime error
-   * For instance a boolean key type can be express in these different ways map.set(false, "myValue") or map.set(null, "myValue")
+   * @example map.set({0: "test", 1: "test1"}, "myValue") // Using a pair as key
+   *
+   * @warn The same key can be represented in multiple ways, depending on the type of the key. This duplicate key situation will cause a runtime error (duplicate key) when sending the map data to the Tezos RPC node.
+   *
+   * For example, consider a contract with a map whose key is of type boolean.  If you set the following values in MichelsonMap: map.set(false, "myValue") and map.set(null, "myValue").
+   *
+   * You will get two unique entries in the MichelsonMap. These values will both be evaluated as falsy by the MichelsonEncoder and ultimately rejected by the Tezos RPC.
    */
   set(key: K, value: T) {
     this.assertTypecheckKey(key);
