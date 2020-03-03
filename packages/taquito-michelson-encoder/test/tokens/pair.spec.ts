@@ -2,15 +2,30 @@ import { createToken } from '../../src/tokens/createToken';
 import { PairToken } from '../../src/tokens/pair';
 
 describe('Pair token', () => {
+  describe('Compare', () => {
+    test('Compare simple pair', () => {
+      const token = createToken(
+        {
+          prim: 'pair',
+          args: [{ prim: 'int', annots: ['test'] }, { prim: 'string', annots: ['test2'] }],
+        },
+        0
+      ) as PairToken;
+
+      expect(token.compare({ test: 1, test2: 'test' }, { test: 2, test2: 'test' })).toEqual(-1);
+      expect(token.compare({ test: 3, test2: 'test' }, { test: 2, test2: 'test' })).toEqual(1);
+      expect(token.compare({ test: 2, test2: 'test' }, { test: 2, test2: 'test' })).toEqual(0);
+      expect(token.compare({ test: 2, test2: 'hello' }, { test: 2, test2: 'test' })).toEqual(-1);
+      expect(token.compare({ test: 2, test2: 'test' }, { test: 2, test2: 'hello' })).toEqual(1);
+    });
+  });
+
   describe('ToBigMapKey', () => {
     test('Simple pair to big map key', () => {
       const token = createToken(
         {
           prim: 'pair',
-          args: [
-            { prim: 'int', annots: ['test'] },
-            { prim: 'string', annots: ['test2'] },
-          ],
+          args: [{ prim: 'int', annots: ['test'] }, { prim: 'string', annots: ['test2'] }],
         },
         0
       ) as PairToken;
@@ -27,10 +42,7 @@ describe('Pair token', () => {
             { prim: 'int', annots: ['test'] },
             {
               prim: 'pair',
-              args: [
-                { prim: 'string', annots: ['test2'] },
-                { prim: 'string', annots: ['test3'] },
-              ],
+              args: [{ prim: 'string', annots: ['test2'] }, { prim: 'string', annots: ['test3'] }],
             },
           ],
         },

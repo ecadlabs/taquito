@@ -21,6 +21,7 @@ import {
 } from '../../src/constants';
 import { InvalidDelegationSource } from '../../src/contract/errors';
 import { preapplyResultFrom } from './helper';
+import { MichelsonMap } from '@taquito/michelson-encoder';
 
 /**
  * RPCContractProvider test
@@ -144,10 +145,12 @@ describe('RpcContractProvider test', () => {
       );
       expect(result).toEqual({
         '0': new BigNumber('261'),
-        '1': {
-          KT1SawqvsVdAbDzqc4KwPpaS1S1veuFgF9AN: new BigNumber('100'),
-          tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn: new BigNumber('100'),
-        },
+        '1': expect.objectContaining(
+          MichelsonMap.fromLiteral({
+            tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn: new BigNumber('100'),
+            KT1SawqvsVdAbDzqc4KwPpaS1S1veuFgF9AN: new BigNumber('100'),
+          })
+        ),
       });
       expect(mockRpcClient.getBigMapKey.mock.calls[0][0]).toEqual('test');
       expect(mockRpcClient.getBigMapKey.mock.calls[0][1]).toEqual({

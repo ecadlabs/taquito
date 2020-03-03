@@ -1,4 +1,4 @@
-import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, MANAGER_LAMBDA, TezosToolkit, Protocols } from "@taquito/taquito";
+import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, MANAGER_LAMBDA, TezosToolkit, Protocols, MichelsonMap } from "@taquito/taquito";
 import { Contract } from "taquito/src/contract/contract";
 import { CONFIGS } from "./config";
 import { badCode } from "./data/badCode";
@@ -15,6 +15,7 @@ import { noAnnotCode, noAnnotInit } from "./data/token_without_annotation";
 import { voteSample } from "./data/vote-contract";
 import { storageContract } from "./data/storage-contract";
 import { mapWithPairAsKeyCode, mapWithPairAsKeyStorage } from "./data/bigmap_with_pair_as_key";
+import { storageContractWithPairAsKey } from "./data/storage-contract-with-pair-as-key";
 
 CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress, protocol }) => {
   const Tezos = lib;
@@ -282,7 +283,7 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress, protocol }) => {
       // Fetch the key (current pkh that is running the test)
       const bigMapValue = await bigMap.get(await Tezos.signer.publicKeyHash())
       expect(bigMapValue['0'].toString()).toEqual("2")
-      expect(bigMapValue['1']).toEqual({})
+      expect(bigMapValue['1']).toEqual(expect.objectContaining(new MichelsonMap()))
       done();
     })
 
@@ -306,7 +307,7 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress, protocol }) => {
         code: tokenBigmapCode,
         storage: {
           owner: await Tezos.signer.publicKeyHash(),
-          accounts: {},
+          accounts: new MichelsonMap(),
           totalSupply: "0"
         }
       })
@@ -321,39 +322,39 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress, protocol }) => {
 
       const initialStorage = {
         owner: addr,
-        accounts: {
+        accounts: MichelsonMap.fromLiteral({
           [addr]: {
             balance: "1",
-            allowances: {
+            allowances: MichelsonMap.fromLiteral({
               [addr]: "1"
-            }
+            })
           },
           "tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD": {
             balance: "1",
-            allowances: {
+            allowances: MichelsonMap.fromLiteral({
               [addr]: "1"
-            }
+            })
           },
           "tz3YjfexGakCDeCseXFUpcXPSAN9xHxE9TH2": {
             balance: "2",
-            allowances: {
+            allowances: MichelsonMap.fromLiteral({
               KT1CDEg2oY3VfMa1neB7hK5LoVMButvivKYv: "1",
               [addr]: "1"
-            }
+            })
           },
           "tz1ccqAEwfPgeoipnXtjAv1iucrpQv3DFmmS": {
             balance: "1",
-            allowances: {
+            allowances: MichelsonMap.fromLiteral({
               [addr]: "1"
-            }
+            })
           },
           "KT1CDEg2oY3VfMa1neB7hK5LoVMButvivKYv": {
             balance: "1",
-            allowances: {
+            allowances: MichelsonMap.fromLiteral({
               [addr]: "1"
-            }
+            })
           }
-        },
+        }),
         totalSupply: "6"
       }
 
@@ -367,7 +368,7 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress, protocol }) => {
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
       const contract = await op.contract()
       const storage: any = await contract.storage()
-      expect((await storage.accounts.get(addr)).allowances[addr].toString()).toEqual(initialStorage.accounts[addr].allowances[addr])
+      expect((await storage.accounts.get(addr)).allowances.get(addr).toString()).toEqual(initialStorage.accounts.get(addr).allowances.get(addr))
       done();
     });
 
@@ -377,7 +378,7 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress, protocol }) => {
       const initialStorage = {
         set1: ['2', '1', '3'],
         list1: ['1'],
-        map1: { "2": "1", "1": "1" }
+        map1: MichelsonMap.fromLiteral({ "2": "1", "1": "1" })
       }
 
       const op = await Tezos.contract.originate({
@@ -392,7 +393,7 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress, protocol }) => {
       let storage: any = await contract.storage()
       expect(storage['set1'].map((x: any) => x.toString())).toEqual(['1', '2', '3'])
       expect(storage['list1'].map((x: any) => x.toString())).toEqual(['1'])
-      expect(storage['map1']['1'].toString()).toEqual('1')
+      expect(storage['map1'].get('1').toString()).toEqual('1')
 
       const setOp = await contract.methods['setSet'](['2']).send()
       await setOp.confirmation();
@@ -400,7 +401,7 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress, protocol }) => {
       const listOp = await contract.methods['setList'](['2']).send()
       await listOp.confirmation();
 
-      const mapOp = await contract.methods['setMap']({ "2": "2" }).send()
+      const mapOp = await contract.methods['setMap'](MichelsonMap.fromLiteral({ "2": "2" })).send()
       await mapOp.confirmation();
 
       done();
@@ -410,54 +411,53 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress, protocol }) => {
         balance: "1",
         code: storageContract,
         storage: {
-          "map1": {
+          "map1": MichelsonMap.fromLiteral({
             "tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD": 1,
             'KT1CDEg2oY3VfMa1neB7hK5LoVMButvivKYv': 2,
             "tz3YjfexGakCDeCseXFUpcXPSAN9xHxE9TH2": 2,
             "tz1ccqAEwfPgeoipnXtjAv1iucrpQv3DFmmS": 3,
-          },
-          "map2": {
+          }),
+          "map2": MichelsonMap.fromLiteral({
             "2": 1,
             '3': 2,
             "1": 2,
             "4": 3,
-          },
-          "map3": {
+          }),
+          "map3": MichelsonMap.fromLiteral({
             "2": 1,
             '3': 2,
             "1": 2,
             "4": 3,
-          },
-          "map4": {
+          }),
+          "map4": MichelsonMap.fromLiteral({
             "zz": 1,
             'aa': 2,
             "ab": 2,
             "cc": 3,
-          },
-          "map5": {
+          }),
+          "map5": MichelsonMap.fromLiteral({
             "aaaa": 1,
             "aa": 1,
             'ab': 2,
             "01": 2,
             "22": 3,
-          },
-          "map6": {
+          }),
+          "map6": MichelsonMap.fromLiteral({
             "2": 1,
             '3': 2,
             "1": 2,
             "4": 3,
-          },
-          "map7": {
+          }),
+          "map7": MichelsonMap.fromLiteral({
             "2018-04-23T10:26:00.996Z": 1,
             '2017-04-23T10:26:00.996Z': 2,
             "2019-04-23T10:26:00.996Z": 2,
             "2015-04-23T10:26:00.996Z": 3,
-          },
+          }),
         }
       })
 
-      const contrct = await op.contract()
-      console.log(contrct.address);
+      await op.contract()
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
       done();
@@ -503,7 +503,7 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress, protocol }) => {
 
       // Verify that the allowance was done as expected
       account1 = await storage[ACCOUNTS].get(ACCOUNT1_ADDRESS)
-      expect(account1[ALLOWANCES][ACCOUNT2_ADDRESS].toString()).toEqual('1')
+      expect(account1[ALLOWANCES].get(ACCOUNT2_ADDRESS).toString()).toEqual('1')
       done();
     })
 
@@ -557,6 +557,63 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress, protocol }) => {
 
     // Pair as key is only supported since proto 006
     if (protocol === Protocols.PsCARTHA) {
+      it('Storage contract with pair as key', async (done) => {
+        const storageMap = new MichelsonMap();
+        storageMap.set({
+          0: "1",
+          1: "2",
+          2: "test",
+          3: "cafe",
+          4: "10",
+          5: true,
+          6: "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5",
+          7: "2019-09-06T15:08:29.000Z",
+          8: "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5"
+        }, 100)
+        storageMap.set({
+          0: "1",
+          1: "2",
+          2: "test",
+          3: "cafe",
+          4: "10",
+          5: false,
+          6: "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5",
+          7: "2019-09-06T15:08:29.000Z",
+          8: "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5"
+        }, 100)
+        storageMap.set({
+          0: "2",
+          1: "2",
+          2: "test",
+          3: "cafe",
+          4: "10",
+          5: true,
+          6: "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5",
+          7: "2019-09-06T15:08:29.000Z",
+          8: "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5"
+        }, 100)
+        storageMap.set({
+          0: "1",
+          1: "2",
+          2: "test",
+          3: "cafe",
+          4: "10",
+          5: true,
+          6: "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5",
+          7: "2018-09-06T15:08:29.000Z",
+          8: "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5"
+        }, 100)
+        const op = await Tezos.contract.originate({
+          balance: "0",
+          code: storageContractWithPairAsKey,
+          storage: storageMap
+        })
+        await op.contract()
+        expect(op.hash).toBeDefined();
+        expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+        done();
+      })
+
       it('Contract with pair as key', async (done) => {
         const op = await Tezos.contract.originate({
           balance: "0",
