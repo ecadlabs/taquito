@@ -12,9 +12,9 @@ import {
 } from './types';
 
 /**
- * @description Transaction operation provide utility function to fetch newly issued transaction
+ * @description Transaction operation provides utility functions to fetch a newly issued transaction
  *
- * @warn Currently support only one transaction per operation
+ * @warn Currently supports one transaction per operation
  */
 export class TransactionOperation extends Operation
   implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation {
