@@ -1,18 +1,16 @@
 import { TezosToolkit } from '@taquito/taquito';
-import { Uint8ArrayConsumer } from '../src/uint8array-consumer';
 import { opMappingReverse } from '../src/constants';
-import { decoders, encoders } from '../src/taquito-local-forging';
+import { localForger } from '../src/taquito-local-forging';
 import { genericCode, genericStorage } from './data/generic_contract';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_big_map';
 import { noAnnotCode, noAnnotInit } from './data/token_without_annotations';
 import { voteInitSample, voteSample } from './data/vote_contract';
-import { fromHexString } from './utils';
 
 const integrationTest = process.env.RUN_INTEGRATION ? test : test.skip;
 
 interface TestCase {
   name: string;
-  operation: {};
+  operation: any;
   expected?: {};
 }
 
@@ -163,6 +161,50 @@ const cases: TestCase[] = [
           parameters: {
             entrypoint: 'default',
             value: { prim: 'Pair', args: [{ int: '2' }, { string: 'hello' }] },
+          },
+          destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          amount: '1000',
+        },
+      ],
+    },
+  },
+  {
+    name: 'Transaction with maximum length entrypoint',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: 'transaction',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          parameters: {
+            entrypoint: 'Tps0RV2UISBvTV6m2z16VnfCVnN5dzX',
+            value: { prim: 'Pair', args: [{ int: '2' }, { string: 'hello' }] },
+          },
+          destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          amount: '1000',
+        },
+      ],
+    },
+  },
+  {
+    name: 'Transaction with non ascii entrypoint and string',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: 'transaction',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          parameters: {
+            entrypoint: 'entrypoint©Ͻ',
+            value: { string: 'Copyright ©Ͻ' },
           },
           destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           amount: '1000',
@@ -519,10 +561,8 @@ const cases: TestCase[] = [
 
 cases.forEach(({ name, operation, expected }) => {
   test(`Test: ${name}`, async done => {
-    const result = encoders['manager'](operation);
-    expect(decoders['manager'](new Uint8ArrayConsumer(fromHexString(result)))).toEqual(
-      expected || operation
-    );
+    const result = await localForger.forge(operation);
+    expect(await localForger.parse(result)).toEqual(expected || operation);
     done();
   });
 
@@ -530,14 +570,12 @@ cases.forEach(({ name, operation, expected }) => {
     integrationTest(`Integration test: ${name} (${rpc})`, async done => {
       const Tezos = new TezosToolkit();
       Tezos.setProvider({ rpc });
-      const result = encoders['manager'](operation);
+      const result = await localForger.forge(operation);
 
       const rpcResult = await Tezos.rpc.forgeOperations(operation);
 
       expect(result).toEqual(rpcResult);
-      expect(decoders['manager'](new Uint8ArrayConsumer(fromHexString(result)))).toEqual(
-        expected || operation
-      );
+      expect(await localForger.parse(result)).toEqual(expected || operation);
       done();
     });
   });

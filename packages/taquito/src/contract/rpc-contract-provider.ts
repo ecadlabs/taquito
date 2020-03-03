@@ -1,7 +1,6 @@
 import { Schema } from '@taquito/michelson-encoder';
 import { ScriptResponse } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
-import { protocols } from '../constants';
 import { Context } from '../context';
 import { DelegateOperation } from '../operations/delegate-operation';
 import { OperationEmitter } from '../operations/operation-emitter';
@@ -15,7 +14,6 @@ import {
 } from '../operations/types';
 import { Contract } from './contract';
 import { InvalidDelegationSource } from './errors';
-import { Estimate } from './estimate';
 import { ContractProvider, ContractSchema, EstimationProvider } from './interface';
 import {
   createOriginationOperation,
@@ -37,7 +35,7 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
    * @param contract contract address you want to get the storage from
    * @param schema optional schema can either be the contract script rpc response or a michelson-encoder schema
    *
-   * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-contracts-contract-id-script
+   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-script
    */
   async getStorage<T>(contract: string, schema?: ContractSchema): Promise<T> {
     if (!schema) {
@@ -66,7 +64,7 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
    *
    * @deprecated Deprecated in favor of getBigMapKeyByID
    *
-   * @see http://tezos.gitlab.io/master/api/rpc.html#get-block-id-context-contracts-contract-id-script
+   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-script
    */
   async getBigMapKey<T>(contract: string, key: string, schema?: ContractSchema): Promise<T> {
     if (!schema) {
@@ -95,7 +93,7 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
    * @param keyToEncode key to query (will be encoded properly according to the schema)
    * @param schema Big Map schema (can be determined using your contract type)
    *
-   * @see http://tezos.gitlab.io/mainnet/api/rpc.html#get-block-id-context-big-maps-big-map-id-script-expr
+   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-big-maps-big-map-id-script-expr
    */
   async getBigMapKeyByID<T>(id: string, keyToEncode: string, schema: Schema): Promise<T> {
     const { key, type } = schema.EncodeBigMapKey(keyToEncode);
@@ -106,37 +104,6 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
     const bigMapValue = await this.context.rpc.getBigMapExpr(id.toString(), encodedExpr);
 
     return schema.ExecuteOnBigMapValue(bigMapValue, smartContractAbstractionSemantic(this)) as T;
-  }
-
-  private async estimate<T extends { fee?: number; gasLimit?: number; storageLimit?: number }>(
-    { fee, gasLimit, storageLimit, ...rest }: T,
-    estimator: (param: T) => Promise<Estimate>
-  ) {
-    let calculatedFee = fee;
-    let calculatedGas = gasLimit;
-    let calculatedStorage = storageLimit;
-
-    if (fee === undefined || gasLimit === undefined || storageLimit === undefined) {
-      const estimation = await estimator({ fee, gasLimit, storageLimit, ...(rest as any) });
-
-      if (calculatedFee === undefined) {
-        calculatedFee = estimation.suggestedFeeMutez;
-      }
-
-      if (calculatedGas === undefined) {
-        calculatedGas = estimation.gasLimit;
-      }
-
-      if (calculatedStorage === undefined) {
-        calculatedStorage = estimation.storageLimit;
-      }
-    }
-
-    return {
-      fee: calculatedFee!,
-      gasLimit: calculatedGas!,
-      storageLimit: calculatedStorage!,
-    };
   }
 
   /**

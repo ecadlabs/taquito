@@ -1,7 +1,7 @@
 import { Tezos } from '@taquito/taquito';
 import { importKey } from '@taquito/signer'
 
-const provider = 'https://alphanet-node.tzscan.io';
+const provider = 'https://api.tez.ie/rpc/carthagenet';
 
 async function example() {
   Tezos.setProvider({ rpc: provider } as any)

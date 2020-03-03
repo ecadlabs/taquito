@@ -7,7 +7,7 @@ import {
   prefixLength,
 } from '@taquito/utils';
 import BigNumber from 'bignumber.js';
-import { entrypointMapping, entrypointMappingReverse } from './constants';
+import { entrypointMapping, entrypointMappingReverse, ENTRYPOINT_MAX_LENGTH } from './constants';
 import { extractRequiredLen, valueDecoder, valueEncoder, MichelsonValue } from './michelson/codec';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
 import { pad } from './utils';
@@ -200,21 +200,21 @@ export const addressDecoder = (val: Uint8ArrayConsumer) => {
 
 export const zarithEncoder = (n: string): string => {
   const fn: Array<string> = [];
-  let nn = parseInt(n, 10);
-  if (Number.isNaN(nn)) {
+  let nn = new BigNumber(n, 10);
+  if (nn.isNaN()) {
     throw new TypeError(`Invalid zarith number ${n}`);
   }
   while (true) {
     // eslint-disable-line
-    if (nn < 128) {
-      if (nn < 16) fn.push('0');
+    if (nn.lt(128)) {
+      if (nn.lt(16)) fn.push('0');
       fn.push(nn.toString(16));
       break;
     } else {
-      let b = nn % 128;
-      nn -= b;
-      nn /= 128;
-      b += 128;
+      let b = nn.mod(128);
+      nn = nn.minus(b);
+      nn = nn.dividedBy(128);
+      b = b.plus(128);
       fn.push(b.toString(16));
     }
   }
@@ -227,11 +227,11 @@ export const zarithDecoder = (n: Uint8ArrayConsumer): string => {
     mostSignificantByte += 1;
   }
 
-  let num = 0;
+  let num = new BigNumber(0);
   for (let i = mostSignificantByte; i >= 0; i -= 1) {
     let tmp = n.get(i) & 0x7f;
-    num *= 128;
-    num += tmp;
+    num = num.multipliedBy(128);
+    num = num.plus(tmp);
   }
 
   n.consume(mostSignificantByte + 1);
@@ -245,7 +245,15 @@ export const entrypointDecoder = (value: Uint8ArrayConsumer) => {
     return entrypointMapping[preamble];
   } else {
     const entry = extractRequiredLen(value, 1);
-    return Buffer.from(entry).toString('utf8');
+
+    const entrypoint = Buffer.from(entry).toString('utf8');
+
+    if (entrypoint.length > ENTRYPOINT_MAX_LENGTH) {
+      throw new Error(
+        `Oversized entrypoint: ${entrypoint}. The maximum length of entrypoint is ${ENTRYPOINT_MAX_LENGTH}`
+      );
+    }
+    return entrypoint;
   }
 };
 
@@ -263,11 +271,16 @@ export const parametersDecoder = (val: Uint8ArrayConsumer) => {
     };
   }
 };
-
 export const entrypointEncoder = (entrypoint: string) => {
   if (entrypoint in entrypointMappingReverse) {
     return `${entrypointMappingReverse[entrypoint]}`;
   } else {
+    if (entrypoint.length > ENTRYPOINT_MAX_LENGTH) {
+      throw new Error(
+        `Oversized entrypoint: ${entrypoint}. The maximum length of entrypoint is ${ENTRYPOINT_MAX_LENGTH}`
+      );
+    }
+
     const value = { string: entrypoint };
     return `ff${valueEncoder(value).slice(8)}`;
   }

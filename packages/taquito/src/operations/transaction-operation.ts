@@ -1,23 +1,20 @@
-import {
-  OperationContentsAndResult,
-  OperationContentsAndResultTransaction,
-  OperationResultTransaction,
-} from '@taquito/rpc';
+import { OperationContentsAndResult, OperationContentsAndResultTransaction } from '@taquito/rpc';
+import BigNumber from 'bignumber.js';
 import { Context } from '../context';
+import { flattenErrors, flattenOperationResult } from './operation-errors';
 import { Operation } from './operations';
 import {
+  FeeConsumingOperation,
   ForgedBytes,
   GasConsumingOperation,
-  StorageConsumingOperation,
   RPCTransferOperation,
-  FeeConsumingOperation,
+  StorageConsumingOperation,
 } from './types';
-import BigNumber from 'bignumber.js';
 
 /**
- * @description Transaction operation provide utility function to fetch newly issued transaction
+ * @description Transaction operation provides utility functions to fetch a newly issued transaction
  *
- * @warn Currently support only one transaction per operation
+ * @warn Currently supports one transaction per operation
  */
 export class TransactionOperation extends Operation
   implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation {
@@ -36,9 +33,7 @@ export class TransactionOperation extends Operation
     const transactionOp =
       Array.isArray(this.results) &&
       (this.results.find(op => op.kind === 'transaction') as OperationContentsAndResultTransaction);
-    const result =
-      transactionOp && transactionOp.metadata && transactionOp.metadata.operation_result;
-    return result ? result : undefined;
+    return transactionOp ? [transactionOp] : [];
   }
 
   get amount() {
@@ -61,22 +56,34 @@ export class TransactionOperation extends Operation
     return this.params.storage_limit;
   }
 
+  private sumProp(arr: any[], prop: string) {
+    return arr.reduce((prev, current) => {
+      return prop in current ? Number(current[prop]) + prev : prev;
+    }, 0);
+  }
+
   get consumedGas() {
-    const consumedGas = this.operationResults && this.operationResults.consumed_gas;
-    return consumedGas ? consumedGas : undefined;
+    return String(
+      this.sumProp(flattenOperationResult({ contents: this.operationResults }), 'consumed_gas')
+    );
   }
 
   get storageDiff() {
-    const storageDiff = this.operationResults && this.operationResults.paid_storage_size_diff;
-    return storageDiff ? storageDiff : undefined;
+    return String(
+      this.sumProp(
+        flattenOperationResult({ contents: this.operationResults }),
+        'paid_storage_size_diff'
+      )
+    );
   }
 
   get storageSize() {
-    const storageSize = this.operationResults && this.operationResults.storage_size;
-    return storageSize ? storageSize : undefined;
+    return String(
+      this.sumProp(flattenOperationResult({ contents: this.operationResults }), 'storage_size')
+    );
   }
 
   get errors() {
-    return this.operationResults && this.operationResults.errors;
+    return flattenErrors({ contents: this.operationResults });
   }
 }

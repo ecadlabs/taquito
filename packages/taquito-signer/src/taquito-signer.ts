@@ -13,20 +13,34 @@ export * from './import-key';
  * @description A local implementation of the signer. Will represent a Tezos account and be able to produce signature in its behalf
  *
  * @warn If running in production and dealing with tokens that have real value, it is strongly recommended to use a HSM backed signer so that private key material is not stored in memory or on disk
+ *
+ * @warn Calling this constructor directly is discouraged as it do not await for sodium library to be loaded.
+ *
+ * Consider doing:
+ *
+ * ```const sodium = require('libsodium-wrappers'); await sodium.ready;```
+ *
+ * The recommended usage is to use InMemorySigner.fromSecretKey('edsk', 'passphrase')
  */
 export class InMemorySigner implements Signer {
   private _key!: Tz1 | ECKey;
 
   static fromFundraiser(email: string, password: string, mnemonic: string) {
     let seed = mnemonicToSeedSync(mnemonic, `${email}${password}`);
-    const test = b58cencode(seed.slice(0, 32), prefix.edsk2);
-    return new InMemorySigner(test);
+    const key = b58cencode(seed.slice(0, 32), prefix.edsk2);
+    return new InMemorySigner(key);
+  }
+
+  static async fromSecretKey(key: string, passphrase?: string) {
+    await sodium.ready;
+    return new InMemorySigner(key, passphrase);
   }
 
   /**
    *
    * @param key Encoded private key
    * @param passphrase Passphrase to decrypt the private key if it is encrypted
+   *
    */
   constructor(key: string, passphrase?: string) {
     const encrypted = key.substring(2, 3) === 'e';
@@ -38,7 +52,7 @@ export class InMemorySigner implements Signer {
         throw new Error('Encrypted key provided without a passphrase.');
       }
 
-      decrypt = constructedKey => {
+      decrypt = (constructedKey: Uint8Array) => {
         const salt = toBuffer(constructedKey.slice(0, 8));
         const encryptedSk = constructedKey.slice(8);
         const encryptionKey = pbkdf2.pbkdf2Sync(passphrase, salt, 32768, 32, 'sha512');
@@ -80,6 +94,8 @@ export class InMemorySigner implements Signer {
       bb = mergebuf(watermark, bb);
     }
 
+    // Ensure sodium is ready before calling crypto_generichash otherwise the function do not exists
+    await sodium.ready;
     const bytesHash = toBuffer(sodium.crypto_generichash(32, bb));
 
     return this._key.sign(bytes, bytesHash);

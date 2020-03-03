@@ -5,7 +5,8 @@
       "boilerplate",
       "making_transfers",
       "originate",
-      "set_delegate"
+      "set_delegate",
+      "smartcontracts"
     ],
     "Signer": [
       "inmemory_signer",

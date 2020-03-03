@@ -1,12 +1,13 @@
 {
   "name": "@taquito/taquito",
-  "version": "6.0.1-beta.0",
+  "version": "6.0.3-beta.1",
   "description": "High level functionality that builds upon the other packages in the Tezos Typescript Library Suite.",
   "keywords": [
     "tezos",
     "blockchain"
   ],
   "main": "dist/taquito.umd.js",
+  "unpkg": "dist/taquito.min.js",
   "module": "dist/taquito.es5.js",
   "typings": "dist/types/taquito.d.ts",
   "files": [
@@ -20,7 +21,10 @@
   "author": "Simon Boissonneault-Robert <simon@ecadlabs.com>",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git+https://github.com/ecadlabs/taquito.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ecadlabs/taquito/issues"
   },
   "license": "MIT",
   "engines": {
@@ -33,7 +37,8 @@
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
-    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts ",
+    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts && npm run build:web",
+    "build:web": "webpack && node update-readme.js",
     "start": "rollup -c rollup.config.ts -w",
     "postinstall": "node patch.js"
   },
@@ -71,10 +76,10 @@
     ]
   },
   "dependencies": {
-    "@taquito/indexer": "^6.0.1-beta.0",
-    "@taquito/michelson-encoder": "^6.0.1-beta.0",
-    "@taquito/rpc": "^6.0.1-beta.0",
-    "@taquito/utils": "^6.0.1-beta.0",
+    "@taquito/indexer": "^6.0.3-beta.1",
+    "@taquito/michelson-encoder": "^6.0.3-beta.1",
+    "@taquito/rpc": "^6.0.3-beta.1",
+    "@taquito/utils": "^6.0.3-beta.1",
     "bignumber.js": "^9.0.0",
     "rxjs": "^6.5.3"
   },
@@ -98,11 +103,16 @@
     "rollup-plugin-sourcemaps": "^0.4.2",
     "rollup-plugin-typescript2": "^0.22.1",
     "shelljs": "^0.8.3",
+    "terser-webpack-plugin": "^2.3.1",
     "ts-jest": "^23.10.2",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
     "tslint-config-standard": "^8.0.1",
-    "typescript": "~3.6.0"
+    "typescript": "~3.6.0",
+    "webpack": "^4.41.4",
+    "webpack-assets-manifest": "^3.1.1",
+    "webpack-cli": "^3.3.10",
+    "webpack-subresource-integrity": "^1.4.0"
   }
 }

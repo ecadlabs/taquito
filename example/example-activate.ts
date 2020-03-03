@@ -2,7 +2,7 @@ import { Tezos } from '@taquito/taquito'
 
 
 async function example() {
-    const provider = 'https://alphanet-node.tzscan.io';
+    const provider = 'https://api.tez.ie/rpc/carthagenet';
     Tezos.setProvider({ rpc: provider });
     try {
         const op = await Tezos.tz.activate("tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu", "161d907951bf5594bedb1d70bb03c938d63c22be")

@@ -6,8 +6,14 @@ A TypeScript library suite for development on the Tezos blockchain
 [![CircleCI](https://circleci.com/gh/ecadlabs/taquito.svg?style=svg)](https://circleci.com/gh/ecadlabs/taquito)
 [![codecov](https://codecov.io/gh/ecadlabs/taquito/branch/master/graph/badge.svg)](https://codecov.io/gh/ecadlabs/taquito)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/3204/badge)](https://bestpractices.coreinfrastructure.org/projects/3204)
+[![npm version](https://badge.fury.io/js/%40taquito%2Ftaquito.svg)](https://badge.fury.io/js/%40taquito%2Ftaquito)
 
 _WARNING: This project is in beta. We welcome users and feedback, please be aware that this project is a work in progress._
+
+## Official channels
+
+- <https://keybase.io/team/ecadlabs.taquito>
+- <https://tezos.stackexchange.com/questions/tagged/taquito>
 
 ## What is Taquito
 
@@ -47,6 +53,7 @@ We publish gpg signed packages to npmjs.org under the `@taquito` handle.
 | Low Level Packages                                               | Responsibility                                                |
 | ---------------------------------------------------------------- | ------------------------------------------------------------- |
 | [@taquito/rpc](packages/taquito-rpc)                             | RPC client library, wrap every rpc endpoint in its own method |
+| [@taquito/local-forging](packages/taquito-local-forging)         | Local forging of Tezos operations                             |
 | [@taquito/michelson-encoder](packages/taquito-michelson-encoder) | Encode/Decode storage and parameters to/from michelson format |
 | [@taquito/indexer](packages/taquito-indexer)                     | A client for the [tezos-indexer-api][0] API                   |
 | [@taquito/streamer](packages/taquito-streamer)                   | A client for the [taquito-streamer][1] API                    |

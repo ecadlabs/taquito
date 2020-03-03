@@ -4,6 +4,7 @@ import { OperationEmitter } from '../operations/operation-emitter';
 import { Operation } from '../operations/operations';
 import { RPCActivateOperation } from '../operations/types';
 import { TzProvider } from './interface';
+import { OpKind } from '@taquito/rpc';
 
 export class RpcTzProvider extends OperationEmitter implements TzProvider {
   constructor(context: Context) {
@@ -20,7 +21,7 @@ export class RpcTzProvider extends OperationEmitter implements TzProvider {
 
   async activate(pkh: string, secret: string) {
     const operation: RPCActivateOperation = {
-      kind: 'activate_account',
+      kind: OpKind.ACTIVATION,
       pkh,
       secret,
     };

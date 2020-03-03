@@ -1,4 +1,8 @@
-import { OperationContentsAndResult, OperationContentsAndResultOrigination } from '@taquito/rpc';
+import {
+  OperationContentsAndResult,
+  OperationContentsAndResultOrigination,
+  OpKind,
+} from '@taquito/rpc';
 import { Context } from '../context';
 import { RpcContractProvider } from '../contract/rpc-contract-provider';
 import { Operation } from './operations';
@@ -8,6 +12,7 @@ import {
   StorageConsumingOperation,
   RPCOriginationOperation,
   FeeConsumingOperation,
+  withKind,
 } from './types';
 
 /**
@@ -40,8 +45,8 @@ export class OriginationOperation extends Operation
 
   get operationResults() {
     const originationOp =
-      Array.isArray(this.results) &&
-      (this.results.find(op => op.kind === 'origination') as OperationContentsAndResultOrigination);
+      Array.isArray(this.results) && this.results.find(op => op.kind === 'origination');
+
     const result =
       originationOp && originationOp.metadata && originationOp.metadata.operation_result;
     return result ? result : undefined;

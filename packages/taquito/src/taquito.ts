@@ -1,5 +1,6 @@
 import { IndexerClient } from '@taquito/indexer';
 import { RpcClient } from '@taquito/rpc';
+import { RPCBatchProvider } from './batch/rpc-batch-provider';
 import { Protocols } from './constants';
 import { Config, Context, TaquitoProvider } from './context';
 import { ContractProvider, EstimationProvider } from './contract/interface';
@@ -24,7 +25,11 @@ export * from './contract/big-map';
 export { CompositeForger } from './forger/composite-forger';
 export * from './forger/interface';
 export { RpcForger } from './forger/rpc-forger';
-export { TezosOperationError, TezosOperationErrorWithMessage, TezosPreapplyFailureError } from './operations/operation-errors';
+export {
+  TezosOperationError,
+  TezosOperationErrorWithMessage,
+  TezosPreapplyFailureError,
+} from './operations/operation-errors';
 export * from './query/interface';
 export * from './signer/interface';
 export * from './subscribe/interface';
@@ -56,6 +61,7 @@ export class TezosToolkit {
   private _tz = new RpcTzProvider(this._context);
   private _estimate = new RPCEstimateProvider(this._context);
   private _contract = new RpcContractProvider(this._context, this._estimate);
+  private _batch = new RPCBatchProvider(this._context, this._estimate);
 
   public readonly format = format;
 
@@ -143,6 +149,8 @@ export class TezosToolkit {
   get contract(): ContractProvider {
     return this._contract;
   }
+
+  public batch = this._batch.batch.bind(this._batch);
 
   /**
    * @description Provide access to operation estimation utilities

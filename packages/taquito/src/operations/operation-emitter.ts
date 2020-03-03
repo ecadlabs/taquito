@@ -1,28 +1,30 @@
 import {
   BlockHeaderResponse,
-  ConstructedOperation,
   ManagerKeyResponse,
+  OperationContents,
   OperationContentsAndResult,
+  OpKind,
   RpcClient,
   RPCRunOperationParam,
 } from '@taquito/rpc';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT, Protocols } from '../constants';
 import { Context } from '../context';
+import { Estimate } from '../contract/estimate';
 import { flattenErrors, TezosOperationError, TezosPreapplyFailureError } from './operation-errors';
 import {
   ForgedBytes,
+  isOpRequireReveal,
   PrepareOperationParams,
-  RPCDelegateOperation,
   RPCOperation,
-  RPCOriginationOperation,
+  RPCOpWithFee,
+  RPCOpWithSource,
   RPCRevealOperation,
-  RPCTransferOperation,
 } from './types';
 
 export interface PreparedOperation {
   opOb: {
     branch: string;
-    contents: ConstructedOperation[];
+    contents: OperationContents[];
     protocol: string;
   };
   counter: number;
@@ -38,25 +40,6 @@ export abstract class OperationEmitter {
   }
 
   constructor(protected context: Context) {}
-
-  private isSourceOp(
-    op: RPCOperation
-  ): op is (RPCTransferOperation | RPCOriginationOperation | RPCDelegateOperation) & {
-    source?: string;
-  } {
-    return ['transaction', 'origination', 'delegation'].includes(op.kind);
-  }
-
-  private isFeeOp(
-    op: RPCOperation
-  ): op is (
-    | RPCTransferOperation
-    | RPCOriginationOperation
-    | RPCDelegateOperation
-    | RPCRevealOperation
-  ) & { source?: string } {
-    return ['reveal', 'transaction', 'origination', 'delegation'].includes(op.kind);
-  }
 
   // Originally from sotez (Copyright (c) 2018 Andrew Kishino)
   protected async prepareOperation({
@@ -84,7 +67,7 @@ export abstract class OperationEmitter {
     let counterPromise: Promise<string | undefined> = Promise.resolve(undefined);
     let managerPromise: Promise<ManagerKeyResponse | undefined> = Promise.resolve(undefined);
     for (let i = 0; i < ops.length; i++) {
-      if (['transaction', 'origination', 'delegation'].includes(ops[i].kind)) {
+      if (isOpRequireReveal(ops[i])) {
         requiresReveal = true;
         const { counter } = await this.rpc.getContract(publicKeyHash);
         counterPromise = Promise.resolve(counter);
@@ -114,7 +97,7 @@ export abstract class OperationEmitter {
       const haveManager = manager && typeof manager === 'object' ? !!manager.key : !!manager;
       if (!haveManager) {
         const reveal: RPCRevealOperation = {
-          kind: 'reveal',
+          kind: OpKind.REVEAL,
           fee: DEFAULT_FEE.REVEAL,
           public_key: await this.signer.publicKey(),
           source: publicKeyHash,
@@ -131,50 +114,68 @@ export abstract class OperationEmitter {
       counters[publicKeyHash] = counter;
     }
 
-    const constructOps = (cOps: RPCOperation[]): ConstructedOperation[] =>
+    const getFee = (op: RPCOpWithFee) => {
+      const opCounter = ++counters[publicKeyHash];
+      return {
+        counter: `${opCounter}`,
+        // tslint:disable-next-line: strict-type-predicates
+        fee: typeof op.fee === 'undefined' ? '0' : `${op.fee}`,
+        // tslint:disable-next-line: strict-type-predicates
+        gas_limit: typeof op.gas_limit === 'undefined' ? '0' : `${op.gas_limit}`,
+        // tslint:disable-next-line: strict-type-predicates
+        storage_limit: typeof op.storage_limit === 'undefined' ? '0' : `${op.storage_limit}`,
+      };
+    };
+
+    const getSource = (op: RPCOpWithSource) => {
+      return {
+        source: typeof op.source === 'undefined' ? source || publicKeyHash : op.source,
+      };
+    };
+
+    const constructOps = (cOps: RPCOperation[]): OperationContents[] =>
       // tslint:disable strict-type-predicates
       cOps.map((op: RPCOperation) => {
-        const constructedOp = { ...op } as ConstructedOperation;
-        if (this.isSourceOp(op)) {
-          if (typeof op.source === 'undefined') {
-            constructedOp.source = source || publicKeyHash;
-          }
+        switch (op.kind) {
+          case OpKind.ACTIVATION:
+            return {
+              ...op,
+            };
+          case OpKind.REVEAL:
+            return {
+              ...op,
+              ...getSource(op),
+              ...getFee(op),
+            };
+          case OpKind.ORIGINATION:
+            return {
+              ...op,
+              balance: typeof op.balance !== 'undefined' ? `${op.balance}` : '0',
+              ...getSource(op),
+              ...getFee(op),
+            };
+          case OpKind.TRANSACTION:
+            const cops = {
+              ...op,
+              amount: typeof op.amount !== 'undefined' ? `${op.amount}` : '0',
+              ...getSource(op),
+              ...getFee(op),
+            };
+            if (cops.source.toLowerCase().startsWith('kt1')) {
+              throw new Error(
+                `KT1 addresses are not supported as source since ${Protocols.PsBabyM1}`
+              );
+            }
+            return cops;
+          case OpKind.DELEGATION:
+            return {
+              ...op,
+              ...getSource(op),
+              ...getFee(op),
+            };
+          default:
+            throw new Error('Unsupported operation');
         }
-        if (this.isFeeOp(op)) {
-          if (typeof op.fee === 'undefined') {
-            constructedOp.fee = '0';
-          } else {
-            constructedOp.fee = `${op.fee}`;
-          }
-          if (typeof op.gas_limit === 'undefined') {
-            constructedOp.gas_limit = '0';
-          } else {
-            constructedOp.gas_limit = `${op.gas_limit}`;
-          }
-          if (typeof op.storage_limit === 'undefined') {
-            constructedOp.storage_limit = '0';
-          } else {
-            constructedOp.storage_limit = `${op.storage_limit}`;
-          }
-          const opCounter = ++counters[publicKeyHash];
-          constructedOp.counter = `${opCounter}`;
-        }
-        if (op.kind === 'origination') {
-          if (typeof op.balance !== 'undefined') constructedOp.balance = `${constructedOp.balance}`;
-        }
-
-        if (op.kind === 'transaction') {
-          if (constructedOp.source.toLowerCase().startsWith('kt1')) {
-            throw new Error(
-              `KT1 addresses are not supported as source since ${Protocols.PsBabyM1}`
-            );
-          }
-
-          if (typeof op.amount !== 'undefined') constructedOp.amount = `${constructedOp.amount}`;
-        }
-        // tslint:enable strict-type-predicates
-
-        return constructedOp;
       });
 
     const branch = head.hash;
@@ -215,6 +216,37 @@ export abstract class OperationEmitter {
       opResponse: await this.rpc.runOperation(op),
       op,
       context: this.context.clone(),
+    };
+  }
+
+  protected async estimate<T extends { fee?: number; gasLimit?: number; storageLimit?: number }>(
+    { fee, gasLimit, storageLimit, ...rest }: T,
+    estimator: (param: T) => Promise<Estimate>
+  ) {
+    let calculatedFee = fee;
+    let calculatedGas = gasLimit;
+    let calculatedStorage = storageLimit;
+
+    if (fee === undefined || gasLimit === undefined || storageLimit === undefined) {
+      const estimation = await estimator({ fee, gasLimit, storageLimit, ...(rest as any) });
+
+      if (calculatedFee === undefined) {
+        calculatedFee = estimation.suggestedFeeMutez;
+      }
+
+      if (calculatedGas === undefined) {
+        calculatedGas = estimation.gasLimit;
+      }
+
+      if (calculatedStorage === undefined) {
+        calculatedStorage = estimation.storageLimit;
+      }
+    }
+
+    return {
+      fee: calculatedFee!,
+      gasLimit: calculatedGas!,
+      storageLimit: calculatedStorage!,
     };
   }
 

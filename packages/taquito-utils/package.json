@@ -1,6 +1,6 @@
 {
   "name": "@taquito/utils",
-  "version": "6.0.1-beta.0",
+  "version": "6.0.3-beta.1",
   "description": "converts michelson data and types into convenient JS/TS objects",
   "keywords": [
     "tezos",
@@ -12,7 +12,8 @@
   "module": "dist/taquito-utils.es5.js",
   "typings": "dist/types/taquito-utils.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "signature.json"
   ],
   "publishConfig": {
     "access": "public"
