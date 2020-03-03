@@ -1,11 +1,12 @@
 import { IndexerClient } from '@taquito/indexer';
 import { RpcClient } from '@taquito/rpc';
-import { InMemorySigner } from '@taquito/signer';
 import { Protocols } from './constants';
-import { Context, Config, TaquitoProvider } from './context';
+import { Config, Context, TaquitoProvider } from './context';
 import { ContractProvider, EstimationProvider } from './contract/interface';
 import { RpcContractProvider } from './contract/rpc-contract-provider';
 import { RPCEstimateProvider } from './contract/rpc-estimate-provider';
+import { Forger } from './forger/interface';
+import { RpcForger } from './forger/rpc-forger';
 import { format } from './format';
 import { IndexerProvider } from './query/indexer-provider';
 import { QueryProvider } from './query/interface';
@@ -15,27 +16,21 @@ import { SubscribeProvider } from './subscribe/interface';
 import { PollingSubscribeProvider } from './subscribe/polling-provider';
 import { TzProvider } from './tz/interface';
 import { RpcTzProvider } from './tz/rpc-tz-provider';
-import { Forger } from './forger/interface';
-import { RpcForger } from './forger/rpc-forger';
 
+export * from './constants';
+export { TaquitoProvider } from './context';
+export * from './contract';
+export * from './contract/big-map';
+export { CompositeForger } from './forger/composite-forger';
+export * from './forger/interface';
+export { RpcForger } from './forger/rpc-forger';
+export { TezosOperationError, TezosOperationErrorWithMessage, TezosPreapplyFailureError } from './operations/operation-errors';
 export * from './query/interface';
 export * from './signer/interface';
 export * from './subscribe/interface';
-export * from './forger/interface';
-export * from './tz/interface';
-export * from './contract';
-export * from './contract/big-map';
-export * from './constants';
-export { TaquitoProvider } from './context';
-export { RpcForger } from './forger/rpc-forger';
-export { CompositeForger } from './forger/composite-forger';
-export {
-  TezosOperationError,
-  TezosOperationErrorWithMessage,
-  TezosPreapplyFailureError,
-} from './operations/operation-errors';
-
 export { SubscribeProvider } from './subscribe/interface';
+export * from './tz/interface';
+
 export interface SetProviderOptions {
   forger?: Forger;
   rpc?: string | RpcClient;
