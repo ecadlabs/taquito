@@ -1,7 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "build": "lerna run build",
+    "build": "lerna run build --no-private",
+    "build:all": "lerna run build",
     "bootstrap": "lerna bootstrap",
     "test": "jest --collectCoverage",
     "lint": "lerna run lint",

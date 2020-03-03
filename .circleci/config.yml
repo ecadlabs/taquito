@@ -42,10 +42,10 @@ jobs:
       - image: circleci/node:8.11.4
     steps:
       - checkout
-      - run: cd website && npm install && npm run build && cp -R build/. ../dist
       - run: npm install
       - run: npm run lerna -- bootstrap
       - run: npm run lerna run build
+      - run: cd website && cp -R build/. ../dist
       - run: npm run build-docs
       - run: cd packages/taquito-react-components && npm run build-storybook -- -o ../../dist/react-storybook
       - run: cd dist && touch .nojekyll && echo 'tezostaquito.io' > CNAME
