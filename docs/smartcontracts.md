@@ -48,7 +48,7 @@ let main (p,s: action * storage) =
 
 ```
 
-[View the counter contract in the Ligo WebIDE][2]
+You can view this contract and deploy it to a testnet using the [Ligo WebIDE][2]
 
 ### Counter Contract Michelson source code
 
@@ -97,7 +97,7 @@ Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/babylonnet' });
 Tezos.contract.at('KT1LjpCPTqGajeaXfLM3WV7csatSgyZcTDQ8')
 .then(c => {
     let methods = c.parameterSchema.ExtractSignatures()
-    render(JSON.stringify(methods))
+    render(JSON.stringify(methods, null, 2))
 })
 .catch(error => console.log(`Error: ${error}`));
 ```
@@ -106,8 +106,8 @@ The `at()` method causes Taquito to query a Tezos nodes RPC API for the contract
 
 The `at` method returns a representation of the contract as a plain old javascript object. Taquito dynamically creates an `increment` and `decrement` method that the developer can call as follows:
 
-`contract.medthods.increment()`
-`contract.methods.decrement()`
+* `contract.methods.increment()`
+* `contract.methods.decrement()`
 
 In Tezos, to call an entrypoint on a contract, one must send a transfer operation. In the case of the counter contract, the transfer value can be `0` as the contract does not expect to receive any tokens. To call the `increment` entrypoint, the transfer must have the appropriate Michelson values specified as "params".
 
@@ -119,7 +119,7 @@ Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/babylonnet' });
 Tezos.contract.at('KT1LjpCPTqGajeaXfLM3WV7csatSgyZcTDQ8')
 .then(c => {
     let incrementParams = c.methods.increment(2).toTransferParams()
-    render(JSON.stringify(incrementParams))
+    render(JSON.stringify(incrementParams, null, 2))
 })
 .catch(error => console.log(`Error: ${error}`));
 ```
