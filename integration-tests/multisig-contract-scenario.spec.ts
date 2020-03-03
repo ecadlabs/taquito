@@ -2,8 +2,9 @@ import { CONFIGS } from "./config";
 import { MANAGER_LAMBDA } from "@taquito/taquito";
 import { genericMultisig } from "./data/multisig";
 
-CONFIGS.forEach(({ lib, rpc, setup }) => {
+CONFIGS.forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
+
 
   describe(`Generic Multisig: ${rpc}`, () => {
     beforeEach(async (done) => {
@@ -11,14 +12,18 @@ CONFIGS.forEach(({ lib, rpc, setup }) => {
       done()
     })
     it('test manager transfers scenarios for Babylon/005', async (done) => {
+      const account1 = await createAddress();
+      const account2 = await createAddress();
+      const account3 = await createAddress();
+
       // Originate the multisig contract
       const op = await Tezos.contract.originate({
         balance: "1",
         code: genericMultisig,
         storage: {
           stored_counter: 0,
-          threshold: 1,
-          keys: [await Tezos.signer.publicKey()]
+          threshold: 2,
+          keys: [await account1.signer.publicKey(), await account2.signer.publicKey(), await account3.signer.publicKey()]
         }
       })
       const contract = await op.contract();
@@ -101,7 +106,8 @@ CONFIGS.forEach(({ lib, rpc, setup }) => {
       }, contract.address))
 
       // Signing the packed
-      const signed = await Tezos.signer.sign(packed, new Uint8Array())
+      const signature1 = await account1.signer.sign(packed, new Uint8Array())
+      const signature2 = await account2.signer.sign(packed, new Uint8Array())
 
       const op2 = await contract.methods.main(
         // Counter
@@ -111,7 +117,7 @@ CONFIGS.forEach(({ lib, rpc, setup }) => {
         // Action
         MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 500),
         // Signature list
-        [signed.sig]
+        [signature1.prefixSig, signature2.prefixSig, null]
       ).send()
 
       await op2.confirmation();
