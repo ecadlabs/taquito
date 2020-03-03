@@ -1,6 +1,5 @@
+import { rpcContractResponse, storage } from '../data/sample13_map_contract';
 import { Schema } from '../src/schema/storage';
-import { storage, rpcContractResponse } from '../data/sample13_map_contract';
-import { MichelsonMap } from '../src/michelson-map';
 import { expectMichelsonMap } from './utils';
 
 describe('Schema with a map as root storage', () => {

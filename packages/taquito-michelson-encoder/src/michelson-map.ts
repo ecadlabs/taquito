@@ -20,7 +20,7 @@ export class MapTypecheckError implements Error {
 }
 
 /**
- * @description Michelson Map is an abstraction over the michelson native map. It support complex Pair as key
+ * @description Michelson Map is an abstraction over the michelson native map. It supports complex Pair as key
  */
 export class MichelsonMap<K extends MichelsonMapKey, T extends any> {
   private valueMap = new Map<string, T>();
@@ -30,7 +30,9 @@ export class MichelsonMap<K extends MichelsonMapKey, T extends any> {
   private valueSchema?: Schema;
 
   /**
-   * @param mapType If specified key and value will be type checked before being added to the map
+   * @param mapType If specified key and value will be type-checked before being added to the map
+   *
+   * @example new MichelsonMap({ prim: "map", args: [{prim: "string"}, {prim: "int"}]})
    */
   constructor(mapType?: MichelsonV1Expression) {
     if (mapType) {
@@ -88,8 +90,7 @@ export class MichelsonMap<K extends MichelsonMapKey, T extends any> {
     }
   }
 
-  // Serialize is used to produce a unique deterministic string representation for each key
-  private serialize(key: K): string {
+  private serializeDeterministically(key: K): string {
     return stringify(key);
   }
 
@@ -114,13 +115,13 @@ export class MichelsonMap<K extends MichelsonMapKey, T extends any> {
   get(key: K): T | undefined {
     this.assertTypecheckKey(key);
 
-    const strKey = this.serialize(key);
+    const strKey = this.serializeDeterministically(key);
     return this.valueMap.get(strKey);
   }
 
   /**
    *
-   * @description Set a key and a value value in the MichelsonMap. If the key already exists override the existing value.
+   * @description Set a key and a value in the MichelsonMap. If the key already exists, override the current value.
    *
    * @example map.set("myKey", "myValue") // Using a string as key
    *
@@ -136,7 +137,7 @@ export class MichelsonMap<K extends MichelsonMapKey, T extends any> {
     this.assertTypecheckKey(key);
     this.assertTypecheckValue(value);
 
-    const strKey = this.serialize(key);
+    const strKey = this.serializeDeterministically(key);
     this.keyMap.set(strKey, key);
     this.valueMap.set(strKey, value);
   }
@@ -144,14 +145,14 @@ export class MichelsonMap<K extends MichelsonMapKey, T extends any> {
   delete(key: K) {
     this.assertTypecheckKey(key);
 
-    this.keyMap.delete(this.serialize(key));
-    this.valueMap.delete(this.serialize(key));
+    this.keyMap.delete(this.serializeDeterministically(key));
+    this.valueMap.delete(this.serializeDeterministically(key));
   }
 
   has(key: K) {
     this.assertTypecheckKey(key);
 
-    const strKey = this.serialize(key);
+    const strKey = this.serializeDeterministically(key);
     return this.keyMap.has(strKey) && this.valueMap.has(strKey);
   }
 
