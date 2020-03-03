@@ -1,7 +1,7 @@
-import { Token, TokenFactory, Semantic } from './token';
+import { Token, TokenFactory, Semantic, ComparableToken } from './token';
 import { OrToken } from './or';
 
-export class PairToken extends Token {
+export class PairToken extends ComparableToken {
   static prim = 'pair';
 
   constructor(
@@ -52,6 +52,10 @@ export class PairToken extends Token {
       key: this.EncodeObject(val),
       type: this.typeWithoutAnnotations(),
     };
+  }
+
+  public ToKey(val: any) {
+    return this.Execute(val);
   }
 
   public EncodeObject(args: any): any {
@@ -122,5 +126,38 @@ export class PairToken extends Token {
       leftToken => leftToken.ExtractSchema(),
       rightToken => rightToken.ExtractSchema()
     );
+  }
+
+  public compare(val1: any, val2: any) {
+    const leftToken = this.createToken(this.val.args[0], this.idx);
+    let keyCount = 1;
+    if (leftToken instanceof PairToken) {
+      keyCount = Object.keys(leftToken.ExtractSchema()).length;
+    }
+
+    const rightToken = this.createToken(this.val.args[1], this.idx + keyCount);
+
+    const getValue = (token: Token, args: any) => {
+      if (token instanceof PairToken && !token.hasAnnotations()) {
+        return args;
+      } else {
+        return args[token.annot()];
+      }
+    };
+
+    if (leftToken instanceof ComparableToken && rightToken instanceof ComparableToken) {
+      const result: number = leftToken.compare(
+        getValue(leftToken, val1),
+        getValue(leftToken, val2)
+      );
+
+      if (result === 0) {
+        return rightToken.compare(getValue(rightToken, val1), getValue(rightToken, val2));
+      }
+
+      return result;
+    }
+
+    throw new Error('Not a comparable pair');
   }
 }

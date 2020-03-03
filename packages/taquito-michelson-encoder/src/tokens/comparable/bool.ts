@@ -1,6 +1,6 @@
-import { Token, TokenFactory } from '../token';
+import { Token, TokenFactory, ComparableToken } from '../token';
 
-export class BoolToken extends Token {
+export class BoolToken extends ComparableToken {
   static prim = 'bool';
 
   constructor(
@@ -26,5 +26,26 @@ export class BoolToken extends Token {
 
   public ExtractSchema() {
     return BoolToken.prim;
+  }
+
+  ToBigMapKey(val: string): { key: { [key: string]: string }; type: { prim: string } } {
+    return {
+      key: this.EncodeObject(val),
+      type: { prim: BoolToken.prim },
+    };
+  }
+
+  ToKey(val: string) {
+    return this.EncodeObject(val);
+  }
+
+  compare(val1: any, val2: any) {
+    if ((val1 && val2) || (!val1 && !val2)) {
+      return 0;
+    } else if (val1) {
+      return 1;
+    } else {
+      return -1;
+    }
   }
 }

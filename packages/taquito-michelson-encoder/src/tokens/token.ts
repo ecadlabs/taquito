@@ -1,4 +1,5 @@
 import { MichelsonV1Expression } from '@taquito/rpc';
+import { MichelsonMapKey } from '../michelson-map';
 
 export abstract class TokenValidationError implements Error {
   name: string = 'ValidationError';
@@ -79,9 +80,13 @@ export abstract class ComparableToken extends Token {
     type: { prim: string };
   };
 
-  abstract ToKey(val: string): string;
+  abstract ToKey(val: string): any;
 
-  compare(o1: string, o2: string) {
+  compare(o1: string, o2: string): number {
+    if (o1 === o2) {
+      return 0;
+    }
+
     return o1 < o2 ? -1 : 1;
   }
 }

@@ -1,5 +1,6 @@
 import { code } from '../../data/proto005/big_map_encoding';
 import { Schema } from '../../src/schema/storage';
+import { MichelsonMap } from '../../src/michelson-map';
 
 describe('Contract with unit encoding', () => {
   it('Should encode storage properly when using empty big map', () => {
@@ -8,7 +9,7 @@ describe('Contract with unit encoding', () => {
       schema.Encode({
         owner: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         totalSupply: '100',
-        accounts: {},
+        accounts: new MichelsonMap(),
       })
     ).toEqual({
       prim: 'Pair',
@@ -35,12 +36,12 @@ describe('Contract with unit encoding', () => {
       schema.Encode({
         owner: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         totalSupply: '100',
-        accounts: {
+        accounts: MichelsonMap.fromLiteral({
           tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn: {
             balance: '0',
-            allowances: {},
+            allowances: new MichelsonMap(),
           },
-        },
+        }),
       })
     ).toEqual({
       prim: 'Pair',
@@ -78,19 +79,19 @@ describe('Contract with unit encoding', () => {
       schema.Encode({
         owner: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         totalSupply: '100',
-        accounts: {
+        accounts: MichelsonMap.fromLiteral({
           tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn: {
             balance: '0',
-            allowances: {},
+            allowances: new MichelsonMap(),
           },
           tz1LhS2WFCinpwUTdUb991ocL2D9Uk6FJGJK: {
             balance: '0',
-            allowances: {
+            allowances: MichelsonMap.fromLiteral({
               tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn: '2',
               tz1LhS2WFCinpwUTdUb991ocL2D9Uk6FJGJK: '3',
-            },
+            }),
           },
-        },
+        }),
       })
     ).toEqual({
       prim: 'Pair',

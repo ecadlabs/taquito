@@ -2,6 +2,8 @@ import BigNumber from 'bignumber.js';
 import { bigMapDiff, params, rpcContractResponse, storage, txParams } from '../data/sample1';
 import { ParameterSchema } from '../src/schema/parameter';
 import { Schema } from '../src/schema/storage';
+import { MichelsonMap } from '../src/michelson-map';
+import { expectMichelsonMap } from './utils';
 
 describe('Schema test', () => {
   it('Should extract schema properly', () => {
@@ -11,7 +13,10 @@ describe('Schema test', () => {
       accounts: {
         address: {
           allowances: {
-            address: 'nat',
+            map: {
+              key: 'address',
+              value: 'nat',
+            },
           },
           balance: 'nat',
         },
@@ -27,7 +32,7 @@ describe('Schema test', () => {
   it('Should encode storage properly', () => {
     const schema = new Schema(storage);
     const result = schema.Encode({
-      accounts: {},
+      accounts: new MichelsonMap(),
       name: 'Token B',
       owner: 'tz1ccqAEwfPgeoipnXtjAv1iucrpQv3DFmmS',
       symbol: 'B',
@@ -111,7 +116,7 @@ describe('Schema test', () => {
     const schema = new Schema(storage);
     const s = schema.Execute(rpcContractResponse.script.storage);
     expect(s).toEqual({
-      accounts: {},
+      accounts: expectMichelsonMap(),
       name: 'Token B',
       owner: 'tz1ccqAEwfPgeoipnXtjAv1iucrpQv3DFmmS',
       symbol: 'B',
@@ -123,14 +128,16 @@ describe('Schema test', () => {
   it('Should parse big map properly', () => {
     const schema = new Schema(storage);
     const s = schema.ExecuteOnBigMapDiff(bigMapDiff);
-    expect(s).toEqual({
-      tz1Ra8yQVQN4Nd7LpPQ6UT6t3bsWWqHZ9wa6: {
-        allowances: {
-          tz1fPjyo55HwUAkd1xcL5vo6DGzJrkxAMpiD: new BigNumber('60'),
+    expect(s).toEqual(
+      expectMichelsonMap({
+        tz1Ra8yQVQN4Nd7LpPQ6UT6t3bsWWqHZ9wa6: {
+          allowances: MichelsonMap.fromLiteral({
+            tz1fPjyo55HwUAkd1xcL5vo6DGzJrkxAMpiD: new BigNumber('60'),
+          }),
+          balance: new BigNumber('200'),
         },
-        balance: new BigNumber('200'),
-      },
-    });
+      })
+    );
   });
 
   it('Should build parameter schema properly', () => {

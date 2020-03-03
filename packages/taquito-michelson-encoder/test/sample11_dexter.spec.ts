@@ -7,6 +7,8 @@ import {
 } from '../data/sample11_token';
 import BigNumber from 'bignumber.js';
 import { ParameterSchema } from '../src/schema/parameter';
+import { MichelsonMap } from '../src/michelson-map';
+import { expectMichelsonMap } from './utils';
 describe('Exchange contract test', () => {
   it('Test storage schema', () => {
     const schema = new Schema(storageDexter);
@@ -16,26 +18,29 @@ describe('Exchange contract test', () => {
       '2': 'contract',
       '3': 'nat',
       '4': {
-        address: {
-          '0': {
-            '0': 'nat',
-            '1': 'nat',
-            '2': 'timestamp',
-          },
-          '1': {
-            '1': 'nat',
-            '2': 'mutez',
-            '3': 'nat',
-            '4': 'timestamp',
-          },
-          '2': {
-            '2': 'nat',
-            '3': 'timestamp',
-          },
-          '3': {
-            '3': 'nat',
-            '4': 'mutez',
-            '5': 'timestamp',
+        map: {
+          key: 'address',
+          value: {
+            '0': {
+              '0': 'nat',
+              '1': 'nat',
+              '2': 'timestamp',
+            },
+            '1': {
+              '1': 'nat',
+              '2': 'mutez',
+              '3': 'nat',
+              '4': 'timestamp',
+            },
+            '2': {
+              '2': 'nat',
+              '3': 'timestamp',
+            },
+            '3': {
+              '3': 'nat',
+              '4': 'mutez',
+              '5': 'timestamp',
+            },
           },
         },
       },
@@ -45,11 +50,11 @@ describe('Exchange contract test', () => {
   it('Test storage parsing', () => {
     const schema = new Schema(storageDexter);
     expect(schema.Execute(rpcContractResponse.script.storage)).toEqual({
-      '0': {},
+      '0': expectMichelsonMap(),
       '1': 'KT1XAMU1kn8EJLM2uqrP71Jevvkyo7yyfNTK',
       '2': 'KT1DmCHxit2bQ2GiHVc24McY6meuJPMTrqD8',
       '3': new BigNumber('100000000'),
-      '4': {},
+      '4': expectMichelsonMap(),
     });
   });
 
@@ -57,11 +62,11 @@ describe('Exchange contract test', () => {
     const schema = new Schema(storageDexter);
     expect(
       schema.Encode({
-        '0': {},
+        '0': new MichelsonMap(),
         '1': 'KT1XAMU1kn8EJLM2uqrP71Jevvkyo7yyfNTK',
         '2': 'KT1DmCHxit2bQ2GiHVc24McY6meuJPMTrqD8',
         '3': new BigNumber('100000000'),
-        '4': {},
+        '4': new MichelsonMap(),
       })
     ).toEqual({
       prim: 'Pair',
@@ -248,7 +253,12 @@ describe('Exchange contract test', () => {
       '0': {
         address: {
           '0': 'nat',
-          '1': { address: 'nat' },
+          '1': {
+            map: {
+              key: 'address',
+              value: 'nat',
+            },
+          },
         },
       },
       '1': 'nat',
@@ -260,7 +270,7 @@ describe('Exchange contract test', () => {
   it('Test storage parsing', () => {
     const schema = new Schema(storageToken);
     expect(schema.Execute(rpcToken.script.storage)).toEqual({
-      '0': {},
+      '0': expectMichelsonMap(),
       '1': new BigNumber('1000000'),
       '2': 'Tezos Gold',
       '3': 'TGD',

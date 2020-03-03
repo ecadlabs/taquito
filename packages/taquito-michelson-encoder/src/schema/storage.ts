@@ -66,6 +66,15 @@ export class Schema {
     return this.removeTopLevelAnnotation(storage);
   }
 
+  Typecheck(val: any) {
+    try {
+      this.root.EncodeObject(val);
+      return true;
+    } catch (ex) {
+      return false;
+    }
+  }
+
   ExecuteOnBigMapDiff(diff: any[], semantics?: Semantic) {
     if (!this.bigMap) {
       throw new Error('No big map schema');
