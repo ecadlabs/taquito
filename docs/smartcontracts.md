@@ -96,14 +96,8 @@ Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/babylonnet' });
 
 Tezos.contract.at('KT1LjpCPTqGajeaXfLM3WV7csatSgyZcTDQ8')
 .then(c => {
- 
     let methods = c.parameterSchema.ExtractSignatures()
-
     render(JSON.stringify(methods))
-    
-    //console.log(c.methods.increment(2).toTransferParams())
-    //let params = c.methods.increment(2).toTransferParams()
-    //render(JSON.stringify(Object.keys(c.methods)))
 })
 .catch(error => console.log(`Error: ${error}`));
 ```
