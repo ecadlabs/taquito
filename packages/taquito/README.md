@@ -7,8 +7,8 @@ The `@taquito/taquito` package contains higher level functionality that builds u
 ## CDN Bundle
 
 ```html
-<script src="https://unpkg.com/@taquito/taquito@6.0.3-beta.1/dist/taquito.min.js"
-crossorigin="anonymous" integrity="sha384-FVSTEBXsUdjuACduZxC3L+zgoyeCp+lX2elh56hkK0zk9oZUK5aWsWcah9acZHse"></script>
+<script src="https://unpkg.com/@taquito/taquito@6.1.0-beta.0/dist/taquito.min.js"
+crossorigin="anonymous" integrity="sha384-sk4V+57zLUCfkna8z4p1u6CioucJqmeo+QnaiXoFiuE8vdkm7/ae2TNFLbL+Ys02"></script>
 ```
 
 ## API Documentation
