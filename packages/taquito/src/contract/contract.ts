@@ -8,8 +8,13 @@ interface SendParams {
   fee?: number;
   storageLimit?: number;
   gasLimit?: number;
-  amount?: number;
+  amount: number;
+  source?: string;
+  mutez?: boolean;
 }
+
+// Ensure that all parameter that are not in SendParams are defined
+type ExplicitTransferParams = Required<Omit<TransferParams, keyof SendParams>> & SendParams;
 
 const DEFAULT_SMART_CONTRACT_METHOD_NAME = 'main';
 
@@ -46,16 +51,26 @@ export class ContractMethod {
     return this.provider.transfer(this.toTransferParams(params));
   }
 
+  /**
+   *
+   * @description Create transfer params to be used with TezosToolkit.contract.transfer methods
+   *
+   * @param Options generic transfer operation parameters
+   */
   toTransferParams({
     fee,
     gasLimit,
     storageLimit,
+    source,
     amount = 0,
+    mutez = false,
   }: Partial<SendParams> = {}): TransferParams {
-    return {
+    const fullTransferParams: ExplicitTransferParams = {
       to: this.address,
       amount,
       fee,
+      mutez,
+      source,
       gasLimit,
       storageLimit,
       parameter: {
@@ -63,9 +78,10 @@ export class ContractMethod {
         value: this.isAnonymous
           ? this.parameterSchema.Encode(this.name, ...this.args)
           : this.parameterSchema.Encode(...this.args),
-      } as any,
+      },
       rawParam: true,
     };
+    return fullTransferParams;
   }
 }
 
