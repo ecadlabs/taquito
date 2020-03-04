@@ -55,7 +55,6 @@ We publish gpg signed packages to npmjs.org under the `@taquito` handle.
 | [@taquito/rpc](packages/taquito-rpc)                             | RPC client library, wrap every rpc endpoint in its own method |
 | [@taquito/local-forging](packages/taquito-local-forging)         | Local forging of Tezos operations                             |
 | [@taquito/michelson-encoder](packages/taquito-michelson-encoder) | Encode/Decode storage and parameters to/from michelson format |
-| [@taquito/streamer](packages/taquito-streamer)                   | A client for the [taquito-streamer][1] API                    |
 | [@taquito/signer](packages/taquito-signer)                       | Provide necessary function to sign using tezos keys           |
 | [@taquito/remote-signer](packages/taquito-remote-signer)         | Provide necessary function to sign using remote signer API    |
 | [@taquito/tezbridge-signer](packages/taquito-tezbridge-signer)   | Provide necessary function to sign using TezBridge            |
@@ -147,7 +146,6 @@ For a contribution to be merged, it is required to have complete documentation, 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, **ANY** IMPLIED WARRANTIES OF MERCHANTABILITY, **NONINFRINGEMENT** OR FITNESS FOR A PARTICULAR PURPOSE ARE **ENTIRELY** DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS **OR ANY AFFILIATED PARTIES OR ENTITIES** BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  **PERSONS USING THIS SOFTWARE DO SO ENTIRELY AT THEIR OWN RISK.**
 
 [0]: https://github.com/ecadlabs/tezos-indexer-api
-[1]: https://github.com/ecadlabs/tezos-streamer
 [2]: https://keybase.io/jevonearth
 [3]: https://keybase.io/simrob
 
