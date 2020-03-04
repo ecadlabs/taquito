@@ -3,7 +3,6 @@ import { RpcTzProvider } from '../src/tz/rpc-tz-provider';
 import { RpcContractProvider } from '../src/contract/rpc-contract-provider';
 import { InMemorySigner } from '@taquito/signer';
 import { PollingSubscribeProvider } from '../src/subscribe/polling-provider';
-import { IndexerProvider } from '../src/query/indexer-provider';
 import { NoopSigner } from '../src/signer/noop';
 import { RpcClient } from '@taquito/rpc';
 
@@ -52,7 +51,6 @@ describe('TezosToolkit test', () => {
 
   const providerKey: (keyof SetProviderOptions)[] = [
     'signer',
-    'indexer',
     'rpc',
     'stream',
     'protocol',
@@ -68,19 +66,6 @@ describe('TezosToolkit test', () => {
         expect(toolkit.rpc['url']).toEqual('test');
         toolkit.setProvider({ [key]: 'test' as any });
         expect(toolkit.rpc['url']).toEqual('test');
-      });
-    });
-
-  providerKey
-    .filter(x => x !== 'indexer')
-    .forEach(key => {
-      it(`setting ${key} provider should not override the indexer provider`, () => {
-        expect(toolkit.query).toBeInstanceOf(IndexerProvider);
-        toolkit.setProvider({ indexer: 'test' });
-        const instance = toolkit.query;
-        expect(instance).toBeInstanceOf(IndexerProvider);
-        toolkit.setProvider({ [key]: 'test' as any });
-        expect(toolkit.query).toEqual(instance);
       });
     });
 

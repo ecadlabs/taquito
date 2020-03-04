@@ -64,7 +64,6 @@
       "^@taquito/rpc$": "<rootDir>/../taquito-rpc/src/taquito-rpc.ts",
       "^@taquito/michelson-encoder$": "<rootDir>/../taquito-michelson-encoder/src/taquito-michelson-encoder.ts",
       "^@taquito/http-utils$": "<rootDir>/../taquito-http-utils/src/taquito-http-utils.ts",
-      "^@taquito/indexer$": "<rootDir>/../taquito-indexer/src/taquito-indexer.ts",
       "^@taquito/utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts"
     },
     "coveragePathIgnorePatterns": [
@@ -76,7 +75,6 @@
     ]
   },
   "dependencies": {
-    "@taquito/indexer": "^6.0.3-beta.1",
     "@taquito/michelson-encoder": "^6.0.3-beta.1",
     "@taquito/rpc": "^6.0.3-beta.1",
     "@taquito/signer": "^6.0.3-beta.1",
