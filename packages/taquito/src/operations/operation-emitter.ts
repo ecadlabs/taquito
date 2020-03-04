@@ -80,7 +80,7 @@ export abstract class OperationEmitter {
       blockHeaderPromise,
       blockMetaPromise,
       counterPromise,
-      managerPromise,
+      managerPromise as any,
     ]);
 
     if (!header) {

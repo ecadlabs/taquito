@@ -9,9 +9,10 @@ module.exports = {
     '**/rollup*.ts',
     '**/dist/**',
     '**/node_modules/**',
-    '**/*.spec.ts'
+    '**/*.spec.ts',
+    "website/**/*"
   ],
+  lernaExclude: ['@taquito/website'],
   name: 'Taquito',
-  excludePrivate: true,
-  skipInternal: true
+  excludePrivate: true
 };
