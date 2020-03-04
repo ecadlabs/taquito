@@ -3,6 +3,7 @@
   "compilerOptions": {
     "declarationDir": "./dist/types",
     "outDir": "./dist/lib",
+    "allowJs": true,
     "typeRoots": [
       "./node_modules/@types"
     ]
