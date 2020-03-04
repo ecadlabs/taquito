@@ -14,6 +14,7 @@ npm install @taquito/taquito
 ```
 
 ## Import the library in your project
+
 You can access Tezos Toolkit in one of two ways.
 
 ### Import `Tezos` (a singleton object) from `@taquito/taquito`
@@ -23,6 +24,7 @@ import { Tezos } from '@taquito/taquito';
 ```
 
 ### Import `TezosToolkit` from `@taquito/taquito` and instantiate it
+
 This approach is only required if you need to instantiate more than one toolkit.
 
 ```js
@@ -61,16 +63,8 @@ Tezos.tz.getBalance('tz1NAozDvi5e7frVq9cUaC3uXQQannemB8Jw')
   .catch(error => render(JSON.stringify(error)));
 ```
 
-### Get balance history
-
-```js live noInline
-Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/mainnet' });
-Tezos.query.balanceHistory('tz1NAozDvi5e7frVq9cUaC3uXQQannemB8Jw')
-  .then(history => render(JSON.stringify(history)))
-  .catch(error => render(JSON.stringify(error)));
-```
-
 ### Import a key
+
 This will import your private key in memory and sign operations using this key.
 
 #### Private key
@@ -80,6 +74,7 @@ Tezos.importKey('p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1');
 ```
 
 #### Faucet Key
+
 A faucet key can be generated at https://faucet.tzalpha.net/
 
 ```js
@@ -149,6 +144,7 @@ fetch('https://api.tez.ie/keys/babylonnet/', {
 ```
 
 ### Interact with a smart contract
+
 Calling smart contract operations require a configured signer, in this example we will use a faucet key. The source for the smart contract [KT1LjpCPTqGajeaXfLM3WV7csatSgyZcTDQ8][smart_contract_on_better_call_dev] used in this example can be found in a [Ligo Web IDE][smart_contract_source].
 
 ```js live noInline

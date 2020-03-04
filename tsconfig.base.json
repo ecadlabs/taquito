@@ -34,9 +34,6 @@
       "@taquito/taquito": [
         "taquito/src/taquito.ts"
       ],
-      "@taquito/indexer": [
-        "taquito-indexer/src/taquito-indexer.ts"
-      ],
       "@taquito/http-utils": [
         "taquito-http-utils/src/taquito-http-utils.ts"
       ],

@@ -37,7 +37,6 @@
       "^@taquito/michelson-encoder$": "<rootDir>/packages/taquito-michelson-encoder/src/taquito-michelson-encoder.ts",
       "^@taquito/http-utils$": "<rootDir>/packages/taquito-http-utils/src/taquito-http-utils.ts",
       "^@taquito/utils$": "<rootDir>/packages/taquito-utils/src/taquito-utils.ts",
-      "^@taquito/indexer$": "<rootDir>/packages/taquito-indexer/src/taquito-indexer.ts",
       "^@taquito/signer$": "<rootDir>/packages/taquito-signer/src/taquito-signer.ts",
       "^@taquito/local-forging$": "<rootDir>/packages/taquito-local-forging/src/taquito-local-forging.ts"
     },
