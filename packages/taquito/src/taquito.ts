@@ -47,7 +47,6 @@ export { SubscribeProvider } from './subscribe/interface';
 export interface SetProviderOptions {
   forger?: Forger;
   rpc?: string | RpcClient;
-  stream?: string | SubscribeProvider;
   signer?: Signer;
   protocol?: Protocols;
   config?: Config;
@@ -58,7 +57,6 @@ export interface SetProviderOptions {
  */
 export class TezosToolkit {
   private _rpcClient = new RpcClient();
-  private _stream!: SubscribeProvider;
   private _options: SetProviderOptions = {};
 
   private _context: Context = new Context();
@@ -83,9 +81,8 @@ export class TezosToolkit {
    * @example Tezos.setProvider({config: {confirmationPollingTimeoutSecond: 300}})
    *
    */
-  setProvider({ rpc, stream, signer, protocol, config, forger }: SetProviderOptions) {
+  setProvider({ rpc, signer, protocol, config, forger }: SetProviderOptions) {
     this.setRpcProvider(rpc);
-    this.setStreamProvider(stream);
     this.setSignerProvider(signer);
     this.setForgerProvider(forger);
 
@@ -121,17 +118,6 @@ export class TezosToolkit {
     this._context.forger = f;
   }
 
-  private setStreamProvider(stream: SetProviderOptions['stream']) {
-    if (typeof stream === 'string') {
-      this._stream = new PollingSubscribeProvider(new Context(new RpcClient(stream)));
-    } else if (typeof stream !== 'undefined') {
-      this._stream = stream;
-    } else if (this._options.stream === undefined) {
-      this._stream = new PollingSubscribeProvider(this._context);
-    }
-    this._options.stream = stream;
-  }
-
   /**
    * @description Provide access to tezos account management
    */
@@ -153,13 +139,6 @@ export class TezosToolkit {
    */
   get estimate(): EstimationProvider {
     return this._estimate;
-  }
-
-  /**
-   * @description Provide access to streaming utilities backed by an streamer implementation
-   */
-  get stream(): SubscribeProvider {
-    return this._stream;
   }
 
   /**

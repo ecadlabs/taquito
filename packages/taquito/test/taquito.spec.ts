@@ -49,13 +49,7 @@ describe('TezosToolkit test', () => {
     expect(toolkit.contract).toBeInstanceOf(RpcContractProvider);
   });
 
-  const providerKey: (keyof SetProviderOptions)[] = [
-    'signer',
-    'rpc',
-    'stream',
-    'protocol',
-    'config',
-  ];
+  const providerKey: (keyof SetProviderOptions)[] = ['signer', 'rpc', 'protocol', 'config'];
   providerKey
     .filter(x => x !== 'rpc')
     .forEach(key => {
@@ -79,19 +73,6 @@ describe('TezosToolkit test', () => {
         expect(instance).toEqual('test');
         toolkit.setProvider({ [key]: 'test' as any });
         expect(toolkit.signer).toEqual(instance);
-      });
-    });
-
-  providerKey
-    .filter(x => x !== 'stream')
-    .forEach(key => {
-      it(`setting ${key} provider should not override the stream provider`, () => {
-        expect(toolkit.stream).toBeInstanceOf(PollingSubscribeProvider);
-        toolkit.setProvider({ stream: 'test' as any });
-        const instance = toolkit.stream;
-        expect(instance).toBeInstanceOf(PollingSubscribeProvider);
-        toolkit.setProvider({ [key]: 'test' as any });
-        expect(toolkit.stream).toEqual(instance);
       });
     });
 
