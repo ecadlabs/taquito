@@ -3,6 +3,89 @@ title: Versions
 author: Simon Boissonneault-Robert
 ---
 
+## v6.1.0-beta.0 Release Notes
+
+### Features
+
+#### (Breaking Change) Support for complex keys in Map and BigMap
+
+This release introduces a breaking change to Map and BigMaps. In the forthcoming protocol "Carthage/006_PsCARTHA", it is possible to use a complex type composed of a pair as a key in a Smart Contracts Map or BigMap. This type of key isn't useable in Javascripts Map objects. 
+
+This release introduces `MichelsonMap()` class that provides an abstraction over these details.
+
+Existing code that accesses Map or BigMap storage via the Taquito data abstraction in the following fashion: 
+
+```typescript
+const account = storage.accounts["tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD"]
+```
+
+Must be updated to use the `get()` and `set()` methods as follows;
+
+```typescript
+const account = storage.accounts.get("tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD")
+```
+Additionally, if existing code initializes storage (during contract origination for example), this code must be updated. One can create a new `MichelsonMap()` as follows:
+
+```typescript
+    const map = new MichelsonMap()
+    
+    map.set({firstName:"Joe", lastName: "Bloe"}, "myValue")
+    
+    Tezos.contract.originate({
+        code: myContractWithAPairAsKeyCode,
+        storage: map
+    })
+```
+
+Or one can also use the `fromLiteral` convenience method, as illustrated below.
+
+```typescript
+    Tezos.contract.originate({
+        code: assertContractCode,
+        storage: {
+            owner: "tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD",
+            accounts: MichelsonMap.fromLiteral({
+                "tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD": {
+                    balance: "1",
+                    allowances: MichelsonMap.fromLiteral({
+                      "tz3YjfexGakCDeCseXFUpcXPSAN9xHxE9TH2": "1"
+                    })
+                }   
+            })
+        }
+    })
+```
+
+A pair can by uses as a key as follows:
+
+```typescript
+map.set({firstName:"Joe", lastName: "Bloe"}, "myValue")
+storage.get({firstName:"Joe", lastName: "Bloe"})
+```
+
+[https://github.com/ecadlabs/taquito/issues/251](https://github.com/ecadlabs/taquito/issues/251)
+
+### Documentation
+
+New documentation covering how to interact with Smart Contracts using Taquito [https://tezostaquito.io/docs/smartcontracts/](https://tezostaquito.io/docs/smartcontracts/)
+
+### Improvements & Fixes
+
+* Add a `UnitType` symbol to the `MichelsonEncoder` [#221][[https://github.com/ecadlabs/taquito/issues/221](https://github.com/ecadlabs/taquito/issues/221)]
+* Improved test coverage throughout the project
+* Represent all Operation kinds as an ENUM
+* Fix for handling of Zarith numbers as reported by Doyensec's security audit [https://github.com/ecadlabs/taquito/issues/264](https://github.com/ecadlabs/taquito/issues/264)
+* Validate entrypoint name length as reported by Doyensec's security audit [https://github.com/ecadlabs/taquito/issues/265](https://github.com/ecadlabs/taquito/issues/265)
+* Improve [multi-sig integration test](https://github.com/ecadlabs/taquito/blob/f3a19c4682ba5af2073e72c5d06734860596f455/integration-tests/multisig-contract-scenario.spec.ts) example
+* Add the mutez option in send method for Smart contract abstraction #255
+
+### CDN Bundle
+
+```html
+<script src="https://unpkg.com/@taquito/taquito@6.1.0-beta.0/dist/taquito.min.js"
+crossorigin="anonymous" integrity="sha384-sk4V+57zLUCfkna8z4p1u6CioucJqmeo+QnaiXoFiuE8vdkm7/ae2TNFLbL+Ys02"></script>
+```
+
 ## 6.0.3-beta.0 Local Forging, Batch Ops and more
 
 This release brings several new features to Taquito. In line with our versioning policy, we have also bumped the major release number to v6 on this release, as this version has and continues to be tested against the Carthage testnet. By using this version of Taquito, your application will be compatible with both the Babylonnet protocol and the anticipated Carthage protocol. 
