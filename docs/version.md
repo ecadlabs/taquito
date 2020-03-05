@@ -13,7 +13,7 @@ This release introduces a breaking change to Map and BigMaps. In the forthcoming
 
 This release introduces `MichelsonMap()` class that provides an abstraction over these details.
 
-Existing code that access Map or BigMap storage via the Taquito data abstratction in the following fashion: 
+Existing code that accesses Map or BigMap storage via the Taquito data abstraction in the following fashion: 
 
 ```typescript
 const account = storage.accounts["tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD"]
@@ -24,7 +24,6 @@ Must be updated to use the `get()` and `set()` methods as follows;
 ```typescript
 const account = storage.accounts.get("tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD")
 ```
-
 Additionally, if existing code initializes storage (during contract origination for example), this code must be updated. One can create a new `MichelsonMap()` as follows:
 
 ```typescript
@@ -38,7 +37,7 @@ Additionally, if existing code initializes storage (during contract origination 
     })
 ```
 
-Or one can also use the `fromLiteral` convenience method as illustrated below
+Or one can also use the `fromLiteral` convenience method, as illustrated below.
 
 ```typescript
     Tezos.contract.originate({
@@ -68,7 +67,7 @@ storage.get({firstName:"Joe", lastName: "Bloe"})
 
 ### Documentation
 
-New documentation covering how to interact with Smart Contracts using taquito [https://tezostaquito.io/docs/smartcontracts/](https://tezostaquito.io/docs/smartcontracts/)
+New documentation covering how to interact with Smart Contracts using Taquito [https://tezostaquito.io/docs/smartcontracts/](https://tezostaquito.io/docs/smartcontracts/)
 
 ### Improvements & Fixes
 
