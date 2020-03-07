@@ -68,7 +68,10 @@ describe('Michelson map', () => {
       map.set('key', 'value');
       map.set('key2', 'value2');
 
-      expect(Array.from(map.entries())).toEqual([['key', 'value'], ['key2', 'value2']]);
+      expect(Array.from(map.entries())).toEqual([
+        ['key', 'value'],
+        ['key2', 'value2'],
+      ]);
       expect(Array.from(map.values())).toEqual(['value', 'value2']);
       expect(Array.from(map.keys())).toEqual(['key', 'key2']);
     });

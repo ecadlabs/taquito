@@ -116,7 +116,7 @@ export class MichelsonMap<K extends MichelsonMapKey, T extends any> {
     this.assertTypecheckKey(key);
 
     const strKey = this.serializeDeterministically(key);
-    return this.valueMap.get(strKey);
+    return this.valueMap.get(strKey) ? this.valueMap.get(strKey) : undefined;
   }
 
   /**
