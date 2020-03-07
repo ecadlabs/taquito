@@ -20,10 +20,10 @@ await Tezos.contract.transfer({ to: contract.address, amount: 1 })
 
 In the following example we will transfer 0.5ꜩ from a `tz1aaYoabvj2DQtpHz74Z83fSNjY29asdBfZ` address that will sign the operation to `tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY`.
 ```js live noInline
-Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/babylonnet' });
+Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/carthagenet' });
 
 render(`Fetching a private key...`);
-fetch('https://api.tez.ie/keys/babylonnet/', {
+fetch('https://api.tez.ie/keys/carthagenet/', {
     method: 'POST',
     headers: { 'Authorization': 'Bearer taquito-example' }
   })
@@ -61,7 +61,7 @@ In order to transfer tokens from a KT1 addresses with the new `manager.tz` contr
 
 Sending 50 mutez from `kt1...` to `tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh`.
 
-### Example transfer from a KT1 to a tz1 address on Babylon/Proto005
+### Example transfer from a KT1 to a tz1 address on Carthage/Proto006
 
 ```js
 const contract = await Tezos.contract.at("kt1...")

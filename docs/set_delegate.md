@@ -36,7 +36,7 @@ In order to delegate for a KT1 addresses with the new `manager.tz` contract, a c
 > 
 > For the time being, we regard KT1 manager accounts as a regular smart contract. In fact, it is possible to have a smart contract that is not following the manager.tz conventions and that also delegates to a baker. The correct lambda to pass to a contract in order to delegate is application/wallet specific. Therefore Taquito does not make any assumption on the KT1.
 
-### Example of delegation for a KT1 on Babylon/Proto005
+### Example of delegation for a KT1 on Carthage/Proto006
 
 ```js
 const contract = await Tezos.contract.at("kt1...")

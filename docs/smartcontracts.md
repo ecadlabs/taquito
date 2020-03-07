@@ -92,7 +92,7 @@ We can inspect the contract methods and data types using the `c.parameterSchema.
 The following example shows how to load the contact, and view the methods on that contract.
 
 ```js live noInline
-Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/babylonnet' });
+Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/carthagenet' });
 
 Tezos.contract.at('KT1LjpCPTqGajeaXfLM3WV7csatSgyZcTDQ8')
 .then(c => {
@@ -114,7 +114,7 @@ In Tezos, to call an entrypoint on a contract, one must send a transfer operatio
 We can inspect the transfer params produced by Taquito using the `toTransferParams()` method as follows.
 
 ```js live noInline
-Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/babylonnet' });
+Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/carthagenet' });
 
 Tezos.contract.at('KT1LjpCPTqGajeaXfLM3WV7csatSgyZcTDQ8')
 .then(c => {
@@ -133,10 +133,10 @@ We call the `send()` method on the `increment()` method. Taquito then forges thi
 Then we wait for the `confirmation(3)` to complete. The `3` number tells Taquito how many confirmations to wait for before resolving the promise. `3` is a good value for this type of demonstration, but we recommend a higher value if you are dealing with mainnet transactions.
 
 ```js live noInline
-Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/babylonnet' });
+Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/carthagenet' });
 
 render(`Fetching temporary private key for testing...`);
-fetch('https://api.tez.ie/keys/babylonnet/', {
+fetch('https://api.tez.ie/keys/carthagenet/', {
     method: 'POST',
     headers: { 'Authorization': 'Bearer taquito-example' }
   })
@@ -156,7 +156,7 @@ fetch('https://api.tez.ie/keys/babylonnet/', {
     render(`Awaiting for ${op.hash} to be confirmed...`)
     return op.confirmation(3).then(() => op.hash)
   })
-  .then(hash => render(`Operation injected: https://babylonnet.tzstats.com/${hash}`))
+  .then(hash => render(`Operation injected: https://carthagenet.tzstats.com/${hash}`))
   .catch(error => render(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
