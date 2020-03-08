@@ -40,10 +40,10 @@ fetch('https://api.tez.ie/keys/carthagenet/', {
     return Tezos.contract.transfer({ to: address, amount: amount });
   })
   .then(op => {
-    render(`Waiting for a confirmation...`);
-    return op.confirmation();
+    render(`Waiting for ${op.hash} to be confirmed...`);
+    return op.confirmation(3).then(() => op.hash);
   })
-  .then(block => render(`Block height: ${block}`))
+  .then(hash => render(`Operation injected: https://carthagenet.tzstats.com/${hash}`))
   .catch(error => render(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
