@@ -145,7 +145,7 @@ fetch('https://api.tez.ie/keys/carthagenet/', {
 
 ### Interact with a smart contract
 
-Calling smart contract operations require a configured signer, in this example we will use a faucet key. The source for the smart contract [KT1LjpCPTqGajeaXfLM3WV7csatSgyZcTDQ8][smart_contract_on_better_call_dev] used in this example can be found in a [Ligo Web IDE][smart_contract_source].
+Calling smart contract operations require a configured signer, in this example we will use a faucet key. The source for the smart contract [KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC][smart_contract_on_better_call_dev] used in this example can be found in a [Ligo Web IDE][smart_contract_source].
 
 ```js live noInline
 Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/carthagenet' });
@@ -160,7 +160,7 @@ fetch('https://api.tez.ie/keys/carthagenet/', {
     render(`Importing the private key...`);
     return Tezos.importKey(privateKey);
   })
-  .then(() => Tezos.contract.at('KT1LjpCPTqGajeaXfLM3WV7csatSgyZcTDQ8'))
+  .then(() => Tezos.contract.at('KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC'))
   .then(contract => {
     const i = 7;
 
@@ -174,4 +174,4 @@ fetch('https://api.tez.ie/keys/carthagenet/', {
 
 [boilerplate]: https://github.com/ecadlabs/taquito-boilerplate
 [smart_contract_source]: https://ide.ligolang.org/p/CelcoaDRK5mLFDmr5rSWug
-[smart_contract_on_better_call_dev]: https://better-call.dev/carthage/KT1LjpCPTqGajeaXfLM3WV7csatSgyZcTDQ8/operations
+[smart_contract_on_better_call_dev]: https://better-call.dev/carthage/KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC/operations

@@ -60,9 +60,3 @@ const setDelegate = (key: string) => {
   ];
 };
 ```
-
-### Example for Athens/Proto004
-
-```js
-await Tezos.contract.setDelegate({ delegate: 'tz1_baker', source: 'KT1...' })
-```

@@ -13,7 +13,7 @@ Michelson is a somewhat specialized language that isn't typical in Javascript or
 
 ## Taquito's Smart Contract Abstraction
 
-Taquito assists developers by reading the Michelson code for a given contract from the blockchain. Based on the retrieved Michelson code, Taquito generates a `contract` javascript object with methods and storage that correspond to the contacts Michelson entrypoints, storage definitions and values.
+Taquito assists developers by reading the Michelson code for a given contract from the blockchain. Based on the retrieved Michelson code, Taquito generates a `contract` javascript object with methods and storage that correspond to the contract's Michelson entrypoints, storage definitions and values.
 
 ## The Counter Contract
 
@@ -89,12 +89,12 @@ You can view this contract and deploy it to a testnet using the [Ligo WebIDE][2]
 To load the contract from the Tezos Blockchain, we use the `Tezos.contract.at` method.
 We can inspect the contract methods and data types using the `c.parameterSchema.ExtractSignatures()` method.
 
-The following example shows how to load the contact, and view the methods on that contract.
+The following example shows how to load the contract, and view the methods on that contract.
 
 ```js live noInline
 Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/carthagenet' });
 
-Tezos.contract.at('KT1LjpCPTqGajeaXfLM3WV7csatSgyZcTDQ8')
+Tezos.contract.at('KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC')
 .then(c => {
     let methods = c.parameterSchema.ExtractSignatures()
     render(JSON.stringify(methods, null, 2))
@@ -116,7 +116,7 @@ We can inspect the transfer params produced by Taquito using the `toTransferPara
 ```js live noInline
 Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/carthagenet' });
 
-Tezos.contract.at('KT1LjpCPTqGajeaXfLM3WV7csatSgyZcTDQ8')
+Tezos.contract.at('KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC')
 .then(c => {
     let incrementParams = c.methods.increment(2).toTransferParams()
     render(JSON.stringify(incrementParams, null, 2))
@@ -145,7 +145,7 @@ fetch('https://api.tez.ie/keys/carthagenet/', {
     render(`Importing the private key...`);
     return Tezos.importKey(privateKey);
   })
-  .then(() => Tezos.contract.at('KT1LjpCPTqGajeaXfLM3WV7csatSgyZcTDQ8'))
+  .then(() => Tezos.contract.at('KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC'))
   .then(contract => {
     const i = 7;
 
