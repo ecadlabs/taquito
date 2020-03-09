@@ -18,7 +18,8 @@ export class HttpResponseError implements Error {
     public message: string,
     public status: STATUS_CODE,
     public statusText: string,
-    public body: string
+    public body: string,
+    public url: string
   ) {}
 }
 
@@ -105,7 +106,8 @@ export class HttpBackend {
               `Http error response: (${this.status}) ${request.response}`,
               this.status as STATUS_CODE,
               request.statusText,
-              request.response
+              request.response,
+              url
             )
           );
         }
