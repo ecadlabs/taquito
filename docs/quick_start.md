@@ -116,10 +116,10 @@ Tezos.importKey(
 The transfer operation requires a configured signer. In this example we will use a private key that we will get from a service that was implemented for demonstration purposes and should only be used for testing and development.
 
 ```js live noInline
-Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/babylonnet' });
+Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/carthagenet' });
 
 render(`Fetching a private key...`);
-fetch('https://api.tez.ie/keys/babylonnet/', {
+fetch('https://api.tez.ie/keys/carthagenet/', {
     method: 'POST',
     headers: { 'Authorization': 'Bearer taquito-example' }
   })
@@ -136,22 +136,22 @@ fetch('https://api.tez.ie/keys/babylonnet/', {
     return Tezos.contract.transfer({ to: address, amount: amount });
   })
   .then(op => {
-    render(`Waiting for a confirmation...`);
-    return op.confirmation();
+    render(`Waiting for ${op.hash} to be confirmed...`);
+    return op.confirmation(1).then(() => op.hash);
   })
-  .then(block => render(`Block height: ${block}`))
+  .then(hash => render(`Operation injected: https://carthagenet.tzstats.com/${hash}`))
   .catch(error => render(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 ### Interact with a smart contract
 
-Calling smart contract operations require a configured signer, in this example we will use a faucet key. The source for the smart contract [KT1LjpCPTqGajeaXfLM3WV7csatSgyZcTDQ8][smart_contract_on_better_call_dev] used in this example can be found in a [Ligo Web IDE][smart_contract_source].
+Calling smart contract operations require a configured signer, in this example we will use a faucet key. The source for the smart contract [KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC][smart_contract_on_better_call_dev] used in this example can be found in a [Ligo Web IDE][smart_contract_source].
 
 ```js live noInline
-Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/babylonnet' });
+Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/carthagenet' });
 
 render(`Fetching a private key...`);
-fetch('https://api.tez.ie/keys/babylonnet/', {
+fetch('https://api.tez.ie/keys/carthagenet/', {
     method: 'POST',
     headers: { 'Authorization': 'Bearer taquito-example' }
   })
@@ -160,18 +160,21 @@ fetch('https://api.tez.ie/keys/babylonnet/', {
     render(`Importing the private key...`);
     return Tezos.importKey(privateKey);
   })
-  .then(() => Tezos.contract.at('KT1LjpCPTqGajeaXfLM3WV7csatSgyZcTDQ8'))
+  .then(() => Tezos.contract.at('KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC'))
   .then(contract => {
     const i = 7;
 
     render(`Incrementing storage value by ${i}...`);
     return contract.methods.increment(i).send();
   })
-  .then(op => op.confirmation())
-  .then(block => render(`Block height: ${block}`))
+  .then(op => {
+    render(`Waiting for ${op.hash} to be confirmed...`);
+    return op.confirmation(1).then(() => op.hash);
+  })
+  .then(hash => render(`Operation injected: https://carthagenet.tzstats.com/${hash}`))
   .catch(error => render(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 [boilerplate]: https://github.com/ecadlabs/taquito-boilerplate
 [smart_contract_source]: https://ide.ligolang.org/p/CelcoaDRK5mLFDmr5rSWug
-[smart_contract_on_better_call_dev]: https://better-call.dev/babylon/KT1LjpCPTqGajeaXfLM3WV7csatSgyZcTDQ8/operations
+[smart_contract_on_better_call_dev]: https://better-call.dev/carthage/KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC/operations
