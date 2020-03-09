@@ -137,7 +137,7 @@ fetch('https://api.tez.ie/keys/carthagenet/', {
   })
   .then(op => {
     render(`Waiting for ${op.hash} to be confirmed...`);
-    return op.confirmation(3).then(() => op.hash);
+    return op.confirmation(1).then(() => op.hash);
   })
   .then(hash => render(`Operation injected: https://carthagenet.tzstats.com/${hash}`))
   .catch(error => render(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
@@ -169,7 +169,7 @@ fetch('https://api.tez.ie/keys/carthagenet/', {
   })
   .then(op => {
     render(`Waiting for ${op.hash} to be confirmed...`);
-    return op.confirmation(3).then(() => op.hash);
+    return op.confirmation(1).then(() => op.hash);
   })
   .then(hash => render(`Operation injected: https://carthagenet.tzstats.com/${hash}`))
   .catch(error => render(`Error: ${JSON.stringify(error, null, 2)}`));
