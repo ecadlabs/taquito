@@ -47,6 +47,7 @@ const defaultChain = 'main';
 
 interface RPCOptions {
   block: string;
+  offset?: number;
 }
 
 const defaultRPCOptions: RPCOptions = { block: 'head' };
@@ -345,9 +346,19 @@ export class RpcClient {
    *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id
    */
-  async getBlock({ block }: RPCOptions = defaultRPCOptions): Promise<BlockResponse> {
+  async getBlock({ block, offset }: RPCOptions = defaultRPCOptions): Promise<BlockResponse> {
+    let blockNumber: string;
+    if (block === 'head' && !offset) {
+      blockNumber = 'head';
+    } else if (block === 'head' && offset) {
+      blockNumber = `head~${offset}`;
+    } else if (block !== 'head' && offset) {
+      blockNumber = `${parseInt(block, 10) - offset}`;
+    } else {
+      blockNumber = block;
+    }
     const response = await this.httpBackend.createRequest<BlockResponse>({
-      url: this.createURL(`/chains/${this.chain}/blocks/${block}`),
+      url: this.createURL(`/chains/${this.chain}/blocks/${blockNumber.toString()}`),
       method: 'GET',
     });
 
