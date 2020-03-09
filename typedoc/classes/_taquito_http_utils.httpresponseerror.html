@@ -101,6 +101,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_taquito_http_utils.httpresponseerror.html#name" class="tsd-kind-icon">name</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_taquito_http_utils.httpresponseerror.html#status" class="tsd-kind-icon">status</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_taquito_http_utils.httpresponseerror.html#statustext" class="tsd-kind-icon">status<wbr>Text</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_taquito_http_utils.httpresponseerror.html#url" class="tsd-kind-icon">url</a></li>
 							</ul>
 						</section>
 					</div>
@@ -112,13 +113,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Http<wbr>Response<wbr>Error<span class="tsd-signature-symbol">(</span>message<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, status<span class="tsd-signature-symbol">: </span><a href="../enums/_taquito_http_utils.status_code-1.html" class="tsd-signature-type">STATUS_CODE</a>, statusText<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, body<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_taquito_http_utils.httpresponseerror.html" class="tsd-signature-type">HttpResponseError</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Http<wbr>Response<wbr>Error<span class="tsd-signature-symbol">(</span>message<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, status<span class="tsd-signature-symbol">: </span><a href="../enums/_taquito_http_utils.status_code-1.html" class="tsd-signature-type">STATUS_CODE</a>, statusText<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, body<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_taquito_http_utils.httpresponseerror.html" class="tsd-signature-type">HttpResponseError</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/6fc6607/packages/taquito-http-utils/src/taquito-http-utils.ts#L22">taquito-http-utils/src/taquito-http-utils.ts:22</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/327ab56/packages/taquito-http-utils/src/taquito-http-utils.ts#L22">taquito-http-utils/src/taquito-http-utils.ts:22</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -135,6 +136,9 @@
 								<li>
 									<h5>body: <span class="tsd-signature-type">string</span></h5>
 								</li>
+								<li>
+									<h5>url: <span class="tsd-signature-type">string</span></h5>
+								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_taquito_http_utils.httpresponseerror.html" class="tsd-signature-type">HttpResponseError</a></h4>
 						</li>
@@ -149,7 +153,7 @@
 					<div class="tsd-signature tsd-kind-icon">body<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/6fc6607/packages/taquito-http-utils/src/taquito-http-utils.ts#L28">taquito-http-utils/src/taquito-http-utils.ts:28</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/327ab56/packages/taquito-http-utils/src/taquito-http-utils.ts#L28">taquito-http-utils/src/taquito-http-utils.ts:28</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -159,7 +163,7 @@
 					<div class="tsd-signature tsd-kind-icon">message<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/6fc6607/packages/taquito-http-utils/src/taquito-http-utils.ts#L25">taquito-http-utils/src/taquito-http-utils.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/327ab56/packages/taquito-http-utils/src/taquito-http-utils.ts#L25">taquito-http-utils/src/taquito-http-utils.ts:25</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -169,7 +173,7 @@
 					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;HttpResponse&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/6fc6607/packages/taquito-http-utils/src/taquito-http-utils.ts#L22">taquito-http-utils/src/taquito-http-utils.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/327ab56/packages/taquito-http-utils/src/taquito-http-utils.ts#L22">taquito-http-utils/src/taquito-http-utils.ts:22</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -179,7 +183,7 @@
 					<div class="tsd-signature tsd-kind-icon">status<span class="tsd-signature-symbol">:</span> <a href="../enums/_taquito_http_utils.status_code-1.html" class="tsd-signature-type">STATUS_CODE</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/6fc6607/packages/taquito-http-utils/src/taquito-http-utils.ts#L26">taquito-http-utils/src/taquito-http-utils.ts:26</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/327ab56/packages/taquito-http-utils/src/taquito-http-utils.ts#L26">taquito-http-utils/src/taquito-http-utils.ts:26</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -189,7 +193,17 @@
 					<div class="tsd-signature tsd-kind-icon">status<wbr>Text<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/6fc6607/packages/taquito-http-utils/src/taquito-http-utils.ts#L27">taquito-http-utils/src/taquito-http-utils.ts:27</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/327ab56/packages/taquito-http-utils/src/taquito-http-utils.ts#L27">taquito-http-utils/src/taquito-http-utils.ts:27</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="url" class="tsd-anchor"></a>
+					<h3>url</h3>
+					<div class="tsd-signature tsd-kind-icon">url<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/327ab56/packages/taquito-http-utils/src/taquito-http-utils.ts#L29">taquito-http-utils/src/taquito-http-utils.ts:29</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -269,6 +283,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_taquito_http_utils.httpresponseerror.html#statustext" class="tsd-kind-icon">status<wbr>Text</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_taquito_http_utils.httpresponseerror.html#url" class="tsd-kind-icon">url</a>
 							</li>
 						</ul>
 					</li>
