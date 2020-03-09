@@ -1,5 +1,12 @@
 import { STATUS_CODE } from './status_code';
 
+// tslint:disable: strict-type-predicates
+const isNode =
+  typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
+// tslint:enable: strict-type-predicates
+
+const XMLHttpRequestCTOR = isNode ? require('xhr2-cookies').XMLHttpRequest : XMLHttpRequest;
+
 export * from './status_code';
 
 const defaultTimeout = 30000;
@@ -67,19 +74,7 @@ export class HttpBackend {
   }
 
   private createXHR(): XMLHttpRequest {
-    // tslint:disable: strict-type-predicates
-    if (
-      typeof process !== 'undefined' &&
-      process.versions != null &&
-      process.versions.node != null
-      // tslint:enable: strict-type-predicates
-    ) {
-      const NodeXHR = require('xhr2-cookies').XMLHttpRequest;
-      const request = new NodeXHR();
-      return request;
-    } else {
-      return new XMLHttpRequest();
-    }
+    return new XMLHttpRequestCTOR();
   }
 
   /**
