@@ -229,7 +229,6 @@ export interface OperationContentsAndResultProposals {
   source: string;
   period: number;
   proposals: string[];
-  metadata: any;
 }
 
 export interface OperationContentsAndResultBallot {
@@ -238,7 +237,6 @@ export interface OperationContentsAndResultBallot {
   period: number;
   proposal: string;
   ballot: OperationContentsBallotEnum;
-  metadata: any;
 }
 
 export interface OperationContentsAndResultReveal {

@@ -1,8 +1,5 @@
-import {
-  MichelsonV1ExpressionBase,
-  PreapplyResponse,
-  TezosGenericOperationError,
-} from '@taquito/rpc';
+import { MichelsonV1ExpressionBase, OperationResultDelegation, OperationResultOrigination, OperationResultReveal, OperationResultTransaction, PreapplyResponse, TezosGenericOperationError } from '@taquito/rpc';
+import { hasMetadata, hasMetadataWithInternalOperationResult, hasMetadataWithResult } from './types';
 
 export interface TezosOperationErrorWithMessage extends TezosGenericOperationError {
   with: MichelsonV1ExpressionBase;
@@ -37,21 +34,28 @@ export class TezosPreapplyFailureError implements Error {
   name: string = 'TezosPreapplyFailureError';
   message: string = 'Preapply returned an unexpected result';
 
-  constructor(public result: any) {}
+  constructor(public result: any) { }
+}
+
+export type MergedOperationResult = OperationResultDelegation & OperationResultOrigination & OperationResultTransaction & OperationResultReveal & {
+  fee?: string
 }
 
 export const flattenOperationResult = (response: PreapplyResponse | PreapplyResponse[]) => {
   let results = Array.isArray(response) ? response : [response];
 
-  let returnedResults: any[] = [];
+  let returnedResults: MergedOperationResult[] = [];
   for (let i = 0; i < results.length; i++) {
     for (let j = 0; j < results[i].contents.length; j++) {
       const content = results[i].contents[j];
-      if ('metadata' in content && typeof content.metadata.operation_result !== 'undefined') {
-        returnedResults.push(content.metadata.operation_result);
+      if (hasMetadataWithResult(content)) {
+        returnedResults.push({
+          fee: content.fee,
+          ...content.metadata.operation_result
+        });
 
         if (Array.isArray(content.metadata.internal_operation_results)) {
-          content.metadata.internal_operation_results.forEach((x: any) =>
+          content.metadata.internal_operation_results.forEach((x) =>
             returnedResults.push(x.result)
           );
         }
@@ -76,14 +80,14 @@ export const flattenErrors = (
   for (let i = 0; i < results.length; i++) {
     for (let j = 0; j < results[i].contents.length; j++) {
       const content = results[i].contents[j];
-      if ('metadata' in content) {
+      if (hasMetadata(content)) {
         if (
-          typeof content.metadata.operation_result !== 'undefined' &&
+          hasMetadataWithResult(content) &&
           content.metadata.operation_result.status === status
         ) {
           errors = errors.concat(content.metadata.operation_result.errors || []);
         }
-        if (Array.isArray(content.metadata.internal_operation_results)) {
+        if (hasMetadataWithInternalOperationResult(content) && Array.isArray(content.metadata.internal_operation_results)) {
           for (const internalResult of content.metadata.internal_operation_results) {
             if ('result' in internalResult && internalResult.result.status === status) {
               errors = errors.concat(internalResult.result.errors || []);
