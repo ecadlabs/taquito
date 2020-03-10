@@ -68,7 +68,7 @@ export class RpcClient {
     private url: string = defaultRPC,
     private chain: string = defaultChain,
     private httpBackend: HttpBackend = new HttpBackend()
-  ) {}
+  ) { }
 
   private createURL(path: string) {
     // Trim trailing slashes because it is assumed to be included in path
@@ -89,6 +89,22 @@ export class RpcClient {
       method: 'GET',
     });
     return hash;
+  }
+
+  /**
+   *
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description List the ancestors of the given block which, if referred to as the branch in an operation header, are recent enough for that operation to be included in the current block.
+   *
+   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-live-blocks
+   */
+  async getLiveBlocks({ block }: RPCOptions = defaultRPCOptions): Promise<string[]> {
+    const blocks = await this.httpBackend.createRequest<string[]>({
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/live_blocks`),
+      method: 'GET',
+    });
+    return blocks;
   }
 
   /**

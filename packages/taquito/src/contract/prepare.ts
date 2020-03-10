@@ -83,8 +83,8 @@ export const createTransferOperation = async ({
     operation.parameters = rawParam
       ? parameter
       : typeof parameter === 'string'
-      ? sexp2mic(parameter)
-      : parameter;
+        ? sexp2mic(parameter)
+        : parameter;
   }
   return operation;
 };

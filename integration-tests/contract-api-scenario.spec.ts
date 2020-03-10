@@ -1,5 +1,6 @@
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, MANAGER_LAMBDA, TezosToolkit, Protocols, MichelsonMap } from "@taquito/taquito";
-import { Contract } from "taquito/src/contract/contract";
+import { ContractAbstraction } from "taquito/src/contract/contract";
+
 import { CONFIGS } from "./config";
 import { badCode } from "./data/badCode";
 import { booleanCode } from "./data/boolean_parameter";
@@ -652,7 +653,7 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress, protocol }) => {
 
   describe('Estimate scenario', () => {
     let LowAmountTez: TezosToolkit;
-    let contract: Contract;
+    let contract: ContractAbstraction;
     const amt = 2000000 + DEFAULT_FEE.REVEAL;
 
     beforeAll(async (done) => {

@@ -11,7 +11,7 @@ import {
   tap,
 } from 'rxjs/operators';
 import { Context } from '../context';
-import { ForgedBytes } from './types';
+import { ForgedBytes, hasMetadataWithResult } from './types';
 
 interface PollingConfig {
   timeout: number;
@@ -109,8 +109,8 @@ export class Operation {
   public get status() {
     return (
       this.results.map(result => {
-        if (result.metadata && result.metadata.operation_result) {
-          return result.metadata.operation_result.status as OperationResultStatusEnum;
+        if (hasMetadataWithResult(result)) {
+          return result.metadata.operation_result.status;
         } else {
           return 'unknown';
         }
