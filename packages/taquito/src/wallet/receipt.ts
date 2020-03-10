@@ -1,14 +1,24 @@
-import { OperationContentsAndResult } from "@taquito/rpc";
-import BigNumber from "bignumber.js";
-import { flattenOperationResult } from "../operations/operation-errors";
+import { OperationContentsAndResult } from '@taquito/rpc';
+import BigNumber from 'bignumber.js';
+import { flattenOperationResult } from '../operations/operation-errors';
 
-export const receiptFromOperation = (op: OperationContentsAndResult[], {
-  ALLOCATION_BURN,
-  ORIGINATION_BURN
-} = {
+export interface Receipt {
+  totalFee: BigNumber;
+  totalGas: BigNumber;
+  totalStorage: BigNumber;
+  totalAllocationBurn: BigNumber;
+  totalOriginationBurn: BigNumber;
+  totalPaidStorageDiff: BigNumber;
+  totalStorageBurn: BigNumber;
+}
+
+export const receiptFromOperation = (
+  op: OperationContentsAndResult[],
+  { ALLOCATION_BURN, ORIGINATION_BURN } = {
     ALLOCATION_BURN: 257,
-    ORIGINATION_BURN: 257
-  }) => {
+    ORIGINATION_BURN: 257,
+  }
+): Receipt => {
   const operationResults = flattenOperationResult({ contents: op });
   let totalGas = new BigNumber(0);
   let totalStorage = new BigNumber(0);
@@ -18,16 +28,24 @@ export const receiptFromOperation = (op: OperationContentsAndResult[], {
   let totalPaidStorageDiff = new BigNumber(0);
   operationResults.forEach(result => {
     totalFee = totalFee.plus(result.fee || 0);
-    totalOriginationBurn = totalOriginationBurn.plus(Array.isArray(result.originated_contracts)
-      ? result.originated_contracts.length * ORIGINATION_BURN
-      : 0);
-    totalAllocationBurn = totalAllocationBurn.plus('allocated_destination_contract' in result ? ALLOCATION_BURN : 0);
+    totalOriginationBurn = totalOriginationBurn.plus(
+      Array.isArray(result.originated_contracts)
+        ? result.originated_contracts.length * ORIGINATION_BURN
+        : 0
+    );
+    totalAllocationBurn = totalAllocationBurn.plus(
+      'allocated_destination_contract' in result ? ALLOCATION_BURN : 0
+    );
     totalGas = totalGas.plus(result.consumed_gas || 0);
     totalPaidStorageDiff = totalPaidStorageDiff.plus(
-      'paid_storage_size_diff' in result ? Number(result.paid_storage_size_diff) || 0 : 0)
+      'paid_storage_size_diff' in result ? Number(result.paid_storage_size_diff) || 0 : 0
+    );
   });
 
-  totalStorage = totalStorage.plus(totalAllocationBurn).plus(totalOriginationBurn).plus(totalPaidStorageDiff)
+  totalStorage = totalStorage
+    .plus(totalAllocationBurn)
+    .plus(totalOriginationBurn)
+    .plus(totalPaidStorageDiff);
 
   return {
     totalFee,
@@ -36,6 +54,6 @@ export const receiptFromOperation = (op: OperationContentsAndResult[], {
     totalAllocationBurn,
     totalOriginationBurn,
     totalPaidStorageDiff,
-    totalStorageBurn: new BigNumber(totalStorage.multipliedBy(1000))
-  }
-}
+    totalStorageBurn: new BigNumber(totalStorage.multipliedBy(1000)),
+  };
+};

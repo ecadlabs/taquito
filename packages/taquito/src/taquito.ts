@@ -15,7 +15,6 @@ import { WalletProvider } from './wallet/interface';
 import { LegacyWallet } from './wallet/legacy';
 import { OperationFactory } from './wallet/opreation-factory';
 
-
 export * from './signer/interface';
 export * from './subscribe/interface';
 export * from './forger/interface';
@@ -33,9 +32,7 @@ export { SubscribeProvider } from './subscribe/interface';
 export { PollingSubscribeProvider } from './subscribe/polling-provider';
 export { RpcForger } from './forger/rpc-forger';
 export { CompositeForger } from './forger/composite-forger';
-export {
-  UnitValue,
-} from '@taquito/michelson-encoder';
+export { UnitValue, MichelsonMap } from '@taquito/michelson-encoder';
 
 export {
   TezosOperationError,
@@ -44,7 +41,7 @@ export {
 } from './operations/operation-errors';
 
 export * from './tz/interface';
-export * from './wallet'
+export * from './wallet';
 
 export interface SetProviderOptions {
   forger?: Forger;

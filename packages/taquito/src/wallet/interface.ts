@@ -1,23 +1,28 @@
-import { ContractSchema, WalletContract } from "../contract";
-import { DelegateParams, OriginateParams, TransferParams } from "../operations/types";
-import { WalletOperation } from "./operation";
-import { OriginationWalletOperation } from "./origination-operation";
-import { DelegationWalletOperation } from "./delegation-operation";
+import { WalletContract } from '../contract';
+import { DelegateParams, OriginateParams, TransferParams } from '../operations/types';
+import { DelegationWalletOperation } from './delegation-operation';
+import { WalletOperation } from './operation';
+import { OriginationWalletOperation } from './origination-operation';
 
 export interface PKHOption {
-  forceRefetch?: boolean
+  forceRefetch?: boolean;
 }
 
-export type WalletDefinedFields = 'fee' | 'gasLimit' | 'storageLimit' | 'source'
+export type WalletDefinedFields = 'fee' | 'gasLimit' | 'storageLimit' | 'source';
 
-export type WalletTransferParams = Omit<TransferParams, WalletDefinedFields>
+export type WalletTransferParams = Omit<TransferParams, WalletDefinedFields>;
 
-export type WalletOriginateParams = Omit<OriginateParams, WalletDefinedFields>
+export type WalletOriginateParams = Omit<OriginateParams, WalletDefinedFields>;
 
-export type WalletDelegateParams = Omit<DelegateParams, WalletDefinedFields>
+export type WalletDelegateParams = Omit<DelegateParams, WalletDefinedFields>;
 
 export interface WalletProvider {
-
+  /**
+   * @description Retrieve the PKH of the account that is currently in use by the wallet
+   *
+   * @param option Option to use while fetching the PKH.
+   * If forceRefetch is specified the wallet provider implementation will refetch the PKH from the wallet
+   */
   pkh(option?: PKHOption): Promise<string>;
 
   /**
@@ -57,5 +62,13 @@ export interface WalletProvider {
    * @param transferParams operation parameter
    */
   transfer(transferParams: WalletTransferParams): Promise<WalletOperation>;
-  at(address: string, schema?: ContractSchema): Promise<WalletContract>;
+
+  /**
+   *
+   * @description Create an smart contract abstraction for the address specified. Calling entrypoints with the returned
+   * smart contract abstraction will leverage the wallet provider to make smart contract calls
+   *
+   * @param address Smart contract address
+   */
+  at(address: string): Promise<WalletContract>;
 }

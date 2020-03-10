@@ -10,15 +10,18 @@ export type ParamsWithKind =
   | withKind<TransferParams, OpKind.TRANSACTION>
   | withKind<ActivationParams, OpKind.ACTIVATION>;
 
-export const findWithKind = <T extends { kind: OpKind }, K extends OpKind>(arr: T[], kind: K): (T & { kind: K } | never) | undefined => {
+export const findWithKind = <T extends { kind: OpKind }, K extends OpKind>(
+  arr: T[],
+  kind: K
+): (T & { kind: K }) | undefined => {
   if (Array.isArray(arr)) {
-    const found = arr.find((op) => op.kind === kind)
+    const found = arr.find(op => op.kind === kind);
 
     if (found && isKind(found, kind)) {
       return found;
     }
   }
-}
+};
 
 export const isKind = <T extends { kind: OpKind }, K extends OpKind>(
   op: T,
@@ -56,27 +59,33 @@ export const isSourceOp = <T extends { kind: OpKind }>(op: T): op is withKind<T,
   return ['transaction', 'delegation', 'origination', 'reveal', 'ballot'].indexOf(op.kind) !== -1;
 };
 
-export const hasMetadata = <T extends { kind: OpKind }, K>(op: T): op is T & {
-  metadata: K
+export const hasMetadata = <T extends { kind: OpKind }, K>(
+  op: T
+): op is T & {
+  metadata: K;
 } => {
   return 'metadata' in op;
-}
+};
 
-export const hasMetadataWithResult = <T extends { kind: OpKind }, K>(op: T): op is T & {
+export const hasMetadataWithResult = <T extends { kind: OpKind }, K>(
+  op: T
+): op is T & {
   metadata: {
-    operation_result: K
-  }
+    operation_result: K;
+  };
 } => {
   return hasMetadata<T, any>(op) && 'operation_result' in op.metadata;
-}
+};
 
-export const hasMetadataWithInternalOperationResult = <T extends { kind: OpKind }, K>(op: T): op is T & {
+export const hasMetadataWithInternalOperationResult = <T extends { kind: OpKind }, K>(
+  op: T
+): op is T & {
   metadata: {
-    internal_operation_results?: K
-  }
+    internal_operation_results?: K;
+  };
 } => {
   return hasMetadata<T, any>(op) && 'internal_operation_results' in op.metadata;
-}
+};
 
 export interface GasConsumingOperation {
   consumedGas?: string;
@@ -108,13 +117,13 @@ export type OriginateParamsBase = {
 export type OriginateParams = OriginateParamsBase &
   (
     | {
-      init?: never;
-      storage: any;
-    }
+        init?: never;
+        storage: any;
+      }
     | {
-      init: string | object;
-      storage?: never;
-    }
+        init: string | object;
+        storage?: never;
+      }
   );
 
 export interface ActivationParams {
