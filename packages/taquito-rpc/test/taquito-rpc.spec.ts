@@ -631,7 +631,6 @@ describe('RpcClient test', () => {
       const endorsement = response.operations[0][0]
         .contents[0] as OperationContentsAndResultEndorsement;
       expect(endorsement.metadata.balance_updates[0].kind).toEqual('contract');
-
       done();
     });
   });
