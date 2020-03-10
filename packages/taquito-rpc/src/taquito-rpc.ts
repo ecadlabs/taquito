@@ -339,11 +339,14 @@ export class RpcClient {
 
   /**
    *
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls. See examples for various available sytaxes.
    *
    * @description All the information about a block
    *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id
+   * @example getBlock() will default to /main/chains/block/head.
+   * @example getBlock({ block: head~2 }) will return an offset of 2 blocks.
+   * @example getBlock({ block: BL8fTiWcSxWCjiMVnDkbh6EuhqVPZzgWheJ2dqwrxYRm9AephXh~2 }) will return an offset of 2 blocks from given block hash..
    */
   async getBlock({ block }: RPCOptions = defaultRPCOptions): Promise<BlockResponse> {
     const response = await this.httpBackend.createRequest<BlockResponse>({
