@@ -1,5 +1,17 @@
-import { MichelsonV1ExpressionBase, OperationResultDelegation, OperationResultOrigination, OperationResultReveal, OperationResultTransaction, PreapplyResponse, TezosGenericOperationError } from '@taquito/rpc';
-import { hasMetadata, hasMetadataWithInternalOperationResult, hasMetadataWithResult } from './types';
+import {
+  MichelsonV1ExpressionBase,
+  OperationResultDelegation,
+  OperationResultOrigination,
+  OperationResultReveal,
+  OperationResultTransaction,
+  PreapplyResponse,
+  TezosGenericOperationError,
+} from '@taquito/rpc';
+import {
+  hasMetadata,
+  hasMetadataWithInternalOperationResult,
+  hasMetadataWithResult,
+} from './types';
 
 export interface TezosOperationErrorWithMessage extends TezosGenericOperationError {
   with: MichelsonV1ExpressionBase;
@@ -34,13 +46,21 @@ export class TezosPreapplyFailureError implements Error {
   name: string = 'TezosPreapplyFailureError';
   message: string = 'Preapply returned an unexpected result';
 
-  constructor(public result: any) { }
+  constructor(public result: any) {}
 }
 
-export type MergedOperationResult = OperationResultDelegation & OperationResultOrigination & OperationResultTransaction & OperationResultReveal & {
-  fee?: string
-}
+export type MergedOperationResult = OperationResultDelegation &
+  OperationResultOrigination &
+  OperationResultTransaction &
+  OperationResultReveal & {
+    fee?: string;
+  };
 
+// Flatten all operation content results and internal operation results into a single array
+// Some cases where we can have multiple operation results or internal operation results are:
+// - When an operation includes a reveal operation
+// - When an operation is made using the batch API
+// - Smart contract call can contains internal operation results when they call other smart contract internally or originate contracts
 export const flattenOperationResult = (response: PreapplyResponse | PreapplyResponse[]) => {
   let results = Array.isArray(response) ? response : [response];
 
@@ -51,13 +71,11 @@ export const flattenOperationResult = (response: PreapplyResponse | PreapplyResp
       if (hasMetadataWithResult(content)) {
         returnedResults.push({
           fee: content.fee,
-          ...content.metadata.operation_result
+          ...content.metadata.operation_result,
         });
 
         if (Array.isArray(content.metadata.internal_operation_results)) {
-          content.metadata.internal_operation_results.forEach((x) =>
-            returnedResults.push(x.result)
-          );
+          content.metadata.internal_operation_results.forEach(x => returnedResults.push(x.result));
         }
       }
     }
@@ -81,13 +99,13 @@ export const flattenErrors = (
     for (let j = 0; j < results[i].contents.length; j++) {
       const content = results[i].contents[j];
       if (hasMetadata(content)) {
-        if (
-          hasMetadataWithResult(content) &&
-          content.metadata.operation_result.status === status
-        ) {
+        if (hasMetadataWithResult(content) && content.metadata.operation_result.status === status) {
           errors = errors.concat(content.metadata.operation_result.errors || []);
         }
-        if (hasMetadataWithInternalOperationResult(content) && Array.isArray(content.metadata.internal_operation_results)) {
+        if (
+          hasMetadataWithInternalOperationResult(content) &&
+          Array.isArray(content.metadata.internal_operation_results)
+        ) {
           for (const internalResult of content.metadata.internal_operation_results) {
             if ('result' in internalResult && internalResult.result.status === status) {
               errors = errors.concat(internalResult.result.errors || []);
