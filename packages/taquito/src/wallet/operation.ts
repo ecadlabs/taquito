@@ -1,5 +1,4 @@
 import { BlockResponse, OperationContentsAndResult, OperationResultStatusEnum } from '@taquito/rpc';
-import BigNumber from 'bignumber.js';
 import { combineLatest, Observable, ReplaySubject } from 'rxjs';
 import {
   distinctUntilChanged,
@@ -11,7 +10,7 @@ import {
   tap,
 } from 'rxjs/operators';
 import { Context } from '../context';
-import { receiptFromOperation, Receipt } from './receipt';
+import { Receipt, receiptFromOperation } from './receipt';
 
 export type OperationStatus = 'pending' | 'unknown' | OperationResultStatusEnum;
 
@@ -43,7 +42,8 @@ export class WalletOperation {
       }
 
       this.lastHead = newHead;
-    })
+    }),
+    shareReplay(1)
   );
 
   // Observable that emit once operation is seen in a block
@@ -66,7 +66,7 @@ export class WalletOperation {
       return typeof x !== 'undefined';
     }),
     first(),
-    shareReplay({ refCount: true })
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   async operationResults() {
