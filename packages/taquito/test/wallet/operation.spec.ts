@@ -109,30 +109,6 @@ describe('WalletOperation', () => {
 
       done();
     });
-
-    it('Should throw an error if it sees two subsequent block with a level difference higher than 2 before the operation is included', async done => {
-      const { cold, flush, getMessages, e } = rxSandbox.create();
-      const blockObs = cold<BlockResponse>('--a--b', {
-        a: createFakeBlock(1),
-        b: createFakeBlock(3),
-      });
-
-      const op = new WalletOperation('test_hash', new Context(), blockObs);
-
-      const messages = getMessages(op.confirmationObservable(2));
-
-      flush();
-
-      const expected = e(
-        '-----#',
-        {},
-        expect.objectContaining({ name: 'MissedBlockDuringConfirmationError' })
-      );
-
-      expect(messages).toEqual(expected);
-
-      done();
-    });
   });
 
   describe('receipt', () => {
