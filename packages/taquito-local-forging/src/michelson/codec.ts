@@ -134,8 +134,8 @@ export const intEncoder: Encoder<IntValue> = ({ int }) => {
     binary.length <= 6
       ? 6
       : (binary.length - 6) % 7
-        ? binary.length + 7 - ((binary.length - 6) % 7)
-        : binary.length;
+      ? binary.length + 7 - ((binary.length - 6) % 7)
+      : binary.length;
 
   const splitted = binary.padStart(pad, '0').match(/\d{6,7}/g);
 
@@ -156,7 +156,6 @@ export const intEncoder: Encoder<IntValue> = ({ int }) => {
 export const intDecoder = (value: Uint8ArrayConsumer): IntValue => {
   let c = value.consume(1)[0];
   const hexNumber: number[] = [];
-  // console.log(c);
   const isNotLastChunkMask = 1 << 7;
   while (c & isNotLastChunkMask) {
     hexNumber.push(c);

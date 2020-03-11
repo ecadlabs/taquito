@@ -1,11 +1,10 @@
 import { ParameterSchema, Schema } from '@taquito/michelson-encoder';
 import { EntrypointsResponse, ScriptResponse } from '@taquito/rpc';
-import { ContractProvider, StorageProvider } from './interface';
-import { InvalidParameterError } from './errors';
-import { TransferParams } from '../operations/types';
-import { WalletProvider } from '../wallet/interface';
 import { TransactionOperation } from '../operations/transaction-operation';
-import { WalletOperation } from '../wallet/operation';
+import { TransferParams } from '../operations/types';
+import { TransactionWalletOperation, Wallet } from '../wallet';
+import { InvalidParameterError } from './errors';
+import { ContractProvider, StorageProvider } from './interface';
 
 interface SendParams {
   fee?: number;
@@ -24,7 +23,7 @@ const DEFAULT_SMART_CONTRACT_METHOD_NAME = 'main';
 /**
  * @description Utility class to send smart contract operation
  */
-export class ContractMethod<T extends ContractProvider | WalletProvider> {
+export class ContractMethod<T extends ContractProvider | Wallet> {
   constructor(
     private provider: T,
     private address: string,
@@ -33,7 +32,7 @@ export class ContractMethod<T extends ContractProvider | WalletProvider> {
     private args: any[],
     private isMultipleEntrypoint = true,
     private isAnonymous = false
-  ) { }
+  ) {}
 
   /**
    * @description Get the schema of the smart contract method
@@ -50,8 +49,14 @@ export class ContractMethod<T extends ContractProvider | WalletProvider> {
    *
    * @param Options generic operation parameter
    */
-  send(params: Partial<SendParams> = {}): Promise<T extends WalletProvider ? WalletOperation : TransactionOperation> {
-    return this.provider.transfer(this.toTransferParams(params)) as any;
+  send(
+    params: Partial<SendParams> = {}
+  ): Promise<T extends Wallet ? TransactionWalletOperation : TransactionOperation> {
+    if (this.provider instanceof Wallet) {
+      return (this.provider as Wallet).transfer(this.toTransferParams(params)).send() as any;
+    } else {
+      return this.provider.transfer(this.toTransferParams(params)) as any;
+    }
   }
 
   /**
@@ -97,13 +102,12 @@ const validateArgs = (args: any[], schema: ParameterSchema, name: string) => {
 };
 
 export type Contract = ContractAbstraction<ContractProvider>;
-export type WalletContract = ContractAbstraction<WalletProvider>;
-
+export type WalletContract = ContractAbstraction<Wallet>;
 
 /**
  * @description Smart contract abstraction
  */
-export class ContractAbstraction<T extends ContractProvider | WalletProvider> {
+export class ContractAbstraction<T extends ContractProvider | Wallet> {
   /**
    * @description Contains methods that are implemented by the target Tezos Smart Contract, and offers the user to call the Smart Contract methods as if they were native TS/JS methods.
    * NB: if the contract contains annotation it will include named properties; if not it will be indexed by a number.
@@ -138,7 +142,7 @@ export class ContractAbstraction<T extends ContractProvider | WalletProvider> {
     const keys = Object.keys(entrypoints);
     if (parameterSchema.isMultipleEntryPoint) {
       keys.forEach(smartContractMethodName => {
-        const method = function (...args: any[]) {
+        const method = function(...args: any[]) {
           const smartContractMethodSchema = new ParameterSchema(
             entrypoints[smartContractMethodName]
           );
@@ -163,7 +167,7 @@ export class ContractAbstraction<T extends ContractProvider | WalletProvider> {
       );
 
       anonymousMethods.forEach(smartContractMethodName => {
-        const method = function (...args: any[]) {
+        const method = function(...args: any[]) {
           validateArgs(
             [smartContractMethodName, ...args],
             parameterSchema,
@@ -183,7 +187,7 @@ export class ContractAbstraction<T extends ContractProvider | WalletProvider> {
       });
     } else {
       const smartContractMethodSchema = this.parameterSchema;
-      const method = function (...args: any[]) {
+      const method = function(...args: any[]) {
         validateArgs(args, parameterSchema, DEFAULT_SMART_CONTRACT_METHOD_NAME);
         return new ContractMethod<T>(
           provider,

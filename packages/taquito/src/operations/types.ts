@@ -10,6 +10,10 @@ export type ParamsWithKind =
   | withKind<TransferParams, OpKind.TRANSACTION>
   | withKind<ActivationParams, OpKind.ACTIVATION>;
 
+export const attachKind = <T, K extends OpKind>(op: T, kind: K) => {
+  return { ...op, kind } as withKind<T, K>;
+};
+
 export const findWithKind = <T extends { kind: OpKind }, K extends OpKind>(
   arr: T[],
   kind: K

@@ -23,7 +23,7 @@ describe('WalletOperation', () => {
 
   describe('confirmationObservable', () => {
     it('Should emit confirmation after receiving seeing operation in block', async done => {
-      const { cold, flush, getMessages, e } = rxSandbox.create();
+      const { cold, flush, getMessages, e, s } = rxSandbox.create();
       const blockObs = cold<BlockResponse>('--a', {
         a: createFakeBlock(1, 'test_hash'),
       });
@@ -44,12 +44,13 @@ describe('WalletOperation', () => {
       });
 
       expect(messages).toEqual(expected);
+      expect(blockObs.subscriptions).toEqual([s('^-!')]);
 
       done();
     });
 
     it('given 2 confirmation it should emit confirmation with complete false after seeing operation in a block', async done => {
-      const { cold, flush, getMessages, e } = rxSandbox.create();
+      const { cold, flush, getMessages, e, s } = rxSandbox.create();
       const blockObs = cold<BlockResponse>('--a', {
         a: createFakeBlock(1, 'test_hash'),
       });
@@ -70,12 +71,13 @@ describe('WalletOperation', () => {
       });
 
       expect(messages).toEqual(expected);
+      expect(blockObs.subscriptions).toEqual([s('^--')]);
 
       done();
     });
 
     it('Should emit 2 confirmation given the operation is included in the first block and a new head is applied on top', async done => {
-      const { cold, flush, getMessages, e } = rxSandbox.create();
+      const { cold, flush, getMessages, e, s } = rxSandbox.create();
       const blockObs = cold<BlockResponse>('--a--b', {
         a: createFakeBlock(1, 'test_hash'),
         b: createFakeBlock(2),
@@ -103,6 +105,7 @@ describe('WalletOperation', () => {
       });
 
       expect(messages).toEqual(expected);
+      expect(blockObs.subscriptions).toEqual([s('^----!')]);
 
       done();
     });
@@ -193,31 +196,49 @@ describe('WalletOperation', () => {
     });
 
     it('should return 1 when there is 1 confirmation', async done => {
-      const { cold, flush } = rxSandbox.create();
+      const { cold, flush, s } = rxSandbox.create();
       const blockObs = cold<BlockResponse>('--a', {
         a: createFakeBlock(1, 'test_hash'),
       });
 
-      const op = new WalletOperation('test_hash', new Context(), blockObs);
+      const op = new WalletOperation(
+        'test_hash',
+        {
+          rpc: {
+            getBlock: jest.fn().mockResolvedValue(createFakeBlock(1)),
+          },
+        } as any,
+        blockObs
+      );
 
       flush();
 
+      expect(blockObs.subscriptions).toEqual([s('^-!')]);
       expect(await op.getCurrentConfirmation()).toEqual(1);
 
       done();
     });
 
     it('should return 2 when there is 2 confirmation', async done => {
-      const { cold, flush } = rxSandbox.create();
+      const { cold, flush, s } = rxSandbox.create();
       const blockObs = cold<BlockResponse>('--a-b', {
         a: createFakeBlock(1, 'test_hash'),
         b: createFakeBlock(2),
       });
 
-      const op = new WalletOperation('test_hash', new Context(), blockObs);
+      const op = new WalletOperation(
+        'test_hash',
+        {
+          rpc: {
+            getBlock: jest.fn().mockResolvedValue(createFakeBlock(2)),
+          },
+        } as any,
+        blockObs
+      );
 
       flush();
 
+      expect(blockObs.subscriptions).toEqual([s('^-!')]);
       expect(await op.getCurrentConfirmation()).toEqual(2);
 
       done();

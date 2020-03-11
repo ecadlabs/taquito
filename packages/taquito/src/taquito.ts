@@ -11,35 +11,28 @@ import { NoopSigner } from './signer/noop';
 import { SubscribeProvider } from './subscribe/interface';
 import { PollingSubscribeProvider } from './subscribe/polling-provider';
 import { TzProvider } from './tz/interface';
-import { WalletProvider } from './wallet/interface';
-import { LegacyWallet } from './wallet/legacy';
+import { LegacyWalletProvider, Wallet, WalletProvider } from './wallet';
 import { OperationFactory } from './wallet/opreation-factory';
 
-export * from './signer/interface';
-export * from './subscribe/interface';
-export * from './forger/interface';
-export * from './tz/interface';
+export { MichelsonMap, UnitValue } from '@taquito/michelson-encoder';
 export * from './constants';
 export * from './context';
 export { TaquitoProvider } from './context';
 export * from './contract';
 export * from './contract/big-map';
-export * from './forger/interface';
-export { OpKind } from './operations/types';
-export * from './signer/interface';
-export * from './subscribe/interface';
-export { SubscribeProvider } from './subscribe/interface';
-export { PollingSubscribeProvider } from './subscribe/polling-provider';
-export { RpcForger } from './forger/rpc-forger';
 export { CompositeForger } from './forger/composite-forger';
-export { UnitValue, MichelsonMap } from '@taquito/michelson-encoder';
-
+export * from './forger/interface';
+export { RpcForger } from './forger/rpc-forger';
 export {
   TezosOperationError,
   TezosOperationErrorWithMessage,
   TezosPreapplyFailureError,
 } from './operations/operation-errors';
-
+export { OpKind } from './operations/types';
+export * from './signer/interface';
+export * from './subscribe/interface';
+export { SubscribeProvider } from './subscribe/interface';
+export { PollingSubscribeProvider } from './subscribe/polling-provider';
 export * from './tz/interface';
 export * from './wallet';
 
@@ -62,6 +55,7 @@ export class TezosToolkit {
   private _options: SetProviderOptions = {};
 
   private _context: Context = new Context();
+  private _wallet?: Wallet;
 
   public readonly format = format;
 
@@ -119,9 +113,14 @@ export class TezosToolkit {
   }
 
   private setWalletProvider(wallet: SetProviderOptions['wallet']) {
-    const w = typeof wallet === 'undefined' ? this.getFactory(LegacyWallet)() : wallet;
-    this._options.wallet = w;
-    this._context.wallet = w;
+    if (!this._options.wallet && typeof wallet === 'undefined') {
+      const w = this.getFactory(LegacyWalletProvider)(this._context.batch);
+      this._options.wallet = w;
+      this._wallet = new Wallet(this._context, this._context.contract);
+    } else if (typeof wallet !== 'undefined') {
+      this._options.wallet = wallet;
+      this._wallet = new Wallet(this._context, this._context.contract);
+    }
   }
 
   private setStreamProvider(stream: SetProviderOptions['stream']) {
@@ -149,8 +148,8 @@ export class TezosToolkit {
     return this._context.contract;
   }
 
-  get wallet(): WalletProvider {
-    return this._context.wallet;
+  get wallet(): Wallet {
+    return this._wallet!;
   }
 
   get operation(): OperationFactory {

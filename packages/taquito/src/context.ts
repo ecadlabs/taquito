@@ -10,12 +10,12 @@ import { OperationFactory } from './wallet/opreation-factory';
 import { RpcTzProvider } from './tz/rpc-tz-provider';
 import { RPCEstimateProvider } from './contract/rpc-estimate-provider';
 import { RpcContractProvider } from './contract/rpc-contract-provider';
-import { LegacyWallet } from './wallet';
 import { RPCBatchProvider } from './batch/rpc-batch-provider';
-import { WalletProvider } from './wallet/interface';
+
+import { Wallet, LegacyWalletProvider, WalletProvider } from './wallet';
 
 export interface TaquitoProvider<T, K extends Array<any>> {
-  new(context: Context, ...rest: K): T;
+  new (context: Context, ...rest: K): T;
 }
 
 export interface Config {
@@ -36,13 +36,14 @@ export const defaultConfig: Required<Config> = {
 export class Context {
   private _forger: Forger;
   private _injector: Injector;
-  private _wallet: WalletProvider;
+  private _walletProvider: WalletProvider;
   public readonly operationFactory: OperationFactory;
 
   public readonly tz = new RpcTzProvider(this);
   public readonly estimate = new RPCEstimateProvider(this);
   public readonly contract = new RpcContractProvider(this, this.estimate);
   public readonly batch = new RPCBatchProvider(this, this.estimate);
+  public readonly wallet = new Wallet(this, this.contract);
 
   constructor(
     private _rpcClient: RpcClient = new RpcClient(),
@@ -57,7 +58,7 @@ export class Context {
     this._forger = forger ? forger : new RpcForger(this);
     this._injector = injector ? injector : new RpcInjector(this);
     this.operationFactory = new OperationFactory(this);
-    this._wallet = wallet ? wallet : new LegacyWallet(this);
+    this._walletProvider = wallet ? wallet : new LegacyWalletProvider(this, this.batch);
   }
 
   get config(): Required<Config> {
@@ -99,12 +100,12 @@ export class Context {
     return this._signer;
   }
 
-  get wallet() {
-    return this._wallet;
+  get walletProvider() {
+    return this._walletProvider;
   }
 
-  set wallet(value: WalletProvider) {
-    this._wallet = value;
+  set walletProvider(value: WalletProvider) {
+    this._walletProvider = value;
   }
 
   set signer(value: Signer) {

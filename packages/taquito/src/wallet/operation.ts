@@ -1,5 +1,5 @@
 import { BlockResponse, OperationContentsAndResult, OperationResultStatusEnum } from '@taquito/rpc';
-import { combineLatest, Observable, ReplaySubject } from 'rxjs';
+import { combineLatest, from, Observable, ReplaySubject } from 'rxjs';
 import {
   distinctUntilChanged,
   filter,
@@ -43,7 +43,7 @@ export class WalletOperation {
 
       this.lastHead = newHead;
     }),
-    shareReplay(1)
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   // Observable that emit once operation is seen in a block
@@ -100,7 +100,7 @@ export class WalletOperation {
       return 0;
     }
 
-    return combineLatest([this._includedInBlock, this.newHead$])
+    return combineLatest([this._includedInBlock, from(this.context.rpc.getBlock())])
       .pipe(
         map(([foundAtBlock, head]) => {
           return head.header.level - foundAtBlock.header.level + 1;
