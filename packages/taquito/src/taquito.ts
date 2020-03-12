@@ -1,5 +1,5 @@
 import { RpcClient } from '@taquito/rpc';
-import { InMemorySigner } from '@taquito/signer';
+import { importKey } from '@taquito/signer';
 import { Protocols } from './constants';
 import { Context, Config, TaquitoProvider } from './context';
 import { ContractProvider, EstimationProvider } from './contract/interface';
@@ -77,10 +77,10 @@ export class TezosToolkit {
   /**
    * @description Sets configuration on the Tezos Taquito instance. Allows user to choose which signer, rpc client, rpc url, forger and so forth
    *
-   * @param options rpc url or rpcClient to use to interact with the Tezos network and  url to use to interact with the Tezos network
+   * @param options rpc url or rpcClient to use to interact with the Tezos network
    *
-   * @example Tezos.setProvider({signer: new InMemorySigner(“edsk...”)})
-   * @example Tezos.setProvider({config: {confirmationPollingTimeoutSecond: 300}})
+   * @example Tezos.setProvider({rpc: 'https://mainnet.tezrpc.me', signer: new InMemorySigner.fromSecretKey(“edsk...”)})
+   * @example Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: 300 }})
    *
    */
   setProvider({ rpc, stream, signer, protocol, config, forger }: SetProviderOptions) {
@@ -93,7 +93,15 @@ export class TezosToolkit {
     this._context.config = config as Required<Config>;
   }
 
-  private setSignerProvider(signer: SetProviderOptions['signer']) {
+  /**
+   * @description Sets signer provider on the Tezos Taquito instance.
+   *
+   * @param options signer to use to interact with the Tezos network
+   *
+   * @example Tezos.setSignerProvider(new InMemorySigner.fromSecretKey('edsk...'))
+   *
+   */
+  setSignerProvider(signer?: SetProviderOptions['signer']) {
     if (!this._options.signer && typeof signer === 'undefined') {
       this._context.signer = new NoopSigner();
       this._options.signer = signer;
@@ -103,7 +111,15 @@ export class TezosToolkit {
     }
   }
 
-  private setRpcProvider(rpc: SetProviderOptions['rpc']) {
+  /**
+   * @description Sets rpc provider on the Tezos Taquito instance
+   *
+   * @param options rpc url or rpcClient to use to interact with the Tezos network
+   *
+   * @example Tezos.setRpcProvider('https://mainnet.tezrpc.me')
+   *
+   */
+  setRpcProvider(rpc?: SetProviderOptions['rpc']) {
     if (typeof rpc === 'string') {
       this._rpcClient = new RpcClient(rpc);
     } else if (rpc instanceof RpcClient) {
@@ -111,17 +127,33 @@ export class TezosToolkit {
     } else if (this._options.rpc === undefined) {
       this._rpcClient = new RpcClient();
     }
-    this._options.rpc = rpc;
+    this._options.rpc = this._rpcClient;
     this._context.rpc = this._rpcClient;
   }
 
-  private setForgerProvider(forger: SetProviderOptions['forger']) {
+  /**
+   * @description Sets forger provider on the Tezos Taquito instance
+   *
+   * @param options forger to use to interact with the Tezos network
+   *
+   * @example Tezos.setForgerProvider(localForger)
+   *
+   */
+  setForgerProvider(forger?: SetProviderOptions['forger']) {
     const f = typeof forger === 'undefined' ? new RpcForger(this._context) : forger;
     this._options.forger = f;
     this._context.forger = f;
   }
 
-  private setStreamProvider(stream: SetProviderOptions['stream']) {
+  /**
+   * @description Sets stream provider on the Tezos Taquito instance
+   *
+   * @param options stream to use to interact with the Tezos network
+   *
+   * @example Tezos.setStreamProvider(...)
+   *
+   */
+  setStreamProvider(stream?: SetProviderOptions['stream']) {
     if (typeof stream === 'string') {
       this._stream = new PollingSubscribeProvider(new Context(new RpcClient(stream)));
     } else if (typeof stream !== 'undefined') {
@@ -174,6 +206,13 @@ export class TezosToolkit {
    */
   get signer() {
     return this._context.signer;
+  }
+
+  /**
+   * @deprecated Deprecated in favor of setting the signer provider with @taquito/signer importKey
+   */
+  importKey(privateKeyOrEmail: string, passphrase?: string, mnemonic?: string, secret?: string) {
+    return importKey(this, privateKeyOrEmail, passphrase, mnemonic, secret);
   }
 
   getFactory<T, K extends Array<any>>(ctor: TaquitoProvider<T, K>) {

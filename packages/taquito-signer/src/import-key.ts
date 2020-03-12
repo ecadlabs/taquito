@@ -1,35 +1,16 @@
 import { InMemorySigner } from './taquito-signer';
 import { TezosToolkit } from '@taquito/taquito';
+
 /**
  *
  * @description Import a key to sign operation
  *
- * @param privateKey Key to load in memory
+ * @param toolkit The toolkit instance to attach a signer
+ * @param privateKeyOrEmail Key to load in memory
  * @param passphrase If the key is encrypted passphrase to decrypt it
- */
-export function importKey(
-  toolkit: TezosToolkit,
-  privateKey: string,
-  passphrase?: string
-): Promise<void>;
-/**
- *
- * @description Import a key using faucet/fundraiser parameter
- *
- * @param email Faucet email
- * @param password Faucet password
  * @param mnemonic Faucet mnemonic
  * @param secret Faucet secret
  */
-// tslint:disable-next-line: unified-signatures
-export function importKey(
-  toolkit: TezosToolkit,
-  email: string,
-  password: string,
-  mnemonic: string,
-  secret: string
-): Promise<void>;
-
 export async function importKey(
   toolkit: TezosToolkit,
   privateKeyOrEmail: string,
@@ -39,6 +20,7 @@ export async function importKey(
 ) {
   if (privateKeyOrEmail && passphrase && mnemonic && secret) {
     const signer = InMemorySigner.fromFundraiser(privateKeyOrEmail, passphrase, mnemonic);
+    toolkit.setSignerProvider(signer);
     const pkh = await signer.publicKeyHash();
     let op;
     try {
@@ -52,9 +34,9 @@ export async function importKey(
     if (op) {
       await op.confirmation();
     }
-    toolkit.setProvider({ signer });
   } else {
     // Fallback to regular import
-    toolkit.setProvider({ signer: new InMemorySigner(privateKeyOrEmail, passphrase) });
+    const signer = await InMemorySigner.fromSecretKey(privateKeyOrEmail, passphrase);
+    toolkit.setSignerProvider(signer);
   }
 }

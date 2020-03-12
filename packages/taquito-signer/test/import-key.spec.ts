@@ -36,6 +36,7 @@ describe('ImportKey', () => {
     mockRpcClient.getManagerKey.mockResolvedValue('test');
     toolkit = new TezosToolkit();
     toolkit['_context'].rpc = mockRpcClient;
+    toolkit['_options'].rpc = mockRpcClient;
   });
 
   it('should use InMemorySigner when importKey is called', async done => {
