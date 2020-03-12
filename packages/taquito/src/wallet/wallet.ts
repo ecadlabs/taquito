@@ -131,7 +131,7 @@ export class WalletOperationBatch {
 }
 
 export class Wallet {
-  constructor(private context: Context, private contract: RpcContractProvider) {}
+  constructor(private context: Context) {}
 
   private get walletProvider() {
     return this.context.walletProvider;
@@ -220,7 +220,7 @@ export class Wallet {
    */
   transfer(params: WalletTransferParams) {
     return this.walletCommand(async () => {
-      const mappedParams = this.walletProvider.mapTransferParamsToWalletParams(params);
+      const mappedParams = await this.walletProvider.mapTransferParamsToWalletParams(params);
       const opHash = await this.walletProvider.sendOperations([mappedParams]);
       return this.context.operationFactory.createTransactionOperation(opHash);
     });
@@ -250,6 +250,6 @@ export class Wallet {
   async at(address: string): Promise<WalletContract> {
     const script = await this.context.rpc.getScript(address);
     const entrypoints = await this.context.rpc.getEntrypoints(address);
-    return new ContractAbstraction(address, script, this, this.contract, entrypoints);
+    return new ContractAbstraction(address, script, this, this.context.contract, entrypoints);
   }
 }

@@ -43,7 +43,7 @@ export class Context {
   public readonly estimate = new RPCEstimateProvider(this);
   public readonly contract = new RpcContractProvider(this, this.estimate);
   public readonly batch = new RPCBatchProvider(this, this.estimate);
-  public readonly wallet = new Wallet(this, this.contract);
+  public readonly wallet = new Wallet(this);
 
   constructor(
     private _rpcClient: RpcClient = new RpcClient(),
@@ -58,7 +58,7 @@ export class Context {
     this._forger = forger ? forger : new RpcForger(this);
     this._injector = injector ? injector : new RpcInjector(this);
     this.operationFactory = new OperationFactory(this);
-    this._walletProvider = wallet ? wallet : new LegacyWalletProvider(this, this.batch);
+    this._walletProvider = wallet ? wallet : new LegacyWalletProvider(this);
   }
 
   get config(): Required<Config> {
