@@ -79,7 +79,6 @@ export class ContractMethod {
           ? this.parameterSchema.Encode(this.name, ...this.args)
           : this.parameterSchema.Encode(...this.args),
       },
-      rawParam: true,
     };
     return fullTransferParams;
   }
