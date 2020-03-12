@@ -1,16 +1,15 @@
+import { Context } from '../context';
 import { attachKind, OpKind } from '../operations/types';
 import {
-  WalletTransferParams,
-  WalletOriginateParams,
   WalletDelegateParams,
+  WalletOriginateParams,
   WalletProvider,
+  WalletTransferParams,
 } from './interface';
 import { WalletParamsWithKind } from './wallet';
-import { Context } from '../context';
-import { RPCBatchProvider } from '../batch/rpc-batch-provider';
 
 export class LegacyWalletProvider implements WalletProvider {
-  constructor(private context: Context, private batch: RPCBatchProvider) {}
+  constructor(private context: Context) {}
 
   async getPKH(): Promise<string> {
     return this.context.signer.publicKeyHash();
@@ -29,7 +28,7 @@ export class LegacyWalletProvider implements WalletProvider {
   }
 
   async sendOperations(params: WalletParamsWithKind[]) {
-    const op = await this.batch.batch(params as any).send();
+    const op = await this.context.batch.batch(params as any).send();
     return op.hash;
   }
 }

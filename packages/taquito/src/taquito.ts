@@ -55,7 +55,7 @@ export class TezosToolkit {
   private _options: SetProviderOptions = {};
 
   private _context: Context = new Context();
-  private _wallet?: Wallet;
+  private _wallet: Wallet = new Wallet(this._context);
 
   public readonly format = format;
 
@@ -114,12 +114,12 @@ export class TezosToolkit {
 
   private setWalletProvider(wallet: SetProviderOptions['wallet']) {
     if (!this._options.wallet && typeof wallet === 'undefined') {
-      const w = this.getFactory(LegacyWalletProvider)(this._context.batch);
+      const w = this.getFactory(LegacyWalletProvider)();
       this._options.wallet = w;
-      this._wallet = new Wallet(this._context, this._context.contract);
+      this._context.walletProvider = w;
     } else if (typeof wallet !== 'undefined') {
       this._options.wallet = wallet;
-      this._wallet = new Wallet(this._context, this._context.contract);
+      this._context.walletProvider = wallet;
     }
   }
 
@@ -149,7 +149,7 @@ export class TezosToolkit {
   }
 
   get wallet(): Wallet {
-    return this._wallet!;
+    return this._wallet;
   }
 
   get operation(): OperationFactory {
