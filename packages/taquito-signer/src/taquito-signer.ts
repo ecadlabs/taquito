@@ -5,6 +5,9 @@ import { Tz1 } from './ed-key';
 import { Tz2, ECKey, Tz3 } from './ec-key';
 import pbkdf2 from 'pbkdf2';
 import { mnemonicToSeedSync } from 'bip39';
+import { Signer } from '@taquito/taquito';
+
+export * from './import-key';
 
 /**
  * @description A local implementation of the signer. Will represent a Tezos account and be able to produce signature in its behalf
@@ -19,7 +22,7 @@ import { mnemonicToSeedSync } from 'bip39';
  *
  * The recommended usage is to use InMemorySigner.fromSecretKey('edsk', 'passphrase')
  */
-export class InMemorySigner {
+export class InMemorySigner implements Signer {
   private _key!: Tz1 | ECKey;
 
   static fromFundraiser(email: string, password: string, mnemonic: string) {
