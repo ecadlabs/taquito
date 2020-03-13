@@ -1,5 +1,5 @@
 /**
- * @description Signer interface which is used accross taquito in order to sign and inject operation
+ * @description Signer interface which is used across taquito in order to sign and inject operation
  */
 export interface Signer {
   /**
