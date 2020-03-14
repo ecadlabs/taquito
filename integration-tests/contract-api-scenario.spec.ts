@@ -86,14 +86,14 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress, protocol }) => {
       expect(op.status === 'applied');
 
       try {
-        await contract.methods.main(null).send()
+        await contract.methods.default(null).send()
       } catch (ex) {
         expect(ex.message).toMatch('test')
       }
 
       try {
         // Bypass estimation
-        await contract.methods.main(null).send({ fee: 20000, gasLimit: 20000, storageLimit: 0 })
+        await contract.methods.default(null).send({ fee: 20000, gasLimit: 20000, storageLimit: 0 })
       } catch (ex) {
         expect(ex.message).toMatch('test')
       }
@@ -175,7 +175,7 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress, protocol }) => {
 
       const storage: any = await contract.storage()
       expect(storage.toString()).toEqual("0")
-      const opMethod = await contract.methods.main("2").send();
+      const opMethod = await contract.methods.default("2").send();
 
       await opMethod.confirmation();
       expect(op.hash).toBeDefined();
