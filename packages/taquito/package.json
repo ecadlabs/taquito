@@ -75,10 +75,10 @@
     ]
   },
   "dependencies": {
-    "@taquito/indexer": "^6.0.1-beta.0",
-    "@taquito/michelson-encoder": "^6.0.1-beta.0",
-    "@taquito/rpc": "^6.0.1-beta.0",
-    "@taquito/utils": "^6.0.1-beta.0",
+    "@taquito/michelson-encoder": "^6.1.0-beta.0",
+    "@taquito/rpc": "^6.1.0-beta.0",
+    "@taquito/signer": "^6.1.0-beta.0",
+    "@taquito/utils": "^6.1.0-beta.0",
     "bignumber.js": "^9.0.0",
     "rxjs": "^6.5.3"
   },
