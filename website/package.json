@@ -16,8 +16,10 @@
     "@fortawesome/react-fontawesome": "^0.1.8",
     "@taquito/taquito": "^6.0.3-beta.1",
     "classnames": "^2.2.6",
+    "mermaid.cli": "^0.5.1",
     "react": "^16.10.2",
-    "react-dom": "^16.10.2"
+    "react-dom": "^16.10.2",
+    "remark-mermaid": "^0.2.0"
   },
   "browserslist": {
     "production": [

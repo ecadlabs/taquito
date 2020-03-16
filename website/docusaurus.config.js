@@ -6,11 +6,10 @@ module.exports = {
   baseUrl: '/',
   projectName: 'taquito',
   organizationName: 'ecadlabs',
-  scripts: ['https://buttons.github.io/buttons.js', {
-    src:
-      'https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js',
-    async: true,
-  }],
+  scripts: [
+    'https://buttons.github.io/buttons.js',
+    { src: 'https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js', async: true }
+  ],
   stylesheets: [
     'https://fonts.googleapis.com/css?family=Baloo+Tammudu|Open+Sans:400,600,800&display=swap',
     'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css'
@@ -105,6 +104,7 @@ module.exports = {
         docs: {
           path: '../docs',
           sidebarPath: require.resolve('./sidebars.json'),
+          remarkPlugins: [[require('remark-mermaid')]]
         }
       }
     ],
