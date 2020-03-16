@@ -5,7 +5,6 @@ import { Tz1 } from './ed-key';
 import { Tz2, ECKey, Tz3 } from './ec-key';
 import pbkdf2 from 'pbkdf2';
 import { mnemonicToSeedSync } from 'bip39';
-import { Signer } from '@taquito/taquito';
 
 export * from './import-key';
 
@@ -22,7 +21,7 @@ export * from './import-key';
  *
  * The recommended usage is to use InMemorySigner.fromSecretKey('edsk', 'passphrase')
  */
-export class InMemorySigner implements Signer {
+export class InMemorySigner {
   private _key!: Tz1 | ECKey;
 
   static fromFundraiser(email: string, password: string, mnemonic: string) {

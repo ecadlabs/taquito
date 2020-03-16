@@ -1,5 +1,4 @@
 import { InMemorySigner } from './taquito-signer';
-import { TezosToolkit } from '@taquito/taquito';
 
 /**
  *
@@ -12,7 +11,7 @@ import { TezosToolkit } from '@taquito/taquito';
  * @param secret Faucet secret
  */
 export async function importKey(
-  toolkit: TezosToolkit,
+  toolkit: any,
   privateKeyOrEmail: string,
   passphrase?: string,
   mnemonic?: string,
@@ -20,7 +19,7 @@ export async function importKey(
 ) {
   if (privateKeyOrEmail && passphrase && mnemonic && secret) {
     const signer = InMemorySigner.fromFundraiser(privateKeyOrEmail, passphrase, mnemonic);
-    toolkit.setSignerProvider(signer);
+    toolkit.setProvider({ signer });
     const pkh = await signer.publicKeyHash();
     let op;
     try {
@@ -37,6 +36,6 @@ export async function importKey(
   } else {
     // Fallback to regular import
     const signer = await InMemorySigner.fromSecretKey(privateKeyOrEmail, passphrase);
-    toolkit.setSignerProvider(signer);
+    toolkit.setProvider({ signer });
   }
 }
