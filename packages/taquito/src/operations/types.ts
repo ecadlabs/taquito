@@ -1,4 +1,9 @@
-import { OperationObject, InternalOperationResultKindEnum, OpKind } from '@taquito/rpc';
+import {
+  OperationObject,
+  InternalOperationResultKindEnum,
+  OpKind,
+  TransactionOperationParameter,
+} from '@taquito/rpc';
 
 export { OpKind } from '@taquito/rpc';
 
@@ -213,11 +218,10 @@ export interface TransferParams {
   source?: string;
   amount: number;
   fee?: number;
-  parameter?: string | object | { entrypoint: string; value: object };
+  parameter?: TransactionOperationParameter;
   gasLimit?: number;
   storageLimit?: number;
   mutez?: boolean;
-  rawParam?: boolean;
 }
 
 /**
@@ -231,7 +235,7 @@ export interface RPCTransferOperation {
   amount: string;
   source?: string;
   destination: string;
-  parameters?: any;
+  parameters?: TransactionOperationParameter;
 }
 
 /**

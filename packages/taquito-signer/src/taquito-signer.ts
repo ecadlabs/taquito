@@ -6,6 +6,8 @@ import { Tz2, ECKey, Tz3 } from './ec-key';
 import pbkdf2 from 'pbkdf2';
 import { mnemonicToSeedSync } from 'bip39';
 
+export * from './import-key';
+
 /**
  * @description A local implementation of the signer. Will represent a Tezos account and be able to produce signature in its behalf
  *

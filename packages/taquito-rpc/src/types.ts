@@ -31,8 +31,6 @@ interface Frozenbalancebycycle {
 
 export type BigMapKey = { key: { [key: string]: string }; type: { prim: string } };
 
-// BlockResponse interface
-// header:
 export interface BlockFullHeader {
   level: number;
   proto: number;
@@ -126,7 +124,7 @@ export interface OperationContentsTransaction {
   storage_limit: string;
   amount: string;
   destination: string;
-  parameters?: MichelsonV1Expression;
+  parameters?: TransactionOperationParameter;
 }
 
 export interface OperationContentsOrigination {
@@ -261,7 +259,7 @@ export interface OperationContentsAndResultTransaction {
   storage_limit: string;
   amount: string;
   destination: string;
-  parameters?: MichelsonV1Expression;
+  parameters?: TransactionOperationParameter;
   metadata: OperationContentsAndResultMetadataTransaction;
 }
 
@@ -289,8 +287,6 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultOrigination
   | OperationContentsAndResultDelegation;
 
-// BlockResponse interface
-// operations:
 export interface OperationEntry {
   protocol: string;
   chain_id: string;
@@ -461,10 +457,6 @@ export interface ScriptedContracts {
   storage: MichelsonV1Expression;
 }
 
-// BlockResponse interface
-// metadata: {
-//   balanceUpdates:
-// }
 export interface OperationBalanceUpdatesItem {
   kind: BalanceUpdateKindEnum;
   category?: BalanceUpdateCategoryEnum;
@@ -533,13 +525,18 @@ export interface OperationResultReveal {
   errors?: TezosGenericOperationError[];
 }
 
+export interface TransactionOperationParameter {
+  entrypoint: string;
+  value: MichelsonV1Expression;
+}
+
 export interface InternalOperationResult {
   kind: InternalOperationResultKindEnum;
   source: string;
   nonce: number;
   amount?: string;
   destination?: string;
-  parameters?: MichelsonV1Expression;
+  parameters?: TransactionOperationParameter;
   public_key?: string;
   balance?: string;
   delegate?: string;

@@ -68,7 +68,6 @@ export const createTransferOperation = async ({
   gasLimit = DEFAULT_GAS_LIMIT.TRANSFER,
   storageLimit = DEFAULT_STORAGE_LIMIT.TRANSFER,
   mutez = false,
-  rawParam = false,
 }: TransferParams) => {
   const operation: RPCTransferOperation = {
     kind: OpKind.TRANSACTION,
@@ -77,15 +76,8 @@ export const createTransferOperation = async ({
     storage_limit: storageLimit,
     amount: mutez ? amount.toString() : format('tz', 'mutez', amount).toString(),
     destination: to,
+    parameters: parameter,
   };
-
-  if (parameter) {
-    operation.parameters = rawParam
-      ? parameter
-      : typeof parameter === 'string'
-        ? sexp2mic(parameter)
-        : parameter;
-  }
   return operation;
 };
 
