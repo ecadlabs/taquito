@@ -11,17 +11,36 @@ import {
 } from '@taquito/taquito';
 import { encodeKeyHash } from '@taquito/utils';
 
+export type BeaconWalletOptions = { name: string };
+
+export enum PermissionScopeEnum {
+  READ_ADDRESS = 'read_address',
+  SIGN = 'sign',
+  OPERATION_REQUEST = 'operation_request',
+  THRESHOLD = 'threshold',
+}
+
 export class BeaconWalletNotInitialized implements Error {
   name = 'BeaconWalletNotInitialized';
   message = 'You need to initialize BeaconWallet by calling beaconWallet.requestPermissions first';
 }
 
+export class MissingRequiredScopes implements Error {
+  name = 'MissingRequiredScopes';
+  message: string;
+
+  constructor(public requiredScopes: PermissionScopeEnum[]) {
+    this.message = `Required permissions scopes were not granted: ${requiredScopes.join(',')}`;
+  }
+}
+
 export class BeaconWallet implements WalletProvider {
+  private readonly MANDATORY_SCOPES = [PermissionScopeEnum.READ_ADDRESS];
   public client: DAppClient;
 
   private permissions?: PermissionResponse;
 
-  constructor(name: string) {
+  constructor({ name }: BeaconWalletOptions) {
     this.client = new DAppClient(name);
   }
 
@@ -33,8 +52,28 @@ export class BeaconWallet implements WalletProvider {
     return this.permissions;
   }
 
+  private validateRequiredScopesOrFail(
+    permission: PermissionResponse,
+    requiredScopes: PermissionScopeEnum[]
+  ) {
+    const mandatoryScope = new Set(requiredScopes);
+
+    for (const scope of permission.permissions.scopes) {
+      if (mandatoryScope.has(scope as PermissionScopeEnum)) {
+        mandatoryScope.delete(scope as PermissionScopeEnum);
+      }
+    }
+
+    if (mandatoryScope.size > 0) {
+      throw new MissingRequiredScopes(Array.from(mandatoryScope));
+    }
+  }
+
   async requestPermissions() {
     const result = await this.client.requestPermissions();
+
+    this.validateRequiredScopesOrFail(result, this.MANDATORY_SCOPES);
+
     this.permissions = result;
   }
 
@@ -62,7 +101,10 @@ export class BeaconWallet implements WalletProvider {
   }
 
   async sendOperations(params: any[]) {
-    const network = this.getPermissionOrFail().permissions.networks;
+    const permissions = this.getPermissionOrFail();
+    this.validateRequiredScopesOrFail(permissions, [PermissionScopeEnum.OPERATION_REQUEST]);
+
+    const network = permissions.permissions.networks;
     const { transactionHashes } = await this.client.requestOperation({
       network: network[0],
       operationDetails: params.map(op => ({
