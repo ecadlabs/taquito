@@ -64,12 +64,6 @@ We publish gpg signed packages to npmjs.org under the `@taquito` handle.
 
 The TypeDoc style API documentation is available [here](https://tezostaquito.io/typedoc)
 
-## React Components overview
-
-React component demos are published using the [storybook](https://storybook.js.org) tool.
-
-View the demo components here: [Tezos components Storybook](https://tezostaquito.io/react-storybook)
-
 ## Versioning Strategy
 
 Version releases use "Semantic Versioning" style version numbers, but deviates from SemVer norms when it comes to the "Major" number.
