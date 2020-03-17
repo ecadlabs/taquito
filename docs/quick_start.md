@@ -117,25 +117,11 @@ Tezos.importKey(
 The transfer operation requires a configured signer. In this example we will use a private key that we will get from a service that was implemented for demonstration purposes and should only be used for testing and development.
 
 ```js live noInline
-Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/carthagenet' });
+const amount = 2;
+const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
 
-println(`Fetching a private key...`);
-fetch('https://api.tez.ie/keys/carthagenet/', {
-    method: 'POST',
-    headers: { Authorization: 'Bearer taquito-example' },
-  })
-  .then(response => response.text())
-  .then(privateKey => {
-    println(`Importing the private key...`);
-    return Tezos.importKey(privateKey);
-  })
-  .then(() => {
-    const amount = 2;
-    const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
-
-    println(`Transfering ${amount} ꜩ to ${address}...`);
-    return Tezos.contract.transfer({ to: address, amount: amount });
-  })
+println(`Transfering ${amount} ꜩ to ${address}...`);
+Tezos.contract.transfer({ to: address, amount: amount })
   .then(op => {
     println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
@@ -149,19 +135,7 @@ fetch('https://api.tez.ie/keys/carthagenet/', {
 Calling smart contract operations require a configured signer, in this example we will use a faucet key. The source for the smart contract [KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC][smart_contract_on_better_call_dev] used in this example can be found in a [Ligo Web IDE][smart_contract_source].
 
 ```js live noInline
-Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/carthagenet' });
-
-println(`Fetching a private key...`);
-fetch('https://api.tez.ie/keys/carthagenet/', {
-    method: 'POST',
-    headers: { Authorization: 'Bearer taquito-example' },
-  })
-  .then(response => response.text())
-  .then(privateKey => {
-    println(`Importing the private key...`);
-    return Tezos.importKey(privateKey);
-  })
-  .then(() => Tezos.contract.at('KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC'))
+Tezos.contract.at('KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC')
   .then(contract => {
     const i = 7;
 
