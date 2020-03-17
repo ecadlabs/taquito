@@ -63,7 +63,7 @@ export function castToString(data: any, keys?: any): object {
       return;
     }
 
-    if (!(item instanceof BigNumber)) {
+    if (!BigNumber.isBigNumber(item)) {
       response[key] = item;
       return;
     }
