@@ -35,7 +35,33 @@ class SemiLiveProvider extends LiveProvider {
 
   run() {
     const { scope, transformCode, noInline } = this.props;
-    this.transpile({ code: this.code, scope, transformCode, noInline });
+
+    // The following piece of code provides additional functionality to the user code such as prinln function and key import
+    const code = `
+let _printlnBuffer = "";
+
+function println(value) {
+  _printlnBuffer += value + "\\n";
+
+  render(_printlnBuffer);
+}
+
+Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/carthagenet' });
+
+fetch('https://api.tez.ie/keys/carthagenet/', {
+    method: 'POST',
+    headers: { Authorization: 'Bearer taquito-example' },
+  })
+  .then(response => response.text())
+  .then(privateKey => {
+    return Tezos.importKey(privateKey);
+  })
+  .then(() => {
+    ${this.code}
+  });
+`;
+
+    this.transpile({ code, scope, transformCode, noInline });
   }
 }
 

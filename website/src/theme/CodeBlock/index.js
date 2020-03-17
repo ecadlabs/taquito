@@ -28,7 +28,7 @@ export default ({
 }) => {
   const {
     siteConfig: {
-      themeConfig: {prism = {}},
+      themeConfig: { prism = {} },
     },
   } = useDocusaurusContext();
   const [showCopied, setShowCopied] = useState(false);
@@ -62,7 +62,7 @@ export default ({
 
     return (
       <Playground
-        scope={{...React, Tezos}}
+        scope={{ ...React, Tezos }}
         code={children.trim()}
         theme={prism.theme || defaultTheme}
         transformCode={code => code.replace(/import .*/g, '')}
@@ -91,14 +91,14 @@ export default ({
       theme={prism.theme || defaultTheme}
       code={children.trim()}
       language={language}>
-      {({className, style, tokens, getLineProps, getTokenProps}) => (
+      {({ className, style, tokens, getLineProps, getTokenProps }) => (
         <div className={styles.codeBlockWrapper}>
           <pre
             ref={target}
             className={classnames(className, styles.codeBlock)}
             style={style}>
             {tokens.map((line, i) => {
-              const lineProps = getLineProps({line, key: i});
+              const lineProps = getLineProps({ line, key: i });
 
               if (highlightLines.includes(i + 1)) {
                 lineProps.className = `${lineProps.className} docusaurus-highlight-code-line`;
@@ -107,7 +107,7 @@ export default ({
               return (
                 <div key={i} {...lineProps}>
                   {line.map((token, key) => (
-                    <span key={key} {...getTokenProps({token, key})} />
+                    <span key={key} {...getTokenProps({ token, key })} />
                   ))}
                 </div>
               );
