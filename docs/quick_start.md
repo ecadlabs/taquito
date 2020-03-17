@@ -58,9 +58,10 @@ Tezos.setProvider({ signer: new TezBridgeSigner() });
 
 ```js live noInline
 Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/mainnet' });
-Tezos.tz.getBalance('tz1NAozDvi5e7frVq9cUaC3uXQQannemB8Jw')
-  .then(balance => render(`${balance.toNumber() / 1000000} ꜩ`))
-  .catch(error => render(JSON.stringify(error)));
+Tezos.tz
+  .getBalance('tz1NAozDvi5e7frVq9cUaC3uXQQannemB8Jw')
+  .then(balance => println(`${balance.toNumber() / 1000000} ꜩ`))
+  .catch(error => println(JSON.stringify(error)));
 ```
 
 ### Import a key
@@ -79,28 +80,28 @@ A faucet key can be generated at https://faucet.tzalpha.net/
 
 ```js
 const FAUCET_KEY = {
-  "mnemonic": [
-    "cart",
-    "will",
-    "page",
-    "bench",
-    "notice",
-    "leisure",
-    "penalty",
-    "medal",
-    "define",
-    "odor",
-    "ride",
-    "devote",
-    "cannon",
-    "setup",
-    "rescue"
+  mnemonic: [
+    'cart',
+    'will',
+    'page',
+    'bench',
+    'notice',
+    'leisure',
+    'penalty',
+    'medal',
+    'define',
+    'odor',
+    'ride',
+    'devote',
+    'cannon',
+    'setup',
+    'rescue',
   ],
-  "secret": "35f266fbf0fca752da1342fdfc745a9c608e7b20",
-  "amount": "4219352756",
-  "pkh": "tz1YBMFg1nLAPxBE6djnCPbMRH5PLXQWt8Mg",
-  "password": "Fa26j580dQ",
-  "email": "jxmjvauo.guddusns@tezos.example.org"
+  secret: '35f266fbf0fca752da1342fdfc745a9c608e7b20',
+  amount: '4219352756',
+  pkh: 'tz1YBMFg1nLAPxBE6djnCPbMRH5PLXQWt8Mg',
+  password: 'Fa26j580dQ',
+  email: 'jxmjvauo.guddusns@tezos.example.org',
 };
 
 Tezos.importKey(
@@ -118,29 +119,29 @@ The transfer operation requires a configured signer. In this example we will use
 ```js live noInline
 Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/carthagenet' });
 
-render(`Fetching a private key...`);
+println(`Fetching a private key...`);
 fetch('https://api.tez.ie/keys/carthagenet/', {
     method: 'POST',
-    headers: { 'Authorization': 'Bearer taquito-example' }
+    headers: { Authorization: 'Bearer taquito-example' },
   })
   .then(response => response.text())
   .then(privateKey => {
-    render(`Importing the private key...`);
+    println(`Importing the private key...`);
     return Tezos.importKey(privateKey);
   })
   .then(() => {
     const amount = 2;
     const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
 
-    render(`Transfering ${amount} ꜩ to ${address}...`);
+    println(`Transfering ${amount} ꜩ to ${address}...`);
     return Tezos.contract.transfer({ to: address, amount: amount });
   })
   .then(op => {
-    render(`Waiting for ${op.hash} to be confirmed...`);
+    println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
   })
-  .then(hash => render(`Operation injected: https://carthagenet.tzstats.com/${hash}`))
-  .catch(error => render(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+  .then(hash => println(`Operation injected: https://carthagenet.tzstats.com/${hash}`))
+  .catch(error => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 ### Interact with a smart contract
@@ -150,29 +151,29 @@ Calling smart contract operations require a configured signer, in this example w
 ```js live noInline
 Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/carthagenet' });
 
-render(`Fetching a private key...`);
+println(`Fetching a private key...`);
 fetch('https://api.tez.ie/keys/carthagenet/', {
     method: 'POST',
-    headers: { 'Authorization': 'Bearer taquito-example' }
+    headers: { Authorization: 'Bearer taquito-example' },
   })
   .then(response => response.text())
   .then(privateKey => {
-    render(`Importing the private key...`);
+    println(`Importing the private key...`);
     return Tezos.importKey(privateKey);
   })
   .then(() => Tezos.contract.at('KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC'))
   .then(contract => {
     const i = 7;
 
-    render(`Incrementing storage value by ${i}...`);
+    println(`Incrementing storage value by ${i}...`);
     return contract.methods.increment(i).send();
   })
   .then(op => {
-    render(`Waiting for ${op.hash} to be confirmed...`);
+    println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
   })
-  .then(hash => render(`Operation injected: https://carthagenet.tzstats.com/${hash}`))
-  .catch(error => render(`Error: ${JSON.stringify(error, null, 2)}`));
+  .then(hash => println(`Operation injected: https://carthagenet.tzstats.com/${hash}`))
+  .catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 [boilerplate]: https://github.com/ecadlabs/taquito-boilerplate
