@@ -19,7 +19,7 @@ Taquito assists developers by reading the Michelson code for a given contract fr
 
 In this guide, we use a straightforward "counter" smart contract to illustrate how Taquito works.
 
-The counter contract has two entrypoints named `increment` and `decrement`.  These entrypoints are used by Taquito to generate corresponding javascript methods that are available to the developer.
+The counter contract has two entrypoints named `increment` and `decrement`. These entrypoints are used by Taquito to generate corresponding javascript methods that are available to the developer.
 
 The counter contracts storage is a simple integer that gets increased or decreased based on the calls to the entrypoints.
 
@@ -94,20 +94,21 @@ The following example shows how to load the contract, and view the methods on th
 ```js live noInline
 Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/carthagenet' });
 
-Tezos.contract.at('KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC')
-.then(c => {
-    let methods = c.parameterSchema.ExtractSignatures()
-    render(JSON.stringify(methods, null, 2))
-})
-.catch(error => console.log(`Error: ${error}`));
+Tezos.contract
+  .at('KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC')
+  .then(c => {
+    let methods = c.parameterSchema.ExtractSignatures();
+    println(JSON.stringify(methods, null, 2));
+  })
+  .catch(error => console.log(`Error: ${error}`));
 ```
 
-The `at()` method causes Taquito to query a Tezos nodes RPC API for the contracts "script" and "entrypoints". From these two inputs, Taquito builds an ordinary JavaScript object with methods that correspond to the Smart Contracts entrypoints. 
+The `at()` method causes Taquito to query a Tezos nodes RPC API for the contracts "script" and "entrypoints". From these two inputs, Taquito builds an ordinary JavaScript object with methods that correspond to the Smart Contracts entrypoints.
 
 The `at` method returns a representation of the contract as a plain old javascript object. Taquito dynamically creates an `increment` and `decrement` method that the developer can call as follows:
 
-* `contract.methods.increment()`
-* `contract.methods.decrement()`
+- `contract.methods.increment()`
+- `contract.methods.decrement()`
 
 In Tezos, to call an entrypoint on a contract, one must send a transfer operation. In the case of the counter contract, the transfer value can be `0` as the contract does not expect to receive any tokens. To call the `increment` entrypoint, the transfer must have the appropriate Michelson values specified as "params".
 
@@ -116,12 +117,13 @@ We can inspect the transfer params produced by Taquito using the `toTransferPara
 ```js live noInline
 Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/carthagenet' });
 
-Tezos.contract.at('KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC')
-.then(c => {
-    let incrementParams = c.methods.increment(2).toTransferParams()
-    render(JSON.stringify(incrementParams, null, 2))
-})
-.catch(error => console.log(`Error: ${error}`));
+Tezos.contract
+  .at('KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC')
+  .then(c => {
+    let incrementParams = c.methods.increment(2).toTransferParams();
+    println(JSON.stringify(incrementParams, null, 2));
+  })
+  .catch(error => console.log(`Error: ${error}`));
 ```
 
 ## Calling the Increment function
@@ -135,29 +137,29 @@ Then we wait for the `confirmation(3)` to complete. The `3` number tells Taquito
 ```js live noInline
 Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/carthagenet' });
 
-render(`Fetching temporary private key for testing...`);
+println(`Fetching temporary private key for testing...`);
 fetch('https://api.tez.ie/keys/carthagenet/', {
     method: 'POST',
-    headers: { 'Authorization': 'Bearer taquito-example' }
+    headers: { Authorization: 'Bearer taquito-example' },
   })
   .then(response => response.text())
   .then(privateKey => {
-    render(`Importing the private key...`);
+    println(`Importing the private key...`);
     return Tezos.importKey(privateKey);
   })
   .then(() => Tezos.contract.at('KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC'))
   .then(contract => {
     const i = 7;
 
-    render(`Incrementing storage value by ${i}...`);
+    println(`Incrementing storage value by ${i}...`);
     return contract.methods.increment(i).send();
   })
   .then(op => {
-    render(`Awaiting for ${op.hash} to be confirmed...`)
-    return op.confirmation(3).then(() => op.hash)
+    println(`Awaiting for ${op.hash} to be confirmed...`);
+    return op.confirmation(3).then(() => op.hash);
   })
-  .then(hash => render(`Operation injected: https://carthagenet.tzstats.com/${hash}`))
-  .catch(error => render(`Error: ${JSON.stringify(error, null, 2)}`));
+  .then(hash => println(`Operation injected: https://carthagenet.tzstats.com/${hash}`))
+  .catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 [0]: https://ligolang.org/

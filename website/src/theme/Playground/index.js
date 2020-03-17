@@ -35,7 +35,21 @@ class SemiLiveProvider extends LiveProvider {
 
   run() {
     const { scope, transformCode, noInline } = this.props;
-    this.transpile({ code: this.code, scope, transformCode, noInline });
+
+    // The following piece of code is injected into the code to provide println functionality
+    const println = `
+let _printlnBuffer = "";
+
+function println(value) {
+  _printlnBuffer += value + "\\n";
+
+  render(_printlnBuffer);
+}
+`;
+
+    const code = `${println} ${this.code}`;
+
+    this.transpile({ code, scope, transformCode, noInline });
   }
 }
 
