@@ -1,21 +1,15 @@
 [![pkgsign status](https://us-central1-pkgsign.cloudfunctions.net/pkgsign-badge?name=@taquito/taquito&expectedIdentity=%40simrob)](https://github.com/RedpointGames/pkgsign)
 
-# Taquito high level functions
+# Taquito Integration Tests
 
-The `@taquito/taquito` package contains higher level functionality that builds upon the other packages in the Tezos Typescript Library Suite.
+The `integration-tests` directory contains a testing suite for various contract interactions that require querying a live chain to test properly.
 
-## CDN Bundle
+## How to test
 
-```html
-<script src="https://unpkg.com/@taquito/taquito@6.1.0-beta.0/dist/taquito.min.js"
-crossorigin="anonymous" integrity="sha384-6afrutf2QliZN19x78z8v4VfLGzGzjzqTxivBwUzbJQy4/dxMvdtz/HPZSXsorg6"></script>
-```
+If you feel obliged, you can run the entire test suite with `npm run test` inside the `integration-tests` directory. Do know that this can take a bit of time to fully run. 
 
-## API Documentation
+If you'd like to take a more targeted approach you can use the command: `npm run test -- -t "Title of test here"` So if I have a test block that starts with `it('does some stuff)` then the command `npm run test -- -t "does some stuff"` will run this test only and save you loads of time.
 
-TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_taquito.html)
-
-See the top-level [https://github.com/ecadlabs/taquito](https://github.com/ecadlabs/taquito) file for details on reporting issues, contributing and versioning.
 
 ## Disclaimer
 

@@ -25,6 +25,7 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress, protocol }) => {
       await setup()
       done()
     })
+
     it('Simple origination scenario', async (done) => {
       const op = await Tezos.contract.originate({
         balance: "1",
@@ -72,6 +73,18 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress, protocol }) => {
         status: 400,
       })
       done();
+    })
+
+    it('Return undefined when BigMap key is not found', async () => {
+      const myContract = await Tezos.contract.at(rpc === "https://api.tez.ie/rpc/carthagenet" ? "KT1MLLuyxgxWzW8iRMrNVeamerasADFqiKPW" : "KT1T2KjQdqeNzeaSGm9MfzfgMN8rWC94BrTP");
+      const contractStorage: any = await myContract.storage();
+      let value;
+      if (rpc === "https://api.tez.ie/rpc/carthagenet") {
+        value = await contractStorage[0].get("tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEyz")
+      } else {
+        value = await contractStorage.ledger.get("tz1XfAjZyaLdceHnZxbMYop7g7kWKPut4PR7")
+      }
+      expect(value).toBeUndefined();
     })
 
     it('Failwith contract', async (done) => {

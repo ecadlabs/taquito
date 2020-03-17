@@ -3,6 +3,7 @@ import { ParameterSchema } from '../src/schema/parameter';
 import { storage, params, rpcContractResponse, bigMapValue } from '../data/baker_registry';
 import BigNumber from 'bignumber.js';
 import { MichelsonMap } from '../src/michelson-map';
+import { Tezos } from '../../taquito';
 describe('Baker Registry contract test', () => {
   it('Test storage schema', () => {
     const schema = new Schema(storage);

@@ -6,7 +6,12 @@ export class BigMapAbstraction {
   constructor(private id: BigNumber, private schema: Schema, private provider: ContractProvider) {}
 
   async get(keyToEncode: string) {
-    return this.provider.getBigMapKeyByID(this.id.toString(), keyToEncode, this.schema);
+    try {
+      const id = await this.provider.getBigMapKeyByID(this.id.toString(), keyToEncode, this.schema);
+      return id;
+    } catch (e) {
+      return undefined;
+    }
   }
 
   toJSON() {
