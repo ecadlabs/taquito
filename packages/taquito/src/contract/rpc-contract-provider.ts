@@ -43,7 +43,7 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
     }
 
     let contractSchema: Schema;
-    if (schema instanceof Schema) {
+    if (Schema.isSchema(schema)) {
       contractSchema = schema;
     } else {
       contractSchema = Schema.fromRPCResponse({ script: schema as ScriptResponse });
@@ -72,7 +72,7 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
     }
 
     let contractSchema: Schema;
-    if (schema instanceof Schema) {
+    if (Schema.isSchema(schema)) {
       contractSchema = schema;
     } else {
       contractSchema = Schema.fromRPCResponse({ script: schema as ScriptResponse });
