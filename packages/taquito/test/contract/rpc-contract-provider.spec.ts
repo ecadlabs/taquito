@@ -8,6 +8,7 @@ import {
   ligoSample,
   tokenInit,
   tokenCode,
+  sampleBigMapAbstractionValue,
 } from './data';
 import BigNumber from 'bignumber.js';
 import { Context } from '../../src/context';
@@ -21,7 +22,8 @@ import {
 } from '../../src/constants';
 import { InvalidDelegationSource } from '../../src/contract/errors';
 import { preapplyResultFrom } from './helper';
-import { MichelsonMap } from '@taquito/michelson-encoder';
+import { MichelsonMap, Schema } from '@taquito/michelson-encoder';
+import { BigMapAbstraction } from '../../src/contract/big-map';
 
 /**
  * RPCContractProvider test
@@ -32,6 +34,7 @@ describe('RpcContractProvider test', () => {
     getScript: jest.Mock<any, any>;
     getStorage: jest.Mock<any, any>;
     getBigMapKey: jest.Mock<any, any>;
+    getBigMapKeyByID: jest.Mock<any, any>;
     getBlockHeader: jest.Mock<any, any>;
     getEntrypoints: jest.Mock<any, any>;
     getManagerKey: jest.Mock<any, any>;
@@ -75,6 +78,7 @@ describe('RpcContractProvider test', () => {
       getManagerKey: jest.fn(),
       getStorage: jest.fn(),
       getBigMapKey: jest.fn(),
+      getBigMapKeyByID: jest.fn(),
       getBlockHeader: jest.fn(),
       getBlockMetadata: jest.fn(),
       getContract: jest.fn(),
@@ -157,6 +161,15 @@ describe('RpcContractProvider test', () => {
         key: { bytes: '000035e993d8c7aaa42b5e3ccd86a33390ececc73abd' },
         type: { prim: 'bytes' },
       });
+      done();
+    });
+  });
+
+  describe('BigMapAbstraction', () => {
+    it('returns undefined on bad key in BigMap', async done => {
+      const schema = new Schema(sampleBigMapAbstractionValue);
+      const bigMap = new BigMapAbstraction(new BigNumber(13242344), schema, rpcContractProvider);
+      expect(await bigMap.get('failingValue')).toBeUndefined();
       done();
     });
   });

@@ -39,6 +39,17 @@ export const sample = {
   ],
 };
 
+export const sampleBigMapAbstractionValue = {
+  prim: 'big_map',
+  args: [
+    { prim: 'address' },
+    {
+      prim: 'pair',
+      args: [{ prim: 'nat' }, { prim: 'map', args: [{ prim: 'address' }, { prim: 'nat' }] }],
+    },
+  ],
+};
+
 export const sampleBigMapValue = {
   prim: 'Pair',
   args: [
@@ -111,7 +122,15 @@ export const miSample = [
   { prim: 'parameter', args: [{ prim: 'int', args: [] }] },
   {
     prim: 'storage',
-    args: [{ prim: 'pair', args: [{ prim: 'int', args: [] }, { prim: 'address', args: [] }] }],
+    args: [
+      {
+        prim: 'pair',
+        args: [
+          { prim: 'int', args: [] },
+          { prim: 'address', args: [] },
+        ],
+      },
+    ],
   },
   {
     prim: 'code',
@@ -385,7 +404,10 @@ export const tokenCode = [
               { prim: 'address', annots: [':from'] },
               {
                 prim: 'pair',
-                args: [{ prim: 'address', annots: [':to'] }, { prim: 'nat', annots: [':value'] }],
+                args: [
+                  { prim: 'address', annots: [':to'] },
+                  { prim: 'nat', annots: [':value'] },
+                ],
               },
             ],
             annots: ['%transfer'],
