@@ -19,6 +19,7 @@ interface Config {
   rpc: string,
   knownBaker: string,
   knownContract: string,
+  knownBigMapContract: string,
   protocol: Protocols
 }
 
@@ -34,12 +35,14 @@ const providers: Config[] = envConfig ? JSON.parse(envConfig) : [
     rpc: 'https://api.tez.ie/rpc/carthagenet',
     knownBaker: 'tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9',
     knownContract: 'KT1XYa1JPKYVJYVJge89r4w2tShS8JYb1NQh',
+    knownBigMapContract: 'KT1HqWsXrGbHWc9muqkApqWu64WsxCU3FoRf',
     protocol: Protocols.PsCARTHA
   },
   {
     rpc: 'https://api.tez.ie/rpc/babylonnet',
     knownBaker: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
     knownContract: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK',
+    knownBigMapContract: 'KT1T2KjQdqeNzeaSGm9MfzfgMN8rWC94BrTP',
     protocol: Protocols.PsBabyM1
   }
 ];
@@ -50,7 +53,7 @@ jest.setTimeout(60000 * 10);
 
 export const CONFIGS: ConfigWithSetup[] =
   forgers.reduce((prev, forger: ForgerType) => {
-    const configs = providers.map(({ rpc, knownBaker, knownContract, protocol }) => {
+    const configs = providers.map(({ rpc, knownBaker, knownContract, knownBigMapContract, protocol }) => {
       const Tezos = new TezosToolkit();
       if (forger === ForgerType.LOCAL) {
         Tezos.setProvider({ rpc, forger: localForger })
@@ -62,7 +65,7 @@ export const CONFIGS: ConfigWithSetup[] =
         Tezos.setProvider({ rpc })
       }
       return {
-        rpc, knownBaker, knownContract, protocol, lib: Tezos, setup: async () => {
+        rpc, knownBaker, knownContract, knownBigMapContract, protocol, lib: Tezos, setup: async () => {
           let faucetKey = {
             email: "peqjckge.qkrrajzs@tezos.example.org",
             password: "y4BX7qS1UE", mnemonic: [

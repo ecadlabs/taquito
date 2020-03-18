@@ -17,7 +17,7 @@ import { storageContract } from "./data/storage-contract";
 import { mapWithPairAsKeyCode, mapWithPairAsKeyStorage } from "./data/bigmap_with_pair_as_key";
 import { storageContractWithPairAsKey } from "./data/storage-contract-with-pair-as-key";
 
-CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress, protocol }) => {
+CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress, protocol, knownBigMapContract }) => {
   const Tezos = lib;
   describe(`Test contract api using: ${rpc}`, () => {
 
@@ -75,13 +75,13 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress, protocol }) => {
     })
 
     it('Return undefined when BigMap key is not found', async () => {
-      const myContract = await Tezos.contract.at(rpc === "https://api.tez.ie/rpc/carthagenet" ? "KT1MLLuyxgxWzW8iRMrNVeamerasADFqiKPW" : "KT1T2KjQdqeNzeaSGm9MfzfgMN8rWC94BrTP");
+      const myContract = await Tezos.contract.at(knownBigMapContract);
       const contractStorage: any = await myContract.storage();
       let value;
       if (rpc === "https://api.tez.ie/rpc/carthagenet") {
-        value = await contractStorage[0].get("tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEyz")
+        value = await contractStorage.ledger.get("tz1NortRftucvAkD1J58L32EhSVrQEWJCEnB")
       } else {
-        value = await contractStorage.ledger.get("tz1XfAjZyaLdceHnZxbMYop7g7kWKPut4PR7")
+        value = await contractStorage.ledger.get("tz1RL215HFeALUc1myZp3rKpSt9EuY5EUsbx")
       }
       expect(value).toBeUndefined();
     })

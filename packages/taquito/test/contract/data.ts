@@ -42,10 +42,10 @@ export const sample = {
 export const sampleBigMapAbstractionValue = {
   prim: 'big_map',
   args: [
-    { prim: 'address' },
+    { prim: 'string' },
     {
       prim: 'pair',
-      args: [{ prim: 'nat' }, { prim: 'map', args: [{ prim: 'address' }, { prim: 'nat' }] }],
+      args: [{ prim: 'nat' }, { prim: 'map', args: [{ prim: 'string' }, { prim: 'nat' }] }],
     },
   ],
 };

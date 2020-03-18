@@ -1,5 +1,3 @@
-[![pkgsign status](https://us-central1-pkgsign.cloudfunctions.net/pkgsign-badge?name=@taquito/taquito&expectedIdentity=%40simrob)](https://github.com/RedpointGames/pkgsign)
-
 # Taquito Integration Tests
 
 The `integration-tests` directory contains a testing suite for various contract interactions that require querying a live chain to test properly.
