@@ -195,7 +195,7 @@ describe('RpcContractProvider test', () => {
       expect(returnValue).toEqual(undefined);
       done();
     });
-    it('returns undefined on bad key in BigMap', async done => {
+    it('returns error if error is not 404 from key lookup in BigMap', async done => {
       const expectedError = new HttpResponseError(
         'fail',
         STATUS_CODE.FORBIDDEN,
