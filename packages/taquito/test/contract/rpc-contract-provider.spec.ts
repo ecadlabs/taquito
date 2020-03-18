@@ -34,7 +34,6 @@ describe('RpcContractProvider test', () => {
     getScript: jest.Mock<any, any>;
     getStorage: jest.Mock<any, any>;
     getBigMapKey: jest.Mock<any, any>;
-    getBigMapKeyByID: jest.Mock<any, any>;
     getBlockHeader: jest.Mock<any, any>;
     getEntrypoints: jest.Mock<any, any>;
     getManagerKey: jest.Mock<any, any>;
@@ -78,7 +77,6 @@ describe('RpcContractProvider test', () => {
       getManagerKey: jest.fn(),
       getStorage: jest.fn(),
       getBigMapKey: jest.fn(),
-      getBigMapKeyByID: jest.fn(),
       getBlockHeader: jest.fn(),
       getBlockMetadata: jest.fn(),
       getContract: jest.fn(),

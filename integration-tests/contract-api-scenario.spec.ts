@@ -25,7 +25,6 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress, protocol }) => {
       await setup()
       done()
     })
-
     it('Simple origination scenario', async (done) => {
       const op = await Tezos.contract.originate({
         balance: "1",
