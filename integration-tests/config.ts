@@ -27,7 +27,7 @@ interface Config {
 /**
  * SignerType specifies the different signer options used in the integration test suite. EPHEMERAL_KEY relies on a the [tezos-key-get-api](https://github.com/ecadlabs/tezos-key-gen-api)
  */
-enum signerType {
+enum SignerType {
   FAUCET,
   EPHEMERAL_KEY
 }
@@ -42,7 +42,7 @@ interface ConfigWithSetup extends Config {
  * EphemeralConfig contains configuration for interacting with the [tezos-key-gen-api](https://github.com/ecadlabs/tezos-key-gen-api)
  */
 interface EphemeralConfig {
-  type: signerType.EPHEMERAL_KEY,
+  type: SignerType.EPHEMERAL_KEY,
   keyUrl: string,
   requestHeaders: {[key: string]: string}
 }
@@ -51,8 +51,8 @@ interface EphemeralConfig {
  * FaucetConfig contains a JSON faucet key that can be used on Tezos test-nets or sandboxes. Faucet keys for public testnets are available from [https://faucet.tzalpha.net/](https://faucet.tzalpha.net/)
  */
 interface FaucetConfig {
-  type: signerType.FAUCET,
-  faucetKey?: {}
+  type: SignerType.FAUCET,
+  faucetKey: {}
 }
 
   const carthagenetEphemeral = {
@@ -61,7 +61,7 @@ interface FaucetConfig {
     knownContract: 'KT1XYa1JPKYVJYVJge89r4w2tShS8JYb1NQh',
     protocol: Protocols.PsCARTHA,
     signerConfig: {
-      type: signerType.EPHEMERAL_KEY,
+      type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
       keyUrl: 'https://api.tez.ie/keys/carthagenet/ephemeral',
       requestHeaders: {'Authorization': 'Bearer taquito-example'},
      }
@@ -72,7 +72,7 @@ interface FaucetConfig {
     knownContract: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK',
     protocol: Protocols.PsBabyM1,
     signerConfig: {
-      type: signerType.EPHEMERAL_KEY,
+      type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
       keyUrl: 'https://api.tez.ie/keys/babylonnet/ephemeral',
       requestHeaders: {'Authorization': 'Bearer taquito-example'},
      }
@@ -107,9 +107,9 @@ interface FaucetConfig {
     knownContract: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK',
     protocol: Protocols.PsCARTHA,
     signerConfig: {
-      type: signerType.FAUCET,
+      type: SignerType.FAUCET as SignerType.FAUCET,
       faucetKey: key,
-     } as FaucetConfig
+     }
   }
 
  const babylonnetFaucet = {
@@ -118,9 +118,9 @@ interface FaucetConfig {
     knownContract: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK',
     protocol: Protocols.PsBabyM1,
     signerConfig: {
-      type: signerType.FAUCET,
+      type: SignerType.FAUCET as SignerType.FAUCET,
       faucetKey: key,
-     } as FaucetConfig
+     }
   }
 const providers: Config[] = [];
 
@@ -160,12 +160,12 @@ export const CONFIGS: ConfigWithSetup[] =
         lib: Tezos,
         signerConfig,
         setup: async () => {
-          if (signerConfig.type === signerType.FAUCET) {
+          if (signerConfig.type === SignerType.FAUCET) {
 
             const faucetKey: any = faucetKeyFile || signerConfig.faucetKey
             await importKey(Tezos, faucetKey.email, faucetKey.password, faucetKey.mnemonic.join(" "), faucetKey.secret)
 
-          } else if(signerConfig.type === signerType.EPHEMERAL_KEY) {
+          } else if(signerConfig.type === SignerType.EPHEMERAL_KEY) {
 
             const httpClient = new HttpBackend()
             const { id, pkh } = await httpClient.createRequest(
