@@ -1,5 +1,7 @@
 import { localForger } from '@taquito/local-forging';
 import { CompositeForger, RpcForger, TezosToolkit, Protocols } from '@taquito/taquito';
+import { RemoteSigner } from '@taquito/remote-signer';
+import { HttpBackend } from '@taquito/http-utils'
 import { b58cencode, Prefix, prefix } from '@taquito/utils';
 import { importKey } from '@taquito/signer'
 import fs from 'fs';
@@ -19,7 +21,15 @@ interface Config {
   rpc: string,
   knownBaker: string,
   knownContract: string,
-  protocol: Protocols
+  protocol: Protocols,
+  signerConfig: EphemeralConfig | FaucetConfig
+}
+/**
+ * SignerType specifies the different signer options used in the integration test suite. EPHEMERAL_KEY relies on a the [tezos-key-get-api](https://github.com/ecadlabs/tezos-key-gen-api)
+ */
+enum signerType {
+  FAUCET,
+  EPHEMERAL_KEY
 }
 
 interface ConfigWithSetup extends Config {
@@ -28,67 +38,151 @@ interface ConfigWithSetup extends Config {
   createAddress: () => Promise<TezosToolkit>,
   protocol: Protocols
 }
+/**
+ * EphemeralConfig contains configuration for interacting with the [tezos-key-gen-api](https://github.com/ecadlabs/tezos-key-gen-api)
+ */
+interface EphemeralConfig {
+  type: signerType.EPHEMERAL_KEY,
+  keyUrl: string,
+  requestHeaders: {[key: string]: string}
+}
 
-const providers: Config[] = envConfig ? JSON.parse(envConfig) : [
-  {
+/**
+ * FaucetConfig contains a JSON faucet key that can be used on Tezos test-nets or sandboxes. Faucet keys for public testnets are available from [https://faucet.tzalpha.net/](https://faucet.tzalpha.net/)
+ */
+interface FaucetConfig {
+  type: signerType.FAUCET,
+  faucetKey?: {}
+}
+
+  const carthagenetEphemeral = {
     rpc: 'https://api.tez.ie/rpc/carthagenet',
     knownBaker: 'tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9',
     knownContract: 'KT1XYa1JPKYVJYVJge89r4w2tShS8JYb1NQh',
-    protocol: Protocols.PsCARTHA
-  },
-  {
+    protocol: Protocols.PsCARTHA,
+    signerConfig: {
+      type: signerType.EPHEMERAL_KEY,
+      keyUrl: 'https://api.tez.ie/keys/carthagenet/ephemeral',
+      requestHeaders: {'Authorization': 'Bearer taquito-example'},
+     }
+  }
+  const babylonnetEphemeral = {
     rpc: 'https://api.tez.ie/rpc/babylonnet',
     knownBaker: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
     knownContract: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK',
-    protocol: Protocols.PsBabyM1
+    protocol: Protocols.PsBabyM1,
+    signerConfig: {
+      type: signerType.EPHEMERAL_KEY,
+      keyUrl: 'https://api.tez.ie/keys/babylonnet/ephemeral',
+      requestHeaders: {'Authorization': 'Bearer taquito-example'},
+     }
   }
-];
+ // Well known faucet key. Can be overridden by setting the `TEZOS_FAUCET_KEY_FILE` environment variable
+ const key = {
+        email: "peqjckge.qkrrajzs@tezos.example.org",
+        password: "y4BX7qS1UE",
+        mnemonic: [
+          "skate",
+          "damp",
+          "faculty",
+          "morning",
+          "bring",
+          "ridge",
+          "traffic",
+          "initial",
+          "piece",
+          "annual",
+          "give",
+          "say",
+          "wrestle",
+          "rare",
+          "ability"
+        ],
+        secret: "7d4c8c3796fdbf4869edb5703758f0e5831f5081"
+     }
+
+ const carthagenetFaucet = {
+    rpc: 'https://api.tez.ie/rpc/carthagenet',
+    knownBaker: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
+    knownContract: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK',
+    protocol: Protocols.PsCARTHA,
+    signerConfig: {
+      type: signerType.FAUCET,
+      faucetKey: key,
+     } as FaucetConfig
+  }
+
+ const babylonnetFaucet = {
+    rpc: 'https://api.tez.ie/rpc/babylonnet',
+    knownBaker: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
+    knownContract: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK',
+    protocol: Protocols.PsBabyM1,
+    signerConfig: {
+      type: signerType.FAUCET,
+      faucetKey: key,
+     } as FaucetConfig
+  }
+const providers: Config[] = [];
+
+if (process.env['RUN_WITH_FAUCET']) {
+  providers.push(carthagenetFaucet, babylonnetFaucet)
+} else {
+  providers.push(carthagenetEphemeral, babylonnetEphemeral)
+}
 
 const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE']
 
 jest.setTimeout(60000 * 10);
 
+const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
+  if (forger === ForgerType.LOCAL) {
+    Tezos.setProvider({ forger: localForger })
+  } else if (forger === ForgerType.COMPOSITE) {
+    const rpcForger = Tezos.getFactory(RpcForger)();
+    const composite = new CompositeForger([rpcForger, localForger]);
+    Tezos.setProvider({ forger: composite })
+  }
+}
+
 export const CONFIGS: ConfigWithSetup[] =
   forgers.reduce((prev, forger: ForgerType) => {
-    const configs = providers.map(({ rpc, knownBaker, knownContract, protocol }) => {
+    const configs = providers.map(({ rpc, knownBaker, knownContract, protocol, signerConfig }) => {
       const Tezos = new TezosToolkit();
-      if (forger === ForgerType.LOCAL) {
-        Tezos.setProvider({ rpc, forger: localForger })
-      } else if (forger === ForgerType.COMPOSITE) {
-        const rpcForger = Tezos.getFactory(RpcForger)();
-        const composite = new CompositeForger([rpcForger, localForger]);
-        Tezos.setProvider({ rpc, forger: composite })
-      } else {
-        Tezos.setProvider({ rpc })
-      }
-      return {
-        rpc, knownBaker, knownContract, protocol, lib: Tezos, setup: async () => {
-          let faucetKey = {
-            email: "peqjckge.qkrrajzs@tezos.example.org",
-            password: "y4BX7qS1UE", mnemonic: [
-              "skate",
-              "damp",
-              "faculty",
-              "morning",
-              "bring",
-              "ridge",
-              "traffic",
-              "initial",
-              "piece",
-              "annual",
-              "give",
-              "say",
-              "wrestle",
-              "rare",
-              "ability"
-            ],
-            secret: "7d4c8c3796fdbf4869edb5703758f0e5831f5081"
-          }
-          if (faucetKeyFile) {
-            faucetKey = JSON.parse(fs.readFileSync(faucetKeyFile).toString())
-          }
 
-          await importKey(Tezos, faucetKey.email, faucetKey.password, faucetKey.mnemonic.join(" "), faucetKey.secret)
+      Tezos.setProvider({ rpc })
+      setupForger(Tezos, forger)
+
+      return {
+        rpc,
+        knownBaker,
+        knownContract,
+        protocol,
+        lib: Tezos,
+        signerConfig,
+        setup: async () => {
+          if (signerConfig.type === signerType.FAUCET) {
+
+            const faucetKey: any = faucetKeyFile || signerConfig.faucetKey
+            await importKey(Tezos, faucetKey.email, faucetKey.password, faucetKey.mnemonic.join(" "), faucetKey.secret)
+
+          } else if(signerConfig.type === signerType.EPHEMERAL_KEY) {
+
+            const httpClient = new HttpBackend()
+            const { id, pkh } = await httpClient.createRequest(
+              {
+                url:  signerConfig.keyUrl,
+                method: 'POST',
+                headers: signerConfig.requestHeaders,
+              })
+
+            const signer = new RemoteSigner(
+              pkh,
+              `${signerConfig.keyUrl}/${id}/`,
+              { headers: signerConfig.requestHeaders },
+            )
+            Tezos.setSignerProvider(signer)
+
+          }
         },
         createAddress: async () => {
           const tezos = new TezosToolkit()
@@ -106,4 +200,3 @@ export const CONFIGS: ConfigWithSetup[] =
     });
     return [...prev, ...configs]
   }, [] as ConfigWithSetup[]);
-
