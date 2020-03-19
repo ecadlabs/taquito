@@ -11,7 +11,6 @@ import {
 import toBuffer from 'typedarray-to-buffer';
 import { BadSigningDataError, KeyNotFoundError, OperationNotAuthorizedError } from './errors';
 import { Signer } from '@taquito/taquito';
-
 interface PublicKeyResponse {
   public_key: string;
 }
@@ -19,9 +18,17 @@ interface PublicKeyResponse {
 interface SignResponse {
   signature: string;
 }
+export interface RemoteSignerOptions {
+  headers?: { [key: string]: string };
+}
 
 export class RemoteSigner implements Signer {
-  constructor(private pkh: string, private rootUrl: string, private http = new HttpBackend()) {}
+  constructor(
+    private pkh: string,
+    private rootUrl: string,
+    private options: RemoteSignerOptions = {},
+    private http = new HttpBackend()
+  ) {}
 
   async publicKeyHash(): Promise<string> {
     return this.pkh;
@@ -37,6 +44,7 @@ export class RemoteSigner implements Signer {
       const { public_key } = await this.http.createRequest<PublicKeyResponse>({
         url: this.createURL(`/keys/${this.pkh}`),
         method: 'GET',
+        headers: this.options.headers,
       });
       return public_key;
     } catch (ex) {
@@ -60,7 +68,11 @@ export class RemoteSigner implements Signer {
         bb = mergebuf(watermark, bb);
       }
       const { signature } = await this.http.createRequest<SignResponse>(
-        { url: this.createURL(`/keys/${this.pkh}`), method: 'POST' },
+        {
+          url: this.createURL(`/keys/${this.pkh}`),
+          method: 'POST',
+          headers: this.options.headers,
+        },
         buf2hex(toBuffer(bb))
       );
       let pref = signature.startsWith('sig') ? signature.substr(0, 3) : signature.substr(0, 5);
