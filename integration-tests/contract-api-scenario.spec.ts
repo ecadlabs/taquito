@@ -77,12 +77,7 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress, protocol, knownBi
     it('Return undefined when BigMap key is not found', async () => {
       const myContract = await Tezos.contract.at(knownBigMapContract);
       const contractStorage: any = await myContract.storage();
-      let value;
-      if (rpc === "https://api.tez.ie/rpc/carthagenet") {
-        value = await contractStorage.ledger.get("tz1NortRftucvAkD1J58L32EhSVrQEWJCEnB")
-      } else {
-        value = await contractStorage.ledger.get("tz1RL215HFeALUc1myZp3rKpSt9EuY5EUsbx")
-      }
+      const value = await contractStorage.ledger.get("tz1NortRftucvAkD1J58L32EhSVrQEWJCEnB")
       expect(value).toBeUndefined();
     })
 

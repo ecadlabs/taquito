@@ -210,7 +210,7 @@ describe('RpcContractProvider test', () => {
         schema,
         rpcContractProvider
       );
-      await expect(bigMap.get('test')).rejects.toThrow();
+      await expect(bigMap.get('test')).rejects.toEqual(expectedError);
       done();
     });
   });

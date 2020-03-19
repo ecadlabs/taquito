@@ -14,7 +14,7 @@ export class BigMapAbstraction {
       if (e instanceof HttpResponseError && e.status === STATUS_CODE.NOT_FOUND) {
         return undefined;
       } else {
-        throw new Error(e);
+        throw e;
       }
     }
   }
