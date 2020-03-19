@@ -94,7 +94,7 @@ export const CONFIGS: ConfigWithSetup[] =
           const tezos = new TezosToolkit()
           tezos.setProvider({ rpc: rpc })
 
-          const keyBytes = new Buffer(32);
+          const keyBytes = Buffer.alloc(32);
           nodeCrypto.randomFillSync(keyBytes)
 
           const key = b58cencode(new Uint8Array(keyBytes), prefix[Prefix.P2SK]);
