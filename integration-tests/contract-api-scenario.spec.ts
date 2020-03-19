@@ -63,6 +63,52 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress, protocol }) => {
       done();
     });
 
+    it('Simple origination scenario with not enough storageLimit', async (done) => {
+      expect.assertions(1)
+      try {
+        await Tezos.contract.originate({
+          balance: "1",
+          code: `parameter string;
+          storage string;
+          code {CAR;
+                PUSH string "Hello ";
+                CONCAT;
+                NIL operation; PAIR};
+          `,
+          init: `"test"`,
+          storageLimit: 0
+        })
+      } catch (ex) {
+        expect(ex).toEqual(expect.objectContaining({
+          message: expect.stringContaining('storage_exhausted.operation')
+        }))
+      }
+      done();
+    });
+
+    it('Simple origination scenario with not enough gasLimit', async (done) => {
+      expect.assertions(1)
+      try {
+        await Tezos.contract.originate({
+          balance: "1",
+          code: `parameter string;
+          storage string;
+          code {CAR;
+                PUSH string "Hello ";
+                CONCAT;
+                NIL operation; PAIR};
+          `,
+          init: `"test"`,
+          gasLimit: 0
+        })
+      } catch (ex) {
+        expect(ex).toEqual(expect.objectContaining({
+          message: expect.stringContaining('gas_exhausted.operation')
+        }))
+      }
+      done();
+    });
+
     it('Contract with bad code', async (done) => {
       await expect(Tezos.contract.originate({
         balance: "1",
@@ -835,14 +881,7 @@ CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress, protocol }) => {
     it('Estimate transfer to regular address with a fixed fee', async (done) => {
       // fee, gasLimit and storage limit are not taken into account
       const params = { fee: 2000, to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) }
-      let estimate = await LowAmountTez.estimate.transfer(params);
-      expect(estimate).toMatchObject({
-        gasLimit: 10307,
-        storageLimit: 0,
-        suggestedFeeMutez: 1382
-      });
-
-      await expect(LowAmountTez.contract.transfer(params)).rejects.toEqual(
+      await expect(LowAmountTez.estimate.transfer(params)).rejects.toEqual(
         expect.objectContaining({
           // Not sure if it is expected according to (https://tezos.gitlab.io/api/errors.html)
           message: expect.stringContaining('storage_error'),
