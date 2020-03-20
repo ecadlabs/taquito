@@ -3,7 +3,7 @@ import { failwithContractCode } from "./data/failwith";
 import { managerCode } from "./data/manager_code";
 import { MANAGER_LAMBDA } from "@taquito/taquito";
 
-CONFIGS.forEach(({ lib, rpc, setup}) => {
+CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   describe(`Test contract that calls 2nd contract that FAILs: ${rpc}`, () => {
 
@@ -11,7 +11,7 @@ CONFIGS.forEach(({ lib, rpc, setup}) => {
       await setup()
       done()
     })
-  it('Catches a Failwith from a contract called via a manager contract', async (done) => {
+    it('Catches a Failwith from a contract called via a manager contract', async (done) => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: failwithContractCode,

@@ -126,7 +126,7 @@ const providers: Config[] = [];
 if (process.env['RUN_WITH_FAUCET']) {
   providers.push(carthagenetFaucet, babylonnetFaucet)
 } else {
-  providers.push(carthagenetEphemeral, babylonnetEphemeral)
+  providers.push(carthagenetEphemeral)
 }
 
 const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE']
@@ -179,8 +179,8 @@ const setupWithFaucetKey = async (Tezos: TezosToolkit, signerConfig: FaucetConfi
   await importKey(Tezos, faucetKey.email, faucetKey.password, faucetKey.mnemonic.join(" "), faucetKey.secret)
 }
 
-export const CONFIGS: ConfigWithSetup[] =
-  forgers.reduce((prev, forger: ForgerType) => {
+export const CONFIGS = () => {
+  return forgers.reduce((prev, forger: ForgerType) => {
     const configs = providers.map(({ rpc, knownBaker, knownContract, protocol, signerConfig }) => {
       const Tezos = new TezosToolkit();
 
@@ -221,3 +221,4 @@ export const CONFIGS: ConfigWithSetup[] =
     });
     return [...prev, ...configs]
   }, [] as ConfigWithSetup[]);
+}

@@ -1,7 +1,7 @@
 import { CONFIGS } from "./config";
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT } from "@taquito/taquito";
 
-CONFIGS.forEach(({ lib, rpc, setup, knownBaker }) => {
+CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
   const Tezos = lib;
   describe(`Test delegation off account using: ${rpc}`, () => {
 

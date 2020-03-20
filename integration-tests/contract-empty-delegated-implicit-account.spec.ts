@@ -1,7 +1,7 @@
 import { CONFIGS } from "./config";
 import { Protocols } from "@taquito/taquito";
 
-CONFIGS.forEach(({ lib, rpc, setup, createAddress, knownBaker, protocol}) => {
+CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, protocol }) => {
   const Tezos = lib;
   describe(`Test emptying a delegated implicit account using: ${rpc}`, () => {
 
@@ -9,7 +9,7 @@ CONFIGS.forEach(({ lib, rpc, setup, createAddress, knownBaker, protocol}) => {
       await setup()
       done()
     })
-it('create a new account, delegate it, attempt to empty it despite delegation expect to fail', async (done) => {
+    it('create a new account, delegate it, attempt to empty it despite delegation expect to fail', async (done) => {
       const LocalTez = await createAddress();
       const op = await Tezos.contract.transfer({ to: await LocalTez.signer.publicKeyHash(), amount: 2 });
       await op.confirmation();

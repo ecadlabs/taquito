@@ -1,6 +1,6 @@
 import { CONFIGS } from "./config";
 
-CONFIGS.forEach(({ lib, rpc, setup, knownBaker }) => {
+CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
   const Tezos = lib;
   describe(`Test account delegation with estimation using: ${rpc}`, () => {
 

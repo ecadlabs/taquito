@@ -2,7 +2,7 @@ import { CONFIGS } from "./config";
 import { MANAGER_LAMBDA } from "@taquito/taquito";
 import { genericMultisig } from "./data/multisig";
 
-CONFIGS.forEach(({ lib, rpc, setup, createAddress }) => {
+CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
 
 

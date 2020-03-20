@@ -2,7 +2,7 @@ import { CONFIGS } from "./config";
 import { tokenCode, tokenInit } from "./data/tokens";
 import { MichelsonMap } from "@taquito/taquito";
 
-CONFIGS.forEach(({ lib, rpc, setup}) => {
+CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   describe(`Test accessing big map abstraction by index using: ${rpc}`, () => {
 
@@ -10,7 +10,7 @@ CONFIGS.forEach(({ lib, rpc, setup}) => {
       await setup()
       done()
     })
-  it('originates a contract with empty bigmap and fetches the storage/bigmap', async (done) => {
+    it('originates a contract with empty bigmap and fetches the storage/bigmap', async (done) => {
       // Deploy a contract with a big map
       const op = await Tezos.contract.originate({
         balance: "1",
