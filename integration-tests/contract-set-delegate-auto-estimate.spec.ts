@@ -1,12 +1,12 @@
 import { CONFIGS } from "./config";
 
-CONFIGS.forEach(({ lib, rpc, setup, knownBaker}) => {
+CONFIGS.forEach(({ lib, rpc, setup, knownBaker }) => {
   const Tezos = lib;
   describe(`Test account delegation with estimation using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       // TODO: use fresh key
-      await setup()
+      await setup(true)
       done()
     })
     it('delegates account to known baker with automatic estimate', async (done) => {
