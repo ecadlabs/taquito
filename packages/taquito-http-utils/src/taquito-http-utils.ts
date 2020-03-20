@@ -105,7 +105,7 @@ export class HttpBackend {
               reject(new Error(`Unable to parse response: ${request.response}`));
             }
           } else {
-            return request.response;
+            resolve(request.response);
           }
         } else {
           reject(
