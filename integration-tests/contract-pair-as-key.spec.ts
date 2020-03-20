@@ -15,16 +15,22 @@ CONFIGS.forEach(({ lib, rpc, setup, protocol}) => {
     if (protocol === Protocols.PsCARTHA) {
       it('Storage contract with pair as key', async (done) => {
         const storageMap = new MichelsonMap();
+        // The contract schema in this example has a key with 8 nested pairs
+        // (int(nat(string(bytes(mutez(bool(key_hash(timestamp(address)))))))))
+        // and a value of `int`
+        // The contract schema in this particular test does not have map
+        // annotations which means that each value needs to have an index
+        // as property name.
         storageMap.set({
-          0: "1",
-          1: "2",
-          2: "test",
-          3: "cafe",
-          4: "10",
-          5: true,
-          6: "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5",
-          7: "2019-09-06T15:08:29.000Z",
-          8: "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5"
+          0: "1",                                    // int
+          1: "2",                                    // nat
+          2: "test",                                 // string
+          3: "cafe",                                 // bytes
+          4: "10",                                   // mutez
+          5: true,                                   // bool
+          6: "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5", // key_hash
+          7: "2019-09-06T15:08:29.000Z",             // timestamp
+          8: "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5"  // address
         }, 100)
         storageMap.set({
           0: "1",
@@ -70,7 +76,7 @@ CONFIGS.forEach(({ lib, rpc, setup, protocol}) => {
         done();
       })
 
-      it('originate contract and init storage with pair as key in map', async (done) => {
+    it('originate contract and init storage with pair as key in map', async (done) => {
         const op = await Tezos.contract.originate({
           balance: "0",
           code: mapWithPairAsKeyCode,
