@@ -22,7 +22,6 @@ describe('RPCEstimateProvider test', () => {
     getScript: jest.Mock<any, any>;
     getBalance: jest.Mock<any, any>;
     getStorage: jest.Mock<any, any>;
-    getBigMapKey: jest.Mock<any, any>;
     getBlockHeader: jest.Mock<any, any>;
     getManagerKey: jest.Mock<any, any>;
     getBlock: jest.Mock<any, any>;
@@ -50,7 +49,6 @@ describe('RPCEstimateProvider test', () => {
       getScript: jest.fn(),
       getManagerKey: jest.fn(),
       getStorage: jest.fn(),
-      getBigMapKey: jest.fn(),
       getBlockHeader: jest.fn(),
       getBlockMetadata: jest.fn(),
       getContract: jest.fn(),
