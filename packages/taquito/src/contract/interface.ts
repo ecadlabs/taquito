@@ -1,4 +1,5 @@
 import { Schema } from '@taquito/michelson-encoder';
+import { MichelsonV1Expression } from '@taquito/rpc';
 import { DelegateOperation } from '../operations/delegate-operation';
 import { OriginationOperation } from '../operations/origination-operation';
 import { TransactionOperation } from '../operations/transaction-operation';
@@ -11,6 +12,7 @@ import {
 } from '../operations/types';
 import { Contract } from './contract';
 import { Estimate } from './estimate';
+import LambdaView from 'taquito/src/contract/lambda-view';
 
 export type ContractSchema = Schema | unknown;
 
@@ -133,4 +135,11 @@ export interface ContractProvider {
    */
   transfer(params: TransferParams): Promise<TransactionOperation>;
   at(address: string, schema?: ContractSchema): Promise<Contract>;
+  lambdaView(
+    lambdaContractOrAddress: Contract | string,
+    viewContractOrAddress: Contract | string,
+    viewMethod: string,
+    entrypointName?: string,
+    contractParameter?: MichelsonV1Expression
+  ): Promise<LambdaView>;
 }

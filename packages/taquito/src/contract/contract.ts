@@ -111,7 +111,7 @@ export class Contract {
     public readonly address: string,
     public readonly script: ScriptResponse,
     private provider: ContractProvider,
-    private entrypoints: EntrypointsResponse
+    public readonly entrypoints: EntrypointsResponse
   ) {
     this.schema = Schema.fromRPCResponse({ script: this.script });
     this.parameterSchema = ParameterSchema.fromRPCResponse({ script: this.script });

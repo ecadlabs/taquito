@@ -1,5 +1,5 @@
 import { Schema } from '@taquito/michelson-encoder';
-import { ScriptResponse } from '@taquito/rpc';
+import { ScriptResponse, MichelsonV1Expression } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Context } from '../context';
 import { DelegateOperation } from '../operations/delegate-operation';
@@ -22,6 +22,7 @@ import {
   createTransferOperation,
 } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
+import LambdaView from 'taquito/src/contract/lambda-view';
 
 export class RpcContractProvider extends OperationEmitter implements ContractProvider {
   constructor(context: Context, private estimator: EstimationProvider) {
@@ -206,5 +207,33 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
     const script = await this.rpc.getScript(address);
     const entrypoints = await this.rpc.getEntrypoints(address);
     return new Contract(address, script, this, entrypoints);
+  }
+
+  async lambdaView(
+    lambdaContractOrAddress: Contract | string,
+    viewContractOrAddress: Contract | string,
+    viewMethod: string,
+    entrypointName?: string,
+    contractParameter?: MichelsonV1Expression
+  ): Promise<LambdaView> {
+    let lambdaContract;
+    let viewContract;
+    if (lambdaContractOrAddress instanceof Contract) {
+      lambdaContract = lambdaContractOrAddress;
+    } else {
+      lambdaContract = await this.at(lambdaContractOrAddress);
+    }
+    if (viewContractOrAddress instanceof Contract) {
+      viewContract = viewContractOrAddress;
+    } else {
+      viewContract = await this.at(viewContractOrAddress);
+    }
+    return new LambdaView(
+      lambdaContract,
+      viewContract,
+      viewMethod,
+      entrypointName,
+      contractParameter
+    );
   }
 }
