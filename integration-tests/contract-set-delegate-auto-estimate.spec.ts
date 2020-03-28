@@ -5,7 +5,6 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
   describe(`Test account delegation with estimation using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
-      // TODO: use fresh key
       await setup(true)
       done()
     })
