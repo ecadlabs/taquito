@@ -258,8 +258,6 @@ export abstract class OperationEmitter {
     const opResponse: OperationContentsAndResult[] = [];
     const results = await this.rpc.preapplyOperations([forgedBytes.opOb]);
 
-    console.log(JSON.stringify(forgedBytes.opOb), JSON.stringify(results));
-
     if (!Array.isArray(results)) {
       throw new TezosPreapplyFailureError(results);
     }
