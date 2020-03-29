@@ -43,9 +43,21 @@ export class OriginationOperation extends Operation
     }
   }
 
+  get status() {
+    const operationResults = this.operationResults;
+    if (operationResults) {
+      return operationResults.status;
+    } else {
+      return 'unknown';
+    }
+  }
+
   get operationResults() {
     const originationOp =
-      Array.isArray(this.results) && this.results.find(op => op.kind === 'origination');
+      Array.isArray(this.results) &&
+      (this.results.find(op => op.kind === 'origination') as
+        | OperationContentsAndResultOrigination
+        | undefined);
 
     const result =
       originationOp && originationOp.metadata && originationOp.metadata.operation_result;
