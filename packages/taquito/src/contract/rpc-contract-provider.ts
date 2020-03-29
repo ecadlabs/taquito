@@ -62,8 +62,8 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
    * @param key contract big map key to fetch value from
    * @param schema optional schema can either be the contract script rpc response or a michelson-encoder schema
    *
-   *
    * @deprecated Deprecated in favor of getBigMapKeyByID
+   *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-script
    */
   async getBigMapKey<T>(contract: string, key: string, schema?: ContractSchema): Promise<T> {

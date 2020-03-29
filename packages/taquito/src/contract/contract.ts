@@ -202,9 +202,9 @@ export class Contract {
    *
    * @param key BigMap key to fetch
    *
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-script
-   *
    * @deprecated getBigMapKey has been deprecated in favor of getBigMapKeyByID
+   *
+   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-script
    */
   public bigMap(key: string) {
     // tslint:disable-next-line: deprecation
