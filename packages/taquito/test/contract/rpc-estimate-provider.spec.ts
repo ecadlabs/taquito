@@ -238,7 +238,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    it('should produce a reveal and transaction operation', async done => {
+    const mockRpcClientRunOperation = () => {
       mockRpcClient.runOperation.mockResolvedValue({
         contents: [
           {
@@ -251,6 +251,10 @@ describe('RPCEstimateProvider test', () => {
           },
         ],
       });
+    };
+
+    it('should produce a reveal and transaction operation', async done => {
+      mockRpcClientRunOperation();
       const estimate = await estimateProvider.transfer({
         to: 'test_to',
         amount: 2,
@@ -263,25 +267,11 @@ describe('RPCEstimateProvider test', () => {
     });
 
     it('should use the maximum storage an account can afford', async done => {
-      mockRpcClient.runOperation.mockResolvedValue({
-        contents: [
-          {
-            kind: 'transaction',
-            metadata: {
-              operation_result: {
-                consumed_gas: 1000,
-              },
-            },
-          },
-        ],
-      });
+      mockRpcClientRunOperation();
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('1100'));
       await estimateProvider.transfer({
         to: 'test_to',
         amount: 2,
-        fee: 10000,
-        gasLimit: 10600,
-        storageLimit: 300,
       });
       expect(mockRpcClient.runOperation).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -300,25 +290,11 @@ describe('RPCEstimateProvider test', () => {
     });
 
     it('should use the maximum storage the protocol allow if user can afford it', async done => {
-      mockRpcClient.runOperation.mockResolvedValue({
-        contents: [
-          {
-            kind: 'transaction',
-            metadata: {
-              operation_result: {
-                consumed_gas: 1000,
-              },
-            },
-          },
-        ],
-      });
+      mockRpcClientRunOperation();
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('800000000'));
       await estimateProvider.transfer({
         to: 'test_to',
         amount: 2,
-        fee: 10000,
-        gasLimit: 10600,
-        storageLimit: 300,
       });
       expect(mockRpcClient.runOperation).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -326,6 +302,78 @@ describe('RPCEstimateProvider test', () => {
             contents: expect.arrayContaining([
               expect.objectContaining({
                 fee: '0',
+                storage_limit: '60000',
+                gas_limit: '80000',
+              }),
+            ]),
+          }),
+        })
+      );
+      done();
+    });
+
+    it('should use the storage limit the user specified', async done => {
+      mockRpcClientRunOperation();
+      mockRpcClient.getBalance.mockResolvedValue(new BigNumber('1100'));
+      await estimateProvider.transfer({
+        to: 'test_to',
+        amount: 2,
+        storageLimit: 200,
+      });
+      expect(mockRpcClient.runOperation).toHaveBeenCalledWith(
+        expect.objectContaining({
+          operation: expect.objectContaining({
+            contents: expect.arrayContaining([
+              expect.objectContaining({
+                fee: '0',
+                storage_limit: '200',
+                gas_limit: '80000',
+              }),
+            ]),
+          }),
+        })
+      );
+      done();
+    });
+
+    it('should use the gas limit the user specified', async done => {
+      mockRpcClientRunOperation();
+      mockRpcClient.getBalance.mockResolvedValue(new BigNumber('10000000000'));
+      await estimateProvider.transfer({
+        to: 'test_to',
+        amount: 2,
+        gasLimit: 200,
+      });
+      expect(mockRpcClient.runOperation).toHaveBeenCalledWith(
+        expect.objectContaining({
+          operation: expect.objectContaining({
+            contents: expect.arrayContaining([
+              expect.objectContaining({
+                fee: '0',
+                storage_limit: '60000',
+                gas_limit: '200',
+              }),
+            ]),
+          }),
+        })
+      );
+      done();
+    });
+
+    it('should use the fees the user specified', async done => {
+      mockRpcClientRunOperation();
+      mockRpcClient.getBalance.mockResolvedValue(new BigNumber('10000000000'));
+      await estimateProvider.transfer({
+        to: 'test_to',
+        amount: 2,
+        fee: 10000,
+      });
+      expect(mockRpcClient.runOperation).toHaveBeenCalledWith(
+        expect.objectContaining({
+          operation: expect.objectContaining({
+            contents: expect.arrayContaining([
+              expect.objectContaining({
+                fee: '10000',
                 storage_limit: '60000',
                 gas_limit: '80000',
               }),
