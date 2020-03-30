@@ -21,6 +21,7 @@ interface Config {
   rpc: string,
   knownBaker: string,
   knownContract: string,
+  knownBigMapContract: string,
   protocol: Protocols,
   signerConfig: EphemeralConfig | FaucetConfig
 }
@@ -44,7 +45,7 @@ interface ConfigWithSetup extends Config {
 interface EphemeralConfig {
   type: SignerType.EPHEMERAL_KEY,
   keyUrl: string,
-  requestHeaders: {[key: string]: string}
+  requestHeaders: { [key: string]: string }
 }
 
 /**
@@ -55,73 +56,77 @@ interface FaucetConfig {
   faucetKey: {}
 }
 
-  const carthagenetEphemeral = {
-    rpc: 'https://api.tez.ie/rpc/carthagenet',
-    knownBaker: 'tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9',
-    knownContract: 'KT1XYa1JPKYVJYVJge89r4w2tShS8JYb1NQh',
-    protocol: Protocols.PsCARTHA,
-    signerConfig: {
-      type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-      keyUrl: 'https://api.tez.ie/keys/carthagenet/ephemeral',
-      requestHeaders: {'Authorization': 'Bearer taquito-example'},
-     }
+const carthagenetEphemeral = {
+  rpc: 'https://api.tez.ie/rpc/carthagenet',
+  knownBaker: 'tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9',
+  knownContract: 'KT1XYa1JPKYVJYVJge89r4w2tShS8JYb1NQh',
+  knownBigMapContract: 'KT1HqWsXrGbHWc9muqkApqWu64WsxCU3FoRf',
+  protocol: Protocols.PsCARTHA,
+  signerConfig: {
+    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
+    keyUrl: 'https://api.tez.ie/keys/carthagenet/ephemeral',
+    requestHeaders: { 'Authorization': 'Bearer taquito-example' },
   }
-  const babylonnetEphemeral = {
-    rpc: 'https://api.tez.ie/rpc/babylonnet',
-    knownBaker: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
-    knownContract: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK',
-    protocol: Protocols.PsBabyM1,
-    signerConfig: {
-      type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-      keyUrl: 'https://api.tez.ie/keys/babylonnet/ephemeral',
-      requestHeaders: {'Authorization': 'Bearer taquito-example'},
-     }
+}
+const babylonnetEphemeral = {
+  rpc: 'https://api.tez.ie/rpc/babylonnet',
+  knownBaker: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
+  knownContract: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK',
+  knownBigMapContract: 'KT1T2KjQdqeNzeaSGm9MfzfgMN8rWC94BrTP',
+  protocol: Protocols.PsBabyM1,
+  signerConfig: {
+    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
+    keyUrl: 'https://api.tez.ie/keys/babylonnet/ephemeral',
+    requestHeaders: { 'Authorization': 'Bearer taquito-example' },
   }
- // Well known faucet key. Can be overridden by setting the `TEZOS_FAUCET_KEY_FILE` environment variable
- const key = {
-        email: "peqjckge.qkrrajzs@tezos.example.org",
-        password: "y4BX7qS1UE",
-        mnemonic: [
-          "skate",
-          "damp",
-          "faculty",
-          "morning",
-          "bring",
-          "ridge",
-          "traffic",
-          "initial",
-          "piece",
-          "annual",
-          "give",
-          "say",
-          "wrestle",
-          "rare",
-          "ability"
-        ],
-        secret: "7d4c8c3796fdbf4869edb5703758f0e5831f5081"
-     }
+}
+// Well known faucet key. Can be overridden by setting the `TEZOS_FAUCET_KEY_FILE` environment variable
+const key = {
+  email: "peqjckge.qkrrajzs@tezos.example.org",
+  password: "y4BX7qS1UE",
+  mnemonic: [
+    "skate",
+    "damp",
+    "faculty",
+    "morning",
+    "bring",
+    "ridge",
+    "traffic",
+    "initial",
+    "piece",
+    "annual",
+    "give",
+    "say",
+    "wrestle",
+    "rare",
+    "ability"
+  ],
+  secret: "7d4c8c3796fdbf4869edb5703758f0e5831f5081"
+}
 
- const carthagenetFaucet = {
-    rpc: 'https://api.tez.ie/rpc/carthagenet',
-    knownBaker: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
-    knownContract: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK',
-    protocol: Protocols.PsCARTHA,
-    signerConfig: {
-      type: SignerType.FAUCET as SignerType.FAUCET,
-      faucetKey: key,
-     }
+const carthagenetFaucet = {
+  rpc: 'https://api.tez.ie/rpc/carthagenet',
+  knownBaker: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
+  knownContract: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK',
+  knownBigMapContract: 'KT1HqWsXrGbHWc9muqkApqWu64WsxCU3FoRf',
+  protocol: Protocols.PsCARTHA,
+  signerConfig: {
+    type: SignerType.FAUCET as SignerType.FAUCET,
+    faucetKey: key,
   }
+}
 
- const babylonnetFaucet = {
-    rpc: 'https://api.tez.ie/rpc/babylonnet',
-    knownBaker: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
-    knownContract: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK',
-    protocol: Protocols.PsBabyM1,
-    signerConfig: {
-      type: SignerType.FAUCET as SignerType.FAUCET,
-      faucetKey: key,
-     }
+const babylonnetFaucet = {
+  rpc: 'https://api.tez.ie/rpc/babylonnet',
+  knownBaker: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
+  knownContract: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK',
+  knownBigMapContract: 'KT1T2KjQdqeNzeaSGm9MfzfgMN8rWC94BrTP',
+  protocol: Protocols.PsBabyM1,
+  signerConfig: {
+    type: SignerType.FAUCET as SignerType.FAUCET,
+    faucetKey: key,
   }
+}
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_FAUCET']) {
@@ -146,7 +151,7 @@ const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
 
 export const CONFIGS: ConfigWithSetup[] =
   forgers.reduce((prev, forger: ForgerType) => {
-    const configs = providers.map(({ rpc, knownBaker, knownContract, protocol, signerConfig }) => {
+    const configs = providers.map(({ rpc, knownBaker, knownContract, protocol, knownBigMapContract, signerConfig }) => {
       const Tezos = new TezosToolkit();
 
       Tezos.setProvider({ rpc })
@@ -156,6 +161,7 @@ export const CONFIGS: ConfigWithSetup[] =
         rpc,
         knownBaker,
         knownContract,
+        knownBigMapContract,
         protocol,
         lib: Tezos,
         signerConfig,
@@ -165,12 +171,12 @@ export const CONFIGS: ConfigWithSetup[] =
             const faucetKey: any = faucetKeyFile || signerConfig.faucetKey
             await importKey(Tezos, faucetKey.email, faucetKey.password, faucetKey.mnemonic.join(" "), faucetKey.secret)
 
-          } else if(signerConfig.type === SignerType.EPHEMERAL_KEY) {
+          } else if (signerConfig.type === SignerType.EPHEMERAL_KEY) {
 
             const httpClient = new HttpBackend()
             const { id, pkh } = await httpClient.createRequest(
               {
-                url:  signerConfig.keyUrl,
+                url: signerConfig.keyUrl,
                 method: 'POST',
                 headers: signerConfig.requestHeaders,
               })
