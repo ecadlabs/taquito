@@ -1,6 +1,6 @@
 import { CONFIGS } from "./config";
 
-CONFIGS.forEach(({ lib, rpc, setup}) => {
+CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   describe(`Originating a contract api using: ${rpc}`, () => {
 
@@ -8,7 +8,7 @@ CONFIGS.forEach(({ lib, rpc, setup}) => {
       await setup()
       done()
     })
-it('Simple origination scenario', async (done) => {
+    it('Simple origination scenario', async (done) => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: `parameter string;

@@ -3,7 +3,7 @@ import { ligoSample } from "./data/ligo-simple-contract";
 import { managerCode } from "./data/manager_code";
 import { MANAGER_LAMBDA, OpKind } from "@taquito/taquito";
 
-CONFIGS.forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
+CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
   const Tezos = lib;
   describe(`Test batch api using: ${rpc}`, () => {
 

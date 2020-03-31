@@ -3,7 +3,7 @@ import { Protocols, MichelsonMap } from "@taquito/taquito";
 import { storageContractWithPairAsKey } from "./data/storage-contract-with-pair-as-key";
 import { mapWithPairAsKeyCode, mapWithPairAsKeyStorage } from "./data/bigmap_with_pair_as_key";
 
-CONFIGS.forEach(({ lib, rpc, setup, protocol}) => {
+CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
   describe(`Storage contract with pair as key using: ${rpc}`, () => {
 
@@ -11,7 +11,7 @@ CONFIGS.forEach(({ lib, rpc, setup, protocol}) => {
       await setup()
       done()
     })
-  // Pair as key is only supported since proto 006
+    // Pair as key is only supported since proto 006
     if (protocol === Protocols.PsCARTHA) {
       it('Storage contract with pair as key', async (done) => {
         const storageMap = new MichelsonMap();

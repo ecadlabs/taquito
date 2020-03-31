@@ -5,7 +5,7 @@ export const tokenInit = (k: string) => ({
     {
       prim: 'Elt',
       args: [
-        { string: 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys' },
+        { string: k },
         { prim: 'Pair', args: [{ "int": "2" }, []] }
       ]
     }

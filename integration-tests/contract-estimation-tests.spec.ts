@@ -5,7 +5,7 @@ import { originate, originate2, transferImplicit2 } from "./data/lambda";
 import { ligoSample } from "./data/ligo-simple-contract";
 import { managerCode } from "./data/manager_code";
 
-CONFIGS.forEach(({ lib, setup, knownBaker, createAddress  }) => {
+CONFIGS().forEach(({ lib, setup, knownBaker, createAddress }) => {
   const Tezos = lib;
 
   describe('Estimate scenario', () => {

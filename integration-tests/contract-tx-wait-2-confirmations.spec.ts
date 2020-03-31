@@ -1,6 +1,6 @@
 import { CONFIGS } from "./config";
 
-CONFIGS.forEach(({ lib, rpc, setup}) => {
+CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   describe(`Test tx and waiting for 2 confirmations using: ${rpc}`, () => {
 
@@ -8,7 +8,7 @@ CONFIGS.forEach(({ lib, rpc, setup}) => {
       await setup()
       done()
     })
-  it('transfers 2 tez and waits for 2 confirmations', async (done) => {
+    it('transfers 2 tez and waits for 2 confirmations', async (done) => {
       const op = await Tezos.contract.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
       await op.confirmation()
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)

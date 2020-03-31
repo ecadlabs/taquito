@@ -1,7 +1,7 @@
 import { CONFIGS } from "./config";
 import { failwithContractCode } from "./data/failwith";
 
-CONFIGS.forEach(({ lib, rpc, setup}) => {
+CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   describe(`Test contract that throws FAILWITH api using: ${rpc}`, () => {
 
@@ -9,7 +9,7 @@ CONFIGS.forEach(({ lib, rpc, setup}) => {
       await setup()
       done()
     })
-  it('captures a FAILWITH and throws an error', async (done) => {
+    it('captures a FAILWITH and throws an error', async (done) => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: failwithContractCode,
