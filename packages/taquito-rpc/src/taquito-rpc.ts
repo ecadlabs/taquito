@@ -227,7 +227,9 @@ export class RpcClient {
    *
    * @description Access the value associated with a key in the big map storage of the contract.
    *
-   * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-context-contracts-contract-id-big-map-get
+   * @deprecated Deprecated in favor of getBigMapKeyByID
+   *
+   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-script
    */
   async getBigMapKey(
     address: string,

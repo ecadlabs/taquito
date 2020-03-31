@@ -153,6 +153,7 @@ describe('RpcContractProvider test', () => {
     it('should call getBigMapKey', async done => {
       mockRpcClient.getScript.mockResolvedValue({ code: [sample] });
       mockRpcClient.getBigMapKey.mockResolvedValue(sampleBigMapValue);
+      // tslint:disable-next-line: deprecation
       const result = await rpcContractProvider.getBigMapKey(
         'test',
         'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn'
