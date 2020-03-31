@@ -1,4 +1,5 @@
 import { RpcContractProvider } from '../../src/contract/rpc-contract-provider';
+import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import {
   sample,
   sampleStorage,
@@ -8,6 +9,7 @@ import {
   ligoSample,
   tokenInit,
   tokenCode,
+  sampleBigMapAbstractionValue,
 } from './data';
 import BigNumber from 'bignumber.js';
 import { Context } from '../../src/context';
@@ -21,7 +23,8 @@ import {
 } from '../../src/constants';
 import { InvalidDelegationSource } from '../../src/contract/errors';
 import { preapplyResultFrom } from './helper';
-import { MichelsonMap } from '@taquito/michelson-encoder';
+import { MichelsonMap, Schema } from '@taquito/michelson-encoder';
+import { BigMapAbstraction } from '../../src/contract/big-map';
 
 /**
  * RPCContractProvider test
@@ -31,6 +34,7 @@ describe('RpcContractProvider test', () => {
   let mockRpcClient: {
     getScript: jest.Mock<any, any>;
     getStorage: jest.Mock<any, any>;
+    getBigMapExpr: jest.Mock<any, any>;
     getBigMapKey: jest.Mock<any, any>;
     getBlockHeader: jest.Mock<any, any>;
     getEntrypoints: jest.Mock<any, any>;
@@ -40,6 +44,7 @@ describe('RpcContractProvider test', () => {
     getBlockMetadata: jest.Mock<any, any>;
     forgeOperations: jest.Mock<any, any>;
     injectOperation: jest.Mock<any, any>;
+    packData: jest.Mock<any, any>;
     preapplyOperations: jest.Mock<any, any>;
     getChainId: jest.Mock<any, any>;
   };
@@ -69,6 +74,7 @@ describe('RpcContractProvider test', () => {
 
   beforeEach(() => {
     mockRpcClient = {
+      getBigMapExpr: jest.fn(),
       getEntrypoints: jest.fn(),
       getBlock: jest.fn(),
       getScript: jest.fn(),
@@ -80,6 +86,7 @@ describe('RpcContractProvider test', () => {
       getContract: jest.fn(),
       forgeOperations: jest.fn(),
       injectOperation: jest.fn(),
+      packData: jest.fn(),
       preapplyOperations: jest.fn(),
       getChainId: jest.fn(),
     };
@@ -110,12 +117,19 @@ describe('RpcContractProvider test', () => {
       mockEstimate as any
     );
 
+    mockRpcClient.getBigMapExpr.mockResolvedValue({
+      prim: 'Pair',
+      args: [{ int: '100' }, []],
+    });
     mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
     mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
     mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
     mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
     mockSigner.publicKey.mockResolvedValue('test_pub_key');
     mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+    mockRpcClient.packData.mockResolvedValue({
+      packed: '747a325542477245424b7a7a5736686a586a78786951464a4e6736575232626d3647454e',
+    });
     mockRpcClient.preapplyOperations.mockResolvedValue([]);
     mockRpcClient.getChainId.mockResolvedValue('chain-id');
   });
@@ -157,6 +171,46 @@ describe('RpcContractProvider test', () => {
         key: { bytes: '000035e993d8c7aaa42b5e3ccd86a33390ececc73abd' },
         type: { prim: 'bytes' },
       });
+      done();
+    });
+  });
+
+  describe('BigMapAbstraction', () => {
+    it('returns undefined on bad key in BigMap', async done => {
+      const expectedError = new HttpResponseError(
+        'fail',
+        STATUS_CODE.NOT_FOUND,
+        'err',
+        'test',
+        'https://test.com'
+      );
+      mockRpcClient.getBigMapExpr.mockRejectedValue(expectedError);
+      const schema = new Schema(sampleBigMapAbstractionValue);
+      const bigMap = new BigMapAbstraction(
+        new BigNumber('tz2UBGrEBKzzW6hjXjxxiQFJNg6WR2bm6GEN'),
+        schema,
+        rpcContractProvider
+      );
+      const returnValue = await bigMap.get('test');
+      expect(returnValue).toEqual(undefined);
+      done();
+    });
+    it('returns error if error is not 404 from key lookup in BigMap', async done => {
+      const expectedError = new HttpResponseError(
+        'fail',
+        STATUS_CODE.FORBIDDEN,
+        'err',
+        'test',
+        'https://test.com'
+      );
+      mockRpcClient.getBigMapExpr.mockRejectedValue(expectedError);
+      const schema = new Schema(sampleBigMapAbstractionValue);
+      const bigMap = new BigMapAbstraction(
+        new BigNumber('tz2UBGrEBKzzW6hjXjxxiQFJNg6WR2bm6GEN'),
+        schema,
+        rpcContractProvider
+      );
+      await expect(bigMap.get('test')).rejects.toEqual(expectedError);
       done();
     });
   });

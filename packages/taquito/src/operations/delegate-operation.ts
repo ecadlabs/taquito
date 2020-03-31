@@ -35,6 +35,15 @@ export class DelegateOperation extends Operation
     return result ? result : undefined;
   }
 
+  get status() {
+    const operationResults = this.operationResults;
+    if (operationResults) {
+      return operationResults.status;
+    } else {
+      return 'unknown';
+    }
+  }
+
   get delegate(): string {
     return this.delegate;
   }

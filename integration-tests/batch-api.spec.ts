@@ -51,19 +51,24 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
     })
 
     it('Simple transfers with bad origination', async (done) => {
-      const op = await Tezos.batch()
-        .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
-        .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
-        .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
-        .withOrigination({
-          balance: "1",
-          code: ligoSample,
-          storage: 0,
-          storageLimit: 0,
-        })
-        .send();
-      await op.confirmation();
-      expect(op.status).toEqual('backtracked')
+      expect.assertions(1);
+      try {
+        await Tezos.batch()
+          .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
+          .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
+          .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
+          .withOrigination({
+            balance: "1",
+            code: ligoSample,
+            storage: 0,
+            storageLimit: 0,
+          })
+          .send();
+      } catch (ex) {
+        expect(ex).toEqual(expect.objectContaining({
+          message: expect.stringContaining('storage_exhausted.operation')
+        }))
+      }
       done();
     })
 

@@ -20,6 +20,7 @@ interface Config {
   rpc: string,
   knownBaker: string,
   knownContract: string,
+  knownBigMapContract: string,
   protocol: Protocols,
   signerConfig: EphemeralConfig | FaucetConfig
 }
@@ -58,6 +59,7 @@ const carthagenetEphemeral = {
   rpc: 'https://api.tez.ie/rpc/carthagenet',
   knownBaker: 'tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9',
   knownContract: 'KT1XYa1JPKYVJYVJge89r4w2tShS8JYb1NQh',
+  knownBigMapContract: 'KT1HqWsXrGbHWc9muqkApqWu64WsxCU3FoRf',
   protocol: Protocols.PsCARTHA,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
@@ -69,6 +71,7 @@ const babylonnetEphemeral = {
   rpc: 'https://api.tez.ie/rpc/babylonnet',
   knownBaker: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
   knownContract: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK',
+  knownBigMapContract: 'KT1T2KjQdqeNzeaSGm9MfzfgMN8rWC94BrTP',
   protocol: Protocols.PsBabyM1,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
@@ -104,6 +107,7 @@ const carthagenetFaucet = {
   rpc: 'https://api.tez.ie/rpc/carthagenet',
   knownBaker: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
   knownContract: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK',
+  knownBigMapContract: 'KT1HqWsXrGbHWc9muqkApqWu64WsxCU3FoRf',
   protocol: Protocols.PsCARTHA,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
@@ -115,6 +119,7 @@ const babylonnetFaucet = {
   rpc: 'https://api.tez.ie/rpc/babylonnet',
   knownBaker: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
   knownContract: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK',
+  knownBigMapContract: 'KT1T2KjQdqeNzeaSGm9MfzfgMN8rWC94BrTP',
   protocol: Protocols.PsBabyM1,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
@@ -126,7 +131,7 @@ const providers: Config[] = [];
 if (process.env['RUN_WITH_FAUCET']) {
   providers.push(carthagenetFaucet, babylonnetFaucet)
 } else {
-  providers.push(carthagenetEphemeral)
+  providers.push(carthagenetEphemeral, babylonnetEphemeral)
 }
 
 const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE']
@@ -181,7 +186,7 @@ const setupWithFaucetKey = async (Tezos: TezosToolkit, signerConfig: FaucetConfi
 
 export const CONFIGS = () => {
   return forgers.reduce((prev, forger: ForgerType) => {
-    const configs = providers.map(({ rpc, knownBaker, knownContract, protocol, signerConfig }) => {
+    const configs = providers.map(({ rpc, knownBaker, knownContract, protocol, knownBigMapContract, signerConfig }) => {
       const Tezos = new TezosToolkit();
 
       Tezos.setProvider({ rpc })
@@ -191,6 +196,7 @@ export const CONFIGS = () => {
         rpc,
         knownBaker,
         knownContract,
+        knownBigMapContract,
         protocol,
         lib: Tezos,
         signerConfig,

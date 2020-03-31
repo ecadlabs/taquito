@@ -2,7 +2,7 @@ import { CONFIGS } from "./config";
 import { tokenCode, tokenInit } from "./data/tokens";
 import { MichelsonMap } from "@taquito/taquito";
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
   const Tezos = lib;
   describe(`Test accessing big map abstraction by index using: ${rpc}`, () => {
 
@@ -32,4 +32,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     })
   });
+
+  it('Return undefined when BigMap key is not found', async () => {
+    const myContract = await Tezos.contract.at(knownBigMapContract);
+    const contractStorage: any = await myContract.storage();
+    const value = await contractStorage.ledger.get("tz1NortRftucvAkD1J58L32EhSVrQEWJCEnB")
+    expect(value).toBeUndefined();
+  })
 })
