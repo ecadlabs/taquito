@@ -120,14 +120,6 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
   async originate(params: OriginateParams) {
     const estimate = await this.estimate(params, this.estimator.originate.bind(this.estimator));
 
-    if (Array.isArray(params.code)) {
-      // Re-order input to the order that the Tezos RPC accepts
-      const order = ['parameter', 'storage', 'code'];
-      params.code = params.code.sort(
-        (a: any, b: any) => order.indexOf(a.prim) - order.indexOf(b.prim)
-      );
-    }
-
     const publicKeyHash = await this.signer.publicKeyHash();
     const operation = await createOriginationOperation({
       ...params,
