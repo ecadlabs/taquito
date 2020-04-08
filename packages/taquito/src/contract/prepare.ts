@@ -30,7 +30,10 @@ export const createOriginationOperation = async ({
     );
   }
 
-  const contractCode = Array.isArray(code) ? code : ml2mic(code);
+  const order = ['parameter', 'storage', 'code'];
+  const contractCode = Array.isArray(code)
+    ? code.sort((a: any, b: any) => order.indexOf(a.prim) - order.indexOf(b.prim)) // Ensure correct ordering for RPC
+    : ml2mic(code);
 
   let contractStorage: object;
   if (storage !== undefined) {
@@ -40,11 +43,8 @@ export const createOriginationOperation = async ({
     contractStorage = typeof init === 'string' ? sexp2mic(init) : init;
   }
 
-  const order = ['parameter', 'storage', 'code'];
   const script = {
-    code: Array.isArray(code)
-      ? code.sort((a: any, b: any) => order.indexOf(a.prim) - order.indexOf(b.prim)) // Ensure correct ordering for RPC
-      : ml2mic(code),
+    code: contractCode,
     storage: contractStorage,
   };
 
