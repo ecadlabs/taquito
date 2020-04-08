@@ -129,9 +129,9 @@ const babylonnetFaucet = {
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_FAUCET']) {
-  providers.push(carthagenetFaucet, babylonnetFaucet)
+  providers.push(carthagenetFaucet)
 } else {
-  providers.push(carthagenetEphemeral, babylonnetEphemeral)
+  providers.push(carthagenetEphemeral)
 }
 
 const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE']
