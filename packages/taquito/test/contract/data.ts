@@ -68,10 +68,10 @@ export const sampleBigMapValue = {
 };
 
 export const miStr = `parameter int; # the participant's guess
-storage   (pair 
+storage   (pair
                 int     # the number of guesses made by participants
                 address # the address to send the winning pot to if the participants fail
-          ); 
+          );
 code {
        # (pair parameter storage) : []
 
@@ -79,7 +79,7 @@ code {
        PUSH mutez 1000000;
        AMOUNT;
        IFCMPGE {} { PUSH string "You did not provide enough tez."; FAILWITH; };
-       
+
        # check that the number of guesses has not been exceeded
        UNPAIR; SWAP; # storage : parameter : []
        DUP;          # storage : storage : parameter : []
@@ -104,7 +104,7 @@ code {
                            PAIR;
                            NIL operation; PAIR;
                          };
-               } 
+               }
                { # attempts exceeded, give winnings to the specified address
                  DIP { DROP; }; # storage : []
                  DUP; CDR;
