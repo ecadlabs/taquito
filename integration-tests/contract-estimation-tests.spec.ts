@@ -163,14 +163,8 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress }) => {
     it('Estimate transfer to regular address with a fixed fee', async (done) => {
       // fee, gasLimit and storage limit are not taken into account
       const params = { fee: 2000, to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) }
-      let estimate = await LowAmountTez.estimate.transfer(params);
-      expect(estimate).toMatchObject({
-        gasLimit: 10307,
-        storageLimit: 0,
-        suggestedFeeMutez: 1382
-      });
 
-      await expect(LowAmountTez.contract.transfer(params)).rejects.toEqual(
+      await expect(LowAmountTez.estimate.transfer(params)).rejects.toEqual(
         expect.objectContaining({
           // Not sure if it is expected according to (https://tezos.gitlab.io/api/errors.html)
           message: expect.stringContaining('storage_error'),
