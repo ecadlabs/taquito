@@ -106,7 +106,7 @@ See the top-level `package.json` file. Some common targets are:
 
 * Install lerna globally `npm install -g lerna`
 * Run `npm install`
-* Run `lerna bootstrap`
+* Run `lerna bootstrap --force-local`
 * Run `npm run build`
 
 #### Once you have modified any package:
