@@ -1,5 +1,5 @@
-import { Token, TokenFactory, Semantic, TokenValidationError, ComparableToken } from './token';
 import { MichelsonMap } from '../michelson-map';
+import { ComparableToken, Semantic, Token, TokenFactory, TokenValidationError } from './token';
 
 export class MapValidationError extends TokenValidationError {
   name: string = 'MapValidationError';
@@ -28,7 +28,7 @@ export class MapToken extends Token {
   }
 
   private isValid(value: any): MapValidationError | null {
-    if (value instanceof MichelsonMap) {
+    if (MichelsonMap.isMichelsonMap(value)) {
       return null;
     }
 

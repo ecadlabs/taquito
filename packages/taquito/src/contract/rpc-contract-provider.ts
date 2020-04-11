@@ -23,7 +23,8 @@ import {
 } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
 
-export class RpcContractProvider extends OperationEmitter implements ContractProvider, StorageProvider {
+export class RpcContractProvider extends OperationEmitter
+  implements ContractProvider, StorageProvider {
   constructor(context: Context, private estimator: EstimationProvider) {
     super(context);
   }
@@ -43,7 +44,7 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
     }
 
     let contractSchema: Schema;
-    if (schema instanceof Schema) {
+    if (Schema.isSchema(schema)) {
       contractSchema = schema;
     } else {
       contractSchema = Schema.fromRPCResponse({ script: schema as ScriptResponse });
@@ -72,7 +73,7 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
     }
 
     let contractSchema: Schema;
-    if (schema instanceof Schema) {
+    if (Schema.isSchema(schema)) {
       contractSchema = schema;
     } else {
       contractSchema = Schema.fromRPCResponse({ script: schema as ScriptResponse });
@@ -80,6 +81,7 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
 
     const encodedKey = contractSchema.EncodeBigMapKey(key);
 
+    // tslint:disable-next-line: deprecation
     const val = await this.rpc.getBigMapKey(contract, encodedKey);
 
     return contractSchema.ExecuteOnBigMapValue(val) as T; // Cast into T because only the caller can know the true type of the storage

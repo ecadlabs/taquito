@@ -2,6 +2,7 @@ import { defaultConfig } from '../../src/context';
 import { OriginationOperation } from '../../src/operations/origination-operation';
 import { ForgedBytes } from '../../src/operations/types';
 import { OperationContentsAndResult } from '@taquito/rpc';
+import { OriginationOperationBuilder, RevealOperationBuilder } from '../helpers';
 
 describe('Origination operation', () => {
   let fakeContext: any;
@@ -78,6 +79,27 @@ describe('Origination operation', () => {
       header: {
         level: 200,
       },
+    });
+  });
+
+  describe('Status', () => {
+    it('returns the status only for origination operation', () => {
+      const originationBuilder = new OriginationOperationBuilder();
+      const revealBuilder = new RevealOperationBuilder();
+      const fakeContractProvider: any = {};
+      const op = new OriginationOperation(
+        'test_hash',
+        {} as any,
+        fakeForgedBytes,
+        [
+          revealBuilder.withResult({ status: 'applied' }).build(),
+          originationBuilder.withResult({ status: 'failed' }).build(),
+        ],
+        fakeContext,
+        fakeContractProvider
+      );
+      expect(op.revealStatus).toEqual('applied');
+      expect(op.status).toEqual('failed');
     });
   });
 

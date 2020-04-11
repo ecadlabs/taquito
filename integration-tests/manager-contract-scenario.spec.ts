@@ -2,7 +2,7 @@ import { CONFIGS } from "./config";
 import { managerCode } from "./data/manager_code";
 import { MANAGER_LAMBDA } from "@taquito/taquito";
 
-CONFIGS.forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
+CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
   const Tezos = lib;
 
   describe(`Manager TZ: ${rpc}`, () => {

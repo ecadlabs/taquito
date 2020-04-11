@@ -8,15 +8,24 @@ const client = new RpcClient(provider);
 async function example() {
   try {
     Tezos.setProvider({ rpc: provider });
+
     console.log('Getting storage...');
-    await Tezos.contract.getStorage('KT1SawqvsVdAbDzqc4KwPpaS1S1veuFgF9AN').then(console.log);
+    await Tezos.contract.at('KT1HqWsXrGbHWc9muqkApqWu64WsxCU3FoRf').then(async contract => {
+      const storage = await contract.storage()
+      console.log(storage)
+    });
+
     console.log('Getting balance...');
-    await Tezos.tz.getBalance('KT1SawqvsVdAbDzqc4KwPpaS1S1veuFgF9AN').then(console.log);
+    await Tezos.tz.getBalance('tz1NAozDvi5e7frVq9cUaC3uXQQannemB8Jw').then(balance => {
+      console.log(`${balance.toNumber() / 1000000} ꜩ`)
+    });
 
     console.log('Getting big map key...');
-    await Tezos.contract
-      .getBigMapKey('KT1SawqvsVdAbDzqc4KwPpaS1S1veuFgF9AN', 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn')
-      .then(console.log);
+    await Tezos.contract.at('KT1HqWsXrGbHWc9muqkApqWu64WsxCU3FoRf').then(async contract => {
+      const contractStorage = await contract.storage();
+      const bigMapKey = await (contractStorage as any).ledger.get('tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx')
+      console.log(bigMapKey)
+    });
 
     console.log('Query balance history...');
     await Tezos.query

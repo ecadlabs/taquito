@@ -2,7 +2,15 @@ import { OperationContentsAndResult, OperationResultOrigination, OpKind } from '
 import { Context } from '../context';
 import { RpcContractProvider } from '../contract/rpc-contract-provider';
 import { Operation } from './operations';
-import { FeeConsumingOperation, findWithKind, ForgedBytes, GasConsumingOperation, hasMetadataWithResult, RPCOriginationOperation, StorageConsumingOperation } from './types';
+import {
+  FeeConsumingOperation,
+  findWithKind,
+  ForgedBytes,
+  GasConsumingOperation,
+  hasMetadataWithResult,
+  RPCOriginationOperation,
+  StorageConsumingOperation,
+} from './types';
 
 /**
  * @description Origination operation provide utility function to fetch newly originated contract
@@ -32,11 +40,22 @@ export class OriginationOperation extends Operation
     }
   }
 
+  get status() {
+    const operationResults = this.operationResults;
+    if (operationResults) {
+      return operationResults.status;
+    } else {
+      return 'unknown';
+    }
+  }
+
   get operationResults() {
-    const originationOp = findWithKind(this.results, OpKind.ORIGINATION)
+    const originationOp = findWithKind(this.results, OpKind.ORIGINATION);
 
     const result =
-      originationOp && hasMetadataWithResult(originationOp) && originationOp.metadata.operation_result as OperationResultOrigination;
+      originationOp &&
+      hasMetadataWithResult(originationOp) &&
+      (originationOp.metadata.operation_result as OperationResultOrigination);
     return result ? result : undefined;
   }
 

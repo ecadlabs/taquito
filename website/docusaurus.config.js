@@ -45,10 +45,6 @@ module.exports = {
               to: 'docs/quick_start',
             },
             {
-              label: 'Storybook',
-              href: 'https://tezostaquito.io/react-storybook',
-            },
-            {
               label: 'TypeDoc Reference',
               href: 'https://tezostaquito.io/typedoc',
             },

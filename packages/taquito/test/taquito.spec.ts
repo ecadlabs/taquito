@@ -16,7 +16,6 @@ describe('TezosToolkit test', () => {
       getScript: jest.fn(),
       getManagerKey: jest.fn(),
       getStorage: jest.fn(),
-      getBigMapKey: jest.fn(),
       getBlockHeader: jest.fn(),
       getBlockMetadata: jest.fn(),
       getContract: jest.fn(),

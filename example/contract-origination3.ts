@@ -1,6 +1,6 @@
 import { Tezos } from '@taquito/taquito';
 import { voteInitSample, voteSample } from '../integration-tests/data/vote-contract';
-const provider = 'https://alphanet-node.tzscan.io';
+const provider = 'https://api.tez.ie/rpc/carthagenet';
 import { importKey } from '@taquito/signer';
 
 async function example() {

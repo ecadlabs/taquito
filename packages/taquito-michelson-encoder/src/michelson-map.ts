@@ -2,6 +2,10 @@ import { MichelsonV1Expression } from '@taquito/rpc';
 import { Schema } from './schema/storage';
 import stringify from 'fast-json-stable-stringify';
 
+// Retrieve a unique symbol associated with the key from the environment
+// Used in order to identify all object that are of type MichelsonMap even if they come from different module
+const michelsonMapTypeSymbol = Symbol.for('taquito-michelson-map-type-symbol');
+
 export type MichelsonMapKey = Array<any> | Object | string | boolean | number;
 
 const isMapType = (
@@ -25,6 +29,15 @@ export class MapTypecheckError implements Error {
 export class MichelsonMap<K extends MichelsonMapKey, T extends any> {
   private valueMap = new Map<string, T>();
   private keyMap = new Map<string, K>();
+
+  public [michelsonMapTypeSymbol] = true;
+
+  // Used to check if an object is a michelson map.
+  // Using instanceof was not working for project that had multiple instance of taquito dependencies
+  // as the class constructor is different
+  static isMichelsonMap(obj: any): obj is MichelsonMap<any, any> {
+    return obj && obj[michelsonMapTypeSymbol] === true;
+  }
 
   private keySchema?: Schema;
   private valueSchema?: Schema;

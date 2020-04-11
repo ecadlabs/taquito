@@ -68,7 +68,7 @@ export class RpcClient {
     private url: string = defaultRPC,
     private chain: string = defaultChain,
     private httpBackend: HttpBackend = new HttpBackend()
-  ) { }
+  ) {}
 
   private createURL(path: string) {
     // Trim trailing slashes because it is assumed to be included in path
@@ -243,7 +243,9 @@ export class RpcClient {
    *
    * @description Access the value associated with a key in the big map storage of the contract.
    *
-   * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-context-contracts-contract-id-big-map-get
+   * @deprecated Deprecated in favor of getBigMapKeyByID
+   *
+   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-script
    */
   async getBigMapKey(
     address: string,
