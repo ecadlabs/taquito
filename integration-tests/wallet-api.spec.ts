@@ -1,6 +1,6 @@
 import { CONFIGS } from "./config";
 
-CONFIGS.forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
   beforeEach(async (done) => {
