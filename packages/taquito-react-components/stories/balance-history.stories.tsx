@@ -12,7 +12,7 @@ stories.addDecorator(withKnobs);
 
 function createTK() {
     const tk = new TezosToolkit();
-    tk.setProvider({ rpc: 'https://alphanet-node.tzscan.io' });
+    tk.setProvider({ rpc: 'https://api.tez.ie/rpc/mainnet' });
     return tk;
 }
 
