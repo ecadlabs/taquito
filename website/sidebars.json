@@ -17,7 +17,6 @@
             "label": "Signer",
             "items": [
                 "inmemory_signer",
-                "faucet_key_signer",
                 "tezbridge_signer"
             ]
         },
