@@ -80,10 +80,10 @@ If you have a private key, you can import it as follows:
 
 ```js
 import { Tezos } from '@taquito/taquito';
-import { InMemorySigner } from '@taquito/taquito-signer';
+import { InMemorySigner, importKey } from '@taquito/taquito-signer';
 
 Tezos.setProvider({ signer: new InMemorySigner() });
-Tezos.importKey('p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1');
+importKey(Tezos, 'p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1');
 ```
 
 #### Importing a Faucet Key
@@ -93,7 +93,7 @@ The key is a JSON file, which you can use with Taquito as follows:
 
 ```js
 import { Tezos } from '@taquito/taquito';
-import { InMemorySigner } from '@taquito/taquito-signer';
+import { InMemorySigner, importKey } from '@taquito/taquito-signer';
 
 Tezos.setProvider({ signer: new InMemorySigner() });
 
@@ -122,7 +122,8 @@ const FAUCET_KEY = {
   email: 'jxmjvauo.guddusns@tezos.example.org',
 };
 
-Tezos.importKey(
+importKey(
+  Tezos,
   FAUCET_KEY.email,
   FAUCET_KEY.password,
   FAUCET_KEY.mnemonic.join(' '),
