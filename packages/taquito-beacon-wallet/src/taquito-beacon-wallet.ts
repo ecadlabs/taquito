@@ -1,5 +1,9 @@
-import { DAppClient } from '@airgap/beacon-sdk/dist/clients/DappClient';
-import { PermissionRequest, PermissionResponse, PermissionScope } from '@airgap/beacon-sdk';
+import {
+  DAppClient,
+  PermissionRequest,
+  PermissionResponse,
+  PermissionScope,
+} from '@airgap/beacon-sdk';
 import {
   createOriginationOperation,
   createSetDelegateOperation,
