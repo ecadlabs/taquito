@@ -1,5 +1,5 @@
 import { DAppClient } from '@airgap/beacon-sdk/dist/clients/DappClient';
-import { PermissionResponse } from '@airgap/beacon-sdk/dist/messages/Messages';
+import { PermissionRequest, PermissionResponse, PermissionScope } from '@airgap/beacon-sdk';
 import {
   createOriginationOperation,
   createSetDelegateOperation,
@@ -13,13 +13,6 @@ import { encodeKeyHash } from '@taquito/utils';
 
 export type BeaconWalletOptions = { name: string };
 
-export enum PermissionScopeEnum {
-  READ_ADDRESS = 'read_address',
-  SIGN = 'sign',
-  OPERATION_REQUEST = 'operation_request',
-  THRESHOLD = 'threshold',
-}
-
 export class BeaconWalletNotInitialized implements Error {
   name = 'BeaconWalletNotInitialized';
   message = 'You need to initialize BeaconWallet by calling beaconWallet.requestPermissions first';
@@ -29,13 +22,13 @@ export class MissingRequiredScopes implements Error {
   name = 'MissingRequiredScopes';
   message: string;
 
-  constructor(public requiredScopes: PermissionScopeEnum[]) {
+  constructor(public requiredScopes: PermissionScope[]) {
     this.message = `Required permissions scopes were not granted: ${requiredScopes.join(',')}`;
   }
 }
 
 export class BeaconWallet implements WalletProvider {
-  private readonly MANDATORY_SCOPES = [PermissionScopeEnum.READ_ADDRESS];
+  private readonly MANDATORY_SCOPES = [PermissionScope.READ_ADDRESS];
   public client: DAppClient;
 
   private permissions?: PermissionResponse;
@@ -54,13 +47,13 @@ export class BeaconWallet implements WalletProvider {
 
   private validateRequiredScopesOrFail(
     permission: PermissionResponse,
-    requiredScopes: PermissionScopeEnum[]
+    requiredScopes: PermissionScope[]
   ) {
     const mandatoryScope = new Set(requiredScopes);
 
-    for (const scope of permission.permissions.scopes) {
-      if (mandatoryScope.has(scope as PermissionScopeEnum)) {
-        mandatoryScope.delete(scope as PermissionScopeEnum);
+    for (const scope of permission.scopes) {
+      if (mandatoryScope.has(scope)) {
+        mandatoryScope.delete(scope);
       }
     }
 
@@ -69,8 +62,8 @@ export class BeaconWallet implements WalletProvider {
     }
   }
 
-  async requestPermissions() {
-    const result = await this.client.requestPermissions();
+  async requestPermissions(request?: PermissionRequest) {
+    const result = await this.client.requestPermissions(request);
 
     this.validateRequiredScopesOrFail(result, this.MANDATORY_SCOPES);
 
@@ -83,9 +76,11 @@ export class BeaconWallet implements WalletProvider {
   }
 
   getPKH() {
-    const { permissions } = this.getPermissionOrFail();
+    const { pubkey } = this.getPermissionOrFail();
 
-    return encodeKeyHash(permissions.pubkey);
+    if (pubkey) {
+      return encodeKeyHash(pubkey);
+    }
   }
 
   mapTransferParamsToWalletParams(params: WalletTransferParams) {
@@ -102,15 +97,15 @@ export class BeaconWallet implements WalletProvider {
 
   async sendOperations(params: any[]) {
     const permissions = this.getPermissionOrFail();
-    this.validateRequiredScopesOrFail(permissions, [PermissionScopeEnum.OPERATION_REQUEST]);
+    this.validateRequiredScopesOrFail(permissions, [PermissionScope.OPERATION_REQUEST]);
 
-    const network = permissions.permissions.networks;
-    const { transactionHashes } = await this.client.requestOperation({
-      network: network[0],
+    const network = permissions.network;
+    const { transactionHash } = await this.client.requestOperation({
+      network,
       operationDetails: params.map(op => ({
         ...this.removeFeeAndLimit(op),
       })) as any,
     });
-    return transactionHashes[0];
+    return transactionHash;
   }
 }

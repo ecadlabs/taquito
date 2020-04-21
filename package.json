@@ -82,7 +82,7 @@
     "tslint-config-standard": "^8.0.1",
     "typedoc": "^0.16.11",
     "typedoc-plugin-lerna-packages": "^0.3.0",
-    "typescript": "~3.6.0"
+    "typescript": "~3.8.3"
   },
   "config": {
     "commitizen": {

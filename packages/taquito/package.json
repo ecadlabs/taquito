@@ -111,7 +111,7 @@
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
     "tslint-config-standard": "^8.0.1",
-    "typescript": "~3.6.0",
+    "typescript": "~3.8.3",
     "webpack": "^4.41.4",
     "webpack-assets-manifest": "^3.1.1",
     "webpack-cli": "^3.3.10",

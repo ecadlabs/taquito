@@ -1,6 +1,5 @@
 import { Context } from '../context';
 import { ContractAbstraction, ContractMethod, WalletContract } from '../contract';
-import { RpcContractProvider } from '../contract/rpc-contract-provider';
 import { OpKind, withKind } from '../operations/types';
 import {
   WalletDelegateParams,
