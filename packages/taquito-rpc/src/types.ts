@@ -606,12 +606,14 @@ export interface ConstantsResponse {
   quorum_min?: number;
   delay_per_missing_endorsement?: number;
   initial_endorsers?: string[];
+  baking_reward_per_endorsement: BigNumber;
 }
 
 export interface ContractResponse {
   balance: BigNumber;
   script: ScriptedContracts;
   counter?: string;
+  delegate?: string;
 }
 
 export interface TestChainStatus {
