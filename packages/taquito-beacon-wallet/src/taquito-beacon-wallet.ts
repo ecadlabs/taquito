@@ -1,6 +1,6 @@
 import {
   DAppClient,
-  PermissionRequest,
+  RequestPermissionInput,
   PermissionResponse,
   PermissionScope,
 } from '@airgap/beacon-sdk';
@@ -66,7 +66,7 @@ export class BeaconWallet implements WalletProvider {
     }
   }
 
-  async requestPermissions(request?: PermissionRequest) {
+  async requestPermissions(request?: RequestPermissionInput) {
     const result = await this.client.requestPermissions(request);
 
     this.validateRequiredScopesOrFail(result, this.MANDATORY_SCOPES);
