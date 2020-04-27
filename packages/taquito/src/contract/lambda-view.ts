@@ -8,8 +8,7 @@ export default class LambdaView {
   constructor(
     private lambdaContract: Contract,
     private viewContract: Contract,
-    public readonly viewMethod: string,
-    public readonly entrypointName: string = 'default',
+    public readonly viewMethod: string = 'default',
     private contractParameter: MichelsonV1Expression = { prim: 'Unit' }
   ) {
     this.voidLambda = this.createVoidLambda();
@@ -38,7 +37,7 @@ export default class LambdaView {
       },
     ];
 
-    if (this.entrypointName === 'default') {
+    if (this.viewMethod === 'default') {
       contractArgs = ([{ string: '%default' }] as MichelsonV1Expression[]).concat(contractArgs);
     }
 
@@ -106,7 +105,7 @@ export default class LambdaView {
                                 prim: 'PUSH',
                                 args: [
                                   { prim: 'address' },
-                                  { string: `${this.viewContract.address}%${this.entrypointName}` },
+                                  { string: `${this.viewContract.address}%${this.viewMethod}` },
                                 ],
                               },
                               { prim: 'DUP' },
@@ -210,10 +209,12 @@ export default class LambdaView {
 
   private getView(): [MichelsonV1Expression, MichelsonV1Expression] {
     const entrypoints = this.viewContract.entrypoints.entrypoints;
-    const entrypoint = entrypoints[this.entrypointName] as MichelsonV1Expression;
+    const entrypoint = entrypoints[this.viewMethod] as MichelsonV1Expression;
 
     if (!entrypoint) {
-      throw Error(`Contract at ${this.viewContract.address} does not have entrypoint: ${name}`);
+      throw Error(
+        `Contract at ${this.viewContract.address} does not have entrypoint: ${this.viewMethod}`
+      );
     }
 
     if (!('prim' in entrypoint) || !entrypoint.args) {
@@ -244,4 +245,8 @@ export default class LambdaView {
 
     return [parameter, callbackContract.args[0]] as [MichelsonV1Expression, MichelsonV1Expression];
   }
+}
+
+export enum DefaultLambdaAddresses {
+  carthagenet = 'KT1VAy1o1FGiXYfD3YT7x7k5eF5HSHhmc1u6',
 }

@@ -22,7 +22,7 @@ import {
   createTransferOperation,
 } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
-import LambdaView from 'taquito/src/contract/lambda-view';
+import LambdaView, { DefaultLambdaAddresses } from './lambda-view';
 
 export class RpcContractProvider extends OperationEmitter implements ContractProvider {
   constructor(context: Context, private estimator: EstimationProvider) {
@@ -213,28 +213,24 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
   async lambdaView(
     lambdaContractOrAddress: Contract | string,
     viewContractOrAddress: Contract | string,
-    viewMethod: string,
-    entrypointName?: string,
+    viewMethod?: string,
     contractParameter?: MichelsonV1Expression
   ): Promise<LambdaView> {
     let lambdaContract;
     let viewContract;
-    if (lambdaContractOrAddress instanceof Contract) {
+    if (Contract.isContract(lambdaContractOrAddress)) {
       lambdaContract = lambdaContractOrAddress;
+    } else if (Object.keys(DefaultLambdaAddresses).includes(lambdaContractOrAddress)) {
+      const addressKey = lambdaContractOrAddress as keyof typeof DefaultLambdaAddresses;
+      lambdaContract = await this.at(DefaultLambdaAddresses[addressKey]);
     } else {
       lambdaContract = await this.at(lambdaContractOrAddress);
     }
-    if (viewContractOrAddress instanceof Contract) {
+    if (Contract.isContract(viewContractOrAddress)) {
       viewContract = viewContractOrAddress;
     } else {
       viewContract = await this.at(viewContractOrAddress);
     }
-    return new LambdaView(
-      lambdaContract,
-      viewContract,
-      viewMethod,
-      entrypointName,
-      contractParameter
-    );
+    return new LambdaView(lambdaContract, viewContract, viewMethod, contractParameter);
   }
 }

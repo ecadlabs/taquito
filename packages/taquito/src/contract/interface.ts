@@ -12,7 +12,7 @@ import {
 } from '../operations/types';
 import { Contract } from './contract';
 import { Estimate } from './estimate';
-import LambdaView from 'taquito/src/contract/lambda-view';
+import LambdaView from './lambda-view';
 
 export type ContractSchema = Schema | unknown;
 
@@ -138,8 +138,7 @@ export interface ContractProvider {
   lambdaView(
     lambdaContractOrAddress: Contract | string,
     viewContractOrAddress: Contract | string,
-    viewMethod: string,
-    entrypointName?: string,
+    viewMethod?: string,
     contractParameter?: MichelsonV1Expression
   ): Promise<LambdaView>;
 }

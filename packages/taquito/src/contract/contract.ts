@@ -92,6 +92,8 @@ const validateArgs = (args: any[], schema: ParameterSchema, name: string) => {
   }
 };
 
+const contractTypeSymbol = Symbol.for('taquito-contract-type-symbol');
+
 /**
  * @description Smart contract abstraction
  */
@@ -106,6 +108,12 @@ export class Contract {
   public readonly schema: Schema;
 
   public readonly parameterSchema: ParameterSchema;
+
+  public [contractTypeSymbol] = true;
+
+  public static isContract(obj: any): obj is Contract {
+    return obj && obj[contractTypeSymbol] === true;
+  }
 
   constructor(
     public readonly address: string,
