@@ -2,7 +2,7 @@ import { CONFIGS } from "./config";
 import { MichelsonMap } from "@taquito/taquito";
 import { tokenBigmapCode } from "./data/token_bigmap";
 
-CONFIGS.forEach(({ lib, rpc, setup}) => {
+CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   describe(`Token with big map and with initial data using: ${rpc}`, () => {
 
@@ -10,7 +10,7 @@ CONFIGS.forEach(({ lib, rpc, setup}) => {
       await setup()
       done()
     })
-  it('Originage token contract with big map and with initialize storage/bigmaps', async (done) => {
+    it('Originage token contract with big map and with initialize storage/bigmaps', async (done) => {
       const addr = await Tezos.signer.publicKeyHash();
 
       const initialStorage = {

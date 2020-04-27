@@ -1,7 +1,7 @@
 import { CONFIGS } from "./config";
 import { tokenCode, tokenInit } from "./data/tokens";
 
-CONFIGS.forEach(({ lib, rpc, setup}) => {
+CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   describe(`Test origination of a token contract using: ${rpc}`, () => {
 

@@ -2,6 +2,7 @@ import { ForgedBytes } from '../../src/operations/types';
 import { OperationContentsAndResult } from '@taquito/rpc';
 import { TransactionOperation } from '../../src/operations/transaction-operation';
 import { defaultConfig } from '../../src/context';
+import { TransferOperationBuilder, RevealOperationBuilder } from '../helpers';
 
 describe('Transfer operation', () => {
   let fakeContext: any;
@@ -106,5 +107,59 @@ describe('Transfer operation', () => {
     expect(op.storageDiff).toEqual('0');
     expect(op.storageSize).toEqual(String(232));
     expect(op.consumedGas).toEqual(String(15953 + 10207));
+  });
+
+  it('status should contains status for transaction operation only', () => {
+    const txBuilder = new TransferOperationBuilder();
+    const revealBuilder = new RevealOperationBuilder();
+
+    const op = new TransactionOperation(
+      'test_hash',
+      {} as any,
+      '',
+      fakeForgedBytes,
+      [
+        revealBuilder.withResult({ status: 'applied' }).build(),
+        txBuilder.withResult({ status: 'backtracked' }).build(),
+      ],
+      fakeContext
+    );
+    expect(op.revealStatus).toEqual('applied');
+    expect(op.status).toEqual('backtracked');
+  });
+
+  it('status should contains status for transaction operation only', () => {
+    const txBuilder = new TransferOperationBuilder();
+    const revealBuilder = new RevealOperationBuilder();
+
+    const op = new TransactionOperation(
+      'test_hash',
+      {} as any,
+      '',
+      fakeForgedBytes,
+      [
+        txBuilder.withResult({ status: 'backtracked' }).build(),
+        revealBuilder.withResult({ status: 'applied' }).build(),
+      ],
+      fakeContext
+    );
+    expect(op.revealStatus).toEqual('applied');
+    expect(op.status).toEqual('backtracked');
+  });
+
+  it('revealStatus should be unknown when there is no reveal operation', () => {
+    const txBuilder = new TransferOperationBuilder();
+    const revealBuilder = new RevealOperationBuilder();
+
+    const op = new TransactionOperation(
+      'test_hash',
+      {} as any,
+      '',
+      fakeForgedBytes,
+      [txBuilder.withResult({ status: 'backtracked' }).build()],
+      fakeContext
+    );
+    expect(op.revealStatus).toEqual('unknown');
+    expect(op.status).toEqual('backtracked');
   });
 });

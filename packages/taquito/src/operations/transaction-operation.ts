@@ -36,6 +36,16 @@ export class TransactionOperation extends Operation
     return transactionOp ? [transactionOp] : [];
   }
 
+  get status() {
+    const operationResults = this.operationResults;
+    const txResult = operationResults[0];
+    if (txResult) {
+      return txResult.metadata.operation_result.status;
+    } else {
+      return 'unknown';
+    }
+  }
+
   get amount() {
     return new BigNumber(this.params.amount);
   }

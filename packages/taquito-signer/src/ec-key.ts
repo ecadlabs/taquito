@@ -72,10 +72,9 @@ export class ECKey {
   async sign(bytes: string, bytesHash: Uint8Array) {
     const key = new elliptic.ec(this.curve).keyFromPrivate(this._key);
     const sig = key.sign(bytesHash, { canonical: true });
-    const signature = new Uint8Array(sig.r.toArray().concat(sig.s.toArray()));
-    const signatureBuffer = toBuffer(signature);
-    const sbytes = bytes + buf2hex(signatureBuffer);
+    const signature = sig.r.toString('hex', 64) + sig.s.toString('hex', 64);
 
+    const sbytes = bytes + signature;
     return {
       bytes,
       sig: b58cencode(signature, prefix.sig),

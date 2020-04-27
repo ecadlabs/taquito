@@ -1,7 +1,7 @@
 import { CONFIGS } from "./config";
 import { ligoSample } from "./data/ligo-simple-contract";
 
-CONFIGS.forEach(({ lib, rpc, setup}) => {
+CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   describe(`Simple ligo origination scenario using: ${rpc}`, () => {
 
@@ -9,7 +9,7 @@ CONFIGS.forEach(({ lib, rpc, setup}) => {
       await setup()
       done()
     })
-  it('originates michelson produced by ligo, and increments a counter in storage', async (done) => {
+    it('originates michelson produced by ligo, and increments a counter in storage', async (done) => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: ligoSample,

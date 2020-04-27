@@ -42,7 +42,7 @@ export * from './types';
 
 export { OpKind } from './opkind';
 
-const defaultRPC = 'https://mainnet.tezrpc.me';
+const defaultRPC = 'https://api.tez.ie/rpc/mainnet';
 const defaultChain = 'main';
 
 interface RPCOptions {
@@ -57,12 +57,12 @@ const defaultRPCOptions: RPCOptions = { block: 'head' };
 export class RpcClient {
   /**
    *
-   * @param url rpc root url (default https://mainnet.tezrpc.me)
+   * @param url rpc root url (default https://api.tez.ie/rpc/mainnet)
    * @param chain chain (default main)
    * @param httpBackend Http backend that issue http request.
    * You can override it by providing your own if you which to hook in the request/response
    *
-   * @example new RpcClient('https://mainnet.tezrpc.me', 'main') this will use https://mainnet.tezrpc.me/chains/main
+   * @example new RpcClient('https://api.tez.ie/rpc/mainnet', 'main') this will use https://api.tez.ie/rpc/mainnet/chains/main
    */
   constructor(
     private url: string = defaultRPC,
@@ -227,7 +227,9 @@ export class RpcClient {
    *
    * @description Access the value associated with a key in the big map storage of the contract.
    *
-   * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-context-contracts-contract-id-big-map-get
+   * @deprecated Deprecated in favor of getBigMapKeyByID
+   *
+   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-script
    */
   async getBigMapKey(
     address: string,

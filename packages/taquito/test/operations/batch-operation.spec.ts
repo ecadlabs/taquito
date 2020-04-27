@@ -2,6 +2,12 @@ import { ForgedBytes } from '../../src/operations/types';
 import { OperationContentsAndResult } from '@taquito/rpc';
 import { BatchOperation } from '../../src/operations/batch-operation';
 import { defaultConfig } from '../../src/context';
+import {
+  RevealOperationBuilder,
+  TransferOperationBuilder,
+  OriginationOperationBuilder,
+  DelegationOperationBuilder,
+} from '../helpers';
 
 describe('Batch operation', () => {
   let fakeContext: any;
@@ -242,5 +248,104 @@ describe('Batch operation', () => {
     );
     expect(op.storageDiff).toEqual('0');
     expect(op.consumedGas).toEqual(String(15285 + 15953 + 10207 + 15794 + 10000 + 15722 + 10000));
+  });
+
+  describe('Status', () => {
+    it('should ignore reveal operation status', () => {
+      const revealBuilder = new RevealOperationBuilder();
+
+      const op = new BatchOperation(
+        'test_hash',
+        {} as any,
+        '',
+        fakeForgedBytes,
+        [revealBuilder.withResult({ status: 'applied' }).build()],
+        fakeContext
+      );
+
+      expect(op.status).toEqual('unknown');
+    });
+
+    it('should consider transaction operation status', () => {
+      const revealBuilder = new RevealOperationBuilder();
+      const txBuilder = new TransferOperationBuilder();
+
+      const op = new BatchOperation(
+        'test_hash',
+        {} as any,
+        '',
+        fakeForgedBytes,
+        [
+          revealBuilder.withResult({ status: 'applied' }).build(),
+          txBuilder.withResult({ status: 'applied' }).build(),
+        ],
+        fakeContext
+      );
+
+      expect(op.status).toEqual('applied');
+      expect(op.revealStatus).toEqual('applied');
+    });
+
+    it('should consider origination operation status', () => {
+      const revealBuilder = new RevealOperationBuilder();
+      const txBuilder = new OriginationOperationBuilder();
+
+      const op = new BatchOperation(
+        'test_hash',
+        {} as any,
+        '',
+        fakeForgedBytes,
+        [
+          revealBuilder.withResult({ status: 'applied' }).build(),
+          txBuilder.withResult({ status: 'applied' }).build(),
+        ],
+        fakeContext
+      );
+
+      expect(op.status).toEqual('applied');
+      expect(op.revealStatus).toEqual('applied');
+    });
+
+    it('should consider delegation operation status', () => {
+      const revealBuilder = new RevealOperationBuilder();
+      const txBuilder = new DelegationOperationBuilder();
+
+      const op = new BatchOperation(
+        'test_hash',
+        {} as any,
+        '',
+        fakeForgedBytes,
+        [
+          revealBuilder.withResult({ status: 'applied' }).build(),
+          txBuilder.withResult({ status: 'applied' }).build(),
+        ],
+        fakeContext
+      );
+
+      expect(op.status).toEqual('applied');
+      expect(op.revealStatus).toEqual('applied');
+    });
+
+    it('should consider this first status when using batch', () => {
+      const revealBuilder = new RevealOperationBuilder();
+      const delegationBuilder = new DelegationOperationBuilder();
+      const originationBuilder = new OriginationOperationBuilder();
+
+      const op = new BatchOperation(
+        'test_hash',
+        {} as any,
+        '',
+        fakeForgedBytes,
+        [
+          revealBuilder.withResult({ status: 'applied' }).build(),
+          originationBuilder.withResult({ status: 'backtracked' }).build(),
+          delegationBuilder.withResult({ status: 'failed' }).build(),
+        ],
+        fakeContext
+      );
+
+      expect(op.status).toEqual('backtracked');
+      expect(op.revealStatus).toEqual('applied');
+    });
   });
 });

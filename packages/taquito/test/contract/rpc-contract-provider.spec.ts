@@ -153,6 +153,7 @@ describe('RpcContractProvider test', () => {
     it('should call getBigMapKey', async done => {
       mockRpcClient.getScript.mockResolvedValue({ code: [sample] });
       mockRpcClient.getBigMapKey.mockResolvedValue(sampleBigMapValue);
+      // tslint:disable-next-line: deprecation
       const result = await rpcContractProvider.getBigMapKey(
         'test',
         'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn'
@@ -257,7 +258,6 @@ describe('RpcContractProvider test', () => {
       });
       done();
     });
-
     it('estimate when no fees are specified', async done => {
       const estimate = new Estimate(1000, 1000, 180);
       mockEstimate.originate.mockResolvedValue(estimate);
@@ -325,6 +325,48 @@ describe('RpcContractProvider test', () => {
               kind: 'origination',
               script: {
                 code: ligoSample,
+                storage: { int: '0' },
+              },
+              source: 'test_pub_key_hash',
+              storage_limit: '257',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        opbytes: 'test',
+      });
+      done();
+    });
+
+    it('should deal with code properties in atypical order', async done => {
+      const order1 = ['storage', 'code', 'parameter'];
+      const result = await rpcContractProvider.originate({
+        delegate: 'test_delegate',
+        balance: '200',
+        code: miSample
+          .concat()
+          .sort((a: any, b: any) => order1.indexOf(a.prim) - order1.indexOf(b.prim)),
+        init: { int: '0' },
+        fee: 10000,
+        gasLimit: 10600,
+        storageLimit: 257,
+      });
+      expect(result.raw).toEqual({
+        counter: 0,
+        opOb: {
+          branch: 'test',
+          contents: [
+            revealOp('test_pub_key_hash'),
+            {
+              balance: '200000000',
+              counter: '2',
+              delegate: 'test_delegate',
+              fee: '10000',
+              gas_limit: '10600',
+              kind: 'origination',
+              script: {
+                code: miSample,
                 storage: { int: '0' },
               },
               source: 'test_pub_key_hash',

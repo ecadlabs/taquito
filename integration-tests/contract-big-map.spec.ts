@@ -2,7 +2,7 @@ import { CONFIGS } from "./config";
 import { storageContract } from "./data/storage-contract";
 import { MichelsonMap } from "@taquito/taquito";
 
-CONFIGS.forEach(({ lib, rpc, setup}) => {
+CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   describe(`Test contract with multiple bigmap variations using: ${rpc}`, () => {
 

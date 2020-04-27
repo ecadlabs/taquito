@@ -84,7 +84,7 @@ export abstract class OperationEmitter {
     ]);
 
     if (!header) {
-      throw new Error('Unable to latest block header');
+      throw new Error('Unable to fetch latest block header');
     }
 
     if (!metadata) {

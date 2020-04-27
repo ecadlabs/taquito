@@ -3,7 +3,7 @@ import { CompositeForger, RpcForger, TezosToolkit, Protocols } from '@taquito/ta
 import { RemoteSigner } from '@taquito/remote-signer';
 import { HttpBackend } from '@taquito/http-utils'
 import { b58cencode, Prefix, prefix } from '@taquito/utils';
-import { importKey } from '@taquito/signer'
+import { importKey, InMemorySigner } from '@taquito/signer'
 import fs from 'fs';
 
 const nodeCrypto = require('crypto');
@@ -15,7 +15,6 @@ enum ForgerType {
 }
 
 const forgers: ForgerType[] = [ForgerType.COMPOSITE];
-const envConfig = process.env['TEZOS_RPC_NODE'];
 
 interface Config {
   rpc: string,
@@ -35,7 +34,7 @@ enum SignerType {
 
 interface ConfigWithSetup extends Config {
   lib: TezosToolkit,
-  setup: () => Promise<void>,
+  setup: (preferFreshKey?: boolean) => Promise<void>,
   createAddress: () => Promise<TezosToolkit>,
   protocol: Protocols
 }
@@ -64,7 +63,7 @@ const carthagenetEphemeral = {
   protocol: Protocols.PsCARTHA,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'https://api.tez.ie/keys/carthagenet/ephemeral',
+    keyUrl: 'https://api.tez.ie/keys/carthagenet',
     requestHeaders: { 'Authorization': 'Bearer taquito-example' },
   }
 }
@@ -76,7 +75,7 @@ const babylonnetEphemeral = {
   protocol: Protocols.PsBabyM1,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'https://api.tez.ie/keys/babylonnet/ephemeral',
+    keyUrl: 'https://api.tez.ie/keys/babylonnet',
     requestHeaders: { 'Authorization': 'Bearer taquito-example' },
   }
 }
@@ -130,9 +129,9 @@ const babylonnetFaucet = {
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_FAUCET']) {
-  providers.push(carthagenetFaucet, babylonnetFaucet)
+  providers.push(carthagenetFaucet)
 } else {
-  providers.push(carthagenetEphemeral, babylonnetEphemeral)
+  providers.push(carthagenetEphemeral)
 }
 
 const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE']
@@ -149,8 +148,44 @@ const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
   }
 }
 
-export const CONFIGS: ConfigWithSetup[] =
-  forgers.reduce((prev, forger: ForgerType) => {
+const setupSignerWithFreshKey = async (Tezos: TezosToolkit, { keyUrl, requestHeaders }: EphemeralConfig) => {
+  const httpClient = new HttpBackend()
+  const key = await httpClient.createRequest<string>(
+    {
+      url: keyUrl,
+      method: 'POST',
+      headers: requestHeaders,
+      json: false,
+    })
+  const signer = new InMemorySigner(key)
+  Tezos.setSignerProvider(signer)
+}
+
+const setupSignerWithEphemeralKey = async (Tezos: TezosToolkit, { keyUrl, requestHeaders }: EphemeralConfig) => {
+  const ephemeralUrl = `${keyUrl}/ephemeral`;
+  const httpClient = new HttpBackend()
+  const { id, pkh } = await httpClient.createRequest(
+    {
+      url: ephemeralUrl,
+      method: 'POST',
+      headers: requestHeaders,
+    })
+
+  const signer = new RemoteSigner(
+    pkh,
+    `${ephemeralUrl}/${id}/`,
+    { headers: requestHeaders },
+  )
+  Tezos.setSignerProvider(signer)
+}
+
+const setupWithFaucetKey = async (Tezos: TezosToolkit, signerConfig: FaucetConfig) => {
+  const faucetKey: any = faucetKeyFile || signerConfig.faucetKey
+  await importKey(Tezos, faucetKey.email, faucetKey.password, faucetKey.mnemonic.join(" "), faucetKey.secret)
+}
+
+export const CONFIGS = () => {
+  return forgers.reduce((prev, forger: ForgerType) => {
     const configs = providers.map(({ rpc, knownBaker, knownContract, protocol, knownBigMapContract, signerConfig }) => {
       const Tezos = new TezosToolkit();
 
@@ -165,29 +200,15 @@ export const CONFIGS: ConfigWithSetup[] =
         protocol,
         lib: Tezos,
         signerConfig,
-        setup: async () => {
+        setup: async (preferFreshKey: boolean = false) => {
           if (signerConfig.type === SignerType.FAUCET) {
-
-            const faucetKey: any = faucetKeyFile || signerConfig.faucetKey
-            await importKey(Tezos, faucetKey.email, faucetKey.password, faucetKey.mnemonic.join(" "), faucetKey.secret)
-
+            await setupWithFaucetKey(Tezos, signerConfig);
           } else if (signerConfig.type === SignerType.EPHEMERAL_KEY) {
-
-            const httpClient = new HttpBackend()
-            const { id, pkh } = await httpClient.createRequest(
-              {
-                url: signerConfig.keyUrl,
-                method: 'POST',
-                headers: signerConfig.requestHeaders,
-              })
-
-            const signer = new RemoteSigner(
-              pkh,
-              `${signerConfig.keyUrl}/${id}/`,
-              { headers: signerConfig.requestHeaders },
-            )
-            Tezos.setSignerProvider(signer)
-
+            if (preferFreshKey) {
+              await setupSignerWithFreshKey(Tezos, signerConfig)
+            } else {
+              await setupSignerWithEphemeralKey(Tezos, signerConfig)
+            }
           }
         },
         createAddress: async () => {
@@ -206,3 +227,4 @@ export const CONFIGS: ConfigWithSetup[] =
     });
     return [...prev, ...configs]
   }, [] as ConfigWithSetup[]);
+}

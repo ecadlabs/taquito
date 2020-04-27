@@ -19,6 +19,18 @@ import {
 } from '../operations/types';
 import { OpKind } from '@taquito/rpc';
 
+export const BATCH_KINDS = [
+  OpKind.ACTIVATION,
+  OpKind.ORIGINATION,
+  OpKind.TRANSACTION,
+  OpKind.DELEGATION,
+];
+export type BatchKinds =
+  | OpKind.ACTIVATION
+  | OpKind.ORIGINATION
+  | OpKind.TRANSACTION
+  | OpKind.DELEGATION;
+
 export class OperationBatch extends OperationEmitter {
   private operations: ParamsWithKind[] = [];
 

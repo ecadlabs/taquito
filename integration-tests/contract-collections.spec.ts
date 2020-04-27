@@ -2,7 +2,7 @@ import { CONFIGS } from "./config";
 import { MichelsonMap } from "@taquito/taquito";
 import { collection_code } from "./data/collection_contract";
 
-CONFIGS.forEach(({ lib, rpc, setup}) => {
+CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   describe(`Collection contract tests using: ${rpc}`, () => {
 
@@ -10,7 +10,7 @@ CONFIGS.forEach(({ lib, rpc, setup}) => {
       await setup()
       done()
     })
-  it('Origingate a contract with set,list,map and exercise all collections', async (done) => {
+    it('Origingate a contract with set,list,map and exercise all collections', async (done) => {
       const addr = await Tezos.signer.publicKeyHash();
 
       const initialStorage = {

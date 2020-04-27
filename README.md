@@ -106,7 +106,7 @@ See the top-level `package.json` file. Some common targets are:
 
 * Install lerna globally `npm install -g lerna`
 * Run `npm install`
-* Run `lerna bootstrap`
+* Run `lerna bootstrap --force-local`
 * Run `npm run build`
 
 #### Once you have modified any package:
@@ -114,6 +114,16 @@ See the top-level `package.json` file. Some common targets are:
 * Run `npm run lint`
 * Run `npm run test`
 * In order to commit please use `npm run commit`
+
+### Running the website locally
+
+The Tezos Taquito [website][4] is built using [Docusaurus][5] To run the Taquito website in development mode locally, run the following commands:
+
+```sh
+cd website
+yarn
+yarn start
+```
 
 ---
 
@@ -142,6 +152,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 [0]: https://github.com/ecadlabs/tezos-indexer-api
 [2]: https://keybase.io/jevonearth
 [3]: https://keybase.io/simrob
+[4]: https://tezostaquito.io
+[5]: https://docusaurus.io/
 
 ## Credits
 

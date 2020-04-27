@@ -1,22 +1,29 @@
 {
-  "docs": [
-    {
-      "type": "category",
-      "label": "General",
-      "items": [
-        "quick_start",
-        "boilerplate",
-        "making_transfers",
-        "originate",
-        "set_delegate",
-        "smartcontracts"
-      ]
-    },
-    { "type": "category", "label": "Signer", "items": ["inmemory_signer", "tezbridge_signer"] },
-    {
-      "type": "link",
-      "label": "TypeDoc Reference",
-      "href": "https://tezostaquito.io/typedoc"
-    }
-  ]
+    "docs": [
+        {
+            "type": "category",
+            "label": "General",
+            "items": [
+                "quick_start",
+                "boilerplate",
+                "making_transfers",
+                "originate",
+                "set_delegate",
+                "smartcontracts"
+            ]
+        },
+        {
+            "type": "category",
+            "label": "Signer",
+            "items": [
+                "inmemory_signer",
+                "tezbridge_signer"
+            ]
+        },
+        {
+            "type": "link",
+            "label": "TypeDoc Reference",
+            "href": "https://tezostaquito.io/typedoc"
+        }
+    ]
 }
