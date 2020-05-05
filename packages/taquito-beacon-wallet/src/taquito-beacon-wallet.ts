@@ -1,9 +1,11 @@
 import {
   DAppClient,
+  DAppClientOptions,
   RequestPermissionInput,
-  PermissionResponse,
+  PermissionResponseOutput,
   PermissionScope,
 } from '@airgap/beacon-sdk';
+
 import {
   createOriginationOperation,
   createSetDelegateOperation,
@@ -13,9 +15,6 @@ import {
   WalletProvider,
   WalletTransferParams,
 } from '@taquito/taquito';
-import { encodeKeyHash } from '@taquito/utils';
-
-export type BeaconWalletOptions = { name: string };
 
 export class BeaconWalletNotInitialized implements Error {
   name = 'BeaconWalletNotInitialized';
@@ -32,13 +31,12 @@ export class MissingRequiredScopes implements Error {
 }
 
 export class BeaconWallet implements WalletProvider {
-  private readonly MANDATORY_SCOPES = [PermissionScope.READ_ADDRESS];
   public client: DAppClient;
 
-  private permissions?: PermissionResponse;
+  private permissions?: PermissionResponseOutput;
 
-  constructor({ name }: BeaconWalletOptions) {
-    this.client = new DAppClient(name);
+  constructor(options: DAppClientOptions) {
+    this.client = new DAppClient(options);
   }
 
   private getPermissionOrFail() {
@@ -50,7 +48,7 @@ export class BeaconWallet implements WalletProvider {
   }
 
   private validateRequiredScopesOrFail(
-    permission: PermissionResponse,
+    permission: PermissionResponseOutput,
     requiredScopes: PermissionScope[]
   ) {
     const mandatoryScope = new Set(requiredScopes);
@@ -68,9 +66,6 @@ export class BeaconWallet implements WalletProvider {
 
   async requestPermissions(request?: RequestPermissionInput) {
     const result = await this.client.requestPermissions(request);
-
-    this.validateRequiredScopesOrFail(result, this.MANDATORY_SCOPES);
-
     this.permissions = result;
   }
 
@@ -80,11 +75,8 @@ export class BeaconWallet implements WalletProvider {
   }
 
   getPKH() {
-    const { pubkey } = this.getPermissionOrFail();
-
-    if (pubkey) {
-      return encodeKeyHash(pubkey);
-    }
+    const { address } = this.getPermissionOrFail();
+    return Promise.resolve(address);
   }
 
   mapTransferParamsToWalletParams(params: WalletTransferParams) {
