@@ -1,0 +1,175 @@
+{
+  "entries": [
+    {
+      "entry": "files/v1alpha2",
+      "value": {
+        "files": [
+          {
+            "path": "dist/taquito-beacon-wallet.es5.js",
+            "sha512": "c51d0482183b591dd8c3cbd96a300272d7bddfa9c69a9c3d1325c1632d3c563400175b285dac7193d42e559b0827b8f3bf27620bf068a3fd2c8139b9d8dcdd34"
+          },
+          {
+            "path": "dist/lib/taquito-beacon-wallet.js",
+            "sha512": "a44dcef375d33ac3c871b4e81c3b3907a7cf487548eddff6bb1ebd19281b46b7d330573a0188a890a3e82423a5c6d51e77d2f60afedca1c51f27b4c921e41ccc"
+          },
+          {
+            "path": "dist/taquito-beacon-wallet.umd.js",
+            "sha512": "07771dc2eaec459b56474bfc5a82e7b618151400da8fec23555914b2705f418b55530f71289620c579cf4df39e6649b255da2065f862abe07c93e5f27102ba89"
+          },
+          {
+            "path": "dist/taquito-beacon-wallet.es5.js.map",
+            "sha512": "d477812215b1b946cf893b29db06f466d3717dce057f4c08f131bae3de64589d370ce72f6a5ee06144d8351936d2947d560dfd0714c83f74404df48f83c5b7c7"
+          },
+          {
+            "path": "dist/lib/taquito-beacon-wallet.js.map",
+            "sha512": "6ab91bc53fecf48741dea905ab316426d1a6592613f7fa93a6c89c9bcfee508183924d56db865a553e439075ff8aad42cb668a814dc607663bad46cb79f07306"
+          },
+          {
+            "path": "dist/taquito-beacon-wallet.umd.js.map",
+            "sha512": "89b2ebddb77e1c7dc2cc9b60628543bf02b179d1e78a75e0bb28483496aa8f900981e6f14d7b9af62429ab43355a4f869b1071e4e5237cdc2bc01a09eacab0b4"
+          },
+          {
+            "path": "dist/types/taquito-beacon-wallet.d.ts",
+            "sha512": "ba31c31ecd6467de02a816e95685400b61b719f9e61880d569f0d5a4500f2c27188b1fb2d0d19c6b4f143bb67741b3cc657b9e168728e7763cf69738aabd73f2"
+          }
+        ]
+      }
+    },
+    {
+      "entry": "identity/v1alpha2",
+      "value": {
+        "identity": {
+          "keybaseUser": "jevonearth"
+        }
+      }
+    },
+    {
+      "entry": "npmCompatiblePackageJson/v1alpha2",
+      "value": {
+        "packageJsonProperties": [
+          "author",
+          "dependencies",
+          "description",
+          "devDependencies",
+          "engines",
+          "files",
+          "jest",
+          "keywords",
+          "license",
+          "lint-staged",
+          "main",
+          "module",
+          "name",
+          "publishConfig",
+          "repository",
+          "scripts",
+          "typings",
+          "version"
+        ],
+        "sha512": "cf911c0e76869319ee9a3a7f41f6982cc42a3ceee5931039b67ccfe5131597f15349eff3bb5a227d84f2469ea441d6c773ac5a7c3197b2c155b4678eea657d11"
+      }
+    },
+    {
+      "entry": "packageJson/v1alpha2",
+      "value": {
+        "packageJson": {
+          "name": "@taquito/beacon-wallet",
+          "version": "6.2.0-beta.0",
+          "description": "Beacon wallet provider",
+          "keywords": [
+            "tezos",
+            "blockchain",
+            "websocket"
+          ],
+          "main": "dist/taquito-beacon-wallet.umd.js",
+          "module": "dist/taquito-beacon-wallet.es5.js",
+          "typings": "dist/types/taquito-beacon-wallet.d.ts",
+          "files": [
+            "signature.json",
+            "dist"
+          ],
+          "publishConfig": {
+            "access": "public"
+          },
+          "author": "Simon Boissonneault-Robert <simon@ecadlabs.com>",
+          "repository": {
+            "type": "git",
+            "url": ""
+          },
+          "license": "MIT",
+          "engines": {
+            "node": ">=6.0.0"
+          },
+          "scripts": {
+            "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
+            "precommit": "lint-staged",
+            "prebuild": "rimraf dist",
+            "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts ",
+            "start": "rollup -c rollup.config.ts -w"
+          },
+          "lint-staged": {
+            "{src,test}/**/*.ts": [
+              "prettier --write",
+              "tslint --fix",
+              "git add"
+            ]
+          },
+          "jest": {
+            "transform": {
+              ".(ts|tsx)": "ts-jest"
+            },
+            "testEnvironment": "node",
+            "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+            "moduleFileExtensions": [
+              "ts",
+              "tsx",
+              "js"
+            ],
+            "coveragePathIgnorePatterns": [
+              "/node_modules/",
+              "/test/"
+            ],
+            "collectCoverageFrom": [
+              "src/**/*.{js,ts}"
+            ]
+          },
+          "dependencies": {
+            "@airgap/beacon-sdk": "0.3.0-beta.2",
+            "@taquito/utils": "^6.2.0-beta.0",
+            "@taquito/taquito": "^6.2.0-beta.0"
+          },
+          "devDependencies": {
+            "@types/chrome": "0.0.106",
+            "@types/jest": "^23.3.2",
+            "@types/libsodium-wrappers": "^0.7.7",
+            "@types/node": "^10.14.13",
+            "@types/ws": "^6.0.3",
+            "colors": "^1.3.2",
+            "coveralls": "^3.0.2",
+            "cross-env": "^5.2.0",
+            "jest": "^24.8.0",
+            "jest-config": "^24.8.0",
+            "lint-staged": "^8.0.0",
+            "lodash.camelcase": "^4.3.0",
+            "prettier": "^1.14.3",
+            "prompt": "^1.0.0",
+            "replace-in-file": "^3.4.2",
+            "rimraf": "^2.6.2",
+            "rollup": "^1.20.1",
+            "rollup-plugin-json": "^4.0.0",
+            "rollup-plugin-sourcemaps": "^0.4.2",
+            "rollup-plugin-typescript2": "^0.22.1",
+            "shelljs": "^0.8.3",
+            "ts-jest": "^23.10.2",
+            "ts-node": "^7.0.1",
+            "tslint": "^5.11.0",
+            "tslint-config-prettier": "^1.15.0",
+            "tslint-config-standard": "^8.0.1",
+            "typescript": "~3.8.3"
+          }
+        }
+      }
+    }
+  ],
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJetbr4CRAD9Qy5GYHsngAAs6IQACZ1mIwb1DDpF/2H56AwKhm+\n15DqOwX/K72XEIPCyUZGYFydyhR1O/AHJ3JaH+rxt+lwdkk5fg0oX9pi4zU58M9h\nlsY5hw/zbDo4b9fL7Lx22142/R05JSAkR6ZUdnMx2Lsl8ciaewJA/LALZTjYGHw9\nYmCoQfAtInZckXJqcU+TO2M4P+vZxgN1+w0gXI3WGCg9dHChxYJW82CmmZvU0XaZ\nWfF7ZrpIzo5TDpuCCOA1penCCXjaNQec7/7MO4dkW0tmHN11po6nAnkPOHGUnbk+\nx/WUsHuH1ZqxMTqNDG6kc5nkGklFA6YTOqUmOmuBtlf2vAbbYKVMaAzllhGH7zjt\n76LNLV6u7AdG7hjKZ2da2PAWzubs+OBo+mIVk3VWPMSY5dIBmyq0qCncACT+VQC6\ndkezmmo4763S+Lk9BGOqWA4xAvAxcNkwkB9g2Rhrbepu5Cs6/rnY7zhTWVTeGQ/T\nALQtNLRefJy1LWFl5G8HlQN6CjxnFNX6PzrC4sR4Fo5U5W22e5aTpGdgc1aUBvSQ\nxZHz/Tw5O2V2LWxZpDmYLeGaf5MPJngusEGoFtnKKXVOH9BPe7I9HU0FZ/Qpc3H7\nHRaO2QoQQDFxDWbvAVAFsaVbWmYG4SXlE2/6TQZPe0EBgTWd7b0aHu3yLWuJQ2it\nM/0cP9IzIB3OH6/FxaWv\n=i5r4\n-----END PGP SIGNATURE-----\n"
+}
