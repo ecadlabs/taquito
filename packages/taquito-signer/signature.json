@@ -102,7 +102,7 @@
           "typings",
           "version"
         ],
-        "sha512": "48ddeb1bf3713b3c2ad4bfc31e10b14803ec1d0b47e499b11311014f5ff63d7eb36c38bbb7dfc4b54a346e79645f8dbdc18194904442c2bc5c38ae978ffc37cb"
+        "sha512": "e699ac903fd044dec192607953ebb681c1967a477594bd4d531376633d5a08f89cd2b4baaa3964365aabc82c18bafc7a415ae7519d6d26e60e5477ff068a783e"
       }
     },
     {
@@ -212,11 +212,11 @@
             "tslint-config-prettier": "^1.15.0",
             "tslint-config-standard": "^8.0.1",
             "typedoc": "^0.15.0",
-            "typescript": "~3.6.0"
+            "typescript": "~3.8.3"
           }
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJekjaICRAD9Qy5GYHsngAAc9AQAD1jWC3zTvTagBlJYpK1wAiZ\nFAIjQhZIkzK8SfeCVX/sbjL64F/1TbGiK8e9/Ih6yWUO+8/yGz5yLN5fBmo3eJ6t\nGDZevuDQs2OgWM44PRdtGOcqNo7JreLXQpl4J3t3F7DcL36oEViTy0ZaVBoHza07\nXig9pJ4m5qmDJfi3njUzcNI/r0aXa7NIcDRkbvRuSm7VEBlNphMtDZq9w8KJ13md\npxznd+N4UyCAT0anuUVY2T/L7k3K3S1UbiLk6m8A5J3UHw93A147bbq3RnuDtN5+\n0c/24caR3aPsO5fs2emG1UxoyI3TZZoh+TtKxNIEom4RYkabS0z6yBdRlXZ4K8yE\n50Y34/oy3jnh79mA5Kw7765H6YeEJQbWM1y2FBKbKB+2zG4fPEBmfkQeyNDGmE/V\n2DEo2LtgeY5Fyn9v4dSQnvRKcrlREjGpz+lCdWT9hX9/WadR3isKBo0Ar1Yiscid\n/wLDI7SsnERexLSWSIKyUHVmRehPkcjKo2t5Ay6Q3AhTD5Gp8aZ5i7P1tIw7P1Qa\n2u5hUzjFLc2eOjbzpmxGpeWB4dTQx8yA3tN2C1AIqWj+GS1fhebI+zjivuvcyvRt\nLlH1X8VH4xDxdRdZw85CvYUnlJ902e33bu23ICPMwTiq2znKKxA8KRZLTJodeto/\nS1LPNxsk2m/czI2Uon4L\n=zRZd\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJetbsBCRAD9Qy5GYHsngAAehsQAGSNhlx+hYZmg8lWoYcHaA4N\nY8XSUvXTdHyori1/8Hx6Xh5kHNk9IOH3jsuwYYVDxxcA4kvZpdjmNyPHHnXBEG77\nrR9EUXdZ6lsuonMn1p29GHaU40PhN79cOEGSsa61La7dMvj0Tu0M/kED7YA4F9fl\nnUb5pE0bpdUQOxVKfJkdhFufmB7Or9/6r/gQKUX5TwFwhfOQTWq4lbgAy3chhzo2\n3Q4nlA3YRBz0618Ne2/YKJcx3XoL4oZxOgynVeZgHF733+vVssUJzIpF37aqfODr\nirEsX6eHNg9iy2WaVkQnrbWc3vtnXzrynI/x3js6l2DsIQ3vR2/GbHyCyNrTUwbl\n0sNvG5HS3zAMRwp/aBhlUtewCd+vc/qTRGpdxhErwDsTvzy+r8IRMPg4tonAdq7o\nbhYemvUL7l53FyojvMHvJ3AjI2vaSZPffsEqX+oKUVpeWSZCvl6+34+Bl7xGbaEg\noNo1bptqqpDLUR5EB6Og71/O0sfeDzaAeBDcSwiHv9eDxKMMM98F+NeRmLgo7z2B\nuccbimSK69h5ZyVKB8W6ndZULJ3M+Pdh/eZY0evPLbjLOnfECOzOg+QdIxA0Un9d\nuLBws4L+BHptZNLCa+B8XItj+xgN/hl7yqVYp/7T4SUef5dK+T47MbVD9+yEyVyJ\nxq06AVeTp8IeYu0iQuH8\n=NI3z\n-----END PGP SIGNATURE-----\n"
 }

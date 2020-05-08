@@ -50,7 +50,7 @@
           },
           {
             "path": "dist/types/constants.d.ts",
-            "sha512": "ed65e87921b074ae1e50eb3923336febdb233620ca85b28bce0e17295f633ed80bfb8ef451c846de93232f2841f4288faa14bc10ba29e238b5466ee2ad597d53"
+            "sha512": "649a276e336facb6ee335fdbb9cfbbead96b09a707ae3cab5d068c6263351d632aadfd76200cd1626570066b3f2980e127c619b4c999ecaa7d8fdcbf65751ab7"
           },
           {
             "path": "dist/types/taquito-utils.d.ts",
@@ -94,7 +94,7 @@
           "typings",
           "version"
         ],
-        "sha512": "c7fa83ef97babfc30b930a2e4e011f9ffdb7e78a4ff55d95b530c78e1d3bf59aa69fbdacce15afc553a64b917a99351170b36c3a0e970de5045d2ba82f39cb5a"
+        "sha512": "03dbe8718b76d5c988488faa6e9839091d8b728a4313dea87b6f5b17ddb205de66a74759241a5b8e24d4fa2497724f2d49bdcea6d2e2a17fe7e80524a275410a"
       }
     },
     {
@@ -185,6 +185,8 @@
             "rollup-plugin-json": "^4.0.0",
             "rollup-plugin-sourcemaps": "^0.4.2",
             "rollup-plugin-typescript2": "^0.22.1",
+            "rollup-plugin-node-resolve": "^5.2.0",
+            "rollup-plugin-commonjs": "^10.1.0",
             "shelljs": "^0.8.3",
             "ts-jest": "^23.10.2",
             "ts-node": "^7.0.1",
@@ -192,11 +194,11 @@
             "tslint-config-prettier": "^1.15.0",
             "tslint-config-standard": "^8.0.1",
             "typedoc": "^0.15.0",
-            "typescript": "~3.6.0"
+            "typescript": "~3.8.3"
           }
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJekjaLCRAD9Qy5GYHsngAAujEQAHcSBgc06654YQSp51pQiBnp\ni2tckalg83/9MauNX6jk+48ol3fB++qoz6nZ01+Va8kvFJd1VU2oI2v+sHewkpLZ\ntiWtEUs+ZDC+8e5eBFQWys8I4SSYrzfP5aMveMhFKy3ONaAJeDAMUyfnzdAsfmIj\nZd88biAsiH60B6KzcYp9Gb6MtN8gNtAqzn5sputjvhEyjLG8lg/V4GSqgxCWU4Mf\nknkYcH8ib7OUMKqsocY0xtmp6WQURytSTnD7S4KvZRoRHuOsmFKddIrb7H6mpqwk\nutelJe6mpGgoydgrc0/bVblATaBcBXUVJPaj7IvouaPOUMSeqpXjGU4b4BWwAJU2\nxWzxZ11nx49eWnEoR4sr7VSH4LDqAhQFXukCzKFwFg/C25ZQnYfnwM36zVcLuTWq\nXJDeuiEFu3vhklO7aebh6TtoCGqeD1EspzHNvOKG+Xfdo4pfdWirKWcdOKUD8kwa\np8kJMhj9iCY78/3fHPC9pxNsahWJTvry6SzUiLZX0rqdT7sXcyD3O7CZL3pzKnRN\njFOkXgamAlJ73wv+BZtrOSBj7tTrw0a8URkxiP+AGm8RI+r4yXaSv4UMlk+PvwQw\nxPxPtCyK/l6I4n66EK7/bc6hYecim6smY+9G8EGsfeBnbrbBRrjjhcZrPYohSkWr\n8Msxe9M0biuy1pliKR7S\n=Yc8V\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJetbsECRAD9Qy5GYHsngAAjnoQACbXlwSB6f0iTDUrXKaZMDFv\nytQidcWTNvcZmpllUsiLgcUFCox5eLWU9bSvhqcy5IZTDmzVRHkU1bdNfC7aiud0\njcIWZ0cGoHHyajk3b9QINZmejef+y48ZvPNb9h9xsGvBo7oJItcVB4b8/FesFVWe\nHEIVfmj9xfkbmwdGTj39N34y7FsQIN6mdriYgwqkTFN8qu+LWzHhbVi7WvF8LAuT\nrYU3yJ4v/ocBME7UEJZQpKsB7Tn57vDg6mxw0xa7FRkAOcNcSzybvxZATBrDiqHg\n2XbzydVd+jBYL+d0x158mqe54aAoM3DUE71ulGMNa4rKD/cVx6xAYWEoM8uMXC0k\nqr3hIrlNaV64mbVosYa9gc/fDWnebOZHj61H4ve+djPxI5hEWvrzXHuq3hUzJttw\nm8YmxW/xuivqi9JgkIlmbalMl/uzt9my0w8Ns/pr4XUXIRAA2RzZeqs75Pk9+XV2\nekfgD+/wVfnrj98rQwpvS8vKVWkC74pNWFAx/Qz3AWwlImGg71GpL8AE7EWFtpjv\nch7JHlvNEKVPJoJNSOcyk1Uzz5vhmNgVGWRb6KD1a+hV7263Fdl2OUyENxm/kvQz\n95TfAqeuJD0WmgoumCraTFVpaduFgBB1QjndNFNhL6SrALeEuTcH5OKINDWc8hQh\nPmZaPYB7OJvj9usz1uFz\n=+zyJ\n-----END PGP SIGNATURE-----\n"
 }

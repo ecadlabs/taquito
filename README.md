@@ -52,13 +52,15 @@ We publish gpg signed packages to npmjs.org under the `@taquito` handle.
 
 | Low Level Packages                                               | Responsibility                                                |
 | ---------------------------------------------------------------- | ------------------------------------------------------------- |
-| [@taquito/rpc](packages/taquito-rpc)                             | RPC client library, wrap every rpc endpoint in its own method |
 | [@taquito/local-forging](packages/taquito-local-forging)         | Local forging of Tezos operations                             |
 | [@taquito/michelson-encoder](packages/taquito-michelson-encoder) | Encode/Decode storage and parameters to/from michelson format |
-| [@taquito/signer](packages/taquito-signer)                       | Provide necessary function to sign using tezos keys           |
 | [@taquito/remote-signer](packages/taquito-remote-signer)         | Provide necessary function to sign using remote signer API    |
+| [@taquito/rpc](packages/taquito-rpc)                             | RPC client library, wrap every rpc endpoint in its own method |
+| [@taquito/signer](packages/taquito-signer)                       | Provide necessary function to sign using tezos keys           |
 | [@taquito/tezbridge-signer](packages/taquito-tezbridge-signer)   | Provide necessary function to sign using TezBridge            |
 | [@taquito/utils](packages/taquito-utils)                         | Provide different encoding and decoding utilities             |
+| [@taquito/tezbridge-wallet](packages/tezbridge-wallet)           | Tezbridge implementation for the Wallet API		   |
+| [@taquito/beacon-wallet](packages/beacon-wallet)                 | TZIP-10 Wallet Interaction implementation for the Wallet API  |
 
 ## API Documentation
 

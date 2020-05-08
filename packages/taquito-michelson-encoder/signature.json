@@ -294,7 +294,7 @@
           },
           {
             "path": "dist/types/tokens/bigmap.d.ts",
-            "sha512": "2f76432e9bd6fdfe956610b798f566fb0ed134bdba987d496f40f9319e3357e999c7a5752bef42a8ee082ad25cbf9514b9ee271a52e9b43a36005d643100dc57"
+            "sha512": "37a555337290629397ad24b6164fee01266e6b589c2fec6551223a24fb8c79b0a90ecad8776cf1e714eb00bd9f76b827563f9d6b47f5380c22c1299624795546"
           },
           {
             "path": "dist/types/tokens/comparable/bool.d.ts",
@@ -342,11 +342,11 @@
           },
           {
             "path": "dist/types/tokens/map.d.ts",
-            "sha512": "cf28013224e393b1ae9f272b51a5bbb22dcd05bfbf2b7345d00e79470e1a3898ba06478ed887d633cda882efb1d3fb6f325024e1b054d78e34c2a517a1aa2fd1"
+            "sha512": "9be58472f5606f8abf2f620d52097fac63c45061b17c745b19171d3feb9e7efc60d2ad065d1c00e837aefd80ce2f0f27e8d7905b9c352db592678c13cfafda79"
           },
           {
             "path": "dist/types/michelson-map.d.ts",
-            "sha512": "5851363ec4148ae4f09333eecf30b3c65e5f379bc73539cc10544b3642ecd21d07a26c897557f03ad23d46a55af5e1bc687c288fecdb4a1c8716841609e55515"
+            "sha512": "aecbcaa8bfbe0b06beb6ce935b2b56da553699049e859c8277300b68131a837d944f4b9244172795f7a3545232f96c25228c90441bb4532f60705d2900fd3042"
           },
           {
             "path": "dist/types/schema/model.d.ts",
@@ -378,11 +378,11 @@
           },
           {
             "path": "dist/types/schema/parameter.d.ts",
-            "sha512": "ebb21d77f0bc4cfa2a321a40c30a6a7b0420c5709d91ae08c1e9612497bb49a7b51ebde39325abc1ff701a93c7e8cc5879b89a778e36f95ca794c319e585a20a"
+            "sha512": "06f687b11ebe78d228d0a5da05fc4455ef9ed81d59d72ce8eb357f73a902c8fb74724dff5621435e821c5a36c36c349a7c44839b3ab4884b08382acbf9843f1e"
           },
           {
             "path": "dist/types/tokens/set.d.ts",
-            "sha512": "53296cc6ca6ba6f9db65b2d9ddeef25a6e4873056a2f0d2709aa3bdb9dec251fc92f7c64036101bff578e77800677cf381ff6914419f924fb029ca37b40c27b6"
+            "sha512": "90ab0dfa2e73216bddc41e9828784189c575093dda0c45c74970f8b1c5f4a4edf3e13df80fd5541adbee5b41e86ec79e56d443c7280c3e5aa1580a2e8aa5ec2b"
           },
           {
             "path": "dist/types/tokens/signature.d.ts",
@@ -454,7 +454,7 @@
           "typings",
           "version"
         ],
-        "sha512": "a8a4e204741de46f33c0caa197b66181ae66f0ae1af31d63c561a0644f7bb7224f9dd79ce185fd4dc2f67a071f613ac7b286faca46a99ea5dbdc2887a9e3a677"
+        "sha512": "42d9c5aaf47439356f83fa79b89185ed168f9681a464fb910b3b0cf917853e806c2c05dc57c40b9d2ce0ba223a6feb80207de592c8a297d889d648c3a07542a6"
       }
     },
     {
@@ -559,11 +559,11 @@
             "tslint-config-prettier": "^1.15.0",
             "tslint-config-standard": "^8.0.1",
             "typedoc": "^0.15.0",
-            "typescript": "~3.6.0"
+            "typescript": "~3.8.3"
           }
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJekjaFCRAD9Qy5GYHsngAAtVYQAIijFv45f4rmtJ23pITfre49\nTVicqs1R+XOy4klP0XeCSsyt+I3DhVKZSoQ0kinfcHN16yjnDOBBWLffKhna9eeh\nc9ICUL/W7Xn4V2hWQKnwGaS6o6XNsjLdCUU8vRn8IftgFeLml/JZkFno0jMQXPK9\nIcO7xFxTkhJ9J5OHpV+03JoUsyCo5WgsoKX20PoSVGb4RaHiMJ2zb7dX1FdDuvd4\nevHIjb7cPsaBKH1i5cngNrGrPYSi6YbTArDhTZu54pWpD98MyFXgiHp6Uolc926n\nkKg9PTKVnSC4SYSLZolMU3Q8UMWmMxXG6x7JuhBd3HR/pKMeyHib9sO0+h+STV3q\nWfWxM5Fv3TQR/c2NXQEKeW5adwWIBtk1lY9dWeRgg3yj40HvieE8JMK3McANQYVL\nY6eUZLiGUT4q5V68ZeVkV25POqJVjDrTh497bskPmLG5R0DzFO/rgpeDk0WIUXHy\n4sT3b7OeJeBXGCIVEU3vUjo8HySbEU5epTjqLi2DOEeRR6bzLzqLTBLxBoQpW2jI\nLmZkSacOEFwFluU0pOCV1ikPiJazQe1boEbtpaKljAWMIfW35d+5tpVJSmONodS3\neRSTIsdYANuTjqyE9qedHUR+67aXR8hNTmuqH8flmH5igOhgth6U1yaKUeep/vjy\n2bbLOGtdnK4+hk2UspcU\n=+9Wu\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJetbr8CRAD9Qy5GYHsngAAlX0QAAz2vxC/MfQSfoQEd6AmY+sx\n2YHhfbY8t0Gu/vqR6ts4ffAAz/D1TQwn5tvIl3wZe2Sy797/RjrJWAFu8d7W9rW0\ni8mriUHiws0yklL+8XoUQfZS7cyy03mP50503um0notchtnrhASpn2fq17oU2TOz\nbGnyTp5MEVe2IJh7ysLYrgXheKLUcpXk6k+4bINN1nRLNXmqs6Gi6aoeym52gQwQ\nQ7AZE/DEHsdnmXyLOu8sSmw6FnHTYSoffxxa2h+0Z6O2DXvJ6CPqI1KoFer+U4jc\nVxx2ZQidd6Od3uXjZO8l5VMZDO6J72NKYZhDfwt58OGwWpkcXzf/zy/in+N582Yw\nKRR6DZgkVTT65kFwljzm7c7y1dQBxHGoShdzeQBGKS4cmHsoFr+QH9mWfgIgjdRG\nCo7Dd7Bl7XjwESnQqRgcvE04uNAGIH/RvjiVii4zkEal01JfVXG1nUXiPm7K/o2o\n2CL3HX9YZHZ14BRn3Wb1yon6jM/Bfy3w/kRwLyegh3Y/1EqMIe0BD3SIDnD/28fi\nq8wOBjZJOtAPudhLyWGw1/XU13Igc55xu+k6rhoUMeqbVRTSuEQI6o0Hy1wp/vfY\nTosaUo8DzJKrcZXc27GoNNLOEVhDiJ+W8ozJbnnHfjGcAxOjzjQUzbPpJZH3Cmuw\n9IPrd+GKD+8JtW7vCtfa\n=Zxhy\n-----END PGP SIGNATURE-----\n"
 }
