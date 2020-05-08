@@ -1,6 +1,6 @@
 {
   "name": "@taquito/taquito",
-  "version": "6.2.0-beta.0",
+  "version": "6.3.0-wallet.0",
   "description": "High level functionality that builds upon the other packages in the Tezos Typescript Library Suite.",
   "keywords": [
     "tezos",
@@ -76,11 +76,11 @@
     ]
   },
   "dependencies": {
-    "@taquito/http-utils": "^6.2.0-beta.0",
-    "@taquito/michelson-encoder": "^6.2.0-beta.0",
-    "@taquito/rpc": "^6.2.0-beta.0",
-    "@taquito/signer": "^6.2.0-beta.0",
-    "@taquito/utils": "^6.2.0-beta.0",
+    "@taquito/http-utils": "^6.3.0-wallet.0",
+    "@taquito/michelson-encoder": "^6.3.0-wallet.0",
+    "@taquito/rpc": "^6.3.0-wallet.0",
+    "@taquito/signer": "^6.3.0-wallet.0",
+    "@taquito/utils": "^6.3.0-wallet.0",
     "bignumber.js": "^9.0.0",
     "rxjs": "^6.5.3"
   },
