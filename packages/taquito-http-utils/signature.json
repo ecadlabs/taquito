@@ -78,7 +78,7 @@
           "typings",
           "version"
         ],
-        "sha512": "0b4ff8d6789678afa2262748ed929b42210ffe3263b525ed365e214d527c6252ad8dd7b230aec92437615032cfb5aa16758ec0b29c5976016239c0ef4481d768"
+        "sha512": "c33eb3b1900001a214b8fee5baa19540d6ad3502881b29f95f2f35248cfc5ca15878c0dd130002220ab7fa632787ea11223ca68a625fac164c9c65b080ce2e0f"
       }
     },
     {
@@ -86,16 +86,13 @@
       "value": {
         "packageJson": {
           "name": "@taquito/http-utils",
-          "version": "6.2.0-beta.1",
+          "version": "6.3.0-wallet.0",
           "description": "",
           "keywords": [],
           "main": "dist/taquito-http-utils.umd.js",
           "module": "dist/taquito-http-utils.es5.js",
           "typings": "dist/types/taquito-http-utils.d.ts",
-          "files": [
-            "signature.json",
-            "dist"
-          ],
+          "files": ["signature.json", "dist"],
           "author": "Simon Boissonneault-Robert <simon@ecadlabs.com>",
           "repository": {
             "type": "git",
@@ -116,11 +113,7 @@
             "start": "rollup -c rollup.config.ts -w"
           },
           "lint-staged": {
-            "{src,test}/**/*.ts": [
-              "prettier --write",
-              "tslint --fix",
-              "git add"
-            ]
+            "{src,test}/**/*.ts": ["prettier --write", "tslint --fix", "git add"]
           },
           "jest": {
             "transform": {
@@ -128,18 +121,9 @@
             },
             "testEnvironment": "node",
             "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-            "moduleFileExtensions": [
-              "ts",
-              "tsx",
-              "js"
-            ],
-            "coveragePathIgnorePatterns": [
-              "/node_modules/",
-              "/test/"
-            ],
-            "collectCoverageFrom": [
-              "src/**/*.{js,ts}"
-            ]
+            "moduleFileExtensions": ["ts", "tsx", "js"],
+            "coveragePathIgnorePatterns": ["/node_modules/", "/test/"],
+            "collectCoverageFrom": ["src/**/*.{js,ts}"]
           },
           "dependencies": {
             "xhr2-cookies": "^1.1.0"
@@ -175,5 +159,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJetdORCRAD9Qy5GYHsngAAFXUQAEdnvRKMYLehs2IiIQZmRJuF\n4I5/G6Fphl1+nXTmrTxugjplul2Nw4aajP1Ooc/0NlJ3ZcGfNIlzBaPoyj0Kevhh\naCYYU05faLGi1Jmao2FVW/zLIiq1MsC44IMVbXaBhn5Pldy/iPxzToN6hzZk2nti\nisrjPdxc8EY9ot1jFNE1/l7hD5+kEJyXxfly7uF+UGN9XOGeI2QmO4e26IvANHqy\ncw/U+QtcIOlm39h2xs40GsH1JzXkdeCoWrp129UzsHt/5VZ+7n+I/D4g7SmLvw2j\nhaPcQv8stye+wfmyxjO0LZLouIo/q6i9mbIZ4rSBK6ddF1l/A9eLvfODdBza6VV6\n9EqOGvQarKKvyNEj8RhOdmoyRHIyd6VpuZ871sQzpM3tA6kv9q1Bwy7iJdAKTRMo\n6ZdvcutEpT0ij+FYu+F5C77rsYXRz9NPTcwqUftU+WFdO25ln+Dw1FfKKwloZckB\nmmgeLj8J0Yr2w2WAln4hopv3TGLN172Aqj84N1EkqVxcCCDnAB8kXslU8x+UhBtq\nmUd0WwR6sjZNpZ//V3l8f27MCQaEP2KCZZ93JFhH7p0Cu6hggHmEGBsosFzaeWps\nIRW60fTO/q8w/hfTKkCTql/HVhFoKCL3G3CkUrc5ao5jXEELLE5SlWgnDww+V7KM\nEgd5fd3ivDR+FasIoA5T\n=rqFt\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJetb4ICRAD9Qy5GYHsngAAlYIQAIX5VyrYvyAEp7M4oXlwVBbm\nNC9n0Hj5YJ73Rq+6A/Q5T/tVJgYSBBnI4TI5f3PCj+qKTpyPky4NlCqwFFB/APP7\nzXGUb0Y+yM8AXRl4BBxnOPjeq9gQEGSleGutcmEzZi+r6PHShOgoo1YnFGq4xdpE\ngX8IuDHGXip7epaAbe4I8f6NP9DEMsGby036qrK1PdusWBTzvxsAc5FId9F+AaJB\nPTNZ5uc+0WNwcVjfQI2Jmo0eFMlLEQKP1imkz4GO39KkS6ZVUqut5/RubTXjtVXt\nPk10zBORECuFPb1dwzF7L7c4VzVWH6gkkqBvt8jF6xQOMNNdXVrRABLvD5xrpWvc\n8WLTQDhCzXMKTSJd7LylLek2s7QxgA3WsgpP+uxgHXkAVgnFo+t0UG6Wn8wnwZUA\nKacnQ2epo3kPByLLUMoLfNJBvgg4aMOcDU5rHTER/C38WzDggaTrfQ82o6GubsIf\n7HE7jn4V1Z9OPkNLM7GRU1elw7deYS6uMp04LuwJ4zGP2UF1Buvrly9vngQ7wH0N\n0ieJ3XHMh+l+gYYFDYASxHey/P/b+SIl/AqLTCYL8qpXT9pWGCVB/UNvPv8rUqD1\nIt5ZVjWZxIZTtaLPB5n6/gIYHX57SLlEud0gfUQ3yxXkCvJShIoPRa5mfcDSqScg\n/BOGskQxKNX8btC+nc25\n=scED\n-----END PGP SIGNATURE-----\n"
 }

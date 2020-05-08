@@ -106,7 +106,7 @@
           "typings",
           "version"
         ],
-        "sha512": "4384da0aa928aa0e2783ffd151eb16194925c6e7f244ddeeb4e2db78b3ae53778115e4e13ee519dd0947503032314bbdfd0c9d67f9aebde5563d7d542b9ac180"
+        "sha512": "54e685b82c2821d1deffa878f784952f6faf7159019f89218d58f7a75f672915938621d2da2c63e82f16284335a04965d4277ce98df1348be9531b0e3e897139"
       }
     },
     {
@@ -114,20 +114,13 @@
       "value": {
         "packageJson": {
           "name": "@taquito/rpc",
-          "version": "6.2.0-beta.1",
+          "version": "6.3.0-wallet.0",
           "description": "Provides low level methods, and types to invoke RPC calls from a Nomadic Tezos RPC node",
-          "keywords": [
-            "tezos",
-            "blockchain",
-            "rpc"
-          ],
+          "keywords": ["tezos", "blockchain", "rpc"],
           "main": "dist/taquito-rpc.umd.js",
           "module": "dist/taquito-rpc.es5.js",
           "typings": "dist/types/taquito-rpc.d.ts",
-          "files": [
-            "signature.json",
-            "dist"
-          ],
+          "files": ["signature.json", "dist"],
           "publishConfig": {
             "access": "public"
           },
@@ -151,11 +144,7 @@
             "start": "rollup -c rollup.config.ts -w"
           },
           "lint-staged": {
-            "{src,test}/**/*.ts": [
-              "prettier --write",
-              "tslint --fix",
-              "git add"
-            ]
+            "{src,test}/**/*.ts": ["prettier --write", "tslint --fix", "git add"]
           },
           "jest": {
             "transform": {
@@ -163,24 +152,15 @@
             },
             "testEnvironment": "node",
             "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-            "moduleFileExtensions": [
-              "ts",
-              "tsx",
-              "js"
-            ],
+            "moduleFileExtensions": ["ts", "tsx", "js"],
             "moduleNameMapper": {
               "^@taquito/http-utils$": "<rootDir>/../taquito-http-utils/src/taquito-http-utils.ts"
             },
-            "coveragePathIgnorePatterns": [
-              "/node_modules/",
-              "/test/"
-            ],
-            "collectCoverageFrom": [
-              "src/**/*.{js,ts}"
-            ]
+            "coveragePathIgnorePatterns": ["/node_modules/", "/test/"],
+            "collectCoverageFrom": ["src/**/*.{js,ts}"]
           },
           "dependencies": {
-            "@taquito/http-utils": "^6.2.0-beta.1",
+            "@taquito/http-utils": "^6.3.0-wallet.0",
             "bignumber.js": "^9.0.0",
             "lodash": "^4.17.15"
           },
@@ -215,5 +195,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJetdOaCRAD9Qy5GYHsngAAV58QAGJ4nTkcKlc/RLzmJAXedlmZ\n8xastf8E84iE89cE8VfaBJiSpzcfsd/U83yUQSgNbYx/sut2rcfoYNV05tJ74hew\nTrNROwp2QqoPJMNp3GR9/a3Dg9YNFUipLnN4JjbkvKThD8vvgtcSE2vsJhhAiaGZ\nPdidI8TYyazEXVA5uLzjZymvg6R1x63e0ejsNw0XXjdupbAamZQEUFCtkhxdU/Lp\nCETMcntUZsk09qCa0XWKgT+GUm7zxZqGlp8eL9dUwEtu74qQJ8UcZ9dExsP6OW0U\nfGxkeL9CVVHENI7hZZJvSbslEOkySXFgv9QLMVSDX6MvQ0eZwLEQ5sE2N4tnt9mZ\ntEOi9nZlNyN9DNH1PmpqqbsM/bNlzCLMEcKRS7c1XHQaq8zdFlIhbqsl2NYp86AB\nIh+P2Gby1kQIS2Mh1OExS30icEyKZB+lPeyaQKO9I8quI5VRYS2VAYztdj4Ud0xa\nEeLDLsqze77fU056rRbJ0kU+74azrXg2P/GQ0LTgnPZ9pGT7622mADl7pWAT3/Je\nyONX6nLLk3m5ZGiqPL5KPOvvR+sINGjAJSOBm9UThxe4gKU51qhyh73DUSAH1IRS\n0vUxscZPn0aWrYUenIVBsHqI+8meuKQJlOilmwaE7nWAtYuysmnQZNpojbfLxinP\n6GnnVRaHePu0i0zMdBZt\n=2Trd\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJetb4OCRAD9Qy5GYHsngAAWqQQAJA6iTn+PDup3Y3plUu2dWd1\nwACLLf95z2Xt3PK44Em/xx3lUbny3wl9rr33jECWDJXFgiR/EDPd+SqNI4jec7K2\n1HVcthTt86UagoH3BXLtuZAh39bbbwost9hwHvnSLkL5TioHuq38DiNAACWX5+dt\nzu09xNDxNg6FWTb398f+K7PohqkjM00nIPN/ZBlYposlJGo63cpoATIU1uT8XtUW\nEB7oX3WfFLuL1eJ6ewgW8YrKUlbADJFdJ/28kCzUKoF10U6M0pThQxoEc897mWyb\n4pyW1Iiaa+z5WKTmksPcj7mVFOGihF5U3y4N3CiKrw8Sn7TcVsS3jq5XE2gHsgYO\npA/6DxsZltBkqqS9VjF5puLDS6dLRFmGz9i7wLzijSlDZK91dxL2NntbWSP6J8Vn\ndJZw5Lj45DsbwHaFCPsdhjtiVL/tRCOzYi9FdfvCXobpyQDjv6fIwhbn8C9L85qt\ntuzSIBq1/CtAkXLG8bSZSq9ZSJWDCrU4k4QC/zF8zKCdiUmU8U++j9FFBjIrR4+H\n4ktwk0W2gJQGLciBAAXZrNx1udfwu5ZYfW3YM1KGRwY1Vi41aUIMFfFZJQWDphVa\nL/QJtujrVkHgL/9d/7Sdz/4yI5VtZyuaKJebeDYfK36DdnQb7LXV6wqWCKpYGtKG\nZDeSCY2lRLVN3WG4iv0E\n=mXnW\n-----END PGP SIGNATURE-----\n"
 }

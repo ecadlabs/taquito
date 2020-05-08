@@ -1,6 +1,6 @@
 {
   "name": "@taquito/utils",
-  "version": "6.2.0-beta.1",
+  "version": "6.3.0-wallet.0",
   "description": "converts michelson data and types into convenient JS/TS objects",
   "keywords": [
     "tezos",
@@ -80,11 +80,11 @@
     "replace-in-file": "^3.4.2",
     "rimraf": "^2.6.2",
     "rollup": "^1.20.1",
+    "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-sourcemaps": "^0.4.2",
     "rollup-plugin-typescript2": "^0.22.1",
-    "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-commonjs": "^10.1.0",
     "shelljs": "^0.8.3",
     "ts-jest": "^23.10.2",
     "ts-node": "^7.0.1",
