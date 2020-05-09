@@ -1,5 +1,5 @@
 {
-  "name": "michel-codec",
+  "name": "taquito-michel-codec",
   "version": "1.0.0",
   "description": "Michelson parser/formatter",
   "main": "./dist/index.js",
