@@ -1,0 +1,28 @@
+{
+  "name": "michel-codec",
+  "version": "1.0.0",
+  "description": "Michelson parser/formatter",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc --build tsconfig.build.json",
+    "test": "jest",
+    "doc": "typedoc"
+  },
+  "author": "Eugene Zagidullin <eugene@ecadlabs.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ecadlabs/taquito.git"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^25.2.1",
+    "@types/node": "^13.13.5",
+    "jest": "^26.0.1",
+    "jest-extended": "^0.11.5",
+    "ts-jest": "^25.5.0",
+    "ts-node": "^8.10.1",
+    "typedoc": "^0.17.6",
+    "typescript": "^3.8.3"
+  }
+}
