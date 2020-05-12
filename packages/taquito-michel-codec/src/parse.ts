@@ -46,86 +46,84 @@ function parseList(scanner: Iterator<Token>): Prim {
     return ret;
 }
 
-function parseSequence(scanner: Iterator<Token>, initTok: Token | null, expectBracket: boolean): Seq {
+function parseSequence(scanner: Iterator<Token>, initialToken: Token | null, expectBracket: boolean): Seq {
     const seq: Seq = [];
     for (; ;) {
-        let startTok: Token;
-        if (initTok !== null) {
-            startTok = initTok;
-            initTok = null;
+        let tok: Token;
+        if (initialToken !== null) {
+            tok = initialToken;
+            initialToken = null;
         } else {
-            const tok = scanner.next();
-            if (tok.done) {
+            const t = scanner.next();
+            if (t.done) {
                 if (expectBracket) {
                     throw errEOF;
                 } else {
                     return seq;
                 }
             }
-            startTok = tok.value;
+            tok = t.value;
         }
 
-        if (startTok.t === Literal.Ident) {
-            // Instruction
+        if (tok.t === "}") {
+            if (!expectBracket) {
+                throw new ParseError(tok, `Seq: unexpected token: ${tok.v}`);
+            } else {
+                return seq;
+            }
+        } else if (tok.t === Literal.Ident) {
+            // Identifier with arguments
             const itm: Prim = {
-                prim: startTok.v,
+                prim: tok.v,
             };
             seq.push(itm);
 
             for (; ;) {
-                const tok = scanner.next();
-                if (tok.done) {
+                const t = scanner.next();
+                if (t.done) {
                     if (expectBracket) {
                         throw errEOF;
                     } else {
                         return seq;
                     }
-                } else if (tok.value.t === "}") {
+                } else if (t.value.t === "}") {
                     if (!expectBracket) {
-                        throw new ParseError(tok.value, `Seq: unexpected token: ${tok.value.v}`);
+                        throw new ParseError(t.value, `Seq: unexpected token: ${t.value.v}`);
                     } else {
                         return seq;
                     }
-                } else if (tok.value.t === ";") {
+                } else if (t.value.t === ";") {
                     break;
                 }
 
-                if (isAnnotation(tok.value)) {
+                if (isAnnotation(t.value)) {
                     itm.annots = itm.annots || [];
-                    itm.annots.push(tok.value.v);
+                    itm.annots.push(t.value.v);
                 } else {
                     itm.args = itm.args || [];
-                    itm.args.push(parseExpr(scanner, tok.value));
+                    itm.args.push(parseExpr(scanner, t.value));
                 }
             }
-        } else if (startTok.t === "{") {
-            // Nested sequence
-            seq.push(parseSequence(scanner, null, true));
+        } else {
+            // Other
+            seq.push(parseExpr(scanner, tok));
 
-            const tok = scanner.next();
-            if (tok.done) {
+            const t = scanner.next();
+            if (t.done) {
                 if (expectBracket) {
                     throw errEOF;
                 } else {
                     return seq;
                 }
-            } else if (tok.value.t === "}") {
+            } else if (t.value.t === "}") {
                 if (!expectBracket) {
-                    throw new ParseError(tok.value, `Seq: unexpected token: ${tok.value.v}`);
+                    throw new ParseError(t.value, `Seq: unexpected token: ${t.value.v}`);
                 } else {
                     return seq;
                 }
-            } else if (tok.value.t !== ";") {
-                throw new ParseError(tok.value, `Seq: unexpected token: ${tok.value.v}`);
+            } else if (t.value.t !== ";") {
+                throw new ParseError(t.value, `Seq: unexpected token: ${t.value.v}`);
             }
-        } else if (startTok.t === "}") {
-            if (!expectBracket) {
-                throw new ParseError(startTok, `Seq: unexpected token: ${startTok.v}`);
-            } else {
-                return seq;
-            }
-        } else {
-            throw new ParseError(startTok, `Seq: unexpected token: ${startTok.v}`);
         }
     }
 }
@@ -155,7 +153,7 @@ function parseExpr(scanner: Iterator<Token>, tok: Token): Expr {
     }
 }
 
-export function parseMicheline(src: string): Seq | null {
+export function parseMichelineScript(src: string): Seq | null {
     const scanner = scan(src);
     const tok = scanner.next();
     if (tok.done) {
@@ -164,4 +162,13 @@ export function parseMicheline(src: string): Seq | null {
     return tok.value.t === "{" ?
         parseSequence(scanner, null, true) :
         parseSequence(scanner, tok.value, false);
+}
+
+export function parseMichelineExpression(src: string): Expr | null {
+    const scanner = scan(src);
+    const tok = scanner.next();
+    if (tok.done) {
+        return null;
+    }
+    return parseExpr(scanner, tok.value);
 }

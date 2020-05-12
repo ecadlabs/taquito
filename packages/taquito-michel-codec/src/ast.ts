@@ -60,6 +60,10 @@ export interface Prim {
    annots?: string[];
 }
 
-export type Seq = (Prim | Seq)[];
-
+export type Seq = (Expr | Seq)[];
 export type Expr = Prim | StringLiteral | IntLiteral | BytesLiteral | Seq;
+
+export interface Script {
+   code: Seq;
+   storage: Expr;
+}

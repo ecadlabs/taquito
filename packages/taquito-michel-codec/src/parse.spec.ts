@@ -1,12 +1,11 @@
 import { Seq } from "./ast";
-import { parseMicheline } from "./parse";
+import { parseMichelineScript } from "./parse";
 import { emitMicheline } from "./emitter";
 
 const src = `{
     parameter key_hash;
-    storage (pair
-        key_hash
-        timestamp);
+    storage
+        (pair key_hash timestamp);
     code
         {
             DUP;
@@ -564,7 +563,7 @@ const ast: Seq = [
 ];
 
 it("parse", () => {
-    const tree = parseMicheline(src);
+    const tree = parseMichelineScript(src);
     expect(tree).toEqual(ast);
 });
 it("format", () => {
