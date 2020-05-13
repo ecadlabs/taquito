@@ -2,12 +2,24 @@ import { emitMicheline, Script, Seq, FormatOptions } from "../src";
 import fs from "fs";
 import process from "process";
 
-const opt: FormatOptions = {
+let api = false;
+let indent = false;
+
+for (const arg of process.argv.slice(2)) {
+    switch (arg) {
+        case "-a":
+            api = true;
+            break;
+        case "-i":
+            indent = true;
+    }
+}
+
+const opt: FormatOptions | undefined = indent ? {
     indent: "    ",
     newline: "\n",
-};
+} : undefined;
 
-const api = process.argv.length > 2 && process.argv[2] === "-a";
 const buf = fs.readFileSync(0).toString();
 const json = JSON.parse(buf);
 
