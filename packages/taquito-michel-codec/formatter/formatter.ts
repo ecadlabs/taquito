@@ -1,4 +1,4 @@
-import { emitMicheline, Script, Seq, FormatOptions } from "../src";
+import { emitMicheline, APIData, Seq, FormatOptions } from "../src";
 import fs from "fs";
 import process from "process";
 
@@ -24,7 +24,7 @@ const buf = fs.readFileSync(0).toString();
 const json = JSON.parse(buf);
 
 if (api) {
-    const script: Script = json;
+    const script: APIData = json;
     console.log("Code:");
     console.log(emitMicheline(script.code, opt));
     console.log("\nStorage:");
