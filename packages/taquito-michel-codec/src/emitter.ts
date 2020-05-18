@@ -1,4 +1,4 @@
-import { Seq, Expr, Prim } from "./ast";
+import { Expr, Prim } from "./ast";
 
 export interface FormatOptions {
     indent?: string;
@@ -88,7 +88,7 @@ function emitExpr(node: Expr, f: Formatter): string {
     }
 }
 
-function emitSeq(node: Seq, f: Formatter): string {
+function emitSeq(node: Expr[], f: Formatter): string {
     let ret = "{" + f.lf;
     let i = node.length;
     for (const el of node) {

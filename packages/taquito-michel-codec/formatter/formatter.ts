@@ -1,9 +1,10 @@
-import { emitMicheline, APIData, Seq, FormatOptions } from "../src";
+import { emitMicheline, APIData, Expr, FormatOptions, assertMichelsonScript, assertMichelsonData } from "../src";
 import fs from "fs";
 import process from "process";
 
 let api = false;
 let indent = false;
+let validate = false;
 
 for (const arg of process.argv.slice(2)) {
     switch (arg) {
@@ -12,6 +13,11 @@ for (const arg of process.argv.slice(2)) {
             break;
         case "-i":
             indent = true;
+            break;
+        case "-v":
+            validate = true;
+            break;
+
     }
 }
 
@@ -25,11 +31,20 @@ const json = JSON.parse(buf);
 
 if (api) {
     const script: APIData = json;
+    if (validate) {
+        assertMichelsonScript(script.code);
+        assertMichelsonData(script.storage);
+    }
+
     console.log("Code:");
     console.log(emitMicheline(script.code, opt));
     console.log("\nStorage:");
     console.log(emitMicheline(script.storage, opt));
 } else {
-    const script: Seq = json;
+    const script: Expr = json;
+    if (validate) {
+        assertMichelsonScript(script);
+    }
+
     console.log(emitMicheline(script, opt));
 }
