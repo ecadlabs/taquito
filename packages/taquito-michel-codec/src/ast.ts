@@ -18,21 +18,19 @@ export interface Prim<PT extends string = string, AT extends Expr[] = Expr[]> {
    annots?: string[];
 }
 
-export type Seq = (Expr | Seq)[];
-export type Expr = Prim | StringLiteral | IntLiteral | BytesLiteral | Seq;
+export type Expr = Prim | StringLiteral | IntLiteral | BytesLiteral | Expr[];
 
 // Valid Michelson script types
 
 type RequiredProp<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>;
 type OmitProp<T, K extends keyof T> = Omit<T, K>;
 
-type ReqArgs<T extends Prim> = RequiredProp<T, "args">;
-type NoArgs<T extends Prim> = OmitProp<T, "args">;
-type NoAnnots<T extends Prim> = OmitProp<T, "annots">;
+export type ReqArgs<T extends Prim> = RequiredProp<T, "args">;
+export type NoArgs<T extends Prim> = OmitProp<T, "args">;
 
 // Instructions
 
-type MichelsonUnaryInstructionId = "DROP" | "DUP" | "SWAP" | "SOME" | "UNIT" | "PAIR" | "CAR" | "CDR" |
+export type MichelsonUnaryInstructionId = "DUP" | "SWAP" | "SOME" | "UNIT" | "PAIR" | "CAR" | "CDR" |
    "CONS" | "SIZE" | "MEM" | "GET" | "UPDATE" | "EXEC" | "FAILWITH" | "RENAME" | "CONCAT" | "SLICE" |
    "PACK" | "ADD" | "SUB" | "MUL" | "EDIV" | "ABS" | "ISNAT" | "INT" | "NEG" | "LSL" | "LSR" | "OR" |
    "AND" | "XOR" | "NOT" | "COMPARE" | "EQ" | "NEQ" | "LT" | "GT" | "LE" | "GE" | "SELF" |
@@ -43,13 +41,14 @@ type MichelsonUnaryInstructionId = "DROP" | "DUP" | "SWAP" | "SOME" | "UNIT" | "
 export type MichelsonInstructionId = MichelsonUnaryInstructionId |
    "DROP" | "DIG" | "DUG" | "NONE" | "LEFT" | "RIGHT" | "NIL" | "UNPACK" | "CONTRACT" | "CAST" |
    "IF_NONE" | "IF_LEFT" | "IF_CONS" | "IF" | "MAP" | "ITER" | "LOOP" | "LOOP_LEFT" | "DIP" |
-   "CREATE_CONTRACT" | "PUSH" | "EMPTY_SET" | "EMPTY_MAP" | "EMPTY_BIG_MAP" | "LAMBDA" | "DIP";
+   "CREATE_CONTRACT" | "PUSH" | "EMPTY_SET" | "EMPTY_MAP" | "EMPTY_BIG_MAP" | "LAMBDA";
 
 type InstrPrim<PT extends MichelsonInstructionId, AT extends Expr[] = never> = Prim<PT, AT>;
 
 export type MichelsonInstruction = MichelsonInstruction[] |
    NoArgs<InstrPrim<MichelsonUnaryInstructionId>> |
-   ReqArgs<InstrPrim<"DROP" | "DIG" | "DUG", [IntLiteral]>> |
+   ReqArgs<InstrPrim<"DIG" | "DUG", [IntLiteral]>> |
+   InstrPrim<"DROP", [IntLiteral]> | // Keep optional argument
    ReqArgs<InstrPrim<"NONE" | "LEFT" | "RIGHT" | "NIL" | "UNPACK" | "CONTRACT" | "CAST", [MichelsonType]>> |
    ReqArgs<InstrPrim<"IF_NONE" | "IF_LEFT" | "IF_CONS" | "IF", [MichelsonInstruction[], MichelsonInstruction[]]>> |
    ReqArgs<InstrPrim<"MAP" | "ITER" | "LOOP" | "LOOP_LEFT" | "DIP" | "CREATE_CONTRACT", [MichelsonInstruction[]]>> |
@@ -57,11 +56,11 @@ export type MichelsonInstruction = MichelsonInstruction[] |
    ReqArgs<InstrPrim<"EMPTY_SET", [MichelsonComparableType]>> |
    ReqArgs<InstrPrim<"EMPTY_MAP" | "EMPTY_BIG_MAP", [MichelsonComparableType, MichelsonType]>> |
    ReqArgs<InstrPrim<"LAMBDA", [MichelsonType, MichelsonType, MichelsonInstruction[]]>> |
-   ReqArgs<InstrPrim<"DIP", [IntLiteral, MichelsonInstruction[]]>>;
+   ReqArgs<InstrPrim<"DIP", [IntLiteral, MichelsonInstruction[]] | [MichelsonInstruction[]]>>;
 
 // Types
 
-type MichelsonSimpleComparableTypeId = "int" | "nat" | "string" | "bytes" | "mutez" | "bool" |
+export type MichelsonSimpleComparableTypeId = "int" | "nat" | "string" | "bytes" | "mutez" | "bool" |
    "key_hash" | "timestamp" | "address";
 
 export type MichelsonTypeId = MichelsonSimpleComparableTypeId |
@@ -70,8 +69,8 @@ export type MichelsonTypeId = MichelsonSimpleComparableTypeId |
 
 type TypePrim<PT extends MichelsonTypeId, AT extends MichelsonType[] = never> = Prim<PT, AT>;
 
-type MichelsonSimpleComparableType = NoArgs<TypePrim<MichelsonSimpleComparableTypeId>>;
-type MichelsonComparableType = MichelsonSimpleComparableType |
+export type MichelsonSimpleComparableType = NoArgs<TypePrim<MichelsonSimpleComparableTypeId>>;
+export type MichelsonComparableType = MichelsonSimpleComparableType |
    ReqArgs<TypePrim<"pair", [MichelsonSimpleComparableType, MichelsonComparableType]>>;
 
 export type MichelsonType = MichelsonComparableType |
@@ -83,9 +82,9 @@ export type MichelsonType = MichelsonComparableType |
 
 // Data
 
-export type MichelsonDataId = "Unit" | "True" | "False" | "None" | "Pair" | "Left" | "Right" | "Some" | "Elt";
-
-type DataPrim<PT extends MichelsonDataId, AT extends MichelsonData[] = never> = NoAnnots<Prim<PT, AT>>;
+export type MichelsonMapElt = ReqArgs<Prim<"Elt", [MichelsonData, MichelsonData]>>;
+export type MichelsonDataId = "Unit" | "True" | "False" | "None" | "Pair" | "Left" | "Right" | "Some";
+type DataPrim<PT extends MichelsonDataId, AT extends MichelsonData[] = never> = Prim<PT, AT>;
 
 export type MichelsonData = IntLiteral |
    StringLiteral |
@@ -94,13 +93,13 @@ export type MichelsonData = IntLiteral |
    ReqArgs<DataPrim<"Pair", [MichelsonData, MichelsonData]>> |
    ReqArgs<DataPrim<"Left" | "Right" | "Some", [MichelsonData]>> |
    MichelsonData[] |
-   ReqArgs<DataPrim<"Elt", [MichelsonData, MichelsonData]>>[] |
+   MichelsonMapElt[] |
    MichelsonInstruction;
 
 // Top level script sections
 
 export type MichelsonSection = "parameter" | "storage" | "code";
-type SectionPrim<PT extends MichelsonSection, AT extends Expr[]> = ReqArgs<NoAnnots<Prim<PT, AT>>>;
+type SectionPrim<PT extends MichelsonSection, AT extends Expr[]> = ReqArgs<Prim<PT, AT>>;
 
 export type MichelsonParameter = SectionPrim<"parameter", [MichelsonType]>;
 export type MichelsonStorage = SectionPrim<"storage", [MichelsonType]>;
@@ -112,6 +111,6 @@ export type MichelsonScript = [MichelsonParameter, MichelsonStorage, MichelsonCo
 
 // As returned by Tezos RPC
 export interface APIData {
-   code: Seq;
+   code: Expr[];
    storage: Expr;
 }

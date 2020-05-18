@@ -1,5 +1,5 @@
 import { scan, Token, Literal } from "./scan";
-import { Prim, Seq, Expr } from "./ast";
+import { Prim, Expr } from "./ast";
 
 export class ParseError extends Error {
     constructor(public token: Token | null, message?: string) {
@@ -46,8 +46,8 @@ function parseList(scanner: Iterator<Token>): Prim {
     return ret;
 }
 
-function parseSequence(scanner: Iterator<Token>, initialToken: Token | null, expectBracket: boolean): Seq {
-    const seq: Seq = [];
+function parseSequence(scanner: Iterator<Token>, initialToken: Token | null, expectBracket: boolean): Expr[] {
+    const seq: Expr[] = [];
     for (; ;) {
         let tok: Token;
         if (initialToken !== null) {
@@ -153,7 +153,7 @@ function parseExpr(scanner: Iterator<Token>, tok: Token): Expr {
     }
 }
 
-export function parseMichelineScript(src: string): Seq | null {
+export function parseMichelineScript(src: string): Expr[] | null {
     const scanner = scan(src);
     const tok = scanner.next();
     if (tok.done) {
