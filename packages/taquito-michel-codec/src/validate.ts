@@ -130,174 +130,144 @@ function assertMichelsonInstruction(ex: Expr[] | Prim, path: PathElem[]): ex is 
             assertMichelsonInstruction(n, p);
             i++;
         }
-        return true;
-    }
-
-    if (Object.prototype.hasOwnProperty.call(unaryInstructionTable, ex.prim)) {
+    } else if (Object.prototype.hasOwnProperty.call(unaryInstructionTable, ex.prim)) {
         assertArgs(ex, 0, path);
-        return true;
+    } else {
+        switch (ex.prim) {
+            case "DROP":
+                if (ex.args !== undefined && assertArgs(ex, 1, path)) {
+                    const p = [...path, { index: 0, val: ex.args[0] }];
+                    /* istanbul ignore else */
+                    if (assertIntLiteral(ex.args[0], p)) {
+                        assertNatural(ex.args[0], p);
+                    }
+                }
+                break;
+
+            case "DIG":
+            case "DUG":
+                /* istanbul ignore else */
+                if (assertArgs(ex, 1, path)) {
+                    const p = [...path, { index: 0, val: ex.args[0] }];
+                    /* istanbul ignore else */
+                    if (assertIntLiteral(ex.args[0], p)) {
+                        assertNatural(ex.args[0], p);
+                    }
+                }
+                break;
+
+            case "NONE":
+            case "LEFT":
+            case "RIGHT":
+            case "NIL":
+            case "UNPACK":
+            case "CONTRACT":
+            case "CAST":
+                /* istanbul ignore else */
+                if (assertArgs(ex, 1, path)) {
+                    assertMichelsonTypeInternal(ex.args[0], [...path, { index: 0, val: ex.args[0] }]);
+                }
+                break;
+
+            case "IF_NONE":
+            case "IF_LEFT":
+            case "IF_CONS":
+            case "IF":
+                /* istanbul ignore else */
+                if (assertArgs(ex, 2, path)) {
+                    const p0 = [...path, { index: 0, val: ex.args[0] }];
+                    /* istanbul ignore else */
+                    if (assertSeq(ex.args[0], p0)) {
+                        assertMichelsonInstruction(ex.args[0], p0);
+                    }
+                    const p1 = [...path, { index: 1, val: ex.args[1] }];
+                    /* istanbul ignore else */
+                    if (assertSeq(ex.args[1], p1)) {
+                        assertMichelsonInstruction(ex.args[1], p1);
+                    }
+                }
+                break;
+
+            case "MAP":
+            case "ITER":
+            case "LOOP":
+            case "LOOP_LEFT":
+            case "CREATE_CONTRACT":
+                /* istanbul ignore else */
+                if (assertArgs(ex, 1, path)) {
+                    const p = [...path, { index: 0, val: ex.args[0] }];
+                    /* istanbul ignore else */
+                    if (assertSeq(ex.args[0], p)) {
+                        assertMichelsonInstruction(ex.args[0], p);
+                    }
+                }
+                break;
+
+            case "DIP":
+                if (ex.args?.length === 2) {
+                    const p0 = [...path, { index: 0, val: ex.args[0] }];
+                    /* istanbul ignore else */
+                    if (assertIntLiteral(ex.args[0], p0)) {
+                        assertNatural(ex.args[0], p0);
+                    }
+                    const p1 = [...path, { index: 1, val: ex.args[1] }];
+                    /* istanbul ignore else */
+                    if (assertSeq(ex.args[1], p1)) {
+                        assertMichelsonInstruction(ex.args[1], p1);
+                    }
+                } else if (ex.args?.length === 1) {
+                    const p = [...path, { index: 0, val: ex.args[0] }];
+                    /* istanbul ignore else */
+                    if (assertSeq(ex.args[0], p)) {
+                        assertMichelsonInstruction(ex.args[0], p);
+                    }
+                } else {
+                    throw new ValidationError(ex, path, "1 or 2 arguments expected");
+                }
+                break;
+
+            case "PUSH":
+                /* istanbul ignore else */
+                if (assertArgs(ex, 2, path)) {
+                    assertMichelsonTypeInternal(ex.args[0], [...path, { index: 0, val: ex.args[0] }]);
+                    assertMichelsonDataInternal(ex.args[1], [...path, { index: 1, val: ex.args[1] }]);
+                }
+                break;
+
+            case "EMPTY_SET":
+                /* istanbul ignore else */
+                if (assertArgs(ex, 1, path)) {
+                    assertMichelsonComparableType(ex.args[0], [...path, { index: 0, val: ex.args[0] }]);
+                }
+                break;
+
+            case "EMPTY_MAP":
+            case "EMPTY_BIG_MAP":
+                /* istanbul ignore else */
+                if (assertArgs(ex, 2, path)) {
+                    assertMichelsonComparableType(ex.args[0], [...path, { index: 0, val: ex.args[0] }]);
+                    assertMichelsonTypeInternal(ex.args[1], [...path, { index: 1, val: ex.args[1] }]);
+                }
+                break;
+
+            case "LAMBDA":
+                /* istanbul ignore else */
+                if (assertArgs(ex, 3, path)) {
+                    assertMichelsonTypeInternal(ex.args[0], [...path, { index: 0, val: ex.args[0] }]);
+                    assertMichelsonTypeInternal(ex.args[1], [...path, { index: 1, val: ex.args[1] }]);
+                    const p2 = [...path, { index: 2, val: ex.args[2] }];
+                    /* istanbul ignore else */
+                    if (assertSeq(ex.args[2], p2)) {
+                        assertMichelsonInstruction(ex.args[2], p2);
+                    }
+                }
+                break;
+
+            default:
+                throw new ValidationError(ex, path, "instruction expected");
+        }
     }
-
-    switch (ex.prim) {
-        case "DROP":
-            if (ex.args !== undefined && assertArgs(ex, 1, path)) {
-                const p = [...path, { index: 0, val: ex.args[0] }];
-                /* istanbul ignore else */
-                if (assertIntLiteral(ex.args[0], p)) {
-                    assertNatural(ex.args[0], p);
-                }
-            }
-            return true;
-
-        case "DIG":
-        case "DUG":
-            /* istanbul ignore else */
-            if (assertArgs(ex, 1, path)) {
-                const p = [...path, { index: 0, val: ex.args[0] }];
-                /* istanbul ignore else */
-                if (assertIntLiteral(ex.args[0], p)) {
-                    assertNatural(ex.args[0], p);
-                }
-            }
-            return true;
-
-        case "NONE":
-        case "LEFT":
-        case "RIGHT":
-        case "NIL":
-        case "UNPACK":
-        case "CONTRACT":
-        case "CAST":
-            /* istanbul ignore else */
-            if (assertArgs(ex, 1, path)) {
-                const p = [...path, { index: 0, val: ex.args[0] }];
-                /* istanbul ignore else */
-                if (assertPrim(ex.args[0], p)) {
-                    assertMichelsonTypeInternal(ex.args[0], p);
-                }
-            }
-            return true;
-
-        case "IF_NONE":
-        case "IF_LEFT":
-        case "IF_CONS":
-        case "IF":
-            /* istanbul ignore else */
-            if (assertArgs(ex, 2, path)) {
-                const p0 = [...path, { index: 0, val: ex.args[0] }];
-                /* istanbul ignore else */
-                if (assertSeq(ex.args[0], p0)) {
-                    assertMichelsonInstruction(ex.args[0], p0);
-                }
-                const p1 = [...path, { index: 1, val: ex.args[1] }];
-                /* istanbul ignore else */
-                if (assertSeq(ex.args[1], p1)) {
-                    assertMichelsonInstruction(ex.args[1], p1);
-                }
-            }
-            return true;
-
-        case "MAP":
-        case "ITER":
-        case "LOOP":
-        case "LOOP_LEFT":
-        case "CREATE_CONTRACT":
-            /* istanbul ignore else */
-            if (assertArgs(ex, 1, path)) {
-                const p = [...path, { index: 0, val: ex.args[0] }];
-                /* istanbul ignore else */
-                if (assertSeq(ex.args[0], p)) {
-                    assertMichelsonInstruction(ex.args[0], p);
-                }
-            }
-            return true;
-
-        case "DIP":
-            if (ex.args?.length === 2) {
-                const p0 = [...path, { index: 0, val: ex.args[0] }];
-                /* istanbul ignore else */
-                if (assertIntLiteral(ex.args[0], p0)) {
-                    assertNatural(ex.args[0], p0);
-                }
-                const p1 = [...path, { index: 1, val: ex.args[1] }];
-                /* istanbul ignore else */
-                if (assertSeq(ex.args[1], p1)) {
-                    assertMichelsonInstruction(ex.args[1], p1);
-                }
-            } else if (ex.args?.length === 1) {
-                const p = [...path, { index: 0, val: ex.args[0] }];
-                /* istanbul ignore else */
-                if (assertSeq(ex.args[0], p)) {
-                    assertMichelsonInstruction(ex.args[0], p);
-                }
-            } else {
-                throw new ValidationError(ex, path, "1 or 2 arguments expected");
-            }
-            return true;
-
-        case "PUSH":
-            /* istanbul ignore else */
-            if (assertArgs(ex, 2, path)) {
-                const p0 = [...path, { index: 0, val: ex.args[0] }];
-                /* istanbul ignore else */
-                if (assertPrim(ex.args[0], p0)) {
-                    assertMichelsonTypeInternal(ex.args[0], p0);
-                }
-                assertMichelsonDataInternal(ex.args[1], [...path, { index: 1, val: ex.args[1] }]);
-            }
-            return true;
-
-        case "EMPTY_SET":
-            /* istanbul ignore else */
-            if (assertArgs(ex, 1, path)) {
-                const p = [...path, { index: 0, val: ex.args[0] }];
-                /* istanbul ignore else */
-                if (assertPrim(ex.args[0], p)) {
-                    assertMichelsonComparableType(ex.args[0], p);
-                }
-            }
-            return true;
-
-        case "EMPTY_MAP":
-        case "EMPTY_BIG_MAP":
-            /* istanbul ignore else */
-            if (assertArgs(ex, 2, path)) {
-                const p0 = [...path, { index: 0, val: ex.args[0] }];
-                /* istanbul ignore else */
-                if (assertPrim(ex.args[0], p0)) {
-                    assertMichelsonComparableType(ex.args[0], p0);
-                }
-                const p1 = [...path, { index: 1, val: ex.args[1] }];
-                /* istanbul ignore else */
-                if (assertPrim(ex.args[1], p1)) {
-                    assertMichelsonTypeInternal(ex.args[1], p1);
-                }
-            }
-            return true;
-
-        case "LAMBDA":
-            /* istanbul ignore else */
-            if (assertArgs(ex, 3, path)) {
-                const p0 = [...path, { index: 0, val: ex.args[0] }];
-                /* istanbul ignore else */
-                if (assertPrim(ex.args[0], p0)) {
-                    assertMichelsonTypeInternal(ex.args[0], p0);
-                }
-                const p1 = [...path, { index: 1, val: ex.args[1] }];
-                /* istanbul ignore else */
-                if (assertPrim(ex.args[1], p1)) {
-                    assertMichelsonTypeInternal(ex.args[1], p1);
-                }
-                const p2 = [...path, { index: 2, val: ex.args[2] }];
-                /* istanbul ignore else */
-                if (assertSeq(ex.args[2], p2)) {
-                    assertMichelsonInstruction(ex.args[2], p2);
-                }
-            }
-            return true;
-    }
-
-    throw new ValidationError(ex, path, "instruction expected");
+    return true;
 }
 
 const simpleComparableTypeTable: Record<MichelsonSimpleComparableTypeId, boolean> = {
@@ -305,113 +275,88 @@ const simpleComparableTypeTable: Record<MichelsonSimpleComparableTypeId, boolean
     "bool": true, "key_hash": true, "timestamp": true, "address": true,
 };
 
-function assertMichelsonSimpleComparableType(ex: Prim, path: PathElem[]): ex is MichelsonSimpleComparableType {
-    if (Object.prototype.hasOwnProperty.call(simpleComparableTypeTable, ex.prim)) {
-        assertArgs(ex, 0, path);
-        return true;
-    }
-    throw new ValidationError(ex, path, "simple comparable type expected");
-}
-
-function assertMichelsonComparableType(ex: Prim, path: PathElem[]): ex is MichelsonComparableType {
-    if (Object.prototype.hasOwnProperty.call(simpleComparableTypeTable, ex.prim)) {
-        assertArgs(ex, 0, path);
-        return true;
-    }
-
-    if (ex.prim === "pair") {
-        /* istanbul ignore else */
-        if (assertArgs(ex, 2, path)) {
-            const p0 = [...path, { index: 0, val: ex.args[0] }];
-            /* istanbul ignore else */
-            if (assertPrim(ex.args[0], p0)) {
-                assertMichelsonSimpleComparableType(ex.args[0], p0);
-            }
-            const p1 = [...path, { index: 1, val: ex.args[1] }];
-            /* istanbul ignore else */
-            if (assertPrim(ex.args[1], p1)) {
-                assertMichelsonComparableType(ex.args[1], p1);
-            }
+function assertMichelsonSimpleComparableType(ex: Expr, path: PathElem[]): ex is MichelsonSimpleComparableType {
+    /* istanbul ignore else */
+    if (assertPrim(ex, path)) {
+        if (!Object.prototype.hasOwnProperty.call(simpleComparableTypeTable, ex.prim)) {
+            throw new ValidationError(ex, path, "simple comparable type expected");
         }
-        return true;
+        assertArgs(ex, 0, path);
     }
-
-    throw new ValidationError(ex, path, "comparable type expected");
+    return true;
 }
 
-function assertMichelsonTypeInternal(ex: Prim, path: PathElem[]): ex is MichelsonType {
-    switch (ex.prim) {
-        case "key":
-        case "unit":
-        case "signature":
-        case "operation":
-        case "chain_id":
+function assertMichelsonComparableType(ex: Expr, path: PathElem[]): ex is MichelsonComparableType {
+    /* istanbul ignore else */
+    if (assertPrim(ex, path)) {
+        if (Object.prototype.hasOwnProperty.call(simpleComparableTypeTable, ex.prim)) {
             assertArgs(ex, 0, path);
-            return true;
-
-        case "option":
-        case "list":
-        case "contract":
-            /* istanbul ignore else */
-            if (assertArgs(ex, 1, path)) {
-                const p = [...path, { index: 0, val: ex.args[0] }];
-                /* istanbul ignore else */
-                if (assertPrim(ex.args[0], p)) {
-                    assertMichelsonTypeInternal(ex.args[0], p);
-                }
-            }
-            return true;
-
-        case "pair":
-        case "or":
-        case "lambda":
+        } else if (ex.prim === "pair") {
             /* istanbul ignore else */
             if (assertArgs(ex, 2, path)) {
-                const p0 = [...path, { index: 0, val: ex.args[0] }];
-                /* istanbul ignore else */
-                if (assertPrim(ex.args[0], p0)) {
-                    assertMichelsonTypeInternal(ex.args[0], p0);
-                }
-                const p1 = [...path, { index: 1, val: ex.args[1] }];
-                /* istanbul ignore else */
-                if (assertPrim(ex.args[1], p1)) {
-                    assertMichelsonTypeInternal(ex.args[1], p1);
-                }
+                assertMichelsonSimpleComparableType(ex.args[0], [...path, { index: 0, val: ex.args[0] }]);
+                assertMichelsonComparableType(ex.args[1], [...path, { index: 1, val: ex.args[1] }]);
             }
-            return true;
-
-        case "set":
-            /* istanbul ignore else */
-            if (assertArgs(ex, 1, path)) {
-                const p = [...path, { index: 0, val: ex.args[0] }];
-                /* istanbul ignore else */
-                if (assertPrim(ex.args[0], p)) {
-                    assertMichelsonComparableType(ex.args[0], p);
-                }
-            }
-            return true;
-
-        case "map":
-        case "big_map":
-            /* istanbul ignore else */
-            if (assertArgs(ex, 2, path)) {
-                const p0 = [...path, { index: 0, val: ex.args[0] }];
-                /* istanbul ignore else */
-                if (assertPrim(ex.args[0], p0)) {
-                    assertMichelsonComparableType(ex.args[0], p0);
-                }
-                const p1 = [...path, { index: 1, val: ex.args[1] }];
-                /* istanbul ignore else */
-                if (assertPrim(ex.args[1], p1)) {
-                    assertMichelsonTypeInternal(ex.args[1], p1);
-                }
-            }
-            return true;
-
-        default:
-            assertMichelsonComparableType(ex, path);
-            return true;
+        } else {
+            throw new ValidationError(ex, path, "comparable type expected");
+        }
     }
+    return true;
+}
+
+function assertMichelsonTypeInternal(ex: Expr, path: PathElem[]): ex is MichelsonType {
+    /* istanbul ignore else */
+    if (assertPrim(ex, path)) {
+        switch (ex.prim) {
+            case "key":
+            case "unit":
+            case "signature":
+            case "operation":
+            case "chain_id":
+                assertArgs(ex, 0, path);
+                break;
+
+            case "option":
+            case "list":
+            case "contract":
+                /* istanbul ignore else */
+                if (assertArgs(ex, 1, path)) {
+                    assertMichelsonTypeInternal(ex.args[0], [...path, { index: 0, val: ex.args[0] }]);
+                }
+                break;
+
+            case "pair":
+            case "or":
+            case "lambda":
+                /* istanbul ignore else */
+                if (assertArgs(ex, 2, path)) {
+                    assertMichelsonTypeInternal(ex.args[0], [...path, { index: 0, val: ex.args[0] }]);
+                    assertMichelsonTypeInternal(ex.args[1], [...path, { index: 1, val: ex.args[1] }]);
+                }
+                break;
+
+            case "set":
+                /* istanbul ignore else */
+                if (assertArgs(ex, 1, path)) {
+                    assertMichelsonComparableType(ex.args[0], [...path, { index: 0, val: ex.args[0] }]);
+                }
+                break;
+
+            case "map":
+            case "big_map":
+                /* istanbul ignore else */
+                if (assertArgs(ex, 2, path)) {
+                    assertMichelsonComparableType(ex.args[0], [...path, { index: 0, val: ex.args[0] }]);
+                    assertMichelsonTypeInternal(ex.args[1], [...path, { index: 1, val: ex.args[1] }]);
+                }
+                break;
+
+            default:
+                assertMichelsonComparableType(ex, path);
+        }
+    }
+
+    return true;
 }
 
 function assertMichelsonDataInternal(ex: Expr, path: PathElem[]): ex is MichelsonData {
@@ -437,10 +382,10 @@ function assertMichelsonDataInternal(ex: Expr, path: PathElem[]): ex is Michelso
             i++;
         }
 
-        if (mapElts === 0 || mapElts === ex.length) {
-            return true;
+        if (mapElts !== 0 && mapElts !== ex.length) {
+            throw new ValidationError(ex, path, "data entries and map elements can't be intermixed");
         }
-        throw new ValidationError(ex, path, "data entries and map elements can't be intermixed");
+        return true;
     }
 
     if (isPrim(ex)) {
@@ -450,7 +395,7 @@ function assertMichelsonDataInternal(ex: Expr, path: PathElem[]): ex is Michelso
             case "False":
             case "None":
                 assertArgs(ex, 0, path);
-                return true;
+                break;
 
             case "Pair":
                 /* istanbul ignore else */
@@ -458,7 +403,7 @@ function assertMichelsonDataInternal(ex: Expr, path: PathElem[]): ex is Michelso
                     assertMichelsonDataInternal(ex.args[0], [...path, { index: 0, val: ex.args[0] }]);
                     assertMichelsonDataInternal(ex.args[1], [...path, { index: 1, val: ex.args[1] }]);
                 }
-                return true;
+                break;
 
             case "Left":
             case "Right":
@@ -467,17 +412,20 @@ function assertMichelsonDataInternal(ex: Expr, path: PathElem[]): ex is Michelso
                 if (assertArgs(ex, 1, path)) {
                     assertMichelsonDataInternal(ex.args[0], [...path, { index: 0, val: ex.args[0] }]);
                 }
-                return true;
+                break;
 
             default:
                 if (Object.prototype.hasOwnProperty.call(instructionTable, ex.prim)) {
                     assertMichelsonInstruction(ex, path);
-                    return true;
+                } else {
+                    throw new ValidationError(ex, path, "data entry or instruction expected");
                 }
         }
+    } else {
+        throw new ValidationError(ex, path, "data entry expected");
     }
 
-    throw new ValidationError(ex, path, "data entry expected");
+    return true;
 }
 
 function assertMichelsonScriptInternal(ex: Expr, path: PathElem[]): ex is MichelsonScript {
@@ -507,19 +455,16 @@ function assertMichelsonScriptInternal(ex: Expr, path: PathElem[]): ex is Michel
 
                         case "parameter":
                         case "storage":
-                            /* istanbul ignore else */
-                            if (assertPrim(n.args[0], pp)) {
-                                assertMichelsonTypeInternal(n.args[0], pp);
-                            }
+                            assertMichelsonTypeInternal(n.args[0], pp);
                     }
                 }
                 i++;
             }
-            return true;
+        } else {
+            throw new ValidationError(ex, path, "valid Michelson script expected");
         }
     }
-
-    throw new ValidationError(ex, path, "valid Michelson script expected");
+    return true;
 }
 
 export function assertMichelsonScript(ex: Expr): ex is MichelsonScript {
@@ -535,9 +480,5 @@ export function assertMichelsonCode(ex: Expr[]): ex is MichelsonInstruction[] {
 }
 
 export function assertMichelsonType(ex: Expr): ex is MichelsonType {
-    /* istanbul ignore else */
-    if (assertPrim(ex, [])) {
-        assertMichelsonTypeInternal(ex, []);
-    }
-    return true;
+    return assertMichelsonTypeInternal(ex, []);
 }
