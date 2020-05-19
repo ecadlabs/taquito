@@ -5,6 +5,8 @@ import process from "process";
 let api = false;
 let indent = false;
 let validate = false;
+let code = false;
+let storage = false;
 
 for (const arg of process.argv.slice(2)) {
     switch (arg) {
@@ -17,8 +19,17 @@ for (const arg of process.argv.slice(2)) {
         case "-v":
             validate = true;
             break;
-
+        case "-c":
+            code = true;
+            break;
+        case "-s":
+            storage = true;
     }
+}
+
+if (!code && !storage) {
+    code = true;
+    storage = true;
 }
 
 const opt: FormatOptions | undefined = indent ? {
@@ -36,10 +47,18 @@ if (api) {
         assertMichelsonData(script.storage);
     }
 
-    console.log("Code:");
-    console.log(emitMicheline(script.code, opt));
-    console.log("\nStorage:");
-    console.log(emitMicheline(script.storage, opt));
+    if (code) {
+        if (storage) {
+            console.log("Code:");
+        }
+        console.log(emitMicheline(script.code, opt));
+    }
+    if (storage) {
+        if (code) {
+            console.log("\nStorage:");
+        }
+        console.log(emitMicheline(script.storage, opt));
+    }
 } else {
     const script: Expr = json;
     if (validate) {
