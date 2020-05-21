@@ -118,7 +118,7 @@ export default class LambdaView {
                                       prim: 'PUSH',
                                       args: [
                                         { prim: 'string' },
-                                        { string: `Contract does not exists` },
+                                        { string: `Contract does not exist` },
                                       ],
                                     },
                                     { prim: 'FAILWITH' },
