@@ -45,11 +45,12 @@ order to call view methods.
 Here's an example of using the Lambda View on an FA1.2 contract. This contract
 has a view entrypoint called `getTotalSupply`:
 
-```js
+```js live noInline
+const network = "carthagenet";
 const fa12Address = 'KT1LARUt9LMKjs7wc9Dh6oeDgvMMa4Rih8eA';
 
 Tezos.contract
   .lambdaView(network, fa12Address, 'getTotalSupply')
   .then(view => view.execute())
-  .then(result => console.log(result));
+  .then(result => println(JSON.stringify(result)));
 ```
