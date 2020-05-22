@@ -692,7 +692,7 @@ const originationOp = await Tezos.contract.originate({
 })
 
 const contract = await originationOp.contract()
-console.log(contract.contractAddress)
+console.log(contract.address)
 ```
 
 ### b. Using the JSON storage
@@ -716,5 +716,5 @@ const originationOp = await Tezos.contract.originate({
 })
 
 const contract = await originationOp.contract()
-console.log(contract.contractAddress)
+console.log(contract.address)
 ```
