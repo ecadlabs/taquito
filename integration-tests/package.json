@@ -4,14 +4,14 @@
     "test:faucet": "RUN_WITH_FAUCET=true jest --runInBand",
     "test": "jest"
   },
-  "version": "6.3.0-wallet.0",
+  "version": "6.3.0-wallet.2",
   "dependencies": {
-    "@taquito/http-utils": "^6.3.0-wallet.0",
-    "@taquito/local-forging": "^6.3.0-wallet.0",
-    "@taquito/remote-signer": "^6.3.0-wallet.0",
-    "@taquito/signer": "^6.3.0-wallet.0",
-    "@taquito/taquito": "^6.3.0-wallet.0",
-    "@taquito/utils": "^6.3.0-wallet.0"
+    "@taquito/http-utils": "^6.3.0-wallet.2",
+    "@taquito/local-forging": "^6.3.0-wallet.2",
+    "@taquito/remote-signer": "^6.3.0-wallet.2",
+    "@taquito/signer": "^6.3.0-wallet.2",
+    "@taquito/taquito": "^6.3.0-wallet.2",
+    "@taquito/utils": "^6.3.0-wallet.2"
   },
   "private": true,
   "jest": {
