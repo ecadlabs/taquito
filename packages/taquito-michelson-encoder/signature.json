@@ -294,7 +294,7 @@
           },
           {
             "path": "dist/types/tokens/bigmap.d.ts",
-            "sha512": "2f76432e9bd6fdfe956610b798f566fb0ed134bdba987d496f40f9319e3357e999c7a5752bef42a8ee082ad25cbf9514b9ee271a52e9b43a36005d643100dc57"
+            "sha512": "37a555337290629397ad24b6164fee01266e6b589c2fec6551223a24fb8c79b0a90ecad8776cf1e714eb00bd9f76b827563f9d6b47f5380c22c1299624795546"
           },
           {
             "path": "dist/types/tokens/comparable/bool.d.ts",
@@ -342,11 +342,11 @@
           },
           {
             "path": "dist/types/tokens/map.d.ts",
-            "sha512": "cf28013224e393b1ae9f272b51a5bbb22dcd05bfbf2b7345d00e79470e1a3898ba06478ed887d633cda882efb1d3fb6f325024e1b054d78e34c2a517a1aa2fd1"
+            "sha512": "9be58472f5606f8abf2f620d52097fac63c45061b17c745b19171d3feb9e7efc60d2ad065d1c00e837aefd80ce2f0f27e8d7905b9c352db592678c13cfafda79"
           },
           {
             "path": "dist/types/michelson-map.d.ts",
-            "sha512": "5851363ec4148ae4f09333eecf30b3c65e5f379bc73539cc10544b3642ecd21d07a26c897557f03ad23d46a55af5e1bc687c288fecdb4a1c8716841609e55515"
+            "sha512": "aecbcaa8bfbe0b06beb6ce935b2b56da553699049e859c8277300b68131a837d944f4b9244172795f7a3545232f96c25228c90441bb4532f60705d2900fd3042"
           },
           {
             "path": "dist/types/schema/model.d.ts",
@@ -378,11 +378,11 @@
           },
           {
             "path": "dist/types/schema/parameter.d.ts",
-            "sha512": "ebb21d77f0bc4cfa2a321a40c30a6a7b0420c5709d91ae08c1e9612497bb49a7b51ebde39325abc1ff701a93c7e8cc5879b89a778e36f95ca794c319e585a20a"
+            "sha512": "06f687b11ebe78d228d0a5da05fc4455ef9ed81d59d72ce8eb357f73a902c8fb74724dff5621435e821c5a36c36c349a7c44839b3ab4884b08382acbf9843f1e"
           },
           {
             "path": "dist/types/tokens/set.d.ts",
-            "sha512": "53296cc6ca6ba6f9db65b2d9ddeef25a6e4873056a2f0d2709aa3bdb9dec251fc92f7c64036101bff578e77800677cf381ff6914419f924fb029ca37b40c27b6"
+            "sha512": "90ab0dfa2e73216bddc41e9828784189c575093dda0c45c74970f8b1c5f4a4edf3e13df80fd5541adbee5b41e86ec79e56d443c7280c3e5aa1580a2e8aa5ec2b"
           },
           {
             "path": "dist/types/tokens/signature.d.ts",
@@ -454,7 +454,7 @@
           "typings",
           "version"
         ],
-        "sha512": "f3d96b8c564fa4569da4c81531000a4d58d7b3a5eb9206c4f2200e13f8c8619ce5fec1f1d0120f77b4cec80041b5b282928adbaff74930bad83264c8810fd0ec"
+        "sha512": "605f6c572912934c2528ab9062c05e4c54d52fc259092e704f685c2f039ac66ba8e4d9f7ea6765eca0a5826c88bf4e835b9f07c866b82dc16202acf15af5c94a"
       }
     },
     {
@@ -462,13 +462,21 @@
       "value": {
         "packageJson": {
           "name": "@taquito/michelson-encoder",
-          "version": "6.3.0-wallet.1",
+          "version": "6.3.0-wallet.3",
           "description": "converts michelson data and types into convenient JS/TS objects",
-          "keywords": ["tezos", "blockchain", "michelson", "smart-contract"],
+          "keywords": [
+            "tezos",
+            "blockchain",
+            "michelson",
+            "smart-contract"
+          ],
           "main": "dist/taquito-michelson-encoder.umd.js",
           "module": "dist/taquito-michelson-encoder.es5.js",
           "typings": "dist/types/taquito-michelson-encoder.d.ts",
-          "files": ["signature.json", "dist"],
+          "files": [
+            "signature.json",
+            "dist"
+          ],
           "publishConfig": {
             "access": "public"
           },
@@ -492,7 +500,11 @@
             "start": "rollup -c rollup.config.ts -w"
           },
           "lint-staged": {
-            "{src,test}/**/*.ts": ["prettier --write", "tslint --fix", "git add"]
+            "{src,test}/**/*.ts": [
+              "prettier --write",
+              "tslint --fix",
+              "git add"
+            ]
           },
           "jest": {
             "transform": {
@@ -500,20 +512,29 @@
             },
             "testEnvironment": "node",
             "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-            "moduleFileExtensions": ["ts", "tsx", "js"],
+            "moduleFileExtensions": [
+              "ts",
+              "tsx",
+              "js"
+            ],
             "moduleNameMapper": {
               "^@taquito/utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts"
             },
-            "coveragePathIgnorePatterns": ["/node_modules/", "/test/"],
-            "collectCoverageFrom": ["src/**/*.{js,ts}"]
+            "coveragePathIgnorePatterns": [
+              "/node_modules/",
+              "/test/"
+            ],
+            "collectCoverageFrom": [
+              "src/**/*.{js,ts}"
+            ]
           },
           "dependencies": {
-            "@taquito/utils": "^6.3.0-wallet.1",
+            "@taquito/utils": "^6.3.0-wallet.3",
             "bignumber.js": "^9.0.0",
             "fast-json-stable-stringify": "^2.1.0"
           },
           "devDependencies": {
-            "@taquito/rpc": "^6.3.0-wallet.1",
+            "@taquito/rpc": "^6.3.0-wallet.3",
             "@types/jest": "^23.3.2",
             "@types/node": "^10.14.13",
             "colors": "^1.3.2",
@@ -538,11 +559,11 @@
             "tslint-config-prettier": "^1.15.0",
             "tslint-config-standard": "^8.0.1",
             "typedoc": "^0.15.0",
-            "typescript": "~3.6.0"
+            "typescript": "~3.8.3"
           }
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJetb4KCRAD9Qy5GYHsngAAaNEQAFKzcHtyNyYIaMz/L/Sty6M6\nuRnekk5snP+4OgJ4YbJmbuT4K8kVYPJiCEw49eLIs1krGxG72Oodi2PeHdjjxsds\nSPq0I5hQOZKw/JCgR6XMDJmU3p7GIWAWmeE03AaLs+6/YLqnj06ASsm+wLhYupfZ\nXOS5oU76DW93pqsIui5XjNEbOMBDQVBZyLY9B3+tpdmRhtlM3vrRldcYBX5gQSq8\nO6QCtSxQ4UmiMfaG2UU1kWSUnl1xB5in08ogILY0U31OyIdDP4xtz8f4rRBgz2u/\n0qWmbmidkXItwD4LpRFb0Tk9kScrdArAje+RgY07EdfmIZfpt6paIQVSyB3Cg5bb\nxBJr1bFhao3+m7OphcJl3WtVZwMDnl1a2VcyCiwcNEPW5524barCSwyK++k1UPrA\nPhhjLezoPlWLOYNLDAZ24YFTnXn7+e/zg1y7djDVTO+2PTMYWryiJwu/qyIYqESN\n4RZo9qg9+eMFNTIRcwbTE0MXOJZujtt/QEm2ev+6AE65O9r9woZiK0WsJmgzZVj6\nM16uuiZrVnb5Bf7FmrxCwrfDmCKNgp/xAzcEB3tB67FVailJAG9XJX5pBTfeAdYG\nX5iGZiM5Wyis/ai6J9e7urLn0vTFitkeEOjovHVU+Fiq00wZ6sEb1a+KcKQSBQZv\nUgOrBN1/NzMtSnArSx8T\n=NCXW\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJeyES3CRAD9Qy5GYHsngAAsrcQAItne5EtZ5StUKyOGfiHpxeb\nvuz3jcGOILIujEYDBzhEdjXQoeTu8E5uPSNdA/IlKMo27qh1upSAGN1qcxV8ctmc\n+yVa/DYDn+7oSBzROhf2HbtxfjSPBKN0S3sehfCLKYqQU3t0ll6JVPx5+JJmFMCr\nAlas3k9YTzTg4gE493aszFfVX4HN1T3dc7ly5SKslWnml/bjJHVxFcUZI6T5E7tN\ng1F4xDRurrucYNNoXyH43OicmrP0v31IYVf1rAe2sSdA77BOvF4b4+Iq/WXBoy+v\nYfuAiQ2C8tD6nKGj92Q60RDdVNJ8mK+7drUfcPVXOfd3mth8YBQRLdnTZ7FpSvbh\nfKVAEI58ltFuXBlt3Vn7Zc0ZY/Rc3wVPf0AT+xZm40GIxC4bY3PwYZduZ3VPdENd\nUNJC2uwlMX6olu9zUj0qsNlmG9m1hQF031YU7c/eGrvjevf1I4PumEpYp8puEEBs\nczwNzbWELEaG28L1T4u/ff+qrg1avfkH4qpja+urj0y0xhEoXvq4cZFvqvFGl/u1\nN/lAIBtbM0yEZMdX5qovXTdCRR92VTbCO3/RcWqKMWTsoqDlxBHI5c8NKeXZ00tB\n1Rn7JYc3U7vr/nftM/UG346GHMke8celdKWDFAbMXi0Ney5wB4/xyE3v+NyB4/rV\nyash6Vv4ZszWDUEXr8Ro\n=Fg72\n-----END PGP SIGNATURE-----\n"
 }

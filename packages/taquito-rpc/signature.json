@@ -10,15 +10,15 @@
           },
           {
             "path": "dist/taquito-rpc.es5.js",
-            "sha512": "3478a455e6952bb72c3b178f3c8c95775b4cf57b96d5cf1a3faabce79b99cc8287f7d45d95f4dff7a4ad271969cf8d7f8b2fcd4830f122c33cf1412e226a8ad4"
+            "sha512": "896daa831e5176fc78d3353537708149d5a6fec51eacfb72527c5ede37b0e9a05631aa4063265063f50efcfcd7a4fb1539d55345a154ccfecd30d4dc7a5d89f2"
           },
           {
             "path": "dist/lib/taquito-rpc.js",
-            "sha512": "852a149a6e09ac5fda1d179fa001c7258a26200d02c89bd67fdeecf3707ce5795ef24387a33ced60e0ed896983aad57908b9e71330aa93b2522a699ad13dccbb"
+            "sha512": "a0c3a1abfe9972627d2445db7fc9dc823d740e4a722a148ec90b0f3416b3b40a466eb963e0e440f32b60515ac97cb62d1bb887c293ed6b7150c1443d854d94c2"
           },
           {
             "path": "dist/taquito-rpc.umd.js",
-            "sha512": "d8dd6d9c4a5f67fb94ba982e13863e28faff019b86170644ae6f9dc3bbec0b586c2a4816dc63e12db748d3caa953fdd50ae1cf9d44dd86883310b9d01c763bd3"
+            "sha512": "90a60178349b1ea11dda9e1002e9f60d0ed9451c83dc0a5f33f2ec8e895932cf943372e536f94ac0bd8f7f0834ee53a7d1db71a08d9a9b7f4476de50c4e64c53"
           },
           {
             "path": "dist/lib/types.js",
@@ -34,15 +34,15 @@
           },
           {
             "path": "dist/taquito-rpc.es5.js.map",
-            "sha512": "f3420de1052907e3ea240f97708a65ad36def25e8a5532e11dec27b97c43b4af710ea0ffd7f70089e00be247cb3a0a52f1785485c0cb44abade23cc0cc3f3eaf"
+            "sha512": "ee11300b2eeba564b5a3f5e350c3365299b9cb16b2cd686c498c166b3fae34a40adddf4efa6c8c5e69cba4c2069add0714b1953865e8b8f74d7c8ea012a71876"
           },
           {
             "path": "dist/lib/taquito-rpc.js.map",
-            "sha512": "1611a4707f83a8cc04e91d49b2469d2755ac0c1f6bad819967faa07d06f4658893921e5ca61a1ff3b8fff970d71d07ed26edc2f1d3411c698807c697f591733e"
+            "sha512": "36aa2b0b5a73f8269e0dd9eff096050662c5e8ec8020ba94a52deda63753c62f6e6b8265b13f26f5f479f4525c2bff0f460c936403337cb4667a753250c74ebe"
           },
           {
             "path": "dist/taquito-rpc.umd.js.map",
-            "sha512": "af178fcad7df2967f4976d220ccbaf9196e58e8db17bae3184b7c629b375dc1e556d4ce54da70d47e6a2c54b9fc500d7d8fe79a3a439c3efdcfacbb90f8da6e5"
+            "sha512": "09695543861b240e8cac0fd428d32d9b69c5741422bf0b57e58da3b1926851d3ac9e3cd0a8e3dcf4c8b480dcde07c044468de77f3361b72fa36d2a1ac9fee2b7"
           },
           {
             "path": "dist/lib/types.js.map",
@@ -62,11 +62,11 @@
           },
           {
             "path": "dist/types/taquito-rpc.d.ts",
-            "sha512": "3a2401a374995d632fa64e86e599c4e9f6ec2032fc528d18ce6f03b2f1f189d9cb25f8362f3cea036716452d7196e1e21a35f4dd4fbabf0715ede0b52051ecb9"
+            "sha512": "bb6c8f8611c99a1f9d8a4fcb745f8e7c7e938cadf4870b5fbca39d9769c913682d34fda803ece8ee9abcb357a1bdbbf0289c985c0db152d1f5db7f56604702b5"
           },
           {
             "path": "dist/types/types.d.ts",
-            "sha512": "1cb8f0ad5ea7cd087ffda2fd2b330f5410a44de58a439b2ef774cac418300d9a7f6ad2f9bf421c7114a881946c5706eec8cf1046b2ebedbbc70e048106c729bb"
+            "sha512": "521ab0633b3deb65ea6703845db6a24c36786100d8dcbb774eda6461f9a71b1d79d465edf33015ac229d5fd9535fed047e7eb2e66606b5e68f7b4b8a19f6d1b7"
           },
           {
             "path": "dist/types/utils/utils.d.ts",
@@ -106,7 +106,7 @@
           "typings",
           "version"
         ],
-        "sha512": "54e685b82c2821d1deffa878f784952f6faf7159019f89218d58f7a75f672915938621d2da2c63e82f16284335a04965d4277ce98df1348be9531b0e3e897139"
+        "sha512": "e28d2d8e958f296c51369bbf933ec3eb2b775c7af1ff1f14161e8862eac5162106b986383c5e95d8ca1e52a3103a72b4d0423ba739c6d6b22c66653ee2c02efd"
       }
     },
     {
@@ -114,13 +114,20 @@
       "value": {
         "packageJson": {
           "name": "@taquito/rpc",
-          "version": "6.3.0-wallet.1",
+          "version": "6.3.0-wallet.3",
           "description": "Provides low level methods, and types to invoke RPC calls from a Nomadic Tezos RPC node",
-          "keywords": ["tezos", "blockchain", "rpc"],
+          "keywords": [
+            "tezos",
+            "blockchain",
+            "rpc"
+          ],
           "main": "dist/taquito-rpc.umd.js",
           "module": "dist/taquito-rpc.es5.js",
           "typings": "dist/types/taquito-rpc.d.ts",
-          "files": ["signature.json", "dist"],
+          "files": [
+            "signature.json",
+            "dist"
+          ],
           "publishConfig": {
             "access": "public"
           },
@@ -144,7 +151,11 @@
             "start": "rollup -c rollup.config.ts -w"
           },
           "lint-staged": {
-            "{src,test}/**/*.ts": ["prettier --write", "tslint --fix", "git add"]
+            "{src,test}/**/*.ts": [
+              "prettier --write",
+              "tslint --fix",
+              "git add"
+            ]
           },
           "jest": {
             "transform": {
@@ -152,15 +163,24 @@
             },
             "testEnvironment": "node",
             "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-            "moduleFileExtensions": ["ts", "tsx", "js"],
+            "moduleFileExtensions": [
+              "ts",
+              "tsx",
+              "js"
+            ],
             "moduleNameMapper": {
               "^@taquito/http-utils$": "<rootDir>/../taquito-http-utils/src/taquito-http-utils.ts"
             },
-            "coveragePathIgnorePatterns": ["/node_modules/", "/test/"],
-            "collectCoverageFrom": ["src/**/*.{js,ts}"]
+            "coveragePathIgnorePatterns": [
+              "/node_modules/",
+              "/test/"
+            ],
+            "collectCoverageFrom": [
+              "src/**/*.{js,ts}"
+            ]
           },
           "dependencies": {
-            "@taquito/http-utils": "^6.3.0-wallet.1",
+            "@taquito/http-utils": "^6.3.0-wallet.3",
             "bignumber.js": "^9.0.0",
             "lodash": "^4.17.15"
           },
@@ -189,11 +209,11 @@
             "tslint": "^5.11.0",
             "tslint-config-prettier": "^1.15.0",
             "tslint-config-standard": "^8.0.1",
-            "typescript": "~3.6.0"
+            "typescript": "~3.8.3"
           }
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJetb4OCRAD9Qy5GYHsngAAWqQQAJA6iTn+PDup3Y3plUu2dWd1\nwACLLf95z2Xt3PK44Em/xx3lUbny3wl9rr33jECWDJXFgiR/EDPd+SqNI4jec7K2\n1HVcthTt86UagoH3BXLtuZAh39bbbwost9hwHvnSLkL5TioHuq38DiNAACWX5+dt\nzu09xNDxNg6FWTb398f+K7PohqkjM00nIPN/ZBlYposlJGo63cpoATIU1uT8XtUW\nEB7oX3WfFLuL1eJ6ewgW8YrKUlbADJFdJ/28kCzUKoF10U6M0pThQxoEc897mWyb\n4pyW1Iiaa+z5WKTmksPcj7mVFOGihF5U3y4N3CiKrw8Sn7TcVsS3jq5XE2gHsgYO\npA/6DxsZltBkqqS9VjF5puLDS6dLRFmGz9i7wLzijSlDZK91dxL2NntbWSP6J8Vn\ndJZw5Lj45DsbwHaFCPsdhjtiVL/tRCOzYi9FdfvCXobpyQDjv6fIwhbn8C9L85qt\ntuzSIBq1/CtAkXLG8bSZSq9ZSJWDCrU4k4QC/zF8zKCdiUmU8U++j9FFBjIrR4+H\n4ktwk0W2gJQGLciBAAXZrNx1udfwu5ZYfW3YM1KGRwY1Vi41aUIMFfFZJQWDphVa\nL/QJtujrVkHgL/9d/7Sdz/4yI5VtZyuaKJebeDYfK36DdnQb7LXV6wqWCKpYGtKG\nZDeSCY2lRLVN3WG4iv0E\n=mXnW\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJeyES5CRAD9Qy5GYHsngAA/jEQAD7pQCDnsnvUs6jfIH/HG2MR\n/+LyJ7fEE2++21gUOP2ME8suLSQ8z6HKtTA30GZFjJLwq77TgHaWL85INXzR9H8P\nSj8aTv/aebJgOf3L8kBjzyGSjOegbyuFduKgHMZ3ZT5lDuZZHMIlQK8h+GUwbumv\nIDoRFPfK1y6So0J/Y5IPVJjmke7RSYVkxOdQ/9PQ97I6V9+NJGbKiCiTbLDqO0QI\n4R0SKuLmwpTHZOEP3D/mzuSnlIOf7lJVFpmDlqQIgxZg8GetIKUCev0t9ljOmGOY\nN2m6278Dh1AKZZ7nzxw8B1aKMVqIHo4hMSFVVpTy1J/cMDtk8gzrLC1oPmDcVXDX\nMKTcasiYMX4k1BQKTutEuKmnOKbOpcL8jvfJgO5bGpIgUuPTpRMkC+Sj9Z7d3fzQ\nBpaoDwUyp8wqs8Vp9DVwGq5WhOigX06xINKjW9jMLU46BYXiz0hqtxojwktuvfE6\nBf2+UcjPfU1vh1D4i9IAN5iAOSteEaOTYlhfd4dKsEdGRsa9eJ2fKsVnnp8fK7bC\nXxMCA9I7ocSVSfmdUNnPHxlWq+toR2NYvZgJtd22gj1oIedjfjf5v3NRQSa893TS\nXFpPP4g058+GcrGQlMnRCgIgR7nelkXwQVsAqVWduBXzTD5t7K8bTFf0XX4E/KAI\nMa2Mm5ccF6Q14i5lr3O8\n=N7rG\n-----END PGP SIGNATURE-----\n"
 }

@@ -102,7 +102,7 @@
           "typings",
           "version"
         ],
-        "sha512": "ebc97dd008004fcb6a9ecad4a32dfb8e0a85489387c04480250447f8a087ec70abf1c266508964eaa7da90583bd7f65144b09c2939e9397ad3460093ac5ef866"
+        "sha512": "893e30b2fa703fe1b3bfe1d684a5f700c48cf8b16cade0f69062693d6ab277d1ddc1f1d71979f3461cdb7348e2c8721ad2eaf602b006e27d687844b009851a84"
       }
     },
     {
@@ -110,13 +110,20 @@
       "value": {
         "packageJson": {
           "name": "@taquito/signer",
-          "version": "6.3.0-wallet.1",
+          "version": "6.3.0-wallet.3",
           "description": "Provide signing functionality to be with taquito",
-          "keywords": ["tezos", "blockchain", "signer"],
+          "keywords": [
+            "tezos",
+            "blockchain",
+            "signer"
+          ],
           "main": "dist/taquito-signer.umd.js",
           "module": "dist/taquito-signer.es5.js",
           "typings": "dist/types/taquito-signer.d.ts",
-          "files": ["dist", "signature.json"],
+          "files": [
+            "dist",
+            "signature.json"
+          ],
           "publishConfig": {
             "access": "public"
           },
@@ -140,7 +147,11 @@
             "start": "rollup -c rollup.config.ts -w"
           },
           "lint-staged": {
-            "{src,test}/**/*.ts": ["prettier --write", "tslint --fix", "git add"]
+            "{src,test}/**/*.ts": [
+              "prettier --write",
+              "tslint --fix",
+              "git add"
+            ]
           },
           "jest": {
             "transform": {
@@ -148,15 +159,24 @@
             },
             "testEnvironment": "node",
             "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-            "moduleFileExtensions": ["ts", "tsx", "js"],
+            "moduleFileExtensions": [
+              "ts",
+              "tsx",
+              "js"
+            ],
             "moduleNameMapper": {
               "^@taquito/utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts"
             },
-            "coveragePathIgnorePatterns": ["/node_modules/", "/test/"],
-            "collectCoverageFrom": ["src/**/*.{js,ts}"]
+            "coveragePathIgnorePatterns": [
+              "/node_modules/",
+              "/test/"
+            ],
+            "collectCoverageFrom": [
+              "src/**/*.{js,ts}"
+            ]
           },
           "dependencies": {
-            "@taquito/utils": "^6.3.0-wallet.1",
+            "@taquito/utils": "^6.3.0-wallet.3",
             "bignumber.js": "^9.0.0",
             "bip39": "^3.0.2",
             "elliptic": "^6.5.1",
@@ -192,11 +212,11 @@
             "tslint-config-prettier": "^1.15.0",
             "tslint-config-standard": "^8.0.1",
             "typedoc": "^0.15.0",
-            "typescript": "~3.6.0"
+            "typescript": "~3.8.3"
           }
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJetb4PCRAD9Qy5GYHsngAA6GAQAEVnz7aeNgb0A+ZmahJBSA5Q\n5R8DbKygt7HsTMmcQEs85J/MB2SrYSqWFSA/ZLbBc24mlVJ5LhZes+KI5F3EDOq6\nZOKucY2AUog9eHAtRQPG+3Fzxf0weXrtN7R6E1YgiQwTZhfFyDAEFbg2X3JvPsDh\nVdGoX5kqZYG1C+7r7DsHyMM0k2VI/h2NjlF9yrTEYu9+pOf59uErolkI3en0Fior\nItmi8avyaSLywudLjwMp2GOCU3aZHiMFV0PxT/RlsKbAf1FtjBDDjJIWzt3VxC++\n1NT7JlHB7HgOcGFLDQnoebR740OjGBhCVjOOtY4/ooBUqT4b44hbo68DzzrdldMv\n/yOi3pbsNw+40Sa0LHqfEf1M24zuXeY+w9qYo36QRpj8nZt8VfebFtiry+eEhf/T\npVzIkG4FMhXx+umBqD5AqHI2IwDKdSFvnURohXhmqF2hrI7sWbY8XZeONSsmtrgJ\nGvPpE3biHRdaXEcE3E5ZXj9pEJ1JemGpswxCX+d/Y/9C40qJcjHvHU+MmmZo91qR\nCN3voIjMYNiI4uyifj/0qXUcNZxoZataYyHyQc+aVDMPV3l9FxMe06BSnBblXVtU\n+tf+VTZqCxpnnKkkNWh700kaVmImjJyjCOhTbmA8ezUF58THOSiSc/8AwnkjMlIM\nds/cBBprVtSI4DRI7v9h\n=vL90\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJeyES6CRAD9Qy5GYHsngAAAcEQAATtts7ViaaimM6mtrKKNgfN\nE/DYqICWPGxupdDhWY4oVlXNC0Nf+1cg7JTbSAYZCeGJafPvWHPY/iRm30CRzkbJ\nc0IQ09FRQWlrTMPm1Okn9n0AURLNKYFriFH6Jm8I5Cuj599ksrIskyR5zPHOwrug\nPPUJhipA0yyO3rTJq1hGnOPF7LzFrDAR8Pq70/nOk25lWfPL1VATzui67Z3qTRap\noezJ6uBg5DuM75i0ffiDTkf59iZXYQu7PhlOPD3eSxmveVMUh7v66iT7v7yylGAa\nP9dQjxlHgu9s5PR8NVcszu+9bKylikANZMjB1c2YqR8u081PJsgHGMZQ+vIbUEoO\npeb4Z7mAQNJmNRvbUPD0tAe2RwZQm14ayiqKfVfYNJDw5tp0nK4nUwRVTSGbY1+o\nKOYS9Z6+MFjQPKhR4anLFdvwBVyIFpObczuaQ2sZtFzKUICZnwk3ad+t8p6nKHe9\nE5DXrZhECyY10kE0xiKAJ7NmHAeap5LiZUdZsN++fXWaG6Ncame6x3kWiKbbgcWL\nmlczfR0eysAoytp8/Oois+UzYl1I0GQMy9IkS4ZuLonvvyYuZ/5Ql94DqxkmX2Vg\nE5JGJPz86qYPWwvjaMD9scXqsaM0481ptpzjEJKxwd1+1aR2Ot+QbXnzcHNofMgt\nsI0d7PMvKdLJj1A1tPWa\n=yJj1\n-----END PGP SIGNATURE-----\n"
 }

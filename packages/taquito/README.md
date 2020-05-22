@@ -8,9 +8,9 @@ The `@taquito/taquito` package contains higher level functionality that builds u
 
 ```html
 <script
-  src="https://unpkg.com/@taquito/taquito@6.2.0-beta.0/dist/taquito.min.js"
+  src="https://unpkg.com/@taquito/taquito@6.3.0-wallet.3/dist/taquito.min.js"
   crossorigin="anonymous"
-  integrity="sha384-aHNQOdftnw1yzHWQWfiKXFDYsIuRGwQpT4oYkE68a550GH7W3Zq7p3NX+awuZe1I"
+  integrity="sha384-TgQQFTqp3fJZmJoWev30IZlnVjyfcVqxdMH46UEihITmefMKcrm58I8TvPFDSK8e"
 ></script>
 ```
 
