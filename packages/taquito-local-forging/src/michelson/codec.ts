@@ -128,7 +128,7 @@ export const stringDecoder: Decoder = (value: Uint8ArrayConsumer) => {
 export const intEncoder: Encoder<IntValue> = ({ int }) => {
   const num = new BigNumber(int, 10);
   const positiveMark = num.toString(2)[0] === '-' ? '1' : '0';
-  const binary = num.toString(2).replace('-', '');
+  const binary = num.toString(2).replace(/-/g, '');
 
   const pad =
     binary.length <= 6

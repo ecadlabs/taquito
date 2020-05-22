@@ -102,7 +102,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/utils",
-          "version": "6.3.0-wallet.0",
+          "version": "6.3.0-wallet.1",
           "description": "converts michelson data and types into convenient JS/TS objects",
           "keywords": ["tezos", "blockchain", "michelson", "smart-contract"],
           "main": "dist/taquito-utils.umd.js",

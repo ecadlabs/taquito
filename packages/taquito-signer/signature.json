@@ -110,7 +110,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/signer",
-          "version": "6.3.0-wallet.0",
+          "version": "6.3.0-wallet.1",
           "description": "Provide signing functionality to be with taquito",
           "keywords": ["tezos", "blockchain", "signer"],
           "main": "dist/taquito-signer.umd.js",
@@ -156,7 +156,7 @@
             "collectCoverageFrom": ["src/**/*.{js,ts}"]
           },
           "dependencies": {
-            "@taquito/utils": "^6.3.0-wallet.0",
+            "@taquito/utils": "^6.3.0-wallet.1",
             "bignumber.js": "^9.0.0",
             "bip39": "^3.0.2",
             "elliptic": "^6.5.1",

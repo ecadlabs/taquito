@@ -86,7 +86,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/http-utils",
-          "version": "6.3.0-wallet.0",
+          "version": "6.3.0-wallet.1",
           "description": "",
           "keywords": [],
           "main": "dist/taquito-http-utils.umd.js",

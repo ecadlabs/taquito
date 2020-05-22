@@ -65,6 +65,13 @@ export class BeaconWallet implements WalletProvider {
   }
 
   async requestPermissions(request?: RequestPermissionInput) {
+    const activeAccount = await this.client.getActiveAccount();
+
+    if (activeAccount) {
+      this.permissions = activeAccount;
+      return;
+    }
+
     const result = await this.client.requestPermissions(request);
     this.permissions = result;
   }

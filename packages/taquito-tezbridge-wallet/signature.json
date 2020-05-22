@@ -74,20 +74,13 @@
       "value": {
         "packageJson": {
           "name": "@taquito/tezbridge-wallet",
-          "version": "6.3.0-wallet.0",
+          "version": "6.3.0-wallet.1",
           "description": "Tezbridge wallet provider",
-          "keywords": [
-            "tezos",
-            "blockchain",
-            "websocket"
-          ],
+          "keywords": ["tezos", "blockchain", "websocket"],
           "main": "dist/taquito-tezbridge-wallet.umd.js",
           "module": "dist/taquito-tezbridge-wallet.es5.js",
           "typings": "dist/types/taquito-tezbridge-wallet.d.ts",
-          "files": [
-            "signature.json",
-            "dist"
-          ],
+          "files": ["signature.json", "dist"],
           "publishConfig": {
             "access": "public"
           },
@@ -108,11 +101,7 @@
             "start": "rollup -c rollup.config.ts -w"
           },
           "lint-staged": {
-            "{src,test}/**/*.ts": [
-              "prettier --write",
-              "tslint --fix",
-              "git add"
-            ]
+            "{src,test}/**/*.ts": ["prettier --write", "tslint --fix", "git add"]
           },
           "jest": {
             "transform": {
@@ -120,21 +109,12 @@
             },
             "testEnvironment": "node",
             "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-            "moduleFileExtensions": [
-              "ts",
-              "tsx",
-              "js"
-            ],
-            "coveragePathIgnorePatterns": [
-              "/node_modules/",
-              "/test/"
-            ],
-            "collectCoverageFrom": [
-              "src/**/*.{js,ts}"
-            ]
+            "moduleFileExtensions": ["ts", "tsx", "js"],
+            "coveragePathIgnorePatterns": ["/node_modules/", "/test/"],
+            "collectCoverageFrom": ["src/**/*.{js,ts}"]
           },
           "dependencies": {
-            "@taquito/taquito": "^6.3.0-wallet.0"
+            "@taquito/taquito": "^6.3.0-wallet.1"
           },
           "devDependencies": {
             "@types/jest": "^23.3.2",

@@ -74,7 +74,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/tezbridge-signer",
-          "version": "6.3.0-wallet.0",
+          "version": "6.3.0-wallet.1",
           "description": "Tezbridge signer provider",
           "keywords": ["tezos", "blockchain", "websocket"],
           "main": "dist/taquito-tezbridge-signer.umd.js",
@@ -114,11 +114,11 @@
             "collectCoverageFrom": ["src/**/*.{js,ts}"]
           },
           "dependencies": {
-            "@taquito/utils": "^6.3.0-wallet.0",
+            "@taquito/utils": "^6.3.0-wallet.1",
             "typedarray-to-buffer": "^3.1.5"
           },
           "devDependencies": {
-            "@taquito/taquito": "^6.3.0-wallet.0",
+            "@taquito/taquito": "^6.3.0-wallet.1",
             "@types/jest": "^23.3.2",
             "@types/node": "^10.14.13",
             "@types/ws": "^6.0.3",
