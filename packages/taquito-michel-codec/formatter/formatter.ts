@@ -1,6 +1,11 @@
-import { emitMicheline, APIData, Expr, FormatOptions, assertMichelsonScript, assertMichelsonData } from "../src";
+import { emitMicheline, Expr, FormatOptions, assertMichelsonScript, assertMichelsonData, Parser } from "../src";
 import fs from "fs";
 import process from "process";
+
+interface APIData {
+    code: Expr;
+    storage: Expr;
+}
 
 let api = false;
 let indent = false;
@@ -39,9 +44,14 @@ const opt: FormatOptions | undefined = indent ? {
 
 const buf = fs.readFileSync(0).toString();
 const json = JSON.parse(buf);
+const parser = new Parser({ expandMacros: true });
 
 if (api) {
-    const script: APIData = json;
+    const script: APIData = {
+        code: parser.parseJSON((<APIData>json).code),
+        storage: parser.parseJSON((<APIData>json).storage),
+    };
+
     if (validate) {
         assertMichelsonScript(script.code);
         assertMichelsonData(script.storage);
@@ -60,7 +70,7 @@ if (api) {
         console.log(emitMicheline(script.storage, opt));
     }
 } else {
-    const script: Expr = json;
+    const script: Expr = parser.parseJSON(json);
     if (validate) {
         assertMichelsonScript(script);
     }

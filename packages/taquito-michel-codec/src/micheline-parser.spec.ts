@@ -1,7 +1,12 @@
-import { parseMichelineScript, parseMichelineExpression } from "./parse";
-import { emitMicheline } from "./emitter";
-import { assertMichelsonScript, assertMichelsonData } from "./validate";
-import { APIData } from "./ast";
+import { Expr } from "./micheline";
+import { assertMichelsonScript, assertMichelsonData } from "./michelson-validator";
+import { emitMicheline } from "./micheline-emitter";
+import { Parser } from "./micheline-parser";
+
+interface APIData {
+    code: Expr;
+    storage: Expr;
+}
 
 const testData: {
     json: string;
@@ -26,12 +31,24 @@ for (const v of testData) {
     v.src = JSON.parse(v.json);
 }
 
-it("parse", () => {
+it("parse micheline", () => {
+    const parser = new Parser();
     for (const v of testData) {
-        const script = parseMichelineScript(v.code);
+        const script = parser.parseScript(v.code);
         expect(script).toEqual(v.src?.code);
 
-        const data = parseMichelineExpression(v.storage);
+        const data = parser.parseMichelineExpression(v.storage);
+        expect(data).toEqual(v.src?.storage);
+    }
+});
+
+it("parse json", () => {
+    const parser = new Parser();
+    for (const v of testData) {
+        const script = parser.parseJSON(v.src?.code || []);
+        expect(script).toEqual(v.src?.code);
+
+        const data = parser.parseJSON(v.src?.storage || []);
         expect(data).toEqual(v.src?.storage);
     }
 });

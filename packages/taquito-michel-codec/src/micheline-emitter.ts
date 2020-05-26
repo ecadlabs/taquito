@@ -1,4 +1,4 @@
-import { Expr, Prim } from "./ast";
+import { Expr, Prim } from "./micheline";
 
 export interface FormatOptions {
     indent?: string;
