@@ -39,7 +39,7 @@ jobs:
       - run: cd integration-tests && npm run test
   deploy-docs:
     docker:
-      - image: circleci/node:lts-buster
+      - image: circleci/node:10-buster
     steps:
       - checkout
       - run: npm install
