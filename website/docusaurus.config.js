@@ -20,7 +20,7 @@ module.exports = {
     description:
       'A TypeScript library suite made available as set of npm packages aiming to make building on top of Tezos easier and more enjoyable.',
   },
-  themes: ['@docusaurus/theme-live-codeblock'],
+  themes: [require.resolve('@docusaurus/theme-live-codeblock')],
   themeConfig: {
     navbar: {
       title: 'Taquito',
