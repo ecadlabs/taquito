@@ -1,12 +1,7 @@
 // Michelson types
 
 import { Prim, Expr, IntLiteral, StringLiteral, BytesLiteral } from "./micheline";
-
-type RequiredProp<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>;
-type OmitProp<T, K extends keyof T> = Omit<T, K>;
-
-export type ReqArgs<T extends Prim> = RequiredProp<T, "args">;
-export type NoArgs<T extends Prim> = OmitProp<T, "args">;
+import { Tuple, NoArgs, ReqArgs } from "./utils";
 
 // Instructions
 
@@ -133,15 +128,9 @@ function assertIntLiteral(ex: Expr, path: PathElem[]): ex is IntLiteral {
    throw new ValidationError(ex, path, "int literal expected");
 }
 
-type Tuple<T, N extends number> = N extends 1 ? [T] :
-   N extends 2 ? [T, T] :
-   N extends 3 ? [T, T, T] :
-   N extends 4 ? [T, T, T, T] :
-   never;
-
 function assertArgs<N extends number>(ex: Prim, n: N, path: PathElem[]):
    ex is N extends 0 ?
-   NoArgs<Prim> :
+   NoArgs<Prim<string>> :
    ReqArgs<Prim<string, Tuple<Expr, N>>> {
    if ((n === 0 && ex.args === undefined) || ex.args?.length === n) {
       return true;

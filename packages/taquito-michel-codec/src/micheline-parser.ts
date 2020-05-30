@@ -30,7 +30,7 @@ export interface ParserOptions {
 export class Parser {
     constructor(private opt?: ParserOptions) { }
 
-    private expandMacros(ex: Prim): Prim | Prim[] {
+    private expand(ex: Prim): Prim | Prim[] {
         return this.opt?.expandMacros ? expandMacros(ex) : ex;
     }
 
@@ -64,7 +64,7 @@ export class Parser {
                 ret.args.push(this.parseExpr(scanner, tok.value));
             }
         }
-        return this.expandMacros(ret);
+        return this.expand(ret);
     }
 
     private parseArgs(scanner: Iterator<Token>, prim: string, expectBracket: boolean): [Prim, boolean] {
@@ -127,7 +127,7 @@ export class Parser {
             } else if (tok.t === Literal.Ident) {
                 // Identifier with arguments
                 const [itm, done] = this.parseArgs(scanner, tok.v, expectBracket);
-                seq.push(this.expandMacros(itm));
+                seq.push(this.expand(itm));
                 if (done) {
                     return seq;
                 }
@@ -158,7 +158,7 @@ export class Parser {
     private parseExpr(scanner: Iterator<Token>, tok: Token): Expr {
         switch (tok.t) {
             case Literal.Ident:
-                return { prim: tok.v };
+                return this.expand({ prim: tok.v });
 
             case Literal.Number:
                 return { int: tok.v };
@@ -242,7 +242,7 @@ export class Parser {
                     }
                 }
 
-                return ret;
+                return this.expand(ret);
             }
 
             throw new JSONParseError(src, `malformed prim expression: ${src}`);
