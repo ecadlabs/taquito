@@ -122,22 +122,7 @@ export function encodeKeyHash(value: string) {
  * @param hex Hex string to convert
  */
 export const hex2buf = (hex: string): Uint8Array => {
-  return new Uint8Array(hex.match(/[\da-f]{2}/gi)!.map(h => parseInt(h, 16)));
-};
-
-/**
- *
- * @description Generate a random hex nonce
- *
- * @param length length of the nonce
- */
-export const hexNonce = (length: number): string => {
-  const chars = '0123456789abcedf';
-  let hex = '';
-  while (length--) {
-    hex += chars[(Math.random() * 16) | 0];
-  }
-  return hex;
+  return new Uint8Array(hex.match(/[\da-f]{2}/gi)!.map((h) => parseInt(h, 16)));
 };
 
 /**
