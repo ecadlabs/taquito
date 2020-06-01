@@ -1,6 +1,6 @@
 {
   "name": "@taquito/http-utils",
-  "version": "6.3.0-wallet.3",
+  "version": "6.3.0-wallet.4",
   "description": "",
   "keywords": [],
   "main": "dist/taquito-http-utils.umd.js",

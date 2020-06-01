@@ -189,10 +189,6 @@
             "sha512": "d42b19310c2661ef754054b0a40ff1e433fca744b1099a135e9a67e128ac910fa8b9f8b86ee38862487b1fb3d8f77581b38d013b5bd8bc3668bbd0399c785541"
           },
           {
-            "path": "dist/taquito.min.js",
-            "sha512": "2c47734ded2aac493b352e0ba6afd5282618d37ab5a8d94f8cb9ea715834710978f81f7e850459f986ae81a6a5d6821e7b4b19bd37d27b73102a5af0ab4bc7a5"
-          },
-          {
             "path": "dist/taquito.umd.js",
             "sha512": "8e50834ff553204f07fe49cd4c6be971caa773e7ffec805ab0d1c2f370f710884bc64dc77cbb5d1ce333d266d02825045fa73149d8290fed8c87f6c72b0243c1"
           },
@@ -607,10 +603,6 @@
           {
             "path": "dist/types/wallet/wallet.d.ts",
             "sha512": "19db47c6a9fdf581097ebfa00e54178aaf99c2267eeecff4db1c572eb08341913958754ee91cf053eff12f17e392c4799bf900823f627fa44b82fa4a24366b4f"
-          },
-          {
-            "path": "dist/taquito.min.js.LICENSE.txt",
-            "sha512": "08236810ef44163f39a0172529ee2c713e8e0f0d93978913728e9100d505427bc2bfee8f77e4ae77a433a7ffcd8eb14898bafe48f9e1106f6b15281c9d72b0ca"
           }
         ]
       }
@@ -648,7 +640,7 @@
           "unpkg",
           "version"
         ],
-        "sha512": "affaedc6637bfbf3ca77ac685f861943ae6f9be8092c7100118554e5821b695ce576564652480d8833b2d84d72888c0d55be8e44dbf66755a4a74b0dc894ca3b"
+        "sha512": "d4b3971fceb8901c210a9dbbba2d757ccfac81bf4f743821190b972fb978532b066a78d2f556e8169de46a9d9a6be5eef07057c54c87a7e36cb7a20cd56acf79"
       }
     },
     {
@@ -656,7 +648,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/taquito",
-          "version": "6.3.0-wallet.3",
+          "version": "6.3.0-wallet.4",
           "description": "High level functionality that builds upon the other packages in the Tezos Typescript Library Suite.",
           "keywords": [
             "tezos",
@@ -732,11 +724,11 @@
             ]
           },
           "dependencies": {
-            "@taquito/http-utils": "^6.3.0-wallet.3",
-            "@taquito/michelson-encoder": "^6.3.0-wallet.3",
-            "@taquito/rpc": "^6.3.0-wallet.3",
-            "@taquito/signer": "^6.3.0-wallet.3",
-            "@taquito/utils": "^6.3.0-wallet.3",
+            "@taquito/http-utils": "^6.3.0-wallet.4",
+            "@taquito/michelson-encoder": "^6.3.0-wallet.4",
+            "@taquito/rpc": "^6.3.0-wallet.4",
+            "@taquito/signer": "^6.3.0-wallet.4",
+            "@taquito/utils": "^6.3.0-wallet.4",
             "bignumber.js": "^9.0.0",
             "rxjs": "^6.5.3"
           },
@@ -777,5 +769,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJeyESzCRAD9Qy5GYHsngAANpgQABGqs7t/H94snB0jQRKmLMac\nhzxnDpMx7XgwRfz5Wnsj8OIW5T0dt+OQM34YAy6P3dcC+B09IPgxdjvA02yZGNO2\nmJKObl2KDOWi7PRfigLRl0BHcS0SRro806uU54ThMPcD8axFs7YapAp12WHwbuxo\nWe5YB0Nl7Y5eLAxw8S162lhHQtQWYM5v1AI5Wa6wSUzH8AYFAbGqWj3fZ+rItF4V\nL7BOlmneGzLYBHDVhznQX9b3x+q9Y1BwZ8iKJuRVi7taFcrez3EC3SZDg4zsOMn0\n5mSEqKCbNGeh/7pnirR2ZMxnJcQc5iwZlvD5YEaXX2FxBdOoRgaB5H9UUmfV2KlG\nP2OkEhXiyw47CUb7egoAxzVWsfjh9yROdK9+TTNzj0uJwxoKnVQkENlqA+E+KsFA\ngjljJNqaP7oLgLE0Lgrx/qfbQ8HMv+FcRYygFVb8m9//qSu82zsSUQCulzlUt5BO\nmb3fnJI+ZYV96MJRlf67Cd/jlal7JGlKfHjMKjuoFcaKScx7+0V/j3xrwgoJDKPD\nIsgDI9jwx6P7L+mHoFA6vbq7tUsp72VzYXh9kziQ94YqBESpD5+x4kw3K2pP+5TX\nKaNVwV7mmlcSSXfFEZzzHE4uwy4nNDy4tmZLM2ESuyKy+aLR3vwV9vZTGbkxFGrM\nXtY9ltgRqRKQAYO1RROE\n=3L4d\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJe1VPSCRAD9Qy5GYHsngAAAhAQAJt5/3LwP2mURFDcCYCGKzhD\nU1+4UtWRTtjBxObo0OoLjKJ9eNfqDj0w5Z5d00xqokiRxXVeuJH96vO5mCSaX/46\nNVRWIXxL10vSsSUxeiZwppqVjfzDS/j5tkkOra7EWNowkwN93qHfc6E7TfsWmX55\neHD21Y0xS/rilPeJby3PFsajEQ1LRX5tNx/9KFYTqGnbT4iEHpRLPr8xH2U+sKG4\nVGvGFCiTbV0zS5Kgiosmq3qx2qHigVJnr75yyDnqBLHX00eTFg3qHHZ+El3JxpPq\nEmcLBTtadU5vZYNcgIaeiXFOUXz9B0/VaDpSADBlk5xUcjMMnXWw+0b3yswTK5VK\nim7njb1ZDBQOTllbLP+ClikcbKIyjUshlwHr4YY9twFLOxi3TdeGThqHLgvkVivN\n4hgIA0GIKgKpoKzTS1PYm5OmDJaqKh8Rl5xOk/D1tcMfsBqpmPGrNbRWzU9ZChqX\n+uuHmqNXIf31GY3qd3a2GMpkxh5wmcW28RdisqS4SoD/F88lVm9IOM5DT7dMV+VG\nA2XoSgfsP1O1z5MtlJXDu6wibPw7JTn48o7kHQVw3BXqoTZqJBAp5tGkt6NrLORL\nptU3LTsoXOeGQA8zheXyZbdeI1cY/DcR79u6GhSnRLMtjhoKQ49Gkw2pHlLsVdoN\nZtQG2OpEfGRMY5Z59tBA\n=j+GX\n-----END PGP SIGNATURE-----\n"
 }

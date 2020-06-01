@@ -1,6 +1,6 @@
 {
   "name": "@taquito/react-components",
-  "version": "6.3.0-wallet.3",
+  "version": "6.3.0-wallet.4",
   "description": "React Components that implement common use cases for data retrieved from the Tezos blockchain",
   "keywords": [
     "tezos",
@@ -43,8 +43,8 @@
     ]
   },
   "dependencies": {
-    "@taquito/rpc": "^6.3.0-wallet.3",
-    "@taquito/taquito": "^6.3.0-wallet.3",
+    "@taquito/rpc": "^6.3.0-wallet.4",
+    "@taquito/taquito": "^6.3.0-wallet.4",
     "@types/react": "^16.8.24",
     "bignumber.js": "^9.0.0",
     "react": "^16.8.6",
