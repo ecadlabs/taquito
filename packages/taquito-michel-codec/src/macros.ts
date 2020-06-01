@@ -50,24 +50,27 @@ function parsePairExpr(p: Prim, expr: string, annotations: string[]): [[number, 
     const ret: [number, string[]][] = [];
     let i = 0;
     let ai = 0;
-    const ann: string[] = [];
+    const ann: string[] = ["", ""];
 
     // Left expression
     if (i === expr.length) {
         throw new MacroError(p, `unexpected end: ${p.prim}`);
     }
     let c = expr[i++];
-    if (c === "P") {
-        const [r, n, an] = parsePairExpr(p, expr.substring(i), annotations.slice(ai));
-        ret.push(...r);
-        i += n;
-        ai += an;
-    } else if (c !== "A") {
-        throw new MacroError(p, `unexpected character: ${c}`);
-    }
-    if (ai !== annotations.length) {
-        // Grab an annotation
-        ann.push(annotations[ai++]);
+    switch (c) {
+        case "P":
+            const [r, n, an] = parsePairExpr(p, expr.substring(i), annotations.slice(ai));
+            ret.push(...r);
+            i += n;
+            ai += an;
+            break;
+        case "A":
+            if (ai !== annotations.length) {
+                ann[0] = annotations[ai++];
+            }
+            break;
+        default:
+            throw new MacroError(p, `unexpected character: ${c}`);
     }
 
     // Right expression
@@ -75,20 +78,26 @@ function parsePairExpr(p: Prim, expr: string, annotations: string[]): [[number, 
         throw new MacroError(p, `unexpected end: ${p.prim}`);
     }
     c = expr[i++];
-    if (c === "P") {
-        const [r, n, an] = parsePairExpr(p, expr.substring(i), annotations.slice(ai));
-        ret.push(...r.map<[number, string[]]>(([v, a]) => [v + 1, a]));
-        i += n;
-        ai += an;
-    } else if (c !== "I") {
-        throw new MacroError(p, `unexpected character: ${c}`);
-    }
-    if (ai !== annotations.length) {
-        // Grab an annotation
-        ann.push(annotations[ai++]);
+    switch (c) {
+        case "P":
+            const [r, n, an] = parsePairExpr(p, expr.substring(i), annotations.slice(ai));
+            ret.push(...r.map<[number, string[]]>(([v, a]) => [v + 1, a]));
+            i += n;
+            ai += an;
+            break;
+        case "I":
+            if (ai !== annotations.length) {
+                ann[1] = annotations[ai++];
+            }
+            break;
+        default:
+            throw new MacroError(p, `unexpected character: ${c}`);
     }
 
-    ret.push([0, ann]);
+    while (ann.length !== 0 && ann[ann.length - 1] === "") {
+        ann.pop();
+    }
+    ret.push([0, ann.map(v => v === "" ? "%" : v)]);
 
     return [ret, i, ai];
 }
@@ -133,7 +142,48 @@ function parsePair(ex: Prim): Prim[] {
         }
     });
 }
+/*
+function parseUnpairExpr(p: Prim, expr: string, annotations: string[]): [[number, string[]][], number, number] {
+    const ret: [number, string[]][] = [];
+    let i = 0;
+    let ai = 0;
 
+    // Left expression
+    if (i === expr.length) {
+        throw new MacroError(p, `unexpected end: ${p.prim}`);
+    }
+    let c = expr[i++];
+    if (c === "P") {
+        const [r, n, an] = parseUnpairExpr(p, expr.substring(i), annotations.slice(ai));
+        ret.push(...r);
+        i += n;
+        ai += an;
+    } else if (c !== "A") {
+        throw new MacroError(p, `unexpected character: ${c}`);
+    }
+
+    // Right expression
+    if (i === expr.length) {
+        throw new MacroError(p, `unexpected end: ${p.prim}`);
+    }
+    c = expr[i++];
+    if (c === "P") {
+        const [r, n, an] = parseUnpairExpr(p, expr.substring(i), annotations.slice(ai));
+        ret.push(...r.map<[number, string[]]>(([v, a]) => [v + 1, a]));
+        i += n;
+        ai += an;
+    } else if (c !== "I") {
+        throw new MacroError(p, `unexpected character: ${c}`);
+    }
+
+    const an = annotations.length - ai > 2 ? 2 : annotations.length - ai;
+    return [
+        [[0, annotations.slice(ai, ai + an)], ...ret], i, ai
+    ];
+}
+*/
+
+const pairRe = /^P[PAI]{3,}R$/;
 
 export function expandMacros(ex: Prim): Prim | Prim[] {
     switch (ex.prim) {
@@ -311,11 +361,18 @@ export function expandMacros(ex: Prim): Prim | Prim[] {
     // More syntactic conveniences
 
     // PAPPAIIR macro
-    if (/^P[PAI]{3,}R$/.test(ex.prim)) {
+    if (pairRe.test(ex.prim)) {
         if (assertArgs(ex, 0)) {
             return parsePair(ex);
         }
     }
+
+    /*
+    // UNPAPPAIIR macro
+    if (/^UNP[PAI]{2,}R$/.test(ex.prim)) {
+
+    }
+    */
 
     return ex;
 }
