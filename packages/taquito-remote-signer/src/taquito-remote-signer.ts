@@ -8,8 +8,16 @@ import {
   mergebuf,
   prefix,
 } from '@taquito/utils';
+import sodium from 'libsodium-wrappers';
+import elliptic from 'elliptic';
 import toBuffer from 'typedarray-to-buffer';
-import { BadSigningDataError, KeyNotFoundError, OperationNotAuthorizedError } from './errors';
+import {
+  BadSigningDataError,
+  KeyNotFoundError,
+  OperationNotAuthorizedError,
+  SignatureVerificationError,
+  PublicKeyMismatchError,
+} from './errors';
 import { Signer } from '@taquito/taquito';
 interface PublicKeyResponse {
   public_key: string;
@@ -18,9 +26,33 @@ interface PublicKeyResponse {
 interface SignResponse {
   signature: string;
 }
+
+type curves = 'ed' | 'p2' | 'sp';
+
 export interface RemoteSignerOptions {
   headers?: { [key: string]: string };
 }
+
+const pref = {
+  ed: {
+    pk: prefix['edpk'],
+    sk: prefix['edsk'],
+    pkh: prefix.tz1,
+    sig: prefix.edsig,
+  },
+  p2: {
+    pk: prefix['p2pk'],
+    sk: prefix['p2sk'],
+    pkh: prefix.tz3,
+    sig: prefix.p2sig,
+  },
+  sp: {
+    pk: prefix['sppk'],
+    sk: prefix['spsk'],
+    pkh: prefix.tz2,
+    sig: prefix.spsig,
+  },
+};
 
 export class RemoteSigner implements Signer {
   constructor(
@@ -67,13 +99,14 @@ export class RemoteSigner implements Signer {
       if (typeof watermark !== 'undefined') {
         bb = mergebuf(watermark, bb);
       }
+      const watermarkedBytes = buf2hex(toBuffer(bb));
       const { signature } = await this.http.createRequest<SignResponse>(
         {
           url: this.createURL(`/keys/${this.pkh}`),
           method: 'POST',
           headers: this.options.headers,
         },
-        buf2hex(toBuffer(bb))
+        watermarkedBytes
       );
       let pref = signature.startsWith('sig') ? signature.substr(0, 3) : signature.substr(0, 5);
 
@@ -82,6 +115,14 @@ export class RemoteSigner implements Signer {
       }
 
       const decoded = b58cdecode(signature, prefix[pref]);
+
+      const signatureVerified = await this.verify(watermarkedBytes, signature);
+      if (!signatureVerified) {
+        throw new SignatureVerificationError('Signature failed verification against public key', {
+          bytes: watermarkedBytes,
+          signature,
+        });
+      }
 
       return {
         bytes,
@@ -104,5 +145,82 @@ export class RemoteSigner implements Signer {
       }
       throw ex;
     }
+  }
+
+  async verify(bytes: string, signature: string): Promise<boolean> {
+    await sodium.ready;
+    const publicKey = await this.publicKey();
+    const curve = publicKey.substring(0, 2) as curves;
+    const _publicKey = toBuffer(b58cdecode(publicKey, pref[curve].pk));
+
+    let signaturePrefix = signature.startsWith('sig')
+      ? signature.substr(0, 3)
+      : signature.substr(0, 5);
+
+    if (!isValidPrefix(signaturePrefix)) {
+      throw new Error('Unsupported signature given by remote signer: ' + signature);
+    }
+
+    const publicKeyHash = b58cencode(sodium.crypto_generichash(20, _publicKey), pref[curve].pkh);
+    if (publicKeyHash !== this.pkh) {
+      throw new PublicKeyMismatchError(
+        'Requested public key does not match the initialized public key hash',
+        {
+          publicKey: publicKey,
+          publicKeyHash: this.pkh,
+        }
+      );
+    }
+
+    let sig;
+    if (signature.substring(0, 3) === 'sig') {
+      sig = b58cdecode(signature, prefix.sig);
+    } else if (signature.substring(0, 5) === `${curve}sig`) {
+      sig = b58cdecode(signature, pref[curve].sig);
+    } else {
+      throw new Error(`Invalid signature provided: ${signature}`);
+    }
+
+    const bytesHash = sodium.crypto_generichash(32, hex2buf(bytes));
+
+    if (curve === 'ed') {
+      try {
+        return sodium.crypto_sign_verify_detached(sig, bytesHash, _publicKey);
+      } catch (e) {
+        return false;
+      }
+    }
+
+    if (curve === 'sp') {
+      const key = new elliptic.ec('secp256k1').keyFromPublic(_publicKey);
+      const hexSig = buf2hex(toBuffer(sig));
+      const match = hexSig.match(/([a-f\d]{64})/gi);
+      if (match) {
+        try {
+          const [r, s] = match;
+          return key.verify(bytesHash, { r, s });
+        } catch (e) {
+          return false;
+        }
+      }
+      return false;
+    }
+
+    if (curve === 'p2') {
+      const key = new elliptic.ec('p256').keyFromPublic(_publicKey);
+      const hexSig = buf2hex(toBuffer(sig));
+      const match = hexSig.match(/([a-f\d]{64})/gi);
+      if (match) {
+        try {
+          const [r, s] = match;
+          return key.verify(bytesHash, { r, s });
+        } catch (e) {
+          return false;
+        }
+      }
+      return false;
+    }
+
+    throw new Error(`Curve '${curve}' not supported`);
   }
 }
