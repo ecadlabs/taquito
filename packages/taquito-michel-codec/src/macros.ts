@@ -31,26 +31,17 @@ function assertIntArg(ex: Prim, arg: Expr): arg is IntLiteral {
     throw new MacroError(ex, `macro ${ex.prim} expects int argument`);
 }
 
-function mkPrim({ prim, annots, args }: { prim: string; annots?: string[]; args?: Expr[]; }): Prim {
-    const ret: Prim = { prim };
-    if (annots !== undefined) {
-        ret.annots = annots;
-    }
-    if (args !== undefined) {
-        ret.args = args;
-    }
-    return ret;
-}
-
 function mayRename(annots?: string[]): Prim[] {
     return annots !== undefined ? [{ prim: "RENAME", annots }] : [];
 }
 
-function parsePairExpr(p: Prim, expr: string, annotations: string[]): [[number, string[]][], number, number] {
-    const ret: [number, string[]][] = [];
+type PT = [number, [string | null, string | null]];
+
+function parsePairUnpairExpr(p: Prim, expr: string, annotations: string[], agg: (a: PT[], v: PT) => PT[]): { r: PT[], n: number, an: number } {
+    const res: PT[] = [];
     let i = 0;
     let ai = 0;
-    const ann: string[] = ["", ""];
+    const ann: [string | null, string | null] = [null, null];
 
     // Left expression
     if (i === expr.length) {
@@ -59,8 +50,8 @@ function parsePairExpr(p: Prim, expr: string, annotations: string[]): [[number, 
     let c = expr[i++];
     switch (c) {
         case "P":
-            const [r, n, an] = parsePairExpr(p, expr.substring(i), annotations.slice(ai));
-            ret.push(...r);
+            const { r, n, an } = parsePairUnpairExpr(p, expr.substring(i), annotations.slice(ai), agg);
+            res.push(...r);
             i += n;
             ai += an;
             break;
@@ -80,8 +71,8 @@ function parsePairExpr(p: Prim, expr: string, annotations: string[]): [[number, 
     c = expr[i++];
     switch (c) {
         case "P":
-            const [r, n, an] = parsePairExpr(p, expr.substring(i), annotations.slice(ai));
-            ret.push(...r.map<[number, string[]]>(([v, a]) => [v + 1, a]));
+            const { r, n, an } = parsePairUnpairExpr(p, expr.substring(i), annotations.slice(ai), agg);
+            res.push(...r.map<PT>(([v, a]) => [v + 1, a]));
             i += n;
             ai += an;
             break;
@@ -94,98 +85,46 @@ function parsePairExpr(p: Prim, expr: string, annotations: string[]): [[number, 
             throw new MacroError(p, `unexpected character: ${c}`);
     }
 
-    while (ann.length !== 0 && ann[ann.length - 1] === "") {
-        ann.pop();
-    }
-    ret.push([0, ann.map(v => v === "" ? "%" : v)]);
-
-    return [ret, i, ai];
+    return { r: agg(res, [0, ann]), n: i, an: ai };
 }
 
-/**
- * PAPPAIIR macro
- * Tezos client uses DIP N {code}. It expands nested blocks then collapses nested DIPs:
- * `DIP { DIP { DIP { PAIR } ; PAIR } ; PAIR } ; PAIR` ->
- * `DIP { DIP { DIP { PAIR }}} ; DIP { DIP { PAIR }} ; DIP { PAIR } ; PAIR` ->
- * `DIP 3 { PAIR } ; DIP 2 { PAIR } ; DIP { PAIR } ; PAIR`
- */
+function trimLast<T>(a: T[], v: T): T[] {
+    let l = a.length;
+    while (l > 0 && a[l - 1] === v) {
+        l--;
+    }
+    return a.slice(0, l);
+}
 
-function parsePair(ex: Prim): Prim[] {
-    const fieldAnnotations: string[] = [];
-    const restAnnotations: string[] = [];
-    if (ex.annots !== undefined) {
-        for (const v of ex.annots) {
-            (v.length !== 0 && v[0] === "%" ? fieldAnnotations : restAnnotations).push(v);
+function filterAnnotations(a?: string[]): {
+    fields: string[];
+    rest: string[];
+} {
+    const fields: string[] = [];
+    const rest: string[] = [];
+    if (a !== undefined) {
+        for (const v of a) {
+            (v.length !== 0 && v[0] === "%" ? fields : rest).push(v);
         }
     }
-
-    const [r] = parsePairExpr(ex, ex.prim.substring(1), fieldAnnotations);
-    return r.map(([v, a], i) => {
-        if (v === 0) {
-            const ann = i === r.length - 1 ? [...a, ...restAnnotations] : a;
-            return mkPrim({
-                prim: "PAIR",
-                annots: ann.length !== 0 ? ann : undefined,
-            });
-        } else {
-            return {
-                prim: "DIP",
-                args: v === 1 ?
-                    [
-                        [mkPrim({ prim: "PAIR", annots: a.length !== 0 ? a : undefined })]
-                    ] :
-                    [
-                        { int: String(v) },
-                        [mkPrim({ prim: "PAIR", annots: a.length !== 0 ? a : undefined })]
-                    ],
-            };
-        }
-    });
+    return { fields, rest };
 }
-/*
-function parseUnpairExpr(p: Prim, expr: string, annotations: string[]): [[number, string[]][], number, number] {
-    const ret: [number, string[]][] = [];
-    let i = 0;
-    let ai = 0;
-
-    // Left expression
-    if (i === expr.length) {
-        throw new MacroError(p, `unexpected end: ${p.prim}`);
-    }
-    let c = expr[i++];
-    if (c === "P") {
-        const [r, n, an] = parseUnpairExpr(p, expr.substring(i), annotations.slice(ai));
-        ret.push(...r);
-        i += n;
-        ai += an;
-    } else if (c !== "A") {
-        throw new MacroError(p, `unexpected character: ${c}`);
-    }
-
-    // Right expression
-    if (i === expr.length) {
-        throw new MacroError(p, `unexpected end: ${p.prim}`);
-    }
-    c = expr[i++];
-    if (c === "P") {
-        const [r, n, an] = parseUnpairExpr(p, expr.substring(i), annotations.slice(ai));
-        ret.push(...r.map<[number, string[]]>(([v, a]) => [v + 1, a]));
-        i += n;
-        ai += an;
-    } else if (c !== "I") {
-        throw new MacroError(p, `unexpected character: ${c}`);
-    }
-
-    const an = annotations.length - ai > 2 ? 2 : annotations.length - ai;
-    return [
-        [[0, annotations.slice(ai, ai + an)], ...ret], i, ai
-    ];
-}
-*/
 
 const pairRe = /^P[PAI]{3,}R$/;
+const unpairRe = /^UNP[PAI]{2,}R$/;
 
-export function expandMacros(ex: Prim): Prim | Prim[] {
+// Unspecified code expression
+type CExpr = Prim | CExpr[];
+
+export function expandMacros(ex: Prim): CExpr {
+    function mkPrim({ prim, annots, args }: Prim): Prim {
+        return {
+            prim,
+            ...(annots && { annots }),
+            ...(args && { args }),
+        };
+    }
+
     switch (ex.prim) {
         // Compare
         case "CMPEQ":
@@ -363,16 +302,46 @@ export function expandMacros(ex: Prim): Prim | Prim[] {
     // PAPPAIIR macro
     if (pairRe.test(ex.prim)) {
         if (assertArgs(ex, 0)) {
-            return parsePair(ex);
+            const { fields, rest } = filterAnnotations(ex.annots);
+            const { r } = parsePairUnpairExpr(ex, ex.prim.substring(1), fields, (a, v) => [...a, v]);
+
+            return r.map(([v, a], i) => {
+                const ann = [
+                    ...trimLast(a, null).map(v => v === null ? "%" : v),
+                    ...((v === 0 && i === r.length - 1) ? rest : [])];
+
+                const leaf = mkPrim({ prim: "PAIR", annots: ann.length !== 0 ? ann : undefined, });
+
+                return v === 0 ? leaf : {
+                    prim: "DIP",
+                    args: v === 1 ? [[leaf]] : [{ int: String(v) }, [leaf]],
+                };
+            });
         }
     }
 
-    /*
     // UNPAPPAIIR macro
-    if (/^UNP[PAI]{2,}R$/.test(ex.prim)) {
+    if (unpairRe.test(ex.prim)) {
+        if (assertArgs(ex, 0)) {
+            const { r } = parsePairUnpairExpr(ex, ex.prim.substring(3), ex.annots || [], (a, v) => [v, ...a]);
 
+            return r.map(([v, a]) => {
+                const leaf: Prim[] = [
+                    { prim: "DUP" },
+                    mkPrim({ prim: "CAR", annots: a[0] !== null ? [a[0]] : undefined }),
+                    {
+                        prim: "DIP",
+                        args: [[mkPrim({ prim: "CDR", annots: a[1] !== null ? [a[1]] : undefined })]],
+                    }
+                ];
+
+                return v === 0 ? leaf : {
+                    prim: "DIP",
+                    args: v === 1 ? [[leaf]] : [{ int: String(v) }, [leaf]],
+                };
+            });
+        }
     }
-    */
 
     return ex;
 }
