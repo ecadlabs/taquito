@@ -12,7 +12,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     })
     it('Originage token contract with big map and with initialize storage/bigmaps', async (done) => {
       const addr = await Tezos.signer.publicKeyHash();
-
       const initialStorage = {
         owner: addr,
         accounts: MichelsonMap.fromLiteral({
@@ -61,7 +60,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
       const contract = await op.contract()
       const storage: any = await contract.storage()
-      expect((await storage.accounts.get(addr)).allowances.get(addr).toString()).toEqual(initialStorage.accounts.get(addr).allowances.get(addr))
+      const got = (await storage.accounts.get(addr) ).allowances.get(addr).toString()
+      const want = (initialStorage.accounts.get(addr) as {balance: string, allowances: MichelsonMap<string, string> }).allowances.get(addr)
+      expect(got).toEqual(want)
       done();
     });
   });
