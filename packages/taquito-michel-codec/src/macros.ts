@@ -112,6 +112,7 @@ function filterAnnotations(a?: string[]): {
 
 const pairRe = /^P[PAI]{3,}R$/;
 const unpairRe = /^UNP[PAI]{2,}R$/;
+const cadrRe = /^C[AD]{2,}R$/;
 
 // Unspecified code expression
 type CExpr = Prim | CExpr[];
@@ -339,6 +340,25 @@ export function expandMacros(ex: Prim): CExpr {
                     prim: "DIP",
                     args: v === 1 ? [[leaf]] : [{ int: String(v) }, [leaf]],
                 };
+            });
+        }
+    }
+
+    // C[AD]+R macro
+    if (cadrRe.test(ex.prim)) {
+        if (assertArgs(ex, 0)) {
+            const ch = [...ex.prim.substring(1, ex.prim.length - 1)];
+
+            return ch.map<Prim>((c, i) => {
+                const ann = i === ch.length - 1 ? ex.annots : undefined;
+                switch (c) {
+                    case "A":
+                        return mkPrim({ prim: "CAR", annots: ann });
+                    case "D":
+                        return mkPrim({ prim: "CDR", annots: ann });
+                    default:
+                        throw new MacroError(ex, `unexpected character: ${c}`);
+                }
             });
         }
     }
