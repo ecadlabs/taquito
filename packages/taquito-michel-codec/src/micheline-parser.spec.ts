@@ -31,41 +31,43 @@ for (const v of testData) {
     v.src = JSON.parse(v.json);
 }
 
-it("parse micheline", () => {
-    const parser = new Parser();
-    for (const v of testData) {
-        const script = parser.parseScript(v.code);
-        expect(script).toEqual(v.src?.code);
+describe("Parser", () => {
+    it("parse micheline", () => {
+        const parser = new Parser();
+        for (const v of testData) {
+            const script = parser.parseScript(v.code);
+            expect(script).toEqual(v.src?.code);
 
-        const data = parser.parseMichelineExpression(v.storage);
-        expect(data).toEqual(v.src?.storage);
-    }
-});
+            const data = parser.parseMichelineExpression(v.storage);
+            expect(data).toEqual(v.src?.storage);
+        }
+    });
 
-it("parse json", () => {
-    const parser = new Parser();
-    for (const v of testData) {
-        const script = parser.parseJSON(v.src?.code || []);
-        expect(script).toEqual(v.src?.code);
+    it("parse json", () => {
+        const parser = new Parser();
+        for (const v of testData) {
+            const script = parser.parseJSON(v.src?.code || []);
+            expect(script).toEqual(v.src?.code);
 
-        const data = parser.parseJSON(v.src?.storage || []);
-        expect(data).toEqual(v.src?.storage);
-    }
-});
+            const data = parser.parseJSON(v.src?.storage || []);
+            expect(data).toEqual(v.src?.storage);
+        }
+    });
 
-it("format", () => {
-    for (const v of testData) {
-        let text = emitMicheline(v.src?.code || []);
-        expect(text).toBe(v.code);
+    it("format", () => {
+        for (const v of testData) {
+            let text = emitMicheline(v.src?.code || []);
+            expect(text).toBe(v.code);
 
-        text = emitMicheline(v.src?.storage || []);
-        expect(text).toBe(v.storage);
-    }
-});
+            text = emitMicheline(v.src?.storage || []);
+            expect(text).toBe(v.storage);
+        }
+    });
 
-it("validate", () => {
-    for (const v of testData) {
-        assertMichelsonScript(v.src?.code || []);
-        assertMichelsonData(v.src?.storage || []);
-    }
+    it("validate", () => {
+        for (const v of testData) {
+            assertMichelsonScript(v.src?.code || []);
+            assertMichelsonData(v.src?.storage || []);
+        }
+    });
 });

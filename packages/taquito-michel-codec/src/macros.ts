@@ -221,7 +221,7 @@ export function expandMacros(ex: Prim): Expr {
                 return [{
                     prim: "IF", args: [
                         [],
-                        [expandMacros({ prim: "FAIL" })],
+                        [[{ prim: "UNIT" }, { prim: "FAILWITH" }]],
                     ]
                 }];
             }
@@ -232,6 +232,18 @@ export function expandMacros(ex: Prim): Expr {
         case "ASSERT_GT":
         case "ASSERT_LE":
         case "ASSERT_GE":
+            if (assertArgs(ex, 0) && assertNoAnnots(ex)) {
+                return [
+                    { prim: ex.prim.slice(7) },
+                    {
+                        prim: "IF", args: [
+                            [],
+                            [[{ prim: "UNIT" }, { prim: "FAILWITH" }]],
+                        ]
+                    },
+                ];
+            }
+
         case "ASSERT_CMPEQ":
         case "ASSERT_CMPNEQ":
         case "ASSERT_CMPLT":
@@ -239,12 +251,18 @@ export function expandMacros(ex: Prim): Expr {
         case "ASSERT_CMPLE":
         case "ASSERT_CMPGE":
             if (assertArgs(ex, 0) && assertNoAnnots(ex)) {
-                return expandMacros({
-                    prim: "IF" + ex.prim.slice(7), args: [
-                        [],
-                        [expandMacros({ prim: "FAIL" })],
-                    ]
-                });
+                return [
+                    [
+                        { prim: "COMPARE" },
+                        { prim: ex.prim.slice(10) },
+                    ],
+                    {
+                        prim: "IF", args: [
+                            [],
+                            [[{ prim: "UNIT" }, { prim: "FAILWITH" }]],
+                        ]
+                    },
+                ];
             }
 
         case "ASSERT_NONE":
@@ -252,7 +270,7 @@ export function expandMacros(ex: Prim): Expr {
                 return [{
                     prim: "IF_NONE", args: [
                         [],
-                        [expandMacros({ prim: "FAIL" })],
+                        [[{ prim: "UNIT" }, { prim: "FAILWITH" }]],
                     ]
                 }];
             }
@@ -261,7 +279,7 @@ export function expandMacros(ex: Prim): Expr {
             if (assertArgs(ex, 0)) {
                 return [{
                     prim: "IF_NONE", args: [
-                        [expandMacros({ prim: "FAIL" })],
+                        [[{ prim: "UNIT" }, { prim: "FAILWITH" }]],
                         mayRename(ex.annots),
                     ]
                 }];
@@ -272,7 +290,7 @@ export function expandMacros(ex: Prim): Expr {
                 return [{
                     prim: "IF_LEFT", args: [
                         mayRename(ex.annots),
-                        [expandMacros({ prim: "FAIL" })],
+                        [[{ prim: "UNIT" }, { prim: "FAILWITH" }]],
                     ]
                 }];
             }
@@ -281,7 +299,7 @@ export function expandMacros(ex: Prim): Expr {
             if (assertArgs(ex, 0)) {
                 return [{
                     prim: "IF_LEFT", args: [
-                        [expandMacros({ prim: "FAIL" })],
+                        [[{ prim: "UNIT" }, { prim: "FAILWITH" }]],
                         mayRename(ex.annots),
                     ]
                 }];
@@ -458,7 +476,7 @@ export function expandMacros(ex: Prim): Expr {
                     {
                         prim: "DIP", args: [[
                             mkPrim({ prim: "CAR", annots: fields.length !== 0 ? ["@" + fields[0].slice(1)] : undefined }),
-                            [ex.args],
+                            ex.args[0],
                         ]]
                     },
                     { prim: "SWAP" },
@@ -467,7 +485,7 @@ export function expandMacros(ex: Prim): Expr {
                 d: [
                     { prim: "DUP" },
                     mkPrim({ prim: "CDR", annots: fields.length !== 0 ? ["@" + fields[0].slice(1)] : undefined }),
-                    [ex.args],
+                    ex.args[0],
                     { prim: "SWAP" },
                     { prim: "CAR", annots: ["@%%"] },
                     { prim: "PAIR", annots: ["%@", fields.length !== 0 ? fields[0] : "%"] },

@@ -30,11 +30,11 @@ export interface ParserOptions {
 export class Parser {
     constructor(private opt?: ParserOptions) { }
 
-    private expand(ex: Prim): Prim | Prim[] {
+    private expand(ex: Prim): Expr {
         return this.opt?.expandMacros ? expandMacros(ex) : ex;
     }
 
-    private parseList(scanner: Iterator<Token>): Prim | Prim[] {
+    private parseList(scanner: Iterator<Token>): Expr {
         const tok = scanner.next();
         if (tok.done) {
             throw errEOF;
