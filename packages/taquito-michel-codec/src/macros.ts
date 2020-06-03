@@ -21,7 +21,7 @@ function assertNoAnnots(ex: Prim): ex is NoAnnots<Prim> {
     if (ex.annots === undefined) {
         return true;
     }
-    throw new MacroError(ex, `unexpected annotation for macro ${ex.prim}`);
+    throw new MacroError(ex, `unexpected annotation on macro ${ex.prim}: ${ex.annots}`);
 }
 
 function assertIntArg(ex: Prim, arg: Expr): arg is IntLiteral {
@@ -29,10 +29,6 @@ function assertIntArg(ex: Prim, arg: Expr): arg is IntLiteral {
         return true;
     }
     throw new MacroError(ex, `macro ${ex.prim} expects int argument`);
-}
-
-function mayRename(annots?: string[]): Prim[] {
-    return annots !== undefined ? [{ prim: "RENAME", annots }] : [];
 }
 
 type PT = [number, [string | null, string | null]];
@@ -50,7 +46,7 @@ function parsePairUnpairExpr(p: Prim, expr: string, annotations: string[], agg: 
     let c = expr[i++];
     switch (c) {
         case "P":
-            const { r, n, an } = parsePairUnpairExpr(p, expr.substring(i), annotations.slice(ai), agg);
+            const { r, n, an } = parsePairUnpairExpr(p, expr.slice(i), annotations.slice(ai), agg);
             res.push(...r);
             i += n;
             ai += an;
@@ -61,7 +57,7 @@ function parsePairUnpairExpr(p: Prim, expr: string, annotations: string[], agg: 
             }
             break;
         default:
-            throw new MacroError(p, `unexpected character: ${c}`);
+            throw new MacroError(p, `${p.prim}: unexpected character: ${c}`);
     }
 
     // Right expression
@@ -71,7 +67,7 @@ function parsePairUnpairExpr(p: Prim, expr: string, annotations: string[], agg: 
     c = expr[i++];
     switch (c) {
         case "P":
-            const { r, n, an } = parsePairUnpairExpr(p, expr.substring(i), annotations.slice(ai), agg);
+            const { r, n, an } = parsePairUnpairExpr(p, expr.slice(i), annotations.slice(ai), agg);
             res.push(...r.map<PT>(([v, a]) => [v + 1, a]));
             i += n;
             ai += an;
@@ -82,10 +78,49 @@ function parsePairUnpairExpr(p: Prim, expr: string, annotations: string[], agg: 
             }
             break;
         default:
-            throw new MacroError(p, `unexpected character: ${c}`);
+            throw new MacroError(p, `${p.prim}: unexpected character: ${c}`);
     }
 
     return { r: agg(res, [0, ann]), n: i, an: ai };
+}
+
+function parseSetMapCadr(p: Prim, expr: string, vann: string[], term: { a: Expr, d: Expr }): Expr {
+    const c = expr[0];
+    switch (c) {
+        case "A":
+            return expr.length > 1 ?
+                [
+                    { prim: "DUP" },
+                    {
+                        prim: "DIP",
+                        args: [[
+                            { prim: "CAR", annots: ["@%%"] },
+                            parseSetMapCadr(p, expr.slice(1), [], term),
+                        ]],
+                    },
+                    { prim: "CDR", annots: ["@%%"] },
+                    { prim: "SWAP" },
+                    { prim: "PAIR", annots: ["%@", "%@", ...vann] },
+                ] : term.a;
+
+        case "D":
+            return expr.length > 1 ?
+                [
+                    { prim: "DUP" },
+                    {
+                        prim: "DIP",
+                        args: [[
+                            { prim: "CDR", annots: ["@%%"] },
+                            parseSetMapCadr(p, expr.slice(1), [], term),
+                        ]],
+                    },
+                    { prim: "CAR", annots: ["@%%"] },
+                    { prim: "PAIR", annots: ["%@", "%@", ...vann] },
+                ] : term.d;
+
+        default:
+            throw new MacroError(p, `${p.prim}: unexpected character: ${c}`);
+    }
 }
 
 function trimLast<T>(a: T[], v: T): T[] {
@@ -110,20 +145,23 @@ function filterAnnotations(a?: string[]): {
     return { fields, rest };
 }
 
+function mkPrim({ prim, annots, args }: Prim): Prim {
+    return {
+        prim,
+        ...(annots && { annots }),
+        ...(args && { args }),
+    };
+}
+
 const pairRe = /^P[PAI]{3,}R$/;
 const unpairRe = /^UNP[PAI]{2,}R$/;
 const cadrRe = /^C[AD]{2,}R$/;
+const setCadrRe = /^SET_C[AD]+R$/;
+const mapCadrRe = /^MAP_C[AD]+R$/;
 
-// Unspecified code expression
-type CExpr = Prim | CExpr[];
-
-export function expandMacros(ex: Prim): CExpr {
-    function mkPrim({ prim, annots, args }: Prim): Prim {
-        return {
-            prim,
-            ...(annots && { annots }),
-            ...(args && { args }),
-        };
+export function expandMacros(ex: Prim): Expr {
+    function mayRename(annots?: string[]): Prim[] {
+        return annots !== undefined ? [{ prim: "RENAME", annots }] : [];
     }
 
     switch (ex.prim) {
@@ -137,7 +175,7 @@ export function expandMacros(ex: Prim): CExpr {
             if (assertArgs(ex, 0)) {
                 return [
                     { prim: "COMPARE" },
-                    mkPrim({ prim: ex.prim.substring(3), annots: ex.annots }),
+                    mkPrim({ prim: ex.prim.slice(3), annots: ex.annots }),
                 ];
             }
 
@@ -149,7 +187,7 @@ export function expandMacros(ex: Prim): CExpr {
         case "IFGE":
             if (assertArgs(ex, 2)) {
                 return [
-                    { prim: ex.prim.substring(2) },
+                    { prim: ex.prim.slice(2) },
                     mkPrim({ prim: "IF", annots: ex.annots, args: ex.args }),
                 ];
             }
@@ -163,7 +201,7 @@ export function expandMacros(ex: Prim): CExpr {
             if (assertArgs(ex, 2)) {
                 return [
                     { prim: "COMPARE" },
-                    { prim: ex.prim.substring(5) },
+                    { prim: ex.prim.slice(5) },
                     mkPrim({ prim: "IF", annots: ex.annots, args: ex.args }),
                 ];
             }
@@ -202,7 +240,7 @@ export function expandMacros(ex: Prim): CExpr {
         case "ASSERT_CMPGE":
             if (assertArgs(ex, 0) && assertNoAnnots(ex)) {
                 return expandMacros({
-                    prim: "IF" + ex.prim.substring(7), args: [
+                    prim: "IF" + ex.prim.slice(7), args: [
                         [],
                         [expandMacros({ prim: "FAIL" })],
                     ]
@@ -265,7 +303,7 @@ export function expandMacros(ex: Prim): CExpr {
                     return [
                         {
                             prim: "DIP",
-                            args: [mkPrim({ prim: "DUP", annots: ex.annots })],
+                            args: [[mkPrim({ prim: "DUP", annots: ex.annots })]],
                         },
                         { prim: "SWAP" },
                     ];
@@ -276,7 +314,7 @@ export function expandMacros(ex: Prim): CExpr {
                             prim: "DIP",
                             args: [
                                 { int: String(n - 1) },
-                                mkPrim({ prim: "DUP", annots: ex.annots }),
+                                [mkPrim({ prim: "DUP", annots: ex.annots })],
                             ],
                         },
                         {
@@ -304,7 +342,7 @@ export function expandMacros(ex: Prim): CExpr {
     if (pairRe.test(ex.prim)) {
         if (assertArgs(ex, 0)) {
             const { fields, rest } = filterAnnotations(ex.annots);
-            const { r } = parsePairUnpairExpr(ex, ex.prim.substring(1), fields, (a, v) => [...a, v]);
+            const { r } = parsePairUnpairExpr(ex, ex.prim.slice(1), fields, (a, v) => [...a, v]);
 
             return r.map(([v, a], i) => {
                 const ann = [
@@ -324,7 +362,7 @@ export function expandMacros(ex: Prim): CExpr {
     // UNPAPPAIIR macro
     if (unpairRe.test(ex.prim)) {
         if (assertArgs(ex, 0)) {
-            const { r } = parsePairUnpairExpr(ex, ex.prim.substring(3), ex.annots || [], (a, v) => [v, ...a]);
+            const { r } = parsePairUnpairExpr(ex, ex.prim.slice(3), ex.annots || [], (a, v) => [v, ...a]);
 
             return r.map(([v, a]) => {
                 const leaf: Prim[] = [
@@ -347,7 +385,7 @@ export function expandMacros(ex: Prim): CExpr {
     // C[AD]+R macro
     if (cadrRe.test(ex.prim)) {
         if (assertArgs(ex, 0)) {
-            const ch = [...ex.prim.substring(1, ex.prim.length - 1)];
+            const ch = [...ex.prim.slice(1, ex.prim.length - 1)];
 
             return ch.map<Prim>((c, i) => {
                 const ann = i === ch.length - 1 ? ex.annots : undefined;
@@ -360,6 +398,83 @@ export function expandMacros(ex: Prim): CExpr {
                         throw new MacroError(ex, `unexpected character: ${c}`);
                 }
             });
+        }
+    }
+
+    // SET_C[AD]+R macro
+    if (setCadrRe.test(ex.prim)) {
+        if (assertArgs(ex, 0)) {
+            const { fields, rest } = filterAnnotations(ex.annots);
+            if (fields.length > 1) {
+                throw new MacroError(ex, `unexpected annotation on macro ${ex.prim}: ${fields}`);
+            }
+
+            const term = fields.length !== 0 ?
+                {
+                    a: [
+                        { prim: "DUP" },
+                        { prim: "CAR", annots: fields },
+                        { prim: "DROP" },
+                        { prim: "CDR", annots: ["@%%"] },
+                        { prim: "SWAP" },
+                        { prim: "PAIR", annots: [fields[0], "%@"] },
+                    ],
+                    d: [
+                        { prim: "DUP" },
+                        { prim: "CDR", annots: fields },
+                        { prim: "DROP" },
+                        { prim: "CAR", annots: ["@%%"] },
+                        { prim: "PAIR", annots: ["%@", fields[0]] },
+                    ],
+                } :
+                {
+                    a: [
+                        { prim: "CDR", annots: ["@%%"] },
+                        { prim: "SWAP" },
+                        { prim: "PAIR", annots: ["%", "%@"] },
+                    ],
+                    d: [
+                        { prim: "CAR", annots: ["@%%"] },
+                        { prim: "PAIR", annots: ["%@", "%"] },
+                    ],
+                };
+
+            return parseSetMapCadr(ex, ex.prim.slice(5, ex.prim.length - 1), rest, term);
+        }
+    }
+
+    // MAP_C[AD]+R macro
+    if (mapCadrRe.test(ex.prim)) {
+        if (assertArgs(ex, 1)) {
+            const { fields } = filterAnnotations(ex.annots);
+            if (fields.length > 1) {
+                throw new MacroError(ex, `unexpected annotation on macro ${ex.prim}: ${fields}`);
+            }
+
+            const term = {
+                a: [
+                    { prim: "DUP" },
+                    { prim: "CDR", annots: ["@%%"] },
+                    {
+                        prim: "DIP", args: [[
+                            mkPrim({ prim: "CAR", annots: fields.length !== 0 ? ["@" + fields[0].slice(1)] : undefined }),
+                            [ex.args],
+                        ]]
+                    },
+                    { prim: "SWAP" },
+                    { prim: "PAIR", annots: [fields.length !== 0 ? fields[0] : "%", "%@"] },
+                ],
+                d: [
+                    { prim: "DUP" },
+                    mkPrim({ prim: "CDR", annots: fields.length !== 0 ? ["@" + fields[0].slice(1)] : undefined }),
+                    [ex.args],
+                    { prim: "SWAP" },
+                    { prim: "CAR", annots: ["@%%"] },
+                    { prim: "PAIR", annots: ["%@", fields.length !== 0 ? fields[0] : "%"] },
+                ],
+            };
+
+            return parseSetMapCadr(ex, ex.prim.slice(5, ex.prim.length - 1), [], term);
         }
     }
 
