@@ -1,4 +1,4 @@
-import { Parser } from "./micheline-parser";
+import { Parser } from "../src";
 
 describe("Macros", () => {
     it("CMPEQ", () => {

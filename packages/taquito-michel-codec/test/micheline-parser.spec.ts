@@ -1,7 +1,10 @@
-import { Expr } from "./micheline";
-import { assertMichelsonScript, assertMichelsonData } from "./michelson-validator";
-import { emitMicheline } from "./micheline-emitter";
-import { Parser } from "./micheline-parser";
+import {
+    Expr,
+    Parser,
+    assertMichelsonScript,
+    assertMichelsonData,
+    emitMicheline
+} from "../src";
 
 interface APIData {
     code: Expr;
