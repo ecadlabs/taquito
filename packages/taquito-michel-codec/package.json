@@ -1,15 +1,15 @@
 {
   "name": "@taquito/michel-codec",
   "version": "6.2.0-beta.1",
-  "description": "Michelson parser/formatter",
+  "description": "Michelson parser/validator/formatter",
   "keywords": [
     "tezos",
     "blockchain",
     "signer"
   ],
-  "types": "./dist/types/index.d.ts",
   "main": "./dist/taquito-michel-codec.umd.js",
   "module": "./dist/taquito-michel-codec.es5.js",
+  "typings": "./dist/types/taquito-michel-codec.d.ts",
   "files": [
     "dist",
     "signature.json"

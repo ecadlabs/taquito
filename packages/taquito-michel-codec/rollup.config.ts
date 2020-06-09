@@ -8,7 +8,7 @@ const pkg = require('./package.json');
 const libraryName = 'taquito-michel-codec';
 
 export default {
-  input: `src/index.ts`,
+  input: `src/taquito-michel-codec.ts`,
   output: [
     { file: pkg.main, name: camelCase(libraryName), format: 'umd', sourcemap: true },
     { file: pkg.module, format: 'es', sourcemap: true },
