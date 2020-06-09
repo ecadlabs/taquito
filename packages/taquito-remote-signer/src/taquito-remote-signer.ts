@@ -11,13 +11,7 @@ import {
 import sodium from 'libsodium-wrappers';
 import elliptic from 'elliptic';
 import toBuffer from 'typedarray-to-buffer';
-import {
-  BadSigningDataError,
-  KeyNotFoundError,
-  OperationNotAuthorizedError,
-  SignatureVerificationError,
-  PublicKeyMismatchError,
-} from './errors';
+import { BadSigningDataError, KeyNotFoundError, OperationNotAuthorizedError } from './errors';
 import { Signer } from '@taquito/taquito';
 interface PublicKeyResponse {
   public_key: string;
@@ -108,20 +102,25 @@ export class RemoteSigner implements Signer {
         },
         watermarkedBytes
       );
-      let pref = signature.startsWith('sig') ? signature.substr(0, 3) : signature.substr(0, 5);
+      let pref = signature.startsWith('sig')
+        ? signature.substring(0, 3)
+        : signature.substring(0, 5);
 
       if (!isValidPrefix(pref)) {
-        throw new Error('Unsupported signature given by remote signer: ' + signature);
+        throw new Error(`Unsupported signature given by remote signer: ${signature}`);
       }
 
       const decoded = b58cdecode(signature, prefix[pref]);
 
       const signatureVerified = await this.verify(watermarkedBytes, signature);
       if (!signatureVerified) {
-        throw new SignatureVerificationError('Signature failed verification against public key', {
-          bytes: watermarkedBytes,
-          signature,
-        });
+        throw new Error(
+          `Signature failed verification against public key:
+          {
+            bytes: ${watermarkedBytes},
+            signature: ${signature}
+          }`
+        );
       }
 
       return {
@@ -158,17 +157,16 @@ export class RemoteSigner implements Signer {
       : signature.substr(0, 5);
 
     if (!isValidPrefix(signaturePrefix)) {
-      throw new Error('Unsupported signature given by remote signer: ' + signature);
+      throw new Error(`Unsupported signature given by remote signer: ${signature}`);
     }
 
     const publicKeyHash = b58cencode(sodium.crypto_generichash(20, _publicKey), pref[curve].pkh);
     if (publicKeyHash !== this.pkh) {
-      throw new PublicKeyMismatchError(
-        'Requested public key does not match the initialized public key hash',
-        {
-          publicKey: publicKey,
-          publicKeyHash: this.pkh,
-        }
+      throw new Error(
+        `Requested public key does not match the initialized public key hash: {
+          publicKey: ${publicKey},
+          publicKeyHash: ${this.pkh}
+        }`
       );
     }
 
