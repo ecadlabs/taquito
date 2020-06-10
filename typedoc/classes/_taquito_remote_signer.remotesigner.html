@@ -100,6 +100,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_taquito_remote_signer.remotesigner.html#publickeyhash" class="tsd-kind-icon">public<wbr>Key<wbr>Hash</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_taquito_remote_signer.remotesigner.html#secretkey" class="tsd-kind-icon">secret<wbr>Key</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_taquito_remote_signer.remotesigner.html#sign" class="tsd-kind-icon">sign</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_taquito_remote_signer.remotesigner.html#verify" class="tsd-kind-icon">verify</a></li>
 							</ul>
 						</section>
 					</div>
@@ -117,7 +118,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/0a376506/packages/taquito-remote-signer/src/taquito-remote-signer.ts#L25">taquito-remote-signer/src/taquito-remote-signer.ts:25</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/a8444773/packages/taquito-remote-signer/src/taquito-remote-signer.ts#L51">taquito-remote-signer/src/taquito-remote-signer.ts:51</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -153,7 +154,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_taquito_taquito.signer-1.html">Signer</a>.<a href="../interfaces/_taquito_taquito.signer-1.html#publickey">publicKey</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/0a376506/packages/taquito-remote-signer/src/taquito-remote-signer.ts#L42">taquito-remote-signer/src/taquito-remote-signer.ts:42</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/a8444773/packages/taquito-remote-signer/src/taquito-remote-signer.ts#L68">taquito-remote-signer/src/taquito-remote-signer.ts:68</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -171,7 +172,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_taquito_taquito.signer-1.html">Signer</a>.<a href="../interfaces/_taquito_taquito.signer-1.html#publickeyhash">publicKeyHash</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/0a376506/packages/taquito-remote-signer/src/taquito-remote-signer.ts#L33">taquito-remote-signer/src/taquito-remote-signer.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/a8444773/packages/taquito-remote-signer/src/taquito-remote-signer.ts#L59">taquito-remote-signer/src/taquito-remote-signer.ts:59</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -189,7 +190,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_taquito_taquito.signer-1.html">Signer</a>.<a href="../interfaces/_taquito_taquito.signer-1.html#secretkey">secretKey</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/0a376506/packages/taquito-remote-signer/src/taquito-remote-signer.ts#L60">taquito-remote-signer/src/taquito-remote-signer.ts:60</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/a8444773/packages/taquito-remote-signer/src/taquito-remote-signer.ts#L86">taquito-remote-signer/src/taquito-remote-signer.ts:86</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -206,7 +207,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/0a376506/packages/taquito-remote-signer/src/taquito-remote-signer.ts#L64">taquito-remote-signer/src/taquito-remote-signer.ts:64</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/a8444773/packages/taquito-remote-signer/src/taquito-remote-signer.ts#L90">taquito-remote-signer/src/taquito-remote-signer.ts:90</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -219,6 +220,32 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{ </span>bytes<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>prefixSig<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>sbytes<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>sig<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="verify" class="tsd-anchor"></a>
+					<h3>verify</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">verify<span class="tsd-signature-symbol">(</span>bytes<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, signature<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/a8444773/packages/taquito-remote-signer/src/taquito-remote-signer.ts#L149">taquito-remote-signer/src/taquito-remote-signer.ts:149</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>bytes: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>signature: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -296,6 +323,9 @@
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_taquito_remote_signer.remotesigner.html#sign" class="tsd-kind-icon">sign</a>
 							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_taquito_remote_signer.remotesigner.html#verify" class="tsd-kind-icon">verify</a>
+							</li>
 						</ul>
 					</li>
 				</ul>
@@ -308,6 +338,12 @@
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported">
 						<a href="../interfaces/_taquito_remote_signer.signresponse.html" class="tsd-kind-icon">Sign<wbr>Response</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-is-not-exported">
+						<a href="../modules/_taquito_remote_signer.html#curves" class="tsd-kind-icon">curves</a>
+					</li>
+					<li class=" tsd-kind-object-literal tsd-parent-kind-module tsd-is-not-exported">
+						<a href="../modules/_taquito_remote_signer.html#pref" class="tsd-kind-icon">pref</a>
 					</li>
 				</ul>
 			</nav>
