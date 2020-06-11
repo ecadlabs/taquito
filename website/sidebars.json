@@ -9,7 +9,8 @@
                 "making_transfers",
                 "originate",
                 "set_delegate",
-                "smartcontracts"
+                "smartcontracts",
+                "estimate"
             ]
         },
         {
