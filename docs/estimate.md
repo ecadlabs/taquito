@@ -23,7 +23,7 @@ Taquito's estimate method can be used to estimate fees, gas and storage associat
 
 ### Estimate a transfer operation
 
-The following example shows an estimate of the fees associated with transferring 2ꜩ to `tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY` address. For demonstration purpose, the signer is configured using a private key that fetches a key service.
+The following example shows an estimate of the fees associated with transferring 2ꜩ to `tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY` address. For demonstration purpose, the signer is configured using a throw-away private key.
 
 ```js live noInline
 const amount = 2;
@@ -72,8 +72,7 @@ Tezos.contract.at('KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC')
 
 ### Estimate a contract origination
 
-In this example, we will use the estimate method of Taquito on a contract origination. 
-The genericMultisigJSONfile is referring to the JSON array that we extracted from the `tezos-cli` output in the [Originating Contracts](https://tezostaquito.io/docs/originate/) section.
+In this example, we will use the estimate method of Taquito on a contract origination. The `genericMultisigJSONfile` variable contains a Michelson Smart Contract.
 
 ```js live noInline
 println(`Estimating the contract origination : `);

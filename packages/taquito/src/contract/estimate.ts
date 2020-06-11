@@ -15,7 +15,7 @@ const GAS_BUFFER = 100;
  * const amount = 2;
  * const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
  *
- * // Estimate gasLimit, storageLimit and fees for an transfer operation
+ * // Estimate gasLimit, storageLimit and fees for a transfer operation
  * const est = await Tezos.estimate.transfer({ to: address, amount: amount })
  * console.log(est.burnFeeMutez, est.gasLimit, est.minimalFeeMutez, est.storageLimit,
  *  est.suggestedFeeMutez, est.totalCost, est.usingBaseFeeMutez)
@@ -24,9 +24,7 @@ const GAS_BUFFER = 100;
  *
  * Estimate a contract origination :
  * ```
- * // Estimate fees related to originate the popular mutli-sig contract available here:
- * // https://github.com/murbard/smart-contracts/blob/master/multisig/michelson/generic.tz
- * // generic.json is referring to the JSON array extracted from the tezos-cli output
+ * // generic.json is referring to a Michelson Smart Contract
  *
  * const genericMultisigJSON = require('./generic.json')
  * const est = await Tezos.estimate.originate({
