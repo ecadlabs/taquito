@@ -5,6 +5,44 @@ const MINIMAL_FEE_PER_GAS_MUTEZ = 0.1;
 
 const GAS_BUFFER = 100;
 
+/**
+ * Examples of use :
+ *
+ *  Estimate a transfer operation :
+ * ```
+ * // Assuming that provider and signer are already configured...
+ *
+ * const amount = 2;
+ * const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
+ *
+ * // Estimate gasLimit, storageLimit and fees for an transfer operation
+ * const est = await Tezos.estimate.transfer({ to: address, amount: amount })
+ * console.log(est.burnFeeMutez, est.gasLimit, est.minimalFeeMutez, est.storageLimit,
+ *  est.suggestedFeeMutez, est.totalCost, est.usingBaseFeeMutez)
+ *
+ * ```
+ *
+ * Estimate a contract origination :
+ * ```
+ * // Estimate fees related to originate the popular mutli-sig contract available here:
+ * // https://github.com/murbard/smart-contracts/blob/master/multisig/michelson/generic.tz
+ * // generic.json is referring to the JSON array extracted from the tezos-cli output
+ *
+ * const genericMultisigJSON = require('./generic.json')
+ * const est = await Tezos.estimate.originate({
+ *   code: genericMultisigJSON,
+ *   storage: {
+ *     stored_counter: 0,
+ *     threshold: 1,
+ *     keys: ['edpkuLxx9PQD8fZ45eUzrK3BhfDZJHhBuK4Zi49DcEGANwd2rpX82t']
+ *   }
+ * })
+ * console.log(est.burnFeeMutez, est.gasLimit, est.minimalFeeMutez, est.storageLimit,
+ *   est.suggestedFeeMutez, est.totalCost, est.usingBaseFeeMutez)
+ *
+ * ```
+ */
+
 export class Estimate {
   constructor(
     private readonly _gasLimit: number | string,
@@ -17,14 +55,14 @@ export class Estimate {
   ) {}
 
   /**
-   * @description Burn fee in mutez
+   * @description The number of Mutez that will be burned for the storage of the [operation](https://tezos.gitlab.io/user/glossary.html#operations).
    */
   get burnFeeMutez() {
     return this.roundUp(Number(this.storageLimit) * MINIMAL_FEE_PER_STORAGE_BYTE_MUTEZ);
   }
 
   /**
-   * @description Get the estimated storage limit
+   * @description  The limit on the amount of storage an [operation](https://tezos.gitlab.io/user/glossary.html#operations) can use.
    */
   get storageLimit() {
     const limit = Math.max(Number(this._storageLimit), 0);
@@ -32,7 +70,7 @@ export class Estimate {
   }
 
   /**
-   * @description Suggested gasLimit for operation
+   * @description The limit on the amount of [gas](https://tezos.gitlab.io/user/glossary.html#gas) a given operation can consume.
    */
   get gasLimit() {
     return Number(this._gasLimit) + GAS_BUFFER;
@@ -49,21 +87,21 @@ export class Estimate {
   }
 
   /**
-   * @description Minimum fees for operation according to baker defaults
+   * @description Minimum fees for the [operation](https://tezos.gitlab.io/user/glossary.html#operations) according to [baker](https://tezos.gitlab.io/user/glossary.html#baker) defaults.
    */
   get minimalFeeMutez() {
     return this.roundUp(MINIMAL_FEE_MUTEZ + this.operationFeeMutez);
   }
 
   /**
-   * @description Suggested fee for operation (minimal fees plus a small buffer)
+   * @description The suggested fee for the operation which includes minimal fees and a small buffer.
    */
   get suggestedFeeMutez() {
     return this.roundUp(this.operationFeeMutez + MINIMAL_FEE_MUTEZ * 2);
   }
 
   /**
-   * @description Fees according to your specified base fee will ensure that at least minimum fees are used
+   * @description Fees according to your specified base fee will ensure that at least minimum fees are used.
    */
   get usingBaseFeeMutez() {
     return (
@@ -71,6 +109,9 @@ export class Estimate {
     );
   }
 
+  /**
+   * @description The sum of `minimalFeeMutez` + `burnFeeMutez`.
+   */
   get totalCost() {
     return this.minimalFeeMutez + this.burnFeeMutez;
   }
