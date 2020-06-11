@@ -69,6 +69,38 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Examples of use :</p>
+					</div>
+					<p> Estimate a transfer operation :</p>
+					<pre><code><span class="hljs-comment">// Assuming that provider and signer are already configured...</span>
+
+<span class="hljs-keyword">const</span> amount = 2;
+<span class="hljs-keyword">const</span> address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
+
+<span class="hljs-comment">// Estimate gasLimit, storageLimit and fees for a transfer operation</span>
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">est</span> = await Tezos.estimate.transfer({ to: address, amount: amount })
+console.<span class="hljs-built_in">log</span>(<span class="hljs-keyword">est</span>.burnFeeMutez, <span class="hljs-keyword">est</span>.gasLimit, <span class="hljs-keyword">est</span>.minimalFeeMutez, <span class="hljs-keyword">est</span>.storageLimit,
+ <span class="hljs-keyword">est</span>.suggestedFeeMutez, <span class="hljs-keyword">est</span>.totalCost, <span class="hljs-keyword">est</span>.usingBaseFeeMutez)
+</code></pre><p>Estimate a contract origination :</p>
+					<pre><code><span class="hljs-comment">// generic.json is referring to a Michelson Smart Contract</span>
+
+<span class="hljs-keyword">const</span> genericMultisigJSON = require('./generic.json')
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">est</span> = await Tezos.estimate.originate({
+  code: genericMultisigJSON,
+  storage: {
+    stored_counter: 0,
+    threshold: 1,
+    keys: ['edpkuLxx9PQD8fZ45eUzrK3BhfDZJHhBuK4Zi49DcEGANwd2rpX82t']
+  }
+})
+console.<span class="hljs-built_in">log</span>(<span class="hljs-keyword">est</span>.burnFeeMutez, <span class="hljs-keyword">est</span>.gasLimit, <span class="hljs-keyword">est</span>.minimalFeeMutez, <span class="hljs-keyword">est</span>.storageLimit,
+  <span class="hljs-keyword">est</span>.suggestedFeeMutez, <span class="hljs-keyword">est</span>.totalCost, <span class="hljs-keyword">est</span>.usingBaseFeeMutez)
+</code></pre>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -114,7 +146,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/a8444773/packages/taquito/src/contract/estimate.ts#L8">taquito/src/contract/estimate.ts:8</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b4d24901/packages/taquito/src/contract/estimate.ts#L44">taquito/src/contract/estimate.ts:44</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -149,13 +181,13 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/a8444773/packages/taquito/src/contract/estimate.ts#L22">taquito/src/contract/estimate.ts:22</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b4d24901/packages/taquito/src/contract/estimate.ts#L58">taquito/src/contract/estimate.ts:58</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<dl class="tsd-comment-tags">
 									<dt>description</dt>
-									<dd><p>Burn fee in mutez</p>
+									<dd><p>The number of Mutez that will be burned for the storage of the <a href="https://tezos.gitlab.io/user/glossary.html#operations">operation</a>.</p>
 									</dd>
 								</dl>
 							</div>
@@ -173,13 +205,13 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/a8444773/packages/taquito/src/contract/estimate.ts#L37">taquito/src/contract/estimate.ts:37</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b4d24901/packages/taquito/src/contract/estimate.ts#L73">taquito/src/contract/estimate.ts:73</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<dl class="tsd-comment-tags">
 									<dt>description</dt>
-									<dd><p>Suggested gasLimit for operation</p>
+									<dd><p>The limit on the amount of <a href="https://tezos.gitlab.io/user/glossary.html#gas">gas</a> a given operation can consume.</p>
 									</dd>
 								</dl>
 							</div>
@@ -197,13 +229,13 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/a8444773/packages/taquito/src/contract/estimate.ts#L54">taquito/src/contract/estimate.ts:54</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b4d24901/packages/taquito/src/contract/estimate.ts#L90">taquito/src/contract/estimate.ts:90</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<dl class="tsd-comment-tags">
 									<dt>description</dt>
-									<dd><p>Minimum fees for operation according to baker defaults</p>
+									<dd><p>Minimum fees for the <a href="https://tezos.gitlab.io/user/glossary.html#operations">operation</a> according to <a href="https://tezos.gitlab.io/user/glossary.html#baker">baker</a> defaults.</p>
 									</dd>
 								</dl>
 							</div>
@@ -221,13 +253,13 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/a8444773/packages/taquito/src/contract/estimate.ts#L29">taquito/src/contract/estimate.ts:29</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b4d24901/packages/taquito/src/contract/estimate.ts#L65">taquito/src/contract/estimate.ts:65</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<dl class="tsd-comment-tags">
 									<dt>description</dt>
-									<dd><p>Get the estimated storage limit</p>
+									<dd><p>The limit on the amount of storage an <a href="https://tezos.gitlab.io/user/glossary.html#operations">operation</a> can use.</p>
 									</dd>
 								</dl>
 							</div>
@@ -245,13 +277,13 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/a8444773/packages/taquito/src/contract/estimate.ts#L61">taquito/src/contract/estimate.ts:61</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b4d24901/packages/taquito/src/contract/estimate.ts#L97">taquito/src/contract/estimate.ts:97</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<dl class="tsd-comment-tags">
 									<dt>description</dt>
-									<dd><p>Suggested fee for operation (minimal fees plus a small buffer)</p>
+									<dd><p>The suggested fee for the operation which includes minimal fees and a small buffer.</p>
 									</dd>
 								</dl>
 							</div>
@@ -269,9 +301,16 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/a8444773/packages/taquito/src/contract/estimate.ts#L74">taquito/src/contract/estimate.ts:74</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b4d24901/packages/taquito/src/contract/estimate.ts#L113">taquito/src/contract/estimate.ts:113</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<dl class="tsd-comment-tags">
+									<dt>description</dt>
+									<dd><p>The sum of <code>minimalFeeMutez</code> + <code>burnFeeMutez</code>.</p>
+									</dd>
+								</dl>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
 						</li>
 					</ul>
@@ -286,13 +325,13 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/a8444773/packages/taquito/src/contract/estimate.ts#L68">taquito/src/contract/estimate.ts:68</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b4d24901/packages/taquito/src/contract/estimate.ts#L104">taquito/src/contract/estimate.ts:104</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<dl class="tsd-comment-tags">
 									<dt>description</dt>
-									<dd><p>Fees according to your specified base fee will ensure that at least minimum fees are used</p>
+									<dd><p>Fees according to your specified base fee will ensure that at least minimum fees are used.</p>
 									</dd>
 								</dl>
 							</div>
