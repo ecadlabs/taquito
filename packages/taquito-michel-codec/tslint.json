@@ -1,0 +1,55 @@
+{
+    "extends": "tslint:recommended",
+    "rules": {
+        "semicolon": [
+            true,
+            "always"
+        ],
+        "object-literal-sort-keys": false,
+        "interface-name": false,
+        "no-shadowed-variable": false,
+        "no-angle-bracket-type-assertion": false,
+        "no-bitwise": false,
+        "no-namespace": false,
+        "whitespace": {
+            "options": [
+                "check-branch",
+                "check-decl",
+                "check-operator",
+                "check-module",
+                "check-separator",
+                "check-type",
+                "check-preblock",
+                "check-type-operator",
+                "check-rest-spread"
+            ]
+        },
+        "forin": false,
+        "no-console": false,
+        "max-classes-per-file": false,
+        "ban-types": {
+            "options": [
+                [
+                    "Function",
+                    "Avoid using the `Function` type. Prefer a specific function type, like `() => void`."
+                ],
+                [
+                    "Boolean",
+                    "Avoid using the `Boolean` type. Did you mean `boolean`?"
+                ],
+                [
+                    "Number",
+                    "Avoid using the `Number` type. Did you mean `number`?"
+                ],
+                [
+                    "String",
+                    "Avoid using the `String` type. Did you mean `string`?"
+                ],
+                [
+                    "Symbol",
+                    "Avoid using the `Symbol` type. Did you mean `symbol`?"
+                ]
+            ]
+        }
+    }
+}
