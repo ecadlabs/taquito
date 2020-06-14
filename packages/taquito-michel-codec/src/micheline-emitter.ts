@@ -1,7 +1,13 @@
 import { Expr, Prim } from "./micheline";
 
 export interface FormatOptions {
+    /**
+     * A string used for code indentation if desired. Usually a tab character or a number of spaces.
+     */
     indent?: string;
+    /**
+     * A string used for line separation. Usually a newline character ("\n");
+     */
     newline?: string;
 }
 
@@ -122,6 +128,11 @@ function emitSeq(node: Expr[], f: Formatter): string {
     return ret + f.indent() + "}";
 }
 
+/**
+ * Formats Micheline expression
+ * @param expr An AST node
+ * @param opt Options
+ */
 export function emitMicheline(expr: Expr, opt?: FormatOptions): string {
     return emitExpr(expr, new Formatter(opt));
 }

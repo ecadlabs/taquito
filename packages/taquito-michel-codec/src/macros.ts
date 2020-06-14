@@ -178,6 +178,7 @@ export function expandMacros(ex: Prim): Expr {
                     mkPrim({ prim: ex.prim.slice(3), annots: ex.annots }),
                 ];
             }
+            break;
 
         case "IFEQ":
         case "IFNEQ":
@@ -191,6 +192,7 @@ export function expandMacros(ex: Prim): Expr {
                     mkPrim({ prim: "IF", annots: ex.annots, args: ex.args }),
                 ];
             }
+            break;
 
         case "IFCMPEQ":
         case "IFCMPNEQ":
@@ -205,6 +207,7 @@ export function expandMacros(ex: Prim): Expr {
                     mkPrim({ prim: "IF", annots: ex.annots, args: ex.args }),
                 ];
             }
+            break;
 
         // Fail
         case "FAIL":
@@ -214,6 +217,7 @@ export function expandMacros(ex: Prim): Expr {
                     { prim: "FAILWITH" },
                 ];
             }
+            break;
 
         // Assertion macros
         case "ASSERT":
@@ -225,6 +229,7 @@ export function expandMacros(ex: Prim): Expr {
                     ]
                 }];
             }
+            break;
 
         case "ASSERT_EQ":
         case "ASSERT_NEQ":
@@ -243,6 +248,7 @@ export function expandMacros(ex: Prim): Expr {
                     },
                 ];
             }
+            break;
 
         case "ASSERT_CMPEQ":
         case "ASSERT_CMPNEQ":
@@ -264,6 +270,7 @@ export function expandMacros(ex: Prim): Expr {
                     },
                 ];
             }
+            break;
 
         case "ASSERT_NONE":
             if (assertArgs(ex, 0) && assertNoAnnots(ex)) {
@@ -274,6 +281,7 @@ export function expandMacros(ex: Prim): Expr {
                     ]
                 }];
             }
+            break;
 
         case "ASSERT_SOME":
             if (assertArgs(ex, 0)) {
@@ -284,6 +292,7 @@ export function expandMacros(ex: Prim): Expr {
                     ]
                 }];
             }
+            break;
 
         case "ASSERT_LEFT":
             if (assertArgs(ex, 0)) {
@@ -294,6 +303,7 @@ export function expandMacros(ex: Prim): Expr {
                     ]
                 }];
             }
+            break;
 
         case "ASSERT_RIGHT":
             if (assertArgs(ex, 0)) {
@@ -304,6 +314,7 @@ export function expandMacros(ex: Prim): Expr {
                     ]
                 }];
             }
+            break;
 
         // Syntactic conveniences
         case "DUP":
@@ -342,11 +353,13 @@ export function expandMacros(ex: Prim): Expr {
                     ];
                 }
             }
+            break;
 
         case "IF_SOME":
             if (assertArgs(ex, 2)) {
                 return [mkPrim({ prim: "IF_NONE", annots: ex.annots, args: [ex.args[1], ex.args[0]] })];
             }
+            break;
 
         case "IF_RIGHT":
             if (assertArgs(ex, 2)) {

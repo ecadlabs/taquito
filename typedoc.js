@@ -10,9 +10,11 @@ module.exports = {
     '**/dist/**',
     '**/node_modules/**',
     '**/*.spec.ts',
-    "website/**/*"
+    "website/**/*",
+    "packages/taquito-michel-codec/formatter/*.ts"
   ],
   lernaExclude: ['@taquito/website'],
   name: 'Taquito',
-  excludePrivate: true
+  excludePrivate: true,
+  excludeNotExported: true
 };
