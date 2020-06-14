@@ -484,7 +484,7 @@ function assertMichelsonScriptInternal(ex: Expr, path: PathElem[]): ex is Michel
       const p = [ex[0].prim, ex[1].prim, ex[2].prim].sort();
       if (p[0] === "code" && p[1] === "parameter" && p[2] === "storage") {
          let i = 0;
-         for (const n of <Prim[]>ex) {
+         for (const n of ex as Prim[]) {
             const p = [...path, { index: i, val: n }];
 
             /* istanbul ignore else */

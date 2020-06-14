@@ -215,7 +215,7 @@ export class Parser {
                 return { int: tok.v };
 
             case Literal.String:
-                return { string: <string>JSON.parse(tok.v) };
+                return { string: JSON.parse(tok.v) as string };
 
             case Literal.Bytes:
                 return { bytes: tok.v.substr(2) };
@@ -278,7 +278,7 @@ export class Parser {
         }
 
         if ('prim' in src) {
-            const p = <Prim>src;
+            const p = src as { prim: any, annots?: any[], args?: any[] };
             if (
                 typeof p.prim === 'string' &&
                 (p.annots === undefined || Array.isArray(p.annots)) &&
@@ -312,23 +312,23 @@ export class Parser {
 
             throw new JSONParseError(src, `malformed prim expression: ${src}`);
         } else if ('string' in src) {
-            if (typeof (<StringLiteral>src).string === 'string') {
-                return { string: (<StringLiteral>src).string };
+            if (typeof (src as any).string === 'string') {
+                return { string: (src as StringLiteral).string };
             }
 
             throw new JSONParseError(src, `malformed string literal: ${src}`);
         } else if ('int' in src) {
-            if (typeof (<IntLiteral>src).int === 'string' && intRe.test((<IntLiteral>src).int)) {
-                return { int: (<IntLiteral>src).int };
+            if (typeof (src as any).int === 'string' && intRe.test((src as IntLiteral).int)) {
+                return { int: (src as IntLiteral).int };
             }
 
             throw new JSONParseError(src, `malformed int literal: ${src}`);
         } else if ('bytes' in src) {
             if (
-                typeof (<BytesLiteral>src).bytes === 'string' &&
-                bytesRe.test((<BytesLiteral>src).bytes)
+                typeof (src as any).bytes === 'string' &&
+                bytesRe.test((src as BytesLiteral).bytes)
             ) {
-                return { bytes: (<BytesLiteral>src).bytes };
+                return { bytes: (src as BytesLiteral).bytes };
             }
 
             throw new JSONParseError(src, `malformed bytes literal: ${src}`);
