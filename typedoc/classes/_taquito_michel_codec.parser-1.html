@@ -1,0 +1,359 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Parser | Taquito</title>
+	<meta name="description" content="Documentation for Taquito">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">Taquito</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../globals.html">Globals</a>
+				</li>
+				<li>
+					<a href="../modules/_taquito_michel_codec.html">@taquito/michel-codec</a>
+				</li>
+				<li>
+					<a href="_taquito_michel_codec.parser-1.html">Parser</a>
+				</li>
+			</ul>
+			<h1>Class Parser</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Converts and validates Michelson expressions between JSON-based Michelson and Micheline</p>
+					</div>
+					<p>Pretty Print a Michelson Smart Contract:</p>
+					<pre><code>const contract = await <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Tezos</span>.</span></span>contract.at(<span class="hljs-string">"KT1Vsw3kh9638gqWoHTjvHCoHLPKvCbMVbCg"</span>);
+const p = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Parser()</span>;
+
+const michelsonCode = p.parse<span class="hljs-constructor">JSON(<span class="hljs-params">contract</span>.<span class="hljs-params">script</span>.<span class="hljs-params">code</span>)</span>;
+const storage = p.parse<span class="hljs-constructor">JSON(<span class="hljs-params">contract</span>.<span class="hljs-params">script</span>.<span class="hljs-params">storage</span>)</span>;
+
+console.log(<span class="hljs-string">"Pretty print Michelson smart contract:"</span>);
+console.log(emit<span class="hljs-constructor">Micheline(<span class="hljs-params">michelsonCode</span>, {<span class="hljs-params">indent</span>:<span class="hljs-string">"    "</span>, <span class="hljs-params">newline</span>: <span class="hljs-string">"\n"</span>,})</span>);
+
+console.log(<span class="hljs-string">"Pretty print Storage:"</span>);
+console.log(emit<span class="hljs-constructor">Micheline(<span class="hljs-params">storage</span>, {<span class="hljs-params">indent</span>:<span class="hljs-string">"    "</span>, <span class="hljs-params">newline</span>: <span class="hljs-string">"\n"</span>,})</span>);</code></pre><p>Encode a Michelson expression for inital storage of a smart contract</p>
+					<pre><code><span class="hljs-keyword">const</span> src = `(Pair (Pair { Elt <span class="hljs-number">1</span>
+               (Pair (Pair <span class="hljs-string">"tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN"</span> <span class="hljs-string">"tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx"</span>)
+                     <span class="hljs-number">0x0501000000026869</span>) }
+         <span class="hljs-number">10000000</span>)
+   (Pair <span class="hljs-number">2</span> <span class="hljs-number">333</span>))`;
+
+<span class="hljs-keyword">const</span> p = new Parser();
+
+<span class="hljs-keyword">const</span> exp = p.parseMichelineExpression(src);
+console.log(JSON.<span class="hljs-built_in">string</span>ify(exp));</code></pre>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">Parser</span>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_taquito_michel_codec.parser-1.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_taquito_michel_codec.parser-1.html#parsejson" class="tsd-kind-icon">parseJSON</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_taquito_michel_codec.parser-1.html#parsemichelineexpression" class="tsd-kind-icon">parse<wbr>Micheline<wbr>Expression</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_taquito_michel_codec.parser-1.html#parsescript" class="tsd-kind-icon">parse<wbr>Script</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Parser<span class="tsd-signature-symbol">(</span>opt<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_taquito_michel_codec.parseroptions-1.html" class="tsd-signature-type">ParserOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_taquito_michel_codec.parser-1.html" class="tsd-signature-type">Parser</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/739a13d8/packages/taquito-michel-codec/src/micheline-parser.ts#L73">packages/taquito-michel-codec/src/micheline-parser.ts:73</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> opt: <a href="../interfaces/_taquito_michel_codec.parseroptions-1.html" class="tsd-signature-type">ParserOptions</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_taquito_michel_codec.parser-1.html" class="tsd-signature-type">Parser</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="parsejson" class="tsd-anchor"></a>
+					<h3>parseJSON</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">parseJSON<span class="tsd-signature-symbol">(</span>src<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/_taquito_michel_codec.html#expr-1" class="tsd-signature-type">Expr</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/739a13d8/packages/taquito-michel-codec/src/micheline-parser.ts#L268">packages/taquito-michel-codec/src/micheline-parser.ts:268</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Takes a JSON-encoded Michelson, validates it, strips away unneeded properties and optionally expands macros (See <a href="../modules/_taquito_michel_codec.html#parseroptions">ParserOptions</a>).</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>src: <span class="tsd-signature-type">object</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>An object containing JSON-encoded Michelson, usually returned by <code>JSON.parse()</code></p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../modules/_taquito_michel_codec.html#expr-1" class="tsd-signature-type">Expr</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="parsemichelineexpression" class="tsd-anchor"></a>
+					<h3>parse<wbr>Micheline<wbr>Expression</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">parse<wbr>Micheline<wbr>Expression<span class="tsd-signature-symbol">(</span>src<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/_taquito_michel_codec.html#expr-1" class="tsd-signature-type">Expr</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/739a13d8/packages/taquito-michel-codec/src/micheline-parser.ts#L255">packages/taquito-michel-codec/src/micheline-parser.ts:255</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Parse any Michelson expression</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>src: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>A Michelson expression such as <code>(Pair {Elt &quot;0&quot; 0} 0)</code> or <code>{parameter ...; storage int; code { DUP ; ...};}</code></p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../modules/_taquito_michel_codec.html#expr-1" class="tsd-signature-type">Expr</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h4>
+							<p>An AST node or null for empty document.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="parsescript" class="tsd-anchor"></a>
+					<h3>parse<wbr>Script</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">parse<wbr>Script<span class="tsd-signature-symbol">(</span>src<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/_taquito_michel_codec.html#expr-1" class="tsd-signature-type">Expr</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/739a13d8/packages/taquito-michel-codec/src/micheline-parser.ts#L238">packages/taquito-michel-codec/src/micheline-parser.ts:238</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Parses a Micheline sequence expression, such as smart contract source. Enclosing curly brackets may be omitted.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>src: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>A Micheline sequence <code>{parameter ...; storage int; code { DUP ; ...};}</code> or <code>parameter ...; storage int; code { DUP ; ...};</code></p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../modules/_taquito_michel_codec.html#expr-1" class="tsd-signature-type">Expr</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/_taquito_http_utils.html">@taquito/http-<wbr>utils</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/_taquito_local_forging.html">@taquito/local-<wbr>forging</a>
+					</li>
+					<li class="current tsd-kind-module">
+						<a href="../modules/_taquito_michel_codec.html">@taquito/michel-<wbr>codec</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/_taquito_michelson_encoder.html">@taquito/michelson-<wbr>encoder</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/_taquito_react_components.html">@taquito/react-<wbr>components</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/_taquito_remote_signer.html">@taquito/remote-<wbr>signer</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/_taquito_rpc.html">@taquito/rpc</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/_taquito_signer.html">@taquito/signer</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/_taquito_taquito.html">@taquito/taquito</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/_taquito_tezbridge_signer.html">@taquito/tezbridge-<wbr>signer</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/_taquito_utils.html">@taquito/utils</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/integration_tests.html">integration-<wbr>tests</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class tsd-parent-kind-module">
+						<a href="_taquito_michel_codec.parser-1.html" class="tsd-kind-icon">Parser</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="_taquito_michel_codec.parser-1.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_taquito_michel_codec.parser-1.html#parsejson" class="tsd-kind-icon">parseJSON</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_taquito_michel_codec.parser-1.html#parsemichelineexpression" class="tsd-kind-icon">parse<wbr>Micheline<wbr>Expression</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_taquito_michel_codec.parser-1.html#parsescript" class="tsd-kind-icon">parse<wbr>Script</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>

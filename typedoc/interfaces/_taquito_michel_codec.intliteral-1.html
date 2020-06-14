@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Params | Taquito</title>
+	<title>IntLiteral | Taquito</title>
 	<meta name="description" content="Documentation for Taquito">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -40,8 +40,6 @@
 							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
 							<input type="checkbox" id="tsd-filter-externals" checked />
 							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
-							<input type="checkbox" id="tsd-filter-only-exported" />
-							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
 						</div>
 					</div>
 					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
@@ -56,24 +54,31 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_taquito_michelson_encoder.html">@taquito/michelson-encoder</a>
+					<a href="../modules/_taquito_michel_codec.html">@taquito/michel-codec</a>
 				</li>
 				<li>
-					<a href="_taquito_michelson_encoder.params.html">Params</a>
+					<a href="_taquito_michel_codec.intliteral-1.html">IntLiteral</a>
 				</li>
 			</ul>
-			<h1>Interface Params</h1>
+			<h1>Interface IntLiteral</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>An AST node representing Michelson int literal.</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">Params</span>
+						<span class="target">IntLiteral</span>
 					</li>
 				</ul>
 			</section>
@@ -81,35 +86,24 @@
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
-						<section class="tsd-index-section tsd-is-not-exported">
+						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="_taquito_michelson_encoder.params.html#args" class="tsd-kind-icon">args</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="_taquito_michelson_encoder.params.html#prim" class="tsd-kind-icon">prim</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_taquito_michel_codec.intliteral-1.html#int" class="tsd-kind-icon">int</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
+			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-					<a name="args" class="tsd-anchor"></a>
-					<h3>args</h3>
-					<div class="tsd-signature tsd-kind-icon">args<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="int" class="tsd-anchor"></a>
+					<h3>int</h3>
+					<div class="tsd-signature tsd-kind-icon">int<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b4d24901/packages/taquito-michelson-encoder/src/schema/model.ts#L68">taquito-michelson-encoder/src/schema/model.ts:68</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-					<a name="prim" class="tsd-anchor"></a>
-					<h3>prim</h3>
-					<div class="tsd-signature tsd-kind-icon">prim<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/b4d24901/packages/taquito-michelson-encoder/src/schema/model.ts#L67">taquito-michelson-encoder/src/schema/model.ts:67</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/739a13d8/packages/taquito-michel-codec/src/micheline.ts#L14">packages/taquito-michel-codec/src/micheline.ts:14</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -128,6 +122,9 @@
 						<a href="../modules/_taquito_local_forging.html">@taquito/local-<wbr>forging</a>
 					</li>
 					<li class="current tsd-kind-module">
+						<a href="../modules/_taquito_michel_codec.html">@taquito/michel-<wbr>codec</a>
+					</li>
+					<li class=" tsd-kind-module">
 						<a href="../modules/_taquito_michelson_encoder.html">@taquito/michelson-<wbr>encoder</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -160,14 +157,11 @@
 				<ul class="before-current">
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported">
-						<a href="_taquito_michelson_encoder.params.html" class="tsd-kind-icon">Params</a>
+					<li class="current tsd-kind-interface tsd-parent-kind-module">
+						<a href="_taquito_michel_codec.intliteral-1.html" class="tsd-kind-icon">Int<wbr>Literal</a>
 						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-								<a href="_taquito_michelson_encoder.params.html#args" class="tsd-kind-icon">args</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-								<a href="_taquito_michelson_encoder.params.html#prim" class="tsd-kind-icon">prim</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_taquito_michel_codec.intliteral-1.html#int" class="tsd-kind-icon">int</a>
 							</li>
 						</ul>
 					</li>
