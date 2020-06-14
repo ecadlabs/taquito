@@ -31,12 +31,12 @@
     ]
   },
   "devDependencies": {
-    "@types/jest": "^25.2.2",
+    "@types/jest": "^26.0.0",
     "@types/node": "^14.0.1",
     "jest": "^26.0.1",
     "jest-config": "^26.0.1",
     "lint-staged": "^10.2.2",
-    "ts-jest": "^26.0.0",
+    "ts-jest": "^26.1.0",
     "ts-node": "^8.10.1",
     "tslint": "^6.1.2",
     "tslint-config-prettier": "^1.18.0",
