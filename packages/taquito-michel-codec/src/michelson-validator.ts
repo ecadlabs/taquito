@@ -87,11 +87,22 @@ export type MichelsonScript = [MichelsonParameter, MichelsonStorage, MichelsonCo
 // Michelson validator
 
 interface PathElem {
+   /**
+    * Node's index. Either argument index or sequence index.
+    */
    index: number;
+   /**
+    * Node's value.
+    */
    val: Expr;
 }
 
 export class ValidationError extends Error {
+   /**
+    * @param val Value of a node caused the error
+    * @param path Path to a node caused the error in the AST tree
+    * @param message An error message
+    */
    constructor(public val: Expr, public path?: PathElem[], message?: string) {
       super(message);
    }
@@ -502,18 +513,38 @@ function assertMichelsonScriptInternal(ex: Expr, path: PathElem[]): ex is Michel
    return true;
 }
 
+/**
+ * Checks if the node is a valid Michelson smart contract source containing all required and valid properties such as `parameter`, `storage` and `code`.
+ * This is a type guard function which either returns true of throws an exception.
+ * @param ex An AST node
+ */
 export function assertMichelsonScript(ex: Expr): ex is MichelsonScript {
    return assertMichelsonScriptInternal(ex, []);
 }
 
+/**
+ * Checks if the node is a valid Michelson data literal such as `(Pair {Elt "0" 0} 0)`.
+ * This is a type guard function which either returns true of throws an exception.
+ * @param ex An AST node
+ */
 export function assertMichelsonData(ex: Expr): ex is MichelsonData {
    return assertMichelsonDataInternal(ex, []);
 }
 
+/**
+ * Checks if the node is a valid Michelson code (sequence of instructions).
+ * This is a type guard function which either returns true of throws an exception.
+ * @param ex An AST node
+ */
 export function assertMichelsonCode(ex: Expr[]): ex is MichelsonInstruction[] {
    return assertMichelsonInstruction(ex, []);
 }
 
+/**
+ * Checks if the node is a valid Michelson type expression.
+ * This is a type guard function which either returns true of throws an exception.
+ * @param ex An AST node
+ */
 export function assertMichelsonType(ex: Expr): ex is MichelsonType {
    return assertMichelsonTypeInternal(ex, []);
 }
