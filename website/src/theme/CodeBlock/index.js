@@ -6,6 +6,7 @@
  */
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { TezosToolkit } from '@taquito/taquito';
+import { validateAddress, validateChain, validateKeyHash, validateContractAddress, validatePublicKey, validateSignature } from '@taquito/utils';
 import Playground from '@theme/Playground';
 import classnames from 'classnames';
 import Clipboard from 'clipboard';
@@ -62,7 +63,7 @@ export default ({
 
     return (
       <Playground
-        scope={{ ...React, Tezos }}
+        scope={{ ...React, Tezos, validateAddress, validateChain, validateKeyHash, validateContractAddress, validatePublicKey, validateSignature }}
         code={children.trim()}
         theme={prism.theme || defaultTheme}
         transformCode={code => code.replace(/import .*/g, '')}
