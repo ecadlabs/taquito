@@ -65,7 +65,7 @@
     "@types/jest": "^25.2.2",
     "elliptic": "^6.5.2",
     "libsodium-wrappers": "^0.7.6",
-    "typedarray-to-buffer": "^3.1.5",
+    "typedarray-to-buffer": "^3.1.5"
   },
   "devDependencies": {
     "@types/elliptic": "^6.4.12",
