@@ -50,7 +50,7 @@
           },
           {
             "path": "dist/types/constants.d.ts",
-            "sha512": "ed65e87921b074ae1e50eb3923336febdb233620ca85b28bce0e17295f633ed80bfb8ef451c846de93232f2841f4288faa14bc10ba29e238b5466ee2ad597d53"
+            "sha512": "649a276e336facb6ee335fdbb9cfbbead96b09a707ae3cab5d068c6263351d632aadfd76200cd1626570066b3f2980e127c619b4c999ecaa7d8fdcbf65751ab7"
           },
           {
             "path": "dist/types/taquito-utils.d.ts",
@@ -94,7 +94,7 @@
           "typings",
           "version"
         ],
-        "sha512": "3cfaed3d4b5f5eb7f4c3abf8b32f1acf1d5bf9a6a2d90da7269573be6dcb96a4ad9f5041134a48083fdd5f4526bab36fafce4a197d14a1d43310b0f64bcddc7a"
+        "sha512": "2fb5c41bb4219ac76d1311d5dbe2407407f6f5fde9ce0d679654235dd9ec436a98378e46afaeca8625e9aa3827ad689b2219fa60aaa9d92ccf3064718988621d"
       }
     },
     {
@@ -102,7 +102,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/utils",
-          "version": "6.2.0-beta.1",
+          "version": "6.3.0-wallet.4",
           "description": "converts michelson data and types into convenient JS/TS objects",
           "keywords": [
             "tezos",
@@ -182,7 +182,9 @@
             "replace-in-file": "^3.4.2",
             "rimraf": "^2.6.2",
             "rollup": "^1.20.1",
+            "rollup-plugin-commonjs": "^10.1.0",
             "rollup-plugin-json": "^4.0.0",
+            "rollup-plugin-node-resolve": "^5.2.0",
             "rollup-plugin-sourcemaps": "^0.4.2",
             "rollup-plugin-typescript2": "^0.22.1",
             "shelljs": "^0.8.3",
@@ -192,11 +194,11 @@
             "tslint-config-prettier": "^1.15.0",
             "tslint-config-standard": "^8.0.1",
             "typedoc": "^0.15.0",
-            "typescript": "~3.6.0"
+            "typescript": "~3.8.3"
           }
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJetdOeCRAD9Qy5GYHsngAAVdMQAJMgVbAWCQ5qZT3Hzw+oz/ZS\n9PAg7xhDV6h6C5PFyBJyZiP8ml0UL0LpgoWbF2EiaoeqB6PDyTy4kwiYOqSfaYeK\ne5TC+jzSPjOa9s+vlWxBJRXt8JzpblSl4fxA1MHXzh0L5FIoDDdLAhhSj+WhHOGv\no1iZyH/5R+9lWaCyH1GUDh3LRN762/m865LMIQ5V7HBw/i8tZdzPXuzJOcQugDeL\n2aVQLcI2lZncD2U6tmx51M/dDXs55+YOBk6oA+iLlcYIaV2lYYjXEn2GvV680Q2h\nnmNDXYvCxNtYazaPqPw2rmebo5b/NTSBWHK62Cx3aKOR0Ydi05Yjg+lRrDoU7/fs\novpVf0xZXeFSy3+6yXI0PCRqw5ae6UN3BQfKBWB7U+DhT7mZRhWpwzE8/zUzTqga\nfNIsSLkjptQxXlBKeUbO4QiBjkrkJ5NkU740UHILaaCPX0qZnLClH6alPEDk/lkS\nsCfHEjzCJ21UsTzl6TFKXaa30RSIn8eEllCcpFy9lZUdd5bquzql7I9B8vErm+Yj\nlQ6N1SEycwPhxqEU5yFY42mDegEnPMUuE3TmLFE1RR5GrRPXsWCt1Sr3n/DlBb5A\nbGAJqlBXdT7UgCe3OY6xRKQ5xFZhnGk2Oq/p6uHU6CBysF3MneY8nMEP6FaPGXmq\nqE6lGZqoVlI0HM9/En98\n=LG2w\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJe1VPhCRAD9Qy5GYHsngAAz8oQAG7vUjD2AuzXA/mN1i8k2Ltn\nwt6jeg0Qv/1qoC6o49x+1Q0FYMNJEJ60MEW3QvVoo25hPduO1MG0z/H2M5npUkzS\npLrfOARbHqXRM0CwFpnt88fKFLb/cxLsU/cO4V3KYApYQcajPZVMWPoGsUjclzED\n16hZPpEWpetNgXOd4LppqByXIaTTtMp7ITSh5lmVXMyG65+73o1eERKlkABYHx4U\n4KinRiiFcr8uQwAHotwE4qj8zAdIdsu1s0ZonO715+ZptdYUZE5uvRRHC5CU5HIb\n6I2VpwI2znrBmJUITjmILmLTRNlse5Vy+P7rb1MKap+ShsVOrZlWNnqzLGTRBrS5\n5MS/+83wnt3iKmzbEXqrmMfBOXyOQwOmO63+4AhM75Baje1qcXpxN9ZcKVMEJfwv\n4KhuLDkuARD3KkIIsiaSBDn5pWkQn9mq0x9/4iS8GDEFq7VMJyw5zxfiQDc/Cquh\nTfbGej2BCD9iu7xr7KMhFuEWMWaEumcIw50bczUAl1PCsjs09V7VVabSo9a8Y/+D\nM7YWR1HBIZnAx2T4yADZnMXmaBGUun8oEKi6mFJ6B6Tt2QnmzoowGpOk9GA7k5Vq\n/6GGFKpF3hSR1tUSDXJUPhIh0rwvQzuQJdEqG8CPe3pK2ZU/D4q/WTKvsn8yLe+Q\naqxRiCjKhncaKzEw9+u7\n=u1cH\n-----END PGP SIGNATURE-----\n"
 }

@@ -1,6 +1,6 @@
 {
   "name": "@taquito/taquito",
-  "version": "6.2.0-beta.1",
+  "version": "6.3.0-wallet.4",
   "description": "High level functionality that builds upon the other packages in the Tezos Typescript Library Suite.",
   "keywords": [
     "tezos",
@@ -37,7 +37,8 @@
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
-    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts && npm run build:web",
+    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts",
+    "build:release": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts && npm run build:web",
     "build:web": "webpack && node update-readme.js",
     "start": "rollup -c rollup.config.ts -w",
     "postinstall": "node patch.js"
@@ -76,13 +77,14 @@
     ]
   },
   "dependencies": {
-    "@taquito/http-utils": "^6.2.0-beta.1",
-    "@taquito/michelson-encoder": "^6.2.0-beta.1",
+    "@taquito/http-utils": "^6.3.0-wallet.4",
     "@taquito/michel-codec": "^6.2.0-beta.1",
-    "@taquito/rpc": "^6.2.0-beta.1",
-    "@taquito/signer": "^6.2.0-beta.1",
-    "@taquito/utils": "^6.2.0-beta.1",
+    "@taquito/michelson-encoder": "^6.3.0-wallet.4",
+    "@taquito/rpc": "^6.3.0-wallet.4",
+    "@taquito/signer": "^6.3.0-wallet.4",
+    "@taquito/utils": "^6.3.0-wallet.4",
     "bignumber.js": "^9.0.0",
+    "rx-sandbox": "^1.0.3",
     "rxjs": "^6.5.5"
   },
   "devDependencies": {

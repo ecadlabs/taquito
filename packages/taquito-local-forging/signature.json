@@ -10,7 +10,7 @@
           },
           {
             "path": "dist/lib/michelson/codec.js",
-            "sha512": "a686910df0d1c8a5f7bc15446b0ac03dd9759e34464674b89243152cd737c8dbb40ebc8eca7a7ec454113075307cc1300f8d195d512c5d5498176c5cd9bcbc71"
+            "sha512": "8c4750592d553a5cc91c54334489e56ea88b07e5cf473a7d30cf5459b8aa8256651246014560ea0fda34a70934824de6fb565fe6d93dff99b03b1b44bffdac7a"
           },
           {
             "path": "dist/lib/constants.js",
@@ -30,7 +30,7 @@
           },
           {
             "path": "dist/taquito-local-forging.es5.js",
-            "sha512": "1e3b49fab26a6290b0af237b1659cf34979d706b22d52cf255f991c2c79894a27561929a23be05853674bd09a3494bbed5b067325983980a55bba3cf6709a380"
+            "sha512": "696b0b257a29b1842b8fc0f430a26ed1073cf1fc77e94275db7caf43c4e2f629f660815f5f1778632318b2349ab30279188e5b2a439fc6be95125747765815e7"
           },
           {
             "path": "dist/lib/taquito-local-forging.js",
@@ -38,7 +38,7 @@
           },
           {
             "path": "dist/taquito-local-forging.umd.js",
-            "sha512": "46753edcf695f60f5fb671e44ca33d448ffb40fce0961c00188b7fb415ae78ce758ea11e36f9d06fe0015d02e541ca23d3737ae2c38ad1a5b8ebb2d302419f44"
+            "sha512": "c9d41aec789bfa965668c484379c6e0eae30a41a500bceb9f8d33506272c97938f3b715c78b5bcebaf1ab9955b2cd0c520eb9882cfda59ed107486f5ec26334b"
           },
           {
             "path": "dist/lib/uint8array-consumer.js",
@@ -54,7 +54,7 @@
           },
           {
             "path": "dist/lib/michelson/codec.js.map",
-            "sha512": "c66788a4887d98932f302833b6e8159dd6380c2c8f9b06a2b5293aa716bb6cd2fc35f8f75336afac0ea1567bc07bcafc50a49f557f6f0ecb8ac58d847e1c5e5d"
+            "sha512": "ac05a9dfe9e477654d90fb1b25450763b2d1d03605ac5a00fd81864ba83a45f072fbd78be65a482d2995047e6658072bba133d0b378bd811cac38f8c3fd6d852"
           },
           {
             "path": "dist/lib/constants.js.map",
@@ -74,7 +74,7 @@
           },
           {
             "path": "dist/taquito-local-forging.es5.js.map",
-            "sha512": "3e7ec6ecf5eb4d0a0f23953f070fa89d5da1c48dfdc6cb11e13f2323e5de73a043d1fdfefb61e6047855dc002028341a4187015f15fcbd5a6e5bc502aa1c89e6"
+            "sha512": "c535dfbc8e922c4327573358a977f680af63bca3c231001220a5796a173020321846011436d6d421a58b0538c7787481bdf7fd413c9bbd18f9b1db44be40853b"
           },
           {
             "path": "dist/lib/taquito-local-forging.js.map",
@@ -82,7 +82,7 @@
           },
           {
             "path": "dist/taquito-local-forging.umd.js.map",
-            "sha512": "f1fad0ad0665f57f4302a7e93bdc07e0a0ac35df158b71aee96428386b14f72e16496235f6c44323211285076b28ef6d3965120211ddfbd5d46e72ce6097f248"
+            "sha512": "e40102dc88af38bb02f6f085f325b6d5966afe718ca0325fd64296c10276c9a7150b60574fc441415911bc3c68ee38dd4c3fe014130d09149a86ae50c802bc3a"
           },
           {
             "path": "dist/lib/uint8array-consumer.js.map",
@@ -166,7 +166,7 @@
           "typings",
           "version"
         ],
-        "sha512": "2d31126ef85a5b62d2514cfd8f841fbe596cf91878590538fc261bda681bc616ce582914d22b202a20ddd8476dcc8e3e0fde768764df73961ebcfbea5e451a77"
+        "sha512": "51488baa2d1c1013ee36f69b3e45405bd8444806de297722ee5aa9caacb4974fd1fda2729a27cb6e0980c09b53761b83edb63a4f41686043bf89acf71a92ea00"
       }
     },
     {
@@ -174,7 +174,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/local-forging",
-          "version": "6.2.0-beta.1",
+          "version": "6.3.0-wallet.4",
           "description": "Provide local forging functionality to be with taquito",
           "keywords": [
             "tezos",
@@ -240,11 +240,11 @@
             ]
           },
           "dependencies": {
-            "@taquito/utils": "^6.2.0-beta.1",
+            "@taquito/utils": "^6.3.0-wallet.4",
             "bignumber.js": "^9.0.0"
           },
           "devDependencies": {
-            "@taquito/taquito": "^6.2.0-beta.1",
+            "@taquito/taquito": "^6.3.0-wallet.4",
             "@types/jest": "^23.3.2",
             "@types/node": "^10.14.13",
             "colors": "^1.3.2",
@@ -269,11 +269,11 @@
             "tslint-config-prettier": "^1.15.0",
             "tslint-config-standard": "^8.0.1",
             "typedoc": "^0.15.0",
-            "typescript": "~3.6.0"
+            "typescript": "~3.8.3"
           }
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJetdOTCRAD9Qy5GYHsngAAVf4QAIAdrB6VPLiJlLzpMC9rI6nH\nWCKdcXDXHbisjAtxedYzOTCOSV4mbWC6YCcW3zQ3uvnf2DTOHtvThkK+VumXjEkL\nWgWpUPR4sG5TTGE/1A9JaZUCNNayOAuG3CgINg1Or5tT0szYhJHMw+xNfJmGjRZj\nSs/rhyra3IWjF2etHxjnSJKFMzn31RPW4yENs9/cfd8v7pWQX1K+yRglpzr60nuK\nhBbXlNa7SWGNRL8gojQhiDqCK0WhGCimk4dqkmBWA7CEdDcB9235kb0v9qc9EJFN\nJoKO6HMXXc1NdTgmwz5+p/by0CUQ7QU54gSgNS9mdnKP1W+z9I66kygsl/P6FEvZ\ncOG7K0UfOobCkTAd5CI5MScRIW65ZGJfdzqHKr7QQx9VVoryFGK/AurDeisHK54s\n8IObTpH0WP/y1dl6v1qKR4GrABOo80sZnfsszgnXBrLObGIMdb8dUEBr+XLTYD3V\ngCGI2v2DpvZrc6CwDE9FNYyBcdU7WGyCdzUDWBSN3QEQ8JX2O2CJIoA35syx0vFK\nQfJ6spdtoIk3FqoCzJQukwOdNyzyZuEBhUE927/ba/u1teBfu/PdNB3wEKFdv+qu\n1OniyYQr2V5PDdUGseot99L9HAESkLeANypf2YidhDyYb0EKCnGhlOEz/byfkofW\ngEDmFaFr79km3qTcd1db\n=G76A\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJe1VPWCRAD9Qy5GYHsngAAKwkQAA++9oUAnfXf1THPhdS1pZPo\n4dOEwIlRIcJtxBH6OODnTCBQPWgTYOcGomHHHW05tWkFWV+tZ8ha3YAXeqembfIb\nBbWBh0K5WFAFwNziaOPa9Gn97VgWeRpacyNeQ1ytbf20YxO+JhAiHvnmA2+JBVul\nD8k3rrDGpg9C/DFYwfGA4nCZ37VEbpwaBrjQeZWK0heQfufVpPA8YibXfb90uFl5\nP5cVRyg3Jnq7mjjcxFHSCcIYbsckvSWqdcI+YRR4LN2vpQdMHskBEwe69cD0TzTl\nGJDQnTuO7HhhwpKWSErP8JBltm8i6su0zH0xawcGV/4u8GtcvpfwaPPKU80NkLSQ\nFadl2YmLPD9QAKJbeXwA7adL/2ajFcaTxU2qm6QTOZ999yQuLDt3pPbNcG/gIY2w\nGn3KZvsKJ0A4dcA/TFuCtZFMC6j1laPR/C0iXyRyvDPJZIfZtgJ1mVK7fMzWD7AP\niCwj4ulidioOvCvVQa6gDaHyXbDGNKusVexWkqAyY2oiaVBAagaAE4CYov8nvUOY\nQ6wSbXoleMneIkh2YnHOxUTPCOODg2zNyLr9Aeu+Y+nslbHDXdwOkLwRd2jjQtZp\nbjBnQ4RpfVS0p+4OShL57MW5A3rypitWOgaUCDnatrjs9t02yULAB/O992VRSMh9\n3YdJWiEqKczYh+HlP4J5\n=EFaI\n-----END PGP SIGNATURE-----\n"
 }

@@ -1,7 +1,7 @@
+import { defaultConfig } from '../../src/context';
 import { OriginationOperation } from '../../src/operations/origination-operation';
 import { ForgedBytes } from '../../src/operations/types';
 import { OperationContentsAndResult } from '@taquito/rpc';
-import { defaultConfig } from '../../src/context';
 import { OriginationOperationBuilder, RevealOperationBuilder } from '../helpers';
 
 describe('Origination operation', () => {
