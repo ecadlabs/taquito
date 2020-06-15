@@ -7,6 +7,8 @@
     "example:origination": "node -r ts-node/register --preserve-symlinks contract-origination.ts",
     "example:origination2": "node -r ts-node/register --preserve-symlinks contract-origination2.ts",
     "example:origination3": "node -r ts-node/register --preserve-symlinks contract-origination3.ts",
+    "example:michel-codec": "node -r ts-node/register --preserve-symlinks michel-codec.ts",
+    "example:encode-storage": "node -r ts-node/register --preserve-symlinks encode-storage.ts",
     "example": "node -r ts-node/register --preserve-symlinks example-node.ts",
     "example:activation": "node -r ts-node/register --preserve-symlinks example-activate.ts",
     "example:streamer": "node -r ts-node/register --preserve-symlinks example-streamer.ts",
@@ -14,7 +16,8 @@
   },
   "dependencies": {
     "@taquito/signer": "^6.3.0-wallet.4",
-    "@taquito/taquito": "^6.3.0-wallet.4"
+    "@taquito/taquito": "^6.3.0-wallet.4",
+    "@taquito/michel-codec": "^6.2.0-beta.1"
   },
   "devDependencies": {
     "ts-node": "^8.10.1"

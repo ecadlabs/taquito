@@ -1,15 +1,15 @@
 {
-  "name": "@taquito/signer",
-  "version": "6.3.0-wallet.4",
-  "description": "Provide signing functionality to be with taquito",
+  "name": "@taquito/michel-codec",
+  "version": "6.2.0-beta.1",
+  "description": "Michelson parser/validator/formatter",
   "keywords": [
     "tezos",
     "blockchain",
     "signer"
   ],
-  "main": "dist/taquito-signer.umd.js",
-  "module": "dist/taquito-signer.es5.js",
-  "typings": "dist/types/taquito-signer.d.ts",
+  "main": "./dist/taquito-michel-codec.umd.js",
+  "module": "./dist/taquito-michel-codec.es5.js",
+  "typings": "./dist/types/taquito-michel-codec.d.ts",
   "files": [
     "dist",
     "signature.json"
@@ -17,10 +17,10 @@
   "publishConfig": {
     "access": "public"
   },
-  "author": "Simon Boissonneault-Robert <simon@ecadlabs.com>",
+  "author": "Eugene Zagidullin <eugene@ecadlabs.com>",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git+https://github.com/ecadlabs/taquito.git"
   },
   "license": "MIT",
   "engines": {
@@ -65,43 +65,25 @@
       "src/**/*.{js,ts}"
     ]
   },
-  "dependencies": {
-    "@taquito/utils": "^6.3.0-wallet.4",
-    "bignumber.js": "^9.0.0",
-    "bip39": "^3.0.2",
-    "elliptic": "^6.5.2",
-    "libsodium-wrappers": "^0.7.6",
-    "pbkdf2": "^3.0.17",
-    "typedarray-to-buffer": "^3.1.5"
-  },
   "devDependencies": {
-    "@types/elliptic": "^6.4.12",
     "@types/jest": "^26.0.0",
-    "@types/libsodium-wrappers": "^0.7.7",
-    "@types/node": "^14.0.1",
-    "@types/pbkdf2": "^3.0.0",
-    "colors": "^1.4.0",
-    "coveralls": "^3.1.0",
-    "cross-env": "^7.0.2",
+    "@types/node": "^13.13.5",
     "jest": "^26.0.1",
-    "jest-config": "^26.0.1",
-    "lint-staged": "^10.2.2",
+    "jest-extended": "^0.11.5",
+    "lint-staged": "^10.2.9",
     "lodash.camelcase": "^4.3.0",
     "prettier": "^2.0.5",
-    "prompt": "^1.0.0",
-    "replace-in-file": "^6.0.0",
     "rimraf": "^3.0.2",
-    "rollup": "^2.10.2",
+    "rollup": "^2.13.1",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-sourcemaps": "^0.6.2",
     "rollup-plugin-typescript2": "^0.27.1",
-    "shelljs": "^0.8.4",
     "ts-jest": "^26.1.0",
     "ts-node": "^8.10.1",
     "tslint": "^6.1.2",
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-standard": "^9.0.0",
     "typedoc": "^0.17.6",
-    "typescript": "~3.9.5"
+    "typescript": "^3.9.3"
   }
 }
