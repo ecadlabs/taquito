@@ -6,91 +6,91 @@
         "files": [
           {
             "path": "dist/lib/codec.js",
-            "sha512": "06777b5740d4ae84f3cf39c325e217b1001667794c068cf3edb3dc283b81c7889b8af65d58a1738881249a0a39c57be4491b6751d650831b80251071f69530d5"
+            "sha512": "9c17dffbcb011d42253528523847a746923cb0dcdde0092ded6f5690dfb0254bb248d9c16ca12e386a080a49c8c1d56dc238b56a39c0daa8b15bc8ce7b7b08b1"
           },
           {
             "path": "dist/lib/michelson/codec.js",
-            "sha512": "8c4750592d553a5cc91c54334489e56ea88b07e5cf473a7d30cf5459b8aa8256651246014560ea0fda34a70934824de6fb565fe6d93dff99b03b1b44bffdac7a"
+            "sha512": "19df4052400bf774e050d519dce61368fcc7a940df747b283e0f8e206e217f897f266cc7bcb82c322172546c41788bb2f07d34576a73628c305243743efce9de"
           },
           {
             "path": "dist/lib/constants.js",
-            "sha512": "fb773684a77177e5eb5f6fe0fe7adf19e5769c222279de2b3cf419f3434cb83c7e4720212932222bb7eff27a3fcba7c6b6a7c7651d4151b69143751fbf152457"
+            "sha512": "7c07a5a5d002e4561e310054fc90ac05615f37a6796f3ed413f24d691162bbf5d365503c694edac0594d325dbba7cd7164b6db10a9be214646a4085924b7ed0a"
           },
           {
             "path": "dist/lib/decoder.js",
-            "sha512": "b64660f5d7f1fca1cf05a4417ef357d6de845e8809993c74eef890485f2c3dd69a1923bbf5aa8eaad540c9b17e2d50ab03170b638f90abf5318790333679f121"
+            "sha512": "568674645c5fa90e53164e200c81a0e894d30a36481d74575706673db948ad929556fa46a4593a93f9dd4e4ca2fc5921386d8cea0ba0c8ea2cee23b19a8e285f"
           },
           {
             "path": "dist/lib/encoder.js",
-            "sha512": "248956eb1e82aac043a6ed63874cd7657517051bb1fdac1f5eb06cf48037eadd37351e9cfeedc46cbabe58cb6d26fa6b8c729cb0fc528e9271c666689f89d4a6"
+            "sha512": "837d92d943c2fefee563a885117027a10ed75a0c3d23d673fcca369a0b4054508c7ec0c7f1bcbbb92085f3fcafde09d2381f365c9fe37657b577f7e50813fcb6"
           },
           {
             "path": "dist/lib/schema/operation.js",
-            "sha512": "f265e4a0c1d3be3810fe7fb5ea88700a6a5df9e846c81a9ff30215991692361518191d4156d4dc6861be0b019da8c5836284c6414d1f1a7dbde86c14c4a1c800"
+            "sha512": "630a06020555130d1d77d81ae1e355600f51075d65752fa1ab741cada2c159fd057703f9887fa70ff367507571731b65bc6f06a55031e8dfeb691ff6d2ac0531"
           },
           {
             "path": "dist/taquito-local-forging.es5.js",
-            "sha512": "696b0b257a29b1842b8fc0f430a26ed1073cf1fc77e94275db7caf43c4e2f629f660815f5f1778632318b2349ab30279188e5b2a439fc6be95125747765815e7"
+            "sha512": "93d21506f507bcc6ecd595c2f5cbd5be97de385e8962e63a8fd19a88067d149452858b0205fa82cb131e44c00e79b05a5dbb409c7f77cee310a30d2c7eda47b5"
           },
           {
             "path": "dist/lib/taquito-local-forging.js",
-            "sha512": "ecad05ac189efd05510c8a1bcda0bf564aa7dcc6b0a8798ffd1175e5fb1915dc8f3b9dd054a6eb91b6f1c6583a85666b4c4595b657f76e43761ca6e10aaade28"
+            "sha512": "fcb70a696ca044ccef65b423d70d9abe8b08adf9d7eb53b14d6b6dd06b21e17520ab0697bf918bf7553827e81025d4e016a0a4ff3ffbfa3ad0212c359708c335"
           },
           {
             "path": "dist/taquito-local-forging.umd.js",
-            "sha512": "c9d41aec789bfa965668c484379c6e0eae30a41a500bceb9f8d33506272c97938f3b715c78b5bcebaf1ab9955b2cd0c520eb9882cfda59ed107486f5ec26334b"
+            "sha512": "5442abbb6bcd8a06bdbb3481172dae491097471c9970b54638a7bf10a67c21d9e20f62566e6a9a1fd4351664b2e834883984471e3fead573b0ef7c07a5565744"
           },
           {
             "path": "dist/lib/uint8array-consumer.js",
-            "sha512": "5eb0da65572aeae60cbe33e3345d8aeb941d47a96dc70a4fe87a2cd2afeeba5756b8553b3bc78f82359829dc107c995e90e0fb8872af39659085bf251ef13e6a"
+            "sha512": "749d1e30b76a0c16f40b4f85daefd4993413619b4ddf03614289d5cec4bfef8c7fac84bc2c337f00e098ecf3b8d7ba4b2d9ddaf3e49a3b671fd3366ac849af2c"
           },
           {
             "path": "dist/lib/utils.js",
-            "sha512": "6bbcbadd3ddbbf2a4ae3aa477d9f0d93779a6be107ec04841bcaa2246b31ebe7a6783c81f7939d5a55db764ed0c976e9e3b58e4799a167854d785292d79d2e11"
+            "sha512": "9001fe385511441b3cbea73db60159422a98602c10e4a8f7204cdfba19e2709d3a18b01755d7fea292451e323653e7866d0cb8e6e2b6860cadf34b1ab82b4304"
           },
           {
             "path": "dist/lib/codec.js.map",
-            "sha512": "049468428cfa5bafe07a1314a0e03c7993e2408e111a3dd45807aff3cc6c669a0afc06a9cfa563b4e7719c3ca87800d18b6ddf07b108ee8d45de05dd1e08b7f5"
+            "sha512": "a2f83868bd36b073cd998d8431872aa321abbb5550fac65cf2bc51b8a309094c24539b8adb66c1d4bcd9c92faa9da8d51958adeee492aeae237c7cd2f718c736"
           },
           {
             "path": "dist/lib/michelson/codec.js.map",
-            "sha512": "ac05a9dfe9e477654d90fb1b25450763b2d1d03605ac5a00fd81864ba83a45f072fbd78be65a482d2995047e6658072bba133d0b378bd811cac38f8c3fd6d852"
+            "sha512": "48c1c81120ffb634974cc1f398b0ad6909247943ed77f72f83745fe54abc7be11ff85d4ed141391ecdaea0db4de118be821ae55230d7016394214000373d912f"
           },
           {
             "path": "dist/lib/constants.js.map",
-            "sha512": "505a41ad5b3362360d9ac482798913b500cd7eeffa1ec76c6d9faace2ae1281a22f7778469be098ab67c320c68df7fa0604b5e8ddb782fb2734db945736f5b02"
+            "sha512": "9af33533459c79ba9cb053223ce76be6bf92f9237dc25c35e6068e1a453e84f0a178bb95c0d2d3ba73982411d4bfb9a915efa10fd3c3ffbd6cde1d88d7e0e85f"
           },
           {
             "path": "dist/lib/decoder.js.map",
-            "sha512": "1fafe4ffbf03ef8e8c459a1856b78dfbe1daa9ac3c9241903ec8928adcbba86c14f73419ea1b30642c08d7320ad2d7dea2cb746d110ad818d617b8d61b671456"
+            "sha512": "457c1b9df7ba6c7676af154d4a841a5de4a32bf07c02f282e7ba3bb44f35e4c933fa1572c54b01248317322a052e2c46eee3551915e02fe5a59fa5bcf6bd9145"
           },
           {
             "path": "dist/lib/encoder.js.map",
-            "sha512": "71ae825ff5f76f67bcbd53927b01cab9db3b8d56a215542ebd877e29bea663f777b48a8ee2b870bff8998a5c8e1699b76792d1f505128cb18e89b6ca77e64e1f"
+            "sha512": "f445b1d2e47e4a3e7450c4d6c009d5f5e41791e111b9e1f2f99dc47b76dd88f9f2fbb9c5d996ccb5736db60bf13a3b09efefe664f0a878ac2831e9f4967c4161"
           },
           {
             "path": "dist/lib/schema/operation.js.map",
-            "sha512": "294b8d34cfa1733266f9ad69df915f64bcad6bd9a2fb6dd63fc5879ad9fe71d62a95209e861a2e226654abd4273ba9f766ca64bc9d162b2f9a4acc2e0428e71f"
+            "sha512": "eec1e0c4863980d2a10627fa0ab95533fcbaff365be324b01849ecb54aa27a149c6a837cac5a8af73d6bd9e5bfea10187605b4a3b5ade5f49695fd56b180254a"
           },
           {
             "path": "dist/taquito-local-forging.es5.js.map",
-            "sha512": "c535dfbc8e922c4327573358a977f680af63bca3c231001220a5796a173020321846011436d6d421a58b0538c7787481bdf7fd413c9bbd18f9b1db44be40853b"
+            "sha512": "17459ff7cb387f8c37efcace63cfc2c6a4f6ac93c36fc7d8b44d33e9e24a2a92dab7b27e85f2a4cc7039474a0c3ed5dbf80871b6c702addbbf608884fa752c75"
           },
           {
             "path": "dist/lib/taquito-local-forging.js.map",
-            "sha512": "c87f96b3c9c81a67589fc50903c4350298979880a0fb27171e061b8b605efc8679749441b2e52e9cd79e8ab771b0cadcbf3d4356cf55f9878b12f1a252a4ca1b"
+            "sha512": "7437986cc4686d304e2c1ca4bd96fa3dc73a5c750ecdd7ff426789652f57cde6155faac4c908756237862bc8b40fcde86c9301c9414e60954d6973957ce7ea4b"
           },
           {
             "path": "dist/taquito-local-forging.umd.js.map",
-            "sha512": "e40102dc88af38bb02f6f085f325b6d5966afe718ca0325fd64296c10276c9a7150b60574fc441415911bc3c68ee38dd4c3fe014130d09149a86ae50c802bc3a"
+            "sha512": "b196a36abc92e36f5e31f40ee5a6c0629bfb84213769d0f28b416962de572d2862592967c01c03d26154bed173eb0e0cc8d14409fd028e97fe84f619e52b6756"
           },
           {
             "path": "dist/lib/uint8array-consumer.js.map",
-            "sha512": "ba4d39bc6de6e08fb1dfa0a4ddb674677d7cae138042bcf6c5c584a6bbff263769d9a33f370fd2501ce6eb27fd0167159dbb5c4d03e72b092d5a326cdc3fac51"
+            "sha512": "24b1c7b895967ae17a103b53065bfacda18081e6395837f8aa6dc730761d66b91748370f79843d8d8fbf91d51f077571c2f555a973b593089b44224e29abfbde"
           },
           {
             "path": "dist/lib/utils.js.map",
-            "sha512": "55cdd8afaa2cc82c543673cf088cf4148dd221785b12931c969c956449bf99d7dd35067a5c0b1454ae48278050ce359cb689ca59266708a7344f7799b5b24ee4"
+            "sha512": "8a42cc5f0b8d3a759aaf932d81437971c432708d370041e4af96b2654e0b0ccf21d157a5fe94c79bb90a21fb35e36b9c81e2428d791fc855659290d2205f9e5f"
           },
           {
             "path": "README.md",
@@ -98,7 +98,7 @@
           },
           {
             "path": "dist/types/codec.d.ts",
-            "sha512": "bbc7dd66fdc6f7bd411f85968482afae84425cf85d47b13cef296aeb6f05d70746aa8fdea89e82e2d4df9c1494a84ce5d81bf14ba6660f9bc98a952993094278"
+            "sha512": "af3bebcf50f61fa27611a64741c8f27fc88428d36a215150ad90ed5f475147870e7db931ea6fca699e07e60a5f971933fd4511734ff0be33c43e1889ff461667"
           },
           {
             "path": "dist/types/michelson/codec.d.ts",
@@ -166,7 +166,7 @@
           "typings",
           "version"
         ],
-        "sha512": "51488baa2d1c1013ee36f69b3e45405bd8444806de297722ee5aa9caacb4974fd1fda2729a27cb6e0980c09b53761b83edb63a4f41686043bf89acf71a92ea00"
+        "sha512": "5d3c7fe66f700c486927383e9d784f5c810d32bddfc57f235994d016c57a8cf92b2574d6c6bf0ea7787368fa1061da3b08ae168dda7bd6a302cc1944cff20ab4"
       }
     },
     {
@@ -174,7 +174,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/local-forging",
-          "version": "6.3.0-wallet.4",
+          "version": "6.3.0-beta.5",
           "description": "Provide local forging functionality to be with taquito",
           "keywords": [
             "tezos",
@@ -240,40 +240,40 @@
             ]
           },
           "dependencies": {
-            "@taquito/utils": "^6.3.0-wallet.4",
+            "@taquito/utils": "^6.3.0-beta.5",
             "bignumber.js": "^9.0.0"
           },
           "devDependencies": {
-            "@taquito/taquito": "^6.3.0-wallet.4",
-            "@types/jest": "^23.3.2",
-            "@types/node": "^10.14.13",
-            "colors": "^1.3.2",
-            "coveralls": "^3.0.2",
-            "cross-env": "^5.2.0",
-            "jest": "^24.8.0",
-            "jest-config": "^24.8.0",
-            "lint-staged": "^8.0.0",
+            "@taquito/taquito": "^6.3.0-beta.5",
+            "@types/jest": "^26.0.0",
+            "@types/node": "^14.0.1",
+            "colors": "^1.4.0",
+            "coveralls": "^3.1.0",
+            "cross-env": "^7.0.2",
+            "jest": "^26.0.1",
+            "jest-config": "^26.0.1",
+            "lint-staged": "^10.2.2",
             "lodash.camelcase": "^4.3.0",
-            "prettier": "^1.14.3",
+            "prettier": "^2.0.5",
             "prompt": "^1.0.0",
-            "replace-in-file": "^3.4.2",
-            "rimraf": "^2.6.2",
-            "rollup": "^1.20.1",
+            "replace-in-file": "^6.0.0",
+            "rimraf": "^3.0.2",
+            "rollup": "^2.10.2",
             "rollup-plugin-json": "^4.0.0",
-            "rollup-plugin-sourcemaps": "^0.4.2",
-            "rollup-plugin-typescript2": "^0.22.1",
-            "shelljs": "^0.8.3",
-            "ts-jest": "^23.10.2",
-            "ts-node": "^7.0.1",
-            "tslint": "^5.11.0",
-            "tslint-config-prettier": "^1.15.0",
-            "tslint-config-standard": "^8.0.1",
-            "typedoc": "^0.15.0",
-            "typescript": "~3.8.3"
+            "rollup-plugin-sourcemaps": "^0.6.2",
+            "rollup-plugin-typescript2": "^0.27.1",
+            "shelljs": "^0.8.4",
+            "ts-jest": "^26.1.0",
+            "ts-node": "^8.10.1",
+            "tslint": "^6.1.2",
+            "tslint-config-prettier": "^1.18.0",
+            "tslint-config-standard": "^9.0.0",
+            "typedoc": "^0.17.6",
+            "typescript": "~3.9.5"
           }
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJe1VPWCRAD9Qy5GYHsngAAKwkQAA++9oUAnfXf1THPhdS1pZPo\n4dOEwIlRIcJtxBH6OODnTCBQPWgTYOcGomHHHW05tWkFWV+tZ8ha3YAXeqembfIb\nBbWBh0K5WFAFwNziaOPa9Gn97VgWeRpacyNeQ1ytbf20YxO+JhAiHvnmA2+JBVul\nD8k3rrDGpg9C/DFYwfGA4nCZ37VEbpwaBrjQeZWK0heQfufVpPA8YibXfb90uFl5\nP5cVRyg3Jnq7mjjcxFHSCcIYbsckvSWqdcI+YRR4LN2vpQdMHskBEwe69cD0TzTl\nGJDQnTuO7HhhwpKWSErP8JBltm8i6su0zH0xawcGV/4u8GtcvpfwaPPKU80NkLSQ\nFadl2YmLPD9QAKJbeXwA7adL/2ajFcaTxU2qm6QTOZ999yQuLDt3pPbNcG/gIY2w\nGn3KZvsKJ0A4dcA/TFuCtZFMC6j1laPR/C0iXyRyvDPJZIfZtgJ1mVK7fMzWD7AP\niCwj4ulidioOvCvVQa6gDaHyXbDGNKusVexWkqAyY2oiaVBAagaAE4CYov8nvUOY\nQ6wSbXoleMneIkh2YnHOxUTPCOODg2zNyLr9Aeu+Y+nslbHDXdwOkLwRd2jjQtZp\nbjBnQ4RpfVS0p+4OShL57MW5A3rypitWOgaUCDnatrjs9t02yULAB/O992VRSMh9\n3YdJWiEqKczYh+HlP4J5\n=EFaI\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJe5tceCRAD9Qy5GYHsngAAIyMQAKO7TRzxxQAnmemaJH1eLZ7R\nFSPXxsmv6dyK+nDuji2bjBWfwOiIKhbJKCn3uQYx3RlLYHBauPX2WAoKFcHVaGY/\n8AXzprmH0z638m3X3iU61o8qr0UG/rLcBvJf6DPo7HtxlcVBbfpjvpEEsl5kRxts\niatjkt4cm10z/LNRiiv0tmyzVa64m3KJinWfOSCQ8iuBYSLmpccGe0hzZBRotLVH\nb7YUxRa6Q//mkRqFo31mjGlB9j+ixP498aPCdkkUWZzzWpnX/htHa/bft+rYuhTM\npEei2jKGHQhS0g6nyyeOYV4smceHEnPT6yoiNNsuoVJLGESPAXkccVIj9uS/S9LB\nflP+Rifoq9eKet6aKh/4Ap4Jb/kwHbN+WyzwjNpeNi0ykWjX3UtGB/+We4BSa/K7\nQI+ISRdnKvxoVvKk0QSCajrdPApqQPln5LBEWa4PivcKuq64p0doCmKu+fVQhahv\nZBpeu6oOxYKabYwDdNPaJ0hStVVY94WIFXhrqXE33MMNneaPE50BgX6iicZ8Uv2G\nRjSIPcUZptxWs9xYndUJgOkDD4cWZ7LAI/LkgD09wo13YCJYii9TxoZzXFi8Cqe9\nePBtk5PKJM0AvllwPI/G7Tpz4rdKepbSdiD+YLZCZZ9SOnhw3fNyuOrl2j5oH5cN\nmIjeoWxUt7slPRcWpIZR\n=S22+\n-----END PGP SIGNATURE-----\n"
 }
