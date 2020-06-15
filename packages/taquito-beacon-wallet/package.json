@@ -60,7 +60,7 @@
     ]
   },
   "dependencies": {
-    "@airgap/beacon-sdk": "1.0.0",
+    "@airgap/beacon-sdk": "1.0.5",
     "@taquito/taquito": "^6.3.0-wallet.4",
     "@taquito/utils": "^6.3.0-wallet.4"
   },
