@@ -84,6 +84,7 @@
     "@taquito/signer": "^6.3.0-wallet.4",
     "@taquito/utils": "^6.3.0-wallet.4",
     "bignumber.js": "^9.0.0",
+    "rx-sandbox": "^1.0.3",
     "rxjs": "^6.5.5"
   },
   "devDependencies": {
