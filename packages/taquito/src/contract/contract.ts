@@ -53,7 +53,8 @@ export class ContractMethod<T extends ContractProvider | Wallet> {
     params: Partial<SendParams> = {}
   ): Promise<T extends Wallet ? TransactionWalletOperation : TransactionOperation> {
     if (this.provider instanceof Wallet) {
-      return (this.provider as Wallet).transfer(this.toTransferParams(params)).send() as any;
+      // TODO got around TS2352: Conversion of type 'T & Wallet' to type 'Wallet' by adding `as unknown`. Needs clarification
+      return (this.provider as unknown as Wallet).transfer(this.toTransferParams(params)).send() as any;
     } else {
       return this.provider.transfer(this.toTransferParams(params)) as any;
     }
