@@ -3,13 +3,19 @@ id: lambda_view
 title: Using the Lambda View
 ---
 
+The lambda view is a way to retrieve data from a smart contract's storage
+without incurring fees via a contract's `view method`. This is a temporary
+solution that will be addressed in a future protocol update.
+
+## Recap: Views & Callbacks
+
 As you develop applications on the blockchain, you'll soon realize you not only
 want to interact with Smart Contracts by updating information but also by
 reading back pieces of data.
 
 Many Smart Contracts have what's known as `view methods`, which allow you to
 specify parameters around what data you'd like to retrieve. They also require
-you to supply a callback contract whose storage  will update as a result of
+you to supply a callback contract whose storage will update as a result of
 executing the view method.
 
 You can read more about views by going through the [FA1.2 Lorentz Tutorial][lorentz-tutorial]
@@ -40,7 +46,15 @@ error we receive contains the information we requested! This allows us to _not_
 incur a fee for requesting data or wait for confirmation from the network in
 order to call view methods.
 
-## Example
+### Considerations
+
+- This method for retrieving data from the blockchain is not considered ideal. A
+future protocol update will make this goal easier to attain without the use of
+a lambda view.
+
+- Invoking the lambda view in the browser will raise errors in the web console.
+
+## Usage
 
 Here's an example of using the Lambda View on an FA1.2 contract. This contract
 has a view entrypoint called `getTotalSupply`:
