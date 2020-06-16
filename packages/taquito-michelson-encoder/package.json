@@ -1,6 +1,6 @@
 {
   "name": "@taquito/michelson-encoder",
-  "version": "6.3.0-beta.5",
+  "version": "6.3.1-beta.0",
   "description": "converts michelson data and types into convenient JS/TS objects",
   "keywords": [
     "tezos",
@@ -67,12 +67,12 @@
     ]
   },
   "dependencies": {
-    "@taquito/utils": "^6.3.0-beta.5",
+    "@taquito/utils": "^6.3.1-beta.0",
     "bignumber.js": "^9.0.0",
     "fast-json-stable-stringify": "^2.1.0"
   },
   "devDependencies": {
-    "@taquito/rpc": "^6.3.0-beta.5",
+    "@taquito/rpc": "^6.3.1-beta.0",
     "@types/jest": "^26.0.0",
     "@types/node": "^14.0.1",
     "colors": "^1.4.0",

@@ -166,7 +166,7 @@
           "typings",
           "version"
         ],
-        "sha512": "5d3c7fe66f700c486927383e9d784f5c810d32bddfc57f235994d016c57a8cf92b2574d6c6bf0ea7787368fa1061da3b08ae168dda7bd6a302cc1944cff20ab4"
+        "sha512": "d7b194fe08ed74f905dc9c59aeced9bf5e6ce91f687e27b396f7aa20697e78cbeb5a74f8a6c6907cacbc277f32be5f84a01f27c85aa9aab01dbcea7caba91c50"
       }
     },
     {
@@ -174,7 +174,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/local-forging",
-          "version": "6.3.0-beta.5",
+          "version": "6.3.1-beta.0",
           "description": "Provide local forging functionality to be with taquito",
           "keywords": [
             "tezos",
@@ -240,11 +240,11 @@
             ]
           },
           "dependencies": {
-            "@taquito/utils": "^6.3.0-beta.5",
+            "@taquito/utils": "^6.3.1-beta.0",
             "bignumber.js": "^9.0.0"
           },
           "devDependencies": {
-            "@taquito/taquito": "^6.3.0-beta.5",
+            "@taquito/taquito": "^6.3.1-beta.0",
             "@types/jest": "^26.0.0",
             "@types/node": "^14.0.1",
             "colors": "^1.4.0",
@@ -275,5 +275,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJe5tceCRAD9Qy5GYHsngAAIyMQAKO7TRzxxQAnmemaJH1eLZ7R\nFSPXxsmv6dyK+nDuji2bjBWfwOiIKhbJKCn3uQYx3RlLYHBauPX2WAoKFcHVaGY/\n8AXzprmH0z638m3X3iU61o8qr0UG/rLcBvJf6DPo7HtxlcVBbfpjvpEEsl5kRxts\niatjkt4cm10z/LNRiiv0tmyzVa64m3KJinWfOSCQ8iuBYSLmpccGe0hzZBRotLVH\nb7YUxRa6Q//mkRqFo31mjGlB9j+ixP498aPCdkkUWZzzWpnX/htHa/bft+rYuhTM\npEei2jKGHQhS0g6nyyeOYV4smceHEnPT6yoiNNsuoVJLGESPAXkccVIj9uS/S9LB\nflP+Rifoq9eKet6aKh/4Ap4Jb/kwHbN+WyzwjNpeNi0ykWjX3UtGB/+We4BSa/K7\nQI+ISRdnKvxoVvKk0QSCajrdPApqQPln5LBEWa4PivcKuq64p0doCmKu+fVQhahv\nZBpeu6oOxYKabYwDdNPaJ0hStVVY94WIFXhrqXE33MMNneaPE50BgX6iicZ8Uv2G\nRjSIPcUZptxWs9xYndUJgOkDD4cWZ7LAI/LkgD09wo13YCJYii9TxoZzXFi8Cqe9\nePBtk5PKJM0AvllwPI/G7Tpz4rdKepbSdiD+YLZCZZ9SOnhw3fNyuOrl2j5oH5cN\nmIjeoWxUt7slPRcWpIZR\n=S22+\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJe6NPcCRAD9Qy5GYHsngAAs/QQAJO8UPQZpTle87l0Zhg5xve1\nBq0HGoQpBukZuxk2WiQb5TkvSSiASjAw9Os3Sv9w3Jm1RdCVb/sWDRwFsZJA4KM/\nLwExAE6rL1QaEs7e13S87CKGq4YPTN5pwUHe7pZNbE9OPKG8UD4p+i1KB29o7CzE\nBZ5wvrySf4y7phpEwpkedRCYoO/PdxoCu8aIQ2m/porOLVN5gmoOvm0hfCaF35zk\nv77sh0crdcONFl90h/lE+nnsXrEneEG8R8X6CEfLMxloDGbMb54N+uy4uoBoSKsp\nEO5qe1XF0xB5HAuhmTAnurpUxBmTqj2V7zZOcfyNVf/p7NTt/OE00nCKASffO5/8\n1avfSfuHQkWXhY5JyjtewTkM94w2C0ORlezhVjio1k3DveZezI6xyGduyTBAMpYN\nv4T0uUs+MTLzwHVwXMCSEJkQjCjjjQJ/mQ86VpbWuviF6B3XvNId9nyKwnl6WDJX\nH0YTS4K6QwJGnc1xOPt05LZ5xH+8ZU2kiYLxxXQ2YZwrlRPVWuHB2WUJfhF1B6+l\nJEIM0gF9Ru6SGKZEe9IS7dnyNWjUVDhHJlmtPks3ew5LodZHiHji0WYaF5UsR6FZ\nBS7UC7NPbU3pn48mcdhPhmsICs0uyptj9RXTfR7lehYpq5BVYQJhFw51krfxYxZB\nWI9bLeBhV/we618ji4Zq\n=CIv7\n-----END PGP SIGNATURE-----\n"
 }

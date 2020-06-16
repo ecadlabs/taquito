@@ -414,7 +414,7 @@
           },
           {
             "path": "README.md",
-            "sha512": "bdd01c8d954ffdc7a435d917955dc74e25e2b95552d5e2d45f9094d601287d9a4b131c6d1b50f0502afba9065264a19c3db40cacfc1f29ba5ccd7f1a3f207837"
+            "sha512": "7a995f1dd5c20bf53efaec74a528b1d44f0e9075cb5365e137d7a7802e3d0757e78f74363a1556029f6a2f78169fea610565f76bc305760f49459a34a1127c8d"
           },
           {
             "path": "dist/types/operations/batch-operation.d.ts",
@@ -648,7 +648,7 @@
           "unpkg",
           "version"
         ],
-        "sha512": "86590795ad9d556f584c38a3bdedc7e3d8588de0fdc1f3d17b50a41e60faf2db55b4219a856709f759e5ad6961532cd26a077fb5f53a1aa66ac117bb3abaa161"
+        "sha512": "d3ac57c2dafcac10fdee4db95f10d192095da4fe5d790ad0ad85bd855fa0a99a41bab24d905faf9a1bd157f662f2a98482c7530b3b90cf306a2b0eb6f96e08f4"
       }
     },
     {
@@ -656,7 +656,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/taquito",
-          "version": "6.3.0-beta.5",
+          "version": "6.3.1-beta.0",
           "description": "High level functionality that builds upon the other packages in the Tezos Typescript Library Suite.",
           "keywords": [
             "tezos",
@@ -733,12 +733,12 @@
             ]
           },
           "dependencies": {
-            "@taquito/http-utils": "^6.3.0-beta.5",
-            "@taquito/michel-codec": "^6.3.0-beta.5",
-            "@taquito/michelson-encoder": "^6.3.0-beta.5",
-            "@taquito/rpc": "^6.3.0-beta.5",
-            "@taquito/signer": "^6.3.0-beta.5",
-            "@taquito/utils": "^6.3.0-beta.5",
+            "@taquito/http-utils": "^6.3.1-beta.0",
+            "@taquito/michel-codec": "^6.3.1-beta.0",
+            "@taquito/michelson-encoder": "^6.3.1-beta.0",
+            "@taquito/rpc": "^6.3.1-beta.0",
+            "@taquito/signer": "^6.3.1-beta.0",
+            "@taquito/utils": "^6.3.1-beta.0",
             "bignumber.js": "^9.0.0",
             "rx-sandbox": "^1.0.3",
             "rxjs": "^6.5.5"
@@ -779,5 +779,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJe5tcaCRAD9Qy5GYHsngAAzRUQACgAAN4Prt9377kR8KPDmkLn\nf3xutwUSzLan+jAzMNXE1uSiwKexKS/7/RyzKKsxLVJ6W+ndRT12RohDFzkE4M94\nZs2iC8RKlUOFknSqNGslIZiTUN6EOwJy1NgMEEdp0OuI20Tx1UcD5UQls6QYtzEk\n/any6hyNCnhNwIkqgZszI8Vhzwu30MJADuC+Wy/l8ju+QknDDFAAK60Aqyn0HMbd\nhhfMmRQzmoSoGuiHglhW1mPXRabihf8JNK5SoHATAGqvAGL2i/RtUslOKWdiVmpY\ng/SOEAmx5sX+ZvvZa8iIbKM3v93VSsy+uNkfxQ64Wm0/ni3cDxt7agAWk7+8O7ze\nQSow0YNZRQ535HRVW6UJoGQnc1z0DLpyxmb/2ipYx1URJXBXuo9e4fLkwCygt3nx\nm6Ew7vY1N3t/E1XsrlbGOTbgAGUV6H1OXk80hD0SmOeiMk5OP0ot45NJ7kB4+AE9\nVnruJbAE/sBSzXwsdgtiN6/iKuhB0U3tz2aq7eXMD0LvFHtElxBhnGPZOKyCWEZg\ngb93aZ7bZBQHftXLzRTiYVT/SaaQmg1OVpfC5WGuMumW4A5tuIB1eFC/dS3ADQr2\n98wxYzKjWTkmmNoq22s7pQDKM+YQuf5C/N4QCCkt7T4UZXMW87f3hP74UFMC+D/o\nir5aq+s/eL83B44No06A\n=Rism\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJe6NPYCRAD9Qy5GYHsngAAFugQAFCWRngD/iLEi69pFNA2EkOF\nw++b2cTeRyE5+Y+IJUkY3Wy9ehwyBQNPKHfOoqqd7bmtYKUQyWl5jBaVJD8R/R5i\nqQ5P6VLDbEkQF4r3/7E4+V5Cma438zHl89FmYAHeCOpQsrzOWNdS9dufzo2GSbqf\nwbYXLnJCoz5DwMlS5XyVUUEj0b5/lw3U3t+rU1ZMXur7v97aSpjFTy/GcSqXcKtI\n8JvBXRvYoskBRAsIx6fhTdWjsddbo6SWGVOhnfvky4lvuJ5eW4wdZxqJPO4Ml4BB\n7Xn7fowZg2yc/YtDS3LmJNvmarAabc0HvPBbgmQZciymBgZf5YC3rMVYXBGk7sg3\nYvviZd/O1w5ZjdoRLXrflNc1jP1+ZIdTtbA7UfGmWnX67JGXPK6ZznB0o6RtQqhJ\nvIamU//S4femalczp58GkydsyR67r/hzJj1VDcx5QthGkZ1OG7hfIkHwiUkqyMxK\nsy2kQMpazQIJ/JL4wYOIi3TFf+VjIKvkfO7/cRdDraYHpSjEq+D9vUW1MHetnnlp\n6OtmCmCrH1VeFvQGMpUIQJa2TGy0da95zO/DEq71by49e5CHxaMgbVILS+toYzlb\nADkCDBVRez5najxG9x5K3ISkjhbnI9DMbeNCsiZZRMxxanYYpot/MouhtLt16J4g\nJCdXaKUdU2caXVeojwue\n=N3p4\n-----END PGP SIGNATURE-----\n"
 }
