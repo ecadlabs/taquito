@@ -16,7 +16,7 @@ import { format } from '../format';
 export const createOriginationOperation = async ({
   code,
   init,
-  balance = '0',
+  balance = "0",
   delegate,
   storage,
   fee = DEFAULT_FEE.ORIGINATION,
@@ -26,7 +26,7 @@ export const createOriginationOperation = async ({
   // tslint:disable-next-line: strict-type-predicates
   if (storage !== undefined && init !== undefined) {
     throw new Error(
-      'Storage and Init cannot be set a the same time. Please either use storage or init but not both.'
+      "Storage and Init cannot be set a the same time. Please either use storage or init but not both.",
     );
   }
 
@@ -90,7 +90,7 @@ export const createOriginationOperation = async ({
     fee,
     gas_limit: gasLimit,
     storage_limit: storageLimit,
-    balance: format('tz', 'mutez', balance).toString(),
+    balance: format("tz", "mutez", balance).toString(),
     script,
   };
 
@@ -114,7 +114,9 @@ export const createTransferOperation = async ({
     fee,
     gas_limit: gasLimit,
     storage_limit: storageLimit,
-    amount: mutez ? amount.toString() : format('tz', 'mutez', amount).toString(),
+    amount: mutez
+      ? amount.toString()
+      : format("tz", "mutez", amount).toString(),
     destination: to,
     parameters: parameter,
   };
@@ -145,7 +147,7 @@ export const createRegisterDelegateOperation = async (
     gasLimit = DEFAULT_GAS_LIMIT.DELEGATION,
     storageLimit = DEFAULT_STORAGE_LIMIT.DELEGATION,
   }: RegisterDelegateParams,
-  source: string
+  source: string,
 ) => {
   return {
     kind: OpKind.DELEGATION,

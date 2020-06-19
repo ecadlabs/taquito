@@ -1,6 +1,6 @@
 {
   "name": "@taquito/utils",
-  "version": "6.2.0-beta.1",
+  "version": "6.3.1-beta.0",
   "description": "converts michelson data and types into convenient JS/TS objects",
   "keywords": [
     "tezos",
@@ -66,7 +66,7 @@
     "buffer": "^5.6.0"
   },
   "devDependencies": {
-    "@types/jest": "^25.2.2",
+    "@types/jest": "^26.0.0",
     "@types/node": "^14.0.1",
     "colors": "^1.4.0",
     "coveralls": "^3.1.0",
@@ -84,12 +84,12 @@
     "rollup-plugin-sourcemaps": "^0.6.2",
     "rollup-plugin-typescript2": "^0.27.1",
     "shelljs": "^0.8.4",
-    "ts-jest": "^26.0.0",
+    "ts-jest": "^26.1.0",
     "ts-node": "^8.10.1",
     "tslint": "^6.1.2",
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-standard": "^9.0.0",
     "typedoc": "^0.17.6",
-    "typescript": "~3.9.2"
+    "typescript": "~3.9.5"
   }
 }

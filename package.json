@@ -52,7 +52,7 @@
   "devDependencies": {
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.3.4",
-    "@types/jest": "^25.2.3",
+    "@types/jest": "^26.0.0",
     "@types/node": "^14.0.4",
     "colors": "^1.4.0",
     "commitizen": "^4.1.2",
@@ -74,17 +74,17 @@
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-sourcemaps": "^0.6.2",
     "rollup-plugin-typescript2": "^0.27.1",
-    "semantic-release": "^17.0.7",
+    "semantic-release": "^17.0.8",
     "shelljs": "^0.8.4",
     "travis-deploy-once": "^5.0.11",
-    "ts-jest": "^26.0.0",
+    "ts-jest": "^26.1.0",
     "ts-node": "^8.10.1",
     "tslint": "^6.1.2",
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-standard": "^9.0.0",
     "typedoc": "^0.17.7",
     "typedoc-plugin-lerna-packages": "^0.3.0",
-    "typescript": "~3.9.3"
+    "typescript": "~3.9.5"
   },
   "config": {
     "commitizen": {
