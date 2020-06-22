@@ -51,25 +51,12 @@ export const createOriginationOperation = async ({
 
   let contractStorage: Expr | undefined;
   if (storage !== undefined) {
-    let s: Expr;
-    if (typeof storage === 'string') {
-      const c = parser.parseMichelineExpression(storage);
-      if (c === null) {
-        throw new Error('Empty storage literal expression');
-      }
-      s = c;
-    } else if (typeof storage === 'object') {
-      s = parser.parseJSON(storage);
-    } else {
-      throw new Error('Storage must be either object or string');
-    }
-
     const storageType = contractCode.find((p): p is Prim => ('prim' in p) && p.prim === 'storage');
     if (storageType?.args === undefined) {
       throw new Error('Missing storage section');
     }
     const schema = new Schema(storageType.args[0] as MichelsonV1Expression); // TODO
-    contractStorage = schema.Encode(s);
+    contractStorage = schema.Encode(storage);
   } else if (typeof init === 'string') {
     const c = parser.parseMichelineExpression(init);
     if (c === null) {

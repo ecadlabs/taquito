@@ -126,13 +126,15 @@ export type OriginateParamsBase = {
 export type OriginateParams = OriginateParamsBase &
   (
     | {
-        init?: never;
-        storage: any;
-      }
+      init?: never;
+      /** JS representation of a storage object */
+      storage: any;
+    }
     | {
-        init: string | object;
-        storage?: never;
-      }
+      /** Initial storage object value. Either Micheline or JSON encoded */
+      init: string | object;
+      storage?: never;
+    }
   );
 
 export interface ActivationParams {
