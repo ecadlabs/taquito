@@ -1,14 +1,14 @@
 import { Parser, emitMicheline } from '@taquito/michel-codec'
 import { Tezos } from '@taquito/taquito';
 
-const provider = 'https://api.tez.ie/rpc/carthagenet';
+const provider = 'https://api.tez.ie/rpc/mainnet';
 
 const example = async () => {
 
   Tezos.setProvider({ rpc: provider });
 
   try {
-    const contract = await Tezos.contract.at('KT1Vsw3kh9638gqWoHTjvHCoHLPKvCbMVbCg')
+    const contract = await Tezos.contract.at('KT1EctCuorV2NfVb1XTQgvzJ88MQtWP8cMMv') //StakerDAO
     const p = new Parser()
 
     console.log('Pretty Print Michelson:')

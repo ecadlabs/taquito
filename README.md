@@ -53,7 +53,8 @@ We publish gpg signed packages to npmjs.org under the `@taquito` handle.
 | Low Level Packages                                               | Responsibility                                                |
 | ---------------------------------------------------------------- | ------------------------------------------------------------- |
 | [@taquito/local-forging](packages/taquito-local-forging)         | Local forging of Tezos operations                             |
-| [@taquito/michelson-encoder](packages/taquito-michelson-encoder) | Encode/Decode storage and parameters to/from michelson format |
+| [@taquito/michelson-encoder](packages/taquito-michelson-encoder) | Makes a JS abstraction for Smart Contracts from Michelson     |
+| [@taquito/michel-codec](packages/taquito-michel-codec)           | Converts Michelson between forms and expands Macros           |
 | [@taquito/remote-signer](packages/taquito-remote-signer)         | Provide necessary function to sign using remote signer API    |
 | [@taquito/rpc](packages/taquito-rpc)                             | RPC client library, wrap every rpc endpoint in its own method |
 | [@taquito/signer](packages/taquito-signer)                       | Provide necessary function to sign using tezos keys           |
