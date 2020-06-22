@@ -1,8 +1,5 @@
 import { Parser, emitMicheline } from '@taquito/michel-codec'
 import { Tezos } from '@taquito/taquito';
-import { idMichelsonCode, idInitData } from "./data/id-contract"
-
-Pretty Print Michelson:
 
 const provider = 'https://api.tez.ie/rpc/carthagenet';
 
