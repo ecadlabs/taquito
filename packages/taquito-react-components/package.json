@@ -1,6 +1,6 @@
 {
   "name": "@taquito/react-components",
-  "version": "6.2.0-beta.1",
+  "version": "6.3.1-beta.0",
   "description": "React Components that implement common use cases for data retrieved from the Tezos blockchain",
   "keywords": [
     "tezos",
@@ -43,8 +43,8 @@
     ]
   },
   "dependencies": {
-    "@taquito/rpc": "^6.2.0-beta.1",
-    "@taquito/taquito": "^6.2.0-beta.1",
+    "@taquito/rpc": "^6.3.1-beta.0",
+    "@taquito/taquito": "^6.3.1-beta.0",
     "@types/react": "^16.9.35",
     "bignumber.js": "^9.0.0",
     "react": "^16.13.1",
@@ -52,12 +52,12 @@
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",
-    "@storybook/addon-actions": "^5.3.18",
-    "@storybook/addon-knobs": "^5.3.18",
-    "@storybook/addon-links": "^5.3.18",
-    "@storybook/addons": "^5.3.18",
-    "@storybook/react": "^5.3.18",
-    "@types/jest": "^25.2.2",
+    "@storybook/addon-actions": "^5.3.19",
+    "@storybook/addon-knobs": "^5.3.19",
+    "@storybook/addon-links": "^5.3.19",
+    "@storybook/addons": "^5.3.19",
+    "@storybook/react": "^5.3.19",
+    "@types/jest": "^26.0.0",
     "@types/node": "^14.0.1",
     "@types/react-color": "^3.0.1",
     "@types/recharts": "^1.8.10",
@@ -81,11 +81,11 @@
     "rollup-plugin-sourcemaps": "^0.6.2",
     "rollup-plugin-typescript2": "^0.27.1",
     "shelljs": "^0.8.4",
-    "ts-jest": "^26.0.0",
+    "ts-jest": "^26.1.0",
     "ts-node": "^8.10.1",
     "tslint": "^6.1.2",
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-standard": "^9.0.0",
-    "typescript": "~3.9.2"
+    "typescript": "~3.9.5"
   }
 }

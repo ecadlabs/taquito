@@ -13,6 +13,12 @@ export * from './validators';
 
 export { prefix, Prefix, prefixLength } from './constants';
 
+/**
+ *
+ * @description Hash a string using the BLAKE2b algorithm, base58 encode the hash obtained and appends the prefix 'expr' to it
+ *
+ * @param value Value in hex
+ */
 export function encodeExpr(value: string) {
   const blakeHash = blake.blake2b(hex2buf(value), null, 32);
   return b58cencode(blakeHash, prefix['expr']);
@@ -91,6 +97,12 @@ export function encodePubKey(value: string) {
   return b58cencode(value.substring(2, 42), prefix.KT);
 }
 
+/**
+ *
+ * @description Base58 encode a key according to its prefix
+ *
+ * @param value Key to base58 encode
+ */
 export function encodeKey(value: string) {
   if (value[0] === '0') {
     const pref: { [key: string]: Uint8Array } = {
@@ -103,6 +115,12 @@ export function encodeKey(value: string) {
   }
 }
 
+/**
+ *
+ * @description Base58 encode a key hash according to its prefix
+ *
+ * @param value Key to base58 encode
+ */
 export function encodeKeyHash(value: string) {
   if (value[0] === '0') {
     const pref: { [key: string]: Uint8Array } = {
@@ -253,7 +271,7 @@ export const mic2arr = function me2(s: any): any {
 
 /**
  *
- * @description Convert a michelson string to it's json representation
+ * @description Convert a michelson string to its json representation
  *
  * @param mi Michelson string to convert to json
  *

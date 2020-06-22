@@ -1,6 +1,6 @@
 {
   "name": "@taquito/remote-signer",
-  "version": "6.2.0-beta.1",
+  "version": "6.3.1-beta.0",
   "description": "Remote signer provider",
   "keywords": [
     "tezos",
@@ -59,16 +59,17 @@
     ]
   },
   "dependencies": {
-    "@taquito/http-utils": "^6.2.0-beta.1",
-    "@taquito/utils": "^6.2.0-beta.1",
+    "@taquito/http-utils": "^6.3.1-beta.0",
+    "@taquito/taquito": "^6.3.1-beta.0",
+    "@taquito/utils": "^6.3.1-beta.0",
+    "@types/jest": "^25.2.2",
     "elliptic": "^6.5.2",
     "libsodium-wrappers": "^0.7.6",
     "typedarray-to-buffer": "^3.1.5"
   },
   "devDependencies": {
-    "@taquito/taquito": "^6.2.0-beta.1",
     "@types/elliptic": "^6.4.12",
-    "@types/jest": "^25.2.2",
+    "@types/jest": "^26.0.0",
     "@types/libsodium-wrappers": "^0.7.7",
     "@types/node": "^14.0.1",
     "@types/ws": "^7.2.4",
@@ -88,11 +89,11 @@
     "rollup-plugin-sourcemaps": "^0.6.2",
     "rollup-plugin-typescript2": "^0.27.1",
     "shelljs": "^0.8.4",
-    "ts-jest": "^26.0.0",
+    "ts-jest": "^26.1.0",
     "ts-node": "^8.10.1",
     "tslint": "^6.1.2",
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-standard": "^9.0.0",
-    "typescript": "~3.9.2"
+    "typescript": "~3.9.5"
   }
 }

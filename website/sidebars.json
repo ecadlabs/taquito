@@ -10,7 +10,8 @@
                 "originate",
                 "set_delegate",
                 "smartcontracts",
-                "estimate"
+                "estimate",
+                "validators"
             ]
         },
         {
