@@ -7,7 +7,7 @@ export type Tuple<T, N extends number> = N extends 1 ? [T] :
     never;
 
 type RequiredProp<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>;
-type OmitProp<T, K extends keyof T> = Omit<T, K> & { [P in K]: never };
+type OmitProp<T, K extends keyof T> = Omit<T, K> & { [P in K]?: never };
 
 export type ReqArgs<T extends Prim> = RequiredProp<T, "args">;
 export type NoArgs<T extends Prim> = OmitProp<T, "args">;
