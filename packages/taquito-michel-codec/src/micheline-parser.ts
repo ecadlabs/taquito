@@ -236,6 +236,11 @@ export class Parser {
      * @param src A Micheline sequence `{parameter ...; storage int; code { DUP ; ...};}` or `parameter ...; storage int; code { DUP ; ...};`
      */
     parseScript(src: string): Expr[] | null {
+        // tslint:disable-next-line: strict-type-predicates
+        if (typeof src !== "string") {
+            throw new TypeError(`string type was expected, got ${typeof src} instead`);
+        }
+
         const scanner = scan(src);
         const tok = scanner.next();
         if (tok.done) {
@@ -253,6 +258,11 @@ export class Parser {
      * @returns An AST node or null for empty document.
      */
     parseMichelineExpression(src: string): Expr | null {
+        // tslint:disable-next-line: strict-type-predicates
+        if (typeof src !== "string") {
+            throw new TypeError(`string type was expected, got ${typeof src} instead`);
+        }
+
         const scanner = scan(src);
         const tok = scanner.next();
         if (tok.done) {
@@ -266,6 +276,11 @@ export class Parser {
      * @param src An object containing JSON-encoded Michelson, usually returned by `JSON.parse()`
      */
     parseJSON(src: object): Expr {
+        // tslint:disable-next-line: strict-type-predicates
+        if (typeof src !== "object") {
+            throw new TypeError(`object type was expected, got ${typeof src} instead`);
+        }
+
         if (Array.isArray(src)) {
             const ret: Expr[] = [];
             for (const n of src) {
@@ -275,9 +290,8 @@ export class Parser {
                 ret.push(this.parseJSON(n));
             }
             return ret;
-        }
 
-        if ('prim' in src) {
+        } else if ('prim' in src) {
             const p = src as { prim: any, annots?: any[], args?: any[] };
             if (
                 typeof p.prim === 'string' &&
