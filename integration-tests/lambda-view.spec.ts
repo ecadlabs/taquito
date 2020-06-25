@@ -10,14 +10,10 @@ CONFIGS().forEach(({ lib, network, setup }) => {
     });
 
     it('executes `getTotalSupply` on an FA1.2 contract', async done => {
-      let result;
-      try {
-        result = await Tezos.contract
-          .lambdaView(network, fa12Address, 'getTotalSupply')
-          .then(view => view.execute());
-      } catch (e) {
-        done(e);
-      }
+      const result = await Tezos.contract
+        .lambdaView(network, fa12Address, 'getTotalSupply')
+        .then(view => view.execute())
+        .catch(e => done(e));
 
       expect(result).toEqual({ int: '0' });
       done();
