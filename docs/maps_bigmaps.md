@@ -42,30 +42,28 @@ Tezos.contract.originate({
 The following example calls a contract that has already been originated with the same code and the same initial storage as above. The get method of the MichelsonMap class is used to see the value associated to the key "1" of the map. Then, a call is made to the main function of the contract using the key "1" as parameter. This has the effect of decreasing the value of the 'current_stock' associated to the key "1". The get method of the MichelsonMap class is used again to see the difference in storage after the method call.
 
 ```js live noInline
-Tezos.contract.at('KT1N3vanfUyNUgFuCq3voqwBsPnEjHdNM16u')
-  .then( myContract => {
-    return myContract.storage()
-    .then ( myStorage => {
-      //We want to see the value of the key "1"
-      return myStorage.get('1')
-    }).then (result => {
-      println(`The key "1" of the map has a current_stock of ${result[Object.keys(result)[0]]} and a max_price of ${result[Object.keys(result)[1]]}.`);
+Tezos.contract.at('KT1WEQQ7RRrzUH7PU9NGMyuTbTF3kjnKynUW')
+.then( myContract => {
+  return myContract.storage()
+  .then (myStorage => {
+    //We want to see the value of the key "1"
+    const value = myStorage.get('1')
+    println(`The key "1" of the map has a current_stock of ${value[Object.keys(value)[0]]} and a max_price of   ${value[Object.keys(value)[1]]}.`);
 
 //Calling the main method of the contract will modify the storage
-      return myContract.methods.main('1').send()
-    }).then(op => {
-      println(`Waiting for ${op.hash} to be confirmed...`);
+    return myContract.methods.main('1').send()
+  }).then(op => {
+    println(`Waiting for ${op.hash} to be confirmed...`);
       return op.confirmation(1).then(() => op.hash);
-    }).then(hash => {
-      println(`Operation injected.`);
+  }).then(hash => {
+    println(`Operation injected.`);
 
 //Use the get method to see the change in storage  
-      return myContract.storage()
-    }).then ( myStorage => {
-      return myStorage.get('1')
-    }).then (result => {
-      println(`The key "1" of the map has now a current_stock of ${result[Object.keys(result)[0]]} and a max_price of ${result[Object.keys(result)[1]]}.`)
-    })
+    return myContract.storage()
+  }).then (myStorage => {
+    const value = myStorage.get('1')
+    println(`The key "1" of the map has now a current_stock of ${value[Object.keys(value)[0]]} and a max_price of ${value[Object.keys(value)[1]]}.`)
+  })
 }).catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
@@ -154,16 +152,16 @@ The get method of the MichelsonMap class can be used to access values of the map
 
 ```js live noInline
 Tezos.contract.at('KT1SPQToSLv7NFvaiJXNYpGjXS9BJwJ3zkAW')
-  .then( myContract => {
-    return myContract.storage()
-  })
-  .then ( myStorage => {
-    return myStorage['theMap'].get({
-  0 : '2', //nat
-  1 : 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY' //address
+.then( myContract => {
+  return myContract.storage()
 })
-  }).then (result => {
-      println(`Values associated with this key : amount : ${result[Object.keys(result)[0]]}, quantity : ${result[Object.keys(result)[1]]}`);
+.then ( myStorage => {
+  const value = myStorage['theMap'].get({
+    0 : '2', //nat
+    1 : 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY' //address
+  })
+  println(`Values associated with this key : amount : ${value[Object.keys(value)[0]]}, quantity :   
+    ${value[Object.keys(value)[1]]}`);
 }).catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 ## Contract having a map in storage where its key has nested pairs
@@ -273,23 +271,22 @@ The get method of the MichelsonMap class can be used to access values of the map
 
 ```js live noInline
 Tezos.contract.at('KT1E6AFEshyEmjML4dUmSNTRzNmnDdPqWzrr')
-  .then( myContract => {
-    return myContract.storage()
-  })
-  .then ( myStorage => {
-    return myStorage.get({
-  0: "1",                                    // int
-  1: "2",                                    // nat
-  2: "test",                                 // string
-  3: "cafe",                                 // bytes
-  4: "10",                                   // mutez
-  5: true,                                   // bool
-  6: "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5", // key_hash
-  7: "2019-09-06T15:08:29.000Z",             // timestamp
-  8: "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5"  // address
+.then( myContract => {
+  return myContract.storage()
 })
-  }).then (result => {
-      println(`The value associated to this key is ${result}.`);
+.then ( myStorage => {
+  const value = myStorage.get({
+    0: "1",                                    // int
+    1: "2",                                    // nat
+    2: "test",                                 // string
+    3: "cafe",                                 // bytes
+    4: "10",                                   // mutez
+    5: true,                                   // bool
+    6: "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5", // key_hash
+    7: "2019-09-06T15:08:29.000Z",             // timestamp
+    8: "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5"  // address
+  })
+  println(`The value associated to this key is ${value}.`);
 }).catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
@@ -302,16 +299,16 @@ The MichelsonMap class can also be used with bigMap. The following example uses 
     "args":
       [ { "prim": "pair",
           "args":
-            [ { "prim": "map",
+            [ { "prim": "big_map",
                 "args":
                   [ { "prim": "pair",
                       "args": [ { "prim": "nat" }, { "prim": "address" } ] },
-                    { "prim": "int" } ], "annots": [ "%theBigMap" ] },
+                    { "prim": "int" } ], "annots": [ "%thebigmap" ] },
               { "prim": "map",
                 "args":
                   [ { "prim": "pair",
                       "args": [ { "prim": "nat" }, { "prim": "address" } ] },
-                    { "prim": "int" } ], "annots": [ "%theMap" ] } ] } ] },
+                    { "prim": "int" } ], "annots": [ "%themap" ] } ] } ] }
 ```
 #### Origination of the contract with initial storage
 
@@ -322,27 +319,27 @@ const storageMap = new MichelsonMap();
 storageMap.set({
   0 : '1', //nat
   1 : 'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx' //address
-}, 10)
+  }, 10)
 storageMap.set({
   0 : '2', //nat
   1 : 'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx' //address
-}, 20)
+  }, 20)
 
 const storageBigMap = new MichelsonMap();
 storageBigMap.set({
   0 : '10', //nat
   1 : 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5' //address
-}, 100)
+  }, 100)
 storageBigMap.set({
   0 : '20', //nat
   1 : 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5' //address
-}, 200)
+  }, 200)
 // contractMapBigMap variable contains the Michelson Smart Contract
 Tezos.contract.originate({
   code: contractMapBigMap,
   storage: {
-    theMap : storageMap,
-    theBigMap : storageBigMap
+    themap : storageMap,
+    thebigmap : storageBigMap
   }
 })
 .then(contractOriginated => {
@@ -356,29 +353,30 @@ Tezos.contract.originate({
 ```
 #### Accessing the values of the map and the bigMap
 
-The get method of the MichelsonMap class can be used to access values of the map and values of the bigMap in the same way.
+The get method of the MichelsonMap class can be used to access the values of the map and values of the bigMap. The difference is that for a map, the value is returned directly while the get method returns a promise when called on bigMap. 
 
 ```js live noInline
-Tezos.contract.at('KT1AR3uCT83s9CU1cP7edh4H2rF2FQCJTPo7')
+Tezos.contract.at('KT1McL1e8UgHUMxxW9B8jxifcLKP11Pyv1wC')
 .then( myContract => {
   return myContract.storage()
   .then ( myStorage => {
-    return myStorage['theMap'].get({
+  //When called on a map, the get method returns the value directly
+    const valueMap = myStorage['themap'].get({
       0 : '1', //nat
       1 : 'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx' //address
     })
-  }).then (result => {
-    println(`The value associated with the specified key of the map is ${result}.`);
+    println(`The value associated with the specified key of the map is ${valueMap}.`);
     return myContract.storage()
   })
 
   .then ( myStorage => {
-    return myStorage['theBigMap'].get({
+  //When called on a bigMap, the get method returns a promise
+    return myStorage['thebigmap'].get({
       0 : '10', //nat
       1 : 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5' //address
     })
-  }).then (result => {
-    println(`The value associated with the specified key of the bigMap is ${result}.`);
+  }).then (valueBigMap => {
+    println(`The value associated with the specified key of the bigMap is ${valueBigMap}.`);
   })
 })
 .catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
