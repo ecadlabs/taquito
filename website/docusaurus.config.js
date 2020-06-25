@@ -20,7 +20,7 @@ module.exports = {
     description:
       'A TypeScript library suite made available as set of npm packages aiming to make building on top of Tezos easier and more enjoyable.',
   },
-  themes: ['@docusaurus/theme-live-codeblock'],
+  themes: [require.resolve('@docusaurus/theme-live-codeblock')],
   themeConfig: {
     navbar: {
       title: 'Taquito',
@@ -29,7 +29,7 @@ module.exports = {
         src: 'img/a_taquito.png'
       },
       links: [
-        { to: 'docs/version', label: '6.1.0-beta.0', position: 'right' },
+        { to: 'docs/version', label: '6.3.2-beta.0', position: 'right' },
         { to: 'docs/quick_start', label: 'Docs', position: 'right' },
         { href: "https://twitter.com/TezosTaquito", label: 'Twitter', position: 'right' },
         { href: "https://github.com/ecadlabs/taquito", label: 'GitHub', position: 'right' }

@@ -10,6 +10,8 @@ import {
   tokenInit,
   tokenCode,
   sampleBigMapAbstractionValue,
+  miInit,
+  miStorage,
 } from './data';
 import BigNumber from 'bignumber.js';
 import { Context } from '../../src/context';
@@ -222,7 +224,7 @@ describe('RpcContractProvider test', () => {
         delegate: 'test_delegate',
         balance: '200',
         code: miStr,
-        init: '{}',
+        init: miInit,
         fee: 10000,
         gasLimit: 10600,
         storageLimit: 257,
@@ -242,10 +244,7 @@ describe('RpcContractProvider test', () => {
               kind: 'origination',
               script: {
                 code: miSample,
-                storage: {
-                  args: [],
-                  prim: '{}',
-                },
+                storage: miStorage,
               },
               source: 'test_pub_key_hash',
               storage_limit: '257',
@@ -266,7 +265,7 @@ describe('RpcContractProvider test', () => {
         delegate: 'test_delegate',
         balance: '200',
         code: miStr,
-        init: '{}',
+        init: miInit,
       });
       expect(result.raw).toEqual({
         counter: 0,
@@ -283,10 +282,7 @@ describe('RpcContractProvider test', () => {
               kind: 'origination',
               script: {
                 code: miSample,
-                storage: {
-                  args: [],
-                  prim: '{}',
-                },
+                storage: miStorage,
               },
               source: 'test_pub_key_hash',
               storage_limit: estimate.storageLimit.toString(),

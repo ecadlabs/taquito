@@ -4,7 +4,7 @@ export class InvalidParameterError implements Error {
   constructor(public smartContractMethodName: string, public sigs: any[], public args: any[]) {
     this.message = `${smartContractMethodName} Received ${
       args.length
-    } arguments while expecting on of the follow signatures (${JSON.stringify(sigs)})`;
+    } arguments while expecting one of the following signatures (${JSON.stringify(sigs)})`;
   }
 }
 

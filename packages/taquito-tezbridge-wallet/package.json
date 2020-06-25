@@ -1,0 +1,92 @@
+{
+  "name": "@taquito/tezbridge-wallet",
+  "version": "6.3.2-beta.0",
+  "description": "Tezbridge wallet provider",
+  "keywords": [
+    "tezos",
+    "blockchain",
+    "websocket"
+  ],
+  "main": "dist/taquito-tezbridge-wallet.umd.js",
+  "module": "dist/taquito-tezbridge-wallet.es5.js",
+  "typings": "dist/types/taquito-tezbridge-wallet.d.ts",
+  "files": [
+    "signature.json",
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Simon Boissonneault-Robert <simon@ecadlabs.com>",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "scripts": {
+    "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
+    "precommit": "lint-staged",
+    "prebuild": "rimraf dist",
+    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts ",
+    "start": "rollup -c rollup.config.ts -w"
+  },
+  "lint-staged": {
+    "{src,test}/**/*.ts": [
+      "prettier --write",
+      "tslint --fix",
+      "git add"
+    ]
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "ts-jest"
+    },
+    "testEnvironment": "node",
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/test/"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,ts}"
+    ]
+  },
+  "dependencies": {
+    "@taquito/taquito": "^6.3.2-beta.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^23.3.2",
+    "@types/node": "^10.14.13",
+    "@types/ws": "^6.0.3",
+    "colors": "^1.3.2",
+    "coveralls": "^3.0.2",
+    "cross-env": "^5.2.0",
+    "jest": "^24.8.0",
+    "jest-config": "^24.8.0",
+    "lint-staged": "^8.0.0",
+    "lodash.camelcase": "^4.3.0",
+    "prettier": "^1.14.3",
+    "prompt": "^1.0.0",
+    "replace-in-file": "^3.4.2",
+    "rimraf": "^2.6.2",
+    "rollup": "^1.20.1",
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-sourcemaps": "^0.4.2",
+    "rollup-plugin-typescript2": "^0.22.1",
+    "shelljs": "^0.8.3",
+    "ts-jest": "^23.10.2",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.15.0",
+    "tslint-config-standard": "^8.0.1",
+    "typescript": "~3.9.5"
+  }
+}

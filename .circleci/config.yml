@@ -4,7 +4,7 @@ orbs:
 jobs:
   build:
     docker:
-      - image: circleci/node:8.11.4
+      - image: circleci/node:10-buster
     steps:
       - checkout
       - run: npm install
@@ -12,7 +12,7 @@ jobs:
       - run: npm run lerna run build
   lint:
     docker:
-      - image: circleci/node:8.11.4
+      - image: circleci/node:10-buster
     steps:
       - checkout
       - run: npm install
@@ -20,7 +20,7 @@ jobs:
       - run: npm run lint
   test:
     docker:
-      - image: circleci/node:8.11.4
+      - image: circleci/node:10-buster
     steps:
       - checkout
       - run: npm install
@@ -30,7 +30,7 @@ jobs:
           file: .coverage/*.json
   integration-tests:
     docker:
-      - image: circleci/node:8.11.4
+      - image: circleci/node:10-buster
     steps:
       - checkout
       - run: npm install
@@ -39,7 +39,7 @@ jobs:
       - run: cd integration-tests && npm run test
   deploy-docs:
     docker:
-      - image: circleci/node:8.11.4
+      - image: circleci/node:10-buster
     steps:
       - checkout
       - run: npm install

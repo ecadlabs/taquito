@@ -11,6 +11,8 @@
                 "set_delegate",
                 "smartcontracts",
                 "lambda_view"
+                "estimate",
+                "validators"
             ]
         },
         {

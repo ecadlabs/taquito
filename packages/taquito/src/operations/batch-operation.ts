@@ -9,6 +9,8 @@ import {
   GasConsumingOperation,
   RPCOperation,
   StorageConsumingOperation,
+  hasMetadata,
+  hasMetadataWithResult,
 } from './types';
 
 export class BatchOperation extends Operation
@@ -35,8 +37,8 @@ export class BatchOperation extends Operation
       this.results
         .filter(result => BATCH_KINDS.indexOf(result.kind) !== -1)
         .map(result => {
-          if (result.metadata && result.metadata.operation_result) {
-            return result.metadata.operation_result.status as OperationResultStatusEnum;
+          if (hasMetadataWithResult(result)) {
+            return result.metadata.operation_result.status;
           } else {
             return 'unknown';
           }

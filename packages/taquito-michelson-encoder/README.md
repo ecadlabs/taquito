@@ -4,7 +4,7 @@
 
 > Our current smart contract abstraction feature is currently in preview. It's API is not final, and it may not cover every use case (yet). We will greatly appreciate any feedback on this feature.
 
-`@taquito/michelson-encoder` converts michelson data and types into convenient JS/TS objects.
+`@taquito/michelson-encoder` provides a JavaScript abstraction based on a Tezos Smart contracts code, parameters and storage.
 
 See the top-level project [https://github.com/ecadlabs/taquito](https://github.com/ecadlabs/taquito) for details on reporting issues, contributing and versioning.
 
@@ -48,7 +48,7 @@ Given the following michelson smart contract data, retrieved from a Tezos Nodes 
 }
 ```
 
-`@taquito/michelson-encoder` will give the caller this:
+`@taquito/michelson-encoder` will generate an abstraction in the form of a plain old javascript object:
 
 ```javascript
 {
@@ -57,7 +57,7 @@ Given the following michelson smart contract data, retrieved from a Tezos Nodes 
   totalSupply: '1000',
   name: 'Token B',
   symbol: 'B',
-  owner: 'tz1ccqAEwfPgeoipnXtjAv1iucrpQv3DFmmS' 
+  owner: 'tz1ccqAEwfPgeoipnXtjAv1iucrpQv3DFmmS'
 }
 ```
 

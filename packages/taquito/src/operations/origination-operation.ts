@@ -1,18 +1,18 @@
 import {
   OperationContentsAndResult,
+  OperationResultOrigination,
   OperationContentsAndResultOrigination,
-  OpKind,
 } from '@taquito/rpc';
 import { Context } from '../context';
 import { RpcContractProvider } from '../contract/rpc-contract-provider';
 import { Operation } from './operations';
 import {
+  FeeConsumingOperation,
   ForgedBytes,
   GasConsumingOperation,
-  StorageConsumingOperation,
+  hasMetadataWithResult,
   RPCOriginationOperation,
-  FeeConsumingOperation,
-  withKind,
+  StorageConsumingOperation,
 } from './types';
 
 /**
@@ -60,7 +60,9 @@ export class OriginationOperation extends Operation
         | undefined);
 
     const result =
-      originationOp && originationOp.metadata && originationOp.metadata.operation_result;
+      originationOp &&
+      hasMetadataWithResult(originationOp) &&
+      originationOp.metadata.operation_result;
     return result ? result : undefined;
   }
 

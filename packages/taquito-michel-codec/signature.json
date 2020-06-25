@@ -1,0 +1,255 @@
+{
+  "entries": [
+    {
+      "entry": "files/v1alpha2",
+      "value": {
+        "files": [
+          {
+            "path": "dist/lib/macros.js",
+            "sha512": "917b90609964fbcecd8f825c901f875d7ae48960b0922ce82f0defa51faac6b2c0231aba91d82b425aefa994172f587153c3c2fad50c2f8d2b47cc6cafa616e1"
+          },
+          {
+            "path": "dist/lib/micheline-emitter.js",
+            "sha512": "56f73f23bacf5801aa50fa617b7b31e45216097b5de17369812f02b2563ca46508682f574e5afa58dfec97569714e04fbf562189d0429f33c131a615bc0d7586"
+          },
+          {
+            "path": "dist/lib/micheline-parser.js",
+            "sha512": "f653b7719b7485efa6d35a7bff02593b0f5c08d9eb908b9cbd70cbd82353a241aa9ff384574f281033524e47eb76e220b84c914c9ca1c1f0fe840a75754a00fb"
+          },
+          {
+            "path": "dist/lib/micheline.js",
+            "sha512": "218a17cfa785c8edcc052b09d63113ffa3bb90a455168a5930933ff4a7a3ee752e05ee9e2f7cef91984fdb743309a0308a8faa9f1d8ed348a6364e0cdf083ece"
+          },
+          {
+            "path": "dist/lib/michelson-validator.js",
+            "sha512": "33e04103beb9d1e4d88933298f2d5588a15164539b4116f0631250cbf5a900ea2a1a0a431759f4b97569749ca06ebbcc6b1725a5760fde669a4e59fb934356e2"
+          },
+          {
+            "path": "dist/lib/scan.js",
+            "sha512": "0e5b17e9dab62954c356157ccdb13e6c00fa75ed39d2e930befe8bd0eeea9d34e4ba163e2599796487a0a4341222957f9b57cc8972abc3cf0d7d758d211ad1ab"
+          },
+          {
+            "path": "dist/taquito-michel-codec.es5.js",
+            "sha512": "d942973629e16e9c8b597240511cc6586794298332ef1ecac773a11b3793d9ddb715d022907022ee2967277381178022322ad752c1e83e56d4628714c7985d72"
+          },
+          {
+            "path": "dist/lib/taquito-michel-codec.js",
+            "sha512": "ccc2a2fabb7e959fe372d7863191fa4d3bb749e5ec5eba6c8bff80ede5be65eaeebed57ee05610a6533490c461b2ceee5bf7e02599e17dc4d1f94dfa29bd5b50"
+          },
+          {
+            "path": "dist/taquito-michel-codec.umd.js",
+            "sha512": "c342a5ba3ceb786de89e620a9760d25f62537d0852092b703eb1c5f729bdff35c4397210aa65da3284691458f9a88bb5137b90ab7638f77f5903d8b02ad202a6"
+          },
+          {
+            "path": "dist/lib/utils.js",
+            "sha512": "619ea44928db93957cb156e936adc83c5063834a086c6a943df83c829307e85b2946689bd2364d648e59c6718b5f21e8d3822c2dc2617f8021001b61155f95f8"
+          },
+          {
+            "path": "dist/lib/macros.js.map",
+            "sha512": "aa9a61dea3d425c3a346c61b5dcd8e503e23310b735e57d7c265a5c5a466496545adc8b1e056c3ed1f4b20eea5439d637218f225015bc989997bbf80c68f61a0"
+          },
+          {
+            "path": "dist/lib/micheline-emitter.js.map",
+            "sha512": "0b608bd9611c274cb5af19b2d0bcf58b64835673634ca84d15236a88f56f320394ea9110bf72599f0c33960735034ba8881a5955b57e21e584b9c1ef7498452a"
+          },
+          {
+            "path": "dist/lib/micheline-parser.js.map",
+            "sha512": "911dfb2a9f32b97762405264534f68be9f7e384b080bb2bc928aedac52a6491d2f480c37d3571dcb700580404dea6d02abbc1f5e22d84c759760437c0da2b9cd"
+          },
+          {
+            "path": "dist/lib/micheline.js.map",
+            "sha512": "455a724848456ea4d5270d3f011e6bbc89f11e8c21940f09617810f2e956e77095dfd65375ab5b8f490e98fa71dc982d686615766fae71731eee6dab4d83baa4"
+          },
+          {
+            "path": "dist/lib/michelson-validator.js.map",
+            "sha512": "22794b7330d1b00eebbb79ad68b97ae535cdea19fe1af46ab16708d857702a9ee2f3c4d0399883bbe3a4e32b82565debb2cfc2cfe8b5d2e8c03f795e2dc1c74a"
+          },
+          {
+            "path": "dist/lib/scan.js.map",
+            "sha512": "a258d524ebee859676ea5dfc52751fcb3ec5be8ec0f71224dc4fae54e380eb23c314c5cdc79b33da9c8e3efaf8c285dfdfaa57fd4895e11966f32f42e4cb51a0"
+          },
+          {
+            "path": "dist/taquito-michel-codec.es5.js.map",
+            "sha512": "80f66382a5017fe31015a4372193af4520c71658510dfec253da9fb331afd6e6677b24f4263e2b09855f8e84c7f2349f171a9b26f6a993a9bad86b6fe506713c"
+          },
+          {
+            "path": "dist/lib/taquito-michel-codec.js.map",
+            "sha512": "82e6165d402c2770634509497b4a77077b14cd28bcb153f8a85081cf2ccb60f6c586ba0a7bbc55756e4d7648f2ecc89ad5ec76814714cecbf562e05e610c9474"
+          },
+          {
+            "path": "dist/taquito-michel-codec.umd.js.map",
+            "sha512": "3b15179cee8c36214b7f048bbe45e836d240e23031aaaec565b56086e56aae9b9a0526c3ed1b6ca1ea4a6e892951d21c559988d29714ba152fd9c1ce1fbc787f"
+          },
+          {
+            "path": "dist/lib/utils.js.map",
+            "sha512": "331165254d9426a498f3a6f2d251a85aac9ac0790ef5dbec07bbae0dcb139a50be1a4dc944559da1ceef7ead386071ac69c11cc40aec6c04440fd7c797b67cbe"
+          },
+          {
+            "path": "README.md",
+            "sha512": "1897105d9f4a23fa1dc08cfcac5fc753dac8b9fbe7c9174b1cb1b09bf225c87886e46a009dd46f55530b3549c62eab135f0f22428e8115ea8406dd52782adbcd"
+          },
+          {
+            "path": "dist/types/macros.d.ts",
+            "sha512": "a94b3979543e579099fd19d7906e1eb9c2bcb7afc12d016a88e022d57ac64f1924535cffc149076d1e7017226a7872face8f194e7a6291a1a7b9394b2f674e51"
+          },
+          {
+            "path": "dist/types/micheline-emitter.d.ts",
+            "sha512": "2bfccbbf88b217b82b459aacad7cf0e64d08fabd32e47c9163a145bf56e28dba3a1f06d1f2070c893acdd3ae9582f47c04490fbe1458ac71f0f00a3692fcac08"
+          },
+          {
+            "path": "dist/types/micheline-parser.d.ts",
+            "sha512": "dd79b9335f971043589a170c060112006f9e57f53f27b1ed125f9456136786a3cba15c7b5993b9390807f710774cc19fdc6b2f1c873bfcf8377aaed22f08906d"
+          },
+          {
+            "path": "dist/types/micheline.d.ts",
+            "sha512": "c024236ba94653e2d24557742d641f5420a1dfd9b703cb4c61ecf76740dad3b9d504f92f48898e907129e65c8965bb436b962714dd96bf53648ca1ac110a89a9"
+          },
+          {
+            "path": "dist/types/michelson-validator.d.ts",
+            "sha512": "396ee1fb3f7b916743288bba8340db111a435a73861935a7ba2f0685147fd9a41429b6ce5baed6f894a531b2eff515795cf8e0edff4b36ed4559fffe6a1b23fa"
+          },
+          {
+            "path": "dist/types/scan.d.ts",
+            "sha512": "043cdcef0b09a72c367f4ea5a87cfd5fc3d35d32674c0ad0fe3e31d2dfdf928e41c5cc263a459e7edb9c60e3820bd80c04c97f7a7bbbaf6ec10b84409c999a4e"
+          },
+          {
+            "path": "dist/types/taquito-michel-codec.d.ts",
+            "sha512": "42857719385142d441574a06229929cd29070c20c123fc7afde078f10fdea2325ef572237f0d0442db2a07d323c07258d414067ad8a69573e67718514cdc0f5b"
+          },
+          {
+            "path": "dist/types/utils.d.ts",
+            "sha512": "0cdbaccb9de4493013d861d2fa6c152444014813886752e318d0b956163d999b523936e770e1b0263cedaca58ec5032800145ae5f0a15df8230edd9419527fab"
+          }
+        ]
+      }
+    },
+    {
+      "entry": "identity/v1alpha2",
+      "value": {
+        "identity": {
+          "keybaseUser": "jevonearth"
+        }
+      }
+    },
+    {
+      "entry": "npmCompatiblePackageJson/v1alpha2",
+      "value": {
+        "packageJsonProperties": [
+          "author",
+          "description",
+          "devDependencies",
+          "engines",
+          "files",
+          "jest",
+          "keywords",
+          "license",
+          "lint-staged",
+          "main",
+          "module",
+          "name",
+          "publishConfig",
+          "repository",
+          "scripts",
+          "typings",
+          "version"
+        ],
+        "sha512": "1dcde88804be25e87c75f0bebfcd7123dc1a1746a571b24837497d8859ba6abe1c3a1244676a985ea38110b28718134d9a2b730897c66269525b169f6c5252b1"
+      }
+    },
+    {
+      "entry": "packageJson/v1alpha2",
+      "value": {
+        "packageJson": {
+          "name": "@taquito/michel-codec",
+          "version": "6.3.2-beta.0",
+          "description": "Michelson parser/validator/formatter",
+          "keywords": [
+            "tezos",
+            "blockchain",
+            "signer"
+          ],
+          "main": "./dist/taquito-michel-codec.umd.js",
+          "module": "./dist/taquito-michel-codec.es5.js",
+          "typings": "./dist/types/taquito-michel-codec.d.ts",
+          "files": [
+            "dist",
+            "signature.json"
+          ],
+          "publishConfig": {
+            "access": "public"
+          },
+          "author": "Eugene Zagidullin <eugene@ecadlabs.com>",
+          "repository": {
+            "type": "git",
+            "url": "git+https://github.com/ecadlabs/taquito.git"
+          },
+          "license": "MIT",
+          "engines": {
+            "node": ">=6.0.0"
+          },
+          "scripts": {
+            "test": "jest --coverage",
+            "test:watch": "jest --coverage --watch",
+            "test:prod": "npm run lint && npm run test -- --no-cache",
+            "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
+            "precommit": "lint-staged",
+            "prebuild": "rimraf dist",
+            "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts",
+            "start": "rollup -c rollup.config.ts -w"
+          },
+          "lint-staged": {
+            "{src,test}/**/*.ts": [
+              "prettier --write",
+              "tslint --fix",
+              "git add"
+            ]
+          },
+          "jest": {
+            "transform": {
+              ".(ts|tsx)": "ts-jest"
+            },
+            "testEnvironment": "node",
+            "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+            "moduleFileExtensions": [
+              "ts",
+              "tsx",
+              "js"
+            ],
+            "moduleNameMapper": {
+              "^@taquito/utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts"
+            },
+            "coveragePathIgnorePatterns": [
+              "/node_modules/",
+              "/test/"
+            ],
+            "collectCoverageFrom": [
+              "src/**/*.{js,ts}"
+            ]
+          },
+          "devDependencies": {
+            "@types/jest": "^26.0.0",
+            "@types/node": "^13.13.5",
+            "jest": "^26.0.1",
+            "jest-extended": "^0.11.5",
+            "lint-staged": "^10.2.9",
+            "lodash.camelcase": "^4.3.0",
+            "prettier": "^2.0.5",
+            "rimraf": "^3.0.2",
+            "rollup": "^2.13.1",
+            "rollup-plugin-json": "^4.0.0",
+            "rollup-plugin-sourcemaps": "^0.6.2",
+            "rollup-plugin-typescript2": "^0.27.1",
+            "ts-jest": "^26.1.0",
+            "ts-node": "^8.10.1",
+            "tslint": "^6.1.2",
+            "tslint-config-prettier": "^1.18.0",
+            "tslint-config-standard": "^9.0.0",
+            "typedoc": "^0.17.6",
+            "typescript": "^3.9.5"
+          }
+        }
+      }
+    }
+  ],
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJe9KzVCRAD9Qy5GYHsngAAgGgQAFTsZCmLcVf6WJXY+wx5WjxE\nKhgBf3oUwYRwl/y4SKb+63K2bLcAnSytP4App8HwAP7cHgJwRzqdZmayFdgJf9OB\nUmqyn3QiOtmfKu2pgY7GgfZQYcBonJsKU/zcmzZ87q4rnTO4gtibIutJWTwZIHVK\nWrZHNQUg0+S/VXlKAdA//K7bWmieha5y1AOGkuTQ2RKuYnHBzUCd2I0qZ/Upd0Fr\nTOtclUATG3iyMq2KtKrcMXD2ZGxOLCHLzuO5rlQj4AloLoBImS24GdMYxzF5FErV\nMx2FdGLrhNP3f6sTFYWTKHxuRrgny5ubQFXi2avYtLRja6fYxMsYyIMgTIUQ9+u0\nysIFDJZOGRgYtg2UN6qZYbFCERAsU/gRMPfvip57mUHy1qVjw5ZmFArv+d2dNjCS\nsIh8bHO3n6bFeOzixHjutkYier9rldwGrDzVrfXa+1av8reVYsADPUFGdgJKDrZJ\nsQNjR7KSlVMgRoIyAYi/4DPw8mGnOH9uX0E/rY2IhG6c/CLJGiTHhK/+w1C6M+5M\nvgwb63AWg9iipcWS5WQI+cba5p97Fvf7pslxYHITai8rrWJy5YPTNhP2D1WX+Fll\nJLGVEuGML8RFcRbsij2kGYUK049PEKTzZLRLap5y6QUXAh6NTO9eDivcdtOAdKYx\nxnfc742SzzeZm2XlmBlN\n=KGYO\n-----END PGP SIGNATURE-----\n"
+}

@@ -4,14 +4,14 @@
     "test:faucet": "RUN_WITH_FAUCET=true jest --runInBand",
     "test": "jest"
   },
-  "version": "6.2.0-beta.0",
+  "version": "6.3.2-beta.0",
   "dependencies": {
-    "@taquito/http-utils": "^6.2.0-beta.0",
-    "@taquito/local-forging": "^6.2.0-beta.0",
-    "@taquito/remote-signer": "^6.2.0-beta.0",
-    "@taquito/signer": "^6.2.0-beta.0",
-    "@taquito/taquito": "^6.2.0-beta.0",
-    "@taquito/utils": "^6.2.0-beta.0"
+    "@taquito/http-utils": "^6.3.2-beta.0",
+    "@taquito/local-forging": "^6.3.2-beta.0",
+    "@taquito/remote-signer": "^6.3.2-beta.0",
+    "@taquito/signer": "^6.3.2-beta.0",
+    "@taquito/taquito": "^6.3.2-beta.0",
+    "@taquito/utils": "^6.3.2-beta.0"
   },
   "private": true,
   "jest": {
@@ -31,17 +31,17 @@
     ]
   },
   "devDependencies": {
-    "@types/jest": "^23.3.2",
-    "@types/node": "^10.14.13",
-    "jest": "^24.8.0",
-    "jest-config": "^24.8.0",
-    "lint-staged": "^8.0.0",
-    "ts-jest": "^24.0.2",
-    "ts-node": "^7.0.1",
-    "tslint": "^5.11.0",
-    "tslint-config-prettier": "^1.15.0",
-    "tslint-config-standard": "^8.0.1",
-    "typescript": "~3.6.0"
+    "@types/jest": "^26.0.0",
+    "@types/node": "^14.0.1",
+    "jest": "^26.0.1",
+    "jest-config": "^26.0.1",
+    "lint-staged": "^10.2.2",
+    "ts-jest": "^26.1.0",
+    "ts-node": "^8.10.1",
+    "tslint": "^6.1.2",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-config-standard": "^9.0.0",
+    "typescript": "~3.9.5"
   },
   "config": {
     "commitizen": {
