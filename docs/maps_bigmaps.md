@@ -3,12 +3,12 @@ title: Working with maps and bigmaps
 author: Roxane Letourneau
 ---
 
-Taquito is offering a class, the MichelsonMap, that acts as an abstraction over Michelson native map. This class supports complex pair as key.
+Taquito is offering a class, the `MichelsonMap`, that acts as an abstraction over Michelson native map. This class supports complex pair as key.
 
 ## Contract having a map in storage
 #### Origination of the contract with initial storage
 
-The storage of the contract used in the following example is a map where the key is a nat and the value is a pair composed of a nat and an amount of tez. The source code of the contract can be found [here](https://ligolang.org/docs/tutorials/get-started/tezos-taco-shop-smart-contract#making-sure-we-get-paid-for-our-tacos). In the example, the contract is originated with initial values using the MichelsonMap class and its set method.
+The storage of the contract used in the following example is a map where the key is a nat and the value is a pair composed of a nat and an amount of tez. The source code of the contract can be found [here](https://ligolang.org/docs/tutorials/get-started/tezos-taco-shop-smart-contract#making-sure-we-get-paid-for-our-tacos). In the example, the contract is originated with initial values using the `MichelsonMap` class and its `set` method.
 
 ```js live noInline
 import { MichelsonMap } from "@taquito/taquito";
@@ -38,8 +38,31 @@ Tezos.contract.originate({
 .catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
+The `fromLiteral` convenience method can also be used, as illustrated below : 
+
+```js live noInline
+import { MichelsonMap } from "@taquito/taquito";
+
+Tezos.contract.originate({
+  code: contractMapTacoShop,
+  storage: MichelsonMap.fromLiteral({
+    "1": {current_stock: "10000", max_price : "50"},
+    "2": {current_stock: "120", max_price : "20"},
+    "3": {current_stock: "50", max_price : "60"}
+  }),  
+})
+.then(contractOriginated => {
+  println(`Waiting for contract origination of ${contractOriginated.contractAddress}...`);
+  return contractOriginated.contract()
+})
+.then (contract => {
+  println(`Origination completed.`);
+})
+.catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
+```
+
 #### Accessing the values of the map
-The following example calls a contract that has already been originated with the same code and the same initial storage as above. The get method of the MichelsonMap class is used to see the value associated to the key "1" of the map. Then, a call is made to the main function of the contract using the key "1" as parameter. This has the effect of decreasing the value of the 'current_stock' associated to the key "1". The get method of the MichelsonMap class is used again to see the difference in storage after the method call.
+The following example calls a contract that has already been originated with the same code and the same initial storage as above. The `get` method of the `MichelsonMap` class is used to see the value associated to the key "1" of the map. Then, a call is made to the main function of the contract using the key "1" as parameter. This has the effect of decreasing the value of the 'current_stock' associated to the key "1". The `get` method of the `MichelsonMap` class is used again to see the difference in storage after the method call.
 
 ```js live noInline
 Tezos.contract.at('KT1WEQQ7RRrzUH7PU9NGMyuTbTF3kjnKynUW')
@@ -148,7 +171,7 @@ Tezos.contract.originate({
 
 #### Accessing the values of the map
 
-The get method of the MichelsonMap class can be used to access values of the map for a specified key.
+The `get` method of the `MichelsonMap` class can be used to access values of the map for a specified key.
 
 ```js live noInline
 Tezos.contract.at('KT1SPQToSLv7NFvaiJXNYpGjXS9BJwJ3zkAW')
@@ -166,7 +189,7 @@ Tezos.contract.at('KT1SPQToSLv7NFvaiJXNYpGjXS9BJwJ3zkAW')
 ```
 ## Contract having a map in storage where its key has nested pairs
 
-The contract schema in this example has a key with 8 nested pairs and a value of `int`. Here is the Michelson code of the storage :
+The contract schema in this example has a key with 8 nested pairs and a value of int. Here is the Michelson code of the storage :
 
 ```
 {
@@ -267,7 +290,7 @@ Tezos.contract.originate({
 ```
 #### Accessing the values of the map
 
-The get method of the MichelsonMap class can be used to access values of the map for a specified key.
+The `get` method of the `MichelsonMap` class can be used to access values of the map for a specified key.
 
 ```js live noInline
 Tezos.contract.at('KT1E6AFEshyEmjML4dUmSNTRzNmnDdPqWzrr')
@@ -292,7 +315,7 @@ Tezos.contract.at('KT1E6AFEshyEmjML4dUmSNTRzNmnDdPqWzrr')
 
 ## Contrat having a pair of map and bigMap in storage
 
-The MichelsonMap class can also be used with bigMap. The following example uses a contract having both a map and a bigMap in its storage. Here is the Michelson code of the storage :
+The `MichelsonMap` class can also be used with bigMap. The following example uses a contract having both a map and a bigMap in its storage. Here is the Michelson code of the storage :
 
 ```
 { "prim": "storage",
@@ -353,7 +376,7 @@ Tezos.contract.originate({
 ```
 #### Accessing the values of the map and the bigMap
 
-The get method of the MichelsonMap class can be used to access the values of the map and values of the bigMap. The difference is that for a map, the value is returned directly while the get method returns a promise when called on bigMap. 
+The `get` method of the `MichelsonMap` class can be used to access the values of the map and values of the bigMap. The difference is that for a map, the value is returned directly while the get method returns a promise when called on bigMap. 
 
 ```js live noInline
 Tezos.contract.at('KT1McL1e8UgHUMxxW9B8jxifcLKP11Pyv1wC')
