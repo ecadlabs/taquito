@@ -66,7 +66,7 @@
           "typings",
           "version"
         ],
-        "sha512": "e65e9cf90eb7fef8d058c54174eb8262ac33c11bb94b70ecac16d8b8077b9ef75b59c56ca4cc9376731f1ae2e257b71a6d9edf1c79388249f78d0c2c9957353f"
+        "sha512": "d7a4bcf5c86d05ba56ddcafb70e50338c4cad2ba7244879690bea8543849674dd95cd929f6c27af103e2a74d373373d75415cdc2da345b585952d6e766fa321f"
       }
     },
     {
@@ -74,7 +74,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/tezbridge-wallet",
-          "version": "6.3.0-beta.5",
+          "version": "6.3.2-beta.0",
           "description": "Tezbridge wallet provider",
           "keywords": [
             "tezos",
@@ -134,7 +134,7 @@
             ]
           },
           "dependencies": {
-            "@taquito/taquito": "^6.3.0-beta.5"
+            "@taquito/taquito": "^6.3.2-beta.0"
           },
           "devDependencies": {
             "@types/jest": "^23.3.2",
@@ -167,5 +167,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJe5tcoCRAD9Qy5GYHsngAAhxMQAHii6qm59+u1q6Qp65ngRCmo\nUH++Enrn1N1/sCbUcQLDpTieD3wd2rBMygS19OzTUcrLyQ9kFqEBsnUDG4aaqvRj\n1yYRLE+dZqjnH6LW+qpSERWK9muJe+q5p447pAhPbeNPiCYnoJyu5hA88+2xdUQp\n6cxByLyshrB+o3t61GPuLXtBHJ8VtPVMfHe8WHb6dVEQ0YuIDxUibX/0yJ/yjN2s\ni32cmFT3N3CKHmfV8eZI6FxdZO9t7bBCENK4TTkvkEdHqdwkqZltUsIfZ5Sf/IcB\n697grR4F7nHxw1Gcz8TEjQXjdg6s+YOhrTZTT1PLpvPM240jBAHJ20lZCauGTxn5\nVdyb0gWdSqpboZwWCFXPJY1eLl/6u/buxG8PWgvMhNbrT5uwFcw87fDsDwtOqgF9\naj24+c/tZwjWrgoMl2XLfpB68qhwkbXghg17LX7/yTZc3pqOMXc5RQEdPS5OVn2d\n/ZecPbVbRQ2jQpvZJ+PF24M6QLnoCNcgViDcqHjrH2KRjDrS2IUSNXcDV2G4UYVJ\n7I98pAiK6qFnRs8h9MkZyy/yN33qbgcggwGeKAVzPFSu2HF6vVSNcwoU7THmU81s\n7tUcPBrmU4m80kt3ylOR0tMfykflX8vqVQA/XJQwVN6By+VeKVPtSB5mMB1dkn54\nz4M4DfA304Ug7pJ78hkK\n=6CAX\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJe9KzeCRAD9Qy5GYHsngAANH4QAAg9t7ZG7D9c5+Je/t9oKZjx\ncwKd1bfIAUg/ynrLfkzIzqV5yxsoylWkhJUMxb1Cdj5S4AVDQ3v0SUTvajfvx8uE\nHwEGGx4amihYWrFvVbPyevZhPF55XJSIJXR7pi+ZTsqPYFYhoWQVkgccu6An/Slc\nN1GhvPGFAcWCzkZ0FU6h8gZKGFxicjCg3umIJLhoP9LUkE9VTwq3js72/Fc8nAjL\nmbSaosGQ2pJkqISj04vYEWf0HVtYUKTpm6ZVLDm/vTMpyLHpVhwep8xh+nZHLSVc\nSmaalJjysmwU3UYNBNOQ26vZbrKo1frp1SK+g6xMW0M6SgtTF07AeCGJu6sT7VD7\njlgPoXKvfwvrJNSV10u81K3mBVFVZrqPZ6brMVhlkjCqpjzB2ek6X7PRj7r8vTf1\nRgyXTjE8/i3VJeJuaiOA8qa02j//Hupakj8cCtRiwziRRwXXN642BU2JGvvJVn8J\ncGZGZm++CfEptBvUL5YlwKei9avidueYp6lw+bAgsSx5S1PzUYwudA8xGnStiGAO\nxjn1V+2oo0oYixulki9k0dq9aFwuUOfV4JiorI+vIi9oIgCmgZaf8iaMI9oAd51/\ngmkwOoVvsyYdh7B/VaMnkDmjGMCBlNZnvKGYSo+ivgYPTFgQbVNtDzEEYyz2hXYc\nCPIwWAsYhQGiitGQBCeP\n=QuDB\n-----END PGP SIGNATURE-----\n"
 }

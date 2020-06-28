@@ -76,9 +76,9 @@ export type MichelsonData = IntLiteral |
 type MichelsonSectionId = "parameter" | "storage" | "code";
 type SectionPrim<PT extends MichelsonSectionId, AT extends Expr[]> = ReqArgs<Prim<PT, AT>>;
 
-type MichelsonParameter = SectionPrim<"parameter", [MichelsonType]>;
-type MichelsonStorage = SectionPrim<"storage", [MichelsonType]>;
-type MichelsonCode = SectionPrim<"code", [MichelsonInstruction[]]>;
+export type MichelsonParameter = SectionPrim<"parameter", [MichelsonType]>;
+export type MichelsonStorage = SectionPrim<"storage", [MichelsonType]>;
+export type MichelsonCode = SectionPrim<"code", [MichelsonInstruction[]]>;
 
 export type MichelsonScript = [MichelsonParameter, MichelsonStorage, MichelsonCode] |
    [MichelsonStorage, MichelsonCode, MichelsonParameter] |

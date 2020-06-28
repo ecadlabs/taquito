@@ -48,7 +48,7 @@ const mergeLimits = (
   };
 };
 
-// RPC require a signature but do not verify it
+// RPC requires a signature but does not verify it
 const SIGNATURE_STUB =
   'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg';
 

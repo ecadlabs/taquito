@@ -68,7 +68,7 @@ Tezos.tz
   .catch(error => println(JSON.stringify(error)));
 ```
 
-### Using the inMemory Singer and Importing a key
+### Using the inMemory Signer and Importing a key
 
 The `InMemorySigner` package is useful for development and testing. It's an easy way to get started with Tezos when you don't need to interact with a users wallet. The `InMemorySigner` is suitable for testing and development. Should you be writing code for production that deals with tokens of real value, it's strongly recommended that you use a RemoteSigner that is backed by a HSM.
 

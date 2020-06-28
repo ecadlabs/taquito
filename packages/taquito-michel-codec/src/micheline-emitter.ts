@@ -134,5 +134,10 @@ function emitSeq(node: Expr[], f: Formatter): string {
  * @param opt Options
  */
 export function emitMicheline(expr: Expr, opt?: FormatOptions): string {
+    // tslint:disable-next-line: strict-type-predicates
+    if (typeof expr !== "object") {
+        throw new TypeError(`object type was expected, got ${typeof expr} instead`);
+    }
+
     return emitExpr(expr, new Formatter(opt));
 }
