@@ -24,7 +24,8 @@ import {
 import { smartContractAbstractionSemantic } from './semantic';
 import LambdaView, { DefaultLambdaAddresses } from './lambda-view';
 
-export class RpcContractProvider extends OperationEmitter implements ContractProvider, StorageProvider {
+export class RpcContractProvider extends OperationEmitter
+  implements ContractProvider, StorageProvider {
   constructor(context: Context, private estimator: EstimationProvider) {
     super(context);
   }
@@ -211,14 +212,14 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
   }
 
   async lambdaView(
-    lambdaContractOrAddress: Contract | string,
-    viewContractOrAddress: Contract | string,
+    lambdaContractOrAddress: ContractAbstraction<ContractProvider> | string,
+    viewContractOrAddress: ContractAbstraction<ContractProvider> | string,
     viewMethod?: string,
     contractParameter?: MichelsonV1Expression
   ): Promise<LambdaView> {
     let lambdaContract;
     let viewContract;
-    if (Contract.isContract(lambdaContractOrAddress)) {
+    if (ContractAbstraction.isContract(lambdaContractOrAddress)) {
       lambdaContract = lambdaContractOrAddress;
     } else if (Object.keys(DefaultLambdaAddresses).includes(lambdaContractOrAddress)) {
       const addressKey = lambdaContractOrAddress as keyof typeof DefaultLambdaAddresses;
@@ -226,7 +227,7 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
     } else {
       lambdaContract = await this.at(lambdaContractOrAddress);
     }
-    if (Contract.isContract(viewContractOrAddress)) {
+    if (ContractAbstraction.isContract(viewContractOrAddress)) {
       viewContract = viewContractOrAddress;
     } else {
       viewContract = await this.at(viewContractOrAddress);

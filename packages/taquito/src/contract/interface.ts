@@ -139,8 +139,8 @@ export interface ContractProvider extends StorageProvider {
   transfer(params: TransferParams): Promise<TransactionOperation>;
   at(address: string, schema?: ContractSchema): Promise<ContractAbstraction<ContractProvider>>;
   lambdaView(
-    lambdaContractOrAddress: Contract | string,
-    viewContractOrAddress: Contract | string,
+    lambdaContractOrAddress: ContractAbstraction<ContractProvider> | string,
+    viewContractOrAddress: ContractAbstraction<ContractProvider> | string,
     viewMethod?: string,
     contractParameter?: MichelsonV1Expression
   ): Promise<LambdaView>;
