@@ -24,6 +24,13 @@
             ]
         },
         {
+            "type": "category",
+            "label": "Advanced",
+            "items": [
+                "complex_parameters"
+            ]
+        },
+        {
             "type": "link",
             "label": "TypeDoc Reference",
             "href": "https://tezostaquito.io/typedoc"
