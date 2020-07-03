@@ -106,29 +106,14 @@ Tezos.contract.at('KT1WEQQ7RRrzUH7PU9NGMyuTbTF3kjnKynUW')
 
 ## A Contract with a Map using an unannotated pair/tuple as a key
 
-Here we have the storage of our contract defined in JSON Michelson.
+Here we have the storage of our contract defined in Michelson.
 
 It has a `Map` with the annotated name `%theMap`. This `Map` uses a pair consisting of a natural number and an address as its key `(1, tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx)`. Its value is also a pair of values, consisting of an `int` (annotated as `%quantity`) and `mutez` (annotated as `%amount`).
 
 ```
-{ "prim": "storage",
-    "args":
-      [ { "prim": "pair",
-          "args":
-            [ { "prim": "pair",
-                "args":
-                  [ { "prim": "address", "annots": [ "%theAddress" ] },
-                    { "prim": "map",
-                      "args":
-                        [ { "prim": "pair",
-                            "args":
-                              [ { "prim": "nat" }, { "prim": "address" } ] },
-                          { "prim": "pair",
-                            "args":
-                              [ { "prim": "mutez", "annots": [ "%amount" ] },
-                                { "prim": "int", "annots": [ "%quantity" ] } ] } ],
-                      "annots": [ "%theMap" ] } ] },
-              { "prim": "int", "annots": [ "%theNumber" ] } ] } ] }
+(pair (pair (address %theAddress)
+            (map %theMap (pair nat address) (pair (mutez %amount) (int %quantity))))
+      (int %theNumber)) 
 ```
 
 ### Origination of the contract with Pair as Map keys
@@ -206,60 +191,17 @@ Tezos.contract.at('KT1SPQToSLv7NFvaiJXNYpGjXS9BJwJ3zkAW')
 
 This contract schema has a key with eight nested pairs and value of an int. This example type of key is impractical, but we offer it as an example to illustrate how to work with complex keys.
 
-The JSON Michelson storage schema with a map using eight pairs as a key:
+The Michelson storage schema with a map using eight pairs as a key:
 
 ```
-{
-  "prim": "storage",
-  "args":
-    [
-      {
-        prim: 'map',
-        args: [
-          {
-            prim: "pair", args: [
-              { prim: "int" },
-              {
-                prim: "pair", args: [
-                  { prim: "nat" },
-                  {
-                    prim: "pair", args: [
-                      { prim: "string" },
-                      {
-                        prim: "pair", args: [
-                          { prim: "bytes" },
-                          {
-                            prim: "pair", args: [
-                              { prim: "mutez" },
-                              {
-                                prim: "pair", args: [
-                                  { prim: "bool" },
-                                  {
-                                    prim: "pair", args: [
-                                      { prim: "key_hash" },
-                                      {
-                                        prim: "pair", args: [
-                                          { prim: "timestamp" },
-                                          { prim: "address" }
-                                        ]
-                                      }
-                                    ]
-                                  }
-                                ]
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }, { prim: "int" }]
-      },
-    ]
-}
+(map (pair int
+        (pair nat
+            (pair string
+                (pair bytes 
+                    (pair mutez 
+                        (pair bool 
+                            (pair key_hash 
+                                (pair timestamp address)))))))) int) 
 ```
 
 ### Origination a contract with complex keys
@@ -340,23 +282,10 @@ Map and BigMap are semantically the same (except one difference), everything you
 
 ### Contract storage containing a map and a bigMap
 
-The `MichelsonMap` class also supports the `bigMap` type. The following example uses a contract containing both a map and a bigMap in its storage. Here is the JSON Michelson definition of storage for this example:
+The `MichelsonMap` class also supports the `bigMap` type. The following example uses a contract containing both a map and a bigMap in its storage. Here is the Michelson definition of storage for this example:
 
 ```
-{ "prim": "storage",
-    "args":
-      [ { "prim": "pair",
-          "args":
-            [ { "prim": "big_map",
-                "args":
-                  [ { "prim": "pair",
-                      "args": [ { "prim": "nat" }, { "prim": "address" } ] },
-                    { "prim": "int" } ], "annots": [ "%thebigmap" ] },
-              { "prim": "map",
-                "args":
-                  [ { "prim": "pair",
-                      "args": [ { "prim": "nat" }, { "prim": "address" } ] },
-                    { "prim": "int" } ], "annots": [ "%themap" ] } ] } ] }
+(pair (big_map %thebigmap (pair nat address) int) (map %themap (pair nat address) int))
 ```
 
 #### Origination of the contract with an initial storage
