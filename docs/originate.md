@@ -39,7 +39,7 @@ Is equivilent to this Michelson expression
 Pair 0 (Pair 1 {"edpkuLxx9PQD8fZ45eUzrK3BhfDZJHhBuK4Zi49DcEGANwd2rpX82t"})
 ```
 
-As you cal see, the property names are discarded. The order of your properties is crucial!
+As you can see, the property names are discarded. The order of your properties is crucial!
 
 ### a. Initializing storage using a JavaScript object
 
