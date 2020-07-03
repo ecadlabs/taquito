@@ -1,5 +1,5 @@
 ---
-title: Working with contracts having complexe storage/parameters
+title: Working with contracts having complex storage/parameters
 author: Roxane Letourneau
 ---
 
