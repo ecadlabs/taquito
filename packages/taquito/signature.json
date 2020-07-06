@@ -190,7 +190,7 @@
           },
           {
             "path": "dist/taquito.min.js",
-            "sha512": "c97261c3fa2ddc0c9a7ba5ea9ec56e51823d2c27d9992901ac4e6391ee19b500641a18cd160ee784185f767ce7e0267dc05469eb99a0c9c07b2a297c5a579f7a"
+            "sha512": "334d4d2f1a461c168d5d0ccc246fc37dc71d0a13c3c1dcd7efb8f65bfd8578e339d1020b3c16097201809a9a224042b95c45c8a9e6e52fb0a0b9c959138c316f"
           },
           {
             "path": "dist/taquito.umd.js",
@@ -414,7 +414,7 @@
           },
           {
             "path": "README.md",
-            "sha512": "c0514049a592c80349ef4b3dfae001d69130a3c95c435720b7d4fe891a44084906df034c97077605f15f4da644aefc4e9fe6286279d5750fc57485a31e4afe51"
+            "sha512": "a4c6063ebdc9e9531b38355ba5ac0e75b90610d4e241c89aee829a04272079024dc68dfb2cae25eaff70fabf03bef8a945cb8d1f9ac2a37190c9dc1d67fabae1"
           },
           {
             "path": "dist/types/operations/batch-operation.d.ts",
@@ -648,7 +648,7 @@
           "unpkg",
           "version"
         ],
-        "sha512": "3bfd307283eb9a2299c1eb7defbae85eedbe55215fa9734be130b4f9425de6fe0f9e70d5105581f02be2dba65b140c685d3826913bbd5f67e956aae84a99a111"
+        "sha512": "399dc480f0e0787d3e6761dca73e11d23d458f62bb52ef8b5e233726a70de5670950c4d0922b3bda29e246e741f0db378a900e8ff521989163ae3cc0b1a84758"
       }
     },
     {
@@ -656,7 +656,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/taquito",
-          "version": "6.3.2-beta.0",
+          "version": "6.3.3-beta.0",
           "description": "High level functionality that builds upon the other packages in the Tezos Typescript Library Suite.",
           "keywords": [
             "tezos",
@@ -733,12 +733,12 @@
             ]
           },
           "dependencies": {
-            "@taquito/http-utils": "^6.3.2-beta.0",
-            "@taquito/michel-codec": "^6.3.2-beta.0",
-            "@taquito/michelson-encoder": "^6.3.2-beta.0",
-            "@taquito/rpc": "^6.3.2-beta.0",
-            "@taquito/signer": "^6.3.2-beta.0",
-            "@taquito/utils": "^6.3.2-beta.0",
+            "@taquito/http-utils": "^6.3.3-beta.0",
+            "@taquito/michel-codec": "^6.3.3-beta.0",
+            "@taquito/michelson-encoder": "^6.3.3-beta.0",
+            "@taquito/rpc": "^6.3.3-beta.0",
+            "@taquito/signer": "^6.3.3-beta.0",
+            "@taquito/utils": "^6.3.3-beta.0",
             "bignumber.js": "^9.0.0",
             "rx-sandbox": "^1.0.3",
             "rxjs": "^6.5.5"
@@ -779,5 +779,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJe9KzPCRAD9Qy5GYHsngAAmGMQACFak+8s9bo3aFI1ImCM1gPc\ndb7MjNx1kcQJNalciFOLIkweHeBlFv0MlG4jN8ROZ5WITTCmnnQJP2JcyB8aGrB6\nN5TMzsotamqjZZ0FhwS1AqjMOoG1ElfiRFv/lmshzCPGXd/8o+6QxQqqh5zsFvh5\neJS3Jd/P8A2rwBBVF54/MKixJ6p86NEeIK3Z2fD/rIfRGdZ1jkb63vFg7cdWhHVT\nMD4zJjVhl6h7AyUCClUxiqsqbNKM5Mx1+UdshmYJs2WNgwpAtCTxPsIoiHPd3+hG\nWSm5CN/m+6BsLPOwqY6Xk66dSPmWIR940Cr7qlT+9WnRjAltCqKNbnCYxfd7TmkU\nz39vGtEe2J7p8+n71HgjQd36Yi6A2nBpbC1ucumEqxyyyvUrOeg2/2ItuKX2Xb9X\noRwCV93ZZnmKL/YW3fRWEjd0mhOLHp7hjG4kDH+hFTSd8shOo9lna+V7FN2gAXVK\n+eLoBuJHX+7e5d0IzFrDMy/W67iiJ/TAFMFCW0IoZdEHvr+GVzIjZ6q4dhsf8KAp\nHMkAUVRaDCHN99VKIVflKMDhwj4IR8vVUPof4KgFWudICwBFCA2szEnocKl4TsqA\nAEbTt6ZlJFdGTIRz1xVHKsgaHYuNuar9JgYMTaL2VELAwWFAD7sYUV8+OrNm74e6\nO1GbJWKzTh5AuMk75r6q\n=hT/1\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfA5jNCRAD9Qy5GYHsngAAVp8QADxfobBt6Cx/TzMuhStGuRDG\nz+Fa5/g0g+iDQByY0WyyVqGyXiEeyCDZqL7HP4ACaL5Z1dvKnQru3IkJmEgRRUqQ\nZT4mmosfXbFRuTT/tGOomT5jiYlWTwcOWwz23r61vgWZpxOiye6omP2aqATpoS2e\nbX+VOXI0cS4mb5xShsNiBgXw4h798NN9sdfI1r7adU+8qtUNCa73K8R2o6/Vmm9w\nZvxBkhtWEZlNlNnsnZYpCF+GQ+5NxuHYo2z7o8KolVi9AGXy0cC+Ji1OeBK1+IgD\nsKKcAYl9dpgIT5kU668DAvmTDn3E1lgR9VR4xhKfdVlIddNHGwRCF8EeO168OKZ0\ndkFD3pV900j8Fpoy/lpEwaiEjIposUeZhL0cYZmSEbK2D0gR43VkAyiwj9w+vNeu\nvSm8cfvqV6on7gXa7T2+IPNmIaNBgtt/DPZvzZYIHXWQC3S13VJM0qPqUJQsQvSp\nCCDLGiOzNdllI8fAawAEYHMHK1xN3QjlIsFx+hnGkXTCryJ+u68GlEC3lEG2ZwzX\ndoBNnMpBn+XOFi4sJXH8T0Why1RmXTG5BiyY2C66Ao3TW0ZDRuyJEfyZGvOXPp65\neWo3aKsObU6bzBKvHhlb213i19W/lg9t5grimL/ifjBZS0+loq/0EnA1eBfmJftC\n+37WiMlKGZ+J4YM7Dl6a\n=f62m\n-----END PGP SIGNATURE-----\n"
 }

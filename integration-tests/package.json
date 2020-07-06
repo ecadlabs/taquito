@@ -4,14 +4,14 @@
     "test:faucet": "RUN_WITH_FAUCET=true jest --runInBand",
     "test": "jest"
   },
-  "version": "6.3.2-beta.0",
+  "version": "6.3.3-beta.0",
   "dependencies": {
-    "@taquito/http-utils": "^6.3.2-beta.0",
-    "@taquito/local-forging": "^6.3.2-beta.0",
-    "@taquito/remote-signer": "^6.3.2-beta.0",
-    "@taquito/signer": "^6.3.2-beta.0",
-    "@taquito/taquito": "^6.3.2-beta.0",
-    "@taquito/utils": "^6.3.2-beta.0"
+    "@taquito/http-utils": "^6.3.3-beta.0",
+    "@taquito/local-forging": "^6.3.3-beta.0",
+    "@taquito/remote-signer": "^6.3.3-beta.0",
+    "@taquito/signer": "^6.3.3-beta.0",
+    "@taquito/taquito": "^6.3.3-beta.0",
+    "@taquito/utils": "^6.3.3-beta.0"
   },
   "private": true,
   "jest": {
