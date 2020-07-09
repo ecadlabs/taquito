@@ -27,7 +27,8 @@
             "type": "category",
             "label": "Advanced",
             "items": [
-                "complex_parameters"
+                "complex_parameters",
+                "storage_annotations"
             ]
         },
         {
