@@ -727,4 +727,14 @@ export class RpcClient {
 
     return { gas: formattedGas, ...rest };
   }
+
+  /**
+   *
+   * @description Return rpc root url
+   */
+
+  getRpcUrl() {
+    return this.url
+  }
+
 }
