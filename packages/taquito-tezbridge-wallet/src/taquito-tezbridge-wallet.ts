@@ -50,7 +50,7 @@ export class TezBridgeWallet implements WalletProvider {
   async sendOperations(params: any[]) {
     const { operation_id } = await tezbridge.request({
       method: 'inject_operations',
-      operations: params.map((op) => ({
+      operations: params.map(op => ({
         ...this.removeFeeAndLimit(op),
       })),
     });
