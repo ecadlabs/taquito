@@ -105,6 +105,16 @@ const passwordExample = "4rW0D22yXt"
 const mnemonicExample = "arrange ceiling whisper churn congress double step carpet empty rice prevent swallow silk casual champion"
 const secretExample = "af552679c4943509bd77643b8ef3f8dcf42e61b3"
 
+//contracts for examples of storage with and without annotations
+const contractStorageAnnot = 
+[ { "prim": "parameter", "args": [ { "prim": "unit" } ] },{ "prim": "storage","args":[ { "prim": "pair","args":[ { "prim": "pair","args":[ { "prim": "pair","args":[ { "prim": "address", "annots": [ "%theAddress" ] },{ "prim": "bool", "annots": [ "%theBool" ] } ] },{ "prim": "pair","args":[ { "prim": "nat", "annots": [ "%theNat" ] },{ "prim": "int", "annots": [ "%theNumber" ] } ] } ] },{ "prim": "mutez", "annots": [ "%theTez" ] } ] } ] },{ "prim": "code","args":[ [ { "prim": "DUP" }, { "prim": "CDR" },{ "prim": "NIL", "args": [ { "prim": "operation" } ] },{ "prim": "PAIR" },{ "prim": "DIP", "args": [ [ { "prim": "DROP" } ] ] } ] ] } ]
+
+const contractStorageWithAndWithoutAnnot =
+[ { "prim": "parameter", "args": [ { "prim": "unit" } ] },{ "prim": "storage","args":[ { "prim": "pair","args":[ { "prim": "pair","args":[ { "prim": "pair","args":[ { "prim": "address"},{ "prim": "bool"} ] },{ "prim": "pair","args":[ { "prim": "nat", "annots": [ "%theNat" ] },{ "prim": "int", "annots": [ "%theNumber" ] } ] } ] },{ "prim": "mutez" } ] } ] },{ "prim": "code","args":[ [ { "prim": "DUP" }, { "prim": "CDR" },{ "prim": "NIL", "args": [ { "prim": "operation" } ] },{ "prim": "PAIR" },{ "prim": "DIP", "args": [ [ { "prim": "DROP" } ] ] } ] ] } ]
+
+const contractStorageWithoutAnnot =
+[ { "prim": "parameter", "args": [ { "prim": "unit" } ] },{ "prim": "storage","args":[ { "prim": "pair","args":[ { "prim": "pair","args":[ { "prim": "pair","args":[ { "prim": "address"},{ "prim": "bool"} ] },{ "prim": "pair","args":[ { "prim": "nat" },{ "prim": "int" } ] } ] },{ "prim": "mutez" } ] } ] },{ "prim": "code","args":[ [ { "prim": "DUP" }, { "prim": "CDR" },{ "prim": "NIL", "args": [ { "prim": "operation" } ] },{ "prim": "PAIR" },{ "prim": "DIP", "args": [ [ { "prim": "DROP" } ] ] } ] ] } ]
+
 `;
 
     this.transpile({ code, scope, transformCode, noInline });
