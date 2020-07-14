@@ -18,7 +18,7 @@ In this example, we will originate the popular mutli-sig contract that is availa
 Here are three examples of originating a contract using Taquito. The first example initializes the storage of the contract using a familiar-looking javascript object. The second and third demonstrates the use of plain Michelson and JSON Michelson. The first method is preferred, but if you have a reason to circumvent the convenient storage API, this allows you to do so.
 
 These three examples will be shown using the `Contract API` and the `Wallet API`. The new Taquito Wallet API is designed to interact with wallets, and it supports Beacon, the TZIP-10 standard.
-> Note : To run the `Wallet API` examples, you can install a wallet extension to your browser. For example, the Beacon Extension can be download [here](https://chrome.google.com/webstore/detail/beacon-extension/gpfndedineagiepkpinficbcbbgjoenn).
+> Note : To run the `Wallet API` examples, you can install a wallet extension to your browser. For example, the Beacon Extension can be download [here](https://www.walletbeacon.io/).
 
 <Tabs
   defaultValue="contractAPI"
