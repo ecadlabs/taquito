@@ -7,6 +7,7 @@
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
 import { validateAddress, validateChain, validateKeyHash, validateContractAddress, validatePublicKey, validateSignature } from '@taquito/utils';
+import {  BeaconWallet } from '@taquito/beacon-wallet';
 import Playground from '@theme/Playground';
 import classnames from 'classnames';
 import Clipboard from 'clipboard';
@@ -63,7 +64,7 @@ export default ({
 
     return (
       <Playground
-        scope={{ ...React, Tezos, validateAddress, validateChain, validateKeyHash, validateContractAddress, validatePublicKey, validateSignature, MichelsonMap }}
+        scope={{ ...React, Tezos, validateAddress, validateChain, validateKeyHash, validateContractAddress, validatePublicKey, validateSignature, MichelsonMap, BeaconWallet }}
         code={children.trim()}
         theme={prism.theme || defaultTheme}
         transformCode={code => code.replace(/import .*/g, '')}
