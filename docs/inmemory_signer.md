@@ -2,9 +2,10 @@
 title: In Memory Signer
 author: Simon Boissonneault-Robert
 ---
-
-> **Warning; storing private keys in memory is suitable for development workflows, but risky for
-> production use-cases! Use the InMemorySigner appropriately given your risk profile**
+:::caution Warning
+**Storing private keys in memory is suitable for development workflows, but risky for
+production use-cases! Use the InMemorySigner appropriately given your risk profile**
+:::
 
 In memory signer is a local signer implementation that allows you to directly use a private key in your browser or your nodejs app.
 
@@ -18,16 +19,35 @@ If you require server-side signing of operations on mainnet, we recommend explor
 
 ### Loading an unencrypted private key
 
+If you configure taquito this way you will now be able to use every function that needs signing support.
+
 ```js
 import { InMemorySigner } from '@taquito/signer'
 import { Tezos } from '@taquito/taquito'
 
 Tezos.setProvider({signer: await InMemorySigner.fromSecretKey('you_private_key')})
 ```
+The `fromSecretKey` method takes a secret that is base58 encoded as a parameter. Here are examples of unencrypted private keys:
 
-If you configure taquito this way you will now be able to use every function that needs signing support
+- **tz1 (ed25516):**
+edsk2rKA8YEExg9Zo2qNPiQnnYheF1DhqjLVmfKdxiFfu5GyGRZRnb
 
-`Note: Operation will be signed automatically using the signer (no prompt)`
+- **tz2 (secp256k1):**
+spsk2Fiz7sGP5fNMJrokp6ynTa4bcFbsRhw58FHXbNf5ProDNFJ5Xq
+
+- **tz3 (p256):**
+p2sk3HdQc93EjixRAWs9WZ6b3spNgPD7VriXU8FH8EiHN8sxCh7gmv
+
+If required, Taquito offers a function to convert to these formats given a hex string or an Uint8Array. Here is an example with a hex string:
+
+```js live noInline
+//import { b58cencode, prefix, Prefix } from '@taquito/utils';
+println(b58cencode('7c842c15c8b0c8fd228e6cb5302a50201f41642dd36b699003fb3c857920bc9d', prefix[Prefix.P2SK]))
+```
+
+:::note
+Operation will be signed automatically using the signer (no prompt)
+:::
 
 ### Loading an encrypted private key with a passphrase
 
@@ -88,7 +108,9 @@ importKey(
 
 If you configure taquito this way, you will now be able to use every function that needs signing support.
 
-`Note: Operation will be signed automatically using the signer (no prompt)`
+:::note
+Operation will be signed automatically using the signer (no prompt)
+:::
 
 ### A simple factory multiple keys/wallets
 

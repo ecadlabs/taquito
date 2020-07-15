@@ -46,3 +46,12 @@
 .main-wrapper {
   overflow-x: hidden;
 }
+
+.alert--secondary {
+  --ifm-alert-background-color: #f1f1f1;
+}
+
+.alert--warning {
+    --ifm-alert-background-color:  #f3b44e;
+    --ifm-alert-border-color:  #ffba00;
+}
