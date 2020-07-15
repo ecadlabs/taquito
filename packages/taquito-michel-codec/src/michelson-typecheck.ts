@@ -1,4 +1,4 @@
-import { MichelsonType, MichelsonData, MichelsonComparableType, MichelsonDataId, MichelsonMapElt } from "./michelson-types";
+import { MichelsonType, MichelsonData, MichelsonComparableType, MichelsonDataId, MichelsonMapElt, MichelsonDataLiteral } from "./michelson-types";
 import { decodeBase58Check } from "./base58";
 import { LongInteger, compareBytes, parseBytes, isDecimal, isNatural } from "./utils";
 import { IntLiteral, StringLiteral } from "./micheline";
@@ -74,12 +74,24 @@ interface PathElem {
 
 export class MichelsonTypeError extends Error {
     /**
-     * @param val Value of a node caused the error
+     * @param val Value of a type node caused the error
      * @param path Path to a node caused the error
      * @param message An error message
      */
     constructor(public val: MichelsonType, public path?: PathElem[], message?: string) {
         super(message);
+    }
+}
+
+export class MichelsonDataError extends MichelsonTypeError {
+    /**
+     * @param val Value of a type node caused the error
+     * @param data Value of a data node caused the error
+     * @param path Path to a node caused the error
+     * @param message An error message
+     */
+    constructor(val: MichelsonType, public data: MichelsonData, path?: PathElem[], message?: string) {
+        super(val, path, message);
     }
 }
 
@@ -194,7 +206,7 @@ function parseDate(a: StringLiteral | IntLiteral): Date | null {
     return null;
 }
 
-function compare(t: MichelsonComparableType, a: MichelsonData, b: MichelsonData): number {
+function compareMichelsonData(t: MichelsonComparableType, a: MichelsonData, b: MichelsonData): number {
     switch (t.prim) {
         case "int":
         case "nat":
@@ -243,43 +255,55 @@ function compare(t: MichelsonComparableType, a: MichelsonData, b: MichelsonData)
                     return x < 0 ? -1 : x > 0 ? 1 : 0;
                 }
             }
+            break;
+
+        case "pair":
+            if (("prim" in a) && ("prim" in b) && (a.prim === "Pair") && (b.prim === "Pair")) {
+                const x = compareMichelsonData(t.args[0], a.args[0], b.args[0]);
+                if (x !== 0) {
+                    return x;
+                }
+                return compareMichelsonData(t.args[1], a.args[1], b.args[1]);
+            }
+
     }
+    // Unlikely, types are expected to be verified before the function call
     throw new Error(`non comparable values: ${a}, ${b}`);
 }
 
-function assertDataValid(t: MichelsonType, d: MichelsonData, path: PathElem[]): void {
+function assertDataValidInternal(t: MichelsonType, d: MichelsonData, path: PathElem[]): void {
     switch (t.prim) {
         // Atomic literals
         case "int":
             if (("int" in d) && isDecimal(d.int)) {
                 return;
             }
-            throw new MichelsonTypeError(t, path, `integer value expected: ${d}`);
+            throw new MichelsonDataError(t, d, path, `integer value expected: ${d}`);
 
         case "nat":
         case "mutez":
             if (("int" in d) && isNatural(d.int)) {
                 return;
             }
-            throw new MichelsonTypeError(t, path, `natural value expected: ${d}`);
+            throw new MichelsonDataError(t, d, path, `natural value expected: ${d}`);
 
         case "string":
             if ("string" in d) {
                 return;
             }
-            throw new MichelsonTypeError(t, path, `string value expected: ${d}`);
+            throw new MichelsonDataError(t, d, path, `string value expected: ${d}`);
 
         case "bytes":
             if ("bytes" in d) {
                 return;
             }
-            throw new MichelsonTypeError(t, path, `bytes value expected: ${d}`);
+            throw new MichelsonDataError(t, d, path, `bytes value expected: ${d}`);
 
         case "bool":
             if (("prim" in d) && (d.prim === "True" || d.prim === "False")) {
                 return;
             }
-            throw new MichelsonTypeError(t, path, `boolean value expected: ${d}`);
+            throw new MichelsonDataError(t, d, path, `boolean value expected: ${d}`);
 
         case "key_hash":
             if (("string" in d) &&
@@ -289,13 +313,13 @@ function assertDataValid(t: MichelsonType, d: MichelsonData, path: PathElem[]): 
                     "P256PublicKeyHash") !== null) {
                 return;
             }
-            throw new MichelsonTypeError(t, path, `key hash expected: ${d}`);
+            throw new MichelsonDataError(t, d, path, `key hash expected: ${d}`);
 
         case "timestamp":
             if ((("string" in d) || ("int" in d)) && parseDate(d) !== null) {
                 return;
             }
-            throw new MichelsonTypeError(t, path, `timestamp expected: ${d}`);
+            throw new MichelsonDataError(t, d, path, `timestamp expected: ${d}`);
 
         case "address":
             if ("string" in d) {
@@ -313,7 +337,7 @@ function assertDataValid(t: MichelsonType, d: MichelsonData, path: PathElem[]): 
                     return;
                 }
             }
-            throw new MichelsonTypeError(t, path, `address expected: ${d}`);
+            throw new MichelsonDataError(t, d, path, `address expected: ${d}`);
 
         case "key":
             if (("string" in d) &&
@@ -323,13 +347,13 @@ function assertDataValid(t: MichelsonType, d: MichelsonData, path: PathElem[]): 
                     "P256PublicKey") !== null) {
                 return;
             }
-            throw new MichelsonTypeError(t, path, `public key expected: ${d}`);
+            throw new MichelsonDataError(t, d, path, `public key expected: ${d}`);
 
         case "unit":
             if (("prim" in d) && d.prim === "Unit") {
                 return;
             }
-            throw new MichelsonTypeError(t, path, `unit value expected: ${d}`);
+            throw new MichelsonDataError(t, d, path, `unit value expected: ${d}`);
 
         case "signature":
             if (("string" in d) &&
@@ -340,7 +364,7 @@ function assertDataValid(t: MichelsonType, d: MichelsonData, path: PathElem[]): 
                     "GenericSignature") !== null) {
                 return;
             }
-            throw new MichelsonTypeError(t, path, `signature expected: ${d}`);
+            throw new MichelsonDataError(t, d, path, `signature expected: ${d}`);
 
         case "chain_id":
             if ("string" in d) {
@@ -353,13 +377,13 @@ function assertDataValid(t: MichelsonType, d: MichelsonData, path: PathElem[]): 
                     return;
                 }
             }
-            throw new MichelsonTypeError(t, path, `chain id expected: ${d}`);
+            throw new MichelsonDataError(t, d, path, `chain id expected: ${d}`);
 
         case "operation":
-            throw new MichelsonTypeError(t, path, "operation type can't be represented as a literal value");
+            throw new MichelsonDataError(t, d, path, "operation type can't be represented as a literal value");
 
         case "contract":
-            throw new MichelsonTypeError(t, path, "contract type can't be represented as a literal value");
+            throw new MichelsonDataError(t, d, path, "contract type can't be represented as a literal value");
 
         // Complex types
         case "option":
@@ -367,11 +391,11 @@ function assertDataValid(t: MichelsonType, d: MichelsonData, path: PathElem[]): 
                 if (d.prim === "None") {
                     return;
                 } else if (d.prim === "Some") {
-                    assertDataValid(t.args[0], d.args[0], [...path, { index: 0, val: t.args[0] }]);
+                    assertDataValidInternal(t.args[0], d.args[0], [...path, { index: 0, val: t.args[0] }]);
                     return;
                 }
             }
-            throw new MichelsonTypeError(t, path, `option expected: ${d}`);
+            throw new MichelsonDataError(t, d, path, `option expected: ${d}`);
 
         case "list":
         case "set":
@@ -380,40 +404,40 @@ function assertDataValid(t: MichelsonType, d: MichelsonData, path: PathElem[]): 
                 let prev: MichelsonData | undefined;
                 for (const v of d) {
                     if (("prim" in v) && v.prim === "Elt") {
-                        throw new MichelsonTypeError(t, path, `Elt item outside of a map literal: ${d}`);
+                        throw new MichelsonDataError(t, d, path, `Elt item outside of a map literal: ${d}`);
                     }
-                    assertDataValid(t.args[0], v, p);
+                    assertDataValidInternal(t.args[0], v, p);
                     if (t.prim === "set") {
                         if (prev === undefined) {
                             prev = v;
-                        } else if (compare(t.args[0], prev, v) > 0) {
-                            throw new MichelsonTypeError(t, path, `set elements must be ordered: ${d}`);
+                        } else if (compareMichelsonData(t.args[0], prev, v) > 0) {
+                            throw new MichelsonDataError(t, d, path, `set elements must be ordered: ${d}`);
                         }
                     }
                 }
                 return;
             }
-            throw new MichelsonTypeError(t, path, `${t.prim} expected: ${d}`);
+            throw new MichelsonDataError(t, d, path, `${t.prim} expected: ${d}`);
 
         case "pair":
             if (("prim" in d) && d.prim === "Pair") {
-                assertDataValid(t.args[0], d.args[0], [...path, { index: 0, val: t.args[0] }]);
-                assertDataValid(t.args[1], d.args[1], [...path, { index: 1, val: t.args[1] }]);
+                assertDataValidInternal(t.args[0], d.args[0], [...path, { index: 0, val: t.args[0] }]);
+                assertDataValidInternal(t.args[1], d.args[1], [...path, { index: 1, val: t.args[1] }]);
                 return;
             }
-            throw new MichelsonTypeError(t, path, `pair expected: ${d}`);
+            throw new MichelsonDataError(t, d, path, `pair expected: ${d}`);
 
         case "or":
             if ("prim" in d) {
                 if (d.prim === "Left") {
-                    assertDataValid(t.args[0], d.args[0], [...path, { index: 0, val: t.args[0] }]);
+                    assertDataValidInternal(t.args[0], d.args[0], [...path, { index: 0, val: t.args[0] }]);
                     return;
                 } else if (d.prim === "Right") {
-                    assertDataValid(t.args[1], d.args[0], [...path, { index: 1, val: t.args[1] }]);
+                    assertDataValidInternal(t.args[1], d.args[0], [...path, { index: 1, val: t.args[1] }]);
                     return;
                 }
             }
-            throw new MichelsonTypeError(t, path, `union (or) expected: ${d}`);
+            throw new MichelsonDataError(t, d, path, `union (or) expected: ${d}`);
 
         case "lambda":
             // TODO
@@ -425,21 +449,25 @@ function assertDataValid(t: MichelsonType, d: MichelsonData, path: PathElem[]): 
                 let prev: MichelsonMapElt | undefined;
                 for (const v of d) {
                     if (!("prim" in v) || v.prim !== "Elt") {
-                        throw new MichelsonTypeError(t, path, `map elements expected: ${d}`);
+                        throw new MichelsonDataError(t, d, path, `map elements expected: ${d}`);
                     }
-                    assertDataValid(t.args[0], v.args[0], [...path, { index: 0, val: t.args[0] }]);
-                    assertDataValid(t.args[1], v.args[1], [...path, { index: 1, val: t.args[1] }]);
+                    assertDataValidInternal(t.args[0], v.args[0], [...path, { index: 0, val: t.args[0] }]);
+                    assertDataValidInternal(t.args[1], v.args[1], [...path, { index: 1, val: t.args[1] }]);
                     if (prev === undefined) {
                         prev = v;
-                    } else if (compare(t.args[0], prev.args[0], v.args[0]) > 0) {
-                        throw new MichelsonTypeError(t, path, `map elements must be ordered: ${d}`);
+                    } else if (compareMichelsonData(t.args[0], prev.args[0], v.args[0]) > 0) {
+                        throw new MichelsonDataError(t, d, path, `map elements must be ordered: ${d}`);
                     }
                 }
                 return;
             }
-            throw new MichelsonTypeError(t, path, `${t.prim} expected: ${d}`);
+            throw new MichelsonDataError(t, d, path, `${t.prim} expected: ${d}`);
 
         default:
-            throw new MichelsonTypeError(t, path, `unexpected type: ${t}`);
+            throw new MichelsonDataError(t, d, path, `unexpected type: ${t}`);
     }
+}
+
+export function assertDataValid(t: MichelsonType, d: MichelsonData): void {
+    assertDataValidInternal(t, d, []);
 }
