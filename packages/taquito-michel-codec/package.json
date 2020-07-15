@@ -85,5 +85,6 @@
     "tslint-config-standard": "^9.0.0",
     "typedoc": "^0.17.6",
     "typescript": "^3.9.5"
-  }
+  },
+  "dependencies": {}
 }

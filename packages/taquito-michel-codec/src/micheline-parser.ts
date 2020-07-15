@@ -29,7 +29,7 @@ function isAnnotation(tok: Token): boolean {
 }
 
 const intRe = new RegExp('^-?[0-9]+$');
-const bytesRe = new RegExp('^([0-9a-fA-F]{2})+$');
+const bytesRe = new RegExp('^([0-9a-fA-F]{2})*$');
 
 export interface ParserOptions {
     /**
@@ -218,7 +218,7 @@ export class Parser {
                 return { string: JSON.parse(tok.v) as string };
 
             case Literal.Bytes:
-                return { bytes: tok.v.substr(2) };
+                return { bytes: tok.v.slice(2) };
 
             case '(':
                 return this.parseList(scanner);

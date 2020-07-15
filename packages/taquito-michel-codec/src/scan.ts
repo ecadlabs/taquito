@@ -52,9 +52,7 @@ export function* scan(src: string, scanComments = false): Generator<Token, void>
             while (i < src.length && isHex.test(src[i])) {
                 i++;
             }
-            if (i - start === 2) {
-                throw new ScanError(src, i, "Bytes literal is too short");
-            } else if (((i - start) & 1) !== 0) {
+            if (((i - start) & 1) !== 0) {
                 throw new ScanError(src, i, "Bytes literal length is expected to be power of two");
             }
             yield { t: Literal.Bytes, v: src.slice(start, i), offset: i };
