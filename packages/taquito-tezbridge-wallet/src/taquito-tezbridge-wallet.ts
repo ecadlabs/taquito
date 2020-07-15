@@ -28,6 +28,19 @@ export class TezBridgeWallet implements WalletProvider {
     });
   }
 
+  /**
+   *
+   * @description Allow user to pre-define their host for easy use on custom nodes
+   *
+   * @param host host's RPC url
+   */
+  setHost(host: string) {
+    return tezbridge.request({
+      method: 'set_host',
+      host: host,
+    });
+  }
+
   mapTransferParamsToWalletParams(params: WalletTransferParams) {
     return createTransferOperation(params);
   }
