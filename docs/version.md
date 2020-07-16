@@ -4,8 +4,23 @@ author: Simon Boissonneault-Robert
 ---
 
 
-## v6.3.3-beta.0 Release Notes
+## v6.3.4-beta.0 Release Notes
 
+### Changes
+
+#### Get method for RPC URL in the Taquito RPC client
+
+It's now possible to find out what URL the RPC Client is configured to use.
+
+#### The TezBridge wallet provider allows setting of the RPC url
+
+Add the ability to Set a host for TezBridge. This is helpful when deploying contracts to a local node, the wallet user does not have to manually update the RPC URL in TezBridge. The application can inform TezBridge what node to use, offering a better user experience. 
+
+#### Documentation
+
+We continue to add and improve documentation for Taquito. Feel free to file Issues for features or missing documentation!
+
+## v6.3.3-beta.0 Release Notes
 
 Bug fix release to allow proper encoding of a call to a smart contract method that has an option parameter.
 
