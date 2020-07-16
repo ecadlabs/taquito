@@ -38,11 +38,25 @@ spsk2Fiz7sGP5fNMJrokp6ynTa4bcFbsRhw58FHXbNf5ProDNFJ5Xq
 - **tz3 (p256):**
 p2sk3HdQc93EjixRAWs9WZ6b3spNgPD7VriXU8FH8EiHN8sxCh7gmv
 
-If required, Taquito offers a function to convert to these formats given a hex string or an Uint8Array. Here is an example with a hex string:
+If required, Taquito offers the `b58cencode` function to convert to these formats given a `hex string` or an `Uint8Array`. Here is an example with a `hex string`:
 
 ```js live noInline
 //import { b58cencode, prefix, Prefix } from '@taquito/utils';
-println(b58cencode('7c842c15c8b0c8fd228e6cb5302a50201f41642dd36b699003fb3c857920bc9d', prefix[Prefix.P2SK]))
+//import { Tezos } from '@taquito/taquito'
+//import { InMemorySigner } from '@taquito/signer'
+
+const b58encodedSecret = b58cencode('7c842c15c8b0c8fd228e6cb5302a50201f41642dd36b699003fb3c857920bc9d', prefix[Prefix.P2SK]);
+println(`The secret is encoded in base58 and the prefix "p2sk" is added to it: ${b58encodedSecret}.`)
+//We take the encoded secret to configure the signer.
+InMemorySigner.fromSecretKey(b58encodedSecret)
+.then( theSigner => {
+  Tezos.setProvider({signer: theSigner})
+  //We can access the public key hash
+  return Tezos.signer.publicKeyHash()
+}).then( publicKeyHash => {
+  println(`The puclic key hash associated is: ${publicKeyHash}.`)
+}).catch(error => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+
 ```
 
 :::note
