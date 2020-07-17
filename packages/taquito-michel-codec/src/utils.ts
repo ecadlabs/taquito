@@ -1,6 +1,6 @@
-import { Prim } from "./micheline";
+import { Prim, Expr } from "./micheline";
 
-export type Tuple<T, N extends number> = N extends 1 ? [T] :
+export type Tuple<N extends number, T> = N extends 1 ? [T] :
     N extends 2 ? [T, T] :
     N extends 3 ? [T, T, T] :
     N extends 4 ? [T, T, T, T] :
@@ -12,6 +12,28 @@ type OmitProp<T, K extends keyof T> = Omit<T, K> & { [P in K]?: never };
 export type ReqArgs<T extends Prim> = RequiredProp<T, "args">;
 export type NoArgs<T extends Prim> = OmitProp<T, "args">;
 export type NoAnnots<T extends Prim> = OmitProp<T, "annots">;
+
+export interface ObjectTreePath<T extends Expr = Expr> {
+    /**
+     * Node's index. Either argument index or sequence index.
+     */
+    index: number;
+    /**
+     * Node's value.
+     */
+    val: T;
+}
+
+export class MichelsonError<T extends Expr = Expr> extends Error {
+    /**
+     * @param val Value of a type node caused the error
+     * @param path Path to a node caused the error
+     * @param message An error message
+     */
+    constructor(public val: T, public path?: ObjectTreePath<T>[], message?: string) {
+        super(message);
+    }
+}
 
 // Ad hoc big integer parser
 export class LongInteger {
@@ -116,4 +138,38 @@ export function isNatural(x: string): boolean {
     } catch {
         return false;
     }
+}
+
+export function getAnnotations(a?: string[]): {
+    field?: string[];
+    type?: string[];
+    var?: string[];
+} {
+    let field: string[] | undefined;
+    let type: string[] | undefined;
+    let vars: string[] | undefined;
+
+    if (a !== undefined) {
+        for (const v of a) {
+            if (v.length !== 0) {
+                switch (v[0]) {
+                    case "%":
+                        field = field || [];
+                        field.push(v);
+                        break;
+                    case ":":
+                        type = type || [];
+                        type.push(v);
+                        break;
+                    case "@":
+                        vars = vars || [];
+                        vars.push(v);
+                        break;
+                    default:
+                        throw new Error(`unexpected annotation prefix: ${v[0]}`);
+                }
+            }
+        }
+    }
+    return { field, type, var: vars };
 }

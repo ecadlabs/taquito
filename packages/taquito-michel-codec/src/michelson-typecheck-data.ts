@@ -1,7 +1,10 @@
-import { MichelsonType, MichelsonData, MichelsonComparableType, MichelsonDataId, MichelsonMapElt, MichelsonDataLiteral } from "./michelson-types";
-import { decodeBase58Check } from "./base58";
-import { LongInteger, compareBytes, parseBytes, isDecimal, isNatural } from "./utils";
+import { MichelsonType, MichelsonData, MichelsonComparableType, MichelsonMapElt, MichelsonTypeId } from "./michelson-types";
 import { IntLiteral, StringLiteral } from "./micheline";
+import { LongInteger, compareBytes, parseBytes, isDecimal, isNatural, ObjectTreePath, MichelsonError } from "./utils";
+import { decodeBase58Check } from "./base58";
+import { assertMichelsonInstruction } from "./michelson-validator";
+import { instructionType } from "./michelson-typecheck-code";
+import { assertTypesEqual } from "./michelson-typecheck-type";
 
 type TezosIDType = "BlockHash" | "OperationHash" | "OperationListHash" | "OperationListListHash" |
     "ProtocolHash" | "ContextHash" | "ED25519PublicKeyHash" | "SECP256K1PublicKeyHash" |
@@ -61,130 +64,15 @@ function checkTezosID(id: string | number[], ...types: TezosIDType[]): [TezosIDT
     return null;
 }
 
-interface PathElem {
-    /**
-     * An argument index
-     */
-    index: number;
-    /**
-     * Node's value.
-     */
-    val: MichelsonType;
-}
-
-export class MichelsonTypeError extends Error {
-    /**
-     * @param val Value of a type node caused the error
-     * @param path Path to a node caused the error
-     * @param message An error message
-     */
-    constructor(public val: MichelsonType, public path?: PathElem[], message?: string) {
-        super(message);
-    }
-}
-
-export class MichelsonDataError extends MichelsonTypeError {
+export class MichelsonDataError extends MichelsonError<MichelsonType> {
     /**
      * @param val Value of a type node caused the error
      * @param data Value of a data node caused the error
      * @param path Path to a node caused the error
      * @param message An error message
      */
-    constructor(val: MichelsonType, public data: MichelsonData, path?: PathElem[], message?: string) {
+    constructor(val: MichelsonType, public data: MichelsonData, path?: ObjectTreePath<MichelsonType>[], message?: string) {
         super(val, path, message);
-    }
-}
-
-function getAnnotations(a?: string[]): {
-    field?: string[];
-    type?: string[];
-    var?: string[];
-} {
-    let field: string[] | undefined;
-    let type: string[] | undefined;
-    let vars: string[] | undefined;
-
-    if (a !== undefined) {
-        for (const v of a) {
-            if (v.length !== 0) {
-                switch (v[0]) {
-                    case "%":
-                        field = field || [];
-                        field.push(v);
-                        break;
-                    case ":":
-                        type = type || [];
-                        type.push(v);
-                        break;
-                    case "@":
-                        vars = vars || [];
-                        vars.push(v);
-                        break;
-                    default:
-                        throw new Error(`unexpected annotation prefix: ${v[0]}`);
-                }
-            }
-        }
-    }
-    return { field, type, var: vars };
-}
-
-function assertTypesEqualInternal(a: MichelsonType, b: MichelsonType, path: PathElem[], field: boolean = false): void {
-    if (a.prim !== b.prim) {
-        throw new MichelsonTypeError(a, path, `unequal types: ${a.prim} != ${b.prim}`);
-    }
-
-    const ann = [getAnnotations(a.annots), getAnnotations(b.annots)];
-    for (const v of ann) {
-        if ((v.type?.length || 0) > 1) {
-            throw new MichelsonTypeError(a, path, `at most one type annotation allowed: ${v.type}`);
-        }
-        if ((v.field?.length || 0) > 1) {
-            throw new MichelsonTypeError(a, path, `at most one field annotation allowed: ${v.field}`);
-        }
-    }
-
-    if (ann[0].type !== undefined && ann[1].type !== undefined && ann[0].type[0] !== ann[1].type[0]) {
-        throw new MichelsonTypeError(a, path, `unequal type names: ${ann[0].type[0]} != ${ann[1].type[0]}`);
-    }
-
-    if (field &&
-        (ann[0].field?.length !== ann[1].field?.length || ann[0].field?.[0] !== ann[1].field?.[0])) {
-        throw new MichelsonTypeError(a, path, `unequal field names: ${ann[0].field?.[0]} != ${ann[1].field?.[0]}`);
-    }
-
-    switch (a.prim) {
-        case "option":
-        case "list":
-        case "contract":
-        case "set":
-            assertTypesEqualInternal(a.args[0], (b as typeof a).args[0], [...path, { index: 0, val: a.args[0] }]);
-            break;
-
-        case "pair":
-        case "or":
-            assertTypesEqualInternal(a.args[0], (b as typeof a).args[0], [...path, { index: 0, val: a.args[0] }], true);
-            assertTypesEqualInternal(a.args[1], (b as typeof a).args[1], [...path, { index: 1, val: a.args[1] }], true);
-            break;
-
-        case "lambda":
-        case "map":
-        case "big_map":
-            assertTypesEqualInternal(a.args[0], (b as typeof a).args[0], [...path, { index: 0, val: a.args[0] }]);
-            assertTypesEqualInternal(a.args[1], (b as typeof a).args[1], [...path, { index: 1, val: a.args[1] }]);
-    }
-}
-
-export function assertTypesEqual(a: MichelsonType, b: MichelsonType): void {
-    assertTypesEqualInternal(a, b, []);
-}
-
-export function typesEqual(a: MichelsonType, b: MichelsonType): boolean {
-    try {
-        assertTypesEqualInternal(a, b, []);
-        return true;
-    } catch {
-        return false;
     }
 }
 
@@ -271,7 +159,7 @@ function compareMichelsonData(t: MichelsonComparableType, a: MichelsonData, b: M
     throw new Error(`non comparable values: ${a}, ${b}`);
 }
 
-function assertDataValidInternal(t: MichelsonType, d: MichelsonData, path: PathElem[]): void {
+export function assertDataValid(t: MichelsonType, d: MichelsonData, path: ObjectTreePath<MichelsonType>[] = []): void {
     switch (t.prim) {
         // Atomic literals
         case "int":
@@ -391,7 +279,7 @@ function assertDataValidInternal(t: MichelsonType, d: MichelsonData, path: PathE
                 if (d.prim === "None") {
                     return;
                 } else if (d.prim === "Some") {
-                    assertDataValidInternal(t.args[0], d.args[0], [...path, { index: 0, val: t.args[0] }]);
+                    assertDataValid(t.args[0], d.args[0], [...path, { index: 0, val: t.args[0] }]);
                     return;
                 }
             }
@@ -406,7 +294,7 @@ function assertDataValidInternal(t: MichelsonType, d: MichelsonData, path: PathE
                     if (("prim" in v) && v.prim === "Elt") {
                         throw new MichelsonDataError(t, d, path, `Elt item outside of a map literal: ${d}`);
                     }
-                    assertDataValidInternal(t.args[0], v, p);
+                    assertDataValid(t.args[0], v, p);
                     if (t.prim === "set") {
                         if (prev === undefined) {
                             prev = v;
@@ -421,8 +309,8 @@ function assertDataValidInternal(t: MichelsonType, d: MichelsonData, path: PathE
 
         case "pair":
             if (("prim" in d) && d.prim === "Pair") {
-                assertDataValidInternal(t.args[0], d.args[0], [...path, { index: 0, val: t.args[0] }]);
-                assertDataValidInternal(t.args[1], d.args[1], [...path, { index: 1, val: t.args[1] }]);
+                assertDataValid(t.args[0], d.args[0], [...path, { index: 0, val: t.args[0] }]);
+                assertDataValid(t.args[1], d.args[1], [...path, { index: 1, val: t.args[1] }]);
                 return;
             }
             throw new MichelsonDataError(t, d, path, `pair expected: ${d}`);
@@ -430,18 +318,24 @@ function assertDataValidInternal(t: MichelsonType, d: MichelsonData, path: PathE
         case "or":
             if ("prim" in d) {
                 if (d.prim === "Left") {
-                    assertDataValidInternal(t.args[0], d.args[0], [...path, { index: 0, val: t.args[0] }]);
+                    assertDataValid(t.args[0], d.args[0], [...path, { index: 0, val: t.args[0] }]);
                     return;
                 } else if (d.prim === "Right") {
-                    assertDataValidInternal(t.args[1], d.args[0], [...path, { index: 1, val: t.args[1] }]);
+                    assertDataValid(t.args[1], d.args[0], [...path, { index: 1, val: t.args[1] }]);
                     return;
                 }
             }
             throw new MichelsonDataError(t, d, path, `union (or) expected: ${d}`);
 
         case "lambda":
-            // TODO
-            throw new Error("lambdas aren't implemented");
+            if (Array.isArray(d) && assertMichelsonInstruction(d, path)) {
+                const body = instructionType(d, [t.args[0]], path);
+                if ("failed" in body) {
+                    throw new MichelsonDataError(t, d, path, `function is failed with error type: ${body.failed}`);
+                }
+                assertTypesEqual([t.args[1]], body, path);
+            }
+            throw new MichelsonDataError(t, d, path, `function expected: ${d}`);
 
         case "map":
         case "big_map":
@@ -451,8 +345,8 @@ function assertDataValidInternal(t: MichelsonType, d: MichelsonData, path: PathE
                     if (!("prim" in v) || v.prim !== "Elt") {
                         throw new MichelsonDataError(t, d, path, `map elements expected: ${d}`);
                     }
-                    assertDataValidInternal(t.args[0], v.args[0], [...path, { index: 0, val: t.args[0] }]);
-                    assertDataValidInternal(t.args[1], v.args[1], [...path, { index: 1, val: t.args[1] }]);
+                    assertDataValid(t.args[0], v.args[0], [...path, { index: 0, val: t.args[0] }]);
+                    assertDataValid(t.args[1], v.args[1], [...path, { index: 1, val: t.args[1] }]);
                     if (prev === undefined) {
                         prev = v;
                     } else if (compareMichelsonData(t.args[0], prev.args[0], v.args[0]) > 0) {
@@ -466,8 +360,4 @@ function assertDataValidInternal(t: MichelsonType, d: MichelsonData, path: PathE
         default:
             throw new MichelsonDataError(t, d, path, `unexpected type: ${t}`);
     }
-}
-
-export function assertDataValid(t: MichelsonType, d: MichelsonData): void {
-    assertDataValidInternal(t, d, []);
 }

@@ -1,5 +1,5 @@
 import { MichelsonType, MichelsonData } from "../src/michelson-types";
-import { assertDataValid } from "../src/michelson-typecheck";
+import { assertDataValid } from "../src/michelson-typecheck-data";
 
 const typedef: MichelsonType = {
     "prim": "pair",

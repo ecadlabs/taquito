@@ -1,35 +1,39 @@
 import { Prim, Expr, IntLiteral, StringLiteral, BytesLiteral } from "./micheline";
-import { NoArgs, ReqArgs, Tuple } from "./utils";
+import { NoArgs, ReqArgs } from "./utils";
 
 // Instructions
 
 export type MichelsonUnaryInstructionId = "DUP" | "SWAP" | "SOME" | "UNIT" | "PAIR" | "CAR" | "CDR" |
-    "CONS" | "SIZE" | "MEM" | "GET" | "UPDATE" | "EXEC" | "FAILWITH" | "RENAME" | "CONCAT" | "SLICE" |
+    "CONS" | "SIZE" | "MEM" | "GET" | "UPDATE" | "EXEC" | "APPLY" | "FAILWITH" | "RENAME" | "CONCAT" | "SLICE" |
     "PACK" | "ADD" | "SUB" | "MUL" | "EDIV" | "ABS" | "ISNAT" | "INT" | "NEG" | "LSL" | "LSR" | "OR" |
     "AND" | "XOR" | "NOT" | "COMPARE" | "EQ" | "NEQ" | "LT" | "GT" | "LE" | "GE" | "SELF" |
     "TRANSFER_TOKENS" | "SET_DELEGATE" | "CREATE_ACCOUNT" | "IMPLICIT_ACCOUNT" | "NOW" | "AMOUNT" |
     "BALANCE" | "CHECK_SIGNATURE" | "BLAKE2B" | "SHA256" | "SHA512" | "HASH_KEY" | "STEPS_TO_QUOTA" |
     "SOURCE" | "SENDER" | "ADDRESS" | "CHAIN_ID";
 
-export type MichelsonInstructionId = MichelsonUnaryInstructionId |
-    "DROP" | "DIG" | "DUG" | "NONE" | "LEFT" | "RIGHT" | "NIL" | "UNPACK" | "CONTRACT" | "CAST" |
+type MichelsonRegularInstructionId = "DROP" | "DIG" | "DUG" | "NONE" | "LEFT" | "RIGHT" | "NIL" | "UNPACK" | "CONTRACT" | "CAST" |
     "IF_NONE" | "IF_LEFT" | "IF_CONS" | "IF" | "MAP" | "ITER" | "LOOP" | "LOOP_LEFT" | "DIP" |
     "CREATE_CONTRACT" | "PUSH" | "EMPTY_SET" | "EMPTY_MAP" | "EMPTY_BIG_MAP" | "LAMBDA";
 
+export type MichelsonInstructionId = MichelsonUnaryInstructionId | MichelsonRegularInstructionId;
+
 type InstrPrim<PT extends MichelsonInstructionId, AT extends Expr[] = never> = Prim<PT, AT>;
+type Instr0<PT extends MichelsonUnaryInstructionId> = NoArgs<InstrPrim<PT>>;
+type InstrX<PT extends MichelsonRegularInstructionId, AT extends Expr[]> = ReqArgs<InstrPrim<PT, AT>>;
 
 export type MichelsonInstruction = MichelsonInstruction[] |
-    NoArgs<InstrPrim<MichelsonUnaryInstructionId>> |
-    ReqArgs<InstrPrim<"DIG" | "DUG", [IntLiteral]>> |
-    InstrPrim<"DROP", [IntLiteral]> | // Keep optional argument
-    ReqArgs<InstrPrim<"NONE" | "LEFT" | "RIGHT" | "NIL" | "UNPACK" | "CONTRACT" | "CAST", [MichelsonType]>> |
-    ReqArgs<InstrPrim<"IF_NONE" | "IF_LEFT" | "IF_CONS" | "IF", [MichelsonInstruction[], MichelsonInstruction[]]>> |
-    ReqArgs<InstrPrim<"MAP" | "ITER" | "LOOP" | "LOOP_LEFT" | "DIP" | "CREATE_CONTRACT", [MichelsonInstruction[]]>> |
-    ReqArgs<InstrPrim<"PUSH", [MichelsonType, MichelsonData]>> |
-    ReqArgs<InstrPrim<"EMPTY_SET", [MichelsonComparableType]>> |
-    ReqArgs<InstrPrim<"EMPTY_MAP" | "EMPTY_BIG_MAP", [MichelsonComparableType, MichelsonType]>> |
-    ReqArgs<InstrPrim<"LAMBDA", [MichelsonType, MichelsonType, MichelsonInstruction[]]>> |
-    ReqArgs<InstrPrim<"DIP", [IntLiteral, MichelsonInstruction[]] | [MichelsonInstruction[]]>>;
+    Instr0<MichelsonUnaryInstructionId> |
+    InstrX<"DIG" | "DUG", [IntLiteral]> |
+    InstrX<"NONE" | "LEFT" | "RIGHT" | "NIL" | "UNPACK" | "CONTRACT" | "CAST", [MichelsonType]> |
+    InstrX<"IF_NONE" | "IF_LEFT" | "IF_CONS" | "IF", [MichelsonInstruction[], MichelsonInstruction[]]> |
+    InstrX<"MAP" | "ITER" | "LOOP" | "LOOP_LEFT" | "DIP", [MichelsonInstruction[]]> |
+    InstrX<"CREATE_CONTRACT", [MichelsonScript]> |
+    InstrX<"PUSH", [MichelsonType, MichelsonData]> |
+    InstrX<"EMPTY_SET", [MichelsonComparableType]> |
+    InstrX<"EMPTY_MAP" | "EMPTY_BIG_MAP", [MichelsonComparableType, MichelsonType]> |
+    InstrX<"LAMBDA", [MichelsonType, MichelsonType, MichelsonInstruction[]]> |
+    InstrX<"DIP", [IntLiteral, MichelsonInstruction[]] | [MichelsonInstruction[]]> |
+    InstrPrim<"DROP", [IntLiteral]>; // Keep optional argument
 
 // Types
 
@@ -41,24 +45,70 @@ export type MichelsonTypeId = MichelsonSimpleComparableTypeId |
     "or" | "lambda" | "set" | "map" | "big_map";
 
 type TypePrim<PT extends MichelsonTypeId, AT extends MichelsonType[] = never> = Prim<PT, AT>;
-type Type0<PT extends MichelsonSimpleComparableTypeId | "key" | "unit" | "signature" | "operation" | "chain_id"> = NoArgs<TypePrim<PT>>;
-type TypeX<PT extends "option" | "list" | "contract" | "pair" | "or" | "lambda" | "set" | "map" | "big_map", AT extends MichelsonType[]> = ReqArgs<TypePrim<PT, AT>>;
+type Type0<PT extends MichelsonTypeId> = NoArgs<TypePrim<PT>>;
+type TypeX<PT extends MichelsonTypeId, AT extends MichelsonType[]> = ReqArgs<TypePrim<PT, AT>>;
 
-export type MichelsonSimpleComparableType = Type0<MichelsonSimpleComparableTypeId>;
-export type MichelsonComparableType = MichelsonSimpleComparableType |
-    TypeX<"pair", [MichelsonSimpleComparableType, MichelsonComparableType]>;
+export type MichelsonSimpleComparableType =
+    MichelsonTypeInt |
+    MichelsonTypeNat |
+    MichelsonTypeString |
+    MichelsonTypeBytes |
+    MichelsonTypeMutez |
+    MichelsonTypeBool |
+    MichelsonTypeKeyHash |
+    MichelsonTypeTimestamp |
+    MichelsonTypeAddress;
 
-interface Type1<P extends "option" | "list" | "contract", T extends MichelsonType = MichelsonType> extends TypeX<P, [T]> { }
-interface Type2<P extends "pair" | "or" | "lambda", T1 extends MichelsonType = MichelsonType, T2 extends MichelsonType = MichelsonType> extends TypeX<P, [T1, T2]> { }
-interface MichelsonSet<T extends MichelsonComparableType = MichelsonComparableType> extends TypeX<"set", [T]> { }
-interface MichelsonMap<P extends "map" | "big_map", T1 extends MichelsonComparableType = MichelsonComparableType, T2 extends MichelsonType = MichelsonType> extends TypeX<P, [T1, T2]> { }
+export type MichelsonComparableType = MichelsonSimpleComparableType | MichelsonTypePair<MichelsonSimpleComparableType, MichelsonComparableType>;
 
-export type MichelsonType = MichelsonComparableType |
-    Type0<"key" | "unit" | "signature" | "operation" | "chain_id"> |
-    Type1<"option" | "list" | "contract"> |
-    Type2<"pair" | "or" | "lambda"> |
-    MichelsonSet |
-    MichelsonMap<"map" | "big_map">;
+export type MichelsonTypeInt = Type0<"int">;
+export type MichelsonTypeNat = Type0<"nat">;
+export type MichelsonTypeString = Type0<"string">;
+export type MichelsonTypeBytes = Type0<"bytes">;
+export type MichelsonTypeMutez = Type0<"mutez">;
+export type MichelsonTypeBool = Type0<"bool">;
+export type MichelsonTypeKeyHash = Type0<"key_hash">;
+export type MichelsonTypeTimestamp = Type0<"timestamp">;
+export type MichelsonTypeAddress = Type0<"address">;
+export type MichelsonTypeKey = Type0<"key">;
+export type MichelsonTypeUnit = Type0<"unit">;
+export type MichelsonTypeSignature = Type0<"signature">;
+export type MichelsonTypeOperation = Type0<"operation">;
+export type MichelsonTypeChainID = Type0<"chain_id">;
+
+export interface MichelsonTypeOption<T extends MichelsonType = MichelsonType> extends TypeX<"option", [T]> { }
+export interface MichelsonTypeList<T extends MichelsonType = MichelsonType> extends TypeX<"list", [T]> { }
+export interface MichelsonTypeContract<T extends MichelsonType = MichelsonType> extends TypeX<"contract", [T]> { }
+export interface MichelsonTypePair<T1 extends MichelsonType = MichelsonType, T2 extends MichelsonType = MichelsonType> extends TypeX<"pair", [T1, T2]> { }
+export interface MichelsonTypeOr<T1 extends MichelsonType = MichelsonType, T2 extends MichelsonType = MichelsonType> extends TypeX<"or", [T1, T2]> { }
+export interface MichelsonTypeLambda<T1 extends MichelsonType = MichelsonType, T2 extends MichelsonType = MichelsonType> extends TypeX<"lambda", [T1, T2]> { }
+export interface MichelsonTypeSet<T extends MichelsonComparableType = MichelsonComparableType> extends TypeX<"set", [T]> { }
+export interface MichelsonTypeMap<T1 extends MichelsonComparableType = MichelsonComparableType, T2 extends MichelsonType = MichelsonType> extends TypeX<"map", [T1, T2]> { }
+export interface MichelsonTypeBigMap<T1 extends MichelsonComparableType = MichelsonComparableType, T2 extends MichelsonType = MichelsonType> extends TypeX<"big_map", [T1, T2]> { }
+
+export type MichelsonType<T extends MichelsonTypeId = MichelsonTypeId> =
+    T extends "int" ? MichelsonTypeInt :
+    T extends "nat" ? MichelsonTypeNat :
+    T extends "string" ? MichelsonTypeString :
+    T extends "bytes" ? MichelsonTypeBytes :
+    T extends "mutez" ? MichelsonTypeMutez :
+    T extends "bool" ? MichelsonTypeBool :
+    T extends "key_hash" ? MichelsonTypeKeyHash :
+    T extends "timestamp" ? MichelsonTypeTimestamp :
+    T extends "address" ? MichelsonTypeAddress :
+    T extends "key" ? MichelsonTypeKey :
+    T extends "unit" ? MichelsonTypeUnit :
+    T extends "signature" ? MichelsonTypeSignature :
+    T extends "operation" ? MichelsonTypeOperation :
+    T extends "chain_id" ? MichelsonTypeChainID :
+    T extends "option" ? MichelsonTypeOption :
+    T extends "list" ? MichelsonTypeList :
+    T extends "contract" ? MichelsonTypeContract :
+    T extends "pair" ? MichelsonTypePair :
+    T extends "or" ? MichelsonTypeOr :
+    T extends "lambda" ? MichelsonTypeLambda :
+    T extends "set" ? MichelsonTypeSet :
+    T extends "map" ? MichelsonTypeMap : MichelsonTypeBigMap;
 
 // Data
 
@@ -69,33 +119,21 @@ type DataPrim<PT extends MichelsonDataId, AT extends MichelsonData[] = never> = 
 type Data0<PT extends "Unit" | "True" | "False" | "None"> = NoArgs<DataPrim<PT>>;
 type DataX<PT extends "Pair" | "Left" | "Right" | "Some", AT extends MichelsonData[]> = ReqArgs<DataPrim<PT, AT>>;
 
-export type MichelsonData = IntLiteral |
-    StringLiteral |
-    BytesLiteral |
-    Data0<"Unit" | "True" | "False" | "None"> |
-    DataX<"Pair", [MichelsonData, MichelsonData]> |
-    DataX<"Left" | "Right" | "Some", [MichelsonData]> |
-    MichelsonData[] |
-    MichelsonMapElt[] |
-    MichelsonInstruction;
-
-export type MichelsonDataLiteral<T extends MichelsonType> =
-    T extends Type0<"int" | "nat" | "mutez"> ? IntLiteral :
-    T extends Type0<"string" | "key_hash" | "address" | "key" | "signature"> ? StringLiteral :
-    T extends Type0<"bytes"> ? BytesLiteral :
-    T extends Type0<"timestamp" | "chain_id"> ? IntLiteral | StringLiteral :
-    T extends Type0<"unit"> ? Data0<"Unit"> :
-    T extends Type0<"bool"> ? Data0<"True" | "False"> :
-    T extends Type1<"option", infer A> ? Data0<"None"> | DataX<"Some", [MichelsonDataLiteral<A>]> :
-    T extends Type1<"list", infer A> ? MichelsonDataLiteral<A>[] :
-    T extends Type2<"pair", infer A1, infer A1> ? DataX<"Pair", [MichelsonDataLiteral<A1>, MichelsonDataLiteral<A1>]> :
-    T extends Type2<"or", infer A1, infer A2> ? DataX<"Left", [MichelsonDataLiteral<A1>]> | DataX<"Right", [MichelsonDataLiteral<A2>]> :
-    T extends TypeX<"lambda", [MichelsonType, MichelsonType]> ? MichelsonInstruction :
-    T extends MichelsonSet<infer A> ? MichelsonDataLiteral<A>[] :
-    T extends MichelsonMap<"map" | "big_map", infer A1, infer A2> ? MichelsonMapElt<MichelsonDataLiteral<A1>, MichelsonDataLiteral<A2>>[] :
-    T extends TypeX<"contract", [MichelsonType]> ? never :
-    T extends Type0<"operation"> ? never :
-    MichelsonData;
+export type MichelsonData<T extends MichelsonType = MichelsonType> =
+    T extends MichelsonTypeInt | MichelsonTypeNat | MichelsonTypeMutez ? IntLiteral :
+    T extends MichelsonTypeString | MichelsonTypeKeyHash | MichelsonTypeAddress | MichelsonTypeKey | MichelsonTypeSignature ? StringLiteral :
+    T extends MichelsonTypeBytes ? BytesLiteral :
+    T extends MichelsonTypeTimestamp | MichelsonTypeChainID ? IntLiteral | StringLiteral :
+    T extends MichelsonTypeUnit ? Data0<"Unit"> :
+    T extends MichelsonTypeBool ? Data0<"True" | "False"> :
+    T extends MichelsonTypeOption<infer A> ? Data0<"None"> | DataX<"Some", [MichelsonData<A>]> :
+    T extends MichelsonTypeList<infer A> ? MichelsonData<A>[] :
+    T extends MichelsonTypePair<infer A1, infer A1> ? DataX<"Pair", [MichelsonData<A1>, MichelsonData<A1>]> :
+    T extends MichelsonTypeOr<infer A1, infer A2> ? DataX<"Left", [MichelsonData<A1>]> | DataX<"Right", [MichelsonData<A2>]> :
+    T extends MichelsonTypeLambda ? MichelsonInstruction :
+    T extends MichelsonTypeSet<infer A> ? MichelsonData<A>[] :
+    T extends MichelsonTypeMap<infer A1, infer A2> | MichelsonTypeBigMap<infer A1, infer A2> ? MichelsonMapElt<MichelsonData<A1>, MichelsonData<A2>>[] :
+    never;
 
 // Top level script sections
 

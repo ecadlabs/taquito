@@ -1,19 +1,12 @@
 import { Prim, Expr, IntLiteral } from "./micheline";
-import { Tuple, NoArgs, ReqArgs } from "./utils";
-import { MichelsonInstructionId, MichelsonInstruction, MichelsonUnaryInstructionId, MichelsonType, MichelsonComparableType, MichelsonSimpleComparableType, MichelsonSimpleComparableTypeId, MichelsonData, MichelsonScript } from "./michelson-types";
+import { Tuple, NoArgs, ReqArgs, ObjectTreePath } from "./utils";
+import {
+   MichelsonInstructionId, MichelsonInstruction, MichelsonUnaryInstructionId,
+   MichelsonType, MichelsonComparableType, MichelsonSimpleComparableType,
+   MichelsonSimpleComparableTypeId, MichelsonData, MichelsonScript
+} from "./michelson-types";
 
 // Michelson validator
-
-interface PathElem {
-   /**
-    * Node's index. Either argument index or sequence index.
-    */
-   index: number;
-   /**
-    * Node's value.
-    */
-   val: Expr;
-}
 
 export class ValidationError extends Error {
    /**
@@ -21,7 +14,7 @@ export class ValidationError extends Error {
     * @param path Path to a node caused the error in the AST tree
     * @param message An error message
     */
-   constructor(public val: Expr, public path?: PathElem[], message?: string) {
+   constructor(public val: Expr, public path?: ObjectTreePath[], message?: string) {
       super(message);
    }
 }
@@ -30,37 +23,37 @@ function isPrim(ex: Expr): ex is Prim {
    return "prim" in ex;
 }
 
-function assertPrim(ex: Expr, path: PathElem[]): ex is Prim {
+function assertPrim(ex: Expr, path: ObjectTreePath[]): ex is Prim {
    if (isPrim(ex)) {
       return true;
    }
    throw new ValidationError(ex, path, "prim expression expected");
 }
 
-function assertSeq(ex: Expr, path: PathElem[]): ex is Expr[] {
+function assertSeq(ex: Expr, path: ObjectTreePath[]): ex is Expr[] {
    if (Array.isArray(ex)) {
       return true;
    }
    throw new ValidationError(ex, path, "sequence expression expected");
 }
 
-function assertNatural(i: IntLiteral, path: PathElem[]) {
+function assertNatural(i: IntLiteral, path: ObjectTreePath[]) {
    if (i.int[0] === "-") {
       throw new ValidationError(i, path, "natural number expected");
    }
 }
 
-function assertIntLiteral(ex: Expr, path: PathElem[]): ex is IntLiteral {
+function assertIntLiteral(ex: Expr, path: ObjectTreePath[]): ex is IntLiteral {
    if ("int" in ex) {
       return true;
    }
    throw new ValidationError(ex, path, "int literal expected");
 }
 
-function assertArgs<N extends number>(ex: Prim, n: N, path: PathElem[]):
+function assertArgs<N extends number>(ex: Prim, n: N, path: ObjectTreePath[]):
    ex is N extends 0 ?
    NoArgs<Prim<string>> :
-   ReqArgs<Prim<string, Tuple<Expr, N>>> {
+   ReqArgs<Prim<string, Tuple<N, Expr>>> {
    if ((n === 0 && ex.args === undefined) || ex.args?.length === n) {
       return true;
    }
@@ -69,7 +62,7 @@ function assertArgs<N extends number>(ex: Prim, n: N, path: PathElem[]):
 
 const unaryInstructionTable: Record<MichelsonUnaryInstructionId, boolean> = {
    "DUP": true, "SWAP": true, "SOME": true, "UNIT": true, "PAIR": true, "CAR": true, "CDR": true,
-   "CONS": true, "SIZE": true, "MEM": true, "GET": true, "UPDATE": true, "EXEC": true, "FAILWITH": true, "RENAME": true, "CONCAT": true, "SLICE": true,
+   "CONS": true, "SIZE": true, "MEM": true, "GET": true, "UPDATE": true, "EXEC": true, "APPLY": true, "FAILWITH": true, "RENAME": true, "CONCAT": true, "SLICE": true,
    "PACK": true, "ADD": true, "SUB": true, "MUL": true, "EDIV": true, "ABS": true, "ISNAT": true, "INT": true, "NEG": true, "LSL": true, "LSR": true, "OR": true,
    "AND": true, "XOR": true, "NOT": true, "COMPARE": true, "EQ": true, "NEQ": true, "LT": true, "GT": true, "LE": true, "GE": true, "SELF": true,
    "TRANSFER_TOKENS": true, "SET_DELEGATE": true, "CREATE_ACCOUNT": true, "IMPLICIT_ACCOUNT": true, "NOW": true, "AMOUNT": true,
@@ -83,7 +76,12 @@ const instructionTable: Record<MichelsonInstructionId, boolean> = Object.assign(
    "CREATE_CONTRACT": true, "PUSH": true, "EMPTY_SET": true, "EMPTY_MAP": true, "EMPTY_BIG_MAP": true, "LAMBDA": true,
 });
 
-function assertMichelsonInstruction(ex: Expr[] | Prim, path: PathElem[]): ex is MichelsonInstruction {
+/**
+ * Checks if the node is a valid Michelson code (sequence of instructions).
+ * This is a type guard function which either returns true of throws an exception.
+ * @param ex An AST node
+ */
+export function assertMichelsonInstruction(ex: Expr[] | Prim, path: ObjectTreePath[] = []): ex is MichelsonInstruction {
    if (Array.isArray(ex)) {
       let i = 0;
       for (const n of ex) {
@@ -129,7 +127,7 @@ function assertMichelsonInstruction(ex: Expr[] | Prim, path: PathElem[]): ex is 
          case "CAST":
             /* istanbul ignore else */
             if (assertArgs(ex, 1, path)) {
-               assertMichelsonTypeInternal(ex.args[0], [...path, { index: 0, val: ex.args[0] }]);
+               assertMichelsonType(ex.args[0], [...path, { index: 0, val: ex.args[0] }]);
             }
             break;
 
@@ -159,11 +157,7 @@ function assertMichelsonInstruction(ex: Expr[] | Prim, path: PathElem[]): ex is 
          case "CREATE_CONTRACT":
             /* istanbul ignore else */
             if (assertArgs(ex, 1, path)) {
-               const p = [...path, { index: 0, val: ex.args[0] }];
-               /* istanbul ignore else */
-               if (assertSeq(ex.args[0], p)) {
-                  assertMichelsonInstruction(ex.args[0], p);
-               }
+               assertMichelsonScript(ex.args[0], [...path, { index: 0, val: ex.args[0] }]);
             }
             break;
 
@@ -193,8 +187,8 @@ function assertMichelsonInstruction(ex: Expr[] | Prim, path: PathElem[]): ex is 
          case "PUSH":
             /* istanbul ignore else */
             if (assertArgs(ex, 2, path)) {
-               assertMichelsonTypeInternal(ex.args[0], [...path, { index: 0, val: ex.args[0] }]);
-               assertMichelsonDataInternal(ex.args[1], [...path, { index: 1, val: ex.args[1] }]);
+               assertMichelsonType(ex.args[0], [...path, { index: 0, val: ex.args[0] }]);
+               assertMichelsonData(ex.args[1], [...path, { index: 1, val: ex.args[1] }]);
             }
             break;
 
@@ -210,15 +204,15 @@ function assertMichelsonInstruction(ex: Expr[] | Prim, path: PathElem[]): ex is 
             /* istanbul ignore else */
             if (assertArgs(ex, 2, path)) {
                assertMichelsonComparableType(ex.args[0], [...path, { index: 0, val: ex.args[0] }]);
-               assertMichelsonTypeInternal(ex.args[1], [...path, { index: 1, val: ex.args[1] }]);
+               assertMichelsonType(ex.args[1], [...path, { index: 1, val: ex.args[1] }]);
             }
             break;
 
          case "LAMBDA":
             /* istanbul ignore else */
             if (assertArgs(ex, 3, path)) {
-               assertMichelsonTypeInternal(ex.args[0], [...path, { index: 0, val: ex.args[0] }]);
-               assertMichelsonTypeInternal(ex.args[1], [...path, { index: 1, val: ex.args[1] }]);
+               assertMichelsonType(ex.args[0], [...path, { index: 0, val: ex.args[0] }]);
+               assertMichelsonType(ex.args[1], [...path, { index: 1, val: ex.args[1] }]);
                const p2 = [...path, { index: 2, val: ex.args[2] }];
                /* istanbul ignore else */
                if (assertSeq(ex.args[2], p2)) {
@@ -239,7 +233,7 @@ const simpleComparableTypeTable: Record<MichelsonSimpleComparableTypeId, boolean
    "bool": true, "key_hash": true, "timestamp": true, "address": true,
 };
 
-function assertMichelsonSimpleComparableType(ex: Expr, path: PathElem[]): ex is MichelsonSimpleComparableType {
+function assertMichelsonSimpleComparableType(ex: Expr, path: ObjectTreePath[]): ex is MichelsonSimpleComparableType {
    /* istanbul ignore else */
    if (assertPrim(ex, path)) {
       if (!Object.prototype.hasOwnProperty.call(simpleComparableTypeTable, ex.prim)) {
@@ -250,7 +244,7 @@ function assertMichelsonSimpleComparableType(ex: Expr, path: PathElem[]): ex is 
    return true;
 }
 
-function assertMichelsonComparableType(ex: Expr, path: PathElem[]): ex is MichelsonComparableType {
+function assertMichelsonComparableType(ex: Expr, path: ObjectTreePath[]): ex is MichelsonComparableType {
    /* istanbul ignore else */
    if (assertPrim(ex, path)) {
       if (Object.prototype.hasOwnProperty.call(simpleComparableTypeTable, ex.prim)) {
@@ -268,7 +262,12 @@ function assertMichelsonComparableType(ex: Expr, path: PathElem[]): ex is Michel
    return true;
 }
 
-function assertMichelsonTypeInternal(ex: Expr, path: PathElem[]): ex is MichelsonType {
+/**
+ * Checks if the node is a valid Michelson type expression.
+ * This is a type guard function which either returns true of throws an exception.
+ * @param ex An AST node
+ */
+export function assertMichelsonType(ex: Expr, path: ObjectTreePath[] = []): ex is MichelsonType {
    /* istanbul ignore else */
    if (assertPrim(ex, path)) {
       switch (ex.prim) {
@@ -285,7 +284,7 @@ function assertMichelsonTypeInternal(ex: Expr, path: PathElem[]): ex is Michelso
          case "contract":
             /* istanbul ignore else */
             if (assertArgs(ex, 1, path)) {
-               assertMichelsonTypeInternal(ex.args[0], [...path, { index: 0, val: ex.args[0] }]);
+               assertMichelsonType(ex.args[0], [...path, { index: 0, val: ex.args[0] }]);
             }
             break;
 
@@ -294,8 +293,8 @@ function assertMichelsonTypeInternal(ex: Expr, path: PathElem[]): ex is Michelso
          case "lambda":
             /* istanbul ignore else */
             if (assertArgs(ex, 2, path)) {
-               assertMichelsonTypeInternal(ex.args[0], [...path, { index: 0, val: ex.args[0] }]);
-               assertMichelsonTypeInternal(ex.args[1], [...path, { index: 1, val: ex.args[1] }]);
+               assertMichelsonType(ex.args[0], [...path, { index: 0, val: ex.args[0] }]);
+               assertMichelsonType(ex.args[1], [...path, { index: 1, val: ex.args[1] }]);
             }
             break;
 
@@ -311,7 +310,7 @@ function assertMichelsonTypeInternal(ex: Expr, path: PathElem[]): ex is Michelso
             /* istanbul ignore else */
             if (assertArgs(ex, 2, path)) {
                assertMichelsonComparableType(ex.args[0], [...path, { index: 0, val: ex.args[0] }]);
-               assertMichelsonTypeInternal(ex.args[1], [...path, { index: 1, val: ex.args[1] }]);
+               assertMichelsonType(ex.args[1], [...path, { index: 1, val: ex.args[1] }]);
             }
             break;
 
@@ -323,7 +322,12 @@ function assertMichelsonTypeInternal(ex: Expr, path: PathElem[]): ex is Michelso
    return true;
 }
 
-function assertMichelsonDataInternal(ex: Expr, path: PathElem[]): ex is MichelsonData {
+/**
+ * Checks if the node is a valid Michelson data literal such as `(Pair {Elt "0" 0} 0)`.
+ * This is a type guard function which either returns true of throws an exception.
+ * @param ex An AST node
+ */
+export function assertMichelsonData(ex: Expr, path: ObjectTreePath[] = []): ex is MichelsonData {
    if (("int" in ex) || ("string" in ex) || ("bytes" in ex)) {
       return true;
    }
@@ -336,12 +340,12 @@ function assertMichelsonDataInternal(ex: Expr, path: PathElem[]): ex is Michelso
          if (isPrim(n) && n.prim === "Elt") {
             /* istanbul ignore else */
             if (assertArgs(n, 2, p)) {
-               assertMichelsonDataInternal(n.args[0], [...p, { index: 0, val: n.args[0] }]);
-               assertMichelsonDataInternal(n.args[1], [...p, { index: 1, val: n.args[1] }]);
+               assertMichelsonData(n.args[0], [...p, { index: 0, val: n.args[0] }]);
+               assertMichelsonData(n.args[1], [...p, { index: 1, val: n.args[1] }]);
             }
             mapElts++;
          } else {
-            assertMichelsonDataInternal(n, p);
+            assertMichelsonData(n, p);
          }
          i++;
       }
@@ -364,8 +368,8 @@ function assertMichelsonDataInternal(ex: Expr, path: PathElem[]): ex is Michelso
          case "Pair":
             /* istanbul ignore else */
             if (assertArgs(ex, 2, path)) {
-               assertMichelsonDataInternal(ex.args[0], [...path, { index: 0, val: ex.args[0] }]);
-               assertMichelsonDataInternal(ex.args[1], [...path, { index: 1, val: ex.args[1] }]);
+               assertMichelsonData(ex.args[0], [...path, { index: 0, val: ex.args[0] }]);
+               assertMichelsonData(ex.args[1], [...path, { index: 1, val: ex.args[1] }]);
             }
             break;
 
@@ -374,7 +378,7 @@ function assertMichelsonDataInternal(ex: Expr, path: PathElem[]): ex is Michelso
          case "Some":
             /* istanbul ignore else */
             if (assertArgs(ex, 1, path)) {
-               assertMichelsonDataInternal(ex.args[0], [...path, { index: 0, val: ex.args[0] }]);
+               assertMichelsonData(ex.args[0], [...path, { index: 0, val: ex.args[0] }]);
             }
             break;
 
@@ -392,7 +396,12 @@ function assertMichelsonDataInternal(ex: Expr, path: PathElem[]): ex is Michelso
    return true;
 }
 
-function assertMichelsonScriptInternal(ex: Expr, path: PathElem[]): ex is MichelsonScript {
+/**
+ * Checks if the node is a valid Michelson smart contract source containing all required and valid properties such as `parameter`, `storage` and `code`.
+ * This is a type guard function which either returns true of throws an exception.
+ * @param ex An AST node
+ */
+export function assertMichelsonScript(ex: Expr, path: ObjectTreePath[] = []): ex is MichelsonScript {
    /* istanbul ignore else */
    if (assertSeq(ex, path) && ex.length === 3 &&
       assertPrim(ex[0], [...path, { index: 0, val: ex[0] }]) &&
@@ -419,7 +428,7 @@ function assertMichelsonScriptInternal(ex: Expr, path: PathElem[]): ex is Michel
 
                   case "parameter":
                   case "storage":
-                     assertMichelsonTypeInternal(n.args[0], pp);
+                     assertMichelsonType(n.args[0], pp);
                }
             }
             i++;
@@ -433,47 +442,11 @@ function assertMichelsonScriptInternal(ex: Expr, path: PathElem[]): ex is Michel
 
 /**
  * Checks if the node is a valid Michelson smart contract source containing all required and valid properties such as `parameter`, `storage` and `code`.
- * This is a type guard function which either returns true of throws an exception.
- * @param ex An AST node
- */
-export function assertMichelsonScript(ex: Expr): ex is MichelsonScript {
-   return assertMichelsonScriptInternal(ex, []);
-}
-
-/**
- * Checks if the node is a valid Michelson data literal such as `(Pair {Elt "0" 0} 0)`.
- * This is a type guard function which either returns true of throws an exception.
- * @param ex An AST node
- */
-export function assertMichelsonData(ex: Expr): ex is MichelsonData {
-   return assertMichelsonDataInternal(ex, []);
-}
-
-/**
- * Checks if the node is a valid Michelson code (sequence of instructions).
- * This is a type guard function which either returns true of throws an exception.
- * @param ex An AST node
- */
-export function assertMichelsonCode(ex: Expr[]): ex is MichelsonInstruction[] {
-   return assertMichelsonInstruction(ex, []);
-}
-
-/**
- * Checks if the node is a valid Michelson type expression.
- * This is a type guard function which either returns true of throws an exception.
- * @param ex An AST node
- */
-export function assertMichelsonType(ex: Expr): ex is MichelsonType {
-   return assertMichelsonTypeInternal(ex, []);
-}
-
-/**
- * Checks if the node is a valid Michelson smart contract source containing all required and valid properties such as `parameter`, `storage` and `code`.
  * @param ex An AST node
  */
 export function isMichelsonScript(ex: Expr): ex is MichelsonScript {
    try {
-      assertMichelsonScriptInternal(ex, []);
+      assertMichelsonScript(ex, []);
       return true;
    } catch {
       return false;
@@ -486,7 +459,7 @@ export function isMichelsonScript(ex: Expr): ex is MichelsonScript {
  */
 export function isMichelsonData(ex: Expr): ex is MichelsonData {
    try {
-      assertMichelsonDataInternal(ex, []);
+      assertMichelsonData(ex, []);
       return true;
    } catch {
       return false;
@@ -512,7 +485,7 @@ export function isMichelsonCode(ex: Expr[]): ex is MichelsonInstruction[] {
  */
 export function isMichelsonType(ex: Expr): ex is MichelsonType {
    try {
-      assertMichelsonTypeInternal(ex, []);
+      assertMichelsonType(ex, []);
       return true;
    } catch {
       return false;
