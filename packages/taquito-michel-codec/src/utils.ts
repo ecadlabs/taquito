@@ -30,7 +30,7 @@ export class MichelsonError<T extends Expr = Expr> extends Error {
      * @param path Path to a node caused the error
      * @param message An error message
      */
-    constructor(public val: T, public path?: ObjectTreePath<T>[], message?: string) {
+    constructor(public val: T, public path?: ObjectTreePath[], message?: string) {
         super(message);
     }
 }

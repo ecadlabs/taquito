@@ -13,28 +13,30 @@ import { decodeBase58Check } from "./base58";
 
 // Type equality check
 
+export class MichelsonTypeError extends MichelsonError<MichelsonType | MichelsonType[]> { }
+
 function assertScalarTypesEqual(a: MichelsonType, b: MichelsonType, path: ObjectTreePath[], field: boolean = false): void {
     if (a.prim !== b.prim) {
-        throw new MichelsonError(a, path, `unequal types: ${a.prim} != ${b.prim}`);
+        throw new MichelsonTypeError(a, path, `unequal types: ${a.prim} != ${b.prim}`);
     }
 
     const ann = [getAnnotations(a.annots), getAnnotations(b.annots)];
     for (const v of ann) {
         if ((v.type?.length || 0) > 1) {
-            throw new MichelsonError(a, path, `at most one type annotation allowed: ${v.type}`);
+            throw new MichelsonTypeError(a, path, `at most one type annotation allowed: ${v.type}`);
         }
         if ((v.field?.length || 0) > 1) {
-            throw new MichelsonError(a, path, `at most one field annotation allowed: ${v.field}`);
+            throw new MichelsonTypeError(a, path, `at most one field annotation allowed: ${v.field}`);
         }
     }
 
     if (ann[0].type !== undefined && ann[1].type !== undefined && ann[0].type[0] !== ann[1].type[0]) {
-        throw new MichelsonError(a, path, `unequal type names: ${ann[0].type[0]} != ${ann[1].type[0]}`);
+        throw new MichelsonTypeError(a, path, `unequal type names: ${ann[0].type[0]} != ${ann[1].type[0]}`);
     }
 
     if (field &&
         (ann[0].field?.length !== ann[1].field?.length || ann[0].field?.[0] !== ann[1].field?.[0])) {
-        throw new MichelsonError(a, path, `unequal field names: ${ann[0].field?.[0]} != ${ann[1].field?.[0]}`);
+        throw new MichelsonTypeError(a, path, `unequal field names: ${ann[0].field?.[0]} != ${ann[1].field?.[0]}`);
     }
 
     switch (a.prim) {
@@ -64,7 +66,7 @@ export function assertTypesEqual<T1 extends MichelsonType | MichelsonType[], T2 
         const aa = a as MichelsonType[];
         const bb = b as MichelsonType[];
         if (aa.length !== bb.length) {
-            throw new MichelsonError(aa, path, `unequal stack lengths: ${aa.length} != ${bb.length}`);
+            throw new MichelsonTypeError(aa, path, `unequal stack lengths: ${aa.length} != ${bb.length}`);
         }
 
         for (let i = 0; i < aa.length; i++) {
@@ -83,6 +85,18 @@ export function typesEqual<T1 extends MichelsonType | MichelsonType[], T2 extend
 }
 
 // Data integrity check
+
+export class MichelsonDataError extends MichelsonError<MichelsonType> {
+    /**
+     * @param val Value of a type node caused the error
+     * @param data Value of a data node caused the error
+     * @param path Path to a node caused the error
+     * @param message An error message
+     */
+    constructor(val: MichelsonType, public data: MichelsonData, path?: ObjectTreePath[], message?: string) {
+        super(val, path, message);
+    }
+}
 
 type TezosIDType = "BlockHash" | "OperationHash" | "OperationListHash" | "OperationListListHash" |
     "ProtocolHash" | "ContextHash" | "ED25519PublicKeyHash" | "SECP256K1PublicKeyHash" |
@@ -140,18 +154,6 @@ function checkTezosID(id: string | number[], ...types: TezosIDType[]): [TezosIDT
         }
     }
     return null;
-}
-
-export class MichelsonDataError extends MichelsonError {
-    /**
-     * @param val Value of a type node caused the error
-     * @param data Value of a data node caused the error
-     * @param path Path to a node caused the error
-     * @param message An error message
-     */
-    constructor(val: MichelsonType, public data: MichelsonData, path?: ObjectTreePath[], message?: string) {
-        super(val, path, message);
-    }
 }
 
 const rfc3339Re = /^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\.[0-9]+)?(Z|[+-]([01][0-9]|2[0-3]):([0-5][0-9]))$/;
@@ -442,6 +444,18 @@ export function assertDataValid(t: MichelsonType, d: MichelsonData, path: Object
 
 // Code validation
 
+export class MichelsonCodeError extends MichelsonError<MichelsonInstruction> {
+    /**
+     * @param val Value of a type node caused the error
+     * @param stackState Current stack state
+     * @param path Path to a node caused the error
+     * @param message An error message
+     */
+    constructor(val: MichelsonInstruction, public stackState: MichelsonStackType, path?: ObjectTreePath[], message?: string) {
+        super(val, path, message);
+    }
+}
+
 export interface MichelsonTypeFailed {
     failed: MichelsonType;
 }
@@ -491,7 +505,7 @@ export function instructionType(instruction: MichelsonInstruction, stack: Michel
 
     function top<T extends ((readonly MichelsonTypeId[]) | null)[]>(n: number, ...typeIds: T): StackType<T> {
         if (stack.length < typeIds.length + n) {
-            throw new MichelsonError(instruction, path, `${prim}: stack must have at least ${typeIds.length} element(s)`);
+            throw new MichelsonCodeError(instruction, stack, path, `${prim}: stack must have at least ${typeIds.length} element(s)`);
         }
 
         let i = n;
@@ -502,7 +516,7 @@ export function instructionType(instruction: MichelsonInstruction, stack: Michel
                     ii++;
                 }
                 if (ii === ids.length) {
-                    throw new MichelsonError(instruction, path, `${prim}: stack type mismatch: [${i}] expected to be ${ids}, got ${stack[i].prim} instead`);
+                    throw new MichelsonCodeError(instruction, stack, path, `${prim}: stack type mismatch: [${i}] expected to be ${ids}, got ${stack[i].prim} instead`);
                 }
             }
             i++;
@@ -512,7 +526,7 @@ export function instructionType(instruction: MichelsonInstruction, stack: Michel
 
     function rest(n?: number): MichelsonType[] {
         if (n !== undefined && stack.length < n) {
-            throw new MichelsonError(instruction, path, `${prim}: stack must have at least ${n} element(s)`);
+            throw new MichelsonCodeError(instruction, stack, path, `${prim}: stack must have at least ${n} element(s)`);
         }
         return stack.slice(n);
     }
@@ -524,7 +538,7 @@ export function instructionType(instruction: MichelsonInstruction, stack: Michel
         } else if (type.prim === "pair" && Object.prototype.hasOwnProperty.call(simpleComparableTypeTable, type.args[0].prim)) {
             assertComparableType(type.args[1]);
         } else {
-            throw new MichelsonError(instruction, path, `${prim}: comparable type expected: ${type}`);
+            throw new MichelsonCodeError(instruction, stack, path, `${prim}: comparable type expected: ${type}`);
         }
     }
 
@@ -603,7 +617,7 @@ export function instructionType(instruction: MichelsonInstruction, stack: Michel
             {
                 const s = top(0, null, ["lambda"]);
                 if (s[1].args[0].prim !== "pair") {
-                    throw new MichelsonError(instruction, path, `${instruction.prim}: function's argument must be a pair: ${s[1].args[0].prim}`);
+                    throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: function's argument must be a pair: ${s[1].args[0].prim}`);
                 }
                 const pt = s[1].args[0];
                 assertTypesEqual(s[0], pt.args[0], path);
@@ -622,13 +636,13 @@ export function instructionType(instruction: MichelsonInstruction, stack: Michel
                 const s0 = top(0, ["string", "list", "bytes"]);
                 if (s0[0].prim === "list") {
                     if (s0[0].args[0].prim !== "string" && s0[0].args[0].prim !== "bytes") {
-                        throw new MichelsonError(instruction, path, `${instruction.prim}: can't concatenate list of ${s0[0].args[0].prim}'s`);
+                        throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: can't concatenate list of ${s0[0].args[0].prim}'s`);
                     }
                     return [s0[0].args[0], ...rest(1)];
                 } else {
                     const s1 = top(1, ["string", "bytes"]);
                     if (s0[0].prim !== s1[0].prim) {
-                        throw new MichelsonError(instruction, path, `${instruction.prim}: can't concatenate ${s0[0].prim} with ${s1[0].prim}`);
+                        throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: can't concatenate ${s0[0].prim} with ${s1[0].prim}`);
                     }
                     return rest(1);
                 }
@@ -653,7 +667,7 @@ export function instructionType(instruction: MichelsonInstruction, stack: Michel
                 } else if (s[0].prim === "mutez" && s[1].prim === "mutez") {
                     return [{ prim: "mutez" }, ...rest(2)];
                 } else {
-                    throw new MichelsonError(instruction, path, `${instruction.prim}: can't add ${s[0].prim} to ${s[1].prim}`);
+                    throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: can't add ${s[0].prim} to ${s[1].prim}`);
                 }
             }
 
@@ -668,7 +682,7 @@ export function instructionType(instruction: MichelsonInstruction, stack: Michel
                 } else if (s[0].prim === "mutez" && s[1].prim === "mutez") {
                     return [{ prim: "mutez" }, ...rest(2)];
                 } else {
-                    throw new MichelsonError(instruction, path, `${instruction.prim}: can't subtract ${s[0].prim} from ${s[1].prim}`);
+                    throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: can't subtract ${s[0].prim} from ${s[1].prim}`);
                 }
             }
 
@@ -682,7 +696,7 @@ export function instructionType(instruction: MichelsonInstruction, stack: Michel
                 } else if (s[0].prim === "nat" && s[1].prim === "mutez" || s[0].prim === "mutez" && s[1].prim === "nat") {
                     return [{ prim: "mutez" }, ...rest(2)];
                 } else {
-                    throw new MichelsonError(instruction, path, `${instruction.prim}: can't multiply ${s[0].prim} by ${s[1].prim}`);
+                    throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: can't multiply ${s[0].prim} by ${s[1].prim}`);
                 }
             }
 
@@ -697,7 +711,7 @@ export function instructionType(instruction: MichelsonInstruction, stack: Michel
                 } else if (s[0].prim === "mutez" && s[1].prim === "mutez") {
                     return [res("nat", "mutez"), ...rest(2)];
                 } else {
-                    throw new MichelsonError(instruction, path, `${instruction.prim}: can't euclideally divide ${s[0].prim} by ${s[1].prim}`);
+                    throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: can't euclideally divide ${s[0].prim} by ${s[1].prim}`);
                 }
             }
 
@@ -727,7 +741,7 @@ export function instructionType(instruction: MichelsonInstruction, stack: Michel
             {
                 const s = top(0, ["nat", "bool"], ["nat", "bool"]);
                 if (s[0].prim !== s[1].prim) {
-                    throw new MichelsonError(instruction, path, `${instruction.prim}: both arguments must be of the same type: ${s[0].prim}, ${s[1].prim}`);
+                    throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: both arguments must be of the same type: ${s[0].prim}, ${s[1].prim}`);
                 }
                 return rest(1);
             }
@@ -736,7 +750,7 @@ export function instructionType(instruction: MichelsonInstruction, stack: Michel
             {
                 const s = top(0, ["nat", "bool", "int"], ["nat", "bool"]);
                 if ((s[0].prim !== "int" || s[1].prim !== "nat") && s[0].prim !== s[1].prim) {
-                    throw new MichelsonError(instruction, path, `${instruction.prim}: both arguments must be of the same type: ${s[0].prim}, ${s[1].prim}`);
+                    throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: both arguments must be of the same type: ${s[0].prim}, ${s[1].prim}`);
                 }
                 return rest(1);
             }
@@ -783,7 +797,7 @@ export function instructionType(instruction: MichelsonInstruction, stack: Michel
             {
                 const s = top(0, ["option"]);
                 if (s[0].args[0].prim !== "key_hash") {
-                    throw new MichelsonError(instruction, path, `${instruction.prim}: key hash expected: ${s[0].args[0].prim}`);
+                    throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: key hash expected: ${s[0].args[0].prim}`);
                 }
                 return [{ prim: "operation" }, ...rest(1)];
             }
@@ -792,7 +806,7 @@ export function instructionType(instruction: MichelsonInstruction, stack: Michel
             {
                 const s = top(0, ["key_hash"], ["option"], ["bool"], ["mutez"]);
                 if (s[1].args[0].prim !== "key_hash") {
-                    throw new MichelsonError(instruction, path, `${instruction.prim}: key hash expected: ${s[1].args[0].prim}`);
+                    throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: key hash expected: ${s[1].args[0].prim}`);
                 }
                 return [{ prim: "operation" }, { prim: "address" }, ...rest(4)];
             }
@@ -865,7 +879,7 @@ export function instructionType(instruction: MichelsonInstruction, stack: Michel
 
         case "UNPACK":
             if (!Object.prototype.hasOwnProperty.call(packableTypesTable, instruction.args[0].prim)) {
-                throw new MichelsonError(instruction, path, `${instruction.prim}: packable type expected: ${instruction.args[0].prim}`);
+                throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: packable type expected: ${instruction.args[0].prim}`);
             }
             top(0, ["bytes"]);
             return [{ prim: "option", args: [instruction.args[0]] }, ...rest(1)];
@@ -912,7 +926,7 @@ export function instructionType(instruction: MichelsonInstruction, stack: Michel
                     return body;
                 }
                 if (body.length < 1) {
-                    throw new MichelsonError(instruction, path, `${instruction.prim}: body must return a value`);
+                    throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: body must return a value`);
                 }
                 assertTypesEqual(tail, body.slice(1), path);
                 if (s[0].prim === "list") {
