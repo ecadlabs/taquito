@@ -21,22 +21,12 @@ function assertScalarTypesEqual(a: MichelsonType, b: MichelsonType, path: Object
     }
 
     const ann = [getAnnotations(a.annots), getAnnotations(b.annots)];
-    for (const v of ann) {
-        if ((v.type?.length || 0) > 1) {
-            throw new MichelsonTypeError(a, path, `at most one type annotation allowed: ${v.type}`);
-        }
-        if ((v.field?.length || 0) > 1) {
-            throw new MichelsonTypeError(a, path, `at most one field annotation allowed: ${v.field}`);
-        }
+    if ((ann[0].type !== undefined || ann[1].type !== undefined) && ann[0].type?.[0] !== ann[1].type?.[0]) {
+        throw new MichelsonTypeError(a, path, `unequal type names: ${ann[0].type?.[0] || "<undefined>"} != ${ann[1].type?.[0] || "<undefined>"}`);
     }
-
-    if (ann[0].type !== undefined && ann[1].type !== undefined && ann[0].type[0] !== ann[1].type[0]) {
-        throw new MichelsonTypeError(a, path, `unequal type names: ${ann[0].type[0]} != ${ann[1].type[0]}`);
-    }
-
     if (field &&
-        (ann[0].field?.length !== ann[1].field?.length || ann[0].field?.[0] !== ann[1].field?.[0])) {
-        throw new MichelsonTypeError(a, path, `unequal field names: ${ann[0].field?.[0]} != ${ann[1].field?.[0]}`);
+        ((ann[0].field !== undefined || ann[1].field !== undefined) && ann[0].field?.[0] !== ann[1].field?.[0])) {
+        throw new MichelsonTypeError(a, path, `unequal field names: ${ann[0].field?.[0] || "<undefined>"} != ${ann[1].field?.[0] || "<undefined>"}`);
     }
 
     switch (a.prim) {
@@ -61,17 +51,61 @@ function assertScalarTypesEqual(a: MichelsonType, b: MichelsonType, path: Object
     }
 }
 
+function assertTypeAnnotationsValid(t: MichelsonType, path: ObjectTreePath[], field: boolean = false): void {
+    const ann = getAnnotations(t.annots);
+    if ((ann.type?.length || 0) > 1) {
+        throw new MichelsonTypeError(t, path, `${t.prim}: at most one type annotation allowed: ${t.annots}`);
+    }
+
+    if (field) {
+        if ((ann.field?.length || 0) > 1) {
+            throw new MichelsonTypeError(t, path, `${t.prim}: at most one field annotation allowed: ${t.annots}`);
+        }
+    } else {
+        if ((ann.field?.length || 0) > 0) {
+            throw new MichelsonTypeError(t, path, `${t.prim}: field annotations aren't allowed here: ${t.annots}`);
+        }
+    }
+
+    switch (t.prim) {
+        case "option":
+        case "list":
+        case "contract":
+        case "set":
+            assertTypeAnnotationsValid(t.args[0], [...path, { index: 0, val: t.args[0] }]);
+            break;
+
+        case "pair":
+        case "or":
+            assertTypeAnnotationsValid(t.args[0], [...path, { index: 0, val: t.args[0] }], true);
+            assertTypeAnnotationsValid(t.args[1], [...path, { index: 1, val: t.args[1] }], true);
+            break;
+
+        case "lambda":
+        case "map":
+        case "big_map":
+            assertTypeAnnotationsValid(t.args[0], [...path, { index: 0, val: t.args[0] }]);
+            assertTypeAnnotationsValid(t.args[1], [...path, { index: 1, val: t.args[1] }]);
+    }
+}
+
 export function assertTypesEqual<T1 extends MichelsonType | MichelsonType[], T2 extends T1>(a: T1, b: T2, path: ObjectTreePath[] = []): void {
     if (Array.isArray(a)) {
+        // type guards don't work for parametrized generic types
         const aa = a as MichelsonType[];
         const bb = b as MichelsonType[];
         if (aa.length !== bb.length) {
             throw new MichelsonTypeError(aa, path, `unequal stack lengths: ${aa.length} != ${bb.length}`);
         }
-
         for (let i = 0; i < aa.length; i++) {
+            assertTypeAnnotationsValid(aa[i], [...path, { index: i, val: aa[0] }]);
+            assertTypeAnnotationsValid(bb[i], []);
             assertScalarTypesEqual(aa[i], bb[i], [...path, { index: i, val: aa[0] }]);
         }
+    } else {
+        assertTypeAnnotationsValid(a as MichelsonType, path);
+        assertTypeAnnotationsValid(b as MichelsonType, []);
+        assertScalarTypesEqual(a as MichelsonType, b as MichelsonType, path);
     }
 }
 
@@ -866,26 +900,32 @@ export function instructionType(instruction: MichelsonInstruction, stack: Michel
             }
 
         case "NONE":
+            assertTypeAnnotationsValid(instruction.args[0], [...path, { index: 0, val: instruction.args[0] }]);
             return [{ prim: "option", args: [instruction.args[0]] }, ...stack];
 
         case "LEFT":
+            assertTypeAnnotationsValid(instruction.args[0], [...path, { index: 0, val: instruction.args[0] }]);
             return [{ prim: "or", args: [top(0, null)[0], instruction.args[0]] }, ...rest(1)];
 
         case "RIGHT":
+            assertTypeAnnotationsValid(instruction.args[0], [...path, { index: 0, val: instruction.args[0] }]);
             return [{ prim: "or", args: [instruction.args[0], top(0, null)[0]] }, ...rest(1)];
 
         case "NIL":
+            assertTypeAnnotationsValid(instruction.args[0], [...path, { index: 0, val: instruction.args[0] }]);
             return [{ prim: "list", args: [instruction.args[0]] }, ...stack];
 
         case "UNPACK":
+            top(0, ["bytes"]);
             if (!Object.prototype.hasOwnProperty.call(packableTypesTable, instruction.args[0].prim)) {
                 throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: packable type expected: ${instruction.args[0].prim}`);
             }
-            top(0, ["bytes"]);
+            assertTypeAnnotationsValid(instruction.args[0], [...path, { index: 0, val: instruction.args[0] }]);
             return [{ prim: "option", args: [instruction.args[0]] }, ...rest(1)];
 
         case "CONTRACT":
             top(0, ["address"]);
+            assertTypeAnnotationsValid(instruction.args[0], [...path, { index: 0, val: instruction.args[0] }]);
             return [{ prim: "option", args: [{ prim: "contract", args: [instruction.args[0]] }] }, ...rest(1)];
 
         case "CAST":
@@ -993,18 +1033,24 @@ export function instructionType(instruction: MichelsonInstruction, stack: Michel
             throw new Error(`${instruction.prim}: TODO`);
 
         case "PUSH":
+            assertTypeAnnotationsValid(instruction.args[0], [...path, { index: 0, val: instruction.args[0] }]);
             assertDataValid(instruction.args[0], instruction.args[1], [...path, { index: 0, val: instruction.args[0] }]);
             return [instruction.args[0], ...stack];
 
         case "EMPTY_SET":
+            assertTypeAnnotationsValid(instruction.args[0], [...path, { index: 0, val: instruction.args[0] }]);
             return [{ prim: "set", args: instruction.args }, ...stack];
 
         case "EMPTY_MAP":
         case "EMPTY_BIG_MAP":
+            assertTypeAnnotationsValid(instruction.args[0], [...path, { index: 0, val: instruction.args[0] }]);
+            assertTypeAnnotationsValid(instruction.args[1], [...path, { index: 1, val: instruction.args[1] }]);
             return [{ prim: instruction.prim === "EMPTY_MAP" ? "map" : "big_map", args: instruction.args }, ...stack];
 
         case "LAMBDA":
             {
+                assertTypeAnnotationsValid(instruction.args[0], [...path, { index: 0, val: instruction.args[0] }]);
+                assertTypeAnnotationsValid(instruction.args[1], [...path, { index: 1, val: instruction.args[1] }]);
                 const body = instructionType(instruction.args[2], [instruction.args[0]], [...path, { index: 2, val: instruction.args[2] }]);
                 if ("failed" in body) {
                     return body;

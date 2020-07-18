@@ -27,7 +27,7 @@ export type MichelsonInstruction = MichelsonInstruction[] |
     InstrX<"NONE" | "LEFT" | "RIGHT" | "NIL" | "UNPACK" | "CONTRACT" | "CAST", [MichelsonType]> |
     InstrX<"IF_NONE" | "IF_LEFT" | "IF_CONS" | "IF", [MichelsonInstruction[], MichelsonInstruction[]]> |
     InstrX<"MAP" | "ITER" | "LOOP" | "LOOP_LEFT" | "DIP", [MichelsonInstruction[]]> |
-    InstrX<"CREATE_CONTRACT", [MichelsonScript]> |
+    InstrX<"CREATE_CONTRACT", [MichelsonContract]> |
     InstrX<"PUSH", [MichelsonType, MichelsonData]> |
     InstrX<"EMPTY_SET", [MichelsonComparableType]> |
     InstrX<"EMPTY_MAP" | "EMPTY_BIG_MAP", [MichelsonComparableType, MichelsonType]> |
@@ -140,10 +140,10 @@ export type MichelsonData<T extends MichelsonType = MichelsonType> =
 type MichelsonSectionId = "parameter" | "storage" | "code";
 type SectionPrim<PT extends MichelsonSectionId, AT extends Expr[]> = ReqArgs<Prim<PT, AT>>;
 
-export type MichelsonParameter = SectionPrim<"parameter", [MichelsonType]>;
-export type MichelsonStorage = SectionPrim<"storage", [MichelsonType]>;
-export type MichelsonCode = SectionPrim<"code", [MichelsonInstruction[]]>;
+export type MichelsonContractParameter = SectionPrim<"parameter", [MichelsonType]>;
+export type MichelsonContractStorage = SectionPrim<"storage", [MichelsonType]>;
+export type MichelsonContractCode = SectionPrim<"code", [MichelsonInstruction[]]>;
 
-export type MichelsonScript = [MichelsonParameter, MichelsonStorage, MichelsonCode] |
-    [MichelsonStorage, MichelsonCode, MichelsonParameter] |
-    [MichelsonCode, MichelsonParameter, MichelsonStorage];
+export type MichelsonContract = [MichelsonContractParameter, MichelsonContractStorage, MichelsonContractCode] |
+    [MichelsonContractStorage, MichelsonContractCode, MichelsonContractParameter] |
+    [MichelsonContractCode, MichelsonContractParameter, MichelsonContractStorage];

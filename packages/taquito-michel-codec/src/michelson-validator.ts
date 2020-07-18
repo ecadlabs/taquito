@@ -3,7 +3,7 @@ import { Tuple, NoArgs, ReqArgs, ObjectTreePath } from "./utils";
 import {
    MichelsonInstructionId, MichelsonInstruction, MichelsonUnaryInstructionId,
    MichelsonType, MichelsonComparableType, MichelsonSimpleComparableType,
-   MichelsonSimpleComparableTypeId, MichelsonData, MichelsonScript
+   MichelsonSimpleComparableTypeId, MichelsonData, MichelsonContract
 } from "./michelson-types";
 
 // Michelson validator
@@ -401,7 +401,7 @@ export function assertMichelsonData(ex: Expr, path: ObjectTreePath[] = []): ex i
  * This is a type guard function which either returns true of throws an exception.
  * @param ex An AST node
  */
-export function assertMichelsonScript(ex: Expr, path: ObjectTreePath[] = []): ex is MichelsonScript {
+export function assertMichelsonScript(ex: Expr, path: ObjectTreePath[] = []): ex is MichelsonContract {
    /* istanbul ignore else */
    if (assertSeq(ex, path) && ex.length === 3 &&
       assertPrim(ex[0], [...path, { index: 0, val: ex[0] }]) &&
@@ -444,7 +444,7 @@ export function assertMichelsonScript(ex: Expr, path: ObjectTreePath[] = []): ex
  * Checks if the node is a valid Michelson smart contract source containing all required and valid properties such as `parameter`, `storage` and `code`.
  * @param ex An AST node
  */
-export function isMichelsonScript(ex: Expr): ex is MichelsonScript {
+export function isMichelsonScript(ex: Expr): ex is MichelsonContract {
    try {
       assertMichelsonScript(ex, []);
       return true;
