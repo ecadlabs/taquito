@@ -2,12 +2,11 @@ import { StringLiteral, IntLiteral, Prim } from "./micheline";
 import {
     MichelsonType, MichelsonData, MichelsonComparableType, MichelsonMapElt,
     MichelsonTypeId, MichelsonSimpleComparableTypeId, MichelsonInstruction,
-    MichelsonTypeOption
+    MichelsonTypeOption,
 } from "./michelson-types";
-import { assertMichelsonInstruction } from "./michelson-validator";
 import {
     getAnnotations, ObjectTreePath, MichelsonError, isNatural,
-    LongInteger, parseBytes, compareBytes, isDecimal
+    LongInteger, parseBytes, compareBytes, isDecimal, instructionTable
 } from "./utils";
 import { decodeBase58Check } from "./base58";
 
@@ -273,6 +272,20 @@ function compareMichelsonData(t: MichelsonComparableType, a: MichelsonData, b: M
     throw new Error(`non comparable values: ${a}, ${b}`);
 }
 
+// Simplified version of assertMichelsonInstruction() for previously validated data
+function isFunction(d: MichelsonData): d is MichelsonInstruction[] {
+    if (!Array.isArray(d)) {
+        return false;
+    }
+    for (const v of d) {
+        if (!(Array.isArray(v) && isFunction(v) ||
+            ("prim" in v) && Object.prototype.hasOwnProperty.call(instructionTable, v.prim))) {
+            return false;
+        }
+    }
+    return true;
+}
+
 export function assertDataValid(t: MichelsonType, d: MichelsonData, path: ObjectTreePath[] = []): void {
     switch (t.prim) {
         // Atomic literals
@@ -442,12 +455,13 @@ export function assertDataValid(t: MichelsonType, d: MichelsonData, path: Object
             throw new MichelsonDataError(t, d, path, `union (or) expected: ${d}`);
 
         case "lambda":
-            if (Array.isArray(d) && assertMichelsonInstruction(d, path)) {
+            if (isFunction(d)) {
                 const body = instructionType(d, [t.args[0]], path);
                 if ("failed" in body) {
                     throw new MichelsonDataError(t, d, path, `function is failed with error type: ${body.failed}`);
                 }
                 assertTypesEqual([t.args[1]], body, [...path, { index: 1, val: t.args[1] }]);
+                return;
             }
             throw new MichelsonDataError(t, d, path, `function expected: ${d}`);
 
