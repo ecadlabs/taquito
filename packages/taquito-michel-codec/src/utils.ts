@@ -15,6 +15,8 @@ export type ReqArgs<T extends Prim> = RequiredProp<T, "args">;
 export type NoArgs<T extends Prim> = OmitProp<T, "args">;
 export type NoAnnots<T extends Prim> = OmitProp<T, "annots">;
 
+export type Nullable<T> = { [P in keyof T]: T[P] | null };
+
 export interface ObjectTreePath<T extends Expr = Expr> {
     /**
      * Node's index. Either argument index or sequence index.
@@ -148,13 +150,13 @@ export interface UnpackedAnnotations {
     v?: string[];
 }
 
-export function unpackAnnotations(a?: string[]): UnpackedAnnotations {
+export function unpackAnnotations(p: Prim): UnpackedAnnotations {
     let field: string[] | undefined;
     let type: string[] | undefined;
     let vars: string[] | undefined;
 
-    if (a !== undefined) {
-        for (const v of a) {
+    if (p.annots !== undefined) {
+        for (const v of p.annots) {
             if (v.length !== 0) {
                 switch (v[0]) {
                     case "%":
