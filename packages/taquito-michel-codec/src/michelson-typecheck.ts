@@ -2,7 +2,8 @@ import { StringLiteral, IntLiteral } from "./micheline";
 import {
     MichelsonType, MichelsonData, MichelsonComparableType, MichelsonMapElt,
     MichelsonTypeId, MichelsonSimpleComparableTypeId, MichelsonInstruction,
-    MichelsonTypeOption
+    MichelsonTypeOption,
+    MichelsonTypeBool
 } from "./michelson-types";
 import {
     unpackAnnotations, ObjectTreePath, MichelsonError, isNatural,
@@ -489,20 +490,6 @@ const packableTypesTable: Record<(typeof packableTypes)[number], boolean> = {
     "pair": true, "or": true, "lambda": true, "set": true, "map": true
 };
 
-// also keeps annotation class if null is provided
-function annotate<T extends MichelsonType>(t: T, a: Nullable<UnpackedAnnotations>): T {
-    const src = unpackAnnotations(t);
-    const ann = (a.v !== undefined || a.t !== undefined || a.f !== undefined) ?
-        [
-            ...(a.v === null ? src.v : a.v),
-            ...(a.t === null ? src.t : a.t),
-            ...(a.f === null ? src.f : a.f)
-        ] : undefined;
-
-    const { annots, ...rest } = t;
-    return { ...(rest as T), ...(ann && { annots: ann }) };
-}
-
 function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[], path: ObjectTreePath[] = []): MichelsonStackType {
     if (Array.isArray(inst)) {
         let i = 0;
@@ -558,18 +545,34 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
     }
 
     // unpack instruction annotations and assert their maximum number
+    // TODO: check special
     function an({ f, t, v }: { f?: number; t?: number; v?: number }) {
         const a = unpackAnnotations(instruction);
-        if ((a.f?.length || 0) > (f || 0)) {
-            throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: at most ${f} field annotations allowed`);
-        }
-        if ((a.t?.length || 0) > (t || 0)) {
-            throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: at most ${t} type annotations allowed`);
-        }
-        if ((a.v?.length || 0) > (v || 0)) {
-            throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: at most ${v} variable annotations allowed`);
-        }
+        const assertNum = (a: string[] | undefined, n: number | undefined, type: string) => {
+            if (a && a.length > (n || 0)) {
+                throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: at most ${n || 0} ${type} annotations allowed`);
+            }
+        };
+        assertNum(a.f, f, "field");
+        assertNum(a.t, t, "type");
+        assertNum(a.v, v, "variable");
         return a;
+    }
+
+    // also keeps annotation class if null is provided
+    // TODO: check special
+    // TODO: filter out empty
+    function annotate<T extends MichelsonType>(t: T, a: Nullable<UnpackedAnnotations>): T {
+        const src = unpackAnnotations(t);
+        const ann = (a.v !== undefined || a.t !== undefined || a.f !== undefined) ?
+            [
+                ...(a.v === null ? src.v : a.v),
+                ...(a.t === null ? src.t : a.t),
+                ...(a.f === null ? src.f : a.f)
+            ] : undefined;
+
+        const { annots, ...rest } = t;
+        return { ...(rest as T), ...(ann && { annots: ann }) };
     }
 
     // shortcut to copy at most one variable annotation from the instruction to the type
@@ -966,14 +969,31 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
             return [annotate({ prim: "option", args: [instruction.args[0]] }, an({ t: 1, v: 1 })), ...stack];
 
         case "LEFT":
-            // TODO field annotations
-            assertTypeAnnotationsValid(instruction.args[0], [...path, { index: 0, val: instruction.args[0] }]);
-            return [annotate({ prim: "or", args: [top(0, null)[0], instruction.args[0]] }, an({ t: 1, v: 1 })), ...rest(1)];
-
         case "RIGHT":
-            // TODO field annotations
-            assertTypeAnnotationsValid(instruction.args[0], [...path, { index: 0, val: instruction.args[0] }]);
-            return [annotate({ prim: "or", args: [instruction.args[0], top(0, null)[0]] }, an({ t: 1, v: 1 })), ...rest(1)];
+            {
+                const s = top(0, null);
+                const ia = an({ f: 2, t: 1, v: 1 });
+                const va = unpackAnnotations(s[0]);
+
+                const children: [MichelsonType, MichelsonType] = [
+                    annotate(s[0], {
+                        t: null,
+                        f: ia.f && ia.f.length > 0 && ia.f[0] !== "%" ?
+                            ia.f[0] === "%@" ?
+                                va.v ? ["%" + va.v[0].slice(1)] : undefined :
+                                ia.f :
+                            undefined,
+                    }),
+                    annotate(instruction.args[0], {
+                        t: null,
+                        f: ia.f && ia.f.length > 1 && ia.f[1] !== "%" ? ia.f : undefined,
+                    }),
+                ];
+
+                return [annotate({
+                    prim: "or", args: instruction.prim === "LEFT" ? children : [children[1], children[0]]
+                }, { t: ia.t, v: ia.v }), ...rest(2)];
+            }
 
         case "NIL":
             assertTypeAnnotationsValid(instruction.args[0], [...path, { index: 0, val: instruction.args[0] }]);
