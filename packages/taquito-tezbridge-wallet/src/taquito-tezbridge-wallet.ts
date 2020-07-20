@@ -41,6 +41,9 @@ export class TezBridgeWallet implements WalletProvider {
   async setHost(host: string) {
     // returns user's address
     await tezbridge.request({
+<<<<<<< HEAD
+>>>>>>> e1a67b40... Removed unnecessary return from .setHost()
+=======
 >>>>>>> e1a67b40... Removed unnecessary return from .setHost()
       method: 'set_host',
       host: host,

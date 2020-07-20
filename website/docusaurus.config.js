@@ -6,14 +6,17 @@ module.exports = {
   baseUrl: '/',
   projectName: 'taquito',
   organizationName: 'ecadlabs',
-  scripts: ['https://buttons.github.io/buttons.js', {
-    src:
-      'https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js',
-    async: true,
-  }],
+  scripts: [
+    'https://buttons.github.io/buttons.js',
+    'https://www.tezbridge.com/plugin.js',
+    {
+      src: 'https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js',
+      async: true,
+    },
+  ],
   stylesheets: [
     'https://fonts.googleapis.com/css?family=Baloo+Tammudu|Open+Sans:400,600,800&display=swap',
-    'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css'
+    'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css',
   ],
   customFields: {
     repoUrl: 'https://github.com/ecadlabs/taquito',
@@ -26,14 +29,14 @@ module.exports = {
       title: 'Taquito',
       logo: {
         alt: 'Taquito Logo',
-        src: 'img/a_taquito.png'
+        src: 'img/a_taquito.png',
       },
       links: [
         { to: 'docs/version', label: '6.3.4-beta.0', position: 'right' },
         { to: 'docs/quick_start', label: 'Docs', position: 'right' },
-        { href: "https://twitter.com/TezosTaquito", label: 'Twitter', position: 'right' },
-        { href: "https://github.com/ecadlabs/taquito", label: 'GitHub', position: 'right' }
-      ]
+        { href: 'https://twitter.com/TezosTaquito', label: 'Twitter', position: 'right' },
+        { href: 'https://github.com/ecadlabs/taquito', label: 'GitHub', position: 'right' },
+      ],
     },
     footer: {
       links: [
@@ -85,7 +88,7 @@ module.exports = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} ECAD Labs - Open Source MIT License`
+      copyright: `Copyright © ${new Date().getFullYear()} ECAD Labs - Open Source MIT License`,
     },
     gtag: {
       trackingID: 'UA-148358030-1',
@@ -101,8 +104,8 @@ module.exports = {
         docs: {
           path: '../docs',
           sidebarPath: require.resolve('./sidebars.json'),
-        }
-      }
+        },
+      },
     ],
   ],
 };

@@ -17,7 +17,9 @@
     "@taquito/beacon-wallet": "^6.3.4-beta.0",
     "@taquito/signer": "^6.3.4-beta.0",
     "@taquito/taquito": "^6.3.4-beta.0",
+    "@taquito/tezbridge-wallet": "^6.3.5-beta.0",
     "@taquito/utils": "^6.3.4-beta.0",
+    "@thanos-wallet/dapp": "^0.5.0",
     "classnames": "^2.2.6",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
