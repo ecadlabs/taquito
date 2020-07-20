@@ -34,8 +34,14 @@ export class TezBridgeWallet implements WalletProvider {
    *
    * @param host host's RPC url
    */
+<<<<<<< HEAD
   setHost(host: string) {
     return tezbridge.request({
+=======
+  async setHost(host: string) {
+    // returns user's address
+    await tezbridge.request({
+>>>>>>> e1a67b40... Removed unnecessary return from .setHost()
       method: 'set_host',
       host: host,
     });
