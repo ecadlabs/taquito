@@ -32,6 +32,13 @@
             ]
         },
         {
+            "type": "category",
+            "label": "How to",
+            "items": [
+                "drain_account"
+            ]
+        },
+        {
             "type": "link",
             "label": "TypeDoc Reference",
             "href": "https://tezostaquito.io/typedoc"
