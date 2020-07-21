@@ -190,7 +190,7 @@
           },
           {
             "path": "dist/taquito.min.js",
-            "sha512": "3965de0525fbe297fd99dc3c2949fb0a9be4e5a7bc15b180eff35ed9f0caae6df3b3a490c76115fd81c4d5c62e4cc729b42c77c7c86dc5a4e087c61e1d6dd616"
+            "sha512": "aa288d6478a3aca7d930985f42029d5b872183e669a4f59d39ca4b60e933be0098abe1786cc0a005adb8ed5fb036107f1415253edb14784c6f64a1b33eb83793"
           },
           {
             "path": "dist/taquito.umd.js",
@@ -414,7 +414,7 @@
           },
           {
             "path": "README.md",
-            "sha512": "567b94820ec9bc0752fcfe9c2ae89bb92278a8451ee29187ed8eec990231ec4b14f52f5c437afcde2f04f21a889225534ad07c9f4ce7357e8e2ab6c3629fe43a"
+            "sha512": "0b031bc8eb8db6947f8844dac901d4c62e43047c279de20aa6fdf4480782934ed5046fd74a720819254b7f894cfad9a65878a04d4e68de8d01fb9112b66f165b"
           },
           {
             "path": "dist/types/operations/batch-operation.d.ts",
@@ -648,7 +648,7 @@
           "unpkg",
           "version"
         ],
-        "sha512": "0578661647f305d3a06b547f58792b36483af3b9e328029c3d1e17c66dc469d341c6464ef27e9bd7a1a7e7e92ef988e8d93488836e6ebf0ad17a7a407352fe6f"
+        "sha512": "35567444a5b80046ada2bd25b23e18e8b36677b3c4aa59ac3014b9072fc2a9f24565c4c966182ddecf9ec70e21c554f0ba6991cbbe43b2e4a2feb5f360d6e693"
       }
     },
     {
@@ -656,7 +656,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/taquito",
-          "version": "6.3.4-beta.0",
+          "version": "6.3.5-beta.0",
           "description": "High level functionality that builds upon the other packages in the Tezos Typescript Library Suite.",
           "keywords": [
             "tezos",
@@ -733,12 +733,12 @@
             ]
           },
           "dependencies": {
-            "@taquito/http-utils": "^6.3.4-beta.0",
-            "@taquito/michel-codec": "^6.3.4-beta.0",
-            "@taquito/michelson-encoder": "^6.3.4-beta.0",
-            "@taquito/rpc": "^6.3.4-beta.0",
-            "@taquito/signer": "^6.3.4-beta.0",
-            "@taquito/utils": "^6.3.4-beta.0",
+            "@taquito/http-utils": "^6.3.5-beta.0",
+            "@taquito/michel-codec": "^6.3.5-beta.0",
+            "@taquito/michelson-encoder": "^6.3.5-beta.0",
+            "@taquito/rpc": "^6.3.5-beta.0",
+            "@taquito/signer": "^6.3.5-beta.0",
+            "@taquito/utils": "^6.3.5-beta.0",
             "bignumber.js": "^9.0.0",
             "rx-sandbox": "^1.0.3",
             "rxjs": "^6.5.5"
@@ -779,5 +779,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfENJ8CRAD9Qy5GYHsngAAYu4QAB8uicRb43wBdF7pZQeaXuFS\nk+a59AVDrxmXhJE32NaDN3lLMZSZWD4Hb0ZD3g3fphMGTnZdQ0Dj5XYuEHl2d/Sn\nf0/9OfhYudr17ktYQXYfT4nHXmiqDt99+oHvNoFTwKhAxyfzAJxz9x2Ik8gLvLp2\nYxHjx4PNwNJOXls5+Is5/Xw4+LA7HVqgZ67b9/17mbNnC81SMObzoNxvvLV93sDS\n6dvyB0F2iEDPr8+DMRx1aRcvUeJnuFXmbSKkLHGQoVcb+enbpYsiH6DGxD2j0fgZ\n5wz7QW7DMOGKAbJKSLU1rm2DZbV7cjgDMdqpcbmJ7UbmDVt9qyLnNcX5p2btb36L\nj5v3sDTLa1iEmcdgvApbhhQ98TtJnWX7YYjfej7fhhDKXGNcUjpKMgEMa+mtCnX8\nd84KC3T0u49fLAG7fppAuzM/xrpI73vdKQxU1ucrRUZS1Sh8v2n7IEpKdwjGVvKu\nnVye2KUQNqlaE61kGg6ZSXf2KfA9fhZNsKdn6Ci+2jpLiS71703xaAcByMc4uIkM\n/e+1Y5ouJv5l6xvYXt0ji0FRuztQCyckv+qhvHmIf5bURBQWWTBWTZNygGuXGv5P\nRPKaDK2doaRJ6/k9C7h02/XNrBVZQX55yr+iXFvVuDfS1gA5UTobysU2d/SFBgtJ\npuJtqjrWdbJ6srUqkXqm\n=x4FX\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfF35+CRAD9Qy5GYHsngAAsUMQAJuf3v7xDGE0H/nmw5vUgGoS\n1IbrLYrbVawAmC8t3zBIuV1gMr5b5Eh+PC2GI5NQvjcEA2FrLkbJR7Y1VPxMYAU1\nIpEBLuDpRTJo2H6pBPUHY5p90zAg3MDpv76508H8rtq+FXZDD+9blLGJC7WgvB7N\nmWZAIkCHstnKnHrWJBte4CMcuQO4Jan/Of5WOibQhzYTnfkkLYpthxVTxmLzA2h0\nfik7N8PwA2j2/9u7C0vS6XhM/6isoXwjM110ES0L+Pr6pf+K8w+Co/5c21ZoNFvr\nnToZe95pR5n/pWXk7jdnSN4l+9IB5kME90guu8MYpZqDax+K0djRw8BRrhNWg8m7\nu2p7OG5CGepXvR90DcPWJtRZD2goMojbIjXyxWO9grj8dNuQ3pbR3LyZ1dxLqaXi\njBMCOYC6wyuqhg5/GTU7xNv45GLyAIAqahO9db5qYwfjO1mbEXhCjUkxtx0VF0Dm\nZ0pvZhehEJzF+0hvacI2ztDO07Y3m7gOdw3HZJblblCxZQu6ETMLBk/2W+DP4ZEY\nN5cgDn/CRx4Z1iKGZ99UR7iL4SePs2uSmRhVYK79aWVrT+WPQEkd1r/qUTQ9nY4m\nh3Okg6hNvYmIlq0/NghAzGCJeHjqD1IbspFdeYd9REDktKbhdutDACEgjgvud2+1\ntEkm1+e2j45TQlsSwM7l\n=56FB\n-----END PGP SIGNATURE-----\n"
 }

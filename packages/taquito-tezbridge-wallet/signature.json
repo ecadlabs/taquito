@@ -6,31 +6,31 @@
         "files": [
           {
             "path": "dist/taquito-tezbridge-wallet.es5.js",
-            "sha512": "a9d421c24d46bac8c7776fc20a288821a5b723806854af5d55b175fec9c8ce1a2e3ec17c5a9dd70bf43d53465e1691dfe9e7a8d1c74742328d98cf12f1e14401"
+            "sha512": "5f4148f2f82b7e256c7964094f373812c16df9dd36fd6655df0571a958ece7e3087226a47e47a82417a644d046dc61962bdc791a14432a2a3cf0ef9ca3184844"
           },
           {
             "path": "dist/lib/taquito-tezbridge-wallet.js",
-            "sha512": "e876e75977d9a4612bcede6544ab6185d6d64156ac3a171768c5c63a67a2f878930009ab2fbfb312ec8539f17326dfe42794ea49fb38fe047d4caf5dea0d1cbc"
+            "sha512": "9ba79913de3b926802cb8440d92125c13dc9ef31240871815adfe915863c452c9038909b742039fc14fb527774caef2a1ff24c35fa5b68af48211af5b0af9142"
           },
           {
             "path": "dist/taquito-tezbridge-wallet.umd.js",
-            "sha512": "34f6dfaac4c84053bf9975d90fdd854e2ade6d84c957c77a0c55958714093bd3793c5a3e12caf3cd3f84685bea899d79626c63b9a8ccf124705d944e3e5a604a"
+            "sha512": "df64fe298eed142dc48e81e22a5d07c3b3275c6ff351d78ddaa66067a50a8209d6a5149547f3914046be6b26f9a3b8acfc1660df253e625f86b522dcaa58be61"
           },
           {
             "path": "dist/taquito-tezbridge-wallet.es5.js.map",
-            "sha512": "d4e76a1c5d5bf712f3628effcd5f028af79832bd91602e904de7e6f5692aeda51a3dfbe9bbf4b72a294ab28034f3d206c393896cbaa2cdc335b4e5acec2793e8"
+            "sha512": "4dc5341995b063ea58f74e787fe549b0f3f5d2e16c8ac6c0500384962539f6c24c1a5ba6e4a0ef0e09017931f5559014098603d62957abe3e601cb6898799b36"
           },
           {
             "path": "dist/lib/taquito-tezbridge-wallet.js.map",
-            "sha512": "1ad79096d739ebeb33c45a3358d7e2a3982d03058f7440411615539a0d77e21e2b65493bcc659986c546769ec4a92b973f64296e23931859f53e3f4684c9bdc2"
+            "sha512": "f33413baa56b7b8a30a30eb25885c7df9f1d9f2e750250731bbab7e7f069843066e922da0a3021344e0a551ee7cf6141f3f85ee22099bf47fe49c4cd3f768ba8"
           },
           {
             "path": "dist/taquito-tezbridge-wallet.umd.js.map",
-            "sha512": "f380c59b619e7fa99ee484fb1430f0e7906d58fdd158badb2284b72028d070999449af85b0233822333ba580bbc12f54d80581177fb805b9bba71be4d065d110"
+            "sha512": "065ea98d266bb9a3af7460c5431e2a0febfe43c769f120d86d948b26d33de89225918005a19b240c37e928935aa91fda84a939303520da2086ca0a7730b7f198"
           },
           {
             "path": "dist/types/taquito-tezbridge-wallet.d.ts",
-            "sha512": "ff3f27ed1cbcea855ed4ed0126f5ae3ee43cdbcd4007d4febbe4073b2545f5a33dd13c6033cd292c04a87caf3005081837250ebe50ce7bf0b57e1685a3fe6af4"
+            "sha512": "3f7a10fd9e10aed789c5021fc8042c50a8f851ec78808a410ae2f8632d0373dd55cda1def50f8b378a50b4eb4f4809ccf9ab37d6c26e0aa242e0865cdf6d4691"
           }
         ]
       }
@@ -66,7 +66,7 @@
           "typings",
           "version"
         ],
-        "sha512": "25afe497e87538f0b5a4e16708909541a6c7cace1a28b369df92da362fd6d49977f7aa149939377fd9c47e9e8f59e29950bb8f9ad2e8c9a723280fbdbe575e02"
+        "sha512": "fc8b74b623aa067f9d1312e058633156038746bac236b5618facbd03486f20136646db15b72816a8ec0f7745590de0ffe7ecc79a97ce339e1caf6d08c7335834"
       }
     },
     {
@@ -74,7 +74,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/tezbridge-wallet",
-          "version": "6.3.4-beta.0",
+          "version": "6.3.5-beta.0",
           "description": "Tezbridge wallet provider",
           "keywords": [
             "tezos",
@@ -134,7 +134,7 @@
             ]
           },
           "dependencies": {
-            "@taquito/taquito": "^6.3.4-beta.0"
+            "@taquito/taquito": "^6.3.5-beta.0"
           },
           "devDependencies": {
             "@types/jest": "^23.3.2",
@@ -167,5 +167,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfENKLCRAD9Qy5GYHsngAAjccQADGOpe07iYo8yDQ5rSy9902W\nGqZl5pbB/RqhNyCAXD3InnPyNnR0bpNKO288j5ldWdJ/tLQw5wNj0YBkPMTENl2I\nc1Q2yZ33glutTANk4FNI2nDTsfPQlKhy+yQtckLz0xQ+rTfHPjT6odKz3VRqXkse\nxv8YusQkq0IatGE5kE9VnCcGheLujB7wOjqVu/3MgnHg4VoOm+UvQ7OlvQBIYOEI\nqNMsju2fmdVqfow9pBulPvK3QLA2G141XaTZYPsQsJpBlf2iWajj2wxojqvSf4qT\nXjuQvB9tjjUssn4hkhLatnucOPgEP0TkAfvve5X7NoFJuV/Kd+IJ5DDxJkUjlXAB\n7b/R+PYHs0MhZgjgtH1LA0CsbdBAHMb3Tc0ExpR1CMkrDf2I1MeAMagtGYKHC9v4\n45cvvsJWX1LQEecVu90RYJpxOjOeK1p+UhTYHquNzsgVGn8+oU/onLShdgyn5uzZ\n8ZVbGuAPxFzWQAqiXAuIOFVOwKFghWGyxFK6ZUwD1fiW4okP72f6lg1mpkzMmkMQ\n/PlCwNg0ykAB6xGWMa9H2BS8RQSwjIEDd6/IparkAumyDch7xhkd2X+vARr44Wnf\nCkQsw7QGyV1i2TcHd2dDtbG2cN9tLTVMh92cjmJO/73lOFtfbiSmdh1jF1RDs3ax\nFWpJDRtOOcrj3MQja0HS\n=hfnS\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfF36NCRAD9Qy5GYHsngAAWdAQAHiVKwA3nTvthH9njq8knmuo\nfCwW3FFbet7GKQDEwKK2W3y+tds9wGSt0EGlvJrQtT0h84ne2bTTyUMzjEs8CMuD\njI5NBfSCadCR4YJ6z4GSLjuzZBANWSZUzUAvLDq30B4raWTfCHfetSin9GTvDZ0V\nmKO6uVAGxvuykaPHp6ekiB8Luun+Nffx+Y9xqyIikljgycnAdZPwlwPTTBo4tP+8\nV6OHPoil4lk44y0D0G1R9atnXKmoMYZYgeiURTYik8Vl4KfPZmXLkLSfjYP5onB4\nHkkBK5klWdzbbcXiMFlSR2/qAbd9ljthxUNxFX3mPlzDTk2oaLuZSOJ3IF8ZDcPC\nF+9cQlUL21lcwVmtSQtL96pO8D/OAe41yE5OBBUR6ldD700Y1f5/kp5wFSewI/Ui\nx5EPoi10BkaXTJhxNWRtHQo0B5e8Xl5W0N/RgIXRkM8UpQsUR3c4wKwtwXZeon4F\nZdNTDpgY5U+CPdd+H+6JjIjO36ZTQQTZ+jNcjbFc6RiZUf/Pe87aSXCSI0U2EVFc\nsrO0bWPTsljfSveozgIvD6Id+xQXx556OgDm+RQjWVaa/q36VFE53KuGSxKD1OGy\n5jMRSVDYKPaKXdLa1QDZ8V1Xqry0PrfU0oz1ZkKVpszyaSQrhV74oxOr+KbcbC/0\n/k7HdibuXTjVMtzeNlBP\n=jfTI\n-----END PGP SIGNATURE-----\n"
 }
