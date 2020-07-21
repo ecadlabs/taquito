@@ -22,8 +22,8 @@ export class TezBridgeWallet implements WalletProvider {
     }
   }
 
-  getPKH() {
-    return tezbridge.request({
+  async getPKH() {
+    return await tezbridge.request({
       method: 'get_source',
     });
   }
@@ -34,8 +34,8 @@ export class TezBridgeWallet implements WalletProvider {
    *
    * @param host host's RPC url
    */
-  setHost(host: string) {
-    return tezbridge.request({
+  async setHost(host: string) {
+    await tezbridge.request({
       method: 'set_host',
       host: host,
     });
