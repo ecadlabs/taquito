@@ -150,6 +150,7 @@ export interface UnpackedAnnotations {
     v?: string[];
 }
 
+const annRe = /^(@%|@%%|%@|[@:%]([_a-zA-Z][_0-9a-zA-Z\.%@]*)?)$/;
 export function unpackAnnotations(p: Prim): UnpackedAnnotations {
     let field: string[] | undefined;
     let type: string[] | undefined;
@@ -158,21 +159,27 @@ export function unpackAnnotations(p: Prim): UnpackedAnnotations {
     if (p.annots !== undefined) {
         for (const v of p.annots) {
             if (v.length !== 0) {
+                if (!annRe.test(v)) {
+                    throw new Error(`unexpected annotation: ${v[0]}`);
+                }
                 switch (v[0]) {
                     case "%":
+                        // allow empty
                         field = field || [];
                         field.push(v);
                         break;
                     case ":":
-                        type = type || [];
-                        type.push(v);
+                        if (v.length > 1) {
+                            type = type || [];
+                            type.push(v);
+                        }
                         break;
                     case "@":
-                        vars = vars || [];
-                        vars.push(v);
+                        if (v.length > 1) {
+                            vars = vars || [];
+                            vars.push(v);
+                        }
                         break;
-                    default:
-                        throw new Error(`unexpected annotation prefix: ${v[0]}`);
                 }
             }
         }

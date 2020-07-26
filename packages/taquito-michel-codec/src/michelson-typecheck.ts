@@ -23,12 +23,24 @@ export enum TypeEqualityMode {
 }
 
 function assertScalarTypesEqual(a: MichelsonType, b: MichelsonType, path: ObjectTreePath[], mode: TypeEqualityMode): void {
+    function getAnnotations(t: MichelsonType): UnpackedAnnotations {
+        try {
+            return unpackAnnotations(t);
+        } catch (err) {
+            if (err instanceof Error) {
+                throw new MichelsonTypeError(a, path, `${t.prim}: ${err.message}`);
+            } else {
+                throw err;
+            }
+        }
+    }
+
     if (a.prim !== b.prim) {
         throw new MichelsonTypeError(a, path, `unequal types: ${a.prim} != ${b.prim}`);
     }
 
     if (mode !== TypeEqualityMode.Loose) {
-        const ann = [unpackAnnotations(a), unpackAnnotations(b)];
+        const ann = [getAnnotations(a), getAnnotations(b)];
         if ((ann[0].t !== undefined || ann[1].t !== undefined) && ann[0].t?.[0] !== ann[1].t?.[0]) {
             throw new MichelsonTypeError(a, path, `unequal type names: ${ann[0].t?.[0] || "<undefined>"} != ${ann[1].t?.[0] || "<undefined>"}`);
         }
@@ -90,7 +102,19 @@ export function typesEqual<T1 extends MichelsonType | MichelsonType[], T2 extend
 }
 
 export function assertTypeAnnotationsValid(t: MichelsonType, path: ObjectTreePath[] = [], field: boolean = false): void {
-    const ann = unpackAnnotations(t);
+    function getAnnotations(t: MichelsonType): UnpackedAnnotations {
+        try {
+            return unpackAnnotations(t);
+        } catch (err) {
+            if (err instanceof Error) {
+                throw new MichelsonTypeError(t, path, `${t.prim}: ${err.message}`);
+            } else {
+                throw err;
+            }
+        }
+    }
+
+    const ann = getAnnotations(t);
     if ((ann.t?.length || 0) > 1) {
         throw new MichelsonTypeError(t, path, `${t.prim}: at most one type annotation allowed: ${t.annots}`);
     }
@@ -503,8 +527,19 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
         }
         return stack;
     }
-
     const instruction = inst; // Make it const for type guarding
+
+    function getAnnotations(p: Exclude<MichelsonInstruction, MichelsonInstruction[]> | MichelsonType): UnpackedAnnotations {
+        try {
+            return unpackAnnotations(p);
+        } catch (err) {
+            if (err instanceof Error) {
+                throw new MichelsonCodeError(instruction, stack, path, `${p.prim}: ${err.message}`);
+            } else {
+                throw err;
+            }
+        }
+    }
 
     function top<T extends ((readonly MichelsonTypeId[]) | null)[]>(n: number, ...typeIds: T): StackType<T> {
         if (stack.length < typeIds.length + n) {
@@ -545,9 +580,8 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
     }
 
     // unpack instruction annotations and assert their maximum number
-    // TODO: check special
-    function an({ f, t, v }: { f?: number; t?: number; v?: number }) {
-        const a = unpackAnnotations(instruction);
+    function instructionAnnotations({ f, t, v }: { f?: number; t?: number; v?: number }) {
+        const a = getAnnotations(instruction);
         const assertNum = (a: string[] | undefined, n: number | undefined, type: string) => {
             if (a && a.length > (n || 0)) {
                 throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: at most ${n || 0} ${type} annotations allowed`);
@@ -559,11 +593,21 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
         return a;
     }
 
+    // check for presence of special annotations
+    function regularAnnotations({ f, t, v }: { f?: number; t?: number; v?: number }) {
+        const a = instructionAnnotations({ f, t, v });
+        for (const val of [...a.v, ...a.f]) {
+            if (val === "@%" || val === "@%%" || val === "%@") {
+                throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: special annotations aren't allowed`);
+            }
+        }
+        return a;
+    }
+
     // also keeps annotation class if null is provided
-    // TODO: check special
     // TODO: filter out empty
     function annotate<T extends MichelsonType>(t: T, a: Nullable<UnpackedAnnotations>): T {
-        const src = unpackAnnotations(t);
+        const src = getAnnotations(t);
         const ann = (a.v !== undefined || a.t !== undefined || a.f !== undefined) ?
             [
                 ...(a.v === null ? src.v : a.v),
@@ -576,33 +620,33 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
     }
 
     // shortcut to copy at most one variable annotation from the instruction to the type
-    function av1<T extends MichelsonType>(t: T, def?: string) {
-        const ia = an({ v: 1 });
+    function annotateVar<T extends MichelsonType>(t: T, def?: string) {
+        const ia = regularAnnotations({ v: 1 });
         return annotate(t, { v: ia.v !== undefined ? ia.v : def !== undefined ? [def] : undefined });
     }
 
     switch (instruction.prim) {
         case "DUP":
-            return [av1(top(0, null)[0]), ...stack];
+            return [annotateVar(top(0, null)[0]), ...stack];
 
         case "SWAP":
             {
                 const s = top(0, null, null);
-                an({});
+                instructionAnnotations({});
                 return [s[1], s[0], ...stack];
             }
 
         case "SOME":
-            return [annotate({ prim: "option", args: [top(0, null)[0]] }, an({ t: 1, v: 1 })), ...rest(1)];
+            return [annotate({ prim: "option", args: [top(0, null)[0]] }, regularAnnotations({ t: 1, v: 1 })), ...rest(1)];
 
         case "UNIT":
-            return [annotate({ prim: "unit" }, an({ v: 1, t: 1 })), ...stack];
+            return [annotate({ prim: "unit" }, regularAnnotations({ v: 1, t: 1 })), ...stack];
 
         case "PAIR":
             {
                 const s = top(0, null, null);
-                const va = [unpackAnnotations(s[0]), unpackAnnotations(s[1])] as const; // stack annotations
-                const ia = an({ f: 2, t: 1, v: 1 }); // instruction annotations
+                const va = [getAnnotations(s[0]), getAnnotations(s[1])] as const; // stack annotations
+                const ia = instructionAnnotations({ f: 2, t: 1, v: 1 }); // instruction annotations
                 const trim = (s: string) => {
                     const i = s.indexOf(".");
                     return s.slice(i > 0 ? i + 1 : 1);
@@ -626,13 +670,13 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
         case "CDR":
             {
                 const s = top(0, ["pair"]);
-                const ia = an({ f: 1, v: 1 }); // instruction annotations
+                const ia = instructionAnnotations({ f: 1, v: 1 });
                 const child = s[0].args[instruction.prim === "CAR" ? 0 : 1];
-                const ca = unpackAnnotations(child);
+                const ca = getAnnotations(child);
                 if (ia.f && ca.f && ia.f[0] !== ca.f[0]) {
                     throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: field names doesn't match: ${ia.f[0]} !== ${ca.f[0]}`);
                 }
-                const va = unpackAnnotations(s[0]);
+                const va = getAnnotations(s[0]);
                 return [annotate(child, {
                     t: null,
                     v: ia.v ?
@@ -651,19 +695,19 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
             {
                 const s = top(0, null, ["list"]);
                 assertTypesEqual(s[0], s[1].args[0], path);
-                return [av1(s[1]), ...rest(2)];
+                return [annotateVar(s[1]), ...rest(2)];
             }
 
         case "SIZE":
             top(0, ["string", "list", "set", "map", "bytes"]);
-            return [av1({ prim: "nat" }), ...rest(1)];
+            return [annotateVar({ prim: "nat" }), ...rest(1)];
 
         case "MEM":
             {
                 const s = top(0, null, ["set", "map", "big_map"]);
                 assertComparableType(s[0]);
                 assertTypesEqual(s[0], s[1].args[0], path);
-                return [av1({ prim: "bool" }), ...rest(2)];
+                return [annotateVar({ prim: "bool" }), ...rest(2)];
             }
 
         case "GET":
@@ -671,7 +715,7 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
                 const s = top(0, null, ["map", "big_map"]);
                 assertComparableType(s[0]);
                 assertTypesEqual(s[0], s[1].args[0], path);
-                return [av1({ prim: "option", args: [s[1].args[1]] }), ...rest(2)];
+                return [annotateVar({ prim: "option", args: [s[1].args[1]] }), ...rest(2)];
             }
 
         case "UPDATE":
@@ -681,11 +725,11 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
                 if (s0[1].prim === "bool") {
                     const s2 = top(2, ["set"]);
                     assertTypesEqual(s0[0], s2[0].args[0], path);
-                    return [av1(s2[0]), ...rest(3)];
+                    return [annotateVar(s2[0]), ...rest(3)];
                 } else {
                     const s2 = top(2, ["map", "big_map"]);
                     assertTypesEqual(s0[0], s2[0].args[0], path);
-                    return [av1(s2[0]), ...rest(3)];
+                    return [annotateVar(s2[0]), ...rest(3)];
                 }
             }
 
@@ -693,7 +737,7 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
             {
                 const s = top(0, null, ["lambda"]);
                 assertTypesEqual(s[0], s[1].args[0], path);
-                return [av1(s[1].args[1]), ...rest(2)];
+                return [annotateVar(s[1].args[1]), ...rest(2)];
             }
 
         case "APPLY":
@@ -704,14 +748,14 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
                 }
                 const pt = s[1].args[0];
                 assertTypesEqual(s[0], pt.args[0], path);
-                return [av1({ prim: "lambda", args: [pt.args[1], s[1].args[1]] }), ...rest(2)];
+                return [annotateVar({ prim: "lambda", args: [pt.args[1], s[1].args[1]] }), ...rest(2)];
             }
 
         case "FAILWITH":
             return { failed: top(0, null)[0] };
 
         case "RENAME":
-            return [av1(top(0, null)[0]), ...rest(1)];
+            return [annotateVar(top(0, null)[0]), ...rest(1)];
 
         case "CONCAT":
             {
@@ -720,34 +764,34 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
                     if (s0[0].args[0].prim !== "string" && s0[0].args[0].prim !== "bytes") {
                         throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: can't concatenate list of ${s0[0].args[0].prim}'s`);
                     }
-                    return [av1(s0[0].args[0]), ...rest(1)];
+                    return [annotateVar(s0[0].args[0]), ...rest(1)];
                 } else {
                     const s1 = top(1, ["string", "bytes"]);
                     if (s0[0].prim !== s1[0].prim) {
                         throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: can't concatenate ${s0[0].prim} with ${s1[0].prim}`);
                     }
-                    return [av1(s1[0]), ...rest(2)];
+                    return [annotateVar(s1[0]), ...rest(2)];
                 }
             }
 
         case "SLICE":
-            return [av1({ prim: "option", args: [top(0, ["nat"], ["nat"], ["string", "bytes"])[2]] }), ...rest(3)];
+            return [annotateVar({ prim: "option", args: [top(0, ["nat"], ["nat"], ["string", "bytes"])[2]] }), ...rest(3)];
 
         case "PACK":
             top(0, packableTypes);
-            return [av1({ prim: "bytes" }), ...rest(1)];
+            return [annotateVar({ prim: "bytes" }), ...rest(1)];
 
         case "ADD":
             {
                 const s = top(0, ["nat", "int", "timestamp", "mutez"], ["nat", "int", "timestamp", "mutez"]);
                 if (s[0].prim === "nat" && s[1].prim === "nat") {
-                    return [av1({ prim: "nat" }), ...rest(2)];
+                    return [annotateVar({ prim: "nat" }), ...rest(2)];
                 } else if ((s[0].prim === "nat" || s[0].prim === "int") && (s[1].prim === "nat" || s[1].prim === "int")) {
-                    return [av1({ prim: "int" }), ...rest(2)];
+                    return [annotateVar({ prim: "int" }), ...rest(2)];
                 } else if (s[0].prim === "int" && s[1].prim === "timestamp" || s[0].prim === "timestamp" && s[1].prim === "int") {
-                    return [av1({ prim: "timestamp" }), ...rest(2)];
+                    return [annotateVar({ prim: "timestamp" }), ...rest(2)];
                 } else if (s[0].prim === "mutez" && s[1].prim === "mutez") {
-                    return [av1({ prim: "mutez" }), ...rest(2)];
+                    return [annotateVar({ prim: "mutez" }), ...rest(2)];
                 } else {
                     throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: can't add ${s[0].prim} to ${s[1].prim}`);
                 }
@@ -758,11 +802,11 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
                 const s = top(0, ["nat", "int", "timestamp", "mutez"], ["nat", "int", "timestamp", "mutez"]);
                 if (((s[0].prim === "nat" || s[0].prim === "int") && (s[1].prim === "nat" || s[1].prim === "int")) ||
                     s[0].prim === "timestamp" && s[1].prim === "timestamp") {
-                    return [av1({ prim: "int" }), ...rest(2)];
+                    return [annotateVar({ prim: "int" }), ...rest(2)];
                 } else if (s[0].prim === "timestamp" && s[1].prim === "int") {
-                    return [av1({ prim: "timestamp" }), ...rest(2)];
+                    return [annotateVar({ prim: "timestamp" }), ...rest(2)];
                 } else if (s[0].prim === "mutez" && s[1].prim === "mutez") {
-                    return [av1({ prim: "mutez" }), ...rest(2)];
+                    return [annotateVar({ prim: "mutez" }), ...rest(2)];
                 } else {
                     throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: can't subtract ${s[0].prim} from ${s[1].prim}`);
                 }
@@ -772,11 +816,11 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
             {
                 const s = top(0, ["nat", "int", "mutez"], ["nat", "int", "mutez"]);
                 if (s[0].prim === "nat" && s[1].prim === "nat") {
-                    return [av1({ prim: "nat" }), ...rest(2)];
+                    return [annotateVar({ prim: "nat" }), ...rest(2)];
                 } else if ((s[0].prim === "nat" || s[0].prim === "int") && (s[1].prim === "nat" || s[1].prim === "int")) {
-                    return [av1({ prim: "int" }), ...rest(2)];
+                    return [annotateVar({ prim: "int" }), ...rest(2)];
                 } else if (s[0].prim === "nat" && s[1].prim === "mutez" || s[0].prim === "mutez" && s[1].prim === "nat") {
-                    return [av1({ prim: "mutez" }), ...rest(2)];
+                    return [annotateVar({ prim: "mutez" }), ...rest(2)];
                 } else {
                     throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: can't multiply ${s[0].prim} by ${s[1].prim}`);
                 }
@@ -787,11 +831,11 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
                 const res = (a: "nat" | "int" | "mutez", b: "nat" | "int" | "mutez"): MichelsonTypeOption => ({ prim: "option", args: [{ prim: "pair", args: [{ prim: a }, { prim: b }] }] });
                 const s = top(0, ["nat", "int", "mutez"], ["nat", "int", "mutez"]);
                 if ((s[0].prim === "nat" || s[0].prim === "int") && (s[1].prim === "nat" || s[1].prim === "int")) {
-                    return [av1(res("int", "nat")), ...rest(2)];
+                    return [annotateVar(res("int", "nat")), ...rest(2)];
                 } else if (s[0].prim === "mutez" && s[1].prim === "nat") {
-                    return [av1(res("mutez", "mutez")), ...rest(2)];
+                    return [annotateVar(res("mutez", "mutez")), ...rest(2)];
                 } else if (s[0].prim === "mutez" && s[1].prim === "mutez") {
-                    return [av1(res("nat", "mutez")), ...rest(2)];
+                    return [annotateVar(res("nat", "mutez")), ...rest(2)];
                 } else {
                     throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: can't euclideally divide ${s[0].prim} by ${s[1].prim}`);
                 }
@@ -799,24 +843,24 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
 
         case "ABS":
             top(0, ["int"]);
-            return [av1({ prim: "nat" }), ...rest(1)];
+            return [annotateVar({ prim: "nat" }), ...rest(1)];
 
         case "ISNAT":
             top(0, ["int"]);
-            return [av1({ prim: "option", args: [{ prim: "nat" }] }), ...rest(1)];
+            return [annotateVar({ prim: "option", args: [{ prim: "nat" }] }), ...rest(1)];
 
         case "INT":
             top(0, ["nat"]);
-            return [av1({ prim: "int" }), ...rest(1)];
+            return [annotateVar({ prim: "int" }), ...rest(1)];
 
         case "NEG":
             top(0, ["nat", "int"]);
-            return [av1({ prim: "int" }), ...rest(1)];
+            return [annotateVar({ prim: "int" }), ...rest(1)];
 
         case "LSL":
         case "LSR":
             top(0, ["nat"], ["nat"]);
-            return [av1({ prim: "nat" }), ...rest(2)];
+            return [annotateVar({ prim: "nat" }), ...rest(2)];
 
         case "OR":
         case "XOR":
@@ -825,7 +869,7 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
                 if (s[0].prim !== s[1].prim) {
                     throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: both arguments must be of the same type: ${s[0].prim}, ${s[1].prim}`);
                 }
-                return [av1(s[1]), ...rest(2)];
+                return [annotateVar(s[1]), ...rest(2)];
             }
 
         case "AND":
@@ -834,16 +878,16 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
                 if ((s[0].prim !== "int" || s[1].prim !== "nat") && s[0].prim !== s[1].prim) {
                     throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: both arguments must be of the same type: ${s[0].prim}, ${s[1].prim}`);
                 }
-                return [av1(s[1]), ...rest(2)];
+                return [annotateVar(s[1]), ...rest(2)];
             }
 
         case "NOT":
             {
                 const s = top(0, ["nat", "bool", "int"]);
                 if (s[0].prim === "bool") {
-                    return [av1({ prim: "bool" }), ...rest(1)];
+                    return [annotateVar({ prim: "bool" }), ...rest(1)];
                 } else {
-                    return [av1({ prim: "int" }), ...rest(1)];
+                    return [annotateVar({ prim: "int" }), ...rest(1)];
                 }
             }
 
@@ -852,7 +896,7 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
                 const s = top(0, null, null);
                 assertComparableType(s[0]);
                 assertComparableType(s[1]);
-                return [av1({ prim: "int" }), ...rest(2)];
+                return [annotateVar({ prim: "int" }), ...rest(2)];
             }
 
         case "EQ":
@@ -862,7 +906,7 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
         case "LE":
         case "GE":
             top(0, ["int"]);
-            return [av1({ prim: "bool" }), ...rest(1)];
+            return [annotateVar({ prim: "bool" }), ...rest(1)];
 
         case "SELF":
             // TODO
@@ -872,7 +916,7 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
             {
                 const s = top(0, null, ["mutez"], ["contract"]);
                 assertTypesEqual(s[0], s[2].args[0], path);
-                return [av1({ prim: "operation" }), ...rest(3)];
+                return [annotateVar({ prim: "operation" }), ...rest(3)];
             }
 
         case "SET_DELEGATE":
@@ -881,12 +925,12 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
                 if (s[0].args[0].prim !== "key_hash") {
                     throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: key hash expected: ${s[0].args[0].prim}`);
                 }
-                return [av1({ prim: "operation" }), ...rest(1)];
+                return [annotateVar({ prim: "operation" }), ...rest(1)];
             }
 
         case "CREATE_ACCOUNT":
             {
-                const va = an({ v: 2 });
+                const va = regularAnnotations({ v: 2 });
                 const s = top(0, ["key_hash"], ["option"], ["bool"], ["mutez"]);
                 if (s[1].args[0].prim !== "key_hash") {
                     throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: key hash expected: ${s[1].args[0].prim}`);
@@ -899,81 +943,81 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
 
         case "IMPLICIT_ACCOUNT":
             top(0, ["key_hash"]);
-            return [av1({ prim: "contract", args: [{ prim: "unit" }] }), ...rest(1)];
+            return [annotateVar({ prim: "contract", args: [{ prim: "unit" }] }), ...rest(1)];
 
         case "NOW":
-            return [av1({ prim: "timestamp" }, "@now"), ...stack];
+            return [annotateVar({ prim: "timestamp" }, "@now"), ...stack];
 
         case "AMOUNT":
-            return [av1({ prim: "mutez" }, "@amount"), ...stack];
+            return [annotateVar({ prim: "mutez" }, "@amount"), ...stack];
 
         case "BALANCE":
-            return [av1({ prim: "mutez" }, "@balance"), ...stack];
+            return [annotateVar({ prim: "mutez" }, "@balance"), ...stack];
 
         case "CHECK_SIGNATURE":
             top(0, ["key"], ["signature"], ["bytes"]);
-            return [av1({ prim: "bool" }), ...rest(3)];
+            return [annotateVar({ prim: "bool" }), ...rest(3)];
 
         case "BLAKE2B":
         case "SHA256":
         case "SHA512":
             top(0, ["bytes"]);
-            return [av1({ prim: "bytes" }), ...rest(1)];
+            return [annotateVar({ prim: "bytes" }), ...rest(1)];
 
         case "HASH_KEY":
             top(0, ["key"]);
-            return [av1({ prim: "key_hash" }), ...rest(1)];
+            return [annotateVar({ prim: "key_hash" }), ...rest(1)];
 
         case "STEPS_TO_QUOTA":
-            return [av1({ prim: "nat" }, "@steps"), ...stack];
+            return [annotateVar({ prim: "nat" }, "@steps"), ...stack];
 
         case "SOURCE":
-            return [av1({ prim: "address" }, "@source"), ...stack];
+            return [annotateVar({ prim: "address" }, "@source"), ...stack];
 
         case "SENDER":
-            return [av1({ prim: "address" }, "@sender"), ...stack];
+            return [annotateVar({ prim: "address" }, "@sender"), ...stack];
 
         case "ADDRESS":
             {
                 const s = top(0, ["contract"]);
-                const ia = an({ v: 1 });
-                const va = unpackAnnotations(s[0]);
+                const ia = regularAnnotations({ v: 1 });
+                const va = getAnnotations(s[0]);
                 return [
                     annotate({ prim: "address" }, { v: ia.v ? ia.v : ["@" + (va.v ? va.v[0].slice(1) + "." : "") + "address"] }),
                     ...rest(1)];
             }
 
         case "CHAIN_ID":
-            return [av1({ prim: "chain_id" }), ...stack];
+            return [annotateVar({ prim: "chain_id" }), ...stack];
 
         case "DROP":
-            an({});
+            instructionAnnotations({});
             return rest(instruction.args !== undefined ? parseInt(instruction.args[0].int, 10) : 1);
 
         case "DIG":
             {
-                an({});
+                instructionAnnotations({});
                 const n = parseInt(instruction.args[0].int, 10);
                 return [top(n, null)[0], ...stack.slice(0, n), ...rest(n + 1)];
             }
 
         case "DUG":
             {
-                an({});
+                instructionAnnotations({});
                 const n = parseInt(instruction.args[0].int, 10);
                 return [...stack.slice(1, n + 1), top(0, null)[0], ...rest(n + 1)];
             }
 
         case "NONE":
             assertTypeAnnotationsValid(instruction.args[0], [...path, { index: 0, val: instruction.args[0] }]);
-            return [annotate({ prim: "option", args: [instruction.args[0]] }, an({ t: 1, v: 1 })), ...stack];
+            return [annotate({ prim: "option", args: [instruction.args[0]] }, regularAnnotations({ t: 1, v: 1 })), ...stack];
 
         case "LEFT":
         case "RIGHT":
             {
                 const s = top(0, null);
-                const ia = an({ f: 2, t: 1, v: 1 });
-                const va = unpackAnnotations(s[0]);
+                const ia = instructionAnnotations({ f: 2, t: 1, v: 1 });
+                const va = getAnnotations(s[0]);
 
                 const children: [MichelsonType, MichelsonType] = [
                     annotate(s[0], {
@@ -997,7 +1041,7 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
 
         case "NIL":
             assertTypeAnnotationsValid(instruction.args[0], [...path, { index: 0, val: instruction.args[0] }]);
-            return [annotate({ prim: "list", args: [instruction.args[0]] }, an({ t: 1, v: 1 })), ...stack];
+            return [annotate({ prim: "list", args: [instruction.args[0]] }, regularAnnotations({ t: 1, v: 1 })), ...stack];
 
         case "UNPACK":
             top(0, ["bytes"]);
@@ -1005,14 +1049,14 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
                 throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: packable type expected: ${instruction.args[0].prim}`);
             }
             assertTypeAnnotationsValid(instruction.args[0], [...path, { index: 0, val: instruction.args[0] }]);
-            return [av1({ prim: "option", args: [instruction.args[0]] }), ...rest(1)];
+            return [annotateVar({ prim: "option", args: [instruction.args[0]] }), ...rest(1)];
 
         case "CONTRACT":
             {
                 const s = top(0, ["address"]);
                 assertTypeAnnotationsValid(instruction.args[0], [...path, { index: 0, val: instruction.args[0] }]);
-                const ia = an({ v: 1 });
-                const va = unpackAnnotations(s[0]);
+                const ia = regularAnnotations({ v: 1 });
+                const va = getAnnotations(s[0]);
                 return [
                     annotate({ prim: "contract", args: [instruction.args[0]] }, { v: ia.v ? ia.v : ["@" + (va.v ? va.v[0].slice(1) + "." : "") + "contract"] }),
                     ...rest(1)];
@@ -1029,7 +1073,7 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
         case "IF_CONS":
         case "IF":
             {
-                an({});
+                instructionAnnotations({});
                 top(0, [instruction.prim === "IF_NONE" ? "option" : instruction.prim === "IF_LEFT" ? "or" : instruction.prim === "IF_CONS" ? "list" : "bool"]);
                 const br0 = functionTypeInternal(instruction.args[0], rest(1), [...path, { index: 0, val: instruction.args[0] }]);
                 const br1 = functionTypeInternal(instruction.args[1], rest(1), [...path, { index: 1, val: instruction.args[1] }]);
@@ -1063,16 +1107,16 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
                 }
                 assertTypesEqual(tail, body.slice(1), path);
                 if (s[0].prim === "list") {
-                    return [av1({ prim: "list", args: [body[0]] }), ...tail];
+                    return [annotateVar({ prim: "list", args: [body[0]] }), ...tail];
                 } else {
-                    return [av1({ prim: "map", args: [s[0].args[0], body[0]] }), ...tail];
+                    return [annotateVar({ prim: "map", args: [s[0].args[0], body[0]] }), ...tail];
                 }
             }
 
         case "ITER":
             // TODO: auto annotations
             {
-                an({});
+                instructionAnnotations({});
                 const s = top(0, ["set", "list", "map"]);
                 const tail = rest(1);
                 const elt = s[0].prim === "map" ? { prim: "pair" as const, args: s[0].args } : s[0].args[0];
@@ -1086,7 +1130,7 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
 
         case "LOOP":
             {
-                an({});
+                instructionAnnotations({});
                 top(0, ["bool"]);
                 const tail = rest(1);
                 const body = functionTypeInternal(instruction.args[0], tail, [...path, { index: 0, val: instruction.args[0] }]);
@@ -1099,7 +1143,7 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
 
         case "LOOP_LEFT":
             {
-                an({});
+                instructionAnnotations({});
                 const s = top(0, ["or"]);
                 const tail = rest(1);
                 const body = functionTypeInternal(instruction.args[0], [s[0].args[0], ...tail], [...path, { index: 0, val: instruction.args[0] }]);
@@ -1112,7 +1156,7 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
 
         case "DIP":
             {
-                an({});
+                instructionAnnotations({});
                 const n = instruction.args.length === 2 ? parseInt(instruction.args[0].int, 10) : 1;
                 const tail = rest(n);
                 const head = stack.slice(0, n);
@@ -1133,17 +1177,17 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
         case "PUSH":
             assertTypeAnnotationsValid(instruction.args[0], [...path, { index: 0, val: instruction.args[0] }]);
             assertDataValid(instruction.args[0], instruction.args[1], [...path, { index: 0, val: instruction.args[0] }]);
-            return [av1(instruction.args[0]), ...stack];
+            return [annotateVar(instruction.args[0]), ...stack];
 
         case "EMPTY_SET":
             assertTypeAnnotationsValid(instruction.args[0], [...path, { index: 0, val: instruction.args[0] }]);
-            return [annotate({ prim: "set", args: instruction.args }, an({ t: 1, v: 1 })), ...stack];
+            return [annotate({ prim: "set", args: instruction.args }, regularAnnotations({ t: 1, v: 1 })), ...stack];
 
         case "EMPTY_MAP":
         case "EMPTY_BIG_MAP":
             assertTypeAnnotationsValid(instruction.args[0], [...path, { index: 0, val: instruction.args[0] }]);
             assertTypeAnnotationsValid(instruction.args[1], [...path, { index: 1, val: instruction.args[1] }]);
-            return [annotate({ prim: instruction.prim === "EMPTY_MAP" ? "map" : "big_map", args: instruction.args }, an({ t: 1, v: 1 })), ...stack];
+            return [annotate({ prim: instruction.prim === "EMPTY_MAP" ? "map" : "big_map", args: instruction.args }, regularAnnotations({ t: 1, v: 1 })), ...stack];
 
         case "LAMBDA":
             {
@@ -1157,7 +1201,7 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
                     throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: function must return a value`);
                 }
                 assertTypesEqual(instruction.args[1], body[0], [...path, { index: 1, val: instruction.args[1] }]);
-                return [av1({ prim: "lambda", args: [instruction.args[0], instruction.args[1]] }), ...stack];
+                return [annotateVar({ prim: "lambda", args: [instruction.args[0], instruction.args[1]] }), ...stack];
             }
 
         default:
