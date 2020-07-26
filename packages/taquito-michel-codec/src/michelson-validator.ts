@@ -1,5 +1,8 @@
 import { Prim, Expr, IntLiteral } from "./micheline";
-import { Tuple, NoArgs, ReqArgs, ObjectTreePath, unaryInstructionTable, instructionTable } from "./utils";
+import {
+   Tuple, NoArgs, ReqArgs, ObjectTreePath, unaryInstructionTable,
+   instructionTable, MichelsonError
+} from "./utils";
 import {
    MichelsonInstruction, MichelsonType, MichelsonComparableType, MichelsonSimpleComparableType,
    MichelsonSimpleComparableTypeId, MichelsonData, MichelsonContract
@@ -7,14 +10,15 @@ import {
 
 // Michelson validator
 
-export class ValidationError extends Error {
+export class ValidationError extends MichelsonError {
    /**
     * @param val Value of a node caused the error
     * @param path Path to a node caused the error in the AST tree
     * @param message An error message
     */
    constructor(public val: Expr, public path?: ObjectTreePath[], message?: string) {
-      super(message);
+      super(val, path, message);
+      Object.setPrototypeOf(this, ValidationError.prototype);
    }
 }
 
@@ -64,7 +68,7 @@ function assertArgs<N extends number>(ex: Prim, n: N, path: ObjectTreePath[]):
  * This is a type guard function which either returns true of throws an exception.
  * @param ex An AST node
  */
-export function assertMichelsonInstruction(ex: Expr[] | Prim, path: ObjectTreePath[] = []): ex is MichelsonInstruction {
+export function assertMichelsonInstruction(ex: Expr, path: ObjectTreePath[] = []): ex is MichelsonInstruction {
    if (Array.isArray(ex)) {
       let i = 0;
       for (const n of ex) {
@@ -75,9 +79,15 @@ export function assertMichelsonInstruction(ex: Expr[] | Prim, path: ObjectTreePa
          assertMichelsonInstruction(n, p);
          i++;
       }
-   } else if (Object.prototype.hasOwnProperty.call(unaryInstructionTable, ex.prim)) {
-      assertArgs(ex, 0, path);
-   } else {
+      return true;
+   }
+
+   if (assertPrim(ex, path)) {
+      if (Object.prototype.hasOwnProperty.call(unaryInstructionTable, ex.prim)) {
+         assertArgs(ex, 0, path);
+         return true;
+      }
+
       switch (ex.prim) {
          case "DROP":
             if (ex.args !== undefined && assertArgs(ex, 1, path)) {
@@ -453,7 +463,7 @@ export function isMichelsonData(ex: Expr): ex is MichelsonData {
  * Checks if the node is a valid Michelson code (sequence of instructions).
  * @param ex An AST node
  */
-export function isMichelsonCode(ex: Expr[]): ex is MichelsonInstruction[] {
+export function isMichelsonCode(ex: Expr): ex is MichelsonInstruction[] {
    try {
       assertMichelsonInstruction(ex, []);
       return true;

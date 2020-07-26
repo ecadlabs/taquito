@@ -36,6 +36,7 @@ export class MichelsonError<T extends Expr = Expr> extends Error {
      */
     constructor(public val: T, public path?: ObjectTreePath[], message?: string) {
         super(message);
+        Object.setPrototypeOf(this, MichelsonError.prototype);
     }
 }
 

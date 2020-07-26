@@ -9,6 +9,7 @@ export class MichelineParseError extends Error {
      */
     constructor(public token: Token | null, message?: string) {
         super(message);
+        Object.setPrototypeOf(this, MichelineParseError.prototype);
     }
 }
 
@@ -19,6 +20,7 @@ export class JSONParseError extends Error {
      */
     constructor(public node: any, message?: string) {
         super(message);
+        Object.setPrototypeOf(this, JSONParseError.prototype);
     }
 }
 

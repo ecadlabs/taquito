@@ -4,6 +4,7 @@ import { Tuple, NoArgs, ReqArgs, NoAnnots } from "./utils";
 export class MacroError extends Error {
     constructor(public prim: Prim, message?: string) {
         super(message);
+        Object.setPrototypeOf(this, MacroError.prototype);
     }
 }
 

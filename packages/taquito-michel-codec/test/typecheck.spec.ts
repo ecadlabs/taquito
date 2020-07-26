@@ -1,5 +1,9 @@
 import { MichelsonType, MichelsonData } from "../src/michelson-types";
-import { assertDataValid, assertTypesEqual, TypeEqualityMode } from "../src/michelson-typecheck";
+import { assertMichelsonInstruction, assertMichelsonType } from "../src/michelson-validator";
+import { assertDataValid, assertTypesEqual, TypeEqualityMode, functionType, MichelsonCodeError } from "../src/michelson-typecheck";
+import { MichelsonError } from "../src/utils";
+import { Parser } from '../src/micheline-parser';
+import { inspect } from "util";
 
 describe('Typecheck', () => {
     it('assertDataValid: string', () => {
@@ -161,5 +165,34 @@ describe('Typecheck', () => {
             ]
         };
         assertTypesEqual(pair0, pair1, [], TypeEqualityMode.Loose);
+    });
+
+    it('code', () => {
+        const src = `
+        { DROP;
+            SOURCE;
+            CONTRACT unit;
+            ASSERT_SOME;
+            PUSH mutez 300;
+            UNIT;
+            TRANSFER_TOKENS;
+            DIP { NIL operation };
+            CONS;
+            DIP { UNIT };
+            PAIR;
+            }`;
+
+        const p = new Parser({ expandMacros: true });
+        const code = p.parseMichelineExpression(src);
+        const arg = p.parseMichelineExpression("(pair (unit @parameter) (unit @storage))");
+
+        if (code !== null && arg !== null && assertMichelsonInstruction(code) && assertMichelsonType(arg)) {
+            try {
+                const ret = functionType(code, [arg]);
+                console.log(inspect(ret, false, null));
+            } catch (err) {
+                console.log(inspect(err, false, null));
+            }
+        }
     });
 });

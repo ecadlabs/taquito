@@ -14,7 +14,12 @@ import { decodeBase58Check } from "./base58";
 
 // Type equality check
 
-export class MichelsonTypeError extends MichelsonError<MichelsonType | MichelsonType[]> { }
+export class MichelsonTypeError extends MichelsonError<MichelsonType | MichelsonType[]> {
+    constructor(public val: MichelsonType | MichelsonType[], public path?: ObjectTreePath[], message?: string) {
+        super(val, path, message);
+        Object.setPrototypeOf(this, MichelsonTypeError.prototype);
+    }
+}
 
 export enum TypeEqualityMode {
     Field,
@@ -125,7 +130,7 @@ export function assertTypeAnnotationsValid(t: MichelsonType, path: ObjectTreePat
         }
     } else {
         if ((ann.f?.length || 0) > 0) {
-            throw new MichelsonTypeError(t, path, `${t.prim}: field annotations aren't allowed here: ${t.annots}`);
+            throw new MichelsonTypeError(t, path, `${t.prim}: field annotations aren't allowed: ${t.annots}`);
         }
     }
 
@@ -162,6 +167,7 @@ export class MichelsonDataError extends MichelsonError<MichelsonType> {
      */
     constructor(val: MichelsonType, public data: MichelsonData, path?: ObjectTreePath[], message?: string) {
         super(val, path, message);
+        Object.setPrototypeOf(this, MichelsonDataError.prototype);
     }
 }
 
@@ -480,6 +486,7 @@ export class MichelsonCodeError extends MichelsonError<MichelsonInstruction> {
      */
     constructor(val: MichelsonInstruction, public stackState: MichelsonStackType, path?: ObjectTreePath[], message?: string) {
         super(val, path, message);
+        Object.setPrototypeOf(this, MichelsonCodeError.prototype);
     }
 }
 
@@ -596,7 +603,7 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
     // check for presence of special annotations
     function regularAnnotations({ f, t, v }: { f?: number; t?: number; v?: number }) {
         const a = instructionAnnotations({ f, t, v });
-        for (const val of [...a.v, ...a.f]) {
+        for (const val of [...(a.v || []), ...(a.f || [])]) {
             if (val === "@%" || val === "@%%" || val === "%@") {
                 throw new MichelsonCodeError(instruction, stack, path, `${instruction.prim}: special annotations aren't allowed`);
             }
@@ -609,19 +616,36 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
         const src = getAnnotations(t);
         const ann = (a.v !== undefined || a.t !== undefined || a.f !== undefined) ?
             [
-                ...(a.v === null ? src.v : a.v),
-                ...(a.t === null ? src.t : a.t),
-                ...(a.f === null ? src.f : a.f)
+                ...((a.v === null ? src.v : a.v) || []),
+                ...((a.t === null ? src.t : a.t) || []),
+                ...((a.f === null ? src.f : a.f) || [])
             ] : undefined;
 
         const { annots, ...rest } = t;
-        return { ...(rest as T), ...(ann && { annots: ann }) };
+        return { ...(rest as T), ...(ann && ann.length !== 0 && { annots: ann }) };
     }
 
     // shortcut to copy at most one variable annotation from the instruction to the type
     function annotateVar<T extends MichelsonType>(t: T, def?: string) {
         const ia = regularAnnotations({ v: 1 });
         return annotate(t, { v: ia.v !== undefined ? ia.v : def !== undefined ? [def] : undefined });
+    }
+
+    function branchType(br0: MichelsonStackType, br1: MichelsonStackType): MichelsonStackType {
+        if (("failed" in br0) || ("failed" in br1)) {
+            if (("failed" in br0) && ("failed" in br1)) {
+                if (typesEqual(br0.failed, br1.failed)) {
+                    return br0;
+                } else {
+                    return { failed: { prim: "or", args: [br0.failed, br1.failed] } }; // Might be useful for debugging
+                }
+            } else {
+                return ("failed" in br0) ? br1 : br0;
+            }
+        } else {
+            assertTypesEqual(br0, br1, path);
+            return br0;
+        }
     }
 
     switch (instruction.prim) {
@@ -1057,7 +1081,7 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
                 const ia = regularAnnotations({ v: 1 });
                 const va = getAnnotations(s[0]);
                 return [
-                    annotate({ prim: "contract", args: [instruction.args[0]] }, { v: ia.v ? ia.v : ["@" + (va.v ? va.v[0].slice(1) + "." : "") + "contract"] }),
+                    annotate({ prim: "option", args: [{ prim: "contract", args: [instruction.args[0]] }] }, { v: ia.v ? ia.v : ["@" + (va.v ? va.v[0].slice(1) + "." : "") + "contract"] }),
                     ...rest(1)];
             }
 
@@ -1068,28 +1092,58 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
             return stack;
 
         case "IF_NONE":
+            {
+                instructionAnnotations({});
+                const s = top(0, ["option"]);
+                const va = getAnnotations(s[0]);
+                const tail = rest(1);
+                const br0 = functionTypeInternal(instruction.args[0], tail, [...path, { index: 0, val: instruction.args[0] }]);
+                const br1 = functionTypeInternal(instruction.args[1],
+                    [annotate(s[0].args[0], { t: null, v: ["@" + (va.v ? va.v[0].slice(1) + "." : "") + "some"] }), ...tail],
+                    [...path, { index: 1, val: instruction.args[1] }]);
+                return branchType(br0, br1);
+            }
+
         case "IF_LEFT":
+            {
+                instructionAnnotations({});
+                const s = top(0, ["or"]);
+                const va = getAnnotations(s[0]);
+                const tail = rest(1);
+                const br0 = functionTypeInternal(instruction.args[0],
+                    [annotate(s[0].args[0], { t: null, v: ["@" + (va.v ? va.v[0].slice(1) + "." : "") + "left"] }), ...tail],
+                    [...path, { index: 0, val: instruction.args[0] }]);
+                const br1 = functionTypeInternal(instruction.args[1],
+                    [annotate(s[0].args[1], { t: null, v: ["@" + (va.v ? va.v[0].slice(1) + "." : "") + "right"] }), ...tail],
+                    [...path, { index: 1, val: instruction.args[1] }]);
+                return branchType(br0, br1);
+            }
+
         case "IF_CONS":
+            {
+                instructionAnnotations({});
+                const s = top(0, ["list"]);
+                const va = getAnnotations(s[0]);
+                const tail = rest(1);
+                const br0 = functionTypeInternal(instruction.args[0],
+                    [
+                        annotate(s[0].args[0], { t: null, v: ["@" + (va.v ? va.v[0].slice(1) + "." : "") + "hd"] }),
+                        annotate(s[0], { t: null, v: ["@" + (va.v ? va.v[0].slice(1) + "." : "") + "tl"] }),
+                        ...tail
+                    ],
+                    [...path, { index: 0, val: instruction.args[0] }]);
+                const br1 = functionTypeInternal(instruction.args[1], tail, [...path, { index: 1, val: instruction.args[1] }]);
+                return branchType(br0, br1);
+            }
+
         case "IF":
             {
                 instructionAnnotations({});
-                top(0, [instruction.prim === "IF_NONE" ? "option" : instruction.prim === "IF_LEFT" ? "or" : instruction.prim === "IF_CONS" ? "list" : "bool"]);
-                const br0 = functionTypeInternal(instruction.args[0], rest(1), [...path, { index: 0, val: instruction.args[0] }]);
-                const br1 = functionTypeInternal(instruction.args[1], rest(1), [...path, { index: 1, val: instruction.args[1] }]);
-                if (("failed" in br0) || ("failed" in br1)) {
-                    if (("failed" in br0) && ("failed" in br1)) {
-                        if (typesEqual(br0.failed, br1.failed)) {
-                            return br0;
-                        } else {
-                            return { failed: { prim: "or", args: [br0.failed, br1.failed] } }; // Might be useful for debugging
-                        }
-                    } else {
-                        return ("failed" in br0) ? br1 : br0;
-                    }
-                } else {
-                    assertTypesEqual(br0, br1, path);
-                    return br0;
-                }
+                top(0, ["bool"]);
+                const tail = rest(1);
+                const br0 = functionTypeInternal(instruction.args[0], tail, [...path, { index: 0, val: instruction.args[0] }]);
+                const br1 = functionTypeInternal(instruction.args[1], tail, [...path, { index: 1, val: instruction.args[1] }]);
+                return branchType(br0, br1);
             }
 
         case "MAP":
@@ -1099,7 +1153,7 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
                 const tail = rest(1);
                 const elt = s[0].prim === "map" ? { prim: "pair" as const, args: s[0].args } : s[0].args[0];
                 const body = functionTypeInternal(instruction.args[0],
-                    [annotate(elt, { v: ["@" + (va.v ? va.v[0].slice(1) + "." : "") + "elt"] }), ...tail],
+                    [annotate(elt, { t: null, v: ["@" + (va.v ? va.v[0].slice(1) + "." : "") + "elt"] }), ...tail],
                     [...path, { index: 0, val: instruction.args[0] }]);
                 if ("failed" in body) {
                     return body;
@@ -1123,7 +1177,7 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
                 const tail = rest(1);
                 const elt = s[0].prim === "map" ? { prim: "pair" as const, args: s[0].args } : s[0].args[0];
                 const body = functionTypeInternal(instruction.args[0],
-                    [annotate(elt, { v: ["@" + (va.v ? va.v[0].slice(1) + "." : "") + "elt"] }), ...tail],
+                    [annotate(elt, { t: null, v: ["@" + (va.v ? va.v[0].slice(1) + "." : "") + "elt"] }), ...tail],
                     [...path, { index: 0, val: instruction.args[0] }]);
                 if ("failed" in body) {
                     return body;
@@ -1152,13 +1206,13 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
                 const va = getAnnotations(s[0]);
                 const tail = rest(1);
                 const body = functionTypeInternal(instruction.args[0],
-                    [annotate(s[0].args[0], { v: va.v ? [va.v[0] + ".left"] : undefined }), ...tail],
+                    [annotate(s[0].args[0], { t: null, v: ["@" + (va.v ? va.v[0].slice(1) + "." : "") + "left"] }), ...tail],
                     [...path, { index: 0, val: instruction.args[0] }]);
                 if ("failed" in body) {
                     return body;
                 }
                 assertTypesEqual([s[0], ...tail], body, path);
-                return [annotate(s[0].args[1], { v: regularAnnotations({ v: 1 }).v, t: null }), ...tail];
+                return [annotate(s[0].args[1], { t: null, v: regularAnnotations({ v: 1 }).v }), ...tail];
             }
 
         case "DIP":

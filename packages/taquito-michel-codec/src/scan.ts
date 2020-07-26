@@ -1,6 +1,7 @@
 export class ScanError extends Error {
     constructor(public src: string, public idx: number, message?: string) {
         super(message);
+        Object.setPrototypeOf(this, ScanError.prototype);
     }
 }
 
