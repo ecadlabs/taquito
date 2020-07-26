@@ -151,7 +151,7 @@ export interface UnpackedAnnotations {
 }
 
 const annRe = /^(@%|@%%|%@|[@:%]([_a-zA-Z][_0-9a-zA-Z\.%@]*)?)$/;
-export function unpackAnnotations(p: Prim): UnpackedAnnotations {
+export function unpackAnnotations(p: Prim, allowEmptyFields = false): UnpackedAnnotations {
     let field: string[] | undefined;
     let type: string[] | undefined;
     let vars: string[] | undefined;
@@ -164,9 +164,10 @@ export function unpackAnnotations(p: Prim): UnpackedAnnotations {
                 }
                 switch (v[0]) {
                     case "%":
-                        // allow empty
-                        field = field || [];
-                        field.push(v);
+                        if (allowEmptyFields || v.length > 1) {
+                            field = field || [];
+                            field.push(v);
+                        }
                         break;
                     case ":":
                         if (v.length > 1) {

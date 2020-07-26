@@ -1,233 +1,165 @@
 import { MichelsonType, MichelsonData } from "../src/michelson-types";
-import { assertDataValid } from "../src/michelson-typecheck";
+import { assertDataValid, assertTypesEqual, TypeEqualityMode } from "../src/michelson-typecheck";
 
-const typedef: MichelsonType = {
-    "prim": "pair",
-    "args": [
-        {
+describe('Typecheck', () => {
+    it('assertDataValid: string', () => {
+        const typedef: MichelsonType = { "prim": "string" };
+        const data: MichelsonData<typeof typedef> = { "string": "test" };
+        assertDataValid(typedef, data);
+    });
+
+    it('assertDataValid: int', () => {
+        const typedef: MichelsonType = { "prim": "int" };
+        const data: MichelsonData<typeof typedef> = { "int": "0" };
+        assertDataValid(typedef, data);
+    });
+
+    it('assertDataValid: nat', () => {
+        const typedef: MichelsonType = { "prim": "nat" };
+        const data: MichelsonData<typeof typedef> = { "int": "0" };
+        assertDataValid(typedef, data);
+    });
+
+    it('assertDataValid: bytes', () => {
+        const typedef: MichelsonType = { "prim": "bytes" };
+        const data: MichelsonData<typeof typedef> = { "bytes": "0xABCDEF42" };
+        assertDataValid(typedef, data);
+    });
+
+    it('assertDataValid: bool', () => {
+        const typedef: MichelsonType = { "prim": "bool" };
+        const data: MichelsonData<typeof typedef> = { "prim": "True" };
+        assertDataValid(typedef, data);
+    });
+
+    it('assertDataValid: unit', () => {
+        const typedef: MichelsonType = { "prim": "unit" };
+        const data: MichelsonData<typeof typedef> = { "prim": "Unit" };
+        assertDataValid(typedef, data);
+    });
+
+    it('assertDataValid: list', () => {
+        const typedef: MichelsonType = { "prim": "list", args: [{ prim: "string" }] };
+        const data: MichelsonData<typeof typedef> = [{ "string": "aaa" }, { "string": "bbb" }];
+        assertDataValid(typedef, data);
+    });
+
+    it('assertDataValid: pair', () => {
+        const typedef: MichelsonType = { "prim": "pair", args: [{ prim: "string" }, { prim: "nat" }] };
+        const data: MichelsonData<typeof typedef> = { prim: "Pair", args: [{ "string": "aaa" }, { "int": "0" }] };
+        assertDataValid(typedef, data);
+    });
+
+    it('assertDataValid: option nat', () => {
+        const typedef: MichelsonType = { "prim": "option", args: [{ prim: "nat" }] };
+        const data: MichelsonData<typeof typedef> = { prim: "Some", args: [{ "int": "0" }] };
+        assertDataValid(typedef, data);
+    });
+
+    it('assertDataValid: option none', () => {
+        const typedef: MichelsonType = { "prim": "option", args: [{ prim: "nat" }] };
+        const data: MichelsonData<typeof typedef> = { prim: "None" };
+        assertDataValid(typedef, data);
+    });
+
+    it('assertDataValid: or left', () => {
+        const typedef: MichelsonType = { "prim": "or", args: [{ prim: "string" }, { prim: "nat" }] };
+        const data: MichelsonData<typeof typedef> = { prim: "Left", args: [{ "string": "aaa" }] };
+        assertDataValid(typedef, data);
+    });
+
+    it('assertDataValid: or right', () => {
+        const typedef: MichelsonType = { "prim": "or", args: [{ prim: "string" }, { prim: "nat" }] };
+        const data: MichelsonData<typeof typedef> = { prim: "Right", args: [{ "int": "0" }] };
+        assertDataValid(typedef, data);
+    });
+
+    it('assertDataValid: set', () => {
+        const typedef: MichelsonType = { "prim": "set", args: [{ "prim": "pair", args: [{ prim: "string" }, { prim: "nat" }] }] };
+        const data: MichelsonData<typeof typedef> = [{ prim: "Pair", args: [{ "string": "aaa" }, { "int": "0" }] }, { prim: "Pair", args: [{ "string": "bbb" }, { "int": "1" }] }];
+        assertDataValid(typedef, data);
+    });
+
+    it('assertDataValid: unsorted set', () => {
+        const typedef: MichelsonType = { "prim": "set", args: [{ "prim": "pair", args: [{ prim: "string" }, { prim: "nat" }] }] };
+        const data: MichelsonData<typeof typedef> = [{ prim: "Pair", args: [{ "string": "bbb" }, { "int": "0" }] }, { prim: "Pair", args: [{ "string": "aaa" }, { "int": "1" }] }];
+        expect(() => assertDataValid(typedef, data)).toThrow();
+    });
+
+    it('assertDataValid: map', () => {
+        const typedef: MichelsonType = { "prim": "map", args: [{ prim: "string" }, { prim: "nat" }] };
+        const data: MichelsonData<typeof typedef> = [{ prim: "Elt", args: [{ "string": "aaa" }, { "int": "0" }] }, { prim: "Elt", args: [{ "string": "bbb" }, { "int": "1" }] }];
+        assertDataValid(typedef, data);
+    });
+
+    it('assertDataValid: unsorted map', () => {
+        const typedef: MichelsonType = { "prim": "map", args: [{ prim: "string" }, { prim: "nat" }] };
+        const data: MichelsonData<typeof typedef> = [{ prim: "Elt", args: [{ "string": "bbb" }, { "int": "0" }] }, { prim: "Elt", args: [{ "string": "aaa" }, { "int": "1" }] }];
+        expect(() => assertDataValid(typedef, data)).toThrow();
+    });
+
+    it('assertDataValid: timestamp', () => {
+        const typedef: MichelsonType = { "prim": "timestamp" };
+        const data: MichelsonData<typeof typedef> = { "string": "2020-06-21T00:39:07Z" };
+        assertDataValid(typedef, data);
+    });
+
+    it('assertDataValid: address', () => {
+        const typedef: MichelsonType = { "prim": "address" };
+        const data: MichelsonData<typeof typedef> = { "string": "tz1VmUWL8DxseZnPTdhHQkkuk6nK55NVdKCG" };
+        assertDataValid(typedef, data);
+    });
+
+    it('assertDataValid: mutez', () => {
+        const typedef: MichelsonType = { "prim": "mutez" };
+        const data: MichelsonData<typeof typedef> = { "int": "0" };
+        assertDataValid(typedef, data);
+    });
+
+    it('assertTypesEqual: identical', () => {
+        const pair: MichelsonType = {
             "prim": "pair",
             "args": [
-                {
-                    "prim": "pair",
-                    "args": [
-                        {
-                            "prim": "int",
-                            "annots": [
-                                "%capitalAmount"
-                            ]
-                        },
-                        {
-                            "prim": "nat",
-                            "annots": [
-                                "%couponRate_inPerc"
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "prim": "pair",
-                    "args": [
-                        {
-                            "prim": "map",
-                            "args": [
-                                {
-                                    "prim": "address"
-                                },
-                                {
-                                    "prim": "pair",
-                                    "args": [
-                                        {
-                                            "prim": "pair",
-                                            "args": [
-                                                {
-                                                    "prim": "pair",
-                                                    "args": [
-                                                        {
-                                                            "prim": "nat",
-                                                            "annots": [
-                                                                "%creditAmount"
-                                                            ]
-                                                        },
-                                                        {
-                                                            "prim": "timestamp",
-                                                            "annots": [
-                                                                "%initialTime"
-                                                            ]
-                                                        }
-                                                    ]
-                                                },
-                                                {
-                                                    "prim": "pair",
-                                                    "args": [
-                                                        {
-                                                            "prim": "bool",
-                                                            "annots": [
-                                                                "%is_final"
-                                                            ]
-                                                        },
-                                                        {
-                                                            "prim": "timestamp",
-                                                            "annots": [
-                                                                "%maturityTime"
-                                                            ]
-                                                        }
-                                                    ]
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "prim": "nat",
-                                            "annots": [
-                                                "%paybackAmount"
-                                            ]
-                                        }
-                                    ]
-                                }
-                            ],
-                            "annots": [
-                                "%creditorsMap"
-                            ]
-                        },
-                        {
-                            "prim": "address",
-                            "annots": [
-                                "%debtor"
-                            ]
-                        }
-                    ]
-                }
+                { "prim": "int", "annots": ["%i"] },
+                { "prim": "nat", "annots": ["%n"] }
             ]
-        },
-        {
-            "prim": "int",
-            "annots": [
-                "%totalCredit"
-            ]
-        }
-    ]
-};
+        };
+        assertTypesEqual(pair, pair);
+    });
 
-const data: MichelsonData<typeof typedef> = {
-    "prim": "Pair",
-    "args": [
-        {
-            "prim": "Pair",
+    it('assertTypesEqual: different fields', () => {
+        const pair0: MichelsonType = {
+            "prim": "pair",
             "args": [
-                {
-                    "prim": "Pair",
-                    "args": [
-                        {
-                            "int": "1000"
-                        },
-                        {
-                            "int": "9"
-                        }
-                    ]
-                },
-                {
-                    "prim": "Pair",
-                    "args": [
-                        [
-                            {
-                                "prim": "Elt",
-                                "args": [
-                                    {
-                                        "string": "tz1VmUWL8DxseZnPTdhHQkkuk6nK55NVdKCG"
-                                    },
-                                    {
-                                        "prim": "Pair",
-                                        "args": [
-                                            {
-                                                "prim": "Pair",
-                                                "args": [
-                                                    {
-                                                        "prim": "Pair",
-                                                        "args": [
-                                                            {
-                                                                "int": "50000000"
-                                                            },
-                                                            {
-                                                                "string": "2020-06-21T00:39:07Z"
-                                                            }
-                                                        ]
-                                                    },
-                                                    {
-                                                        "prim": "Pair",
-                                                        "args": [
-                                                            {
-                                                                "prim": "True"
-                                                            },
-                                                            {
-                                                                "string": "2020-06-25T03:05:48Z"
-                                                            }
-                                                        ]
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                "int": "50001694"
-                                            }
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "prim": "Elt",
-                                "args": [
-                                    {
-                                        "string": "tz1g4Kw2qhYELxeeHc2yiuLtPdovVckYNc6G"
-                                    },
-                                    {
-                                        "prim": "Pair",
-                                        "args": [
-                                            {
-                                                "prim": "Pair",
-                                                "args": [
-                                                    {
-                                                        "prim": "Pair",
-                                                        "args": [
-                                                            {
-                                                                "int": "50000000"
-                                                            },
-                                                            {
-                                                                "string": "2020-06-21T03:05:48Z"
-                                                            }
-                                                        ]
-                                                    },
-                                                    {
-                                                        "prim": "Pair",
-                                                        "args": [
-                                                            {
-                                                                "prim": "False"
-                                                            },
-                                                            {
-                                                                "string": "2020-06-21T00:39:07Z"
-                                                            }
-                                                        ]
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                "int": "106"
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ],
-                        {
-                            "string": "tz1NBWgCxEGy8U6UA4hRmemt3YmMXbPPe1YH"
-                        }
-                    ]
-                }
+                { "prim": "int", "annots": ["%i"] },
+                { "prim": "nat", "annots": ["%n"] }
             ]
-        },
-        {
-            "int": "50000000"
-        }
-    ]
-};
+        };
+        const pair1: MichelsonType = {
+            "prim": "pair",
+            "args": [
+                { "prim": "int", "annots": ["%i"] },
+                { "prim": "nat" }
+            ]
+        };
+        expect(() => assertTypesEqual(pair0, pair1)).toThrow();
+    });
 
-it('assertDataValid', () => {
-    assertDataValid(typedef, data);
+    it('assertTypesEqual: loose', () => {
+        const pair0: MichelsonType = {
+            "prim": "pair",
+            "args": [
+                { "prim": "int", "annots": ["%i"] },
+                { "prim": "nat", "annots": ["%n"] }
+            ]
+        };
+        const pair1: MichelsonType = {
+            "prim": "pair",
+            "args": [
+                { "prim": "int", "annots": ["%i"] },
+                { "prim": "nat" }
+            ]
+        };
+        assertTypesEqual(pair0, pair1, [], TypeEqualityMode.Loose);
+    });
 });
