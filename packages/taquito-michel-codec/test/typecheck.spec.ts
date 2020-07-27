@@ -1,7 +1,6 @@
 import { MichelsonType, MichelsonData } from "../src/michelson-types";
-import { assertMichelsonInstruction, assertMichelsonType } from "../src/michelson-validator";
-import { assertDataValid, assertTypesEqual, TypeEqualityMode, functionType, MichelsonCodeError } from "../src/michelson-typecheck";
-import { MichelsonError } from "../src/utils";
+import { assertMichelsonInstruction, assertMichelsonType, assertMichelsonContract } from "../src/michelson-validator";
+import { assertContractValid, assertDataValid, assertTypesEqual, TypeEqualityMode, functionType, MichelsonCodeError, contractEntrypoint } from "../src/michelson-typecheck";
 import { Parser } from '../src/micheline-parser';
 import { inspect } from "util";
 
@@ -167,29 +166,57 @@ describe('Typecheck', () => {
         assertTypesEqual(pair0, pair1, [], TypeEqualityMode.Loose);
     });
 
+    it('contractEntrypoint', () => {
+        const param: MichelsonType = {
+            prim: 'or',
+            args: [
+                {
+                    prim: 'pair',
+                    annots: ['%have_fun'],
+                    args: [
+                        {
+                            prim: 'big_map',
+                            args: [{ prim: 'string' }, { prim: 'nat' }]
+                        },
+                        { prim: 'unit' }
+                    ]
+                },
+                { prim: 'unit', annots: ['%default'] }
+            ]
+        };
+        expect(contractEntrypoint(param, "%default")).toEqual(param.args[1]);
+        expect(contractEntrypoint(param, "%have_fun")).toEqual(param.args[0]);
+    });
+
     it('code', () => {
         const src = `
-        { DROP;
-            SOURCE;
-            CONTRACT unit;
-            ASSERT_SOME;
-            PUSH mutez 300;
-            UNIT;
-            TRANSFER_TOKENS;
-            DIP { NIL operation };
-            CONS;
-            DIP { UNIT };
-            PAIR;
-            }`;
+parameter (or (pair %have_fun (big_map string nat) unit) (unit %default)) ;
+storage (big_map string nat) ;
+code { UNPAIR ;
+       DIP { NIL operation } ;
+       IF_LEFT
+         { DROP }
+         { DROP ;
+           SELF %have_fun ;
+           PUSH mutez 0 ;
+           DUP 4 ;
+           PUSH (option nat) (Some 8) ;
+           PUSH string "hahaha" ;
+           UPDATE ;
+           UNIT ;
+           SWAP ;
+           PAIR ;
+           TRANSFER_TOKENS ;
+           CONS } ;
+       PAIR }
+`;
 
         const p = new Parser({ expandMacros: true });
-        const code = p.parseMichelineExpression(src);
-        const arg = p.parseMichelineExpression("(pair (unit @parameter) (unit @storage))");
+        const contract = p.parseScript(src);
 
-        if (code !== null && arg !== null && assertMichelsonInstruction(code) && assertMichelsonType(arg)) {
+        if (contract !== null && assertMichelsonContract(contract)) {
             try {
-                const ret = functionType(code, [arg]);
-                console.log(inspect(ret, false, null));
+                assertContractValid(contract);
             } catch (err) {
                 console.log(inspect(err, false, null));
             }

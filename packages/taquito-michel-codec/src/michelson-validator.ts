@@ -10,15 +10,15 @@ import {
 
 // Michelson validator
 
-export class ValidationError extends MichelsonError {
+export class MichelsonValidationError extends MichelsonError {
    /**
     * @param val Value of a node caused the error
     * @param path Path to a node caused the error in the AST tree
     * @param message An error message
     */
    constructor(public val: Expr, public path?: ObjectTreePath[], message?: string) {
-      super(val, path, message);
-      Object.setPrototypeOf(this, ValidationError.prototype);
+      super(val, undefined, path, message);
+      Object.setPrototypeOf(this, MichelsonValidationError.prototype);
    }
 }
 
@@ -30,19 +30,19 @@ function assertPrim(ex: Expr, path: ObjectTreePath[]): ex is Prim {
    if (isPrim(ex)) {
       return true;
    }
-   throw new ValidationError(ex, path, "prim expression expected");
+   throw new MichelsonValidationError(ex, path, "prim expression expected");
 }
 
 function assertSeq(ex: Expr, path: ObjectTreePath[]): ex is Expr[] {
    if (Array.isArray(ex)) {
       return true;
    }
-   throw new ValidationError(ex, path, "sequence expression expected");
+   throw new MichelsonValidationError(ex, path, "sequence expression expected");
 }
 
 function assertNatural(i: IntLiteral, path: ObjectTreePath[]) {
    if (i.int[0] === "-") {
-      throw new ValidationError(i, path, "natural number expected");
+      throw new MichelsonValidationError(i, path, "natural number expected");
    }
 }
 
@@ -50,7 +50,7 @@ function assertIntLiteral(ex: Expr, path: ObjectTreePath[]): ex is IntLiteral {
    if ("int" in ex) {
       return true;
    }
-   throw new ValidationError(ex, path, "int literal expected");
+   throw new MichelsonValidationError(ex, path, "int literal expected");
 }
 
 function assertArgs<N extends number>(ex: Prim, n: N, path: ObjectTreePath[]):
@@ -60,7 +60,7 @@ function assertArgs<N extends number>(ex: Prim, n: N, path: ObjectTreePath[]):
    if ((n === 0 && ex.args === undefined) || ex.args?.length === n) {
       return true;
    }
-   throw new ValidationError(ex, path, `${n} arguments expected`);
+   throw new MichelsonValidationError(ex, path, `${n} arguments expected`);
 }
 
 /**
@@ -74,7 +74,7 @@ export function assertMichelsonInstruction(ex: Expr, path: ObjectTreePath[] = []
       for (const n of ex) {
          const p = [...path, { index: i, val: n }];
          if (!Array.isArray(n) && !isPrim(n)) {
-            throw new ValidationError(ex, p, "sequence or prim expected");
+            throw new MichelsonValidationError(ex, p, "sequence or prim expected");
          }
          assertMichelsonInstruction(n, p);
          i++;
@@ -150,7 +150,7 @@ export function assertMichelsonInstruction(ex: Expr, path: ObjectTreePath[] = []
          case "CREATE_CONTRACT":
             /* istanbul ignore else */
             if (assertArgs(ex, 1, path)) {
-               assertMichelsonScript(ex.args[0], [...path, { index: 0, val: ex.args[0] }]);
+               assertMichelsonContract(ex.args[0], [...path, { index: 0, val: ex.args[0] }]);
             }
             break;
 
@@ -173,7 +173,7 @@ export function assertMichelsonInstruction(ex: Expr, path: ObjectTreePath[] = []
                   assertMichelsonInstruction(ex.args[0], p);
                }
             } else {
-               throw new ValidationError(ex, path, "1 or 2 arguments expected");
+               throw new MichelsonValidationError(ex, path, "1 or 2 arguments expected");
             }
             break;
 
@@ -215,7 +215,7 @@ export function assertMichelsonInstruction(ex: Expr, path: ObjectTreePath[] = []
             break;
 
          default:
-            throw new ValidationError(ex, path, "instruction expected");
+            throw new MichelsonValidationError(ex, path, "instruction expected");
       }
    }
    return true;
@@ -230,7 +230,7 @@ function assertMichelsonSimpleComparableType(ex: Expr, path: ObjectTreePath[]): 
    /* istanbul ignore else */
    if (assertPrim(ex, path)) {
       if (!Object.prototype.hasOwnProperty.call(simpleComparableTypeTable, ex.prim)) {
-         throw new ValidationError(ex, path, "simple comparable type expected");
+         throw new MichelsonValidationError(ex, path, "simple comparable type expected");
       }
       assertArgs(ex, 0, path);
    }
@@ -249,7 +249,7 @@ function assertMichelsonComparableType(ex: Expr, path: ObjectTreePath[]): ex is 
             assertMichelsonComparableType(ex.args[1], [...path, { index: 1, val: ex.args[1] }]);
          }
       } else {
-         throw new ValidationError(ex, path, "comparable type expected");
+         throw new MichelsonValidationError(ex, path, "comparable type expected");
       }
    }
    return true;
@@ -344,7 +344,7 @@ export function assertMichelsonData(ex: Expr, path: ObjectTreePath[] = []): ex i
       }
 
       if (mapElts !== 0 && mapElts !== ex.length) {
-         throw new ValidationError(ex, path, "data entries and map elements can't be intermixed");
+         throw new MichelsonValidationError(ex, path, "data entries and map elements can't be intermixed");
       }
       return true;
    }
@@ -379,11 +379,11 @@ export function assertMichelsonData(ex: Expr, path: ObjectTreePath[] = []): ex i
             if (Object.prototype.hasOwnProperty.call(instructionTable, ex.prim)) {
                assertMichelsonInstruction(ex, path);
             } else {
-               throw new ValidationError(ex, path, "data entry or instruction expected");
+               throw new MichelsonValidationError(ex, path, "data entry or instruction expected");
             }
       }
    } else {
-      throw new ValidationError(ex, path, "data entry expected");
+      throw new MichelsonValidationError(ex, path, "data entry expected");
    }
 
    return true;
@@ -394,7 +394,7 @@ export function assertMichelsonData(ex: Expr, path: ObjectTreePath[] = []): ex i
  * This is a type guard function which either returns true of throws an exception.
  * @param ex An AST node
  */
-export function assertMichelsonScript(ex: Expr, path: ObjectTreePath[] = []): ex is MichelsonContract {
+export function assertMichelsonContract(ex: Expr, path: ObjectTreePath[] = []): ex is MichelsonContract {
    /* istanbul ignore else */
    if (assertSeq(ex, path) && ex.length === 3 &&
       assertPrim(ex[0], [...path, { index: 0, val: ex[0] }]) &&
@@ -427,7 +427,7 @@ export function assertMichelsonScript(ex: Expr, path: ObjectTreePath[] = []): ex
             i++;
          }
       } else {
-         throw new ValidationError(ex, path, "valid Michelson script expected");
+         throw new MichelsonValidationError(ex, path, "valid Michelson script expected");
       }
    }
    return true;
@@ -439,7 +439,7 @@ export function assertMichelsonScript(ex: Expr, path: ObjectTreePath[] = []): ex
  */
 export function isMichelsonScript(ex: Expr): ex is MichelsonContract {
    try {
-      assertMichelsonScript(ex, []);
+      assertMichelsonContract(ex, []);
       return true;
    } catch {
       return false;

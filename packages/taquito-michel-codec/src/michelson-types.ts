@@ -147,3 +147,7 @@ export type MichelsonContractCode = SectionPrim<"code", [MichelsonInstruction[]]
 export type MichelsonContract = [MichelsonContractParameter, MichelsonContractStorage, MichelsonContractCode] |
     [MichelsonContractStorage, MichelsonContractCode, MichelsonContractParameter] |
     [MichelsonContractCode, MichelsonContractParameter, MichelsonContractStorage];
+
+export type MichelsonContractSection<T extends MichelsonSectionId> =
+    T extends "parameter" ? MichelsonContractParameter :
+    T extends "storage" ? MichelsonContractStorage : MichelsonContractCode;

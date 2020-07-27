@@ -4,6 +4,7 @@
         "semicolon": [
             true,
             "always"
-        ]
+        ],
+        "no-unused-variable": true
     }
 }

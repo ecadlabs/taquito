@@ -28,14 +28,24 @@ export interface ObjectTreePath<T extends Expr = Expr> {
     val: T;
 }
 
-export class MichelsonError<T extends Expr = Expr> extends Error {
+export class MichelsonError<VT extends Expr = Expr, DT extends Expr = Expr> extends Error {
+    public data?: DT;
+    public path?: ObjectTreePath[];
+
     /**
      * @param val Value of a type node caused the error
+     * @param data Value of a data node caused the error
      * @param path Path to a node caused the error
      * @param message An error message
      */
-    constructor(public val: T, public path?: ObjectTreePath[], message?: string) {
+    constructor(public val: VT, data?: DT, path?: ObjectTreePath[], message?: string) {
         super(message);
+        if (data !== undefined) {
+            this.data = data;
+        }
+        if (path !== undefined) {
+            this.path = path;
+        }
         Object.setPrototypeOf(this, MichelsonError.prototype);
     }
 }
@@ -151,8 +161,14 @@ export interface UnpackedAnnotations {
     v?: string[];
 }
 
+export interface UnpackAnnotationsOptions {
+    specialVar?: boolean; // CAR, CDR
+    specialFields?: boolean; // PAIR, LEFT, RIGHT
+}
+
 const annRe = /^(@%|@%%|%@|[@:%]([_a-zA-Z][_0-9a-zA-Z\.%@]*)?)$/;
-export function unpackAnnotations(p: Prim, allowEmptyFields = false): UnpackedAnnotations {
+
+export function unpackAnnotations(p: Prim, opt?: UnpackAnnotationsOptions): UnpackedAnnotations {
     let field: string[] | undefined;
     let type: string[] | undefined;
     let vars: string[] | undefined;
@@ -160,12 +176,15 @@ export function unpackAnnotations(p: Prim, allowEmptyFields = false): UnpackedAn
     if (p.annots !== undefined) {
         for (const v of p.annots) {
             if (v.length !== 0) {
-                if (!annRe.test(v)) {
-                    throw new Error(`unexpected annotation: ${v[0]}`);
+                if (!annRe.test(v) ||
+                    (!opt?.specialVar && (v === "@%" || v === "@%%")) ||
+                    (!opt?.specialFields && v === "%@")) {
+                    throw new Error(`${p.prim}: unexpected annotation: ${v[0]}`);
                 }
+
                 switch (v[0]) {
                     case "%":
-                        if (allowEmptyFields || v.length > 1) {
+                        if (opt?.specialFields || v.length > 1) {
                             field = field || [];
                             field.push(v);
                         }
