@@ -5,6 +5,7 @@
             true,
             "always"
         ],
-        "no-unused-variable": true
+        "no-unused-variable": true,
+        "strict-type-predicates": true
     }
 }
