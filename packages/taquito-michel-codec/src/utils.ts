@@ -163,7 +163,9 @@ export interface UnpackedAnnotations {
 
 export interface UnpackAnnotationsOptions {
     specialVar?: boolean; // CAR, CDR
+    emptyVar?: boolean;
     specialFields?: boolean; // PAIR, LEFT, RIGHT
+    emptyFields?: boolean;
 }
 
 const annRe = /^(@%|@%%|%@|[@:%]([_a-zA-Z][_0-9a-zA-Z\.%@]*)?)$/;
@@ -184,7 +186,7 @@ export function unpackAnnotations(p: Prim, opt?: UnpackAnnotationsOptions): Unpa
 
                 switch (v[0]) {
                     case "%":
-                        if (opt?.specialFields || v.length > 1) {
+                        if (opt?.emptyFields || v.length > 1) {
                             field = field || [];
                             field.push(v);
                         }
@@ -196,7 +198,7 @@ export function unpackAnnotations(p: Prim, opt?: UnpackAnnotationsOptions): Unpa
                         }
                         break;
                     case "@":
-                        if (v.length > 1) {
+                        if (opt?.emptyVar || v.length > 1) {
                             vars = vars || [];
                             vars.push(v);
                         }
