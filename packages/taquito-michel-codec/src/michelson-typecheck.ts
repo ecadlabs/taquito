@@ -499,7 +499,7 @@ export interface InstructionTrace {
     nested?: InstructionTrace[];
 }
 
-interface FunctionTypeResult {
+export interface FunctionTypeResult {
     ret: MichelsonStackType;
     trace: InstructionTrace;
 }
@@ -640,7 +640,7 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
     function getEntrypoint(contract: MichelsonContract | MichelsonType, ep?: string): MichelsonType {
         let entrypoint: MichelsonType | null;
         try {
-            entrypoint = contractEntrypoint(contract, ep);
+            entrypoint = contractEntryPoint(contract, ep);
         } catch (err) {
             if (err instanceof Error) {
                 throw new MichelsonCodeError(instruction, undefined, stack, path, `${instruction.prim}: ${err.message}`);
@@ -1408,7 +1408,7 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
     };
 }
 
-function contractSection<T extends "parameter" | "storage" | "code">(contract: MichelsonContract, section: T): [MichelsonContractSection<T>, number] {
+export function contractSection<T extends "parameter" | "storage" | "code">(contract: MichelsonContract, section: T): [MichelsonContractSection<T>, number] {
     let i = 0;
     for (const s of contract) {
         if (s.prim === section) {
@@ -1419,7 +1419,7 @@ function contractSection<T extends "parameter" | "storage" | "code">(contract: M
     throw new Error(`missing contract section: ${section}`);
 }
 
-export function contractEntrypoint(contract: MichelsonContract | MichelsonType, ep?: string): MichelsonType | null {
+export function contractEntryPoint(contract: MichelsonContract | MichelsonType, ep?: string): MichelsonType | null {
     const parameter = Array.isArray(contract) ? contractSection(contract, "parameter")[0].args[0] : contract;
 
     function lookup(parameter: MichelsonType, ep?: string): MichelsonType | null {
