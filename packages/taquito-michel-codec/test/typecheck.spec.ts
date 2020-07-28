@@ -1,6 +1,6 @@
 import { MichelsonType, MichelsonData } from "../src/michelson-types";
-import { assertMichelsonInstruction, assertMichelsonType, assertMichelsonContract } from "../src/michelson-validator";
-import { assertContractValid, assertDataValid, assertTypesEqual, TypeEqualityMode, functionType, MichelsonCodeError, contractEntrypoint } from "../src/michelson-typecheck";
+import { assertMichelsonContract } from "../src/michelson-validator";
+import { assertContractValid, assertDataValid, assertTypesEqual, TypeEqualityMode, contractEntryPoint } from "../src/michelson-typecheck";
 import { Parser } from '../src/micheline-parser';
 import { inspect } from "util";
 
@@ -184,8 +184,8 @@ describe('Typecheck', () => {
                 { prim: 'unit', annots: ['%default'] }
             ]
         };
-        expect(contractEntrypoint(param, "%default")).toEqual(param.args[1]);
-        expect(contractEntrypoint(param, "%have_fun")).toEqual(param.args[0]);
+        expect(contractEntryPoint(param, "%default")).toEqual(param.args[1]);
+        expect(contractEntryPoint(param, "%have_fun")).toEqual(param.args[0]);
     });
 
     it('code', () => {

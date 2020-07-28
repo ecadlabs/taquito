@@ -1515,11 +1515,6 @@ export function functionTypeTrace(inst: MichelsonInstruction, stack: MichelsonTy
     return ret;
 }
 
-export function functionType(inst: MichelsonInstruction, stack: MichelsonType[], contract?: MichelsonContract | null, path: ObjectTreePath[] = []): MichelsonStackType {
-    const { ret } = functionTypeTrace(inst, stack, contract || null, path);
-    return ret;
-}
-
 export function assertTypesEqual<T1 extends MichelsonType | MichelsonType[], T2 extends T1>(a: T1, b: T2, path: ObjectTreePath[] = [], mode: TypeEqualityMode = TypeEqualityMode.Strict): void {
     if (Array.isArray(a)) {
         // type guards don't work for parametrized generic types

@@ -4,7 +4,7 @@ import {
 } from "./michelson-types";
 import {
     assertContractValid, InstructionTrace, contractSection,
-    contractEntryPoint, assertDataValid, functionTypeTrace, functionType,
+    contractEntryPoint, assertDataValid, functionTypeTrace,
     MichelsonStackType, FunctionTypeResult, assertTypeAnnotationsValid
 } from "./michelson-typecheck";
 import { Parser } from "./micheline-parser";
@@ -78,7 +78,7 @@ export class Contract {
     }
 
     functionType(inst: MichelsonInstruction, stack: MichelsonType[]): MichelsonStackType {
-        return functionType(inst, stack, this.contract);
+        return this.functionTypeTrace(inst, stack).ret;
     }
 }
 
