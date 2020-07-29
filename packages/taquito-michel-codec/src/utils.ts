@@ -17,35 +17,14 @@ export type NoAnnots<T extends Prim> = OmitProp<T, "annots">;
 
 export type Nullable<T> = { [P in keyof T]: T[P] | null };
 
-export interface ObjectTreePath<T extends Expr = Expr> {
+export class MichelsonError<T extends Expr = Expr> extends Error {
     /**
-     * Node's index. Either argument index or sequence index.
-     */
-    index: number;
-    /**
-     * Node's value.
-     */
-    val: T;
-}
-
-export class MichelsonError<VT extends Expr = Expr, DT extends Expr = Expr> extends Error {
-    public data?: DT;
-    public path?: ObjectTreePath[];
-
-    /**
-     * @param val Value of a type node caused the error
-     * @param data Value of a data node caused the error
+     * @param val Value of a AST node caused the error
      * @param path Path to a node caused the error
      * @param message An error message
      */
-    constructor(public val: VT, data?: DT, path?: ObjectTreePath[], message?: string) {
+    constructor(public val: T, message?: string) {
         super(message);
-        if (data !== undefined) {
-            this.data = data;
-        }
-        if (path !== undefined) {
-            this.path = path;
-        }
         Object.setPrototypeOf(this, MichelsonError.prototype);
     }
 }
@@ -181,7 +160,7 @@ export function unpackAnnotations(p: Prim, opt?: UnpackAnnotationsOptions): Unpa
                 if (!annRe.test(v) ||
                     (!opt?.specialVar && (v === "@%" || v === "@%%")) ||
                     (!opt?.specialFields && v === "%@")) {
-                    throw new Error(`${p.prim}: unexpected annotation: ${v[0]}`);
+                    throw new MichelsonError(p, `${p.prim}: unexpected annotation: ${v[0]}`);
                 }
 
                 switch (v[0]) {

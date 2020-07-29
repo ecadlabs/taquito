@@ -1,8 +1,5 @@
 import { MichelsonType, MichelsonData } from "../src/michelson-types";
-import { assertMichelsonContract } from "../src/michelson-validator";
-import { assertContractValid, assertDataValid, assertTypesEqual, TypeEqualityMode, contractEntryPoint } from "../src/michelson-typecheck";
-import { Parser } from '../src/micheline-parser';
-import { inspect } from "util";
+import { assertDataValid, assertTypesEqual, TypeEqualityMode, contractEntryPoint } from "../src/michelson-typecheck";
 
 describe('Typecheck', () => {
     it('assertDataValid: string', () => {
@@ -186,32 +183,5 @@ describe('Typecheck', () => {
         };
         expect(contractEntryPoint(param, "%default")).toEqual(param.args[1]);
         expect(contractEntryPoint(param, "%have_fun")).toEqual(param.args[0]);
-    });
-
-    it('code', () => {
-        const src = `
-        parameter key;
-        storage (pair signature string);
-        code {
-               DUP; DUP;
-               DIP{ CDR; DUP; CAR;
-                    DIP{CDR; PACK}};
-               CAR; CHECK_SIGNATURE;
-               IF {} {FAIL} ;
-               CDR; NIL operation ; PAIR};
-`;
-
-        const p = new Parser({ expandMacros: true });
-        const contract = p.parseScript(src);
-
-        if (contract !== null && assertMichelsonContract(contract)) {
-            try {
-                const trace = assertContractValid(contract);
-                console.log(inspect(trace, false, null));
-            } catch (err) {
-                console.log(inspect(err, false, null));
-                throw err;
-            }
-        }
     });
 });

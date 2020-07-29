@@ -3,28 +3,34 @@ import {
     MichelsonData, MichelsonInstruction
 } from "./michelson-types";
 import {
-    assertContractValid, InstructionTrace, contractSection,
-    contractEntryPoint, assertDataValid, functionTypeTrace,
-    MichelsonStackType, FunctionTypeResult, assertTypeAnnotationsValid
+    assertContractValid, contractSection,
+    contractEntryPoint, assertDataValid,
+    MichelsonStackType, assertTypeAnnotationsValid,
+    InstructionTrace, Context, functionType
 } from "./michelson-typecheck";
 import { Parser } from "./micheline-parser";
 import { assertMichelsonContract, assertMichelsonType, assertMichelsonData } from "./michelson-validator";
 
-export class Contract {
-    public readonly trace: InstructionTrace;
+export interface ContractOptions {
+    traceCallback?: (t: InstructionTrace) => void;
+}
 
-    constructor(public readonly contract: MichelsonContract) {
-        this.trace = assertContractValid(contract);
+export class Contract {
+    private ctx: Context;
+
+    constructor(public readonly contract: MichelsonContract, opt?: ContractOptions) {
+        this.ctx = { contract, ...opt };
+        assertContractValid(contract, this.ctx);
     }
 
-    static parse(src: string | object): Contract {
+    static parse(src: string | object, opt?: ContractOptions): Contract {
         const p = new Parser({ expandMacros: true });
         const expr = typeof src === "string" ? p.parseScript(src) : p.parseJSON(src);
         if (expr === null) {
             throw new Error("empty contract");
         }
         if (assertMichelsonContract(expr)) {
-            return new Contract(expr);
+            return new Contract(expr, opt);
         }
         throw undefined;
     }
@@ -54,7 +60,7 @@ export class Contract {
     }
 
     section<T extends "parameter" | "storage" | "code">(section: T): MichelsonContractSection<T> {
-        return contractSection(this.contract, section)[0];
+        return contractSection(this.contract, section);
     }
 
     entryPoint(ep?: string): MichelsonType | null {
@@ -62,7 +68,7 @@ export class Contract {
     }
 
     assertDataValid(t: MichelsonType, d: MichelsonData): void {
-        assertDataValid(t, d, this.contract);
+        assertDataValid(t, d, this.ctx);
     }
 
     assertParameterValid(ep: string | null, d: MichelsonData): void {
@@ -73,12 +79,8 @@ export class Contract {
         this.assertDataValid(t, d);
     }
 
-    functionTypeTrace(inst: MichelsonInstruction, stack: MichelsonType[]): FunctionTypeResult {
-        return functionTypeTrace(inst, stack, this.contract);
-    }
-
     functionType(inst: MichelsonInstruction, stack: MichelsonType[]): MichelsonStackType {
-        return this.functionTypeTrace(inst, stack).ret;
+        return functionType(inst, stack, this.ctx);
     }
 }
 
