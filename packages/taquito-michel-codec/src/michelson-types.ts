@@ -155,3 +155,10 @@ export type MichelsonContract =
 export type MichelsonContractSection<T extends MichelsonSectionId> =
     T extends "parameter" ? MichelsonContractParameter :
     T extends "storage" ? MichelsonContractStorage : MichelsonContractCode;
+
+// Code analysis types 
+export interface MichelsonTypeFailed {
+    failed: MichelsonType;
+}
+
+export type MichelsonStackType = MichelsonType[] | MichelsonTypeFailed;

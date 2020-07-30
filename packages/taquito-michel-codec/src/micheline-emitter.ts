@@ -122,7 +122,7 @@ function emitSeq(node: Expr[], f: Formatter): string {
             ret += emitExpr(el, f.down(1));
         }
 
-        ret += (i > 1 ? ";" : "") + f.lf;
+        ret += (i > 1 ? ";" + f.lfsp : f.lf);
         i--;
     }
     return ret + f.indent() + "}";

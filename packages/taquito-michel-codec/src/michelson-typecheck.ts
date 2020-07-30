@@ -3,7 +3,7 @@ import {
     MichelsonType, MichelsonData, MichelsonComparableType, MichelsonMapElt,
     MichelsonTypeId, MichelsonSimpleComparableTypeId, MichelsonInstruction,
     MichelsonTypeOption, MichelsonContract,
-    MichelsonContractSection
+    MichelsonContractSection, MichelsonStackType
 } from "./michelson-types";
 import {
     unpackAnnotations, MichelsonError, isNatural,
@@ -451,12 +451,6 @@ function assertDataValidInternal(t: MichelsonType, d: MichelsonData, ctx: Contex
 
 // Code validation
 
-export interface MichelsonTypeFailed {
-    failed: MichelsonType;
-}
-
-export type MichelsonStackType = MichelsonType[] | MichelsonTypeFailed;
-
 type TT1<T1 extends MichelsonTypeId[] | null> = [T1];
 type TT2<T1 extends MichelsonTypeId[] | null, T2 extends MichelsonTypeId[] | null> = [T1, T2];
 type TT3<T1 extends MichelsonTypeId[] | null, T2 extends MichelsonTypeId[] | null, T3 extends MichelsonTypeId[] | null> = [T1, T2, T3];
@@ -477,7 +471,7 @@ const simpleComparableTypeTable: Record<MichelsonSimpleComparableTypeId, boolean
 
 export interface InstructionTrace {
     op: MichelsonInstruction;
-    in: MichelsonType | MichelsonType[];
+    in: MichelsonType[];
     out: MichelsonStackType;
 }
 
@@ -689,7 +683,7 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
             {
                 const s = args(0, null, ["list"]);
                 ensureTypesEqual(s[0], s[1].args[0]);
-                ret = [annotateVar(s[1]), ...stack.slice(2)];
+                ret = [annotateVar({ prim: "list", args: [s[1].args[0]] }), ...stack.slice(2)];
                 break;
             }
 
@@ -844,7 +838,9 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
             {
                 const res = (a: "nat" | "int" | "mutez", b: "nat" | "int" | "mutez"): MichelsonTypeOption => ({ prim: "option", args: [{ prim: "pair", args: [{ prim: a }, { prim: b }] }] });
                 const s = args(0, ["nat", "int", "mutez"], ["nat", "int", "mutez"]);
-                if ((s[0].prim === "nat" || s[0].prim === "int") && (s[1].prim === "nat" || s[1].prim === "int")) {
+                if (s[0].prim === "nat" && s[1].prim === "nat") {
+                    ret = [annotateVar(res("nat", "nat")), ...stack.slice(2)];
+                } else if ((s[0].prim === "nat" || s[0].prim === "int") && (s[1].prim === "nat" || s[1].prim === "int")) {
                     ret = [annotateVar(res("int", "nat")), ...stack.slice(2)];
                 } else if (s[0].prim === "mutez" && s[1].prim === "nat") {
                     ret = [annotateVar(res("mutez", "mutez")), ...stack.slice(2)];
@@ -1095,7 +1091,7 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
 
                 ret = [annotate({
                     prim: "or", args: instruction.prim === "LEFT" ? children : [children[1], children[0]]
-                }, { t: ia.t, v: ia.v }), ...stack.slice(2)];
+                }, { t: ia.t, v: ia.v }), ...stack.slice(1)];
                 break;
             }
 

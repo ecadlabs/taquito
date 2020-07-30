@@ -1,6 +1,7 @@
 import { Prim, Expr } from "./micheline";
-import { MichelsonUnaryInstructionId, MichelsonInstructionId } from "./michelson-types";
+import { MichelsonUnaryInstructionId, MichelsonInstructionId, MichelsonStackType } from "./michelson-types";
 import { decodeBase58Check } from "./base58";
+import { emitMicheline } from "./micheline-emitter";
 
 export type Tuple<N extends number, T> = N extends 1 ? [T] :
     N extends 2 ? [T, T] :
@@ -147,7 +148,7 @@ export interface UnpackAnnotationsOptions {
     emptyFields?: boolean;
 }
 
-const annRe = /^(@%|@%%|%@|[@:%]([_a-zA-Z][_0-9a-zA-Z\.%@]*)?)$/;
+const annRe = /^(@%|@%%|%@|[@:%]([_0-9a-zA-Z][_0-9a-zA-Z\.%@]*)?)$/;
 
 export function unpackAnnotations(p: Prim, opt?: UnpackAnnotationsOptions): UnpackedAnnotations {
     let field: string[] | undefined;
@@ -160,7 +161,7 @@ export function unpackAnnotations(p: Prim, opt?: UnpackAnnotationsOptions): Unpa
                 if (!annRe.test(v) ||
                     (!opt?.specialVar && (v === "@%" || v === "@%%")) ||
                     (!opt?.specialFields && v === "%@")) {
-                    throw new MichelsonError(p, `${p.prim}: unexpected annotation: ${v[0]}`);
+                    throw new MichelsonError(p, `${p.prim}: unexpected annotation: ${v}`);
                 }
 
                 switch (v[0]) {
@@ -261,4 +262,17 @@ export function checkTezosID(id: string | number[], ...types: TezosIDType[]): [T
         }
     }
     return null;
+}
+
+export function formatStack(s: MichelsonStackType): string {
+    if ("failed" in s) {
+        return `[FAILED: ${emitMicheline(s.failed)}]`;
+    }
+    let ret = "";
+    let i = 0;
+    for (const v of s) {
+        const ann = unpackAnnotations(v);
+        ret += `[${i++}${ann.v ? "/" + ann.v[0] : ""}]: ${emitMicheline(v)}\n`;
+    }
+    return ret;
 }
