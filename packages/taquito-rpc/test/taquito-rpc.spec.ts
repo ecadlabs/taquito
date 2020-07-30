@@ -981,4 +981,13 @@ describe('RpcClient test', () => {
       done();
     });
   });
+
+  describe('getRpcUrl', () => {
+    it('return the RPC Url', () => {
+      const rpcUrlMainnet = (new RpcClient()).getRpcUrl()
+      expect(rpcUrlMainnet).toEqual('https://api.tez.ie/rpc/mainnet');
+      const rpcUrlCarthagenet = (new RpcClient('https://api.tez.ie/rpc/carthagenet')).getRpcUrl()
+      expect(rpcUrlCarthagenet).toEqual('https://api.tez.ie/rpc/carthagenet');
+    });
+  });
 });

@@ -2,9 +2,10 @@
 title: In Memory Signer
 author: Simon Boissonneault-Robert
 ---
-
-> **Warning; storing private keys in memory is suitable for development workflows, but risky for
-> production use-cases! Use the InMemorySigner appropriately given your risk profile**
+:::caution Warning
+**Storing private keys in memory is suitable for development workflows, but risky for
+production use-cases! Use the InMemorySigner appropriately given your risk profile**
+:::
 
 In memory signer is a local signer implementation that allows you to directly use a private key in your browser or your nodejs app.
 
@@ -18,16 +19,70 @@ If you require server-side signing of operations on mainnet, we recommend explor
 
 ### Loading an unencrypted private key
 
+If you configure taquito this way you will now be able to use every function that needs signing support.
+
 ```js
+
 import { InMemorySigner } from '@taquito/signer'
 import { Tezos } from '@taquito/taquito'
 
-Tezos.setProvider({signer: await InMemorySigner.fromSecretKey('you_private_key')})
+Tezos.setProvider({signer: await InMemorySigner.fromSecretKey('your_private_key')})
 ```
 
-If you configure taquito this way you will now be able to use every function that needs signing support
+:::note
+Operation will be signed automatically using the signer (no prompt)
+:::
 
-`Note: Operation will be signed automatically using the signer (no prompt)`
+The `fromSecretKey` method takes a secret that is base58 encoded as a parameter. Here are three examples with unencrypted private keys:
+
+```js live noInline
+//import { Tezos } from '@taquito/taquito'
+//import { InMemorySigner } from '@taquito/signer'
+
+InMemorySigner.fromSecretKey('edsk2rKA8YEExg9Zo2qNPiQnnYheF1DhqjLVmfKdxiFfu5GyGRZRnb')
+.then( theSigner => {
+  Tezos.setProvider({signer: theSigner})
+  //We can access the public key hash
+  return Tezos.signer.publicKeyHash()
+}).then( publicKeyHash => {
+  println(`The puclic key hash associated is: ${publicKeyHash}.`)
+}).catch(error => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+```
+
+```js live noInline
+//import { Tezos } from '@taquito/taquito'
+//import { InMemorySigner } from '@taquito/signer'
+
+InMemorySigner.fromSecretKey('spsk2Fiz7sGP5fNMJrokp6ynTa4bcFbsRhw58FHXbNf5ProDNFJ5Xq')
+.then( theSigner => {
+  Tezos.setProvider({signer: theSigner})
+  //We can access the public key hash
+  return Tezos.signer.publicKeyHash()
+}).then( publicKeyHash => {
+  println(`The puclic key hash associated is: ${publicKeyHash}.`)
+}).catch(error => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+```
+
+When required, Taquito offers the `b58cencode` function allowing to encode the secret in base58. The parameters of the function are the secret, that can be a `hex string` or an `Uint8Array`, and the desired prefix. Here is an example with a `hex string`:
+
+```js live noInline
+//import { b58cencode, prefix, Prefix } from '@taquito/utils';
+//import { Tezos } from '@taquito/taquito'
+//import { InMemorySigner } from '@taquito/signer'
+
+const b58encodedSecret = b58cencode('7c842c15c8b0c8fd228e6cb5302a50201f41642dd36b699003fb3c857920bc9d', prefix[Prefix.P2SK]);
+println(`The secret is encoded in base58 and the prefix "p2sk" is added to it: ${b58encodedSecret}.`)
+//We take the encoded secret to configure the signer.
+InMemorySigner.fromSecretKey(b58encodedSecret)
+.then( theSigner => {
+  Tezos.setProvider({signer: theSigner})
+  //We can access the public key hash
+  return Tezos.signer.publicKeyHash()
+}).then( publicKeyHash => {
+  println(`The puclic key hash associated is: ${publicKeyHash}.`)
+}).catch(error => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+
+```
 
 ### Loading an encrypted private key with a passphrase
 
@@ -39,6 +94,50 @@ import { InMemorySigner } from '@taquito/signer'
 import { Tezos } from '@taquito/taquito'
 
 Tezos.setProvider({signer: await InMemorySigner.fromSecretKey('your_private_key', 'your_passphrase')})
+```
+
+Here are three examples with encrypted private keys where the passphrase used is `test`:
+
+```js live noInline
+//import { Tezos } from '@taquito/taquito'
+//import { InMemorySigner } from '@taquito/signer'
+
+InMemorySigner.fromSecretKey('edesk1GXwWmGjXiLHBKxGBxwmNvG21vKBh6FBxc4CyJ8adQQE2avP5vBB57ZUZ93Anm7i4k8RmsHaPzVAvpnHkFF', 'test')
+.then( theSigner => {
+  Tezos.setProvider({signer: theSigner})
+  //We can access the public key hash
+  return Tezos.signer.publicKeyHash()
+}).then( publicKeyHash => {
+  println(`The puclic key hash associated is: ${publicKeyHash}.`)
+}).catch(error => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+```
+
+```js live noInline
+//import { Tezos } from '@taquito/taquito'
+//import { InMemorySigner } from '@taquito/signer'
+
+InMemorySigner.fromSecretKey('spesk24UQkAiJk8X6AufNtRv1WWPp2BAssEgmijCTQPMgUXweSKPmLdbyAjPmCG1pR2dC9P5UZZVeZcb7zVodUHZ', 'test')
+.then( theSigner => {
+  Tezos.setProvider({signer: theSigner})
+  //We can access the public key hash
+  return Tezos.signer.publicKeyHash()
+}).then( publicKeyHash => {
+  println(`The puclic key hash associated is: ${publicKeyHash}.`)
+}).catch(error => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+```
+
+```js live noInline
+//import { Tezos } from '@taquito/taquito'
+//import { InMemorySigner } from '@taquito/signer'
+
+InMemorySigner.fromSecretKey('p2esk28hoUE2J88QNFj2aDX2pjzL7wcVh2g8tkEwtWWguby9M3FHUgSbzvF2Sd7wQ4Kd8crFwvto6gF3otcBuo4T', 'test')
+.then( theSigner => {
+  Tezos.setProvider({signer: theSigner})
+  //We can access the public key hash
+  return Tezos.signer.publicKeyHash()
+}).then( publicKeyHash => {
+  println(`The puclic key hash associated is: ${publicKeyHash}.`)
+}).catch(error => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 ### Using a testnet faucet key
@@ -88,7 +187,9 @@ importKey(
 
 If you configure taquito this way, you will now be able to use every function that needs signing support.
 
-`Note: Operation will be signed automatically using the signer (no prompt)`
+:::note
+Operation will be signed automatically using the signer (no prompt)
+:::
 
 ### A simple factory multiple keys/wallets
 

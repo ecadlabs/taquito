@@ -159,6 +159,8 @@ const unpairRe = /^UNP[PAI]{2,}R$/;
 const cadrRe = /^C[AD]{2,}R$/;
 const setCadrRe = /^SET_C[AD]+R$/;
 const mapCadrRe = /^MAP_C[AD]+R$/;
+const diipRe = /^DI{2,}P$/;
+const duupRe = /^DU+P$/;
 
 export function expandMacros(ex: Prim): Expr {
     function mayRename(annots?: string[]): Prim[] {
@@ -318,43 +320,6 @@ export function expandMacros(ex: Prim): Expr {
             break;
 
         // Syntactic conveniences
-        case "DUP":
-            if (ex.args === undefined) {
-                return ex;
-            }
-
-            if (assertArgs(ex, 1) && assertIntArg(ex, ex.args[0])) {
-                const n = parseInt(ex.args[0].int, 10);
-
-                if (n === 1) {
-                    return [mkPrim({ prim: "DUP", annots: ex.annots })];
-
-                } else if (n === 2) {
-                    return [
-                        {
-                            prim: "DIP",
-                            args: [[mkPrim({ prim: "DUP", annots: ex.annots })]],
-                        },
-                        { prim: "SWAP" },
-                    ];
-
-                } else {
-                    return [
-                        {
-                            prim: "DIP",
-                            args: [
-                                { int: String(n - 1) },
-                                [mkPrim({ prim: "DUP", annots: ex.annots })],
-                            ],
-                        },
-                        {
-                            prim: "DIG",
-                            args: [{ int: String(n) }],
-                        },
-                    ];
-                }
-            }
-            break;
 
         case "IF_SOME":
             if (assertArgs(ex, 2)) {
@@ -508,6 +473,61 @@ export function expandMacros(ex: Prim): Expr {
 
             return parseSetMapCadr(ex, ex.prim.slice(5, ex.prim.length - 1), [], term);
         }
+    }
+
+    // Expand deprecated DI...IP to [DIP n]
+    if (diipRe.test(ex.prim)) {
+        if (assertArgs(ex, 1)) {
+            let n = 0;
+            while (ex.prim[1 + n] === "I") { n++ }
+            return mkPrim({ prim: "DIP", args: [{ int: String(n) }, ex.args[0]] });
+        }
+    }
+
+    // Expand modern DUP n or deprecated DU...UP
+    if (duupRe.test(ex.prim)) {
+        let n = 0;
+        while (ex.prim[1 + n] === "U") { n++ }
+
+        if (n === 1) {
+            if (ex.args === undefined) {
+                return ex; // skip
+            }
+            if (assertArgs(ex, 1) && assertIntArg(ex, ex.args[0])) {
+                n = parseInt(ex.args[0].int, 10);
+            }
+        } else {
+            assertArgs(ex, 0);
+        }
+
+        if (n === 1) {
+            return [mkPrim({ prim: "DUP", annots: ex.annots })];
+
+        } else if (n === 2) {
+            return [
+                {
+                    prim: "DIP",
+                    args: [[mkPrim({ prim: "DUP", annots: ex.annots })]],
+                },
+                { prim: "SWAP" },
+            ];
+
+        } else {
+            return [
+                {
+                    prim: "DIP",
+                    args: [
+                        { int: String(n - 1) },
+                        [mkPrim({ prim: "DUP", annots: ex.annots })],
+                    ],
+                },
+                {
+                    prim: "DIG",
+                    args: [{ int: String(n) }],
+                },
+            ];
+        }
+
     }
 
     return ex;

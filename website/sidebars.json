@@ -11,7 +11,8 @@
                 "set_delegate",
                 "smartcontracts",
                 "estimate",
-                "validators"
+                "validators",
+                "maps_bigmaps"
             ]
         },
         {
@@ -20,6 +21,21 @@
             "items": [
                 "inmemory_signer",
                 "tezbridge_signer"
+            ]
+        },
+        {
+            "type": "category",
+            "label": "Advanced",
+            "items": [
+                "complex_parameters",
+                "storage_annotations"
+            ]
+        },
+        {
+            "type": "category",
+            "label": "How to",
+            "items": [
+                "drain_account"
             ]
         },
         {

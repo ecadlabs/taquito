@@ -335,6 +335,15 @@ describe('Macros', () => {
     expect(m).toStrictEqual(e);
   });
 
+  it('DUUP', () => {
+    const macro = '{ DUUP }';
+    const expanded = '{ { DIP { DUP } ; SWAP } }';
+    const p = new Parser({ expandMacros: true });
+    const m = p.parseMichelineExpression(macro);
+    const e = p.parseMichelineExpression(expanded);
+    expect(m).toStrictEqual(e);
+  });
+
   it('DUP 3', () => {
     const macro = '{ DUP 3 }';
     const expanded = '{ { DIP 2 { DUP } ; DIG 3 } }';
@@ -561,6 +570,15 @@ describe('Macros', () => {
                 PAIR %a %@ } } ;
         CAR @%% ;
         PAIR %@ %@ } }`;
+    const p = new Parser({ expandMacros: true });
+    const m = p.parseMichelineExpression(macro);
+    const e = p.parseMichelineExpression(expanded);
+    expect(m).toStrictEqual(e);
+  });
+
+  it('DIIP', () => {
+    const macro = '{ DIIP { ASSERT } }';
+    const expanded = `{ DIP 2 { { IF {} { { UNIT ; FAILWITH } } } } }`;
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);

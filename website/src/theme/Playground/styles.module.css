@@ -26,6 +26,7 @@
 }
 
 .playgroundPreview {
+  white-space: pre-wrap;
   border: 1px solid #f0f0f0;
   border-bottom-left-radius: var(--ifm-global-radius);
   border-bottom-right-radius: var(--ifm-global-radius);
