@@ -69,13 +69,11 @@ function assertArgs<N extends number>(ex: Prim, n: N):
  */
 export function assertMichelsonInstruction(ex: Expr): ex is MichelsonInstruction {
    if (Array.isArray(ex)) {
-      let i = 0;
       for (const n of ex) {
          if (!Array.isArray(n) && !isPrim(n)) {
             throw new MichelsonValidationError(ex, "sequence or prim expected");
          }
          assertMichelsonInstruction(n);
-         i++;
       }
       return true;
    }
@@ -141,6 +139,12 @@ export function assertMichelsonInstruction(ex: Expr): ex is MichelsonInstruction
          case "ITER":
          case "LOOP":
          case "LOOP_LEFT":
+            /* istanbul ignore else */
+            if (assertArgs(ex, 1)) {
+               assertMichelsonInstruction(ex.args[0]);
+            }
+            break;
+
          case "CREATE_CONTRACT":
             /* istanbul ignore else */
             if (assertArgs(ex, 1)) {
@@ -317,7 +321,6 @@ export function assertMichelsonData(ex: Expr): ex is MichelsonData {
 
    if (Array.isArray(ex)) {
       let mapElts = 0;
-      let i = 0;
       for (const n of ex) {
          if (isPrim(n) && n.prim === "Elt") {
             /* istanbul ignore else */
@@ -329,7 +332,6 @@ export function assertMichelsonData(ex: Expr): ex is MichelsonData {
          } else {
             assertMichelsonData(n);
          }
-         i++;
       }
 
       if (mapElts !== 0 && mapElts !== ex.length) {
@@ -386,10 +388,8 @@ export function assertMichelsonData(ex: Expr): ex is MichelsonData {
 export function assertMichelsonContract(ex: Expr): ex is MichelsonContract {
    /* istanbul ignore else */
    if (assertSeq(ex) && ex.length === 3 && assertPrim(ex[0]) && assertPrim(ex[1]) && assertPrim(ex[2])) {
-
       const p = [ex[0].prim, ex[1].prim, ex[2].prim].sort();
       if (p[0] === "code" && p[1] === "parameter" && p[2] === "storage") {
-         let i = 0;
          for (const n of ex as Prim[]) {
             /* istanbul ignore else */
             if (assertArgs(n, 1)) {
@@ -406,7 +406,6 @@ export function assertMichelsonContract(ex: Expr): ex is MichelsonContract {
                      assertMichelsonType(n.args[0]);
                }
             }
-            i++;
          }
       } else {
          throw new MichelsonValidationError(ex, "valid Michelson script expected");

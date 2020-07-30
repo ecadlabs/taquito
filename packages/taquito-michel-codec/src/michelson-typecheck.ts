@@ -1362,18 +1362,30 @@ export function contractSection<T extends "parameter" | "storage" | "code">(cont
     throw new MichelsonError(contract, `missing contract section: ${section}`);
 }
 
-export function contractEntryPoint(contract: MichelsonContract | MichelsonType, ep?: string): MichelsonType | null {
-    const parameter = Array.isArray(contract) ? contractSection(contract, "parameter").args[0] : contract;
+export function contractEntryPoint(src: MichelsonContract | MichelsonType, ep?: string): MichelsonType | null {
+    ep = ep || "%default";
+    let parameter: MichelsonType;
 
-    function lookup(parameter: MichelsonType, ep?: string): MichelsonType | null {
+    if (Array.isArray(src)) {
+        const sec = contractSection(src, "parameter");
+        const a = unpackAnnotations(sec);
+        if (a.f && a.f[0] === ep) {
+            return sec.args[0];
+        }
+        parameter = sec.args[0];
+    } else {
+        parameter = src;
+    }
+
+    function lookup(parameter: MichelsonType, ep: string): MichelsonType | null {
         const a = unpackAnnotations(parameter);
-        if (a.f && a.f[0] === (ep || "%default")) {
+        if (a.f && a.f[0] === ep) {
             return parameter;
         } else if (parameter.prim === "or") {
             const left = lookup(parameter.args[0], ep);
             const right = lookup(parameter.args[1], ep);
             if (left !== null && right !== null) {
-                throw new MichelsonError(contract, `duplicate entrypoint: ${ep}`);
+                throw new MichelsonError(src, `duplicate entrypoint: ${ep}`);
             } else {
                 return left || right;
             }
@@ -1383,16 +1395,14 @@ export function contractEntryPoint(contract: MichelsonContract | MichelsonType, 
     }
 
     const entrypoint = lookup(parameter, ep);
-
-    return entrypoint !== null ? entrypoint :
-        ep === undefined || ep === "%default" ? parameter : null;
+    return entrypoint !== null ? entrypoint : ep === "%default" ? parameter : null;
 }
 
 // Contract validation
 
 export function assertContractValid(contract: MichelsonContract, ctx?: Context): void {
     const parameter = contractSection(contract, "parameter").args[0];
-    assertTypeAnnotationsValid(parameter);
+    assertTypeAnnotationsValid(parameter, true);
 
     const storage = contractSection(contract, "storage").args[0];
     assertTypeAnnotationsValid(storage);
@@ -1456,13 +1466,11 @@ export function functionType(inst: MichelsonInstruction, stack: MichelsonType[],
 export function assertTypesEqual<T1 extends MichelsonType | MichelsonType[], T2 extends T1>(a: T1, b: T2, mode: TypeEqualityMode = TypeEqualityMode.Strict): void {
     if (Array.isArray(a)) {
         // type guards don't work for parametrized generic types
-        const aa = a as MichelsonType[];
-        const bb = b as MichelsonType[];
-        for (let i = 0; i < aa.length; i++) {
-            assertTypeAnnotationsValid(aa[i]);
+        for (const v of a as MichelsonType[]) {
+            assertTypeAnnotationsValid(v);
         }
-        for (let i = 0; i < bb.length; i++) {
-            assertTypeAnnotationsValid(bb[i]);
+        for (const v of b as MichelsonType[]) {
+            assertTypeAnnotationsValid(v);
         }
     } else {
         assertTypeAnnotationsValid(a as MichelsonType);
