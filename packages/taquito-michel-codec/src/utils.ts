@@ -1,7 +1,8 @@
-import { Prim, Expr } from "./micheline";
+import { Prim, Expr, sourceReference } from "./micheline";
 import { MichelsonUnaryInstructionId, MichelsonInstructionId, MichelsonStackType } from "./michelson-types";
 import { decodeBase58Check } from "./base58";
 import { emitMicheline } from "./micheline-emitter";
+import { InstructionTrace } from "./michelson-typecheck";
 
 export type Tuple<N extends number, T> = N extends 1 ? [T] :
     N extends 2 ? [T, T] :
@@ -272,7 +273,27 @@ export function formatStack(s: MichelsonStackType): string {
     let i = 0;
     for (const v of s) {
         const ann = unpackAnnotations(v);
-        ret += `[${i++}${ann.v ? "/" + ann.v[0] : ""}]: ${emitMicheline(v)}\n`;
+        if (ret !== "") {
+            ret += "\n";
+        }
+        ret += `[${i++}${ann.v ? "/" + ann.v[0] : ""}]: ${emitMicheline(v)}`;
     }
     return ret;
+}
+
+export function traceDumpFunc(blocks: boolean, cb: (s: string) => void): (v: InstructionTrace) => void {
+    return (v: InstructionTrace) => {
+        if (Array.isArray(v) && !blocks) {
+            return;
+        }
+        const macro = v.op[sourceReference]?.macro;
+
+        cb(`${macro ? "Macro" : "Op"}: ${macro ? emitMicheline(macro) + " / " : ""}${emitMicheline(v.op)}
+Input:
+${formatStack(v.in)}
+Output:
+${formatStack(v.out)}
+
+`);
+    };
 }

@@ -24,7 +24,8 @@ const isHex = new RegExp("[0-9a-fA-F]");
 export interface Token {
     t: TokenType;
     v: string;
-    offset: number;
+    first: number;
+    last: number;
 }
 
 export function* scan(src: string, scanComments = false): Generator<Token, void> {
@@ -46,7 +47,7 @@ export function* scan(src: string, scanComments = false): Generator<Token, void>
             while (i < src.length && isIdent.test(src[i])) {
                 i++;
             }
-            yield { t: Literal.Ident, v: src.slice(start, i), offset: start };
+            yield { t: Literal.Ident, v: src.slice(start, i), first: start, last: i };
         } else if (src.length - i > 1 && src.substr(i, 2) === "0x") {
             // Bytes
             i += 2;
@@ -56,7 +57,7 @@ export function* scan(src: string, scanComments = false): Generator<Token, void>
             if (((i - start) & 1) !== 0) {
                 throw new ScanError(src, i, "Bytes literal length is expected to be power of two");
             }
-            yield { t: Literal.Bytes, v: src.slice(start, i), offset: start };
+            yield { t: Literal.Bytes, v: src.slice(start, i), first: start, last: i };
         } else if (isDigit.test(s) || s === "-") {
             // Number
             if (s === "-") {
@@ -69,7 +70,7 @@ export function* scan(src: string, scanComments = false): Generator<Token, void>
             if (ii === i) {
                 throw new ScanError(src, i, "Number literal is too short");
             }
-            yield { t: Literal.Number, v: src.slice(start, i), offset: start };
+            yield { t: Literal.Number, v: src.slice(start, i), first: start, last: i };
         } else if (s === "\"") {
             // String
             i++;
@@ -85,7 +86,7 @@ export function* scan(src: string, scanComments = false): Generator<Token, void>
                 throw new ScanError(src, i, "Unterminated string literal");
             }
             i++;
-            yield { t: Literal.String, v: src.slice(start, i), offset: start };
+            yield { t: Literal.String, v: src.slice(start, i), first: start, last: i };
         } else if (s === "#") {
             // Comment
             i++;
@@ -93,7 +94,7 @@ export function* scan(src: string, scanComments = false): Generator<Token, void>
                 i++;
             }
             if (scanComments) {
-                yield { t: Literal.Comment, v: src.slice(start, i), offset: start };
+                yield { t: Literal.Comment, v: src.slice(start, i), first: start, last: i };
             }
         } else if (src.length - i > 1 && src.substr(i, 2) === "/*") {
             // C style comment
@@ -106,11 +107,11 @@ export function* scan(src: string, scanComments = false): Generator<Token, void>
             }
             i += 2;
             if (scanComments) {
-                yield { t: Literal.Comment, v: src.slice(start, i), offset: start };
+                yield { t: Literal.Comment, v: src.slice(start, i), first: start, last: i };
             }
         } else if (s === "(" || s === ")" || s === "{" || s === "}" || s === ";") {
             i++;
-            yield { t: s, v: s, offset: i };
+            yield { t: s, v: s, first: start, last: i };
         } else {
             throw new ScanError(src, i, `Invalid character at offset ${i}: \`${s}'`);
         }

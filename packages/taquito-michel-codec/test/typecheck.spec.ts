@@ -160,7 +160,7 @@ describe('Typecheck', () => {
                 { "prim": "nat" }
             ]
         };
-        assertTypesEqual(pair0, pair1, [], TypeEqualityMode.Loose);
+        assertTypesEqual(pair0, pair1, TypeEqualityMode.Loose);
     });
 
     it('contractEntrypoint', () => {
