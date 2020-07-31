@@ -1,47 +1,36 @@
 {
-    "docs": [
-        {
-            "type": "category",
-            "label": "General",
-            "items": [
-                "quick_start",
-                "boilerplate",
-                "making_transfers",
-                "originate",
-                "set_delegate",
-                "smartcontracts",
-                "estimate",
-                "validators",
-                "maps_bigmaps"
-            ]
-        },
-        {
-            "type": "category",
-            "label": "Signer",
-            "items": [
-                "inmemory_signer",
-                "tezbridge_signer"
-            ]
-        },
-        {
-            "type": "category",
-            "label": "Advanced",
-            "items": [
-                "complex_parameters",
-                "storage_annotations"
-            ]
-        },
-        {
-            "type": "category",
-            "label": "How to",
-            "items": [
-                "drain_account"
-            ]
-        },
-        {
-            "type": "link",
-            "label": "TypeDoc Reference",
-            "href": "https://tezostaquito.io/typedoc"
-        }
-    ]
+  "docs": [
+    {
+      "type": "category",
+      "label": "General",
+      "items": [
+        "quick_start",
+        "boilerplate",
+        "wallet_API",
+        "making_transfers",
+        "originate",
+        "set_delegate",
+        "smartcontracts",
+        "estimate",
+        "validators",
+        "maps_bigmaps",
+        "web3js_taquito"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Signer",
+      "items": ["inmemory_signer", "tezbridge_signer"]
+    },
+    {
+      "type": "category",
+      "label": "Advanced",
+      "items": ["complex_parameters", "storage_annotations"]
+    },
+    {
+      "type": "link",
+      "label": "TypeDoc Reference",
+      "href": "https://tezostaquito.io/typedoc"
+    }
+  ]
 }
