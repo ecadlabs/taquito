@@ -136,7 +136,7 @@ export type MichelsonData<T extends MichelsonType = MichelsonType> =
     T extends MichelsonTypePair<infer A1, infer A1> ? DataX<"Pair", [MichelsonData<A1>, MichelsonData<A1>]> :
     T extends MichelsonTypeOr<infer A1, infer A2> ? DataX<"Left", [MichelsonData<A1>]> | DataX<"Right", [MichelsonData<A2>]> :
     T extends MichelsonTypeLambda ? MichelsonInstruction :
-    T extends MichelsonTypeSet<infer A> ? DataList<A>[] :
+    T extends MichelsonTypeSet<infer A> ? DataList<A> :
     T extends MichelsonTypeMap<infer A1, infer A2> | MichelsonTypeBigMap<infer A1, infer A2> ? EltList<A1, A2> :
     never;
 

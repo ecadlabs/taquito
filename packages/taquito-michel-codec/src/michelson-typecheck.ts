@@ -1400,7 +1400,7 @@ export function contractEntryPoint(src: MichelsonContract | MichelsonType, ep?: 
 
 // Contract validation
 
-export function assertContractValid(contract: MichelsonContract, ctx?: Context): void {
+export function assertContractValid(contract: MichelsonContract, ctx?: Context): MichelsonStackType {
     const parameter = contractSection(contract, "parameter").args[0];
     assertTypeAnnotationsValid(parameter, true);
 
@@ -1419,7 +1419,8 @@ export function assertContractValid(contract: MichelsonContract, ctx?: Context):
     const ret = functionTypeInternal(code, [arg], { ...ctx, ...{ contract } });
 
     if ("failed" in ret) {
-        throw new MichelsonInstructionError(code, ret, `contract fails with ${ret.failed.prim} error type`);
+        // throw new MichelsonInstructionError(code, ret, `contract fails with ${ret.failed.prim} error type`);
+        return ret;
     }
 
     const expected: MichelsonType = {
@@ -1439,6 +1440,8 @@ export function assertContractValid(contract: MichelsonContract, ctx?: Context):
             throw err;
         }
     }
+
+    return ret;
 }
 
 // Exported wrapper functions

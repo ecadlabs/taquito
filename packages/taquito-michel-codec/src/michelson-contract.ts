@@ -1,11 +1,11 @@
 import {
     MichelsonContract, MichelsonContractSection, MichelsonType,
-    MichelsonData, MichelsonInstruction
+    MichelsonData, MichelsonInstruction, MichelsonStackType
 } from "./michelson-types";
 import {
     assertContractValid, contractSection,
     contractEntryPoint, assertDataValid,
-    MichelsonStackType, assertTypeAnnotationsValid,
+    assertTypeAnnotationsValid,
     InstructionTrace, Context, functionType
 } from "./michelson-typecheck";
 import { Parser } from "./micheline-parser";
@@ -17,10 +17,11 @@ export interface ContractOptions {
 
 export class Contract {
     private ctx: Context;
+    public readonly output: MichelsonStackType;
 
     constructor(public readonly contract: MichelsonContract, opt?: ContractOptions) {
         this.ctx = { contract, ...opt };
-        assertContractValid(contract, this.ctx);
+        this.output = assertContractValid(contract, this.ctx);
     }
 
     static parse(src: string | object, opt?: ContractOptions): Contract {

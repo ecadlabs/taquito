@@ -1,8 +1,7 @@
 import { Contract } from "../src/michelson-contract";
 import { MichelsonError, formatError } from "../src/utils";
-import { inspect } from "util";
 
-describe('Typecheck mini scenarios', () => {
+describe('Mini scenarios', () => {
     it("authentication", () => {
         const src = `/*
     
@@ -38,7 +37,7 @@ describe('Typecheck mini scenarios', () => {
             Contract.parse(src);
         } catch (err) {
             if (err instanceof MichelsonError) {
-                console.log(inspect(err, false, null));
+                console.log(formatError(err));
             }
             throw err;
         }
@@ -80,7 +79,7 @@ describe('Typecheck mini scenarios', () => {
             Contract.parse(src);
         } catch (err) {
             if (err instanceof MichelsonError) {
-                console.log(inspect(err, false, null));
+                console.log(formatError(err));
             }
             throw err;
         }
@@ -132,7 +131,7 @@ describe('Typecheck mini scenarios', () => {
             Contract.parse(src);
         } catch (err) {
             if (err instanceof MichelsonError) {
-                console.log(inspect(err, false, null));
+                console.log(formatError(err));
             }
             throw err;
         }
@@ -176,7 +175,7 @@ describe('Typecheck mini scenarios', () => {
             Contract.parse(src);
         } catch (err) {
             if (err instanceof MichelsonError) {
-                console.log(inspect(err, false, null));
+                console.log(formatError(err));
             }
             throw err;
         }
@@ -201,7 +200,7 @@ describe('Typecheck mini scenarios', () => {
             Contract.parse(src);
         } catch (err) {
             if (err instanceof MichelsonError) {
-                console.log(inspect(err, false, null));
+                console.log(formatError(err));
             }
             throw err;
         }
@@ -221,7 +220,7 @@ describe('Typecheck mini scenarios', () => {
             Contract.parse(src);
         } catch (err) {
             if (err instanceof MichelsonError) {
-                console.log(inspect(err, false, null));
+                console.log(formatError(err));
             }
             throw err;
         }
@@ -237,7 +236,7 @@ describe('Typecheck mini scenarios', () => {
             Contract.parse(src);
         } catch (err) {
             if (err instanceof MichelsonError) {
-                console.log(inspect(err, false, null));
+                console.log(formatError(err));
             }
             throw err;
         }
@@ -267,7 +266,7 @@ describe('Typecheck mini scenarios', () => {
             Contract.parse(src);
         } catch (err) {
             if (err instanceof MichelsonError) {
-                console.log(inspect(err, false, null));
+                console.log(formatError(err));
             }
             throw err;
         }
@@ -355,7 +354,7 @@ describe('Typecheck mini scenarios', () => {
             Contract.parse(src);
         } catch (err) {
             if (err instanceof MichelsonError) {
-                console.log(inspect(err, false, null));
+                console.log(formatError(err));
             }
             throw err;
         }
@@ -395,7 +394,7 @@ describe('Typecheck mini scenarios', () => {
             Contract.parse(src);
         } catch (err) {
             if (err instanceof MichelsonError) {
-                console.log(inspect(err, false, null));
+                console.log(formatError(err));
             }
             throw err;
         }
@@ -430,7 +429,7 @@ describe('Typecheck mini scenarios', () => {
             Contract.parse(src);
         } catch (err) {
             if (err instanceof MichelsonError) {
-                console.log(inspect(err, false, null));
+                console.log(formatError(err));
             }
             throw err;
         }
@@ -448,7 +447,7 @@ describe('Typecheck mini scenarios', () => {
             Contract.parse(src);
         } catch (err) {
             if (err instanceof MichelsonError) {
-                console.log(inspect(err, false, null));
+                console.log(formatError(err));
             }
             throw err;
         }
@@ -472,7 +471,7 @@ describe('Typecheck mini scenarios', () => {
             Contract.parse(src);
         } catch (err) {
             if (err instanceof MichelsonError) {
-                console.log(inspect(err, false, null));
+                console.log(formatError(err));
             }
             throw err;
         }
@@ -543,7 +542,7 @@ describe('Typecheck mini scenarios', () => {
             Contract.parse(src);
         } catch (err) {
             if (err instanceof MichelsonError) {
-                console.log(inspect(err, false, null));
+                console.log(formatError(err));
             }
             throw err;
         }
@@ -602,7 +601,7 @@ describe('Typecheck mini scenarios', () => {
             Contract.parse(src);
         } catch (err) {
             if (err instanceof MichelsonError) {
-                console.log(inspect(err, false, null));
+                console.log(formatError(err));
             }
             throw err;
         }
@@ -692,7 +691,7 @@ describe('Typecheck mini scenarios', () => {
             Contract.parse(src);
         } catch (err) {
             if (err instanceof MichelsonError) {
-                console.log(inspect(err, false, null));
+                console.log(formatError(err));
             }
             throw err;
         }

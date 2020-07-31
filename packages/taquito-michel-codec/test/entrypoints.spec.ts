@@ -2,7 +2,7 @@ import { Contract } from "../src/michelson-contract";
 import { MichelsonError } from "../src/utils";
 import { inspect } from "util";
 
-describe('Typecheck entrypoints', () => {
+describe('Entrypoints', () => {
     it("big_map_entrypoints", () => {
         const src = `storage
       (pair (big_map string nat) (big_map string nat)) ;

@@ -2,7 +2,7 @@ import { Contract } from "../src/michelson-contract";
 import { MichelsonError } from "../src/utils";
 import { inspect } from "util";
 
-describe('Typecheck attic', () => {
+describe('Attic', () => {
     it("accounts", () => {
         const src = `# This is a very simple accounts system.
 # (Left key) initializes or deposits into an account

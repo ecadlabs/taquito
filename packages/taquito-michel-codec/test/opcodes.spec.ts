@@ -2,7 +2,7 @@ import { Contract } from "../src/michelson-contract";
 import { MichelsonError } from "../src/utils";
 import { inspect } from "util";
 
-describe('Typecheck opcodes', () => {
+describe('Opcodes', () => {
     it("abs", () => {
         const src = `parameter nat;
 storage unit;
