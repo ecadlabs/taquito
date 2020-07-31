@@ -1,4 +1,4 @@
-import { Expr, Prim } from "./micheline";
+import { Expr, Prim, sourceReference } from "./micheline";
 
 export interface FormatOptions {
     /**
@@ -55,9 +55,14 @@ function isMultiline(node: Prim): boolean {
     return false;
 }
 
-function emitExpr(node: Expr, f: Formatter): string {
+function emitExpr(node: Expr, f: Formatter, foldMacros: boolean): string {
+    const macro = node[sourceReference]?.macro;
+    if (foldMacros && macro) {
+        return emitExpr(macro, f, foldMacros);
+    }
+
     if (Array.isArray(node)) {
-        return emitSeq(node, f);
+        return emitSeq(node, f, foldMacros);
 
     } else if ("string" in node) {
         return JSON.stringify(node.string);
@@ -84,9 +89,9 @@ function emitExpr(node: Expr, f: Formatter): string {
             const multiline = isMultiline(node);
             for (const a of node.args) {
                 if (multiline) {
-                    ret += f.lfsp + f.indent(1) + emitExpr(a, f.down(1));
+                    ret += f.lfsp + f.indent(1) + emitExpr(a, f.down(1), foldMacros);
                 } else {
-                    ret += " " + emitExpr(a, f);
+                    ret += " " + emitExpr(a, f, foldMacros);
                 }
             }
         }
@@ -94,7 +99,7 @@ function emitExpr(node: Expr, f: Formatter): string {
     }
 }
 
-function emitSeq(node: Expr[], f: Formatter): string {
+function emitSeq(node: Expr[], f: Formatter, foldMacros: boolean): string {
     let ret = "{" + f.lf;
     let i = node.length;
     for (const el of node) {
@@ -112,14 +117,14 @@ function emitSeq(node: Expr[], f: Formatter): string {
                 const multiline = isMultiline(el);
                 for (const a of el.args) {
                     if (multiline) {
-                        ret += f.lfsp + f.indent(2) + emitExpr(a, f.down(2));
+                        ret += f.lfsp + f.indent(2) + emitExpr(a, f.down(2), foldMacros);
                     } else {
-                        ret += " " + emitExpr(a, f);
+                        ret += " " + emitExpr(a, f, foldMacros);
                     }
                 }
             }
         } else {
-            ret += emitExpr(el, f.down(1));
+            ret += emitExpr(el, f.down(1), foldMacros);
         }
 
         ret += (i > 1 ? ";" + f.lfsp : f.lf);
@@ -133,11 +138,11 @@ function emitSeq(node: Expr[], f: Formatter): string {
  * @param expr An AST node
  * @param opt Options
  */
-export function emitMicheline(expr: Expr, opt?: FormatOptions): string {
+export function emitMicheline(expr: Expr, opt?: FormatOptions, foldMacros = false): string {
     // tslint:disable-next-line: strict-type-predicates
     if (typeof expr !== "object") {
         throw new TypeError(`object type was expected, got ${typeof expr} instead`);
     }
 
-    return emitExpr(expr, new Formatter(opt));
+    return emitExpr(expr, new Formatter(opt), foldMacros);
 }

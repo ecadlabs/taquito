@@ -2,7 +2,7 @@ import { Prim, Expr, sourceReference } from "./micheline";
 import { MichelsonUnaryInstructionId, MichelsonInstructionId, MichelsonStackType } from "./michelson-types";
 import { decodeBase58Check } from "./base58";
 import { emitMicheline } from "./micheline-emitter";
-import { InstructionTrace } from "./michelson-typecheck";
+import { InstructionTrace, MichelsonInstructionError, MichelsonTypeError } from "./michelson-typecheck";
 
 export type Tuple<N extends number, T> = N extends 1 ? [T] :
     N extends 2 ? [T, T] :
@@ -29,6 +29,10 @@ export class MichelsonError<T extends Expr = Expr> extends Error {
         super(message);
         Object.setPrototypeOf(this, MichelsonError.prototype);
     }
+}
+
+export function isMichelsonError<T extends Expr = Expr>(err: any): err is MichelsonError<T> {
+    return err instanceof MichelsonError;
 }
 
 // Ad hoc big integer parser
@@ -269,16 +273,11 @@ export function formatStack(s: MichelsonStackType): string {
     if ("failed" in s) {
         return `[FAILED: ${emitMicheline(s.failed)}]`;
     }
-    let ret = "";
-    let i = 0;
-    for (const v of s) {
+
+    return s.map((v, i) => {
         const ann = unpackAnnotations(v);
-        if (ret !== "") {
-            ret += "\n";
-        }
-        ret += `[${i++}${ann.v ? "/" + ann.v[0] : ""}]: ${emitMicheline(v)}`;
-    }
-    return ret;
+        return `[${i}${ann.v ? "/" + ann.v[0] : ""}]: ${emitMicheline(v)}`;
+    }).join("\n");
 }
 
 export function traceDumpFunc(blocks: boolean, cb: (s: string) => void): (v: InstructionTrace) => void {
@@ -288,12 +287,33 @@ export function traceDumpFunc(blocks: boolean, cb: (s: string) => void): (v: Ins
         }
         const macro = v.op[sourceReference]?.macro;
 
-        cb(`${macro ? "Macro" : "Op"}: ${macro ? emitMicheline(macro) + " / " : ""}${emitMicheline(v.op)}
+        const msg = `${macro ? "Macro" : "Op"}: ${macro ? emitMicheline(macro, undefined, true) + " / " : ""}${emitMicheline(v.op)}
 Input:
 ${formatStack(v.in)}
 Output:
 ${formatStack(v.out)}
-
-`);
+`;
+        cb(msg);
     };
+}
+
+export function formatError(err: MichelsonError): string {
+    if (err instanceof MichelsonInstructionError) {
+        const macro = err.val[sourceReference]?.macro;
+        return `${macro ? "Macro" : "Op"}: ${macro ? emitMicheline(macro, undefined, true) + " / " : ""}${emitMicheline(err.val)}
+Stack:
+${formatStack(err.stackState)}
+`;
+    } else if (err instanceof MichelsonTypeError) {
+        const type = Array.isArray(err.val) ?
+            "[" + err.val.map((v, i) => `[${i}]: ${emitMicheline(v)}`).join("; ") + "]" :
+            emitMicheline(err.val);
+
+        return `Type: ${type}
+${err.data ? `Data: ${emitMicheline(err.data)}
+` : ""}
+`;
+    } else {
+        return `Value: ${emitMicheline(err.val)}`;
+    }
 }

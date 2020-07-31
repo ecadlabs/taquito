@@ -531,7 +531,7 @@ export function expandMacros(ex: Prim): Expr {
     if (diipRe.test(ex.prim)) {
         if (assertArgs(ex, 1)) {
             let n = 0;
-            while (ex.prim[1 + n] === "I") { n++ }
+            while (ex.prim[1 + n] === "I") { n++; }
             return mkPrim({ prim: "DIP", args: [{ int: String(n) }, ex.args[0]] });
         }
     }
@@ -539,7 +539,7 @@ export function expandMacros(ex: Prim): Expr {
     // Expand modern DUP n or deprecated DU...UP
     if (duupRe.test(ex.prim)) {
         let n = 0;
-        while (ex.prim[1 + n] === "U") { n++ }
+        while (ex.prim[1 + n] === "U") { n++; }
 
         if (n === 1) {
             if (ex.args === undefined) {
