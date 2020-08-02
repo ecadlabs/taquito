@@ -3,7 +3,7 @@ import {
     MichelsonType, MichelsonData, MichelsonComparableType, MichelsonMapElt,
     MichelsonTypeId, MichelsonSimpleComparableTypeId, MichelsonInstruction,
     MichelsonTypeOption, MichelsonContract,
-    MichelsonContractSection, MichelsonStackType
+    MichelsonContractSection, MichelsonStackType, MichelsonTypeMap, MichelsonTypeBigMap
 } from "./michelson-types";
 import {
     unpackAnnotations, MichelsonError, isNatural,
@@ -523,11 +523,11 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
         return stack.slice(n, typeIds.length + n) as StackType<T>;
     }
 
-    function ensureComparableType(type: MichelsonType) {
+    function ensureComparableType(type: MichelsonType): type is MichelsonComparableType {
         if (Object.prototype.hasOwnProperty.call(simpleComparableTypeTable, type.prim)) {
-            return;
+            return true;
         } else if (type.prim === "pair" && Object.prototype.hasOwnProperty.call(simpleComparableTypeTable, type.args[0].prim)) {
-            ensureComparableType(type.args[1]);
+            return ensureComparableType(type.args[1]);
         } else {
             throw new MichelsonInstructionError(instruction, stack, `${instruction.prim}: comparable type expected: ${type}`);
         }
@@ -713,15 +713,27 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
         case "UPDATE":
             {
                 const s0 = args(0, null, ["bool", "option"]);
-                ensureComparableType(s0[0]);
-                if (s0[1].prim === "bool") {
-                    const s2 = args(2, ["set"]);
-                    ensureTypesEqual(s0[0], s2[0].args[0]);
-                    ret = [annotateVar(s2[0]), ...stack.slice(3)];
+                if (ensureComparableType(s0[0])) {
+                    if (s0[1].prim === "bool") {
+                        const s1 = args(2, ["set"]);
+                        ensureTypesEqual<MichelsonComparableType, MichelsonComparableType>(s0[0], s1[0].args[0]);
+                        ret = [annotateVar({
+                            prim: "set",
+                            args: [annotate(s0[0], { t: null })],
+                        }), ...stack.slice(3)];
+                    } else {
+                        const s1 = args(2, ["map", "big_map"]);
+                        ensureTypesEqual<MichelsonComparableType, MichelsonComparableType>(s0[0], s1[0].args[0]);
+                        ret = [annotateVar({
+                            prim: s1[0].prim,
+                            args: [
+                                annotate(s0[0], { t: null }),
+                                annotate(s0[1].args[0], { t: null }),
+                            ],
+                        }), ...stack.slice(3)];
+                    }
                 } else {
-                    const s2 = args(2, ["map", "big_map"]);
-                    ensureTypesEqual(s0[0], s2[0].args[0]);
-                    ret = [annotateVar(s2[0]), ...stack.slice(3)];
+                    ret = []; // never
                 }
                 break;
             }
