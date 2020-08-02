@@ -1,5 +1,5 @@
 import { MichelsonType, MichelsonData } from "../src/michelson-types";
-import { assertDataValid, assertTypesEqual, TypeEqualityMode, contractEntryPoint } from "../src/michelson-typecheck";
+import { assertDataValid, assertTypesEqual, contractEntryPoint } from "../src/michelson-typecheck";
 
 describe('Typecheck', () => {
     it('assertDataValid: string', () => {
@@ -143,24 +143,6 @@ describe('Typecheck', () => {
             ]
         };
         expect(() => assertTypesEqual(pair0, pair1)).toThrow();
-    });
-
-    it('assertTypesEqual: loose', () => {
-        const pair0: MichelsonType = {
-            "prim": "pair",
-            "args": [
-                { "prim": "int", "annots": ["%i"] },
-                { "prim": "nat", "annots": ["%n"] }
-            ]
-        };
-        const pair1: MichelsonType = {
-            "prim": "pair",
-            "args": [
-                { "prim": "int", "annots": ["%i"] },
-                { "prim": "nat" }
-            ]
-        };
-        assertTypesEqual(pair0, pair1, TypeEqualityMode.Loose);
     });
 
     it('contractEntrypoint', () => {

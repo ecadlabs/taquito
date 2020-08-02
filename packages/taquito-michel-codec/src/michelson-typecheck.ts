@@ -3,7 +3,7 @@ import {
     MichelsonType, MichelsonData, MichelsonComparableType, MichelsonMapElt,
     MichelsonTypeId, MichelsonSimpleComparableTypeId, MichelsonInstruction,
     MichelsonTypeOption, MichelsonContract,
-    MichelsonContractSection, MichelsonStackType, MichelsonTypeMap, MichelsonTypeBigMap
+    MichelsonContractSection, MichelsonStackType
 } from "./michelson-types";
 import {
     unpackAnnotations, MichelsonError, isNatural,
@@ -46,26 +46,18 @@ export class MichelsonInstructionError extends MichelsonError<MichelsonInstructi
     }
 }
 
-export enum TypeEqualityMode {
-    Field,
-    Strict,
-    Loose
-}
-
-function assertScalarTypesEqual(a: MichelsonType, b: MichelsonType, mode: TypeEqualityMode): void {
+function assertScalarTypesEqual(a: MichelsonType, b: MichelsonType, field: boolean = false): void {
     if (a.prim !== b.prim) {
         throw new MichelsonTypeError(a, undefined, `types mismatch: ${a.prim} != ${b.prim}`);
     }
 
-    if (mode !== TypeEqualityMode.Loose) {
-        const ann = [unpackAnnotations(a), unpackAnnotations(b)];
-        if (ann[0].t && ann[1].t && ann[0].t[0] !== ann[1].t[0]) {
-            throw new MichelsonTypeError(a, undefined, `${a.prim}: type names mismatch: ${ann[0].t[0]} != ${ann[1].t[0]}`);
-        }
-        if (mode === TypeEqualityMode.Field &&
-            (ann[0].f && ann[1].f && ann[0].f[0] !== ann[1].f[0])) {
-            throw new MichelsonTypeError(a, undefined, `${a.prim}: field names mismatch: ${ann[0].f[0]} != ${ann[1].f}`);
-        }
+    const ann = [unpackAnnotations(a), unpackAnnotations(b)];
+    if (ann[0].t && ann[1].t && ann[0].t[0] !== ann[1].t[0]) {
+        throw new MichelsonTypeError(a, undefined, `${a.prim}: type names mismatch: ${ann[0].t[0]} != ${ann[1].t[0]}`);
+    }
+    if (field &&
+        (ann[0].f && ann[1].f && ann[0].f[0] !== ann[1].f[0])) {
+        throw new MichelsonTypeError(a, undefined, `${a.prim}: field names mismatch: ${ann[0].f[0]} != ${ann[1].f}`);
     }
 
     switch (a.prim) {
@@ -73,24 +65,24 @@ function assertScalarTypesEqual(a: MichelsonType, b: MichelsonType, mode: TypeEq
         case "list":
         case "contract":
         case "set":
-            assertScalarTypesEqual(a.args[0], (b as typeof a).args[0], mode === TypeEqualityMode.Loose ? TypeEqualityMode.Loose : TypeEqualityMode.Strict);
+            assertScalarTypesEqual(a.args[0], (b as typeof a).args[0]);
             break;
 
         case "pair":
         case "or":
-            assertScalarTypesEqual(a.args[0], (b as typeof a).args[0], mode === TypeEqualityMode.Loose ? TypeEqualityMode.Loose : TypeEqualityMode.Field);
-            assertScalarTypesEqual(a.args[1], (b as typeof a).args[1], mode === TypeEqualityMode.Loose ? TypeEqualityMode.Loose : TypeEqualityMode.Field);
+            assertScalarTypesEqual(a.args[0], (b as typeof a).args[0], true);
+            assertScalarTypesEqual(a.args[1], (b as typeof a).args[1], true);
             break;
 
         case "lambda":
         case "map":
         case "big_map":
-            assertScalarTypesEqual(a.args[0], (b as typeof a).args[0], mode === TypeEqualityMode.Loose ? TypeEqualityMode.Loose : TypeEqualityMode.Strict);
-            assertScalarTypesEqual(a.args[1], (b as typeof a).args[1], mode === TypeEqualityMode.Loose ? TypeEqualityMode.Loose : TypeEqualityMode.Strict);
+            assertScalarTypesEqual(a.args[0], (b as typeof a).args[0]);
+            assertScalarTypesEqual(a.args[1], (b as typeof a).args[1]);
     }
 }
 
-function assertTypesEqualInternal<T1 extends MichelsonType | MichelsonType[], T2 extends T1>(a: T1, b: T2, mode: TypeEqualityMode = TypeEqualityMode.Strict): void {
+function assertTypesEqualInternal<T1 extends MichelsonType | MichelsonType[], T2 extends T1>(a: T1, b: T2, field: boolean = false): void {
     if (Array.isArray(a)) {
         // type guards don't work for parametrized generic types
         const aa = a as MichelsonType[];
@@ -99,10 +91,10 @@ function assertTypesEqualInternal<T1 extends MichelsonType | MichelsonType[], T2
             throw new MichelsonTypeError(aa, undefined, `stack length mismatch: ${aa.length} != ${bb.length}`);
         }
         for (let i = 0; i < aa.length; i++) {
-            assertScalarTypesEqual(aa[i], bb[i], mode);
+            assertScalarTypesEqual(aa[i], bb[i], field);
         }
     } else {
-        assertScalarTypesEqual(a as MichelsonType, b as MichelsonType, mode);
+        assertScalarTypesEqual(a as MichelsonType, b as MichelsonType, field);
     }
 }
 
@@ -1133,10 +1125,11 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
             }
 
         case "CAST":
+            instructionAnnotations({});
             const s = args(0, null);
             assertTypeAnnotationsValid(instruction.args[0]);
-            assertTypesEqualInternal(instruction.args[0], s[0], TypeEqualityMode.Loose);
-            ret = stack;
+            assertTypesEqualInternal(instruction.args[0], s[0]);
+            ret = [instruction.args[0], ...stack.slice(1)];
             break;
 
         case "IF_NONE":
@@ -1478,7 +1471,7 @@ export function functionType(inst: MichelsonInstruction, stack: MichelsonType[],
     return functionTypeInternal(inst, stack, ctx || null);
 }
 
-export function assertTypesEqual<T1 extends MichelsonType | MichelsonType[], T2 extends T1>(a: T1, b: T2, mode: TypeEqualityMode = TypeEqualityMode.Strict): void {
+export function assertTypesEqual<T1 extends MichelsonType | MichelsonType[], T2 extends T1>(a: T1, b: T2, field: boolean = false): void {
     if (Array.isArray(a)) {
         // type guards don't work for parametrized generic types
         for (const v of a as MichelsonType[]) {
@@ -1491,5 +1484,5 @@ export function assertTypesEqual<T1 extends MichelsonType | MichelsonType[], T2 
         assertTypeAnnotationsValid(a as MichelsonType);
         assertTypeAnnotationsValid(b as MichelsonType);
     }
-    assertTypesEqualInternal(a, b, mode);
+    assertTypesEqualInternal(a, b, field);
 }
