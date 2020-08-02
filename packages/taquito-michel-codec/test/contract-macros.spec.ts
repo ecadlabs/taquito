@@ -459,5 +459,106 @@ describe("Contract macros", () => {
             throw err;
         }
     });
+
+    // Some additional tests --eugene
+    it("UNPAPAPAIR", () => {
+        const src = `parameter unit ;
+storage
+  (pair (pair (pair (nat %f0) (string %f1)) (pair (int %f2) (mutez %f3)))
+        (pair (pair (string %f4) (int %f5)) (pair (nat %f6) (list %f7 int)))) ;
+code 
+    {
+        CDR ;
+        DUP;
+        UNPAPAPAIR @v0 @v1 @% @%;
+        SWAP;
+        PAIR @v2 %@ %@;
+        SWAP;
+        PAIR @v3 %@ %@;
+        SWAP;
+        PAIR @v4 %@ %@;
+        CAST (pair (list %f7 int) (pair %v3 (nat %f6) (pair %v2 (pair %v1 (string %f4) (int %f5)) (pair %v0 (pair (nat %f0) (string %f1)) (pair (int %f2) (mutez %f3))))));
+        DROP;
+        NIL operation ;
+        PAIR 
+    }`;
+        try {
+            Contract.parse(src);
+        } catch (err) {
+            if (err instanceof MichelsonError) {
+                console.log(formatError(err));
+            }
+            throw err;
+        }
+    });
+
+    it("UNPAPAPAIR", () => {
+        const src = `parameter unit ;
+storage
+  (pair (pair (pair (nat %f0) (string %f1)) (pair (int %f2) (mutez %f3)))
+        (pair (pair (string %f4) (int %f5)) (pair (nat %f6) (list %f7 int)))) ;
+code 
+    {
+        CDR ;
+        DUP;
+        UNPPPAIIPAIR @v0 @v1 @v2 @v3 @v4;
+        SWAP;
+        PAIR @v2 %@ %@;
+        SWAP;
+        PAIR @v3 %@ %@;
+        SWAP;
+        PAIR @v4 %@ %@;
+        SWAP;
+        PAIR @v5 %@ %@;
+        CAST (pair (pair (nat %f6) (list %f7 int)) (pair %v4 (pair (string %f4) (int %f5)) (pair %v3 (pair (int %f2) (mutez %f3)) (pair %v2 (string %v1) (nat %v0)))));
+        DROP;
+        NIL operation ;
+        PAIR 
+    }
+`;
+        try {
+            Contract.parse(src);
+        } catch (err) {
+            if (err instanceof MichelsonError) {
+                console.log(formatError(err));
+            }
+            throw err;
+        }
+    });
+
+    it("PPPAIPAIPAPAIR", () => {
+        const src = `parameter unit ;
+storage
+  (pair (pair 
+            (pair (nat %f0) (string %f1))
+            (pair (int %f2) (mutez %f3)))
+        (pair
+            (int %f4)
+            (pair (nat %f5) (list %f6 int)))) ;
+code 
+    {
+        CDR;
+        DROP;
+        NIL @f6 int;
+        PUSH @f5 nat 0;
+        PUSH @f4 int 0;
+        PUSH @f3 mutez 0;
+        PUSH @f2 int 0;
+        PUSH @f1 string "";
+        PUSH @f0 nat 0;
+        PPPAIPAIPAPAIR %f0 %@ %f2 %@ %f4 %@ @stor;
+        NIL operation ;
+        PAIR 
+    }
+`;
+        try {
+            Contract.parse(src);
+        } catch (err) {
+            if (err instanceof MichelsonError) {
+                console.log(formatError(err));
+            }
+            throw err;
+        }
+    });
 });
 
