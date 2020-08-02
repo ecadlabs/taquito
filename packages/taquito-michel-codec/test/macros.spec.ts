@@ -403,9 +403,7 @@ describe('Macros', () => {
 
   it('UNPPAIPAIR', () => {
     const macro = '{ UNPPAIPAIR }';
-    const expanded = `{ { { DUP ; CAR ; DIP { CDR } } ;
-    { DUP ; CAR ; DIP { CDR } } ;
-    DIP 2 { { DUP ; CAR ; DIP { CDR } } } } }`;
+    const expanded = `{{{DUP; CAR; DIP {CDR}}; DIP {{DUP; CAR; DIP {CDR}}}; {DUP; CAR; DIP {CDR}}}}`;
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
@@ -425,22 +423,7 @@ describe('Macros', () => {
 
   it('UNPPPAIIPAIR', () => {
     const macro = '{ UNPPPAIIPAIR }';
-    const expanded = `{ { { DUP ; CAR ; DIP { CDR } } ;
-    { DUP ; CAR ; DIP { CDR } } ;
-    { DUP ; CAR ; DIP { CDR } } ;
-    DIP 3 { { DUP ; CAR ; DIP { CDR } } } } }`;
-    const p = new Parser({ expandMacros: true });
-    const m = p.parseMichelineExpression(macro);
-    const e = p.parseMichelineExpression(expanded);
-    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
-  });
-
-  it('UNPAPAPAIR', () => {
-    const macro = '{ UNPPPAIIPAIR }';
-    const expanded = `{ { { DUP ; CAR ; DIP { CDR } } ;
-    { DUP ; CAR ; DIP { CDR } } ;
-    { DUP ; CAR ; DIP { CDR } } ;
-    DIP 2 { { DUP ; CAR ; DIP { CDR } } } } }`;
+    const expanded = `{{{DUP; CAR; DIP {CDR}}; DIP {{DUP; CAR; DIP {CDR}}}; {DUP; CAR; DIP {CDR}}; {DUP; CAR; DIP {CDR}}}}`;
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
@@ -449,10 +432,7 @@ describe('Macros', () => {
 
   it('UNPAPPAIPAIR', () => {
     const macro = '{ UNPAPPAIPAIR }';
-    const expanded = `{ { { DUP ; CAR ; DIP { CDR } } ;
-    DIP { { DUP ; CAR ; DIP { CDR } } } ;
-    DIP { { DUP ; CAR ; DIP { CDR } } } ;
-    DIP 3 { { DUP ; CAR ; DIP { CDR } } } } }`;
+    const expanded = `{{{DUP; CAR; DIP {CDR}}; DIP {{DUP; CAR; DIP {CDR}}}; DIP 2 {{DUP; CAR; DIP {CDR}}}; DIP {{DUP; CAR; DIP {CDR}}}}}`;
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);

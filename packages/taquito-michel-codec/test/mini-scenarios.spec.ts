@@ -1,9 +1,10 @@
 import { Contract } from "../src/michelson-contract";
-import { MichelsonError, formatError } from "../src/utils";
+import { MichelsonError } from "../src/utils";
+import { formatError } from "../src/formatters";
 
 describe('Mini scenarios', () => {
-    it("authentication", () => {
-        const src = `/*
+  it("authentication", () => {
+    const src = `/*
     
     This contract is an example of using a cryptographic signature to
     handle authentication. A public key is stored, and only the owner of
@@ -33,18 +34,18 @@ describe('Mini scenarios', () => {
         DIP { PUSH nat 1; ADD };
         PAPAIR
       }`;
-        try {
-            Contract.parse(src);
-        } catch (err) {
-            if (err instanceof MichelsonError) {
-                console.log(formatError(err));
-            }
-            throw err;
-        }
-    });
+    try {
+      Contract.parse(src);
+    } catch (err) {
+      if (err instanceof MichelsonError) {
+        console.log(formatError(err));
+      }
+      throw err;
+    }
+  });
 
-    it("big_map_entrypoints", () => {
-        const src = `storage
+  it("big_map_entrypoints", () => {
+    const src = `storage
       (pair (big_map string nat) (big_map string nat)) ;
     parameter
       (or (unit %default)
@@ -75,18 +76,18 @@ describe('Mini scenarios', () => {
                          { DIP { UNPAIR } ; DIP { NONE nat } ; UPDATE }
                          { DIP { UNPAIR ; SWAP } ; DIP { NONE nat } ; UPDATE ; SWAP } } } ;
                PAIR ; NIL operation ; PAIR } }`;
-        try {
-            Contract.parse(src);
-        } catch (err) {
-            if (err instanceof MichelsonError) {
-                console.log(formatError(err));
-            }
-            throw err;
-        }
-    });
+    try {
+      Contract.parse(src);
+    } catch (err) {
+      if (err instanceof MichelsonError) {
+        console.log(formatError(err));
+      }
+      throw err;
+    }
+  });
 
-    it("big_map_magic", () => {
-        const src = `# this contracts handles two big_maps
+  it("big_map_magic", () => {
+    const src = `# this contracts handles two big_maps
     storage
       (or (pair (big_map string string) (big_map string string)) unit) ;
     parameter
@@ -127,18 +128,18 @@ describe('Mini scenarios', () => {
                            ITER { DIP { NONE string } ; UPDATE } ;
                            PAIR ; LEFT unit } }} } ;
            NIL operation ; PAIR }`;
-        try {
-            Contract.parse(src);
-        } catch (err) {
-            if (err instanceof MichelsonError) {
-                console.log(formatError(err));
-            }
-            throw err;
-        }
-    });
+    try {
+      Contract.parse(src);
+    } catch (err) {
+      if (err instanceof MichelsonError) {
+        console.log(formatError(err));
+      }
+      throw err;
+    }
+  });
 
-    it("create_contract", () => {
-        const src = `/*
+  it("create_contract", () => {
+    const src = `/*
     - param: None:
     
       Create a contract then perform a recursive call on Some [addr] where
@@ -171,18 +172,18 @@ describe('Mini scenarios', () => {
                CONTRACT string ; IF_SOME {} { FAIL } ;
                PUSH mutez 0 ; PUSH string "abcdefg" ; TRANSFER_TOKENS ;
                NIL operation; SWAP; CONS ; UNIT ; SWAP ; PAIR } } ;`;
-        try {
-            Contract.parse(src);
-        } catch (err) {
-            if (err instanceof MichelsonError) {
-                console.log(formatError(err));
-            }
-            throw err;
-        }
-    });
+    try {
+      Contract.parse(src);
+    } catch (err) {
+      if (err instanceof MichelsonError) {
+        console.log(formatError(err));
+      }
+      throw err;
+    }
+  });
 
-    it("create_contract_simple", () => {
-        const src = `parameter unit;
+  it("create_contract_simple", () => {
+    const src = `parameter unit;
     storage unit;
     code { CAR;
            PUSH string "foo";
@@ -196,18 +197,18 @@ describe('Mini scenarios', () => {
            NIL operation;
            PAIR;
          }`;
-        try {
-            Contract.parse(src);
-        } catch (err) {
-            if (err instanceof MichelsonError) {
-                console.log(formatError(err));
-            }
-            throw err;
-        }
-    });
+    try {
+      Contract.parse(src);
+    } catch (err) {
+      if (err instanceof MichelsonError) {
+        console.log(formatError(err));
+      }
+      throw err;
+    }
+  });
 
-    it("default_account", () => {
-        const src = `/*
+  it("default_account", () => {
+    const src = `/*
     Send 100 tz to the implicit account given as parameter.
     */
     
@@ -216,34 +217,34 @@ describe('Mini scenarios', () => {
     code {DIP{UNIT}; CAR; IMPLICIT_ACCOUNT;
           PUSH mutez 100000000; UNIT; TRANSFER_TOKENS;
           NIL operation; SWAP; CONS; PAIR}`;
-        try {
-            Contract.parse(src);
-        } catch (err) {
-            if (err instanceof MichelsonError) {
-                console.log(formatError(err));
-            }
-            throw err;
-        }
-    });
+    try {
+      Contract.parse(src);
+    } catch (err) {
+      if (err instanceof MichelsonError) {
+        console.log(formatError(err));
+      }
+      throw err;
+    }
+  });
 
-    it("hardlimit", () => {
-        const src = `parameter unit ;
+  it("hardlimit", () => {
+    const src = `parameter unit ;
     storage int ;
     code { # This contract stops accepting transactions after N incoming transactions
            CDR ; DUP ; PUSH int 0 ; CMPLT; IF {PUSH int -1 ; ADD} {FAIL};
            NIL operation ; PAIR} ;`;
-        try {
-            Contract.parse(src);
-        } catch (err) {
-            if (err instanceof MichelsonError) {
-                console.log(formatError(err));
-            }
-            throw err;
-        }
-    });
+    try {
+      Contract.parse(src);
+    } catch (err) {
+      if (err instanceof MichelsonError) {
+        console.log(formatError(err));
+      }
+      throw err;
+    }
+  });
 
-    it("lockup", () => {
-        const src = `parameter unit;
+  it("lockup", () => {
+    const src = `parameter unit;
     storage (pair timestamp (pair mutez address));
     code { CDR;                      # Ignore the parameter
            DUP;                      # Duplicate the storage
@@ -262,18 +263,18 @@ describe('Mini scenarios', () => {
            TRANSFER_TOKENS;          # Emit the transfer
            NIL operation; SWAP; CONS;# Make a singleton list of internal operations
            PAIR}                     # Pair up to meet the calling convention`;
-        try {
-            Contract.parse(src);
-        } catch (err) {
-            if (err instanceof MichelsonError) {
-                console.log(formatError(err));
-            }
-            throw err;
-        }
-    });
+    try {
+      Contract.parse(src);
+    } catch (err) {
+      if (err instanceof MichelsonError) {
+        console.log(formatError(err));
+      }
+      throw err;
+    }
+  });
 
-    it("multiple_en2", () => {
-        const src = `{ parameter unit ;
+  it("multiple_en2", () => {
+    const src = `{ parameter unit ;
       storage (option address) ;
       code { SENDER ;
              SELF ;
@@ -350,18 +351,18 @@ describe('Mini scenarios', () => {
                     DIP { SOME } ;
                     PAIR } }
            } }`;
-        try {
-            Contract.parse(src);
-        } catch (err) {
-            if (err instanceof MichelsonError) {
-                console.log(formatError(err));
-            }
-            throw err;
-        }
-    });
+    try {
+      Contract.parse(src);
+    } catch (err) {
+      if (err instanceof MichelsonError) {
+        console.log(formatError(err));
+      }
+      throw err;
+    }
+  });
 
-    it("multiple_entrypoints_counter", () => {
-        const src = `{ parameter unit ;
+  it("multiple_entrypoints_counter", () => {
+    const src = `{ parameter unit ;
       storage (option address) ;
       code { SENDER ; SELF ; ADDRESS ;
              IFCMPEQ
@@ -390,18 +391,18 @@ describe('Mini scenarios', () => {
                  DIP { SELF ; PUSH mutez 0 } ; TRANSFER_TOKENS ;
                  NIL operation ; SWAP ; CONS ; SWAP ; CONS ;
                  DIP { SOME } ; PAIR } } }`;
-        try {
-            Contract.parse(src);
-        } catch (err) {
-            if (err instanceof MichelsonError) {
-                console.log(formatError(err));
-            }
-            throw err;
-        }
-    });
+    try {
+      Contract.parse(src);
+    } catch (err) {
+      if (err instanceof MichelsonError) {
+        console.log(formatError(err));
+      }
+      throw err;
+    }
+  });
 
-    it("parameterized_multisig", () => {
-        const src = `storage (pair bool (pair (map nat (pair bool bool)) (pair key key)));
+  it("parameterized_multisig", () => {
+    const src = `storage (pair bool (pair (map nat (pair bool bool)) (pair key key)));
     parameter (or nat (pair signature nat));
     code { DUP; CAR; DIP{CDDR};       # Stack tangling
            IF_LEFT { DIP{DUP; CAR}; GET; # Get the value stored for that index
@@ -425,36 +426,36 @@ describe('Mini scenarios', () => {
                      # Update the stored value and finish off
                      UPDATE; PAIR; PUSH bool False; PAIR};
            NIL operation; PAIR }`;
-        try {
-            Contract.parse(src);
-        } catch (err) {
-            if (err instanceof MichelsonError) {
-                console.log(formatError(err));
-            }
-            throw err;
-        }
-    });
+    try {
+      Contract.parse(src);
+    } catch (err) {
+      if (err instanceof MichelsonError) {
+        console.log(formatError(err));
+      }
+      throw err;
+    }
+  });
 
-    it("replay", () => {
-        const src = `# This contract always fail because it tries to execute twice the same operation
+  it("replay", () => {
+    const src = `# This contract always fail because it tries to execute twice the same operation
     parameter unit ;
     storage unit ;
     code { CDR ; NIL operation ;
            SELF ; PUSH mutez 0 ; UNIT ; TRANSFER_TOKENS ;
            DUP ; DIP { CONS } ; CONS ;
            PAIR }`;
-        try {
-            Contract.parse(src);
-        } catch (err) {
-            if (err instanceof MichelsonError) {
-                console.log(formatError(err));
-            }
-            throw err;
-        }
-    });
+    try {
+      Contract.parse(src);
+    } catch (err) {
+      if (err instanceof MichelsonError) {
+        console.log(formatError(err));
+      }
+      throw err;
+    }
+  });
 
-    it("reveal_signed_preimage", () => {
-        const src = `parameter (pair bytes signature) ;
+  it("reveal_signed_preimage", () => {
+    const src = `parameter (pair bytes signature) ;
     storage (pair bytes key) ;
     code {
            #check that sha256(param.bytes) == storage.bytes
@@ -467,18 +468,18 @@ describe('Mini scenarios', () => {
            CDR ; DUP ; CDR ; HASH_KEY ; IMPLICIT_ACCOUNT ;
            BALANCE ; UNIT ; TRANSFER_TOKENS ;
            NIL operation ; SWAP ; CONS ; PAIR }`;
-        try {
-            Contract.parse(src);
-        } catch (err) {
-            if (err instanceof MichelsonError) {
-                console.log(formatError(err));
-            }
-            throw err;
-        }
-    });
+    try {
+      Contract.parse(src);
+    } catch (err) {
+      if (err instanceof MichelsonError) {
+        console.log(formatError(err));
+      }
+      throw err;
+    }
+  });
 
-    it("vote_for_delegate", () => {
-        const src = `parameter (option key_hash) ;
+  it("vote_for_delegate", () => {
+    const src = `parameter (option key_hash) ;
     storage (pair
                (pair %mgr1 (address %addr) (option %key key_hash))
                (pair %mgr2 (address %addr) (option %key key_hash))) ;
@@ -508,18 +509,18 @@ describe('Mini scenarios', () => {
                        NIL operation }}
                  { DROP ; NIL operation }} ;
            PAIR }`;
-        try {
-            Contract.parse(src);
-        } catch (err) {
-            if (err instanceof MichelsonError) {
-                console.log(formatError(err));
-            }
-            throw err;
-        }
-    });
+    try {
+      Contract.parse(src);
+    } catch (err) {
+      if (err instanceof MichelsonError) {
+        console.log(formatError(err));
+      }
+      throw err;
+    }
+  });
 
-    it("weather_insurance", () => {
-        const src = `parameter (pair (signature %signed_weather_data) (nat :rain %actual_level));
+  it("weather_insurance", () => {
+    const src = `parameter (pair (signature %signed_weather_data) (nat :rain %actual_level));
     # (pair (under_key over_key) (pair weather_service_key (pair rain_level days_in_future)))
     storage (pair (pair (address %under_key)
                         (address %over_key))
@@ -538,18 +539,18 @@ describe('Mini scenarios', () => {
            BALANCE; UNIT ; TRANSFER_TOKENS @trans.op; # Setup and execute transfer
            NIL operation ; SWAP ; CONS ;
            PAIR };`;
-        try {
-            Contract.parse(src);
-        } catch (err) {
-            if (err instanceof MichelsonError) {
-                console.log(formatError(err));
-            }
-            throw err;
-        }
-    });
+    try {
+      Contract.parse(src);
+    } catch (err) {
+      if (err instanceof MichelsonError) {
+        console.log(formatError(err));
+      }
+      throw err;
+    }
+  });
 
-    it("xcat", () => {
-        const src = `parameter (bytes);
+  it("xcat", () => {
+    const src = `parameter (bytes);
     storage (unit);
     code {
            # Extract parameter from initial stack.
@@ -597,18 +598,18 @@ describe('Mini scenarios', () => {
            NIL operation; SWAP; CONS;
            UNIT; SWAP; PAIR
          }`;
-        try {
-            Contract.parse(src);
-        } catch (err) {
-            if (err instanceof MichelsonError) {
-                console.log(formatError(err));
-            }
-            throw err;
-        }
-    });
+    try {
+      Contract.parse(src);
+    } catch (err) {
+      if (err instanceof MichelsonError) {
+        console.log(formatError(err));
+      }
+      throw err;
+    }
+  });
 
-    it("xcat_dapp", () => {
-        const src = `parameter (or
+  it("xcat_dapp", () => {
+    const src = `parameter (or
                  # First possible action is funding, to create an xcat
                  (pair %fund
                     (address %dest)
@@ -687,14 +688,14 @@ describe('Mini scenarios', () => {
                CONS; PAIR;
              }
          }`;
-        try {
-            Contract.parse(src);
-        } catch (err) {
-            if (err instanceof MichelsonError) {
-                console.log(formatError(err));
-            }
-            throw err;
-        }
-    });
+    try {
+      Contract.parse(src);
+    } catch (err) {
+      if (err instanceof MichelsonError) {
+        console.log(formatError(err));
+      }
+      throw err;
+    }
+  });
 });
 

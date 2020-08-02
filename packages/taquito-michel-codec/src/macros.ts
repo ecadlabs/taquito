@@ -34,7 +34,7 @@ function assertIntArg(ex: Prim, arg: Expr): arg is IntLiteral {
 
 type PT = [number, [string | null, string | null]];
 
-function parsePairExpr(p: Prim, expr: string, annotations: string[]): { r: PT[], n: number, an: number } {
+function parsePairUnpairExpr(p: Prim, expr: string, annotations: string[], agg: (l: PT[] | undefined, r: PT[] | undefined, top: PT) => PT[]): { r: PT[], n: number, an: number } {
     let i = 0;
     let ai = 0;
     const ann: [string | null, string | null] = [null, null];
@@ -47,7 +47,7 @@ function parsePairExpr(p: Prim, expr: string, annotations: string[]): { r: PT[],
     let c = expr[i++];
     switch (c) {
         case "P":
-            const { r, n, an } = parsePairExpr(p, expr.slice(i), annotations.slice(ai));
+            const { r, n, an } = parsePairUnpairExpr(p, expr.slice(i), annotations.slice(ai), agg);
             lexpr = r;
             i += n;
             ai += an;
@@ -69,7 +69,7 @@ function parsePairExpr(p: Prim, expr: string, annotations: string[]): { r: PT[],
     c = expr[i++];
     switch (c) {
         case "P":
-            const { r, n, an } = parsePairExpr(p, expr.slice(i), annotations.slice(ai));
+            const { r, n, an } = parsePairUnpairExpr(p, expr.slice(i), annotations.slice(ai), agg);
             rexpr = r.map<PT>(([v, a]) => [v + 1, a]);
             i += n;
             ai += an;
@@ -83,59 +83,7 @@ function parsePairExpr(p: Prim, expr: string, annotations: string[]): { r: PT[],
             throw new MacroError(p, `${p.prim}: unexpected character: ${c}`);
     }
 
-    return { r: [...(lexpr || []), ...(rexpr || []), [0, ann]], n: i, an: ai };
-}
-
-function parseUnpairExpr(p: Prim, expr: string, annotations: string[]): { r: PT[], n: number, an: number } {
-    let i = 0;
-    let ai = 0;
-    const ann: [string | null, string | null] = [null, null];
-
-    // Left expression
-    let lexpr: PT[] | undefined;
-    if (i === expr.length) {
-        throw new MacroError(p, `unexpected end: ${p.prim}`);
-    }
-    let c = expr[i++];
-    switch (c) {
-        case "P":
-            const { r, n, an } = parseUnpairExpr(p, expr.slice(i), annotations.slice(ai));
-            lexpr = r;
-            i += n;
-            ai += an;
-            break;
-        case "A":
-            if (ai !== annotations.length) {
-                ann[0] = annotations[ai++];
-            }
-            break;
-        default:
-            throw new MacroError(p, `${p.prim}: unexpected character: ${c}`);
-    }
-
-    // Right expression
-    let rexpr: PT[] | undefined;
-    if (i === expr.length) {
-        throw new MacroError(p, `unexpected end: ${p.prim}`);
-    }
-    c = expr[i++];
-    switch (c) {
-        case "P":
-            const { r, n, an } = parseUnpairExpr(p, expr.slice(i), annotations.slice(ai));
-            rexpr = r.map<PT>(([v, a]) => [v + 1, a]);
-            i += n;
-            ai += an;
-            break;
-        case "I":
-            if (ai !== annotations.length) {
-                ann[1] = annotations[ai++];
-            }
-            break;
-        default:
-            throw new MacroError(p, `${p.prim}: unexpected character: ${c}`);
-    }
-
-    return { r: [[0, ann], ...(rexpr || []), ...(lexpr || [])], n: i, an: ai };
+    return { r: agg(lexpr, rexpr, [0, ann]), n: i, an: ai };
 }
 
 function parseSetMapCadr(p: Prim, expr: string, vann: string[], term: { a: Expr, d: Expr }): Expr {
@@ -392,7 +340,7 @@ export function expandMacros(ex: Prim): Expr {
     if (pairRe.test(ex.prim)) {
         if (assertArgs(ex, 0)) {
             const { fields, rest } = filterAnnotations(ex.annots);
-            const { r } = parsePairExpr(ex, ex.prim.slice(1), fields);
+            const { r } = parsePairUnpairExpr(ex, ex.prim.slice(1), fields, (l, r, top) => [...(l || []), ...(r || []), top]);
 
             return r.map(([v, a], i) => {
                 const ann = [
@@ -412,7 +360,7 @@ export function expandMacros(ex: Prim): Expr {
     // UNPAPPAIIR macro
     if (unpairRe.test(ex.prim)) {
         if (assertArgs(ex, 0)) {
-            const { r } = parseUnpairExpr(ex, ex.prim.slice(3), ex.annots || []);
+            const { r } = parsePairUnpairExpr(ex, ex.prim.slice(3), ex.annots || [], (l, r, top) => [top, ...(r || []), ...(l || [])]);
             return r.map(([v, a]) => {
                 const leaf: Prim[] = [
                     { prim: "DUP" },

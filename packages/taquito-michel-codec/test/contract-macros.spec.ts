@@ -1,5 +1,6 @@
 import { Contract } from "../src/michelson-contract";
-import { MichelsonError, formatError } from "../src/utils";
+import { MichelsonError } from "../src/utils";
+import { formatError } from "../src/formatters";
 
 describe("Contract macros", () => {
     it("assert", () => {
