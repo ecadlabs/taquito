@@ -50,6 +50,9 @@ type TypePrim<PT extends MichelsonTypeId, AT extends MichelsonType[] = never> = 
 type Type0<PT extends MichelsonTypeId> = NoArgs<TypePrim<PT>>;
 type TypeX<PT extends MichelsonTypeId, AT extends MichelsonType[]> = ReqArgs<TypePrim<PT, AT>>;
 
+// Type subclasses
+// https://michelson.nomadic-labs.com/#types
+
 export type MichelsonSimpleComparableType =
     MichelsonTypeInt |
     MichelsonTypeNat |
@@ -61,7 +64,61 @@ export type MichelsonSimpleComparableType =
     MichelsonTypeTimestamp |
     MichelsonTypeAddress;
 
-export type MichelsonComparableType = MichelsonSimpleComparableType | MichelsonTypePair<MichelsonSimpleComparableType, MichelsonComparableType>;
+// C class
+export type MichelsonComparableType =
+    MichelsonSimpleComparableType |
+    MichelsonTypePair<MichelsonSimpleComparableType, MichelsonComparableType>;
+
+type MichelsonSimpleType =
+    MichelsonSimpleComparableType |
+    MichelsonTypeChainID |
+    MichelsonTypeKey |
+    MichelsonTypeLambda |
+    MichelsonTypeSet |
+    MichelsonTypeSignature |
+    MichelsonTypeUnit;
+
+// B, PA class
+export type MichelsonSerializableType =
+    MichelsonSimpleType |
+    MichelsonTypeContract |
+    MichelsonTypeList<MichelsonSerializableType> |
+    MichelsonTypeMap<MichelsonComparableType, MichelsonSerializableType> |
+    MichelsonTypeOption<MichelsonSerializableType> |
+    MichelsonTypeOr<MichelsonSerializableType, MichelsonSerializableType> |
+    MichelsonTypePair<MichelsonSerializableType, MichelsonSerializableType>;
+
+// PU class
+export type MichelsonPushableType =
+    MichelsonSimpleType |
+    MichelsonTypeList<MichelsonPushableType> |
+    MichelsonTypeMap<MichelsonComparableType, MichelsonPushableType> |
+    MichelsonTypeOption<MichelsonPushableType> |
+    MichelsonTypeOr<MichelsonPushableType, MichelsonPushableType> |
+    MichelsonTypePair<MichelsonPushableType, MichelsonPushableType>;
+
+// S class
+export type MichelsonStorableType =
+    MichelsonSimpleType |
+    MichelsonTypeList<MichelsonStorableType> |
+    MichelsonTypeMap<MichelsonComparableType, MichelsonStorableType> |
+    MichelsonTypeOption<MichelsonStorableType> |
+    MichelsonTypeOr<MichelsonStorableType, MichelsonStorableType> |
+    MichelsonTypePair<MichelsonStorableType, MichelsonStorableType> |
+    MichelsonTypeBigMap<MichelsonComparableType, MichelsonStorableType>;
+
+// PM class
+export type MichelsonPassableType =
+    MichelsonSimpleType |
+    MichelsonTypeContract |
+    MichelsonTypeList<MichelsonPassableType> |
+    MichelsonTypeMap<MichelsonComparableType, MichelsonPassableType> |
+    MichelsonTypeOption<MichelsonPassableType> |
+    MichelsonTypeOr<MichelsonPassableType, MichelsonPassableType> |
+    MichelsonTypePair<MichelsonPassableType, MichelsonPassableType> |
+    MichelsonTypeBigMap<MichelsonComparableType, MichelsonPassableType>;
+
+// Michelson types
 
 export type MichelsonTypeInt = Type0<"int">;
 export type MichelsonTypeNat = Type0<"nat">;
