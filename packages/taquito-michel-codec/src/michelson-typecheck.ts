@@ -471,6 +471,7 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
     if (Array.isArray(inst)) {
         let ret: MichelsonStackType = stack;
         let s = stack;
+        let i = 0;
         for (const op of inst) {
             const ft = functionTypeInternal(op, s, ctx);
             ret = ft;
@@ -478,6 +479,11 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
                 break;
             }
             s = ft;
+            i++;
+        }
+
+        if (("failed" in ret) && i !== inst.length - 1) {
+            throw new MichelsonInstructionError(inst, ret, "FAIL must appear in a tail position");
         }
 
         if (ctx?.traceCallback !== undefined) {
