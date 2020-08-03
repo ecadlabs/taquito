@@ -1,11 +1,11 @@
 import { Prim, Expr, IntLiteral } from "./micheline";
 import {
    Tuple, NoArgs, ReqArgs, unaryInstructionTable,
-   instructionTable, MichelsonError
+   instructionTable, MichelsonError, simpleComparableTypeTable
 } from "./utils";
 import {
    MichelsonInstruction, MichelsonType, MichelsonComparableType, MichelsonSimpleComparableType,
-   MichelsonSimpleComparableTypeId, MichelsonData, MichelsonContract
+   MichelsonData, MichelsonContract
 } from "./michelson-types";
 
 // Michelson validator
@@ -214,11 +214,6 @@ export function assertMichelsonInstruction(ex: Expr): ex is MichelsonInstruction
    }
    return true;
 }
-
-const simpleComparableTypeTable: Record<MichelsonSimpleComparableTypeId, boolean> = {
-   "int": true, "nat": true, "string": true, "bytes": true, "mutez": true,
-   "bool": true, "key_hash": true, "timestamp": true, "address": true,
-};
 
 function assertMichelsonSimpleComparableType(ex: Expr): ex is MichelsonSimpleComparableType {
    /* istanbul ignore else */

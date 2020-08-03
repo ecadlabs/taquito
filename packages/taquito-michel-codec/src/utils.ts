@@ -1,5 +1,5 @@
 import { Prim, Expr } from "./micheline";
-import { MichelsonUnaryInstructionId, MichelsonInstructionId } from "./michelson-types";
+import { MichelsonUnaryInstructionId, MichelsonInstructionId, MichelsonSimpleComparableTypeId } from "./michelson-types";
 import { decodeBase58Check } from "./base58";
 
 export type Tuple<N extends number, T> = N extends 1 ? [T] :
@@ -208,6 +208,11 @@ export const instructionTable: Record<MichelsonInstructionId, boolean> = Object.
     "IF_NONE": true, "IF_LEFT": true, "IF_CONS": true, "IF": true, "MAP": true, "ITER": true, "LOOP": true, "LOOP_LEFT": true, "DIP": true,
     "CREATE_CONTRACT": true, "PUSH": true, "EMPTY_SET": true, "EMPTY_MAP": true, "EMPTY_BIG_MAP": true, "LAMBDA": true,
 });
+
+export const simpleComparableTypeTable: Record<MichelsonSimpleComparableTypeId, boolean> = {
+    "int": true, "nat": true, "string": true, "bytes": true, "mutez": true,
+    "bool": true, "key_hash": true, "timestamp": true, "address": true,
+};
 
 export type TezosIDType = "BlockHash" | "OperationHash" | "OperationListHash" | "OperationListListHash" |
     "ProtocolHash" | "ContextHash" | "ED25519PublicKeyHash" | "SECP256K1PublicKeyHash" |

@@ -1,14 +1,14 @@
 import { StringLiteral, IntLiteral, Prim } from "./micheline";
 import {
     MichelsonType, MichelsonData, MichelsonComparableType, MichelsonMapElt,
-    MichelsonTypeId, MichelsonSimpleComparableTypeId, MichelsonInstruction,
+    MichelsonTypeId, MichelsonInstruction,
     MichelsonTypeOption, MichelsonContract,
     MichelsonContractSection, MichelsonStackType
 } from "./michelson-types";
 import {
     unpackAnnotations, MichelsonError, isNatural,
     LongInteger, parseBytes, compareBytes, isDecimal, instructionTable,
-    checkTezosID, tezosPrefix, UnpackedAnnotations, Nullable, UnpackAnnotationsOptions
+    checkTezosID, tezosPrefix, UnpackedAnnotations, Nullable, UnpackAnnotationsOptions, simpleComparableTypeTable
 } from "./utils";
 import { decodeBase58Check } from "./base58";
 
@@ -455,11 +455,6 @@ type StackType<T extends ((readonly MichelsonTypeId[]) | null)[]> =
     T extends TT3<infer T1, infer T2, infer T3> ? [MT<T1>, MT<T2>, MT<T3>] :
     T extends TT4<infer T1, infer T2, infer T3, infer T4> ? [MT<T1>, MT<T2>, MT<T3>, MT<T4>] :
     never;
-
-const simpleComparableTypeTable: Record<MichelsonSimpleComparableTypeId, boolean> = {
-    "int": true, "nat": true, "string": true, "bytes": true, "mutez": true,
-    "bool": true, "key_hash": true, "timestamp": true, "address": true,
-};
 
 export interface InstructionTrace {
     op: MichelsonInstruction;
