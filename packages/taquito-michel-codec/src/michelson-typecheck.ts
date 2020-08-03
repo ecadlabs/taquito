@@ -1,14 +1,13 @@
 import { StringLiteral, IntLiteral, Prim } from "./micheline";
 import {
-    MichelsonType, MichelsonData, MichelsonComparableType, MichelsonMapElt,
-    MichelsonTypeId, MichelsonInstruction,
+    MichelsonType, MichelsonData, MichelsonComparableType, MichelsonMapElt, MichelsonCode,
     MichelsonTypeOption, MichelsonContract,
     MichelsonContractSection, MichelsonStackType
 } from "./michelson-types";
 import {
     unpackAnnotations, MichelsonError, isNatural,
-    LongInteger, parseBytes, compareBytes, isDecimal, instructionTable,
-    checkTezosID, tezosPrefix, UnpackedAnnotations, Nullable, UnpackAnnotationsOptions, simpleComparableTypeTable
+    LongInteger, parseBytes, compareBytes, isDecimal, instructionIDs,
+    checkTezosID, tezosPrefix, UnpackedAnnotations, Nullable, UnpackAnnotationsOptions, simpleComparableTypeIDs
 } from "./utils";
 import { decodeBase58Check } from "./base58";
 
@@ -34,13 +33,13 @@ export class MichelsonTypeError extends MichelsonError<MichelsonType | Michelson
     }
 }
 
-export class MichelsonInstructionError extends MichelsonError<MichelsonInstruction> {
+export class MichelsonInstructionError extends MichelsonError<MichelsonCode> {
     /**
      * @param val Value of a type node caused the error
      * @param stackState Current stack state
      * @param message An error message
      */
-    constructor(val: MichelsonInstruction, public stackState: MichelsonStackType, message?: string) {
+    constructor(val: MichelsonCode, public stackState: MichelsonStackType, message?: string) {
         super(val, message);
         Object.setPrototypeOf(this, MichelsonInstructionError.prototype);
     }
@@ -222,13 +221,13 @@ function compareMichelsonData(t: MichelsonComparableType, a: MichelsonData, b: M
 }
 
 // Simplified version of assertMichelsonInstruction() for previously validated data
-function isFunction(d: MichelsonData): d is MichelsonInstruction[] {
+function isFunction(d: MichelsonData): d is MichelsonCode[] {
     if (!Array.isArray(d)) {
         return false;
     }
     for (const v of d) {
         if (!(Array.isArray(v) && isFunction(v) ||
-            ("prim" in v) && Object.prototype.hasOwnProperty.call(instructionTable, v.prim))) {
+            ("prim" in v) && Object.prototype.hasOwnProperty.call(instructionIDs, v.prim))) {
             return false;
         }
     }
@@ -443,13 +442,15 @@ function assertDataValidInternal(t: MichelsonType, d: MichelsonData, ctx: Contex
 
 // Code validation
 
-type TT1<T1 extends MichelsonTypeId[] | null> = [T1];
-type TT2<T1 extends MichelsonTypeId[] | null, T2 extends MichelsonTypeId[] | null> = [T1, T2];
-type TT3<T1 extends MichelsonTypeId[] | null, T2 extends MichelsonTypeId[] | null, T3 extends MichelsonTypeId[] | null> = [T1, T2, T3];
-type TT4<T1 extends MichelsonTypeId[] | null, T2 extends MichelsonTypeId[] | null, T3 extends MichelsonTypeId[] | null, T4 extends MichelsonTypeId[] | null> = [T1, T2, T3, T4];
-type MT<T extends readonly MichelsonTypeId[] | null> = MichelsonType<T extends readonly MichelsonTypeId[] ? T[number] : MichelsonTypeId>;
+type MichelsonTypeID = MichelsonType["prim"];
 
-type StackType<T extends ((readonly MichelsonTypeId[]) | null)[]> =
+type TT1<T1 extends MichelsonTypeID[] | null> = [T1];
+type TT2<T1 extends MichelsonTypeID[] | null, T2 extends MichelsonTypeID[] | null> = [T1, T2];
+type TT3<T1 extends MichelsonTypeID[] | null, T2 extends MichelsonTypeID[] | null, T3 extends MichelsonTypeID[] | null> = [T1, T2, T3];
+type TT4<T1 extends MichelsonTypeID[] | null, T2 extends MichelsonTypeID[] | null, T3 extends MichelsonTypeID[] | null, T4 extends MichelsonTypeID[] | null> = [T1, T2, T3, T4];
+type MT<T extends MichelsonTypeID[] | null> = MichelsonType<T extends MichelsonTypeID[] ? T[number] : MichelsonTypeID>;
+
+type StackType<T extends (MichelsonTypeID[] | null)[]> =
     T extends TT1<infer T1> ? [MT<T1>] :
     T extends TT2<infer T1, infer T2> ? [MT<T1>, MT<T2>] :
     T extends TT3<infer T1, infer T2, infer T3> ? [MT<T1>, MT<T2>, MT<T3>] :
@@ -457,12 +458,12 @@ type StackType<T extends ((readonly MichelsonTypeId[]) | null)[]> =
     never;
 
 export interface InstructionTrace {
-    op: MichelsonInstruction;
+    op: MichelsonCode;
     in: MichelsonType[];
     out: MichelsonStackType;
 }
 
-function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[], ctx: Context | null): MichelsonStackType {
+function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: Context | null): MichelsonStackType {
     if (Array.isArray(inst)) {
         let ret: MichelsonStackType = stack;
         let s = stack;
@@ -495,7 +496,7 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
     const instruction = inst; // Make it const for type guarding
 
     // make sure the stack has enough number of arguments of specific types
-    function args<T extends ((readonly MichelsonTypeId[]) | null)[]>(n: number, ...typeIds: T): StackType<T> {
+    function args<T extends (MichelsonTypeID[] | null)[]>(n: number, ...typeIds: T): StackType<T> {
         if (stack.length < typeIds.length + n) {
             throw new MichelsonInstructionError(instruction, stack, `${instruction.prim}: stack must have at least ${typeIds.length} element(s)`);
         }
@@ -517,9 +518,9 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
     }
 
     function ensureComparableType(type: MichelsonType): type is MichelsonComparableType {
-        if (Object.prototype.hasOwnProperty.call(simpleComparableTypeTable, type.prim)) {
+        if (Object.prototype.hasOwnProperty.call(simpleComparableTypeIDs, type.prim)) {
             return true;
-        } else if (type.prim === "pair" && Object.prototype.hasOwnProperty.call(simpleComparableTypeTable, type.args[0].prim)) {
+        } else if (type.prim === "pair" && Object.prototype.hasOwnProperty.call(simpleComparableTypeIDs, type.args[0].prim)) {
             return ensureComparableType(type.args[1]);
         } else {
             throw new MichelsonInstructionError(instruction, stack, `${instruction.prim}: comparable type expected: ${type}`);
@@ -1343,7 +1344,7 @@ function functionTypeInternal(inst: MichelsonInstruction, stack: MichelsonType[]
             }
 
         default:
-            throw new MichelsonError((instruction as MichelsonInstruction), `unexpected instruction: ${(instruction as Prim).prim}`);
+            throw new MichelsonError((instruction as MichelsonCode), `unexpected instruction: ${(instruction as Prim).prim}`);
     }
 
 
@@ -1457,7 +1458,7 @@ export function assertDataValid(t: MichelsonType, d: MichelsonData, ctx?: Contex
     assertDataValidInternal(t, d, ctx || null);
 }
 
-export function functionType(inst: MichelsonInstruction, stack: MichelsonType[], ctx?: Context): MichelsonStackType {
+export function functionType(inst: MichelsonCode, stack: MichelsonType[], ctx?: Context): MichelsonStackType {
     for (const t of stack) {
         assertTypeAnnotationsValid(t);
     }

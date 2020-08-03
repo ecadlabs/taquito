@@ -1,5 +1,8 @@
 import { Prim, Expr } from "./micheline";
-import { MichelsonUnaryInstructionId, MichelsonInstructionId, MichelsonSimpleComparableTypeId } from "./michelson-types";
+import {
+    MichelsonComparableType, MichelsonNoArgInstruction,
+    MichelsonInstruction, MichelsonSimpleComparableType
+} from "./michelson-types";
 import { decodeBase58Check } from "./base58";
 
 export type Tuple<N extends number, T> = N extends 1 ? [T] :
@@ -193,7 +196,7 @@ export function unpackAnnotations(p: Prim, opt?: UnpackAnnotationsOptions): Unpa
     return { f: field, t: type, v: vars };
 }
 
-export const unaryInstructionTable: Record<MichelsonUnaryInstructionId, boolean> = {
+export const noArgInstructionIDs: Record<MichelsonNoArgInstruction["prim"], boolean> = {
     "DUP": true, "SWAP": true, "SOME": true, "UNIT": true, "PAIR": true, "CAR": true, "CDR": true,
     "CONS": true, "SIZE": true, "MEM": true, "GET": true, "UPDATE": true, "EXEC": true, "APPLY": true, "FAILWITH": true, "RENAME": true, "CONCAT": true, "SLICE": true,
     "PACK": true, "ADD": true, "SUB": true, "MUL": true, "EDIV": true, "ABS": true, "ISNAT": true, "INT": true, "NEG": true, "LSL": true, "LSR": true, "OR": true,
@@ -203,16 +206,18 @@ export const unaryInstructionTable: Record<MichelsonUnaryInstructionId, boolean>
     "SOURCE": true, "SENDER": true, "ADDRESS": true, "CHAIN_ID": true,
 };
 
-export const instructionTable: Record<MichelsonInstructionId, boolean> = Object.assign({}, unaryInstructionTable, {
+export const instructionIDs: Record<MichelsonInstruction["prim"], boolean> = Object.assign({}, noArgInstructionIDs, {
     "DROP": true, "DIG": true, "DUG": true, "NONE": true, "LEFT": true, "RIGHT": true, "NIL": true, "UNPACK": true, "CONTRACT": true, "CAST": true,
     "IF_NONE": true, "IF_LEFT": true, "IF_CONS": true, "IF": true, "MAP": true, "ITER": true, "LOOP": true, "LOOP_LEFT": true, "DIP": true,
     "CREATE_CONTRACT": true, "PUSH": true, "EMPTY_SET": true, "EMPTY_MAP": true, "EMPTY_BIG_MAP": true, "LAMBDA": true,
 });
 
-export const simpleComparableTypeTable: Record<MichelsonSimpleComparableTypeId, boolean> = {
+export const simpleComparableTypeIDs: Record<MichelsonSimpleComparableType["prim"], boolean> = {
     "int": true, "nat": true, "string": true, "bytes": true, "mutez": true,
     "bool": true, "key_hash": true, "timestamp": true, "address": true,
 };
+
+export const comparableTypeIDs: Record<MichelsonComparableType["prim"], boolean> = Object.assign({}, simpleComparableTypeIDs, { "pair": true });
 
 export type TezosIDType = "BlockHash" | "OperationHash" | "OperationListHash" | "OperationListListHash" |
     "ProtocolHash" | "ContextHash" | "ED25519PublicKeyHash" | "SECP256K1PublicKeyHash" |

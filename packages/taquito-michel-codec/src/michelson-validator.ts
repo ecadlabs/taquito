@@ -1,10 +1,10 @@
 import { Prim, Expr, IntLiteral } from "./micheline";
 import {
-   Tuple, NoArgs, ReqArgs, unaryInstructionTable,
-   instructionTable, MichelsonError, simpleComparableTypeTable
+   Tuple, NoArgs, ReqArgs, noArgInstructionIDs,
+   instructionIDs, MichelsonError, simpleComparableTypeIDs
 } from "./utils";
 import {
-   MichelsonInstruction, MichelsonType, MichelsonComparableType, MichelsonSimpleComparableType,
+   MichelsonCode, MichelsonType, MichelsonComparableType, MichelsonSimpleComparableType,
    MichelsonData, MichelsonContract
 } from "./michelson-types";
 
@@ -67,7 +67,7 @@ function assertArgs<N extends number>(ex: Prim, n: N):
  * This is a type guard function which either returns true of throws an exception.
  * @param ex An AST node
  */
-export function assertMichelsonInstruction(ex: Expr): ex is MichelsonInstruction {
+export function assertMichelsonInstruction(ex: Expr): ex is MichelsonCode {
    if (Array.isArray(ex)) {
       for (const n of ex) {
          if (!Array.isArray(n) && !isPrim(n)) {
@@ -79,7 +79,7 @@ export function assertMichelsonInstruction(ex: Expr): ex is MichelsonInstruction
    }
 
    if (assertPrim(ex)) {
-      if (Object.prototype.hasOwnProperty.call(unaryInstructionTable, ex.prim)) {
+      if (Object.prototype.hasOwnProperty.call(noArgInstructionIDs, ex.prim)) {
          assertArgs(ex, 0);
          return true;
       }
@@ -218,7 +218,7 @@ export function assertMichelsonInstruction(ex: Expr): ex is MichelsonInstruction
 function assertMichelsonSimpleComparableType(ex: Expr): ex is MichelsonSimpleComparableType {
    /* istanbul ignore else */
    if (assertPrim(ex)) {
-      if (!Object.prototype.hasOwnProperty.call(simpleComparableTypeTable, ex.prim)) {
+      if (!Object.prototype.hasOwnProperty.call(simpleComparableTypeIDs, ex.prim)) {
          throw new MichelsonValidationError(ex, "simple comparable type expected");
       }
       assertArgs(ex, 0);
@@ -229,7 +229,7 @@ function assertMichelsonSimpleComparableType(ex: Expr): ex is MichelsonSimpleCom
 function assertMichelsonComparableType(ex: Expr): ex is MichelsonComparableType {
    /* istanbul ignore else */
    if (assertPrim(ex)) {
-      if (Object.prototype.hasOwnProperty.call(simpleComparableTypeTable, ex.prim)) {
+      if (Object.prototype.hasOwnProperty.call(simpleComparableTypeIDs, ex.prim)) {
          assertArgs(ex, 0);
       } else if (ex.prim === "pair") {
          /* istanbul ignore else */
@@ -297,7 +297,12 @@ export function assertMichelsonType(ex: Expr): ex is MichelsonType {
             break;
 
          default:
-            assertMichelsonComparableType(ex);
+            if (Object.prototype.hasOwnProperty.call(simpleComparableTypeIDs, ex.prim)) {
+               assertArgs(ex, 0);
+            } else {
+               throw new MichelsonValidationError(ex, "type expected");
+            }
+            break;
       }
    }
 
@@ -362,7 +367,7 @@ export function assertMichelsonData(ex: Expr): ex is MichelsonData {
             break;
 
          default:
-            if (Object.prototype.hasOwnProperty.call(instructionTable, ex.prim)) {
+            if (Object.prototype.hasOwnProperty.call(instructionIDs, ex.prim)) {
                assertMichelsonInstruction(ex);
             } else {
                throw new MichelsonValidationError(ex, "data entry or instruction expected");
@@ -439,7 +444,7 @@ export function isMichelsonData(ex: Expr): ex is MichelsonData {
  * Checks if the node is a valid Michelson code (sequence of instructions).
  * @param ex An AST node
  */
-export function isMichelsonCode(ex: Expr): ex is MichelsonInstruction[] {
+export function isMichelsonCode(ex: Expr): ex is MichelsonCode[] {
    try {
       assertMichelsonInstruction(ex);
       return true;

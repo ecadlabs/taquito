@@ -1,6 +1,6 @@
 import {
     MichelsonContract, MichelsonContractSection, MichelsonType,
-    MichelsonData, MichelsonInstruction, MichelsonStackType
+    MichelsonData, MichelsonCode, MichelsonStackType
 } from "./michelson-types";
 import {
     assertContractValid, contractSection,
@@ -80,7 +80,7 @@ export class Contract {
         this.assertDataValid(t, d);
     }
 
-    functionType(inst: MichelsonInstruction, stack: MichelsonType[]): MichelsonStackType {
+    functionType(inst: MichelsonCode, stack: MichelsonType[]): MichelsonStackType {
         return functionType(inst, stack, this.ctx);
     }
 }
