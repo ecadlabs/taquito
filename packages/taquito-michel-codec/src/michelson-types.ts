@@ -27,13 +27,16 @@ export type MichelsonNoArgInstruction = Instr0<MichelsonNoArgInstructionID>;
 export type MichelsonInstruction =
     MichelsonNoArgInstruction |
     InstrX<"DIG" | "DUG", [IntLiteral]> |
-    InstrX<"NONE" | "LEFT" | "RIGHT" | "NIL" | "UNPACK" | "CONTRACT" | "CAST", [MichelsonType]> |
+    InstrX<"NONE" | "LEFT" | "RIGHT" | "NIL" | "CAST", [MichelsonType]> |
     InstrX<"IF_NONE" | "IF_LEFT" | "IF_CONS" | "IF", [MichelsonCode, MichelsonCode]> |
     InstrX<"MAP" | "ITER" | "LOOP" | "LOOP_LEFT" | "DIP", [MichelsonCode]> |
+    InstrX<"UNPACK", [MichelsonSerializableType]> |
+    InstrX<"CONTRACT", [MichelsonPassableType]> |
     InstrX<"CREATE_CONTRACT", [MichelsonContract]> |
-    InstrX<"PUSH", [MichelsonType, MichelsonData]> |
+    InstrX<"PUSH", [MichelsonPushableType, MichelsonData]> |
     InstrX<"EMPTY_SET", [MichelsonComparableType]> |
-    InstrX<"EMPTY_MAP" | "EMPTY_BIG_MAP", [MichelsonComparableType, MichelsonType]> |
+    InstrX<"EMPTY_MAP", [MichelsonComparableType, MichelsonType]> |
+    InstrX<"EMPTY_BIG_MAP", [MichelsonComparableType, MichelsonSerializableType]> |
     InstrX<"LAMBDA", [MichelsonType, MichelsonType, MichelsonCode]> |
     InstrX<"DIP", [IntLiteral, MichelsonCode] | [MichelsonCode]> |
     InstrPrim<"DROP", [IntLiteral]>; // Keep optional argument
@@ -105,7 +108,7 @@ export type MichelsonStorableType =
     MichelsonTypeOption<MichelsonStorableType> |
     MichelsonTypeOr<MichelsonStorableType, MichelsonStorableType> |
     MichelsonTypePair<MichelsonStorableType, MichelsonStorableType> |
-    MichelsonTypeBigMap<MichelsonComparableType, MichelsonStorableType>;
+    MichelsonTypeBigMap<MichelsonComparableType, MichelsonStorableType & MichelsonSerializableType>;
 
 // PM class
 export type MichelsonPassableType =
@@ -116,7 +119,7 @@ export type MichelsonPassableType =
     MichelsonTypeOption<MichelsonPassableType> |
     MichelsonTypeOr<MichelsonPassableType, MichelsonPassableType> |
     MichelsonTypePair<MichelsonPassableType, MichelsonPassableType> |
-    MichelsonTypeBigMap<MichelsonComparableType, MichelsonPassableType>;
+    MichelsonTypeBigMap<MichelsonComparableType, MichelsonPassableType & MichelsonSerializableType>;
 
 // Michelson types
 
@@ -143,7 +146,7 @@ export interface MichelsonTypeOr<T1 extends MichelsonType = MichelsonType, T2 ex
 export interface MichelsonTypeLambda<T1 extends MichelsonType = MichelsonType, T2 extends MichelsonType = MichelsonType> extends TypeX<"lambda", [T1, T2]> { }
 export interface MichelsonTypeSet<T extends MichelsonComparableType = MichelsonComparableType> extends TypeX<"set", [T]> { }
 export interface MichelsonTypeMap<T1 extends MichelsonComparableType = MichelsonComparableType, T2 extends MichelsonType = MichelsonType> extends TypeX<"map", [T1, T2]> { }
-export interface MichelsonTypeBigMap<T1 extends MichelsonComparableType = MichelsonComparableType, T2 extends MichelsonType = MichelsonType> extends TypeX<"big_map", [T1, T2]> { }
+export interface MichelsonTypeBigMap<T1 extends MichelsonComparableType = MichelsonComparableType, T2 extends MichelsonSerializableType = MichelsonSerializableType> extends TypeX<"big_map", [T1, T2]> { }
 
 export type MichelsonType<T extends MichelsonTypeID = MichelsonTypeID> =
     T extends "int" ? MichelsonTypeInt :
@@ -194,7 +197,8 @@ export type MichelsonData<T extends MichelsonType = MichelsonType> =
     T extends MichelsonTypeOr<infer A1, infer A2> ? DataX<"Left", [MichelsonData<A1>]> | DataX<"Right", [MichelsonData<A2>]> :
     T extends MichelsonTypeLambda ? MichelsonCode :
     T extends MichelsonTypeSet<infer A> ? DataList<A> :
-    T extends MichelsonTypeMap<infer A1, infer A2> | MichelsonTypeBigMap<infer A1, infer A2> ? EltList<A1, A2> :
+    T extends MichelsonTypeMap<infer A1, infer A2> ? EltList<A1, A2> :
+    T extends MichelsonTypeBigMap<infer A1, infer A2> ? EltList<A1, A2> :
     never;
 
 // Top level script sections
@@ -202,8 +206,8 @@ export type MichelsonData<T extends MichelsonType = MichelsonType> =
 type MichelsonSectionId = "parameter" | "storage" | "code";
 type SectionPrim<PT extends MichelsonSectionId, AT extends Expr[]> = ReqArgs<Prim<PT, AT>>;
 
-export type MichelsonContractParameter = SectionPrim<"parameter", [MichelsonType]>;
-export type MichelsonContractStorage = SectionPrim<"storage", [MichelsonType]>;
+export type MichelsonContractParameter = SectionPrim<"parameter", [MichelsonPassableType]>;
+export type MichelsonContractStorage = SectionPrim<"storage", [MichelsonStorableType]>;
 export type MichelsonContractCode = SectionPrim<"code", [List<MichelsonCode>]>;
 
 export type MichelsonContract =

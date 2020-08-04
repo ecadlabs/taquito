@@ -1,4 +1,4 @@
-import { StringLiteral, IntLiteral, Prim } from "./micheline";
+import { StringLiteral, IntLiteral, Prim, Expr } from "./micheline";
 import {
     MichelsonType, MichelsonData, MichelsonComparableType, MichelsonMapElt, MichelsonCode,
     MichelsonTypeOption, MichelsonContract,
@@ -6,10 +6,14 @@ import {
 } from "./michelson-types";
 import {
     unpackAnnotations, MichelsonError, isNatural,
-    LongInteger, parseBytes, compareBytes, isDecimal, instructionIDs,
-    checkTezosID, tezosPrefix, UnpackedAnnotations, Nullable, UnpackAnnotationsOptions, simpleComparableTypeIDs
+    LongInteger, parseBytes, compareBytes, isDecimal,
+    checkTezosID, tezosPrefix, UnpackedAnnotations, Nullable, UnpackAnnotationsOptions,
 } from "./utils";
 import { decodeBase58Check } from "./base58";
+import {
+    assertMichelsonComparableType, instructionIDs,
+    assertMichelsonSerializableType, assertMichelsonStorableType
+} from "./michelson-validator";
 
 export interface Context {
     contract?: MichelsonContract;
@@ -517,16 +521,6 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
         return stack.slice(n, typeIds.length + n) as StackType<T>;
     }
 
-    function ensureComparableType(type: MichelsonType): type is MichelsonComparableType {
-        if (Object.prototype.hasOwnProperty.call(simpleComparableTypeIDs, type.prim)) {
-            return true;
-        } else if (type.prim === "pair" && Object.prototype.hasOwnProperty.call(simpleComparableTypeIDs, type.args[0].prim)) {
-            return ensureComparableType(type.args[1]);
-        } else {
-            throw new MichelsonInstructionError(instruction, stack, `${instruction.prim}: comparable type expected: ${type}`);
-        }
-    }
-
     function wrap<T extends unknown[], U>(fn: (...args: T) => U) {
         return (...args: T): U => {
             try {
@@ -541,8 +535,25 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
         };
     }
 
+    function wrapPred<T extends Expr, U extends MichelsonType & T>(fn: (arg: T) => arg is U) {
+        return (arg: T): arg is U => {
+            try {
+                return fn(arg);
+            } catch (err) {
+                if (err instanceof MichelsonError) {
+                    throw new MichelsonInstructionError(instruction, stack, err.message);
+                } else {
+                    throw err;
+                }
+            }
+        };
+    }
+
     const argAnnotations = wrap(unpackAnnotations);
     const ensureTypesEqual = wrap(assertTypesEqualInternal);
+    const ensureComparableType = wrapPred(assertMichelsonComparableType);
+    const ensureSerializableType = wrapPred(assertMichelsonSerializableType);
+    const ensureStorableType = wrapPred(assertMichelsonStorableType);
 
     // unpack instruction annotations and assert their maximum number
     function instructionAnnotations(num: { f?: number; t?: number; v?: number }, opt?: UnpackAnnotationsOptions) {
@@ -718,13 +729,25 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
                     } else {
                         const s1 = args(2, ["map", "big_map"]);
                         ensureTypesEqual<MichelsonComparableType, MichelsonComparableType>(s0[0], s1[0].args[0]);
-                        ret = [annotateVar({
-                            prim: s1[0].prim,
-                            args: [
-                                annotate(s0[0], { t: null }),
-                                annotate(s0[1].args[0], { t: null }),
-                            ],
-                        }), ...stack.slice(3)];
+                        if (s1[0].prim === "map") {
+                            ret = [annotateVar({
+                                prim: "map",
+                                args: [
+                                    annotate(s0[0], { t: null }),
+                                    annotate(s0[1].args[0], { t: null }),
+                                ],
+                            }), ...stack.slice(3)];
+                        } else if (ensureSerializableType(s0[1].args[0])) {
+                            ret = [annotateVar({
+                                prim: "big_map",
+                                args: [
+                                    annotate(s0[0], { t: null }),
+                                    annotate(s0[1].args[0], { t: null }),
+                                ],
+                            }), ...stack.slice(3)];
+                        } else {
+                            ret = []; // never
+                        }
                     }
                 } else {
                     ret = []; // never
@@ -785,9 +808,7 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
         case "PACK":
             {
                 const s = args(0, null);
-                if (s[0].prim === "big_map" || s[0].prim === "operation") {
-                    throw new MichelsonInstructionError(instruction, stack, `${instruction.prim}: non packable type: ${s[0].prim}`);
-                }
+                ensureSerializableType(s[0]);
                 ret = [annotateVar({ prim: "bytes" }), ...stack.slice(1)];
                 break;
             }
@@ -1108,9 +1129,6 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
 
         case "UNPACK":
             args(0, ["bytes"]);
-            if (instruction.args[0].prim === "big_map" || instruction.args[0].prim === "operation") {
-                throw new MichelsonInstructionError(instruction, stack, `${instruction.prim}: non packable type: ${instruction.args[0].prim}`);
-            }
             assertTypeAnnotationsValid(instruction.args[0]);
             ret = [annotateVar({ prim: "option", args: [instruction.args[0]] }), ...stack.slice(1)];
             break;
@@ -1298,8 +1316,10 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
                 if (s[0].args[0].prim !== "key_hash") {
                     throw new MichelsonInstructionError(instruction, stack, `${instruction.prim}: key hash expected: ${s[0].args[0].prim}`);
                 }
-                assertContractValid(instruction.args[0]);
-                assertTypesEqualInternal(contractSection(instruction.args[0], "storage").args[0], s[2]);
+                if (ensureStorableType(s[2])) {
+                    assertContractValid(instruction.args[0]);
+                    assertTypesEqualInternal(contractSection(instruction.args[0], "storage").args[0], s[2]);
+                }
                 ret = [
                     annotate({ prim: "operation" }, { v: ia.v && ia.v.length > 0 && ia.v[0] !== "@" ? [ia.v[0]] : undefined }),
                     annotate({ prim: "address" }, { v: ia.v && ia.v.length > 1 && ia.v[1] !== "@" ? [ia.v[1]] : undefined }),
@@ -1320,10 +1340,15 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
             break;
 
         case "EMPTY_MAP":
+            assertTypeAnnotationsValid(instruction.args[0]);
+            assertTypeAnnotationsValid(instruction.args[1]);
+            ret = [annotate({ prim: "map", args: instruction.args }, instructionAnnotations({ t: 1, v: 1 })), ...stack];
+            break;
+
         case "EMPTY_BIG_MAP":
             assertTypeAnnotationsValid(instruction.args[0]);
             assertTypeAnnotationsValid(instruction.args[1]);
-            ret = [annotate({ prim: instruction.prim === "EMPTY_MAP" ? "map" : "big_map", args: instruction.args }, instructionAnnotations({ t: 1, v: 1 })), ...stack];
+            ret = [annotate({ prim: "big_map", args: instruction.args }, instructionAnnotations({ t: 1, v: 1 })), ...stack];
             break;
 
         case "LAMBDA":
