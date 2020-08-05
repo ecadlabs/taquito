@@ -73,19 +73,19 @@
 						<p>Converts and validates Michelson expressions between JSON-based Michelson and Micheline</p>
 					</div>
 					<p>Pretty Print a Michelson Smart Contract:</p>
-					<pre><code>const contract = await <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Tezos</span>.</span></span>contract.at(<span class="hljs-string">"KT1Vsw3kh9638gqWoHTjvHCoHLPKvCbMVbCg"</span>);
+					<pre><code>const contract = await <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Tezos</span>.</span></span>contract.at(<span class="hljs-string">&quot;KT1Vsw3kh9638gqWoHTjvHCoHLPKvCbMVbCg&quot;</span>);
 const p = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Parser()</span>;
 
 const michelsonCode = p.parse<span class="hljs-constructor">JSON(<span class="hljs-params">contract</span>.<span class="hljs-params">script</span>.<span class="hljs-params">code</span>)</span>;
 const storage = p.parse<span class="hljs-constructor">JSON(<span class="hljs-params">contract</span>.<span class="hljs-params">script</span>.<span class="hljs-params">storage</span>)</span>;
 
-console.log(<span class="hljs-string">"Pretty print Michelson smart contract:"</span>);
-console.log(emit<span class="hljs-constructor">Micheline(<span class="hljs-params">michelsonCode</span>, {<span class="hljs-params">indent</span>:<span class="hljs-string">"    "</span>, <span class="hljs-params">newline</span>: <span class="hljs-string">"\n"</span>,})</span>);
+console.log(<span class="hljs-string">&quot;Pretty print Michelson smart contract:&quot;</span>);
+console.log(emit<span class="hljs-constructor">Micheline(<span class="hljs-params">michelsonCode</span>, {<span class="hljs-params">indent</span>:<span class="hljs-string">&quot;    &quot;</span>, <span class="hljs-params">newline</span>: <span class="hljs-string">&quot;\n&quot;</span>,})</span>);
 
-console.log(<span class="hljs-string">"Pretty print Storage:"</span>);
-console.log(emit<span class="hljs-constructor">Micheline(<span class="hljs-params">storage</span>, {<span class="hljs-params">indent</span>:<span class="hljs-string">"    "</span>, <span class="hljs-params">newline</span>: <span class="hljs-string">"\n"</span>,})</span>);</code></pre><p>Encode a Michelson expression for inital storage of a smart contract</p>
+console.log(<span class="hljs-string">&quot;Pretty print Storage:&quot;</span>);
+console.log(emit<span class="hljs-constructor">Micheline(<span class="hljs-params">storage</span>, {<span class="hljs-params">indent</span>:<span class="hljs-string">&quot;    &quot;</span>, <span class="hljs-params">newline</span>: <span class="hljs-string">&quot;\n&quot;</span>,})</span>);</code></pre><p>Encode a Michelson expression for inital storage of a smart contract</p>
 					<pre><code><span class="hljs-keyword">const</span> src = `(Pair (Pair { Elt <span class="hljs-number">1</span>
-               (Pair (Pair <span class="hljs-string">"tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN"</span> <span class="hljs-string">"tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx"</span>)
+               (Pair (Pair <span class="hljs-string">&quot;tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN&quot;</span> <span class="hljs-string">&quot;tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx&quot;</span>)
                      <span class="hljs-number">0x0501000000026869</span>) }
          <span class="hljs-number">10000000</span>)
    (Pair <span class="hljs-number">2</span> <span class="hljs-number">333</span>))`;
@@ -137,7 +137,7 @@ console.log(JSON.<span class="hljs-built_in">string</span>ify(exp));</code></pre
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/micheline-parser.ts#L73">packages/taquito-michel-codec/src/micheline-parser.ts:73</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/micheline-parser.ts#L73">packages/taquito-michel-codec/src/micheline-parser.ts:73</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -163,7 +163,7 @@ console.log(JSON.<span class="hljs-built_in">string</span>ify(exp));</code></pre
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/micheline-parser.ts#L278">packages/taquito-michel-codec/src/micheline-parser.ts:278</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/micheline-parser.ts#L278">packages/taquito-michel-codec/src/micheline-parser.ts:278</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -194,7 +194,7 @@ console.log(JSON.<span class="hljs-built_in">string</span>ify(exp));</code></pre
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/micheline-parser.ts#L260">packages/taquito-michel-codec/src/micheline-parser.ts:260</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/micheline-parser.ts#L260">packages/taquito-michel-codec/src/micheline-parser.ts:260</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -226,7 +226,7 @@ console.log(JSON.<span class="hljs-built_in">string</span>ify(exp));</code></pre
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/micheline-parser.ts#L238">packages/taquito-michel-codec/src/micheline-parser.ts:238</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/micheline-parser.ts#L238">packages/taquito-michel-codec/src/micheline-parser.ts:238</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -294,9 +294,6 @@ console.log(JSON.<span class="hljs-built_in">string</span>ify(exp));</code></pre
 					<li class=" tsd-kind-module">
 						<a href="../modules/_taquito_utils.html">@taquito/utils</a>
 					</li>
-					<li class=" tsd-kind-module">
-						<a href="../modules/integration_tests.html">integration-<wbr>tests</a>
-					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
@@ -360,6 +357,5 @@ console.log(JSON.<span class="hljs-built_in">string</span>ify(exp));</code></pre
 </div>
 <div class="overlay"></div>
 <script src="../assets/js/main.js"></script>
-<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
 </body>
 </html>

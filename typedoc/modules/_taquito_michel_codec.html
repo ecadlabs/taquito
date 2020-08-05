@@ -64,56 +64,6 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<p><a href="https://github.com/RedpointGames/pkgsign"><img src="https://us-central1-pkgsign.cloudfunctions.net/pkgsign-badge?name=@taquito/michelson-encoder&expectedIdentity=%40jevonearth" alt="pkgsign status"></a></p>
-					<a href="#taquito-michel-codec-package" id="taquito-michel-codec-package" style="color: inherit; text-decoration: none;">
-						<h1>Taquito michel-codec package</h1>
-					</a>
-					<p><code>@taquito/michel-codec</code> Converts and validates Michelson expressions between JSON based Michelson and Micheline.</p>
-					<p>This package can:</p>
-					<ul>
-						<li>Retrieve Michelson in JSON form from the Tezos Node RPC and convert it to plain Michelson. </li>
-						<li>Parse plain Michelson (including Macros) and expand/convert it to JSON Michelson suitable for injection into the Tezo Blockchain.</li>
-						<li>Validate Michelson to ensure correctness</li>
-					</ul>
-					<p>See the top-level project <a href="https://github.com/ecadlabs/taquito">https://github.com/ecadlabs/taquito</a> for details on reporting issues, contributing and versioning.</p>
-					<a href="#examples" id="examples" style="color: inherit; text-decoration: none;">
-						<h2>Examples</h2>
-					</a>
-					<a href="#michelson-expression-to-json" id="michelson-expression-to-json" style="color: inherit; text-decoration: none;">
-						<h3>Michelson expression to JSON</h3>
-					</a>
-					<pre><code class="language-js">    <span class="hljs-keyword">const</span> code = <span class="hljs-string">`(Pair
-                     (Pair { Elt 1 (Pair (Pair "tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN" "tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx") 0x0501000000026869)}
-                           10000000)
-                     (Pair 2 333)
-                  )`</span>;
-
-    <span class="hljs-keyword">const</span> p = <span class="hljs-keyword">new</span> Parser()
-
-    <span class="hljs-keyword">const</span> result = p.parseMichelineExpression(code)
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">JSON</span>.stringify(result))</code></pre>
-					<p>Output:</p>
-					<pre><code class="language-json">{<span class="hljs-attr">"prim"</span>:<span class="hljs-string">"Pair"</span>,<span class="hljs-attr">"args"</span>:[{<span class="hljs-attr">"prim"</span>:<span class="hljs-string">"Pair"</span>,<span class="hljs-attr">"args"</span>:[[{<span class="hljs-attr">"prim"</span>:<span class="hljs-string">"Elt"</span>,<span class="hljs-attr">"args"</span>:[{<span class="hljs-attr">"int"</span>:<span class="hljs-string">"1"</span>},{<span class="hljs-attr">"prim"</span>:<span class="hljs-string">"Pair"</span>,<span class="hljs-attr">"args"</span>:[{<span class="hljs-attr">"prim"</span>:<span class="hljs-string">"Pair"</span>,<span class="hljs-attr">"args"</span>:[{<span class="hljs-attr">"string"</span>:<span class="hljs-string">"tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN"</span>},{<span class="hljs-attr">"string"</span>:<span class="hljs-string">"tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx"</span>}]},{<span class="hljs-attr">"bytes"</span>:<span class="hljs-string">"0501000000026869"</span>}]}]}],{<span class="hljs-attr">"int"</span>:<span class="hljs-string">"10000000"</span>}]},{<span class="hljs-attr">"prim"</span>:<span class="hljs-string">"Pair"</span>,<span class="hljs-attr">"args"</span>:[{<span class="hljs-attr">"int"</span>:<span class="hljs-string">"2"</span>},{<span class="hljs-attr">"int"</span>:<span class="hljs-string">"333"</span>}]}]}</code></pre>
-					<a href="#pretty-print-a-michelson-contract" id="pretty-print-a-michelson-contract" style="color: inherit; text-decoration: none;">
-						<h3>Pretty Print a Michelson contract</h3>
-					</a>
-					<pre><code>    const contract = await <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Tezos</span>.</span></span>contract.at('KT1EctCuorV2NfVb1XTQgvzJ88MQtWP8cMMv')
-    const p = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Parser()</span>
-
-    const michelsonCode = p.parse<span class="hljs-constructor">JSON(<span class="hljs-params">contract</span>.<span class="hljs-params">script</span>.<span class="hljs-params">code</span> <span class="hljs-params">as</span> JSON[])</span>
-    console.log(emit<span class="hljs-constructor">Micheline(<span class="hljs-params">michelsonCode</span>, {<span class="hljs-params">indent</span>:<span class="hljs-string">"    "</span>, <span class="hljs-params">newline</span>: <span class="hljs-string">"\n"</span>,})</span>)</code></pre>
-					<a href="#api-documentation" id="api-documentation" style="color: inherit; text-decoration: none;">
-						<h2>API Documentation</h2>
-					</a>
-					<p>TypeDoc style documentation is available on-line <a href="https://tezostaquito.io/typedoc/modules/_taquito_michel_codec.html">here</a></p>
-					<a href="#disclaimer" id="disclaimer" style="color: inherit; text-decoration: none;">
-						<h2>Disclaimer</h2>
-					</a>
-					<p>THIS SOFTWARE IS PROVIDED &quot;AS IS&quot; AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
-				</div>
-			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
@@ -396,7 +346,7 @@
 					<div class="tsd-signature tsd-kind-icon">Expr<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_taquito_michel_codec.prim-1.html" class="tsd-signature-type">Prim</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_taquito_michel_codec.stringliteral-1.html" class="tsd-signature-type">StringLiteral</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_taquito_michel_codec.intliteral-1.html" class="tsd-signature-type">IntLiteral</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_taquito_michel_codec.bytesliteral-1.html" class="tsd-signature-type">BytesLiteral</a><span class="tsd-signature-symbol"> | </span><a href="_taquito_michel_codec.html#expr-1" class="tsd-signature-type">Expr</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/micheline.ts#L36">packages/taquito-michel-codec/src/micheline.ts:36</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/micheline.ts#L36">packages/taquito-michel-codec/src/micheline.ts:36</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -411,7 +361,7 @@
 					<div class="tsd-signature tsd-kind-icon">Michelson<wbr>Code<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">SectionPrim</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"code"</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">[</span><a href="_taquito_michel_codec.html#michelsoninstruction-1" class="tsd-signature-type">MichelsonInstruction</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/michelson-validator.ts#L81">packages/taquito-michel-codec/src/michelson-validator.ts:81</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/michelson-validator.ts#L81">packages/taquito-michel-codec/src/michelson-validator.ts:81</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -421,7 +371,7 @@
 					<div class="tsd-signature tsd-kind-icon">Michelson<wbr>Comparable<wbr>Type<span class="tsd-signature-symbol">:</span> <a href="_taquito_michel_codec.html#michelsonsimplecomparabletype-1" class="tsd-signature-type">MichelsonSimpleComparableType</a><span class="tsd-signature-symbol"> | </span><a href="_taquito_michel_codec.html#reqargs" class="tsd-signature-type">ReqArgs</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TypePrim</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"pair"</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">[</span><a href="_taquito_michel_codec.html#michelsonsimplecomparabletype-1" class="tsd-signature-type">MichelsonSimpleComparableType</a><span class="tsd-signature-symbol">, </span><a href="_taquito_michel_codec.html#michelsoncomparabletype-1" class="tsd-signature-type">MichelsonComparableType</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/michelson-validator.ts#L48">packages/taquito-michel-codec/src/michelson-validator.ts:48</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/michelson-validator.ts#L48">packages/taquito-michel-codec/src/michelson-validator.ts:48</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -431,7 +381,7 @@
 					<div class="tsd-signature tsd-kind-icon">Michelson<wbr>Data<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_taquito_michel_codec.intliteral-1.html" class="tsd-signature-type">IntLiteral</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_taquito_michel_codec.stringliteral-1.html" class="tsd-signature-type">StringLiteral</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_taquito_michel_codec.bytesliteral-1.html" class="tsd-signature-type">BytesLiteral</a><span class="tsd-signature-symbol"> | </span><a href="_taquito_michel_codec.html#noargs" class="tsd-signature-type">NoArgs</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">DataPrim</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"Unit"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"True"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"False"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"None"</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="_taquito_michel_codec.html#reqargs" class="tsd-signature-type">ReqArgs</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">DataPrim</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"Pair"</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">[</span><a href="_taquito_michel_codec.html#michelsondata-1" class="tsd-signature-type">MichelsonData</a><span class="tsd-signature-symbol">, </span><a href="_taquito_michel_codec.html#michelsondata-1" class="tsd-signature-type">MichelsonData</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="_taquito_michel_codec.html#reqargs" class="tsd-signature-type">ReqArgs</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">DataPrim</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"Left"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"Right"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"Some"</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">[</span><a href="_taquito_michel_codec.html#michelsondata-1" class="tsd-signature-type">MichelsonData</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="_taquito_michel_codec.html#michelsondata-1" class="tsd-signature-type">MichelsonData</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><a href="_taquito_michel_codec.html#michelsonmapelt-1" class="tsd-signature-type">MichelsonMapElt</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><a href="_taquito_michel_codec.html#michelsoninstruction-1" class="tsd-signature-type">MichelsonInstruction</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/michelson-validator.ts#L64">packages/taquito-michel-codec/src/michelson-validator.ts:64</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/michelson-validator.ts#L64">packages/taquito-michel-codec/src/michelson-validator.ts:64</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -441,7 +391,7 @@
 					<div class="tsd-signature tsd-kind-icon">Michelson<wbr>Data<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"Unit"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"True"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"False"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"None"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"Pair"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"Left"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"Right"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"Some"</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/michelson-validator.ts#L61">packages/taquito-michel-codec/src/michelson-validator.ts:61</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/michelson-validator.ts#L61">packages/taquito-michel-codec/src/michelson-validator.ts:61</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -451,7 +401,7 @@
 					<div class="tsd-signature tsd-kind-icon">Michelson<wbr>Instruction<span class="tsd-signature-symbol">:</span> <a href="_taquito_michel_codec.html#michelsoninstruction-1" class="tsd-signature-type">MichelsonInstruction</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><a href="_taquito_michel_codec.html#noargs" class="tsd-signature-type">NoArgs</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstrPrim</span><span class="tsd-signature-symbol">&lt;</span><a href="_taquito_michel_codec.html#michelsonunaryinstructionid-1" class="tsd-signature-type">MichelsonUnaryInstructionId</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="_taquito_michel_codec.html#reqargs" class="tsd-signature-type">ReqArgs</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstrPrim</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"DIG"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"DUG"</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">[</span><a href="../interfaces/_taquito_michel_codec.intliteral-1.html" class="tsd-signature-type">IntLiteral</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">InstrPrim</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"DROP"</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">[</span><a href="../interfaces/_taquito_michel_codec.intliteral-1.html" class="tsd-signature-type">IntLiteral</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="_taquito_michel_codec.html#reqargs" class="tsd-signature-type">ReqArgs</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstrPrim</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"NONE"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"LEFT"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"RIGHT"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"NIL"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"UNPACK"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"CONTRACT"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"CAST"</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">[</span><a href="_taquito_michel_codec.html#michelsontype-1" class="tsd-signature-type">MichelsonType</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="_taquito_michel_codec.html#reqargs" class="tsd-signature-type">ReqArgs</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstrPrim</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"IF_NONE"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"IF_LEFT"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"IF_CONS"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"IF"</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">[</span><a href="_taquito_michel_codec.html#michelsoninstruction-1" class="tsd-signature-type">MichelsonInstruction</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><a href="_taquito_michel_codec.html#michelsoninstruction-1" class="tsd-signature-type">MichelsonInstruction</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="_taquito_michel_codec.html#reqargs" class="tsd-signature-type">ReqArgs</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstrPrim</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"MAP"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"ITER"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"LOOP"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"LOOP_LEFT"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"DIP"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"CREATE_CONTRACT"</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">[</span><a href="_taquito_michel_codec.html#michelsoninstruction-1" class="tsd-signature-type">MichelsonInstruction</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="_taquito_michel_codec.html#reqargs" class="tsd-signature-type">ReqArgs</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstrPrim</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"PUSH"</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">[</span><a href="_taquito_michel_codec.html#michelsontype-1" class="tsd-signature-type">MichelsonType</a><span class="tsd-signature-symbol">, </span><a href="_taquito_michel_codec.html#michelsondata-1" class="tsd-signature-type">MichelsonData</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="_taquito_michel_codec.html#reqargs" class="tsd-signature-type">ReqArgs</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstrPrim</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"EMPTY_SET"</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">[</span><a href="_taquito_michel_codec.html#michelsoncomparabletype-1" class="tsd-signature-type">MichelsonComparableType</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="_taquito_michel_codec.html#reqargs" class="tsd-signature-type">ReqArgs</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstrPrim</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"EMPTY_MAP"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"EMPTY_BIG_MAP"</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">[</span><a href="_taquito_michel_codec.html#michelsoncomparabletype-1" class="tsd-signature-type">MichelsonComparableType</a><span class="tsd-signature-symbol">, </span><a href="_taquito_michel_codec.html#michelsontype-1" class="tsd-signature-type">MichelsonType</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="_taquito_michel_codec.html#reqargs" class="tsd-signature-type">ReqArgs</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstrPrim</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"LAMBDA"</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">[</span><a href="_taquito_michel_codec.html#michelsontype-1" class="tsd-signature-type">MichelsonType</a><span class="tsd-signature-symbol">, </span><a href="_taquito_michel_codec.html#michelsontype-1" class="tsd-signature-type">MichelsonType</a><span class="tsd-signature-symbol">, </span><a href="_taquito_michel_codec.html#michelsoninstruction-1" class="tsd-signature-type">MichelsonInstruction</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="_taquito_michel_codec.html#reqargs" class="tsd-signature-type">ReqArgs</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstrPrim</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"DIP"</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">[</span><a href="../interfaces/_taquito_michel_codec.intliteral-1.html" class="tsd-signature-type">IntLiteral</a><span class="tsd-signature-symbol">, </span><a href="_taquito_michel_codec.html#michelsoninstruction-1" class="tsd-signature-type">MichelsonInstruction</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">[</span><a href="_taquito_michel_codec.html#michelsoninstruction-1" class="tsd-signature-type">MichelsonInstruction</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/michelson-validator.ts#L23">packages/taquito-michel-codec/src/michelson-validator.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/michelson-validator.ts#L23">packages/taquito-michel-codec/src/michelson-validator.ts:23</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -461,7 +411,7 @@
 					<div class="tsd-signature tsd-kind-icon">Michelson<wbr>Instruction<wbr>Id<span class="tsd-signature-symbol">:</span> <a href="_taquito_michel_codec.html#michelsonunaryinstructionid-1" class="tsd-signature-type">MichelsonUnaryInstructionId</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"DROP"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"DIG"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"DUG"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"NONE"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"LEFT"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"RIGHT"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"NIL"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"UNPACK"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"CONTRACT"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"CAST"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"IF_NONE"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"IF_LEFT"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"IF_CONS"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"IF"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"MAP"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"ITER"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"LOOP"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"LOOP_LEFT"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"DIP"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"CREATE_CONTRACT"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"PUSH"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"EMPTY_SET"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"EMPTY_MAP"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"EMPTY_BIG_MAP"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"LAMBDA"</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/michelson-validator.ts#L16">packages/taquito-michel-codec/src/michelson-validator.ts:16</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/michelson-validator.ts#L16">packages/taquito-michel-codec/src/michelson-validator.ts:16</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -471,7 +421,7 @@
 					<div class="tsd-signature tsd-kind-icon">Michelson<wbr>Map<wbr>Elt<span class="tsd-signature-symbol">:</span> <a href="_taquito_michel_codec.html#reqargs" class="tsd-signature-type">ReqArgs</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_michel_codec.prim-1.html" class="tsd-signature-type">Prim</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"Elt"</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">[</span><a href="_taquito_michel_codec.html#michelsondata-1" class="tsd-signature-type">MichelsonData</a><span class="tsd-signature-symbol">, </span><a href="_taquito_michel_codec.html#michelsondata-1" class="tsd-signature-type">MichelsonData</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/michelson-validator.ts#L60">packages/taquito-michel-codec/src/michelson-validator.ts:60</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/michelson-validator.ts#L60">packages/taquito-michel-codec/src/michelson-validator.ts:60</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -481,7 +431,7 @@
 					<div class="tsd-signature tsd-kind-icon">Michelson<wbr>Parameter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">SectionPrim</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"parameter"</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">[</span><a href="_taquito_michel_codec.html#michelsontype-1" class="tsd-signature-type">MichelsonType</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/michelson-validator.ts#L79">packages/taquito-michel-codec/src/michelson-validator.ts:79</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/michelson-validator.ts#L79">packages/taquito-michel-codec/src/michelson-validator.ts:79</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -491,7 +441,7 @@
 					<div class="tsd-signature tsd-kind-icon">Michelson<wbr>Script<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">[</span><a href="_taquito_michel_codec.html#michelsonparameter-1" class="tsd-signature-type">MichelsonParameter</a><span class="tsd-signature-symbol">, </span><a href="_taquito_michel_codec.html#michelsonstorage-1" class="tsd-signature-type">MichelsonStorage</a><span class="tsd-signature-symbol">, </span><a href="_taquito_michel_codec.html#michelsoncode-1" class="tsd-signature-type">MichelsonCode</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">[</span><a href="_taquito_michel_codec.html#michelsonstorage-1" class="tsd-signature-type">MichelsonStorage</a><span class="tsd-signature-symbol">, </span><a href="_taquito_michel_codec.html#michelsoncode-1" class="tsd-signature-type">MichelsonCode</a><span class="tsd-signature-symbol">, </span><a href="_taquito_michel_codec.html#michelsonparameter-1" class="tsd-signature-type">MichelsonParameter</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">[</span><a href="_taquito_michel_codec.html#michelsoncode-1" class="tsd-signature-type">MichelsonCode</a><span class="tsd-signature-symbol">, </span><a href="_taquito_michel_codec.html#michelsonparameter-1" class="tsd-signature-type">MichelsonParameter</a><span class="tsd-signature-symbol">, </span><a href="_taquito_michel_codec.html#michelsonstorage-1" class="tsd-signature-type">MichelsonStorage</a><span class="tsd-signature-symbol">]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/michelson-validator.ts#L83">packages/taquito-michel-codec/src/michelson-validator.ts:83</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/michelson-validator.ts#L83">packages/taquito-michel-codec/src/michelson-validator.ts:83</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -501,7 +451,7 @@
 					<div class="tsd-signature tsd-kind-icon">Michelson<wbr>Simple<wbr>Comparable<wbr>Type<span class="tsd-signature-symbol">:</span> <a href="_taquito_michel_codec.html#noargs" class="tsd-signature-type">NoArgs</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TypePrim</span><span class="tsd-signature-symbol">&lt;</span><a href="_taquito_michel_codec.html#michelsonsimplecomparabletypeid-1" class="tsd-signature-type">MichelsonSimpleComparableTypeId</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/michelson-validator.ts#L47">packages/taquito-michel-codec/src/michelson-validator.ts:47</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/michelson-validator.ts#L47">packages/taquito-michel-codec/src/michelson-validator.ts:47</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -511,7 +461,7 @@
 					<div class="tsd-signature tsd-kind-icon">Michelson<wbr>Simple<wbr>Comparable<wbr>Type<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"int"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"nat"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"string"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"bytes"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"mutez"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"bool"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"key_hash"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"timestamp"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"address"</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/michelson-validator.ts#L38">packages/taquito-michel-codec/src/michelson-validator.ts:38</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/michelson-validator.ts#L38">packages/taquito-michel-codec/src/michelson-validator.ts:38</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -521,7 +471,7 @@
 					<div class="tsd-signature tsd-kind-icon">Michelson<wbr>Storage<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">SectionPrim</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"storage"</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">[</span><a href="_taquito_michel_codec.html#michelsontype-1" class="tsd-signature-type">MichelsonType</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/michelson-validator.ts#L80">packages/taquito-michel-codec/src/michelson-validator.ts:80</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/michelson-validator.ts#L80">packages/taquito-michel-codec/src/michelson-validator.ts:80</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -531,7 +481,7 @@
 					<div class="tsd-signature tsd-kind-icon">Michelson<wbr>Type<span class="tsd-signature-symbol">:</span> <a href="_taquito_michel_codec.html#michelsoncomparabletype-1" class="tsd-signature-type">MichelsonComparableType</a><span class="tsd-signature-symbol"> | </span><a href="_taquito_michel_codec.html#noargs" class="tsd-signature-type">NoArgs</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TypePrim</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"key"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"unit"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"signature"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"operation"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"chain_id"</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="_taquito_michel_codec.html#reqargs" class="tsd-signature-type">ReqArgs</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TypePrim</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"option"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"list"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"contract"</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">[</span><a href="_taquito_michel_codec.html#michelsontype-1" class="tsd-signature-type">MichelsonType</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="_taquito_michel_codec.html#reqargs" class="tsd-signature-type">ReqArgs</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TypePrim</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"pair"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"or"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"lambda"</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">[</span><a href="_taquito_michel_codec.html#michelsontype-1" class="tsd-signature-type">MichelsonType</a><span class="tsd-signature-symbol">, </span><a href="_taquito_michel_codec.html#michelsontype-1" class="tsd-signature-type">MichelsonType</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="_taquito_michel_codec.html#reqargs" class="tsd-signature-type">ReqArgs</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TypePrim</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"set"</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">[</span><a href="_taquito_michel_codec.html#michelsoncomparabletype-1" class="tsd-signature-type">MichelsonComparableType</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="_taquito_michel_codec.html#reqargs" class="tsd-signature-type">ReqArgs</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TypePrim</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"map"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"big_map"</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">[</span><a href="_taquito_michel_codec.html#michelsoncomparabletype-1" class="tsd-signature-type">MichelsonComparableType</a><span class="tsd-signature-symbol">, </span><a href="_taquito_michel_codec.html#michelsontype-1" class="tsd-signature-type">MichelsonType</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/michelson-validator.ts#L51">packages/taquito-michel-codec/src/michelson-validator.ts:51</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/michelson-validator.ts#L51">packages/taquito-michel-codec/src/michelson-validator.ts:51</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -541,7 +491,7 @@
 					<div class="tsd-signature tsd-kind-icon">Michelson<wbr>Type<wbr>Id<span class="tsd-signature-symbol">:</span> <a href="_taquito_michel_codec.html#michelsonsimplecomparabletypeid-1" class="tsd-signature-type">MichelsonSimpleComparableTypeId</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"key"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"unit"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"signature"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"operation"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"chain_id"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"option"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"list"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"contract"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"pair"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"or"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"lambda"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"set"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"map"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"big_map"</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/michelson-validator.ts#L41">packages/taquito-michel-codec/src/michelson-validator.ts:41</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/michelson-validator.ts#L41">packages/taquito-michel-codec/src/michelson-validator.ts:41</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -551,7 +501,7 @@
 					<div class="tsd-signature tsd-kind-icon">Michelson<wbr>Unary<wbr>Instruction<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"DUP"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"SWAP"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"SOME"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"UNIT"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"PAIR"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"CAR"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"CDR"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"CONS"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"SIZE"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"MEM"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"GET"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"UPDATE"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"EXEC"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"FAILWITH"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"RENAME"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"CONCAT"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"SLICE"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"PACK"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"ADD"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"SUB"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"MUL"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"EDIV"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"ABS"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"ISNAT"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"INT"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"NEG"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"LSL"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"LSR"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"OR"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"AND"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"XOR"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"NOT"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"COMPARE"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"EQ"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"NEQ"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"LT"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"GT"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"LE"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"GE"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"SELF"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"TRANSFER_TOKENS"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"SET_DELEGATE"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"CREATE_ACCOUNT"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"IMPLICIT_ACCOUNT"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"NOW"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"AMOUNT"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"BALANCE"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"CHECK_SIGNATURE"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"BLAKE2B"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"SHA256"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"SHA512"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"HASH_KEY"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"STEPS_TO_QUOTA"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"SOURCE"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"SENDER"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"ADDRESS"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"CHAIN_ID"</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/michelson-validator.ts#L8">packages/taquito-michel-codec/src/michelson-validator.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/michelson-validator.ts#L8">packages/taquito-michel-codec/src/michelson-validator.ts:8</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -561,7 +511,7 @@
 					<div class="tsd-signature tsd-kind-icon">No<wbr>Annots&lt;T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">OmitProp</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">"annots"</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/utils.ts#L14">packages/taquito-michel-codec/src/utils.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/utils.ts#L14">packages/taquito-michel-codec/src/utils.ts:14</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -577,7 +527,7 @@
 					<div class="tsd-signature tsd-kind-icon">No<wbr>Args&lt;T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">OmitProp</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">"args"</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/utils.ts#L13">packages/taquito-michel-codec/src/utils.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/utils.ts#L13">packages/taquito-michel-codec/src/utils.ts:13</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -593,7 +543,7 @@
 					<div class="tsd-signature tsd-kind-icon">Req<wbr>Args&lt;T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">RequiredProp</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">"args"</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/utils.ts#L12">packages/taquito-michel-codec/src/utils.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/utils.ts#L12">packages/taquito-michel-codec/src/utils.ts:12</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -609,7 +559,7 @@
 					<div class="tsd-signature tsd-kind-icon">Token<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"("</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">")"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"{"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"}"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">";"</span><span class="tsd-signature-symbol"> | </span><a href="../enums/_taquito_michel_codec.literal.html" class="tsd-signature-type">Literal</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/scan.ts#L15">packages/taquito-michel-codec/src/scan.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/scan.ts#L15">packages/taquito-michel-codec/src/scan.ts:15</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -619,7 +569,7 @@
 					<div class="tsd-signature tsd-kind-icon">Tuple&lt;T, N&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">N</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">1</span><span class="tsd-signature-symbol"> ? </span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-type">N</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">2</span><span class="tsd-signature-symbol"> ? </span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-type">N</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">3</span><span class="tsd-signature-symbol"> ? </span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-type">N</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">4</span><span class="tsd-signature-symbol"> ? </span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-type">never</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/utils.ts#L3">packages/taquito-michel-codec/src/utils.ts:3</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/utils.ts#L3">packages/taquito-michel-codec/src/utils.ts:3</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -645,7 +595,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/michelson-validator.ts#L539">packages/taquito-michel-codec/src/michelson-validator.ts:539</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/michelson-validator.ts#L539">packages/taquito-michel-codec/src/michelson-validator.ts:539</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -677,7 +627,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/michelson-validator.ts#L530">packages/taquito-michel-codec/src/michelson-validator.ts:530</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/michelson-validator.ts#L530">packages/taquito-michel-codec/src/michelson-validator.ts:530</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -709,7 +659,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/michelson-validator.ts#L521">packages/taquito-michel-codec/src/michelson-validator.ts:521</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/michelson-validator.ts#L521">packages/taquito-michel-codec/src/michelson-validator.ts:521</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -741,7 +691,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/michelson-validator.ts#L548">packages/taquito-michel-codec/src/michelson-validator.ts:548</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/michelson-validator.ts#L548">packages/taquito-michel-codec/src/michelson-validator.ts:548</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -773,7 +723,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/micheline-emitter.ts#L136">packages/taquito-michel-codec/src/micheline-emitter.ts:136</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/micheline-emitter.ts#L136">packages/taquito-michel-codec/src/micheline-emitter.ts:136</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -810,7 +760,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/macros.ts#L164">packages/taquito-michel-codec/src/macros.ts:164</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/macros.ts#L164">packages/taquito-michel-codec/src/macros.ts:164</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -833,7 +783,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michel-codec/src/scan.ts#L29">packages/taquito-michel-codec/src/scan.ts:29</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michel-codec/src/scan.ts#L29">packages/taquito-michel-codec/src/scan.ts:29</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -895,9 +845,6 @@
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="_taquito_utils.html">@taquito/utils</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="integration_tests.html">integration-<wbr>tests</a>
 					</li>
 				</ul>
 			</nav>
@@ -1161,6 +1108,5 @@
 </div>
 <div class="overlay"></div>
 <script src="../assets/js/main.js"></script>
-<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
 </body>
 </html>

@@ -64,73 +64,6 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<p><a href="https://github.com/RedpointGames/pkgsign"><img src="https://us-central1-pkgsign.cloudfunctions.net/pkgsign-badge?name=@taquito/michelson-encoder&expectedIdentity=%40jevonearth" alt="pkgsign status"></a></p>
-					<a href="#taquito-michelson-encoder-package" id="taquito-michelson-encoder-package" style="color: inherit; text-decoration: none;">
-						<h1>Taquito Michelson Encoder package</h1>
-					</a>
-					<blockquote>
-						<p>Our current smart contract abstraction feature is currently in preview. It&#39;s API is not final, and it may not cover every use case (yet). We will greatly appreciate any feedback on this feature.</p>
-					</blockquote>
-					<p><code>@taquito/michelson-encoder</code> provides a JavaScript abstraction based on a Tezos Smart contracts code, parameters and storage.</p>
-					<p>See the top-level project <a href="https://github.com/ecadlabs/taquito">https://github.com/ecadlabs/taquito</a> for details on reporting issues, contributing and versioning.</p>
-					<a href="#example" id="example" style="color: inherit; text-decoration: none;">
-						<h2>Example</h2>
-					</a>
-					<p>Given the following michelson smart contract data, retrieved from a Tezos Nodes RPC:</p>
-					<pre><code class="language-json">{
-  <span class="hljs-attr">"storage"</span>: {
-    <span class="hljs-attr">"prim"</span>: <span class="hljs-string">"Pair"</span>,
-    <span class="hljs-attr">"args"</span>: [
-      [],
-      {
-        <span class="hljs-attr">"prim"</span>: <span class="hljs-string">"Pair"</span>,
-        <span class="hljs-attr">"args"</span>: [
-          { <span class="hljs-attr">"int"</span>: <span class="hljs-string">"1"</span> },
-          {
-            <span class="hljs-attr">"prim"</span>: <span class="hljs-string">"Pair"</span>,
-            <span class="hljs-attr">"args"</span>: [
-              { <span class="hljs-attr">"int"</span>: <span class="hljs-string">"1000"</span> },
-              {
-                <span class="hljs-attr">"prim"</span>: <span class="hljs-string">"Pair"</span>,
-                <span class="hljs-attr">"args"</span>: [
-                  { <span class="hljs-attr">"string"</span>: <span class="hljs-string">"Token B"</span> },
-                  {
-                    <span class="hljs-attr">"prim"</span>: <span class="hljs-string">"Pair"</span>,
-                    <span class="hljs-attr">"args"</span>: [
-                      { <span class="hljs-attr">"string"</span>: <span class="hljs-string">"B"</span> },
-                      { <span class="hljs-attr">"string"</span>: <span class="hljs-string">"tz1ccqAEwfPgeoipnXtjAv1iucrpQv3DFmmS"</span> }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  }
-}</code></pre>
-					<p><code>@taquito/michelson-encoder</code> will generate an abstraction in the form of a plain old javascript object:</p>
-					<pre><code class="language-javascript">{
-  <span class="hljs-attr">accounts</span>: {},
-  <span class="hljs-attr">version</span>: <span class="hljs-string">'1'</span>,
-  <span class="hljs-attr">totalSupply</span>: <span class="hljs-string">'1000'</span>,
-  <span class="hljs-attr">name</span>: <span class="hljs-string">'Token B'</span>,
-  <span class="hljs-attr">symbol</span>: <span class="hljs-string">'B'</span>,
-  <span class="hljs-attr">owner</span>: <span class="hljs-string">'tz1ccqAEwfPgeoipnXtjAv1iucrpQv3DFmmS'</span>
-}</code></pre>
-					<a href="#api-documentation" id="api-documentation" style="color: inherit; text-decoration: none;">
-						<h2>API Documentation</h2>
-					</a>
-					<p>TypeDoc style documentation is available on-line <a href="https://tezostaquito.io/typedoc/modules/_taquito_michelson_encoder.html">here</a></p>
-					<a href="#disclaimer" id="disclaimer" style="color: inherit; text-decoration: none;">
-						<h2>Disclaimer</h2>
-					</a>
-					<p>THIS SOFTWARE IS PROVIDED &quot;AS IS&quot; AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
-				</div>
-			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
@@ -436,7 +369,7 @@
 					<div class="tsd-signature tsd-kind-icon">Falsy&lt;T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michelson-encoder/src/schema/types.ts#L1">packages/taquito-michelson-encoder/src/schema/types.ts:1</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michelson-encoder/src/schema/types.ts#L1">packages/taquito-michelson-encoder/src/schema/types.ts:1</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -452,7 +385,7 @@
 					<div class="tsd-signature tsd-kind-icon">Michelson<wbr>Map<wbr>Key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michelson-encoder/src/michelson-map.ts#L9">packages/taquito-michelson-encoder/src/michelson-map.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michelson-encoder/src/michelson-map.ts#L9">packages/taquito-michelson-encoder/src/michelson-map.ts:9</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -462,7 +395,7 @@
 					<div class="tsd-signature tsd-kind-icon">Token<wbr>Factory<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>val<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, idx<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="../classes/_taquito_michelson_encoder.token.html" class="tsd-signature-type">Token</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michelson-encoder/src/tokens/token.ts#L15">packages/taquito-michelson-encoder/src/tokens/token.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michelson-encoder/src/tokens/token.ts#L15">packages/taquito-michelson-encoder/src/tokens/token.ts:15</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -499,7 +432,7 @@
 					<div class="tsd-signature tsd-kind-icon">Unit<wbr>Value<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">unique symbol</span><span class="tsd-signature-symbol"> = Symbol()</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michelson-encoder/src/taquito-michelson-encoder.ts#L6">packages/taquito-michelson-encoder/src/taquito-michelson-encoder.ts:6</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michelson-encoder/src/taquito-michelson-encoder.ts#L6">packages/taquito-michelson-encoder/src/taquito-michelson-encoder.ts:6</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -509,7 +442,7 @@
 					<div class="tsd-signature tsd-kind-icon">tokens<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><a href="../classes/_taquito_michelson_encoder.bigmaptoken.html" class="tsd-signature-type">BigMapToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_taquito_michelson_encoder.pairtoken.html" class="tsd-signature-type">PairToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_taquito_michelson_encoder.nattoken.html" class="tsd-signature-type">NatToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_taquito_michelson_encoder.stringtoken.html" class="tsd-signature-type">StringToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_taquito_michelson_encoder.addresstoken.html" class="tsd-signature-type">AddressToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_taquito_michelson_encoder.booltoken.html" class="tsd-signature-type">BoolToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_taquito_michelson_encoder.contracttoken.html" class="tsd-signature-type">ContractToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_taquito_michelson_encoder.listtoken.html" class="tsd-signature-type">ListToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_taquito_michelson_encoder.muteztoken.html" class="tsd-signature-type">MutezToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_taquito_michelson_encoder.bytestoken.html" class="tsd-signature-type">BytesToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_taquito_michelson_encoder.timestamptoken.html" class="tsd-signature-type">TimestampToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_taquito_michelson_encoder.inttoken.html" class="tsd-signature-type">IntToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_taquito_michelson_encoder.unittoken.html" class="tsd-signature-type">UnitToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_taquito_michelson_encoder.keytoken.html" class="tsd-signature-type">KeyToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_taquito_michelson_encoder.keyhashtoken.html" class="tsd-signature-type">KeyHashToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_taquito_michelson_encoder.signaturetoken.html" class="tsd-signature-type">SignatureToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_taquito_michelson_encoder.lambdatoken.html" class="tsd-signature-type">LambdaToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_taquito_michelson_encoder.operationtoken.html" class="tsd-signature-type">OperationToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_taquito_michelson_encoder.settoken.html" class="tsd-signature-type">SetToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_taquito_michelson_encoder.chainidtoken.html" class="tsd-signature-type">ChainIDToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_taquito_michelson_encoder.maptoken.html" class="tsd-signature-type">MapToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_taquito_michelson_encoder.ortoken.html" class="tsd-signature-type">OrToken</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_taquito_michelson_encoder.optiontoken.html" class="tsd-signature-type">OptionToken</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = [PairToken,NatToken,StringToken,BigMapToken,AddressToken,MapToken,BoolToken,OrToken,ContractToken,ListToken,MutezToken,BytesToken,OptionToken,TimestampToken,IntToken,UnitToken,KeyToken,KeyHashToken,SignatureToken,LambdaToken,OperationToken,SetToken,ChainIDToken,]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michelson-encoder/src/tokens/tokens.ts#L34">packages/taquito-michelson-encoder/src/tokens/tokens.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michelson-encoder/src/tokens/tokens.ts#L34">packages/taquito-michelson-encoder/src/tokens/tokens.ts:34</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -526,7 +459,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/58b742e80/packages/taquito-michelson-encoder/src/tokens/createToken.ts#L9">packages/taquito-michelson-encoder/src/tokens/createToken.ts:9</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d3a7e4805/packages/taquito-michelson-encoder/src/tokens/createToken.ts#L9">packages/taquito-michelson-encoder/src/tokens/createToken.ts:9</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -588,9 +521,6 @@
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="_taquito_utils.html">@taquito/utils</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="integration_tests.html">integration-<wbr>tests</a>
 					</li>
 				</ul>
 			</nav>
@@ -893,6 +823,5 @@
 </div>
 <div class="overlay"></div>
 <script src="../assets/js/main.js"></script>
-<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
 </body>
 </html>
