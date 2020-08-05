@@ -1,10 +1,12 @@
-name: Node.js CI
+name: Website Deploy
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
 jobs:
   publish-docs:
     runs-on: ubuntu-latest
-    if: github.ref == 'ref/head/master'
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
