@@ -28,7 +28,7 @@ module.exports = {
         alt: 'Taquito Logo',
         src: 'img/a_taquito.png'
       },
-      links: [
+      items: [
         { to: 'docs/version', label: '6.3.5-beta.0', position: 'right' },
         { to: 'docs/quick_start', label: 'Docs', position: 'right' },
         { href: "https://twitter.com/TezosTaquito", label: 'Twitter', position: 'right' },

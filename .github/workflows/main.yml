@@ -17,6 +17,7 @@ jobs:
           ${{ runner.os }}-node-
     - run: npm install
     - run: npm run lerna -- bootstrap
+    - run: npm run build
     - run: npm run lint
     - run: npm run test -- --runInBand
     - uses: codecov/codecov-action@v1
@@ -50,7 +51,7 @@ jobs:
   publish-docs:
     runs-on: ubuntu-latest
     if: github.ref == 'ref/head/master'
-    needs: [integration-tests, lint-and-test]
+    needs: [lint-and-test]
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
@@ -68,7 +69,7 @@ jobs:
     - run: cd website && cp -R build/. ../dist
     - run: npm run build-docs
     - run: cd packages/taquito-react-components && npm run build-storybook -- -o ../../dist/react-storybook
-    # - run: cd dist && touch .nojekyll && echo 'tezostaquito.io' > CNAME
+    - run: cd dist && touch .nojekyll && echo 'tezostaquito.io' > CNAME
     - name: Publish generated content to GitHub Pages
       uses: tsunematsu21/actions-publish-gh-pages@v1.0.1
       with:
