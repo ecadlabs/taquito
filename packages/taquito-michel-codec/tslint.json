@@ -1,11 +1,7 @@
 {
     "extends": "../../tslint.json",
     "rules": {
-        "semicolon": [
-            true,
-            "always"
-        ],
-        "no-unused-variable": true,
+        "semicolon": true,
         "strict-type-predicates": true
     }
 }

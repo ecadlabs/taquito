@@ -121,7 +121,7 @@ export function decodeBase58(src: string): number[] {
     const acc: number[] = [];
     let i = 0;
     // count and skip leading zeros
-    while (i < src.length && byteAt(src, i) === 0) { i++ }
+    while (i < src.length && byteAt(src, i) === 0) { i++; }
     let zeros = i;
     while (i < src.length) {
         let carry = byteAt(src, i++);
