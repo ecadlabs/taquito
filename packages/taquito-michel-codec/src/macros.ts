@@ -11,7 +11,7 @@ export class MacroError extends Error {
 function assertArgs<N extends number>(ex: Prim, n: N):
     ex is N extends 0 ?
     NoArgs<Prim<string>> :
-    ReqArgs<Prim<string, Tuple<N, Expr>>> {
+    ReqArgs<Prim<string, Tuple<Expr, N>>> {
     if ((n === 0 && ex.args === undefined) || ex.args?.length === n) {
         return true;
     }
