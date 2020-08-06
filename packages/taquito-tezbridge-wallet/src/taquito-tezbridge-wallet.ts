@@ -23,7 +23,7 @@ export class TezBridgeWallet implements WalletProvider {
   }
 
   async getPKH() {
-    return await tezbridge.request({
+    return tezbridge.request({
       method: 'get_source',
     });
   }

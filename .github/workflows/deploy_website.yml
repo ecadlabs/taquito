@@ -1,0 +1,35 @@
+name: Website Deploy
+
+on:
+  push:
+    branches:
+      - master
+jobs:
+  publish-docs:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: 10.x
+    - uses: actions/cache@v1
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+    - run: npm install
+    - run: npm run lerna -- bootstrap
+    - run: npm run lerna run build
+    - run: cd website && cp -R build/. ../dist
+    - run: npm run build-docs
+    - run: cd packages/taquito-react-components && npm run build-storybook -- -o ../../dist/react-storybook
+    - run: cd dist && touch .nojekyll && echo 'tezostaquito.io' > CNAME
+    - name: Publish generated content to GitHub Pages
+      uses: tsunematsu21/actions-publish-gh-pages@v1.0.1
+      with:
+        dir: dist
+        branch: gh-pages
+        token: ${{ secrets.ACCESS_TOKEN }}
+      env:
+        CI: true
