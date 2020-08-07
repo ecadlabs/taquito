@@ -8,12 +8,14 @@ describe('LedgerSigner test', () => {
   let mockTransport: {
     send: jest.Mock<any, any>;
     decorateAppAPIMethods: jest.Mock<any, any>;
+    setScrambleKey: jest.Mock<any, any>;
   };
 
   beforeEach(async () => {
     mockTransport =  { 
       send: jest.fn(), 
-      decorateAppAPIMethods: jest.fn() 
+      decorateAppAPIMethods: jest.fn(),
+      setScrambleKey: jest.fn(),
     }
   });
 

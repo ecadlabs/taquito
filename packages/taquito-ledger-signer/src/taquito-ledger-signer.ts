@@ -11,7 +11,7 @@ import {
 } from './utils';
 import sodium from 'libsodium-wrappers';
 
-export type LedgerTransport = Pick<Transport<string>, 'send' | 'decorateAppAPIMethods'>
+export type LedgerTransport = Pick<Transport<string>, 'send' | 'decorateAppAPIMethods' | 'setScrambleKey'>
 
 export enum DerivationType {
   tz1 = 0x00,
@@ -60,7 +60,7 @@ export class LedgerSigner implements Signer {
       private prompt: boolean = true,
       private derivationType: DerivationType = DerivationType.tz1
     ) {
-      this.transport.decorateAppAPIMethods(this,['getLedgerPublicKey', 'signOperation'], 'XTZ');
+      this.transport.setScrambleKey('XTZ')
     }    
 
     async publicKeyHash(): Promise<string> {
@@ -77,7 +77,7 @@ export class LedgerSigner implements Signer {
       if (this._publicKey) {
         return this._publicKey;
       }
-      try {
+
         const responseLedger = await this.getLedgerpublicKey();
         const publicKeyLength = responseLedger[0];
         const rawPublicKey = responseLedger.slice(1, 1 + publicKeyLength);
@@ -100,9 +100,7 @@ export class LedgerSigner implements Signer {
         this._publicKey = publicKey;
         this._publicKeyHash = publicKeyHash;
         return publicKey;
-    } catch (ex) {
-        throw new Error(`Unable to get the public key.`)
-      }
+
     }
 
     private async getLedgerpublicKey(): Promise<Buffer> {
