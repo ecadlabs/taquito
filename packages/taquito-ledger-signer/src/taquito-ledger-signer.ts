@@ -119,7 +119,6 @@ export class LedgerSigner implements Signer {
     }
 
     async sign(bytes: string, watermark?: Uint8Array) {
-      console.log('bytes', bytes, 'watermark', watermark)
         const watermarkedBytes = appendWatermark(bytes, watermark);     
         const watermarkedBytes2buff = Buffer.from(watermarkedBytes, "hex");
         let messageToSend = [];
@@ -140,7 +139,6 @@ export class LedgerSigner implements Signer {
             const signatureBuffer = Buffer.concat([rValue.buffer, sValue.buffer])
             signature = signatureBuffer.toString('hex');
           }
-          console.log('sig',b58cencode(signature, prefix[Prefix.SIG]), 'signature', signature)
 
         return {
           bytes,
@@ -157,7 +155,6 @@ export class LedgerSigner implements Signer {
         let p1 = (i === message.length - 1) ? this.LAST_MESSAGE_SEQUENCE : this.OTHER_MESSAGE_SEQUENCE;
         ledgerResponse = await this.transport.send(this.CLA, this.INS_SIGN, p1, this.derivationType, message[i]);
       }
-      console.log('ici',Buffer.from(ledgerResponse).toString('hex'));
       return ledgerResponse;
     }
   }
