@@ -5,6 +5,32 @@ import { ligoSample } from "./data/ligo-simple-contract";
 
 /**
  * LedgerSigner test
+ * 
+ * Set up your Ledger device with this mnemonic to run this test file and remove " "testPathIgnorePatterns": ["./ledger-signer.spec.ts"] " from package.json.
+ * 1. episode
+ * 2. capital
+ * 3. clerk
+ * 4. vanish
+ * 5. goat
+ * 6. result
+ * 7. scan
+ * 8. phrase
+ * 9. air
+ * 10. float
+ * 11. shoot
+ * 12. nasty
+ * 13. wreck
+ * 14. safe
+ * 15. parade
+ * 16. south
+ * 17. outside
+ * 18. urban
+ * 19. bounce
+ * 20. art
+ * 21. boil
+ * 22. mix
+ * 23. front
+ * 24. security
  */
 describe('LedgerSigner test', () => {
   let transport: LedgerTransport;
