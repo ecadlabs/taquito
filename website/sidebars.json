@@ -20,7 +20,7 @@
     {
       "type": "category",
       "label": "Signer",
-      "items": ["inmemory_signer", "tezbridge_signer"]
+      "items": ["inmemory_signer", "tezbridge_signer", "ledger_signer"]
     },
     {
       "type": "category",
