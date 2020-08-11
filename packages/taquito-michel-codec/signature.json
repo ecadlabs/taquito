@@ -30,7 +30,7 @@
           },
           {
             "path": "dist/taquito-michel-codec.es5.js",
-            "sha512": "74e6bf83604862df20389a3fa2d5c0e3208d7b98e0f9d555c2815afadf5ef5f8e897eb89664b5b7184f7cde576788cc73af529213d599dab119351220c779f8c"
+            "sha512": "a9ad34af5f937dfb7e684f65c900641b2cc8998f1b15db4940644f0feb9dcdfc8d531cb394167a4d2e41838861979315d0973f66ff98d15f39e4c36c43d6450a"
           },
           {
             "path": "dist/lib/taquito-michel-codec.js",
@@ -38,7 +38,7 @@
           },
           {
             "path": "dist/taquito-michel-codec.umd.js",
-            "sha512": "aee1bef6d5d1213095cf3eee6ebbdf756cc3d152cd35ead74b3088a7fa5422fbe4bbdf8c8dbdb14c6ae3a257f0691ee5f7a4f284f54b9f4d8f632fee747cd738"
+            "sha512": "56181469510e99d38e120e9d24d4d839a0edc1fbb42a33bdad25298258648d41331ab1291341b6738f6a250f40b7c9201771496f825b5067847f331896a82b52"
           },
           {
             "path": "dist/lib/utils.js",
@@ -153,7 +153,7 @@
           "typings",
           "version"
         ],
-        "sha512": "3781624fb00234ba16f77668a2c4f5c410b14be6b6a49a434ee983b4e1829e924a683f822b43a1bcbb0aff8cf142291134b8b2d2cfc88c23cd782dd5836c9562"
+        "sha512": "bb23c424939a5ca6a59c7668ea89b3f8784cb560b22c3145ca9bd5d146db57ec76a5eb503743ce7c49a652b398a8163b3152599d5e10cb9d62ea034296234449"
       }
     },
     {
@@ -161,7 +161,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/michel-codec",
-          "version": "6.3.5-beta.0",
+          "version": "6.4.0-ledger.0",
           "description": "Michelson parser/validator/formatter",
           "keywords": [
             "tezos",
@@ -227,29 +227,29 @@
             ]
           },
           "devDependencies": {
-            "@types/jest": "^26.0.0",
-            "@types/node": "^13.13.5",
-            "jest": "^26.0.1",
+            "@types/jest": "^26.0.8",
+            "@types/node": "^14.0.27",
+            "jest": "^26.2.2",
             "jest-extended": "^0.11.5",
-            "lint-staged": "^10.2.9",
+            "lint-staged": "^10.2.11",
             "lodash.camelcase": "^4.3.0",
             "prettier": "^2.0.5",
             "rimraf": "^3.0.2",
-            "rollup": "^2.13.1",
+            "rollup": "^2.23.0",
             "rollup-plugin-json": "^4.0.0",
             "rollup-plugin-sourcemaps": "^0.6.2",
             "rollup-plugin-typescript2": "^0.27.1",
-            "ts-jest": "^26.1.0",
-            "ts-node": "^8.10.1",
-            "tslint": "^6.1.2",
+            "ts-jest": "^26.1.4",
+            "ts-node": "^8.10.2",
+            "tslint": "^6.1.3",
             "tslint-config-prettier": "^1.18.0",
             "tslint-config-standard": "^9.0.0",
-            "typedoc": "^0.17.6",
-            "typescript": "^3.9.5"
+            "typedoc": "^0.17.8",
+            "typescript": "^3.9.7"
           }
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfF36DCRAD9Qy5GYHsngAAl4QQADzA9a1cqVtYCHlFMOFo4M6n\ntMM/Tj/cP988y1LgShJbuIoRYspYZiNN2FUtQqgsKmKZqFkv6yqRcGsadHCkvks6\nwfa+anZjmOHYB8QURFe8wXZaw28HBvI+Frydk2R2jXUjFm+vzx+grJd04A+SsiE/\nbZFQNqpCSaUuMKl6zyoJMoy8F8/HR8eebpdam8ndJg2LvaCDnBnham7cQ7P5B8VT\n1Ds/r7Yu9ISSXkU//OAwHdrbSOr3OWK2VYy9MZtAJ1mDSBWvzrNuCSI8tuhJa8fM\nXz1R/eZm3H4KGsI8cuYV/1tmnwrltHJIq5hoMDQbcnxML5npMydguwxXA2CqO1Hp\nmsYEpZSBYqaS1mYw7lPlGaalkXvLk9HR2ZNoO42EYZfNC1CgfUPP8FxLvG9yrOaZ\n5Vll04I1jhLENxfOtT/lVpPzeSR/x8RRjBHH26yQ+i9IvL44NonaGm0g5hmfwP2I\nlQ9F75f5WrIMsQ0qt6IluF3HmxDr3h04XgnYRFoMBiBfuG/6uhOWmYTzgcFLlgM7\npQjZ8WP/wuYimUKY4hqYCm++Ok5odFrJ+GAOXdDe/7g0VxSJOnfBUQZfngmbziZX\niykc+ld4M2bl65K41RQu+A9Sb60gMFGzsdi5QZZf4sr6Riuwdc0qS0ZYbrorRFQG\nifD4hm4o94GjZ0BpLsZB\n=Qw11\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfMhKxCRAD9Qy5GYHsngAAiKIQAB/o4MqJSv5zoeMyev0B8uzQ\nHaRwijO0Rs2VQ7I4OcJhnn8OMKTsjCyA6V3PwMWoSmPMjZTKg6ORTgAccr3tzqio\nnOcLLR5oXqawMrZSou1jsMA01ABcGDAxGCjBqnqmCXwNoMemkCWC/Wf9qw6t1Gvr\nf1kx7EGJBcma4ToYTvNE4Bq35SycFAHc7mHU0eM3pQWwbQSP+rUqQbvqf0+XdGPh\nA070yeaPOB9dWTnHdpvtfsaVWzWQhbt5e/cL9gF8vDlc/xlnuOhPqbmqrSZygJQ6\nJVbw9cYeQ79ipkrBq2snKZ7TAIVQHBGX47F6gW2nGgGpi3PEACmSMEqwFILdpEQK\nU9nPOGZUCLB9T3lIdWnhConi31y8eCJT7wEYzNLnSQJv6Bek9wfKpEhNd0P5NCKz\nWb5bJBTDLXzJBei7HfdBJvzLbE7yF5WC+KpTIc+dqLGl+6orwBXDUS49Uto1sqvk\nNENvzEobQQAdacvwRyWEq6K9A9GhIZAu+9xuHhAffSvmhcYqMqVR6XnsMq4tEaBE\nW4DE0Yl7oi4AL/QGfhItx5dkPa4E6PrVzC0CHp5dyIlFB+1R/z75qXSwl98hN/09\nH0tnZD7j0LcSSYii0GYLGXZQHUzkf7IJsty1KsOGMGuOKbaxvwZWZeIK/0VuFbc+\nA9THBEWV7MQoiCoUqcn/\n=Z9mb\n-----END PGP SIGNATURE-----\n"
 }

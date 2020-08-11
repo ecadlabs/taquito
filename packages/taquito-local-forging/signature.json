@@ -38,7 +38,7 @@
           },
           {
             "path": "dist/taquito-local-forging.umd.js",
-            "sha512": "5442abbb6bcd8a06bdbb3481172dae491097471c9970b54638a7bf10a67c21d9e20f62566e6a9a1fd4351664b2e834883984471e3fead573b0ef7c07a5565744"
+            "sha512": "e5959ce1ead37b1793f771fc4cf8335fd6cb7e5d2e95ed3934501fd3d086b77df238a3bff3552eeed003a147a38b872962e9ce396d499728eaa2d9da77c8a2cb"
           },
           {
             "path": "dist/lib/uint8array-consumer.js",
@@ -166,7 +166,7 @@
           "typings",
           "version"
         ],
-        "sha512": "9a76be1a06c5cebc845768984271573423632f2e237b9e2653cf81be9ff567905b9c3d516d853a39d56577e3072710cce8c263b4bc40abc3afe1dd3fe8553a20"
+        "sha512": "6aa4a301e101ab695c2514850d6717f5cb4b61f4c3e465d1d2f2436cd0db0919e257af28dd5e7ab21cb05d9446b3f09d9986e46140ca18a6f9b82775c9f2c44f"
       }
     },
     {
@@ -174,7 +174,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/local-forging",
-          "version": "6.3.5-beta.0",
+          "version": "6.4.0-ledger.0",
           "description": "Provide local forging functionality to be with taquito",
           "keywords": [
             "tezos",
@@ -240,40 +240,40 @@
             ]
           },
           "dependencies": {
-            "@taquito/utils": "^6.3.5-beta.0",
+            "@taquito/utils": "^6.4.0-ledger.0",
             "bignumber.js": "^9.0.0"
           },
           "devDependencies": {
-            "@taquito/taquito": "^6.3.5-beta.0",
-            "@types/jest": "^26.0.0",
-            "@types/node": "^14.0.1",
+            "@taquito/taquito": "^6.4.0-ledger.0",
+            "@types/jest": "^26.0.8",
+            "@types/node": "^14.0.27",
             "colors": "^1.4.0",
             "coveralls": "^3.1.0",
             "cross-env": "^7.0.2",
-            "jest": "^26.0.1",
-            "jest-config": "^26.0.1",
-            "lint-staged": "^10.2.2",
+            "jest": "^26.2.2",
+            "jest-config": "^26.2.2",
+            "lint-staged": "^10.2.11",
             "lodash.camelcase": "^4.3.0",
             "prettier": "^2.0.5",
             "prompt": "^1.0.0",
-            "replace-in-file": "^6.0.0",
+            "replace-in-file": "^6.1.0",
             "rimraf": "^3.0.2",
-            "rollup": "^2.10.2",
+            "rollup": "^2.23.0",
             "rollup-plugin-json": "^4.0.0",
             "rollup-plugin-sourcemaps": "^0.6.2",
             "rollup-plugin-typescript2": "^0.27.1",
             "shelljs": "^0.8.4",
-            "ts-jest": "^26.1.0",
-            "ts-node": "^8.10.1",
-            "tslint": "^6.1.2",
+            "ts-jest": "^26.1.4",
+            "ts-node": "^8.10.2",
+            "tslint": "^6.1.3",
             "tslint-config-prettier": "^1.18.0",
             "tslint-config-standard": "^9.0.0",
-            "typedoc": "^0.17.6",
-            "typescript": "~3.9.5"
+            "typedoc": "^0.17.8",
+            "typescript": "~3.9.7"
           }
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfF36CCRAD9Qy5GYHsngAA89MQAITrqHP2p7bCuYmq99DeqMFN\nClvl3qLxajhdUQcKd/E+DHVrMFozQIWhj4M2b1cvbYXBZEmIJ6g6udnK5+D2bEwF\noAXKnJi64CisMCGyYgwKRVUcVzKJaVW9zJN8aD7mFGhGR6IfouvEC3/EA7xN287M\neWepTusUU+vQj+96hz3leQHZSoZXg8rhxiSnFy9Bm7jyXt7BNSz2iZXDXJqWAl34\ntk/XKIvigaE7ookzUUkQAJ9IE4Ly/wo8RBV9sRN4mM9ZwMLOfFHu7j1k2p6eHcxv\nepfby2jA77ZoIwhPtKt4MHFjmIySLmt2bCBkM0Fp5nqX/3/Mkw1PlhCkNfzsX3tg\ngq9LIH35nvY9VjIpC2OKeBHXLYY9kFxoHS60JDfG/5givr9NdeG7UlCFmW5TyjoF\nbB3l4JFtJngq+4R9sXNJiEG9ui7MFpBtU0xn5kunmm7A771wuDlbKGIXuRqb1rN5\n6iC2ospaeVBMGKPlJgKmlDANWNBQ0eOIPDI13E1ihQ5nmU1xrOazoPRaZYFhBsbg\ncMt0h9CDaIoKHPEHt9C7ulNO9KSygXblsEUqMtfifl7uQxcWBA+5bhWoJg+gMRYJ\nRMzMS6xoNc5JrvncthZg2lARJ7Fm276j0FjOVVY2GCFAOWoeH4uGEBlbAGZudmnD\ntBLvZQNEhN9M49DdE8dc\n=2xru\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfMhKwCRAD9Qy5GYHsngAAkIAQAHsFQFgYsTUjEuSnlJIHXBrP\n8uXVkJAC4QlhRjvSlWYtTLu6fZEQE3SwGd/0EMVxHug0TVpgA+O7a0gi25n1mYbx\nU3pV9/smxn6x4eUjs4MmOcejMZdwXvxz3hznz4OF6Uo349yM8KaM0A6CT3K4vxkZ\nU6jS0rJ+OrwGwtSYZSkaB+y6Rkna9Wu7/ooO/DPaFwqKlaC1EyjmuTAIlFYTkUsw\nmsS+izFTWXtszQEV0/rArpM8VCzQbHZ+Sz9z29u0r3QACCFita7ITCkNtJgdtNsh\no5e4sxQ4d1P+hne8QPIiGfdpoqgau4CYwyQ+LDBGEbzBYP7lfThvqpbJ5P2zRqnW\nDiUbB29uy3PjqpvaOK0uOcYfOMYSCDH/0VD+GE15DZ0Va12iz6nZ2ETU8x3Ld9G2\n2D0+J7kP1pa9Wkjl25dXBqI/DHNJCP1ZbpxTgqXohCRejDuy8BU2wwPq9e3O+Pb2\n0MIzrSlkTiGu8iIqbWu6B0XFXVFHrN6JGDk1fXb6ZKlA1QZv+LhyrdAZ6q2If6gg\ni9ylur3o9G4x7Ekm1EyMLCCRPh+krery35kk4wmJB2RbOxxSphg/GXak3yQhMJol\nkGhDxYM98yfPAJ9IwNTYvWtE5482i794NBqDgBpurHejtrKDzAjG8R3fh4pqrbAs\nvxVOL2oTT3bAD4wO+1X6\n=K2T4\n-----END PGP SIGNATURE-----\n"
 }

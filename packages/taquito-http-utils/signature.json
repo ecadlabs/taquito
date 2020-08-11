@@ -18,7 +18,7 @@
           },
           {
             "path": "dist/taquito-http-utils.umd.js",
-            "sha512": "3caa7a982037be5c17c7deb566661e486c48b9e38ddb011965c3c65e678bdbc8756ac9650c51ba02df5391efa81341f5e1f2abb1658ee69e7d96028fffd03f88"
+            "sha512": "9e372842707aa15a970c32c032d382a118820984d03cbfd5841d7180f0680cca75df5ae2f9a82c7ba5273e71ed2aadc2de2e855a3e802a0369da948bcc19d98d"
           },
           {
             "path": "dist/lib/status_code.js.map",
@@ -78,7 +78,7 @@
           "typings",
           "version"
         ],
-        "sha512": "c27b42d6fc05584ddc3272dad34a8be4a0ce69ccea0e66e7bf70b41c508f0327350c21fad25b8f44e92ac5134578bc4c791d55ed23cb203740c866052921f24b"
+        "sha512": "88d94cd7f45831964057dfff098578534446dac8f15a0a9268f938c0499a719b96a41ca5a0809cd2f05b243ca05c342122c03858e9b53ef5364a4bd9da3ed91e"
       }
     },
     {
@@ -86,7 +86,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/http-utils",
-          "version": "6.3.5-beta.0",
+          "version": "6.4.0-ledger.0",
           "description": "",
           "keywords": [],
           "main": "dist/taquito-http-utils.umd.js",
@@ -145,35 +145,35 @@
             "xhr2-cookies": "^1.1.0"
           },
           "devDependencies": {
-            "@types/jest": "^26.0.0",
-            "@types/node": "^14.0.1",
-            "@types/superagent": "^4.1.7",
+            "@types/jest": "^26.0.8",
+            "@types/node": "^14.0.27",
+            "@types/superagent": "^4.1.8",
             "colors": "^1.4.0",
             "coveralls": "^3.1.0",
             "cross-env": "^7.0.2",
-            "jest": "^26.0.1",
-            "jest-config": "^26.0.1",
-            "lint-staged": "^10.2.2",
+            "jest": "^26.2.2",
+            "jest-config": "^26.2.2",
+            "lint-staged": "^10.2.11",
             "lodash.camelcase": "^4.3.0",
             "prettier": "^2.0.5",
             "prompt": "^1.0.0",
-            "replace-in-file": "^6.0.0",
+            "replace-in-file": "^6.1.0",
             "rimraf": "^3.0.2",
-            "rollup": "^2.10.2",
+            "rollup": "^2.23.0",
             "rollup-plugin-json": "^4.0.0",
             "rollup-plugin-sourcemaps": "^0.6.2",
             "rollup-plugin-typescript2": "^0.27.1",
             "shelljs": "^0.8.4",
-            "ts-jest": "^26.1.0",
-            "ts-node": "^8.10.1",
-            "tslint": "^6.1.2",
+            "ts-jest": "^26.1.4",
+            "ts-node": "^8.10.2",
+            "tslint": "^6.1.3",
             "tslint-config-prettier": "^1.18.0",
             "tslint-config-standard": "^9.0.0",
-            "typescript": "~3.9.5"
+            "typescript": "~3.9.7"
           }
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfF36ACRAD9Qy5GYHsngAAtMMQAGKk7xD49AFOiDFUp7Syhofy\nrq+oixEysRN9W8fOOOMvSXvT+ZCDYWJOcFOpOdV/WTi7U5jS/+/B15n71qIyeJev\n7ONdf5UBsH6UYxUTzp1ZZoXvjKFlXd1NwC5aaNsVCuToOpZi0wIgvo3nEpsiIW5b\nL4nofmG8okjB0s50a/GcjKodapLAPhoZoCNUtn1NvxQH9j386jG5t7lp0SQ4H/+o\nDxLQK5gQ2d9YCsBljyVaOlsNnSWtIBotRX5tZRxwbQM/uS9EPfcLlp+wIfFA2g/K\nLCi4QshFZxTQgpY1qANbZmCAeOJ4BN8aNpjp4mwg8KVm1KD3XqGokpqeOf7vK1Xh\nETuhwyae6NHzsQBwQ+lL9Fr7o8CNkMaQyURfFskDIB5x+IlyqekFbeYRRuBlKUxj\n95J4G+P4o6ifutX4tResRyCnMTCCfVz5EsXj9B8dCdeuPA+mydeJrW2w3diS4B6S\nIpjeSlWh769YxU6CZdwSkGYCKwMmXGsvTsRBNwV/oMicyolCKEAuaiNzRuAzhzDG\nhJmwMHYq15pcSZxCP+uPEmiFuo2Rm7R614X9eURN2HqroeJ7X9Qo6dBJrP+G+1GU\nD4T3roRkxkh2QLuWbDKiD2gwVJIKj76K1dDk234boZox1l8UFgZ/SLvk4VlTDeQ3\nDBANN2zCEzbchqXdOwXa\n=GQn2\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfMhKtCRAD9Qy5GYHsngAA+DgQACo+aIOWcvg7wDeSHgzBuhCE\nQHDCm0nGfHMfQqcK03CbR85CzybmK9+Vo+q0pKg2DLxMy938W2cN9nfbgJd2SQWa\nCTqjxDeCupuBkq8LecLa1HJVKWsPGFUo6kcb/DG4/rqrgW5uNld5aXQQ4M7hlmrm\nqEbWN3JSPRDZDKP82iDyeV1lw71J3rY6XzG725ytZu9bPCLjR4/ppI/kdlxBp8o4\nN6HEKUeHaBuhyk7ROpdFQbmeVRmcBjeIfxvGsc3ldOcN4hO3SVMYRtZeTYcb4Pvk\nG9Yxosrhn4TSvT1dAr//YEZ2aTMKOywAH0GdTq6a7TNyEol7c1pbaAkWSsjNXsRE\nsow+or7UqLu/hq+PuopBmoZBt4x8btPXj8o0t0pIqCeReKkKYXmv1+jQ9rP9YKa3\npgZ2R25vV/mctGPJi7sz1DjrAqcpRLmJLtXMKuK4zbfF1ZUJ18yJMx+UxsMd9j4Q\nhiAGA6RzuWqvMyPx1AUV4qLGVCreBJxf97cQTEBQzKj7wS9ry1zgGLTJF2WhHRNB\nZUKXUKJ6GJrAmLNkzTD1Ie6bY9ZsT5wfdPWX/kjLwNkGXpHr3ZrrHCfFePi7keOY\nFNJB1nGPk+GeKGBx4ZgCY+TV9kGGuhLd+ksX6R2GWZqfgZXyb/estAqrGSpsnWar\n/NK77Q6MnQBnEpo85GUt\n=rgG1\n-----END PGP SIGNATURE-----\n"
 }

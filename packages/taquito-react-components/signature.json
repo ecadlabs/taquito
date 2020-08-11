@@ -18,7 +18,7 @@
           },
           {
             "path": "dist/taquito-react-components.es5.js",
-            "sha512": "b1392a6c545841aac14e10084eac0b3e4c4d72b8909f49113e4d9034424c98bbe8b0ac166724c174d1ec771fa18fb5d6b303c64ec7e9d24b73346bdb907e2609"
+            "sha512": "a66c86dc12dbb69c71c87a770f4609c03303a87a775545a90768dec9444c9811e4e80c1f6078035cbcc5c526bfee2247f1442e04394b77cb60ee821ba8ec2aac"
           },
           {
             "path": "dist/lib/taquito-react-components.js",
@@ -26,7 +26,7 @@
           },
           {
             "path": "dist/taquito-react-components.umd.js",
-            "sha512": "6f38997ab176cd86de7712ec05fdb926b01a15e717251cc7ad1025e7530fd5dcc61c7d84121a954f17b34421681e32df04704c98b4d651fb5e860f8b6a6fefc9"
+            "sha512": "070532ab5e7d05b4cf2ec8544273b33fd369aa0849e5448418b01227a1e6ef7d5c48bac8d41982dc83a847f0d9796b6a6291b8566bbcd0b1b69ea784df8d3b2b"
           },
           {
             "path": "dist/lib/tezos-context.js",
@@ -117,7 +117,7 @@
           "typings",
           "version"
         ],
-        "sha512": "b8f9645bde4166c9b9f2d7ec85265a84fa583f84e315c055373348d1bbd0b72893a1f6820f60f73e9c5e7f7c160cd9e2abb05ca390bce26a42e05bcc17d11698"
+        "sha512": "19e20164c7e9b7ef467df8f579effaacf7dbb9f4975269a692829cb445a7c9d5a7f14c24f319b21a739f417e8b28d024a65bb8aa5d67ae4767f4aea179acc131"
       }
     },
     {
@@ -125,7 +125,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/react-components",
-          "version": "6.3.5-beta.0",
+          "version": "6.4.0-ledger.0",
           "description": "React Components that implement common use cases for data retrieved from the Tezos blockchain",
           "keywords": [
             "tezos",
@@ -168,24 +168,24 @@
             ]
           },
           "dependencies": {
-            "@taquito/rpc": "^6.3.5-beta.0",
-            "@taquito/taquito": "^6.3.5-beta.0",
-            "@types/react": "^16.9.35",
+            "@taquito/rpc": "^6.4.0-ledger.0",
+            "@taquito/taquito": "^6.4.0-ledger.0",
+            "@types/react": "^16.9.44",
             "bignumber.js": "^9.0.0",
             "react": "^16.13.1",
             "recharts": "^1.8.5"
           },
           "devDependencies": {
-            "@babel/core": "^7.9.6",
+            "@babel/core": "^7.11.0",
             "@storybook/addon-actions": "^5.3.19",
             "@storybook/addon-knobs": "^5.3.19",
             "@storybook/addon-links": "^5.3.19",
             "@storybook/addons": "^5.3.19",
             "@storybook/react": "^5.3.19",
-            "@types/jest": "^26.0.0",
-            "@types/node": "^14.0.1",
-            "@types/react-color": "^3.0.1",
-            "@types/recharts": "^1.8.10",
+            "@types/jest": "^26.0.8",
+            "@types/node": "^14.0.27",
+            "@types/react-color": "^3.0.4",
+            "@types/recharts": "^1.8.14",
             "@types/storybook__react": "^5.2.1",
             "awesome-typescript-loader": "^5.2.1",
             "babel-loader": "^8.1.0",
@@ -193,29 +193,29 @@
             "core-js": "^3.6.5",
             "coveralls": "^3.1.0",
             "cross-env": "^7.0.2",
-            "jest": "^26.0.1",
-            "jest-config": "^26.0.1",
-            "lint-staged": "^10.2.2",
+            "jest": "^26.2.2",
+            "jest-config": "^26.2.2",
+            "lint-staged": "^10.2.11",
             "lodash.camelcase": "^4.3.0",
             "prettier": "^2.0.5",
             "prompt": "^1.0.0",
-            "replace-in-file": "^6.0.0",
+            "replace-in-file": "^6.1.0",
             "rimraf": "^3.0.2",
-            "rollup": "^2.10.2",
+            "rollup": "^2.23.0",
             "rollup-plugin-json": "^4.0.0",
             "rollup-plugin-sourcemaps": "^0.6.2",
             "rollup-plugin-typescript2": "^0.27.1",
             "shelljs": "^0.8.4",
-            "ts-jest": "^26.1.0",
-            "ts-node": "^8.10.1",
-            "tslint": "^6.1.2",
+            "ts-jest": "^26.1.4",
+            "ts-node": "^8.10.2",
+            "tslint": "^6.1.3",
             "tslint-config-prettier": "^1.18.0",
             "tslint-config-standard": "^9.0.0",
-            "typescript": "~3.9.5"
+            "typescript": "~3.9.7"
           }
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfF36GCRAD9Qy5GYHsngAAbpoQAHRcC01WRCLSYLpoWMTpBXVr\nH0I+5wE65ngPK6Tj3vDUFLfLKYR7cp2gTesfQKA4RQ8d0NFnxchupP91dhee8K6n\nF0FR2u7egLB9nXprprzvk7QqFclsTYD8qvXjGoHcvtHn92YicRLKv8/zWSI+ftTi\nueWqtLy0WYqqbAUy76JaQgKBzUqaSEMUN18ra2bRhs7awvSG4+ADHLo2/TNC+rRt\nMmVMYq1KytGOKBJ+dTwY1p1C7vXW9ch+Bvqg9ye1fhhLsfMVbzRH6/GobDf7J82P\nuRdqzxBjMO7sHj4/9aZGk8UdlYqwgch7Jm7vK99FbEZGzDe6S+45Brm3m6tGbcRW\nRzNTyXeJvgmk4R2yKD+1SJGfc8lXCt3h9Mo4ITawke/iyXivmoZm/OX+9RBcQPo8\ndy+WCOHXJIFl16XGvO3bXHqSj7cDhJcgCcIhmJ1hPovumUn9bFFwz8WU4U0kjX3i\n4YCe9ka65OCQ+yxyNTEasmGlcu83S1+Cm7Kgw8nXmIcPH1ahEheAlUB4FELm6HyQ\nSMT9NUB99wHQAZfmpETjmrj2JnQMb5GdUATT0yQ8M4CXyjFHxeTuDG9ripH363zf\nJ3cySeV27DYoCoUh7xDsZHJ8Lpr8mQHj+bZwi9qHYRKeaYrsYOnM2cNIuFeHctk2\nZb/7eW/gmF/fP6esrzpi\n=NnqG\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfMhK0CRAD9Qy5GYHsngAAob4QAApvh2hnEQ4xf8F1PTsRE96H\n0IcMFnGyRTKEg23rWtOoX2fUOVTDwjq5tgaadpy0ycz3Vu3ZHgI/2s+Fi06i+73X\nFth4Um6/g/5VN9p1hi1aiuKkhyK80WDdECyymZbN3C9soFQ1E3tN0wOwOpJXoGNX\nRg4FoDx8zLJD0uYjf+11NfPdDFTBozvFfp/0zVvyof2oeaE9NwzVtu9EwGys8iV3\nKSeH6Cbw61Y2y/bjcCkD5gNuNC139BFx2MQe2AM8I85TAw7eAPe0PT3ROqi3rFwU\nivGoHOqKRPF4PTbNepwerh/b7zKj3RG0oSh0gLQY+68S0yaybRZRuaepjPnySVpL\nuYwbR63sMyHP+rUYT8xIje9fHsbk5iQaMphjGnSC+CN8ElGZFyz8F4j95K912iE3\nOcLyqPKu7Of5PzfgOHUsrN4sp5yfj5yPfetEHq9hO4B0sQ4F1bsNGRuNcajqZGz9\nBWzv5YSBqLU2waqePxqPnCy3GUvSxN9qIP9gBksrUlNi5GuP5QzyPHvhkTsU+d59\nX3NlFkCkOo9W3vaGZGH5xAZck/+VPMzut+AiLXZshR//swE4nYVmxkhtga2DPDcH\nsLvi5Atyrle3xSXlqqeJ6zAiP0UDDTk6p6lDMAowUZIRFOPHibmWvuiO26citdmp\nLZLvTtsGlWBye8o7v7yu\n=eggL\n-----END PGP SIGNATURE-----\n"
 }
