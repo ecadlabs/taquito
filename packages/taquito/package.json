@@ -118,5 +118,6 @@
     "webpack-assets-manifest": "^3.1.1",
     "webpack-cli": "^3.3.12",
     "webpack-subresource-integrity": "^1.4.1"
-  }
+  },
+  "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
 }

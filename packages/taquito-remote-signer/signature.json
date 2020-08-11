@@ -65,6 +65,7 @@
           "devDependencies",
           "engines",
           "files",
+          "gitHead",
           "jest",
           "keywords",
           "license",
@@ -78,7 +79,7 @@
           "typings",
           "version"
         ],
-        "sha512": "8233052b97252dded149dbd57ef0bc6d036a562930255f95c578f2ef269bf751cf8e5580383c5ed8979f4c0af565fb6bdecea7aacb86072494930d495fd1c4ee"
+        "sha512": "b8af92ecf6bec7de305af0428057044f23267189d525c6cf8bb98eabe968475ddad5782ae806c58bbfc6283404b96a47810c0ae617883c4fbc5a949e3f836ded"
       }
     },
     {
@@ -181,10 +182,11 @@
             "tslint-config-prettier": "^1.18.0",
             "tslint-config-standard": "^9.0.0",
             "typescript": "~3.9.7"
-          }
+          },
+          "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfMhK2CRAD9Qy5GYHsngAAyHgQAD0tmhNyXOfuuWLZDjJ0FTFh\nLV+48hCdVOV8eOsJKf/fe7M/0LmC/8ZTz+JRu9mGlz2hlOHvgVJ6Ojhx6rBc/CXk\nGzhjhRgZHYe9oow6bIOJLLpdRwkHsEesZ/vwbp98qkqTUhV/9wMvfT62QQai/t1k\n40tLKkA6JbrGHNeRQETrPvKfVN6CMDPSXm2UvD8gIpy465ZqkqaSqRoY7BFjFml6\nQ4rTGfy5E81KxNz/lQJPcB8Lb0Kfhak5f4KkYMtnEYAiwnFOcDHy7ORuk6iOzRGc\nnsN+wLrIl2sYuKZz7Q/tNbxxoamk+idrio7ctN23nn+n5e+vbY8wMXT/kjb0BESy\nbD5LWIDzIIqYuqYZnAHrDw4vo5r6tVSRkcuh6Mua01EeSCek9AM82GLQk2QQ9N4O\nWv4AXJjxUc31NKTA67m5HpCIk9EsDXlWp0bI9HjVeAoqs09SSCxrBSlwMRkFdHug\nXOKluQIC+0fqkTtklB65FOOi6z5pgTtOlqZj7PsKFKo7VqKkKvuqICdbzTN0n+5Y\n+3yCzuUk5TZRjcS53A8hbEGqgiqwAJ3qvjEJQWKohiL1bWyAe97rcQQEm6gP/pCo\nhl0JKcLKDTfTbTuWZRf/b10Y2gQ1aLWuYPUOXQ3mx2cTuy0+u/65deBIX/sCbI5d\nIMUtMmcacg7KJ1ZH1RNT\n=bFoD\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfMhWWCRAD9Qy5GYHsngAAAdMQAKHWBIWiH6KBqBdSXz9dMzvF\nLs4bdun3BSTah+tCoJQInd/wWG4MQEHb7Es+vDdETYobHRMqtnSnVZ2//soDXrwH\nRIw1E9v2qwBp7M8LMlv3OYJ1OyfEkfEHnx9Cu79KArhLXh/6ynrvJucm5fhct8hn\nwETQtj8XXP0XH1BT52JpZIfMni+QpgE0+5b6vHS81yKtcpliME4EkU1qEJf8vRFU\nOYVOlwDW3zti2GIxbJ9qWuz6ENsJ9g6/5ZRxxaSxY5yXhdNwc6FBxlOvK6parWwt\n++nZVHADBKkz9KjmyTwvo8lrceRtG6YHU5z0qSur+FIUAdjGon/sOBNholGwAx5Y\nz6GUX88BOpHSwRSilCtnFWbK+JJWjZN0Efk5L3YmVYtoOAT9NMq8NmIpcnCYGzai\n73a7nN87j++7nCqhljWCYcDWq/LkMnj3amRqyR1Jt392d6IHELJsU6yUv/z06x7S\neZzUel8daVzLMFLjXLVS/GKyyAA4Npa5m9ZLYbp17EwOWZX/9c7X1YfN8dEF8x6V\n3iSe57O0lZg2f5gq1lCrpzZ6Eg9shUvmtw+JBlWJwTKFN7+5EAnJoGCKYhnG3ZbT\nMwm1uMuAdSwPVZa+icOdZMBoHTRtddtHa9spoDsk9uk6yu8+DTHoIwmYCoowYlet\noSoI9jgu/7KdBmB6Ubh8\n=ArOv\n-----END PGP SIGNATURE-----\n"
 }

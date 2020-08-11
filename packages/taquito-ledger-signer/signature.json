@@ -100,6 +100,7 @@
           "description",
           "devDependencies",
           "engines",
+          "gitHead",
           "jest",
           "keywords",
           "license",
@@ -113,7 +114,7 @@
           "typings",
           "version"
         ],
-        "sha512": "d86f6645d7ff8f75bb9daea306a3f02b5ac9f316cb368432f43bbc7ed566a88c4bc77af85b465120d80f9d2b445f75341fa036ddf9008271e7acb3053f184ec1"
+        "sha512": "37c9d00393de778cfdc3ed71eb6ccd1a69aa3e3c0a2f1f40023ae6379131b9ca2d59018589f2a8ed4daa435e0fbc82f85a371ae7522d3512fc2048d72752c3cf"
       }
     },
     {
@@ -132,7 +133,7 @@
           "module": "dist/taquito-ledger-signer.es5.js",
           "typings": "dist/types/taquito-ledger-signer.d.ts",
           "publishConfig": {
-            "access": "restricted"
+            "access": "public"
           },
           "author": "Roxane Letourneau <roxane@ecadlabs.com>",
           "repository": {
@@ -213,10 +214,11 @@
             "tslint-config-prettier": "^1.18.0",
             "tslint-config-standard": "^9.0.0",
             "typescript": "^3.9.7"
-          }
+          },
+          "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfMhKvCRAD9Qy5GYHsngAA1XAQAG8vA3YYik+lqDGR4IzPr98X\nDN4Y5gz5ymepmn0gdPEKVmPTgHZ0ikFQnXjunQIJLzZMWqBpGNQktBHmF0RQZHTO\nl1Z0wMunjyLmkUl9fKxyjrzFo+eOL8NJyiRJ0bAn/ZfxusOG1NSRuJkbqQXIu+Qz\nbhIhCX49FYHtRlvpbgItdxNd+4UYjAEiOX+9xyvcUN0FGG9uc7HAk2FcQPsJJybF\nZR8r7FqGvPmZ6mC51rHR8oTj1YX7j1S2mb9t3778BSe4bILEsQZ/C4PcC4H1AKvZ\n1IzSfJzfUmB8KWiKiGO+D0pcGATKtGvZoDEE5MKwt/WuC6M2vcc2Ws4s/BfBAelt\n49cr4BqB8PI/vhPRaOG4dYX+PEHq7+0XgwplCuHmX7KXxIj+qqF+MAbgVKIf3TV0\nEeHnqJZFkg3kntyxBnoLy47rqn73vdYc8tyXkpO2NCO3qTvmws04Bg+Ik0izjs6h\nGE6iyYD9fHNecqmIJRlOgWQaJiaWROOMEqMePLueu6SNqbfFc4CwHoo+OoPTWrvY\nWib2/UUbMjSrmQRDRxcL3zQgjNRP9UNhiM4NJTOiHCtC5D8rjbhHl3kYEa2AtyAr\npKKUhntlfMFcebPh64tkVIO9qA1JZJN4DIN4Jds9ybnSYrJwD0psIA/+mkXlZl+M\n4unwHi3SvdyjGIDYef5O\n=RID5\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfMhWPCRAD9Qy5GYHsngAA5h8QAE9l5mXynpAUJZlWrC9iJ4Lm\nOY19U1kA1rYYOTkYk/zZOVeX3CemnHDIHSjFXESoQrlBHs2SrkWaHZK0DJERS5iC\nFfBXjAgPb9zLnNpbSAmHKe4UJhLEjpeu4g7cDyJ8SkO0xhqV/Ya5ylc/yglsP6Xx\nLiIw70H1vmB//+k+jGQ9PuGQwXjEuH0BjMRT+EaUm+j8qvA944I7qFBadcplUwZa\nPW7kzO0STf8WHHPxJQbEGBKRGkC83iM+L5ffTCTOgj1igT4sg6Zat6m+2ud13Zd1\nSbGD05p6J1rUCi5lXK5FjM2grGAAvjDOoloQkJkp1x5Nstz7/jO78N+la4l6DGjh\nzgJKgpGhs0YS+19hcHmGPv/yKR7vFJTUL7iVvwJ0UdUOQAIcVlCJTOws5ipEkB0p\nkdXw3qtDu5FfVQtYsmw6ygw+THmhuGl0+Mu3/s3QeiL/dnvlnGI0tQjHOLcZt6Wi\nlwrYEIjiNBlapANLrOpiqEo2OpF7TGxDxevIcwpKpnFu/sYOLA352TjxWwbPqwdZ\nwD+HxNOV12OE1qlz94MY8f9R2/msoJQ5FnbVUDpv/8Ohfezx9eLwNvOjuxxgzebT\nuepHbQqKXrTUwygs4xBI97VYDdbiQJom4WARZb8T5n3Q5nuJlQDgT5138br4SH8k\n7kZPJUe1c8XoRGWgPPCr\n=Zkqu\n-----END PGP SIGNATURE-----\n"
 }
