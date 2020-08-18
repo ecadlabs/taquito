@@ -79,8 +79,8 @@ const ledgerSigner = new LedgerSigner(transport);
 Tezos.setProvider({ signer: ledgerSigner });
 
 //Get the public key and the public key hash from the Ledger
-const publicKey = await Tezos.ledgerSigner.publicKey();
-const publicKeyHash = await Tezos.ledgerSigner.publicKeyHash();
+const publicKey = await Tezos.signer.publicKey();
+const publicKeyHash = await Tezos.signer.publicKeyHash();
 ```
 
 You are all set to sign operation with your Ledger device. You can use your configured ledger signer with both the Contract API or the Wallet API as usual. If you try the following example, you will be asked on your Ledger device to confirm the transaction before sending it.
