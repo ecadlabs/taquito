@@ -130,12 +130,17 @@ Tezos.wallet.transfer({ to: address, amount: amount }).send()
   </TabItem>
 </Tabs>
 
+## Paths scanning
+
+Having your Ledger device connected to your computer and the `Tezos Wallet App` opened, you can run the following code example. It will scan your Ledger from path `44'/1729'/0'/0'/0'` to `44'/1729'/0'/0'/9'` to get public key hashes and the balance for accounts that are revealed.
+
 ```js live noInline
-//import { LedgerSigner, DerivationType, HDPathTemplate } from 'taquito-ledger-signer';
+//import { LedgerSigner, DerivationType, HDPathTemplate } from '@taquito/ledger-signer';
 //import { Tezos } from '@taquito/taquito';
 //import TransportU2F from "@ledgerhq/hw-transport-u2f";
 
-
+TransportU2F.create()
+.then(transport => {
   for (let index = 0, p = Promise.resolve(); index < 10; index++){
     p = p.then(_ => new Promise(resolve =>
       setTimeout(function () {
@@ -143,12 +148,10 @@ Tezos.wallet.transfer({ to: address, amount: amount }).send()
         resolve();
       }, 2000)))
     }
-
+})
 
 function getAddressInfo(transport, index) {
-TransportU2F.create()
-.then(transport => {
-  const ledgerSigner = new LedgerSigner(transport, HDPathTemplate(index), true, DerivationType.tz1);
+  const ledgerSigner = new LedgerSigner(transport, `44'/1729'/0'/0'/${index}'`, true, DerivationType.tz1);
   Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/carthagenet', signer: ledgerSigner });
   return Tezos.signer.publicKeyHash()
 .then ( pkh => {
@@ -156,11 +159,11 @@ TransportU2F.create()
 .then ( balance => {
   Tezos.rpc.getManagerKey(pkh)
 .then( getPublicKey => {
-  console.log(`The public key hash related to the derivation path having the index ${index} is ${pkh}.`);
+  println(`The public key hash related to the derivation path having the index ${index} is ${pkh}.`);
   if ( getPublicKey ) {
-    console.log(`The balance is ${balance.toNumber() / 1000000} ꜩ.\n`)
+    println(`The balance is ${balance.toNumber() / 1000000} ꜩ.\n`)
   } else {
-    console.log('This account is not revealed.\n')
+    println('This account is not revealed.\n')
   }
-})})})})}
+})})})}
 ```
