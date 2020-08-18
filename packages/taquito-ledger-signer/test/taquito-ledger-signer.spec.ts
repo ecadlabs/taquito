@@ -1,4 +1,4 @@
-import { LedgerSigner, DerivationType } from '../src/taquito-ledger-signer';
+import { LedgerSigner, DerivationType, HDPathTemplate } from '../src/taquito-ledger-signer';
 import { transformPathToBuffer } from '../src/utils';
 
 /**
@@ -59,6 +59,20 @@ it('Should get public key and public key hash for tz1', async () => {
     expect(mockTransport.send).toHaveBeenCalledTimes(1);
     expect(pk).toEqual('p2pk674CN8MDQBTHMxyNmRoJ3bnotxDdY4rqedevJc89Uc1b5kZ1b5R');
     expect(pkh).toEqual('tz3S43CJiFnra6i9yf7p6zkp9yCnaBxHfAfG');
+  })
+
+  it('Should get the right public key and public key hash using HDPathTemplate with index 5', async () => {
+    const path = HDPathTemplate(5);
+    const signer = new LedgerSigner(mockTransport, path, false, DerivationType.tz1);
+    const mockpk = Buffer.from('2102ccdfe2cffa0aa6511ee0dad2c0877073580af2a3cbdb026bf97c127928136c139000', 'hex');
+    mockTransport.send.mockResolvedValue(mockpk); 
+    const pk = await signer.publicKey();
+    const pkh = await signer.publicKeyHash();
+    const buff = transformPathToBuffer(path);
+    expect(mockTransport.send).toHaveBeenCalledWith(0x80, 0x02, 0x00, 0x00, buff);
+    expect(mockTransport.send).toHaveBeenCalledTimes(1);
+    expect(pk).toEqual('edpkvCTBXu8jchmdq1At1wnpqHXLK1pYKx7MRtPHYwfo5k48V5sf8b');
+    expect(pkh).toEqual('tz1QzsJQ8VDFWiYurySgfNvGqaBrt949PQZf');
   })
 
   it('Should sign operation for tz1', async () => {

@@ -19,6 +19,10 @@ export enum DerivationType {
   tz3 = 0x02
 };
 
+export const HDPathTemplate = (index: number) => {
+  return `44'/1729'/0'/0'/${index}'`;
+};
+
 /**
  *
  * @description Implementation of the Signer interface that will allow signing operation from a Ledger Nano device 

@@ -48,19 +48,22 @@ const ledgerSigner = new LedgerSigner(transport);
 The constructor of the `LedgerSigner` class can take three other parameters. If none are specified, the default values will be used.
 
  - path: **default value is "44'/1729'/0'/0'/0'"**  
- Ledger derivation path is used to get the accounts from a mnemonic phrase. For example, to get the next address from a phrase, the last number needs to be increased by one ("44'/1729'/0'/0'/1'"). The path must begin with 44'/1729'.
+ The Ledger derivation path is used to get the accounts from a mnemonic phrase. The first path used on the Ledger is usually `44'/1729'/0'/0'/0'` or can also be `44'/1729'/0'/0'`.  
+ The meaning of the numbers in the path is: `purpose'/coin_type'/account'/change'/address_index'`. The path must always begin with `44'/1729'`.  
+ If you want to get the next address from a mnemonic phrase, the last number of the path `address_index` needs to be increased by one (`44'/1729'/0'/0'/1'`).  
+ You can use as a parameter the `HDPathTemplate` which refers to `44'/1729'/0'/0'/${address_index}'`. You will only have to specify what is the index of the address you want to use. Or you can also use a complete path as a parameter.
  - prompt: **default is true**  
  If true, you will be asked, on your Ledger device, for validation to send your public key.
  - derivationType: **default is DerivationType.tz1**  
  It can be DerivationType.tz1, DerivationType.tz2 or DerivationType.tz3.
 
 ```js
-import { LedgerSigner, DerivationType } from '@taquito/ledger-signer';
+import { LedgerSigner, DerivationType, HDPathTemplate } from '@taquito/ledger-signer';
 import { Tezos } from '@taquito/taquito';
 
 const ledgerSigner = new LedgerSigner(
     transport, //required
-    "44'/1729'/0'/0'/0'", // path optional
+    HDPathTemplate(1), // path optional (equivalent to "44'/1729'/0'/0'/1'")
     true, // prompt optional
     DerivationType.tz1 // derivationType optional
     );
@@ -126,3 +129,38 @@ Tezos.wallet.transfer({ to: address, amount: amount }).send()
 
   </TabItem>
 </Tabs>
+
+```js live noInline
+//import { LedgerSigner, DerivationType, HDPathTemplate } from 'taquito-ledger-signer';
+//import { Tezos } from '@taquito/taquito';
+//import TransportU2F from "@ledgerhq/hw-transport-u2f";
+
+
+  for (let index = 0, p = Promise.resolve(); index < 10; index++){
+    p = p.then(_ => new Promise(resolve =>
+      setTimeout(function () {
+        getAddressInfo(transport, index);
+        resolve();
+      }, 2000)))
+    }
+
+
+function getAddressInfo(transport, index) {
+TransportU2F.create()
+.then(transport => {
+  const ledgerSigner = new LedgerSigner(transport, HDPathTemplate(index), true, DerivationType.tz1);
+  Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/carthagenet', signer: ledgerSigner });
+  return Tezos.signer.publicKeyHash()
+.then ( pkh => {
+ Tezos.tz.getBalance(pkh)
+.then ( balance => {
+  Tezos.rpc.getManagerKey(pkh)
+.then( getPublicKey => {
+  console.log(`The public key hash related to the derivation path having the index ${index} is ${pkh}.`);
+  if ( getPublicKey ) {
+    console.log(`The balance is ${balance.toNumber() / 1000000} ꜩ.\n`)
+  } else {
+    console.log('This account is not revealed.\n')
+  }
+})})})})}
+```

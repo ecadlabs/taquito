@@ -1,6 +1,6 @@
 {
-  "name": "@taquito/ledger-signer",
-  "version": "6.3.5-beta.0",
+  "name": "taquito-ledger-signer",
+  "version": "0.0.1",
   "description": "Ledger signer provider",
   "keywords": [
     "tezos",
@@ -10,9 +10,6 @@
   "main": "dist/taquito-ledger-signer.umd.js",
   "module": "dist/taquito-ledger-signer.es5.js",
   "typings": "dist/types/taquito-ledger-signer.d.ts",
-  "publishConfig": {
-    "access": "restricted"
-  },
   "author": "Roxane Letourneau <roxane@ecadlabs.com>",
   "repository": {
     "type": "git",
