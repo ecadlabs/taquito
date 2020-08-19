@@ -12,7 +12,7 @@ The Ledger Signer implements the Signer interface of Taquito, allowing you to si
 You need to have the [Tezos Wallet app](https://support.ledger.com/hc/en-us/articles/360016057774-Tezos-XTZ-) installed and opened on your Ledger device when using the Ledger Signer. 
 :::
 
-You first need to import the desired transport from the [LedgerJs library](https://github.com/LedgerHQ/ledgerjs). The Ledger Signer has currently been tested with `@ledgerhq/hw-transport-node-hid` for Node based application and with `@ledgerhq/hw-transport-node-hid` for web applications.
+You first need to import the desired transport from the [LedgerJs library](https://github.com/LedgerHQ/ledgerjs). The Ledger Signer has currently been tested with `@ledgerhq/hw-transport-node-hid` for Node based application and with `@ledgerhq/hw-transport-u2f` for web applications.
 You will need to pass an instance of the transport of your choice to your Ledger Signer as follows:
 
 <Tabs
@@ -50,10 +50,10 @@ The constructor of the `LedgerSigner` class can take three other parameters. If 
  - path: **default value is "44'/1729'/0'/0'/0'"**  
  The Ledger derivation path is used to get the accounts from a mnemonic phrase. The first path used on the Ledger is usually `44'/1729'/0'/0'/0'` or can also be `44'/1729'/0'/0'`.  
  The meaning of the numbers in the path is: `purpose'/coin_type'/account'/change'/address_index'`. The path must always begin with `44'/1729'`.  
- If you want to get the next address from a mnemonic phrase, the last number of the path `address_index` needs to be increased by one (`44'/1729'/0'/0'/1'`).  
+ If you want to get the next address from a mnemonic phrase, the last number of the path (`address_index`) needs to be increased by one (`44'/1729'/0'/0'/1'`).  
  You can use as a parameter the `HDPathTemplate` which refers to `44'/1729'/0'/0'/${address_index}'`. You will only have to specify what is the index of the address you want to use. Or you can also use a complete path as a parameter.
  - prompt: **default is true**  
- If true, you will be asked, on your Ledger device, for validation to send your public key.
+ If true, you will be asked, on your Ledger device, for validation to send your public key. ***Note that confirmation is required when using `@ledgerhq/hw-transport-u2f`, so you should not set this parameter to false if you are using this transport.***
  - derivationType: **default is DerivationType.tz1**  
  It can be DerivationType.tz1, DerivationType.tz2 or DerivationType.tz3.
 
@@ -132,7 +132,7 @@ Tezos.wallet.transfer({ to: address, amount: amount }).send()
 
 ## Paths scanning
 
-Having your Ledger device connected to your computer and the `Tezos Wallet App` opened, you can run the following code example. It will scan your Ledger from path `44'/1729'/0'/0'/0'` to `44'/1729'/0'/0'/9'` to get public key hashes and the balance for accounts that are revealed.
+Having your Ledger device connected to your computer and the `Tezos Wallet App` opened, you can run the following code example. It will scan your Ledger from path `44'/1729'/0'/0'/0'` to `44'/1729'/0'/0'/9'` to get public key hashes and the balance for accounts that are revealed. Confirmations will be asked on your Ledger to send the public keys.
 
 ```js live noInline
 //import { LedgerSigner, DerivationType, HDPathTemplate } from '@taquito/ledger-signer';
@@ -167,3 +167,5 @@ function getAddressInfo(transport, index) {
   }
 })})})}
 ```
+
+A similar example of path scanning using `@ledgerhq/hw-transport-node-hid` can be found [here](https://github.com/ecadlabs/taquito/tree/master/example/scan-path-ledger.ts). This example directly retrieves the public keys from the Ledger without asking for confirmation on the device.

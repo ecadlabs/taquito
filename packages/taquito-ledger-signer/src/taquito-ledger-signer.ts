@@ -112,12 +112,17 @@ export class LedgerSigner implements Signer {
     }
 
     private async getLedgerpublicKey(): Promise<Buffer> {
+      try{
       let ins = this.INS_PROMPT_PUBLIC_KEY; 
       if (this.prompt == false){
         ins = this.INS_GET_PUBLIC_KEY; 
       }
       const responseLedger = await this.transport.send(this.CLA, ins, this.FIRST_MESSAGE_SEQUENCE, this.derivationType, transformPathToBuffer(this.path));
       return responseLedger;
+    }
+    catch (error) {
+      throw new Error("Unable to retrieve public key")
+    }
     }
   
     async secretKey(): Promise<string> {
