@@ -18,14 +18,14 @@ export function transformPathToBuffer(path : string) : Buffer {
     const result: any[] = [];
     const components = path.split('/');
     components.forEach((element) => {
-        let number = parseInt(element, 10);
-        if (Number.isNaN(number)) {
+        let toNumber = parseInt(element, 10);
+        if (Number.isNaN(toNumber)) {
             return;
         }
         if (element.length > 1 && element[element.length - 1] === "'") {
-            number += 0x80000000;
+            toNumber += 0x80000000;
         }
-        result.push(number);
+        result.push(toNumber);
     });
     let buffer = Buffer.alloc(1 + result.length * 4);
     buffer[0] = result.length;
@@ -40,7 +40,7 @@ export function transformPathToBuffer(path : string) : Buffer {
  * @description Converts uncompressed ledger key to standard tezos binary representation  
  */
 export function compressPublicKey(publicKey: Buffer, curve: DerivationType) {
-    if (curve == 0x00){
+    if (curve === 0x00){
         publicKey = publicKey.slice(1);
     } else {
         publicKey[0] = 0x02 + (publicKey[64] & 0x01);
@@ -95,14 +95,14 @@ export function validateResponse(response: Buffer) : boolean
     if (response[2] !== 0x02) {
         valid = false;
     }
-    let r_length = response[3];
-    if (response[4 + r_length] !== 0x02) {
+    let rLength = response[3];
+    if (response[4 + rLength] !== 0x02) {
         valid = false;
     }
 
-    let idx_length_s_val = 5 + r_length;
-    let s_length = response[idx_length_s_val];
-    if((idx_length_s_val + 1 + s_length) + 2 !== response.length) {
+    let idxLengthSVal = 5 + rLength;
+    let sLength = response[idxLengthSVal];
+    if((idxLengthSVal + 1 + sLength) + 2 !== response.length) {
         valid = false;
     }
     return valid;

@@ -47,11 +47,11 @@ export const HDPathTemplate = (index: number) => {
  */
 export class LedgerSigner implements Signer {
 
-  //constants for APDU requests (https://github.com/obsidiansystems/ledger-app-tezos/blob/master/APDUs.md)
-  private readonly CLA = 0x80; //Instruction class (always 0x80)
-  private readonly INS_GET_PUBLIC_KEY = 0x02; //Instruction code to get the ledger’s internal public key without prompt
-  private readonly INS_PROMPT_PUBLIC_KEY = 0x03; //Instruction code to get the ledger’s internal public key with prompt
-  private readonly INS_SIGN = 0x04; //Sign a message with the ledger’s key
+  // constants for APDU requests (https://github.com/obsidiansystems/ledger-app-tezos/blob/master/APDUs.md)
+  private readonly CLA = 0x80; // Instruction class (always 0x80)
+  private readonly INS_GET_PUBLIC_KEY = 0x02; // Instruction code to get the ledger’s internal public key without prompt
+  private readonly INS_PROMPT_PUBLIC_KEY = 0x03; // Instruction code to get the ledger’s internal public key with prompt
+  private readonly INS_SIGN = 0x04; // Sign a message with the ledger’s key
   private readonly FIRST_MESSAGE_SEQUENCE = 0X00;
   private readonly LAST_MESSAGE_SEQUENCE = 0X81;
   private readonly OTHER_MESSAGE_SEQUENCE = 0X01;
@@ -94,11 +94,11 @@ export class LedgerSigner implements Signer {
 
         let prefPk = prefix[Prefix.EDPK];
         let prefPkh = prefix[Prefix.TZ1]
-        if (this.derivationType == DerivationType.tz2){
+        if (this.derivationType === DerivationType.tz2){
             prefPk = prefix[Prefix.SPPK];
             prefPkh = prefix[Prefix.TZ2]
         }
-        else if (this.derivationType == DerivationType.tz3){
+        else if (this.derivationType === DerivationType.tz3){
             prefPk = prefix[Prefix.P2PK];
             prefPkh = prefix[Prefix.TZ3]
         }
@@ -114,7 +114,7 @@ export class LedgerSigner implements Signer {
     private async getLedgerpublicKey(): Promise<Buffer> {
       try{
       let ins = this.INS_PROMPT_PUBLIC_KEY; 
-      if (this.prompt == false){
+      if (this.prompt === false){
         ins = this.INS_GET_PUBLIC_KEY; 
       }
       const responseLedger = await this.transport.send(this.CLA, ins, this.FIRST_MESSAGE_SEQUENCE, this.derivationType, transformPathToBuffer(this.path));
@@ -137,16 +137,16 @@ export class LedgerSigner implements Signer {
         messageToSend = chunkOperation(messageToSend, watermarkedBytes2buff)
         let ledgerResponse = await this.signWithLedger(messageToSend);
         let signature;
-        if (this.derivationType == DerivationType.tz1) {
+        if (this.derivationType === DerivationType.tz1) {
             signature = ledgerResponse.slice(0, ledgerResponse.length - 2).toString('hex');
           } else {
             if(!validateResponse(ledgerResponse)) {
               throw new Error('Cannot parse ledger response.');
             }
-            const idx_length_r_val = 3; //Third element of response is length of r value
-            const rValue = extractValue(idx_length_r_val, ledgerResponse)
-            let idx_length_s_val = rValue.idxValueStart + rValue.length + 1;
-            const sValue = extractValue(idx_length_s_val, ledgerResponse);
+            const idxLengthRVal = 3; // Third element of response is length of r value
+            const rValue = extractValue(idxLengthRVal, ledgerResponse)
+            let idxLengthSVal = rValue.idxValueStart + rValue.length + 1;
+            const sValue = extractValue(idxLengthSVal, ledgerResponse);
             const signatureBuffer = Buffer.concat([rValue.buffer, sValue.buffer])
             signature = signatureBuffer.toString('hex');
           }
@@ -160,7 +160,7 @@ export class LedgerSigner implements Signer {
     }
 
     private async signWithLedger(message: any): Promise<Buffer> {
-      //first element of the message represents the path
+      // first element of the message represents the path
       let ledgerResponse = await this.transport.send(this.CLA, this.INS_SIGN, this.FIRST_MESSAGE_SEQUENCE, this.derivationType, message[0]);
       for (let i = 1; i < message.length; i++) {
         let p1 = (i === message.length - 1) ? this.LAST_MESSAGE_SEQUENCE : this.OTHER_MESSAGE_SEQUENCE;
