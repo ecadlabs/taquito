@@ -28,6 +28,11 @@
       "items": ["complex_parameters", "storage_annotations"]
     },
     {
+      "type": "category",
+      "label": "Running integration tests",
+      "items": ["ledger_integration_test"]
+    },
+    {
       "type": "link",
       "label": "TypeDoc Reference",
       "href": "https://tezostaquito.io/typedoc"
