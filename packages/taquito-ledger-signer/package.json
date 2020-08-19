@@ -1,6 +1,6 @@
 {
-  "name": "taquito-ledger-signer",
-  "version": "0.0.1",
+  "name": "@taquito/ledger-signer",
+  "version": "6.4.0-ledger.0",
   "description": "Ledger signer provider",
   "keywords": [
     "tezos",
@@ -10,6 +10,9 @@
   "main": "dist/taquito-ledger-signer.umd.js",
   "module": "dist/taquito-ledger-signer.es5.js",
   "typings": "dist/types/taquito-ledger-signer.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "author": "Roxane Letourneau <roxane@ecadlabs.com>",
   "repository": {
     "type": "git",
@@ -55,15 +58,15 @@
   "dependencies": {
     "@ledgerhq/hw-transport": "^5.21.0",
     "@ledgerhq/hw-transport-node-hid": "^5.19.1",
-    "@taquito/taquito": "^6.3.5-beta.0",
-    "@taquito/utils": "^6.3.5-beta.0",
+    "@taquito/taquito": "^6.4.0-ledger.0",
+    "@taquito/utils": "^6.4.0-ledger.0",
     "@types/jest": "^25.2.2",
     "buffer": "^5.6.0",
     "libsodium-wrappers": "^0.7.8"
   },
   "devDependencies": {
-    "@types/ledgerhq__hw-transport-node-hid": "^4.22.1",
     "@types/jest": "^26.0.0",
+    "@types/ledgerhq__hw-transport-node-hid": "^4.22.1",
     "@types/libsodium-wrappers": "^0.7.7",
     "@types/node": "^14.0.1",
     "@types/ws": "^7.2.4",
@@ -89,5 +92,6 @@
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-standard": "^9.0.0",
     "typescript": "^3.9.7"
-  }
+  },
+  "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
 }

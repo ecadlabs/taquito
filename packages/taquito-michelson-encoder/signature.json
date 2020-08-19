@@ -114,7 +114,7 @@
           },
           {
             "path": "dist/taquito-michelson-encoder.es5.js",
-            "sha512": "922c62ac7845dcea60a44f0761c4e002e00df34510a598e355fc9ab1a5a459c2aff6e6a987463392ac2d11179fe7048ced08c6de8b751d32f5bd12b13f3848ee"
+            "sha512": "d9be43e3224a8c55aed6fdbb5e2379589a3eae1c51f3f16fd27ae1918dc0da63dee85d769af4d41a0adb5ee9cf40a42d00ec864bedfb375151c1950db055297f"
           },
           {
             "path": "dist/lib/taquito-michelson-encoder.js",
@@ -122,7 +122,7 @@
           },
           {
             "path": "dist/taquito-michelson-encoder.umd.js",
-            "sha512": "4b44a470ca44b97b95c7d49a0f0ffbeff6264b3f935bab3a775bdef96708fc6822243e4c720830b289a9400abb33ccbe4af7397708429e88686ee11ad7f0b127"
+            "sha512": "e070edc73f33301054ff5e766002889cb334221997a83289164d5eb3eeff6ecd3ad71b51f3175bfb1bcbc1ab6b0f5e5f7c004b0b53eba2562fd2983197fef436"
           },
           {
             "path": "dist/lib/tokens/comparable/timestamp.js",
@@ -441,6 +441,7 @@
           "devDependencies",
           "engines",
           "files",
+          "gitHead",
           "jest",
           "keywords",
           "license",
@@ -454,7 +455,7 @@
           "typings",
           "version"
         ],
-        "sha512": "74a88e7e6db0815323a99a80c154fd948e2e4d2c990f02b365936f8ac4299f71bf0c0fefcc15f9cd6694428c45e634c2c412bfd554a7d86115558c0671b50cc3"
+        "sha512": "0e8e1f145dd885e5a88803857e40e3366c26a5c71d0c0e7d54e9d0ab4559eca0ba1d392bd186d265f6acb44833fa61e06a084304cfd37d4181d05430b94caf33"
       }
     },
     {
@@ -462,7 +463,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/michelson-encoder",
-          "version": "6.3.5-beta.0",
+          "version": "6.4.0-ledger.0",
           "description": "converts michelson data and types into convenient JS/TS objects",
           "keywords": [
             "tezos",
@@ -529,41 +530,43 @@
             ]
           },
           "dependencies": {
-            "@taquito/utils": "^6.3.5-beta.0",
+            "@taquito/rpc": "^6.4.0-ledger.0",
+            "@taquito/utils": "^6.4.0-ledger.0",
             "bignumber.js": "^9.0.0",
             "fast-json-stable-stringify": "^2.1.0"
           },
           "devDependencies": {
             "@taquito/rpc": "^6.3.5-beta.0",
-            "@types/jest": "^26.0.0",
-            "@types/node": "^14.0.1",
+            "@types/jest": "^26.0.8",
+            "@types/node": "^14.0.27",
             "colors": "^1.4.0",
             "coveralls": "^3.1.0",
             "cross-env": "^7.0.2",
-            "jest": "^26.0.1",
-            "jest-config": "^26.0.1",
-            "lint-staged": "^10.2.2",
+            "jest": "^26.2.2",
+            "jest-config": "^26.2.2",
+            "lint-staged": "^10.2.11",
             "lodash.camelcase": "^4.3.0",
             "prettier": "^2.0.5",
             "prompt": "^1.0.0",
-            "replace-in-file": "^6.0.0",
+            "replace-in-file": "^6.1.0",
             "rimraf": "^3.0.2",
-            "rollup": "^2.10.2",
+            "rollup": "^2.23.0",
             "rollup-plugin-json": "^4.0.0",
             "rollup-plugin-sourcemaps": "^0.6.2",
             "rollup-plugin-typescript2": "^0.27.1",
             "shelljs": "^0.8.4",
-            "ts-jest": "^26.1.0",
-            "ts-node": "^8.10.1",
-            "tslint": "^6.1.2",
+            "ts-jest": "^26.1.4",
+            "ts-node": "^8.10.2",
+            "tslint": "^6.1.3",
             "tslint-config-prettier": "^1.18.0",
             "tslint-config-standard": "^9.0.0",
-            "typedoc": "^0.17.6",
-            "typescript": "~3.9.5"
-          }
+            "typedoc": "^0.17.8",
+            "typescript": "~3.9.7"
+          },
+          "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfF36FCRAD9Qy5GYHsngAACGIQAAOQ50TTvtkpaq7J+L0WiPNg\nRAumQZ6o8MS4HN1vrl93EgYmFPtNXdaSwayhtzlXMMXAyKJb3jUXSCx/lISUcyVF\nSxbuAHVw+kNtNkvZBC2sYBjRBtuuUaDD/k7hyLH9p3UT++9w/reIgBkU3Yem/z6W\nXvqaMg3l2xe3Mq+IWUIRnjH+Y+2FzdubCkkyABjgM+krwb4NVEvplE2Xb61CPsVd\nW6NvLStTjib+oqc1a39ylVaxklh9AmDCmJl5wmhPvPGbXzRrw+mbhyjz6hhCminG\nhClTg22o7K+f6prjUN39ZuLH2SkEXIrw6fxVbi2LDipi23CeW+LtUzdhwwvaY20C\nxu+SpAjNdPhOLB0K+Ixux2pTpsbkysOH8T6Ho5yewNDqi591cJq2HpKF2FRTLefH\nalbX4F/MqZWHU8Z53Gm+NThG+H5NR/+XX4JtPoQAaaFskdOtyvb+7YsBf/noyo2d\nPB+1+ED27GdlKgTm9HKCOWF/A+Wnc9sJhBdba0cz+6vDl3bQk56qI4owcPMj5PZS\nG6UimP9JvhDH9wrxoRcRjbFLK8vYrhZSQJub/QdaBluSS+wjXEpMm+L2PldcUe6x\nzSa47C+18DAAEm7drHx05WAoLj50x1JGyYW2jjFSn7dulix8YrLCczY//+2+0Rur\nvvOqDSi3GCApcuj/UGoT\n=1/5O\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfMhWTCRAD9Qy5GYHsngAAgFIQAJWwWP1iPdwlpNSnlt83ohKL\nGxvy1MiCLbW7TFwwc88cgauBWoR+iHoQ3QBQRy55BiZYKcVB2BuxYq38YZg8gCIo\nzvYRHw7e9mObs+GVEGyTB6DmRM4wk7MmxrCDHwlQJiAcgzImVA5Ln3kbOpXf5ZZN\nFXx9SyLQJcTKBDCQIGFrwieLyjO2hz5BnWpEEocNWvQ8B0so0uVMxYpsfVSGxUQG\nBBLwFGVz5pezcYKWMYtwRHxnEePzHpyIemt04pM4nIS2yvF++0QtR8MfD957bDbj\nMwYTYEKyJw6/MSEh4KwqLmcXleaiIqnUfeVHWCLNj6eP/kMa7LGbQekH84LxZ0R4\nLJT4ZKr+vKyOH520C1xAFsuSdqxlzXDlzhzS7ronKDXg1tSgE5FP4VW7JxUiypXy\nMtV9ss080zVSCko8q3fb0yT2uPHzrr4o0i4oC+eX205hhLp+XMOEUMBItZolZ4GV\nkKK6uR9ByQ8TmTFT7YQrtjW7yhBRnVb4wOnIefII2sD7nNPvDMvQJHql9wGN+2Yu\nfoVYiO/SlJiHk+CoheFK+XzgqL44lMYtOjM3AsIIy2Cg8oUvJvoS4ftGsA9tpzGb\nY5/gIon6aWdc8u8HAjM7pKeiISuEfbuOtcZBvEk9et8l8NU4NYua0zS3/B3cQ7w+\n8ZTCUqhIFnN4PjyAiwCd\n=PXWF\n-----END PGP SIGNATURE-----\n"
 }
