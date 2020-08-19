@@ -173,7 +173,7 @@ describe('Should be abble to used Ledger with wallet API', () => {
           DerivationType.tz1
         );
         Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/carthagenet', signer: signer });
-        const op = await Tezos.wallet.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 }).send()
+        const op = await Tezos.wallet.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.1 }).send()
       await op.confirmation()
       expect(op.opHash).toBeDefined();
       done();
