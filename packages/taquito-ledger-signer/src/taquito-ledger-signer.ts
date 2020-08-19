@@ -65,6 +65,12 @@ export class LedgerSigner implements Signer {
       private derivationType: DerivationType = DerivationType.tz1
     ) {
       this.transport.setScrambleKey('XTZ')
+      if(!path.startsWith("44'/1729'")) {
+        throw new Error("The derivation path must start with 44'/1729'");
+      }
+      if(!Object.values(DerivationType).includes(derivationType)) {
+        throw new Error("The derivation type must be DerivationType.tz1, DerivationType.tz2 or DerivationType.tz3")
+      }
     }    
 
     async publicKeyHash(): Promise<string> {
@@ -81,7 +87,6 @@ export class LedgerSigner implements Signer {
       if (this._publicKey) {
         return this._publicKey;
       }
-
         const responseLedger = await this.getLedgerpublicKey();
         const publicKeyLength = responseLedger[0];
         const rawPublicKey = responseLedger.slice(1, 1 + publicKeyLength);
@@ -104,7 +109,6 @@ export class LedgerSigner implements Signer {
         this._publicKey = publicKey;
         this._publicKeyHash = publicKeyHash;
         return publicKey;
-
     }
 
     private async getLedgerpublicKey(): Promise<Buffer> {

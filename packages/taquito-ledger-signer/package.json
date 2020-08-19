@@ -59,7 +59,7 @@
     "@taquito/utils": "^6.3.5-beta.0",
     "@types/jest": "^25.2.2",
     "buffer": "^5.6.0",
-    "libsodium-wrappers": "^0.7.6"
+    "libsodium-wrappers": "^0.7.8"
   },
   "devDependencies": {
     "@types/ledgerhq__hw-transport-node-hid": "^4.22.1",

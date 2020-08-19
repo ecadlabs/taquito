@@ -19,6 +19,28 @@ describe('LedgerSigner test', () => {
     }
   });
 
+  it('RemoteSigner is instantiable with parameters', () => {
+    expect(
+      new LedgerSigner(
+        mockTransport,
+        "44'/1729'/0'/0'/0'", 
+        true, 
+        DerivationType.tz2
+      )
+    ).toBeInstanceOf(LedgerSigner);
+  });
+
+  it('Should throw exception if path is incorrect', () => {
+    expect(() => {
+      new LedgerSigner(
+        mockTransport,
+        "4'/1729'/0'/0'/0'", 
+        true, 
+        DerivationType.tz2
+      )}
+    ).toThrow("The derivation path must start with 44'/1729'");
+  });
+
 it('Should get public key and public key hash for tz1', async () => {
     const signer = new LedgerSigner(mockTransport);
     const mockpk = Buffer.from('2102063ed375b28dd2c1841138d4959f57b4a2715730e2e28fcda9144a19876dd3c69000', 'hex');

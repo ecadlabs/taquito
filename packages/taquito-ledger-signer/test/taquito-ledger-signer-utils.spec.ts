@@ -1,6 +1,3 @@
-import { LedgerSigner, DerivationType, LedgerTransport } from '../src/taquito-ledger-signer';
-import TransportNodeHid from "@ledgerhq/hw-transport-node-hid";
-import Transport from '@ledgerhq/hw-transport';
 import { 
   transformPathToBuffer, 
   compressPublicKey, 
