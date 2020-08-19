@@ -31,7 +31,9 @@
       "/node_modules/",
       "/test/"
     ],
-      "testPathIgnorePatterns": ["./ledger-signer.spec.ts"]
+    "testPathIgnorePatterns": [
+      "./ledger-signer.spec.ts"
+    ]
   },
   "devDependencies": {
     "@types/jest": "^26.0.8",
