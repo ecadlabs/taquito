@@ -13,9 +13,12 @@
     "example": "node -r ts-node/register --preserve-symlinks example-node.ts",
     "example:activation": "node -r ts-node/register --preserve-symlinks example-activate.ts",
     "example:streamer": "node -r ts-node/register --preserve-symlinks example-streamer.ts",
-    "example:formatter": "node -r ts-node/register --preserve-symlinks example-formatter.ts"
+    "example:formatter": "node -r ts-node/register --preserve-symlinks example-formatter.ts",
+    "example:scan-path-ledger": "node -r ts-node/register --preserve-symlinks scan-path-ledger.ts"
   },
   "dependencies": {
+    "@ledgerhq/hw-transport-node-hid": "^5.22.0",
+    "@taquito/ledger-signer": "^6.4.0-ledger.0",
     "@taquito/michel-codec": "^6.3.5-beta.0",
     "@taquito/signer": "^6.3.5-beta.0",
     "@taquito/taquito": "^6.3.5-beta.0"
