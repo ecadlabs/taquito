@@ -1,4 +1,4 @@
-import "babel-polyfill";
+
 import { LedgerSigner, DerivationType } from '@taquito/ledger-signer';
 import { Tezos } from '@taquito/taquito';
 import TransportNodeHid from "@ledgerhq/hw-transport-node-hid";
