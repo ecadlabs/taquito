@@ -32,7 +32,8 @@
       "/test/"
     ],
     "testPathIgnorePatterns": [
-      "./ledger-signer.spec.ts"
+      "./ledger-signer.spec.ts",
+      "./ledger-signer-falling-tests.spec.ts"
     ]
   },
   "devDependencies": {
