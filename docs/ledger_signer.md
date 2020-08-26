@@ -16,7 +16,7 @@ You first need to import the desired transport from the [LedgerJs library](https
 You will need to pass an instance of the transport of your choice to your Ledger Signer as follows:
 
 <Tabs
-  defaultValue="contractAPI"
+  defaultValue="webApp"
   values={[
     {label: 'Web application', value: 'webApp'},
     {label: 'Node application', value: 'nodeApp'}
