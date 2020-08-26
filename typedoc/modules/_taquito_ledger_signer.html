@@ -1,0 +1,481 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>@taquito/ledger-signer | Taquito</title>
+	<meta name="description" content="Documentation for Taquito">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">Taquito</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../globals.html">Globals</a>
+				</li>
+				<li>
+					<a href="_taquito_ledger_signer.html">@taquito/ledger-signer</a>
+				</li>
+			</ul>
+			<h1>Module @taquito/ledger-signer</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Enumerations</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-enum tsd-parent-kind-module"><a href="../enums/_taquito_ledger_signer.derivationtype.html" class="tsd-kind-icon">Derivation<wbr>Type</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Classes</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/_taquito_ledger_signer.ledgersigner.html" class="tsd-kind-icon">Ledger<wbr>Signer</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Type aliases</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="_taquito_ledger_signer.html#ledgertransport" class="tsd-kind-icon">Ledger<wbr>Transport</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Functions</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="_taquito_ledger_signer.html#hdpathtemplate" class="tsd-kind-icon">HDPath<wbr>Template</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="_taquito_ledger_signer.html#appendwatermark" class="tsd-kind-icon">append<wbr>Watermark</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="_taquito_ledger_signer.html#chunkoperation" class="tsd-kind-icon">chunk<wbr>Operation</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="_taquito_ledger_signer.html#compresspublickey" class="tsd-kind-icon">compress<wbr>Public<wbr>Key</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="_taquito_ledger_signer.html#extractvalue" class="tsd-kind-icon">extract<wbr>Value</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="_taquito_ledger_signer.html#transformpathtobuffer" class="tsd-kind-icon">transform<wbr>Path<wbr>ToBuffer</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="_taquito_ledger_signer.html#validateresponse" class="tsd-kind-icon">validate<wbr>Response</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Type aliases</h2>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
+					<a name="ledgertransport" class="tsd-anchor"></a>
+					<h3>Ledger<wbr>Transport</h3>
+					<div class="tsd-signature tsd-kind-icon">Ledger<wbr>Transport<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Pick</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Transport</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">"send"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"decorateAppAPIMethods"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"setScrambleKey"</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/871bf87/packages/taquito-ledger-signer/src/taquito-ledger-signer.ts#L14">packages/taquito-ledger-signer/src/taquito-ledger-signer.ts:14</a></li>
+						</ul>
+					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Functions</h2>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="hdpathtemplate" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> HDPath<wbr>Template</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">HDPath<wbr>Template<span class="tsd-signature-symbol">(</span>index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/871bf87/packages/taquito-ledger-signer/src/taquito-ledger-signer.ts#L22">packages/taquito-ledger-signer/src/taquito-ledger-signer.ts:22</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>index: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="appendwatermark" class="tsd-anchor"></a>
+					<h3>append<wbr>Watermark</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">append<wbr>Watermark<span class="tsd-signature-symbol">(</span>bytes<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, watermark<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Uint8Array</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/871bf87/packages/taquito-ledger-signer/src/utils.ts#L52">packages/taquito-ledger-signer/src/utils.ts:52</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>bytes: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> watermark: <span class="tsd-signature-type">Uint8Array</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="chunkoperation" class="tsd-anchor"></a>
+					<h3>chunk<wbr>Operation</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">chunk<wbr>Operation<span class="tsd-signature-symbol">(</span>messageToSend<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, operation<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Buffer</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/871bf87/packages/taquito-ledger-signer/src/utils.ts#L68">packages/taquito-ledger-signer/src/utils.ts:68</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<dl class="tsd-comment-tags">
+									<dt>description</dt>
+									<dd><p>In order not to exceed the data length allowed by the Ledger device, split the operation into buffers of 230 bytes (max) and add them to the message to send to the Ledger</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>messageToSend: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The message to send to the Ledger device</p>
+									</div>
+								</li>
+								<li>
+									<h5>operation: <span class="tsd-signature-type">Buffer</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The operation which will be chunk if its length is over 230 bytes</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+							<p>The instruction to send to the Ledger device</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="compresspublickey" class="tsd-anchor"></a>
+					<h3>compress<wbr>Public<wbr>Key</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">compress<wbr>Public<wbr>Key<span class="tsd-signature-symbol">(</span>publicKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Buffer</span>, curve<span class="tsd-signature-symbol">: </span><a href="../enums/_taquito_ledger_signer.derivationtype.html" class="tsd-signature-type">DerivationType</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Buffer</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/871bf87/packages/taquito-ledger-signer/src/utils.ts#L42">packages/taquito-ledger-signer/src/utils.ts:42</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<dl class="tsd-comment-tags">
+									<dt>description</dt>
+									<dd><p>Converts uncompressed ledger key to standard tezos binary representation</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>publicKey: <span class="tsd-signature-type">Buffer</span></h5>
+								</li>
+								<li>
+									<h5>curve: <a href="../enums/_taquito_ledger_signer.derivationtype.html" class="tsd-signature-type">DerivationType</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Buffer</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="extractvalue" class="tsd-anchor"></a>
+					<h3>extract<wbr>Value</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">extract<wbr>Value<span class="tsd-signature-symbol">(</span>idxLength<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, response<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Buffer</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>buffer<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Buffer</span><span class="tsd-signature-symbol">; </span>idxValueStart<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>length<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/871bf87/packages/taquito-ledger-signer/src/utils.ts#L118">packages/taquito-ledger-signer/src/utils.ts:118</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<dl class="tsd-comment-tags">
+									<dt>description</dt>
+									<dd><p>Extract a part of the response returned by the Ledger</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>idxLength: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The index in the response from the Ledger that corresponds to the length of the part to extract</p>
+									</div>
+								</li>
+								<li>
+									<h5>response: <span class="tsd-signature-type">Buffer</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The signature returned by the Ledger (return from the signWithLedger function)</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">{ </span>buffer<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Buffer</span><span class="tsd-signature-symbol">; </span>idxValueStart<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>length<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span></h4>
+							<p>An object that contains the extracted buffer, the index where it starts in the response and the length of the extracted part</p>
+							<ul class="tsd-parameters">
+								<li class="tsd-parameter">
+									<h5>buffer<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Buffer</span></h5>
+								</li>
+								<li class="tsd-parameter">
+									<h5>idx<wbr>Value<wbr>Start<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li class="tsd-parameter">
+									<h5>length<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="transformpathtobuffer" class="tsd-anchor"></a>
+					<h3>transform<wbr>Path<wbr>ToBuffer</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">transform<wbr>Path<wbr>ToBuffer<span class="tsd-signature-symbol">(</span>path<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Buffer</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/871bf87/packages/taquito-ledger-signer/src/utils.ts#L17">packages/taquito-ledger-signer/src/utils.ts:17</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<dl class="tsd-comment-tags">
+									<dt>description</dt>
+									<dd><p>Convert the path to a buffer that will be used as LC and CDATA in the APDU send to the ledger device (<a href="https://github.com/obsidiansystems/ledger-app-tezos/blob/master/APDUs.md">https://github.com/obsidiansystems/ledger-app-tezos/blob/master/APDUs.md</a>)</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>path: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ledger derivation path (default is &quot;44&#39;/1729&#39;/0&#39;/0&#39;/0&#39;&quot;)</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Buffer</span></h4>
+							<p>A buffer where the first element is the length of the path (default is 5), then 4 bytes for each number of the path to which is added 0x8000000</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="validateresponse" class="tsd-anchor"></a>
+					<h3>validate<wbr>Response</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">validate<wbr>Response<span class="tsd-signature-symbol">(</span>response<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Buffer</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/871bf87/packages/taquito-ledger-signer/src/utils.ts#L86">packages/taquito-ledger-signer/src/utils.ts:86</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<dl class="tsd-comment-tags">
+									<dt>description</dt>
+									<dd><p>Verify if the signature returned by the ledger for tz2 and tz3 is valid</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>response: <span class="tsd-signature-type">Buffer</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The signature returned by the Ledger (return from the signWithLedger function)</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+							<p>True if valid, false otherwise</p>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_taquito_beacon_wallet.html">@taquito/beacon-<wbr>wallet</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_taquito_http_utils.html">@taquito/http-<wbr>utils</a>
+					</li>
+					<li class="current tsd-kind-module">
+						<a href="_taquito_ledger_signer.html">@taquito/ledger-<wbr>signer</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_taquito_local_forging.html">@taquito/local-<wbr>forging</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_taquito_michel_codec.html">@taquito/michel-<wbr>codec</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_taquito_michelson_encoder.html">@taquito/michelson-<wbr>encoder</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_taquito_react_components.html">@taquito/react-<wbr>components</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_taquito_remote_signer.html">@taquito/remote-<wbr>signer</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_taquito_rpc.html">@taquito/rpc</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_taquito_signer.html">@taquito/signer</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_taquito_taquito.html">@taquito/taquito</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_taquito_tezbridge_signer.html">@taquito/tezbridge-<wbr>signer</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_taquito_tezbridge_wallet.html">@taquito/tezbridge-<wbr>wallet</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_taquito_utils.html">@taquito/utils</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-enum tsd-parent-kind-module">
+						<a href="../enums/_taquito_ledger_signer.derivationtype.html" class="tsd-kind-icon">Derivation<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="../classes/_taquito_ledger_signer.ledgersigner.html" class="tsd-kind-icon">Ledger<wbr>Signer</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="_taquito_ledger_signer.html#ledgertransport" class="tsd-kind-icon">Ledger<wbr>Transport</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="_taquito_ledger_signer.html#hdpathtemplate" class="tsd-kind-icon">HDPath<wbr>Template</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="_taquito_ledger_signer.html#appendwatermark" class="tsd-kind-icon">append<wbr>Watermark</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="_taquito_ledger_signer.html#chunkoperation" class="tsd-kind-icon">chunk<wbr>Operation</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="_taquito_ledger_signer.html#compresspublickey" class="tsd-kind-icon">compress<wbr>Public<wbr>Key</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="_taquito_ledger_signer.html#extractvalue" class="tsd-kind-icon">extract<wbr>Value</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="_taquito_ledger_signer.html#transformpathtobuffer" class="tsd-kind-icon">transform<wbr>Path<wbr>ToBuffer</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="_taquito_ledger_signer.html#validateresponse" class="tsd-kind-icon">validate<wbr>Response</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
