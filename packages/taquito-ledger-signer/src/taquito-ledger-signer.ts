@@ -19,8 +19,8 @@ export enum DerivationType {
   tz3 = 0x02
 };
 
-export const HDPathTemplate = (index: number) => {
-  return `44'/1729'/0'/0'/${index}'`;
+export const HDPathTemplate = (account: number) => {
+  return `44'/1729'/${account}'/0'`;
 };
 
 /**
@@ -28,21 +28,22 @@ export const HDPathTemplate = (index: number) => {
  * @description Implementation of the Signer interface that will allow signing operation from a Ledger Nano device 
  *
  * @param transport A transport instance from LedgerJS libraries depending on the platform used (e.g. Web, Node)
- * @param path The ledger derivation path (default is "44'/1729'/0'/0'/0'")
+ * @param path The ledger derivation path (default is "44'/1729'/0'/0'")
  * @param prompt Whether to prompt the ledger for public key (default is true)
  * @param derivationType The value which defines the curve to use (DerivationType.tz1(default), DerivationType.tz2, DerivationType.tz3)
  * 
  * @example
  * ```
- * import TransportU2F from "@ledgerhq/hw-transport-u2f";
- * const transport = await TransportU2F.create();
- * const ledgerSigner = new LedgerSigner(transport, "44'/1729'/0'/0'/0'", false, DerivationType.tz1);
- * ```
- * @example
- * ```
  * import TransportNodeHid from "@ledgerhq/hw-transport-node-hid";
  * const transport = await TransportNodeHid.create();
- * const ledgerSigner = new LedgerSigner(transport, "44'/1729'/0'/0'/1'", true, DerivationType.tz3);
+ * const ledgerSigner = new LedgerSigner(transport, "44'/1729'/0'/0'", false, DerivationType.tz1);
+ * ```
+ * 
+ * @example
+ * ```
+ * import TransportU2F from "@ledgerhq/hw-transport-u2f";
+ * const transport = await TransportU2F.create();
+ * const ledgerSigner = new LedgerSigner(transport, "44'/1729'/0'/0'", true, DerivationType.tz2);
  * ```
  */
 export class LedgerSigner implements Signer {
@@ -60,7 +61,7 @@ export class LedgerSigner implements Signer {
   private _publicKeyHash?: string;
     constructor(
       private transport: LedgerTransport,
-      private path: string = "44'/1729'/0'/0'/0'",
+      private path: string = "44'/1729'/0'/0'",
       private prompt: boolean = true,
       private derivationType: DerivationType = DerivationType.tz1
     ) {

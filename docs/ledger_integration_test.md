@@ -8,30 +8,18 @@ The integration tests for the Ledger Signer are disabled by default because they
 ## Steps to run the tests
 
 1. Set up your Ledger device with this mnemonic phrase:  
-**1-episode  
-2-capital  
-3-clerk  
-4-vanish  
-5-goat  
-6-result  
-7-scan  
-8-phrase  
-9-air  
-10-float  
-11-shoot  
-12-nasty  
-13-wreck  
-14-safe  
-15-parade  
-16-south  
-17-outside  
-18-urban  
-19-bounce  
-20-art  
-21-boil  
-22-mix  
-23-front  
-24-security**
+**1-prefer 
+2-wait 
+3-flock 
+4-brown 
+5-volume 
+6-recycle 
+7-scrub 
+8-elder 
+9-rate 
+10-pair 
+11-twenty 
+12-giant **
 
 2. Open `Tezos Wallet app` on your Ledger device.
 3. Remove `./ledger-signer.spec.ts` from `"testPathIgnorePatterns"` in the package.json.

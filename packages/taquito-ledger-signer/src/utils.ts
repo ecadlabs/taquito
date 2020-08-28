@@ -11,8 +11,8 @@ const MAX_CHUNK_SIZE = 230;
  *
  * @description Convert the path to a buffer that will be used as LC and CDATA in the APDU send to the ledger device (https://github.com/obsidiansystems/ledger-app-tezos/blob/master/APDUs.md)  
  *
- * @param path The ledger derivation path (default is "44'/1729'/0'/0'/0'")
- * @returns A buffer where the first element is the length of the path (default is 5), then 4 bytes for each number of the path to which is added 0x8000000
+ * @param path The ledger derivation path (default is "44'/1729'/0'/0'")
+ * @returns A buffer where the first element is the length of the path (default is 4), then 3 bytes for each number of the path to which is added 0x8000000
  */
 export function transformPathToBuffer(path : string) : Buffer {
     const result: any[] = [];

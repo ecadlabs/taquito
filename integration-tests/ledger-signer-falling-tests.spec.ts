@@ -18,7 +18,7 @@ describe('LedgerSigner falling test', () => {
         it('Should throw error when user declines to provide public key', async(done) => {
             const signer = new LedgerSigner(
                 transport,
-                "44'/1729'/0'/0'/0'", 
+                "44'/1729'/0'/0'", 
                 true, 
                 DerivationType.tz1
             );
@@ -34,7 +34,7 @@ describe('LedgerSigner falling test', () => {
         it('Should throw error when user declines to sign', async (done) => {
             const signer = new LedgerSigner(
                 transport,
-                "44'/1729'/0'/0'/0'", 
+                "44'/1729'/0'/0'", 
                 false, 
                 DerivationType.tz1
             );
@@ -54,7 +54,7 @@ describe('LedgerSigner falling test', () => {
             it('Should throw error when user declines transaction with Ledger', async (done) => {
                 const signer = new LedgerSigner(
                     transport,
-                    "44'/1729'/0'/0'/0'", 
+                    "44'/1729'/0'/0'", 
                     false, 
                     DerivationType.tz1
                 );
@@ -75,7 +75,7 @@ describe('LedgerSigner falling test', () => {
             it('Should throw error when user declines to originate contract with Ledger', async (done) => {
                 const signer = new LedgerSigner(
                     transport,
-                    "44'/1729'/0'/0'/0'", 
+                    "44'/1729'/0'/0'", 
                     false, 
                     DerivationType.tz1
                 );
