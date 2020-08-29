@@ -7,30 +7,17 @@ import { ligoSample } from "./data/ligo-simple-contract";
  * LedgerSigner test
  * 
  * Set up your Ledger device with this mnemonic to run this test file and remove " "testPathIgnorePatterns": ["./ledger-signer.spec.ts"] " from package.json.
- * 1. episode
- * 2. capital
- * 3. clerk
- * 4. vanish
- * 5. goat
- * 6. result
- * 7. scan
- * 8. phrase
- * 9. air
- * 10. float
- * 11. shoot
- * 12. nasty
- * 13. wreck
- * 14. safe
- * 15. parade
- * 16. south
- * 17. outside
- * 18. urban
- * 19. bounce
- * 20. art
- * 21. boil
- * 22. mix
- * 23. front
- * 24. security
+ * 1-prefer 
+ * 2-wait 3-flock 
+ * 4-brown 
+ * 5-volume 
+ * 6-recycle 
+ * 7-scrub 
+ * 8-elder 
+ * 9-rate 
+ * 10-pair 
+ * 11-twenty 
+ * 12-giant 
  */
 describe('LedgerSigner test', () => {
   let transport: LedgerTransport;
@@ -51,7 +38,7 @@ describe('LedgerSigner test', () => {
     expect(
       new LedgerSigner(
         transport,
-        "44'/1729'/0'/0'/0'", 
+        "44'/1729'/0'/0'", 
         true, 
         DerivationType.tz2
       )
@@ -59,56 +46,56 @@ describe('LedgerSigner test', () => {
   });
 
   describe('Get the public key', () => {
-    it('Should get the right public key and public key hash of the Ledger for tz1 curve when index of path is 0', async (done) => {
+    it('Should get the right public key and public key hash of the Ledger for tz1 curve and default path', async (done) => {
         const signer = new LedgerSigner(
           transport,
-          "44'/1729'/0'/0'/0'", 
+          "44'/1729'/0'/0'", 
           false, 
           DerivationType.tz1
         );
         const pk = await signer.publicKey();
         const pkh = await signer.publicKeyHash();
         expect(pk).toEqual(
-          'edpktgyU5HvdQbXSbYMCMUeQvFuFKuAmfqXSMdqSBPJpqGTphs6yNb'
+          'edpkuRkcStobJ569XFxmE6edyRQQzMmtf4ZnmPkTPfSQnt6P3Nym2V'
         );
         expect(pkh).toEqual(
-          'tz1XMxuGdfC6BjQHkW3PumWtMcy4qeMj8nqW'
+          'tz1e42w8ZaGAbM3gucbBy8iRypdbnqUj7oWY'
         );
         done();
       });
 
-      it('Should get the right public key and public key hash of the Ledger for tz2 curve when index of path is 0', async (done) => {
+      it('Should get the right public key and public key hash of the Ledger for tz2 curve and default path', async (done) => {
         const signer = new LedgerSigner(
           transport,
-          "44'/1729'/0'/0'/0'", 
+          "44'/1729'/0'/0'", 
           false, 
           DerivationType.tz2
         );
         const pk = await signer.publicKey();
         const pkh = await signer.publicKeyHash();
         expect(pk).toEqual(
-          'sppk7ZyfL4gibJ8uB8SFYx2Tcebbq9acai5zqDm3WjWTN5fG8oS7s1a'
+          'sppk7ZMM9NZLPPueTKcoJobdUG7MjLtaGsdrZqddcn9U6C9Yt99m8sU'
         );
         expect(pkh).toEqual(
-          'tz2JWNkgLcVhFTswedDL3XoYCzUbwqogVaH7'
+          'tz2SxDTGnT3mHzaHf6mwy6Wtw1qUX1hzm1Sw'
         );
         done();
       });
 
-      it('Should get the right public key and public key hash of the Ledger for tz3 curve when index of path is 0', async (done) => {
+      it('Should get the right public key and public key hash of the Ledger for tz3 curve and path having 1 as account value', async (done) => {
         const signer = new LedgerSigner(
           transport,
-          "44'/1729'/0'/0'/0'", 
+          "44'/1729'/1'/0'", 
           false, 
           DerivationType.tz3
         );
         const pk = await signer.publicKey();
         const pkh = await signer.publicKeyHash();
         expect(pk).toEqual(
-          'p2pk66rRf1SioA7ExRs7bkC84x8GaB8TQZDGM5Lv8h2nnfaLDMYygne'
+          'p2pk66MZ9MuDHfn5cQsUvtCvU376cijjvDLtTQzBFNeDHMijG4snUZZ'
         );
         expect(pkh).toEqual(
-          'tz3Vr7uy6ncpTBbqd7ptS8YXZWPrWrrVafKZ'
+          'tz3PX4M9x9N7oXp2WWxNcQNK6GtaGdCdesK9'
         );
         done();
       });
@@ -119,22 +106,22 @@ describe('LedgerSigner test', () => {
         it('Should returned the right signature with the Ledger', async (done) => {
           const signer = new LedgerSigner(
             transport,
-            "44'/1729'/0'/0'/0'", 
+            "44'/1729'/0'/0'", 
             false, 
             DerivationType.tz1
           );
           const signed = await signer.sign(
-            '030368110e29f26373bb4c14b65c026cd88c08a64db67ebb881e7edcc90430d3396c008097b09b3bfdd573ca638ca83ee62cc80a7f4adbe80aab9c60c3500ae8070000b24ac1e1759565d5c9b69af8450ce7ea3d1ee64c00'
+            '03281e35275248696304421740804c13f1434162474ee9449f70fb0f02cfd178f26c00c9fc72e8491bd2973e196f04ec6918ad5bcee22daa0abeb98d01c35000c09a0c0000eadc0855adb415fa69a76fc10397dc2fb37039a000'
           );
           expect(signed).toEqual({ 
             bytes:
-                '030368110e29f26373bb4c14b65c026cd88c08a64db67ebb881e7edcc90430d3396c008097b09b3bfdd573ca638ca83ee62cc80a7f4adbe80aab9c60c3500ae8070000b24ac1e1759565d5c9b69af8450ce7ea3d1ee64c00',
+                '03281e35275248696304421740804c13f1434162474ee9449f70fb0f02cfd178f26c00c9fc72e8491bd2973e196f04ec6918ad5bcee22daa0abeb98d01c35000c09a0c0000eadc0855adb415fa69a76fc10397dc2fb37039a000',
             sig:
-                'sigibTrJxrL4ncz5Vxdyh8aFAQkWzagYstUb61iFKVA9FovpH52qiWgXeR1NHDBwtb12kge1QiH9qb1wCujqZUeNXfcPURNz',
+                'sigsKFbsguu6KmUyVbarrdZiqzF94zaaQh3GWu2gXE5sEdQQbq6RFbmfo8GeC4eFLtzzwEUidf1iSX6xYARMsF8d48HAxQv9',
             prefixSig:
-                'sigibTrJxrL4ncz5Vxdyh8aFAQkWzagYstUb61iFKVA9FovpH52qiWgXeR1NHDBwtb12kge1QiH9qb1wCujqZUeNXfcPURNz',
+                'sigsKFbsguu6KmUyVbarrdZiqzF94zaaQh3GWu2gXE5sEdQQbq6RFbmfo8GeC4eFLtzzwEUidf1iSX6xYARMsF8d48HAxQv9',
             sbytes:
-                '030368110e29f26373bb4c14b65c026cd88c08a64db67ebb881e7edcc90430d3396c008097b09b3bfdd573ca638ca83ee62cc80a7f4adbe80aab9c60c3500ae8070000b24ac1e1759565d5c9b69af8450ce7ea3d1ee64c009d81b67d88a7bb98628862c4f4ef3870f9016f14af39c8eeaa2a7e34dca37bfced2985c327654ae1355fbe52cbfe89660578f4d328998a8aa84c192f0c51cc0f' 
+                '03281e35275248696304421740804c13f1434162474ee9449f70fb0f02cfd178f26c00c9fc72e8491bd2973e196f04ec6918ad5bcee22daa0abeb98d01c35000c09a0c0000eadc0855adb415fa69a76fc10397dc2fb37039a000e029a32d628fe101d9c07f82bfd34c86c0b04ee7e3bbe317420ea098944464f18d701857c42fae94ff81bfaf838b6c16df1188ca462bd78b5dd1a2b7371f3108' 
           });
           done();
         });
@@ -145,7 +132,7 @@ describe('LedgerSigner test', () => {
     it('Should originate contract with Ledger', async (done) => {
       const signer = new LedgerSigner(
         transport,
-        "44'/1729'/0'/0'/0'", 
+        "44'/1729'/0'/0'", 
         false, 
         DerivationType.tz1
       );
@@ -168,7 +155,7 @@ describe('Should be abble to used Ledger with wallet API', () => {
     it('Should sign and inject transaction with Ledger', async (done) => {
         const signer = new LedgerSigner(
           transport,
-          "44'/1729'/0'/0'/0'", 
+          "44'/1729'/0'/0'", 
           false, 
           DerivationType.tz1
         );

@@ -23,7 +23,7 @@ describe('LedgerSigner test', () => {
     expect(
       new LedgerSigner(
         mockTransport,
-        "44'/1729'/0'/0'/0'", 
+        "44'/1729'/0'/0'", 
         true, 
         DerivationType.tz2
       )
@@ -34,129 +34,129 @@ describe('LedgerSigner test', () => {
     expect(() => {
       new LedgerSigner(
         mockTransport,
-        "4'/1729'/0'/0'/0'", 
+        "4'/1729'/0'/0'", 
         true, 
         DerivationType.tz2
       )}
     ).toThrow("The derivation path must start with 44'/1729'");
   });
 
-it('Should get public key and public key hash for tz1', async () => {
+it('Should get public key and public key hash for default path and tz1 curve', async () => {
     const signer = new LedgerSigner(mockTransport);
-    const mockpk = Buffer.from('2102063ed375b28dd2c1841138d4959f57b4a2715730e2e28fcda9144a19876dd3c69000', 'hex');
+    const mockpk = Buffer.from('21026760ff228c2c16cbca18bb782a106e51c43a131776f5dfad30ecb5d5e43eccbd9000', 'hex');
     mockTransport.send.mockResolvedValue(mockpk); 
     const pk = await signer.publicKey();
     const pkh = await signer.publicKeyHash();
-    const path = "44'/1729'/0'/0'/0'";
+    const path = "44'/1729'/0'/0'";
     const buff = transformPathToBuffer(path);
     expect(mockTransport.send).toHaveBeenCalledWith(0x80, 0x03, 0x00, 0x00, buff);
     expect(mockTransport.send).toHaveBeenCalledTimes(1);
-    expect(pk).toEqual('edpktgyU5HvdQbXSbYMCMUeQvFuFKuAmfqXSMdqSBPJpqGTphs6yNb');
-    expect(pkh).toEqual('tz1XMxuGdfC6BjQHkW3PumWtMcy4qeMj8nqW');
+    expect(pk).toEqual('edpkuRkcStobJ569XFxmE6edyRQQzMmtf4ZnmPkTPfSQnt6P3Nym2V');
+    expect(pkh).toEqual('tz1e42w8ZaGAbM3gucbBy8iRypdbnqUj7oWY');
   })
 
-  it('Should get public key and public key hash for tz2', async () => {
-    const signer = new LedgerSigner(mockTransport, "44'/1729'/0'/0'/1'", false, DerivationType.tz2);
-    const mockpk = Buffer.from('41049784b81605e344a2156e3cb77e77559d8dc3ad0f62322aeb9734e3374e95f104995292faba65d941b98ff27531ba47566a83a0c7bdfc78b52223d9f56136acf09000', 'hex');
+  it('Should get public key and public key hash for default path and tz2 curve', async () => {
+    const signer = new LedgerSigner(mockTransport, "44'/1729'/0'/0'", false, DerivationType.tz2);
+    const mockpk = Buffer.from('410406285dc14a52f870054debb9add64359c968698b16697651d2457a9b3235ce3686f3821d7373b00e91670b137920cc0f3480dca3373d057c34a163047549cc3e9000', 'hex');
     mockTransport.send.mockResolvedValue(mockpk); 
     const pk = await signer.publicKey();
     const pkh = await signer.publicKeyHash();
-    const path = "44'/1729'/0'/0'/1'";
+    const path = "44'/1729'/0'/0'";
     const buff = transformPathToBuffer(path);
     expect(mockTransport.send).toHaveBeenCalledWith(0x80, 0x02, 0x00, 0x01, buff);
     expect(mockTransport.send).toHaveBeenCalledTimes(1);
-    expect(pk).toEqual('sppk7aTNC17Y3bCioVJSEUH5gAMwcU5qN28b2DAmepCNs7BZ8rUyP4o');
-    expect(pkh).toEqual('tz2UChAE93SHiw7FsKY9T6ZK5XHbVJruJr8S');
+    expect(pk).toEqual('sppk7ZMM9NZLPPueTKcoJobdUG7MjLtaGsdrZqddcn9U6C9Yt99m8sU');
+    expect(pkh).toEqual('tz2SxDTGnT3mHzaHf6mwy6Wtw1qUX1hzm1Sw');
   })
 
-  it('Should get public key and public key hash for tz3', async () => {
-    const signer = new LedgerSigner(mockTransport, "44'/1729'/0'/2'/2'", false, DerivationType.tz3);
-    const mockpk = Buffer.from('4104470c0ce49986fae82c9baf3c9782c0ae78806bc16b5418d49a15afc6c5d9d55952a06552cae0ce2e69e8b40ee93819f00797fec45f1bd40cf67e9da2fc67da639000', 'hex');
+  it('Should get public key and public key hash for path which accounnt is 1 and tz3 curve', async () => {
+    const signer = new LedgerSigner(mockTransport, "44'/1729'/1'/0'", false, DerivationType.tz3);
+    const mockpk = Buffer.from('4104eac3db090c124a2d57623d8e743f4a2beef9e6f96e80b49a4755c525c6c80ee391d9d93595479ae1d0099ecc8f4d56ca0542516407ff9f386c48678de965b8809000', 'hex');
     mockTransport.send.mockResolvedValue(mockpk); 
     const pk = await signer.publicKey();
     const pkh = await signer.publicKeyHash();
-    const path = "44'/1729'/0'/2'/2'";
+    const path = "44'/1729'/1'/0'";
     const buff = transformPathToBuffer(path);
     expect(mockTransport.send).toHaveBeenCalledWith(0x80, 0x02, 0x00, 0x02, buff);
     expect(mockTransport.send).toHaveBeenCalledTimes(1);
-    expect(pk).toEqual('p2pk674CN8MDQBTHMxyNmRoJ3bnotxDdY4rqedevJc89Uc1b5kZ1b5R');
-    expect(pkh).toEqual('tz3S43CJiFnra6i9yf7p6zkp9yCnaBxHfAfG');
+    expect(pk).toEqual('p2pk66MZ9MuDHfn5cQsUvtCvU376cijjvDLtTQzBFNeDHMijG4snUZZ');
+    expect(pkh).toEqual('tz3PX4M9x9N7oXp2WWxNcQNK6GtaGdCdesK9');
   })
 
-  it('Should get the right public key and public key hash using HDPathTemplate with index 5', async () => {
-    const path = HDPathTemplate(5);
+  it('Should get the right public key and public key hash using HDPathTemplate with index 1', async () => {
+    const path = HDPathTemplate(1); //"44'/1729'/1'/0'"
     const signer = new LedgerSigner(mockTransport, path, false, DerivationType.tz1);
-    const mockpk = Buffer.from('2102ccdfe2cffa0aa6511ee0dad2c0877073580af2a3cbdb026bf97c127928136c139000', 'hex');
+    const mockpk = Buffer.from('2102ba40b58f38f54512f79e0d6c416e501759d08a05948989d84204a81d841e76749000', 'hex');
     mockTransport.send.mockResolvedValue(mockpk); 
     const pk = await signer.publicKey();
     const pkh = await signer.publicKeyHash();
     const buff = transformPathToBuffer(path);
     expect(mockTransport.send).toHaveBeenCalledWith(0x80, 0x02, 0x00, 0x00, buff);
     expect(mockTransport.send).toHaveBeenCalledTimes(1);
-    expect(pk).toEqual('edpkvCTBXu8jchmdq1At1wnpqHXLK1pYKx7MRtPHYwfo5k48V5sf8b');
-    expect(pkh).toEqual('tz1QzsJQ8VDFWiYurySgfNvGqaBrt949PQZf');
+    expect(pk).toEqual('edpkv4FWm7YkppQNmKjxrSHCYzoh2pYRdeFeUeXWVjPTLPzyJduaox');
+    expect(pkh).toEqual('tz1fpJJ331QrGMkdEPJzSWWEZRfVgrUCwzUf');
   })
 
   it('Should sign operation for tz1', async () => {
     const signer = new LedgerSigner(mockTransport);
-    const mockpk = Buffer.from('f657bd75591090f2910872cd195290285d00d7d02c432c384effb9d03734533adeeab9658eaaee12fb9f6b080210a0fc8ab185feea8d6a7ec98e421ccf764a0d9000', 'hex');
-    mockTransport.send.mockResolvedValue(mockpk); 
-    const signature = await signer.sign('0315a3be060e266dfcdcc63db603d73f2327499e2a3b88c361f34e70547be90d886c008097b09b3bfdd573ca638ca83ee62cc80a7f4adba20eb59c60ed760000016ca589ff04efc7f657ded2a796631183b3d3709a00ffff09696e6372656d656e74000000020007');
-    const path = "44'/1729'/0'/0'/0'";
+    const mocksig = Buffer.from('35c1f3340121965a1350af2082af3c83d4338c23c254591ec7a12fef5d4e9fc2a63f7051508cc41255894fe511cfd11af827e8f8e6c3730c3dd0775aff33dc029000', 'hex');
+    mockTransport.send.mockResolvedValue(mocksig); 
+    const signature = await signer.sign('367325bbba406bc3f8c1bf12b27b6e8081064722d3342e34142c172b322ba0426b00c9fc72e8491bd2973e196f04ec6918ad5bcee22d8c0bbcb98d01e85200006760ff228c2c16cbca18bb782a106e51c43a131776f5dfad30ecb5d5e43eccbd6c00c9fc72e8491bd2973e196f04ec6918ad5bcee22dea0abdb98d01c35000a0c21e0000eadc0855adb415fa69a76fc10397dc2fb37039a000');
+    const path = "44'/1729'/0'/0'";
     const buff = transformPathToBuffer(path);
     expect(mockTransport.send).toHaveBeenCalledTimes(2);
     expect(mockTransport.send).toHaveBeenCalledWith(0x80, 0x04, 0x00, 0x00, buff);
     expect(signature).toEqual({
       bytes:
-        '0315a3be060e266dfcdcc63db603d73f2327499e2a3b88c361f34e70547be90d886c008097b09b3bfdd573ca638ca83ee62cc80a7f4adba20eb59c60ed760000016ca589ff04efc7f657ded2a796631183b3d3709a00ffff09696e6372656d656e74000000020007',
+        '367325bbba406bc3f8c1bf12b27b6e8081064722d3342e34142c172b322ba0426b00c9fc72e8491bd2973e196f04ec6918ad5bcee22d8c0bbcb98d01e85200006760ff228c2c16cbca18bb782a106e51c43a131776f5dfad30ecb5d5e43eccbd6c00c9fc72e8491bd2973e196f04ec6918ad5bcee22dea0abdb98d01c35000a0c21e0000eadc0855adb415fa69a76fc10397dc2fb37039a000',
       prefixSig:
-        'sigvDZDMc2jGcw2tTDrU2hRK61yhAFkYW2xXzs4qD46VEZJwLJ9sZ6v3jJEvKHKLXsACt4m6dWCgSncEFJ4wr2GBD5JyPJKx',
+        'sigV2DADKhiwmvCaRS8QoxhM6DgXF8hTPbUBDbCd7vxkx5Do3rbJ8ZceS59b4c69z1XbtishJzit2RjorEpf6DpfS4paStBK',
       sbytes:
-        '0315a3be060e266dfcdcc63db603d73f2327499e2a3b88c361f34e70547be90d886c008097b09b3bfdd573ca638ca83ee62cc80a7f4adba20eb59c60ed760000016ca589ff04efc7f657ded2a796631183b3d3709a00ffff09696e6372656d656e74000000020007f657bd75591090f2910872cd195290285d00d7d02c432c384effb9d03734533adeeab9658eaaee12fb9f6b080210a0fc8ab185feea8d6a7ec98e421ccf764a0d',
+        '367325bbba406bc3f8c1bf12b27b6e8081064722d3342e34142c172b322ba0426b00c9fc72e8491bd2973e196f04ec6918ad5bcee22d8c0bbcb98d01e85200006760ff228c2c16cbca18bb782a106e51c43a131776f5dfad30ecb5d5e43eccbd6c00c9fc72e8491bd2973e196f04ec6918ad5bcee22dea0abdb98d01c35000a0c21e0000eadc0855adb415fa69a76fc10397dc2fb37039a00035c1f3340121965a1350af2082af3c83d4338c23c254591ec7a12fef5d4e9fc2a63f7051508cc41255894fe511cfd11af827e8f8e6c3730c3dd0775aff33dc02',
       sig:
-        'sigvDZDMc2jGcw2tTDrU2hRK61yhAFkYW2xXzs4qD46VEZJwLJ9sZ6v3jJEvKHKLXsACt4m6dWCgSncEFJ4wr2GBD5JyPJKx',
+        'sigV2DADKhiwmvCaRS8QoxhM6DgXF8hTPbUBDbCd7vxkx5Do3rbJ8ZceS59b4c69z1XbtishJzit2RjorEpf6DpfS4paStBK',
     });
   })
 
   it('Should sign operation for tz2', async () => {
-    const signer = new LedgerSigner(mockTransport, "44'/1729'/0'/0'/0'", false, DerivationType.tz2);
-    const mockpk = Buffer.from('3144022032b84b9a869324669bb9d2a1f7515cf5844c5cdeb2ca453af63903ef85c48207022029024defb54f815ac29ed4f58b7bdab736f17549d83c0e68358a22acc9dd36179000', 'hex');
-    mockTransport.send.mockResolvedValue(mockpk); 
-    const signature = await signer.sign('03e6e9fa3e9bbcc7c949466870837d85378dbaf324612bde8664ef318dc077ff716c016fcc969fc1f67f4eed5cf609c455d4bd01364ba9a20eb68068ed760000016ca589ff04efc7f657ded2a796631183b3d3709a00ffff09696e6372656d656e74000000020007');
-    const path = "44'/1729'/0'/0'/0'";
+    const signer = new LedgerSigner(mockTransport, "44'/1729'/0'/0'", false, DerivationType.tz2);
+    const mocksig = Buffer.from('314402201bf0d530c35c70dacddfc14c2073e6666df839dca23ff18f0b2a375493fe06a4022036992c38fd5c3e88d6381208744c859dab96de0d8d221ead65b08b553680eee59000', 'hex');
+    mockTransport.send.mockResolvedValue(mocksig); 
+    const signature = await signer.sign('0372a589146bff99c31469fde4a7ac539e0ea5d926cbea4b72f2ae048fefacdaa16c01cc70a574e52e16028ce0fead32e8b2d8cc1440aca40e9bba8d01ed760000016ca589ff04efc7f657ded2a796631183b3d3709a00ffff09696e6372656d656e74000000020007');
+    const path = "44'/1729'/0'/0'";
     const buff = transformPathToBuffer(path);
     expect(mockTransport.send).toHaveBeenCalledTimes(2);
     expect(mockTransport.send).toHaveBeenCalledWith(0x80, 0x04, 0x00, 0x01, buff);
     expect(signature).toEqual({
       bytes:
-        '03e6e9fa3e9bbcc7c949466870837d85378dbaf324612bde8664ef318dc077ff716c016fcc969fc1f67f4eed5cf609c455d4bd01364ba9a20eb68068ed760000016ca589ff04efc7f657ded2a796631183b3d3709a00ffff09696e6372656d656e74000000020007',
+        '0372a589146bff99c31469fde4a7ac539e0ea5d926cbea4b72f2ae048fefacdaa16c01cc70a574e52e16028ce0fead32e8b2d8cc1440aca40e9bba8d01ed760000016ca589ff04efc7f657ded2a796631183b3d3709a00ffff09696e6372656d656e74000000020007',
       prefixSig:
-        'sigUdAEuwDWvCpHe3Aqx1F7yay4c2C1Kh6P9HttGvo5i5eP4atccZgHW4FW3N6JLKDPfLf1o3PMtk9HuSG3JsB2XMTmkxZCC',
+        'sigReJyeiJtnz4tm35D8RGRLeyFrc1h8c84cQQ4K95BUDo9P6pP2dMZmmTRHSocfY9cQR8u218TFPqwBYfVhR3xMoCzr7hYu',
       sbytes:
-        '03e6e9fa3e9bbcc7c949466870837d85378dbaf324612bde8664ef318dc077ff716c016fcc969fc1f67f4eed5cf609c455d4bd01364ba9a20eb68068ed760000016ca589ff04efc7f657ded2a796631183b3d3709a00ffff09696e6372656d656e7400000002000732b84b9a869324669bb9d2a1f7515cf5844c5cdeb2ca453af63903ef85c4820729024defb54f815ac29ed4f58b7bdab736f17549d83c0e68358a22acc9dd3617',
+        '0372a589146bff99c31469fde4a7ac539e0ea5d926cbea4b72f2ae048fefacdaa16c01cc70a574e52e16028ce0fead32e8b2d8cc1440aca40e9bba8d01ed760000016ca589ff04efc7f657ded2a796631183b3d3709a00ffff09696e6372656d656e740000000200071bf0d530c35c70dacddfc14c2073e6666df839dca23ff18f0b2a375493fe06a436992c38fd5c3e88d6381208744c859dab96de0d8d221ead65b08b553680eee5',
       sig:
-        'sigUdAEuwDWvCpHe3Aqx1F7yay4c2C1Kh6P9HttGvo5i5eP4atccZgHW4FW3N6JLKDPfLf1o3PMtk9HuSG3JsB2XMTmkxZCC',
+        'sigReJyeiJtnz4tm35D8RGRLeyFrc1h8c84cQQ4K95BUDo9P6pP2dMZmmTRHSocfY9cQR8u218TFPqwBYfVhR3xMoCzr7hYu',
     });
   })
 
   it('Should sign operation for tz3', async () => {
-    const signer = new LedgerSigner(mockTransport, "44'/1729'/0'/0'/0'", false, DerivationType.tz3);
-    const mockpk = Buffer.from('314402203d3b46bf5fc06108a54f02c783216beca868474d91bf05f738157f2c40728f9902207f63a12ae7c1badd9d6c3a3ca04555b61166ec220343dbb530caa36d169db8b69000', 'hex');
-    mockTransport.send.mockResolvedValue(mockpk); 
-    const signature = await signer.sign('035a5e306fd31f1ecd1df6a1dc33488e9baaaa6230c64e0c97bf3a69c60cd3a0056c02686932f282fea132ce940aa79bf6e88b43395b19a20eb68168ed760000016ca589ff04efc7f657ded2a796631183b3d3709a00ffff09696e6372656d656e74000000020007');
-    const path = "44'/1729'/0'/0'/0'";
+    const signer = new LedgerSigner(mockTransport, "44'/1729'/0'/0'", false, DerivationType.tz3);
+    const mocksig = Buffer.from('3144022005ccc37c4c434b39054a68d15f9f4d4d279699dd3a406cb235e0b3bf62a6ec1702204f72794ad3f06dd3ebb21b36b63eb44b98f5607e8751513741d73660b7952c399000', 'hex');
+    mockTransport.send.mockResolvedValue(mocksig); 
+    const signature = await signer.sign('038e1824a75961255a36e47d354733d6923c5849579d6abb4bd8c2a929ab5d393a6b02bd2cbb50fb2bfd7237b474a25b1b4ae447c577208c0babbc8d01e8520002022937a7444d7a00cb29f353058444d26d19382f0079e34b5aaf0eda4cec6665f16d02bd2cbb50fb2bfd7237b474a25b1b4ae447c577209310acbc8d01bb78c2030000000000b702000000b205000764045b0000000a2564656372656d656e74045b0000000a25696e6372656d656e740501035b0502020000008303210317057000010321057100020316072e020000002b032105700002032105710003034203210317057000010321057100020316034b051f020000000405200002020000002b0321057000020321057100030342032103170570000103210571000203160312051f020000000405200002053d036d0342051f020000000405200002000000020000');
+    const path = "44'/1729'/0'/0'";
     const buff = transformPathToBuffer(path);
-    expect(mockTransport.send).toHaveBeenCalledTimes(2);
+    expect(mockTransport.send).toHaveBeenCalledTimes(3);
     expect(mockTransport.send).toHaveBeenCalledWith(0x80, 0x04, 0x00, 0x02, buff);
     expect(signature).toEqual({
       bytes:
-        '035a5e306fd31f1ecd1df6a1dc33488e9baaaa6230c64e0c97bf3a69c60cd3a0056c02686932f282fea132ce940aa79bf6e88b43395b19a20eb68168ed760000016ca589ff04efc7f657ded2a796631183b3d3709a00ffff09696e6372656d656e74000000020007',
+        '038e1824a75961255a36e47d354733d6923c5849579d6abb4bd8c2a929ab5d393a6b02bd2cbb50fb2bfd7237b474a25b1b4ae447c577208c0babbc8d01e8520002022937a7444d7a00cb29f353058444d26d19382f0079e34b5aaf0eda4cec6665f16d02bd2cbb50fb2bfd7237b474a25b1b4ae447c577209310acbc8d01bb78c2030000000000b702000000b205000764045b0000000a2564656372656d656e74045b0000000a25696e6372656d656e740501035b0502020000008303210317057000010321057100020316072e020000002b032105700002032105710003034203210317057000010321057100020316034b051f020000000405200002020000002b0321057000020321057100030342032103170570000103210571000203160312051f020000000405200002053d036d0342051f020000000405200002000000020000',
       prefixSig:
-        'sigVzvVJnA6sniKfktjb5Ea4B4ZRdu8gLVmU5PYZd3zuwhq3hUKM7rAmxPzyFKdApFA3d6sTYUfSCQLtqJbhg8HnWQCfzkp5',
+        'sigNkJcdMAWmsqeBM7ARbQ3Gm74NQ5xfc8kyt5gKRQRdWQpZPXW2bT2cxAKBBrCn6ddmqKfkc31q62kWujT8AEEZgeAquYy5',
       sbytes:
-        '035a5e306fd31f1ecd1df6a1dc33488e9baaaa6230c64e0c97bf3a69c60cd3a0056c02686932f282fea132ce940aa79bf6e88b43395b19a20eb68168ed760000016ca589ff04efc7f657ded2a796631183b3d3709a00ffff09696e6372656d656e740000000200073d3b46bf5fc06108a54f02c783216beca868474d91bf05f738157f2c40728f997f63a12ae7c1badd9d6c3a3ca04555b61166ec220343dbb530caa36d169db8b6',
+        '038e1824a75961255a36e47d354733d6923c5849579d6abb4bd8c2a929ab5d393a6b02bd2cbb50fb2bfd7237b474a25b1b4ae447c577208c0babbc8d01e8520002022937a7444d7a00cb29f353058444d26d19382f0079e34b5aaf0eda4cec6665f16d02bd2cbb50fb2bfd7237b474a25b1b4ae447c577209310acbc8d01bb78c2030000000000b702000000b205000764045b0000000a2564656372656d656e74045b0000000a25696e6372656d656e740501035b0502020000008303210317057000010321057100020316072e020000002b032105700002032105710003034203210317057000010321057100020316034b051f020000000405200002020000002b0321057000020321057100030342032103170570000103210571000203160312051f020000000405200002053d036d0342051f02000000040520000200000002000005ccc37c4c434b39054a68d15f9f4d4d279699dd3a406cb235e0b3bf62a6ec174f72794ad3f06dd3ebb21b36b63eb44b98f5607e8751513741d73660b7952c39',
       sig:
-        'sigVzvVJnA6sniKfktjb5Ea4B4ZRdu8gLVmU5PYZd3zuwhq3hUKM7rAmxPzyFKdApFA3d6sTYUfSCQLtqJbhg8HnWQCfzkp5',
+        'sigNkJcdMAWmsqeBM7ARbQ3Gm74NQ5xfc8kyt5gKRQRdWQpZPXW2bT2cxAKBBrCn6ddmqKfkc31q62kWujT8AEEZgeAquYy5',
     });
   })
 

@@ -3,37 +3,36 @@ title: Ledger
 author: Roxane Letourneau
 ---
 
-The integration tests for the Ledger Signer are disabled by default because they require having a Ledger Device connected to your computer.
+The Ledger Signer's integration tests are disabled by default because they require having a Ledger Device connected to your computer.
 
 ## Steps to run the tests
 
 1. Set up your Ledger device with this mnemonic phrase:  
-**1-episode  
-2-capital  
-3-clerk  
-4-vanish  
-5-goat  
-6-result  
-7-scan  
-8-phrase  
-9-air  
-10-float  
-11-shoot  
-12-nasty  
-13-wreck  
-14-safe  
-15-parade  
-16-south  
-17-outside  
-18-urban  
-19-bounce  
-20-art  
-21-boil  
-22-mix  
-23-front  
-24-security**
+**1-prefer 
+2-wait 
+3-flock 
+4-brown 
+5-volume 
+6-recycle 
+7-scrub 
+8-elder 
+9-rate 
+10-pair 
+11-twenty 
+12-giant **
 
 2. Open `Tezos Wallet app` on your Ledger device.
-3. Remove `"testPathIgnorePatterns": ["./ledger-signer.spec.ts"]` from package.json.
-4. If you only want to run Ledger integration tests, this command can be used : `npm run test ledger-signer.spec.ts`
+3. Remove `./ledger-signer.spec.ts` from `"testPathIgnorePatterns"` in the package.json.
+4. If you only want to run Ledger integration tests, use this command: `npm run test ledger-signer.spec.ts`
 5. As the tests include operation like transfer of token and contract origination, the tests will take some time to complete. You will be prompt on the Ledger to confirm the operations.
+
+## Falling tests
+
+There is also a set of integration tests used to verify the behavior when the user declines the Ledger's prompt.
+
+To run these tests, you need to:
+
+1. Open `Tezos Wallet app` on your Ledger device.
+2. Remove `./ledger-signer-falling-tests.spec.ts` from `"testPathIgnorePatterns"` in the package.json.
+3. If you only want to run these tests, use this command: `npm run test ledger-signer-falling-tests.spec.ts`
+4. You will need to decline all Ledger prompts.

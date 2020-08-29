@@ -16,7 +16,7 @@ You first need to import the desired transport from the [LedgerJs library](https
 You will need to pass an instance of the transport of your choice to your Ledger Signer as follows:
 
 <Tabs
-  defaultValue="contractAPI"
+  defaultValue="webApp"
   values={[
     {label: 'Web application', value: 'webApp'},
     {label: 'Node application', value: 'nodeApp'}
@@ -45,13 +45,11 @@ const ledgerSigner = new LedgerSigner(transport);
   </TabItem>
 </Tabs>
 
-The constructor of the `LedgerSigner` class can take three other parameters. If none are specified, the default values will be used.
+The constructor of the `LedgerSigner` class can take three other parameters. If none are specified, the default values are used.
 
- - path: **default value is "44'/1729'/0'/0'/0'"**  
- The Ledger derivation path is used to get the accounts from a mnemonic phrase. The first path used on the Ledger is usually `44'/1729'/0'/0'/0'` or can also be `44'/1729'/0'/0'`.  
- The meaning of the numbers in the path is: `purpose'/coin_type'/account'/change'/address_index'`. The path must always begin with `44'/1729'`.  
- If you want to get the next address from a mnemonic phrase, the last number of the path (`address_index`) needs to be increased by one (`44'/1729'/0'/0'/1'`).  
- You can use as a parameter the `HDPathTemplate` which refers to `44'/1729'/0'/0'/${address_index}'`. You will only have to specify what is the index of the address you want to use. Or you can also use a complete path as a parameter.
+ - path: **default value is "44'/1729'/0'/0'"**  
+ You can use as a parameter the `HDPathTemplate` which refers to `44'/1729'/${account}'/0'`. You will only have to specify what is the index of the account you want to use. Or you can also use a complete path as a parameter.  
+ *More details about paths below*
  - prompt: **default is true**  
  If true, you will be asked, on your Ledger device, for validation to send your public key. ***Note that confirmation is required when using `@ledgerhq/hw-transport-u2f`, so you should not set this parameter to false if you are using this transport.***
  - derivationType: **default is DerivationType.tz1**  
@@ -63,7 +61,7 @@ import { Tezos } from '@taquito/taquito';
 
 const ledgerSigner = new LedgerSigner(
     transport, //required
-    HDPathTemplate(1), // path optional (equivalent to "44'/1729'/0'/0'/1'")
+    HDPathTemplate(1), // path optional (equivalent to "44'/1729'/1'/0'")
     true, // prompt optional
     DerivationType.tz1 // derivationType optional
     );
@@ -130,9 +128,59 @@ Tezos.wallet.transfer({ to: address, amount: amount }).send()
   </TabItem>
 </Tabs>
 
+
+## Derivation paths, HD wallet & BIP Standards
+
+Derivation paths are related to [Hierarchical Deterministic Wallet (HD wallet)](https://en.bitcoinwiki.org/wiki/Deterministic_wallet). `HD wallet` is a system allowing to derive addresses from a mnemonic phrase combined with a derivation path. Changing one index of the path will allow accessing a different `account`. We can access an unlimited number of addresses with `HD wallet`. 
+
+Here is the technical specification for the most commonly used HD wallets :
+
+- [BIP-32](https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki): HD wallet
+- [BIP-39](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki): Mnemonic phrase
+- [BIP-44](https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki): Derivation path
+
+According to BIP44, path is described as follow:
+`purpose' / coin_type' / account' / change / address_index`.
+Where `purpose` is a constant set to `44'` and `coin_type` is set to `1729'` for Tezos.
+
+#### Different Tezos HD Paths
+
+The path always begins with `44'/1729'` and we see some difference for the three other indexes across the Tezos ecosystem. We can notice that changing any number for the three last indexes of the path (`account' / change / address_index`) will lead to different accounts. **But, to ensure consistency, it is important trying to follow the same convention regarding the structure of the path and which index to increase to access the next address.**
+
+In Tezos, we generally see a slight difference in the path compared to the BIP44 specification. It is common to see path made of 4 indexes instead of 5 (default path being `44'/1729'/0'/0'` instead of `44'/1729'/0'/0'/0'`). For example, the default path used by tezos-client is `44'/1729'/0'/0'`.
+Based on what is done by the Tezos-client, the default path used by Taquito in the `LedgerSigner` is also `44'/1729'/0'/0'`. Taquito offers a template for the path called `HDPathTemplate`. This template uses four indexes and suggests doing the iteration on the `account` index.  
+For example, you can use HDPathTemplate(0) (equivalent to `44'/1729'/0'/0'`) to access the first address, HDPathTemplate(1) equivalent to `44'/1729'/1'/0'`) to access the second address, HDPathTemplate(2) (equivalent to `44'/1729'/2'/0'`) to access the third address... *In order to meet the needs of each user, this template is not imposed by Taquito*.
+
+We can see other implementations that adhere to BIP44 and use `44'/1729'/0'/0'/0'`, where the next address is accessed by incrementing `account` or `address_index`.
+
+**Quick summary of [different default paths used](https://github.com/LedgerHQ/ledger-live-common/blob/master/src/derivation.js):**
+
+|Wallet      |Path                                                        |
+|------------|------------------------------------------------------------|
+|Tezbox      |"44'/1729'/{account}'/0'" or "44'/1729'/0'/{account}'"      |
+|Galleon     |"44'/1729'/{account}'/0'/0'" or "44'/1729'/0'/0'/{account}'"| 
+
+#### Some considerations about paths
+
+According to BIP44, "Software should prevent a creation of an account if a previous account does not have a transaction history (meaning none of its addresses have been used before)." When building an app using the `LedgerSigner`, you must be careful not to allow users to access an account with a path structure that does not follow any convention. Otherwise, users could have difficulties using their accounts with other wallets that are not compatible with their paths. As stated before, HD wallets allow you to get an infinity of address. According to BIP44, wallets should follow an `Account discovery` algorithm meaning that it is possible that the wallet won't found an account created with an unconventional path. We can think about how hard it would be for a user who had created an account with a no common path and forgot it to find it back. 
+
+#### More about derivation path here
+
+https://ethereum.stackexchange.com/questions/70017/can-someone-explain-the-meaning-of-derivation-path-in-wallet-in-plain-english-s
+
+https://github.com/LedgerHQ/ledger-live-desktop/issues/2559
+
+https://github.com/obsidiansystems/ledger-app-tezos/#importing-the-key-from-the-ledger-device
+
+https://github.com/MyCryptoHQ/MyCrypto/issues/2070
+
+https://medium.com/mycrypto/wtf-is-a-derivation-path-c3493ca2eb52
+
+
 ## Paths scanning
 
-Having your Ledger device connected to your computer and the `Tezos Wallet App` opened, you can run the following code example. It will scan your Ledger from path `44'/1729'/0'/0'/0'` to `44'/1729'/0'/0'/9'` to get public key hashes and the balance for accounts that are revealed. Confirmations will be asked on your Ledger to send the public keys.
+Having your Ledger device connected to your computer and the `Tezos Wallet App` opened, you can run the following code example. It will scan your Ledger from path `44'/1729'/0'/0'` to `44'/1729'/9'/0'` to get public key hashes and the balance for revealed accounts. Confirmations will be asked on your Ledger to send the public keys.
+*This example is not intended to be a complete example of paths scanning but only a rough outline of what is possible to do.*
 
 ```js live noInline
 //import { LedgerSigner, DerivationType, HDPathTemplate } from '@taquito/ledger-signer';
@@ -151,7 +199,7 @@ TransportU2F.create()
 })
 
 function getAddressInfo(transport, index) {
-  const ledgerSigner = new LedgerSigner(transport, `44'/1729'/0'/0'/${index}'`, true, DerivationType.tz1);
+  const ledgerSigner = new LedgerSigner(transport, `44'/1729'/${index}'/0'`, true, DerivationType.tz1);
   Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/carthagenet', signer: ledgerSigner });
   return Tezos.signer.publicKeyHash()
 .then ( pkh => {
