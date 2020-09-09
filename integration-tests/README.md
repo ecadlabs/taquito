@@ -4,10 +4,11 @@ The `integration-tests` directory contains a testing suite for various contract 
 
 ## How to test
 
-If you feel obliged, you can run the entire test suite with `npm run test` inside the `integration-tests` directory. Do know that this can take a bit of time to fully run. 
+If you feel obliged, you can run the entire test suite with `npm run test` inside the `integration-tests` directory. Do know that this can take a bit of time to fully run.
 
 If you'd like to take a more targeted approach you can use the command: `npm run test -- -t "Title of test here"` So if I have a test block that starts with `it('does some stuff)` then the command `npm run test -- -t "does some stuff"` will run this test only and save you loads of time.
 
+Before running any test, make sure you have `lerna` locally or globally installed and run `npm run bootstrap` followed by `npm run build` in the root directory to prepare before the tests.
 
 ## Disclaimer
 

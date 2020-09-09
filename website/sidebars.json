@@ -14,7 +14,8 @@
         "estimate",
         "validators",
         "maps_bigmaps",
-        "web3js_taquito"
+        "web3js_taquito",
+        "rpc_package"
       ]
     },
     {
