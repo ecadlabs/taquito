@@ -206,6 +206,13 @@ export class TezosToolkit {
   }
 
   /**
+   * @description Provide access to transfer utilities
+   */
+  get transfer() {
+    return this._context.transfer.transfer;
+  }
+
+  /**
    * @description Provide access to streaming utilities backed by an streamer implementation
    */
   get stream(): SubscribeProvider {
