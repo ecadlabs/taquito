@@ -6,6 +6,7 @@ import { Estimate } from "./estimate";
 import { createTransferOperation } from "./prepare";
 import { RPCRunOperationParam, PreapplyResponse } from "@taquito/rpc";
 import { flattenErrors, TezosOperationError, flattenOperationResult } from "../operations/operation-errors";
+import { NoOpTransfer } from "../transfer/no-op";
 
 // RPC requires a signature but does not verify it
 const SIGNATURE_STUB =
@@ -36,15 +37,21 @@ const mergeLimits = (
 
 export class TransferProvider extends OperationEmitter {
     private _context: Context;
-    private _transferParams!: TransferParams;
+    private _transferParams: TransferParams;
     private readonly ALLOCATION_STORAGE = 257;
     private readonly ORIGINATION_STORAGE = 257;
 
     constructor(context: Context) {
         super(context);
-        // currently we are not using context, but has been added for future usage
+        // Currently we are not using context, but has been added for future usage
         this._context = context;
-        // this._transferParams = null;
+        this._transferParams = (new NoOpTransfer()).transferParams;
+    }
+
+    // Initialise tranferParams since constructor did not have them while invocation
+    transfer = (transferParams: TransferParams) => {
+        this._transferParams = transferParams;
+        return this;
     }
 
     // Maximum values defined by the protocol
@@ -62,12 +69,6 @@ export class TransferProvider extends OperationEmitter {
                 BigNumber.min(balance.dividedBy(cost_per_byte), hard_storage_limit_per_operation).toNumber()
             ),
         };
-    }
-
-    transfer = (transferParams: TransferParams) => {
-        // do the magic
-        this._transferParams = transferParams;
-        return this;
     }
 
     private createEstimateFromOperationContent(
@@ -129,9 +130,10 @@ export class TransferProvider extends OperationEmitter {
         });
     }
 
-
     async _estimate() {
         const { fee, storageLimit, gasLimit, ...rest } = this._transferParams;
+
+        // ToDo: simplify estimation logic
         const pkh = await this.signer.publicKeyHash();
         const DEFAULT_PARAMS = await this.getAccountLimits(pkh);
         const op = await createTransferOperation({
@@ -141,7 +143,7 @@ export class TransferProvider extends OperationEmitter {
         return (await this.createEstimate({ operation: op, source: pkh }))[0];
     }
 
-    send() {
-        return 'send';
+    async _send() {
+        return 'send'; // TODO
     }
 }

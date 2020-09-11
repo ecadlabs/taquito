@@ -1,7 +1,7 @@
 import { importKey } from "@taquito/signer";
 import { TezosToolkit } from "../../src/taquito";
 
-describe('Tranfer tests', () => {
+describe('Transfer tests', () => {
     let mockRpcClient: any;
     let toolkit: TezosToolkit;
 
@@ -14,7 +14,7 @@ describe('Tranfer tests', () => {
         importKey(toolkit, FAUCET_KEY.email, FAUCET_KEY.password, FAUCET_KEY.mnemonic.join(' '), FAUCET_KEY.secret);
     });
 
-    it('Verify transfer estimate', async done => {
+    it('should provide transfer estimate', async done => {
         jest.setTimeout(60000 * 10);
         const estimate = await toolkit.transfer({ to: 'tz1VtHKUzDac9oGUmt2ReLrPj3kh3zyzF6GR', amount: 2.1 })._estimate();
         expect(estimate).toMatchObject({
