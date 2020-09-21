@@ -8,7 +8,7 @@ export class ObservableSubscription<T> implements Subscription<T> {
   private closeListeners: Array<() => void> = [];
   private completed$ = new Subject();
 
-  constructor(obs: Observable<T>) {
+  constructor(obs: Observable<T>, private shouldRetry: boolean = false) {
     obs
       .pipe(
         takeUntil(this.completed$),
@@ -23,7 +23,7 @@ export class ObservableSubscription<T> implements Subscription<T> {
             this.call(this.closeListeners);
           }
         ),
-        retry()
+        this.shouldRetry ? retry() : tap(),
       )
       .subscribe();
   }
