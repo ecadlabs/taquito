@@ -2,6 +2,10 @@
   "name": "integration-tests",
   "scripts": {
     "test:faucet": "RUN_WITH_FAUCET=true jest --runInBand",
+    "test:carthagenet": "CARTHAGENET=true jest",
+    "test:carthagenet-faucet": "RUN_CARTHAGENET_WITH_FAUCET=true jest --runInBand",
+    "test:delphinet": "DELPHINET=true jest",
+    "test:delphinet-faucet": "RUN_DELPHINET_WITH_FAUCET=true jest --runInBand",
     "test": "jest"
   },
   "version": "6.4.0-ledger.0",
