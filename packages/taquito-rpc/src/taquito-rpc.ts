@@ -68,7 +68,7 @@ export class RpcClient {
     private url: string = defaultRPC,
     private chain: string = defaultChain,
     private httpBackend: HttpBackend = new HttpBackend()
-  ) { }
+  ) {}
 
   private createURL(path: string) {
     // Trim trailing slashes because it is assumed to be included in path
@@ -127,6 +127,22 @@ export class RpcClient {
       method: 'GET',
     });
     return new BigNumber(balance);
+  }
+
+  /**
+   *
+   * @param address address from which we want to retrieve the operation counter
+   *
+   * @description Get the operation counter for a given implicit account address.
+   *
+   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-counter
+   */
+  async getCounter(address: string): Promise<number> {
+    const counter = await this.httpBackend.createRequest<number>({
+      url: this.createURL(`/chains/${this.chain}/blocks/head/context/contracts/${address}/counter`),
+      method: 'GET',
+    });
+    return counter;
   }
 
   /**
@@ -734,7 +750,6 @@ export class RpcClient {
    */
 
   getRpcUrl() {
-    return this.url
+    return this.url;
   }
-
 }
