@@ -41,7 +41,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress }) => {
       expect(estimate).toMatchObject({
         gasLimit: 10307,
         storageLimit: 0,
-        suggestedFeeMutez: 1384
+        suggestedFeeMutez: 1386
       });
       done();
     })
@@ -51,7 +51,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress }) => {
       expect(estimate).toMatchObject({
         gasLimit: 10307,
         storageLimit: 257,
-        suggestedFeeMutez: 1384
+        suggestedFeeMutez: 1386
       });
       done();
     });
@@ -66,7 +66,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress }) => {
         {
           gasLimit: 17932,
           storageLimit: 571,
-          suggestedFeeMutez: 2439
+          suggestedFeeMutez: 2441
         }
       )
       done();
@@ -80,7 +80,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress }) => {
       expect(estimate).toMatchObject({
         gasLimit: 10100,
         storageLimit: 0,
-        suggestedFeeMutez: 1359
+        suggestedFeeMutez: 1361
       })
       done();
     })
@@ -91,7 +91,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress }) => {
       expect(estimate).toMatchObject({
         gasLimit: 26260,
         storageLimit: 0,
-        suggestedFeeMutez: 3052
+        suggestedFeeMutez: 3054
       })
       done();
     })
@@ -106,7 +106,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress }) => {
       expect(estimate).toMatchObject({
         gasLimit: 36875,
         storageLimit: 514,
-        suggestedFeeMutez: 4173
+        suggestedFeeMutez: 4175
       })
       done();
     })
@@ -117,7 +117,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress }) => {
       expect(estimate).toMatchObject({
         gasLimit: 28286,
         storageLimit: 317,
-        suggestedFeeMutez: 3261
+        suggestedFeeMutez: 3263
       })
       done();
     })
@@ -128,7 +128,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress }) => {
       expect(estimate).toMatchObject({
         gasLimit: 40928,
         storageLimit: 634,
-        suggestedFeeMutez: 4590
+        suggestedFeeMutez: 4592
       })
       // Do the actual operation
       const op2 = await contract.methods.do(originate2()).send();
@@ -155,7 +155,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress }) => {
       expect(estimate).toMatchObject({
         gasLimit: 10307,
         storageLimit: 0,
-        suggestedFeeMutez: 1382
+        suggestedFeeMutez: 1384
       });
       done();
     });
