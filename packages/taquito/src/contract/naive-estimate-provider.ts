@@ -1,4 +1,4 @@
-import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
+import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT, Protocols } from '../constants';
 import { OriginateParams, TransferParams, ParamsWithKind } from '../operations/types';
 import { Estimate } from './estimate';
 import { EstimationProvider } from './interface';
@@ -7,6 +7,17 @@ import { EstimationProvider } from './interface';
  * @description Naïve implementation of an estimate provider. Will work for basic transaction but your operation risk to fail if they are more complex (smart contract interaction)
  */
 export class NaiveEstimateProvider implements EstimationProvider {
+  private _cost_per_byte: number;
+  constructor(
+    private readonly protocol: Protocols,
+  ) {
+    if (this.protocol === Protocols.PsCARTHA) {
+      this._cost_per_byte = 1000;
+    }
+    else {
+      this._cost_per_byte = 250;
+    }
+  }
   /**
    *
    * @description Estimate gasLimit, storageLimit and fees for an origination operation
@@ -20,7 +31,7 @@ export class NaiveEstimateProvider implements EstimationProvider {
     storageLimit = DEFAULT_STORAGE_LIMIT.ORIGINATION,
     gasLimit = DEFAULT_GAS_LIMIT.ORIGINATION,
   }: OriginateParams) {
-    return new Estimate(gasLimit, storageLimit, 185, fee);
+    return new Estimate(gasLimit, storageLimit, 185, this._cost_per_byte, fee);
   }
 
   /**
@@ -36,7 +47,7 @@ export class NaiveEstimateProvider implements EstimationProvider {
     storageLimit = DEFAULT_STORAGE_LIMIT.TRANSFER,
     gasLimit = DEFAULT_GAS_LIMIT.TRANSFER,
   }: TransferParams) {
-    return new Estimate(gasLimit, storageLimit, 162, fee);
+    return new Estimate(gasLimit, storageLimit, 162, this._cost_per_byte, fee);
   }
 
   /**
@@ -51,7 +62,7 @@ export class NaiveEstimateProvider implements EstimationProvider {
     fee = DEFAULT_FEE.DELEGATION,
     gasLimit = DEFAULT_GAS_LIMIT.DELEGATION,
   }): Promise<Estimate> {
-    return new Estimate(gasLimit, 0, 157, fee);
+    return new Estimate(gasLimit, 0, 157, this._cost_per_byte, fee);
   }
 
   /**
@@ -66,7 +77,7 @@ export class NaiveEstimateProvider implements EstimationProvider {
     fee = DEFAULT_FEE.DELEGATION,
     gasLimit = DEFAULT_GAS_LIMIT.DELEGATION,
   }): Promise<Estimate> {
-    return new Estimate(gasLimit, 0, 157, fee);
+    return new Estimate(gasLimit, 0, 157, this._cost_per_byte, fee);
   }
 
   async batch(params: ParamsWithKind[]) {
@@ -83,7 +94,7 @@ export class NaiveEstimateProvider implements EstimationProvider {
           estimates.push(await this.setDelegate(param));
           break;
         case 'activate_account':
-          estimates.push(new Estimate(0, 0, 0, 0));
+          estimates.push(new Estimate(0, 0, 0, this._cost_per_byte, 0));
           break;
         default:
           throw new Error(`Unsupported operation kind: ${(param as any).kind}`);

@@ -94,26 +94,26 @@ const babylonnetEphemeral = {
 }
 // Well known faucet key. Can be overridden by setting the `TEZOS_FAUCET_KEY_FILE` environment variable
 const key = {
-  email: "peqjckge.qkrrajzs@tezos.example.org",
-  password: "y4BX7qS1UE",
+  email: "eivsdpkk.vaewxumx@tezos.example.org",
+  password: "yC5x4XiOGc",
   mnemonic: [
-    "skate",
-    "damp",
-    "faculty",
-    "morning",
-    "bring",
-    "ridge",
-    "traffic",
-    "initial",
-    "piece",
-    "annual",
-    "give",
-    "say",
-    "wrestle",
-    "rare",
-    "ability"
+    "purity",
+    "universe",
+    "illegal",
+    "insane",
+    "wrap",
+    "pigeon",
+    "cupboard",
+    "deliver",
+    "flee",
+    "minimum",
+    "outer",
+    "clinic",
+    "news",
+    "icon",
+    "violin"
   ],
-  secret: "7d4c8c3796fdbf4869edb5703758f0e5831f5081"
+  secret: "a3354dd722c7e5d9d64a8e39cba9563e4f6dfa4d"
 }
 
 const delphinetFaucet = {

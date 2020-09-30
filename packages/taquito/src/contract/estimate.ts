@@ -1,6 +1,5 @@
 const MINIMAL_FEE_MUTEZ = 100;
 const MINIMAL_FEE_PER_BYTE_MUTEZ = 1;
-const MINIMAL_FEE_PER_STORAGE_BYTE_MUTEZ = 1000;
 const MINIMAL_FEE_PER_GAS_MUTEZ = 0.1;
 
 const GAS_BUFFER = 100;
@@ -46,6 +45,7 @@ export class Estimate {
     private readonly _gasLimit: number | string,
     private readonly _storageLimit: number | string,
     private readonly opSize: number | string,
+    private readonly minimal_fee_per_storage_byte_mutez: number | string,
     /**
      * @description Base fee in mutez (1 mutez = 1e10−6 tez)
      */
@@ -53,10 +53,10 @@ export class Estimate {
   ) {}
 
   /**
-   * @description The number of Mutez that will be burned for the storage of the [operation](https://tezos.gitlab.io/user/glossary.html#operations).
+   * @description The number of Mutez that will be burned for the storage of the [operation](https://tezos.gitlab.io/user/glossary.html#operations). (Storage + Allocation fees)
    */
   get burnFeeMutez() {
-    return this.roundUp(Number(this.storageLimit) * MINIMAL_FEE_PER_STORAGE_BYTE_MUTEZ);
+    return this.roundUp(Number(this.storageLimit) * Number(this.minimal_fee_per_storage_byte_mutez));
   }
 
   /**

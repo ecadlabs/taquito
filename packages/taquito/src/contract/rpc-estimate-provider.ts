@@ -75,7 +75,8 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
 
   private createEstimateFromOperationContent(
     content: PreapplyResponse['contents'][0],
-    size: number
+    size: number,
+    costPerByte: BigNumber
   ) {
     const operationResults = flattenOperationResult({ contents: [content] });
     let totalGas = 0;
@@ -92,9 +93,9 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     });
 
     if (isOpWithFee(content)) {
-      return new Estimate(totalGas || 0, Number(totalStorage || 0), size);
+      return new Estimate(totalGas || 0, Number(totalStorage || 0), size, costPerByte.toNumber());
     } else {
-      return new Estimate(0, 0, size, 0);
+      return new Estimate(0, 0, size, costPerByte.toNumber(), 0);
     }
   }
 
@@ -110,7 +111,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     };
 
     const { opResponse } = await this.simulate(operation);
-
+    const { cost_per_byte } = await this.rpc.getConstants();
     const errors = [...flattenErrors(opResponse, 'backtracked'), ...flattenErrors(opResponse)];
 
     // Fail early in case of errors
@@ -127,7 +128,8 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     return opResponse.contents.map(x => {
       return this.createEstimateFromOperationContent(
         x,
-        opbytes.length / 2 / opResponse.contents.length
+        opbytes.length / 2 / opResponse.contents.length,
+        cost_per_byte
       );
     });
   }
