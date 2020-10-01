@@ -57,7 +57,7 @@ interface FaucetConfig {
 
 const delphinetEphemeral = {
   rpc: 'https://api.tez.ie/rpc/delphinet',
-  knownBaker: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+  knownBaker: 'tz1LpmZmB1yJJBcCrBDLSAStmmugGDEghdVv',
   knownContract: 'KT1Gm9PeBggJzegaM9sRCz1EymLrWxpWyGXr',
   knownBigMapContract: 'KT18m2EWmKL6cDdLBFpgg6RHtCgBzdRXEnst',
   protocol: Protocols.PsDELPH1,
@@ -118,7 +118,7 @@ const key = {
 
 const delphinetFaucet = {
   rpc: 'https://api.tez.ie/rpc/delphinet',
-  knownBaker: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+  knownBaker: 'tz1LpmZmB1yJJBcCrBDLSAStmmugGDEghdVv',
   knownContract: 'KT1Gm9PeBggJzegaM9sRCz1EymLrWxpWyGXr',
   knownBigMapContract: 'KT18m2EWmKL6cDdLBFpgg6RHtCgBzdRXEnst',
   protocol: Protocols.PsDELPH1,

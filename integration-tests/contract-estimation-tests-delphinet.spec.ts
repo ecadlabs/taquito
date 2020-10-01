@@ -223,6 +223,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol }) => {
     })
   });
 } else {
-  test.skip
+  test.skip('test', () => {
+  });
 }
 })
