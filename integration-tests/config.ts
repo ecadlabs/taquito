@@ -59,7 +59,7 @@ const delphinetEphemeral = {
   rpc: 'https://api.tez.ie/rpc/delphinet',
   knownBaker: 'tz1LpmZmB1yJJBcCrBDLSAStmmugGDEghdVv',
   knownContract: 'KT1Gm9PeBggJzegaM9sRCz1EymLrWxpWyGXr',
-  knownBigMapContract: 'KT18m2EWmKL6cDdLBFpgg6RHtCgBzdRXEnst',
+  knownBigMapContract: 'KT1Nf1CPvF1FFmAan5LiRvcyukyt3Nf4Le9B',
   protocol: Protocols.PsDELPH1,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
@@ -94,33 +94,33 @@ const babylonnetEphemeral = {
 }
 // Well known faucet key. Can be overridden by setting the `TEZOS_FAUCET_KEY_FILE` environment variable
 const key = {
-  email: "eivsdpkk.vaewxumx@tezos.example.org",
-  password: "yC5x4XiOGc",
+  email: "aqquglap.bdbxsgrq@tezos.example.org",
+  password: "20Wxnm7ywc",
   mnemonic: [
-    "purity",
-    "universe",
-    "illegal",
-    "insane",
-    "wrap",
-    "pigeon",
-    "cupboard",
-    "deliver",
-    "flee",
-    "minimum",
-    "outer",
-    "clinic",
-    "news",
-    "icon",
-    "violin"
+    "hockey",
+    "express",
+    "denial",
+    "know",
+    "sun",
+    "latin",
+    "tenant",
+    "injury",
+    "ship",
+    "lobster",
+    "master",
+    "behave",
+    "midnight",
+    "blast",
+    "floor"
   ],
-  secret: "a3354dd722c7e5d9d64a8e39cba9563e4f6dfa4d"
+  secret: "0d45a2f09fac2183452fc173f91139c5f2dfb6f9"
 }
 
 const delphinetFaucet = {
   rpc: 'https://api.tez.ie/rpc/delphinet',
   knownBaker: 'tz1LpmZmB1yJJBcCrBDLSAStmmugGDEghdVv',
   knownContract: 'KT1Gm9PeBggJzegaM9sRCz1EymLrWxpWyGXr',
-  knownBigMapContract: 'KT18m2EWmKL6cDdLBFpgg6RHtCgBzdRXEnst',
+  knownBigMapContract: 'KT1Nf1CPvF1FFmAan5LiRvcyukyt3Nf4Le9B',
   protocol: Protocols.PsDELPH1,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,

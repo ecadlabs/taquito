@@ -18,11 +18,12 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
         init: tokenInit(`${await Tezos.signer.publicKeyHash()}`),
       })
       const contract = await op.contract()
+      console.log("Address",contract.address)
 
       // Fetch the storage of the newly deployed contract
       const storage: any = await contract.storage();
 
-      // First property is the big map abstracttion (This contract does not have annotations so we access by index)
+      // First property is the big map abstraction (This contract does not have annotations so we access by index)
       const bigMap = storage['0'];
 
       // Fetch the key (current pkh that is running the test)
