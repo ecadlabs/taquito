@@ -7,6 +7,7 @@ describe('Estimate', () => {
     expect(estimate.suggestedFeeMutez).toStrictEqual(3786);
     expect(estimate.totalCost).toStrictEqual(963686);
     expect(estimate.burnFeeMutez).toStrictEqual(960000);
+    expect(estimate.consumedMilligas).toStrictEqual(27147000);
   });
 
   it('Calculate fees in mutez properly with string for Carthagenet', () => {
@@ -16,6 +17,7 @@ describe('Estimate', () => {
     expect(estimate.usingBaseFeeMutez).toStrictEqual(11922);
     expect(estimate.burnFeeMutez).toStrictEqual(300000);
     expect(estimate.totalCost).toEqual(302022);
+    expect(estimate.consumedMilligas).toStrictEqual(17311000);
   });
 
   it('Calculate fees in mutez properly for Delphinet', () => {
@@ -24,6 +26,7 @@ describe('Estimate', () => {
     expect(estimate.suggestedFeeMutez).toStrictEqual(3786);
     expect(estimate.totalCost).toStrictEqual(243686);
     expect(estimate.burnFeeMutez).toStrictEqual(240000);
+    expect(estimate.consumedMilligas).toStrictEqual(27147000);
   });
 
   it('Calculate fees in mutez properly with string for Delphinet', () => {
@@ -33,5 +36,6 @@ describe('Estimate', () => {
     expect(estimate.usingBaseFeeMutez).toStrictEqual(11922);
     expect(estimate.burnFeeMutez).toStrictEqual(75000);
     expect(estimate.totalCost).toEqual(77022);
+    expect(estimate.consumedMilligas).toStrictEqual(17311000);
   });
 });

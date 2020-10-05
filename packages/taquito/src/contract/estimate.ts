@@ -119,6 +119,6 @@ export class Estimate {
    * This function returns an estimation of the gas that operation will consume in milligas. 
    */
   get consumedMilligas() {
-    return this._milligasLimit;
+    return Number(this._milligasLimit);
   }
 }
