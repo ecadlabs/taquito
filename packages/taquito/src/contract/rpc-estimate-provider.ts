@@ -80,6 +80,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
   ) {
     const operationResults = flattenOperationResult({ contents: [content] });
     let totalGas = 0;
+    let totalMilligas = 0;
     let totalStorage = 0;
     operationResults.forEach(result => {
       totalStorage +=
@@ -88,12 +89,18 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
           : 0;
       totalStorage += 'allocated_destination_contract' in result ? this.ALLOCATION_STORAGE : 0;
       totalGas += Number(result.consumed_gas) || 0;
+      totalMilligas += Number(result.consumed_milligas) || 0;
       totalStorage +=
         'paid_storage_size_diff' in result ? Number(result.paid_storage_size_diff) || 0 : 0;
     });
 
+    if (totalGas !== 0 && totalMilligas === 0) {
+      // This will convert gas to milligas for Carthagenet where result does not contain consumed gas in milligas.
+      totalMilligas = totalGas * 1000;
+    }
+
     if (isOpWithFee(content)) {
-      return new Estimate(totalGas || 0, Number(totalStorage || 0), size, costPerByte.toNumber());
+      return new Estimate(totalMilligas || 0, Number(totalStorage || 0), size, costPerByte.toNumber());
     } else {
       return new Estimate(0, 0, size, costPerByte.toNumber(), 0);
     }

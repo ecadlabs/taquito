@@ -601,7 +601,7 @@ describe('RpcContractProvider test', () => {
 
   describe('setDelegate', () => {
     it('should produce a reveal and delegation operation', async done => {
-      const estimate = new Estimate(1000, 1000, 180, 1000);
+      const estimate = new Estimate(1000000, 1000, 180, 1000);
       mockEstimate.setDelegate.mockResolvedValue(estimate);
       const result = await rpcContractProvider.setDelegate({
         source: 'test_source',
@@ -653,7 +653,7 @@ describe('RpcContractProvider test', () => {
 
   describe('registerDelegate', () => {
     it('should produce a reveal and delegation operation', async done => {
-      const estimate = new Estimate(1000, 1000, 180, 1000);
+      const estimate = new Estimate(1000000, 1000, 180, 1000);
       mockEstimate.registerDelegate.mockResolvedValue(estimate);
       const result = await rpcContractProvider.registerDelegate({});
       expect(result.raw).toEqual({

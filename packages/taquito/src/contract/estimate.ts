@@ -42,7 +42,7 @@ const GAS_BUFFER = 100;
 
 export class Estimate {
   constructor(
-    private readonly _gasLimit: number | string,
+    private readonly _milligasLimit: number | string,
     private readonly _storageLimit: number | string,
     private readonly opSize: number | string,
     private readonly minimalFeePerStorageByteMutez: number | string,
@@ -71,13 +71,13 @@ export class Estimate {
    * @description The limit on the amount of [gas](https://tezos.gitlab.io/user/glossary.html#gas) a given operation can consume.
    */
   get gasLimit() {
-    return Number(this._gasLimit) + GAS_BUFFER;
+    return this.roundUp(Number(this._milligasLimit)/1000 + GAS_BUFFER);
   }
 
   private get operationFeeMutez() {
     return (
-      this.gasLimit * MINIMAL_FEE_PER_GAS_MUTEZ + Number(this.opSize) * MINIMAL_FEE_PER_BYTE_MUTEZ
-    );
+      (Number(this._milligasLimit)/1000 + GAS_BUFFER) * MINIMAL_FEE_PER_GAS_MUTEZ + Number(this.opSize) * MINIMAL_FEE_PER_BYTE_MUTEZ
+      );
   }
 
   private roundUp(nanotez: number) {
@@ -112,5 +112,13 @@ export class Estimate {
    */
   get totalCost() {
     return this.minimalFeeMutez + this.burnFeeMutez;
+  }
+
+  /**
+   * @description Since Delphinet, consumed gas is provided in milligas for more precision. 
+   * This function returns an estimation of the gas that operation will consume in milligas. 
+   */
+  get consumedMilligas() {
+    return this._milligasLimit;
   }
 }
