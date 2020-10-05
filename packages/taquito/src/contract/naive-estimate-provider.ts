@@ -29,7 +29,7 @@ export class NaiveEstimateProvider implements EstimationProvider {
   async originate({
     fee = DEFAULT_FEE.ORIGINATION,
     storageLimit = DEFAULT_STORAGE_LIMIT.ORIGINATION,
-    gasLimit = DEFAULT_GAS_LIMIT.ORIGINATION,
+    gasLimit = DEFAULT_GAS_LIMIT.ORIGINATION * 1000,
   }: OriginateParams) {
     return new Estimate(gasLimit, storageLimit, 185, this._costPerByte, fee);
   }
@@ -45,7 +45,7 @@ export class NaiveEstimateProvider implements EstimationProvider {
   async transfer({
     fee = DEFAULT_FEE.TRANSFER,
     storageLimit = DEFAULT_STORAGE_LIMIT.TRANSFER,
-    gasLimit = DEFAULT_GAS_LIMIT.TRANSFER,
+    gasLimit = DEFAULT_GAS_LIMIT.TRANSFER * 1000,
   }: TransferParams) {
     return new Estimate(gasLimit, storageLimit, 162, this._costPerByte, fee);
   }
@@ -60,7 +60,7 @@ export class NaiveEstimateProvider implements EstimationProvider {
    */
   async setDelegate({
     fee = DEFAULT_FEE.DELEGATION,
-    gasLimit = DEFAULT_GAS_LIMIT.DELEGATION,
+    gasLimit = DEFAULT_GAS_LIMIT.DELEGATION * 1000,
   }): Promise<Estimate> {
     return new Estimate(gasLimit, 0, 157, this._costPerByte, fee);
   }
@@ -75,7 +75,7 @@ export class NaiveEstimateProvider implements EstimationProvider {
    */
   async registerDelegate({
     fee = DEFAULT_FEE.DELEGATION,
-    gasLimit = DEFAULT_GAS_LIMIT.DELEGATION,
+    gasLimit = DEFAULT_GAS_LIMIT.DELEGATION * 1000,
   }): Promise<Estimate> {
     return new Estimate(gasLimit, 0, 157, this._costPerByte, fee);
   }
