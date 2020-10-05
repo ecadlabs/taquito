@@ -8,7 +8,8 @@ import { managerCode } from "./data/manager_code";
 CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol }) => {
   const Tezos = lib;
 
-  if (protocol === Protocols.PsDELPH1) {
+  const carthagenet = (protocol === Protocols.PsCARTHA) ? test : test.skip;
+  const delphinet = (protocol === Protocols.PsDELPH1) ? test : test.skip;
 
   describe('Estimate scenario', () => {
     let LowAmountTez: TezosToolkit;
@@ -38,7 +39,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol }) => {
       }
     })
 
-    test('Estimate transfer with allocated destination', async (done) => {
+    delphinet('Estimate transfer with allocated destination', async (done) => {
       const estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 1.9 });
       expect(estimate.gasLimit).toEqual(1527);
       expect(estimate.storageLimit).toEqual(0);
@@ -51,7 +52,20 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol }) => {
       done();
     })
 
-    test('Estimate transfer with unallocated destination', async (done) => {
+    carthagenet('Estimate transfer with allocated destination', async (done) => {
+      const estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 1.9 });
+      expect(estimate.gasLimit).toEqual(10307);
+      expect(estimate.storageLimit).toEqual(0);
+      expect(estimate.suggestedFeeMutez).toEqual(1386);
+      expect(estimate.burnFeeMutez).toEqual(0);
+      expect(estimate.minimalFeeMutez).toEqual(1286);
+      expect(estimate.totalCost).toEqual(1286);
+      expect(estimate.usingBaseFeeMutez).toEqual(1286);
+      expect(estimate.consumedMilligas).toEqual(10207000);
+      done();
+    })
+
+    delphinet('Estimate transfer with unallocated destination', async (done) => {
       const estimate = await LowAmountTez.estimate.transfer({ to: await (await createAddress()).signer.publicKeyHash(), amount: 1.7 });
       expect(estimate.gasLimit).toEqual(1527);
       expect(estimate.storageLimit).toEqual(257);
@@ -64,7 +78,20 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol }) => {
       done();
     });
 
-    test('Estimate simple origination', async (done) => {
+    carthagenet('Estimate transfer with unallocated destination', async (done) => {
+      const estimate = await LowAmountTez.estimate.transfer({ to: await (await createAddress()).signer.publicKeyHash(), amount: 1.7 });
+      expect(estimate.gasLimit).toEqual(10307);
+      expect(estimate.storageLimit).toEqual(257);
+      expect(estimate.suggestedFeeMutez).toEqual(1386);
+      expect(estimate.burnFeeMutez).toEqual(257000);
+      expect(estimate.minimalFeeMutez).toEqual(1286);
+      expect(estimate.totalCost).toEqual(258286);
+      expect(estimate.usingBaseFeeMutez).toEqual(1286);
+      expect(estimate.consumedMilligas).toEqual(10207000);
+      done();
+    });
+
+    delphinet('Estimate simple origination', async (done) => {
       const estimate = await LowAmountTez.estimate.originate({
         balance: "1",
         code: ligoSample,
@@ -81,7 +108,24 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol }) => {
       done();
     });
 
-    test('Estimate setDelegate', async (done) => {
+    carthagenet('Estimate simple origination', async (done) => {
+      const estimate = await LowAmountTez.estimate.originate({
+        balance: "1",
+        code: ligoSample,
+        storage: 0,
+      })
+      expect(estimate.gasLimit).toEqual(17932);
+      expect(estimate.storageLimit).toEqual(571);
+      expect(estimate.suggestedFeeMutez).toEqual(2441);
+      expect(estimate.burnFeeMutez).toEqual(571000);
+      expect(estimate.minimalFeeMutez).toEqual(2341);
+      expect(estimate.totalCost).toEqual(573341);
+      expect(estimate.usingBaseFeeMutez).toEqual(2341);
+      expect(estimate.consumedMilligas).toEqual(17832000);
+      done();
+    });
+
+    delphinet('Estimate setDelegate', async (done) => {
       const estimate = await LowAmountTez.estimate.setDelegate({
         delegate: knownBaker,
         source: await LowAmountTez.signer.publicKeyHash(),
@@ -97,7 +141,23 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol }) => {
       done();
     })
 
-    test('Estimate internal transfer to allocated implicit', async (done) => {
+    carthagenet('Estimate setDelegate', async (done) => {
+      const estimate = await LowAmountTez.estimate.setDelegate({
+        delegate: knownBaker,
+        source: await LowAmountTez.signer.publicKeyHash(),
+      })
+      expect(estimate.gasLimit).toEqual(10100);
+      expect(estimate.storageLimit).toEqual(0);
+      expect(estimate.suggestedFeeMutez).toEqual(1361);
+      expect(estimate.burnFeeMutez).toEqual(0);
+      expect(estimate.minimalFeeMutez).toEqual(1261);
+      expect(estimate.totalCost).toEqual(1261);
+      expect(estimate.usingBaseFeeMutez).toEqual(1261);
+      expect(estimate.consumedMilligas).toEqual(10000000);
+      done();
+    })
+
+    delphinet('Estimate internal transfer to allocated implicit', async (done) => {
       const tx = contract.methods.do(MANAGER_LAMBDA.transferImplicit(knownBaker, 50)).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx)
       expect(estimate.gasLimit).toEqual(4963);
@@ -111,7 +171,21 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol }) => {
       done();
     })
 
-    test('Estimate to multiple internal transfer to unallocated account', async (done) => {
+    carthagenet('Estimate internal transfer to allocated implicit', async (done) => {
+      const tx = contract.methods.do(MANAGER_LAMBDA.transferImplicit(knownBaker, 50)).toTransferParams();
+      const estimate = await LowAmountTez.estimate.transfer(tx)
+      expect(estimate.gasLimit).toEqual(26260);
+      expect(estimate.storageLimit).toEqual(0);
+      expect(estimate.suggestedFeeMutez).toEqual(3054);
+      expect(estimate.burnFeeMutez).toEqual(0);
+      expect(estimate.minimalFeeMutez).toEqual(2954);
+      expect(estimate.totalCost).toEqual(2954);
+      expect(estimate.usingBaseFeeMutez).toEqual(2954);
+      expect(estimate.consumedMilligas).toEqual(26160000);
+      done();
+    })
+
+    delphinet('Estimate to multiple internal transfer to unallocated account', async (done) => {
       const tx = contract.methods.do(transferImplicit2(
         await (await createAddress()).signer.publicKeyHash(),
         await (await createAddress()).signer.publicKeyHash(),
@@ -129,7 +203,25 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol }) => {
       done();
     })
 
-    test('Estimate internal origination', async (done) => {
+    carthagenet('Estimate to multiple internal transfer to unallocated account', async (done) => {
+      const tx = contract.methods.do(transferImplicit2(
+        await (await createAddress()).signer.publicKeyHash(),
+        await (await createAddress()).signer.publicKeyHash(),
+        50)
+      ).toTransferParams();
+      const estimate = await LowAmountTez.estimate.transfer(tx)
+      expect(estimate.gasLimit).toEqual(36875);
+      expect(estimate.storageLimit).toEqual(514);
+      expect(estimate.suggestedFeeMutez).toEqual(4175);
+      expect(estimate.burnFeeMutez).toEqual(514000);
+      expect(estimate.minimalFeeMutez).toEqual(4075);
+      expect(estimate.totalCost).toEqual(518075);
+      expect(estimate.usingBaseFeeMutez).toEqual(4075);
+      expect(estimate.consumedMilligas).toEqual(36775000);
+      done();
+    })
+
+    delphinet('Estimate internal origination', async (done) => {
       const tx = contract.methods.do(originate()).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx)
       expect(estimate.gasLimit).toEqual(5568);
@@ -143,7 +235,21 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol }) => {
       done();
     })
 
-    test('Estimate multiple internal origination', async (done) => {
+    carthagenet('Estimate internal origination', async (done) => {
+      const tx = contract.methods.do(originate()).toTransferParams();
+      const estimate = await LowAmountTez.estimate.transfer(tx)
+      expect(estimate.gasLimit).toEqual(28286);
+      expect(estimate.storageLimit).toEqual(317);
+      expect(estimate.suggestedFeeMutez).toEqual(3263);
+      expect(estimate.burnFeeMutez).toEqual(317000);
+      expect(estimate.minimalFeeMutez).toEqual(3163);
+      expect(estimate.totalCost).toEqual(320163);
+      expect(estimate.usingBaseFeeMutez).toEqual(3163);
+      expect(estimate.consumedMilligas).toEqual(28186000);
+      done();
+    })
+
+    delphinet('Estimate multiple internal origination', async (done) => {
       const tx = contract.methods.do(originate2()).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx)
       expect(estimate.gasLimit).toEqual(7758);
@@ -154,6 +260,23 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol }) => {
       expect(estimate.totalCost).toEqual(159673);
       expect(estimate.usingBaseFeeMutez).toEqual(1173);
       expect(estimate.consumedMilligas).toEqual(7657256);
+      // Do the actual operation
+      const op2 = await contract.methods.do(originate2()).send();
+      await op2.confirmation();
+      done();
+    })
+
+    carthagenet('Estimate multiple internal origination', async (done) => {
+      const tx = contract.methods.do(originate2()).toTransferParams();
+      const estimate = await LowAmountTez.estimate.transfer(tx)
+      expect(estimate.gasLimit).toEqual(40928);
+      expect(estimate.storageLimit).toEqual(634);
+      expect(estimate.suggestedFeeMutez).toEqual(4592);
+      expect(estimate.burnFeeMutez).toEqual(634000);
+      expect(estimate.minimalFeeMutez).toEqual(4492);
+      expect(estimate.totalCost).toEqual(638492);
+      expect(estimate.usingBaseFeeMutez).toEqual(4492);
+      expect(estimate.consumedMilligas).toEqual(40828000);
       // Do the actual operation
       const op2 = await contract.methods.do(originate2()).send();
       await op2.confirmation();
@@ -174,7 +297,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol }) => {
       done()
     })
 
-    it('Estimate transfer to regular address', async (done) => {
+    delphinet('Estimate transfer to regular address', async (done) => {
       let estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) });
       expect(estimate.gasLimit).toEqual(1527);
       expect(estimate.storageLimit).toEqual(0);
@@ -184,6 +307,19 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol }) => {
       expect(estimate.totalCost).toEqual(404);
       expect(estimate.usingBaseFeeMutez).toEqual(404);
       expect(estimate.consumedMilligas).toEqual(1427000);
+      done();
+    });
+
+    carthagenet('Estimate transfer to regular address', async (done) => {
+      let estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) });
+      expect(estimate.gasLimit).toEqual(10307);
+      expect(estimate.storageLimit).toEqual(0);
+      expect(estimate.suggestedFeeMutez).toEqual(1384);
+      expect(estimate.burnFeeMutez).toEqual(0);
+      expect(estimate.minimalFeeMutez).toEqual(1284);
+      expect(estimate.totalCost).toEqual(1284);
+      expect(estimate.usingBaseFeeMutez).toEqual(1284);
+      expect(estimate.consumedMilligas).toEqual(10207000);
       done();
     });
 
@@ -231,8 +367,4 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol }) => {
       done();
     })
   });
-} else {
-  test.skip('test', () => {
-  });
-}
 })
