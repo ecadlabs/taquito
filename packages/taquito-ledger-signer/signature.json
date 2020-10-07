@@ -182,12 +182,12 @@
             "@ledgerhq/hw-transport-node-hid": "^5.19.1",
             "@taquito/taquito": "^6.4.0-ledger.0",
             "@taquito/utils": "^6.4.0-ledger.0",
-            "@types/jest": "^25.2.2",
+            "@types/jest": "^26.0.14",
             "buffer": "^5.6.0",
             "libsodium-wrappers": "^0.7.6"
           },
           "devDependencies": {
-            "@types/jest": "^26.0.0",
+            "@types/jest": "^26.0.14",
             "@types/ledgerhq__hw-transport-node-hid": "^4.22.1",
             "@types/libsodium-wrappers": "^0.7.7",
             "@types/node": "^14.0.1",
