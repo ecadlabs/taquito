@@ -34,6 +34,7 @@ export const defaultConfig: Required<Config> = {
  * @description Encapsulate common service used throughout different part of the library
  */
 export class Context {
+  private _rpcClient: RpcClient;
   private _forger: Forger;
   private _injector: Injector;
   private _walletProvider: WalletProvider;
@@ -46,7 +47,7 @@ export class Context {
   public readonly wallet = new Wallet(this);
 
   constructor(
-    private _rpcClient: RpcClient = new RpcClient(),
+    private _rpc: RpcClient | string,
     private _signer: Signer = new NoopSigner(),
     private _proto?: Protocols,
     private _config?: Partial<Config>,
@@ -54,6 +55,11 @@ export class Context {
     injector?: Injector,
     wallet?: WalletProvider
   ) {
+    if (typeof this._rpc === 'string') {
+      this._rpcClient = new RpcClient(this._rpc);
+    } else {
+      this._rpcClient = this._rpc;
+    }
     this.config = _config as any;
     this._forger = forger ? forger : new RpcForger(this);
     this._injector = injector ? injector : new RpcInjector(this);
