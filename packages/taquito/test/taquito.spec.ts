@@ -38,11 +38,12 @@ describe('TezosToolkit test', () => {
     });
 
     mockRpcClient.getManagerKey.mockResolvedValue('test');
-    toolkit = new TezosToolkit();
-    toolkit['_context'].rpc = mockRpcClient;
+    toolkit = new TezosToolkit(mockRpcClient);
+
   });
 
   it('setProvider with string should create rpc provider', () => {
+    console.log(toolkit.rpc)
     toolkit.setProvider({ rpc: 'test' });
     expect(toolkit.tz).toBeInstanceOf(RpcTzProvider);
     expect(toolkit.contract).toBeInstanceOf(RpcContractProvider);
@@ -59,7 +60,7 @@ describe('TezosToolkit test', () => {
     .filter(x => x !== 'rpc')
     .forEach(key => {
       it(`setting ${key} provider should not override the rpc provider`, () => {
-        toolkit = new TezosToolkit();
+        toolkit = new TezosToolkit('rpc');
         expect(toolkit.rpc).toBeInstanceOf(RpcClient);
         toolkit.setProvider({ rpc: 'test' });
         expect(toolkit.rpc['url']).toEqual('test');
