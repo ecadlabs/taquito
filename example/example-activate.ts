@@ -3,9 +3,9 @@ import { Tezos } from '@taquito/taquito'
 
 async function example() {
     const provider = 'https://api.tez.ie/rpc/carthagenet';
-    Tezos.setProvider({ rpc: provider });
+    const tezos = Tezos(provider);
     try {
-        const op = await Tezos.tz.activate("tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu", "161d907951bf5594bedb1d70bb03c938d63c22be")
+        const op = await tezos.tz.activate("tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu", "161d907951bf5594bedb1d70bb03c938d63c22be")
         console.log('Awaiting confirmation...');
         await op.confirmation();
         console.log(op.hash, op.includedInBlock);

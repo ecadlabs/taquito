@@ -5,9 +5,10 @@ import { InMemorySigner } from '@taquito/signer';
 async function example() {
     const provider = 'https://api.tez.ie/rpc/carthagenet';
     const signer: any = new InMemorySigner('edsk3xkqabYfWWpcEKTWk75cRQv2bgHA3EHuuHSFH3ejqzKPx69Zh9');
-    Tezos.setProvider({ rpc: provider, signer });
+    const tezos = Tezos(provider);
+    tezos.setSignerProvider( signer );
     try {
-        const contract = await Tezos.contract.at('KT1SawqvsVdAbDzqc4KwPpaS1S1veuFgF9AN');
+        const contract = await tezos.contract.at('KT1SawqvsVdAbDzqc4KwPpaS1S1veuFgF9AN');
         console.log("Printing contract methods...");
         console.log(contract.methods);
         console.log("Showing initial storage...");
