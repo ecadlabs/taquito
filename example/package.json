@@ -17,13 +17,13 @@
     "example:scan-path-ledger": "node -r ts-node/register --preserve-symlinks scan-path-ledger.ts"
   },
   "dependencies": {
-    "@ledgerhq/hw-transport-node-hid": "^5.22.0",
+    "@ledgerhq/hw-transport-node-hid": "^5.25.0",
     "@taquito/ledger-signer": "^6.4.0-ledger.0",
     "@taquito/michel-codec": "^6.4.0-ledger.0",
     "@taquito/signer": "^6.4.0-ledger.0",
     "@taquito/taquito": "^6.4.0-ledger.0"
   },
   "devDependencies": {
-    "ts-node": "^8.10.2"
+    "ts-node": "^9.0.0"
   }
 }
