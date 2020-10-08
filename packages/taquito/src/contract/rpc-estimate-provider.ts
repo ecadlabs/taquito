@@ -75,10 +75,12 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
 
   private createEstimateFromOperationContent(
     content: PreapplyResponse['contents'][0],
-    size: number
+    size: number,
+    costPerByte: BigNumber
   ) {
     const operationResults = flattenOperationResult({ contents: [content] });
     let totalGas = 0;
+    let totalMilligas = 0;
     let totalStorage = 0;
     operationResults.forEach(result => {
       totalStorage +=
@@ -87,14 +89,20 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
           : 0;
       totalStorage += 'allocated_destination_contract' in result ? this.ALLOCATION_STORAGE : 0;
       totalGas += Number(result.consumed_gas) || 0;
+      totalMilligas += Number(result.consumed_milligas) || 0;
       totalStorage +=
         'paid_storage_size_diff' in result ? Number(result.paid_storage_size_diff) || 0 : 0;
     });
 
+    if (totalGas !== 0 && totalMilligas === 0) {
+      // This will convert gas to milligas for Carthagenet where result does not contain consumed gas in milligas.
+      totalMilligas = totalGas * 1000;
+    }
+
     if (isOpWithFee(content)) {
-      return new Estimate(totalGas || 0, Number(totalStorage || 0), size);
+      return new Estimate(totalMilligas || 0, Number(totalStorage || 0), size, costPerByte.toNumber());
     } else {
-      return new Estimate(0, 0, size, 0);
+      return new Estimate(0, 0, size, costPerByte.toNumber(), 0);
     }
   }
 
@@ -110,7 +118,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     };
 
     const { opResponse } = await this.simulate(operation);
-
+    const { cost_per_byte } = await this.rpc.getConstants();
     const errors = [...flattenErrors(opResponse, 'backtracked'), ...flattenErrors(opResponse)];
 
     // Fail early in case of errors
@@ -127,7 +135,8 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     return opResponse.contents.map(x => {
       return this.createEstimateFromOperationContent(
         x,
-        opbytes.length / 2 / opResponse.contents.length
+        opbytes.length / 2 / opResponse.contents.length,
+        cost_per_byte
       );
     });
   }

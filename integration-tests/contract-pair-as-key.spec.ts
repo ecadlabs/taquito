@@ -1,9 +1,9 @@
 import { CONFIGS } from "./config";
-import { Protocols, MichelsonMap } from "@taquito/taquito";
+import { MichelsonMap } from "@taquito/taquito";
 import { storageContractWithPairAsKey } from "./data/storage-contract-with-pair-as-key";
 import { mapWithPairAsKeyCode, mapWithPairAsKeyStorage } from "./data/bigmap_with_pair_as_key";
 
-CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
+CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   describe(`Storage contract with pair as key using: ${rpc}`, () => {
 
@@ -12,7 +12,8 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done()
     })
     // Pair as key is only supported since proto 006
-    if (protocol === Protocols.PsCARTHA) {
+    // Now that babylone has been removed from Config, this check is not required
+    // if (protocol === Protocols.PsCARTHA) {
       it('Storage contract with pair as key', async (done) => {
         const storageMap = new MichelsonMap();
         // The contract schema in this example has a key with 8 nested pairs
@@ -88,6 +89,5 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         expect(value).toEqual('test')
         done();
       });
-    }
   });
 })

@@ -27,14 +27,14 @@ async function example() {
       console.log(bigMapKey)
     });
 
-    console.log('Query balance history...');
+/*     console.log('Query balance history...');
     await Tezos.query
       .balanceHistory('KT1DzGefKWdrwWn9HxcYtKR46todiC66bxsH', {
         start: '2018-09-20T03:36:47Z',
         end: new Date(),
         limit: 100,
       })
-      .then(console.log);
+      .then(console.log); */
   } catch (ex) {
     console.error(ex);
   }

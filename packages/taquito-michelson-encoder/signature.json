@@ -536,7 +536,7 @@
             "fast-json-stable-stringify": "^2.1.0"
           },
           "devDependencies": {
-            "@taquito/rpc": "^6.3.5-beta.0",
+            "@taquito/rpc": "^6.4.0-ledger.0",
             "@types/jest": "^26.0.8",
             "@types/node": "^14.0.27",
             "colors": "^1.4.0",

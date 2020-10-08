@@ -26,7 +26,7 @@ jobs:
       env:
         CI: true
         RUN_INTEGRATION: true
-  integration-tests:
+  integration-tests-carthagenet:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -45,6 +45,28 @@ jobs:
     - run: npm install
     - run: npm run lerna -- bootstrap
     - run: npm run build
-    - run: cd integration-tests && npm run test
+    - run: cd integration-tests && npm run test:carthagenet
+      env:
+        CI: true
+  integration-tests-delphinet:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [10.x]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node }}
+    - uses: actions/cache@v1
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+    - run: npm install
+    - run: npm run lerna -- bootstrap
+    - run: npm run build
+    - run: cd integration-tests && npm run test:delphinet-faucet
       env:
         CI: true
