@@ -48,6 +48,8 @@ export interface SetProviderOptions {
 
 /**
  * @description Facade class that surfaces all of the libraries capability and allow it's configuration
+ * 
+ * @param _rpc The RPC server to use
  */
 export class TezosToolkit {
   private _stream!: SubscribeProvider;

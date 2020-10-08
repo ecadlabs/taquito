@@ -15,7 +15,8 @@
         "validators",
         "maps_bigmaps",
         "web3js_taquito",
-        "rpc_package"
+        "rpc_package",
+        "community_run_nodes"
       ]
     },
     {
