@@ -38,12 +38,11 @@ describe('TezosToolkit test', () => {
     });
 
     mockRpcClient.getManagerKey.mockResolvedValue('test');
-    toolkit = new TezosToolkit(mockRpcClient);
-
+    toolkit = new TezosToolkit('url');
+    toolkit['_context'].rpc = mockRpcClient;
   });
 
   it('setProvider with string should create rpc provider', () => {
-    console.log(toolkit.rpc)
     toolkit.setProvider({ rpc: 'test' });
     expect(toolkit.tz).toBeInstanceOf(RpcTzProvider);
     expect(toolkit.contract).toBeInstanceOf(RpcContractProvider);
