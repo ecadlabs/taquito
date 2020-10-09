@@ -95,6 +95,12 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_taquito_taquito.naiveestimateprovider.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_taquito_taquito.naiveestimateprovider.html#batch" class="tsd-kind-icon">batch</a></li>
@@ -105,6 +111,32 @@
 							</ul>
 						</section>
 					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Naive<wbr>Estimate<wbr>Provider<span class="tsd-signature-symbol">(</span>protocol<span class="tsd-signature-symbol">: </span><a href="../enums/_taquito_taquito.protocols-2.html" class="tsd-signature-type">Protocols</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.naiveestimateprovider.html" class="tsd-signature-type">NaiveEstimateProvider</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/contract/naive-estimate-provider.ts#L10">packages/taquito/src/contract/naive-estimate-provider.ts:10</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>protocol: <a href="../enums/_taquito_taquito.protocols-2.html" class="tsd-signature-type">Protocols</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_taquito_taquito.naiveestimateprovider.html" class="tsd-signature-type">NaiveEstimateProvider</a></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -120,7 +152,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_taquito_taquito.estimationprovider-2.html">EstimationProvider</a>.<a href="../interfaces/_taquito_taquito.estimationprovider-2.html#batch">batch</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/20d9312/packages/taquito/src/contract/naive-estimate-provider.ts#L72">packages/taquito/src/contract/naive-estimate-provider.ts:72</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/contract/naive-estimate-provider.ts#L83">packages/taquito/src/contract/naive-estimate-provider.ts:83</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -143,7 +175,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/20d9312/packages/taquito/src/contract/naive-estimate-provider.ts#L18">packages/taquito/src/contract/naive-estimate-provider.ts:18</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/contract/naive-estimate-provider.ts#L29">packages/taquito/src/contract/naive-estimate-provider.ts:29</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -179,13 +211,13 @@
 					<a name="registerdelegate" class="tsd-anchor"></a>
 					<h3>register<wbr>Delegate</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">register<wbr>Delegate<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>fee<span class="tsd-signature-symbol">: </span><a href="../enums/_taquito_taquito.default_fee-1.html" class="tsd-signature-type">DEFAULT_FEE</a><span class="tsd-signature-symbol">; </span>gasLimit<span class="tsd-signature-symbol">: </span><a href="../enums/_taquito_taquito.default_gas_limit-1.html#delegation" class="tsd-signature-type">DELEGATION</a><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_taquito_taquito.estimate.html" class="tsd-signature-type">Estimate</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">register<wbr>Delegate<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>fee<span class="tsd-signature-symbol">: </span><a href="../enums/_taquito_taquito.default_fee-1.html" class="tsd-signature-type">DEFAULT_FEE</a><span class="tsd-signature-symbol">; </span>gasLimit<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_taquito_taquito.estimate.html" class="tsd-signature-type">Estimate</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/20d9312/packages/taquito/src/contract/naive-estimate-provider.ts#L65">packages/taquito/src/contract/naive-estimate-provider.ts:65</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/contract/naive-estimate-provider.ts#L76">packages/taquito/src/contract/naive-estimate-provider.ts:76</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -198,13 +230,13 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>__namedParameters: <span class="tsd-signature-symbol">{ </span>fee<span class="tsd-signature-symbol">: </span><a href="../enums/_taquito_taquito.default_fee-1.html" class="tsd-signature-type">DEFAULT_FEE</a><span class="tsd-signature-symbol">; </span>gasLimit<span class="tsd-signature-symbol">: </span><a href="../enums/_taquito_taquito.default_gas_limit-1.html#delegation" class="tsd-signature-type">DELEGATION</a><span class="tsd-signature-symbol"> }</span></h5>
+									<h5>__namedParameters: <span class="tsd-signature-symbol">{ </span>fee<span class="tsd-signature-symbol">: </span><a href="../enums/_taquito_taquito.default_fee-1.html" class="tsd-signature-type">DEFAULT_FEE</a><span class="tsd-signature-symbol">; </span>gasLimit<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span></h5>
 									<ul class="tsd-parameters">
 										<li class="tsd-parameter">
 											<h5>fee<span class="tsd-signature-symbol">: </span><a href="../enums/_taquito_taquito.default_fee-1.html" class="tsd-signature-type">DEFAULT_FEE</a></h5>
 										</li>
 										<li class="tsd-parameter">
-											<h5>gas<wbr>Limit<span class="tsd-signature-symbol">: </span><a href="../enums/_taquito_taquito.default_gas_limit-1.html#delegation" class="tsd-signature-type">DELEGATION</a></h5>
+											<h5>gas<wbr>Limit<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
 										</li>
 									</ul>
 								</li>
@@ -218,13 +250,13 @@
 					<a name="setdelegate" class="tsd-anchor"></a>
 					<h3>set<wbr>Delegate</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Delegate<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>fee<span class="tsd-signature-symbol">: </span><a href="../enums/_taquito_taquito.default_fee-1.html" class="tsd-signature-type">DEFAULT_FEE</a><span class="tsd-signature-symbol">; </span>gasLimit<span class="tsd-signature-symbol">: </span><a href="../enums/_taquito_taquito.default_gas_limit-1.html#delegation" class="tsd-signature-type">DELEGATION</a><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_taquito_taquito.estimate.html" class="tsd-signature-type">Estimate</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Delegate<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>fee<span class="tsd-signature-symbol">: </span><a href="../enums/_taquito_taquito.default_fee-1.html" class="tsd-signature-type">DEFAULT_FEE</a><span class="tsd-signature-symbol">; </span>gasLimit<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_taquito_taquito.estimate.html" class="tsd-signature-type">Estimate</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/20d9312/packages/taquito/src/contract/naive-estimate-provider.ts#L50">packages/taquito/src/contract/naive-estimate-provider.ts:50</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/contract/naive-estimate-provider.ts#L61">packages/taquito/src/contract/naive-estimate-provider.ts:61</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -237,13 +269,13 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>__namedParameters: <span class="tsd-signature-symbol">{ </span>fee<span class="tsd-signature-symbol">: </span><a href="../enums/_taquito_taquito.default_fee-1.html" class="tsd-signature-type">DEFAULT_FEE</a><span class="tsd-signature-symbol">; </span>gasLimit<span class="tsd-signature-symbol">: </span><a href="../enums/_taquito_taquito.default_gas_limit-1.html#delegation" class="tsd-signature-type">DELEGATION</a><span class="tsd-signature-symbol"> }</span></h5>
+									<h5>__namedParameters: <span class="tsd-signature-symbol">{ </span>fee<span class="tsd-signature-symbol">: </span><a href="../enums/_taquito_taquito.default_fee-1.html" class="tsd-signature-type">DEFAULT_FEE</a><span class="tsd-signature-symbol">; </span>gasLimit<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span></h5>
 									<ul class="tsd-parameters">
 										<li class="tsd-parameter">
 											<h5>fee<span class="tsd-signature-symbol">: </span><a href="../enums/_taquito_taquito.default_fee-1.html" class="tsd-signature-type">DEFAULT_FEE</a></h5>
 										</li>
 										<li class="tsd-parameter">
-											<h5>gas<wbr>Limit<span class="tsd-signature-symbol">: </span><a href="../enums/_taquito_taquito.default_gas_limit-1.html#delegation" class="tsd-signature-type">DELEGATION</a></h5>
+											<h5>gas<wbr>Limit<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
 										</li>
 									</ul>
 								</li>
@@ -263,7 +295,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/20d9312/packages/taquito/src/contract/naive-estimate-provider.ts#L34">packages/taquito/src/contract/naive-estimate-provider.ts:34</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/contract/naive-estimate-provider.ts#L45">packages/taquito/src/contract/naive-estimate-provider.ts:45</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -354,6 +386,9 @@
 					<li class="current tsd-kind-class tsd-parent-kind-module">
 						<a href="_taquito_taquito.naiveestimateprovider.html" class="tsd-kind-icon">Naive<wbr>Estimate<wbr>Provider</a>
 						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="_taquito_taquito.naiveestimateprovider.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_taquito_taquito.naiveestimateprovider.html#batch" class="tsd-kind-icon">batch</a>
 							</li>
@@ -393,6 +428,7 @@
 			<ul class="tsd-legend">
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
 				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
 			<ul class="tsd-legend">

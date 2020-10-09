@@ -88,11 +88,13 @@
 						<dt>example</dt>
 						<dd><pre><code><span class="hljs-keyword">import</span> TransportNodeHid <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;@ledgerhq/hw-transport-node-hid&quot;</span>;
 <span class="hljs-keyword">const</span> transport = <span class="hljs-keyword">await</span> TransportNodeHid.create();
-<span class="hljs-keyword">const</span> ledgerSigner = <span class="hljs-keyword">new</span> LedgerSigner(transport, <span class="hljs-string">&quot;44&#x27;/1729&#x27;/0&#x27;/0&#x27;&quot;</span>, <span class="hljs-literal">false</span>, DerivationType.tz1);</code></pre></dd>
+<span class="hljs-keyword">const</span> ledgerSigner = <span class="hljs-keyword">new</span> LedgerSigner(transport, <span class="hljs-string">&quot;44&#x27;/1729&#x27;/0&#x27;/0&#x27;&quot;</span>, <span class="hljs-literal">false</span>, DerivationType.tz1);</code></pre>
+						</dd>
 						<dt>example</dt>
 						<dd><pre><code><span class="hljs-keyword">import</span> TransportU2F <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;@ledgerhq/hw-transport-u2f&quot;</span>;
 <span class="hljs-keyword">const</span> transport = <span class="hljs-keyword">await</span> TransportU2F.create();
-<span class="hljs-keyword">const</span> ledgerSigner = <span class="hljs-keyword">new</span> LedgerSigner(transport, <span class="hljs-string">&quot;44&#x27;/1729&#x27;/0&#x27;/0&#x27;&quot;</span>, <span class="hljs-literal">true</span>, DerivationType.tz2);</code></pre></dd>
+<span class="hljs-keyword">const</span> ledgerSigner = <span class="hljs-keyword">new</span> LedgerSigner(transport, <span class="hljs-string">&quot;44&#x27;/1729&#x27;/0&#x27;/0&#x27;&quot;</span>, <span class="hljs-literal">true</span>, DerivationType.tz2);</code></pre>
+						</dd>
 					</dl>
 				</div>
 			</section>
@@ -144,7 +146,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/20d9312/packages/taquito-ledger-signer/src/taquito-ledger-signer.ts#L61">packages/taquito-ledger-signer/src/taquito-ledger-signer.ts:61</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito-ledger-signer/src/taquito-ledger-signer.ts#L61">packages/taquito-ledger-signer/src/taquito-ledger-signer.ts:61</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -180,7 +182,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_taquito_taquito.signer-1.html">Signer</a>.<a href="../interfaces/_taquito_taquito.signer-1.html#publickey">publicKey</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/20d9312/packages/taquito-ledger-signer/src/taquito-ledger-signer.ts#L87">packages/taquito-ledger-signer/src/taquito-ledger-signer.ts:87</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito-ledger-signer/src/taquito-ledger-signer.ts#L87">packages/taquito-ledger-signer/src/taquito-ledger-signer.ts:87</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -198,7 +200,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_taquito_taquito.signer-1.html">Signer</a>.<a href="../interfaces/_taquito_taquito.signer-1.html#publickeyhash">publicKeyHash</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/20d9312/packages/taquito-ledger-signer/src/taquito-ledger-signer.ts#L77">packages/taquito-ledger-signer/src/taquito-ledger-signer.ts:77</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito-ledger-signer/src/taquito-ledger-signer.ts#L77">packages/taquito-ledger-signer/src/taquito-ledger-signer.ts:77</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -216,7 +218,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_taquito_taquito.signer-1.html">Signer</a>.<a href="../interfaces/_taquito_taquito.signer-1.html#secretkey">secretKey</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/20d9312/packages/taquito-ledger-signer/src/taquito-ledger-signer.ts#L129">packages/taquito-ledger-signer/src/taquito-ledger-signer.ts:129</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito-ledger-signer/src/taquito-ledger-signer.ts#L129">packages/taquito-ledger-signer/src/taquito-ledger-signer.ts:129</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -233,7 +235,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/20d9312/packages/taquito-ledger-signer/src/taquito-ledger-signer.ts#L133">packages/taquito-ledger-signer/src/taquito-ledger-signer.ts:133</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito-ledger-signer/src/taquito-ledger-signer.ts#L133">packages/taquito-ledger-signer/src/taquito-ledger-signer.ts:133</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>

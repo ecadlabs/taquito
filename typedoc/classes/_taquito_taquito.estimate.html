@@ -82,7 +82,8 @@
 <span class="hljs-keyword">const</span> <span class="hljs-keyword">est</span> = await Tezos.estimate.transfer({ to: address, amount: amount })
 console.<span class="hljs-built_in">log</span>(<span class="hljs-keyword">est</span>.burnFeeMutez, <span class="hljs-keyword">est</span>.gasLimit, <span class="hljs-keyword">est</span>.minimalFeeMutez, <span class="hljs-keyword">est</span>.storageLimit,
  <span class="hljs-keyword">est</span>.suggestedFeeMutez, <span class="hljs-keyword">est</span>.totalCost, <span class="hljs-keyword">est</span>.usingBaseFeeMutez)
-</code></pre><p>Estimate a contract origination :</p>
+</code></pre>
+					<p>Estimate a contract origination :</p>
 					<pre><code><span class="hljs-comment">// generic.json is referring to a Michelson Smart Contract</span>
 
 <span class="hljs-keyword">const</span> genericMultisigJSON = require(&#x27;./generic.json&#x27;)
@@ -121,6 +122,7 @@ console.<span class="hljs-built_in">log</span>(<span class="hljs-keyword">est</s
 							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_taquito_taquito.estimate.html#burnfeemutez" class="tsd-kind-icon">burn<wbr>Fee<wbr>Mutez</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_taquito_taquito.estimate.html#consumedmilligas" class="tsd-kind-icon">consumed<wbr>Milligas</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_taquito_taquito.estimate.html#gaslimit" class="tsd-kind-icon">gas<wbr>Limit</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_taquito_taquito.estimate.html#minimalfeemutez" class="tsd-kind-icon">minimal<wbr>Fee<wbr>Mutez</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_taquito_taquito.estimate.html#storagelimit" class="tsd-kind-icon">storage<wbr>Limit</a></li>
@@ -138,25 +140,28 @@ console.<span class="hljs-built_in">log</span>(<span class="hljs-keyword">est</s
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Estimate<span class="tsd-signature-symbol">(</span>_gasLimit<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, _storageLimit<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, opSize<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, baseFeeMutez<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.estimate.html" class="tsd-signature-type">Estimate</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Estimate<span class="tsd-signature-symbol">(</span>_milligasLimit<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, _storageLimit<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, opSize<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, minimalFeePerStorageByteMutez<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, baseFeeMutez<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.estimate.html" class="tsd-signature-type">Estimate</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/20d9312/packages/taquito/src/contract/estimate.ts#L44">packages/taquito/src/contract/estimate.ts:44</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/contract/estimate.ts#L43">packages/taquito/src/contract/estimate.ts:43</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>_gasLimit: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+									<h5>_milligasLimit: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
 								</li>
 								<li>
 									<h5>_storageLimit: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
 								</li>
 								<li>
 									<h5>opSize: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>minimalFeePerStorageByteMutez: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> baseFeeMutez: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = MINIMAL_FEE_MUTEZ</span></h5>
@@ -179,13 +184,38 @@ console.<span class="hljs-built_in">log</span>(<span class="hljs-keyword">est</s
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/20d9312/packages/taquito/src/contract/estimate.ts#L58">packages/taquito/src/contract/estimate.ts:58</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/contract/estimate.ts#L58">packages/taquito/src/contract/estimate.ts:58</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<dl class="tsd-comment-tags">
 									<dt>description</dt>
-									<dd><p>The number of Mutez that will be burned for the storage of the <a href="https://tezos.gitlab.io/user/glossary.html#operations">operation</a>.</p>
+									<dd><p>The number of Mutez that will be burned for the storage of the <a href="https://tezos.gitlab.io/user/glossary.html#operations">operation</a>. (Storage + Allocation fees)</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="consumedmilligas" class="tsd-anchor"></a>
+					<h3>consumed<wbr>Milligas</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> consumedMilligas<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/contract/estimate.ts#L121">packages/taquito/src/contract/estimate.ts:121</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<dl class="tsd-comment-tags">
+									<dt>description</dt>
+									<dd><p>Since Delphinet, consumed gas is provided in milligas for more precision.
+										This function returns an estimation of the gas that operation will consume in milligas.</p>
 									</dd>
 								</dl>
 							</div>
@@ -203,7 +233,7 @@ console.<span class="hljs-built_in">log</span>(<span class="hljs-keyword">est</s
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/20d9312/packages/taquito/src/contract/estimate.ts#L73">packages/taquito/src/contract/estimate.ts:73</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/contract/estimate.ts#L73">packages/taquito/src/contract/estimate.ts:73</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -227,7 +257,7 @@ console.<span class="hljs-built_in">log</span>(<span class="hljs-keyword">est</s
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/20d9312/packages/taquito/src/contract/estimate.ts#L90">packages/taquito/src/contract/estimate.ts:90</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/contract/estimate.ts#L90">packages/taquito/src/contract/estimate.ts:90</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -251,7 +281,7 @@ console.<span class="hljs-built_in">log</span>(<span class="hljs-keyword">est</s
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/20d9312/packages/taquito/src/contract/estimate.ts#L65">packages/taquito/src/contract/estimate.ts:65</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/contract/estimate.ts#L65">packages/taquito/src/contract/estimate.ts:65</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -275,7 +305,7 @@ console.<span class="hljs-built_in">log</span>(<span class="hljs-keyword">est</s
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/20d9312/packages/taquito/src/contract/estimate.ts#L97">packages/taquito/src/contract/estimate.ts:97</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/contract/estimate.ts#L97">packages/taquito/src/contract/estimate.ts:97</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -299,7 +329,7 @@ console.<span class="hljs-built_in">log</span>(<span class="hljs-keyword">est</s
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/20d9312/packages/taquito/src/contract/estimate.ts#L113">packages/taquito/src/contract/estimate.ts:113</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/contract/estimate.ts#L113">packages/taquito/src/contract/estimate.ts:113</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -323,7 +353,7 @@ console.<span class="hljs-built_in">log</span>(<span class="hljs-keyword">est</s
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/20d9312/packages/taquito/src/contract/estimate.ts#L104">packages/taquito/src/contract/estimate.ts:104</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/contract/estimate.ts#L104">packages/taquito/src/contract/estimate.ts:104</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -401,6 +431,9 @@ console.<span class="hljs-built_in">log</span>(<span class="hljs-keyword">est</s
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="_taquito_taquito.estimate.html#burnfeemutez" class="tsd-kind-icon">burn<wbr>Fee<wbr>Mutez</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="_taquito_taquito.estimate.html#consumedmilligas" class="tsd-kind-icon">consumed<wbr>Milligas</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="_taquito_taquito.estimate.html#gaslimit" class="tsd-kind-icon">gas<wbr>Limit</a>
