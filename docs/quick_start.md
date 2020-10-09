@@ -17,7 +17,7 @@ npm install @taquito/taquito
 
 ### Import `TezosToolkit` from `@taquito/taquito` and instantiate it
 
-The constructor of the `TezosToolkit` class takes an RPC URL as a parameter. It can be a string or a [`RpcClient`](https://tezostaquito.io/typedoc/classes/_taquito_rpc.rpcclient.html#constructor) object. A list of community-run nodes can be accessed [here](community_run_nodes.md).
+The constructor of the `TezosToolkit` class takes an RPC URL as a parameter. It can be a string or a [`RpcClient`](rpc_package.md) object. A list of community-run nodes can be accessed [here](community_run_nodes.md).
 
 ```js
 import { TezosToolkit } from '@taquito/taquito';
@@ -82,9 +82,10 @@ importKey(Tezos, 'p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1');
 The key is a JSON file, which you can use with Taquito as follows:
 
 ```js
-import { Tezos } from '@taquito/taquito';
+import { TezosToolkit } from '@taquito/taquito';
 import { InMemorySigner, importKey } from '@taquito/taquito-signer';
 
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 Tezos.setProvider({ signer: new InMemorySigner() });
 
 const FAUCET_KEY = {
