@@ -34,11 +34,11 @@
           },
           {
             "path": "dist/lib/taquito-local-forging.js",
-            "sha512": "fcb70a696ca044ccef65b423d70d9abe8b08adf9d7eb53b14d6b6dd06b21e17520ab0697bf918bf7553827e81025d4e016a0a4ff3ffbfa3ad0212c359708c335"
+            "sha512": "0cdb476e185d9c9be482f6a9740c14b89967ae3b1530ff8ce2f1b6dd42e516f84e82e7113aec6be9a83c6bac6c5b61ceb7e37b6646e76d527e7146424702f5c7"
           },
           {
             "path": "dist/taquito-local-forging.umd.js",
-            "sha512": "e5959ce1ead37b1793f771fc4cf8335fd6cb7e5d2e95ed3934501fd3d086b77df238a3bff3552eeed003a147a38b872962e9ce396d499728eaa2d9da77c8a2cb"
+            "sha512": "f9c5365cd96bb6a7fa09cb3c8c1c42bd86fe23642c92a3962e1a27554abeb79c9b3f70aac778ade9d99eeef7ca5253b4252691802c07238650df79125498f751"
           },
           {
             "path": "dist/lib/uint8array-consumer.js",
@@ -82,7 +82,7 @@
           },
           {
             "path": "dist/taquito-local-forging.umd.js.map",
-            "sha512": "b196a36abc92e36f5e31f40ee5a6c0629bfb84213769d0f28b416962de572d2862592967c01c03d26154bed173eb0e0cc8d14409fd028e97fe84f619e52b6756"
+            "sha512": "6818895d260389466cd4f952190049931eaead7d642b2b1f9d854dc55eaf6a74ce8021df4db9b51e251407cb08b1f46e694d7fe2cff7fe0fce3a777b350e4051"
           },
           {
             "path": "dist/lib/uint8array-consumer.js.map",
@@ -167,7 +167,7 @@
           "typings",
           "version"
         ],
-        "sha512": "0aa2e555a0f91904eec7791e47a28dd500aee0ac7ce30c88c1a916ff9cb8729a4c9206d37154f6fb4ab575106c9adefe7733ea53cd153a13fff813aa1c01321d"
+        "sha512": "1865aa73a4fe3b7208ae7105e2ef58fe366a3cd5f56e6a58d21933c6825ad414d42172774fb856cb5f4fa4fec591df7f3c156db4a025c93535002069d6e61a3b"
       }
     },
     {
@@ -175,7 +175,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/local-forging",
-          "version": "6.4.0-ledger.0",
+          "version": "7.0.0-beta.pre.0",
           "description": "Provide local forging functionality to be with taquito",
           "keywords": [
             "tezos",
@@ -241,41 +241,41 @@
             ]
           },
           "dependencies": {
-            "@taquito/utils": "^6.4.0-ledger.0",
-            "bignumber.js": "^9.0.0"
+            "@taquito/utils": "^7.0.0-beta.pre.0",
+            "bignumber.js": "^9.0.1"
           },
           "devDependencies": {
-            "@taquito/taquito": "^6.4.0-ledger.0",
-            "@types/jest": "^26.0.8",
-            "@types/node": "^14.0.27",
+            "@taquito/taquito": "^7.0.0-beta.pre.0",
+            "@types/jest": "^26.0.14",
+            "@types/node": "^14.11.5",
             "colors": "^1.4.0",
             "coveralls": "^3.1.0",
             "cross-env": "^7.0.2",
-            "jest": "^26.2.2",
-            "jest-config": "^26.2.2",
-            "lint-staged": "^10.2.11",
+            "jest": "^26.5.2",
+            "jest-config": "^26.5.2",
+            "lint-staged": "^10.4.0",
             "lodash.camelcase": "^4.3.0",
-            "prettier": "^2.0.5",
+            "prettier": "^2.1.2",
             "prompt": "^1.0.0",
             "replace-in-file": "^6.1.0",
             "rimraf": "^3.0.2",
-            "rollup": "^2.23.0",
+            "rollup": "^2.28.2",
             "rollup-plugin-json": "^4.0.0",
-            "rollup-plugin-sourcemaps": "^0.6.2",
-            "rollup-plugin-typescript2": "^0.27.1",
+            "rollup-plugin-sourcemaps": "^0.6.3",
+            "rollup-plugin-typescript2": "^0.27.3",
             "shelljs": "^0.8.4",
-            "ts-jest": "^26.1.4",
-            "ts-node": "^8.10.2",
+            "ts-jest": "^26.4.1",
+            "ts-node": "^9.0.0",
             "tslint": "^6.1.3",
             "tslint-config-prettier": "^1.18.0",
             "tslint-config-standard": "^9.0.0",
-            "typedoc": "^0.17.8",
-            "typescript": "~3.9.7"
+            "typedoc": "^0.19.2",
+            "typescript": "^4.0.3"
           },
           "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfMhWQCRAD9Qy5GYHsngAAfUYQAIA5zcjPiqyLjumYAqrPrJ6A\nL/G6hqQKq5APdecTa07XbgfOsyQdK4DPcSa3NjVkDsTEMm7lr15mXfBlAVWKUSrM\nBbedR9lX3amJhzHlDrrTCmVbFaMIhqyJmG+Hk32Nxk4jvXZE/XSeygrCquuerahb\nfRFS5hA80w6kUY5o8nRIphLRL1kUA8j1LmIaCtbDd81ZmblEbTVQHIk0+7gKYWmS\n5h32t9J3mK7acbCDpcfsXCMTKkeBmEYh5XWZrSovRt4dm8WYoQlsA7Ve5m0QVVKK\na54LAYSNHcY53zhilvFacll33YzL/RrOiEILqXg+6+UV/kwCYiCsIRNmEAv6KjxH\n/R4QwcynhcjFGuqkqHfDAxY4tWxYYcwL/S6ITFIrtRiBGy5fhFvKE95giPGl+ZmG\nq92kAMh746NBPKPUwGUgvVlZ/+4G02quYXr//1SXua/7hmPslyJ8pCPEBzkW593y\nSE1r54+DHwz/3CAN8hwhgZeK57EbdQ/54VOgxFXoLWUn/8hz0XjAjsGq7Ov/lzpL\nGtiyfr4pRRbQCZ4GINbK2Xo2T5R9m4KOZERY4bvddnReWvwJp5LW4GH4vZSsY2A4\nw4xkRtymqtc4odsRRaUgF7+nz8awEecwQSRqaKwtR/mmn/HhNHv9roVsnE74LAJ5\nuBkKB2mLvztY3solzf2Z\n=Hy5b\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfgMjpCRAD9Qy5GYHsngAA+z4QAAnjqejrsDYFYVnlGaAWLkLl\nfVpFXXwSE0tLmluSHEF+NrfcPYkpaHT8N8GDASJLsblPt8Y2p1LDLQl+XztJanTt\nzL/g90nTOMsDjur2O5lm9BY4WE9L5gJs/aCpKksB1yiiUq85Ng0ZKXSgCqN5U68J\nhEwVSw77xd+wtkXoWXs7N9RvqOgzptbDlHldAL9tgt0Hxk0JAA5qaJ+oks4SteT5\nGo4AsCpTExPNbem+klUo4PdJFYuK80JnQZ8hpTZsLt4NB64yhMRczF+sOKC8mrDw\n/b6q6x41Qfv5A6SJWCf7TlqudTDNUCdIg3gjXMGcpR8LaqXboy2/MA4mJXbLN7qi\nJXFc8dWOb69VshOpXQBVTGOQdxqlT/MTzJSIWPqLIexiuBKG5mBR3XTbwqDk4tnE\ndT5MnuZPE9HHZBo59leWGbzIHBrIKoS7ahiLy+y4AcONdI4n4c9ByuWRDqfMM3S2\n5qYOl8QBYqP4faxuCKucRJedYpfZ/CRBN6kDLDD5v2UUIh1zjMZtQVJ6aYGkLE4o\njNrkBj5aEgoMGEqUFTXziSmINEFoIeNv5xpme5sTvP2gCUEHETXlnRZ20Au9X+ML\nXLW4gmNwraB5Wbq92drzG0v90SpgNv7wXKJWXfJScZEe8JfNK07ZqD3DZeIkM1bS\nDV/HNAgzvNwS3D+6Tt7u\n=ikuQ\n-----END PGP SIGNATURE-----\n"
 }

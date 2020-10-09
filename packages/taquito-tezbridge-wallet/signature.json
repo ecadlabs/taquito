@@ -67,7 +67,7 @@
           "typings",
           "version"
         ],
-        "sha512": "02291a7920c690f0e2a21d5c724d4de5c94261b9b8bb919c714f08df98a7363ea8c4ce962e6e5ca3121e23579620345ae43060bdc5d1d6ae2f29a7a2c2582a93"
+        "sha512": "2044c40ab7234f3a0a645aa31a49da2bffe6dd581a51a7535c986ef92a842654d0fce2358921b8f4089bd0afc93799f5209587cc9dad5fbf779ecfa1a4bfabed"
       }
     },
     {
@@ -75,7 +75,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/tezbridge-wallet",
-          "version": "6.4.0-ledger.0",
+          "version": "7.0.0-beta.pre.0",
           "description": "Tezbridge wallet provider",
           "keywords": [
             "tezos",
@@ -135,39 +135,39 @@
             ]
           },
           "dependencies": {
-            "@taquito/taquito": "^6.4.0-ledger.0"
+            "@taquito/taquito": "^7.0.0-beta.pre.0"
           },
           "devDependencies": {
-            "@types/jest": "^26.0.8",
-            "@types/node": "^14.0.27",
-            "@types/ws": "^7.2.6",
+            "@types/jest": "^26.0.14",
+            "@types/node": "^14.11.5",
+            "@types/ws": "^7.2.7",
             "colors": "^1.4.0",
             "coveralls": "^3.1.0",
             "cross-env": "^7.0.2",
-            "jest": "^26.2.2",
-            "jest-config": "^26.2.2",
-            "lint-staged": "^10.2.11",
+            "jest": "^26.5.2",
+            "jest-config": "^26.5.2",
+            "lint-staged": "^10.4.0",
             "lodash.camelcase": "^4.3.0",
-            "prettier": "^2.0.5",
+            "prettier": "^2.1.2",
             "prompt": "^1.0.0",
             "replace-in-file": "^6.1.0",
             "rimraf": "^3.0.2",
-            "rollup": "^2.23.0",
+            "rollup": "^2.28.2",
             "rollup-plugin-json": "^4.0.0",
-            "rollup-plugin-sourcemaps": "^0.6.2",
-            "rollup-plugin-typescript2": "^0.27.1",
+            "rollup-plugin-sourcemaps": "^0.6.3",
+            "rollup-plugin-typescript2": "^0.27.3",
             "shelljs": "^0.8.4",
-            "ts-jest": "^26.1.4",
-            "ts-node": "^8.10.2",
+            "ts-jest": "^26.4.1",
+            "ts-node": "^9.0.0",
             "tslint": "^6.1.3",
             "tslint-config-prettier": "^1.18.0",
             "tslint-config-standard": "^9.0.0",
-            "typescript": "~3.9.7"
+            "typescript": "^4.0.3"
           },
           "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfMhWbCRAD9Qy5GYHsngAAteMQABavBNR7WMekXdXC4ZQVEBNo\n5k3myFiWWu65+K+sJ3FHckTStKdY+vTvEaa2mMPhYlEt63qgnst9mregH9Ffjw9a\n1UuEpzCfaZaL7HlNTo4p+874EI6erhEhdsf0xlypOgumwRsGO/uyoXDiLIkGKTE8\n7yZbVTjbyf0YaAe7KDUHCiwBtwtU8rSBtuBbE5P0toTrdtD2Ru/ciIHsnuj8gL3c\nalXXETGfyZNBVGiYFGKL36aCPPooofiyvZkgrKrv0q6qlmmKD0VMq28fvDQfS6f1\n8agMGPq1zDEFN9D+a1r7N+9LQT4kjSgieGSWVFIcDtRNgoX2O0xI26WdrLnjU4bQ\nLXoV+oZibnyVduYLZNBYuPfrwUfNgIFtG84lPNr9ZLLsXwMRvzDJ1fnVDA95EwWt\nYNMEc2StgKZuY7+kIfWsSxeNHpz0tv5t7m6enwcw57fLQCCp4MHyT5qw7mzthJKq\nmt1UBlUcLSsF6H7LRkkO+tqjZotTuZ07DbveBRrJj5nu3wZTM/bOgj+75sYVSUZk\n8wFIaQ+0Dwy//s8eu2zEzUDqetYL+4JQGPJsQ2THsRWDvwGDeJ7WPSkvxMfAfOSj\nUS8Pqn4w6riWJCKzmTlAiXlpmCRWusna8do70KCZnPHk+iXDDO64KaYQT2IpuIEd\n0ooH1WnKuQu0jGWb5If1\n=MBC+\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfgMjwCRAD9Qy5GYHsngAAI78QAIrwQEKd+ZB8oIoSRjCTpo8o\nbEjg3qHOISrXa2+Y6gumrNFtIGV0+MT5ZpPCADRlfUhU4jiD457jIdDYvTeRco2N\n+t1ayZ5NPzQFEg2NTK5GObaqAvdJgMs9BjzdH/bjnw2O3NWuUF3VECa2zTFN0YH5\nV1I0Mcy00iu9NqLtUz/+9UkbThePFl7Xy51Qc1LAAhvE5bYYZcuJjm79y7EAxpO/\nZwWWY9dQwiFEoQnTldXuMrisqp+Y4KVfahjqzVWC5eowfzhu4zNPyHZc8tfCiAFi\n3Hx16WnTG9fuLt+YT9sOXCAWzxDPJTUh8n8TTvtNd/N8rUP2Q0rQf4EPQU5kvhyZ\nzjcx7bOwagmcF9Cm5W4ziBDZ6/p+WuLCJi7ZYIvWdF5/kdWHsxo9P9grDAJixLcv\nBd78s24QPNvCqUMPcB+cUNA2eb1sfd5/fCFt05Psjm2w33zLqdWWy/ppWNnzxIBB\nPylGmuPdcbcSuPPCIqr96MfdNNgCX4Kn+di20O9sZhYsseAUNK/hfotNVYXVlO+L\nJijYOg+miFvpMdeepGChEtm+491/9OQnOrmDfNnnDQiQtEob137TOTjRd+UXuvmk\nem9/5GrpLk0GXHAEdnTg46y7RoJ7P9kATzamyhOm5TAUQ709CvxVYt40SP8nspuv\ng0Ffdxml6MpOW2geymVo\n=8CPm\n-----END PGP SIGNATURE-----\n"
 }
