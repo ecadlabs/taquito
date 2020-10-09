@@ -3,7 +3,7 @@ import { Tezos } from '@taquito/taquito';
 
 async function example() {
   const provider = 'https://api.tez.ie/rpc/mainnet';
-  Tezos.setProvider({ rpc: provider });
+  Tezos.setProvider({ rpc: provider, config: {shouldObservableSubscriptionRetry: true} });
   try {
 
     const bakerEndorsementFilter = {
