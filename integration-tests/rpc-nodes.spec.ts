@@ -11,8 +11,7 @@ const rpcList = [
     'https://carthagenet.smartpy.io', 
     'https://testnet-tezos.giganode.io',
     'https://rpcalpha.tzbeta.net/',
-    'https://rpctest.tzbeta.net/',
-    //'https://rpc.tzbeta.net/'
+    'https://rpctest.tzbeta.net/'
 ]
 
 
@@ -21,9 +20,9 @@ const contractAddress = 'KT1FrLQx9w51HBkJwR2V6bxXdJCxxnrXKjZH';
 const contractBigMapStorage = 'KT1Szqn6iy6jpHf4NXcs6RNj36jqAyYUQwW7';
 
 rpcList.forEach(async rpc => {
-    Tezos.setRpcProvider(rpc)
+    const tezos = Tezos(rpc)
     const signer: any = new InMemorySigner('edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca');
-    Tezos.setSignerProvider(signer);
+    tezos.setSignerProvider(signer);
     const rpcClient: RpcClient = new RpcClient(rpc);
 
     describe(`Test calling all methods from RpcClient: ${rpc}`, () => {
@@ -87,7 +86,7 @@ rpcList.forEach(async rpc => {
             }
             const { key, type } = contractSchema.EncodeBigMapKey('1');
             const { packed } = await rpcClient.packData({ data: key, type });
-            const contract = await Tezos.contract.at(contractBigMapStorage)
+            const contract = await tezos.contract.at(contractBigMapStorage)
             const storage: any = await contract.storage();
             const id = Number(storage.id);
             const encodedExpr = encodeExpr(packed);
