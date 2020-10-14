@@ -16,7 +16,7 @@
         "maps_bigmaps",
         "web3js_taquito",
         "rpc_package",
-        "community_run_nodes"
+        "rpc_nodes"
       ]
     },
     {
