@@ -1,3 +1,21 @@
+export const tokenBigmapStorage = {
+  prim: 'Pair',
+  args: [
+    {
+      prim: 'Pair',
+      args: [
+        [],
+        {
+          string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+        },
+      ],
+    },
+    {
+      int: '100',
+    },
+  ],
+};
+
 export const tokenBigmapCode = [{
   "prim": "parameter",
   "args":
