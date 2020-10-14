@@ -45,7 +45,10 @@ const tezos = Tezos('https://YOUR_PREFERRED_RPC_URL');
 - Cryptium Labs nodes:
     - Mainnet: http://mainnet.tezos.cryptium.ch:8732
     - Carthagenet: http://carthagenet.tezos.cryptium.ch:8732
-- Luke Youngblood nodes: https://rpc.tzbeta.net/
+- Luke Youngblood nodes: 
+    - Mainnet: https://rpc.tzbeta.net/
+    - Delphinet: https://rpczero.tzbeta.net/
+    - Carthagenet: https://rpcalpha.tzbeta.net/ and https://rpctest.tzbeta.net/
 - Ecad Labs nodes:
     - Mainnet: https://api.tez.ie/rpc/mainnet
     - Carthagenet: https://api.tez.ie/rpc/carthagenet
