@@ -8,7 +8,7 @@ Before version 7, Taquito was configured to use our default RPC node; the defaul
 
 However, in version 7 of Taquito, we decided to remove the default RPC node. The reason behind this choice is to avoid that a lot of applications rely on our default node and thus centralize a part of the ecosystem on one node.
 
-When creating an instance of the TezosToolkit, it is now required to specify the RPC node. The `Tezos` singleton has been replaced by a function taking an RPC node as a parameter. Both ways are equivalent, and the second one has only been kept for users familiar with the `Tezos` singleton.
+When creating an instance of the TezosToolkit, it is now required to specify the RPC node. The `Tezos` singleton has been replaced by a function taking an RPC node as a parameter. Both ways are equivalent, and the second one has been kept for users familiar with the `Tezos` singleton.
 
 ``` js
 import { TezosToolkit } from '@taquito/taquito';
