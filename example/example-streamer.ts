@@ -4,6 +4,7 @@ import { Tezos } from '@taquito/taquito';
 async function example() {
   const provider = 'https://api.tez.ie/rpc/mainnet';
   const tezos = Tezos(provider)
+  tezos.setProvider({ config: { shouldObservableSubscriptionRetry: true } });
   try {
 
     const bakerEndorsementFilter = {

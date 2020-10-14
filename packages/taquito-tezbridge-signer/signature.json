@@ -14,7 +14,7 @@
           },
           {
             "path": "dist/taquito-tezbridge-signer.umd.js",
-            "sha512": "a8c032546db5380cc8656243a35b23c1e5618e427e7451993edc642ae7b74dd8a0a3956fce954a920c281eda348b8b0096b9678419d69de3aa7109b8090e3817"
+            "sha512": "33e6e8847649d09eaaaa515ebf5c9eba8e942e0ae6e2f72f48b142baca9328de1ffe6a835e375ef9e4a46cda9194d85cd51df08cd0b9f2c14148799ae112f854"
           },
           {
             "path": "dist/taquito-tezbridge-signer.es5.js.map",
@@ -26,7 +26,7 @@
           },
           {
             "path": "dist/taquito-tezbridge-signer.umd.js.map",
-            "sha512": "96d1bb4e06e8e4796759c61100c8c8d7b392faec48ebfbde814ad39368fcc95050e8d2af8c309a0b360b8e2bd4d0c11640b3fba38b0c1a4e7023235f6b258ccb"
+            "sha512": "80b229cc5873e6b373425ee03cf601e638470f73f5f9073aa0a81557a2da23f17347e107afa43bf312d407869753c70096c89d7819739ef347e9e4269ca7fc92"
           },
           {
             "path": "dist/types/taquito-tezbridge-signer.d.ts",
@@ -67,7 +67,7 @@
           "typings",
           "version"
         ],
-        "sha512": "c92ff0978aa38390ef0822c3d91e14181a91bd683260f2f80213e364971bc9fd215d8f5b5a0d89a435b79993267dc637b160fe938866a41c2f9804d85efeb22b"
+        "sha512": "c9ea0df105381e6e0bde2a80550af6afd45409bb1a0142f104c74bedf0e0e37fa903718605eb593c122f93f9bc9a0571280932d35133f3abfb2a3811c059ee6a"
       }
     },
     {
@@ -75,7 +75,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/tezbridge-signer",
-          "version": "6.4.0-ledger.0",
+          "version": "7.0.0-beta.pre.0",
           "description": "Tezbridge signer provider",
           "keywords": [
             "tezos",
@@ -135,41 +135,41 @@
             ]
           },
           "dependencies": {
-            "@taquito/utils": "^6.4.0-ledger.0",
+            "@taquito/utils": "^7.0.0-beta.pre.0",
             "typedarray-to-buffer": "^3.1.5"
           },
           "devDependencies": {
-            "@taquito/taquito": "^6.4.0-ledger.0",
-            "@types/jest": "^26.0.8",
-            "@types/node": "^14.0.27",
-            "@types/ws": "^7.2.6",
+            "@taquito/taquito": "^7.0.0-beta.pre.0",
+            "@types/jest": "^26.0.14",
+            "@types/node": "^14.11.5",
+            "@types/ws": "^7.2.7",
             "colors": "^1.4.0",
             "coveralls": "^3.1.0",
             "cross-env": "^7.0.2",
-            "jest": "^26.2.2",
-            "jest-config": "^26.2.2",
-            "lint-staged": "^10.2.11",
+            "jest": "^26.5.2",
+            "jest-config": "^26.5.2",
+            "lint-staged": "^10.4.0",
             "lodash.camelcase": "^4.3.0",
-            "prettier": "^2.0.5",
+            "prettier": "^2.1.2",
             "prompt": "^1.0.0",
             "replace-in-file": "^6.1.0",
             "rimraf": "^3.0.2",
-            "rollup": "^2.23.0",
+            "rollup": "^2.28.2",
             "rollup-plugin-json": "^4.0.0",
-            "rollup-plugin-sourcemaps": "^0.6.2",
-            "rollup-plugin-typescript2": "^0.27.1",
+            "rollup-plugin-sourcemaps": "^0.6.3",
+            "rollup-plugin-typescript2": "^0.27.3",
             "shelljs": "^0.8.4",
-            "ts-jest": "^26.1.4",
-            "ts-node": "^8.10.2",
+            "ts-jest": "^26.4.1",
+            "ts-node": "^9.0.0",
             "tslint": "^6.1.3",
             "tslint-config-prettier": "^1.18.0",
             "tslint-config-standard": "^9.0.0",
-            "typescript": "~3.9.7"
+            "typescript": "^4.0.3"
           },
           "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfMhWaCRAD9Qy5GYHsngAAbwoQAIODICt0JEB1k4WEpZdys3NH\nHg9U6Iqb7lGcWyt0GYxo7lxFeiOhb5i0lp7W3YhWjgTLAzZKP3irFhYEKcc6eUpd\nXvzhV0S/P4/fxojdHOKIEAPlpgE45q16dqWSVAAh2fjjqAXgawvBHNq9cm4Bcwpp\nNogkqWoxDhGW4DUlIkIQmAkFk92RUuXE77e2z6bIwT4b3ap6gsAIIkyeXv2imqqb\nDnF547GiN3HXT4cjInK5UgYgroJfqCvvOSJMcOfuGALxhCnTzlXUbchXrhaGWuft\nBNZ9OksM+tGbOmngNQW2USYChAmQHCwuLuHnstI8dMidw8KK6yuseuTBg4jE0rdl\n8uOt2fl3LJ/NW7Z/iTO/Gb9pKl1SxMYrF3vVFit1OfJY240inmw3OPAri/kceLST\n7m0wqZeiJ9GzZjOenX64vhsUejYH7cz3A7R4Prf9MmQ97L3JDzqBkyI7eLGyGMFf\nFxLixgdc8NbYYJCtX5o6RU0zsx2gvMNnYUHYST8H4VUiFWPlnx6UdRy7IxFdBvwm\nnT+BQDD94i+rLZQ7hpsktpSeSKAR4fwcSS0qGD30cQK/wPuidku8yOOf4jD2YcnP\nwJN6UD+MPiTvyFXPEJu7QP7f6PNv8NOiWyGCf17XPTDoKdzDCTNYN5TAxjBC65Kc\nDTHGj4lyR4Xy3hLWU5Oc\n=CI23\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfgMjvCRAD9Qy5GYHsngAAfs4QACaKz3S7XEwJNs+3Qrl2hLGc\nru4LxAUwW8Yrw3hhQU7q/9cLqbx+Wng16PdkRNtnSPas5vgrrfNlVxK4ATOZLAIi\nV+t27d4jsZx9iAk8ybQu9stMFisP1pfDGpyEZ7AYRbMcWFxrVRQ9UUuqnQ/OMLMr\nSNcOKbFim8I8eQL+bZjmD5fF4gWPyfxyokT6qURBrHAd1NHh46KhyOztqPD60R4v\nYZP7l3C59VU/TZTL0Klx1+oO4n19d97o0vEJpYzZT8CD47GdR75JWY/I5rmMLebW\nVmQiVzeUnRrqunY3OMMlDD5LU5JqmEPaLm1Ad96SkUfQucjpMwYlyz8+orcubkAu\noQ0jRULJYOyth3P4wuOCG4FWx5tka72CeOi8p8KhJ1ejjqWtTg+a2CllOFOcxafZ\nPVXGV7iQQ86D/UL17Lv2qZg8U6UM0s+tLSCU2Djp4xg/VxvTNHJasMBW23Uvp5zy\nCTbRLhTbrGZcGiwXXfHNlbV9iTbXO/cWntoBIvg5c4CYfrEcgTYwMYEqtB1gfA3B\nEBqO4OQi9cVhAztHUjA4gLoMU6LPuaoPV4AIGohtR1+vyyKi/GjQHVjrsH1J82XK\nrCtxQxULHLvzo4o/sIow3Ue3b53T2lr+eiK76GLw/e8HXm868ZfmX5eNo+8ooqbR\nrT6+8BOVxbEUaYiU9hNJ\n=JYB9\n-----END PGP SIGNATURE-----\n"
 }
