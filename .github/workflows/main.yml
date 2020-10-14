@@ -52,7 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [10.x]
+        node: [10.x, 12.x]
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
@@ -67,6 +67,6 @@ jobs:
     - run: npm install
     - run: npm run lerna -- bootstrap
     - run: npm run build
-    - run: cd integration-tests && npm run test:delphinet-faucet
+    - run: cd integration-tests && npm run test:delphinet
       env:
         CI: true
