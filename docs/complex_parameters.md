@@ -123,9 +123,11 @@ The way to write the parameter when calling the function of a contract with Taqu
 #### Inspect parameter
 
 ```js live noInline
-import { Tezos, MichelsonMap } from '@taquito/taquito';
+// import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
+// const Tezos = new TezosToolkit('https://api.tez.ie/keys/carthagenet/')
+// import { importKey } from '@taquito/signer';
 
-Tezos.importKey(emailExample, passwordExample, mnemonicExample, secretExample)
+importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
 .then(signer => {
     return Tezos.contract.at('KT1JjYmy6q4xxZGL4qXQGkSra7xNtrEpQ85K')
 }).then(myContract => {
@@ -139,9 +141,11 @@ Tezos.importKey(emailExample, passwordExample, mnemonicExample, secretExample)
 #### Call the set_child_record function when all the arguments are defined
 
 ```js live noInline
-import { Tezos, MichelsonMap } from '@taquito/taquito';
+// import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
+// const Tezos = new TezosToolkit('https://api.tez.ie/keys/carthagenet/')
+// import { importKey } from '@taquito/signer';
 
-Tezos.importKey(emailExample, passwordExample, mnemonicExample, secretExample)
+importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
 .then(signer => {
     return Tezos.contract.at('KT1JjYmy6q4xxZGL4qXQGkSra7xNtrEpQ85K')
 }).then(myContract => {
@@ -168,9 +172,11 @@ Tezos.importKey(emailExample, passwordExample, mnemonicExample, secretExample)
 The `address %address` and the `nat %ttl` of the `set_child_record` function are optional. If we want one or both to be null, we must specify the value of the argument as `null` or `undefined`.
 
 ```js live noInline
-import { Tezos, MichelsonMap } from '@taquito/taquito';
+// import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
+// const Tezos = new TezosToolkit('https://api.tez.ie/keys/carthagenet/')
+// import { importKey } from '@taquito/signer';
 
-Tezos.importKey(emailExample, passwordExample, mnemonicExample, secretExample)
+importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
 .then(signer => {
     return Tezos.contract.at('KT1JjYmy6q4xxZGL4qXQGkSra7xNtrEpQ85K')
 }).then(myContract => {

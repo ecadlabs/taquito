@@ -6,6 +6,7 @@
  */
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
+import { importKey } from '@taquito/signer';
 import { 
   validateAddress, 
   validateChain, 
@@ -79,6 +80,7 @@ export default ({
       <Playground
         scope={{ ...React, 
           Tezos, 
+          importKey,
           validateAddress, 
           validateChain, 
           validateKeyHash, 
