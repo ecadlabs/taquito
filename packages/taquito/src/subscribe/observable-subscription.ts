@@ -1,6 +1,6 @@
-import { Observable, Subscription as RXJSSubscription, Subject } from 'rxjs';
+import { Observable, Subscription as RXJSSubscription, Subject, of, NEVER } from 'rxjs';
 import { Subscription } from './interface';
-import { takeUntil, tap, retry } from 'rxjs/operators';
+import { takeUntil, tap, retry, catchError } from 'rxjs/operators';
 
 export class ObservableSubscription<T> implements Subscription<T> {
   private errorListeners: Array<(error: Error) => void> = [];
@@ -24,6 +24,7 @@ export class ObservableSubscription<T> implements Subscription<T> {
           }
         ),
         this.shouldRetry ? retry() : tap(),
+        catchError(() => NEVER)
       )
       .subscribe();
   }
