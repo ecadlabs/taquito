@@ -24,7 +24,9 @@ If you configure taquito this way you will now be able to use every function tha
 ```js
 
 import { InMemorySigner } from '@taquito/signer'
-import { Tezos } from '@taquito/taquito'
+import { TezosToolkit } from '@taquito/taquito';
+
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 
 Tezos.setProvider({signer: await InMemorySigner.fromSecretKey('your_private_key')})
 ```
@@ -36,8 +38,9 @@ Operation will be signed automatically using the signer (no prompt)
 The `fromSecretKey` method takes a secret that is base58 encoded as a parameter. Here are three examples with unencrypted private keys:
 
 ```js live noInline
-//import { Tezos } from '@taquito/taquito'
-//import { InMemorySigner } from '@taquito/signer'
+// import { TezosToolkit } from '@taquito/taquito'
+// import { InMemorySigner } from '@taquito/signer'
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
 
 InMemorySigner.fromSecretKey('edsk2rKA8YEExg9Zo2qNPiQnnYheF1DhqjLVmfKdxiFfu5GyGRZRnb')
 .then( theSigner => {
@@ -50,8 +53,9 @@ InMemorySigner.fromSecretKey('edsk2rKA8YEExg9Zo2qNPiQnnYheF1DhqjLVmfKdxiFfu5GyGR
 ```
 
 ```js live noInline
-//import { Tezos } from '@taquito/taquito'
-//import { InMemorySigner } from '@taquito/signer'
+// import { TezosToolkit } from '@taquito/taquito'
+// import { InMemorySigner } from '@taquito/signer'
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
 
 InMemorySigner.fromSecretKey('spsk2Fiz7sGP5fNMJrokp6ynTa4bcFbsRhw58FHXbNf5ProDNFJ5Xq')
 .then( theSigner => {
@@ -66,9 +70,10 @@ InMemorySigner.fromSecretKey('spsk2Fiz7sGP5fNMJrokp6ynTa4bcFbsRhw58FHXbNf5ProDNF
 When required, Taquito offers the `b58cencode` function allowing to encode the secret in base58. The parameters of the function are the secret, that can be a `hex string` or an `Uint8Array`, and the desired prefix. Here is an example with a `hex string`:
 
 ```js live noInline
-//import { b58cencode, prefix, Prefix } from '@taquito/utils';
-//import { Tezos } from '@taquito/taquito'
-//import { InMemorySigner } from '@taquito/signer'
+// import { b58cencode, prefix, Prefix } from '@taquito/utils';
+// import { TezosToolkit } from '@taquito/taquito'
+// import { InMemorySigner } from '@taquito/signer'
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
 
 const b58encodedSecret = b58cencode('7c842c15c8b0c8fd228e6cb5302a50201f41642dd36b699003fb3c857920bc9d', prefix[Prefix.P2SK]);
 println(`The secret is encoded in base58 and the prefix "p2sk" is added to it: ${b58encodedSecret}.`)
@@ -91,16 +96,18 @@ If your private key is encrypted, you can specify a passphrase to decrypt it. Do
 ```js
 
 import { InMemorySigner } from '@taquito/signer'
-import { Tezos } from '@taquito/taquito'
+import { TezosToolkit } from '@taquito/taquito'
 
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 Tezos.setProvider({signer: await InMemorySigner.fromSecretKey('your_private_key', 'your_passphrase')})
 ```
 
 Here are three examples with encrypted private keys where the passphrase used is `test`:
 
 ```js live noInline
-//import { Tezos } from '@taquito/taquito'
-//import { InMemorySigner } from '@taquito/signer'
+// import { TezosToolkit } from '@taquito/taquito'
+// import { InMemorySigner } from '@taquito/signer'
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
 
 InMemorySigner.fromSecretKey('edesk1GXwWmGjXiLHBKxGBxwmNvG21vKBh6FBxc4CyJ8adQQE2avP5vBB57ZUZ93Anm7i4k8RmsHaPzVAvpnHkFF', 'test')
 .then( theSigner => {
@@ -113,8 +120,9 @@ InMemorySigner.fromSecretKey('edesk1GXwWmGjXiLHBKxGBxwmNvG21vKBh6FBxc4CyJ8adQQE2
 ```
 
 ```js live noInline
-//import { Tezos } from '@taquito/taquito'
-//import { InMemorySigner } from '@taquito/signer'
+// import { TezosToolkit } from '@taquito/taquito'
+// import { InMemorySigner } from '@taquito/signer'
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
 
 InMemorySigner.fromSecretKey('spesk24UQkAiJk8X6AufNtRv1WWPp2BAssEgmijCTQPMgUXweSKPmLdbyAjPmCG1pR2dC9P5UZZVeZcb7zVodUHZ', 'test')
 .then( theSigner => {
@@ -127,8 +135,9 @@ InMemorySigner.fromSecretKey('spesk24UQkAiJk8X6AufNtRv1WWPp2BAssEgmijCTQPMgUXweS
 ```
 
 ```js live noInline
-//import { Tezos } from '@taquito/taquito'
-//import { InMemorySigner } from '@taquito/signer'
+// import { TezosToolkit } from '@taquito/taquito'
+// import { InMemorySigner } from '@taquito/signer'
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
 
 InMemorySigner.fromSecretKey('p2esk28hoUE2J88QNFj2aDX2pjzL7wcVh2g8tkEwtWWguby9M3FHUgSbzvF2Sd7wQ4Kd8crFwvto6gF3otcBuo4T', 'test')
 .then( theSigner => {
@@ -146,8 +155,10 @@ To load a faucet key (available from https://faucet.tzalpha.net/) for working a 
 can do so as follows:
 
 ```js
-import { Tezos } from '@taquito/taquito'
+import { TezosToolkit } from '@taquito/taquito'
 import { importKey } from '@taquito/taquito-signer';
+
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_TESTNET_RPC_URL');
 
 // A key faucet, similar to what is available from https://faucet.tzalpha.net/
 const FAUCET_KEY = {
@@ -198,9 +209,10 @@ The `signerFactory` function example creates a new Tezos instance. Use the tezos
 
 ```js
 import { InMemorySigner } from "@taquito/signer";
-import { Tezos } from "@taquito/taquito";
+import { TezosToolkit } from "@taquito/taquito";
 
-const signerFactory = async (pk: string) => {
+const signerFactory = async (rpcUrl: string, pk: string) => {
+  const Tezos = new TezosToolkit(rpcUrl);
   await Tezos.setProvider({ signer: await InMemorySigner.fromSecretKey(pk) });
   return Tezos;
 };

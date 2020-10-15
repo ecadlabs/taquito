@@ -26,6 +26,9 @@ Taquito's estimate method can be used to estimate fees, gas and storage associat
 The following example shows an estimate of the fees associated with transferring 2ꜩ to `tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY` address. For demonstration purpose, the signer is configured using a throw-away private key.
 
 ```js live noInline
+// import { TezosToolkit } from '@taquito/taquito';
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+
 const amount = 2;
 const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
 
@@ -48,6 +51,9 @@ Tezos.estimate.transfer({ to: address, amount: amount })
 This example will demonstrate how to estimate the fees related to calling a smart contract. The Ligo source code for the smart contract used in this example can be found at [Ligo Web IDE](https://ide.ligolang.org/p/N2QTykOAXBkXmiKcRCyg3Q).
 
 ```js live noInline
+// import { TezosToolkit } from '@taquito/taquito';
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+
 Tezos.contract.at('KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC')
 .then(contract => {
     const i = 7;
@@ -75,6 +81,9 @@ Tezos.contract.at('KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC')
 In this example, we will use the estimate method of Taquito on a contract origination. The `genericMultisigJSONfile` variable contains a Michelson Smart Contract.
 
 ```js live noInline
+// import { TezosToolkit } from '@taquito/taquito';
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+
 println(`Estimating the contract origination : `);
   Tezos.estimate.originate({
     code: genericMultisigJSONfile,

@@ -74,7 +74,7 @@ export default ({
   }, [button.current, target.current]);
 
   if (live) {
-    const Tezos = new TezosToolkit();
+    const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
 
     return (
       <Playground

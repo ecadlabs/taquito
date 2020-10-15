@@ -52,7 +52,8 @@ As described above, the `map %data` uses a value that we chose between different
 Since every argument is identified by an annotation, we can ignore optional values if they are not needed. In the first entry of the `bigMap %records` of this example, we do not specify a value for the `address %address`, the `nat %ttl` and the `nat %validator`, but we define one for the `nat %validator` of the second entry of the bigMap.
 
 ```js
-import { Tezos, MichelsonMap } from '@taquito/taquito';
+import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
 
 //%data
 const dataMap = new MichelsonMap();

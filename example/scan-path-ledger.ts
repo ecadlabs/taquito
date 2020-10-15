@@ -7,12 +7,13 @@ async function example() {
 
     const transport = await TransportNodeHid.create();
     let index = 0;
+    const tezos = Tezos('https://api.tez.ie/rpc/carthagenet')
     while (index < 10) {
         const ledgerSigner = new LedgerSigner(transport, `44'/1729'/${index}'/0'`, false, DerivationType.tz1);
-        Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/carthagenet', signer: ledgerSigner });
-        const pkh = await Tezos.signer.publicKeyHash();
-        const balance = await Tezos.tz.getBalance(pkh)
-        const getPublicKey = await Tezos.rpc.getManagerKey(pkh)
+        tezos.setProvider({ signer: ledgerSigner });
+        const pkh = await tezos.signer.publicKeyHash();
+        const balance = await tezos.tz.getBalance(pkh)
+        const getPublicKey = await tezos.rpc.getManagerKey(pkh)
         console.log(`The public key hash related to the derivation path having the account ${index} is ${pkh}.`)
         if (getPublicKey) {
             console.log(`The balance is ${balance.toNumber() / 1000000} ꜩ.\n`)

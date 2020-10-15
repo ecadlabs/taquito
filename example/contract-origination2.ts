@@ -5,9 +5,9 @@ import { importKey } from '@taquito/signer';
 const provider = 'https://api.tez.ie/rpc/carthagenet';
 
 async function example() {
-  Tezos.setProvider({ rpc: provider } as any);
+  const tezos = Tezos(provider)
   await importKey(
-    Tezos,
+    tezos,
     'peqjckge.qkrrajzs@tezos.example.org',
     'y4BX7qS1UE',
     [
@@ -32,7 +32,7 @@ async function example() {
 
   try {
     console.log('Deploying Ligo simple contract...');
-    const op = await Tezos.contract.originate({
+    const op = await tezos.contract.originate({
       balance: '1',
       code: ligoSample,
       init: { int: '0' },
