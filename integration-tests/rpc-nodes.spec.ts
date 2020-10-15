@@ -7,13 +7,12 @@ import { tokenBigmapCode, tokenBigmapStorage } from './data/token_bigmap';
 
 const rpcList = [
     'https://api.tez.ie/rpc/carthagenet',
-    'http://carthagenet.tezos.cryptium.ch:8732', 
+    //'http://carthagenet.tezos.cryptium.ch:8732', 
     'https://carthagenet.smartpy.io', 
     'https://testnet-tezos.giganode.io',
     'https://rpcalpha.tzbeta.net/',
     'https://rpctest.tzbeta.net/'
 ]
-
 
 const implicitAddress = 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr';
 const contractAddress = 'KT1FrLQx9w51HBkJwR2V6bxXdJCxxnrXKjZH';
