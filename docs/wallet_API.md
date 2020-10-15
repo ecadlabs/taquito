@@ -36,10 +36,12 @@ Remember that some wallets may require an extra step in addition to the package 
 ## Connecting the wallet
 
 After installing the Taquito package and the package containing the Wallet API for the wallet of your choice, it's time to import the Wallet API into your project! Although the steps are very similar for each wallet, they all have their specificities that we will check in the paragraphs below.
-To start, let's import the Tezos singleton instance from Taquito:
+To start, let's create an instance of the `TezosToolkit` from Taquito:
+When doing so, we have to choose the network we want to use:
 
 ```js
-import { Tezos } from '@taquito/taquito';
+import { TezosToolkit } from '@taquito/taquito';
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 ```
 
 This object exposes different methods we are going to use to set up our wallet. TezBridge has been around for some time and it may be the one you are the most familiar with, so let's start with that!
@@ -58,7 +60,7 @@ Next, we can set up the wallet. In general, you will give your dapp users the ch
 <script src="https://www.tezbridge.com/plugin.js"></script>
 ```
 
-To set up TezBridge as your wallet, you use the `setWalletProvider` method of the `Tezos` singleton instance and pass a new instance of the `TezBridgeWallet` class:
+To set up TezBridge as your wallet, you use the `setWalletProvider` method of the `TezosToolkit` instance and pass a new instance of the `TezBridgeWallet` class:
 
 ```js
 Tezos.setWalletProvider(new TezBridgeWallet());
@@ -132,7 +134,7 @@ const Tezos = await wallet.toTezos();
 const userAddress = wallet.pkh || (await wallet.getPKH());
 ```
 
-If you are using your own Tezos singleton instance, it is time to set the wallet as the provider (this is not necessary if you use the one provided by Thanos wallet, but remember you have to continue using it throughout your dapp):
+If you are using your own TezosToolkit instance, it is time to set the wallet as the provider (this is not necessary if you use the one provided by Thanos wallet, but remember you have to continue using it throughout your dapp):
 
 ```js
 Tezos.setWalletProvider(wallet);
@@ -141,7 +143,7 @@ Tezos.setWalletProvider(wallet);
 or
 
 ```js
-Tezos.setProvider({ wallet });
+Tezos.setProvider({ wallet: wallet });
 ```
 
 #### Try the Thanos wallet!
@@ -532,13 +534,7 @@ import { MichelsonMap } from "@taquito/taquito";
 
 Now, we have everything we need to originate a new contract!
 
-Before doing so, we have to choose the network we want to originate it to:
-
-```js
-Tezos.setProvider({ rpc: 'https://mainnet.SmartPy.io}' });
-```
-
-Then, we can start the process. The Tezos singleton has a `wallet` property with an `originate` method. This is the one that must be called to originate the contract. This method takes an argument, an object with two properties: `code` that holds the parsed Michelson code to be originated and `storage` that holds the initial storage. After passing this argument, you call the `send()` method to originate the contract.
+Then, we can start the process. The TezosToolkit has a `wallet` property with an `originate` method. This is the one that must be called to originate the contract. This method takes an argument, an object with two properties: `code` that holds the parsed Michelson code to be originated and `storage` that holds the initial storage. After passing this argument, you call the `send()` method to originate the contract.
 
 ```js
 const op = await Tezos.wallet
@@ -560,24 +556,15 @@ Taquito makes interacting with smart contracts very easy! With only the address 
 
 ### - Instance creation
 
-First, you need to import the Tezos singleton object or instantiate the Tezos toolkit and configure the RPC host you want to connect to:
-
-```js
-import { Tezos } from '@taquito/taquito';
-
-Tezos.setProvider({ rpc: 'https://YOUR_PREFERRED_RPC_URL' });
-```
-
-_or_
+First, you need to import TezosToolkit and instantiate it with the RPC host you want to connect to:
 
 ```js
 import { TezosToolkit } from '@taquito/taquito';
-const Tezos = new TezosToolkit();
 
-Tezos.setProvider({ rpc: 'https://YOUR_PREFERRED_RPC_URL' });
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 ```
 
-Next, you can use the singleton object to create the smart contract instance with the contract address:
+Next, you can use the `TezosToolkit` instance to create the smart contract instance with the contract address:
 
 ```js
 const contractInstance = await Tezos.wallet.at('contract address');
@@ -604,7 +591,7 @@ _Methods:_
 
 ## The Wallet instance
 
-The Tezos singleton object exposes a _wallet_ property in the same fashion it exposes the _contract_ property you may be used to. This property is an instance of the [Wallet class](https://tezostaquito.io/typedoc/classes/_taquito_taquito.wallet-2.html) with a few useful methods you want to check out. It becomes available as soon as you set up a wallet by calling `Tezos.setProvider({wallet})` or `Tezos.setWalletProvider(wallet)`. Here is a list of the methods and a basic description of their function before seeing some examples:
+The TezosToolkit instance exposes a _wallet_ property in the same fashion it exposes the _contract_ property you may be used to. This property is an instance of the [Wallet class](https://tezostaquito.io/typedoc/classes/_taquito_taquito.wallet-2.html) with a few useful methods you want to check out. It becomes available as soon as you set up a wallet by calling `Tezos.setProvider({wallet})` or `Tezos.setWalletProvider(wallet)`. Here is a list of the methods and a basic description of their function before seeing some examples:
 
 1. `at`: creates an smart contract abstraction for the address specified
 2. `batch`: creates a batch of operations

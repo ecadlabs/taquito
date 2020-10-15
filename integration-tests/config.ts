@@ -224,7 +224,7 @@ const setupWithFaucetKey = async (Tezos: TezosToolkit, signerConfig: FaucetConfi
 export const CONFIGS = () => {
   return forgers.reduce((prev, forger: ForgerType) => {
     const configs = providers.map(({ rpc, knownBaker, knownContract, protocol, knownBigMapContract, signerConfig }) => {
-      const Tezos = new TezosToolkit();
+      const Tezos = new TezosToolkit(rpc);
 
       Tezos.setProvider({ rpc })
       setupForger(Tezos, forger)
@@ -249,8 +249,7 @@ export const CONFIGS = () => {
           }
         },
         createAddress: async () => {
-          const tezos = new TezosToolkit()
-          tezos.setProvider({ rpc: rpc })
+          const tezos = new TezosToolkit(rpc)
 
           const keyBytes = Buffer.alloc(32);
           nodeCrypto.randomFillSync(keyBytes)

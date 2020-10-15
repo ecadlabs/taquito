@@ -28,6 +28,8 @@ The storage of the contract used in the following example is a map where a key i
 
 ```js live noInline
 import { MichelsonMap } from "@taquito/taquito";
+// import { TezosToolkit } from '@taquito/taquito';
+// const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 
 const storageMap = new MichelsonMap();
 storageMap.set("1", {current_stock: "10000", max_price : "50"})

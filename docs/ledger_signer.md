@@ -57,7 +57,6 @@ The constructor of the `LedgerSigner` class can take three other parameters. If 
 
 ```js
 import { LedgerSigner, DerivationType, HDPathTemplate } from '@taquito/ledger-signer';
-import { Tezos } from '@taquito/taquito';
 
 const ledgerSigner = new LedgerSigner(
     transport, //required
@@ -71,8 +70,10 @@ const ledgerSigner = new LedgerSigner(
 
 ```js
 import { LedgerSigner } from '@taquito/ledger-signer';
-import { Tezos } from '@taquito/taquito';
 import TransportNodeHid from "@ledgerhq/hw-transport-node-hid";
+import { TezosToolkit } from "@taquito/taquito";
+
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 
 const transport = await TransportNodeHid.create();
 const ledgerSigner = new LedgerSigner(transport);
@@ -184,8 +185,9 @@ Having your Ledger device connected to your computer and the `Tezos Wallet App` 
 
 ```js live noInline
 //import { LedgerSigner, DerivationType, HDPathTemplate } from '@taquito/ledger-signer';
-//import { Tezos } from '@taquito/taquito';
+//import { TezosToolkit } from '@taquito/taquito';
 //import TransportU2F from "@ledgerhq/hw-transport-u2f";
+//const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
 
 TransportU2F.create()
 .then(transport => {
@@ -200,7 +202,7 @@ TransportU2F.create()
 
 function getAddressInfo(transport, index) {
   const ledgerSigner = new LedgerSigner(transport, `44'/1729'/${index}'/0'`, true, DerivationType.tz1);
-  Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/carthagenet', signer: ledgerSigner });
+  Tezos.setProvider({ signer: ledgerSigner });
   return Tezos.signer.publicKeyHash()
 .then ( pkh => {
  Tezos.tz.getBalance(pkh)
