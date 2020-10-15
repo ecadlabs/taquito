@@ -53,8 +53,7 @@ Since every argument is identified by an annotation, we can ignore optional valu
 
 ```js
 import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
-// Tezos.setProvider({signer: YOUR_SIGNER})
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
 
 //%data
 const dataMap = new MichelsonMap();
@@ -126,8 +125,7 @@ The way to write the parameter when calling the function of a contract with Taqu
 
 ```js live noInline
 import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
-// Tezos.setProvider({signer: YOUR_SIGNER})
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
 
 Tezos.importKey(emailExample, passwordExample, mnemonicExample, secretExample)
 .then(signer => {
@@ -144,8 +142,7 @@ Tezos.importKey(emailExample, passwordExample, mnemonicExample, secretExample)
 
 ```js live noInline
 import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
-// Tezos.setProvider({signer: YOUR_SIGNER})
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
 
 Tezos.importKey(emailExample, passwordExample, mnemonicExample, secretExample)
 .then(signer => {
@@ -175,8 +172,8 @@ The `address %address` and the `nat %ttl` of the `set_child_record` function are
 
 ```js live noInline
 import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
-// Tezos.setProvider({signer: YOUR_SIGNER})
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+
 
 Tezos.importKey(emailExample, passwordExample, mnemonicExample, secretExample)
 .then(signer => {

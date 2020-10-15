@@ -40,10 +40,12 @@ importKey("p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1")
 
 ```
 import {  BeaconWallet } from '@taquito/beacon-wallet';
-const option = {name:"nameOfWallet"}
+import { TezosToolkit } from '@taquito/taquito';
+const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+const option = { name: "nameOfWallet" }
 const wallet = new BeaconWallet(option)
-const network = {type:"carthagenet"}
-await wallet.requestPermissions({network})
+const network = { type: "carthagenet" }
+await wallet.requestPermissions({ network })
 Tezos.setWalletProvider(wallet)
 ```
 
@@ -226,6 +228,9 @@ Tezos.contract.originate({
   <TabItem value="walletAPI">
 
 ```js live noInline wallet
+// import { TezosToolkit } from '@taquito/taquito';
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+
 // const genericMultisigJSONfile = require('./generic.json')
 // generic.json is referring to Michelson source code in JSON representation
 

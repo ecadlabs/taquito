@@ -211,9 +211,8 @@ The `signerFactory` function example creates a new Tezos instance. Use the tezos
 import { InMemorySigner } from "@taquito/signer";
 import { TezosToolkit } from "@taquito/taquito";
 
-const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
-
-const signerFactory = async (pk: string) => {
+const signerFactory = async (rpcUrl: string, pk: string) => {
+  const Tezos = new TezosToolkit(rpcUrl);
   await Tezos.setProvider({ signer: await InMemorySigner.fromSecretKey(pk) });
   return Tezos;
 };

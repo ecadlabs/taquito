@@ -41,7 +41,7 @@ Here is an example of the compilation error you would get when updating Taquito 
     - It should not alter your requests, for example, changing the operation data before forging it.
     - It should not censor your operations; you want to make sure that your transactions will be broadcasted to the network.
 - **Disponibility**: You might want to choose a node with some mechanisms to guarantee reasonable uptime for your use cases.
-- **Endpoints support**: Depending on your use cases, you want the required endpoints to be exposed by the node you chose. We wrote integration tests to show what methods in the taquito RPC package, which maps to the RPC endpoints, work on which nodes of the following section: integration-tests/rpc-nodes.spec.ts.
+- **Endpoints support**: Depending on your use cases, you want the required endpoints to be exposed by the node you chose. We wrote integration tests to show what methods in the taquito RPC package, which maps to the RPC endpoints, work on which nodes of the following section. These tests can be found here: integration-tests/rpc-nodes.spec.ts.
 - **Reliable**: You want a node that is in sync with the rest of the network, for example, you don't want a node that is always five blocks behind.
 - **Maintenance/support**: You might want to choose a node that is kept to date and that you can contact the support team if you need assistance in case of trouble.
 

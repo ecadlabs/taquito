@@ -92,6 +92,8 @@ We can inspect the contract methods and data types using the `c.parameterSchema.
 The following example shows how to load the contract, and view the methods on that contract.
 
 ```js live noInline
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+
 Tezos.contract
   .at('KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC')
   .then(c => {
@@ -113,6 +115,8 @@ In Tezos, to call an entrypoint on a contract, one must send a transfer operatio
 We can inspect the transfer params produced by Taquito using the `toTransferParams()` method as follows.
 
 ```js live noInline
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+
 Tezos.contract
   .at('KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC')
   .then(c => {
@@ -131,6 +135,8 @@ We call the `send()` method on the `increment()` method. Taquito then forges thi
 Then we wait for the `confirmation(3)` to complete. The `3` number tells Taquito how many confirmations to wait for before resolving the promise. `3` is a good value for this type of demonstration, but we recommend a higher value if you are dealing with mainnet transactions.
 
 ```js live noInline
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+
 Tezos.contract.at('KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC')
   .then(contract => {
     const i = 7;
