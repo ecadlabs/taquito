@@ -73,6 +73,9 @@
 						<dt>description</dt>
 						<dd><p>Facade class that surfaces all of the libraries capability and allow it&#39;s configuration</p>
 						</dd>
+						<dt>param</dt>
+						<dd><p>The RPC server to use</p>
+						</dd>
 					</dl>
 				</div>
 			</section>
@@ -136,15 +139,24 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Tezos<wbr>Toolkit<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.tezostoolkit.html" class="tsd-signature-type">TezosToolkit</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Tezos<wbr>Toolkit<span class="tsd-signature-symbol">(</span>_rpc<span class="tsd-signature-symbol">: </span><a href="_taquito_rpc.rpcclient.html" class="tsd-signature-type">RpcClient</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, _context<span class="tsd-signature-symbol">?: </span><a href="_taquito_taquito.context-1.html" class="tsd-signature-type">Context</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.tezostoolkit.html" class="tsd-signature-type">TezosToolkit</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/taquito.ts#L60">packages/taquito/src/taquito.ts:60</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d0b8e24/packages/taquito/src/taquito.ts#L60">packages/taquito/src/taquito.ts:60</a></li>
 								</ul>
 							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>_rpc: <a href="_taquito_rpc.rpcclient.html" class="tsd-signature-type">RpcClient</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> _context: <a href="_taquito_taquito.context-1.html" class="tsd-signature-type">Context</a><span class="tsd-signature-symbol"> = new Context(_rpc)</span></h5>
+								</li>
+							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_taquito_taquito.tezostoolkit.html" class="tsd-signature-type">TezosToolkit</a></h4>
 						</li>
 					</ul>
@@ -158,7 +170,7 @@
 					<div class="tsd-signature tsd-kind-icon">batch<span class="tsd-signature-symbol">:</span> <a href="_taquito_taquito.rpcbatchprovider.html#batch" class="tsd-signature-type">batch</a><span class="tsd-signature-symbol"> = this._context.batch.batch.bind(this._context.batch)</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/taquito.ts#L199">packages/taquito/src/taquito.ts:199</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d0b8e24/packages/taquito/src/taquito.ts#L209">packages/taquito/src/taquito.ts:209</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -168,7 +180,7 @@
 					<div class="tsd-signature tsd-kind-icon">format<span class="tsd-signature-symbol">:</span> <a href="../modules/_taquito_taquito.html#format" class="tsd-signature-type">format</a><span class="tsd-signature-symbol"> = format</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/taquito.ts#L60">packages/taquito/src/taquito.ts:60</a></li>
+							<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d0b8e24/packages/taquito/src/taquito.ts#L60">packages/taquito/src/taquito.ts:60</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -185,7 +197,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/taquito.ts#L187">packages/taquito/src/taquito.ts:187</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d0b8e24/packages/taquito/src/taquito.ts#L197">packages/taquito/src/taquito.ts:197</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -209,7 +221,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/taquito.ts#L204">packages/taquito/src/taquito.ts:204</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d0b8e24/packages/taquito/src/taquito.ts#L214">packages/taquito/src/taquito.ts:214</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -233,7 +245,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/taquito.ts#L195">packages/taquito/src/taquito.ts:195</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d0b8e24/packages/taquito/src/taquito.ts#L205">packages/taquito/src/taquito.ts:205</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_taquito_taquito.operationfactory.html" class="tsd-signature-type">OperationFactory</a></h4>
@@ -250,7 +262,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/taquito.ts#L218">packages/taquito/src/taquito.ts:218</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d0b8e24/packages/taquito/src/taquito.ts#L228">packages/taquito/src/taquito.ts:228</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -274,7 +286,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/taquito.ts#L225">packages/taquito/src/taquito.ts:225</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d0b8e24/packages/taquito/src/taquito.ts#L235">packages/taquito/src/taquito.ts:235</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -298,7 +310,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/taquito.ts#L211">packages/taquito/src/taquito.ts:211</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d0b8e24/packages/taquito/src/taquito.ts#L221">packages/taquito/src/taquito.ts:221</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -322,7 +334,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/taquito.ts#L180">packages/taquito/src/taquito.ts:180</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d0b8e24/packages/taquito/src/taquito.ts#L190">packages/taquito/src/taquito.ts:190</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -346,7 +358,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/taquito.ts#L191">packages/taquito/src/taquito.ts:191</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d0b8e24/packages/taquito/src/taquito.ts#L201">packages/taquito/src/taquito.ts:201</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_taquito_taquito.wallet-2.html" class="tsd-signature-type">Wallet</a></h4>
@@ -366,7 +378,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/taquito.ts#L236">packages/taquito/src/taquito.ts:236</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d0b8e24/packages/taquito/src/taquito.ts#L246">packages/taquito/src/taquito.ts:246</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -398,7 +410,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/taquito.ts#L232">packages/taquito/src/taquito.ts:232</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d0b8e24/packages/taquito/src/taquito.ts#L242">packages/taquito/src/taquito.ts:242</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -437,7 +449,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/taquito.ts#L133">packages/taquito/src/taquito.ts:133</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d0b8e24/packages/taquito/src/taquito.ts#L143">packages/taquito/src/taquito.ts:143</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -470,7 +482,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/taquito.ts#L76">packages/taquito/src/taquito.ts:76</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d0b8e24/packages/taquito/src/taquito.ts#L85">packages/taquito/src/taquito.ts:85</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -529,7 +541,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/taquito.ts#L113">packages/taquito/src/taquito.ts:113</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d0b8e24/packages/taquito/src/taquito.ts#L122">packages/taquito/src/taquito.ts:122</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -562,7 +574,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/taquito.ts#L95">packages/taquito/src/taquito.ts:95</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d0b8e24/packages/taquito/src/taquito.ts#L104">packages/taquito/src/taquito.ts:104</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -595,7 +607,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/taquito.ts#L147">packages/taquito/src/taquito.ts:147</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d0b8e24/packages/taquito/src/taquito.ts#L157">packages/taquito/src/taquito.ts:157</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -628,7 +640,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d886184/packages/taquito/src/taquito.ts#L166">packages/taquito/src/taquito.ts:166</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/d0b8e24/packages/taquito/src/taquito.ts#L176">packages/taquito/src/taquito.ts:176</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -676,9 +688,6 @@
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="../modules/_taquito_michelson_encoder.html">@taquito/michelson-<wbr>encoder</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="../modules/_taquito_react_components.html">@taquito/react-<wbr>components</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="../modules/_taquito_remote_signer.html">@taquito/remote-<wbr>signer</a>
