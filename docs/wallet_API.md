@@ -580,7 +580,7 @@ _Properties:_
 
 1. `address`: a string containing the address of the smart contract.
 2. `methods`: an object whose methods are named after the contract entrypoints (if the entrypoints are not annotated, the methods will be numbers).
-3. `parameterSchema`: an instance of the [Parameter class](https://github.com/ecadlabs/taquito/blob/d424fa178a95675920b21c8e8c228fbe0e7df36e/packages/taquito-michelson-encoder/src/schema/parameter.ts) with two useful methods: `hasAnnotation` tells you if the entrypoints are annotated and `isMultipleEntryPoint` tells you if the contract has multiple entrypoints (if _false_, you can interact with the contract with `.methods.main()`).
+3. `parameterSchema`: an instance of the [Parameter class](https://github.com/ecadlabs/taquito/blob/d424fa178a95675920b21c8e8c228fbe0e7df36e/packages/taquito-michelson-encoder/src/schema/parameter.ts) with two useful methods: `hasAnnotation` tells you if the entrypoints are annotated and `isMultipleEntryPoint` tells you if the contract has multiple entrypoints (if _false_, you can interact with the contract with `.methods.default()`).
 4. `schema`: an instance of the [Schema class](https://github.com/ecadlabs/taquito/blob/d424fa178a95675920b21c8e8c228fbe0e7df36e/packages/taquito-michelson-encoder/src/schema/storage.ts#L15) with various methods to get more information about the storage or the structure of the contract.
 5. `script`: an object with two properties: `code` is an array with three objects, each representing the JSON formatted Michelson code for the parameter, storage and code (respectively), `storage` is the JSON formatted Michelson code for the storage of the contract.
 
