@@ -48,6 +48,8 @@ Here is an example of the compilation error you would get when updating Taquito 
 
 ## List of community-run nodes
 
+*If a public node is missing, or information is inaccurate, please help us by submitting a pull request on our GitHub page.*
+
 - Tezos Giga Node from Tezos Ukraine
     - Mainnet: https://mainnet-tezos.giganode.io
     - Carthage testnet: https://testnet-tezos.giganode.io 
@@ -59,9 +61,6 @@ Here is an example of the compilation error you would get when updating Taquito 
     - Carthagenet: https://carthagenet.smartpy.io
     - Delphinet: https://delphinet.smartpy.io
     - Dalphanet: https://dalphanet.smartpy.io
-- Cryptium Labs nodes:
-    - Mainnet: http://mainnet.tezos.cryptium.ch:8732
-    - Carthagenet: http://carthagenet.tezos.cryptium.ch:8732
 - Nodes operated by Blockscale on behalf of the Tezos Foundation: 
     - Mainnet: https://rpc.tzbeta.net/
     - Current protocol/version testnet (Carthagenet): https://rpctest.tzbeta.net/

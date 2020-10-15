@@ -7,7 +7,6 @@ import { tokenBigmapCode, tokenBigmapStorage } from './data/token_bigmap';
 
 const rpcList = [
     'https://api.tez.ie/rpc/carthagenet',
-    //'http://carthagenet.tezos.cryptium.ch:8732', 
     'https://carthagenet.smartpy.io', 
     'https://testnet-tezos.giganode.io',
     'https://rpcalpha.tzbeta.net/',
