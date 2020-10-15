@@ -124,7 +124,7 @@ The way to write the parameter when calling the function of a contract with Taqu
 
 ```js live noInline
 // import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://api.tez.ie/keys/carthagenet/')
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet')
 // import { importKey } from '@taquito/signer';
 
 importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
@@ -142,7 +142,7 @@ importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
 
 ```js live noInline
 // import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://api.tez.ie/keys/carthagenet/')
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet')
 // import { importKey } from '@taquito/signer';
 
 importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
@@ -173,7 +173,7 @@ The `address %address` and the `nat %ttl` of the `set_child_record` function are
 
 ```js live noInline
 // import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://api.tez.ie/keys/carthagenet/')
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet')
 // import { importKey } from '@taquito/signer';
 
 importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
