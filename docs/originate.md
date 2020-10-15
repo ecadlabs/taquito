@@ -40,10 +40,12 @@ importKey("p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1")
 
 ```
 import {  BeaconWallet } from '@taquito/beacon-wallet';
-const option = {name:"nameOfWallet"}
+import { TezosToolkit } from '@taquito/taquito';
+const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+const option = { name: "nameOfWallet" }
 const wallet = new BeaconWallet(option)
-const network = {type:"carthagenet"}
-await wallet.requestPermissions({network})
+const network = { type: "carthagenet" }
+await wallet.requestPermissions({ network })
 Tezos.setWalletProvider(wallet)
 ```
 
@@ -77,6 +79,9 @@ As you can see, the property names are discarded. The order of your properties i
   <TabItem value="contractAPI">
 
 ```js live noInline
+// import { TezosToolkit } from '@taquito/taquito';
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+
 // const genericMultisigJSONfile = require('./generic.json')
 // generic.json is referring to Michelson source code in JSON representation
 
@@ -100,6 +105,9 @@ Tezos.contract.originate({
   <TabItem value="walletAPI">
 
 ```js live noInline wallet
+// import { TezosToolkit } from '@taquito/taquito';
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+
 // const genericMultisigJSONfile = require('./generic.json')
 // generic.json is referring to Michelson source code in JSON representation
 
@@ -136,6 +144,9 @@ When using Michelson expression for initial storage, we need to use the `init` p
   <TabItem value="contractAPI">
 
 ```js live noInline
+// import { TezosToolkit } from '@taquito/taquito';
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+
 // const genericMultisigJSONfile = require('./generic.json')
 // generic.json is referring to Michelson source code in JSON representation
 
@@ -155,6 +166,9 @@ Tezos.contract.originate({
   <TabItem value="walletAPI">
 
 ```js live noInline wallet
+// import { TezosToolkit } from '@taquito/taquito';
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+
 // const genericMultisigJSONfile = require('./generic.json')
 // generic.json is referring to Michelson source code in JSON representation
 
@@ -185,6 +199,9 @@ Tezos.wallet.originate({
   <TabItem value="contractAPI">
 
 ```js live noInline
+// import { TezosToolkit } from '@taquito/taquito';
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+
 // const genericMultisigJSONfile = require('./generic.json')
 // generic.json is referring to Michelson source code in JSON representation
 
@@ -211,6 +228,9 @@ Tezos.contract.originate({
   <TabItem value="walletAPI">
 
 ```js live noInline wallet
+// import { TezosToolkit } from '@taquito/taquito';
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+
 // const genericMultisigJSONfile = require('./generic.json')
 // generic.json is referring to Michelson source code in JSON representation
 

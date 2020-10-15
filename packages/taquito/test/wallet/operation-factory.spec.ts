@@ -27,7 +27,7 @@ describe('createNewPollingBasedHeadObservable', () => {
     const obs = createNewPollingBasedHeadObservable(
       timer,
       blockObs as any,
-      new Context(),
+      new Context('url'),
       scheduler
     );
 
@@ -66,7 +66,7 @@ describe('createNewPollingBasedHeadObservable', () => {
     const obs = createNewPollingBasedHeadObservable(
       timer,
       blockObs as any,
-      new Context(),
+      new Context('url'),
       scheduler
     );
 

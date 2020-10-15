@@ -13,12 +13,16 @@ When the `Babylon/proto005` protocol amendment came into affect, it changed how 
 This is the simplest delegation scenario
 
 ```js
+// const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+
 await Tezos.contract.setDelegate({ source: 'tz1_source', delegate: 'tz1_baker' })
 ```
 
 Register as a delegate
 
 ```js
+// const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+
 await Tezos.contract.registerDelegate({})
 ```
 
@@ -39,6 +43,8 @@ In order to delegate for a KT1 addresses with the new `manager.tz` contract, a c
 ### Example of delegation for a KT1 on Carthage/Proto006
 
 ```js
+// const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+
 const contract = await Tezos.contract.at("kt1...")
 await contract.methods.do(setDelegate("tz1_delegate")).send()
 ```

@@ -3,7 +3,8 @@ import { Tezos } from '@taquito/taquito';
 
 async function example() {
   const provider = 'https://api.tez.ie/rpc/mainnet';
-  Tezos.setProvider({ rpc: provider, config: {shouldObservableSubscriptionRetry: true} });
+  const tezos = Tezos(provider)
+  tezos.setProvider({ config: { shouldObservableSubscriptionRetry: true } });
   try {
 
     const bakerEndorsementFilter = {
@@ -14,7 +15,7 @@ async function example() {
       and: [{ destination: 'tz2TSvNTh2epDMhZHrw73nV9piBX7kLZ9K9m' }, { kind: 'delegation' }]
     }
 
-    const sub = Tezos.stream.subscribeOperation({
+    const sub = tezos.stream.subscribeOperation({
       or: [bakerEndorsementFilter, bakerDelegation]
     })
 

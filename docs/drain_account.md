@@ -22,6 +22,8 @@ In the following example, the account we want to empty is not yet revealed. We n
 :::
 
 ```js live noInline
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+
 Tezos.signer.publicKeyHash()
 .then( address => {
   Tezos.tz.getBalance(address)
@@ -53,6 +55,8 @@ The contract we originate is a `manager contract`. It has a `do` method taking a
 In the example, we estimate the transfer operation before doing it. When draining the account, the associated fees will be deducted from the manager's address. Thus, for the operation to be successful, the manager's  address for that account must contain funds to cover the gas. 
 
 ```js live noInline
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+
 function transferImplicit (key, mutez) {
     return [
       { prim: 'DROP' },

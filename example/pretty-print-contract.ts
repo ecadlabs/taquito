@@ -5,10 +5,10 @@ const provider = 'https://api.tez.ie/rpc/mainnet';
 
 const example = async () => {
 
-  Tezos.setProvider({ rpc: provider });
+  const tezos = Tezos(provider)
 
   try {
-    const contract = await Tezos.contract.at('KT1EctCuorV2NfVb1XTQgvzJ88MQtWP8cMMv') //StakerDAO
+    const contract = await tezos.contract.at('KT1EctCuorV2NfVb1XTQgvzJ88MQtWP8cMMv') //StakerDAO
     const p = new Parser()
 
     console.log('Pretty Print Michelson:')

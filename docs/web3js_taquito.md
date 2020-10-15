@@ -31,13 +31,13 @@ const web3 = new Web3(Web3.providers.HttpProvider('http://localhost:9545'));
 **Taquito**:
 
 ```js
-import { Tezos } from @taquito/taquito;
+import { TezosToolkit } from '@taquito/taquito';
 
-Tezos.setProvider({rpc: "http://localhost:9545"});
+const Tezos = new TezosToolkit("http://localhost:9545");
 ```
 
 The Web3js package exports a class that needs to be instantiated before being used. The difference between _Web3_ and _web3_ is a common source of errors in Ethereum development.
-Taquito exports a ready-to-use singleton object conveniently called **Tezos**. However, if you want to instantiate and initialize it yourself, it is also possible to import `TezosToolkit` from Taquito and write `const Tezos = new TezosToolkit(options);`, which is similar to the Web3js code.
+Taquito also exports a class named `TezosToolkit` that needs to be instantiated before being used, which is similar to the Web3js code.
 
 ## Get account balance
 
@@ -204,9 +204,9 @@ const receipt = await contract.methods.increment(counter + 1).send();
 **Taquito**:
 
 ```js
-import { Tezos } from '@taquito/taquito';
-
-const wallet = Tezos.setProvider({ rpc: 'http://localhost:8732', wallet }); // use the wallet of your choice
+import { TezosToolkit } from '@taquito/taquito';
+const Tezos = new TezosToolkit('http://localhost:8732');
+const wallet = Tezos.setProvider({ wallet: walletOfYourChoice }); // use the wallet of your choice
 
 const userBalance = await Tezos.tz.getBalance('tz_address');
 

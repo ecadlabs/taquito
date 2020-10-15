@@ -58,9 +58,10 @@ describe('LedgerSigner falling test', () => {
                     false, 
                     DerivationType.tz1
                 );
-                Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/carthagenet', signer: signer });
+                const tezos = Tezos('https://api.tez.ie/rpc/carthagenet');
+                tezos.setSignerProvider( signer );
                 try {
-                    const op = await Tezos.wallet.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.1 }).send()
+                    const op = await tezos.wallet.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.1 }).send()
                     await op.confirmation()
                 } 
                 catch (error) {
@@ -79,9 +80,10 @@ describe('LedgerSigner falling test', () => {
                     false, 
                     DerivationType.tz1
                 );
-                Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/carthagenet', signer: signer });
+                const tezos = Tezos('https://api.tez.ie/rpc/carthagenet');
+                tezos.setSignerProvider( signer );
                 try {
-                    const op = await Tezos.contract.originate({
+                    const op = await tezos.contract.originate({
                         balance: "1",
                         code: ligoSample,
                         storage: 0,

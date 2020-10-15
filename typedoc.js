@@ -13,7 +13,6 @@ module.exports = {
     'integration-tests/**/*.ts',
     'packages/taquito-michel-codec/formatter/*.ts',
     'packages/taquito/example',
-    'packages/taquito/react-components',
     'packages/taquito/website',
     'website/**/*',
   ],

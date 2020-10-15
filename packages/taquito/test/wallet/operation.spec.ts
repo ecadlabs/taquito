@@ -28,7 +28,7 @@ describe('WalletOperation', () => {
         a: createFakeBlock(1, 'test_hash'),
       });
 
-      const op = new WalletOperation('test_hash', new Context(), blockObs);
+      const op = new WalletOperation('test_hash', new Context('url'), blockObs);
 
       const messages = getMessages(op.confirmationObservable(1));
 
@@ -55,7 +55,7 @@ describe('WalletOperation', () => {
         a: createFakeBlock(1, 'test_hash'),
       });
 
-      const op = new WalletOperation('test_hash', new Context(), blockObs);
+      const op = new WalletOperation('test_hash', new Context('url'), blockObs);
 
       const messages = getMessages(op.confirmationObservable(2));
 
@@ -83,7 +83,7 @@ describe('WalletOperation', () => {
         b: createFakeBlock(2),
       });
 
-      const op = new WalletOperation('test_hash', new Context(), blockObs);
+      const op = new WalletOperation('test_hash', new Context('url'), blockObs);
 
       const messages = getMessages(op.confirmationObservable(2));
 
@@ -118,7 +118,7 @@ describe('WalletOperation', () => {
         a: createFakeBlock(1, 'test_hash'),
       });
 
-      const op = new WalletOperation('test_hash', new Context(), blockObs);
+      const op = new WalletOperation('test_hash', new Context('url'), blockObs);
 
       flush();
       const receipt = await op.receipt();
@@ -144,7 +144,7 @@ describe('WalletOperation', () => {
         a: createFakeBlock(1, 'test_hash'),
       });
 
-      const op = new WalletOperation('test_hash', new Context(), blockObs);
+      const op = new WalletOperation('test_hash', new Context('url'), blockObs);
 
       flush();
       const result = await op.operationResults();
@@ -162,7 +162,7 @@ describe('WalletOperation', () => {
         a: createFakeBlock(1),
       });
 
-      const op = new WalletOperation('test_hash', new Context(), blockObs);
+      const op = new WalletOperation('test_hash', new Context('url'), blockObs);
 
       flush();
 

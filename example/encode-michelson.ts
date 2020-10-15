@@ -1,11 +1,6 @@
-import { Parser, emitMicheline } from '@taquito/michel-codec'
-import { Tezos } from '@taquito/taquito';
-
-const provider = 'https://api.tez.ie/rpc/carthagenet';
+import { Parser } from '@taquito/michel-codec'
 
 const example = async () => {
-
-  Tezos.setProvider({ rpc: provider });
 
   try {
     // Encode initial storage values to JSON that is acceptable to the Tezos RPC

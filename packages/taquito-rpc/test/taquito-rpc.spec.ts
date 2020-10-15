@@ -19,7 +19,8 @@ describe('RpcClient test', () => {
   });
 
   it('RpcClient is instantiable', () => {
-    expect(new RpcClient()).toBeInstanceOf(RpcClient);
+    const rpcUrl: string = "test";
+    expect(new RpcClient(rpcUrl)).toBeInstanceOf(RpcClient);
   });
 
   describe('Concat url properly', () => {
@@ -984,7 +985,8 @@ describe('RpcClient test', () => {
 
   describe('getRpcUrl', () => {
     it('return the RPC Url', () => {
-      const rpcUrlMainnet = (new RpcClient()).getRpcUrl()
+      const url: string = 'https://api.tez.ie/rpc/mainnet';
+      const rpcUrlMainnet = (new RpcClient(url)).getRpcUrl();
       expect(rpcUrlMainnet).toEqual('https://api.tez.ie/rpc/mainnet');
       const rpcUrlCarthagenet = (new RpcClient('https://api.tez.ie/rpc/carthagenet')).getRpcUrl()
       expect(rpcUrlCarthagenet).toEqual('https://api.tez.ie/rpc/carthagenet');
