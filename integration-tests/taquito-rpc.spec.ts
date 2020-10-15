@@ -2,7 +2,7 @@ import { CONFIGS } from "./config";
 import { RpcClient } from '../packages/taquito-rpc/src/taquito-rpc';
 
 
-CONFIGS.forEach(({ rpc }) => {
+CONFIGS().forEach(({ rpc }) => {
     const client = new RpcClient();
 
     describe(`Taquito RPC: ${rpc}`, () => {

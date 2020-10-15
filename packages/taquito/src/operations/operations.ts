@@ -1,4 +1,9 @@
-import { BlockResponse, OperationContentsAndResult, OperationResultStatusEnum } from '@taquito/rpc';
+import {
+  BlockResponse,
+  OperationContentsAndResult,
+  OperationResultStatusEnum,
+  OperationContentsAndResultReveal,
+} from '@taquito/rpc';
 import { defer, from, ReplaySubject, timer } from 'rxjs';
 import {
   filter,
@@ -11,7 +16,7 @@ import {
   tap,
 } from 'rxjs/operators';
 import { Context } from '../context';
-import { ForgedBytes } from './types';
+import { ForgedBytes, hasMetadataWithResult } from './types';
 
 interface PollingConfig {
   timeout: number;
@@ -106,11 +111,28 @@ export class Operation {
     this.confirmed$.pipe(first()).subscribe();
   }
 
+  get revealOperation() {
+    return (
+      Array.isArray(this.results) &&
+      (this.results.find(op => op.kind === 'reveal') as
+        | OperationContentsAndResultReveal
+        | undefined)
+    );
+  }
+
+  public get revealStatus() {
+    if (this.revealOperation) {
+      return this.revealOperation.metadata.operation_result.status;
+    } else {
+      return 'unknown';
+    }
+  }
+
   public get status() {
     return (
       this.results.map(result => {
-        if (result.metadata && result.metadata.operation_result) {
-          return result.metadata.operation_result.status as OperationResultStatusEnum;
+        if (hasMetadataWithResult(result)) {
+          return result.metadata.operation_result.status;
         } else {
           return 'unknown';
         }

@@ -42,7 +42,7 @@ export * from './types';
 
 export { OpKind } from './opkind';
 
-const defaultRPC = 'https://mainnet.tezrpc.me';
+const defaultRPC = 'https://api.tez.ie/rpc/mainnet';
 const defaultChain = 'main';
 
 interface RPCOptions {
@@ -57,18 +57,18 @@ const defaultRPCOptions: RPCOptions = { block: 'head' };
 export class RpcClient {
   /**
    *
-   * @param url rpc root url (default https://mainnet.tezrpc.me)
+   * @param url rpc root url (default https://api.tez.ie/rpc/mainnet)
    * @param chain chain (default main)
    * @param httpBackend Http backend that issue http request.
    * You can override it by providing your own if you which to hook in the request/response
    *
-   * @example new RpcClient('https://mainnet.tezrpc.me', 'main') this will use https://mainnet.tezrpc.me/chains/main
+   * @example new RpcClient('https://api.tez.ie/rpc/mainnet', 'main') this will use https://api.tez.ie/rpc/mainnet/chains/main
    */
   constructor(
     private url: string = defaultRPC,
     private chain: string = defaultChain,
     private httpBackend: HttpBackend = new HttpBackend()
-  ) {}
+  ) { }
 
   private createURL(path: string) {
     // Trim trailing slashes because it is assumed to be included in path
@@ -89,6 +89,22 @@ export class RpcClient {
       method: 'GET',
     });
     return hash;
+  }
+
+  /**
+   *
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description List the ancestors of the given block which, if referred to as the branch in an operation header, are recent enough for that operation to be included in the current block.
+   *
+   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-live-blocks
+   */
+  async getLiveBlocks({ block }: RPCOptions = defaultRPCOptions): Promise<string[]> {
+    const blocks = await this.httpBackend.createRequest<string[]>({
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/live_blocks`),
+      method: 'GET',
+    });
+    return blocks;
   }
 
   /**
@@ -227,7 +243,9 @@ export class RpcClient {
    *
    * @description Access the value associated with a key in the big map storage of the contract.
    *
-   * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-context-contracts-contract-id-big-map-get
+   * @deprecated Deprecated in favor of getBigMapKeyByID
+   *
+   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-script
    */
   async getBigMapKey(
     address: string,
@@ -709,4 +727,14 @@ export class RpcClient {
 
     return { gas: formattedGas, ...rest };
   }
+
+  /**
+   *
+   * @description Return rpc root url
+   */
+
+  getRpcUrl() {
+    return this.url
+  }
+
 }

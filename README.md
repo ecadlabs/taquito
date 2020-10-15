@@ -1,19 +1,18 @@
-
 <span style="display:block;text-align:center">![Logo](https://tezostaquito.io/img/Taquito.png)</span>
 
 A TypeScript library suite for development on the Tezos blockchain
 
-[![CircleCI](https://circleci.com/gh/ecadlabs/taquito.svg?style=svg)](https://circleci.com/gh/ecadlabs/taquito)
+![Node.js CI](https://github.com/ecadlabs/taquito/workflows/Node.js%20CI/badge.svg)
 [![codecov](https://codecov.io/gh/ecadlabs/taquito/branch/master/graph/badge.svg)](https://codecov.io/gh/ecadlabs/taquito)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/3204/badge)](https://bestpractices.coreinfrastructure.org/projects/3204)
 [![npm version](https://badge.fury.io/js/%40taquito%2Ftaquito.svg)](https://badge.fury.io/js/%40taquito%2Ftaquito)
 
 _WARNING: This project is in beta. We welcome users and feedback, please be aware that this project is a work in progress._
 
-## Official channels
+## Community support channels
 
-- <https://keybase.io/team/ecadlabs.taquito>
-- <https://tezos.stackexchange.com/questions/tagged/taquito>
+- [TezosTaquito Telegram Community Channel][telegram]
+- [Tezos StackExchange][stackexchange]
 
 ## What is Taquito
 
@@ -52,23 +51,20 @@ We publish gpg signed packages to npmjs.org under the `@taquito` handle.
 
 | Low Level Packages                                               | Responsibility                                                |
 | ---------------------------------------------------------------- | ------------------------------------------------------------- |
-| [@taquito/rpc](packages/taquito-rpc)                             | RPC client library, wrap every rpc endpoint in its own method |
 | [@taquito/local-forging](packages/taquito-local-forging)         | Local forging of Tezos operations                             |
-| [@taquito/michelson-encoder](packages/taquito-michelson-encoder) | Encode/Decode storage and parameters to/from michelson format |
-| [@taquito/signer](packages/taquito-signer)                       | Provide necessary function to sign using tezos keys           |
+| [@taquito/michelson-encoder](packages/taquito-michelson-encoder) | Makes a JS abstraction for Smart Contracts from Michelson     |
+| [@taquito/michel-codec](packages/taquito-michel-codec)           | Converts Michelson between forms and expands Macros           |
 | [@taquito/remote-signer](packages/taquito-remote-signer)         | Provide necessary function to sign using remote signer API    |
+| [@taquito/rpc](packages/taquito-rpc)                             | RPC client library, wrap every rpc endpoint in its own method |
+| [@taquito/signer](packages/taquito-signer)                       | Provide necessary function to sign using tezos keys           |
 | [@taquito/tezbridge-signer](packages/taquito-tezbridge-signer)   | Provide necessary function to sign using TezBridge            |
 | [@taquito/utils](packages/taquito-utils)                         | Provide different encoding and decoding utilities             |
+| [@taquito/tezbridge-wallet](packages/tezbridge-wallet)           | Tezbridge implementation for the Wallet API		   |
+| [@taquito/beacon-wallet](packages/beacon-wallet)                 | TZIP-10 Wallet Interaction implementation for the Wallet API  |
 
 ## API Documentation
 
 The TypeDoc style API documentation is available [here](https://tezostaquito.io/typedoc)
-
-## React Components overview
-
-React component demos are published using the [storybook](https://storybook.js.org) tool.
-
-View the demo components here: [Tezos components Storybook](https://tezostaquito.io/react-storybook)
 
 ## Versioning Strategy
 
@@ -112,7 +108,7 @@ See the top-level `package.json` file. Some common targets are:
 
 * Install lerna globally `npm install -g lerna`
 * Run `npm install`
-* Run `lerna bootstrap`
+* Run `lerna bootstrap --force-local`
 * Run `npm run build`
 
 #### Once you have modified any package:
@@ -120,6 +116,16 @@ See the top-level `package.json` file. Some common targets are:
 * Run `npm run lint`
 * Run `npm run test`
 * In order to commit please use `npm run commit`
+
+### Running the website locally
+
+The Tezos Taquito [website][4] is built using [Docusaurus][5] To run the Taquito website in development mode locally, run the following commands:
+
+```sh
+cd website
+yarn
+yarn start
+```
 
 ---
 
@@ -148,6 +154,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 [0]: https://github.com/ecadlabs/tezos-indexer-api
 [2]: https://keybase.io/jevonearth
 [3]: https://keybase.io/simrob
+[4]: https://tezostaquito.io
+[5]: https://docusaurus.io/
+[telegram]: https://t.me/tezostaquito
+[stackexchange]: https://tezos.stackexchange.com/questions/tagged/taquito
 
 ## Credits
 

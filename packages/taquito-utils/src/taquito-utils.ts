@@ -13,6 +13,12 @@ export * from './validators';
 
 export { prefix, Prefix, prefixLength } from './constants';
 
+/**
+ *
+ * @description Hash a string using the BLAKE2b algorithm, base58 encode the hash obtained and appends the prefix 'expr' to it
+ *
+ * @param value Value in hex
+ */
 export function encodeExpr(value: string) {
   const blakeHash = blake.blake2b(hex2buf(value), null, 32);
   return b58cencode(blakeHash, prefix['expr']);
@@ -91,6 +97,12 @@ export function encodePubKey(value: string) {
   return b58cencode(value.substring(2, 42), prefix.KT);
 }
 
+/**
+ *
+ * @description Base58 encode a key according to its prefix
+ *
+ * @param value Key to base58 encode
+ */
 export function encodeKey(value: string) {
   if (value[0] === '0') {
     const pref: { [key: string]: Uint8Array } = {
@@ -103,6 +115,12 @@ export function encodeKey(value: string) {
   }
 }
 
+/**
+ *
+ * @description Base58 encode a key hash according to its prefix
+ *
+ * @param value Key to base58 encode
+ */
 export function encodeKeyHash(value: string) {
   if (value[0] === '0') {
     const pref: { [key: string]: Uint8Array } = {
@@ -122,22 +140,7 @@ export function encodeKeyHash(value: string) {
  * @param hex Hex string to convert
  */
 export const hex2buf = (hex: string): Uint8Array => {
-  return new Uint8Array(hex.match(/[\da-f]{2}/gi)!.map(h => parseInt(h, 16)));
-};
-
-/**
- *
- * @description Generate a random hex nonce
- *
- * @param length length of the nonce
- */
-export const hexNonce = (length: number): string => {
-  const chars = '0123456789abcedf';
-  let hex = '';
-  while (length--) {
-    hex += chars[(Math.random() * 16) | 0];
-  }
-  return hex;
+  return new Uint8Array(hex.match(/[\da-f]{2}/gi)!.map((h) => parseInt(h, 16)));
 };
 
 /**
@@ -152,69 +155,6 @@ export const mergebuf = (b1: Uint8Array, b2: Uint8Array): Uint8Array => {
   r.set(b1);
   r.set(b2, b1.length);
   return r;
-};
-
-/**
- *
- * @description Convert a michelson string expression to it's json representation
- *
- * @param mi Michelson string expression to convert to json
- */
-export const sexp2mic = function me(mi: string): any {
-  mi = mi
-    .replace(/(?:@[a-z_]+)|(?:#.*$)/gm, '')
-    .replace(/\s+/g, ' ')
-    .trim();
-  if (mi.charAt(0) === '(') mi = mi.slice(1, -1);
-  let pl = 0;
-  let sopen = false;
-  let escaped = false;
-  const ret: { prim: string; args: any[] } = {
-    prim: '',
-    args: [],
-  };
-  let val = '';
-  for (let i = 0; i < mi.length; i++) {
-    if (escaped) {
-      val += mi[i];
-      escaped = false;
-      continue;
-    } else if (
-      (i === mi.length - 1 && sopen === false) ||
-      (mi[i] === ' ' && pl === 0 && sopen === false)
-    ) {
-      if (i === mi.length - 1) val += mi[i];
-      if (val) {
-        if (val === parseInt(val, 10).toString()) {
-          if (!ret.prim) return { int: val };
-          ret.args.push({ int: val });
-        } else if (val[0] === '0' && val[1] === 'x') {
-          val = val.substr(2);
-          if (!ret.prim) return { bytes: val };
-          ret.args.push({ bytes: val });
-        } else if (ret.prim) {
-          ret.args.push(me(val));
-        } else {
-          ret.prim = val;
-        }
-        val = '';
-      }
-      continue;
-    } else if (mi[i] === '"' && sopen) {
-      sopen = false;
-      if (!ret.prim) return { string: val };
-      ret.args.push({ string: val });
-      val = '';
-      continue;
-    } else if (mi[i] === '"' && !sopen && pl === 0) {
-      sopen = true;
-      continue;
-    } else if (mi[i] === '\\') escaped = true;
-    else if (mi[i] === '(') pl++;
-    else if (mi[i] === ')') pl--;
-    val += mi[i];
-  }
-  return ret;
 };
 
 /**
@@ -262,81 +202,6 @@ export const mic2arr = function me2(s: any): any {
     ret = parseInt(s.int, 10);
   } else {
     ret = s;
-  }
-  return ret;
-};
-
-/**
- *
- * @description Convert a michelson string to it's json representation
- *
- * @param mi Michelson string to convert to json
- *
- * @warn This implementation of the Michelson parser is a prototype. The current implementation is naïve. We are likely going to switch to using the Nomadic Michelson encoder in the future, as per Issue https://gitlab.com/tezos/tezos/issues/581
- */
-export const ml2mic = function me(mi: string): any {
-  const ret = [];
-  let inseq = false;
-  let seq = '';
-  let val = '';
-  let pl = 0;
-  let bl = 0;
-  let sopen = false;
-  let escaped = false;
-  for (let i = 0; i < mi.length; i++) {
-    if (val === '}' || val === ';') {
-      val = '';
-    }
-    if (inseq) {
-      if (mi[i] === '}') {
-        bl--;
-      } else if (mi[i] === '{') {
-        bl++;
-      }
-      if (bl === 0) {
-        const st = me(val);
-        ret.push({
-          prim: seq.trim(),
-          args: [st],
-        });
-        val = '';
-        bl = 0;
-        inseq = false;
-      }
-    } else if (mi[i] === '{') {
-      bl++;
-      seq = val;
-      val = '';
-      inseq = true;
-      continue;
-    } else if (escaped) {
-      val += mi[i];
-      escaped = false;
-      continue;
-    } else if (
-      (i === mi.length - 1 && sopen === false) ||
-      (mi[i] === ';' && pl === 0 && sopen === false)
-    ) {
-      if (i === mi.length - 1) val += mi[i];
-      if (val.trim() === '' || val.trim() === '}' || val.trim() === ';') {
-        val = '';
-        continue;
-      }
-      ret.push(sexp2mic(val));
-      val = '';
-      continue;
-    } else if (mi[i] === '"' && sopen) {
-      sopen = false;
-    } else if (mi[i] === '"' && !sopen) {
-      sopen = true;
-    } else if (mi[i] === '\\') {
-      escaped = true;
-    } else if (mi[i] === '(') {
-      pl++;
-    } else if (mi[i] === ')') {
-      pl--;
-    }
-    val += mi[i];
   }
   return ret;
 };

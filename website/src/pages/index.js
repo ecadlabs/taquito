@@ -11,12 +11,12 @@ import styles from './styles.module.css';
 
 const FEATURES = [
   {
-    description: 'Hit the ground running using & contributing to the library quickly: Taquito is written in an idiomatic TypeScript style, and includes a set of ready-made React components.',
+    description: 'Hit the ground running using: Taquito\'s Smart-Contract abstractions makes working with contracts feel like your working with plain old JavaScript objects.',
     awesomeIcon: faLaughBeam,
     title: 'Easy to Use',
   },
   {
-    description: 'Perfect for any JavaScript project on the front- or back-end with minimal dependencies, Taquito has no reliance on any stack by default, except the <a href="https://gitlab.com/tezos/tezos" target="_blank">Tezos Node</a>.',
+    description: 'Perfect for any JavaScript project on the front-end, back-end or command line with minimal dependencies, Taquito has no reliance on any stack by default, except the <a href="https://gitlab.com/tezos/tezos" target="_blank">Tezos Node</a>.',
     awesomeIcon: faSuitcase,
     title: 'Portable',
   },

@@ -1,26 +1,38 @@
 import { RpcClient } from '@taquito/rpc';
-import { Signer } from './signer/interface';
-import { NoopSigner } from './signer/noop';
 import { Protocols } from './constants';
 import { Forger } from './forger/interface';
 import { RpcForger } from './forger/rpc-forger';
 import { Injector } from './injector/interface';
 import { RpcInjector } from './injector/rpc-injector';
+import { Signer } from './signer/interface';
+import { NoopSigner } from './signer/noop';
+import { OperationFactory } from './wallet/opreation-factory';
+import { RpcTzProvider } from './tz/rpc-tz-provider';
+import { RPCEstimateProvider } from './contract/rpc-estimate-provider';
+import { RpcContractProvider } from './contract/rpc-contract-provider';
+import { RPCBatchProvider } from './batch/rpc-batch-provider';
+
+import { Wallet, LegacyWalletProvider, WalletProvider } from './wallet';
 
 export interface TaquitoProvider<T, K extends Array<any>> {
   new (context: Context, ...rest: K): T;
 }
 
+// The shouldObservableSubscriptionRetrythe parameter is related to the observable in ObservableSubsription class. 
+// When set to true, the observable won't die when getBlock rpc call fails; the error will be reported via the error callback, 
+// and it will continue to poll for new blocks.
 export interface Config {
   confirmationPollingIntervalSecond?: number;
   confirmationPollingTimeoutSecond?: number;
   defaultConfirmationCount?: number;
+  shouldObservableSubscriptionRetry?: boolean;
 }
 
 export const defaultConfig: Required<Config> = {
   confirmationPollingIntervalSecond: 10,
   defaultConfirmationCount: 1,
   confirmationPollingTimeoutSecond: 180,
+  shouldObservableSubscriptionRetry: false
 };
 
 /**
@@ -29,6 +41,14 @@ export const defaultConfig: Required<Config> = {
 export class Context {
   private _forger: Forger;
   private _injector: Injector;
+  private _walletProvider: WalletProvider;
+  public readonly operationFactory: OperationFactory;
+
+  public readonly tz = new RpcTzProvider(this);
+  public readonly estimate = new RPCEstimateProvider(this);
+  public readonly contract = new RpcContractProvider(this, this.estimate);
+  public readonly batch = new RPCBatchProvider(this, this.estimate);
+  public readonly wallet = new Wallet(this);
 
   constructor(
     private _rpcClient: RpcClient = new RpcClient(),
@@ -36,11 +56,14 @@ export class Context {
     private _proto?: Protocols,
     private _config?: Partial<Config>,
     forger?: Forger,
-    injector?: Injector
+    injector?: Injector,
+    wallet?: WalletProvider
   ) {
     this.config = _config as any;
     this._forger = forger ? forger : new RpcForger(this);
     this._injector = injector ? injector : new RpcInjector(this);
+    this.operationFactory = new OperationFactory(this);
+    this._walletProvider = wallet ? wallet : new LegacyWalletProvider(this);
   }
 
   get config(): Required<Config> {
@@ -80,6 +103,14 @@ export class Context {
 
   get signer() {
     return this._signer;
+  }
+
+  get walletProvider() {
+    return this._walletProvider;
+  }
+
+  set walletProvider(value: WalletProvider) {
+    this._walletProvider = value;
   }
 
   set signer(value: Signer) {

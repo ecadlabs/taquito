@@ -1,14 +1,23 @@
 {
   "name": "integration-tests",
   "scripts": {
-    "test": "jest --runInBand"
+    "test:faucet": "RUN_WITH_FAUCET=true jest --runInBand",
+    "test:carthagenet": "CARTHAGENET=true jest",
+    "test:carthagenet-faucet": "RUN_CARTHAGENET_WITH_FAUCET=true jest --runInBand",
+    "test:delphinet": "DELPHINET=true jest",
+    "test:delphinet-faucet": "RUN_DELPHINET_WITH_FAUCET=true jest --runInBand",
+    "test": "jest"
   },
-  "version": "6.1.0-beta.0",
+  "version": "7.0.0-beta.pre.0",
   "dependencies": {
-    "@taquito/local-forging": "^6.1.0-beta.0",
-    "@taquito/signer": "^6.1.0-beta.0",
-    "@taquito/taquito": "^6.1.0-beta.0",
-    "@taquito/utils": "^6.1.0-beta.0"
+    "@ledgerhq/hw-transport": "^5.25.0",
+    "@ledgerhq/hw-transport-node-hid": "^5.25.0",
+    "@taquito/http-utils": "^7.0.0-beta.pre.0",
+    "@taquito/local-forging": "^7.0.0-beta.pre.0",
+    "@taquito/remote-signer": "^7.0.0-beta.pre.0",
+    "@taquito/signer": "^7.0.0-beta.pre.0",
+    "@taquito/taquito": "^7.0.0-beta.pre.0",
+    "@taquito/utils": "^7.0.0-beta.pre.0"
   },
   "private": true,
   "jest": {
@@ -25,20 +34,24 @@
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/test/"
+    ],
+    "testPathIgnorePatterns": [
+      "./ledger-signer.spec.ts",
+      "./ledger-signer-falling-tests.spec.ts"
     ]
   },
   "devDependencies": {
-    "@types/jest": "^23.3.2",
-    "@types/node": "^10.14.13",
-    "jest": "^24.8.0",
-    "jest-config": "^24.8.0",
-    "lint-staged": "^8.0.0",
-    "ts-jest": "^24.0.2",
-    "ts-node": "^7.0.1",
-    "tslint": "^5.11.0",
-    "tslint-config-prettier": "^1.15.0",
-    "tslint-config-standard": "^8.0.1",
-    "typescript": "~3.6.0"
+    "@types/jest": "^26.0.14",
+    "@types/node": "^14.11.5",
+    "jest": "^26.5.2",
+    "jest-config": "^26.5.2",
+    "lint-staged": "^10.4.0",
+    "ts-jest": "^26.4.1",
+    "ts-node": "^9.0.0",
+    "tslint": "^6.1.3",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-config-standard": "^9.0.0",
+    "typescript": "~4.0.3"
   },
   "config": {
     "commitizen": {

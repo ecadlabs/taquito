@@ -25,7 +25,30 @@ import {
   createTransferOperation,
 } from './prepare';
 
-// RPC require a signature but do not verify it
+interface Limits {
+  fee?: number;
+  storageLimit?: number;
+  gasLimit?: number;
+}
+
+const mergeLimits = (
+  userDefinedLimit: Limits,
+  defaultLimits: Required<Limits>
+): Required<Limits> => {
+  return {
+    fee: typeof userDefinedLimit.fee === 'undefined' ? defaultLimits.fee : userDefinedLimit.fee,
+    gasLimit:
+      typeof userDefinedLimit.gasLimit === 'undefined'
+        ? defaultLimits.gasLimit
+        : userDefinedLimit.gasLimit,
+    storageLimit:
+      typeof userDefinedLimit.storageLimit === 'undefined'
+        ? defaultLimits.storageLimit
+        : userDefinedLimit.storageLimit,
+  };
+};
+
+// RPC requires a signature but does not verify it
 const SIGNATURE_STUB =
   'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg';
 
@@ -52,10 +75,12 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
 
   private createEstimateFromOperationContent(
     content: PreapplyResponse['contents'][0],
-    size: number
+    size: number,
+    costPerByte: BigNumber
   ) {
     const operationResults = flattenOperationResult({ contents: [content] });
     let totalGas = 0;
+    let totalMilligas = 0;
     let totalStorage = 0;
     operationResults.forEach(result => {
       totalStorage +=
@@ -64,14 +89,20 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
           : 0;
       totalStorage += 'allocated_destination_contract' in result ? this.ALLOCATION_STORAGE : 0;
       totalGas += Number(result.consumed_gas) || 0;
+      totalMilligas += Number(result.consumed_milligas) || 0;
       totalStorage +=
         'paid_storage_size_diff' in result ? Number(result.paid_storage_size_diff) || 0 : 0;
     });
 
+    if (totalGas !== 0 && totalMilligas === 0) {
+      // This will convert gas to milligas for Carthagenet where result does not contain consumed gas in milligas.
+      totalMilligas = totalGas * 1000;
+    }
+
     if (isOpWithFee(content)) {
-      return new Estimate(totalGas || 0, Number(totalStorage || 0), size);
+      return new Estimate(totalMilligas || 0, Number(totalStorage || 0), size, costPerByte.toNumber());
     } else {
-      return new Estimate(0, 0, size, 0);
+      return new Estimate(0, 0, size, costPerByte.toNumber(), 0);
     }
   }
 
@@ -87,7 +118,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     };
 
     const { opResponse } = await this.simulate(operation);
-
+    const { cost_per_byte } = await this.rpc.getConstants();
     const errors = [...flattenErrors(opResponse, 'backtracked'), ...flattenErrors(opResponse)];
 
     // Fail early in case of errors
@@ -104,7 +135,8 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     return opResponse.contents.map(x => {
       return this.createEstimateFromOperationContent(
         x,
-        opbytes.length / 2 / opResponse.contents.length
+        opbytes.length / 2 / opResponse.contents.length,
+        cost_per_byte
       );
     });
   }
@@ -122,7 +154,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     const DEFAULT_PARAMS = await this.getAccountLimits(pkh);
     const op = await createOriginationOperation({
       ...rest,
-      ...DEFAULT_PARAMS,
+      ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
     });
     return (await this.createEstimate({ operation: op, source: pkh }))[0];
   }
@@ -139,7 +171,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     const DEFAULT_PARAMS = await this.getAccountLimits(pkh);
     const op = await createTransferOperation({
       ...rest,
-      ...DEFAULT_PARAMS,
+      ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
     });
     return (await this.createEstimate({ operation: op, source: pkh }))[0];
   }
@@ -152,10 +184,13 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    *
    * @param Estimate
    */
-  async setDelegate(params: DelegateParams) {
-    const sourceOrDefault = params.source || (await this.signer.publicKeyHash());
+  async setDelegate({ fee, gasLimit, storageLimit, ...rest }: DelegateParams) {
+    const sourceOrDefault = rest.source || (await this.signer.publicKeyHash());
     const DEFAULT_PARAMS = await this.getAccountLimits(sourceOrDefault);
-    const op = await createSetDelegateOperation({ ...params, ...DEFAULT_PARAMS });
+    const op = await createSetDelegateOperation({
+      ...rest,
+      ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
+    });
     return (await this.createEstimate({ operation: op, source: sourceOrDefault }))[0];
   }
 
@@ -168,7 +203,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
           operations.push(
             await createTransferOperation({
               ...param,
-              ...DEFAULT_PARAMS,
+              ...mergeLimits(param, DEFAULT_PARAMS),
             })
           );
           break;
@@ -176,7 +211,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
           operations.push(
             await createOriginationOperation({
               ...param,
-              ...DEFAULT_PARAMS,
+              ...mergeLimits(param, DEFAULT_PARAMS),
             })
           );
           break;
@@ -184,7 +219,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
           operations.push(
             await createSetDelegateOperation({
               ...param,
-              ...DEFAULT_PARAMS,
+              ...mergeLimits(param, DEFAULT_PARAMS),
             })
           );
           break;

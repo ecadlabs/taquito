@@ -6,63 +6,63 @@
         "files": [
           {
             "path": "dist/lib/balance-history.js",
-            "sha512": "5e42c9e8f633b00aeaaf359f590fd419a154714cd7f2d39f297006cc52a59d1ac54cbd51d7df226def4edc322ae6236f4a934bef605625f29c73948600c02df4"
+            "sha512": "1741b85a40950f1b799a559b2278ea5ea11694c22410abf70b666aadcd2fa721fbcf7b79e00a405f605a1c7c96deb6660f0b34a3058600f66b42024797d72a6a"
           },
           {
             "path": "dist/lib/balance.js",
-            "sha512": "edec26c542a119c9bff6dbd1a471478226bb8e37576ed04c7230aef0eade9755147e8b5d1d84cb21d88b8f3e0476174b9950ec9843353a8219f0b8a268090b9c"
+            "sha512": "dd7e2cf814168cfb057fa2e26731d5fa54735883832b30c320ebb0e0e6c931a8133bfe204ecaaa68f15dba49d1238defe1e1cd3b55e91b67f77402612f1f399f"
           },
           {
             "path": "dist/lib/format.js",
-            "sha512": "ee85d31bad1ba8db76d3849735e53ad79aed181f33997f8041aeb8909200b1ffb3e86c5e51c476df3ebe3803807cac3fee5643a39c55e1a7d68047f60a4a0a4e"
+            "sha512": "1042930b834a34b9d11abf5a7c1c8a4bb514bb81aba88a07d2190a8a9b0552a5f6a2acb2baa01cd9e5ea491768a5e14a39f201a53c3bc09cd32a52b018ef3270"
           },
           {
             "path": "dist/taquito-react-components.es5.js",
-            "sha512": "a04dacf0ec3d60ceec0df1b30f7a6c914527579396acd65acf952f9bf78928b7c0e440cbca9ca72ad3d22c116148bc92eb8caa5143a0d3019778145be2e08852"
+            "sha512": "a66c86dc12dbb69c71c87a770f4609c03303a87a775545a90768dec9444c9811e4e80c1f6078035cbcc5c526bfee2247f1442e04394b77cb60ee821ba8ec2aac"
           },
           {
             "path": "dist/lib/taquito-react-components.js",
-            "sha512": "562e8e56c087b8eb4659c467bc50fb02c4ae85fb9a791f89f0ca7f07bc1a67f630af44be98004c2e8cdca99fd800a9fd0b45328e3b8966eb2400479c6dd28d0f"
+            "sha512": "73cd22cee5282d4e9450be135452da68f65dacebea195281e694dedb2c769f10d850853562a7a1cadeacd3d0c21f533496a1f5b36d0f4bc2ef23f44d79427b61"
           },
           {
             "path": "dist/taquito-react-components.umd.js",
-            "sha512": "0673be09acf1069fd23a51cc35c97f6d703d5fa9ccd2ed8786f42415d41a7df24e3bd3aa618e6213a35a2307c48000c29d4e90f32d7216520635baf4ab56c8c0"
+            "sha512": "2cdb2026f08321b71ff55980e244cf15b30e742b5e9b0cd92bb40503f15eac2ea0d11dda6a71025cdf0739ec3a0a26d19bda9679f316018955b8938596ba8200"
           },
           {
             "path": "dist/lib/tezos-context.js",
-            "sha512": "e96f2c3d2f2d675bb05e7cac9cc5c9991945307a4bf5c3aa8a4a23b121ea88fd98fcc80b7d3cf495206999fea56590a5847e36e3254bdf0f30887d1d4294cbe1"
+            "sha512": "ddc926ac9f7f6ec98a4cbff8922e14baa0e36c9e09abb0ac70301a2d5b31657f36e8a96a4375ad1f23bbb42bf5da39750a434cc24e3f480e56cde8e9b61cf734"
           },
           {
             "path": "dist/lib/balance-history.js.map",
-            "sha512": "d6de8d437fd1cede09d5c34c98ca690f688a8569c6f9d9e0676b88f00a23213a94da40e8c8e4fed244c4ee2389d4c79f42b91518f4a6f97d371a6d84b73bebcd"
+            "sha512": "75b9d7ec88f92a4ecbee592937f8f61539ef2127d17b4b55470ddd9d922d3ef579b6a6f7a7a3cf8349736c4b17a2651c584a72047801536fef33978cfa4f636e"
           },
           {
             "path": "dist/lib/balance.js.map",
-            "sha512": "505516ba31ecefbb61436e4a68a7a9a592491776ac7c9f7ac6c5360177873d8a0450a1ba2f4afba88fcb739b34a6031768a8fc1bb047372a6d415a9817af899e"
+            "sha512": "c11e4d4a05ae70d032f2039415407f2460232fe36a2ce8a3174b5f5bd23287264856de719a0198804e70aa61ea44796caee64382a167dbf2f92123eec48c33dc"
           },
           {
             "path": "dist/lib/format.js.map",
-            "sha512": "45d44d1a88506800735961cf55dd55bf181bc8ea3bde8335e5d3bfc42ac353acc47d39616c926ea88567ef82e5979d6f2e6e401d68b80b47c9c87af8ab30ae00"
+            "sha512": "03c5ef8cfb1e04352d06b84fec524eff974c0c8824d0c0561b082c996921d5455a2df942328e11934dbebd8f11b127a9fd53cdb8373b9bdcfdf9f3d3f4cc6c88"
           },
           {
             "path": "dist/taquito-react-components.es5.js.map",
-            "sha512": "b7949101946ee6fe1d77eb1b7e418bbf92b5a800a02266c5c709c459a3d4867a02de67aeb8b0ba7fce266ef05d013aaa2f7729e822c7bb99aa4325f1ede9f718"
+            "sha512": "71553879de83b3cfcc5d7c40078133ae13ff3f06e7c9b4f4ec37d782a339ee142aab0b5e7e77ed943e0cd163ee9bd4bd0f6df92d4d69a8a97718f3a0d96d0997"
           },
           {
             "path": "dist/lib/taquito-react-components.js.map",
-            "sha512": "7ceab9390ca235e096a88ca157d7624497b36baa9a56a284caeba5dc22c9666dc1ebaa2e0d1b82a72802ebd853caac4e27e1f273084f75023fecab375aa875f1"
+            "sha512": "08267dad6603c7f2eacab58dcdbe14258fd46454ccfd2caf079d03b99ecfb1f1689c5dab369c9992d585908bca50a33e6145aea536bea536cea7326393406ea3"
           },
           {
             "path": "dist/taquito-react-components.umd.js.map",
-            "sha512": "f5ef80a24072a6836041066413075fa4bbabccd0b2c344f5f125e29175b2e8d491bec1a7e104ee135f57304aa9a071b7044b0d9b2706d92c790ed32e0ef1a319"
+            "sha512": "ecd7c4b7b92675ba0e71b442033d30982ad28c03cd20ca39b3f566c3c93457e314c161db2320a008ab2681713a57ded08bdcfc9d900d4ca34a20aafa75f3ce48"
           },
           {
             "path": "dist/lib/tezos-context.js.map",
-            "sha512": "a91580e8f1fab60c14b5609e9adb32160608a7e33353b60dd5c128e71cb1a1c9255ee2c631fa8610aa4f8a9c928b39cf3db86b00e0b3e47bc040e3ba00626446"
+            "sha512": "eca040804738ba8235b3a30c1853e315884fc0fab630bdf8cb24e8b638b4f7ca8005537b0b8c95b740f94eae3e0d20a699b14856dd40df2471f624a86f4ac453"
           },
           {
             "path": "README.md",
-            "sha512": "385c29953f57f3855e5510d1e1060e9b3058ce7772e1bf6cba421bdc110dfb900d2f1cd102eb13d7742103c7e90b5f0cac15a0b1855e067b990089cc4a3bc37a"
+            "sha512": "0b27051d4554c63d3d16afe53682448a4c9cc76be378911b9e6cf2b4dbaa010dfcb3093e6ac87c1f29568058e2a5ffc79521dc8b07d03e3d924839180ee0c7a8"
           },
           {
             "path": "dist/types/balance-history.d.ts",
@@ -91,7 +91,7 @@
       "entry": "identity/v1alpha2",
       "value": {
         "identity": {
-          "keybaseUser": "simrob"
+          "keybaseUser": "jevonearth"
         }
       }
     },
@@ -105,6 +105,7 @@
           "devDependencies",
           "engines",
           "files",
+          "gitHead",
           "keywords",
           "license",
           "lint-staged",
@@ -117,7 +118,7 @@
           "typings",
           "version"
         ],
-        "sha512": "113b9cc8fd11df944aa02a53f90877330915856b42b56c47e16ae14c5cde258e209f345b9df29f27703ced2e01806cc56730ff33d2b1e10c5ad9587fb2c9a37a"
+        "sha512": "967fe343f00a52fbbd7ee203c43f5eb1d2f50b08fbb8294ca5f85e070b512d039176fd3139440e9157ce8d2ceaf6eb8f52f3e33a11de61df65379c8bdfeb42a2"
       }
     },
     {
@@ -125,7 +126,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/react-components",
-          "version": "6.1.0-beta.0",
+          "version": "7.0.0-beta.pre.0",
           "description": "React Components that implement common use cases for data retrieved from the Tezos blockchain",
           "keywords": [
             "tezos",
@@ -168,54 +169,55 @@
             ]
           },
           "dependencies": {
-            "@taquito/rpc": "^6.1.0-beta.0",
-            "@taquito/taquito": "^6.1.0-beta.0",
-            "@types/react": "^16.8.24",
-            "bignumber.js": "^9.0.0",
-            "react": "^16.8.6",
-            "recharts": "^1.7.1"
+            "@taquito/rpc": "^7.0.0-beta.pre.0",
+            "@taquito/taquito": "^7.0.0-beta.pre.0",
+            "@types/react": "^16.9.51",
+            "bignumber.js": "^9.0.1",
+            "react": "^16.13.1",
+            "recharts": "^1.8.5"
           },
           "devDependencies": {
-            "@babel/core": "^7.5.5",
-            "@storybook/addon-actions": "^5.2.1",
-            "@storybook/addon-knobs": "^5.2.1",
-            "@storybook/addon-links": "^5.2.1",
-            "@storybook/addons": "^5.2.1",
-            "@storybook/react": "^5.2.1",
-            "@types/jest": "^23.3.2",
-            "@types/node": "^10.14.14",
-            "@types/react-color": "^3.0.1",
-            "@types/recharts": "^1.1.21",
-            "@types/storybook__react": "^4.0.2",
+            "@babel/core": "^7.11.6",
+            "@storybook/addon-actions": "^6.0.26",
+            "@storybook/addon-knobs": "^6.0.26",
+            "@storybook/addon-links": "^6.0.26",
+            "@storybook/addons": "^6.0.26",
+            "@storybook/react": "^6.0.26",
+            "@types/jest": "^26.0.14",
+            "@types/node": "^14.11.5",
+            "@types/react-color": "^3.0.4",
+            "@types/recharts": "^1.8.16",
+            "@types/storybook__react": "^5.2.1",
             "awesome-typescript-loader": "^5.2.1",
-            "babel-loader": "^8.0.6",
-            "colors": "^1.3.2",
-            "core-js": "^3.2.1",
-            "coveralls": "^3.0.2",
-            "cross-env": "^5.2.0",
-            "jest": "^24.8.0",
-            "jest-config": "^24.8.0",
-            "lint-staged": "^8.0.0",
+            "babel-loader": "^8.1.0",
+            "colors": "^1.4.0",
+            "core-js": "^3.6.5",
+            "coveralls": "^3.1.0",
+            "cross-env": "^7.0.2",
+            "jest": "^26.5.2",
+            "jest-config": "^26.5.2",
+            "lint-staged": "^10.4.0",
             "lodash.camelcase": "^4.3.0",
-            "prettier": "^1.14.3",
+            "prettier": "^2.1.2",
             "prompt": "^1.0.0",
-            "replace-in-file": "^3.4.2",
-            "rimraf": "^2.6.2",
-            "rollup": "^1.20.1",
+            "replace-in-file": "^6.1.0",
+            "rimraf": "^3.0.2",
+            "rollup": "^2.28.2",
             "rollup-plugin-json": "^4.0.0",
-            "rollup-plugin-sourcemaps": "^0.4.2",
-            "rollup-plugin-typescript2": "^0.22.1",
-            "shelljs": "^0.8.3",
-            "ts-jest": "^23.10.2",
-            "ts-node": "^7.0.1",
-            "tslint": "^5.11.0",
-            "tslint-config-prettier": "^1.15.0",
-            "tslint-config-standard": "^8.0.1",
-            "typescript": "~3.6.0"
-          }
+            "rollup-plugin-sourcemaps": "^0.6.3",
+            "rollup-plugin-typescript2": "^0.27.3",
+            "shelljs": "^0.8.4",
+            "ts-jest": "^26.4.1",
+            "ts-node": "^9.0.0",
+            "tslint": "^6.1.3",
+            "tslint-config-prettier": "^1.18.0",
+            "tslint-config-standard": "^9.0.0",
+            "typescript": "^4.0.3"
+          },
+          "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJeX/OcCRCwAkEJD2ZwqwAAsc8QACI129xXoPFdphbhF7Uy5zZY\nb4Y7INNfuBWfAO6TmzJOPmf/E8fD7dh/O+8jjOqxfYnZB8VD3rFkCEHSNB+nOC86\nzOj/pQIwmGK3OAhOZV+2p/zj8EP472NUg6fhj2R9tQ07ctPcbOhSygcxJiZQQAdn\nrZgchYoZjLDPXLliajZJr7+v3bWFj5Z1DLMckX0lagRlnlpJIbgZ9f8XrxsOX/Ty\n3Ynim2pcFMa5FZnD6orDWn6V+VMrCKT0LzhJ008sq4bYqs/NZKjjhd9YiytmSYRP\nSkGuTgDXca9i0wjqBTm87GyuX30lgLJoqPmaWJLqHkaTGUMeH2W2adqFFMxXipk6\n7C+p+eYMvVSxHFMvYHPev+89Bg/j1OI1K5hSKWJCurpxhvmrrjcdupURXbCPQOwV\n9SeXrdAfyOGzRS/NMqfT4g35iMzOoMlEojiWVlveS0HemtKQZHNwhoxY4bpQk9hR\nhzDAMySVNzTQ8qyRAgyyQkcs+g5wneKJjwJPbWOonvdO60RkRChuFAaty7H7q8Ti\n2Nm6rDTR/uQS44+xdUuIIMziheP0EYb6+NwJwKcpzF82t/I/nSifRc13mQlhVZak\nYRdxVrfG4RT9Xo42vvXqIy9hnBQuvbnZ6SL8f0G2ZLxxi7Y7WWjsVe+6kNZq1+jl\nOP70+qH+e9cP5a40YdK+\n=F/ql\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfgMjrCRAD9Qy5GYHsngAAXI4QAIfJ7fJiYnOPjci2zH+yBaho\n9O2yphbHq90e3z9zOulLy+GJKvlW0a7kwhbmEJ5v0RHLX26Y2cpUwENbEHJkMMmu\ntMwt4MASW5/4eAIfNNvLe5SydpVZ4hKJTM0tiMqwYOiGbm+6BypcqFDuK83nvrGc\nuhe79DRpDN+Vul6Me5aGz/G9tSS1GXM56gJN8t7Z6gbQtoL5TaN05nMKngIGbXd/\nI+pUiCYXR6pok7RnFa5cUpBWKg2eCc3qch+UnGCx6hWdoGhyuvopGUp4H2v/8FYF\nE2y5Aj6Aja3+bYROx7bq4w34Xdi7uxRTf1NwyhqBVTBW6SsaocZdnSOXGtywm9Aw\nJ2yzq2UeAsqZ4/JU7TqDLfJIshJA29oo25N/Uu5lGAhwvKkLcBTAusNJly8ojC8D\nPXaUNIXprCP+hA/TpxAN4iVOyGb/4lRFAbTxmGEVUnkiBEoSmau8Zo5XsYB3Sif7\nNOlRXL0ycmzVxwrCV+ohSPBn6PF08axn89XHcFobcfv7A/oQ/u1HxLEVKY9NxAOY\niCSTTAaFf2moS/aUMtEsKTJ0TxnV1pvvMfDeob+VUsVJxnaHOM6XZYNEBsnUbu/g\nSNoq4Yt2G/fQR7m+QuaGJ4osre4i8a1C7cQ6rhfjuT760SvxNMrSIWSvMdZR38c6\neSyso7J9Y+W5OHC+ztK0\n=RHqk\n-----END PGP SIGNATURE-----\n"
 }

@@ -1,18 +1,24 @@
 module.exports = {
   mode: 'modules',
   out: 'dist/typedoc',
+  readme: 'packages/taquito/README.md',
   exclude: [
-    'integration-tests/**/*.ts',
-    'example/**/*.ts',
+    '**/*.spec.ts',
     '**/data/**',
-    '**/test/**',
-    '**/rollup*.ts',
     '**/dist/**',
     '**/node_modules/**',
-    '**/*.spec.ts',
-    "website/**/*"
+    '**/rollup*.ts',
+    '**/test/**',
+    'example/**/*.ts',
+    'integration-tests/**/*.ts',
+    'packages/taquito-michel-codec/formatter/*.ts',
+    'packages/taquito/example',
+    'packages/taquito/react-components',
+    'packages/taquito/website',
+    'website/**/*',
   ],
-  lernaExclude: ['@taquito/website'],
+  lernaExclude: [],
   name: 'Taquito',
-  excludePrivate: true
+  excludePrivate: true,
+  excludeNotExported: true
 };

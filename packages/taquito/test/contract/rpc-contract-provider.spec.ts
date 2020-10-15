@@ -1,4 +1,5 @@
 import { RpcContractProvider } from '../../src/contract/rpc-contract-provider';
+import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import {
   sample,
   sampleStorage,
@@ -8,6 +9,9 @@ import {
   ligoSample,
   tokenInit,
   tokenCode,
+  sampleBigMapAbstractionValue,
+  miInit,
+  miStorage,
 } from './data';
 import BigNumber from 'bignumber.js';
 import { Context } from '../../src/context';
@@ -21,7 +25,8 @@ import {
 } from '../../src/constants';
 import { InvalidDelegationSource } from '../../src/contract/errors';
 import { preapplyResultFrom } from './helper';
-import { MichelsonMap } from '@taquito/michelson-encoder';
+import { MichelsonMap, Schema } from '@taquito/michelson-encoder';
+import { BigMapAbstraction } from '../../src/contract/big-map';
 
 /**
  * RPCContractProvider test
@@ -31,6 +36,7 @@ describe('RpcContractProvider test', () => {
   let mockRpcClient: {
     getScript: jest.Mock<any, any>;
     getStorage: jest.Mock<any, any>;
+    getBigMapExpr: jest.Mock<any, any>;
     getBigMapKey: jest.Mock<any, any>;
     getBlockHeader: jest.Mock<any, any>;
     getEntrypoints: jest.Mock<any, any>;
@@ -40,6 +46,7 @@ describe('RpcContractProvider test', () => {
     getBlockMetadata: jest.Mock<any, any>;
     forgeOperations: jest.Mock<any, any>;
     injectOperation: jest.Mock<any, any>;
+    packData: jest.Mock<any, any>;
     preapplyOperations: jest.Mock<any, any>;
     getChainId: jest.Mock<any, any>;
   };
@@ -69,6 +76,7 @@ describe('RpcContractProvider test', () => {
 
   beforeEach(() => {
     mockRpcClient = {
+      getBigMapExpr: jest.fn(),
       getEntrypoints: jest.fn(),
       getBlock: jest.fn(),
       getScript: jest.fn(),
@@ -80,6 +88,7 @@ describe('RpcContractProvider test', () => {
       getContract: jest.fn(),
       forgeOperations: jest.fn(),
       injectOperation: jest.fn(),
+      packData: jest.fn(),
       preapplyOperations: jest.fn(),
       getChainId: jest.fn(),
     };
@@ -110,12 +119,19 @@ describe('RpcContractProvider test', () => {
       mockEstimate as any
     );
 
+    mockRpcClient.getBigMapExpr.mockResolvedValue({
+      prim: 'Pair',
+      args: [{ int: '100' }, []],
+    });
     mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
     mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
     mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
     mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
     mockSigner.publicKey.mockResolvedValue('test_pub_key');
     mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+    mockRpcClient.packData.mockResolvedValue({
+      packed: '747a325542477245424b7a7a5736686a586a78786951464a4e6736575232626d3647454e',
+    });
     mockRpcClient.preapplyOperations.mockResolvedValue([]);
     mockRpcClient.getChainId.mockResolvedValue('chain-id');
   });
@@ -139,6 +155,7 @@ describe('RpcContractProvider test', () => {
     it('should call getBigMapKey', async done => {
       mockRpcClient.getScript.mockResolvedValue({ code: [sample] });
       mockRpcClient.getBigMapKey.mockResolvedValue(sampleBigMapValue);
+      // tslint:disable-next-line: deprecation
       const result = await rpcContractProvider.getBigMapKey(
         'test',
         'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn'
@@ -161,13 +178,53 @@ describe('RpcContractProvider test', () => {
     });
   });
 
+  describe('BigMapAbstraction', () => {
+    it('returns undefined on bad key in BigMap', async done => {
+      const expectedError = new HttpResponseError(
+        'fail',
+        STATUS_CODE.NOT_FOUND,
+        'err',
+        'test',
+        'https://test.com'
+      );
+      mockRpcClient.getBigMapExpr.mockRejectedValue(expectedError);
+      const schema = new Schema(sampleBigMapAbstractionValue);
+      const bigMap = new BigMapAbstraction(
+        new BigNumber('tz2UBGrEBKzzW6hjXjxxiQFJNg6WR2bm6GEN'),
+        schema,
+        rpcContractProvider
+      );
+      const returnValue = await bigMap.get('test');
+      expect(returnValue).toEqual(undefined);
+      done();
+    });
+    it('returns error if error is not 404 from key lookup in BigMap', async done => {
+      const expectedError = new HttpResponseError(
+        'fail',
+        STATUS_CODE.FORBIDDEN,
+        'err',
+        'test',
+        'https://test.com'
+      );
+      mockRpcClient.getBigMapExpr.mockRejectedValue(expectedError);
+      const schema = new Schema(sampleBigMapAbstractionValue);
+      const bigMap = new BigMapAbstraction(
+        new BigNumber('tz2UBGrEBKzzW6hjXjxxiQFJNg6WR2bm6GEN'),
+        schema,
+        rpcContractProvider
+      );
+      await expect(bigMap.get('test')).rejects.toEqual(expectedError);
+      done();
+    });
+  });
+
   describe('originate', () => {
     it('should produce a reveal and origination operation', async done => {
       const result = await rpcContractProvider.originate({
         delegate: 'test_delegate',
         balance: '200',
         code: miStr,
-        init: '{}',
+        init: miInit,
         fee: 10000,
         gasLimit: 10600,
         storageLimit: 257,
@@ -187,10 +244,7 @@ describe('RpcContractProvider test', () => {
               kind: 'origination',
               script: {
                 code: miSample,
-                storage: {
-                  args: [],
-                  prim: '{}',
-                },
+                storage: miStorage,
               },
               source: 'test_pub_key_hash',
               storage_limit: '257',
@@ -203,16 +257,15 @@ describe('RpcContractProvider test', () => {
       });
       done();
     });
-
     it('estimate when no fees are specified', async done => {
-      const estimate = new Estimate(1000, 1000, 180);
+      const estimate = new Estimate(1000, 1000, 180, 1000);
       mockEstimate.originate.mockResolvedValue(estimate);
 
       const result = await rpcContractProvider.originate({
         delegate: 'test_delegate',
         balance: '200',
         code: miStr,
-        init: '{}',
+        init: miInit,
       });
       expect(result.raw).toEqual({
         counter: 0,
@@ -229,10 +282,7 @@ describe('RpcContractProvider test', () => {
               kind: 'origination',
               script: {
                 code: miSample,
-                storage: {
-                  args: [],
-                  prim: '{}',
-                },
+                storage: miStorage,
               },
               source: 'test_pub_key_hash',
               storage_limit: estimate.storageLimit.toString(),
@@ -284,6 +334,48 @@ describe('RpcContractProvider test', () => {
       });
       done();
     });
+
+    it('should deal with code properties in atypical order', async done => {
+      const order1 = ['storage', 'code', 'parameter'];
+      const result = await rpcContractProvider.originate({
+        delegate: 'test_delegate',
+        balance: '200',
+        code: miSample
+          .concat()
+          .sort((a: any, b: any) => order1.indexOf(a.prim) - order1.indexOf(b.prim)),
+        init: { int: '0' },
+        fee: 10000,
+        gasLimit: 10600,
+        storageLimit: 257,
+      });
+      expect(result.raw).toEqual({
+        counter: 0,
+        opOb: {
+          branch: 'test',
+          contents: [
+            revealOp('test_pub_key_hash'),
+            {
+              balance: '200000000',
+              counter: '2',
+              delegate: 'test_delegate',
+              fee: '10000',
+              gas_limit: '10600',
+              kind: 'origination',
+              script: {
+                code: miSample,
+                storage: { int: '0' },
+              },
+              source: 'test_pub_key_hash',
+              storage_limit: '257',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        opbytes: 'test',
+      });
+      done();
+    });
   });
 
   describe('transfer', () => {
@@ -321,7 +413,7 @@ describe('RpcContractProvider test', () => {
     });
 
     it('should estimate when no fee are specified', async done => {
-      const estimate = new Estimate(1000, 1000, 180);
+      const estimate = new Estimate(1000, 1000, 180, 1000);
       mockEstimate.transfer.mockResolvedValue(estimate);
 
       const result = await rpcContractProvider.transfer({
@@ -509,7 +601,7 @@ describe('RpcContractProvider test', () => {
 
   describe('setDelegate', () => {
     it('should produce a reveal and delegation operation', async done => {
-      const estimate = new Estimate(1000, 1000, 180);
+      const estimate = new Estimate(1000000, 1000, 180, 1000);
       mockEstimate.setDelegate.mockResolvedValue(estimate);
       const result = await rpcContractProvider.setDelegate({
         source: 'test_source',
@@ -540,7 +632,7 @@ describe('RpcContractProvider test', () => {
     });
 
     it('should throw InvalidDelegationSource when setting a KT1 address in babylon', async done => {
-      const estimate = new Estimate(1000, 1000, 180);
+      const estimate = new Estimate(1000, 1000, 180, 1000);
       mockEstimate.setDelegate.mockResolvedValue(estimate);
       mockRpcClient.getBlockMetadata.mockResolvedValue({
         next_protocol: Protocols.PsBabyM1,
@@ -561,7 +653,7 @@ describe('RpcContractProvider test', () => {
 
   describe('registerDelegate', () => {
     it('should produce a reveal and delegation operation', async done => {
-      const estimate = new Estimate(1000, 1000, 180);
+      const estimate = new Estimate(1000000, 1000, 180, 1000);
       mockEstimate.registerDelegate.mockResolvedValue(estimate);
       const result = await rpcContractProvider.registerDelegate({});
       expect(result.raw).toEqual({

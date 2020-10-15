@@ -6,13 +6,33 @@
       "items": [
         "quick_start",
         "boilerplate",
+        "wallet_API",
         "making_transfers",
         "originate",
         "set_delegate",
-        "smartcontracts"
+        "smartcontracts",
+        "estimate",
+        "validators",
+        "maps_bigmaps",
+        "web3js_taquito",
+        "rpc_package"
       ]
     },
-    { "type": "category", "label": "Signer", "items": ["inmemory_signer", "tezbridge_signer"] },
+    {
+      "type": "category",
+      "label": "Signer",
+      "items": ["inmemory_signer", "tezbridge_signer", "ledger_signer"]
+    },
+    {
+      "type": "category",
+      "label": "Advanced",
+      "items": ["complex_parameters", "storage_annotations", "drain_account"]
+    },
+    {
+      "type": "category",
+      "label": "Running integration tests",
+      "items": ["ledger_integration_test"]
+    },
     {
       "type": "link",
       "label": "TypeDoc Reference",

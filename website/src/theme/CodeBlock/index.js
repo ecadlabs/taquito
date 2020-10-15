@@ -5,7 +5,22 @@
  * LICENSE file in the root directory of this source tree.
  */
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import { TezosToolkit } from '@taquito/taquito';
+import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
+import { 
+  validateAddress, 
+  validateChain, 
+  validateKeyHash, 
+  validateContractAddress, 
+  validatePublicKey, 
+  validateSignature, 
+  b58cencode, 
+  prefix, 
+  Prefix 
+} from '@taquito/utils';
+import {  BeaconWallet } from '@taquito/beacon-wallet';
+import { InMemorySigner } from '@taquito/signer';
+import { LedgerSigner, DerivationType } from '@taquito/ledger-signer';
+import TransportU2F from "@ledgerhq/hw-transport-u2f";
 import Playground from '@theme/Playground';
 import classnames from 'classnames';
 import Clipboard from 'clipboard';
@@ -28,7 +43,7 @@ export default ({
 }) => {
   const {
     siteConfig: {
-      themeConfig: {prism = {}},
+      themeConfig: { prism = {} },
     },
   } = useDocusaurusContext();
   const [showCopied, setShowCopied] = useState(false);
@@ -62,7 +77,23 @@ export default ({
 
     return (
       <Playground
-        scope={{...React, Tezos}}
+        scope={{ ...React, 
+          Tezos, 
+          validateAddress, 
+          validateChain, 
+          validateKeyHash, 
+          validateContractAddress, 
+          validatePublicKey, 
+          validateSignature, 
+          b58cencode, 
+          prefix, 
+          Prefix, 
+          MichelsonMap, 
+          BeaconWallet, 
+          InMemorySigner, 
+          LedgerSigner, 
+          DerivationType, 
+          TransportU2F }}
         code={children.trim()}
         theme={prism.theme || defaultTheme}
         transformCode={code => code.replace(/import .*/g, '')}
@@ -91,14 +122,14 @@ export default ({
       theme={prism.theme || defaultTheme}
       code={children.trim()}
       language={language}>
-      {({className, style, tokens, getLineProps, getTokenProps}) => (
+      {({ className, style, tokens, getLineProps, getTokenProps }) => (
         <div className={styles.codeBlockWrapper}>
           <pre
             ref={target}
             className={classnames(className, styles.codeBlock)}
             style={style}>
             {tokens.map((line, i) => {
-              const lineProps = getLineProps({line, key: i});
+              const lineProps = getLineProps({ line, key: i });
 
               if (highlightLines.includes(i + 1)) {
                 lineProps.className = `${lineProps.className} docusaurus-highlight-code-line`;
@@ -107,7 +138,7 @@ export default ({
               return (
                 <div key={i} {...lineProps}>
                   {line.map((token, key) => (
-                    <span key={key} {...getTokenProps({token, key})} />
+                    <span key={key} {...getTokenProps({ token, key })} />
                   ))}
                 </div>
               );

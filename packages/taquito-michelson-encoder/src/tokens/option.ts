@@ -25,9 +25,12 @@ export class OptionToken extends Token {
     const value = args;
     if (
       value === undefined ||
-      value === null ||
-      (Array.isArray(value) && (value[0] === undefined || value[0] === null))
+      value === null
     ) {
+      return { prim: 'None' };
+    }
+    else if ((Array.isArray(value) && (value[value.length-1] === undefined || value[value.length-1] === null))) {
+      value.pop();
       return { prim: 'None' };
     }
 

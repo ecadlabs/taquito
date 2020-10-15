@@ -8,16 +8,21 @@
     "deploy": "docusaurus deploy"
   },
   "dependencies": {
-    "@docusaurus/core": "^2.0.0-alpha.39",
-    "@docusaurus/preset-classic": "^2.0.0-alpha.39",
-    "@docusaurus/theme-live-codeblock": "^2.0.0-alpha.39",
-    "@fortawesome/fontawesome-svg-core": "^1.2.26",
-    "@fortawesome/free-solid-svg-icons": "^5.12.0",
-    "@fortawesome/react-fontawesome": "^0.1.8",
-    "@taquito/taquito": "^6.0.3-beta.1",
+    "@docusaurus/core": "^2.0.0-alpha.63",
+    "@docusaurus/preset-classic": "^2.0.0-alpha.63",
+    "@docusaurus/theme-live-codeblock": "^2.0.0-alpha.63",
+    "@fortawesome/fontawesome-svg-core": "^1.2.32",
+    "@fortawesome/free-solid-svg-icons": "^5.15.1",
+    "@fortawesome/react-fontawesome": "^0.1.11",
+    "@ledgerhq/hw-transport-u2f": "^5.25.3",
+    "@taquito/beacon-wallet": "^6.3.5-beta.0",
+    "@taquito/ledger-signer": "^6.4.0-ledger.0",
+    "@taquito/signer": "^6.3.5-beta.0",
+    "@taquito/taquito": "^6.3.5-beta.0",
+    "@taquito/utils": "^6.3.5-beta.0",
     "classnames": "^2.2.6",
-    "react": "^16.10.2",
-    "react-dom": "^16.10.2"
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
   },
   "browserslist": {
     "production": [

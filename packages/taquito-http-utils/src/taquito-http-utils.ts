@@ -15,7 +15,9 @@ interface HttpRequestOptions {
   url: string;
   method?: 'GET' | 'POST';
   timeout?: number;
+  json?: boolean;
   query?: { [key: string]: any };
+  headers?: { [key: string]: string };
 }
 
 export class HttpResponseError implements Error {
@@ -82,18 +84,28 @@ export class HttpBackend {
    *
    * @param options contains options to be passed for the HTTP request (url, method and timeout)
    */
-  createRequest<T>({ url, method, timeout, query }: HttpRequestOptions, data?: {}) {
+  createRequest<T>(
+    { url, method, timeout, query, headers = {}, json = true }: HttpRequestOptions,
+    data?: {}
+  ) {
     return new Promise<T>((resolve, reject) => {
       const request = this.createXHR();
       request.open(method || 'GET', `${url}${this.serialize(query)}`);
       request.setRequestHeader('Content-Type', 'application/json');
+      for (const k in headers) {
+        request.setRequestHeader(k, headers[k]);
+      }
       request.timeout = timeout || defaultTimeout;
       request.onload = function() {
         if (this.status >= 200 && this.status < 300) {
-          try {
-            resolve(JSON.parse(request.response));
-          } catch (ex) {
-            reject(new Error(`Unable to parse response: ${request.response}`));
+          if (json) {
+            try {
+              resolve(JSON.parse(request.response));
+            } catch (ex) {
+              reject(new Error(`Unable to parse response: ${request.response}`));
+            }
+          } else {
+            resolve(request.response);
           }
         } else {
           reject(

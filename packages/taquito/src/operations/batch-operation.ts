@@ -1,14 +1,17 @@
+import { OperationContentsAndResult, OperationResultStatusEnum } from '@taquito/rpc';
+import { BATCH_KINDS } from '../batch/rpc-batch-provider';
+import { Context } from '../context';
+import { flattenErrors, flattenOperationResult } from './operation-errors';
+import { Operation } from './operations';
 import {
-  RPCOperation,
-  GasConsumingOperation,
-  StorageConsumingOperation,
   FeeConsumingOperation,
   ForgedBytes,
+  GasConsumingOperation,
+  RPCOperation,
+  StorageConsumingOperation,
+  hasMetadata,
+  hasMetadataWithResult,
 } from './types';
-import { Operation } from './operations';
-import { OperationContentsAndResult } from '@taquito/rpc';
-import { Context } from '../context';
-import { flattenOperationResult, flattenErrors } from './operation-errors';
 
 export class BatchOperation extends Operation
   implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation {
@@ -27,6 +30,20 @@ export class BatchOperation extends Operation
     return arr.reduce((prev, current) => {
       return prop in current ? Number(current[prop]) + prev : prev;
     }, 0);
+  }
+
+  public get status() {
+    return (
+      this.results
+        .filter(result => BATCH_KINDS.indexOf(result.kind) !== -1)
+        .map(result => {
+          if (hasMetadataWithResult(result)) {
+            return result.metadata.operation_result.status;
+          } else {
+            return 'unknown';
+          }
+        })[0] || 'unknown'
+    );
   }
 
   get fee() {

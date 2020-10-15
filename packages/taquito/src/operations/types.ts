@@ -15,6 +15,23 @@ export type ParamsWithKind =
   | withKind<TransferParams, OpKind.TRANSACTION>
   | withKind<ActivationParams, OpKind.ACTIVATION>;
 
+export const attachKind = <T, K extends OpKind>(op: T, kind: K) => {
+  return { ...op, kind } as withKind<T, K>;
+};
+
+export const findWithKind = <T extends { kind: OpKind }, K extends OpKind>(
+  arr: T[],
+  kind: K
+): (T & { kind: K }) | undefined => {
+  if (Array.isArray(arr)) {
+    const found = arr.find(op => op.kind === kind);
+
+    if (found && isKind(found, kind)) {
+      return found;
+    }
+  }
+};
+
 export const isKind = <T extends { kind: OpKind }, K extends OpKind>(
   op: T,
   kind: K
@@ -51,6 +68,34 @@ export const isSourceOp = <T extends { kind: OpKind }>(op: T): op is withKind<T,
   return ['transaction', 'delegation', 'origination', 'reveal', 'ballot'].indexOf(op.kind) !== -1;
 };
 
+export const hasMetadata = <T extends { kind: OpKind }, K>(
+  op: T
+): op is T & {
+  metadata: K;
+} => {
+  return 'metadata' in op;
+};
+
+export const hasMetadataWithResult = <T extends { kind: OpKind }, K>(
+  op: T
+): op is T & {
+  metadata: {
+    operation_result: K;
+  };
+} => {
+  return hasMetadata<T, any>(op) && 'operation_result' in op.metadata;
+};
+
+export const hasMetadataWithInternalOperationResult = <T extends { kind: OpKind }, K>(
+  op: T
+): op is T & {
+  metadata: {
+    internal_operation_results?: K;
+  };
+} => {
+  return hasMetadata<T, any>(op) && 'internal_operation_results' in op.metadata;
+};
+
 export interface GasConsumingOperation {
   consumedGas?: string;
   gasLimit: number;
@@ -81,13 +126,15 @@ export type OriginateParamsBase = {
 export type OriginateParams = OriginateParamsBase &
   (
     | {
-        init?: never;
-        storage: any;
-      }
+      init?: never;
+      /** JS representation of a storage object */
+      storage: any;
+    }
     | {
-        init: string | object;
-        storage?: never;
-      }
+      /** Initial storage object value. Either Micheline or JSON encoded */
+      init: string | object;
+      storage?: never;
+    }
   );
 
 export interface ActivationParams {

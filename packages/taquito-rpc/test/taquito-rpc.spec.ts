@@ -222,6 +222,7 @@ describe('RpcClient test', () => {
 
   describe('getBigMapKey', () => {
     it('query the right url', async done => {
+      // tslint:disable-next-line: deprecation
       await client.getBigMapKey('address', { key: 'test', type: 'string' } as any);
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'POST',
@@ -978,6 +979,15 @@ describe('RpcClient test', () => {
         url: 'root/chains/test/blocks/head/context/big_maps/1/2',
       });
       done();
+    });
+  });
+
+  describe('getRpcUrl', () => {
+    it('return the RPC Url', () => {
+      const rpcUrlMainnet = (new RpcClient()).getRpcUrl()
+      expect(rpcUrlMainnet).toEqual('https://api.tez.ie/rpc/mainnet');
+      const rpcUrlCarthagenet = (new RpcClient('https://api.tez.ie/rpc/carthagenet')).getRpcUrl()
+      expect(rpcUrlCarthagenet).toEqual('https://api.tez.ie/rpc/carthagenet');
     });
   });
 });
