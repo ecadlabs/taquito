@@ -566,9 +566,9 @@ cases.forEach(({ name, operation, expected }) => {
     done();
   });
 
-  ['https://api.tez.ie/rpc/babylonnet', 'https://api.tez.ie/rpc/carthagenet'].forEach(rpc => {
+  ['https://api.tez.ie/rpc/delphinet', 'https://api.tez.ie/rpc/carthagenet'].forEach(rpc => {
     integrationTest(`Integration test: ${name} (${rpc})`, async done => {
-      const Tezos = new TezosToolkit();
+      const Tezos = new TezosToolkit(rpc);
       Tezos.setProvider({ rpc });
       const result = await localForger.forge(operation);
 

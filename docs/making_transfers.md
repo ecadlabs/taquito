@@ -20,7 +20,8 @@ await Tezos.contract.transfer({ to: contract.address, amount: 1 })
 
 In the following example we will transfer 0.5ꜩ from a `tz1aaYoabvj2DQtpHz74Z83fSNjY29asdBfZ` address that will sign the operation to `tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY`.
 ```js live noInline
-Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/carthagenet' });
+// import { TezosToolkit } from '@taquito/taquito';
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
 
 render(`Fetching a private key...`);
 fetch('https://api.tez.ie/keys/carthagenet/', {
@@ -30,7 +31,7 @@ fetch('https://api.tez.ie/keys/carthagenet/', {
   .then(response => response.text())
   .then(privateKey => {
     render(`Importing the private key...`);
-    return Tezos.importKey(privateKey);
+    return importKey(Tezos, privateKey);
   })
   .then(() => {
     const amount = 0.5;

@@ -1,51 +1,43 @@
 import { RpcClient } from '@taquito/rpc';
-import { importKey } from '@taquito/signer';
 import { Protocols } from './constants';
-import { Context, Config, TaquitoProvider } from './context';
+import { Config, Context, TaquitoProvider } from './context';
 import { ContractProvider, EstimationProvider } from './contract/interface';
-import { RpcContractProvider } from './contract/rpc-contract-provider';
-import { RPCEstimateProvider } from './contract/rpc-estimate-provider';
+import { Forger } from './forger/interface';
+import { RpcForger } from './forger/rpc-forger';
 import { format } from './format';
 import { Signer } from './signer/interface';
 import { NoopSigner } from './signer/noop';
 import { SubscribeProvider } from './subscribe/interface';
 import { PollingSubscribeProvider } from './subscribe/polling-provider';
 import { TzProvider } from './tz/interface';
-import { RpcTzProvider } from './tz/rpc-tz-provider';
-import { Forger } from './forger/interface';
-import { RpcForger } from './forger/rpc-forger';
-import { RPCBatchProvider } from './batch/rpc-batch-provider';
+import { LegacyWalletProvider, Wallet, WalletProvider } from './wallet';
+import { OperationFactory } from './wallet/opreation-factory';
 
-export * from './signer/interface';
-export * from './subscribe/interface';
-export * from './forger/interface';
-export * from './tz/interface';
+export { MichelsonMap, UnitValue } from '@taquito/michelson-encoder';
+export * from './constants';
+export * from './context';
+export { TaquitoProvider } from './context';
 export * from './contract';
 export * from './contract/big-map';
-export * from './constants';
-
-export { OpKind } from './operations/types';
-
-export { TaquitoProvider } from './context';
-export { PollingSubscribeProvider } from './subscribe/polling-provider';
-export { RpcForger } from './forger/rpc-forger';
 export { CompositeForger } from './forger/composite-forger';
-export {
-  MichelsonMap,
-  MichelsonMapKey,
-  MapTypecheckError,
-  UnitValue,
-} from '@taquito/michelson-encoder';
-
+export * from './forger/interface';
+export { RpcForger } from './forger/rpc-forger';
 export {
   TezosOperationError,
   TezosOperationErrorWithMessage,
   TezosPreapplyFailureError,
 } from './operations/operation-errors';
-
+export { OpKind } from './operations/types';
+export * from './signer/interface';
+export * from './subscribe/interface';
 export { SubscribeProvider } from './subscribe/interface';
+export { PollingSubscribeProvider } from './subscribe/polling-provider';
+export * from './tz/interface';
+export * from './wallet';
+
 export interface SetProviderOptions {
   forger?: Forger;
+  wallet?: WalletProvider;
   rpc?: string | RpcClient;
   stream?: string | SubscribeProvider;
   signer?: Signer;
@@ -55,22 +47,27 @@ export interface SetProviderOptions {
 
 /**
  * @description Facade class that surfaces all of the libraries capability and allow it's configuration
+ * 
+ * @param _rpc The RPC server to use
  */
 export class TezosToolkit {
-  private _rpcClient = new RpcClient();
   private _stream!: SubscribeProvider;
   private _options: SetProviderOptions = {};
-
-  private _context: Context = new Context();
-
-  private _tz = new RpcTzProvider(this._context);
-  private _estimate = new RPCEstimateProvider(this._context);
-  private _contract = new RpcContractProvider(this._context, this._estimate);
-  private _batch = new RPCBatchProvider(this._context, this._estimate);
+  private _rpcClient: RpcClient
+  private _wallet: Wallet;
 
   public readonly format = format;
 
-  constructor() {
+  constructor(
+    private _rpc: RpcClient | string,
+    private _context: Context = new Context(_rpc)
+  ) {
+    if (typeof this._rpc === 'string') {
+      this._rpcClient = new RpcClient(this._rpc);
+    } else {
+      this._rpcClient = this._rpc;
+    }
+    this._wallet = new Wallet(this._context);
     this.setProvider({ rpc: this._rpcClient });
   }
 
@@ -83,11 +80,13 @@ export class TezosToolkit {
    * @example Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: 300 }})
    *
    */
-  setProvider({ rpc, stream, signer, protocol, config, forger }: SetProviderOptions) {
+
+  setProvider({ rpc, stream, signer, protocol, config, forger, wallet }: SetProviderOptions) {
     this.setRpcProvider(rpc);
     this.setStreamProvider(stream);
     this.setSignerProvider(signer);
     this.setForgerProvider(forger);
+    this.setWalletProvider(wallet);
 
     this._context.proto = protocol;
     this._context.config = config as Required<Config>;
@@ -124,9 +123,10 @@ export class TezosToolkit {
       this._rpcClient = new RpcClient(rpc);
     } else if (rpc instanceof RpcClient) {
       this._rpcClient = rpc;
-    } else if (this._options.rpc === undefined) {
+    } 
+/*     else if (this._options.rpc === undefined) {
       this._rpcClient = new RpcClient();
-    }
+    } */
     this._options.rpc = this._rpcClient;
     this._context.rpc = this._rpcClient;
   }
@@ -140,7 +140,7 @@ export class TezosToolkit {
    *
    */
   setForgerProvider(forger?: SetProviderOptions['forger']) {
-    const f = typeof forger === 'undefined' ? new RpcForger(this._context) : forger;
+    const f = typeof forger === 'undefined' ? this.getFactory(RpcForger)() : forger;
     this._options.forger = f;
     this._context.forger = f;
   }
@@ -159,32 +159,59 @@ export class TezosToolkit {
     } else if (typeof stream !== 'undefined') {
       this._stream = stream;
     } else if (this._options.stream === undefined) {
-      this._stream = new PollingSubscribeProvider(this._context);
+      this._stream = this.getFactory(PollingSubscribeProvider)();
     }
     this._options.stream = stream;
+  }
+
+  /**
+   * @description Sets wallet provider on the Tezos Taquito instance
+   *
+   * @param options wallet to use to interact with the Tezos network
+   *
+   * @example Tezos.setWalletProvider(...)
+   *
+   */
+  setWalletProvider(wallet?: SetProviderOptions['wallet']) {
+    if (!this._options.wallet && typeof wallet === 'undefined') {
+      const w = this.getFactory(LegacyWalletProvider)();
+      this._options.wallet = w;
+      this._context.walletProvider = w;
+    } else if (typeof wallet !== 'undefined') {
+      this._options.wallet = wallet;
+      this._context.walletProvider = wallet;
+    }
   }
 
   /**
    * @description Provide access to tezos account management
    */
   get tz(): TzProvider {
-    return this._tz;
+    return this._context.tz;
   }
 
   /**
    * @description Provide access to smart contract utilities
    */
   get contract(): ContractProvider {
-    return this._contract;
+    return this._context.contract;
   }
 
-  public batch = this._batch.batch.bind(this._batch);
+  get wallet(): Wallet {
+    return this._wallet;
+  }
+
+  get operation(): OperationFactory {
+    return this._context.operationFactory;
+  }
+
+  public batch = this._context.batch.batch.bind(this._context.batch);
 
   /**
    * @description Provide access to operation estimation utilities
    */
   get estimate(): EstimationProvider {
-    return this._estimate;
+    return this._context.estimate;
   }
 
   /**
@@ -208,13 +235,6 @@ export class TezosToolkit {
     return this._context.signer;
   }
 
-  /**
-   * @deprecated Deprecated in favor of setting the signer provider with @taquito/signer importKey
-   */
-  importKey(privateKeyOrEmail: string, passphrase?: string, mnemonic?: string, secret?: string) {
-    return importKey(this, privateKeyOrEmail, passphrase, mnemonic, secret);
-  }
-
   getFactory<T, K extends Array<any>>(ctor: TaquitoProvider<T, K>) {
     return (...args: K) => {
       return new ctor(this._context, ...args);
@@ -225,4 +245,4 @@ export class TezosToolkit {
 /**
  * @description Default Tezos toolkit instance
  */
-export const Tezos = new TezosToolkit();
+export const Tezos = (rpcClient: RpcClient | string) => new TezosToolkit(rpcClient);

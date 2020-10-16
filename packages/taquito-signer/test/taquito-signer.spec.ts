@@ -1,7 +1,7 @@
 import { InMemorySigner } from '../src/taquito-signer';
 
 describe('inmemory-signer', () => {
-  it('fromFundraiser', async done => {
+  it('fromFundraiser', async (done) => {
     const signer = InMemorySigner.fromFundraiser(
       'rtphpwty.yohjelcp@tezos.example.org',
       'HMYlTEu0EF',
@@ -28,35 +28,35 @@ describe('inmemory-signer', () => {
     done();
   });
 
-  it('Invalid key', async done => {
-    expect(function() {
+  it('Invalid key', async (done) => {
+    expect(function () {
       const signer = new InMemorySigner('test');
     }).toThrow('Unsupported key type');
     done();
   });
 
-  it('(tz1) Invalid key unable to decode', async done => {
-    expect(function() {
+  it('(tz1) Invalid key unable to decode', async (done) => {
+    expect(function () {
       const signer = new InMemorySigner('edsk4TjJWEszkHKono7XMnepqwi37FrbVt1KCsifJeAGimxheShG');
     }).toThrow('Invalid checksum');
     done();
   });
 
-  it('(tz2) Invalid key unable to decode', async done => {
-    expect(function() {
+  it('(tz2) Invalid key unable to decode', async (done) => {
+    expect(function () {
       const signer = new InMemorySigner('spsk4TjJWEszkHKono7XMnepqwi37FrbVt1KCsifJeAGimxheShG');
     }).toThrow('Invalid checksum');
     done();
   });
 
-  it('(tz3) Invalid key unable to decode', async done => {
-    expect(function() {
+  it('(tz3) Invalid key unable to decode', async (done) => {
+    expect(function () {
       const signer = new InMemorySigner('p2sk4TjJWEszkHKono7XMnepqwi37FrbVt1KCsifJeAGimxheShG');
     }).toThrow('Invalid checksum');
     done();
   });
 
-  it('Tz1 64 bytes', async done => {
+  it('Tz1 64 bytes', async (done) => {
     const signer = new InMemorySigner(
       'edskS3DtVSbWbPD1yviMGebjYwWJtruMjDcfAZsH9uba22EzKeYhmQkkraFosFETmEMfFNVcDYQ5QbFerj9ozDKroXZ6mb5oxV'
     );
@@ -74,7 +74,7 @@ describe('inmemory-signer', () => {
     done();
   });
 
-  it('Tz1 32 bytes', async done => {
+  it('Tz1 32 bytes', async (done) => {
     const signer = new InMemorySigner('edsk4TjJWEszkHKono7XMnepVqwi37FrpbVt1KCsifJeAGimxheShG');
     expect(await signer.publicKey()).toEqual(
       'edpkuhmrbunxumoiVdQuxBZUPMmwkPt7yLtY5Qnua3VJVTLWr3vXXa'
@@ -90,7 +90,7 @@ describe('inmemory-signer', () => {
     done();
   });
 
-  it('Tz2', async done => {
+  it('Tz2', async (done) => {
     const signer = new InMemorySigner('spsk2rBDDeUqakQ42nBHDGQTtP3GErb6AahHPwF9bhca3Q5KA5HESE');
     expect(await signer.publicKey()).toEqual(
       'sppk7aqSksZan1AGXuKtCz9UBLZZ77e3ZWGpFxR7ig1Z17GneEhSSbH'
@@ -106,7 +106,16 @@ describe('inmemory-signer', () => {
     done();
   });
 
-  it('Tz3', async done => {
+  it('Tz2 with bytes producing public key that needs padding', async (done) => {
+    const signer = new InMemorySigner('spsk33kCcKpgrvXRQJB2GVGxAMxrSEmwKXLh2KR4ztLcbaCnQq3FFs');
+    expect(await signer.publicKeyHash()).toEqual('tz2JFbdFh1RVYuYX4gWbVQz9SAtqEZSwZaB8');
+    expect(await signer.publicKey()).toEqual(
+      'sppk7bFd7b4DWcabg4yw4N5q8rn9thycWmY21EJDCKfTskNiBH8RJrd'
+    );
+    done();
+  });
+
+  it('Tz3', async (done) => {
     const signer = new InMemorySigner('p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1');
     expect(await signer.publicKey()).toEqual(
       'p2pk66tTYL5EvahKAXncbtbRPBkAnxo3CszzUho5wPCgWauBMyvybuB'
@@ -122,7 +131,7 @@ describe('inmemory-signer', () => {
     done();
   });
 
-  it('Tz3 Encrypted', async done => {
+  it('Tz3 Encrypted', async (done) => {
     const signer = new InMemorySigner(
       'p2esk2TFqgNcoT4u99ut5doGTUFNwo9x4nNvkpM6YMLqXrt4SbFdQnqLM3hoAXLMB2uZYazj6LZGvcoYzk16H6Et',
       'test1234'
@@ -141,7 +150,7 @@ describe('inmemory-signer', () => {
     done();
   });
 
-  it('Tz3 Encrypted with bytes producing signature that needs padding', async done => {
+  it('Tz3 Encrypted with bytes producing signature that needs padding', async (done) => {
     const signer = new InMemorySigner('p2sk2ke47zhFz3znRZj39TW5KKS9VgfU1Hax7KeErgnShNe9oQFQUP');
     expect(await signer.publicKeyHash()).toEqual('tz3bBDnPj3Bvek1DeJtsTvicBUPEoTpm2ySt');
     expect(await signer.secretKey()).toEqual(

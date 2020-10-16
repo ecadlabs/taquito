@@ -6,51 +6,51 @@
         "files": [
           {
             "path": "dist/lib/ec-key.js",
-            "sha512": "f7c74da966f2e86cc8806c9b94679ffe43bc32a3d368f65a5349ce30a99c242ed77b345f0b389d36a0048aeeee72573426be9b7e946cc0feb6e113ada6320315"
+            "sha512": "9c07bfd146fb307548d528795213d75310a85cae21b0726b51ca367ae9b720e399bc0c28d43aee65129a153345f3253c6e5895bae209a2b7e4edffc82e5c26b7"
           },
           {
             "path": "dist/lib/ed-key.js",
-            "sha512": "c7313da8a677ad28fd48769e0d97195223343653847b2557d7881b08d90ce8c68cab862b0d9ad73731e24688dc4c2d64384a9e3d77a9ef4707f01e5cf413d75c"
+            "sha512": "62dbdb23883fd4a4c9b67c0381356595bda46fee720be189d963daabe3506a69a3b464821652f478460e7d8ca51a270f6f84c20818aec4d511b1d560a4dd1b11"
           },
           {
             "path": "dist/lib/import-key.js",
-            "sha512": "62f72617bf1383592c558dc026fc1d00f7780ea0503d527e67d5dce9e14fef15b073c9d581cacfebf3f5c63e22078e88980f6543c5d833663231b80f75d18bca"
+            "sha512": "4e1fad91017a63adf08343b4bc12b4916bcad9d6ae5fc4dc4df8ae5c6cd1a1d88340b2e1e17171e8a86cc2295e82d897ef53b5f296ed6cb3e44186d0e6de5228"
           },
           {
             "path": "dist/taquito-signer.es5.js",
-            "sha512": "a4f546ba427719c2cc95457fb8409d0af354dbd6fac778bac298f709cde3e9e591134cf7c7775bfbd80be6761d31a3d2c30008dcc8f2122800b506460e74b9e1"
+            "sha512": "a18843a908e102443c1a359b0500d02f322c2b17e69804d1d06c7a7117f1a3adfcf886f8607c63cee4717a9b28107e05eb3a803e057af544b9ee3283fdfae4ea"
           },
           {
             "path": "dist/lib/taquito-signer.js",
-            "sha512": "e0f71972acb4fe578c0f5880fadcc6dd4ae24d49f20783a6bd05981376807ceca21aa9ea21f9aa405aac54c6882128a9623a75a7023797b5d56d805adb78011f"
+            "sha512": "8393ae84654047172e7425c38a657ea1947e6ef7fdc61cd03cf2dbdce23a47f3cae7db277b067c2acaab1036be53a3729f2949daea5f289b7cd500e1113ae2ad"
           },
           {
             "path": "dist/taquito-signer.umd.js",
-            "sha512": "3e049972c0ebf006abd16a511feea0894ff83d5bb8c3884b3bb9b28ef5c224becbee9b1fbbcac07f4c820f46cf96380a74e65a32fbd6c17e43ec3d4eb151f452"
+            "sha512": "cb78a93ca519f8e1a05f573326fd7cf966db4eb5a5366dc48403ddd0c7480a7a5527debbbd72d14e32923df620354e03164b7357dba5acc9003cc35c939f07b9"
           },
           {
             "path": "dist/lib/ec-key.js.map",
-            "sha512": "bd143d963f56107c13a4708d69638d907b7ce7d609daace06cdd1adfea625d053a469cf2d844378bd80512cd307813ddb92704b8ef173cc6ccc9688ba3a821dc"
+            "sha512": "32e91cb313e87cad9448236e3d3b0056a8914e0c4ccf504769f053ef085cfeac6ae8fafca691b73bdb165f5549269591f80e56c29d912e13d49987c1ae7564a5"
           },
           {
             "path": "dist/lib/ed-key.js.map",
-            "sha512": "c5a0bed13a14d200f9e723be0a04f7f45119da075b72edce8ee3abb4843a98c3c346ae411e38556dd765b3e5ee4da8c4aba9c8617cb6da909d333714469bf8fe"
+            "sha512": "dc4ef8620f17657569480234eb94ef74081f6c2e6666f978230fc086091c03b52a1f3cb1a0a30143a7ba92d540a4b84dbf060ba02c41a1412c8bda311c93a508"
           },
           {
             "path": "dist/lib/import-key.js.map",
-            "sha512": "5332dce1ffdcb12520cc17f73453eb343a9b451917d8dd5f6a6576e2f2c6483ad504cc91f100ab05bb773fa9e96583955d1e2d8112326e3abe5e5c71e25c8655"
+            "sha512": "fc09ef439473335da7d5e3b91e9504ba072e9af1a5f448e4869470524068ab37f94b78c8cc56ad1a5455bfbfcff10e74a04fa500a112861e7bc8581bc185a00f"
           },
           {
             "path": "dist/taquito-signer.es5.js.map",
-            "sha512": "bc91a09dab641a7f665385c0aeef8675ca7b66222a82fc93848e44709950e5a450c92ac6ee15bccd2a243d7a7cb07a434d411b43d17542deac68278025b89a7b"
+            "sha512": "d916244e716cf938658d96fe400075b2f15e8750829db62df6af9819dbdf6875ab30c18187d3471adc3343b7fb960fc79f740d0204ae2539af8082be5a2937fe"
           },
           {
             "path": "dist/lib/taquito-signer.js.map",
-            "sha512": "c2af7de1dfd1c1816c6fdda0e40eb95a51b584a4b2eb004b8becf3bae77b0ef62bc0d40683281fbd1bd2a010a2f214e5899c3e90fdeaf30ce82da6769ac79943"
+            "sha512": "e0f29f97ad5aa7793affff2ac045017324989c68c5b91d0f9e92c31b00fe0bd0df96e1d06f6f59c17225a92c314d5868f2a8669da89d8a89e0c845bc1745c513"
           },
           {
             "path": "dist/taquito-signer.umd.js.map",
-            "sha512": "6d6364580d7177089f21ed72d017ff867e21498428416783e74047729e48259992d80e37c3cbf40e521ba6a4fe9dc19f12a441088dca8406a5e614836c39a2cb"
+            "sha512": "ed5c6213c076235ace3c0eb37eec7aad5c3ad85bcd086277361ab1b98781b4755ba4adfd612d1a2557599b127e4e3f53e80acf0468e03d49938aa38766343014"
           },
           {
             "path": "dist/types/ec-key.d.ts",
@@ -89,6 +89,7 @@
           "devDependencies",
           "engines",
           "files",
+          "gitHead",
           "jest",
           "keywords",
           "license",
@@ -102,7 +103,7 @@
           "typings",
           "version"
         ],
-        "sha512": "48ddeb1bf3713b3c2ad4bfc31e10b14803ec1d0b47e499b11311014f5ff63d7eb36c38bbb7dfc4b54a346e79645f8dbdc18194904442c2bc5c38ae978ffc37cb"
+        "sha512": "12eda1756753a0af5cf7db64ea6620f4e92f4da0ee4b078bccd34c6afcf07cf5a4ce76a9446cadcdbbfe196e589a38b02b576567c26c92360b8a61583a1aa553"
       }
     },
     {
@@ -110,7 +111,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/signer",
-          "version": "6.2.0-beta.0",
+          "version": "7.0.0-beta.pre.0",
           "description": "Provide signing functionality to be with taquito",
           "keywords": [
             "tezos",
@@ -176,47 +177,48 @@
             ]
           },
           "dependencies": {
-            "@taquito/utils": "^6.2.0-beta.0",
-            "bignumber.js": "^9.0.0",
+            "@taquito/utils": "^7.0.0-beta.pre.0",
+            "bignumber.js": "^9.0.1",
             "bip39": "^3.0.2",
-            "elliptic": "^6.5.1",
-            "libsodium-wrappers": "^0.7.5",
-            "pbkdf2": "^3.0.17",
+            "elliptic": "^6.5.3",
+            "libsodium-wrappers": "^0.7.8",
+            "pbkdf2": "^3.1.1",
             "typedarray-to-buffer": "^3.1.5"
           },
           "devDependencies": {
-            "@types/elliptic": "^6.4.9",
-            "@types/jest": "^23.3.2",
-            "@types/libsodium-wrappers": "^0.7.5",
-            "@types/node": "^10.14.13",
-            "@types/pbkdf2": "^3.0.0",
-            "colors": "^1.3.2",
-            "coveralls": "^3.0.2",
-            "cross-env": "^5.2.0",
-            "jest": "^24.8.0",
-            "jest-config": "^24.8.0",
-            "lint-staged": "^8.0.0",
+            "@types/elliptic": "^6.4.12",
+            "@types/jest": "^26.0.14",
+            "@types/libsodium-wrappers": "^0.7.8",
+            "@types/node": "^14.11.5",
+            "@types/pbkdf2": "^3.1.0",
+            "colors": "^1.4.0",
+            "coveralls": "^3.1.0",
+            "cross-env": "^7.0.2",
+            "jest": "^26.5.2",
+            "jest-config": "^26.5.2",
+            "lint-staged": "^10.4.0",
             "lodash.camelcase": "^4.3.0",
-            "prettier": "^1.14.3",
+            "prettier": "^2.1.2",
             "prompt": "^1.0.0",
-            "replace-in-file": "^3.4.2",
-            "rimraf": "^2.6.2",
-            "rollup": "^1.20.1",
+            "replace-in-file": "^6.1.0",
+            "rimraf": "^3.0.2",
+            "rollup": "^2.28.2",
             "rollup-plugin-json": "^4.0.0",
-            "rollup-plugin-sourcemaps": "^0.4.2",
-            "rollup-plugin-typescript2": "^0.22.1",
-            "shelljs": "^0.8.3",
-            "ts-jest": "^23.10.2",
-            "ts-node": "^7.0.1",
-            "tslint": "^5.11.0",
-            "tslint-config-prettier": "^1.15.0",
-            "tslint-config-standard": "^8.0.1",
-            "typedoc": "^0.15.0",
-            "typescript": "~3.6.0"
-          }
+            "rollup-plugin-sourcemaps": "^0.6.3",
+            "rollup-plugin-typescript2": "^0.27.3",
+            "shelljs": "^0.8.4",
+            "ts-jest": "^26.4.1",
+            "ts-node": "^9.0.0",
+            "tslint": "^6.1.3",
+            "tslint-config-prettier": "^1.18.0",
+            "tslint-config-standard": "^9.0.0",
+            "typedoc": "^0.19.2",
+            "typescript": "^4.0.3"
+          },
+          "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJekjaICRAD9Qy5GYHsngAAc9AQAD1jWC3zTvTagBlJYpK1wAiZ\nFAIjQhZIkzK8SfeCVX/sbjL64F/1TbGiK8e9/Ih6yWUO+8/yGz5yLN5fBmo3eJ6t\nGDZevuDQs2OgWM44PRdtGOcqNo7JreLXQpl4J3t3F7DcL36oEViTy0ZaVBoHza07\nXig9pJ4m5qmDJfi3njUzcNI/r0aXa7NIcDRkbvRuSm7VEBlNphMtDZq9w8KJ13md\npxznd+N4UyCAT0anuUVY2T/L7k3K3S1UbiLk6m8A5J3UHw93A147bbq3RnuDtN5+\n0c/24caR3aPsO5fs2emG1UxoyI3TZZoh+TtKxNIEom4RYkabS0z6yBdRlXZ4K8yE\n50Y34/oy3jnh79mA5Kw7765H6YeEJQbWM1y2FBKbKB+2zG4fPEBmfkQeyNDGmE/V\n2DEo2LtgeY5Fyn9v4dSQnvRKcrlREjGpz+lCdWT9hX9/WadR3isKBo0Ar1Yiscid\n/wLDI7SsnERexLSWSIKyUHVmRehPkcjKo2t5Ay6Q3AhTD5Gp8aZ5i7P1tIw7P1Qa\n2u5hUzjFLc2eOjbzpmxGpeWB4dTQx8yA3tN2C1AIqWj+GS1fhebI+zjivuvcyvRt\nLlH1X8VH4xDxdRdZw85CvYUnlJ902e33bu23ICPMwTiq2znKKxA8KRZLTJodeto/\nS1LPNxsk2m/czI2Uon4L\n=zRZd\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfgMjuCRAD9Qy5GYHsngAA1a8QAB7JoOjZ8GXZ4DWSGtWNxPFy\nHt8GdXXqxhhPd/g+e5cSCmTtbHCBDdDh0/xBveCvokGX4bh6sCcgP2MnxGePGNRm\nxmCdbSZGRET6dlzY6G9FkzV5toB+Co1ODDlL/zFl7Pw0B6uBPU8FXKz8D6QfJ7Vm\nYq29rQyKvmoOxGcAC0GeXZoyto42i2nDcyC2YLVCoTYUkLS+nNwVo+zjX5FGObsM\nOTalZr3riG3N+SBs21BQrDnS21Gy/ozZOs0X7jR7nkKsRG8tXj8r1mTTS9E6yuHe\nzn0VHuKzTRl7XPxaywXtf2gXRu50x85Q6R7EQZ4YSxAv3G2T8cM6wCtwcHhI13bi\n1MwNPNgzwrp9i6wEaXZM3JrlVPF2s2PY6VjLJmmsH1xmM7EBHUOUmyFYZp06VAx/\nZxgITn3wDpOdHTm82W8/MeazAvNpUqQ2SVDVUdFApT9nEifqAUpioLFopVMaJJ6Z\n/nadodBP+b3OvEv4zMPoe+UH+VzIfAFD69+9aWHELMLKH6OHPcsC1I+cG0tHSYYn\nKubKElD8sHq/1fLhTjn5dGo6CPgnbtO6PzLq2mst061thOLMqjRIGwjyc1u15TWW\neb0PirqJystdRcMPDJCDUZuQm4gSNCD3PMSk9a0TN7SLJBwc8kJKkCL6tBkVGX1k\nmhqmxFA8N1ATUALIdHln\n=pwPI\n-----END PGP SIGNATURE-----\n"
 }

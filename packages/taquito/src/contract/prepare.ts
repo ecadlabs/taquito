@@ -1,3 +1,6 @@
+import { Schema } from '@taquito/michelson-encoder';
+import { OpKind, MichelsonV1Expression } from '@taquito/rpc';
+import { Parser, Prim, Expr } from '@taquito/michel-codec';
 import {
   OriginateParams,
   RPCOriginationOperation,
@@ -8,15 +11,12 @@ import {
   RegisterDelegateParams,
 } from '../operations/types';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
-import { ml2mic, sexp2mic } from '@taquito/utils';
-import { Schema } from '@taquito/michelson-encoder';
 import { format } from '../format';
-import { OpKind } from '@taquito/rpc';
 
 export const createOriginationOperation = async ({
   code,
   init,
-  balance = '0',
+  balance = "0",
   delegate,
   storage,
   fee = DEFAULT_FEE.ORIGINATION,
@@ -26,21 +26,45 @@ export const createOriginationOperation = async ({
   // tslint:disable-next-line: strict-type-predicates
   if (storage !== undefined && init !== undefined) {
     throw new Error(
-      'Storage and Init cannot be set a the same time. Please either use storage or init but not both.'
+      "Storage and Init cannot be set a the same time. Please either use storage or init but not both.",
     );
   }
 
-  const order = ['parameter', 'storage', 'code'];
-  const contractCode = Array.isArray(code)
-    ? code.sort((a: any, b: any) => order.indexOf(a.prim) - order.indexOf(b.prim)) // Ensure correct ordering for RPC
-    : ml2mic(code);
+  const parser = new Parser({ expandMacros: true });
 
-  let contractStorage: object;
-  if (storage !== undefined) {
-    const schema = new Schema(contractCode[1].args[0]);
-    contractStorage = schema.Encode(storage);
+  let contractCode: Expr[];
+  if (typeof code === 'string') {
+    const c = parser.parseScript(code);
+    if (c === null) {
+      throw new Error('Empty Michelson source');
+    }
+    contractCode = c;
   } else {
-    contractStorage = typeof init === 'string' ? sexp2mic(init) : init;
+    const c = parser.parseJSON(code);
+    if (!Array.isArray(c)) {
+      throw new Error('JSON encoded Michelson script must be an array');
+    }
+    const order = ['parameter', 'storage', 'code'];
+    // Ensure correct ordering for RPC
+    contractCode = (c as Prim[]).sort((a, b) => order.indexOf(a.prim) - order.indexOf(b.prim));
+  }
+
+  let contractStorage: Expr | undefined;
+  if (storage !== undefined) {
+    const storageType = contractCode.find((p): p is Prim => ('prim' in p) && p.prim === 'storage');
+    if (storageType?.args === undefined) {
+      throw new Error('Missing storage section');
+    }
+    const schema = new Schema(storageType.args[0] as MichelsonV1Expression); // TODO
+    contractStorage = schema.Encode(storage);
+  } else if (typeof init === 'string') {
+    const c = parser.parseMichelineExpression(init);
+    if (c === null) {
+      throw new Error('Empty initial storage value');
+    }
+    contractStorage = c;
+  } else if (typeof init === 'object') {
+    contractStorage = parser.parseJSON(init);
   }
 
   const script = {
@@ -53,7 +77,7 @@ export const createOriginationOperation = async ({
     fee,
     gas_limit: gasLimit,
     storage_limit: storageLimit,
-    balance: format('tz', 'mutez', balance).toString(),
+    balance: format("tz", "mutez", balance).toString(),
     script,
   };
 
@@ -77,7 +101,9 @@ export const createTransferOperation = async ({
     fee,
     gas_limit: gasLimit,
     storage_limit: storageLimit,
-    amount: mutez ? amount.toString() : format('tz', 'mutez', amount).toString(),
+    amount: mutez
+      ? amount.toString()
+      : format("tz", "mutez", amount).toString(),
     destination: to,
     parameters: parameter,
   };
@@ -108,7 +134,7 @@ export const createRegisterDelegateOperation = async (
     gasLimit = DEFAULT_GAS_LIMIT.DELEGATION,
     storageLimit = DEFAULT_STORAGE_LIMIT.DELEGATION,
   }: RegisterDelegateParams,
-  source: string
+  source: string,
 ) => {
   return {
     kind: OpKind.DELEGATION,

@@ -9,7 +9,9 @@ You first need to include https://www.tezbridge.com/plugin.js in your applicatio
 
 ```js
 import { TezBridgeSigner } from '@taquito/tezbridge-signer'
-import { Tezos } from '@taquito/taquito'
+import { TezosToolkit } from "@taquito/taquito";
+
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 
 Tezos.setProvider({signer: new TezBridgeSigner()})
 ```

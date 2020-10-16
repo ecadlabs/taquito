@@ -1,6 +1,6 @@
 import { Context } from '../context';
 import { ContractMethod } from '../contract/contract';
-import { EstimationProvider } from '../contract/interface';
+import { EstimationProvider, ContractProvider } from '../contract/interface';
 import {
   createOriginationOperation,
   createSetDelegateOperation,
@@ -55,7 +55,7 @@ export class OperationBatch extends OperationEmitter {
    *
    * @param params Transfer operation parameter
    */
-  withContractCall(params: ContractMethod) {
+  withContractCall(params: ContractMethod<ContractProvider>) {
     return this.withTransfer(params.toTransferParams());
   }
 
@@ -174,7 +174,7 @@ export class OperationBatch extends OperationEmitter {
 }
 
 export class RPCBatchProvider {
-  constructor(private context: Context, private estimator: EstimationProvider) {}
+  constructor(private context: Context, private estimator: EstimationProvider) { }
 
   /***
    *

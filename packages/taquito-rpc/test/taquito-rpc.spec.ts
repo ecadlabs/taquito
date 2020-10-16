@@ -19,7 +19,8 @@ describe('RpcClient test', () => {
   });
 
   it('RpcClient is instantiable', () => {
-    expect(new RpcClient()).toBeInstanceOf(RpcClient);
+    const rpcUrl: string = "test";
+    expect(new RpcClient(rpcUrl)).toBeInstanceOf(RpcClient);
   });
 
   describe('Concat url properly', () => {
@@ -979,6 +980,16 @@ describe('RpcClient test', () => {
         url: 'root/chains/test/blocks/head/context/big_maps/1/2',
       });
       done();
+    });
+  });
+
+  describe('getRpcUrl', () => {
+    it('return the RPC Url', () => {
+      const url: string = 'https://api.tez.ie/rpc/mainnet';
+      const rpcUrlMainnet = (new RpcClient(url)).getRpcUrl();
+      expect(rpcUrlMainnet).toEqual('https://api.tez.ie/rpc/mainnet');
+      const rpcUrlCarthagenet = (new RpcClient('https://api.tez.ie/rpc/carthagenet')).getRpcUrl()
+      expect(rpcUrlCarthagenet).toEqual('https://api.tez.ie/rpc/carthagenet');
     });
   });
 });

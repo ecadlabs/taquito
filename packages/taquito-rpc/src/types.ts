@@ -229,7 +229,6 @@ export interface OperationContentsAndResultProposals {
   source: string;
   period: number;
   proposals: string[];
-  metadata: any;
 }
 
 export interface OperationContentsAndResultBallot {
@@ -238,7 +237,6 @@ export interface OperationContentsAndResultBallot {
   period: number;
   proposal: string;
   ballot: OperationContentsBallotEnum;
-  metadata: any;
 }
 
 export interface OperationContentsAndResultReveal {
@@ -493,6 +491,7 @@ export interface OperationResultDelegation {
   status: OperationResultStatusEnum;
   consumed_gas?: string;
   errors?: TezosGenericOperationError[];
+  consumed_milligas?: string;
 }
 
 export interface ContractBigMapDiffItem {
@@ -519,12 +518,14 @@ export interface OperationResultTransaction {
   paid_storage_size_diff?: string;
   allocated_destination_contract?: boolean;
   errors?: TezosGenericOperationError[];
+  consumed_milligas?: string;
 }
 
 export interface OperationResultReveal {
   status: OperationResultStatusEnum;
   consumed_gas?: string;
   errors?: TezosGenericOperationError[];
+  consumed_milligas?: string;
 }
 
 export interface TransactionOperationParameter {
@@ -568,6 +569,7 @@ export interface OperationResultOrigination {
   storage_size?: string;
   paid_storage_size_diff?: string;
   errors?: TezosGenericOperationError[];
+  consumed_milligas?: string;
 }
 
 export interface OperationContentsAndResultMetadataOrigination {

@@ -15,33 +15,18 @@ npm install @taquito/taquito
 
 ## Import the library in your project
 
-You can use Taquito as a singleton object, or you can "new up" a new instance.
-
-### Import `Tezos` (a singleton object) from `@taquito/taquito`
-
-```js
-import { Tezos } from '@taquito/taquito';
-```
-
 ### Import `TezosToolkit` from `@taquito/taquito` and instantiate it
 
-Making a new instance of Taquito is useful if you require more than one instance. Perhaps if you wanted to communicate with two different RPC nodes, or offer to different Signing options. You can new up separate instances with different providers or configuration per instance.
+The constructor of the `TezosToolkit` class takes an RPC URL as a parameter. It can be a string or a [RpcClient](rpc_package.md) object. A list of community-run nodes can be accessed [here](rpc_nodes.md#list-of-community-run-nodes).
 
 ```js
 import { TezosToolkit } from '@taquito/taquito';
 
-const tezos = new TezosToolkit();
+const tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 ```
+In some case, it can be useful to make more than one instance of Taquito. Perhaps if you wanted to communicate with two different RPC nodes, or offer to different Signing options. You can new up separate instances with different providers or configuration per instance.
 
 ## Configuration
-
-### Configuring which RPC server to use
-
-```js
-import { Tezos } from '@taquito/taquito';
-
-Tezos.setProvider({ rpc: 'https://YOUR_PREFERRED_RPC_URL' });
-```
 
 ### Changing the underlying signer
 
@@ -50,10 +35,11 @@ Taquito's Contract API supports different signers. There is no default signer co
 You can set which signer you wish to use as follows:
 
 ```js
-import { Tezos } from '@taquito/taquito';
+import { TezosToolkit } from '@taquito/taquito';
 import { TezBridgeSigner } from '@taquito/tezbridge-signer';
 
-Tezos.setProvider({ signer: new TezBridgeSigner() });
+const tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+tezos.setProvider({ signer: new TezBridgeSigner() });
 ```
 
 ## Examples
@@ -61,14 +47,16 @@ Tezos.setProvider({ signer: new TezBridgeSigner() });
 ### Get the current Tezos balance for an address
 
 ```js live noInline
-Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/mainnet' });
+// import { TezosToolkit } from '@taquito/taquito';
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+
 Tezos.tz
-  .getBalance('tz1NAozDvi5e7frVq9cUaC3uXQQannemB8Jw')
+  .getBalance('tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY')
   .then(balance => println(`${balance.toNumber() / 1000000} ꜩ`))
   .catch(error => println(JSON.stringify(error)));
 ```
 
-### Using the inMemory Singer and Importing a key
+### Using the inMemory Signer and Importing a key
 
 The `InMemorySigner` package is useful for development and testing. It's an easy way to get started with Tezos when you don't need to interact with a users wallet. The `InMemorySigner` is suitable for testing and development. Should you be writing code for production that deals with tokens of real value, it's strongly recommended that you use a RemoteSigner that is backed by a HSM.
 
@@ -79,8 +67,10 @@ This will import your private key in memory and sign operations using this key.
 If you have a private key, you can import it as follows:
 
 ```js
-import { Tezos } from '@taquito/taquito';
+import { TezosToolkit } from '@taquito/taquito';
 import { InMemorySigner, importKey } from '@taquito/taquito-signer';
+
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 
 Tezos.setProvider({ signer: new InMemorySigner() });
 importKey(Tezos, 'p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1');
@@ -92,9 +82,10 @@ importKey(Tezos, 'p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1');
 The key is a JSON file, which you can use with Taquito as follows:
 
 ```js
-import { Tezos } from '@taquito/taquito';
+import { TezosToolkit } from '@taquito/taquito';
 import { InMemorySigner, importKey } from '@taquito/taquito-signer';
 
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 Tezos.setProvider({ signer: new InMemorySigner() });
 
 const FAUCET_KEY = {

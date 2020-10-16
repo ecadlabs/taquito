@@ -10,6 +10,8 @@ import {
   tokenInit,
   tokenCode,
   sampleBigMapAbstractionValue,
+  miInit,
+  miStorage,
 } from './data';
 import BigNumber from 'bignumber.js';
 import { Context } from '../../src/context';
@@ -222,7 +224,7 @@ describe('RpcContractProvider test', () => {
         delegate: 'test_delegate',
         balance: '200',
         code: miStr,
-        init: '{}',
+        init: miInit,
         fee: 10000,
         gasLimit: 10600,
         storageLimit: 257,
@@ -242,10 +244,7 @@ describe('RpcContractProvider test', () => {
               kind: 'origination',
               script: {
                 code: miSample,
-                storage: {
-                  args: [],
-                  prim: '{}',
-                },
+                storage: miStorage,
               },
               source: 'test_pub_key_hash',
               storage_limit: '257',
@@ -259,14 +258,14 @@ describe('RpcContractProvider test', () => {
       done();
     });
     it('estimate when no fees are specified', async done => {
-      const estimate = new Estimate(1000, 1000, 180);
+      const estimate = new Estimate(1000, 1000, 180, 1000);
       mockEstimate.originate.mockResolvedValue(estimate);
 
       const result = await rpcContractProvider.originate({
         delegate: 'test_delegate',
         balance: '200',
         code: miStr,
-        init: '{}',
+        init: miInit,
       });
       expect(result.raw).toEqual({
         counter: 0,
@@ -283,10 +282,7 @@ describe('RpcContractProvider test', () => {
               kind: 'origination',
               script: {
                 code: miSample,
-                storage: {
-                  args: [],
-                  prim: '{}',
-                },
+                storage: miStorage,
               },
               source: 'test_pub_key_hash',
               storage_limit: estimate.storageLimit.toString(),
@@ -417,7 +413,7 @@ describe('RpcContractProvider test', () => {
     });
 
     it('should estimate when no fee are specified', async done => {
-      const estimate = new Estimate(1000, 1000, 180);
+      const estimate = new Estimate(1000, 1000, 180, 1000);
       mockEstimate.transfer.mockResolvedValue(estimate);
 
       const result = await rpcContractProvider.transfer({
@@ -605,7 +601,7 @@ describe('RpcContractProvider test', () => {
 
   describe('setDelegate', () => {
     it('should produce a reveal and delegation operation', async done => {
-      const estimate = new Estimate(1000, 1000, 180);
+      const estimate = new Estimate(1000000, 1000, 180, 1000);
       mockEstimate.setDelegate.mockResolvedValue(estimate);
       const result = await rpcContractProvider.setDelegate({
         source: 'test_source',
@@ -636,7 +632,7 @@ describe('RpcContractProvider test', () => {
     });
 
     it('should throw InvalidDelegationSource when setting a KT1 address in babylon', async done => {
-      const estimate = new Estimate(1000, 1000, 180);
+      const estimate = new Estimate(1000, 1000, 180, 1000);
       mockEstimate.setDelegate.mockResolvedValue(estimate);
       mockRpcClient.getBlockMetadata.mockResolvedValue({
         next_protocol: Protocols.PsBabyM1,
@@ -657,7 +653,7 @@ describe('RpcContractProvider test', () => {
 
   describe('registerDelegate', () => {
     it('should produce a reveal and delegation operation', async done => {
-      const estimate = new Estimate(1000, 1000, 180);
+      const estimate = new Estimate(1000000, 1000, 180, 1000);
       mockEstimate.registerDelegate.mockResolvedValue(estimate);
       const result = await rpcContractProvider.registerDelegate({});
       expect(result.raw).toEqual({
