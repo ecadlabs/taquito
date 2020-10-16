@@ -14,9 +14,9 @@ import sodium from 'libsodium-wrappers';
 export type LedgerTransport = Pick<Transport<string>, 'send' | 'decorateAppAPIMethods' | 'setScrambleKey'>
 
 export enum DerivationType {
-  tz1 = 0x00,
-  tz2 = 0x01,
-  tz3 = 0x02
+  ED25519 = 0x00, //tz1
+  SECP256K1 = 0x01, //tz2
+  SECP256R1 = 0x02 //tz3
 };
 
 export const HDPathTemplate = (account: number) => {
@@ -30,20 +30,20 @@ export const HDPathTemplate = (account: number) => {
  * @param transport A transport instance from LedgerJS libraries depending on the platform used (e.g. Web, Node)
  * @param path The ledger derivation path (default is "44'/1729'/0'/0'")
  * @param prompt Whether to prompt the ledger for public key (default is true)
- * @param derivationType The value which defines the curve to use (DerivationType.tz1(default), DerivationType.tz2, DerivationType.tz3)
+ * @param derivationType The value which defines the curve to use (DerivationType.ED25519(default), DerivationType.SECP256K1, DerivationType.SECP256R1)
  * 
  * @example
  * ```
  * import TransportNodeHid from "@ledgerhq/hw-transport-node-hid";
  * const transport = await TransportNodeHid.create();
- * const ledgerSigner = new LedgerSigner(transport, "44'/1729'/0'/0'", false, DerivationType.tz1);
+ * const ledgerSigner = new LedgerSigner(transport, "44'/1729'/0'/0'", false, DerivationType.ED25519);
  * ```
  * 
  * @example
  * ```
  * import TransportU2F from "@ledgerhq/hw-transport-u2f";
  * const transport = await TransportU2F.create();
- * const ledgerSigner = new LedgerSigner(transport, "44'/1729'/0'/0'", true, DerivationType.tz2);
+ * const ledgerSigner = new LedgerSigner(transport, "44'/1729'/0'/0'", true, DerivationType.SECP256K1);
  * ```
  */
 export class LedgerSigner implements Signer {
@@ -63,14 +63,14 @@ export class LedgerSigner implements Signer {
       private transport: LedgerTransport,
       private path: string = "44'/1729'/0'/0'",
       private prompt: boolean = true,
-      private derivationType: DerivationType = DerivationType.tz1
+      private derivationType: DerivationType = DerivationType.ED25519
     ) {
       this.transport.setScrambleKey('XTZ')
       if(!path.startsWith("44'/1729'")) {
         throw new Error("The derivation path must start with 44'/1729'");
       }
       if(!Object.values(DerivationType).includes(derivationType)) {
-        throw new Error("The derivation type must be DerivationType.tz1, DerivationType.tz2 or DerivationType.tz3")
+        throw new Error("The derivation type must be DerivationType.ED25519, DerivationType.SECP256K1 or DerivationType.SECP256R1")
       }
     }    
 
@@ -95,11 +95,11 @@ export class LedgerSigner implements Signer {
 
         let prefPk = prefix[Prefix.EDPK];
         let prefPkh = prefix[Prefix.TZ1]
-        if (this.derivationType === DerivationType.tz2){
+        if (this.derivationType === DerivationType.SECP256K1){
             prefPk = prefix[Prefix.SPPK];
             prefPkh = prefix[Prefix.TZ2]
         }
-        else if (this.derivationType === DerivationType.tz3){
+        else if (this.derivationType === DerivationType.SECP256R1){
             prefPk = prefix[Prefix.P2PK];
             prefPkh = prefix[Prefix.TZ3]
         }
@@ -138,7 +138,7 @@ export class LedgerSigner implements Signer {
         messageToSend = chunkOperation(messageToSend, watermarkedBytes2buff)
         let ledgerResponse = await this.signWithLedger(messageToSend);
         let signature;
-        if (this.derivationType === DerivationType.tz1) {
+        if (this.derivationType === DerivationType.ED25519) {
             signature = ledgerResponse.slice(0, ledgerResponse.length - 2).toString('hex');
           } else {
             if(!validateResponse(ledgerResponse)) {

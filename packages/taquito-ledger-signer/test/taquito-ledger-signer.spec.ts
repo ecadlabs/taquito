@@ -25,7 +25,7 @@ describe('LedgerSigner test', () => {
         mockTransport,
         "44'/1729'/0'/0'", 
         true, 
-        DerivationType.tz2
+        DerivationType.SECP256K1
       )
     ).toBeInstanceOf(LedgerSigner);
   });
@@ -36,7 +36,7 @@ describe('LedgerSigner test', () => {
         mockTransport,
         "4'/1729'/0'/0'", 
         true, 
-        DerivationType.tz2
+        DerivationType.SECP256K1
       )}
     ).toThrow("The derivation path must start with 44'/1729'");
   });
@@ -56,7 +56,7 @@ it('Should get public key and public key hash for default path and tz1 curve', a
   })
 
   it('Should get public key and public key hash for default path and tz2 curve', async () => {
-    const signer = new LedgerSigner(mockTransport, "44'/1729'/0'/0'", false, DerivationType.tz2);
+    const signer = new LedgerSigner(mockTransport, "44'/1729'/0'/0'", false, DerivationType.SECP256K1);
     const mockpk = Buffer.from('410406285dc14a52f870054debb9add64359c968698b16697651d2457a9b3235ce3686f3821d7373b00e91670b137920cc0f3480dca3373d057c34a163047549cc3e9000', 'hex');
     mockTransport.send.mockResolvedValue(mockpk); 
     const pk = await signer.publicKey();
@@ -70,7 +70,7 @@ it('Should get public key and public key hash for default path and tz1 curve', a
   })
 
   it('Should get public key and public key hash for path which accounnt is 1 and tz3 curve', async () => {
-    const signer = new LedgerSigner(mockTransport, "44'/1729'/1'/0'", false, DerivationType.tz3);
+    const signer = new LedgerSigner(mockTransport, "44'/1729'/1'/0'", false, DerivationType.SECP256R1);
     const mockpk = Buffer.from('4104eac3db090c124a2d57623d8e743f4a2beef9e6f96e80b49a4755c525c6c80ee391d9d93595479ae1d0099ecc8f4d56ca0542516407ff9f386c48678de965b8809000', 'hex');
     mockTransport.send.mockResolvedValue(mockpk); 
     const pk = await signer.publicKey();
@@ -85,7 +85,7 @@ it('Should get public key and public key hash for default path and tz1 curve', a
 
   it('Should get the right public key and public key hash using HDPathTemplate with index 1', async () => {
     const path = HDPathTemplate(1); //"44'/1729'/1'/0'"
-    const signer = new LedgerSigner(mockTransport, path, false, DerivationType.tz1);
+    const signer = new LedgerSigner(mockTransport, path, false, DerivationType.ED25519);
     const mockpk = Buffer.from('2102ba40b58f38f54512f79e0d6c416e501759d08a05948989d84204a81d841e76749000', 'hex');
     mockTransport.send.mockResolvedValue(mockpk); 
     const pk = await signer.publicKey();
@@ -119,7 +119,7 @@ it('Should get public key and public key hash for default path and tz1 curve', a
   })
 
   it('Should sign operation for tz2', async () => {
-    const signer = new LedgerSigner(mockTransport, "44'/1729'/0'/0'", false, DerivationType.tz2);
+    const signer = new LedgerSigner(mockTransport, "44'/1729'/0'/0'", false, DerivationType.SECP256K1);
     const mocksig = Buffer.from('314402201bf0d530c35c70dacddfc14c2073e6666df839dca23ff18f0b2a375493fe06a4022036992c38fd5c3e88d6381208744c859dab96de0d8d221ead65b08b553680eee59000', 'hex');
     mockTransport.send.mockResolvedValue(mocksig); 
     const signature = await signer.sign('0372a589146bff99c31469fde4a7ac539e0ea5d926cbea4b72f2ae048fefacdaa16c01cc70a574e52e16028ce0fead32e8b2d8cc1440aca40e9bba8d01ed760000016ca589ff04efc7f657ded2a796631183b3d3709a00ffff09696e6372656d656e74000000020007');
@@ -140,7 +140,7 @@ it('Should get public key and public key hash for default path and tz1 curve', a
   })
 
   it('Should sign operation for tz3', async () => {
-    const signer = new LedgerSigner(mockTransport, "44'/1729'/0'/0'", false, DerivationType.tz3);
+    const signer = new LedgerSigner(mockTransport, "44'/1729'/0'/0'", false, DerivationType.SECP256R1);
     const mocksig = Buffer.from('3144022005ccc37c4c434b39054a68d15f9f4d4d279699dd3a406cb235e0b3bf62a6ec1702204f72794ad3f06dd3ebb21b36b63eb44b98f5607e8751513741d73660b7952c399000', 'hex');
     mockTransport.send.mockResolvedValue(mocksig); 
     const signature = await signer.sign('038e1824a75961255a36e47d354733d6923c5849579d6abb4bd8c2a929ab5d393a6b02bd2cbb50fb2bfd7237b474a25b1b4ae447c577208c0babbc8d01e8520002022937a7444d7a00cb29f353058444d26d19382f0079e34b5aaf0eda4cec6665f16d02bd2cbb50fb2bfd7237b474a25b1b4ae447c577209310acbc8d01bb78c2030000000000b702000000b205000764045b0000000a2564656372656d656e74045b0000000a25696e6372656d656e740501035b0502020000008303210317057000010321057100020316072e020000002b032105700002032105710003034203210317057000010321057100020316034b051f020000000405200002020000002b0321057000020321057100030342032103170570000103210571000203160312051f020000000405200002053d036d0342051f020000000405200002000000020000');
