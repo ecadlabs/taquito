@@ -1,29 +1,48 @@
-import { InMemorySigner } from '@taquito/signer';
-import { Tezos, } from '@taquito/taquito';
+import { CONFIGS } from "./config";
 import { RpcClient, ScriptResponse } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_bigmap';
+import { Protocols } from "@taquito/taquito";
 
-const rpcList = [
-    'https://api.tez.ie/rpc/carthagenet',
-    'https://carthagenet.smartpy.io', 
-    'https://testnet-tezos.giganode.io',
-    'https://rpcalpha.tzbeta.net/',
-    'https://rpctest.tzbeta.net/'
-]
+CONFIGS().forEach(({ lib, knownBaker, knownContract, setup, protocol }) => {
+    const Tezos = lib;
+      
+      beforeEach(async (done) => {
+        await setup()
+        done()
+      })
 
-const implicitAddress = 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr';
-const contractAddress = 'KT1FrLQx9w51HBkJwR2V6bxXdJCxxnrXKjZH';
-const contractBigMapStorage = 'KT1Szqn6iy6jpHf4NXcs6RNj36jqAyYUQwW7';
+      let rpcList: Array<string> = [];
+      let contractBigMapStorage: string;
+
+      if (protocol === Protocols.PsDELPH1) {
+        rpcList = [
+            'https://api.tez.ie/rpc/delphinet',
+            'https://delphinet.smartpy.io', 
+            'https://delphinet-tezos.giganode.io',
+            'https://rpczero.tzbeta.net/'
+        ];
+        contractBigMapStorage = 'KT1GL4k5wRayrH3KEXkPcqSeWXnoiJqxk1ZA'
+      }
+
+      else if (protocol === Protocols.PsCARTHA) {
+        rpcList = [
+            'https://api.tez.ie/rpc/carthagenet',
+            'https://carthagenet.smartpy.io', 
+            'https://testnet-tezos.giganode.io',
+            'https://rpcalpha.tzbeta.net/',
+            'https://rpctest.tzbeta.net/'
+        ];
+        contractBigMapStorage = 'KT1Szqn6iy6jpHf4NXcs6RNj36jqAyYUQwW7';
+      }
 
 rpcList.forEach(async rpc => {
-    const tezos = Tezos(rpc)
-    const signer: any = new InMemorySigner('edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca');
-    tezos.setSignerProvider(signer);
+    Tezos.setRpcProvider(rpc)
+    
     const rpcClient: RpcClient = new RpcClient(rpc);
 
-    describe(`Test calling all methods from RpcClient: ${rpc}`, () => {
+    describe(`Test calling all methods from RPC node: ${rpc}`, () => {
 
         it('Get the head block hash', async (done) => {
 
@@ -38,43 +57,43 @@ rpcList.forEach(async rpc => {
             done()
         })
 
-        it(`Access the balance of the address: ${implicitAddress}`, async (done) => {
-            const balance = await rpcClient.getBalance(implicitAddress);
+        it(`Access the balance of an address`, async (done) => {
+            const balance = await rpcClient.getBalance(knownBaker);
             expect(balance).toBeDefined();
             done()
         })
 
-        it(`Access the data of the contract: ${contractAddress}`, async (done) => {
-            const storage = await rpcClient.getStorage(contractAddress);
+        it(`Access the data of a contract`, async (done) => {
+            const storage = await rpcClient.getStorage(knownContract);
             expect(storage).toBeDefined();
             done()
         })
 
-        it(`Access the code and data of the contract: ${contractAddress}`, async (done) => {
-            const script = await rpcClient.getScript(contractAddress);
+        it(`Access the code and data of a contract`, async (done) => {
+            const script = await rpcClient.getScript(knownContract);
             expect(script).toBeDefined();
             done()
         })
 
-        it(`Access the complete status of the contract: ${contractAddress}`, async (done) => {
-            const contract = await rpcClient.getContract(contractAddress);
+        it(`Access the complete status of a contract`, async (done) => {
+            const contract = await rpcClient.getContract(knownContract);
             expect(contract).toBeDefined();
             done()
         })
 
-        it(`Access the manager key of the contract: ${implicitAddress}`, async (done) => {
-            const managerKey = await rpcClient.getManagerKey(implicitAddress);
+        it(`Access the manager key of a contract`, async (done) => {
+            const managerKey = await rpcClient.getManagerKey(knownBaker);
             expect(managerKey).toBeDefined();
             done()
         })
 
-        it(`Access the delegate of the contract: ${implicitAddress}`, async (done) => {
-            const delegate = await rpcClient.getDelegate(implicitAddress);
+        it(`Access the delegate of a contract`, async (done) => {
+            const delegate = await rpcClient.getDelegate(knownBaker);
             expect(delegate).toBeDefined();
             done()
         })
 
-        it(`Access the value associated with a key in a big map: ${contractBigMapStorage}`, async (done) => {
+        it(`Access the value associated with a key in a big map`, async (done) => {
             const schema = await rpcClient.getScript(contractBigMapStorage);
             let contractSchema: Schema;
             if (Schema.isSchema(schema)) {
@@ -84,7 +103,7 @@ rpcList.forEach(async rpc => {
             }
             const { key, type } = contractSchema.EncodeBigMapKey('1');
             const { packed } = await rpcClient.packData({ data: key, type });
-            const contract = await tezos.contract.at(contractBigMapStorage)
+            const contract = await Tezos.contract.at(contractBigMapStorage)
             const storage: any = await contract.storage();
             const id = Number(storage.id);
             const encodedExpr = encodeExpr(packed);
@@ -93,8 +112,8 @@ rpcList.forEach(async rpc => {
             done()
         })
 
-        it(`Fetches information about a delegate from RPC: ${implicitAddress}`, async (done) => {
-            const delegates = await rpcClient.getDelegates(implicitAddress);
+        it(`Fetches information about a delegate from RPC`, async (done) => {
+            const delegates = await rpcClient.getDelegates(knownBaker);
             expect(delegates).toBeDefined();
             done()
         })
@@ -231,7 +250,7 @@ rpcList.forEach(async rpc => {
                         },
                     },
                     ],
-                    protocol: 'PsCARTHAGazKbHtnKfLzQg3kms52kSRpgnDY982a9oYsSXRLQEb',
+                    protocol: `${protocol}`,
                     signature: 'edsigtcagjMz6xtr45ummgsxgj7V6tQGRMerspzSVLJuE2bmBv6dGffCXYqokNgymY7uY7c97kpFrzMr5dhjqwKGsUb6kSP3B97'
                 }
 
@@ -244,7 +263,7 @@ rpcList.forEach(async rpc => {
         })
 
         it('Get the list of entrypoints of the contract', async (done) => {
-            const entrypoints = await rpcClient.getEntrypoints(contractAddress);
+            const entrypoints = await rpcClient.getEntrypoints(knownContract);
             expect(entrypoints).toBeDefined();
             done()
         })
@@ -290,3 +309,4 @@ rpcList.forEach(async rpc => {
       });
 });
 
+    })

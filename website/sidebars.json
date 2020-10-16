@@ -32,7 +32,10 @@
     {
       "type": "category",
       "label": "Running integration tests",
-      "items": ["ledger_integration_test"]
+      "items": [
+        "ledger_integration_test",
+        "rpc_nodes_integration_test"
+      ]
     },
     {
       "type": "link",
