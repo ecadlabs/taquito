@@ -13,15 +13,15 @@
 <script src="https://buttons.github.io/buttons.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js" async></script><title data-react-helmet="true">Originating (Deploying) Contracts | Taquito</title><meta data-react-helmet="true" name="docsearch:version" content="current,latest"><meta data-react-helmet="true" name="twitter:card" content="summary_large_image"><meta data-react-helmet="true" property="og:title" content="Originating (Deploying) Contracts | Taquito"><meta data-react-helmet="true" name="description" content="Taquito can originate (create or deploy) Smart Contracts to the Tezos Blockchain."><meta data-react-helmet="true" property="og:description" content="Taquito can originate (create or deploy) Smart Contracts to the Tezos Blockchain."><meta data-react-helmet="true" property="og:url" content="https://tezostaquito.io/docs/originate"><link data-react-helmet="true" rel="shortcut icon" href="/img/favicon.png"><link data-react-helmet="true" rel="canonical" href="https://tezostaquito.io/docs/originate"><link rel="stylesheet" href="/styles.0fcdfaf4.css">
 <link rel="preload" href="/styles.291adccf.js" as="script">
-<link rel="preload" href="/runtime~main.2bf39c6e.js" as="script">
-<link rel="preload" href="/main.512d3eb7.js" as="script">
+<link rel="preload" href="/runtime~main.33c6be4c.js" as="script">
+<link rel="preload" href="/main.f4844189.js" as="script">
 <link rel="preload" href="/1.10928a06.js" as="script">
-<link rel="preload" href="/2.08e5cfb2.js" as="script">
-<link rel="preload" href="/1be78505.8d23bdbc.js" as="script">
-<link rel="preload" href="/30.8ce4c9fe.js" as="script">
+<link rel="preload" href="/2.d904ada7.js" as="script">
+<link rel="preload" href="/1be78505.7b009039.js" as="script">
+<link rel="preload" href="/30.1c5c61f3.js" as="script">
 <link rel="preload" href="/935f2afb.0fe7fb43.js" as="script">
 <link rel="preload" href="/17896441.6a686a25.js" as="script">
-<link rel="preload" href="/5379c6fc.bbe601cb.js" as="script">
+<link rel="preload" href="/5379c6fc.237967dc.js" as="script">
 </head>
 <body>
 <script>!function(){function t(t){document.documentElement.setAttribute("data-theme",t)}var e=function(){var t=null;try{t=localStorage.getItem("theme")}catch(t){}return t}();t(null!==e?e:"light")}()</script><div id="__docusaurus">
@@ -158,14 +158,14 @@ Tezos.contract.originate({
 }
 </style></div><button type="button" aria-label="Copy code to clipboard" class="button_2icF copyButton_Yf5t">Copy</button></div><div class="playgroundHeader_ih4M playgroundPreviewHeader_zow_">Result<button type="button" aria-label="Execute example" class="button_2icF runButton_t80m">Run code</button></div><div class="playgroundPreview_uOoh"><div></div></div></div></div></div></div></div></article><div class="margin-vert--lg"><nav class="pagination-nav" aria-label="Blog list page navigation"><div class="pagination-nav__item"><a class="pagination-nav__link" href="/docs/making_transfers"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">« Making Transfers</div></a></div><div class="pagination-nav__item pagination-nav__item--next"><a class="pagination-nav__link" href="/docs/set_delegate"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Set delegate »</div></a></div></nav></div></div></div><div class="col col--3"><div class="tableOfContents_3SO_"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#example-demonstrating-origination-of-a-contract" class="table-of-contents__link">Example demonstrating origination of a contract</a></li><li><a href="#originate-the-contract-using-taquito" class="table-of-contents__link">Originate the contract using Taquito</a><ul><li><a href="#a-initializing-storage-using-a-plain-old-javascript-object" class="table-of-contents__link">a. Initializing storage using a Plain Old JavaScript Object</a></li><li><a href="#b-initializing-storage-using-a-plain-michelson-expression-for-initial-storage" class="table-of-contents__link">b. Initializing storage using a plain Michelson Expression for initial storage</a></li><li><a href="#c-initializing-storage-using-a-json-encoded-michelson-expression-for-initial-storage" class="table-of-contents__link">c. Initializing storage using a JSON encoded Michelson Expression for initial storage</a></li></ul></li></ul></div></div></div></div></main></div></div><footer class="footer"><div class="container"><div class="row footer__links"><div class="col footer__col"><h4 class="footer__title">Docs</h4><ul class="footer__items"><li class="footer__item"><a class="footer__link-item" href="/docs/quick_start">Quick Start</a></li><li class="footer__item"><a href="https://tezostaquito.io/typedoc" target="_blank" rel="noopener noreferrer" class="footer__link-item">TypeDoc Reference</a></li></ul></div><div class="col footer__col"><h4 class="footer__title">Community</h4><ul class="footer__items"><li class="footer__item"><a href="https://tezos.stackexchange.com/questions/tagged/taquito" target="_blank" rel="noopener noreferrer" class="footer__link-item">Stack Exchange</a></li><li class="footer__item"><a href="https://twitter.com/TezosTaquito" target="_blank" rel="noopener noreferrer" class="footer__link-item">Twitter</a></li><li class="footer__item"><a href="https://github.com/ecadlabs/taquito/blob/master/code-of-conduct.md" target="_blank" rel="noopener noreferrer" class="footer__link-item">Code of Conduct</a></li><li class="footer__item"><a href="https://github.com/ecadlabs/taquito" target="_blank" rel="noopener noreferrer" class="footer__link-item">GitHub</a></li></ul></div><div class="col footer__col"><h4 class="footer__title">Contact</h4><ul class="footer__items"><li class="footer__item"><a href="https://github.com/ecadlabs/taquito/issues" target="_blank" rel="noopener noreferrer" class="footer__link-item">Report issues</a></li><li class="footer__item"><a href="https://github.com/ecadlabs/taquito/blob/master/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer" class="footer__link-item">Contribute</a></li></ul></div></div><div class="text--center">Copyright © 2020 ECAD Labs - Open Source MIT License</div></div></footer></div>
 <script src="/styles.291adccf.js"></script>
-<script src="/runtime~main.2bf39c6e.js"></script>
-<script src="/main.512d3eb7.js"></script>
+<script src="/runtime~main.33c6be4c.js"></script>
+<script src="/main.f4844189.js"></script>
 <script src="/1.10928a06.js"></script>
-<script src="/2.08e5cfb2.js"></script>
-<script src="/1be78505.8d23bdbc.js"></script>
-<script src="/30.8ce4c9fe.js"></script>
+<script src="/2.d904ada7.js"></script>
+<script src="/1be78505.7b009039.js"></script>
+<script src="/30.1c5c61f3.js"></script>
 <script src="/935f2afb.0fe7fb43.js"></script>
 <script src="/17896441.6a686a25.js"></script>
-<script src="/5379c6fc.bbe601cb.js"></script>
+<script src="/5379c6fc.237967dc.js"></script>
 </body>
 </html>
