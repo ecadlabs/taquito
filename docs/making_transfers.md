@@ -31,7 +31,7 @@ fetch('https://api.tez.ie/keys/carthagenet/', {
   .then(response => response.text())
   .then(privateKey => {
     render(`Importing the private key...`);
-    return Tezos.importKey(privateKey);
+    return importKey(Tezos, privateKey);
   })
   .then(() => {
     const amount = 0.5;

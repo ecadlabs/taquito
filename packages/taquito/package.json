@@ -81,7 +81,6 @@
     "@taquito/michel-codec": "^7.0.0-beta.pre.0",
     "@taquito/michelson-encoder": "^7.0.0-beta.pre.0",
     "@taquito/rpc": "^7.0.0-beta.pre.0",
-    "@taquito/signer": "^7.0.0-beta.pre.0",
     "@taquito/utils": "^7.0.0-beta.pre.0",
     "bignumber.js": "^9.0.1",
     "rx-sandbox": "^1.0.3",

@@ -1,5 +1,4 @@
 import { RpcClient } from '@taquito/rpc';
-import { importKey } from '@taquito/signer';
 import { Protocols } from './constants';
 import { Config, Context, TaquitoProvider } from './context';
 import { ContractProvider, EstimationProvider } from './contract/interface';
@@ -234,13 +233,6 @@ export class TezosToolkit {
    */
   get signer() {
     return this._context.signer;
-  }
-
-  /**
-   * @deprecated Deprecated in favor of setting the signer provider with @taquito/signer importKey
-   */
-  importKey(privateKeyOrEmail: string, passphrase?: string, mnemonic?: string, secret?: string) {
-    return importKey(this, privateKeyOrEmail, passphrase, mnemonic, secret);
   }
 
   getFactory<T, K extends Array<any>>(ctor: TaquitoProvider<T, K>) {

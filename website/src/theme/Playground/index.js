@@ -65,7 +65,7 @@ wallet.requestPermissions({network})
 })
 .then(response => response.text())
 .then(privateKey => {
-  return Tezos.importKey(privateKey);
+  return importKey(Tezos, privateKey);
  })
 .then(() => {
   ${this.code}
