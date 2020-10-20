@@ -335,7 +335,7 @@ export class RpcClient {
     });
 
     const castedResponse: any = castToBigNumber(response, [
-      'time_between_blocks', 
+      'time_between_blocks',
       'hard_gas_limit_per_operation',
       'hard_gas_limit_per_block',
       'proof_of_work_threshold',
