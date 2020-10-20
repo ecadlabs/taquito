@@ -457,6 +457,7 @@ describe('RpcClient test', () => {
     it('query the right url and casts property to BigNumber', async done => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
+          // Carthagenet constants
           proof_of_work_nonce_size: 8,
           nonce_length: 32,
           max_revelations_per_block: 32,
@@ -466,22 +467,28 @@ describe('RpcClient test', () => {
           blocks_per_cycle: 2048,
           blocks_per_commitment: 32,
           blocks_per_roll_snapshot: 256,
-          blocks_per_voting_period: 8192,
+          blocks_per_voting_period: 2048,
           time_between_blocks: ['30', '40'],
           endorsers_per_block: 32,
-          hard_gas_limit_per_operation: '400000',
-          hard_gas_limit_per_block: '4000000',
+          hard_gas_limit_per_operation: '1040000',
+          hard_gas_limit_per_block: '10400000',
           proof_of_work_threshold: '70368744177663',
-          tokens_per_roll: '10000000000',
+          tokens_per_roll: '8000000000',
           michelson_maximum_type_size: 1000,
           seed_nonce_revelation_tip: '125000',
           origination_size: 257,
-          block_security_deposit: '128000000',
-          endorsement_security_deposit: '16000000',
-          block_reward: '0',
-          endorsement_reward: '0',
+          block_security_deposit: '512000000',
+          endorsement_security_deposit: '64000000',
+          baking_reward_per_endorsement: ['1250000','187500'],
+          endorsement_reward: ['1250000','833333'],
           cost_per_byte: '1000',
           hard_storage_limit_per_operation: '60000',
+          test_chain_duration: '43200',
+          quorum_min: 3000,
+          quorum_max: 7000,
+          min_proposal_quorum: 500,
+          delay_per_missing_endorsement: 2,
+          initial_endorsers: 24
         })
       );
       const response = await client.getConstants();
@@ -491,7 +498,19 @@ describe('RpcClient test', () => {
         url: 'root/chains/test/blocks/head/context/constants',
       });
       expect(response.block_security_deposit).toBeInstanceOf(BigNumber);
-      expect(response.block_security_deposit.toString()).toEqual('128000000');
+      expect(response.block_security_deposit.toString()).toEqual('512000000');
+
+      expect(response.baking_reward_per_endorsement[0]).toBeInstanceOf(BigNumber);
+      expect(response.baking_reward_per_endorsement[0].toString()).toEqual('1250000');
+      expect(response.baking_reward_per_endorsement[1]).toBeInstanceOf(BigNumber);
+      expect(response.baking_reward_per_endorsement[1].toString()).toEqual('187500');
+
+      expect(response.delay_per_missing_endorsement).toBeInstanceOf(BigNumber);
+      expect(response.delay_per_missing_endorsement.toString()).toEqual('2');
+
+      expect(response.max_revelations_per_block).toEqual(32);
+
+      expect(response.max_anon_ops_per_block).toBeUndefined();
 
       done();
     });

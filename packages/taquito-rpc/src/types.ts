@@ -581,8 +581,10 @@ export interface OperationContentsAndResultMetadataOrigination {
 export interface ConstantsResponse {
   proof_of_work_nonce_size: number;
   nonce_length: number;
-  max_revelations_per_block: number;
+  max_revelations_per_block?: number; // carthagenet
+  max_anon_ops_per_block?: number; // delphinet
   max_operation_data_length: number;
+  max_proposals_per_delegate: number;
   preserved_cycles: number;
   blocks_per_cycle: number;
   blocks_per_commitment: number;
@@ -596,19 +598,19 @@ export interface ConstantsResponse {
   tokens_per_roll: BigNumber;
   michelson_maximum_type_size: number;
   seed_nonce_revelation_tip: string;
-  origination_burn: string;
+  origination_size: number;
   block_security_deposit: BigNumber;
   endorsement_security_deposit: BigNumber;
-  block_reward: BigNumber;
-  endorsement_reward: BigNumber;
+  baking_reward_per_endorsement: BigNumber[];
+  endorsement_reward: BigNumber[];
   cost_per_byte: BigNumber;
   hard_storage_limit_per_operation: BigNumber;
-  min_proposal_quorum?: number;
-  quorum_max?: number;
-  quorum_min?: number;
-  delay_per_missing_endorsement?: number;
-  initial_endorsers?: string[];
-  baking_reward_per_endorsement: BigNumber;
+  test_chain_duration: BigNumber;
+  min_proposal_quorum: number;
+  quorum_max: number;
+  quorum_min: number;
+  delay_per_missing_endorsement: BigNumber;
+  initial_endorsers: number;
 }
 
 export interface ContractResponse {
