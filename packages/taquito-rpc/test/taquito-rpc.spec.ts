@@ -453,22 +453,97 @@ describe('RpcClient test', () => {
     });
   });
 
-  describe('getConstants', () => {
+  describe('getConstants Proto007', () => {
     it('query the right url and casts property to BigNumber', async done => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
-          // Carthagenet constants
+          proof_of_work_nonce_size: 8,
+          nonce_length: 32,
+          max_anon_ops_per_block: 132,
+          max_operation_data_length: 16384,
+          max_proposals_per_delegate: 20,
+          preserved_cycles: 3,
+          blocks_per_cycle: 2048,
+          blocks_per_commitment: 16,
+          blocks_per_roll_snapshot: 128,
+          blocks_per_voting_period: 2048,
+          time_between_blocks: ['30', '20'],
+          endorsers_per_block: 32,
+          hard_gas_limit_per_operation: '1040000',
+          hard_gas_limit_per_block: '10400000',
+          proof_of_work_threshold: '70368744177663',
+          tokens_per_roll: '8000000000',
+          michelson_maximum_type_size: 1000,
+          seed_nonce_revelation_tip: '125000',
+          origination_size: 257,
+          block_security_deposit: '512000000',
+          endorsement_security_deposit: '64000000',
+          baking_reward_per_endorsement: ['1250000','187500'],
+          endorsement_reward: ['1250000','833333'],
+          cost_per_byte: '250',
+          hard_storage_limit_per_operation: '60000',
+          test_chain_duration: '61440',
+          quorum_min: 2000,
+          quorum_max: 7000,
+          min_proposal_quorum: 500,
+          initial_endorsers: 24,
+          delay_per_missing_endorsement: '4'
+        })
+      );
+      const response = await client.getConstants();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/context/constants',
+      });
+      expect(response.block_security_deposit).toBeInstanceOf(BigNumber);
+      expect(response.block_security_deposit.toString()).toEqual('512000000');
+
+      expect(response.endorsement_reward).toBeDefined();
+      if (response.endorsement_reward instanceof Array) {
+        expect(response.endorsement_reward[0]).toBeInstanceOf(BigNumber);
+        expect(response.endorsement_reward[0].toString()).toEqual('1250000');
+        expect(response.endorsement_reward[1]).toBeInstanceOf(BigNumber);
+        expect(response.endorsement_reward[1].toString()).toEqual('833333');
+      }
+
+      expect(response.baking_reward_per_endorsement).toBeDefined();
+      expect(response.baking_reward_per_endorsement![0]).toBeInstanceOf(BigNumber);
+      expect(response.baking_reward_per_endorsement![0].toString()).toEqual('1250000');
+      expect(response.baking_reward_per_endorsement![1]).toBeInstanceOf(BigNumber);
+      expect(response.baking_reward_per_endorsement![1].toString()).toEqual('187500');
+
+      expect(response.delay_per_missing_endorsement).toBeDefined();
+      expect(response.delay_per_missing_endorsement!).toBeInstanceOf(BigNumber);
+      expect(response.delay_per_missing_endorsement!.toString()).toEqual('4')
+
+      expect(response.max_anon_ops_per_block).toBeDefined();
+      expect(response.max_anon_ops_per_block!).toEqual(132);
+
+
+      expect(response.max_revelations_per_block).toBeUndefined();
+      expect(response.block_reward).toBeUndefined();
+      expect(response.origination_burn).toBeUndefined();
+
+      done();
+    });
+  });
+
+   describe('getConstants Proto006', () => {
+    it('properties return by the RPC are accessible and the ones that do not belong to proto6 are undefined', async done => {
+      httpBackend.createRequest.mockReturnValue(
+        Promise.resolve({
           proof_of_work_nonce_size: 8,
           nonce_length: 32,
           max_revelations_per_block: 32,
           max_operation_data_length: 16384,
           max_proposals_per_delegate: 20,
-          preserved_cycles: 3,
-          blocks_per_cycle: 2048,
+          preserved_cycles: 5,
+          blocks_per_cycle: 4096,
           blocks_per_commitment: 32,
           blocks_per_roll_snapshot: 256,
-          blocks_per_voting_period: 2048,
-          time_between_blocks: ['30', '40'],
+          blocks_per_voting_period: 32768,
+          time_between_blocks: ['60', '40'],
           endorsers_per_block: 32,
           hard_gas_limit_per_operation: '1040000',
           hard_gas_limit_per_block: '10400000',
@@ -483,34 +558,94 @@ describe('RpcClient test', () => {
           endorsement_reward: ['1250000','833333'],
           cost_per_byte: '1000',
           hard_storage_limit_per_operation: '60000',
-          test_chain_duration: '43200',
-          quorum_min: 3000,
+          test_chain_duration: '1966080',
+          quorum_min: 2000,
           quorum_max: 7000,
           min_proposal_quorum: 500,
-          delay_per_missing_endorsement: 2,
-          initial_endorsers: 24
+          initial_endorsers: 24,
+          delay_per_missing_endorsement: '8'
         })
       );
       const response = await client.getConstants();
 
-      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
-        method: 'GET',
-        url: 'root/chains/test/blocks/head/context/constants',
-      });
-      expect(response.block_security_deposit).toBeInstanceOf(BigNumber);
-      expect(response.block_security_deposit.toString()).toEqual('512000000');
+      expect(response.hard_gas_limit_per_operation).toBeInstanceOf(BigNumber);
+      expect(response.hard_gas_limit_per_operation.toString()).toEqual('1040000');
 
-      expect(response.baking_reward_per_endorsement[0]).toBeInstanceOf(BigNumber);
-      expect(response.baking_reward_per_endorsement[0].toString()).toEqual('1250000');
-      expect(response.baking_reward_per_endorsement[1]).toBeInstanceOf(BigNumber);
-      expect(response.baking_reward_per_endorsement[1].toString()).toEqual('187500');
+      expect(response.max_revelations_per_block).toBeDefined();
+      expect(response.max_revelations_per_block!).toEqual(32);
 
-      expect(response.delay_per_missing_endorsement).toBeInstanceOf(BigNumber);
-      expect(response.delay_per_missing_endorsement.toString()).toEqual('2');
+      expect(response.origination_size).toBeDefined();
+      expect(response.origination_size!).toEqual(257);
+      
+      expect(response.max_anon_ops_per_block).toBeUndefined();
+      expect(response.block_reward).toBeUndefined();
+      expect(response.origination_burn).toBeUndefined();
 
-      expect(response.max_revelations_per_block).toEqual(32);
+      done();
+    });
+  });
+
+  describe('getConstants Proto005', () => {
+    it('properties return by the RPC are accessible and the ones that do not belong to proto5 are undefined', async done => {
+      httpBackend.createRequest.mockReturnValue(
+        Promise.resolve({
+          proof_of_work_nonce_size: 8,
+          nonce_length: 32,
+          max_revelations_per_block: 32,
+          max_operation_data_length: 16384,
+          max_proposals_per_delegate: 20,
+          preserved_cycles: 5,
+          blocks_per_cycle: 4096,
+          blocks_per_commitment: 32,
+          blocks_per_roll_snapshot: 256,
+          blocks_per_voting_period: 32768,
+          time_between_blocks: ['60', '40'],
+          endorsers_per_block: 32,
+          hard_gas_limit_per_operation: '800000',
+          hard_gas_limit_per_block: '8000000',
+          proof_of_work_threshold: '70368744177663',
+          tokens_per_roll: '8000000000',
+          michelson_maximum_type_size: 1000,
+          seed_nonce_revelation_tip: '125000',
+          origination_size: 257,
+          block_security_deposit: '512000000',
+          endorsement_security_deposit: '64000000',
+          block_reward: '16000000',
+          baking_reward_per_endorsement: ['1250000','187500'],
+          endorsement_reward: '2000000',
+          cost_per_byte: '1000',
+          hard_storage_limit_per_operation: '60000',
+          test_chain_duration: '1966080',
+          quorum_min: 2000,
+          quorum_max: 7000,
+          min_proposal_quorum: 500,
+          initial_endorsers: 24,
+          delay_per_missing_endorsement: '8'
+        })
+      );
+      const response = await client.getConstants();
+
+      expect(response.endorsement_reward).toBeInstanceOf(BigNumber);
+      expect(response.endorsement_reward.toString()).toEqual('2000000');
+
+      expect(response.block_reward).toBeDefined();
+      if (response.block_reward) {
+        expect(response.block_reward).toBeInstanceOf(BigNumber);
+        expect(response.block_reward.toString()).toEqual('16000000');
+      }
+      expect(response.quorum_max).toBeDefined();
+      if (response.quorum_max) {
+        expect(response.quorum_max).toEqual(7000);
+      }
+
+      expect(response.test_chain_duration).toBeDefined();
+      if (response.test_chain_duration) {
+        expect(response.block_reward).toBeInstanceOf(BigNumber);
+        expect(response.test_chain_duration.toString()).toEqual('1966080');
+      }
 
       expect(response.max_anon_ops_per_block).toBeUndefined();
+      expect(response.origination_burn).toBeUndefined();
 
       done();
     });

@@ -578,13 +578,19 @@ export interface OperationContentsAndResultMetadataOrigination {
   internal_operation_results?: InternalOperationResult[];
 }
 
-export interface ConstantsResponse {
+export type ConstantsResponse = 
+ConstantsResponseCommon & 
+ConstantsResponseProto007 &
+ConstantsResponseProto006 &
+ConstantsResponseProto005 &
+ConstantsResponseProto004 &
+ConstantsResponseProto003 &
+ConstantsResponseProto001And002
+
+export interface ConstantsResponseCommon {
   proof_of_work_nonce_size: number;
   nonce_length: number;
-  max_revelations_per_block?: number; // carthagenet
-  max_anon_ops_per_block?: number; // delphinet
   max_operation_data_length: number;
-  max_proposals_per_delegate: number;
   preserved_cycles: number;
   blocks_per_cycle: number;
   blocks_per_commitment: number;
@@ -597,20 +603,42 @@ export interface ConstantsResponse {
   proof_of_work_threshold: BigNumber;
   tokens_per_roll: BigNumber;
   michelson_maximum_type_size: number;
-  seed_nonce_revelation_tip: string;
-  origination_size: number;
+  seed_nonce_revelation_tip: BigNumber;
   block_security_deposit: BigNumber;
   endorsement_security_deposit: BigNumber;
-  baking_reward_per_endorsement: BigNumber[];
-  endorsement_reward: BigNumber[];
+  endorsement_reward: BigNumber | BigNumber[] // BigNumber[] since proto 006, BigNumber before
   cost_per_byte: BigNumber;
   hard_storage_limit_per_operation: BigNumber;
-  test_chain_duration: BigNumber;
-  min_proposal_quorum: number;
-  quorum_max: number;
-  quorum_min: number;
-  delay_per_missing_endorsement: BigNumber;
-  initial_endorsers: number;
+}
+export interface ConstantsResponseProto007 extends Omit<ConstantsResponseProto006, 'max_revelations_per_block'> {
+  max_anon_ops_per_block?: number;
+}
+
+export interface ConstantsResponseProto006 extends Omit<ConstantsResponseProto005, 'block_reward'> {
+  baking_reward_per_endorsement?: BigNumber[];
+}
+
+export interface ConstantsResponseProto005 extends ConstantsResponseProto004 {
+  quorum_min?: number;
+  quorum_max?: number;
+  min_proposal_quorum?: number;
+  initial_endorsers?: number;
+  delay_per_missing_endorsement?: BigNumber;
+}
+
+export interface ConstantsResponseProto004 extends ConstantsResponseProto003 {
+  test_chain_duration?: BigNumber;
+}
+
+export interface ConstantsResponseProto003 extends Omit<ConstantsResponseProto001And002, 'origination_burn'> {
+  origination_size?: number;
+  max_proposals_per_delegate?: number;
+}
+
+export interface ConstantsResponseProto001And002 {
+  max_revelations_per_block?: number;
+  origination_burn?: string;
+  block_reward?: BigNumber;
 }
 
 export interface ContractResponse {
