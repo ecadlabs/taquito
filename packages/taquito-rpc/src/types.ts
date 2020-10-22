@@ -585,7 +585,7 @@ ConstantsResponseProto006 &
 ConstantsResponseProto005 &
 ConstantsResponseProto004 &
 ConstantsResponseProto003 &
-ConstantsResponseProto001And002
+ConstantsResponseProto001And002;
 
 export interface ConstantsResponseCommon {
   proof_of_work_nonce_size: number;
@@ -606,7 +606,7 @@ export interface ConstantsResponseCommon {
   seed_nonce_revelation_tip: BigNumber;
   block_security_deposit: BigNumber;
   endorsement_security_deposit: BigNumber;
-  endorsement_reward: BigNumber | BigNumber[] // BigNumber[] since proto 006, BigNumber before
+  endorsement_reward: BigNumber | BigNumber[]; // BigNumber[] since proto 006, BigNumber before
   cost_per_byte: BigNumber;
   hard_storage_limit_per_operation: BigNumber;
 }
