@@ -18,7 +18,7 @@ When creating an instance of the TezosToolkit, it is now required to specify the
 
 **Change required:**
 
-Before version 7:
+Before version 7:  
 ``` js
 import { TezosToolkit } from '@taquito/taquito';
 const tezos = new TezosToolkit();
@@ -26,15 +26,15 @@ const tezos = new TezosToolkit();
 // or
 
 import { Tezos } from '@taquito/taquito';
-// ready to use Tezos singleton
+// ready-to-use Tezos singleton
 ```
 
-With version 7:
+Since version 7:
 ``` js
 import { TezosToolkit } from '@taquito/taquito';
 const tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL_NOW_REQUIRED');
 
-// or the ones that were using the Tezos singleton can considered naming the variable as the singleton to avoid having the rename it everywhere in their code:
+// Those who were using the Tezos singleton may consider naming the variable like the singleton to avoid renaming it everywhere in their code:
 const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL_NOW_REQUIRED');
 ```
 
