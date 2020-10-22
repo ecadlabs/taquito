@@ -515,7 +515,7 @@ describe('RpcClient test', () => {
 
       expect(response.delay_per_missing_endorsement).toBeDefined();
       expect(response.delay_per_missing_endorsement!).toBeInstanceOf(BigNumber);
-      expect(response.delay_per_missing_endorsement!.toString()).toEqual('4')
+      expect(response.delay_per_missing_endorsement!.toString()).toEqual('4');
 
       expect(response.max_anon_ops_per_block).toBeDefined();
       expect(response.max_anon_ops_per_block!).toEqual(132);
@@ -1142,7 +1142,7 @@ describe('RpcClient test', () => {
       const url: string = 'https://api.tez.ie/rpc/mainnet';
       const rpcUrlMainnet = (new RpcClient(url)).getRpcUrl();
       expect(rpcUrlMainnet).toEqual('https://api.tez.ie/rpc/mainnet');
-      const rpcUrlCarthagenet = (new RpcClient('https://api.tez.ie/rpc/carthagenet')).getRpcUrl()
+      const rpcUrlCarthagenet = (new RpcClient('https://api.tez.ie/rpc/carthagenet')).getRpcUrl();
       expect(rpcUrlCarthagenet).toEqual('https://api.tez.ie/rpc/carthagenet');
     });
   });
