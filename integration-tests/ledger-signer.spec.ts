@@ -1,6 +1,6 @@
 import { LedgerSigner, LedgerTransport, DerivationType } from '../packages/taquito-ledger-signer/src/taquito-ledger-signer';
 import TransportNodeHid from "@ledgerhq/hw-transport-node-hid";
-import { Tezos } from '@taquito/taquito';
+import { TezosToolkit } from '@taquito/taquito';
 import { ligoSample } from "./data/ligo-simple-contract";
 
 /**
@@ -136,7 +136,7 @@ describe('LedgerSigner test', () => {
         false, 
         DerivationType.tz1
       );
-      const tezos = Tezos('https://api.tez.ie/rpc/carthagenet');
+      const tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
       tezos.setSignerProvider( signer );
       const op = await tezos.contract.originate({
         balance: "1",
@@ -160,7 +160,7 @@ describe('Should be abble to used Ledger with wallet API', () => {
           false, 
           DerivationType.tz1
         );
-        const tezos = Tezos('https://api.tez.ie/rpc/carthagenet');
+        const tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
         tezos.setSignerProvider( signer );
         const op = await tezos.wallet.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.1 }).send()
       await op.confirmation()
