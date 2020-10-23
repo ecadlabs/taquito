@@ -38,6 +38,13 @@
       ]
     },
     {
+      "type": "category",
+      "label": "Breaking changes",
+      "items": [
+        "v7_breaking_changes"
+      ]
+    },
+    {
       "type": "link",
       "label": "TypeDoc Reference",
       "href": "https://tezostaquito.io/typedoc"
