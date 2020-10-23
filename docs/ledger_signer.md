@@ -53,7 +53,7 @@ The constructor of the `LedgerSigner` class can take three other parameters. If 
  - prompt: **default is true**  
  If true, you will be asked, on your Ledger device, for validation to send your public key. ***Note that confirmation is required when using `@ledgerhq/hw-transport-u2f`, so you should not set this parameter to false if you are using this transport.***
  - derivationType: **default is DerivationType.ED25519**  
- It can be DerivationType.ED25519, DerivationType.SECP256K1 or DerivationType.SECP256R1.
+ It can be DerivationType.ED25519 (tz1), DerivationType.SECP256K1 (tz2) or DerivationType.SECP256R1 (tz3).
 
 ```js
 import { LedgerSigner, DerivationType, HDPathTemplate } from '@taquito/ledger-signer';
@@ -181,7 +181,7 @@ https://medium.com/mycrypto/wtf-is-a-derivation-path-c3493ca2eb52
 
 ## Live example that iterate from path `44'/1729'/0'/0'` to `44'/1729'/9'/0'`
 
-Having your Ledger device connected to your computer and the `Tezos Wallet App` opened, you can run the following code example. It will scan your Ledger from path `44'/1729'/0'/0'` to `44'/1729'/9'/0'` to get public key hashes and the balance for revealed accounts. Confirmations will be asked on your Ledger to send the public keys.
+Having your Ledger device connected to your computer and the `Tezos Wallet App` opened, you can run the following code example. It will scan your Ledger from path `44'/1729'/0'/0'` to `44'/1729'/9'/0'` to get public key hashes and the balance for revealed accounts. Confirmations will be asked on your Ledger to send the public keys.  
 *Note that this example is not intended to be a complete example of paths scanning but only a rough outline of what is possible to do.*
 
 ```js live noInline
