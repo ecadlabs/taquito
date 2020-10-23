@@ -14,9 +14,9 @@ import sodium from 'libsodium-wrappers';
 export type LedgerTransport = Pick<Transport<string>, 'send' | 'decorateAppAPIMethods' | 'setScrambleKey'>
 
 export enum DerivationType {
-  ED25519 = 0x00, //tz1
-  SECP256K1 = 0x01, //tz2
-  SECP256R1 = 0x02 //tz3
+  ED25519 = 0x00, // tz1
+  SECP256K1 = 0x01, // tz2
+  SECP256R1 = 0x02 // tz3
 };
 
 export const HDPathTemplate = (account: number) => {
