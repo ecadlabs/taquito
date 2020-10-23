@@ -20,7 +20,7 @@ describe('LedgerSigner falling test', () => {
                 transport,
                 "44'/1729'/0'/0'", 
                 true, 
-                DerivationType.tz1
+                DerivationType.ED25519
             );
             try {
                 await signer.publicKey(); 
@@ -36,7 +36,7 @@ describe('LedgerSigner falling test', () => {
                 transport,
                 "44'/1729'/0'/0'", 
                 false, 
-                DerivationType.tz1
+                DerivationType.ED25519
             );
             try {
                 const signed = await signer.sign(
@@ -56,7 +56,7 @@ describe('LedgerSigner falling test', () => {
                     transport,
                     "44'/1729'/0'/0'", 
                     false, 
-                    DerivationType.tz1
+                    DerivationType.ED25519
                 );
                 const tezos = Tezos('https://api.tez.ie/rpc/carthagenet');
                 tezos.setSignerProvider( signer );
@@ -78,7 +78,7 @@ describe('LedgerSigner falling test', () => {
                     transport,
                     "44'/1729'/0'/0'", 
                     false, 
-                    DerivationType.tz1
+                    DerivationType.ED25519
                 );
                 const tezos = Tezos('https://api.tez.ie/rpc/carthagenet');
                 tezos.setSignerProvider( signer );
