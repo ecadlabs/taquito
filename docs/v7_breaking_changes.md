@@ -4,10 +4,10 @@ author: Roxane Letourneau
 ---
 
 :::warning Breaking changes
-With this major number update, we decided to refract some parts of the Taquito code. Please note that the migration to version 7 introduces breaking changes. 
+With this major number update, we decided to refactor or change some parts of the Taquito API. Please note that the migration to version 7 introduces breaking changes. 
 :::
 
-Each breaking change is exposed on this page with:
+Each breaking change is explained on this page with:
 - the reasons that motivated it,
 - code examples that show what needs to be changed on your code (how it was in prior versions versus how it needs to be using v7), and
 - potential errors you might get when updating to v7 without making the fixes.
@@ -16,7 +16,7 @@ Each breaking change is exposed on this page with:
 
 Before version 7, Taquito was configured to use our default RPC node; the default value was set in the constructor of the `RpcClient` class. We took this approach so that users can get started quickly, and Taquito should "just work" with minimal fiddling. Users could import a ready-to-use `Tezos` singleton, an instance of the `TezosToolkit` class using the default RPC URL.    
 
-However, in version 7 of Taquito, we decided to remove the default RPC node URL. The reason behind this choice is to avoid that a lot of applications rely on our default node and thus centralize a part of the ecosystem on one node.
+However, in version 7 of Taquito, we decided to remove the default RPC node URL. The reason behind this choice is to encourage developers to make their own informed choice on which Tezos RPC node (public or private) is best for them. This change also helps avoid dApps using Taquito from centralizing on one public RPC node. Decentralization is an important part of Tezos, and we want to encourage decentralization at the RPC infrastructure level.
 
 This change impacts the following classes, where it is now required to specify an RPC node in their constructor:
 - `RpcClient`
@@ -82,7 +82,7 @@ If you update to version 7 without replacing main with default in your code, you
 
 ## Removed the importKey method from TezosToolkit class
 
-This method has been marked as deprecated in march 2020 in favor of setting the signer provider with `@taquito/signer importKey`.
+This method has been marked as deprecated in March 2020 in favor of setting the signer provider with `@taquito/signer importKey`.
 The purpose of this change was to remove the `@taquito/signer` dependency from `@taquito/taquito` because it was increasing it bundle size a lot (~1.1mb) while being not necessary for most browser based application.
 
 ### Change required in your code:
