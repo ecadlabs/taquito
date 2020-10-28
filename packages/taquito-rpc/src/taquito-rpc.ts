@@ -340,12 +340,16 @@ export class RpcClient {
       'hard_gas_limit_per_block',
       'proof_of_work_threshold',
       'tokens_per_roll',
+      'seed_nonce_revelation_tip',
       'block_security_deposit',
       'endorsement_security_deposit',
       'block_reward',
-      'endorsement_reward',
+      'endorsement_reward', 
       'cost_per_byte',
       'hard_storage_limit_per_operation',
+      'test_chain_duration',
+      'baking_reward_per_endorsement', 
+      'delay_per_missing_endorsement'
     ]);
 
     return {
