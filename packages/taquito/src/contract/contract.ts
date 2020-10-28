@@ -18,7 +18,7 @@ interface SendParams {
 // Ensure that all parameter that are not in SendParams are defined
 type ExplicitTransferParams = Required<Omit<TransferParams, keyof SendParams>> & SendParams;
 
-const DEFAULT_SMART_CONTRACT_METHOD_NAME = 'main';
+const DEFAULT_SMART_CONTRACT_METHOD_NAME = 'default';
 
 /**
  * @description Utility class to send smart contract operation
