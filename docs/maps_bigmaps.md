@@ -90,7 +90,7 @@ Tezos.contract.at('KT1WEQQ7RRrzUH7PU9NGMyuTbTF3kjnKynUW')
     println(`The key "1" of the map has a current_stock of ${value[Object.keys(value)[0]]} and a max_price of   ${value[Object.keys(value)[1]]}.`);
 
     //Calling the main method of the contract will modify the storage
-    return myContract.methods.main('1').send()
+    return myContract.methods.default('1').send()
   }).then(op => {
     println(`Waiting for ${op.hash} to be confirmed...`);
       return op.confirmation(1).then(() => op.hash);

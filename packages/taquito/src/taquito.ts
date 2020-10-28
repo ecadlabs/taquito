@@ -241,8 +241,3 @@ export class TezosToolkit {
     };
   }
 }
-
-/**
- * @description Default Tezos toolkit instance
- */
-export const Tezos = (rpcClient: RpcClient | string) => new TezosToolkit(rpcClient);

@@ -1,10 +1,10 @@
-import { Tezos } from '@taquito/taquito';
+import { TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
 
 const provider = 'https://api.tez.ie/rpc/carthagenet';
 
 async function example() {
-  const tezos = Tezos(provider);
+  const tezos = new TezosToolkit(provider);
   await importKey(
     tezos,
     'peqjckge.qkrrajzs@tezos.example.org',

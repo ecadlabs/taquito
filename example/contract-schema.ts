@@ -1,11 +1,11 @@
-import { Tezos } from '@taquito/taquito';
+import { TezosToolkit } from '@taquito/taquito';
 import { InMemorySigner } from '@taquito/signer';
 
 
 async function example() {
     const provider = 'https://api.tez.ie/rpc/carthagenet';
     const signer: any = new InMemorySigner('edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca');
-    const tezos = Tezos(provider);
+    const tezos = new TezosToolkit(provider);
     tezos.setSignerProvider( signer );
     try {
         const contract = await tezos.contract.at('KT1Q3t3gb8RANMfZozAfSDUXW2UWVqmSR3rr');
