@@ -14,20 +14,28 @@ Before version 7, Taquito was configured to use our default RPC node; the defaul
 
 However, in version 7 of Taquito, we decided to remove the default RPC node. The reason behind this choice is to avoid that a lot of applications rely on our default node and thus centralize a part of the ecosystem on one node.
 
-When creating an instance of the TezosToolkit, it is now required to specify the RPC node. The Tezos singleton has been replaced by a function taking an RPC node as a parameter. Both ways are equivalent, and the second one has been kept for users familiar with the Tezos singleton.
+When creating an instance of the TezosToolkit, it is now required to specify the RPC node. The Tezos singleton is no longer supported.
 
 **Change required:**
 
-~~const tezos = new TezosToolkit()~~
-
+Before version 7:  
 ``` js
 import { TezosToolkit } from '@taquito/taquito';
-const tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+const tezos = new TezosToolkit();
 
 // or
 
-import { Tezos } '@taquito/taquito';
-const tezos = Tezos('https://YOUR_PREFERRED_RPC_URL');
+import { Tezos } from '@taquito/taquito';
+// ready-to-use Tezos singleton
+```
+
+Since version 7:
+``` js
+import { TezosToolkit } from '@taquito/taquito';
+const tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL_NOW_REQUIRED');
+
+// Those who were using the Tezos singleton may consider naming the variable like the singleton to avoid renaming it everywhere in their code:
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL_NOW_REQUIRED');
 ```
 
 Here is an example of the compilation error you would get when updating Taquito to version 7, if the RPC URL is not specified: 

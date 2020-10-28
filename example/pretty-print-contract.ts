@@ -1,11 +1,11 @@
 import { Parser, emitMicheline } from '@taquito/michel-codec'
-import { Tezos } from '@taquito/taquito';
+import { TezosToolkit } from '@taquito/taquito';
 
 const provider = 'https://api.tez.ie/rpc/mainnet';
 
 const example = async () => {
 
-  const tezos = Tezos(provider)
+  const tezos = new TezosToolkit(provider)
 
   try {
     const contract = await tezos.contract.at('KT1EctCuorV2NfVb1XTQgvzJ88MQtWP8cMMv') //StakerDAO

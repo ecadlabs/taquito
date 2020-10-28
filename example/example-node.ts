@@ -1,4 +1,4 @@
-import { Tezos } from '../packages/taquito/src/taquito';
+import { TezosToolkit } from '../packages/taquito/src/taquito';
 import { RpcClient } from '../packages/taquito-rpc/src/taquito-rpc';
 import { castToString } from '../packages/taquito-rpc/src/utils/utils';
 
@@ -7,7 +7,7 @@ const client = new RpcClient(provider);
 
 async function example() {
   try {
-    const tezos = Tezos(provider);
+    const tezos = new TezosToolkit(provider);
 
     console.log('Getting storage...');
     await tezos.contract.at('KT1HqWsXrGbHWc9muqkApqWu64WsxCU3FoRf').then(async contract => {

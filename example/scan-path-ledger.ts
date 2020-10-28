@@ -1,13 +1,13 @@
 
 import { LedgerSigner, DerivationType } from '@taquito/ledger-signer';
-import { Tezos } from '@taquito/taquito';
+import { TezosToolkit } from '@taquito/taquito';
 import TransportNodeHid from "@ledgerhq/hw-transport-node-hid";
 
 async function example() {
 
     const transport = await TransportNodeHid.create();
     let index = 0;
-    const tezos = Tezos('https://api.tez.ie/rpc/carthagenet')
+    const tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet')
     while (index < 10) {
         const ledgerSigner = new LedgerSigner(transport, `44'/1729'/${index}'/0'`, false, DerivationType.tz1);
         tezos.setProvider({ signer: ledgerSigner });
