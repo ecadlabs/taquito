@@ -38,11 +38,7 @@
       ]
     },
     {
-      "type": "category",
-      "label": "Breaking changes",
-      "items": [
-        "v7_breaking_changes"
-      ]
+      "Upgrading version" : ["v7_breaking_changes"]
     },
     {
       "type": "link",

@@ -1,5 +1,5 @@
 ---
-title: Taquito version 7
+title: Upgrading version 7
 author: Roxane Letourneau
 ---
 
