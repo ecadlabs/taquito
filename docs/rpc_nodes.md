@@ -3,46 +3,6 @@ title: RPC nodes
 author: Roxane Letourneau
 ---
 
-:::note
-
->Please be aware that version 7 of taquito introduces breaking changes related to the following classes, where it is now required to specify an RPC node in their constructor:
-- RpcClient
-- Context  
-- TezosToolkit 
-
-Before version 7, Taquito was configured to use our default RPC node; the default value was set in the constructor of the RpcClient class. We took this approach so that users can get started quickly, and Taquito should "just work" with minimal fiddling. Users could import a ready to use Tezos singleton, an instance of the TezosToolkit class using the default RPC URL.    
-
-However, in version 7 of Taquito, we decided to remove the default RPC node. The reason behind this choice is to avoid that a lot of applications rely on our default node and thus centralize a part of the ecosystem on one node.
-
-When creating an instance of the TezosToolkit, it is now required to specify the RPC node. The Tezos singleton is no longer supported.
-
-**Change required:**
-
-Before version 7:  
-``` js
-import { TezosToolkit } from '@taquito/taquito';
-const tezos = new TezosToolkit();
-
-// or
-
-import { Tezos } from '@taquito/taquito';
-// ready-to-use Tezos singleton
-```
-
-Since version 7:
-``` js
-import { TezosToolkit } from '@taquito/taquito';
-const tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL_NOW_REQUIRED');
-
-// Those who were using the Tezos singleton may consider naming the variable like the singleton to avoid renaming it everywhere in their code:
-const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL_NOW_REQUIRED');
-```
-
-Here is an example of the compilation error you would get when updating Taquito to version 7, if the RPC URL is not specified: 
-
-`Type '(rpcClient: string | RpcClient) => TezosToolkit' is missing the following properties from type 'TezosToolkit': _rpc, _context, _stream, _options, and 20 more.`
-:::
-
 ## What to consider when choosing a node
 
 - **Trust**: Choose a node that you can trust the people who operate it.

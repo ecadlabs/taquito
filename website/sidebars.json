@@ -38,6 +38,9 @@
       ]
     },
     {
+      "Upgrading version" : ["v7_breaking_changes"]
+    },
+    {
       "type": "link",
       "label": "TypeDoc Reference",
       "href": "https://tezostaquito.io/typedoc"
