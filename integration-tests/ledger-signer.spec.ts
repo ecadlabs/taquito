@@ -40,7 +40,7 @@ describe('LedgerSigner test', () => {
         transport,
         "44'/1729'/0'/0'", 
         true, 
-        DerivationType.tz2
+        DerivationType.SECP256K1
       )
     ).toBeInstanceOf(LedgerSigner);
   });
@@ -51,7 +51,7 @@ describe('LedgerSigner test', () => {
           transport,
           "44'/1729'/0'/0'", 
           false, 
-          DerivationType.tz1
+          DerivationType.ED25519
         );
         const pk = await signer.publicKey();
         const pkh = await signer.publicKeyHash();
@@ -69,7 +69,7 @@ describe('LedgerSigner test', () => {
           transport,
           "44'/1729'/0'/0'", 
           false, 
-          DerivationType.tz2
+          DerivationType.SECP256K1
         );
         const pk = await signer.publicKey();
         const pkh = await signer.publicKeyHash();
@@ -87,7 +87,7 @@ describe('LedgerSigner test', () => {
           transport,
           "44'/1729'/1'/0'", 
           false, 
-          DerivationType.tz3
+          DerivationType.SECP256R1
         );
         const pk = await signer.publicKey();
         const pkh = await signer.publicKeyHash();
@@ -108,7 +108,7 @@ describe('LedgerSigner test', () => {
             transport,
             "44'/1729'/0'/0'", 
             false, 
-            DerivationType.tz1
+            DerivationType.ED25519
           );
           const signed = await signer.sign(
             '03281e35275248696304421740804c13f1434162474ee9449f70fb0f02cfd178f26c00c9fc72e8491bd2973e196f04ec6918ad5bcee22daa0abeb98d01c35000c09a0c0000eadc0855adb415fa69a76fc10397dc2fb37039a000'
@@ -134,7 +134,7 @@ describe('LedgerSigner test', () => {
         transport,
         "44'/1729'/0'/0'", 
         false, 
-        DerivationType.tz1
+        DerivationType.ED25519
       );
       const tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
       tezos.setSignerProvider( signer );
@@ -158,7 +158,7 @@ describe('Should be abble to used Ledger with wallet API', () => {
           transport,
           "44'/1729'/0'/0'", 
           false, 
-          DerivationType.tz1
+          DerivationType.ED25519
         );
         const tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
         tezos.setSignerProvider( signer );
