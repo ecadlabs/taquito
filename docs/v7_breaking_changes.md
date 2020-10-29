@@ -175,7 +175,7 @@ Ledger support was pre-released in September. Taquito never officially released 
 
 This breaking change can impact the users of the pre-released `ledger-signer` package. 
 
-We have renamed the enum `DerivationType` members to use the curve name. Now `tz1`, `tz2`, and `tz3` become `ED25519`, `SECP256K1`, and `SECP256R1`. This enum is used in the optional `derivationType` parameter of the constructor of the `LedgerSigner` class.
+We have renamed the enum `DerivationType` members to use the curve name. Now `tz1`, `tz2`, and `tz3` become `ED25519`, `SECP256K1`, and `P256`. This enum is used in the optional `derivationType` parameter of the constructor of the `LedgerSigner` class.
 
 There is another derivation type (`BIPS32_ED25519`), which also uses the tz1 prefix. It is used by the `tezos-client` CLI when paired with a ledger device but is not implemented so far in the `ledger-signer` package. The derivation types being named `tz1`, `tz2` and `tz3` were potentially an area of confusion in the future, whereas different derivation types use the same signature scheme. 
 

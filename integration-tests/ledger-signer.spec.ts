@@ -87,7 +87,7 @@ describe('LedgerSigner test', () => {
           transport,
           "44'/1729'/1'/0'", 
           false, 
-          DerivationType.SECP256R1
+          DerivationType.P256
         );
         const pk = await signer.publicKey();
         const pkh = await signer.publicKeyHash();
