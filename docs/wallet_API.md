@@ -244,7 +244,7 @@ Although it is possible and perfectly fine to transfer tokens directly from the 
 
 ### - Transfer between implicit accounts
 
-```js live noInline
+```js live noInline wallet
 Tezos.wallet
   .transfer({ to: 'tz1NhNv9g7rtcjyNsH8Zqu79giY5aTqDDrzB', amount: 0.2 })
   .send()
@@ -268,16 +268,17 @@ The `transfer` method takes an object with only two required properties: the `to
 
 ### - Transfer to smart contracts
 
-```js live noInline
+```js live noInline wallet
 Tezos.wallet
   .transfer({ to: 'KT1TMZhfoYtpjbGG1nLjs7SZioFM1njsRwkP', amount: 0.2 })
   .send()
-  .then((op) =>
-    op
-      .confirmation()
-      .then((result) => println(result))
+  .then((op) => {
+    println(`Waiting for ${op.opHash} to be confirmed...`);
+    return op.confirmation(1).then(() => op.opHash);
+  })
+  .then(hash => println(`Operation injected: https://carthagenet.tzstats.com/${hash}`))
       .catch((err) => println(err))
-  );
+
 ```
 
 Transactions to smart contracts operate in the same fashion as transactions to an implicit account, the only difference being the `KT1...` address. You will also receive a transaction hash and have to wait for the transaction to be confirmed. Once confirmed, it can be the right time to update the user's/contract's balance, for example.
@@ -300,7 +301,7 @@ In this example, we are working with a simple smart contract with two methods: `
 Most of the possible arguments of the entrypoint method are pretty straightforward and intuitive and do not require any explanation. However, a couple of them need more attention.
 Most of the time, the process is simple: you take the contract abstraction you created for the contract you target, you call the `methods` property on it which exposes all the entrypoints of the contract as methods. You pass the argument you want to send to the contract as a function argument before calling the `send()` method to send the transaction:
 
-```js live noInline
+```js live noInline wallet
 Tezos.wallet
   .at('KT1PCLg8Da8T5h5SWibMopPVsxiKg27tSRxx')
   .then((contract) => contract.methods.areYouThere(true).send())
@@ -323,7 +324,7 @@ Tezos.wallet
 
 In the case of multiple arguments (for example if the entrypoint expects a pair), you can just pass the arguments one by one. Be careful of the order of the arguments, they must be in the exact order expected by the contract entrypoint:
 
-```js live noInline
+```js live noInline wallet
 Tezos.wallet
   .at('KT1PCLg8Da8T5h5SWibMopPVsxiKg27tSRxx')
   .then((contract) =>

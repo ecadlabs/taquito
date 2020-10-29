@@ -48,9 +48,8 @@ function println(value) {
 
 Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/carthagenet' });
 
-if(${this.props.wallet}){
-  console.log("Using BeaconWallet")
-  const option = {name:"exampleWallet"};
+${this.props.wallet ? 
+  `const option = {name:"exampleWallet"};
   const wallet = new BeaconWallet(option);
   const network = {type:"carthagenet"};
   wallet.requestPermissions({network})
@@ -59,29 +58,18 @@ if(${this.props.wallet}){
   })
   .then(() => {
     ${this.code}
-  });
-} else if (${this.props.thanosWallet}) {
-  console.log("using Thanos wallet")
-  ThanosWallet.isAvailable()
-  .then(() => {
-    const wallet = new ThanosWallet('MyAwesomeDapp');
-    wallet.connect('carthagenet').then(() => {
-      Tezos.setWalletProvider(wallet);
-    });
-  })
-} else {
-    fetch('https://api.tez.ie/keys/carthagenet/', {
+  });`:
+  `fetch('https://api.tez.ie/keys/carthagenet/', {
     method: 'POST',
     headers: { Authorization: 'Bearer taquito-example' },
   })
   .then(response => response.text())
   .then(privateKey => {
     return importKey(Tezos, privateKey);
-  })
+   })
   .then(() => {
     ${this.code}
-  });
-}
+   });`}
 
 //contract used in example "estimate a contract origination"
 const genericMultisigJSONfile = 
