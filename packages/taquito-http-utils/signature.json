@@ -34,7 +34,7 @@
           },
           {
             "path": "dist/taquito-http-utils.umd.js.map",
-            "sha512": "f95941fac0b293d37ca3a219a6beb8406955b24b2a1bf31b3e16b6d9290658ce1615fc38c9833b598e739d8feb6ff48155041305ea468fd03ac11d502ee92ad4"
+            "sha512": "b8281e67a01c781377129f1c6a8a98193e6c467526459bdd5309b1913fe3ae6ac9724e7ec0051ca26fa0aa27d6b1d7b7da9aadd6b3931810e81a1f7c3c7450de"
           },
           {
             "path": "dist/types/status_code.d.ts",
@@ -79,7 +79,7 @@
           "typings",
           "version"
         ],
-        "sha512": "72f3163159f29f326d28be7371d372b157af037b13c81fecfc4850e04cd16316320d267b68ee24a6d63951681db5e43ad1fde30a64e8d8bb1ef211ea79776607"
+        "sha512": "773dd5a47ae5dd3e2b9cae0144a4ccb74b66e676a61353697c2489971f7e7a432598270085ba43e528258ebf569d64f65c85f81d61ac35990718d8d344887ccf"
       }
     },
     {
@@ -87,7 +87,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/http-utils",
-          "version": "7.0.0-beta.pre.0",
+          "version": "7.0.0-beta-RC.0",
           "description": "",
           "keywords": [],
           "main": "dist/taquito-http-utils.umd.js",
@@ -177,5 +177,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfgMjnCRAD9Qy5GYHsngAAQ6cQAEzCtRLixsdYlOSzGRSNnwhF\nGP4UkMqYVFO7p8FwTJEDmOwof3hiM3cwtxR+zONNZeNNHMGTO8zDcWoEnnDHtWfl\ngi212V2aAoNBzv8VtYcYJ2gMtZenKD/kHxkVv/EIO1/6A2kIh55jOFG2+VxTmv43\nxA+ssL/YCfTfZl879ExpDV4iD5fWNIIK4S4bXAUpUPa12MvJjcZTVc7emiOu0YHC\nvm8AOnAQoI3hSCg9TAp80a1cZWXi+xtgTWpc3idCn2/e6P48FlzWvH8OG0cCCTl5\n0Bwod1sFntTt0N8Z+ZN85K7G3JByPsPU69EyfKSFfzh+8/WXfIPrI+A7L3LKzZ15\nwC2/ndczPH/VDC//KXaI/N26vu8ScUYVTBgnTQj/NZqX6PPwpyNejpYGNHbucLwh\nlaTdo6Pm9PHhnC8KM7002Ixm1i2ckn0x14O/EgzNkVILF/Srg40r6KQ4B0G90Nqp\n8bpMGeeI+aUPxiGFxZnqJbycq8ON8Of/ef9UC5ONFsrwq5KzvtjShcNHcEDCoUs3\nnqBpImdEkaNDxHE8GfYANY8GZwL9ep3c+BoNjjPgQB4Rw3yhtp7amjF5IjRyz87r\nnQmO6r2dqACgZO7+Dq9GDoS5n6FNsQjDeDDUtCgn2+MGiGLaCJSazIpVUCVKiz6P\nJPuLGFI/kDV63b25ZxdG\n=OWmA\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfmbo7CRAD9Qy5GYHsngAAlw0QACRRH3goISqgAUsYHLapfU+W\njF7LpiequENL8K/zKFaciVqN8uBVjd41mAGFmzrnHddJ2X684LYzsMh9Jx7QXAW3\n/oBRyoB9eRbOVnrBhrmric1cUHp+9O78kfh3wnm2Bb8hUCfFxFaKyCt6QwzHpOfX\nqjkcjsorCLXZ4SWbjE8UDyslXstvh/bLV9f0fvm2M21ummMLLdbjwMjWGKqYr6Ew\nzXPW+BGgJHEkzU5L/SIH+Lc7DD4DPuxCVk1uB6QXi1noCNSbcNA12odyG6jZC1pD\nXO7wS9JYQOnpLyPXLdu0zelHztykLEU3ydasnaYPu/GUTNS0w3EGkG7gYPhcVj8H\nT5AwXuyMuv50tzITnZhAOXUl159EYuTFfzJxOFc8DeiBo5aZF/Z9HFcukIa42C+P\ngYl2OBkx23On39M3F8c6gefApgw6KMF8bjn/t9PxdBq8mPZ25xk4OvxBHVMSOmab\nKCq5jlrqYJqvYBTO8HahlmjpF1jzAl7n9XTjXyExEFy7XMEB7otcFTbCzEa40k3o\nGg6r9eH/nlphz0iUqaZ+Q4zeyOfvEVgl31LwAjM3Jbn/4cDOzhg9e7e/dZz0BHP8\nmBfST0D+XG+iUf5QwkAO7D8j3iZBLGXAamRKbjUaQ92WrNri/b8kbtDK8g2PZQjx\nXtvGMrLFQ+oK/sB0I7n0\n=RUSo\n-----END PGP SIGNATURE-----\n"
 }

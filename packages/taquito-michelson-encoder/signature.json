@@ -262,7 +262,7 @@
           },
           {
             "path": "dist/taquito-michelson-encoder.umd.js.map",
-            "sha512": "4a2c7b5277d993793a16509333cf00e290ac48cd9fee9d4819048ecfe1d957b55a94ab81c084e344eadf3547de582b6fbd67583a857c7b25bb71e9800b144664"
+            "sha512": "eb352a6261fd9c1db40f1980812dbbda53b60397879ec15dd4a257911f338779478608120fa999827080d269df20594f48dc0727e20a475043518b79382c1313"
           },
           {
             "path": "dist/lib/tokens/comparable/timestamp.js.map",
@@ -455,7 +455,7 @@
           "typings",
           "version"
         ],
-        "sha512": "da79f56899af729608f1b3598a1450619d06f9c53a002321977f15b70d3ec1aad2a3f8f89ae908f3ebb9dbf94d1394687778e5ac805ae1593801853d83db4ea1"
+        "sha512": "bc9bb04de241201c1a60a89487f8a1c553881b62d3e48e86a17b268c2c31e9602fb677e9c15590e9d5af13dbf5658d3f3a87fba9de80eca580653644d47568e3"
       }
     },
     {
@@ -463,7 +463,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/michelson-encoder",
-          "version": "7.0.0-beta.pre.0",
+          "version": "7.0.0-beta-RC.0",
           "description": "converts michelson data and types into convenient JS/TS objects",
           "keywords": [
             "tezos",
@@ -530,8 +530,8 @@
             ]
           },
           "dependencies": {
-            "@taquito/rpc": "^7.0.0-beta.pre.0",
-            "@taquito/utils": "^7.0.0-beta.pre.0",
+            "@taquito/rpc": "^7.0.0-beta-RC.0",
+            "@taquito/utils": "^7.0.0-beta-RC.0",
             "bignumber.js": "^9.0.1",
             "fast-json-stable-stringify": "^2.1.0"
           },
@@ -568,5 +568,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfgMjqCRAD9Qy5GYHsngAAGFEQABffytONN/quNrNry4umm9kw\nM1asf8BNLzsPagCUhwVd43C72F5Vew9t01XlU5HA/w7+LLA3KArDuuoViFJpudkz\nW7TD0me0SACMerIez6FG1qIhsKjigzWWkyTO9pobIvhNt5WrrjK9TK18X3xx9fAp\nqjj1VhPshBV4lSfe1WpGghtZwxq76QduAA8YSjfPwVn7hRY5VKTKcdJ9y1DGzY+H\nVBplkveakZTT61tUoIMx8cBk47kjO2AUdl77n5/fXV9KrtWWh0J0ox9gHr7gutuU\n6BO/ArzvUqHgRKKGL+nEvBg43+riV/Y0d0uiJX0pwUUZxkJx6XKmL9r3ePLW5sWj\nO47SC/zVbEEG+90xPW6zzKqJ21ZR9Iit0kqXoklb5/csXm63VLil1KrXyxUcsyIA\nvHjzm8mXmC2gViMEh1PWfzz/uEDBixeKAIOjMLr3BaPwU0woP40ucmDz945QnuY6\n7O4RVc5e2zafoAQDQIcOrFWOTRyBQ4pn92nAV4obD1fI32r3gnO3CN036WgcbjlF\nJkCFIkBX9sgc4qECpileuDdppRMlFDKiY4jRjiJuFE3BcxA7EY2wUqoc4jnUEaBm\n8PzLuvu3ACgsgQxmeewJj7L+y/c4yzsy2nZpIl/76AVA7HUFTZBSX7whMpYPlQjY\nO68fw6mOjGl7J6hlHr6s\n=2a+C\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfmbpACRAD9Qy5GYHsngAAkh0QAF54GdGzdYYAVAwtP5H9B5fo\nSiEgYB2BVQgSIGI4IHPpiczjvrQ6tWRMzwaeO+qknUw3iJdKZjO8VzLHWjgKZx+g\niTjN2svJ5ouMVFvWzD/nhF52fR7UDp5NQv4yKnIgxsfJLzQVRCvLpZCGxaeAeADK\nD77FGcGyKsAYUfu/ZSSGOyhOw2wEXzkiJeuFpFrxs3WT9mZbilqhpU2myDBP6udZ\n1Jfrl5jFlZ5v9kX7zOFCyZVU+5XUb00DL6ay2KEaF7aMcb9DLzDIdThv/L0jZpZC\np1+WUlOJ+Y3XF3+GtiiO4bv0+8Ye0xKBV6/SGNIIxB4gzWt+v1QOZzZzAuW32L2c\ntO3vF+RD3Rxo1dSgcIhbSW8gjktx7UNw7Oopi9AGNsxC8YJ7pAfX8QBLaDkQHPY6\ngdPjVF6d+17qepEhOuXDjTRrRGVYf7bDEbd+g56tTwC+b5jzjwuYn+Vky/2zABpf\nY+rc3ysvt0CRq/JYqV0quwCwu+vhB5hqJQldIjad+hN37Iuo/UwU4wUPRfYsaHnE\n7X772AguDitxH7FH5u/z9hgvBTawAdLnPv9dxqICJqiTgXGiGkt0scRXIfuKdd5n\nLChvaWYbVDGLtM82Ab3vZqfl5sCj50o+Inp25LYImUjD06wg3pUwIU7FQmD6dhji\nqlZy7v7QEQMhjdBZK7NF\n=b4ty\n-----END PGP SIGNATURE-----\n"
 }
