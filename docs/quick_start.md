@@ -3,6 +3,11 @@ title: Quick start
 author: Simon Boissonneault-Robert
 ---
 
+
+:::warning v7 Breaking changes
+Taquito version 7, which supports the Tezos "delphi" protocol has some breaking changes. If you are upgrading from an earlier version to v7 please read the [v7 upgrade guide](v7_breaking_changes.md)
+:::
+
 ## Installing Taquito using npm
 
 > For quick-start, you may also like to try out our template/boilerplate app [here][boilerplate]
