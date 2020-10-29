@@ -61,7 +61,14 @@ if(${this.props.wallet}){
     ${this.code}
   });
 } else if (${this.props.thanosWallet}) {
-
+  console.log("using Thanos wallet")
+  ThanosWallet.isAvailable()
+  .then(() => {
+    const wallet = new ThanosWallet('MyAwesomeDapp');
+    wallet.connect('carthagenet').then(() => {
+      Tezos.setWalletProvider(wallet);
+    });
+  })
 } else {
     fetch('https://api.tez.ie/keys/carthagenet/', {
     method: 'POST',
