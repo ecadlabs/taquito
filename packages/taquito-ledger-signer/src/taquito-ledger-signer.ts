@@ -16,7 +16,7 @@ export type LedgerTransport = Pick<Transport<string>, 'send' | 'decorateAppAPIMe
 export enum DerivationType {
   ED25519 = 0x00, // tz1
   SECP256K1 = 0x01, // tz2
-  SECP256R1 = 0x02 // tz3
+  P256 = 0x02 // tz3
 };
 
 export const HDPathTemplate = (account: number) => {
@@ -30,7 +30,7 @@ export const HDPathTemplate = (account: number) => {
  * @param transport A transport instance from LedgerJS libraries depending on the platform used (e.g. Web, Node)
  * @param path The ledger derivation path (default is "44'/1729'/0'/0'")
  * @param prompt Whether to prompt the ledger for public key (default is true)
- * @param derivationType The value which defines the curve to use (DerivationType.ED25519(default), DerivationType.SECP256K1, DerivationType.SECP256R1)
+ * @param derivationType The value which defines the curve to use (DerivationType.ED25519(default), DerivationType.SECP256K1, DerivationType.P256)
  * 
  * @example
  * ```
@@ -70,7 +70,7 @@ export class LedgerSigner implements Signer {
         throw new Error("The derivation path must start with 44'/1729'");
       }
       if(!Object.values(DerivationType).includes(derivationType)) {
-        throw new Error("The derivation type must be DerivationType.ED25519, DerivationType.SECP256K1 or DerivationType.SECP256R1")
+        throw new Error("The derivation type must be DerivationType.ED25519, DerivationType.SECP256K1 or DerivationType.P256")
       }
     }    
 
@@ -99,7 +99,7 @@ export class LedgerSigner implements Signer {
             prefPk = prefix[Prefix.SPPK];
             prefPkh = prefix[Prefix.TZ2]
         }
-        else if (this.derivationType === DerivationType.SECP256R1){
+        else if (this.derivationType === DerivationType.P256){
             prefPk = prefix[Prefix.P2PK];
             prefPkh = prefix[Prefix.TZ3]
         }
