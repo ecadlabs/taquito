@@ -21,6 +21,8 @@ import {
 import {  BeaconWallet } from '@taquito/beacon-wallet';
 import { InMemorySigner } from '@taquito/signer';
 import { LedgerSigner, DerivationType } from '@taquito/ledger-signer';
+import { TezBridgeWallet } from '@taquito/tezbridge-wallet';
+import { ThanosWallet } from '@thanos-wallet/dapp';
 import TransportU2F from "@ledgerhq/hw-transport-u2f";
 import Playground from '@theme/Playground';
 import classnames from 'classnames';
@@ -93,7 +95,9 @@ export default ({
           MichelsonMap, 
           BeaconWallet, 
           InMemorySigner, 
-          LedgerSigner, 
+          LedgerSigner,
+          TezBridgeWallet,
+          ThanosWallet, 
           DerivationType, 
           TransportU2F }}
         code={children.trim()}

@@ -49,27 +49,27 @@ function println(value) {
 Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/carthagenet' });
 
 ${this.props.wallet ? 
-`const option = {name:"exampleWallet"};
-const wallet = new BeaconWallet(option);
-const network = {type:"carthagenet"};
-wallet.requestPermissions({network})
-.then(permission => {
-  return Tezos.setWalletProvider(wallet);
-})
-.then(() => {
-  ${this.code}
-});`:
-`fetch('https://api.tez.ie/keys/carthagenet/', {
-  method: 'POST',
-  headers: { Authorization: 'Bearer taquito-example' },
-})
-.then(response => response.text())
-.then(privateKey => {
-  return importKey(Tezos, privateKey);
- })
-.then(() => {
-  ${this.code}
- });`}
+  `const option = {name:"exampleWallet"};
+  const wallet = new BeaconWallet(option);
+  const network = {type:"carthagenet"};
+  wallet.requestPermissions({network})
+  .then(permission => {
+    return Tezos.setWalletProvider(wallet);
+  })
+  .then(() => {
+    ${this.code}
+  });`:
+  `fetch('https://api.tez.ie/keys/carthagenet/', {
+    method: 'POST',
+    headers: { Authorization: 'Bearer taquito-example' },
+  })
+  .then(response => response.text())
+  .then(privateKey => {
+    return importKey(Tezos, privateKey);
+   })
+  .then(() => {
+    ${this.code}
+   });`}
 
 //contract used in example "estimate a contract origination"
 const genericMultisigJSONfile = 

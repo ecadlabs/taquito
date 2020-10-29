@@ -19,7 +19,9 @@
     "@taquito/ledger-signer": "^7.0.0-beta-RC.0",
     "@taquito/signer": "^7.0.0-beta-RC.0",
     "@taquito/taquito": "^7.0.0-beta-RC.0",
+    "@taquito/tezbridge-wallet": "^7.0.0-beta-RC.0",
     "@taquito/utils": "^7.0.0-beta-RC.0",
+    "@thanos-wallet/dapp": "^0.7.0",
     "classnames": "^2.2.6",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
