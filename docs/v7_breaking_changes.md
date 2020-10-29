@@ -44,10 +44,17 @@ const tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL_NOW_REQUIRED');
 // Those who were using the Tezos singleton may consider naming the variable like the singleton to avoid renaming it everywhere in their code:
 const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL_NOW_REQUIRED');
 ```
+### Example Errors if you were using the Tezos singleton
+
+Here is an example of the compilation error you would get when updating Taquito to version 7, if you do not replace the Tezos singleton by an instance of the TezosToolkit: 
+
+`Module '"../../node_modules/@taquito/taquito/dist/types/taquito"' has no exported member 'Tezos'.` 
 
 ### Error when the url is not set:
 
-Here is an example of the compilation error you would get when updating Taquito to version 7, if the RPC URL is not specified: 
+Here are examples of the compilation error you would get when updating Taquito to version 7, if the RPC URL is not specified: 
+
+`An argument for '_rpc' was not provided. Expected 1-2 arguments, but got 0.`
 
 `Type '(rpcClient: string | RpcClient) => TezosToolkit' is missing the following properties from type 'TezosToolkit': _rpc, _context, _stream, _options, and 20 more.`
 
@@ -104,9 +111,12 @@ const tezos = new TezosToolkit('your_rpc_node')
 importKey(tezos, email, password, mnemonic, secret);
 ```
 
-### Error when the importKey function is not replaced
+### Errors when the `importKey` function is not replaced
 
-If you update to version 7 without replacing the `importKey` method in your code, you might get the following error at runtime:
+If you update to version 7 without replacing the `importKey` method in your code, you might get the following compilation error:
+`Property 'importKey' does not exist on type 'TezosToolkit'.`
+
+or this error at runtime:
 `importKey is not a function`.
 
 ## Fetching `constants` from the RPC
