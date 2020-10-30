@@ -4,6 +4,90 @@ author: Simon Boissonneault-Robert
 ---
 
 
+## Taquito v7.0.0-beta
+
+As per the Taquito [Versioning Strategy](https://github.com/ecadlabs/taquito#versioning-strategy) this v7.0.0 release supports the upcoming Delphinet Tezos Protocol which we are expecting to reach quorum in the coming days.
+
+
+### Delphinet Support
+
+In Delphinet, consumed gas is also provided in `milligas` for a more accurate description of the gas consumption. Replaced property `_gasLimit` by `_milligasLimit` in the `Estimate` class. Added a new method called `consumedMilligas`. This method estimates the gas that the operation will consume in `milligas`. However, the `gasLimit` still needs to be specified in gas (not in `milligas`) when sending transactions.
+ 
+For more details on the Delphi protocol see:
+
+Delphi release announcement: https://blog.nomadic-labs.com/delphi-official-release.html
+Delphi changelogs: https://blog.nomadic-labs.com/delphi-changelog.html#007-delphi-changelog
+ 
+
+### Ledger support for singing
+
+Taquito now ships with a [Ledger](https://www.ledger.com/) Signer implementation. This feature makes it easy to interoperate with Ledger Hardware wallets in a web context or from command-line tools.
+
+Documentation is available here: https://tezostaquito.io/docs/ledger_signer
+
+We have tested using both Ledger Nano S and X devices.
+
+Both the [Madfish](https://www.madfish.solutions/) ([Thanos Wallet](https://thanoswallet.com/)) and Agile Ventures (Tezos Domains) have put this package to use in their products. A special thanks to Klas and Luis of the Kukai team for their early feedback. 
+
+
+### More documentation!
+
+- [Web3js → Taquito](https://tezostaquito.io/docs/web3js_taquito)
+- Docs on how to run our integration tests for
+  - [Ledger Devices](https://tezostaquito.io/docs/ledger_integration_test)
+  - [RPC Node](https://tezostaquito.io/docs/rpc_nodes_integration_test)
+- [Docs for RPC](https://tezostaquito.io/docs/rpc_package)
+- [Docs for popular public Tezos nodes](https://tezostaquito.io/docs/rpc_nodes)
+
+
+### Breaking Changes
+
+With a major version release, comes an opportunity for us to make some breaking changes.
+
+We have published an [upgrade guide](https://tezostaquito.io/docs/v7_breaking_changes) to help guide developers and making these changes as easy to adopt as possible.
+
+
+The three most notable changes are:
+
+#### Removal of the default RPC URL
+
+Users of Taquito must specifically set their RPC URL. We have published a list of [public nodes Tezos RPC nodes](Removal of the default RPC URL
+Removal of the default Tezos singleton. You have to new up a new instance now!).
+
+#### Removal of the default Tezos singleton
+
+This change is related to the removal of the RPC node.
+
+#### Remove the deprecated `Tezos.importKey` method from the main Taquito package
+We deprecated the top-level `importKey` method last march, and now it’s finally time to remove it. The method continues to be available in the `@taquito/signer` package as usual.
+
+### Bugs / Improvements
+
+Fix to the subscription so it doesn’t die on error
+
+We removed the react-components package from Taquito. These may return in the future in a dedicated repository.
+
+### Tests;
+
+We have added many more tests to our [integration-test](https://github.com/ecadlabs/taquito/tree/master/integration-tests) suit. Including tests for draining of accounts
+
+### Infrastructure / backend
+
+- We moved our CI system to GitHub Actions (Thank you to CiricleCI for the year of service!)
+- We have deployed [GitHub’s code scanning](https://github.blog/2020-09-30-code-scanning-is-now-available/) service
+- Separated CI jobs by testnet
+
+### CII Best Practices
+
+Taquito now meets all the criteria for CII Best Practices which you can review [here](https://bestpractices.coreinfrastructure.org/en/projects/3204)
+
+### Why is Taquito still marked as beta?
+
+Taquito v7 is considered very stable, but there are still some items we want to get perfect before removing the `beta` tag. Namely complete architectural documentation to assist developers and auditors with understanding the internals. Documentation is part of the project, and we think our documentation is getting better but we want to go further.
+
+A big thank you to Roxane Létourneau for her excellent work on this Taquito release!
+
+
 ## v6.3.4-beta.0 Release Notes
 
 ### Changes
