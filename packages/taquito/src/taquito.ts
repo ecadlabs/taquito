@@ -1,5 +1,4 @@
 import { RpcClient } from '@taquito/rpc';
-import { importKey } from '@taquito/signer';
 import { Protocols } from './constants';
 import { Config, Context, TaquitoProvider } from './context';
 import { ContractProvider, EstimationProvider } from './contract/interface';
@@ -48,18 +47,27 @@ export interface SetProviderOptions {
 
 /**
  * @description Facade class that surfaces all of the libraries capability and allow it's configuration
+ * 
+ * @param _rpc The RPC server to use
  */
 export class TezosToolkit {
-  private _rpcClient = new RpcClient();
   private _stream!: SubscribeProvider;
   private _options: SetProviderOptions = {};
-
-  private _context: Context = new Context();
-  private _wallet: Wallet = new Wallet(this._context);
+  private _rpcClient: RpcClient
+  private _wallet: Wallet;
 
   public readonly format = format;
 
-  constructor() {
+  constructor(
+    private _rpc: RpcClient | string,
+    private _context: Context = new Context(_rpc)
+  ) {
+    if (typeof this._rpc === 'string') {
+      this._rpcClient = new RpcClient(this._rpc);
+    } else {
+      this._rpcClient = this._rpc;
+    }
+    this._wallet = new Wallet(this._context);
     this.setProvider({ rpc: this._rpcClient });
   }
 
@@ -115,9 +123,10 @@ export class TezosToolkit {
       this._rpcClient = new RpcClient(rpc);
     } else if (rpc instanceof RpcClient) {
       this._rpcClient = rpc;
-    } else if (this._options.rpc === undefined) {
+    } 
+/*     else if (this._options.rpc === undefined) {
       this._rpcClient = new RpcClient();
-    }
+    } */
     this._options.rpc = this._rpcClient;
     this._context.rpc = this._rpcClient;
   }
@@ -226,21 +235,9 @@ export class TezosToolkit {
     return this._context.signer;
   }
 
-  /**
-   * @deprecated Deprecated in favor of setting the signer provider with @taquito/signer importKey
-   */
-  importKey(privateKeyOrEmail: string, passphrase?: string, mnemonic?: string, secret?: string) {
-    return importKey(this, privateKeyOrEmail, passphrase, mnemonic, secret);
-  }
-
   getFactory<T, K extends Array<any>>(ctor: TaquitoProvider<T, K>) {
     return (...args: K) => {
       return new ctor(this._context, ...args);
     };
   }
 }
-
-/**
- * @description Default Tezos toolkit instance
- */
-export const Tezos = new TezosToolkit();

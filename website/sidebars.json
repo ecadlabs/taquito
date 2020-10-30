@@ -1,32 +1,50 @@
 {
-    "docs": [
-        {
-            "type": "category",
-            "label": "General",
-            "items": [
-                "quick_start",
-                "boilerplate",
-                "making_transfers",
-                "originate",
-                "set_delegate",
-                "smartcontracts",
-                "lambda_view"
-                "estimate",
-                "validators"
-            ]
-        },
-        {
-            "type": "category",
-            "label": "Signer",
-            "items": [
-                "inmemory_signer",
-                "tezbridge_signer"
-            ]
-        },
-        {
-            "type": "link",
-            "label": "TypeDoc Reference",
-            "href": "https://tezostaquito.io/typedoc"
-        }
-    ]
+  "docs": [
+    {
+      "type": "category",
+      "label": "General",
+      "items": [
+        "quick_start",
+        "boilerplate",
+        "wallet_API",
+        "making_transfers",
+        "originate",
+        "set_delegate",
+        "smartcontracts",
+        "estimate",
+        "validators",
+        "maps_bigmaps",
+        "web3js_taquito",
+        "rpc_package",
+        "rpc_nodes",
+        "lambda_view"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Signer",
+      "items": ["inmemory_signer", "tezbridge_signer", "ledger_signer"]
+    },
+    {
+      "type": "category",
+      "label": "Advanced",
+      "items": ["complex_parameters", "storage_annotations", "drain_account"]
+    },
+    {
+      "type": "category",
+      "label": "Running integration tests",
+      "items": [
+        "ledger_integration_test",
+        "rpc_nodes_integration_test"
+      ]
+    },
+    {
+      "Upgrading Guide" : ["v7_breaking_changes"]
+    },
+    {
+      "type": "link",
+      "label": "TypeDoc Reference",
+      "href": "https://tezostaquito.io/typedoc"
+    }
+  ]
 }

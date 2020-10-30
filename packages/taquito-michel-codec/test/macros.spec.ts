@@ -1,4 +1,5 @@
 import { Parser } from '../src/micheline-parser';
+import { emitMicheline } from '../src/micheline-emitter';
 
 describe('Macros', () => {
   it('CMPEQ', () => {
@@ -8,7 +9,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('CMPNEQ', () => {
@@ -17,7 +18,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('CMPLT', () => {
@@ -26,7 +27,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('CMPGT', () => {
@@ -35,7 +36,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('CMPLE', () => {
@@ -44,7 +45,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('CMPGE', () => {
@@ -53,7 +54,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('IFEQ', () => {
@@ -62,7 +63,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('IFNEQ', () => {
@@ -71,7 +72,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('IFLT', () => {
@@ -80,7 +81,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('IFGT', () => {
@@ -89,7 +90,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('IFLE', () => {
@@ -98,7 +99,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('IFGE', () => {
@@ -107,7 +108,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('IFCMPEQ', () => {
@@ -116,7 +117,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('IFCMPNEQ', () => {
@@ -125,7 +126,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('IFCMPLT', () => {
@@ -134,7 +135,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('IFCMPGT', () => {
@@ -143,7 +144,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('IFCMPLE', () => {
@@ -152,7 +153,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('IFCMPGE', () => {
@@ -161,7 +162,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('FAIL', () => {
@@ -170,7 +171,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('ASSERT', () => {
@@ -179,7 +180,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('ASSERT_EQ', () => {
@@ -188,7 +189,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('ASSERT_NEQ', () => {
@@ -197,7 +198,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('ASSERT_LT', () => {
@@ -206,7 +207,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('ASSERT_GT', () => {
@@ -215,7 +216,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('ASSERT_LE', () => {
@@ -224,7 +225,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('ASSERT_GE', () => {
@@ -233,7 +234,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('ASSERT_CMPEQ', () => {
@@ -242,7 +243,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('ASSERT_CMPNEQ', () => {
@@ -251,7 +252,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('ASSERT_CMPLT', () => {
@@ -260,7 +261,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('ASSERT_CMPGT', () => {
@@ -269,7 +270,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('ASSERT_CMPLE', () => {
@@ -278,7 +279,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('ASSERT_CMPGE', () => {
@@ -287,7 +288,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('ASSERT_NONE', () => {
@@ -296,7 +297,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('ASSERT_SOME', () => {
@@ -305,7 +306,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('ASSERT_LEFT', () => {
@@ -314,7 +315,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('ASSERT_RIGHT', () => {
@@ -323,7 +324,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('DUP 2', () => {
@@ -332,7 +333,16 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
+  });
+
+  it('DUUP', () => {
+    const macro = '{ DUUP }';
+    const expanded = '{ { DIP { DUP } ; SWAP } }';
+    const p = new Parser({ expandMacros: true });
+    const m = p.parseMichelineExpression(macro);
+    const e = p.parseMichelineExpression(expanded);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('DUP 3', () => {
@@ -341,7 +351,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('PAPPAIIR %a %b @x', () => {
@@ -350,7 +360,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('PAPPAIIR %a %b %c @x', () => {
@@ -359,7 +369,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('PAPPAIIR %a %b %c %d @x', () => {
@@ -368,7 +378,16 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
+  });
+
+  it('PAPAPAIR', () => {
+    const macro = '{ PAPAPAIR }';
+    const expanded = '{ { DIP 2 { PAIR } ; DIP { PAIR } ; PAIR } }';
+    const p = new Parser({ expandMacros: true });
+    const m = p.parseMichelineExpression(macro);
+    const e = p.parseMichelineExpression(expanded);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('UNPAPPAIIR %a %b %c %d @x', () => {
@@ -379,7 +398,45 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
+  });
+
+  it('UNPPAIPAIR', () => {
+    const macro = '{ UNPPAIPAIR }';
+    const expanded = `{{{DUP; CAR; DIP {CDR}}; DIP {{DUP; CAR; DIP {CDR}}}; {DUP; CAR; DIP {CDR}}}}`;
+    const p = new Parser({ expandMacros: true });
+    const m = p.parseMichelineExpression(macro);
+    const e = p.parseMichelineExpression(expanded);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
+  });
+
+  it('UNPPAPAIIR', () => {
+    const macro = '{ UNPPAPAIIR }';
+    const expanded = `{ { { DUP ; CAR ; DIP { CDR } } ;
+    { DUP ; CAR ; DIP { CDR } } ;
+    DIP { { DUP ; CAR ; DIP { CDR } } } } }`;
+    const p = new Parser({ expandMacros: true });
+    const m = p.parseMichelineExpression(macro);
+    const e = p.parseMichelineExpression(expanded);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
+  });
+
+  it('UNPPPAIIPAIR', () => {
+    const macro = '{ UNPPPAIIPAIR }';
+    const expanded = `{{{DUP; CAR; DIP {CDR}}; DIP {{DUP; CAR; DIP {CDR}}}; {DUP; CAR; DIP {CDR}}; {DUP; CAR; DIP {CDR}}}}`;
+    const p = new Parser({ expandMacros: true });
+    const m = p.parseMichelineExpression(macro);
+    const e = p.parseMichelineExpression(expanded);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
+  });
+
+  it('UNPAPPAIPAIR', () => {
+    const macro = '{ UNPAPPAIPAIR }';
+    const expanded = `{{{DUP; CAR; DIP {CDR}}; DIP {{DUP; CAR; DIP {CDR}}}; DIP 2 {{DUP; CAR; DIP {CDR}}}; DIP {{DUP; CAR; DIP {CDR}}}}}`;
+    const p = new Parser({ expandMacros: true });
+    const m = p.parseMichelineExpression(macro);
+    const e = p.parseMichelineExpression(expanded);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('CAAR', () => {
@@ -388,7 +445,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('CDDR', () => {
@@ -397,7 +454,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('SET_CAR', () => {
@@ -406,7 +463,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('SET_CDR', () => {
@@ -415,7 +472,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('SET_CADR', () => {
@@ -428,7 +485,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('SET_CADR %a', () => {
@@ -441,7 +498,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('SET_CDAR', () => {
@@ -453,7 +510,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('SET_CDAR %a', () => {
@@ -465,7 +522,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('MAP_CAR', () => {
@@ -478,7 +535,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('MAP_CDR', () => {
@@ -492,7 +549,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('MAP_CADR', () => {
@@ -511,7 +568,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('MAP_CADR %a', () => {
@@ -530,7 +587,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('MAP_CDAR', () => {
@@ -547,7 +604,7 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
   it('MAP_CDAR %a', () => {
@@ -564,6 +621,15 @@ describe('Macros', () => {
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
-    expect(m).toStrictEqual(e);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
+  });
+
+  it('DIIP', () => {
+    const macro = '{ DIIP { ASSERT } }';
+    const expanded = `{ DIP 2 { { IF {} { { UNIT ; FAILWITH } } } } }`;
+    const p = new Parser({ expandMacros: true });
+    const m = p.parseMichelineExpression(macro);
+    const e = p.parseMichelineExpression(expanded);
+    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 });

@@ -1,19 +1,18 @@
-
 <span style="display:block;text-align:center">![Logo](https://tezostaquito.io/img/Taquito.png)</span>
 
 A TypeScript library suite for development on the Tezos blockchain
 
-[![CircleCI](https://circleci.com/gh/ecadlabs/taquito.svg?style=svg)](https://circleci.com/gh/ecadlabs/taquito)
+![Node.js CI](https://github.com/ecadlabs/taquito/workflows/Node.js%20CI/badge.svg)
 [![codecov](https://codecov.io/gh/ecadlabs/taquito/branch/master/graph/badge.svg)](https://codecov.io/gh/ecadlabs/taquito)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/3204/badge)](https://bestpractices.coreinfrastructure.org/projects/3204)
 [![npm version](https://badge.fury.io/js/%40taquito%2Ftaquito.svg)](https://badge.fury.io/js/%40taquito%2Ftaquito)
 
 _WARNING: This project is in beta. We welcome users and feedback, please be aware that this project is a work in progress._
 
-## Official channels
+## Community support channels
 
-- <https://keybase.io/team/ecadlabs.taquito>
-- <https://tezos.stackexchange.com/questions/tagged/taquito>
+- [TezosTaquito Telegram Community Channel][telegram]
+- [Tezos StackExchange][stackexchange]
 
 ## What is Taquito
 
@@ -157,6 +156,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 [3]: https://keybase.io/simrob
 [4]: https://tezostaquito.io
 [5]: https://docusaurus.io/
+[telegram]: https://t.me/tezostaquito
+[stackexchange]: https://tezos.stackexchange.com/questions/tagged/taquito
 
 ## Credits
 

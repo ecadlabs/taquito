@@ -10,6 +10,10 @@ module.exports = {
     src:
       'https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js',
     async: true,
+  }, {
+    src:
+      'https://www.tezbridge.com/plugin.js',
+    async: true,
   }],
   stylesheets: [
     'https://fonts.googleapis.com/css?family=Baloo+Tammudu|Open+Sans:400,600,800&display=swap',
@@ -28,8 +32,8 @@ module.exports = {
         alt: 'Taquito Logo',
         src: 'img/a_taquito.png'
       },
-      links: [
-        { to: 'docs/version', label: '6.3.2-beta.0', position: 'right' },
+      items: [
+        { to: 'docs/version', label: '6.3.5-beta.0', position: 'right' },
         { to: 'docs/quick_start', label: 'Docs', position: 'right' },
         { href: "https://twitter.com/TezosTaquito", label: 'Twitter', position: 'right' },
         { href: "https://github.com/ecadlabs/taquito", label: 'GitHub', position: 'right' }

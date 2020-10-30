@@ -22,9 +22,22 @@ export class TezBridgeWallet implements WalletProvider {
     }
   }
 
-  getPKH() {
+  async getPKH() {
     return tezbridge.request({
       method: 'get_source',
+    });
+  }
+
+  /**
+   *
+   * @description Allow user to pre-define their host for easy use on custom nodes
+   *
+   * @param host host's RPC url
+   */
+  async setHost(host: string) {
+    await tezbridge.request({
+      method: 'set_host',
+      host: host,
     });
   }
 

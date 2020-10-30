@@ -33,7 +33,7 @@ describe('ImportKey', () => {
     });
 
     mockRpcClient.getManagerKey.mockResolvedValue('test');
-    toolkit = new TezosToolkit();
+    toolkit = new TezosToolkit('url');
     toolkit['_rpcClient'] = mockRpcClient;
     toolkit['_context'].rpc = mockRpcClient;
     toolkit['_options'].rpc = mockRpcClient;

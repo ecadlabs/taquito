@@ -4,6 +4,7 @@ import { Tuple, NoArgs, ReqArgs, NoAnnots } from "./utils";
 export class MacroError extends Error {
     constructor(public prim: Prim, message?: string) {
         super(message);
+        Object.setPrototypeOf(this, MacroError.prototype);
     }
 }
 
@@ -33,13 +34,13 @@ function assertIntArg(ex: Prim, arg: Expr): arg is IntLiteral {
 
 type PT = [number, [string | null, string | null]];
 
-function parsePairUnpairExpr(p: Prim, expr: string, annotations: string[], agg: (a: PT[], v: PT) => PT[]): { r: PT[], n: number, an: number } {
-    const res: PT[] = [];
+function parsePairUnpairExpr(p: Prim, expr: string, annotations: string[], agg: (l: PT[] | undefined, r: PT[] | undefined, top: PT) => PT[]): { r: PT[], n: number, an: number } {
     let i = 0;
     let ai = 0;
     const ann: [string | null, string | null] = [null, null];
 
     // Left expression
+    let lexpr: PT[] | undefined;
     if (i === expr.length) {
         throw new MacroError(p, `unexpected end: ${p.prim}`);
     }
@@ -47,7 +48,7 @@ function parsePairUnpairExpr(p: Prim, expr: string, annotations: string[], agg: 
     switch (c) {
         case "P":
             const { r, n, an } = parsePairUnpairExpr(p, expr.slice(i), annotations.slice(ai), agg);
-            res.push(...r);
+            lexpr = r;
             i += n;
             ai += an;
             break;
@@ -61,6 +62,7 @@ function parsePairUnpairExpr(p: Prim, expr: string, annotations: string[], agg: 
     }
 
     // Right expression
+    let rexpr: PT[] | undefined;
     if (i === expr.length) {
         throw new MacroError(p, `unexpected end: ${p.prim}`);
     }
@@ -68,7 +70,7 @@ function parsePairUnpairExpr(p: Prim, expr: string, annotations: string[], agg: 
     switch (c) {
         case "P":
             const { r, n, an } = parsePairUnpairExpr(p, expr.slice(i), annotations.slice(ai), agg);
-            res.push(...r.map<PT>(([v, a]) => [v + 1, a]));
+            rexpr = r.map<PT>(([v, a]) => [v + 1, a]);
             i += n;
             ai += an;
             break;
@@ -81,7 +83,7 @@ function parsePairUnpairExpr(p: Prim, expr: string, annotations: string[], agg: 
             throw new MacroError(p, `${p.prim}: unexpected character: ${c}`);
     }
 
-    return { r: agg(res, [0, ann]), n: i, an: ai };
+    return { r: agg(lexpr, rexpr, [0, ann]), n: i, an: ai };
 }
 
 function parseSetMapCadr(p: Prim, expr: string, vann: string[], term: { a: Expr, d: Expr }): Expr {
@@ -158,6 +160,8 @@ const unpairRe = /^UNP[PAI]{2,}R$/;
 const cadrRe = /^C[AD]{2,}R$/;
 const setCadrRe = /^SET_C[AD]+R$/;
 const mapCadrRe = /^MAP_C[AD]+R$/;
+const diipRe = /^DI{2,}P$/;
+const duupRe = /^DU+P$/;
 
 export function expandMacros(ex: Prim): Expr {
     function mayRename(annots?: string[]): Prim[] {
@@ -317,43 +321,6 @@ export function expandMacros(ex: Prim): Expr {
             break;
 
         // Syntactic conveniences
-        case "DUP":
-            if (ex.args === undefined) {
-                return ex;
-            }
-
-            if (assertArgs(ex, 1) && assertIntArg(ex, ex.args[0])) {
-                const n = parseInt(ex.args[0].int, 10);
-
-                if (n === 1) {
-                    return [mkPrim({ prim: "DUP", annots: ex.annots })];
-
-                } else if (n === 2) {
-                    return [
-                        {
-                            prim: "DIP",
-                            args: [[mkPrim({ prim: "DUP", annots: ex.annots })]],
-                        },
-                        { prim: "SWAP" },
-                    ];
-
-                } else {
-                    return [
-                        {
-                            prim: "DIP",
-                            args: [
-                                { int: String(n - 1) },
-                                [mkPrim({ prim: "DUP", annots: ex.annots })],
-                            ],
-                        },
-                        {
-                            prim: "DIG",
-                            args: [{ int: String(n) }],
-                        },
-                    ];
-                }
-            }
-            break;
 
         case "IF_SOME":
             if (assertArgs(ex, 2)) {
@@ -373,7 +340,7 @@ export function expandMacros(ex: Prim): Expr {
     if (pairRe.test(ex.prim)) {
         if (assertArgs(ex, 0)) {
             const { fields, rest } = filterAnnotations(ex.annots);
-            const { r } = parsePairUnpairExpr(ex, ex.prim.slice(1), fields, (a, v) => [...a, v]);
+            const { r } = parsePairUnpairExpr(ex, ex.prim.slice(1), fields, (l, r, top) => [...(l || []), ...(r || []), top]);
 
             return r.map(([v, a], i) => {
                 const ann = [
@@ -393,8 +360,7 @@ export function expandMacros(ex: Prim): Expr {
     // UNPAPPAIIR macro
     if (unpairRe.test(ex.prim)) {
         if (assertArgs(ex, 0)) {
-            const { r } = parsePairUnpairExpr(ex, ex.prim.slice(3), ex.annots || [], (a, v) => [v, ...a]);
-
+            const { r } = parsePairUnpairExpr(ex, ex.prim.slice(3), ex.annots || [], (l, r, top) => [top, ...(r || []), ...(l || [])]);
             return r.map(([v, a]) => {
                 const leaf: Prim[] = [
                     { prim: "DUP" },
@@ -507,6 +473,61 @@ export function expandMacros(ex: Prim): Expr {
 
             return parseSetMapCadr(ex, ex.prim.slice(5, ex.prim.length - 1), [], term);
         }
+    }
+
+    // Expand deprecated DI...IP to [DIP n]
+    if (diipRe.test(ex.prim)) {
+        if (assertArgs(ex, 1)) {
+            let n = 0;
+            while (ex.prim[1 + n] === "I") { n++; }
+            return mkPrim({ prim: "DIP", args: [{ int: String(n) }, ex.args[0]] });
+        }
+    }
+
+    // Expand modern DUP n or deprecated DU...UP
+    if (duupRe.test(ex.prim)) {
+        let n = 0;
+        while (ex.prim[1 + n] === "U") { n++; }
+
+        if (n === 1) {
+            if (ex.args === undefined) {
+                return ex; // skip
+            }
+            if (assertArgs(ex, 1) && assertIntArg(ex, ex.args[0])) {
+                n = parseInt(ex.args[0].int, 10);
+            }
+        } else {
+            assertArgs(ex, 0);
+        }
+
+        if (n === 1) {
+            return [mkPrim({ prim: "DUP", annots: ex.annots })];
+
+        } else if (n === 2) {
+            return [
+                {
+                    prim: "DIP",
+                    args: [[mkPrim({ prim: "DUP", annots: ex.annots })]],
+                },
+                { prim: "SWAP" },
+            ];
+
+        } else {
+            return [
+                {
+                    prim: "DIP",
+                    args: [
+                        { int: String(n - 1) },
+                        [mkPrim({ prim: "DUP", annots: ex.annots })],
+                    ],
+                },
+                {
+                    prim: "DIG",
+                    args: [{ int: String(n) }],
+                },
+            ];
+        }
+
     }
 
     return ex;
