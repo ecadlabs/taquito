@@ -1,7 +1,8 @@
 import { CONFIGS } from './config';
-CONFIGS().forEach(({ lib, network, setup }) => {
+CONFIGS().forEach(({ lib, network, knownFa12Contract, setup }) => {
+  
   const Tezos = lib;
-  const fa12Address = 'KT1LARUt9LMKjs7wc9Dh6oeDgvMMa4Rih8eA';
+  const fa12Address = knownFa12Contract;
 
   describe('Lambda view', () => {
     beforeEach(async done => {

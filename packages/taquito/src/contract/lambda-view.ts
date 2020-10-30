@@ -248,5 +248,7 @@ export default class LambdaView {
 }
 
 export enum DefaultLambdaAddresses {
+  mainnet = 'KT1CPuTzwC7h7uLXd5WQmpMFso1HxrLBUtpE',
   carthagenet = 'KT1VAy1o1FGiXYfD3YT7x7k5eF5HSHhmc1u6',
+  delphinet = 'KT19abMFs3haqyKYwqdLjK9GbtofryZLvpiK'
 }
