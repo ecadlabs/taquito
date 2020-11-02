@@ -224,6 +224,9 @@ export default class LambdaView {
 
     const args = Array.from(entrypoint.args) as [MichelsonV1Expression, MichelsonV1Expression];
     const [parameter, callbackContract] = args;
+    if( 'annots' in parameter ) {
+      delete parameter['annots']
+    }
 
     if (!('prim' in callbackContract) || !callbackContract.args) {
       // TODO: Enhance this error message to be more descriptive

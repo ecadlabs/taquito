@@ -21,7 +21,6 @@ interface Config {
   knownBaker: string;
   knownContract: string;
   knownBigMapContract: string;
-  knownFa12Contract: string;
   network: string;
   protocol: Protocols;
   signerConfig: EphemeralConfig | FaucetConfig;
@@ -62,7 +61,6 @@ const delphinetEphemeral = {
   knownBaker: 'tz1LpmZmB1yJJBcCrBDLSAStmmugGDEghdVv',
   knownContract: 'KT1Gm9PeBggJzegaM9sRCz1EymLrWxpWyGXr',
   knownBigMapContract: 'KT1Nf1CPvF1FFmAan5LiRvcyukyt3Nf4Le9B',
-  knownFa12Contract: 'KT1BcotqYFmapi6QbNXirn371Ykf2tv5XAGB',
   network: 'delphinet',
   protocol: Protocols.PsDELPH1,
   signerConfig: {
@@ -77,7 +75,6 @@ const carthagenetEphemeral = {
   knownBaker: 'tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9',
   knownContract: 'KT1XYa1JPKYVJYVJge89r4w2tShS8JYb1NQh',
   knownBigMapContract: 'KT1HqWsXrGbHWc9muqkApqWu64WsxCU3FoRf',
-  knownFa12Contract: 'KT1LARUt9LMKjs7wc9Dh6oeDgvMMa4Rih8eA',
   protocol: Protocols.PsCARTHA,
   network: 'carthagenet',
   signerConfig: {
@@ -127,7 +124,6 @@ const delphinetFaucet = {
   knownBaker: 'tz1LpmZmB1yJJBcCrBDLSAStmmugGDEghdVv',
   knownContract: 'KT1Gm9PeBggJzegaM9sRCz1EymLrWxpWyGXr',
   knownBigMapContract: 'KT1Nf1CPvF1FFmAan5LiRvcyukyt3Nf4Le9B',
-  knownFa12Contract: 'KT1BcotqYFmapi6QbNXirn371Ykf2tv5XAGB',
   network: 'delphinet',
   protocol: Protocols.PsDELPH1,
   signerConfig: {
@@ -141,7 +137,6 @@ const carthagenetFaucet = {
   knownBaker: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
   knownContract: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK',
   knownBigMapContract: 'KT1HqWsXrGbHWc9muqkApqWu64WsxCU3FoRf',
-  knownFa12Contract: 'KT1LARUt9LMKjs7wc9Dh6oeDgvMMa4Rih8eA',
   network: 'carthagenet',
   protocol: Protocols.PsCARTHA,
   signerConfig: {
@@ -241,7 +236,7 @@ const setupWithFaucetKey = async (Tezos: TezosToolkit, signerConfig: FaucetConfi
 export const CONFIGS = () => {
   return forgers.reduce((prev, forger: ForgerType) => {
 
-    const configs = providers.map(({ rpc, knownBaker, knownContract, knownFa12Contract, network, protocol, knownBigMapContract, signerConfig }) => {
+    const configs = providers.map(({ rpc, knownBaker, knownContract, network, protocol, knownBigMapContract, signerConfig }) => {
       const Tezos = new TezosToolkit(rpc);
 
       setupForger(Tezos, forger)
@@ -254,7 +249,6 @@ export const CONFIGS = () => {
         protocol,
         lib: Tezos,
         knownBigMapContract,
-        knownFa12Contract,
         signerConfig,
         setup: async (preferFreshKey: boolean = false) => {
           if (signerConfig.type === SignerType.FAUCET) {
