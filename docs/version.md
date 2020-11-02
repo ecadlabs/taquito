@@ -19,7 +19,7 @@ Delphi release announcement: https://blog.nomadic-labs.com/delphi-official-relea
 Delphi changelogs: https://blog.nomadic-labs.com/delphi-changelog.html#007-delphi-changelog
  
 
-### Ledger support for singing
+### Ledger support for signing
 
 Taquito now ships with a [Ledger](https://www.ledger.com/) Signer implementation. This feature makes it easy to interoperate with Ledger Hardware wallets in a web context or from command-line tools.
 
