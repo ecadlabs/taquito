@@ -12,12 +12,12 @@ As per the Taquito [Versioning Strategy](https://github.com/ecadlabs/taquito#ver
 ### Delphinet Support
 
 In Delphinet, consumed gas is also provided in `milligas` for a more accurate description of the gas consumption. Replaced property `_gasLimit` by `_milligasLimit` in the `Estimate` class. Added a new method called `consumedMilligas`. This method estimates the gas that the operation will consume in `milligas`. However, the `gasLimit` still needs to be specified in gas (not in `milligas`) when sending transactions.
- 
+
 For more details on the Delphi protocol see:
 
 Delphi release announcement: https://blog.nomadic-labs.com/delphi-official-release.html
 Delphi changelogs: https://blog.nomadic-labs.com/delphi-changelog.html#007-delphi-changelog
- 
+
 
 ### Ledger support for signing
 
@@ -27,7 +27,7 @@ Documentation is available here: https://tezostaquito.io/docs/ledger_signer
 
 We have tested using both Ledger Nano S and X devices.
 
-Both the [Madfish](https://www.madfish.solutions/) ([Thanos Wallet](https://thanoswallet.com/)) and Agile Ventures (Tezos Domains) have put this package to use in their products. A special thanks to Klas and Luis of the Kukai team for their early feedback. 
+Both the [Madfish](https://www.madfish.solutions/) ([Thanos Wallet](https://thanoswallet.com/)) and Agile Ventures (Tezos Domains) have put this package to use in their products. A special thanks to Klas and Luis of the Kukai team for their early feedback.
 
 
 ### More documentation!
@@ -51,12 +51,12 @@ The three most notable changes are:
 
 #### Removal of the default RPC URL
 
-Users of Taquito must specifically set their RPC URL. We have published a list of [public nodes Tezos RPC nodes](Removal of the default RPC URL
-Removal of the default Tezos singleton. You have to new up a new instance now!).
+Users of Taquito must specifically set their RPC URL. We have published a list of [public nodes Tezos RPC nodes](https://tezostaquito.io/docs/rpc_nodes/).
+
 
 #### Removal of the default Tezos singleton
 
-This change is related to the removal of the RPC node.
+Users must now make a new instance of the Taquito `TezosToolkit`. This change is related to the removal of the default RPC node URL.
 
 #### Remove the deprecated `Tezos.importKey` method from the main Taquito package
 We deprecated the top-level `importKey` method last march, and now it’s finally time to remove it. The method continues to be available in the `@taquito/signer` package as usual.
@@ -67,7 +67,7 @@ Fix to the subscription so it doesn’t die on error
 
 We removed the react-components package from Taquito. These may return in the future in a dedicated repository.
 
-### Tests;
+### Tests
 
 We have added many more tests to our [integration-test](https://github.com/ecadlabs/taquito/tree/master/integration-tests) suit. Including tests for draining of accounts
 
@@ -98,7 +98,7 @@ It's now possible to find out what URL the RPC Client is configured to use.
 
 #### The TezBridge wallet provider allows setting of the RPC url
 
-Add the ability to Set a host for TezBridge. This is helpful when deploying contracts to a local node, the wallet user does not have to manually update the RPC URL in TezBridge. The application can inform TezBridge what node to use, offering a better user experience. 
+Add the ability to Set a host for TezBridge. This is helpful when deploying contracts to a local node, the wallet user does not have to manually update the RPC URL in TezBridge. The application can inform TezBridge what node to use, offering a better user experience.
 
 #### Documentation
 
@@ -181,11 +181,11 @@ Correct types are applied to parameters on the RPC response #312
 
 #### (Breaking Change) Support for complex keys in Map and BigMap
 
-This release introduces a breaking change to Map and BigMaps. In the forthcoming protocol "Carthage/006_PsCARTHA", it is possible to use a complex type composed of a pair as a key in a Smart Contracts Map or BigMap. This type of key isn't useable in Javascripts Map objects. 
+This release introduces a breaking change to Map and BigMaps. In the forthcoming protocol "Carthage/006_PsCARTHA", it is possible to use a complex type composed of a pair as a key in a Smart Contracts Map or BigMap. This type of key isn't useable in Javascripts Map objects.
 
 This release introduces `MichelsonMap()` class that provides an abstraction over these details.
 
-Existing code that accesses Map or BigMap storage via the Taquito data abstraction in the following fashion: 
+Existing code that accesses Map or BigMap storage via the Taquito data abstraction in the following fashion:
 
 ```typescript
 const account = storage.accounts["tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD"]
@@ -200,9 +200,9 @@ Additionally, if existing code initializes storage (during contract origination 
 
 ```typescript
     const map = new MichelsonMap()
-    
+
     map.set({firstName:"Joe", lastName: "Bloe"}, "myValue")
-    
+
     Tezos.contract.originate({
         code: myContractWithAPairAsKeyCode,
         storage: map
@@ -222,7 +222,7 @@ Or one can also use the `fromLiteral` convenience method, as illustrated below.
                     allowances: MichelsonMap.fromLiteral({
                       "tz3YjfexGakCDeCseXFUpcXPSAN9xHxE9TH2": "1"
                     })
-                }   
+                }
             })
         }
     })
@@ -260,7 +260,7 @@ crossorigin="anonymous" integrity="sha384-sk4V+57zLUCfkna8z4p1u6CioucJqmeo+QnaiX
 
 ## 6.0.3-beta.0 Local Forging, Batch Ops and more
 
-This release brings several new features to Taquito. In line with our versioning policy, we have also bumped the major release number to v6 on this release, as this version has and continues to be tested against the Carthage testnet. By using this version of Taquito, your application will be compatible with both the Babylonnet protocol and the anticipated Carthage protocol. 
+This release brings several new features to Taquito. In line with our versioning policy, we have also bumped the major release number to v6 on this release, as this version has and continues to be tested against the Carthage testnet. By using this version of Taquito, your application will be compatible with both the Babylonnet protocol and the anticipated Carthage protocol.
 
 As per our versioning policy, we have now removed support for injecting Athens operations, as that protocol is no longer in use on mainnet or in an active testnet.
 
@@ -309,7 +309,7 @@ We have made a subscribe API that will poll the RPC behind the scenes. The API a
 
 `BigMapAbstraction` is now exported from the taquito package #182
 
-`michelson-encoder` has the ability to get Taquito's representation of type definitions from a smart contract. For example, storage and entrypoint type definitions.  
+`michelson-encoder` has the ability to get Taquito's representation of type definitions from a smart contract. For example, storage and entrypoint type definitions.
 
 **BREAKING CHANGES**
 
@@ -323,7 +323,7 @@ We have added many new  unit and integration tests including but not limited to 
 
 fix(michelson-encoder): Fix improper encoding of boolean parameters #215
 
-fix(michelson-encoder) Encoder now sorts maps and big map keys as expected by the protocol 
+fix(michelson-encoder) Encoder now sorts maps and big map keys as expected by the protocol
 
 fix(estimator) Fix fee estimation of low balance accounts.
 
