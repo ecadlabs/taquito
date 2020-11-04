@@ -1,4 +1,4 @@
-import { MichelsonScript, MichelsonData, MichelsonStorage, MichelsonType } from "@taquito/michel-codec";
+import { MichelsonContract, MichelsonData, MichelsonContractStorage, MichelsonType } from "@taquito/michel-codec";
 
 export const sampleStorage: MichelsonData = {
   prim: 'Pair',
@@ -14,7 +14,7 @@ export const sampleStorage: MichelsonData = {
   ],
 };
 
-export const sample: MichelsonStorage = {
+export const sample: MichelsonContractStorage = {
   prim: 'storage',
   args: [
     {
@@ -121,7 +121,7 @@ code {
      };
 `;
 
-export const miSample: MichelsonScript =
+export const miSample: MichelsonContract =
   [
     { prim: 'parameter', args: [{ prim: 'int' }] },
     {
@@ -295,7 +295,7 @@ export const miStorage: MichelsonData = {
   ],
 };
 
-export const ligoSample: MichelsonScript = [
+export const ligoSample: MichelsonContract = [
   { prim: 'parameter', args: [{ prim: 'int' }] },
   { prim: 'storage', args: [{ prim: 'int' }] },
   {
@@ -458,7 +458,7 @@ export const ligoSample: MichelsonScript = [
   },
 ];
 
-export const tokenCode: MichelsonScript = [
+export const tokenCode: MichelsonContract = [
   {
     prim: 'parameter',
     args: [
