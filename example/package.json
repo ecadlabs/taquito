@@ -1,26 +1,27 @@
 {
   "name": "@taquito/example",
   "private": true,
-  "version": "6.3.5-beta.0",
+  "version": "7.0.0-beta.0",
   "scripts": {
     "example:at": "node -r ts-node/register --preserve-symlinks contract-schema.ts",
     "example:origination": "node -r ts-node/register --preserve-symlinks contract-origination.ts",
     "example:origination2": "node -r ts-node/register --preserve-symlinks contract-origination2.ts",
     "example:origination3": "node -r ts-node/register --preserve-symlinks contract-origination3.ts",
-    "example:michel-codec": "node -r ts-node/register --preserve-symlinks michel-codec.ts",
     "example:pretty-print": "node -r ts-node/register --preserve-symlinks pretty-print-contract.ts",
     "example:encode-michelson": "node -r ts-node/register --preserve-symlinks encode-michelson.ts",
     "example": "node -r ts-node/register --preserve-symlinks example-node.ts",
     "example:activation": "node -r ts-node/register --preserve-symlinks example-activate.ts",
     "example:streamer": "node -r ts-node/register --preserve-symlinks example-streamer.ts",
-    "example:formatter": "node -r ts-node/register --preserve-symlinks example-formatter.ts"
+    "example:scan-path-ledger": "node -r ts-node/register --preserve-symlinks scan-path-ledger.ts"
   },
   "dependencies": {
-    "@taquito/michel-codec": "^6.3.5-beta.0",
-    "@taquito/signer": "^6.3.5-beta.0",
-    "@taquito/taquito": "^6.3.5-beta.0"
+    "@ledgerhq/hw-transport-node-hid": "^5.25.0",
+    "@taquito/ledger-signer": "^7.0.0-beta.0",
+    "@taquito/michel-codec": "^7.0.0-beta.0",
+    "@taquito/signer": "^7.0.0-beta.0",
+    "@taquito/taquito": "^7.0.0-beta.0"
   },
   "devDependencies": {
-    "ts-node": "^8.10.2"
+    "ts-node": "^9.0.0"
   }
 }

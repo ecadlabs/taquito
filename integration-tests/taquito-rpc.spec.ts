@@ -3,7 +3,7 @@ import { RpcClient } from '../packages/taquito-rpc/src/taquito-rpc';
 
 
 CONFIGS().forEach(({ rpc }) => {
-    const client = new RpcClient();
+    const client = new RpcClient(rpc);
 
     describe(`Taquito RPC: ${rpc}`, () => {
         describe('getBlock', () => {

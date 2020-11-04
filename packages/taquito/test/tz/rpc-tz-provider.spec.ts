@@ -4,7 +4,7 @@ import { Context } from '../../src/context';
 
 describe('RpcTzProvider test', () => {
   it('is instantiable', () => {
-    expect(new RpcTzProvider(new Context())).toBeInstanceOf(RpcTzProvider);
+    expect(new RpcTzProvider(new Context('url'))).toBeInstanceOf(RpcTzProvider);
   });
 
   describe('getBalance', () => {

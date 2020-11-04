@@ -5,7 +5,7 @@ import json from 'rollup-plugin-json';
 
 const pkg = require('./package.json');
 
-const libraryName = 'taquito-react-components';
+const libraryName = 'taquito-ledger-signer';
 
 export default {
   input: `src/${libraryName}.ts`,
@@ -14,7 +14,7 @@ export default {
     { file: pkg.module, format: 'es', sourcemap: true },
   ],
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
-  external: [],
+  //external: ['@ledgerhq/hw-transport-node-hid'],
   watch: {
     include: 'src/**',
   },

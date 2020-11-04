@@ -14,18 +14,31 @@
         "estimate",
         "validators",
         "maps_bigmaps",
-        "web3js_taquito"
+        "web3js_taquito",
+        "rpc_package",
+        "rpc_nodes"
       ]
     },
     {
       "type": "category",
       "label": "Signer",
-      "items": ["inmemory_signer", "tezbridge_signer"]
+      "items": ["inmemory_signer", "tezbridge_signer", "ledger_signer"]
     },
     {
       "type": "category",
       "label": "Advanced",
-      "items": ["complex_parameters", "storage_annotations"]
+      "items": ["complex_parameters", "storage_annotations", "drain_account"]
+    },
+    {
+      "type": "category",
+      "label": "Running integration tests",
+      "items": [
+        "ledger_integration_test",
+        "rpc_nodes_integration_test"
+      ]
+    },
+    {
+      "Upgrading Guide" : ["v7_breaking_changes"]
     },
     {
       "type": "link",

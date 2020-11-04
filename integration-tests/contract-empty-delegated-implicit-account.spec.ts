@@ -1,7 +1,6 @@
 import { CONFIGS } from "./config";
-import { Protocols } from "@taquito/taquito";
 
-CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, protocol }) => {
+CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker }) => {
   const Tezos = lib;
   describe(`Test emptying a delegated implicit account using: ${rpc}`, () => {
 
@@ -29,11 +28,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, protocol }) => 
       try {
         await LocalTez.contract.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: maxAmount, fee: estimate.suggestedFeeMutez, gasLimit: estimate.gasLimit, storageLimit: 0 })
       } catch (ex) {
-        if (protocol === Protocols.PsCARTHA) {
           expect(ex.message).toMatch('empty_implicit_delegated_contract')
-        } else if (protocol === Protocols.PsBabyM1) {
-          expect(ex.message).toMatch('Assert_failure src/proto_005_PsBabyM1/lib_protocol/contract_storage.ml')
-        }
       }
       done();
     });

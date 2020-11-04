@@ -25,6 +25,8 @@ To do so, let's look at three examples of contract origination showing initial v
 We need to write the storage as a Javascript object and include the annotated names in it.
 
 ```js live noInline
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+
 Tezos.contract.originate({
   code: contractStorageAnnot,
   storage: {
@@ -56,6 +58,8 @@ Tezos.contract.originate({
 All properties in storage are accessible by the index corresponding to the order that the storage is defined.
 
 ```js live noInline
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+
 Tezos.contract.originate({
   code: contractStorageWithoutAnnot,
   storage: {
@@ -91,6 +95,8 @@ In the following example, only the elements in positions 2 and 3 have an annotat
 Note that when proprieties have annotations, we cannot access them by index. For example, if you replace "theNat" by 2 and "theNumber" by 3 in this code example, it will fail.
 
 ```js live noInline
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+
 Tezos.contract.originate({
   code: contractStorageWithAndWithoutAnnot,
   storage: {

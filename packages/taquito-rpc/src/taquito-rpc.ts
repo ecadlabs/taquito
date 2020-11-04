@@ -42,7 +42,6 @@ export * from './types';
 
 export { OpKind } from './opkind';
 
-const defaultRPC = 'https://api.tez.ie/rpc/mainnet';
 const defaultChain = 'main';
 
 interface RPCOptions {
@@ -57,7 +56,7 @@ const defaultRPCOptions: RPCOptions = { block: 'head' };
 export class RpcClient {
   /**
    *
-   * @param url rpc root url (default https://api.tez.ie/rpc/mainnet)
+   * @param url rpc root url
    * @param chain chain (default main)
    * @param httpBackend Http backend that issue http request.
    * You can override it by providing your own if you which to hook in the request/response
@@ -65,7 +64,7 @@ export class RpcClient {
    * @example new RpcClient('https://api.tez.ie/rpc/mainnet', 'main') this will use https://api.tez.ie/rpc/mainnet/chains/main
    */
   constructor(
-    private url: string = defaultRPC,
+    private url: string,
     private chain: string = defaultChain,
     private httpBackend: HttpBackend = new HttpBackend()
   ) { }
@@ -341,12 +340,16 @@ export class RpcClient {
       'hard_gas_limit_per_block',
       'proof_of_work_threshold',
       'tokens_per_roll',
+      'seed_nonce_revelation_tip',
       'block_security_deposit',
       'endorsement_security_deposit',
       'block_reward',
-      'endorsement_reward',
+      'endorsement_reward', 
       'cost_per_byte',
       'hard_storage_limit_per_operation',
+      'test_chain_duration',
+      'baking_reward_per_endorsement', 
+      'delay_per_missing_endorsement'
     ]);
 
     return {

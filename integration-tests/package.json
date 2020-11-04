@@ -2,16 +2,22 @@
   "name": "integration-tests",
   "scripts": {
     "test:faucet": "RUN_WITH_FAUCET=true jest --runInBand",
+    "test:carthagenet": "CARTHAGENET=true jest",
+    "test:carthagenet-faucet": "RUN_CARTHAGENET_WITH_FAUCET=true jest --runInBand",
+    "test:delphinet": "DELPHINET=true jest",
+    "test:delphinet-faucet": "RUN_DELPHINET_WITH_FAUCET=true jest --runInBand",
     "test": "jest"
   },
-  "version": "6.3.5-beta.0",
+  "version": "7.0.0-beta.0",
   "dependencies": {
-    "@taquito/http-utils": "^6.3.5-beta.0",
-    "@taquito/local-forging": "^6.3.5-beta.0",
-    "@taquito/remote-signer": "^6.3.5-beta.0",
-    "@taquito/signer": "^6.3.5-beta.0",
-    "@taquito/taquito": "^6.3.5-beta.0",
-    "@taquito/utils": "^6.3.5-beta.0"
+    "@ledgerhq/hw-transport": "^5.25.0",
+    "@ledgerhq/hw-transport-node-hid": "^5.25.0",
+    "@taquito/http-utils": "^7.0.0-beta.0",
+    "@taquito/local-forging": "^7.0.0-beta.0",
+    "@taquito/remote-signer": "^7.0.0-beta.0",
+    "@taquito/signer": "^7.0.0-beta.0",
+    "@taquito/taquito": "^7.0.0-beta.0",
+    "@taquito/utils": "^7.0.0-beta.0"
   },
   "private": true,
   "jest": {
@@ -28,20 +34,25 @@
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/test/"
+    ],
+    "testPathIgnorePatterns": [
+      "./ledger-signer.spec.ts",
+      "./ledger-signer-falling-tests.spec.ts",
+      "./rpc-nodes.spec.ts"
     ]
   },
   "devDependencies": {
-    "@types/jest": "^26.0.8",
-    "@types/node": "^14.0.27",
-    "jest": "^26.2.2",
-    "jest-config": "^26.2.2",
-    "lint-staged": "^10.2.11",
-    "ts-jest": "^26.1.4",
-    "ts-node": "^8.10.2",
+    "@types/jest": "^26.0.14",
+    "@types/node": "^14.11.5",
+    "jest": "^26.5.2",
+    "jest-config": "^26.5.2",
+    "lint-staged": "^10.4.0",
+    "ts-jest": "^26.4.1",
+    "ts-node": "^9.0.0",
     "tslint": "^6.1.3",
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-standard": "^9.0.0",
-    "typescript": "~3.9.7"
+    "typescript": "~4.0.3"
   },
   "config": {
     "commitizen": {

@@ -36,10 +36,12 @@ Remember that some wallets may require an extra step in addition to the package 
 ## Connecting the wallet
 
 After installing the Taquito package and the package containing the Wallet API for the wallet of your choice, it's time to import the Wallet API into your project! Although the steps are very similar for each wallet, they all have their specificities that we will check in the paragraphs below.
-To start, let's import the Tezos singleton instance from Taquito:
+To start, let's create an instance of the `TezosToolkit` from Taquito:
+When doing so, we have to choose the network we want to use:
 
 ```js
-import { Tezos } from '@taquito/taquito';
+import { TezosToolkit } from '@taquito/taquito';
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 ```
 
 This object exposes different methods we are going to use to set up our wallet. TezBridge has been around for some time and it may be the one you are the most familiar with, so let's start with that!
@@ -58,7 +60,7 @@ Next, we can set up the wallet. In general, you will give your dapp users the ch
 <script src="https://www.tezbridge.com/plugin.js"></script>
 ```
 
-To set up TezBridge as your wallet, you use the `setWalletProvider` method of the `Tezos` singleton instance and pass a new instance of the `TezBridgeWallet` class:
+To set up TezBridge as your wallet, you use the `setWalletProvider` method of the `TezosToolkit` instance and pass a new instance of the `TezBridgeWallet` class:
 
 ```js
 Tezos.setWalletProvider(new TezBridgeWallet());
@@ -132,7 +134,7 @@ const Tezos = await wallet.toTezos();
 const userAddress = wallet.pkh || (await wallet.getPKH());
 ```
 
-If you are using your own Tezos singleton instance, it is time to set the wallet as the provider (this is not necessary if you use the one provided by Thanos wallet, but remember you have to continue using it throughout your dapp):
+If you are using your own TezosToolkit instance, it is time to set the wallet as the provider (this is not necessary if you use the one provided by Thanos wallet, but remember you have to continue using it throughout your dapp):
 
 ```js
 Tezos.setWalletProvider(wallet);
@@ -141,7 +143,7 @@ Tezos.setWalletProvider(wallet);
 or
 
 ```js
-Tezos.setProvider({ wallet });
+Tezos.setProvider({ wallet: wallet });
 ```
 
 #### Try the Thanos wallet!
@@ -242,7 +244,7 @@ Although it is possible and perfectly fine to transfer tokens directly from the 
 
 ### - Transfer between implicit accounts
 
-```js live noInline
+```js live noInline wallet
 Tezos.wallet
   .transfer({ to: 'tz1NhNv9g7rtcjyNsH8Zqu79giY5aTqDDrzB', amount: 0.2 })
   .send()
@@ -266,16 +268,17 @@ The `transfer` method takes an object with only two required properties: the `to
 
 ### - Transfer to smart contracts
 
-```js live noInline
+```js live noInline wallet
 Tezos.wallet
   .transfer({ to: 'KT1TMZhfoYtpjbGG1nLjs7SZioFM1njsRwkP', amount: 0.2 })
   .send()
-  .then((op) =>
-    op
-      .confirmation()
-      .then((result) => println(result))
+  .then((op) => {
+    println(`Waiting for ${op.opHash} to be confirmed...`);
+    return op.confirmation(1).then(() => op.opHash);
+  })
+  .then(hash => println(`Operation injected: https://carthagenet.tzstats.com/${hash}`))
       .catch((err) => println(err))
-  );
+
 ```
 
 Transactions to smart contracts operate in the same fashion as transactions to an implicit account, the only difference being the `KT1...` address. You will also receive a transaction hash and have to wait for the transaction to be confirmed. Once confirmed, it can be the right time to update the user's/contract's balance, for example.
@@ -298,7 +301,7 @@ In this example, we are working with a simple smart contract with two methods: `
 Most of the possible arguments of the entrypoint method are pretty straightforward and intuitive and do not require any explanation. However, a couple of them need more attention.
 Most of the time, the process is simple: you take the contract abstraction you created for the contract you target, you call the `methods` property on it which exposes all the entrypoints of the contract as methods. You pass the argument you want to send to the contract as a function argument before calling the `send()` method to send the transaction:
 
-```js live noInline
+```js live noInline wallet
 Tezos.wallet
   .at('KT1PCLg8Da8T5h5SWibMopPVsxiKg27tSRxx')
   .then((contract) => contract.methods.areYouThere(true).send())
@@ -321,7 +324,7 @@ Tezos.wallet
 
 In the case of multiple arguments (for example if the entrypoint expects a pair), you can just pass the arguments one by one. Be careful of the order of the arguments, they must be in the exact order expected by the contract entrypoint:
 
-```js live noInline
+```js live noInline wallet
 Tezos.wallet
   .at('KT1PCLg8Da8T5h5SWibMopPVsxiKg27tSRxx')
   .then((contract) =>
@@ -532,13 +535,7 @@ import { MichelsonMap } from "@taquito/taquito";
 
 Now, we have everything we need to originate a new contract!
 
-Before doing so, we have to choose the network we want to originate it to:
-
-```js
-Tezos.setProvider({ rpc: 'https://mainnet.SmartPy.io}' });
-```
-
-Then, we can start the process. The Tezos singleton has a `wallet` property with an `originate` method. This is the one that must be called to originate the contract. This method takes an argument, an object with two properties: `code` that holds the parsed Michelson code to be originated and `storage` that holds the initial storage. After passing this argument, you call the `send()` method to originate the contract.
+Then, we can start the process. The TezosToolkit has a `wallet` property with an `originate` method. This is the one that must be called to originate the contract. This method takes an argument, an object with two properties: `code` that holds the parsed Michelson code to be originated and `storage` that holds the initial storage. After passing this argument, you call the `send()` method to originate the contract.
 
 ```js
 const op = await Tezos.wallet
@@ -560,24 +557,15 @@ Taquito makes interacting with smart contracts very easy! With only the address 
 
 ### - Instance creation
 
-First, you need to import the Tezos singleton object or instantiate the Tezos toolkit and configure the RPC host you want to connect to:
-
-```js
-import { Tezos } from '@taquito/taquito';
-
-Tezos.setProvider({ rpc: 'https://YOUR_PREFERRED_RPC_URL' });
-```
-
-_or_
+First, you need to import TezosToolkit and instantiate it with the RPC host you want to connect to:
 
 ```js
 import { TezosToolkit } from '@taquito/taquito';
-const Tezos = new TezosToolkit();
 
-Tezos.setProvider({ rpc: 'https://YOUR_PREFERRED_RPC_URL' });
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 ```
 
-Next, you can use the singleton object to create the smart contract instance with the contract address:
+Next, you can use the `TezosToolkit` instance to create the smart contract instance with the contract address:
 
 ```js
 const contractInstance = await Tezos.wallet.at('contract address');
@@ -593,7 +581,7 @@ _Properties:_
 
 1. `address`: a string containing the address of the smart contract.
 2. `methods`: an object whose methods are named after the contract entrypoints (if the entrypoints are not annotated, the methods will be numbers).
-3. `parameterSchema`: an instance of the [Parameter class](https://github.com/ecadlabs/taquito/blob/d424fa178a95675920b21c8e8c228fbe0e7df36e/packages/taquito-michelson-encoder/src/schema/parameter.ts) with two useful methods: `hasAnnotation` tells you if the entrypoints are annotated and `isMultipleEntryPoint` tells you if the contract has multiple entrypoints (if _false_, you can interact with the contract with `.methods.main()`).
+3. `parameterSchema`: an instance of the [Parameter class](https://github.com/ecadlabs/taquito/blob/d424fa178a95675920b21c8e8c228fbe0e7df36e/packages/taquito-michelson-encoder/src/schema/parameter.ts) with two useful methods: `hasAnnotation` tells you if the entrypoints are annotated and `isMultipleEntryPoint` tells you if the contract has multiple entrypoints (if _false_, you can interact with the contract with `.methods.default()`).
 4. `schema`: an instance of the [Schema class](https://github.com/ecadlabs/taquito/blob/d424fa178a95675920b21c8e8c228fbe0e7df36e/packages/taquito-michelson-encoder/src/schema/storage.ts#L15) with various methods to get more information about the storage or the structure of the contract.
 5. `script`: an object with two properties: `code` is an array with three objects, each representing the JSON formatted Michelson code for the parameter, storage and code (respectively), `storage` is the JSON formatted Michelson code for the storage of the contract.
 
@@ -604,7 +592,7 @@ _Methods:_
 
 ## The Wallet instance
 
-The Tezos singleton object exposes a _wallet_ property in the same fashion it exposes the _contract_ property you may be used to. This property is an instance of the [Wallet class](https://tezostaquito.io/typedoc/classes/_taquito_taquito.wallet-2.html) with a few useful methods you want to check out. It becomes available as soon as you set up a wallet by calling `Tezos.setProvider({wallet})` or `Tezos.setWalletProvider(wallet)`. Here is a list of the methods and a basic description of their function before seeing some examples:
+The TezosToolkit instance exposes a _wallet_ property in the same fashion it exposes the _contract_ property you may be used to. This property is an instance of the [Wallet class](https://tezostaquito.io/typedoc/classes/_taquito_taquito.wallet-2.html) with a few useful methods you want to check out. It becomes available as soon as you set up a wallet by calling `Tezos.setProvider({wallet})` or `Tezos.setWalletProvider(wallet)`. Here is a list of the methods and a basic description of their function before seeing some examples:
 
 1. `at`: creates an smart contract abstraction for the address specified
 2. `batch`: creates a batch of operations

@@ -1,9 +1,0 @@
-{
-  "extends": "../../tsconfig.prod.json",
-  "compilerOptions": {
-    "declarationDir": "./dist/types",
-    "outDir": "./dist/lib",
-    "typeRoots": ["./node_modules/@types"]
-  },
-  "include": ["./src/**/*"]
-}

@@ -32,6 +32,7 @@ interface Operationresult {
   consumed_gas: string;
   storage_size: string;
   paid_storage_size_diff: string;
+  consumed_milligas?: string;
 }
 
 interface Bigmapdiff {

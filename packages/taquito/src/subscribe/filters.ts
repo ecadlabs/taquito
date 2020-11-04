@@ -70,7 +70,7 @@ export const evaluateFilter = (op: OperationContent, filter: Filter): boolean =>
     filters.push(...(filter as any));
   }
 
-  return filters.every((filterOrExp: OpFilter | FilterExpression) => {
+  return (filters as any[]).every((filterOrExp: OpFilter | FilterExpression) => {
     if ('and' in filterOrExp || 'or' in filterOrExp) {
       return evaluateExpression(op, filterOrExp);
     } else {

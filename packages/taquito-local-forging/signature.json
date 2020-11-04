@@ -34,11 +34,11 @@
           },
           {
             "path": "dist/lib/taquito-local-forging.js",
-            "sha512": "fcb70a696ca044ccef65b423d70d9abe8b08adf9d7eb53b14d6b6dd06b21e17520ab0697bf918bf7553827e81025d4e016a0a4ff3ffbfa3ad0212c359708c335"
+            "sha512": "0cdb476e185d9c9be482f6a9740c14b89967ae3b1530ff8ce2f1b6dd42e516f84e82e7113aec6be9a83c6bac6c5b61ceb7e37b6646e76d527e7146424702f5c7"
           },
           {
             "path": "dist/taquito-local-forging.umd.js",
-            "sha512": "5442abbb6bcd8a06bdbb3481172dae491097471c9970b54638a7bf10a67c21d9e20f62566e6a9a1fd4351664b2e834883984471e3fead573b0ef7c07a5565744"
+            "sha512": "f9c5365cd96bb6a7fa09cb3c8c1c42bd86fe23642c92a3962e1a27554abeb79c9b3f70aac778ade9d99eeef7ca5253b4252691802c07238650df79125498f751"
           },
           {
             "path": "dist/lib/uint8array-consumer.js",
@@ -82,7 +82,7 @@
           },
           {
             "path": "dist/taquito-local-forging.umd.js.map",
-            "sha512": "b196a36abc92e36f5e31f40ee5a6c0629bfb84213769d0f28b416962de572d2862592967c01c03d26154bed173eb0e0cc8d14409fd028e97fe84f619e52b6756"
+            "sha512": "f002b7812c1b6d023c51153f3941819f25f30d7d6f54723fc0364f0698a3c0d756020118a2a34770526d6cb1bd10ce6a1bd78b10742e83fb32057bf48582481c"
           },
           {
             "path": "dist/lib/uint8array-consumer.js.map",
@@ -153,6 +153,7 @@
           "devDependencies",
           "engines",
           "files",
+          "gitHead",
           "jest",
           "keywords",
           "license",
@@ -166,7 +167,7 @@
           "typings",
           "version"
         ],
-        "sha512": "9a76be1a06c5cebc845768984271573423632f2e237b9e2653cf81be9ff567905b9c3d516d853a39d56577e3072710cce8c263b4bc40abc3afe1dd3fe8553a20"
+        "sha512": "5ce0ec530e3e43e3907d798392158975ccac95341928b6f3f3530544ed12ba7172ea33b80682afa11df9c95099b3fb1c3c67a0a6dbc019533fd77cf50355b14c"
       }
     },
     {
@@ -174,7 +175,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/local-forging",
-          "version": "6.3.5-beta.0",
+          "version": "7.0.0-beta.0",
           "description": "Provide local forging functionality to be with taquito",
           "keywords": [
             "tezos",
@@ -240,40 +241,41 @@
             ]
           },
           "dependencies": {
-            "@taquito/utils": "^6.3.5-beta.0",
-            "bignumber.js": "^9.0.0"
+            "@taquito/utils": "^7.0.0-beta.0",
+            "bignumber.js": "^9.0.1"
           },
           "devDependencies": {
-            "@taquito/taquito": "^6.3.5-beta.0",
-            "@types/jest": "^26.0.0",
-            "@types/node": "^14.0.1",
+            "@taquito/taquito": "^7.0.0-beta.0",
+            "@types/jest": "^26.0.14",
+            "@types/node": "^14.11.5",
             "colors": "^1.4.0",
             "coveralls": "^3.1.0",
             "cross-env": "^7.0.2",
-            "jest": "^26.0.1",
-            "jest-config": "^26.0.1",
-            "lint-staged": "^10.2.2",
+            "jest": "^26.5.2",
+            "jest-config": "^26.5.2",
+            "lint-staged": "^10.4.0",
             "lodash.camelcase": "^4.3.0",
-            "prettier": "^2.0.5",
+            "prettier": "^2.1.2",
             "prompt": "^1.0.0",
-            "replace-in-file": "^6.0.0",
+            "replace-in-file": "^6.1.0",
             "rimraf": "^3.0.2",
-            "rollup": "^2.10.2",
+            "rollup": "^2.28.2",
             "rollup-plugin-json": "^4.0.0",
-            "rollup-plugin-sourcemaps": "^0.6.2",
-            "rollup-plugin-typescript2": "^0.27.1",
+            "rollup-plugin-sourcemaps": "^0.6.3",
+            "rollup-plugin-typescript2": "^0.27.3",
             "shelljs": "^0.8.4",
-            "ts-jest": "^26.1.0",
-            "ts-node": "^8.10.1",
-            "tslint": "^6.1.2",
+            "ts-jest": "^26.4.1",
+            "ts-node": "^9.0.0",
+            "tslint": "^6.1.3",
             "tslint-config-prettier": "^1.18.0",
             "tslint-config-standard": "^9.0.0",
-            "typedoc": "^0.17.6",
-            "typescript": "~3.9.5"
-          }
+            "typedoc": "^0.19.2",
+            "typescript": "^4.0.3"
+          },
+          "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfF36CCRAD9Qy5GYHsngAA89MQAITrqHP2p7bCuYmq99DeqMFN\nClvl3qLxajhdUQcKd/E+DHVrMFozQIWhj4M2b1cvbYXBZEmIJ6g6udnK5+D2bEwF\noAXKnJi64CisMCGyYgwKRVUcVzKJaVW9zJN8aD7mFGhGR6IfouvEC3/EA7xN287M\neWepTusUU+vQj+96hz3leQHZSoZXg8rhxiSnFy9Bm7jyXt7BNSz2iZXDXJqWAl34\ntk/XKIvigaE7ookzUUkQAJ9IE4Ly/wo8RBV9sRN4mM9ZwMLOfFHu7j1k2p6eHcxv\nepfby2jA77ZoIwhPtKt4MHFjmIySLmt2bCBkM0Fp5nqX/3/Mkw1PlhCkNfzsX3tg\ngq9LIH35nvY9VjIpC2OKeBHXLYY9kFxoHS60JDfG/5givr9NdeG7UlCFmW5TyjoF\nbB3l4JFtJngq+4R9sXNJiEG9ui7MFpBtU0xn5kunmm7A771wuDlbKGIXuRqb1rN5\n6iC2ospaeVBMGKPlJgKmlDANWNBQ0eOIPDI13E1ihQ5nmU1xrOazoPRaZYFhBsbg\ncMt0h9CDaIoKHPEHt9C7ulNO9KSygXblsEUqMtfifl7uQxcWBA+5bhWoJg+gMRYJ\nRMzMS6xoNc5JrvncthZg2lARJ7Fm276j0FjOVVY2GCFAOWoeH4uGEBlbAGZudmnD\ntBLvZQNEhN9M49DdE8dc\n=2xru\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfnJAZCRAD9Qy5GYHsngAAqCMQAEBNXDd4YxAzPq2z9ESsdEWi\nCeZPG3D3KJZEDxMiuoUYnmTcRxnlX/POoWAKH3xAOSjiEI1qfcqJUvs+wU8jTtCs\nDgZf6jTx92QqGMNRZ6lHqYx6Yp81WMcvIPjoGOS4mcMk6LOh1Zp6f9HVnx9tZXlu\nUNwRFG1YusUQe8LwCDSPT1eTAsyGLZlJifBKu339eaZ1y6Tz5/LLFUL+y6gQzH+y\nSSAd+KmxRRlLKuWsVoGNm47AX9xqjk7ZptNbBcUgZjMdePi8LdMljFCRpFWQlRSr\n3y+1jww/RqHIq+A+VuKnxJjLpAHwU9xQl4y49srHRkT89FD7BjxweCvknuosUdDe\nV/2U4l7lx8AigO4dHt+bWmOkicxSzkJMFiv2Lb1ifGkx23UANhX+pmxuhj4QoMDh\nl60BzGhFcFWN3lYPVbRXJTyRE49sjkzEKQWvdFKIt1c6vZPSxcYGylNnDDMxQiqe\nekqV028P1pLKVgnD59ulWN3uniGoYCEnSlpzKoxZN2g4Iw66NymrCZM9icgvgent\nlHOEyc6AOJRUqfe6hKLXde/SaT/vgnBAbyHlIFvbtBr0o6ZC8+IZLx5eLzHTVrUe\n+Pw5o3aNCf2APMu/DLwAikPCHNPN5J8wNgkglFAyA15ue6ZdqKe6zNjTMsxJC9mR\nUMHFvjLPp+mDkvgZI9rQ\n=0a8h\n-----END PGP SIGNATURE-----\n"
 }

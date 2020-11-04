@@ -52,7 +52,8 @@ As described above, the `map %data` uses a value that we chose between different
 Since every argument is identified by an annotation, we can ignore optional values if they are not needed. In the first entry of the `bigMap %records` of this example, we do not specify a value for the `address %address`, the `nat %ttl` and the `nat %validator`, but we define one for the `nat %validator` of the second entry of the bigMap.
 
 ```js
-import { Tezos, MichelsonMap } from '@taquito/taquito';
+import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
 
 //%data
 const dataMap = new MichelsonMap();
@@ -123,9 +124,11 @@ The way to write the parameter when calling the function of a contract with Taqu
 #### Inspect parameter
 
 ```js live noInline
-import { Tezos, MichelsonMap } from '@taquito/taquito';
+// import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet')
+// import { importKey } from '@taquito/signer';
 
-Tezos.importKey(emailExample, passwordExample, mnemonicExample, secretExample)
+importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
 .then(signer => {
     return Tezos.contract.at('KT1JjYmy6q4xxZGL4qXQGkSra7xNtrEpQ85K')
 }).then(myContract => {
@@ -139,9 +142,11 @@ Tezos.importKey(emailExample, passwordExample, mnemonicExample, secretExample)
 #### Call the set_child_record function when all the arguments are defined
 
 ```js live noInline
-import { Tezos, MichelsonMap } from '@taquito/taquito';
+// import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet')
+// import { importKey } from '@taquito/signer';
 
-Tezos.importKey(emailExample, passwordExample, mnemonicExample, secretExample)
+importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
 .then(signer => {
     return Tezos.contract.at('KT1JjYmy6q4xxZGL4qXQGkSra7xNtrEpQ85K')
 }).then(myContract => {
@@ -168,9 +173,11 @@ Tezos.importKey(emailExample, passwordExample, mnemonicExample, secretExample)
 The `address %address` and the `nat %ttl` of the `set_child_record` function are optional. If we want one or both to be null, we must specify the value of the argument as `null` or `undefined`.
 
 ```js live noInline
-import { Tezos, MichelsonMap } from '@taquito/taquito';
+// import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet')
+// import { importKey } from '@taquito/signer';
 
-Tezos.importKey(emailExample, passwordExample, mnemonicExample, secretExample)
+importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
 .then(signer => {
     return Tezos.contract.at('KT1JjYmy6q4xxZGL4qXQGkSra7xNtrEpQ85K')
 }).then(myContract => {

@@ -1,4 +1,3 @@
-
 <span style="display:block;text-align:center">![Logo](https://tezostaquito.io/img/Taquito.png)</span>
 
 A TypeScript library suite for development on the Tezos blockchain
@@ -10,10 +9,10 @@ A TypeScript library suite for development on the Tezos blockchain
 
 _WARNING: This project is in beta. We welcome users and feedback, please be aware that this project is a work in progress._
 
-## Official channels
+## Community support channels
 
-- <https://keybase.io/team/ecadlabs.taquito>
-- <https://tezos.stackexchange.com/questions/tagged/taquito>
+- [TezosTaquito Telegram Community Channel][telegram]
+- [Tezos StackExchange][stackexchange]
 
 ## What is Taquito
 
@@ -157,6 +156,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 [3]: https://keybase.io/simrob
 [4]: https://tezostaquito.io
 [5]: https://docusaurus.io/
+[telegram]: https://t.me/tezostaquito
+[stackexchange]: https://tezos.stackexchange.com/questions/tagged/taquito
 
 ## Credits
 

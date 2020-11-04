@@ -1,6 +1,5 @@
 const MINIMAL_FEE_MUTEZ = 100;
 const MINIMAL_FEE_PER_BYTE_MUTEZ = 1;
-const MINIMAL_FEE_PER_STORAGE_BYTE_MUTEZ = 1000;
 const MINIMAL_FEE_PER_GAS_MUTEZ = 0.1;
 
 const GAS_BUFFER = 100;
@@ -43,9 +42,10 @@ const GAS_BUFFER = 100;
 
 export class Estimate {
   constructor(
-    private readonly _gasLimit: number | string,
+    private readonly _milligasLimit: number | string,
     private readonly _storageLimit: number | string,
     private readonly opSize: number | string,
+    private readonly minimalFeePerStorageByteMutez: number | string,
     /**
      * @description Base fee in mutez (1 mutez = 1e10−6 tez)
      */
@@ -53,10 +53,10 @@ export class Estimate {
   ) {}
 
   /**
-   * @description The number of Mutez that will be burned for the storage of the [operation](https://tezos.gitlab.io/user/glossary.html#operations).
+   * @description The number of Mutez that will be burned for the storage of the [operation](https://tezos.gitlab.io/user/glossary.html#operations). (Storage + Allocation fees)
    */
   get burnFeeMutez() {
-    return this.roundUp(Number(this.storageLimit) * MINIMAL_FEE_PER_STORAGE_BYTE_MUTEZ);
+    return this.roundUp(Number(this.storageLimit) * Number(this.minimalFeePerStorageByteMutez));
   }
 
   /**
@@ -71,13 +71,13 @@ export class Estimate {
    * @description The limit on the amount of [gas](https://tezos.gitlab.io/user/glossary.html#gas) a given operation can consume.
    */
   get gasLimit() {
-    return Number(this._gasLimit) + GAS_BUFFER;
+    return this.roundUp(Number(this._milligasLimit)/1000 + GAS_BUFFER);
   }
 
   private get operationFeeMutez() {
     return (
-      this.gasLimit * MINIMAL_FEE_PER_GAS_MUTEZ + Number(this.opSize) * MINIMAL_FEE_PER_BYTE_MUTEZ
-    );
+      (Number(this._milligasLimit)/1000 + GAS_BUFFER) * MINIMAL_FEE_PER_GAS_MUTEZ + Number(this.opSize) * MINIMAL_FEE_PER_BYTE_MUTEZ
+      );
   }
 
   private roundUp(nanotez: number) {
@@ -112,5 +112,13 @@ export class Estimate {
    */
   get totalCost() {
     return this.minimalFeeMutez + this.burnFeeMutez;
+  }
+
+  /**
+   * @description Since Delphinet, consumed gas is provided in milligas for more precision. 
+   * This function returns an estimation of the gas that operation will consume in milligas. 
+   */
+  get consumedMilligas() {
+    return Number(this._milligasLimit);
   }
 }
