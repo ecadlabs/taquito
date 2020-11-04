@@ -229,7 +229,8 @@ describe('RpcContractProvider test', () => {
         gasLimit: 10600,
         storageLimit: 257,
       });
-      expect(result.raw).toEqual({
+      const res = JSON.parse(JSON.stringify(result.raw)); // Strip symbols
+      expect(res).toEqual({
         counter: 0,
         opOb: {
           branch: 'test',
@@ -267,7 +268,8 @@ describe('RpcContractProvider test', () => {
         code: miStr,
         init: miInit,
       });
-      expect(result.raw).toEqual({
+      const res = JSON.parse(JSON.stringify(result.raw)); // Strip symbols
+      expect(res).toEqual({
         counter: 0,
         opOb: {
           branch: 'test',
