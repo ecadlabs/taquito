@@ -1,13 +1,15 @@
 import { MichelsonV1Expression } from '@taquito/rpc';
-import { Contract } from './contract';
+import { Contract, ContractAbstraction, WalletContract } from './contract';
 import { TezosOperationError } from '../operations/operation-errors';
+import { ContractProvider } from './interface';
+import { Wallet } from '../wallet';
 
 export default class LambdaView {
   public readonly voidLambda: Object;
 
   constructor(
-    private lambdaContract: Contract,
-    private viewContract: Contract,
+    private lambdaContract: Contract | WalletContract,
+    private viewContract: ContractAbstraction< ContractProvider | Wallet > ,
     public readonly viewMethod: string = 'default',
     private contractParameter: MichelsonV1Expression = { prim: 'Unit' }
   ) {
@@ -248,10 +250,4 @@ export default class LambdaView {
 
     return [parameter, callbackContract.args[0]] as [MichelsonV1Expression, MichelsonV1Expression];
   }
-}
-
-export enum DefaultLambdaAddresses {
-  mainnet = 'KT1CPuTzwC7h7uLXd5WQmpMFso1HxrLBUtpE',
-  carthagenet = 'KT1VAy1o1FGiXYfD3YT7x7k5eF5HSHhmc1u6',
-  delphinet = 'KT19abMFs3haqyKYwqdLjK9GbtofryZLvpiK'
 }

@@ -249,6 +249,8 @@ export class Wallet {
   async at(address: string): Promise<WalletContract> {
     const script = await this.context.rpc.getScript(address);
     const entrypoints = await this.context.rpc.getEntrypoints(address);
-    return new ContractAbstraction(address, script, this, this.context.contract, entrypoints);
+    const blockHeader = await this.context.rpc.getBlockHeader();
+    const chainId = blockHeader.chain_id;
+    return new ContractAbstraction(address, script, this, this.context.contract, entrypoints, chainId);
   }
 }

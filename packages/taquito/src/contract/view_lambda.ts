@@ -1,4 +1,4 @@
-export const viewLambda = [
+const code = [
   {
     prim: 'parameter',
     args: [
@@ -17,3 +17,10 @@ export const viewLambda = [
   { prim: 'storage', args: [{ prim: 'unit' }] },
   { prim: 'code', args: [[{ prim: 'CAR' }, { prim: 'UNIT' }, { prim: 'EXEC' }]] },
 ];
+
+const storage = 'Unit';
+
+export const VIEW_LAMBDA = {
+  code,
+  storage
+}

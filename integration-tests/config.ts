@@ -21,7 +21,6 @@ interface Config {
   knownBaker: string;
   knownContract: string;
   knownBigMapContract: string;
-  network: string;
   protocol: Protocols;
   signerConfig: EphemeralConfig | FaucetConfig;
 }
@@ -61,7 +60,6 @@ const delphinetEphemeral = {
   knownBaker: 'tz1LpmZmB1yJJBcCrBDLSAStmmugGDEghdVv',
   knownContract: 'KT1Gm9PeBggJzegaM9sRCz1EymLrWxpWyGXr',
   knownBigMapContract: 'KT1Nf1CPvF1FFmAan5LiRvcyukyt3Nf4Le9B',
-  network: 'delphinet',
   protocol: Protocols.PsDELPH1,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
@@ -76,7 +74,6 @@ const carthagenetEphemeral = {
   knownContract: 'KT1XYa1JPKYVJYVJge89r4w2tShS8JYb1NQh',
   knownBigMapContract: 'KT1HqWsXrGbHWc9muqkApqWu64WsxCU3FoRf',
   protocol: Protocols.PsCARTHA,
-  network: 'carthagenet',
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'https://api.tez.ie/keys/carthagenet',
@@ -124,7 +121,6 @@ const delphinetFaucet = {
   knownBaker: 'tz1LpmZmB1yJJBcCrBDLSAStmmugGDEghdVv',
   knownContract: 'KT1Gm9PeBggJzegaM9sRCz1EymLrWxpWyGXr',
   knownBigMapContract: 'KT1Nf1CPvF1FFmAan5LiRvcyukyt3Nf4Le9B',
-  network: 'delphinet',
   protocol: Protocols.PsDELPH1,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
@@ -137,7 +133,6 @@ const carthagenetFaucet = {
   knownBaker: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
   knownContract: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK',
   knownBigMapContract: 'KT1HqWsXrGbHWc9muqkApqWu64WsxCU3FoRf',
-  network: 'carthagenet',
   protocol: Protocols.PsCARTHA,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
@@ -150,7 +145,6 @@ const babylonnetFaucet = {
   knownBaker: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
   knownContract: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK',
   knownBigMapContract: 'KT1T2KjQdqeNzeaSGm9MfzfgMN8rWC94BrTP',
-  network: 'babylonnet',
   protocol: Protocols.PsBabyM1,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
@@ -236,7 +230,7 @@ const setupWithFaucetKey = async (Tezos: TezosToolkit, signerConfig: FaucetConfi
 export const CONFIGS = () => {
   return forgers.reduce((prev, forger: ForgerType) => {
 
-    const configs = providers.map(({ rpc, knownBaker, knownContract, network, protocol, knownBigMapContract, signerConfig }) => {
+    const configs = providers.map(({ rpc, knownBaker, knownContract, protocol, knownBigMapContract, signerConfig }) => {
       const Tezos = new TezosToolkit(rpc);
 
       setupForger(Tezos, forger)
@@ -245,7 +239,6 @@ export const CONFIGS = () => {
         rpc,
         knownBaker,
         knownContract,
-        network,
         protocol,
         lib: Tezos,
         knownBigMapContract,

@@ -1,5 +1,4 @@
 import { Schema } from '@taquito/michelson-encoder';
-import { MichelsonV1Expression } from '@taquito/rpc';
 import { DelegateOperation } from '../operations/delegate-operation';
 import { OriginationOperation } from '../operations/origination-operation';
 import { TransactionOperation } from '../operations/transaction-operation';
@@ -12,7 +11,6 @@ import {
 } from '../operations/types';
 import { ContractAbstraction } from './contract';
 import { Estimate } from './estimate';
-import LambdaView from './lambda-view';
 
 export type ContractSchema = Schema | unknown;
 
@@ -138,10 +136,4 @@ export interface ContractProvider extends StorageProvider {
    */
   transfer(params: TransferParams): Promise<TransactionOperation>;
   at(address: string, schema?: ContractSchema): Promise<ContractAbstraction<ContractProvider>>;
-  lambdaView(
-    lambdaContractOrAddress: ContractAbstraction<ContractProvider> | string,
-    viewContractOrAddress: ContractAbstraction<ContractProvider> | string,
-    viewMethod?: string,
-    contractParameter?: MichelsonV1Expression
-  ): Promise<LambdaView>;
 }

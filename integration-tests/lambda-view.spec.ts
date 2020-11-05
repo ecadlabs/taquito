@@ -1,20 +1,20 @@
-import { ContractAbstraction, ContractProvider, MichelsonMap } from '@taquito/taquito';
+import { MichelsonMap } from '@taquito/taquito';
 import { CONFIGS } from './config';
 import { tzip7Contract } from './data/tzip_7_contract';
-import { testContract } from './data/test_lambda_view'
+import { testContract } from './data/test_lambda_view';
+import { fa2Contract } from './data/fa2_contract';
 
-CONFIGS().forEach(({ lib, network, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  let contract: ContractAbstraction<ContractProvider>;
-  //const contract = await Tezos.contract.at('KT1A87ZZL8mBKcWGr34BVsERPCJjfX82iBto');
-console.log(network)
+  const toJSON = (x: any) => JSON.parse(JSON.stringify(x));
+
   describe(`Lambda view using: ${rpc}`, () => {
     beforeEach(async done => {
       await setup();
       done()
-  });
+    });
 
-  it('Originate FA1.2 contract and get view entrypoints', async done => { 
+    it('Originate FA1.2 contract and fetch data from view entrypoints', async done => {
       const mapAccount1 = new MichelsonMap();
       mapAccount1.set('tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY', '25');
       mapAccount1.set('tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE', '25');
@@ -44,47 +44,23 @@ console.log(network)
       })
 
       await op.confirmation()
-      console.log('hash',op.hash)
-      contract = await op.contract(); 
-  
-      const getTotalSupply = await Tezos.contract
-      .lambdaView(network, contract.address, 'getTotalSupply')
-      .then(view => view.execute())
-      .catch(e => done(e));
+      const contract = await op.contract();
+      //const contract = await Tezos.contract.at('KT1A87ZZL8mBKcWGr34BVsERPCJjfX82iBto');
 
-    expect(getTotalSupply).toEqual({ int: '100' });
+      const getTotalSupply = await contract.views.getTotalSupply([['Unit']]).read();
+      expect(getTotalSupply.toString()).toEqual('100');
 
-      const getBalance = await Tezos.contract
-        .lambdaView(network, contract.address, 'getBalance', { string: 'tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1' })
-        .then(view => view.execute())
-        .catch(e => done(e));
+      const getBalance = await contract.views.getBalance('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1').read();
+      expect(getBalance.toString()).toEqual('50');
 
-      expect(getBalance).toEqual({ int: '50' });
-
-      const getAllowance = await Tezos.contract
-        .lambdaView(network, contract.address, 'getAllowance', {
-          prim: 'Pair',
-          args: [
-          {
-            string: 'tz1XTyqBn4xi9tkRDutpRyQwHxfF8ar4i4Wq'
-          },
-          {
-            string: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'
-          }]})
-        .then(view => view.execute())
-        .catch(e => done(e));
-
-      expect(getAllowance).toEqual({ int: '25' });
-
-
-      const viewPromise = Tezos.contract.lambdaView(network, contract.address, 'unknownMethod');
-      await expect(viewPromise).rejects.toThrow(/does not have entrypoint/);
+      const getAllowance = await contract.views.getAllowance('tz1XTyqBn4xi9tkRDutpRyQwHxfF8ar4i4Wq', 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM').read();
+      expect(getAllowance.toString()).toEqual('25');
 
       done();
     })
-     
 
-    it('executes `getBalance` on KT1R8uNCSm6pYHo2vNBzUHnvb9JQhY1ojeRy', async done => {
+
+    it('Originate a contract and fetch data from view entrypoints', async done => {
 
       const mapAccount2 = new MichelsonMap();
       mapAccount2.set('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM', '25');
@@ -114,23 +90,73 @@ console.log(network)
       })
 
       await op.confirmation()
-      console.log('hash',op.hash)
-      contract = await op.contract(); 
+      const contract = await op.contract();
 
-      const result = await Tezos.contract
-        .lambdaView(network, contract, 'getBalance', { string: 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY' })
-        .then(view => view.execute())
-        .catch(e => done(e));
+      //const contract = await Tezos.contract.at('KT1QXZMKbNYBf2wa9WJ3iXeBFEqd7HqmDh3H');
 
-      expect(result).toEqual(
-        { prim: 'Pair',
-          args:
-            [ { int: '50' },
-              { bytes: '0000eadc0855adb415fa69a76fc10397dc2fb37039a0' } ] }
-      );
+      const getBalance = await contract.views.getBalance('tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY').read();
+      expect(toJSON(getBalance)).toEqual({
+        balance: '50',
+        owner: 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY'
+      });
+
       done();
     });
 
 
-  }); 
+    it('Originate FA2 contract and fetch data from view entrypoints', async done => {
+
+      const bigMapLedger = new MichelsonMap();
+      bigMapLedger.set('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1', {
+        allowances: ['tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY'],
+        balance: '50'
+      });
+      bigMapLedger.set('tz1XTyqBn4xi9tkRDutpRyQwHxfF8ar4i4Wq', {
+        allowances: ['tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE'],
+        balance: '50',
+      });
+
+      const tokenMetadataBigMap = new MichelsonMap();
+      tokenMetadataBigMap.set('0', {
+        token_id: '0',
+        symbol: 'hello',
+        name: 'test',
+        decimals: '0',
+        extras: new MichelsonMap()
+      });
+      tokenMetadataBigMap.set('1', {
+        token_id: '1',
+        symbol: 'world',
+        name: 'test2',
+        decimals: '0',
+        extras: new MichelsonMap()
+      });
+
+      const op = await Tezos.contract.originate({
+        balance: "1",
+        code: fa2Contract,
+        storage: {
+          ledger: bigMapLedger,
+          token_metadata: tokenMetadataBigMap,
+          total_supply: '100'
+        },
+      })
+
+      await op.confirmation()
+      const contract = await op.contract();
+
+      //const contract = await Tezos.contract.at('KT1BkrcPjCXGPrQoYhVGFNwWMMyW2LrgBg9Q');
+
+      const balance_of = await contract.views.balance_of([{ owner: 'tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1', token_id: '0' }]).read();
+      expect(toJSON(balance_of)).toEqual([{
+        "balance": "50",
+        "request": {
+          "owner": "tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1",
+          "token_id": "0"
+        }
+      }]);
+
+      done();
+    });
+  });
 });

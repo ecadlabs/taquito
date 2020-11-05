@@ -1,5 +1,5 @@
 import { Schema } from '@taquito/michelson-encoder';
-import { ScriptResponse, MichelsonV1Expression } from '@taquito/rpc';
+import { ScriptResponse } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Context } from '../context';
 import { DelegateOperation } from '../operations/delegate-operation';
@@ -22,13 +22,13 @@ import {
   createTransferOperation,
 } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
-import LambdaView, { DefaultLambdaAddresses } from './lambda-view';
 
 export class RpcContractProvider extends OperationEmitter
   implements ContractProvider, StorageProvider {
   constructor(context: Context, private estimator: EstimationProvider) {
     super(context);
   }
+  contractProviderTypeSymbol = Symbol.for('taquito--provider-type-symbol');
 
   /**
    *
@@ -208,30 +208,8 @@ export class RpcContractProvider extends OperationEmitter
   async at(address: string): Promise<ContractAbstraction<ContractProvider>> {
     const script = await this.rpc.getScript(address);
     const entrypoints = await this.rpc.getEntrypoints(address);
-    return new ContractAbstraction(address, script, this, this, entrypoints);
-  }
-
-  async lambdaView(
-    lambdaContractOrAddress: ContractAbstraction<ContractProvider> | string,
-    viewContractOrAddress: ContractAbstraction<ContractProvider> | string,
-    viewMethod?: string,
-    contractParameter?: MichelsonV1Expression
-  ): Promise<LambdaView> {
-    let lambdaContract;
-    let viewContract;
-    if (ContractAbstraction.isContract(lambdaContractOrAddress)) {
-      lambdaContract = lambdaContractOrAddress;
-    } else if (Object.keys(DefaultLambdaAddresses).includes(lambdaContractOrAddress)) {
-      const addressKey = lambdaContractOrAddress as keyof typeof DefaultLambdaAddresses;
-      lambdaContract = await this.at(DefaultLambdaAddresses[addressKey]);
-    } else {
-      lambdaContract = await this.at(lambdaContractOrAddress);
-    }
-    if (ContractAbstraction.isContract(viewContractOrAddress)) {
-      viewContract = viewContractOrAddress;
-    } else {
-      viewContract = await this.at(viewContractOrAddress);
-    }
-    return new LambdaView(lambdaContract, viewContract, viewMethod, contractParameter);
+    const blockHeader = await this.rpc.getBlockHeader();
+    const chainId = blockHeader.chain_id;
+    return new ContractAbstraction(address, script, this, this, entrypoints, chainId);
   }
 }

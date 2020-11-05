@@ -8,6 +8,13 @@ export class InvalidParameterError implements Error {
   }
 }
 
+export class UndefinedLambdaContractError implements Error {
+  name: string = 'Undefined LambdaContract error';
+  message: string;
+  constructor() {
+    this.message = "This might happen if you are using a sandbox. Please provide the address of a lambda contract as a parameter of the read method.";
+  }
+}
 export class InvalidDelegationSource implements Error {
   name: string = 'Invalid delegation source error';
   message: string;
