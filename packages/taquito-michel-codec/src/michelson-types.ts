@@ -193,7 +193,7 @@ export type MichelsonData<T extends MichelsonType = MichelsonType> =
     T extends MichelsonTypeBool ? Data0<"True" | "False"> :
     T extends MichelsonTypeOption<infer A> ? Data0<"None"> | DataX<"Some", [MichelsonData<A>]> :
     T extends MichelsonTypeList<infer A> ? DataList<A> :
-    T extends MichelsonTypePair<infer A1, infer A1> ? DataX<"Pair", [MichelsonData<A1>, MichelsonData<A1>]> :
+    T extends MichelsonTypePair<infer A1, infer A2> ? DataX<"Pair", [MichelsonData<A1>, MichelsonData<A2>]> :
     T extends MichelsonTypeOr<infer A1, infer A2> ? DataX<"Left", [MichelsonData<A1>]> | DataX<"Right", [MichelsonData<A2>]> :
     T extends MichelsonTypeLambda ? MichelsonCode :
     T extends MichelsonTypeSet<infer A> ? DataList<A> :
