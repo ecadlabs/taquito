@@ -16,7 +16,8 @@
         "maps_bigmaps",
         "web3js_taquito",
         "rpc_package",
-        "rpc_nodes"
+        "rpc_nodes",
+        "lambda_view"
       ]
     },
     {

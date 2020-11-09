@@ -23,10 +23,12 @@ import {
 } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
 
-export class RpcContractProvider extends OperationEmitter implements ContractProvider, StorageProvider {
+export class RpcContractProvider extends OperationEmitter
+  implements ContractProvider, StorageProvider {
   constructor(context: Context, private estimator: EstimationProvider) {
     super(context);
   }
+  contractProviderTypeSymbol = Symbol.for('taquito--provider-type-symbol');
 
   /**
    *
@@ -206,6 +208,8 @@ export class RpcContractProvider extends OperationEmitter implements ContractPro
   async at(address: string): Promise<ContractAbstraction<ContractProvider>> {
     const script = await this.rpc.getScript(address);
     const entrypoints = await this.rpc.getEntrypoints(address);
-    return new ContractAbstraction(address, script, this, this, entrypoints);
+    const blockHeader = await this.rpc.getBlockHeader();
+    const chainId = blockHeader.chain_id;
+    return new ContractAbstraction(address, script, this, this, entrypoints, chainId);
   }
 }
