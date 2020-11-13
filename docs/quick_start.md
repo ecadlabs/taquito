@@ -3,7 +3,6 @@ title: Quick start
 author: Simon Boissonneault-Robert
 ---
 
-
 :::warning v7 Breaking changes
 Taquito version 7, which supports the Tezos "delphi" protocol has some breaking changes. If you are upgrading from an earlier version to v7 please read the [v7 upgrade guide](v7_breaking_changes.md)
 :::
@@ -29,6 +28,7 @@ import { TezosToolkit } from '@taquito/taquito';
 
 const tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 ```
+
 In some case, it can be useful to make more than one instance of Taquito. Perhaps if you wanted to communicate with two different RPC nodes, or offer to different Signing options. You can new up separate instances with different providers or configuration per instance.
 
 ## Configuration
@@ -57,8 +57,8 @@ tezos.setProvider({ signer: new TezBridgeSigner() });
 
 Tezos.tz
   .getBalance('tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY')
-  .then(balance => println(`${balance.toNumber() / 1000000} ꜩ`))
-  .catch(error => println(JSON.stringify(error)));
+  .then((balance) => println(`${balance.toNumber() / 1000000} ꜩ`))
+  .catch((error) => println(JSON.stringify(error)));
 ```
 
 ### Using the inMemory Signer and Importing a key
@@ -73,12 +73,13 @@ If you have a private key, you can import it as follows:
 
 ```js
 import { TezosToolkit } from '@taquito/taquito';
-import { InMemorySigner, importKey } from '@taquito/taquito-signer';
+import { InMemorySigner, importKey } from '@taquito/signer';
 
 const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 
-Tezos.setProvider({ signer: new InMemorySigner() });
-importKey(Tezos, 'p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1');
+Tezos.setProvider({
+  signer: new InMemorySigner('YOUR_PRIVATE_KEY'),
+});
 ```
 
 #### Importing a Faucet Key
@@ -88,7 +89,7 @@ The key is a JSON file, which you can use with Taquito as follows:
 
 ```js
 import { TezosToolkit } from '@taquito/taquito';
-import { InMemorySigner, importKey } from '@taquito/taquito-signer';
+import { InMemorySigner, importKey } from '@taquito/signer';
 
 const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 Tezos.setProvider({ signer: new InMemorySigner() });
@@ -124,7 +125,7 @@ importKey(
   FAUCET_KEY.password,
   FAUCET_KEY.mnemonic.join(' '),
   FAUCET_KEY.secret
-);
+).catch((e) => console.error(e));
 ```
 
 ### Transfer
@@ -136,13 +137,14 @@ const amount = 2;
 const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
 
 println(`Transfering ${amount} ꜩ to ${address}...`);
-Tezos.contract.transfer({ to: address, amount: amount })
-  .then(op => {
+Tezos.contract
+  .transfer({ to: address, amount: amount })
+  .then((op) => {
     println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
   })
-  .then(hash => println(`Operation injected: https://carthagenet.tzstats.com/${hash}`))
-  .catch(error => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+  .then((hash) => println(`Operation injected: https://carthagenet.tzstats.com/${hash}`))
+  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 ### Interact with a smart contract
@@ -150,19 +152,20 @@ Tezos.contract.transfer({ to: address, amount: amount })
 Calling smart contract operations requires a configured signer, in this example we will use a faucet key. The Ligo source code for this smart contract [KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC][smart_contract_on_better_call_dev] used in this example can be found in a [Ligo Web IDE][smart_contract_source].
 
 ```js live noInline
-Tezos.contract.at('KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC')
-  .then(contract => {
+Tezos.contract
+  .at('KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC')
+  .then((contract) => {
     const i = 7;
 
     println(`Incrementing storage value by ${i}...`);
     return contract.methods.increment(i).send();
   })
-  .then(op => {
+  .then((op) => {
     println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
   })
-  .then(hash => println(`Operation injected: https://carthagenet.tzstats.com/${hash}`))
-  .catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .then((hash) => println(`Operation injected: https://carthagenet.tzstats.com/${hash}`))
+  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 [boilerplate]: https://github.com/ecadlabs/taquito-boilerplate
