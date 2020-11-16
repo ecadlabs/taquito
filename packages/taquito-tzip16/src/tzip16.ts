@@ -11,7 +11,8 @@ import tzip16spec from "../assets/proposals_tzip-16_metadata-schema.json";
  * metadataURI, 
  * metadataProperties,
  * metadataHostStorageCode,
- * metadataHostContractAddress
+ * metadataHostContractAddress,
+ * metadataAssertFunctions
  */
 
 
@@ -20,7 +21,10 @@ const ajv = new Ajv({ allErrors: true });
 export class MetaDataManager {
 
     // 1. INSERT METADATA
-
+    /**
+     * 
+     * @param metadataHostStorageCode Michelson code of the storage where %metadata is to be searched in top-level tree
+     */
     isValidMetadataType(metadataHostStorageCode: string) {
         // check if metadata in StorageCode has metadata of type (big_map %metadata string bytes) // TODO
         // Note: There are other checks in tzip16 related to metadata shape; review storage implementation
@@ -44,6 +48,10 @@ export class MetaDataManager {
         }
     }
 
+    /**
+     * Validates if a uri is one of the schemes in tzip16
+     * @param metadataURI URI to be validated
+     */
     isValidMetadataURI(metadataURI: string): boolean {
         return this.isUrl(metadataURI) ||
             this.isIPFSURIScheme(metadataURI) || // TODO
@@ -85,6 +93,7 @@ export class MetaDataManager {
             return false;
         }
     }
+    
     // private getURIProtocol(uri: string) {
     //     const protocol = uri.split(':')[0];
     //     // ipfs cases start with '/'
@@ -169,6 +178,4 @@ export class MetaDataManager {
         } else return false;
 
     }
-
-
 }
