@@ -16,8 +16,6 @@ import tzip16spec from "../assets/proposals_tzip-16_metadata-schema.json";
  */
 
 
-const ajv = new Ajv({ allErrors: true });
-
 export class MetaDataManager {
 
     // 1. INSERT METADATA
@@ -93,7 +91,7 @@ export class MetaDataManager {
             return false;
         }
     }
-    
+
     // private getURIProtocol(uri: string) {
     //     const protocol = uri.split(':')[0];
     //     // ipfs cases start with '/'
