@@ -1,0 +1,45 @@
+{
+  "name": "taquito-tzip16",
+  "version": "1.0.0",
+  "description": "",
+  "main": "tzip16.ts",
+  "scripts": {
+    "test": "jest --collectCoverage"
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "ts-jest"
+    },
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/integration-tests/"
+    ],
+    "testEnvironment": "node",
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "moduleNameMapper": {
+      "^@taquito/tzip16$": "<rootDir>/src/tzip16.ts"
+    },
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/test/"
+    ],
+    "collectCoverageFrom": [
+      "packages/**/src/**/*.{js,ts}"
+    ]
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ajv": "^7.0.0-beta.4",
+    "is-ipfs": "^2.0.0",
+    "validate.js": "^0.13.1"
+  },
+  "devDependencies": {
+    "jest": "^26.6.3"
+  }
+}
