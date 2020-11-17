@@ -17,7 +17,8 @@
         "web3js_taquito",
         "rpc_package",
         "rpc_nodes",
-        "lambda_view"
+        "lambda_view",
+        "batch_API"
       ]
     },
     {
@@ -33,13 +34,10 @@
     {
       "type": "category",
       "label": "Running integration tests",
-      "items": [
-        "ledger_integration_test",
-        "rpc_nodes_integration_test"
-      ]
+      "items": ["ledger_integration_test", "rpc_nodes_integration_test"]
     },
     {
-      "Upgrading Guide" : ["v7_breaking_changes"]
+      "Upgrading Guide": ["v7_breaking_changes"]
     },
     {
       "type": "link",
