@@ -31,3 +31,15 @@ export const protocols = {
   '006': [Protocols.PsCARTHA],
   '007': [Protocols.PsDELPH1]
 };
+
+export enum DefaultLambdaAddresses {
+  MAINNET = 'KT1CPuTzwC7h7uLXd5WQmpMFso1HxrLBUtpE',
+  CARTHAGENET = 'KT1VAy1o1FGiXYfD3YT7x7k5eF5HSHhmc1u6',
+  DELPHINET = 'KT19abMFs3haqyKYwqdLjK9GbtofryZLvpiK'
+}
+
+export enum ChainIds {
+  MAINNET = "NetXdQprcVkpaWU",
+  CARTHAGENET = "NetXjD3HPJJjmcd",
+  DELPHINET = "NetXm8tYqnMWky1"
+}

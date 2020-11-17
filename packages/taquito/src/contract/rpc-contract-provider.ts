@@ -23,10 +23,12 @@ import {
 } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
 
-export class RpcContractProvider extends OperationEmitter implements ContractProvider, StorageProvider {
+export class RpcContractProvider extends OperationEmitter
+  implements ContractProvider, StorageProvider {
   constructor(context: Context, private estimator: EstimationProvider) {
     super(context);
   }
+  contractProviderTypeSymbol = Symbol.for('taquito--provider-type-symbol');
 
   /**
    *

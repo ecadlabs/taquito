@@ -18,7 +18,7 @@
           },
           {
             "path": "dist/lib/constants.js",
-            "sha512": "820dbd2b1ac8034821cdc09e174fdc926ddb37ee5a95fbabec104e13d2cde5e1ea710f1e67510f87cc3e09e8422a8b800203e9f6561869c98acbf724cfc9687f"
+            "sha512": "e2145d797097bef6d4390d933370a51d4869252153a618fcb209cbdeb464fc8974490c5c898ba18de69e5176af4d7c7480bd2acc74f0afa38646f708cf8da803"
           },
           {
             "path": "dist/lib/context.js",
@@ -26,7 +26,7 @@
           },
           {
             "path": "dist/lib/contract/contract.js",
-            "sha512": "fb0e8ed1c5a541e329897b46f0e2cba3b058d24fd5ce5c74f0f9d7cd4df83ca9ef08c37e1314e0fe856c8d0c3cee56cae51219737bfa124def44559078347af4"
+            "sha512": "b7a3ace6469174fd543b0a7877471eb1966d7eb6bedf961df991852ebc34769314b8a9a54c7580e023aa279ca9dfade0f020ccab413dbc18cfd210f29e43f592"
           },
           {
             "path": "dist/lib/operations/delegate-operation.js",
@@ -38,7 +38,7 @@
           },
           {
             "path": "dist/lib/contract/errors.js",
-            "sha512": "ecafecc0d9f9f49bc9a25ce0c62f084ecb07fe622f505202bb58bc60675133bc832c0869e1bf055ae09641afb9a610aeca0c7010aa969c30ac7983efbd54af40"
+            "sha512": "3aaf6e823212b359ec81694d79c0065d93675116a992c46d903ea692690fb9ca31a5fbcc8f492066daaee6cae2ee0580b0617eba1155b5373dcf6b8ed516b04c"
           },
           {
             "path": "dist/lib/contract/estimate.js",
@@ -87,6 +87,10 @@
           {
             "path": "dist/lib/wallet/interface.js",
             "sha512": "84f5c8ae6d7a701b8b1694326d9791c726a48902a29042d5cbe85ed3d00adf4bd8aaa61efeac4998102d6b1960235ae8f3991f409641b9fb3096e1e0942933a1"
+          },
+          {
+            "path": "dist/lib/contract/lambda-view.js",
+            "sha512": "db0211441d5ea4c5c4b122092896e557f56d137a8e21312eeb94e6eec7b8edb41a4c166307b0f84e81671d82b12bb4cd5095dddc07c9a8c0590804bfb97086c3"
           },
           {
             "path": "dist/lib/wallet/legacy.js",
@@ -158,7 +162,7 @@
           },
           {
             "path": "dist/lib/contract/rpc-contract-provider.js",
-            "sha512": "f4279b2c6d473ab40511a582706102cdd6db383bc96596d862092379d835be39930f69cdc27d7e194277a4fa703924afe1c70703dcaa0b3fbf23cf2b34923a6f"
+            "sha512": "e9f12a3daea41c9d397629b82479d3d3e9051e83c4cf55dfb0600ec9e898927c06adfea4fe1d243f04f3533d767f78347d8ba991c620658e34361f809c80ae31"
           },
           {
             "path": "dist/lib/contract/rpc-estimate-provider.js",
@@ -182,19 +186,15 @@
           },
           {
             "path": "dist/taquito.es5.js",
-            "sha512": "9473457e4dc38566be49c39195360778dd49c32dfd3ea7a884d4ba0c84e4f73a81e7612e258904f856bfad51846e6d8ab5b8a127ae85424208c0917937f28349"
+            "sha512": "011c9547309984c284abb0f20228fab308c8c721b428de27550072e2ef68be00d0a0e8e6bca8f0c70296cd4611b7f47363aca47d81443e5fcd85338db59c4801"
           },
           {
             "path": "dist/lib/taquito.js",
             "sha512": "716a588160851112b13e69bbb4eee034cf38faab161fde9524f69fed67bd893d5e7288c855240dcc5960cc499663eb9d87bc081d6ae27a14b7d840620b473218"
           },
           {
-            "path": "dist/taquito.min.js",
-            "sha512": "b341b2555e7a535bae0ff66068bf5c37e9bacc2b8eeed909ffc2f3a1d504788ad5c96d8b0eb8d86d204cf348efe839d796e209052e142e5a3c227c46215a24b2"
-          },
-          {
             "path": "dist/taquito.umd.js",
-            "sha512": "5da0fb891369385c236bc414eb1e96b9b0db1b445cc8cca12614548f7cccfe718fccd5ba6c838546cbda5642c00ffc41cb56af2353963f148136462b1941d256"
+            "sha512": "58278b46f446ee2af951e59f02d03932aeb97f926624cee8758e4f36e7df49b7290b1c4ceebb9a281cd5f67b1b63d577a8902ab6a31d26bff1de06b968fd31be"
           },
           {
             "path": "dist/lib/operations/transaction-operation.js",
@@ -209,8 +209,12 @@
             "sha512": "f9fa3bb720faf8eb483e39a8e22a577038735ca93bdfad47a324c54b100f183b99d27c4cc4fb5b18000655f0f63c4f86265f6b5c0ef020fcf120c45d7a96d83b"
           },
           {
+            "path": "dist/lib/contract/view_lambda.js",
+            "sha512": "b5a8e92befad072215ddfcb7b44d41fa917bdf47a46a51353f21e95fdc6dc1218fc9c4e00364f184de01e3bcbb92395771f9264135a8b9706dc63ee7346916cd"
+          },
+          {
             "path": "dist/lib/wallet/wallet.js",
-            "sha512": "e0916f217657ba9e8894b0c332a9123a45b527de233ce81fb13c098683d1f02648c279e4670cb32d33f750eb2f53ce1ea4333bce135ac59ddc696d96b0677e17"
+            "sha512": "2dd4203a38fd18748798776447eb06e2b85890f7600eeea8a25d9d2b3bde14606bb58248bcc4c5cce74606ee67368f1c32aea284e8a576c2d6db82c564643af1"
           },
           {
             "path": "dist/lib/operations/batch-operation.js.map",
@@ -226,7 +230,7 @@
           },
           {
             "path": "dist/lib/constants.js.map",
-            "sha512": "fb679bdeccdd5c3684486d79b8d69e5c82b0da5f887a86f856282071a21002cd98bf93f021a6bb7b3cbcdff59b92a6a686a066a367d14359929cfefaa4e20e71"
+            "sha512": "39a80c1b341c8f3d27954cd39a02f62dbe4b17b38259b9fa9bb1bdfe74040fdbf2efbe8122deff276381bed589500b2b57996cca1ac09c5212d90e3b9b5303e8"
           },
           {
             "path": "dist/lib/context.js.map",
@@ -234,7 +238,7 @@
           },
           {
             "path": "dist/lib/contract/contract.js.map",
-            "sha512": "6be8476cf825ba5e5da3785dd808cdd72701db454189af12d95032a978a9dcc604180b7709ea9dbd0c5a9e73cacd89b5e2b90efb961a4c4318f6ff8c291efd51"
+            "sha512": "8e0b3e03a35d288b0e32713cf57f586a0e3093f939ed81d331dc43d5a94387d6b1b215012589ff9f88d90f67ee3f17d09935e3bdb9109f2fc6e453911fa15e5e"
           },
           {
             "path": "dist/lib/operations/delegate-operation.js.map",
@@ -246,7 +250,7 @@
           },
           {
             "path": "dist/lib/contract/errors.js.map",
-            "sha512": "2959e598573d31081067fd57c109d1a048b0ba30168df498a79d625eba467dac639c59e6b760014e5d814a645348fed8c5a8a12e1837f90f5c88a1ce462af410"
+            "sha512": "b63becceaaeefe3f367912ab3ebb828470c36787f0d728dd9554e0d3161b6cd3fdc1c8e2c3938434ec2dbff666e2eeefdbfe1010ea488128db511a1ffaaeceae"
           },
           {
             "path": "dist/lib/contract/estimate.js.map",
@@ -295,6 +299,10 @@
           {
             "path": "dist/lib/wallet/interface.js.map",
             "sha512": "65fe5ce265d4590493990e5f186555990a03819e9e958e4a70f4b940be4f88e71ed282784848521aeb85f2b25ebf3f79bb400f499ff5b41bc833886717097492"
+          },
+          {
+            "path": "dist/lib/contract/lambda-view.js.map",
+            "sha512": "f3181aa2959aad891dceb2b96357d74488cf7569e6b71349fcb262dd72cc8912ca213dfa8567527acd9a5898dd853bb606628877f87d5287d826e8378a232bd1"
           },
           {
             "path": "dist/lib/wallet/legacy.js.map",
@@ -362,7 +370,7 @@
           },
           {
             "path": "dist/lib/contract/rpc-contract-provider.js.map",
-            "sha512": "fed577096112592de75b803110e3d64e20c149ea13667adb0a7fcb193520cd752903249a29c5c2f3e8ab76c0bc096b25cf7e6f031abb2e5eb2da4d744ed90175"
+            "sha512": "1382b585c7b3fe56befb5ef2ee9be61414f6a09dd509212266bcc1a55a62cb6ab426301e1ad4a67f725c9ee4b917898236512c8f5f9c44630797cccdabd5d76b"
           },
           {
             "path": "dist/lib/contract/rpc-estimate-provider.js.map",
@@ -386,7 +394,7 @@
           },
           {
             "path": "dist/taquito.es5.js.map",
-            "sha512": "c53597b03d4c45d8fde83603b0ec836d87e82bfb793f4d7ae5419defd119f37a9264bc57d4f77252099c145ab738f9dde8018427ebe76061b83df5876071c577"
+            "sha512": "5957c45afee2f719be8e8d5f48c1a37d92590a90b9c5c54f48b09473dd28ab8b5f55b2fb8b5f77648d1934d03105c19ef59a0ae57f56aff69df9794d34e99e05"
           },
           {
             "path": "dist/lib/taquito.js.map",
@@ -394,7 +402,7 @@
           },
           {
             "path": "dist/taquito.umd.js.map",
-            "sha512": "ad05cd2ab590f1117bba7aa3c795f4884ba096b6ee27c9bdd9a8ee2cf558f3d42e3cb8d5063cd592569f24f03e05c1b4a1928ff4c6724c05088ab08cce81c4db"
+            "sha512": "47dd0e4aade9cd31a33f9209e0f61e2f4c4482a633edec262a502dfd9f7622b68a4b786d68e6535d08a267f0a46a8bfabfc91eb8b5b45f4211d098f481d9fd25"
           },
           {
             "path": "dist/lib/operations/transaction-operation.js.map",
@@ -409,8 +417,12 @@
             "sha512": "d6962f944e36fa03d734913cb4fd8f19fb4ca26428412d14432eab9ac8e0402111444a0bc4b12eec77224f96ae16efb07c28bc321ace2a36eafedcfd0bfbdf93"
           },
           {
+            "path": "dist/lib/contract/view_lambda.js.map",
+            "sha512": "d89cf62e2819934ce633bee7cd56846a8f4d4a864994afe460bf4716a14522f4842a9215321855a46faad3210938bbf38a5702184463106c70755f1dbc814307"
+          },
+          {
             "path": "dist/lib/wallet/wallet.js.map",
-            "sha512": "08a7ea374a165a740a8e99b68144b93f7468b6e0c7b2527e7912b543098d57367d5180ca96eaef53f6b990b13b6d5bd9f31d1bb7043372e08c76640c53fbc7f2"
+            "sha512": "8711520e7678d943fffa138d6906b458e40d9c9e8009d123086779a5ce2acbb6819fc09a234eee3b8418885c5cb7154682590aea495dd0b52204ca77aa0911cb"
           },
           {
             "path": "README.md",
@@ -430,7 +442,7 @@
           },
           {
             "path": "dist/types/constants.d.ts",
-            "sha512": "4a0f604fad1845ed42ba66934147e8c5b2a62055cbfb5cede46ca8c50c800c4f685fcde581768f065dd56f4ed9e01c3e28eec74d2d33b582c00fbfe94848c106"
+            "sha512": "9972b3a734736289a501f5118c06dd0ab8c5d11e3b2fec3b53605a3eec8367b2798d0d28d1afe9d98595c98b81dcbe1574b4659393cd4a8c84aa362325e653fc"
           },
           {
             "path": "dist/types/context.d.ts",
@@ -438,7 +450,7 @@
           },
           {
             "path": "dist/types/contract/contract.d.ts",
-            "sha512": "90600e9d6816ecf64c27aee5472d44e2ce1c4003a6c801437e183a5d82e1073475e11b7f82db2c6ff58ac6767eb6dd195650237d40426e1305dc923df8a48f4b"
+            "sha512": "216ea67c686a7859109f07bc05b451cd06cea1d90dd13987ca47296e7ebc4015b53648fb2d7bd8e2e7a2d66e1fa5485cbd86ee5ed4af3aa194eb4b2cea48dbcd"
           },
           {
             "path": "dist/types/operations/delegate-operation.d.ts",
@@ -450,7 +462,7 @@
           },
           {
             "path": "dist/types/contract/errors.d.ts",
-            "sha512": "3b89beba78d3bf7a96ca0d9418772e396f7d5c016ca692040809237b5cf837d01cdc13df875c677feffeeafa6a40d87a92adb19b9d4a6748fd8bca3bdb26ab2a"
+            "sha512": "31568915089388b0011da64c5050289d69ed3ae325f584719f652636bce45c964d81556a9ee9be4fce86798aafc266f7fd997002d21e8c702850e52f9d40158c"
           },
           {
             "path": "dist/types/contract/estimate.d.ts",
@@ -499,6 +511,10 @@
           {
             "path": "dist/types/wallet/interface.d.ts",
             "sha512": "e33c881e29c0907eb44c3d4e1c5afef6739c048cecd1f2bf38fcfaaf4b87519a4e7cbe73631cc464b85278ebbdb8f753b2313cb4b9ee9350702cfa67a7dca245"
+          },
+          {
+            "path": "dist/types/contract/lambda-view.d.ts",
+            "sha512": "545fa3c45a0a44f6083290c125dd64a7cb4c764b41d8ee065ba895123258279fdaa0e29a93fdf04555ce38d0e8ea946b34bffd5e5cd35ca4885d56ee06d2f955"
           },
           {
             "path": "dist/types/wallet/legacy.d.ts",
@@ -566,7 +582,7 @@
           },
           {
             "path": "dist/types/contract/rpc-contract-provider.d.ts",
-            "sha512": "fabee0461c5ac184e1a5b3275f59d7972a15a0b66b2d29c8a922fe6eff94ca21a28117d6e5b27e9f9d445ccf36d30d5d58e6d19f21ced9dac80894287e4370ce"
+            "sha512": "d80d7c62c02e512a3466f7ac9beac8481d23d10887180ac1466a3bc5578e3e3d3293f04d41703c76a1058d9a7bfc15ea340dbc44690657831508643f2c2c3ee5"
           },
           {
             "path": "dist/types/contract/rpc-estimate-provider.d.ts",
@@ -605,12 +621,12 @@
             "sha512": "2b1fb8c1cb088a524ef21512abb0c50adb42b5a8ddb0796ccb61493ddd73d965f5f92beb69843025e29532aba74593419ad4e4b42420aab588eca21f69798ea7"
           },
           {
-            "path": "dist/types/wallet/wallet.d.ts",
-            "sha512": "19db47c6a9fdf581097ebfa00e54178aaf99c2267eeecff4db1c572eb08341913958754ee91cf053eff12f17e392c4799bf900823f627fa44b82fa4a24366b4f"
+            "path": "dist/types/contract/view_lambda.d.ts",
+            "sha512": "75ac1eca911b8328aa267d06bd908f89224f87b4a05fa04e3429cb6b0bfc2a360b94fefa821026655ae5d8ab8063a12d0d52e6237bcde82fa07bc7315e6bc871"
           },
           {
-            "path": "dist/taquito.min.js.LICENSE.txt",
-            "sha512": "3f1d7511b4d8fb46608a36f18f2b0de5336d75dda7a2520e7f6a145a0d027e83860ff6ef6d5135a21e6082b751eb7bf04fe82a4a43d5054e94eaf8ed4984c4e0"
+            "path": "dist/types/wallet/wallet.d.ts",
+            "sha512": "19db47c6a9fdf581097ebfa00e54178aaf99c2267eeecff4db1c572eb08341913958754ee91cf053eff12f17e392c4799bf900823f627fa44b82fa4a24366b4f"
           }
         ]
       }
@@ -649,7 +665,7 @@
           "unpkg",
           "version"
         ],
-        "sha512": "43aa83324679211ec5a86421804f23c91b3651bc9516a8c18e4f271c7ae5f287e2096f4b51613d6b0dec8a34aeed4b09cde2e6a6727ed390b3f283dc2667cc3f"
+        "sha512": "bdcfa043cbd816765121a80c25ad7162066f31ee096da4b8f29db3036003fc148e7bce44fa7be810e792b728927ef1c09fcac2c476b9a8915c848549add3e030"
       }
     },
     {
@@ -657,7 +673,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/taquito",
-          "version": "7.0.0-beta.0",
+          "version": "7.1.0-preview-lambdaview.0",
           "description": "High level functionality that builds upon the other packages in the Tezos Typescript Library Suite.",
           "keywords": [
             "tezos",
@@ -734,11 +750,11 @@
             ]
           },
           "dependencies": {
-            "@taquito/http-utils": "^7.0.0-beta.0",
-            "@taquito/michel-codec": "^7.0.0-beta.0",
-            "@taquito/michelson-encoder": "^7.0.0-beta.0",
-            "@taquito/rpc": "^7.0.0-beta.0",
-            "@taquito/utils": "^7.0.0-beta.0",
+            "@taquito/http-utils": "^7.1.0-preview-lambdaview.0",
+            "@taquito/michel-codec": "^7.1.0-preview-lambdaview.0",
+            "@taquito/michelson-encoder": "^7.1.0-preview-lambdaview.0",
+            "@taquito/rpc": "^7.1.0-preview-lambdaview.0",
+            "@taquito/utils": "^7.1.0-preview-lambdaview.0",
             "bignumber.js": "^9.0.1",
             "rx-sandbox": "^1.0.3",
             "rxjs": "^6.6.3"
@@ -780,5 +796,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfnJAVCRAD9Qy5GYHsngAAzlwQAJ0VeT5sZDG0APyohG8IM0iG\n2c/7vF4XuSdh/WINpaJCd4yoH7t3HJgPukp7CtZjtcTY+XnBih6gjn8zePxHfOWw\nWUsGzrrhj80v/p8UivjYQJ64ELF5fFAS+bZmdmbAfPMePoxeb7KNJmRvfPvL05lE\nlh9nV8YtiON8To3Ua94hYeNCBMhTdH07preirXGb/jJXecP6C1+bmoiLiMxVPOML\nUXGVvTM9EJlqB7+f+laXuuYVklSwkT8WXuBy+NPm5SklbHOGlRk+fm4JQo7hgfun\n/ieS1dwVPsrbF4eFjCNW0dmLBbmy6hORvYQ+X8ztiL5fYcb26/Xk159FSaKAvmqo\n84tqZ4XL50kQ/wPZAIHsp28mPkEe85Umnpukh/Rt+Q5TmBAh1asga569aG9BcSDy\nXT7Sa9fVRc+M67aWTnidi162EZRUbVhig4fVIfXzlf7FwQxck+6dAKX6pyK1khVp\nARbLs1hCtJzwMd9Odrba5Y6rLIeRgHfhZjOOzdQ7Qr6U9QkaG0qrLR4Uzwdc4Y9j\ncCpdIuKlYTbaucf1FxR3GtkvVdCSMWQKKuWdHcvr6IMjkZDD6GFGGL204b9YgNCo\n9o1qT4yocZQ/r8xMKeGjgjP+fhIkU8mnyMM2m2wgBiKIvpnB2qmmaiXWsVHXRBN6\nseOE+QrC74Fcis5Ialry\n=i5fZ\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfqdDpCRAD9Qy5GYHsngAA//UQAHroKjAXPDLvKF/h/Tpdnyyl\nDPtc8X5m6ta8hZrdC2KDjQOEZ4Vb/Hhz+St6AOAQJH16oJvIccVH3LhEBjZRxPXr\nnNspZj0VpCUmtHBOahWefLOsPjs8mgLHbwkWRvbt97RwaF/ceyV2nfopGeZHWtZI\nL7SbpUd3DTGIh9zfcEDFvdUhBwZ7BQOqTkxbdmFy3Cl+G/hUhdv3TsUQnqUS9Owv\nIAMr1wsIc8n/9rt08ppSBOtc3CPfA1nxSCad5LSTmAQq5fhBYcBEjr65eshNrcXq\nyB7bzIgUa7PxLzy1726cxtwOsOJEf7FuPu6LQT69ooWZ/xPscYJmXcWQRXAIVXqH\nuc2un1BYPXBhaUrpF+F6CzyA5rUYL4/wiP6Ut1HL7gYonX2MSD03A99ypAamGSsR\nFlU04QnbtCCK/6J7YGDE5MC9wQowvmAvFnAuQiIqdYfos7XQeZ/nDhkrnZUpQ1H1\nP/6Q25cR2R2hUItCcVzbPf78TF4V9hmet0b0Cq/l86KUxNk8I/R0vSS8ahd9l/3U\n6n4sStLag3qi92Z+D1uc24o/2peuwKW6ANVaYNkg8SNOwkAtHpMI+lgMjTQ9qCTk\nA1D+Du1Cr6swpnkRtRnhflc61B/+pp/OcHcdyrdPU8flOdDU0FKLRA5ksuKci6uY\ntz/oHD7HHv2JmOEipteA\n=udyD\n-----END PGP SIGNATURE-----\n"
 }
