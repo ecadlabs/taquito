@@ -123,8 +123,9 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
     public readonly address: string,
     public readonly script: ScriptResponse,
     provider: T,
-    private storageProvider: StorageProvider,
-    private entrypoints: EntrypointsResponse
+    protected storageProvider: StorageProvider,
+    public readonly entrypoints: EntrypointsResponse,
+    private chainId: string
   ) {
     this.schema = Schema.fromRPCResponse({ script: this.script });
     this.parameterSchema = ParameterSchema.fromRPCResponse({ script: this.script });

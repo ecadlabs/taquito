@@ -134,6 +134,10 @@ export interface ContractProvider extends StorageProvider {
    *
    * @param Transfer operation parameter
    */
+
   transfer(params: TransferParams): Promise<TransactionOperation>;
-  at(address: string, schema?: ContractSchema): Promise<ContractAbstraction<ContractProvider>>;
+  at<T extends ContractAbstraction<ContractProvider>>(address: string, ctorProvider?: () => new (...args: any[]) => T): Promise<T>;
 }
+
+export type ContractMixin = <TBase extends Constructor>(Base: TBase) => Constructor;
+export type Constructor= new (...args: any[]) => ContractAbstraction<ContractProvider>;
