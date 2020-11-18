@@ -5,7 +5,7 @@ author: Simon Boissonneault-Robert
 
 ## Taquito v7.0.1-beta
 
-This release updates Taqutio's Wallet API provider for TZIP-10/Beacon to the latest version. This adds support for delphinet testnets.
+This release updates Taquito's Wallet API provider for TZIP-10/beacon-sdk to 1.2.0. This version of beacon-sdk support delpinet.
 
 ## Taquito v7.0.0-beta
 
