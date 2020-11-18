@@ -80,42 +80,121 @@ describe('ContractView test', () => {
   });
 
 
-    it('should return contract views', async done => {
-      mockRpcClient.getEntrypoints.mockResolvedValue({
-        entrypoints: {
-          transfer: { "prim": "pair", "args": [{ "prim": "pair", "args": [{ "prim": "address" }, { "prim": "address" }] }, { "prim": "nat" }] },
-          mint: { "prim": "nat" },
-          getTotalSupply: { "prim": "pair", "args": [{ "prim": "unit" }, { "prim": "contract", "args": [{ "prim": "nat" }] }] },
-          getBalance: { "prim": "pair", "args": [{ "prim": "address" }, { "prim": "contract", "args": [{ "prim": "nat" }] }] },
-          getAllowance: { "prim": "pair", "args": [{ "prim": "pair", "args": [{ "prim": "address" }, { "prim": "address" }] }, { "prim": "contract", "args": [{ "prim": "nat" }] }] },
-          approve: { "prim": "pair", "args": [{ "prim": "address" }, { "prim": "nat" }] }
-        }
-      });
-
-      const result = await rpcContractProvider.at('test');
-      expect(result.views.getTotalSupply([['Unit']])).toBeInstanceOf(ContractView);
-      expect(result.views.getBalance('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1')).toBeInstanceOf(ContractView);
-      expect(result.views.getAllowance('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1', 'tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE')).toBeInstanceOf(ContractView);
-      expect(() => result.views.getAllowance('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1', 'tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE', 'test')).toThrowError(InvalidParameterError);
-      done();
+  it("should return contract views", async (done) => {
+    mockRpcClient.getEntrypoints.mockResolvedValue({
+      entrypoints: {
+        transfer: {
+          prim: "pair",
+          args: [
+            { prim: "pair", args: [{ prim: "address" }, { prim: "address" }] },
+            { prim: "nat" },
+          ],
+        },
+        mint: { prim: "nat" },
+        getTotalSupply: {
+          prim: "pair",
+          args: [{ prim: "unit" }, { prim: "contract", args: [{ prim: "nat" }] }],
+        },
+        getBalance: {
+          prim: "pair",
+          args: [
+            { prim: "address" },
+            { prim: "contract", args: [{ prim: "nat" }] },
+          ],
+        },
+        getAllowance: {
+          prim: "pair",
+          args: [
+            { prim: "pair", args: [{ prim: "address" }, { prim: "address" }] },
+            { prim: "contract", args: [{ prim: "nat" }] },
+          ],
+        },
+        approve: { prim: "pair", args: [{ prim: "address" }, { prim: "nat" }] },
+      },
     });
 
-    it('should return contract views', async done => {
-      mockRpcClient.getEntrypoints.mockResolvedValue({
-        entrypoints: {
-          transfer: { "prim": "pair", "args": [{ "prim": "pair", "args": [{ "prim": "address" }, { "prim": "address" }] }, { "prim": "nat" }] },
-          mint: { "prim": "nat" },
-          getTotalSupply: { "prim": "pair", "args": [{ "prim": "unit" }, { "prim": "contract", "args": [{ "prim": "nat" }] }] },
-          getBalance: { "prim": "pair", "args": [{ "prim": "address", "annots": [":owner", "%viewParam"] }, { "prim": "contract", "args": [{ "prim": "nat" }], "annots": ["%viewCallbackTo"] }] },
-          getAllowance: { "prim": "pair", "args": [{ "prim": "pair", "args": [{ "prim": "address", "annots": [":owner"] }, { "prim": "address", "annots": [":spender"] }], "annots": ["%viewParam"] }, { "prim": "contract", "args": [{ "prim": "nat" }], "annots": ["%viewCallbackTo"] }], "annots": ["%getAllowance"] },
-          approve: { "prim": "pair", "args": [{ "prim": "address" }, { "prim": "nat" }] }
-        }
-      });
+    const result = await rpcContractProvider.at("test");
+    expect(result.views.getTotalSupply([["Unit"]])).toBeInstanceOf(ContractView);
+    expect(
+      result.views.getBalance("tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1")
+    ).toBeInstanceOf(ContractView);
+    expect(
+      result.views.getAllowance(
+        "tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1",
+        "tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE"
+      )
+    ).toBeInstanceOf(ContractView);
+    expect(() =>
+      result.views.getAllowance(
+        "tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1",
+        "tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE",
+        "test"
+      )
+    ).toThrowError(InvalidParameterError);
+    done();
+  });
 
-      const result = await rpcContractProvider.at('test');
 
-      expect(result.views.getBalance('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1')).toBeInstanceOf(ContractView);
-      expect(result.views.getAllowance('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1', 'tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE')).toBeInstanceOf(ContractView);
-      done();
+  it("should return contract views", async (done) => {
+    mockRpcClient.getEntrypoints.mockResolvedValue({
+      entrypoints: {
+        transfer: {
+          prim: "pair",
+          args: [
+            { prim: "pair", args: [{ prim: "address" }, { prim: "address" }] },
+            { prim: "nat" },
+          ],
+        },
+        mint: { prim: "nat" },
+        getTotalSupply: {
+          prim: "pair",
+          args: [{ prim: "unit" }, { prim: "contract", args: [{ prim: "nat" }] }],
+        },
+        getBalance: {
+          prim: "pair",
+          args: [
+            { prim: "address", annots: [":owner", "%viewParam"] },
+            {
+              prim: "contract",
+              args: [{ prim: "nat" }],
+              annots: ["%viewCallbackTo"],
+            },
+          ],
+        },
+        getAllowance: {
+          prim: "pair",
+          args: [
+            {
+              prim: "pair",
+              args: [
+                { prim: "address", annots: [":owner"] },
+                { prim: "address", annots: [":spender"] },
+              ],
+              annots: ["%viewParam"],
+            },
+            {
+              prim: "contract",
+              args: [{ prim: "nat" }],
+              annots: ["%viewCallbackTo"],
+            },
+          ],
+          annots: ["%getAllowance"],
+        },
+        approve: { prim: "pair", args: [{ prim: "address" }, { prim: "nat" }] },
+      },
     });
+
+    const result = await rpcContractProvider.at("test");
+
+    expect(
+      result.views.getBalance("tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1")
+    ).toBeInstanceOf(ContractView);
+    expect(
+      result.views.getAllowance(
+        "tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1",
+        "tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE"
+      )
+    ).toBeInstanceOf(ContractView);
+    done();
+  });
 });
