@@ -334,11 +334,7 @@ function assertDataValidInternal(t: MichelsonType, d: MichelsonData, ctx: Contex
             throw new MichelsonTypeError(t, d, `signature expected: ${JSON.stringify(d)}`);
 
         case "chain_id":
-            if ("string" in d) {
-                if (checkTezosID(d.string, "ChainID") !== null) {
-                    return;
-                }
-            } else if ("bytes" in d) {
+            if ("bytes" in d) {
                 const x = parseBytes(d.bytes);
                 if (x !== null && x.length === tezosPrefix.ChainID[0]) {
                     return;

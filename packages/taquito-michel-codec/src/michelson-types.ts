@@ -187,8 +187,8 @@ interface EltList<T1 extends MichelsonComparableType, T2 extends MichelsonType> 
 export type MichelsonData<T extends MichelsonType = MichelsonType> =
     T extends MichelsonTypeInt | MichelsonTypeNat | MichelsonTypeMutez ? IntLiteral :
     T extends MichelsonTypeString | MichelsonTypeKeyHash | MichelsonTypeAddress | MichelsonTypeKey | MichelsonTypeSignature ? StringLiteral :
-    T extends MichelsonTypeBytes ? BytesLiteral :
-    T extends MichelsonTypeTimestamp | MichelsonTypeChainID ? IntLiteral | StringLiteral :
+    T extends MichelsonTypeBytes | MichelsonTypeChainID ? BytesLiteral :
+    T extends MichelsonTypeTimestamp ? IntLiteral | StringLiteral :
     T extends MichelsonTypeUnit ? Data0<"Unit"> :
     T extends MichelsonTypeBool ? Data0<"True" | "False"> :
     T extends MichelsonTypeOption<infer A> ? Data0<"None"> | DataX<"Some", [MichelsonData<A>]> :
