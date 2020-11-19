@@ -1,7 +1,7 @@
 {
   "name": "@taquito/example",
   "private": true,
-  "version": "7.1.0-preview-lambdaview.0",
+  "version": "7.1.0-preview.1",
   "scripts": {
     "example:at": "node -r ts-node/register --preserve-symlinks contract-schema.ts",
     "example:origination": "node -r ts-node/register --preserve-symlinks contract-origination.ts",
@@ -16,10 +16,10 @@
   },
   "dependencies": {
     "@ledgerhq/hw-transport-node-hid": "^5.25.0",
-    "@taquito/ledger-signer": "^7.1.0-preview-lambdaview.0",
-    "@taquito/michel-codec": "^7.1.0-preview-lambdaview.0",
-    "@taquito/signer": "^7.1.0-preview-lambdaview.0",
-    "@taquito/taquito": "^7.1.0-preview-lambdaview.0"
+    "@taquito/ledger-signer": "^7.1.0-preview.1",
+    "@taquito/michel-codec": "^7.1.0-preview.1",
+    "@taquito/signer": "^7.1.0-preview.1",
+    "@taquito/taquito": "^7.1.0-preview.1"
   },
   "devDependencies": {
     "ts-node": "^9.0.0"
