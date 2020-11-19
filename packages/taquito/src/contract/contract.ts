@@ -95,6 +95,9 @@ export class ContractMethod<T extends ContractProvider | Wallet> {
   }
 }
 
+/**
+ * @description Utility class to retrieve data from a smart contract's storage without incurring fees via a contract's view method
+ */
 export class ContractView {
   constructor(
     private currentContract: ContractAbstraction<ContractProvider | Wallet>,
@@ -106,6 +109,15 @@ export class ContractView {
     private args: any[]
   ) { }
 
+  /**
+   *
+   * @description Find which lambda contract to use based on the current network, 
+   * encode parameters to Michelson, 
+   * create an instance of Lambdaview to retrive data, and
+   * Decode Michelson response 
+   *
+   * @param Options Address of a lambda contract (sandbox users)
+   */
   async read(customLambdaAddress?: string) {
 
     let lambdaAddress;
