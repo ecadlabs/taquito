@@ -102,9 +102,7 @@ export class BeaconWallet implements WalletProvider {
     const permissions = this.getPermissionOrFail();
     this.validateRequiredScopesOrFail(permissions, [PermissionScope.OPERATION_REQUEST]);
 
-    const network = permissions.network;
     const { transactionHash } = await this.client.requestOperation({
-      network,
       operationDetails: params.map(op => ({
         ...this.removeFeeAndLimit(op),
       })) as any,
