@@ -30,6 +30,15 @@ export class MissingRequiredScopes implements Error {
   }
 }
 
+export class AccountNotFound implements Error {
+  name = 'AccountNotFound';
+  message: string;
+
+  constructor(public accountIdentifier: String) {
+    this.message = `The account ${accountIdentifier} was not found in the local storage`;
+  }
+}
+
 export class BeaconWallet implements WalletProvider {
   public client: DAppClient;
 
@@ -108,5 +117,54 @@ export class BeaconWallet implements WalletProvider {
       })) as any,
     });
     return transactionHash;
+  }
+ 
+  /**
+   * 
+   * @description Removes all beacon values from the storage. After using this method, this instance is no longer usable. You will have to instanciate a new BeaconWallet.
+   */
+  async disconnect() {
+    await this.client.destroy();
+  }
+
+  /**
+   * 
+   * @description Allows to remove an account from the local storage
+   * @param accountIdentifier optional identifier of the account to remove from the storage. If none is specified, the active account (if defined) will be removed from the storage.
+   */
+  async removeAccount(accountIdentifier?: string) {
+    let accountInfo = accountIdentifier 
+      ? await this.client.getAccount(accountIdentifier)
+      : await this.client.getActiveAccount();
+
+    if (accountInfo) {
+      await this.client.removeAccount(accountInfo.accountIdentifier);
+    }
+  }
+
+  /**
+   * 
+   * @description Allows to remove all accounts and set active account to undefined
+   */
+  async removeAllAccounts() {
+    await this.client.removeAllAccounts();
+  }
+
+  /**
+   * 
+   * @description Return the active account
+   */
+  async getActiveAccount() {
+    const activeAccount = await this.client.getActiveAccount();
+    return activeAccount;
+  }
+
+  /**
+   * 
+   * @description Return all accounts in storage
+   */
+  async getAccounts() {
+    const activeAccount = await this.client.getAccounts();
+    return activeAccount;
   }
 }
