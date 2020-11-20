@@ -30,15 +30,6 @@ export class MissingRequiredScopes implements Error {
   }
 }
 
-export class AccountNotFound implements Error {
-  name = 'AccountNotFound';
-  message: string;
-
-  constructor(public accountIdentifier: String) {
-    this.message = `The account ${accountIdentifier} was not found in the local storage`;
-  }
-}
-
 export class BeaconWallet implements WalletProvider {
   public client: DAppClient;
 
@@ -121,7 +112,8 @@ export class BeaconWallet implements WalletProvider {
  
   /**
    * 
-   * @description Removes all beacon values from the storage. After using this method, this instance is no longer usable. You will have to instanciate a new BeaconWallet.
+   * @description Removes all beacon values from the storage. After using this method, this instance is no longer usable. 
+   * You will have to instanciate a new BeaconWallet.
    */
   async disconnect() {
     await this.client.destroy();
@@ -130,7 +122,8 @@ export class BeaconWallet implements WalletProvider {
   /**
    * 
    * @description Allows to remove an account from the local storage
-   * @param accountIdentifier optional identifier of the account to remove from the storage. If none is specified, the active account (if defined) will be removed from the storage.
+   * @param accountIdentifier optional identifier of the account to remove from the storage. 
+   * If none is specified, the active account (if defined) will be removed from the storage.
    */
   async removeAccount(accountIdentifier?: string) {
     let accountInfo = accountIdentifier 
