@@ -6,7 +6,7 @@ author: Claude Barde
 
 ## What is the Batch API?
 
-Taquito provides a simple way of forging and sending transactions to the blockchain, whether you wish to send a few tez to a certain address or interact with a smart contract. Every time a Tezos account signs a transaction, its transaction counter is incremented by 1. This feature prevents users from sending two or multiple transactions in a row as illustrated in this code snippet:
+Taquito provides a simple way of forging and sending transactions to the blockchain, whether you wish to send a few tez to a certain address or interact with a smart contract. Each Tezos account holds a counter that increments every time an operation is included in a block on the network. This feature prevents users from sending two or multiple transactions in a row as illustrated in this code snippet:
 
 ```js
 /*
