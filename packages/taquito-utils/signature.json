@@ -95,7 +95,7 @@
           "typings",
           "version"
         ],
-        "sha512": "382481b4167fd09861df84dddc86a8be5e6c842b16041f2317879c0ed7bf3087f4684695adee86f6d4b767e5849de2f2ddccf53c182a84f22ace6ad624dd221f"
+        "sha512": "9afeea75876fe459440a9a6a379b03fd0782f49aee037d48b03f56cc28c117d85bf8675d8c2cedffc0f7e4991a12b9b8b78c629c201c47a11c34911854d36b57"
       }
     },
     {
@@ -103,7 +103,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/utils",
-          "version": "7.1.0-preview-lambdaview.0",
+          "version": "7.1.0-preview.1",
           "description": "converts michelson data and types into convenient JS/TS objects",
           "keywords": [
             "tezos",
@@ -200,5 +200,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfqdD2CRAD9Qy5GYHsngAAsUgQAAFSj3UfVOVCjDgwqF+4KZ+/\n3JQ0rwN6d9DiD+v1EHcoTDJyB22dKSNlv2GdxiYvf/FzKai2iRA7+soXuCcmHvg1\nKImXsGFbUuxoFZZstbAKe8kEDKJncDA4vwUEzwFyqhLnyHrYcuLmqkFf22zXhwWj\nzVDsYc/JuAmSGuH22S6Rt8Z95ppjsDz9adFhb+tmWHq5F/QNbfsj1A1OU7xPfxPR\nJ23j4QWPgECw7TQ+/pFfoijO9ath4s6StYE4y99Gl5ITjTen8jc6c1h8AJb14xU+\n/1nebvQN0v4x9nZ3KJCpKNm26+n4P1HtbJp++lZO28j+I2ttoxclOU7cC69X8X2e\nrhXkmgko4gwUiJHicHQmml0VIxgWny3Nt3o4utkHZtXvBYKUxczULhKnhV1XBLZY\nNFzO9IOkQCD2OdS1hG1ipdxUOkoSIUIf3PEyaA4tpNIs5PK6BAdvloqIFNQ4W16P\nIA1oUHhAeURGRQyQq9p6VrWmyHatkEAjxSMCWLhzlaYtPOfq6chXSBXx2oPT1abu\nxAPSz0uDHFR6EqLlZFGAcxQpN6QYC8QVm6rtMX4WCrt171IDavb3Rbh3NCK+14qF\nrLoJkaL6daj6t5BoIBp+8bBFMgU3eSPaMFq3TqBc92CEHrQpShv3ekIiHE+HKgAf\nOnbRD30nFCoy1pWOIAZO\n=MsSx\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJftcSvCRAD9Qy5GYHsngAAPl8QAGJznarcggYVjDKMroQdmp6/\n3Mx/kqLiN42m4qRjYFW8Hk22Wt5HzzLhbOpK6gUFJnBBXaadk1aWWiZYcNBYR66o\nzUVrYLQwPz2w4AGeHqRiD5h/3frd0ecYD2KtGX1u8jZnEblvdtoJdfile14retNo\nmM8DGAX7OExerpJ5AOF0/v+w58HN1r0XIpm8rQ+9fnpO4aWstXZD93KkjPUfHhYG\nLX3UJ+nx7T9BtZMQAJ6YP6VbSIw19KVdeZOpOFMaGoqm8tFEXn18ogcdkHjsZi0R\nDhjOKTeui5CmDQhuLtlhwPNVwQUZA0otyj9SlYck45FNwt6pfeDcTWz+FzfMrLoc\nltSxY4RDTHTcPvJN+N9VedvAmj2ocSj4PiuOdeksnI/tis5IJEZnrl1YXc7SInyA\nL6plSfUU2yHELcQHGM8eb4zvXOU+0tCehqvG93OOxgmvJKY+PmwYGzJ+YqbNwTKg\nzgcG9xt6D0YP/O0CmN9N5aXGnPnRU1C625ll5Q4J1Kfax7+Q29PIiOYqmFFeX6JS\n1GU5j5TqAx8ykrkjr5vzDt8S0ajN/WUK9WV8aKQo2XhGlJtpSlHPvZHCkq0vBZkq\no45GmAAiCla1rosOpBURK2bmrSD7rvBgguPbIANPCJUca0yRxSpPxqwPZw1FVUxt\nxJjGPgsJKPytwev6MUNc\n=OUfN\n-----END PGP SIGNATURE-----\n"
 }
