@@ -126,7 +126,7 @@ export class BeaconWallet implements WalletProvider {
    * If none is specified, the active account (if defined) will be removed from the storage.
    */
   async removeAccount(accountIdentifier?: string) {
-    let accountInfo = accountIdentifier 
+    const accountInfo = accountIdentifier 
       ? await this.client.getAccount(accountIdentifier)
       : await this.client.getActiveAccount();
 
