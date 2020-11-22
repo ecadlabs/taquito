@@ -18,6 +18,7 @@ interface HttpRequestOptions {
   json?: boolean;
   query?: { [key: string]: any };
   headers?: { [key: string]: string };
+  signal?: AbortSignal;
 }
 
 export class HttpResponseError implements Error {
@@ -85,10 +86,15 @@ export class HttpBackend {
    * @param options contains options to be passed for the HTTP request (url, method and timeout)
    */
   createRequest<T>(
-    { url, method, timeout, query, headers = {}, json = true }: HttpRequestOptions,
+    { url, method, timeout, query, headers = {}, json = true, signal }: HttpRequestOptions,
     data?: {}
   ) {
     return new Promise<T>((resolve, reject) => {
+      const cancel = () => reject(new Error("Request cancelled"));
+      if (signal && signal.aborted) {
+        return cancel();
+      }
+
       const request = this.createXHR();
       request.open(method || 'GET', `${url}${this.serialize(query)}`);
       request.setRequestHeader('Content-Type', 'application/json');
@@ -127,6 +133,22 @@ export class HttpBackend {
       request.onerror = function(err) {
         reject(new HttpRequestFailed(url, err));
       };
+      
+      request.onabort = function() {
+        cancel();
+      };
+      
+      if (signal) {
+        const abort = () => request.abort();
+        signal.addEventListener("abort", abort);
+        
+        request.onreadystatechange = function() {
+          if (this.readyState === 4) {
+            // clean handler after XHR done
+            signal.removeEventListener("abort", abort);
+          }
+        };
+      }
 
       if (data) {
         const dataStr = JSON.stringify(data);
