@@ -1392,38 +1392,36 @@ export function contractSection<T extends "parameter" | "storage" | "code">(cont
 
 export function contractEntryPoint(src: MichelsonContract | MichelsonType, ep?: string): MichelsonType | null {
     ep = ep || "%default";
-    let parameter: MichelsonType;
+    const entryPoint = contractEntryPoints(src).find(x => x[0] === ep);
 
+    if (entryPoint !== undefined) {
+        return entryPoint[1];
+    } else if (ep === "%default") {
+        return Array.isArray(src) ? contractSection(src, "parameter").args[0] : src;
+    }
+    return null;
+}
+
+export function contractEntryPoints(src: MichelsonContract | MichelsonType): [string, MichelsonType][] {
     if (Array.isArray(src)) {
-        const sec = contractSection(src, "parameter");
-        const a = unpackAnnotations(sec);
-        if (a.f && a.f[0] === ep) {
-            return sec.args[0];
-        }
-        parameter = sec.args[0];
-    } else {
-        parameter = src;
+        const param = contractSection(src, "parameter");
+        const ch = contractEntryPoints(param.args[0]);
+        const a = unpackAnnotations(param);
+        return a.f ? [[a.f[0], param.args[0]], ...ch] : ch;
     }
 
-    function lookup(parameter: MichelsonType, ep: string): MichelsonType | null {
-        const a = unpackAnnotations(parameter);
-        if (a.f && a.f[0] === ep) {
-            return parameter;
-        } else if (parameter.prim === "or") {
-            const left = lookup(parameter.args[0], ep);
-            const right = lookup(parameter.args[1], ep);
-            if (left !== null && right !== null) {
-                throw new MichelsonError(src, `duplicate entrypoint: ${ep}`);
-            } else {
-                return left || right;
+    if (src.prim === "or") {
+        const getArg = (n: 0 | 1): [string, MichelsonType][] => {
+            const a = unpackAnnotations(src.args[n]);
+            if (src.args[n].prim === "or") {
+                const ch = contractEntryPoints(src.args[n]);
+                return a.f ? [[a.f[0], src.args[n]], ...ch] : ch;
             }
-        } else {
-            return null;
-        }
+            return a.f ? [[a.f[0], src.args[n]]] : [];
+        };
+        return [...getArg(0), ...getArg(1)];
     }
-
-    const entrypoint = lookup(parameter, ep);
-    return entrypoint !== null ? entrypoint : ep === "%default" ? parameter : null;
+    return [];
 }
 
 // Contract validation
