@@ -6,9 +6,9 @@ import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 export class BigMapAbstraction {
   constructor(private id: BigNumber, private schema: Schema, private provider: ContractProvider) {}
 
-  async get(keyToEncode: string) {
+  async get(keyToEncode: string | number) {
     try {
-      const id = await this.provider.getBigMapKeyByID(this.id.toString(), keyToEncode, this.schema);
+      const id = await this.provider.getBigMapKeyByID(this.id.toString(), keyToEncode.toString(), this.schema);
       return id;
     } catch (e) {
       if (e instanceof HttpResponseError && e.status === STATUS_CODE.NOT_FOUND) {
