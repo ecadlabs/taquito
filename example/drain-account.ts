@@ -5,8 +5,8 @@ import { b58cencode, Prefix, prefix } from '@taquito/utils';
 const nodeCrypto = require('crypto');
 
 async function example() {
-	const provider = 'https://delphinet-tezos.giganode.io';
-	const keyUrl = 'https://api.tez.ie/keys/delphinet';
+	const provider = 'https://api.tez.ie/rpc/carthagenet';
+	const keyUrl = 'https://api.tez.ie/keys/carthagenet';
 	const Tezos = new TezosToolkit(provider);
 
 	const httpClient = new HttpBackend();
@@ -20,7 +20,7 @@ async function example() {
 	Tezos.setSignerProvider(signer);
 
 	try {
-		//create a new implicit account
+		//create a new implicit account (the receiver)
 		const tezos = new TezosToolkit(provider);
 		const keyBytes = Buffer.alloc(32);
 		nodeCrypto.randomFillSync(keyBytes);
@@ -28,9 +28,9 @@ async function example() {
 		await importKey(tezos, key);
 
 		// We first make a transfer to reveal the sender address
-		        const op = await Tezos.contract.transfer({ to: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', amount: 0.1 });
-                console.log(`Waiting for ${op.hash} to be confirmed...`);
-                await op.confirmation(1);
+		const op = await Tezos.contract.transfer({ to: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', amount: 0.1 });
+        console.log(`Waiting for ${op.hash} to be confirmed...`);
+        await op.confirmation(1);
 
 		const address = await Tezos.signer.publicKeyHash();
 		const balance = await Tezos.tz.getBalance(address);
@@ -39,22 +39,13 @@ async function example() {
 		);
 		const estimate = await Tezos.estimate.transfer({
 			to: await tezos.signer.publicKeyHash(),
-            amount: balance.toNumber() - 64250,
+            amount: balance.toNumber() - 257000,
             mutez: true
 		});
-		console.log(
-			`burnFeeMutez : ${estimate.burnFeeMutez}, 
-            gasLimit : ${estimate.gasLimit}, 
-            minimalFeeMutez : ${estimate.minimalFeeMutez}, 
-            storageLimit : ${estimate.storageLimit}, 
-            suggestedFeeMutez : ${estimate.suggestedFeeMutez}, 
-            totalCost : ${estimate.totalCost}, 
-            usingBaseFeeMutez : ${estimate.usingBaseFeeMutez}
-            milligas: ${estimate.consumedMilligas}`
-		);
-		 const maxAmount = balance.minus(estimate.suggestedFeeMutez + estimate.burnFeeMutez).toNumber();
+        const totalFees = estimate.suggestedFeeMutez + estimate.burnFeeMutez;
+		 const maxAmount = balance.minus(totalFees).toNumber();
             console.log(
-                `The estimated fees related to the emptying operation are ${estimate.suggestedFeeMutez} mutez.\n
+                `The estimated fees related to the emptying operation are ${totalFees} mutez.\n
                 Considering the fees, the amount we need to send to empty the account is ${maxAmount / 1000000} ꜩ.`
             );
             const opTransfer = await Tezos.contract.transfer({
