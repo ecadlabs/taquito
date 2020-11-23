@@ -134,30 +134,5 @@ export class BeaconWallet implements WalletProvider {
       await this.client.removeAccount(accountInfo.accountIdentifier);
     }
   }
-
-  /**
-   * 
-   * @description Allows to remove all accounts and set active account to undefined
-   */
-  async removeAllAccounts() {
-    await this.client.removeAllAccounts();
-  }
-
-  /**
-   * 
-   * @description Return the active account
-   */
-  async getActiveAccount() {
-    const activeAccount = await this.client.getActiveAccount();
-    return activeAccount;
-  }
-
-  /**
-   * 
-   * @description Return all accounts in storage
-   */
-  async getAccounts() {
-    const activeAccount = await this.client.getAccounts();
-    return activeAccount;
   }
 }
