@@ -1,4 +1,4 @@
-import { sourceReference } from "./micheline";
+import { sourceReference, Expr } from "./micheline";
 import { InstructionTrace, MichelsonInstructionError, MichelsonTypeError } from "./michelson-typecheck";
 import { emitMicheline } from "./micheline-emitter";
 import { unpackAnnotations, MichelsonError } from "./utils";
@@ -41,7 +41,7 @@ ${formatStack(err.stackState)}
 `;
     } else if (err instanceof MichelsonTypeError) {
         const type = Array.isArray(err.val) ?
-            "[" + err.val.map((v, i) => `[${i}]: ${emitMicheline(v)}`).join("; ") + "]" :
+            "[" + (err.val as Expr[]).map((v, i) => `[${i}]: ${emitMicheline(v)}`).join("; ") + "]" :
             emitMicheline(err.val);
 
         return `Type: ${type}
