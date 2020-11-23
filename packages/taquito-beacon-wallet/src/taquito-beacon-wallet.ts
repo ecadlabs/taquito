@@ -134,5 +134,4 @@ export class BeaconWallet implements WalletProvider {
       await this.client.removeAccount(accountInfo.accountIdentifier);
     }
   }
-  }
 }
