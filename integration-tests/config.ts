@@ -185,10 +185,16 @@ else if (process.env['RUN_CARTHAGENET_WITH_FAUCET']) {
   providers.push(carthagenetFaucet)
 } 
 else if (process.env['RUN_DELPHINET_WITH_FAUCET']) {
-  providers.push(delphinetFaucet, ebetanetFaucet)
+  providers.push(delphinetFaucet)
+}
+else if (process.env['RUN_BETANET_WITH_FAUCET']) {
+  providers.push(ebetanetFaucet)
 }
 else if (process.env['DELPHINET']) {
-  providers.push(delphinetEphemeral, ebetanetEphemeral)
+  providers.push(delphinetEphemeral)
+}
+else if (process.env['EBETANET']) {
+  providers.push(ebetanetEphemeral)
 }
 else if (process.env['CARTHAGENET']) {
   providers.push(carthagenetEphemeral)
