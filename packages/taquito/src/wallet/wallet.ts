@@ -246,11 +246,14 @@ export class Wallet {
    *
    * @param address Smart contract address
    */
-  async at(address: string): Promise<WalletContract> {
+  async at<T extends ContractAbstraction<Wallet>>(address: string, ctorProvider: () => new (...args: any[]) => T = () => ContractAbstraction as any): Promise<T> {
     const script = await this.context.rpc.getScript(address);
     const entrypoints = await this.context.rpc.getEntrypoints(address);
     const blockHeader = await this.context.rpc.getBlockHeader();
     const chainId = blockHeader.chain_id;
-    return new ContractAbstraction(address, script, this, this.context.contract, entrypoints, chainId);
+    const clazz = ctorProvider();
+    return new clazz(address, script, this, this.context.contract, entrypoints, chainId);
   }
 }
+
+export type ConstructorWallet= new (...args: any[]) => ContractAbstraction<Wallet>;

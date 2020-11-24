@@ -12,6 +12,7 @@ import {
   RegisterDelegateParams,
   TransferParams,
 } from '../operations/types';
+import { Wallet } from '../wallet';
 import { ContractAbstraction } from './contract';
 import { InvalidDelegationSource } from './errors';
 import { ContractProvider, ContractSchema, EstimationProvider, StorageProvider } from './interface';
@@ -205,7 +206,7 @@ export class RpcContractProvider extends OperationEmitter
     return new TransactionOperation(hash, operation, source, forgedBytes, opResponse, context);
   }
 
-  async at<T extends ContractAbstraction<ContractProvider>>(address: string, ctorProvider: () => new (...args: any[]) => T = () => ContractAbstraction as any): Promise<T>{
+  async at<T extends ContractAbstraction<ContractProvider>>(address: string, ctorProvider: () => new (...args: any[]) => T = () => ContractAbstraction as any): Promise<T> {
     const script = await this.rpc.getScript(address);
     const entrypoints = await this.rpc.getEntrypoints(address);
     const blockHeader = await this.rpc.getBlockHeader();
