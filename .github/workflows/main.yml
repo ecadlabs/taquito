@@ -3,7 +3,6 @@ name: Node.js CI
 on: [push]
 jobs:
   lint-and-test:
-    # Use self hosted GitHub runner
     runs-on: self-hosted
     steps:
     - uses: actions/checkout@v2
