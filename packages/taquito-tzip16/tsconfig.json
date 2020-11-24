@@ -1,0 +1,6 @@
+{ 
+    "compilerOptions": { 
+        "esModuleInterop": true, // TODO: review effects of this 
+        "resolveJsonModule": true
+    } 
+}

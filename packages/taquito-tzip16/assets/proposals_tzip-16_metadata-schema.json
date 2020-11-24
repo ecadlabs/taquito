@@ -1,0 +1,371 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$ref": "#/definitions/contract-metadata-tzip-16",
+  "definitions": {
+    "bignum": {
+      "title": "Big number",
+      "description": "Decimal representation of a big number",
+      "type": "string"
+    },
+    "contract-metadata-tzip-16": {
+      "title": "contract-metadata-tzip-16",
+      "description": "Smart Contract Metadata Standard (TZIP-16).",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "The identification of the contract.",
+          "type": "string"
+        },
+        "description": {
+          "description": "Natural language description of the contract and/or its behavior.",
+          "type": "string"
+        },
+        "version": {
+          "description": "The version of the contract code.",
+          "type": "string"
+        },
+        "license": {
+          "description": "The software license of the contract.",
+          "type": "object",
+          "properties": {
+            "name": {
+              "description": "A mnemonic name for the license, see also the License-name case.",
+              "type": "string"
+            },
+            "details": {
+              "description": "Paragraphs of free text, with punctuation and proper language.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": false
+        },
+        "authors": {
+          "description": "The list of authors of the contract.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "homepage": {
+          "description": "A link for humans to follow for documentation, sources, issues, etc.",
+          "type": "string"
+        },
+        "source": {
+          "description": "Description of how the contract's Michelson was generated.",
+          "type": "object",
+          "properties": {
+            "tools": {
+              "title": "Contract Producing Tools",
+              "description": "List of tools/versions used in producing the Michelson.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "location": {
+              "title": "Source Location",
+              "description": "Location (URL) of the source code.",
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "interfaces": {
+          "description": "The list of interfaces the contract claims to implement (e.g. TZIP-12).",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "errors": {
+          "description": "Error translators.",
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "title": "static-error-translator",
+                "description": "A convertor between error codes and expanded messages.",
+                "type": "object",
+                "properties": {
+                  "error": {
+                    "$ref": "#/definitions/micheline.tzip-16.expression"
+                  },
+                  "expansion": {
+                    "$ref": "#/definitions/micheline.tzip-16.expression"
+                  },
+                  "languages": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "expansion",
+                  "error"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "title": "dynamic-error-translator",
+                "description": "An off-chain-view to call to convert error codes to expanded messages.",
+                "type": "object",
+                "properties": {
+                  "view": {
+                    "type": "string"
+                  },
+                  "languages": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "view"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          }
+        },
+        "views": {
+          "description": "The storage queries, a.k.a. off-chain views provided.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "description": "Plain language documentation of the off-chain view; with punctuation.",
+                "type": "string"
+              },
+              "implementations": {
+                "description": "The list of available and equivalent implementations.",
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "title": "michelson-storage-view",
+                      "description": "An off-chain view using Michelson as a scripting language to interpret the storage of a contract.",
+                      "type": "object",
+                      "properties": {
+                        "michelson-storage-view": {
+                          "type": "object",
+                          "properties": {
+                            "parameter": {
+                              "description": "The Michelson type of the potential external parameters required by the code of the view.",
+                              "$ref": "#/definitions/micheline.tzip-16.expression"
+                            },
+                            "return-type": {
+                              "description": "The type of the result of the view, i.e. the value left on the stack by the code.",
+                              "$ref": "#/definitions/micheline.tzip-16.expression"
+                            },
+                            "code": {
+                              "description": "The Michelson code expression implementing the view.",
+                              "$ref": "#/definitions/micheline.tzip-16.expression"
+                            },
+                            "annotations": {
+                              "description": "List of objects documenting the annotations used in the 3 above fields.",
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "description": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "description",
+                                  "name"
+                                ],
+                                "additionalProperties": false
+                              }
+                            },
+                            "version": {
+                              "description": "A string representing the version of Michelson that the view is meant to work with; versions here should be base58check-encoded protocol hashes.",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "code",
+                            "return-type"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "michelson-storage-view"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "title": "rest-api-query-view",
+                      "description": "An off-chain view using a REST API described in a separate OpenAPI specification. The following parameters form a pointer to the localtion in the OpenAPI description.",
+                      "type": "object",
+                      "properties": {
+                        "rest-api-query": {
+                          "type": "object",
+                          "properties": {
+                            "specification-uri": {
+                              "description": "A URI pointing at the location of the OpenAPI specification.",
+                              "type": "string"
+                            },
+                            "base-uri": {
+                              "description": "The URI-prefix to use to query the API.",
+                              "type": "string"
+                            },
+                            "path": {
+                              "description": "The path component of the URI to look-up in the OpenAPI specification.",
+                              "type": "string"
+                            },
+                            "method": {
+                              "description": "The HTTP method to use.",
+                              "type": "string",
+                              "enum": [
+                                "GET",
+                                "POST",
+                                "PUT"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "path",
+                            "specification-uri"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "rest-api-query"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              },
+              "pure": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "implementations",
+              "name"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    "micheline.tzip-16.expression": {
+      "oneOf": [
+        {
+          "title": "Int",
+          "type": "object",
+          "properties": {
+            "int": {
+              "$ref": "#/definitions/bignum"
+            }
+          },
+          "required": [
+            "int"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "title": "String",
+          "type": "object",
+          "properties": {
+            "string": {
+              "$ref": "#/definitions/unistring"
+            }
+          },
+          "required": [
+            "string"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "title": "Bytes",
+          "type": "object",
+          "properties": {
+            "bytes": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9]+$"
+            }
+          },
+          "required": [
+            "bytes"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "title": "Sequence",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/micheline.tzip-16.expression"
+          }
+        },
+        {
+          "title": "Generic prim (any number of args with or without annot)",
+          "type": "object",
+          "properties": {
+            "prim": {
+              "$ref": "#/definitions/unistring"
+            },
+            "args": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/micheline.tzip-16.expression"
+              }
+            },
+            "annots": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "prim"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "unistring": {
+      "title": "Universal string representation",
+      "description": "Either a plain UTF8 string, or a sequence of bytes for strings that contain invalid byte sequences.",
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "invalid_utf8_string": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 255
+              }
+            }
+          },
+          "required": [
+            "invalid_utf8_string"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}

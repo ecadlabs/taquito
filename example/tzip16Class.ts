@@ -1,7 +1,7 @@
 import { ContractAbstraction, TezosToolkit } from "@taquito/taquito";
-import { FetcherProvider } from "taquito-tzip16/src/fetcherProvider";
-import Tzip16ContractAbstraction  from '../packages/taquito-tzip16/src/taquito-tzip16'
-import Tzip16  from '../packages/taquito-tzip16/src/tzip16ContractAbstraction'
+import { FetcherProvider } from "taquito-tzip16-2/src/fetcherProvider";
+import Tzip16ContractAbstraction  from '../packages/taquito-tzip16-2/src/taquito-tzip16'
+import Tzip16  from '../packages/taquito-tzip16-2/src/tzip16ContractAbstraction'
 
 const provider = 'https://api.tez.ie/rpc/carthagenet';
 
