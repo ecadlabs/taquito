@@ -2,7 +2,7 @@ import { StringLiteral, IntLiteral, Prim, Expr } from "./micheline";
 import {
     MichelsonType, MichelsonData, MichelsonComparableType, MichelsonMapElt, MichelsonCode,
     MichelsonTypeOption, MichelsonContract,
-    MichelsonContractSection, MichelsonStackType
+    MichelsonContractSection, MichelsonStackType, MichelsonPassableType
 } from "./michelson-types";
 import {
     unpackAnnotations, MichelsonError, isNatural,
@@ -1390,7 +1390,7 @@ export function contractSection<T extends "parameter" | "storage" | "code">(cont
     throw new MichelsonError(contract, `missing contract section: ${section}`);
 }
 
-export function contractEntryPoint(src: MichelsonContract | MichelsonType, ep?: string): MichelsonType | null {
+export function contractEntryPoint(src: MichelsonContract | MichelsonPassableType, ep?: string): MichelsonPassableType | null {
     ep = ep || "%default";
     const entryPoint = contractEntryPoints(src).find(x => x[0] === ep);
 
@@ -1402,7 +1402,7 @@ export function contractEntryPoint(src: MichelsonContract | MichelsonType, ep?: 
     return null;
 }
 
-export function contractEntryPoints(src: MichelsonContract | MichelsonType): [string, MichelsonType][] {
+export function contractEntryPoints(src: MichelsonContract | MichelsonPassableType): [string, MichelsonPassableType][] {
     if (Array.isArray(src)) {
         const param = contractSection(src, "parameter");
         const ch = contractEntryPoints(param.args[0]);
@@ -1411,7 +1411,7 @@ export function contractEntryPoints(src: MichelsonContract | MichelsonType): [st
     }
 
     if (src.prim === "or") {
-        const getArg = (n: 0 | 1): [string, MichelsonType][] => {
+        const getArg = (n: 0 | 1): [string, MichelsonPassableType][] => {
             const a = unpackAnnotations(src.args[n]);
             if (src.args[n].prim === "or") {
                 const ch = contractEntryPoints(src.args[n]);
