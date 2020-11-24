@@ -102,13 +102,36 @@ export class BeaconWallet implements WalletProvider {
     const permissions = this.getPermissionOrFail();
     this.validateRequiredScopesOrFail(permissions, [PermissionScope.OPERATION_REQUEST]);
 
-    const network = permissions.network;
     const { transactionHash } = await this.client.requestOperation({
-      network,
       operationDetails: params.map(op => ({
         ...this.removeFeeAndLimit(op),
       })) as any,
     });
     return transactionHash;
+  }
+ 
+  /**
+   * 
+   * @description Removes all beacon values from the storage. After using this method, this instance is no longer usable. 
+   * You will have to instanciate a new BeaconWallet.
+   */
+  async disconnect() {
+    await this.client.destroy();
+  }
+
+  /**
+   * 
+   * @description Allows to remove an account from the local storage
+   * @param accountIdentifier optional identifier of the account to remove from the storage. 
+   * If none is specified, the active account (if defined) will be removed from the storage.
+   */
+  async removeAccount(accountIdentifier?: string) {
+    const accountInfo = accountIdentifier 
+      ? await this.client.getAccount(accountIdentifier)
+      : await this.client.getActiveAccount();
+
+    if (accountInfo) {
+      await this.client.removeAccount(accountInfo.accountIdentifier);
+    }
   }
 }
