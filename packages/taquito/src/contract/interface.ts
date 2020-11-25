@@ -137,10 +137,4 @@ export interface ContractProvider extends StorageProvider {
 
   transfer(params: TransferParams): Promise<TransactionOperation>;
   at<T extends ContractAbstraction<ContractProvider>>(address: string, contractAbstractionComposer?: (abs: ContractAbstraction<ContractProvider>) => T): Promise<T>;
-
-
-  //at2<T extends ContractAbstraction<ContractProvider>>(address: string, ctorProvider?: () => new (...args: any[]) => T): Promise<T>;
 }
-
-//export type ContractMixin = <TBase extends Constructor>(Base: TBase) => Constructor;
-// export type ConstructorContractProvider= new (...args: any[]) => ContractAbstraction<ContractProvider>;

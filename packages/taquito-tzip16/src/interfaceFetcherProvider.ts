@@ -13,13 +13,5 @@ export interface FetcherProviderInterface {
     fetchMetadata(contractAbstraction: ContractAbstraction<ContractProvider | Wallet>, uri: String): Promise<{}>;
 }
 
-export class FetcherProvider implements FetcherProviderInterface {
 
-    async fetchMetadata(contractAbstraction: ContractAbstraction<ContractProvider | Wallet>, uri: String): Promise<{}>{
-        // TODO
-        const testToBeRemoved: Storage = await contractAbstraction.storage(); // Remove that
-        console.log(uri)
-        return testToBeRemoved;// Remove that
-    };
-}
 
