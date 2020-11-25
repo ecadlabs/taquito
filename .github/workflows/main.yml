@@ -19,7 +19,7 @@ jobs:
     - run: npm run lerna -- bootstrap
     - run: npm run build
     - run: npm run lint
-    - run: npm run test -- --runInBand
+    - run: npm run test -- --runInBand -- --maxWorkers=64
     - uses: codecov/codecov-action@v1
       with:
         file: .coverage/*.json
@@ -45,7 +45,7 @@ jobs:
     - run: npm ci
     - run: npm run lerna -- bootstrap
     - run: npm run build
-    - run: cd integration-tests && npm run test:carthagenet
+    - run: cd integration-tests && npm run test:carthagenet -- --maxWorkers=64
       env:
         CI: true
   integration-tests-delphinet:
@@ -67,6 +67,6 @@ jobs:
     - run: npm ci
     - run: npm run lerna -- bootstrap
     - run: npm run build
-    - run: cd integration-tests && npm run test:delphinet
+    - run: cd integration-tests && npm run test:delphinet -- --maxWorkers=64
       env:
         CI: true
