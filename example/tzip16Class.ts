@@ -1,25 +1,15 @@
-import { ContractAbstraction, TezosToolkit } from "@taquito/taquito";
-import { FetcherProvider } from "taquito-tzip16-2/src/fetcherProvider";
-import Tzip16ContractAbstraction  from '../packages/taquito-tzip16-2/src/taquito-tzip16'
-import Tzip16  from '../packages/taquito-tzip16-2/src/tzip16ContractAbstraction'
-
-const provider = 'https://api.tez.ie/rpc/carthagenet';
+import { TezosToolkit } from "@taquito/taquito";
+import { composeTzip16 } from '../packages/taquito-tzip16/src/composer'
 
 async function example() {
   try {
-    const fetcher = new FetcherProvider();
+
     const tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
-    const test = await tezos.contract.at("KT1Uv2jXQY8GPauZgJWTaGaqtECKznUqbGbo", () => Tzip16ContractAbstraction(ContractAbstraction, fetcher));
-    
-    // more user friendly way to call it
-    const test2 = await tezos.contract.at("KT1Uv2jXQY8GPauZgJWTaGaqtECKznUqbGbo", Tzip16());
-    const test3 = await tezos.wallet.at("KT1Uv2jXQY8GPauZgJWTaGaqtECKznUqbGbo", Tzip16(fetcher));
-    // the new method getUri() of the Tzip16ContractAbstraction class is accessible
-    test.getUri();
-    test2.getUri();
-    test3.getUri();
-    const testWallet = await tezos.wallet.at("KT1Uv2jXQY8GPauZgJWTaGaqtECKznUqbGbo", () => Tzip16ContractAbstraction(ContractAbstraction));
-    testWallet.getUri();
+    const contract = await tezos.contract.at("KT1Uv2jXQY8GPauZgJWTaGaqtECKznUqbGbo", composeTzip16)
+    const uri = await contract.tzip16().getUri();
+    console.log('uri:', uri);
+    // const metadata = await contract.tzip16().getMetadata();
+
 
 } catch (ex) {
     console.error(ex);

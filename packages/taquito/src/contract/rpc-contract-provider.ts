@@ -206,12 +206,21 @@ export class RpcContractProvider extends OperationEmitter
     return new TransactionOperation(hash, operation, source, forgedBytes, opResponse, context);
   }
 
-  async at<T extends ContractAbstraction<ContractProvider>>(address: string, ctorProvider: () => new (...args: any[]) => T = () => ContractAbstraction as any): Promise<T> {
+  async at<T extends ContractAbstraction<ContractProvider>>(address: string, contractAbstractionComposer: (abs: ContractAbstraction<ContractProvider>) => T = x => x as any): Promise<T> {
+    const script = await this.rpc.getScript(address);
+    const entrypoints = await this.rpc.getEntrypoints(address);
+    const blockHeader = await this.rpc.getBlockHeader();
+    const chainId = blockHeader.chain_id;
+    const abs = new ContractAbstraction(address, script, this, this, entrypoints, chainId);
+    return contractAbstractionComposer(abs)
+  }
+
+/*   async at<T extends ContractAbstraction<ContractProvider>>(address: string, ctorProvider: () => new (...args: any[]) => T = () => ContractAbstraction as any): Promise<T> {
     const script = await this.rpc.getScript(address);
     const entrypoints = await this.rpc.getEntrypoints(address);
     const blockHeader = await this.rpc.getBlockHeader();
     const chainId = blockHeader.chain_id;
     const clazz = ctorProvider();
     return new clazz(address, script, this, this, entrypoints, chainId);
-  }
+  } */
 }

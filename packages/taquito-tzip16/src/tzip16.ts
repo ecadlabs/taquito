@@ -1,8 +1,8 @@
-import Ajv, { JSONSchemaType, DefinedError } from "ajv"
-import validate, { result } from "validate.js";
-import isIPFS from 'is-ipfs';
+//import Ajv, { JSONSchemaType, DefinedError } from "ajv"
+//import validate, { result } from "validate.js";
+//import isIPFS from 'is-ipfs';
 
-import tzip16spec from "../assets/proposals_tzip-16_metadata-schema.json";
+//import tzip16spec from "../assets/proposals_tzip-16_metadata-schema.json";
 
 /** Metadata related artifacts:
  * metadataMichelsonType, // this is a type
@@ -16,25 +16,25 @@ import tzip16spec from "../assets/proposals_tzip-16_metadata-schema.json";
  */
 
 
-export class MetaDataManager {
+//export class MetaDataManager {
 
     // 1. INSERT METADATA
     /**
      * 
      * @param metadataHostStorageCode Michelson code of the storage where %metadata is to be searched in top-level tree
      */
-    isValidMetadataType(metadataHostStorageCode: string) {
+    /* isValidMetadataType(metadataHostStorageCode: string) {
         // check if metadata in StorageCode has metadata of type (big_map %metadata string bytes) // TODO
         // Note: There are other checks in tzip16 related to metadata shape; review storage implementation
         return;
-    }
+    } */
 
     /**
      * Checks if a metadata matches a known schema
      * @param metadataJSON metadata whose schema needs to be checked
      * @param metadataSchema (optional) schema to be matched against
      */
-    isValidMetadata(metadataJSON: JSON, metadataSchema?: JSON): boolean {
+    /* isValidMetadata(metadataJSON: JSON, metadataSchema?: JSON): boolean {
         // return if all reserved fields are valid
         // wrap error // TODO
         if (metadataSchema) {
@@ -45,17 +45,17 @@ export class MetaDataManager {
             return this.validateSchemaWithData(metadataJSON, _schema);
         }
     }
-
+ */
     /**
      * Validates if a uri is one of the schemes in tzip16
      * @param metadataURI URI to be validated
      */
-    isValidMetadataURI(metadataURI: string): boolean {
+    /* isValidMetadataURI(metadataURI: string): boolean {
         return this.isUrl(metadataURI) ||
             this.isIPFSURIScheme(metadataURI) || // TODO
             this.isTezosStorageTypeURI(metadataURI);
     }
-
+ */
     // 2. READ METADATA
     // 2.1 Parse to metadataProvider
     // ---
@@ -65,7 +65,7 @@ export class MetaDataManager {
 
 
     // UTILS
-    private validateSchemaWithData(metadataJSON: JSON, metadataSchema: JSON): boolean {
+    /* private validateSchemaWithData(metadataJSON: JSON, metadataSchema: JSON): boolean {
         // use a library // TODO
         const ajv = new Ajv({ allErrors: true });
         const validationFunction = ajv.compile(metadataSchema);
@@ -90,7 +90,7 @@ export class MetaDataManager {
             // console.error(JSON.stringify(_result));
             return false;
         }
-    }
+    } */
 
     // private getURIProtocol(uri: string) {
     //     const protocol = uri.split(':')[0];
@@ -125,7 +125,7 @@ export class MetaDataManager {
     //     }
     // }
 
-    private isIPFSURIScheme(unknownURI: string): boolean {
+    /* private isIPFSURIScheme(unknownURI: string): boolean {
         const _result = isIPFS.url(unknownURI);
         if (_result) {
             return true;
@@ -176,4 +176,4 @@ export class MetaDataManager {
         } else return false;
 
     }
-}
+} */

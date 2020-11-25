@@ -5,7 +5,7 @@ import json from 'rollup-plugin-json';
 
 const pkg = require('./package.json');
 
-const libraryName = 'taquito-tzip16';
+const libraryName = 'tzip16';
 
 export default {
   input: `src/${libraryName}.ts`,

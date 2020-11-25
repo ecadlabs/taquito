@@ -1,6 +1,15 @@
-{ 
-    "compilerOptions": { 
-        "esModuleInterop": true, // TODO: review effects of this 
-        "resolveJsonModule": true
-    } 
-}
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+      "declarationDir": "dist/types",
+      "outDir": "dist/lib",
+      "typeRoots": [
+        "node_modules/@types"
+      ],
+      "jsx": "react"
+    },
+    "include": [
+      "src"
+    ]
+  }
+  
