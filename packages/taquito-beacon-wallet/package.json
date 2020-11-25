@@ -1,6 +1,6 @@
 {
   "name": "@taquito/beacon-wallet",
-  "version": "7.1.0-preview.2",
+  "version": "7.1.0-preview.4",
   "description": "Beacon wallet provider",
   "keywords": [
     "tezos",
@@ -61,8 +61,8 @@
   },
   "dependencies": {
     "@airgap/beacon-sdk": "^2.0.0-beta.16",
-    "@taquito/taquito": "^7.1.0-preview.2",
-    "@taquito/utils": "^7.1.0-preview.2"
+    "@taquito/taquito": "^7.1.0-preview.4",
+    "@taquito/utils": "^7.1.0-preview.4"
   },
   "devDependencies": {
     "@types/chrome": "0.0.124",
