@@ -143,4 +143,4 @@ export interface ContractProvider extends StorageProvider {
 }
 
 //export type ContractMixin = <TBase extends Constructor>(Base: TBase) => Constructor;
-export type ConstructorContractProvider= new (...args: any[]) => ContractAbstraction<ContractProvider>;
+// export type ConstructorContractProvider= new (...args: any[]) => ContractAbstraction<ContractProvider>;
