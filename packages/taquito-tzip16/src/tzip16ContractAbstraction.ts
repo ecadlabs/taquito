@@ -48,7 +48,7 @@ export class Tzip16ContractAbstraction {
     /**
    * @description Return the decoded uri
    */
-    async getUri() {
+    async getUri(): Promise<string> {
         const isCompliant = await this.isTzip16Compliant();
         if (!isCompliant) {
             throw new Error("The contract is not compliant with tzip16 standard.");
@@ -60,7 +60,7 @@ export class Tzip16ContractAbstraction {
     /**
    * @description Fetch and return the metadata
    */
-    async getMetadata() {
+    async getMetadata(): Promise<{}> {
         return this.fetcher.fetchMetadata(this.abs, await this.getUri());
     }
 }
