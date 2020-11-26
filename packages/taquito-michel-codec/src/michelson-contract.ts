@@ -6,7 +6,8 @@ import {
     assertContractValid, contractSection,
     contractEntryPoint, assertDataValid,
     assertTypeAnnotationsValid,
-    InstructionTrace, Context, functionType
+    InstructionTrace, Context, functionType,
+    isDataValid, contractEntryPoints
 } from "./michelson-typecheck";
 import { Parser } from "./micheline-parser";
 import { assertMichelsonContract, assertMichelsonType, assertMichelsonData } from "./michelson-validator";
@@ -64,12 +65,20 @@ export class Contract {
         return contractSection(this.contract, section);
     }
 
+    entryPoints(): [string, MichelsonType][] {
+        return contractEntryPoints(this.contract);
+    }
+
     entryPoint(ep?: string): MichelsonType | null {
         return contractEntryPoint(this.contract, ep);
     }
 
-    assertDataValid(t: MichelsonType, d: MichelsonData): void {
-        assertDataValid(t, d, this.ctx);
+    assertDataValid<T extends MichelsonType>(d: MichelsonData, t: T): d is MichelsonData<T> {
+        return assertDataValid(d, t, this.ctx);
+    }
+
+    isDataValid<T extends MichelsonType>(d: MichelsonData, t: T): d is MichelsonData<T> {
+        return isDataValid(d, t, this.ctx);
     }
 
     assertParameterValid(ep: string | null, d: MichelsonData): void {
@@ -77,7 +86,16 @@ export class Contract {
         if (t === null) {
             throw new Error(`contract has no entrypoint named ${ep}`);
         }
-        this.assertDataValid(t, d);
+        this.assertDataValid(d, t);
+    }
+
+    isParameterValid(ep: string | null, d: MichelsonData): boolean {
+        try {
+            this.assertParameterValid(ep, d);
+            return true;
+        } catch {
+            return false;
+        }
     }
 
     functionType(inst: MichelsonCode, stack: MichelsonType[]): MichelsonStackType {
