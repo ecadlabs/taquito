@@ -56,7 +56,7 @@ interface FaucetConfig {
 }
 
 const ebetanetEphemeral = {
-  rpc: 'https://api.tez.ie/rpc/ebetanet',
+  rpc: process.env['TEZOS_RPC_EBETANET'] || 'https://api.tez.ie/rpc/ebetanet',
   knownBaker: 'tz1LpmZmB1yJJBcCrBDLSAStmmugGDEghdVv',
   knownContract: 'KT1Gm9PeBggJzegaM9sRCz1EymLrWxpWyGXr',
   knownBigMapContract: 'KT1Nf1CPvF1FFmAan5LiRvcyukyt3Nf4Le9B',
