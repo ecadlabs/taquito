@@ -410,6 +410,9 @@ function emitContractModule(c: Contract, prefix: string = "", fmt: Formatter): s
     return res;
 }
 
+/**
+ * TypeScript code generator
+ */
 export class Emitter {
     private fmt: Formatter;
 
@@ -417,14 +420,26 @@ export class Emitter {
         this.fmt = new Formatter(opt || { indent: "    ", newline: "\n" });
     }
 
+    /**
+     * Generate TypeScript equivalent of the Michelson type
+     * @param t A Michelson type definition
+     */
     tsTypeDef(t: MichelsonType): string {
         return mkUnion(emitTSTypeDef(t, this.fmt, {}));
     }
 
+    /**
+     * Generate a TypeScript type expression for the exact subtype of MichelsonType 
+     * @param t A Michelson type definition
+     */
     michelsonTypeDef(t: MichelsonType): string {
         return emitMichelsonTypeDef(t, this.fmt, {});
     }
 
+    /**
+     * Generate a TypeScript object literal of type definition what is basically a JSON 
+     * @param t A Michelson type definition
+     */
     michelsonType(t: MichelsonType): string {
         return emitMichelsonType(t, this.fmt);
     }
@@ -437,6 +452,11 @@ export class Emitter {
         return `(src: MichelsonData<${inType}>): ${outType} => (${emitTSLiteralExpr(t, "src", this.fmt)});`;
     }
 
+    /**
+     * Generate a TypeScript helper module for the contract
+     * @param c Michelson contract
+     * @param prefix Optional prefix for public names
+     */
     contractModule(c: Contract, prefix: string = ""): string {
         return emitContractModule(c, prefix, this.fmt);
     }
