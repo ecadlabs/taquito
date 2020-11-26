@@ -1,0 +1,30 @@
+#!/usr/bin/env node
+const yargs = require("yargs");
+const fs = require("fs");
+const process = require("process");
+const michelCodec = require("@taquito/michel-codec");
+const typing = require("../");
+
+const argv = yargs(process.argv.slice(2))
+    .options({
+        "input": {
+            alias: "i",
+            describe: "Read Michelson contract from file instead of stdin",
+            type: "string",
+        },
+        "json": {
+            alias: "j",
+            describe: "Expect JSON encoded contract",
+            type: "boolean",
+        },
+        "prefix": {
+            alias: "p",
+            describe: "Optional prefix for exported names",
+            type: "string",
+        },
+    }).argv;
+
+const buf = fs.readFileSync(argv.input || 0).toString();
+const contract = michelCodec.Contract.parse(argv.json ? JSON.parse(buf) : buf);
+const mod = new typing.Emitter().contractModule(contract, argv.prefix);
+process.stdout.write(mod);
