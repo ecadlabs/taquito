@@ -1,4 +1,5 @@
 import { ContractAbstraction, ContractProvider, Wallet } from "@taquito/taquito";
+import { HttpBackend } from "@taquito/http-utils";
 
 export interface FetcherProviderInterface {
     /**
@@ -10,8 +11,21 @@ export interface FetcherProviderInterface {
      * @param contractAbstraction the contractAbstraction of the current contract (useful if metadata are located inside its own storage)
      * @param uri the decoded uri
      */
-    fetchMetadata(contractAbstraction: ContractAbstraction<ContractProvider | Wallet>, uri: String): Promise<{}>;
+    fetchMetadata(contractAbstraction: ContractAbstraction<ContractProvider | Wallet>, uri: String): Promise<{metadataJSON: JSON}>;
 }
 
 
 
+export class FetcherProvider implements FetcherProviderInterface {
+    private httpBackend: HttpBackend = new HttpBackend();
+
+    async fetchMetadata(contractAbstraction: ContractAbstraction<ContractProvider | Wallet>, uri: String): Promise<{metadataJSON: JSON}> {
+        const storage: Storage = await contractAbstraction.storage();
+        const hash = await this.httpBackend.createRequest<string>({
+            url: uri.toString()
+          });
+          return JSON.parse(hash);
+        // throw new Error("Method not implemented.");
+    }
+    
+}
