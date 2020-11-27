@@ -214,7 +214,6 @@ Generated TypeScript module:
 /* The code is automatically generated; DO NOT EDIT. */
 
 import {
-    Context,
     MichelsonContract,
     MichelsonData,
     MichelsonType,
@@ -736,7 +735,7 @@ const contract: MichelsonContract = [
     {
         prim: "parameter",
         args: [parameter],
-        annots: ["%root"]
+        annots: ["%root"],
     },
     {
         prim: "storage",

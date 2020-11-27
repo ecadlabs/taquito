@@ -350,13 +350,11 @@ function emitContractModule(c: Contract, prefix: string = "", fmt: Formatter): s
 
         const emitAssertFunc = (typeName: string, typeSpec: string) => {
             imports["assertDataValid"] = true;
-            imports["Context"] = true;
             return `function assert${typeName}(d: MichelsonData): d is ${typeName} {${fmt.lfsp(1)}return assertDataValid(d, ${typeSpec}, { contract: ${lcamel(prefix + "Contract")} });${fmt.lfsp()}}`;
         };
 
         const emitTypeGuardFunc = (typeName: string, typeSpec: string) => {
             imports["assertDataValid"] = true;
-            imports["Context"] = true;
             return `function is${typeName}(d: MichelsonData): d is ${typeName} {${fmt.lfsp(1)}try {${fmt.lfsp(2)}return assertDataValid(d, ${typeSpec}, { contract: ${lcamel(prefix + "Contract")} });${fmt.lfsp(1)}} catch {${fmt.lfsp(2)}return false;${fmt.lfsp(1)}}${fmt.lfsp()}}`;
         };
 
@@ -377,7 +375,7 @@ function emitContractModule(c: Contract, prefix: string = "", fmt: Formatter): s
     const parameterAnn = c.section("parameter").annots;
     const storageAnn = c.section("storage").annots;
     res += `/* Contract literal with trimmed code section */${fmt.lfsp()}${fmt.lf()}`;
-    res += `const ${lcamel(prefix + "Contract")}: MichelsonContract = [${fmt.lf(1)}{${fmt.lfsp(2)}prim: "parameter",${fmt.lfsp(2)}args: [${lcamel(prefix + "Parameter")}],${parameterAnn ? `${fmt.lfsp(2)}annots: [${parameterAnn.map(v => JSON.stringify(v)).join(", ")}]` : ""}${fmt.lfsp(1)}},${fmt.lfsp(1)}{${fmt.lfsp(2)}prim: "storage",${fmt.lfsp(2)}args: [${lcamel(prefix + "Storage")}],${storageAnn ? `${fmt.lfsp(2)}annots: [${storageAnn.map(v => JSON.stringify(v)).join(", ")}]` : ""}${fmt.lfsp(1)}},${fmt.lfsp(1)}{${fmt.lfsp(2)}prim: "code",${fmt.lfsp(2)}args: [[]],${fmt.lfsp(1)}}${fmt.lf()}];${fmt.lfsp()}${fmt.lf()}`;
+    res += `const ${lcamel(prefix + "Contract")}: MichelsonContract = [${fmt.lf(1)}{${fmt.lfsp(2)}prim: "parameter",${fmt.lfsp(2)}args: [${lcamel(prefix + "Parameter")}],${parameterAnn ? `${fmt.lfsp(2)}annots: [${parameterAnn.map(v => JSON.stringify(v)).join(", ")}],` : ""}${fmt.lfsp(1)}},${fmt.lfsp(1)}{${fmt.lfsp(2)}prim: "storage",${fmt.lfsp(2)}args: [${lcamel(prefix + "Storage")}],${storageAnn ? `${fmt.lfsp(2)}annots: [${storageAnn.map(v => JSON.stringify(v)).join(", ")}],` : ""}${fmt.lfsp(1)}},${fmt.lfsp(1)}{${fmt.lfsp(2)}prim: "code",${fmt.lfsp(2)}args: [[]],${fmt.lfsp(1)}}${fmt.lf()}];${fmt.lfsp()}${fmt.lf()}`;
 
     if (entryPoints.length !== 0) {
         imports["MichelsonData"] = true;
