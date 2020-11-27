@@ -12,20 +12,20 @@ Usage:
 
 ## Typing rules
 
-| Michelson type(s)                         | TypeScript equivalent            |
-| ----------------------------------------- | -------------------------------- |
-| int, nat, mutez                           | `bigint | number`                |
-| string, key_hash, address, key, signature | `string`                         |
-| bytes, chain_id                           | `Uint8Array | number[] | string` |
-| bool                                      | `boolean`                        |
-| timestamp                                 | `string | number | Date`         |
-| unit                                      | `"Unit"`                         |
-| (option T)                                | `T | null`                       |
-| pair                                      | See below                        |
-| or                                        | See below                        |
-| list T, set T                             | `T[]`                            |
-| map K V, big_map K, V                     | `Map<K,V> | [K, V][]`            |
-| lambda                                    | `MichelsonCode`                  |
+| Michelson type(s)                         | TypeScript equivalent              |
+| ----------------------------------------- | ---------------------------------- |
+| int, nat, mutez                           | bigint \| number                   |
+| string, key_hash, address, key, signature | string                             |
+| bytes, chain_id                           | Uint8Array \| number\[\] \| string |
+| bool                                      | boolean                            |
+| timestamp                                 | string \| number \| Date           |
+| unit                                      | "Unit"                             |
+| (option T)                                | T \| null                          |
+| pair                                      | See below                          |
+| or                                        | See below                          |
+| list T, set T                             | T\[\]                              |
+| map K V, big_map K, V                     | Map<K,V> \| \[K, V\]\[\]`          |
+| lambda                                    | MichelsonCode                      |
 
 ### Pair types
 
@@ -82,35 +82,35 @@ For every Michelson type (i.e. contract storage type, parameter root type and al
 
 ### Types
 
-#### `Parameter`
+#### Parameter
 
 Represents TypeScript equivalent of contract's parameter type
 
-#### `ParameterType`
+#### ParameterType
 
 An exact subtype of `MichelsonType` covering contract's parameter Michelson type (an AST tree type)
 
-#### `ParameterData`
+#### ParameterData
 
 Parameter data literal type. An alias for `MichelsonData<ParameterType>`
 
-#### `Storage`
+#### Storage
 
 Represents TypeScript equivalent of contract's storage type
 
-#### `StorageType`
+#### StorageType
 
 An exact subtype of `MichelsonType` covering contract's storage Michelson type (an AST tree type)
 
-#### `StorageData`
+#### StorageData
 
 Storage data literal type. An alias for `MichelsonData<StorageType>`
 
-#### `EntryPointID`
+#### EntryPointID
 
 Union type representing entry point names
 
-#### `EntryPointArg<id extends EntryPointID>` 
+#### EntryPointArg<id extends EntryPointID>
 
 Conditional type that expands into TypeScript equivalent of the entry point argument type
 
@@ -118,71 +118,71 @@ Conditional type that expands into TypeScript equivalent of the entry point argu
 
 Conditional type that expands into entry point argument Michelson type (an AST tree type)
 
-#### `EntryPointData<id extends EntryPointID>`
+#### EntryPointData<id extends EntryPointID>
 
 Conditional type that expands into entry point argument data literal type
 
 ### Constants
 
-#### `parameter: ParameterType`
+#### parameter: ParameterType
 
 An AST representation of the parameter type
 
-#### `storage: ParameterType`
+#### storage: ParameterType
 
 An AST representation of the storage type
 
-#### `entryPoints`
+#### entryPoints
 
 An entry point table with corresponding Michelson types
 
 ### Functions
 
-#### `decodeParameter(src: ParameterData): Parameter`
+#### decodeParameter(src: ParameterData): Parameter
 
 Decode Michelson data literal into corresponding TypeScript object
 
-#### `encodeParameter(src: Parameter): ParameterData`
+#### encodeParameter(src: Parameter): ParameterData
 
 Encode TypeScript object as Michelson data literal
 
-#### `isParameterData(d: MichelsonData): d is ParameterData`
+#### isParameterData(d: MichelsonData): d is ParameterData
 
 Returns true if `d` matches parameter data literal. Calls `assertDataValid(d, parameter, ctx)`
 
-#### `assertParameterData(d: MichelsonData): d is ParameterData`
+#### assertParameterData(d: MichelsonData): d is ParameterData
 
 Throws an exception if `d` isn't matching parameter data literal. Has a type guard annotation for convenience but never return false.
 
-#### `decodeStorage(src: StorageData): Storage`
+#### decodeStorage(src: StorageData): Storage
 
 Decode Michelson data literal into corresponding TypeScript object
 
-#### `encodeStorage(src: Storage): StorageData`
+#### encodeStorage(src: Storage): StorageData
 
 Encode TypeScript object as Michelson data literal
 
-#### `isStorageData(d: MichelsonData, ctx?: Context): d is StorageData`
+#### isStorageData(d: MichelsonData): d is StorageData
 
 Returns true if `d` matches storage data literal. Calls `assertDataValid(d, storage, ctx)`
 
-#### `assertStorageData(d: MichelsonData, ctx?: Context): d is StorageData`
+#### assertStorageData(d: MichelsonData): d is StorageData
 
 Throws an exception if `d` doesn't match storage data literal. Has a type guard annotation for convenience but never returns false.
 
-#### `decodeEntryPointArg<T extends EntryPointID>(id: T, src: EntryPointData<T>): EntryPointArg<T>`
+#### decodeEntryPointArg<T extends EntryPointID>(id: T, src: EntryPointData<T>): EntryPointArg<T>
 
 Decode Michelson data literal into corresponding TypeScript object
 
-#### `encodeEntryPointArg<T extends EntryPointID>(id: T, src: EntryPointArg<T>): EntryPointData<T>`
+#### encodeEntryPointArg<T extends EntryPointID>(id: T, src: EntryPointArg<T>): EntryPointData<T>
 
 Encode TypeScript object as Michelson data literal
 
-#### `isEntryPointData<T extends EntryPointID>(id: T, d: MichelsonData): d is EntryPointData<T>`
+#### isEntryPointData<T extends EntryPointID>(id: T, d: MichelsonData): d is EntryPointData<T>
 
 Returns true if `d` matches entry point's argument data literal
 
-#### `assertEntryPointData<T extends EntryPointID>(id: T, d: MichelsonData): d is EntryPointData<T>`
+#### assertEntryPointData<T extends EntryPointID>(id: T, d: MichelsonData): d is EntryPointData<T>
 
 Throws an exception if `d` doesn't match entry point's argument data literal. Has a type guard annotation for convenience but never returns false.
 
