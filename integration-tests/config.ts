@@ -57,10 +57,10 @@ interface FaucetConfig {
 
 const ebetanetEphemeral = {
   rpc: process.env['TEZOS_RPC_EBETANET'] || 'https://api.tez.ie/rpc/ebetanet',
-  knownBaker: 'tz1LpmZmB1yJJBcCrBDLSAStmmugGDEghdVv',
+  knownBaker: 'tz1emHVcmCG7nPKTBfEd7dPPeh7fUJgaUoUq',
   knownContract: 'KT1Gm9PeBggJzegaM9sRCz1EymLrWxpWyGXr',
   knownBigMapContract: 'KT1Nf1CPvF1FFmAan5LiRvcyukyt3Nf4Le9B',
-  protocol: Protocols.PsDELPH1,
+  protocol: Protocols.Pt24m4xi,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'https://api.tez.ie/keys/ebetanet',
