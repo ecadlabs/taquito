@@ -99,9 +99,15 @@ function collectProperties<T extends MichelsonTypePair | MichelsonTypeOr>(t: T, 
     return [...getArg(0), ...getArg(1)];
 }
 
-function emitObjectType(t: MichelsonTypePair, fmt: Formatter, imports: { [n: string]: boolean }): string {
+function isTuple(t: MichelsonTypePair): boolean {
     const ann = t.args.map(v => fieldAnn(v));
-    if (ann[0] === undefined && ann[1] === undefined) {
+    return ann[0] === undefined &&
+        ann[1] === undefined &&
+        (t.args[0].prim !== "pair" || t.args[1].prim !== "pair");
+}
+
+function emitObjectType(t: MichelsonTypePair, fmt: Formatter, imports: { [n: string]: boolean }): string {
+    if (isTuple(t)) {
         // emit tuple
         return `[${fmt.lf(1)}${mkUnion(emitTSTypeDef(t.args[0], fmt.down(1), imports))},${fmt.lfsp(1)}${mkUnion(emitTSTypeDef(t.args[1], fmt.down(1), imports))}${fmt.lf(0)}]`;
     }
@@ -165,8 +171,7 @@ function emitTSTypeDef(t: MichelsonType, fmt: Formatter, imports: { [n: string]:
 }
 
 function emitPair(t: MichelsonTypePair, selector: string, ctx: { idx: number }, fmt: Formatter, imports: { [n: string]: boolean }): string {
-    const ann = t.args.map(v => fieldAnn(v));
-    if (ann[0] === undefined && ann[1] === undefined) {
+    if (isTuple(t)) {
         // emit tuple
         return `{${fmt.lfsp(1)}prim: "Pair",${fmt.lfsp(1)}args: [${fmt.lf(2)}${emitMichelsonDataExpr(t.args[0], selector + "[0]", fmt.down(2), imports)},${fmt.lfsp(2)}${emitMichelsonDataExpr(t.args[1], selector + "[1]", fmt.down(2), imports)}${fmt.lf(1)}]${fmt.lfsp(0)}}`;
     }
@@ -242,8 +247,7 @@ function emitMichelsonDataExpr(t: MichelsonType, selector: string, fmt: Formatte
 }
 
 function emitObjectLiteral(t: MichelsonTypePair, selector: string, fmt: Formatter): string {
-    const ann = t.args.map(v => fieldAnn(v));
-    if (ann[0] === undefined && ann[1] === undefined) {
+    if (isTuple(t)) {
         // emit tuple
         return `[${fmt.lf(1)}${emitTSLiteralExpr(t.args[0], `${selector}.args[0]`, fmt.down(1))},${fmt.lfsp(1)}${emitTSLiteralExpr(t.args[1], `${selector}.args[1]`, fmt.down(1))}${fmt.lf(0)}]`;
     }
