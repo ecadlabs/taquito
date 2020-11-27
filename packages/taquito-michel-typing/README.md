@@ -146,11 +146,11 @@ Decode Michelson data literal into corresponding TypeScript object
 
 Encode TypeScript object as Michelson data literal
 
-#### `isParameterData(d: MichelsonData, ctx?: Context): d is ParameterData`
+#### `isParameterData(d: MichelsonData): d is ParameterData`
 
 Returns true if `d` matches parameter data literal. Calls `assertDataValid(d, parameter, ctx)`
 
-#### `assertParameterData(d: MichelsonData, ctx?: Context): d is ParameterData`
+#### `assertParameterData(d: MichelsonData): d is ParameterData`
 
 Throws an exception if `d` isn't matching parameter data literal. Has a type guard annotation for convenience but never return false.
 
@@ -215,6 +215,7 @@ Generated TypeScript module:
 
 import {
     Context,
+    MichelsonContract,
     MichelsonData,
     MichelsonType,
     MichelsonTypeOption,
@@ -343,13 +344,13 @@ export const encodeParameter = (src: Parameter): ParameterData => (src.use_strin
                 }]
             });
 
-export function assertParameterData(d: MichelsonData, ctx?: Context): d is ParameterData {
-    return assertDataValid(d, parameter, ctx);
+export function assertParameterData(d: MichelsonData): d is ParameterData {
+    return assertDataValid(d, parameter, { contract: contract });
 }
 
-export function isParameterData(d: MichelsonData, ctx?: Context): d is ParameterData {
+export function isParameterData(d: MichelsonData): d is ParameterData {
     try {
-        return assertDataValid(d, parameter, ctx);
+        return assertDataValid(d, parameter, { contract: contract });
     } catch {
         return false;
     }
@@ -463,13 +464,13 @@ export const encodeStorage = (src: Storage): StorageData => ({
     ]
 });
 
-export function assertStorageData(d: MichelsonData, ctx?: Context): d is StorageData {
-    return assertDataValid(d, storage, ctx);
+export function assertStorageData(d: MichelsonData): d is StorageData {
+    return assertDataValid(d, storage, { contract: contract });
 }
 
-export function isStorageData(d: MichelsonData, ctx?: Context): d is StorageData {
+export function isStorageData(d: MichelsonData): d is StorageData {
     try {
-        return assertDataValid(d, storage, ctx);
+        return assertDataValid(d, storage, { contract: contract });
     } catch {
         return false;
     }
@@ -492,13 +493,13 @@ const decodeEntryPointUseStringArg = (src: EntryPointUseStringData): EntryPointU
 
 const encodeEntryPointUseStringArg = (src: EntryPointUseStringArg): EntryPointUseStringData => ({ string: src });
 
-function assertEntryPointUseStringData(d: MichelsonData, ctx?: Context): d is EntryPointUseStringData {
-    return assertDataValid(d, entryPointUseString, ctx);
+function assertEntryPointUseStringData(d: MichelsonData): d is EntryPointUseStringData {
+    return assertDataValid(d, entryPointUseString, { contract: contract });
 }
 
-function isEntryPointUseStringData(d: MichelsonData, ctx?: Context): d is EntryPointUseStringData {
+function isEntryPointUseStringData(d: MichelsonData): d is EntryPointUseStringData {
     try {
-        return assertDataValid(d, entryPointUseString, ctx);
+        return assertDataValid(d, entryPointUseString, { contract: contract });
     } catch {
         return false;
     }
@@ -521,13 +522,13 @@ const decodeEntryPointUseAddrArg = (src: EntryPointUseAddrData): EntryPointUseAd
 
 const encodeEntryPointUseAddrArg = (src: EntryPointUseAddrArg): EntryPointUseAddrData => ({ string: src });
 
-function assertEntryPointUseAddrData(d: MichelsonData, ctx?: Context): d is EntryPointUseAddrData {
-    return assertDataValid(d, entryPointUseAddr, ctx);
+function assertEntryPointUseAddrData(d: MichelsonData): d is EntryPointUseAddrData {
+    return assertDataValid(d, entryPointUseAddr, { contract: contract });
 }
 
-function isEntryPointUseAddrData(d: MichelsonData, ctx?: Context): d is EntryPointUseAddrData {
+function isEntryPointUseAddrData(d: MichelsonData): d is EntryPointUseAddrData {
     try {
-        return assertDataValid(d, entryPointUseAddr, ctx);
+        return assertDataValid(d, entryPointUseAddr, { contract: contract });
     } catch {
         return false;
     }
@@ -556,13 +557,13 @@ const decodeEntryPointUseBytesArg = (src: EntryPointUseBytesData): EntryPointUse
 
 const encodeEntryPointUseBytesArg = (src: EntryPointUseBytesArg): EntryPointUseBytesData => ({ bytes: (v => typeof v === "string" ? v : [...v].map(x => (x >> 4 & 0xf).toString(16) + (x & 0xf).toString(16)).join(""))(src) });
 
-function assertEntryPointUseBytesData(d: MichelsonData, ctx?: Context): d is EntryPointUseBytesData {
-    return assertDataValid(d, entryPointUseBytes, ctx);
+function assertEntryPointUseBytesData(d: MichelsonData): d is EntryPointUseBytesData {
+    return assertDataValid(d, entryPointUseBytes, { contract: contract });
 }
 
-function isEntryPointUseBytesData(d: MichelsonData, ctx?: Context): d is EntryPointUseBytesData {
+function isEntryPointUseBytesData(d: MichelsonData): d is EntryPointUseBytesData {
     try {
-        return assertDataValid(d, entryPointUseBytes, ctx);
+        return assertDataValid(d, entryPointUseBytes, { contract: contract });
     } catch {
         return false;
     }
@@ -585,17 +586,34 @@ const decodeEntryPointUseTsArg = (src: EntryPointUseTsData): EntryPointUseTsArg 
 
 const encodeEntryPointUseTsArg = (src: EntryPointUseTsArg): EntryPointUseTsData => ({ string: (v => v instanceof Date ? v.toISOString() : typeof v === "number" ? new Date(v * 1000).toISOString() : v)(src) });
 
-function assertEntryPointUseTsData(d: MichelsonData, ctx?: Context): d is EntryPointUseTsData {
-    return assertDataValid(d, entryPointUseTs, ctx);
+function assertEntryPointUseTsData(d: MichelsonData): d is EntryPointUseTsData {
+    return assertDataValid(d, entryPointUseTs, { contract: contract });
 }
 
-function isEntryPointUseTsData(d: MichelsonData, ctx?: Context): d is EntryPointUseTsData {
+function isEntryPointUseTsData(d: MichelsonData): d is EntryPointUseTsData {
     try {
-        return assertDataValid(d, entryPointUseTs, ctx);
+        return assertDataValid(d, entryPointUseTs, { contract: contract });
     } catch {
         return false;
     }
 }
+
+/* Contract literal with trimmed code section */
+
+const contract: MichelsonContract = [
+    {
+        prim: "parameter",
+        args: [parameter],
+    },
+    {
+        prim: "storage",
+        args: [storage],
+    },
+    {
+        prim: "code",
+        args: [[]],
+    }
+];
 
 /* Entry Points */
 

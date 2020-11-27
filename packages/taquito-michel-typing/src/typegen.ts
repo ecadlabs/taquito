@@ -351,13 +351,13 @@ function emitContractModule(c: Contract, prefix: string = "", fmt: Formatter): s
         const emitAssertFunc = (typeName: string, typeSpec: string) => {
             imports["assertDataValid"] = true;
             imports["Context"] = true;
-            return `function assert${typeName}(d: MichelsonData, ctx?: Context): d is ${typeName} {${fmt.lfsp(1)}return assertDataValid(d, ${typeSpec}, ctx);${fmt.lfsp()}}`;
+            return `function assert${typeName}(d: MichelsonData): d is ${typeName} {${fmt.lfsp(1)}return assertDataValid(d, ${typeSpec}, { contract: ${lcamel(prefix + "Contract")} });${fmt.lfsp()}}`;
         };
 
         const emitTypeGuardFunc = (typeName: string, typeSpec: string) => {
             imports["assertDataValid"] = true;
             imports["Context"] = true;
-            return `function is${typeName}(d: MichelsonData, ctx?: Context): d is ${typeName} {${fmt.lfsp(1)}try {${fmt.lfsp(2)}return assertDataValid(d, ${typeSpec}, ctx);${fmt.lfsp(1)}} catch {${fmt.lfsp(2)}return false;${fmt.lfsp(1)}}${fmt.lfsp()}}`;
+            return `function is${typeName}(d: MichelsonData): d is ${typeName} {${fmt.lfsp(1)}try {${fmt.lfsp(2)}return assertDataValid(d, ${typeSpec}, { contract: ${lcamel(prefix + "Contract")} });${fmt.lfsp(1)}} catch {${fmt.lfsp(2)}return false;${fmt.lfsp(1)}}${fmt.lfsp()}}`;
         };
 
         const exp = t.export ? "export " : "";
@@ -372,6 +372,10 @@ function emitContractModule(c: Contract, prefix: string = "", fmt: Formatter): s
         res += `${exp}${emitAssertFunc(dataName, typeSpecName)}${fmt.lfsp()}${fmt.lf()}`;
         res += `${exp}${emitTypeGuardFunc(dataName, typeSpecName)}${fmt.lfsp()}${fmt.lf()}`;
     }
+
+    imports["MichelsonContract"] = true;
+    res += `/* Contract literal with trimmed code section */${fmt.lfsp()}${fmt.lf()}`;
+    res += `const ${lcamel(prefix + "Contract")}: MichelsonContract = [${fmt.lf(1)}{${fmt.lfsp(2)}prim: "parameter",${fmt.lfsp(2)}args: [${lcamel(prefix + "Parameter")}],${fmt.lfsp(1)}},${fmt.lfsp(1)}{${fmt.lfsp(2)}prim: "storage",${fmt.lfsp(2)}args: [${lcamel(prefix + "Storage")}],${fmt.lfsp(1)}},${fmt.lfsp(1)}{${fmt.lfsp(2)}prim: "code",${fmt.lfsp(2)}args: [[]],${fmt.lfsp(1)}}${fmt.lf()}];${fmt.lfsp()}${fmt.lf()}`;
 
     if (entryPoints.length !== 0) {
         imports["MichelsonData"] = true;
