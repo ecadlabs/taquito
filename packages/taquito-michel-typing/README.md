@@ -24,7 +24,7 @@ Usage:
 | pair                                      | See below                          |
 | or                                        | See below                          |
 | list T, set T                             | T\[\]                              |
-| map K V, big_map K, V                     | Map<K,V> \| \[K, V\]\[\]`          |
+| map K V, big_map K, V                     | Map\<K,V\> \| \[K, V\]\[\]`        |
 | lambda                                    | MichelsonCode                      |
 
 ### Pair types
@@ -110,15 +110,15 @@ Storage data literal type. An alias for `MichelsonData<StorageType>`
 
 Union type representing entry point names
 
-#### EntryPointArg<id extends EntryPointID>
+#### EntryPointArg\<id extends EntryPointID\>
 
 Conditional type that expands into TypeScript equivalent of the entry point argument type
 
-#### `EntryPointType<id extends EntryPointID>`
+#### EntryPointType\<id extends EntryPointID\>
 
 Conditional type that expands into entry point argument Michelson type (an AST tree type)
 
-#### EntryPointData<id extends EntryPointID>
+#### EntryPointData\<id extends EntryPointID\>
 
 Conditional type that expands into entry point argument data literal type
 
@@ -170,19 +170,19 @@ Returns true if `d` matches storage data literal. Calls `assertDataValid(d, stor
 
 Throws an exception if `d` doesn't match storage data literal. Has a type guard annotation for convenience but never returns false.
 
-#### decodeEntryPointArg<T extends EntryPointID>(id: T, src: EntryPointData<T>): EntryPointArg<T>
+#### decodeEntryPointArg\<T extends EntryPointID\>(id: T, src: EntryPointData\<T\>): EntryPointArg\<T\>
 
 Decode Michelson data literal into corresponding TypeScript object
 
-#### encodeEntryPointArg<T extends EntryPointID>(id: T, src: EntryPointArg<T>): EntryPointData<T>
+#### encodeEntryPointArg\<T extends EntryPointID\>(id: T, src: EntryPointArg\<T\>): EntryPointData\<T\>
 
 Encode TypeScript object as Michelson data literal
 
-#### isEntryPointData<T extends EntryPointID>(id: T, d: MichelsonData): d is EntryPointData<T>
+#### isEntryPointData\<T extends EntryPointID\>(id: T, d: MichelsonData): d is EntryPointData\<T\>
 
 Returns true if `d` matches entry point's argument data literal
 
-#### assertEntryPointData<T extends EntryPointID>(id: T, d: MichelsonData): d is EntryPointData<T>
+#### assertEntryPointData\<T extends EntryPointID\>(id: T, d: MichelsonData): d is EntryPointData\<T\>
 
 Throws an exception if `d` doesn't match entry point's argument data literal. Has a type guard annotation for convenience but never returns false.
 
