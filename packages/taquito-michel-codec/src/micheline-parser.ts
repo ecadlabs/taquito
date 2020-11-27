@@ -74,7 +74,11 @@ export interface ParserOptions {
  * ```
  */
 export class Parser {
-    constructor(private opt?: ParserOptions) { }
+    private opt: ParserOptions;
+
+    constructor(opt?: ParserOptions) {
+        this.opt = opt || { expandMacros: true };
+    }
 
     private expand(ex: Prim): Expr {
         if (this.opt?.expandMacros) {
