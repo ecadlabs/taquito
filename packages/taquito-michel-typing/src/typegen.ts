@@ -374,8 +374,10 @@ function emitContractModule(c: Contract, prefix: string = "", fmt: Formatter): s
     }
 
     imports["MichelsonContract"] = true;
+    const parameterAnn = c.section("parameter").annots;
+    const storageAnn = c.section("storage").annots;
     res += `/* Contract literal with trimmed code section */${fmt.lfsp()}${fmt.lf()}`;
-    res += `const ${lcamel(prefix + "Contract")}: MichelsonContract = [${fmt.lf(1)}{${fmt.lfsp(2)}prim: "parameter",${fmt.lfsp(2)}args: [${lcamel(prefix + "Parameter")}],${fmt.lfsp(1)}},${fmt.lfsp(1)}{${fmt.lfsp(2)}prim: "storage",${fmt.lfsp(2)}args: [${lcamel(prefix + "Storage")}],${fmt.lfsp(1)}},${fmt.lfsp(1)}{${fmt.lfsp(2)}prim: "code",${fmt.lfsp(2)}args: [[]],${fmt.lfsp(1)}}${fmt.lf()}];${fmt.lfsp()}${fmt.lf()}`;
+    res += `const ${lcamel(prefix + "Contract")}: MichelsonContract = [${fmt.lf(1)}{${fmt.lfsp(2)}prim: "parameter",${fmt.lfsp(2)}args: [${lcamel(prefix + "Parameter")}],${parameterAnn ? `${fmt.lfsp(2)}annots: [${parameterAnn.map(v => JSON.stringify(v)).join(", ")}]` : ""}${fmt.lfsp(1)}},${fmt.lfsp(1)}{${fmt.lfsp(2)}prim: "storage",${fmt.lfsp(2)}args: [${lcamel(prefix + "Storage")}],${storageAnn ? `${fmt.lfsp(2)}annots: [${storageAnn.map(v => JSON.stringify(v)).join(", ")}]` : ""}${fmt.lfsp(1)}},${fmt.lfsp(1)}{${fmt.lfsp(2)}prim: "code",${fmt.lfsp(2)}args: [[]],${fmt.lfsp(1)}}${fmt.lf()}];${fmt.lfsp()}${fmt.lf()}`;
 
     if (entryPoints.length !== 0) {
         imports["MichelsonData"] = true;

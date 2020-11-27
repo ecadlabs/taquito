@@ -196,7 +196,7 @@ storage (pair
     (pair (option %opt_int int) (pair %tuple string string))
 );
 
-parameter (or
+parameter %root (or
     (or (string %use_string) (address %use_addr))
     (or (bytes %use_bytes) (timestamp %use_ts))
 );
@@ -476,6 +476,138 @@ export function isStorageData(d: MichelsonData): d is StorageData {
     }
 }
 
+/* EntryPointRoot */
+
+type EntryPointRootType = MichelsonTypeOr<
+    MichelsonTypeOr<
+        MichelsonType<"string">,
+        MichelsonType<"address">>,
+    MichelsonTypeOr<
+        MichelsonType<"bytes">,
+        MichelsonType<"timestamp">>>;
+
+type EntryPointRootArg = {
+    use_string: string;
+    use_addr?: undefined;
+    use_bytes?: undefined;
+    use_ts?: undefined;
+} | {
+    use_string?: undefined;
+    use_addr: string;
+    use_bytes?: undefined;
+    use_ts?: undefined;
+} | {
+    use_string?: undefined;
+    use_addr?: undefined;
+    use_bytes: Uint8Array | number[] | string;
+    use_ts?: undefined;
+} | {
+    use_string?: undefined;
+    use_addr?: undefined;
+    use_bytes?: undefined;
+    use_ts: string | number | Date;
+};
+
+type EntryPointRootData = MichelsonData<EntryPointRootType>;
+
+const entryPointRoot: EntryPointRootType = {
+    prim: "or",
+    args: [
+        {
+            prim: "or",
+            args: [
+                {
+                    prim: "string",
+                    annots: ["%use_string"]
+                },
+                {
+                    prim: "address",
+                    annots: ["%use_addr"]
+                }
+            ]
+        },
+        {
+            prim: "or",
+            args: [
+                {
+                    prim: "bytes",
+                    annots: ["%use_bytes"]
+                },
+                {
+                    prim: "timestamp",
+                    annots: ["%use_ts"]
+                }
+            ]
+        }
+    ]
+};
+
+const decodeEntryPointRootArg = (src: EntryPointRootData): EntryPointRootArg => (src.prim === "Left" ?
+    src.args[0].prim === "Left" ?
+        {
+            use_string: src.args[0].args[0].string
+        } :
+        {
+            use_addr: src.args[0].args[0].string
+        } :
+    src.args[0].prim === "Left" ?
+        {
+            use_bytes: (v => {
+                const b: number[] = [];
+                for (let i = 0; i < v.bytes.length; i += 2) {
+                    b.push(parseInt(v.bytes.slice(i, i + 2), 16));
+                }
+                return b;
+            })(src.args[0].args[0])
+        } :
+        {
+            use_ts: (v => new Date("string" in v ? v.string : parseInt(v.int, 10) * 1000))(src.args[0].args[0])
+        });
+
+const encodeEntryPointRootArg = (src: EntryPointRootArg): EntryPointRootData => (src.use_string !== undefined ?
+    {
+        prim: "Left",
+        args: [{
+            prim: "Left",
+            args: [{ string: src.use_string }]
+        }]
+    } :
+    src.use_addr !== undefined ?
+        {
+            prim: "Left",
+            args: [{
+                prim: "Right",
+                args: [{ string: src.use_addr }]
+            }]
+        } :
+        src.use_bytes !== undefined ?
+            {
+                prim: "Right",
+                args: [{
+                    prim: "Left",
+                    args: [{ bytes: (v => typeof v === "string" ? v : [...v].map(x => (x >> 4 & 0xf).toString(16) + (x & 0xf).toString(16)).join(""))(src.use_bytes) }]
+                }]
+            } :
+            {
+                prim: "Right",
+                args: [{
+                    prim: "Right",
+                    args: [{ string: (v => v instanceof Date ? v.toISOString() : typeof v === "number" ? new Date(v * 1000).toISOString() : v)(src.use_ts) }]
+                }]
+            });
+
+function assertEntryPointRootData(d: MichelsonData): d is EntryPointRootData {
+    return assertDataValid(d, entryPointRoot, { contract: contract });
+}
+
+function isEntryPointRootData(d: MichelsonData): d is EntryPointRootData {
+    try {
+        return assertDataValid(d, entryPointRoot, { contract: contract });
+    } catch {
+        return false;
+    }
+}
+
 /* EntryPointUseString */
 
 type EntryPointUseStringType = MichelsonType<"string">;
@@ -604,6 +736,7 @@ const contract: MichelsonContract = [
     {
         prim: "parameter",
         args: [parameter],
+        annots: ["%root"]
     },
     {
         prim: "storage",
@@ -617,27 +750,32 @@ const contract: MichelsonContract = [
 
 /* Entry Points */
 
-export type EntryPointID = "use_string" |
+export type EntryPointID = "root" |
+    "use_string" |
     "use_addr" |
     "use_bytes" |
     "use_ts";
 
-export type EntryPointArg<id extends EntryPointID> = id extends "use_string" ? EntryPointUseStringArg :
+export type EntryPointArg<id extends EntryPointID> = id extends "root" ? EntryPointRootArg :
+    id extends "use_string" ? EntryPointUseStringArg :
     id extends "use_addr" ? EntryPointUseAddrArg :
     id extends "use_bytes" ? EntryPointUseBytesArg :
     EntryPointUseTsArg;
 
-export type EntryPointType<id extends EntryPointID> = id extends "use_string" ? EntryPointUseStringType :
+export type EntryPointType<id extends EntryPointID> = id extends "root" ? EntryPointRootType :
+    id extends "use_string" ? EntryPointUseStringType :
     id extends "use_addr" ? EntryPointUseAddrType :
     id extends "use_bytes" ? EntryPointUseBytesType :
     EntryPointUseTsType;
 
-export type EntryPointData<id extends EntryPointID> = id extends "use_string" ? EntryPointUseStringData :
+export type EntryPointData<id extends EntryPointID> = id extends "root" ? EntryPointRootData :
+    id extends "use_string" ? EntryPointUseStringData :
     id extends "use_addr" ? EntryPointUseAddrData :
     id extends "use_bytes" ? EntryPointUseBytesData :
     EntryPointUseTsData;
 
 export const entryPoints = {
+    "root": entryPointRoot,
     "use_string": entryPointUseString,
     "use_addr": entryPointUseAddr,
     "use_bytes": entryPointUseBytes,
@@ -646,6 +784,8 @@ export const entryPoints = {
 
 export function assertEntryPointData<T extends EntryPointID>(id: T, d: MichelsonData): d is EntryPointData<T> {
     switch (id) {
+        case "root":
+            return assertEntryPointRootData(d);
         case "use_string":
             return assertEntryPointUseStringData(d);
         case "use_addr":
@@ -659,6 +799,8 @@ export function assertEntryPointData<T extends EntryPointID>(id: T, d: Michelson
 
 export function isEntryPointData<T extends EntryPointID>(id: T, d: MichelsonData): d is EntryPointData<T> {
     switch (id) {
+        case "root":
+            return isEntryPointRootData(d);
         case "use_string":
             return isEntryPointUseStringData(d);
         case "use_addr":
@@ -672,6 +814,8 @@ export function isEntryPointData<T extends EntryPointID>(id: T, d: MichelsonData
 
 export function decodeEntryPointArg<T extends EntryPointID>(id: T, src: EntryPointData<T>): EntryPointArg<T> {
     switch (id) {
+        case "root":
+            return decodeEntryPointRootArg(src as EntryPointRootData) as EntryPointArg<T>;
         case "use_string":
             return decodeEntryPointUseStringArg(src as EntryPointUseStringData) as EntryPointArg<T>;
         case "use_addr":
@@ -685,6 +829,8 @@ export function decodeEntryPointArg<T extends EntryPointID>(id: T, src: EntryPoi
 
 export function encodeEntryPointArg<T extends EntryPointID>(id: T, src: EntryPointArg<T>): EntryPointData<T> {
     switch (id) {
+        case "root":
+            return encodeEntryPointRootArg(src as EntryPointRootArg) as EntryPointData<T>;
         case "use_string":
             return encodeEntryPointUseStringArg(src as EntryPointUseStringArg) as EntryPointData<T>;
         case "use_addr":
