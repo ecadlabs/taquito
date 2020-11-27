@@ -107,7 +107,7 @@
           "typings",
           "version"
         ],
-        "sha512": "ecb9c1f026c0808f24ec829ffeb7f91e44e010128a473c41751f62e0cc456b597d3f35f94f29aeb21ea07806b82e164a102b21e132f419c916a1f52725032043"
+        "sha512": "983d0e635a643e7d45af69b843eca623970b684f743804e4828ed5f362fade14865cd89504d77689224bd0eff04fc9b61a7905181a59f31d7c223d1fc1f1d51d"
       }
     },
     {
@@ -115,7 +115,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/rpc",
-          "version": "7.1.0-preview.6",
+          "version": "7.1.0-preview.7",
           "description": "Provides low level methods, and types to invoke RPC calls from a Nomadic Tezos RPC node",
           "keywords": [
             "tezos",
@@ -181,7 +181,7 @@
             ]
           },
           "dependencies": {
-            "@taquito/http-utils": "^7.1.0-preview.6",
+            "@taquito/http-utils": "^7.1.0-preview.7",
             "bignumber.js": "^9.0.1",
             "lodash": "^4.17.20"
           },
@@ -217,5 +217,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfwFG6CRAD9Qy5GYHsngAAMJUQAEXsPL397gALC1csxYcdZZvo\nfhUd9bcjhqgC3DkdjcyhSDGp6O2aYI0tRCr2+tr9r05ljGUKcwhHy0jcHBYoQlgL\nIhs2rWr/MeXtGh6hCdaHcMjs11KEjud8TYFXgqry/sIcLwt8WgkM/DIlmtKZ7WjD\ndUMkCTj8wm9eAeTIX8+iu7QWa6ofddIvpZv8AHgeuB/z2MsV770Ky/sgY8VCYDfE\ne1s9J6jQnSa3fxIQTQEPmei7v92GbpC0uKgRZ72TUbJLJFM1IL3TyZSLBMPSUfM7\nJgfGuaf4MmpMa7oqwI4nwwJ+394OXlBQ7oMsf1N8DdOVPE/CWHlTTiqBN6wy+l9F\n64YeYdNblc8J/fgimLOIl56RelNa6Fz220vlIFYphDSiBkXWonEYOtMM9hO04sHD\nSbfj6bKKbZsxKFSrotIvvXejZmtGsGvslsq+wjqnKSsBbar9Ew32JDrs6Dj5Ym/q\nJGMjKaW7Dc5g85BMvFR8DeNTxwP4zcWD896+vf62Muy8adI+bu9o9/+c+frunxAT\nAZ73OkZ1FCCd0ZGZNetnDSHm3uZ/4g4W7mFzHu6klAcBUJPom6JqWfvOL9tqrXBM\nbnzrci1dJe9f6KJE3W5wjUIgdGwnDrwUU0oPehkg0TGa3uYxqV9/yCVngY6NbWZ8\n95cMluGRnSL3ZZs7fvEB\n=WEpv\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfwFpjCRAD9Qy5GYHsngAA6tAQAGtjymr5lizJvAfkjt0dLFMQ\nqGkf2qzGev6mUygpnaB1jmdvIW22BlgOfRGE3iam/qV1b++xs0FqJR8z78FmgZbw\n4MzIShm7R+MaNf2wHEchLtf6J4tg0N9xYr1oYpKzP+jZpe4u7ogk34Bs/mbmeMkT\nFwj8gJTo+CtibWTePLESEZb8f9/WKQ56VKCODXsPnjgixQHG9XMlCnNuZqKN6Mn1\nOuI8ULHVGs9OhUOf8ToM0tfRu7fic1vRvB9Tal53SPVsRivkpoEP1npZaEQYEHYm\nfNmx3K2g9b0H871sOKfy0o1p9CqFZk/VLLau8afuPlPoIlEJ6H1IhrTTEdAf15me\nRMFy8FfJxuN5VP6nlA5qzf5vJ0J2clm4WahiJG0WHuvPZ0+B43nlmbv9l9mSDEEZ\n0iBExraMUoCnh0YGc1qry3G0jvb1JFSx3LjeyslfhAc20ssn29Qhcy1P/JYSAZRj\ndKgrffFRD5giBXgiHe/8TT5iKpB/yu/htempGXxOrz58uWY8Ff+AzfBaEWjroEeR\nzo70BWIwUhOrT1sJl7oFTFFT5nZZ2vHt3rwn0iq5RmYvfkMz25ghGmcfoKEQAoRl\ntVw+yHaH56PSlWjSU4Xbe7PG0otDXeoRoUCgKutE2GjywbrrsSoNgzrdRAzNKc2z\ndGotdM4tBQ0yoF/g4nl+\n=nvPO\n-----END PGP SIGNATURE-----\n"
 }
