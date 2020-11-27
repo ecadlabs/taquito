@@ -326,17 +326,8 @@ function emitMichelsonType(t: MichelsonType, fmt: Formatter): string {
     return `{${fmt.lfsp(1)}${props.join("," + fmt.lfsp(1))}${fmt.lfsp(0)}}`;
 }
 
-function toLower(s: string): string {
-    return s.length !== 0 && /[A-Z]/.test(s[0]) ?
-        s[0].toLowerCase() + s.slice(1) :
-        s;
-}
-
-function toUpper(s: string): string {
-    return s.length !== 0 && /[a-z]/.test(s[0]) ?
-        s[0].toUpperCase() + s.slice(1) :
-        s;
-}
+const camel = (s: string) => s.split("_").map(v => v.length > 0 ? v[0].toUpperCase() + v.slice(1) : v).join("");
+const lcamel = (s: string) => s.split("_").map((v, i) => v.length > 0 ? (i === 0 ? v[0].toLocaleLowerCase() : v[0].toUpperCase()) + v.slice(1) : v).join("");
 
 function emitContractModule(c: Contract, prefix: string = "", fmt: Formatter): string {
     let res = "";
@@ -345,17 +336,17 @@ function emitContractModule(c: Contract, prefix: string = "", fmt: Formatter): s
     // trim '%'
     const entryPoints = c.entryPoints().map((v: [string, MichelsonType]): [string, MichelsonType] => [v[0].slice(1), v[1]]);
 
-    const types: { name: string, type: MichelsonType, export: boolean }[] = [
-        { name: "Parameter", type: c.section("parameter").args[0], export: true },
-        { name: "Storage", type: c.section("storage").args[0], export: true },
-        ...entryPoints.map(v => ({ name: "EntryPoint" + toUpper(v[0]), type: v[1], export: false })),
+    const types: { name: string, argName: string, type: MichelsonType, export: boolean }[] = [
+        { name: "Parameter", argName: "Parameter", type: c.section("parameter").args[0], export: true },
+        { name: "Storage", argName: "Storage", type: c.section("storage").args[0], export: true },
+        ...entryPoints.map(v => ({ name: "EntryPoint" + camel(v[0]), argName: "EntryPoint" + camel(v[0]) + "Arg", type: v[1], export: false })),
     ];
 
     for (const t of types) {
         const typeName = prefix + t.name + "Type";
-        const tsTypeName = prefix + t.name + "Arg";
+        const tsTypeName = prefix + t.argName;
         const dataName = prefix + t.name + "Data";
-        const typeSpecName = toLower(prefix + t.name);
+        const typeSpecName = lcamel(prefix + t.name);
 
         const emitAssertFunc = (typeName: string, typeSpec: string) => {
             imports["assertDataValid"] = true;
@@ -383,6 +374,8 @@ function emitContractModule(c: Contract, prefix: string = "", fmt: Formatter): s
     }
 
     if (entryPoints.length !== 0) {
+        imports["MichelsonData"] = true;
+
         const p = prefix + "EntryPoint";
         const idName = p + "ID";
 
@@ -397,14 +390,14 @@ function emitContractModule(c: Contract, prefix: string = "", fmt: Formatter): s
 
         res += `/* Entry Points */${fmt.lfsp()}${fmt.lf()}`;
         res += `export type ${p}ID = ${entryPoints.map(v => "\"" + v[0] + "\"").join(" |" + fmt.lfsp(1))};${fmt.lfsp()}${fmt.lf()}`;
-        res += conditionalType(p + "Arg", idName, entryPoints.map(v => [v[0], p + toUpper(v[0]) + "Arg"])) + fmt.lfsp() + fmt.lf();
-        res += conditionalType(p + "Type", idName, entryPoints.map(v => [v[0], p + toUpper(v[0]) + "Type"])) + fmt.lfsp() + fmt.lf();
-        res += conditionalType(p + "Data", idName, entryPoints.map(v => [v[0], p + toUpper(v[0]) + "Data"])) + fmt.lfsp() + fmt.lf();
-        res += `export const ${toLower(prefix + "EntryPoints")} = {${fmt.lfsp(1)}${entryPoints.map(v => `"${v[0]}": ${toLower(p)}${toUpper(v[0])}`).join("," + fmt.lfsp(1))}${fmt.lfsp(0)}} as const;${fmt.lfsp()}${fmt.lf()}`;
-        res += `export function assert${p}Data<T extends ${idName}>(id: T, d: MichelsonData): d is ${p}Data<T> {${fmt.lfsp(1)}${emitSwitch(entryPoints.map(v => [v[0], `assert${p}${toUpper(v[0])}Data(d)`]))}${fmt.lfsp(0)}}${fmt.lfsp()}${fmt.lf()}`;
-        res += `export function is${p}Data<T extends ${idName}>(id: T, d: MichelsonData): d is ${p}Data<T> {${fmt.lfsp(1)}${emitSwitch(entryPoints.map(v => [v[0], `is${p}${toUpper(v[0])}Data(d)`]))}${fmt.lfsp(0)}}${fmt.lfsp()}${fmt.lf()}`;
-        res += `export function decode${p}Arg<T extends ${idName}>(id: T, src: ${p}Data<T>): ${p}Arg<T> {${fmt.lfsp(1)}${emitSwitch(entryPoints.map(v => [v[0], `decode${p}${toUpper(v[0])}Arg(src as ${p}${toUpper(v[0])}Data) as ${p}Arg<T>`]))}${fmt.lfsp(0)}}${fmt.lfsp()}${fmt.lf()}`;
-        res += `export function encode${p}Arg<T extends ${idName}>(id: T, src: ${p}Arg<T>): ${p}Data<T> {${fmt.lfsp(1)}${emitSwitch(entryPoints.map(v => [v[0], `encode${p}${toUpper(v[0])}Arg(src as ${p}${toUpper(v[0])}Arg) as ${p}Data<T>`]))}${fmt.lfsp(0)}}${fmt.lfsp()}${fmt.lf()}`;
+        res += conditionalType(p + "Arg", idName, entryPoints.map(v => [v[0], p + camel(v[0]) + "Arg"])) + fmt.lfsp() + fmt.lf();
+        res += conditionalType(p + "Type", idName, entryPoints.map(v => [v[0], p + camel(v[0]) + "Type"])) + fmt.lfsp() + fmt.lf();
+        res += conditionalType(p + "Data", idName, entryPoints.map(v => [v[0], p + camel(v[0]) + "Data"])) + fmt.lfsp() + fmt.lf();
+        res += `export const ${lcamel(prefix + "EntryPoints")} = {${fmt.lfsp(1)}${entryPoints.map(v => `"${v[0]}": ${lcamel(p) + camel(v[0])}`).join("," + fmt.lfsp(1))}${fmt.lfsp(0)}} as const;${fmt.lfsp()}${fmt.lf()}`;
+        res += `export function assert${p}Data<T extends ${idName}>(id: T, d: MichelsonData): d is ${p}Data<T> {${fmt.lfsp(1)}${emitSwitch(entryPoints.map(v => [v[0], `assert${p}${camel(v[0])}Data(d)`]))}${fmt.lfsp(0)}}${fmt.lfsp()}${fmt.lf()}`;
+        res += `export function is${p}Data<T extends ${idName}>(id: T, d: MichelsonData): d is ${p}Data<T> {${fmt.lfsp(1)}${emitSwitch(entryPoints.map(v => [v[0], `is${p}${camel(v[0])}Data(d)`]))}${fmt.lfsp(0)}}${fmt.lfsp()}${fmt.lf()}`;
+        res += `export function decode${p}Arg<T extends ${idName}>(id: T, src: ${p}Data<T>): ${p}Arg<T> {${fmt.lfsp(1)}${emitSwitch(entryPoints.map(v => [v[0], `decode${p}${camel(v[0])}Arg(src as ${p}${camel(v[0])}Data) as ${p}Arg<T>`]))}${fmt.lfsp(0)}}${fmt.lfsp()}${fmt.lf()}`;
+        res += `export function encode${p}Arg<T extends ${idName}>(id: T, src: ${p}Arg<T>): ${p}Data<T> {${fmt.lfsp(1)}${emitSwitch(entryPoints.map(v => [v[0], `encode${p}${camel(v[0])}Arg(src as ${p}${camel(v[0])}Arg) as ${p}Data<T>`]))}${fmt.lfsp(0)}}${fmt.lfsp()}${fmt.lf()}`;
     }
 
     // TODO: assert and make functions for entry points
