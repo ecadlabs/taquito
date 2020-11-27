@@ -38,7 +38,7 @@ export enum DefaultLambdaAddresses {
   MAINNET = 'KT1CPuTzwC7h7uLXd5WQmpMFso1HxrLBUtpE',
   CARTHAGENET = 'KT1VAy1o1FGiXYfD3YT7x7k5eF5HSHhmc1u6',
   DELPHINET = 'KT19abMFs3haqyKYwqdLjK9GbtofryZLvpiK',
-  EBETANET = 'KT1MzD2ZjZGAzi3pTN2sAMWt1jMWHk8yMgeP'
+  EBETANET = 'KT1LLPP2NomAaKNettHdewadWmQrM6uFg73V'
 }
 
 export enum ChainIds {
