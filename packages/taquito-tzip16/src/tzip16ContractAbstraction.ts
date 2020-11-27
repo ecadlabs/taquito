@@ -1,5 +1,5 @@
 import { ContractAbstraction, ContractProvider, Wallet } from "@taquito/taquito";
-import { bin2String, hexToBytes } from "./utils";
+import { bytes2Char } from "./utils";
 import { FetcherProvider } from "./interfaceFetcherProvider"
 
 // TODO
@@ -54,7 +54,7 @@ export class Tzip16ContractAbstraction {
             throw new Error("The contract is not compliant with tzip16 standard.");
         }
         console.log('this._uri', this._uri)
-        return bin2String(hexToBytes(this._uri!));
+        return bytes2Char(this._uri!);
     }
 
     /**

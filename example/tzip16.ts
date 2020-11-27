@@ -5,7 +5,7 @@ import { tacoContractTzip16 } from "./modified-taco-contract";
 import { InMemorySigner } from "@taquito/signer";
 
 const example = async () => {
-    const provider = 'https://testnet-tezos.giganode.io';
+    const provider = 'https://api.tez.ie/rpc/carthagenet';
     const signer: any = new InMemorySigner('edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca');
     const tezos = new TezosToolkit(provider);
     tezos.setSignerProvider( signer );
@@ -59,7 +59,6 @@ const example = async () => {
         // Add validation to see if there is an empty key
         const uri = await metadataInStorage.get('');
         console.log(uri)
-        console.log('typeof(uri)', typeof(uri))
         const uri2string = bin2String(hexToBytes(uri));
         console.log('URI:' , uri2string);
 
