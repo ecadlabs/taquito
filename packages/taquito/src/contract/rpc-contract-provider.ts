@@ -212,6 +212,6 @@ export class RpcContractProvider extends OperationEmitter
     const blockHeader = await this.rpc.getBlockHeader();
     const chainId = blockHeader.chain_id;
     const abs = new ContractAbstraction(address, script, this, this, entrypoints, chainId);
-    return contractAbstractionComposer(abs)
+    return contractAbstractionComposer(abs);
   }
 }

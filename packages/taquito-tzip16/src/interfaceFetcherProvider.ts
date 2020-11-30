@@ -1,6 +1,13 @@
 import { ContractAbstraction, ContractProvider, Wallet } from "@taquito/taquito";
 import { HttpBackend } from "@taquito/http-utils";
 
+interface MetadataEnvelope {
+    uri: string;
+    integrityCheckResult?: boolean;
+    sha256Hash?: string;
+    metadata: JSON
+}
+
 export interface FetcherProviderInterface {
     /**
      *
@@ -11,7 +18,7 @@ export interface FetcherProviderInterface {
      * @param contractAbstraction the contractAbstraction of the current contract (useful if metadata are located inside its own storage)
      * @param uri the decoded uri
      */
-    fetchMetadata(contractAbstraction: ContractAbstraction<ContractProvider | Wallet>, uri: String): Promise<{metadataJSON: JSON}>;
+    fetchMetadata(contractAbstraction: ContractAbstraction<ContractProvider | Wallet>, uri: String): Promise<MetadataEnvelope>;
 }
 
 
@@ -19,7 +26,7 @@ export interface FetcherProviderInterface {
 export class FetcherProvider implements FetcherProviderInterface {
     private httpBackend: HttpBackend = new HttpBackend();
 
-    async fetchMetadata(contractAbstraction: ContractAbstraction<ContractProvider | Wallet>, uri: String): Promise<{metadataJSON: JSON}> {
+    async fetchMetadata(contractAbstraction: ContractAbstraction<ContractProvider | Wallet>, uri: String): Promise<MetadataEnvelope> {
         const storage: Storage = await contractAbstraction.storage();
         const hash = await this.httpBackend.createRequest<string>({
             url: uri.toString()
