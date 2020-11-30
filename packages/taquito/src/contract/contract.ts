@@ -129,8 +129,8 @@ export class ContractView {
       lambdaAddress = DefaultLambdaAddresses.CARTHAGENET
     } else if (this.chainId === ChainIds.DELPHINET) {
       lambdaAddress = DefaultLambdaAddresses.DELPHINET
-    } else if (this.chainId === ChainIds.EBETANET) {
-      lambdaAddress = DefaultLambdaAddresses.EBETANET
+    } else if (this.chainId === ChainIds.EDONET) {
+      lambdaAddress = DefaultLambdaAddresses.EDONET
     } else if (this.chainId === ChainIds.MAINNET) {
       lambdaAddress = DefaultLambdaAddresses.MAINNET
     } else {
