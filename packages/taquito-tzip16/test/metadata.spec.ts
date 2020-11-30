@@ -7,6 +7,7 @@ const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
 const f = new FetcherProvider();
 
 const FAUCET_KEY = { "mnemonic": ["unknown", "hub", "eye", "sport", "walk", "oil", "outdoor", "donkey", "poet", "expire", "just", "indicate", "response", "lawsuit", "thank"], "secret": "71c2c58c6b1fadef14fd5ac8f380ee595b804938", "amount": "40032467721", "pkh": "tz1VtHKUzDac9oGUmt2ReLrPj3kh3zyzF6GR", "password": "1knvgG5AQJ", "email": "lrsfvdev.aomudkjy@tezos.example.org" };
+// tslint:disable-next-line: no-floating-promises
 importKey(Tezos, FAUCET_KEY.email, FAUCET_KEY.password, FAUCET_KEY.mnemonic.join(' '), FAUCET_KEY.secret);
 
 let testContractAddress: string;
