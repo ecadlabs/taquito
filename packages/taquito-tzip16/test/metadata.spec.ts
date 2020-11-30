@@ -49,7 +49,7 @@ async function originateContract(_uri: string): Promise<string> {
                 metadata: initialMetadataBigmap
             },
         });
-        console.log('Attempted origination of contract : ' + op.contractAddress);
+        console.log('Attempted origination of contract : https://better-call.dev/carthagenet/' + op.contractAddress);
         // await op.confirmation(1);
         // console.log('Contract Originated. View details at https://better-call.dev/carthagenet/' + op.contractAddress)
         if (op.contractAddress) {
