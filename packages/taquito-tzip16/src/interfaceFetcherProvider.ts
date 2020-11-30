@@ -18,45 +18,28 @@ export interface FetcherProviderInterface {
      * @param contractAbstraction the contractAbstraction of the current contract (useful if metadata are located inside its own storage)
      * @param uri the decoded uri
      */
-<<<<<<< HEAD
-    fetchMetadata(contractAbstraction: ContractAbstraction<ContractProvider | Wallet>, uri: String): Promise<{}>;
-=======
-    fetchMetadata(contractAbstraction: ContractAbstraction<ContractProvider | Wallet>, uri: String): Promise<MetadataEnvelope>;
->>>>>>> b7e55346b5775af6dcde505b28b0722187ff1a8f
+    fetchMetadata(contractAbstraction: ContractAbstraction<ContractProvider | Wallet>, uri: string): Promise<MetadataEnvelope>;
 }
 
 
 
 export class FetcherProvider implements FetcherProviderInterface {
-    private httpBackend: HttpBackend = new HttpBackend();
+    constructor(
+        private httpBackend: HttpBackend = new HttpBackend()
+    ) { }
 
-<<<<<<< HEAD
-    async fetchMetadata(_contractAbstraction: ContractAbstraction<ContractProvider | Wallet>, decodedUri: String): Promise<JSON> {
-        // TODO: Extend Storage class
-        // const expectedUri: string = Storage.metadata
-
-        // const storage: Storage = await contractAbstraction.storage();
-        // console.log("Storage length is :" + storage.metadata);
-
-        let _response:string;
-        try {
-            _response = await this.httpBackend.createRequest<string>({
-                url: decodedUri.toString()
-            });
-            console.log("res:"+_response.toString());
-        } catch (ex) {
-            throw new Error("FetcherProvider failed: " + ex);
+    async fetchMetadata(contractAbstraction: ContractAbstraction<ContractProvider | Wallet>, uri: string): Promise<MetadataEnvelope> {
+        // tslint:disable-next-line: one-variable-per-declaration
+        let _storage: Storage, metadata, defaultURI;
+        try { _storage = await contractAbstraction.storage(); } catch (err) { throw err; }
+        try { metadata = await _storage['metadata']; } catch (err) { throw err; }
+        try { defaultURI = await metadata.get(""); } catch (err) { throw err; }
+        console.log("here")
+        if (!(uri.localeCompare(defaultURI))) {
+            return { uri: defaultURI, metadata }
+        } else {
+            throw new Error("uri does not match metadata URI in contractAbstraction.");
         }
-        return JSON.parse(_response);
-=======
-    async fetchMetadata(contractAbstraction: ContractAbstraction<ContractProvider | Wallet>, uri: String): Promise<MetadataEnvelope> {
-        const storage: Storage = await contractAbstraction.storage();
-        const hash = await this.httpBackend.createRequest<string>({
-            url: uri.toString()
-          });
-          return JSON.parse(hash);
-        // throw new Error("Method not implemented.");
->>>>>>> b7e55346b5775af6dcde505b28b0722187ff1a8f
     }
 
 }

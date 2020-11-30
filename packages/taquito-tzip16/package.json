@@ -63,6 +63,8 @@
     "validate.js": "^0.13.1"
   },
   "devDependencies": {
+    "@taquito/http-utils": "^7.0.1-beta.0",
+    "@taquito/signer": "^7.0.1-beta.0",
     "@types/jest": "^26.0.14",
     "@types/lodash.camelcase": "^4.3.6",
     "@types/node": "^14.11.5",
