@@ -1,5 +1,5 @@
 import { ContractAbstraction, ContractProvider, Wallet } from "@taquito/taquito";
-import { bytes2Char } from "./utils";
+import { bytes2Char } from "./tzip16-utils";
 import { FetcherProvider } from "./interfaceFetcherProvider"
 
 // TODO
@@ -16,7 +16,7 @@ export class Tzip16ContractAbstraction {
     //private _fetcher = new FetcherProvider();
 
     constructor(
-        private abs: ContractAbstraction<ContractProvider>, 
+        private abs: ContractAbstraction<ContractProvider | Wallet>, 
         private fetcher: FetcherProvider = new FetcherProvider()
         ) {}
 
