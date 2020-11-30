@@ -6,8 +6,8 @@
     "test:carthagenet-faucet": "RUN_CARTHAGENET_WITH_FAUCET=true jest --runInBand",
     "test:delphinet": "DELPHINET=true jest",
     "test:delphinet-faucet": "RUN_DELPHINET_WITH_FAUCET=true jest --runInBand",
-    "test:ebetanet": "EBETANET=true jest",
-    "test:ebetanet-faucet": "RUN_EBETANET_WITH_FAUCET=true jest --runInBand",
+    "test:edonet": "EDONET=true jest",
+    "test:edonet-faucet": "RUN_EDONET_WITH_FAUCET=true jest --runInBand",
     "test": "jest"
   },
   "version": "7.1.0-preview.5",

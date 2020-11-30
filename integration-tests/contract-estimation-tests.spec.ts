@@ -10,7 +10,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol }) => {
 
   const carthagenet = (protocol === Protocols.PsCARTHA) ? test : test.skip;
   const delphinet = (protocol === Protocols.PsDELPH1) ? test : test.skip;
-  const ebetanet = (protocol === Protocols.PsZ2k9Fh) ? test : test.skip;
+  const edonet = (protocol === Protocols.PtEdoTez) ? test : test.skip;
 
   describe('Estimate scenario', () => {
     let LowAmountTez: TezosToolkit;
@@ -66,7 +66,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol }) => {
       done();
     })
 
-    ebetanet('Estimate transfer with allocated destination', async (done) => {
+    edonet('Estimate transfer with allocated destination', async (done) => {
       const estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 1.9 });
       expect(estimate.gasLimit).toEqual(10307);
       expect(estimate.storageLimit).toEqual(0);
@@ -105,7 +105,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol }) => {
       done();
     });
 
-    ebetanet('Estimate transfer with unallocated destination', async (done) => {
+    edonet('Estimate transfer with unallocated destination', async (done) => {
       const estimate = await LowAmountTez.estimate.transfer({ to: await (await createAddress()).signer.publicKeyHash(), amount: 1.7 });
       expect(estimate.gasLimit).toEqual(10307);
       expect(estimate.storageLimit).toEqual(257);
@@ -135,7 +135,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol }) => {
       done();
     });
 
-    ebetanet('Estimate simple origination', async (done) => {
+    edonet('Estimate simple origination', async (done) => {
       const estimate = await LowAmountTez.estimate.originate({
         balance: "1",
         code: ligoSample,
@@ -185,7 +185,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol }) => {
       done();
     })
 
-    ebetanet('Estimate setDelegate', async (done) => {
+    edonet('Estimate setDelegate', async (done) => {
       const estimate = await LowAmountTez.estimate.setDelegate({
         delegate: knownBaker,
         source: await LowAmountTez.signer.publicKeyHash(),
@@ -231,7 +231,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol }) => {
       done();
     })
 
-    ebetanet('Estimate internal transfer to allocated implicit', async (done) => {
+    edonet('Estimate internal transfer to allocated implicit', async (done) => {
       const tx = contract.methods.do(MANAGER_LAMBDA.transferImplicit(knownBaker, 50)).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx)
       expect(estimate.gasLimit).toEqual(4939);
@@ -277,7 +277,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol }) => {
       done();
     })
 
-    ebetanet('Estimate to multiple internal transfer to unallocated account', async (done) => {
+    edonet('Estimate to multiple internal transfer to unallocated account', async (done) => {
       const tx = contract.methods.do(transferImplicit2(
         await (await createAddress()).signer.publicKeyHash(),
         await (await createAddress()).signer.publicKeyHash(),
@@ -327,7 +327,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol }) => {
       done();
     })
 
-    ebetanet('Estimate internal origination', async (done) => {
+    edonet('Estimate internal origination', async (done) => {
       const tx = contract.methods.do(originate()).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx)
       expect(estimate.gasLimit).toEqual(5491);
@@ -372,7 +372,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol }) => {
       done();
     })
 
-    ebetanet('Estimate multiple internal origination', async (done) => {
+    edonet('Estimate multiple internal origination', async (done) => {
       const tx = contract.methods.do(originate2()).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx)
       expect(estimate.gasLimit).toEqual(7758);
@@ -446,7 +446,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol }) => {
       done();
     });
 
-    ebetanet('Estimate transfer to regular address', async (done) => {
+    edonet('Estimate transfer to regular address', async (done) => {
       let estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) });
       expect(estimate.gasLimit).toEqual(10307);
       expect(estimate.storageLimit).toEqual(0);

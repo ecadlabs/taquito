@@ -55,15 +55,15 @@ interface FaucetConfig {
   faucetKey: {};
 }
 
-const ebetanetEphemeral = {
-  rpc: process.env['TEZOS_RPC_EBETANET'] || 'https://api.tez.ie/rpc/ebetanet',
-  knownBaker: 'tz1emHVcmCG7nPKTBfEd7dPPeh7fUJgaUoUq',
-  knownContract: 'KT1Gm9PeBggJzegaM9sRCz1EymLrWxpWyGXr',
-  knownBigMapContract: 'KT1Nf1CPvF1FFmAan5LiRvcyukyt3Nf4Le9B',
+const edonetEphemeral = {
+  rpc: process.env['TEZOS_RPC_EDONET'] || 'https://api.tez.ie/rpc/edonet',
+  knownBaker: 'tz1ScKYRsTP7rkPsU8VRNKFYyCoCBPX4WADJ',
+  knownContract: 'KT1ETP77nkHvrkVzfV3AydrHMpbER4Et7s3y',
+  knownBigMapContract: 'KT1P4eFWszS7Y9qom4SjnM15GJcYzsnVH4ER',
   protocol: Protocols.Pt24m4xi,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'https://api.tez.ie/keys/ebetanet',
+    keyUrl: 'https://api.tez.ie/keys/edonet',
     requestHeaders: { 'Authorization': 'Bearer taquito-example' },
   }
 }
@@ -129,12 +129,12 @@ const key = {
   secret: "122bb47843750982da5c65f7affa0d32971ac876"
 }
 
-const ebetanetFaucet = {
-  rpc: 'https://api.tez.ie/rpc/ebetanet',
-  knownBaker: 'tz1LpmZmB1yJJBcCrBDLSAStmmugGDEghdVv',
-  knownContract: 'KT1Gm9PeBggJzegaM9sRCz1EymLrWxpWyGXr',
-  knownBigMapContract: 'KT1Nf1CPvF1FFmAan5LiRvcyukyt3Nf4Le9B',
-  protocol: Protocols.PsZ2k9Fh,
+const edonetFaucet = {
+  rpc: 'https://api.tez.ie/rpc/edonet',
+  knownBaker: 'tz1ScKYRsTP7rkPsU8VRNKFYyCoCBPX4WADJ',
+  knownContract: 'KT1ETP77nkHvrkVzfV3AydrHMpbER4Et7s3y',
+  knownBigMapContract: 'KT1P4eFWszS7Y9qom4SjnM15GJcYzsnVH4ER',
+  protocol: Protocols.PtEdoTez,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
     faucetKey: key,
@@ -179,7 +179,7 @@ const babylonnetFaucet = {
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_FAUCET']) {
-  providers.push(carthagenetFaucet, delphinetFaucet, ebetanetFaucet)
+  providers.push(carthagenetFaucet, delphinetFaucet, edonetFaucet)
 } 
 else if (process.env['RUN_CARTHAGENET_WITH_FAUCET']) {
   providers.push(carthagenetFaucet)
@@ -188,13 +188,13 @@ else if (process.env['RUN_DELPHINET_WITH_FAUCET']) {
   providers.push(delphinetFaucet)
 }
 else if (process.env['RUN_BETANET_WITH_FAUCET']) {
-  providers.push(ebetanetFaucet)
+  providers.push(edonetFaucet)
 }
 else if (process.env['DELPHINET']) {
   providers.push(delphinetEphemeral)
 }
-else if (process.env['EBETANET']) {
-  providers.push(ebetanetEphemeral)
+else if (process.env['EDONET']) {
+  providers.push(edonetEphemeral)
 }
 else if (process.env['CARTHAGENET']) {
   providers.push(carthagenetEphemeral)
