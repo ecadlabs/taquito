@@ -34,7 +34,7 @@ export class FetcherProvider implements FetcherProviderInterface {
         try { _storage = await contractAbstraction.storage(); } catch (err) { throw err; }
         try { metadata = await _storage['metadata']; } catch (err) { throw err; }
         try { defaultURI = await metadata.get(""); } catch (err) { throw err; }
-        console.log("here")
+        
         if (!(uri.localeCompare(defaultURI))) {
             return { uri: defaultURI, metadata }
         } else {
