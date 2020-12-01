@@ -38,7 +38,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 },
             });
             await op.confirmation();
-            console.log('empty metadata:', (await op.contract()).address);
             expect(op.hash).toBeDefined();
             expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
             done();
@@ -69,7 +68,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 },
             });
             await op.confirmation();
-            console.log('valid metadata:', (await op.contract()).address);
             expect(op.hash).toBeDefined();
             expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
             done();
@@ -98,7 +96,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                     taco_shop_storage: tacoShopStorageMap
                 },
             });
-            console.log('metadata with emoji:', (await op.contract()).address);
             await op.confirmation();
             expect(op.hash).toBeDefined();
             expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
@@ -130,7 +127,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 },
             });
             await op.confirmation();
-            console.log('metadata invalid:', (await op.contract()).address);
             expect(op.hash).toBeDefined();
             expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
             done();
