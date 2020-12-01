@@ -12,11 +12,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done()
         })
          it('Deploy a contract having empty metadata stored at an HTTPS URL', async (done) => {
-            // carthagenet: KT1DATAwToYxFAKsJMSVGT1j6Cwk14vMZivm
-            // delphinet: KT1FBUDWx3Au6e3pjzdYDAhSZVJ9umt7ykJ5
+            // carthagenet: KT1A1DmqFa8eusnpp8eLhwc8NPw29b2ddEHQ
+            // delphinet: KT1WTGDQ9j2mFE7SbgmoixNAVXH1ynjdagon
 
             // location of the contract metadata
-            const url = 'https://storage.cloud.google.com/tzip-16/empty-metadata.json';
+            const url = 'https://storage.googleapis.com/tzip-16/empty-metadata.json';
             const bytesUrl = char2Bytes(url);
 
             const metadataBigMAp = new MichelsonMap();
@@ -38,17 +38,18 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 },
             });
             await op.confirmation();
+            console.log('empty metadata:', (await op.contract()).address);
             expect(op.hash).toBeDefined();
             expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
             done();
         });
 
         it('Deploy a contract having valid metadata stored at an HTTPS URL', async (done) => {
-            // carthagenet: KT1Bf6m9DuDS6YS5N3L9EiVQ7juKWPtGDL9v
-            // delphinet: KT1MEHN3Q4sQjhSPAB33wzYoEKS7SNkepmvh
+            // carthagenet: KT1GPiBGM2sQ7DjPqCmGbHBDzkhweTR2spZA
+            // delphinet: KT1KGkToC8UUJBJLqHcLRkv7xvjWd8JwUuTo
 
             // location of the contract metadata
-            const url = 'https://storage.cloud.google.com/tzip-16/taco-shop-metadata.json';
+            const url = 'https://storage.googleapis.com/tzip-16/taco-shop-metadata.json';
             const bytesUrl = char2Bytes(url);
 
             const metadataBigMAp = new MichelsonMap();
@@ -68,16 +69,17 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 },
             });
             await op.confirmation();
+            console.log('valid metadata:', (await op.contract()).address);
             expect(op.hash).toBeDefined();
             expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
             done();
         }); 
         it('Deploy a contract having valid metadata which contains emoji stored at an HTTPS URL', async (done) => {
-            // carthagenet: KT1QjDoUXzV7AvWmXyfwzeb21mcBZi2dz2mL
-            // delphinet: KT1NnzBWSqyuQ5KGdbkGmNj6gAajkRMq1DHi
+            // carthagenet: KT1A1mR7zS8cWBehnf5wa6eY1SwCY6Teigne
+            // delphinet: KT194AJC8UQPguynGdJfEVynF9wfUghDjHSt
 
             // location of the contract metadata
-            const url = 'https://storage.cloud.google.com/tzip-16/emoji-in-metadata.json';
+            const url = 'https://storage.googleapis.com/tzip-16/emoji-in-metadata.json';
             const bytesUrl = char2Bytes(url);
 
             const metadataBigMAp = new MichelsonMap();
@@ -96,6 +98,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                     taco_shop_storage: tacoShopStorageMap
                 },
             });
+            console.log('metadata with emoji:', (await op.contract()).address);
             await op.confirmation();
             expect(op.hash).toBeDefined();
             expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
@@ -103,11 +106,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         });
 
         it('Deploy a contract having invalid metadata stored at an HTTPS URL', async (done) => {
-            // carthagenet: KT1BKh48gwytBo7zFq6M3PCJc7LmcAcBDQPN
-            // delphinet: KT1Nvf247DvSZDae5Jv8QRebfMq5qaRU6PN4
+            // carthagenet: KT1LiZ1H4Jk2EatrZjpYVRfH2o4JWMdTgGaM
+            // delphinet: KT1UQyKUoCat9oQNHPGMDypQ4mWW44DFWzXt
 
             // location of the contract metadata
-            const url = 'https://storage.cloud.google.com/tzip-16/invalid.json';
+            const url = 'https://storage.googleapis.com/tzip-16/invalid.json';
             const bytesUrl = char2Bytes(url);
 
             const metadataBigMAp = new MichelsonMap();
@@ -127,6 +130,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 },
             });
             await op.confirmation();
+            console.log('metadata invalid:', (await op.contract()).address);
             expect(op.hash).toBeDefined();
             expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
             done();
