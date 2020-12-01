@@ -2,7 +2,6 @@ import {
   DAppClient,
   DAppClientOptions,
   RequestPermissionInput,
-  PermissionResponseOutput,
   PermissionScope,
 } from '@airgap/beacon-sdk';
 
@@ -33,27 +32,17 @@ export class MissingRequiredScopes implements Error {
 export class BeaconWallet implements WalletProvider {
   public client: DAppClient;
 
-  private permissions?: PermissionResponseOutput;
-
   constructor(options: DAppClientOptions) {
     this.client = new DAppClient(options);
   }
 
-  private getPermissionOrFail() {
-    if (!this.permissions) {
-      throw new BeaconWalletNotInitialized();
-    }
-
-    return this.permissions;
-  }
-
   private validateRequiredScopesOrFail(
-    permission: PermissionResponseOutput,
+    permissionScopes: PermissionScope[],
     requiredScopes: PermissionScope[]
   ) {
     const mandatoryScope = new Set(requiredScopes);
 
-    for (const scope of permission.scopes) {
+    for (const scope of permissionScopes) {
       if (mandatoryScope.has(scope)) {
         mandatoryScope.delete(scope);
       }
@@ -65,15 +54,7 @@ export class BeaconWallet implements WalletProvider {
   }
 
   async requestPermissions(request?: RequestPermissionInput) {
-    const activeAccount = await this.client.getActiveAccount();
-
-    if (activeAccount) {
-      this.permissions = activeAccount;
-      return;
-    }
-
-    const result = await this.client.requestPermissions(request);
-    this.permissions = result;
+    await this.client.requestPermissions(request);
   }
 
   private removeFeeAndLimit<T extends { gas_limit: any; storage_limit: any; fee: any }>(op: T) {
@@ -81,9 +62,12 @@ export class BeaconWallet implements WalletProvider {
     return rest;
   }
 
-  getPKH() {
-    const { address } = this.getPermissionOrFail();
-    return Promise.resolve(address);
+  async getPKH() {
+    const account = await this.client.getActiveAccount();
+    if (!account) {
+      throw new BeaconWalletNotInitialized();
+    }
+    return account.address;
   }
 
   mapTransferParamsToWalletParams(params: WalletTransferParams) {
@@ -99,7 +83,11 @@ export class BeaconWallet implements WalletProvider {
   }
 
   async sendOperations(params: any[]) {
-    const permissions = this.getPermissionOrFail();
+    const account = await this.client.getActiveAccount();
+    if (!account) {
+      throw new BeaconWalletNotInitialized();
+    }
+    const permissions = account.scopes;
     this.validateRequiredScopesOrFail(permissions, [PermissionScope.OPERATION_REQUEST]);
 
     const { transactionHash } = await this.client.requestOperation({
@@ -121,43 +109,9 @@ export class BeaconWallet implements WalletProvider {
 
   /**
    * 
-   * @description Allows to remove an account from the local storage
-   * @param accountIdentifier optional identifier of the account to remove from the storage. 
-   * If none is specified, the active account (if defined) will be removed from the storage.
+   * @description This method removes the active account from local storage by setting it to undefined.
    */
-  async removeAccount(accountIdentifier?: string) {
-    const accountInfo = accountIdentifier 
-      ? await this.client.getAccount(accountIdentifier)
-      : await this.client.getActiveAccount();
-
-    if (accountInfo) {
-      await this.client.removeAccount(accountInfo.accountIdentifier);
-    }
-  }
-
-  /**
-   * 
-   * @description Allows to remove all accounts and set active account to undefined
-   */
-  async removeAllAccounts() {
-    await this.client.removeAllAccounts();
-  }
-
-  /**
-   * 
-   * @description Return the active account
-   */
-  async getActiveAccount() {
-    const activeAccount = await this.client.getActiveAccount();
-    return activeAccount;
-  }
-
-  /**
-   * 
-   * @description Return all accounts in storage
-   */
-  async getAccounts() {
-    const activeAccount = await this.client.getAccounts();
-    return activeAccount;
+  async clearActiveAccount() {
+    await this.client.setActiveAccount();
   }
 }

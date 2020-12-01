@@ -56,7 +56,7 @@ interface FaucetConfig {
 }
 
 const delphinetEphemeral = {
-  rpc: 'https://api.tez.ie/rpc/delphinet',
+  rpc: process.env['TEZOS_RPC_DELPHINET'] || 'https://api.tez.ie/rpc/delphinet',
   knownBaker: 'tz1LpmZmB1yJJBcCrBDLSAStmmugGDEghdVv',
   knownContract: 'KT1Gm9PeBggJzegaM9sRCz1EymLrWxpWyGXr',
   knownBigMapContract: 'KT1Nf1CPvF1FFmAan5LiRvcyukyt3Nf4Le9B',
@@ -69,7 +69,7 @@ const delphinetEphemeral = {
 }
 
 const carthagenetEphemeral = {
-  rpc: 'https://api.tez.ie/rpc/carthagenet',
+  rpc: process.env['TEZOS_RPC_CARTHAGENET'] || 'https://api.tez.ie/rpc/carthagenet',
   knownBaker: 'tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9',
   knownContract: 'KT1XYa1JPKYVJYVJge89r4w2tShS8JYb1NQh',
   knownBigMapContract: 'KT1HqWsXrGbHWc9muqkApqWu64WsxCU3FoRf',
@@ -81,7 +81,7 @@ const carthagenetEphemeral = {
   },
 };
 const babylonnetEphemeral = {
-  rpc: 'https://api.tez.ie/rpc/babylonnet',
+  rpc: process.env['TEZOS_RPC_BABYLONNET'] || 'https://api.tez.ie/rpc/babylonnet',
   knownBaker: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
   knownContract: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK',
   knownBigMapContract: 'KT1T2KjQdqeNzeaSGm9MfzfgMN8rWC94BrTP',
