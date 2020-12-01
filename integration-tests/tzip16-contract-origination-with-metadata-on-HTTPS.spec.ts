@@ -11,7 +11,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             await setup()
             done()
         })
-         it('Deploy a contract having empty metadata stored at an HTTPS URL', async (done) => {
+        it('Deploy a contract having empty metadata stored at an HTTPS URL', async (done) => {
             // carthagenet: KT1A1DmqFa8eusnpp8eLhwc8NPw29b2ddEHQ
             // delphinet: KT1WTGDQ9j2mFE7SbgmoixNAVXH1ynjdagon
 
@@ -71,7 +71,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(op.hash).toBeDefined();
             expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
             done();
-        }); 
+        });
+
         it('Deploy a contract having valid metadata which contains emoji stored at an HTTPS URL', async (done) => {
             // carthagenet: KT1A1mR7zS8cWBehnf5wa6eY1SwCY6Teigne
             // delphinet: KT194AJC8UQPguynGdJfEVynF9wfUghDjHSt
@@ -131,6 +132,5 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
             done();
         });
-
     });
 })
