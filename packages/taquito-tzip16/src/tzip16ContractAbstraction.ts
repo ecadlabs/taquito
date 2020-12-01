@@ -1,6 +1,6 @@
 import { ContractAbstraction, ContractProvider, Wallet } from "@taquito/taquito";
 import { bytes2Char } from "./tzip16-utils";
-import { FetcherProvider } from "./interfaceFetcherProvider"
+import { FetcherProvider } from "./fetcherProvider"
 
 // TODO
 export class MetadataView {

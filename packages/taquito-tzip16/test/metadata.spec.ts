@@ -1,62 +1,35 @@
 import { ContractAbstraction, ContractProvider, TezosToolkit, Wallet, MichelsonMap } from "@taquito/taquito";
-import { importKey } from "@taquito/signer";
-import { FetcherProvider } from "../src/interfaceFetcherProvider";
-import { char2Bytes } from "../src/tzip16-utils";
+import { MetadataEnvelope } from "../src/interfaceFetcherProvider";
+import { FetcherProvider } from "../src/fetcherProvider";
 
 const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
 const f = new FetcherProvider();
 
-const FAUCET_KEY = { "mnemonic": ["unknown", "hub", "eye", "sport", "walk", "oil", "outdoor", "donkey", "poet", "expire", "just", "indicate", "response", "lawsuit", "thank"], "secret": "71c2c58c6b1fadef14fd5ac8f380ee595b804938", "amount": "40032467721", "pkh": "tz1VtHKUzDac9oGUmt2ReLrPj3kh3zyzF6GR", "password": "1knvgG5AQJ", "email": "lrsfvdev.aomudkjy@tezos.example.org" };
-// tslint:disable-next-line: no-floating-promises
-importKey(Tezos, FAUCET_KEY.email, FAUCET_KEY.password, FAUCET_KEY.mnemonic.join(' '), FAUCET_KEY.secret);
-
-let testContractAddress: string;
+let testContractAbstraction: ContractAbstraction<ContractProvider | Wallet>;
 let testURL = "http://echo.jsontest.com/1/2/3/4"
 
 beforeAll(async () => {
-    testContractAddress = await originateContract(testURL)
-},15000)
+    testContractAbstraction = await Tezos.contract.at("KT1D3TCYU6BeGjj3kvLW4D9hnaoLAhX6rGhM");
+})
 
 describe('FetcherProviderTests', () => {
     it('successfully fetches a contract, for a given address', async (done) => {
         jest.setTimeout(10000);
-        let fetchedContract;
-        try {
-            fetchedContract = await Tezos.contract.at(testContractAddress);
-        } catch (error) {
-            throw error;
-        }
-
-        const fetchedMetadata = await f.fetchMetadata(fetchedContract, "http://echo.jsontest.com/1/2/3/4");
-        // expect(fetchedMetadata).toBeInstanceOf(String);
+        const fetchedMetadata = await f.fetchMetadata(testContractAbstraction, testURL);
+        expect(fetchedMetadata).toMatchObject({
+            uri: 'http://echo.jsontest.com/1/2/3/4',
+            metadata: { '1': '2', '3': '4' },
+            integrityCheckResult: true
+        })
         done();
     })
-    test.todo('something');
+
+    // it('successfully throws, for no address', async () => {
+    //     jest.setTimeout(10000);
+    //     const testUndefinedContractAbstraction = await Tezos.contract.at("");
+    //     expect(f.fetchMetadata(testUndefinedContractAbstraction, testURL)).toThrow(Error);
+    //     //done();
+    // })
+
+    test.todo('check for huge strings');
 })
-
-
-// Originates a contract with a desired uri string at empty key in storage
-async function originateContract(_uri: string): Promise<string> {
-    try {
-        const initialMetadataBigmap = new MichelsonMap();
-        initialMetadataBigmap.set("", char2Bytes(_uri));
-        const simpleContract = `parameter unit;
-      storage (pair nat (big_map %metadata string bytes));
-      code { FAILWITH };`;
-        const op = await Tezos.contract.originate({
-            code: simpleContract, // Taken from TZComet sample
-            storage: {
-                0: 42,
-                metadata: initialMetadataBigmap
-            },
-        });
-        console.log('Attempted origination of contract : https://better-call.dev/carthagenet/' + op.contractAddress);
-        // await op.confirmation(1);
-        // console.log('Contract Originated. View details at https://better-call.dev/carthagenet/' + op.contractAddress)
-        if (op.contractAddress) {
-            return op.contractAddress;
-        } else { throw new Error("Unexpected") }
-    } catch (err) {
-        return (err);
-    }
-}

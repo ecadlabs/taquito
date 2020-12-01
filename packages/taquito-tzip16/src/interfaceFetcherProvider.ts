@@ -1,7 +1,6 @@
 import { ContractAbstraction, ContractProvider, MichelsonMap, Wallet } from "@taquito/taquito";
-import { HttpBackend } from "@taquito/http-utils";
 
-interface MetadataEnvelope {
+export interface MetadataEnvelope {
     uri: string;
     integrityCheckResult?: boolean;
     sha256Hash?: string;
@@ -19,27 +18,4 @@ export interface FetcherProviderInterface {
      * @param uri the decoded uri
      */
     fetchMetadata(contractAbstraction: ContractAbstraction<ContractProvider | Wallet>, uri: string): Promise<MetadataEnvelope>;
-}
-
-
-
-export class FetcherProvider implements FetcherProviderInterface {
-    constructor(
-        private httpBackend: HttpBackend = new HttpBackend()
-    ) { }
-
-    async fetchMetadata(contractAbstraction: ContractAbstraction<ContractProvider | Wallet>, uri: string): Promise<MetadataEnvelope> {
-        // tslint:disable-next-line: one-variable-per-declaration
-        let _storage: Storage, metadata, defaultURI;
-        try { _storage = await contractAbstraction.storage(); } catch (err) { throw err; }
-        try { metadata = await _storage['metadata']; } catch (err) { throw err; }
-        try { defaultURI = await metadata.get(""); } catch (err) { throw err; }
-        
-        if (!(uri.localeCompare(defaultURI))) {
-            return { uri: defaultURI, metadata }
-        } else {
-            throw new Error("uri does not match metadata URI in contractAbstraction.");
-        }
-    }
-
 }
