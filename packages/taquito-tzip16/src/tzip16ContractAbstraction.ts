@@ -1,6 +1,7 @@
 import { ContractAbstraction, ContractProvider, Wallet } from "@taquito/taquito";
 import { bytes2Char } from "./tzip16-utils";
 import { FetcherProvider } from "./fetcherProvider"
+import { MetadataEnvelope } from "./interfaceFetcherProvider";
 
 // TODO
 export class MetadataView {
@@ -41,7 +42,6 @@ export class Tzip16ContractAbstraction {
         } else {
             isCompliant = false;
         }
-        console.log('isCompliant', isCompliant)
         return isCompliant;
     }
 
@@ -53,14 +53,13 @@ export class Tzip16ContractAbstraction {
         if (!isCompliant) {
             throw new Error("The contract is not compliant with tzip16 standard.");
         }
-        console.log('this._uri', this._uri)
         return bytes2Char(this._uri!);
     }
 
     /**
    * @description Fetch and return the metadata
    */
-    async getMetadata(): Promise<{}> {
-        return this.fetcher.fetchMetadata(this.abs, await this.getUri());
+    async getMetadata(): Promise<MetadataEnvelope> {
+        return await this.fetcher.fetchMetadata(this.abs, await this.getUri());
     }
 }
