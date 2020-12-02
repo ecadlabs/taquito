@@ -57,14 +57,13 @@
     ]
   },
   "dependencies": {
-    "@taquito/taquito": "^7.0.1-beta.0",
+    "@taquito/taquito": "^7.1.0-preview.4",
+    "@taquito/http-utils": "^7.1.0-preview.4",
     "ajv": "^7.0.0-beta.4",
     "is-ipfs": "^2.0.0",
     "validate.js": "^0.13.1"
   },
   "devDependencies": {
-    "@taquito/http-utils": "^7.0.1-beta.0",
-    "@taquito/signer": "^7.0.1-beta.0",
     "@types/jest": "^26.0.14",
     "@types/lodash.camelcase": "^4.3.6",
     "@types/node": "^14.11.5",
