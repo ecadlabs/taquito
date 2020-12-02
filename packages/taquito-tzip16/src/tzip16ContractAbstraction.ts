@@ -1,65 +1,50 @@
-import { ContractAbstraction, ContractProvider, Wallet } from "@taquito/taquito";
-import { bytes2Char } from "./tzip16-utils";
-import { FetcherProvider } from "./fetcherProvider"
-import { MetadataEnvelope } from "./interfaceFetcherProvider";
+import { ContractAbstraction, ContractProvider, Wallet } from '@taquito/taquito';
+import { bytes2Char } from './tzip16-utils';
+import { FetcherProvider } from './fetcherProvider';
+import { MetadataEnvelope } from './interfaceFetcherProvider';
+import { MetadataNotFound, UriNotFound } from './tzip16Errors';
 
 // TODO
-export class MetadataView {
-    constructor(
-    ) { }
+/* export class MetadataView {
+    constructor() { }
 
-    async execute() {
-    }
-}
+    async execute() { }
+} */
 
 export class Tzip16ContractAbstraction {
-    private _uri: string | undefined;
-    //private _fetcher = new FetcherProvider();
 
     constructor(
-        private abs: ContractAbstraction<ContractProvider | Wallet>, 
+        private constractAbstraction: ContractAbstraction<ContractProvider | Wallet>,
         private fetcher: FetcherProvider = new FetcherProvider()
-        ) {}
+    ) { }
 
     // TODO
     // public metadataViews: { [key: string]: (...args: any[]) => MetadataView } = {};
 
-    /**
-      * @description Verify if there is a bigmap metadata in the storage and an empty string key
-      */
-    private async isTzip16Compliant(): Promise<boolean> {
-        const storage: Storage = await this.abs.storage();
-        let isCompliant: boolean = true;
-        let bigMapMetadata;
+    private async getUriOrFail(): Promise<string> {
+        const storage: Storage = await this.constractAbstraction.storage();
+        let metadataField;
+        let uri;
         if (storage.metadata) {
-            bigMapMetadata = storage.metadata;
+            metadataField = storage.metadata;
         } else {
-            return false;
+            throw new MetadataNotFound();
         }
-        const uri = await bigMapMetadata.get('');
-        if (uri) {
-            this._uri = uri;
-        } else {
-            isCompliant = false;
+        try {
+            uri = await metadataField.get('');
+        } catch (err) {
+            throw new UriNotFound();
         }
-        return isCompliant;
+        return uri;
     }
 
     /**
-   * @description Return the decoded uri
-   */
-    async getUri(): Promise<string> {
-        const isCompliant = await this.isTzip16Compliant();
-        if (!isCompliant) {
-            throw new Error("The contract is not compliant with tzip16 standard.");
-        }
-        return bytes2Char(this._uri!);
-    }
-
-    /**
-   * @description Fetch and return the metadata
-   */
+     * @description Return an object containing the metadata, the uri, an optional integrity check result and an optional sha256 hash
+     * 
+     */
     async getMetadata(): Promise<MetadataEnvelope> {
-        return await this.fetcher.fetchMetadata(this.abs, await this.getUri());
+        const uri = await this.getUriOrFail();
+        const metadata = await this.fetcher.fetchMetadata(this.constractAbstraction, bytes2Char(uri));
+        return metadata;
     }
 }

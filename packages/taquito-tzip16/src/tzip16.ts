@@ -1,8 +1,8 @@
-//import Ajv, { JSONSchemaType, DefinedError } from "ajv"
-//import validate, { result } from "validate.js";
-//import isIPFS from 'is-ipfs';
+//  import Ajv, { JSONSchemaType, DefinedError } from "ajv"
+//  import validate, { result } from "validate.js";
+//  import isIPFS from 'is-ipfs';
 
-//import tzip16spec from "../assets/proposals_tzip-16_metadata-schema.json";
+//  import tzip16spec from "../assets/proposals_tzip-16_metadata-schema.json";
 
 /** Metadata related artifacts:
  * metadataMichelsonType, // this is a type
@@ -16,7 +16,7 @@
  */
 
 
-//export class MetaDataManager {
+//  export class MetaDataManager {
 
     // 1. INSERT METADATA
     /**
