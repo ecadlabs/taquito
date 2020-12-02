@@ -1,4 +1,9 @@
-import { ContractAbstraction, ContractProvider, MichelsonMap, Wallet } from "@taquito/taquito";
+import { ContractAbstraction, ContractProvider, Wallet } from "@taquito/taquito";
+
+export interface RequestOptions {
+    headers?: { [key: string]: string };
+    mimeType?: string;
+  }
 
 export interface MetadataEnvelope {
     uri: string;
@@ -16,6 +21,7 @@ export interface FetcherProviderInterface {
      *
      * @param contractAbstraction the contractAbstraction of the current contract (useful if metadata are located inside its own storage)
      * @param uri the decoded uri
+     * @param options optional parameter allowing to specify headers for Http request
      */
-    fetchMetadata(contractAbstraction: ContractAbstraction<ContractProvider | Wallet>, uri: string): Promise<MetadataEnvelope>;
+    fetchMetadata(contractAbstraction: ContractAbstraction<ContractProvider | Wallet>, uri: string, options?: RequestOptions): Promise<MetadataEnvelope>;
 }

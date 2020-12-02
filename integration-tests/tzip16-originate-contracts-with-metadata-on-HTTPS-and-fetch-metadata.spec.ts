@@ -54,7 +54,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             // carthagenet: KT1A1DmqFa8eusnpp8eLhwc8NPw29b2ddEHQ
             // delphinet: KT1WTGDQ9j2mFE7SbgmoixNAVXH1ynjdagon
 
-            const contract = await Tezos.contract.at(contractAddressEmptyMetadata, composeTzip16);
+            const contract = await Tezos.contract.at(contractAddressEmptyMetadata, composeTzip16());
             const metadata = await contract.tzip16().getMetadata();
 
             expect(metadata.uri).toEqual('https://storage.googleapis.com/tzip-16/empty-metadata.json');
@@ -129,7 +129,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             // carthagenet: KT1A1mR7zS8cWBehnf5wa6eY1SwCY6Teigne
             // delphinet: KT194AJC8UQPguynGdJfEVynF9wfUghDjHSt
 
-            const contract = await Tezos.contract.at(contractAddressEmoji, composeTzip16);
+            const contract = await Tezos.contract.at(contractAddressEmoji, composeTzip16());
             const metadata = await contract.tzip16().getMetadata();
 
             expect(metadata.uri).toEqual('https://storage.googleapis.com/tzip-16/emoji-in-metadata.json');
@@ -190,7 +190,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             // carthagenet: KT1LiZ1H4Jk2EatrZjpYVRfH2o4JWMdTgGaM
             // delphinet: KT1UQyKUoCat9oQNHPGMDypQ4mWW44DFWzXt
 
-            const contract = await Tezos.contract.at(contractAddressInvalidMetadata, composeTzip16);
+            const contract = await Tezos.contract.at(contractAddressInvalidMetadata, composeTzip16());
             try {
                 await contract.tzip16().getMetadata()
             } catch (error) {

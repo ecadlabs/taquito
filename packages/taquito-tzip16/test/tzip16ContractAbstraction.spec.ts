@@ -31,7 +31,7 @@ describe('Tzip16 contract abstraction test', () => {
         mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
 
         mockFetcher.fetchMetadata.mockResolvedValue({
-            uri: 'https://storage.googleapis.com/tzip-16/taco-shop-metadata.json',
+            uri: 'https://test',
             metadata: { name: 'Taquito test' }
         });
 
@@ -56,7 +56,7 @@ describe('Tzip16 contract abstraction test', () => {
 
         const abs = await toolkit.contract.at('test');
         const tzip16Abs = new Tzip16ContractAbstraction(abs);
-        tzip16Abs['fetcher'] = mockFetcher;
+        tzip16Abs['_fetcher'] = mockFetcher;
         const metadata = await tzip16Abs.getMetadata();
 
         expect(metadata.metadata).toEqual({ name: 'Taquito test' });
@@ -73,9 +73,13 @@ describe('Tzip16 contract abstraction test', () => {
 
         const abs = await toolkit.contract.at('test');
         const tzip16Abs = new Tzip16ContractAbstraction(abs);
-        tzip16Abs['fetcher'] = mockFetcher;
+        tzip16Abs['_fetcher'] = mockFetcher;
 
-        expect(tzip16Abs.getMetadata()).rejects.toThrowError(MetadataNotFound);
+        try {
+            await tzip16Abs.getMetadata();
+        } catch (e) {
+            expect(e).toBeInstanceOf(MetadataNotFound);
+        }
         done();
     });
 
@@ -98,9 +102,13 @@ describe('Tzip16 contract abstraction test', () => {
 
         const abs = await toolkit.contract.at('test');
         const tzip16Abs = new Tzip16ContractAbstraction(abs);
-        tzip16Abs['fetcher'] = mockFetcher;
+        tzip16Abs['_fetcher'] = mockFetcher;
 
-        expect(tzip16Abs.getMetadata()).rejects.toThrowError(UriNotFound);
+        try {
+            await tzip16Abs.getMetadata();
+        } catch (e) {
+            expect(e).toBeInstanceOf(UriNotFound);
+        }
         done();
     });
 });

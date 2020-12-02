@@ -53,7 +53,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             // carthagenet: KT1FeMKGGvdWiA4r5RaucoEUAa8cTEXSSpCX
             // delphinet: KT1PHNmaHvQNjt1LTqdWobJUi2aeDeWUdQUq
 
-            const contract = await Tezos.contract.at(contractAddress, composeTzip16);
+            const contract = await Tezos.contract.at(contractAddress, composeTzip16());
             const metadata = await contract.tzip16().getMetadata();
 
             expect(metadata.uri).toEqual('sha256://0x7e99ecf3a4490e3044ccdf319898d77380a2fc20aae36b6e40327d678399d17b/https:%2F%2Fstorage.googleapis.com%2Ftzip-16%2Ftaco-shop-metadata.json');
@@ -116,7 +116,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             // carthagenet: KT1Xj3v6v4hEWrQsnWf4oa87Q5T9JThvqNj7
             // delphinet: KT1Bhj5fgQioJYnFbg8jeki5SgRd7ZsCfhwp
 
-            const contract = await Tezos.contract.at(contractAddressInvalidHash, composeTzip16);
+            const contract = await Tezos.contract.at(contractAddressInvalidHash, composeTzip16());
             const metadata = await contract.tzip16().getMetadata();
 
             expect(metadata.uri).toEqual('sha256://0x7e99ecf3a4491e3044ccdf319898d77380a2fc20aae36b6e40327d678399d17b/https:%2F%2Fstorage.googleapis.com%2Ftzip-16%2Ftaco-shop-metadata.json');

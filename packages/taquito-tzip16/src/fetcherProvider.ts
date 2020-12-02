@@ -1,5 +1,5 @@
 import { ContractAbstraction, ContractProvider, Wallet } from "@taquito/taquito";
-import { FetcherProviderInterface, MetadataEnvelope } from "./interfaceFetcherProvider";
+import { FetcherProviderInterface, MetadataEnvelope, RequestOptions } from "./interfaceFetcherProvider";
 import { HTTPHandler } from "./URIHandler/httpHandler";
 
 export class FetcherProvider implements FetcherProviderInterface {
@@ -8,7 +8,8 @@ export class FetcherProvider implements FetcherProviderInterface {
     constructor() {
         this.httpHandler = new HTTPHandler();
     }
-    async fetchMetadata(_contractAbstraction: ContractAbstraction<ContractProvider | Wallet>, _uri: string): Promise<MetadataEnvelope> {
+    async fetchMetadata(_contractAbstraction: ContractAbstraction<ContractProvider | Wallet>, _uri: string, options?: RequestOptions): Promise<MetadataEnvelope> {
+        console.log(options);
         // tslint:disable-next-line: strict-type-predicates
         if( typeof _contractAbstraction !== 'undefined') {
             console.log(typeof(_contractAbstraction.address))

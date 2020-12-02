@@ -75,7 +75,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
             // carthagenet: KT1WCcgKMtFwSpdBc9kJ7vsH7MEmuXphon8K
             // delphinet: KT1DNapRVdG9t74fzAvXLcKDcgxZd1i1TobV
 
-            const contract = await Tezos.contract.at(contractAddress, composeTzip16);
+            const contract = await Tezos.contract.at(contractAddress, composeTzip16());
             const metadata = await contract.tzip16().getMetadata();
 
             expect(metadata.uri).toEqual('https://storage.googleapis.com/tzip-16/fa2-metadata.json');
