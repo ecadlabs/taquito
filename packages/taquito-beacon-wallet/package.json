@@ -60,7 +60,7 @@
     ]
   },
   "dependencies": {
-    "@airgap/beacon-sdk": "^2.0.0-beta.16",
+    "@airgap/beacon-sdk": "^2.0.0-beta.18",
     "@taquito/taquito": "^7.1.0-preview.7",
     "@taquito/utils": "^7.1.0-preview.7"
   },
