@@ -65,6 +65,7 @@
     "validate.js": "^0.13.1"
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.0.1",
     "@types/jest": "^26.0.14",
     "@types/lodash.camelcase": "^4.3.6",
     "@types/node": "^14.11.5",
@@ -73,6 +74,7 @@
     "colors": "^1.4.0",
     "coveralls": "^3.1.0",
     "cross-env": "^7.0.2",
+    "crypto-js": "^4.0.0",
     "jest": "^26.5.2",
     "jest-config": "^26.5.2",
     "lint-staged": "^10.4.0",

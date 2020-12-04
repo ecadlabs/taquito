@@ -1,5 +1,5 @@
 import { ContractAbstraction, ContractProvider, Wallet } from "@taquito/taquito";
-import { RequestOptions } from "./interfaceFetcherProvider";
+import { RequestOptions } from "./interfaceMetadataProvider";
 import { Tzip16ContractAbstraction } from './tzip16ContractAbstraction'
 
 export function composeTzip16(options?: RequestOptions){

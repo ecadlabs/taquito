@@ -1,7 +1,7 @@
 import { ContractAbstraction, ContractProvider, Wallet } from '@taquito/taquito';
 import { bytes2Char } from './tzip16-utils';
-import { FetcherProvider } from './fetcherProvider';
-import { MetadataEnvelope, RequestOptions } from './interfaceFetcherProvider';
+import { MetadataProvider } from './metadataProvider';
+import { MetadataEnvelope, RequestOptions } from './interfaceMetadataProvider';
 import { MetadataNotFound, UriNotFound } from './tzip16Errors';
 
 // TODO
@@ -12,7 +12,7 @@ import { MetadataNotFound, UriNotFound } from './tzip16Errors';
 } 
  */
 export class Tzip16ContractAbstraction {
-    private _fetcher: FetcherProvider;
+    private _fetcher: MetadataProvider;
 
     // public metadataViews: { [key: string]: (...args: any[]) => MetadataView } = {};
 
@@ -20,7 +20,7 @@ export class Tzip16ContractAbstraction {
         private constractAbstraction: ContractAbstraction<ContractProvider | Wallet>,
         private options?: RequestOptions
     ) { 
-        this._fetcher = new FetcherProvider()
+        this._fetcher = new MetadataProvider()
     }
 
     private async getUriOrFail(): Promise<string> {
@@ -46,7 +46,7 @@ export class Tzip16ContractAbstraction {
      */
     async getMetadata(): Promise<MetadataEnvelope> {
         const uri = await this.getUriOrFail();
-        const metadata = await this._fetcher.fetchMetadata(this.constractAbstraction, bytes2Char(uri), this.options);
+        const metadata = await this._fetcher.provideMetadata(this.constractAbstraction, bytes2Char(uri), this.options);
         return metadata;
     }
 }

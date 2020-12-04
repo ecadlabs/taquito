@@ -129,7 +129,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             // carthagenet: KT1A1mR7zS8cWBehnf5wa6eY1SwCY6Teigne
             // delphinet: KT194AJC8UQPguynGdJfEVynF9wfUghDjHSt
 
-            const contract = await Tezos.contract.at(contractAddressEmoji, composeTzip16());
+            const contract = await Tezos.contract.at(contractAddressEmoji, composeTzip16({mimeType: "text; charset=utf-8"}));
             const metadata = await contract.tzip16().getMetadata();
 
             expect(metadata.uri).toEqual('https://storage.googleapis.com/tzip-16/emoji-in-metadata.json');
