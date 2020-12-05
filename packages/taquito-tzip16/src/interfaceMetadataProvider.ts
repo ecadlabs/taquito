@@ -13,7 +13,7 @@ export interface MetadataEnvelope {
     metadata: MetadataInterface
 }
 
-export interface FetcherProviderInterface{
+export interface MetadataProviderInterface {
     /**
      *
      * @description Fetch the metadata. The uri parameter contains the required information to locate metadata contents (http/https, ipfs, tezos-storage).
@@ -24,5 +24,5 @@ export interface FetcherProviderInterface{
      * @param uri the decoded uri
      * @param options optional parameter allowing to specify headers for Http request
      */
-    fetchMetadata(contractAbstraction: ContractAbstraction<ContractProvider | Wallet>, uri: string, options?: RequestOptions): Promise<MetadataEnvelope>;
+    provideMetadata(contractAbstraction: ContractAbstraction<ContractProvider | Wallet>, uri: string, options?: RequestOptions): Promise<MetadataEnvelope>;
 }
