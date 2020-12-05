@@ -58,6 +58,7 @@
   },
   "dependencies": {
     "@taquito/http-utils": "^7.1.0-preview.4",
+    "@taquito/rpc": "^7.0.1-beta.0",
     "@taquito/taquito": "^7.1.0-preview.4",
     "@taquito/utils": "^7.0.1-beta.0",
     "ajv": "^7.0.0-beta.4",

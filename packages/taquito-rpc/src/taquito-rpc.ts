@@ -695,6 +695,21 @@ export class RpcClient {
     return response;
   }
 
+  async runCode(
+    op: any,
+    { block }: RPCOptions = defaultRPCOptions
+  ) {
+    const response = await this.httpBackend.createRequest<any>(
+      {
+        url: this.createURL(`/chains/${this.chain}/blocks/${block}/helpers/scripts/run_code`),
+        method: 'POST',
+      },
+      op
+    );
+
+    return response;
+  }
+
   async getChainId() {
     return this.httpBackend.createRequest<string>({
       url: this.createURL(`/chains/${this.chain}/chain_id`),

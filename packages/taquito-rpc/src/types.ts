@@ -689,6 +689,11 @@ export type RPCRunOperationParam = {
   chain_id: string;
 };
 
+export type RPCRunCodeParam = {
+  operation: OperationObject;
+  chain_id: string;
+};
+
 export type EntrypointsResponse = {
   entrypoints: { [key: string]: Object };
   unreachable?: { path: ('Left' | 'Right')[] };

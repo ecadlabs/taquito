@@ -34,6 +34,7 @@ export { SubscribeProvider } from './subscribe/interface';
 export { PollingSubscribeProvider } from './subscribe/polling-provider';
 export * from './tz/interface';
 export * from './wallet';
+export { ExtensionProviderInterface } from './extension/interface';
 
 export interface SetProviderOptions {
   forger?: Forger;

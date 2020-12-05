@@ -1,11 +1,11 @@
-import { ContractAbstraction, ContractProvider, Wallet } from "@taquito/taquito";
+import { ContractAbstraction, ContractProvider, ExtensionProviderInterface, Wallet } from "@taquito/taquito";
 import { FetcherProviderInterface, MetadataEnvelope, RequestOptions } from "./interfaceFetcherProvider";
 import { HTTPHandler } from "./URIHandler/httpHandler";
 
-export class FetcherProvider implements FetcherProviderInterface {
+export class FetcherProvider implements FetcherProviderInterface, ExtensionProviderInterface {
     httpHandler: HTTPHandler;
 
-    constructor() {
+    constructor(httpOption?: any) {
         this.httpHandler = new HTTPHandler();
     }
     async fetchMetadata(_contractAbstraction: ContractAbstraction<ContractProvider | Wallet>, _uri: string, options?: RequestOptions): Promise<MetadataEnvelope> {
@@ -20,7 +20,7 @@ export class FetcherProvider implements FetcherProviderInterface {
         
         let metadataEnvelope: MetadataEnvelope = {
             uri: _uri,
-            metadata: JSON.parse("{}"),
+            metadata: {},
             integrityCheckResult: false,
             // sha256Hash: ""
         };

@@ -1,4 +1,5 @@
 import { Schema } from '@taquito/michelson-encoder';
+import { Context } from '../context';
 import { DelegateOperation } from '../operations/delegate-operation';
 import { OriginationOperation } from '../operations/origination-operation';
 import { TransactionOperation } from '../operations/transaction-operation';
@@ -136,5 +137,5 @@ export interface ContractProvider extends StorageProvider {
    */
 
   transfer(params: TransferParams): Promise<TransactionOperation>;
-  at<T extends ContractAbstraction<ContractProvider>>(address: string, contractAbstractionComposer?: (abs: ContractAbstraction<ContractProvider>) => T): Promise<T>;
+  at<T extends ContractAbstraction<ContractProvider>>(address: string, contractAbstractionComposer?: (abs: ContractAbstraction<ContractProvider>, context: Context) => T): Promise<T>;
 }

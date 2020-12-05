@@ -55,7 +55,7 @@ describe('Tzip16 contract abstraction test', () => {
         });
 
         const abs = await toolkit.contract.at('test');
-        const tzip16Abs = new Tzip16ContractAbstraction(abs);
+        const tzip16Abs = new Tzip16ContractAbstraction(abs, toolkit['_context']);
         tzip16Abs['_fetcher'] = mockFetcher;
         const metadata = await tzip16Abs.getMetadata();
 
@@ -72,7 +72,7 @@ describe('Tzip16 contract abstraction test', () => {
         ]);
 
         const abs = await toolkit.contract.at('test');
-        const tzip16Abs = new Tzip16ContractAbstraction(abs);
+        const tzip16Abs = new Tzip16ContractAbstraction(abs, toolkit['_context']);
         tzip16Abs['_fetcher'] = mockFetcher;
 
         try {
@@ -101,7 +101,7 @@ describe('Tzip16 contract abstraction test', () => {
         });
 
         const abs = await toolkit.contract.at('test');
-        const tzip16Abs = new Tzip16ContractAbstraction(abs);
+        const tzip16Abs = new Tzip16ContractAbstraction(abs, toolkit['_context']);
         tzip16Abs['_fetcher'] = mockFetcher;
 
         try {

@@ -1,4 +1,5 @@
 import { ContractAbstraction, ContractProvider, Wallet } from "@taquito/taquito";
+import { MetadataInterface } from "./metadataInterface";
 
 export interface RequestOptions {
     headers?: { [key: string]: string };
@@ -9,10 +10,10 @@ export interface MetadataEnvelope {
     uri: string;
     integrityCheckResult?: boolean;
     sha256Hash?: string;
-    metadata: JSON
+    metadata: MetadataInterface
 }
 
-export interface FetcherProviderInterface {
+export interface FetcherProviderInterface{
     /**
      *
      * @description Fetch the metadata. The uri parameter contains the required information to locate metadata contents (http/https, ipfs, tezos-storage).
