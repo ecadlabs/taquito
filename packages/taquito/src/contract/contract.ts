@@ -101,7 +101,7 @@ export class ContractMethod<T extends ContractProvider | Wallet> {
 export class ContractView {
   constructor(
     private currentContract: ContractAbstraction<ContractProvider | Wallet>,
-    private provider: ContractProvider | Wallet,
+    private provider: ContractProvider,
     private name: string,
     private chainId: string,
     private callbackParametersSchema: ParameterSchema,
@@ -189,7 +189,7 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
     public readonly address: string,
     public readonly script: ScriptResponse,
     provider: T,
-    private storageProvider: StorageProvider,
+    protected storageProvider: StorageProvider,
     public readonly entrypoints: EntrypointsResponse,
     private chainId: string
   ) {
