@@ -9,7 +9,7 @@ async function example() {
     tezos.addExtension(new Tzip16Module());
     const contract = await tezos.contract.at("KT1GPiBGM2sQ7DjPqCmGbHBDzkhweTR2spZA", tzip16)
     const metadata = await contract.tzip16().getMetadata();
-    console.log(JSON.stringify(metadata));
+    console.log(JSON.stringify(metadata, null, 2));
 
   } catch (ex) {
     console.error(ex);
