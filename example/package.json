@@ -22,6 +22,6 @@
     "@taquito/taquito": "^7.1.0-preview.8"
   },
   "devDependencies": {
-    "ts-node": "^9.0.0"
+    "ts-node": "^9.1.1"
   }
 }
