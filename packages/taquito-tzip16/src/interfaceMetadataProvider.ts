@@ -12,7 +12,7 @@ export interface MetadataEnvelope {
 export interface MetadataProviderInterface {
     /**
      *
-     * @description Call a metadataProvider to fetch the metadata. The uri parameter contains the required information to locate metadata contents (http/https, ipfs, tezos-storage).
+     * @description Fetch the metadata. The uri parameter contains the required information to locate metadata contents (http/https, ipfs, tezos-storage).
      *
      * @returns An object representing the uri, the metadata and an optional integrity check result
      *
