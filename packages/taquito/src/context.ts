@@ -13,7 +13,6 @@ import { RpcContractProvider } from './contract/rpc-contract-provider';
 import { RPCBatchProvider } from './batch/rpc-batch-provider';
 
 import { Wallet, LegacyWalletProvider, WalletProvider } from './wallet';
-import { ExtensionProvider } from './extension/extension-provider';
 
 export interface TaquitoProvider<T, K extends Array<any>> {
   new (context: Context, ...rest: K): T;
@@ -51,7 +50,6 @@ export class Context {
   public readonly contract = new RpcContractProvider(this, this.estimate);
   public readonly batch = new RPCBatchProvider(this, this.estimate);
   public readonly wallet = new Wallet(this);
-  public readonly extension = new ExtensionProvider([]);
 
   constructor(
     private _rpc: RpcClient | string,
@@ -131,10 +129,6 @@ export class Context {
 
   get proto() {
     return this._proto;
-  }
-
-  set metadataProvider(value: any) {
-    this.metadataProvider=value;
   }
 
   async isAnyProtocolActive(protocol: string[] = []) {

@@ -2,11 +2,12 @@ import { CONFIGS } from "./config";
 import { char2Bytes } from "../packages/taquito-tzip16/src/tzip16-utils"
 import { tacoContractTzip16 } from "./data/modified-taco-contract"
 import { MichelsonMap } from "@taquito/taquito";
-import { composeTzip16 } from '../packages/taquito-tzip16/src/composer';
+import { tzip16 } from '../packages/taquito-tzip16/src/composer';
+import { Tzip16Module } from "taquito-tzip16/src/tzip16-extension";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
-
+    Tezos.addExtension(new Tzip16Module());
     let contractAddress: string;
     let contractMetadataInAnotherContract: string;
 
@@ -49,7 +50,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             });
             await op.confirmation();
             contractAddress = (await op.contract()).address;
-            console.log(contractAddress)
             expect(op.hash).toBeDefined();
             expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
             done();
@@ -59,7 +59,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             // carthagenet: KT1RF4nXUitQb2G8TE5H9zApatxeKLtQymtg
             // delphinet: KT1KTkzGMHN4P1XvT4X1kFT5ubcvzxs6ZfSq
 
-            const contract = await Tezos.contract.at(contractAddress, composeTzip16());
+            const contract = await Tezos.contract.at(contractAddress, tzip16);
             const metadata = await contract.tzip16().getMetadata();
 
             expect(metadata.uri).toEqual('tezos-storage:here');
@@ -96,7 +96,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             });
             await op.confirmation();
             contractMetadataInAnotherContract = (await op.contract()).address;
-            console.log(contractMetadataInAnotherContract)
             expect(op.hash).toBeDefined();
             expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
             done();
@@ -106,7 +105,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             // carthagenet: KT1Ud3D2oyE27Xz7wh5AhD9wz8wc4pkuXeT4
             // delphinet: KT1BAQ3nEsLrEeZdkij8KiekaWUVQERNF1Hi 
 
-            const contract = await Tezos.contract.at(contractMetadataInAnotherContract, composeTzip16());
+            const contract = await Tezos.contract.at(contractMetadataInAnotherContract, tzip16);
             const metadata = await contract.tzip16().getMetadata();
 
             expect(metadata.uri).toEqual(`tezos-storage://${contractAddress}/here`);

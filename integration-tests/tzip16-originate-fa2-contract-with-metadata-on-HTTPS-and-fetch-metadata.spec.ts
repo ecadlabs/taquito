@@ -2,10 +2,12 @@ import { CONFIGS } from "./config";
 import { char2Bytes } from "../packages/taquito-tzip16/src/tzip16-utils"
 import { MichelsonMap } from "@taquito/taquito";
 import { fa2ContractTzip16 } from "./data/fa2_contract_with_metadata";
-import { composeTzip16 } from '../packages/taquito-tzip16/src/composer';
+import { tzip16 } from '../packages/taquito-tzip16/src/composer';
+import { Tzip16Module } from "taquito-tzip16/src/tzip16-extension";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
     const Tezos = lib;
+    Tezos.addExtension(new Tzip16Module());
     let contractAddress: string;
     describe(`Originating contracts having metadata stored at HTTPS URL using: ${rpc}`, () => {
 
@@ -75,7 +77,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
             // carthagenet: KT1WCcgKMtFwSpdBc9kJ7vsH7MEmuXphon8K
             // delphinet: KT1DNapRVdG9t74fzAvXLcKDcgxZd1i1TobV
 
-            const contract = await Tezos.contract.at(contractAddress, composeTzip16());
+            const contract = await Tezos.contract.at(contractAddress, tzip16);
             const metadata = await contract.tzip16().getMetadata();
 
             expect(metadata.uri).toEqual('https://storage.googleapis.com/tzip-16/fa2-metadata.json');

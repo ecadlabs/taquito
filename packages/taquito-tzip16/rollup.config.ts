@@ -5,7 +5,7 @@ import json from 'rollup-plugin-json';
 
 const pkg = require('./package.json');
 
-const libraryName = 'tzip16';
+const libraryName = 'tzip16ContractAbstraction';
 
 export default {
   input: `src/${libraryName}.ts`,
