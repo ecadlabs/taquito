@@ -189,7 +189,7 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
     public readonly address: string,
     public readonly script: ScriptResponse,
     provider: T,
-    protected storageProvider: StorageProvider,
+    private storageProvider: StorageProvider,
     public readonly entrypoints: EntrypointsResponse,
     private chainId: string
   ) {
