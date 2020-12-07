@@ -4,7 +4,7 @@ import { MetadataContext, Tzip16ContractAbstraction } from './tzip16ContractAbst
 export function tzip16<T extends ContractAbstraction<ContractProvider | Wallet>>(abs: T, context: Context) {
     return Object.assign(abs, {
         // namespace tzip16
-        tzip16: function (this: ContractAbstraction<ContractProvider | Wallet>) {
+        tzip16 (this: ContractAbstraction<ContractProvider | Wallet>) {
             return new Tzip16ContractAbstraction(this, context as MetadataContext);
         }
     })

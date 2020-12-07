@@ -5,13 +5,13 @@ export interface MetadataInterface {
 	description?: string;
 	version?: string;
 	license?: { name: string; details?: string };
-	authors?: Array<string>;
+	authors?: string[];
 	homepage?: string;
-	source?: { tools?: Array<string>; location?: string };
-	interfaces?: Array<string>;
+	source?: { tools?: string[]; location?: string };
+	interfaces?: string[];
 	errors?: Array<
-		| { error: MichelineTzip16Expression; expansion: MichelineTzip16Expression; languages?: Array<string> }
-		| { view: string; languages?: Array<string> }
+		| { error: MichelineTzip16Expression; expansion: MichelineTzip16Expression; languages?: string[] }
+		| { view: string; languages?: string[] }
 	>;
 	views?: Array<{
 		name: string;
@@ -43,7 +43,7 @@ type MichelineTzip16Expression =
 	| { 'int': BigNumber }
 	| { 'string': string }
 	| { 'bytes': string }
-	| Array<MichelineTzip16Expression>
-	| { prim: Unistring; args?: Array<MichelineTzip16Expression>; annots?: Array<string> };
+	| MichelineTzip16Expression[]
+	| { prim: Unistring; args?: MichelineTzip16Expression[]; annots?: string[] };
 
-type Unistring = string | { invalid_utf8_string: Array<number> }; // Add max and min
+type Unistring = string | { invalid_utf8_string: number[] }; // Add max and min
