@@ -455,7 +455,7 @@
           "typings",
           "version"
         ],
-        "sha512": "46bbfe778f3998d6c4e336e071aa75fed89826d31aa9dd29ae24446625b75bc675cf701182a7e0994f95c42f842e342e18ff3808f3ca6b3e9e11d65f3e05f331"
+        "sha512": "cd9a4250d51aa4d8f128db801f33e957f8466d7f61a172739181f34a8db23e79b382d95103326fcc92c02993ad9f821264e5ade1687d57cf074be4ae37f2ca4d"
       }
     },
     {
@@ -463,7 +463,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/michelson-encoder",
-          "version": "7.1.0-preview.8",
+          "version": "7.1.0-preview.9",
           "description": "converts michelson data and types into convenient JS/TS objects",
           "keywords": [
             "tezos",
@@ -530,20 +530,20 @@
             ]
           },
           "dependencies": {
-            "@taquito/rpc": "^7.1.0-preview.8",
-            "@taquito/utils": "^7.1.0-preview.8",
+            "@taquito/rpc": "^7.1.0-preview.9",
+            "@taquito/utils": "^7.1.0-preview.9",
             "bignumber.js": "^9.0.1",
             "fast-json-stable-stringify": "^2.1.0"
           },
           "devDependencies": {
             "@taquito/rpc": "^6.4.0-ledger.0",
-            "@types/jest": "^26.0.14",
-            "@types/node": "^14.11.5",
+            "@types/jest": "^26.0.16",
+            "@types/node": "^14.14.10",
             "colors": "^1.4.0",
             "coveralls": "^3.1.0",
             "cross-env": "^7.0.2",
-            "jest": "^26.5.2",
-            "jest-config": "^26.5.2",
+            "jest": "^26.6.3",
+            "jest-config": "^26.6.3",
             "lint-staged": "^10.4.0",
             "lodash.camelcase": "^4.3.0",
             "prettier": "^2.1.2",
@@ -555,18 +555,18 @@
             "rollup-plugin-sourcemaps": "^0.6.3",
             "rollup-plugin-typescript2": "^0.27.3",
             "shelljs": "^0.8.4",
-            "ts-jest": "^26.4.1",
-            "ts-node": "^9.0.0",
+            "ts-jest": "^26.4.4",
+            "ts-node": "^9.1.1",
             "tslint": "^6.1.3",
             "tslint-config-prettier": "^1.18.0",
             "tslint-config-standard": "^9.0.0",
             "typedoc": "^0.19.2",
-            "typescript": "^4.0.3"
+            "typescript": "^4.1.2"
           },
           "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfyF32CRAD9Qy5GYHsngAAB0IQAG7+SOmST5gkSqfsFwUF9oUO\nKu8Si8ouSg401nQhxHaVrS1YVjvHOg6KSAIIWGTnZtQ4YvsDQRdjD339sj8Wjq+F\nDWAyKISUFCKOkr64+mfPDFy3pW384kC6pWEsZZADlH5kg6Xy5A3YOsPF9Zf/79DH\nM8aewEYzKVxoisLLvBdYQWyPQXupGlkJZ3yisslnM5z1tP/ff5Q9RG9qP2Wh2IJm\n2mmDhSoWyTIrQXldtoDpgJshq1sSC1U9qm4b4hyRvI92nEb6NiBzF2R+GBcN45i8\nrzRsSf5UnKMyLY1wxGor1Oh4x0iJ1CPUUBssSVJQ0jPPLvDsulAPZQ8FoOfg6w4H\nCFAYk33MB0VUz8GuEfxGVLsDZkrImeKX6p0nG3OUKnPE7yjF/nRhROVXlrd2N6KW\nODV5M3KN8Lv42bc59u9eXpVhiyWLRYe1hsybhiZ0jAwo/LEZjRmr7of2ydmY/o31\nWhw6+xD5E0M4OhonvYuVc6noNIXv05uraABq6BugRrXOsl4KYom1MTa5A0UQOuOV\nQ435ATqgdbFuOYpuGfR13vm6/6gcqKLboKjhkkkf4fqWDYsOvb3qmQGP8Eh2E/zB\n+cVJ+xuiNKSbk9pocK3N8E/tBM3Jtm8JfE34hF8SWD6LH+gkB2Rh/FRNmk/Cb83y\n7hhkguWfQKZ34erWFx+5\n=iWM5\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfzr7LCRAD9Qy5GYHsngAAPtkQAJhNvv28pysz4r5CRo3rQId1\n92n7y76HYoTJBlJGQpicMR96UvKGDwPO6ruXWi7QUCZ+6sP6S8hiHVYSBAhlsHnF\nH0/9OPbV/Jkj3gw9VL8b7M8+TlLVJPXk2oWF85vDFWoeIVgJSU05bR3or1FZgQjZ\n5v5Aag607rqxQUfan7pjRGPKp8jG5l5059KLl9DlxrLgzf+ezbRRo3NhwN11ibcZ\naJTgYEWpjWkzkdAzrvZGUw7+ICpKRGyDb6hrQ/x5VMpY2uviObfVPwoR+MUKJuSM\n7foRpQSXaipaDhfZHknRF842GulUZxZolZ//jqAI60jkWw3dLNkQCAtdoJ+e5Hci\nSa1SKx5hY2HOYQMI4cv9c2aJNUlwHC2MWRi9XWVn1kIyRLQwHvcKerm6CNezsd+6\noOM2fP/6DNsC96wfbn2nzX7feUsVpPfgmwADipSF/4zJr1aei96RXTrqLEhsH+Bu\nOkbiX60afIyeXGELEigO9rcZlxYCBCxkzeAQuJUM2cguBwHzt1AEYw5IiMxspQWd\nSbzbcxZVlLORDlL97erW0Bus46t6VICoSmp+u4EXRPfMZcjXucA85+D5vu4+neU5\n9Msq2jZS+H3MX3y5kYor2awENfn9qXdRHLHWLZAB1jVqY+dYnfoK/VF7buhAifeB\ncEE1T2jdmNzI5AhvnnQ8\n=4jka\n-----END PGP SIGNATURE-----\n"
 }

@@ -1,6 +1,6 @@
 {
   "name": "@taquito/http-utils",
-  "version": "7.1.0-preview.8",
+  "version": "7.1.0-preview.9",
   "description": "",
   "keywords": [],
   "main": "dist/taquito-http-utils.umd.js",

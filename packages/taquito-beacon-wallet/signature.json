@@ -67,7 +67,7 @@
           "typings",
           "version"
         ],
-        "sha512": "cdb34994be855b506dd251de6c61e8856cab21963096aa05c1691858dba72e475d6a8a91fa2363caae5b57f69dfc2aec60739eeb1df40c53cfc7ab09e8556e47"
+        "sha512": "665cc365f82e4533b939d5ee5e11e68004359e41cbaa97b2ba5052ecf8afd3adefc3f7d9eb97490564dc581fcabd29abe8340b60ce30cd9fe5c640424e6eb77d"
       }
     },
     {
@@ -75,7 +75,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/beacon-wallet",
-          "version": "7.1.0-preview.8",
+          "version": "7.1.0-preview.9",
           "description": "Beacon wallet provider",
           "keywords": [
             "tezos",
@@ -135,21 +135,21 @@
             ]
           },
           "dependencies": {
-            "@airgap/beacon-sdk": "^2.0.0-beta.18",
-            "@taquito/taquito": "^7.1.0-preview.8",
-            "@taquito/utils": "^7.1.0-preview.8"
+            "@airgap/beacon-sdk": "^2.0.0-beta.19",
+            "@taquito/taquito": "^7.1.0-preview.9",
+            "@taquito/utils": "^7.1.0-preview.9"
           },
           "devDependencies": {
-            "@types/chrome": "0.0.124",
-            "@types/jest": "^26.0.14",
+            "@types/chrome": "0.0.126",
+            "@types/jest": "^26.0.16",
             "@types/libsodium-wrappers": "^0.7.8",
-            "@types/node": "^14.11.5",
-            "@types/ws": "^7.2.7",
+            "@types/node": "^14.14.10",
+            "@types/ws": "^7.4.0",
             "colors": "^1.4.0",
             "coveralls": "^3.1.0",
             "cross-env": "^7.0.2",
-            "jest": "^26.5.2",
-            "jest-config": "^26.5.2",
+            "jest": "^26.6.3",
+            "jest-config": "^26.6.3",
             "lint-staged": "^10.4.0",
             "lodash.camelcase": "^4.3.0",
             "prettier": "^2.1.2",
@@ -161,17 +161,17 @@
             "rollup-plugin-sourcemaps": "^0.6.3",
             "rollup-plugin-typescript2": "^0.27.3",
             "shelljs": "^0.8.4",
-            "ts-jest": "^26.4.1",
-            "ts-node": "^9.0.0",
+            "ts-jest": "^26.4.4",
+            "ts-node": "^9.1.1",
             "tslint": "^6.1.3",
             "tslint-config-prettier": "^1.18.0",
             "tslint-config-standard": "^9.0.0",
-            "typescript": "^4.0.3"
+            "typescript": "^4.1.2"
           },
           "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfyF3xCRAD9Qy5GYHsngAAkMAQAB0Qd2mbQxdNDeMEQUQDINUQ\ndRP3gSjgsfcFKeVJEFs/unx0+k0JyDIONnciXjTkb1n7tGIm3ISi0QDOKNjkL2Y3\nCNt9H2AdThAtfHyrXKMENflu9oh83fnkPldMqodUnuytMoolPR4hyEKnAcbFLNw+\nWHj/fJldY5SDkAUdPrJ0r/vpWwSP5gG+0pMUswux27QgEYTe753Xhiq+Od48dcJX\no1A56xjp7lmJpWqSUUyLJtRpbLBj38gAOLhMpY8B8o4hAWfZJj+KCl3To71LbCqp\nj0IfpvuBW/uAmHXo8gwMV7Jw9IWfjqLIahIUA8dfC6LYPL2kMm6JxRkkioyLzsWu\nxJCevquTzY4iN67gKocsnAED7dbDDVQyfnU9g6JfzgdUIlj5wFfZGmtYH0nrpHsU\n7zFAy8UJqAjabwTWxygQLVjFzobnAB/TYsBjZ0sdiN9Nh3mZmIyLg8w7gDGzljOG\n/4jfF3phWB0urvN148dh8pY8RWh2/ou+G6V0bJKLbOzQoMXOdCccaVFEgxQfU1Gz\nD03nrgeaUp4jP4z72on2JSqckzKzxOIIuNxXtriDb28qQfazSRX4+TTAAIFntq8o\nBVhdvoomwwEkvx2xUm0pa6AOjsfV/jiUm+5lZlNax1PzudFmVCpBQP431hddx9t9\n0XwBjNyvO2yWKcEXe/7I\n=R5S7\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfzr7GCRAD9Qy5GYHsngAAgZAQAC3PJJhF4QA2b+yGawUtZfdd\nFzvwCsnhcdutWR37sObTV+8ScH1EpUXGHTRXdUqjwZbMlGEqpOA1yyZ3ohyJGqa3\nc7bK5yHGeuapbZICNs8yGtjaj7MW/kk7U7gcRpP1APDLE11a3IoYqI8uVHwJGJC9\n+Jm5iaGzEXQztHg6XUtbBSK7O8oudV+CuPxNHAYd5kAeJsu6mZYWXLYTajycD4bq\nWe8gD8QrC/x9IBA0cnFnWeqLbdxHjzy/IlG44UBAwNpX3nof7Dr36/EIy7GdCXx+\nuYHJalRu0epN7X6HKt+BTyFJRoT2LJ1a5sxHyO6ny4wZtnXezYufhzL6Jx6XzNix\nT/JHzrp/b57fp+C3OCpFiln1LgIM3xH5L2ToM8Fz2/2dsnGZE7T0+IG7GR/yZ+sR\nh3bObaCQ4cQb8Hic0MfeLTaD0n7ZK3k+IxKIMJziyvvIuKWHdEuBMY/wphWdGeMg\n0DfLTrIMlCYPdxjCZB2wMlAJb4J8poTCKDiBy4tFsRn/MmaTeuvEPirX1+j5xF9J\nCthxbDL3VAcfr3iyyWwLldDjCpNmoqbr2m91wLqAPoKADJta0g/XpVH42J2S2nnW\nx2mPjHFdc7sdMJCg6KMhYCKhlCpwWKoyYoexAQQUyJoVQAk96d5snhW5Deme584N\nueqVOWlT+lJU9zJ0Ht8g\n=be6C\n-----END PGP SIGNATURE-----\n"
 }

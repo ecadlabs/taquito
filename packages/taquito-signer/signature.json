@@ -103,7 +103,7 @@
           "typings",
           "version"
         ],
-        "sha512": "cf0fa289a20ac8bdc36ff4706ef4761234b632017acdf29c47975f6e41d39c927326741b6663d00db7c834e62367e0fce3c6bae6f46a4298801a8b8d61d9d4ec"
+        "sha512": "492259d5126a4c74c2a471884d38397e77dde7d8ab0f33cdf4c240f95076756fb960a36ee317c29710e2c51ab0912ae28d290d6849c875b1a0b57e738225fafd"
       }
     },
     {
@@ -111,7 +111,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/signer",
-          "version": "7.1.0-preview.8",
+          "version": "7.1.0-preview.9",
           "description": "Provide signing functionality to be with taquito",
           "keywords": [
             "tezos",
@@ -177,8 +177,8 @@
             ]
           },
           "dependencies": {
-            "@taquito/taquito": "^7.1.0-preview.8",
-            "@taquito/utils": "^7.1.0-preview.8",
+            "@taquito/taquito": "^7.1.0-preview.9",
+            "@taquito/utils": "^7.1.0-preview.9",
             "bignumber.js": "^9.0.1",
             "bip39": "^3.0.2",
             "elliptic": "^6.5.3",
@@ -188,15 +188,15 @@
           },
           "devDependencies": {
             "@types/elliptic": "^6.4.12",
-            "@types/jest": "^26.0.14",
+            "@types/jest": "^26.0.16",
             "@types/libsodium-wrappers": "^0.7.8",
-            "@types/node": "^14.11.5",
+            "@types/node": "^14.14.10",
             "@types/pbkdf2": "^3.1.0",
             "colors": "^1.4.0",
             "coveralls": "^3.1.0",
             "cross-env": "^7.0.2",
-            "jest": "^26.5.2",
-            "jest-config": "^26.5.2",
+            "jest": "^26.6.3",
+            "jest-config": "^26.6.3",
             "lint-staged": "^10.4.0",
             "lodash.camelcase": "^4.3.0",
             "prettier": "^2.1.2",
@@ -208,18 +208,18 @@
             "rollup-plugin-sourcemaps": "^0.6.3",
             "rollup-plugin-typescript2": "^0.27.3",
             "shelljs": "^0.8.4",
-            "ts-jest": "^26.4.1",
-            "ts-node": "^9.0.0",
+            "ts-jest": "^26.4.4",
+            "ts-node": "^9.1.1",
             "tslint": "^6.1.3",
             "tslint-config-prettier": "^1.18.0",
             "tslint-config-standard": "^9.0.0",
             "typedoc": "^0.19.2",
-            "typescript": "^4.0.3"
+            "typescript": "^4.1.2"
           },
           "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfyF34CRAD9Qy5GYHsngAAGZ0QAEMLik4gMsxDmboGzBGs2xpe\nrUILKlLV8J+HX8qTJ1zm/RorqbRNJSKY8n5VTafBbo1DeooM8hnaI5yp90uu0u/o\noeGKJefP9Zl6PaoZpT8WJ2h/rNccULFKVi5WVrQfPfFKJDQn6v6gig9KmlwXUmnH\nOkkMCCuXnHX7zwc0vrrPveal1pBKmiiHrgHaqrNPqKkWYMDuOeATRay2wk3KPqRH\nQaMa2DYmoTUCWTX7EN48L+YIlOlMoamoh3o3bccVQ3qsTKmUAYlJM8ZvkiZQESSp\nSgqmVB5/YiNDP7DNO7tPHuCycRZsfpRkErejrLTAPj3j8ZMzdJrK8bMdiihO5IGp\nn2sxzeofvveGc6EiHE0WXitsa2rIZLdrS9nBnprK/DvUugW35jaznVFUFoUJbaVu\n0d2hDJgW35S/lUWrxBoZwyFfCIA5vtsuO5cU9ZEUCWheoq9Y1u87mWteOQ5ieIHa\navMAfZDMnZ9il822XLaVHSfpVZU7DdzgpCP8ycqAeAHu18z7R2UFP/CLOcivQwHh\nFh+Fg8wh4/TBV6tgwMpmIiPXMuySo+p2trolEp+nhCktvz+Np2zOx5GbufrY8XMl\nb2hLQiJHiwvWG27lkuGQ1duqO6fKeJSGGauUo3Q75oJFRlBRny4xtRxnxLqbcaTq\ns47Kk9bq+adPLwxjdDCT\n=4oLz\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfzr7OCRAD9Qy5GYHsngAABXsQAFMVWHoikD08sjUEylGeU1cJ\n4cxC0GaZtCpVo6zlksY0vOPn8dnflr0+XQrlKuyzxNzNcqjyjeDHhFprZIZLjim/\npzOoTcTn2kELW7mIJX9Cwy/9n+ntUqRQDchB7hxk3GL6ly7pFrZWWFtz0lt90ZPn\nUwDw/dgcgNQFHtPt9P0NvH+hcipQymHQRZ+JOmPCRbUp2aLUtT1tWB6jE803UwSj\nWENdkrCR3ETRaYtQ33qtyIzUa2BuaXIceEuhs77bYT/M1u1MgaOfzUlCakrUkzAn\ncn/vJwqZemDuAoncNTtTjHRsp4reNe6Too+5509umliw/BP8L6nMv4jxMQHBzveZ\n62iW2h2zuaquu/NeI1xCAMU1BsYF1Ib+ksQ0F0aJBcl8nJH07BcI+XJR9ewfrWMM\nmcVwAZbBUo7riAMbPAo/lXYtjEJ57AXeGfPsUNLYkKuobBVnduh3+wyihqBx/D7E\nFoIxwhNXPO8lEpUcesG7Dd1/R1U2LvuUnbL+NO50uq4bNf+4iUeEQdj9fj+UnBE/\n637qI7hApyKnSXPJBFfP/QfG3ymbJVqEnp69zzhBGFVYFwvFCAGOvT7kt/xyZzv1\nyIGRD9af4Ue42GNdH+Ven/ffAykYg1QFzGvnv1hQZC7rXcv45aRJ5L+lnNora1cs\nEXeGWJLnsXRq/eT/LNwY\n=/11n\n-----END PGP SIGNATURE-----\n"
 }

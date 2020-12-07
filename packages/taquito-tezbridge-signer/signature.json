@@ -67,7 +67,7 @@
           "typings",
           "version"
         ],
-        "sha512": "1a2c4db91feca22cc51109557b33ddc4f88135cd4f287632a9af42c63e4fc430a82054b66901f61b3b69d02bb3f5df6fc3fd6e20f0b2dcc3686a7203a49506f3"
+        "sha512": "35aaad02d185f8f09a7aa23bbe12443eea70c85a0f89c1c5feb44ca7686c3625ca17315242c924f95b9f234dd88e6a96e86aa165497f841f5ece5238645d0c10"
       }
     },
     {
@@ -75,7 +75,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/tezbridge-signer",
-          "version": "7.1.0-preview.8",
+          "version": "7.1.0-preview.9",
           "description": "Tezbridge signer provider",
           "keywords": [
             "tezos",
@@ -135,19 +135,19 @@
             ]
           },
           "dependencies": {
-            "@taquito/utils": "^7.1.0-preview.8",
+            "@taquito/utils": "^7.1.0-preview.9",
             "typedarray-to-buffer": "^3.1.5"
           },
           "devDependencies": {
-            "@taquito/taquito": "^7.1.0-preview.8",
-            "@types/jest": "^26.0.14",
-            "@types/node": "^14.11.5",
-            "@types/ws": "^7.2.7",
+            "@taquito/taquito": "^7.1.0-preview.9",
+            "@types/jest": "^26.0.16",
+            "@types/node": "^14.14.10",
+            "@types/ws": "^7.4.0",
             "colors": "^1.4.0",
             "coveralls": "^3.1.0",
             "cross-env": "^7.0.2",
-            "jest": "^26.5.2",
-            "jest-config": "^26.5.2",
+            "jest": "^26.6.3",
+            "jest-config": "^26.6.3",
             "lint-staged": "^10.4.0",
             "lodash.camelcase": "^4.3.0",
             "prettier": "^2.1.2",
@@ -159,17 +159,17 @@
             "rollup-plugin-sourcemaps": "^0.6.3",
             "rollup-plugin-typescript2": "^0.27.3",
             "shelljs": "^0.8.4",
-            "ts-jest": "^26.4.1",
-            "ts-node": "^9.0.0",
+            "ts-jest": "^26.4.4",
+            "ts-node": "^9.1.1",
             "tslint": "^6.1.3",
             "tslint-config-prettier": "^1.18.0",
             "tslint-config-standard": "^9.0.0",
-            "typescript": "^4.0.3"
+            "typescript": "^4.1.2"
           },
           "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfyF35CRAD9Qy5GYHsngAAVAsQAEPcsbTb29IDWo42jLm8GHKZ\nNXiK77faupSMQLm6EnoVX5l5RRdJXxJ9NO9UXMvhbiKVArxpg/mRpGRE2JFh6BJO\nS0yywoCUG5AzBTqZG8/4HblY9bIHo08Hw5afvjJip5T8isciGCrnFTHzUMjRKQdV\no/LFercZ3sylBeWuYdK2QDmVYZv6LId1mUmgAqLVH0gbtWrWPJDpcvBN6E9H7Bow\nHylfkHk3fOyt/FmC1fHzSKv1yppoN+OegQitaQGFHjlafQq/xLs33pdCgyAJZBxy\n5J8efc/SK4WsjBtc0QSQhObDP3PNsw0+6X3PC3DbleLufHHtLlpTda71D2gKP8xc\nzV6xL072sQqdLVbKgG/1ntrZQFG5Uuy6ODZ47AndovBXd5KY1l/XlQmFyLW3lTh9\n+VBe+DI3SGFSBRzrrcyamW7fasX6LXdwU1RDjU7D3FeQ/+zSNKtUFE/f0NBSgE1Y\nCJL+utkR0Dr359XSkirzoCZiq5U/ZZjYBNk/MDiM3tzrFXLOhqyWPfywoSn8nUmB\nCBGKiikJmpARaRMgHyoV/DtpT3Rpu/lUidgx9GB97DThCBvckVJhi+DeqWakZ5y1\nshNDSEyDYw0hOL0uC4g86tpu+9E/YqXd8JsVFdccTpAQ16nrpEX+Z0JNAvLLv/LY\nqMrC8oLb+4sRYFcV2Owo\n=8av2\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfzr7PCRAD9Qy5GYHsngAAVFAQAKWcLrywQe7EY9DQIFmyMiE4\nHiusz33fVlAAqf4kl1r/CbX+PsreQ3rpvbyUAQuVXMZYN+gr9V98oidc77qNz6Fh\nmzH3mOJlIDnM9UxOq6b+mHMVdBddgBEL2fZFCYG9U8mS3r2K16YLnYrgulITPhgf\nlpUrlWh1hlGJMxwB1/E/oN50Xh78F/2btK+STsIT4TD6l8DBUK1EZGKvtHWY1pXg\nqzXoNiMQMm1xH/BP/c4TembyLLfrOeT6wSKd4YJUXWqXV5ynRgOkNL5Z3W3csJj2\nzAI3yQgRHAOIDEHJ6oE+zH1gPs6jZlOumelchOsvdRgl+Vyzd3trnjD7f2fpPGrd\ncsK1m+Da52lr7lspSdGWCJ1Zm0dgM+qCfKIj2oPpPeZGcXRmHxvn3zhKt87PMCQw\nwViM9W844jioKuKTcVfiKTqOuUGYq+vDTc6K9O/dfkWjVxdIuQZ3WT4Zct5fsYAe\nehDqjFkYqHy8WfBpfxKndfCGPkEbzyCtlF62hSsAhhi2HqlAXj9TDukeeMDGJ0je\n0I1wrafPwbzeMuFu8p46rxl6XTvG0nkdGtaV9sgj0F0Jc+kB7JZIYc0h2ZHLw1xW\n0npIP/67meyCxNLwuqX1wuKvykSiGjYnsmgjB0m1MloyHZm9XkCie/y20OQvNUvs\n3pe8r6BabLkbBjGq2USC\n=9hwA\n-----END PGP SIGNATURE-----\n"
 }
