@@ -19,7 +19,8 @@
         "rpc_nodes",
         "lambda_view",
         "batch_API",
-        "tutorial_links"
+        "tutorial_links",
+        "michelsonmap"
       ]
     },
     {

@@ -77,11 +77,13 @@ export default ({
 
   if (live) {
     const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+    const wallet = new BeaconWallet({name:"exampleWallet"});
 
     return (
       <Playground
         scope={{ ...React, 
           Tezos, 
+          wallet,
           importKey,
           validateAddress, 
           validateChain, 

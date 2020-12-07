@@ -49,9 +49,7 @@ function println(value) {
 Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/carthagenet' });
 
 ${this.props.wallet ? 
-  `const option = {name:"exampleWallet"};
-  const wallet = new BeaconWallet(option);
-  const network = {type:"carthagenet"};
+  `const network = {type:"carthagenet"};
   wallet.requestPermissions({network})
   .then(permission => {
     return Tezos.setWalletProvider(wallet);
