@@ -3,7 +3,7 @@ name: Node.js CI
 on: [push]
 jobs:
   lint-and-test:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
@@ -27,10 +27,10 @@ jobs:
         CI: true
         RUN_INTEGRATION: true
   integration-tests-carthagenet:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     strategy:
       matrix:
-        node: [10.x, 12.x]
+        node: [12.x]
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
@@ -45,14 +45,14 @@ jobs:
     - run: npm ci
     - run: npm run lerna -- bootstrap
     - run: npm run build
-    - run: cd integration-tests && npm run test:carthagenet
+    - run: cd integration-tests && npm run test:carthagenet -- --maxWorkers=10
       env:
         CI: true
   integration-tests-delphinet:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     strategy:
       matrix:
-        node: [10.x, 12.x]
+        node: [12.x]
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
@@ -67,6 +67,6 @@ jobs:
     - run: npm ci
     - run: npm run lerna -- bootstrap
     - run: npm run build
-    - run: cd integration-tests && npm run test:delphinet
+    - run: cd integration-tests && npm run test:delphinet -- --maxWorkers=10
       env:
         CI: true
