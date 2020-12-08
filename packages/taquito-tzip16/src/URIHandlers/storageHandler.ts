@@ -1,4 +1,5 @@
 import { ContractAbstraction, ContractProvider, Wallet } from "@taquito/taquito";
+import { bytes2Char } from '../tzip16-utils';
 
 export class StorageFetcher {
     /**
@@ -7,9 +8,9 @@ export class StorageFetcher {
      * @param _key 
      */
     async getMetadataStorage(_contractAbstraction: ContractAbstraction<ContractProvider | Wallet>, _key: string): Promise<JSON> {
-        
         const _storage: any = await _contractAbstraction.storage();
-        return _storage[`${_key}`];
+        const _data = await _storage['metadata'].get(`${_key}`)
+        return JSON.parse(bytes2Char(_data));
     }
 
     /**

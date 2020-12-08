@@ -1,8 +1,8 @@
 
-import CryptoJS from "crypto-js";
+import SHA256 from "crypto-js/sha256";
 
 export class Crypto {
     sha256(_preimage:string){
-        return CryptoJS.SHA256(_preimage).toString();
+        return SHA256(_preimage).toString();
     }
 }

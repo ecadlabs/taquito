@@ -1,5 +1,5 @@
-import { ContractAbstraction, ContractProvider, Wallet } from "@taquito/taquito";
-import { MetadataProviderInterface, MetadataEnvelope, RequestOptions } from "./interfaceMetadataProvider";
+import { ContractAbstraction, ContractProvider, Wallet, TezosToolkit, Context } from "@taquito/taquito";
+import { MetadataProviderInterface, MetadataEnvelope } from "./interfaceMetadataProvider";
 import { HTTPFetcher } from "./URIHandlers/httpHandler";
 import { StorageFetcher } from "./URIHandlers/storageHandler";
 import { Validator } from "../src/URIHandlers/validator";
@@ -14,8 +14,7 @@ export class MetadataProvider implements MetadataProviderInterface {
         this.storageHandler = new StorageFetcher();
         this.validator = new Validator();
     }
-    async provideMetadata(_contractAbstraction: ContractAbstraction<ContractProvider | Wallet>, _uri: string, options?: RequestOptions): Promise<MetadataEnvelope> {
-        console.log(options);
+    async provideMetadata(_contractAbstraction: ContractAbstraction<ContractProvider | Wallet>, _uri: string, context: Context): Promise<MetadataEnvelope> {
         // tslint:disable-next-line: strict-type-predicates
         if (typeof _contractAbstraction !== 'undefined') {
             console.log(typeof (_contractAbstraction.address))
@@ -28,22 +27,34 @@ export class MetadataProvider implements MetadataProviderInterface {
             uri: _uri,
             metadata: JSON.parse("{}"),
             integrityCheckResult: false,
-            // sha256Hash: ""
+            sha256Hash: undefined
         };
 
-        const _uriInfo = this.extractProtocol(_uri);
+        const _uriInfo = this.getProtocolInfo(_uri);
 
         switch (_uriInfo.protocol) {
             case 'http':
             case 'https':
                 try {
-                    metadataEnvelope.metadata = await this.httpHandler.getMetadataHTTP(_uri, options)
+                    metadataEnvelope.metadata = await this.httpHandler.getMetadataHTTP(_uri)
                 } catch (error) {
                     throw new Error("Problem using HTTPHandler." + error);
                 }
                 break;
             case 'tezos-storage':
-                metadataEnvelope.metadata = await this.storageHandler.getMetadataStorage(_contractAbstraction, _uriInfo.path);
+                if (_uriInfo.host) {
+                    const _contract = await context.contract.at(_uriInfo.host);
+                    metadataEnvelope.metadata = await this.storageHandler.getMetadataStorage(_contract, _uriInfo.path)
+                } else {
+                    metadataEnvelope.metadata = await this.storageHandler.getMetadataStorage(_contractAbstraction, _uriInfo.path);
+                }
+                break;
+            case 'sha256':
+                const _validation = await this.validator.validateSHA256(_uriInfo.path);
+                metadataEnvelope.sha256Hash = _validation.metadataHash
+                metadataEnvelope.metadata = _validation.metadata
+                metadataEnvelope.integrityCheckResult = _validation.integrityResult;
+                break;
         }
 
         return metadataEnvelope;
@@ -51,20 +62,30 @@ export class MetadataProvider implements MetadataProviderInterface {
 
     /**
      * Returns protocol & resolved path for a uri, 
-     * returns empty string("") if protocol is invalid
      * @param _uri a URI for locating metadata
      */
-    private extractProtocol(_uri: string): { protocol: string, path: string } {
+    private getProtocolInfo(_uri: string): {
+        protocol: string,
+        host: string | undefined,
+        network: string | undefined,
+        path: string
+    } {
+        let _path = _uri;
+        let _host = undefined;
+        let _network = undefined;
+
         const expectedProtocol = _uri.split(':')[0];
         switch (expectedProtocol) {
-            case 'sha256':
-                const validation = this.validator.validateTezosStorage(_uri)
-                break;
             case 'tezos-storage':
+                const _info = this.validator.validateTezosStorage(_uri);
+                _path = _info.path;
+                _host = _info.host;
+                _network = _info.network;
                 break;
+            // case 'sha256':
+                // const _infoSHA = this.validator.validateSHA256(_uri);
         }
-        return { protocol: expectedProtocol, path: _uri }
+        return { protocol: expectedProtocol, host: _host, network: _network, path: _path }
     }
-
 
 }
