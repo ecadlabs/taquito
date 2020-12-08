@@ -97,7 +97,7 @@ Tezos.contract.at('KT1A87ZZL8mBKcWGr34BVsERPCJjfX82iBto')
 **How to deploy a lambda contract (sandbox users):**
 
 ``` js
-import { VIEW_LAMBDA } from '@taquito/taquito/src/contract/view_lambda'
+import { VIEW_LAMBDA } from '@taquito/taquito'
 
 const op = await tezos.contract.originate({
   code: VIEW_LAMBDA.code,

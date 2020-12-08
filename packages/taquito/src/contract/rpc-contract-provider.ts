@@ -216,5 +216,4 @@ export class RpcContractProvider extends OperationEmitter
   }
 }
 
-export type ContractAbstractionComposer<T> =
-(abs: ContractAbstraction<ContractProvider>, context: Context) => T 
+type ContractAbstractionComposer<T> = (abs: ContractAbstraction<ContractProvider>, context: Context) => T 

@@ -13,7 +13,7 @@ class ContractAbstractionTest {
 
 function composeContractAbstractionTest<T extends ContractAbstraction<Wallet>>(abs: T) {
 	return Object.assign(abs, {
-		constractAbstractionTest: function(this: ContractAbstraction<Wallet>) {
+		constractAbstractionTest (this: ContractAbstraction<Wallet>) {
 			return new ContractAbstractionTest(this);
 		}
 	});

@@ -214,7 +214,7 @@
           "typings",
           "version"
         ],
-        "sha512": "0416439237b3f99d7b3c0421b89a8bace9db096020bfd0e1ff9a2248a905c4f5793a18d3571ef72b26dca4e085ca65c106028315aa95d0e9a237ebaccbee83bc"
+        "sha512": "3d2db215b17e5eb9c4704f32ea9a3a3bb3992d861695ef5f6bb7f1e7ded448c0073c46540d3e4f440b4d3b4b0a303ed67549f7bde9ea732d40fe35e598ebfa1b"
       }
     },
     {
@@ -222,7 +222,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/michel-codec",
-          "version": "7.1.0-preview.4",
+          "version": "7.1.0-preview.8",
           "description": "Michelson parser/validator/formatter",
           "keywords": [
             "tezos",
@@ -313,5 +313,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfvU1vCRAD9Qy5GYHsngAAN1YQAKTOIzIW6vpGsJ71rjU5gL4E\nExNvP8aFUsdzS1Xfbf7q+ogfKCXO0xg5vNRs2t1u6zI2VJ6R1x0omdSE2xOjKg+E\n5CCagKSrTlX8BX0bQyvsS3YoWNu1KPg2kubqDFgrMrc/8VPs9jnjvdkEYhU4HiiY\nulSAxrW164Wd3Qkx0yLhhpEJm1n6SNwOhszWATw4N/rrcTw7I6HxyG0VdRndVEB5\nDVO4XJuqpf6KzNhT/z1siy2ec0nvuk2U1behXOxHZFYX6Fvh5YQabPZlczGHC+vx\nsCoUYeC9uwT+Ua0oNp3LjsytDFEhDqOIzmZjqTjDq62QoPi9G96NE9Zm2aSbxh+V\nNyOe2YbTIxCe36S7MyAyHoGghTdKSkxfv9uKES5D7hifnskgIxBcfHSGaSH2Xpte\nJ9hju7ttTryunOVHX4vs3xFC0AIP9Rs/+RwTIzHR3zjbbUlQnwtYLLVB70cQOG49\ni7uKlG3pWFJi2L/EcNzKudnWvllKowWhY28kToG189+soy7Is29W24Myc8UyMko9\noJqt8gosWFnnA0KM3Ut1uLODLEPyntva4/oOramdIC6Ak1NeuBzS66YPCZpDAxvg\nltX6f0eSqzTdFZk9BK8iSFZCyWGjMiNEwjAHXXXxID8nUOULAOQWIqtXp7gEMcRs\nLcAJ7GcICn4NS7DjHXPn\n=ItyD\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfyF30CRAD9Qy5GYHsngAAbyoQAF4qnwnlCi1DI0qQouNB3FLD\nFYtTmCo76/2Wl/KGBzhhk0unTYiu5P6FNHEKhtQWr2SBNw4U0r0z20S1XcwQlr+l\nvzC7RJ4prb3zDLxZZFg/V+9SCLazMM+YpWU3pcT93yzUTDlYRbda+tSPbv+qw/oH\nOcEIVws604yDeTtKvOJ+2ke710KCzzqBHC9kOQB8n+aSETygnCsJNDdoOg9Akw97\nrGoNcx3VSASqGCtPpqPEmxXaabnNvg0Koo/p0pyiRdnlrLBtD3/+yRjyzZ7BdbeY\nQSgBcLzrseDTU2yiVLMk3eLqnPZE0yxBTic7Cuw5hvJxD/7ZjLc/RtMvg/M6eQ/3\n5zqfstqXONsf6MQx/3VNkNWhECdYy1QT/i2NvsdFYeG4o4rVojPBcgQjruTZGWTl\ngWsOYnUfnRnbWnrJX543LX6L6YG9DXxxTilYNoJXvpIfgLgvInwsMgQTQnNWt7D5\nIAiKoT6MmOut4UWLKB9/rq44nD7FUT69c6tXmQ8/GxlD6fzHoyrQOot6575LvvMv\nHmhPNEacG7fzCHhMAdb/vKPpPJG55kNND3E/WGVIVGLporO74xi3O70orx8rvIpi\nc5Zpz+zmHK5Oa+eYx09YyWRkmgJeyDo9NGXOHmP3NcbsPYRMHeBBm3GABIRRcnAP\nIvY1k58m78v4e0WQ6xXK\n=bKAY\n-----END PGP SIGNATURE-----\n"
 }

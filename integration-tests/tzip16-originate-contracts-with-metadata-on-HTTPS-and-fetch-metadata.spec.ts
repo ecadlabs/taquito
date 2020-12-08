@@ -2,10 +2,12 @@ import { CONFIGS } from "./config";
 import { char2Bytes } from "../packages/taquito-tzip16/src/tzip16-utils"
 import { tacoContractTzip16 } from "./data/modified-taco-contract"
 import { MichelsonMap } from "@taquito/taquito";
-import { composeTzip16 } from '../packages/taquito-tzip16/src/composer';
+import { tzip16 } from '../packages/taquito-tzip16/src/composer';
+import { Tzip16Module } from '../packages/taquito-tzip16/src/tzip16-extension'
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
+    Tezos.addExtension(new Tzip16Module());
 
     let contractAddressEmptyMetadata: string;
     let contractAddressEmoji: string;
@@ -17,7 +19,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             await setup()
             done()
         })
-        it('Deploy a contract having empty metadata stored at an HTTPS URL', async (done) => {
+         it('Deploy a contract having empty metadata stored at an HTTPS URL', async (done) => {
             // carthagenet: KT1A1DmqFa8eusnpp8eLhwc8NPw29b2ddEHQ
             // delphinet: KT1WTGDQ9j2mFE7SbgmoixNAVXH1ynjdagon
 
@@ -48,13 +50,13 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(op.hash).toBeDefined();
             expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
             done();
-        });
+        }); 
 
         it('Fetch the empty metadata of the contract', async (done) => {
             // carthagenet: KT1A1DmqFa8eusnpp8eLhwc8NPw29b2ddEHQ
             // delphinet: KT1WTGDQ9j2mFE7SbgmoixNAVXH1ynjdagon
 
-            const contract = await Tezos.contract.at(contractAddressEmptyMetadata, composeTzip16());
+            const contract = await Tezos.contract.at('KT1A1DmqFa8eusnpp8eLhwc8NPw29b2ddEHQ', tzip16);
             const metadata = await contract.tzip16().getMetadata();
 
             expect(metadata.uri).toEqual('https://storage.googleapis.com/tzip-16/empty-metadata.json');
@@ -64,7 +66,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        it('Deploy a contract having valid metadata stored at an HTTPS URL', async (done) => {
+         it('Deploy a contract having valid metadata stored at an HTTPS URL', async (done) => {
             // carthagenet: KT1GPiBGM2sQ7DjPqCmGbHBDzkhweTR2spZA
             // delphinet: KT1KGkToC8UUJBJLqHcLRkv7xvjWd8JwUuTo
 
@@ -129,7 +131,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             // carthagenet: KT1A1mR7zS8cWBehnf5wa6eY1SwCY6Teigne
             // delphinet: KT194AJC8UQPguynGdJfEVynF9wfUghDjHSt
 
-            const contract = await Tezos.contract.at(contractAddressEmoji, composeTzip16());
+            const contract = await Tezos.contract.at(contractAddressEmoji, tzip16);
             const metadata = await contract.tzip16().getMetadata();
 
             expect(metadata.uri).toEqual('https://storage.googleapis.com/tzip-16/emoji-in-metadata.json');
@@ -190,14 +192,14 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             // carthagenet: KT1LiZ1H4Jk2EatrZjpYVRfH2o4JWMdTgGaM
             // delphinet: KT1UQyKUoCat9oQNHPGMDypQ4mWW44DFWzXt
 
-            const contract = await Tezos.contract.at(contractAddressInvalidMetadata, composeTzip16());
+            const contract = await Tezos.contract.at(contractAddressInvalidMetadata, tzip16);
             try {
-                await contract.tzip16().getMetadata()
+                await contract.tzip16().getMetadata();
             } catch (error) {
                 expect(error.message).toContain(`Invalid metadata`);
             }
 
             done();
-        });
+        }); 
     });
 })
