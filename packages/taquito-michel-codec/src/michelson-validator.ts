@@ -3,14 +3,14 @@ import { Tuple, NoArgs, ReqArgs, MichelsonError } from "./utils";
 import {
    MichelsonCode, MichelsonType, MichelsonComparableType, MichelsonSimpleComparableType,
    MichelsonData, MichelsonContract, MichelsonNoArgInstruction, MichelsonInstruction,
-   MichelsonSerializableType, MichelsonPushableType, MichelsonStorableType, MichelsonPassableType
+   MichelsonSerializableType, MichelsonPushableType, MichelsonStorableType, MichelsonPassableType, InstructionList
 } from "./michelson-types";
 
 // Michelson validator
 
 const noArgInstructionIDs: Record<MichelsonNoArgInstruction["prim"], true> = {
-   "DUP": true, "SWAP": true, "SOME": true, "UNIT": true, "PAIR": true, "CAR": true, "CDR": true,
-   "CONS": true, "SIZE": true, "MEM": true, "GET": true, "UPDATE": true, "EXEC": true, "APPLY": true, "FAILWITH": true, "RENAME": true, "CONCAT": true, "SLICE": true,
+   "SWAP": true, "SOME": true, "UNIT": true, "CAR": true, "CDR": true,
+   "CONS": true, "SIZE": true, "MEM": true, "GET": true, "EXEC": true, "APPLY": true, "FAILWITH": true, "RENAME": true, "CONCAT": true, "SLICE": true,
    "PACK": true, "ADD": true, "SUB": true, "MUL": true, "EDIV": true, "ABS": true, "ISNAT": true, "INT": true, "NEG": true, "LSL": true, "LSR": true, "OR": true,
    "AND": true, "XOR": true, "NOT": true, "COMPARE": true, "EQ": true, "NEQ": true, "LT": true, "GT": true, "LE": true, "GE": true, "SELF": true,
    "TRANSFER_TOKENS": true, "SET_DELEGATE": true, "CREATE_ACCOUNT": true, "IMPLICIT_ACCOUNT": true, "NOW": true, "AMOUNT": true,
@@ -19,8 +19,9 @@ const noArgInstructionIDs: Record<MichelsonNoArgInstruction["prim"], true> = {
 };
 
 export const instructionIDs: Record<MichelsonInstruction["prim"], true> = Object.assign({}, noArgInstructionIDs, {
-   "DROP": true, "DIG": true, "DUG": true, "NONE": true, "LEFT": true, "RIGHT": true, "NIL": true, "UNPACK": true, "CONTRACT": true, "CAST": true,
-   "IF_NONE": true, "IF_LEFT": true, "IF_CONS": true, "IF": true, "MAP": true, "ITER": true, "LOOP": true, "LOOP_LEFT": true, "DIP": true,
+   "UPDATE": true, "DUP": true, "PAIR": true, "UNPAIR": true, "DROP": true, "DIG": true, "DUG": true, "NONE": true, "LEFT": true,
+   "RIGHT": true, "NIL": true, "UNPACK": true, "CONTRACT": true, "CAST": true, "IF_NONE": true, "IF_LEFT": true,
+   "IF_CONS": true, "IF": true, "MAP": true, "ITER": true, "LOOP": true, "LOOP_LEFT": true, "DIP": true,
    "CREATE_CONTRACT": true, "PUSH": true, "EMPTY_SET": true, "EMPTY_MAP": true, "EMPTY_BIG_MAP": true, "LAMBDA": true,
 } as const);
 
@@ -111,6 +112,10 @@ export function assertMichelsonInstruction(ex: Expr): ex is MichelsonCode {
 
       switch (ex.prim) {
          case "DROP":
+         case "PAIR":
+         case "UNPAIR":
+         case "DUP":
+         case "UPDATE":
             if (ex.args !== undefined && assertArgs(ex, 1)) {
                /* istanbul ignore else */
                if (assertIntLiteral(ex.args[0])) {
@@ -121,6 +126,7 @@ export function assertMichelsonInstruction(ex: Expr): ex is MichelsonCode {
 
          case "DIG":
          case "DUG":
+         case "GET":
             /* istanbul ignore else */
             if (assertArgs(ex, 1)) {
                /* istanbul ignore else */
@@ -355,9 +361,7 @@ export function assertMichelsonType(ex: Expr): ex is MichelsonType {
    return true;
 }
 
-function traverseType(
-   ex: Prim, left: (ex: Prim) => void, child: (ex: Prim) => void): ex is MichelsonType {
-
+function traverseType(ex: Prim, left: (ex: Prim) => void, child: (ex: Prim) => void): ex is MichelsonType {
    switch (ex.prim) {
       case "option":
       case "list":
@@ -376,10 +380,18 @@ function traverseType(
 
       case "pair":
          /* istanbul ignore else */
-         if (assertArgs(ex, 2) && assertPrim(ex.args[0]) && assertPrim(ex.args[1])) {
-            left(ex.args[0]);
-            child(ex.args[1]);
+         if (ex.args === undefined || ex.args.length < 2) {
+            throw new MichelsonValidationError(ex, "at least 2 arguments expected");
          }
+         ex.args.forEach((a, i) => {
+            if (assertPrim(a)) {
+               if (i === 0) {
+                  left(a);
+               } else {
+                  child(a);
+               }
+            }
+         });
          break;
 
       case "or":
@@ -470,9 +482,11 @@ export function assertMichelsonData(ex: Expr): ex is MichelsonData {
 
          case "Pair":
             /* istanbul ignore else */
-            if (assertArgs(ex, 2)) {
-               assertMichelsonData(ex.args[0]);
-               assertMichelsonData(ex.args[1]);
+            if (ex.args === undefined || ex.args.length < 2) {
+               throw new MichelsonValidationError(ex, "at least 2 arguments expected");
+            }
+            for (const a of ex.args) {
+               assertMichelsonData(a);
             }
             break;
 
@@ -566,7 +580,7 @@ export function isMichelsonData(ex: Expr): ex is MichelsonData {
  * Checks if the node is a valid Michelson code (sequence of instructions).
  * @param ex An AST node
  */
-export function isMichelsonCode(ex: Expr): ex is MichelsonCode[] {
+export function isMichelsonCode(ex: Expr): ex is InstructionList {
    try {
       assertMichelsonInstruction(ex);
       return true;

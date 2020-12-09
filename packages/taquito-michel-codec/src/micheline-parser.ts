@@ -1,7 +1,6 @@
 import { scan, Token, Literal } from './scan';
 import { Expr, Prim, StringLiteral, IntLiteral, BytesLiteral, sourceReference, List, SourceReference } from './micheline';
 import { expandMacros } from './macros';
-import { lstat } from 'fs';
 
 export class MichelineParseError extends Error {
     /**
