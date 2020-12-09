@@ -1,6 +1,8 @@
 import validate, { result } from "validate.js";
-import SHA256 from "crypto-js/sha256";
+import CryptoJS from "crypto-js";
 import { HTTPFetcher } from "./httpHandler";
+import { ContractAbstraction, ContractProvider, Wallet } from "@taquito/taquito";
+import { MetadataInterface } from "../metadataInterface";
 
 export class Validator {
     httpHandler: HTTPFetcher;
@@ -57,13 +59,18 @@ export class Validator {
 
     }
 
+    validateMetadataType(_contract: ContractAbstraction<ContractProvider | Wallet>) {
+
+    }
+
     async validateSHA256(sha256uri: string) {
         const infoArray = sha256uri.slice(11).split('/');
         const _expectedHash = infoArray[0];
         const _encodedUri = infoArray[1];
 
-        const metadata: string = (await this.httpHandler.getMetadataHTTP(decodeURIComponent(_encodedUri))).toString();
-        const metadataHash = SHA256(metadata).toString();
+        let metadata: MetadataInterface = await this.httpHandler.getMetadataHTTP(decodeURIComponent(_encodedUri));
+
+        let metadataHash = CryptoJS.SHA256(metadata.toString()).toString(CryptoJS.enc.Hex);
 
         let integrityResult: boolean = false;
         if (metadataHash.match(_expectedHash)) {

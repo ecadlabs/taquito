@@ -1,12 +1,10 @@
 import { ContractAbstraction, ContractProvider, TezosToolkit, Wallet, MichelsonMap } from "@taquito/taquito";
 import { MetadataEnvelope } from "../src/interfaceMetadataProvider";
 import { MetadataProvider } from "../src/metadataProvider";
-import { Crypto } from "../src/URIHandlers/utils";
 import { Validator } from "../src/URIHandlers/validator";
 
 const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
 const f = new MetadataProvider();
-const c = new Crypto;
 const v = new Validator;
 
 let testContractAbstraction: ContractAbstraction<ContractProvider | Wallet>;
@@ -43,13 +41,6 @@ describe('FetcherProviderTests', () => {
         console.log(await v.validateSHA256(sha256URL))
         done();
     })
-
-    // it('hashes', (done) => {
-    //     expect(c.sha256("{}")).toEqual(
-    //         expect.stringMatching("44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a")
-    //     )
-    //     done();
-    // })
 
     // it('validates tezos-storage uri', (done) => {
     //     const validation = v.validateTezosStorage("tezos-storage://KT1QDFEu8JijYbsJqzoXq7mKvfaQQamHD1kX/%2Ffoo");
