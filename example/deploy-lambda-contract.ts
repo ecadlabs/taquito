@@ -1,6 +1,6 @@
 import { TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
-import { VIEW_LAMBDA } from '@taquito/taquito/src/contract/view_lambda'
+import { VIEW_LAMBDA } from '../packages/taquito/src/contract/view_lambda';
 
 const provider = 'https://api.tez.ie/rpc/carthagenet';
 

@@ -103,7 +103,7 @@
           "typings",
           "version"
         ],
-        "sha512": "5823e8c692af0c3bdae7bbeec7a416c0055e48ea88dddd946dd99231626f868d494be5332bc849efc149d95cb9ead2438ee2fbf4bc86e383ff997cb845436c83"
+        "sha512": "3525a8f6a7f3c0299d55a566291c5f4c9125ffed00c3baa221ee7583a2a95d19e56c3d7180db597cc37bd51a9220180f1dcf3e31c9d23199139951b59865c758"
       }
     },
     {
@@ -111,7 +111,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/signer",
-          "version": "7.1.0-preview.5",
+          "version": "7.1.0-beta.0",
           "description": "Provide signing functionality to be with taquito",
           "keywords": [
             "tezos",
@@ -177,8 +177,8 @@
             ]
           },
           "dependencies": {
-            "@taquito/taquito": "^7.1.0-preview.5",
-            "@taquito/utils": "^7.1.0-preview.5",
+            "@taquito/taquito": "^7.1.0-beta.0",
+            "@taquito/utils": "^7.1.0-beta.0",
             "bignumber.js": "^9.0.1",
             "bip39": "^3.0.2",
             "elliptic": "^6.5.3",
@@ -188,15 +188,15 @@
           },
           "devDependencies": {
             "@types/elliptic": "^6.4.12",
-            "@types/jest": "^26.0.14",
+            "@types/jest": "^26.0.16",
             "@types/libsodium-wrappers": "^0.7.8",
-            "@types/node": "^14.11.5",
+            "@types/node": "^14.14.10",
             "@types/pbkdf2": "^3.1.0",
             "colors": "^1.4.0",
             "coveralls": "^3.1.0",
             "cross-env": "^7.0.2",
-            "jest": "^26.5.2",
-            "jest-config": "^26.5.2",
+            "jest": "^26.6.3",
+            "jest-config": "^26.6.3",
             "lint-staged": "^10.4.0",
             "lodash.camelcase": "^4.3.0",
             "prettier": "^2.1.2",
@@ -208,18 +208,18 @@
             "rollup-plugin-sourcemaps": "^0.6.3",
             "rollup-plugin-typescript2": "^0.27.3",
             "shelljs": "^0.8.4",
-            "ts-jest": "^26.4.1",
-            "ts-node": "^9.0.0",
+            "ts-jest": "^26.4.4",
+            "ts-node": "^9.1.1",
             "tslint": "^6.1.3",
             "tslint-config-prettier": "^1.18.0",
             "tslint-config-standard": "^9.0.0",
             "typedoc": "^0.19.2",
-            "typescript": "^4.0.3"
+            "typescript": "^4.1.2"
           },
           "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfv8a9CRAD9Qy5GYHsngAARWwQACTHN0+U28fnxlIyDWVrGCju\nqSlAtz9HRoDYwyuswebb7kJFSdcj1zwtdBXqv2uYDPk1cQ2Ws7qFa54RfM9QL/cH\n/JJZ8EhsZ5zVJUDOwQkP3ME/Di13PPAf92/TNd7KF2AHnV2gza8pfUe5DOs6FdRK\n75otsgpQfbFR8e+2NGfuBQiQX0wYjRQnGdkxEyVvhfj4WwTzQ+mKLVO57HgP/cZ+\nf4LNxYVYjNPM1pfu8/agmMxbi0+whNjtf62E9nokkfPe4JzuZ52dEFZVu/sLrx1p\nDmYL5Gv+Zz0Zh+kj06GQ/LerMEiL/z5qC338KDKY57XVX7rX6lAcYzOiNELuyZpp\nlzLs+55tC0poYJdI3MQEhkFW/rcMMjQ2+sUxRHa+ZINgHlB9jrepBGYpu1aczU4k\nSOu/Tbrz8P1qosPum1m11lJDJ6x4jRz2K2+nxRRSxdXQEInja4i+anIzz8gALw5O\n4+f5+ViUm19OrxfOZwYfV8vJoYemrSsMpB5h5vRovW7OXPNkoGz/oXsjQhl9gLuO\nG3nwfOAV2MQnk6RJ5YyaLystfz8AhJYFG9laz1Ilb3wTqvzOoXXn+bRk+bPJ2a4C\n2/ou7kBfm7fpiyyUgVnqcHdrZ4uN0hmmqeBuBkhiXMShT7sjoVzQSb+qbrcy0Mxx\nezXoxH+OdaZIdmrS0YYv\n=VmZT\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfz5jbCRAD9Qy5GYHsngAAH5gQABBGhqwgabxO3b/X4VWRXsgR\nV/2iqquZ+CPAvn8ZtrfsKT2FWxH92abTE8htMNb4DbqJFOHRv8ryQHcfvg9G+MTp\nXN0M6tw78vLc+ZHXSbFFzRzNfT/oIld5BtyY55eDyP1GBFZGJS5KrWO0tsg2zuSc\n5fWSteS1M5WsuQ5Faz13gvXj6lFch4IYJ8FbyoCDCKyiHLzYyirKGb046ekeoi7B\nntIn8Mgo7DmVYI9+QM2s8BT+GJhattZx0VOc6SOWWv50ourQBJMiP2XoEgSn7nva\njX9UWSDEMMGApD+5lHbrN+vSeBfZo5Y7Y55xEYgJz30H0UJPdG8vIxqAUyuiI8XH\nVma4q9fRKudCEXLFnHRe1YF4upjs227D/WRD4Cf6EGlru++j/GCPJGCuPnGl1sAd\nW4M0LKOCCCW9lZLXnX5srkiKXyxYTCheejQMxaDEBdldqNk0muh7IpCc29B2YjFC\n3laeqTW/7vZUuhsk8W2KFNIXT/72geDaln6MHJ4U44gx/OPZ1O3ErnD19JDGKZMN\ngbXlFJQSYuZ5jZCnmaYU5mxX6qtCJstZHJuGUO39IKVesMbvdr8z1pvuhzhlgovx\nlcOCHpjI5vJiy2f77PYbG1fIFHXSRU4FiU8bxwd6I63rH+8GGwzvgsnjx9JceMGL\n57BYHZDqk/B1Fuw9wFeu\n=6ycS\n-----END PGP SIGNATURE-----\n"
 }

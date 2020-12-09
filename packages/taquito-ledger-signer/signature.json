@@ -114,7 +114,7 @@
           "typings",
           "version"
         ],
-        "sha512": "afa566f6bf4e68361a91f7b476785c772ec1c76d49b48b951934bc49a197a4d34b5db296a1428b2439ad3b69f2186bfac48a5abb388d399e9393dabfeff3f66c"
+        "sha512": "e25cc1caa780d715077668a6f6145eaca2405585f408ca599b870e0541dc91cc1556276edf86bc603ad26a01ab80280bb0ecf823b3f528339e9003aab087b3fe"
       }
     },
     {
@@ -122,7 +122,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/ledger-signer",
-          "version": "7.1.0-preview.5",
+          "version": "7.1.0-beta.0",
           "description": "Ledger signer provider",
           "keywords": [
             "tezos",
@@ -180,23 +180,23 @@
           "dependencies": {
             "@ledgerhq/hw-transport": "^5.25.0",
             "@ledgerhq/hw-transport-node-hid": "^5.25.0",
-            "@taquito/taquito": "^7.1.0-preview.5",
-            "@taquito/utils": "^7.1.0-preview.5",
-            "@types/jest": "^26.0.14",
+            "@taquito/taquito": "^7.1.0-beta.0",
+            "@taquito/utils": "^7.1.0-beta.0",
+            "@types/jest": "^26.0.16",
             "buffer": "^5.6.0",
             "libsodium-wrappers": "^0.7.8"
           },
           "devDependencies": {
-            "@types/jest": "^26.0.14",
+            "@types/jest": "^26.0.16",
             "@types/ledgerhq__hw-transport-node-hid": "^4.22.2",
             "@types/libsodium-wrappers": "^0.7.8",
-            "@types/node": "^14.11.5",
-            "@types/ws": "^7.2.7",
+            "@types/node": "^14.14.10",
+            "@types/ws": "^7.4.0",
             "colors": "^1.4.0",
             "coveralls": "^3.1.0",
             "cross-env": "^7.0.2",
-            "jest": "^26.5.2",
-            "jest-config": "^26.5.2",
+            "jest": "^26.6.3",
+            "jest-config": "^26.6.3",
             "lint-staged": "^10.4.0",
             "lodash.camelcase": "^4.3.0",
             "prettier": "^2.1.2",
@@ -208,17 +208,17 @@
             "rollup-plugin-sourcemaps": "^0.6.3",
             "rollup-plugin-typescript2": "^0.27.3",
             "shelljs": "^0.8.4",
-            "ts-jest": "^26.4.1",
-            "ts-node": "^9.0.0",
+            "ts-jest": "^26.4.4",
+            "ts-node": "^9.1.1",
             "tslint": "^6.1.2",
             "tslint-config-prettier": "^1.18.0",
             "tslint-config-standard": "^9.0.0",
-            "typescript": "^4.0.3"
+            "typescript": "^4.1.2"
           },
           "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfv8a3CRAD9Qy5GYHsngAAZlQQAGhuqKCxVAfvobTXqUA1jegV\nzgCCmRCxbqQXk8TPE+VDGYj2CzXggsL4JeglF2JbM8BFzYF6zXBm63Ma0o8SiG+u\nrVUAOgMZb6f1yudt4aCVSXM0U7TqOFyJv5Ed9JQivSXatGoLsDxomEcWbML3mROA\nV8T6QBpMN+mBoKUkTsCAHYkD27bt9iH+xDNOGGyDul2P+RXbjHjwtZ9WVt2qWKJl\nHpaRH5nTaBwUkTfh11PjMW79jITpTNW3qUZEgsUnLkP9VWNkdZyv42fgCyvAcJu5\n/lMBaBJjnOOGEJmNrXebppDQPSM8Kf/bofN3sai45NNtcUvaNdTaCWopNfQSR5jW\n8piDzp0GOrEeOlw90tQAWqa82dzzuAL5xRLsqQ4H2gMqyPD4zJPOy4z9DOlP69Gw\nDOcyOgrrkx2vex5e/tO8FB71OvITkfGpRaMoNv3BWbGHS/Gu8jUjkPkJzBgLD8YW\nStmRc/P8aQgLc2Vko+xTq5eYmreUEeCvXlZg4yJfBnstrLJBEQ1SNmL6YAkwdq7m\nMBAdk+pXbBWDrT9gE3kmC7KFWE9KQ7DPezRscHuGcsHvJiAhjiiA+wEpq8Y60qxI\nL8xqp6wdW3sJZ3RaYnPKKgt2tPHmNcx2nYtoccONvCTHF8c3SjvaGjzDQufirrfd\nsivEKO3K+f+KNS3dO4I3\n=72PE\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfz5jVCRAD9Qy5GYHsngAACFYQAJP8V+qy2iTtujteHjeXAkc1\nCpABuAy0njEVKmLeGkc+azKSGVAbjGzPsr0ZZfmVBemGKFsSSbfuhCx8UPxAkAau\nUYvlIehb5Qf7tbwPoi82M/Q6hP2WaWHju1YOrw5Ykox+mQNDChKcIN6Ww2s5PtsT\nOjS5xlsYmI0G6l8O7Q3jpnWo808DTdgTR9W87KeJf90VPSQZmJGUNKN13LYaRPuo\nGFqhHIxhMBnBVkuaMwouTUJgZu3lnVNCe93HACO85SojpNwAwyW0goPAwjTxZDHG\nvJ1wCwoZzvq/l7YPXdDr8S9d1SQnMxYkKbo1Jh349bUi+fj9+3iqvFJRMdiPlIfo\ncC5394p42zgIoKi4YDKbPu5pnuCIwuxk8zHIvXhLW6EuNArNpBnJuZylgKfCRxpt\ntq2coQe6yTvm59rcBoPqUhuM+uYbtPOslwW/aIbU3d2RMQXAyRyOQAI6Yhn3VPMT\n3XlXu+ZBgfgDherKaAERWaLfXPcLXGxxFujaqGhRi3heXQL6p+c8inySadQK4yv2\ndsLjZR7hpbK5UYwgUr97hfmx1BhwX1UszjlsNi4dMddboFb1lvJu8omAGShAYrTz\n3LRwkRzGxNbEswLHh9SrBx0JgLSh7yJRvzMiB9fIXpMnH2j5DPS1jtmlAVMUtQK5\nawdWaEgHCFIKkqGhFPLf\n=cdbz\n-----END PGP SIGNATURE-----\n"
 }
