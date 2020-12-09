@@ -3,7 +3,7 @@ import { char2Bytes } from "../packages/taquito-tzip16/src/tzip16-utils"
 import { tacoContractTzip16 } from "./data/modified-taco-contract"
 import { MichelsonMap } from "@taquito/taquito";
 import { tzip16 } from '../packages/taquito-tzip16/src/composer';
-import { Tzip16Module } from "taquito-tzip16/src/tzip16-extension";
+import { Tzip16Module } from "../packages/taquito-tzip16/src/tzip16-extension";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
