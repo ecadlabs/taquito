@@ -15,13 +15,8 @@ export class MetadataProvider implements MetadataProviderInterface {
         this.validator = new Validator();
     }
     async provideMetadata(_contractAbstraction: ContractAbstraction<ContractProvider | Wallet>, _uri: string, context: Context): Promise<MetadataEnvelope> {
-        // tslint:disable-next-line: strict-type-predicates
-        if (typeof _contractAbstraction !== 'undefined') {
-            console.log(typeof (_contractAbstraction.address))
-            const contractAddress: string = _contractAbstraction.address;
-        }
-        else throw new Error("No contract was passed to the fetcher.");
 
+        this.validator.prevalidate(_contractAbstraction);
 
         let metadataEnvelope: MetadataEnvelope = {
             uri: _uri,
@@ -37,8 +32,8 @@ export class MetadataProvider implements MetadataProviderInterface {
             case 'https':
                 try {
                     metadataEnvelope.metadata = await this.httpHandler.getMetadataHTTP(_uri)
-                } catch (error) {
-                    throw new Error("Problem using HTTPHandler." + error);
+                } catch (err) {
+                    throw new Error("Problem using HTTPHandler." + err);
                 }
                 break;
             case 'tezos-storage':

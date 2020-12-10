@@ -1,13 +1,19 @@
 import validate, { result } from "validate.js";
 import CryptoJS from "crypto-js";
 import { HTTPFetcher } from "./httpHandler";
+import { StorageFetcher } from "./storageHandler";
 import { ContractAbstraction, ContractProvider, Wallet } from "@taquito/taquito";
-import { MetadataInterface } from "../metadataInterface";
+import { getStorage } from "../tzip16-utils";
+
 
 export class Validator {
     httpHandler: HTTPFetcher;
+    storageFetcher: StorageFetcher;
+
     constructor() {
         this.httpHandler = new HTTPFetcher();
+        this.storageFetcher = new StorageFetcher();
+
     }
 
     isValidUrl(unknownURI: string): boolean {
@@ -59,18 +65,54 @@ export class Validator {
 
     }
 
-    validateMetadataType(_contract: ContractAbstraction<ContractProvider | Wallet>) {
-
+    async prevalidate(_contract: ContractAbstraction<ContractProvider | Wallet>): Promise<void> {
+        if (_contract === undefined) {
+            throw new Error("Empty contract abstraction.")
+        }
+        try {
+            const _storage: Storage = await getStorage(_contract);
+            const _metadata = await this.validateMetadataLevel(_storage);
+            await this.validateMetadataType(_metadata);
+        } catch (err) {
+            throw new Error("Validation promise did not return.");
+        }
+        return;
     }
+
+    async validateMetadataLevel(storage: Storage): Promise<any> {
+        let metadata;
+        try {
+            metadata = await storage['metadata'];
+        } catch (err) {
+            throw new Error("Metadata bigmap does not exist in the top level of the storage tree.")
+        }
+        return metadata;
+    }
+
+    async validateMetadataType(_metadata: any): Promise<void> {
+        const info = await _metadata.schema.root.val;
+        if (info.prim !== 'big_map') {
+            throw new Error("Metadata exists but is not of type big_map.")
+        }
+        if (info.args[0].prim !== 'string') {
+            throw new Error("Metadata exists but its key not of type string.")
+        }
+        if (info.args[1].prim !== 'bytes') {
+            throw new Error("Metadata exists but its key not of type bytes.")
+        }
+        return;
+    }
+
 
     async validateSHA256(sha256uri: string) {
         const infoArray = sha256uri.slice(11).split('/');
         const _expectedHash = infoArray[0];
         const _encodedUri = infoArray[1];
 
-        let metadata: MetadataInterface = await this.httpHandler.getMetadataHTTP(decodeURIComponent(_encodedUri));
+        const metadataForHashing = await this.httpHandler.getMetadataNonJSON(decodeURIComponent(_encodedUri));
+        const metadata = await this.httpHandler.getMetadataHTTP(decodeURIComponent(_encodedUri))
 
-        let metadataHash = CryptoJS.SHA256(metadata.toString()).toString(CryptoJS.enc.Hex);
+        let metadataHash: string = CryptoJS.SHA256(metadataForHashing.toString()).toString(CryptoJS.enc.Hex);
 
         let integrityResult: boolean = false;
         if (metadataHash.match(_expectedHash)) {
