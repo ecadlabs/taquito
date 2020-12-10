@@ -33,9 +33,14 @@ export class BytesToken extends ComparableToken {
     }
   }
 
-  public Encode(args: any[]): any {
-    const val = args.pop();
+  private convertUint8ArrayToHexString(val: any){
+    return val.constructor === Uint8Array? Buffer.from(val).toString('hex'): val;
+  }
 
+  public Encode(args: any[]): any {
+    let val = args.pop();
+
+    val = this.convertUint8ArrayToHexString(val);
     const err = this.isValid(val);
     if (err) {
       throw err;
@@ -45,6 +50,7 @@ export class BytesToken extends ComparableToken {
   }
 
   public EncodeObject(val: any) {
+    val = this.convertUint8ArrayToHexString(val);
     const err = this.isValid(val);
     if (err) {
       throw err;
