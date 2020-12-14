@@ -1,9 +1,11 @@
 import validate, { result } from "validate.js";
-import CryptoJS from "crypto-js";
 import { HTTPFetcher } from "./httpHandler";
 import { StorageFetcher } from "./storageHandler";
 import { ContractAbstraction, ContractProvider, Wallet } from "@taquito/taquito";
-import { getStorage } from "../tzip16-utils";
+import { getStorage, sha256 } from "../tzip16-utils";
+import { MetadataInterface } from "../metadataInterface";
+import Ajv, { JSONSchemaType, DefinedError } from "ajv";
+import { tzip16spec } from "../../assets/proposals_tzip-16_metadata-schema";
 
 
 export class Validator {
@@ -16,7 +18,11 @@ export class Validator {
 
     }
 
-    isValidUrl(unknownURI: string): boolean {
+    /**
+     * Returns, if uri is a valid http, https uri
+     * @param unknownURI a uri string for protocol verification
+     */
+    async isValidUrl(unknownURI: string): Promise<void> {
         const _result = validate({ website: unknownURI }, {
             website: {
                 url: {
@@ -24,15 +30,31 @@ export class Validator {
                 }
             }
         });
+
         if (_result === undefined) {
-            return true;
+            return;
         } else {
-            // TODO : error handling
-            // throw new Error(JSON.stringify(_result));
-            return false;
+            throw new Error(JSON.stringify(_result));
         }
     }
 
+    /**
+     * Returns, if JSON complies to the schema
+     */
+    private isJsonValidWithSchema(metadataJSON: JSON, metadataSchema: JSON): boolean {
+        const ajv = new Ajv({ allErrors: true });
+        const validationFunction = ajv.compile(metadataSchema);
+        const validationResult = validationFunction(metadataJSON);
+        if (!validationResult) {
+            throw validationFunction.errors;
+        }
+        return validationResult;
+    }
+
+    /**
+     * Returns host contract, tezos network and metadata path information from the uri
+     * @param tezosStorageURI TZIP16 uri of tezos-storage scheme
+     */
     validateTezosStorage(tezosStorageURI: string) {
         let host = undefined;
         let network = undefined;
@@ -65,8 +87,25 @@ export class Validator {
 
     }
 
+    /**
+     * Post validates metadata (TZIP16 schema compliance)
+     * @param metadata Metadata for post validation
+     */
+    async postvalidate(metadata: MetadataInterface): Promise<void> {
+        const _metadata = JSON.parse(JSON.stringify(metadata));
+        try {
+            await this.validateMetadataCompliance(_metadata);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * Pre validates metadata as per TZIP16 expectation
+     * @param _contract Contract containing metadata
+     */
     async prevalidate(_contract: ContractAbstraction<ContractProvider | Wallet>): Promise<void> {
-        if (_contract === undefined) {
+        if (_contract.address === undefined) {
             throw new Error("Empty contract abstraction.")
         }
         try {
@@ -79,6 +118,25 @@ export class Validator {
         return;
     }
 
+    /**
+     * Validate metadata against specified schema or TZIP16 schema spec, otherwise
+     * @param metadata JSON data to be validated
+     * @param schemaDefinition Schema definition to be validated against
+     */
+    async validateMetadataCompliance(metadata: JSON, schemaDefinition?: JSON) {
+        if (schemaDefinition) {
+            return this.isJsonValidWithSchema(metadata, schemaDefinition);
+        } else {
+            const _schema = JSON.parse(JSON.stringify(tzip16spec));
+            _schema["$id"] = "http://json-schema.org/draft-04/schema#";
+            return this.isJsonValidWithSchema(metadata, _schema);
+        }
+    }
+
+    /**
+     * Gets metadata if it exists in the top level
+     * @param storage 
+     */
     async validateMetadataLevel(storage: Storage): Promise<any> {
         let metadata;
         try {
@@ -89,6 +147,10 @@ export class Validator {
         return metadata;
     }
 
+    /**
+     * Returns if metadata has type (big_map %metadata string bytes)
+     * @param _metadata 
+     */
     async validateMetadataType(_metadata: any): Promise<void> {
         const info = await _metadata.schema.root.val;
         if (info.prim !== 'big_map') {
@@ -103,7 +165,10 @@ export class Validator {
         return;
     }
 
-
+    /**
+     * Returns metadata, metadataHash and whether it matches the expected value in the provided uri
+     * @param sha256uri TZIP16 uri of sha256 scheme
+     */
     async validateSHA256(sha256uri: string) {
         const infoArray = sha256uri.slice(11).split('/');
         const _expectedHash = infoArray[0];
@@ -112,7 +177,7 @@ export class Validator {
         const metadataForHashing = await this.httpHandler.getMetadataNonJSON(decodeURIComponent(_encodedUri));
         const metadata = await this.httpHandler.getMetadataHTTP(decodeURIComponent(_encodedUri))
 
-        let metadataHash: string = CryptoJS.SHA256(metadataForHashing.toString()).toString(CryptoJS.enc.Hex);
+        const metadataHash: string = sha256(metadataForHashing.toString());
 
         let integrityResult: boolean = false;
         if (metadataHash.match(_expectedHash)) {

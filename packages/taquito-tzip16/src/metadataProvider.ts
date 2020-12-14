@@ -4,6 +4,9 @@ import { HTTPFetcher } from "./URIHandlers/httpHandler";
 import { StorageFetcher } from "./URIHandlers/storageHandler";
 import { Validator } from "../src/URIHandlers/validator";
 
+/**
+ * @description: Metadata Provider
+ */
 export class MetadataProvider implements MetadataProviderInterface {
     httpHandler: HTTPFetcher;
     storageHandler: StorageFetcher;
@@ -14,9 +17,16 @@ export class MetadataProvider implements MetadataProviderInterface {
         this.storageHandler = new StorageFetcher();
         this.validator = new Validator();
     }
+
+    /**
+     * Provides metadata at the specified uri as per TZIP16 specification.
+     * @param _contractAbstraction A Tezos Contract Abstraction containing metadata in its storage
+     * @param _uri A URI to fetch metadata from
+     * @param context Tezos Toolkit User Context
+     */
     async provideMetadata(_contractAbstraction: ContractAbstraction<ContractProvider | Wallet>, _uri: string, context: Context): Promise<MetadataEnvelope> {
 
-        this.validator.prevalidate(_contractAbstraction);
+        await this.validator.prevalidate(_contractAbstraction);
 
         let metadataEnvelope: MetadataEnvelope = {
             uri: _uri,
@@ -31,7 +41,9 @@ export class MetadataProvider implements MetadataProviderInterface {
             case 'http':
             case 'https':
                 try {
-                    metadataEnvelope.metadata = await this.httpHandler.getMetadataHTTP(_uri)
+                    if (this.validator.isValidUrl(_uriInfo.path)) {
+                        metadataEnvelope.metadata = await this.httpHandler.getMetadataHTTP(_uri)
+                    }
                 } catch (err) {
                     throw new Error("Problem using HTTPHandler." + err);
                 }
@@ -51,6 +63,8 @@ export class MetadataProvider implements MetadataProviderInterface {
                 metadataEnvelope.integrityCheckResult = _validation.integrityResult;
                 break;
         }
+
+        await this.validator.postvalidate(metadataEnvelope.metadata);
 
         return metadataEnvelope;
     }
@@ -78,7 +92,7 @@ export class MetadataProvider implements MetadataProviderInterface {
                 _network = _info.network;
                 break;
             // case 'sha256':
-                // const _infoSHA = this.validator.validateSHA256(_uri);
+            // const _infoSHA = this.validator.validateSHA256(_uri);
         }
         return { protocol: expectedProtocol, host: _host, network: _network, path: _path }
     }

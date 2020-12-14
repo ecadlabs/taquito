@@ -7,12 +7,11 @@ export class HTTPFetcher {
         this.httpBackend = new HttpBackend();
     }
     /**
-     * Returns metadata using https
+     * Gets metadata at a uri location using http/https
      * @param _uri https uri to locate the metadata
-     * @param options (Optional) request parameters
      */
     async getMetadataHTTP(_uri: string): Promise<JSON> {
-        const _response:any = await this.httpBackend.createRequest({
+        const _response: any = await this.httpBackend.createRequest({
             url: _uri,
             mimeType: "text; charset=utf-8",
         })
@@ -20,8 +19,12 @@ export class HTTPFetcher {
         return response;
     }
 
+    /**
+     * Gets
+     * @param _uri http/https uri to locate the metadata
+     */
     async getMetadataNonJSON(_uri: string): Promise<JSON> {
-        const _response:any = await this.httpBackend.createRequest({
+        const _response: any = await this.httpBackend.createRequest({
             url: _uri,
             mimeType: "text; charset=utf-8",
             json: false

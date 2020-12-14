@@ -1,4 +1,4 @@
-{
+export const tzip16spec = {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "$ref": "#/definitions/contract-metadata-tzip-16",
   "definitions": {
