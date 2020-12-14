@@ -3,49 +3,70 @@ import { MetadataNotFound, UriNotFound } from '../src/tzip16Errors';
 
 describe('Tzip16 contract abstraction test', () => {
 	let mockMetadataProvider: {
-        provideMetadata: jest.Mock<any, any>;
-    };
-	let mockContractAbstraction: {
-        storage: jest.Mock<any, any>;
-    };
-    let mockContext: any = {};
+		provideMetadata: jest.Mock<any, any>;
+	};
+	let mockContractAbstraction: any = {};
+	let mockSchema: {
+		FindFirstInTopLevelPair: jest.Mock<any, any>;
+	};
+	let mockContext: any = {};
+
+	let mockRpcContractProvider: {
+		getBigMapKeyByID: jest.Mock<any, any>;
+	};
 
 	beforeEach(() => {
 		mockMetadataProvider = {
 			provideMetadata: jest.fn()
 		};
 
-		mockContractAbstraction = {
-			storage: jest.fn()
+		mockSchema = {
+			FindFirstInTopLevelPair: jest.fn()
+		};
+
+		mockRpcContractProvider = {
+			getBigMapKeyByID: jest.fn()
 		};
 
 		mockMetadataProvider.provideMetadata.mockResolvedValue({
 			uri: 'https://test',
 			metadata: { name: 'Taquito test' }
-        });
-        
-        mockContext['metadataProvider'] = mockMetadataProvider;
+		});
+
+		mockContext['metadataProvider'] = mockMetadataProvider;
+		mockContext['contract'] = mockRpcContractProvider;
+
+		mockContractAbstraction['schema'] = mockSchema;
+		mockContractAbstraction['script'] = {
+			script: {
+				code: [],
+				storage: {
+					prim: 'Pair',
+					args: [
+						{
+							int: '20350'
+						},
+						[]
+					]
+				}
+			}
+		};
 	});
 
 	it('Should get the metadata', async (done) => {
-        const metadataBigMap = { get: () => Promise.resolve('cafe')};
-        jest.spyOn(metadataBigMap, 'get');
-		mockContractAbstraction.storage.mockResolvedValue({
-			metadata: metadataBigMap,
-			storage: {}
-		});
+		mockSchema.FindFirstInTopLevelPair.mockReturnValue({ int: '20350' });
+		mockRpcContractProvider.getBigMapKeyByID.mockResolvedValue('cafe');
+
 		const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
 		const metadata = await tzip16Abs.getMetadata();
 
-        expect(metadata.metadata).toEqual({ name: 'Taquito test' });
-        expect(metadataBigMap.get).toHaveBeenLastCalledWith('')
+		expect(metadata.metadata).toEqual({ name: 'Taquito test' });
 		done();
 	});
 
 	it('Should fail with MetadataNotFound', async (done) => {
-		mockContractAbstraction.storage.mockResolvedValue({
-			valueMap: 'There is no bigmap called metadata'
-		});
+		mockSchema.FindFirstInTopLevelPair.mockReturnValue(undefined);
+
 		const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
 
 		try {
@@ -57,9 +78,9 @@ describe('Tzip16 contract abstraction test', () => {
 	});
 
 	it('Should fail with UriNotFound', async (done) => {
-		mockContractAbstraction.storage.mockResolvedValue({
-			metadata: 'There is no empty string'
-		});
+		mockSchema.FindFirstInTopLevelPair.mockReturnValue({ int: '20350' });
+		mockRpcContractProvider.getBigMapKeyByID.mockResolvedValue(undefined);
+		
 		const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
 
 		try {

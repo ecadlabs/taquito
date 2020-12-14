@@ -58,11 +58,12 @@
   },
   "dependencies": {
     "@taquito/http-utils": "^7.1.0-preview.4",
+    "@taquito/michelson-encoder": "^7.1.0-beta.0",
     "@taquito/rpc": "^7.0.1-beta.0",
     "@taquito/taquito": "^7.1.0-preview.4",
     "@taquito/utils": "^7.0.1-beta.0",
-    "bignumber.js": "^9.0.1",
     "ajv": "^7.0.0-beta.4",
+    "bignumber.js": "^9.0.1",
     "is-ipfs": "^2.0.0",
     "validate.js": "^0.13.1"
   },
