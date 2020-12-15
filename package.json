@@ -74,7 +74,6 @@
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-typescript2": "^0.27.3",
-    "semantic-release": "^17.2.3",
     "shelljs": "^0.8.4",
     "ts-jest": "^26.4.1",
     "ts-node": "^9.0.0",
