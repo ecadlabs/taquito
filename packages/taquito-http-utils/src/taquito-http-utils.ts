@@ -18,6 +18,7 @@ interface HttpRequestOptions {
   json?: boolean;
   query?: { [key: string]: any };
   headers?: { [key: string]: string };
+  mimeType?: string;
 }
 
 export class HttpResponseError implements Error {
@@ -85,13 +86,16 @@ export class HttpBackend {
    * @param options contains options to be passed for the HTTP request (url, method and timeout)
    */
   createRequest<T>(
-    { url, method, timeout, query, headers = {}, json = true }: HttpRequestOptions,
+    { url, method, timeout, query, headers = {}, json = true, mimeType = undefined}: HttpRequestOptions,
     data?: {}
   ) {
     return new Promise<T>((resolve, reject) => {
       const request = this.createXHR();
       request.open(method || 'GET', `${url}${this.serialize(query)}`);
       request.setRequestHeader('Content-Type', 'application/json');
+      if (mimeType){
+        request.overrideMimeType(`${mimeType}`);
+      }
       for (const k in headers) {
         request.setRequestHeader(k, headers[k]);
       }

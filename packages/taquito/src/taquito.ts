@@ -3,6 +3,7 @@ import { RPCBatchProvider } from './batch/rpc-batch-provider';
 import { Protocols } from './constants';
 import { Config, Context, TaquitoProvider } from './context';
 import { ContractProvider, EstimationProvider } from './contract/interface';
+import { Extension } from './extension/extension';
 import { Forger } from './forger/interface';
 import { RpcForger } from './forger/rpc-forger';
 import { format } from './format';
@@ -35,6 +36,7 @@ export { SubscribeProvider } from './subscribe/interface';
 export { PollingSubscribeProvider } from './subscribe/polling-provider';
 export * from './tz/interface';
 export * from './wallet';
+export { Extension } from './extension/extension';
 
 export interface SetProviderOptions {
   forger?: Forger;
@@ -235,6 +237,17 @@ export class TezosToolkit {
    */
   get signer() {
     return this._context.signer;
+  }
+
+  /**
+   * @description Allow to add a module to the TezosToolkit instance. This method adds the appropriate Providers(s) required by the module to the internal context.
+   * 
+   * @param module extension to add to the TezosToolkit instance
+   *
+   * @example Tezos.addExtension(new Tzip16Module());
+   */
+  addExtension(module: Extension) {
+    module.configureContext(this._context);
   }
 
   getFactory<T, K extends Array<any>>(ctor: TaquitoProvider<T, K>) {
