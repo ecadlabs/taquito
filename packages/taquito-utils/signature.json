@@ -95,7 +95,7 @@
           "typings",
           "version"
         ],
-        "sha512": "3489235a3236fce9d58c77ad1a811750c2a6a29895704a7417e47db5cae3ad8b6318e6292382708b0b1ea4b99ce0a25eb8d012f8472b10eacdf3026ba8865083"
+        "sha512": "069c23e18fc186bbea185f8c9db1cd628390931b4d1b0e9d8acc263e9f54e5667a5779297c28efc2ace826be64cb533a0e1aef6434d95b3ffc72ccaafd50376a"
       }
     },
     {
@@ -103,7 +103,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/utils",
-          "version": "7.1.0-preview.8",
+          "version": "7.1.0-beta.0",
           "description": "converts michelson data and types into convenient JS/TS objects",
           "keywords": [
             "tezos",
@@ -169,13 +169,13 @@
             "buffer": "^5.6.0"
           },
           "devDependencies": {
-            "@types/jest": "^26.0.14",
-            "@types/node": "^14.11.5",
+            "@types/jest": "^26.0.16",
+            "@types/node": "^14.14.10",
             "colors": "^1.4.0",
             "coveralls": "^3.1.0",
             "cross-env": "^7.0.2",
-            "jest": "^26.5.2",
-            "jest-config": "^26.5.2",
+            "jest": "^26.6.3",
+            "jest-config": "^26.6.3",
             "lint-staged": "^10.4.0",
             "lodash.camelcase": "^4.3.0",
             "prettier": "^2.1.2",
@@ -187,18 +187,18 @@
             "rollup-plugin-sourcemaps": "^0.6.3",
             "rollup-plugin-typescript2": "^0.27.3",
             "shelljs": "^0.8.4",
-            "ts-jest": "^26.4.1",
-            "ts-node": "^9.0.0",
+            "ts-jest": "^26.4.4",
+            "ts-node": "^9.1.1",
             "tslint": "^6.1.3",
             "tslint-config-prettier": "^1.18.0",
             "tslint-config-standard": "^9.0.0",
             "typedoc": "^0.19.2",
-            "typescript": "^4.0.3"
+            "typescript": "^4.1.2"
           },
           "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfyF37CRAD9Qy5GYHsngAABnIQABtEzEa97P5c0jd4xVdhoC2F\nFFelGega9kKxIdb36bnItXu4K0bZ+4XqZrU6IJrJrcXdl5qD3bvPhv5dVlCd6Vn/\nlIG/VgS14Oa8jlkJH3zcAVuuUH/MyhtCNjmJK8K13UcdADE3rfGsC8WOoykoderd\n4/JCLNwxKK7FzGzVUewSsAr0fi7rbtJGlpzNGyYyw1V74mrgcS7PvvnaB3hNVehC\n5cakVF4G3q7UHQFpzffuehM14U8E9mzcm0xUrjvwP2McK5tQF4GWSjsnagbsr5UU\nEIIMYN3J44PYLdIsHuTKlEMCmKPZRTY0Xtot+Bhr2HHg2JWuNlW28opIdlPzsoZB\n1AJP26fuahFl9JUX1GB8RQeg0UCnpO6qFu8nWjmTzkkb8TqNp/QWGyYMVlSEPfpD\nvGAwYRTuH3y5+D4rg4t30FSk1++YgC1tfdQSK1Vy/Rdb1It1NH1I/JM5gRSeTAFV\nKGSnJNWKPdhfohQBbSGcJq58PN2ExVzY8Qus7Y09T1H46kWRUiwrWsG5S3gVBn99\n+haY2rFmwRH+ZIY9uLo2riNQ9wcx9vsjrTZbK5e34OU23sMBz+WA6ypCgFE5fj35\nb4nUwwn1jUQ9WjZCnjHCUx1h7d5rXZBgZC2OHVEKQDramM7HfT5uvmLXxt5bsQKk\n+d5CZaatYY2bsJOVphpP\n=ysyt\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfz5jeCRAD9Qy5GYHsngAARv8QAH1kofKabL36JilU4a4ja/FR\n38S2CN4PWFjAMPnIotllEDIfrId40iW9QIgHRYQuqwLT9liBw/Khj+VPV2c4fSx+\n/GaxwnDQIY0Pjubi2FO23gp3Lzl7gQIqvC0wrqwe66plxjQPQAYIaKb3Tb6Nutvd\noE2Agn0APy2LUPipQdaEOabVKz8uQMKHPpVY45CSEv9akjyb5PAudq0jiilUU3QS\ndYAg3AoMHiiGOpMpZ/YKiLr43XQ4V/IQkEtTNbMhK7lwFBzJj6fpZfL2WU7DWTpU\nsYYLPZ+cvuSWcUYfbmKdJCZPZ3HbUf3kjF4dNrVEdt7V2lK+ZXOiJrXH82xZ7a6j\nMrMcZri8JyaiodbuwCkz0Uvh8JVWjyC77To05Yx/lvCvzwhfOsHsEyjQRP8+x7iH\n6hZXxVlwVzVqstvDsV13Jk7+XPxbbdpLDD6p3z36oX6/ZABiKbKi+j+UA/FS8OLS\nXVVVXgYXkzFk0zXxIICsoxE7lt90Qqjlzyd+0fk2CalKuuZulRX5UP3q3lINifw6\nlV4LRkUUy7vIgXOna8qNHDd9GY/snBrHL+19C4k/BpqtYfzv+Ky9itehvkTcDo0V\ns0YICDiHKIKvKGPy0OUL5ZY1Gd26pIkWH5zY/8sBE1oFiq5XJioui3jly4ULUeUG\niq6/6oP9kKxdqQTmjyeG\n=C1vW\n-----END PGP SIGNATURE-----\n"
 }
