@@ -17,12 +17,12 @@ export interface MetadataEnvelope {
 export interface Handler {
     getMetadata(
         contractAbstraction: ContractAbstraction<ContractProvider | Wallet>,
-        uri: tzip16Uri,
+        uri: Tzip16Uri,
         context: Context
     ): Promise<string>
 }
 
-export interface tzip16Uri {
+export interface Tzip16Uri {
     sha256hash: string | undefined;
     protocol: string;
     location: string;

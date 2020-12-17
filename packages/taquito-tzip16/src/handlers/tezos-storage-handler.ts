@@ -1,6 +1,6 @@
 import { Schema } from '@taquito/michelson-encoder';
 import { Context, ContractAbstraction, ContractProvider, Wallet } from '@taquito/taquito';
-import { Handler, tzip16Uri } from '../metadata-provider';
+import { Handler, Tzip16Uri } from '../metadata-provider';
 import { bytes2Char } from '../tzip16-utils';
 import { InvalidMetadataType, BigMapMetadataNotFound, InvalidUri, MetadataNotFound } from '../tzip16-errors';
 
@@ -10,12 +10,14 @@ const typeOfValueToFind = {
     annots: ['%metadata']
 };
 
+type BigMapId = { int: string };
+
 export class TezosStorageHandler implements Handler {
     private readonly TEZOS_STORAGE_REGEX = /^(?:\/\/(KT1\w{33})(?:\.(.+))?\/)?([\w|\%]+)$/;
 
     async getMetadata(
         contractAbstraction: ContractAbstraction<ContractProvider | Wallet>,
-        { location }: tzip16Uri,
+        { location }: Tzip16Uri,
         context: Context
     ) {
         const parsedTezosStorageUri = this.parseTezosStorageUri(location);
@@ -23,10 +25,10 @@ export class TezosStorageHandler implements Handler {
             throw new InvalidUri(`tezos-storage:${location}`);
         }
         const storage: any = await context.rpc.getScript(parsedTezosStorageUri.contractAddress || contractAbstraction.address);
-        const bigMapId = Schema.fromRPCResponse({ script: storage }).FindFirstInTopLevelPair(
+        const bigMapId = Schema.fromRPCResponse({ script: storage }).FindFirstInTopLevelPair<BigMapId>(
             storage.storage,
             typeOfValueToFind
-        ) as any;
+        );
 
         if (!bigMapId) {
             throw new BigMapMetadataNotFound();

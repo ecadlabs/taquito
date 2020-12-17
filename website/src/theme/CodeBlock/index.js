@@ -22,6 +22,7 @@ import {  BeaconWallet } from '@taquito/beacon-wallet';
 import { InMemorySigner } from '@taquito/signer';
 import { LedgerSigner, DerivationType } from '@taquito/ledger-signer';
 import { TezBridgeWallet } from '@taquito/tezbridge-wallet';
+import { Tzip16Module, tzip16 } from '@taquito/tzip16'
 import { ThanosWallet } from '@thanos-wallet/dapp';
 import TransportU2F from "@ledgerhq/hw-transport-u2f";
 import Playground from '@theme/Playground';
@@ -98,6 +99,8 @@ export default ({
           BeaconWallet, 
           InMemorySigner, 
           LedgerSigner,
+          Tzip16Module,
+          tzip16,
           TezBridgeWallet,
           ThanosWallet, 
           DerivationType, 
