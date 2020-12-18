@@ -10,7 +10,7 @@ The Tezos blockchain is a fantastic tool but it is self-contained. Except for th
 
 ## Installing the Wallet API
 
-The first thing to do to use the wallet API is to install it.
+The first thing to do is to use the wallet API is to install it. You just need to install the Taquito package to use the wallet API:
 
 ```bash
 npm install @taquito/taquito
@@ -22,8 +22,9 @@ or
 yarn add @taquito/taquito
 ```
 
-Make sure you have the latest version, starting with `6.3.2-beta.0` (when the API became available) or above.  
-Once the package is downloaded, you can install the wallet of your choice. The wallet API supports different kinds of wallets, _TezBridge_, _Beacon_ and _Thanos_ wallets are available to use at the moment. You can install one or multiple wallets according to your needs:
+Make sure you have the latest version (`7.1.0` when this article was written, but the API became available from `6.3.2-beta.0`).
+
+Once the package is downloaded, you can install the wallet of your choice. The wallet API supports different kinds of wallets. _Beacon_, _Thanos_ and _TezBridge_ wallets are available to use at the moment. You can install one or multiple wallets according to your needs:
 
 ```bash
 npm install @taquito/tezbridge-wallet
@@ -35,18 +36,176 @@ Remember that some wallets may require an extra step in addition to the package 
 
 ## Connecting the wallet
 
-After installing the Taquito package and the package containing the Wallet API for the wallet of your choice, it's time to import the Wallet API into your project! Although the steps are very similar for each wallet, they all have their specificities that we will check in the paragraphs below.
-To start, let's create an instance of the `TezosToolkit` from Taquito:
-When doing so, we have to choose the network we want to use:
+After installing the Taquito package in your dapp project and the package containing the Wallet API for the wallet of your choice, it's time to import the Wallet API into your project! Although the steps are very similar for each wallet, they all have their specificities that we will check in the paragraphs below.
+To start, let's import the Tezos Toolkit from Taquito and create a new instance of the Tezos singleton:
 
 ```js
 import { TezosToolkit } from '@taquito/taquito';
-const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+
+const Tezos = new TezosToolkit('https://mainnet-tezos.giganode.io');
 ```
 
-This object exposes different methods we are going to use to set up our wallet. TezBridge has been around for some time and it may be the one you are the most familiar with, so let's start with that!
+This object exposes different methods we are going to use to set up our wallet. TZIP-10 has become the official standard of communication and interaction between wallets and dapps, so let's start with the `@taquito/beacon-wallet` package that implements this standard!
 
-### - TezBridge wallet
+### - TZIP-10 wallet
+
+The `BeaconWallet` is a package implementing the TZIP-10 standard that describes the communication between a dapp (decentralised application on Tezos) and a wallet (eg. a browser extension). The Beacon wallet works with any wallet that supports the TZIP-10 standard (for example the Beacon extension, Thanos or Kukai). This is the recommended way of connecting your dapp to a wallet. In addition to being future-proof, it gives your users the freedom to choose the wallet they want.
+
+First, the `BeaconWallet` class must be imported:
+
+```js
+import { BeaconWallet } from '@taquito/beacon-wallet';
+```
+
+Then, you can start initializing the wallet:
+
+```js
+const options = {
+  name: 'MyAwesomeDapp',
+  iconUrl: 'https://tezostaquito.io/img/favicon.png',
+  eventHandlers: {
+    PERMISSION_REQUEST_SUCCESS: {
+      handler: async (data) => {
+        console.log('permission data:', data);
+      },
+    },
+  },
+};
+const wallet = new BeaconWallet(options);
+```
+
+The necessary bare minimum to instantiate the wallet is an object with a `name` property which contains the name of your dapp. However, the Beacon wallet allows you to customize your dapp responses to different events. In the example above, instead of getting the default Beacon pop-up after the user connects the wallet, it will just display the available data in the console. You can use whatever solution you prefer for feedback. For more customization options, you can find a list of all the default handlers [in the beacon-sdk Github repo](https://github.com/airgap-it/beacon-sdk/blob/master/src/events.ts).
+
+The Beacon wallet requires an extra step to set up the network to connect to and the permissions:
+
+```js
+await wallet.requestPermissions({
+  network: {
+    type: 'mainnet' | 'carthagenet' | 'delphinet' | 'custom',
+  },
+});
+```
+
+You can choose among `mainnet`, `delphinet`, `carthagenet` and `custom` to set up the network. Once the permissions have been configured, you can get the user's address by calling the `getPKH` method on the wallet:
+
+```js
+const userAddress = await wallet.getPKH();
+```
+
+To finish, you can set the wallet as your provider:
+
+```js
+Tezos.setWalletProvider(wallet);
+```
+
+or
+
+```js
+Tezos.setProvider({ wallet });
+```
+
+#### Try the Beacon wallet!
+
+Make sure you have the Beacon browser extension installed (the extension offers minimal features, the BeaconWallet works with any wallet implementing the TZIP-10 standard), the AirGap wallet on your phone or any TZIP-10 ready wallet like Thanos or Kukai.
+
+```js live noInline
+//import { BeaconWallet } from '@taquito/beacon-wallet';
+
+const options = { name: 'MyAwesomeDapp' };
+const wallet = new BeaconWallet(options);
+
+wallet
+  .requestPermissions({ network: { type: 'delphinet' } })
+  .then((_) => wallet.getPKH())
+  .then((address) => println(`Your address: ${address}`));
+
+Tezos.setWalletProvider(wallet);
+```
+
+### - Development wallets
+
+During the development of your dapp, you may prefer a less "user-friendly" option that gives you more information and details than a more user-friendly wallet. You may also want to install and set up a wallet quickly that requires less boilerplate than the Beacon SDK. In these cases, you can choose between the Tezbridge wallet (for more details in a lightweight format) and the ThanosWallet (for a quick setup using the Thanos wallet extension).
+
+- Thanos wallet
+
+Just like the other wallets, you have to import the Thanos wallet class first:
+
+```js
+import { ThanosWallet } from '@thanos-wallet/dapp';
+```
+
+Then, Thanos requires an extra step to verify that the extension is installed and connected in the browser. The `ThanosWallet` class exposes a static property called `isAvailable` that just does that. You must use it before attempting to connect the wallet:
+
+```js
+try {
+  const available = await ThanosWallet.isAvailable();
+  if (!available) {
+    throw new Error('Thanos Wallet not installed');
+  }
+} catch (err) {
+  console.log(err);
+}
+```
+
+In order for this to work, you have to enable dapps in the Thanos wallet. Under `Settings`, you will find a `DApps` section where the checkbox must be checked to allow interactions between the wallet and the dapps.
+
+Now that we are sure the extension is installed and running, we can continue and connect the wallet. We start by creating a new instance of the `ThanosWallet` class:
+
+```js
+const wallet = new ThanosWallet('MyAwesomeDapp');
+```
+
+The class constructor takes one parameter, the name of your dapp (this will be used later in the transaction confirmation pop-up). After the instantiation, we can connect the wallet by calling the `connect` method:
+
+```js
+await wallet.connect('mainnet' | 'delphinet' | 'carthagenet' | 'labnet' | 'sandbox');
+```
+
+Once the wallet is connected, there are a couple of things you can get out of it:
+
+```js
+const wallet = new ThanosWallet('MyAwesomeDapp');
+// the ThanosWallet can return an instance of the Tezos singleton
+const Tezos = await wallet.toTezos();
+// the ThanosWallet can return the user's address
+const userAddress = wallet.pkh || (await wallet.getPKH());
+```
+
+If you are using your own Tezos singleton instance, it is time to set the wallet as the provider (this is not necessary if you use the one provided by Thanos wallet, but remember you have to continue using it throughout your dapp):
+
+```js
+Tezos.setWalletProvider(wallet);
+```
+
+or
+
+```js
+Tezos.setProvider({ wallet });
+```
+
+#### Try the Thanos wallet!
+
+Make sure you have the Thanos browser extension installed first.
+
+```js live noInline
+//import { ThanosWallet } from '@thanos-wallet/dapp';
+
+ThanosWallet.isAvailable()
+  .then(() => {
+    const wallet = new ThanosWallet('MyAwesomeDapp');
+
+    wallet.connect('delphinet').then(() => {
+      Tezos.setWalletProvider(wallet);
+
+      println(`Your address: ${wallet.pkh}`);
+    });
+  })
+  .catch((err) => console.log(err));
+```
+
+- TezBridge wallet
+
+> Note that the TezBridge wallet may not work properly since the Delphi upgrade and might be deprecated in the future.
 
 First, we have to import the TezBridge wallet from the package:
 
@@ -60,7 +219,7 @@ Next, we can set up the wallet. In general, you will give your dapp users the ch
 <script src="https://www.tezbridge.com/plugin.js"></script>
 ```
 
-To set up TezBridge as your wallet, you use the `setWalletProvider` method of the `TezosToolkit` instance and pass a new instance of the `TezBridgeWallet` class:
+To set up TezBridge as your wallet, you use the `setWalletProvider` method of the `Tezos` singleton instance and pass a new instance of the `TezBridgeWallet` class:
 
 ```js
 Tezos.setWalletProvider(new TezBridgeWallet());
@@ -89,162 +248,13 @@ Tezos.setWalletProvider(wallet);
 wallet.getPKH().then((userAddress) => println(`Your address: ${userAddress}`));
 ```
 
-### - Thanos wallet
-
-Just like the other wallets, you have to import Thanos wallet class first:
-
-```js
-import { ThanosWallet } from '@thanos-wallet/dapp';
-```
-
-Then, Thanos requires an extra step to verify that the extension is installed and connected in the browser. The `ThanosWallet` class exposes a static property called `isAvailable` that just does that. You must use it before attempting to connect the wallet:
-
-```js
-try {
-  const available = await ThanosWallet.isAvailable();
-  if (!available) {
-    throw new Error('Thanos Wallet not installed');
-  }
-} catch (err) {
-  console.log(err);
-}
-```
-
-In order for this to work, you have to enable dapps in the Thanos wallet. Under `Settings`, you will find a `DApps` section where the checkbox must be checked to allow interactions between the wallet and the dapps.
-
-Now that we are sure the extension is installed and running, we can continue and connect the wallet. We start by creating a new instance of the ThanosWallet class:
-
-```js
-const wallet = new ThanosWallet('MyAwesomeDapp');
-```
-
-The class constructor takes one parameter, the name of your dapp (this will be used later in the transaction confirmation pop-up). After the instantiation, we can connect the wallet by calling the `connect` method:
-
-```js
-await wallet.connect('mainnet' | 'carthagenet' | 'labnet' | 'sandbox');
-```
-
-Once the wallet is connected, there are a couple of things you can get out of it:
-
-```js
-const wallet = new ThanosWallet('MyAwesomeDapp');
-// the ThanosWallet can return an instance of the Tezos singleton
-const Tezos = await wallet.toTezos();
-// the ThanosWallet can return the user's address
-const userAddress = wallet.pkh || (await wallet.getPKH());
-```
-
-If you are using your own TezosToolkit instance, it is time to set the wallet as the provider (this is not necessary if you use the one provided by Thanos wallet, but remember you have to continue using it throughout your dapp):
-
-```js
-Tezos.setWalletProvider(wallet);
-```
-
-or
-
-```js
-Tezos.setProvider({ wallet: wallet });
-```
-
-#### Try the Thanos wallet!
-
-Make sure you have the Thanos browser extension installed first.
-
-```js live noInline
-//import { ThanosWallet } from '@thanos-wallet/dapp';
-
-ThanosWallet.isAvailable()
-  .then(() => {
-    const wallet = new ThanosWallet('MyAwesomeDapp');
-
-    wallet.connect('carthagenet').then(() => {
-      Tezos.setWalletProvider(wallet);
-
-      println(`Your address: ${wallet.pkh}`);
-    });
-  })
-  .catch((err) => console.log(err));
-```
-
-### - Beacon wallet
-
-The Beacon wallet is a package implementing the TZIP-10 standard that describes the communication between a dapp (decentralised application on Tezos) and a wallet (eg. browser extension). The Beacon wallet works with the Beacon extension you can install in your browser but also with any wallet that supports the TZIP-10 standard (for example Thanos).
-
-First, the `BeaconWallet` class must be imported:
-
-```js
-import { BeaconWallet } from '@taquito/beacon-wallet';
-```
-
-Then, you can start initializing the wallet:
-
-```js
-const options = {
-  name: 'MyAwesomeDapp',
-  iconUrl: 'https://tezostaquito.io/img/favicon.png',
-  eventHandlers: {
-    PERMISSION_REQUEST_SUCCESS: {
-      handler: async (data) => {
-        console.log('permission data:', data);
-      },
-    },
-  },
-};
-const wallet = new BeaconWallet(options);
-```
-
-The necessary bare minimum to instantiate the wallet is an object with a `name` property which contains the name of your dapp. However, the Beacon wallet allows you to customize your dapp responses to different events. In the example above, instead of getting the default Beacon pop-up after the user connects the wallet, it will just display the available data in the console. You can use whatever solution you prefer for feedback. For more customization options, you can find a list of all the default handlers [in the beacon-sdk Github repo](https://github.com/airgap-it/beacon-sdk/blob/master/src/events.ts).
-
-Next, you can set the wallet as your provider:
-
-```js
-Tezos.setWalletProvider(wallet);
-```
-
-or
-
-```js
-Tezos.setProvider({ wallet });
-```
-
-The Beacon wallet requires an extra step to set up the network to connect to and the permissions:
-
-```js
-await wallet.requestPermissions({ network: { type: 'mainnet' | 'carthagenet' | 'custom' } });
-
-const userAddress = wallet.permissions.address;
-```
-
-You can choose among `mainnet`, `carthagenet` and `custom` to set up the network. Once the permissions have been configured, you can find the user's address under the `address` property of the `wallet.permissions` object. You can also get the user's address by calling the `getPKH` method on the wallet:
-
-```js
-const userAddress = await wallet.getPKH();
-```
-
-#### Try the Beacon wallet!
-
-Make sure you have the Beacon browser extension installed (the extension is only used for development purposes, the BeaconWallet works with any wallet implementing the TZIP-10 standard) or the AirGap wallet on your phone.
-
-```js live noInline
-//import { BeaconWallet } from '@taquito/beacon-wallet';
-
-const options = { name: 'MyAwesomeDapp' };
-const wallet = new BeaconWallet(options);
-
-wallet
-  .requestPermissions({ network: { type: 'carthagenet' } })
-  .then((_) => println(`Your address: ${wallet.permissions.address}`));
-
-Tezos.setWalletProvider(wallet);
-```
-
 ## Making transfers
 
 Although it is possible and perfectly fine to transfer tokens directly from the wallets, Taquito offers the possibility to programmatically send tokens. This could be a better solution if you want to do calculations before sending the tokens or if the amount of tokens to send is based on a variable value. This could also be preferrable in order to avoid manual inputs that can often be a source of errors. Using Taquito to send tokens only requires to sign a transaction, sit back and relax :)
 
 ### - Transfer between implicit accounts
 
-```js live noInline wallet
+```js live noInline
 Tezos.wallet
   .transfer({ to: 'tz1NhNv9g7rtcjyNsH8Zqu79giY5aTqDDrzB', amount: 0.2 })
   .send()
@@ -268,25 +278,24 @@ The `transfer` method takes an object with only two required properties: the `to
 
 ### - Transfer to smart contracts
 
-```js live noInline wallet
+```js live noInline
 Tezos.wallet
   .transfer({ to: 'KT1TMZhfoYtpjbGG1nLjs7SZioFM1njsRwkP', amount: 0.2 })
   .send()
-  .then((op) => {
-    println(`Waiting for ${op.opHash} to be confirmed...`);
-    return op.confirmation(1).then(() => op.opHash);
-  })
-  .then(hash => println(`Operation injected: https://carthagenet.tzstats.com/${hash}`))
+  .then((op) =>
+    op
+      .confirmation()
+      .then((result) => println(result))
       .catch((err) => println(err))
-
+  );
 ```
 
 Transactions to smart contracts operate in the same fashion as transactions to an implicit account, the only difference being the `KT1...` address. You will also receive a transaction hash and have to wait for the transaction to be confirmed. Once confirmed, it can be the right time to update the user's/contract's balance, for example.
 
-## Sending transactions
+## Calling a smart contract
 
 Sending a transaction to a smart contract to update its storage is going to be a different type of action as it implies targetting a specific entrypoint and formatting correctly the data to be sent.  
-Fortunately, Taquito will make this operation go like a breeze! First, you need the contract abstraction created with the address of the smart contract you are targetting:
+Fortunately, Taquito will make this operation go like a breeze! First, you need the contract abstraction created with the address of the smart contract you are targeting:
 
 ```js
 const contract = await Tezos.wallet.at('KT1TMZhfoYtpjbGG1nLjs7SZioFM1njsRwkP');
@@ -301,7 +310,7 @@ In this example, we are working with a simple smart contract with two methods: `
 Most of the possible arguments of the entrypoint method are pretty straightforward and intuitive and do not require any explanation. However, a couple of them need more attention.
 Most of the time, the process is simple: you take the contract abstraction you created for the contract you target, you call the `methods` property on it which exposes all the entrypoints of the contract as methods. You pass the argument you want to send to the contract as a function argument before calling the `send()` method to send the transaction:
 
-```js live noInline wallet
+```js live noInline
 Tezos.wallet
   .at('KT1PCLg8Da8T5h5SWibMopPVsxiKg27tSRxx')
   .then((contract) => contract.methods.areYouThere(true).send())
@@ -324,7 +333,7 @@ Tezos.wallet
 
 In the case of multiple arguments (for example if the entrypoint expects a pair), you can just pass the arguments one by one. Be careful of the order of the arguments, they must be in the exact order expected by the contract entrypoint:
 
-```js live noInline wallet
+```js live noInline
 Tezos.wallet
   .at('KT1PCLg8Da8T5h5SWibMopPVsxiKg27tSRxx')
   .then((contract) =>
@@ -535,7 +544,13 @@ import { MichelsonMap } from "@taquito/taquito";
 
 Now, we have everything we need to originate a new contract!
 
-Then, we can start the process. The TezosToolkit has a `wallet` property with an `originate` method. This is the one that must be called to originate the contract. This method takes an argument, an object with two properties: `code` that holds the parsed Michelson code to be originated and `storage` that holds the initial storage. After passing this argument, you call the `send()` method to originate the contract.
+Before doing so, we have to choose the network we want to originate it to:
+
+```js
+Tezos.setProvider({ rpc: 'https://mainnet.SmartPy.io}' });
+```
+
+Then, we can start the process. The Tezos singleton has a `wallet` property with an `originate` method. This is the one that must be called to originate the contract. This method takes an argument, an object with two properties: `code` that holds the parsed Michelson code to be originated and `storage` that holds the initial storage. After passing this argument, you call the `send()` method to originate the contract.
 
 ```js
 const op = await Tezos.wallet
@@ -557,15 +572,24 @@ Taquito makes interacting with smart contracts very easy! With only the address 
 
 ### - Instance creation
 
-First, you need to import TezosToolkit and instantiate it with the RPC host you want to connect to:
+First, you need to import the Tezos singleton object or instantiate the Tezos toolkit and configure the RPC host you want to connect to:
+
+```js
+import { Tezos } from '@taquito/taquito';
+
+Tezos.setProvider({ rpc: 'https://YOUR_PREFERRED_RPC_URL' });
+```
+
+_or_
 
 ```js
 import { TezosToolkit } from '@taquito/taquito';
+const Tezos = new TezosToolkit();
 
-const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+Tezos.setProvider({ rpc: 'https://YOUR_PREFERRED_RPC_URL' });
 ```
 
-Next, you can use the `TezosToolkit` instance to create the smart contract instance with the contract address:
+Next, you can use the singleton object to create the smart contract instance with the contract address:
 
 ```js
 const contractInstance = await Tezos.wallet.at('contract address');
@@ -581,7 +605,7 @@ _Properties:_
 
 1. `address`: a string containing the address of the smart contract.
 2. `methods`: an object whose methods are named after the contract entrypoints (if the entrypoints are not annotated, the methods will be numbers).
-3. `parameterSchema`: an instance of the [Parameter class](https://github.com/ecadlabs/taquito/blob/d424fa178a95675920b21c8e8c228fbe0e7df36e/packages/taquito-michelson-encoder/src/schema/parameter.ts) with two useful methods: `hasAnnotation` tells you if the entrypoints are annotated and `isMultipleEntryPoint` tells you if the contract has multiple entrypoints (if _false_, you can interact with the contract with `.methods.default()`).
+3. `parameterSchema`: an instance of the [Parameter class](https://github.com/ecadlabs/taquito/blob/d424fa178a95675920b21c8e8c228fbe0e7df36e/packages/taquito-michelson-encoder/src/schema/parameter.ts) with two useful methods: `hasAnnotation` tells you if the entrypoints are annotated and `isMultipleEntryPoint` tells you if the contract has multiple entrypoints (if _false_, you can interact with the contract with `.methods.main()`).
 4. `schema`: an instance of the [Schema class](https://github.com/ecadlabs/taquito/blob/d424fa178a95675920b21c8e8c228fbe0e7df36e/packages/taquito-michelson-encoder/src/schema/storage.ts#L15) with various methods to get more information about the storage or the structure of the contract.
 5. `script`: an object with two properties: `code` is an array with three objects, each representing the JSON formatted Michelson code for the parameter, storage and code (respectively), `storage` is the JSON formatted Michelson code for the storage of the contract.
 
@@ -592,7 +616,7 @@ _Methods:_
 
 ## The Wallet instance
 
-The TezosToolkit instance exposes a _wallet_ property in the same fashion it exposes the _contract_ property you may be used to. This property is an instance of the [Wallet class](https://tezostaquito.io/typedoc/classes/_taquito_taquito.wallet-2.html) with a few useful methods you want to check out. It becomes available as soon as you set up a wallet by calling `Tezos.setProvider({wallet})` or `Tezos.setWalletProvider(wallet)`. Here is a list of the methods and a basic description of their function before seeing some examples:
+The Tezos singleton object exposes a _wallet_ property in the same fashion it exposes the _contract_ property you may be used to. This property is an instance of the [Wallet class](https://tezostaquito.io/typedoc/classes/_taquito_taquito.wallet-2.html) with a few useful methods you want to check out. It becomes available as soon as you set up a wallet by calling `Tezos.setProvider({wallet})` or `Tezos.setWalletProvider(wallet)`. Here is a list of the methods and a basic description of their function before seeing some examples:
 
 1. `at`: creates an smart contract abstraction for the address specified
 2. `batch`: creates a batch of operations
