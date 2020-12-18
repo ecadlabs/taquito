@@ -108,7 +108,7 @@ Tezos.setProvider({ wallet });
 
 Make sure you have the Beacon browser extension installed (the extension offers minimal features, the BeaconWallet works with any wallet implementing the TZIP-10 standard), the AirGap wallet on your phone or any TZIP-10 ready wallet like Thanos or Kukai.
 
-```js live noInline
+```js live noInline wallet
 //import { BeaconWallet } from '@taquito/beacon-wallet';
 
 const options = { name: 'MyAwesomeDapp' };
@@ -187,7 +187,7 @@ Tezos.setProvider({ wallet });
 
 Make sure you have the Thanos browser extension installed first.
 
-```js live noInline
+```js live noInline wallet
 //import { ThanosWallet } from '@thanos-wallet/dapp';
 
 ThanosWallet.isAvailable()
@@ -241,7 +241,7 @@ const userAddress = await wallet.getPKH();
 
 #### Try the TezBridge wallet!
 
-```js live noInline
+```js live noInline wallet
 //import { TezBridgeWallet } from '@taquito/tezbridge-wallet';
 const wallet = new TezBridgeWallet();
 Tezos.setWalletProvider(wallet);
@@ -254,7 +254,7 @@ Although it is possible and perfectly fine to transfer tokens directly from the 
 
 ### - Transfer between implicit accounts
 
-```js live noInline
+```js live noInline wallet
 Tezos.wallet
   .transfer({ to: 'tz1NhNv9g7rtcjyNsH8Zqu79giY5aTqDDrzB', amount: 0.2 })
   .send()
@@ -278,7 +278,7 @@ The `transfer` method takes an object with only two required properties: the `to
 
 ### - Transfer to smart contracts
 
-```js live noInline
+```js live noInline wallet
 Tezos.wallet
   .transfer({ to: 'KT1TMZhfoYtpjbGG1nLjs7SZioFM1njsRwkP', amount: 0.2 })
   .send()
@@ -310,7 +310,7 @@ In this example, we are working with a simple smart contract with two methods: `
 Most of the possible arguments of the entrypoint method are pretty straightforward and intuitive and do not require any explanation. However, a couple of them need more attention.
 Most of the time, the process is simple: you take the contract abstraction you created for the contract you target, you call the `methods` property on it which exposes all the entrypoints of the contract as methods. You pass the argument you want to send to the contract as a function argument before calling the `send()` method to send the transaction:
 
-```js live noInline
+```js live noInline wallet
 Tezos.wallet
   .at('KT1PCLg8Da8T5h5SWibMopPVsxiKg27tSRxx')
   .then((contract) => contract.methods.areYouThere(true).send())
@@ -333,7 +333,7 @@ Tezos.wallet
 
 In the case of multiple arguments (for example if the entrypoint expects a pair), you can just pass the arguments one by one. Be careful of the order of the arguments, they must be in the exact order expected by the contract entrypoint:
 
-```js live noInline
+```js live noInline wallet
 Tezos.wallet
   .at('KT1PCLg8Da8T5h5SWibMopPVsxiKg27tSRxx')
   .then((contract) =>
@@ -605,7 +605,7 @@ _Properties:_
 
 1. `address`: a string containing the address of the smart contract.
 2. `methods`: an object whose methods are named after the contract entrypoints (if the entrypoints are not annotated, the methods will be numbers).
-3. `parameterSchema`: an instance of the [Parameter class](https://github.com/ecadlabs/taquito/blob/d424fa178a95675920b21c8e8c228fbe0e7df36e/packages/taquito-michelson-encoder/src/schema/parameter.ts) with two useful methods: `hasAnnotation` tells you if the entrypoints are annotated and `isMultipleEntryPoint` tells you if the contract has multiple entrypoints (if _false_, you can interact with the contract with `.methods.main()`).
+3. `parameterSchema`: an instance of the [Parameter class](https://github.com/ecadlabs/taquito/blob/d424fa178a95675920b21c8e8c228fbe0e7df36e/packages/taquito-michelson-encoder/src/schema/parameter.ts) with two useful methods: `hasAnnotation` tells you if the entrypoints are annotated and `isMultipleEntryPoint` tells you if the contract has multiple entrypoints (if _false_, you can interact with the contract with `.methods.default()`).
 4. `schema`: an instance of the [Schema class](https://github.com/ecadlabs/taquito/blob/d424fa178a95675920b21c8e8c228fbe0e7df36e/packages/taquito-michelson-encoder/src/schema/storage.ts#L15) with various methods to get more information about the storage or the structure of the contract.
 5. `script`: an object with two properties: `code` is an array with three objects, each representing the JSON formatted Michelson code for the parameter, storage and code (respectively), `storage` is the JSON formatted Michelson code for the storage of the contract.
 
