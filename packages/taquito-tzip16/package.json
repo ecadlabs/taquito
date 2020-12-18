@@ -57,24 +57,22 @@
     ]
   },
   "dependencies": {
-    "@taquito/http-utils": "^7.1.0-beta.0",
-    "@taquito/michelson-encoder": "^7.1.0-beta.0",
-    "@taquito/rpc": "^7.1.0-beta.0",
-    "@taquito/taquito": "^7.1.0-beta.0",
-    "@taquito/utils": "^7.1.0-beta.0",
+    "@taquito/http-utils": "^7.2.0-alpha.0",
+    "@taquito/michelson-encoder": "^7.2.0-alpha.0",
+    "@taquito/rpc": "^7.2.0-alpha.0",
+    "@taquito/taquito": "^7.2.0-alpha.0",
+    "@taquito/utils": "^7.2.0-alpha.0",
     "bignumber.js": "^9.0.1",
-    "@types/crypto-js": "^4.0.1"
+    "crypto-js": "^4.0.0"
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.0.1",
     "@types/jest": "^26.0.14",
-    "@types/lodash.camelcase": "^4.3.6",
     "@types/node": "^14.11.5",
-    "@types/rollup-plugin-json": "^3.0.2",
     "@types/ws": "^7.2.7",
     "colors": "^1.4.0",
     "coveralls": "^3.1.0",
     "cross-env": "^7.0.2",
-    "crypto-js": "^4.0.0",
     "jest": "^26.5.2",
     "jest-config": "^26.5.2",
     "lint-staged": "^10.4.0",
@@ -93,6 +91,7 @@
     "tslint": "^6.1.2",
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-standard": "^9.0.0",
+    "typedoc": "^0.19.2",
     "typescript": "^4.0.3"
   },
   "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
