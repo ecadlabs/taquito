@@ -92,7 +92,9 @@ export class HttpBackend {
     return new Promise<T>((resolve, reject) => {
       const request = this.createXHR();
       request.open(method || 'GET', `${url}${this.serialize(query)}`);
-      request.setRequestHeader('Content-Type', 'application/json');
+      if (!headers['Content-Type']) {
+        request.setRequestHeader('Content-Type', 'application/json');
+      }
       if (mimeType){
         request.overrideMimeType(`${mimeType}`);
       }

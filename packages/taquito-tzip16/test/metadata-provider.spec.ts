@@ -12,6 +12,9 @@ describe('Metadata provider test', () => {
     let mockTezosStorageHandler: {
         getMetadata: jest.Mock<any, any>;
     };
+    let mockIpfsHandler: {
+        getMetadata: jest.Mock<any, any>;
+    };
 
     beforeEach(() => {
         mockHttpHandler = {
@@ -20,10 +23,14 @@ describe('Metadata provider test', () => {
         mockTezosStorageHandler = {
             getMetadata: jest.fn()
         };
+        mockIpfsHandler = {
+            getMetadata: jest.fn()
+        };
         handlers = new Map<string, Handler>([
             ['http', mockHttpHandler],
             ['https', mockHttpHandler],
-            ['tezos-storage', mockTezosStorageHandler]
+            ['tezos-storage', mockTezosStorageHandler],
+            ['ipfs', mockIpfsHandler]
         ]);
         metadataProvider = new MetadataProvider(handlers);
     });
@@ -102,6 +109,33 @@ describe('Metadata provider test', () => {
         done();
     });
 
+    it('Should succesfully fetch metadata for IPFS', async (done) => {
+        mockIpfsHandler.getMetadata.mockResolvedValue(
+            `{"name":"test","description":"A metadata test","version":"0.1","license":"MIT","authors":["Taquito <https://tezostaquito.io/>"],"homepage":"https://tezostaquito.io/"}`
+        );
+
+        const metadata = await metadataProvider.provideMetadata(
+            mockContractAbstraction,
+            'ipfs://QmcMUKkhXowQjCPtDVVXyFJd7W9LmC92Gs5kYH1KjEisdj',
+            mockContext
+        );
+
+        expect(metadata).toMatchObject({
+            uri: 'ipfs://QmcMUKkhXowQjCPtDVVXyFJd7W9LmC92Gs5kYH1KjEisdj',
+            metadata: {
+                name: 'test',
+                description: 'A metadata test',
+                version: '0.1',
+                license: 'MIT',
+                authors: ['Taquito <https://tezostaquito.io/>'],
+                homepage: 'https://tezostaquito.io/'
+            },
+            integrityCheckResult: undefined,
+            sha256Hash: undefined
+        });
+        done();
+    });
+
     it('Should fail with InvalidUri', async (done) => {
         try {
             await metadataProvider.provideMetadata(
@@ -111,19 +145,6 @@ describe('Metadata provider test', () => {
             );
         } catch (ex) {
             expect(ex).toBeInstanceOf(InvalidUri)
-        }
-        done();
-    });
-
-    it('Should fail with ProtocolNotSupported', async (done) => {
-        try {
-            await metadataProvider.provideMetadata(
-                mockContractAbstraction,
-                'ipfs://test',
-                mockContext
-            );
-        } catch (ex) {
-            expect(ex).toBeInstanceOf(ProtocolNotSupported)
         }
         done();
     });

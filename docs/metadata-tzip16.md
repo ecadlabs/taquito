@@ -8,7 +8,7 @@ The `@taquito/tzip16` package allows retrieving metadata associated with a smart
 ## How to use the tzip16 package
 The package can be used as an extension to the well known Taquito contract abstraction. 
 
-First, an instance of `Tzip16Module` needs to be added to your `TezosToolkit` instance as an extension: `Tezos.addExtension(new Tzip16Module())`. The constructor of the `Tzip16Module` class takes an optional Metadata Provider as a parameter. This allows to inject a custom metadata provider and/or custom protocol handlers if desired. Otherwise, the default `MetadataProvider` from the `@taquito/tzip16` is used. 
+First, an instance of `Tzip16Module` needs to be added to your `TezosToolkit` instance as an extension: `Tezos.addExtension(new Tzip16Module())`. The constructor of the `Tzip16Module` class takes an optional Metadata Provider as a parameter. This allows to inject a custom metadata provider and/or custom protocol handlers if desired. It also allows using a different gateway than the default one for IPFS. Otherwise, the default `MetadataProvider` from the `@taquito/tzip16` is used. 
 
 Then, the `tzip16` function need to be used to extend the contract abstraction: `const contract = await tezos.contract.at("contractAddress", tzip16)`.
 
@@ -82,8 +82,28 @@ Tezos.contract.at(contractAddress, tzip16)
 .catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
-## What is coming next
+## IPFS example
 
-The `@taquito/tzip16` package contains default HTTP(S) and tezos-storage handlers. An IPFS handler will also be implemented.
+```js live noInline
+// import { TezosToolkit } from '@taquito/taquito';
+// import { Tzip16Module, tzip16 } from "@taquito/tzip16";
+// const Tezos = new TezosToolkit('rpc_url');
+
+Tezos.addExtension(new Tzip16Module());
+
+const contractAddress = "KT1PBndiMVyeptfQejZKYcSB6YmucaJdXVBQ";
+
+Tezos.contract.at(contractAddress, tzip16)
+.then(contract => {
+  println(`Fetching the metadata for ${contractAddress}...`);
+  return contract.tzip16().getMetadata();
+})
+.then (metadata => {
+  println(JSON.stringify(metadata, null, 2));
+})
+.catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
+```
+
+## What is coming next
 
 Support for off-chain views will be added to the package.
