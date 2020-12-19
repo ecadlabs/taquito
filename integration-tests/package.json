@@ -8,16 +8,16 @@
     "test:delphinet-faucet": "RUN_DELPHINET_WITH_FAUCET=true jest --runInBand",
     "test": "jest"
   },
-  "version": "7.2.0-alpha.1",
+  "version": "7.2.0-alpha.2",
   "dependencies": {
     "@ledgerhq/hw-transport": "^5.25.0",
     "@ledgerhq/hw-transport-node-hid": "^5.25.0",
-    "@taquito/http-utils": "^7.2.0-alpha.1",
-    "@taquito/local-forging": "^7.2.0-alpha.1",
-    "@taquito/remote-signer": "^7.2.0-alpha.1",
-    "@taquito/signer": "^7.2.0-alpha.1",
-    "@taquito/taquito": "^7.2.0-alpha.1",
-    "@taquito/utils": "^7.2.0-alpha.1"
+    "@taquito/http-utils": "^7.2.0-alpha.2",
+    "@taquito/local-forging": "^7.2.0-alpha.2",
+    "@taquito/remote-signer": "^7.2.0-alpha.2",
+    "@taquito/signer": "^7.2.0-alpha.2",
+    "@taquito/taquito": "^7.2.0-alpha.2",
+    "@taquito/utils": "^7.2.0-alpha.2"
   },
   "private": true,
   "jest": {
