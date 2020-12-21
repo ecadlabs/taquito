@@ -1,4 +1,4 @@
-import { MichelsonType, MichelsonData } from "../src/michelson-types";
+import { MichelsonType, MichelsonData, MichelsonPassableType } from "../src/michelson-types";
 import { assertDataValid, assertTypesEqual, contractEntryPoint } from "../src/michelson-typecheck";
 
 describe('Typecheck', () => {
@@ -146,7 +146,7 @@ describe('Typecheck', () => {
     });
 
     it('contractEntrypoint', () => {
-        const param: MichelsonType = {
+        const param: MichelsonPassableType = {
             prim: 'or',
             args: [
                 {

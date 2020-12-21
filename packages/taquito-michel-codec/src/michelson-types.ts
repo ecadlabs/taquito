@@ -56,6 +56,8 @@ type MichelsonTypeID = "address" | "big_map" | "bool" | "bytes" | "chain_id" | "
 type Type0<PT extends MichelsonTypeID> = Prim0<PT>;
 type TypeX<PT extends MichelsonTypeID, AT extends MichelsonType[]> = PrimX<PT, AT>;
 
+export type PairArgs<T extends MichelsonType = MichelsonType> = [T, T, ...T[]];
+
 // Type subclasses
 // https://michelson.nomadic-labs.com/#types
 
@@ -144,7 +146,7 @@ export type MichelsonTypeChainID = Type0<"chain_id">;
 export interface MichelsonTypeOption<T extends MichelsonType = MichelsonType> extends TypeX<"option", [T]> { }
 export interface MichelsonTypeList<T extends MichelsonType = MichelsonType> extends TypeX<"list", [T]> { }
 export interface MichelsonTypeContract<T extends MichelsonPassableType = MichelsonPassableType> extends TypeX<"contract", [T]> { }
-export interface MichelsonTypePair<T extends [MichelsonType, MichelsonType, ...MichelsonType[]] = [MichelsonType, MichelsonType, ...MichelsonType[]]> extends TypeX<"pair", T> { }
+export interface MichelsonTypePair<T extends PairArgs = PairArgs> extends TypeX<"pair", T> { }
 export interface MichelsonTypeOr<T extends [MichelsonType, MichelsonType] = [MichelsonType, MichelsonType]> extends TypeX<"or", T> { }
 export interface MichelsonTypeLambda<Arg extends MichelsonType = MichelsonType, Ret extends MichelsonType = MichelsonType> extends TypeX<"lambda", [Arg, Ret]> { }
 export interface MichelsonTypeSet<T extends MichelsonComparableType = MichelsonComparableType> extends TypeX<"set", [T]> { }
@@ -189,29 +191,29 @@ interface EltList<T1 extends MichelsonComparableType, T2 extends MichelsonType> 
 type MT = MichelsonType;
 type MD<T extends MichelsonType> = MichelsonData<T>;
 
-type PairLiteral<T extends [MichelsonType, MichelsonType, ...MichelsonType[]]> = DataX<"Pair", PairLiteralArg<T>>;
-type PairLiteralArg<T extends [MichelsonType, MichelsonType, ...MichelsonType[]]> =
+type PairLiteral<T extends PairArgs> = DataX<"Pair", PairLiteralArg<T>>;
+type PairLiteralArg<T extends PairArgs> =
     T extends [MT, MT] ? [MD<T[0]>, MD<T[1]>] :
-    T extends [MT, MT, MT] ? [MD<T[0]>, MD<T[1]>, MD<T[2]>] | [PairLiteral<[T[0], T[1]]>, MD<T[2]>] :
-    T extends [MT, MT, MT, MT] ? [MD<T[0]>, MD<T[1]>, MD<T[2]>, MD<T[3]>] | [PairLiteral<[T[0], T[1], T[2]]>, MD<T[3]>] :
-    T extends [MT, MT, MT, MT, MT] ? [MD<T[0]>, MD<T[1]>, MD<T[2]>, MD<T[3]>, MD<T[4]>] | [PairLiteral<[T[0], T[1], T[2], T[3]]>, MD<T[4]>] :
-    T extends [MT, MT, MT, MT, MT, MT] ? [MD<T[0]>, MD<T[1]>, MD<T[2]>, MD<T[3]>, MD<T[4]>, MD<T[5]>] | [PairLiteral<[T[0], T[1], T[2], T[3], T[4]]>, MD<T[5]>] :
-    T extends [MT, MT, MT, MT, MT, MT, MT] ? [MD<T[0]>, MD<T[1]>, MD<T[2]>, MD<T[3]>, MD<T[4]>, MD<T[5]>, MD<T[6]>] | [PairLiteral<[T[0], T[1], T[2], T[3], T[4], T[5]]>, MD<T[6]>] :
-    T extends [MT, MT, MT, MT, MT, MT, MT, MT] ? [MD<T[0]>, MD<T[1]>, MD<T[2]>, MD<T[3]>, MD<T[4]>, MD<T[5]>, MD<T[6]>, MD<T[7]>] | [PairLiteral<[T[0], T[1], T[2], T[3], T[4], T[5], T[6]]>, MD<T[7]>] :
-    T extends [MT, MT, MT, MT, MT, MT, MT, MT, MT] ? [MD<T[0]>, MD<T[1]>, MD<T[2]>, MD<T[3]>, MD<T[4]>, MD<T[5]>, MD<T[6]>, MD<T[7]>, MD<T[8]>] | [PairLiteral<[T[0], T[1], T[2], T[3], T[4], T[5], T[6], T[7]]>, MD<T[8]>] :
-    T extends [MT, MT, MT, MT, MT, MT, MT, MT, MT, MT] ? [MD<T[0]>, MD<T[1]>, MD<T[2]>, MD<T[3]>, MD<T[4]>, MD<T[5]>, MD<T[6]>, MD<T[7]>, MD<T[8]>, MD<T[9]>] | [PairLiteral<[T[0], T[1], T[2], T[3], T[4], T[5], T[6], T[7], T[8]]>, MD<T[9]>] :
-    T extends [MT, MT, MT, MT, MT, MT, MT, MT, MT, MT, MT] ? [MD<T[0]>, MD<T[1]>, MD<T[2]>, MD<T[3]>, MD<T[4]>, MD<T[5]>, MD<T[6]>, MD<T[7]>, MD<T[8]>, MD<T[9]>, MD<T[10]>] | [PairLiteral<[T[0], T[1], T[2], T[3], T[4], T[5], T[6], T[7], T[8], T[9]]>, MD<T[10]>] :
-    T extends [MT, MT, MT, MT, MT, MT, MT, MT, MT, MT, MT, MT] ? [MD<T[0]>, MD<T[1]>, MD<T[2]>, MD<T[3]>, MD<T[4]>, MD<T[5]>, MD<T[6]>, MD<T[7]>, MD<T[8]>, MD<T[9]>, MD<T[10]>, MD<T[11]>] | [PairLiteral<[T[0], T[1], T[2], T[3], T[4], T[5], T[6], T[7], T[8], T[9], T[10]]>, MD<T[11]>] :
-    T extends [MT, MT, MT, MT, MT, MT, MT, MT, MT, MT, MT, MT, MT] ? [MD<T[0]>, MD<T[1]>, MD<T[2]>, MD<T[3]>, MD<T[4]>, MD<T[5]>, MD<T[6]>, MD<T[7]>, MD<T[8]>, MD<T[9]>, MD<T[10]>, MD<T[11]>, MD<T[12]>] | [PairLiteral<[T[0], T[1], T[2], T[3], T[4], T[5], T[6], T[7], T[8], T[9], T[10], T[11]]>, MD<T[12]>] :
-    T extends [MT, MT, MT, MT, MT, MT, MT, MT, MT, MT, MT, MT, MT, MT] ? [MD<T[0]>, MD<T[1]>, MD<T[2]>, MD<T[3]>, MD<T[4]>, MD<T[5]>, MD<T[6]>, MD<T[7]>, MD<T[8]>, MD<T[9]>, MD<T[10]>, MD<T[11]>, MD<T[12]>, MD<T[13]>] | [PairLiteral<[T[0], T[1], T[2], T[3], T[4], T[5], T[6], T[7], T[8], T[9], T[10], T[11], T[12]]>, MD<T[13]>] :
-    T extends [MT, MT, MT, MT, MT, MT, MT, MT, MT, MT, MT, MT, MT, MT, MT] ? [MD<T[0]>, MD<T[1]>, MD<T[2]>, MD<T[3]>, MD<T[4]>, MD<T[5]>, MD<T[6]>, MD<T[7]>, MD<T[8]>, MD<T[9]>, MD<T[10]>, MD<T[11]>, MD<T[12]>, MD<T[13]>, MD<T[14]>] | [PairLiteral<[T[0], T[1], T[2], T[3], T[4], T[5], T[6], T[7], T[8], T[9], T[10], T[11], T[12], T[13]]>, MD<T[14]>] :
+    T extends [MT, MT, MT] ? [MD<T[0]>, MD<T[1]>, MD<T[2]>] | [MD<T[0]>, PairLiteral<[T[1], T[2]]>] :
+    T extends [MT, MT, MT, MT] ? [MD<T[0]>, MD<T[1]>, MD<T[2]>, MD<T[3]>] | [MD<T[0]>, PairLiteral<[T[1], T[2], T[3]]>] :
+    T extends [MT, MT, MT, MT, MT] ? [MD<T[0]>, MD<T[1]>, MD<T[2]>, MD<T[3]>, MD<T[4]>] | [MD<T[0]>, PairLiteral<[T[1], T[2], T[3], T[4]]>] :
+    T extends [MT, MT, MT, MT, MT, MT] ? [MD<T[0]>, MD<T[1]>, MD<T[2]>, MD<T[3]>, MD<T[4]>, MD<T[5]>] | [MD<T[0]>, PairLiteral<[T[1], T[2], T[3], T[4], T[5]]>] :
+    T extends [MT, MT, MT, MT, MT, MT, MT] ? [MD<T[0]>, MD<T[1]>, MD<T[2]>, MD<T[3]>, MD<T[4]>, MD<T[5]>, MD<T[6]>] | [MD<T[0]>, PairLiteral<[T[1], T[2], T[3], T[4], T[5], T[6]]>] :
+    T extends [MT, MT, MT, MT, MT, MT, MT, MT] ? [MD<T[0]>, MD<T[1]>, MD<T[2]>, MD<T[3]>, MD<T[4]>, MD<T[5]>, MD<T[6]>, MD<T[7]>] | [MD<T[0]>, PairLiteral<[T[1], T[2], T[3], T[4], T[5], T[6], T[7]]>] :
+    T extends [MT, MT, MT, MT, MT, MT, MT, MT, MT] ? [MD<T[0]>, MD<T[1]>, MD<T[2]>, MD<T[3]>, MD<T[4]>, MD<T[5]>, MD<T[6]>, MD<T[7]>, MD<T[8]>] | [MD<T[0]>, PairLiteral<[T[1], T[2], T[3], T[4], T[5], T[6], T[7], T[8]]>] :
+    T extends [MT, MT, MT, MT, MT, MT, MT, MT, MT, MT] ? [MD<T[0]>, MD<T[1]>, MD<T[2]>, MD<T[3]>, MD<T[4]>, MD<T[5]>, MD<T[6]>, MD<T[7]>, MD<T[8]>, MD<T[9]>] | [MD<T[0]>, PairLiteral<[T[1], T[2], T[3], T[4], T[5], T[6], T[7], T[8], T[9]]>] :
+    T extends [MT, MT, MT, MT, MT, MT, MT, MT, MT, MT, MT] ? [MD<T[0]>, MD<T[1]>, MD<T[2]>, MD<T[3]>, MD<T[4]>, MD<T[5]>, MD<T[6]>, MD<T[7]>, MD<T[8]>, MD<T[9]>, MD<T[10]>] | [MD<T[0]>, PairLiteral<[T[1], T[2], T[3], T[4], T[5], T[6], T[7], T[8], T[9], T[10]]>] :
+    T extends [MT, MT, MT, MT, MT, MT, MT, MT, MT, MT, MT, MT] ? [MD<T[0]>, MD<T[1]>, MD<T[2]>, MD<T[3]>, MD<T[4]>, MD<T[5]>, MD<T[6]>, MD<T[7]>, MD<T[8]>, MD<T[9]>, MD<T[10]>, MD<T[11]>] | [MD<T[0]>, PairLiteral<[T[1], T[2], T[3], T[4], T[5], T[6], T[7], T[8], T[9], T[10], T[11]]>] :
+    T extends [MT, MT, MT, MT, MT, MT, MT, MT, MT, MT, MT, MT, MT] ? [MD<T[0]>, MD<T[1]>, MD<T[2]>, MD<T[3]>, MD<T[4]>, MD<T[5]>, MD<T[6]>, MD<T[7]>, MD<T[8]>, MD<T[9]>, MD<T[10]>, MD<T[11]>, MD<T[12]>] | [MD<T[0]>, PairLiteral<[T[1], T[2], T[3], T[4], T[5], T[6], T[7], T[8], T[9], T[10], T[11], T[12]]>] :
+    T extends [MT, MT, MT, MT, MT, MT, MT, MT, MT, MT, MT, MT, MT, MT] ? [MD<T[0]>, MD<T[1]>, MD<T[2]>, MD<T[3]>, MD<T[4]>, MD<T[5]>, MD<T[6]>, MD<T[7]>, MD<T[8]>, MD<T[9]>, MD<T[10]>, MD<T[11]>, MD<T[12]>, MD<T[13]>] | [MD<T[0]>, PairLiteral<[T[1], T[2], T[3], T[4], T[5], T[6], T[7], T[8], T[9], T[10], T[11], T[12], T[13]]>] :
+    T extends [MT, MT, MT, MT, MT, MT, MT, MT, MT, MT, MT, MT, MT, MT, MT] ? [MD<T[0]>, MD<T[1]>, MD<T[2]>, MD<T[3]>, MD<T[4]>, MD<T[5]>, MD<T[6]>, MD<T[7]>, MD<T[8]>, MD<T[9]>, MD<T[10]>, MD<T[11]>, MD<T[12]>, MD<T[13]>, MD<T[14]>] | [MD<T[0]>, PairLiteral<[T[1], T[2], T[3], T[4], T[5], T[6], T[7], T[8], T[9], T[10], T[11], T[12], T[13], T[14]]>] :
     [MD<MT>, MD<MT>, ...MD<MT>[]];
 
 /*
 type PairLiteralArg<T extends [MichelsonType, MichelsonType, ...MichelsonType[]]> = {
     [N in keyof T]: T[N] extends MichelsonType ? MichelsonData<T[N]> : undefined;
 };
- */
+*/
 
 export type MichelsonData<T extends MichelsonType = MichelsonType> =
     T extends MichelsonTypeInt | MichelsonTypeNat | MichelsonTypeMutez ? IntLiteral :
@@ -222,7 +224,7 @@ export type MichelsonData<T extends MichelsonType = MichelsonType> =
     T extends MichelsonTypeBool ? Data0<"True" | "False"> :
     T extends MichelsonTypeOption<infer A> ? Data0<"None"> | DataX<"Some", [MichelsonData<A>]> :
     T extends MichelsonTypeList<infer A> ? DataList<A> :
-    T extends MichelsonTypePair<infer A> ? DataX<"Pair", PairLiteralArg<A>> :
+    T extends MichelsonTypePair<infer A> ? DataX<"Pair", PairLiteralArg<A>> : // TODO: sequences as comb pairs
     T extends MichelsonTypeOr<infer A> ? DataX<"Left", [MichelsonData<A[0]>]> | DataX<"Right", [MichelsonData<A[1]>]> :
     T extends MichelsonTypeLambda ? InstructionList :
     T extends MichelsonTypeSet<infer A> ? DataList<A> :
