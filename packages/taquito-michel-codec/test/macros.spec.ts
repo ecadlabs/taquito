@@ -327,27 +327,9 @@ describe('Macros', () => {
     expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
   });
 
-  it('DUP 2', () => {
-    const macro = '{ DUP 2 }';
-    const expanded = '{ { DIP { DUP } ; SWAP } }';
-    const p = new Parser({ expandMacros: true });
-    const m = p.parseMichelineExpression(macro);
-    const e = p.parseMichelineExpression(expanded);
-    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
-  });
-
   it('DUUP', () => {
     const macro = '{ DUUP }';
-    const expanded = '{ { DIP { DUP } ; SWAP } }';
-    const p = new Parser({ expandMacros: true });
-    const m = p.parseMichelineExpression(macro);
-    const e = p.parseMichelineExpression(expanded);
-    expect(emitMicheline(m || [])).toEqual(emitMicheline(e || []));
-  });
-
-  it('DUP 3', () => {
-    const macro = '{ DUP 3 }';
-    const expanded = '{ { DIP 2 { DUP } ; DIG 3 } }';
+    const expanded = '{ DUP 2 }';
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
@@ -392,9 +374,7 @@ describe('Macros', () => {
 
   it('UNPAPPAIIR %a %b %c %d @x', () => {
     const macro = '{ UNPAPPAIIR %a %b %c %d @x }';
-    const expanded = `{ { { DUP ; CAR %a ; DIP { CDR } } ;
-    DIP { { DUP ; CAR ; DIP { CDR %d } } } ;
-    DIP { { DUP ; CAR %b ; DIP { CDR %c } } } } }`;
+    const expanded = `{{UNPAIR; DIP {UNPAIR}; DIP {UNPAIR}}}`;
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
@@ -403,7 +383,7 @@ describe('Macros', () => {
 
   it('UNPPAIPAIR', () => {
     const macro = '{ UNPPAIPAIR }';
-    const expanded = `{{{DUP; CAR; DIP {CDR}}; DIP {{DUP; CAR; DIP {CDR}}}; {DUP; CAR; DIP {CDR}}}}`;
+    const expanded = `{{UNPAIR; DIP {UNPAIR}; UNPAIR}}`;
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
@@ -412,9 +392,7 @@ describe('Macros', () => {
 
   it('UNPPAPAIIR', () => {
     const macro = '{ UNPPAPAIIR }';
-    const expanded = `{ { { DUP ; CAR ; DIP { CDR } } ;
-    { DUP ; CAR ; DIP { CDR } } ;
-    DIP { { DUP ; CAR ; DIP { CDR } } } } }`;
+    const expanded = `{{UNPAIR; UNPAIR; DIP {UNPAIR}}}`;
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
@@ -423,7 +401,7 @@ describe('Macros', () => {
 
   it('UNPPPAIIPAIR', () => {
     const macro = '{ UNPPPAIIPAIR }';
-    const expanded = `{{{DUP; CAR; DIP {CDR}}; DIP {{DUP; CAR; DIP {CDR}}}; {DUP; CAR; DIP {CDR}}; {DUP; CAR; DIP {CDR}}}}`;
+    const expanded = `{{UNPAIR; DIP {UNPAIR}; UNPAIR; UNPAIR}}`;
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);
@@ -432,7 +410,7 @@ describe('Macros', () => {
 
   it('UNPAPPAIPAIR', () => {
     const macro = '{ UNPAPPAIPAIR }';
-    const expanded = `{{{DUP; CAR; DIP {CDR}}; DIP {{DUP; CAR; DIP {CDR}}}; DIP 2 {{DUP; CAR; DIP {CDR}}}; DIP {{DUP; CAR; DIP {CDR}}}}}`;
+    const expanded = `{{UNPAIR; DIP {UNPAIR}; DIP 2 {UNPAIR}; DIP {UNPAIR}}}`;
     const p = new Parser({ expandMacros: true });
     const m = p.parseMichelineExpression(macro);
     const e = p.parseMichelineExpression(expanded);

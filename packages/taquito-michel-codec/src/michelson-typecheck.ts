@@ -240,16 +240,16 @@ function compareMichelsonData(t: MichelsonComparableType, a: MichelsonData, b: M
                 const tComb = buildComb(t);
                 const aComb = buildComb(a);
                 const bComb = buildComb(b);
-                const x = compareMichelsonData(tComb, aComb.args[0], bComb.args[0]);
+                const x = compareMichelsonData(tComb.args[0], aComb.args[0], bComb.args[0]);
                 if (x !== 0) {
                     return x;
                 }
-                return compareMichelsonData(tComb, aComb.args[1], bComb.args[1]);
+                return compareMichelsonData(tComb.args[0], aComb.args[1], bComb.args[1]);
             }
 
     }
     // Unlikely, types are expected to be verified before the function call
-    throw new MichelsonTypeError(t, undefined, `non comparable values: ${a}, ${b}`);
+    throw new MichelsonTypeError(t, undefined, `${t.prim}: not comparable values: ${JSON.stringify(a)}, ${JSON.stringify(b)}`);
 }
 
 function isInstruction(p: Prim): p is MichelsonInstruction {
@@ -640,6 +640,7 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
         });
     }
 
+    // comb helper functions
     function getN(src: MichelsonTypePair, n: number, i: number = n): MichelsonType[] {
         const p = buildComb(src);
         if (i === 1) {
