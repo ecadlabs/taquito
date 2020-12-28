@@ -36,13 +36,13 @@ export type MichelsonInstruction =
     InstrX<"NONE" | "LEFT" | "RIGHT" | "NIL" | "CAST", [MichelsonType]> |
     InstrX<"IF_NONE" | "IF_LEFT" | "IF_CONS" | "IF", [InstructionList, InstructionList]> |
     InstrX<"MAP" | "ITER" | "LOOP" | "LOOP_LEFT" | "DIP", [InstructionList]> |
-    InstrX<"UNPACK", [MichelsonSerializableType]> |
+    InstrX<"UNPACK", [MichelsonPackableType]> |
     InstrX<"CONTRACT", [MichelsonPassableType]> |
     InstrX<"CREATE_CONTRACT", [MichelsonContract]> |
     InstrX<"PUSH", [MichelsonPushableType, MichelsonData]> |
     InstrX<"EMPTY_SET", [MichelsonComparableType]> |
     InstrX<"EMPTY_MAP", [MichelsonComparableType, MichelsonType]> |
-    InstrX<"EMPTY_BIG_MAP", [MichelsonComparableType, MichelsonSerializableType]> |
+    InstrX<"EMPTY_BIG_MAP", [MichelsonComparableType, MichelsonBigMapStorableType]> |
     InstrX<"LAMBDA", [MichelsonType, MichelsonType, InstructionList]> |
     InstrX<"DIP", [IntLiteral, InstructionList] | [InstructionList]> |
     InstrPrim<"DROP" | "PAIR" | "UNPAIR" | "DUP" | "UPDATE", [IntLiteral]>;
@@ -51,55 +51,86 @@ export type MichelsonInstruction =
 
 type MichelsonTypeID = "address" | "big_map" | "bool" | "bytes" | "chain_id" | "contract" | "int" |
     "key_hash" | "key" | "lambda" | "list" | "map" | "mutez" | "nat" | "operation" | "option" |
-    "or" | "pair" | "set" | "signature" | "string" | "timestamp" | "unit";
+    "or" | "pair" | "set" | "signature" | "string" | "timestamp" | "unit" | "never" | "bls12_381_g1" |
+    "bls12_381_g2" | "bls12_381_fr" | "sapling_transaction" | "sapling_state" | "ticket";
 
 type Type0<PT extends MichelsonTypeID> = Prim0<PT>;
-type TypeX<PT extends MichelsonTypeID, AT extends MichelsonType[]> = PrimX<PT, AT>;
+type TypeX<PT extends MichelsonTypeID, AT extends Expr[]> = PrimX<PT, AT>;
 
 export type PairArgs<T extends MichelsonType = MichelsonType> = [T, T, ...T[]];
 
 // Type subclasses
 // https://michelson.nomadic-labs.com/#types
 
-export type MichelsonSimpleComparableType =
+type MichelsonAtomicType =
+    MichelsonTypeAddress |
+    MichelsonTypeBool |
+    MichelsonTypeBytes |
+    MichelsonTypeChainID |
     MichelsonTypeInt |
     MichelsonTypeNat |
     MichelsonTypeString |
-    MichelsonTypeBytes |
     MichelsonTypeMutez |
-    MichelsonTypeBool |
     MichelsonTypeKeyHash |
-    MichelsonTypeTimestamp |
-    MichelsonTypeAddress;
+    MichelsonTypeKey |
+    MichelsonTypeNever |
+    MichelsonTypeSignature |
+    MichelsonTypeUnit |
+    MichelsonTypeTimestamp;
 
 // C class
 export type MichelsonComparableType =
-    MichelsonSimpleComparableType |
-    MichelsonTypePair<[MichelsonSimpleComparableType, MichelsonComparableType, ...MichelsonComparableType[]]>;
+    MichelsonAtomicType |
+    MichelsonTypeOption<MichelsonComparableType> |
+    MichelsonTypeOr<[MichelsonComparableType, MichelsonComparableType]> |
+    MichelsonTypePair<[MichelsonComparableType, MichelsonComparableType, ...MichelsonComparableType[]]>;
 
-type MichelsonSimpleType =
-    MichelsonSimpleComparableType |
-    MichelsonTypeChainID |
-    MichelsonTypeKey |
-    MichelsonTypeLambda |
-    MichelsonTypeSet |
-    MichelsonTypeSignature |
-    MichelsonTypeUnit;
+type SimpleType =
+    MichelsonAtomicType |
+    MichelsonTypeBLS12_381_G1 |
+    MichelsonTypeBLS12_381_G2 |
+    MichelsonTypeBLS12_381_FR |
+    MichelsonTypeSaplingTransaction |
+    MichelsonTypeLambda;
 
-// B, PA class
-export type MichelsonSerializableType =
-    MichelsonSimpleType |
+/*
+type CompositeType<T extends MichelsonType> =
+    MichelsonTypeList<T> |
+    MichelsonTypeSet<T & MichelsonComparableType> |
+    MichelsonTypeMap<MichelsonComparableType, T> |
+    MichelsonTypeOption<T> |
+    MichelsonTypeOr<[T, T]> |
+    MichelsonTypePair<[T, T, ...T[]]>;
+*/
+
+// PA class
+export type MichelsonPackableType =
+    SimpleType |
+    MichelsonTypeList<MichelsonPackableType> |
+    MichelsonTypeSet<MichelsonPackableType & MichelsonComparableType> |
+    MichelsonTypeMap<MichelsonComparableType, MichelsonPackableType> |
+    MichelsonTypeOption<MichelsonPackableType> |
+    MichelsonTypeOr<[MichelsonPackableType, MichelsonPackableType]> |
+    MichelsonTypePair<[MichelsonPackableType, MichelsonPackableType, ...MichelsonPackableType[]]> |
+    MichelsonTypeContract;
+
+// B class
+export type MichelsonBigMapStorableType =
+    SimpleType |
+    MichelsonTypeList<MichelsonBigMapStorableType> |
+    MichelsonTypeSet<MichelsonBigMapStorableType & MichelsonComparableType> |
+    MichelsonTypeMap<MichelsonComparableType, MichelsonBigMapStorableType> |
+    MichelsonTypeOption<MichelsonBigMapStorableType> |
+    MichelsonTypeOr<[MichelsonBigMapStorableType, MichelsonBigMapStorableType]> |
+    MichelsonTypePair<[MichelsonBigMapStorableType, MichelsonBigMapStorableType, ...MichelsonBigMapStorableType[]]> |
     MichelsonTypeContract |
-    MichelsonTypeList<MichelsonSerializableType> |
-    MichelsonTypeMap<MichelsonComparableType, MichelsonSerializableType> |
-    MichelsonTypeOption<MichelsonSerializableType> |
-    MichelsonTypeOr<[MichelsonSerializableType, MichelsonSerializableType]> |
-    MichelsonTypePair<[MichelsonSerializableType, MichelsonSerializableType, ...MichelsonSerializableType[]]>;
+    MichelsonTypeTicket;
 
 // PU class
 export type MichelsonPushableType =
-    MichelsonSimpleType |
+    SimpleType |
     MichelsonTypeList<MichelsonPushableType> |
+    MichelsonTypeSet<MichelsonPushableType & MichelsonComparableType> |
     MichelsonTypeMap<MichelsonComparableType, MichelsonPushableType> |
     MichelsonTypeOption<MichelsonPushableType> |
     MichelsonTypeOr<[MichelsonPushableType, MichelsonPushableType]> |
@@ -107,24 +138,30 @@ export type MichelsonPushableType =
 
 // S class
 export type MichelsonStorableType =
-    MichelsonSimpleType |
+    SimpleType |
     MichelsonTypeList<MichelsonStorableType> |
+    MichelsonTypeSet<MichelsonStorableType & MichelsonComparableType> |
     MichelsonTypeMap<MichelsonComparableType, MichelsonStorableType> |
     MichelsonTypeOption<MichelsonStorableType> |
     MichelsonTypeOr<[MichelsonStorableType, MichelsonStorableType]> |
     MichelsonTypePair<[MichelsonStorableType, MichelsonStorableType, ...MichelsonStorableType[]]> |
-    MichelsonTypeBigMap<MichelsonComparableType, MichelsonStorableType & MichelsonSerializableType>;
+    MichelsonTypeSaplingState |
+    MichelsonTypeTicket |
+    MichelsonTypeBigMap<MichelsonComparableType, MichelsonStorableType & MichelsonBigMapStorableType>;
 
 // PM class
 export type MichelsonPassableType =
-    MichelsonSimpleType |
-    MichelsonTypeContract |
+    SimpleType |
     MichelsonTypeList<MichelsonPassableType> |
+    MichelsonTypeSet<MichelsonPassableType & MichelsonComparableType> |
     MichelsonTypeMap<MichelsonComparableType, MichelsonPassableType> |
     MichelsonTypeOption<MichelsonPassableType> |
     MichelsonTypeOr<[MichelsonPassableType, MichelsonPassableType]> |
     MichelsonTypePair<[MichelsonPassableType, MichelsonPassableType, ...MichelsonPassableType[]]> |
-    MichelsonTypeBigMap<MichelsonComparableType, MichelsonPassableType & MichelsonSerializableType>;
+    MichelsonTypeContract |
+    MichelsonTypeSaplingState |
+    MichelsonTypeTicket |
+    MichelsonTypeBigMap<MichelsonComparableType, MichelsonPassableType & MichelsonBigMapStorableType>;
 
 // Michelson types
 
@@ -142,6 +179,10 @@ export type MichelsonTypeUnit = Type0<"unit">;
 export type MichelsonTypeSignature = Type0<"signature">;
 export type MichelsonTypeOperation = Type0<"operation">;
 export type MichelsonTypeChainID = Type0<"chain_id">;
+export type MichelsonTypeNever = Type0<"never">;
+export type MichelsonTypeBLS12_381_G1 = Type0<"bls12_381_g1">;
+export type MichelsonTypeBLS12_381_G2 = Type0<"bls12_381_g2">;
+export type MichelsonTypeBLS12_381_FR = Type0<"bls12_381_fr">;
 
 export interface MichelsonTypeOption<T extends MichelsonType = MichelsonType> extends TypeX<"option", [T]> { }
 export interface MichelsonTypeList<T extends MichelsonType = MichelsonType> extends TypeX<"list", [T]> { }
@@ -151,7 +192,10 @@ export interface MichelsonTypeOr<T extends [MichelsonType, MichelsonType] = [Mic
 export interface MichelsonTypeLambda<Arg extends MichelsonType = MichelsonType, Ret extends MichelsonType = MichelsonType> extends TypeX<"lambda", [Arg, Ret]> { }
 export interface MichelsonTypeSet<T extends MichelsonComparableType = MichelsonComparableType> extends TypeX<"set", [T]> { }
 export interface MichelsonTypeMap<K extends MichelsonComparableType = MichelsonComparableType, V extends MichelsonType = MichelsonType> extends TypeX<"map", [K, V]> { }
-export interface MichelsonTypeBigMap<K extends MichelsonComparableType = MichelsonComparableType, V extends MichelsonSerializableType = MichelsonSerializableType> extends TypeX<"big_map", [K, V]> { }
+export interface MichelsonTypeBigMap<K extends MichelsonComparableType = MichelsonComparableType, V extends MichelsonBigMapStorableType = MichelsonBigMapStorableType> extends TypeX<"big_map", [K, V]> { }
+export interface MichelsonTypeSaplingState<S extends string = string> extends TypeX<"sapling_state", [IntLiteral<S>]> { }
+export interface MichelsonTypeSaplingTransaction<S extends string = string> extends TypeX<"sapling_transaction", [IntLiteral<S>]> { }
+export interface MichelsonTypeTicket<T extends MichelsonComparableType = MichelsonComparableType> extends TypeX<"ticket", [T]> { }
 
 export type MichelsonType<T extends MichelsonTypeID = MichelsonTypeID> =
     T extends "int" ? MichelsonTypeInt :
@@ -171,11 +215,19 @@ export type MichelsonType<T extends MichelsonTypeID = MichelsonTypeID> =
     T extends "option" ? MichelsonTypeOption :
     T extends "list" ? MichelsonTypeList :
     T extends "contract" ? MichelsonTypeContract :
+    T extends "ticket" ? MichelsonTypeTicket :
     T extends "pair" ? MichelsonTypePair :
     T extends "or" ? MichelsonTypeOr :
     T extends "lambda" ? MichelsonTypeLambda :
     T extends "set" ? MichelsonTypeSet :
-    T extends "map" ? MichelsonTypeMap : MichelsonTypeBigMap;
+    T extends "map" ? MichelsonTypeMap :
+    T extends "big_map" ? MichelsonTypeBigMap :
+    T extends "never" ? MichelsonTypeNever :
+    T extends "bls12_381_g1" ? MichelsonTypeBLS12_381_G1 :
+    T extends "bls12_381_g2" ? MichelsonTypeBLS12_381_G2 :
+    T extends "bls12_381_fr" ? MichelsonTypeBLS12_381_FR :
+    T extends "sapling_transaction" ? MichelsonTypeSaplingTransaction :
+    MichelsonTypeSaplingState;
 
 // Data
 
