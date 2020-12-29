@@ -2,7 +2,7 @@ import { HttpBackend } from "@taquito/http-utils";
 import { ContractAbstraction, ContractProvider, Wallet, Context } from "@taquito/taquito";
 import { Handler, Tzip16Uri } from "../metadata-provider";
 
-export class IpfsHandler implements Handler {
+export class IpfsHttpHandler implements Handler {
     private _ipfsGateway: string;
     private _httpBackend = new HttpBackend();
 

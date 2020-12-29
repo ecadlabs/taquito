@@ -1,4 +1,4 @@
-import { IpfsHandler } from '../../src/handlers/ipfs-handler'
+import { IpfsHttpHandler } from '../../src/handlers/ipfs-handler'
 
 describe('Tzip16 http handler test', () => {
 	let mockHttpBackend: {
@@ -7,7 +7,7 @@ describe('Tzip16 http handler test', () => {
     let mockContractAbstraction: any = {};
     let mockContext: any = {};
     
-    const ipfsHandler = new IpfsHandler();
+    const ipfsHandler = new IpfsHttpHandler();
 
 	beforeEach(() => {
 		mockHttpBackend = {

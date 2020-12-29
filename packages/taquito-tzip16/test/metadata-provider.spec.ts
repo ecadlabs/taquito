@@ -12,7 +12,7 @@ describe('Metadata provider test', () => {
     let mockTezosStorageHandler: {
         getMetadata: jest.Mock<any, any>;
     };
-    let mockIpfsHandler: {
+    let mockIpfsHttpHandler: {
         getMetadata: jest.Mock<any, any>;
     };
 
@@ -23,14 +23,14 @@ describe('Metadata provider test', () => {
         mockTezosStorageHandler = {
             getMetadata: jest.fn()
         };
-        mockIpfsHandler = {
+        mockIpfsHttpHandler = {
             getMetadata: jest.fn()
         };
         handlers = new Map<string, Handler>([
             ['http', mockHttpHandler],
             ['https', mockHttpHandler],
             ['tezos-storage', mockTezosStorageHandler],
-            ['ipfs', mockIpfsHandler]
+            ['ipfs', mockIpfsHttpHandler]
         ]);
         metadataProvider = new MetadataProvider(handlers);
     });
@@ -110,7 +110,7 @@ describe('Metadata provider test', () => {
     });
 
     it('Should succesfully fetch metadata for IPFS', async (done) => {
-        mockIpfsHandler.getMetadata.mockResolvedValue(
+        mockIpfsHttpHandler.getMetadata.mockResolvedValue(
             `{"name":"test","description":"A metadata test","version":"0.1","license":"MIT","authors":["Taquito <https://tezostaquito.io/>"],"homepage":"https://tezostaquito.io/"}`
         );
 
