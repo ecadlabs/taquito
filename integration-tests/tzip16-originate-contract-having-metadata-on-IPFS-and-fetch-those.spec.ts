@@ -4,10 +4,19 @@ import { tacoContractTzip16 } from './data/modified-taco-contract';
 import { MichelsonMap } from '@taquito/taquito';
 import { tzip16 } from '../packages/taquito-tzip16/src/composer';
 import { Tzip16Module } from '../packages/taquito-tzip16/src/tzip16-extension';
+import { IpfsHttpHandler } from '../packages/taquito-tzip16/src/handlers/ipfs-handler';
+import { Handler, MetadataProvider } from '../packages/taquito-tzip16/src/metadata-provider';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
-    Tezos.addExtension(new Tzip16Module());
+
+    const customHandler = new Map<string, Handler>([
+        ['ipfs', new IpfsHttpHandler('gateway.ipfs.io')]
+    ]);
+
+    const customMetadataProvider = new MetadataProvider(customHandler);
+
+    Tezos.addExtension(new Tzip16Module(customMetadataProvider));
 
     let contractAddress: string;
 
@@ -47,7 +56,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        it('Should fail to fetch invalid metadata of the contract', async (done) => {
+        it('Should fetch metadata of the contract on IPFS', async (done) => {
             // carthagenet:KT1PBndiMVyeptfQejZKYcSB6YmucaJdXVBQ
             // delphinet: KT1BfdzrP3ybxSbQCNZrmdk2Y5AQjRK1KKkz
 
