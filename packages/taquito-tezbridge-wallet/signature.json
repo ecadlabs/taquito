@@ -67,7 +67,7 @@
           "typings",
           "version"
         ],
-        "sha512": "5bf4a4c55e79af0f97f25de24d4e53f7da335b1d4424ff2aca619d2b854dc4a3665352745cf89b5aae8d92d9d25a5c55da8053ddd1447c11742b9a3c6e0a9e20"
+        "sha512": "feaa9c5451d9f5658b3806f9a4c24f8cb6b452fd86fd1c691d36ad656751fb09b61cbdbb7baaac6a74307a7932f80f6790f44014c78d3664629e9e7307061ffc"
       }
     },
     {
@@ -75,7 +75,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/tezbridge-wallet",
-          "version": "7.1.0-preview.8",
+          "version": "7.1.0-beta.0",
           "description": "Tezbridge wallet provider",
           "keywords": [
             "tezos",
@@ -135,17 +135,17 @@
             ]
           },
           "dependencies": {
-            "@taquito/taquito": "^7.1.0-preview.8"
+            "@taquito/taquito": "^7.1.0-beta.0"
           },
           "devDependencies": {
-            "@types/jest": "^26.0.14",
-            "@types/node": "^14.11.5",
-            "@types/ws": "^7.2.7",
+            "@types/jest": "^26.0.16",
+            "@types/node": "^14.14.10",
+            "@types/ws": "^7.4.0",
             "colors": "^1.4.0",
             "coveralls": "^3.1.0",
             "cross-env": "^7.0.2",
-            "jest": "^26.5.2",
-            "jest-config": "^26.5.2",
+            "jest": "^26.6.3",
+            "jest-config": "^26.6.3",
             "lint-staged": "^10.4.0",
             "lodash.camelcase": "^4.3.0",
             "prettier": "^2.1.2",
@@ -157,17 +157,17 @@
             "rollup-plugin-sourcemaps": "^0.6.3",
             "rollup-plugin-typescript2": "^0.27.3",
             "shelljs": "^0.8.4",
-            "ts-jest": "^26.4.1",
-            "ts-node": "^9.0.0",
+            "ts-jest": "^26.4.4",
+            "ts-node": "^9.1.1",
             "tslint": "^6.1.3",
             "tslint-config-prettier": "^1.18.0",
             "tslint-config-standard": "^9.0.0",
-            "typescript": "^4.0.3"
+            "typescript": "^4.1.2"
           },
           "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfyF36CRAD9Qy5GYHsngAAtlsQAGeObmz9pUTfv3zjTXIz+mpD\n2ea0VCqh4ASwDaHikUa0kL++1RED2eTPsc1215bJdCsTB58AyZO4cKamWgcerZnO\n7r9JBdIvar+AJUoh79bGqYov644CaFfpj96Z4/TQPCz+bMEVe0wAyhW3AUrbvSaP\nslWqkQ3AXBRC+pH6mHyfIAVH6TTlGz5iTOYjUYB89bPfSKluNVvwt83kAuJ0LH/7\nMRohfr1fAm868OhWCmfi5x+jSm+odxb1njzcRI13hhlwylS0v32bWlJ7AYzraSJc\nUIr3BFAtUy3/RQcCnhlGAhFEyJFWZJPSqziciacwCY6ACyMm/zTRjKoltIDajMgY\n9P6lY4irZ9HqXlxyVVJcdlO65FThMXDVA4TstnyUR0QPD15linLF7S4dLhCkHcrc\nXFmm4BfQw20T4FU8k28ANOGNjYmtYpD8hAyng83CPUvSo6TpZInEO5TfixI7jRdL\nYFvwQiFwpfDPkaTuFZ8OLkDifKh1MAvWzeaB6RW1+/HiUMRsR0fkX8FaY/XFTN1i\nhnJk2xUH7x3quSZ7VJKPMgK1DS+d8s8bhtSEszwXThetZQjFyW/zZ5b2QZDLaBz8\nJ6mziGAYHGmfRcH+mjXdgq9MqaatGg0WfS1QYhuqbbBO9Zzew8lObYP/9/9Mqpu1\n1zXVvQNkzCSxXI0rJldU\n=Pdcm\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfz5jdCRAD9Qy5GYHsngAAbYEQAARg3hIbVQp1NNFGm0VRnuor\n35Lyk9ah7NMFgzLICVMdJfFY5QcWDL7iWX50iQhYOrrZXUehZ73fySTFa95WCjMh\n3YQdEu8jQjxNoBbNsV+yCpzscSno1AgD8uoaGRglP3nkdzq7xE/ZCcZMvXpSM6zd\njyp/EmHc5le/cA0R+wmBhaqJds2WJe768Q79c95A2D207USM7tOZKOIpAUV+MXzC\nFkDKmsH+g6KZSc9gwecQK1bK7+iktYTGsnRVx6CEyNaioa4HEr1Je6pF8aSuCJth\nH3y57jUOBTFxSR3Ec2VvTeYjXhFw9RWiIa+/DAxH9KGW1NOpQ06V+66zRzQOI6R7\n0W1e+i8b7RsKuHwjfEEHGcOUTp6qInph3lbjmipKLYC7lpS76AVdArqIGZdz8F3m\ndeuvU2CSSYCFCg4UclZHA5lYKASkYqXAtXZZU5WLQppxXcTJkxD42k0MnCUl7/TN\nbT5WOc4EhFKfD1uUEBjW61ICDcwWvpoE6lZQU5WWjI6igkvewmLtsTTlOf3gJWRO\nJA9akTbSJF4Oe+0pUuylqPdJBFXG0vtpljIZGw3Ck465sBh22mX37YotdC2lQTwE\nZyQro7bkVFLlVcygL5xnyH8bZx2lzORbOxL+8FgPpNxopmytCAsVAlYq2cXKjcH/\nSGV4cYUFSpDg8aSF1AHZ\n=puj0\n-----END PGP SIGNATURE-----\n"
 }

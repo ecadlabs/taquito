@@ -167,7 +167,7 @@
           "typings",
           "version"
         ],
-        "sha512": "b8b79e5eab89a2906a024021c3c5a57bdff780a65726d8385560e8667bc0714e9fbd0ef22aeebe69dc57d45f73fb67fffa4201bd3d0012bf2e7e57bfdaed631b"
+        "sha512": "17cfc79eb6d2de1958bb488cca7fc8c1234cc4a9aa979d8904decb655adabf375d964f8ea49ff6c6ad83c080b4eed8007a8f9513155c0c67af94507e10ea2377"
       }
     },
     {
@@ -175,7 +175,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/local-forging",
-          "version": "7.1.0-preview.8",
+          "version": "7.1.0-beta.0",
           "description": "Provide local forging functionality to be with taquito",
           "keywords": [
             "tezos",
@@ -241,18 +241,18 @@
             ]
           },
           "dependencies": {
-            "@taquito/utils": "^7.1.0-preview.8",
+            "@taquito/utils": "^7.1.0-beta.0",
             "bignumber.js": "^9.0.1"
           },
           "devDependencies": {
-            "@taquito/taquito": "^7.1.0-preview.8",
-            "@types/jest": "^26.0.14",
-            "@types/node": "^14.11.5",
+            "@taquito/taquito": "^7.1.0-beta.0",
+            "@types/jest": "^26.0.16",
+            "@types/node": "^14.14.10",
             "colors": "^1.4.0",
             "coveralls": "^3.1.0",
             "cross-env": "^7.0.2",
-            "jest": "^26.5.2",
-            "jest-config": "^26.5.2",
+            "jest": "^26.6.3",
+            "jest-config": "^26.6.3",
             "lint-staged": "^10.4.0",
             "lodash.camelcase": "^4.3.0",
             "prettier": "^2.1.2",
@@ -264,18 +264,18 @@
             "rollup-plugin-sourcemaps": "^0.6.3",
             "rollup-plugin-typescript2": "^0.27.3",
             "shelljs": "^0.8.4",
-            "ts-jest": "^26.4.1",
-            "ts-node": "^9.0.0",
+            "ts-jest": "^26.4.4",
+            "ts-node": "^9.1.1",
             "tslint": "^6.1.3",
             "tslint-config-prettier": "^1.18.0",
             "tslint-config-standard": "^9.0.0",
             "typedoc": "^0.19.2",
-            "typescript": "^4.0.3"
+            "typescript": "^4.1.2"
           },
           "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfyF30CRAD9Qy5GYHsngAA5IEQAI8UDDT6TdlhKR7zW4+0nGJB\npX6xSlQtj2YWxEh5ZM7dQ2pyJ2mlFxwAErW2jT/TKCIlbFXROauTHYWGdFGK0hI7\neZ8gONhd0NhYk2Vgl7B721cCnsH/C6vIMW/ujsCBcEYOV7Pp/O+A/7EBfbTJHujB\npzZKeB2JUO22A5Hm1NKGHJVVzlRiap80/uv+QorW8qNfLm428PoteI5qGdOPPlgK\nIec+XkxzyV1Pul7SDQSjd4odMD1FkCv7PhwxV3UcxFiNzmfVPAW54wl+l7guF/1w\nICwlVkJN0RVQycNdQfeXPk1OyvakYofeJBI88pF/ZPKzaV/qnAgGTdToO8o3Tws5\npDtvPDeFCdBXI7ZzM7MgzJTlELT7yTbEygn5ppD/OjplaiiGvINQ/btgcz895/VS\n8w5knIgiUD9FM2IawaFuXmOSgiILJMWZ3xELQcYrZqCC2HCdfU40TmAjP0oqvCiI\npvtX88JmlKPxkJvZHlw4F7pSQawF9uxG+AYZLOhbsf0LyUs+QDWU5oIgvV+6Wf92\n0/wKeNVTO+7uLTtW27TBc8WmeN+xHYUs9vDYdvfxwNZilE3CC5H5hqCswYn3grpn\nG3XxXTf0zxHSSf7X6sq5gWLIfj17OqOqmVpJMTOFmacNJNFb6x4y5TyDTcYrF+5N\n8di5HZLSJDkB/dHeJfHa\n=aBS5\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfz5jWCRAD9Qy5GYHsngAANA0QAIf+B8MhxwFcF20r6MXl1Jqq\nLmcEkDBCeTMBoKxkUaxxNx7wY89OkVAic6eyAh3Xt/vXlnjsMrpS219R824pfge3\nNNUq28cb/7ZGDMxeI4D+GV8NTdHbjh8DwwHkO8a7ndzFBY9fBn3d+bTLu/FgYpo5\nQh/93811H/V5HuspNsjdCNEgUawZSwnSCaLKEhA+b40iWrqLfvvV+mK9f5MKW+64\nwOV96vIU1FMDwxVi70BgOBq0tw67iBB5uaF4leAUw2Hw3Y1eINSiQUZgcBrSGemj\n01/dg/ewyt/nnpDgodsIZtwoYZfhDd7D/9TteQyjSz1535YIoz+DsbQFS/R2vblc\nM8qpARR5K0HTRXcCvZne2xTs0kbLbQACbIDQijq6RrRHKHuxf7ChDqeVEqcp3dlF\ny9Q3bacx/77F8h73NG/OGeYkZ6cKZHKdNt2TZGAATbnS3ufRyGotk02P87Zvb/zW\nVm94ZTWNnMnmuC5hudWNVds+SpF/u+ESj+/LXlYMi3YN3TWj9zLIelL9U83h3JBH\ncE/MRbjjo6QRmi8UUu8VEAg3e5U3sKtDzPqBvr86IjK3ixubkZIybJ5kLjDbhlKW\nz5DbA52DX7u592EXrQWIPHUOuJYTPZ3uIZpXMX8r9k/RFvLz+0UhJnI4HOepuVCA\np1IcnJvXPFqeB3G246RO\n=djeT\n-----END PGP SIGNATURE-----\n"
 }
