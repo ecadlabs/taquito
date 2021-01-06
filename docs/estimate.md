@@ -27,14 +27,15 @@ The following example shows an estimate of the fees associated with transferring
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/delphinet');
 
 const amount = 2;
 const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
 
 println(`Estimating the transfer of ${amount} ꜩ to ${address} : `);
-Tezos.estimate.transfer({ to: address, amount: amount })
-  .then(est => {
+Tezos.estimate
+  .transfer({ to: address, amount: amount })
+  .then((est) => {
     println(`burnFeeMutez : ${est.burnFeeMutez}, 
     gasLimit : ${est.gasLimit}, 
     minimalFeeMutez : ${est.minimalFeeMutez}, 
@@ -43,7 +44,7 @@ Tezos.estimate.transfer({ to: address, amount: amount })
     totalCost : ${est.totalCost}, 
     usingBaseFeeMutez : ${est.usingBaseFeeMutez}`);
   })
-  .catch(error => console.table(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.table(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 ### Estimate a smart contract call
@@ -52,28 +53,29 @@ This example will demonstrate how to estimate the fees related to calling a smar
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/delphinet');
 
-Tezos.contract.at('KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC')
-.then(contract => {
+Tezos.contract
+  .at('KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC')
+  .then((contract) => {
     const i = 7;
 
     return contract.methods.increment(i).toTransferParams({});
   })
-  .then(op => {
+  .then((op) => {
     println(`Estimating the smart contract call : `);
-    return Tezos.estimate.transfer(op)
+    return Tezos.estimate.transfer(op);
   })
-  .then(est => {
+  .then((est) => {
     println(`burnFeeMutez : ${est.burnFeeMutez}, 
     gasLimit : ${est.gasLimit}, 
     minimalFeeMutez : ${est.minimalFeeMutez}, 
     storageLimit : ${est.storageLimit}, 
     suggestedFeeMutez : ${est.suggestedFeeMutez}, 
     totalCost : ${est.totalCost}, 
-    usingBaseFeeMutez : ${est.usingBaseFeeMutez}`)
-    })
-  .catch(error => console.table(`Error: ${JSON.stringify(error, null, 2)}`));
+    usingBaseFeeMutez : ${est.usingBaseFeeMutez}`);
+  })
+  .catch((error) => console.table(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 ### Estimate a contract origination
@@ -82,25 +84,26 @@ In this example, we will use the estimate method of Taquito on a contract origin
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/delphinet');
 
 println(`Estimating the contract origination : `);
-  Tezos.estimate.originate({
+Tezos.estimate
+  .originate({
     code: genericMultisigJSONfile,
     storage: {
       stored_counter: 0,
       threshold: 1,
-      keys: ['edpkuLxx9PQD8fZ45eUzrK3BhfDZJHhBuK4Zi49DcEGANwd2rpX82t']
-    }
+      keys: ['edpkuLxx9PQD8fZ45eUzrK3BhfDZJHhBuK4Zi49DcEGANwd2rpX82t'],
+    },
   })
-  .then (originationOp => {
+  .then((originationOp) => {
     println(`burnFeeMutez : ${originationOp.burnFeeMutez}, 
     gasLimit : ${originationOp.gasLimit}, 
     minimalFeeMutez : ${originationOp.minimalFeeMutez}, 
     storageLimit : ${originationOp.storageLimit}, 
     suggestedFeeMutez : ${originationOp.suggestedFeeMutez}, 
     totalCost : ${originationOp.totalCost}, 
-    usingBaseFeeMutez : ${originationOp.usingBaseFeeMutez}`)
-    })
-  .catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
+    usingBaseFeeMutez : ${originationOp.usingBaseFeeMutez}`);
+  })
+  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
