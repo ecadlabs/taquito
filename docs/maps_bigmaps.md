@@ -293,7 +293,7 @@ The `get` method of the `MichelsonMap` class accesses values of the map for a sp
 
 ```js live noInline
 Tezos.contract
-  .at('KT1E6AFEshyEmjML4dUmSNTRzNmnDdPqWzrr')
+  .at('KT1M95NdJa5B3zNT2eQhk31gzYzPJzbSV4ya')
   .then((myContract) => {
     return myContract.storage();
   })
