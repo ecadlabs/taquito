@@ -52,5 +52,32 @@ export class InvalidMetadataType implements Error {
 export class UnconfiguredMetadataProviderError implements Error {
     name = 'UnconfiguredMetadataProviderError';
     message =
-      'No metadata provider has been configured. The default one can be configured by calling addExtension(new Tzip16Module()) on your TezosToolkit instance.';
-  }
+        'No metadata provider has been configured. The default one can be configured by calling addExtension(new Tzip16Module()) on your TezosToolkit instance.';
+}
+
+export class IllegalInstructionInViewCode implements Error {
+    name: string = 'IllegalInstructionInViewCode';
+    message: string;
+
+    constructor(public instruction: string) {
+        this.message = `Failed to execute the view. The code of the view contains an illegal instruction: ${instruction}.`;
+    }
+}
+
+export class NoParameterExpectedError implements Error {
+    name: string = 'NoParameterExpectedError';
+    message: string;
+    constructor(public viewName: string, public args: any[]) {
+        this.message = `${viewName} Received ${args.length
+            } arguments while expecting no parameter or 'Unit'`;
+    }
+}
+
+export class InvalidViewParameterError implements Error {
+    name: string = 'InvalidViewParameterError';
+    message: string;
+    constructor(public viewName: string, public sigs: any[], public args: any[]) {
+        this.message = `${viewName} Received ${args.length
+            } arguments while expecting one of the following signatures (${JSON.stringify(sigs)})`;
+    }
+}

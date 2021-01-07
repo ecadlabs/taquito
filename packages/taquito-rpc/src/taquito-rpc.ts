@@ -31,7 +31,9 @@ import {
   PreapplyResponse,
   ProposalsResponse,
   RawBlockHeaderResponse,
+  RPCRunCodeParam,
   RPCRunOperationParam,
+  RunCodeResult,
   ScriptResponse,
   StorageResponse,
   VotesListingsResponse,
@@ -690,6 +692,29 @@ export class RpcClient {
         method: 'POST',
       },
       op
+    );
+
+    return response;
+  }
+
+  /**
+   * @param code Code to run
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Run a piece of code in the current context
+   *
+   * @see https://tezos.gitlab.io/007/rpc.html#post-block-id-helpers-scripts-run-code
+   */
+  async runCode(
+    code: RPCRunCodeParam,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<RunCodeResult> {
+    const response = await this.httpBackend.createRequest<any>(
+      {
+        url: this.createURL(`/chains/${this.chain}/blocks/${block}/helpers/scripts/run_code`),
+        method: 'POST',
+      },
+      code
     );
 
     return response;
