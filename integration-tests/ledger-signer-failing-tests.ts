@@ -4,10 +4,10 @@ import { TezosToolkit } from '@taquito/taquito';
 import { ligoSample } from "./data/ligo-simple-contract";
 
 /**
- * LedgerSigner falling test
+ * LedgerSigner failing test
  * 
  */
-describe('LedgerSigner falling test', () => {
+describe('LedgerSigner failing test', () => {
     let transport: LedgerTransport;
     
     beforeEach(async () => {
