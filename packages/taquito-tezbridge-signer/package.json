@@ -1,6 +1,10 @@
 {
   "name": "@taquito/tezbridge-signer",
+<<<<<<< HEAD
   "version": "7.2.0-alpha.2",
+=======
+  "version": "8.0.0-alpha.0",
+>>>>>>> remotes/origin/edonet
   "description": "Tezbridge signer provider",
   "keywords": [
     "tezos",
@@ -60,11 +64,19 @@
     ]
   },
   "dependencies": {
+<<<<<<< HEAD
     "@taquito/utils": "^7.2.0-alpha.2",
     "typedarray-to-buffer": "^3.1.5"
   },
   "devDependencies": {
     "@taquito/taquito": "^7.2.0-alpha.2",
+=======
+    "@taquito/utils": "^8.0.0-alpha.0",
+    "typedarray-to-buffer": "^3.1.5"
+  },
+  "devDependencies": {
+    "@taquito/taquito": "^8.0.0-alpha.0",
+>>>>>>> remotes/origin/edonet
     "@types/jest": "^26.0.16",
     "@types/node": "^14.14.10",
     "@types/ws": "^7.4.0",

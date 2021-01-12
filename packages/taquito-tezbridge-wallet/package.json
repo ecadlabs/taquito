@@ -1,6 +1,10 @@
 {
   "name": "@taquito/tezbridge-wallet",
+<<<<<<< HEAD
   "version": "7.2.0-alpha.2",
+=======
+  "version": "8.0.0-alpha.0",
+>>>>>>> remotes/origin/edonet
   "description": "Tezbridge wallet provider",
   "keywords": [
     "tezos",
@@ -60,7 +64,11 @@
     ]
   },
   "dependencies": {
+<<<<<<< HEAD
     "@taquito/taquito": "^7.2.0-alpha.2"
+=======
+    "@taquito/taquito": "^8.0.0-alpha.0"
+>>>>>>> remotes/origin/edonet
   },
   "devDependencies": {
     "@types/jest": "^26.0.16",

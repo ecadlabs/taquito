@@ -1,6 +1,10 @@
 {
   "name": "@taquito/remote-signer",
+<<<<<<< HEAD
   "version": "7.2.0-alpha.2",
+=======
+  "version": "8.0.0-alpha.0",
+>>>>>>> remotes/origin/edonet
   "description": "Remote signer provider",
   "keywords": [
     "tezos",
@@ -59,9 +63,15 @@
     ]
   },
   "dependencies": {
+<<<<<<< HEAD
     "@taquito/http-utils": "^7.2.0-alpha.2",
     "@taquito/taquito": "^7.2.0-alpha.2",
     "@taquito/utils": "^7.2.0-alpha.2",
+=======
+    "@taquito/http-utils": "^8.0.0-alpha.0",
+    "@taquito/taquito": "^8.0.0-alpha.0",
+    "@taquito/utils": "^8.0.0-alpha.0",
+>>>>>>> remotes/origin/edonet
     "@types/jest": "^26.0.16",
     "elliptic": "^6.5.3",
     "libsodium-wrappers": "^0.7.8",

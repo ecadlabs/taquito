@@ -1,6 +1,10 @@
 {
   "name": "@taquito/michelson-encoder",
+<<<<<<< HEAD
   "version": "7.2.0-alpha.2",
+=======
+  "version": "8.0.0-alpha.0",
+>>>>>>> remotes/origin/edonet
   "description": "converts michelson data and types into convenient JS/TS objects",
   "keywords": [
     "tezos",
@@ -67,8 +71,13 @@
     ]
   },
   "dependencies": {
+<<<<<<< HEAD
     "@taquito/rpc": "^7.2.0-alpha.2",
     "@taquito/utils": "^7.2.0-alpha.2",
+=======
+    "@taquito/rpc": "^8.0.0-alpha.0",
+    "@taquito/utils": "^8.0.0-alpha.0",
+>>>>>>> remotes/origin/edonet
     "bignumber.js": "^9.0.1",
     "fast-json-stable-stringify": "^2.1.0"
   },

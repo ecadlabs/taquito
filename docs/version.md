@@ -3,6 +3,34 @@ title: Versions
 author: Simon Boissonneault-Robert
 ---
 
+## Taquito v7.1.0-beta
+
+### New Features
+
+#### Lambda Views
+
+Lambda views is a technique that allows a caller to execute a view function on a contract without incurring fees. Taquito provides an abstraction over this technique that makes it easy to use. Application developers can use this feature to call view methods on smart-contracts without incurring fees.
+
+See the [Lambda View documentation](https://tezostaquito.io/docs/lambda_view)
+
+Special thanks to Philip Diaz and Michael Klien for contributing this feature to Taquito.
+
+#### michel-codec type checking
+
+The `@taquito/michel-codec` package now validates/type checks your Michelson. This validation provides an additional layer of safety and speed as this package validates Michelson at run-time, catching invalid code before it reaches a Tezos node. We will be integrating `michel-codec` package deeper into Taquito over the next few releases.
+
+### Beacon V2
+
+The Taquito wallet API now supports Beacon V2. This update is the product of close collaboration between AirGap, Kukai, Thanos, and Taquito. The updated TZIP-10/Beacon experience is smoother than before, and users who have more than one Tezos wallet are accommodated.
+
+The new behaviour can be seen in action here: https://cloney.tezostaquito.io/, with actual implementation from the dApp side available here: https://github.com/ecadlabs/george-cloney
+
+### Docs
+
+- Using the Taquito Batch API
+- MichelsonMap Documentation
+- List of community learning resources (See an omission? Let us know!)
+
 ## Taquito v7.0.1-beta
 
 This release updates Taquito's Wallet API provider for TZIP-10/beacon-sdk to 1.2.0. This version of beacon-sdk support delpinet.
