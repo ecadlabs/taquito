@@ -1,10 +1,6 @@
 {
   "name": "@taquito/utils",
-<<<<<<< HEAD
-  "version": "7.2.0-alpha.2",
-=======
   "version": "8.0.0-alpha.0",
->>>>>>> remotes/origin/edonet
   "description": "converts michelson data and types into convenient JS/TS objects",
   "keywords": [
     "tezos",

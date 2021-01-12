@@ -1,10 +1,6 @@
 {
   "name": "@taquito/taquito",
-<<<<<<< HEAD
-  "version": "7.2.0-alpha.2",
-=======
   "version": "8.0.0-alpha.0",
->>>>>>> remotes/origin/edonet
   "description": "High level functionality that builds upon the other packages in the Tezos Typescript Library Suite.",
   "keywords": [
     "tezos",
@@ -81,19 +77,11 @@
     ]
   },
   "dependencies": {
-<<<<<<< HEAD
-    "@taquito/http-utils": "^7.2.0-alpha.2",
-    "@taquito/michel-codec": "^7.2.0-alpha.2",
-    "@taquito/michelson-encoder": "^7.2.0-alpha.2",
-    "@taquito/rpc": "^7.2.0-alpha.2",
-    "@taquito/utils": "^7.2.0-alpha.2",
-=======
     "@taquito/http-utils": "^8.0.0-alpha.0",
     "@taquito/michel-codec": "^8.0.0-alpha.0",
     "@taquito/michelson-encoder": "^8.0.0-alpha.0",
     "@taquito/rpc": "^8.0.0-alpha.0",
     "@taquito/utils": "^8.0.0-alpha.0",
->>>>>>> remotes/origin/edonet
     "bignumber.js": "^9.0.1",
     "rx-sandbox": "^1.0.3",
     "rxjs": "^6.6.3"
