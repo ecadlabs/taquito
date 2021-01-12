@@ -85,7 +85,7 @@ export class MichelsonStorageView implements View {
                 if (x.prim === instruction) {
                     code[i] = Object(instructionsToReplace)[instruction];
                 }
-                if (x.args && x.args.length != 0) {
+                if (x.args && x.args.length !== 0) {
                     this.adaptViewCodeToContext(x.args, contractBalance, blockTimeStamp, chainId);
                 }
             }

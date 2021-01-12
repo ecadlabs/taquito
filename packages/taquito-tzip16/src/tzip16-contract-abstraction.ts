@@ -90,7 +90,7 @@ export class Tzip16ContractAbstraction {
         this._metadataViewsObject = metadataViews;
     }
 
-    private generateIndexedViewName(viewName: string, metadataViews: Object) {
+    private generateIndexedViewName(viewName: string, metadataViews: {}) {
         let i = 1;
         if (viewName in metadataViews) {
             while (`${viewName}${i}` in metadataViews) {

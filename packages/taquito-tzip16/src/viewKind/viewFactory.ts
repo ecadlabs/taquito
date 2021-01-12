@@ -18,7 +18,7 @@ export class ViewFactory {
                 );
                 return;
             }
-            return function () {
+            return () => {
                 const view = new MichelsonStorageView(
                     viewName,
                     contract,
@@ -32,7 +32,7 @@ export class ViewFactory {
         }
     }
 
-    public getImplementationType(viewImplementation: ViewImplementation) {
+    getImplementationType(viewImplementation: ViewImplementation) {
         return Object.keys(viewImplementation)[0];
     }
 
