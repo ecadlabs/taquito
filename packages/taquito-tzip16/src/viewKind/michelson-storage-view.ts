@@ -34,7 +34,7 @@ export class MichelsonStorageView implements View {
                 if (instruction.prim === forbiddenInstruction) {
                     throw new ForbiddenInstructionInViewCode(forbiddenInstruction);
                 }
-                if (instruction.args && instruction.args.length != 0) {
+                if (instruction.args && instruction.args.length !== 0) {
                     this.findForbiddenInstructionInViewCode(instruction.args as any);
                 }
             }
@@ -54,7 +54,7 @@ export class MichelsonStorageView implements View {
                     throw new ForbiddenInstructionInViewCode('the instruction SELF should only be used before ADDRESS');
                 }
             }
-            if (instruction.args && instruction.args.length != 0) {
+            if (instruction.args && instruction.args.length !== 0) {
                 this.illegalUseOfSelfInstruction(instruction.args as any);
             }
         }
