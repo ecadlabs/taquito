@@ -1,6 +1,4 @@
 import { MichelsonV1Expression } from '@taquito/rpc';
-import BigNumber from 'bignumber.js';
-
 export interface MetadataInterface {
 	name?: string;
 	description?: string;
@@ -19,21 +17,25 @@ export type ErrorsTzip16 = Array<
 	| { view: string; languages?: string[] }
 >;
 
-export type Views = Array<{
-	name: string;
-	description?: string;
-	implementations: Array<
-		| {
-			michelsonStorageView: MichelsonStorageView;
-		}
-		| {
-			restApiQuery: RestApiQuery;
-		}
-	>;
-	pure?: boolean;
-}>;
+export enum ViewImplementationType {
+	MICHELSON_STORAGE = 'michelsonStorageView',
+	REST_API_QUERY = 'restApiQuery'
+}
 
-export type MichelsonStorageView = {
+export type ViewImplementation =
+	| { [ViewImplementationType.MICHELSON_STORAGE]: MichelsonStorageViewType }
+	| { [ViewImplementationType.REST_API_QUERY]: RestApiQueryType };
+
+export interface ViewDefinition {
+	name?: string;
+	description?: string;
+	implementations?: ViewImplementation[];
+	pure?: boolean;
+}
+
+export type Views = ViewDefinition[];
+
+export type MichelsonStorageViewType = {
 	parameter?: MichelineTzip16Expression;
 	returnType: MichelineTzip16Expression;
 	code: MichelineTzip16Expression;
@@ -41,7 +43,7 @@ export type MichelsonStorageView = {
 	version?: string;
 };
 
-export type RestApiQuery = {
+export type RestApiQueryType = {
 	specificationUri: string;
 	baseUri?: string;
 	path: string;
@@ -53,4 +55,4 @@ export type MichelineTzip16Expression =
 	| MichelineTzip16Expression[]
 	| { prim: Unistring; args?: MichelineTzip16Expression[]; annots?: string[] };
 
-type Unistring = string | { invalid_utf8_string: number[] }; // Add max and min
+type Unistring = string | { invalid_utf8_string: number[] };

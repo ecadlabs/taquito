@@ -46,10 +46,10 @@ function println(value) {
   render(_printlnBuffer);
 }
 
-Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/carthagenet' });
+Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/delphinet' });
 
 ${this.props.wallet ? 
-  `const network = {type:"carthagenet"};
+  `const network = {type:"delphinet"};
   wallet.requestPermissions({network})
   .then(permission => {
     return Tezos.setWalletProvider(wallet);
@@ -57,7 +57,7 @@ ${this.props.wallet ?
   .then(() => {
     ${this.code}
   });`:
-  `fetch('https://api.tez.ie/keys/carthagenet/', {
+  `fetch('https://api.tez.ie/keys/delphinet/', {
     method: 'POST',
     headers: { Authorization: 'Bearer taquito-example' },
   })

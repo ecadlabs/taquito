@@ -94,7 +94,7 @@ describe('Tzip16 contract abstraction test', () => {
 	it('Should properly add a valid view to the _metadataViewsObject property', async (done) => {
 		const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
 		// Act as we already fetched metadata; it contains one view
-		tzip16Abs['_metadataEnveloppe'] = {
+		tzip16Abs['_metadataEnvelope'] = {
 			uri: '',
 			metadata: {
 				views: [
@@ -131,7 +131,7 @@ describe('Tzip16 contract abstraction test', () => {
 	it('The _metadataViewsObject property should be empty when there is no view in metadata', async (done) => {
 		const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
 		// Act as we already fetched metadata; it contains no view
-		tzip16Abs['_metadataEnveloppe'] = {
+		tzip16Abs['_metadataEnvelope'] = {
 			uri: '',
 			metadata: {
 				views: []
@@ -147,7 +147,7 @@ describe('Tzip16 contract abstraction test', () => {
 	it('The _metadataViewsObject property should be empty when there is no view property in metadata', async (done) => {
 		const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
 		// Act as we already fetched metadata; it contains no view
-		tzip16Abs['_metadataEnveloppe'] = {
+		tzip16Abs['_metadataEnvelope'] = {
 			uri: '',
 			metadata: {}
 		};
@@ -159,7 +159,7 @@ describe('Tzip16 contract abstraction test', () => {
 
 	it('Should ignore view having an unsupported type', async (done) => {
 		const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
-		(tzip16Abs['_metadataEnveloppe'] as any) = {
+		(tzip16Abs['_metadataEnvelope'] as any) = {
 			uri: '',
 			metadata: {
 				views: [
@@ -178,7 +178,6 @@ describe('Tzip16 contract abstraction test', () => {
 			}
 		};
 		const metadataView = await tzip16Abs.metadataViews();
-		console.log(metadataView)
 		expect(metadataView).toEqual({});
 		expect(tzip16Abs['_metadataViewsObject']).toEqual(metadataView);
 		done();
@@ -187,7 +186,7 @@ describe('Tzip16 contract abstraction test', () => {
 	it('Should ignore the unsupported type of view and add the supported one to the _metadataViewsObject property', async (done) => {
 		const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
 		// Act as we already fetched metadata; it contains a view having an unsupported type and a valid view
-		(tzip16Abs['_metadataEnveloppe'] as any) = {
+		(tzip16Abs['_metadataEnvelope'] as any) = {
 			uri: '',
 			metadata: {
 				views: [
@@ -233,7 +232,7 @@ describe('Tzip16 contract abstraction test', () => {
 
 	it('Should ignore view having no code property', async (done) => {
 		const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
-		(tzip16Abs['_metadataEnveloppe'] as any) = {
+		(tzip16Abs['_metadataEnvelope'] as any) = {
 			uri: '',
 			metadata: {
 				views: [
@@ -258,7 +257,7 @@ describe('Tzip16 contract abstraction test', () => {
 
 	it('Should ignore view having no returnType property', async (done) => {
 		const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
-		(tzip16Abs['_metadataEnveloppe'] as any) = {
+		(tzip16Abs['_metadataEnvelope'] as any) = {
 			uri: '',
 			metadata: {
 				views: [
@@ -283,7 +282,7 @@ describe('Tzip16 contract abstraction test', () => {
 
 	it('Should ignore view having no implementation', async (done) => {
 		const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
-		(tzip16Abs['_metadataEnveloppe'] as any) = {
+		(tzip16Abs['_metadataEnvelope'] as any) = {
 			uri: '',
 			metadata: {
 				views: [
@@ -301,7 +300,7 @@ describe('Tzip16 contract abstraction test', () => {
 
 	it('Should ignore view having no implementation property', async (done) => {
 		const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
-		(tzip16Abs['_metadataEnveloppe'] as any) = {
+		(tzip16Abs['_metadataEnvelope'] as any) = {
 			uri: '',
 			metadata: {
 				views: [
@@ -318,7 +317,7 @@ describe('Tzip16 contract abstraction test', () => {
 
 	it('Should ignore view having no name property', async (done) => {
 		const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
-		(tzip16Abs['_metadataEnveloppe'] as any) = {
+		(tzip16Abs['_metadataEnvelope'] as any) = {
 			uri: '',
 			metadata: {
 				views: [
@@ -344,7 +343,7 @@ describe('Tzip16 contract abstraction test', () => {
 	it('Should properly add a valid view to the _metadataViewsObject property', async (done) => {
 		const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
 		// Act as we already fetched metadata; it contains one view
-		tzip16Abs['_metadataEnveloppe'] = {
+		tzip16Abs['_metadataEnvelope'] = {
 			uri: '',
 			metadata: {
 				views: [

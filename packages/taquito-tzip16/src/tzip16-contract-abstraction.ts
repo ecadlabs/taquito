@@ -6,6 +6,7 @@ import BigNumber from 'bignumber.js';
 import { Schema } from '@taquito/michelson-encoder';
 import { ViewFactory } from './viewKind/viewFactory';
 import { View } from './viewKind/interface';
+import { ViewDefinition } from './metadata-interface';
 
 export type MetadataContext = Context & {
     metadataProvider: MetadataProviderInterface;
@@ -20,10 +21,9 @@ const metadataBigMapType = {
 };
 export class Tzip16ContractAbstraction {
     private _metadataProvider: MetadataProviderInterface;
-    private _metadataEnveloppe?: MetadataEnvelope;
+    private _metadataEnvelope?: MetadataEnvelope;
     private _viewFactory = new ViewFactory();
-    private _isViewInitialised: boolean = false;
-    private _metadataViewsObject: { [key: string]: (...args: any[]) => View } = {};
+    private _metadataViewsObject: { [key: string]: () => View } = {};
 
     constructor(
         private constractAbstraction: ContractAbstraction<ContractProvider | Wallet>,
@@ -65,19 +65,19 @@ export class Tzip16ContractAbstraction {
         if (!this._metadataProvider) {
             throw new UnconfiguredMetadataProviderError();
         }
-        if (!this._metadataEnveloppe) {
+        if (!this._metadataEnvelope) {
             const uri = await this.getUriOrFail();
-            this._metadataEnveloppe = await this._metadataProvider.provideMetadata(
+            this._metadataEnvelope = await this._metadataProvider.provideMetadata(
                 this.constractAbstraction,
                 bytes2Char(uri),
                 this.context
             );
         }
-        return this._metadataEnveloppe;
+        return this._metadataEnvelope;
     }
 
     async metadataViews() {
-        if (!this._isViewInitialised) {
+        if (Object.keys(this._metadataViewsObject).length === 0) {
             await this.initializeMetadataViewsList();
         }
         return this._metadataViewsObject;
@@ -85,36 +85,39 @@ export class Tzip16ContractAbstraction {
 
     private async initializeMetadataViewsList() {
         const { metadata } = await this.getMetadata();
+        const metadataViews: any = {};
+        metadata.views?.forEach((view) => this.createViewImplementations(view, metadataViews))
+        this._metadataViewsObject = metadataViews;
+    }
 
-        if (metadata.views) {
-            for (let view of metadata.views) {
-                if (view.implementations) {
-                    for (let viewImplementation of view.implementations) {
-                        if (view.name) {
-                            // when views have the same name, add an index at the end of the name
-                            let viewName = view.name;
-                            let i = 1;
-                            if (viewName in this._metadataViewsObject) {
-                                while (`${viewName}${i}` in this._metadataViewsObject) {
-                                    i++;
-                                }
-                                viewName = `${view.name}${i}`;
-                            }
-                            const metadataView = this._viewFactory.getView(
-                                view.name,
-                                this.context.rpc,
-                                this.constractAbstraction,
-                                viewImplementation
-                            );
-                            // if typeof metadataView === 'undefined', the view has an unsupported type and is ignored
-                            if (typeof metadataView !== 'undefined') {
-                                this._metadataViewsObject[viewName] = metadataView;
-                            }
-                        }
-                    }
+    private generateIndexedViewName(viewName: string, metadataViews: Object) {
+        let i = 1;
+        if (viewName in metadataViews) {
+            while (`${viewName}${i}` in metadataViews) {
+                i++;
+            }
+            viewName = `${viewName}${i}`;
+        }
+        return viewName;
+    }
+
+    private createViewImplementations(view: ViewDefinition, metadataViews: any) {
+        for (let viewImplementation of view?.implementations ?? []) {
+            if (view.name) {
+                // when views have the same name, add an index at the end of the name
+                const viewName = this.generateIndexedViewName(view.name, metadataViews);
+                const metadataView = this._viewFactory.getView(
+                    viewName,
+                    this.context.rpc,
+                    this.constractAbstraction,
+                    viewImplementation
+                );
+                if (metadataView) {
+                    metadataViews[viewName] = metadataView;
+                } else {
+                    console.warn(`Skipped generating ${viewName} because the view has an unsupported type: ${this._viewFactory.getImplementationType(viewImplementation)}`)
                 }
             }
         }
-        this._isViewInitialised = true;
     }
 }

@@ -55,12 +55,12 @@ export class UnconfiguredMetadataProviderError implements Error {
         'No metadata provider has been configured. The default one can be configured by calling addExtension(new Tzip16Module()) on your TezosToolkit instance.';
 }
 
-export class IllegalInstructionInViewCode implements Error {
-    name: string = 'IllegalInstructionInViewCode';
+export class ForbiddenInstructionInViewCode implements Error {
+    name: string = 'ForbiddenInstructionInViewCode';
     message: string;
 
     constructor(public instruction: string) {
-        this.message = `Failed to execute the view. The code of the view contains an illegal instruction: ${instruction}.`;
+        this.message = `Erreur found in the code of the view. It contains a forbidden instruction: ${instruction}.`;
     }
 }
 
@@ -68,8 +68,7 @@ export class NoParameterExpectedError implements Error {
     name: string = 'NoParameterExpectedError';
     message: string;
     constructor(public viewName: string, public args: any[]) {
-        this.message = `${viewName} Received ${args.length
-            } arguments while expecting no parameter or 'Unit'`;
+        this.message = `${viewName} Received ${args.length} arguments while expecting no parameter or 'Unit'`;
     }
 }
 
@@ -77,7 +76,6 @@ export class InvalidViewParameterError implements Error {
     name: string = 'InvalidViewParameterError';
     message: string;
     constructor(public viewName: string, public sigs: any[], public args: any[]) {
-        this.message = `${viewName} Received ${args.length
-            } arguments while expecting one of the following signatures (${JSON.stringify(sigs)})`;
+        this.message = `${viewName} Received ${args.length} arguments while expecting one of the following signatures (${JSON.stringify(sigs)})`;
     }
 }

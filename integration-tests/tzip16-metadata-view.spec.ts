@@ -37,15 +37,15 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 			const metadataViews = await contractAbstraction.tzip16().metadataViews();
 			console.log(metadataViews)
 
-			const viewEmptyBytesResult = await metadataViews['emptyBytes']().executeView();
+			const viewEmptyBytesResult = await metadataViews.emptyBytes().executeView();
 			expect(viewEmptyBytesResult.toString()).toEqual('');
 
-			const viewSomeJsonResult = await metadataViews['someJson']().executeView();
+			const viewSomeJsonResult = await metadataViews.someJson().executeView();
 			expect(viewSomeJsonResult.toString()).toEqual(
 				'7b2268656c6c6f223a22776f726c64222c226d6f7265223a7b226c6f72656d223a34322c22697073756d223a5b22222c226f6e65222c2232225d7d7d'
 			);
 
-			const viewSomeTextResult = await metadataViews['someText']().executeView();
+			const viewSomeTextResult = await metadataViews.someText().executeView();
 			expect(viewSomeTextResult.toString()).toEqual(
 				'0a4865726520697320736f6d6520746578742e0ad09bd0bed180d0b5d0bc20d0b8d0bfd181d183d0bc20d0b4d0bed0bbd0bed18020d181d0b8d18220d0b0d0bcd0b5d1822c20d0b0d0bbd0b8d18fd183d0b8d0b420d0b8d0bdd186d0bed180d180d183d0bfd182d0b520d182d185d0b5d0bed0bfd185d180d0b0d181d182d183d18120d0b5d18320d181d0b5d0b02c20d0b8d0bd0ad0b5d183d0bc20d181d0bed0bbd183d182d0b020d0bed0bfd182d0b8d0bed0bd20d0b4d0b5d184d0b8d0bdd0b8d182d0b8d0bed0bdd0b5d0bc2e20d090d18220d0bcd0b5d0b020d181d0b8d0bcd183d0bb20d0bed184d184d0b8d186d0b8d0b8d18120d0bcd0bed0bbd0b5d181d182d0b8d0b0d0b52c20d0b5d0bed1810ad18fd183d0b0d0b5d18fd183d0b520d0b8d0bdd0b2d0b8d0b4d183d0bdd18220d186d0bed0bdd0b2d0b5d0bdd0b8d180d0b520d0b8d0b42e20d090d18220d181d0bed0bbd0b5d0b0d18220d0b2d0bed0bbd183d182d0bfd0b0d18220d0b2d0b5d0bb2e20d0a1d0b5d0b420d0b5d0b820d0b8d0bdd0b5d180d0bcd0b8d1810ad0b2d0b5d180d0b8d182d183d1810a0aeca781eca084eb8c80ed86b5eba0b9ec9db420ec9786ec9d8420eb958cec9790eb8a9420eb8c80ed86b5eba0b9ec9db420eca780ebaa85ed959ceb8ba42c20eab7b820eca095ecb998eca08120eca491eba6bdec84b1ec9d800aeca480ec8898eb909ceb8ba42e20eab5adeab080eb8a9420ebb295eba5a0ec9db420eca095ed9598eb8a9420ebb094ec979020ec9d98ed9598ec97ac20eca095eb8bb9ec9ab4ec9881ec979020ed9584ec9a94ed959c20ec9e90eab888ec9d840aebb3b4eca1b0ed95a020ec889820ec9e88eb8ba42c20eab5b0ec82acebb295ec9b90ec9d9820eca1b0eca781c2b7eab68ced959c20ebb08f20ec9eaced8c90eab480ec9d9820ec9e90eab2a9ec9d8020ebb295eba5a0eba19c20eca095ed959ceb8ba42e0a'
 			);
@@ -64,7 +64,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 		});
 
 		it('Deploy a contract with metadata having a couple of views (example taken from TZComet) and call the views', async (done) => {
-			// KT1S5Q7iN9ybuBuJviDYzXf7Mq94ToETwBJS
+			// KT18tKt6ysL5QVqLMmwQL5p5Nu6m8KjRbhSb
 
 			const metadataBigMAp = new MichelsonMap();
 			metadataBigMAp.set("", char2Bytes('tezos-storage:here'));

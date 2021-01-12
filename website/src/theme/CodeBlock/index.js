@@ -22,7 +22,7 @@ import {  BeaconWallet } from '@taquito/beacon-wallet';
 import { InMemorySigner } from '@taquito/signer';
 import { LedgerSigner, DerivationType } from '@taquito/ledger-signer';
 import { TezBridgeWallet } from '@taquito/tezbridge-wallet';
-import { Tzip16Module, tzip16 } from '@taquito/tzip16'
+import { Tzip16Module, tzip16, bytes2Char, MichelsonStorageView } from '@taquito/tzip16'
 import { ThanosWallet } from '@thanos-wallet/dapp';
 import TransportU2F from "@ledgerhq/hw-transport-u2f";
 import Playground from '@theme/Playground';
@@ -77,7 +77,7 @@ export default ({
   }, [button.current, target.current]);
 
   if (live) {
-    const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+    const Tezos = new TezosToolkit('https://api.tez.ie/rpc/delphinet');
     const wallet = new BeaconWallet({name:"exampleWallet"});
 
     return (
@@ -101,6 +101,8 @@ export default ({
           LedgerSigner,
           Tzip16Module,
           tzip16,
+          bytes2Char,
+          MichelsonStorageView,
           TezBridgeWallet,
           ThanosWallet, 
           DerivationType, 
