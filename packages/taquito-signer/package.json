@@ -1,6 +1,6 @@
 {
   "name": "@taquito/signer",
-  "version": "7.2.0-alpha.2",
+  "version": "7.2.0-beta.2",
   "description": "Provide signing functionality to be with taquito",
   "keywords": [
     "tezos",
@@ -66,8 +66,8 @@
     ]
   },
   "dependencies": {
-    "@taquito/taquito": "^7.2.0-alpha.2",
-    "@taquito/utils": "^7.2.0-alpha.2",
+    "@taquito/taquito": "^7.2.0-beta.2",
+    "@taquito/utils": "^7.2.0-beta.2",
     "bignumber.js": "^9.0.1",
     "bip39": "^3.0.2",
     "elliptic": "^6.5.3",
