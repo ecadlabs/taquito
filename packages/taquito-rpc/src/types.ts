@@ -689,6 +689,24 @@ export type RPCRunOperationParam = {
   chain_id: string;
 };
 
+export type RPCRunCodeParam = {
+  script: MichelsonV1ExpressionExtended[];
+  storage: MichelsonV1Expression;
+  input: MichelsonV1Expression;
+  amount: string;
+  chain_id: string;
+  source?: string;
+  payer?: string;
+  gas?: BigNumber;
+  entrypoint?: string;
+};
+
+export type RunCodeResult = {
+  storage: MichelsonV1Expression;
+  operations: InternalOperationResult[];
+  big_map_diff?: ContractBigMapDiff;
+}
+
 export type EntrypointsResponse = {
   entrypoints: { [key: string]: Object };
   unreachable?: { path: ('Left' | 'Right')[] };
