@@ -78,7 +78,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 			const contractAddress = (await op.contract()).address;
 
 			const contractAbstraction = await Tezos.contract.at(contractAddress, tzip16);
-			const metadataViews = await contractAbstraction.tzip16().metadataViews();
+			const metadataViews = await contractAbstraction.tzip16().metadataViews()
 
 			try {
 				await metadataViews['an-empty-useless-view']().executeView();
