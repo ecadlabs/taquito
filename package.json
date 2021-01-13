@@ -6,6 +6,7 @@
     "bootstrap": "lerna bootstrap",
     "test": "jest --collectCoverage",
     "lint": "lerna run lint",
+    "clean": "lerna clean --yes",
     "commit": "git-cz",
     "precommit": "lerna run --concurrency 1 --stream precommit",
     "example": "cd example && npm run example",
@@ -39,7 +40,8 @@
       "^@taquito/http-utils$": "<rootDir>/packages/taquito-http-utils/src/taquito-http-utils.ts",
       "^@taquito/utils$": "<rootDir>/packages/taquito-utils/src/taquito-utils.ts",
       "^@taquito/signer$": "<rootDir>/packages/taquito-signer/src/taquito-signer.ts",
-      "^@taquito/local-forging$": "<rootDir>/packages/taquito-local-forging/src/taquito-local-forging.ts"
+      "^@taquito/local-forging$": "<rootDir>/packages/taquito-local-forging/src/taquito-local-forging.ts",
+      "^@taquito/tzip16$": "<rootDir>/packages/taquito-tzip16/src/taquito-tzip16.ts"
     },
     "coveragePathIgnorePatterns": [
       "/node_modules/",

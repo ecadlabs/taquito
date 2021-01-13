@@ -153,4 +153,33 @@ export class Schema {
       [this.bigMap.annot()]: bigMap,
     };
   }
+
+  /**
+   * @description Look up in top-level pairs of the storage to find a value matching the specified type
+   *
+   * @returns The first value found that match the type or `undefined` if no value is found
+   * 
+   * @param storage storage to parse to find the value
+   * @param valueType type of value to look for
+   *
+   */
+  FindFirstInTopLevelPair<T extends MichelsonV1Expression>(storage: any, valueType: any) {
+    const path = this.findPathToValue(this.root['val'], valueType);
+
+    return path?.reduce((previous: any, current: string) => {
+      return previous.args[current]
+    }, storage) as T | undefined
+  }
+
+  private findPathToValue(schema: any, valueToFind: any, path: string[] = []): string[] | undefined {
+    if (JSON.stringify(valueToFind) === JSON.stringify(schema)) {
+      return path;
+    }
+    else if (schema['prim'] === 'pair') {
+      return (
+        this.findPathToValue(schema['args'][0], valueToFind, [...path, '0']) ||
+        this.findPathToValue(schema['args'][1], valueToFind, [...path, '1'])
+      );
+    }
+  }
 }
