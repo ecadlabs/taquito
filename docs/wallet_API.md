@@ -280,7 +280,7 @@ The `transfer` method takes an object with only two required properties: the `to
 
 ```js live noInline wallet
 Tezos.wallet
-  .transfer({ to: 'KT1TMZhfoYtpjbGG1nLjs7SZioFM1njsRwkP', amount: 0.2 })
+  .transfer({ to: 'KT1FEkrfq1KtUPXMCux8MRZGCrbmq6vGxUtE', amount: 0.2 })
   .send()
   .then((op) =>
     op
@@ -298,7 +298,7 @@ Sending a transaction to a smart contract to update its storage is going to be a
 Fortunately, Taquito will make this operation go like a breeze! First, you need the contract abstraction created with the address of the smart contract you are targeting:
 
 ```js
-const contract = await Tezos.wallet.at('KT1TMZhfoYtpjbGG1nLjs7SZioFM1njsRwkP');
+const contract = await Tezos.wallet.at('KT1FEkrfq1KtUPXMCux8MRZGCrbmq6vGxUtE');
 ```
 
 This line creates a contract abstraction with multiple methods named after the contract entrypoints. For example, if you have a `transfer` entrypoint in your contract, you will also have a `.transfer()` method in the `contract` object. Each method accepts parameters required by the contract entrypoint.
@@ -312,7 +312,7 @@ Most of the time, the process is simple: you take the contract abstraction you c
 
 ```js live noInline wallet
 Tezos.wallet
-  .at('KT1PCLg8Da8T5h5SWibMopPVsxiKg27tSRxx')
+  .at('KT1EKZshRTnJQoA6ojbRisiiGwSB5kKNmZSt')
   .then((contract) => contract.methods.areYouThere(true).send())
   .then((op) => {
     println(`Hash: ${op.opHash}`);
@@ -335,7 +335,7 @@ In the case of multiple arguments (for example if the entrypoint expects a pair)
 
 ```js live noInline wallet
 Tezos.wallet
-  .at('KT1PCLg8Da8T5h5SWibMopPVsxiKg27tSRxx')
+  .at('KT1EKZshRTnJQoA6ojbRisiiGwSB5kKNmZSt')
   .then((contract) =>
     contract.methods.addName('tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb', 'Alice').send()
   )
@@ -547,7 +547,7 @@ Now, we have everything we need to originate a new contract!
 Before doing so, we have to choose the network we want to originate it to:
 
 ```js
-Tezos.setProvider({ rpc: 'https://mainnet.SmartPy.io}' });
+Tezos.setProvider({ rpc: 'https://mainnet-tezos.giganode.io}' });
 ```
 
 Then, we can start the process. The Tezos singleton has a `wallet` property with an `originate` method. This is the one that must be called to originate the contract. This method takes an argument, an object with two properties: `code` that holds the parsed Michelson code to be originated and `storage` that holds the initial storage. After passing this argument, you call the `send()` method to originate the contract.
@@ -629,7 +629,7 @@ The Tezos singleton object exposes a _wallet_ property in the same fashion it ex
 We have already seen the `at` method of the Wallet instance earlier in order to create the contract abstraction:
 
 ```js
-const contract = await Tezos.wallet.at('KT1TMZhfoYtpjbGG1nLjs7SZioFM1njsRwkP');
+const contract = await Tezos.wallet.at('KT1FEkrfq1KtUPXMCux8MRZGCrbmq6vGxUtE');
 ```
 
 The method is a promise that expects the address of the contract for which you want to create the abstraction.

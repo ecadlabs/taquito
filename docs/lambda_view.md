@@ -53,8 +53,8 @@ order to call view methods.
 ## Considerations
 
 - This method for retrieving data from the blockchain is not considered ideal. A
-future protocol update will make this goal easier to attain without the use of
-a lambda view.
+  future protocol update will make this goal easier to attain without the use of
+  a lambda view.
 
 - Invoking the lambda view in the browser will raise errors in the web console.
 
@@ -70,34 +70,40 @@ Taquito dynamically creates a `getAllowance`, `getBalance` and `getTotalSupply` 
 - `myContract.views.getBalance(parameters)`
 - `myContract.view.getTotalSupply(parameters)`
 
-:::note 
+:::note
 Parameters must not include the callback parameter
 :::
 
-Then we call the `read()` method, which takes an optional lambda contract address. *This optional parameter is useful for the sandbox users as they will need to deploy and use their own lambda contract.*
+Then we call the `read()` method, which takes an optional lambda contract address. _This optional parameter is useful for the sandbox users as they will need to deploy and use their own lambda contract._
 
 ```js live noInline
-Tezos.contract.at('KT1A87ZZL8mBKcWGr34BVsERPCJjfX82iBto')
-.then(contract => {
-  return contract.views.getTotalSupply([['Unit']]).read()
-}).then(response => {
-  println(response)
-}).catch(error => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+Tezos.contract
+  .at('KT1Bki1YP1JdykrMH4iTTt7bguHsbeuUAbpG')
+  .then((contract) => {
+    return contract.views.getTotalSupply([['Unit']]).read();
+  })
+  .then((response) => {
+    println(response);
+  })
+  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 ```js live noInline
-Tezos.contract.at('KT1A87ZZL8mBKcWGr34BVsERPCJjfX82iBto')
-.then(contract => {
-  return contract.views.getBalance('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1').read()
-}).then(response => {
-  println(response)
-}).catch(error => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+Tezos.contract
+  .at('KT1Bki1YP1JdykrMH4iTTt7bguHsbeuUAbpG')
+  .then((contract) => {
+    return contract.views.getBalance('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1').read();
+  })
+  .then((response) => {
+    println(response);
+  })
+  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 **How to deploy a lambda contract (sandbox users):**
 
-``` js
-import { VIEW_LAMBDA } from '@taquito/taquito'
+```js
+import { VIEW_LAMBDA } from '@taquito/taquito';
 
 const op = await tezos.contract.originate({
   code: VIEW_LAMBDA.code,
@@ -105,29 +111,37 @@ const op = await tezos.contract.originate({
 });
 
 const lambdaContract = await op.contract();
-const lambdaContractAddress = lambdaContract.address
+const lambdaContractAddress = lambdaContract.address;
 ```
 
 :::note
-Taquito internally contains a list of lambda contracts. Thus, no need to deploy a lambda contract if you are using Mainnet, Delphinet, or Carthagenet. Taquito will detect the current network and use the appropriate lambda contract. 
+Taquito internally contains a list of lambda contracts. Thus, no need to deploy a lambda contract if you are using Mainnet, Delphinet, or Carthagenet. Taquito will detect the current network and use the appropriate lambda contract.
 :::
 
 **More examples:**
 
 ```js live noInline
-Tezos.contract.at('KT1BkrcPjCXGPrQoYhVGFNwWMMyW2LrgBg9Q')
-.then(contract => {
-  return contract.views.balance_of([{ owner: 'tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1', token_id: '0' }]).read()
-}).then(response => {
-  println(JSON.stringify(response, null, 2))
-}).catch(error => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+Tezos.contract
+  .at('KT1MB4fe2b9euiMk1W4evxnfQHbq8FB5Yrbe')
+  .then((contract) => {
+    return contract.views
+      .balance_of([{ owner: 'tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1', token_id: '0' }])
+      .read();
+  })
+  .then((response) => {
+    println(JSON.stringify(response, null, 2));
+  })
+  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 ```js live noInline
-Tezos.contract.at('KT1QXZMKbNYBf2wa9WJ3iXeBFEqd7HqmDh3H')
-.then(contract => {
-  return contract.views.getBalance('tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY').read()
-}).then(response => {
-  println(JSON.stringify(response, null, 2))
-}).catch(error => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+Tezos.contract
+  .at('KT1MeKubyqYXaXqEdjZmaxJffeMz5oAvnRrV')
+  .then((contract) => {
+    return contract.views.getBalance('tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY').read();
+  })
+  .then((response) => {
+    println(JSON.stringify(response, null, 2));
+  })
+  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
