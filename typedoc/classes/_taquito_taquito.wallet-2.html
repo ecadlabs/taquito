@@ -88,7 +88,7 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_taquito_taquito.wallet-2.html#at" class="tsd-kind-icon">at</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="_taquito_taquito.wallet-2.html#at" class="tsd-kind-icon">at</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_taquito_taquito.wallet-2.html#batch" class="tsd-kind-icon">batch</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_taquito_taquito.wallet-2.html#originate" class="tsd-kind-icon">originate</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_taquito_taquito.wallet-2.html#pkh" class="tsd-kind-icon">pkh</a></li>
@@ -112,7 +112,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/87d8346/packages/taquito/src/wallet/wallet.ts#L132">packages/taquito/src/wallet/wallet.ts:132</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/66c1c9f/packages/taquito/src/wallet/wallet.ts#L132">packages/taquito/src/wallet/wallet.ts:132</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -128,17 +128,17 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
 					<a name="at" class="tsd-anchor"></a>
 					<h3>at</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">at<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_taquito.html#walletcontract-1" class="tsd-signature-type">WalletContract</a><span class="tsd-signature-symbol">&gt;</span></li>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">at&lt;T&gt;<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, contractAbstractionComposer<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">(</span>abs<span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.contractabstraction-2.html" class="tsd-signature-type">ContractAbstraction</a><span class="tsd-signature-symbol">&lt;</span><a href="_taquito_taquito.wallet-2.html" class="tsd-signature-type">Wallet</a><span class="tsd-signature-symbol">&gt;</span>, context<span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.context-1.html" class="tsd-signature-type">Context</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/87d8346/packages/taquito/src/wallet/wallet.ts#L249">packages/taquito/src/wallet/wallet.ts:249</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/66c1c9f/packages/taquito/src/wallet/wallet.ts#L249">packages/taquito/src/wallet/wallet.ts:249</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -149,6 +149,12 @@
 									</dd>
 								</dl>
 							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T<span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.contractabstraction-2.html" class="tsd-signature-type">ContractAbstraction</a><span class="tsd-signature-symbol">&lt;</span><a href="_taquito_taquito.wallet-2.html" class="tsd-signature-type">Wallet</a><span class="tsd-signature-symbol">&gt;</span></h4>
+								</li>
+							</ul>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -157,8 +163,32 @@
 										<p>Smart contract address</p>
 									</div>
 								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> contractAbstractionComposer: <span class="tsd-signature-symbol">(</span>abs<span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.contractabstraction-2.html" class="tsd-signature-type">ContractAbstraction</a><span class="tsd-signature-symbol">&lt;</span><a href="_taquito_taquito.wallet-2.html" class="tsd-signature-type">Wallet</a><span class="tsd-signature-symbol">&gt;</span>, context<span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.context-1.html" class="tsd-signature-type">Context</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> = x &#x3D;&gt; x as any</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter-signature">
+											<ul class="tsd-signatures tsd-kind-type-literal">
+												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>abs<span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.contractabstraction-2.html" class="tsd-signature-type">ContractAbstraction</a><span class="tsd-signature-symbol">&lt;</span><a href="_taquito_taquito.wallet-2.html" class="tsd-signature-type">Wallet</a><span class="tsd-signature-symbol">&gt;</span>, context<span class="tsd-signature-symbol">: </span><a href="_taquito_taquito.context-1.html" class="tsd-signature-type">Context</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
+											</ul>
+											<ul class="tsd-descriptions">
+												<li class="tsd-description">
+													<h4 class="tsd-parameters-title">Parameters</h4>
+													<ul class="tsd-parameters">
+														<li>
+															<h5>abs: <a href="_taquito_taquito.contractabstraction-2.html" class="tsd-signature-type">ContractAbstraction</a><span class="tsd-signature-symbol">&lt;</span><a href="_taquito_taquito.wallet-2.html" class="tsd-signature-type">Wallet</a><span class="tsd-signature-symbol">&gt;</span></h5>
+														</li>
+														<li>
+															<h5>context: <a href="_taquito_taquito.context-1.html" class="tsd-signature-type">Context</a></h5>
+														</li>
+													</ul>
+													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_taquito.html#walletcontract-1" class="tsd-signature-type">WalletContract</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -172,7 +202,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/87d8346/packages/taquito/src/wallet/wallet.ts#L236">packages/taquito/src/wallet/wallet.ts:236</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/66c1c9f/packages/taquito/src/wallet/wallet.ts#L236">packages/taquito/src/wallet/wallet.ts:236</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -206,7 +236,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/87d8346/packages/taquito/src/wallet/wallet.ts#L169">packages/taquito/src/wallet/wallet.ts:169</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/66c1c9f/packages/taquito/src/wallet/wallet.ts#L169">packages/taquito/src/wallet/wallet.ts:169</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -254,7 +284,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/87d8346/packages/taquito/src/wallet/wallet.ts#L147">packages/taquito/src/wallet/wallet.ts:147</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/66c1c9f/packages/taquito/src/wallet/wallet.ts#L147">packages/taquito/src/wallet/wallet.ts:147</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -289,7 +319,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/87d8346/packages/taquito/src/wallet/wallet.ts#L202">packages/taquito/src/wallet/wallet.ts:202</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/66c1c9f/packages/taquito/src/wallet/wallet.ts#L202">packages/taquito/src/wallet/wallet.ts:202</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -331,7 +361,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/87d8346/packages/taquito/src/wallet/wallet.ts#L187">packages/taquito/src/wallet/wallet.ts:187</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/66c1c9f/packages/taquito/src/wallet/wallet.ts#L187">packages/taquito/src/wallet/wallet.ts:187</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -379,7 +409,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/87d8346/packages/taquito/src/wallet/wallet.ts#L220">packages/taquito/src/wallet/wallet.ts:220</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/66c1c9f/packages/taquito/src/wallet/wallet.ts#L220">packages/taquito/src/wallet/wallet.ts:220</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -465,6 +495,9 @@
 						<a href="../modules/_taquito_tezbridge_wallet.html">@taquito/tezbridge-<wbr>wallet</a>
 					</li>
 					<li class=" tsd-kind-module">
+						<a href="../modules/_taquito_tzip16.html">@taquito/tzip16</a>
+					</li>
+					<li class=" tsd-kind-module">
 						<a href="../modules/_taquito_utils.html">@taquito/utils</a>
 					</li>
 				</ul>
@@ -479,7 +512,7 @@
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
 								<a href="_taquito_taquito.wallet-2.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
 								<a href="_taquito_taquito.wallet-2.html#at" class="tsd-kind-icon">at</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
