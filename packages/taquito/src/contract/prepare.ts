@@ -22,6 +22,7 @@ export const createOriginationOperation = async ({
   fee = DEFAULT_FEE.ORIGINATION,
   gasLimit = DEFAULT_GAS_LIMIT.ORIGINATION,
   storageLimit = DEFAULT_STORAGE_LIMIT.ORIGINATION,
+  mutez = false
 }: OriginateParams) => {
   // tslint:disable-next-line: strict-type-predicates
   if (storage !== undefined && init !== undefined) {
@@ -77,7 +78,9 @@ export const createOriginationOperation = async ({
     fee,
     gas_limit: gasLimit,
     storage_limit: storageLimit,
-    balance: format("tz", "mutez", balance).toString(),
+    balance: mutez
+      ? balance.toString()
+      : format('tz', 'mutez', balance).toString(),
     script,
   };
 

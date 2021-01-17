@@ -258,6 +258,48 @@ describe('RpcContractProvider test', () => {
       });
       done();
     });
+
+    it('should not convert balance to mutez when mutez flag is set to true', async done => {
+      const result = await rpcContractProvider.originate({
+        delegate: 'test_delegate',
+        balance: '200',
+        code: miStr,
+        init: miInit,
+        fee: 10000,
+        gasLimit: 10600,
+        storageLimit: 257,
+        mutez: true,
+      });
+      const res = JSON.parse(JSON.stringify(result.raw)); // Strip symbols
+      expect(res).toEqual({
+        counter: 0,
+        opOb: {
+          branch: 'test',
+          contents: [
+            revealOp('test_pub_key_hash'),
+            {
+              balance: '200',
+              counter: '2',
+              delegate: 'test_delegate',
+              fee: '10000',
+              gas_limit: '10600',
+              kind: 'origination',
+              script: {
+                code: miSample,
+                storage: miStorage,
+              },
+              source: 'test_pub_key_hash',
+              storage_limit: '257',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        opbytes: 'test',
+      });
+      done();
+    });
+
     it('estimate when no fees are specified', async done => {
       const estimate = new Estimate(1000, 1000, 180, 1000);
       mockEstimate.originate.mockResolvedValue(estimate);
