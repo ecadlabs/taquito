@@ -2,25 +2,32 @@ import { Token, TokenFactory, Semantic, ComparableToken } from './token';
 import { OrToken } from './or';
 
 // collapse comb pair
-function collapse(val: { prim: string; args: any[]; annots: any[] }): [any, any] {
-  if (val.args.length > 2) {
+function collapse(val: { prim: string; args: any[]; annots?: any[] } | any[], prim: string = PairToken.prim): [any, any] {
+  if (Array.isArray(val)) {
+    return collapse({
+      prim: prim,
+      args: val,
+    }, prim);
+  } else if (val.args.length > 2) {
     return [val.args[0], {
-      prim: val.prim,
+      prim: prim,
       args: val.args.slice(1),
     }];
-  } else {
-    return [val.args[0], val.args[1]];
   }
+  return [val.args[0], val.args[1]];
 }
 export class PairToken extends ComparableToken {
   static prim = 'pair';
 
   constructor(
-    protected val: { prim: string; args: any[]; annots: any[] },
-    protected idx: number,
-    protected fac: TokenFactory
+    val: { prim: string; args: any[]; annots: any[] } | any[],
+    idx: number,
+    fac: TokenFactory
   ) {
-    super(val, idx, fac);
+    super(Array.isArray(val) ? {
+      prim: PairToken.prim,
+      args: val,
+    } : val, idx, fac);
   }
 
   private args(): [any, any] {
@@ -133,7 +140,7 @@ export class PairToken extends ComparableToken {
   }
 
   public Execute(val: any, semantics?: Semantic): { [key: string]: any } {
-    const args = collapse(val);
+    const args = collapse(val, 'Pair');
     return this.traversal(
       leftToken => leftToken.Execute(args[0], semantics),
       rightToken => rightToken.Execute(args[1], semantics)
