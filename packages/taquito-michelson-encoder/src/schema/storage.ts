@@ -17,15 +17,12 @@ function collapse(val: Token['val'] | any[], prim: string = PairToken.prim): Tok
       args: val,
     }, prim);
   }
-  if (val.args === undefined) {
-    throw new Error('Token has no arguments');
-  }
-  if (val.prim === prim && val.args.length > 2) {
+  if (val.prim === prim && val.args?.length! > 2) {
     return {
       ...val,
-      args: [val.args[0], {
+      args: [val.args![0], {
         prim: prim,
-        args: val.args.slice(1),
+        args: val.args?.slice(1),
       }],
     };
   }
