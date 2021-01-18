@@ -31,11 +31,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 			});
 			await op.confirmation();
 			const contractAddress = (await op.contract()).address;
-			console.log(contractAddress);
 
 			const contractAbstraction = await Tezos.contract.at(contractAddress, tzip16);
 			const metadataViews = await contractAbstraction.tzip16().metadataViews();
-			console.log(metadataViews)
 
 			const viewEmptyBytesResult = await metadataViews.emptyBytes().executeView();
 			expect(viewEmptyBytesResult.toString()).toEqual('');
@@ -79,11 +77,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 			});
 			await op.confirmation();
 			const contractAddress = (await op.contract()).address;
-			console.log(contractAddress);
 
 			const contractAbstraction = await Tezos.contract.at(contractAddress, tzip16);
 			const metadataViews = await contractAbstraction.tzip16().metadataViews();
-			console.log(metadataViews)
 
 			try {
 				await metadataViews['an-empty-useless-view']().executeView();
