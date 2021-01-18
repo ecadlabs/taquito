@@ -92,15 +92,15 @@ We can inspect the contract methods and data types using the `c.parameterSchema.
 The following example shows how to load the contract, and view the methods on that contract.
 
 ```js live noInline
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/delphinet');
 
 Tezos.contract
-  .at('KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC')
-  .then(c => {
+  .at('KT1NGihnotUbt8C1WsKfsUg1E2D7UPYzAn2N')
+  .then((c) => {
     let methods = c.parameterSchema.ExtractSignatures();
     println(JSON.stringify(methods, null, 2));
   })
-  .catch(error => console.log(`Error: ${error}`));
+  .catch((error) => console.log(`Error: ${error}`));
 ```
 
 The `at()` method causes Taquito to query a Tezos nodes RPC API for the contracts "script" and "entrypoints". From these two inputs, Taquito builds an ordinary JavaScript object with methods that correspond to the Smart Contracts entrypoints.
@@ -115,15 +115,15 @@ In Tezos, to call an entrypoint on a contract, one must send a transfer operatio
 We can inspect the transfer params produced by Taquito using the `toTransferParams()` method as follows.
 
 ```js live noInline
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/delphinet');
 
 Tezos.contract
-  .at('KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC')
-  .then(c => {
+  .at('KT1NGihnotUbt8C1WsKfsUg1E2D7UPYzAn2N')
+  .then((c) => {
     let incrementParams = c.methods.increment(2).toTransferParams();
     println(JSON.stringify(incrementParams, null, 2));
   })
-  .catch(error => console.log(`Error: ${error}`));
+  .catch((error) => console.log(`Error: ${error}`));
 ```
 
 ## Calling the Increment function
@@ -135,21 +135,22 @@ We call the `send()` method on the `increment()` method. Taquito then forges thi
 Then we wait for the `confirmation(3)` to complete. The `3` number tells Taquito how many confirmations to wait for before resolving the promise. `3` is a good value for this type of demonstration, but we recommend a higher value if you are dealing with mainnet transactions.
 
 ```js live noInline
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/delphinet');
 
-Tezos.contract.at('KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC')
-  .then(contract => {
+Tezos.contract
+  .at('KT1NGihnotUbt8C1WsKfsUg1E2D7UPYzAn2N')
+  .then((contract) => {
     const i = 7;
 
     println(`Incrementing storage value by ${i}...`);
     return contract.methods.increment(i).send();
   })
-  .then(op => {
+  .then((op) => {
     println(`Awaiting for ${op.hash} to be confirmed...`);
     return op.confirmation(3).then(() => op.hash);
   })
-  .then(hash => println(`Operation injected: https://carthagenet.tzstats.com/${hash}`))
-  .catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .then((hash) => println(`Operation injected: https://delphi.tzstats.com/${hash}`))
+  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 [0]: https://ligolang.org/

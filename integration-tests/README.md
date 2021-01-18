@@ -46,5 +46,5 @@ So if you have a test spec with the name `it('does some stuff)` then the command
 
 ## Configuration
 
-See the `taquito/integration-tests/config.ts` file for details of test configurations and target networks. Some configurations have default values that can be overridden using environment variables. For example, you can make the tests run against a custom `delpinet` node by setting the environment variable: ` export TEZOS_RPC_DELPHINET='http://localhost:8732'`. 
+See the `taquito/integration-tests/config.ts` file for details of test configurations and target networks. Some configurations have default values that can be overridden using environment variables. For example, you can make the tests run against a custom `delphinet` node by setting the environment variable: ` export TEZOS_RPC_DELPHINET='http://localhost:8732'`. 
 

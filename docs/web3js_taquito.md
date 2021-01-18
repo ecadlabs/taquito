@@ -33,7 +33,7 @@ const web3 = new Web3(Web3.providers.HttpProvider('http://localhost:9545'));
 ```js
 import { TezosToolkit } from '@taquito/taquito';
 
-const Tezos = new TezosToolkit("http://localhost:9545");
+const Tezos = new TezosToolkit('http://localhost:8732');
 ```
 
 The Web3js package exports a class that needs to be instantiated before being used. The difference between _Web3_ and _web3_ is a common source of errors in Ethereum development.
@@ -178,7 +178,7 @@ if(typeof window.web3 !== undefined){
 Nope;
 ```
 
-## Full code to connect to the network and send a transaction to a smart contract
+## Full code to connect to a local node and send a transaction to a smart contract
 
 **Web3js**:
 

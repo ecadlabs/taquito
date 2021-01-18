@@ -51,9 +51,10 @@ As described above, the `map %data` uses a value that we chose between different
 
 Since every argument is identified by an annotation, we can ignore optional values if they are not needed. In the first entry of the `bigMap %records` of this example, we do not specify a value for the `address %address`, the `nat %ttl` and the `nat %validator`, but we define one for the `nat %validator` of the second entry of the bigMap.
 
-```js
-import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+```js live noInline
+// import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
+// import { importKey } from '@taquito/signer';
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/delphinet');
 
 //%data
 const dataMap = new MichelsonMap();
@@ -84,16 +85,21 @@ const validatorsMap = new MichelsonMap();
 //key is a nat, value is an address
 validatorsMap.set('1', 'tz1btkXVkVFWLgXa66sbRJa8eeUSwvQFX4kP')
 
-const originationOp = await Tezos.contract.originate({
-    code : contractJSON,
+importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
+.then(() => {
+  return Tezos.contract.originate({
+    code : contractJson,
     storage : {
       owner : 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', //address
       records: recordsBigMap, 
       validators : validatorsMap
     }})
-
-const contract = await originationOp.contract()
-console.log(contract.address)
+}).then((contractOriginated) => {
+  println(`Waiting for confirmation of origination for ${contractOriginated.contractAddress}...`);
+  return contractOriginated.contract();
+}).then((contract) => {
+  println(`Origination completed.`);
+}).catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 ## Calling the function of a contract having a complex object as a parameter
@@ -125,12 +131,12 @@ The way to write the parameter when calling the function of a contract with Taqu
 
 ```js live noInline
 // import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet')
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/delphinet')
 // import { importKey } from '@taquito/signer';
 
 importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
 .then(signer => {
-    return Tezos.contract.at('KT1JjYmy6q4xxZGL4qXQGkSra7xNtrEpQ85K')
+    return Tezos.contract.at('KT1Guzg4pWj5BEyc8qtoicNsuPCYfjRbYLZc')
 }).then(myContract => {
     const dataMap = new MichelsonMap();
     dataMap.set("Hello World", { bool : true })
@@ -143,12 +149,12 @@ importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
 
 ```js live noInline
 // import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet')
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/delphinet')
 // import { importKey } from '@taquito/signer';
 
 importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
 .then(signer => {
-    return Tezos.contract.at('KT1JjYmy6q4xxZGL4qXQGkSra7xNtrEpQ85K')
+    return Tezos.contract.at('KT1Guzg4pWj5BEyc8qtoicNsuPCYfjRbYLZc')
 }).then(myContract => {
     const dataMap = new MichelsonMap();
     dataMap.set("Hello World", { bool : true })
@@ -165,7 +171,7 @@ importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
     println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
 }).then(hash => {
-    println(`Operation injected: https://better-call.dev/carthagenet/KT1JjYmy6q4xxZGL4qXQGkSra7xNtrEpQ85K/operations`);
+    println(`Operation injected: https://better-call.dev/delphinet/KT1Guzg4pWj5BEyc8qtoicNsuPCYfjRbYLZc/operations`);
 }).catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 #### Call the set_child_record function when optional arguments are null
@@ -174,12 +180,12 @@ The `address %address` and the `nat %ttl` of the `set_child_record` function are
 
 ```js live noInline
 // import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet')
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/delphinet')
 // import { importKey } from '@taquito/signer';
 
 importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
 .then(signer => {
-    return Tezos.contract.at('KT1JjYmy6q4xxZGL4qXQGkSra7xNtrEpQ85K')
+    return Tezos.contract.at('KT1Guzg4pWj5BEyc8qtoicNsuPCYfjRbYLZc')
 }).then(myContract => {
     const dataMap = new MichelsonMap();
     dataMap.set("Hello World", { nat : '3' })
@@ -196,6 +202,6 @@ importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
     println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
 }).then(hash => {
-    println(`Operation injected: https://better-call.dev/carthagenet/KT1JjYmy6q4xxZGL4qXQGkSra7xNtrEpQ85K/operations`);
+    println(`Operation injected: https://better-call.dev/delphinet/KT1Guzg4pWj5BEyc8qtoicNsuPCYfjRbYLZc/operations`);
 }).catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```

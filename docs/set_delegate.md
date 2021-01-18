@@ -2,6 +2,7 @@
 title: Set delegate
 author: Simon Boissonneault-Robert
 ---
+
 # Examples demonstrating delegation for various address type
 
 In Tezos a delegation operation will set the delegate of an address.
@@ -15,7 +16,7 @@ This is the simplest delegation scenario
 ```js
 // const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 
-await Tezos.contract.setDelegate({ source: 'tz1_source', delegate: 'tz1_baker' })
+await Tezos.contract.setDelegate({ source: 'tz1_source', delegate: 'tz1_baker' });
 ```
 
 Register as a delegate
@@ -23,7 +24,7 @@ Register as a delegate
 ```js
 // const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 
-await Tezos.contract.registerDelegate({})
+await Tezos.contract.registerDelegate({});
 ```
 
 ## Delegation involving "originated" KT1 addresses
@@ -37,16 +38,16 @@ In order to delegate for a KT1 addresses with the new `manager.tz` contract, a c
 > The examples following only apply to KT1 addresses that were migrated as part of the `Babylon/proto005` upgrade. Delegations involving _other_ types of smart-contracts, will depend on those contracts specifically.
 
 > **Why doesn't Taquito abstract KT1 manager accounts so I can just call setDelegate()**
-> 
+>
 > For the time being, we regard KT1 manager accounts as a regular smart contract. In fact, it is possible to have a smart contract that is not following the manager.tz conventions and that also delegates to a baker. The correct lambda to pass to a contract in order to delegate is application/wallet specific. Therefore Taquito does not make any assumption on the KT1.
 
-### Example of delegation for a KT1 on Carthage/Proto006
+### Example of delegation for a KT1 on Delphi/Proto007
 
 ```js
 // const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 
-const contract = await Tezos.contract.at("kt1...")
-await contract.methods.do(setDelegate("tz1_delegate")).send()
+const contract = await Tezos.contract.at('kt1...');
+await contract.methods.do(setDelegate('tz1_delegate')).send();
 ```
 
 Where `setDelegate` is a function that returns the necessary Michelson lambda. It looks like this:

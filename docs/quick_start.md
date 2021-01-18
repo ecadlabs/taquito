@@ -53,7 +53,7 @@ tezos.setProvider({ signer: new TezBridgeSigner() });
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/delphinet');
 
 Tezos.tz
   .getBalance('tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY')
@@ -143,17 +143,17 @@ Tezos.contract
     println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
   })
-  .then((hash) => println(`Operation injected: https://carthagenet.tzstats.com/${hash}`))
+  .then((hash) => println(`Operation injected: https://delphi.tzstats.com/${hash}`))
   .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 ### Interact with a smart contract
 
-Calling smart contract operations requires a configured signer, in this example we will use a faucet key. The Ligo source code for this smart contract [KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC][smart_contract_on_better_call_dev] used in this example can be found in a [Ligo Web IDE][smart_contract_source].
+Calling smart contract operations requires a configured signer, in this example we will use a faucet key. The Ligo source code for this smart contract [KT1NGihnotUbt8C1WsKfsUg1E2D7UPYzAn2N][smart_contract_on_better_call_dev] used in this example can be found in a [Ligo Web IDE][smart_contract_source].
 
 ```js live noInline
 Tezos.contract
-  .at('KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC')
+  .at('KT1NGihnotUbt8C1WsKfsUg1E2D7UPYzAn2N')
   .then((contract) => {
     const i = 7;
 
@@ -164,10 +164,10 @@ Tezos.contract
     println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
   })
-  .then((hash) => println(`Operation injected: https://carthagenet.tzstats.com/${hash}`))
+  .then((hash) => println(`Operation injected: https://delphi.tzstats.com/${hash}`))
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 [boilerplate]: https://github.com/ecadlabs/taquito-boilerplate
 [smart_contract_source]: https://ide.ligolang.org/p/CelcoaDRK5mLFDmr5rSWug
-[smart_contract_on_better_call_dev]: https://better-call.dev/carthage/KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC/operations
+[smart_contract_on_better_call_dev]: https://better-call.dev/delphinet/KT1NGihnotUbt8C1WsKfsUg1E2D7UPYzAn2N/operations
