@@ -138,7 +138,7 @@ export class MichelsonStorageView implements View {
         const contractBalance = (await this.rpc.getBalance(this.contract.address)).toString();
         const block = await this.rpc.getBlock();
         const blockTimestamp = block.header.timestamp.toString();
-        const protocol_hash = block.protocol;
+        const protocolHash = block.protocol;
 
         const code = this.adaptViewCodeToContext(this.code, contractBalance, blockTimestamp, chainId);
 
@@ -166,7 +166,7 @@ export class MichelsonStorageView implements View {
         };
 
         // Fix for Edo which required a balance property when calling the run_code endpoint
-        if(protocol_hash === Protocols.PtEdoTez) {
+        if(protocolHash === Protocols.PtEdoTez) {
             Object.assign(viewScript, { balance: '0' });
         }
 
