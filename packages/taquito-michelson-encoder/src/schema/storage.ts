@@ -16,7 +16,11 @@ function collapse(val: Token['val'] | any[], prim: string = PairToken.prim): Tok
       prim: prim,
       args: val,
     }, prim);
-  } else if (val.prim === prim && val.args.length > 2) {
+  }
+  if (val.args === undefined) {
+    throw new Error('Token has no arguments');
+  }
+  if (val.prim === prim && val.args.length > 2) {
     return {
       ...val,
       args: [val.args[0], {
@@ -35,7 +39,7 @@ function deepEqual(a: Token['val'] | any[], b: Token['val'] | any[]): boolean {
     (ac.args === undefined && bc.args === undefined ||
       ac.args !== undefined && bc.args !== undefined &&
       ac.args.length === bc.args.length &&
-      ac.args.every((v, i) => deepEqual(v, bc.args[i]))) &&
+      ac.args.every((v, i) => deepEqual(v, bc.args?.[i]))) &&
     (ac.annots === undefined && bc.annots === undefined ||
       ac.annots !== undefined && bc.annots !== undefined &&
       ac.annots.length === bc.annots.length &&
@@ -207,6 +211,9 @@ export class Schema {
     if (Array.isArray(schema) || schema['prim'] === 'pair') {
       const sch = collapse(schema);
       const str = collapse(storage, 'Pair');
+      if (sch.args === undefined || str.args === undefined) {
+        throw new Error('Tokens have no arguments'); // unlikely
+      }
       return this.findValue(sch.args[0], str.args[0], valueToFind) ||
         this.findValue(sch.args[1], str.args[1], valueToFind);
     }

@@ -2,13 +2,17 @@ import { Token, TokenFactory, Semantic, ComparableToken } from './token';
 import { OrToken } from './or';
 
 // collapse comb pair
-function collapse(val: { prim: string; args: any[]; annots?: any[] } | any[], prim: string = PairToken.prim): [any, any] {
+function collapse(val: Token['val'] | any[], prim: string = PairToken.prim): [any, any] {
   if (Array.isArray(val)) {
     return collapse({
       prim: prim,
       args: val,
     }, prim);
-  } else if (val.args.length > 2) {
+  }
+  if (val.args === undefined) {
+    throw new Error('Token has no arguments');
+  }
+  if (val.args.length > 2) {
     return [val.args[0], {
       prim: prim,
       args: val.args.slice(1),
