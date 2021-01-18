@@ -699,6 +699,7 @@ export type RPCRunCodeParam = {
   payer?: string;
   gas?: BigNumber;
   entrypoint?: string;
+  balance?: string;
 };
 
 export type RunCodeResult = {

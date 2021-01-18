@@ -25,13 +25,10 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         })
       } catch (ex) {
         if( protocol === Protocols.PtEdoTez) {
-	  console.log(ex)
           expect(ex).toEqual(expect.objectContaining({ message: expect.stringContaining('michelson_v1.invalid_syntactic_constant') }))
 	} else if( protocol === Protocols.PsCARTHA) {
-	  console.log(ex)
           expect(ex).toEqual(expect.objectContaining({ message: expect.stringContaining('invalidSyntacticConstantError') }))
         } else {
-	  console.log(ex)
           expect(ex).toEqual(expect.objectContaining({ message: expect.stringContaining('invalid_constant') }))
         }
       }

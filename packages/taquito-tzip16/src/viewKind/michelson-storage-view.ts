@@ -1,6 +1,6 @@
 import { ParameterSchema } from '@taquito/michelson-encoder';
 import { RpcClient, MichelsonV1Expression, MichelsonV1ExpressionExtended } from '@taquito/rpc';
-import { ContractAbstraction, ContractProvider, Wallet } from '@taquito/taquito';
+import { ContractAbstraction, ContractProvider, Protocols, Wallet } from '@taquito/taquito';
 import { ForbiddenInstructionInViewCode, InvalidViewParameterError, NoParameterExpectedError } from '../tzip16-errors';
 import { View } from './interface';
 
@@ -136,7 +136,10 @@ export class MichelsonStorageView implements View {
         // currentContext
         const chainId = await this.rpc.getChainId();
         const contractBalance = (await this.rpc.getBalance(this.contract.address)).toString();
-        const blockTimestamp = (await this.rpc.getBlock()).header.timestamp.toString();
+        const block = await this.rpc.getBlock();
+        const blockTimestamp = block.header.timestamp.toString();
+        const protocol_hash = block.protocol;
+
         const code = this.adaptViewCodeToContext(this.code, contractBalance, blockTimestamp, chainId);
 
         const viewScript = {
@@ -161,6 +164,11 @@ export class MichelsonStorageView implements View {
             amount: '0',
             chain_id: chainId
         };
+
+        // Fix for Edo which required a balance property when calling the run_code endpoint
+        if(protocol_hash === Protocols.PtEdoTez) {
+            Object.assign(viewScript, { balance: '0' });
+        }
 
         const result: any = await this.rpc.runCode(viewScript as any);
         const viewResultSchema = new ParameterSchema(this.returnType);
