@@ -23,15 +23,22 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
 		it('test contract abstraction composition', async (done) => {
 
-			const contract = createTzip12Tzip16ContractAbstraction(await Tezos.contract.at('KT1BAQ3nEsLrEeZdkij8KiekaWUVQERNF1Hi'), Tezos);
-			const metadata = await contract.tzip16().getMetadata();
-			console.log(metadata);
+			// tzip12 token metadata in a view token_metadata
+			/// const contract = createTzip12Tzip16ContractAbstraction(await Tezos.contract.at('KT1Nu6FHWrpWF3wAkKkWs1Tb1MMTgNesFrUn'), Tezos);
+			// const tokenMetadata = await contract.tzip12().getTokenMetadata(0);
+			// console.log('tokenMetadata', tokenMetadata)
 
-			// tzip12
-			const tokenMetadata = contract.tzip12().getTokenMetadata();
-			console.log('tokenMetadata', tokenMetadata)
+			// tzip12 token metadata in a big map token_metadata
+			const contract2 = createTzip12Tzip16ContractAbstraction(await Tezos.contract.at('KT1TjX9Uz8eDs3boTTMPfak8nghVFmAgPgLa'), Tezos);
+			const tokenMetadata2 = await contract2.tzip12().getTokenMetadata(0);
+			const test = await contract2.tzip12().isTzip12Compliant()
+			console.log('tokenMetadata2', tokenMetadata2)
+			console.log(test)
 
-			console.log(Tezos['_context'])
+			// tzip12 token metadata in bigmap with uri
+			// const contract3 = createTzip12Tzip16ContractAbstraction(await Tezos.contract.at('KT1TjX9Uz8eDs3boTTMPfak8nghVFmAgPgLa'), Tezos);
+			// const tokenMetadata3 = await contract3.tzip12().getTokenMetadata(1);
+			// console.log('tokenMetadata3', tokenMetadata3)
 
 			expect(1).toEqual(1);
 
