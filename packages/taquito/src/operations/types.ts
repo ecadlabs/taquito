@@ -118,6 +118,7 @@ export type OriginateParamsBase = {
   fee?: number;
   gasLimit?: number;
   storageLimit?: number;
+  mutez?: boolean;
 };
 
 /**
