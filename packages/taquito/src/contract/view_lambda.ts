@@ -1,5 +1,3 @@
-/* istanbul ignore file */
-
 const code = [
   {
     prim: 'parameter',
