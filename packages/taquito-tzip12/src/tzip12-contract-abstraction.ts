@@ -1,8 +1,7 @@
 import { MichelsonMap, Schema } from '@taquito/michelson-encoder';
-import { BigMapAbstraction, Context, ContractAbstraction, ContractProvider, Wallet } from '@taquito/taquito';
-import { Tzip16ContractAbstraction, MetadataProviderInterface, MetadataContext, View, bytes2Char, InvalidUri, char2Bytes } from '@taquito/tzip16'
-import { TokenMetadataNotFound } from './tzip12-errors';
-import BigNumber from 'bignumber.js';
+import { ContractAbstraction, ContractProvider, Wallet } from '@taquito/taquito';
+import { Tzip16ContractAbstraction, MetadataContext, View, bytes2Char } from '@taquito/tzip16'
+import { TokenIdNotFound, TokenMetadataNotFound } from './tzip12-errors';
 
 const tokenMetadataBigMapType = {
     prim: 'big_map',
@@ -30,27 +29,27 @@ export class Tzip12ContractAbstraction {
 
     /**
      * @description Fetches the contract metadata (according to the Tzip-016 standard)
-     * @returns Returns an object containing the metadata, the uri, an optional integrity check result and an optional sha256 hash 
-     * or it returns Undefined if the contract has no metadata (non-compliant with Tzip-016)
+     * @returns An object containing the metadata, the uri, an optional integrity check result and an optional sha256 hash 
+     * or `Undefined` if the contract has no metadata (non-compliant with Tzip-016)
      */
-    async getContractMetadata() {
+    private async getContractMetadata() {
         try {
-            return await this._tzip16ContractAbstraction.getMetadata();
+            const contractMetadata = await this._tzip16ContractAbstraction.getMetadata();
+            return contractMetadata.metadata;
         } catch (err) {
             // The contract is not compliant with Tzip-016. There is no contract metadata.
         }
-
     }
 
     /**
-     * @description The Tzip-016 "interfaces" field MUST be present in the contract metadata. It should contain "TZIP-012[-<version-info>]"
+     * @description The Tzip-016 "interfaces" field MUST be present in the contract metadata. It should contain "TZIP-012[version-info]"
      * @returns True if "interfaces" field is present and contains "TZIP-012", false otherwise
      */
     async isTzip12Compliant() {
         let isCompliant = false;
         const metadata = await this.getContractMetadata();
         if (metadata) {
-            const tzip12Interface = metadata.metadata.interfaces?.filter((x) => {
+            const tzip12Interface = metadata.interfaces?.filter((x) => {
                 return x.substring(0, 8) === "TZIP-012";
             });
             isCompliant = (tzip12Interface && tzip12Interface.length !== 0) ? true : false;
@@ -58,97 +57,114 @@ export class Tzip12ContractAbstraction {
         return isCompliant;
     }
 
+    /**
+     * @description Fetches the token metadata for a specified token ID.
+     * The function first tries to find a `token_metadata` view in the contract metadata and to execute it with the token ID.
+     * If there is no view, the function tries to find a `token_metadata` bigmap in the top-level pairs of the storage.
+     * @param tokenId The ID of the token for which we want to retrieve token metadata
+     * @returns An object of type `TokenMetadata`
+     */
     async getTokenMetadata(tokenId: number) {
-        // Firts step: look if the contract has metadata
-        const contractMetadata = await this.getContractMetadata();
-        if (contractMetadata) {
-            const views = await this._tzip16ContractAbstraction.metadataViews();
-            if (this.hasTokenMetadataView(views)) {
-                // Second step: Look if metadata contains a view called `token_metadata`
-                // execute the view 
-                return await this.executeTokenMetadataView(views['token_metadata'](), tokenId);
-            }
-        }
-            // Otherwise find %token_metadata of type (big_map nat (pair nat (map string bytes)))
-            // TODO fetch metadata if there is a uri
-            const bigmapTokenMetadata = this.findTokenMetadataBigMap();
-            console.log(bigmapTokenMetadata)
-            const pairTokenMetadata = await bigmapTokenMetadata.get<{}>(tokenId.toString());
-            if(pairTokenMetadata) {
-                const michelsonMap = Object.values(pairTokenMetadata)[1];
-                return this.formatMetadataTokenFromViewResult(michelsonMap as MichelsonMap<string, string>)
-            }
-        throw new TokenMetadataNotFound(this.contractAbstraction.address)
+        const tokenMetadata = await this.retrieveTokenMetadataFromView(tokenId);
+        return (!tokenMetadata) ? await this.retrieveTokenMetadataFromBigMap(tokenId) : tokenMetadata;
     }
 
-    /**
-     * @description The `custom` method used by a contract to provide access to the token-metadata
-     * @returns True if a view called `token_metadata` is present in the metadata, false otherwise
-     */
-    private hasTokenMetadataView(views: {}) {
-            for (let view of Object.keys(views)) {
-                if (view === 'token_metadata') {
-                    return true;
-                }
+    private async retrieveTokenMetadataFromView(tokenId: number) {
+        if (await this.getContractMetadata()) {
+            const views = await this._tzip16ContractAbstraction.metadataViews();
+            if (this.hasTokenMetadataView(views)) {
+                const viewResult = await this.executeTokenMetadataView(views['token_metadata'](), tokenId);
+                return viewResult;
             }
+        }
+    }
+
+    private hasTokenMetadataView(views: {}) {
+        for (let view of Object.keys(views)) {
+            if (view === 'token_metadata') {
+                return true;
+            }
+        }
         return false;
     }
 
-    private async executeTokenMetadataView(tokenMetadataView: View, index: number): Promise<TokenMetadata> {
-        const tokenMetadata = await tokenMetadataView.executeView(index);
-        const michelsonMap = Object.values(tokenMetadata)[1];
-        const metadataFromUri = await this.isUriInTokenMetadata(michelsonMap);
-        if (metadataFromUri) {
-            return metadataFromUri.metadata
-        } else {
-            return this.formatMetadataTokenFromViewResult((michelsonMap as MichelsonMap<string, string>));
+    private async executeTokenMetadataView(tokenMetadataView: View, tokenId: number): Promise<TokenMetadata> {
+        let tokenMetadata;
+        try {
+            tokenMetadata = await tokenMetadataView.executeView(tokenId);
+        } catch (err) {
+            throw new TokenIdNotFound(tokenId);
         }
+        const tokenMap = Object.values(tokenMetadata)[1];
+        if (!MichelsonMap.isMichelsonMap(tokenMap)) {
+            throw new TokenMetadataNotFound(this.contractAbstraction.address);
+        }
+        const metadataFromUri = await this.fetchTokenMetadataFromUri(tokenMap as MichelsonMap<string, string>);
+        return metadataFromUri ? metadataFromUri : this.formatMetadataToken((tokenMap as MichelsonMap<string, string>));
     }
 
-    private async isUriInTokenMetadata(tokenMetadata: any) {
-        // todo try catch
+    private async fetchTokenMetadataFromUri(tokenMetadata: MichelsonMap<string, string>) {
         const uri = tokenMetadata.get("");
         if (uri) {
             try {
-                return await this.context.metadataProvider.provideMetadata(
+                const metadataFromUri = await this.context.metadataProvider.provideMetadata(
                     this.contractAbstraction,
                     bytes2Char(uri),
                     this.context
                 );
+                return metadataFromUri.metadata;
             } catch (e) {
                 if (e.name === 'InvalidUri') {
-                    console.warn(`The URI ${bytes2Char(uri)} is present in the token metadata, but is invalid.`)
+                    console.warn(`The URI ${bytes2Char(uri)} is present in the token metadata, but is invalid.`);
+                } else {
+                    throw e;
                 }
             }
         }
     }
 
-    private formatMetadataTokenFromViewResult(metadataTokenMap: MichelsonMap<string, string>): TokenMetadata {
+    private formatMetadataToken(metadataTokenMap: MichelsonMap<string, string>): TokenMetadata {
         const tokenMetadataDecoded = {};
-            for (let keyTokenMetadata of metadataTokenMap.keys()) {
-                if (!(keyTokenMetadata === '')){
-                    Object.assign(tokenMetadataDecoded, { [keyTokenMetadata]: bytes2Char(metadataTokenMap.get(keyTokenMetadata)!) });
-                }
-              }
-            return tokenMetadataDecoded
-
+        for (let keyTokenMetadata of metadataTokenMap.keys()) {
+            if (keyTokenMetadata === 'decimals') {
+                Object.assign(tokenMetadataDecoded, { [keyTokenMetadata]: Number(bytes2Char(metadataTokenMap.get(keyTokenMetadata)!)) });
+            }
+            else if (!(keyTokenMetadata === '')) {
+                Object.assign(tokenMetadataDecoded, { [keyTokenMetadata]: bytes2Char(metadataTokenMap.get(keyTokenMetadata)!) });
+            }
+        }
+        return tokenMetadataDecoded
     }
 
-    private findTokenMetadataBigMap(): BigMapAbstraction {
+    private async retrieveTokenMetadataFromBigMap(tokenId: number) {
+        const bigmapTokenMetadataId = this.findTokenMetadataBigMap();
+        let pairNatMap;
+        try {
+            pairNatMap = await this.context.contract.getBigMapKeyByID<any>(
+                bigmapTokenMetadataId['int'].toString(),
+                tokenId.toString(),
+                new Schema(tokenMetadataBigMapType)
+            );
+        } catch (err) {
+            throw new TokenIdNotFound(tokenId);
+        }
+
+        const michelsonMap = pairNatMap['1'];
+        if (!MichelsonMap.isMichelsonMap(michelsonMap)) {
+            throw new TokenIdNotFound(tokenId);
+        }
+        return this.formatMetadataToken(michelsonMap as unknown as MichelsonMap<string, string>)
+    }
+
+    private findTokenMetadataBigMap(): BigMapId {
         const tokenMetadataBigMapId = this.contractAbstraction.schema.FindFirstInTopLevelPair<BigMapId>(
             this.contractAbstraction.script.storage,
             tokenMetadataBigMapType
         );
-        console.log('tokenMetadataBigMapId',tokenMetadataBigMapId)
         if (!tokenMetadataBigMapId) {
             throw new TokenMetadataNotFound(this.contractAbstraction.address);
         }
-
-        return new BigMapAbstraction(
-            new BigNumber(tokenMetadataBigMapId['int']),
-            new Schema(tokenMetadataBigMapType),
-            this.context.contract
-        );
+        return tokenMetadataBigMapId;
     }
 
 
