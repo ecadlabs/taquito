@@ -104,6 +104,8 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 		});
 
 		it('Should test contratAbstraction composition, fetch contract and token metadata of the Fa2 contract', async (done) => {
+			// delphi : KT19txYWjVo4yLvcGnnyiGc35CuX12Pc4krn
+			
 			Tezos.addExtension(new Tzip12Module());
 			// Tezos.addExtension(new Tzip16Module())... one extension is sufficient as they use the same MetadataProvider
 
