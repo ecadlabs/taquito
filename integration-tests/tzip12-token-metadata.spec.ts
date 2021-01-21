@@ -1,13 +1,11 @@
 import { CONFIGS } from './config';
 import { compose, MichelsonMap } from '@taquito/taquito';
-import { tzip16 } from '../packages/taquito-tzip16/src/composer';
+import { tzip16, Tzip16Module, char2Bytes } from '@taquito/tzip16';
 import { tzip12 } from '../packages/taquito-tzip12/src/composer';
-import { Tzip16Module } from '../packages/taquito-tzip16/src/tzip16-extension';
 import { Tzip12Module } from '../packages/taquito-tzip12/src/tzip12-extension';
 import { TokenIdNotFound } from '../packages/taquito-tzip12/src/tzip12-errors';
 import { fa2TokenFactory } from './data/fa2-token-factory';
 import { fa2ForTokenMetadataView } from './data/fa2-for-token-metadata-view';
-import { char2Bytes } from '../packages/taquito-tzip16/src/tzip16-utils';
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 	const Tezos = lib;

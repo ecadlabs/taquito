@@ -66,15 +66,14 @@ export class Tzip12ContractAbstraction {
      */
     async getTokenMetadata(tokenId: number) {
         const tokenMetadata = await this.retrieveTokenMetadataFromView(tokenId);
-        return (!tokenMetadata) ? await this.retrieveTokenMetadataFromBigMap(tokenId) : tokenMetadata;
+        return (!tokenMetadata) ? this.retrieveTokenMetadataFromBigMap(tokenId) : tokenMetadata;
     }
 
     private async retrieveTokenMetadataFromView(tokenId: number) {
         if (await this.getContractMetadata()) {
             const views = await this._tzip16ContractAbstraction.metadataViews();
             if (this.hasTokenMetadataView(views)) {
-                const viewResult = await this.executeTokenMetadataView(views['token_metadata'](), tokenId);
-                return viewResult;
+                return this.executeTokenMetadataView(views['token_metadata'](), tokenId);
             }
         }
     }

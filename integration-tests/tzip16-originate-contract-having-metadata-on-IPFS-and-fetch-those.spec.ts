@@ -1,11 +1,7 @@
 import { CONFIGS } from './config';
-import { char2Bytes } from '../packages/taquito-tzip16/src/tzip16-utils';
 import { tacoContractTzip16 } from './data/modified-taco-contract';
 import { MichelsonMap } from '@taquito/taquito';
-import { tzip16 } from '../packages/taquito-tzip16/src/composer';
-import { Tzip16Module } from '../packages/taquito-tzip16/src/tzip16-extension';
-import { IpfsHttpHandler } from '../packages/taquito-tzip16/src/handlers/ipfs-handler';
-import { Handler, MetadataProvider } from '../packages/taquito-tzip16/src/metadata-provider';
+import { char2Bytes, tzip16, Tzip16Module, IpfsHttpHandler, Handler, MetadataProvider } from '@taquito/tzip16';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
