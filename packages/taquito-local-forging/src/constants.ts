@@ -157,6 +157,28 @@ export const opMapping: { [key: string]: string } = {
   '73': 'APPLY',
   '74': 'chain_id',
   '75': 'CHAIN_ID',
+  '76': 'LEVEL',
+  '77': 'SELF_ADDRESS',
+  '78': 'never',
+  '79': 'NEVER',
+  '7a': 'UNPAIR',
+  '7b': 'VOTING_POWER',
+  '7c': 'TOTAL_VOTING_POWER',
+  '7d': 'KECCAK',
+  '7e': 'SHA3',
+  '7f': 'PAIRING_CHECK',
+  '80': 'bls12_381_g1',
+  '81': 'bls12_381_g2',
+  '82': 'bls12_381_fr',
+  '83': 'sapling_state',
+  '84': 'sapling_transaction',
+  '85': 'SAPLING_EMPTY_STATE',
+  '86': 'SAPLING_VERIFY_UPDATE',
+  '87': 'ticket',
+  '88': 'TICKET',
+  '89': 'READ_TICKET',
+  '8a': 'SPLIT_TICKET',
+  '8b': 'JOIN_TICKETS'
 };
 
 export const opMappingReverse = (() => {
