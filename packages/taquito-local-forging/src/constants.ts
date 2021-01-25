@@ -67,8 +67,8 @@ export const opMapping: { [key: string]: string } = {
   '19': 'COMPARE',
   '1a': 'CONCAT',
   '1b': 'CONS',
-  '1c': 'CREATE_ACCOUNT',
-  '1d': 'CREATE_CONTRACT',
+  '1c': 'CREATE_ACCOUNT', // Removed in Edo
+  '1d': 'CREATE_CONTRACT', // Removed in Edo
   '1e': 'IMPLICIT_ACCOUNT',
   '1f': 'DIP',
   '20': 'DROP',
@@ -113,7 +113,7 @@ export const opMapping: { [key: string]: string } = {
   '47': 'SOURCE',
   '48': 'SENDER',
   '49': 'SELF',
-  '4a': 'STEPS_TO_QUOTA',
+  '4a': 'STEPS_TO_QUOTA', // Removed in Edo
   '4b': 'SUB',
   '4c': 'SWAP',
   '4d': 'TRANSFER_TOKENS',
@@ -178,7 +178,8 @@ export const opMapping: { [key: string]: string } = {
   '88': 'TICKET',
   '89': 'READ_TICKET',
   '8a': 'SPLIT_TICKET',
-  '8b': 'JOIN_TICKETS'
+  '8b': 'JOIN_TICKETS',
+  '8c': 'GET_AND_UPDATE'
 };
 
 export const opMappingReverse = (() => {

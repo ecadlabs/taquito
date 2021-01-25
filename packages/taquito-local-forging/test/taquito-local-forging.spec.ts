@@ -1,6 +1,7 @@
 import { TezosToolkit } from '@taquito/taquito';
 import { opMappingReverse } from '../src/constants';
 import { localForger } from '../src/taquito-local-forging';
+import { ticketCode, ticketCode2, ticketCode3, ticketCode4, ticketStorage, ticketStorage2, ticketStorage3, ticketStorage4 } from './data/code_with_ticket';
 import { genericCode, genericStorage } from './data/generic_contract';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_big_map';
 import { noAnnotCode, noAnnotInit } from './data/token_without_annotations';
@@ -557,6 +558,92 @@ const cases: TestCase[] = [
       ],
     },
   },
+  {
+    name: 'Origination with ticket 1',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: 'origination',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          balance: '0',
+          script: {
+            code: ticketCode,
+            storage: ticketStorage,
+          },
+        },
+      ],
+    },
+  },
+/*   { 
+  // This test currently fails. TypeError: Cannot read property 'toString' of undefined
+  // (packages/taquito-local-forging/src/michelson/codec.ts:188:9)
+    name: 'Origination with ticket 2',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: 'origination',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          balance: '0',
+          script: {
+            code: ticketCode2,
+            storage: ticketStorage2,
+          },
+        },
+      ],
+    },
+  }, */
+  {
+    name: 'Origination with ticket 3',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: 'origination',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          balance: '0',
+          script: {
+            code: ticketCode3,
+            storage: ticketStorage3,
+          },
+        },
+      ],
+    },
+  },
+  {
+    name: 'Origination with ticket 4',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: 'origination',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          balance: '0',
+          script: {
+            code: ticketCode4,
+            storage: ticketStorage4,
+          },
+        },
+      ],
+    },
+  },
 ];
 
 cases.forEach(({ name, operation, expected }) => {
@@ -566,7 +653,7 @@ cases.forEach(({ name, operation, expected }) => {
     done();
   });
 
-  ['https://api.tez.ie/rpc/delphinet', 'https://api.tez.ie/rpc/carthagenet'].forEach(rpc => {
+  ['https://api.tez.ie/rpc/delphinet', 'https://api.tez.ie/rpc/edonet'].forEach(rpc => {
     integrationTest(`Integration test: ${name} (${rpc})`, async done => {
       const Tezos = new TezosToolkit(rpc);
       Tezos.setProvider({ rpc });
