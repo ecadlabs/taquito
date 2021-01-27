@@ -222,3 +222,23 @@ export const buf2hex = (buffer: Buffer): string => {
   });
   return hexParts.join('');
 };
+
+/**
+ *
+ * @description Convert a string to bytes
+ *
+ * @param str String to convert
+ */
+export function char2Bytes(str: string) {
+  return Buffer.from(str, 'utf8').toString('hex');
+}
+
+/**
+ *
+ * @description Convert bytes to a string
+ *
+ * @param str Bytes to convert
+ */
+export function bytes2Char(hex: string): string {
+  return Buffer.from(hex2buf(hex)).toString('utf8');
+}
