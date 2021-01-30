@@ -8,18 +8,19 @@ interface PrimX<PT extends string = string, AT extends Expr[] = Expr[]> extends 
 }
 
 // Instructions
-type MichelsonNoArgInstructionID = "SWAP" | "SOME" | "UNIT" | "CAR" | "CDR" |
-    "CONS" | "SIZE" | "MEM" | "GET" | "EXEC" | "APPLY" | "FAILWITH" | "RENAME" | "CONCAT" | "SLICE" |
-    "PACK" | "ADD" | "SUB" | "MUL" | "EDIV" | "ABS" | "ISNAT" | "INT" | "NEG" | "LSL" | "LSR" | "OR" |
-    "AND" | "XOR" | "NOT" | "COMPARE" | "EQ" | "NEQ" | "LT" | "GT" | "LE" | "GE" | "SELF" |
-    "TRANSFER_TOKENS" | "SET_DELEGATE" | "CREATE_ACCOUNT" | "IMPLICIT_ACCOUNT" | "NOW" | "AMOUNT" |
-    "BALANCE" | "CHECK_SIGNATURE" | "BLAKE2B" | "SHA256" | "SHA512" | "HASH_KEY" | "STEPS_TO_QUOTA" |
-    "SOURCE" | "SENDER" | "ADDRESS" | "CHAIN_ID";
+type MichelsonNoArgInstructionID = "ABS" | "ADD" | "ADDRESS" | "AMOUNT" | "AND" | "APPLY" | "BALANCE" |
+    "BLAKE2B" | "CAR" | "CDR" | "CHAIN_ID" | "CHECK_SIGNATURE" | "COMPARE" | "CONCAT" | "CONS" | "EDIV" |
+    "EQ" | "EXEC" | "FAILWITH" | "GE" | "GET_AND_UPDATE" | "GT" | "HASH_KEY" | "IMPLICIT_ACCOUNT" |
+    "INT" | "ISNAT" | "JOIN_TICKETS" | "KECCAK" | "LE" | "LEVEL" | "LSL" | "LSR" | "LT" | "MEM" | "MUL" |
+    "NEG" | "NEQ" | "NEVER" | "NOT" | "NOW" | "OR" | "PACK" | "PAIRING_CHECK" | "READ_TICKET" |
+    "SAPLING_VERIFY_UPDATE" | "SELF" | "SELF_ADDRESS" | "SENDER" | "SET_DELEGATE" | "SHA256" | "SHA3" |
+    "SHA512" | "SIZE" | "SLICE" | "SOME" | "SOURCE" | "SPLIT_TICKET" | "SUB" | "SWAP" | "TICKET" |
+    "TOTAL_VOTING_POWER" | "TRANSFER_TOKENS" | "UNIT" | "VOTING_POWER" | "XOR" | "RENAME";
 
-type MichelsonRegularInstructionID = "DUP" | "PAIR" | "UNPAIR" | "GET" | "UPDATE" | "DROP" | "DIG" | "DUG" | "NONE" | "LEFT" | "RIGHT" | "NIL" | "UNPACK" | "CONTRACT" | "CAST" |
-    "IF_NONE" | "IF_LEFT" | "IF_CONS" | "IF" | "MAP" | "ITER" | "LOOP" | "LOOP_LEFT" | "DIP" |
-    "CREATE_CONTRACT" | "PUSH" | "EMPTY_SET" | "EMPTY_MAP" | "EMPTY_BIG_MAP" | "LAMBDA";
-
+type MichelsonRegularInstructionID = "CONTRACT" | "CREATE_CONTRACT" | "DIG" | "DIP" | "DROP" |
+    "DUG" | "DUP" | "EMPTY_BIG_MAP" | "EMPTY_MAP" | "EMPTY_SET" | "GET" | "IF" | "IF_CONS" | "IF_LEFT" |
+    "IF_NONE" | "ITER" | "LAMBDA" | "LEFT" | "LOOP" | "LOOP_LEFT" | "MAP" | "NIL" | "NONE" | "PAIR" |
+    "PUSH" | "RIGHT" | "SAPLING_EMPTY_STATE" | "UNPACK" | "UNPAIR" | "UPDATE" | "CAST";
 
 type MichelsonInstructionID = MichelsonNoArgInstructionID | MichelsonRegularInstructionID;
 type InstrPrim<PT extends MichelsonInstructionID, AT extends Expr[]> = Prim<PT, AT>;
@@ -49,10 +50,12 @@ export type MichelsonInstruction =
 
 // Types
 
-type MichelsonTypeID = "address" | "big_map" | "bool" | "bytes" | "chain_id" | "contract" | "int" |
-    "key_hash" | "key" | "lambda" | "list" | "map" | "mutez" | "nat" | "operation" | "option" |
-    "or" | "pair" | "set" | "signature" | "string" | "timestamp" | "unit" | "never" | "bls12_381_g1" |
-    "bls12_381_g2" | "bls12_381_fr" | "sapling_transaction" | "sapling_state" | "ticket";
+export type MichelsonSimpleComparableTypeID = "string" | "nat" | "int" | "bytes" | "bool" | "mutez" |
+    "key_hash" | "address" | "timestamp" | "never" | "key" | "unit" | "signature" | "chain_id";
+
+export type MichelsonTypeID = MichelsonSimpleComparableTypeID |
+    "option" | "list" | "set" | "contract" | "operation" | "pair" | "or" | "lambda" | "map" | "big_map" |
+    "sapling_transaction" | "sapling_state" | "ticket" | "bls12_381_g1" | "bls12_381_g2" | "bls12_381_fr";
 
 type Type0<PT extends MichelsonTypeID> = Prim0<PT>;
 type TypeX<PT extends MichelsonTypeID, AT extends Expr[]> = PrimX<PT, AT>;
@@ -132,10 +135,11 @@ export type MichelsonDataId = "Unit" | "True" | "False" | "None" | "Pair" | "Lef
 type Data0<PT extends MichelsonDataId> = Prim0<PT>;
 type DataX<PT extends MichelsonDataId, AT extends MichelsonData[]> = PrimX<PT, AT>;
 
-interface MichelsonMapElt extends PrimX<"Elt", [MichelsonData, MichelsonData]> { }
-interface DataList extends List<MichelsonData> { }
-interface PartialData extends DataX<"Some" | "Left" | "Right", [MichelsonData]> { }
-interface PairData extends DataX<"Pair", MichelsonData[]> { }
+type PartialData = DataX<"Some" | "Left" | "Right", [MichelsonData]>;
+type DataList<T extends MichelsonData[]> = T & Node;
+export type MichelsonDataPair<T extends MichelsonData[]> = DataX<"Pair", T> | DataList<T>;
+export type MichelsonMapElt = PrimX<"Elt", [MichelsonData, MichelsonData]>;
+export type MichelsonMapEltList = List<MichelsonMapElt>;
 
 export type MichelsonData =
     IntLiteral |
@@ -143,10 +147,10 @@ export type MichelsonData =
     BytesLiteral |
     Data0<"Unit" | "True" | "False" | "None"> |
     PartialData |
-    DataList |
-    PairData |
+    DataList<MichelsonData[]> |
+    MichelsonDataPair<MichelsonData[]> |
     InstructionList |
-    List<MichelsonMapElt>;
+    MichelsonMapEltList;
 
 // Top level script sections
 
@@ -174,4 +178,4 @@ export interface MichelsonTypeFailed {
     failed: MichelsonType;
 }
 
-export type MichelsonStackType = MichelsonType[] | MichelsonTypeFailed;
+export type MichelsonReturnType = MichelsonType[] | MichelsonTypeFailed;

@@ -1,40 +1,41 @@
 import { Prim, Expr, IntLiteral } from "./micheline";
 import { Tuple, NoArgs, ReqArgs, MichelsonError } from "./utils";
 import {
-   MichelsonCode, MichelsonType, MichelsonComparableType, MichelsonSimpleComparableType,
-   MichelsonData, MichelsonContract, MichelsonNoArgInstruction, MichelsonInstruction,
-   MichelsonSerializableType, MichelsonPushableType, MichelsonStorableType, MichelsonPassableType, InstructionList
+   MichelsonCode, MichelsonType, MichelsonData, MichelsonContract, MichelsonNoArgInstruction,
+   MichelsonInstruction, InstructionList, MichelsonTypeID, MichelsonSimpleComparableTypeID
 } from "./michelson-types";
 
 // Michelson validator
 
 const noArgInstructionIDs: Record<MichelsonNoArgInstruction["prim"], true> = {
-   "SWAP": true, "SOME": true, "UNIT": true, "CAR": true, "CDR": true,
-   "CONS": true, "SIZE": true, "MEM": true, "GET": true, "EXEC": true, "APPLY": true, "FAILWITH": true, "RENAME": true, "CONCAT": true, "SLICE": true,
-   "PACK": true, "ADD": true, "SUB": true, "MUL": true, "EDIV": true, "ABS": true, "ISNAT": true, "INT": true, "NEG": true, "LSL": true, "LSR": true, "OR": true,
-   "AND": true, "XOR": true, "NOT": true, "COMPARE": true, "EQ": true, "NEQ": true, "LT": true, "GT": true, "LE": true, "GE": true, "SELF": true,
-   "TRANSFER_TOKENS": true, "SET_DELEGATE": true, "CREATE_ACCOUNT": true, "IMPLICIT_ACCOUNT": true, "NOW": true, "AMOUNT": true,
-   "BALANCE": true, "CHECK_SIGNATURE": true, "BLAKE2B": true, "SHA256": true, "SHA512": true, "HASH_KEY": true, "STEPS_TO_QUOTA": true,
-   "SOURCE": true, "SENDER": true, "ADDRESS": true, "CHAIN_ID": true,
+   "ABS": true, "ADD": true, "ADDRESS": true, "AMOUNT": true, "AND": true, "APPLY": true, "BALANCE": true,
+   "BLAKE2B": true, "CAR": true, "CDR": true, "CHAIN_ID": true, "CHECK_SIGNATURE": true, "COMPARE": true, "CONCAT": true, "CONS": true, "EDIV": true,
+   "EQ": true, "EXEC": true, "FAILWITH": true, "GE": true, "GET_AND_UPDATE": true, "GT": true, "HASH_KEY": true, "IMPLICIT_ACCOUNT": true,
+   "INT": true, "ISNAT": true, "JOIN_TICKETS": true, "KECCAK": true, "LE": true, "LEVEL": true, "LSL": true, "LSR": true, "LT": true, "MEM": true, "MUL": true,
+   "NEG": true, "NEQ": true, "NEVER": true, "NOT": true, "NOW": true, "OR": true, "PACK": true, "PAIRING_CHECK": true, "READ_TICKET": true,
+   "SAPLING_VERIFY_UPDATE": true, "SELF": true, "SELF_ADDRESS": true, "SENDER": true, "SET_DELEGATE": true, "SHA256": true, "SHA3": true,
+   "SHA512": true, "SIZE": true, "SLICE": true, "SOME": true, "SOURCE": true, "SPLIT_TICKET": true, "SUB": true, "SWAP": true, "TICKET": true,
+   "TOTAL_VOTING_POWER": true, "TRANSFER_TOKENS": true, "UNIT": true, "VOTING_POWER": true, "XOR": true, "RENAME": true,
 };
 
 export const instructionIDs: Record<MichelsonInstruction["prim"], true> = Object.assign({}, noArgInstructionIDs, {
-   "UPDATE": true, "DUP": true, "PAIR": true, "UNPAIR": true, "DROP": true, "DIG": true, "DUG": true, "NONE": true, "LEFT": true,
-   "RIGHT": true, "NIL": true, "UNPACK": true, "CONTRACT": true, "CAST": true, "IF_NONE": true, "IF_LEFT": true,
-   "IF_CONS": true, "IF": true, "MAP": true, "ITER": true, "LOOP": true, "LOOP_LEFT": true, "DIP": true,
-   "CREATE_CONTRACT": true, "PUSH": true, "EMPTY_SET": true, "EMPTY_MAP": true, "EMPTY_BIG_MAP": true, "LAMBDA": true,
+   "CONTRACT": true, "CREATE_CONTRACT": true, "DIG": true, "DIP": true, "DROP": true,
+   "DUG": true, "DUP": true, "EMPTY_BIG_MAP": true, "EMPTY_MAP": true, "EMPTY_SET": true, "GET": true, "IF": true, "IF_CONS": true, "IF_LEFT": true,
+   "IF_NONE": true, "ITER": true, "LAMBDA": true, "LEFT": true, "LOOP": true, "LOOP_LEFT": true, "MAP": true, "NIL": true, "NONE": true, "PAIR": true,
+   "PUSH": true, "RIGHT": true, "SAPLING_EMPTY_STATE": true, "UNPACK": true, "UNPAIR": true, "UPDATE": true, "CAST": true,
 } as const);
 
-const simpleComparableTypeIDs: Record<MichelsonSimpleComparableType["prim"], true> = {
-   "int": true, "nat": true, "string": true, "bytes": true, "mutez": true,
-   "bool": true, "key_hash": true, "timestamp": true, "address": true,
+const simpleComparableTypeIDs: Record<MichelsonSimpleComparableTypeID, true> = {
+   "unit": true, "never": true, "bool": true, "int": true, "nat": true, "string": true,
+   "chain_id": true, "bytes": true, "mutez": true, "key_hash": true, "key": true,
+   "signature": true, "timestamp": true, "address": true,
 };
 
-const typeIDs: Record<MichelsonType["prim"], true> = {
-   "address": true, "big_map": true, "bool": true, "bytes": true, "chain_id": true, "contract": true, "int": true,
-   "key_hash": true, "key": true, "lambda": true, "list": true, "map": true, "mutez": true, "nat": true, "operation": true, "option": true,
-   "or": true, "pair": true, "set": true, "signature": true, "string": true, "timestamp": true, "unit": true,
-};
+const typeIDs: Record<MichelsonTypeID, true> = Object.assign({}, simpleComparableTypeIDs, {
+   "or": true, "pair": true, "set": true, "big_map": true, "contract": true, "lambda": true,
+   "list": true, "map": true, "operation": true, "option": true, "bls12_381_g1": true,
+   "bls12_381_g2": true, "bls12_381_fr": true, "sapling_transaction": true, "sapling_state": true, "ticket": true,
+} as const);
 
 export class MichelsonValidationError extends MichelsonError {
    /**
@@ -51,6 +52,10 @@ function isPrim(ex: Expr): ex is Prim {
    return "prim" in ex;
 }
 
+function isPrimOrSeq(ex: Expr): ex is Prim | Expr[] {
+   return Array.isArray(ex) || "prim" in ex;
+}
+
 function assertPrim(ex: Expr): ex is Prim {
    if (isPrim(ex)) {
       return true;
@@ -63,6 +68,13 @@ function assertSeq(ex: Expr): ex is Expr[] {
       return true;
    }
    throw new MichelsonValidationError(ex, "sequence expression expected");
+}
+
+function assertPrimOrSeq(ex: Expr): ex is Prim | Expr[] {
+   if (isPrimOrSeq(ex)) {
+      return true;
+   }
+   throw new MichelsonValidationError(ex, "prim or sequence expression expected");
 }
 
 function assertNatural(i: IntLiteral) {
@@ -116,7 +128,17 @@ export function assertMichelsonInstruction(ex: Expr): ex is MichelsonCode {
          case "UNPAIR":
          case "DUP":
          case "UPDATE":
+         case "GET":
             if (ex.args !== undefined && assertArgs(ex, 1)) {
+               /* istanbul ignore else */
+               if (assertIntLiteral(ex.args[0])) {
+                  assertNatural(ex.args[0]);
+               }
+            }
+            break;
+
+         case "SAPLING_EMPTY_STATE":
+            if (assertArgs(ex, 1)) {
                /* istanbul ignore else */
                if (assertIntLiteral(ex.args[0])) {
                   assertNatural(ex.args[0]);
@@ -126,7 +148,6 @@ export function assertMichelsonInstruction(ex: Expr): ex is MichelsonCode {
 
          case "DIG":
          case "DUG":
-         case "GET":
             /* istanbul ignore else */
             if (assertArgs(ex, 1)) {
                /* istanbul ignore else */
@@ -150,7 +171,7 @@ export function assertMichelsonInstruction(ex: Expr): ex is MichelsonCode {
          case "UNPACK":
             /* istanbul ignore else */
             if (assertArgs(ex, 1)) {
-               assertMichelsonSerializableType(ex.args[0]);
+               assertMichelsonPackableType(ex.args[0]);
             }
             break;
 
@@ -242,7 +263,7 @@ export function assertMichelsonInstruction(ex: Expr): ex is MichelsonCode {
             /* istanbul ignore else */
             if (assertArgs(ex, 2)) {
                assertMichelsonComparableType(ex.args[0]);
-               assertMichelsonSerializableType(ex.args[1]);
+               assertMichelsonBigMapStorableType(ex.args[1]);
             }
             break;
 
@@ -265,80 +286,94 @@ export function assertMichelsonInstruction(ex: Expr): ex is MichelsonCode {
    return true;
 }
 
-export function assertMichelsonComparableType(ex: Expr): ex is MichelsonComparableType {
+export function assertMichelsonComparableType(ex: Expr): ex is MichelsonType {
    /* istanbul ignore else */
-   if (assertPrim(ex)) {
-      if (!Object.prototype.hasOwnProperty.call(simpleComparableTypeIDs, ex.prim) && ex.prim !== "pair") {
+   if (assertPrimOrSeq(ex)) {
+      if (Array.isArray(ex) || ex.prim === "pair" || ex.prim === "or" || ex.prim === "option") {
+         traverseType(ex, (ex) => assertMichelsonComparableType(ex));
+      } else if (!Object.prototype.hasOwnProperty.call(simpleComparableTypeIDs, ex.prim)) {
          throw new MichelsonValidationError(ex, `${ex.prim}: type is not comparable`);
       }
-      traverseType(ex,
-         (ex) => {
-            if (!Object.prototype.hasOwnProperty.call(simpleComparableTypeIDs, ex.prim)) {
-               throw new MichelsonValidationError(ex, `${ex.prim}: type is not comparable`);
-            }
-            assertArgs(ex, 0);
-         },
-         (ex) => assertMichelsonComparableType(ex));
    }
    return true;
 }
 
-export function assertMichelsonSerializableType(ex: Expr): ex is MichelsonSerializableType {
+export function assertMichelsonPackableType(ex: Expr): ex is MichelsonType {
    /* istanbul ignore else */
-   if (assertPrim(ex)) {
-      if (!Object.prototype.hasOwnProperty.call(typeIDs, ex.prim) ||
-         ex.prim === "big_map" ||
-         ex.prim === "operation") {
-         throw new MichelsonValidationError(ex, `${ex.prim}: type can't be used inside big_map or PACK/UNPACK instructions`);
+   if (assertPrimOrSeq(ex)) {
+      if (isPrim(ex)) {
+         if (!Object.prototype.hasOwnProperty.call(typeIDs, ex.prim) ||
+            ex.prim === "big_map" ||
+            ex.prim === "operation" ||
+            ex.prim === "sapling_state" ||
+            ex.prim === "ticket") {
+            throw new MichelsonValidationError(ex, `${ex.prim}: type can't be used inside PACK/UNPACK instructions`);
+         }
+         traverseType(ex, (ex) => assertMichelsonPackableType(ex));
       }
-      traverseType(ex,
-         (ex) => assertMichelsonSerializableType(ex),
-         (ex) => assertMichelsonSerializableType(ex));
    }
    return true;
 }
 
-export function assertMichelsonPushableType(ex: Expr): ex is MichelsonPushableType {
+export function assertMichelsonPushableType(ex: Expr): ex is MichelsonType {
    /* istanbul ignore else */
-   if (assertPrim(ex)) {
-      if (!Object.prototype.hasOwnProperty.call(typeIDs, ex.prim) ||
-         ex.prim === "big_map" ||
-         ex.prim === "operation" ||
-         ex.prim === "contract") {
-         throw new MichelsonValidationError(ex, `${ex.prim}: type can't be pushed`);
+   if (assertPrimOrSeq(ex)) {
+      if (isPrim(ex)) {
+         if (!Object.prototype.hasOwnProperty.call(typeIDs, ex.prim) ||
+            ex.prim === "big_map" ||
+            ex.prim === "operation" ||
+            ex.prim === "sapling_state" ||
+            ex.prim === "ticket" ||
+            ex.prim === "contract") {
+            throw new MichelsonValidationError(ex, `${ex.prim}: type can't be pushed`);
+         }
+         traverseType(ex, (ex) => assertMichelsonPushableType(ex));
       }
-      traverseType(ex,
-         (ex) => assertMichelsonPushableType(ex),
-         (ex) => assertMichelsonPushableType(ex));
    }
    return true;
 }
 
-export function assertMichelsonStorableType(ex: Expr): ex is MichelsonStorableType {
+export function assertMichelsonStorableType(ex: Expr): ex is MichelsonType {
    /* istanbul ignore else */
-   if (assertPrim(ex)) {
-      if (!Object.prototype.hasOwnProperty.call(typeIDs, ex.prim) ||
-         ex.prim === "operation" ||
-         ex.prim === "contract") {
-         throw new MichelsonValidationError(ex, `${ex.prim}: type can't be used as part of a storage`);
+   if (assertPrimOrSeq(ex)) {
+      if (isPrim(ex)) {
+         if (!Object.prototype.hasOwnProperty.call(typeIDs, ex.prim) ||
+            ex.prim === "operation" ||
+            ex.prim === "contract") {
+            throw new MichelsonValidationError(ex, `${ex.prim}: type can't be used as part of a storage`);
+         }
+         traverseType(ex, (ex) => assertMichelsonStorableType(ex));
       }
-      traverseType(ex,
-         (ex) => assertMichelsonStorableType(ex),
-         (ex) => assertMichelsonStorableType(ex));
    }
    return true;
 }
 
-export function assertMichelsonPassableType(ex: Expr): ex is MichelsonPassableType {
+export function assertMichelsonPassableType(ex: Expr): ex is MichelsonType {
    /* istanbul ignore else */
-   if (assertPrim(ex)) {
-      if (!Object.prototype.hasOwnProperty.call(typeIDs, ex.prim) ||
-         ex.prim === "operation") {
-         throw new MichelsonValidationError(ex, `${ex.prim}: type can't be used as part of a parameter`);
+   if (assertPrimOrSeq(ex)) {
+      if (isPrim(ex)) {
+         if (!Object.prototype.hasOwnProperty.call(typeIDs, ex.prim) ||
+            ex.prim === "operation") {
+            throw new MichelsonValidationError(ex, `${ex.prim}: type can't be used as part of a parameter`);
+         }
+         traverseType(ex, (ex) => assertMichelsonPassableType(ex));
       }
-      traverseType(ex,
-         (ex) => assertMichelsonPassableType(ex),
-         (ex) => assertMichelsonPassableType(ex));
+   }
+   return true;
+}
+
+export function assertMichelsonBigMapStorableType(ex: Expr): ex is MichelsonType {
+   /* istanbul ignore else */
+   if (assertPrimOrSeq(ex)) {
+      if (isPrim(ex)) {
+         if (!Object.prototype.hasOwnProperty.call(typeIDs, ex.prim) ||
+            ex.prim === "big_map" ||
+            ex.prim === "operation" ||
+            ex.prim === "sapling_state") {
+            throw new MichelsonValidationError(ex, `${ex.prim}: type can't be used inside a big_map`);
+         }
+         traverseType(ex, (ex) => assertMichelsonBigMapStorableType(ex));
+      }
    }
    return true;
 }
@@ -350,24 +385,37 @@ export function assertMichelsonPassableType(ex: Expr): ex is MichelsonPassableTy
  */
 export function assertMichelsonType(ex: Expr): ex is MichelsonType {
    /* istanbul ignore else */
-   if (assertPrim(ex)) {
-      if (!Object.prototype.hasOwnProperty.call(typeIDs, ex.prim)) {
-         throw new MichelsonValidationError(ex, "type expected");
+   if (assertPrimOrSeq(ex)) {
+      if (isPrim(ex)) {
+         if (!Object.prototype.hasOwnProperty.call(typeIDs, ex.prim)) {
+            throw new MichelsonValidationError(ex, "type expected");
+         }
+         traverseType(ex, (ex) => assertMichelsonType(ex));
       }
-      traverseType(ex,
-         (ex) => assertMichelsonType(ex),
-         (ex) => assertMichelsonType(ex));
    }
    return true;
 }
 
-function traverseType(ex: Prim, left: (ex: Prim) => void, child: (ex: Prim) => void): ex is MichelsonType {
+function traverseType(ex: Prim | Expr[], cb: (ex: Prim | Expr[]) => void): ex is MichelsonType {
+   if (Array.isArray(ex) || ex.prim === "pair") {
+      const args = Array.isArray(ex) ? ex : ex.args;
+      if (args === undefined || args.length < 2) {
+         throw new MichelsonValidationError(ex, "at least 2 arguments expected");
+      }
+      args.forEach(a => {
+         if (assertPrimOrSeq(a)) {
+            cb(a);
+         }
+      });
+      return true;
+   }
+
    switch (ex.prim) {
       case "option":
       case "list":
          /* istanbul ignore else */
-         if (assertArgs(ex, 1) && assertPrim(ex.args[0])) {
-            child(ex.args[0]);
+         if (assertArgs(ex, 1) && assertPrimOrSeq(ex.args[0])) {
+            cb(ex.args[0]);
          }
          break;
 
@@ -378,27 +426,11 @@ function traverseType(ex: Prim, left: (ex: Prim) => void, child: (ex: Prim) => v
          }
          break;
 
-      case "pair":
-         /* istanbul ignore else */
-         if (ex.args === undefined || ex.args.length < 2) {
-            throw new MichelsonValidationError(ex, "at least 2 arguments expected");
-         }
-         ex.args.forEach((a, i) => {
-            if (assertPrim(a)) {
-               if (i === 0) {
-                  left(a);
-               } else {
-                  child(a);
-               }
-            }
-         });
-         break;
-
       case "or":
          /* istanbul ignore else */
-         if (assertArgs(ex, 2) && assertPrim(ex.args[0]) && assertPrim(ex.args[1])) {
-            child(ex.args[0]);
-            child(ex.args[1]);
+         if (assertArgs(ex, 2) && assertPrimOrSeq(ex.args[0]) && assertPrimOrSeq(ex.args[1])) {
+            cb(ex.args[0]);
+            cb(ex.args[1]);
          }
          break;
 
@@ -419,18 +451,32 @@ function traverseType(ex: Prim, left: (ex: Prim) => void, child: (ex: Prim) => v
 
       case "map":
          /* istanbul ignore else */
-         if (assertArgs(ex, 2) && assertPrim(ex.args[0]) && assertPrim(ex.args[1])) {
+         if (assertArgs(ex, 2) && assertPrimOrSeq(ex.args[0]) && assertPrimOrSeq(ex.args[1])) {
             assertMichelsonComparableType(ex.args[0]);
-            child(ex.args[1]);
+            cb(ex.args[1]);
          }
          break;
 
       case "big_map":
          /* istanbul ignore else */
-         if (assertArgs(ex, 2) && assertPrim(ex.args[0]) && assertPrim(ex.args[1])) {
+         if (assertArgs(ex, 2) && assertPrimOrSeq(ex.args[0]) && assertPrimOrSeq(ex.args[1])) {
             assertMichelsonComparableType(ex.args[0]);
-            assertMichelsonSerializableType(ex.args[1]);
-            child(ex.args[1]);
+            assertMichelsonBigMapStorableType(ex.args[1]);
+            cb(ex.args[1]);
+         }
+         break;
+
+      case "ticket":
+         /* istanbul ignore else */
+         if (assertArgs(ex, 1) && assertPrimOrSeq(ex.args[0])) {
+            assertMichelsonComparableType(ex.args[0]);
+         }
+         break;
+
+      case "sapling_state":
+      case "sapling_transaction":
+         if (assertArgs(ex, 1)) {
+            assertIntLiteral(ex.args[0]);
          }
          break;
 

@@ -157,7 +157,11 @@ export interface UnpackAnnotationsOptions {
 
 const annRe = /^(@%|@%%|%@|[@:%]([_0-9a-zA-Z][_0-9a-zA-Z\.%@]*)?)$/;
 
-export function unpackAnnotations(p: Prim, opt?: UnpackAnnotationsOptions): UnpackedAnnotations {
+export function unpackAnnotations(p: Prim | Expr[], opt?: UnpackAnnotationsOptions): UnpackedAnnotations {
+    if (Array.isArray(p)) {
+        return {};
+    }
+
     let field: string[] | undefined;
     let type: string[] | undefined;
     let vars: string[] | undefined;
