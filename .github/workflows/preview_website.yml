@@ -8,6 +8,7 @@ jobs:
   publish-docs:
     runs-on: ubuntu-latest
     steps:
+    # - run: echo "CI_COMMIT_SHORT_SHA=${}" >> $GITHUB_ENV
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
       with:
@@ -23,7 +24,9 @@ jobs:
     - run: npm run lerna -- bootstrap
     - run: npm run lerna run build
     - run: cd website && cp -R build/. ../dist
-    - run: npx netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json --alias="github-test"
+    - run: npx netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json --alias="$GITHUB_REF" > netlify.json
+    - run: echo "NETLIFY_DEPLOY_URL=$(jq -r .deploy_url netlify.json)" >> $GITHUB_ENV
+    - run: echo "NETLIFY_DEPLOY_LOGS=$(jq -r .logs netlify.json)" >> $GITHUB_ENV
     # - run: npm run build-docs
     # - run: cd dist && touch .nojekyll && echo 'tezostaquito.io' > CNAME
     # - name: Publish generated content to GitHub Pages
@@ -44,5 +47,5 @@ jobs:
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: 'This is a test comment!'
+            body: 'A new deploy preview is available on Netlify at ${{ env.NETLIFY_DEPLOY_URL }}, you can view the logs at ${{ env.NETLIFY_DEPLOY_LOGS }}'
           })
