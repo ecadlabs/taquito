@@ -21,6 +21,7 @@
     "@taquito/taquito": "^8.0.0-beta.5",
     "@taquito/tezbridge-wallet": "^8.0.0-beta.5",
     "@taquito/tzip16": "^8.0.0-beta.5",
+    "@taquito/tzip12": "^8.0.0-beta.5",
     "@taquito/utils": "^8.0.0-beta.5",
     "@thanos-wallet/dapp": "^0.7.0",
     "classnames": "^2.2.6",
