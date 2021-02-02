@@ -15,3 +15,8 @@ export class TokenIdNotFound implements Error {
         this.message = `Could not find token metadata for the token ID: ${tokenId}`;
     }
 }
+
+export class InvalidTokenMetadata implements Error {
+    name = 'InvalidTokenMetadata';
+    message = 'Non-compliance with the TZIP-012 standard. The required property `decimals` is missing.';
+}

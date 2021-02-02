@@ -3,7 +3,7 @@ import { compose, MichelsonMap } from '@taquito/taquito';
 import { tzip16, Tzip16Module, char2Bytes } from '@taquito/tzip16';
 import { tzip12 } from '../packages/taquito-tzip12/src/composer';
 import { Tzip12Module } from '../packages/taquito-tzip12/src/tzip12-extension';
-import { TokenIdNotFound } from '../packages/taquito-tzip12/src/tzip12-errors';
+import { TokenIdNotFound, InvalidTokenMetadata } from '../packages/taquito-tzip12/src/tzip12-errors';
 import { fa2TokenFactory } from './data/fa2-token-factory';
 import { fa2ForTokenMetadataView } from './data/fa2-for-token-metadata-view';
 
@@ -12,7 +12,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 	let contractAddress: string;
 	let contractAddress2: string;
 
-	describe(`Deploy a Fa2 contract and fetch metadata (token metadata are in the big map %token_metadata): ${rpc}`, () => {
+ 	describe(`Deploy a Fa2 contract and fetch metadata (token metadata are in the big map %token_metadata): ${rpc}`, () => {
 		beforeEach(async (done) => {
 			await setup();
 			done();
@@ -67,12 +67,12 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			token2.set('symbol', char2Bytes('ALC'));
 			token2.set('decimals', '30');
 			token_metadata.set('1', {
-				0: '1',
-				1: token1
+				token_id: '1',
+				token_info: token1
 			});
 			token_metadata.set('2', {
-				0: '2',
-				1: token2
+				token_id: '2',
+				token_info: token2
 			});
 
 			const token_total_supply = new MichelsonMap();
@@ -104,7 +104,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 		});
 
 		it('Should test contratAbstraction composition, fetch contract and token metadata of the Fa2 contract', async (done) => {
-			// delphi : KT19txYWjVo4yLvcGnnyiGc35CuX12Pc4krn
+			// delphi : KT1NiajZ91LJwyJ5mnoRioXPqF9b4qM8st56
 			
 			Tezos.addExtension(new Tzip12Module());
 			// Tezos.addExtension(new Tzip16Module())... one extension is sufficient as they use the same MetadataProvider
@@ -138,6 +138,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			// Fetch token metadata
 			const tokenMetadata1 = await contract.tzip12().getTokenMetadata(1);
 			expect(tokenMetadata1).toEqual({
+				token_id:1,
 				decimals: 6,
 				name: 'wToken',
 				symbol: 'wTK'
@@ -145,6 +146,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
 			const tokenMetadata2 = await contract.tzip12().getTokenMetadata(2);
 			expect(tokenMetadata2).toEqual({
+				token_id: 2,
 				name: 'AliceToken',
 				decimals: 0,
 				symbol: 'ALC'
@@ -157,15 +159,15 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			}
 			done();
 		});
-	});
+	}); 
 
-	describe(`Deploy a Fa2 contract and fetch metadata (token metadata are obtain from a view %token_metadata): ${rpc}`, () => {
+ 	describe(`Deploy a Fa2 contract and fetch metadata (token metadata are obtain from a view %token_metadata): ${rpc}`, () => {
 		beforeEach(async (done) => {
 			await setup();
 			done();
 		});
 
-		it('Should deploy a Fa2 contract having metadata on HTTPS and a view %token_metadata', async (done) => {
+ 		it('Should deploy a Fa2 contract having metadata on HTTPS and a view %token_metadata', async (done) => {
 			const LocalTez1 = await createAddress();
 			const localTez1Pkh = await LocalTez1.signer.publicKeyHash();
 			const LocalTez2 = await createAddress();
@@ -187,7 +189,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 				'20000'
 			);
 
-			const url = 'https://storage.googleapis.com/tzip-16/fa2-token-metadata-view.json';
+			const url = 'https://storage.googleapis.com/tzip-16/fa2-token-metadata-view-all-token-view.json';
 			const bytesUrl = char2Bytes(url);
 			const metadata = new MichelsonMap();
 			metadata.set('', bytesUrl);
@@ -195,18 +197,25 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			const operators = new MichelsonMap();
 
 			const tokens = new MichelsonMap();
+			const metadataMap0 = new MichelsonMap();
+			metadataMap0.set('', char2Bytes('https://storage.googleapis.com/tzip-16/token-metadata.json'));
+			metadataMap0.set('name', char2Bytes('Name from URI is prioritized!'));
 			const metadataMap1 = new MichelsonMap();
-			metadataMap1.set('', char2Bytes('https://storage.googleapis.com/tzip-16/token-metadata.json'));
+			metadataMap1.set('name', char2Bytes('AliceToken'));
+			metadataMap1.set('symbol', char2Bytes('ALC'));
+			metadataMap1.set('decimals', '30');
+			metadataMap1.set('extra', char2Bytes('Add more data'));
 			const metadataMap2 = new MichelsonMap();
-			metadataMap2.set('name', char2Bytes('AliceToken'));
-			metadataMap2.set('symbol', char2Bytes('ALC'));
-			metadataMap2.set('decimals', '30');
-			metadataMap2.set('extra', char2Bytes('Add more data'))
+			metadataMap2.set('name', char2Bytes('Invalid token metadata'));
 			tokens.set('0', {
-				metadata_map: metadataMap1,
+				metadata_map: metadataMap0,
 				total_supply: '20000'
 			});
 			tokens.set('1', {
+				metadata_map: metadataMap1,
+				total_supply: '20000'
+			});
+			tokens.set('2', {
 				metadata_map: metadataMap2,
 				total_supply: '20000'
 			});
@@ -231,11 +240,11 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
 			expect(op.hash).toBeDefined();
 			expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-			done();
-		});
+			done(); 
+		});    
 
 		it('Should test contratAbstraction composition, fetch contract and token metadata of the Fa2 contract', async (done) => {
-			// delphi: KT1DmnMEK6NdStW9JLrNyRyd64DRK7FynDoq
+			// delphi: KT1Pf8Ltw1Q91mXEtvkcmxyan3rxPDsHx8eZ
 
 			Tezos.addExtension(new Tzip16Module());
 
@@ -244,7 +253,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
 			// Fetch contract metadata on HTTPs
 			const metadata = await contract.tzip16().getMetadata();
-			expect(metadata.uri).toEqual('https://storage.googleapis.com/tzip-16/fa2-token-metadata-view.json');
+			expect(metadata.uri).toEqual('https://storage.googleapis.com/tzip-16/fa2-token-metadata-view-all-token-view.json');
 			expect(metadata.integrityCheckResult).toBeUndefined();
 			expect(metadata.sha256Hash).toBeUndefined();
 			expect(metadata.metadata).toBeDefined();
@@ -254,15 +263,17 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			expect(isTzip12Contract).toEqual(true);
 
 			// Fetch token metadata (view result contains a URI for this token)
-			const tokenMetadata1 = await contract.tzip12().getTokenMetadata(0);
-			expect(tokenMetadata1).toEqual({
+			const tokenMetadata0 = await contract.tzip12().getTokenMetadata(0);
+			expect(tokenMetadata0).toEqual({
+				token_id: 0,
 				decimals: 3,
 				name: 'Taquito test URI',
 				symbol: 'XTZ2'
 			});
 
-			const tokenMetadata2 = await contract.tzip12().getTokenMetadata(1);
-			expect(tokenMetadata2).toEqual({
+			const tokenMetadata1 = await contract.tzip12().getTokenMetadata(1);
+			expect(tokenMetadata1).toEqual({
+				token_id: 1,
 				name: 'AliceToken',
 				decimals: 0,
 				symbol: 'ALC',
@@ -272,9 +283,15 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			try {
 				await contract.tzip12().getTokenMetadata(2);
 			} catch (err) {
+				expect(err).toBeInstanceOf(InvalidTokenMetadata);
+			}
+
+			try {
+				await contract.tzip12().getTokenMetadata(3);
+			} catch (err) {
 				expect(err).toBeInstanceOf(TokenIdNotFound);
 			}
 			done();
 		});
-	});
+	}); 
 });

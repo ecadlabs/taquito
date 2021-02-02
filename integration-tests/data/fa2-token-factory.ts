@@ -451,10 +451,10 @@ export const fa2TokenFactory = [
                                                     {
                                                         prim: 'pair',
                                                         args: [
-                                                            { prim: 'nat' },
+                                                            { prim: 'nat', annots: ['%token_id'] },
                                                             {
                                                                 prim: 'map',
-                                                                args: [{ prim: 'string' }, { prim: 'bytes' }]
+                                                                args: [{ prim: 'string' }, { prim: 'bytes' }], annots: ['%token_info']
                                                             }
                                                         ]
                                                     }

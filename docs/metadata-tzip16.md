@@ -1,5 +1,5 @@
 ---
-title: TZIP-16
+title: TZIP-16 Contract Metadata and Views
 author: Roxane Letourneau
 ---
 

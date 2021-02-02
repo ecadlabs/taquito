@@ -1,7 +1,7 @@
 import { MichelsonMap } from '@taquito/taquito';
 import { char2Bytes, InvalidUri } from '@taquito/tzip16';
 import { Tzip12ContractAbstraction } from '../src/tzip12-contract-abstraction';
-import { TokenIdNotFound, TokenMetadataNotFound } from '../src/tzip12-errors';
+import { InvalidTokenMetadata, TokenIdNotFound, TokenMetadataNotFound } from '../src/tzip12-errors';
 
 describe('Tzip12 contract abstraction test', () => {
 
@@ -19,9 +19,6 @@ describe('Tzip12 contract abstraction test', () => {
     let mockRpcContractProvider: {
         getBigMapKeyByID: jest.Mock<any, any>;
     };
-    let mockBigMapAbstraction: {
-        get: jest.Mock<any, any>;
-    }
 
     beforeEach(() => {
         mockMetadataProvider = {
@@ -39,9 +36,6 @@ describe('Tzip12 contract abstraction test', () => {
         };
         mockRpcContractProvider = {
             getBigMapKeyByID: jest.fn()
-        };
-        mockBigMapAbstraction = {
-            get: jest.fn()
         };
         mockContractAbstraction.address = 'test';
         mockContractAbstraction['schema'] = mockSchema;
@@ -151,6 +145,7 @@ describe('Tzip12 contract abstraction test', () => {
 
         const tokenMetadata = await tzip12Abs['executeTokenMetadataView'](mockMichelsonStorageView, 0);
         expect(tokenMetadata).toEqual({
+            token_id: 0,
             name: 'Taquito',
             symbol: 'XTZ',
             decimals: 3
@@ -201,12 +196,13 @@ describe('Tzip12 contract abstraction test', () => {
         tokenMap.set('', char2Bytes('https://storage.googleapis.com/tzip-16/token-metadata.json'));
 
         mockMichelsonStorageView.executeView.mockResolvedValue({
-            '0': '0',
-            '1': tokenMap
+            'token_id': '0',
+            'token_info': tokenMap
         })
 
         const tokenMetadata = await tzip12Abs['executeTokenMetadataView'](mockMichelsonStorageView, 0);
         expect(tokenMetadata).toEqual({
+            token_id: 0,
             name: 'Taquito test',
             decimals: 3,
             symbol: 'XTZ!',
@@ -255,12 +251,13 @@ describe('Tzip12 contract abstraction test', () => {
 
         // takes as parameter the nat token-id and returns the (pair nat (map string bytes)) value
         mockMichelsonStorageView.executeView.mockResolvedValue({
-            '0': '0',
-            '1': tokenMap
+            'token_id': '0',
+            'token_info': tokenMap
         })
 
         const tokenMetadata = await tzip12Abs['retrieveTokenMetadataFromView'](0);
         expect(tokenMetadata).toEqual({
+            token_id: 0,
             name: 'Taquito',
             symbol: 'XTZ',
             decimals: 3
@@ -294,12 +291,13 @@ describe('Tzip12 contract abstraction test', () => {
         tokenMap.set('symbol', char2Bytes('XTZ'));
         tokenMap.set('decimals', char2Bytes('3'));
         mockRpcContractProvider.getBigMapKeyByID.mockResolvedValue({
-            '0': '0',
-            '1': tokenMap
+            'token_id': '0',
+            'token_info': tokenMap
         });
 
         const tokenMetadata = await tzip12Abs['retrieveTokenMetadataFromBigMap'](0);
         expect(tokenMetadata).toEqual({
+            token_id: 0,
             name: 'Taquito',
             symbol: 'XTZ',
             decimals: 3
@@ -346,16 +344,101 @@ describe('Tzip12 contract abstraction test', () => {
         tokenMap.set('symbol', char2Bytes('XTZ'));
         tokenMap.set('decimals', char2Bytes('3'));
         mockRpcContractProvider.getBigMapKeyByID.mockResolvedValue({
-            '0': '0',
-            '1': tokenMap
+            'token_id': '0',
+            'token_info': tokenMap
         });
 
         const tokenMetadata = await tzip12Abs.getTokenMetadata(0);
         expect(tokenMetadata).toEqual({
+            token_id: 0,
             name: 'Taquito',
             symbol: 'XTZ',
             decimals: 3
         });
+        done();
+    });
+
+    it('Test 2 for getTokenMetadata(): Should succeed to fetch the token metadata from URI and token_info map', async (done) => {
+        mockMetadataProvider.provideMetadata.mockResolvedValue({
+            uri: 'https://test',
+            metadata: { name: 'Taquito test' }
+        });
+
+        mockSchema.FindFirstInTopLevelPair.mockReturnValue({ int: '20350' });
+        const tokenMap = new MichelsonMap({ prim: "map", args: [{ prim: "string" }, { prim: "bytes" }] });
+        tokenMap.set('', char2Bytes('https://test'));
+        tokenMap.set('name', char2Bytes('Taquito'));
+        tokenMap.set('symbol', char2Bytes('XTZ'));
+        tokenMap.set('decimals', char2Bytes('3'));
+        mockRpcContractProvider.getBigMapKeyByID.mockResolvedValue({
+            'token_id': '0',
+            'token_info': tokenMap
+        });
+
+        const tokenMetadata = await tzip12Abs.getTokenMetadata(0);
+        expect(tokenMetadata).toEqual({
+            token_id: 0,
+            name: 'Taquito test',
+            symbol: 'XTZ',
+            decimals: 3
+        });
+        done();
+    });
+
+    it('Test 3 for getTokenMetadata(): Should succeed to fetch the token metadata from URI and token_info map', async (done) => {
+        mockTzip16ContractAbstraction.getMetadata.mockResolvedValue({
+            uri: 'https://contractMetadata',
+            metadata: { name: 'Contract metadata' }
+        });
+
+        mockMetadataProvider.provideMetadata.mockResolvedValue({
+            uri: 'https://test',
+            metadata: { name: 'Taquito test' }
+        });
+
+        mockTzip16ContractAbstraction.metadataViews.mockResolvedValue({ 'token_metadata': () => mockMichelsonStorageView });
+
+        mockSchema.FindFirstInTopLevelPair.mockReturnValue({ int: '20350' });
+        const tokenMap = new MichelsonMap({ prim: "map", args: [{ prim: "string" }, { prim: "bytes" }] });
+        tokenMap.set('', char2Bytes('https://test'));
+        tokenMap.set('name', char2Bytes('Taquito'));
+        tokenMap.set('symbol', char2Bytes('XTZ'));
+        tokenMap.set('decimals', char2Bytes('3'));
+
+        // takes as parameter the nat token-id and returns the (pair nat (map string bytes)) value
+        mockMichelsonStorageView.executeView.mockResolvedValue({
+            'token_id': '0',
+            'token_info': tokenMap
+        })
+
+        const tokenMetadata = await tzip12Abs.getTokenMetadata(0);
+        expect(tokenMetadata).toEqual({
+            token_id: 0,
+            name: 'Taquito test',
+            symbol: 'XTZ',
+            decimals: 3
+        });
+        done();
+    });
+
+    it('Test 4 for getTokenMetadata(): Should throw InvalidTokenMetadata', async (done) => {
+        mockTzip16ContractAbstraction.getMetadata.mockImplementation(() => {
+            throw new Error();
+        });
+        mockSchema.FindFirstInTopLevelPair.mockReturnValue({ int: '20350' });
+        const tokenMap = new MichelsonMap({ prim: "map", args: [{ prim: "string" }, { prim: "bytes" }] });
+        tokenMap.set('name', char2Bytes('Taquito'));
+        tokenMap.set('symbol', char2Bytes('XTZ'));
+        mockRpcContractProvider.getBigMapKeyByID.mockResolvedValue({
+            'token_id': '0',
+            'token_info': tokenMap
+        });
+
+        try {
+            await tzip12Abs.getTokenMetadata(0)
+        } catch (err) {
+            expect (err).toBeInstanceOf(InvalidTokenMetadata)
+        }
         done();
     });
 });

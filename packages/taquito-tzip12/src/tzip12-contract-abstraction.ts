@@ -1,20 +1,25 @@
 import { MichelsonMap, Schema } from '@taquito/michelson-encoder';
 import { ContractAbstraction, ContractProvider, Wallet } from '@taquito/taquito';
-import { Tzip16ContractAbstraction, MetadataContext, View, bytes2Char } from '@taquito/tzip16'
-import { TokenIdNotFound, TokenMetadataNotFound } from './tzip12-errors';
+import { Tzip16ContractAbstraction, MetadataContext, View, bytes2Char, MetadataInterface } from '@taquito/tzip16'
+import { InvalidTokenMetadata, TokenIdNotFound, TokenMetadataNotFound } from './tzip12-errors';
 
 const tokenMetadataBigMapType = {
     prim: 'big_map',
-    args: [{ prim: 'nat' }, { prim: 'pair', args: [{ prim: 'nat' }, { prim: "map", args: [{ prim: 'string' }, { prim: 'bytes' }] }] }],
+    args: [
+        { prim: 'nat' }, 
+        { prim: 'pair', args: [
+            { prim: 'nat' , annots: ['%token_id']}, 
+            { prim: "map", args: [{ prim: 'string' }, { prim: 'bytes' }], annots: ['%token_info'] }] }],
     annots: ['%token_metadata']
 };
 
 type BigMapId = { int: string };
 
 export interface TokenMetadata {
+    token_id: number,
+    decimals: number
     name?: string,
     symbol?: string,
-    decimals?: number
 }
 
 export class Tzip12ContractAbstraction {
@@ -72,7 +77,7 @@ export class Tzip12ContractAbstraction {
     private async retrieveTokenMetadataFromView(tokenId: number) {
         if (await this.getContractMetadata()) {
             const views = await this._tzip16ContractAbstraction.metadataViews();
-            if (this.hasTokenMetadataView(views)) {
+            if (views && this.hasTokenMetadataView(views)) {
                 return this.executeTokenMetadataView(views['token_metadata'](), tokenId);
             }
         }
@@ -99,7 +104,7 @@ export class Tzip12ContractAbstraction {
             throw new TokenMetadataNotFound(this.contractAbstraction.address);
         }
         const metadataFromUri = await this.fetchTokenMetadataFromUri(tokenMap as MichelsonMap<string, string>);
-        return metadataFromUri ? metadataFromUri : this.formatMetadataToken((tokenMap as MichelsonMap<string, string>));
+        return this.formatMetadataToken(tokenId, (tokenMap as MichelsonMap<string, string>), metadataFromUri);
     }
 
     private async fetchTokenMetadataFromUri(tokenMetadata: MichelsonMap<string, string>) {
@@ -122,8 +127,10 @@ export class Tzip12ContractAbstraction {
         }
     }
 
-    private formatMetadataToken(metadataTokenMap: MichelsonMap<string, string>): TokenMetadata {
-        const tokenMetadataDecoded = {};
+    private formatMetadataToken(tokenId: number, metadataTokenMap: MichelsonMap<string, string>, metadataFromUri?: any): TokenMetadata {
+        const tokenMetadataDecoded = {
+            'token_id': tokenId
+        };
         for (let keyTokenMetadata of metadataTokenMap.keys()) {
             if (keyTokenMetadata === 'decimals') {
                 Object.assign(tokenMetadataDecoded, { [keyTokenMetadata]: Number(bytes2Char(metadataTokenMap.get(keyTokenMetadata)!)) });
@@ -132,7 +139,17 @@ export class Tzip12ContractAbstraction {
                 Object.assign(tokenMetadataDecoded, { [keyTokenMetadata]: bytes2Char(metadataTokenMap.get(keyTokenMetadata)!) });
             }
         }
-        return tokenMetadataDecoded
+        // if an URI is present, add the fetched properties to the object
+        // if a property is in the URI and the map, prevalence is accorded to value from the URI
+        if (metadataFromUri) {
+            for(let property in metadataFromUri) {
+                Object.assign(tokenMetadataDecoded, {[property]: metadataFromUri[property]})
+            }
+        }
+        if(!('decimals' in tokenMetadataDecoded)) {
+            throw new InvalidTokenMetadata;
+        } 
+        return tokenMetadataDecoded;
     }
 
     private async retrieveTokenMetadataFromBigMap(tokenId: number) {
@@ -148,11 +165,12 @@ export class Tzip12ContractAbstraction {
             throw new TokenIdNotFound(tokenId);
         }
 
-        const michelsonMap = pairNatMap['1'];
+        const michelsonMap = pairNatMap['token_info'];
         if (!MichelsonMap.isMichelsonMap(michelsonMap)) {
             throw new TokenIdNotFound(tokenId);
         }
-        return this.formatMetadataToken(michelsonMap as unknown as MichelsonMap<string, string>)
+        const metadataFromUri = await this.fetchTokenMetadataFromUri(michelsonMap as MichelsonMap<string, string>);
+        return this.formatMetadataToken(tokenId, michelsonMap as MichelsonMap<string, string>, metadataFromUri)
     }
 
     private findTokenMetadataBigMap(): BigMapId {

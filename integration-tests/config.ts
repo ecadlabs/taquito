@@ -199,7 +199,7 @@ else if (process.env['EDONET']) {
 else if (process.env['CARTHAGENET']) {
   providers.push(carthagenetEphemeral)
 } else {
-  providers.push(carthagenetEphemeral, delphinetEphemeral)
+  providers.push(edonetEphemeral, delphinetEphemeral)
 }
 
 const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE'];

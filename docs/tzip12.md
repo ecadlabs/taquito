@@ -3,6 +3,9 @@ title: TZIP-12 Token Metadata
 author: Roxane Letourneau
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 The `@taquito/tzip12` package allows retrieving metadata associated with tokens of FA2 contract. More information about the TZIP-12 standard can be found [here](https://gitlab.com/tzip/tzip/-/blob/master/proposals/tzip-12/tzip-12.md).
 
 ## How to use the tzip12 package
@@ -46,9 +49,125 @@ await contract.tzip16().getMetadata(); // Tzip16ContractAbstraction method
 
 ## Get the token metadata
 
-The token metadata can be obtained from a view named `token_metadata` present in the contract metadata or, from a big map named `token_metadata` in the contratc storage. The `getTokenMetadata` method of the `Tzip12ContractAbstraction` class will find the metadata token with precedence for the off-chain view if there is one.
+There are two scenarios to obtain the metadata of a token:
+1. They can be obtained from executing an off-chain view named `token_metadata` present in the contract metadata
+2. or, from a big map named `token_metadata` in the contract storage. 
 
-#### Example where the token metadata are found the big map %token_metadata
+The `getTokenMetadata` method of the `Tzip12ContractAbstraction` class will find the token metadata with precedence for the off-chain view, if there is one, as specified in the standard.
+
+The `getTokenMetadata` method returns an object matching this interface :
+```
+interface TokenMetadata {
+    token_id: number,
+    decimals: number
+    name?: string,
+    symbol?: string,
+}
+```
+
+:::note
+If additional metadata values are provided for a token_id, they will also be returned.
+:::
+
+Here is a flowchart that summarizes the logic perform internally when calling the `getTokenMetadata` method:
+
+![Flowchart](/img/FlowchartGetTokenMetadata.png)
+
+**Note: If there is a URI in the token_info map and other keys/values in the map, all properties will be returned (properties fetched from the URI and properties found in the map). If the same key is found at the URI location and in the map token_info and that their value is different, precedence is accorded to the value from the URI.*
+
+### Example where the token metadata are obtained from an off-chain view `token_metadata`
+
+```js live noInline
+// import { TezosToolkit, compose } from '@taquito/taquito';
+// import { Tzip12Module, tzip12 } from "@taquito/tzip12";
+// import { tzip16 } from "@taquito/tzip16";
+// const Tezos = new TezosToolkit('rpc_url');
+
+Tezos.addExtension(new Tzip12Module());
+
+const contractAddress = "KT1Pf8Ltw1Q91mXEtvkcmxyan3rxPDsHx8eZ";
+const tokenId = 1;
+
+Tezos.contract.at(contractAddress, compose(tzip12, tzip16))
+.then(contract => {
+  println(`Fetching the token metadata for the token ID ${tokenId}...`);
+  return contract.tzip12().getTokenMetadata(tokenId);
+})
+.then (tokenMetadata => {
+  println(JSON.stringify(tokenMetadata, null, 2));
+})
+.catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
+```
+
+The same result can also be obtained by calling the off-chain view `token_metadata` using the `taquito-tzip16` package:
+
+```js live noInline
+// import { TezosToolkit } from '@taquito/taquito';
+// import { Tzip16Module, tzip16, bytes2Char } from "@taquito/tzip16";
+// const Tezos = new TezosToolkit('rpc_url');
+
+Tezos.addExtension(new Tzip16Module());
+
+const contractAddress = "KT1Pf8Ltw1Q91mXEtvkcmxyan3rxPDsHx8eZ";
+const tokenId = 1;
+
+Tezos.contract.at(contractAddress, tzip16)
+.then(contract => {
+  println(`Initialising the views for ${contractAddress}...`);
+  return contract.tzip16().metadataViews();
+})
+.then (views => {
+  return views['token_metadata']().executeView(tokenId)
+}).then (result => {
+  println('Result of the view token_metadata:');
+  println(`name: ${bytes2Char((Object.values(result)[1]).get('name'))}`);
+  println(`decimals: ${bytes2Char((Object.values(result)[1]).get('decimals'))}`);
+  println(`symbol: ${bytes2Char((Object.values(result)[1]).get('symbol'))}`);
+  println(`extra: ${bytes2Char((Object.values(result)[1]).get('extra'))}`);
+})
+.catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
+```
+
+*Note that an off-chain view `all-tokens` should also be present in the contract metadata allowing the user to know with which token ID the `token_metadata` can be called.*
+### Example where the token metadata are found in the big map `%token_metadata`
+
+:::note
+To be [Tzip-012 compliant](https://gitlab.com/tzip/tzip/-/blob/master/proposals/tzip-12/tzip-12.md#token-metadata-storage-access), the type of the big map `%token_metadata` in the storage of the contract should match the following type:
+
+
+<Tabs
+  defaultValue="michelson"
+  values={[
+    {label: 'Michelson', value: 'michelson'}, 
+    {label: 'JSON Michelson', value: 'jsonMichelson'}
+    ]}>
+  <TabItem value="michelson">
+
+
+```
+(big_map %token_metadata nat
+  (pair (nat %token_id)
+    (map %token_info string bytes)))
+```
+
+  </TabItem>
+  <TabItem value="jsonMichelson">
+
+```
+prim: 'big_map',
+    args: [
+        { prim: 'nat' }, 
+        { prim: 'pair', args: [
+            { prim: 'nat' , annots: ['%token_id']}, 
+            { prim: "map", args: [{ prim: 'string' }, { prim: 'bytes' }], annots: ['%token_info'] }] }],
+    annots: ['%token_metadata']
+```
+
+  </TabItem>
+</Tabs>  
+
+Otherwise, the token metadata won't be found by the `getTokenMetadata` method and a `TokenMetadataNotFound` error will be thrown.
+:::
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
@@ -57,7 +176,7 @@ The token metadata can be obtained from a view named `token_metadata` present in
 
 Tezos.addExtension(new Tzip12Module());
 
-const contractAddress = "KT19txYWjVo4yLvcGnnyiGc35CuX12Pc4krn";
+const contractAddress = "KT1NiajZ91LJwyJ5mnoRioXPqF9b4qM8st56";
 const tokenId = 1;
 
 Tezos.contract.at(contractAddress, tzip12)
@@ -71,31 +190,6 @@ Tezos.contract.at(contractAddress, tzip12)
 .catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
-#### Example where the token metadata are obtained from an off-chain view `token_metadata`
+#### For more information on the contracts used in the examples: 
 
-```js live noInline
-// import { TezosToolkit, compose } from '@taquito/taquito';
-// import { Tzip12Module, tzip12 } from "@taquito/tzip12";
-// import { tzip16 } from "@taquito/tzip16";
-// const Tezos = new TezosToolkit('rpc_url');
-
-Tezos.addExtension(new Tzip12Module());
-
-const contractAddress = "KT1DmnMEK6NdStW9JLrNyRyd64DRK7FynDoq";
-const tokenId = 1;
-
-Tezos.contract.at(contractAddress, compose(tzip12, tzip16))
-.then(contract => {
-  println(`Let's fetch the contract metadata to examine the token_metadata view...`);
-  contract.tzip16().getMetadata()
-.then (metadata => {
-  println(JSON.stringify(metadata.metadata.views, null, 2));
-  println(`Fetching the token metadata for the token ID ${tokenId}...`);
-  return contract.tzip12().getTokenMetadata(tokenId);
-})
-.then (tokenMetadata => {
-  println(JSON.stringify(tokenMetadata, null, 2));
-})})
-.catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
-```
-
+integration-tests/tzip12-token-metadata.spec.ts
