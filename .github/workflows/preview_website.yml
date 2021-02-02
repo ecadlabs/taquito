@@ -1,8 +1,8 @@
 name: Netlify Preview Deploy
 
 on:
-  issues:
-    types: [opened]
+  pull_request:
+    branches: [master]
 
 jobs:
   publish-docs:
