@@ -9,6 +9,40 @@ import { Falsy } from './types';
 
 const schemaTypeSymbol = Symbol.for('taquito-schema-type-symbol');
 
+// collapse comb pair
+function collapse(val: Token['val'] | any[], prim: string = PairToken.prim): Token['val'] {
+  if (Array.isArray(val)) {
+    return collapse({
+      prim: prim,
+      args: val,
+    }, prim);
+  }
+  if (val.prim === prim && val.args?.length! > 2) {
+    return {
+      ...val,
+      args: [val.args![0], {
+        prim: prim,
+        args: val.args?.slice(1),
+      }],
+    };
+  }
+  return val;
+}
+
+function deepEqual(a: Token['val'] | any[], b: Token['val'] | any[]): boolean {
+  const ac = collapse(a);
+  const bc = collapse(b);
+  return ac.prim === bc.prim &&
+    (ac.args === undefined && bc.args === undefined ||
+      ac.args !== undefined && bc.args !== undefined &&
+      ac.args.length === bc.args.length &&
+      ac.args.every((v, i) => deepEqual(v, bc.args?.[i]))) &&
+    (ac.annots === undefined && bc.annots === undefined ||
+      ac.annots !== undefined && bc.annots !== undefined &&
+      ac.annots.length === bc.annots.length &&
+      ac.annots.every((v, i) => v === bc.annots?.[i]));
+}
+
 /**
  * @warn Our current smart contract abstraction feature is currently in preview. It's API is not final, and it may not cover every use case (yet). We will greatly appreciate any feedback on this feature.
  */
@@ -164,22 +198,21 @@ export class Schema {
    *
    */
   FindFirstInTopLevelPair<T extends MichelsonV1Expression>(storage: any, valueType: any) {
-    const path = this.findPathToValue(this.root['val'], valueType);
-
-    return path?.reduce((previous: any, current: string) => {
-      return previous.args[current]
-    }, storage) as T | undefined
+    return this.findValue(this.root['val'], storage, valueType) as T | undefined;
   }
 
-  private findPathToValue(schema: any, valueToFind: any, path: string[] = []): string[] | undefined {
-    if (JSON.stringify(valueToFind) === JSON.stringify(schema)) {
-      return path;
+  private findValue(schema: Token['val'] | any[], storage: any, valueToFind: any): any {
+    if (deepEqual(valueToFind, schema)) {
+      return storage;
     }
-    else if (schema['prim'] === 'pair') {
-      return (
-        this.findPathToValue(schema['args'][0], valueToFind, [...path, '0']) ||
-        this.findPathToValue(schema['args'][1], valueToFind, [...path, '1'])
-      );
+    if (Array.isArray(schema) || schema['prim'] === 'pair') {
+      const sch = collapse(schema);
+      const str = collapse(storage, 'Pair');
+      if (sch.args === undefined || str.args === undefined) {
+        throw new Error('Tokens have no arguments'); // unlikely
+      }
+      return this.findValue(sch.args[0], str.args[0], valueToFind) ||
+        this.findValue(sch.args[1], str.args[1], valueToFind);
     }
   }
 }

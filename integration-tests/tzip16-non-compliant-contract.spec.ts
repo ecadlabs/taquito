@@ -1,7 +1,5 @@
 import { CONFIGS } from "./config";
-import { tzip16 } from '../packages/taquito-tzip16/src/composer';
-import { Tzip16Module } from '../packages/taquito-tzip16/src/tzip16-extension'
-import { BigMapMetadataNotFound } from '../packages/taquito-tzip16/src/tzip16-errors';
+import { tzip16, Tzip16Module, BigMapMetadataNotFound } from '@taquito/tzip16';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
