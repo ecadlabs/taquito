@@ -1063,15 +1063,16 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
 
             case "ADD":
                 {
-                    const s = args(0, ["nat", "int", "timestamp", "mutez"], ["nat", "int", "timestamp", "mutez"]);
-                    if (s[0].prim === "nat" && s[1].prim === "nat") {
-                        return [annotateVar({ prim: "nat" }), ...stack.slice(2)];
-                    } else if ((s[0].prim === "nat" || s[0].prim === "int") && (s[1].prim === "nat" || s[1].prim === "int")) {
+                    const s = args(0,
+                        ["nat", "int", "timestamp", "mutez", "bls12_381_g1", "bls12_381_g2", "bls12_381_fr"],
+                        ["nat", "int", "timestamp", "mutez", "bls12_381_g1", "bls12_381_g2", "bls12_381_fr"]
+                    );
+                    if ((s[0].prim === "nat" || s[0].prim === "int") && (s[1].prim === "nat" || s[1].prim === "int")) {
                         return [annotateVar({ prim: "int" }), ...stack.slice(2)];
                     } else if (s[0].prim === "int" && s[1].prim === "timestamp" || s[0].prim === "timestamp" && s[1].prim === "int") {
                         return [annotateVar({ prim: "timestamp" }), ...stack.slice(2)];
-                    } else if (s[0].prim === "mutez" && s[1].prim === "mutez") {
-                        return [annotateVar({ prim: "mutez" }), ...stack.slice(2)];
+                    } else if ((s[0].prim === "nat" || s[0].prim === "mutez" || s[0].prim === "bls12_381_g1" || s[0].prim === "bls12_381_g2" || s[0].prim === "bls12_381_fr") && s[0].prim === s[1].prim) {
+                        return [annotateVar(s[0]), ...stack.slice(2)];
                     }
                     throw new MichelsonInstructionError(instruction, stack, `${instruction.prim}: can't add ${s[0].prim} to ${s[1].prim}`);
                 }
@@ -1092,13 +1093,20 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
 
             case "MUL":
                 {
-                    const s = args(0, ["nat", "int", "mutez"], ["nat", "int", "mutez"]);
-                    if (s[0].prim === "nat" && s[1].prim === "nat") {
-                        return [annotateVar({ prim: "nat" }), ...stack.slice(2)];
-                    } else if ((s[0].prim === "nat" || s[0].prim === "int") && (s[1].prim === "nat" || s[1].prim === "int")) {
+                    const s = args(0,
+                        ["nat", "int", "mutez", "bls12_381_g1", "bls12_381_g2", "bls12_381_fr"],
+                        ["nat", "int", "mutez", "bls12_381_g1", "bls12_381_g2", "bls12_381_fr"]
+                    );
+                    if ((s[0].prim === "nat" || s[0].prim === "int") && (s[1].prim === "nat" || s[1].prim === "int")) {
                         return [annotateVar({ prim: "int" }), ...stack.slice(2)];
                     } else if (s[0].prim === "nat" && s[1].prim === "mutez" || s[0].prim === "mutez" && s[1].prim === "nat") {
                         return [annotateVar({ prim: "mutez" }), ...stack.slice(2)];
+                    } else if ((s[0].prim === "bls12_381_g1" || s[0].prim === "bls12_381_g2" || s[0].prim === "bls12_381_fr") && s[1].prim === "bls12_381_fr" ||
+                        (s[0].prim === "nat" || s[0].prim === "int") && s[0].prim === s[1].prim) {
+                        return [annotateVar(s[0]), ...stack.slice(2)];
+                    } else if ((s[0].prim === "nat" || s[0].prim === "int") && s[1].prim === "bls12_381_fr" ||
+                        (s[1].prim === "nat" || s[1].prim === "int") && s[0].prim === "bls12_381_fr") {
+                        return [annotateVar({ prim: "bls12_381_fr" }), ...stack.slice(2)];
                     }
                     throw new MichelsonInstructionError(instruction, stack, `${instruction.prim}: can't multiply ${s[0].prim} by ${s[1].prim}`);
                 }
@@ -1128,12 +1136,17 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
                 return [annotateVar({ prim: "option", args: [{ prim: "nat" }] }), ...stack.slice(1)];
 
             case "INT":
-                args(0, ["nat"]);
+                args(0, ["nat", "bls12_381_fr"]);
                 return [annotateVar({ prim: "int" }), ...stack.slice(1)];
 
             case "NEG":
-                args(0, ["nat", "int"]);
-                return [annotateVar({ prim: "int" }), ...stack.slice(1)];
+                {
+                    const s = args(0, ["nat", "int", "bls12_381_g1", "bls12_381_g2", "bls12_381_fr"])[0];
+                    if (s.prim === "nat" || s.prim === "int") {
+                        return [annotateVar({ prim: "int" }), ...stack.slice(1)];
+                    }
+                    return [annotateVar(s), ...stack.slice(1)];
+                }
 
             case "LSL":
             case "LSR":
