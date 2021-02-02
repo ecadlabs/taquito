@@ -3,12 +3,7 @@ name: Netlify Preview Deploy
 on:
   issues:
     types: [opened]
-
-jobs:
-  comment:
-    runs-on: ubuntu-latest
-    steps:
-      
+    
 jobs:
   publish-docs:
     runs-on: ubuntu-latest
