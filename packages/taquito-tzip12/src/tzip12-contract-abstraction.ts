@@ -147,7 +147,7 @@ export class Tzip12ContractAbstraction {
             }
         }
         if(!('decimals' in tokenMetadataDecoded)) {
-            throw new InvalidTokenMetadata;
+            throw new InvalidTokenMetadata();
         } 
         return tokenMetadataDecoded;
     }
