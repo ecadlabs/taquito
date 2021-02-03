@@ -12,8 +12,8 @@
   },
   "version": "8.0.0-beta.5",
   "dependencies": {
-    "@ledgerhq/hw-transport": "^5.25.0",
-    "@ledgerhq/hw-transport-node-hid": "^5.25.0",
+    "@ledgerhq/hw-transport": "^5.41.0",
+    "@ledgerhq/hw-transport-node-hid": "^5.41.0",
     "@taquito/http-utils": "^8.0.0-beta.5",
     "@taquito/local-forging": "^8.0.0-beta.5",
     "@taquito/remote-signer": "^8.0.0-beta.5",
