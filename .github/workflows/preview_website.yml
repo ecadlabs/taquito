@@ -23,10 +23,11 @@ jobs:
     - run: npm run lerna -- bootstrap
     - run: npm run lerna run build
     - run: cd website && cp -R build/. ../dist
-    # - run: npx netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json --alias="$GITHUB_REF"
-    - run: echo "NETLIFY_RESPONSE=$(npx netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json --alias=$GITHUB_REF)" >> $GITHUB_ENV
-    - run: echo "NETLIFY_DEPLOY_URL=$(echo ${{ env.NETLIFY_RESPONSE }} | jq -r .deploy_url netlify.json)" >> $GITHUB_ENV
-    - run: echo "NETLIFY_DEPLOY_LOGS=$(echo ${{ env.NETLIFY_RESPONSE }} | jq -r .logs netlify.json)" >> $GITHUB_ENV
+    - run: echo "GITHUB_SHORT_SHA=${GITHUB_SHA:0:8} >> $GITHUB_ENV"
+    - run: npx netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json --alias="${{ env.GITHUB_SHORT_SHA }}"
+    # - run: echo "NETLIFY_RESPONSE=$(npx netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json --alias=$GITHUB_REF)" >> $GITHUB_ENV
+    # - run: echo "NETLIFY_DEPLOY_URL=$(echo ${{ env.NETLIFY_RESPONSE }} | jq -r .deploy_url netlify.json)" >> $GITHUB_ENV
+    # - run: echo "NETLIFY_DEPLOY_LOGS=$(echo ${{ env.NETLIFY_RESPONSE }} | jq -r .logs netlify.json)" >> $GITHUB_ENV
     # - run: echo 'NETLIFY_DEPLOY_LOGS=$(jq -r .logs netlify.json)' >> $GITHUB_ENV
     # - run: npm run build-docs
     # - run: cd dist && touch .nojekyll && echo 'tezostaquito.io' > CNAME
@@ -48,5 +49,5 @@ jobs:
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: 'A new deploy preview is available on Netlify at https://${{ env.NETLIFY_DEPLOY_URL }}--tezostaquito.netlify.app'
+            body: 'A new deploy preview is available on Netlify at https://${{ env.GITHUB_SHORT_SHA }}--tezostaquito.netlify.app'
           })
