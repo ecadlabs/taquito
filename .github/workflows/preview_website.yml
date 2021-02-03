@@ -45,6 +45,6 @@ jobs:
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
         SLACK_USERNAME: Taquito Notifications
-        SLACK_ICON: https://i.imgur.com/UaLZDO0.png
+        SLACK_ICON: https://imgur.com/1zlqzFu
         SLACK_TITLE: Message 
         SLACK_MESSAGE: There is a new deployment preview available for Taquito at https://${{ env.short_sha }}--tezostaquito.netlify.app
