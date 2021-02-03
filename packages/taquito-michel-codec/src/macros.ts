@@ -332,6 +332,23 @@ export function expandMacros(ex: Prim): Expr {
             if (assertArgs(ex, 2)) {
                 return [mkPrim({ prim: "IF_LEFT", annots: ex.annots, args: [ex.args[1], ex.args[0]] })];
             }
+            break;
+
+        // CAR/CDR n
+        case "CAR":
+        case "CDR":
+            if (ex.args !== undefined) {
+                if (assertArgs(ex, 1) && assertIntArg(ex, ex.args[0])) {
+                    const n = parseInt(ex.args[0].int, 10);
+                    return mkPrim({
+                        prim: "GET",
+                        args: [{ int: ex.prim === "CAR" ? String(n * 2 + 1) : String(n * 2) }],
+                        annots: ex.annots,
+                    });
+                }
+            } else {
+                return ex;
+            }
     }
 
     // More syntactic conveniences

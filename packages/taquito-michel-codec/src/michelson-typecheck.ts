@@ -887,8 +887,8 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
             case "CAR":
             case "CDR":
                 {
-                    const s = args(0, ["pair"])[0];
-                    const field = typeArgs(s)[instruction.prim === "CAR" ? 0 : 1];
+                    const s = unpackComb("pair", args(0, ["pair"])[0]);
+                    const field = s.args[instruction.prim === "CAR" ? 0 : 1];
                     const ia = instructionAnn({ f: 1, v: 1 }, { specialVar: true });
                     return [annotateField(s, field, ia, 0, instruction.prim.toLocaleLowerCase()), ...stack.slice(1)];
                 }
@@ -973,7 +973,7 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
                     const s = args(0, null, ["option"], ["map", "big_map"]);
                     ensureComparableType(s[0]);
                     ensureTypesEqual(s[0], s[2].args[0]);
-                    ensureTypesEqual(s[1], s[2].args[1]);
+                    ensureTypesEqual(s[1].args[0], s[2].args[1]);
                     const va = ia.v?.map(v => v !== "@" ? [v] : undefined);
                     if (s[2].prim === "map") {
                         return [
@@ -1067,11 +1067,11 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
                         ["nat", "int", "timestamp", "mutez", "bls12_381_g1", "bls12_381_g2", "bls12_381_fr"],
                         ["nat", "int", "timestamp", "mutez", "bls12_381_g1", "bls12_381_g2", "bls12_381_fr"]
                     );
-                    if ((s[0].prim === "nat" || s[0].prim === "int") && (s[1].prim === "nat" || s[1].prim === "int")) {
+                    if (s[0].prim === "nat" && s[1].prim === "int" || s[0].prim === "int" && s[1].prim === "nat") {
                         return [annotateVar({ prim: "int" }), ...stack.slice(2)];
                     } else if (s[0].prim === "int" && s[1].prim === "timestamp" || s[0].prim === "timestamp" && s[1].prim === "int") {
                         return [annotateVar({ prim: "timestamp" }), ...stack.slice(2)];
-                    } else if ((s[0].prim === "nat" || s[0].prim === "mutez" || s[0].prim === "bls12_381_g1" || s[0].prim === "bls12_381_g2" || s[0].prim === "bls12_381_fr") && s[0].prim === s[1].prim) {
+                    } else if ((s[0].prim === "int" || s[0].prim === "nat" || s[0].prim === "mutez" || s[0].prim === "bls12_381_g1" || s[0].prim === "bls12_381_g2" || s[0].prim === "bls12_381_fr") && s[0].prim === s[1].prim) {
                         return [annotateVar(s[0]), ...stack.slice(2)];
                     }
                     throw new MichelsonInstructionError(instruction, stack, `${instruction.prim}: can't add ${s[0].prim} to ${s[1].prim}`);
@@ -1097,7 +1097,7 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
                         ["nat", "int", "mutez", "bls12_381_g1", "bls12_381_g2", "bls12_381_fr"],
                         ["nat", "int", "mutez", "bls12_381_g1", "bls12_381_g2", "bls12_381_fr"]
                     );
-                    if ((s[0].prim === "nat" || s[0].prim === "int") && (s[1].prim === "nat" || s[1].prim === "int")) {
+                    if (s[0].prim === "nat" && s[1].prim === "int" || s[0].prim === "int" && s[1].prim === "nat") {
                         return [annotateVar({ prim: "int" }), ...stack.slice(2)];
                     } else if (s[0].prim === "nat" && s[1].prim === "mutez" || s[0].prim === "mutez" && s[1].prim === "nat") {
                         return [annotateVar({ prim: "mutez" }), ...stack.slice(2)];
@@ -1580,7 +1580,10 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
                         throw new MichelsonInstructionError(instruction, stack, `${instruction.prim}: ticket expected: ${typeID(s.args[0])}`);
                     }
                     ensureTypesEqual(s.args[0], s.args[1]);
-                    return [annotateVar(s.args[0]), ...stack.slice(1)];
+                    return [annotateVar({
+                        prim: "option",
+                        args: [annotate(s.args[0], { t: null })],
+                    }), ...stack.slice(1)];
                 }
 
             case "SPLIT_TICKET":
@@ -1617,8 +1620,8 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
                                 { prim: "nat" },
                             ]
                         }, { v: va?.[0] }),
-                        annotate(s, { v: va?.[0], t: null }),
-                        ...stack.slice(2),
+                        annotate(s, { v: va?.[1], t: null }),
+                        ...stack.slice(1),
                     ];
                 }
 
