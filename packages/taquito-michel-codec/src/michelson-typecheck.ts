@@ -76,10 +76,10 @@ function unpackComb<I extends "pair" | "Pair">(id: I, v: I extends "pair" ? Mich
         // it's a way to make a union of two interfaces not an interface with two independent properties of union types
         const ret = id === "pair" ? {
             prim: "pair",
-            args: args,
+            args,
         } : {
                 prim: "Pair",
-                args: args,
+                args,
             };
         return ret as PairTypeOrDataPrim<I>;
     }
@@ -818,7 +818,7 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
         }
     }
 
-    let retStack = ((instruction: MichelsonInstruction): MichelsonReturnType => {
+    const retStack = ((instruction: MichelsonInstruction): MichelsonReturnType => {
         switch (instruction.prim) {
             case "DUP":
                 {
@@ -865,7 +865,7 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
                                 va.v ? ["%" + trim(va.v?.[0] || "")] : undefined :
                                 [ia.f[i]] :
                             undefined;
-                        return annotate(v, { v: null, t: null, f: f });
+                        return annotate(v, { v: null, t: null, f });
                     });
                     return [
                         annotate({

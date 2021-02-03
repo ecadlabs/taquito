@@ -137,17 +137,9 @@ export function assertMichelsonInstruction(ex: Expr): ex is MichelsonCode {
             }
             break;
 
-         case "SAPLING_EMPTY_STATE":
-            if (assertArgs(ex, 1)) {
-               /* istanbul ignore else */
-               if (assertIntLiteral(ex.args[0])) {
-                  assertNatural(ex.args[0]);
-               }
-            }
-            break;
-
          case "DIG":
          case "DUG":
+         case "SAPLING_EMPTY_STATE":
             /* istanbul ignore else */
             if (assertArgs(ex, 1)) {
                /* istanbul ignore else */
