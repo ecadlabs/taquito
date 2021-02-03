@@ -24,9 +24,9 @@ jobs:
     - run: npm run lerna run build
     - run: cd website && cp -R build/. ../dist
     # - run: npx netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json --alias="$GITHUB_REF"
-    - run: echo 'NETLIFY_RESPONSE=$(npx netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json --alias="$GITHUB_REF")' >> $GITHUB_ENV
-    - run: echo 'NETLIFY_DEPLOY_URL=$(echo ${{ env.NETLIFY_RESPONSE }} | jq -r .deploy_url netlify.json)' >> $GITHUB_ENV
-    - run: echo 'NETLIFY_DEPLOY_LOGS=$(echo ${{ env.NETLIFY_RESPONSE }} | jq -r .logs netlify.json)' >> $GITHUB_ENV
+    - run: echo "NETLIFY_RESPONSE=$(npx netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json --alias=$GITHUB_REF)" >> $GITHUB_ENV
+    - run: echo "NETLIFY_DEPLOY_URL=$(echo ${{ env.NETLIFY_RESPONSE }} | jq -r .deploy_url netlify.json)" >> $GITHUB_ENV
+    - run: echo "NETLIFY_DEPLOY_LOGS=$(echo ${{ env.NETLIFY_RESPONSE }} | jq -r .logs netlify.json)" >> $GITHUB_ENV
     # - run: echo 'NETLIFY_DEPLOY_LOGS=$(jq -r .logs netlify.json)' >> $GITHUB_ENV
     # - run: npm run build-docs
     # - run: cd dist && touch .nojekyll && echo 'tezostaquito.io' > CNAME
