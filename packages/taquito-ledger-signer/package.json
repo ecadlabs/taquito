@@ -1,6 +1,6 @@
 {
   "name": "@taquito/ledger-signer",
-  "version": "7.1.0-preview.7",
+  "version": "8.0.0-beta.5",
   "description": "Ledger signer provider",
   "keywords": [
     "tezos",
@@ -58,23 +58,23 @@
   "dependencies": {
     "@ledgerhq/hw-transport": "^5.25.0",
     "@ledgerhq/hw-transport-node-hid": "^5.25.0",
-    "@taquito/taquito": "^7.1.0-preview.7",
-    "@taquito/utils": "^7.1.0-preview.7",
-    "@types/jest": "^26.0.14",
+    "@taquito/taquito": "^8.0.0-beta.5",
+    "@taquito/utils": "^8.0.0-beta.5",
+    "@types/jest": "^26.0.16",
     "buffer": "^5.6.0",
     "libsodium-wrappers": "^0.7.8"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.14",
+    "@types/jest": "^26.0.16",
     "@types/ledgerhq__hw-transport-node-hid": "^4.22.2",
     "@types/libsodium-wrappers": "^0.7.8",
-    "@types/node": "^14.11.5",
-    "@types/ws": "^7.2.7",
+    "@types/node": "^14.14.10",
+    "@types/ws": "^7.4.0",
     "colors": "^1.4.0",
     "coveralls": "^3.1.0",
     "cross-env": "^7.0.2",
-    "jest": "^26.5.2",
-    "jest-config": "^26.5.2",
+    "jest": "^26.6.3",
+    "jest-config": "^26.6.3",
     "lint-staged": "^10.4.0",
     "lodash.camelcase": "^4.3.0",
     "prettier": "^2.1.2",
@@ -86,12 +86,12 @@
     "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-typescript2": "^0.27.3",
     "shelljs": "^0.8.4",
-    "ts-jest": "^26.4.1",
-    "ts-node": "^9.0.0",
+    "ts-jest": "^26.4.4",
+    "ts-node": "^9.1.1",
     "tslint": "^6.1.2",
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-standard": "^9.0.0",
-    "typescript": "^4.0.3"
+    "typescript": "^4.1.2"
   },
   "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
 }

@@ -19,7 +19,10 @@
         "rpc_nodes",
         "lambda_view",
         "batch_API",
-        "tutorial_links"
+        "tutorial_links",
+        "michelsonmap",
+        "metadata-tzip16",
+        "tzip12"
       ]
     },
     {

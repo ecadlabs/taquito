@@ -101,7 +101,7 @@ export class ContractMethod<T extends ContractProvider | Wallet> {
 export class ContractView {
   constructor(
     private currentContract: ContractAbstraction<ContractProvider | Wallet>,
-    private provider: ContractProvider | Wallet,
+    private provider: ContractProvider,
     private name: string,
     private chainId: string,
     private callbackParametersSchema: ParameterSchema,
@@ -129,6 +129,8 @@ export class ContractView {
       lambdaAddress = DefaultLambdaAddresses.CARTHAGENET
     } else if (this.chainId === ChainIds.DELPHINET) {
       lambdaAddress = DefaultLambdaAddresses.DELPHINET
+    } else if (this.chainId === ChainIds.EDONET) {
+      lambdaAddress = DefaultLambdaAddresses.EDONET
     } else if (this.chainId === ChainIds.MAINNET) {
       lambdaAddress = DefaultLambdaAddresses.MAINNET
     } else {

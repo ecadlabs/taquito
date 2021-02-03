@@ -67,7 +67,7 @@
           "typings",
           "version"
         ],
-        "sha512": "bcc8e7374202b926ed8e217baf2d5236631448238c3b87fd411138f10ae1b8a7fee7bbf471624624b871e16ae9de9bb68eb82465492831bf120a23f50e80a617"
+        "sha512": "5b6d1cc1e5a205feba4be3799455ae33b7fb88e6546f860a25b4fa4e57b93c1fd1ca95776895b8ae1087b893f4f00b4ed7c6e4ddbbd0d74a2b8e547673e3c3aa"
       }
     },
     {
@@ -75,7 +75,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/beacon-wallet",
-          "version": "7.1.0-preview.7",
+          "version": "7.1.0-beta.0",
           "description": "Beacon wallet provider",
           "keywords": [
             "tezos",
@@ -135,21 +135,21 @@
             ]
           },
           "dependencies": {
-            "@airgap/beacon-sdk": "^2.0.0-beta.16",
-            "@taquito/taquito": "^7.1.0-preview.7",
-            "@taquito/utils": "^7.1.0-preview.7"
+            "@airgap/beacon-sdk": "^2.0.0",
+            "@taquito/taquito": "^7.1.0-beta.0",
+            "@taquito/utils": "^7.1.0-beta.0"
           },
           "devDependencies": {
-            "@types/chrome": "0.0.124",
-            "@types/jest": "^26.0.14",
+            "@types/chrome": "0.0.126",
+            "@types/jest": "^26.0.16",
             "@types/libsodium-wrappers": "^0.7.8",
-            "@types/node": "^14.11.5",
-            "@types/ws": "^7.2.7",
+            "@types/node": "^14.14.10",
+            "@types/ws": "^7.4.0",
             "colors": "^1.4.0",
             "coveralls": "^3.1.0",
             "cross-env": "^7.0.2",
-            "jest": "^26.5.2",
-            "jest-config": "^26.5.2",
+            "jest": "^26.6.3",
+            "jest-config": "^26.6.3",
             "lint-staged": "^10.4.0",
             "lodash.camelcase": "^4.3.0",
             "prettier": "^2.1.2",
@@ -161,17 +161,17 @@
             "rollup-plugin-sourcemaps": "^0.6.3",
             "rollup-plugin-typescript2": "^0.27.3",
             "shelljs": "^0.8.4",
-            "ts-jest": "^26.4.1",
-            "ts-node": "^9.0.0",
+            "ts-jest": "^26.4.4",
+            "ts-node": "^9.1.1",
             "tslint": "^6.1.3",
             "tslint-config-prettier": "^1.18.0",
             "tslint-config-standard": "^9.0.0",
-            "typescript": "^4.0.3"
+            "typescript": "^4.1.2"
           },
           "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfwFpcCRAD9Qy5GYHsngAAiq0QAAUuMc+wTdlSbQmWxgDjbcpC\nV/T1hfc9ioMkG7/SLTWO+VjrRjp3lsWHgCGiwH0YOQaE4fqXwXdDCIcFGANrQfUh\nj1JQlZJgZuFYNNXj32LrgiPvMd5pOWF1VVLYf5dmXIMetEmT6zd9WgKvW8bSTfTC\nUZiMiV8hc61HcK0efgukoCxAy9AouJ3dMQwuMkGHhyZoRZ+VnUlrziiT1sR4c/Yc\nOr13ZezgwKc7GljYu/u7rrH6XbBUjtD9GGiKRmls3Mrp/QjkO3O9s0SEOAdW82q7\nKZlErRowm1x2zT7raIb8Y6fagen73uSPCOoHNR3ks8JIfvWYbk/5cbArAuCQYiKJ\nmBMqVpXw+spM4BpLjSYNPdkImcAgRXTbhkcbplvwVDAg0QTP809VAsXub0+2UxEa\nhH7npUkHYZOiLTrpp6n/wxVZYvEipdSzP5Bzp5kLt2fNNIkW0XzqGcRLsWf/w7JE\n0EzNm/mTXDevjE0EkSBgcdG720K4eB1JDyisXqfTN895KyTolOhGleg1s5o4Urvi\no5AbnSVM31Acin3s2BAZCOxEwlp9BaYfrPX+XujDFv4T+BvNvcHOKNkpI7M349tF\nHio1y/cZa9uhKdsW7tySHhC/3MUKF0t3biKI9pWVSXd3IcBZrysZ6A01jcuxtMqq\nfYjErdBxfc8nUdRyt52P\n=z8m7\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfz5jTCRAD9Qy5GYHsngAAp5wQAI3uWYqcrBfnKkGOYwTOAf6F\nKYpSPieKtcK2NYdf+46FNeSrvukmdHM3p0DFoiBIUCGyt/EjRtIJsQWNP6MgAnKE\njZnb1x3WW3mV9soZuEuwLuFY0oVSdxXZp7bLNlGHZHdzDkFEWZZDkYr16rNJinZI\ntDmYObs9ixme7rNhaw+tqkJd+MwXSkXjZ7LLFM3Q3oPDAg5FCwN3/XX2v3qey7Dr\neVNHbU3f4lnrnqiGba3asQhBBgww0q0WQIdPd10fjSo+7yMs9vHdRd0cZpUcSbSs\neijKSESqlTuHcyrb9gycyBtPmeVDRQmcbvEKgrQECYZsSFCioIpw2IJCYuVE5lpm\nrkoOrihEBfUISgsTq5aEfEOM7g7hX3OB+uW9jsr1XXXDpd2wOtXB8Q0aHwId8Ecb\n0bpe7/zKNkiHm4LwZ9OIJyLBhWrTLU3CO2NDbRFEdD3uSt8tBU64YiZTrsFQlj5d\nNghoXP/UC7p3/KscIlmgDWKqiq0EMAMDCW2/V09XHCcVNQJUgnipz0rW6XvKGo48\nCmfmuDRp8cBtSP7QIHSJrQonN2TXJ8wr2JIo1b3GUBRRfWunQ4J45vgkIavSGyiw\nUij9c4kewVXSaczxU2bsugFUJ48a/JkdT3KN8SW7uW3T2WzLLkYHZzh+1qBiNuRf\nN8guXXcn5lESxorGC7rC\n=tnV3\n-----END PGP SIGNATURE-----\n"
 }

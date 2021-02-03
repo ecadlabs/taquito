@@ -20,17 +20,13 @@ export interface Semantic {
 
 export abstract class Token {
   constructor(
-    protected val: { prim: string; args: any[]; annots?: any[] },
+    protected val: { prim: string; args?: any[]; annots?: any[] },
     protected idx: number,
     protected fac: TokenFactory
-  ) {}
+  ) { }
 
   protected typeWithoutAnnotations() {
-    const removeArgsRec = (val: {
-      prim: string;
-      args: any[];
-      annots?: any[];
-    }): { prim: string; args?: any[] } => {
+    const removeArgsRec = (val: Token['val']): { prim: string; args?: any[] } => {
       if (val.args) {
         return {
           prim: val.prim,

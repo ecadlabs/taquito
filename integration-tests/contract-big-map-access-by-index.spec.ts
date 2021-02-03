@@ -18,7 +18,6 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
         init: tokenInit(`${await Tezos.signer.publicKeyHash()}`),
       })
       const contract = await op.contract()
-      console.log("Address",contract.address)
 
       // Fetch the storage of the newly deployed contract
       const storage: any = await contract.storage();

@@ -1,0 +1,3 @@
+parameter unit;
+storage (option nat);
+code { DROP; NONE nat; NIL operation; PAIR; };

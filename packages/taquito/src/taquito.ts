@@ -1,7 +1,9 @@
 import { RpcClient } from '@taquito/rpc';
+import { RPCBatchProvider } from './batch/rpc-batch-provider';
 import { Protocols } from './constants';
 import { Config, Context, TaquitoProvider } from './context';
 import { ContractProvider, EstimationProvider } from './contract/interface';
+import { Extension } from './extension/extension';
 import { Forger } from './forger/interface';
 import { RpcForger } from './forger/rpc-forger';
 import { format } from './format';
@@ -34,6 +36,7 @@ export { SubscribeProvider } from './subscribe/interface';
 export { PollingSubscribeProvider } from './subscribe/polling-provider';
 export * from './tz/interface';
 export * from './wallet';
+export { Extension } from './extension/extension';
 
 export interface SetProviderOptions {
   forger?: Forger;
@@ -55,21 +58,24 @@ export class TezosToolkit {
   private _options: SetProviderOptions = {};
   private _rpcClient: RpcClient
   private _wallet: Wallet;
+  private _context: Context;
+  public batch: RPCBatchProvider['batch'];
 
   public readonly format = format;
 
   constructor(
-    private _rpc: RpcClient | string,
-    private _context: Context = new Context(_rpc)
+    private _rpc: RpcClient | string
   ) {
     if (typeof this._rpc === 'string') {
       this._rpcClient = new RpcClient(this._rpc);
     } else {
       this._rpcClient = this._rpc;
     }
+    this._context = new Context(_rpc);
     this._wallet = new Wallet(this._context);
     this.setProvider({ rpc: this._rpcClient });
-  }
+    this.batch = this._context.batch.batch.bind(this._context.batch);
+  } 
 
   /**
    * @description Sets configuration on the Tezos Taquito instance. Allows user to choose which signer, rpc client, rpc url, forger and so forth
@@ -205,8 +211,6 @@ export class TezosToolkit {
     return this._context.operationFactory;
   }
 
-  public batch = this._context.batch.batch.bind(this._context.batch);
-
   /**
    * @description Provide access to operation estimation utilities
    */
@@ -233,6 +237,17 @@ export class TezosToolkit {
    */
   get signer() {
     return this._context.signer;
+  }
+
+  /**
+   * @description Allow to add a module to the TezosToolkit instance. This method adds the appropriate Providers(s) required by the module to the internal context.
+   * 
+   * @param module extension to add to the TezosToolkit instance
+   *
+   * @example Tezos.addExtension(new Tzip16Module());
+   */
+  addExtension(module: Extension) {
+    module.configureContext(this._context);
   }
 
   getFactory<T, K extends Array<any>>(ctor: TaquitoProvider<T, K>) {

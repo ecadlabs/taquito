@@ -107,7 +107,7 @@
           "typings",
           "version"
         ],
-        "sha512": "983d0e635a643e7d45af69b843eca623970b684f743804e4828ed5f362fade14865cd89504d77689224bd0eff04fc9b61a7905181a59f31d7c223d1fc1f1d51d"
+        "sha512": "5cffcdbae66d3d4a46b3a26113ab4e599d9dd1bca80e276630570a1ab5803d941903e87e7b11d2d7bac0b2a2330b46db77d50c5c69834202afe97c99b4d38265"
       }
     },
     {
@@ -115,7 +115,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/rpc",
-          "version": "7.1.0-preview.7",
+          "version": "7.1.0-beta.0",
           "description": "Provides low level methods, and types to invoke RPC calls from a Nomadic Tezos RPC node",
           "keywords": [
             "tezos",
@@ -181,19 +181,19 @@
             ]
           },
           "dependencies": {
-            "@taquito/http-utils": "^7.1.0-preview.7",
+            "@taquito/http-utils": "^7.1.0-beta.0",
             "bignumber.js": "^9.0.1",
             "lodash": "^4.17.20"
           },
           "devDependencies": {
-            "@types/jest": "^26.0.14",
-            "@types/lodash": "^4.14.161",
-            "@types/node": "^14.11.5",
+            "@types/jest": "^26.0.16",
+            "@types/lodash": "^4.14.165",
+            "@types/node": "^14.14.10",
             "colors": "^1.4.0",
             "coveralls": "^3.1.0",
             "cross-env": "^7.0.2",
-            "jest": "^26.5.2",
-            "jest-config": "^26.5.2",
+            "jest": "^26.6.3",
+            "jest-config": "^26.6.3",
             "lint-staged": "^10.4.0",
             "lodash.camelcase": "^4.3.0",
             "prettier": "^2.1.2",
@@ -205,17 +205,17 @@
             "rollup-plugin-sourcemaps": "^0.6.3",
             "rollup-plugin-typescript2": "^0.27.3",
             "shelljs": "^0.8.4",
-            "ts-jest": "^26.4.1",
-            "ts-node": "^9.0.0",
+            "ts-jest": "^26.4.4",
+            "ts-node": "^9.1.1",
             "tslint": "^6.1.3",
             "tslint-config-prettier": "^1.18.0",
             "tslint-config-standard": "^9.0.0",
-            "typescript": "^4.0.3"
+            "typescript": "^4.1.2"
           },
           "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfwFpjCRAD9Qy5GYHsngAA6tAQAGtjymr5lizJvAfkjt0dLFMQ\nqGkf2qzGev6mUygpnaB1jmdvIW22BlgOfRGE3iam/qV1b++xs0FqJR8z78FmgZbw\n4MzIShm7R+MaNf2wHEchLtf6J4tg0N9xYr1oYpKzP+jZpe4u7ogk34Bs/mbmeMkT\nFwj8gJTo+CtibWTePLESEZb8f9/WKQ56VKCODXsPnjgixQHG9XMlCnNuZqKN6Mn1\nOuI8ULHVGs9OhUOf8ToM0tfRu7fic1vRvB9Tal53SPVsRivkpoEP1npZaEQYEHYm\nfNmx3K2g9b0H871sOKfy0o1p9CqFZk/VLLau8afuPlPoIlEJ6H1IhrTTEdAf15me\nRMFy8FfJxuN5VP6nlA5qzf5vJ0J2clm4WahiJG0WHuvPZ0+B43nlmbv9l9mSDEEZ\n0iBExraMUoCnh0YGc1qry3G0jvb1JFSx3LjeyslfhAc20ssn29Qhcy1P/JYSAZRj\ndKgrffFRD5giBXgiHe/8TT5iKpB/yu/htempGXxOrz58uWY8Ff+AzfBaEWjroEeR\nzo70BWIwUhOrT1sJl7oFTFFT5nZZ2vHt3rwn0iq5RmYvfkMz25ghGmcfoKEQAoRl\ntVw+yHaH56PSlWjSU4Xbe7PG0otDXeoRoUCgKutE2GjywbrrsSoNgzrdRAzNKc2z\ndGotdM4tBQ0yoF/g4nl+\n=nvPO\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfz5jaCRAD9Qy5GYHsngAAW68QAGI48V/pZ1goAYJ+L66XbKJj\n3zh2YKiojyViirmICTzfxvu+ts82pYxS3DjqBqmzSygAiIz8s/TUTuycEyQy/ju3\nSf1CdZlzgcMsfiCea3i3vAzDqxpD62EdWaj4Iw1iq0sVR4LWvUT9lTQ1UcCVOPVi\n1DCVVJ4BDlTgUpEa5znvUccsLqu/R7pOdrKQVUwafFot0+KRt+uZOeeNVmDzqJ0Y\nB7LK5DuHt/sRZhBatujMvqaKdTg/9B2+aRIIJe/O4c+XYAaHnsNDVX3v4t1/Teyl\nqUd4IzP1wlLAEvQk/c4lYp6+tDgtc0CE5gwsMTJGVVrIOnogymsbTALU9eczHEqf\noUY/Jtzqc+7e30tLD2/aMJHy1Cj33RTkMzL1RYcoMI5j970qZ2blIwE6JjaS0NFv\nApZOX9NDQnouDQOhEI1Pnwhxvv62v6cJ4WnlwpcAUEYSgw41qKYWCP5aGOQD1PWb\nxLkGbCS3xza2/Kf7quez0Ae4GueE76z8Lu3i6Bl+O5xnjkdc5fGwn8YJRHlhS+J5\nifQF8tu1FdCdiNmC/StH6GNspDtAD+oWPoD3ciiBxPr903rbhfhk91V8N23dMzZQ\nRm035DBLh3EORI9nEXSyertlQ/y4NE/l0sIb2myHQBrui5RjnA7k0UeYqWI5oJ64\nswzeVz3R18GmKrfWfkrU\n=SLRu\n-----END PGP SIGNATURE-----\n"
 }
