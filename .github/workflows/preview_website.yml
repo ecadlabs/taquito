@@ -5,7 +5,7 @@ on:
     branches: [master]
 
 jobs:
-  publish-docs:
+  publish-website-preview:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -39,3 +39,12 @@ jobs:
             repo: context.repo.repo,
             body: 'A new deploy preview is available on Netlify at https://${{ env.short_sha }}--tezostaquito.netlify.app'
           })
+    - uses: actions/checkout@v2
+    - name: Slack Notification
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+        SLACK_USERNAME: Taquito Notifications
+        SLACK_ICON: https://i.imgur.com/UaLZDO0.png
+        SLACK_TITLE: Message 
+        SLACK_MESSAGE: There is a new deployment preview available for Taquito at https://${{ env.short_sha }}--tezostaquito.netlify.app
