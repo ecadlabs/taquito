@@ -24,19 +24,7 @@ jobs:
     - run: npm run lerna run build
     - run: cd website && cp -R build/. ../dist
     - run: echo "short_sha=${GITHUB_SHA:0:8}" >> $GITHUB_ENV
-    - run: npx netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json --alias="${{ env.short_sha }}"
-    # - run: echo "NETLIFY_RESPONSE=$(npx netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json --alias=$GITHUB_REF)" >> $GITHUB_ENV
-    # - run: echo "NETLIFY_DEPLOY_URL=$(echo ${{ env.NETLIFY_RESPONSE }} | jq -r .deploy_url netlify.json)" >> $GITHUB_ENV
-    # - run: echo "NETLIFY_DEPLOY_LOGS=$(echo ${{ env.NETLIFY_RESPONSE }} | jq -r .logs netlify.json)" >> $GITHUB_ENV
-    # - run: echo 'NETLIFY_DEPLOY_LOGS=$(jq -r .logs netlify.json)' >> $GITHUB_ENV
-    # - run: npm run build-docs
-    # - run: cd dist && touch .nojekyll && echo 'tezostaquito.io' > CNAME
-    # - name: Publish generated content to GitHub Pages
-    #   uses: tsunematsu21/actions-publish-gh-pages@v1.0.1
-    #   with:
-    #     dir: dist
-    #     branch: gh-pages
-    #     token: ${{ secrets.ACCESS_TOKEN }}
+    - run: npx netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json --alias="${{ env.short_sha }}" --message "Deployment for $GITHUB_REF"
       env:
         CI: true
         NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
