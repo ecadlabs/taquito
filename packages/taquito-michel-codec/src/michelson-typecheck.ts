@@ -677,7 +677,11 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
 
     // unpack instruction annotations and assert their maximum number
     function instructionAnn(num: { f?: number; t?: number; v?: number }, opt?: UnpackAnnotationsOptions) {
-        const a = unpackAnnotations(instruction, opt);
+        const a = argAnn(instruction, {
+            ...opt,
+            emptyFields: num.f !== undefined && num.f > 1,
+            emptyVar: num.v !== undefined && num.v > 1,
+        });
         const assertNum = (a: string[] | undefined, n: number | undefined, type: string) => {
             if (a && a.length > (n || 0)) {
                 throw new MichelsonInstructionError(instruction, stack, `${instruction.prim}: at most ${n || 0} ${type} annotations allowed`);
@@ -715,7 +719,7 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
     function annotateField(arg: MichelsonTypePair<MichelsonType[]>, field: MichelsonType, insAnn: UnpackedAnnotations, n: number, defField: string): MichelsonType {
         const fieldAnn = argAnn(field).f?.[0]; // field's field annotation
         const insFieldAnn = insAnn.f?.[n];
-        if (insFieldAnn !== undefined && fieldAnn !== undefined && insFieldAnn !== fieldAnn) {
+        if (insFieldAnn !== undefined && insFieldAnn !== "%" && fieldAnn !== undefined && insFieldAnn !== fieldAnn) {
             throw new MichelsonInstructionError(instruction, stack, `${instruction.prim}: field names doesn't match: ${insFieldAnn} !== ${fieldAnn}`);
         }
         const insVarAnn = insAnn.v?.[n]; // nth instruction's variable annotation
@@ -849,7 +853,7 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
                         throw new MichelsonInstructionError(instruction, stack, `PAIR ${n} is forbidden`);
                     }
                     const s = args(0, ...new Array<null>(n).fill(null));
-                    const ia = instructionAnn({ f: n, t: 1, v: 1 }, { specialFields: true, emptyFields: true });
+                    const ia = instructionAnn({ f: n, t: 1, v: 1 }, { specialFields: true });
                     const trim = (s: string) => {
                         const i = s.lastIndexOf(".");
                         return s.slice(i > 0 ? i + 1 : 1);
@@ -969,7 +973,7 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
 
             case "GET_AND_UPDATE":
                 {
-                    const ia = instructionAnn({ v: 2 }, { emptyVar: true });
+                    const ia = instructionAnn({ v: 2 });
                     const s = args(0, null, ["option"], ["map", "big_map"]);
                     ensureComparableType(s[0]);
                     ensureTypesEqual(s[0], s[2].args[0]);
@@ -1501,7 +1505,7 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
 
             case "CREATE_CONTRACT":
                 {
-                    const ia = instructionAnn({ v: 2 }, { emptyVar: true });
+                    const ia = instructionAnn({ v: 2 });
                     const s = args(0, ["option"], ["mutez"], null);
                     if (typeID(s[0].args[0]) !== "key_hash") {
                         throw new MichelsonInstructionError(instruction, stack, `${instruction.prim}: key hash expected: ${typeID(s[0].args[0])}`);
@@ -1608,7 +1612,7 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
 
             case "READ_TICKET":
                 {
-                    const ia = instructionAnn({ v: 2 }, { emptyVar: true });
+                    const ia = instructionAnn({ v: 2 });
                     const s = args(0, ["ticket"])[0];
                     const va = ia.v?.map(v => v !== "@" ? [v] : undefined);
                     return [
