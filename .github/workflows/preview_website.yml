@@ -8,7 +8,6 @@ jobs:
   publish-docs:
     runs-on: ubuntu-latest
     steps:
-    # - run: echo "CI_COMMIT_SHORT_SHA=${}" >> $GITHUB_ENV
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
       with:
@@ -24,7 +23,7 @@ jobs:
     - run: npm run lerna -- bootstrap
     - run: npm run lerna run build
     - run: cd website && cp -R build/. ../dist
-    - run: npx netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json --alias="$GITHUB_REF" > netlify.json
+    - run: npx netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json > netlify.json
     - run: echo "NETLIFY_DEPLOY_URL=$(jq -r .deploy_url netlify.json)" >> $GITHUB_ENV
     - run: echo "NETLIFY_DEPLOY_LOGS=$(jq -r .logs netlify.json)" >> $GITHUB_ENV
     # - run: npm run build-docs
