@@ -6,6 +6,7 @@
     "bootstrap": "lerna bootstrap",
     "test": "jest --collectCoverage",
     "lint": "lerna run lint",
+    "clean": "lerna clean --yes",
     "commit": "git-cz",
     "precommit": "lerna run --concurrency 1 --stream precommit",
     "example": "cd example && npm run example",
@@ -39,7 +40,9 @@
       "^@taquito/http-utils$": "<rootDir>/packages/taquito-http-utils/src/taquito-http-utils.ts",
       "^@taquito/utils$": "<rootDir>/packages/taquito-utils/src/taquito-utils.ts",
       "^@taquito/signer$": "<rootDir>/packages/taquito-signer/src/taquito-signer.ts",
-      "^@taquito/local-forging$": "<rootDir>/packages/taquito-local-forging/src/taquito-local-forging.ts"
+      "^@taquito/local-forging$": "<rootDir>/packages/taquito-local-forging/src/taquito-local-forging.ts",
+      "^@taquito/tzip16$": "<rootDir>/packages/taquito-tzip16/src/taquito-tzip16.ts",
+      "^@taquito/tzip12$": "<rootDir>/packages/taquito-tzip12/src/taquito-tzip12.ts"
     },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
@@ -74,7 +77,6 @@
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-typescript2": "^0.27.3",
-    "semantic-release": "^17.2.3",
     "shelljs": "^0.8.4",
     "ts-jest": "^26.4.1",
     "ts-node": "^9.0.0",

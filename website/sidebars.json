@@ -20,7 +20,9 @@
         "lambda_view",
         "batch_API",
         "tutorial_links",
-        "michelsonmap"
+        "michelsonmap",
+        "metadata-tzip16",
+        "tzip12"
       ]
     },
     {

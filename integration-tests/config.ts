@@ -60,7 +60,7 @@ const edonetEphemeral = {
   knownBaker: 'tz1ScKYRsTP7rkPsU8VRNKFYyCoCBPX4WADJ',
   knownContract: 'KT1ETP77nkHvrkVzfV3AydrHMpbER4Et7s3y',
   knownBigMapContract: 'KT1P4eFWszS7Y9qom4SjnM15GJcYzsnVH4ER',
-  protocol: Protocols.Pt24m4xi,
+  protocol: Protocols.PtEdoTez,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'https://api.tez.ie/keys/edonet',
@@ -199,7 +199,7 @@ else if (process.env['EDONET']) {
 else if (process.env['CARTHAGENET']) {
   providers.push(carthagenetEphemeral)
 } else {
-  providers.push(carthagenetEphemeral, delphinetEphemeral)
+  providers.push(edonetEphemeral, delphinetEphemeral)
 }
 
 const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE'];
