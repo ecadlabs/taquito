@@ -3,7 +3,7 @@ import { NatToken } from './comparable/nat';
 import { ContractToken } from './contract';
 import { Token, TokenFactory, Semantic } from './token';
 
-export class EncodeTickeError implements Error {
+export class EncodeTicketError implements Error {
   name = 'TicketEncodeError';
   message = 'Tickets cannot be sent to the blockchain; they are created on-chain';
 }
@@ -29,11 +29,11 @@ export class TicketToken extends Token {
   }
 
   public Encode(_args: any[]): any {
-    throw new EncodeTickeError()
+    throw new EncodeTicketError()
   }
 
   public EncodeObject(_args: any): any {
-    throw new EncodeTickeError()  
+    throw new EncodeTicketError()  
   }
 
   public Execute(val: any, _semantics?: Semantic) {
