@@ -33,7 +33,7 @@ export interface InstructionList extends List<MichelsonCode> { }
 export type MichelsonNoArgInstruction = Instr0<MichelsonNoArgInstructionID>;
 export type MichelsonInstruction =
     MichelsonNoArgInstruction |
-    InstrX<"DIG" | "DUG" | "GET" | "SAPLING_EMPTY_STATE", [IntLiteral]> |
+    InstrX<"DIG" | "DUG" | "SAPLING_EMPTY_STATE", [IntLiteral]> |
     InstrX<"NONE" | "LEFT" | "RIGHT" | "NIL" | "CAST", [MichelsonType]> |
     InstrX<"IF_NONE" | "IF_LEFT" | "IF_CONS" | "IF", [InstructionList, InstructionList]> |
     InstrX<"MAP" | "ITER" | "LOOP" | "LOOP_LEFT" | "DIP", [InstructionList]> |
@@ -46,7 +46,7 @@ export type MichelsonInstruction =
     InstrX<"EMPTY_BIG_MAP", [MichelsonType, MichelsonType]> |
     InstrX<"LAMBDA", [MichelsonType, MichelsonType, InstructionList]> |
     InstrX<"DIP", [IntLiteral, InstructionList] | [InstructionList]> |
-    InstrPrim<"DROP" | "PAIR" | "UNPAIR" | "DUP" | "UPDATE", [IntLiteral]>;
+    InstrPrim<"DROP" | "PAIR" | "UNPAIR" | "DUP" | "GET" | "UPDATE", [IntLiteral]>;
 
 // Types
 
