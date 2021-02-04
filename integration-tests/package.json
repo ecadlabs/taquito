@@ -40,7 +40,7 @@
     ],
     "testPathIgnorePatterns": [
       "./ledger-signer.spec.ts",
-      "./ledger-signer-falling-tests.spec.ts",
+      "./ledger-signer-failing-tests.spec.ts",
       "./rpc-nodes.spec.ts"
     ]
   },
