@@ -1,6 +1,6 @@
 import { BigNumber } from 'bignumber.js';
 import { createToken } from '../../src/tokens/createToken';
-import { TicketToken, EncodeTickeError } from '../../src/tokens/ticket';
+import { TicketToken, EncodeTicketError } from '../../src/tokens/ticket';
 
 describe('Ticket token', () => {
   let tokenTicketNat: TicketToken;
@@ -10,20 +10,20 @@ describe('Ticket token', () => {
 
   describe('EncodeObject', () => {
     it('Should always throw an encode error', () => {
-      expect(() => tokenTicketNat.EncodeObject('test')).toThrowError(EncodeTickeError);
-      expect(() => tokenTicketNat.EncodeObject(2)).toThrowError(EncodeTickeError);
-      expect(() => tokenTicketNat.EncodeObject({})).toThrowError(EncodeTickeError);
-      expect(() => tokenTicketNat.EncodeObject('11')).toThrowError(EncodeTickeError);
+      expect(() => tokenTicketNat.EncodeObject('test')).toThrowError(EncodeTicketError);
+      expect(() => tokenTicketNat.EncodeObject(2)).toThrowError(EncodeTicketError);
+      expect(() => tokenTicketNat.EncodeObject({})).toThrowError(EncodeTicketError);
+      expect(() => tokenTicketNat.EncodeObject('11')).toThrowError(EncodeTicketError);
     });
   });
 
   describe('Encode', () => {
     it('Should always throw an encode error', () => {
-      expect(() => tokenTicketNat.Encode(['test'])).toThrowError(EncodeTickeError);
-      expect(() => tokenTicketNat.Encode(['2'])).toThrowError(EncodeTickeError);
-      expect(() => tokenTicketNat.Encode([11])).toThrowError(EncodeTickeError);
-      expect(() => tokenTicketNat.Encode([])).toThrowError(EncodeTickeError);
-      expect(() => tokenTicketNat.Encode([{}])).toThrowError(EncodeTickeError);
+      expect(() => tokenTicketNat.Encode(['test'])).toThrowError(EncodeTicketError);
+      expect(() => tokenTicketNat.Encode(['2'])).toThrowError(EncodeTicketError);
+      expect(() => tokenTicketNat.Encode([11])).toThrowError(EncodeTicketError);
+      expect(() => tokenTicketNat.Encode([])).toThrowError(EncodeTicketError);
+      expect(() => tokenTicketNat.Encode([{}])).toThrowError(EncodeTicketError);
     });
   });
 
