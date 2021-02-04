@@ -30,6 +30,7 @@ import { LambdaToken } from './lambda';
 import { OperationToken } from './operation';
 import { SetToken } from './set';
 import { ChainIDToken } from './chain-id';
+import { TicketToken } from './ticket'
 
 export const tokens = [
   PairToken,
@@ -55,4 +56,5 @@ export const tokens = [
   OperationToken,
   SetToken,
   ChainIDToken,
+  TicketToken
 ];
