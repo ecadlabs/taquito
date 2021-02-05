@@ -1,0 +1,1 @@
+// { prim: 'sapling_transaction', args: [ { int: '8' } ], annots: [ '%transaction' ] }
