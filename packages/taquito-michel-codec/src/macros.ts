@@ -1,4 +1,5 @@
 import { Prim, Expr, IntLiteral } from "./micheline";
+import { DefaultProtocol, Protocol, ProtocolOptions } from "./michelson-types";
 import { Tuple, NoArgs, ReqArgs, NoAnnots } from "./utils";
 
 export class MacroError extends Error {
@@ -156,14 +157,16 @@ function mkPrim({ prim, annots, args }: Prim): Prim {
 }
 
 const pairRe = /^P[PAI]{3,}R$/;
-const unpairRe = /^UNP[PAI]{3,}R$/;
+const unpairRe = /^UNP[PAI]{2,}R$/;
 const cadrRe = /^C[AD]{2,}R$/;
 const setCadrRe = /^SET_C[AD]+R$/;
 const mapCadrRe = /^MAP_C[AD]+R$/;
 const diipRe = /^DI{2,}P$/;
-const duupRe = /^DU{2,}P$/;
+const duupRe = /^DU+P$/;
 
-export function expandMacros(ex: Prim): Expr {
+export function expandMacros(ex: Prim, opt?: ProtocolOptions): Expr {
+    const proto = opt?.protocol || DefaultProtocol;
+
     function mayRename(annots?: string[]): Prim[] {
         return annots !== undefined ? [{ prim: "RENAME", annots }] : [];
     }
@@ -375,14 +378,36 @@ export function expandMacros(ex: Prim): Expr {
     }
 
     // UNPAPPAIIR macro
-    // 008_edo: annotations are deprecated
     if (unpairRe.test(ex.prim)) {
-        if (assertArgs(ex, 0)) {
-            const { r } = parsePairUnpairExpr(ex, ex.prim.slice(3), [], (l, r, top) => [top, ...(r || []), ...(l || [])]);
-            return r.map(([v]) => {
-                const leaf = mkPrim({
-                    prim: "UNPAIR",
+        if (proto === Protocol.PtEdoTez) {
+            if (ex.prim === "UNPAIR") {
+                return ex;
+            }
+            if (assertArgs(ex, 0)) {
+                // 008_edo: annotations are deprecated
+                const { r } = parsePairUnpairExpr(ex, ex.prim.slice(3), [], (l, r, top) => [top, ...(r || []), ...(l || [])]);
+                return r.map(([v]) => {
+                    const leaf = mkPrim({
+                        prim: "UNPAIR",
+                    });
+
+                    return v === 0 ? leaf : {
+                        prim: "DIP",
+                        args: v === 1 ? [[leaf]] : [{ int: String(v) }, [leaf]],
+                    };
                 });
+            }
+        } else if (assertArgs(ex, 0)) {
+            const { r } = parsePairUnpairExpr(ex, ex.prim.slice(3), ex.annots || [], (l, r, top) => [top, ...(r || []), ...(l || [])]);
+            return r.map(([v, a]) => {
+                const leaf: Prim[] = [
+                    { prim: "DUP" },
+                    mkPrim({ prim: "CAR", annots: a[0] !== null ? [a[0]] : undefined }),
+                    {
+                        prim: "DIP",
+                        args: [[mkPrim({ prim: "CDR", annots: a[1] !== null ? [a[1]] : undefined })]],
+                    }
+                ];
 
                 return v === 0 ? leaf : {
                     prim: "DIP",
@@ -497,12 +522,56 @@ export function expandMacros(ex: Prim): Expr {
         }
     }
 
-    // Expand  deprecated DU...UP
+    // Expand DU...UP and DUP n
     if (duupRe.test(ex.prim)) {
-        if (assertArgs(ex, 0)) {
-            let n = 0;
-            while (ex.prim[1 + n] === "U") { n++; }
-            return mkPrim({ prim: "DUP", args: [{ int: String(n) }], annots: ex.annots });
+        let n = 0;
+        while (ex.prim[1 + n] === "U") { n++; }
+        if (proto === Protocol.PtEdoTez) {
+            if (n === 1) {
+                return ex;
+            }
+            if (assertArgs(ex, 0)) {
+                return mkPrim({ prim: "DUP", args: [{ int: String(n) }], annots: ex.annots });
+            }
+        } else {
+            if (n === 1) {
+                if (ex.args === undefined) {
+                    return ex; // skip
+                }
+                if (assertArgs(ex, 1) && assertIntArg(ex, ex.args[0])) {
+                    n = parseInt(ex.args[0].int, 10);
+                }
+            } else {
+                assertArgs(ex, 0);
+            }
+
+            if (n === 1) {
+                return [mkPrim({ prim: "DUP", annots: ex.annots })];
+
+            } else if (n === 2) {
+                return [
+                    {
+                        prim: "DIP",
+                        args: [[mkPrim({ prim: "DUP", annots: ex.annots })]],
+                    },
+                    { prim: "SWAP" },
+                ];
+
+            } else {
+                return [
+                    {
+                        prim: "DIP",
+                        args: [
+                            { int: String(n - 1) },
+                            [mkPrim({ prim: "DUP", annots: ex.annots })],
+                        ],
+                    },
+                    {
+                        prim: "DIG",
+                        args: [{ int: String(n) }],
+                    },
+                ];
+            }
         }
     }
 

@@ -179,3 +179,20 @@ export interface MichelsonTypeFailed {
 }
 
 export type MichelsonReturnType = MichelsonType[] | MichelsonTypeFailed;
+
+export enum Protocol {
+    Pt24m4xi = "Pt24m4xiPbLDhVgVfABUjirbmda3yohdN82Sp9FeuAXJ4eV9otd",
+    PsBABY5H = "PsBABY5HQTSkA4297zNHfsZNKtxULfL18y95qb3m53QJiXGmrbU",
+    PsBabyM1 = "PsBabyM1eUXZseaJdmXFApDSBqj8YBfwELoxZHHW77EMcAbbwAS",
+    PsCARTHA = "PsCARTHAGazKbHtnKfLzQg3kms52kSRpgnDY982a9oYsSXRLQEb",
+    PsDELPH1 = "PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo",
+    PtEdoTez = "PtEdoTezd3RHSC31mpxxo1npxFjoWWcFgQtxapi51Z8TLu6v6Uq"
+}
+
+export const DefaultProtocol = Protocol.PsDELPH1;
+
+export type ProtocolID = `${Protocol}`;
+
+export interface ProtocolOptions {
+    protocol?: ProtocolID;
+}

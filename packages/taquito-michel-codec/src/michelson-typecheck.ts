@@ -2,7 +2,10 @@ import { StringLiteral, IntLiteral, Prim, Expr, sourceReference } from "./michel
 import {
     MichelsonType, MichelsonData, MichelsonMapElt, MichelsonCode, MichelsonTypeOption,
     MichelsonContract, MichelsonContractSection, MichelsonReturnType, MichelsonTypePair,
-    MichelsonInstruction, InstructionList, MichelsonDataPair, MichelsonTypeID, MichelsonTypeOr
+    MichelsonInstruction, InstructionList, MichelsonDataPair, MichelsonTypeID, MichelsonTypeOr,
+    ProtocolOptions,
+    DefaultProtocol,
+    Protocol
 } from "./michelson-types";
 import {
     unpackAnnotations, MichelsonError, isNatural,
@@ -15,7 +18,7 @@ import {
     assertMichelsonPackableType, assertMichelsonStorableType, assertMichelsonBigMapStorableType
 } from "./michelson-validator";
 
-export interface Context {
+export interface Context extends ProtocolOptions {
     contract?: MichelsonContract;
     traceCallback?: (t: InstructionTrace) => void;
 }
@@ -610,8 +613,9 @@ function instructionListType(inst: InstructionList, stack: MichelsonType[], ctx:
     return ret;
 }
 
-
 function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: Context | null): MichelsonReturnType {
+    const proto = ctx?.protocol || DefaultProtocol;
+
     if (Array.isArray(inst)) {
         return instructionListType(inst, stack, ctx);
     }
@@ -1027,7 +1031,9 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
             case "FAILWITH":
                 {
                     const s = args(0, null)[0];
-                    ensurePackableType(s);
+                    if (proto === Protocol.PtEdoTez) {
+                        ensurePackableType(s);
+                    }
                     return { failed: s };
                 }
 

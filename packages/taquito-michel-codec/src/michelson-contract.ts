@@ -1,6 +1,6 @@
 import {
     MichelsonContract, MichelsonContractSection, MichelsonType,
-    MichelsonData, MichelsonCode, MichelsonReturnType
+    MichelsonData, MichelsonCode, MichelsonReturnType, ProtocolOptions
 } from "./michelson-types";
 import {
     assertContractValid, contractSection,
@@ -12,7 +12,7 @@ import {
 import { Parser } from "./micheline-parser";
 import { assertMichelsonContract, assertMichelsonType, assertMichelsonData } from "./michelson-validator";
 
-export interface ContractOptions {
+export interface ContractOptions extends ProtocolOptions {
     traceCallback?: (t: InstructionTrace) => void;
 }
 
@@ -26,7 +26,7 @@ export class Contract {
     }
 
     static parse(src: string | object, opt?: ContractOptions): Contract {
-        const p = new Parser({ expandMacros: true });
+        const p = new Parser(opt);
         const expr = typeof src === "string" ? p.parseScript(src) : p.parseJSON(src);
         if (expr === null) {
             throw new Error("empty contract");

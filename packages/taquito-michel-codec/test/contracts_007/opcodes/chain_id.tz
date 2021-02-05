@@ -1,0 +1,3 @@
+parameter unit;
+storage unit;
+code { CHAIN_ID; DROP; CAR; NIL operation; PAIR }
