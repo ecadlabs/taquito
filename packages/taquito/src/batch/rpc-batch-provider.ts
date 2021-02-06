@@ -18,6 +18,7 @@ import {
   isOpWithFee,
 } from '../operations/types';
 import { OpKind } from '@taquito/rpc';
+import { Protocols } from '../constants';
 
 export const BATCH_KINDS = [
   OpKind.ACTIVATION,
@@ -93,6 +94,9 @@ export class OperationBatch extends OperationEmitter {
   }
 
   private async getRPCOp(param: ParamsWithKind) {
+    if (!this.context.proto) {
+      this.context.proto = (await this.rpc.getBlock()).protocol as Protocols;
+    }
     switch (param.kind) {
       case OpKind.TRANSACTION:
         return createTransferOperation({
@@ -101,7 +105,7 @@ export class OperationBatch extends OperationEmitter {
       case OpKind.ORIGINATION:
         return createOriginationOperation({
           ...param,
-        });
+        }, this.context.proto);
       case OpKind.DELEGATION:
         return createSetDelegateOperation({
           ...param,

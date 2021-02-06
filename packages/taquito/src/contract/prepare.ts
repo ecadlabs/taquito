@@ -12,6 +12,7 @@ import {
 } from '../operations/types';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
 import { format } from '../format';
+import { Protocols } from '../constants'
 
 export const createOriginationOperation = async ({
   code,
@@ -23,7 +24,7 @@ export const createOriginationOperation = async ({
   gasLimit = DEFAULT_GAS_LIMIT.ORIGINATION,
   storageLimit = DEFAULT_STORAGE_LIMIT.ORIGINATION,
   mutez = false
-}: OriginateParams) => {
+}: OriginateParams, protocol?: Protocols) => {
   // tslint:disable-next-line: strict-type-predicates
   if (storage !== undefined && init !== undefined) {
     throw new Error(
@@ -31,7 +32,7 @@ export const createOriginationOperation = async ({
     );
   }
 
-  const parser = new Parser({ expandMacros: true });
+  const parser = new Parser({ protocol });
 
   let contractCode: Expr[];
   if (typeof code === 'string') {

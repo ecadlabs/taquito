@@ -1,3 +1,4 @@
+import { Protocols } from '../constants';
 import { Context } from '../context';
 import { ContractAbstraction, ContractMethod, WalletContract } from '../contract';
 import { OpKind, withKind } from '../operations/types';
@@ -172,6 +173,9 @@ export class Wallet {
         ...params,
       });
       const opHash = await this.walletProvider.sendOperations([mappedParams]);
+      if (!this.context.proto) {
+        this.context.proto = (await this.context.rpc.getBlock()).protocol as Protocols;
+      }
       return this.context.operationFactory.createOriginationOperation(opHash);
     });
   }
