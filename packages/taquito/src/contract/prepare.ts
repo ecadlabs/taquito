@@ -10,9 +10,8 @@ import {
   RPCDelegateOperation,
   RegisterDelegateParams,
 } from '../operations/types';
-import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
+import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT, Protocols } from '../constants';
 import { format } from '../format';
-import { Protocols } from '../constants'
 
 export const createOriginationOperation = async ({
   code,
