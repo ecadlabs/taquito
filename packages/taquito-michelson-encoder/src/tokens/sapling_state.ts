@@ -25,7 +25,7 @@ export class SaplingStateToken extends Token {
   }
 
   private isValid(val: any): SaplingStateValidationError | null {
-    if (val ! == {}) {
+    if (val !== {}) {
       return new SaplingStateValidationError(val, this, `Value is not an empty sapling state "{}": ${val}`);
     } else {
       return null;
