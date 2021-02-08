@@ -17,7 +17,7 @@ import {
 import { decodeBase58Check } from "./base58";
 import {
     assertMichelsonComparableType, instructionIDs,
-    assertMichelsonPackableType, assertMichelsonStorableType, assertMichelsonBigMapStorableType
+    assertMichelsonPackableType, assertMichelsonStorableType, assertMichelsonBigMapStorableType, assertMichelsonPushableType
 } from "./michelson-validator";
 
 export interface Context extends ProtocolOptions {
@@ -679,6 +679,7 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
     const ensureComparableType = rethrowTypeGuard(assertMichelsonComparableType);
     const ensurePackableType = rethrowTypeGuard(assertMichelsonPackableType);
     const ensureStorableType = rethrowTypeGuard(assertMichelsonStorableType);
+    const ensurePushableType = rethrowTypeGuard(assertMichelsonPushableType);
     const ensureBigMapStorableType = rethrowTypeGuard(assertMichelsonBigMapStorableType);
 
     // unpack instruction annotations and assert their maximum number
@@ -1022,6 +1023,8 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
             case "APPLY":
                 {
                     const s = args(0, null, ["lambda"]);
+                    ensureStorableType(s[0]);
+                    ensurePushableType(s[0]);
                     if (!isPairType(s[1].args[0])) {
                         throw new MichelsonInstructionError(instruction, stack, `${instruction.prim}: function's argument must be a pair: ${typeID(s[1].args[0])}`);
                     }
