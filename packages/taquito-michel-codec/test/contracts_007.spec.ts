@@ -27,7 +27,6 @@ const contracts: {
         "big_map_magic.tz",
         "create_contract_simple.tz",
     ],
-    /*
     "ill_typed": [
         "multiple_code_field.tz",
         "set_update_non_comparable.tz",
@@ -47,7 +46,6 @@ const contracts: {
         "missing_parameter_and_storage_fields.tz",
         "multiple_parameter_field.tz",
     ],
-    */
     "macros": [
         "assert_neq.tz",
         "assert_cmpge.tz",
