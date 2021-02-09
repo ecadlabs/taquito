@@ -13,6 +13,8 @@ import { RpcContractProvider } from './contract/rpc-contract-provider';
 import { RPCBatchProvider } from './batch/rpc-batch-provider';
 
 import { Wallet, LegacyWalletProvider, WalletProvider } from './wallet';
+import { ParserProvider } from './parser/interface';
+import { MichelCodecParser } from './parser/michel-codec-parser';
 
 export interface TaquitoProvider<T, K extends Array<any>> {
   new (context: Context, ...rest: K): T;
@@ -41,6 +43,7 @@ export const defaultConfig: Required<Config> = {
 export class Context {
   private _rpcClient: RpcClient;
   private _forger: Forger;
+  private _parser: ParserProvider;
   private _injector: Injector;
   private _walletProvider: WalletProvider;
   public readonly operationFactory: OperationFactory;
@@ -58,7 +61,8 @@ export class Context {
     private _config?: Partial<Config>,
     forger?: Forger,
     injector?: Injector,
-    wallet?: WalletProvider
+    wallet?: WalletProvider,
+    parser?: ParserProvider
   ) {
     if (typeof this._rpc === 'string') {
       this._rpcClient = new RpcClient(this._rpc);
@@ -70,6 +74,7 @@ export class Context {
     this._injector = injector ? injector : new RpcInjector(this);
     this.operationFactory = new OperationFactory(this);
     this._walletProvider = wallet ? wallet : new LegacyWalletProvider(this);
+    this._parser = parser? parser: new MichelCodecParser(this);
   }
 
   get config(): Required<Config> {
@@ -129,6 +134,14 @@ export class Context {
 
   get proto() {
     return this._proto;
+  }
+
+  get parser() {
+    return this._parser;
+  }
+
+  set parser(value: ParserProvider) {
+    this._parser = value;
   }
 
   async isAnyProtocolActive(protocol: string[] = []) {
