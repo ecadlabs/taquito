@@ -12,6 +12,7 @@ import {
 } from '../operations/types';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
 import { format } from '../format';
+import { InvalidCodeParameter, InvalidInitParameter } from './errors';
 
 export const createOriginationOperation = async ({
   code,
@@ -31,23 +32,22 @@ export const createOriginationOperation = async ({
     );
   }
 
-  if(typeof code === 'string'){
-    throw new Error('The code parameter has the wrong type: An array was expected instead of a string');
+  if(!Array.isArray(code)){
+    throw new InvalidCodeParameter('Wrong code parameter type, expected an array', code);
   }
 
-  let contractCode = code as Expr[];
   let contractStorage: Expr | undefined;
   if (storage !== undefined) {
-    const storageType = contractCode.find((p): p is Prim => ('prim' in p) && p.prim === 'storage');
+    const storageType = (code as Expr[]).find((p): p is Prim => ('prim' in p) && p.prim === 'storage');
     if (storageType?.args === undefined) {
-      throw new Error('The storage section is missing from the script');
+      throw new InvalidCodeParameter('The storage section is missing from the script', code);
     }
     const schema = new Schema(storageType.args[0] as MichelsonV1Expression); // TODO
     contractStorage = schema.Encode(storage);
   } else if (init !== undefined && typeof init === 'object') {
     contractStorage = init as Expr;
   } else {
-    throw new Error ('The init parameter has the wrong type: A JSON object was expected instead of a string');
+    throw new InvalidInitParameter('Wrong init parameter type, expected JSON Michelson', init);
   }
 
   const script = {
