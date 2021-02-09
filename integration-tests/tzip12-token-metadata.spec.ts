@@ -12,7 +12,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 	let contractAddress: string;
 	let contractAddress2: string;
 
- 	describe(`Deploy a Fa2 contract and fetch metadata (token metadata are in the big map %token_metadata): ${rpc}`, () => {
+ 	 describe(`Deploy a Fa2 contract and fetch metadata (token metadata are in the big map %token_metadata): ${rpc}`, () => {
 		beforeEach(async (done) => {
 			await setup();
 			done();
@@ -159,7 +159,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			}
 			done();
 		});
-	}); 
+	});  
 
  	describe(`Deploy a Fa2 contract and fetch metadata (token metadata are obtain from a view %token_metadata): ${rpc}`, () => {
 		beforeEach(async (done) => {
@@ -189,7 +189,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 				'20000'
 			);
 
-			const url = 'https://storage.googleapis.com/tzip-16/fa2-token-metadata-view-all-token-view.json';
+			const url = 'https://storage.googleapis.com/tzip-16/fa2-views.json';
 			const bytesUrl = char2Bytes(url);
 			const metadata = new MichelsonMap();
 			metadata.set('', bytesUrl);
@@ -244,7 +244,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 		});    
 
 		it('Should test contratAbstraction composition, fetch contract and token metadata of the Fa2 contract', async (done) => {
-			// delphi: KT1Pf8Ltw1Q91mXEtvkcmxyan3rxPDsHx8eZ
+			// delphi: KT1QL1PrjmbEfRGb2dyLdc9eJ6MQpb83LQtb
 
 			Tezos.addExtension(new Tzip16Module());
 
@@ -253,7 +253,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
 			// Fetch contract metadata on HTTPs
 			const metadata = await contract.tzip16().getMetadata();
-			expect(metadata.uri).toEqual('https://storage.googleapis.com/tzip-16/fa2-token-metadata-view-all-token-view.json');
+			expect(metadata.uri).toEqual('https://storage.googleapis.com/tzip-16/fa2-views.json');
 			expect(metadata.integrityCheckResult).toBeUndefined();
 			expect(metadata.sha256Hash).toBeUndefined();
 			expect(metadata.metadata).toBeDefined();
