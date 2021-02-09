@@ -65,11 +65,9 @@ export class MichelCodecParser implements ParserProvider {
                 throw new Error('Empty initial storage value');
             }
             parsedInit = c;
-        } else if (typeof init === 'object') {
-            parsedInit = await this.parseJSON(init);
         } else {
-            throw new Error('Init parameter has an invalid format')
-        }
+            parsedInit = await this.parseJSON(init);
+        } 
         return parsedInit;
     }
 
