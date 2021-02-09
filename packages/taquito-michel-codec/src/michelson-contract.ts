@@ -1,6 +1,6 @@
 import {
     MichelsonContract, MichelsonContractSection, MichelsonType,
-    MichelsonData, MichelsonCode, MichelsonStackType
+    MichelsonData, MichelsonCode, MichelsonReturnType, ProtocolOptions
 } from "./michelson-types";
 import {
     assertContractValid, contractSection,
@@ -12,13 +12,13 @@ import {
 import { Parser } from "./micheline-parser";
 import { assertMichelsonContract, assertMichelsonType, assertMichelsonData } from "./michelson-validator";
 
-export interface ContractOptions {
+export interface ContractOptions extends ProtocolOptions {
     traceCallback?: (t: InstructionTrace) => void;
 }
 
 export class Contract {
     private ctx: Context;
-    public readonly output: MichelsonStackType;
+    public readonly output: MichelsonReturnType;
 
     constructor(public readonly contract: MichelsonContract, opt?: ContractOptions) {
         this.ctx = { contract, ...opt };
@@ -26,7 +26,7 @@ export class Contract {
     }
 
     static parse(src: string | object, opt?: ContractOptions): Contract {
-        const p = new Parser({ expandMacros: true });
+        const p = new Parser(opt);
         const expr = typeof src === "string" ? p.parseScript(src) : p.parseJSON(src);
         if (expr === null) {
             throw new Error("empty contract");
@@ -73,11 +73,11 @@ export class Contract {
         return contractEntryPoint(this.contract, ep);
     }
 
-    assertDataValid<T extends MichelsonType>(d: MichelsonData, t: T): d is MichelsonData<T> {
-        return assertDataValid(d, t, this.ctx);
+    assertDataValid(d: MichelsonData, t: MichelsonType): void {
+        assertDataValid(d, t, this.ctx);
     }
 
-    isDataValid<T extends MichelsonType>(d: MichelsonData, t: T): d is MichelsonData<T> {
+    isDataValid(d: MichelsonData, t: MichelsonType): boolean {
         return isDataValid(d, t, this.ctx);
     }
 
@@ -98,7 +98,7 @@ export class Contract {
         }
     }
 
-    functionType(inst: MichelsonCode, stack: MichelsonType[]): MichelsonStackType {
+    functionType(inst: MichelsonCode, stack: MichelsonType[]): MichelsonReturnType {
         return functionType(inst, stack, this.ctx);
     }
 }
