@@ -14,6 +14,8 @@ import { PollingSubscribeProvider } from './subscribe/polling-provider';
 import { TzProvider } from './tz/interface';
 import { LegacyWalletProvider, Wallet, WalletProvider } from './wallet';
 import { OperationFactory } from './wallet/opreation-factory';
+import { ParserProvider } from './parser/interface';
+import { MichelCodecParser } from './parser/michel-codec-parser';
 
 export { MichelsonMap, UnitValue } from '@taquito/michelson-encoder';
 export * from './constants';

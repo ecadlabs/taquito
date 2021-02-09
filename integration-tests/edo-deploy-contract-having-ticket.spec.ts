@@ -1,5 +1,5 @@
 import { CONFIGS } from "./config";
-import { ticketCode, ticketCode3, ticketCode4, ticketStorage, ticketStorage3, ticketStorage4 } from '../packages/taquito-local-forging/test/data/code_with_ticket';
+import { ticketCode, ticketStorage } from '../packages/taquito-local-forging/test/data/code_with_ticket';
 import { Protocols } from "@taquito/taquito";
 import { importKey } from "@taquito/signer";
 
@@ -47,9 +47,6 @@ CONFIGS().forEach(({ lib, rpc, protocol }) => {
       await op.confirmation();
       expect(op.opHash).toBeDefined();
 
-      const contract = await op.contract();
-      console.log('contract', contract.address);
-      
       done();
     });
 
@@ -62,9 +59,6 @@ CONFIGS().forEach(({ lib, rpc, protocol }) => {
       await op.confirmation();
       expect(op.hash).toBeDefined();
 
-      const contract = await op.contract();
-      console.log('contract', contract.address);
-      
       done();
     });
 
@@ -77,9 +71,6 @@ CONFIGS().forEach(({ lib, rpc, protocol }) => {
       await op.confirmation();
       expect(op.hash).toBeDefined();
 
-      const contract = await op.contract();
-      console.log('contract', contract.address);
-      
       done();
     });
 
@@ -94,13 +85,8 @@ CONFIGS().forEach(({ lib, rpc, protocol }) => {
 
       await op.confirmation();
       expect(op.hash).toBeDefined();
-
-      const contract = await op.contract();
-      console.log('contract', contract.address);
       
       done();
     });
-
-   
   });
 })

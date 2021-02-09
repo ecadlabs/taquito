@@ -1,7 +1,6 @@
 import { Schema } from '@taquito/michelson-encoder';
 import { ScriptResponse } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
-import { Protocols } from '../constants';
 import { Context } from '../context';
 import { DelegateOperation } from '../operations/delegate-operation';
 import { OperationEmitter } from '../operations/operation-emitter';
@@ -123,15 +122,13 @@ export class RpcContractProvider extends OperationEmitter
    */
   async originate(params: OriginateParams) {
     const estimate = await this.estimate(params, this.estimator.originate.bind(this.estimator));
-    if (!this.context.proto) {
-      this.context.proto = (await this.rpc.getBlock()).protocol as Protocols;
-    }
 
     const publicKeyHash = await this.signer.publicKeyHash();
-    const operation = await createOriginationOperation({
+    const operation = await createOriginationOperation(
+      await this.context.parser.prepareCodeOrigination({
       ...params,
       ...estimate,
-    },this.context.proto);
+    }));
     const preparedOrigination = await this.prepareOperation({ operation, source: publicKeyHash });
     const forgedOrigination = await this.forge(preparedOrigination);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(forgedOrigination);

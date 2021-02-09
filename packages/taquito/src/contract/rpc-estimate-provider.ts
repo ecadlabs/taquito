@@ -151,15 +151,13 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    * @param OriginationOperation Originate operation parameter
    */
   async originate({ fee, storageLimit, gasLimit, ...rest }: OriginateParams) {
-    if (!this.context.proto) {
-      this.context.proto = (await this.rpc.getBlock()).protocol as Protocols;
-    }
     const pkh = await this.signer.publicKeyHash();
     const DEFAULT_PARAMS = await this.getAccountLimits(pkh);
-    const op = await createOriginationOperation({
+    const op = await createOriginationOperation(
+      await this.context.parser.prepareCodeOrigination({
       ...rest,
       ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
-    },this.context.proto);
+    }));
     return (await this.createEstimate({ operation: op, source: pkh }))[0];
   }
   /**
@@ -199,9 +197,6 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
   }
 
   async batch(params: ParamsWithKind[]) {
-    if (!this.context.proto) {
-      this.context.proto = (await this.rpc.getBlock()).protocol as Protocols;
-    }
     const operations: RPCOperation[] = [];
     const DEFAULT_PARAMS = await this.getAccountLimits(await this.signer.publicKeyHash());
     for (const param of params) {
@@ -219,7 +214,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
             await createOriginationOperation({
               ...param,
               ...mergeLimits(param, DEFAULT_PARAMS),
-            }, this.context.proto)
+            })
           );
           break;
         case OpKind.DELEGATION:

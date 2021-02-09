@@ -1,6 +1,6 @@
 import { Schema } from '@taquito/michelson-encoder';
 import { OpKind, MichelsonV1Expression } from '@taquito/rpc';
-import { Parser, Prim, Expr } from '@taquito/michel-codec';
+import { Prim, Expr } from '@taquito/michel-codec';
 import {
   OriginateParams,
   RPCOriginationOperation,
@@ -10,7 +10,7 @@ import {
   RPCDelegateOperation,
   RegisterDelegateParams,
 } from '../operations/types';
-import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT, Protocols } from '../constants';
+import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
 import { format } from '../format';
 
 export const createOriginationOperation = async ({
@@ -23,7 +23,7 @@ export const createOriginationOperation = async ({
   gasLimit = DEFAULT_GAS_LIMIT.ORIGINATION,
   storageLimit = DEFAULT_STORAGE_LIMIT.ORIGINATION,
   mutez = false
-}: OriginateParams, protocol?: Protocols) => {
+}: OriginateParams) => {
   // tslint:disable-next-line: strict-type-predicates
   if (storage !== undefined && init !== undefined) {
     throw new Error(
@@ -31,45 +31,27 @@ export const createOriginationOperation = async ({
     );
   }
 
-  const parser = new Parser({ protocol });
-
-  let contractCode: Expr[];
-  if (typeof code === 'string') {
-    const c = parser.parseScript(code);
-    if (c === null) {
-      throw new Error('Empty Michelson source');
-    }
-    contractCode = c;
-  } else {
-    const c = parser.parseJSON(code);
-    if (!Array.isArray(c)) {
-      throw new Error('JSON encoded Michelson script must be an array');
-    }
-    const order = ['parameter', 'storage', 'code'];
-    // Ensure correct ordering for RPC
-    contractCode = (c as Prim[]).sort((a, b) => order.indexOf(a.prim) - order.indexOf(b.prim));
+  if(typeof code === 'string'){
+    throw new Error('The code parameter has the wrong type: An array was expected instead of a string');
   }
 
+  let contractCode = code as Expr[];
   let contractStorage: Expr | undefined;
   if (storage !== undefined) {
     const storageType = contractCode.find((p): p is Prim => ('prim' in p) && p.prim === 'storage');
     if (storageType?.args === undefined) {
-      throw new Error('Missing storage section');
+      throw new Error('The storage section is missing from the script');
     }
     const schema = new Schema(storageType.args[0] as MichelsonV1Expression); // TODO
     contractStorage = schema.Encode(storage);
-  } else if (typeof init === 'string') {
-    const c = parser.parseMichelineExpression(init);
-    if (c === null) {
-      throw new Error('Empty initial storage value');
-    }
-    contractStorage = c;
-  } else if (typeof init === 'object') {
-    contractStorage = parser.parseJSON(init);
+  } else if (init !== undefined && typeof init === 'object') {
+    contractStorage = init as Expr;
+  } else {
+    throw new Error ('The init parameter has the wrong type: A JSON object was expected instead of a string');
   }
 
   const script = {
-    code: contractCode,
+    code,
     storage: contractStorage,
   };
 
