@@ -62,6 +62,11 @@ type TypeX<PT extends MichelsonTypeID, AT extends Expr[]> = PrimX<PT, AT>;
 
 // Michelson types
 
+export const refContract: unique symbol = Symbol("ref_contract");
+export interface MichelsonTypeAddress extends Type0<"address"> {
+    [refContract]?: MichelsonTypeContract<MichelsonType>;
+}
+
 export type MichelsonTypeInt = Type0<"int">;
 export type MichelsonTypeNat = Type0<"nat">;
 export type MichelsonTypeString = Type0<"string">;
@@ -70,7 +75,6 @@ export type MichelsonTypeMutez = Type0<"mutez">;
 export type MichelsonTypeBool = Type0<"bool">;
 export type MichelsonTypeKeyHash = Type0<"key_hash">;
 export type MichelsonTypeTimestamp = Type0<"timestamp">;
-export type MichelsonTypeAddress = Type0<"address">;
 export type MichelsonTypeKey = Type0<"key">;
 export type MichelsonTypeUnit = Type0<"unit">;
 export type MichelsonTypeSignature = Type0<"signature">;

@@ -558,31 +558,37 @@ export function assertMichelsonData(ex: Expr): ex is MichelsonData {
  */
 export function assertMichelsonContract(ex: Expr): ex is MichelsonContract {
    /* istanbul ignore else */
-   if (assertSeq(ex) && ex.length === 3 && assertPrim(ex[0]) && assertPrim(ex[1]) && assertPrim(ex[2])) {
-      const p = [ex[0].prim, ex[1].prim, ex[2].prim].sort();
-      if (p[0] === "code" && p[1] === "parameter" && p[2] === "storage") {
-         for (const n of ex as Prim[]) {
+   if (assertSeq(ex)) {
+      const ent: { [sec: string]: boolean } = {};
+      for (const sec of ex) {
+         if (assertPrim(sec)) {
+            if (sec.prim !== "code" && sec.prim !== "parameter" && sec.prim !== "storage") {
+               throw new MichelsonValidationError(ex, `unexpected contract section: ${sec.prim}`);
+            }
+            if (sec.prim in ent) {
+               throw new MichelsonValidationError(ex, `duplicate contract section: ${sec.prim}`);
+            }
+            ent[sec.prim] = true;
+
             /* istanbul ignore else */
-            if (assertArgs(n, 1)) {
-               switch (n.prim) {
+            if (assertArgs(sec, 1)) {
+               switch (sec.prim) {
                   case "code":
                      /* istanbul ignore else */
-                     if (assertSeq(n.args[0])) {
-                        assertMichelsonInstruction(n.args[0]);
+                     if (assertSeq(sec.args[0])) {
+                        assertMichelsonInstruction(sec.args[0]);
                      }
                      break;
 
                   case "parameter":
-                     assertMichelsonPassableType(n.args[0]);
+                     assertMichelsonPassableType(sec.args[0]);
                      break;
 
                   case "storage":
-                     assertMichelsonStorableType(n.args[0]);
+                     assertMichelsonStorableType(sec.args[0]);
                }
             }
          }
-      } else {
-         throw new MichelsonValidationError(ex, "valid Michelson script expected");
       }
    }
    return true;

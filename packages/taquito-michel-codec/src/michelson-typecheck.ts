@@ -5,7 +5,9 @@ import {
     MichelsonInstruction, InstructionList, MichelsonDataPair, MichelsonTypeID, MichelsonTypeOr,
     ProtocolOptions,
     DefaultProtocol,
-    Protocol
+    Protocol,
+    refContract,
+    MichelsonTypeAddress
 } from "./michelson-types";
 import {
     unpackAnnotations, MichelsonError, isNatural,
@@ -15,7 +17,7 @@ import {
 import { decodeBase58Check } from "./base58";
 import {
     assertMichelsonComparableType, instructionIDs,
-    assertMichelsonPackableType, assertMichelsonStorableType, assertMichelsonBigMapStorableType
+    assertMichelsonPackableType, assertMichelsonStorableType, assertMichelsonBigMapStorableType, assertMichelsonPushableType
 } from "./michelson-validator";
 
 export interface Context extends ProtocolOptions {
@@ -677,6 +679,7 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
     const ensureComparableType = rethrowTypeGuard(assertMichelsonComparableType);
     const ensurePackableType = rethrowTypeGuard(assertMichelsonPackableType);
     const ensureStorableType = rethrowTypeGuard(assertMichelsonStorableType);
+    const ensurePushableType = rethrowTypeGuard(assertMichelsonPushableType);
     const ensureBigMapStorableType = rethrowTypeGuard(assertMichelsonBigMapStorableType);
 
     // unpack instruction annotations and assert their maximum number
@@ -1020,6 +1023,8 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
             case "APPLY":
                 {
                     const s = args(0, null, ["lambda"]);
+                    ensureStorableType(s[0]);
+                    ensurePushableType(s[0]);
                     if (!isPairType(s[1].args[0])) {
                         throw new MichelsonInstructionError(instruction, stack, `${instruction.prim}: function's argument must be a pair: ${typeID(s[1].args[0])}`);
                     }
@@ -1216,7 +1221,7 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
                     const ia = instructionAnn({ f: 1, v: 1 });
                     const ep = contractEntryPoint(ctx.contract, ia.f?.[0]);
                     if (ep === null) {
-                        throw new MichelsonInstructionError(instruction, stack, `${instruction.prim}: contract has no entrypoint named ${ep}`);
+                        throw new MichelsonInstructionError(instruction, stack, `${instruction.prim}: contract has no entrypoint ${ep}`);
                     }
                     return [annotate({ prim: "contract", args: [ep] }, { v: ia.v ? ia.v : ["@self"] }), ...stack];
                 }
@@ -1277,12 +1282,18 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
                     const s = args(0, ["contract"])[0];
                     const ia = instructionAnn({ v: 1 });
                     return [
-                        annotate({ prim: "address" }, { v: ia.v ? ia.v : varSuffix(argAnn(s), "address") }),
+                        annotate({ prim: "address", [refContract]: s }, { v: ia.v ? ia.v : varSuffix(argAnn(s), "address") }),
                         ...stack.slice(1)];
                 }
 
             case "SELF_ADDRESS":
-                return [annotateVar({ prim: "address" }, "@address"), ...stack];
+                {
+                    const addr: MichelsonTypeAddress = { prim: "address" };
+                    if (ctx?.contract !== undefined) {
+                        addr[refContract] = { prim: "contract", args: [contractSection(ctx?.contract, "parameter").args[0]] };
+                    }
+                    return [annotateVar(addr, "@address"), ...stack];
+                }
 
             case "CHAIN_ID":
                 return [annotateVar({ prim: "chain_id" }), ...stack];
@@ -1355,6 +1366,14 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
                     const s = args(0, ["address"])[0];
                     assertTypeAnnotationsValid(instruction.args[0]);
                     const ia = instructionAnn({ v: 1, f: 1 });
+                    const contract = s[refContract];
+                    if (contract !== undefined) {
+                        const ep = contractEntryPoint(contract, ia.f?.[0]);
+                        if (ep === null) {
+                            throw new MichelsonInstructionError(instruction, stack, `${instruction.prim}: contract has no entrypoint ${ep}`);
+                        }
+                        ensureTypesEqual(ep, instruction.args[0]);
+                    }
                     return [
                         annotate({ prim: "option", args: [{ prim: "contract", args: [instruction.args[0]] }] }, { v: ia.v ? ia.v : varSuffix(argAnn(s), "contract") }),
                         ...stack.slice(1)];
@@ -1520,10 +1539,14 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
                         assertContractValid(instruction.args[0]);
                         assertScalarTypesEqual(contractSection(instruction.args[0], "storage").args[0], s[2]);
                     }
+
                     const va = ia.v?.map(v => v !== "@" ? [v] : undefined);
                     return [
                         annotate({ prim: "operation" }, { v: va?.[0] }),
-                        annotate({ prim: "address" }, { v: va?.[1] }),
+                        annotate({
+                            prim: "address",
+                            [refContract]: { prim: "contract", args: [contractSection(instruction.args[0], "parameter").args[0]] },
+                        }, { v: va?.[1] }),
                         ...stack.slice(3)
                     ];
                 }

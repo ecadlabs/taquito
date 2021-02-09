@@ -37,7 +37,6 @@ const contracts: {
         "big_map_read.tz",
         "ticket_builder_fungible.tz",
     ],
-    /*
     "ill_typed": [
         "ticket_apply.tz",
         "never_literal.tz",
@@ -74,7 +73,6 @@ const contracts: {
         "multiple_parameter_field.tz",
         "pack_sapling_state.tz",
     ],
-    */
     "macros": [
         "assert_neq.tz",
         "assert_cmpge.tz",
