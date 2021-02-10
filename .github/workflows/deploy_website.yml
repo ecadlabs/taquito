@@ -22,7 +22,7 @@ jobs:
     - run: npm run lerna run build
     - run: cd website && cp -R build/. ../dist
     - run: npm install netlify-cli
-    - run: npx netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json --prod" --message "Deployment for $GITHUB_REF"
+    - run: npx netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json --prod --message "Deployment for $GITHUB_REF"
       env:
         CI: true
         NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
