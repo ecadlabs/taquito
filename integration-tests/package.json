@@ -10,17 +10,17 @@
     "test:edonet-faucet": "RUN_EDONET_WITH_FAUCET=true jest --runInBand",
     "test": "jest"
   },
-  "version": "8.0.0-beta.5",
+  "version": "8.0.0-beta.7",
   "dependencies": {
-    "@ledgerhq/hw-transport": "^5.25.0",
-    "@ledgerhq/hw-transport-node-hid": "^5.25.0",
-    "@taquito/http-utils": "^8.0.0-beta.5",
-    "@taquito/local-forging": "^8.0.0-beta.5",
-    "@taquito/remote-signer": "^8.0.0-beta.5",
-    "@taquito/signer": "^8.0.0-beta.5",
-    "@taquito/taquito": "^8.0.0-beta.5",
-    "@taquito/tzip16": "^8.0.0-beta.5",
-    "@taquito/utils": "^8.0.0-beta.5"
+    "@ledgerhq/hw-transport": "^5.41.0",
+    "@ledgerhq/hw-transport-node-hid": "^5.41.0",
+    "@taquito/http-utils": "^8.0.0-beta.7",
+    "@taquito/local-forging": "^8.0.0-beta.7",
+    "@taquito/remote-signer": "^8.0.0-beta.7",
+    "@taquito/signer": "^8.0.0-beta.7",
+    "@taquito/taquito": "^8.0.0-beta.7",
+    "@taquito/tzip16": "^8.0.0-beta.7",
+    "@taquito/utils": "^8.0.0-beta.7"
   },
   "private": true,
   "jest": {
@@ -40,7 +40,7 @@
     ],
     "testPathIgnorePatterns": [
       "./ledger-signer.spec.ts",
-      "./ledger-signer-falling-tests.spec.ts",
+      "./ledger-signer-failing-tests.spec.ts",
       "./rpc-nodes.spec.ts"
     ]
   },

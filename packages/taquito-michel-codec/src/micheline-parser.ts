@@ -1,7 +1,7 @@
 import { scan, Token, Literal } from './scan';
 import { Expr, Prim, StringLiteral, IntLiteral, BytesLiteral, sourceReference, List, SourceReference } from './micheline';
 import { expandMacros } from './macros';
-import { lstat } from 'fs';
+import { ProtocolOptions } from './michelson-types';
 
 export class MichelineParseError extends Error {
     /**
@@ -34,11 +34,11 @@ function isAnnotation(tok: Token): boolean {
 const intRe = new RegExp('^-?[0-9]+$');
 const bytesRe = new RegExp('^([0-9a-fA-F]{2})*$');
 
-export interface ParserOptions {
+export interface ParserOptions extends ProtocolOptions {
     /**
      * Expand [Michelson macros](https://tezos.gitlab.io/whitedoc/michelson.html#macros) during parsing.
      */
-    expandMacros: boolean;
+    expandMacros?: boolean;
 }
 
 /**
@@ -74,11 +74,12 @@ export interface ParserOptions {
  * ```
  */
 export class Parser {
-    constructor(private opt?: ParserOptions) { }
+    constructor(private opt?: ParserOptions) {
+    }
 
     private expand(ex: Prim): Expr {
-        if (this.opt?.expandMacros) {
-            const ret = expandMacros(ex);
+        if (this.opt?.expandMacros !== undefined ? this.opt?.expandMacros : true) {
+            const ret = expandMacros(ex, this.opt);
             if (ret !== ex) {
                 ret[sourceReference] = { ...(ex[sourceReference] || { first: 0, last: 0 }), macro: ex };
             }

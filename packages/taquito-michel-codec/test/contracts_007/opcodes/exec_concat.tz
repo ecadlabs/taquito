@@ -1,0 +1,7 @@
+parameter string;
+storage string;
+code {CAR;
+      LAMBDA string string
+             {PUSH string "_abc"; NIL string ;
+              SWAP ; CONS ; SWAP ; CONS ; CONCAT};
+      SWAP; EXEC; NIL operation; PAIR};

@@ -2,9 +2,9 @@ import { sourceReference, Expr } from "./micheline";
 import { InstructionTrace, MichelsonInstructionError, MichelsonTypeError } from "./michelson-typecheck";
 import { emitMicheline } from "./micheline-emitter";
 import { unpackAnnotations, MichelsonError } from "./utils";
-import { MichelsonStackType } from "./michelson-types";
+import { MichelsonReturnType } from "./michelson-types";
 
-export function formatStack(s: MichelsonStackType): string {
+export function formatStack(s: MichelsonReturnType): string {
     if ("failed" in s) {
         return `[FAILED: ${emitMicheline(s.failed)}]`;
     }

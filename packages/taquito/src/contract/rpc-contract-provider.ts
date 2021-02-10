@@ -124,10 +124,11 @@ export class RpcContractProvider extends OperationEmitter
     const estimate = await this.estimate(params, this.estimator.originate.bind(this.estimator));
 
     const publicKeyHash = await this.signer.publicKeyHash();
-    const operation = await createOriginationOperation({
+    const operation = await createOriginationOperation(
+      await this.context.parser.prepareCodeOrigination({
       ...params,
       ...estimate,
-    });
+    }));
     const preparedOrigination = await this.prepareOperation({ operation, source: publicKeyHash });
     const forgedOrigination = await this.forge(preparedOrigination);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(forgedOrigination);

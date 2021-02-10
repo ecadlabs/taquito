@@ -1,0 +1,3 @@
+parameter (map string nat);
+storage nat;
+code {CAR; SIZE; NIL operation; PAIR}
