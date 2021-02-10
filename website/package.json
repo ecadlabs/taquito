@@ -6,7 +6,7 @@
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
-    "netlify:preview": "netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json --alias=${{ env.short_sha }} --message 'Deployment for $GITHUB_REF'"
+    "netlify:preview": "netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json --alias=$ALIAS --message 'Deployment for $GITHUB_REF'"
   },
   "dependencies": {
     "@docusaurus/core": "^2.0.0-alpha.63",
