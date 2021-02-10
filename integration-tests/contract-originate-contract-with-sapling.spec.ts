@@ -38,7 +38,7 @@ CONFIGS().forEach(({ lib, rpc, protocol }) => {
       done()
     })
 
-    edonet('Originates a contract having an empty sapling state in its storage', async (done) => {
+     edonet('Originates a contract having an empty sapling state in its storage', async (done) => {
       const op = await Tezos.contract.originate({
         code: rpcContractResponse.script.code,
         init: `{}` // empty sapling state
@@ -61,17 +61,17 @@ CONFIGS().forEach(({ lib, rpc, protocol }) => {
       expect(op.hash).toBeDefined();
 
       done();
-    });
+    }); 
 
     edonet('Originates a contract with sapling states in its storage and init in JSON', async (done) => {
-      Tezos['_context'].parser = new NoopParser();
         const op = await Tezos.contract.originate({
         code: rpcContractResponse4.script.code,
-        init: { prim: 'Pair', args: [ {}, {} ] }
+        init: { prim: 'Pair', args: [ [], [] ] }
       });
 
       await op.confirmation();
       expect(op.hash).toBeDefined();
+      console.log(op.contractAddress);
 
       done();
     });
