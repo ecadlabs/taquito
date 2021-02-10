@@ -5,7 +5,7 @@ on:
     branches:
       - master
 jobs:
-  publish-docs:
+  publish-website:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -22,13 +22,17 @@ jobs:
     - run: npm run lerna -- bootstrap
     - run: npm run lerna run build
     - run: cd website && cp -R build/. ../dist
-    - run: npm run build-docs
-    - run: cd dist && touch .nojekyll && echo 'tezostaquito.io' > CNAME
-    - name: Publish generated content to GitHub Pages
-      uses: tsunematsu21/actions-publish-gh-pages@v1.0.1
-      with:
-        dir: dist
-        branch: gh-pages
-        token: ${{ secrets.ACCESS_TOKEN }}
+    - run: npm install netlify-cli
+    - run: npx netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json --prod" --message "Deployment for $GITHUB_REF"
       env:
         CI: true
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+    - name: Slack Notification
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+        SLACK_USERNAME: Taquito Notifications
+        SLACK_ICON: https://imgur.com/1zlqzFu
+        SLACK_TITLE: Message 
+        SLACK_MESSAGE: A new version of the Taquito website has been published. https://tezostaquito.netlify.app
