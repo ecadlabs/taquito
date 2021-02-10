@@ -1290,7 +1290,7 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
                 {
                     const addr: MichelsonTypeAddress = { prim: "address" };
                     if (ctx?.contract !== undefined) {
-                        addr[refContract] = { prim: "contract", args: [contractSection(ctx?.contract, "parameter").args[0]] };
+                        addr[refContract] = { prim: "contract", args: [contractSection(ctx.contract, "parameter").args[0]] };
                     }
                     return [annotateVar(addr, "@address"), ...stack];
                 }
@@ -1553,7 +1553,7 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
 
             case "PUSH":
                 assertTypeAnnotationsValid(instruction.args[0]);
-                assertDataValidInternal(instruction.args[1], instruction.args[0], ctx);
+                assertDataValidInternal(instruction.args[1], instruction.args[0], { ...ctx, contract: undefined });
                 return [annotateVar(instruction.args[0]), ...stack];
 
             case "EMPTY_SET":
@@ -1578,7 +1578,7 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
                 {
                     assertTypeAnnotationsValid(instruction.args[0]);
                     assertTypeAnnotationsValid(instruction.args[1]);
-                    const body = functionTypeInternal(instruction.args[2], [instruction.args[0]], ctx);
+                    const body = functionTypeInternal(instruction.args[2], [instruction.args[0]], { ...ctx, contract: undefined });
                     if ("failed" in body) {
                         return body;
                     }
