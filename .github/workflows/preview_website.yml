@@ -5,6 +5,7 @@ on:
     branches: [master]
 
 jobs:
+## This job will deploy the netlify preview builds
   publish-website-preview:
     runs-on: ubuntu-latest
     steps:
