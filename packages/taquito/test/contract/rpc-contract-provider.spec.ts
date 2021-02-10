@@ -23,10 +23,12 @@ import {
   DEFAULT_FEE,
   DEFAULT_GAS_LIMIT,
 } from '../../src/constants';
-import { InvalidDelegationSource } from '../../src/contract/errors';
+import { InvalidCodeParameter, InvalidDelegationSource, InvalidInitParameter } from '../../src/contract/errors';
 import { preapplyResultFrom } from './helper';
 import { MichelsonMap, Schema } from '@taquito/michelson-encoder';
 import { BigMapAbstraction } from '../../src/contract/big-map';
+import { OriginateParams } from '../../src/operations/types';
+import { NoopParser, ParserProvider } from '../../src/taquito';
 
 /**
  * RPCContractProvider test
@@ -747,6 +749,78 @@ describe('RpcContractProvider test', () => {
       mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
       const result = await rpcContractProvider.at('test');
       expect(result.methods.mint('test', 100)).toBeInstanceOf(ContractMethod);
+      done();
+    });
+  });
+  
+    describe('originate with noop parser', () => {
+      it('should throw InvalidCodeParameter', async done => {
+        rpcContractProvider['context'].parser = new NoopParser();
+        try {
+          await rpcContractProvider.originate({
+          delegate: 'test_delegate',
+          balance: '200',
+          code: miStr, // needs to be JSON Michelson
+          init: miInit,
+          fee: 10000,
+          gasLimit: 10600,
+          storageLimit: 257,
+        });
+      } catch( err) {
+        expect(err).toBeInstanceOf(InvalidCodeParameter);
+        expect(err.message).toEqual('Wrong code parameter type, expected an array');
+      }
+      done();
+    });
+
+    it('should throw InvalidCodeParameter when missing storage part', async done => {
+      rpcContractProvider['context'].parser = new NoopParser();
+      try {
+        await rpcContractProvider.originate({
+          delegate: 'test_delegate',
+          balance: '200',
+          code: [
+            { prim: 'parameter', args: [{ prim: 'int' }] },
+            {
+                prim: 'code',
+                args: [[{ prim: 'DUP' }]]
+            }
+          ],
+          storage: 'test',
+          fee: 10000,
+          gasLimit: 10600,
+          storageLimit: 257,
+        });
+      } catch( err) {
+        expect(err).toBeInstanceOf(InvalidCodeParameter);
+        expect(err.message).toEqual('The storage section is missing from the script');
+      }
+      done();
+    });
+
+  it('should throw InvalidInitParameter', async done => {
+    rpcContractProvider['context'].parser = new NoopParser();
+    try {
+      await rpcContractProvider.originate({
+        delegate: 'test_delegate',
+        balance: '200',
+        code: [
+          { prim: 'parameter', args: [{ prim: 'int' }] },
+          {
+              prim: 'code',
+              args: [[{ prim: 'DUP' }]]
+          },
+          { prim: 'storage', args: [{ prim: 'pair', args: [{ prim: 'int' }, { prim: 'address' }] }] }
+        ],
+        init: 'test',
+        fee: 10000,
+        gasLimit: 10600,
+        storageLimit: 257,
+      });
+    } catch (err) {
+      expect(err).toBeInstanceOf(InvalidInitParameter);
+      expect(err.message).toEqual('Wrong init parameter type, expected JSON Michelson');
+    }
       done();
     });
   });
