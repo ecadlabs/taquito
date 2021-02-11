@@ -57,10 +57,10 @@ interface FaucetConfig {
 
 const edonetEphemeral = {
   rpc: process.env['TEZOS_RPC_EDONET'] || 'https://api.tez.ie/rpc/edonet',
-  knownBaker: 'tz1ScKYRsTP7rkPsU8VRNKFYyCoCBPX4WADJ',
-  knownContract: 'KT1ETP77nkHvrkVzfV3AydrHMpbER4Et7s3y',
-  knownBigMapContract: 'KT1P4eFWszS7Y9qom4SjnM15GJcYzsnVH4ER',
-  protocol: Protocols.PtEdoTez,
+  knownBaker: 'tz1R55a2HQbXUAzWKJYE5bJp3UvvawwCm9Pr',
+  knownContract: 'KT1MTFjUeqBeZoFeW1NLSrzJdcS5apFiUXoB',
+  knownBigMapContract: 'KT1Aqk5xE36Kx7JUUV8VMx4t9jLgQn4MBWQk',
+  protocol: Protocols.PtEdo27k,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'https://api.tez.ie/keys/edonet',
@@ -131,10 +131,10 @@ const key = {
 
 const edonetFaucet = {
   rpc: 'https://api.tez.ie/rpc/edonet',
-  knownBaker: 'tz1ScKYRsTP7rkPsU8VRNKFYyCoCBPX4WADJ',
-  knownContract: 'KT1ETP77nkHvrkVzfV3AydrHMpbER4Et7s3y',
-  knownBigMapContract: 'KT1P4eFWszS7Y9qom4SjnM15GJcYzsnVH4ER',
-  protocol: Protocols.PtEdoTez,
+  knownBaker: 'tz1R55a2HQbXUAzWKJYE5bJp3UvvawwCm9Pr',
+  knownContract: 'KT1MTFjUeqBeZoFeW1NLSrzJdcS5apFiUXoB',
+  knownBigMapContract: 'KT1Aqk5xE36Kx7JUUV8VMx4t9jLgQn4MBWQk',
+  protocol: Protocols.PtEdo27k,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
     faucetKey: key,

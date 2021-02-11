@@ -7,7 +7,7 @@ describe('MichelCodec parser', () => {
     };
 
     mockRpcClient.getBlockMetadata.mockResolvedValue({
-        next_protocol: 'PtEdoTezd3RHSC31mpxxo1npxFjoWWcFgQtxapi51Z8TLu6v6Uq'
+        next_protocol: 'PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA'
     });
 
     it('is instantiable', () => {
@@ -18,7 +18,7 @@ describe('MichelCodec parser', () => {
         it('calls getBlockMetadata from the rpc client', async (done) => {
             const parser = new MichelCodecParser(new Context(mockRpcClient as any));
             const result = await parser['getNextProto']();
-            expect(result).toStrictEqual(Protocols.PtEdoTez);
+            expect(result).toStrictEqual(Protocols.PtEdo27k);
             done();
         });
     });

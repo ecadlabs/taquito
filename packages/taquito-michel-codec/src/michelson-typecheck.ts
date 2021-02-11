@@ -1036,7 +1036,7 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
             case "FAILWITH":
                 {
                     const s = args(0, null)[0];
-                    if (proto === Protocol.PtEdoTez) {
+                    if (proto === Protocol.PtEdo27k) {
                         ensurePackableType(s);
                     }
                     return { failed: s };
