@@ -1,37 +1,13 @@
 import { CONFIGS } from './config';
 import { miStr, miObject } from './data/contractWithUnpair';
-import { importKey } from '@taquito/signer';
 import { Protocols } from '@taquito/taquito';
 
-CONFIGS().forEach(({ lib, rpc, protocol }) => {
+CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
     const Tezos = lib;
 
     describe(`Test origination of a token contract using: ${rpc}`, () => {
         beforeEach(async (done) => {
-            // temporary while the key gen doesn't use Taquito v8
-            await importKey(
-                Tezos,
-                'jrgsdwvy.aodtebxy@tezos.example.org',
-                'uEZk7VeV8T',
-                [
-                    "super",
-                    "grab",
-                    "found",
-                    "bus",
-                    "slush",
-                    "express",
-                    "dose",
-                    "scare",
-                    "mango",
-                    "dish",
-                    "ecology",
-                    "kiss",
-                    "dune",
-                    "era",
-                    "grit"
-                ].join(' '),
-                '3ae061613f27900f387ad3bbb389ac37e3f454f3'
-            );
+            await setup();
             done();
         });
 
