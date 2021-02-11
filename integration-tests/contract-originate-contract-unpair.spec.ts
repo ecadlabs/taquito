@@ -1,37 +1,13 @@
 import { CONFIGS } from './config';
 import { miStr, miObject } from './data/contractWithUnpair';
-import { importKey } from '@taquito/signer';
 import { Protocols } from '@taquito/taquito';
 
-CONFIGS().forEach(({ lib, rpc, protocol }) => {
+CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
     const Tezos = lib;
 
-    describe(`Test origination of a token contract using: ${rpc}`, () => {
+    describe(`Test origination of contract with UNPAIR using: ${rpc}`, () => {
         beforeEach(async (done) => {
-            // temporary while the key gen doesn't use Taquito v8
-            await importKey(
-                Tezos,
-                'hsvioapt.qnigdfsz@tezos.example.org',
-                'OOq9TlNAOX',
-                [
-                    'midnight',
-                    'assault',
-                    'zebra',
-                    'nothing',
-                    'myself',
-                    'voice',
-                    'suggest',
-                    'behind',
-                    'maid',
-                    'fluid',
-                    'trend',
-                    'wash',
-                    'outside',
-                    'amused',
-                    'case'
-                ].join(' '),
-                'aca91c0c576d60fda823e30ff1ea6e5cca1b2036'
-            );
+            await setup();
             done();
         });
 
@@ -43,6 +19,7 @@ CONFIGS().forEach(({ lib, rpc, protocol }) => {
 
             await op.confirmation();
             expect(op.hash).toBeDefined();
+            expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
 
             const contract = await op.contract();
 
@@ -66,6 +43,7 @@ CONFIGS().forEach(({ lib, rpc, protocol }) => {
 
             await op.confirmation();
             expect(op.hash).toBeDefined();
+            expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
 
             const contract = await op.contract();
 
@@ -92,6 +70,7 @@ CONFIGS().forEach(({ lib, rpc, protocol }) => {
 
             await op.confirmation();
             expect(op.hash).toBeDefined();
+            expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
 
             const contract = await op.contract();
 
@@ -115,6 +94,7 @@ CONFIGS().forEach(({ lib, rpc, protocol }) => {
 
             await op.confirmation();
             expect(op.hash).toBeDefined();
+            expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
 
             const contract = await op.contract();
 
@@ -138,6 +118,7 @@ CONFIGS().forEach(({ lib, rpc, protocol }) => {
 
             await op.confirmation();
             expect(op.hash).toBeDefined();
+            expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
 
             const contract = await op.contract();
 
@@ -164,6 +145,7 @@ CONFIGS().forEach(({ lib, rpc, protocol }) => {
 
             await op.confirmation();
             expect(op.hash).toBeDefined();
+            expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
 
             const contract = await op.contract();
 
