@@ -539,9 +539,9 @@ export const rpcContractResponse2 = {
 	}
 };
 
-export const storage2 = rpcContractResponse.script.code.find((x) => x.prim === 'storage')!.args[0] as any;
+export const storage2 = rpcContractResponse2.script.code.find((x) => x.prim === 'storage')!.args[0] as any;
 
-export const params2 = rpcContractResponse.script.code.find((x) => x.prim === 'parameter')!.args[0] as any;
+export const params2 = rpcContractResponse2.script.code.find((x) => x.prim === 'parameter')!.args[0] as any;
 
 // KT1NQh57yhVyT9cKhvjjaSmZ9YHZgwkAhJsB
 export const rpcContractResponse3 = {
@@ -701,9 +701,9 @@ export const rpcContractResponse3 = {
 	}
 };
 
-export const storage3 = rpcContractResponse.script.code.find((x) => x.prim === 'storage')!.args[0] as any;
+export const storage3 = rpcContractResponse3.script.code.find((x) => x.prim === 'storage')!.args[0] as any;
 
-export const params3 = rpcContractResponse.script.code.find((x) => x.prim === 'parameter')!.args[0] as any;
+export const params3 = rpcContractResponse3.script.code.find((x) => x.prim === 'parameter')!.args[0] as any;
 
 // KT1P7WdaJCnyyz83oBrHrFUPsxeVawGy4TSB
 export const rpcContractResponse4 = {
@@ -818,9 +818,9 @@ export const rpcContractResponse4 = {
 	}
 };
 
-export const storage4 = rpcContractResponse.script.code.find((x) => x.prim === 'storage')!.args[0] as any;
+export const storage4 = rpcContractResponse4.script.code.find((x) => x.prim === 'storage')!.args[0] as any;
 
-export const params4 = rpcContractResponse.script.code.find((x) => x.prim === 'parameter')!.args[0] as any;
+export const params4 = rpcContractResponse4.script.code.find((x) => x.prim === 'parameter')!.args[0] as any;
 
 // KT1R11DJKeYmt7Wzu21fQPeYdByyPWLbDqyF
 export const rpcContractResponse5 = {
@@ -866,9 +866,9 @@ export const rpcContractResponse5 = {
 	}
 };
 
-export const storage5 = rpcContractResponse.script.code.find((x) => x.prim === 'storage')!.args[0] as any;
+export const storage5 = rpcContractResponse5.script.code.find((x) => x.prim === 'storage')!.args[0] as any;
 
-export const params5 = rpcContractResponse.script.code.find((x) => x.prim === 'parameter')!.args[0] as any;
+export const params5 = rpcContractResponse5.script.code.find((x) => x.prim === 'parameter')!.args[0] as any;
 
 // KT1GZBKBSaDDEkEH4xreMJH3oSfjsqRn8MTL
 export const rpcContractResponse6 = {
@@ -928,9 +928,9 @@ export const rpcContractResponse6 = {
 	}
 };
 
-export const storage6 = rpcContractResponse.script.code.find((x) => x.prim === 'storage')!.args[0] as any;
+export const storage6 = rpcContractResponse6.script.code.find((x) => x.prim === 'storage')!.args[0] as any;
 
-export const params6 = rpcContractResponse.script.code.find((x) => x.prim === 'parameter')!.args[0] as any;
+export const params6 = rpcContractResponse6.script.code.find((x) => x.prim === 'parameter')!.args[0] as any;
 
 // KT1XpFASuiYhShqteQ4QjSfR21ERq2R3ZfrH
 export const rpcContractResponse7 = {
@@ -999,9 +999,9 @@ export const rpcContractResponse7 = {
 	}
 };
 
-export const storage7 = rpcContractResponse.script.code.find((x) => x.prim === 'storage')!.args[0] as any;
+export const storage7 = rpcContractResponse7.script.code.find((x) => x.prim === 'storage')!.args[0] as any;
 
-export const params7 = rpcContractResponse.script.code.find((x) => x.prim === 'parameter')!.args[0] as any;
+export const params7 = rpcContractResponse7.script.code.find((x) => x.prim === 'parameter')!.args[0] as any;
 
 // KT1KnF4vZMgTRgy9hniwV9pYpPj4b7HEV8fU
 export const rpcContractResponse8 = {
@@ -1042,6 +1042,6 @@ export const rpcContractResponse8 = {
 	}
 };
 
-export const storage8 = rpcContractResponse.script.code.find((x) => x.prim === 'storage')!.args[0] as any;
+export const storage8 = rpcContractResponse8.script.code.find((x) => x.prim === 'storage')!.args[0] as any;
 
-export const params8 = rpcContractResponse.script.code.find((x) => x.prim === 'parameter')!.args[0] as any;
+export const params8 = rpcContractResponse8.script.code.find((x) => x.prim === 'parameter')!.args[0] as any;
