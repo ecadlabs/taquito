@@ -1,7 +1,26 @@
 import { TezosToolkit } from '@taquito/taquito';
 import { opMappingReverse } from '../src/constants';
 import { localForger } from '../src/taquito-local-forging';
-import { ticketCode, ticketCode2, ticketCode3, ticketCode4, ticketStorage, ticketStorage2, ticketStorage3, ticketStorage4 } from './data/code_with_ticket';
+import { 
+  rpcContractResponse, 
+  rpcContractResponse2, 
+  rpcContractResponse3, 
+  rpcContractResponse4, 
+  rpcContractResponse5, 
+  rpcContractResponse6, 
+  rpcContractResponse7, 
+  rpcContractResponse8, 
+  rpcContractResponse9 
+} from './data/code_with_sapling';
+import { ticketCode, 
+  ticketCode2, 
+  ticketCode3, 
+  ticketCode4, 
+  ticketStorage, 
+  ticketStorage2, 
+  ticketStorage3, 
+  ticketStorage4 
+} from './data/code_with_ticket';
 import { genericCode, genericStorage } from './data/generic_contract';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_big_map';
 import { noAnnotCode, noAnnotInit } from './data/token_without_annotations';
@@ -579,9 +598,7 @@ const cases: TestCase[] = [
       ],
     },
   },
-/*   { 
-  // This test currently fails. TypeError: Cannot read property 'toString' of undefined
-  // (packages/taquito-local-forging/src/michelson/codec.ts:188:9)
+  {
     name: 'Origination with ticket 2',
     operation: {
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
@@ -601,7 +618,7 @@ const cases: TestCase[] = [
         },
       ],
     },
-  }, */
+  },
   {
     name: 'Origination with ticket 3',
     operation: {
@@ -639,6 +656,195 @@ const cases: TestCase[] = [
           script: {
             code: ticketCode4,
             storage: ticketStorage4,
+          },
+        },
+      ],
+    },
+  },
+  {
+    name: 'Origination with sapling 1',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: 'origination',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          balance: '0',
+          script: {
+            code: rpcContractResponse.script.code,
+            storage: [],
+          },
+        },
+      ],
+    },
+  },
+  {
+    name: 'Origination with sapling 2',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: 'origination',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          balance: '0',
+          script: {
+            code: rpcContractResponse2.script.code,
+            storage: { prim: 'Pair', args: [{ int: '0' }, [], []] },
+          },
+        },
+      ],
+    },
+  },
+  {
+    name: 'Origination with sapling 3',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: 'origination',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          balance: '0',
+          script: {
+            code: rpcContractResponse3.script.code,
+            storage: [],
+          },
+        },
+      ],
+    },
+  },
+  {
+    name: 'Origination with sapling 4',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: 'origination',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          balance: '0',
+          script: {
+            code: rpcContractResponse4.script.code,
+            storage: { prim: 'Pair', args: [[], []] },
+          },
+        },
+      ],
+    },
+  },
+  {
+    name: 'Origination with sapling 5',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: 'origination',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          balance: '0',
+          script: {
+            code: rpcContractResponse5.script.code,
+            storage: { prim: 'Unit' },
+          },
+        },
+      ],
+    },
+  },
+  {
+    name: 'Origination with sapling 6',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: 'origination',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          balance: '0',
+          script: {
+            code: rpcContractResponse6.script.code,
+            storage: { prim: 'Unit' },
+          },
+        },
+      ],
+    },
+  },
+  {
+    name: 'Origination with sapling 7',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: 'origination',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          balance: '0',
+          script: {
+            code: rpcContractResponse7.script.code,
+            storage: { prim: 'None' },
+          },
+        },
+      ],
+    },
+  },
+  {
+    name: 'Origination with sapling 8',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: 'origination',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          balance: '0',
+          script: {
+            code: rpcContractResponse8.script.code,
+            storage: [],
+          },
+        },
+      ],
+    },
+  },
+  {
+    name: 'A test with comb pairs',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: 'origination',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          balance: '0',
+          script: {
+            code: rpcContractResponse9.script.code,
+            storage: [],
           },
         },
       ],
