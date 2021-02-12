@@ -18,7 +18,7 @@ describe('MichelCodec parser', () => {
         it('calls getBlockMetadata from the rpc client', async (done) => {
             const parser = new MichelCodecParser(new Context(mockRpcClient as any));
             const result = await parser['getNextProto']();
-            expect(result).toStrictEqual(Protocols.PtEdo27k);
+            expect(result).toStrictEqual(Protocols.PtEdo2Zk);
             done();
         });
     });

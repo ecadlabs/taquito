@@ -23,7 +23,7 @@ export enum Protocols {
   PsBabyM1 = 'PsBabyM1eUXZseaJdmXFApDSBqj8YBfwELoxZHHW77EMcAbbwAS',
   PsCARTHA = 'PsCARTHAGazKbHtnKfLzQg3kms52kSRpgnDY982a9oYsSXRLQEb',
   PsDELPH1 = 'PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo',
-  PtEdo27k = 'PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA'
+  PtEdo2Zk = 'PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA'
 }
 
 export const protocols = {
@@ -31,7 +31,7 @@ export const protocols = {
   '005': [Protocols.PsBABY5H, Protocols.PsBabyM1],
   '006': [Protocols.PsCARTHA],
   '007': [Protocols.PsDELPH1],
-  '008': [Protocols.PtEdo27k] // edonet v2
+  '008': [Protocols.PtEdo2Zk] // edonet v2
 };
 
 export enum DefaultLambdaAddresses {
