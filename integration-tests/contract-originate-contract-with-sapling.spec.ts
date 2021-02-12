@@ -1,5 +1,5 @@
 import { CONFIGS } from "./config";
-import { rpcContractResponse, rpcContractResponse4 } from '../packages/taquito-michelson-encoder/data/sample19_sapling';
+import { rpcContractResponse, rpcContractResponse2, rpcContractResponse4 } from '../packages/taquito-michelson-encoder/data/sample19_sapling';
 import { Protocols } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, protocol, setup,  }) => {
@@ -26,5 +26,28 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup,  }) => {
 
       done();
     }); 
+
+    edonet('Originates a contract with sapling states in its storage', async (done) => {
+      const op = await Tezos.contract.originate({
+        code: rpcContractResponse2.script.code,
+        init: `(Pair 0 {} {})`
+      });
+      await op.confirmation();
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+      done();
+    }); 
+    
+    edonet('Originates a contract with sapling states in its storage and init in JSON', async (done) => {
+        const op = await Tezos.contract.originate({
+        code: rpcContractResponse4.script.code,
+        init: { prim: 'Pair', args: [ [], [] ] }
+      });
+      await op.confirmation();
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+      done();
+    });
+
   });
 })
