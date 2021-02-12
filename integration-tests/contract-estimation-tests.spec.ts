@@ -10,7 +10,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol }) => {
 
   const carthagenet = (protocol === Protocols.PsCARTHA) ? test : test.skip;
   const delphinet = (protocol === Protocols.PsDELPH1) ? test : test.skip;
-  const edonet = (protocol === Protocols.PtEdo27k) ? test : test.skip;
+  const edonet = (protocol === Protocols.PtEdo2Zk) ? test : test.skip;
 
   describe('Estimate scenario', () => {
     let LowAmountTez: TezosToolkit;

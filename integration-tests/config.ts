@@ -60,7 +60,7 @@ const edonetEphemeral = {
   knownBaker: 'tz1R55a2HQbXUAzWKJYE5bJp3UvvawwCm9Pr',
   knownContract: 'KT1MTFjUeqBeZoFeW1NLSrzJdcS5apFiUXoB',
   knownBigMapContract: 'KT1Aqk5xE36Kx7JUUV8VMx4t9jLgQn4MBWQk',
-  protocol: Protocols.PtEdo27k,
+  protocol: Protocols.PtEdo2Zk,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'https://api.tez.ie/keys/edonet',
@@ -134,7 +134,7 @@ const edonetFaucet = {
   knownBaker: 'tz1R55a2HQbXUAzWKJYE5bJp3UvvawwCm9Pr',
   knownContract: 'KT1MTFjUeqBeZoFeW1NLSrzJdcS5apFiUXoB',
   knownBigMapContract: 'KT1Aqk5xE36Kx7JUUV8VMx4t9jLgQn4MBWQk',
-  protocol: Protocols.PtEdo27k,
+  protocol: Protocols.PtEdo2Zk,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
     faucetKey: key,

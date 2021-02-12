@@ -24,7 +24,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
           init: `"Copyright ©"`
         })
       } catch (ex) {
-        if( protocol === Protocols.PtEdo27k) {
+        if( protocol === Protocols.PtEdo2Zk) {
           expect(ex).toEqual(expect.objectContaining({ message: expect.stringContaining('michelson_v1.invalid_syntactic_constant') }))
 	} else if( protocol === Protocols.PsCARTHA) {
           expect(ex).toEqual(expect.objectContaining({ message: expect.stringContaining('invalidSyntacticConstantError') }))
