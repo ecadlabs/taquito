@@ -179,15 +179,12 @@ const babylonnetFaucet = {
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_FAUCET']) {
-  providers.push(carthagenetFaucet, delphinetFaucet, edonetFaucet)
-} 
-else if (process.env['RUN_CARTHAGENET_WITH_FAUCET']) {
-  providers.push(carthagenetFaucet)
+  providers.push(delphinetFaucet, edonetFaucet)
 } 
 else if (process.env['RUN_DELPHINET_WITH_FAUCET']) {
   providers.push(delphinetFaucet)
 }
-else if (process.env['RUN_BETANET_WITH_FAUCET']) {
+else if (process.env['RUN_EDONET_WITH_FAUCET']) {
   providers.push(edonetFaucet)
 }
 else if (process.env['DELPHINET']) {
@@ -195,9 +192,6 @@ else if (process.env['DELPHINET']) {
 }
 else if (process.env['EDONET']) {
   providers.push(edonetEphemeral)
-}
-else if (process.env['CARTHAGENET']) {
-  providers.push(carthagenetEphemeral)
 } else {
   providers.push(edonetEphemeral, delphinetEphemeral)
 }
