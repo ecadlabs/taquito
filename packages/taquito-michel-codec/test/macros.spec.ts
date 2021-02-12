@@ -4,7 +4,7 @@ import { Protocol } from '../src/michelson-types';
 
 const parserOptions: ParserOptions = {
   expandMacros: true,
-  protocol: Protocol.PtEdoTez,
+  protocol: Protocol.PtEdo27k,
 }
 
 describe('Macros', () => {

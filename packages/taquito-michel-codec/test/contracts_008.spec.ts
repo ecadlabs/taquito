@@ -281,13 +281,13 @@ const contracts: {
     ],
 };
 
-describe("PtEdoTez", () => {
+describe("PtEdo27k", () => {
     for (const [group, list] of Object.entries(contracts)) {
         describe(group, () => {
             for (const contract of list) {
                 it(contract, () => {
                     const options: ContractOptions = {
-                        protocol: Protocol.PtEdoTez,
+                        protocol: Protocol.PtEdo27k
                     }
 
                     const filename = path.resolve(__dirname, "contracts_008", group, contract);

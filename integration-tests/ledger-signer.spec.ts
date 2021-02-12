@@ -2,6 +2,7 @@ import { CONFIGS } from './config';
 import { LedgerSigner, LedgerTransport, DerivationType } from '../packages/taquito-ledger-signer/src/taquito-ledger-signer';
 import TransportNodeHid from "@ledgerhq/hw-transport-node-hid";
 import { ligoSample } from "./data/ligo-simple-contract";
+import { TezosToolkit } from '@taquito/taquito';
 
 /**
  * LedgerSigner test
@@ -19,7 +20,7 @@ import { ligoSample } from "./data/ligo-simple-contract";
  * 11-twenty 
  * 12-giant 
  */
-CONFIGS().forEach(({ lib, setup }) => {
+CONFIGS().forEach(({ lib, setup, rpc }) => {
   const tezos = lib;
 
   describe('LedgerSigner test', () => {
@@ -27,8 +28,8 @@ CONFIGS().forEach(({ lib, setup }) => {
 
     beforeEach(async (done) => {
       transport = await TransportNodeHid.create();
-      await setup();
-			done();
+      await setup(true);
+      done();
     });
 
     it('RemoteSigner is instantiable with default parameters', () => {
@@ -135,14 +136,19 @@ CONFIGS().forEach(({ lib, setup }) => {
     describe('Should be abble to use Ledger with contract API', () => {
       jest.setTimeout(60000)
       it('Should originate contract with Ledger', async (done) => {
+
+        const fundAccountFirst = await tezos.contract.transfer({ to: 'tz1e42w8ZaGAbM3gucbBy8iRypdbnqUj7oWY', amount: 9 });
+        await fundAccountFirst.confirmation();
+
         const signer = new LedgerSigner(
           transport,
           "44'/1729'/0'/0'",
           false,
           DerivationType.ED25519
         );
-        tezos.setSignerProvider(signer);
-        const op = await tezos.contract.originate({
+        const Tezos = new TezosToolkit(rpc);
+        Tezos.setSignerProvider(signer);
+        const op = await Tezos.contract.originate({
           balance: "1",
           code: ligoSample,
           storage: 0,
@@ -164,8 +170,9 @@ CONFIGS().forEach(({ lib, setup }) => {
           false,
           DerivationType.ED25519
         );
-        tezos.setSignerProvider(signer);
-        const op = await tezos.wallet.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.1 }).send()
+        const Tezos = new TezosToolkit(rpc);
+        Tezos.setSignerProvider(signer);
+        const op = await Tezos.wallet.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.1 }).send()
         await op.confirmation()
         expect(op.opHash).toBeDefined();
         done();

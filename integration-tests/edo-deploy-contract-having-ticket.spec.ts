@@ -5,7 +5,7 @@ import { Protocols } from "@taquito/taquito";
 CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
   const Tezos = lib;
 
-  const edonet = (protocol === Protocols.PtEdoTez) ? test : test.skip;
+  const edonet = (protocol === Protocols.PtEdo27k) ? test : test.skip;
 
   describe(`Test origination of a token contract using: ${rpc}`, () => {
 

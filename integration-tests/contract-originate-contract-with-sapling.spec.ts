@@ -1,11 +1,11 @@
 import { CONFIGS } from "./config";
-import { rpcContractResponse, rpcContractResponse2, rpcContractResponse4 } from '../packages/taquito-michelson-encoder/data/sample19_sapling';
+import { rpcContractResponse, rpcContractResponse4 } from '../packages/taquito-michelson-encoder/data/sample19_sapling';
 import { Protocols } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, protocol, setup,  }) => {
   const Tezos = lib;
 
-  const edonet = (protocol === Protocols.PtEdoTez) ? test : test.skip;
+  const edonet = (protocol === Protocols.PtEdo27k) ? test : test.skip;
 
   describe(`Test origination of contracts with sapling using: ${rpc}`, () => {
 
