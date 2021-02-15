@@ -1,3 +1,7 @@
+/**
+ * @packageDocumentation
+ * @module @taquito/rpc
+ */
 import { HttpBackend } from '@taquito/http-utils';
 import BigNumber from 'bignumber.js';
 import {

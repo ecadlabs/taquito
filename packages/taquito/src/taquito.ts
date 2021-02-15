@@ -1,3 +1,8 @@
+/**
+ * @packageDocumentation
+ * @module @taquito/taquito
+ */
+
 import { RpcClient } from '@taquito/rpc';
 import { RPCBatchProvider } from './batch/rpc-batch-provider';
 import { Protocols } from './constants';

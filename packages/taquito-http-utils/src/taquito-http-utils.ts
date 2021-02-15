@@ -1,3 +1,8 @@
+/**
+ * @packageDocumentation
+ * @module @taquito/http-utils
+ */
+
 import { STATUS_CODE } from './status_code';
 
 // tslint:disable: strict-type-predicates
