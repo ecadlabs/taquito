@@ -10,17 +10,17 @@
     "test:edonet-faucet": "RUN_EDONET_WITH_FAUCET=true jest --runInBand",
     "test": "jest"
   },
-  "version": "8.0.1-beta.1",
+  "version": "8.0.2-beta.0",
   "dependencies": {
     "@ledgerhq/hw-transport": "^5.41.0",
     "@ledgerhq/hw-transport-node-hid": "^5.41.0",
-    "@taquito/http-utils": "^8.0.1-beta.1",
-    "@taquito/local-forging": "^8.0.1-beta.1",
-    "@taquito/remote-signer": "^8.0.1-beta.1",
-    "@taquito/signer": "^8.0.1-beta.1",
-    "@taquito/taquito": "^8.0.1-beta.1",
-    "@taquito/tzip16": "^8.0.1-beta.1",
-    "@taquito/utils": "^8.0.1-beta.1"
+    "@taquito/http-utils": "^8.0.2-beta.0",
+    "@taquito/local-forging": "^8.0.2-beta.0",
+    "@taquito/remote-signer": "^8.0.2-beta.0",
+    "@taquito/signer": "^8.0.2-beta.0",
+    "@taquito/taquito": "^8.0.2-beta.0",
+    "@taquito/tzip16": "^8.0.2-beta.0",
+    "@taquito/utils": "^8.0.2-beta.0"
   },
   "private": true,
   "jest": {

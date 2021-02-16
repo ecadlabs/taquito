@@ -114,15 +114,15 @@
           },
           {
             "path": "dist/taquito-michelson-encoder.es5.js",
-            "sha512": "c30b9a9c01a9a486f4db1c614f8a4e0e89c867ba014f553ce35b33b605d0529b5f0a5190397201951ccd4a8b3712098ead4791f5bf18014cb12fecf8ac8ed081"
+            "sha512": "bdc9fff9701133a40094ec8195f38a19001f1881ab509c2e92224c9a984d2975efcb59665a833ce7848b0d3f8e2e01f59bd35d51c3aafe974bf0ba3e3e109768"
           },
           {
             "path": "dist/lib/taquito-michelson-encoder.js",
-            "sha512": "d54217084d5744dc34ea3ec016e652e30ef4288bfb08db15056e9597db8e71f67dc639dc85c4c882a37ca6ca2d5079691d3ec5382f30be3f88e996797327cd04"
+            "sha512": "c74e7a5cf8b8827b0415b4602acfcab21a958fa6a04d8de7ff70800547ff051031fc6586402c9f9f0ca08a837f91966a937e99958a6cbc41ae068a608e8110a7"
           },
           {
             "path": "dist/taquito-michelson-encoder.umd.js",
-            "sha512": "ca0c2f4f88b5897014185aa58d5035ae731b23b046d42fae88a6b61b3b068f445a0600c2c501d16e50f083c0c3cffc9d65309172ad2473a1f6452c5d504a5f08"
+            "sha512": "cb86b091175a3cf766bf4164f103906f2a77d8a44751221ac28a0c4357e9d65d849057707901ada403ed645b13f9b0a54cd7de6bd06211bff97fdf9c7562f5dd"
           },
           {
             "path": "dist/lib/tokens/ticket.js",
@@ -258,15 +258,15 @@
           },
           {
             "path": "dist/taquito-michelson-encoder.es5.js.map",
-            "sha512": "e2b0c73b352654dfeac510a5d4b6ee6800783965357e8c9cc56ec6ea26a104f413a1550b59620257ea63745473e5bf433eb6c766931d88bb0b1c32b9e201d170"
+            "sha512": "da3df8fd96008c7541e99b269a6bf15b8711d5d693a9f6f70376bc6c9eee6653928c7f88911fa421ebd27e584ad06abb993956963505f8c7d9c77c4cfed9aef1"
           },
           {
             "path": "dist/lib/taquito-michelson-encoder.js.map",
-            "sha512": "d907be7ca555cf33f18bcf148ba32e6df6d16d8d0b7997e3205a19c293613c378a396f76e424eaa6371e49d04bc61bb27e93d66d58b2da40f30563525f1bde74"
+            "sha512": "109738f22305cb323547a1f82f6cd1f3d63c4cf3bcbdbd0fad29df1606c64b6971707c6bc798162f4aae5d2f03a0ab6c1ada9e8f43c3f82dfbee81bc4251af13"
           },
           {
             "path": "dist/taquito-michelson-encoder.umd.js.map",
-            "sha512": "70d1917453da2c19c5cf96543861f476a7e11d25df898deb0d72f92322f1ce3bc422caf8f66e9704e5216fbf460666acfbb90a8f10f050894621cf3dae65a8c6"
+            "sha512": "983e67420003a377d4c9e27cbabca10b7e0950e2fc343aaa2cecdbc3483699c575a8468164181c0310259bda1654c51863e92dbc8eb8410d204d7844f2d3c0e1"
           },
           {
             "path": "dist/lib/tokens/ticket.js.map",
@@ -406,7 +406,7 @@
           },
           {
             "path": "dist/types/taquito-michelson-encoder.d.ts",
-            "sha512": "af7ecece379fae7b5cd280898f988dc8f40f732db5093717d81d6c15009747069d3d24388c2ac67ab4a79cb052e4c43c66d820845ac808b380f699a442935b38"
+            "sha512": "4518f81af8f5b1b8c9b6af28122f59fd5573e7a1cd852c49e08b370798f0fbcecc7926e189e43742de900a4e10bbf78e01af7f9914a3fbc436835914f7e44b12"
           },
           {
             "path": "dist/types/tokens/ticket.d.ts",
@@ -467,7 +467,7 @@
           "typings",
           "version"
         ],
-        "sha512": "46b06453b4320f6222112cf1cc1a7b0f5c3aa52240c56d5e4f119296750fe0b098290e3a651bf5131638af0daff7958ac6ce89fce1ecd9413b724f4e0e422627"
+        "sha512": "9366015e20df6d00d5c2ab374f3d0bfffc9c1fc6e459a9d874078a5605f951e3471d951a65a1de6567bae3bc546a85dae873889a8ec0d2cbf844bfd53bed7d40"
       }
     },
     {
@@ -475,7 +475,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/michelson-encoder",
-          "version": "8.0.1-beta.1",
+          "version": "8.0.2-beta.0",
           "description": "converts michelson data and types into convenient JS/TS objects",
           "keywords": [
             "tezos",
@@ -542,8 +542,8 @@
             ]
           },
           "dependencies": {
-            "@taquito/rpc": "^8.0.1-beta.1",
-            "@taquito/utils": "^8.0.1-beta.1",
+            "@taquito/rpc": "^8.0.2-beta.0",
+            "@taquito/utils": "^8.0.2-beta.0",
             "bignumber.js": "^9.0.1",
             "fast-json-stable-stringify": "^2.1.0"
           },
@@ -580,5 +580,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJgJf+JCRAD9Qy5GYHsngAAg28QAGQ2kat078cncjtHjTAhqozH\nnMtqLaz9YUxqzrspaXbu702XS9lIW+IXWXbaFxJCBx6xWT6sSad5Nq4H0ahK44IV\n5bXh3M1FPVArYeqZrrzDfs4rRZzB7ZyADMIJ8puvZkDGp6fYhMv+cYDk5UudgIcA\nwsJj9NVbQvK8Y7GKkn54iXn7xJXjp9IxF7VqS1WAcIaqkzpQJWs7uBQKOWmxFTrJ\nHqSB5q3jxu80lEFFXwcc0puXsRSYXqOgiG1pjIZ7WMf5M8r+CRRsoPyOkg/SrMYn\nvsajlTBQmLNdoawN3mNYLCLYCV2jTg1+2DcC7HezzOf3kwH1+l8Q1zv4NKUH05gl\nSi5SyH/SsdDcAu8VOqeApwWiUi59k6WWe38tfJ6c9mW+5oFxdQEyc1BDuSbeV3DH\nxqrV7o2X4xxPo0NfGnq3+YV46b2pzDn1JQtmNnWWv8RQoJ4etnAsoyhb0CvsogBi\nYMl50Q3uJe6zi4hbl/Qj9pN9csWYkKxOOkwOoKMMnrOkwIgzv+zI8lt6KJEZvhLq\nTP7lCZhW787jQ1fFWblw6KFqVQmXwOKlt1kYYNxki2QdKSnZ0NL6SE0wKrB8mifx\ntv0QPn7eLAbdb8gUfGmPpNFloeYAAJOaGWjcNgVYjjNgsvJ0Mr0dMMrmpZBTP+jC\nb+uaCTBHo795FDXR0bLF\n=kZRm\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJgLFSVCRAD9Qy5GYHsngAAgnAQACBgi7GGtClcb8IWIQUutteN\nAXRgDrdpNK7+cTlfRxK73bKbRwk4UOs+tCSIoCZTdVsqELV5/3LG2ZSkihtGpyDM\nAop2Mg4ZjaQ3eetd37ACt3unecxtejw14NkDIv21fj5YZfv2EvkoanBxs+f4tsSR\n8AsSe6mhe5ivlAHA0eRNfjdLbtuGWKKHb68c5ROkI0SHbXf4HoEJzF9stAusrSae\nBIQUtQCCdkwvdmVrBQNuEzC2JpUutHtt8kLujlwpjG4BPnZ3smtFuUQ/aTM75wnS\nL+gALp8QJPPuci04qjuzBylcO7nAirZoo+q+Qr15/YnrH7X5v4pcBafUYqTpsv6L\nkr+uyOTSzU9RiiOuJhPmfaB29Prm/P2mLrDY97ZxtBDKqiFesx1RIgVY7LHduOC/\noh14p8D58SxiRoZI4r9Ze4xr0ZkmBEO8SdaEVmmmxV+Obl2C4kZZL807IZ5bIN3K\nJFYgBZLbYFdJ5lfW91NDe8Lu8eHY0724jahqe6RjGci3vvxiGAlIY8LE6kkF/WED\nUdCzih70qLcT/uqEmkrIDvIzXdDrqej/6Ij5g3Ism7bn3fvtIZ2pmLZ+56PU8NkL\nteh7iCPhKjH85JARuL+E5RG1GvCybHF3RdiFtdr638jp3w+A/tJ3z2x2AEflitSs\n8ODAUOjhci/MYvItz3Uu\n=8tyT\n-----END PGP SIGNATURE-----\n"
 }
