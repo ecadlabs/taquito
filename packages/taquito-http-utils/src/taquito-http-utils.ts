@@ -55,7 +55,7 @@ export class HttpBackend {
 
     const str = [];
     for (const p in obj) {
-      if (obj.hasOwnProperty(p) && obj[p]) {
+      if (obj.hasOwnProperty(p) && typeof obj[p] !== 'undefined') {
         const prop = typeof obj[p].toJSON === 'function' ? obj[p].toJSON() : obj[p];
         // query arguments can have no value so we need some way of handling that
         // example https://domain.com/query?all
