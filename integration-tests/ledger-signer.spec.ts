@@ -133,7 +133,7 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
       });
     })
 
-    describe('Should be able to use Ledger with contract API', () => {
+    describe('Should be abble to use Ledger with contract API', () => {
       jest.setTimeout(60000)
       it('Should originate contract with Ledger', async (done) => {
 
@@ -160,7 +160,7 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
       });
     })
 
-    describe('Should be able to used Ledger with wallet API', () => {
+    describe('Should be abble to used Ledger with wallet API', () => {
       jest.setTimeout(60000)
 
       it('Should sign and inject transaction with Ledger', async (done) => {

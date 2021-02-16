@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await setup()
       done()
     })
-    it('Origination of an ID contract written in plain Michelson', async (done) => {
+    it('Origniation of an ID contract written in plain Michelson', async (done) => {
       const op = await Tezos.contract.originate({
         balance: "0",
         code: idMichelsonCode,
