@@ -7,6 +7,7 @@
 	<meta name="description" content="Documentation for Taquito">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
+	<script async src="../assets/js/search.js" id="search-script"></script>
 </head>
 <body>
 <header>
@@ -51,7 +52,7 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../globals.html">Globals</a>
+					<a href="../modules.html">Taquito</a>
 				</li>
 				<li>
 					<a href="../modules/_taquito_tezbridge_wallet.html">@taquito/tezbridge-wallet</a>
@@ -78,7 +79,7 @@
 			<section class="tsd-panel">
 				<h3>Implements</h3>
 				<ul class="tsd-hierarchy">
-					<li><a href="../interfaces/_taquito_taquito.walletprovider-2.html" class="tsd-signature-type">WalletProvider</a></li>
+					<li><a href="../interfaces/_taquito_taquito.walletprovider.html" class="tsd-signature-type" data-tsd-kind="Interface">WalletProvider</a></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -111,16 +112,16 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Tez<wbr>Bridge<wbr>Wallet<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_taquito_tezbridge_wallet.tezbridgewallet.html" class="tsd-signature-type">TezBridgeWallet</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Tez<wbr>Bridge<wbr>Wallet<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_taquito_tezbridge_wallet.tezbridgewallet.html" class="tsd-signature-type" data-tsd-kind="Class">TezBridgeWallet</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-tezbridge-wallet/src/taquito-tezbridge-wallet.ts#L18">packages/taquito-tezbridge-wallet/src/taquito-tezbridge-wallet.ts:18</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-tezbridge-wallet/src/taquito-tezbridge-wallet.ts#L22">taquito-tezbridge-wallet/src/taquito-tezbridge-wallet.ts:22</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <a href="_taquito_tezbridge_wallet.tezbridgewallet.html" class="tsd-signature-type">TezBridgeWallet</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_taquito_tezbridge_wallet.tezbridgewallet.html" class="tsd-signature-type" data-tsd-kind="Class">TezBridgeWallet</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -137,7 +138,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-tezbridge-wallet/src/taquito-tezbridge-wallet.ts#L25">packages/taquito-tezbridge-wallet/src/taquito-tezbridge-wallet.ts:25</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-tezbridge-wallet/src/taquito-tezbridge-wallet.ts#L29">taquito-tezbridge-wallet/src/taquito-tezbridge-wallet.ts:29</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -148,22 +149,22 @@
 					<a name="mapdelegateparamstowalletparams" class="tsd-anchor"></a>
 					<h3>map<wbr>Delegate<wbr>Params<wbr>ToWallet<wbr>Params</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">map<wbr>Delegate<wbr>Params<wbr>ToWallet<wbr>Params<span class="tsd-signature-symbol">(</span>params<span class="tsd-signature-symbol">: </span><a href="../modules/_taquito_taquito.html#walletdelegateparams-2" class="tsd-signature-type">WalletDelegateParams</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_taquito.rpcdelegateoperation.html" class="tsd-signature-type">RPCDelegateOperation</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">map<wbr>Delegate<wbr>Params<wbr>ToWallet<wbr>Params<span class="tsd-signature-symbol">(</span>params<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Pick</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">DelegateParams</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;delegate&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RPCDelegateOperation</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-tezbridge-wallet/src/taquito-tezbridge-wallet.ts#L52">packages/taquito-tezbridge-wallet/src/taquito-tezbridge-wallet.ts:52</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-tezbridge-wallet/src/taquito-tezbridge-wallet.ts#L56">taquito-tezbridge-wallet/src/taquito-tezbridge-wallet.ts:56</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>params: <a href="../modules/_taquito_taquito.html#walletdelegateparams-2" class="tsd-signature-type">WalletDelegateParams</a></h5>
+									<h5>params: <span class="tsd-signature-type">Pick</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">DelegateParams</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;delegate&quot;</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_taquito.rpcdelegateoperation.html" class="tsd-signature-type">RPCDelegateOperation</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RPCDelegateOperation</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -171,22 +172,22 @@
 					<a name="maporiginateparamstowalletparams" class="tsd-anchor"></a>
 					<h3>map<wbr>Originate<wbr>Params<wbr>ToWallet<wbr>Params</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">map<wbr>Originate<wbr>Params<wbr>ToWallet<wbr>Params<span class="tsd-signature-symbol">(</span>params<span class="tsd-signature-symbol">: </span><a href="../modules/_taquito_taquito.html#walletoriginateparams-2" class="tsd-signature-type">WalletOriginateParams</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_taquito.rpcoriginationoperation.html" class="tsd-signature-type">RPCOriginationOperation</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">map<wbr>Originate<wbr>Params<wbr>ToWallet<wbr>Params<span class="tsd-signature-symbol">(</span>params<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Pick</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">OriginateParams</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;mutez&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;balance&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;code&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;delegate&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;init&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;storage&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RPCOriginationOperation</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-tezbridge-wallet/src/taquito-tezbridge-wallet.ts#L48">packages/taquito-tezbridge-wallet/src/taquito-tezbridge-wallet.ts:48</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-tezbridge-wallet/src/taquito-tezbridge-wallet.ts#L52">taquito-tezbridge-wallet/src/taquito-tezbridge-wallet.ts:52</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>params: <a href="../modules/_taquito_taquito.html#walletoriginateparams-2" class="tsd-signature-type">WalletOriginateParams</a></h5>
+									<h5>params: <span class="tsd-signature-type">Pick</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">OriginateParams</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;mutez&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;balance&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;code&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;delegate&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;init&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;storage&quot;</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_taquito.rpcoriginationoperation.html" class="tsd-signature-type">RPCOriginationOperation</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RPCOriginationOperation</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -194,22 +195,22 @@
 					<a name="maptransferparamstowalletparams" class="tsd-anchor"></a>
 					<h3>map<wbr>Transfer<wbr>Params<wbr>ToWallet<wbr>Params</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">map<wbr>Transfer<wbr>Params<wbr>ToWallet<wbr>Params<span class="tsd-signature-symbol">(</span>params<span class="tsd-signature-symbol">: </span><a href="../modules/_taquito_taquito.html#wallettransferparams-2" class="tsd-signature-type">WalletTransferParams</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_taquito.rpctransferoperation.html" class="tsd-signature-type">RPCTransferOperation</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">map<wbr>Transfer<wbr>Params<wbr>ToWallet<wbr>Params<span class="tsd-signature-symbol">(</span>params<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Pick</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TransferParams</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;mutez&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;to&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;amount&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;parameter&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RPCTransferOperation</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-tezbridge-wallet/src/taquito-tezbridge-wallet.ts#L44">packages/taquito-tezbridge-wallet/src/taquito-tezbridge-wallet.ts:44</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-tezbridge-wallet/src/taquito-tezbridge-wallet.ts#L48">taquito-tezbridge-wallet/src/taquito-tezbridge-wallet.ts:48</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>params: <a href="../modules/_taquito_taquito.html#wallettransferparams-2" class="tsd-signature-type">WalletTransferParams</a></h5>
+									<h5>params: <span class="tsd-signature-type">Pick</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TransferParams</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;mutez&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;to&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;amount&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;parameter&quot;</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_taquito.rpctransferoperation.html" class="tsd-signature-type">RPCTransferOperation</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RPCTransferOperation</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -223,7 +224,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-tezbridge-wallet/src/taquito-tezbridge-wallet.ts#L56">packages/taquito-tezbridge-wallet/src/taquito-tezbridge-wallet.ts:56</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-tezbridge-wallet/src/taquito-tezbridge-wallet.ts#L60">taquito-tezbridge-wallet/src/taquito-tezbridge-wallet.ts:60</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -246,7 +247,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-tezbridge-wallet/src/taquito-tezbridge-wallet.ts#L37">packages/taquito-tezbridge-wallet/src/taquito-tezbridge-wallet.ts:37</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-tezbridge-wallet/src/taquito-tezbridge-wallet.ts#L41">taquito-tezbridge-wallet/src/taquito-tezbridge-wallet.ts:41</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -274,8 +275,8 @@
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 			<nav class="tsd-navigation primary">
 				<ul>
-					<li class="globals  ">
-						<a href="../globals.html"><em>Globals</em></a>
+					<li class=" ">
+						<a href="../modules.html">Modules</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="../modules/_taquito_beacon_wallet.html">@taquito/beacon-<wbr>wallet</a>
@@ -288,9 +289,6 @@
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="../modules/_taquito_local_forging.html">@taquito/local-<wbr>forging</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="../modules/_taquito_michel_codec.html">@taquito/michel-<wbr>codec</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="../modules/_taquito_michelson_encoder.html">@taquito/michelson-<wbr>encoder</a>
@@ -369,7 +367,6 @@
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
-				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
 				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
 				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
 				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>

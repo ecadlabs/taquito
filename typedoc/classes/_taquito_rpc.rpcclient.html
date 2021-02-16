@@ -7,6 +7,7 @@
 	<meta name="description" content="Documentation for Taquito">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
+	<script async src="../assets/js/search.js" id="search-script"></script>
 </head>
 <body>
 <header>
@@ -51,7 +52,7 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../globals.html">Globals</a>
+					<a href="../modules.html">Taquito</a>
 				</li>
 				<li>
 					<a href="../modules/_taquito_rpc.html">@taquito/rpc</a>
@@ -141,13 +142,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Rpc<wbr>Client<span class="tsd-signature-symbol">(</span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, chain<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, httpBackend<span class="tsd-signature-symbol">?: </span><a href="_taquito_http_utils.httpbackend.html" class="tsd-signature-type">HttpBackend</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_taquito_rpc.rpcclient.html" class="tsd-signature-type">RpcClient</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Rpc<wbr>Client<span class="tsd-signature-symbol">(</span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, chain<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, httpBackend<span class="tsd-signature-symbol">?: </span><a href="_taquito_http_utils.httpbackend.html" class="tsd-signature-type" data-tsd-kind="Class">HttpBackend</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_taquito_rpc.rpcclient.html" class="tsd-signature-type" data-tsd-kind="Class">RpcClient</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L58">packages/taquito-rpc/src/taquito-rpc.ts:58</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L62">taquito-rpc/src/taquito-rpc.ts:62</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -162,30 +163,24 @@
 								<li>
 									<h5>url: <span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<div class="lead">
-											<p>rpc root url</p>
-										</div>
+										<p>rpc root url</p>
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> chain: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = defaultChain</span></h5>
+									<h5>chain: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = ...</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<div class="lead">
-											<p>chain (default main)</p>
-										</div>
+										<p>chain (default main)</p>
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> httpBackend: <a href="_taquito_http_utils.httpbackend.html" class="tsd-signature-type">HttpBackend</a><span class="tsd-signature-symbol"> = new HttpBackend()</span></h5>
+									<h5>httpBackend: <a href="_taquito_http_utils.httpbackend.html" class="tsd-signature-type" data-tsd-kind="Class">HttpBackend</a><span class="tsd-signature-symbol"> = ...</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<div class="lead">
-											<p>Http backend that issue http request.
-											You can override it by providing your own if you which to hook in the request/response</p>
-										</div>
+										<p>Http backend that issue http request.
+										You can override it by providing your own if you which to hook in the request/response</p>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_taquito_rpc.rpcclient.html" class="tsd-signature-type">RpcClient</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_taquito_rpc.rpcclient.html" class="tsd-signature-type" data-tsd-kind="Class">RpcClient</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -196,13 +191,13 @@
 					<a name="forgeoperations" class="tsd-anchor"></a>
 					<h3>forge<wbr>Operations</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">forge<wbr>Operations<span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><a href="../modules/_taquito_rpc.html#forgeoperationsparams-1" class="tsd-signature-type">ForgeOperationsParams</a>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">forge<wbr>Operations<span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Pick</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_rpc.operationobject.html" class="tsd-signature-type" data-tsd-kind="Interface">OperationObject</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;branch&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;contents&quot;</span><span class="tsd-signature-symbol">&gt;</span>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L596">packages/taquito-rpc/src/taquito-rpc.ts:596</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L600">taquito-rpc/src/taquito-rpc.ts:600</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -218,18 +213,13 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>data: <a href="../modules/_taquito_rpc.html#forgeoperationsparams-1" class="tsd-signature-type">ForgeOperationsParams</a></h5>
+									<h5>data: <span class="tsd-signature-type">Pick</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_rpc.operationobject.html" class="tsd-signature-type" data-tsd-kind="Interface">OperationObject</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;branch&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;contents&quot;</span><span class="tsd-signature-symbol">&gt;</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>operation contents to forge</p>
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = defaultRPCOptions</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter">
-											<h5>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-									</ul>
+									<h5>__namedParameters: <span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol"> = ...</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -240,13 +230,13 @@
 					<a name="getbakingrights" class="tsd-anchor"></a>
 					<h3>get<wbr>Baking<wbr>Rights</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Baking<wbr>Rights<span class="tsd-signature-symbol">(</span>args<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_taquito_rpc.bakingrightsqueryarguments-1.html" class="tsd-signature-type">BakingRightsQueryArguments</a>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#bakingrightsresponse-1" class="tsd-signature-type">BakingRightsResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Baking<wbr>Rights<span class="tsd-signature-symbol">(</span>args<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_taquito_rpc.bakingrightsqueryarguments.html" class="tsd-signature-type" data-tsd-kind="Interface">BakingRightsQueryArguments</a>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#bakingrightsresponse" class="tsd-signature-type" data-tsd-kind="Type alias">BakingRightsResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L426">packages/taquito-rpc/src/taquito-rpc.ts:426</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L430">taquito-rpc/src/taquito-rpc.ts:430</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -262,21 +252,16 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> args: <a href="../interfaces/_taquito_rpc.bakingrightsqueryarguments-1.html" class="tsd-signature-type">BakingRightsQueryArguments</a><span class="tsd-signature-symbol"> = {}</span></h5>
+									<h5>args: <a href="../interfaces/_taquito_rpc.bakingrightsqueryarguments.html" class="tsd-signature-type" data-tsd-kind="Interface">BakingRightsQueryArguments</a><span class="tsd-signature-symbol"> = ...</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>contains optional query arguments</p>
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = defaultRPCOptions</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter">
-											<h5>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-									</ul>
+									<h5>__namedParameters: <span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol"> = ...</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#bakingrightsresponse-1" class="tsd-signature-type">BakingRightsResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#bakingrightsresponse" class="tsd-signature-type" data-tsd-kind="Type alias">BakingRightsResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -284,13 +269,13 @@
 					<a name="getbalance" class="tsd-anchor"></a>
 					<h3>get<wbr>Balance</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Balance<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#balanceresponse-1" class="tsd-signature-type">BalanceResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Balance<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">BigNumber</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L120">packages/taquito-rpc/src/taquito-rpc.ts:120</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L124">taquito-rpc/src/taquito-rpc.ts:124</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -312,15 +297,10 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = defaultRPCOptions</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter">
-											<h5>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-									</ul>
+									<h5>__namedParameters: <span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol"> = ...</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#balanceresponse-1" class="tsd-signature-type">BalanceResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">BigNumber</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -328,13 +308,13 @@
 					<a name="getballotlist" class="tsd-anchor"></a>
 					<h3>get<wbr>Ballot<wbr>List</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Ballot<wbr>List<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#ballotlistresponse-1" class="tsd-signature-type">BallotListResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Ballot<wbr>List<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#ballotlistresponse" class="tsd-signature-type" data-tsd-kind="Type alias">BallotListResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L468">packages/taquito-rpc/src/taquito-rpc.ts:468</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L472">taquito-rpc/src/taquito-rpc.ts:472</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -350,15 +330,10 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = defaultRPCOptions</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter">
-											<h5>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-									</ul>
+									<h5>__namedParameters: <span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol"> = ...</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#ballotlistresponse-1" class="tsd-signature-type">BallotListResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#ballotlistresponse" class="tsd-signature-type" data-tsd-kind="Type alias">BallotListResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -366,13 +341,13 @@
 					<a name="getballots" class="tsd-anchor"></a>
 					<h3>get<wbr>Ballots</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Ballots<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_rpc.ballotsresponse-1.html" class="tsd-signature-type">BallotsResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Ballots<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_rpc.ballotsresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">BallotsResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L485">packages/taquito-rpc/src/taquito-rpc.ts:485</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L489">taquito-rpc/src/taquito-rpc.ts:489</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -388,15 +363,10 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = defaultRPCOptions</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter">
-											<h5>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-									</ul>
+									<h5>__namedParameters: <span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol"> = ...</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_rpc.ballotsresponse-1.html" class="tsd-signature-type">BallotsResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_rpc.ballotsresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">BallotsResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -404,13 +374,13 @@
 					<a name="getbigmapexpr" class="tsd-anchor"></a>
 					<h3>get<wbr>Big<wbr>Map<wbr>Expr</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Big<wbr>Map<wbr>Expr<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, expr<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#bigmapresponse-1" class="tsd-signature-type">BigMapResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Big<wbr>Map<wbr>Expr<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, expr<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#bigmapresponse" class="tsd-signature-type" data-tsd-kind="Type alias">BigMapResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L277">packages/taquito-rpc/src/taquito-rpc.ts:277</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L281">taquito-rpc/src/taquito-rpc.ts:281</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -438,7 +408,7 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = defaultRPCOptions</span></h5>
+									<h5>__namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = ...</span></h5>
 									<ul class="tsd-parameters">
 										<li class="tsd-parameter">
 											<h5>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
@@ -446,7 +416,7 @@
 									</ul>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#bigmapresponse-1" class="tsd-signature-type">BigMapResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#bigmapresponse" class="tsd-signature-type" data-tsd-kind="Type alias">BigMapResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -454,13 +424,13 @@
 					<a name="getbigmapkey" class="tsd-anchor"></a>
 					<h3>get<wbr>Big<wbr>Map<wbr>Key</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Big<wbr>Map<wbr>Key<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, key<span class="tsd-signature-symbol">: </span><a href="../modules/_taquito_rpc.html#bigmapkey-1" class="tsd-signature-type">BigMapKey</a>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#bigmapgetresponse-1" class="tsd-signature-type">BigMapGetResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Big<wbr>Map<wbr>Key<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, key<span class="tsd-signature-symbol">: </span><a href="../modules/_taquito_rpc.html#bigmapkey" class="tsd-signature-type" data-tsd-kind="Type alias">BigMapKey</a>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#michelsonv1expression" class="tsd-signature-type" data-tsd-kind="Type alias">MichelsonV1Expression</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L251">packages/taquito-rpc/src/taquito-rpc.ts:251</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L255">taquito-rpc/src/taquito-rpc.ts:255</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -485,10 +455,10 @@
 									</div>
 								</li>
 								<li>
-									<h5>key: <a href="../modules/_taquito_rpc.html#bigmapkey-1" class="tsd-signature-type">BigMapKey</a></h5>
+									<h5>key: <a href="../modules/_taquito_rpc.html#bigmapkey" class="tsd-signature-type" data-tsd-kind="Type alias">BigMapKey</a></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = defaultRPCOptions</span></h5>
+									<h5>__namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = ...</span></h5>
 									<ul class="tsd-parameters">
 										<li class="tsd-parameter">
 											<h5>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
@@ -496,7 +466,7 @@
 									</ul>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#bigmapgetresponse-1" class="tsd-signature-type">BigMapGetResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#michelsonv1expression" class="tsd-signature-type" data-tsd-kind="Type alias">MichelsonV1Expression</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -504,13 +474,13 @@
 					<a name="getblock" class="tsd-anchor"></a>
 					<h3>get<wbr>Block</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Block<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_rpc.blockresponse-1.html" class="tsd-signature-type">BlockResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Block<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_rpc.blockresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">BlockResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L374">packages/taquito-rpc/src/taquito-rpc.ts:374</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L378">taquito-rpc/src/taquito-rpc.ts:378</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -535,15 +505,10 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = defaultRPCOptions</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter">
-											<h5>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-									</ul>
+									<h5>__namedParameters: <span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol"> = ...</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_rpc.blockresponse-1.html" class="tsd-signature-type">BlockResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_rpc.blockresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">BlockResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -551,13 +516,13 @@
 					<a name="getblockhash" class="tsd-anchor"></a>
 					<h3>get<wbr>Block<wbr>Hash</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Block<wbr>Hash<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Block<wbr>Hash<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L87">packages/taquito-rpc/src/taquito-rpc.ts:87</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L91">taquito-rpc/src/taquito-rpc.ts:91</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -573,12 +538,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = defaultRPCOptions</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter">
-											<h5>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-									</ul>
+									<h5>__namedParameters: <span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol"> = ...</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -589,13 +549,13 @@
 					<a name="getblockheader" class="tsd-anchor"></a>
 					<h3>get<wbr>Block<wbr>Header</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Block<wbr>Header<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_rpc.blockheaderresponse-1.html" class="tsd-signature-type">BlockHeaderResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Block<wbr>Header<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_rpc.blockheaderresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">BlockHeaderResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L391">packages/taquito-rpc/src/taquito-rpc.ts:391</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L395">taquito-rpc/src/taquito-rpc.ts:395</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -611,15 +571,10 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = defaultRPCOptions</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter">
-											<h5>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-									</ul>
+									<h5>__namedParameters: <span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol"> = ...</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_rpc.blockheaderresponse-1.html" class="tsd-signature-type">BlockHeaderResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_rpc.blockheaderresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">BlockHeaderResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -627,13 +582,13 @@
 					<a name="getblockmetadata" class="tsd-anchor"></a>
 					<h3>get<wbr>Block<wbr>Metadata</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Block<wbr>Metadata<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_rpc.blockmetadata-1.html" class="tsd-signature-type">BlockMetadata</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Block<wbr>Metadata<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_rpc.blockmetadata.html" class="tsd-signature-type" data-tsd-kind="Interface">BlockMetadata</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L408">packages/taquito-rpc/src/taquito-rpc.ts:408</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L412">taquito-rpc/src/taquito-rpc.ts:412</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -649,15 +604,10 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = defaultRPCOptions</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter">
-											<h5>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-									</ul>
+									<h5>__namedParameters: <span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol"> = ...</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_rpc.blockmetadata-1.html" class="tsd-signature-type">BlockMetadata</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_rpc.blockmetadata.html" class="tsd-signature-type" data-tsd-kind="Interface">BlockMetadata</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -671,7 +621,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L723">packages/taquito-rpc/src/taquito-rpc.ts:723</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L727">taquito-rpc/src/taquito-rpc.ts:727</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -682,13 +632,13 @@
 					<a name="getconstants" class="tsd-anchor"></a>
 					<h3>get<wbr>Constants</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Constants<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#constantsresponse-1" class="tsd-signature-type">ConstantsResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Constants<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#constantsresponse" class="tsd-signature-type" data-tsd-kind="Type alias">ConstantsResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L333">packages/taquito-rpc/src/taquito-rpc.ts:333</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L337">taquito-rpc/src/taquito-rpc.ts:337</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -704,15 +654,10 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = defaultRPCOptions</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter">
-											<h5>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-									</ul>
+									<h5>__namedParameters: <span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol"> = ...</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#constantsresponse-1" class="tsd-signature-type">ConstantsResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#constantsresponse" class="tsd-signature-type" data-tsd-kind="Type alias">ConstantsResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -720,13 +665,13 @@
 					<a name="getcontract" class="tsd-anchor"></a>
 					<h3>get<wbr>Contract</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Contract<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_rpc.contractresponse-1.html" class="tsd-signature-type">ContractResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Contract<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_rpc.contractresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">ContractResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L184">packages/taquito-rpc/src/taquito-rpc.ts:184</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L188">taquito-rpc/src/taquito-rpc.ts:188</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -748,7 +693,7 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = defaultRPCOptions</span></h5>
+									<h5>__namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = ...</span></h5>
 									<ul class="tsd-parameters">
 										<li class="tsd-parameter">
 											<h5>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
@@ -756,7 +701,7 @@
 									</ul>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_rpc.contractresponse-1.html" class="tsd-signature-type">ContractResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_rpc.contractresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">ContractResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -764,13 +709,13 @@
 					<a name="getcurrentperiodkind" class="tsd-anchor"></a>
 					<h3>get<wbr>Current<wbr>Period<wbr>Kind</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Current<wbr>Period<wbr>Kind<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#periodkindresponse-1" class="tsd-signature-type">PeriodKindResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Current<wbr>Period<wbr>Kind<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#periodkindresponse" class="tsd-signature-type" data-tsd-kind="Type alias">PeriodKindResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L502">packages/taquito-rpc/src/taquito-rpc.ts:502</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L506">taquito-rpc/src/taquito-rpc.ts:506</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -786,15 +731,10 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = defaultRPCOptions</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter">
-											<h5>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-									</ul>
+									<h5>__namedParameters: <span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol"> = ...</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#periodkindresponse-1" class="tsd-signature-type">PeriodKindResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#periodkindresponse" class="tsd-signature-type" data-tsd-kind="Type alias">PeriodKindResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -802,13 +742,13 @@
 					<a name="getcurrentproposal" class="tsd-anchor"></a>
 					<h3>get<wbr>Current<wbr>Proposal</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Current<wbr>Proposal<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#currentproposalresponse-1" class="tsd-signature-type">CurrentProposalResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Current<wbr>Proposal<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#delegateresponse" class="tsd-signature-type" data-tsd-kind="Type alias">DelegateResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L521">packages/taquito-rpc/src/taquito-rpc.ts:521</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L525">taquito-rpc/src/taquito-rpc.ts:525</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -824,15 +764,10 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = defaultRPCOptions</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter">
-											<h5>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-									</ul>
+									<h5>__namedParameters: <span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol"> = ...</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#currentproposalresponse-1" class="tsd-signature-type">CurrentProposalResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#delegateresponse" class="tsd-signature-type" data-tsd-kind="Type alias">DelegateResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -840,13 +775,13 @@
 					<a name="getcurrentquorum" class="tsd-anchor"></a>
 					<h3>get<wbr>Current<wbr>Quorum</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Current<wbr>Quorum<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#currentquorumresponse-1" class="tsd-signature-type">CurrentQuorumResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Current<wbr>Quorum<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L540">packages/taquito-rpc/src/taquito-rpc.ts:540</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L544">taquito-rpc/src/taquito-rpc.ts:544</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -862,15 +797,10 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = defaultRPCOptions</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter">
-											<h5>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-									</ul>
+									<h5>__namedParameters: <span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol"> = ...</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#currentquorumresponse-1" class="tsd-signature-type">CurrentQuorumResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -878,13 +808,13 @@
 					<a name="getdelegate" class="tsd-anchor"></a>
 					<h3>get<wbr>Delegate</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Delegate<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#delegateresponse-1" class="tsd-signature-type">DelegateResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Delegate<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#delegateresponse" class="tsd-signature-type" data-tsd-kind="Type alias">DelegateResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L228">packages/taquito-rpc/src/taquito-rpc.ts:228</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L232">taquito-rpc/src/taquito-rpc.ts:232</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -906,7 +836,7 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = defaultRPCOptions</span></h5>
+									<h5>__namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = ...</span></h5>
 									<ul class="tsd-parameters">
 										<li class="tsd-parameter">
 											<h5>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
@@ -914,7 +844,7 @@
 									</ul>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#delegateresponse-1" class="tsd-signature-type">DelegateResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#delegateresponse" class="tsd-signature-type" data-tsd-kind="Type alias">DelegateResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -922,13 +852,13 @@
 					<a name="getdelegates" class="tsd-anchor"></a>
 					<h3>get<wbr>Delegates</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Delegates<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_rpc.delegatesresponse-1.html" class="tsd-signature-type">DelegatesResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Delegates<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_rpc.delegatesresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">DelegatesResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L297">packages/taquito-rpc/src/taquito-rpc.ts:297</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L301">taquito-rpc/src/taquito-rpc.ts:301</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -950,7 +880,7 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = defaultRPCOptions</span></h5>
+									<h5>__namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = ...</span></h5>
 									<ul class="tsd-parameters">
 										<li class="tsd-parameter">
 											<h5>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
@@ -958,7 +888,7 @@
 									</ul>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_rpc.delegatesresponse-1.html" class="tsd-signature-type">DelegatesResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_rpc.delegatesresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">DelegatesResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -966,13 +896,13 @@
 					<a name="getendorsingrights" class="tsd-anchor"></a>
 					<h3>get<wbr>Endorsing<wbr>Rights</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Endorsing<wbr>Rights<span class="tsd-signature-symbol">(</span>args<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_taquito_rpc.endorsingrightsqueryarguments-1.html" class="tsd-signature-type">EndorsingRightsQueryArguments</a>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#endorsingrightsresponse-1" class="tsd-signature-type">EndorsingRightsResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Endorsing<wbr>Rights<span class="tsd-signature-symbol">(</span>args<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_taquito_rpc.endorsingrightsqueryarguments.html" class="tsd-signature-type" data-tsd-kind="Interface">EndorsingRightsQueryArguments</a>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#endorsingrightsresponse" class="tsd-signature-type" data-tsd-kind="Type alias">EndorsingRightsResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L448">packages/taquito-rpc/src/taquito-rpc.ts:448</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L452">taquito-rpc/src/taquito-rpc.ts:452</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -988,21 +918,16 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> args: <a href="../interfaces/_taquito_rpc.endorsingrightsqueryarguments-1.html" class="tsd-signature-type">EndorsingRightsQueryArguments</a><span class="tsd-signature-symbol"> = {}</span></h5>
+									<h5>args: <a href="../interfaces/_taquito_rpc.endorsingrightsqueryarguments.html" class="tsd-signature-type" data-tsd-kind="Interface">EndorsingRightsQueryArguments</a><span class="tsd-signature-symbol"> = ...</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>contains optional query arguments</p>
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = defaultRPCOptions</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter">
-											<h5>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-									</ul>
+									<h5>__namedParameters: <span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol"> = ...</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#endorsingrightsresponse-1" class="tsd-signature-type">EndorsingRightsResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#endorsingrightsresponse" class="tsd-signature-type" data-tsd-kind="Type alias">EndorsingRightsResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1010,13 +935,13 @@
 					<a name="getentrypoints" class="tsd-anchor"></a>
 					<h3>get<wbr>Entrypoints</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Entrypoints<span class="tsd-signature-symbol">(</span>contract<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#entrypointsresponse-1" class="tsd-signature-type">EntrypointsResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Entrypoints<span class="tsd-signature-symbol">(</span>contract<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#entrypointsresponse" class="tsd-signature-type" data-tsd-kind="Type alias">EntrypointsResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L661">packages/taquito-rpc/src/taquito-rpc.ts:661</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L665">taquito-rpc/src/taquito-rpc.ts:665</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1041,15 +966,10 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = defaultRPCOptions</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter">
-											<h5>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-									</ul>
+									<h5>__namedParameters: <span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol"> = ...</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#entrypointsresponse-1" class="tsd-signature-type">EntrypointsResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#entrypointsresponse" class="tsd-signature-type" data-tsd-kind="Type alias">EntrypointsResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1057,13 +977,13 @@
 					<a name="getliveblocks" class="tsd-anchor"></a>
 					<h3>get<wbr>Live<wbr>Blocks</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Live<wbr>Blocks<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Live<wbr>Blocks<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L103">packages/taquito-rpc/src/taquito-rpc.ts:103</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L107">taquito-rpc/src/taquito-rpc.ts:107</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1079,12 +999,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = defaultRPCOptions</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter">
-											<h5>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-									</ul>
+									<h5>__namedParameters: <span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol"> = ...</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1095,13 +1010,13 @@
 					<a name="getmanagerkey" class="tsd-anchor"></a>
 					<h3>get<wbr>Manager<wbr>Key</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Manager<wbr>Key<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#managerkeyresponse-1" class="tsd-signature-type">ManagerKeyResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Manager<wbr>Key<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#managerkeyresponse" class="tsd-signature-type" data-tsd-kind="Type alias">ManagerKeyResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L207">packages/taquito-rpc/src/taquito-rpc.ts:207</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L211">taquito-rpc/src/taquito-rpc.ts:211</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1123,7 +1038,7 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = defaultRPCOptions</span></h5>
+									<h5>__namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = ...</span></h5>
 									<ul class="tsd-parameters">
 										<li class="tsd-parameter">
 											<h5>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
@@ -1131,7 +1046,7 @@
 									</ul>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#managerkeyresponse-1" class="tsd-signature-type">ManagerKeyResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#managerkeyresponse" class="tsd-signature-type" data-tsd-kind="Type alias">ManagerKeyResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1139,13 +1054,13 @@
 					<a name="getproposals" class="tsd-anchor"></a>
 					<h3>get<wbr>Proposals</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Proposals<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#proposalsresponse-1" class="tsd-signature-type">ProposalsResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Proposals<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#proposalsresponse" class="tsd-signature-type" data-tsd-kind="Type alias">ProposalsResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L578">packages/taquito-rpc/src/taquito-rpc.ts:578</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L582">taquito-rpc/src/taquito-rpc.ts:582</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1161,15 +1076,10 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = defaultRPCOptions</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter">
-											<h5>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-									</ul>
+									<h5>__namedParameters: <span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol"> = ...</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#proposalsresponse-1" class="tsd-signature-type">ProposalsResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#proposalsresponse" class="tsd-signature-type" data-tsd-kind="Type alias">ProposalsResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1183,7 +1093,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L764">packages/taquito-rpc/src/taquito-rpc.ts:764</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L768">taquito-rpc/src/taquito-rpc.ts:768</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1201,13 +1111,13 @@
 					<a name="getscript" class="tsd-anchor"></a>
 					<h3>get<wbr>Script</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Script<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#scriptresponse-1" class="tsd-signature-type">ScriptResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Script<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_rpc.scriptedcontracts.html" class="tsd-signature-type" data-tsd-kind="Interface">ScriptedContracts</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L163">packages/taquito-rpc/src/taquito-rpc.ts:163</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L167">taquito-rpc/src/taquito-rpc.ts:167</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1229,7 +1139,7 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = defaultRPCOptions</span></h5>
+									<h5>__namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = ...</span></h5>
 									<ul class="tsd-parameters">
 										<li class="tsd-parameter">
 											<h5>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
@@ -1237,7 +1147,7 @@
 									</ul>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#scriptresponse-1" class="tsd-signature-type">ScriptResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_taquito_rpc.scriptedcontracts.html" class="tsd-signature-type" data-tsd-kind="Interface">ScriptedContracts</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1245,13 +1155,13 @@
 					<a name="getstorage" class="tsd-anchor"></a>
 					<h3>get<wbr>Storage</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Storage<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#storageresponse-1" class="tsd-signature-type">StorageResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Storage<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#michelsonv1expression" class="tsd-signature-type" data-tsd-kind="Type alias">MichelsonV1Expression</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L142">packages/taquito-rpc/src/taquito-rpc.ts:142</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L146">taquito-rpc/src/taquito-rpc.ts:146</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1273,7 +1183,7 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = defaultRPCOptions</span></h5>
+									<h5>__namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = ...</span></h5>
 									<ul class="tsd-parameters">
 										<li class="tsd-parameter">
 											<h5>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
@@ -1281,7 +1191,7 @@
 									</ul>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#storageresponse-1" class="tsd-signature-type">StorageResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#michelsonv1expression" class="tsd-signature-type" data-tsd-kind="Type alias">MichelsonV1Expression</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1289,13 +1199,13 @@
 					<a name="getvoteslistings" class="tsd-anchor"></a>
 					<h3>get<wbr>Votes<wbr>Listings</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Votes<wbr>Listings<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#voteslistingsresponse-1" class="tsd-signature-type">VotesListingsResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Votes<wbr>Listings<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#voteslistingsresponse" class="tsd-signature-type" data-tsd-kind="Type alias">VotesListingsResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L559">packages/taquito-rpc/src/taquito-rpc.ts:559</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L563">taquito-rpc/src/taquito-rpc.ts:563</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1311,15 +1221,10 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = defaultRPCOptions</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter">
-											<h5>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-									</ul>
+									<h5>__namedParameters: <span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol"> = ...</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#voteslistingsresponse-1" class="tsd-signature-type">VotesListingsResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#voteslistingsresponse" class="tsd-signature-type" data-tsd-kind="Type alias">VotesListingsResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1327,13 +1232,13 @@
 					<a name="injectoperation" class="tsd-anchor"></a>
 					<h3>inject<wbr>Operation</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">inject<wbr>Operation<span class="tsd-signature-symbol">(</span>signedOpBytes<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#operationhash-1" class="tsd-signature-type">OperationHash</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">inject<wbr>Operation<span class="tsd-signature-symbol">(</span>signedOpBytes<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L617">packages/taquito-rpc/src/taquito-rpc.ts:617</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L621">taquito-rpc/src/taquito-rpc.ts:621</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1355,7 +1260,7 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#operationhash-1" class="tsd-signature-type">OperationHash</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1363,13 +1268,13 @@
 					<a name="packdata" class="tsd-anchor"></a>
 					<h3>pack<wbr>Data</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">pack<wbr>Data<span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><a href="../interfaces/_taquito_rpc.packdataparams-1.html" class="tsd-signature-type">PackDataParams</a>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{ </span>gas<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"unaccounted"</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">pack<wbr>Data<span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><a href="../interfaces/_taquito_rpc.packdataparams.html" class="tsd-signature-type" data-tsd-kind="Interface">PackDataParams</a>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{ </span>gas<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;unaccounted&quot;</span><span class="tsd-signature-symbol">; </span>packed<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L741">packages/taquito-rpc/src/taquito-rpc.ts:741</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L745">taquito-rpc/src/taquito-rpc.ts:745</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1388,21 +1293,16 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>data: <a href="../interfaces/_taquito_rpc.packdataparams-1.html" class="tsd-signature-type">PackDataParams</a></h5>
+									<h5>data: <a href="../interfaces/_taquito_rpc.packdataparams.html" class="tsd-signature-type" data-tsd-kind="Interface">PackDataParams</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Data to pack</p>
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = defaultRPCOptions</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter">
-											<h5>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-									</ul>
+									<h5>__namedParameters: <span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol"> = ...</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{ </span>gas<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"unaccounted"</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{ </span>gas<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;unaccounted&quot;</span><span class="tsd-signature-symbol">; </span>packed<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1410,13 +1310,13 @@
 					<a name="preapplyoperations" class="tsd-anchor"></a>
 					<h3>preapply<wbr>Operations</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">preapply<wbr>Operations<span class="tsd-signature-symbol">(</span>ops<span class="tsd-signature-symbol">: </span><a href="../modules/_taquito_rpc.html#preapplyparams-1" class="tsd-signature-type">PreapplyParams</a>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#preapplyresponse-1" class="tsd-signature-type">PreapplyResponse</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">preapply<wbr>Operations<span class="tsd-signature-symbol">(</span>ops<span class="tsd-signature-symbol">: </span><a href="../modules/_taquito_rpc.html#preapplyparams" class="tsd-signature-type" data-tsd-kind="Type alias">PreapplyParams</a>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#preapplyresponse" class="tsd-signature-type" data-tsd-kind="Type alias">PreapplyResponse</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L636">packages/taquito-rpc/src/taquito-rpc.ts:636</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L640">taquito-rpc/src/taquito-rpc.ts:640</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1432,21 +1332,16 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>ops: <a href="../modules/_taquito_rpc.html#preapplyparams-1" class="tsd-signature-type">PreapplyParams</a></h5>
+									<h5>ops: <a href="../modules/_taquito_rpc.html#preapplyparams" class="tsd-signature-type" data-tsd-kind="Type alias">PreapplyParams</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Operations to apply</p>
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = defaultRPCOptions</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter">
-											<h5>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-									</ul>
+									<h5>__namedParameters: <span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol"> = ...</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#preapplyresponse-1" class="tsd-signature-type">PreapplyResponse</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#preapplyresponse" class="tsd-signature-type" data-tsd-kind="Type alias">PreapplyResponse</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1454,13 +1349,13 @@
 					<a name="runcode" class="tsd-anchor"></a>
 					<h3>run<wbr>Code</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">run<wbr>Code<span class="tsd-signature-symbol">(</span>code<span class="tsd-signature-symbol">: </span><a href="../modules/_taquito_rpc.html#rpcruncodeparam-1" class="tsd-signature-type">RPCRunCodeParam</a>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#runcoderesult-1" class="tsd-signature-type">RunCodeResult</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">run<wbr>Code<span class="tsd-signature-symbol">(</span>code<span class="tsd-signature-symbol">: </span><a href="../modules/_taquito_rpc.html#rpcruncodeparam" class="tsd-signature-type" data-tsd-kind="Type alias">RPCRunCodeParam</a>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#runcoderesult" class="tsd-signature-type" data-tsd-kind="Type alias">RunCodeResult</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L708">packages/taquito-rpc/src/taquito-rpc.ts:708</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L712">taquito-rpc/src/taquito-rpc.ts:712</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1476,21 +1371,16 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>code: <a href="../modules/_taquito_rpc.html#rpcruncodeparam-1" class="tsd-signature-type">RPCRunCodeParam</a></h5>
+									<h5>code: <a href="../modules/_taquito_rpc.html#rpcruncodeparam" class="tsd-signature-type" data-tsd-kind="Type alias">RPCRunCodeParam</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Code to run</p>
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = defaultRPCOptions</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter">
-											<h5>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-									</ul>
+									<h5>__namedParameters: <span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol"> = ...</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#runcoderesult-1" class="tsd-signature-type">RunCodeResult</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#runcoderesult" class="tsd-signature-type" data-tsd-kind="Type alias">RunCodeResult</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1498,13 +1388,13 @@
 					<a name="runoperation" class="tsd-anchor"></a>
 					<h3>run<wbr>Operation</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">run<wbr>Operation<span class="tsd-signature-symbol">(</span>op<span class="tsd-signature-symbol">: </span><a href="../modules/_taquito_rpc.html#rpcrunoperationparam-1" class="tsd-signature-type">RPCRunOperationParam</a>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#preapplyresponse-1" class="tsd-signature-type">PreapplyResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">run<wbr>Operation<span class="tsd-signature-symbol">(</span>op<span class="tsd-signature-symbol">: </span><a href="../modules/_taquito_rpc.html#rpcrunoperationparam" class="tsd-signature-type" data-tsd-kind="Type alias">RPCRunOperationParam</a>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#preapplyresponse" class="tsd-signature-type" data-tsd-kind="Type alias">PreapplyResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/e0b1240/packages/taquito-rpc/src/taquito-rpc.ts#L685">packages/taquito-rpc/src/taquito-rpc.ts:685</a></li>
+									<li>Defined in <a href="https://github.com/ecadlabs/taquito/blob/01e36ab/packages/taquito-rpc/src/taquito-rpc.ts#L689">taquito-rpc/src/taquito-rpc.ts:689</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1520,21 +1410,16 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>op: <a href="../modules/_taquito_rpc.html#rpcrunoperationparam-1" class="tsd-signature-type">RPCRunOperationParam</a></h5>
+									<h5>op: <a href="../modules/_taquito_rpc.html#rpcrunoperationparam" class="tsd-signature-type" data-tsd-kind="Type alias">RPCRunOperationParam</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Operation to run</p>
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = defaultRPCOptions</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter">
-											<h5>block<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-									</ul>
+									<h5>__namedParameters: <span class="tsd-signature-type">RPCOptions</span><span class="tsd-signature-symbol"> = ...</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#preapplyresponse-1" class="tsd-signature-type">PreapplyResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_taquito_rpc.html#preapplyresponse" class="tsd-signature-type" data-tsd-kind="Type alias">PreapplyResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1543,8 +1428,8 @@
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 			<nav class="tsd-navigation primary">
 				<ul>
-					<li class="globals  ">
-						<a href="../globals.html"><em>Globals</em></a>
+					<li class=" ">
+						<a href="../modules.html">Modules</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="../modules/_taquito_beacon_wallet.html">@taquito/beacon-<wbr>wallet</a>
@@ -1557,9 +1442,6 @@
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="../modules/_taquito_local_forging.html">@taquito/local-<wbr>forging</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="../modules/_taquito_michel_codec.html">@taquito/michel-<wbr>codec</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="../modules/_taquito_michelson_encoder.html">@taquito/michelson-<wbr>encoder</a>
@@ -1716,7 +1598,6 @@
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
-				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
 				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
 				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
 				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
