@@ -471,7 +471,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol }) => {
       done();
     });
 
-    it('Estimate transfer to regular address with unsufficient balance', async (done) => {
+    it('Estimate transfer to regular address with insufficient balance', async (done) => {
       await expect(
         LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt })
       ).rejects.toEqual(
@@ -481,7 +481,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol }) => {
       done();
     });
 
-    it('Estimate transfer to regular address with unsufficient balance to pay storage for allocation', async (done) => {
+    it('Estimate transfer to regular address with insufficient balance to pay storage for allocation', async (done) => {
       await expect(
         LowAmountTez.estimate.transfer({ to: await (await createAddress()).signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) })
       ).rejects.toEqual(
@@ -491,7 +491,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol }) => {
       done();
     });
 
-    it('Estimate origination with unsufficient balance to pay storage', async (done) => {
+    it('Estimate origination with insufficient balance to pay storage', async (done) => {
       await expect(LowAmountTez.estimate.originate({
         balance: "0",
         code: ligoSample,

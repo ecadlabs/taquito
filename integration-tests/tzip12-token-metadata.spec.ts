@@ -103,7 +103,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			done();
 		});
 
-		it('Should test contratAbstraction composition, fetch contract and token metadata of the Fa2 contract', async (done) => {
+		it('Should test contractAbstraction composition, fetch contract and token metadata of the Fa2 contract', async (done) => {
 			// delphi : KT1NiajZ91LJwyJ5mnoRioXPqF9b4qM8st56
 			
 			Tezos.addExtension(new Tzip12Module());
@@ -243,7 +243,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			done(); 
 		});    
 
-		it('Should test contratAbstraction composition, fetch contract and token metadata of the Fa2 contract', async (done) => {
+		it('Should test contractAbstraction composition, fetch contract and token metadata of the Fa2 contract', async (done) => {
 			// delphi: KT1QL1PrjmbEfRGb2dyLdc9eJ6MQpb83LQtb
 
 			Tezos.addExtension(new Tzip16Module());

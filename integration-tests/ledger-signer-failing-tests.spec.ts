@@ -55,7 +55,7 @@ CONFIGS().forEach(({ lib, setup }) => {
                 done();
             });
 
-            describe('Should be abble to used Ledger with wallet API', () => {
+            describe('Should be able to used Ledger with wallet API', () => {
                 jest.setTimeout(60000)
                 it('Should throw error when user declines transaction with Ledger', async (done) => {
                     const signer = new LedgerSigner(
@@ -76,7 +76,7 @@ CONFIGS().forEach(({ lib, setup }) => {
                 });
             });
 
-            describe('Should be abble to use Ledger with contract API', () => {
+            describe('Should be able to use Ledger with contract API', () => {
                 jest.setTimeout(60000)
                 it('Should throw error when user declines to originate contract with Ledger', async (done) => {
                     const signer = new LedgerSigner(
