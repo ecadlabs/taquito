@@ -1,3 +1,8 @@
+/**
+ * @packageDocumentation
+ * @module @taquito/ledger-signer
+ */
+
 import { Signer } from '@taquito/taquito';
 import Transport from '@ledgerhq/hw-transport';
 import { b58cencode, prefix, Prefix } from '@taquito/utils';

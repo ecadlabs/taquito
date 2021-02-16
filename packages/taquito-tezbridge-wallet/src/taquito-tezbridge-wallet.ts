@@ -1,3 +1,7 @@
+/**
+ * @packageDocumentation
+ * @module @taquito/tezbridge-wallet
+ */
 import {
   createOriginationOperation,
   createSetDelegateOperation,
