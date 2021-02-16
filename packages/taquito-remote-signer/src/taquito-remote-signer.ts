@@ -1,3 +1,7 @@
+/**
+ * @packageDocumentation
+ * @module @taquito/remote-signer
+ */
 import { HttpBackend, HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import {
   b58cdecode,

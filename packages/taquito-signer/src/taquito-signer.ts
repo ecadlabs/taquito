@@ -1,3 +1,7 @@
+/**
+ * @packageDocumentation
+ * @module @taquito/signer
+ */
 import sodium from 'libsodium-wrappers';
 import { hex2buf, mergebuf, b58cencode, prefix } from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
