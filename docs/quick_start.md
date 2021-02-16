@@ -1,10 +1,10 @@
 ---
-title: Quick start
+title: QuickStart
 author: Simon Boissonneault-Robert
 ---
 
-:::warning v7 Breaking changes
-Taquito version 7, which supports the Tezos "delphi" protocol has some breaking changes. If you are upgrading from an earlier version to v7 please read the [v7 upgrade guide](v7_breaking_changes.md)
+::: warning v7 Breaking changes
+Taquito version 7, which supports the Tezos Delphi protocol, has some breaking changes. If you are upgrading from an earlier version to V7, please read the [v7 upgrade guide](v7_breaking_changes.md)
 :::
 
 ## Installing Taquito using npm
@@ -29,7 +29,7 @@ import { TezosToolkit } from '@taquito/taquito';
 const tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 ```
 
-In some case, it can be useful to make more than one instance of Taquito. Perhaps if you wanted to communicate with two different RPC nodes, or offer to different Signing options. You can new up separate instances with different providers or configuration per instance.
+In some cases, it can be useful to make more than one instance of Taquito. For example, if you want to communicate with two different RPC nodes, or offer to different Signing options. You can new up separate instances with different providers or configuration per instance.
 
 ## Configuration
 
