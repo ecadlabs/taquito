@@ -6,7 +6,7 @@ author: Claude Barde
 
 ## What is the Batch API?
 
-Taquito provides a simple way of forging and sending transactions to the blockchain, whether you wish to send a few tez to a certain address or interact with a smart contract. Each Tezos account holds a counter that increments every time an operation is included in a block on the network. This feature prevents users from sending two or multiple transactions in a row as illustrated in this code snippet:
+Taquito provides a simple way of forging and sending transactions to the blockchain, whether you wish to send a few Tez to a certain address or interact with a smart contract. Each Tezos account holds a counter that increments every time an operation is included in a block on the network. This feature prevents users from sending two or multiple transactions in a row, as illustrated in this code snippet:
 
 ```js
 /*
@@ -26,8 +26,7 @@ await op2.confirmation();
  * Counter 1122148 already used for contract tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb (expected 1122149))"
  */
 ```
-
-Tracking the confirmation of transactions and the update of the transaction counter can be very frustrating and cumbersome, this is why Taquito provides the Batch API. The Batch API allows you to group all your transactions together and emit them at once under the same transaction counter value and the same transaction hash.
+Taquito provides the Batch API because tracking the confirmation of transactions and the update of the transaction counter can be very frustrating and cumbersome. this is why  The Batch API allows you to group all your transactions together and emit them at once under the same transaction counter value and the same transaction hash.
 
 ## How does it work?
 
@@ -50,7 +49,7 @@ After concatenating the different methods to batch operations together, a single
 
 #### - The `withTransfer` method
 
-This method allows you to add a transfer of tez to the batched operations. It takes an object as a parameter with 4 properties. Two of them are mandatory: `to` indicates the recipient of the transfer and `amount` indicates the amount of tez to be transferred. Two other properties are optional: if `mutez` is set to `true`, the value specified in `amount` is considered to be in mutez. The `parameter` property takes an object where you can indicate an entrypoint and a value for the transfer.
+This method allows you to add a transfer of Tez to the batched operations. It takes an object as a parameter with 4 properties. Two of them are mandatory: `to` indicates the recipient of the transfer and `amount` indicates the amount of Tez to be transferred. Two other properties are optional: if `mutez` is set to `true`, the value specified in `amount` is considered to be in mutez. The `parameter` property takes an object where you can indicate an entrypoint and a value for the transfer.
 
 ```js
 const batch = await Tezos.batch()
@@ -141,7 +140,7 @@ Like with other operations created by Taquito, the `send` method is a promise th
 
 ## What are the limitations?
 
-The limitations of batched operations are within the limitations of single operations, for example, the number of operations batched together is limited by the gas limit of the Tezos blockchain.
+The limitations of batched operations are within the limitations of single operations. For example, the number of operations batched together is limited by the gas limit of the Tezos blockchain.
 In addition to that, batched operations can only be signed by a single account.
 
 ## References
