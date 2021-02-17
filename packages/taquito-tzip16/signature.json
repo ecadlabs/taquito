@@ -30,19 +30,19 @@
           },
           {
             "path": "dist/lib/viewKind/michelson-storage-view.js",
-            "sha512": "a2cd12769087ed48bd8470a774e434d6e48d2bc421fa2985406577cf5364b0c803a8be485c8bc4e4a394ec9bf59a947d3cc9458e2887797a44fe4118742cc41e"
+            "sha512": "88186ade149bbc845e1dab71ef2a95bee2bb6af329dbcd923d816d419bed56c6e0cfca8403b8c38455dc4a5738ae7a77fbb198d7fa4701bc747d3224a4d549ee"
           },
           {
             "path": "dist/taquito-tzip16.es5.js",
-            "sha512": "ab46231e037c38467129e70a3f9972404d6d34ca26aa0f43330e4cb22afcb3c87a14c3c0ddd28e38431e0d5fc979b840624b5b1589874af75bd9a3d66875f6ae"
+            "sha512": "860d1152d68b71a94fa8e0b64caef07b328eded1e5f2667618255b574083089f945ae628e0177718e3a439c0b7781c57d0062a6ae7d307ca0c1a41a3926a1781"
           },
           {
             "path": "dist/lib/taquito-tzip16.js",
-            "sha512": "35bff060a2ee8bcf54652957f570b36ef02f4bd5c6b02b0616c9cfe396aea9057b7597316de63a77d27b115836d031e48b80254a18e17172a54ed954bf445fa4"
+            "sha512": "f57316b8b241c5b8e7933f6f0202e752999017ce927bee04130239b26078e9308d3a0ce6d9bd21d4e9e78f55942471bfe4f4e54d72d2c1cd231c20703f0534e2"
           },
           {
             "path": "dist/taquito-tzip16.umd.js",
-            "sha512": "fbf5d7d8af36354eed3f7774aa0c3e3942702265650bf12e98c0bb135e4c7a1fa776455ea66b9ffa5e2844fab949167c85f9f85a48be8ac79bb36def4621143f"
+            "sha512": "ef833745ad2b44ea14b32f728ab12e695bfbc71cf87129e94c73c454a8a45b9a372dbad002db05979a1536fe36e3fe1bcf541c010a403045d0b046744ad809dd"
           },
           {
             "path": "dist/lib/handlers/tezos-storage-handler.js",
@@ -110,15 +110,15 @@
           },
           {
             "path": "dist/taquito-tzip16.es5.js.map",
-            "sha512": "1a718d08f33d7620caaf0b0fed5522a103bfb147249e800f29e6726dc7384a8888d59c7e3c144cde286c58143b27ea6617d172b4db4bbd96505b6678e89f64e1"
+            "sha512": "1c77ed20c6e2620ea6f153e62f7d35003786e175ff00a2aa6e051160c2fdbe91d5d4823d4f202850f9de8cd22b779eaba6e7eb9f23ab63bd0bddd137c590aaa6"
           },
           {
             "path": "dist/lib/taquito-tzip16.js.map",
-            "sha512": "63e456f3b2f6a181a78cf842d6251eb050bea53db8c8019ff38e0753e9cf6cdbf6c5c5eaf3295172847846bc7819717fe295629331db4065cddcea80a0ed693d"
+            "sha512": "e4c16c1baa5f1d1a6b03ec6f4dfd34288007d128b3b797bcd5bb1d25e1907212f511555aa37faa4a1e6d3e6847e5d3a013100bd72a8dc025b95c8d91a30f8f53"
           },
           {
             "path": "dist/taquito-tzip16.umd.js.map",
-            "sha512": "2f82fdde13c978765fed22a39a1aa9cc64a8f9e99e0f4305f377e47562fb510e886912a9e5c8058a1ae0922bff75e95719c226e8b1cc69a9c20a36a5b075e6e3"
+            "sha512": "3b47d08593b427c8aab343dbb9f1b17206471139b65ae9294f42a706b48dbec0cc6d2a1454101726d8686ab932f79caeaf0aa4cefb5817a7cf6daf20e1cab00b"
           },
           {
             "path": "dist/lib/handlers/tezos-storage-handler.js.map",
@@ -222,7 +222,7 @@
           },
           {
             "path": "src/viewKind/michelson-storage-view.ts",
-            "sha512": "482f5e1535cfcf40d44989888e6cee478b3ac81238336e91d374c456791a5cc16e8c45024eba28aa3b706fca67a0c81d9218bae0012b6d29b239048bc62b75e5"
+            "sha512": "ac70a0372052b21fffd524ef4f7658dba7ce5019ea09733e8183fb3bcd33f76db10c579b80b40ffe685dec705ccff0df0ef41ce557717025e52da85a526658c0"
           },
           {
             "path": "rollup.config.ts",
@@ -230,11 +230,11 @@
           },
           {
             "path": "dist/types/taquito-tzip16.d.ts",
-            "sha512": "7e66e8c6914c03ce3dc4e1e09680ceac42e09b1769975fc71ca22d248555cf562e437fa7a6ca108b6305d301fd042969a397f21769704e964da9675a6500e885"
+            "sha512": "0993137ba6eb4a6b6435b096b91a285f64cbcf6942e6c2a447484a7b4d08a9eb95aec2b3c6555cd15c0f7d80e9a144ff22cb6928c2d8d6cd15f92ea19e1d22c2"
           },
           {
             "path": "src/taquito-tzip16.ts",
-            "sha512": "1e85c42e6db467232375aec9b549f59186880a4e7e193cbf57b7ab24879abe5e7bfe12243df5f6c06753020708887219bd6087f58ff4ad4caf1ff3462af0a88b"
+            "sha512": "a27096e1a66412b1046c4a399a61f1143edd09b42d5d29fbb71aa504ed0eb5c05823eb4eaa006a7a258b6ea1c5e93763718f17cbf163796b70bf5c78c23702c5"
           },
           {
             "path": "dist/types/handlers/tezos-storage-handler.d.ts",
@@ -330,7 +330,7 @@
           "typings",
           "version"
         ],
-        "sha512": "59079be6aa014375522660edb69753eebad493454c8ea07db847bf35c1ec27e925f7596c9a3c17a607ea21cb35d49e6f9573b5725f6cffa4a064447da73f1a1a"
+        "sha512": "bdceccd0361cff6130da7b4cceaead36ec840d7ed2009de23a890b28b648a6ed402d8fd8708ccf5eb907bfe0db6b537c45a4cf67ce482096413bc415090ff22e"
       }
     },
     {
@@ -338,7 +338,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/tzip16",
-          "version": "8.0.1-beta.1",
+          "version": "8.0.3-beta.0",
           "description": "Tzip16",
           "keywords": [
             "tezos",
@@ -395,11 +395,11 @@
             ]
           },
           "dependencies": {
-            "@taquito/http-utils": "^8.0.1-beta.1",
-            "@taquito/michelson-encoder": "^8.0.1-beta.1",
-            "@taquito/rpc": "^8.0.1-beta.1",
-            "@taquito/taquito": "^8.0.1-beta.1",
-            "@taquito/utils": "^8.0.1-beta.1",
+            "@taquito/http-utils": "^8.0.3-beta.0",
+            "@taquito/michelson-encoder": "^8.0.3-beta.0",
+            "@taquito/rpc": "^8.0.3-beta.0",
+            "@taquito/taquito": "^8.0.3-beta.0",
+            "@taquito/utils": "^8.0.3-beta.0",
             "bignumber.js": "^9.0.1",
             "crypto-js": "^4.0.0"
           },
@@ -437,5 +437,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJgJf+QCRAD9Qy5GYHsngAAo64QAJTpKEEObsyV4JfZWRaglWu4\ncbLauE232f81BjQPS3BIId+PkVZHtxo1pUa2PbQ4tETIROg2B2uKcSPl8rqyxn7j\nBMmZa5CXTRI2Y8XAdbJ5dX7zZLREppoz1KxP16wdeOyt6z0AT1GHDdv7aVKf5I4R\nElo/dOKRgmOI3bYlIUOOte31fk68eq2acylzoMGQKQPSNUTh1HKfCTAtn0utl9Jw\nPzvOfO92bjC8i5xMNUhSH1T1yXD18AoUzeI+ThBSaPahBmtG7dWbz3qhoSrPR0HB\nwa+ogHECV6XF8DeRShJ0JAhE5Uh12cUHhsepmWq8Vm+MZWOs11F441En+RfKGZGO\nW4G7W+HD8cm9wU7WVDQAzW1AWISIlRubklO6F6V0OkZT4SkZBNPqertTjCyGg4mF\nSgIAQByKA6vXdYwaCMNqsjpwnOcS3VQQAb66tqhUpGQckmKhqKm+EoDm5ZfkSjZX\nxSeRWI9RZMf+Kxl9hobA9k/CW0om6NQwBGOxX30/WZoboaUHEhm/M/TqkxfHJcOB\nCZ3yvzlppDEEfQH2cb1Q4kFLfhcFAGzVHMKWH8CMbmR538XB7NBoPrfv7CqDMQuS\n9aBhadwlhCQEx8FG7NCiHd3IXjOVnFZAv7xVU6Nw3pvmVZyXbeJ6oK2asquZR0+l\nMFTwf5jtvyYYvXP9HstS\n=Qir6\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJgLYOxCRAD9Qy5GYHsngAAKLcQAJY1iv2ycphT0kqKo1rXnk9o\nNYSeh7h5zW3yq9BIeShyRCkZJOldOBighGzZE//xixpvWI9VLDIgia2tkBWJgbR4\n1H/jxdf7nhkC1LYaclYpTSixt5z79OSTNakY2uaTTRLr231dj+AqjN8lg8Iql24x\nhFRYQyzMHKXN6k41J6zWR8k3QyQ3uGGkyGgLebsjWkMA+7iqbFF+wUXnF23mL/z1\ncNjBikKSRaMURzwP8GgAjh8PE14eAFM/nUnT9KY8lpBNVHpurSHVieure+HjahZK\nLDtXn/xc932vdET8uknyHaQDTGBVswO0pirlf/dQcIAB5XQJntVxqmUK8lyIyJkB\ng8Bno1hv5tLOSYCGowXn613BsIvyczhfoPeGb6Z17GwuJ26kFjoCvxOOx88vrXEA\npcacvUY8Ezqvb/XREc+38o3M9Qw3zXi8vm4z8jK/opeTV1gMx/6eMdZd6XN62puh\nEhJ9C0tGA60/CsBHTQqW+RY+wgG1hgLQZAG51S8Z1qibhVIsoICk9oyU19tS9mtU\nBcdgbiAwzuLhnkGcZjomVlDdsWUw+0bMLV7IELvhoGbcmbLXLuNhkN2GGnt8QDJt\n9bdNpgTuuHnKBZr9bKkUX1X/m1PZcIFL1meKGxJnwlU0CIY+oiqXgm0toMCeZDIS\n1m8YMdhvtRDvf0hBg/RI\n=tYkw\n-----END PGP SIGNATURE-----\n"
 }

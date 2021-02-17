@@ -22,7 +22,7 @@
           },
           {
             "path": "dist/lib/taquito-signer.js",
-            "sha512": "8393ae84654047172e7425c38a657ea1947e6ef7fdc61cd03cf2dbdce23a47f3cae7db277b067c2acaab1036be53a3729f2949daea5f289b7cd500e1113ae2ad"
+            "sha512": "71777e543602dbb3ef170f337513fdf9ffe9624b452979a72e0dc0896ea40d6a5953cbe876617df576de78902aa8d3f583346ab0ab78b0651c92206a16a51651"
           },
           {
             "path": "dist/taquito-signer.umd.js",
@@ -42,15 +42,15 @@
           },
           {
             "path": "dist/taquito-signer.es5.js.map",
-            "sha512": "1e2ce95b12e7c826b4ab76b923ea68be2529d481e3e2f7a66166e2ef5d18f69295d042de108e504059b010a0e3bff1e70b49722971850cd6f20c74479c87a295"
+            "sha512": "caafc5f73db0325b8ccc403c5ddb6d258b1ef5b399d9e6c44107e12400ef5f328bc6e6c10c2a1cb0612e5e768ec222ef471f3c59561ab25744fe8587b1b017fb"
           },
           {
             "path": "dist/lib/taquito-signer.js.map",
-            "sha512": "e0f29f97ad5aa7793affff2ac045017324989c68c5b91d0f9e92c31b00fe0bd0df96e1d06f6f59c17225a92c314d5868f2a8669da89d8a89e0c845bc1745c513"
+            "sha512": "fcb802926ae055cab052b1111a28398ccf3986fd04654c18cc48490a2a0ff057e5cc09aa324f63b78caf4cdae43bb4c81b1408d1704ed0ff389c9e94487aa3db"
           },
           {
             "path": "dist/taquito-signer.umd.js.map",
-            "sha512": "79d0e8ec713032eb50322836f1703d62ebd23824de3eec47a794bbd0d50d36a8ba552d3685cd0b87f74d006f2bf8d7bfaf67cebd5ca19ee60945c172be3f37f5"
+            "sha512": "8cadd1bb56f1401f294ceca9f46e08a225a857e2de4c97aa8f67ea94e8d3231424e91be4aa14f1929ca309ff32dafcb62c932350a85ba1b28cb0dfa241a8c159"
           },
           {
             "path": "dist/types/ec-key.d.ts",
@@ -103,7 +103,7 @@
           "typings",
           "version"
         ],
-        "sha512": "348b02ff6a7ab3bdb0cff05e9500e0840d160624398ac365707d67e0da485acaa4a3317cdfdaa5461352f9029e66c324c0d5988077fd70354afd513cbc07ccab"
+        "sha512": "ed7c2a7e901c2707c84f197eb3f0847d83f999221b810d089ebb487ca846a99e00bb33bc8497192e72baaee5fff54bc5d6870c555b938bcfe55eb07e8e5de5f7"
       }
     },
     {
@@ -111,7 +111,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/signer",
-          "version": "8.0.1-beta.1",
+          "version": "8.0.3-beta.0",
           "description": "Provide signing functionality to be with taquito",
           "keywords": [
             "tezos",
@@ -177,8 +177,8 @@
             ]
           },
           "dependencies": {
-            "@taquito/taquito": "^8.0.1-beta.1",
-            "@taquito/utils": "^8.0.1-beta.1",
+            "@taquito/taquito": "^8.0.3-beta.0",
+            "@taquito/utils": "^8.0.3-beta.0",
             "bignumber.js": "^9.0.1",
             "bip39": "^3.0.2",
             "elliptic": "^6.5.3",
@@ -221,5 +221,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJgJf+MCRAD9Qy5GYHsngAAee4QAC9rvYqs2bXigGGzlOSe4Uss\n9F8DpodgxHqF+2eXVsWoOU5OIqo5Fi1Jpz3FPkZOwZWB6dL6Fk1icDW10Sh7qCPn\nusqSJZESd+vfswujTbp5+g6Bst53+KDs65fmmk3RtskMASr7JiuCCPBEfbvoK8zV\n7PhO1JXJQpvbGchX/O7BBTkeW8lGqQ95IY2gYml0DNBpFximsiQ83cw66n4bpFu8\nc8AAXc1yC91//zcuj4fRZDipmk0+hBJ2qlf2Z6zOsjm/r6qA3pS2DZNHCDy28eEr\nl4ZZx6rt8ny7GHt+sYNB6nkidEo0Px3Sam4I5VyAuc8PptpiJhwEcMHpVcf1GmPm\n3fs4f74aOnc6CFkSMsrimVx8cFTk9oPhAHM1eTDVHUOIStLN0rwmAaDeMIaBF+YB\nWc6UfuigdLHDmFT3ISRMR14C0GCsdWoBJHKXfm7swX3fFu+bXhW1wF/hMV0LkkbZ\nLNP/rDkpCNzQB+lN0rfbrl/79jO3I6niMWkXUMGZ6zeaIY9AS98rWm9ejl00MvDO\n9u5U7bLHxYuIEkwRc8DF+qsKn9b/o+QUJy/L+NbL4vx8Oq9D0/zdkbUa5Zh0Yet+\nDicVZptMFDxPBDRqkDnKRYeQuQTbd/JlKD/jBniCNSvyW/uN+NrqZyzZntRw9QRR\nYEL2YN1tFMggUvCqjh3b\n=dmIq\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJgLYOtCRAD9Qy5GYHsngAAQG4QAJXcpbMpfgvRtssM2PHWesSz\n2VYCvX9YsigZ0YmSOWLbIx+FKxwkjFF2coyFiKaDsUN1cLhi2YhVB7dcknKTyTma\nHVQ1MEp2YkmANIZd93gA4xxiPQmtPsBghTqgCJfLmtT1xBD8aWrh1Ns62VO6iDJy\ng6HDNCQvRyrMfOWMxxOo+wPA46VkPwT7aPmnRFoc3yjyQwHQW6kGnOUGc0cFwlRT\nj6tgkApGb49+SrZGw0RPITS3qqHQi4InUKN5ILLUZv0UeC70a541mIrFutrDQeyH\nePJffte6FSPvDIXABi7WPqoqQ205moZJ2OpXNQEobINM9PLncuXcDowkWy1s5B7x\nF8ru8vgtqk5fcqukQh4rqeKpCU5xES9Kp5GsyaVdAEJWt1ITGoC7eka5LLRWCau6\n5MXrbyJQUnlt4Iqj98VwjZaUjgBAFhZCPVEPV25sOa509ENwJ3XeRwUlOM6xf+1U\ndWDA7qwDAwcElK/1Bmq25BU+1hnGnuEZCV9J3OLSbFV6HV0pxTP5FzqFzjlV6IjK\n7IXeHK3MFgmWi6I0+bTd2Xhguo7uRrEMgnN2kcJSwv905FAvRydX6Jd08KSSL8XA\ngZO7Y6KiLY7OTqRiR39RpHzFYSucBY+9unavi7HmHqicgsWRJhP2Kgp+kYrcNSxh\nfxVfjry9iPW7K0lORpU1\n=LK5m\n-----END PGP SIGNATURE-----\n"
 }
