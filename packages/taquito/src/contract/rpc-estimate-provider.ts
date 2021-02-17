@@ -211,10 +211,11 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
           break;
         case OpKind.ORIGINATION:
           operations.push(
-            await createOriginationOperation({
+            await createOriginationOperation(
+              await this.context.parser.prepareCodeOrigination({
               ...param,
               ...mergeLimits(param, DEFAULT_PARAMS),
-            })
+            }))
           );
           break;
         case OpKind.DELEGATION:
