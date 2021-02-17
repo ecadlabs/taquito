@@ -186,7 +186,7 @@
           },
           {
             "path": "dist/lib/contract/rpc-estimate-provider.js",
-            "sha512": "cf82395115c8b4aed421eb6578b8041e51e6382ff410e68556392cd36a3242fd2fa1d939771656e3ff52e5899dac6f25e1aaeda90ac9455beaa695723364b0dd"
+            "sha512": "b835d1d12e8c0a2a3d99d265a61d7ce2eb8f26c83d0c0fa69b1d84d2d54f4eee8b1b999e43d3105158ef7068a2a6405a1a1966d8b365ae72b6b786de5fddb678"
           },
           {
             "path": "dist/lib/forger/rpc-forger.js",
@@ -206,7 +206,7 @@
           },
           {
             "path": "dist/taquito.es5.js",
-            "sha512": "7eca14a99ba18816bb69f343abe748a5bf02e3407f627f071f2c126b25ed596f5e5add8b8e00b6fe6b259f4761116e828a23a9483afd94d8cc75d120f91f34e9"
+            "sha512": "4e5ac0baaf3256300fdbe694a6a513fa8372fa1d5c090f671aacefcaf53269d34792c19485593ae9b8a2536dff85d02c51781ae95ebc0bd3fbdfae601c444e46"
           },
           {
             "path": "dist/lib/taquito.js",
@@ -214,11 +214,11 @@
           },
           {
             "path": "dist/taquito.min.js",
-            "sha512": "3399c9632659183a2547f26d13007157ff748be1110eb2c709089748c5fa75408dd707ce61afe206e42984cb33845e59195afedf75de95e69660831fc8c023f5"
+            "sha512": "0d44d13c6b7da245201e9b71b9d6f83b3da394aa7553f00ad19cf450196400c2aeb931698d2a30d0475d758c46c0017a8dee7b2bc05928e7570b636654247bf7"
           },
           {
             "path": "dist/taquito.umd.js",
-            "sha512": "739e7aa847945f15894564a50da6beb5bf6cd652863e49dd1945414ec0bbaacc2ce23834caef2d2a7b82c4d4c80ec3f95c7a7b523e091fddb038845f537eb0ac"
+            "sha512": "f3f3c31a13c8e8b6660aa8ac87a2b6585584c20920163c5304ac56f0b2a33ae6385a9c1e2ea20e2dffb4a29ff6c2b01872e8008377c074825187267ec35035bf"
           },
           {
             "path": "dist/lib/operations/transaction-operation.js",
@@ -418,7 +418,7 @@
           },
           {
             "path": "dist/lib/contract/rpc-estimate-provider.js.map",
-            "sha512": "f1c93f81b75b477f596c500388fca0755055b00834382ac2534371bffc76ab7c52fff6205b3ef3679c4aaacbbd2008951e784792602fe1a6cf288e471c9dd307"
+            "sha512": "fb37cd11184a3e35383ef64b4fdf92443079d0e4ff9d7efffd3dff4e68fe692623e13f23a89f331287bc0eae9d04ff11c6feb139c2af5b8f43ab7b7d69136f92"
           },
           {
             "path": "dist/lib/forger/rpc-forger.js.map",
@@ -438,7 +438,7 @@
           },
           {
             "path": "dist/taquito.es5.js.map",
-            "sha512": "784e1e36170f903f78f563778f89651192af0e9f44f97f022121f6935200cc0970d339dae3a5831c2aed9c124189bf4c521feadaf6b67b598907719e21a4f8db"
+            "sha512": "52c57bcf86d2a85e3c2e1486ca780c85a511a1a972b232f8b9f1cb47fe24a9d65b39c044c56a8911ddcdb3fca34544bd00d408a64c4c7a65f1ec49d15dd15fee"
           },
           {
             "path": "dist/lib/taquito.js.map",
@@ -446,7 +446,7 @@
           },
           {
             "path": "dist/taquito.umd.js.map",
-            "sha512": "a1268351247a206d68ede735179142590da00af4e98ac2c730f57eb42fe72af91a0987f99d6cb597788cfb622956044ff750b53cd720cb0bfc39e0d2f58c5800"
+            "sha512": "906c3ffa0c7906efc4e8f00ea69b4b7e7fb40ac7dd7ffb843df42c6898f609e63ed9c8f2d1c929af842cbfd372eff6bd3f3163519b1918d2d570ebb256fffea1"
           },
           {
             "path": "dist/lib/operations/transaction-operation.js.map",
@@ -470,7 +470,7 @@
           },
           {
             "path": "README.md",
-            "sha512": "2fd8624fbf0115f558903e6ae4ee1872ff8e29ca649f8097cffff1d2de9b5b781fdb6c6dd0044444ef3b8dacab70be0e62b0db887e34f54cf8d44ea4d2d8d280"
+            "sha512": "42da6092dc37325d94a8215feb67a4a37661e655430524c62775d74d78a036bd330ed9aae02ace95117191d8f8846cdbc890485b674b64d797e0330957414fd6"
           },
           {
             "path": "dist/types/operations/batch-operation.d.ts",
@@ -733,7 +733,7 @@
           "unpkg",
           "version"
         ],
-        "sha512": "2e901f79b04b84fbc61d0fc037932297b23ce44bbc691cb38d4d5d0c3b402a6e9e9ea3e9a028023a2dcf28f5d918016ae42f69b38c699afe8c6b8afbbf91ee48"
+        "sha512": "d1d4d05ce0ffbdb545631fdbca646a77162aab014e3cb56724684dc3d88f05bc820cc9a3a6d409d81360c3ff38bacc9f74212e0ea28de90a7b26e963b32e3c6f"
       }
     },
     {
@@ -741,7 +741,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/taquito",
-          "version": "8.0.2-beta.0",
+          "version": "8.0.3-beta.0",
           "description": "High level functionality that builds upon the other packages in the Tezos Typescript Library Suite.",
           "keywords": [
             "tezos",
@@ -818,11 +818,11 @@
             ]
           },
           "dependencies": {
-            "@taquito/http-utils": "^8.0.2-beta.0",
-            "@taquito/michel-codec": "^8.0.2-beta.0",
-            "@taquito/michelson-encoder": "^8.0.2-beta.0",
-            "@taquito/rpc": "^8.0.2-beta.0",
-            "@taquito/utils": "^8.0.2-beta.0",
+            "@taquito/http-utils": "^8.0.3-beta.0",
+            "@taquito/michel-codec": "^8.0.3-beta.0",
+            "@taquito/michelson-encoder": "^8.0.3-beta.0",
+            "@taquito/rpc": "^8.0.3-beta.0",
+            "@taquito/utils": "^8.0.3-beta.0",
             "bignumber.js": "^9.0.1",
             "rx-sandbox": "^1.0.3",
             "rxjs": "^6.6.3"
@@ -864,5 +864,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJgLFSPCRAD9Qy5GYHsngAA6xEQAKHUo7s0A6wQhaOdcdGu6PB/\nuN2VNvFlVzbyf/NA/9pqDRZwxe3s8sdHSuHVWxiwdS8AOhwQkDQTBciksm7vaTRF\ni+jKugufqJt0DTRQRzB6xqtCHMqheSazwSoItPONECVY9ZO5HLuOuB6a0n/UJthO\n7ALt0sTvJ/dlCvPq72A26BfiiBIQSgdj5nh1kEsmSHbjBy5Yo7LPQi6S6PwOw8GN\nvdxwX7w2XjLodfusEqANuPtW0wtORM0hzM2sug5WrNx752EzzANAosFKh5+NHYoI\n9+nA5776o5+I0TSLqLZrjjkaRiZ65NK15/ZttJjOPIdua9GmmTLAEFL/Gj/E7m9d\nvFDkADWjN8PFYKsUsr6idoV8vXHOwuzCD5sM+yOq0N7JODCiDGTHMcxTCV8UHoH2\n6TE4IzoZl0CdweyQcAoz4LYmkST81vR57deSQejtE/1DQrDha2GLCekhzHVJMpbD\nLOnjQqW3c4UXORD76FcjrnxRnC8ajsOtBjK2qMP9xWNkB+Phjhyjd9kFqxxAKBu1\nEuHRuDFVliFyqGqmDN6h2PDwCzXY+pBnOGykYvlC/SRIez0TxelrioSTi/mKbBaJ\nwInHSCY5OgeGv4bJvPav7Djb7cuwLtXT3k8x99Eoy82aRWRG5Phbect+mH8NLF9H\nWU2FHPntzARcZS+RZzix\n=7J9k\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJgLYOkCRAD9Qy5GYHsngAAPEwQACHTYfdbYZRH44S4J4OgBdS4\nFJCzT8k5J/FCZenNLMtH69QBrp1Wviqb95J3phbSeGYXBDBfaTKt+ZM8vAmdXIYJ\ndoS+bKNniPxC4hJ0qA3lYDwqRyPZy+U6abydCNdZ1CmHhU0aSaQtSQWcGnq2eMBy\nzP038RqZmBloqJKnh9C+ULKXAUunm/k9G3B+T/yjJN3oW3fIYejOlODpLQaa88mk\n/o7beFbf1oFrrlt1P0i5Gxaz+u2C9xotrvQLRL80vKBo19aiBZi7cWMMtXyEmy+k\nobBmp7jPV1Jov6ck+M2zSJop947s8j+j5UF336pAkW4VdUvu1cW40iHs2o98eOEX\ndTm9M7Q+ZdWU2+H1v3yZAiapsVTQHFyVQ51bHC+rhsRFHQyzJEQlqO9ZKxlKXlGt\nPpmlttltK99T//+6Ib/WoerolI82IUCHTp4WuFAsfJce8LnJZB3AtH/JHGqWPE4a\nmPStp8sy1oxplCp/Fn4inCsvaWePh4jA90pjrVMA4zr+K6lmt+7BoQuuZ6ETRJLL\nNnZsJAy4pyL6bDVaiQGmvjYlenFEOnOEad7QY2LSC49/b+fkkg7uo7d1ae/H3szI\nqw/RWGp+L22OZPXIiWiIv6guNsJnC4KSFN9vydWw3rH3tJkmCDqGHGSLU6Wsd3le\nKAdh1SB9L0E+gfj1Brsh\n=2eBL\n-----END PGP SIGNATURE-----\n"
 }
