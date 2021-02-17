@@ -137,12 +137,12 @@ console.log('Operation hash:', batchOp.hash);
 await batchOp.confirmation();
 ```
 
-Like with other operations created by Taquito, the `send` method is a promise that returns an object where the operation hash is available under the `hash` property and where you can wait until the transaction is confirmed with the `confirmation` method (taking as a parameter the number of confirmations you would like to receive).
+Like with other operations created by Taquito, the `send` method is a promise that returns an object where the operation hash is available under the `hash` property and where you can wait for the `confirmation` method to confirm the transaction (taking as a parameter the number of confirmations you would like to receive).
 
 ## What are the limitations?
 
-The limitations of batched operations are within the limitations of single operations, for example, the number of operations batched together is limited by the gas limit of the Tezos blockchain.
-In addition to that, batched operations can only be signed by a single account.
+The limitations of batched operations are within the constraints of single processes. For example, the gas limit of the Tezos blockchain limits the number of functions that can batch together.
+In addition to that, only a single account can sign batched operations.
 
 ## References
 
