@@ -12,7 +12,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
       done()    
     });
     
-    it('originates a wallet with empty bigmap and fetches the storage/bigmap', async (done) => {
+    it('originates a contract with empty bigmap using the wallet API and fetches the storage/bigmap', async (done) => {
       
       const op = await Tezos.wallet.originate({
         balance: "1",
