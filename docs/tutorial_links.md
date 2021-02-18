@@ -4,7 +4,7 @@ id: tutorial_links
 author: Claude Barde
 ---
 
-You will find below a list of different tutorials about Taquito written on various platforms. These tutorials explain core concepts of Taquito and how to implement it and use it in a Tezos dapp.
+Below is a list of different tutorials about Taquito written on various platforms. These tutorials explain core concepts of Taquito and how to implement them and use them in a Tezos dapp.
 
 - **[Build your first dapp on Tezos](https://medium.com/better-programming/build-your-first-dapp-on-tezos-270c568d4fe9)**  
   A guide to build a simple React dapp on Tezos with wallet support using Taquito
