@@ -7,7 +7,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
 
     const customHandler = new Map<string, Handler>([
-        ['ipfs', new IpfsHttpHandler('gateway.ipfs.io')]
+        ['ipfs', new IpfsHttpHandler('cloudflare-ipfs.com')]
     ]);
 
     const customMetadataProvider = new MetadataProvider(customHandler);
