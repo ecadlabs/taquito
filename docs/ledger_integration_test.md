@@ -24,7 +24,7 @@ The Ledger Signer's integration tests are disabled by default because they requi
 2. Open `Tezos Wallet app` on your Ledger device.
 3. Remove `./ledger-signer.spec.ts` from `"testPathIgnorePatterns"` in the package.json.
 4. If you only want to run Ledger integration tests, use this command: `npm run test ledger-signer.spec.ts`
-5. As the tests include operation like transfer of token and contract origination, the tests will take some time to complete. You will be prompt on the Ledger to confirm the operations.
+5. As the tests include operations such as transfer of token and contract origination, the tests will take some time to complete. You will be prompt on the Ledger to confirm the operations.
 
 ## Failing tests
 

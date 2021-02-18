@@ -4,12 +4,11 @@ title: Using the Lambda View
 ---
 
 :::caution note
-This is a prerelease feature. If you have questions or issues, please feel free to file them on our [Github](https://github.com/ecadlabs/taquito) issue tracker.
+This feature is prerelease. Please feel free to use our [Github](https://github.com/ecadlabs/taquito) issue tracker if you have questions or issues.
 :::
 
 The lambda view is a way to retrieve data from a smart contract's storage
-without incurring fees via a contract's `view method`. This is a temporary
-solution that will be addressed in a future protocol update.
+without incurring fees via a contract's view method. This solution is a temporary solution that we will address in a future protocol update.
 
 ## Recap: Views & Callbacks
 
@@ -17,7 +16,7 @@ As you develop applications on the blockchain, you'll soon realize you not only
 want to interact with Smart Contracts by updating information but also by
 reading back pieces of data.
 
-Many Smart Contracts have what's known as `view methods`, which allow you to
+Many Smart Contracts have what's known as `view methods,` which allow you to
 specify parameters around what data you'd like to retrieve. They also require
 you to supply a callback contract whose storage will update as a result of
 executing the view method.
@@ -33,22 +32,20 @@ One issue with using views and callbacks is that, just like any operation
 executed on Tezos, each read has a small fee attached to it. The amount is
 trivial for occasional reads, but it becomes a burden at higher volumes.
 
-Another drawback is speed: since we're invoking a contract method, we have to
-wait for confirmation in order retrieve the data we requested. This may not be
+Another drawback is speed: since we're invoking a contract method, we have to wait for confirmation to retrieve the requested data. You may not find this 
 acceptable if the application you're working on requires consistent, faster
 response times.
 
 ## Enter Lambda View
 
-What we can do to work around these limitations is to send our contract address,
+We can work around these limitations to send our contract address,
 view method, and parameters as its own "view" to a simple lambda contract that
-_always_ fails. We refer to this method as a "lambda view".
+_always_ fails. We refer to this method as a "lambda view."
 
 The result of invoking our always-failing lambda contract is an error from the
-blockchain. That may not sound very useful, but the clever part is that the
-error we receive contains the information we requested! This allows us to _not_
-incur a fee for requesting data or wait for confirmation from the network in
-order to call view methods.
+blockchain. That may not sound very useful, but the brilliant part is that the
+error we receive contains the information we requested!  We can _not_
+incur a fee for requesting data or waiting for confirmation from the network to call view methods.
 
 ## Considerations
 
@@ -60,9 +57,9 @@ order to call view methods.
 
 ## Usage
 
-The lambda view feature has been integrated into the `ContractAbstraction` class. This allows retrieving data from a view in a very similar way than calling other entrypoints of a smart contract with Taquito.
+We have integrated the lambda view feature into the `ContractAbstraction` class. This integration allows retrieving data from a very similar view to call other entry points of a smart contract with Taquito.
 
-Here's an example of using the Lambda View on an FA1.2 contract.
+Here's an example of using the Lambda View on a FA1.2 contract.
 
 Taquito dynamically creates a `getAllowance`, `getBalance` and `getTotalSupply` view method that the developer can call as follows:
 
@@ -74,7 +71,7 @@ Taquito dynamically creates a `getAllowance`, `getBalance` and `getTotalSupply` 
 Parameters must not include the callback parameter
 :::
 
-Then we call the `read()` method, which takes an optional lambda contract address. _This optional parameter is useful for the sandbox users as they will need to deploy and use their own lambda contract._
+Then we call the `read()` method, which takes an optional lambda contract address. _This optional parameter is useful for the sandbox users as they will need to deploy and use their lambda contract._
 
 ```js live noInline
 Tezos.contract
