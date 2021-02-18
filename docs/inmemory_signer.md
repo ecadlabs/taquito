@@ -3,7 +3,7 @@ title: In Memory Signer
 author: Simon Boissonneault-Robert
 ---
 
-::: caution Warning
+:::caution Warning
 **Storing private keys in memory is suitable for development workflows but risky for
 production use-cases! Use the InMemorySigner appropriately given your risk profile**
 :::

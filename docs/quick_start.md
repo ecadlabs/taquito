@@ -1,9 +1,9 @@
 ---
-title: Quickstart
+title: Quick Start
 author: Simon Boissonneault-Robert
 ---
 
-::: warning v7 Breaking changes
+:::warning v7 Breaking changes
 Taquito version 7, which supports the Tezos "Delphi" protocol, has some breaking changes. If you are upgrading from an earlier version to v7, please read the [v7 upgrade guide](v7_breaking_changes.md)
 :::
 
@@ -149,7 +149,7 @@ Tezos.contract
 
 ### Interact with a smart contract
 
-Calling smart contract operations requires a configured signer; in this example we will use a faucet key. The Ligo source code for this smart contract [KT1NGihnotUbt8C1WsKfsUg1E2D7UPYzAn2N][smart_contract_on_better_call_dev] used in this example can be found in a [Ligo Web IDE][smart_contract_source].
+Calling smart contract operations requires a configured signer; in this example we will use a faucet key. The Ligo source code for the smart contract [KT1NGihnotUbt8C1WsKfsUg1E2D7UPYzAn2N][smart_contract_on_better_call_dev] used in this example can be found in a [Ligo Web IDE][smart_contract_source].
 
 ```js live noInline
 Tezos.contract

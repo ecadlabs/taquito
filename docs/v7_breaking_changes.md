@@ -3,7 +3,7 @@ title: Upgrading to v7/delphi
 author: Roxane Letourneau
 ---
 
-::: warning Breaking changes
+:::warning Breaking changes
 With this major number update to support the `delphi` Tezos protocol, we have also implemented some breaking changes to the Taquito API. This document explains how to update your projects.
 :::
 
@@ -180,7 +180,7 @@ if (response.max_revelations_per_block) {
 
 ## DerivationType renamed in the LedgerSigner
 
-::: info Early Adopters of the Taquito Ledger Signer
+:::info Early Adopters of the Taquito Ledger Signer
 Ledger support was pre-released in September. Taquito never officially released this package until v7, but some teams adopted the pre-release package early, and this section is relevant only to those early adopters.
 :::
 
