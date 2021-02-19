@@ -60,6 +60,10 @@ order to call view methods.
 
 ## Usage
 
+:::caution note
+Since a call is made to the lambda contract, a signer needs to be configured on your TezosToolkit instance.
+:::
+
 The lambda view feature has been integrated into the `ContractAbstraction` class. This allows retrieving data from a view in a very similar way than calling other entrypoints of a smart contract with Taquito.
 
 Here's an example of using the Lambda View on an FA1.2 contract.

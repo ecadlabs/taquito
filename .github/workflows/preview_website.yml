@@ -1,11 +1,12 @@
-name: Website Deploy
+name: Netlify Preview Deploy
 
 on:
-  push:
-    branches:
-      - master
+  pull_request:
+    branches: [master]
+
 jobs:
-  publish-website:
+## This job will deploy the netlify preview builds
+  publish-website-preview:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -22,11 +23,23 @@ jobs:
     - run: npm run lerna -- bootstrap
     - run: npm run lerna run build
     - run: npm run build-docs
-    - run: npm run netlify:publish
+    - run: echo "short_sha=${GITHUB_SHA:0:8}" >> $GITHUB_ENV
+    - run: npm run netlify:preview
       env:
         CI: true
         NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
         NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+    - uses: actions/github-script@v3
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          github.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: 'A new deploy preview is available on Netlify at https://${{ env.short_sha }}--tezostaquito.netlify.app'
+          })
+    - uses: actions/checkout@v2
     - name: Slack Notification
       uses: rtCamp/action-slack-notify@v2
       env:
@@ -34,4 +47,4 @@ jobs:
         SLACK_USERNAME: Taquito Notifications
         SLACK_ICON: https://imgur.com/1zlqzFu
         SLACK_TITLE: Message 
-        SLACK_MESSAGE: A new version of the Taquito website has been published. https://tezostaquito.netlify.app
+        SLACK_MESSAGE: There is a new deployment preview available for Taquito at https://${{ env.short_sha }}--tezostaquito.netlify.app

@@ -1,5 +1,5 @@
 module.exports = {
-  out: 'dist/typedoc',
+  out: 'website/build/typedoc',
   readme: 'packages/taquito/README.md',
   entryPoints: [
     './packages/taquito/src/taquito.ts',
