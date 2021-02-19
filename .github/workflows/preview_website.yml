@@ -22,7 +22,6 @@ jobs:
     - run: npm ci
     - run: npm run lerna -- bootstrap
     - run: npm run lerna run build
-    - run: cd website && cp -R build/. ../dist
     - run: npm run build-docs
     - run: echo "short_sha=${GITHUB_SHA:0:8}" >> $GITHUB_ENV
     - run: npm run netlify:preview
