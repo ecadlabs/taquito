@@ -4,23 +4,23 @@ author: Simon Boissonneault-Robert
 ---
 
 :::caution Warning
-**Storing private keys in memory is suitable for development workflows, but risky for
+**Storing private keys in memory is suitable for development workflows but risky for
 production use-cases! Use the InMemorySigner appropriately given your risk profile**
 :::
 
-In memory signer is a local signer implementation that allows you to directly use a private key in your browser or your nodejs app.
+Inmemory signer is a local signer implementation that allows you to directly use a private key in your browser or your nodejs app.
 
-This signer implementation is intended to be used for development workflows.
+This signer implementation is for development workflows.
 
-Using the InMemorySigner for operations on mainnet where your system is dealing with tokens of real value, is discouraged.
+Using the InMemorySigner for operations on mainnet where your system uses tokens of real value is discouraged.
 
-If you require server-side signing of operations on mainnet, we recommend exploring the use of the Remote Signer package in conjunction with an HSM remote signer such as [Signatory][0], or [TacoInfra's Remote Signer][1].
+If you require the server-side signing of operations on the mainnet, we recommend exploring the use of the Remote Signer package in conjunction with an HSM remote signer such as [Signatory][0] or [TacoInfra's Remote Signer][1].
 
 ## Usage
 
 ### Loading an unencrypted private key
 
-If you configure taquito this way you will now be able to use every function that needs signing support.
+If you configure Taquito this way, you will now be able to use every function that needs signing support.
 
 ```js
 import { InMemorySigner } from '@taquito/signer';
@@ -32,7 +32,7 @@ Tezos.setProvider({ signer: await InMemorySigner.fromSecretKey('your_private_key
 ```
 
 :::note
-Operation will be signed automatically using the signer (no prompt)
+The operation will be signed automatically using the signer (no prompt)
 :::
 
 The `fromSecretKey` method takes a secret that is base58 encoded as a parameter. Here are three examples with unencrypted private keys:
@@ -222,16 +222,16 @@ importKey(
 // Your Tezos instance is now operably configured for signing with the faucet key.
 ```
 
-If you configure taquito this way, you will now be able to use every function that needs signing support.
+If you configure Taquito this way, you will now be able to use every function that needs signing support.
 
 :::note
-Operation will be signed automatically using the signer (no prompt)
+The operation will be signed automatically using the signer (no prompt)
 :::
 
 ### A simple factory multiple keys/wallets
 
 If you require to sign operations with many different keys, then implementing a factory function can be useful.
-The `signerFactory` function example creates a new Tezos instance. Use the tezos instance for signing, and discard it when complete.
+The `signerFactory` function example creates a new Tezos instance. Use the Tezos instance for signing, and discard it when complete.
 
 ```js
 import { InMemorySigner } from '@taquito/signer';

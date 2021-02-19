@@ -3,7 +3,7 @@ title: Validation functions
 author: Roxane Letourneau
 ---
 
-Taquito provides functions that allow us to see if an address, a chain, a key hash, a contract address, a public key or a signature is valid. Note that these validations do not rely on a node but are done based on checksums. Thus, they allow us to check if a value is valid and not if it exists on a chain. The `ValidationResult` returned by these functions is an enum which can take the following values:
+Taquito provides functions that allow us to see if an address, a chain, a key hash, a contract address, a public key, or a signature is valid. Note that these validations do not rely on a node but are done based on checksums. Thus, they allow us to check if a value is valid and not if it exists on a chain. The `ValidationResult` returned by these functions is an enum that can take the following values:
 
 ```
 0 = NO_PREFIX_MATCHED,
@@ -16,9 +16,9 @@ Taquito provides functions that allow us to see if an address, a chain, a key ha
 
 #### The `validateAddress` function
 
-This function can be used to validate implicit addresses (tz1, tz2, tz3) as well as originated addresses (KT1).
+This function can be used to validate implicit addresses (tz1, tz2, tz3) and originated addresses (KT1).
 
-In the following example, the function is first called with a valid public key hash (pkh). Then, it is called with the same pkh where one character differs (e.g. 'p' instead of 'P'), which results in an invalid checksum.
+In the following example, the function is first called with a valid public key hash (pkh). It is then called with the same pkh where one character differs (e.g. 'p' instead of 'P'), which results in an invalid checksum.
 
 ```js live noInline
 import { validateAddress } from '@taquito/utils';

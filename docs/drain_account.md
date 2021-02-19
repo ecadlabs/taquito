@@ -3,20 +3,20 @@ title: Drain an account
 author: Roxane Letourneau
 ---
 
-In this section, we show how to transfer all tokens from one account (implicit or originated) to another so that the source account balance is zero.
+This section shows how to transfer all tokens from one account (implicit or originated) to another so that the source account balance is zero.
 
 ## Draining implicit accounts (tz1, tz2, tz3)
 
-We want to "empty" an implicit account by sending all of its tokens to another account. It can be tricky to empty a tezos account completely because the gas fee must be subtracted from the account balance.
+We want to "empty" an implicit account by sending all of its tokens to another account. It can be tricky to empty a tezos account because the system must subtract the gas fee from the account balance.
 
 To do so, we first need to estimate the fees related to this operation. The `estimate` property of the `TezosToolkit` provides access to operation estimation utilities. Calling the `transfer` method will return an instance of the `Estimate` class and its `suggestedFeeMutez` property will allow us to know the fee associated with the operation.
 
-Once we know the associated fees, we can calculate the maximum amount that needs to be sent to drain the account by subtracting these fees from the account balance.
+Once we know the associated fees, we can calculate the maximum amount that needs to send to drain the account by subtracting these fees from the account balance.
 
 Finally, we can do the transfer operation and use the maximum amount we just calculated as the `amount` parameter of the `transfer` function.
 
 :::note
-In the following example, the account we want to empty is not yet revealed. We need to keep in mind that there are fees related to a reveal operation. This is why we are subtracting 1420 mutez from the balance as it will be used as reveal fees.
+In the following example, we have not revealed the account that we want to empty. We need to keep in mind that there are fees related to a reveal operation. We are subtracting 1420 mutez from the balance to cover reveal fees.
 
 **If the account to drain has already been revealed, you must not subtract this amount (1420 mutez) from the balance.**
 :::
@@ -78,9 +78,9 @@ Tezos.signer
 
 In the following example, we first originate a contract with a starting balance of 8 ꜩ. Then, we transfer all of its tokens to an implicit account.
 
-The contract we originate is a `manager contract`. It has a `do` method taking a lambda function as a parameter. We call the smart contract by passing a function called `transferImplicit` to its `do` method in order to transfer its tokens to the implicit address. More information on transfers involving originated KT1 addresses can be found [here](https://tezostaquito.io/docs/making_transfers#transfers-involving-originated-kt1-addresses).
+The contract we originate is a `manager contract.` It has a `do` method taking a lambda function as a parameter. We call the smart contract by passing a function called `transferImplicit` to its `do` method to transfer its tokens to the implicit address. More information on transfers involving originated KT1 addresses can be found [here](https://tezostaquito.io/docs/making_transfers#transfers-involving-originated-kt1-addresses).
 
-In the example, we estimate the transfer operation before doing it. When draining the account, the associated fees will be deducted from the manager's address. Thus, for the operation to be successful, the manager's address for that account must contain funds to cover the gas.
+In the example, we estimate the transfer operation before doing it. The associated fees are deducted from the manager's address when draining the account. Thus, for the operation to be successful, the manager's address for that account must contain funds to cover the gas.
 
 ```js live noInline
 // const Tezos = new TezosToolkit('https://api.tez.ie/rpc/delphinet');

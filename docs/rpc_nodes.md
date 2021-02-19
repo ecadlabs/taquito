@@ -13,7 +13,7 @@ author: Roxane Letourneau
 
 ## List of community-run nodes
 
-*If you are aware of a public node missing from our list, or our information is inaccurate, please help us by submitting an issue or pull request on our GitHub page.*
+*If you are aware of a public node missing from our list or our information is inaccurate, please help us by submitting an issue or pull request on our GitHub page.*
 
 - Tezos Giga Node from Tezos Ukraine
     - Mainnet: https://mainnet-tezos.giganode.io
