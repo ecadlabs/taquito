@@ -13,3 +13,4 @@ website/build/
 manifest.json
 !.vscode/extensions.json
 website/*.bak
+integration-tests/jest-stare/

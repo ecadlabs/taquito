@@ -19,6 +19,7 @@ const forgers: ForgerType[] = [ForgerType.COMPOSITE];
 interface Config {
   rpc: string;
   knownBaker: string;
+  knownBakerContract?: string | undefined;
   knownContract: string;
   knownBigMapContract: string;
   protocol: Protocols;
@@ -53,6 +54,20 @@ interface EphemeralConfig {
 interface FaucetConfig {
   type: SignerType.FAUCET;
   faucetKey: {};
+}
+
+const falphanetEphemeral = {
+  rpc: process.env['TEZOS_RPC_FALPHANET'] || 'https://api.tez.ie/rpc/falphanet',
+  knownBakerContract: 'SG1cfiN47qGnkvwfBQrWADFULNbTLLKfVwTP',
+  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
+  knownContract: 'KT1D83NWKdY6KNhWV4xiA7rDrRW4EumMzVqN',
+  knownBigMapContract: 'KT1J6s9KGwvCSGqc9tPWEHpac6qHtHoRY188',
+  protocol: Protocols.PsrsRVg1,
+  signerConfig: {
+    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
+    keyUrl: 'https://api.tez.ie/keys/falphanet',
+    requestHeaders: { 'Authorization': 'Bearer taquito-example' },
+  }
 }
 
 const edonetEphemeral = {
@@ -129,6 +144,19 @@ const key = {
   secret: "122bb47843750982da5c65f7affa0d32971ac876"
 }
 
+const falphanetFaucet = {
+  rpc: 'https://api.tez.ie/rpc/falphanet',
+  knownBakerContract: 'SG1cfiN47qGnkvwfBQrWADFULNbTLLKfVwTP',
+  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
+  knownContract: 'KT1D83NWKdY6KNhWV4xiA7rDrRW4EumMzVqN',
+  knownBigMapContract: 'KT1J6s9KGwvCSGqc9tPWEHpac6qHtHoRY188',
+  protocol: Protocols.PsrsRVg1,
+  signerConfig: {
+    type: SignerType.FAUCET as SignerType.FAUCET,
+    faucetKey: key,
+  }
+}
+
 const edonetFaucet = {
   rpc: 'https://api.tez.ie/rpc/edonet',
   knownBaker: 'tz1R55a2HQbXUAzWKJYE5bJp3UvvawwCm9Pr',
@@ -179,7 +207,7 @@ const babylonnetFaucet = {
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_FAUCET']) {
-  providers.push(delphinetFaucet, edonetFaucet)
+  providers.push(delphinetFaucet, edonetFaucet, falphanetFaucet)
 } 
 else if (process.env['RUN_DELPHINET_WITH_FAUCET']) {
   providers.push(delphinetFaucet)
@@ -187,13 +215,19 @@ else if (process.env['RUN_DELPHINET_WITH_FAUCET']) {
 else if (process.env['RUN_EDONET_WITH_FAUCET']) {
   providers.push(edonetFaucet)
 }
+else if (process.env['RUN_FALPHANET_WITH_FAUCET']) {
+  providers.push(falphanetFaucet)
+}
 else if (process.env['DELPHINET']) {
   providers.push(delphinetEphemeral)
 }
 else if (process.env['EDONET']) {
   providers.push(edonetEphemeral)
+} 
+else if (process.env['FALPHANET']) {
+  providers.push(falphanetFaucet)
 } else {
-  providers.push(edonetEphemeral, delphinetEphemeral)
+  providers.push(falphanetEphemeral, edonetEphemeral, delphinetEphemeral)
 }
 
 const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE'];
@@ -266,13 +300,14 @@ const setupWithFaucetKey = async (Tezos: TezosToolkit, signerConfig: FaucetConfi
 export const CONFIGS = () => {
   return forgers.reduce((prev, forger: ForgerType) => {
 
-    const configs = providers.map(({ rpc, knownBaker, knownContract, protocol, knownBigMapContract, signerConfig }) => {
+    const configs = providers.map(({ rpc, knownBakerContract, knownBaker, knownContract, protocol, knownBigMapContract, signerConfig }) => {
       const Tezos = new TezosToolkit(rpc);
 
       setupForger(Tezos, forger)
 
       return {
         rpc,
+        knownBakerContract,
         knownBaker,
         knownContract,
         protocol,
