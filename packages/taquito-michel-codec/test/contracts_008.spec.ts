@@ -288,7 +288,7 @@ describe("PtEdo2Zk", () => {
                 it(contract, () => {
                     const options: ContractOptions = {
                         protocol: Protocol.PtEdo2Zk
-                    }
+                    };
 
                     const filename = path.resolve(__dirname, "contracts_008", group, contract);
                     const src = fs.readFileSync(filename).toString();

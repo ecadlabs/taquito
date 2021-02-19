@@ -134,10 +134,10 @@ export type MichelsonType<T extends MichelsonTypeID = MichelsonTypeID> =
 
 // Data
 
-export type MichelsonDataId = "Unit" | "True" | "False" | "None" | "Pair" | "Left" | "Right" | "Some";
+export type MichelsonDataID = "Unit" | "True" | "False" | "None" | "Pair" | "Left" | "Right" | "Some";
 
-type Data0<PT extends MichelsonDataId> = Prim0<PT>;
-type DataX<PT extends MichelsonDataId, AT extends MichelsonData[]> = PrimX<PT, AT>;
+type Data0<PT extends MichelsonDataID> = Prim0<PT>;
+type DataX<PT extends MichelsonDataID, AT extends MichelsonData[]> = PrimX<PT, AT>;
 
 type PartialData = DataX<"Some" | "Left" | "Right", [MichelsonData]>;
 type DataList<T extends MichelsonData[]> = T & Node;
@@ -158,8 +158,8 @@ export type MichelsonData =
 
 // Top level script sections
 
-type MichelsonSectionId = "parameter" | "storage" | "code";
-type SectionPrim<PT extends MichelsonSectionId, AT extends Expr[]> = PrimX<PT, AT>;
+type MichelsonSectionID = "parameter" | "storage" | "code";
+type SectionPrim<PT extends MichelsonSectionID, AT extends Expr[]> = PrimX<PT, AT>;
 
 export type MichelsonContractParameter = SectionPrim<"parameter", [MichelsonType]>;
 export type MichelsonContractStorage = SectionPrim<"storage", [MichelsonType]>;
@@ -173,7 +173,7 @@ export type MichelsonContract =
     [MichelsonContractCode, MichelsonContractStorage, MichelsonContractParameter] |
     [MichelsonContractCode, MichelsonContractParameter, MichelsonContractStorage];
 
-export type MichelsonContractSection<T extends MichelsonSectionId> =
+export type MichelsonContractSection<T extends MichelsonSectionID> =
     T extends "parameter" ? MichelsonContractParameter :
     T extends "storage" ? MichelsonContractStorage : MichelsonContractCode;
 
