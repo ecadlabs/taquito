@@ -1,3 +1,8 @@
+/**
+ * @packageDocumentation
+ * @module @taquito/local-forging
+ */
+
 import { ForgeParams, Forger } from '@taquito/taquito';
 import { CODEC } from './constants';
 import { decoders } from './decoder';

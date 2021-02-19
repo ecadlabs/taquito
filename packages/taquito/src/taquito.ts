@@ -1,3 +1,8 @@
+/**
+ * @packageDocumentation
+ * @module @taquito/taquito
+ */
+
 import { RpcClient } from '@taquito/rpc';
 import { RPCBatchProvider } from './batch/rpc-batch-provider';
 import { Protocols } from './constants';
@@ -14,8 +19,6 @@ import { PollingSubscribeProvider } from './subscribe/polling-provider';
 import { TzProvider } from './tz/interface';
 import { LegacyWalletProvider, Wallet, WalletProvider } from './wallet';
 import { OperationFactory } from './wallet/opreation-factory';
-import { ParserProvider } from './parser/interface';
-import { MichelCodecParser } from './parser/michel-codec-parser';
 
 export { MichelsonMap, UnitValue } from '@taquito/michelson-encoder';
 export * from './constants';
@@ -39,6 +42,9 @@ export { PollingSubscribeProvider } from './subscribe/polling-provider';
 export * from './tz/interface';
 export * from './wallet';
 export { Extension } from './extension/extension';
+export * from './parser/interface';
+export * from './parser/michel-codec-parser';
+export * from './parser/noop-parser'
 
 export interface SetProviderOptions {
   forger?: Forger;

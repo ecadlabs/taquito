@@ -1,40 +1,16 @@
 import { CONFIGS } from "./config";
 import { ticketCode, ticketStorage } from '../packages/taquito-local-forging/test/data/code_with_ticket';
 import { Protocols } from "@taquito/taquito";
-import { importKey } from "@taquito/signer";
 
-CONFIGS().forEach(({ lib, rpc, protocol }) => {
+CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
   const Tezos = lib;
 
-  const edonet = (protocol === Protocols.PtEdoTez) ? test : test.skip;
+  const edonet = (protocol === Protocols.PtEdo2Zk) ? test : test.skip;
 
   describe(`Test origination of a token contract using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
-      // temporary while the key gen doesn't use Taquito v8
-      await importKey(
-        Tezos,
-        'peqjckge.qkrrajzs@tezos.example.org',
-        'y4BX7qS1UE',
-        [
-            'skate',
-            'damp',
-            'faculty',
-            'morning',
-            'bring',
-            'ridge',
-            'traffic',
-            'initial',
-            'piece',
-            'annual',
-            'give',
-            'say',
-            'wrestle',
-            'rare',
-            'ability',
-        ].join(' '),
-        '7d4c8c3796fdbf4869edb5703758f0e5831f5081'
-    );
+      await setup();
       done()
     })
 
@@ -58,6 +34,7 @@ CONFIGS().forEach(({ lib, rpc, protocol }) => {
 
       await op.confirmation();
       expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
 
       done();
     });
@@ -70,6 +47,7 @@ CONFIGS().forEach(({ lib, rpc, protocol }) => {
 
       await op.confirmation();
       expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
 
       done();
     });
@@ -85,8 +63,9 @@ CONFIGS().forEach(({ lib, rpc, protocol }) => {
 
       await op.confirmation();
       expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       
       done();
-    });
+    }); 
   });
 })

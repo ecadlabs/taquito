@@ -23,7 +23,7 @@ export enum Protocols {
   PsBabyM1 = 'PsBabyM1eUXZseaJdmXFApDSBqj8YBfwELoxZHHW77EMcAbbwAS',
   PsCARTHA = 'PsCARTHAGazKbHtnKfLzQg3kms52kSRpgnDY982a9oYsSXRLQEb',
   PsDELPH1 = 'PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo',
-  PtEdoTez = 'PtEdoTezd3RHSC31mpxxo1npxFjoWWcFgQtxapi51Z8TLu6v6Uq'
+  PtEdo2Zk = 'PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA'
 }
 
 export const protocols = {
@@ -31,19 +31,19 @@ export const protocols = {
   '005': [Protocols.PsBABY5H, Protocols.PsBabyM1],
   '006': [Protocols.PsCARTHA],
   '007': [Protocols.PsDELPH1],
-  '008': [Protocols.PtEdoTez] // edonet
+  '008': [Protocols.PtEdo2Zk] // edonet v2
 };
 
 export enum DefaultLambdaAddresses {
   MAINNET = 'KT1CPuTzwC7h7uLXd5WQmpMFso1HxrLBUtpE',
   CARTHAGENET = 'KT1VAy1o1FGiXYfD3YT7x7k5eF5HSHhmc1u6',
   DELPHINET = 'KT19abMFs3haqyKYwqdLjK9GbtofryZLvpiK',
-  EDONET = 'KT198LTgMryZh2T7eCDqTVQsSQHTH2MxsGLv'
+  EDONET = 'KT1A64nVZDccAHGAsf1ZyVajXZcbiwjV3SnN'
 }
 
 export enum ChainIds {
   MAINNET = "NetXdQprcVkpaWU",
   CARTHAGENET = "NetXjD3HPJJjmcd",
   DELPHINET = "NetXm8tYqnMWky1",
-  EDONET = "NetXSp4gfdanies"
+  EDONET = "NetXSgo1ZT2DRUG"
 }

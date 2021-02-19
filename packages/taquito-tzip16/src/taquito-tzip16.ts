@@ -1,3 +1,7 @@
+/**
+ * @packageDocumentation
+ * @module @taquito/tzip16
+ */
 export * from './handlers/http-handler';
 export * from './handlers/tezos-storage-handler';
 export * from './handlers/ipfs-handler';

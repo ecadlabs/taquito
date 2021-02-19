@@ -1,3 +1,7 @@
+/**
+ * @packageDocumentation
+ * @module @taquito/michel-codec
+ */
 export * from "./micheline";
 export * from "./micheline-parser";
 export * from "./micheline-emitter";

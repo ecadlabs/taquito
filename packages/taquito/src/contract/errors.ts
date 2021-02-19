@@ -23,3 +23,13 @@ export class InvalidDelegationSource implements Error {
     this.message = `Since Babylon delegation source can no longer be a contract address ${source}. Please use the smart contract abstraction to set your delegate.`;
   }
 }
+
+export class InvalidCodeParameter implements Error {
+  public name: string = 'InvalidCodeParameter';
+  constructor(public message: string, public readonly data: any) { }
+}
+
+export class InvalidInitParameter implements Error {
+  public name: string = 'InvalidInitParameter';
+  constructor(public message: string, public readonly data: any) { }
+}

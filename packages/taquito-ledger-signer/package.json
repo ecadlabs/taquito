@@ -1,6 +1,6 @@
 {
   "name": "@taquito/ledger-signer",
-  "version": "8.0.0-beta.7",
+  "version": "8.0.3-beta.0",
   "description": "Ledger signer provider",
   "keywords": [
     "tezos",
@@ -57,8 +57,8 @@
   },
   "dependencies": {
     "@ledgerhq/hw-transport": "^5.41.0",
-    "@taquito/taquito": "^8.0.0-beta.7",
-    "@taquito/utils": "^8.0.0-beta.7",
+    "@taquito/taquito": "^8.0.3-beta.0",
+    "@taquito/utils": "^8.0.3-beta.0",
     "@types/jest": "^26.0.16",
     "buffer": "^5.6.0",
     "libsodium-wrappers": "^0.7.8"
@@ -90,7 +90,7 @@
     "tslint": "^6.1.2",
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-standard": "^9.0.0",
-    "typescript": "^4.1.2"
+    "typescript": "^4.1.5"
   },
   "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
 }
