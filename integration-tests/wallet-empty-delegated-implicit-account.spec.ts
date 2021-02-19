@@ -1,6 +1,6 @@
 import { CONFIGS } from "./config";
 
-CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker }) => {
+CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBakerContract, knownBaker }) => {
   const Tezos = lib;
   const test = require('jest-retries')
 
@@ -14,10 +14,11 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker }) => {
       const LocalTez = await createAddress();
       const op = await Tezos.wallet.transfer({ to: await LocalTez.signer.publicKeyHash(), amount: 2 }).send();
       await op.confirmation();
+      const delegate = knownBakerContract || knownBaker;
 
       // Delegating from the account we want to empty
       // This will do the reveal operation automatically
-      const op2 = await LocalTez.wallet.setDelegate({ delegate: knownBaker}).send();
+      const op2 = await LocalTez.wallet.setDelegate({delegate}).send();
       await op2.confirmation();
 
       const estimate = await LocalTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 0.5 });
