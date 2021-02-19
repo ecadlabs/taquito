@@ -22,6 +22,7 @@ jobs:
     - run: npm run lerna -- bootstrap
     - run: npm run lerna run build
     - run: cd website && cp -R build/. ../dist
+    - run: npm run build-docs
     - run: npm run netlify:publish
       env:
         CI: true
