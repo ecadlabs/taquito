@@ -12,7 +12,7 @@ Remove `./rpc-nodes.spec.ts` from `"testPathIgnorePatterns"` in the package.json
     - **Delphinet**: `npm run test:delphinet rpc-nodes.spec.ts`
     - **Both protocols**: `npm run test rpc-nodes.spec.ts`
 
-**When all endpoints are accessible for a node, you will obtain :**
+**When all endpoints are accessible for a node, you will obtain:**
 
 ```
 Test calling all methods from RPC node: https://a-node
