@@ -22,7 +22,7 @@ jobs:
     - run: npm run lerna -- bootstrap
     - run: npm run lerna run build
     - run: cd website && cp -R build/. ../dist
-    - run: npm run netlify:preview
+    - run: npm run netlify:publish
       env:
         CI: true
         NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
