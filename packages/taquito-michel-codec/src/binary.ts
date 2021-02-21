@@ -1,5 +1,4 @@
-import { BytesLiteral, Expr } from "./micheline";
-import { MichelsonData } from "./michelson-types";
+import { Expr, Prim } from "./micheline";
 
 const primitives = ["parameter", "storage", "code", "False", "Elt", "Left", "None", "Pair",
     "Right", "Some", "True", "Unit", "PACK", "UNPACK", "BLAKE2B", "SHA256", "SHA512", "ABS", "ADD",
@@ -77,11 +76,95 @@ class Writer {
     }
 }
 
-function encodeBinary(expr: Expr, wr: Writer): void {
+const boundsErr = new Error("bounds out of range");
+class Reader {
+    constructor(private buffer: Uint8Array, private idx: number = 0, private cap: number = buffer.length) {
+    }
+
+    /** Remaining length */
+    get length(): number {
+        return this.cap - this.idx;
+    }
+
+    readBytes(len: number): Uint8Array {
+        if (this.cap - this.idx < len) {
+            throw boundsErr;
+        }
+        const ret = this.buffer.slice(this.idx, this.idx + len);
+        this.idx += len;
+        return ret;
+    }
+
+    reader(len: number): Reader {
+        if (this.cap - this.idx < len) {
+            throw boundsErr;
+        }
+        const ret = new Reader(this.buffer, this.idx, this.idx + len);
+        this.idx += len;
+        return ret;
+    }
+
+    readUint8(): number {
+        if (this.cap - this.idx < 1) {
+            throw boundsErr;
+        }
+        return this.buffer[this.idx++] >>> 0;
+    }
+
+    readUint16(): number {
+        if (this.cap - this.idx < 2) {
+            throw boundsErr;
+        }
+        const x0 = this.buffer[this.idx++];
+        const x1 = this.buffer[this.idx++];
+        return ((x0 << 8) | x1) >>> 0;
+    }
+
+    readUint32(): number {
+        if (this.cap - this.idx < 4) {
+            throw boundsErr;
+        }
+        const x0 = this.buffer[this.idx++];
+        const x1 = this.buffer[this.idx++];
+        const x2 = this.buffer[this.idx++];
+        const x3 = this.buffer[this.idx++];
+        return ((x0 << 24) | (x1 << 16) | (x2 << 8) | x3) >>> 0;
+    }
+
+    readInt8(): number {
+        if (this.cap - this.idx < 1) {
+            throw boundsErr;
+        }
+        const x = this.buffer[this.idx++];
+        return (x << 24) >> 24;
+    }
+
+    readInt16(): number {
+        if (this.cap - this.idx < 2) {
+            throw boundsErr;
+        }
+        const x0 = this.buffer[this.idx++];
+        const x1 = this.buffer[this.idx++];
+        return (((x0 << 8) | x1) << 16) >> 16;
+    }
+
+    readInt32(): number {
+        if (this.cap - this.idx < 4) {
+            throw boundsErr;
+        }
+        const x0 = this.buffer[this.idx++];
+        const x1 = this.buffer[this.idx++];
+        const x2 = this.buffer[this.idx++];
+        const x3 = this.buffer[this.idx++];
+        return (x0 << 24) | (x1 << 16) | (x2 << 8) | x3;
+    }
+}
+
+function encode(expr: Expr, wr: Writer): void {
     if (Array.isArray(expr)) {
         const w = new Writer();
         for (const v of expr) {
-            encodeBinary(v, w);
+            encode(v, w);
         }
         wr.writeUint8(Tag.Sequence);
         wr.writeUint32(w.length);
@@ -148,10 +231,10 @@ function encodeBinary(expr: Expr, wr: Writer): void {
     if (expr.args !== undefined) {
         if (expr.args.length < 3) {
             for (const a of expr.args) {
-                encodeBinary(a, wr);
+                encode(a, wr);
             }
         } else {
-            encodeBinary(expr.args, wr);
+            encode(expr.args, wr);
         }
     }
 
@@ -163,8 +246,111 @@ function encodeBinary(expr: Expr, wr: Writer): void {
     }
 }
 
+function decode(rd: Reader): Expr {
+    const tag = rd.readUint8();
+    switch (tag) {
+        case Tag.Int:
+            {
+                const buf: number[] = [];
+                let byte: number;
+                do {
+                    byte = rd.readInt8();
+                    buf.push(byte);
+                } while ((byte & 0x80) !== 0);
+                let val = BigInt(0);
+                let sign = false;
+                for (let i = buf.length - 1; i >= 0; i--) {
+                    const bits = (i === 0) ? BigInt(6) : BigInt(7);
+                    const byte = BigInt(buf[i]);
+                    val <<= bits;
+                    val |= byte & ((BigInt(1) << bits) - BigInt(1));
+                    if (i === 0) {
+                        sign = !!(byte & BigInt(0x40));
+                    }
+                }
+                if (sign) {
+                    val = -val;
+                }
+                return { int: String(val) };
+            }
+
+        case Tag.String:
+            {
+                const length = rd.readUint32();
+                const bytes = rd.readBytes(length);
+                const dec = new TextDecoder();
+                return { string: dec.decode(bytes) };
+            }
+
+        case Tag.Bytes:
+            {
+                const length = rd.readUint32();
+                const bytes = rd.readBytes(length);
+                const hex = Array.from(bytes).map(x => ((x >> 4) & 0xf).toString(16) + (x & 0xf).toString(16)).join("");
+                return { bytes: hex };
+            }
+
+        case Tag.Sequence:
+            {
+                const res: Expr[] = [];
+                const length = rd.readUint32();
+                const r = rd.reader(length);
+                while (r.length > 0) {
+                    res.push(decode(r));
+                }
+                return res;
+            }
+
+        default:
+            {
+                if (tag > 9) {
+                    throw new Error(`Unknown tag: ${tag}`);
+                }
+                const p = rd.readUint8();
+                if (p >= primitives.length) {
+                    throw new Error(`Unknown primitive tag: ${p}`);
+                }
+                const res: Prim = {
+                    prim: primitives[p],
+                };
+
+                const argn = (tag - 3) >> 1;
+                if (argn < 3) {
+                    for (let i = 0; i < argn; i++) {
+                        res.args = res.args || [];
+                        res.args.push(decode(rd));
+                    }
+                } else {
+                    res.args = res.args || [];
+                    const length = rd.readUint32();
+                    const r = rd.reader(length);
+                    while (r.length > 0) {
+                        res.args.push(decode(r));
+                    }
+                }
+
+                if (((tag - 3) & 1) === 1) {
+                    // annotations
+                    const length = rd.readUint32();
+                    const bytes = rd.readBytes(length);
+                    const dec = new TextDecoder();
+                    res.annots = dec.decode(bytes).split(" ");
+                }
+                return res;
+            }
+    }
+}
+
 export function emitBinary(expr: Expr): number[] {
     const w = new Writer();
-    encodeBinary(expr, w);
+    encode(expr, w);
     return w.buffer;
+}
+
+export function parseBinary(buf: Uint8Array | number[]): Expr | null {
+    if (buf.length === 0) {
+        return null;
+    }
+    const rd = new Reader(new Uint8Array(buf));
+    return decode(rd);
 }
