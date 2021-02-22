@@ -5,6 +5,7 @@ author: Simon Boissonneault-Robert
 
 ::: warning v7 Breaking changes
 Taquito version 7, which supports the Tezos Delphi protocol, has some breaking changes. If you are upgrading from an earlier version to V7, please read the [v7 upgrade guide](v7_breaking_changes.md)
+
 :::
 
 ## Installing Taquito using npm
@@ -29,7 +30,9 @@ import { TezosToolkit } from '@taquito/taquito';
 const tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 ```
 
+
 In some cases, it can be useful to make more than one instance of Taquito. For example, if you want to communicate with two different RPC nodes, or offer to different Signing options. You can new up separate instances with different providers or configuration per instance.
+
 
 ## Configuration
 
@@ -63,9 +66,9 @@ Tezos.tz
 
 ### Using the inMemory Signer and Importing a key
 
-The `InMemorySigner` package is useful for development and testing. It's an easy way to get started with Tezos when you don't need to interact with a users wallet. The `InMemorySigner` is suitable for testing and development. Should you be writing code for production that deals with tokens of real value, it's strongly recommended that you use a RemoteSigner that is backed by a HSM.
+The `InMemorySigner` package is useful for development and testing. It's an easy way to get started with Tezos when you don't need to interact with a user's wallet. The `InMemorySigner` is suitable for testing and development. Should you be writing code for production that deals with real value tokens, we strongly recommend that you use a RemoteSigner that an HSM backs.
 
-This will import your private key in memory and sign operations using this key.
+This feature will import your private key in memory and sign operations using this key.
 
 #### Importing a Private key
 
@@ -84,7 +87,7 @@ Tezos.setProvider({
 
 #### Importing a Faucet Key
 
-"Faucet Keys" allow you to get Tezos tokens on the various Tezos "testnets". You can download a faucet key from https://faucet.tzalpha.net/
+"Faucet Keys" allows you to get Tezos tokens on the various Tezos "testnets." You can download a faucet key from https://faucet.tzalpha.net/
 The key is a JSON file, which you can use with Taquito as follows:
 
 ```js
@@ -130,7 +133,7 @@ importKey(
 
 ### Transfer
 
-The transfer operation requires a configured signer. In this example we will use a private key that we fetch a key service, implemented for demonstration purposes. This key service should only be used for testing and development purposes.
+The transfer operation requires a configured signer. In this example, we will use a private key to fetch a key service implemented for demonstration purposes. You should only use this key service for testing and development purposes.
 
 ```js live noInline
 const amount = 2;
@@ -149,7 +152,7 @@ Tezos.contract
 
 ### Interact with a smart contract
 
-Calling smart contract operations requires a configured signer, in this example we will use a faucet key. The Ligo source code for this smart contract [KT1NGihnotUbt8C1WsKfsUg1E2D7UPYzAn2N][smart_contract_on_better_call_dev] used in this example can be found in a [Ligo Web IDE][smart_contract_source].
+Calling smart contract operations requires a configured signer; in this example we will use a faucet key. The Ligo source code for the smart contract [KT1NGihnotUbt8C1WsKfsUg1E2D7UPYzAn2N][smart_contract_on_better_call_dev] used in this example can be found in a [Ligo Web IDE][smart_contract_source].
 
 ```js live noInline
 Tezos.contract

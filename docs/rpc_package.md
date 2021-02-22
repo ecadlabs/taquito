@@ -7,7 +7,7 @@ Taquito RPC Package Documentation
 
 ## Description
 
-The RPC client package can be used to query the RPC API of your chosen node. The higher-level [`@taquito/taquito`](https://tezostaquito.io/typedoc/modules/_taquito_rpc.html) package builds on this RPC package, in general, you won't need to use this package directly, but it is available for use should you want some specific data and bypass the higher level abstractions in Taquito.
+You can use the RPC client package to query the RPC API of your chosen node. The higher-level [`@taquito/taquito`](https://tezostaquito.io/typedoc/modules/_taquito_rpc.html) package builds on this RPC package, in general, you won't need to use this package directly, but it is available for use should you want some specific data and bypass the higher-level abstractions in Taquito.
 
 Methods in the RPC package map one-to-one to the corresponding Tezos RPC API endpoints. All responses from the RPC are returns with TypeScript types. It doesn't do any other parsing or compositions at this level.
 
@@ -64,7 +64,7 @@ const contract = await client.getContract(contractExample);
 console.log('-- Contract:', contract);
 ```
 
-This method returns the balance of the contract, the code and the storage.
+This method returns the balance of the contract, the code, and the storage.
 
 ```js
 // gets contract entrypoints
@@ -72,7 +72,7 @@ const entrypoints = await client.getEntrypoints(contractExample);
 console.log('-- Entrypoints:', entrypoints);
 ```
 
-You can also get a list of the contract entrypoints as an object whose keys are the entrypoint names and whose values are the expected parameters in JSON format.
+You can also get a list of the contract entry points as an object whose keys are the entry point names and whose values are the expected parameters in JSON format.
 
 ```js
 // gets contract script
@@ -80,7 +80,7 @@ const script = await client.getScript(contractExample);
 console.log('-- Contract script:', script);
 ```
 
-The `getScript` method returns the script of the contract as a 3 key/value pair object: a key for the parameter, a key for the storage and a key for the code.
+The `getScript` method returns the contract's script as a 3 key/value pair object: a key for the parameter, a key for the storage, and a key for the code.
 
 ```js
 // gets contract storage

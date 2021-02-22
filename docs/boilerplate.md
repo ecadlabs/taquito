@@ -14,6 +14,6 @@ For information about how to get started with Taquito Boilerplate please refer t
 
 ### React demo
 
-You can also download a demo app written in React to try Taquito. The template for the app is available in the [Taquito React template repo][taquito-react-template] and only requires a few commands to be up and running.
+You can also download a demo app written in React to try Taquito. The app's template is available in the [Taquito React template repo][taquito-react-template] and only requires a few commands to be up and running.
 
 [taquito-react-template]: https://github.com/ecadlabs/taquito-react-template

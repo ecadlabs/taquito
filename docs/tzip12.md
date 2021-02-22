@@ -6,15 +6,15 @@ author: Roxane Letourneau
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-The `@taquito/tzip12` package allows retrieving metadata associated with tokens of FA2 contract. More information about the TZIP-12 standard can be found [here](https://gitlab.com/tzip/tzip/-/blob/master/proposals/tzip-12/tzip-12.md).
+The `@taquito/tzip12` package allows retrieving metadata associated with tokens of FA2 contract. You can find more information about the TZIP-12 standard [here](https://gitlab.com/tzip/tzip/-/blob/master/proposals/tzip-12/tzip-12.md).
 
 ## How to use the tzip12 package
 
-The package can be used as an extension to the well known Taquito contract abstraction. 
+The package can act as an extension to the well-known Taquito contract abstraction. 
 
 1. **We first need to create an instance of `Tzip12Module` and add it as an extension to our `TezosToolkit`**
 
-The constructor of the `Tzip12Module` takes an optional `MetadataProvider` as a parameter. When none is passed, the default `MetadataProvider` of Taquito is instantiated and the default handlers (`HttpHandler`, `IpfsHandler`, and `TezosStorageHandler`) are used.
+The constructor of the `Tzip12Module` takes an optional `MetadataProvider` as a parameter. When none is passed, the default `MetadataProvider` of Taquito is instantiated, and the default handlers (`HttpHandler,` `IpfsHandler,` and `TezosStorageHandler`) are used.
 
 ```js
 import { TezosToolkit } from '@taquito/taquito';
@@ -51,7 +51,7 @@ await contract.tzip16().getMetadata(); // Tzip16ContractAbstraction method
 
 There are two scenarios to obtain the metadata of a token:
 1. They can be obtained from executing an off-chain view named `token_metadata` present in the contract metadata
-2. or, from a big map named `token_metadata` in the contract storage. 
+2. or from a big map named `token_metadata` in the contract storage. 
 
 The `getTokenMetadata` method of the `Tzip12ContractAbstraction` class will find the token metadata with precedence for the off-chain view, if there is one, as specified in the standard.
 
@@ -166,7 +166,7 @@ prim: 'big_map',
   </TabItem>
 </Tabs>  
 
-Otherwise, the token metadata won't be found by the `getTokenMetadata` method and a `TokenMetadataNotFound` error will be thrown.
+Otherwise, the token metadata won't be found by the `getTokenMetadata` method, and a `TokenMetadataNotFound` error will be thrown.
 :::
 
 ```js live noInline

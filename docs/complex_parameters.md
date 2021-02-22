@@ -14,7 +14,7 @@ The source code of the contract used in the following examples is available [her
 
 Here we have the storage of the contract defined in Michelson.
 
-This storage uses a pair which is itself composed of a pair and a `map` (annotated as %validators). The nested pair consists of an address (annotated as %owner) and a `bigMap` (annotated as %records). The `map %validators` uses a natural number (`nat`) as its key and an address as its value. The `bigMap %records` uses a value in `bytes` as its key and a pair consisting of nested pairs as its value. In these nested pairs, we find addresses and natural numbers, where some are optional, and a `map` (annotated %data). The `map %data` uses a `string` as its key and the user needs to choose the value of the `map` between different proposed types (`int`, `bytes`, `bool`, ...). We can notice in this example that all the arguments are identified by an annotation.
+The storage uses a pair composed of a nested pair and a `map` (annotated as %validators). The nested pair consists of an address (annotated as %owner) and a `bigMap` (annotated as %records). The `map %validators` use a natural number (`nat`) as its key and address its value. The `bigMap %records` uses a value in `bytes` as its key and a pair consisting of nested pairs as its value. We find addresses and natural numbers in these nested pairs, where some are optional, and a `map` (annotated %data). The `map %data` uses a `string` as its key, and the user needs to choose the value of the `map` between different proposed types (`int,` `bytes,` `bool`, ...). We can notice in this example that an annotation identifies all the arguments.
 
 ```
 storage (pair
@@ -105,6 +105,7 @@ importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
 ## Calling the function of a contract having a complex object as a parameter
 
 The contract contains a function named `set_child_record`. The parameter of the function is composed of nested pairs regrouping different datatypes (address, `map`, `bytes` and `nat`). Two of its arguments, the `address %address` and the `nat %ttl`, are optional. The `map %data` uses a `string` as its key. The user needs to choose the value of the `map` between different proposed types. 
+
 
 Here is the parameter of the function defined in Michelson :
 
