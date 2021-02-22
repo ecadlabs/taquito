@@ -1,6 +1,17 @@
-import { Expr, Prim } from "./micheline";
+import { BytesLiteral, Expr, Prim } from "./micheline";
+import {
+    MichelsonTypeID, MichelsonDataID,
+    MichelsonSectionID, MichelsonInstructionID
+} from "./michelson-types";
+import { parseBytes } from "./utils";
 
-const primitives = ["parameter", "storage", "code", "False", "Elt", "Left", "None", "Pair",
+type PrimID = MichelsonTypeID |
+    MichelsonDataID |
+    MichelsonSectionID |
+    MichelsonInstructionID |
+    "Elt";
+
+const primitives: PrimID[] = ["parameter", "storage", "code", "False", "Elt", "Left", "None", "Pair",
     "Right", "Some", "True", "Unit", "PACK", "UNPACK", "BLAKE2B", "SHA256", "SHA512", "ABS", "ADD",
     "AMOUNT", "AND", "BALANCE", "CAR", "CDR", "CHECK_SIGNATURE", "COMPARE", "CONCAT", "CONS",
     "CREATE_ACCOUNT", "CREATE_CONTRACT", "IMPLICIT_ACCOUNT", "DIP", "DROP", "DUP", "EDIV", "EMPTY_MAP",
@@ -15,9 +26,9 @@ const primitives = ["parameter", "storage", "code", "False", "Elt", "Left", "Non
     "SELF_ADDRESS", "never", "NEVER", "UNPAIR", "VOTING_POWER", "TOTAL_VOTING_POWER", "KECCAK",
     "SHA3", "PAIRING_CHECK", "bls12_381_g1", "bls12_381_g2", "bls12_381_fr", "sapling_state",
     "sapling_transaction", "SAPLING_EMPTY_STATE", "SAPLING_VERIFY_UPDATE", "ticket", "TICKET",
-    "READ_TICKET", "SPLIT_TICKET", "JOIN_TICKETS", "GET_AND_UPDATE"] as const;
+    "READ_TICKET", "SPLIT_TICKET", "JOIN_TICKETS", "GET_AND_UPDATE"];
 
-const primTags: { [key: string]: number | undefined } = Object.assign({}, ...primitives.map((v, i) => ({ [v]: i })));
+const primTags: { [key in PrimID]?: number } & { [key: string]: number | undefined; } = Object.assign({}, ...primitives.map((v, i) => ({ [v]: i })));
 
 enum Tag {
     Int = 0,
@@ -158,6 +169,134 @@ class Reader {
         const x3 = this.buffer[this.idx++];
         return (x0 << 24) | (x1 << 16) | (x2 << 8) | x3;
     }
+}
+
+enum ContractID {
+    Implicit = 0,
+    Originated = 1,
+}
+
+enum PublicKeyHashID {
+    ED25519 = 0,
+    SECP256K1 = 1,
+    P256 = 2,
+}
+
+type AddressType = "ED25519PublicKeyHash" | "SECP256K1PublicKeyHash" | "P256PublicKeyHash" | "ContractHash";
+
+export interface Address {
+    type: AddressType;
+    hash: number[] | Uint8Array;
+    entryPoint?: string;
+}
+
+function decodePublicKeyHash(rd: Reader): Address {
+    let type: AddressType;
+    const tag = rd.readUint8();
+    switch (tag) {
+        case PublicKeyHashID.ED25519:
+            type = "ED25519PublicKeyHash";
+            break;
+        case PublicKeyHashID.SECP256K1:
+            type = "SECP256K1PublicKeyHash";
+            break;
+        case PublicKeyHashID.P256:
+            type = "P256PublicKeyHash";
+            break;
+        default:
+            throw new Error(`unknown public key hash tag: ${tag}`);
+    }
+    return { type, hash: rd.readBytes(20) };
+}
+
+function decodeAddress(rd: Reader): Address {
+    let address: Address;
+    const tag = rd.readUint8();
+    switch (tag) {
+        case ContractID.Implicit:
+            address = decodePublicKeyHash(rd);
+            break;
+
+        case ContractID.Originated:
+            address = {
+                type: "ContractHash",
+                hash: rd.readBytes(20),
+            };
+            rd.readBytes(1);
+            break;
+
+        default:
+            throw new Error(`unknown address tag: ${tag}`);
+    }
+
+    if (rd.length !== 0) {
+        // entry point
+        const dec = new TextDecoder();
+        address.entryPoint = dec.decode(rd.readBytes(rd.length));
+    }
+    return address;
+}
+
+enum PublicKeyID {
+    ED25519 = 0,
+    SECP256K1 = 1,
+    P256 = 2,
+}
+
+export type PublicKeyType = "ED25519PublicKey" | "SECP256K1PublicKey" | "P256PublicKey";
+export interface PublicKey {
+    type: PublicKeyType;
+    key: number[] | Uint8Array;
+}
+
+function decodePublicKey(rd: Reader): PublicKey {
+    let ln: number;
+    let type: PublicKeyType;
+    const tag = rd.readUint8();
+    switch (tag) {
+        case PublicKeyID.ED25519:
+            type = "ED25519PublicKey";
+            ln = 32;
+            break;
+        case PublicKeyID.SECP256K1:
+            type = "SECP256K1PublicKey";
+            ln = 33;
+            break;
+        case PublicKeyID.P256:
+            type = "P256PublicKey";
+            ln = 33;
+            break;
+        default:
+            throw new Error(`unknown public key tag: ${tag}`);
+    }
+    return { type, key: rd.readBytes(ln) };
+}
+
+export function decodeAddressBytes(b: BytesLiteral): Address {
+    const bytes = parseBytes(b.bytes);
+    if (bytes === null) {
+        throw new Error(`can't parse bytes: "${b.bytes}"`);
+    }
+    const rd = new Reader(new Uint8Array(bytes));
+    return decodeAddress(rd);
+}
+
+export function decodePublicKeyHashBytes(b: BytesLiteral): Address {
+    const bytes = parseBytes(b.bytes);
+    if (bytes === null) {
+        throw new Error(`can't parse bytes: "${b.bytes}"`);
+    }
+    const rd = new Reader(new Uint8Array(bytes));
+    return decodePublicKeyHash(rd);
+}
+
+export function decodePublicKeyBytes(b: BytesLiteral): PublicKey {
+    const bytes = parseBytes(b.bytes);
+    if (bytes === null) {
+        throw new Error(`can't parse bytes: "${b.bytes}"`);
+    }
+    const rd = new Reader(new Uint8Array(bytes));
+    return decodePublicKey(rd);
 }
 
 function encode(expr: Expr, wr: Writer): void {

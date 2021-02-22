@@ -1,4 +1,4 @@
-import { Prim, Expr } from "./micheline";
+import { Prim, Expr, BytesLiteral, StringLiteral } from "./micheline";
 import { decodeBase58Check } from "./base58";
 
 export type Tuple<N extends number, T> =
@@ -242,8 +242,8 @@ export const tezosPrefix: Record<TezosIDType, TezosIDPrefix> = {
     ChainID: [4, [87, 82, 0]],
 };
 
-export function checkTezosID(id: string | number[], ...types: TezosIDType[]): [TezosIDType, number[]] | null {
-    const buf = Array.isArray(id) ? id : decodeBase58Check(id);
+export function checkTezosID(id: string, ...types: TezosIDType[]): [TezosIDType, number[]] | null {
+    const buf = decodeBase58Check(id);
     for (const t of types) {
         const prefix = tezosPrefix[t];
         if (buf.length === prefix[0] + prefix[1].length) {

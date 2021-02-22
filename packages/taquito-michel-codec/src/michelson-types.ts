@@ -20,9 +20,11 @@ type MichelsonNoArgInstructionID = "ABS" | "ADD" | "ADDRESS" | "AMOUNT" | "AND" 
 type MichelsonRegularInstructionID = "CONTRACT" | "CREATE_CONTRACT" | "DIG" | "DIP" | "DROP" |
     "DUG" | "DUP" | "EMPTY_BIG_MAP" | "EMPTY_MAP" | "EMPTY_SET" | "GET" | "IF" | "IF_CONS" | "IF_LEFT" |
     "IF_NONE" | "ITER" | "LAMBDA" | "LEFT" | "LOOP" | "LOOP_LEFT" | "MAP" | "NIL" | "NONE" | "PAIR" |
-    "PUSH" | "RIGHT" | "SAPLING_EMPTY_STATE" | "UNPACK" | "UNPAIR" | "UPDATE" | "CAST";
+    "PUSH" | "RIGHT" | "SAPLING_EMPTY_STATE" | "UNPACK" | "UNPAIR" | "UPDATE" | "CAST" |
+    // legacy
+    "CREATE_ACCOUNT" | "STEPS_TO_QUOTA";
 
-type MichelsonInstructionID = MichelsonNoArgInstructionID | MichelsonRegularInstructionID;
+export type MichelsonInstructionID = MichelsonNoArgInstructionID | MichelsonRegularInstructionID;
 type InstrPrim<PT extends MichelsonInstructionID, AT extends Expr[]> = Prim<PT, AT>;
 type Instr0<PT extends MichelsonNoArgInstructionID> = Prim0<PT>;
 type InstrX<PT extends MichelsonRegularInstructionID, AT extends Expr[]> = PrimX<PT, AT>;
@@ -158,7 +160,7 @@ export type MichelsonData =
 
 // Top level script sections
 
-type MichelsonSectionID = "parameter" | "storage" | "code";
+export type MichelsonSectionID = "parameter" | "storage" | "code";
 type SectionPrim<PT extends MichelsonSectionID, AT extends Expr[]> = PrimX<PT, AT>;
 
 export type MichelsonContractParameter = SectionPrim<"parameter", [MichelsonType]>;

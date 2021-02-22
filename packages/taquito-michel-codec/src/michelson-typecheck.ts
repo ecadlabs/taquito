@@ -1,4 +1,4 @@
-import { StringLiteral, IntLiteral, Prim, Expr, sourceReference } from "./micheline";
+import { StringLiteral, IntLiteral, Prim, Expr } from "./micheline";
 import {
     MichelsonType, MichelsonData, MichelsonMapElt, MichelsonCode, MichelsonTypeOption,
     MichelsonContract, MichelsonContractSection, MichelsonReturnType, MichelsonTypePair,
@@ -15,6 +15,7 @@ import {
     checkTezosID, tezosPrefix, UnpackedAnnotations, Nullable, UnpackAnnotationsOptions,
 } from "./utils";
 import { decodeBase58Check } from "./base58";
+import { decodeAddressBytes, decodePublicKeyBytes, decodePublicKeyHashBytes } from "./binary";
 import {
     assertMichelsonComparableType, instructionIDs,
     assertMichelsonPackableType, assertMichelsonStorableType, assertMichelsonBigMapStorableType, assertMichelsonPushableType
@@ -402,6 +403,13 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
                     "SECP256K1PublicKeyHash",
                     "P256PublicKeyHash") !== null) {
                 return;
+            } else if ("bytes" in d) {
+                try {
+                    decodePublicKeyHashBytes(d);
+                    return;
+                } catch (err) {
+                    // ignore message
+                }
             }
             throw new MichelsonTypeError(t, d, `key hash expected: ${JSON.stringify(d)}`);
 
@@ -426,6 +434,13 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
                     "ContractHash") !== null) {
                     return;
                 }
+            } else if ("bytes" in d) {
+                try {
+                    decodeAddressBytes(d);
+                    return;
+                } catch (err) {
+                    // ignore message
+                }
             }
             throw new MichelsonTypeError(t, d, `address expected: ${JSON.stringify(d)}`);
 
@@ -436,6 +451,13 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
                     "SECP256K1PublicKey",
                     "P256PublicKey") !== null) {
                 return;
+            } else if ("bytes" in d) {
+                try {
+                    decodePublicKeyBytes(d);
+                    return;
+                } catch (err) {
+                    // ignore message
+                }
             }
             throw new MichelsonTypeError(t, d, `public key expected: ${JSON.stringify(d)}`);
 
@@ -446,7 +468,7 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
             throw new MichelsonTypeError(t, d, `unit value expected: ${JSON.stringify(d)}`);
 
         case "signature":
-            if (("string" in d) &&
+            if (("bytes" in d) || ("string" in d) &&
                 checkTezosID(d.string,
                     "ED25519Signature",
                     "SECP256K1Signature",
