@@ -49,7 +49,7 @@ In this example, we originate the contract with initial values in the storage. W
 
 As described above, the `map %data` uses a value that we chose between different types. When using Taquito, we need to surround the chosen argument with curly braces. In the current example, we initialize the value in the `map %data` to the boolean true: `{ bool: true }`.
 
-Since every argument is identified by an annotation, we can ignore optional values if they are not needed. In the first entry of the `bigMap %records` of this example, we do not specify a value for the `address %address`, the `nat %ttl` and the `nat %validator`, but we define one for the `nat %validator` of the second entry of the bigMap.
+An annotation identifies every argument. Therefore we can ignore optional values if they are not needed. In the first entry of the `bigMap %records` of this example, we do not specify values for the `address %address` or the `nat %ttl` or the `nat %validator` but we define one for the `nat %validator` of the second entry of the bigmap.
 
 ```js live noInline
 // import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
@@ -104,7 +104,11 @@ importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
 
 ## Calling the function of a contract having a complex object as a parameter
 
+<<<<<<< HEAD
+The contract contains a function named `set_child_record`. The parameter of the function is composed of nested pairs regrouping different datatypes (address, `map`, `bytes` and `nat`). Two of its arguments, the `address %address` and the `nat %ttl`, are optional. The `map %data` uses a `string` as its key. The user needs to choose the value of the `map` between different proposed types. 
+=======
 The contract contains a function named `set_child_record`. The parameter of the function is composed of nested pairs regrouping different datatypes (address, `map`, `bytes`, and `nat`). Two of its arguments, the `address %address` and the `nat %ttl`, are optional. The `map %data` uses a `string` as its key and the user needs to choose the value of the `map` between different proposed types. 
+>>>>>>> master
 
 Here is the parameter of the function defined in Michelson :
 
