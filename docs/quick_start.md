@@ -3,7 +3,7 @@ title: QuickStart
 author: Simon Boissonneault-Robert
 ---
 
-::: warning v7 Breaking changes
+:::warning v7 Breaking changes
 Taquito version 7, which supports the Tezos Delphi protocol, has some breaking changes. If you are upgrading from an earlier version to V7, please read the [v7 upgrade guide](v7_breaking_changes.md)
 
 :::
