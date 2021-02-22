@@ -71,7 +71,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
 
       const contract = await op.contract();
-      console.log('Contract address:', contract.address);
 
       // Fetch the storage of the newly deployed contract
       const storage: any = await contract.storage();
