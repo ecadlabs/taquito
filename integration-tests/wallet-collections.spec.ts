@@ -28,6 +28,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.opHash).toBeDefined();
 
       const contract = await op.contract()
+      // file deepcode ignore no-any: any is good enough
       const storage: any = await contract.storage()
       expect(storage['set1'].map((x: any) => x.toString())).toEqual(['1', '2', '3'])
       expect(storage['list1'].map((x: any) => x.toString())).toEqual(['1'])
