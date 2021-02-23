@@ -26,7 +26,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       // Emptying the account
       // The max amount that can be sent now is the total balance minus the fees (no need for reveal fees)
       const maxAmount = balance.minus(estimate.suggestedFeeMutez).toNumber();
-      console.log("maxAmount : " +maxAmount)
       
       const op3 = await LocalTez.wallet.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: maxAmount }).send();
       await op3.confirmation();
