@@ -4,6 +4,7 @@ import { CONFIGS } from "./config";
 import { originate, originate2, transferImplicit2 } from "./data/lambda";
 import { ligoSample } from "./data/ligo-simple-contract";
 import { managerCode } from "./data/manager_code";
+import { WalletContract } from '../packages/taquito/src/contract/contract';
 
 CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => {
   const Tezos = lib;
@@ -14,7 +15,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
 
   describe(`Estimate scenario for contract made with wallet api using: ${rpc}`, () => {
     let LowAmountTez: TezosToolkit;
-    let contract: Contract;
+    let contract: WalletContract;
     const amt = 2000000 + DEFAULT_FEE.REVEAL;
 
     beforeAll(async (done) => {
@@ -24,14 +25,14 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
         const pkh = await LowAmountTez.signer.publicKeyHash()
         const transfer = await Tezos.wallet.transfer({ to: pkh, mutez: true, amount: amt }).send();
         await transfer.confirmation();
-        const op = await Tezos.contract.originate({
+        const op = await Tezos.wallet.originate({
           balance: "1",
           code: managerCode,
           init: { "string": pkh },
-        })
+        }).send()
         contract = await op.contract()
-        contract = await LowAmountTez.contract.at(contract.address)
-        expect(op.status).toEqual('applied')
+        contract = await LowAmountTez.wallet.at(contract.address)
+        expect(op.status).toBeTruthy
       }
       catch (ex) {
         fail(ex.message)
