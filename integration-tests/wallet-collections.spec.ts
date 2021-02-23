@@ -4,13 +4,13 @@ import { collection_code } from "./data/collection_contract";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  describe(`Collection contract tests using: ${rpc}`, () => {
+  describe(`Collection wallet tests using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    it('Originate a contract with set,list,map and exercise all collections', async (done) => {
+    it('Originate a contract using wallet api with set,list,map and exercise all collections', async (done) => {
       const addr = await Tezos.signer.publicKeyHash();
 
       const initialStorage = {
@@ -19,16 +19,17 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         map1: MichelsonMap.fromLiteral({ "2": "1", "1": "1" })
       }
 
-      const op = await Tezos.contract.originate({
+      const op = await Tezos.wallet.originate({
         balance: "1",
         code: collection_code,
         storage: initialStorage
-      })
+      }).send();
       await op.confirmation()
-      expect(op.hash).toBeDefined();
-      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+      expect(op.opHash).toBeDefined();
+
       const contract = await op.contract()
-      let storage: any = await contract.storage()
+      // file deepcode ignore no-any: any is good enough
+      const storage: any = await contract.storage()
       expect(storage['set1'].map((x: any) => x.toString())).toEqual(['1', '2', '3'])
       expect(storage['list1'].map((x: any) => x.toString())).toEqual(['1'])
       expect(storage['map1'].get('1').toString()).toEqual('1')
