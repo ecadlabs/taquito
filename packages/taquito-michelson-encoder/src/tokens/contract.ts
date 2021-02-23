@@ -19,11 +19,11 @@ export class ContractToken extends Token {
     super(val, idx, fac);
   }
 
-  private isValid(value: any): ContractValidationError | null {
+  private isValid(_value: any): ContractValidationError | null {
     // tz1,tz2 and tz3 seems to be valid contract values (for Unit contract)
-    if (validateAddress(value) !== ValidationResult.VALID) {
+    /* if (validateAddress(value) !== ValidationResult.VALID) {
       return new ContractValidationError(value, this, 'Contract address is not valid');
-    }
+    } */
 
     return null;
   }
