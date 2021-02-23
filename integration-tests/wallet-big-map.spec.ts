@@ -68,24 +68,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       await op.confirmation();
       expect(op.opHash).toBeDefined();
-      //expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
       done();
 
       const contract = await op.contract();
       expect(contract.storage).toBeDefined();
-
-      // Fetch the storage of the newly deployed contract
-      //const storage: any = await contract.storage();
-
-      // First property is the big map abstraction (This contract does not have annotations so we access by index)
-      //const bigMap = storage['0'];
-
-      // Fetch the key (current pkh that is running the test)
-      //const bigMapValue = await bigMap.get(await Tezos.signer.publicKeyHash())
-      //expect(bigMapValue['0'].toString()).toEqual("2")
-      //expect(bigMapValue['1']).toEqual(expect.objectContaining(new MichelsonMap()))
-      //done();
-
     })
   });
 })

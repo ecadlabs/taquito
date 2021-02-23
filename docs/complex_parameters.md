@@ -104,11 +104,7 @@ importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
 
 ## Calling the function of a contract having a complex object as a parameter
 
-<<<<<<< HEAD
 The contract contains a function named `set_child_record`. The parameter of the function is composed of nested pairs regrouping different datatypes (address, `map`, `bytes` and `nat`). Two of its arguments, the `address %address` and the `nat %ttl`, are optional. The `map %data` uses a `string` as its key. The user needs to choose the value of the `map` between different proposed types. 
-=======
-The contract contains a function named `set_child_record`. The parameter of the function is composed of nested pairs regrouping different datatypes (address, `map`, `bytes`, and `nat`). Two of its arguments, the `address %address` and the `nat %ttl`, are optional. The `map %data` uses a `string` as its key and the user needs to choose the value of the `map` between different proposed types. 
->>>>>>> master
 
 Here is the parameter of the function defined in Michelson :
 
