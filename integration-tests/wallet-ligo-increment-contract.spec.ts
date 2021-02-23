@@ -19,13 +19,15 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.opHash).toBeDefined();
       const contract = await op.contract();
 
+      // file deepcode ignore no-any: any is good enough
       const storage: any = await contract.storage()
       expect(storage.toString()).toEqual("0")
       const opMethod = await contract.methods.default("2").send();
 
       await opMethod.confirmation();
       expect(op.opHash).toBeDefined();
-       const storage2: any = await contract.storage()
+      // file deepcode ignore no-any: any is good enough
+      const storage2: any = await contract.storage()
       expect(storage2.toString()).toEqual("2")
       done();
     });
