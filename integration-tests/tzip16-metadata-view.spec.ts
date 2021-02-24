@@ -60,7 +60,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 			done();
 		});
 
-	test('Deploy a contract with metadata having a couple of views (example taken from TZComet) and call the views', async (done) => {
+	test('Deploy a contract with metadata having a couple of views (example taken from TZComet) and call the views', async (done: () => void) => {
 			// KT18tKt6ysL5QVqLMmwQL5p5Nu6m8KjRbhSb
 			const metadataBigMAp = new MichelsonMap();
 			metadataBigMAp.set("", char2Bytes('tezos-storage:here'));
