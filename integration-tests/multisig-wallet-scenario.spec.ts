@@ -30,6 +30,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       expect(op.status).toBeTruthy
 
       // Utility function that mimic the PAIR operation of michelson
+      // deepcode ignore no-any: any is good enough
       const pair = ({ data, type }: any, value: any) => {
         return {
           data: {
