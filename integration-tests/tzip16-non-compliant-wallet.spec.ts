@@ -26,6 +26,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                         { "prim": "PAIR" }]]
                 }];
 
+            // file deepcode ignore object-literal-shorthand: not sure how to fix
             const op = await Tezos.wallet.originate({
                 code: code,
                 storage: value

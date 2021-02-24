@@ -38,7 +38,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
             1: localTez2Pkh
          },
             'None');
-
+         // file deepcode ignore object-literal-shorthand: not sure how to fix
          const op = await Tezos.wallet.originate({
             code: fa2ContractTzip16,
             storage: {
