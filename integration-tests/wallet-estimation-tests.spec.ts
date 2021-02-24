@@ -4,6 +4,7 @@ import { CONFIGS } from "./config";
 import { originate, originate2, transferImplicit2 } from "./data/lambda";
 import { ligoSample } from "./data/ligo-simple-contract";
 import { managerCode } from "./data/manager_code";
+import { WalletContract } from '../packages/taquito/src/contract/contract';
 
 CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => {
   const Tezos = lib;
@@ -12,9 +13,9 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
   const delphinet = (protocol === Protocols.PsDELPH1) ? test : test.skip;
   const edonet = (protocol === Protocols.PtEdo2Zk) ? test : test.skip;
 
-  describe(`Estimate scenario using: ${rpc}`, () => {
+  describe(`Estimate scenario for contract made with wallet api using: ${rpc}`, () => {
     let LowAmountTez: TezosToolkit;
-    let contract: Contract;
+    let contract: WalletContract;
     const amt = 2000000 + DEFAULT_FEE.REVEAL;
 
     beforeAll(async (done) => {
@@ -22,16 +23,16 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
         await setup()
         LowAmountTez = await createAddress();
         const pkh = await LowAmountTez.signer.publicKeyHash()
-        const transfer = await Tezos.contract.transfer({ to: pkh, mutez: true, amount: amt });
+        const transfer = await Tezos.wallet.transfer({ to: pkh, mutez: true, amount: amt }).send();
         await transfer.confirmation();
-        const op = await Tezos.contract.originate({
+        const op = await Tezos.wallet.originate({
           balance: "1",
           code: managerCode,
           init: { "string": pkh },
-        })
-        contract = await op.contract();
-        contract = await LowAmountTez.contract.at(contract.address)
-        expect(op.status).toEqual('applied')
+        }).send()
+        contract = await op.contract()
+        contract = await LowAmountTez.wallet.at(contract.address)
+        expect(op.status).toBeTruthy
       }
       catch (ex) {
         fail(ex.message)
@@ -421,7 +422,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
     })
 
     delphinet('Estimate transfer to regular address', async (done) => {
-      let estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) });
+      const estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) });
       expect(estimate.gasLimit).toEqual(1527);
       expect(estimate.storageLimit).toEqual(0);
       expect(estimate.suggestedFeeMutez).toEqual(504);
@@ -434,7 +435,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
     });
 
     carthagenet('Estimate transfer to regular address', async (done) => {
-      let estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) });
+      const estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) });
       expect(estimate.gasLimit).toEqual(10307);
       expect(estimate.storageLimit).toEqual(0);
       expect(estimate.suggestedFeeMutez).toEqual(1384);
@@ -447,7 +448,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
     });
 
     edonet('Estimate transfer to regular address', async (done) => {
-      let estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) });
+      const estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) });
       expect(estimate.gasLimit).toEqual(1527);
       expect(estimate.storageLimit).toEqual(0);
       expect(estimate.suggestedFeeMutez).toEqual(504);
@@ -471,7 +472,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       done();
     });
 
-    it('Estimate transfer to regular address with insufficient balance', async (done) => {
+    it('Estimate transfer to regular address with unsufficient balance', async (done) => {
       await expect(
         LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt })
       ).rejects.toEqual(
@@ -481,7 +482,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       done();
     });
 
-    it('Estimate transfer to regular address with insufficient balance to pay storage for allocation', async (done) => {
+    it('Estimate transfer to regular address with unsufficient balance to pay storage for allocation', async (done) => {
       await expect(
         LowAmountTez.estimate.transfer({ to: await (await createAddress()).signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) })
       ).rejects.toEqual(
@@ -491,7 +492,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       done();
     });
 
-    it('Estimate origination with insufficient balance to pay storage', async (done) => {
+    it('Estimate origination with unsufficient balance to pay storage', async (done) => {
       await expect(LowAmountTez.estimate.originate({
         balance: "0",
         code: ligoSample,

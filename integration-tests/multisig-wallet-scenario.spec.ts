@@ -11,13 +11,13 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       await setup()
       done()
     })
-    it('test manager transfers scenarios for Babylon/005', async (done) => {
+    it('test manager transfers scenarios for Babylon/005 with wallet api contract', async (done) => {
       const account1 = await createAddress();
       const account2 = await createAddress();
       const account3 = await createAddress();
 
       // Originate the multisig contract
-      const op = await Tezos.contract.originate({
+      const op = await Tezos.wallet.originate({
         balance: "1",
         code: genericMultisig,
         storage: {
@@ -25,12 +25,12 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
           threshold: 2,
           keys: [await account1.signer.publicKey(), await account2.signer.publicKey(), await account3.signer.publicKey()]
         }
-      })
+      }).send();
       const contract = await op.contract();
-      expect(op.status).toEqual('applied')
+      expect(op.status).toBeTruthy
 
       // Utility function that mimic the PAIR operation of michelson
-      // file deepcode ignore no-any: any is good enough
+      // deepcode ignore no-any: any is good enough
       const pair = ({ data, type }: any, value: any) => {
         return {
           data: {
@@ -46,7 +46,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
       // Packing the data that need to be sign by each party of the multi-sig
       // The data passed to this step is specific to this multi-sig implementation
-      // file deepcode ignore no-any: any is good enough
       const { packed } = await Tezos.rpc.packData(pair({
         data: {
           prim: 'Pair',
@@ -57,6 +56,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
               args: [MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 500)]
             }
           ]
+        // deepcode ignore no-any: any is good enough
         } as any,
         type: {
           "prim": "pair",
