@@ -6,7 +6,7 @@ author: Claude Barde
 
 ## What is the Batch API?
 
-Taquito provides a simple way of forging and sending transactions to the blockchain, whether you wish to send a few tez to a specific address or interact with a smart contract. Each Tezos account holds a counter that increments every time an operation is included in a block on the network. This feature prevents users from sending two or multiple transactions in a row, as illustrated in this code snippet:
+Taquito provides a simple way of forging and sending transactions to the blockchain, whether you wish to send a few tez to a certain address or interact with a smart contract. Each Tezos account holds a counter that increments every time an operation is included in a block on the network. This feature prevents users from sending two or multiple transactions in a row as illustrated in this code snippet:
 
 ```js
 /*
@@ -27,7 +27,7 @@ await op2.confirmation();
  */
 ```
 
-Tracking the confirmation of transactions and the transaction counter’s update can be very frustrating and cumbersome; this is why Taquito provides the Batch API. The Batch API allows you to group all your transactions and emit them at once under the same transaction counter value and the same transaction hash.
+Tracking the confirmation of transactions and the update of the transaction counter can be very frustrating and cumbersome, this is why Taquito provides the Batch API. The Batch API allows you to group all your transactions together and emit them at once under the same transaction counter value and the same transaction hash.
 
 ## How does it work?
 
@@ -46,7 +46,7 @@ console.log('Operation hash:', batchOp.hash);
 await batchOp.confirmation();
 ```
 
-After concatenating the different methods to batch operations together, a single transaction is created and broadcast with a single operation hash returned. As for any other transaction initiated by Taquito, you then wait for a determined number of confirmations.
+After concatenating the different methods to batch operations together, a single transaction is created and broadcast with a single operation hash returned. As for any other transaction created by Taquito, you then wait for a determined number of confirmations.
 
 #### - The `withTransfer` method
 
@@ -61,7 +61,7 @@ const batch = await Tezos.wallet.batch()
 
 #### - The `withOrigination` method
 
-This method allows you to add the origination of one or multiple contracts to an existing batch of operations. It takes an object as a parameter with four properties. The `code` property is mandatory and can be a string representing the plain Michelson code or the Michelson contract’s JSON representation. The parameter object must also include an `init` or `storage` property: when `init` is specified, `storage` is optional and vice-versa. `init` is the initial storage object value that can be either Micheline or JSON encoded. `storage` is a JavaScript representation of a storage object. You can also indicate a `balance` for the newly created contract and a `delegate.`
+This method allows you to add the origination of one or multiple contracts to an existing batch of operations. It takes an object as a parameter with 4 properties. The `code` property is mandatory and can be a string representing the plain Michelson code or the JSON representation of the Michelson contract. The parameter object must also include an `init` or `storage` property: when `init` is specified, `storage` is optional and vice-versa. `init` is the initial storage object value that can be either Micheline or JSON encoded. `storage` is a JavaScript representation of a storage object. Optionally, you can also indicate a `balance` for the newly created contract and a `delegate`.
 
 ```js
 const batch = await Tezos.contract.batch()
@@ -86,7 +86,7 @@ const batch = await Tezos.contract.batch().withDelegation({
 
 #### - The `withContractCall` method
 
-This method may be one of the most useful ones as it allows you to batch and emit multiple contract calls under one transaction. The parameter is also pretty simple: it takes the function you would call on the contract abstraction object to send a single transaction.
+This method may be one of the most useful ones as it allows you to batch and emit multiple contract calls under one transaction. The parameter is also pretty simple: it takes the function you would call on the contract abstraction object if you would send a single transaction.
 
 ```js
 const batch = await Tezos.wallet.batch()
@@ -149,4 +149,3 @@ In addition to that, only a single account can sign batched operations.
 
 - [Integration tests](https://github.com/ecadlabs/taquito/blob/master/integration-tests/batch-api.spec.ts)
 - [Documentation](https://tezostaquito.io/typedoc/classes/_taquito_taquito.walletoperationbatch-2.html)
->>>>>>> master
