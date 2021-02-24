@@ -148,4 +148,3 @@ In addition to that, only a single account can sign batched operations.
 
 - [Integration tests](https://github.com/ecadlabs/taquito/blob/master/integration-tests/batch-api.spec.ts)
 - [Documentation](https://tezostaquito.io/typedoc/classes/_taquito_taquito.walletoperationbatch-2.html)
->>>>>>> master
