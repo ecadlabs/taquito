@@ -240,9 +240,13 @@ export class Wallet {
    *
    * @param params List of operation to initialize the batch with
    */
-  batch(params: Parameters<WalletOperationBatch['with']>[0]) {
+  batch(params?: Parameters<WalletOperationBatch['with']>[0]) {
     const batch = new WalletOperationBatch(this.walletProvider, this.context);
-    batch.with(params);
+    
+    if (Array.isArray(params)) {
+      batch.with(params);
+    }
+    
     return batch;
   }
 

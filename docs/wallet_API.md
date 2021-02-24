@@ -1086,12 +1086,9 @@ await batchOp.confirmation();
 
 
 
-> Note: you cannot make a contract call with the first method.
-
-
-
 As with other operations, you must call the `confirmation` method on the returned operation to wait for the operation to be confirmed.
 
+*See [the Batch API documentation](batch-api.md) for more examples using the `batch` method.*
 
 
 We already checked the `originate` method earlier, and it takes an object as a parameter with two properties: `code` with the Michelson code of the contract in a JSON format and storage with the initial storage.
