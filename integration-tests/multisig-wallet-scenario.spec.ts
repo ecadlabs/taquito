@@ -56,6 +56,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
               args: [MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 500)]
             }
           ]
+        // deepcode ignore no-any: any is good enough
         } as any,
         type: {
           "prim": "pair",
