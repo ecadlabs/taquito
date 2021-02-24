@@ -67,6 +67,10 @@ export class TezosToolkit {
   private _rpcClient: RpcClient
   private _wallet: Wallet;
   private _context: Context;
+  /**
+   * @deprecated TezosToolkit.batch has been deprecated in favor of TezosToolkit.contract.batch
+   *
+   */
   public batch: RPCBatchProvider['batch'];
 
   public readonly format = format;

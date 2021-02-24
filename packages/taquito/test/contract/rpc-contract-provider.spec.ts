@@ -27,8 +27,9 @@ import { InvalidCodeParameter, InvalidDelegationSource, InvalidInitParameter } f
 import { preapplyResultFrom } from './helper';
 import { MichelsonMap, Schema } from '@taquito/michelson-encoder';
 import { BigMapAbstraction } from '../../src/contract/big-map';
-import { OriginateParams } from '../../src/operations/types';
-import { NoopParser, ParserProvider } from '../../src/taquito';
+import { OpKind, ParamsWithKind } from '../../src/operations/types';
+import { NoopParser } from '../../src/taquito';
+import { OperationBatch } from '../../src/batch/rpc-batch-provider';
 
 /**
  * RPCContractProvider test
@@ -64,6 +65,7 @@ describe('RpcContractProvider test', () => {
     transfer: jest.Mock<any, any>;
     setDelegate: jest.Mock<any, any>;
     registerDelegate: jest.Mock<any, any>;
+    batch: jest.Mock<any, any>;
   };
 
   const revealOp = (source: string) => ({
@@ -106,6 +108,7 @@ describe('RpcContractProvider test', () => {
       transfer: jest.fn(),
       registerDelegate: jest.fn(),
       setDelegate: jest.fn(),
+      batch: jest.fn()
     };
 
     // Required for operations confirmation polling
@@ -823,5 +826,32 @@ describe('RpcContractProvider test', () => {
     }
       done();
     });
+
+    describe('batch', () => {
+      it('should produce a batch operation', async done => {
+
+        const opToBatch: ParamsWithKind[] = [
+          {
+            kind: OpKind.TRANSACTION,
+            to: 'test',
+            amount: 2
+          },
+          {
+            kind: OpKind.TRANSACTION,
+            to: 'test',
+            amount: 2
+          }
+        ];
+
+        const opBatch = new OperationBatch(rpcContractProvider['context'], mockEstimate);
+
+        expect(rpcContractProvider.batch()).toBeInstanceOf(OperationBatch);
+        expect(rpcContractProvider.batch()).toEqual(opBatch);
+
+        expect(rpcContractProvider.batch(opToBatch)).toEqual(opBatch.with(opToBatch));
+
+        done();
+      });
+    }); 
   });
 });
