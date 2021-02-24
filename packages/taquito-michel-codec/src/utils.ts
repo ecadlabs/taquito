@@ -1,5 +1,6 @@
-import { Prim, Expr, BytesLiteral, StringLiteral } from "./micheline";
+import { Prim, Expr, BytesLiteral, StringLiteral, IntLiteral } from "./micheline";
 import { decodeBase58Check } from "./base58";
+import { MichelsonData, MichelsonDataPair, MichelsonType, MichelsonTypePair } from "./michelson-types";
 
 export type Tuple<N extends number, T> =
     N extends 1 ? [T] :
@@ -35,6 +36,23 @@ export class MichelsonError<T extends Expr = Expr> extends Error {
 
 export function isMichelsonError<T extends Expr = Expr>(err: any): err is MichelsonError<T> {
     return err instanceof MichelsonError;
+}
+
+export class MichelsonTypeError extends MichelsonError<MichelsonType | MichelsonType[]> {
+    public data?: Expr;
+
+    /**
+     * @param val Value of a type node caused the error
+     * @param data Value of a data node caused the error
+     * @param message An error message
+     */
+    constructor(val: MichelsonType | MichelsonType[], data?: Expr, message?: string) {
+        super(val, message);
+        if (data !== undefined) {
+            this.data = data;
+        }
+        Object.setPrototypeOf(this, MichelsonTypeError.prototype);
+    }
 }
 
 // Ad hoc big integer parser
@@ -242,7 +260,7 @@ export const tezosPrefix: Record<TezosIDType, TezosIDPrefix> = {
     ChainID: [4, [87, 82, 0]],
 };
 
-export function checkTezosID(id: string, ...types: TezosIDType[]): [TezosIDType, number[]] | null {
+export function checkDecodeTezosID<T extends TezosIDType[]>(id: string, ...types: T): [T[number], number[]] | null {
     const buf = decodeBase58Check(id);
     for (const t of types) {
         const prefix = tezosPrefix[t];
@@ -255,6 +273,61 @@ export function checkTezosID(id: string, ...types: TezosIDType[]): [TezosIDType,
                 return [t, buf.slice(prefix[1].length)];
             }
         }
+    }
+    return null;
+}
+
+// reassemble comb pair for transparent comparison etc. non-recursive!
+type PairTypeOrDataPrim<I extends "pair" | "Pair"> = I extends "pair" ? Extract<MichelsonTypePair<MichelsonType[]>, Prim> : Extract<MichelsonDataPair<MichelsonData[]>, Prim>;
+export function unpackComb<I extends "pair" | "Pair">(id: I, v: I extends "pair" ? MichelsonTypePair<MichelsonType[]> : MichelsonDataPair<MichelsonData[]>): PairTypeOrDataPrim<I> {
+    const vv: MichelsonTypePair<MichelsonType[]> | MichelsonDataPair<MichelsonData[]> = v;
+    const args = Array.isArray(vv) ? vv : vv.args;
+    if (args.length === 2) {
+        // it's a way to make a union of two interfaces not an interface with two independent properties of union types
+        const ret = id === "pair" ? {
+            prim: "pair",
+            args,
+        } : {
+                prim: "Pair",
+                args,
+            };
+        return ret as PairTypeOrDataPrim<I>;
+    }
+
+    return {
+        ...v,
+        args: [
+            args[0],
+            {
+                prim: id,
+                args: args.slice(1),
+            },
+        ],
+    } as PairTypeOrDataPrim<I>;
+}
+
+export function isPairType(t: MichelsonType): t is MichelsonTypePair<MichelsonType[]> {
+    return Array.isArray(t) || t.prim === "pair";
+}
+
+export function isPairData(d: Expr): d is MichelsonDataPair<MichelsonData[]> {
+    return Array.isArray(d) || "prim" in d && d.prim === "Pair";
+}
+
+const rfc3339Re = /^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])[T ]([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\.[0-9]+)?(Z|[+-]([01][0-9]|2[0-3]):([0-5][0-9]))$/;
+
+export function parseDate(a: StringLiteral | IntLiteral): Date | null {
+    if ("string" in a) {
+        if (isNatural(a.string)) {
+            return new Date(parseInt(a.string, 10));
+        } else if (rfc3339Re.test(a.string)) {
+            const x = new Date(a.string);
+            if (!Number.isNaN(x.valueOf)) {
+                return x;
+            }
+        }
+    } else if (isNatural(a.int)) {
+        return new Date(parseInt(a.int, 10));
     }
     return null;
 }

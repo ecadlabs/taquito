@@ -141,7 +141,8 @@ export type MichelsonDataID = "Unit" | "True" | "False" | "None" | "Pair" | "Lef
 type Data0<PT extends MichelsonDataID> = Prim0<PT>;
 type DataX<PT extends MichelsonDataID, AT extends MichelsonData[]> = PrimX<PT, AT>;
 
-type PartialData = DataX<"Some" | "Left" | "Right", [MichelsonData]>;
+export type MichelsonDataOption = DataX<"Some", [MichelsonData]> | Data0<"None">;
+export type MichelsonDataOr = DataX<"Left" | "Right", [MichelsonData]>;
 type DataList<T extends MichelsonData[]> = T & Node;
 export type MichelsonDataPair<T extends MichelsonData[]> = DataX<"Pair", T> | DataList<T>;
 export type MichelsonMapElt = PrimX<"Elt", [MichelsonData, MichelsonData]>;
@@ -151,8 +152,9 @@ export type MichelsonData =
     IntLiteral |
     StringLiteral |
     BytesLiteral |
-    Data0<"Unit" | "True" | "False" | "None"> |
-    PartialData |
+    Data0<"Unit" | "True" | "False"> |
+    MichelsonDataOption |
+    MichelsonDataOr |
     DataList<MichelsonData[]> |
     MichelsonDataPair<MichelsonData[]> |
     InstructionList |

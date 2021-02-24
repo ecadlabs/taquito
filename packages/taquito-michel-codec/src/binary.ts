@@ -1,9 +1,13 @@
 import { BytesLiteral, Expr, Prim } from "./micheline";
 import {
     MichelsonTypeID, MichelsonDataID,
-    MichelsonSectionID, MichelsonInstructionID
+    MichelsonSectionID, MichelsonInstructionID, MichelsonData, MichelsonType, MichelsonMapElt, MichelsonDataOr, MichelsonDataOption
 } from "./michelson-types";
-import { parseBytes } from "./utils";
+import {
+    checkDecodeTezosID,
+    isPairData, isPairType, MichelsonTypeError,
+    parseBytes, parseDate, unpackComb
+} from "./utils";
 
 type PrimID = MichelsonTypeID |
     MichelsonDataID |
@@ -43,6 +47,8 @@ enum Tag {
     Prim = 9,
     Bytes = 10,
 }
+
+const hexBytes = (bytes: number[]) => bytes.map(x => ((x >> 4) & 0xf).toString(16) + (x & 0xf).toString(16)).join("");
 
 class Writer {
     public buffer: number[] = [];
@@ -190,7 +196,7 @@ export interface Address {
     entryPoint?: string;
 }
 
-function decodePublicKeyHash(rd: Reader): Address {
+function readPublicKeyHash(rd: Reader): Address {
     let type: AddressType;
     const tag = rd.readUint8();
     switch (tag) {
@@ -209,12 +215,12 @@ function decodePublicKeyHash(rd: Reader): Address {
     return { type, hash: rd.readBytes(20) };
 }
 
-function decodeAddress(rd: Reader): Address {
+function readAddress(rd: Reader): Address {
     let address: Address;
     const tag = rd.readUint8();
     switch (tag) {
         case ContractID.Implicit:
-            address = decodePublicKeyHash(rd);
+            address = readPublicKeyHash(rd);
             break;
 
         case ContractID.Originated:
@@ -237,6 +243,43 @@ function decodeAddress(rd: Reader): Address {
     return address;
 }
 
+function writePublicKeyHash(a: Address, w: Writer): void {
+    let tag: PublicKeyHashID;
+    switch (a.type) {
+        case "ED25519PublicKeyHash":
+            tag = PublicKeyHashID.ED25519;
+            break;
+        case "SECP256K1PublicKeyHash":
+            tag = PublicKeyHashID.SECP256K1;
+            break;
+        case "P256PublicKeyHash":
+            tag = PublicKeyHashID.P256;
+            break;
+        default:
+            throw new Error(`unexpected address type: ${a.type}`);
+    }
+    w.writeUint8(tag);
+    w.writeBytes(Array.from(a.hash));
+}
+
+function writeAddress(a: Address, w: Writer): void {
+    if (a.type === "ContractHash") {
+        w.writeUint8(ContractID.Originated);
+        w.writeBytes(Array.from(a.hash));
+        w.writeUint8(0);
+        return;
+    }
+
+    w.writeUint8(ContractID.Implicit);
+    writePublicKeyHash(a, w);
+
+    if (a.entryPoint !== undefined && a.entryPoint !== "" && a.entryPoint !== "default") {
+        const enc = new TextEncoder();
+        const bytes = enc.encode(a.entryPoint);
+        w.writeBytes(Array.from(bytes));
+    }
+}
+
 enum PublicKeyID {
     ED25519 = 0,
     SECP256K1 = 1,
@@ -246,10 +289,10 @@ enum PublicKeyID {
 export type PublicKeyType = "ED25519PublicKey" | "SECP256K1PublicKey" | "P256PublicKey";
 export interface PublicKey {
     type: PublicKeyType;
-    key: number[] | Uint8Array;
+    publicKey: number[] | Uint8Array;
 }
 
-function decodePublicKey(rd: Reader): PublicKey {
+function readPublicKey(rd: Reader): PublicKey {
     let ln: number;
     let type: PublicKeyType;
     const tag = rd.readUint8();
@@ -269,41 +312,36 @@ function decodePublicKey(rd: Reader): PublicKey {
         default:
             throw new Error(`unknown public key tag: ${tag}`);
     }
-    return { type, key: rd.readBytes(ln) };
+    return { type, publicKey: rd.readBytes(ln) };
 }
 
-export function decodeAddressBytes(b: BytesLiteral): Address {
-    const bytes = parseBytes(b.bytes);
-    if (bytes === null) {
-        throw new Error(`can't parse bytes: "${b.bytes}"`);
+function writePublicKey(pk: PublicKey, w: Writer): void {
+    let tag: PublicKeyID;
+    switch (pk.type) {
+        case "ED25519PublicKey":
+            tag = PublicKeyID.ED25519;
+            break;
+        case "SECP256K1PublicKey":
+            tag = PublicKeyID.SECP256K1;
+            break;
+        case "P256PublicKey":
+            tag = PublicKeyID.P256;
+            break;
+        default:
+            throw new Error(`unexpected public key type: ${pk.type}`);
     }
-    const rd = new Reader(new Uint8Array(bytes));
-    return decodeAddress(rd);
+    w.writeUint8(tag);
+    w.writeBytes(Array.from(pk.publicKey));
 }
 
-export function decodePublicKeyHashBytes(b: BytesLiteral): Address {
-    const bytes = parseBytes(b.bytes);
-    if (bytes === null) {
-        throw new Error(`can't parse bytes: "${b.bytes}"`);
-    }
-    const rd = new Reader(new Uint8Array(bytes));
-    return decodePublicKeyHash(rd);
-}
+type TransformFunc = (e: Expr) => [Expr, () => Generator<[Expr, TransformFunc]>];
+function writeExpr(expr: Expr, wr: Writer, tr: TransformFunc): void {
+    const [e, args] = tr(expr);
 
-export function decodePublicKeyBytes(b: BytesLiteral): PublicKey {
-    const bytes = parseBytes(b.bytes);
-    if (bytes === null) {
-        throw new Error(`can't parse bytes: "${b.bytes}"`);
-    }
-    const rd = new Reader(new Uint8Array(bytes));
-    return decodePublicKey(rd);
-}
-
-function encode(expr: Expr, wr: Writer): void {
-    if (Array.isArray(expr)) {
+    if (Array.isArray(e)) {
         const w = new Writer();
-        for (const v of expr) {
-            encode(v, w);
+        for (const [v, t] of args()) {
+            writeExpr(v, w, t);
         }
         wr.writeUint8(Tag.Sequence);
         wr.writeUint32(w.length);
@@ -311,18 +349,18 @@ function encode(expr: Expr, wr: Writer): void {
         return;
     }
 
-    if ("string" in expr) {
+    if ("string" in e) {
         const enc = new TextEncoder();
-        const bytes = enc.encode(expr.string);
+        const bytes = enc.encode(e.string);
         wr.writeUint8(Tag.String);
         wr.writeUint32(bytes.length);
         wr.writeBytes(Array.from(bytes));
         return;
     }
 
-    if ("int" in expr) {
+    if ("int" in e) {
         wr.writeUint8(Tag.Int);
-        let val = BigInt(expr.int);
+        let val = BigInt(e.int);
         const sign = val < 0;
         if (sign) {
             val = -val;
@@ -344,10 +382,10 @@ function encode(expr: Expr, wr: Writer): void {
         return;
     }
 
-    if ("bytes" in expr) {
+    if ("bytes" in e) {
         const bytes: number[] = [];
-        for (let i = 0; i < expr.bytes.length; i += 2) {
-            bytes.push(parseInt(expr.bytes.slice(i, i + 2), 16));
+        for (let i = 0; i < e.bytes.length; i += 2) {
+            bytes.push(parseInt(e.bytes.slice(i, i + 2), 16));
         }
         wr.writeUint8(Tag.Bytes);
         wr.writeUint32(bytes.length);
@@ -355,37 +393,43 @@ function encode(expr: Expr, wr: Writer): void {
         return;
     }
 
-    const prim = primTags[expr.prim];
+    const prim = primTags[e.prim];
     if (prim === undefined) {
-        throw new TypeError(`Can't encode primary: ${expr.prim}`);
+        throw new TypeError(`Can't encode primary: ${e.prim}`);
     }
 
-    const tag = expr.args?.length || 0 < 3 ?
-        Tag.Prim0 + (expr.args?.length || 0) * 2 + (expr.annots === undefined || expr.annots.length === 0 ? 0 : 1) :
+    const tag = e.args?.length || 0 < 3 ?
+        Tag.Prim0 + (e.args?.length || 0) * 2 + (e.annots === undefined || e.annots.length === 0 ? 0 : 1) :
         Tag.Prim;
 
     wr.writeUint8(tag);
     wr.writeUint8(prim);
 
-    if (expr.args !== undefined) {
-        if (expr.args.length < 3) {
-            for (const a of expr.args) {
-                encode(a, wr);
+    if (e.args !== undefined) {
+        if (e.args.length < 3) {
+            for (const [v, t] of args()) {
+                writeExpr(v, wr, t);
             }
         } else {
-            encode(expr.args, wr);
+            const w = new Writer();
+            for (const [v, t] of args()) {
+                writeExpr(v, w, t);
+            }
+            wr.writeUint8(Tag.Sequence);
+            wr.writeUint32(w.length);
+            wr.writeBytes(w.buffer);
         }
     }
 
-    if (expr.annots !== undefined && expr.annots.length !== 0) {
+    if (e.annots !== undefined && e.annots.length !== 0) {
         const enc = new TextEncoder();
-        const bytes = enc.encode(expr.annots.join(" "));
+        const bytes = enc.encode(e.annots.join(" "));
         wr.writeUint32(bytes.length);
         wr.writeBytes(Array.from(bytes));
     }
 }
 
-function decode(rd: Reader): Expr {
+function readExpr(rd: Reader): Expr {
     const tag = rd.readUint8();
     switch (tag) {
         case Tag.Int:
@@ -425,7 +469,7 @@ function decode(rd: Reader): Expr {
             {
                 const length = rd.readUint32();
                 const bytes = rd.readBytes(length);
-                const hex = Array.from(bytes).map(x => ((x >> 4) & 0xf).toString(16) + (x & 0xf).toString(16)).join("");
+                const hex = hexBytes(Array.from(bytes));
                 return { bytes: hex };
             }
 
@@ -435,7 +479,7 @@ function decode(rd: Reader): Expr {
                 const length = rd.readUint32();
                 const r = rd.reader(length);
                 while (r.length > 0) {
-                    res.push(decode(r));
+                    res.push(readExpr(r));
                 }
                 return res;
             }
@@ -457,14 +501,14 @@ function decode(rd: Reader): Expr {
                 if (argn < 3) {
                     for (let i = 0; i < argn; i++) {
                         res.args = res.args || [];
-                        res.args.push(decode(rd));
+                        res.args.push(readExpr(rd));
                     }
                 } else {
                     res.args = res.args || [];
                     const length = rd.readUint32();
                     const r = rd.reader(length);
                     while (r.length > 0) {
-                        res.args.push(decode(r));
+                        res.args.push(readExpr(r));
                     }
                 }
 
@@ -480,9 +524,219 @@ function decode(rd: Reader): Expr {
     }
 }
 
+const passThrough: TransformFunc = (e: Expr) => [e, function* () {
+    if (Array.isArray(e) || "prim" in e) {
+        const args = Array.isArray(e) ? e : (e.args || []);
+        for (const a of args) {
+            yield [a, passThrough];
+        }
+    }
+}];
+
 export function emitBinary(expr: Expr): number[] {
     const w = new Writer();
-    encode(expr, w);
+    writeExpr(expr, w, passThrough);
+    return w.buffer;
+}
+
+const isOrData = (e: Expr): e is MichelsonDataOr => "prim" in e && (e.prim === "Left" || e.prim === "Right");
+const isOptionData = (e: Expr): e is MichelsonDataOption => "prim" in e && (e.prim === "Some" || e.prim === "None");
+
+export function packData(d: MichelsonData, t: MichelsonType): number[] {
+    const transform = (t: MichelsonType): TransformFunc => (d: Expr): [Expr, () => Generator<[Expr, TransformFunc]>] => {
+        if (isPairType(t)) {
+            if (!isPairData(d)) {
+                throw new MichelsonTypeError(t, d, `pair expected: ${JSON.stringify(d)}`);
+            }
+            // combs aren't used in pack format
+            const dc = unpackComb("Pair", d);
+            const tc = unpackComb("pair", t);
+            return [dc, function* () {
+                for (let i = 0; i < tc.args.length; i++) {
+                    yield [dc.args[i], transform(tc.args[i])];
+                }
+            }];
+        }
+
+        switch (t.prim) {
+            case "or":
+                if (isOrData(d)) {
+                    return [d, function* () {
+                        yield [d.args[0], transform(d.prim === "Left" ? t.args[0] : t.args[1])];
+                    }];
+                }
+                throw new MichelsonTypeError(t, d, `or expected: ${JSON.stringify(d)}`);
+
+            case "option":
+                if (isOptionData(d)) {
+                    return [d, function* () {
+                        const dd = d;
+                        if (dd.prim === "Some") {
+                            yield [dd.args[0], transform(t.args[0])];
+                        }
+                    }];
+                }
+                throw new MichelsonTypeError(t, d, `option expected: ${JSON.stringify(d)}`);
+
+            case "list":
+            case "set":
+                if (Array.isArray(d)) {
+                    return [d, function* () {
+                        for (const v of d) {
+                            yield [v, transform(t.args[0])];
+                        }
+                    }];
+                }
+                throw new MichelsonTypeError(t, d, `${t.prim} expected: ${JSON.stringify(d)}`);
+
+            case "map":
+                if (Array.isArray(d)) {
+                    return [d, function* (): Generator<[Expr, TransformFunc]> {
+                        for (const elt of d) {
+                            if (!("prim" in elt) || elt.prim !== "Elt") {
+                                throw new MichelsonTypeError(t, elt, `map element expected: ${JSON.stringify(elt)}`);
+                            }
+                            yield [elt, (elt: Expr) => [elt, function* () {
+                                for (let i = 0; i < t.args.length; i++) {
+                                    const isElt = (e: Expr): e is MichelsonMapElt => "prim" in e && e.prim === "Elt";
+                                    if (isElt(elt)) {
+                                        yield [elt.args[i], transform(t.args[i])];
+                                    }
+                                }
+                            }]];
+                        }
+                    }];
+                }
+                throw new MichelsonTypeError(t, d, `map expected: ${JSON.stringify(d)}`);
+
+            case "chain_id":
+                if ("bytes" in d || "string" in d) {
+                    let bytes: string | null;
+                    if ("string" in d) {
+                        const id = checkDecodeTezosID(d.string, "ChainID");
+                        bytes = id !== null ? hexBytes(id[1]) : null;
+                    } else {
+                        bytes = d.bytes;
+                    }
+                    if (bytes !== null) {
+                        return [{ bytes }, function* () { /* wow such empty */ }];
+                    }
+                }
+                throw new MichelsonTypeError(t, d, `chain id expected: ${JSON.stringify(d)}`);
+
+            case "signature":
+                if ("bytes" in d || "string" in d) {
+                    let bytes: string | null;
+                    if ("string" in d) {
+                        const id = checkDecodeTezosID(d.string,
+                            "ED25519Signature",
+                            "SECP256K1Signature",
+                            "P256Signature",
+                            "GenericSignature");
+                        bytes = id !== null ? hexBytes(id[1]) : null;
+                    } else {
+                        bytes = d.bytes;
+                    }
+                    if (bytes !== null) {
+                        return [{ bytes }, function* () { /* wow such empty */ }];
+                    }
+                }
+                throw new MichelsonTypeError(t, d, `signature expected: ${JSON.stringify(d)}`);
+
+            case "key_hash":
+                if ("bytes" in d || "string" in d) {
+                    let bytes: string | null = null;
+                    if ("string" in d) {
+                        const pkh = checkDecodeTezosID(d.string,
+                            "ED25519PublicKeyHash",
+                            "SECP256K1PublicKeyHash",
+                            "P256PublicKeyHash");
+                        if (pkh !== null) {
+                            const w = new Writer();
+                            writePublicKeyHash({ type: pkh[0], hash: pkh[1] }, w);
+                            bytes = hexBytes(w.buffer);
+                        }
+                    } else {
+                        bytes = d.bytes;
+                    }
+                    if (bytes !== null) {
+                        return [{ bytes }, function* () { /* wow such empty */ }];
+                    }
+                }
+                throw new MichelsonTypeError(t, d, `key hash expected: ${JSON.stringify(d)}`);
+
+            case "key":
+                if ("bytes" in d || "string" in d) {
+                    let bytes: string | null = null;
+                    if ("string" in d) {
+                        const pkh = checkDecodeTezosID(d.string,
+                            "ED25519PublicKey",
+                            "SECP256K1PublicKey",
+                            "P256PublicKey");
+                        if (pkh !== null) {
+                            const w = new Writer();
+                            writePublicKey({ type: pkh[0], publicKey: pkh[1] }, w);
+                            bytes = hexBytes(w.buffer);
+                        }
+                    } else {
+                        bytes = d.bytes;
+                    }
+                    if (bytes !== null) {
+                        return [{ bytes }, function* () { /* wow such empty */ }];
+                    }
+                }
+                throw new MichelsonTypeError(t, d, `public key expected: ${JSON.stringify(d)}`);
+
+            case "address":
+                if ("bytes" in d || "string" in d) {
+                    let bytes: string | null = null;
+                    if ("string" in d) {
+                        const s = d.string.split("%");
+                        const address = checkDecodeTezosID(s[0],
+                            "ED25519PublicKeyHash",
+                            "SECP256K1PublicKeyHash",
+                            "P256PublicKeyHash",
+                            "ContractHash");
+                        if (address !== null) {
+                            const w = new Writer();
+                            writeAddress({ type: address[0], hash: address[1], entryPoint: s.length > 1 ? s[1] : undefined }, w);
+                            bytes = hexBytes(w.buffer);
+                        }
+                    } else {
+                        bytes = d.bytes;
+                    }
+                    if (bytes !== null) {
+                        return [{ bytes }, function* () { /* wow such empty */ }];
+                    }
+                }
+                throw new MichelsonTypeError(t, d, `address expected: ${JSON.stringify(d)}`);
+
+            case "timestamp":
+                if ("string" in d || "int" in d) {
+                    let int: string | null = null;
+                    if ("string" in d) {
+                        const p = parseDate(d);
+                        if (p !== null) {
+                            int = String(Math.floor(p.getTime() / 1000));
+                        }
+                    } else {
+                        int = d.int;
+                    }
+                    if (int !== null) {
+                        return [{ int }, function* () { /* wow such empty */ }];
+                    }
+                }
+                throw new MichelsonTypeError(t, d, `timestamp expected: ${JSON.stringify(d)}`);
+
+            default:
+                return passThrough(d);
+
+            // TODO check lambdas for typed instructions like PUSH etc
+        }
+    };
+    const w = new Writer();
+    w.writeUint8(5);
+    writeExpr(d, w, transform(t));
     return w.buffer;
 }
 
@@ -491,5 +745,32 @@ export function parseBinary(buf: Uint8Array | number[]): Expr | null {
         return null;
     }
     const rd = new Reader(new Uint8Array(buf));
-    return decode(rd);
+    return readExpr(rd);
+}
+
+export function decodeAddressBytes(b: BytesLiteral): Address {
+    const bytes = parseBytes(b.bytes);
+    if (bytes === null) {
+        throw new Error(`can't parse bytes: "${b.bytes}"`);
+    }
+    const rd = new Reader(new Uint8Array(bytes));
+    return readAddress(rd);
+}
+
+export function decodePublicKeyHashBytes(b: BytesLiteral): Address {
+    const bytes = parseBytes(b.bytes);
+    if (bytes === null) {
+        throw new Error(`can't parse bytes: "${b.bytes}"`);
+    }
+    const rd = new Reader(new Uint8Array(bytes));
+    return readPublicKeyHash(rd);
+}
+
+export function decodePublicKeyBytes(b: BytesLiteral): PublicKey {
+    const bytes = parseBytes(b.bytes);
+    if (bytes === null) {
+        throw new Error(`can't parse bytes: "${b.bytes}"`);
+    }
+    const rd = new Reader(new Uint8Array(bytes));
+    return readPublicKey(rd);
 }

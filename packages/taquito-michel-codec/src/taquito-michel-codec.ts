@@ -10,5 +10,5 @@ export * from "./michelson-types";
 export * from "./michelson-typecheck";
 export * from "./michelson-contract";
 export * from "./formatters";
-export { MichelsonError, isMichelsonError } from "./utils";
+export { MichelsonError, isMichelsonError, MichelsonTypeError } from "./utils";
 export { MacroError } from "./macros";
