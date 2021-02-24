@@ -50,7 +50,7 @@ After concatenating the different methods to batch operations together, a single
 
 #### - The `withTransfer` method
 
-This method allows you to add a transfer of tez to the batched operations. It takes an object as a parameter with four properties. Two of them are mandatory: `to` indicates the transfer’s recipient, and `amount` means the amount of tez to be transferred. Two other properties are optional: if `mutez` is set to `true`, the value specified in `amount` is considered to be in mutez. The `parameter` property takes an object to indicate an entrypoint and a value for the transfer.
+This method allows you to add a transfer of tez to the batched operations. It takes an object as a parameter with 4 properties. Two of them are mandatory: `to` indicates the recipient of the transfer and `amount` indicates the amount of tez to be transferred. Two other properties are optional: if `mutez` is set to `true`, the value specified in `amount` is considered to be in mutez. The `parameter` property takes an object where you can indicate an entrypoint and a value for the transfer.
 
 ```js
 const batch = await Tezos.wallet.batch()
