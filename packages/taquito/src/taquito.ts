@@ -86,6 +86,7 @@ export class TezosToolkit {
     this._context = new Context(_rpc);
     this._wallet = new Wallet(this._context);
     this.setProvider({ rpc: this._rpcClient });
+    // tslint:disable-next-line: deprecation
     this.batch = this._context.batch.batch.bind(this._context.batch);
   } 
 
