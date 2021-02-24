@@ -70,7 +70,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       const estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 1.9 });
       expect(estimate.gasLimit).toEqual(1527);
       expect(estimate.storageLimit).toEqual(0);
-      expect(estimate.suggestedFeeMutez).toEqual(506);
+      expect(estimate.suggestedFeeMutez).toEqual(506); 
       expect(estimate.burnFeeMutez).toEqual(0);
       expect(estimate.minimalFeeMutez).toEqual(406);
       expect(estimate.totalCost).toEqual(406);
