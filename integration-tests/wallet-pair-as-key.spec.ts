@@ -36,6 +36,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(operation.status).toBeTruthy
 
       // Verify that the transfer was done as expected
+      // file deepcode ignore no-any: any is good enough
       const storage = await contract.storage<any>()
       let account1 = await storage[ACCOUNTS].get(ACCOUNT1_ADDRESS)
       expect(account1[BALANCE].toString()).toEqual('16')
