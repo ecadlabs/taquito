@@ -4,14 +4,14 @@ import { genericMultisig } from "./data/multisig";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
-
+  const test = require('jest-retries')
 
   describe(`Generic Multisig: ${rpc}`, () => {
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    it('test manager transfers scenarios for Babylon/005', async (done) => {
+    test('test manager transfers scenarios for Babylon/005', 2, async (done: () => void) => {
       const account1 = await createAddress();
       const account2 = await createAddress();
       const account3 = await createAddress();
