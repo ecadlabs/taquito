@@ -4,13 +4,14 @@ import { MANAGER_LAMBDA } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
   const Tezos = lib;
+  const test = require('jest-retries');
 
   describe(`Manager TZ: ${rpc}`, () => {
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    it('tests manager transfer scenarios for Babylon/005 with wallet APi contract', async (done) => {
+    test('tests manager transfer scenarios for Babylon/005 with wallet APi contract', 2, async (done: () => void) => {
       const op = await Tezos.wallet.originate({
         balance: "1",
         code: managerCode,
