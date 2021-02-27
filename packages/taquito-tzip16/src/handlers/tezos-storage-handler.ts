@@ -1,7 +1,7 @@
 import { Schema } from '@taquito/michelson-encoder';
 import { Context, ContractAbstraction, ContractProvider, Wallet } from '@taquito/taquito';
 import { Handler, Tzip16Uri } from '../metadata-provider';
-import { bytes2Char } from '../tzip16-utils';
+import { bytes2Char } from '@taquito/utils';
 import { InvalidMetadataType, BigMapMetadataNotFound, InvalidUri, MetadataNotFound } from '../tzip16-errors';
 
 const typeOfValueToFind = {

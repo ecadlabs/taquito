@@ -15,3 +15,5 @@ export * from './tzip16-utils';
 export * from './viewKind/interface';
 export * from './viewKind/michelson-storage-view';
 export * from './viewKind/viewFactory';
+
+export { bytes2Char, char2Bytes } from "@taquito/utils";
