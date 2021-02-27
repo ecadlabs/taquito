@@ -23,10 +23,13 @@ import {
   DEFAULT_FEE,
   DEFAULT_GAS_LIMIT,
 } from '../../src/constants';
-import { InvalidDelegationSource } from '../../src/contract/errors';
+import { InvalidCodeParameter, InvalidDelegationSource, InvalidInitParameter } from '../../src/contract/errors';
 import { preapplyResultFrom } from './helper';
 import { MichelsonMap, Schema } from '@taquito/michelson-encoder';
 import { BigMapAbstraction } from '../../src/contract/big-map';
+import { OpKind, ParamsWithKind } from '../../src/operations/types';
+import { NoopParser } from '../../src/taquito';
+import { OperationBatch } from '../../src/batch/rpc-batch-provider';
 
 /**
  * RPCContractProvider test
@@ -34,6 +37,7 @@ import { BigMapAbstraction } from '../../src/contract/big-map';
 describe('RpcContractProvider test', () => {
   let rpcContractProvider: RpcContractProvider;
   let mockRpcClient: {
+    // deepcode ignore no-any: any is good enough
     getScript: jest.Mock<any, any>;
     getStorage: jest.Mock<any, any>;
     getBigMapExpr: jest.Mock<any, any>;
@@ -52,16 +56,19 @@ describe('RpcContractProvider test', () => {
   };
 
   let mockSigner: {
+    // deepcode ignore no-any: any is good enough
     publicKeyHash: jest.Mock<any, any>;
     publicKey: jest.Mock<any, any>;
     sign: jest.Mock<any, any>;
   };
 
   let mockEstimate: {
+    // deepcode ignore no-any: any is good enough
     originate: jest.Mock<any, any>;
     transfer: jest.Mock<any, any>;
     setDelegate: jest.Mock<any, any>;
     registerDelegate: jest.Mock<any, any>;
+    batch: jest.Mock<any, any>;
   };
 
   const revealOp = (source: string) => ({
@@ -104,6 +111,7 @@ describe('RpcContractProvider test', () => {
       transfer: jest.fn(),
       registerDelegate: jest.fn(),
       setDelegate: jest.fn(),
+      batch: jest.fn()
     };
 
     // Required for operations confirmation polling
@@ -115,6 +123,7 @@ describe('RpcContractProvider test', () => {
     });
 
     rpcContractProvider = new RpcContractProvider(
+      // deepcode ignore no-any: any is good enough
       new Context(mockRpcClient as any, mockSigner as any),
       mockEstimate as any
     );
@@ -386,6 +395,7 @@ describe('RpcContractProvider test', () => {
         balance: '200',
         code: miSample
           .concat()
+          // deepcode ignore no-any: any is good enough
           .sort((a: any, b: any) => order1.indexOf(a.prim) - order1.indexOf(b.prim)),
         init: { int: '0' },
         fee: 10000,
@@ -749,5 +759,104 @@ describe('RpcContractProvider test', () => {
       expect(result.methods.mint('test', 100)).toBeInstanceOf(ContractMethod);
       done();
     });
+  });
+  
+    describe('originate with noop parser', () => {
+      it('should throw InvalidCodeParameter', async done => {
+        rpcContractProvider['context'].parser = new NoopParser();
+        try {
+          await rpcContractProvider.originate({
+          delegate: 'test_delegate',
+          balance: '200',
+          code: miStr, // needs to be JSON Michelson
+          init: miInit,
+          fee: 10000,
+          gasLimit: 10600,
+          storageLimit: 257,
+        });
+      } catch( err) {
+        expect(err).toBeInstanceOf(InvalidCodeParameter);
+        expect(err.message).toEqual('Wrong code parameter type, expected an array');
+      }
+      done();
+    });
+
+    it('should throw InvalidCodeParameter when missing storage part', async done => {
+      rpcContractProvider['context'].parser = new NoopParser();
+      try {
+        await rpcContractProvider.originate({
+          delegate: 'test_delegate',
+          balance: '200',
+          code: [
+            { prim: 'parameter', args: [{ prim: 'int' }] },
+            {
+                prim: 'code',
+                args: [[{ prim: 'DUP' }]]
+            }
+          ],
+          storage: 'test',
+          fee: 10000,
+          gasLimit: 10600,
+          storageLimit: 257,
+        });
+      } catch( err) {
+        expect(err).toBeInstanceOf(InvalidCodeParameter);
+        expect(err.message).toEqual('The storage section is missing from the script');
+      }
+      done();
+    });
+
+  it('should throw InvalidInitParameter', async done => {
+    rpcContractProvider['context'].parser = new NoopParser();
+    try {
+      await rpcContractProvider.originate({
+        delegate: 'test_delegate',
+        balance: '200',
+        code: [
+          { prim: 'parameter', args: [{ prim: 'int' }] },
+          {
+              prim: 'code',
+              args: [[{ prim: 'DUP' }]]
+          },
+          { prim: 'storage', args: [{ prim: 'pair', args: [{ prim: 'int' }, { prim: 'address' }] }] }
+        ],
+        init: 'test',
+        fee: 10000,
+        gasLimit: 10600,
+        storageLimit: 257,
+      });
+    } catch (err) {
+      expect(err).toBeInstanceOf(InvalidInitParameter);
+      expect(err.message).toEqual('Wrong init parameter type, expected JSON Michelson');
+    }
+      done();
+    });
+
+    describe('batch', () => {
+      it('should produce a batch operation', async done => {
+
+        const opToBatch: ParamsWithKind[] = [
+          {
+            kind: OpKind.TRANSACTION,
+            to: 'test',
+            amount: 2
+          },
+          {
+            kind: OpKind.TRANSACTION,
+            to: 'test',
+            amount: 2
+          }
+        ];
+
+        const opBatch = new OperationBatch(rpcContractProvider['context'], mockEstimate);
+
+        expect(rpcContractProvider.batch()).toBeInstanceOf(OperationBatch);
+        expect(rpcContractProvider.batch()).toEqual(opBatch);
+
+        expect(rpcContractProvider.batch(opToBatch)).toEqual(opBatch.with(opToBatch));
+
+        done();
+      });
+    }); 
   });
 });

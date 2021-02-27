@@ -10,7 +10,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await setup()
       done()
     })
-    it('originates a contract and initlizes bigmaps with variants of data', async (done) => {
+    it('originates a contract and initializes bigmaps with variants of data', async (done) => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: storageContract,

@@ -12,3 +12,4 @@ compiled
 website/build/
 manifest.json
 !.vscode/extensions.json
+website/*.bak

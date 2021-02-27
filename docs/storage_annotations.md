@@ -7,7 +7,7 @@ This section shows how to write storage when :
 
 - it has annotations
 - it has no annotation
-- it has a mix of properties which are annotated and others which are not
+- it has a mix of annotated and not-annotated properties
 
 To do so, let's look at three examples of contract origination showing initial values in the storage.
 

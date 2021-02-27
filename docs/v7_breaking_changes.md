@@ -10,16 +10,16 @@ With this major number update to support the `delphi` Tezos protocol, we have al
 This page explains each breaking change, including:
 
 - the reasons that motivated it,
-- code examples that explain how to update your code (how it was in prior versions versus how it needs to be using v7), and
+- code examples that demonstrate how to update your code (how it was in prior versions versus how it needs to be using v7), and
 - potential errors you might get when updating to v7 without making the fixes.
 
 ## Removed the default RPC Node URL
 
-Prior version 7, Taquito shipped with a default RPC node URL. We have removed the default URL, forcing developers to specify the RPC node they wish to use. See [RPC Nodes](rpc_nodes.md) for a list of public and private nodes options.
+Before version 7, Taquito shipped with a default RPC node URL. We have removed the default URL, forcing developers to specify the RPC node they wish to use. See [RPC Nodes](rpc_nodes.md) for a list of public and private nodes options.
 
-The previous default was set in the constructor of the `RpcClient` class. We took this approach so that users can get started quickly, and Taquito should "just work" with minimal fiddling. Users could import a ready-to-use `Tezos` singleton, an instance of the `TezosToolkit` class using the default RPC URL.
+The previous default was set in the constructor of the `RpcClient` class. We took this approach so that users can get started quickly, and Taquito should "just work" with minimal fiddling. Users could import a ready-to-use Tezos singleton, an instance of the `TezosToolkit` class using the default RPC URL.
 
-However, in version 7 of Taquito, we decided to remove the default RPC node URL. The reason behind this choice is to encourage developers to make their own informed choice on which Tezos RPC node (public or private) is best for them. This change also helps avoid dApps using Taquito from centralizing on one public RPC node. Decentralization is an important part of Tezos, including the node infrastructure level.
+However, in version 7 of Taquito, we decided to remove the default RPC node URL. The reason behind this choice is to encourage developers to make their own informed choice on which Tezos RPC node (public or private) is best for them. This change also helps avoid dApps using Taquito from centralizing on one public RPC node. Decentralization is an essential part of Tezos, including the node infrastructure level.
 
 This change impacts the following classes, where it is now required to specify an RPC node in their constructor:
 
@@ -27,7 +27,7 @@ This change impacts the following classes, where it is now required to specify a
 - `Context`
 - `TezosToolkit`
 
-When creating an instance of the `TezosToolkit`, one must specify the RPC node. It can be a `string` or a [`RpcClient`](rpc_package.md) object. A list of community-run nodes can be accessed [here](rpc_nodes.md#list-of-community-run-nodes). **The `Tezos` singleton, which was a ready-to-use instance of the `TezosToolkit` class, is no longer supported.**
+When creating an instance of the `TezosToolkit`, one must specify the RPC node. It can be a `string` or a [`RpcClient`](rpc_package.md) object. A list of community-run nodes can be accessed [here](rpc_nodes.md#list-of-community-run-nodes). **The `Tezos` singleton, a ready-to-use instance of the `TezosToolkit` class, is no longer supported.**
 
 ### Change required in your code:
 
@@ -53,7 +53,7 @@ const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL_NOW_REQUIRED');
 
 ### Example Errors if you were using the Tezos singleton
 
-Here is an example of the compilation error you would get when updating Taquito to version 7, if you do not replace the Tezos singleton by an instance of the TezosToolkit:
+Here is an example of the compilation error you would get when updating Taquito to version 7, if you do not replace the Tezos singleton with an instance of the TezosToolkit:
 
 `Module '"../../node_modules/@taquito/taquito/dist/types/taquito"' has no exported member 'Tezos'.`
 
@@ -69,9 +69,9 @@ Here are examples of the compilation error you would get when updating Taquito t
 
 Version 7 of Taquito introduces a breaking change for implementations that use the `main` method for calling the default entrypoint of a contract.
 
-Before version 7, there was a synthetic method called `main` in Taquito to interact with the default entrypoint of a contract. The `main` name was confusing because it referred to the [default](http://tezos.gitlab.io/whitedoc/michelson.html#the-default-entrypoint) entrypoint in Michelson.
+Before version 7, there was a synthetic method called `main` in Taquito to interact with the default entrypoint. The `main` name was confusing because it referred to the [default](http://tezos.gitlab.io/whitedoc/michelson.html#the-default-entrypoint) entrypoint in Michelson.
 
-In version 7, this synthetic entrypoint name has been renamed from `main` to `default`.
+In version 7, this synthetic entrypoint name has been renamed from `main` to `default.`
 
 ### Changes required in your code:
 
@@ -101,7 +101,7 @@ If you update to version 7 without replacing main with default in your code, you
 ## Removed the `importKey` method from TezosToolkit class
 
 This method was marked as deprecated in March 2020 and recommended to use the signer provider: `@taquito/signer importKey`.
-The purpose of this change was to remove the `@taquito/signer` dependency from `@taquito/taquito` because it increased the bundle size by ~1.1mb while being not necessary for most browser-based use-cases.
+The purpose of this change was to remove the `@taquito/signer` dependency from `@taquito/taquito` because it increased the bundle size by ~1.1mb while not being necessary for most browser-based use-cases.
 
 ### Change required in your code:
 
@@ -136,7 +136,7 @@ or this error at runtime:
 
 Taquito now uses a type union that is composed of specific types for each protocol's economic constants.
 
-Each protocol can add, change or remove constants. Prior to v7 Taquito used a single type with optional parameters. For correctness and to avoid bloat over time, we now implement specific types for each protocol's constants.
+Each protocol can add, change or remove constants. Before v7, Taquito used a single type with optional parameters. We now implement specific types for each protocol's constants for the correctness and avoid bloat over time.
 
 The `ConstantsResponse` interface in the Taquito RPC package is used when querying the RPC for constants with the `getConstants` method of the `RpcClient` class. Changes made to the interface `ConstantsResponse` are in the table below. Note that not all of them are breaking changes; some new or missing properties are added.
 
@@ -188,7 +188,7 @@ This breaking change can impact the users of the pre-released `ledger-signer` pa
 
 We have renamed the enum `DerivationType` members to use the curve name. Now `tz1`, `tz2`, and `tz3` become `ED25519`, `SECP256K1`, and `P256`. This enum is used in the optional `derivationType` parameter of the constructor of the `LedgerSigner` class.
 
-There is another derivation type (`BIPS32_ED25519`), which also uses the tz1 prefix. It is used by the `tezos-client` CLI when paired with a ledger device but is not implemented so far in the `ledger-signer` package. The derivation types being named `tz1`, `tz2` and `tz3` were potentially an area of confusion in the future, whereas different derivation types use the same signature scheme.
+There is another derivation type (`BIPS32_ED25519`), which also uses the tz1 prefix. It is used by the `tezos-client` CLI when paired with a ledger device but is not implemented so far in the `ledger-signer` package. The derivation types being named `tz1`, `tz2`, and `tz3` were potentially an area of confusion in the future, whereas different derivation types use the same signature scheme.
 
 ### Change required in your code:
 

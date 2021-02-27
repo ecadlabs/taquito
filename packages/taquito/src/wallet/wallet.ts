@@ -1,5 +1,6 @@
+import { Protocols } from '../constants';
 import { Context } from '../context';
-import { ContractAbstraction, ContractMethod, WalletContract } from '../contract';
+import { ContractAbstraction, ContractMethod } from '../contract';
 import { OpKind, withKind } from '../operations/types';
 import {
   WalletDelegateParams,
@@ -7,7 +8,6 @@ import {
   WalletProvider,
   WalletTransferParams,
 } from './interface';
-import { OperationFactory } from './opreation-factory';
 
 export interface PKHOption {
   forceRefetch?: boolean;
@@ -21,7 +21,7 @@ export type WalletParamsWithKind =
 export class WalletOperationBatch {
   private operations: WalletParamsWithKind[] = [];
 
-  constructor(private walletProvider: WalletProvider, private operationFactory: OperationFactory) {}
+  constructor(private walletProvider: WalletProvider, private context: Context) {}
 
   /**
    *
@@ -67,23 +67,25 @@ export class WalletOperationBatch {
   }
 
   private async mapOperation(param: WalletParamsWithKind) {
-    switch (param.kind) {
-      case OpKind.TRANSACTION:
-        return this.walletProvider.mapTransferParamsToWalletParams({
-          ...param,
-        });
-      case OpKind.ORIGINATION:
-        return this.walletProvider.mapOriginateParamsToWalletParams({
-          ...param,
-        });
-      case OpKind.DELEGATION:
-        return this.walletProvider.mapDelegateParamsToWalletParams({
-          ...param,
-        });
-      default:
-        throw new Error(`Unsupported operation kind: ${(param as any).kind}`);
-    }
-  }
+		switch (param.kind) {
+			case OpKind.TRANSACTION:
+				return this.walletProvider.mapTransferParamsToWalletParams({
+					...param
+				});
+			case OpKind.ORIGINATION:
+				return this.walletProvider.mapOriginateParamsToWalletParams(
+					await this.context.parser.prepareCodeOrigination({
+						...param
+					})
+				);
+			case OpKind.DELEGATION:
+				return this.walletProvider.mapDelegateParamsToWalletParams({
+					...param
+				});
+			default:
+				throw new Error(`Unsupported operation kind: ${(param as any).kind}`);
+		}
+	}
 
   /**
    *
@@ -125,7 +127,7 @@ export class WalletOperationBatch {
 
     const opHash = await this.walletProvider.sendOperations(ops);
 
-    return this.operationFactory.createOperation(opHash);
+    return this.context.operationFactory.createOperation(opHash);
   }
 }
 
@@ -167,14 +169,19 @@ export class Wallet {
    * @param originateParams Originate operation parameter
    */
   originate(params: WalletOriginateParams) {
-    return this.walletCommand(async () => {
-      const mappedParams = await this.walletProvider.mapOriginateParamsToWalletParams({
-        ...params,
-      });
-      const opHash = await this.walletProvider.sendOperations([mappedParams]);
-      return this.context.operationFactory.createOriginationOperation(opHash);
-    });
-  }
+		return this.walletCommand(async () => {
+			const mappedParams = await this.walletProvider.mapOriginateParamsToWalletParams(
+				await this.context.parser.prepareCodeOrigination({
+					...params
+				})
+			);
+			const opHash = await this.walletProvider.sendOperations([ mappedParams ]);
+			if (!this.context.proto) {
+				this.context.proto = (await this.context.rpc.getBlock()).protocol as Protocols;
+			}
+			return this.context.operationFactory.createOriginationOperation(opHash);
+		});
+	}
 
   /**
    *
@@ -233,9 +240,13 @@ export class Wallet {
    *
    * @param params List of operation to initialize the batch with
    */
-  batch(params: Parameters<WalletOperationBatch['with']>[0]) {
-    const batch = new WalletOperationBatch(this.walletProvider, this.context.operationFactory);
-    batch.with(params);
+  batch(params?: Parameters<WalletOperationBatch['with']>[0]) {
+    const batch = new WalletOperationBatch(this.walletProvider, this.context);
+    
+    if (Array.isArray(params)) {
+      batch.with(params);
+    }
+    
     return batch;
   }
 

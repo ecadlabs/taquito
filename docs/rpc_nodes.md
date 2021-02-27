@@ -13,7 +13,7 @@ author: Roxane Letourneau
 
 ## List of community-run nodes
 
-*If you are aware of a public node missing from our list, or our information is inaccurate, please help us by submitting an issue or pull request on our GitHub page.*
+*If you are aware of a public node missing from our list or our information is inaccurate, please help us by submitting an issue or pull request on our GitHub page.*
 
 - Tezos Giga Node from Tezos Ukraine
     - Mainnet: https://mainnet-tezos.giganode.io
@@ -29,10 +29,8 @@ author: Roxane Letourneau
     - Next protocol/version testnet (Edonet): https://rpczero.tzbeta.net/
 - ECAD Labs nodes:
     - Mainnet: https://api.tez.ie/rpc/mainnet
-    - Carthagenet: https://api.tez.ie/rpc/carthagenet
     - Delphinet: https://api.tez.ie/rpc/delphinet
-    - Ebetanet: https://api.tez.ie/rpc/ebetanet
-    - Edonet: https://api.tez.ie/rpc/edonet
+    - Edonet: https://api.tez.ie/rpc/edonet (edo2net / Chainid is `NetXSgo1ZT2DRUG`)
 
 ## How to run a node
 

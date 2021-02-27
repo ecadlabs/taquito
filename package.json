@@ -12,7 +12,9 @@
     "example": "cd example && npm run example",
     "lerna": "lerna",
     "build-docs": "typedoc",
-    "gh-pages": "gh-pages"
+    "gh-pages": "gh-pages",
+    "netlify:preview": "netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json --alias=$short_sha --message 'Deployment for $GITHUB_REF'",
+    "netlify:publish": "netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json --prod --message 'Deployment for $GITHUB_REF'"
   },
   "workspaces": [
     "packages/*"
@@ -41,7 +43,8 @@
       "^@taquito/utils$": "<rootDir>/packages/taquito-utils/src/taquito-utils.ts",
       "^@taquito/signer$": "<rootDir>/packages/taquito-signer/src/taquito-signer.ts",
       "^@taquito/local-forging$": "<rootDir>/packages/taquito-local-forging/src/taquito-local-forging.ts",
-      "^@taquito/tzip16$": "<rootDir>/packages/taquito-tzip16/src/taquito-tzip16.ts"
+      "^@taquito/tzip16$": "<rootDir>/packages/taquito-tzip16/src/taquito-tzip16.ts",
+      "^@taquito/tzip12$": "<rootDir>/packages/taquito-tzip12/src/taquito-tzip12.ts"
     },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
@@ -82,9 +85,8 @@
     "tslint": "^6.1.3",
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-standard": "^9.0.0",
-    "typedoc": "^0.19.2",
-    "typedoc-plugin-lerna-packages": "^0.3.1",
-    "typescript": "^4.1.2"
+    "typedoc": "^0.20.23",
+    "typescript": "^4.1.5"
   },
   "config": {
     "commitizen": {

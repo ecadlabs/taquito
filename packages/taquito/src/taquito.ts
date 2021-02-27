@@ -1,3 +1,8 @@
+/**
+ * @packageDocumentation
+ * @module @taquito/taquito
+ */
+
 import { RpcClient } from '@taquito/rpc';
 import { RPCBatchProvider } from './batch/rpc-batch-provider';
 import { Protocols } from './constants';
@@ -37,6 +42,9 @@ export { PollingSubscribeProvider } from './subscribe/polling-provider';
 export * from './tz/interface';
 export * from './wallet';
 export { Extension } from './extension/extension';
+export * from './parser/interface';
+export * from './parser/michel-codec-parser';
+export * from './parser/noop-parser'
 
 export interface SetProviderOptions {
   forger?: Forger;
@@ -59,6 +67,10 @@ export class TezosToolkit {
   private _rpcClient: RpcClient
   private _wallet: Wallet;
   private _context: Context;
+  /**
+   * @deprecated TezosToolkit.batch has been deprecated in favor of TezosToolkit.contract.batch
+   *
+   */
   public batch: RPCBatchProvider['batch'];
 
   public readonly format = format;
@@ -74,6 +86,7 @@ export class TezosToolkit {
     this._context = new Context(_rpc);
     this._wallet = new Wallet(this._context);
     this.setProvider({ rpc: this._rpcClient });
+    // tslint:disable-next-line: deprecation
     this.batch = this._context.batch.batch.bind(this._context.batch);
   } 
 

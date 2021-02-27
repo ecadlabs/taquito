@@ -7,7 +7,7 @@ async function example() {
 
     const transport = await TransportNodeHid.create();
     let index = 0;
-    const tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet')
+    const tezos = new TezosToolkit('https://api.tez.ie/rpc/edonet')
     while (index < 10) {
         const ledgerSigner = new LedgerSigner(transport, `44'/1729'/${index}'/0'`, false, DerivationType.ED25519);
         tezos.setProvider({ signer: ledgerSigner });

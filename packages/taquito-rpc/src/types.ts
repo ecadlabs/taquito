@@ -450,7 +450,7 @@ export interface MichelsonV1ExpressionExtended {
   annots?: string[];
 }
 
-export type MichelsonV1Expression = MichelsonV1ExpressionBase | MichelsonV1ExpressionExtended;
+export type MichelsonV1Expression = MichelsonV1ExpressionBase | MichelsonV1ExpressionExtended | MichelsonV1Expression[];
 
 export interface ScriptedContracts {
   code: MichelsonV1Expression[];
@@ -578,14 +578,14 @@ export interface OperationContentsAndResultMetadataOrigination {
   internal_operation_results?: InternalOperationResult[];
 }
 
-export type ConstantsResponse = 
-ConstantsResponseCommon & 
-ConstantsResponseProto007 &
-ConstantsResponseProto006 &
-ConstantsResponseProto005 &
-ConstantsResponseProto004 &
-ConstantsResponseProto003 &
-ConstantsResponseProto001And002;
+export type ConstantsResponse =
+  ConstantsResponseCommon &
+  ConstantsResponseProto007 &
+  ConstantsResponseProto006 &
+  ConstantsResponseProto005 &
+  ConstantsResponseProto004 &
+  ConstantsResponseProto003 &
+  ConstantsResponseProto001And002;
 
 export interface ConstantsResponseCommon {
   proof_of_work_nonce_size: number;
@@ -699,6 +699,7 @@ export type RPCRunCodeParam = {
   payer?: string;
   gas?: BigNumber;
   entrypoint?: string;
+  balance?: string;
 };
 
 export type RunCodeResult = {

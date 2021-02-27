@@ -1,3 +1,8 @@
+/**
+ * @packageDocumentation
+ * @module @taquito/utils
+ */
+
 /*
  * Some code in this file is originally from sotez and eztz
  * Copyright (c) 2018 Andrew Kishino

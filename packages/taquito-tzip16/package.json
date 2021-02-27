@@ -1,6 +1,6 @@
 {
   "name": "@taquito/tzip16",
-  "version": "7.2.0-beta.2",
+  "version": "8.0.4-beta.0",
   "description": "Tzip16",
   "keywords": [
     "tezos",
@@ -57,11 +57,11 @@
     ]
   },
   "dependencies": {
-    "@taquito/http-utils": "^7.2.0-beta.2",
-    "@taquito/michelson-encoder": "^7.2.0-beta.2",
-    "@taquito/rpc": "^7.2.0-beta.2",
-    "@taquito/taquito": "^7.2.0-beta.2",
-    "@taquito/utils": "^7.2.0-beta.2",
+    "@taquito/http-utils": "^8.0.4-beta.0",
+    "@taquito/michelson-encoder": "^8.0.4-beta.0",
+    "@taquito/rpc": "^8.0.4-beta.0",
+    "@taquito/taquito": "^8.0.4-beta.0",
+    "@taquito/utils": "^8.0.4-beta.0",
     "bignumber.js": "^9.0.1",
     "crypto-js": "^4.0.0"
   },
@@ -91,8 +91,8 @@
     "tslint": "^6.1.2",
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-standard": "^9.0.0",
-    "typedoc": "^0.19.2",
-    "typescript": "^4.0.3"
+    "typedoc": "^0.20.23",
+    "typescript": "^4.1.5"
   },
   "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
 }

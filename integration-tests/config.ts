@@ -55,6 +55,19 @@ interface FaucetConfig {
   faucetKey: {};
 }
 
+const edonetEphemeral = {
+  rpc: process.env['TEZOS_RPC_EDONET'] || 'https://api.tez.ie/rpc/edonet',
+  knownBaker: 'tz1R55a2HQbXUAzWKJYE5bJp3UvvawwCm9Pr',
+  knownContract: 'KT1MTFjUeqBeZoFeW1NLSrzJdcS5apFiUXoB',
+  knownBigMapContract: 'KT1Aqk5xE36Kx7JUUV8VMx4t9jLgQn4MBWQk',
+  protocol: Protocols.PtEdo2Zk,
+  signerConfig: {
+    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
+    keyUrl: 'https://api.tez.ie/keys/edonet',
+    requestHeaders: { 'Authorization': 'Bearer taquito-example' },
+  }
+}
+
 const delphinetEphemeral = {
   rpc: process.env['TEZOS_RPC_DELPHINET'] || 'https://api.tez.ie/rpc/delphinet',
   knownBaker: 'tz1LpmZmB1yJJBcCrBDLSAStmmugGDEghdVv',
@@ -116,6 +129,18 @@ const key = {
   secret: "122bb47843750982da5c65f7affa0d32971ac876"
 }
 
+const edonetFaucet = {
+  rpc: 'https://api.tez.ie/rpc/edonet',
+  knownBaker: 'tz1R55a2HQbXUAzWKJYE5bJp3UvvawwCm9Pr',
+  knownContract: 'KT1MTFjUeqBeZoFeW1NLSrzJdcS5apFiUXoB',
+  knownBigMapContract: 'KT1Aqk5xE36Kx7JUUV8VMx4t9jLgQn4MBWQk',
+  protocol: Protocols.PtEdo2Zk,
+  signerConfig: {
+    type: SignerType.FAUCET as SignerType.FAUCET,
+    faucetKey: key,
+  }
+}
+
 const delphinetFaucet = {
   rpc: 'https://api.tez.ie/rpc/delphinet',
   knownBaker: 'tz1LpmZmB1yJJBcCrBDLSAStmmugGDEghdVv',
@@ -154,21 +179,21 @@ const babylonnetFaucet = {
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_FAUCET']) {
-  providers.push(carthagenetFaucet, delphinetFaucet)
-} 
-else if (process.env['RUN_CARTHAGENET_WITH_FAUCET']) {
-  providers.push(carthagenetFaucet)
+  providers.push(delphinetFaucet, edonetFaucet)
 } 
 else if (process.env['RUN_DELPHINET_WITH_FAUCET']) {
   providers.push(delphinetFaucet)
 }
+else if (process.env['RUN_EDONET_WITH_FAUCET']) {
+  providers.push(edonetFaucet)
+}
 else if (process.env['DELPHINET']) {
   providers.push(delphinetEphemeral)
 }
-else if (process.env['CARTHAGENET']) {
-  providers.push(carthagenetEphemeral)
+else if (process.env['EDONET']) {
+  providers.push(edonetEphemeral)
 } else {
-  providers.push(carthagenetEphemeral, delphinetEphemeral)
+  providers.push(edonetEphemeral, delphinetEphemeral)
 }
 
 const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE'];
@@ -190,14 +215,19 @@ const setupSignerWithFreshKey = async (
   { keyUrl, requestHeaders }: EphemeralConfig
 ) => {
   const httpClient = new HttpBackend();
-  const key = await httpClient.createRequest<string>({
-    url: keyUrl,
-    method: 'POST',
-    headers: requestHeaders,
-    json: false,
-  });
-  const signer = new InMemorySigner(key);
-  Tezos.setSignerProvider(signer);
+
+  try {
+    const key = await httpClient.createRequest<string>({
+      url: keyUrl,
+      method: 'POST',
+      headers: requestHeaders,
+      json: false,
+    });
+    const signer = new InMemorySigner(key!);
+    Tezos.setSignerProvider(signer);
+  } catch (e) {
+    console.log("An error occurs when trying to fetch a fresh key:", e)
+  }
 };
 
 const setupSignerWithEphemeralKey = async (
@@ -206,14 +236,20 @@ const setupSignerWithEphemeralKey = async (
 ) => {
   const ephemeralUrl = `${keyUrl}/ephemeral`;
   const httpClient = new HttpBackend();
-  const { id, pkh } = await httpClient.createRequest({
-    url: ephemeralUrl,
-    method: 'POST',
-    headers: requestHeaders,
-  });
 
-  const signer = new RemoteSigner(pkh, `${ephemeralUrl}/${id}/`, { headers: requestHeaders });
-  Tezos.setSignerProvider(signer);
+  try {
+    const { id, pkh } = await httpClient.createRequest({
+      url: ephemeralUrl,
+      method: 'POST',
+      headers: requestHeaders,
+    });
+
+    const signer = new RemoteSigner(pkh, `${ephemeralUrl}/${id}/`, { headers: requestHeaders });
+    Tezos.setSignerProvider(signer);
+
+  } catch (e) {
+    console.log("An error occurs when trying to fetch an ephemeral key:", e)
+  }
 };
 
 const setupWithFaucetKey = async (Tezos: TezosToolkit, signerConfig: FaucetConfig) => {

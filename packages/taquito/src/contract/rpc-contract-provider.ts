@@ -1,6 +1,7 @@
 import { Schema } from '@taquito/michelson-encoder';
 import { ScriptResponse } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
+import { OperationBatch } from '../batch/rpc-batch-provider';
 import { Context } from '../context';
 import { DelegateOperation } from '../operations/delegate-operation';
 import { OperationEmitter } from '../operations/operation-emitter';
@@ -9,10 +10,10 @@ import { TransactionOperation } from '../operations/transaction-operation';
 import {
   DelegateParams,
   OriginateParams,
+  ParamsWithKind,
   RegisterDelegateParams,
   TransferParams,
 } from '../operations/types';
-import { Wallet } from '../wallet';
 import { ContractAbstraction } from './contract';
 import { InvalidDelegationSource } from './errors';
 import { ContractProvider, ContractSchema, EstimationProvider, StorageProvider } from './interface';
@@ -124,10 +125,11 @@ export class RpcContractProvider extends OperationEmitter
     const estimate = await this.estimate(params, this.estimator.originate.bind(this.estimator));
 
     const publicKeyHash = await this.signer.publicKeyHash();
-    const operation = await createOriginationOperation({
+    const operation = await createOriginationOperation(
+      await this.context.parser.prepareCodeOrigination({
       ...params,
       ...estimate,
-    });
+    }));
     const preparedOrigination = await this.prepareOperation({ operation, source: publicKeyHash });
     const forgedOrigination = await this.forge(preparedOrigination);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(forgedOrigination);
@@ -214,6 +216,25 @@ export class RpcContractProvider extends OperationEmitter
     const abs = new ContractAbstraction(address, script, this, this, entrypoints, chainId);
     return contractAbstractionComposer(abs, this.context);
   }
+
+  /**
+   *
+   * @description Batch a group of operation together. Operations will be applied in the order in which they are added to the batch
+   *
+   * @returns A batch object from which we can add more operation or send a command to execute the batch
+   * 
+   * @param params List of operation to batch together
+   */
+  batch(params?: ParamsWithKind[]) {
+    const batch = new OperationBatch(this.context, this.estimator);
+
+    if (Array.isArray(params)) {
+      batch.with(params);
+    }
+
+    return batch;
+  }
+
 }
 
 type ContractAbstractionComposer<T> = (abs: ContractAbstraction<ContractProvider>, context: Context) => T 
