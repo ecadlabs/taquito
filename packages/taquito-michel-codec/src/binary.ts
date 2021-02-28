@@ -267,11 +267,10 @@ function writeAddress(a: Address, w: Writer): void {
         w.writeUint8(ContractID.Originated);
         w.writeBytes(Array.from(a.hash));
         w.writeUint8(0);
-        return;
+    } else {
+        w.writeUint8(ContractID.Implicit);
+        writePublicKeyHash(a, w);
     }
-
-    w.writeUint8(ContractID.Implicit);
-    writePublicKeyHash(a, w);
 
     if (a.entryPoint !== undefined && a.entryPoint !== "" && a.entryPoint !== "default") {
         const enc = new TextEncoder();

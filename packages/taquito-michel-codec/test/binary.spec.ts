@@ -1,6 +1,15 @@
-import { Parser } from "../src/micheline-parser";
-import { MichelsonData, MichelsonType, Protocol } from "../src/michelson-types";
-import { emitBinary, packData, parseBinary } from "../src/binary";
+import fs from "fs";
+import path from "path";
+
+import { MichelsonData, MichelsonType } from "../src/michelson-types";
+import { packData } from "../src/binary";
+
+interface TestData {
+    title: string,
+    type: MichelsonType,
+    data: MichelsonData,
+    packed: string,
+}
 
 function parseHex(s: string): number[] {
     const res: number[] = [];
@@ -11,10 +20,13 @@ function parseHex(s: string): number[] {
 }
 
 describe("Pack", () => {
-    it("address", () => {
-        const type: MichelsonType = { prim: "address" };
-        const data: MichelsonData = { string: "KT1RvkwF4F7pz1gCoxkyZrG1RkrxQy3gmFTv" };
-        const p = packData(data, type);
-        expect(p).toEqual(parseHex("050a0000001601be41ee922ddd2cf33201e49d32da0afec571dce300"));
-    });
+    const filename = path.resolve(__dirname, "binary-data.json");
+    const src: TestData[] = JSON.parse(fs.readFileSync(filename).toString());
+
+    for (const s of src) {
+        it(s.title, () => {
+            const p = packData(s.data, s.type);
+            expect(p).toEqual(parseHex(s.packed));
+        });
+    }
 });

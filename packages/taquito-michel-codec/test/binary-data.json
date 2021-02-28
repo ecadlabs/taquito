@@ -6,7 +6,8 @@
         },
         "type": {
             "prim": "address"
-        }
+        },
+        "packed": "050a0000001901be41ee922ddd2cf33201e49d32da0afec571dce300666f6f"
     },
     {
         "title": "chain_id (bytes)",
@@ -15,7 +16,8 @@
         },
         "type": {
             "prim": "chain_id"
-        }
+        },
+        "packed": "050a000000047a06a770"
     },
     {
         "title": "chain_id (base58)",
@@ -24,7 +26,8 @@
         },
         "type": {
             "prim": "chain_id"
-        }
+        },
+        "packed": "050a00000004f3d48554"
     },
     {
         "title": "key",
@@ -33,7 +36,8 @@
         },
         "type": {
             "prim": "key"
-        }
+        },
+        "packed": "050a00000021004798d2cc98473d7e250c898885718afd2e4efbcb1a1595ab9730761ed830de0f"
     },
     {
         "title": "key_hash",
@@ -42,7 +46,8 @@
         },
         "type": {
             "prim": "key_hash"
-        }
+        },
+        "packed": "050a000000150002298c03ed7d454a101eb7022bc95f7e5f41ac78"
     },
     {
         "title": "lambda",
@@ -72,7 +77,8 @@
                     "prim": "nat"
                 }
             ]
-        }
+        },
+        "packed": "0502000000080743036200010312"
     },
     {
         "title": "signature",
@@ -81,7 +87,8 @@
         },
         "type": {
             "prim": "signature"
-        }
+        },
+        "packed": "050a0000004049d47dba27bd76208b092f3e500f64818920c817491b8b9094f28c2c2b9c6721b257b8878ce47182122b8ea84aeacd84a8aa28cb1f1fe48a26355a7bca4b8306"
     },
     {
         "title": "timestamp (ISO 8601)",
@@ -90,7 +97,8 @@
         },
         "type": {
             "prim": "timestamp"
-        }
+        },
+        "packed": "0500a7e8e4d80b"
     },
     {
         "title": "timestamp (Unix)",
@@ -99,7 +107,8 @@
         },
         "type": {
             "prim": "timestamp"
-        }
+        },
+        "packed": "05009ef8ecda0b"
     },
     {
         "title": "list",
@@ -121,7 +130,8 @@
                     "prim": "address"
                 }
             ]
-        }
+        },
+        "packed": "0502000000570a0000001901bfb02c20a2edeef97c288c5857d3f5f68d6e19b800666f6f0a00000019017ea0041bb4a78e74b142521bf4d2c92585bd18e9006261720a000000160131c3d20727bd4ea9ae69e5f262245613dcdf83be00"
     },
     {
         "title": "map",
@@ -170,7 +180,8 @@
                     "prim": "timestamp"
                 }
             ]
-        }
+        },
+        "packed": "050200000021070400bb010086a999db0b070400880700b7f3d9f90b070400950c00aff9df830c"
     },
     {
         "title": "option (Some)",
@@ -189,7 +200,8 @@
                     "prim": "chain_id"
                 }
             ]
-        }
+        },
+        "packed": "0505090a00000004f3d48554"
     },
     {
         "title": "option (None)",
@@ -203,7 +215,8 @@
                     "prim": "chain_id"
                 }
             ]
-        }
+        },
+        "packed": "050306"
     },
     {
         "title": "or (Left)",
@@ -225,7 +238,8 @@
                     "prim": "string"
                 }
             ]
-        }
+        },
+        "packed": "0505050a00000004f3d48554"
     },
     {
         "title": "or (Right)",
@@ -247,7 +261,8 @@
                     "prim": "string"
                 }
             ]
-        }
+        },
+        "packed": "0505080100000003666f6f"
     },
     {
         "title": "pair",
@@ -272,7 +287,8 @@
                     "prim": "string"
                 }
             ]
-        }
+        },
+        "packed": "0507070a00000004f3d485540100000003666f6f"
     },
     {
         "title": "list of pairs",
@@ -304,6 +320,7 @@
                     ]
                 }
             ]
-        }
+        },
+        "packed": "05020000001307070a00000004f3d485540100000003666f6f"
     }
 ]

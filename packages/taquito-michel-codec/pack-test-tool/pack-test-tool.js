@@ -22,7 +22,7 @@ async function packData(data) {
     const ret = [];
     for (const src of data) {
         try {
-            const res = await client.packData(src, { block: "head" });
+            const res = await client.packData({ data: src.data, type: src.type }, { block: "head" });
             ret.push({ ...src, packed: res.packed });
         } catch (err) {
             console.log(err);
@@ -31,4 +31,4 @@ async function packData(data) {
     return ret;
 }
 
-packData(data).then(ret => process.stdout.write(JSON.stringify(ret, null, "  ")));
+packData(data).then(ret => process.stdout.write(JSON.stringify(ret, null, "    ")));
