@@ -739,6 +739,10 @@ export function packData(d: MichelsonData, t: MichelsonType): number[] {
     return w.buffer;
 }
 
+export function packDataBytes(d: MichelsonData, t: MichelsonType): BytesLiteral {
+    return { bytes: hexBytes(packData(d, t)) };
+}
+
 export function parseBinary(buf: Uint8Array | number[]): Expr | null {
     if (buf.length === 0) {
         return null;
