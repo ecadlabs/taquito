@@ -3,7 +3,6 @@ import {
     MichelsonType, MichelsonData, MichelsonMapElt, MichelsonCode, MichelsonTypeOption,
     MichelsonContract, MichelsonContractSection, MichelsonReturnType, MichelsonTypePair,
     MichelsonInstruction, InstructionList, MichelsonDataPair, MichelsonTypeID, MichelsonTypeOr,
-    ProtocolOptions,
     DefaultProtocol,
     Protocol,
     refContract,
@@ -19,8 +18,9 @@ import {
     assertMichelsonComparableType, instructionIDs,
     assertMichelsonPackableType, assertMichelsonStorableType, assertMichelsonBigMapStorableType, assertMichelsonPushableType
 } from "./michelson-validator";
+import { ParserOptions } from "./micheline-parser";
 
-export interface Context extends ProtocolOptions {
+export interface Context extends ParserOptions {
     contract?: MichelsonContract;
     traceCallback?: (t: InstructionTrace) => void;
 }
