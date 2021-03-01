@@ -3,7 +3,7 @@ title: Estimate Operations
 author: Edmond Lee & Roxane Letourneau
 ---
 
-Taquito's estimate method can be used to estimate fees, gas and storage associated with an operation.
+Taquito's estimate method can be used to estimate fees, gas, and storage associated with an operation.
 
 ## Estimate Values
 
@@ -15,7 +15,7 @@ Taquito's estimate method can be used to estimate fees, gas and storage associat
 
 [`storageLimit`](https://tezostaquito.io/typedoc/classes/_taquito_taquito.estimate.html#storagelimit): The limit on the amount of storage an operation can use. Returns a number.
 
-[`suggestedFeeMutez:`](https://tezostaquito.io/typedoc/classes/_taquito_taquito.estimate.html#suggestedfeemutez) The suggested fee for the operation which includes minimal fees and a small buffer. Returns a number.
+[`suggestedFeeMutez:`](https://tezostaquito.io/typedoc/classes/_taquito_taquito.estimate.html#suggestedfeemutez) The suggested fee for the operation includes minimal fees and a small buffer. Returns a number.
 
 [`totalCost`](https://tezostaquito.io/typedoc/classes/_taquito_taquito.estimate.html#totalcost): The sum of `minimalFeeMutez` + `burnFeeMutez`. Returns a number.
 
@@ -23,7 +23,7 @@ Taquito's estimate method can be used to estimate fees, gas and storage associat
 
 ### Estimate a transfer operation
 
-The following example shows an estimate of the fees associated with transferring 2ꜩ to `tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY` address. For demonstration purpose, the signer is configured using a throw-away private key.
+The following example shows an estimate of the fees associated with transferring 2ꜩ to `tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY` address. The configuration of the signer is to use a throw-away private key for demonstration purposes.
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
@@ -49,7 +49,7 @@ Tezos.estimate
 
 ### Estimate a smart contract call
 
-This example will demonstrate how to estimate the fees related to calling a smart contract. The Ligo source code for the smart contract used in this example can be found at [Ligo Web IDE](https://ide.ligolang.org/p/N2QTykOAXBkXmiKcRCyg3Q).
+This example will demonstrate how to estimate the fees related to calling a smart contract. The Ligo source code for the smart contract used in this example is at [Ligo Web IDE](https://ide.ligolang.org/p/N2QTykOAXBkXmiKcRCyg3Q).
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';

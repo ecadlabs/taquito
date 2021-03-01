@@ -5,9 +5,9 @@ author: Simon Boissonneault-Robert
 
 # Examples demonstrating transfers between various address types
 
-In Tezos a transfer operation will transfer tokens between two addresses.
+In Tezos, a transfer operation transfers tokens between two addresses.
 
-When the `Babylon/proto005` protocol amendment came into affect, it changed how token transfer involving KT1 addresses work. In order to transfer tokens _from_ a KT1 account, the transfer must be completed by calling the KT1's smart contract `do` method. The `do` method takes a lambda function, and it is the logic of this function that causes the desired transfer of tokens to happen.
+When the `Babylon/proto005` protocol amendment came into effect, it changed how token transfer involving KT1 addresses work. The transfer of tokens _from_ a KT1 account is completed by calling the KT1's smart contract `do` method. The `do` method takes a lambda function, and it is the logic of this function that causes the desired transfer of tokens to happen.
 
 The Taquito [integration tests](https://github.com/ecadlabs/taquito/blob/master/integration-tests/manager-contract-scenario.spec.ts) can be useful to see how this works.
 
@@ -19,7 +19,7 @@ This is the simplest token transfer scenario
 await Tezos.contract.transfer({ to: contract.address, amount: 1 });
 ```
 
-In the following example we will transfer 0.5ꜩ from a `tz1aaYoabvj2DQtpHz74Z83fSNjY29asdBfZ` address that will sign the operation to `tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY`.
+In the following example, we transfer 0.5ꜩ from a `tz1aaYoabvj2DQtpHz74Z83fSNjY29asdBfZ` address that signs the operation to `tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY`.
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
@@ -52,13 +52,13 @@ fetch('https://api.tez.ie/keys/delphinet/', {
 
 ## Transfers involving "originated" KT1 addresses
 
-Pre-`Babylon/proto005` it was common to have "script-less" KT1 addresses. This changed when the Tezos blockchain migrated to the new `Babylon/proto005` protocol.
+Pre-`Babylon/proto005` "script-less" KT1 addresses were common. This situation changed when the Tezos blockchain migrated to the new `Babylon/proto005` protocol.
 
-During the migration form `proto004` to `proto005` all KT1 addresses were migrated so that they got a contract called [manager.tz](https://gitlab.com/nomadic-labs/mi-cho-coq/blob/master/src/contracts/manager.tz). This meant that there are no longer any "script-less" KT1 addresses in Tezos.
+During the migration from `proto004` to `proto005`, all KT1 addresses migrated so that they got a contract called [manager.tz](https://gitlab.com/nomadic-labs/mi-cho-coq/blob/master/src/contracts/manager.tz). This change meant that there are no longer any "script-less" KT1 addresses in Tezos.
 
-In order to transfer tokens from a KT1 addresses with the new `manager.tz` contract, a call to the KT1's smart contract's `do` method is required. The `do` method takes a lambda function, and it is this lambda function that causes changes to occur in the KT1 address.
+A call to the KT1's smart contracts' `do` method is required to transfer tokens from KT1 addresses with the new `manager.tz` contract. The `do` method takes a lambda function, and it is this lambda function that causes changes to occur in the KT1 address.
 
-> The examples following only apply to KT1 addresses that were migrated as part of the `Babylon/proto005` upgrade. Transfers involving _other_ types of smart-contracts, will depend on those contracts specifically.
+> The examples following apply only to KT1 addresses migrated as part of the `Babylon/proto005` upgrade. Transfers involving _other_ types of smart-contracts depend on those contracts specifically.
 
 ## Transfer 0.00005 (50 mutez) tokens from a KT1 address to a tz1 address
 

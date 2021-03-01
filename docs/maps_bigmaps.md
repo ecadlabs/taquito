@@ -11,9 +11,9 @@ Learn how to:
 - Use Pairs as a key to access `Map` and `BigMap` values
 - Why Michelson `Map` and `BigMap` don't look like a Javascript `Map`
 
-Taquito provides `MichelsonMap`, which makes it easy and familiar for developers to work with the native Michelson map datatypes. `MichelsonMap` supports initialization, get and set methods to `Maps` using primitive datatypes and pairs as keys.
+Taquito provides `MichelsonMap` to make it easy for developers to work with the native Michelson map datatypes. `MichelsonMap` supports initialization, get and set methods to `Maps` using primitive datatypes and pairs as keys.
 
-Michelson offers two variants of `Maps` that are semantically the same but have different implementations and trade-offs in terms of `gas` and `storage` costs on a contract. A `Map` will use more storage but cost less gas, whereas a `BigMap` will consume less storage but has higher gas costs during the execution of the Smart Contract.
+Michelson offers two variants of `Maps` that are semantically the same but have different implementations and trade-offs in terms of `gas` and `storage` costs on a contract. A `Map` uses more storage but costs less gas, whereas a `BigMap` consumes less storage but has higher gas costs during the Smart Contract's execution.
 
 - [Michelson documentation for Map][michelson_map]
 - [Michelson documentation for BigMap][michelson_bigmap]
@@ -24,7 +24,7 @@ Michelson offers two variants of `Maps` that are semantically the same but have 
 
 This example builds on the Ligo Lang Taco Shop learning resources.
 
-The storage of the contract used in the following example is a map where a key is a natural number (a `nat`), and a value is a pair composed of two values representing the quantity of stock and `tez` tokens respectively. The source code of the contract is available [here](https://ligolang.org/docs/tutorials/get-started/tezos-taco-shop-smart-contract#making-sure-we-get-paid-for-our-tacos). In the example, the contract is originated with initial values using the `MichelsonMap` class' `set` method.
+The storage of the contract used in the following example is a map where a key is a natural number (a `nat`), and a value is a pair composed of two values representing the quantity of stock and `tez` tokens, respectively. The contract's source code is available [here](https://ligolang.org/docs/tutorials/get-started/tezos-taco-shop-smart-contract#making-sure-we-get-paid-for-our-tacos). In the example, the contract is originated with initial values using the `MichelsonMap` class' `set` method.
 
 ```js live noInline
 import { MichelsonMap } from '@taquito/taquito';
@@ -80,7 +80,7 @@ Tezos.contract
 
 This example loads the same type of Taco Shop contract (we created this one earlier). Taquito provides a `get` method of the `MichelsonMap` on storage of type `Map`, and in this case, we access the value stored with a key of `1`.
 
-Then, the example calls the Contracts `main` function of the contract using the key `1` as its parameter. Remember, we can only change contracts storage by calling the function provided by the contract. The `main` function on this Smart Contract has the effect of decreasing the value of the `current_stock` associated with the key `1`. The `get` method of the `MichelsonMap` class is used again to see the difference in storage after the method call.
+The example calls the Contracts `main` function of the contract using the key `1` as its parameter. Remember, we can only change contract storage by calling the function provided by the contract. The `main` function on this Smart Contract is decreasing the value of the `current_stock` associated with the key `1`.  We use the `get` method of the `MichelsonMap` class to see the difference in storage after the method call.
 
 ```js live noInline
 Tezos.contract
@@ -193,11 +193,11 @@ Tezos.contract
 
 ### Accessing Map values using Pairs
 
-The `get` method of the `MichelsonMap` class can be used to access values of the map for a specified key.
+The `get` method of the `MichelsonMap` class accesses values of the map for a specified key.
 
 This example accesses the map using its `theMap` annotation. If the storage does now annotate its properties, the caller must use numeric indexes instead.
 
-Recall that this contract does not annotate the pairs of the key pair either, we use numeric indexes for this also.
+Recall that this contract does not annotate the pairs of the key pair either. We use numeric indexes for this also.
 
 ```js live noInline
 Tezos.contract
@@ -218,7 +218,7 @@ Tezos.contract
 
 ## A Map with nested Pairs as keys
 
-This contract schema has a key with eight nested pairs and value of an int. This example type of key is impractical, but we offer it as an example to illustrate how to work with complex keys.
+This contract schema has a key with eight nested pairs and the value of an int. This example type of key is impractical, but we offer it as an example to illustrate how to work with complex keys.
 
 The Michelson storage schema with a map using eight pairs as a key:
 
@@ -235,7 +235,7 @@ The Michelson storage schema with a map using eight pairs as a key:
 
 ### Origination a contract with complex keys
 
-The contract schema in this example does not have map annotations which means that each value needs to have an index as a property name.
+In this example, the contract schema does not have map annotations, which means that each value needs to have an index as a property name.
 
 ```js live noInline
 import { MichelsonMap } from '@taquito/taquito';
@@ -316,7 +316,7 @@ Tezos.contract
 
 ## BigMaps
 
-Map and BigMap are semantically the same (except one difference), everything you learned about Maps applies to working with BigMap's. The only difference is that when calling `get` on a BigMap will return a Javascript Promise whereas get on a Map returns directly.
+Map and BigMap are semantically the same except for everything you learned about Maps applies to working with BigMaps. The only difference is that when calling `get` on a bigMap will return a Javascript Promise, whereas get on a Map returns directly. In this example, the contract schema does not have map annotations, which means that each value needs to have an index as a property name.
 
 ### Contract storage containing a map and a bigMap
 
@@ -383,7 +383,7 @@ Tezos.contract
 
 #### Accessing the values of the map and the bigMap
 
-The `get` method of the `MichelsonMap` class accesses the values of the map and values of the bigMap. The difference is that for a map, the value gets returned directly while the get method on a bigMap returns a promise.
+The `get` method of the `MichelsonMap` class accesses the values of the map and values of the bigMap. The difference is that the value gets returned directly for a map while the get method on a bigMap returns a promise.
 
 ```js live noInline
 Tezos.contract

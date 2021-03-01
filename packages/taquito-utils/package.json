@@ -1,6 +1,6 @@
 {
   "name": "@taquito/utils",
-  "version": "8.0.2-beta.0",
+  "version": "8.0.4-beta.0",
   "description": "converts michelson data and types into convenient JS/TS objects",
   "keywords": [
     "tezos",
@@ -32,7 +32,8 @@
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts",
-    "start": "rollup -c rollup.config.ts -w"
+    "start": "rollup -c rollup.config.ts -w",
+    "test": "jest"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [

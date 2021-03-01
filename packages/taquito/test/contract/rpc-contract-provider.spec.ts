@@ -27,8 +27,9 @@ import { InvalidCodeParameter, InvalidDelegationSource, InvalidInitParameter } f
 import { preapplyResultFrom } from './helper';
 import { MichelsonMap, Schema } from '@taquito/michelson-encoder';
 import { BigMapAbstraction } from '../../src/contract/big-map';
-import { OriginateParams } from '../../src/operations/types';
-import { NoopParser, ParserProvider } from '../../src/taquito';
+import { OpKind, ParamsWithKind } from '../../src/operations/types';
+import { NoopParser } from '../../src/taquito';
+import { OperationBatch } from '../../src/batch/rpc-batch-provider';
 
 /**
  * RPCContractProvider test
@@ -36,6 +37,7 @@ import { NoopParser, ParserProvider } from '../../src/taquito';
 describe('RpcContractProvider test', () => {
   let rpcContractProvider: RpcContractProvider;
   let mockRpcClient: {
+    // deepcode ignore no-any: any is good enough
     getScript: jest.Mock<any, any>;
     getStorage: jest.Mock<any, any>;
     getBigMapExpr: jest.Mock<any, any>;
@@ -54,16 +56,19 @@ describe('RpcContractProvider test', () => {
   };
 
   let mockSigner: {
+    // deepcode ignore no-any: any is good enough
     publicKeyHash: jest.Mock<any, any>;
     publicKey: jest.Mock<any, any>;
     sign: jest.Mock<any, any>;
   };
 
   let mockEstimate: {
+    // deepcode ignore no-any: any is good enough
     originate: jest.Mock<any, any>;
     transfer: jest.Mock<any, any>;
     setDelegate: jest.Mock<any, any>;
     registerDelegate: jest.Mock<any, any>;
+    batch: jest.Mock<any, any>;
   };
 
   const revealOp = (source: string) => ({
@@ -106,6 +111,7 @@ describe('RpcContractProvider test', () => {
       transfer: jest.fn(),
       registerDelegate: jest.fn(),
       setDelegate: jest.fn(),
+      batch: jest.fn()
     };
 
     // Required for operations confirmation polling
@@ -117,6 +123,7 @@ describe('RpcContractProvider test', () => {
     });
 
     rpcContractProvider = new RpcContractProvider(
+      // deepcode ignore no-any: any is good enough
       new Context(mockRpcClient as any, mockSigner as any),
       mockEstimate as any
     );
@@ -388,6 +395,7 @@ describe('RpcContractProvider test', () => {
         balance: '200',
         code: miSample
           .concat()
+          // deepcode ignore no-any: any is good enough
           .sort((a: any, b: any) => order1.indexOf(a.prim) - order1.indexOf(b.prim)),
         init: { int: '0' },
         fee: 10000,
@@ -823,5 +831,32 @@ describe('RpcContractProvider test', () => {
     }
       done();
     });
+
+    describe('batch', () => {
+      it('should produce a batch operation', async done => {
+
+        const opToBatch: ParamsWithKind[] = [
+          {
+            kind: OpKind.TRANSACTION,
+            to: 'test',
+            amount: 2
+          },
+          {
+            kind: OpKind.TRANSACTION,
+            to: 'test',
+            amount: 2
+          }
+        ];
+
+        const opBatch = new OperationBatch(rpcContractProvider['context'], mockEstimate);
+
+        expect(rpcContractProvider.batch()).toBeInstanceOf(OperationBatch);
+        expect(rpcContractProvider.batch()).toEqual(opBatch);
+
+        expect(rpcContractProvider.batch(opToBatch)).toEqual(opBatch.with(opToBatch));
+
+        done();
+      });
+    }); 
   });
 });

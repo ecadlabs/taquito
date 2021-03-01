@@ -95,3 +95,108 @@ export const ligoSample = [{ "prim": "parameter", "args": [{ "prim": "int" }] },
                 { "prim": "DROP" }]]]
         }]]]
 }]
+
+export const ligoSampleMichelson = `parameter
+int ;
+storage
+int ;
+code
+{
+  {} ;
+  {
+    {
+      {
+        {
+          DUP
+        } ;
+        CAR
+      } ;
+      {
+        {
+          {
+            {
+              DIP {
+                DUP
+              } ;
+              SWAP
+            }
+          } ;
+          CDR
+        } ;
+        {
+          PUSH unit Unit ;
+          {
+            {
+              {
+                {
+                  {
+                    DIP {
+                      {
+                        DIP {
+                          DUP
+                        } ;
+                        SWAP
+                      }
+                    } ;
+                    SWAP
+                  } ;
+                  {
+                    DIP {
+                      {
+                        DIP {
+                          DUP
+                        } ;
+                        SWAP
+                      }
+                    } ;
+                    SWAP
+                  }
+                } ;
+                ADD
+              } ;
+              NIL operation
+            } ;
+            PAIR
+          }
+        } ;
+        {} ;
+        DIP {
+          {
+            DIP {
+              {
+                DIP {
+                  DIP {
+                    DIP {
+                      {}
+                    }
+                  }
+                } ;
+                DROP
+              }
+            } ;
+            DROP
+          }
+        }
+      } ;
+      {} ;
+      DIP {
+        {
+          DIP {
+            DIP {
+              {}
+            }
+          } ;
+          DROP
+        }
+      }
+    } ;
+    DIP {
+      {
+        DIP {
+          {}
+        } ;
+        DROP
+      }
+    }
+  }
+}`

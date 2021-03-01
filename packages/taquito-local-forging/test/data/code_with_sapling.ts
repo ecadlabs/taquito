@@ -678,7 +678,7 @@ export const rpcContractResponse8 = {
 	}
 };
 
-export const rpcContractResponse9 = {
+export const example9 = {
 	// To test comb pair forging/unforging
 	// Not a valid contract
 	balance: '0',
@@ -710,6 +710,52 @@ export const rpcContractResponse9 = {
 							{ prim: 'nat', annots: ['%test16'] }
 						],
 						annots: ['%combPairAnnot']
+					}
+				]
+			},
+			{ prim: 'storage', args: [{ prim: 'sapling_state', args: [{ int: '8' }] }] },
+			{
+				prim: 'code',
+				args: [
+					[ { prim: 'DUP' } ]
+				]
+			}
+		],
+		storage: { int: '56' }
+	}
+};
+
+export const example10 = {
+	// To test comb pair forging/unforging
+	// Not a valid contract
+	balance: '0',
+	script: {
+		code: [
+			{
+				prim: 'parameter',
+				args: [
+					{
+						prim: 'pair',
+						args: [
+							{ prim: 'sapling_transaction', args: [{ int: '8' }] },
+							{ prim: 'sapling_state', args: [{ int: '8' }] },
+							{ prim: 'int' },
+							{ prim: 'int' },
+							{ prim: 'mutez' },
+							{ prim: 'nat' },
+							{ prim: 'int' },
+							{ prim: 'int' },
+							{ prim: 'mutez' },
+							{ prim: 'nat' },
+							{ prim: 'int' },
+							{ prim: 'int' },
+							{ prim: 'mutez' },
+							{ prim: 'nat' },
+							{ prim: 'int'},
+							{ prim: 'int'},
+							{ prim: 'mutez' },
+							{ prim: 'nat'}
+						]
 					}
 				]
 			},

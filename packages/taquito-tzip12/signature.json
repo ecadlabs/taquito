@@ -154,7 +154,7 @@
           "typings",
           "version"
         ],
-        "sha512": "3ba2c2b9af83da7c07b73a8bcf1c9d213e24f8e432ccfc3988759d807bee834b26706b56d1add1ee421d6d915d17ac7675933da1628d1e6c236b202d4107234b"
+        "sha512": "443ada2396444ab721112177d1460fed6710a37a1318775048f8639e2861500e91ddfa880f581e8593fa2ebc0f062eb7e9fab364ab768e1a866c8eb1ec87e626"
       }
     },
     {
@@ -162,7 +162,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/tzip12",
-          "version": "8.0.2-beta.0",
+          "version": "8.0.4-beta.0",
           "description": "Tzip12",
           "keywords": [
             "tezos",
@@ -220,9 +220,9 @@
             ]
           },
           "dependencies": {
-            "@taquito/michelson-encoder": "^8.0.2-beta.0",
-            "@taquito/taquito": "^8.0.2-beta.0",
-            "@taquito/tzip16": "^8.0.2-beta.0",
+            "@taquito/michelson-encoder": "^8.0.4-beta.0",
+            "@taquito/taquito": "^8.0.4-beta.0",
+            "@taquito/tzip16": "^8.0.4-beta.0",
             "bignumber.js": "^9.0.1"
           },
           "devDependencies": {
@@ -258,5 +258,5 @@
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJgLFSbCRAD9Qy5GYHsngAAwQsQAG2XgRcmutxlWvqJnyQAN0+8\n/x25H1eK9CivgRKXdTx4yLh+oTEEbM0IHfql5Hx0Hm3zSHZlgNxykx47IxNFn802\n6s+F5Br0rW4NsGEXeKm/QkUbu3MQEwfVuOnmxhYdd5wZXpCda6uEbwzGEVvaKLIc\n4pgtcsp97tI4KOhus+QwjTQehcwDgzV2tWujPJE+ZzK32gZEojuBLShaq/NBGY0v\nND41AjM+l+WdFlRCLj7UfXC/V43Xn4tu2yef8AwRUAoG1EdaLIIvasdr8kvxnyza\nIxKJcjWBV78wGkjDZbat6t87OOMA2i5zfYoUGqDgBl2XkeDTykpGYnFgY0Y0hcTN\n7iTtrPtz8rb49jYRNdy1PcGhp5BPHwzNojw9U5+P4ooqzyutcEKLGHoyQnlGpAy/\nfiEefmor2bvp3NhUvVqntR0smq3DlZC3fTQS9N8iWDMgajUPBPsDgVNGONDYb+Uu\nnINpp7ToZoqQcwNMT0fGZS1cqq2phcUKewhavk4E73RlTAKuiibT+MR635bY+I5j\nCVXW975iBvoyZsZhjz/hqnuPC+j07rOvGGKrOACK3I/12oDQn9enANzyg64zFENq\nhdeOnuuJhsPp/Sg+0PjrD7lPxxRu+NVzcrR1DGk2JY5U2DqJyxzEjPuV7z5Q3ikT\nCDhkU/4R8RLMyvJMA50c\n=G9AT\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJgN/UJCRAD9Qy5GYHsngAAG5YQADz9lK/rnrFl59ncciwO6SeO\n6hDavbgXSWmNc3IB9C7Axw4IX+ojxmlkUjPoi5Q+TUfX08MoBNl7s2p1+Xy/nlmI\nrW9H3d/d0BBJSONgMzwFQ+vCgdAX+WQdEs8e7wGBuzFiILz79m3iA4hXPg2wip0T\nr1gWwV0lyPWYQNlpX34P6mirXnXwun9p5fMFW5XWhRCqb5elRM3uLbpXPkUX2K7Z\nuDyZk73RUMzeFW+xZ2V4AA9KN+CPPjQ4i5gJDHMh/Cbhi7fKcY7cEGiqtkni+svx\nochQocYEeLZ8wMEAKYBupRP1kVXH9xx0PYyiyj9xRl0581j3bohVKij+MiWqYwNw\nlMK6iuQrAzIgH/g9A7v6HrjoKeInf+1Ae5KxMu9y7bwiueTtce4dli1XgzXFJZd9\nOAGpTJKj0W7VpWRK1PiOiFcd8JK5ZNNTVDbSl1x/EVpifVNThHDJ0430p0vZOevG\nsRG4KsGnVE+c8lE8xPAfGXJ77gVP08X6kvhPxwW95/LmZXrulZEqlP/5b6+D/6RQ\nPX6N1IQtdf6ltrpCHSOSJDg0vnFTdWt2L5NkKcl0i68vZd4ieAk0sR0GuRR5xHWk\nXaQXAysU3pQ88QnY5QSEVg3CLMvgYPc5lt7unrkajS/6lK+lCnTKyJw4pykok4os\nINu80bS6QLT1kZPipXn0\n=bYl2\n-----END PGP SIGNATURE-----\n"
 }

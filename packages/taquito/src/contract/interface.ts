@@ -1,4 +1,5 @@
 import { Schema } from '@taquito/michelson-encoder';
+import { OperationBatch } from '../batch/rpc-batch-provider';
 import { Context } from '../context';
 import { DelegateOperation } from '../operations/delegate-operation';
 import { OriginationOperation } from '../operations/origination-operation';
@@ -138,4 +139,12 @@ export interface ContractProvider extends StorageProvider {
 
   transfer(params: TransferParams): Promise<TransactionOperation>;
   at<T extends ContractAbstraction<ContractProvider>>(address: string, contractAbstractionComposer?: (abs: ContractAbstraction<ContractProvider>, context: Context) => T): Promise<T>;
+
+  /**
+   *
+   * @description Batch a group of operation together. Operations will be applied in the order in which they are added to the batch
+   *
+   * @param params List of operation to batch together
+   */
+  batch(params?: ParamsWithKind[]): OperationBatch ;
 }
