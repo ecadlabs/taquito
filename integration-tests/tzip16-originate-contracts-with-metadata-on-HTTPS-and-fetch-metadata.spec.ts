@@ -11,13 +11,15 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     let contractAddressEmoji: string;
     let contractAddressInvalidMetadata: string;
 
+    const test = require('jest-retries');
+
     describe(`Originating contracts having metadata stored at HTTPS URL using: ${rpc}`, () => {
 
         beforeEach(async (done) => {
             await setup()
             done()
         })
-         it('Deploy a contract having empty metadata stored at an HTTPS URL', async (done) => {
+         test('Deploy a contract having empty metadata stored at an HTTPS URL', 2, async (done: () => void) => {
             // carthagenet: KT1A1DmqFa8eusnpp8eLhwc8NPw29b2ddEHQ
             // delphinet: KT1WTGDQ9j2mFE7SbgmoixNAVXH1ynjdagon
 
@@ -50,7 +52,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         }); 
 
-        it('Fetch the empty metadata of the contract', async (done) => {
+        test('Fetch the empty metadata of the contract', 2, async (done: () => void) => {
             // carthagenet: KT1A1DmqFa8eusnpp8eLhwc8NPw29b2ddEHQ
             // delphinet: KT1WTGDQ9j2mFE7SbgmoixNAVXH1ynjdagon
 
@@ -64,7 +66,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-         it('Deploy a contract having valid metadata stored at an HTTPS URL', async (done) => {
+         test('Deploy a contract having valid metadata stored at an HTTPS URL', 2, async (done: () => void) => {
             // carthagenet: KT1GPiBGM2sQ7DjPqCmGbHBDzkhweTR2spZA
             // delphinet: KT1KGkToC8UUJBJLqHcLRkv7xvjWd8JwUuTo
 
@@ -94,7 +96,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        it('Deploy a contract having valid metadata which contains emoji stored at an HTTPS URL', async (done) => {
+        test('Deploy a contract having valid metadata which contains emoji stored at an HTTPS URL', 2, async (done: () => void) => {
             // carthagenet: KT1A1mR7zS8cWBehnf5wa6eY1SwCY6Teigne
             // delphinet: KT194AJC8UQPguynGdJfEVynF9wfUghDjHSt
 
@@ -125,7 +127,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        it('Fetch the metadata which contains emoji of the contract', async (done) => {
+        test('Fetch the metadata which contains emoji of the contract', 2, async (done: () => void) => {
             // carthagenet: KT1A1mR7zS8cWBehnf5wa6eY1SwCY6Teigne
             // delphinet: KT194AJC8UQPguynGdJfEVynF9wfUghDjHSt
 
@@ -155,7 +157,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        it('Deploy a contract having invalid metadata stored at an HTTPS URL', async (done) => {
+        test('Deploy a contract having invalid metadata stored at an HTTPS URL', 2, async (done: () => void) => {
             // carthagenet: KT1LiZ1H4Jk2EatrZjpYVRfH2o4JWMdTgGaM
             // delphinet: KT1UQyKUoCat9oQNHPGMDypQ4mWW44DFWzXt
 
@@ -186,7 +188,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        it('Should fail to fetch invalid metadata of the contract', async (done) => {
+        test('Should fail to fetch invalid metadata of the contract', 2, async (done: () => void) => {
             // carthagenet: KT1LiZ1H4Jk2EatrZjpYVRfH2o4JWMdTgGaM
             // delphinet: KT1UQyKUoCat9oQNHPGMDypQ4mWW44DFWzXt
 

@@ -2,13 +2,15 @@ import { CONFIGS } from "./config";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
+  const test = require('jest-retries');
+
   describe(`Originating a contract api using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    it('Simple origination scenario', async (done) => {
+    test('Simple origination scenario', 2, async (done: () => void) => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: `parameter string;

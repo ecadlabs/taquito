@@ -9,6 +9,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     let contractAddress: string;
     let contractAddressInvalidHash: string;
 
+    const test = require('jest-retries');
+
     describe(`Originating contracts having metadata stored at HTTPS URL using: ${rpc}`, () => {
 
         beforeEach(async (done) => {
@@ -16,7 +18,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done()
         })
 
-        it('Deploy a contract having a sha256 hash in URI', async (done) => {
+        test('Deploy a contract having a sha256 hash in URI', 2, async (done: () => void) => {
             // carthagenet: KT1FeMKGGvdWiA4r5RaucoEUAa8cTEXSSpCX
             // delphinet: KT1PHNmaHvQNjt1LTqdWobJUi2aeDeWUdQUq
 
@@ -49,7 +51,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        it('Fetch metadata of the contract having a sha256 hash in URI', async (done) => {
+        test('Fetch metadata of the contract having a sha256 hash in URI', 2, async (done: () => void) => {
             // carthagenet: KT1FeMKGGvdWiA4r5RaucoEUAa8cTEXSSpCX
             // delphinet: KT1PHNmaHvQNjt1LTqdWobJUi2aeDeWUdQUq
 
@@ -79,7 +81,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        it('Deploy a contract having an invalid sha256 hash in URI', async (done) => {
+        test('Deploy a contract having an invalid sha256 hash in URI', 2, async (done: () => void) => {
             // carthagenet: KT1Xj3v6v4hEWrQsnWf4oa87Q5T9JThvqNj7
             // delphinet: KT1Bhj5fgQioJYnFbg8jeki5SgRd7ZsCfhwp
 
@@ -112,7 +114,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        it('Fetch metadata of the contract having an invalid sha256 hash in URI', async (done) => {
+        test('Fetch metadata of the contract having an invalid sha256 hash in URI', 2, async (done: () => void) => {
             // carthagenet: KT1Xj3v6v4hEWrQsnWf4oa87Q5T9JThvqNj7
             // delphinet: KT1Bhj5fgQioJYnFbg8jeki5SgRd7ZsCfhwp
 

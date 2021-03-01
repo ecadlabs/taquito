@@ -32,7 +32,8 @@
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts",
-    "start": "rollup -c rollup.config.ts -w"
+    "start": "rollup -c rollup.config.ts -w",
+    "test": "jest"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [

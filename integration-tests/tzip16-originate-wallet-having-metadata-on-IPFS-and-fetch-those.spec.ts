@@ -5,6 +5,7 @@ import { char2Bytes, tzip16, Tzip16Module, IpfsHttpHandler, Handler, MetadataPro
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
+    const test = require('jest-retries')
 
     const customHandler = new Map<string, Handler>([
         ['ipfs', new IpfsHttpHandler('cloudflare-ipfs.com')]
@@ -22,7 +23,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        it('Deploy a contract made with wallet api having metadata stored at on IPFS', async (done) => {
+        test('Deploy a contract made with wallet api having metadata stored at on IPFS', 2, async (done: () => void) => {
             // carthagenet: KT1PBndiMVyeptfQejZKYcSB6YmucaJdXVBQ
             // delphinet: KT1BfdzrP3ybxSbQCNZrmdk2Y5AQjRK1KKkz
 
@@ -51,7 +52,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        it('Should fetch metadata of the wallet api made contract on IPFS', async (done) => {
+    test('Should fetch metadata of the wallet api made contract on IPFS', 2, async (done: () => void) => {
             // carthagenet:KT1PBndiMVyeptfQejZKYcSB6YmucaJdXVBQ
             // delphinet: KT1BfdzrP3ybxSbQCNZrmdk2Y5AQjRK1KKkz
 
