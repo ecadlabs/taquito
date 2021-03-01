@@ -5,8 +5,8 @@ import { Protocols } from "@taquito/taquito";
 CONFIGS().forEach(({ lib, rpc, protocol, setup,  }) => {
   const Tezos = lib;
 
-  const edonet = (protocol === Protocols.PtEdo2Zk) ? test : test.skip;
-
+  const edonet = (protocol === Protocols.PtEdo2Zk) ? test && require('jest-retries') : test.skip;
+  
   describe(`Test origination of contracts with sapling using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
@@ -14,7 +14,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup,  }) => {
       done()
     })
 
-     edonet('Originates a contract having an empty sapling state in its storage', async (done) => {
+     edonet('Originates a contract having an empty sapling state in its storage', 2, async (done: () => void) => {
       const op = await Tezos.contract.originate({
         code: rpcContractResponse.script.code,
         init: `{}` // empty sapling state
@@ -27,7 +27,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup,  }) => {
       done();
     }); 
 
-    edonet('Originates a contract with sapling states in its storage', async (done) => {
+    edonet('Originates a contract with sapling states in its storage', 2, async (done: () => void) => {
       const op = await Tezos.contract.originate({
         code: rpcContractResponse2.script.code,
         init: `(Pair 0 {} {})`
@@ -38,7 +38,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup,  }) => {
       done();
     }); 
     
-    edonet('Originates a contract with sapling states in its storage and init in JSON', async (done) => {
+    edonet('Originates a contract with sapling states in its storage and init in JSON', 2, async (done: () => void) => {
         const op = await Tezos.contract.originate({
         code: rpcContractResponse4.script.code,
         init: { prim: 'Pair', args: [ [], [] ] }
