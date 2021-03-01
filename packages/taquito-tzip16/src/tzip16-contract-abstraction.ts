@@ -1,5 +1,5 @@
 import { BigMapAbstraction, Context, ContractAbstraction, ContractProvider, Wallet } from '@taquito/taquito';
-import { bytes2Char } from './tzip16-utils';
+import { bytes2Char } from '@taquito/utils';
 import { MetadataEnvelope, MetadataProviderInterface } from './metadata-provider';
 import { BigMapMetadataNotFound, UnconfiguredMetadataProviderError, UriNotFound } from './tzip16-errors';
 import BigNumber from 'bignumber.js';
