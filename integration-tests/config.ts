@@ -225,7 +225,7 @@ else if (process.env['EDONET']) {
   providers.push(edonetEphemeral)
 } 
 else if (process.env['FALPHANET']) {
-  providers.push(falphanetFaucet)
+  providers.push(falphanetEphemeral)
 } else {
   providers.push(falphanetEphemeral, edonetEphemeral, delphinetEphemeral)
 }

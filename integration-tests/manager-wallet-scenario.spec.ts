@@ -1,10 +1,14 @@
 import { CONFIGS } from "./config";
 import { managerCode } from "./data/manager_code";
-import { MANAGER_LAMBDA } from "@taquito/taquito";
+import { Protocols, MANAGER_LAMBDA, MANAGER_LAMBDA_V9 } from "@taquito/taquito";
 
-CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
+CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownBakerContract, knownContract, protocol }) => {
   const Tezos = lib;
   const test = require('jest-retries');
+  let MANAGER = MANAGER_LAMBDA;
+  if( protocol === Protocols.PsrsRVg1) {
+    MANAGER = MANAGER_LAMBDA_V9
+  }
 
   describe(`Manager TZ: ${rpc}`, () => {
     beforeEach(async (done) => {
@@ -23,19 +27,19 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
       // A regular transfer operation is made. No smart contract calls required for this scenario.
       const opTransferToContract = await Tezos.wallet.transfer({ to: contract.address, amount: 1 }).send();
       await opTransferToContract.confirmation();
-      expect(op.status).toBeTruthy
+      expect(opTransferToContract.status).toBeTruthy
       // Transfer from contract (kt1_alice) to implicit account (tz1)
       // We pass a lambda function to the kt1_alice contracts `do` entrypoint. The lambda code causes the contract to transfer
       // the specified number (50) of mutez to the target address.
-      const opTransfer = await contract.methods.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 50)).send({ amount: 0 })
+      const opTransfer = await contract.methods.do(MANAGER.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 50)).send({ amount: 0 })
       await opTransfer.confirmation();
       expect(opTransfer.status).toBeTruthy
       // Set delegate on contract kt1_alice by passing a lambda function to kt1_alice's `do` entrypoint
-      const opSetDelegate = await contract.methods.do(MANAGER_LAMBDA.setDelegate(knownBaker)).send({ amount: 0 })
+      const opSetDelegate = await contract.methods.do(MANAGER.setDelegate(knownBakerContract || knownBaker)).send({ amount: 0 })
       await opSetDelegate.confirmation();
       expect(opSetDelegate.status).toBeTruthy
       // Remove delegate on contract kt1_alice by passing a lambda function to kt1_alice's `do` entrypoint
-      const removeDelegateOp = await contract.methods.do(MANAGER_LAMBDA.removeDelegate()).send({ amount: 0 })
+      const removeDelegateOp = await contract.methods.do(MANAGER.removeDelegate()).send({ amount: 0 })
       await removeDelegateOp.confirmation();
       expect(removeDelegateOp.status).toBeTruthy
       // Transfer from contract (kt1_alice) to contract (kt1 bob)
@@ -43,12 +47,12 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
       // lambda helper function. The transfer amount in the actual transfer operation is 0. We are not transferring the token
       // in the transfer operation, we are instructing the contract to transfer the token using the `do` entrypoint of the kt1_alice
       // contract.
-      const transferToContractOp = await contract.methods.do(MANAGER_LAMBDA.transferToContract(knownContract, 1)).send({ amount: 0 })
+      const transferToContractOp = await contract.methods.do(MANAGER.transferToContract(knownContract, 1)).send({ amount: 0 })
       await transferToContractOp.confirmation();
       expect(transferToContractOp.status).toBeTruthy
 
       try {
-        await contract.methods.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 50 * 1000000)).send({ amount: 0 })
+        await contract.methods.do(MANAGER.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 50 * 1000000)).send({ amount: 0 })
         fail('Should throw during transfer with amount higher than balance')
       } catch (ex) {
         expect(ex.message).toMatch('balance_too_low')

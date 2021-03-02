@@ -1,10 +1,15 @@
 import { CONFIGS } from "./config";
 import { ligoSample, ligoSampleMichelson } from "./data/ligo-simple-contract";
 import { managerCode } from "./data/manager_code";
-import { MANAGER_LAMBDA, OpKind } from "@taquito/taquito";
+import { Protocols, MANAGER_LAMBDA, MANAGER_LAMBDA_V9, OpKind } from "@taquito/taquito";
 
-CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
+CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownBakerContract, createAddress, protocol }) => {
   const Tezos = lib;
+  let MANAGER = MANAGER_LAMBDA;
+  if( protocol === Protocols.PsrsRVg1) {
+    MANAGER = MANAGER_LAMBDA_V9
+  }
+  
   describe(`Test batch api using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
@@ -107,9 +112,9 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
 
       const batch = Tezos.batch()
         .withTransfer({ to: contract.address, amount: 1 })
-        .withContractCall(contract.methods.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 50)))
-        .withContractCall(contract.methods.do(MANAGER_LAMBDA.setDelegate(knownBaker)))
-        .withContractCall(contract.methods.do(MANAGER_LAMBDA.removeDelegate()))
+        .withContractCall(contract.methods.do(MANAGER.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 50)))
+        .withContractCall(contract.methods.do(MANAGER.setDelegate(knownBakerContract || knownBaker)))
+        .withContractCall(contract.methods.do(MANAGER.removeDelegate()))
 
       const batchOp = await batch.send();
 
