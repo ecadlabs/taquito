@@ -3,6 +3,7 @@ import { Contract, ContractAbstraction, WalletContract } from './contract';
 import { TezosOperationError } from '../operations/operation-errors';
 import { ContractProvider } from './interface';
 import { Wallet } from '../wallet';
+import { Protocols } from '../constants';
 
 export default class LambdaView {
   public readonly voidLambda: Object;
@@ -11,9 +12,10 @@ export default class LambdaView {
     private lambdaContract: Contract | WalletContract,
     private viewContract: ContractAbstraction< ContractProvider | Wallet > ,
     public readonly viewMethod: string = 'default',
-    private contractParameter: MichelsonV1Expression = { prim: 'Unit' }
+    private contractParameter: MichelsonV1Expression = { prim: 'Unit' },
+    private protocol: string
   ) {
-    this.voidLambda = this.createVoidLambda();
+    this.voidLambda = this.createVoidLambda(this.protocol);
   }
 
   async execute(): Promise<any> {
@@ -31,8 +33,12 @@ export default class LambdaView {
     }
   }
 
-  private createVoidLambda(): Object {
+  private createVoidLambda(protocol: string): Object {
     const [parameter, callback] = this.getView();
+
+    // Fix for Falphanet,
+    // CREATE_CONTRACT key_hash has been deprecated in favor of CREATE_CONTRACT baker_hash
+    const hashType = (protocol === Protocols.PsrsRVg1)? 'baker_hash': 'key_hash';
 
     let contractArgs: MichelsonV1Expression[] = [
       {
@@ -47,7 +53,7 @@ export default class LambdaView {
 
     return [
       { prim: 'PUSH', args: [{ prim: 'mutez' }, { int: '0' }] },
-      { prim: 'NONE', args: [{ prim: 'key_hash' }] },
+      { prim: 'NONE', args: [{ prim: hashType }] },
       {
         prim: 'CREATE_CONTRACT',
         args: [
