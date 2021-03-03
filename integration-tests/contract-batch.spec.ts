@@ -1,11 +1,15 @@
 import { CONFIGS } from './config';
 import { ligoSample, ligoSampleMichelson } from './data/ligo-simple-contract';
 import { managerCode } from './data/manager_code';
-import { MANAGER_LAMBDA, OpKind } from '@taquito/taquito';
+import { Protocols, MANAGER_LAMBDA, MANAGER_LAMBDA_V9, OpKind } from '@taquito/taquito';
+const test = require('jest-retries');
 
-CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, createAddress }) => {
+CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, knownBakerContract, protocol, createAddress }) => {
     const Tezos = lib;
-    const test = require('jest-retries');
+    let MANAGER = MANAGER_LAMBDA;
+    if( protocol === Protocols.PsrsRVg1) {
+        MANAGER = MANAGER_LAMBDA_V9
+    }
     describe(`Test contract.batch using: ${rpc}`, () => {
         beforeEach(async (done) => {
             await setup();
@@ -135,10 +139,10 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, createAddress }
                 .batch()
                 .withTransfer({ to: contract.address, amount: 1 })
                 .withContractCall(
-                    contract.methods.do(MANAGER_LAMBDA.transferImplicit('tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh', 50))
+                    contract.methods.do(MANAGER.transferImplicit('tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh', 50))
                 )
-                .withContractCall(contract.methods.do(MANAGER_LAMBDA.setDelegate(knownBaker)))
-                .withContractCall(contract.methods.do(MANAGER_LAMBDA.removeDelegate()));
+                .withContractCall(contract.methods.do(MANAGER.setDelegate(knownBakerContract || knownBaker)))
+                .withContractCall(contract.methods.do(MANAGER.removeDelegate()));
 
             const batchOp = await batch.send();
 

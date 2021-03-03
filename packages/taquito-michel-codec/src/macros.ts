@@ -379,7 +379,8 @@ export function expandMacros(ex: Prim, opt?: ProtocolOptions): Expr {
 
     // UNPAPPAIIR macro
     if (unpairRe.test(ex.prim)) {
-        if (proto === Protocol.PtEdo2Zk) {
+        if (proto === Protocol.PtEdo2Zk || 
+            proto === Protocol.PsrsRVg1) {
             if (ex.prim === "UNPAIR") {
                 return ex;
             }
@@ -526,7 +527,8 @@ export function expandMacros(ex: Prim, opt?: ProtocolOptions): Expr {
     if (duupRe.test(ex.prim)) {
         let n = 0;
         while (ex.prim[1 + n] === "U") { n++; }
-        if (proto === Protocol.PtEdo2Zk) {
+        if (proto === Protocol.PtEdo2Zk || 
+            proto === Protocol.PsrsRVg1) {
             if (n === 1) {
                 return ex;
             }

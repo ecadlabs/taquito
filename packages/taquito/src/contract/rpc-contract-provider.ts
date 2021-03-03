@@ -211,9 +211,8 @@ export class RpcContractProvider extends OperationEmitter
   async at<T extends ContractAbstraction<ContractProvider>>(address: string, contractAbstractionComposer: ContractAbstractionComposer<T> = x => x as any): Promise<T> {
     const script = await this.rpc.getScript(address);
     const entrypoints = await this.rpc.getEntrypoints(address);
-    const blockHeader = await this.rpc.getBlockHeader();
-    const chainId = blockHeader.chain_id;
-    const abs = new ContractAbstraction(address, script, this, this, entrypoints, chainId);
+    const { chain_id, protocol } = await this.rpc.getBlockHeader();
+    const abs = new ContractAbstraction(address, script, this, this, entrypoints, chain_id, protocol);
     return contractAbstractionComposer(abs, this.context);
   }
 

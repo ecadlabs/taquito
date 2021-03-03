@@ -73,11 +73,11 @@ describe('LambdaView test', () => {
     );
 
     expect(
-      new LambdaView(lambdaContract, viewContract, "getAllowance")
+      new LambdaView(lambdaContract, viewContract, "getAllowance", 'protocolHash')
     ).toBeInstanceOf(LambdaView);
 
     expect(
-      new LambdaView(lambdaContract, viewContract, "getAllowance", {
+      new LambdaView(lambdaContract, viewContract, "getAllowance", 'protocolHash', {
         prim: "Pair",
         args: [
           { string: "tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1" },
@@ -99,7 +99,7 @@ describe('LambdaView test', () => {
       "KT1VAy1o1FGiXYfD3YT7x7k5eF5HSHhmc1u6"
     );
 
-    const lambda = new LambdaView(lambdaContract, viewContract, "getAllowance", {
+    const lambda = new LambdaView(lambdaContract, viewContract, "getAllowance", 'protocolHash', {
       prim: "Pair",
       args: [
         { string: "tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1" },
@@ -360,7 +360,7 @@ describe('LambdaView test', () => {
 
     expect(
       () =>
-        new LambdaView(lambdaContract, viewContract, "getAllowance", {
+        new LambdaView(lambdaContract, viewContract, "getAllowance", 'protocolHash', {
           prim: "Pair",
           args: [
             { string: "tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1" },
@@ -395,7 +395,7 @@ describe('LambdaView test', () => {
 
     expect(
       () =>
-        new LambdaView(lambdaContract, viewContract, "getAllowance", {
+        new LambdaView(lambdaContract, viewContract, "getAllowance", 'protocolHash', {
           prim: "Pair",
           args: [
             { string: "tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1" },
@@ -429,7 +429,7 @@ describe('LambdaView test', () => {
 
     expect(
       () =>
-        new LambdaView(lambdaContract, viewContract, "getAllowance", {
+        new LambdaView(lambdaContract, viewContract, "getAllowance", 'protocolHash',{
           prim: "Pair",
           args: [
             { string: "tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1" },
@@ -463,7 +463,7 @@ describe('LambdaView test', () => {
 
     expect(
       () =>
-        new LambdaView(lambdaContract, viewContract, "getAllowance", {
+        new LambdaView(lambdaContract, viewContract, "getAllowance", 'protocolHash',{
           prim: "Pair",
           args: [
             { string: "tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1" },
@@ -496,7 +496,7 @@ describe('LambdaView test', () => {
     );
 
     expect(
-      () => new LambdaView(lambdaContract, viewContract, "test")
+      () => new LambdaView(lambdaContract, viewContract, "test", 'protocolHash', )
     ).toThrowError(
       "Contract at KT1A87ZZL8mBKcWGr34BVsERPCJjfX82iBto does not have entrypoint: test"
     );
@@ -525,7 +525,7 @@ describe('LambdaView test', () => {
     const lambdaContract = await toolkitLambda.contract.at('KT1VAy1o1FGiXYfD3YT7x7k5eF5HSHhmc1u6');
 
     expect(
-      () => new LambdaView(lambdaContract, viewContract, "getAllowance")
+      () => new LambdaView(lambdaContract, viewContract, "getAllowance", 'protocolHash', )
     ).toThrowError("Callback contract args undefined");
 
     done();

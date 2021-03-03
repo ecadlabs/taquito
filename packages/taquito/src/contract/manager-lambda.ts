@@ -66,9 +66,42 @@ const transferToContract = (key: string, amount: number) => {
   ];
 };
 
+// Since v9, the type of delegate is changed from key_hash to baker_hash
+const setDelegateV9 = (key: string) => {
+  return [
+    { prim: 'DROP' },
+    { prim: 'NIL', args: [{ prim: 'operation' }] },
+    {
+      prim: 'PUSH',
+      args: [{ prim: 'baker_hash' }, { string: key }],
+    },
+    { prim: 'SOME' },
+    { prim: 'SET_DELEGATE' },
+    { prim: 'CONS' },
+  ];
+};
+
+// Since v9, the type of delegate is changed from key_hash to baker_hash
+const removeDelegateV9 = () => {
+  return [
+    { prim: 'DROP' },
+    { prim: 'NIL', args: [{ prim: 'operation' }] },
+    { prim: 'NONE', args: [{ prim: 'baker_hash' }] },
+    { prim: 'SET_DELEGATE' },
+    { prim: 'CONS' },
+  ];
+};
+
 export const MANAGER_LAMBDA = {
   setDelegate,
   removeDelegate,
   transferImplicit,
   transferToContract,
+};
+
+export const MANAGER_LAMBDA_V9 = {
+  setDelegate: setDelegateV9,
+  removeDelegate: removeDelegateV9,
+  transferImplicit,
+  transferToContract
 };

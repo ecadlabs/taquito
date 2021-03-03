@@ -1,9 +1,16 @@
+import { Protocols } from "@taquito/taquito";
 import { CONFIGS } from "./config";
 import { voteSample } from "./data/vote-contract";
+const test = require('jest-retries');
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const test = require('jest-retries');
+
+  // We skip this test for Falphanet 
+  // The code of the contract is no longer valid 
+  // because of the deprecated SET_DELEGATE key_hash
+  const it = (protocol !== Protocols.PsrsRVg1) ? test : test.skip;
+
   describe(`Originate a voting contract using: ${rpc}`, () => {
 
     beforeEach(async (done) => {

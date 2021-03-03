@@ -106,7 +106,8 @@ export class ContractView {
     private chainId: string,
     private callbackParametersSchema: ParameterSchema,
     private parameterSchema: ParameterSchema,
-    private args: any[]
+    private args: any[],
+    private protocol: string
   ) { }
 
   /**
@@ -131,6 +132,8 @@ export class ContractView {
       lambdaAddress = DefaultLambdaAddresses.DELPHINET
     } else if (this.chainId === ChainIds.EDONET) {
       lambdaAddress = DefaultLambdaAddresses.EDONET
+    } else if (this.chainId === ChainIds.FALPHANET) {
+      lambdaAddress = DefaultLambdaAddresses.FALPHANET
     } else if (this.chainId === ChainIds.MAINNET) {
       lambdaAddress = DefaultLambdaAddresses.MAINNET
     } else {
@@ -139,7 +142,7 @@ export class ContractView {
 
     const lambdaContract = await this.provider.at(lambdaAddress);
     const arg = this.parameterSchema.Encode(...this.args);
-    const lambdaView = new LambdaView(lambdaContract, this.currentContract, this.name, arg);
+    const lambdaView = new LambdaView(lambdaContract, this.currentContract, this.name, this.protocol, arg);
     const failedWith = await lambdaView.execute();
     const response = this.callbackParametersSchema.Execute(failedWith);
     return response;
@@ -193,11 +196,12 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
     provider: T,
     private storageProvider: StorageProvider,
     public readonly entrypoints: EntrypointsResponse,
-    private chainId: string
+    private chainId: string,
+    private protocol: string
   ) {
     this.schema = Schema.fromRPCResponse({ script: this.script });
     this.parameterSchema = ParameterSchema.fromRPCResponse({ script: this.script });
-    this._initializeMethods(this, address, provider, this.entrypoints.entrypoints, this.chainId);
+    this._initializeMethods(this, address, provider, this.entrypoints.entrypoints, this.chainId, this.protocol);
   }
 
   private _initializeMethods(
@@ -207,7 +211,8 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
     entrypoints: {
       [key: string]: object;
     },
-    chainId: string
+    chainId: string,
+    protocol: string
   ) {
     const parameterSchema = this.parameterSchema;
     const keys = Object.keys(entrypoints);
@@ -250,7 +255,8 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
                 chainId,
                 smartContractMethodCallbackSchema,
                 smartContractMethodSchemaWithoutCallback,
-                args
+                args,
+                protocol
               );
             };
             this.views[smartContractMethodName] = view;

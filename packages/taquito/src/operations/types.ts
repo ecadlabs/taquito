@@ -211,6 +211,7 @@ export interface RPCDelegateOperation {
   gas_limit: number;
   storage_limit: number;
   delegate: string;
+  version?: string;
 }
 
 /**
