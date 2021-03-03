@@ -1,6 +1,7 @@
 import { Protocols } from "@taquito/taquito";
 import { CONFIGS } from "./config";
 import { voteSample } from "./data/vote-contract";
+const test = require('jest-retries');
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
@@ -16,7 +17,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       await setup()
       done()
     })
-    it('originates a voting contract made with wallet api and inits the storage', async (done) => {
+    test('originates a voting contract made with wallet api and inits the storage', 2, async (done: () => void) => {
       // TODO: probably remove this as very expensive
       const op = await Tezos.wallet.originate({
         balance: "1",

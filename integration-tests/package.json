@@ -12,17 +12,17 @@
     "test:falphanet-faucet": "RUN_FALPHANET_WITH_FAUCET=true jest --runInBand",
     "test": "jest"
   },
-  "version": "8.0.4-beta.0",
+  "version": "8.0.5-preview.0",
   "dependencies": {
     "@ledgerhq/hw-transport": "^5.41.0",
     "@ledgerhq/hw-transport-node-hid": "^5.41.0",
-    "@taquito/http-utils": "^8.0.4-beta.0",
-    "@taquito/local-forging": "^8.0.4-beta.0",
-    "@taquito/remote-signer": "^8.0.4-beta.0",
-    "@taquito/signer": "^8.0.4-beta.0",
-    "@taquito/taquito": "^8.0.4-beta.0",
-    "@taquito/tzip16": "^8.0.4-beta.0",
-    "@taquito/utils": "^8.0.4-beta.0"
+    "@taquito/http-utils": "^8.0.5-preview.0",
+    "@taquito/local-forging": "^8.0.5-preview.0",
+    "@taquito/remote-signer": "^8.0.5-preview.0",
+    "@taquito/signer": "^8.0.5-preview.0",
+    "@taquito/taquito": "^8.0.5-preview.0",
+    "@taquito/tzip16": "^8.0.5-preview.0",
+    "@taquito/utils": "^8.0.5-preview.0"
   },
   "private": true,
   "jest": {
