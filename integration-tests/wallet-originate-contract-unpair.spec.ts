@@ -25,7 +25,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
             const code: any = contract.script.code.find((x: any) => x.prim === 'code');
             const instUnpair = code.args[0].find((x: any) => x.prim === 'UNPAIR');
 
-            if (protocol === Protocols.PtEdo2Zk) {
+            if ((protocol === Protocols.PtEdo2Zk) || (protocol === Protocols.PsrsRVg1)) {
                 expect(instUnpair).toBeDefined();
             } else {
                 expect(instUnpair).toBeUndefined();
@@ -48,7 +48,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
             const code: any = contract.script.code.find((x: any) => x.prim === 'code');
             const instUnpair = code.args[0].find((x: any) => x.prim === 'UNPAIR');
 
-            if (protocol === Protocols.PtEdo2Zk) {
+            if ((protocol === Protocols.PtEdo2Zk) || (protocol === Protocols.PsrsRVg1)) {
                 expect(instUnpair).toBeDefined();
             } else {
                 expect(instUnpair).toBeUndefined();
@@ -74,7 +74,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
             const code: any = contract.script.code.find((x: any) => x.prim === 'code');
             const instUnpair = code.args[0].find((x: any) => x.prim === 'UNPAIR');
 
-            if (protocol === Protocols.PtEdo2Zk) {
+            if ((protocol === Protocols.PtEdo2Zk) || (protocol === Protocols.PsrsRVg1)) {
                 expect(instUnpair).toBeDefined();
             } else {
                 expect(instUnpair).toBeUndefined();
@@ -97,7 +97,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
             const code: any = contract.script.code.find((x: any) => x.prim === 'code');
             const instUnpair = code.args[0].find((x: any) => x.prim === 'UNPAIR');
 
-            if (protocol === Protocols.PtEdo2Zk) {
+            if ((protocol === Protocols.PtEdo2Zk) || (protocol === Protocols.PsrsRVg1)) {
                 expect(instUnpair).toBeDefined();
             } else {
                 expect(instUnpair).toBeUndefined();
@@ -120,7 +120,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
             const code: any = contract.script.code.find((x: any) => x.prim === 'code');
             const instUnpair = code.args[0].find((x: any) => x.prim === 'UNPAIR');
 
-            if (protocol === Protocols.PtEdo2Zk) {
+            if ((protocol === Protocols.PtEdo2Zk) || (protocol === Protocols.PsrsRVg1)) {
                 expect(instUnpair).toBeDefined();
             } else {
                 expect(instUnpair).toBeUndefined();
@@ -146,7 +146,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
             const code: any = contract.script.code.find((x: any) => x.prim === 'code');
             const instUnpair = code.args[0].find((x: any) => x.prim === 'UNPAIR');
 
-            if (protocol === Protocols.PtEdo2Zk) {
+            if ((protocol === Protocols.PtEdo2Zk) || (protocol === Protocols.PsrsRVg1)) {
                 expect(instUnpair).toBeDefined();
             } else {
                 expect(instUnpair).toBeUndefined();
