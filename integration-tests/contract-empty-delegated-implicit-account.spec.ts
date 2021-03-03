@@ -1,6 +1,6 @@
 import { CONFIGS } from "./config";
 
-CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker }) => {
+CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBakerContract, knownBaker }) => {
   const Tezos = lib;
   describe(`Test emptying a delegated implicit account using: ${rpc}`, () => {
 
@@ -12,10 +12,11 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker }) => {
       const LocalTez = await createAddress();
       const op = await Tezos.contract.transfer({ to: await LocalTez.signer.publicKeyHash(), amount: 2 });
       await op.confirmation();
+      const delegate = knownBakerContract || knownBaker;
 
       // Delegating from the account we want to empty
       // This will do the reveal operation automatically
-      const op2 = await LocalTez.contract.setDelegate({ delegate: knownBaker, source: await LocalTez.signer.publicKeyHash() });
+      const op2 = await LocalTez.contract.setDelegate({ delegate, source: await LocalTez.signer.publicKeyHash() });
       await op2.confirmation();
 
       const estimate = await LocalTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 0.5 });

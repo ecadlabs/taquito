@@ -1,6 +1,6 @@
 import { CONFIGS } from "./config";
 
-CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
+CONFIGS().forEach(({ lib, rpc, setup, knownBakerContract, knownBaker }) => {
   const Tezos = lib;
   describe(`Test account delegation with estimation using: ${rpc}`, () => {
 
@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
       done()
     })
     it('delegates account to known baker with automatic estimate', async (done) => {
-      const delegate = knownBaker
+      const delegate = knownBakerContract || knownBaker
       try {
         const op = await Tezos.wallet.setDelegate({
           delegate,
@@ -21,7 +21,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
         expect(account).toEqual(delegate)
       } catch (ex) {
         //When running tests more than one time with the same faucet key, the account is already delegated to the given delegate
-        expect(ex.message).toMatch('delegate.unchanged')
+        expect(ex.message).toMatch(/delegate\.unchanged|delegation\.unchanged/)
       }
       done();
     });
