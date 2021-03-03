@@ -1,7 +1,6 @@
 import { Protocols } from "@taquito/taquito";
 import { CONFIGS } from "./config";
 import { voteSample } from "./data/vote-contract";
-const test = require('jest-retries');
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
@@ -9,7 +8,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   // We skip this test for Falphanet 
   // The code of the contract is no longer valid 
   // because of the deprecated SET_DELEGATE key_hash
-  const it = (protocol !== Protocols.PsrsRVg1) ? test : test.skip;
+  const it = (protocol !== Protocols.PsrsRVg1) ? test && require('jest-retries') : test.skip;
 
   describe(`Originate a voting contract using: ${rpc}`, () => {
 
@@ -17,7 +16,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       await setup()
       done()
     })
-    test('originates a voting contract made with wallet api and inits the storage', 2, async (done: () => void) => {
+    it('originates a voting contract made with wallet api and inits the storage', 2, async (done: () => void) => {
       // TODO: probably remove this as very expensive
       const op = await Tezos.wallet.originate({
         balance: "1",
