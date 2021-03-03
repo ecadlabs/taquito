@@ -133,12 +133,6 @@ export abstract class OperationEmitter {
       };
     };
 
-    const getVersion = () => {
-      return metadata.protocol !== Protocols.PsrsRVg1 ? null : {
-        version: "1"
-      };
-    };
-
     const constructOps = (cOps: RPCOperation[]): OperationContents[] =>
       // tslint:disable strict-type-predicates
       cOps.map((op: RPCOperation) => {
@@ -177,8 +171,7 @@ export abstract class OperationEmitter {
             return {
               ...op,
               ...getSource(op),
-              ...getFee(op),
-              ...getVersion(),
+              ...getFee(op)
             };
           default:
             throw new Error('Unsupported operation');
