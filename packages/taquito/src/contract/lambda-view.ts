@@ -12,8 +12,8 @@ export default class LambdaView {
     private lambdaContract: Contract | WalletContract,
     private viewContract: ContractAbstraction< ContractProvider | Wallet > ,
     public readonly viewMethod: string = 'default',
-    private contractParameter: MichelsonV1Expression = { prim: 'Unit' },
-    private protocol: string
+    private protocol: string,
+    private contractParameter: MichelsonV1Expression = { prim: 'Unit' }
   ) {
     this.voidLambda = this.createVoidLambda(this.protocol);
   }

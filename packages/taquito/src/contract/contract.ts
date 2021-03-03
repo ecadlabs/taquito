@@ -142,7 +142,7 @@ export class ContractView {
 
     const lambdaContract = await this.provider.at(lambdaAddress);
     const arg = this.parameterSchema.Encode(...this.args);
-    const lambdaView = new LambdaView(lambdaContract, this.currentContract, this.name, arg, this.protocol);
+    const lambdaView = new LambdaView(lambdaContract, this.currentContract, this.name, this.protocol, arg);
     const failedWith = await lambdaView.execute();
     const response = this.callbackParametersSchema.Execute(failedWith);
     return response;
