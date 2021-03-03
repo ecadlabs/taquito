@@ -1,8 +1,15 @@
+import { Protocols } from "@taquito/taquito";
 import { CONFIGS } from "./config";
 import { voteSample } from "./data/vote-contract";
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
+
+  // We skip this test for Falphanet 
+  // The code of the contract is no longer valid 
+  // because of the deprecated SET_DELEGATE key_hash
+  const it = (protocol !== Protocols.PsrsRVg1) ? test : test.skip;
+
   describe(`Originate a voting contract using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
@@ -25,7 +32,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           },
         }
       })
-      await op.confirmation()
+      await op.confirmation();
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
       done();
