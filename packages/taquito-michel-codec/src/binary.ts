@@ -333,13 +333,13 @@ function writePublicKey(pk: PublicKey, w: Writer): void {
     w.writeBytes(Array.from(pk.publicKey));
 }
 
-type TransformFunc = (e: Expr) => [Expr, () => Generator<[Expr, TransformFunc]>];
+type TransformFunc = (e: Expr) => [Expr, IterableIterator<[Expr, TransformFunc]>];
 function writeExpr(expr: Expr, wr: Writer, tr: TransformFunc): void {
     const [e, args] = tr(expr);
 
     if (Array.isArray(e)) {
         const w = new Writer();
-        for (const [v, t] of args()) {
+        for (const [v, t] of args) {
             writeExpr(v, w, t);
         }
         wr.writeUint8(Tag.Sequence);
@@ -406,12 +406,12 @@ function writeExpr(expr: Expr, wr: Writer, tr: TransformFunc): void {
 
     if (e.args !== undefined) {
         if (e.args.length < 3) {
-            for (const [v, t] of args()) {
+            for (const [v, t] of args) {
                 writeExpr(v, wr, t);
             }
         } else {
             const w = new Writer();
-            for (const [v, t] of args()) {
+            for (const [v, t] of args) {
                 writeExpr(v, w, t);
             }
             wr.writeUint8(Tag.Sequence);
@@ -523,14 +523,14 @@ function readExpr(rd: Reader): Expr {
     }
 }
 
-const passThrough: TransformFunc = (e: Expr) => [e, function* () {
+const passThrough: TransformFunc = (e: Expr) => [e, (function* (): Generator<[Expr, TransformFunc]> {
     if (Array.isArray(e) || "prim" in e) {
         const args = Array.isArray(e) ? e : (e.args || []);
         for (const a of args) {
             yield [a, passThrough];
         }
     }
-}];
+})()];
 
 export function emitBinary(expr: Expr): number[] {
     const w = new Writer();
@@ -542,7 +542,7 @@ const isOrData = (e: Expr): e is MichelsonDataOr => "prim" in e && (e.prim === "
 const isOptionData = (e: Expr): e is MichelsonDataOption => "prim" in e && (e.prim === "Some" || e.prim === "None");
 
 export function packData(d: MichelsonData, t: MichelsonType): number[] {
-    const transform = (t: MichelsonType): TransformFunc => (d: Expr): [Expr, () => Generator<[Expr, TransformFunc]>] => {
+    const transform = (t: MichelsonType): TransformFunc => (d: Expr): [Expr, IterableIterator<[Expr, TransformFunc]>] => {
         if (isPairType(t)) {
             if (!isPairData(d)) {
                 throw new MichelsonTypeError(t, d, `pair expected: ${JSON.stringify(d)}`);
@@ -550,61 +550,61 @@ export function packData(d: MichelsonData, t: MichelsonType): number[] {
             // combs aren't used in pack format
             const dc = unpackComb("Pair", d);
             const tc = unpackComb("pair", t);
-            return [dc, function* () {
+            return [dc, (function* (): Generator<[Expr, TransformFunc]> {
                 for (let i = 0; i < tc.args.length; i++) {
                     yield [dc.args[i], transform(tc.args[i])];
                 }
-            }];
+            })()];
         }
 
         switch (t.prim) {
             case "or":
                 if (isOrData(d)) {
-                    return [d, function* () {
+                    return [d, (function* (): Generator<[Expr, TransformFunc]> {
                         yield [d.args[0], transform(d.prim === "Left" ? t.args[0] : t.args[1])];
-                    }];
+                    })()];
                 }
                 throw new MichelsonTypeError(t, d, `or expected: ${JSON.stringify(d)}`);
 
             case "option":
                 if (isOptionData(d)) {
-                    return [d, function* () {
+                    return [d, (function* (): Generator<[Expr, TransformFunc]> {
                         const dd = d;
                         if (dd.prim === "Some") {
                             yield [dd.args[0], transform(t.args[0])];
                         }
-                    }];
+                    })()];
                 }
                 throw new MichelsonTypeError(t, d, `option expected: ${JSON.stringify(d)}`);
 
             case "list":
             case "set":
                 if (Array.isArray(d)) {
-                    return [d, function* () {
+                    return [d, (function* (): Generator<[Expr, TransformFunc]> {
                         for (const v of d) {
                             yield [v, transform(t.args[0])];
                         }
-                    }];
+                    })()];
                 }
                 throw new MichelsonTypeError(t, d, `${t.prim} expected: ${JSON.stringify(d)}`);
 
             case "map":
                 if (Array.isArray(d)) {
-                    return [d, function* (): Generator<[Expr, TransformFunc]> {
+                    return [d, (function* (): Generator<[Expr, TransformFunc]> {
                         for (const elt of d) {
                             if (!("prim" in elt) || elt.prim !== "Elt") {
                                 throw new MichelsonTypeError(t, elt, `map element expected: ${JSON.stringify(elt)}`);
                             }
-                            yield [elt, (elt: Expr) => [elt, function* () {
+                            yield [elt, (elt: Expr) => [elt, (function* (): Generator<[Expr, TransformFunc]> {
                                 for (let i = 0; i < t.args.length; i++) {
                                     const isElt = (e: Expr): e is MichelsonMapElt => "prim" in e && e.prim === "Elt";
                                     if (isElt(elt)) {
                                         yield [elt.args[i], transform(t.args[i])];
                                     }
                                 }
-                            }]];
+                            })()]];
                         }
-                    }];
+                    })()];
                 }
                 throw new MichelsonTypeError(t, d, `map expected: ${JSON.stringify(d)}`);
 
@@ -618,7 +618,7 @@ export function packData(d: MichelsonData, t: MichelsonType): number[] {
                         bytes = d.bytes;
                     }
                     if (bytes !== null) {
-                        return [{ bytes }, function* () { /* wow such empty */ }];
+                        return [{ bytes }, (function* () { /* wow such empty */ })()];
                     }
                 }
                 throw new MichelsonTypeError(t, d, `chain id expected: ${JSON.stringify(d)}`);
@@ -637,7 +637,7 @@ export function packData(d: MichelsonData, t: MichelsonType): number[] {
                         bytes = d.bytes;
                     }
                     if (bytes !== null) {
-                        return [{ bytes }, function* () { /* wow such empty */ }];
+                        return [{ bytes }, (function* () { /* wow such empty */ })()];
                     }
                 }
                 throw new MichelsonTypeError(t, d, `signature expected: ${JSON.stringify(d)}`);
@@ -659,7 +659,7 @@ export function packData(d: MichelsonData, t: MichelsonType): number[] {
                         bytes = d.bytes;
                     }
                     if (bytes !== null) {
-                        return [{ bytes }, function* () { /* wow such empty */ }];
+                        return [{ bytes }, (function* () { /* wow such empty */ })()];
                     }
                 }
                 throw new MichelsonTypeError(t, d, `key hash expected: ${JSON.stringify(d)}`);
@@ -681,7 +681,7 @@ export function packData(d: MichelsonData, t: MichelsonType): number[] {
                         bytes = d.bytes;
                     }
                     if (bytes !== null) {
-                        return [{ bytes }, function* () { /* wow such empty */ }];
+                        return [{ bytes }, (function* () { /* wow such empty */ })()];
                     }
                 }
                 throw new MichelsonTypeError(t, d, `public key expected: ${JSON.stringify(d)}`);
@@ -705,7 +705,7 @@ export function packData(d: MichelsonData, t: MichelsonType): number[] {
                         bytes = d.bytes;
                     }
                     if (bytes !== null) {
-                        return [{ bytes }, function* () { /* wow such empty */ }];
+                        return [{ bytes }, (function* () { /* wow such empty */ })()];
                     }
                 }
                 throw new MichelsonTypeError(t, d, `address expected: ${JSON.stringify(d)}`);
@@ -722,7 +722,7 @@ export function packData(d: MichelsonData, t: MichelsonType): number[] {
                         int = d.int;
                     }
                     if (int !== null) {
-                        return [{ int }, function* () { /* wow such empty */ }];
+                        return [{ int }, (function* () { /* wow such empty */ })()];
                     }
                 }
                 throw new MichelsonTypeError(t, d, `timestamp expected: ${JSON.stringify(d)}`);
