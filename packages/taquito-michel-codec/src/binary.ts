@@ -6,7 +6,7 @@ import {
 import {
     checkDecodeTezosID,
     isPairData, isPairType, MichelsonTypeError,
-    parseBytes, parseDate, unpackComb
+    parseBytes, parseDate, TezosIDType, unpackComb
 } from "./utils";
 
 type PrimID = MichelsonTypeID |
@@ -333,14 +333,19 @@ function writePublicKey(pk: PublicKey, w: Writer): void {
     w.writeBytes(Array.from(pk.publicKey));
 }
 
-type TransformFunc = (e: Expr) => [Expr, IterableIterator<[Expr, TransformFunc]>];
-function writeExpr(expr: Expr, wr: Writer, tr: TransformFunc): void {
-    const [e, args] = tr(expr);
+type WriteTransformFunc = (e: Expr) => [Expr, IterableIterator<WriteTransformFunc>];
+
+function writeExpr(expr: Expr, wr: Writer, tf: WriteTransformFunc): void {
+    const [e, args] = tf(expr);
 
     if (Array.isArray(e)) {
         const w = new Writer();
-        for (const [v, t] of args) {
-            writeExpr(v, w, t);
+        for (const v of e) {
+            const a = args.next();
+            if (a.done) {
+                throw new Error("REPORT ME: iterator is done");
+            }
+            writeExpr(v, w, a.value);
         }
         wr.writeUint8(Tag.Sequence);
         wr.writeUint32(w.length);
@@ -406,13 +411,21 @@ function writeExpr(expr: Expr, wr: Writer, tr: TransformFunc): void {
 
     if (e.args !== undefined) {
         if (e.args.length < 3) {
-            for (const [v, t] of args) {
-                writeExpr(v, wr, t);
+            for (const v of e.args) {
+                const a = args.next();
+                if (a.done) {
+                    throw new Error("REPORT ME: iterator is done");
+                }
+                writeExpr(v, wr, a.value);
             }
         } else {
             const w = new Writer();
-            for (const [v, t] of args) {
-                writeExpr(v, w, t);
+            for (const v of e.args) {
+                const a = args.next();
+                if (a.done) {
+                    throw new Error("REPORT ME: iterator is done");
+                }
+                writeExpr(v, w, a.value);
             }
             wr.writeUint8(Tag.Sequence);
             wr.writeUint32(w.length);
@@ -428,7 +441,11 @@ function writeExpr(expr: Expr, wr: Writer, tr: TransformFunc): void {
     }
 }
 
-function readExpr(rd: Reader): Expr {
+type ReadTransformFunc = () => [(e: Expr) => Expr, IterableIterator<ReadTransformFunc>];
+
+function readExpr(rd: Reader, tf: ReadTransformFunc): Expr {
+    const [tr, args] = tf();
+
     const tag = rd.readUint8();
     switch (tag) {
         case Tag.Int:
@@ -453,7 +470,7 @@ function readExpr(rd: Reader): Expr {
                 if (sign) {
                     val = -val;
                 }
-                return { int: String(val) };
+                return tr({ int: String(val) });
             }
 
         case Tag.String:
@@ -461,7 +478,7 @@ function readExpr(rd: Reader): Expr {
                 const length = rd.readUint32();
                 const bytes = rd.readBytes(length);
                 const dec = new TextDecoder();
-                return { string: dec.decode(bytes) };
+                return tr({ string: dec.decode(bytes) });
             }
 
         case Tag.Bytes:
@@ -469,7 +486,7 @@ function readExpr(rd: Reader): Expr {
                 const length = rd.readUint32();
                 const bytes = rd.readBytes(length);
                 const hex = hexBytes(Array.from(bytes));
-                return { bytes: hex };
+                return tr({ bytes: hex });
             }
 
         case Tag.Sequence:
@@ -478,9 +495,13 @@ function readExpr(rd: Reader): Expr {
                 const length = rd.readUint32();
                 const r = rd.reader(length);
                 while (r.length > 0) {
-                    res.push(readExpr(r));
+                    const a = args.next();
+                    if (a.done) {
+                        throw new Error("REPORT ME: iterator is done");
+                    }
+                    res.push(readExpr(r, a.value));
                 }
-                return res;
+                return tr(res);
             }
 
         default:
@@ -499,15 +520,23 @@ function readExpr(rd: Reader): Expr {
                 const argn = (tag - 3) >> 1;
                 if (argn < 3) {
                     for (let i = 0; i < argn; i++) {
+                        const a = args.next();
+                        if (a.done) {
+                            throw new Error("REPORT ME: iterator is done");
+                        }
                         res.args = res.args || [];
-                        res.args.push(readExpr(rd));
+                        res.args.push(readExpr(rd, a.value));
                     }
                 } else {
                     res.args = res.args || [];
                     const length = rd.readUint32();
                     const r = rd.reader(length);
                     while (r.length > 0) {
-                        res.args.push(readExpr(r));
+                        const a = args.next();
+                        if (a.done) {
+                            throw new Error("REPORT ME: iterator is done");
+                        }
+                        res.args.push(readExpr(r, a.value));
                     }
                 }
 
@@ -518,23 +547,20 @@ function readExpr(rd: Reader): Expr {
                     const dec = new TextDecoder();
                     res.annots = dec.decode(bytes).split(" ");
                 }
-                return res;
+                return tr(res);
             }
     }
 }
 
-const passThrough: TransformFunc = (e: Expr) => [e, (function* (): Generator<[Expr, TransformFunc]> {
-    if (Array.isArray(e) || "prim" in e) {
-        const args = Array.isArray(e) ? e : (e.args || []);
-        for (const a of args) {
-            yield [a, passThrough];
-        }
+const writePassThrough: WriteTransformFunc = (e: Expr) => [e, (function* () {
+    while (true) {
+        yield writePassThrough;
     }
 })()];
 
 export function emitBinary(expr: Expr): number[] {
     const w = new Writer();
-    writeExpr(expr, w, passThrough);
+    writeExpr(expr, w, writePassThrough);
     return w.buffer;
 }
 
@@ -542,193 +568,215 @@ const isOrData = (e: Expr): e is MichelsonDataOr => "prim" in e && (e.prim === "
 const isOptionData = (e: Expr): e is MichelsonDataOption => "prim" in e && (e.prim === "Some" || e.prim === "None");
 
 export function packData(d: MichelsonData, t: MichelsonType): number[] {
-    const transform = (t: MichelsonType): TransformFunc => (d: Expr): [Expr, IterableIterator<[Expr, TransformFunc]>] => {
-        if (isPairType(t)) {
-            if (!isPairData(d)) {
-                throw new MichelsonTypeError(t, d, `pair expected: ${JSON.stringify(d)}`);
+    const transform = (t: MichelsonType): WriteTransformFunc => {
+        const base58bytes = (title: string, types: TezosIDType[]): WriteTransformFunc => (d: Expr) => {
+            if (!("bytes" in d) && !("string" in d)) {
+                throw new MichelsonTypeError(t, d, `${title} expected: ${JSON.stringify(d)}`);
             }
-            // combs aren't used in pack format
-            const dc = unpackComb("Pair", d);
-            const tc = unpackComb("pair", t);
-            return [dc, (function* (): Generator<[Expr, TransformFunc]> {
-                for (let i = 0; i < tc.args.length; i++) {
-                    yield [dc.args[i], transform(tc.args[i])];
+            let bytes: string;
+            if ("string" in d) {
+                const id = checkDecodeTezosID(d.string, ...types);
+                if (id === null) {
+                    throw new MichelsonTypeError(t, d, `${title} base58 expected: ${d.string}`);
                 }
-            })()];
+                bytes = hexBytes(id[1]);
+            } else {
+                bytes = d.bytes;
+            }
+            return [{ bytes }, [][Symbol.iterator]()];
+        };
+
+        if (isPairType(t)) {
+            return (d: Expr) => {
+                if (!isPairData(d)) {
+                    throw new MichelsonTypeError(t, d, `pair expected: ${JSON.stringify(d)}`);
+                }
+                // combs aren't used in pack format
+                const tc = unpackComb("pair", t);
+                const dc = unpackComb("Pair", d);
+                return [dc, (function* (): Generator<WriteTransformFunc> {
+                    for (let i = 0; i < tc.args.length; i++) {
+                        yield transform(tc.args[i]);
+                    }
+                })()];
+            };
         }
 
         switch (t.prim) {
             case "or":
-                if (isOrData(d)) {
-                    return [d, (function* (): Generator<[Expr, TransformFunc]> {
-                        yield [d.args[0], transform(d.prim === "Left" ? t.args[0] : t.args[1])];
+                return (d: Expr) => {
+                    if (!isOrData(d)) {
+                        throw new MichelsonTypeError(t, d, `or expected: ${JSON.stringify(d)}`);
+                    }
+                    return [d, (function* (): Generator<WriteTransformFunc> {
+                        yield transform(t.args[d.prim === "Left" ? 0 : 1]);
                     })()];
-                }
-                throw new MichelsonTypeError(t, d, `or expected: ${JSON.stringify(d)}`);
+                };
 
             case "option":
-                if (isOptionData(d)) {
-                    return [d, (function* (): Generator<[Expr, TransformFunc]> {
+                return (d: Expr) => {
+                    if (!isOptionData(d)) {
+                        throw new MichelsonTypeError(t, d, `option expected: ${JSON.stringify(d)}`);
+                    }
+                    return [d, (function* (): Generator<WriteTransformFunc> {
                         const dd = d;
                         if (dd.prim === "Some") {
-                            yield [dd.args[0], transform(t.args[0])];
+                            yield transform(t.args[0]);
                         }
                     })()];
-                }
-                throw new MichelsonTypeError(t, d, `option expected: ${JSON.stringify(d)}`);
+                };
 
             case "list":
             case "set":
-                if (Array.isArray(d)) {
-                    return [d, (function* (): Generator<[Expr, TransformFunc]> {
+                return (d: Expr) => {
+                    if (!Array.isArray(d)) {
+                        throw new MichelsonTypeError(t, d, `${t.prim} expected: ${JSON.stringify(d)}`);
+                    }
+                    return [d, (function* (): Generator<WriteTransformFunc> {
                         for (const v of d) {
-                            yield [v, transform(t.args[0])];
+                            yield transform(t.args[0]);
                         }
                     })()];
-                }
-                throw new MichelsonTypeError(t, d, `${t.prim} expected: ${JSON.stringify(d)}`);
+                };
 
             case "map":
-                if (Array.isArray(d)) {
-                    return [d, (function* (): Generator<[Expr, TransformFunc]> {
+                return (d: Expr) => {
+                    if (!Array.isArray(d)) {
+                        throw new MichelsonTypeError(t, d, `map expected: ${JSON.stringify(d)}`);
+                    }
+                    return [d, (function* (): Generator<WriteTransformFunc> {
                         for (const elt of d) {
-                            if (!("prim" in elt) || elt.prim !== "Elt") {
-                                throw new MichelsonTypeError(t, elt, `map element expected: ${JSON.stringify(elt)}`);
-                            }
-                            yield [elt, (elt: Expr) => [elt, (function* (): Generator<[Expr, TransformFunc]> {
-                                for (let i = 0; i < t.args.length; i++) {
-                                    const isElt = (e: Expr): e is MichelsonMapElt => "prim" in e && e.prim === "Elt";
-                                    if (isElt(elt)) {
-                                        yield [elt.args[i], transform(t.args[i])];
-                                    }
+                            yield (elt: Expr) => {
+                                if (!("prim" in elt) || elt.prim !== "Elt") {
+                                    throw new MichelsonTypeError(t, elt, `map element expected: ${JSON.stringify(elt)}`);
                                 }
-                            })()]];
+                                return [elt, (function* (): Generator<WriteTransformFunc> {
+                                    for (let i = 0; i < t.args.length; i++) {
+                                        yield transform(t.args[i]);
+                                    }
+                                })()];
+                            };
                         }
                     })()];
-                }
-                throw new MichelsonTypeError(t, d, `map expected: ${JSON.stringify(d)}`);
+                };
 
             case "chain_id":
-                if ("bytes" in d || "string" in d) {
-                    let bytes: string | null;
+                return (d: Expr) => {
+                    if (!("bytes" in d) && !("string" in d)) {
+                        throw new MichelsonTypeError(t, d, `chain id expected: ${JSON.stringify(d)}`);
+                    }
+                    let bytes: string;
                     if ("string" in d) {
                         const id = checkDecodeTezosID(d.string, "ChainID");
-                        bytes = id !== null ? hexBytes(id[1]) : null;
+                        if (id === null) {
+                            throw new MichelsonTypeError(t, d, `chain id base58 expected: ${d.string}`);
+                        }
+                        bytes = hexBytes(id[1]);
                     } else {
                         bytes = d.bytes;
                     }
-                    if (bytes !== null) {
-                        return [{ bytes }, (function* () { /* wow such empty */ })()];
-                    }
-                }
-                throw new MichelsonTypeError(t, d, `chain id expected: ${JSON.stringify(d)}`);
+                    return [{ bytes }, [][Symbol.iterator]()];
+                };
 
             case "signature":
-                if ("bytes" in d || "string" in d) {
-                    let bytes: string | null;
+                return (d: Expr) => {
+                    if (!("bytes" in d) && !("string" in d)) {
+                        throw new MichelsonTypeError(t, d, `signature expected: ${JSON.stringify(d)}`);
+                    }
+                    let bytes: string;
                     if ("string" in d) {
-                        const id = checkDecodeTezosID(d.string,
-                            "ED25519Signature",
-                            "SECP256K1Signature",
-                            "P256Signature",
-                            "GenericSignature");
-                        bytes = id !== null ? hexBytes(id[1]) : null;
+                        const sig = checkDecodeTezosID(d.string, "ED25519Signature", "SECP256K1Signature", "P256Signature", "GenericSignature");
+                        if (sig === null) {
+                            throw new MichelsonTypeError(t, d, `signature base58 expected: ${d.string}`);
+                        }
+                        bytes = hexBytes(sig[1]);
                     } else {
                         bytes = d.bytes;
                     }
-                    if (bytes !== null) {
-                        return [{ bytes }, (function* () { /* wow such empty */ })()];
-                    }
-                }
-                throw new MichelsonTypeError(t, d, `signature expected: ${JSON.stringify(d)}`);
+                    return [{ bytes }, [][Symbol.iterator]()];
+                };
 
             case "key_hash":
-                if ("bytes" in d || "string" in d) {
-                    let bytes: string | null = null;
+                return (d: Expr) => {
+                    if (!("bytes" in d) && !("string" in d)) {
+                        throw new MichelsonTypeError(t, d, `key hash expected: ${JSON.stringify(d)}`);
+                    }
+                    let bytes: string;
                     if ("string" in d) {
-                        const pkh = checkDecodeTezosID(d.string,
-                            "ED25519PublicKeyHash",
-                            "SECP256K1PublicKeyHash",
-                            "P256PublicKeyHash");
-                        if (pkh !== null) {
-                            const w = new Writer();
-                            writePublicKeyHash({ type: pkh[0], hash: pkh[1] }, w);
-                            bytes = hexBytes(w.buffer);
+                        const pkh = checkDecodeTezosID(d.string, "ED25519PublicKeyHash", "SECP256K1PublicKeyHash", "P256PublicKeyHash");
+                        if (pkh === null) {
+                            throw new MichelsonTypeError(t, d, `key hash base58 expected: ${d.string}`);
                         }
+                        const w = new Writer();
+                        writePublicKeyHash({ type: pkh[0], hash: pkh[1] }, w);
+                        bytes = hexBytes(w.buffer);
                     } else {
                         bytes = d.bytes;
                     }
-                    if (bytes !== null) {
-                        return [{ bytes }, (function* () { /* wow such empty */ })()];
-                    }
-                }
-                throw new MichelsonTypeError(t, d, `key hash expected: ${JSON.stringify(d)}`);
+                    return [{ bytes }, [][Symbol.iterator]()];
+                };
 
             case "key":
-                if ("bytes" in d || "string" in d) {
-                    let bytes: string | null = null;
+                return (d: Expr) => {
+                    if (!("bytes" in d) && !("string" in d)) {
+                        throw new MichelsonTypeError(t, d, `public key expected: ${JSON.stringify(d)}`);
+                    }
+                    let bytes: string;
                     if ("string" in d) {
-                        const pkh = checkDecodeTezosID(d.string,
-                            "ED25519PublicKey",
-                            "SECP256K1PublicKey",
-                            "P256PublicKey");
-                        if (pkh !== null) {
-                            const w = new Writer();
-                            writePublicKey({ type: pkh[0], publicKey: pkh[1] }, w);
-                            bytes = hexBytes(w.buffer);
+                        const key = checkDecodeTezosID(d.string, "ED25519PublicKey", "SECP256K1PublicKey", "P256PublicKey");
+                        if (key === null) {
+                            throw new MichelsonTypeError(t, d, `public key base58 expected: ${d.string}`);
                         }
+                        const w = new Writer();
+                        writePublicKey({ type: key[0], publicKey: key[1] }, w);
+                        bytes = hexBytes(w.buffer);
                     } else {
                         bytes = d.bytes;
                     }
-                    if (bytes !== null) {
-                        return [{ bytes }, (function* () { /* wow such empty */ })()];
-                    }
-                }
-                throw new MichelsonTypeError(t, d, `public key expected: ${JSON.stringify(d)}`);
+                    return [{ bytes }, [][Symbol.iterator]()];
+                };
 
             case "address":
-                if ("bytes" in d || "string" in d) {
-                    let bytes: string | null = null;
+                return (d: Expr) => {
+                    if (!("bytes" in d) && !("string" in d)) {
+                        throw new MichelsonTypeError(t, d, `address expected: ${JSON.stringify(d)}`);
+                    }
+                    let bytes: string;
                     if ("string" in d) {
                         const s = d.string.split("%");
-                        const address = checkDecodeTezosID(s[0],
-                            "ED25519PublicKeyHash",
-                            "SECP256K1PublicKeyHash",
-                            "P256PublicKeyHash",
-                            "ContractHash");
-                        if (address !== null) {
-                            const w = new Writer();
-                            writeAddress({ type: address[0], hash: address[1], entryPoint: s.length > 1 ? s[1] : undefined }, w);
-                            bytes = hexBytes(w.buffer);
+                        const address = checkDecodeTezosID(s[0], "ED25519PublicKeyHash", "SECP256K1PublicKeyHash", "P256PublicKeyHash", "ContractHash");
+                        if (address === null) {
+                            throw new MichelsonTypeError(t, d, `address base58 expected: ${d.string}`);
                         }
+                        const w = new Writer();
+                        writeAddress({ type: address[0], hash: address[1], entryPoint: s.length > 1 ? s[1] : undefined }, w);
+                        bytes = hexBytes(w.buffer);
                     } else {
                         bytes = d.bytes;
                     }
-                    if (bytes !== null) {
-                        return [{ bytes }, (function* () { /* wow such empty */ })()];
-                    }
-                }
-                throw new MichelsonTypeError(t, d, `address expected: ${JSON.stringify(d)}`);
+                    return [{ bytes }, [][Symbol.iterator]()];
+                };
 
             case "timestamp":
-                if ("string" in d || "int" in d) {
-                    let int: string | null = null;
+                return (d: Expr) => {
+                    if (!("string" in d) && !("int" in d)) {
+                        throw new MichelsonTypeError(t, d, `timestamp expected: ${JSON.stringify(d)}`);
+                    }
+                    let int: string;
                     if ("string" in d) {
                         const p = parseDate(d);
-                        if (p !== null) {
-                            int = String(Math.floor(p.getTime() / 1000));
+                        if (p === null) {
+                            throw new MichelsonTypeError(t, d, `can't parse date: ${d.string}`);
                         }
+                        int = String(Math.floor(p.getTime() / 1000));
                     } else {
                         int = d.int;
                     }
-                    if (int !== null) {
-                        return [{ int }, (function* () { /* wow such empty */ })()];
-                    }
-                }
-                throw new MichelsonTypeError(t, d, `timestamp expected: ${JSON.stringify(d)}`);
+                    return [{ int }, [][Symbol.iterator]()];
+                };
 
             default:
-                return passThrough(d);
+                return writePassThrough;
 
             // TODO check lambdas for typed instructions like PUSH etc
         }
@@ -743,12 +791,18 @@ export function packDataBytes(d: MichelsonData, t: MichelsonType): BytesLiteral 
     return { bytes: hexBytes(packData(d, t)) };
 }
 
+const readPassThrough: ReadTransformFunc = () => [(e: Expr) => e, (function* () {
+    while (true) {
+        yield readPassThrough;
+    }
+})()];
+
 export function parseBinary(buf: Uint8Array | number[]): Expr | null {
     if (buf.length === 0) {
         return null;
     }
     const rd = new Reader(new Uint8Array(buf));
-    return readExpr(rd);
+    return readExpr(rd, readPassThrough);
 }
 
 export function decodeAddressBytes(b: BytesLiteral): Address {
