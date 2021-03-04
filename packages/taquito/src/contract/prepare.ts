@@ -110,6 +110,13 @@ export const createSetDelegateOperation = async ({
     storage_limit: storageLimit,
     delegate,
   };
+  // Fix for Falphanet: There is a new version of Delegation.
+  // The type of the delegate field is changed from public_key_hash to baker_hash 
+  // and version field is added to disambiguate from the legacy types with constant value "1".
+  // The legacy types are preserved with the original encoding for compatibility.
+  if((/sg1/i.test(delegate))){
+    Object.assign(operation, { version: '1' });
+  }
   return operation;
 };
 
