@@ -3,20 +3,13 @@ import path from "path";
 
 import { MichelsonData, MichelsonType } from "../src/michelson-types";
 import { packData } from "../src/binary";
+import { parseHex } from "../src/utils";
 
 interface TestData {
     title: string,
     type: MichelsonType,
     data: MichelsonData,
     packed: string,
-}
-
-function parseHex(s: string): number[] {
-    const res: number[] = [];
-    for (let i = 0; i < s.length; i += 2) {
-        res.push(parseInt(s.slice(i, i + 2), 16));
-    }
-    return res;
 }
 
 describe("Pack", () => {

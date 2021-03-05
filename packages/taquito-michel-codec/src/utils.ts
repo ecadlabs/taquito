@@ -331,3 +331,11 @@ export function parseDate(a: StringLiteral | IntLiteral): Date | null {
     }
     return null;
 }
+
+export function parseHex(s: string): number[] {
+    const res: number[] = [];
+    for (let i = 0; i < s.length; i += 2) {
+        res.push(parseInt(s.slice(i, i + 2), 16));
+    }
+    return res;
+}
