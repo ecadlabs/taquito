@@ -6,5 +6,5 @@
     "packages/*",
     "website"
   ],
-  "version": "8.0.5-preview.0"
+  "version": "8.0.6-beta-RC.0"
 }
