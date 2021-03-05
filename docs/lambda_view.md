@@ -3,10 +3,6 @@ id: lambda_view
 title: Using the Lambda View
 ---
 
-:::caution note
-This feature is prerelease. Please feel free to use our [Github](https://github.com/ecadlabs/taquito) issue tracker if you have questions or issues.
-:::
-
 The lambda view is a way to retrieve data from a smart contract's storage
 without incurring fees via a contract's view method. This solution is a temporary solution that we will address in a future protocol update.
 
