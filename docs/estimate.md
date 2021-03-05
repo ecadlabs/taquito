@@ -27,7 +27,7 @@ The following example shows an estimate of the fees associated with transferring
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/delphinet');
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/edonet');
 
 const amount = 2;
 const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
@@ -53,7 +53,7 @@ This example will demonstrate how to estimate the fees related to calling a smar
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/delphinet');
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/edonet');
 
 Tezos.contract
   .at('KT1PupyraehzPEjTKJgY2qmZHXdP5pQUyGgC')
@@ -84,7 +84,7 @@ In this example, we will use the estimate method of Taquito on a contract origin
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/delphinet');
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/edonet');
 
 println(`Estimating the contract origination : `);
 Tezos.estimate
