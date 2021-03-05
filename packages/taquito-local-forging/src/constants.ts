@@ -196,7 +196,7 @@ export const kindMapping: { [key: number]: string } = {
   0x04: 'activate_account',
   0x6b: 'reveal',
   0x6e: 'delegation',
-  0xd2: 'delegationSg1', //Falphanet, when delegate is a SG1 address
+  0xd2: 'delegationSg1', // Falphanet, when delegate is a SG1 address
   0x6c: 'transaction',
   0x6d: 'origination',
   0x06: 'ballot',
