@@ -233,7 +233,7 @@ The Michelson storage schema with a map using eight pairs as a key:
                                 (pair timestamp address)))))))) int)
 ```
 
-### Origination a contract with complex keys
+### Origination of a contract with complex keys
 
 In this example, the contract schema does not have map annotations, which means that each value needs to have an index as a property name.
 
