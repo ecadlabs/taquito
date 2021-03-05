@@ -4,6 +4,8 @@
  */
 
 import { pad } from './utils';
+import { localForger } from './taquito-local-forging';
+import { Protocols } from '@taquito/taquito';
 
 // See: https://tezos.gitlab.io/protocols/005_babylon.html#transactions-now-have-an-entrypoint
 export const ENTRYPOINT_MAX_LENGTH = 31;
@@ -221,6 +223,7 @@ export const entrypointMapping: { [key: string]: string } = {
   '02': 'do',
   '03': 'set_delegate',
   '04': 'remove_delegate',
+  ...(localForger.getProtocol() === Protocols.PsrsRVg1 && {'05': 'main'} )
 };
 
 export const entrypointMappingReverse = (() => {

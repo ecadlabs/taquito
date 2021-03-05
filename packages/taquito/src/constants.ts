@@ -36,6 +36,8 @@ export const protocols = {
   '009': [Protocols.PsrsRVg1]
 };
 
+export const latestProtocol = Protocols.PsrsRVg1;
+
 export enum DefaultLambdaAddresses {
   MAINNET = 'KT1CPuTzwC7h7uLXd5WQmpMFso1HxrLBUtpE',
   CARTHAGENET = 'KT1VAy1o1FGiXYfD3YT7x7k5eF5HSHhmc1u6',

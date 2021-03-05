@@ -40,6 +40,36 @@ interface TestCase {
   operation: any;
   expected?: {};
 }
+export const veryCommonCases: TestCase[] = [
+  {
+    name: 'Transaction with custom entrypoint',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: 'transaction',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          parameters: {
+            entrypoint: 'main',
+            value: {
+              prim: 'Pair',
+              args: [
+                { prim: 'Pair', args: [{ bytes: '0202' }, { int: '202' }] },
+                { string: 'hello' },
+              ],
+            },
+          },
+          destination: 'KT1HPaJE1QNtuiYPgMAGhzTrs446K9wptmsR',
+          amount: '1000',
+        },
+      ],
+    },
+  }
+];
 
 export const commonCases: TestCase[] = [
   {
@@ -881,5 +911,29 @@ export const falphanetCases: TestCase[] = [
         },
       ],
     },
-  }
-]
+  },
+  // In `opMapping` from the file `constants.ts`, the operations from `LEVEL` to `GET_AND_UPDATE` have been added in the edo protocol
+  ...extractOp(141, 141).map(op => {
+    return {
+      name: `Origination operation (${op})`,
+      operation: {
+        branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+        contents: [
+          {
+            kind: 'origination',
+            counter: '1',
+            source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+            fee: '10000',
+            gas_limit: '10',
+            storage_limit: '10',
+            balance: '0',
+            script: {
+              code: genericCode(op),
+              storage: genericStorage,
+            },
+          },
+        ],
+      },
+    };
+  })
+];

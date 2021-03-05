@@ -8,6 +8,7 @@ import { CODEC } from './constants';
 import { decoders } from './decoder';
 import { encoders } from './encoder';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
+import { latestProtocol } from '@taquito/taquito';
 
 export { CODEC } from './constants';
 export * from './decoder';
@@ -26,6 +27,11 @@ export function getCodec(codec: CODEC) {
 
 export class LocalForger implements Forger {
   private codec = getCodec(CODEC.MANAGER);
+  private protocol: string;
+
+  constructor(private currentProtocol: string = latestProtocol) {
+    this.protocol = currentProtocol;
+  }
 
   forge(params: ForgeParams): Promise<string> {
     return Promise.resolve(this.codec.encoder(params));
@@ -33,6 +39,10 @@ export class LocalForger implements Forger {
 
   parse(hex: string): Promise<ForgeParams> {
     return Promise.resolve(this.codec.decoder(hex) as ForgeParams);
+  }
+
+  getProtocol(): string {
+    return this.protocol;
   }
 }
 
