@@ -1,28 +1,29 @@
 import { opMapping } from '../src/constants';
-import { 
-  rpcContractResponse, 
-  rpcContractResponse2, 
-  rpcContractResponse4, 
-  rpcContractResponse5, 
-  rpcContractResponse7, 
+import {
+  rpcContractResponse,
+  rpcContractResponse2,
+  rpcContractResponse4,
+  rpcContractResponse5,
+  rpcContractResponse7,
   example9,
-  example10 
+  example10
 } from './data/code_with_sapling';
-import { ticketCode, 
-  ticketCode2, 
-  ticketCode3, 
-  ticketCode4, 
-  ticketStorage, 
-  ticketStorage2, 
-  ticketStorage3, 
-  ticketStorage4 
+import {
+  ticketCode,
+  ticketCode2,
+  ticketCode3,
+  ticketCode4,
+  ticketStorage,
+  ticketStorage2,
+  ticketStorage3,
+  ticketStorage4
 } from './data/code_with_ticket';
 import { genericCode, genericStorage } from './data/generic_contract';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_big_map';
 import { noAnnotCode, noAnnotInit } from './data/token_without_annotations';
 import { voteInitSample, voteSample } from './data/vote_contract';
 
-function extractOp (startIndex: number, endIndex: number) {
+function extractOp(startIndex: number, endIndex: number) {
   const result = [];
   let i = startIndex;
   for (i; i <= endIndex; i++) {
@@ -583,7 +584,7 @@ export const commonCases: TestCase[] = [
         },
       ],
     },
-  } 
+  }
 ];
 
 export const edoCases: TestCase[] = [
@@ -843,3 +844,42 @@ export const edoCases: TestCase[] = [
     },
   },
 ];
+
+export const falphanetCases: TestCase[] = [
+  {
+    name: 'Delegation to SG1 address with version field',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: 'delegation',
+          delegate: 'SG1cfiN47qGnkvwfBQrWADFULNbTLLKfVwTP',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          version: '1'
+        },
+      ],
+    },
+  },
+  {
+    name: 'Delegation to a different SG1 address with version field',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: 'delegation',
+          delegate: 'SG1k9nv1doFmT1QX86GHVPxbUKb81GMaxoon',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          version: '1'
+        },
+      ],
+    },
+  }
+]

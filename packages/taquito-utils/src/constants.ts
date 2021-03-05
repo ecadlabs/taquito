@@ -4,6 +4,7 @@ export enum Prefix {
   TZ3 = 'tz3',
   KT = 'KT',
   KT1 = 'KT1',
+  SG1 = 'SG1',
 
   EDSK2 = 'edsk2',
   SPSK = 'spsk',
@@ -43,6 +44,7 @@ export const prefix = {
   [Prefix.TZ3]: new Uint8Array([6, 161, 164]),
   [Prefix.KT]: new Uint8Array([2, 90, 121]),
   [Prefix.KT1]: new Uint8Array([2, 90, 121]),
+  [Prefix.SG1]: new Uint8Array([3, 56, 226]),
 
   [Prefix.EDSK]: new Uint8Array([43, 246, 78, 7]),
   [Prefix.EDSK2]: new Uint8Array([13, 15, 58, 7]),
@@ -83,6 +85,7 @@ export const prefixLength: { [key: string]: number } = {
   [Prefix.TZ3]: 20,
   [Prefix.KT]: 20,
   [Prefix.KT1]: 20,
+  [Prefix.SG1]: 20,
   [Prefix.EDPK]: 32,
   [Prefix.SPPK]: 33,
   [Prefix.P2PK]: 33,
