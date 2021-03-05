@@ -24,14 +24,19 @@ export const prefixDecoder = (pre: Prefix) => (str: Uint8ArrayConsumer) => {
 export const tz1Decoder = prefixDecoder(Prefix.TZ1);
 export const branchDecoder = prefixDecoder(Prefix.B);
 export const pkhDecoder = (val: Uint8ArrayConsumer) => {
-  const prefix = val.consume(1);
+  const prefix = val.get(0)
 
-  if (prefix[0] === 0x00) {
+  if (prefix === 0x00) {
+    val.consume(1);
     return prefixDecoder(Prefix.TZ1)(val);
-  } else if (prefix[0] === 0x01) {
+  } else if (prefix === 0x01) {
+    val.consume(1);
     return prefixDecoder(Prefix.TZ2)(val);
-  } else if (prefix[0] === 0x02) {
+  } else if (prefix === 0x02) {
+    val.consume(1);
     return prefixDecoder(Prefix.TZ3)(val);
+  } else {
+    return prefixDecoder(Prefix.SG1)(val)
   }
 };
 
@@ -137,6 +142,8 @@ export const pkhEncoder = (val: string) => {
       return '01' + prefixEncoder(Prefix.TZ2)(val);
     case Prefix.TZ3:
       return '02' + prefixEncoder(Prefix.TZ3)(val);
+    case Prefix.SG1:
+      return prefixEncoder(Prefix.SG1)(val);
     default:
       throw new Error('Invalid public key hash');
   }

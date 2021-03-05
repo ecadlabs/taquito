@@ -81,7 +81,8 @@ export const operationEncoder = (encoders: { [key: string]: (val: {}) => string 
     throw new Error(`Unsupported operation kind: ${operation.kind}`);
   }
 
-  return kindMappingReverse[operation.kind] + encoders[operation.kind](operation);
+  const kind = (operation.kind === 'delegation' && 'version' in operation)? 'delegationSg1': operation.kind
+  return kindMappingReverse[kind] + encoders[operation.kind](operation);
 };
 
 export const operationDecoder = (decoders: { [key: string]: Decoder }) => (
@@ -89,8 +90,13 @@ export const operationDecoder = (decoders: { [key: string]: Decoder }) => (
 ) => {
   const op = value.consume(1);
 
-  const operationName = kindMapping[op[0]];
+  const operationName = (op[0] === 0xd2)? 'delegation': kindMapping[op[0]];
+  
   const decodedObj = decoders[operationName](value);
+
+if(op[0] === 0xd2) {
+    Object.assign(decodedObj, { version: '1' });
+  } 
 
   if (typeof decodedObj !== 'object') {
     throw new Error('Decoded invalid operation');
