@@ -198,5 +198,5 @@ export function decodeBase58Check(src: string): number[] {
 
 export function encodeBase58Check(src: number[] | Uint8Array): string {
     const sum = sha256(sha256(src));
-    return encodeBase58([...src, ...sum]);
+    return encodeBase58([...src, ...sum.slice(0, 4)]);
 }

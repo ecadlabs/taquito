@@ -1,5 +1,5 @@
 import { Prim, Expr, BytesLiteral, StringLiteral, IntLiteral } from "./micheline";
-import { decodeBase58Check } from "./base58";
+import { decodeBase58Check, encodeBase58Check } from "./base58";
 import { MichelsonData, MichelsonDataPair, MichelsonType, MichelsonTypePair } from "./michelson-types";
 
 export type Tuple<N extends number, T> =
@@ -263,18 +263,26 @@ export const tezosPrefix: Record<TezosIDType, TezosIDPrefix> = {
 export function checkDecodeTezosID<T extends TezosIDType[]>(id: string, ...types: T): [T[number], number[]] | null {
     const buf = decodeBase58Check(id);
     for (const t of types) {
-        const prefix = tezosPrefix[t];
-        if (buf.length === prefix[0] + prefix[1].length) {
+        const [plen, p] = tezosPrefix[t];
+        if (buf.length === plen + p.length) {
             let i = 0;
-            while (i < prefix[1].length && buf[i] === prefix[1][i]) {
+            while (i < p.length && buf[i] === p[i]) {
                 i++;
             }
-            if (i === prefix[1].length) {
-                return [t, buf.slice(prefix[1].length)];
+            if (i === p.length) {
+                return [t, buf.slice(p.length)];
             }
         }
     }
     return null;
+}
+
+export function encodeTezosID(id: TezosIDType, data: number[] | Uint8Array): string {
+    const [plen, p] = tezosPrefix[id];
+    if (data.length !== plen) {
+        throw new Error(`incorrect data length for ${id}: ${data.length}`);
+    }
+    return encodeBase58Check([...p, ...data]);
 }
 
 // reassemble comb pair for transparent comparison etc. non-recursive!
@@ -335,7 +343,17 @@ export function parseDate(a: StringLiteral | IntLiteral): Date | null {
 export function parseHex(s: string): number[] {
     const res: number[] = [];
     for (let i = 0; i < s.length; i += 2) {
-        res.push(parseInt(s.slice(i, i + 2), 16));
+        const ss = s.slice(i, i + 2);
+        const x = parseInt(ss, 16);
+        if (Number.isNaN(x)) {
+            throw new Error(`can't parse hex byte: ${ss}`);
+        }
+        res.push(x);
     }
     return res;
 }
+
+export function hexBytes(bytes: number[]): string {
+    return bytes.map(x => ((x >> 4) & 0xf).toString(16) + (x & 0xf).toString(16)).join("");
+}
+

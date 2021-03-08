@@ -10,17 +10,7 @@
         "packed": "050a0000001901be41ee922ddd2cf33201e49d32da0afec571dce300666f6f"
     },
     {
-        "title": "chain_id (bytes)",
-        "data": {
-            "bytes": "7a06a770"
-        },
-        "type": {
-            "prim": "chain_id"
-        },
-        "packed": "050a000000047a06a770"
-    },
-    {
-        "title": "chain_id (base58)",
+        "title": "chain_id",
         "data": {
             "string": "NetXynUjJNZm7wi"
         },
@@ -83,7 +73,7 @@
     {
         "title": "signature",
         "data": {
-            "string": "edsigthTzJ8X7MPmNeEwybRAvdxS1pupqcM5Mk4uCuyZAe7uEk68YpuGDeViW8wSXMrCi5CwoNgqs8V2w8ayB5dMJzrYCHhD8C7"
+            "string": "sigXeXB5JD5TaLb3xgTPKjgf9W45judiCmNP9UBdZBdmtHSGBxL1M8ZSUb6LpjGP2MdfUBTB4WHs5APnvyRV1LooU6QHJuDe"
         },
         "type": {
             "prim": "signature"
@@ -91,7 +81,7 @@
         "packed": "050a0000004049d47dba27bd76208b092f3e500f64818920c817491b8b9094f28c2c2b9c6721b257b8878ce47182122b8ea84aeacd84a8aa28cb1f1fe48a26355a7bca4b8306"
     },
     {
-        "title": "timestamp (ISO 8601)",
+        "title": "timestamp",
         "data": {
             "string": "2019-09-26T10:59:51Z"
         },
@@ -99,16 +89,6 @@
             "prim": "timestamp"
         },
         "packed": "0500a7e8e4d80b"
-    },
-    {
-        "title": "timestamp (Unix)",
-        "data": {
-            "int": "1571659294"
-        },
-        "type": {
-            "prim": "timestamp"
-        },
-        "packed": "05009ef8ecda0b"
     },
     {
         "title": "list",
@@ -165,7 +145,7 @@
                         "int": "789"
                     },
                     {
-                        "string": "2021-02-28T20:34:55.596Z"
+                        "string": "2021-02-28T20:34:55Z"
                     }
                 ]
             }

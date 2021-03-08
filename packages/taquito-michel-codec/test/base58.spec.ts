@@ -1,5 +1,5 @@
-import { decodeBase58, encodeBase58 } from "../src/base58";
-import { parseHex } from "../src/utils";
+import { decodeBase58, decodeBase58Check, encodeBase58, encodeBase58Check } from "../src/base58";
+import { hexBytes, parseHex } from "../src/utils";
 
 const test: {
     vec: string;
@@ -19,9 +19,17 @@ const test: {
         }
     ];
 
+const testCheck: {
+    vec: string;
+    s: string;
+}[] = [
+        {
+            vec: "025a7991a6caedf5419d01100e4587f0d4d9fc84b4749a",
+            s: "KT1MruMYHugk6x7qWQGeFKoV4fuarhTfoV6t",
+        }
+    ];
+
 describe("Base58", () => {
-    const vec = parseHex("00eb15231dfceb60925886b67d065299925915aeb172c06647");
-    const s = "1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L";
     it("encode", () => {
         for (const t of test) {
             expect(encodeBase58(parseHex(t.vec))).toEqual(t.s);
@@ -30,6 +38,19 @@ describe("Base58", () => {
     it("decode", () => {
         for (const t of test) {
             expect(decodeBase58(t.s)).toEqual(parseHex(t.vec));
+        }
+    });
+});
+
+describe("Base58Check", () => {
+    it("encode", () => {
+        for (const t of testCheck) {
+            expect(encodeBase58Check(parseHex(t.vec))).toEqual(t.s);
+        }
+    });
+    it("decode", () => {
+        for (const t of testCheck) {
+            expect(decodeBase58Check(t.s)).toEqual(parseHex(t.vec));
         }
     });
 });
