@@ -4,7 +4,7 @@ title: Using the Lambda View
 ---
 
 :::caution note
-This feature is prerelease. Please feel free to use our [Github](https://github.com/ecadlabs/taquito) issue tracker if you have questions or issues.
+Since a call is made to the lambda contract, a signer needs to be configured on your TezosToolkit instance.
 :::
 
 The lambda view is a way to retrieve data from a smart contract's storage
@@ -56,10 +56,6 @@ incur a fee for requesting data or waiting for confirmation from the network to 
 - Invoking the lambda view in the browser will raise errors in the web console.
 
 ## Usage
-
-:::caution note
-Since a call is made to the lambda contract, a signer needs to be configured on your TezosToolkit instance.
-:::
 
 We have integrated the lambda view feature into the `ContractAbstraction` class. This integration allows retrieving data from a very similar view to call other entry points of a smart contract with Taquito.
 
