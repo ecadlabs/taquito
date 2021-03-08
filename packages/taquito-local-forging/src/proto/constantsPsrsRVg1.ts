@@ -1,41 +1,5 @@
-/*
- * Some code in this file is originally from sotez
- * Copyright (c) 2018 Andrew Kishino
- */
-
-import { pad } from './utils';
-
-// See: https://tezos.gitlab.io/protocols/005_babylon.html#transactions-now-have-an-entrypoint
-export const ENTRYPOINT_MAX_LENGTH = 31;
-
-export enum CODEC {
-  SECRET = 'secret',
-  RAW = 'raw',
-  TZ1 = 'tz1',
-  BRANCH = 'branch',
-  ZARITH = 'zarith',
-  PUBLIC_KEY = 'public_key',
-  PKH = 'pkh',
-  DELEGATE = 'delegate',
-  SCRIPT = 'script',
-  BALLOT_STATEMENT = 'ballotStmt',
-  PROPOSAL = 'proposal',
-  PROPOSAL_ARR = 'proposalArr',
-  INT32 = 'int32',
-  PARAMETERS = 'parameters',
-  ADDRESS = 'address',
-  OPERATION = 'operation',
-  OP_ACTIVATE_ACCOUNT = 'activate_account',
-  OP_DELEGATION = 'delegation',
-  OP_TRANSACTION = 'transaction',
-  OP_ORIGINATION = 'origination',
-  OP_BALLOT = 'ballot',
-  OP_ENDORSEMENT = 'endorsement',
-  OP_SEED_NONCE_REVELATION = 'seed_nonce_revelation',
-  OP_REVEAL = 'reveal',
-  OP_PROPOSALS = 'proposals',
-  MANAGER = 'manager',
-}
+import { pad } from '../utils';
+export { ENTRYPOINT_MAX_LENGTH, CODEC } from '../constants'
 
 // See https://tezos.gitlab.io/whitedoc/michelson.html#full-grammar
 export const opMapping: { [key: string]: string } = {
@@ -220,7 +184,8 @@ export const entrypointMapping: { [key: string]: string } = {
   '01': 'root',
   '02': 'do',
   '03': 'set_delegate',
-  '04': 'remove_delegate'
+  '04': 'remove_delegate',
+  '05': 'main'
 };
 
 export const entrypointMappingReverse = (() => {
@@ -230,4 +195,5 @@ export const entrypointMappingReverse = (() => {
   });
   return result;
 })();
+
 
