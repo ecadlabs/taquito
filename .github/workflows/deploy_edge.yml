@@ -1,14 +1,14 @@
 name: Deploy Edge
 
-on: [push, pull_request]
-  # workflow_run:
-  #   workflows: ["Node.js CI"]
-  #   types:
-  #     - completed
+on:
+  workflow_run:
+    workflows: ["Node.js CI"]
+    types:
+      - completed
 jobs:
   deply-edge-package:
-    runs-on: ubuntu-latest # change to self-hosted before PR
-    # if: ${{ github.event_name == 'pull_request' || github.ref == 'refs/heads/master' }}
+    runs-on: self-hosted
+    if: ${{ github.event_name == 'pull_request' || github.ref == 'refs/heads/master' }}
     strategy:
       matrix:
         node: [12.x]
