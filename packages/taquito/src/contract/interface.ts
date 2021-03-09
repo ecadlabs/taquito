@@ -127,7 +127,7 @@ export interface ContractProvider extends StorageProvider {
    *
    * @param RegisterDelegate operation parameter
    */
-  registerDelegate(params: DelegateParams): Promise<DelegateOperation>;
+  registerDelegate(params: RegisterDelegateParams): Promise<DelegateOperation>;
   /**
    *
    * @description Transfer tz from current address to a specific address. Will sign and inject an operation using the current context
