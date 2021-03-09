@@ -12,8 +12,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 const pkh = await Tezos.wallet.pkh();
                 const op = await Tezos.wallet.registerDelegate().send();
 
-                let conf1 = await op.confirmation();
-                let currentConf1 = await op.getCurrentConfirmation();
+                const conf1 = await op.confirmation();
+                const currentConf1 = await op.getCurrentConfirmation();
                 expect(currentConf1).toEqual(1);
                 expect(conf1).toEqual(
                     expect.objectContaining({
