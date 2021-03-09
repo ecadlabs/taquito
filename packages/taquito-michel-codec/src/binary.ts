@@ -558,16 +558,10 @@ const writePassThrough: WriteTransformFunc = (e: Expr) => [e, (function* () {
     }
 })()];
 
-export function emitBinary(expr: Expr): number[] {
-    const w = new Writer();
-    writeExpr(expr, w, writePassThrough);
-    return w.buffer;
-}
-
 const isOrData = (e: Expr): e is MichelsonDataOr => "prim" in e && (e.prim === "Left" || e.prim === "Right");
 const isOptionData = (e: Expr): e is MichelsonDataOption => "prim" in e && (e.prim === "Some" || e.prim === "None");
 
-export function packData(d: MichelsonData, t: MichelsonType): number[] {
+export function packData(d: MichelsonData, t?: MichelsonType): number[] {
     const getTransformFunc = (t: MichelsonType): WriteTransformFunc => {
         if (isPairType(t)) {
             return (d: Expr) => {
@@ -766,7 +760,7 @@ export function packData(d: MichelsonData, t: MichelsonType): number[] {
     };
     const w = new Writer();
     w.writeUint8(5);
-    writeExpr(d, w, getTransformFunc(t));
+    writeExpr(d, w, t !== undefined ? getTransformFunc(t) : writePassThrough);
     return w.buffer;
 }
 
@@ -780,15 +774,7 @@ const readPassThrough: ReadTransformFuncs = [(e: Expr) => e, () => (function* ()
     }
 })()];
 
-export function parseBinary(buf: Uint8Array | number[]): Expr | null {
-    if (buf.length === 0) {
-        return null;
-    }
-    const rd = new Reader(new Uint8Array(buf));
-    return readExpr(rd, readPassThrough);
-}
-
-export function unpackData(src: number[] | Uint8Array, t: MichelsonType): MichelsonData {
+export function unpackData(src: number[] | Uint8Array, t?: MichelsonType): MichelsonData {
     const getTransformFuncs = (t: MichelsonType): ReadTransformFuncs => {
         if (isPairType(t)) {
             const args = Array.isArray(t) ? t : t.args;
@@ -1000,21 +986,30 @@ export function unpackData(src: number[] | Uint8Array, t: MichelsonType): Michel
     if (r.readUint8() !== 5) {
         throw new Error("incorrect packed data magic number");
     }
-    const ex = readExpr(r, getTransformFuncs(t));
-    if (assertMichelsonData(ex)) {
-        assertDataValid(ex, t);
-        return ex;
+    if (t !== undefined) {
+        const ex = readExpr(r, getTransformFuncs(t));
+        if (assertMichelsonData(ex)) {
+            assertDataValid(ex, t);
+            return ex;
+        }
+    } else {
+        const ex = readExpr(r, readPassThrough);
+        if (assertMichelsonData(ex)) {
+            return ex;
+        }
     }
     throw new Error(); // never
 }
 
-export function unpackDataBytes(src: BytesLiteral, t: MichelsonType): MichelsonData {
+export function unpackDataBytes(src: BytesLiteral, t?: MichelsonType): MichelsonData {
     const bytes = parseBytes(src.bytes);
     if (bytes === null) {
         throw new Error(`can't parse bytes: "${src.bytes}"`);
     }
     return unpackData(bytes, t);
 }
+
+// helper functions also used by validator
 
 export function decodeAddressBytes(b: BytesLiteral): Address {
     const bytes = parseBytes(b.bytes);
