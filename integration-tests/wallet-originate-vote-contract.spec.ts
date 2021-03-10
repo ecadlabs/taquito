@@ -1,16 +1,16 @@
 import { CONFIGS } from "./config";
 import { voteSample } from "./data/vote-contract";
-import { STATUS_CODE } from '@taquito/http-utils';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
+  const test = require('jest-retries');
   describe(`Originate a voting contract using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    it('originates a voting contract made with wallet api and inits the storage', async (done) => {
+    test('originates a voting contract made with wallet api and inits the storage', 2, async (done: () => void) => {
       // TODO: probably remove this as very expensive
       const op = await Tezos.wallet.originate({
         balance: "1",
