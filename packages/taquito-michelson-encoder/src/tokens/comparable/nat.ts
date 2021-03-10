@@ -31,7 +31,7 @@ export class NatToken extends ComparableToken {
       throw err;
     }
 
-    return { int: String(val).toString() };
+    return { int: new BigNumber(val).toFixed() };
   }
 
   private isValid(val: any): NatValidationError | null {
@@ -51,7 +51,7 @@ export class NatToken extends ComparableToken {
       throw err;
     }
 
-    return { int: String(val).toString() };
+    return { int: new BigNumber(val).toFixed() };
   }
 
   public ExtractSchema() {
