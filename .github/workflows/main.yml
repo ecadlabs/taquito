@@ -83,7 +83,7 @@ jobs:
     - run: npm ci
     - run: npm run lerna -- bootstrap
     - run: npm run build
-    - run: cd integration-tests && npm run test:edonet -- -maxWorkers=${{ secrets.NPM_JEST_MAX_WORKERS }}
+    - run: cd integration-tests && npm run test:edonet -- --maxWorkers=${{ secrets.NPM_JEST_MAX_WORKERS }}
       env:
         CI: true
         TEZOS_RPC_DELPHINET: ${{ secrets.TEZOS_RPC_DELPHINET }}
