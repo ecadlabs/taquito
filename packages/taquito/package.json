@@ -37,11 +37,12 @@
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
-    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts",
-    "build:release": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts && npm run build:web",
-    "build:web": "webpack && node update-readme.js",
-    "start": "rollup -c rollup.config.ts -w",
-    "postinstall": "node patch.js"
+    "version-stamp": "node ./version-stamping.js",
+    "build": "npm run version-stamp && tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts",
+    "build:release": "npm run version-stamp && tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts && npm run build:web",
+    "build:web": "npm run version-stamp && webpack && node update-readme.js",
+    "start": "npm run version-stamp && rollup -c rollup.config.ts -w",
+    "postinstall": "node patch.js && npm run version-stamp"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [

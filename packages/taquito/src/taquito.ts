@@ -17,6 +17,7 @@ import { NoopSigner } from './signer/noop';
 import { SubscribeProvider } from './subscribe/interface';
 import { PollingSubscribeProvider } from './subscribe/polling-provider';
 import { TzProvider } from './tz/interface';
+import { VERSION } from './version';
 import { LegacyWalletProvider, Wallet, WalletProvider } from './wallet';
 import { OperationFactory } from './wallet/opreation-factory';
 
@@ -267,5 +268,12 @@ export class TezosToolkit {
     return (...args: K) => {
       return new ctor(this._context, ...args);
     };
+  }
+
+  /**
+   * @description Gets an object containing the version of Taquito library and git sha of the commit this library is compiled from
+   */
+  getVersionInfo() {
+    return VERSION;
   }
 }
