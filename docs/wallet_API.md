@@ -196,7 +196,7 @@ const options = { name: 'MyAwesomeDapp' };
 const wallet = new BeaconWallet(options);
 
 wallet
-  .requestPermissions({ network: { type: 'delphinet' } })
+  .requestPermissions({ network: { type: 'edonet' } })
   .then((_) => wallet.getPKH())
   .then((address) => println(`Your address: ${address}`));
 
@@ -333,7 +333,7 @@ ThanosWallet.isAvailable()
   .then(() => {
     const wallet = new ThanosWallet('MyAwesomeDapp');
 
-    wallet.connect('delphinet').then(() => {
+    wallet.connect('edonet').then(() => {
       Tezos.setWalletProvider(wallet);
       println(`Your address: ${wallet.pkh}`);
     });
@@ -476,7 +476,7 @@ The `transfer` method takes an object with only two required properties: the `to
 ```js live noInline wallet
 
 Tezos.wallet
-  .transfer({ to: 'KT1FEkrfq1KtUPXMCux8MRZGCrbmq6vGxUtE', amount: 0.2 })
+  .transfer({ to: 'KT1XW9MAxDqF4LwVps86meQ5ihEXyAepmZDm', amount: 0.2 })
   .send()
   .then((op) =>
     op
@@ -505,7 +505,7 @@ Fortunately, Taquito will make this operation go like a breeze! First, you need 
 
 ```
 const contract = await 
-Tezos.wallet.at('KT1FEkrfq1KtUPXMCux8MRZGCrbmq6vGxUtE');
+Tezos.wallet.at('KT1KLbEeEgW5h1QLkPuPvqdgurHx6v4hGyic');
 
 ```
 
@@ -531,7 +531,7 @@ Most of the time, the process is simple: you take the contract abstraction you c
 ```js live noInline wallet
 
 Tezos.wallet
-  .at('KT1EKZshRTnJQoA6ojbRisiiGwSB5kKNmZSt')
+  .at('KT1KLbEeEgW5h1QLkPuPvqdgurHx6v4hGyic')
   .then((contract) => contract.methods.areYouThere(true).send())
   .then((op) => {
     println(`Hash: ${op.opHash}`);
@@ -560,7 +560,7 @@ In the case of multiple arguments (for example if the entrypoint expects a pair)
 ```js live noInline wallet
 
 Tezos.wallet
-  .at('KT1EKZshRTnJQoA6ojbRisiiGwSB5kKNmZSt')
+  .at('KT1KLbEeEgW5h1QLkPuPvqdgurHx6v4hGyic')
   .then((contract) =>
     contract.methods.addName('tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb', 'Alice').send()
   )
@@ -1024,7 +1024,7 @@ We have already seen the `at` method of the Wallet instance earlier in order to 
 
 ```js
 
-const contract = await Tezos.wallet.at('KT1FEkrfq1KtUPXMCux8MRZGCrbmq6vGxUtE');
+const contract = await Tezos.wallet.at('KT1XW9MAxDqF4LwVps86meQ5ihEXyAepmZDm');
 
 ```
 

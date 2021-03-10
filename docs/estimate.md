@@ -56,7 +56,7 @@ This example will demonstrate how to estimate the fees related to calling a smar
 // const Tezos = new TezosToolkit('https://api.tez.ie/rpc/edonet');
 
 Tezos.contract
-  .at('KT1PupyraehzPEjTKJgY2qmZHXdP5pQUyGgC')
+  .at('KT1MZR1g3jZCU6itoyEZ7u91hyJMG2efgmwu')
   .then((contract) => {
     const i = 7;
 

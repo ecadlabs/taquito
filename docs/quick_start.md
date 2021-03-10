@@ -139,17 +139,17 @@ Tezos.contract
     println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
   })
-  .then((hash) => println(`Operation injected: https://delphi.tzstats.com/${hash}`))
+  .then((hash) => println(`Operation injected: https://edo.tzstats.com/${hash}`))
   .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 ### Interact with a smart contract
 
-Calling smart contract operations requires a configured signer; in this example we will use a faucet key. The Ligo source code for the smart contract [KT1NGihnotUbt8C1WsKfsUg1E2D7UPYzAn2N][smart_contract_on_better_call_dev] used in this example can be found in a [Ligo Web IDE][smart_contract_source].
+Calling smart contract operations requires a configured signer; in this example we will use a faucet key. The Ligo source code for the smart contract [KT1XHVPUh9JRsPePzjfYRRch9oPkZEEYiBf4][smart_contract_on_better_call_dev] used in this example can be found in a [Ligo Web IDE][smart_contract_source].
 
 ```js live noInline
 Tezos.contract
-  .at('KT1NGihnotUbt8C1WsKfsUg1E2D7UPYzAn2N')
+  .at('KT1F7DYSa7fVTNScSDDVVokqmmytpJBB5bs9')
   .then((contract) => {
     const i = 7;
 
@@ -160,10 +160,10 @@ Tezos.contract
     println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
   })
-  .then((hash) => println(`Operation injected: https://delphi.tzstats.com/${hash}`))
+  .then((hash) => println(`Operation injected: https://edo.tzstats.com/${hash}`))
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 [boilerplate]: https://github.com/ecadlabs/taquito-boilerplate
 [smart_contract_source]: https://ide.ligolang.org/p/CelcoaDRK5mLFDmr5rSWug
-[smart_contract_on_better_call_dev]: https://better-call.dev/delphinet/KT1NGihnotUbt8C1WsKfsUg1E2D7UPYzAn2N/operations
+[smart_contract_on_better_call_dev]: https://better-call.dev/edonet/KT1WMJhUya7YHT8c8CFhTHkJuDV6zgbk7WuH/operations
