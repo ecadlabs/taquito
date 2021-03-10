@@ -44,7 +44,7 @@ export class IntToken extends ComparableToken {
       throw err;
     }
 
-    return { int: String(val).toString() };
+    return { int: new BigNumber(val).toFixed() };
   }
 
   public EncodeObject(val: any): any {
@@ -53,7 +53,7 @@ export class IntToken extends ComparableToken {
       throw err;
     }
 
-    return { int: String(val).toString() };
+    return { int: new BigNumber(val).toFixed() };
   }
 
   public ToBigMapKey(val: string) {
