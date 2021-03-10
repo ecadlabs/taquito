@@ -145,7 +145,7 @@ Tezos.contract
 
 ### Interact with a smart contract
 
-Calling smart contract operations requires a configured signer; in this example we will use a faucet key. The Ligo source code for the smart contract [KT1XHVPUh9JRsPePzjfYRRch9oPkZEEYiBf4][smart_contract_on_better_call_dev] used in this example can be found in a [Ligo Web IDE][smart_contract_source].
+Calling smart contract operations requires a configured signer; in this example we will use a faucet key. The Ligo source code for the smart contract [KT1F7DYSa7fVTNScSDDVVokqmmytpJBB5bs9][smart_contract_on_better_call_dev] used in this example can be found in a [Ligo Web IDE][smart_contract_source].
 
 ```js live noInline
 Tezos.contract
@@ -166,4 +166,4 @@ Tezos.contract
 
 [boilerplate]: https://github.com/ecadlabs/taquito-boilerplate
 [smart_contract_source]: https://ide.ligolang.org/p/CelcoaDRK5mLFDmr5rSWug
-[smart_contract_on_better_call_dev]: https://better-call.dev/edonet/KT1WMJhUya7YHT8c8CFhTHkJuDV6zgbk7WuH/operations
+[smart_contract_on_better_call_dev]: https://better-call.dev/edo2net/KT1F7DYSa7fVTNScSDDVVokqmmytpJBB5bs9/operations
