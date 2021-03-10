@@ -6,56 +6,33 @@ import { packData, unpackData } from "../src/binary";
 import { parseHex } from "../src/utils";
 
 interface TypedTestData {
-    title: string,
-    type: MichelsonType,
+    type?: MichelsonType,
     data: MichelsonData,
     packed: string,
 }
 
-interface UntypedTestData {
-    val: MichelsonData,
-    bytes: string,
-}
+describe("Binary", () => {
+    const files = [
+        "binary-data1.json",
+        "binary-data2.json",
+    ];
+    const paths = files.map(f => path.resolve(__dirname, f));
+    const src: TypedTestData[] = [].concat(...paths.map(p => JSON.parse(fs.readFileSync(p).toString())));
 
-describe("Pack", () => {
-    describe("Typed", () => {
-        const filename = path.resolve(__dirname, "binary-data1.json");
-        const src: TypedTestData[] = JSON.parse(fs.readFileSync(filename).toString());
-        describe("pack", () => {
-            for (const s of src) {
-                it(s.title, () => {
-                    const p = packData(s.data, s.type);
-                    expect(p).toEqual(parseHex(s.packed));
-                });
-            }
-        });
-        describe("unpack", () => {
-            for (const s of src) {
-                it(s.title, () => {
-                    const ex = unpackData(parseHex(s.packed), s.type);
-                    expect(ex).toEqual(s.data);
-                });
-            }
-        });
+    describe("pack", () => {
+        for (const s of src) {
+            it(JSON.stringify(s.data), () => {
+                const p = packData(s.data, s.type);
+                expect(p).toEqual(parseHex(s.packed));
+            });
+        }
     });
-    describe("Untyped", () => {
-        const filename = path.resolve(__dirname, "binary-data2.json");
-        const src: UntypedTestData[] = JSON.parse(fs.readFileSync(filename).toString());
-        describe("pack", () => {
-            for (const s of src) {
-                it(JSON.stringify(s.val), () => {
-                    const p = packData(s.val);
-                    expect(p).toEqual(parseHex(s.bytes));
-                });
-            }
-        });
-        describe("unpack", () => {
-            for (const s of src) {
-                it(JSON.stringify(s.val), () => {
-                    const ex = unpackData(parseHex(s.bytes));
-                    expect(ex).toEqual(s.val);
-                });
-            }
-        });
+    describe("unpack", () => {
+        for (const s of src) {
+            it(JSON.stringify(s.data), () => {
+                const ex = unpackData(parseHex(s.packed), s.type);
+                expect(ex).toEqual(s.data);
+            });
+        }
     });
 });

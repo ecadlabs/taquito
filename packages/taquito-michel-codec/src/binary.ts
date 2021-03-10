@@ -400,7 +400,7 @@ function writeExpr(expr: Expr, wr: Writer, tf: WriteTransformFunc): void {
         throw new TypeError(`Can't encode primary: ${e.prim}`);
     }
 
-    const tag = e.args?.length || 0 < 3 ?
+    const tag = (e.args?.length || 0) < 3 ?
         Tag.Prim0 + (e.args?.length || 0) * 2 + (e.annots === undefined || e.annots.length === 0 ? 0 : 1) :
         Tag.Prim;
 
@@ -425,7 +425,6 @@ function writeExpr(expr: Expr, wr: Writer, tf: WriteTransformFunc): void {
                 }
                 writeExpr(v, w, a.value);
             }
-            wr.writeUint8(Tag.Sequence);
             wr.writeUint32(w.length);
             wr.writeBytes(w.buffer);
         }
@@ -436,6 +435,8 @@ function writeExpr(expr: Expr, wr: Writer, tf: WriteTransformFunc): void {
         const bytes = enc.encode(e.annots.join(" "));
         wr.writeUint32(bytes.length);
         wr.writeBytes(Array.from(bytes));
+    } else if (e.args !== undefined && e.args.length >= 3) {
+        wr.writeUint32(0);
     }
 }
 
@@ -540,12 +541,14 @@ function readExpr(rd: Reader, tf: ReadTransformFuncs): Expr {
                     }
                 }
 
-                if (((tag - 3) & 1) === 1) {
+                if (((tag - 3) & 1) === 1 || argn === 3) {
                     // annotations
                     const length = rd.readUint32();
-                    const bytes = rd.readBytes(length);
-                    const dec = new TextDecoder();
-                    res.annots = dec.decode(new Uint8Array(bytes)).split(" ");
+                    if (length !== 0) {
+                        const bytes = rd.readBytes(length);
+                        const dec = new TextDecoder();
+                        res.annots = dec.decode(new Uint8Array(bytes)).split(" ");
+                    }
                 }
                 return tr(res);
             }
@@ -760,6 +763,9 @@ export function packData(d: MichelsonData, t?: MichelsonType): number[] {
     };
     const w = new Writer();
     w.writeUint8(5);
+    if (t !== undefined) {
+        assertDataValid(d, t);
+    }
     writeExpr(d, w, t !== undefined ? getTransformFunc(t) : writePassThrough);
     return w.buffer;
 }

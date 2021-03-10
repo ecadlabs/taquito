@@ -1,6 +1,5 @@
 [
     {
-        "title": "address",
         "data": {
             "string": "KT1RvkwF4F7pz1gCoxkyZrG1RkrxQy3gmFTv%foo"
         },
@@ -10,7 +9,6 @@
         "packed": "050a0000001901be41ee922ddd2cf33201e49d32da0afec571dce300666f6f"
     },
     {
-        "title": "chain_id",
         "data": {
             "string": "NetXynUjJNZm7wi"
         },
@@ -20,7 +18,6 @@
         "packed": "050a00000004f3d48554"
     },
     {
-        "title": "key",
         "data": {
             "string": "edpkuBknW28nW72KG6RoHtYW7p12T6GKc7nAbwYX5m8Wd9sDVC9yav"
         },
@@ -30,7 +27,6 @@
         "packed": "050a00000021004798d2cc98473d7e250c898885718afd2e4efbcb1a1595ab9730761ed830de0f"
     },
     {
-        "title": "key_hash",
         "data": {
             "string": "tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx"
         },
@@ -40,8 +36,146 @@
         "packed": "050a000000150002298c03ed7d454a101eb7022bc95f7e5f41ac78"
     },
     {
-        "title": "lambda",
         "data": [
+            {
+                "prim": "LAMBDA",
+                "args": [
+                    {
+                        "prim": "string"
+                    },
+                    {
+                        "prim": "string"
+                    },
+                    []
+                ]
+            },
+            {
+                "prim": "LAMBDA",
+                "args": [
+                    {
+                        "prim": "string"
+                    },
+                    {
+                        "prim": "string"
+                    },
+                    []
+                ],
+                "annots": [
+                    "@l"
+                ]
+            },
+            {
+                "prim": "PUSH",
+                "args": [
+                    {
+                        "prim": "string"
+                    },
+                    {
+                        "string": ""
+                    }
+                ]
+            },
+            {
+                "prim": "PUSH",
+                "args": [
+                    {
+                        "prim": "list",
+                        "args": [
+                            {
+                                "prim": "list",
+                                "args": [
+                                    {
+                                        "prim": "string"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    [
+                        [
+                            {
+                                "string": "one"
+                            }
+                        ],
+                        [
+                            {
+                                "string": "two"
+                            }
+                        ],
+                        []
+                    ]
+                ]
+            },
+            {
+                "prim": "PUSH",
+                "args": [
+                    {
+                        "prim": "list",
+                        "args": [
+                            {
+                                "prim": "string"
+                            }
+                        ]
+                    },
+                    []
+                ]
+            },
+            {
+                "prim": "PUSH",
+                "args": [
+                    {
+                        "prim": "list",
+                        "args": [
+                            {
+                                "prim": "string"
+                            }
+                        ]
+                    },
+                    [
+                        {
+                            "string": "one"
+                        },
+                        {
+                            "string": "two"
+                        },
+                        {
+                            "string": ""
+                        }
+                    ]
+                ]
+            },
+            {
+                "prim": "PUSH",
+                "args": [
+                    {
+                        "prim": "bool"
+                    },
+                    {
+                        "prim": "True"
+                    }
+                ]
+            },
+            {
+                "prim": "IF",
+                "args": [
+                    [],
+                    []
+                ]
+            },
+            {
+                "prim": "DROP",
+                "args": [
+                    {
+                        "int": "6"
+                    }
+                ]
+            },
+            {
+                "prim": "DIP",
+                "args": [
+                    []
+                ]
+            },
             {
                 "prim": "PUSH",
                 "args": [
@@ -68,10 +202,9 @@
                 }
             ]
         },
-        "packed": "0502000000080743036200010312"
+        "packed": "0502000000ad0931000000090368036802000000000000000009310000000903680368020000000000000002406c0743036801000000000743055f055f0368020000001f020000000801000000036f6e650200000008010000000374776f02000000000743055f036802000000000743055f0368020000001501000000036f6e65010000000374776f010000000007430359030a072c0200000000020000000005200006051f02000000000743036200010312"
     },
     {
-        "title": "signature",
         "data": {
             "string": "sigXeXB5JD5TaLb3xgTPKjgf9W45judiCmNP9UBdZBdmtHSGBxL1M8ZSUb6LpjGP2MdfUBTB4WHs5APnvyRV1LooU6QHJuDe"
         },
@@ -81,7 +214,6 @@
         "packed": "050a0000004049d47dba27bd76208b092f3e500f64818920c817491b8b9094f28c2c2b9c6721b257b8878ce47182122b8ea84aeacd84a8aa28cb1f1fe48a26355a7bca4b8306"
     },
     {
-        "title": "timestamp",
         "data": {
             "string": "2019-09-26T10:59:51Z"
         },
@@ -91,7 +223,6 @@
         "packed": "0500a7e8e4d80b"
     },
     {
-        "title": "list",
         "data": [
             {
                 "string": "KT1S4Kg5NCiQQ8dNtPuMXVAbJguhGLA4mGeP%foo"
@@ -114,7 +245,6 @@
         "packed": "0502000000570a0000001901bfb02c20a2edeef97c288c5857d3f5f68d6e19b800666f6f0a00000019017ea0041bb4a78e74b142521bf4d2c92585bd18e9006261720a000000160131c3d20727bd4ea9ae69e5f262245613dcdf83be00"
     },
     {
-        "title": "map",
         "data": [
             {
                 "prim": "Elt",
@@ -164,7 +294,6 @@
         "packed": "050200000021070400bb010086a999db0b070400880700b7f3d9f90b070400950c00aff9df830c"
     },
     {
-        "title": "option (Some)",
         "data": {
             "prim": "Some",
             "args": [
@@ -184,7 +313,6 @@
         "packed": "0505090a00000004f3d48554"
     },
     {
-        "title": "option (None)",
         "data": {
             "prim": "None"
         },
@@ -199,7 +327,6 @@
         "packed": "050306"
     },
     {
-        "title": "or (Left)",
         "data": {
             "prim": "Left",
             "args": [
@@ -222,7 +349,6 @@
         "packed": "0505050a00000004f3d48554"
     },
     {
-        "title": "or (Right)",
         "data": {
             "prim": "Right",
             "args": [
@@ -245,7 +371,6 @@
         "packed": "0505080100000003666f6f"
     },
     {
-        "title": "pair",
         "data": {
             "prim": "Pair",
             "args": [
@@ -271,7 +396,6 @@
         "packed": "0507070a00000004f3d485540100000003666f6f"
     },
     {
-        "title": "list of pairs",
         "data": [
             {
                 "prim": "Pair",
@@ -302,5 +426,107 @@
             ]
         },
         "packed": "05020000001307070a00000004f3d485540100000003666f6f"
+    },
+    {
+        "data": [
+            {
+                "string": "one"
+            },
+            {
+                "string": "two"
+            },
+            {
+                "string": ""
+            }
+        ],
+        "type": {
+            "prim": "list",
+            "args": [
+                {
+                    "prim": "string"
+                }
+            ]
+        },
+        "packed": "05020000001501000000036f6e65010000000374776f0100000000"
+    },
+    {
+        "data": [
+            {
+                "string": ""
+            },
+            {
+                "string": "one"
+            },
+            {
+                "string": "two"
+            }
+        ],
+        "type": {
+            "prim": "list",
+            "args": [
+                {
+                    "prim": "string"
+                }
+            ]
+        },
+        "packed": "050200000015010000000001000000036f6e65010000000374776f"
+    },
+    {
+        "data": [
+            [],
+            [
+                {
+                    "string": "one"
+                }
+            ],
+            [
+                {
+                    "string": "two"
+                }
+            ]
+        ],
+        "type": {
+            "prim": "list",
+            "args": [
+                {
+                    "prim": "list",
+                    "args": [
+                        {
+                            "prim": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        "packed": "05020000001f0200000000020000000801000000036f6e650200000008010000000374776f"
+    },
+    {
+        "data": [
+            [
+                {
+                    "string": "one"
+                }
+            ],
+            [
+                {
+                    "string": "two"
+                }
+            ],
+            []
+        ],
+        "type": {
+            "prim": "list",
+            "args": [
+                {
+                    "prim": "list",
+                    "args": [
+                        {
+                            "prim": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        "packed": "05020000001f020000000801000000036f6e650200000008010000000374776f0200000000"
     }
 ]

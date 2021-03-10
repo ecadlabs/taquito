@@ -1,6 +1,5 @@
 [
     {
-        "title": "address",
         "data": {
             "string": "KT1RvkwF4F7pz1gCoxkyZrG1RkrxQy3gmFTv%foo"
         },
@@ -9,7 +8,6 @@
         }
     },
     {
-        "title": "chain_id",
         "data": {
             "string": "NetXynUjJNZm7wi"
         },
@@ -18,7 +16,6 @@
         }
     },
     {
-        "title": "key",
         "data": {
             "string": "edpkuBknW28nW72KG6RoHtYW7p12T6GKc7nAbwYX5m8Wd9sDVC9yav"
         },
@@ -27,7 +24,6 @@
         }
     },
     {
-        "title": "key_hash",
         "data": {
             "string": "tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx"
         },
@@ -36,8 +32,146 @@
         }
     },
     {
-        "title": "lambda",
         "data": [
+            {
+                "prim": "LAMBDA",
+                "args": [
+                    {
+                        "prim": "string"
+                    },
+                    {
+                        "prim": "string"
+                    },
+                    []
+                ]
+            },
+            {
+                "prim": "LAMBDA",
+                "args": [
+                    {
+                        "prim": "string"
+                    },
+                    {
+                        "prim": "string"
+                    },
+                    []
+                ],
+                "annots": [
+                    "@l"
+                ]
+            },
+            {
+                "prim": "PUSH",
+                "args": [
+                    {
+                        "prim": "string"
+                    },
+                    {
+                        "string": ""
+                    }
+                ]
+            },
+            {
+                "prim": "PUSH",
+                "args": [
+                    {
+                        "prim": "list",
+                        "args": [
+                            {
+                                "prim": "list",
+                                "args": [
+                                    {
+                                        "prim": "string"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    [
+                        [
+                            {
+                                "string": "one"
+                            }
+                        ],
+                        [
+                            {
+                                "string": "two"
+                            }
+                        ],
+                        []
+                    ]
+                ]
+            },
+            {
+                "prim": "PUSH",
+                "args": [
+                    {
+                        "prim": "list",
+                        "args": [
+                            {
+                                "prim": "string"
+                            }
+                        ]
+                    },
+                    []
+                ]
+            },
+            {
+                "prim": "PUSH",
+                "args": [
+                    {
+                        "prim": "list",
+                        "args": [
+                            {
+                                "prim": "string"
+                            }
+                        ]
+                    },
+                    [
+                        {
+                            "string": "one"
+                        },
+                        {
+                            "string": "two"
+                        },
+                        {
+                            "string": ""
+                        }
+                    ]
+                ]
+            },
+            {
+                "prim": "PUSH",
+                "args": [
+                    {
+                        "prim": "bool"
+                    },
+                    {
+                        "prim": "True"
+                    }
+                ]
+            },
+            {
+                "prim": "IF",
+                "args": [
+                    [],
+                    []
+                ]
+            },
+            {
+                "prim": "DROP",
+                "args": [
+                    {
+                        "int": "6"
+                    }
+                ]
+            },
+            {
+                "prim": "DIP",
+                "args": [
+                    []
+                ]
+            },
             {
                 "prim": "PUSH",
                 "args": [
@@ -66,7 +200,6 @@
         }
     },
     {
-        "title": "signature",
         "data": {
             "string": "sigXeXB5JD5TaLb3xgTPKjgf9W45judiCmNP9UBdZBdmtHSGBxL1M8ZSUb6LpjGP2MdfUBTB4WHs5APnvyRV1LooU6QHJuDe"
         },
@@ -75,7 +208,6 @@
         }
     },
     {
-        "title": "timestamp",
         "data": {
             "string": "2019-09-26T10:59:51Z"
         },
@@ -84,7 +216,6 @@
         }
     },
     {
-        "title": "list",
         "data": [
             {
                 "string": "KT1S4Kg5NCiQQ8dNtPuMXVAbJguhGLA4mGeP%foo"
@@ -106,7 +237,6 @@
         }
     },
     {
-        "title": "map",
         "data": [
             {
                 "prim": "Elt",
@@ -155,7 +285,6 @@
         }
     },
     {
-        "title": "option (Some)",
         "data": {
             "prim": "Some",
             "args": [
@@ -174,7 +303,6 @@
         }
     },
     {
-        "title": "option (None)",
         "data": {
             "prim": "None"
         },
@@ -188,7 +316,6 @@
         }
     },
     {
-        "title": "or (Left)",
         "data": {
             "prim": "Left",
             "args": [
@@ -210,7 +337,6 @@
         }
     },
     {
-        "title": "or (Right)",
         "data": {
             "prim": "Right",
             "args": [
@@ -232,7 +358,6 @@
         }
     },
     {
-        "title": "pair",
         "data": {
             "prim": "Pair",
             "args": [
@@ -257,7 +382,6 @@
         }
     },
     {
-        "title": "list of pairs",
         "data": [
             {
                 "prim": "Pair",
@@ -280,6 +404,104 @@
                         {
                             "prim": "chain_id"
                         },
+                        {
+                            "prim": "string"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "data": [
+            {
+                "string": "one"
+            },
+            {
+                "string": "two"
+            },
+            {
+                "string": ""
+            }
+        ],
+        "type": {
+            "prim": "list",
+            "args": [
+                {
+                    "prim": "string"
+                }
+            ]
+        }
+    },
+    {
+        "data": [
+            {
+                "string": ""
+            },
+            {
+                "string": "one"
+            },
+            {
+                "string": "two"
+            }
+        ],
+        "type": {
+            "prim": "list",
+            "args": [
+                {
+                    "prim": "string"
+                }
+            ]
+        }
+    },
+    {
+        "data": [
+            [],
+            [
+                {
+                    "string": "one"
+                }
+            ],
+            [
+                {
+                    "string": "two"
+                }
+            ]
+        ],
+        "type": {
+            "prim": "list",
+            "args": [
+                {
+                    "prim": "list",
+                    "args": [
+                        {
+                            "prim": "string"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "data": [
+            [
+                {
+                    "string": "one"
+                }
+            ],
+            [
+                {
+                    "string": "two"
+                }
+            ],
+            []
+        ],
+        "type": {
+            "prim": "list",
+            "args": [
+                {
+                    "prim": "list",
+                    "args": [
                         {
                             "prim": "string"
                         }
