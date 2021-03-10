@@ -57,6 +57,11 @@ export interface SetProviderOptions {
   config?: Config;
 }
 
+export interface VersionInfo {
+  commitHash: string;
+  version: string;
+}
+
 /**
  * @description Facade class that surfaces all of the libraries capability and allow it's configuration
  * 
@@ -273,7 +278,7 @@ export class TezosToolkit {
   /**
    * @description Gets an object containing the version of Taquito library and git sha of the commit this library is compiled from
    */
-  getVersionInfo() {
+  getVersionInfo(): VersionInfo {
     return VERSION;
   }
 }

@@ -4,7 +4,6 @@ import { RpcContractProvider } from '../src/contract/rpc-contract-provider';
 import { PollingSubscribeProvider } from '../src/subscribe/polling-provider';
 import { NoopSigner } from '../src/signer/noop';
 import { RpcClient } from '@taquito/rpc';
-import { hasEqualStructure } from './helpers';
 
 describe('TezosToolkit test', () => {
   let mockRpcClient: any;
@@ -97,9 +96,6 @@ describe('TezosToolkit test', () => {
   test('getVersionInfo returns well formed response', () => {
     const versionInfo = toolkit.getVersionInfo();
     expect(versionInfo.commitHash).toBeTruthy();
-    expect(typeof versionInfo.commitHash).toBe('string');
     expect(versionInfo.version).toBeTruthy();
-    expect(typeof versionInfo.version).toBe('string');
-    expect(hasEqualStructure(versionInfo, {"commitHash": "", "version": ""})).toBe(true);
   });
 });

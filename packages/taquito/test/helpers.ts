@@ -161,15 +161,3 @@ export class RevealOperationBuilder {
     };
   }
 }
-
-export function hasEqualStructure(obj1: any, obj2: any): boolean {
-  return Object.keys(obj1).every(key => {
-      const v = obj1[key];
-
-      if (typeof v === 'object' && v !== null) {
-          return hasEqualStructure(v, obj2[key]);
-      }
-
-      return obj2.hasOwnProperty(key);
-  });
-}
