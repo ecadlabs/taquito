@@ -1,9 +1,18 @@
-import { encodeExpr, char2Bytes, bytes2Char } from '../src/taquito-utils';
+import { encodeExpr, char2Bytes, bytes2Char, encodeOpHash } from '../src/taquito-utils';
 
 describe('Encode expr', () => {
   it('Should encode expression properly', () => {
     expect(encodeExpr('050a000000160000b2e19a9e74440d86c59f13dab8a18ff873e889ea')).toEqual(
       'exprv6UsC1sN3Fk2XfgcJCL8NCerP5rCGy1PRESZAqr7L2JdzX55EN'
+    );
+  });
+});
+
+describe('Encode operation hash', () => {
+  it('Should encode operation hash properly', () => {
+    const opBytesSigned = '0f185d8a30061e8134c162dbb7a6c3ab8f5fdb153363ccd6149b49a33481156a6c00b2e19a9e74440d86c59f13dab8a18ff873e889eaa304ab05da13000001f1585a7384f36e45fb43dc37e8ce172bced3e05700ff0000000002002110c033f3a990c2e46a3d6054ecc2f74072aae7a34b5ac4d9ce9edc11c2410a97695682108951786f05b361da03b97245dc9897e1955e08b5b8d9e153b0bdeb0d';
+    expect(encodeOpHash(opBytesSigned)).toEqual(
+      'opapqvVXmebRTCFd2GQFydr4tJj3V5QocQuTmuhbatcHm4Seo2t'
     );
   });
 });
