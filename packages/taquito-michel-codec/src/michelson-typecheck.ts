@@ -1,4 +1,4 @@
-import { StringLiteral, IntLiteral, Prim, Expr } from "./micheline";
+import { Prim, Expr } from "./micheline";
 import {
     MichelsonType, MichelsonData, MichelsonMapElt, MichelsonCode, MichelsonTypeOption,
     MichelsonContract, MichelsonContractSection, MichelsonReturnType, MichelsonTypePair,
@@ -12,7 +12,7 @@ import {
 import {
     unpackAnnotations, MichelsonError, isNatural,
     LongInteger, parseBytes, compareBytes, isDecimal,
-    checkDecodeTezosID, tezosPrefix, UnpackedAnnotations, Nullable,
+    checkDecodeTezosID, UnpackedAnnotations, Nullable,
     UnpackAnnotationsOptions, unpackComb, MichelsonTypeError, isPairType, isPairData, parseDate,
 } from "./utils";
 import { decodeBase58Check } from "./base58";

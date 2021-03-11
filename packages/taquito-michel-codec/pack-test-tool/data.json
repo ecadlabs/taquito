@@ -61,6 +61,85 @@
         }
     },
     {
+        "data": [
+            {
+                "prim": "PUSH",
+                "args": [
+                    {
+                        "prim": "address"
+                    },
+                    {
+                        "string": "KT1RvkwF4F7pz1gCoxkyZrG1RkrxQy3gmFTv%foo"
+                    }
+                ]
+            },
+            {
+                "prim": "DROP"
+            }
+        ],
+        "type": {
+            "prim": "lambda",
+            "args": [
+                {
+                    "prim": "unit"
+                },
+                {
+                    "prim": "unit"
+                }
+            ]
+        }
+    },
+    {
+        "data": [
+            {
+                "prim": "DROP"
+            },
+            {
+                "prim": "SELF_ADDRESS"
+            }
+        ],
+        "type": {
+            "prim": "lambda",
+            "args": [
+                {
+                    "prim": "unit"
+                },
+                {
+                    "prim": "address"
+                }
+            ]
+        }
+    },
+    {
+        "data": [
+            {
+                "prim": "CONTRACT",
+                "args": [
+                    {
+                        "prim": "unit"
+                    }
+                ]
+            },
+            {
+                "prim": "DROP"
+            },
+            {
+                "prim": "UNIT"
+            }
+        ],
+        "type": {
+            "prim": "lambda",
+            "args": [
+                {
+                    "prim": "address"
+                },
+                {
+                    "prim": "unit"
+                }
+            ]
+        }
+    },
+    {
         "data": {
             "string": "sigXeXB5JD5TaLb3xgTPKjgf9W45judiCmNP9UBdZBdmtHSGBxL1M8ZSUb6LpjGP2MdfUBTB4WHs5APnvyRV1LooU6QHJuDe"
         },

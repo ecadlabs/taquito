@@ -66,6 +66,88 @@
         "packed": "0502000000080743036200010312"
     },
     {
+        "data": [
+            {
+                "prim": "PUSH",
+                "args": [
+                    {
+                        "prim": "address"
+                    },
+                    {
+                        "string": "KT1RvkwF4F7pz1gCoxkyZrG1RkrxQy3gmFTv%foo"
+                    }
+                ]
+            },
+            {
+                "prim": "DROP"
+            }
+        ],
+        "type": {
+            "prim": "lambda",
+            "args": [
+                {
+                    "prim": "unit"
+                },
+                {
+                    "prim": "unit"
+                }
+            ]
+        },
+        "packed": "0502000000240743036e0a0000001901be41ee922ddd2cf33201e49d32da0afec571dce300666f6f0320"
+    },
+    {
+        "data": [
+            {
+                "prim": "DROP"
+            },
+            {
+                "prim": "SELF_ADDRESS"
+            }
+        ],
+        "type": {
+            "prim": "lambda",
+            "args": [
+                {
+                    "prim": "unit"
+                },
+                {
+                    "prim": "address"
+                }
+            ]
+        },
+        "packed": "05020000000403200377"
+    },
+    {
+        "data": [
+            {
+                "prim": "CONTRACT",
+                "args": [
+                    {
+                        "prim": "unit"
+                    }
+                ]
+            },
+            {
+                "prim": "DROP"
+            },
+            {
+                "prim": "UNIT"
+            }
+        ],
+        "type": {
+            "prim": "lambda",
+            "args": [
+                {
+                    "prim": "address"
+                },
+                {
+                    "prim": "unit"
+                }
+            ]
+        },
+        "packed": "0502000000080555036c0320034f"
+    },
+    {
         "data": {
             "string": "sigXeXB5JD5TaLb3xgTPKjgf9W45judiCmNP9UBdZBdmtHSGBxL1M8ZSUb6LpjGP2MdfUBTB4WHs5APnvyRV1LooU6QHJuDe"
         },
