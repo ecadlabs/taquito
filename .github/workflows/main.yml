@@ -57,5 +57,4 @@ jobs:
     - run: cd integration-tests && npm run test:edonet -- --maxWorkers=8
       env:
         CI: true
-        TEZOS_RPC_EDONET: ${{ secrets.TEZOS_RPC_EDONET }}
-        TEZOS_RPC_FLORENCENET: ${{ secrets.TEZOS_RPC_FLORENCENET }}
+        TEZOS_RPC_EDONET: "http://10.60.41.99:8732"
