@@ -17,20 +17,17 @@ author: Roxane Letourneau
 
 - Tezos Giga Node from Tezos Ukraine
     - Mainnet: https://mainnet-tezos.giganode.io
-    - Delphi testnet: https://testnet-tezos.giganode.io
     - Edo testnet: https://edonet-tezos.giganode.io
 - SmartPy nodes
     - Mainnet: https://mainnet.smartpy.io
-    - Zeronet: https://zeronet.smartpy.io
     - Edonet: https://edonet.smartpy.io/
 - Nodes operated by Blockscale on behalf of the Tezos Foundation: 
     - Mainnet: https://rpc.tzbeta.net/
-    - Current protocol/version testnet (Delphinet): https://rpctest.tzbeta.net/
     - Next protocol/version testnet (Edonet): https://rpczero.tzbeta.net/
 - ECAD Labs nodes:
     - Mainnet: https://api.tez.ie/rpc/mainnet
-    - Delphinet: https://api.tez.ie/rpc/delphinet
     - Edonet: https://api.tez.ie/rpc/edonet (edo2net / Chainid is `NetXSgo1ZT2DRUG`)
+    - Florencenet: https://api.tez.ie/rpc/florencenet
 
 ## How to run a node
 
