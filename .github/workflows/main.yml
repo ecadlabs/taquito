@@ -35,29 +35,6 @@ jobs:
         CI: true
         RUN_INTEGRATION: true
 
-  integration-tests-delphinet:
-    runs-on: self-hosted
-    strategy:
-      matrix:
-        node: [12.x]
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node }}
-    - uses: actions/cache@v1
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
-    - run: npm ci
-    - run: npm run lerna -- bootstrap
-    - run: npm run build
-    - run: cd integration-tests && npm run test:delphinet -- --maxWorkers=10
-      env:
-        CI: true
-
   integration-tests-edonet:
     runs-on: ubuntu-latest
     strategy:
@@ -77,6 +54,8 @@ jobs:
     - run: npm ci
     - run: npm run lerna -- bootstrap
     - run: npm run build
-    - run: cd integration-tests && npm run test:edonet -- --maxWorkers=10
+    - run: cd integration-tests && npm run test:edonet -- --maxWorkers=${{ secrets.NPM_JEST_MAX_WORKERS }}
       env:
         CI: true
+        TEZOS_RPC_EDONET: ${{ secrets.TEZOS_RPC_EDONET }}
+        TEZOS_RPC_FLORENCENET: ${{ secrets.TEZOS_RPC_FLORENCENET }}
