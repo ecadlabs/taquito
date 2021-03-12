@@ -271,7 +271,7 @@ The class constructor takes one parameter, the name of your dapp (this will be u
 
 ```
 
-await wallet.connect('mainnet' | 'edonet' | 'delphinet' | 'labnet' | 'sandbox');
+await wallet.connect('mainnet' | 'edo2net' | 'delphinet' | 'labnet' | 'sandbox');
 
 ```
 
