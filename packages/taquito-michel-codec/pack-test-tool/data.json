@@ -9,6 +9,14 @@
     },
     {
         "data": {
+            "string": "KT1RvkwF4F7pz1gCoxkyZrG1RkrxQy3gmFTv%foo"
+        },
+        "type": {
+            "prim": "string"
+        }
+    },
+    {
+        "data": {
             "string": "NetXynUjJNZm7wi"
         },
         "type": {

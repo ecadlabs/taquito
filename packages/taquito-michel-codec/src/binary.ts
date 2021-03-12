@@ -446,7 +446,7 @@ function writeExpr(expr: Expr, wr: Writer, tf: WriteTransformFunc): void {
 type ReadTransformFuncs = [(e: Expr) => IterableIterator<ReadTransformFuncs>, (e: Expr) => Expr];
 
 function readExpr(rd: Reader, tf: ReadTransformFuncs): Expr {
-    function* rpt() {
+    function* passThrough() {
         while (true) {
             yield readPassThrough;
         }
@@ -501,7 +501,7 @@ function readExpr(rd: Reader, tf: ReadTransformFuncs): Expr {
                 let res: Expr[] = [];
                 let savedrd = rd.copy();
                 // make two passes
-                let it: IterableIterator<ReadTransformFuncs> = rpt();
+                let it: IterableIterator<ReadTransformFuncs> = passThrough();
                 for (let n = 0; n < 2; n++) {
                     const r = savedrd.reader(length);
                     res = [];
@@ -532,7 +532,7 @@ function readExpr(rd: Reader, tf: ReadTransformFuncs): Expr {
                 const argn = (tag - 3) >> 1;
                 let res: Prim = { prim };
                 // make two passes
-                let it: IterableIterator<ReadTransformFuncs> = rpt();
+                let it: IterableIterator<ReadTransformFuncs> = passThrough();
                 let savedrd = rd.copy();
                 for (let n = 0; n < 2; n++) {
                     res = { prim };
@@ -794,6 +794,41 @@ const writePassThrough: WriteTransformFunc = (e: Expr) => {
     })()];
 };
 
+/**
+ * Serializes any value of packable type to its optimized binary representation 
+ * identical to the one used by PACK and UNPACK Michelson instructions.
+ * Without a type definition (not recommended) the data will be encoded as a binary form of a generic Michelson expression.
+ * Type definition allows some types like `timestamp` and `address` and other base58 representable types to be encoded to
+ * corresponding optimized binary forms borrowed from the Tezos protocol
+ * 
+ * ```typescript
+ * const data: MichelsonData = {
+ *     string: "KT1RvkwF4F7pz1gCoxkyZrG1RkrxQy3gmFTv%foo"
+ * };
+ * 
+ * const typ: MichelsonType = {
+ *     prim: "address"
+ * };
+ * 
+ * const packed = packData(data, typ);
+ * 
+ * // 050a0000001901be41ee922ddd2cf33201e49d32da0afec571dce300666f6f
+ * ```
+ * 
+ * Without a type definition the base58 encoded address will be treated as a string
+ * ```typescript
+ * const data: MichelsonData = {
+ *     string: "KT1RvkwF4F7pz1gCoxkyZrG1RkrxQy3gmFTv%foo"
+ * };
+ * 
+ * const packed = packData(data);
+ * 
+ * // 0501000000284b543152766b7746344637707a3167436f786b795a724731526b7278517933676d46547625666f6f
+ * ```
+ * @param d Data object
+ * @param t Optional type definition
+ * @returns Binary representation as numeric array
+ */
 export function packData(d: MichelsonData, t?: MichelsonType): number[] {
     const w = new Writer();
     w.writeUint8(5);
@@ -801,6 +836,28 @@ export function packData(d: MichelsonData, t?: MichelsonType): number[] {
     return w.buffer;
 }
 
+/**
+ * Serializes any value of packable type to its optimized binary representation 
+ * identical to the one used by PACK and UNPACK Michelson instructions.
+ * Same as {@link packData} but returns a `bytes` Michelson data literal instead of an array
+ * 
+ * ```typescript
+ * const data: MichelsonData = {
+ *     string: "2019-09-26T10:59:51Z"
+ * };
+ * 
+ * const typ: MichelsonType = {
+ *     prim: "timestamp"
+ * };
+ * 
+ * const packed = packDataBytes(data, typ);
+ * 
+ * // { bytes: "0500a7e8e4d80b" }
+ * ```
+ * @param d Data object
+ * @param t Optional type definition
+ * @returns Binary representation as a bytes literal
+ */
 export function packDataBytes(d: MichelsonData, t: MichelsonType): BytesLiteral {
     return { bytes: hexBytes(packData(d, t)) };
 }
@@ -1031,6 +1088,36 @@ const readPassThrough: ReadTransformFuncs = [
     (e: Expr) => e
 ];
 
+/**
+ * Deserialize a byte array into the corresponding Michelson value.
+ * Without a type definition (not recommended) the binary data will be treated as a binary form of a generic Michelson expression and returned as is.
+ * Type definition allows some types like `timestamp` and `address` and other types usually encoded in optimized binary forms to be transformed 
+ * back to their string representations like base58 and ISO timestamps.
+ * 
+ * ```typescript
+ * const src = [0x05, 0x00, 0xa7, 0xe8, 0xe4, 0xd8, 0x0b];
+ * 
+ * const typ: MichelsonType = {
+ *     prim: "timestamp"
+ * };
+ * 
+ * const data = unpackData(src, typ);
+ * 
+ * // { string: "2019-09-26T10:59:51Z" }
+ * ```
+ * 
+ * Same binary data without a type definition
+ * ```typescript
+ * const src = [0x05, 0x00, 0xa7, 0xe8, 0xe4, 0xd8, 0x0b];
+ * 
+ * const data = unpackData(src);
+ * 
+ * // { int: "1569495591" }
+ * ```
+ * @param src Byte array
+ * @param t Optional type definition
+ * @returns Deserialized data
+ */
 export function unpackData(src: number[] | Uint8Array, t?: MichelsonType): MichelsonData {
     const r = new Reader(src);
     if (r.readUint8() !== 5) {
@@ -1043,6 +1130,25 @@ export function unpackData(src: number[] | Uint8Array, t?: MichelsonType): Miche
     throw new Error(); // never
 }
 
+/**
+ * Deserialize a byte array into the corresponding Michelson value.
+ * Same as {@link unpackData} but takes a `bytes` Michelson data literal instead of an array
+ * 
+ * ```typescript
+ * const src = { bytes: "0500a7e8e4d80b" };
+ * 
+ * const typ: MichelsonType = {
+ *     prim: "timestamp"
+ * };
+ * 
+ * const data = unpackDataBytes(src, typ);
+ * 
+ * // { string: "2019-09-26T10:59:51Z" }
+ * ```
+ * @param src Bytes object
+ * @param t Optional type definition
+ * @returns Deserialized data
+ */
 export function unpackDataBytes(src: BytesLiteral, t?: MichelsonType): MichelsonData {
     const bytes = parseBytes(src.bytes);
     if (bytes === null) {
