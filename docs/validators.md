@@ -64,7 +64,7 @@ Here is a valid example with the address of an existing contract :
 import { validateContractAddress } from '@taquito/utils';
 
 //valid
-const contractAddress = 'KT1NGihnotUbt8C1WsKfsUg1E2D7UPYzAn2N';
+const contractAddress = 'KT1F7DYSa7fVTNScSDDVVokqmmytpJBB5bs9';
 const validation = validateContractAddress(contractAddress);
 println(
   `Calling the validateContractAddress function with ${contractAddress} returns ${validation}.`
