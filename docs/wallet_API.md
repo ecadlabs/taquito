@@ -39,7 +39,7 @@ Make sure you have the latest version (`7.1.0` when this article was written, bu
 
 
 
-Once the package is downloaded, you can install the wallet of your choice. The wallet API supports different kinds of wallets. _Beacon_, _Thanos_ and _TezBridge_ wallets are available to use at the moment. You can install one or multiple wallets according to your needs:
+Once the package is downloaded, you can install the wallet of your choice. The wallet API supports different kinds of wallets. _Beacon_, _Temple_ and _TezBridge_ wallets are available to use at the moment. You can install one or multiple wallets according to your needs:
 
 
 
@@ -49,13 +49,13 @@ npm install @taquito/tezbridge-wallet
 
 npm install @taquito/beacon-wallet
 
-npm install @thanos-wallet/dapp
+npm install @temple-wallet/dapp
 
 ```
 
 
 
-Remember that some wallets may require an extra step in addition to the package installation. For example, TezBridge requires a plugin file, Thanos must be used with an extension installed in the browser. We will explain the requirements for the different wallets in detail in the sections below.
+Remember that some wallets may require an extra step in addition to the package installation. For example, TezBridge requires a plugin file, Temple must be used with an extension installed in the browser. We will explain the requirements for the different wallets in detail in the sections below.
 
 
 
@@ -84,7 +84,7 @@ This object exposes different methods we are going to use to set up our wallet. 
 
 
 
-The `BeaconWallet` is a package implementing the TZIP-10 standard that describes the communication between a dapp (decentralized application on Tezos) and a wallet (e.g., a browser extension). The Beacon wallet works with any wallet that supports the TZIP-10 standard (for example, the Beacon extension, Thanos, or Kukai). This package is the recommended way of connecting your dapp to a wallet. In addition to being future-proof, it gives your users the freedom to choose the wallet they want.
+The `BeaconWallet` is a package implementing the TZIP-10 standard that describes the communication between a dapp (decentralized application on Tezos) and a wallet (e.g., a browser extension). The Beacon wallet works with any wallet that supports the TZIP-10 standard (for example, the Beacon extension, Temple, or Kukai). This package is the recommended way of connecting your dapp to a wallet. In addition to being future-proof, it gives your users the freedom to choose the wallet they want.
 
 
 
@@ -183,7 +183,7 @@ Tezos.setProvider({ wallet });
 
 
 
-Make sure you have the Beacon browser extension installed (the extension offers minimal features, the BeaconWallet works with any wallet implementing the TZIP-10 standard), the AirGap wallet on your phone, or any TZIP-10 ready wallet like Thanos or Kukai.
+Make sure you have the Beacon browser extension installed (the extension offers minimal features, the BeaconWallet works with any wallet implementing the TZIP-10 standard), the AirGap wallet on your phone, or any TZIP-10 ready wallet like Temple or Kukai.
 
 
 
@@ -210,27 +210,27 @@ Tezos.setWalletProvider(wallet);
 
 
 
-During the development of your dapp, you may prefer a less "user-friendly" option that gives you more information and details than a more user-friendly wallet. You may also want to install and set up a wallet quickly that requires less boilerplate than the Beacon SDK. In these cases, you can choose between the Tezbridge wallet (for more details in a lightweight format) and the ThanosWallet (for a quick setup using the Thanos wallet extension).
+During the development of your dapp, you may prefer a less "user-friendly" option that gives you more information and details than a more user-friendly wallet. You may also want to install and set up a wallet quickly that requires less boilerplate than the Beacon SDK. In these cases, you can choose between the Tezbridge wallet (for more details in a lightweight format) and the Temple Wallet (for a quick setup using the Temple wallet extension).
 
 
 
-- Thanos wallet
+- Temple wallet
 
 
 
-Just like the other wallets, you have to import the Thanos wallet class first:
+Just like the other wallets, you have to import the Temple wallet class first:
 
 
 
 ```
 
-import { ThanosWallet } from '@thanos-wallet/dapp';
+import { TempleWallet } from '@temple-wallet/dapp';
 
 ```
 
 
 
-Then, Thanos requires an extra step to verify that the extension is installed and connected in the browser. The `ThanosWallet` class exposes a static property called `isAvailable` that just does that. You must use it before attempting to connect the wallet:
+Then, Temple requires an extra step to verify that the extension is installed and connected in the browser. Temple used to be called Thanos and some Taquito code still uses the name Thanos. The `Thanoswallet` class exposes a static property called `isAvailable` that just does that. You must use it before attempting to connect the wallet:
 
 
 
@@ -249,7 +249,7 @@ try {
 
 
 
-For this to work, you have to enable dapps in the Thanos wallet. Under `Settings`, you will find a `DApps` section where the checkbox must be checked to allow interactions between the wallet and the dapps.
+For this to work, you have to enable dapps in the Temple wallet. Under `Settings`, you will find a `DApps` section where the checkbox must be checked to allow interactions between the wallet and the dapps.
 
 
 
@@ -271,12 +271,12 @@ The class constructor takes one parameter, the name of your dapp (this will be u
 
 ```
 
-await wallet.connect('mainnet' | 'delphinet' | 'carthagenet' | 'labnet' | 'sandbox');
+await wallet.connect('mainnet' | 'edonet' | 'delphinet' | 'labnet' | 'sandbox');
 
 ```
 
 
-
+(Temple used to be called Thanos and some Taquito code still uses the name Thanos.)
 Once the wallet is connected, there are a couple of things you can get out of it:
 
 
@@ -293,7 +293,7 @@ const userAddress = wallet.pkh || (await wallet.getPKH());
 
 
 
-If you are using your own Tezos singleton instance, it is time to set the wallet as the provider (this is not necessary if you use the one provided by Thanos wallet, but remember you have to continue using it throughout your dapp):
+If you are using your own Tezos singleton instance, it is time to set the wallet as the provider (this is not necessary if you use the one provided by Temple wallet, but remember you have to continue using it throughout your dapp):
 
 
 
@@ -317,11 +317,11 @@ Tezos.setProvider({ wallet });
 
 
 
-#### Try the Thanos wallet!
+#### Try the Temple wallet!
 
 
 
-Make sure you have the Thanos browser extension installed first.
+Make sure you have the Temple  browser extension installed first.
 
 
 
