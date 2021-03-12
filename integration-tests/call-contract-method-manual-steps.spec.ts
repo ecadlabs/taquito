@@ -19,7 +19,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             });
             const contract = await opOrigination.contract();
 
-            // Let's say we want to call the default entryvpoint of the precedent contract, and we want to obtain the operation hash before injecting the operation to the node. 
+            // Let's say we want to call the default entry point of the presented contract, and we want to obtain the operation hash before injecting the operation to the node. 
             // Currently, if we do `await contract.methods.default(5).send()`, we won't be able to obtain the operation hash before the operation gets injected.
             // This plan to be addressed in issue #432
 
