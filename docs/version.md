@@ -21,7 +21,7 @@ The `@taquito/michel-codec` package now validates/type checks your Michelson. Th
 
 ### Beacon V2
 
-The Taquito wallet API now supports Beacon V2. This update is the product of close collaboration between AirGap, Kukai, Thanos, and Taquito. The updated TZIP-10/Beacon experience is smoother than before, and users who have more than one Tezos wallet are accommodated.
+The Taquito wallet API now supports Beacon V2. This update is the product of close collaboration between AirGap, Kukai, Temple, and Taquito. The updated TZIP-10/Beacon experience is smoother than before, and users who have more than one Tezos wallet are accommodated.
 
 The new behaviour can be seen in action here: https://cloney.tezostaquito.io/, with actual implementation from the dApp side available here: https://github.com/ecadlabs/george-cloney
 
@@ -58,7 +58,7 @@ Documentation is available here: https://tezostaquito.io/docs/ledger_signer
 
 We have tested using both Ledger Nano S and X devices.
 
-Both the [Madfish](https://www.madfish.solutions/) ([Thanos Wallet](https://thanoswallet.com/)) and Agile Ventures (Tezos Domains) have put this package to use in their products. A special thanks to Klas and Luis of the Kukai team for their early feedback.
+Both the [Madfish](https://www.madfish.solutions/) ([Temple Wallet](https://templewallet.com/)) and Agile Ventures (Tezos Domains) have put this package to use in their products. A special thanks to Klas and Luis of the Kukai team for their early feedback.
 
 
 ### More documentation!
