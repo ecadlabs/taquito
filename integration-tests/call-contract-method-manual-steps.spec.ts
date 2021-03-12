@@ -76,16 +76,18 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         });
     });
 
-    function toString(o: any) {
-        Object.keys(o).forEach(k => {
-          if (typeof o[k] === 'object') {
-            return toString(o[k]);
+    // deepcode ignore no-any: any is good enough
+    function toString(object: any): object {
+        const keys = Object.keys(object);
+        keys.forEach(key => {
+          if (typeof object[key] === 'object') {
+            return toString(object[key]);
           }
           
-          o[k] = '' + o[k];
+          object[key] = '' + object[key];
         });
         
-        return o;
+        return object;
       }
     
 });
