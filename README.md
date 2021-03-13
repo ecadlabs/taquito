@@ -47,7 +47,6 @@ We publish gpg signed packages to npmjs.org under the `@taquito` handle.
 | High Level Packages                                            | Responsibility                                               |
 | -------------------------------------------------------------- | ------------------------------------------------------------ |
 | [@taquito/taquito](packages/taquito)                           | Regroup every other library and provide higher level utility |
-| [@taquito/react-components](packages/taquito-react-components) | React components that implement some common use cases        |
 
 | Low Level Packages                                               | Responsibility                                                |
 | ---------------------------------------------------------------- | ------------------------------------------------------------- |
@@ -59,7 +58,9 @@ We publish gpg signed packages to npmjs.org under the `@taquito` handle.
 | [@taquito/signer](packages/taquito-signer)                       | Provide necessary function to sign using tezos keys           |
 | [@taquito/tezbridge-signer](packages/taquito-tezbridge-signer)   | Provide necessary function to sign using TezBridge            |
 | [@taquito/utils](packages/taquito-utils)                         | Provide different encoding and decoding utilities             |
-| [@taquito/tezbridge-wallet](packages/tezbridge-wallet)           | Tezbridge implementation for the Wallet API           |
+| [@taquito/tezbridge-wallet](packages/tezbridge-wallet)           | Tezbridge implementation for the Wallet API                   |
+| [@taquito/tzip12](packages/taquito-tzip12)                       | TZIP-12 Implementation for Taquito                            |
+| [@taquito/tzip16](packages/taquito-tzip16)                       | TZIP-16 Implementation for Taquito                            |
 | [@taquito/beacon-wallet](packages/beacon-wallet)                 | TZIP-10 Wallet Interaction implementation for the Wallet API  |
 
 ## API Documentation

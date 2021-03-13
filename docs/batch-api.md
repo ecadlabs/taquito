@@ -10,7 +10,7 @@ Taquito provides a simple way of forging and sending transactions to the blockch
 
 ```js
 /*
- * ONE OF THESE TRANSACTIONS WILL FAIL
+ * ONE OF THESE TRANSACTIONS WILL FAIL 
  * AND YOU WILL GET AN ERROR MESSAGE
  */
 const op1 = await contract.methods.interact('tezos').send();
