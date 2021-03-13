@@ -31,6 +31,16 @@ export function encodeExpr(value: string) {
 
 /**
  *
+ * @description Return the operation hash of a signed operation 
+ * @param value Value in hex of a signed operation
+ */
+ export function encodeOpHash(value: string) {
+  const blakeHash = blake.blake2b(hex2buf(value), null, 32);
+  return b58cencode(blakeHash, prefix.o);
+}
+
+/**
+ *
  * @description Base58 encode a string or a Uint8Array and append a prefix to it
  *
  * @param value Value to base58 encode
