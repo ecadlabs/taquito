@@ -55,6 +55,19 @@ interface FaucetConfig {
   faucetKey: {};
 }
 
+const florencenetEphemeral = {
+  rpc: process.env['TEZOS_RPC_FLORENCENET'] || 'https://api.tez.ie/rpc/florencenet',
+  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
+  knownContract: 'KT1BRwtrBfiC2paqoSw4nakJ2EGLCGuoprLQ',
+  knownBigMapContract: 'KT1W1jh5C5NbcVVvpnBLQT9ekMbR5a8fg6mc',
+  protocol: Protocols.PsFLorena,
+  signerConfig: {
+    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
+    keyUrl: 'https://api.tez.ie/keys/florencenet',
+    requestHeaders: { 'Authorization': 'Bearer taquito-example' },
+  }
+}
+
 const edonetEphemeral = {
   rpc: process.env['TEZOS_RPC_EDONET'] || 'https://api.tez.ie/rpc/edonet',
   knownBaker: 'tz1R55a2HQbXUAzWKJYE5bJp3UvvawwCm9Pr',
@@ -129,6 +142,18 @@ const key = {
   secret: "122bb47843750982da5c65f7affa0d32971ac876"
 }
 
+const florencenetFaucet = {
+  rpc: 'https://api.tez.ie/rpc/florencenet',
+  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
+  knownContract: 'KT1BRwtrBfiC2paqoSw4nakJ2EGLCGuoprLQ',
+  knownBigMapContract: 'KT1W1jh5C5NbcVVvpnBLQT9ekMbR5a8fg6mc',
+  protocol: Protocols.PsFLorena,
+  signerConfig: {
+    type: SignerType.FAUCET as SignerType.FAUCET,
+    faucetKey: key,
+  }
+}
+
 const edonetFaucet = {
   rpc: 'https://api.tez.ie/rpc/edonet',
   knownBaker: 'tz1R55a2HQbXUAzWKJYE5bJp3UvvawwCm9Pr',
@@ -179,21 +204,21 @@ const babylonnetFaucet = {
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_FAUCET']) {
-  providers.push(delphinetFaucet, edonetFaucet)
+  providers.push(florencenetFaucet, edonetFaucet)
 } 
-else if (process.env['RUN_DELPHINET_WITH_FAUCET']) {
-  providers.push(delphinetFaucet)
+else if (process.env['RUN_FLORENCENET_WITH_FAUCET']) {
+  providers.push(florencenetFaucet)
 }
 else if (process.env['RUN_EDONET_WITH_FAUCET']) {
   providers.push(edonetFaucet)
 }
-else if (process.env['DELPHINET']) {
-  providers.push(delphinetEphemeral)
+else if (process.env['FLORENCENET']) {
+  providers.push(florencenetEphemeral)
 }
 else if (process.env['EDONET']) {
   providers.push(edonetEphemeral)
 } else {
-  providers.push(edonetEphemeral, delphinetEphemeral)
+  providers.push(florencenetEphemeral, edonetEphemeral)
 }
 
 const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE'];

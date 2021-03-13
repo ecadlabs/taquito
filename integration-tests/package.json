@@ -2,12 +2,10 @@
   "name": "integration-tests",
   "scripts": {
     "test:faucet": "RUN_WITH_FAUCET=true jest --runInBand",
-    "test:carthagenet": "CARTHAGENET=true jest",
-    "test:carthagenet-faucet": "RUN_CARTHAGENET_WITH_FAUCET=true jest --runInBand",
-    "test:delphinet": "DELPHINET=true jest",
-    "test:delphinet-faucet": "RUN_DELPHINET_WITH_FAUCET=true jest --runInBand",
     "test:edonet": "EDONET=true jest",
     "test:edonet-faucet": "RUN_EDONET_WITH_FAUCET=true jest --runInBand",
+    "test:florencenet": "FLORENCENET=true jest",
+    "test:florencenet-faucet": "RUN_FLORENCENET_WITH_FAUCET=true jest --runInBand",
     "test": "jest"
   },
   "version": "8.0.6-beta.0",
@@ -42,7 +40,12 @@
       "./ledger-signer.spec.ts",
       "./ledger-signer-failing-tests.spec.ts",
       "./rpc-nodes.spec.ts"
-    ]
+    ],
+    "reporters": [
+      "default",
+      "jest-stare"
+    ],
+    "testResultsProcessor": "./node_modules/jest-stare"
   },
   "devDependencies": {
     "@types/jest": "^26.0.16",
@@ -50,6 +53,7 @@
     "jest": "^26.6.3",
     "jest-config": "^26.5.2",
     "jest-retries": "^1.0.1",
+    "jest-stare": "2.2.1",
     "lint-staged": "^10.4.0",
     "ts-jest": "^26.4.4",
     "ts-node": "^9.1.1",
