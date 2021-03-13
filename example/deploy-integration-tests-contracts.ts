@@ -57,12 +57,12 @@ async function example() {
         console.log('Deploying the knownBigMapContract...');
         const allowances = new MichelsonMap();
         const ledger = new MichelsonMap();
-        ledger.set('tz1btkXVkVFWLgXa66sbRJa8eeUSwvQFX4kP', { allowances: allowances, balance: '100' });
+        ledger.set('tz1btkXVkVFWLgXa66sbRJa8eeUSwvQFX4kP', { allowances, balance: '100' });
 
         const opknownBigMapContract = await tezos.contract.originate({
             code: knownBigMapContract,
             storage: {
-                ledger: ledger,
+                ledger,
                 owner: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
                 paused: true,
                 totalSupply: '100'
