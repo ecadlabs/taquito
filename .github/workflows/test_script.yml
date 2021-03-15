@@ -1,0 +1,38 @@
+name: Deploy Edge
+
+on:
+  pull_request:
+  # push:
+  #   branches:
+  #     - master
+jobs:
+  deply-edge-package:
+    runs-on: self-hosted
+    if: ${{ github.event_name == 'pull_request' || github.ref == 'refs/heads/master' }}
+    strategy:
+      matrix:
+        node: [12.x]
+    env:
+      VERDACCIO_TOKEN: ${{ secrets.EDGE_VERDACCIO_TOKEN }}
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node }}
+    - uses: actions/cache@v1
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+    - run: echo "TARGET_VERSION=8.0.6-beta.0-626dd5a2--699" >> $GITHUB_ENV
+    - uses: actions/github-script@v3
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          github.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: "New packages have been deployed to the preview repository at: https://npm.preview.tezostaquito.io/ \n Published packages: $(find packages/ -mindepth 1 -maxdepth 2 -name package.json | cut -d'/' -f 2 | sed "s/^\(.*\)$/npm i @taquito\/\1@${TARGET_VERSION}/")"
+          })
