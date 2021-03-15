@@ -1,5 +1,5 @@
 name: Node.js CI
-## Comment for the sake of testing the CI
+## Comment for the sake of testing the CI2
 on:
   pull_request:
     branches: [master]
