@@ -18,8 +18,9 @@ import {
 import { decodeBase58Check } from "./base58";
 import { decodeAddressBytes, decodePublicKeyBytes, decodePublicKeyHashBytes } from "./binary";
 import {
-    assertMichelsonComparableType, instructionIDs,
-    assertMichelsonPackableType, assertMichelsonStorableType, assertMichelsonBigMapStorableType, assertMichelsonPushableType
+    assertMichelsonComparableType,
+    assertMichelsonPackableType, assertMichelsonStorableType,
+    assertMichelsonBigMapStorableType, assertMichelsonPushableType, isInstruction, assertDataListIfAny
 } from "./michelson-validator";
 
 export interface Context extends ProtocolOptions {
@@ -162,6 +163,8 @@ export function assertTypeAnnotationsValid(t: MichelsonType, field: boolean = fa
 function compareMichelsonData(t: MichelsonType, a: MichelsonData, b: MichelsonData): number {
     if (isPairType(t)) {
         if (isPairData(a) && isPairData(b)) {
+            assertDataListIfAny(a);
+            assertDataListIfAny(b);
             const tComb = unpackComb("pair", t);
             const aComb = unpackComb("Pair", a);
             const bComb = unpackComb("Pair", b);
@@ -236,10 +239,6 @@ function compareMichelsonData(t: MichelsonType, a: MichelsonData, b: MichelsonDa
     throw new MichelsonTypeError(t, undefined, `${typeID(t)}: not comparable values: ${JSON.stringify(a)}, ${JSON.stringify(b)}`);
 }
 
-function isInstruction(p: Prim): p is MichelsonInstruction {
-    return Object.prototype.hasOwnProperty.call(instructionIDs, p.prim);
-}
-
 // Simplified version of assertMichelsonInstruction() for previously validated data
 function isFunction(d: MichelsonData): d is InstructionList {
     if (!Array.isArray(d)) {
@@ -255,27 +254,9 @@ function isFunction(d: MichelsonData): d is InstructionList {
 }
 
 function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Context | null): void {
-    const assertDataListIfAny = (d: MichelsonData): d is MichelsonData[] => {
-        if (!Array.isArray(d)) {
-            return false;
-        }
-        for (const v of d) {
-            if ("prim" in v) {
-                if (isInstruction(v)) {
-                    throw new MichelsonTypeError(t, d, `Instruction outside of a lambda: ${JSON.stringify(d)}`);
-                } else if (v.prim === "Elt") {
-                    throw new MichelsonTypeError(t, d, `Elt item outside of a map literal: ${JSON.stringify(d)}`);
-                }
-            }
-        }
-        return true;
-    };
-
     if (isPairType(t)) {
         if (isPairData(d)) {
-            if (Array.isArray(d)) {
-                assertDataListIfAny(d);
-            }
+            assertDataListIfAny(d);
             const dc = unpackComb("Pair", d);
             const tc = unpackComb("pair", t);
             assertDataValidInternal(dc.args[0], tc.args[0], ctx);

@@ -10,6 +10,15 @@
     },
     {
         "data": {
+            "string": "KT1RvkwF4F7pz1gCoxkyZrG1RkrxQy3gmFTv%foo"
+        },
+        "type": {
+            "prim": "string"
+        },
+        "packed": "0501000000284b543152766b7746344637707a3167436f786b795a724731526b7278517933676d46547625666f6f"
+    },
+    {
+        "data": {
             "string": "NetXynUjJNZm7wi"
         },
         "type": {
@@ -337,6 +346,56 @@
             ]
         },
         "packed": "0507070a00000004f3d485540100000003666f6f"
+    },
+    {
+        "data": {
+            "prim": "Pair",
+            "args": [
+                {
+                    "prim": "True"
+                },
+                {
+                    "string": "foo"
+                },
+                {
+                    "int": "-123"
+                }
+            ]
+        },
+        "expect": {
+            "prim": "Pair",
+            "args": [
+                {
+                    "prim": "True"
+                },
+                {
+                    "prim": "Pair",
+                    "args": [
+                        {
+                            "string": "foo"
+                        },
+                        {
+                            "int": "-123"
+                        }
+                    ]
+                }
+            ]
+        },
+        "type": {
+            "prim": "pair",
+            "args": [
+                {
+                    "prim": "bool"
+                },
+                {
+                    "prim": "string"
+                },
+                {
+                    "prim": "int"
+                }
+            ]
+        },
+        "packed": "050707030a07070100000003666f6f00fb01"
     },
     {
         "data": [

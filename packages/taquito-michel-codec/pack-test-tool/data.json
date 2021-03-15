@@ -330,6 +330,55 @@
         }
     },
     {
+        "data": {
+            "prim": "Pair",
+            "args": [
+                {
+                    "prim": "True"
+                },
+                {
+                    "string": "foo"
+                },
+                {
+                    "int": "-123"
+                }
+            ]
+        },
+        "expect": {
+            "prim": "Pair",
+            "args": [
+                {
+                    "prim": "True"
+                },
+                {
+                    "prim": "Pair",
+                    "args": [
+                        {
+                            "string": "foo"
+                        },
+                        {
+                            "int": "-123"
+                        }
+                    ]
+                }
+            ]
+        },
+        "type": {
+            "prim": "pair",
+            "args": [
+                {
+                    "prim": "bool"
+                },
+                {
+                    "prim": "string"
+                },
+                {
+                    "prim": "int"
+                }
+            ]
+        }
+    },
+    {
         "data": [
             {
                 "prim": "Pair",

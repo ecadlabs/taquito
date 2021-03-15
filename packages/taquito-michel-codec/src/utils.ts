@@ -1,4 +1,4 @@
-import { Prim, Expr, BytesLiteral, StringLiteral, IntLiteral } from "./micheline";
+import { Prim, Expr, StringLiteral, IntLiteral } from "./micheline";
 import { decodeBase58Check, encodeBase58Check } from "./base58";
 import { MichelsonData, MichelsonDataPair, MichelsonType, MichelsonTypePair } from "./michelson-types";
 
@@ -296,9 +296,9 @@ export function unpackComb<I extends "pair" | "Pair">(id: I, v: I extends "pair"
             prim: "pair",
             args,
         } : {
-                prim: "Pair",
-                args,
-            };
+            prim: "Pair",
+            args,
+        };
         return ret as PairTypeOrDataPrim<I>;
     }
 
@@ -356,4 +356,3 @@ export function parseHex(s: string): number[] {
 export function hexBytes(bytes: number[]): string {
     return bytes.map(x => ((x >> 4) & 0xf).toString(16) + (x & 0xf).toString(16)).join("");
 }
-

@@ -5,7 +5,7 @@ import {
     MichelsonData, MichelsonType, MichelsonDataOr,
     MichelsonDataOption, MichelsonInstruction
 } from "./michelson-types";
-import { assertMichelsonData, assertMichelsonInstruction } from "./michelson-validator";
+import { assertDataListIfAny, assertMichelsonData, assertMichelsonInstruction } from "./michelson-validator";
 import {
     checkDecodeTezosID, encodeTezosID, hexBytes,
     isPairData, isPairType, MichelsonTypeError,
@@ -585,6 +585,7 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
             if (!isPairData(d)) {
                 throw new MichelsonTypeError(t, d, `pair expected: ${JSON.stringify(d)}`);
             }
+            assertDataListIfAny(d);
             // combs aren't used in pack format
             const tc = unpackComb("pair", t);
             const dc = unpackComb("Pair", d);

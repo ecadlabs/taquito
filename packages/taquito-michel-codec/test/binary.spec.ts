@@ -1,13 +1,15 @@
 import fs from "fs";
 import path from "path";
 
-import { MichelsonData, MichelsonType } from "../src/michelson-types";
+import { MichelsonData, MichelsonDataPair, MichelsonType } from "../src/michelson-types";
 import { packData, unpackData } from "../src/binary";
-import { parseHex } from "../src/utils";
+import { isPairData, parseHex, unpackComb } from "../src/utils";
+import { isInstruction } from "../src/michelson-validator";
 
 interface TypedTestData {
     type?: MichelsonType,
     data: MichelsonData,
+    expect?: MichelsonData,
     packed: string,
 }
 
@@ -31,7 +33,7 @@ describe("Binary", () => {
         for (const s of src) {
             it(JSON.stringify(s.data), () => {
                 const ex = unpackData(parseHex(s.packed), s.type);
-                expect(ex).toEqual(s.data);
+                expect(ex).toEqual(s.expect || s.data);
             });
         }
     });
