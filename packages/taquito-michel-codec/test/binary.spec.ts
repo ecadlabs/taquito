@@ -1,16 +1,16 @@
 import fs from "fs";
 import path from "path";
 
-import { MichelsonData, MichelsonDataPair, MichelsonType } from "../src/michelson-types";
+import { MichelsonData, MichelsonType, ProtocolID } from "../src/michelson-types";
 import { packData, unpackData } from "../src/binary";
-import { isPairData, parseHex, unpackComb } from "../src/utils";
-import { isInstruction } from "../src/michelson-validator";
+import { parseHex } from "../src/utils";
 
 interface TypedTestData {
-    type?: MichelsonType,
-    data: MichelsonData,
-    expect?: MichelsonData,
-    packed: string,
+    type?: MichelsonType;
+    data: MichelsonData;
+    expect?: MichelsonData;
+    packed: string;
+    proto?: ProtocolID;
 }
 
 describe("Binary", () => {

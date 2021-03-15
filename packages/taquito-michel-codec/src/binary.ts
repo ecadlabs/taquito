@@ -859,7 +859,7 @@ export function packData(d: MichelsonData, t?: MichelsonType): number[] {
  * @param t Optional type definition
  * @returns Binary representation as a bytes literal
  */
-export function packDataBytes(d: MichelsonData, t: MichelsonType): BytesLiteral {
+export function packDataBytes(d: MichelsonData, t?: MichelsonType): BytesLiteral {
     return { bytes: hexBytes(packData(d, t)) };
 }
 
