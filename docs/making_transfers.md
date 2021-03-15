@@ -23,10 +23,10 @@ In the following example, we transfer 0.5ꜩ from a `tz1aaYoabvj2DQtpHz74Z83fSNj
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/delphinet');
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/edonet');
 
 render(`Fetching a private key...`);
-fetch('https://api.tez.ie/keys/delphinet/', {
+fetch('https://api.tez.ie/keys/edonet/', {
   method: 'POST',
   headers: { Authorization: 'Bearer taquito-example' },
 })
@@ -46,7 +46,7 @@ fetch('https://api.tez.ie/keys/delphinet/', {
     render(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
   })
-  .then((hash) => render(`Operation injected: https://delphi.tzstats.com/${hash}`))
+  .then((hash) => render(`Operation injected: https://edonet.tzstats.com/${hash}`))
   .catch((error) => render(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
@@ -98,14 +98,14 @@ export const transferImplicit = (key: string, mutez: number) => {
 
 ## Transfer 0.000001 (1 mutez) tokens from a KT1 address to a KT1 address
 
-Sending 1 mutez to `KT1EKZshRTnJQoA6ojbRisiiGwSB5kKNmZSt` from `KT1...`
+Sending 1 mutez to `KT1KLbEeEgW5h1QLkPuPvqdgurHx6v4hGyic` from `KT1...`
 
 ### Example for Babylon/Proto005 or higher
 
 ```js
 const contract = await Tezos.contract.at('KT1...');
 await contract.methods
-  .do(transferToContract('KT1EKZshRTnJQoA6ojbRisiiGwSB5kKNmZSt', 1))
+  .do(transferToContract('KT1KLbEeEgW5h1QLkPuPvqdgurHx6v4hGyic', 1))
   .send({ amount: 0 });
 ```
 

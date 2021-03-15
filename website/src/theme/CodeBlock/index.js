@@ -78,7 +78,7 @@ export default ({
   }, [button.current, target.current]);
 
   if (live) {
-    const Tezos = new TezosToolkit('https://api.tez.ie/rpc/delphinet');
+    const Tezos = new TezosToolkit('https://api.tez.ie/rpc/edonet');
     const wallet = new BeaconWallet({name:"exampleWallet"});
 
     return (
