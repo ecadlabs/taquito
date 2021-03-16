@@ -46,7 +46,10 @@ export * from './wallet';
 export { Extension } from './extension/extension';
 export * from './parser/interface';
 export * from './parser/michel-codec-parser';
-export * from './parser/noop-parser'
+export * from './parser/noop-parser';
+export * from './packer/interface';
+export * from './packer/michel-codec-packer';
+export * from './packer/rpc-packer';
 
 export interface SetProviderOptions {
   forger?: Forger;

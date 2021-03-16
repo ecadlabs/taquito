@@ -94,7 +94,7 @@ export class HttpBackend {
     { url, method, timeout, query, headers = {}, json = true, mimeType = undefined}: HttpRequestOptions,
     data?: {}
   ) {
-      const resolvedRequest = new Promise<T>((resolve, reject) => {
+    return new Promise<T>((resolve, reject) => {
       const request = this.createXHR();
       request.open(method || 'GET', `${url}${this.serialize(query)}`);
       if (!headers['Content-Type']) {
@@ -146,8 +146,5 @@ export class HttpBackend {
         request.send();
       }
     });
-    return resolvedRequest.then( value => {
-      return value
-    })
   }
 }

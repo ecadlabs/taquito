@@ -2,7 +2,7 @@ import { Prim, Expr } from "./micheline";
 import {
     MichelsonType, MichelsonData, MichelsonMapElt, MichelsonCode, MichelsonTypeOption,
     MichelsonContract, MichelsonContractSection, MichelsonReturnType, MichelsonTypePair,
-    MichelsonInstruction, InstructionList, MichelsonDataPair, MichelsonTypeID, MichelsonTypeOr,
+    MichelsonInstruction, InstructionList, MichelsonTypeID, MichelsonTypeOr,
     ProtocolOptions,
     DefaultProtocol,
     Protocol,

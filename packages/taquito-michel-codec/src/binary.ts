@@ -628,7 +628,7 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
                     throw new MichelsonTypeError(t, d, `${t.prim} expected: ${JSON.stringify(d)}`);
                 }
                 return [d, (function* () {
-                    for (const v of d) {
+                    for (const _v of d) {
                         yield getWriteTransformFunc(t.args[0]);
                     }
                 })()];
@@ -640,7 +640,7 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
                     throw new MichelsonTypeError(t, d, `map expected: ${JSON.stringify(d)}`);
                 }
                 return [d, (function* (): Generator<WriteTransformFunc> {
-                    for (const elt of d) {
+                    for (const _elt of d) {
                         yield (elt: Expr) => {
                             if (!("prim" in elt) || elt.prim !== "Elt") {
                                 throw new MichelsonTypeError(t, elt, `map element expected: ${JSON.stringify(elt)}`);
