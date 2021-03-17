@@ -12,11 +12,11 @@ async function example() {
         const contractAddress = 'KT1Qo6HuBuXEPvAKAyFMLsnUcvtL3fMpwmTS';
         const contract = await tezos.contract.at(contractAddress);
 
-        interface storageType {
+        interface StorageType {
             0: BigNumber
             1: BigMapAbstraction
         }
-        const storage = await contract.storage<storageType>();
+        const storage = await contract.storage<StorageType>();
         const bigMapStorage = storage[1];
 
         // Fetch values of the big map using the RPC to pack
