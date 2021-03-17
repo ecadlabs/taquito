@@ -45,7 +45,7 @@ jobs:
           echo "" >> $GITHUB_ENV
           echo "### Published packages:" >> $GITHUB_ENV
           echo "\`\`\`" >> $GITHUB_ENV
-          find packages/ -mindepth 1 -maxdepth 2 -name package.json | cut -d'/' -f 2 | sed "s/^\(.*\)$/npm i @taquito\/\1@${TARGET_VERSION} --registry https:\/\/npm.preview.tezostaquito.io\//" >> $GITHUB_ENV
+          find packages/ -mindepth 1 -maxdepth 2 -name package.json | xargs -I{} node -pe "require('./{}')['name']" | sed "s/^\(.*\)$/npm i \1@${TARGET_VERSION} --registry https:\/\/npm.preview.tezostaquito.io\//" >> $GITHUB_ENV
           echo "\`\`\`" >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
     - uses: actions/github-script@v3
