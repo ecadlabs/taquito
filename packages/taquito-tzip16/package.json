@@ -73,8 +73,8 @@
     "colors": "^1.4.0",
     "coveralls": "^3.1.0",
     "cross-env": "^7.0.2",
-    "jest": "^26.5.2",
-    "jest-config": "^26.5.2",
+    "jest": "^26.6.3",
+    "jest-config": "^26.6.3",
     "lint-staged": "^10.4.0",
     "lodash.camelcase": "^4.3.0",
     "prettier": "^2.1.2",
@@ -91,7 +91,7 @@
     "tslint": "^6.1.2",
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-standard": "^9.0.0",
-    "typedoc": "^0.20.23",
+    "typedoc": "^0.20.32",
     "typescript": "^4.1.5"
   },
   "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
