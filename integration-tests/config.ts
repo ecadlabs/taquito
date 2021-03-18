@@ -106,15 +106,10 @@ const edonetFaucet = {
 
 const providers: Config[] = [];
 
-if (process.env['RUN_WITH_FAUCET']) {
+if (process.env['RUN_WITH_FAUCET'] || process.env['RUN_EDONET_WITH_FAUCET']) {
   providers.push(edonetFaucet)
 } 
-else if (process.env['RUN_EDONET_WITH_FAUCET']) {
-  providers.push(edonetFaucet)
-}
 else if (process.env['EDONET']) {
-  providers.push(edonetEphemeral)
-} else {
   providers.push(edonetEphemeral)
 }
 
