@@ -15,7 +15,7 @@ import {
   switchMapTo,
   tap,
 } from 'rxjs/operators';
-import { Context } from '../context';
+import { Context, defaultConfirmationCountConst } from '../context';
 import { ForgedBytes, hasMetadataWithResult } from './types';
 
 interface PollingConfig {
@@ -146,22 +146,30 @@ export class Operation {
    * @param interval [10] Polling interval
    * @param timeout [180] Timeout
    */
-  confirmation(confirmations?: number, interval?: number, timeout?: number) {
+  async confirmation(confirmations?: number, interval?: number, timeout?: number) {
     if (typeof confirmations !== 'undefined' && confirmations < 1) {
       throw new Error('Confirmation count must be at least 1');
     }
 
     const {
       defaultConfirmationCount,
-      confirmationPollingIntervalSecond,
       confirmationPollingTimeoutSecond,
     } = this.context.config;
+    
+    const confirmationPollingIntervalSecond = this.context.config.confirmationPollingIntervalSecond !== undefined 
+                                        ? this.context.config.confirmationPollingIntervalSecond 
+                                        : await this.context.getConfirmationPollingInterval();
+
     this._pollingConfig$.next({
       interval: interval || confirmationPollingIntervalSecond,
       timeout: timeout || confirmationPollingTimeoutSecond,
     } as Required<PollingConfig>);
 
-    const conf = confirmations !== undefined ? confirmations : defaultConfirmationCount;
+    const conf = confirmations !== undefined ? 
+                 confirmations : 
+                 (defaultConfirmationCount === undefined ?
+                   defaultConfirmationCountConst :
+                   defaultConfirmationCount);
 
     return new Promise<number>((resolve, reject) => {
       this.confirmed$

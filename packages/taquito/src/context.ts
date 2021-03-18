@@ -17,10 +17,15 @@ import { ParserProvider } from './parser/interface';
 import { MichelCodecParser } from './parser/michel-codec-parser';
 import { Packer } from './packer/interface';
 import { RpcPacker } from './packer/rpc-packer';
+import BigNumber from 'bignumber.js';
 
 export interface TaquitoProvider<T, K extends Array<any>> {
   new (context: Context, ...rest: K): T;
 }
+
+export const defaultConfirmationCountConst = 1;
+export const confirmationPollingTimeoutSecondConst = 180;
+export const shouldObservableSubscriptionRetryConst = false;
 
 // The shouldObservableSubscriptionRetrythe parameter is related to the observable in ObservableSubsription class. 
 // When set to true, the observable won't die when getBlock rpc call fails; the error will be reported via the error callback, 
@@ -32,11 +37,10 @@ export interface Config {
   shouldObservableSubscriptionRetry?: boolean;
 }
 
-export const defaultConfig: Required<Config> = {
-  confirmationPollingIntervalSecond: 10,
-  defaultConfirmationCount: 1,
-  confirmationPollingTimeoutSecond: 180,
-  shouldObservableSubscriptionRetry: false
+export const defaultConfig: Partial<Config> = {
+  defaultConfirmationCount: defaultConfirmationCountConst,
+  confirmationPollingTimeoutSecond: confirmationPollingTimeoutSecondConst,
+  shouldObservableSubscriptionRetry: shouldObservableSubscriptionRetryConst
 };
 
 /**
@@ -82,11 +86,11 @@ export class Context {
     this._packer = packer? packer: new RpcPacker(this);
   }
 
-  get config(): Required<Config> {
+  get config(): Partial<Config> {
     return this._config as any;
   }
 
-  set config(value: Required<Config>) {
+  set config(value: Partial<Config>) {
     this._config = {
       ...defaultConfig,
       ...value,
@@ -166,6 +170,28 @@ export class Context {
     }
   }
 
+  async getConfirmationPollingInterval() {
+    try {
+      const constants = await this.rpc.getConstants();
+      let confirmationPollingInterval = BigNumber.sum(constants.time_between_blocks[0], 
+             constants.delay_per_missing_endorsement!, 
+             Math.max(0, constants.initial_endorsers! - constants.endorsers_per_block));
+      
+      // Divide the polling interval by a constant 3
+      // to improvise for polling time to work in prod,
+      // testnet and sandbox enviornment.   
+      confirmationPollingInterval = confirmationPollingInterval.dividedBy(3);  
+      this.config.confirmationPollingIntervalSecond = confirmationPollingInterval.toNumber();
+      return this.config.confirmationPollingIntervalSecond;
+    } catch (exception) {
+      console.log(exception);
+    }
+    // Return default value if there is
+    // an issue returning from constants
+    // file.
+    return 10;
+  }
+  
   /**
    * @description Create a copy of the current context. Useful when you have long running operation and you do not want a context change to affect the operation
    */

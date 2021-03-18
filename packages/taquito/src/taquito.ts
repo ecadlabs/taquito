@@ -115,7 +115,7 @@ export class TezosToolkit {
     this.setPackerProvider(packer);
 
     this._context.proto = protocol;
-    this._context.config = config as Required<Config>;
+    this._context.config = config as Partial<Config>;
   }
 
   /**

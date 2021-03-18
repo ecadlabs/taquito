@@ -9,7 +9,7 @@ import {
   takeWhile,
   tap,
 } from 'rxjs/operators';
-import { Context } from '../context';
+import { Context, defaultConfirmationCountConst } from '../context';
 import { Receipt, receiptFromOperation } from './receipt';
 
 export type OperationStatus = 'pending' | 'unknown' | OperationResultStatusEnum;
@@ -142,7 +142,11 @@ export class WalletOperation {
 
     const { defaultConfirmationCount } = this.context.config;
 
-    const conf = confirmations !== undefined ? confirmations : defaultConfirmationCount;
+    const conf = confirmations !== undefined ? 
+                 confirmations : 
+                 (defaultConfirmationCount === undefined ?
+                   defaultConfirmationCountConst :
+                   defaultConfirmationCount);
 
     return combineLatest([this._includedInBlock, this.newHead$]).pipe(
       distinctUntilChanged(([, previousHead], [, newHead]) => {
