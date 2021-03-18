@@ -19,8 +19,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         })
 
         test('Deploy a contract having a sha256 hash in URI', 2, async (done: () => void) => {
-            // carthagenet: KT1FeMKGGvdWiA4r5RaucoEUAa8cTEXSSpCX
-            // delphinet: KT1PHNmaHvQNjt1LTqdWobJUi2aeDeWUdQUq
 
             // location of the contract metadata
             const urlPercentEncoded = encodeURIComponent('//storage.googleapis.com/tzip-16/taco-shop-metadata.json');
@@ -52,8 +50,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         });
 
         test('Fetch metadata of the contract having a sha256 hash in URI', 2, async (done: () => void) => {
-            // carthagenet: KT1FeMKGGvdWiA4r5RaucoEUAa8cTEXSSpCX
-            // delphinet: KT1PHNmaHvQNjt1LTqdWobJUi2aeDeWUdQUq
 
             const contract = await Tezos.contract.at(contractAddress, tzip16);
             const metadata = await contract.tzip16().getMetadata();
@@ -82,8 +78,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         });
 
         test('Deploy a contract having an invalid sha256 hash in URI', 2, async (done: () => void) => {
-            // carthagenet: KT1Xj3v6v4hEWrQsnWf4oa87Q5T9JThvqNj7
-            // delphinet: KT1Bhj5fgQioJYnFbg8jeki5SgRd7ZsCfhwp
 
             // location of the contract metadata
             const urlPercentEncoded = encodeURIComponent('//storage.googleapis.com/tzip-16/taco-shop-metadata.json');
@@ -115,8 +109,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         });
 
         test('Fetch metadata of the contract having an invalid sha256 hash in URI', 2, async (done: () => void) => {
-            // carthagenet: KT1Xj3v6v4hEWrQsnWf4oa87Q5T9JThvqNj7
-            // delphinet: KT1Bhj5fgQioJYnFbg8jeki5SgRd7ZsCfhwp
 
             const contract = await Tezos.contract.at(contractAddressInvalidHash, tzip16);
             const metadata = await contract.tzip16().getMetadata();

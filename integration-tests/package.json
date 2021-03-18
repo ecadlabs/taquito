@@ -8,6 +8,7 @@
     "test:delphinet-faucet": "RUN_DELPHINET_WITH_FAUCET=true jest --runInBand",
     "test:edonet": "EDONET=true jest",
     "test:edonet-faucet": "RUN_EDONET_WITH_FAUCET=true jest --runInBand",
+    "test:sandbox": "SANDBOX=true jest",
     "test": "jest"
   },
   "version": "8.0.6-beta.0",
@@ -47,6 +48,7 @@
   "devDependencies": {
     "@types/jest": "^26.0.16",
     "@types/node": "^14.14.10",
+    "gulp-webserver": "^0.9.1",
     "jest": "^26.6.3",
     "jest-config": "^26.5.2",
     "jest-retries": "^1.0.1",
