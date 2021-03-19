@@ -8,7 +8,7 @@ export class EncodeTicketError implements Error {
 }
 
 const ticketerType = { "prim": "contract" };
-const amountType = { "prim":"int" };
+const amountType = { "prim": "int" };
 
 export class TicketToken extends Token {
   static prim = 'ticket';
@@ -30,6 +30,9 @@ export class TicketToken extends Token {
   }
 
   public Execute(val: any, semantics?: Semantic) {
+    if (semantics && semantics[TicketToken.prim]) {
+      return semantics[TicketToken.prim](val, this.val);
+    }
     const ticketer = this.createToken(ticketerType, this.idx);
     const value = this.createToken(this.val.args[0], this.idx);
     const amount = this.createToken(amountType, this.idx);
