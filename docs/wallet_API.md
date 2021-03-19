@@ -135,7 +135,7 @@ The Beacon wallet requires an extra step to set up the network to connect to and
 
 await wallet.requestPermissions({
   network: {
-    type: 'mainnet' | 'carthagenet' | 'delphinet' | 'custom',
+    type: 'mainnet' | 'edo2net' | 'delphinet' | 'custom',
   },
 });
 
@@ -143,7 +143,7 @@ await wallet.requestPermissions({
 
 
 
-You can choose among `mainnet`, `delphinet`, `carthagenet` and `custom` to set up the network. Once the permissions have been configured, you can get the user's address by calling the `getPKH` method on the wallet:
+You can choose among `mainnet`, `delphinet`, `edo2net` and `custom` to set up the network. Once the permissions have been configured, you can get the user's address by calling the `getPKH` method on the wallet:
 
 
 
