@@ -2670,8 +2670,10 @@ export const rpcContractResponse = {
 	}
 };
 
+// deepcode ignore no-any: any is good enough
 export const storage = rpcContractResponse.script.code.find((x) => x.prim === 'storage')!.args[0] as any;
 
+// deepcode ignore no-any: any is good enough
 export const params = rpcContractResponse.script.code.find((x) => x.prim === 'parameter')!.args[0] as any;
 
 export const bigMapValue = {
