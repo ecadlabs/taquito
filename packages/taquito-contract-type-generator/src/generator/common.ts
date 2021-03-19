@@ -14,7 +14,7 @@ export const reduceFlatMap = <T>(out: T[], x: T[]): T[] => {
     return out;
 }
 
-const reduceFlatMapTest = () => {
-    const items = [['a'], ['b']];
-    const itemsFlat = items.reduce(reduceFlatMap);
-};
+// const reduceFlatMapTest = () => {
+//     const items = [['a'], ['b']];
+//     const itemsFlat = items.reduce(reduceFlatMap);
+// };

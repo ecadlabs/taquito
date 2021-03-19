@@ -30,7 +30,7 @@
     "contract-type-generator": "bin/contract-type-generator.js"
   },
   "scripts": {
-    "example": "contract-type-generator --g ./usage/example/contracts ./usage/example/types",
+    "example": "contract-type-generator --g ./example/contracts ./example/types",
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts'",
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
