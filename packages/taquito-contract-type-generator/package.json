@@ -1,0 +1,78 @@
+{
+  "private": true,
+  "name": "@taquito/contract-type-generator",
+  "version": "8.0.6-beta.0",
+  "description": "Contract Typescript Type Generator",
+  "keywords": [
+    "tezos",
+    "blockchain",
+    "types"
+  ],
+  "main": "./dist/taquito-contract-type-generator.umd.js",
+  "module": "./dist/taquito-contract-type-generator.js",
+  "typings": "./dist/types/taquito-contract-type-generator.d.ts",
+  "files": [
+    "dist",
+    "signature.json"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Rick Love <rick@toldpro.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ecadlabs/taquito.git"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "scripts": {
+    "example": "ts-node -r tsconfig-paths/register ./src/cli.ts --g ./usage/example/contracts ./usage/example/types",
+    "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts'",
+    "precommit": "lint-staged",
+    "prebuild": "rimraf dist",
+    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts ",
+    "start": "rollup -c rollup.config.ts -w"
+  },
+  "lint-staged": {
+    "{src,test}/**/*.ts": [
+      "prettier --write",
+      "tslint --fix",
+      "git add"
+    ]
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "ts-jest"
+    },
+    "testEnvironment": "node",
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "moduleNameMapper": {
+      "^@taquito/utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts"
+    },
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/test/"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,ts}"
+    ]
+  },
+  "dependencies": {
+    "@taquito/michel-codec": "^8.0.6-beta.0",
+    "@taquito/michelson-encoder": "^8.0.6-beta.0",
+    "@taquito/taquito": "^8.0.6-beta.0",
+    "bignumber.js": "^9.0.1"
+  },
+  "devDependencies": {
+    "ts-node": "^9.1.1",
+    "tsconfig-paths": "^3.9.0",
+    "typescript": "^4.2.3"
+  }
+}
