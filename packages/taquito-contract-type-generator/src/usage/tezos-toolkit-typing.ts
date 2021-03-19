@@ -82,6 +82,6 @@ export type TypedContractAbstractionOf<T extends ContractTypeBase> = ContractAbs
         : never
     };
 };
-export const createContractAbstractionComposer = <TContract extends ContractTypeBase>() => (abs: ContractAbstraction<ContractProvider>, context: Context): TypedContractAbstractionOf<TContract> => {
+export const createContractAbstractionComposer = <TContract extends ContractTypeBase>() => (abs: ContractAbstraction<ContractProvider>): TypedContractAbstractionOf<TContract> => {
     return abs as unknown as TypedContractAbstractionOf<TContract>;
 };

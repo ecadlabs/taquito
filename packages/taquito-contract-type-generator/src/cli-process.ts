@@ -1,7 +1,13 @@
 import fsRaw from 'fs';
 import path from 'path';
-import { generateContractTypesFromMichelsonCode } from './contract-type-generator';
-const fs = fsRaw.promises;
+import { promisify } from 'util';
+import { generateContractTypesFromMichelsonCode } from './generator/process';
+const fs = {
+    mkdir: promisify(fsRaw.mkdir),
+    readdir: promisify(fsRaw.readdir),
+    readFile: promisify(fsRaw.readFile),
+    writeFile: promisify(fsRaw.writeFile),
+};
 
 export const generateContractTypesProcessTzContractFiles = async ({
     inputTzContractDirectory,

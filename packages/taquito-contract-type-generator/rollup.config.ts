@@ -5,7 +5,7 @@ import json from 'rollup-plugin-json';
 
 const pkg = require('./package.json');
 
-const libraryName = 'taquito-michelson-encoder';
+const libraryName = 'taquito-contract-type-generator';
 
 export default {
   input: `src/${libraryName}.ts`,

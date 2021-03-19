@@ -1,8 +1,8 @@
 import * as M from '@taquito/michel-codec';
-import { GenerateApiError } from './generator/common';
-import { parseContractStorage, parseContractParameter } from './generator/contract-parser';
-import { SchemaOutput, toSchema } from './generator/schema-output';
-import { TypescriptCodeOutput, toTypescriptCode } from './generator/typescript-output';
+import { GenerateApiError } from './common';
+import { parseContractStorage, parseContractParameter } from './contract-parser';
+import { SchemaOutput, toSchema } from './schema-output';
+import { TypescriptCodeOutput, toTypescriptCode } from './typescript-output';
 
 export const generateContractTypesFromMichelsonCode = (contractScript: string): {
     schema: SchemaOutput;
