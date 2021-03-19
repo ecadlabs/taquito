@@ -1,4 +1,4 @@
-import { generateContractTypes_processTzContractFiles } from './cli-process';
+import { generateContractTypesProcessTzContractFiles } from './cli-process';
 
 export const run = async (): Promise<void> => {
     const argv = process.argv;
@@ -8,7 +8,7 @@ export const run = async (): Promise<void> => {
 
     if (argsGenerateFile) {
         const [inputTzContractDirectory, outputTypescriptDirectory] = argsGenerateFile;
-        await generateContractTypes_processTzContractFiles({ inputTzContractDirectory, outputTypescriptDirectory });
+        await generateContractTypesProcessTzContractFiles({ inputTzContractDirectory, outputTypescriptDirectory });
         return;
     }
 

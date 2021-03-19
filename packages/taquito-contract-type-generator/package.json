@@ -28,7 +28,7 @@
     "node": ">=6.0.0"
   },
   "scripts": {
-    "example": "ts-node -r tsconfig-paths/register ./src/cli.ts --g ./usage/example/contracts ./usage/example/types",
+    "example": "node -r ts-node/register --preserve-symlinks ./src/cli.ts --g ./usage/example/contracts ./usage/example/types",
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts'",
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
@@ -73,6 +73,7 @@
   "devDependencies": {
     "ts-node": "^9.1.1",
     "tsconfig-paths": "^3.9.0",
+    "tslint": "^6.1.3",
     "typescript": "^4.2.3"
   }
 }

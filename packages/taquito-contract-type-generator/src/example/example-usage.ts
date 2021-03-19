@@ -33,7 +33,7 @@ const exampleContractMethods1 = async () => {
 
 };
 
-const exampleContractMethods1_contractExtractionComposer = async () => {
+const exampleContractMethods1ContractExtractionComposer = async () => {
 
     // Using the existing type system 
     const Tezos = new TezosToolkit(`https://YOUR_PREFERRED_RPC_URL`);
@@ -41,7 +41,7 @@ const exampleContractMethods1_contractExtractionComposer = async () => {
     const contract = await Tezos.contract.at(`tz123`, createContractAbstractionComposer<TestContractType>());
 
     // Or use the type mapper directly
-    const contract_thisAlsoWorks = await Tezos.contract.at<TypedContractAbstractionOf<TestContractType>>(`tz123`);
+    const contractThisAlsoWorks = await Tezos.contract.at<TypedContractAbstractionOf<TestContractType>>(`tz123`);
 
     contract.methods.bid(tas.nat(0));
     contract.methods.configure({
@@ -167,7 +167,7 @@ const exampleContractStorage1 = async () => {
 };
 
 
-const exampleContractStorage1_contractAbstractionComposer = async () => {
+const exampleContractStorage1ContractAbstractionComposer = async () => {
 
     // Using the existing type system 
     const Tezos = new TezosToolkit(`https://YOUR_PREFERRED_RPC_URL`);

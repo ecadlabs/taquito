@@ -28,7 +28,7 @@ ${tabs(indent)}`;
 
     const typeToCode = (t: TypedType, indent: number): string => {
         if (t.kind === `value`) {
-            //return `${t.typescriptType}`;
+            // return `${t.typescriptType}`;
 
             const prim = `prim` in t.raw ? t.raw.prim : `unknown`;
 

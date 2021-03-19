@@ -115,11 +115,11 @@ const visitVar = (node: MVarArgs): TypedVar[] => {
     // console.log('visitMethodArgs', { node });
     // const debug_source = toDebugSource(node);
 
-    if (typeof node === `string`) {
-        return [{
-            type: visitType(node),
-        }];
-    }
+    // if (typeof node === `string`) {
+    //     return [{
+    //         type: visitType(node),
+    //     }];
+    // }
 
     if (`annots` in node && node.annots?.length === 1) {
         // A named arg 
@@ -152,9 +152,9 @@ const visitType = (node: MType): TypedType => {
     // console.log('visitType', { node });
     // const debug_source = toDebugSource(node);
 
-    if (typeof node === `string`) {
-        return { kind: `value`, raw: node, value: node, typescriptType: `string` };
-    }
+    // if (typeof node === `string`) {
+    //     return { kind: `value`, raw: node, value: node, typescriptType: `string` };
+    // }
 
     if (!(`prim` in node)) {
         // Unknown

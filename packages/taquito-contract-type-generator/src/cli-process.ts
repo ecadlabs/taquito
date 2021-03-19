@@ -3,7 +3,7 @@ import path from 'path';
 import { generateContractTypesFromMichelsonCode } from './contract-type-generator';
 const fs = fsRaw.promises;
 
-export const generateContractTypes_processTzContractFiles = async ({
+export const generateContractTypesProcessTzContractFiles = async ({
     inputTzContractDirectory,
     outputTypescriptDirectory,
 }: {

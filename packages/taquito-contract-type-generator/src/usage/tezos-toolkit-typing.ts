@@ -1,6 +1,5 @@
 import { TransactionOperationParameter } from '@taquito/rpc';
-import { Context, ContractAbstraction, ContractProvider, TransactionWalletOperation, Wallet } from '@taquito/taquito';
-import { TezosToolkit } from '@taquito/taquito';
+import { TezosToolkit, Context, ContractAbstraction, ContractProvider, TransactionWalletOperation, Wallet } from '@taquito/taquito';
 import { OriginationOperation } from '@taquito/taquito/dist/types/operations/origination-operation';
 import { TransactionOperation } from '@taquito/taquito/dist/types/operations/transaction-operation';
 import { OriginateParams } from '@taquito/taquito/dist/types/operations/types';
