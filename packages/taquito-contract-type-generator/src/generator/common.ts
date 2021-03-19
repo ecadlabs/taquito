@@ -8,3 +8,13 @@ export class GenerateApiError implements Error {
 export const assertExhaustive = (value: never, message: string): void => {
     console.error(message, { value });
 };
+
+export const reduceFlatMap = <T>(out: T[], x: T[]): T[] => {
+    out.push(...x);
+    return out;
+}
+
+const reduceFlatMapTest = () => {
+    const items = [['a'], ['b']];
+    const itemsFlat = items.reduce(reduceFlatMap);
+};

@@ -1,7 +1,5 @@
 import * as M from '@taquito/michel-codec';
-import { assertExhaustive, GenerateApiError } from './common';
-
-
+import { assertExhaustive, GenerateApiError, reduceFlatMap } from './common';
 
 export type TypedStorage = {
     storage: {
@@ -57,7 +55,7 @@ const toDebugSource = (node: M.MichelsonType) => {
 export const parseContractStorage = (storage: M.MichelsonContractStorage): TypedStorage => {
     const fields = storage.args
         .map(x => visitVar(x))
-        .flatMap(x => x);
+        .reduce(reduceFlatMap);
     return {
         storage: {
             kind: `object`,
@@ -71,7 +69,7 @@ export const parseContractParameter = (parameter: M.MichelsonContractParameter):
     return {
         methods: parameter.args
             .map(x => visitContractParameterEndpoint(x as MMethod))
-            .flatMap(x => x),
+            .reduce(reduceFlatMap),
     };
 };
 
@@ -82,12 +80,12 @@ const visitContractParameterEndpoint = (node: MMethod): TypedMethod[] => {
 
     // Sub endpoints (i.e. admin endpoints that are imported)
     if (node.prim === `or`) {
-        return node.args.map(x => visitContractParameterEndpoint(x as MMethod)).flatMap(x => x);
+        return node.args.map(x => visitContractParameterEndpoint(x as MMethod)).reduce(reduceFlatMap);
     }
 
     // Sub endpoints as a list (i.e. admin endpoints that are imported)
     if (node.prim === `list` && (node?.args?.[0] as MMethod)?.prim === `or`) {
-        return node.args.map(x => visitContractParameterEndpoint(x as MMethod)).flatMap(x => x);
+        return node.args.map(x => visitContractParameterEndpoint(x as MMethod)).reduce(reduceFlatMap);
     }
 
     if (node.annots?.[0]) {
@@ -99,9 +97,9 @@ const visitContractParameterEndpoint = (node: MMethod): TypedMethod[] => {
             return [{
                 name: name.substr(1),
                 args: [
-                    ...node.prim !== `pair` && !node.args ? [{ type: visitType(node) }] : [],
-                    ...(node.args ?? []).map(x => visitVar(x)),
-                ].flatMap(x => x),
+                    ...(node.prim !== `pair` && !node.args ? [{ type: visitType(node) }] : []),
+                    ...(node.args ?? []).map(x => visitVar(x)).reduce(reduceFlatMap),
+                ],
             }];
         }
     }
@@ -136,7 +134,7 @@ const visitVar = (node: MVarArgs): TypedVar[] => {
 
     if (`prim` in node) {
         if (node.prim === `pair`) {
-            return node.args.map(x => visitVar(x as MMethod)).flatMap(x => x);
+            return node.args.map(x => visitVar(x as MMethod)).reduce(reduceFlatMap);
         }
     }
 
@@ -164,7 +162,7 @@ const visitType = (node: MType): TypedType => {
 
     // Union
     if (node.prim === `or`) {
-        const union = node.args.map(x => visitVar(x)).flatMap(x => x);
+        const union = node.args.map(x => visitVar(x)).reduce(reduceFlatMap);
 
         // Flatten
         const rightSide = union[1];
@@ -185,7 +183,7 @@ const visitType = (node: MType): TypedType => {
 
     // Intersect
     if (node.prim === `pair`) {
-        const fields = node.args.map(x => visitVar(x)).flatMap(x => x);
+        const fields = node.args.map(x => visitVar(x)).reduce(reduceFlatMap);
         if (fields.some(x => !x)) {
             throw new GenerateApiError(`pair: Some fields are null`, { node, args: node.args, fields });
         }
