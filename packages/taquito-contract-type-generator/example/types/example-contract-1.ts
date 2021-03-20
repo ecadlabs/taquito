@@ -17,13 +17,13 @@ type Storage = {
         last_bid_time: timestamp;
         round_time: int;
         extend_time: int;
-        asset: {
+        asset: Array<{
             fa2_address: address;
-            fa2_batch: {
+            fa2_batch: Array<{
                 token_id: nat;
                 amount: nat;
-            }[];
-        }[];
+            }>;
+        }>;
         min_raise_percent: nat;
         min_raise: mutez;
         end_time: timestamp;
@@ -43,13 +43,13 @@ type Methods = {
         min_raise: mutez;
         round_time: nat;
         extend_time: nat;
-        asset: {
+        asset: Array<{
             fa2_address: address;
-            fa2_batch: {
+            fa2_batch: Array<{
                 token_id: nat;
                 amount: nat;
-            }[];
-        }[];
+            }>;
+        }>;
         start_time: timestamp;
         end_time: timestamp;
     }) => Promise<void>;

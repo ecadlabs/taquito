@@ -46,7 +46,7 @@ ${tabs(indent)}`;
             return strictType.strictType;
         }
         if (t.kind === `array`) {
-            return `${typeToCode(t.array.item, indent)}[]`;
+            return `Array<${typeToCode(t.array.item, indent)}>`;
         }
         if (t.kind === `map`) {
 

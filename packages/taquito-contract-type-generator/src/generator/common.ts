@@ -1,6 +1,7 @@
+
 export class GenerateApiError implements Error {
-    public name = `GenerateApiError`;
-    constructor(public message: string, public readonly data: unknown) {
+    name = `GenerateApiError`;
+    constructor(public message: string, readonly data: unknown) {
         console.error(`❌ GenerateApiError: ${message}`, data);
     }
 }

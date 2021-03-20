@@ -60,7 +60,7 @@ export const parseContractStorage = (storage: M.MichelsonContractStorage): Typed
         storage: {
             kind: `object`,
             raw: storage as unknown as M.MichelsonType,
-            fields: fields,
+            fields,
         },
     };
 };

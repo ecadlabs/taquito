@@ -31,19 +31,19 @@ type Methods = {
     pause: (param: boolean) => Promise<void>;
     set_admin: (param: address) => Promise<void>;
     balance_of: (params: {
-        requests: {
+        requests: Array<{
             owner: address;
             token_id: nat;
-        }[];
+        }>;
         callback: contract;
     }) => Promise<void>;
     transfer: (params: {
         from_: address;
-        txs: {
+        txs: Array<{
             to_: address;
             token_id: nat;
             amount: nat;
-        }[];
+        }>;
     }) => Promise<void>;
     add_operator: (params: {
         owner: address;
