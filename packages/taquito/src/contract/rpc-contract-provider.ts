@@ -121,7 +121,7 @@ export class RpcContractProvider<TContract extends { methods: unknown, storage: 
    *
    * @param OriginationOperation Originate operation parameter
    */
-  async originate(params: OriginateParams) {
+  async originate(params: OriginateParams): Promise<OriginationOperation<TContract>> {
     const estimate = await this.estimate(params, this.estimator.originate.bind(this.estimator));
 
     const publicKeyHash = await this.signer.publicKeyHash();
