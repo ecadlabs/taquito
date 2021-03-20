@@ -164,8 +164,8 @@ const isView = (schema: ParameterSchema): boolean => {
   return isView;
 };
 
-export type Contract<TContract extends { methods: unknown, storage: unknown }> = ContractAbstraction<ContractProvider<TContract>, TContract>;
-export type WalletContract<TContract extends { methods: unknown, storage: unknown }> = ContractAbstraction<Wallet<TContract>, TContract>;
+export type Contract<TContract extends { methods: unknown, storage: unknown } = { methods: any, storage: any }> = ContractAbstraction<ContractProvider<TContract>, TContract>;
+export type WalletContract<TContract extends { methods: unknown, storage: unknown } = { methods: any, storage: any }> = ContractAbstraction<Wallet<TContract>, TContract>;
 
 const isContractProvider = <TContract extends { methods: unknown, storage: unknown }>(variableToCheck: any): variableToCheck is ContractProvider<TContract> =>
   variableToCheck.contractProviderTypeSymbol !== undefined;
