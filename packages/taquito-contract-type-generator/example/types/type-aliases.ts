@@ -26,9 +26,9 @@ const createBigNumberTypeTas = <T extends BigNumber>() => {
     return (value: number | BigNumber | string): T => new BigNumber(value) as T;
 };
 
-type asMapParamOf<K, V> = K extends string ? { [key: string]: V } | { key: K, value: V }[]
-    : K extends number ? { [key: number]: V } | { key: K, value: V }[]
-    : { key: K, value: V }[];
+type asMapParamOf<K, V> = K extends string ? { [key: string]: V } | Array<{ key: K, value: V }>
+    : K extends number ? { [key: number]: V } | Array<{ key: K, value: V }>
+    : Array<{ key: K, value: V }>;
 
 function asMap<K, V>(value: asMapParamOf<K, V>): MMap<K, V> {
     const m = new MichelsonMap<K, V>();
