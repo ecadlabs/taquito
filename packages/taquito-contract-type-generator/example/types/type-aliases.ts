@@ -33,7 +33,7 @@ type asMapParamOf<K, V> = K extends string ? { [key: string]: V } | Array<{ key:
 function asMap<K, V>(value: asMapParamOf<K, V>): MMap<K, V> {
     const m = new MichelsonMap<K, V>();
     if (Array.isArray(value)) {
-        const vArray = value as { key: K, value: V }[];
+        const vArray = value as Array<{ key: K, value: V }>;
         vArray.forEach(x => m.set(x.key, x.value));
     } else {
         const vObject = value as { [key: string]: V };
