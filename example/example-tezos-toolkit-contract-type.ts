@@ -1,5 +1,4 @@
-// import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
-import { MichelsonMap, TezosToolkit } from '../packages/taquito/src/taquito';
+import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
 
 const example = async () => {
 
