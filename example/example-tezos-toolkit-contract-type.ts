@@ -9,7 +9,7 @@ const example = async () => {
             sell: (params: { id: string }) => void;
         },
         storage: {
-            isTrue: boolean;
+            isInitialized: boolean;
             values: MichelsonMap<string, { id: string, isOpen: boolean }>;
         }
     };
@@ -20,10 +20,12 @@ const example = async () => {
     const originateContract = async () => {
         // Contract
         const originateResult = await tezos.contract.originate({
-            code: '',
-            // TODO: Type This
-            storage: {
+            code: '...',
 
+            // This type must match
+            storage: {
+                isInitialized: false,
+                values: new MichelsonMap(),
             },
         });
         const contract = await originateResult.contract(1000);
