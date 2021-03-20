@@ -68,4 +68,7 @@ export const tas = {
     // Operations
     add,
     subtract,
+
+    // To number
+    number: (value: string | BigNumber) => Number(value + ''),
 };
