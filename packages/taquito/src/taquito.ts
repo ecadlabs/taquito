@@ -61,11 +61,11 @@ export interface SetProviderOptions {
  * 
  * @param _rpc The RPC server to use
  */
-export class TezosToolkit {
+export class TezosToolkit<TContract extends { methods: unknown, storage: unknown } = { methods: unknown, storage: unknown }> {
   private _stream!: SubscribeProvider;
   private _options: SetProviderOptions = {};
   private _rpcClient: RpcClient
-  private _wallet: Wallet;
+  private _wallet: Wallet<TContract>;
   private _context: Context;
   /**
    * @deprecated TezosToolkit.batch has been deprecated in favor of TezosToolkit.contract.batch
@@ -88,7 +88,7 @@ export class TezosToolkit {
     this.setProvider({ rpc: this._rpcClient });
     // tslint:disable-next-line: deprecation
     this.batch = this._context.batch.batch.bind(this._context.batch);
-  } 
+  }
 
   /**
    * @description Sets configuration on the Tezos Taquito instance. Allows user to choose which signer, rpc client, rpc url, forger and so forth
@@ -142,10 +142,10 @@ export class TezosToolkit {
       this._rpcClient = new RpcClient(rpc);
     } else if (rpc instanceof RpcClient) {
       this._rpcClient = rpc;
-    } 
-/*     else if (this._options.rpc === undefined) {
-      this._rpcClient = new RpcClient();
-    } */
+    }
+    /*     else if (this._options.rpc === undefined) {
+          this._rpcClient = new RpcClient();
+        } */
     this._options.rpc = this._rpcClient;
     this._context.rpc = this._rpcClient;
   }
@@ -212,11 +212,11 @@ export class TezosToolkit {
   /**
    * @description Provide access to smart contract utilities
    */
-  get contract(): ContractProvider {
+  get contract(): ContractProvider<TContract> {
     return this._context.contract;
   }
 
-  get wallet(): Wallet {
+  get wallet(): Wallet<TContract> {
     return this._wallet;
   }
 

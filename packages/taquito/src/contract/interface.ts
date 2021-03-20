@@ -98,7 +98,7 @@ export interface StorageProvider {
   getBigMapKeyByID<T>(id: string, keyToEncode: string, schema: Schema): Promise<T>;
 }
 
-export interface ContractProvider extends StorageProvider {
+export interface ContractProvider<TContract extends { methods: unknown, storage: unknown }> extends StorageProvider {
   /**
    *
    * @description Originate a new contract according to the script in parameters. Will sign and inject an operation using the current context
@@ -138,7 +138,7 @@ export interface ContractProvider extends StorageProvider {
    */
 
   transfer(params: TransferParams): Promise<TransactionOperation>;
-  at<T extends ContractAbstraction<ContractProvider>>(address: string, contractAbstractionComposer?: (abs: ContractAbstraction<ContractProvider>, context: Context) => T): Promise<T>;
+  at<T extends ContractAbstraction<ContractProvider<TContract>, TContract>>(address: string, contractAbstractionComposer?: (abs: ContractAbstraction<ContractProvider<TContract>, TContract>, context: Context) => T): Promise<T>;
 
   /**
    *
@@ -146,5 +146,5 @@ export interface ContractProvider extends StorageProvider {
    *
    * @param params List of operation to batch together
    */
-  batch(params?: ParamsWithKind[]): OperationBatch ;
+  batch(params?: ParamsWithKind[]): OperationBatch;
 }

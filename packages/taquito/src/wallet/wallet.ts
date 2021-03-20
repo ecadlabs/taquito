@@ -18,10 +18,10 @@ export type WalletParamsWithKind =
   | withKind<WalletOriginateParams, OpKind.ORIGINATION>
   | withKind<WalletDelegateParams, OpKind.DELEGATION>;
 
-export class WalletOperationBatch {
+export class WalletOperationBatch<TContract extends { methods: unknown, storage: unknown }> {
   private operations: WalletParamsWithKind[] = [];
 
-  constructor(private walletProvider: WalletProvider, private context: Context) {}
+  constructor(private walletProvider: WalletProvider, private context: Context) { }
 
   /**
    *
@@ -40,7 +40,7 @@ export class WalletOperationBatch {
    *
    * @param params Transfer operation parameter
    */
-  withContractCall(params: ContractMethod<Wallet>) {
+  withContractCall(params: ContractMethod<Wallet<TContract>, TContract>) {
     return this.withTransfer(params.toTransferParams());
   }
 
@@ -67,25 +67,25 @@ export class WalletOperationBatch {
   }
 
   private async mapOperation(param: WalletParamsWithKind) {
-		switch (param.kind) {
-			case OpKind.TRANSACTION:
-				return this.walletProvider.mapTransferParamsToWalletParams({
-					...param
-				});
-			case OpKind.ORIGINATION:
-				return this.walletProvider.mapOriginateParamsToWalletParams(
-					await this.context.parser.prepareCodeOrigination({
-						...param
-					})
-				);
-			case OpKind.DELEGATION:
-				return this.walletProvider.mapDelegateParamsToWalletParams({
-					...param
-				});
-			default:
-				throw new Error(`Unsupported operation kind: ${(param as any).kind}`);
-		}
-	}
+    switch (param.kind) {
+      case OpKind.TRANSACTION:
+        return this.walletProvider.mapTransferParamsToWalletParams({
+          ...param
+        });
+      case OpKind.ORIGINATION:
+        return this.walletProvider.mapOriginateParamsToWalletParams(
+          await this.context.parser.prepareCodeOrigination({
+            ...param
+          })
+        );
+      case OpKind.DELEGATION:
+        return this.walletProvider.mapDelegateParamsToWalletParams({
+          ...param
+        });
+      default:
+        throw new Error(`Unsupported operation kind: ${(param as any).kind}`);
+    }
+  }
 
   /**
    *
@@ -131,8 +131,8 @@ export class WalletOperationBatch {
   }
 }
 
-export class Wallet {
-  constructor(private context: Context) {}
+export class Wallet<TContract extends { methods: unknown, storage: unknown }> {
+  constructor(private context: Context) { }
 
   private get walletProvider() {
     return this.context.walletProvider;
@@ -169,19 +169,19 @@ export class Wallet {
    * @param originateParams Originate operation parameter
    */
   originate(params: WalletOriginateParams) {
-		return this.walletCommand(async () => {
-			const mappedParams = await this.walletProvider.mapOriginateParamsToWalletParams(
-				await this.context.parser.prepareCodeOrigination({
-					...params
-				})
-			);
-			const opHash = await this.walletProvider.sendOperations([ mappedParams ]);
-			if (!this.context.proto) {
-				this.context.proto = (await this.context.rpc.getBlock()).protocol as Protocols;
-			}
-			return this.context.operationFactory.createOriginationOperation(opHash);
-		});
-	}
+    return this.walletCommand(async () => {
+      const mappedParams = await this.walletProvider.mapOriginateParamsToWalletParams(
+        await this.context.parser.prepareCodeOrigination({
+          ...params
+        })
+      );
+      const opHash = await this.walletProvider.sendOperations([mappedParams]);
+      if (!this.context.proto) {
+        this.context.proto = (await this.context.rpc.getBlock()).protocol as Protocols;
+      }
+      return this.context.operationFactory.createOriginationOperation(opHash);
+    });
+  }
 
   /**
    *
@@ -240,13 +240,13 @@ export class Wallet {
    *
    * @param params List of operation to initialize the batch with
    */
-  batch(params?: Parameters<WalletOperationBatch['with']>[0]) {
+  batch(params?: Parameters<WalletOperationBatch<TContract>['with']>[0]) {
     const batch = new WalletOperationBatch(this.walletProvider, this.context);
-    
+
     if (Array.isArray(params)) {
       batch.with(params);
     }
-    
+
     return batch;
   }
 
@@ -257,7 +257,10 @@ export class Wallet {
    *
    * @param address Smart contract address
    */
-  async at<T extends ContractAbstraction<Wallet>>(address: string, contractAbstractionComposer: (abs: ContractAbstraction<Wallet>, context: Context) => T = x => x as any): Promise<T> {
+  async at<T extends ContractAbstraction<Wallet<TContract>, TContract>>(
+    address: string,
+    contractAbstractionComposer: (abs: ContractAbstraction<Wallet<TContract>, TContract>, context: Context) => T = x => x as any
+  ): Promise<T> {
     const script = await this.context.rpc.getScript(address);
     const entrypoints = await this.context.rpc.getEntrypoints(address);
     const blockHeader = await this.context.rpc.getBlockHeader();

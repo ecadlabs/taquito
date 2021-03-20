@@ -25,7 +25,7 @@ const DEFAULT_SMART_CONTRACT_METHOD_NAME = 'default';
 /**
  * @description Utility class to send smart contract operation
  */
-export class ContractMethod<T extends ContractProvider | Wallet> {
+export class ContractMethod<T extends ContractProvider<TContract> | Wallet<TContract>, TContract extends { methods: unknown, storage: unknown }> {
   constructor(
     private provider: T,
     private address: string,
@@ -53,10 +53,10 @@ export class ContractMethod<T extends ContractProvider | Wallet> {
    */
   send(
     params: Partial<SendParams> = {}
-  ): Promise<T extends Wallet ? TransactionWalletOperation : TransactionOperation> {
+  ): Promise<T extends Wallet<TContract> ? TransactionWalletOperation : TransactionOperation> {
     if (this.provider instanceof Wallet) {
       // TODO got around TS2352: Conversion of type 'T & Wallet' to type 'Wallet' by adding `as unknown`. Needs clarification
-      return (this.provider as unknown as Wallet).transfer(this.toTransferParams(params)).send() as any;
+      return (this.provider as unknown as Wallet<TContract>).transfer(this.toTransferParams(params)).send() as any;
     } else {
       return this.provider.transfer(this.toTransferParams(params)) as any;
     }
@@ -98,10 +98,10 @@ export class ContractMethod<T extends ContractProvider | Wallet> {
 /**
  * @description Utility class to retrieve data from a smart contract's storage without incurring fees via a contract's view method
  */
-export class ContractView {
+export class ContractView<TContract extends { methods: unknown, storage: unknown }> {
   constructor(
-    private currentContract: ContractAbstraction<ContractProvider | Wallet>,
-    private provider: ContractProvider,
+    private currentContract: ContractAbstraction<ContractProvider<TContract> | Wallet<TContract>, TContract>,
+    private provider: ContractProvider<TContract>,
     private name: string,
     private chainId: string,
     private callbackParametersSchema: ParameterSchema,
@@ -164,24 +164,31 @@ const isView = (schema: ParameterSchema): boolean => {
   return isView;
 };
 
-export type Contract = ContractAbstraction<ContractProvider>;
-export type WalletContract = ContractAbstraction<Wallet>;
+export type Contract<TContract extends { methods: unknown, storage: unknown }> = ContractAbstraction<ContractProvider<TContract>, TContract>;
+export type WalletContract<TContract extends { methods: unknown, storage: unknown }> = ContractAbstraction<Wallet<TContract>, TContract>;
 
-const isContractProvider = (variableToCheck: any): variableToCheck is ContractProvider =>
+const isContractProvider = <TContract extends { methods: unknown, storage: unknown }>(variableToCheck: any): variableToCheck is ContractProvider<TContract> =>
   variableToCheck.contractProviderTypeSymbol !== undefined;
+
+type ContractMethodsOf<T extends ContractProvider<TContract> | Wallet<TContract>, TContract extends { methods: unknown, storage: unknown }> = {
+  [M in keyof TContract['methods']]:
+  TContract['methods'][M] extends (...args: infer A) => unknown
+  ? (...args: A) => ContractMethod<T, TContract>
+  : never
+};
 
 /**
  * @description Smart contract abstraction
  */
-export class ContractAbstraction<T extends ContractProvider | Wallet> {
+export class ContractAbstraction<T extends ContractProvider<TContract> | Wallet<TContract>, TContract extends { methods: unknown, storage: unknown }> {
   /**
    * @description Contains methods that are implemented by the target Tezos Smart Contract, and offers the user to call the Smart Contract methods as if they were native TS/JS methods.
    * NB: if the contract contains annotation it will include named properties; if not it will be indexed by a number.
    *
    */
-  public methods: { [key: string]: (...args: any[]) => ContractMethod<T> } = {};
+  public methods = {} as ContractMethodsOf<T, TContract>;
 
-  public views: { [key: string]: (...args: any[]) => ContractView } = {};
+  public views: { [key: string]: (...args: any[]) => ContractView<TContract> } = {};
 
   public readonly schema: Schema;
 
@@ -201,7 +208,7 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
   }
 
   private _initializeMethods(
-    currentContract: ContractAbstraction<T>,
+    currentContract: ContractAbstraction<T, TContract>,
     address: string,
     provider: T,
     entrypoints: {
@@ -220,7 +227,7 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
 
           validateArgs(args, smartContractMethodSchema, smartContractMethodName);
 
-          return new ContractMethod<T>(
+          return new ContractMethod<T, TContract>(
             provider,
             address,
             smartContractMethodSchema,
@@ -272,7 +279,7 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
             parameterSchema,
             smartContractMethodName
           );
-          return new ContractMethod<T>(
+          return new ContractMethod<T, TContract>(
             provider,
             address,
             parameterSchema,
@@ -288,7 +295,7 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
       const smartContractMethodSchema = this.parameterSchema;
       const method = function (...args: any[]) {
         validateArgs(args, parameterSchema, DEFAULT_SMART_CONTRACT_METHOD_NAME);
-        return new ContractMethod<T>(
+        return new ContractMethod<T, TContract>(
           provider,
           address,
           smartContractMethodSchema,
@@ -304,7 +311,7 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
   /**
    * @description Return a friendly representation of the smart contract storage
    */
-  public storage<T>() {
+  public storage<T = TContract['storage']>() {
     return this.storageProvider.getStorage<T>(this.address, this.schema);
   }
 
