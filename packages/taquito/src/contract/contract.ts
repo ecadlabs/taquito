@@ -180,7 +180,7 @@ type ContractMethodsOf<T extends ContractProvider<TContract> | Wallet<TContract>
 /**
  * @description Smart contract abstraction
  */
-export class ContractAbstraction<T extends ContractProvider<TContract> | Wallet<TContract>, TContract extends { methods: unknown, storage: unknown }> {
+export class ContractAbstraction<T extends ContractProvider<TContract> | Wallet<TContract>, TContract extends { methods: unknown, storage: unknown } = { methods: unknown, storage: unknown }> {
   /**
    * @description Contains methods that are implemented by the target Tezos Smart Contract, and offers the user to call the Smart Contract methods as if they were native TS/JS methods.
    * NB: if the contract contains annotation it will include named properties; if not it will be indexed by a number.

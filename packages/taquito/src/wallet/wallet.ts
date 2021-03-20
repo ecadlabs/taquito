@@ -131,7 +131,7 @@ export class WalletOperationBatch<TContract extends { methods: unknown, storage:
   }
 }
 
-export class Wallet<TContract extends { methods: unknown, storage: unknown }> {
+export class Wallet<TContract extends { methods: unknown, storage: unknown } = { methods: unknown, storage: unknown }> {
   constructor(private context: Context) { }
 
   private get walletProvider() {
