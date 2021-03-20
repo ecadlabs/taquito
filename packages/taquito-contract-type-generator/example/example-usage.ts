@@ -2,7 +2,7 @@ import { TezosToolkit } from '@taquito/taquito';
 import { Contract as TestContractType } from './types/example-contract-1';
 import { Contract as TestContractType2 } from './types/example-contract-2';
 import { nat, tas } from './types/type-aliases';
-import { createContractAbstractionComposer, TezosToolkitTyped, TypedContractAbstractionOf } from '../usage/tezos-toolkit-typing';
+import { createContractAbstractionComposer, TezosToolkitTyped, TypedContractAbstractionOf } from '../src/usage/tezos-toolkit-typing';
 
 
 const exampleContractMethods1 = async () => {
