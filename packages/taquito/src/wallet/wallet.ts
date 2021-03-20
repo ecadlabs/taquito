@@ -265,7 +265,7 @@ export class Wallet<TContract extends { methods: unknown, storage: unknown }> {
     const entrypoints = await this.context.rpc.getEntrypoints(address);
     const blockHeader = await this.context.rpc.getBlockHeader();
     const chainId = blockHeader.chain_id;
-    const abs = new ContractAbstraction(address, script, this, this.context.contract, entrypoints, chainId);
+    const abs: ContractAbstraction<Wallet<TContract>, TContract> = new ContractAbstraction(address, script, this, this.context.contract, entrypoints, chainId);
     return contractAbstractionComposer(abs, this.context);
   }
 }

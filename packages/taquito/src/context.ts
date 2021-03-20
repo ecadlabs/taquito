@@ -17,7 +17,7 @@ import { ParserProvider } from './parser/interface';
 import { MichelCodecParser } from './parser/michel-codec-parser';
 
 export interface TaquitoProvider<T, K extends Array<any>> {
-  new (context: Context, ...rest: K): T;
+  new(context: Context, ...rest: K): T;
 }
 
 // The shouldObservableSubscriptionRetrythe parameter is related to the observable in ObservableSubsription class. 
@@ -74,7 +74,7 @@ export class Context {
     this._injector = injector ? injector : new RpcInjector(this);
     this.operationFactory = new OperationFactory(this);
     this._walletProvider = wallet ? wallet : new LegacyWalletProvider(this);
-    this._parser = parser? parser: new MichelCodecParser(this);
+    this._parser = parser ? parser : new MichelCodecParser(this);
   }
 
   get config(): Required<Config> {

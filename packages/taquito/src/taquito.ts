@@ -213,7 +213,7 @@ export class TezosToolkit<TContract extends { methods: unknown, storage: unknown
    * @description Provide access to smart contract utilities
    */
   get contract(): ContractProvider<TContract> {
-    return this._context.contract;
+    return this._context.contract as unknown as ContractProvider<TContract>;
   }
 
   get wallet(): Wallet<TContract> {

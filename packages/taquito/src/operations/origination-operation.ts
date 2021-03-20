@@ -20,7 +20,7 @@ import {
  *
  * @warn Currently support only one origination per operation
  */
-export class OriginationOperation extends Operation
+export class OriginationOperation<TContract extends { methods: unknown, storage: unknown }> extends Operation
   implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation {
   /**
    * @description Contract address of the newly originated contract
@@ -33,7 +33,7 @@ export class OriginationOperation extends Operation
     raw: ForgedBytes,
     results: OperationContentsAndResult[],
     context: Context,
-    private contractProvider: RpcContractProvider
+    private contractProvider: RpcContractProvider<TContract>
   ) {
     super(hash, raw, results, context);
 

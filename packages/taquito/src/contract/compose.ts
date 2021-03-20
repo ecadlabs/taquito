@@ -4,9 +4,10 @@ import { ContractAbstraction } from './contract';
 import { ContractProvider } from './interface';
 
 export function compose<
-    ContractAbsComposer1 extends ContractAbstraction<ContractProvider | Wallet>,
-    ContractAbsComposer2 extends ContractAbstraction<ContractProvider | Wallet>,
-    ContractAbstractionComposed
+    ContractAbsComposer1 extends ContractAbstraction<ContractProvider<TContract> | Wallet<TContract>, TContract>,
+    ContractAbsComposer2 extends ContractAbstraction<ContractProvider<TContract> | Wallet<TContract>, TContract>,
+    ContractAbstractionComposed,
+    TContract extends { methods: unknown, storage: unknown }
 >(
     functioncomposer1: (abs: ContractAbsComposer1, context: Context) => ContractAbsComposer2,
     functioncomposer2: (abs: ContractAbsComposer2, context: Context) => ContractAbstractionComposed

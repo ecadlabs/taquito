@@ -107,7 +107,7 @@ export interface ContractProvider<TContract extends { methods: unknown, storage:
    *
    * @param OriginationOperation Originate operation parameter
    */
-  originate(contract: OriginateParams): Promise<OriginationOperation>;
+  originate(contract: OriginateParams): Promise<OriginationOperation<TContract>>;
 
   /**
    *
@@ -146,5 +146,5 @@ export interface ContractProvider<TContract extends { methods: unknown, storage:
    *
    * @param params List of operation to batch together
    */
-  batch(params?: ParamsWithKind[]): OperationBatch;
+  batch(params?: ParamsWithKind[]): OperationBatch<TContract>;
 }

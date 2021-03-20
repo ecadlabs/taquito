@@ -6,7 +6,7 @@ import { TransferParams } from '../operations/types';
 import { TransactionWalletOperation, Wallet } from '../wallet';
 import { InvalidParameterError, UndefinedLambdaContractError } from './errors';
 import { ContractProvider, StorageProvider } from './interface';
-import LambdaView from './lambda-view';
+import LambdaView, { LambaViewContractOf } from './lambda-view';
 
 interface SendParams {
   fee?: number;
@@ -218,6 +218,8 @@ export class ContractAbstraction<T extends ContractProvider<TContract> | Wallet<
   ) {
     const parameterSchema = this.parameterSchema;
     const keys = Object.keys(entrypoints);
+    const methods = this.methods as { [key: string]: (...args: unknown[]) => unknown };
+
     if (parameterSchema.isMultipleEntryPoint) {
       keys.forEach(smartContractMethodName => {
         const smartContractMethodSchema = new ParameterSchema(
@@ -235,7 +237,7 @@ export class ContractAbstraction<T extends ContractProvider<TContract> | Wallet<
             args
           );
         };
-        this.methods[smartContractMethodName] = method;
+        methods[smartContractMethodName] = method;
 
         if (isContractProvider(provider)) {
           if (isView(smartContractMethodSchema)) {
@@ -289,7 +291,7 @@ export class ContractAbstraction<T extends ContractProvider<TContract> | Wallet<
             true
           );
         };
-        this.methods[smartContractMethodName] = method;
+        methods[smartContractMethodName] = method;
       });
     } else {
       const smartContractMethodSchema = this.parameterSchema;
@@ -304,7 +306,7 @@ export class ContractAbstraction<T extends ContractProvider<TContract> | Wallet<
           false
         );
       };
-      this.methods[DEFAULT_SMART_CONTRACT_METHOD_NAME] = method;
+      methods[DEFAULT_SMART_CONTRACT_METHOD_NAME] = method;
     }
   }
 

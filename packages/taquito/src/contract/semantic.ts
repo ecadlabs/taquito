@@ -5,9 +5,9 @@ import BigNumber from 'bignumber.js';
 import { MichelsonV1Expression } from '@taquito/rpc';
 
 // Override the default michelson encoder semantic to provide richer abstraction over storage properties
-export const smartContractAbstractionSemantic: (p: ContractProvider) => Semantic = (
-  provider: ContractProvider
-) => ({
+export const smartContractAbstractionSemantic = <TContract extends { methods: unknown, storage: unknown }>(
+  provider: ContractProvider<TContract>,
+): Semantic => ({
   // Provide a specific abstraction for BigMaps
   big_map: (val: MichelsonV1Expression, code: MichelsonV1Expression) => {
     if (!val || !('int' in val) || val.int === undefined) {
