@@ -41,7 +41,7 @@ const example = async () => {
         methods.bid({ amount: '10' });
         methods.sell({ id: '42' });
     };
-    originateContract();
+    await originateContract();
 
 
     const accessContract = async () => {
@@ -61,7 +61,7 @@ const example = async () => {
         methods.bid({ amount: '10' });
         methods.sell({ id: '42' });
     };
-    accessContract();
+    await accessContract();
 
     const accessWallet = async () => {
         // Contract
@@ -80,8 +80,9 @@ const example = async () => {
         methods.bid({ amount: '10' });
         methods.sell({ id: '42' });
     };
-    accessWallet();
+    await accessWallet();
 
 };
 
+// tslint:disable-next-line: no-floating-promises
 example();
