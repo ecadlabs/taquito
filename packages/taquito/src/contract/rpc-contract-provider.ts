@@ -25,7 +25,7 @@ import {
 } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
 
-export class RpcContractProvider<TContract extends { methods: unknown, storage: unknown }> extends OperationEmitter
+export class RpcContractProvider<TContract extends { methods: unknown, storage: unknown } = { methods: any; storage: any }> extends OperationEmitter
   implements ContractProvider<TContract>, StorageProvider {
   constructor(context: Context, private estimator: EstimationProvider) {
     super(context);

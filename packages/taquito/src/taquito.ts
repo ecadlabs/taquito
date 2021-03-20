@@ -61,7 +61,7 @@ export interface SetProviderOptions {
  * 
  * @param _rpc The RPC server to use
  */
-export class TezosToolkit<TContract extends { methods: unknown, storage: unknown } = { methods: unknown, storage: unknown }> {
+export class TezosToolkit<TContract extends { methods: unknown, storage: unknown } = { methods: any; storage: any }> {
   private _stream!: SubscribeProvider;
   private _options: SetProviderOptions = {};
   private _rpcClient: RpcClient

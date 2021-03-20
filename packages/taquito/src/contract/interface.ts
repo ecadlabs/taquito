@@ -98,7 +98,7 @@ export interface StorageProvider {
   getBigMapKeyByID<T>(id: string, keyToEncode: string, schema: Schema): Promise<T>;
 }
 
-export interface ContractProvider<TContract extends { methods: unknown, storage: unknown } = { methods: unknown, storage: unknown }> extends StorageProvider {
+export interface ContractProvider<TContract extends { methods: unknown, storage: unknown } = { methods: any; storage: any }> extends StorageProvider {
   /**
    *
    * @description Originate a new contract according to the script in parameters. Will sign and inject an operation using the current context
