@@ -5,8 +5,8 @@ import { generateContractTypesFromMichelsonCode } from '../src/generator/process
 const fs = {
     readFile: promisify(fsRaw.readFile),
 };
-const readFileText = async (filePath: string) => {
-    return await fs.readFile(filePath, { encoding: 'utf8' });
+const readFileText = async (filePath: string): Promise<string> => {
+    return fs.readFile(filePath, { encoding: 'utf8' });
 };
 
 describe('Generate Example Contracts', () => {
