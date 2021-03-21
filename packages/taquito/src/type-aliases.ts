@@ -7,6 +7,7 @@ export type address = string & { __type: 'address' };
 export type bytes = string & { __type: 'bytes' };
 export type contract = string & { __type: 'contract' };
 export type operation = string & { __type: 'operation' };
+export type key = string & { __type: 'key' };
 export type key_hash = string & { __type: 'key_hash' };
 
 export type timestamp = string & { __type: 'timestamp' };

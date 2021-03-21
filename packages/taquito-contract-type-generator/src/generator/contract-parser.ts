@@ -104,7 +104,10 @@ const visitContractParameterEndpoint = (node: MMethod): TypedMethod[] => {
         }
     }
 
-    throw new GenerateApiError(`Unknown method: ${node.prim as string}`, { node });
+    // throw new GenerateApiError(`Unknown method: ${node.prim as string}`, { node });
+    console.warn(`Unknown method: ${node.prim as string}`, { node });
+
+    return [];
 };
 
 
