@@ -1,5 +1,5 @@
 
-import { address, BigMap, int, mutez, nat, timestamp } from './type-aliases';
+import { address, BigMap, int, mutez, nat, timestamp } from '@taquito/taquito/src/type-aliases';
 
 type Storage = {
     pauseable_admin?: {
