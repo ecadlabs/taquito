@@ -7,7 +7,35 @@ const fs = {
     readdir: promisify(fsRaw.readdir),
     readFile: promisify(fsRaw.readFile),
     writeFile: promisify(fsRaw.writeFile),
+    stat: promisify(fsRaw.stat),
 };
+
+
+const getAllFiles = async (rootPath: string, filter: (fullPath: string) => boolean): Promise<string[]> => {
+    const allFiles = [] as string[];
+
+    const getAllFilesRecursive = async (dirPath: string) => {
+        let files = await fs.readdir(dirPath, { withFileTypes: true });
+
+        for (const f of files) {
+            const subPath = path.resolve(dirPath, f.name);
+
+            if (f.isDirectory()) {
+                await getAllFilesRecursive(subPath);
+                continue;
+            }
+
+            if (!filter(subPath)) {
+                continue;
+            }
+
+            allFiles.push(subPath);
+        }
+    }
+
+    await getAllFilesRecursive(rootPath);
+    return allFiles;
+}
 
 export const generateContractTypesProcessTzContractFiles = async ({
     inputTzContractDirectory,
@@ -19,14 +47,11 @@ export const generateContractTypesProcessTzContractFiles = async ({
 
     console.log(`Generating Types: ${path.resolve(inputTzContractDirectory)} => ${path.resolve(outputTypescriptDirectory)}`);
 
-    // Make dir
-    await fs.mkdir(outputTypescriptDirectory, { recursive: true });
-
-    const allFiles = await fs.readdir(inputTzContractDirectory);
-    const files = allFiles.filter(x => x.endsWith(`.tz`));
+    const files = await getAllFiles(inputTzContractDirectory, x => x.endsWith('.tz'));
     console.log(`Contracts Found: ${[``, ...files].join(`\n\t- `)}`);
 
-    for (const fileRelativePath of files) {
+    for (const fullPath of files) {
+        const fileRelativePath = fullPath.replace(path.resolve(inputTzContractDirectory), '');
         const inputFilePath = path.join(inputTzContractDirectory, fileRelativePath);
         const outputFilePath = path.join(outputTypescriptDirectory, fileRelativePath.replace(`.tz`, `.ts`));
         console.log(`Processing ${fileRelativePath}...`);
@@ -34,6 +59,9 @@ export const generateContractTypesProcessTzContractFiles = async ({
         try {
             const michelsonCode = await fs.readFile(inputFilePath, { encoding: `utf8` });
             const { typescriptCode: { final: finalTypescriptCode } } = generateContractTypesFromMichelsonCode(michelsonCode);
+
+            // Write output (ensure dir exists)
+            await fs.mkdir(path.dirname(outputFilePath), { recursive: true });
             await fs.writeFile(outputFilePath, finalTypescriptCode);
         } catch (err: unknown) {
             console.error(`❌ Could not process ${fileRelativePath}`, { err });

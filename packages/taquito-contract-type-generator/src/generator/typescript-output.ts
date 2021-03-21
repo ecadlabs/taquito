@@ -147,7 +147,7 @@ ${tabs(indent)}`;
 
     // ${typeMapping}
     //         `.trim();
-    const typeAliases = `import { ${usedStrictTypes.map(x => x.strictType).join(`, `)} } from './type-aliases';`;
+    const typeAliases = `import { ${usedStrictTypes.map(x => x.strictType).join(`, `)} } from '@taquito/taquito/src/type-aliases';`;
 
     const finalCode = `
 ${typeAliases}

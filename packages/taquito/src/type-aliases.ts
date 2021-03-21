@@ -1,5 +1,5 @@
-import { MichelsonMap } from '@taquito/taquito';
 import { BigNumber } from 'bignumber.js';
+import { MichelsonMap } from './taquito';
 
 export type unit = (true | undefined) & { __type: 'unit' };
 
