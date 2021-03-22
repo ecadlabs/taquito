@@ -1,3 +1,4 @@
+import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { ScriptResponse } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
@@ -100,15 +101,66 @@ export class RpcContractProvider extends OperationEmitter
    *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-big-maps-big-map-id-script-expr
    */
-  async getBigMapKeyByID<T>(id: string, keyToEncode: string, schema: Schema): Promise<T> {
+  async getBigMapKeyByID<T>(id: string, keyToEncode: string, schema: Schema, block?: string): Promise<T> {
     const { key, type } = schema.EncodeBigMapKey(keyToEncode);
     const { packed } = await this.context.rpc.packData({ data: key, type });
 
     const encodedExpr = encodeExpr(packed);
 
-    const bigMapValue = await this.context.rpc.getBigMapExpr(id.toString(), encodedExpr);
+    const bigMapValue = block? await this.context.rpc.getBigMapExpr(id.toString(), encodedExpr, { block }) : await this.context.rpc.getBigMapExpr(id.toString(), encodedExpr);
 
     return schema.ExecuteOnBigMapValue(bigMapValue, smartContractAbstractionSemantic(this)) as T;
+  }
+
+  /**
+   *
+   * @description Fetch multiple values in a big map
+   * All values will be fetch on the same block level
+   * If one of the key does not exist in the big map, its value will be set to undefined
+   *
+   * @param id Big Map ID
+   * @param keys Array of keys to query (will be encoded properly according to the schema)
+   * @param schema Big Map schema (can be determined using your contract type)
+   * @returns An object containing the keys queried in the big map and their value in a well-formatted JSON object format
+   *
+   */
+  async getBigMapKeysByID<T>(id: string, keys: string[], schema: Schema): Promise<{ [key: string]: T | undefined }> {
+    let bigMapValues = Object({[keys[0]]: undefined});
+    if (keys.length === 1) {
+      let val: T | undefined;
+      try {
+        val = await this.getBigMapKeyByID<T>(id, keys[0], schema);
+      } catch(ex) {
+        if (ex instanceof HttpResponseError && ex.status === STATUS_CODE.NOT_FOUND) {
+          val = undefined;
+        } else {
+          throw ex;
+        }
+      }
+      Object.assign(bigMapValues, {[keys[0]]: val});
+
+    } else {
+      const { header } = await this.context.rpc.getBlock();
+
+      const results = await Promise.all(
+        keys.map(async keyToEncode => {
+          return this.getBigMapKeyByID<T>(id, keyToEncode, schema, header.level.toString())
+          .catch(ex => {
+            if (ex instanceof HttpResponseError && ex.status === STATUS_CODE.NOT_FOUND) {
+              (keyToEncode as any) = undefined;
+            } else {
+              throw ex;
+            }
+          })
+        })
+      );
+
+      for (let i = 0; i < results.length; i++) {
+        Object.assign(bigMapValues, {[keys[i]]: results[i]})
+      }
+    }
+
+    return bigMapValues;
   }
 
   /**

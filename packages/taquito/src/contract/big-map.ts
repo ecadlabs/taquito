@@ -19,6 +19,20 @@ export class BigMapAbstraction {
     }
   }
 
+  /**
+   *
+   * @description Fetch multiple values in a big map
+   * All values will be fetch on the same block level
+   * If one of the key does not exist in the big map, its value will be set to undefined
+   *
+   * @param keysToEncode Array of keys to query (will be encoded properly according to the schema)
+   * @returns An object containing the keys queried in the big map and their value in a well-formatted JSON object format
+   *
+   */
+  async getMultipleValues<T>(keysToEncode: string[]) {
+    return await this.provider.getBigMapKeysByID<T>(this.id.toString(), keysToEncode, this.schema);
+  }
+
   toJSON() {
     return this.id.toString();
   }
