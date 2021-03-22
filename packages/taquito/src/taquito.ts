@@ -12,6 +12,8 @@ import { Extension } from './extension/extension';
 import { Forger } from './forger/interface';
 import { RpcForger } from './forger/rpc-forger';
 import { format } from './format';
+import { Packer } from './packer/interface';
+import { RpcPacker } from './packer/rpc-packer';
 import { Signer } from './signer/interface';
 import { NoopSigner } from './signer/noop';
 import { SubscribeProvider } from './subscribe/interface';
@@ -44,7 +46,10 @@ export * from './wallet';
 export { Extension } from './extension/extension';
 export * from './parser/interface';
 export * from './parser/michel-codec-parser';
-export * from './parser/noop-parser'
+export * from './parser/noop-parser';
+export * from './packer/interface';
+export * from './packer/michel-codec-packer';
+export * from './packer/rpc-packer';
 
 export interface SetProviderOptions {
   forger?: Forger;
@@ -54,6 +59,7 @@ export interface SetProviderOptions {
   signer?: Signer;
   protocol?: Protocols;
   config?: Config;
+  packer?: Packer;
 }
 
 /**
@@ -100,12 +106,13 @@ export class TezosToolkit {
    *
    */
 
-  setProvider({ rpc, stream, signer, protocol, config, forger, wallet }: SetProviderOptions) {
+  setProvider({ rpc, stream, signer, protocol, config, forger, wallet, packer }: SetProviderOptions) {
     this.setRpcProvider(rpc);
     this.setStreamProvider(stream);
     this.setSignerProvider(signer);
     this.setForgerProvider(forger);
     this.setWalletProvider(wallet);
+    this.setPackerProvider(packer);
 
     this._context.proto = protocol;
     this._context.config = config as Required<Config>;
@@ -200,6 +207,20 @@ export class TezosToolkit {
       this._options.wallet = wallet;
       this._context.walletProvider = wallet;
     }
+  }
+
+  /**
+   * @description Sets Packer provider on the Tezos Taquito instance
+   *
+   * @param options packer to use to interact with the Tezos network
+   *
+   * @example Tezos.setPackerProvider(new MichelCodecPacker())
+   *
+   */
+  setPackerProvider(packer?: SetProviderOptions['packer']){
+    const p = typeof packer === 'undefined' ? this.getFactory(RpcPacker)() : packer;
+    this._options.packer = p;
+    this._context.packer = p;
   }
 
   /**

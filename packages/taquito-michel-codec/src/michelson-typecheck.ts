@@ -1,8 +1,8 @@
-import { StringLiteral, IntLiteral, Prim, Expr, sourceReference } from "./micheline";
+import { Prim, Expr } from "./micheline";
 import {
     MichelsonType, MichelsonData, MichelsonMapElt, MichelsonCode, MichelsonTypeOption,
     MichelsonContract, MichelsonContractSection, MichelsonReturnType, MichelsonTypePair,
-    MichelsonInstruction, InstructionList, MichelsonDataPair, MichelsonTypeID, MichelsonTypeOr,
+    MichelsonInstruction, InstructionList, MichelsonTypeID, MichelsonTypeOr,
     ProtocolOptions,
     DefaultProtocol,
     Protocol,
@@ -12,34 +12,20 @@ import {
 import {
     unpackAnnotations, MichelsonError, isNatural,
     LongInteger, parseBytes, compareBytes, isDecimal,
-    checkTezosID, tezosPrefix, UnpackedAnnotations, Nullable, UnpackAnnotationsOptions,
+    checkDecodeTezosID, UnpackedAnnotations, Nullable,
+    UnpackAnnotationsOptions, unpackComb, MichelsonTypeError, isPairType, isPairData, parseDate,
 } from "./utils";
 import { decodeBase58Check } from "./base58";
+import { decodeAddressBytes, decodePublicKeyBytes, decodePublicKeyHashBytes } from "./binary";
 import {
-    assertMichelsonComparableType, instructionIDs,
-    assertMichelsonPackableType, assertMichelsonStorableType, assertMichelsonBigMapStorableType, assertMichelsonPushableType
+    assertMichelsonComparableType,
+    assertMichelsonPackableType, assertMichelsonStorableType,
+    assertMichelsonBigMapStorableType, assertMichelsonPushableType, isInstruction, assertDataListIfAny
 } from "./michelson-validator";
 
 export interface Context extends ProtocolOptions {
     contract?: MichelsonContract;
     traceCallback?: (t: InstructionTrace) => void;
-}
-
-export class MichelsonTypeError extends MichelsonError<MichelsonType | MichelsonType[]> {
-    public data?: Expr;
-
-    /**
-     * @param val Value of a type node caused the error
-     * @param data Value of a data node caused the error
-     * @param message An error message
-     */
-    constructor(val: MichelsonType | MichelsonType[], data?: Expr, message?: string) {
-        super(val, message);
-        if (data !== undefined) {
-            this.data = data;
-        }
-        Object.setPrototypeOf(this, MichelsonTypeError.prototype);
-    }
 }
 
 export class MichelsonInstructionError extends MichelsonError<MichelsonCode> {
@@ -62,43 +48,6 @@ function typeID(t: MichelsonType): MichelsonTypeID {
 type TypeArgs<T extends MichelsonType> = T extends Prim ? T["args"] : T;
 function typeArgs<T extends MichelsonType>(t: T): TypeArgs<T> {
     return ("prim" in t ? (t as Extract<MichelsonType, Prim>).args : t) as TypeArgs<T>;
-}
-
-function isPairType(t: MichelsonType): t is MichelsonTypePair<MichelsonType[]> {
-    return Array.isArray(t) || t.prim === "pair";
-}
-
-function isPairData(d: MichelsonData): d is MichelsonDataPair<MichelsonData[]> {
-    return Array.isArray(d) || "prim" in d && d.prim === "Pair";
-}
-
-// reassemble comb pair for transparent comparison etc. non-recursive!
-type PairTypeOrDataPrim<I extends "pair" | "Pair"> = I extends "pair" ? Extract<MichelsonTypePair<MichelsonType[]>, Prim> : Extract<MichelsonDataPair<MichelsonData[]>, Prim>;
-function unpackComb<I extends "pair" | "Pair">(id: I, v: I extends "pair" ? MichelsonTypePair<MichelsonType[]> : MichelsonDataPair<MichelsonData[]>): PairTypeOrDataPrim<I> {
-    const vv: MichelsonTypePair<MichelsonType[]> | MichelsonDataPair<MichelsonData[]> = v;
-    const args = Array.isArray(vv) ? vv : vv.args;
-    if (args.length === 2) {
-        // it's a way to make a union of two interfaces not an interface with two independent properties of union types
-        const ret = id === "pair" ? {
-            prim: "pair",
-            args,
-        } : {
-                prim: "Pair",
-                args,
-            };
-        return ret as PairTypeOrDataPrim<I>;
-    }
-
-    return {
-        ...v,
-        args: [
-            args[0],
-            {
-                prim: id,
-                args: args.slice(1),
-            },
-        ],
-    } as PairTypeOrDataPrim<I>;
 }
 
 function assertScalarTypesEqual(a: MichelsonType, b: MichelsonType, field: boolean = false): void {
@@ -211,27 +160,11 @@ export function assertTypeAnnotationsValid(t: MichelsonType, field: boolean = fa
 
 // Data integrity check
 
-const rfc3339Re = /^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])[T ]([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\.[0-9]+)?(Z|[+-]([01][0-9]|2[0-3]):([0-5][0-9]))$/;
-
-function parseDate(a: StringLiteral | IntLiteral): Date | null {
-    if ("string" in a) {
-        if (isNatural(a.string)) {
-            return new Date(parseInt(a.string, 10));
-        } else if (rfc3339Re.test(a.string)) {
-            const x = new Date(a.string);
-            if (!Number.isNaN(x.valueOf)) {
-                return x;
-            }
-        }
-    } else if (isNatural(a.int)) {
-        return new Date(parseInt(a.int, 10));
-    }
-    return null;
-}
-
 function compareMichelsonData(t: MichelsonType, a: MichelsonData, b: MichelsonData): number {
     if (isPairType(t)) {
         if (isPairData(a) && isPairData(b)) {
+            assertDataListIfAny(a);
+            assertDataListIfAny(b);
             const tComb = unpackComb("pair", t);
             const aComb = unpackComb("Pair", a);
             const bComb = unpackComb("Pair", b);
@@ -278,11 +211,6 @@ function compareMichelsonData(t: MichelsonType, a: MichelsonData, b: MichelsonDa
             case "key_hash":
             case "address":
             case "signature":
-                if (("string" in a) && ("string" in b)) {
-                    return compareBytes(decodeBase58Check(a.string), decodeBase58Check(b.string));
-                }
-                break;
-
             case "chain_id":
                 if (("string" in a || "bytes" in a) && ("string" in b || "bytes" in b)) {
                     return compareBytes("string" in a ? decodeBase58Check(a.string) : parseBytes(a.bytes) || [], "string" in b ? decodeBase58Check(b.string) : parseBytes(b.bytes) || []);
@@ -311,10 +239,6 @@ function compareMichelsonData(t: MichelsonType, a: MichelsonData, b: MichelsonDa
     throw new MichelsonTypeError(t, undefined, `${typeID(t)}: not comparable values: ${JSON.stringify(a)}, ${JSON.stringify(b)}`);
 }
 
-function isInstruction(p: Prim): p is MichelsonInstruction {
-    return Object.prototype.hasOwnProperty.call(instructionIDs, p.prim);
-}
-
 // Simplified version of assertMichelsonInstruction() for previously validated data
 function isFunction(d: MichelsonData): d is InstructionList {
     if (!Array.isArray(d)) {
@@ -330,27 +254,9 @@ function isFunction(d: MichelsonData): d is InstructionList {
 }
 
 function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Context | null): void {
-    const assertDataListIfAny = (d: MichelsonData): d is MichelsonData[] => {
-        if (!Array.isArray(d)) {
-            return false;
-        }
-        for (const v of d) {
-            if ("prim" in v) {
-                if (isInstruction(v)) {
-                    throw new MichelsonTypeError(t, d, `Instruction outside of a lambda: ${JSON.stringify(d)}`);
-                } else if (v.prim === "Elt") {
-                    throw new MichelsonTypeError(t, d, `Elt item outside of a map literal: ${JSON.stringify(d)}`);
-                }
-            }
-        }
-        return true;
-    };
-
     if (isPairType(t)) {
         if (isPairData(d)) {
-            if (Array.isArray(d)) {
-                assertDataListIfAny(d);
-            }
+            assertDataListIfAny(d);
             const dc = unpackComb("Pair", d);
             const tc = unpackComb("pair", t);
             assertDataValidInternal(dc.args[0], tc.args[0], ctx);
@@ -397,11 +303,18 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
 
         case "key_hash":
             if (("string" in d) &&
-                checkTezosID(d.string,
+                checkDecodeTezosID(d.string,
                     "ED25519PublicKeyHash",
                     "SECP256K1PublicKeyHash",
                     "P256PublicKeyHash") !== null) {
                 return;
+            } else if ("bytes" in d) {
+                try {
+                    decodePublicKeyHashBytes(d);
+                    return;
+                } catch (err) {
+                    // ignore message
+                }
             }
             throw new MichelsonTypeError(t, d, `key hash expected: ${JSON.stringify(d)}`);
 
@@ -419,23 +332,37 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
                     // trim entry point
                     address = d.string.slice(0, ep);
                 }
-                if (checkTezosID(address,
+                if (checkDecodeTezosID(address,
                     "ED25519PublicKeyHash",
                     "SECP256K1PublicKeyHash",
                     "P256PublicKeyHash",
                     "ContractHash") !== null) {
                     return;
                 }
+            } else if ("bytes" in d) {
+                try {
+                    decodeAddressBytes(d);
+                    return;
+                } catch (err) {
+                    // ignore message
+                }
             }
             throw new MichelsonTypeError(t, d, `address expected: ${JSON.stringify(d)}`);
 
         case "key":
             if (("string" in d) &&
-                checkTezosID(d.string,
+                checkDecodeTezosID(d.string,
                     "ED25519PublicKey",
                     "SECP256K1PublicKey",
                     "P256PublicKey") !== null) {
                 return;
+            } else if ("bytes" in d) {
+                try {
+                    decodePublicKeyBytes(d);
+                    return;
+                } catch (err) {
+                    // ignore message
+                }
             }
             throw new MichelsonTypeError(t, d, `public key expected: ${JSON.stringify(d)}`);
 
@@ -446,8 +373,8 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
             throw new MichelsonTypeError(t, d, `unit value expected: ${JSON.stringify(d)}`);
 
         case "signature":
-            if (("string" in d) &&
-                checkTezosID(d.string,
+            if (("bytes" in d) || ("string" in d) &&
+                checkDecodeTezosID(d.string,
                     "ED25519Signature",
                     "SECP256K1Signature",
                     "P256Signature",
@@ -459,7 +386,7 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
         case "chain_id":
             if ("bytes" in d || "string" in d) {
                 const x = "string" in d ? decodeBase58Check(d.string) : parseBytes(d.bytes);
-                if (x !== null && x.length === tezosPrefix.ChainID[0]) {
+                if (x !== null) {
                     return;
                 }
             }
