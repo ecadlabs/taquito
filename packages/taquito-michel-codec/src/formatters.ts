@@ -1,7 +1,7 @@
 import { sourceReference, Expr } from "./micheline";
-import { InstructionTrace, MichelsonInstructionError, MichelsonTypeError } from "./michelson-typecheck";
+import { InstructionTrace, MichelsonInstructionError } from "./michelson-typecheck";
 import { emitMicheline } from "./micheline-emitter";
-import { unpackAnnotations, MichelsonError } from "./utils";
+import { unpackAnnotations, MichelsonError, MichelsonTypeError } from "./utils";
 import { MichelsonReturnType } from "./michelson-types";
 
 export function formatStack(s: MichelsonReturnType): string {
