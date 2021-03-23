@@ -1,5 +1,5 @@
 ---
-title: Working with Maps and BigMaps
+title: Maps and BigMaps
 author: Roxane Letourneau
 ---
 
