@@ -131,13 +131,6 @@ const edonetFaucet = {
 
 const providers: Config[] = [];
 
-<<<<<<< HEAD
-if (process.env['RUN_WITH_FAUCET'] || process.env['RUN_EDONET_WITH_FAUCET']) {
-  providers.push(edonetFaucet)
-} 
-else if (process.env['EDONET']) {
-  providers.push(edonetEphemeral)
-=======
 if (process.env['RUN_WITH_FAUCET']) {
   providers.push(florencenetFaucet, edonetFaucet)
 } 
@@ -154,7 +147,6 @@ else if (process.env['EDONET']) {
   providers.push(edonetEphemeral)
 } else {
   providers.push(florencenetEphemeral, edonetEphemeral)
->>>>>>> master
 }
 
 const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE'];
