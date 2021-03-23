@@ -1,4 +1,4 @@
-import { localForger } from '@taquito/local-forging';
+git statusimport { localForger } from '@taquito/local-forging';
 import { CompositeForger, RpcForger, TezosToolkit, Protocols } from '@taquito/taquito';
 import { RemoteSigner } from '@taquito/remote-signer';
 import { HttpBackend } from '@taquito/http-utils';
