@@ -4,8 +4,8 @@ import { Protocols } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, protocol, setup,  }) => {
   const Tezos = lib;
-
-  const edonet = (protocol === Protocols.PtEdo2Zk) ? test && require('jest-retries') : test.skip;
+  const test = require('jest-retries');
+  const edonet = (protocol === Protocols.PtEdo2Zk) ? test : test.skip;
   
   describe(`Test origination of contracts with sapling using: ${rpc}`, () => {
 
