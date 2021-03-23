@@ -41,6 +41,7 @@ import {
   ScriptResponse,
   StorageResponse,
   VotesListingsResponse,
+  VotingPeriodBlockResult,
 } from './types';
 import { castToBigNumber } from './utils/utils';
 
@@ -510,6 +511,8 @@ export class RpcClient {
    * @param options contains generic configuration for rpc calls
    *
    * @description Current period kind.
+   * 
+   * @deprecated Deprecated in favor of getCurrentPeriod
    *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-votes-current-period-kind
    */
@@ -779,4 +782,45 @@ export class RpcClient {
     return this.url
   }
 
+  /**
+   *
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Voting period of current block.
+   * 
+   * @example getCurrentPeriod() will default to current voting period for /main/chains/block/head.
+   *
+   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-votes-current-period
+   */
+   async getCurrentPeriod({ block }: RPCOptions = defaultRPCOptions): Promise<
+   VotingPeriodBlockResult
+ > {
+   const response = await this.httpBackend.createRequest<VotingPeriodBlockResult>({
+     url: this.createURL(`/chains/${this.chain}/blocks/${block}/votes/current_period`),
+     method: 'GET',
+   });
+
+   return response;
+ }
+
+   /**
+    *
+    * @param options contains generic configuration for rpc calls
+    *
+    * @description Voting period of next block.
+    * 
+    * @example getSuccessorPeriod() will default to successor voting period for /main/chains/block/head.
+    *
+    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-votes-successor-period
+    */
+    async getSuccessorPeriod({ block }: RPCOptions = defaultRPCOptions): Promise<
+    VotingPeriodBlockResult
+  > {
+    const response = await this.httpBackend.createRequest<VotingPeriodBlockResult>({
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/votes/successor_period`),
+      method: 'GET',
+    });
+ 
+    return response;
+  }
 }

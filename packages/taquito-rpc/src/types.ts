@@ -667,6 +667,14 @@ export interface Level {
   expected_commitment: boolean;
 }
 
+export interface LevelInfo {
+  level: number;
+  level_position: number;
+  cycle: number;
+  cycle_position: number;
+  expected_commitment: boolean;
+}
+
 export interface BlockMetadata {
   protocol: string;
   next_protocol: string;
@@ -676,8 +684,10 @@ export interface BlockMetadata {
   max_block_header_length: number;
   max_operation_list_length: MaxOperationListLength[];
   baker: string;
-  level: Level;
-  voting_period_kind: string;
+  level?: Level;
+  level_info?: LevelInfo;
+  voting_period_kind?: string;
+  voting_period_info?: VotingPeriodBlockResult;
   nonce_hash?: any;
   consumed_gas: string;
   deactivated: any[];
@@ -724,4 +734,16 @@ export interface OperationContentsAndResultOrigination {
   delegate?: string;
   script?: ScriptedContracts;
   metadata: OperationContentsAndResultMetadataOrigination;
+}
+
+export interface VotingPeriodResult {
+  index: number;
+  kind: string;
+  start_position: number;
+}
+
+export interface VotingPeriodBlockResult {
+  voting_period: VotingPeriodResult;
+  position: number;
+  remaining: number;
 }
