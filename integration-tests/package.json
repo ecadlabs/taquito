@@ -14,12 +14,13 @@
     "@ledgerhq/hw-transport-node-hid": "^5.41.0",
     "@taquito/http-utils": "^8.0.6-beta.0",
     "@taquito/local-forging": "^8.0.6-beta.0",
+    "@taquito/michel-codec": "^8.0.6-beta.0",
     "@taquito/remote-signer": "^8.0.6-beta.0",
     "@taquito/signer": "^8.0.6-beta.0",
     "@taquito/taquito": "^8.0.6-beta.0",
     "@taquito/tzip16": "^8.0.6-beta.0",
     "@taquito/utils": "^8.0.6-beta.0",
-    "@taquito/michel-codec": "^8.0.6-beta.0"
+    "bignumber.js": "^9.0.1"
   },
   "private": true,
   "jest": {

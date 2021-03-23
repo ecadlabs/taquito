@@ -30,25 +30,25 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             });
             const contract = await op.contract();
 
-            interface storageType {
+            interface StorageType {
                 0: BigMapAbstraction,
                 1: string,
                 2: boolean,
                 3: BigNumber
             }
-            interface bigMapVal {
+            interface BigMapVal {
                 0: BigNumber,
                 1: MichelsonMap<string, BigNumber>
             }
 
             // Fetch the storage of the newly deployed contract
-            const storage = await contract.storage<storageType>();
+            const storage = await contract.storage<StorageType>();
 
             // First property is the big map abstraction (This contract does not have annotations so we access by index)
             const bigMap = storage['0'];
 
             // Fetch multiples keys
-            const bigMapValues = await bigMap.getMultipleValues<bigMapVal>(['tz3PNdfg3Fc8hH4m9iSs7bHgDgugsufJnBZ1', 'tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD', 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn', 'tz3YjfexGakCDeCseXFUpcXPSAN9xHxE9TH2']);
+            const bigMapValues = await bigMap.getMultipleValues<BigMapVal>(['tz3PNdfg3Fc8hH4m9iSs7bHgDgugsufJnBZ1', 'tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD', 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn', 'tz3YjfexGakCDeCseXFUpcXPSAN9xHxE9TH2']);
             expect(bigMapValues['tz3PNdfg3Fc8hH4m9iSs7bHgDgugsufJnBZ1']!['0'].toString()).toEqual('2');
             expect(bigMapValues['tz3PNdfg3Fc8hH4m9iSs7bHgDgugsufJnBZ1']!['1']).toEqual(expect.objectContaining(new MichelsonMap()));
 
