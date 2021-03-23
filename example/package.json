@@ -13,7 +13,8 @@
     "example:activation": "node -r ts-node/register --preserve-symlinks example-activate.ts",
     "example:streamer": "node -r ts-node/register --preserve-symlinks example-streamer.ts",
     "example:scan-path-ledger": "node -r ts-node/register --preserve-symlinks scan-path-ledger.ts",
-    "example:rpc-vs-local-pack": "node -r ts-node/register --preserve-symlinks example-bigmap-local-vs-rpc-pack.ts"
+    "example:rpc-vs-local-pack-sequential": "node -r ts-node/register --preserve-symlinks example-sequential-bigmap-local-vs-rpc-pack.ts",
+    "example:rpc-vs-local-pack-parallel": "node -r ts-node/register --preserve-symlinks example-parallel-bigmap-local-vs-rpc-pack.ts"
   },
   "dependencies": {
     "@ledgerhq/hw-transport-node-hid": "^5.43.0",
