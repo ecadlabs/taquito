@@ -318,7 +318,7 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
    *
    * @deprecated getBigMapKey has been deprecated in favor of getBigMapKeyByID
    *
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-script
+   * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-context-contracts-contract-id-big-map-get
    */
   public bigMap(key: string) {
     // tslint:disable-next-line: deprecation
