@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 
 const rpc = 'https://api.tez.ie/rpc/edonet';
 const numberOfValueToFetch = 810; // max 810
-const repeat = 2; // How many time we want to fetch all the keys
+const repeat = 1; // How many time we want to fetch all the keys
 
 async function example() {
 
@@ -39,7 +39,7 @@ async function example() {
         }
         const durationLocalPack = new Date().getTime() - startLocalPack;
 
-        console.log(`Fetched ${numberOfValueToFetch} value(s) on the big map in sequence using ${rpc}.`);
+        console.log(`Fetched ${numberOfValueToFetch * repeat} value(s) on the big map in sequence using ${rpc}.`);
         console.log(`It took`, durationRpcPack, `ms to fetch the big map values when packing data with the RPC.`);
         console.log(`It took`, durationLocalPack, `ms to fetch the big map values when packing data locally.`);
         console.log('Difference is:', durationRpcPack - durationLocalPack, 'ms.')
