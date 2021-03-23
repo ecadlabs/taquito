@@ -15,6 +15,8 @@ import { RPCBatchProvider } from './batch/rpc-batch-provider';
 import { Wallet, LegacyWalletProvider, WalletProvider } from './wallet';
 import { ParserProvider } from './parser/interface';
 import { MichelCodecParser } from './parser/michel-codec-parser';
+import { Packer } from './packer/interface';
+import { RpcPacker } from './packer/rpc-packer';
 
 export interface TaquitoProvider<T, K extends Array<any>> {
   new (context: Context, ...rest: K): T;
@@ -47,6 +49,7 @@ export class Context {
   private _injector: Injector;
   private _walletProvider: WalletProvider;
   public readonly operationFactory: OperationFactory;
+  private _packer: Packer;
 
   public readonly tz = new RpcTzProvider(this);
   public readonly estimate = new RPCEstimateProvider(this);
@@ -61,8 +64,9 @@ export class Context {
     private _config?: Partial<Config>,
     forger?: Forger,
     injector?: Injector,
+    packer?: Packer,
     wallet?: WalletProvider,
-    parser?: ParserProvider
+    parser?: ParserProvider,
   ) {
     if (typeof this._rpc === 'string') {
       this._rpcClient = new RpcClient(this._rpc);
@@ -75,6 +79,7 @@ export class Context {
     this.operationFactory = new OperationFactory(this);
     this._walletProvider = wallet ? wallet : new LegacyWalletProvider(this);
     this._parser = parser? parser: new MichelCodecParser(this);
+    this._packer = packer? packer: new RpcPacker(this);
   }
 
   get config(): Required<Config> {
@@ -144,6 +149,14 @@ export class Context {
     this._parser = value;
   }
 
+  get packer() {
+    return this._packer;
+  }
+
+  set packer(value: Packer) {
+    this._packer = value;
+  }
+
   async isAnyProtocolActive(protocol: string[] = []) {
     if (this._proto) {
       return protocol.includes(this._proto);
@@ -157,6 +170,6 @@ export class Context {
    * @description Create a copy of the current context. Useful when you have long running operation and you do not want a context change to affect the operation
    */
   clone(): Context {
-    return new Context(this.rpc, this.signer, this.proto, this.config, this.forger, this._injector);
+    return new Context(this.rpc, this.signer, this.proto, this.config, this.forger, this._injector, this.packer);
   }
 }

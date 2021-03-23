@@ -25,17 +25,6 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, setup, protocol }) => {
         contractBigMapStorage = 'KT1GL4k5wRayrH3KEXkPcqSeWXnoiJqxk1ZA'
       }
 
-    //   else if (protocol === Protocols.PsCARTHA) {
-    //     rpcList = [
-    //         'https://api.tez.ie/rpc/carthagenet',
-    //         'https://carthagenet.smartpy.io', 
-    //         'https://testnet-tezos.giganode.io',
-    //         'https://rpcalpha.tzbeta.net/',
-    //         'https://rpctest.tzbeta.net/'
-    //     ];
-    //     contractBigMapStorage = 'KT1Szqn6iy6jpHf4NXcs6RNj36jqAyYUQwW7';
-    //  }
-
 rpcList.forEach(async rpc => {
     Tezos.setRpcProvider(rpc)
     
