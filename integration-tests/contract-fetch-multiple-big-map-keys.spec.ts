@@ -1,5 +1,5 @@
 import { CONFIGS } from './config';
-import { tokenCode, tokenInit } from './data/tokens';
+import { tokenCode } from './data/tokens';
 import { MichelsonMap, BigMapAbstraction } from '@taquito/taquito';
 import BigNumber from 'bignumber.js';
 
@@ -13,7 +13,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         it('originates a contract with empty bigmap and fetches the storage/bigmap', async (done) => {
             const signer = await Tezos.signer.publicKeyHash();
 
-            /* const bigMapInit = new MichelsonMap();
+            const bigMapInit = new MichelsonMap();
             bigMapInit.set(signer, { 0: '1', 1: new MichelsonMap() });
             bigMapInit.set('tz3PNdfg3Fc8hH4m9iSs7bHgDgugsufJnBZ1', { 0: '2', 1: new MichelsonMap() });
             bigMapInit.set('tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD', { 0: '3', 1: new MichelsonMap() });
@@ -29,7 +29,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 }
             });
             const contract = await op.contract();
-            console.log('address', contract.address) */
 
             interface storageType {
                 0: BigMapAbstraction,
@@ -41,7 +40,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 0: BigNumber,
                 1: MichelsonMap<string, BigNumber>
             }
-            const contract = await Tezos.contract.at('KT1L3M2v4KjG5Q8AFEPsXkV2Zdade5LUmV7d')
 
             // Fetch the storage of the newly deployed contract
             const storage = await contract.storage<storageType>();

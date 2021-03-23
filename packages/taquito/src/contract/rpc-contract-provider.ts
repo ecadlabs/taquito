@@ -126,7 +126,7 @@ export class RpcContractProvider extends OperationEmitter
    */
   async getBigMapKeysByID<T>(id: string, keys: string[], schema: Schema): Promise<{ [key: string]: T | undefined }> {
     let bigMapValues = Object({[keys[0]]: undefined});
-    if (keys.length === 1) {
+    if (keys.length === 1) { // No need to get the block level if only one key
       let val: T | undefined;
       try {
         val = await this.getBigMapKeyByID<T>(id, keys[0], schema);
@@ -142,18 +142,18 @@ export class RpcContractProvider extends OperationEmitter
     } else {
       const { header } = await this.context.rpc.getBlock();
 
-      const results = await Promise.all(
-        keys.map(async keyToEncode => {
-          return this.getBigMapKeyByID<T>(id, keyToEncode, schema, header.level.toString())
-          .catch(ex => {
+      const results = await Promise.all(keys.map(async (keyToEncode) => {
+        try {
+          return await this.getBigMapKeyByID<T>(id, keyToEncode, schema, header.level.toString());
+        } catch(ex) {
             if (ex instanceof HttpResponseError && ex.status === STATUS_CODE.NOT_FOUND) {
               (keyToEncode as any) = undefined;
             } else {
               throw ex;
             }
-          })
+          }
         })
-      );
+      )
 
       for (let i = 0; i < results.length; i++) {
         Object.assign(bigMapValues, {[keys[i]]: results[i]})

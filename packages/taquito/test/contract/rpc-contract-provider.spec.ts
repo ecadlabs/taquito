@@ -344,7 +344,7 @@ describe('RpcContractProvider test', () => {
         })
       );
       expect(result).toEqual({
-          tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn: undefined,
+          tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn: undefined, // value set to undefined
           tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN: new BigNumber(3),
         });
       expect(mockRpcClient.packData.mock.calls[0][0]).toEqual({
@@ -377,6 +377,48 @@ describe('RpcContractProvider test', () => {
       expect(mockRpcClient.getBigMapExpr.mock.calls[1][2]).toEqual({
         block: "123456",
       });
+      done();
+    });
+
+    it("getBigMapKeysByID should set value to undefined if only 1 key to fetch and that it does not exist", async (done) => {
+      mockRpcClient.packData.mockResolvedValue({
+        packed: "050a000000160000e7670f32038107a59a2b9cfefae36ea21f5aa63c",
+      });
+      const expectedError = new HttpResponseError(
+        'fail',
+        STATUS_CODE.NOT_FOUND,
+        'err',
+        'test',
+        'https://test.com'
+      );
+      mockRpcClient.getBigMapExpr.mockRejectedValue(expectedError);
+  
+      const result = await rpcContractProvider.getBigMapKeysByID(
+        "133",
+        [
+          "tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN",
+        ],
+        new Schema({
+          prim: "big_map",
+          args: [{ prim: "address" }, { prim: "nat" }],
+        })
+      );
+      expect(result).toEqual({
+        tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN: undefined,
+      });
+      expect(mockRpcClient.getBlock.mock.calls[0]).toBeUndefined();
+      expect(mockRpcClient.packData.mock.calls[0][0]).toEqual({
+        data: {
+          bytes: "0000e7670f32038107a59a2b9cfefae36ea21f5aa63c",
+        },
+        type: {
+          prim: "bytes",
+        },
+      });
+      expect(mockRpcClient.getBigMapExpr.mock.calls[0][0]).toEqual("133");
+      expect(mockRpcClient.getBigMapExpr.mock.calls[0][1]).toEqual(
+        "exprvPCPwzweu2FnFYTpZJoAM2vEWmPtHDXvsvNsrsKM6ZHMzeahE7"
+      );
       done();
     });
 
