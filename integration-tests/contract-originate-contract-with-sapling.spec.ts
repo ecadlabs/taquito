@@ -12,8 +12,8 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup,  }) => {
       await setup();
       done()
     })
-
-     edonet('Originates a contract having an empty sapling state in its storage', 2, async function (done: () => void) {
+    //  deepcode ignore only-arrow-functions: not sure how to do it otherwise 
+    edonet('Originates a contract having an empty sapling state in its storage', 2, async function (done: () => void) {
       const op = await Tezos.contract.originate({
         code: rpcContractResponse.script.code,
         init: `{}` // empty sapling state
