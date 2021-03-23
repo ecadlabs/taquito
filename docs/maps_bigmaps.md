@@ -415,6 +415,26 @@ Tezos.contract
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
+## Local packing for big maps
+
+By default, a call to an RPC node is used to pack data when fetching values from a big map. Big map keys need to be serialized or packed and Taquito relies on the PACK functionality of a Tezos RPC node to pack the big map keys. This may be considered inefficient as it adds a request to a remote node to fetch data.
+
+Now, Taquito allows you to pack the required data locally to fetch values from a big map. By relying on the local pack implementation, Taquito eliminates one RPC roundtrip when fetching big map values. This feature makes fetching big map values **50% faster**.
+
+Implementing this feature is a very easy 2 step process:
+1. Importing the `MichelCodecPacker` class from `@taquito/taquito`
+2. Creating an instance of the `MichelCodecPacker` class and passing it to the `setPackerProvider` method of the `TezosToolkit` instance.
+
+Here is an example:
+
+``` js
+import { MichelCodecPacker } from "@taquito/taquito";
+const Tezos = new TezosToolkit(RPC_URL);
+Tezos.setPackerProvider(new MichelCodecPacker());
+```
+
+After that, Taquito will automatically pack the keys locally when you want to fetch the values of a big map.
+
 ---
 
 [michelson_map]: https://michelson.nomadic-labs.com/#type-big_map
