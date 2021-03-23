@@ -1,6 +1,6 @@
 ---
 id: lambda_view
-title: Using the Lambda View
+title: Lambda View
 ---
 
 :::caution note

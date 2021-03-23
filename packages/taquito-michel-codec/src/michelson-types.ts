@@ -20,9 +20,11 @@ type MichelsonNoArgInstructionID = "ABS" | "ADD" | "ADDRESS" | "AMOUNT" | "AND" 
 type MichelsonRegularInstructionID = "CONTRACT" | "CREATE_CONTRACT" | "DIG" | "DIP" | "DROP" |
     "DUG" | "DUP" | "EMPTY_BIG_MAP" | "EMPTY_MAP" | "EMPTY_SET" | "GET" | "IF" | "IF_CONS" | "IF_LEFT" |
     "IF_NONE" | "ITER" | "LAMBDA" | "LEFT" | "LOOP" | "LOOP_LEFT" | "MAP" | "NIL" | "NONE" | "PAIR" |
-    "PUSH" | "RIGHT" | "SAPLING_EMPTY_STATE" | "UNPACK" | "UNPAIR" | "UPDATE" | "CAST";
+    "PUSH" | "RIGHT" | "SAPLING_EMPTY_STATE" | "UNPACK" | "UNPAIR" | "UPDATE" | "CAST" |
+    // legacy
+    "CREATE_ACCOUNT" | "STEPS_TO_QUOTA";
 
-type MichelsonInstructionID = MichelsonNoArgInstructionID | MichelsonRegularInstructionID;
+export type MichelsonInstructionID = MichelsonNoArgInstructionID | MichelsonRegularInstructionID;
 type InstrPrim<PT extends MichelsonInstructionID, AT extends Expr[]> = Prim<PT, AT>;
 type Instr0<PT extends MichelsonNoArgInstructionID> = Prim0<PT>;
 type InstrX<PT extends MichelsonRegularInstructionID, AT extends Expr[]> = PrimX<PT, AT>;
@@ -134,12 +136,13 @@ export type MichelsonType<T extends MichelsonTypeID = MichelsonTypeID> =
 
 // Data
 
-export type MichelsonDataId = "Unit" | "True" | "False" | "None" | "Pair" | "Left" | "Right" | "Some";
+export type MichelsonDataID = "Unit" | "True" | "False" | "None" | "Pair" | "Left" | "Right" | "Some";
 
-type Data0<PT extends MichelsonDataId> = Prim0<PT>;
-type DataX<PT extends MichelsonDataId, AT extends MichelsonData[]> = PrimX<PT, AT>;
+type Data0<PT extends MichelsonDataID> = Prim0<PT>;
+type DataX<PT extends MichelsonDataID, AT extends MichelsonData[]> = PrimX<PT, AT>;
 
-type PartialData = DataX<"Some" | "Left" | "Right", [MichelsonData]>;
+export type MichelsonDataOption = DataX<"Some", [MichelsonData]> | Data0<"None">;
+export type MichelsonDataOr = DataX<"Left" | "Right", [MichelsonData]>;
 type DataList<T extends MichelsonData[]> = T & Node;
 export type MichelsonDataPair<T extends MichelsonData[]> = DataX<"Pair", T> | DataList<T>;
 export type MichelsonMapElt = PrimX<"Elt", [MichelsonData, MichelsonData]>;
@@ -149,8 +152,9 @@ export type MichelsonData =
     IntLiteral |
     StringLiteral |
     BytesLiteral |
-    Data0<"Unit" | "True" | "False" | "None"> |
-    PartialData |
+    Data0<"Unit" | "True" | "False"> |
+    MichelsonDataOption |
+    MichelsonDataOr |
     DataList<MichelsonData[]> |
     MichelsonDataPair<MichelsonData[]> |
     InstructionList |
@@ -158,8 +162,8 @@ export type MichelsonData =
 
 // Top level script sections
 
-type MichelsonSectionId = "parameter" | "storage" | "code";
-type SectionPrim<PT extends MichelsonSectionId, AT extends Expr[]> = PrimX<PT, AT>;
+export type MichelsonSectionID = "parameter" | "storage" | "code";
+type SectionPrim<PT extends MichelsonSectionID, AT extends Expr[]> = PrimX<PT, AT>;
 
 export type MichelsonContractParameter = SectionPrim<"parameter", [MichelsonType]>;
 export type MichelsonContractStorage = SectionPrim<"storage", [MichelsonType]>;
@@ -173,7 +177,7 @@ export type MichelsonContract =
     [MichelsonContractCode, MichelsonContractStorage, MichelsonContractParameter] |
     [MichelsonContractCode, MichelsonContractParameter, MichelsonContractStorage];
 
-export type MichelsonContractSection<T extends MichelsonSectionId> =
+export type MichelsonContractSection<T extends MichelsonSectionID> =
     T extends "parameter" ? MichelsonContractParameter :
     T extends "storage" ? MichelsonContractStorage : MichelsonContractCode;
 
@@ -190,7 +194,8 @@ export enum Protocol {
     PsBabyM1 = "PsBabyM1eUXZseaJdmXFApDSBqj8YBfwELoxZHHW77EMcAbbwAS",
     PsCARTHA = "PsCARTHAGazKbHtnKfLzQg3kms52kSRpgnDY982a9oYsSXRLQEb",
     PsDELPH1 = "PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo",
-    PtEdo2Zk = 'PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA'
+    PtEdo2Zk = 'PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA',
+    PsFLorena = 'PsFLorenaUUuikDWvMDr6fGBRG8kt3e3D3fHoXK1j1BFRxeSH4i'
 }
 
 export const DefaultProtocol = Protocol.PsDELPH1;

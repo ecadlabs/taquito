@@ -5,7 +5,7 @@ import { Protocol } from '../src/michelson-types';
 const parserOptions: ParserOptions = {
   expandMacros: true,
   protocol: Protocol.PtEdo2Zk,
-}
+};
 
 describe('Macros', () => {
   it('CMPEQ', () => {

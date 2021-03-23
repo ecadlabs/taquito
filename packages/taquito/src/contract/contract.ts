@@ -131,6 +131,8 @@ export class ContractView {
       lambdaAddress = DefaultLambdaAddresses.DELPHINET
     } else if (this.chainId === ChainIds.EDONET) {
       lambdaAddress = DefaultLambdaAddresses.EDONET
+    } else if (this.chainId === ChainIds.FLORENCENET) {
+      lambdaAddress = DefaultLambdaAddresses.FLORENCENET
     } else if (this.chainId === ChainIds.MAINNET) {
       lambdaAddress = DefaultLambdaAddresses.MAINNET
     } else {
@@ -316,7 +318,7 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
    *
    * @deprecated getBigMapKey has been deprecated in favor of getBigMapKeyByID
    *
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-script
+   * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-context-contracts-contract-id-big-map-get
    */
   public bigMap(key: string) {
     // tslint:disable-next-line: deprecation

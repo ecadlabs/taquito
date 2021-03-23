@@ -81,7 +81,7 @@ export interface StorageProvider {
    *
    * @deprecated Deprecated in favor of getBigMapKeyByID
    *
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-script
+   * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-context-contracts-contract-id-big-map-get
    */
   getBigMapKey<T>(contract: string, key: string, schema?: ContractSchema): Promise<T>;
 

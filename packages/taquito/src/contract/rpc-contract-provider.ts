@@ -69,7 +69,7 @@ export class RpcContractProvider extends OperationEmitter
    *
    * @deprecated Deprecated in favor of getBigMapKeyByID
    *
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-script
+   * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-context-contracts-contract-id-big-map-get
    */
   async getBigMapKey<T>(contract: string, key: string, schema?: ContractSchema): Promise<T> {
     if (!schema) {
@@ -103,7 +103,7 @@ export class RpcContractProvider extends OperationEmitter
    */
   async getBigMapKeyByID<T>(id: string, keyToEncode: string, schema: Schema, block?: string): Promise<T> {
     const { key, type } = schema.EncodeBigMapKey(keyToEncode);
-    const { packed } = await this.context.rpc.packData({ data: key, type });
+    const { packed } = await this.context.packer.packData({ data: key, type });
 
     const encodedExpr = encodeExpr(packed);
 

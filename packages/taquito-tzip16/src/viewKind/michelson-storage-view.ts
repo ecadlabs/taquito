@@ -170,7 +170,7 @@ export class MichelsonStorageView implements View {
         };
 
         // Fix for Edo which required a balance property when calling the run_code endpoint
-        if(protocolHash === Protocols.PtEdo2Zk) {
+        if(protocolHash === Protocols.PtEdo2Zk || protocolHash === Protocols.PsFLorena) {
             Object.assign(viewScript, { balance: '0' });
         }
 

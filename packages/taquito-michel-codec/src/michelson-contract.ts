@@ -1,6 +1,6 @@
 import {
     MichelsonContract, MichelsonContractSection, MichelsonType,
-    MichelsonData, MichelsonCode, MichelsonReturnType, ProtocolOptions
+    MichelsonData, MichelsonCode, MichelsonReturnType
 } from "./michelson-types";
 import {
     assertContractValid, contractSection,
@@ -9,10 +9,10 @@ import {
     InstructionTrace, Context, functionType,
     isDataValid, contractEntryPoints
 } from "./michelson-typecheck";
-import { Parser } from "./micheline-parser";
+import { Parser, ParserOptions } from "./micheline-parser";
 import { assertMichelsonContract, assertMichelsonType, assertMichelsonData } from "./michelson-validator";
 
-export interface ContractOptions extends ProtocolOptions {
+export interface ContractOptions extends ParserOptions {
     traceCallback?: (t: InstructionTrace) => void;
 }
 
@@ -37,8 +37,8 @@ export class Contract {
         throw undefined;
     }
 
-    static parseTypeExpression(src: string | object): MichelsonType {
-        const p = new Parser({ expandMacros: true });
+    static parseTypeExpression(src: string | object, opt?: ParserOptions): MichelsonType {
+        const p = new Parser(opt);
         const expr = typeof src === "string" ? p.parseScript(src) : p.parseJSON(src);
         if (expr === null) {
             throw new Error("empty type expression");
@@ -49,8 +49,8 @@ export class Contract {
         throw undefined;
     }
 
-    static parseDataExpression(src: string | object): MichelsonData {
-        const p = new Parser({ expandMacros: true });
+    static parseDataExpression(src: string | object, opt?: ParserOptions): MichelsonData {
+        const p = new Parser(opt);
         const expr = typeof src === "string" ? p.parseScript(src) : p.parseJSON(src);
         if (expr === null) {
             throw new Error("empty data expression");
