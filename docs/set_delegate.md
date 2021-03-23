@@ -1,5 +1,5 @@
 ---
-title: Set delegate
+title: Delegation
 author: Simon Boissonneault-Robert
 ---
 
