@@ -97,5 +97,8 @@
     "extends": [
       "@commitlint/config-conventional"
     ]
+  },
+  "dependencies": {
+    "gulp-webserver": "^0.9.1"
   }
 }
