@@ -3,7 +3,6 @@ import {
     MichelsonType, MichelsonData, MichelsonMapElt, MichelsonCode, MichelsonTypeOption,
     MichelsonContract, MichelsonContractSection, MichelsonReturnType, MichelsonTypePair,
     MichelsonInstruction, InstructionList, MichelsonTypeID, MichelsonTypeOr,
-    ProtocolOptions,
     DefaultProtocol,
     Protocol,
     refContract,

@@ -30,7 +30,7 @@ export class BigMapAbstraction {
    *
    */
   async getMultipleValues<T>(keysToEncode: string[]) {
-    return await this.provider.getBigMapKeysByID<T>(this.id.toString(), keysToEncode, this.schema);
+    return this.provider.getBigMapKeysByID<T>(this.id.toString(), keysToEncode, this.schema);
   }
 
   toJSON() {
