@@ -102,7 +102,7 @@ export class RpcContractProvider extends OperationEmitter
    */
   async getBigMapKeyByID<T>(id: string, keyToEncode: string, schema: Schema): Promise<T> {
     const { key, type } = schema.EncodeBigMapKey(keyToEncode);
-    const { packed } = await this.context.rpc.packData({ data: key, type });
+    const { packed } = await this.context.packer.packData({ data: key, type });
 
     const encodedExpr = encodeExpr(packed);
 

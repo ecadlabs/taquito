@@ -39,3 +39,22 @@ jobs:
     - run: git add . && git commit -m "committing changes to files to make lerna happy in next step, this is expected to never be pushed to remote"
     - run: echo ${VERDACCIO_TOKEN} >> ~/.npmrc
     - run: npm run lerna -- publish --dist-tag edge from-package --yes --registry https://npm.preview.tezostaquito.io/
+    - run: |
+          echo "COMMENT_BODY<<EOF"  >> $GITHUB_ENV
+          echo "New packages have been deployed to the preview repository at https://npm.preview.tezostaquito.io/." >> $GITHUB_ENV
+          echo "" >> $GITHUB_ENV
+          echo "### Published packages:" >> $GITHUB_ENV
+          echo "\`\`\`" >> $GITHUB_ENV
+          find packages/ -mindepth 1 -maxdepth 2 -name package.json | xargs -I{} node -pe "require('./{}')['name']" | sed "s/^\(.*\)$/npm i \1@${TARGET_VERSION} --registry https:\/\/npm.preview.tezostaquito.io\//" >> $GITHUB_ENV
+          echo "\`\`\`" >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
+    - uses: actions/github-script@v3
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          github.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: process.env.COMMENT_BODY
+          })

@@ -1,7 +1,111 @@
 ---
 title: Versions
-author: Simon Boissonneault-Robert
+author: Jev Bjorsell
 ---
+
+## 8.0.6-beta.0 Updated beacon-sdk, bug fixed related to contract callback entry point
+
+* Updated beacon-sdk to version 2.2.2 #677
+* char2bytes and bytes2char functions (initially in the taquito-tzip16 package) have been added to the taquito-utils package #589
+* Allow specifying an entry point in a contract callback #652
+* Improved CI by adding retry for some of the integration tests
+
+## 8.0.4-beta.0 Refactor batch API, improve errors for LamdbaView
+
+* TezosToolkit.batch has been deprecated in favour of a batch() method on the contract and wallet API. See preliminary docs here: https://github.com/ecadlabs/taquito/pull/648/files and many examples of usage in our integration tests.
+* LamdbaView returns a useful error message when a signer is not configured in Taquito
+* More intergration-tests to cover the Wallet API
+* Many small fixes to the Taquito documentation
+
+
+## 8.0.3-beta.0 Fix for batch origination
+
+# This is a bug-fix release that addresses issue #624
+
+## 8.0.2-beta.0 Fixes for Protocol ENUM, getBakingRights and support for comb-pairs in local-forging package
+
+
+* A type in the Protocols enum was fixed. Protocols.PtEdo27k is now Protocols.PtEdo2Zk If you use this ENUM value, you will need to update your code. The protocol hash value has not changed.
+* getBakingRights issue when max_priority set to 0 has been fixed (Thank you to @itkach for report, thank you to @kjaiswal for first PR taco tada )
+* Support for comb-pairs has been added to the local-forging package
+* Integration test has been added to originate sapling contracts with various initial storage states
+
+## 8.0.1-beta.1 Final v8.0.1 - Update Now - mainnet transitions to edo on Feb 13th 2021!
+
+The Tezos mainnet transitions from the incumbent delphi protocol to the edo protocol on Feb 13th 2021. If you have projects on mainnet that use Taquito, it is crucial that you update now.
+
+This release supports 008-PtEdo2Zk protocol that ships with the recently releases Tezos v8.2 node.
+
+The edonet testnet has been reset. The public node that Taquito operates is running this new testnet, and this testnet runs the protocol that will come into effect on mainnet this Saturday the 13th of Feb 2021.
+
+If you are using a public testnet for your development or testing, please verify that it is running protocol 008-PtEdo2Zk!
+
+## Summary
+
+* Support for the upcoming EDO protocol (Comes into effect on February 13th 2021)
+* Contract and Token Metadata features
+* Support for off-chain Michelson views
+* Michel-codec type checks all your Michelson
+* Ships with @airgap/beacon-sdk v2.2.1 for the Taquito Beacon wallet provider.
+* As per the Taquito Versioning Strategy this v8.0.0 release supports the upcoming edonet Tezos Protocol which will activate on the Tezos mainnet on February 13th 2021.
+
+## edonet Support
+
+Taquito v8 ships with backward compatible support for the EDO protocol. This means that all our integration tests and known use cases that function on pre EDO protocols also function on the EDO protocol. Taquito users with Applications deployed on Tezos’ mainnet must upgrade to v8 prior to the EDO protocol transition which will happen on Saturday, February 13th.
+
+The edonet protocol brought changes to the layout of the “combs” data structure. Taquito supports this new structure in such a way that is backward compatible without changing the corresponding Taquito APIs.
+
+Taquito’s michel-codec package and michelson-encoder package has been updated to support the new Michelson instructions and layout changes. sapling_state and sapling_transaction will be added to michelson-encoder in a subsequent release.
+
+Michel-codec Update to support all Michelson changes introduced in the 008 edo update.
+
+For all the changes in edo itself, see the edo changelogs here: https://tezos.gitlab.io/protocols/008_edo.html
+
+Contract and Token Metadata support (TZIP-16/TZIP-12
+Taquito v8 ships with full support for reading Contract and Token metadata, as well as loading and executing “off-chain-views”. Projects can now publish metadata about their contract to IPFS, a HTTP server or (even if not appropriate) on-chain.
+
+Taquito’s support makes it easy for developers to fetch metadata such as name, author, logo, symbol for a Smart Contract based on the address.
+
+Documentation on Taquitos’ new API is available here: https://tezostaquito.io/docs/metadata-tzip16/ and here https://tezostaquito.io/docs/tzip12/
+
+michel-codec updates
+The michel-codec package now type checks all Michelson. Passing an incorrect data type with a Michelson operation will be caught by michel-codec.
+
+Michel-codec now takes a protocol parameter so that it produces the correct Michelson representation and validation based on what is supported in the specified protocol.
+
+Example of use:
+
+```
+Import {Protocol, Parser, ParserOptions} from ‘@taquito/michel-codec’
+
+const parserOptions: ParserOptions = {
+  expandMacros: true,
+  protocol: Protocol.PtEdo27k,
+}
+const p = new Parser(parserOptions);
+```
+
+## Dependency requirements
+
+Taquito now depends on Typescript 4.1 to build. This release is build using Typescript 4.1.5
+
+## Tests;
+
+We have added many more tests to our integration-test suite. Examples of originating contracts with Sapling state and Tickets are available in the test suite.
+
+## Why is Taquito still marked as beta?
+
+Taquito v8 is considered very stable, but we still carry the beta tag, as we want to make it perfect before removing the beta tag. Namely, complete architectural documentation to assist developers and auditors with understanding the internals. Documentation is part of the project, and we think our documentation is good, but we can do better.
+
+## What’s coming next for Taquito?
+
+We will soon be working on integrating Florence, the next Tezos protocol update proposal. We plan to deliver a final version of Taquito v9 much earlier, giving teams a longer runway to upgrade their projects prior to protocol transition.
+
+Developer Experience is our high priority item, and we have improvements in our backlog that we plan to start work on.
+
+We have a good practice of Continuous Delivery in Taquito, but we plan to take this to the next level. Making new features available for pre-view earlier, and test artefacts more visible. Stay tuned!
+
+If you have feature or issue requests, please create an issue on http://github.com/ecadlabs/taquito/issues or join us on the Taquito community support channel on Telegram https://t.me/tezostaquito
 
 ## Taquito v7.1.0-beta
 

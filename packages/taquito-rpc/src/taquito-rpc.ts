@@ -2,7 +2,7 @@
  * @packageDocumentation
  * @module @taquito/rpc
  */
-import { HttpBackend } from '@taquito/http-utils';
+import { HttpBackend, HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import BigNumber from 'bignumber.js';
 import {
   BakingRightsQueryArguments,
@@ -233,13 +233,23 @@ export class RpcClient {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<DelegateResponse> {
-    return this.httpBackend.createRequest<DelegateResponse>({
-      url: this.createURL(
-        `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/delegate`
-      ),
-      method: 'GET',
-    });
+    let delegate: DelegateResponse;
+    try { 
+      delegate = await this.httpBackend.createRequest<DelegateResponse>({
+        url: this.createURL(
+          `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/delegate`
+        ),
+        method: 'GET',
+      });
+    } catch(ex) {
+      if (ex instanceof HttpResponseError && ex.status === STATUS_CODE.NOT_FOUND) {
+        delegate = null;
+    } else {
+      throw ex;
+    }
   }
+  return delegate
+}
 
   /**
    *
