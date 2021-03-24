@@ -5,6 +5,7 @@ import { fa2ContractTzip16 } from "./data/fa2_contract_with_metadata";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
    const Tezos = lib;
+   const test = require('jest-retries');
    Tezos.addExtension(new Tzip16Module());
    let contractAddress: string;
    describe(`Tzip16 metadata and view on a fa2 contract made with wallet api: ${rpc}`, () => {
@@ -14,7 +15,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
          done()
       })
 
-      it('Should deploy a Fa2 wallet api contract having metadata on HTTPS', async (done) => {
+      test('Should deploy a Fa2 wallet api contract having metadata on HTTPS', 2, async (done: () => void) => {
 
          const LocalTez1 = await createAddress();
          const localTez1Pkh = await LocalTez1.signer.publicKeyHash();
@@ -67,8 +68,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
          done();
       });
 
-      it('Should fetch metadata of the Fa2 wallet api contract', async (done) => {
-
+      test('Should fetch metadata of the Fa2 wallet api contract', 2, async (done: () => void) => {
          const contract = await Tezos.wallet.at(contractAddress, tzip16);
          const metadata = await contract.tzip16().getMetadata();
 
@@ -411,7 +411,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
          done();
       });
 
-      it('Should execute views', async (done) => {
+      test('Should execute views', 2, async (done: () => void) => {
          // edonet: KT1XKs56Z8iXpYAD3pzfyXC3B4maJciob74X
 
          const contractAbstraction = await Tezos.wallet.at(contractAddress, tzip16);
