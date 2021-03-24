@@ -1,5 +1,5 @@
 ---
-title: The MichelsonMap class
+title: MichelsonMap class
 id: michelsonmap
 author: Claude Barde
 ---

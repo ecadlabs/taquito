@@ -22,8 +22,9 @@ import {
     assertMichelsonPackableType, assertMichelsonStorableType,
     assertMichelsonBigMapStorableType, assertMichelsonPushableType, isInstruction, assertDataListIfAny
 } from "./michelson-validator";
+import { ParserOptions } from "./micheline-parser";
 
-export interface Context extends ProtocolOptions {
+export interface Context extends ParserOptions {
     contract?: MichelsonContract;
     traceCallback?: (t: InstructionTrace) => void;
 }
