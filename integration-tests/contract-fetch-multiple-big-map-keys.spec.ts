@@ -60,6 +60,18 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(bigMapValues['tz3YjfexGakCDeCseXFUpcXPSAN9xHxE9TH2']!['0'].toString()).toEqual('4');
             expect(bigMapValues['tz3YjfexGakCDeCseXFUpcXPSAN9xHxE9TH2']!['1']).toEqual(expect.objectContaining(new MichelsonMap()));
 
+
+            // Specify a level
+            const { header } = await Tezos.rpc.getBlock();
+
+            // Fetch multiples keys
+            const bigMapValuesWithLevel = await bigMap.getMultipleValues<BigMapVal>(['tz3PNdfg3Fc8hH4m9iSs7bHgDgugsufJnBZ1', 'tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD'], header.level);
+            expect(bigMapValuesWithLevel['tz3PNdfg3Fc8hH4m9iSs7bHgDgugsufJnBZ1']!['0'].toString()).toEqual('2');
+            expect(bigMapValuesWithLevel['tz3PNdfg3Fc8hH4m9iSs7bHgDgugsufJnBZ1']!['1']).toEqual(expect.objectContaining(new MichelsonMap()));
+
+            expect(bigMapValuesWithLevel['tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD']!['0'].toString()).toEqual('3');
+            expect(bigMapValuesWithLevel['tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD']!['1']).toEqual(expect.objectContaining(new MichelsonMap()));
+
             done();
         });
     });

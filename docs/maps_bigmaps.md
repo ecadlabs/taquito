@@ -439,7 +439,7 @@ After that, Taquito will automatically pack the keys locally when you want to fe
 
 It is possible to fetch multiple big map values using Taquito with one call using the `getMultipleValues` method of the `BigMapAbstraction` class. Taquito will ensure that all fetched big maps come from the same block to ensure a consistent state.
 
-The method takes an `array` of `string` (keys) to query as a parameter and returns an object containing the keys and their value in a well-formatted JSON object format.
+The method takes an `array` of `string` (keys) to query and an optional block level as a parameter and returns an object containing the keys and their value in a well-formatted JSON object format.
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
