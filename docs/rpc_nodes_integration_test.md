@@ -8,9 +8,7 @@ author: Roxane Letourneau
 1. The RPC nodes' integration tests are disabled by default.  
 Remove `./rpc-nodes.spec.ts` from `"testPathIgnorePatterns"` in the package.json.
 2. In the integration test folder, run one of the following commands: 
-    - **Carthagenet**: `npm run test:carthagenet rpc-nodes.spec.ts`
-    - **Delphinet**: `npm run test:delphinet rpc-nodes.spec.ts`
-    - **Both protocols**: `npm run test rpc-nodes.spec.ts`
+    - **Edonet**: `npm run test:edonet rpc-nodes.spec.ts`
 
 **When all endpoints are accessible for a node, you will obtain:**
 

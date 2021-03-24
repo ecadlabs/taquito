@@ -4,17 +4,16 @@ import { Protocols } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, protocol, setup,  }) => {
   const Tezos = lib;
+  const edonet = (protocol === Protocols.PtEdo2Zk) ? require('jest-retries') : test.skip;
 
-  const edonet = (protocol === Protocols.PtEdo2Zk) ? test && require('jest-retries') : test.skip;
-  
   describe(`Test origination of contracts with sapling using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup();
       done()
     })
-
-     edonet('Originates a contract having an empty sapling state in its storage', 2, async (done: () => void) => {
+    //  deepcode ignore only-arrow-functions: not sure how to do it otherwise
+    edonet('Originates a contract having an empty sapling state in its storage', 2, async function (done: () => void) {
       const op = await Tezos.contract.originate({
         code: rpcContractResponse.script.code,
         init: `{}` // empty sapling state
@@ -25,7 +24,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup,  }) => {
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
 
       done();
-    }); 
+    });
 
     edonet('Originates a contract with sapling states in its storage', 2, async (done: () => void) => {
       const op = await Tezos.contract.originate({
@@ -36,8 +35,8 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup,  }) => {
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       done();
-    }); 
-    
+    });
+
     edonet('Originates a contract with sapling states in its storage and init in JSON', 2, async (done: () => void) => {
         const op = await Tezos.contract.originate({
         code: rpcContractResponse4.script.code,

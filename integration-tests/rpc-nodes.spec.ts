@@ -7,7 +7,7 @@ import { Protocols } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, knownBaker, knownContract, setup, protocol }) => {
     const Tezos = lib;
-      
+
       beforeEach(async (done) => {
         await setup()
         done()
@@ -16,30 +16,18 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, setup, protocol }) => {
       let rpcList: Array<string> = [];
       let contractBigMapStorage: string;
 
-      if (protocol === Protocols.PsDELPH1) {
+      if (protocol === Protocols.PtEdo2Zk) {
         rpcList = [
-            'https://api.tez.ie/rpc/delphinet',
-            'https://delphinet.smartpy.io', 
-            'https://delphinet-tezos.giganode.io',
-            'https://rpczero.tzbeta.net/'
+            'https://api.tez.ie/rpc/edonet',
+            'https://edonet.smartpy.io',
+            'https://edonet-tezos.giganode.io',
         ];
         contractBigMapStorage = 'KT1GL4k5wRayrH3KEXkPcqSeWXnoiJqxk1ZA'
       }
 
-      else if (protocol === Protocols.PsCARTHA) {
-        rpcList = [
-            'https://api.tez.ie/rpc/carthagenet',
-            'https://carthagenet.smartpy.io', 
-            'https://testnet-tezos.giganode.io',
-            'https://rpcalpha.tzbeta.net/',
-            'https://rpctest.tzbeta.net/'
-        ];
-        contractBigMapStorage = 'KT1Szqn6iy6jpHf4NXcs6RNj36jqAyYUQwW7';
-      }
-
 rpcList.forEach(async rpc => {
     Tezos.setRpcProvider(rpc)
-    
+
     const rpcClient: RpcClient = new RpcClient(rpc);
 
     describe(`Test calling all methods from RPC node: ${rpc}`, () => {
@@ -215,14 +203,14 @@ rpcList.forEach(async rpc => {
                   },
                 ],
             }
-              
+
             const forgeOrigination = await rpcClient.forgeOperations(operation);
             expect(forgeOrigination).toBeDefined();
             done()
         })
 
         // We will send invalid signedOpBytes and see if the node returns the expected error message
-        it('Inject an operation in node and broadcast it', async (done) => {  
+        it('Inject an operation in node and broadcast it', async (done) => {
             try{
                 const injectedOperation = await rpcClient.injectOperation('operation');
             } catch (ex) {
