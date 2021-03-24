@@ -92,10 +92,24 @@ export interface StorageProvider {
    * @param id Big Map ID
    * @param keyToEncode key to query (will be encoded properly according to the schema)
    * @param schema Big Map schema (can be determined using your contract type)
+   * @param block optional block level to fetch the value from
    *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-big-maps-big-map-id-script-expr
    */
-  getBigMapKeyByID<T>(id: string, keyToEncode: string, schema: Schema): Promise<T>;
+  getBigMapKeyByID<T>(id: string, keyToEncode: string, schema: Schema, block?: number): Promise<T>;
+
+  /**
+   *
+   * @description Fetch multiple values in a big map
+   *
+   * @param id Big Map ID
+   * @param keysToEncode Array of keys to query (will be encoded properly according to the schema)
+   * @param schema Big Map schema (can be determined using your contract type)
+   * @param block optional block level to fetch the values from
+   * @returns An object containing the keys queried in the big map and their value in a well-formatted JSON object format
+   *
+   */
+   getBigMapKeysByID<T>(id: string, keysToEncode: string[], schema: Schema, block?: number): Promise<{ [key: string]: T | undefined }>;
 }
 
 export interface ContractProvider extends StorageProvider {

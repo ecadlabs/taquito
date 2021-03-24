@@ -435,6 +435,36 @@ Tezos.setPackerProvider(new MichelCodecPacker());
 
 After that, Taquito will automatically pack the keys locally when you want to fetch the values of a big map.
 
+## Fetch multiple big map values at once
+
+It is possible to fetch multiple big map values using Taquito with one call using the `getMultipleValues` method of the `BigMapAbstraction` class. Taquito will ensure that all fetched big maps come from the same block to ensure a consistent state.
+
+The method takes an `array` of `string` (keys) to query and an optional block level as a parameter and returns an object containing the keys and their value in a well-formatted JSON object format.
+
+```js live noInline
+// import { TezosToolkit } from '@taquito/taquito';
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/edonet');
+
+Tezos.contract
+  .at('KT1L3M2v4KjG5Q8AFEPsXkV2Zdade5LUmV7d')
+  .then((contract) => {
+    println('Fetching the storage of the contract...')
+    return contract.storage()
+  })
+  .then((storage) => {
+    println('Fetching the big map values...')
+    return storage['0'].getMultipleValues([
+      'tz3PNdfg3Fc8hH4m9iSs7bHgDgugsufJnBZ1', 
+      'tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD', 
+      'tz3YjfexGakCDeCseXFUpcXPSAN9xHxE9TH2'
+    ]);
+  })
+  .then((values) =>{
+    println(JSON.stringify(values, null, 2))
+  })
+  .catch((error) => println(JSON.stringify(error)));
+```
+
 ---
 
 [michelson_map]: https://michelson.nomadic-labs.com/#type-big_map
