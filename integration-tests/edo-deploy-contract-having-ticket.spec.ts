@@ -4,8 +4,7 @@ import { Protocols } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
   const Tezos = lib;
-
-  const edonet = (protocol === Protocols.PtEdo2Zk) ? test && require('jest-retries') : test.skip;
+  const edonet = (protocol === Protocols.PtEdo2Zk) ? require('jest-retries') : test.skip;
 
   describe(`Test origination of a token contract using: ${rpc}`, () => {
 
@@ -13,20 +12,20 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
       await setup();
       done()
     })
+    //  deepcode ignore only-arrow-functions: not sure how to do it otherwise
+    edonet('Originates a contract having ticket with init and the wallet api', 2, async function (done: () => void) {
+        const op = await Tezos.wallet.originate({
+          code: ticketCode,
+          init: ticketStorage
+        }).send();
 
-    edonet('Originates a contract having ticket with init and the wallet api', 2, async (done: () => void) => {
-      const op = await Tezos.wallet.originate({
-        code: ticketCode,
-        init: ticketStorage
-      }).send();
+        await op.confirmation();
+        expect(op.opHash).toBeDefined();
 
-      await op.confirmation();
-      expect(op.opHash).toBeDefined();
+        done();
+      });
 
-      done();
-    });
-
-    edonet('Originates a contract having ticket with init and the contract api', 2, async (done: () => void) => {
+    edonet('Originates a contract having ticket with init and the contract api', 2, async  (done: () => void) => {
       const op = await Tezos.contract.originate({
         code: ticketCode,
         init: `(Pair None None)`

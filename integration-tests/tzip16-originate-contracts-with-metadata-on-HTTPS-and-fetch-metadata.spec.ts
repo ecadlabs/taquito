@@ -20,8 +20,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done()
         })
          test('Deploy a contract having empty metadata stored at an HTTPS URL', 2, async (done: () => void) => {
-            // carthagenet: KT1A1DmqFa8eusnpp8eLhwc8NPw29b2ddEHQ
-            // delphinet: KT1WTGDQ9j2mFE7SbgmoixNAVXH1ynjdagon
 
             // location of the contract metadata
             const url = 'https://storage.googleapis.com/tzip-16/empty-metadata.json';
@@ -53,8 +51,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         }); 
 
         test('Fetch the empty metadata of the contract', 2, async (done: () => void) => {
-            // carthagenet: KT1A1DmqFa8eusnpp8eLhwc8NPw29b2ddEHQ
-            // delphinet: KT1WTGDQ9j2mFE7SbgmoixNAVXH1ynjdagon
 
             const contract = await Tezos.contract.at(contractAddressEmptyMetadata, tzip16);
             const metadata = await contract.tzip16().getMetadata();
@@ -67,8 +63,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         });
 
          test('Deploy a contract having valid metadata stored at an HTTPS URL', 2, async (done: () => void) => {
-            // carthagenet: KT1GPiBGM2sQ7DjPqCmGbHBDzkhweTR2spZA
-            // delphinet: KT1KGkToC8UUJBJLqHcLRkv7xvjWd8JwUuTo
 
             // location of the contract metadata
             const url = 'https://storage.googleapis.com/tzip-16/taco-shop-metadata.json';
@@ -97,8 +91,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         });
 
         test('Deploy a contract having valid metadata which contains emoji stored at an HTTPS URL', 2, async (done: () => void) => {
-            // carthagenet: KT1A1mR7zS8cWBehnf5wa6eY1SwCY6Teigne
-            // delphinet: KT194AJC8UQPguynGdJfEVynF9wfUghDjHSt
 
             // location of the contract metadata
             const url = 'https://storage.googleapis.com/tzip-16/emoji-in-metadata.json';
@@ -128,8 +120,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         });
 
         test('Fetch the metadata which contains emoji of the contract', 2, async (done: () => void) => {
-            // carthagenet: KT1A1mR7zS8cWBehnf5wa6eY1SwCY6Teigne
-            // delphinet: KT194AJC8UQPguynGdJfEVynF9wfUghDjHSt
 
             const contract = await Tezos.contract.at(contractAddressEmoji, tzip16);
             const metadata = await contract.tzip16().getMetadata();
@@ -158,8 +148,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         });
 
         test('Deploy a contract having invalid metadata stored at an HTTPS URL', 2, async (done: () => void) => {
-            // carthagenet: KT1LiZ1H4Jk2EatrZjpYVRfH2o4JWMdTgGaM
-            // delphinet: KT1UQyKUoCat9oQNHPGMDypQ4mWW44DFWzXt
 
             // location of the contract metadata
             const url = 'https://storage.googleapis.com/tzip-16/invalid.json';
@@ -189,8 +177,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         });
 
         test('Should fail to fetch invalid metadata of the contract', 2, async (done: () => void) => {
-            // carthagenet: KT1LiZ1H4Jk2EatrZjpYVRfH2o4JWMdTgGaM
-            // delphinet: KT1UQyKUoCat9oQNHPGMDypQ4mWW44DFWzXt
 
             const contract = await Tezos.contract.at(contractAddressInvalidMetadata, tzip16);
             try {

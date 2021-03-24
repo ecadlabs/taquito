@@ -16,8 +16,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done()
         })
         it('Deploy a wallet api contract having metadata inside its own storage', async (done) => {
-            // carthagenet: KT1RF4nXUitQb2G8TE5H9zApatxeKLtQymtg
-            // delphinet: KT1KTkzGMHN4P1XvT4X1kFT5ubcvzxs6ZfSq
 
             const metadataJSON = {
                 "name": "test",
@@ -53,8 +51,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         });
 
         it('Fetch the metadata in the wallet api contract itself', async (done) => {
-            // carthagenet: KT1RF4nXUitQb2G8TE5H9zApatxeKLtQymtg
-            // delphinet: KT1KTkzGMHN4P1XvT4X1kFT5ubcvzxs6ZfSq
 
             const contract = await Tezos.wallet.at(contractAddress, tzip16);
             const metadata = await contract.tzip16().getMetadata();
@@ -76,8 +72,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         });
 
         it('Deploy a wallet api contract having metadata inside another contract same network', async (done) => {
-            // carthagenet: KT1Ud3D2oyE27Xz7wh5AhD9wz8wc4pkuXeT4
-            // delphinet: KT1BAQ3nEsLrEeZdkij8KiekaWUVQERNF1Hi
 
             const metadataBigMAp = new MichelsonMap();
             metadataBigMAp.set("", char2Bytes(`tezos-storage://${contractAddress}/here`));
@@ -98,8 +92,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         });
 
         it('Fetch the metadata in the storage of the other wallet api contract', async (done) => {
-            // carthagenet: KT1Ud3D2oyE27Xz7wh5AhD9wz8wc4pkuXeT4
-            // delphinet: KT1BAQ3nEsLrEeZdkij8KiekaWUVQERNF1Hi 
 
             const contract = await Tezos.wallet.at(contractMetadataInAnotherContract, tzip16);
             const metadata = await contract.tzip16().getMetadata();
