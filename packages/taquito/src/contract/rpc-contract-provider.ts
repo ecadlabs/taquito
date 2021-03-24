@@ -128,7 +128,7 @@ export class RpcContractProvider extends OperationEmitter
    *
    */
   async getBigMapKeysByID<T>(id: string, keys: string[], schema: Schema, block?: number): Promise<{ [key: string]: T | undefined }> {
-    let bigMapValues = Object({[keys[0]]: undefined});
+    const bigMapValues = Object({[keys[0]]: undefined});
     if (keys.length === 1) { // No need to get the block level if only one key
       let val: T | undefined;
       try {
@@ -154,7 +154,7 @@ export class RpcContractProvider extends OperationEmitter
       // Execute batch of promises in series
       const batchSize = 5;
       let position = 0;
-      let results: (T | undefined)[] = [];
+      let results: Array<(T | undefined)> = [];
 
       while (position < keys.length) {
         const keysBatch = keys.slice(position, position + batchSize);
