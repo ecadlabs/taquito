@@ -20,7 +20,7 @@ import { SubscribeProvider } from './subscribe/interface';
 import { PollingSubscribeProvider } from './subscribe/polling-provider';
 import { TzProvider } from './tz/interface';
 import { LegacyWalletProvider, Wallet, WalletProvider } from './wallet';
-import { OperationFactory } from './wallet/opreation-factory';
+import { OperationFactory } from './wallet/operation-factory';
 
 export { MichelsonMap, UnitValue } from '@taquito/michelson-encoder';
 export * from './constants';
