@@ -4,6 +4,7 @@ import { depositContractCode, depositContractStorage } from "./data/deposit_cont
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   const test = require('jest-retries');
+  
   describe(`Test contract made with wallet API with unit as params using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
