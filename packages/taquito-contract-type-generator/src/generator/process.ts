@@ -4,7 +4,7 @@ import { parseContractStorage, parseContractParameter } from './contract-parser'
 import { SchemaOutput, toSchema } from './schema-output';
 import { TypescriptCodeOutput, toTypescriptCode } from './typescript-output';
 
-export const generateContractTypesFromMichelsonCode = (contractScript: string): {
+export const generateContractTypesFromMichelsonCode = (contractScript: string, codeTypeName?: string): {
     schema: SchemaOutput;
     typescriptCode: TypescriptCodeOutput;
 } => {
@@ -26,7 +26,7 @@ export const generateContractTypesFromMichelsonCode = (contractScript: string): 
     const methods = parameterResult?.methods ?? [];
     const schemaOutput = toSchema(methods);
 
-    const typescriptCode = toTypescriptCode(storage, methods);
+    const typescriptCode = toTypescriptCode(storage, methods, codeTypeName);
 
     return {
         schema: schemaOutput,

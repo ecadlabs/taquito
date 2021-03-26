@@ -8,7 +8,7 @@ export type TypescriptCodeOutput = {
     methods: string;
 };
 
-export const toTypescriptCode = (storage: TypedStorage, methods: TypedMethod[]): TypescriptCodeOutput => {
+export const toTypescriptCode = (storage: TypedStorage, methods: TypedMethod[], codeTypeName?: string): TypescriptCodeOutput => {
     type StrictType = { strictType: string, baseType?: string, raw?: string };
     const usedStrictTypes = [] as StrictType[];
     const addStrictType = (strictType: StrictType) => {
@@ -149,6 +149,8 @@ ${tabs(indent)}`;
     //         `.trim();
     const typeAliases = `import { ${usedStrictTypes.map(x => x.strictType).join(`, `)} } from '@taquito/contract-type-generator';`;
 
+    const codeType = codeTypeName ? `, code: { __type: '${codeTypeName}' }` : '';
+
     const finalCode = `
 ${typeAliases}
 
@@ -156,7 +158,7 @@ ${storageCode}
 
 ${methodsCode}
 
-export type Contract = { methods: Methods, storage: Storage };
+export type Contract = { methods: Methods, storage: Storage${codeType} };
 `;
     return {
         final: finalCode,

@@ -10,6 +10,12 @@ const fs = {
     stat: promisify(fsRaw.stat),
 };
 
+const toPascalCase = (text: string) => text
+    .replace(/[^A-Za-z0-9]/g, '_')
+    .split("_")
+    .filter(x => x)
+    .map(x => x[0].toUpperCase() + x.substring(1))
+    .join('');
 
 const getAllFiles = async (rootPath: string, filter: (fullPath: string) => boolean): Promise<string[]> => {
     const allFiles = [] as string[];
@@ -52,13 +58,16 @@ export const generateContractTypesProcessTzContractFiles = async ({
 
     for (const fullPath of files) {
         const fileRelativePath = fullPath.replace(path.resolve(inputTzContractDirectory), '');
+        const fileName = fileRelativePath.replace('.tz', '');
         const inputFilePath = path.join(inputTzContractDirectory, fileRelativePath);
         const outputFilePath = path.join(outputTypescriptDirectory, fileRelativePath.replace(`.tz`, `.ts`));
         console.log(`Processing ${fileRelativePath}...`);
 
         try {
             const michelsonCode = await fs.readFile(inputFilePath, { encoding: `utf8` });
-            const { typescriptCode: { final: finalTypescriptCode } } = generateContractTypesFromMichelsonCode(michelsonCode);
+            const codeTypeName = toPascalCase(fileName) + 'CodeType';
+
+            const { typescriptCode: { final: finalTypescriptCode } } = generateContractTypesFromMichelsonCode(michelsonCode, codeTypeName);
 
             // Write output (ensure dir exists)
             await fs.mkdir(path.dirname(outputFilePath), { recursive: true });
