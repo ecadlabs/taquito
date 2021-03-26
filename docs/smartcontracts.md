@@ -1,5 +1,5 @@
 ---
-title: Working with Smart Contracts
+title: Smart contract interaction
 author: Jev Bjorsell
 ---
 
