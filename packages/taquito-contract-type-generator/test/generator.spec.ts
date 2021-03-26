@@ -2,6 +2,8 @@ import fsRaw from 'fs';
 import path from 'path';
 import { promisify } from 'util';
 import { generateContractTypesFromMichelsonCode } from '../src/generator/process';
+import { normalizeContractName } from '../src/generator/contract-name';
+
 const fs = {
     readFile: promisify(fsRaw.readFile),
 };
@@ -13,9 +15,12 @@ describe('Generate Example Contracts', () => {
 
     const testContractTypeGeneration = async (contractFileName: string) => {
         const contractTz = await readFileText(path.resolve(__dirname, `../example/contracts/${contractFileName}.tz`));
-        const expectedTypescriptCode = await readFileText(path.resolve(__dirname, `../example/types/${contractFileName}.ts`));
-        const { typescriptCode: { final: actualTypescriptCode } } = generateContractTypesFromMichelsonCode(contractTz);
-        expect(actualTypescriptCode.trim()).toEqual(expectedTypescriptCode.trim());
+        const expectedTypeFileContent = await readFileText(path.resolve(__dirname, `../example/types/${contractFileName}.types.ts`));
+        const expectedCodeFileContent = await readFileText(path.resolve(__dirname, `../example/types/${contractFileName}.code.ts`));
+        const contractName = normalizeContractName(contractFileName);
+        const { typescriptCodeOutput: { typesFileContent: actualTypesFileContent, contractCodeFileContent: actualCodeFileContent } } = generateContractTypesFromMichelsonCode(contractTz, contractName);
+        expect(actualTypesFileContent.trim()).toEqual(expectedTypeFileContent.trim());
+        expect(actualCodeFileContent.trim()).toEqual(expectedCodeFileContent.trim());
     };
 
     it('Generate Contract 01', async () => {

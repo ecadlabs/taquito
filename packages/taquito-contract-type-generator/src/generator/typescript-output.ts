@@ -2,13 +2,14 @@ import { assertExhaustive, GenerateApiError } from './common';
 import { TypedStorage, TypedMethod, TypedType, TypedVar } from './contract-parser';
 
 export type TypescriptCodeOutput = {
-    final: string;
+    typesFileContent: string;
+    contractCodeFileContent: string;
     typeMapping: string;
     storage: string;
     methods: string;
 };
 
-export const toTypescriptCode = (storage: TypedStorage, methods: TypedMethod[], codeTypeName?: string): TypescriptCodeOutput => {
+export const toTypescriptCode = (storage: TypedStorage, methods: TypedMethod[], contractName: string, parsedContract: unknown): TypescriptCodeOutput => {
     type StrictType = { strictType: string, baseType?: string, raw?: string };
     const usedStrictTypes = [] as StrictType[];
     const addStrictType = (strictType: StrictType) => {
@@ -149,19 +150,28 @@ ${tabs(indent)}`;
     //         `.trim();
     const typeAliases = `import { ${usedStrictTypes.map(x => x.strictType).join(`, `)} } from '@taquito/contract-type-generator';`;
 
-    const codeType = codeTypeName ? `, code: { __type: '${codeTypeName}' }` : '';
+    const contractTypeName = `${contractName}ContractType`;
+    const codeName = `${contractName}Code`;
 
-    const finalCode = `
+    const typesFileContent = `
 ${typeAliases}
 
 ${storageCode}
 
 ${methodsCode}
 
-export type Contract = { methods: Methods, storage: Storage${codeType} };
+export type ${contractTypeName} = { methods: Methods, storage: Storage, code: { __type: '${codeName}' } };
+`;
+
+    const contractCodeFileContent = `
+export const ${codeName}: { __type: '${codeName}', code: string } = { 
+    __type: '${codeName}', 
+    code: \`${JSON.stringify(parsedContract)}\`
+};
 `;
     return {
-        final: finalCode,
+        typesFileContent,
+        contractCodeFileContent,
         storage: storageCode,
         methods: methodsCode,
         typeMapping,

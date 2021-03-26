@@ -1,6 +1,7 @@
 import fsRaw from 'fs';
 import path from 'path';
 import { promisify } from 'util';
+import { normalizeContractName } from './generator/contract-name';
 import { generateContractTypesFromMichelsonCode } from './generator/process';
 const fs = {
     mkdir: promisify(fsRaw.mkdir),
@@ -9,13 +10,6 @@ const fs = {
     writeFile: promisify(fsRaw.writeFile),
     stat: promisify(fsRaw.stat),
 };
-
-const toPascalCase = (text: string) => text
-    .replace(/[^A-Za-z0-9]/g, '_')
-    .split("_")
-    .filter(x => x)
-    .map(x => x[0].toUpperCase() + x.substring(1))
-    .join('');
 
 const getAllFiles = async (rootPath: string, filter: (fullPath: string) => boolean): Promise<string[]> => {
     const allFiles = [] as string[];
@@ -60,18 +54,20 @@ export const generateContractTypesProcessTzContractFiles = async ({
         const fileRelativePath = fullPath.replace(path.resolve(inputTzContractDirectory), '');
         const fileName = fileRelativePath.replace('.tz', '');
         const inputFilePath = path.join(inputTzContractDirectory, fileRelativePath);
-        const outputFilePath = path.join(outputTypescriptDirectory, fileRelativePath.replace(`.tz`, `.ts`));
+        const typesOutputFilePath = path.join(outputTypescriptDirectory, fileRelativePath.replace(`.tz`, `.types.ts`));
+        const codeContentOutputFilePath = path.join(outputTypescriptDirectory, fileRelativePath.replace(`.tz`, `.code.ts`));
         console.log(`Processing ${fileRelativePath}...`);
 
         try {
             const michelsonCode = await fs.readFile(inputFilePath, { encoding: `utf8` });
-            const codeTypeName = toPascalCase(fileName) + 'CodeType';
+            const contractTypeName = normalizeContractName(fileName);
 
-            const { typescriptCode: { final: finalTypescriptCode } } = generateContractTypesFromMichelsonCode(michelsonCode, codeTypeName);
+            const { typescriptCodeOutput: { typesFileContent, contractCodeFileContent } } = generateContractTypesFromMichelsonCode(michelsonCode, contractTypeName);
 
             // Write output (ensure dir exists)
-            await fs.mkdir(path.dirname(outputFilePath), { recursive: true });
-            await fs.writeFile(outputFilePath, finalTypescriptCode);
+            await fs.mkdir(path.dirname(typesOutputFilePath), { recursive: true });
+            await fs.writeFile(typesOutputFilePath, typesFileContent);
+            await fs.writeFile(codeContentOutputFilePath, contractCodeFileContent);
         } catch (err: unknown) {
             console.error(`❌ Could not process ${fileRelativePath}`, { err });
         }
