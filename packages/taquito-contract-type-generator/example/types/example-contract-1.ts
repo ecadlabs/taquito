@@ -1,5 +1,5 @@
 
-import { address, BigMap, int, mutez, nat, timestamp } from '../../src';
+import { address, BigMap, int, mutez, nat, timestamp } from '@taquito/contract-type-generator';
 
 type Storage = {
     pauseable_admin?: {
