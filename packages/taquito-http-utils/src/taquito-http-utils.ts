@@ -14,7 +14,7 @@ const XMLHttpRequestCTOR = isNode ? require('xhr2-cookies').XMLHttpRequest : XML
 
 export * from './status_code';
 
-const defaultTimeout = 30000;
+const defaultTimeout = 1800000;
 
 interface HttpRequestOptions {
   url: string;
