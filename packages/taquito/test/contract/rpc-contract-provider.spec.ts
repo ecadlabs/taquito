@@ -297,14 +297,16 @@ describe('RpcContractProvider test', () => {
           args: [{ prim: "address" }, { prim: "nat" }],
         })
       );
-      expect(result).toEqual({
+      expect(result).toEqual(expect.objectContaining(
+        MichelsonMap.fromLiteral({
           tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn: new BigNumber(3),
           tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN: new BigNumber(7),
           tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx: new BigNumber(6),
           tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY: new BigNumber(5),
           tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh: new BigNumber(4),
           tz1NAozDvi5e7frVq9cUaC3uXQQannemB8Jw: new BigNumber(1)
-        });
+        })
+      ))
       expect(mockRpcClient.packData.mock.calls[0][0]).toEqual({
         data: {
           bytes: "000035e993d8c7aaa42b5e3ccd86a33390ececc73abd",
@@ -428,10 +430,12 @@ describe('RpcContractProvider test', () => {
           args: [{ prim: "address" }, { prim: "nat" }],
         })
       );
-      expect(result).toEqual({
+      expect(result).toEqual(expect.objectContaining(
+        MichelsonMap.fromLiteral({
           tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn: undefined, // value set to undefined
           tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN: new BigNumber(3),
-        });
+        })
+      ));
       expect(mockRpcClient.packData.mock.calls[0][0]).toEqual({
         data: {
           bytes: "000035e993d8c7aaa42b5e3ccd86a33390ececc73abd",
@@ -487,10 +491,12 @@ describe('RpcContractProvider test', () => {
         }),
         654321
       );
-      expect(result).toEqual({
+      expect(result).toEqual(expect.objectContaining(
+        MichelsonMap.fromLiteral({
           tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn: new BigNumber(34), 
           tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN: new BigNumber(3),
-        });
+        })
+      ));
       expect(mockRpcClient.getBlock.mock.calls[0]).toBeUndefined();
       expect(mockRpcClient.packData.mock.calls[0][0]).toEqual({
         data: {
@@ -548,9 +554,11 @@ describe('RpcContractProvider test', () => {
           args: [{ prim: "address" }, { prim: "nat" }],
         })
       );
-      expect(result).toEqual({
-        tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN: undefined,
-      });
+      expect(result).toEqual(expect.objectContaining(
+        MichelsonMap.fromLiteral({
+          tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN: undefined,
+        })
+      ));
       expect(mockRpcClient.getBlock.mock.calls[0]).toBeUndefined();
       expect(mockRpcClient.packData.mock.calls[0][0]).toEqual({
         data: {
@@ -583,9 +591,11 @@ describe('RpcContractProvider test', () => {
           args: [{ prim: "address" }, { prim: "nat" }],
         })
       );
-      expect(result).toEqual({
-        tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN: new BigNumber(3),
-      });
+      expect(result).toEqual(expect.objectContaining(
+        MichelsonMap.fromLiteral({
+          tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN: new BigNumber(3),
+        })
+      ));
       expect(mockRpcClient.getBlock.mock.calls[0]).toBeUndefined();
       expect(mockRpcClient.packData.mock.calls[0][0]).toEqual({
         data: {
@@ -598,6 +608,43 @@ describe('RpcContractProvider test', () => {
       expect(mockRpcClient.getBigMapExpr.mock.calls[0][0]).toEqual("133");
       expect(mockRpcClient.getBigMapExpr.mock.calls[0][1]).toEqual(
         "exprvPCPwzweu2FnFYTpZJoAM2vEWmPtHDXvsvNsrsKM6ZHMzeahE7"
+      );
+      done();
+    });
+
+    it("getBigMapKeysByID with a pair as key and a pair as value", async (done) => {
+      mockRpcClient.packData.mockResolvedValue({
+        packed: "0507070100000005746573743201000000057465737433",
+      });
+      mockRpcClient.getBigMapExpr.mockResolvedValue({  prim: "Pair", args: [{ int: "2" }, { string: "3" }] });
+  
+      const result = await rpcContractProvider.getBigMapKeysByID(
+        "133",
+        [
+          { 'test': 'test2', 'test2': 'test3' },
+        ],
+        new Schema({
+          prim: "big_map",
+          args: [{ "prim": "pair", "args": [{ "prim": "string", annots: ["%test"] }, { "prim": "string", annots: ["%test2"] }] }, { "prim": "pair", "args":[{ "prim": "int" }, { "prim": "int" }] }],
+        })
+      );
+      expect(result.has({ 'test': 'test2', 'test2': 'test3' })).toBeTruthy();
+      expect(result.get({ 'test': 'test2', 'test2': 'test3' })).toEqual({
+        0: new BigNumber(2),
+        1: new BigNumber(3)      
+      });
+      expect(mockRpcClient.getBlock.mock.calls[0]).toBeUndefined();
+      expect(mockRpcClient.packData.mock.calls[0][0]).toEqual({
+        data: {
+          prim: "Pair", args: [{ string: "test2" }, { string: "test3" }]
+        },
+        type: {
+          prim: "pair", args: [{ prim: "string" }, { prim: "string" }]
+        },
+      });
+      expect(mockRpcClient.getBigMapExpr.mock.calls[0][0]).toEqual("133");
+      expect(mockRpcClient.getBigMapExpr.mock.calls[0][1]).toEqual(
+        "exprteZPr9h8pkyKKw9PMFEXqG1jbMBkj4A2KC9Mp5cAAjSrDWvfXs"
       );
       done();
     });

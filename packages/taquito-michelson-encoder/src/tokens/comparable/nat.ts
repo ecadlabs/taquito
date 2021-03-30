@@ -58,9 +58,9 @@ export class NatToken extends ComparableToken {
     return NatToken.prim;
   }
 
-  public ToBigMapKey(val: string) {
+  public ToBigMapKey(val: string | number) {
     return {
-      key: { int: val },
+      key: { int: String(val) },
       type: { prim: NatToken.prim },
     };
   }

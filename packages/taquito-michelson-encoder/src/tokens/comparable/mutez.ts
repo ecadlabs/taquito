@@ -56,9 +56,9 @@ export class MutezToken extends ComparableToken {
     return { int: String(val).toString() };
   }
 
-  public ToBigMapKey(val: string) {
+  public ToBigMapKey(val: string | number) {
     return {
-      key: { int: val },
+      key: { int: String(val) },
       type: { prim: MutezToken.prim },
     };
   }

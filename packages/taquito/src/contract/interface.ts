@@ -1,4 +1,4 @@
-import { Schema } from '@taquito/michelson-encoder';
+import { BigMapKeyType, MichelsonMap, MichelsonMapKey, Schema } from '@taquito/michelson-encoder';
 import { OperationBatch } from '../batch/rpc-batch-provider';
 import { Context } from '../context';
 import { DelegateOperation } from '../operations/delegate-operation';
@@ -96,7 +96,7 @@ export interface StorageProvider {
    *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-big-maps-big-map-id-script-expr
    */
-  getBigMapKeyByID<T>(id: string, keyToEncode: string, schema: Schema, block?: number): Promise<T>;
+  getBigMapKeyByID<T>(id: string, keyToEncode: BigMapKeyType, schema: Schema, block?: number): Promise<T>;
 
   /**
    *
@@ -109,7 +109,7 @@ export interface StorageProvider {
    * @returns An object containing the keys queried in the big map and their value in a well-formatted JSON object format
    *
    */
-   getBigMapKeysByID<T>(id: string, keysToEncode: string[], schema: Schema, block?: number): Promise<{ [key: string]: T | undefined }>;
+   getBigMapKeysByID<T>(id: string, keysToEncode: Array<BigMapKeyType>, schema: Schema, block?: number): Promise<MichelsonMap<MichelsonMapKey, T | undefined>>;
 }
 
 export interface ContractProvider extends StorageProvider {

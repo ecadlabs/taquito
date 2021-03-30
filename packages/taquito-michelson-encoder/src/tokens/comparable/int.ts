@@ -56,9 +56,9 @@ export class IntToken extends ComparableToken {
     return { int: new BigNumber(val).toFixed() };
   }
 
-  public ToBigMapKey(val: string) {
+  public ToBigMapKey(val: string | number) {
     return {
-      key: { int: val },
+      key: { int: String(val) },
       type: { prim: IntToken.prim },
     };
   }

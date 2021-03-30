@@ -33,4 +33,19 @@ describe('Int token', () => {
       expect(() => token.Encode([{}])).toThrowError(IntValidationError);
     });
   });
+
+  describe('ToBigMapKey', () => {
+  it('accepts a number as parameter', () => {
+      expect(token.ToBigMapKey(0)).toEqual({
+        key: { int: '0' },
+        type: { prim: IntToken.prim },
+      });
+    });
+  it('accepts a string as parameter', () => {
+      expect(token.ToBigMapKey('0')).toEqual({
+        key: { int: '0' },
+        type: { prim: IntToken.prim },
+      });    
+    });
+  });
 });

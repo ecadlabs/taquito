@@ -32,4 +32,19 @@ describe('Mutez token', () => {
       expect(() => token.Encode([{}])).toThrowError(MutezValidationError);
     });
   });
+
+  describe('ToBigMapKey', () => {
+  it('accepts a number as parameter', () => {
+      expect(token.ToBigMapKey(10000000)).toEqual({
+        key: { int: '10000000' },
+        type: { prim: MutezToken.prim },
+      });
+    });
+  it('accepts a string as parameter', () => {
+      expect(token.ToBigMapKey('10000000')).toEqual({
+        key: { int: '10000000' },
+        type: { prim: MutezToken.prim },
+      });    
+    });
+  });
 });

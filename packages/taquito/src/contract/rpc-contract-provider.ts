@@ -1,5 +1,5 @@
 import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
-import { Schema } from '@taquito/michelson-encoder';
+import { BigMapKeyType, MichelsonMap, MichelsonMapKey, Schema } from '@taquito/michelson-encoder';
 import { ScriptResponse } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { OperationBatch } from '../batch/rpc-batch-provider';
@@ -102,7 +102,7 @@ export class RpcContractProvider extends OperationEmitter
    *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-big-maps-big-map-id-script-expr
    */
-  async getBigMapKeyByID<T>(id: string, keyToEncode: string, schema: Schema, block?: number): Promise<T> {
+  async getBigMapKeyByID<T>(id: string, keyToEncode: BigMapKeyType, schema: Schema, block?: number): Promise<T> {
     const { key, type } = schema.EncodeBigMapKey(keyToEncode);
     const { packed } = await this.context.packer.packData({ data: key, type });
 
@@ -124,11 +124,11 @@ export class RpcContractProvider extends OperationEmitter
    * @param keys Array of keys to query (will be encoded properly according to the schema)
    * @param schema Big Map schema (can be determined using your contract type)
    * @param block optional block level to fetch the values from
-   * @returns An object containing the keys queried in the big map and their value in a well-formatted JSON object format
+   * @returns A MichelsonMap containing the keys queried in the big map and their value in a well-formatted JSON object format
    *
    */
-  async getBigMapKeysByID<T>(id: string, keys: string[], schema: Schema, block?: number): Promise<{ [key: string]: T | undefined }> {
-    const bigMapValues = Object({[keys[0]]: undefined});
+  async getBigMapKeysByID<T>(id: string, keys: Array<BigMapKeyType>, schema: Schema, block?: number): Promise<MichelsonMap<MichelsonMapKey, T | undefined>> {
+    const bigMapValues = new MichelsonMap<MichelsonMapKey, T | undefined>();
     if (keys.length === 1) { // No need to get the block level if only one key
       let val: T | undefined;
       try {
@@ -140,7 +140,7 @@ export class RpcContractProvider extends OperationEmitter
           throw ex;
         }
       }
-      Object.assign(bigMapValues, {[keys[0]]: val});
+      bigMapValues.set(keys[0], val);
 
     } else {
       let level: number;
@@ -174,7 +174,7 @@ export class RpcContractProvider extends OperationEmitter
       }
 
       for (let i = 0; i < results.length; i++) {
-        Object.assign(bigMapValues, {[keys[i]]: results[i]})
+        bigMapValues.set(keys[i], results[i]);
       }
     }
 
