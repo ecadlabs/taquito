@@ -15,6 +15,7 @@
         "originate",
         "rpc_nodes",
         "rpc_package",
+        "signing",
         "smartcontracts",
         "tickets",
         "making_transfers",
