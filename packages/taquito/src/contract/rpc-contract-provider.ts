@@ -1,3 +1,4 @@
+import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { ScriptResponse } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
@@ -97,18 +98,87 @@ export class RpcContractProvider extends OperationEmitter
    * @param id Big Map ID
    * @param keyToEncode key to query (will be encoded properly according to the schema)
    * @param schema Big Map schema (can be determined using your contract type)
+   * @param block optional block level to fetch the values from
    *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-big-maps-big-map-id-script-expr
    */
-  async getBigMapKeyByID<T>(id: string, keyToEncode: string, schema: Schema): Promise<T> {
+  async getBigMapKeyByID<T>(id: string, keyToEncode: string, schema: Schema, block?: number): Promise<T> {
     const { key, type } = schema.EncodeBigMapKey(keyToEncode);
     const { packed } = await this.context.packer.packData({ data: key, type });
 
     const encodedExpr = encodeExpr(packed);
 
-    const bigMapValue = await this.context.rpc.getBigMapExpr(id.toString(), encodedExpr);
+    const bigMapValue = block? await this.context.rpc.getBigMapExpr(id.toString(), encodedExpr, { block: String(block) }) : await this.context.rpc.getBigMapExpr(id.toString(), encodedExpr);
 
     return schema.ExecuteOnBigMapValue(bigMapValue, smartContractAbstractionSemantic(this)) as T;
+  }
+
+  /**
+   *
+   * @description Fetch multiple values in a big map
+   * All values will be fetched on the same block level. If a block is specified in the request, the values will be fetched at it. 
+   * Otherwise, a first request will be done to the node to fetch the level of the head and all values will be fetched at this level.
+   * If one of the keys does not exist in the big map, its value will be set to undefined.
+   *
+   * @param id Big Map ID
+   * @param keys Array of keys to query (will be encoded properly according to the schema)
+   * @param schema Big Map schema (can be determined using your contract type)
+   * @param block optional block level to fetch the values from
+   * @returns An object containing the keys queried in the big map and their value in a well-formatted JSON object format
+   *
+   */
+  async getBigMapKeysByID<T>(id: string, keys: string[], schema: Schema, block?: number): Promise<{ [key: string]: T | undefined }> {
+    const bigMapValues = Object({[keys[0]]: undefined});
+    if (keys.length === 1) { // No need to get the block level if only one key
+      let val: T | undefined;
+      try {
+        val = await this.getBigMapKeyByID<T>(id, keys[0], schema, block);
+      } catch(ex) {
+        if (ex instanceof HttpResponseError && ex.status === STATUS_CODE.NOT_FOUND) {
+          val = undefined;
+        } else {
+          throw ex;
+        }
+      }
+      Object.assign(bigMapValues, {[keys[0]]: val});
+
+    } else {
+      let level: number;
+      if(block) {
+        level = block
+      } else {
+        const { header } = await this.context.rpc.getBlock();
+        level = header.level
+      }
+
+      // Execute batch of promises in series
+      const batchSize = 5;
+      let position = 0;
+      let results: Array<(T | undefined)> = [];
+
+      while (position < keys.length) {
+        const keysBatch = keys.slice(position, position + batchSize);
+        results = [...results, ...await Promise.all(keysBatch.map(async (keyToEncode) => {
+          try {
+            return await this.getBigMapKeyByID<T>(id, keyToEncode, schema, level);
+          } catch(ex) {
+              if (ex instanceof HttpResponseError && ex.status === STATUS_CODE.NOT_FOUND) {
+                (keyToEncode as any) = undefined;
+              } else {
+                throw ex;
+              }
+            }
+          })
+        )];
+        position += batchSize;
+      }
+
+      for (let i = 0; i < results.length; i++) {
+        Object.assign(bigMapValues, {[keys[i]]: results[i]})
+      }
+    }
+
+    return bigMapValues;
   }
 
   /**

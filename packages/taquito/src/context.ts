@@ -6,7 +6,7 @@ import { Injector } from './injector/interface';
 import { RpcInjector } from './injector/rpc-injector';
 import { Signer } from './signer/interface';
 import { NoopSigner } from './signer/noop';
-import { OperationFactory } from './wallet/opreation-factory';
+import { OperationFactory } from './wallet/operation-factory';
 import { RpcTzProvider } from './tz/rpc-tz-provider';
 import { RPCEstimateProvider } from './contract/rpc-estimate-provider';
 import { RpcContractProvider } from './contract/rpc-contract-provider';

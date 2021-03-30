@@ -1,6 +1,6 @@
 {
   "name": "pack-test-tool",
-  "version": "8.0.5-pack.1",
+  "version": "8.1.0",
   "description": "Generate pack test data via Tezos RPC",
   "main": "pack-test-tool.js",
   "private": true,
