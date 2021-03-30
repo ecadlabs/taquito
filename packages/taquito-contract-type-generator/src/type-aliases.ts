@@ -9,6 +9,8 @@ export type contract = string & { __type: 'contract' };
 export type operation = string & { __type: 'operation' };
 export type key = string & { __type: 'key' };
 export type key_hash = string & { __type: 'key_hash' };
+export type signature = string & { __type: 'signature' };
+export type ticket = string & { __type: 'ticket' };
 
 export type timestamp = string & { __type: 'timestamp' };
 
