@@ -67,7 +67,7 @@ export class MutezToken extends ComparableToken {
     return int;
   }
 
-  public compare(mutez1: string | number, mutez2: string | number) {
+  compare(mutez1: string | number, mutez2: string | number) {
     const o1 = Number(mutez1);
     const o2 = Number(mutez2);
     if (o1 === o2) {

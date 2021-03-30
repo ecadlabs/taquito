@@ -67,7 +67,7 @@ export class IntToken extends ComparableToken {
     return int;
   }
 
-  public compare(int1: string | number, int2: string | number) {
+  compare(int1: string | number, int2: string | number) {
     const o1 = Number(int1);
     const o2 = Number(int2);
     if (o1 === o2) {

@@ -69,7 +69,7 @@ export class NatToken extends ComparableToken {
     return int;
   }
 
-  public compare(nat1: string | number, nat2: string | number) {
+  compare(nat1: string | number, nat2: string | number) {
     const o1 = Number(nat1);
     const o2 = Number(nat2);
     if (o1 === o2) {
