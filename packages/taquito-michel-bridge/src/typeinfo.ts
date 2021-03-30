@@ -1,5 +1,4 @@
 import { MichelsonType, MichelsonTypeID, unpackAnnotations, unpackComb } from "@taquito/michel-codec";
-import { inspect } from "util";
 
 export const ObjectID: unique symbol = Symbol("object");
 export const UnionID: unique symbol = Symbol("union");
@@ -88,8 +87,6 @@ function getComplexTypeInfo<T extends "pair" | "or">(typ: MichelsonType<T>): Typ
     }
 
     const tt = isPair(t) ? unpackComb("pair", t) : t;
-    console.log(inspect(tt, false, null));
-
     return {
         type: tt.prim,
         expr: tt,

@@ -1,6 +1,5 @@
 import { MichelsonType } from "@taquito/michel-codec";
 import { getTypeInfo, TypeInfo, ObjectID } from "../src/typeinfo";
-import { inspect } from "util";
 
 describe("Type info", () => {
     it("record", () => {
@@ -79,7 +78,76 @@ describe("Type info", () => {
             },
         ];
 
+        const expected: TypeInfo = {
+            type: 'pair',
+            expr: {
+                prim: 'pair',
+                args: [
+                    { prim: 'int' },
+                    {
+                        prim: 'pair',
+                        args: [
+                            { prim: 'nat' },
+                            { prim: 'string' },
+                            {
+                                prim: 'pair',
+                                annots: [':tuple'],
+                                args: [{ prim: 'signature' }, { prim: 'bool' }]
+                            }
+                        ]
+                    }
+                ]
+            },
+            left: { type: 'int', expr: { prim: 'int' } },
+            right: {
+                type: 'pair',
+                expr: {
+                    prim: 'pair',
+                    args: [
+                        { prim: 'nat' },
+                        {
+                            prim: 'pair',
+                            args: [
+                                { prim: 'string' },
+                                {
+                                    prim: 'pair',
+                                    annots: [':tuple'],
+                                    args: [{ prim: 'signature' }, { prim: 'bool' }]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                left: { type: 'nat', expr: { prim: 'nat' } },
+                right: {
+                    type: 'pair',
+                    expr: {
+                        prim: 'pair',
+                        args: [
+                            { prim: 'string' },
+                            {
+                                prim: 'pair',
+                                annots: [':tuple'],
+                                args: [{ prim: 'signature' }, { prim: 'bool' }]
+                            }
+                        ]
+                    },
+                    left: { type: 'string', expr: { prim: 'string' } },
+                    right: {
+                        type: 'pair',
+                        expr: {
+                            prim: 'pair',
+                            args: [{ prim: 'signature' }, { prim: 'bool' }]
+                        },
+                        left: { type: 'signature', expr: { prim: 'signature' } },
+                        right: { type: 'bool', expr: { prim: 'bool' } },
+                        name: 'tuple'
+                    }
+                }
+            }
+        };
+
         const ti = getTypeInfo(src);
-        //console.log(inspect(ti, false, null));
+        expect(ti).toEqual(expected);
     });
 });
