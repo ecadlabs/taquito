@@ -66,4 +66,14 @@ export class IntToken extends ComparableToken {
   public ToKey({ int }: any) {
     return int;
   }
+
+  public compare(int1: string | number, int2: string | number) {
+    const o1 = Number(int1);
+    const o2 = Number(int2);
+    if (o1 === o2) {
+      return 0;
+    }
+
+    return o1 < o2 ? -1 : 1;
+  }
 }

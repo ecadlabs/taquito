@@ -68,4 +68,14 @@ export class NatToken extends ComparableToken {
   public ToKey({ int }: any) {
     return int;
   }
+
+  public compare(nat1: string | number, nat2: string | number) {
+    const o1 = Number(nat1);
+    const o2 = Number(nat2);
+    if (o1 === o2) {
+      return 0;
+    }
+
+    return o1 < o2 ? -1 : 1;
+  }
 }
