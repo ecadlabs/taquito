@@ -63,11 +63,7 @@ describe('BigMapAbstraction test', () => {
                 rpcContractProvider as any
             );
             const result = await bigMap.getMultipleValues(['tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN'])
-            expect(result).toEqual(expect.objectContaining(
-                MichelsonMap.fromLiteral({
-                    tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN: new BigNumber(3),
-                })
-            ));
+            expect(result.get('tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN')).toEqual(new BigNumber(3));
             done();
         });
 
@@ -84,17 +80,12 @@ describe('BigMapAbstraction test', () => {
                 }),
                 rpcContractProvider as any
             );
-            expect(
-                await bigMap.getMultipleValues([
-                    'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-                    'tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN'
-                ])
-            ).toEqual(expect.objectContaining(
-                MichelsonMap.fromLiteral({
-                    tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn: undefined,
-                    tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN: new BigNumber(3)
-                })
-            ));
+            const result = await bigMap.getMultipleValues([
+                'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+                'tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN'
+            ]);
+            expect(result.get('tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn')).toBeUndefined();
+            expect(result.get('tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN')).toEqual(new BigNumber(3));
             done();
         });
     });
