@@ -37,32 +37,36 @@ const getAllFiles = async (rootPath: string, filter: (fullPath: string) => boole
     return allFiles;
 }
 
-export const generateContractTypesProcessTzContractFiles = async ({
+export const generateContractTypesProcessContractFiles = async ({
     inputTzContractDirectory,
     outputTypescriptDirectory,
+    format,
 }: {
     inputTzContractDirectory: string;
     outputTypescriptDirectory: string;
+    format: 'tz' | 'json'
 }): Promise<void> => {
 
     console.log(`Generating Types: ${path.resolve(inputTzContractDirectory)} => ${path.resolve(outputTypescriptDirectory)}`);
 
-    const files = await getAllFiles(inputTzContractDirectory, x => x.endsWith('.tz'));
+    const ext = '.' + format;
+    const files = await getAllFiles(inputTzContractDirectory, x => x.endsWith(ext));
     console.log(`Contracts Found: ${[``, ...files].join(`\n\t- `)}`);
 
     for (const fullPath of files) {
         const fileRelativePath = fullPath.replace(path.resolve(inputTzContractDirectory), '');
-        const fileName = fileRelativePath.replace('.tz', '');
+        const fileName = fileRelativePath.replace(ext, '');
         const inputFilePath = path.join(inputTzContractDirectory, fileRelativePath);
-        const typesOutputFilePath = path.join(outputTypescriptDirectory, fileRelativePath.replace(`.tz`, `.types.ts`));
-        const codeContentOutputFilePath = path.join(outputTypescriptDirectory, fileRelativePath.replace(`.tz`, `.code.ts`));
+        const typesOutputFilePath = path.join(outputTypescriptDirectory, fileRelativePath.replace(ext, `.types.ts`));
+        const codeContentOutputFilePath = path.join(outputTypescriptDirectory, fileRelativePath.replace(ext, `.code.ts`));
         console.log(`Processing ${fileRelativePath}...`);
 
         try {
-            const michelsonCode = await fs.readFile(inputFilePath, { encoding: `utf8` });
             const contractTypeName = normalizeContractName(fileName);
 
-            const { typescriptCodeOutput: { typesFileContent, contractCodeFileContent } } = generateContractTypesFromMichelsonCode(michelsonCode, contractTypeName);
+            const michelsonCode = await fs.readFile(inputFilePath, { encoding: `utf8` });
+
+            const { typescriptCodeOutput: { typesFileContent, contractCodeFileContent } } = generateContractTypesFromMichelsonCode(michelsonCode, contractTypeName, format);
 
             // Write output (ensure dir exists)
             await fs.mkdir(path.dirname(typesOutputFilePath), { recursive: true });

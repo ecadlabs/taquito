@@ -13,12 +13,12 @@ const readFileText = async (filePath: string): Promise<string> => {
 
 describe('Generate Example Contracts', () => {
 
-    const testContractTypeGeneration = async (contractFileName: string) => {
-        const contractTz = await readFileText(path.resolve(__dirname, `../example/contracts/${contractFileName}.tz`));
+    const testContractTypeGeneration = async (contractFileName: string, format: 'tz' | 'json' = 'tz') => {
+        const contractRaw = await readFileText(path.resolve(__dirname, `../example/contracts/${contractFileName}.${format}`));
         const expectedTypeFileContent = await readFileText(path.resolve(__dirname, `../example/types/${contractFileName}.types.ts`));
         const expectedCodeFileContent = await readFileText(path.resolve(__dirname, `../example/types/${contractFileName}.code.ts`));
         const contractName = normalizeContractName(contractFileName);
-        const { typescriptCodeOutput: { typesFileContent: actualTypesFileContent, contractCodeFileContent: actualCodeFileContent } } = generateContractTypesFromMichelsonCode(contractTz, contractName);
+        const { typescriptCodeOutput: { typesFileContent: actualTypesFileContent, contractCodeFileContent: actualCodeFileContent } } = generateContractTypesFromMichelsonCode(contractRaw, contractName, format);
         expect(actualTypesFileContent.trim()).toEqual(expectedTypeFileContent.trim());
         expect(actualCodeFileContent.trim()).toEqual(expectedCodeFileContent.trim());
     };
@@ -29,5 +29,9 @@ describe('Generate Example Contracts', () => {
 
     it('Generate Contract 2', async () => {
         await testContractTypeGeneration('example-contract-2');
+    });
+
+    it('Generate Contract 3 - json', async () => {
+        await testContractTypeGeneration('example-contract-3', 'json');
     });
 });

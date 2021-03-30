@@ -4,7 +4,7 @@ import { parseContractStorage, parseContractParameter } from './contract-parser'
 import { SchemaOutput, toSchema } from './schema-output';
 import { TypescriptCodeOutput, toTypescriptCode } from './typescript-output';
 
-export const generateContractTypesFromMichelsonCode = (contractScript: string, contractName: string): {
+export const generateContractTypesFromMichelsonCode = (contractScript: string, contractName: string, format: 'tz' | 'json'): {
     schema: SchemaOutput;
     typescriptCodeOutput: TypescriptCodeOutput;
     parsedContract: M.MichelsonContract;
@@ -12,7 +12,7 @@ export const generateContractTypesFromMichelsonCode = (contractScript: string, c
 
     const p = new M.Parser();
 
-    const contract = p.parseScript(contractScript) as M.MichelsonContract;
+    const contract = (format === 'tz' ? p.parseScript(contractScript) : JSON.parse(contractScript)) as M.MichelsonContract;
     if (!contract) {
         throw new GenerateApiError(`Could not parse contract script`, contractScript);
     }
