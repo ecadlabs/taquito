@@ -9,7 +9,7 @@ export type TypescriptCodeOutput = {
     methods: string;
 };
 
-export const toTypescriptCode = (storage: TypedStorage, methods: TypedMethod[], contractName: string, parsedContract: unknown): TypescriptCodeOutput => {
+export const toTypescriptCode = (storage: TypedStorage, methods: TypedMethod[], contractName: string, parsedContract: unknown, protocol: { name: string, key: string }): TypescriptCodeOutput => {
     type StrictType = { strictType: string, baseType?: string, raw?: string };
     const usedStrictTypes = [] as StrictType[];
     const addStrictType = (strictType: StrictType) => {
@@ -164,8 +164,9 @@ export type ${contractTypeName} = { methods: Methods, storage: Storage, code: { 
 `;
 
     const contractCodeFileContent = `
-export const ${codeName}: { __type: '${codeName}', code: string } = { 
+export const ${codeName}: { __type: '${codeName}', protocol: string, code: string } = { 
     __type: '${codeName}', 
+    protocol: '${protocol.key}',
     code: \`${JSON.stringify(parsedContract)}\`
 };
 `;

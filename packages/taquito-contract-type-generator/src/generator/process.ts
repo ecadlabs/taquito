@@ -4,18 +4,44 @@ import { parseContractStorage, parseContractParameter } from './contract-parser'
 import { SchemaOutput, toSchema } from './schema-output';
 import { TypescriptCodeOutput, toTypescriptCode } from './typescript-output';
 
+const parseContractWithMinimalProtocolLevel = (contractScript: string, format: 'tz' | 'json', contractLevelIndex: number): { contract: M.MichelsonContract, protocol: { name: string, key: string } } => {
+    const contractLevels = [
+        { name: 'PsDELPH1', key: M.Protocol.PsDELPH1 },
+        { name: 'PtEdo2Zk', key: M.Protocol.PtEdo2Zk },
+        { name: 'PsFLorena', key: M.Protocol.PsFLorena },
+    ];
+
+    const protocol = contractLevels[contractLevelIndex];
+    if (!protocol) {
+        throw new GenerateApiError(`Could not parse contract script`, contractScript);
+    }
+
+    const p = new M.Parser({ protocol: protocol.key });
+
+    try {
+        const contract = (format === 'tz' ? p.parseScript(contractScript) : p.parseJSON(JSON.parse(contractScript))) as M.MichelsonContract;
+        if (contract) {
+            return {
+                contract,
+                protocol,
+            };
+        }
+    } catch { }
+
+    // Try again with next level
+    return parseContractWithMinimalProtocolLevel(contractScript, format, contractLevelIndex + 1);
+};
+
 export const generateContractTypesFromMichelsonCode = (contractScript: string, contractName: string, format: 'tz' | 'json'): {
     schema: SchemaOutput;
     typescriptCodeOutput: TypescriptCodeOutput;
     parsedContract: M.MichelsonContract;
+    minimalProtocol: string;
 } => {
 
-    const p = new M.Parser();
+    const p = new M.Parser({ protocol: M.Protocol.PsFLorena });
 
-    const contract = (format === 'tz' ? p.parseScript(contractScript) : JSON.parse(contractScript)) as M.MichelsonContract;
-    if (!contract) {
-        throw new GenerateApiError(`Could not parse contract script`, contractScript);
-    }
+    const { contract, protocol } = parseContractWithMinimalProtocolLevel(contractScript, format, 0);
 
     const contractStorage = contract.find(x => x.prim === `storage`) as undefined | M.MichelsonContractStorage;
     const contractParameter = contract.find(x => x.prim === `parameter`) as undefined | M.MichelsonContractParameter;
@@ -27,11 +53,12 @@ export const generateContractTypesFromMichelsonCode = (contractScript: string, c
     const methods = parameterResult?.methods ?? [];
     const schemaOutput = toSchema(methods);
 
-    const typescriptCode = toTypescriptCode(storage, methods, contractName, contract);
+    const typescriptCode = toTypescriptCode(storage, methods, contractName, contract, protocol);
 
     return {
         schema: schemaOutput,
         typescriptCodeOutput: typescriptCode,
         parsedContract: contract,
+        minimalProtocol: protocol.key,
     };
 };
