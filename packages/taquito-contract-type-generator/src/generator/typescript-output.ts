@@ -167,7 +167,7 @@ export type ${contractTypeName} = { methods: Methods, storage: Storage, code: { 
 export const ${codeName}: { __type: '${codeName}', protocol: string, code: string } = { 
     __type: '${codeName}', 
     protocol: '${protocol.key}',
-    code: \`${JSON.stringify(parsedContract)}\`
+    code: JSON.parse(\`${JSON.stringify(parsedContract)}\`)
 };
 `;
     return {
