@@ -34,4 +34,8 @@ describe('Generate Example Contracts', () => {
     it('Generate Contract 3 - json', async () => {
         await testContractTypeGeneration('example-contract-3', 'json');
     });
+
+    it('Generate Contract 4 - newer protocol', async () => {
+        await testContractTypeGeneration('example-contract-4');
+    });
 });
