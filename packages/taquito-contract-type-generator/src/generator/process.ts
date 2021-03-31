@@ -26,7 +26,9 @@ const parseContractWithMinimalProtocolLevel = (contractScript: string, format: '
                 protocol,
             };
         }
-    } catch { }
+    } catch {
+        // Ignore parse errors
+    }
 
     // Try again with next level
     return parseContractWithMinimalProtocolLevel(contractScript, format, contractLevelIndex + 1);
