@@ -55,7 +55,7 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
     });
 
     describe('Get the public key', () => {
-      it('Should get the right public key and public key hash of the Ledger for tz1 curve and default path', async (done) => {
+      it('Should get the correct public key and public key hash of the Ledger for tz1 curve and default path', async (done) => {
         const signer = new LedgerSigner(
           transport,
           "44'/1729'/0'/0'",
@@ -73,7 +73,7 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
         done();
       });
 
-      it('Should get the right public key and public key hash of the Ledger for tz2 curve and default path', async (done) => {
+      it('Should get the correct public key and public key hash of the Ledger for tz2 curve and default path', async (done) => {
         const signer = new LedgerSigner(
           transport,
           "44'/1729'/0'/0'",
@@ -91,7 +91,7 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
         done();
       });
 
-      it('Should get the right public key and public key hash of the Ledger for tz3 curve and path having 1 as account value', async (done) => {
+      it('Should get the correct public key and public key hash of the Ledger for tz3 curve and path having 1 as account value', async (done) => {
         const signer = new LedgerSigner(
           transport,
           "44'/1729'/1'/0'",
@@ -112,7 +112,7 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
 
     describe('Should sign operation with Ledger', () => {
       jest.setTimeout(30000);
-      it('Should returned the right signature with the Ledger', async (done) => {
+      it('Should return the correct signature with the Ledger', async (done) => {
         const signer = new LedgerSigner(
           transport,
           "44'/1729'/0'/0'",
@@ -136,8 +136,27 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
       });
     })
 
+   describe('Should be able to use Ledger with wallet API', () => {
+      jest.setTimeout(120000)
+
+      it('Should sign and inject transaction with Ledger', async (done) => {
+        const signer = new LedgerSigner(
+          transport,
+          "44'/1729'/0'/0'",
+          false,
+          DerivationType.ED25519
+        );
+        const Tezos = new TezosToolkit(rpc);
+        Tezos.setSignerProvider(signer);
+        const op = await Tezos.wallet.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.1 }).send()
+        await op.confirmation()
+        expect(op.opHash).toBeDefined();
+        done();
+      });
+    })
+
     describe('Should be able to use Ledger with contract API', () => {
-      jest.setTimeout(60000)
+      jest.setTimeout(120000)
       it('Should originate contract with Ledger', async (done) => {
 
         const fundAccountFirst = await tezos.contract.transfer({ to: 'tz1e42w8ZaGAbM3gucbBy8iRypdbnqUj7oWY', amount: 9 });
@@ -159,25 +178,6 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
         await op.confirmation()
         expect(op.hash).toBeDefined();
         expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
-        done();
-      });
-    })
-
-    describe('Should be able to use Ledger with wallet API', () => {
-      jest.setTimeout(60000)
-
-      it('Should sign and inject transaction with Ledger', async (done) => {
-        const signer = new LedgerSigner(
-          transport,
-          "44'/1729'/0'/0'",
-          false,
-          DerivationType.ED25519
-        );
-        const Tezos = new TezosToolkit(rpc);
-        Tezos.setSignerProvider(signer);
-        const op = await Tezos.wallet.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.1 }).send()
-        await op.confirmation()
-        expect(op.opHash).toBeDefined();
         done();
       });
     })
