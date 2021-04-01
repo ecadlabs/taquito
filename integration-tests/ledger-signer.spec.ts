@@ -7,7 +7,9 @@ import { TezosToolkit } from '@taquito/taquito';
 /**
  * LedgerSigner test
  * 
- * Set up your Ledger device with this mnemonic to run this test file and remove " "testPathIgnorePatterns": ["./ledger-signer.spec.ts"] " from package.json.
+ * remove "testPathIgnorePatterns": ["./ledger-signer.spec.ts"] from package.json.
+ * 
+ * Set up your Ledger device with this mnemonic to run this test file and 
  * 1-prefer 
  * 2-wait 3-flock 
  * 4-brown 
@@ -20,6 +22,7 @@ import { TezosToolkit } from '@taquito/taquito';
  * 11-twenty 
  * 12-giant 
  */
+
 CONFIGS().forEach(({ lib, setup, rpc }) => {
   const tezos = lib;
 
@@ -133,7 +136,7 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
       });
     })
 
-    describe('Should be abble to use Ledger with contract API', () => {
+    describe('Should be able to use Ledger with contract API', () => {
       jest.setTimeout(60000)
       it('Should originate contract with Ledger', async (done) => {
 
@@ -160,7 +163,7 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
       });
     })
 
-    describe('Should be abble to used Ledger with wallet API', () => {
+    describe('Should be able to use Ledger with wallet API', () => {
       jest.setTimeout(60000)
 
       it('Should sign and inject transaction with Ledger', async (done) => {
