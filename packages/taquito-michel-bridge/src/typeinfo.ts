@@ -1,4 +1,4 @@
-import { MichelsonType, MichelsonTypeID, unpackAnnotations, unpackComb } from "@taquito/michel-codec";
+import { MichelsonType, MichelsonTypeID, util } from "@taquito/michel-codec";
 
 export const ObjectID: unique symbol = Symbol("object");
 export const UnionID: unique symbol = Symbol("union");
@@ -37,7 +37,7 @@ interface TypeInfoComplex<T extends typeof ObjectID | typeof UnionID> extends Ty
     properties: TypeInfoProp[];
 }
 
-export type TypeInfoProp = TypeInfo & { prop: string; };
+type TypeInfoProp = TypeInfo & { prop: string; };
 export type TypeInfo<T extends MichelsonTypeID = MichelsonTypeID> =
     T extends UnaryTypeID ? TypeInfoUnary<T> :
     T extends "pair" ? TypeInfoBinary<T> | TypeInfoComplex<typeof ObjectID> :
@@ -50,7 +50,7 @@ function collectProps(t: MichelsonType<"pair" | "or">): TypeInfoProp[] | null {
     const [args, prim] = Array.isArray(t) ? [t, "pair"] as const : [t.args, t.prim];
     const props: TypeInfoProp[] = [];
     for (const a of args) {
-        const ann = unpackAnnotations(a);
+        const ann = util.unpackAnnotations(a);
         if (ann.f === undefined) {
             if (Array.isArray(a) && prim === "pair" || !Array.isArray(a) && prim === a.prim) {
                 const p = collectProps(a);
@@ -86,7 +86,7 @@ function getComplexTypeInfo<T extends "pair" | "or">(typ: MichelsonType<T>): Typ
         } as TypeInfo<T>;
     }
 
-    const tt = isPair(t) ? unpackComb("pair", t) : t;
+    const tt = isPair(t) ? util.unpackComb("pair", t) : t;
     return {
         type: tt.prim,
         expr: tt,
@@ -141,7 +141,7 @@ export function getTypeInfo<T extends MichelsonTypeID>(typ: MichelsonType<T>): T
         }
     }
 
-    const ann = unpackAnnotations(t);
+    const ann = util.unpackAnnotations(t);
     if (ann.t !== undefined) {
         ti.name = ann.t[0].slice(1);
     }

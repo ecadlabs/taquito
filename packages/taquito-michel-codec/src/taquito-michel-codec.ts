@@ -11,5 +11,7 @@ export * from "./michelson-typecheck";
 export * from "./michelson-contract";
 export * from "./formatters";
 export * from "./binary";
-export { MichelsonError, isMichelsonError, MichelsonTypeError, unpackAnnotations, unpackComb } from "./utils";
+export { MichelsonError, isMichelsonError, MichelsonTypeError } from "./utils";
+export * as util from "./utils";
+export * as base58 from "./base58";
 export { MacroError } from "./macros";

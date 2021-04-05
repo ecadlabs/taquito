@@ -1160,6 +1160,21 @@ export function unpackDataBytes(src: BytesLiteral, t?: MichelsonType): Michelson
 
 // helper functions also used by validator
 
+export function decodeAddress(b: number[] | Uint8Array): Address {
+    const rd = new Reader(new Uint8Array(b));
+    return readAddress(rd);
+}
+
+export function decodePublicKeyHash(b: number[] | Uint8Array): Address {
+    const rd = new Reader(new Uint8Array(b));
+    return readPublicKeyHash(rd);
+}
+
+export function decodePublicKey(b: number[] | Uint8Array): PublicKey {
+    const rd = new Reader(new Uint8Array(b));
+    return readPublicKey(rd);
+}
+
 export function decodeAddressBytes(b: BytesLiteral): Address {
     const bytes = parseBytes(b.bytes);
     if (bytes === null) {
