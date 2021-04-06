@@ -3,12 +3,14 @@ import { CONFIGS } from "./config";
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
     const Tezos = lib;
     describe(`Test emptying a revealed implicit account into a new implicit account using: ${rpc}`, () => {
+        
+        const test = require('jest-retries');
 
         beforeEach(async (done) => {
             await setup()
             done()
         })
-        it('reveals the sender account, creates an unrevealed implicit account, empties the sender account into the created one', async (done) => {
+        test('reveals the sender account, creates an unrevealed implicit account, empties the sender account into the created one', 2,  async (done: () => void) => {
             const receiver = await createAddress();
             const receiver_pkh = await receiver.signer.publicKeyHash();
 
