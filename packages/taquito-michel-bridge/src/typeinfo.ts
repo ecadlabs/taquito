@@ -18,7 +18,7 @@ interface TypeInfoUnary<T extends UnaryTypeID> extends TypeInfoPrimitive<T> {
     element: TypeInfo;
 }
 
-interface TypeInfoBinary<T extends "or" | "pair"> extends TypeInfoPrimitive<T> {
+interface TypeInfoBinary<T extends "pair" | "or"> extends TypeInfoPrimitive<T> {
     left: TypeInfo;
     right: TypeInfo;
 }
@@ -34,26 +34,34 @@ interface TypeInfoMap<T extends "map" | "big_map"> extends TypeInfoPrimitive<T> 
 }
 
 interface TypeInfoComplex<T extends typeof ObjectID | typeof UnionID> extends TypeInfoPrimitive<T> {
-    properties: TypeInfoProp[];
+    fields: TypeInfoField[];
+    fieldsIndex: { [prop: string]: TypeInfoField | undefined };
 }
 
-type TypeInfoProp = TypeInfo & { prop: string; };
+interface TypeInfoSaplingState extends TypeInfoPrimitive<"sapling_state"> {
+    memoSize: number;
+}
+
+export type TypeInfoObject = TypeInfoComplex<typeof ObjectID>;
+export type TypeInfoUnion = TypeInfoComplex<typeof UnionID>;
+export type TypeInfoField = TypeInfo & { prop: string; };
 export type TypeInfo<T extends MichelsonTypeID = MichelsonTypeID> =
     T extends UnaryTypeID ? TypeInfoUnary<T> :
-    T extends "pair" ? TypeInfoBinary<T> | TypeInfoComplex<typeof ObjectID> :
-    T extends "or" ? TypeInfoBinary<T> | TypeInfoComplex<typeof UnionID> :
+    T extends "pair" ? TypeInfoBinary<T> | TypeInfoObject :
+    T extends "or" ? TypeInfoBinary<T> | TypeInfoUnion :
     T extends "lambda" ? TypeInfoLambda :
     T extends "map" | "big_map" ? TypeInfoMap<T> :
+    T extends "sapling_state" ? TypeInfoSaplingState :
     TypeInfoPrimitive<T>;
 
-function collectProps(t: MichelsonType<"pair" | "or">): TypeInfoProp[] | null {
+function collectFields(t: MichelsonType<"pair" | "or">): TypeInfoField[] | null {
     const [args, prim] = Array.isArray(t) ? [t, "pair"] as const : [t.args, t.prim];
-    const props: TypeInfoProp[] = [];
+    const props: TypeInfoField[] = [];
     for (const a of args) {
         const ann = util.unpackAnnotations(a);
         if (ann.f === undefined) {
             if (Array.isArray(a) && prim === "pair" || !Array.isArray(a) && prim === a.prim) {
-                const p = collectProps(a);
+                const p = collectFields(a);
                 if (p === null) {
                     return null;
                 }
@@ -77,12 +85,13 @@ function isPair(t: MichelsonType): t is MichelsonType<"pair"> {
 
 function getComplexTypeInfo<T extends "pair" | "or">(typ: MichelsonType<T>): TypeInfo<T> {
     const t: MichelsonType<"pair" | "or"> = typ;
-    const properties = collectProps(t);
-    if (properties !== null) {
+    const fields = collectFields(t);
+    if (fields !== null) {
         return {
             type: isPair(t) ? ObjectID : UnionID,
             expr: t,
-            properties,
+            fields,
+            fieldsIndex: Object.assign({}, ...fields.map(p => ({ [p.prop]: p }))),
         } as TypeInfo<T>;
     }
 
@@ -132,6 +141,20 @@ export function getTypeInfo<T extends MichelsonTypeID>(typ: MichelsonType<T>): T
                     value: getTypeInfo(t.args[1]),
                 } as TypeInfo<"map" | "big_map">;
                 break;
+
+            case "sapling_state":
+                ti = {
+                    type: t.prim,
+                    expr: t,
+                    memoSize: parseInt(t.args[0].int, 10),
+                } as TypeInfoSaplingState;
+                break;
+
+            case "contract":
+            case "never":
+            case "operation":
+            case "sapling_transaction":
+                throw new util.MichelsonTypeError(t, undefined, `type ${t.prim} has no literal representation`);
 
             default:
                 ti = {

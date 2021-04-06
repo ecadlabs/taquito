@@ -10,8 +10,11 @@ import {
     util,
     assertDataValid,
     assertMichelsonData,
+    MichelsonType,
+    MichelsonDataPair,
+    MichelsonDataOr,
 } from "@taquito/michel-codec";
-import { TypeInfo, ObjectID, UnionID } from "./typeinfo";
+import { TypeInfo, ObjectID, TypeInfoObject, TypeInfoUnion, UnionID, getTypeInfo } from "./typeinfo";
 
 export class AssembleError extends Error {
     constructor(public type: TypeInfo, public data: any, message?: string) {
@@ -20,7 +23,6 @@ export class AssembleError extends Error {
     }
 }
 
-const intRe = new RegExp('^-?[0-9]+$');
 const bytesRe = new RegExp('^([0-9a-fA-F]{2})*$');
 
 function isNumArray(x: unknown): x is number[] | Uint8Array {
@@ -38,9 +40,9 @@ function isNumArray(x: unknown): x is number[] | Uint8Array {
     return false;
 }
 
-type TupleData = [unknown, unknown] | { left: unknown, right: unknown };
-function isPair(x: unknown): x is TupleData {
-    return Array.isArray(x) && x.length === 2 || typeof x === "object" && x !== null && "left" in x && "right" in x;
+type PairData = unknown[] | { left: unknown, right: unknown };
+function isPair(x: unknown): x is PairData {
+    return Array.isArray(x) && x.length > 1 || typeof x === "object" && x !== null && "left" in x && "right" in x;
 }
 
 type UnionData = { left: unknown, right?: undefined } | { left?: undefined, right: unknown };
@@ -63,13 +65,84 @@ function isMap(x: unknown): x is MapData {
     return false;
 }
 
+const getField = (t: MichelsonType) => util.unpackAnnotations(t).f?.[0].slice(1);
+
+function assembleObject(t: TypeInfoObject, data: unknown, ctx?: Context): MichelsonDataPair<MichelsonData[]> {
+    if (typeof data !== "object" || data === null) {
+        throw new AssembleError(t, data, `object expected: ${JSON.stringify(data)}`);
+    }
+
+    const traverse = (t: TypeInfoObject, p: MichelsonType<"pair">, data: object, ctx?: Context): MichelsonDataPair<MichelsonData[]> => {
+        const args: MichelsonData[] = [];
+        for (const arg of Array.isArray(p) ? p : p.args) {
+            const prop = getField(arg);
+            if (prop !== undefined) {
+                const ti = t.fieldsIndex[prop];
+                if (ti === undefined) {
+                    throw new Error(`unexpected property: ${prop}`); // unlikely
+                }
+                const val: unknown = (data as any)[prop];
+                if (ti.type !== "option" && val === undefined) {
+                    throw new AssembleError(t, data, `missing property '${prop}': ${JSON.stringify(data)}`);
+                }
+                args.push(assembleData(ti, val, ctx));
+            } else if (Array.isArray(arg) || arg.prim === "pair") {
+                args.push(traverse(t, arg, data, ctx));
+            } else {
+                throw new Error(`unexpected node: ${JSON.stringify(arg)}`); // unlikely
+            }
+        }
+        return { prim: "Pair", args };
+    };
+
+    return traverse(t, t.expr, data, ctx);
+}
+
+function assembleUnion(t: TypeInfoUnion, data: unknown, ctx?: Context): MichelsonDataOr {
+    if (typeof data !== "object" || data === null) {
+        throw new AssembleError(t, data, `object expected: ${JSON.stringify(data)}`);
+    }
+
+    const traverse = (t: TypeInfoUnion, p: MichelsonType<"or">, data: object, ctx?: Context): MichelsonDataOr | undefined => {
+        for (let i = 0; i < 2; i++) {
+            const arg = p.args[i];
+            const prop = getField(arg);
+            if (prop !== undefined) {
+                const ti = t.fieldsIndex[prop];
+                if (ti === undefined) {
+                    throw new Error(`unexpected property: ${prop}`); // unlikely
+                }
+                const val: unknown = (data as any)[prop];
+                if (val !== undefined) {
+                    return { prim: i === 0 ? "Left" : "Right", args: [assembleData(ti, val, ctx)] };
+                }
+            } else if ("prim" in arg && arg.prim === "or") {
+                const val = traverse(t, arg, data, ctx);
+                if (val !== undefined) {
+                    return { prim: i === 0 ? "Left" : "Right", args: [val] };
+                }
+            } else {
+                throw new Error(`unexpected node: ${JSON.stringify(arg)}`); // unlikely
+            }
+        }
+    };
+
+    const val = traverse(t, t.expr, data, ctx);
+    if (val === undefined) {
+        throw new AssembleError(t, data, `one of '${t.fields}' properties expected: ${JSON.stringify(data)}`);
+    }
+    return val;
+}
+
 export function assembleData(t: TypeInfo, data: unknown, ctx?: Context): MichelsonData {
+    const getBytes = (data: unknown) => isNumArray(data) ? data : typeof data === "string" && bytesRe.test(data) ? util.parseHex(data) : undefined;
+
     switch (t.type) {
         case "int":
         case "nat":
         case "mutez":
             // tslint:disable-next-line: strict-type-predicates valid-typeof
-            if (typeof data === "bigint" || typeof data === "number" || (typeof data === "string" && intRe.test(data))) {
+            if (typeof data === "bigint" || typeof data === "number" || (typeof data === "string" && util.isDecimal(data))) {
                 return { int: String(data) };
             }
             throw new AssembleError(t, data, `number expected: ${JSON.stringify(data)}`);
@@ -81,94 +154,103 @@ export function assembleData(t: TypeInfo, data: unknown, ctx?: Context): Michels
             throw new AssembleError(t, data, `string expected: ${JSON.stringify(data)}`);
 
         case "key_hash":
-        case "address":
-        case "key":
-        case "signature":
-        case "chain_id":
-        case "bytes":
             {
-                const bytes = isNumArray(data) ? data : typeof data === "string" && bytesRe.test(data) ? util.parseHex(data) : undefined;
-                switch (t.type) {
-                    case "key_hash":
-                        if (bytes !== undefined) {
-                            try {
-                                decodePublicKeyHash(bytes);
-                                return { bytes: util.hexBytes(Array.from(bytes)) };
-                            } catch (err) {
-                                // ignore message
-                            }
-                        } else if (typeof data === "string" && util.checkDecodeTezosID(data,
-                            "ED25519PublicKeyHash",
-                            "SECP256K1PublicKeyHash",
-                            "P256PublicKeyHash") !== null) {
-                            return { string: data };
-                        }
-                        break;
-
-                    case "address":
-                        if (bytes !== undefined) {
-                            try {
-                                decodeAddress(bytes);
-                                return { bytes: util.hexBytes(Array.from(bytes)) };
-                            } catch (err) {
-                                // ignore message
-                            }
-                        } else if (typeof data === "string" && util.checkDecodeTezosID(data,
-                            "ED25519PublicKeyHash",
-                            "SECP256K1PublicKeyHash",
-                            "P256PublicKeyHash",
-                            "ContractHash") !== null) {
-                            return { string: data };
-                        }
-                        break;
-
-                    case "key":
-                        if (bytes !== undefined) {
-                            try {
-                                decodePublicKey(bytes);
-                                return { bytes: util.hexBytes(Array.from(bytes)) };
-                            } catch (err) {
-                                // ignore message
-                            }
-                        } else if (typeof data === "string" && util.checkDecodeTezosID(data,
-                            "ED25519PublicKey",
-                            "SECP256K1PublicKey",
-                            "P256PublicKey") !== null) {
-                            return { string: data };
-                        }
-                        break;
-
-                    case "signature":
-                        if (bytes !== undefined) {
-                            return { bytes: util.hexBytes(Array.from(bytes)) };
-                        } else if (typeof data === "string" && util.checkDecodeTezosID(data,
-                            "ED25519Signature",
-                            "SECP256K1Signature",
-                            "P256Signature",
-                            "GenericSignature") !== null) {
-                            return { string: data };
-                        }
-                        break;
-
-                    case "chain_id":
-                        if (bytes !== undefined) {
-                            return { bytes: util.hexBytes(Array.from(bytes)) };
-                        } else if (typeof data === "string") {
-                            try {
-                                base58.decodeBase58Check(data);
-                                return { string: data };
-                            } catch (err) {
-                                // ignore message
-                            }
-                        }
-                        break;
-
-                    case "bytes":
-                        if (bytes !== undefined) {
-                            return { bytes: util.hexBytes(Array.from(bytes)) };
-                        }
+                const bytes = getBytes(data);
+                if (bytes !== undefined) {
+                    try {
+                        decodePublicKeyHash(bytes);
+                        return { bytes: util.hexBytes(Array.from(bytes)) };
+                    } catch (err) {
+                        // ignore message
+                    }
+                } else if (typeof data === "string" && util.checkDecodeTezosID(data,
+                    "ED25519PublicKeyHash",
+                    "SECP256K1PublicKeyHash",
+                    "P256PublicKeyHash") !== null) {
+                    return { string: data };
                 }
                 throw new AssembleError(t, data, `${t.type} (number[], Uint8Array, hex string or base58) expected: ${JSON.stringify(data)}`);
+            }
+
+        case "address":
+            {
+                const bytes = getBytes(data);
+                if (bytes !== undefined) {
+                    try {
+                        decodeAddress(bytes);
+                        return { bytes: util.hexBytes(Array.from(bytes)) };
+                    } catch (err) {
+                        // ignore message
+                    }
+                } else if (typeof data === "string" && util.checkDecodeTezosID(data,
+                    "ED25519PublicKeyHash",
+                    "SECP256K1PublicKeyHash",
+                    "P256PublicKeyHash",
+                    "ContractHash") !== null) {
+                    return { string: data };
+                }
+                throw new AssembleError(t, data, `${t.type} (number[], Uint8Array, hex string or base58) expected: ${JSON.stringify(data)}`);
+            }
+
+        case "key":
+            {
+                const bytes = getBytes(data);
+                if (bytes !== undefined) {
+                    try {
+                        decodePublicKey(bytes);
+                        return { bytes: util.hexBytes(Array.from(bytes)) };
+                    } catch (err) {
+                        // ignore message
+                    }
+                } else if (typeof data === "string" && util.checkDecodeTezosID(data,
+                    "ED25519PublicKey",
+                    "SECP256K1PublicKey",
+                    "P256PublicKey") !== null) {
+                    return { string: data };
+                }
+                throw new AssembleError(t, data, `${t.type} (number[], Uint8Array, hex string or base58) expected: ${JSON.stringify(data)}`);
+            }
+
+        case "signature":
+            {
+                const bytes = getBytes(data);
+                if (bytes !== undefined) {
+                    return { bytes: util.hexBytes(Array.from(bytes)) };
+                } else if (typeof data === "string" && util.checkDecodeTezosID(data,
+                    "ED25519Signature",
+                    "SECP256K1Signature",
+                    "P256Signature",
+                    "GenericSignature") !== null) {
+                    return { string: data };
+                }
+                throw new AssembleError(t, data, `${t.type} (number[], Uint8Array, hex string or base58) expected: ${JSON.stringify(data)}`);
+            }
+
+        case "chain_id":
+            {
+                const bytes = getBytes(data);
+                if (bytes !== undefined) {
+                    return { bytes: util.hexBytes(Array.from(bytes)) };
+                } else if (typeof data === "string") {
+                    try {
+                        base58.decodeBase58Check(data);
+                        return { string: data };
+                    } catch (err) {
+                        // ignore message
+                    }
+                }
+                throw new AssembleError(t, data, `${t.type} (number[], Uint8Array, hex string or base58) expected: ${JSON.stringify(data)}`);
+            }
+
+        case "bytes":
+        case "bls12_381_g1":
+        case "bls12_381_g2":
+            {
+                const bytes = getBytes(data);
+                if (bytes !== undefined) {
+                    return { bytes: util.hexBytes(Array.from(bytes)) };
+                }
+                throw new AssembleError(t, data, `${t.type} (number[], Uint8Array or hex string) expected: ${JSON.stringify(data)}`);
             }
 
         case "bool":
@@ -200,14 +282,13 @@ export function assembleData(t: TypeInfo, data: unknown, ctx?: Context): Michels
 
         case "pair":
             if (isPair(data)) {
+                const d = Array.isArray(data) ? (data.length > 2 ? [data[0], data.slice(1)] : data) : [data.left, data.right]; // expand comb
                 return {
                     prim: "Pair",
-                    args: Array.isArray(data) ?
-                        [assembleData(t.left, data[0], ctx), assembleData(t.right, data[1], ctx)] :
-                        [assembleData(t.left, data.left, ctx), assembleData(t.right, data.right, ctx)],
+                    args: [assembleData(t.left, d[0], ctx), assembleData(t.right, d[1], ctx)],
                 };
             }
-            throw new AssembleError(t, data, `tuple ([left, right] | { left: ..., right: ...} expected: ${JSON.stringify(data)}`);
+            throw new AssembleError(t, data, `array or tuple ({ left: ..., right: ...}) expected: ${JSON.stringify(data)}`);
 
         case "or":
             if (isUnion(data)) {
@@ -215,7 +296,7 @@ export function assembleData(t: TypeInfo, data: unknown, ctx?: Context): Michels
                     { prim: "Left", args: [assembleData(t.left, data.left, ctx)] } :
                     { prim: "Right", args: [assembleData(t.right, data.right, ctx)] };
             }
-            throw new AssembleError(t, data, `or ({ left: ... } | { right: ... }) expected: ${JSON.stringify(data)}`);
+            throw new AssembleError(t, data, `union ({ left: ... } | { right: ... }) expected: ${JSON.stringify(data)}`);
 
         case "list":
         case "set":
@@ -241,6 +322,37 @@ export function assembleData(t: TypeInfo, data: unknown, ctx?: Context): Michels
             }
             throw new AssembleError(t, data, `lambda expected: ${JSON.stringify(data)}`);
 
+        case "bls12_381_fr":
+            if (typeof data === "bigint" || typeof data === "number") {
+                return { int: String(data) };
+            } else {
+                const bytes = getBytes(data);
+                if (bytes !== undefined) {
+                    return { bytes: util.hexBytes(Array.from(bytes)) };
+                }
+            }
+            throw new AssembleError(t, data, `number or byte array expected: ${JSON.stringify(data)}`);
+
+        case "ticket":
+            {
+                const ti = getTypeInfo({
+                    prim: "pair",
+                    args: [
+                        { prim: "address" },
+                        t.element.expr,
+                        { prim: "nat" },
+                    ]
+                });
+                return assembleData(ti, data, ctx);
+            }
+
         case ObjectID:
+            return assembleObject(t, data, ctx);
+
+        case UnionID:
+            return assembleUnion(t, data, ctx);
+
+        default:
+            throw new AssembleError(t, data, `unexpected type: ${t.type}`);
     }
 }
