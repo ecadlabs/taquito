@@ -21,7 +21,7 @@ import {
   switchMap,
   timeoutWith,
 } from 'rxjs/operators';
-import { Context, confirmationPollingTimeoutSecondConst } from '../context';
+import { Context } from '../context';
 import { DelegationWalletOperation } from './delegation-operation';
 import { WalletOperation } from './operation';
 import { OriginationWalletOperation } from './origination-operation';
@@ -50,15 +50,17 @@ export const createNewPollingBasedHeadObservable = (
   sharedHeadOb: Observable<BlockResponse>,
   context: Context,
   scheduler?: SchedulerLike
-): Observable<BlockResponse> => {
-  const confirmationPollingTimeoutSecond = context.config.confirmationPollingTimeoutSecond === undefined ?
-                                              confirmationPollingTimeoutSecondConst :
-                                              context.config.confirmationPollingTimeoutSecond;
+): Observable<BlockResponse> => {  
+  
+  if (context.config.confirmationPollingTimeoutSecond === undefined) {
+    throw new Error('Confirmation polling timeout second can not be undefined!');
+  }
+
   return pollingTimer.pipe(
     switchMap(() => sharedHeadOb),
     distinctUntilKeyChanged('hash'),
     timeoutWith(
-      confirmationPollingTimeoutSecond * 1000,
+      context.config.confirmationPollingTimeoutSecond * 1000,
       throwError(new Error('Confirmation polling timed out')),
       scheduler
     ),
