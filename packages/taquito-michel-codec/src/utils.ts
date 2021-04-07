@@ -1,6 +1,6 @@
 import { Prim, Expr, StringLiteral, IntLiteral } from "./micheline";
 import { decodeBase58Check, encodeBase58Check } from "./base58";
-import { MichelsonData, MichelsonDataPair, MichelsonType, MichelsonTypePair } from "./michelson-types";
+import { MichelsonData, MichelsonDataPair, MichelsonType, MichelsonTypePair, ProtocolID } from "./michelson-types";
 
 export type Tuple<N extends number, T> =
     N extends 1 ? [T] :
@@ -355,4 +355,23 @@ export function parseHex(s: string): number[] {
 
 export function hexBytes(bytes: number[]): string {
     return bytes.map(x => ((x >> 4) & 0xf).toString(16) + (x & 0xf).toString(16)).join("");
+}
+
+const protoOrder: Record<ProtocolID, number> = {
+    "Ps9mPmXaRzmzk35gbAYNCAw6UXdE2qoABTHbN2oEEc1qM7CwT9P": 0,
+    "PtCJ7pwoxe8JasnHY8YonnLYjcVHmhiARPJvqcC6VfHT5s8k8sY": 1,
+    "PsYLVpVvgbLhAhoqAkMFUo6gudkJ9weNXhUYCiLDzcUpFpkk8Wt": 2,
+    "PsddFKi32cMJ2qPjf43Qv5GDWLDPZb3T3bF6fLKiF5HtvHNU7aP": 3,
+    "Pt24m4xiPbLDhVgVfABUjirbmda3yohdN82Sp9FeuAXJ4eV9otd": 4,
+    "PsBABY5HQTSkA4297zNHfsZNKtxULfL18y95qb3m53QJiXGmrbU": 5,
+    "PsBabyM1eUXZseaJdmXFApDSBqj8YBfwELoxZHHW77EMcAbbwAS": 6,
+    "PsCARTHAGazKbHtnKfLzQg3kms52kSRpgnDY982a9oYsSXRLQEb": 7,
+    "PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo": 8,
+    "PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA": 9,
+    "PtEdoTezd3RHSC31mpxxo1npxFjoWWcFgQtxapi51Z8TLu6v6Uq": 10,
+    "PsFLorenaUUuikDWvMDr6fGBRG8kt3e3D3fHoXK1j1BFRxeSH4i": 11,
+};
+
+export function compareProto(a: ProtocolID, b: ProtocolID): number {
+    return protoOrder[a] - protoOrder[b];
 }

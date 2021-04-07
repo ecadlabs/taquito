@@ -1,6 +1,6 @@
 import { Prim, Expr, IntLiteral } from "./micheline";
 import { DefaultProtocol, Protocol, ProtocolOptions } from "./michelson-types";
-import { Tuple, NoArgs, ReqArgs, NoAnnots } from "./utils";
+import { Tuple, NoArgs, ReqArgs, NoAnnots, compareProto } from "./utils";
 
 export class MacroError extends Error {
     constructor(public prim: Prim, message?: string) {
@@ -379,7 +379,7 @@ export function expandMacros(ex: Prim, opt?: ProtocolOptions): Expr {
 
     // UNPAPPAIIR macro
     if (unpairRe.test(ex.prim)) {
-        if (proto === Protocol.PtEdo2Zk || proto === Protocol.PsFLorena) {
+        if (compareProto(proto, Protocol.PtEdo2Zk) >= 0) {
             if (ex.prim === "UNPAIR") {
                 return ex;
             }
@@ -526,7 +526,7 @@ export function expandMacros(ex: Prim, opt?: ProtocolOptions): Expr {
     if (duupRe.test(ex.prim)) {
         let n = 0;
         while (ex.prim[1 + n] === "U") { n++; }
-        if (proto === Protocol.PtEdo2Zk || proto === Protocol.PsFLorena) {
+        if (compareProto(proto, Protocol.PtEdo2Zk) >= 0) {
             if (n === 1) {
                 return ex;
             }

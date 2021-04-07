@@ -12,7 +12,8 @@ import {
     unpackAnnotations, MichelsonError, isNatural,
     LongInteger, parseBytes, compareBytes, isDecimal,
     checkDecodeTezosID, UnpackedAnnotations, Nullable,
-    UnpackAnnotationsOptions, unpackComb, MichelsonTypeError, isPairType, isPairData, parseDate,
+    UnpackAnnotationsOptions, unpackComb, MichelsonTypeError,
+    isPairType, isPairData, parseDate, compareProto,
 } from "./utils";
 import { decodeBase58Check } from "./base58";
 import { decodeAddressBytes, decodePublicKeyBytes, decodePublicKeyHashBytes } from "./binary";
@@ -963,7 +964,7 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
             case "FAILWITH":
                 {
                     const s = args(0, null)[0];
-                    if (proto === Protocol.PtEdo2Zk || proto === Protocol.PsFLorena) {
+                    if (compareProto(proto, Protocol.PtEdo2Zk) >= 0) {
                         ensurePackableType(s);
                     }
                     return { failed: s };
