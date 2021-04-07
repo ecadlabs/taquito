@@ -20,10 +20,9 @@ describe('Observable subscription test', () => {
         const { cold, flush } = rxSandbox.create();
         let stub = jest.fn();
         let errStub = jest.fn();
-        let value = ['a-#', 'b-#', 'c'];
         let i = 0;
         let observable$ = defer(() => {
-            return cold(value[i++])
+            return cold('a-b-c-#-d-e')
         });
         const subscriber = new ObservableSubscription(observable$, true);
         subscriber.on('data', stub);
@@ -32,7 +31,7 @@ describe('Observable subscription test', () => {
         flush();
 
         expect(stub).toBeCalledTimes(3);
-        expect(errStub).toBeCalledTimes(2);
+        expect(errStub).toBeCalledTimes(1);
             
         done();
     })
