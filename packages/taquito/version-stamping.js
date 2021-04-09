@@ -27,7 +27,7 @@ function writeData(commitHash, version) {
         version
     }
 
-    const file = resolve(__dirname, 'src', 'version.ts');
+    const file = resolve('.', 'src', 'version.ts');
     const content = `
 // IMPORTANT: THIS FILE IS AUTO GENERATED! DO NOT MANUALLY EDIT OR CHECKIN!
 /* tslint:disable */
