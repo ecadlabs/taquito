@@ -287,10 +287,13 @@ export function encodeTezosID(id: TezosIDType, data: number[] | Uint8Array): str
 
 // reassemble comb pair for transparent comparison etc. non-recursive!
 type PairTypeOrDataPrim<I extends "pair" | "Pair"> = I extends "pair" ? Extract<MichelsonTypePair<MichelsonType[]>, Prim> : Extract<MichelsonDataPair<MichelsonData[]>, Prim>;
-export function unpackComb<I extends "pair" | "Pair">(id: I, v: I extends "pair" ? MichelsonTypePair<MichelsonType[]> : MichelsonDataPair<MichelsonData[]>): PairTypeOrDataPrim<I> {
-    const vv: MichelsonTypePair<MichelsonType[]> | MichelsonDataPair<MichelsonData[]> = v;
-    const args = Array.isArray(vv) ? vv : vv.args;
+export function unpackComb<I extends "pair" | "Pair">(id: I, val: I extends "pair" ? MichelsonTypePair<MichelsonType[]> : MichelsonDataPair<MichelsonData[]>): PairTypeOrDataPrim<I> {
+    const v: MichelsonTypePair<MichelsonType[]> | MichelsonDataPair<MichelsonData[]> = val;
+    const args = Array.isArray(v) ? v : v.args;
     if (args.length === 2) {
+        if (!Array.isArray(v)) {
+            return v as PairTypeOrDataPrim<I>;
+        }
         // it's a way to make a union of two interfaces not an interface with two independent properties of union types
         const ret = id === "pair" ? {
             prim: "pair",
@@ -303,7 +306,7 @@ export function unpackComb<I extends "pair" | "Pair">(id: I, v: I extends "pair"
     }
 
     return {
-        ...(Array.isArray(vv) ? { prim: id } : vv),
+        ...(Array.isArray(v) ? { prim: id } : v),
         args: [
             args[0],
             {

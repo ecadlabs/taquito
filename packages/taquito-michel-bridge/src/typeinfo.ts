@@ -1,11 +1,12 @@
-import { MichelsonType, MichelsonTypeID, util } from "@taquito/michel-codec";
+import { MichelsonType, MichelsonTypeID, Prim, util } from "@taquito/michel-codec";
+import { unpackCombFull } from "./utils";
 
 export const ObjectID: unique symbol = Symbol("object");
 export const UnionID: unique symbol = Symbol("union");
 
 export type TypeID = MichelsonTypeID | typeof ObjectID | typeof UnionID;
 
-type TypeExpr<T extends TypeID> = MichelsonType<T extends (typeof ObjectID) ? "pair" : T extends (typeof UnionID) ? "or" : T>;
+type TypeExpr<T extends TypeID> = Extract<MichelsonType<T extends (typeof ObjectID) ? "pair" : T extends (typeof UnionID) ? "or" : T>, Prim>;
 type UnaryTypeID = "option" | "list" | "set" | "contract" | "ticket";
 
 interface TypeInfoPrimitive<T extends TypeID = TypeID> {
@@ -79,28 +80,22 @@ function collectFields(t: MichelsonType<"pair" | "or">): TypeInfoField[] | null 
     return props;
 }
 
-function isPair(t: MichelsonType): t is MichelsonType<"pair"> {
-    return Array.isArray(t) || t.prim === "pair";
-}
-
 function getComplexTypeInfo<T extends "pair" | "or">(typ: MichelsonType<T>): TypeInfo<T> {
-    const t: MichelsonType<"pair" | "or"> = typ;
+    const t = util.isPairType(typ) ? unpackCombFull(typ) : typ as MichelsonType<"or">;
     const fields = collectFields(t);
     if (fields !== null) {
         return {
-            type: isPair(t) ? ObjectID : UnionID,
+            type: util.isPairType(t) ? ObjectID : UnionID,
             expr: t,
             fields,
             fieldsIndex: Object.assign({}, ...fields.map(p => ({ [p.prop]: p }))),
         } as TypeInfo<T>;
     }
-
-    const tt = isPair(t) ? util.unpackComb("pair", t) : t;
     return {
-        type: tt.prim,
-        expr: tt,
-        left: getTypeInfo(tt.args[0]),
-        right: getTypeInfo(tt.args[1]),
+        type: t.prim,
+        expr: t,
+        left: getTypeInfo(t.args[0]),
+        right: getTypeInfo(t.args[1]),
     } as TypeInfo<T>;
 }
 

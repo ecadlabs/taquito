@@ -1,5 +1,6 @@
 import { MichelsonType } from "@taquito/michel-codec";
 import { getTypeInfo, TypeInfo, ObjectID } from "../src/typeinfo";
+// import util from "util";
 
 describe("Type info", () => {
     it("record", () => {
@@ -19,17 +20,30 @@ describe("Type info", () => {
 
         const expected: TypeInfo = {
             type: ObjectID,
-            expr: [
-                { prim: 'int', annots: ['%one'] },
-                { prim: 'nat', annots: ['%two'] },
-                { prim: 'string', annots: ['%three'] },
-                {
-                    prim: 'pair',
-                    annots: ['%tuple', ':tuple'],
-                    args: [{ prim: 'string' }, { prim: 'timestamp' }]
-                }
-            ],
-            properties: [
+            expr: {
+                prim: 'pair',
+                args: [
+                    { prim: 'int', annots: ['%one'] },
+                    {
+                        prim: 'pair',
+                        args: [
+                            { prim: 'nat', annots: ['%two'] },
+                            {
+                                prim: 'pair',
+                                args: [
+                                    { prim: 'string', annots: ['%three'] },
+                                    {
+                                        prim: 'pair',
+                                        annots: ['%tuple', ':tuple'],
+                                        args: [{ prim: 'string' }, { prim: 'timestamp' }]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            fields: [
                 {
                     type: 'int',
                     expr: { prim: 'int', annots: ['%one'] },
@@ -49,6 +63,7 @@ describe("Type info", () => {
                     type: 'pair',
                     expr: {
                         prim: 'pair',
+                        annots: ['%tuple', ':tuple'],
                         args: [{ prim: 'string' }, { prim: 'timestamp' }]
                     },
                     left: { type: 'string', expr: { prim: 'string' } },
@@ -56,10 +71,40 @@ describe("Type info", () => {
                     name: 'tuple',
                     prop: 'tuple'
                 }
-            ]
+            ],
+            fieldsIndex: {
+                one: {
+                    type: 'int',
+                    expr: { prim: 'int', annots: ['%one'] },
+                    prop: 'one'
+                },
+                two: {
+                    type: 'nat',
+                    expr: { prim: 'nat', annots: ['%two'] },
+                    prop: 'two'
+                },
+                three: {
+                    type: 'string',
+                    expr: { prim: 'string', annots: ['%three'] },
+                    prop: 'three'
+                },
+                tuple: {
+                    type: 'pair',
+                    expr: {
+                        prim: 'pair',
+                        annots: ['%tuple', ':tuple'],
+                        args: [{ prim: 'string' }, { prim: 'timestamp' }]
+                    },
+                    left: { type: 'string', expr: { prim: 'string' } },
+                    right: { type: 'timestamp', expr: { prim: 'timestamp' } },
+                    name: 'tuple',
+                    prop: 'tuple'
+                }
+            }
         };
 
         const ti = getTypeInfo(src);
+        //console.log(util.inspect(ti, false, null));
         expect(ti).toEqual(expected);
     });
 
@@ -88,11 +133,16 @@ describe("Type info", () => {
                         prim: 'pair',
                         args: [
                             { prim: 'nat' },
-                            { prim: 'string' },
                             {
                                 prim: 'pair',
-                                annots: [':tuple'],
-                                args: [{ prim: 'signature' }, { prim: 'bool' }]
+                                args: [
+                                    { prim: 'string' },
+                                    {
+                                        prim: 'pair',
+                                        annots: [':tuple'],
+                                        args: [{ prim: 'signature' }, { prim: 'bool' }]
+                                    }
+                                ]
                             }
                         ]
                     }
@@ -137,6 +187,7 @@ describe("Type info", () => {
                         type: 'pair',
                         expr: {
                             prim: 'pair',
+                            annots: [':tuple'],
                             args: [{ prim: 'signature' }, { prim: 'bool' }]
                         },
                         left: { type: 'signature', expr: { prim: 'signature' } },
@@ -149,5 +200,6 @@ describe("Type info", () => {
 
         const ti = getTypeInfo(src);
         expect(ti).toEqual(expected);
+        //console.log(util.inspect(ti, false, null));
     });
 });
