@@ -151,9 +151,12 @@ export class Operation {
       throw new Error('Confirmation count must be at least 1');
     }
 
+    const confirmationPollingIntervalSecond = this.context.config.confirmationPollingIntervalSecond !== undefined 
+                                        ? this.context.config.confirmationPollingIntervalSecond 
+                                        : await this.context.getConfirmationPollingInterval();
+
     const {
       defaultConfirmationCount,
-      confirmationPollingIntervalSecond,
       confirmationPollingTimeoutSecond,
     } = this.context.config;
     this._pollingConfig$.next({
