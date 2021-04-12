@@ -35,7 +35,7 @@ export type TypedType = {
             typescriptType: 'string' | 'boolean' | 'number';
         } | {
             kind: 'union';
-            union: TypedVar[];
+            union: TypedType[];
         } | {
             kind: 'object';
             fields: TypedVar[];
@@ -112,7 +112,7 @@ const visitContractParameterEndpoint = (node: MMethod): TypedMethod[] => {
 
 
 type MVarArgs = M.MichelsonType;
-const visitVar = (node: MVarArgs): TypedVar[] => {
+const visitVar = (node: MVarArgs, options?: { treatPairAsObject: boolean }): TypedVar[] => {
     // console.log('visitMethodArgs', { node });
     // const debug_source = toDebugSource(node);
 
@@ -136,7 +136,7 @@ const visitVar = (node: MVarArgs): TypedVar[] => {
     }
 
     if (`prim` in node) {
-        if (node.prim === `pair`) {
+        if (node.prim === `pair` && !options?.treatPairAsObject) {
             return node.args.map(x => visitVar(x as MMethod)).reduce(reduceFlatMap, []);
         }
     }
@@ -165,13 +165,13 @@ const visitType = (node: MType): TypedType => {
 
     // Union
     if (node.prim === `or`) {
-        const union = node.args.map(x => visitVar(x)).reduce(reduceFlatMap, []);
+        const union = node.args.map(x => visitVar(x, { treatPairAsObject: true })).reduce(reduceFlatMap, []).map(x => x.type);
 
         // Flatten
         const rightSide = union[1];
-        if (rightSide.type.kind === `union`) {
+        if (rightSide.kind === `union`) {
             union.pop();
-            union.push(...rightSide.type.union);
+            union.push(...rightSide.union);
         }
 
         if (union.some(x => !x)) {
