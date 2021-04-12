@@ -30,15 +30,19 @@
     "contract-type-generator": "bin/contract-type-generator.js"
   },
   "scripts": {
+    "examples": "npm run example && npm run example-json && npm run example-simple && npm run example-local",
     "example": "contract-type-generator --g ./example/contracts ./example/types",
     "example-json": "contract-type-generator --json --g ./example/contracts ./example/types",
     "example-simple": "contract-type-generator --types simple --g ./example/contracts ./example/types-simple",
+    "example-file": "contract-type-generator --types file --g ./example/contracts ./example/types-file",
+    "example-local": "contract-type-generator --types local --g ./example/contracts ./example/types-local",
     "test-generate": "contract-type-generator --g ../taquito-michel-codec/test/ ./test/michel-codec-test-contract-types/",
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts'",
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts ",
-    "start": "rollup -c rollup.config.ts -w"
+    "start": "rollup -c rollup.config.ts -w",
+    "test": "npm run examples && npx jest"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [

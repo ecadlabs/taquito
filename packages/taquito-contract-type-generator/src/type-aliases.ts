@@ -56,7 +56,7 @@ function subtract<T extends BigNumber>(a: T, b: T): T {
     return a.minus(b) as T;
 }
 
-/** Tezos as casting for strict types */
+/** tas: Tezos 'as' casting for strict types */
 export const tas = {
     address: createStringTypeTas<address>(),
     bytes: createStringTypeTas<bytes>(),

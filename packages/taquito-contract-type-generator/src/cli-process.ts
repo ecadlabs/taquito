@@ -80,13 +80,13 @@ export const generateContractTypesProcessContractFiles = async ({
 
     const typeAliasFilePath = await findTypeAliasFilePath();
     const typeAliasData: TypeAliasData = typeAliasMode === 'local' ? { mode: typeAliasMode, fileContent: await fs.readFile(typeAliasFilePath, { encoding: 'utf8' }) }
-        : typeAliasMode === 'file' ? { mode: typeAliasMode, importPath: `./type-aliases.ts` }
+        : typeAliasMode === 'file' ? { mode: typeAliasMode, importPath: `./type-aliases` }
             : typeAliasMode === 'library' ? { mode: typeAliasMode, importPath: typeAliasImportPath }
                 : { mode: 'simple' };
 
     if (typeAliasMode === 'file') {
         // Copy the type alias file
-        await fs.copyFile(typeAliasFilePath, path.join(outputTypescriptDirectory + './type-aliases.ts'));
+        await fs.copyFile(typeAliasFilePath, path.join(outputTypescriptDirectory, './type-aliases.ts'));
     }
 
     for (const fullPath of files) {
