@@ -4,7 +4,6 @@ import { TypedStorage, TypedMethod, TypedType, TypedVar } from './contract-parse
 export type TypescriptCodeOutput = {
     typesFileContent: string;
     contractCodeFileContent: string;
-    typeMapping: string;
     storage: string;
     methods: string;
 };
@@ -15,10 +14,12 @@ export type TypeAliasData = {
 } | {
     mode: 'file' | 'library',
     importPath?: string,
+} | {
+    mode: 'none',
 };
 
 export const toTypescriptCode = (storage: TypedStorage, methods: TypedMethod[], contractName: string, parsedContract: unknown, protocol: { name: string, key: string }, typeAliasData: TypeAliasData): TypescriptCodeOutput => {
-    type StrictType = { strictType: string, baseType?: string, raw?: string };
+    type StrictType = { strictType: string, baseType: string, typeArgs?: string, import?: { name: string, from: string } };
     const usedStrictTypes = [] as StrictType[];
     const addStrictType = (strictType: StrictType) => {
         if (!usedStrictTypes.some(x => x.strictType === strictType.strictType)) {
@@ -48,7 +49,7 @@ ${tabs(indent)}`;
                 return `${t.typescriptType}`;
             }
 
-            const baseType = t.typescriptType === `number` ? `BigNumber` : t.typescriptType;
+            const baseType = t.typescriptType === `number` ? `string` : t.typescriptType;
             const strictType = { baseType, strictType: prim };
             addStrictType(strictType);
 
@@ -60,8 +61,8 @@ ${tabs(indent)}`;
         if (t.kind === `map`) {
 
             const strictType = t.map.isBigMap
-                ? { strictType: `BigMap`, raw: `type BigMap<K, V> = Omit<MichelsonMap<K, V>, 'get'> & { get: (key: K) => Promise<V> }` }
-                : { strictType: `MMap`, raw: `type MMap<K, V> = MichelsonMap<K, V>` };
+                ? { strictType: `BigMap`, typeArgs: '<K,T>', baseType: `MichelsonMap<K,T>`, import: { name: 'MichelsonMap', from: '@taquito/taquito' } }
+                : { strictType: `MMap`, typeArgs: '<K,T>', baseType: `MichelsonMap<K,T>`, import: { name: 'MichelsonMap', from: '@taquito/taquito' } };
             addStrictType(strictType);
 
             return `${strictType.strictType}<${typeToCode(t.map.key, indent)}, ${typeToCode(t.map.value, indent)}>`;
@@ -138,26 +139,38 @@ ${tabs(indent)}`;
     const methodsCode = methodsToCode(0);
     const storageCode = storageToCode(0);
 
-    const typeMapping = usedStrictTypes
+    // Simple type aliases
+    const simpleTypeMappingImportsAll = new Map(usedStrictTypes.map(x => x.import).filter(x => x).map(x => [`${x?.from}:${x?.name}`, x!]));
+    const simpleTypeMappingImportsFrom = [...simpleTypeMappingImportsAll.values()].reduce((out, x) => {
+        const names = out[x.from] ?? [];
+        names.push(x.name);
+        out[x.from] = names.sort((a, b) => a.localeCompare(b));
+        return out;
+    }, {} as { [from: string]: string[] });
+    const simpleTypeMappingImportsText = Object.keys(simpleTypeMappingImportsFrom)
+        .map(k => `import { ${simpleTypeMappingImportsFrom[k].join(', ')} } from '${k}';\n`)
+        .join('');
+
+    const simpleTypeMapping = usedStrictTypes
         .sort((a, b) => a.strictType.localeCompare(b.strictType))
         .map(x => {
             if (x.baseType) {
-                return `type ${x.strictType} = ${x.baseType} & { __type: '${x.strictType}' };`;
+                return `type ${x.strictType}${x.typeArgs ?? ''} = ${x.baseType};`;
             }
-            if (x.raw) {
-                return `${x.raw};`;
-            }
+
             return `// type ${x.strictType} = unknown;`;
         }).join(`\n`);
 
-    const typeAliases = typeAliasData.mode === 'local' ? typeAliasData.fileContent
-        : `import { ${usedStrictTypes.map(x => x.strictType).join(`, `)} } from '${typeAliasData.importPath}';`;
+    const typeAliasesDefinitions =
+        typeAliasData.mode === 'none' ? `${simpleTypeMappingImportsText}${simpleTypeMapping}`
+            : typeAliasData.mode === 'local' ? typeAliasData.fileContent
+                : `import { ${usedStrictTypes.map(x => x.strictType).join(`, `)} } from '${typeAliasData.importPath}';`;
 
     const contractTypeName = `${contractName}ContractType`;
     const codeName = `${contractName}Code`;
 
     const typesFileContent = `
-${typeAliases}
+${typeAliasesDefinitions}
 
 ${storageCode}
 
@@ -178,7 +191,6 @@ export const ${codeName}: { __type: '${codeName}', protocol: string, code: unkno
         contractCodeFileContent,
         storage: storageCode,
         methods: methodsCode,
-        typeMapping,
     };
 
 };

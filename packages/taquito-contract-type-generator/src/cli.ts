@@ -12,10 +12,13 @@ export const run = async (): Promise<void> => {
         const [inputTzContractDirectory, outputTypescriptDirectory] = argsGenerateFile;
         const format = argsUseJson ? 'json' : 'tz';
         const [typeAliasModeArg] = argsTypeAliasMode ?? [];
+
+        // Library is default mode
         const typeAliasMode = !typeAliasModeArg ? 'local'
-            : typeAliasModeArg === 'library' ? 'library'
+            : typeAliasModeArg === 'local' ? 'local'
                 : typeAliasModeArg === 'file' ? 'file'
-                    : 'local';
+                    : typeAliasModeArg === 'none' ? 'none'
+                        : 'library';
         await generateContractTypesProcessContractFiles({ inputTzContractDirectory, outputTypescriptDirectory, format, typeAliasMode });
         return;
     }
