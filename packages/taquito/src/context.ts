@@ -18,6 +18,8 @@ import { MichelCodecParser } from './parser/michel-codec-parser';
 import { Packer } from './packer/interface';
 import { RpcPacker } from './packer/rpc-packer';
 import BigNumber from 'bignumber.js';
+import { throwError } from 'rxjs';
+import { Console } from 'console';
 
 export interface TaquitoProvider<T, K extends Array<any>> {
   new (context: Context, ...rest: K): T;
@@ -170,8 +172,9 @@ export class Context {
     try {
       const constants = await this.rpc.getConstants();
       let confirmationPollingInterval = BigNumber.sum(constants.time_between_blocks[0], 
-             constants.delay_per_missing_endorsement!, 
-             Math.max(0, constants.initial_endorsers! - constants.endorsers_per_block));
+        new BigNumber(constants.delay_per_missing_endorsement!)
+        .multipliedBy(Math.max(0, constants.initial_endorsers! - constants.endorsers_per_block))
+      );
       
       // Divide the polling interval by a constant 3
       // to improvise for polling time to work in prod,

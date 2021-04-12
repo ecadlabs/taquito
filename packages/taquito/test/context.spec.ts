@@ -54,7 +54,7 @@ describe('Taquito context class', () => {
             "delay_per_missing_endorsement": "1"
         });
         const pollingInterval = await new Context(mockRpcClient).getConfirmationPollingInterval();
-        expect(pollingInterval).toBe(1);
+        expect(pollingInterval).toBe(2/3);
     });
 
     it('getConfirmationPollingInterval should return polling interval for production enviornment', async () => {
@@ -101,7 +101,7 @@ describe('Taquito context class', () => {
             "delay_per_missing_endorsement": "4"
         });
         const pollingInterval = await new Context(mockRpcClient).getConfirmationPollingInterval();
-        expect(pollingInterval).toBe(34/3);
+        expect(pollingInterval).toBe(10);
 
     });
     
