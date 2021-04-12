@@ -25,7 +25,7 @@ export class ObservableSubscription<T> implements Subscription<T> {
           }
         ),
         this.shouldRetry ? retryWhen(errors => errors.pipe(take(retries))) : tap(),
-        catchError(e => timer(delayInMS).pipe(mergeMap(() => throwError(e)))), 
+        catchError(() => timer(delayInMS))
       )
       .subscribe();
   }
