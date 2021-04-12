@@ -12,7 +12,7 @@ const fs = {
     readFile: promisify(fsRaw.readFile),
     writeFile: promisify(fsRaw.writeFile),
     stat: promisify(fsRaw.stat),
-    exists: promisify(fsRaw.exists),
+    exists: fsRaw.existsSync,
 };
 
 const getAllFiles = async (rootPath: string, filter: (fullPath: string) => boolean): Promise<string[]> => {
@@ -66,7 +66,7 @@ export const generateContractTypesProcessContractFiles = async ({
         const modulePath = './src/type-aliases.ts';
         let d = __dirname;
         let f = '';
-        while (!await fs.exists(f = path.join(d, modulePath))) {
+        while (!fs.exists(f = path.join(d, modulePath))) {
             const parentDir = path.dirname(d);
             if (!parentDir || d === parentDir) {
                 throw new Error('Could not fine type-aliases file');
