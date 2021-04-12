@@ -10,7 +10,7 @@ describe('Taquito context class', () => {
       };
     });
     
-    it('getConfirmationPollingInterval should return polling interval for sandbox enviornment', async () => {
+    it('getConfirmationPollingInterval should return polling interval for sandbox environment', async () => {
         mockRpcClient.getConstants.mockResolvedValue({
             "proof_of_work_nonce_size": 8,
             "nonce_length": 32,
