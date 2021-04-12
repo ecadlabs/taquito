@@ -3,7 +3,6 @@ import { CONFIGS } from "./config";
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
     const Tezos = lib;
     describe(`Test emptying a revealed implicit account into a new implicit account using: ${rpc}`, () => {
-        
         const test = require('jest-retries');
 
         beforeEach(async (done) => {
