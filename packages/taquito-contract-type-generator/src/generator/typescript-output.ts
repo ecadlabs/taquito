@@ -15,7 +15,7 @@ export type TypeAliasData = {
     mode: 'file' | 'library',
     importPath?: string,
 } | {
-    mode: 'none',
+    mode: 'simple',
 };
 
 export const toTypescriptCode = (storage: TypedStorage, methods: TypedMethod[], contractName: string, parsedContract: unknown, protocol: { name: string, key: string }, typeAliasData: TypeAliasData): TypescriptCodeOutput => {
@@ -156,7 +156,7 @@ ${tabs(indent)}`;
         .map(x => x.simpleTypeDefinition).join(`\n`);
 
     const typeAliasesDefinitions =
-        typeAliasData.mode === 'none' ? `${simpleTypeMappingImportsText}${simpleTypeMapping}`
+        typeAliasData.mode === 'simple' ? `${simpleTypeMappingImportsText}${simpleTypeMapping}`
             : typeAliasData.mode === 'local' ? typeAliasData.fileContent
                 : `import { ${usedStrictTypes.map(x => x.aliasType).join(`, `)} } from '${typeAliasData.importPath}';`;
 

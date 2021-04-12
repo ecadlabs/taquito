@@ -17,7 +17,7 @@ export const run = async (): Promise<void> => {
         const typeAliasMode =
             typeAliasModeArg === 'local' ? 'local'
                 : typeAliasModeArg === 'file' ? 'file'
-                    : typeAliasModeArg === 'none' ? 'none'
+                    : typeAliasModeArg === 'simple' ? 'simple'
                         : 'library';
         await generateContractTypesProcessContractFiles({ inputTzContractDirectory, outputTypescriptDirectory, format, typeAliasMode });
         return;

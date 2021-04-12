@@ -50,7 +50,7 @@ export const generateContractTypesProcessContractFiles = async ({
     inputTzContractDirectory: string;
     outputTypescriptDirectory: string;
     format: 'tz' | 'json',
-    typeAliasMode: 'local' | 'file' | 'library' | 'none',
+    typeAliasMode: 'local' | 'file' | 'library' | 'simple',
 }): Promise<void> => {
 
     console.log(`Generating Types: ${path.resolve(inputTzContractDirectory)} => ${path.resolve(outputTypescriptDirectory)}`);
@@ -82,7 +82,7 @@ export const generateContractTypesProcessContractFiles = async ({
     const typeAliasData: TypeAliasData = typeAliasMode === 'local' ? { mode: typeAliasMode, fileContent: await fs.readFile(typeAliasFilePath, { encoding: 'utf8' }) }
         : typeAliasMode === 'file' ? { mode: typeAliasMode, importPath: `./type-aliases.ts` }
             : typeAliasMode === 'library' ? { mode: typeAliasMode, importPath: typeAliasImportPath }
-                : { mode: 'none' };
+                : { mode: 'simple' };
 
     if (typeAliasMode === 'file') {
         // Copy the type alias file

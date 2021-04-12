@@ -12,33 +12,44 @@ const readFileText = async (filePath: string): Promise<string> => {
     return fs.readFile(filePath, { encoding: 'utf8' });
 };
 
-describe('Generate Example Contracts', async () => {
+describe('Generate Example Contracts', () => {
 
-    const typeAliasData: TypeAliasData = { mode: 'library', importPath: '@taquito/contact-type-generator/src/type-aliases' };
+    const typeAliasDataLibrary: TypeAliasData = { mode: 'library', importPath: '@taquito/contract-type-generator' };
+    const typeAliasDataSimple: TypeAliasData = { mode: 'simple' };
 
-    const testContractTypeGeneration = async (contractFileName: string, format: 'tz' | 'json' = 'tz') => {
+    const testContractTypeGeneration = async (contractFileName: string, format: 'tz' | 'json', mode: 'library' | 'simple') => {
         const contractRaw = await readFileText(path.resolve(__dirname, `../example/contracts/${contractFileName}.${format}`));
-        const expectedTypeFileContent = await readFileText(path.resolve(__dirname, `../example/types/${contractFileName}.types.ts`));
-        const expectedCodeFileContent = await readFileText(path.resolve(__dirname, `../example/types/${contractFileName}.code.ts`));
+        const expectedTypeFileContent = await readFileText(path.resolve(__dirname, `../example/types${mode === 'simple' ? '-simple' : ''}/${contractFileName}.types.ts`));
+        const expectedCodeFileContent = await readFileText(path.resolve(__dirname, `../example/types${mode === 'simple' ? '-simple' : ''}/${contractFileName}.code.ts`));
         const contractName = normalizeContractName(contractFileName);
+        const typeAliasData = mode === 'library' ? typeAliasDataLibrary : typeAliasDataSimple;
         const { typescriptCodeOutput: { typesFileContent: actualTypesFileContent, contractCodeFileContent: actualCodeFileContent } } = generateContractTypesFromMichelsonCode(contractRaw, contractName, format, typeAliasData);
         expect(actualTypesFileContent.trim()).toEqual(expectedTypeFileContent.trim());
         expect(actualCodeFileContent.trim()).toEqual(expectedCodeFileContent.trim());
     };
 
-    it('Generate Contract 01', async () => {
-        await testContractTypeGeneration('example-contract-1');
+    it('Generate Contract 01 - tz library', async () => {
+        await testContractTypeGeneration('example-contract-1', 'tz', 'library');
+    });
+    it('Generate Contract 01 - tz simple', async () => {
+        await testContractTypeGeneration('example-contract-1', 'tz', 'simple');
+    });
+    it('Generate Contract 02 - tz library', async () => {
+        await testContractTypeGeneration('example-contract-2', 'tz', 'library');
+    });
+    it('Generate Contract 02 - tz simple', async () => {
+        await testContractTypeGeneration('example-contract-2', 'tz', 'simple');
     });
 
-    it('Generate Contract 2', async () => {
-        await testContractTypeGeneration('example-contract-2');
+    it('Generate Contract 03 - json library', async () => {
+        await testContractTypeGeneration('example-contract-3', 'json', 'library');
     });
 
-    it('Generate Contract 3 - json', async () => {
-        await testContractTypeGeneration('example-contract-3', 'json');
+    it('Generate Contract 04 - newer protocol', async () => {
+        await testContractTypeGeneration('example-contract-4', 'tz', 'library');
+    });
+    it('Generate Contract 04 - tz simple', async () => {
+        await testContractTypeGeneration('example-contract-4', 'tz', 'simple');
     });
 
-    it('Generate Contract 4 - newer protocol', async () => {
-        await testContractTypeGeneration('example-contract-4');
-    });
 });

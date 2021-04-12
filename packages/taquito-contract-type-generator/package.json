@@ -32,6 +32,7 @@
   "scripts": {
     "example": "contract-type-generator --g ./example/contracts ./example/types",
     "example-json": "contract-type-generator --json --g ./example/contracts ./example/types",
+    "example-simple": "contract-type-generator --types simple --g ./example/contracts ./example/types-simple",
     "test-generate": "contract-type-generator --g ../taquito-michel-codec/test/ ./test/michel-codec-test-contract-types/",
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts'",
     "precommit": "lint-staged",
