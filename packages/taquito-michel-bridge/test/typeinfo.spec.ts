@@ -3,7 +3,7 @@ import { getTypeInfo, TypeInfo, ObjectID } from "../src/typeinfo";
 // import util from "util";
 
 describe("Type info", () => {
-    it("record", () => {
+    it("object", () => {
         const src: MichelsonType = [
             { prim: "int", annots: ["%one"] },
             { prim: "nat", annots: ["%two"] },
@@ -47,17 +47,17 @@ describe("Type info", () => {
                 {
                     type: 'int',
                     expr: { prim: 'int', annots: ['%one'] },
-                    prop: 'one'
+                    field: 'one'
                 },
                 {
                     type: 'nat',
                     expr: { prim: 'nat', annots: ['%two'] },
-                    prop: 'two'
+                    field: 'two'
                 },
                 {
                     type: 'string',
                     expr: { prim: 'string', annots: ['%three'] },
-                    prop: 'three'
+                    field: 'three'
                 },
                 {
                     type: 'pair',
@@ -69,24 +69,24 @@ describe("Type info", () => {
                     left: { type: 'string', expr: { prim: 'string' } },
                     right: { type: 'timestamp', expr: { prim: 'timestamp' } },
                     name: 'tuple',
-                    prop: 'tuple'
+                    field: 'tuple'
                 }
             ],
             fieldsIndex: {
                 one: {
                     type: 'int',
                     expr: { prim: 'int', annots: ['%one'] },
-                    prop: 'one'
+                    field: 'one'
                 },
                 two: {
                     type: 'nat',
                     expr: { prim: 'nat', annots: ['%two'] },
-                    prop: 'two'
+                    field: 'two'
                 },
                 three: {
                     type: 'string',
                     expr: { prim: 'string', annots: ['%three'] },
-                    prop: 'three'
+                    field: 'three'
                 },
                 tuple: {
                     type: 'pair',
@@ -98,7 +98,7 @@ describe("Type info", () => {
                     left: { type: 'string', expr: { prim: 'string' } },
                     right: { type: 'timestamp', expr: { prim: 'timestamp' } },
                     name: 'tuple',
-                    prop: 'tuple'
+                    field: 'tuple'
                 }
             }
         };

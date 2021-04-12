@@ -123,7 +123,7 @@ const base58alphabetBwd: number[] = [
 
 function byteAt(src: string, i: number): number {
     const c = src.charCodeAt(i) - 49;
-    if (c >= base58alphabetFwd.length || base58alphabetFwd[c] === -1) {
+    if (c < 0 || c >= base58alphabetFwd.length || base58alphabetFwd[c] === -1) {
         throw new Error(`Base58 decoding error: unexpected character at position ${i}: ${src[i]}`);
     }
     return base58alphabetFwd[c];
@@ -163,6 +163,9 @@ export function encodeBase58(src: number[] | Uint8Array): string {
     let zeros = i;
     while (i < src.length) {
         let carry = src[i++];
+        if (carry < 0 || carry > 255) {
+            throw new Error(`value out of range: ${carry}`);
+        }
         let ii = 0;
         while (carry !== 0 || ii < acc.length) {
             const m = (acc[ii] || 0) * 256 + carry;

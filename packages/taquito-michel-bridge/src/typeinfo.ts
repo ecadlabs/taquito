@@ -36,7 +36,7 @@ interface TypeInfoMap<T extends "map" | "big_map"> extends TypeInfoPrimitive<T> 
 
 interface TypeInfoComplex<T extends typeof ObjectID | typeof UnionID> extends TypeInfoPrimitive<T> {
     fields: TypeInfoField[];
-    fieldsIndex: { [prop: string]: TypeInfoField | undefined };
+    fieldsIndex: { [field: string]: TypeInfoField | undefined };
 }
 
 interface TypeInfoSaplingState extends TypeInfoPrimitive<"sapling_state"> {
@@ -45,7 +45,7 @@ interface TypeInfoSaplingState extends TypeInfoPrimitive<"sapling_state"> {
 
 export type TypeInfoObject = TypeInfoComplex<typeof ObjectID>;
 export type TypeInfoUnion = TypeInfoComplex<typeof UnionID>;
-export type TypeInfoField = TypeInfo & { prop: string; };
+export type TypeInfoField = TypeInfo & { field: string; };
 export type TypeInfo<T extends MichelsonTypeID = MichelsonTypeID> =
     T extends UnaryTypeID ? TypeInfoUnary<T> :
     T extends "pair" ? TypeInfoBinary<T> | TypeInfoObject :
@@ -73,7 +73,7 @@ function collectFields(t: MichelsonType<"pair" | "or">): TypeInfoField[] | null 
         } else {
             props.push({
                 ...getTypeInfo(a),
-                prop: ann.f[0].slice(1),
+                field: ann.f[0].slice(1),
             });
         }
     }
@@ -88,7 +88,7 @@ function getComplexTypeInfo<T extends "pair" | "or">(typ: MichelsonType<T>): Typ
             type: util.isPairType(t) ? ObjectID : UnionID,
             expr: t,
             fields,
-            fieldsIndex: Object.assign({}, ...fields.map(p => ({ [p.prop]: p }))),
+            fieldsIndex: Object.assign({}, ...fields.map(p => ({ [p.field]: p }))),
         } as TypeInfo<T>;
     }
     return {

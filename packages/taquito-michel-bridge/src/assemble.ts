@@ -174,8 +174,8 @@ export function assembleData(t: TypeInfo, data: unknown, opt?: ProtocolOptions):
                 const bytes = getBytes(data);
                 if (bytes !== undefined) {
                     try {
-                        decodePublicKeyHash(bytes);
-                        return { bytes: util.hexBytes(Array.from(bytes)) };
+                        const addr = decodePublicKeyHash(bytes);
+                        return { string: util.encodeTezosID(addr.type, addr.hash) };
                     } catch (err) {
                         // ignore message
                     }
@@ -193,17 +193,20 @@ export function assembleData(t: TypeInfo, data: unknown, opt?: ProtocolOptions):
                 const bytes = getBytes(data);
                 if (bytes !== undefined) {
                     try {
-                        decodeAddress(bytes);
-                        return { bytes: util.hexBytes(Array.from(bytes)) };
+                        const addr = decodeAddress(bytes);
+                        return { string: util.encodeTezosID(addr.type, addr.hash) + (addr.entryPoint ? "%" + addr.entryPoint : "") };
                     } catch (err) {
                         // ignore message
                     }
-                } else if (typeof data === "string" && util.checkDecodeTezosID(data,
-                    "ED25519PublicKeyHash",
-                    "SECP256K1PublicKeyHash",
-                    "P256PublicKeyHash",
-                    "ContractHash") !== null) {
-                    return { string: data };
+                } else if (typeof data === "string") {
+                    const s = data.split("%");
+                    if (util.checkDecodeTezosID(s[0],
+                        "ED25519PublicKeyHash",
+                        "SECP256K1PublicKeyHash",
+                        "P256PublicKeyHash",
+                        "ContractHash") !== null) {
+                        return { string: data };
+                    }
                 }
                 throw new AssembleError(t, data, `${t.type} (number[], Uint8Array, hex string or base58) expected: ${JSON.stringify(data)}`);
             }
@@ -213,8 +216,8 @@ export function assembleData(t: TypeInfo, data: unknown, opt?: ProtocolOptions):
                 const bytes = getBytes(data);
                 if (bytes !== undefined) {
                     try {
-                        decodePublicKey(bytes);
-                        return { bytes: util.hexBytes(Array.from(bytes)) };
+                        const pk = decodePublicKey(bytes);
+                        return { string: util.encodeTezosID(pk.type, pk.publicKey) };
                     } catch (err) {
                         // ignore message
                     }
@@ -231,7 +234,7 @@ export function assembleData(t: TypeInfo, data: unknown, opt?: ProtocolOptions):
             {
                 const bytes = getBytes(data);
                 if (bytes !== undefined) {
-                    return { bytes: util.hexBytes(Array.from(bytes)) };
+                    return { string: util.encodeTezosID("GenericSignature", bytes) };
                 } else if (typeof data === "string" && util.checkDecodeTezosID(data,
                     "ED25519Signature",
                     "SECP256K1Signature",
@@ -246,7 +249,7 @@ export function assembleData(t: TypeInfo, data: unknown, opt?: ProtocolOptions):
             {
                 const bytes = getBytes(data);
                 if (bytes !== undefined) {
-                    return { bytes: util.hexBytes(Array.from(bytes)) };
+                    return { string: util.encodeTezosID("ChainID", bytes) };
                 } else if (typeof data === "string") {
                     try {
                         base58.decodeBase58Check(data);
