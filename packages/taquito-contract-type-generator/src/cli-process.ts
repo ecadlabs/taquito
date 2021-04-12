@@ -4,6 +4,7 @@ import { promisify } from 'util';
 import { normalizeContractName } from './generator/contract-name';
 import { generateContractTypesFromMichelsonCode } from './generator/process';
 import { TypeAliasData } from './generator/typescript-output';
+import { typeAliasesFileContent } from './type-aliases-file-content';
 
 const fs = {
     mkdir: promisify(fsRaw.mkdir),
@@ -61,32 +62,15 @@ export const generateContractTypesProcessContractFiles = async ({
 
     const typeAliasImportPath = `@taquito/contract-type-generator`;
 
-    // Find the raw typ-aliases.ts file since it will be in a different relative location after build
-    const findTypeAliasFilePath = async (): Promise<string> => {
-        const modulePath = './src/type-aliases.ts';
-        let d = __dirname;
-        let f = '';
-        while (!fs.exists(f = path.join(d, modulePath))) {
-            const parentDir = path.dirname(d);
-            if (!parentDir || d === parentDir) {
-                throw new Error('Could not fine type-aliases file');
-            }
-
-            d = parentDir;
-        }
-
-        return f;
-    };
-
-    const typeAliasFilePath = await findTypeAliasFilePath();
-    const typeAliasData: TypeAliasData = typeAliasMode === 'local' ? { mode: typeAliasMode, fileContent: await fs.readFile(typeAliasFilePath, { encoding: 'utf8' }) }
+    const typeAliasData: TypeAliasData = typeAliasMode === 'local' ? { mode: typeAliasMode, fileContent: typeAliasesFileContent }
         : typeAliasMode === 'file' ? { mode: typeAliasMode, importPath: `./type-aliases` }
             : typeAliasMode === 'library' ? { mode: typeAliasMode, importPath: typeAliasImportPath }
                 : { mode: 'simple' };
 
     if (typeAliasMode === 'file') {
         // Copy the type alias file
-        await fs.copyFile(typeAliasFilePath, path.join(outputTypescriptDirectory, './type-aliases.ts'));
+        await fs.mkdir(outputTypescriptDirectory, { recursive: true });
+        await fs.writeFile(path.join(outputTypescriptDirectory, './type-aliases.ts'), typeAliasesFileContent);
     }
 
     for (const fullPath of files) {
