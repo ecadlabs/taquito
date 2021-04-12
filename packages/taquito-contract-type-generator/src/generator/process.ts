@@ -2,7 +2,7 @@ import * as M from '@taquito/michel-codec';
 import { GenerateApiError } from './common';
 import { parseContractStorage, parseContractParameter } from './contract-parser';
 import { SchemaOutput, toSchema } from './schema-output';
-import { TypescriptCodeOutput, toTypescriptCode } from './typescript-output';
+import { TypescriptCodeOutput, toTypescriptCode, TypeAliasData } from './typescript-output';
 
 const parseContractWithMinimalProtocolLevel = (contractScript: string, format: 'tz' | 'json', contractLevelIndex: number): { contract: M.MichelsonContract, protocol: { name: string, key: string } } => {
     const contractLevels = [
@@ -34,7 +34,7 @@ const parseContractWithMinimalProtocolLevel = (contractScript: string, format: '
     return parseContractWithMinimalProtocolLevel(contractScript, format, contractLevelIndex + 1);
 };
 
-export const generateContractTypesFromMichelsonCode = (contractScript: string, contractName: string, format: 'tz' | 'json'): {
+export const generateContractTypesFromMichelsonCode = (contractScript: string, contractName: string, format: 'tz' | 'json', typeAliasData: TypeAliasData): {
     schema: SchemaOutput;
     typescriptCodeOutput: TypescriptCodeOutput;
     parsedContract: M.MichelsonContract;
@@ -55,7 +55,7 @@ export const generateContractTypesFromMichelsonCode = (contractScript: string, c
     const methods = parameterResult?.methods ?? [];
     const schemaOutput = toSchema(methods);
 
-    const typescriptCode = toTypescriptCode(storage, methods, contractName, contract, protocol);
+    const typescriptCode = toTypescriptCode(storage, methods, contractName, contract, protocol, typeAliasData);
 
     return {
         schema: schemaOutput,

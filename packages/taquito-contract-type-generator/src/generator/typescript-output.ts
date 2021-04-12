@@ -9,7 +9,15 @@ export type TypescriptCodeOutput = {
     methods: string;
 };
 
-export const toTypescriptCode = (storage: TypedStorage, methods: TypedMethod[], contractName: string, parsedContract: unknown, protocol: { name: string, key: string }): TypescriptCodeOutput => {
+export type TypeAliasData = {
+    mode: 'local',
+    fileContent?: string,
+} | {
+    mode: 'file' | 'library',
+    importPath?: string,
+};
+
+export const toTypescriptCode = (storage: TypedStorage, methods: TypedMethod[], contractName: string, parsedContract: unknown, protocol: { name: string, key: string }, typeAliasData: TypeAliasData): TypescriptCodeOutput => {
     type StrictType = { strictType: string, baseType?: string, raw?: string };
     const usedStrictTypes = [] as StrictType[];
     const addStrictType = (strictType: StrictType) => {
@@ -142,13 +150,8 @@ ${tabs(indent)}`;
             return `// type ${x.strictType} = unknown;`;
         }).join(`\n`);
 
-    //     const typeAliases = `
-    // import { MichelsonMap } from '@taquito/taquito';
-    // import { BigNumber } from 'bignumber.js';
-
-    // ${typeMapping}
-    //         `.trim();
-    const typeAliases = `import { ${usedStrictTypes.map(x => x.strictType).join(`, `)} } from '@taquito/contract-type-generator';`;
+    const typeAliases = typeAliasData.mode === 'local' ? typeAliasData.fileContent
+        : `import { ${usedStrictTypes.map(x => x.strictType).join(`, `)} } from '${typeAliasData.importPath}';`;
 
     const contractTypeName = `${contractName}ContractType`;
     const codeName = `${contractName}Code`;
