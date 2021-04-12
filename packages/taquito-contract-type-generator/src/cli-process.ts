@@ -59,7 +59,7 @@ export const generateContractTypesProcessContractFiles = async ({
     const files = await getAllFiles(inputTzContractDirectory, x => x.endsWith(ext));
     console.log(`Contracts Found: ${[``, ...files].join(`\n\t- `)}`);
 
-    const typeAliasImportPath = `@taquito/contact-type-generator/src/type-aliases`;
+    const typeAliasImportPath = `@taquito/contract-type-generator`;
 
     // Find the raw typ-aliases.ts file since it will be in a different relative location after build
     const findTypeAliasFilePath = async (): Promise<string> => {

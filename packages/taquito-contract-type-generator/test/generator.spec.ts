@@ -3,6 +3,7 @@ import path from 'path';
 import { promisify } from 'util';
 import { generateContractTypesFromMichelsonCode } from '../src/generator/process';
 import { normalizeContractName } from '../src/generator/contract-name';
+import { TypeAliasData } from '../src/generator/typescript-output';
 
 const fs = {
     readFile: promisify(fsRaw.readFile),
@@ -11,14 +12,16 @@ const readFileText = async (filePath: string): Promise<string> => {
     return fs.readFile(filePath, { encoding: 'utf8' });
 };
 
-describe('Generate Example Contracts', () => {
+describe('Generate Example Contracts', async () => {
+
+    const typeAliasData: TypeAliasData = { mode: 'library', importPath: '@taquito/contact-type-generator/src/type-aliases' };
 
     const testContractTypeGeneration = async (contractFileName: string, format: 'tz' | 'json' = 'tz') => {
         const contractRaw = await readFileText(path.resolve(__dirname, `../example/contracts/${contractFileName}.${format}`));
         const expectedTypeFileContent = await readFileText(path.resolve(__dirname, `../example/types/${contractFileName}.types.ts`));
         const expectedCodeFileContent = await readFileText(path.resolve(__dirname, `../example/types/${contractFileName}.code.ts`));
         const contractName = normalizeContractName(contractFileName);
-        const { typescriptCodeOutput: { typesFileContent: actualTypesFileContent, contractCodeFileContent: actualCodeFileContent } } = generateContractTypesFromMichelsonCode(contractRaw, contractName, format);
+        const { typescriptCodeOutput: { typesFileContent: actualTypesFileContent, contractCodeFileContent: actualCodeFileContent } } = generateContractTypesFromMichelsonCode(contractRaw, contractName, format, typeAliasData);
         expect(actualTypesFileContent.trim()).toEqual(expectedTypeFileContent.trim());
         expect(actualCodeFileContent.trim()).toEqual(expectedCodeFileContent.trim());
     };
