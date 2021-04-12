@@ -1,10 +1,5 @@
 
-import { MichelsonMap } from '@taquito/taquito';
-type address = string;
-type BigMap<K,T> = MichelsonMap<K,T>;
-type int = string;
-type nat = string;
-type timestamp = string;
+import { address, BigMap, int, nat, timestamp } from '@taquito/contract-type-generator';
 
 type Storage = {
     pauseable_admin?: {

@@ -10,6 +10,18 @@ Run contract generator on every contract (.tz) in a folder `./example/contracts`
 
 - `npx contract-type-generator --g ./example/contracts ./example/types`
 
+## Cli Options
+
+- `--types library`
+    - Import strict contract type aliases from the taquito library
+- `--types file`
+    - Copy the strict contract type aliases to a file in the output directory
+- `--types local`
+    - Copy the strict contract type aliases to each generated contract
+- `--types none`
+    - Use simple typescript types with aliases defined in each generated contract
+
+
 ## Development
 
 - Build Taquito

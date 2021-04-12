@@ -14,8 +14,8 @@ export const run = async (): Promise<void> => {
         const [typeAliasModeArg] = argsTypeAliasMode ?? [];
 
         // Library is default mode
-        const typeAliasMode = !typeAliasModeArg ? 'local'
-            : typeAliasModeArg === 'local' ? 'local'
+        const typeAliasMode =
+            typeAliasModeArg === 'local' ? 'local'
                 : typeAliasModeArg === 'file' ? 'file'
                     : typeAliasModeArg === 'none' ? 'none'
                         : 'library';

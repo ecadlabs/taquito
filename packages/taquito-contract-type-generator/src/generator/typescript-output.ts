@@ -1,4 +1,4 @@
-import { assertExhaustive, GenerateApiError } from './common';
+import { assertExhaustive, GenerateApiError, reduceFlatMap } from './common';
 import { TypedStorage, TypedMethod, TypedType, TypedVar } from './contract-parser';
 
 export type TypescriptCodeOutput = {
@@ -19,10 +19,10 @@ export type TypeAliasData = {
 };
 
 export const toTypescriptCode = (storage: TypedStorage, methods: TypedMethod[], contractName: string, parsedContract: unknown, protocol: { name: string, key: string }, typeAliasData: TypeAliasData): TypescriptCodeOutput => {
-    type StrictType = { strictType: string, baseType: string, typeArgs?: string, import?: { name: string, from: string } };
-    const usedStrictTypes = [] as StrictType[];
-    const addStrictType = (strictType: StrictType) => {
-        if (!usedStrictTypes.some(x => x.strictType === strictType.strictType)) {
+    type TypeAlias = { aliasType: string, simpleTypeDefinition: string, simpleTypeImports?: { name: string, from: string }[] };
+    const usedStrictTypes = [] as TypeAlias[];
+    const addTypeAlias = (strictType: TypeAlias) => {
+        if (!usedStrictTypes.some(x => x.aliasType === strictType.aliasType)) {
             usedStrictTypes.push(strictType);
         }
     };
@@ -49,23 +49,23 @@ ${tabs(indent)}`;
                 return `${t.typescriptType}`;
             }
 
-            const baseType = t.typescriptType === `number` ? `string` : t.typescriptType;
-            const strictType = { baseType, strictType: prim };
-            addStrictType(strictType);
+            const simpleBaseType = t.typescriptType === `number` ? `string` : t.typescriptType;
+            const typeAlias: TypeAlias = { aliasType: prim, simpleTypeDefinition: `type ${prim} = ${simpleBaseType};` };
+            addTypeAlias(typeAlias);
 
-            return strictType.strictType;
+            return typeAlias.aliasType;
         }
         if (t.kind === `array`) {
             return `Array<${typeToCode(t.array.item, indent)}>`;
         }
         if (t.kind === `map`) {
 
-            const strictType = t.map.isBigMap
-                ? { strictType: `BigMap`, typeArgs: '<K,T>', baseType: `MichelsonMap<K,T>`, import: { name: 'MichelsonMap', from: '@taquito/taquito' } }
-                : { strictType: `MMap`, typeArgs: '<K,T>', baseType: `MichelsonMap<K,T>`, import: { name: 'MichelsonMap', from: '@taquito/taquito' } };
-            addStrictType(strictType);
+            const typeAlias: TypeAlias = t.map.isBigMap
+                ? { aliasType: `BigMap`, simpleTypeDefinition: 'type BigMap<K,T> = MichelsonMap<K,T>;', simpleTypeImports: [{ name: 'MichelsonMap', from: '@taquito/taquito' }] }
+                : { aliasType: `MMap`, simpleTypeDefinition: 'type MMap<K,T> = MichelsonMap<K,T>;', simpleTypeImports: [{ name: 'MichelsonMap', from: '@taquito/taquito' }] };
+            addTypeAlias(typeAlias);
 
-            return `${strictType.strictType}<${typeToCode(t.map.key, indent)}, ${typeToCode(t.map.value, indent)}>`;
+            return `${typeAlias.aliasType}<${typeToCode(t.map.key, indent)}, ${typeToCode(t.map.value, indent)}>`;
         }
         if (t.kind === `object`) {
             return `{${toIndentedItems(indent, {},
@@ -91,9 +91,9 @@ ${tabs(indent)}`;
             )})`;
         }
         if (t.kind === `unit`) {
-            const strictType = { baseType: `(true | undefined)`, strictType: `unit` };
-            addStrictType(strictType);
-            return strictType.strictType;
+            const typeAlias: TypeAlias = { aliasType: `unit`, simpleTypeDefinition: `type unit = (true | undefined);`, };
+            addTypeAlias(typeAlias);
+            return typeAlias.aliasType;
         }
         if (t.kind === `never`) {
             return `never`;
@@ -140,7 +140,7 @@ ${tabs(indent)}`;
     const storageCode = storageToCode(0);
 
     // Simple type aliases
-    const simpleTypeMappingImportsAll = new Map(usedStrictTypes.map(x => x.import).filter(x => x).map(x => [`${x?.from}:${x?.name}`, x!]));
+    const simpleTypeMappingImportsAll = new Map(usedStrictTypes.map(x => x.simpleTypeImports ?? []).reduce(reduceFlatMap).map(x => [`${x?.from}:${x?.name}`, x]));
     const simpleTypeMappingImportsFrom = [...simpleTypeMappingImportsAll.values()].reduce((out, x) => {
         const names = out[x.from] ?? [];
         names.push(x.name);
@@ -152,19 +152,13 @@ ${tabs(indent)}`;
         .join('');
 
     const simpleTypeMapping = usedStrictTypes
-        .sort((a, b) => a.strictType.localeCompare(b.strictType))
-        .map(x => {
-            if (x.baseType) {
-                return `type ${x.strictType}${x.typeArgs ?? ''} = ${x.baseType};`;
-            }
-
-            return `// type ${x.strictType} = unknown;`;
-        }).join(`\n`);
+        .sort((a, b) => a.aliasType.localeCompare(b.aliasType))
+        .map(x => x.simpleTypeDefinition).join(`\n`);
 
     const typeAliasesDefinitions =
         typeAliasData.mode === 'none' ? `${simpleTypeMappingImportsText}${simpleTypeMapping}`
             : typeAliasData.mode === 'local' ? typeAliasData.fileContent
-                : `import { ${usedStrictTypes.map(x => x.strictType).join(`, `)} } from '${typeAliasData.importPath}';`;
+                : `import { ${usedStrictTypes.map(x => x.aliasType).join(`, `)} } from '${typeAliasData.importPath}';`;
 
     const contractTypeName = `${contractName}ContractType`;
     const codeName = `${contractName}Code`;
@@ -194,3 +188,5 @@ export const ${codeName}: { __type: '${codeName}', protocol: string, code: unkno
     };
 
 };
+
+
