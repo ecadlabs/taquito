@@ -15,7 +15,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(second.currentConfirmation - first.currentConfirmation).toEqual(1)
       // Retrying another time should be instant
       const [first2, second2] = await Promise.all([op.confirmation(), op.confirmation(2)])
-      expect(second2.expectedConfirmation - first2.expectedConfirmation).toEqual(1)
+      expect(second2.expectedConfirmation! - first2.expectedConfirmation!).toEqual(1)
       done();
     })
   });
