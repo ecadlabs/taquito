@@ -62,6 +62,10 @@ module.exports = {
               href: 'https://tezos.stackexchange.com/questions/tagged/taquito',
             },
             {
+              label: 'Telegram',
+              href: 'https://t.me/tezostaquito',
+            },
+            {
               label: 'Twitter',
               href: 'https://twitter.com/TezosTaquito',
             },
