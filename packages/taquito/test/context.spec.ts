@@ -57,7 +57,7 @@ describe('Taquito context class', () => {
         expect(pollingInterval).toBe(2/3);
     });
 
-    it('getConfirmationPollingInterval should return polling interval for production enviornment', async () => {
+    it('getConfirmationPollingInterval should return polling interval for production environment', async () => {
         mockRpcClient.getConstants.mockResolvedValue({
             "proof_of_work_nonce_size": 8,
             "nonce_length": 32,
