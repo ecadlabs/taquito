@@ -1,6 +1,6 @@
 import { Observable, Subscription as RXJSSubscription, Subject, timer, throwError } from 'rxjs';
 import { Subscription } from './interface';
-import { takeUntil, tap, catchError, retryWhen, take, mergeMap } from 'rxjs/operators';
+import { takeUntil, tap, catchError, retryWhen, take } from 'rxjs/operators';
 
 export class ObservableSubscription<T> implements Subscription<T> {
   private errorListeners: Array<(error: Error) => void> = [];
