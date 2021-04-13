@@ -12,14 +12,14 @@
   "dependencies": {
     "@ledgerhq/hw-transport": "^5.41.0",
     "@ledgerhq/hw-transport-node-hid": "^5.41.0",
-    "@taquito/http-utils": "^8.1.0",
+    "@taquito/http-utils": "^8.1.1",
     "@taquito/local-forging": "^8.1.1",
     "@taquito/michel-codec": "^8.1.1",
     "@taquito/remote-signer": "^8.1.1",
     "@taquito/signer": "^8.1.1",
     "@taquito/taquito": "^8.1.1",
     "@taquito/tzip16": "^8.1.1",
-    "@taquito/utils": "^8.1.0",
+    "@taquito/utils": "^8.1.1",
     "bignumber.js": "^9.0.1"
   },
   "private": true,

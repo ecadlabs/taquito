@@ -67,7 +67,7 @@
   },
   "dependencies": {
     "@taquito/taquito": "^8.1.1",
-    "@taquito/utils": "^8.1.0",
+    "@taquito/utils": "^8.1.1",
     "bignumber.js": "^9.0.1",
     "bip39": "^3.0.2",
     "elliptic": "^6.5.4",

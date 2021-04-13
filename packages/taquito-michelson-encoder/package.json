@@ -68,7 +68,7 @@
   },
   "dependencies": {
     "@taquito/rpc": "^8.1.1",
-    "@taquito/utils": "^8.1.0",
+    "@taquito/utils": "^8.1.1",
     "bignumber.js": "^9.0.1",
     "fast-json-stable-stringify": "^2.1.0"
   },

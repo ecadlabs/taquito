@@ -62,7 +62,7 @@
   "dependencies": {
     "@airgap/beacon-sdk": "^2.2.3",
     "@taquito/taquito": "^8.1.1",
-    "@taquito/utils": "^8.1.0"
+    "@taquito/utils": "^8.1.1"
   },
   "devDependencies": {
     "@types/chrome": "0.0.126",
