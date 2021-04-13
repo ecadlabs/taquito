@@ -23,18 +23,18 @@
                                            (pair (list %asset
                                                     (pair (address %fa2_address) (list %fa2_batch (pair (nat %token_id) (nat %amount)))))
                                                  (pair (timestamp %start_time) (timestamp %end_time))))))))))
-        (pair %resolve
-          (or (pair (mutez %amount) (address %recipient)) 
-              (pair (address %fa2) (list (pair (address %from_) 
-                                                          (list %txs (pair (address %to_) 
-                                                                           (pair (nat %token_id) (nat %amount))
-                                                                     )
-                                                          )
-                                                    )
-                                              )
-                         )
-          )
-        )) ;
+        (or %transfers (pair (mutez %amount) (address %recipient)) 
+            (pair (address %fa2) (list (pair (address %from_) 
+                              (list %txs (pair (address %to_) 
+                                                (pair (nat %token_id) (nat %amount))
+                                          )
+                              )
+                              )
+                  )
+            )
+            )
+            ) ;
+            
   storage (or %transfers (pair (mutez %amount) (address %recipient)) 
                          (pair (address %fa2) (list (pair (address %from_) 
                                                           (list %txs (pair (address %to_) 

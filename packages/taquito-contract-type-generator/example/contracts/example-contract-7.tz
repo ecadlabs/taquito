@@ -6,12 +6,9 @@
                   (address %token_for_sale_address)
                   (pair (nat %token_for_sale_token_id)
                         (pair (address %money_token_address) (nat %money_token_token_id))))))
-        (or (pair %cancel
-               (address %sale_seller)
-               (pair %tokens
-                  (address %token_for_sale_address)
-                  (pair (nat %token_for_sale_token_id)
-                        (pair (address %money_token_address) (nat %money_token_token_id)))))
+        (or (list %mint
+                  (pair (pair %token_metadata (nat %token_id) (map %token_info string bytes))
+                        (address %owner))) 
             (pair %sell
                (nat %sale_price)
                (pair %sale_tokens_param

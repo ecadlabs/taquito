@@ -56,11 +56,14 @@ export const parseContractStorage = (storage: M.MichelsonContractStorage): Typed
     const fields = storage.args
         .map(x => visitVar(x))
         .reduce(reduceFlatMap, []);
+
+    const fieldsSimple = fields.length === 1 && !fields[0].name && fields[0].type.kind === 'object' ? fields[0].type.fields : fields;
+
     return {
         storage: {
             kind: `object`,
             raw: storage as unknown as M.MichelsonType,
-            fields,
+            fields: fieldsSimple,
         },
     };
 };
@@ -76,80 +79,57 @@ export const parseContractParameter = (parameter: M.MichelsonContractParameter):
 
 type MMethod = M.MichelsonTypeOr<[M.MichelsonType, M.MichelsonType]>;
 const visitContractParameterEndpoint = (node: MMethod): TypedMethod[] => {
+
     // console.log('visitContractParameterEndpoint', { node });
 
-    // Sub endpoints (i.e. admin endpoints that are imported)
-    if (node.prim === `or`) {
-        return node.args.map(x => visitContractParameterEndpoint(x as MMethod)).reduce(reduceFlatMap, []);
-    }
+    const nameRaw = node.annots?.[0];
+    const name = nameRaw?.startsWith('%') ? nameRaw.substr(1) : null;
 
-    // Sub endpoints as a list (i.e. admin endpoints that are imported)
-    if (node.prim === `list` && (node?.args?.[0] as MMethod)?.prim === `or`) {
-        return node.args.map(x => visitContractParameterEndpoint(x as MMethod)).reduce(reduceFlatMap, []);
-    }
+    if (!name) {
 
-    if (node.annots?.[0]) {
-        // A method if it has a name
-        const name = node.annots[0];
-        if (name.startsWith(`%`)) {
-            // console.log('visitContractParameterEndpoint method', { name, node });
-
-            const nodeType = visitType(node);
-            if (nodeType.kind !== 'object') {
-                return [{
-                    name: name.substr(1),
-                    args: [{ type: nodeType }],
-                }];
-            }
-
-            return [{
-                name: name.substr(1),
-                args: [
-                    ...(node.prim !== `pair` && !node.args ? [{ type: visitType(node) }] : []),
-                    ...(node.args ?? []).map(x => visitVar(x, { ignoreName: true })).reduce(reduceFlatMap, []),
-                ],
-            }];
+        // Sub endpoints (i.e. admin endpoints that are imported)
+        if (node.prim === `or`) {
+            return node.args.map(x => visitContractParameterEndpoint(x as MMethod)).reduce(reduceFlatMap, []);
         }
-    }
 
-    // throw new GenerateApiError(`Unknown method: ${node.prim as string}`, { node });
-    console.warn(`Unknown method: ${node.prim as string}`, { node });
-
-    return [];
-};
-
-
-type MVarArgs = M.MichelsonType;
-const visitVar = (node: MVarArgs, options?: { ignoreName?: boolean, treatPairAsObject?: boolean }): TypedVar[] => {
-    // console.log('visitMethodArgs', { node });
-    // const debug_source = toDebugSource(node);
-
-    // if (typeof node === `string`) {
-    //     return [{
-    //         type: visitType(node),
-    //     }];
-    // }
-
-    const name = `annots` in node && node.annots?.length === 1 ? node.annots[0].substr(1) : undefined;
-    if (name && !options?.ignoreName) {
-        return [{
-            name,
-            type: visitType(node),
-        }];
-    }
-
-    if (`prim` in node) {
-        if (node.prim === `pair` && !options?.treatPairAsObject) {
-            return node.args.map(x => visitVar(x as MMethod, { ignoreName: false })).reduce(reduceFlatMap, []);
+        // Sub endpoints as a list (i.e. admin endpoints that are imported)
+        if (node.prim === `list` && (node?.args?.[0] as MMethod)?.prim === `or`) {
+            return node.args.map(x => visitContractParameterEndpoint(x as MMethod)).reduce(reduceFlatMap, []);
         }
+
+        console.warn(`Unknown method: ${node.prim as string}`, { node });
+        return [];
     }
 
-    // Assume type?
+    const nodeType = visitType(node);
+
+    // Method args are usually objects
+    if (nodeType.kind === 'object') {
+        return [{ name, args: nodeType.fields }];
+    }
+
+    // Simple methods can have a single unnamed argument
     return [{
         name,
-        type: visitType(node),
+        args: [{ type: nodeType }],
     }];
-    // throw new GenerateApiError(`Unknown visitVar node: ${JSON.stringify(node, null, 2)} `, { node });
+};
+
+// type PrimOf<T extends M.MichelsonType> = T extends { prim: infer U } ? U : never;
+// type WithPrim<T extends M.MichelsonType, P extends PrimOf<T>> = T extends { prim: P } ? T : never;
+// const isPrimType = <TPrim extends PrimOf<M.MichelsonType>>(node: undefined | null | M.MichelsonType, prim: TPrim): node is WithPrim<M.MichelsonType, TPrim> => {
+//     return (node && 'prim' in node && node.prim === prim) || false;
+// };
+
+type MVarArgs = M.MichelsonType;
+const visitVar = (node: MVarArgs): TypedVar[] => {
+    const name = `annots` in node && node.annots?.length === 1 ? node.annots[0].substr(1) : undefined;
+    const type = visitType(node);
+
+    return [{
+        name,
+        type,
+    }];
 };
 
 type MType = M.MichelsonType;
@@ -169,14 +149,20 @@ const visitType = (node: MType): TypedType => {
 
     // Union
     if (node.prim === `or`) {
-        const union = node.args.map(x => visitVar(x, { ignoreName: true, treatPairAsObject: true })).reduce(reduceFlatMap, []).map(x => x.type);
+        const unionVars = node.args.map(x => visitVar(x)).reduce(reduceFlatMap, []).map(x => x);
 
-        // Flatten
-        const rightSide = union[1];
-        if (rightSide.kind === `union`) {
-            union.pop();
-            union.push(...rightSide.union);
-        }
+        // Flatten with child unions
+        const union = unionVars.map(x => x.type.kind === 'union' ? x.type.union : [x.type]).reduce(reduceFlatMap, []);
+
+        // const union = unionVars.map(x => x.type);
+
+        // Flatten with child unions
+
+        // const rightSide = union[1];
+        // if (rightSide.kind === `union`) {
+        //     union.pop();
+        //     union.push(...rightSide.union);
+        // }
 
         if (union.some(x => !x)) {
             throw new GenerateApiError(`or: Some fields are null`, { node });
@@ -190,15 +176,21 @@ const visitType = (node: MType): TypedType => {
 
     // Intersect
     if (node.prim === `pair`) {
-        const fields = node.args.map(x => visitVar(x, { ignoreName: true })).reduce(reduceFlatMap, []);
+        const fields = node.args.map(x => visitVar(x)).reduce(reduceFlatMap, []);
         if (fields.some(x => !x)) {
             throw new GenerateApiError(`pair: Some fields are null`, { node, args: node.args, fields });
         }
+        if (fields.length !== 2) {
+            throw new GenerateApiError(`pair: Expected 2 items`, { node, length: fields.length, fields });
+        }
+
+        // Flatten with unnamed child pairs
+        const fieldsFlat = fields.map(x => !x.name && x.type.kind === 'object' ? x.type.fields : [x]).reduce(reduceFlatMap, []);
 
         return {
             kind: `object`,
             raw: node,
-            fields,
+            fields: fieldsFlat,
         };
     }
 
