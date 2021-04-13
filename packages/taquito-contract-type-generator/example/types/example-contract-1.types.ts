@@ -56,4 +56,4 @@ type Methods = {
     resolve: (param: nat) => Promise<void>;
 };
 
-export type ExampleContract1ContractType = { methods: Methods, storage: Storage, code: { __type: 'ExampleContract1Code', protocol: string, code: unknown } };
+export type ExampleContract1ContractType = { methods: Methods, storage: Storage, code: { __type: 'ExampleContract1Code', protocol: string, code: object[] } };
