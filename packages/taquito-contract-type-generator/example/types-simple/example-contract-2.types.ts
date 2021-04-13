@@ -45,14 +45,14 @@ type Methods = {
         }>,
         callback: contract,
     ) => Promise<void>;
-    transfer: (
-        from_: address,
-        txs: Array<{
-            to_: address;
-            token_id: nat;
-            amount: nat;
-        }>,
-    ) => Promise<void>;
+    transfer: (param: Array<{
+            from_: address;
+            txs: Array<{
+                to_: address;
+                token_id: nat;
+                amount: nat;
+            }>;
+        }>) => Promise<void>;
     add_operator: (
         owner: address,
         operator: address,
@@ -63,20 +63,20 @@ type Methods = {
         operator: address,
         token_id: nat,
     ) => Promise<void>;
-    burn_tokens: (
-        owner: address,
-        token_id: nat,
-        amount: nat,
-    ) => Promise<void>;
+    burn_tokens: (param: Array<{
+            owner: address;
+            token_id: nat;
+            amount: nat;
+        }>) => Promise<void>;
     create_token: (
         token_id: nat,
         token_info: MMap<string, bytes>,
     ) => Promise<void>;
-    mint_tokens: (
-        owner: address,
-        token_id: nat,
-        amount: nat,
-    ) => Promise<void>;
+    mint_tokens: (param: Array<{
+            owner: address;
+            token_id: nat;
+            amount: nat;
+        }>) => Promise<void>;
 };
 
 export type ExampleContract2ContractType = { methods: Methods, storage: Storage, code: { __type: 'ExampleContract2Code', protocol: string, code: unknown } };

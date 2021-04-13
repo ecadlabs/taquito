@@ -1,5 +1,13 @@
 
-import { address, BigMap, bytes, contract, MMap, nat, unit } from '@taquito/contract-type-generator';
+import BigNumber from 'bigNumber.js';
+import { MichelsonMap } from '@taquito/taquito';
+type address = string;
+type BigMap<K,T> = MichelsonMap<K,T>;
+type bytes = string;
+type contract = string;
+type MMap<K,T> = MichelsonMap<K,T>;
+type nat = string | BigNumber | number;
+type unit = (true | undefined);
 
 type Storage = {
     admin?: {
@@ -71,4 +79,4 @@ type Methods = {
         }>) => Promise<void>;
 };
 
-export type ExampleContract2ContractType = { methods: Methods, storage: Storage, code: { __type: 'ExampleContract2Code', protocol: string, code: unknown } };
+export type ExampleContract6ContractType = { methods: Methods, storage: Storage, code: { __type: 'ExampleContract6Code', protocol: string, code: unknown } };

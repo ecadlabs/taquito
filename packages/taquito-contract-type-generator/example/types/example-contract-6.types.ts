@@ -71,4 +71,4 @@ type Methods = {
         }>) => Promise<void>;
 };
 
-export type ExampleContract2ContractType = { methods: Methods, storage: Storage, code: { __type: 'ExampleContract2Code', protocol: string, code: unknown } };
+export type ExampleContract6ContractType = { methods: Methods, storage: Storage, code: { __type: 'ExampleContract6Code', protocol: string, code: unknown } };

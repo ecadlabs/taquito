@@ -94,6 +94,14 @@ const visitContractParameterEndpoint = (node: MMethod): TypedMethod[] => {
         if (name.startsWith(`%`)) {
             // console.log('visitContractParameterEndpoint method', { name, node });
 
+            const nodeType = visitType(node);
+            if (nodeType.kind !== 'object') {
+                return [{
+                    name: name.substr(1),
+                    args: [{ type: nodeType }],
+                }];
+            }
+
             return [{
                 name: name.substr(1),
                 args: [
