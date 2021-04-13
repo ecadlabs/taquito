@@ -31,12 +31,16 @@ export interface Config {
   confirmationPollingTimeoutSecond?: number;
   defaultConfirmationCount?: number;
   shouldObservableSubscriptionRetry?: boolean;
+  observableSubscriptionRetryDelay?: number;
+  observableSubscriptionRetries?: number;
 }
 
 export const defaultConfig: Partial<Config> = {
   defaultConfirmationCount: 1,
   confirmationPollingTimeoutSecond: 180,
-  shouldObservableSubscriptionRetry: false
+  shouldObservableSubscriptionRetry: false,
+  observableSubscriptionRetries: 10,
+  observableSubscriptionRetryDelay: 1000
 };
 
 /**

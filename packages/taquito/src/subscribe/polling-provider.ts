@@ -44,13 +44,19 @@ export class PollingSubscribeProvider implements SubscribeProvider {
     refCount()
   );
 
-  constructor(private context: Context, public readonly POLL_INTERVAL = 20000) {}
+  constructor(private context: Context, public readonly POLL_INTERVAL = 20000, private retries = 10, private delayInMS = 1000) {}
 
   subscribe(_filter: 'head'): Subscription<string> {
-    return new ObservableSubscription(this.newBlock$.pipe(pluck('hash')), this.context.config.shouldObservableSubscriptionRetry);
+    return new ObservableSubscription(this.newBlock$.pipe(pluck('hash')), 
+                                      this.context.config.shouldObservableSubscriptionRetry,
+                                      this.context.config.observableSubscriptionRetries,
+                                      this.context.config.observableSubscriptionRetryDelay);
   }
 
   subscribeOperation(filter: Filter): Subscription<OperationContent> {
-    return new ObservableSubscription(this.newBlock$.pipe(applyFilter(filter)), this.context.config.shouldObservableSubscriptionRetry);
+    return new ObservableSubscription(this.newBlock$.pipe(applyFilter(filter)),
+                                      this.context.config.shouldObservableSubscriptionRetry,
+                                      this.context.config.observableSubscriptionRetries,
+                                      this.context.config.observableSubscriptionRetryDelay);
   }
 }
