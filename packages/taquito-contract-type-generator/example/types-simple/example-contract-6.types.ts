@@ -1,5 +1,5 @@
 
-import BigNumber from 'bigNumber.js';
+import BigNumber from 'bignumber.js';
 import { MichelsonMap } from '@taquito/taquito';
 type address = string;
 type BigMap<K,T> = MichelsonMap<K,T>;

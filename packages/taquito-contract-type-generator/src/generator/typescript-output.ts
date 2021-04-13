@@ -50,7 +50,7 @@ ${tabs(indent)}`;
             }
 
             const simpleBaseType = t.typescriptType === `number` ? `string | BigNumber | number` : t.typescriptType;
-            const typeAlias: TypeAlias = { aliasType: prim, simpleTypeDefinition: `type ${prim} = ${simpleBaseType};`, simpleTypeImports: [{ name: 'BigNumber', isDefault: true, from: 'bigNumber.js' }] };
+            const typeAlias: TypeAlias = { aliasType: prim, simpleTypeDefinition: `type ${prim} = ${simpleBaseType};`, simpleTypeImports: [{ name: 'BigNumber', isDefault: true, from: 'bignumber.js' }] };
             addTypeAlias(typeAlias);
 
             return typeAlias.aliasType;

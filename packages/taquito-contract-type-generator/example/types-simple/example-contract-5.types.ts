@@ -1,5 +1,5 @@
 
-import BigNumber from 'bigNumber.js';
+import BigNumber from 'bignumber.js';
 type address = string;
 type mutez = string | BigNumber | number;
 type nat = string | BigNumber | number;
