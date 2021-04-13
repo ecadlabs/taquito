@@ -3,13 +3,15 @@ import { CONFIGS } from "./config";
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
+  const test = require('jest-retries');
+
   describe(`Test invalid data for origination using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    it('fails because non-ascii in init data', async (done) => {
+    test('fails because there is non-ascii in the init data', 2, async (done: () => void) => {
       expect.assertions(1);
       try {
         await Tezos.contract.originate({
