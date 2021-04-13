@@ -187,11 +187,11 @@ ${storageCode}
 
 ${methodsCode}
 
-export type ${contractTypeName} = { methods: Methods, storage: Storage, code: { __type: '${codeName}', protocol: string, code: unknown } };
+export type ${contractTypeName} = { methods: Methods, storage: Storage, code: { __type: '${codeName}', protocol: string, code: object[] } };
 `;
 
     const contractCodeFileContent = `
-export const ${codeName}: { __type: '${codeName}', protocol: string, code: unknown } = {
+export const ${codeName}: { __type: '${codeName}', protocol: string, code: object[] } = {
     __type: '${codeName}',
     protocol: '${protocol.key}',
     code: JSON.parse(\`${JSON.stringify(parsedContract)}\`)
