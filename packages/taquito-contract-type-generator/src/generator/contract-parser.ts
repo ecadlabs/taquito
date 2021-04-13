@@ -106,7 +106,7 @@ const visitContractParameterEndpoint = (node: MMethod): TypedMethod[] => {
                 name: name.substr(1),
                 args: [
                     ...(node.prim !== `pair` && !node.args ? [{ type: visitType(node) }] : []),
-                    ...(node.args ?? []).map(x => visitVar(x, { ignoreName: true })).reduce(reduceFlatMap, []),
+                    ...(node.args ?? []).map(x => visitVar(x)).reduce(reduceFlatMap, []),
                 ],
             }];
         }
@@ -120,7 +120,7 @@ const visitContractParameterEndpoint = (node: MMethod): TypedMethod[] => {
 
 
 type MVarArgs = M.MichelsonType;
-const visitVar = (node: MVarArgs, options?: { ignoreName?: boolean, treatPairAsObject?: boolean }): TypedVar[] => {
+const visitVar = (node: MVarArgs, options?: { treatPairAsObject: boolean }): TypedVar[] => {
     // console.log('visitMethodArgs', { node });
     // const debug_source = toDebugSource(node);
 
@@ -130,23 +130,27 @@ const visitVar = (node: MVarArgs, options?: { ignoreName?: boolean, treatPairAsO
     //     }];
     // }
 
-    const name = `annots` in node && node.annots?.length === 1 ? node.annots[0].substr(1) : undefined;
-    if (name && !options?.ignoreName) {
-        return [{
-            name,
-            type: visitType(node),
-        }];
+    if (`annots` in node && node.annots?.length === 1) {
+        // A named arg 
+        const name = node.annots[0];
+        if (name.startsWith(`%`)) {
+            // console.log('visitMethodArgs arg', { name, node });
+
+            return [{
+                name: name.substr(1),
+                type: visitType(node),
+            }];
+        }
     }
 
     if (`prim` in node) {
         if (node.prim === `pair` && !options?.treatPairAsObject) {
-            return node.args.map(x => visitVar(x as MMethod, { ignoreName: false })).reduce(reduceFlatMap, []);
+            return node.args.map(x => visitVar(x as MMethod)).reduce(reduceFlatMap, []);
         }
     }
 
     // Assume type?
     return [{
-        name,
         type: visitType(node),
     }];
     // throw new GenerateApiError(`Unknown visitVar node: ${JSON.stringify(node, null, 2)} `, { node });
@@ -169,7 +173,7 @@ const visitType = (node: MType): TypedType => {
 
     // Union
     if (node.prim === `or`) {
-        const union = node.args.map(x => visitVar(x, { ignoreName: true, treatPairAsObject: true })).reduce(reduceFlatMap, []).map(x => x.type);
+        const union = node.args.map(x => visitVar(x, { treatPairAsObject: true })).reduce(reduceFlatMap, []).map(x => x.type);
 
         // Flatten
         const rightSide = union[1];
@@ -190,11 +194,10 @@ const visitType = (node: MType): TypedType => {
 
     // Intersect
     if (node.prim === `pair`) {
-        const fields = node.args.map(x => visitVar(x, { ignoreName: true })).reduce(reduceFlatMap, []);
+        const fields = node.args.map(x => visitVar(x)).reduce(reduceFlatMap, []);
         if (fields.some(x => !x)) {
             throw new GenerateApiError(`pair: Some fields are null`, { node, args: node.args, fields });
         }
-
         return {
             kind: `object`,
             raw: node,
