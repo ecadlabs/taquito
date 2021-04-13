@@ -2,7 +2,7 @@
   "name": "@taquito/http-utils",
   "version": "8.1.0",
   "description": "",
-  "keywords": [],
+  "keywords": ["tezos"],
   "main": "dist/taquito-http-utils.umd.js",
   "module": "dist/taquito-http-utils.es5.js",
   "typings": "dist/types/taquito-http-utils.d.ts",
