@@ -82,22 +82,21 @@ const visitContractParameterEndpoint = (node: MMethod): TypedMethod[] => {
 
     // console.log('visitContractParameterEndpoint', { node });
 
+    // Sub endpoints (i.e. admin endpoints that are imported)
+    if (node.prim === `or`) {
+        return node.args.map(x => visitContractParameterEndpoint(x as MMethod)).reduce(reduceFlatMap, []);
+    }
+
+    // Sub endpoints as a list with a single or (i.e. admin endpoints that are imported)
+    if (node.prim === `list` && node.args.length as number === 1 && (node.args[0] as MMethod)?.prim === `or`) {
+        return node.args.map(x => visitContractParameterEndpoint(x as MMethod)).reduce(reduceFlatMap, []);
+    }
+
     const nameRaw = node.annots?.[0];
     const name = nameRaw?.startsWith('%') ? nameRaw.substr(1) : null;
 
     if (!name) {
-
-        // Sub endpoints (i.e. admin endpoints that are imported)
-        if (node.prim === `or`) {
-            return node.args.map(x => visitContractParameterEndpoint(x as MMethod)).reduce(reduceFlatMap, []);
-        }
-
-        // Sub endpoints as a list (i.e. admin endpoints that are imported)
-        if (node.prim === `list` && (node?.args?.[0] as MMethod)?.prim === `or`) {
-            return node.args.map(x => visitContractParameterEndpoint(x as MMethod)).reduce(reduceFlatMap, []);
-        }
-
-        console.warn(`Unknown method: ${node.prim as string}`, { node });
+        console.warn(`Unknown method: ${node.prim as string}`, { node, args: node.args });
         return [];
     }
 

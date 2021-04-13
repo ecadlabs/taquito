@@ -1,5 +1,5 @@
 
-import { address, mutez, nat, timestamp } from '@taquito/contract-type-generator';
+import { address, MMap, mutez, nat, timestamp } from '@taquito/contract-type-generator';
 
 type Storage = {
     transfers: (
@@ -62,14 +62,16 @@ type Methods = {
         start_time: timestamp,
         end_time: timestamp,
     ) => Promise<void>;
-    resolve: (param: (
+    propose: (
+        frozen_token: nat,
+        proposal_metadata: MMap<string, Array<(
             {
                 amount: mutez;
                 recipient: address;
             }
             | {
-                fa2: address;
-                1: Array<{
+                contract_address: address;
+                transfer_list: Array<{
                     from_: address;
                     txs: Array<{
                         to_: address;
@@ -78,7 +80,8 @@ type Methods = {
                     }>;
                 }>;
             }
-        )) => Promise<void>;
+        )>>,
+    ) => Promise<void>;
 };
 
 export type ExampleContract5ContractType = { methods: Methods, storage: Storage, code: { __type: 'ExampleContract5Code', protocol: string, code: unknown } };
