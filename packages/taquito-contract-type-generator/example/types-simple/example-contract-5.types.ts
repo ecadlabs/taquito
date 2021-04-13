@@ -1,7 +1,8 @@
 
+import BigNumber from 'bigNumber.js';
 type address = string;
-type mutez = string;
-type nat = string;
+type mutez = string | BigNumber | number;
+type nat = string | BigNumber | number;
 type timestamp = string;
 
 type Storage = {

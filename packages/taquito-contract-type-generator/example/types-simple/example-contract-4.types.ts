@@ -1,9 +1,10 @@
 
+import BigNumber from 'bigNumber.js';
 import { MichelsonMap } from '@taquito/taquito';
 type address = string;
 type BigMap<K,T> = MichelsonMap<K,T>;
-type int = string;
-type nat = string;
+type int = string | BigNumber | number;
+type nat = string | BigNumber | number;
 type timestamp = string;
 
 type Storage = {

@@ -19,7 +19,7 @@ export type TypeAliasData = {
 };
 
 export const toTypescriptCode = (storage: TypedStorage, methods: TypedMethod[], contractName: string, parsedContract: unknown, protocol: { name: string, key: string }, typeAliasData: TypeAliasData): TypescriptCodeOutput => {
-    type TypeAlias = { aliasType: string, simpleTypeDefinition: string, simpleTypeImports?: { name: string, from: string }[] };
+    type TypeAlias = { aliasType: string, simpleTypeDefinition: string, simpleTypeImports?: { name: string, isDefault?: boolean, from: string }[] };
     const usedStrictTypes = [] as TypeAlias[];
     const addTypeAlias = (strictType: TypeAlias) => {
         if (!usedStrictTypes.some(x => x.aliasType === strictType.aliasType)) {
@@ -49,8 +49,8 @@ ${tabs(indent)}`;
                 return `${t.typescriptType}`;
             }
 
-            const simpleBaseType = t.typescriptType === `number` ? `string` : t.typescriptType;
-            const typeAlias: TypeAlias = { aliasType: prim, simpleTypeDefinition: `type ${prim} = ${simpleBaseType};` };
+            const simpleBaseType = t.typescriptType === `number` ? `string | BigNumber | number` : t.typescriptType;
+            const typeAlias: TypeAlias = { aliasType: prim, simpleTypeDefinition: `type ${prim} = ${simpleBaseType};`, simpleTypeImports: [{ name: 'BigNumber', isDefault: true, from: 'bigNumber.js' }] };
             addTypeAlias(typeAlias);
 
             return typeAlias.aliasType;
@@ -140,15 +140,24 @@ ${tabs(indent)}`;
     const storageCode = storageToCode(0);
 
     // Simple type aliases
-    const simpleTypeMappingImportsAll = new Map(usedStrictTypes.map(x => x.simpleTypeImports ?? []).reduce(reduceFlatMap, []).map(x => [`${x?.from}:${x?.name}`, x]));
+    const simpleTypeMappingImportsAll = new Map(usedStrictTypes.map(x => x.simpleTypeImports ?? []).reduce(reduceFlatMap, []).map(x => [`${x?.from}:${x?.name}:${x?.isDefault}`, x]));
     const simpleTypeMappingImportsFrom = [...simpleTypeMappingImportsAll.values()].reduce((out, x) => {
-        const names = out[x.from] ?? [];
-        names.push(x.name);
-        out[x.from] = names.sort((a, b) => a.localeCompare(b));
+        const entry = out[x.from] ?? (out[x.from] = { names: [] });
+        if (x.isDefault) {
+            entry.default = x.name;
+        } else {
+            entry.names.push(x.name);
+        }
+        entry.names.sort((a, b) => a.localeCompare(b));
         return out;
-    }, {} as { [from: string]: string[] });
+    }, {} as { [from: string]: { names: string[], default?: string } });
+
     const simpleTypeMappingImportsText = Object.keys(simpleTypeMappingImportsFrom)
-        .map(k => `import { ${simpleTypeMappingImportsFrom[k].join(', ')} } from '${k}';\n`)
+        .map(k => {
+            const entry = simpleTypeMappingImportsFrom[k];
+            const items = [entry.default, entry.names.length ? `{ ${entry.names.join(', ')} }` : ''].filter(x => x);
+            return `import ${items.join(', ')} from '${k}';\n`;
+        })
         .join('');
 
     const simpleTypeMapping = usedStrictTypes
