@@ -1,5 +1,5 @@
 
-import { address, BigMap, nat } from '@taquito/contract-type-generator';
+import { address, BigMap, bytes, MMap, nat } from '@taquito/contract-type-generator';
 
 type Storage = {
     admin?: {
@@ -9,10 +9,12 @@ type Storage = {
     };
     sales: BigMap<{
         sale_seller: address;
-        token_for_sale_address: address;
-        token_for_sale_token_id: nat;
-        money_token_address: address;
-        money_token_token_id: nat;
+        tokens: {
+            token_for_sale_address: address;
+            token_for_sale_token_id: nat;
+            money_token_address: address;
+            money_token_token_id: nat;
+        };
     }, nat>;
 };
 
@@ -22,24 +24,28 @@ type Methods = {
     set_admin: (param: address) => Promise<void>;
     buy: (
         sale_seller: address,
-        token_for_sale_address: address,
-        token_for_sale_token_id: nat,
-        money_token_address: address,
-        money_token_token_id: nat,
+        tokens: {
+            token_for_sale_address: address;
+            token_for_sale_token_id: nat;
+            money_token_address: address;
+            money_token_token_id: nat;
+        },
     ) => Promise<void>;
-    cancel: (
-        sale_seller: address,
-        token_for_sale_address: address,
-        token_for_sale_token_id: nat,
-        money_token_address: address,
-        money_token_token_id: nat,
-    ) => Promise<void>;
+    mint: (param: Array<{
+            token_metadata: {
+                token_id: nat;
+                token_info: MMap<string, bytes>;
+            };
+            owner: address;
+        }>) => Promise<void>;
     sell: (
         sale_price: nat,
-        token_for_sale_address: address,
-        token_for_sale_token_id: nat,
-        money_token_address: address,
-        money_token_token_id: nat,
+        sale_tokens_param: {
+            token_for_sale_address: address;
+            token_for_sale_token_id: nat;
+            money_token_address: address;
+            money_token_token_id: nat;
+        },
     ) => Promise<void>;
 };
 
