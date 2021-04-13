@@ -24,12 +24,10 @@ type Methods = {
     set_admin: (param: address) => Promise<void>;
     buy: (
         sale_seller: address,
-        tokens: {
-            token_for_sale_address: address;
-            token_for_sale_token_id: nat;
-            money_token_address: address;
-            money_token_token_id: nat;
-        },
+        token_for_sale_address: address,
+        token_for_sale_token_id: nat,
+        money_token_address: address,
+        money_token_token_id: nat,
     ) => Promise<void>;
     mint: (param: Array<{
             token_metadata: {
@@ -40,12 +38,10 @@ type Methods = {
         }>) => Promise<void>;
     sell: (
         sale_price: nat,
-        sale_tokens_param: {
-            token_for_sale_address: address;
-            token_for_sale_token_id: nat;
-            money_token_address: address;
-            money_token_token_id: nat;
-        },
+        token_for_sale_address: address,
+        token_for_sale_token_id: nat,
+        money_token_address: address,
+        money_token_token_id: nat,
     ) => Promise<void>;
 };
 

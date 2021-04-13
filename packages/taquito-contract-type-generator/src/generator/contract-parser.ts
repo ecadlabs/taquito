@@ -100,7 +100,7 @@ const visitContractParameterEndpoint = (node: MMethod): TypedMethod[] => {
         return [];
     }
 
-    const nodeType = visitType(node);
+    const nodeType = visitType(node, { ignorePairName: node.prim === 'pair' });
 
     // Method args are usually objects
     if (nodeType.kind === 'object') {
@@ -132,7 +132,7 @@ const visitVar = (node: MVarArgs): TypedVar[] => {
 };
 
 type MType = M.MichelsonType;
-const visitType = (node: MType): TypedType => {
+const visitType = (node: MType, options?: { ignorePairName?: boolean }): TypedType => {
     // console.log('visitType', { node });
     // const debug_source = toDebugSource(node);
 
@@ -184,7 +184,7 @@ const visitType = (node: MType): TypedType => {
         }
 
         // Flatten with unnamed child pairs
-        const fieldsFlat = fields.map(x => !x.name && x.type.kind === 'object' ? x.type.fields : [x]).reduce(reduceFlatMap, []);
+        const fieldsFlat = fields.map(x => (!x.name || options?.ignorePairName) && x.type.kind === 'object' ? x.type.fields : [x]).reduce(reduceFlatMap, []);
 
         return {
             kind: `object`,
