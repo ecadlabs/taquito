@@ -116,9 +116,9 @@ ${tabs(indent)}`;
             return `${args[0].name ?? `param`}: ${typeToCode(args[0].type, indent + 1)}`;
         }
 
-        return `params: {${toIndentedItems(indent, {},
-            args.filter(x => x.name || x.type.kind !== `unit`).map((a, i) => varToCode(a, i, indent + 1) + `;`),
-        )}}`;
+        return `${toIndentedItems(indent, {},
+            args.filter(x => x.name || x.type.kind !== `unit`).map((a, i) => varToCode(a, i, indent + 1) + `,`),
+        )}`;
     };
 
     const methodsToCode = (indent: number) => {

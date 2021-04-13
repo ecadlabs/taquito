@@ -44,27 +44,27 @@ type Methods = {
     confirm_admin: () => Promise<void>;
     pause: (param: boolean) => Promise<void>;
     set_admin: (param: address) => Promise<void>;
-    bid: (params: {
-        asset_id: nat;
-        bid_amount: nat;
-    }) => Promise<void>;
+    bid: (
+        asset_id: nat,
+        bid_amount: nat,
+    ) => Promise<void>;
     cancel: (param: nat) => Promise<void>;
-    configure: (params: {
-        opening_price: nat;
-        min_raise_percent: nat;
-        min_raise: nat;
-        round_time: nat;
-        extend_time: nat;
+    configure: (
+        opening_price: nat,
+        min_raise_percent: nat,
+        min_raise: nat,
+        round_time: nat,
+        extend_time: nat,
         asset: Array<{
             fa2_address: address;
             fa2_batch: Array<{
                 token_id: nat;
                 amount: nat;
             }>;
-        }>;
-        start_time: timestamp;
-        end_time: timestamp;
-    }) => Promise<void>;
+        }>,
+        start_time: timestamp,
+        end_time: timestamp,
+    ) => Promise<void>;
     resolve: (param: nat) => Promise<void>;
 };
 
