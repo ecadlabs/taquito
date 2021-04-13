@@ -69,8 +69,8 @@ ${tabs(indent)}`;
         if (t.kind === `map`) {
 
             const typeAlias: TypeAlias = t.map.isBigMap
-                ? { aliasType: `BigMap`, simpleTypeDefinition: 'type BigMap<K,T> = MichelsonMap<K,T>;', simpleTypeImports: [{ name: 'MichelsonMap', from: '@taquito/taquito' }] }
-                : { aliasType: `MMap`, simpleTypeDefinition: 'type MMap<K,T> = MichelsonMap<K,T>;', simpleTypeImports: [{ name: 'MichelsonMap', from: '@taquito/taquito' }] };
+                ? { aliasType: `BigMap`, simpleTypeDefinition: 'type BigMap<K, T> = MichelsonMap<K, T>;', simpleTypeImports: [{ name: 'MichelsonMap', from: '@taquito/taquito' }] }
+                : { aliasType: `MMap`, simpleTypeDefinition: 'type MMap<K, T> = MichelsonMap<K, T>;', simpleTypeImports: [{ name: 'MichelsonMap', from: '@taquito/taquito' }] };
             addTypeAlias(typeAlias);
 
             return `${typeAlias.aliasType}<${typeToCode(t.map.key, indent)}, ${typeToCode(t.map.value, indent)}>`;
