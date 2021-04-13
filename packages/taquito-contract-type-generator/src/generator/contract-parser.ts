@@ -32,7 +32,7 @@ export type TypedType = {
         } | {
             kind: 'value';
             value: string;
-            typescriptType: 'string' | 'boolean' | 'number';
+            typescriptType: 'string' | 'boolean' | 'number' | 'Date';
         } | {
             kind: 'union';
             union: TypedType[];
@@ -279,6 +279,18 @@ const visitType = (node: MType): TypedType => {
         };
     }
 
+    // Date
+    if (node.prim === `timestamp`
+
+    ) {
+        return {
+            kind: `value`,
+            raw: node,
+            value: node.prim,
+            typescriptType: `Date`,
+        };
+    }
+
     // strings
     if (node.prim === `address`
         || node.prim === `key`
@@ -293,8 +305,6 @@ const visitType = (node: MType): TypedType => {
         || node.prim === `sapling_state`
         || node.prim === `sapling_transaction`
         || node.prim === `contract`
-        || node.prim === `timestamp`
-
     ) {
         return {
             kind: `value`,

@@ -12,7 +12,7 @@ export type key_hash = string & { __type: 'key_hash' };
 export type signature = string & { __type: 'signature' };
 export type ticket = string & { __type: 'ticket' };
 
-export type timestamp = string & { __type: 'timestamp' };
+export type timestamp = Date & { __type: 'timestamp' };
 
 export type int = BigNumber & { __type: 'int' };
 export type nat = BigNumber & { __type: 'nat' };
@@ -61,7 +61,7 @@ export const tas = {
     address: createStringTypeTas<address>(),
     bytes: createStringTypeTas<bytes>(),
     contract: createStringTypeTas<contract>(),
-    timestamp: (value: string | Date): timestamp => new Date(value).toISOString() as timestamp,
+    timestamp: (value: string | Date): timestamp => new Date(value) as timestamp,
 
     int: createBigNumberTypeTas<int>(),
     nat: createBigNumberTypeTas<nat>(),

@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 type address = string;
 type mutez = string | BigNumber | number;
 type nat = string | BigNumber | number;
-type timestamp = string;
+type timestamp = Date | string;
 
 type Storage = {
     transfers: (

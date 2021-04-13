@@ -5,7 +5,7 @@ type address = string;
 type BigMap<K,T> = MichelsonMap<K,T>;
 type int = string | BigNumber | number;
 type nat = string | BigNumber | number;
-type timestamp = string;
+type timestamp = Date | string;
 
 type Storage = {
     pauseable_admin?: {

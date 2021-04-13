@@ -49,8 +49,16 @@ ${tabs(indent)}`;
                 return `${t.typescriptType}`;
             }
 
-            const simpleBaseType = t.typescriptType === `number` ? `string | BigNumber | number` : t.typescriptType;
-            const typeAlias: TypeAlias = { aliasType: prim, simpleTypeDefinition: `type ${prim} = ${simpleBaseType};`, simpleTypeImports: [{ name: 'BigNumber', isDefault: true, from: 'bignumber.js' }] };
+            if (t.typescriptType === 'number') {
+                const simpleBaseType = `string | BigNumber | number`;
+                const typeAlias: TypeAlias = { aliasType: prim, simpleTypeDefinition: `type ${prim} = ${simpleBaseType};`, simpleTypeImports: [{ name: 'BigNumber', isDefault: true, from: 'bignumber.js' }] };
+                addTypeAlias(typeAlias);
+
+                return typeAlias.aliasType;
+            }
+
+            const simpleBaseType = t.typescriptType === 'Date' ? 'Date | string' : t.typescriptType;
+            const typeAlias: TypeAlias = { aliasType: prim, simpleTypeDefinition: `type ${prim} = ${simpleBaseType};` };
             addTypeAlias(typeAlias);
 
             return typeAlias.aliasType;
