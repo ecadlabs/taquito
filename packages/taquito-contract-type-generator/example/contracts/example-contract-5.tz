@@ -1,16 +1,12 @@
 { parameter
     (or (or (or (or %admin (or (unit %confirm_admin) (bool %pause)) (pair %set_admin
                                                                         (nat %bid)
-                                                                        (or %transfers (pair (mutez %amount) (address %recipient)) 
-                                                                                        (pair (address %fa2) (list (pair (address %from_) 
-                                                                                                                        (list %txs (pair (address %to_) 
-                                                                                                                                        (pair (nat %token_id) (nat %amount))
-                                                                                                                                    )
-                                                                                                                        )
-                                                                                                                    )
-                                                                                                            )
-                                                                                        )
-                                                                        )
+                       (list %transfers (or (pair %xtz_transfer_type (mutez %amount) (address %recipient))
+                                 (pair %token_transfer_type
+                                    (address %contract_address)
+                                    (list %transfer_list
+                                       (pair (address %from_)
+                                             (list %txs (pair (address %to_) (pair (nat %token_id) (nat %amount)))))))))
                                                                     ))
                 (nat %bid))
             (or (nat %cancel)
@@ -36,16 +32,12 @@
             )
             ) ;
 
-  storage (or %transfers (pair (mutez %amount) (address %recipient)) 
-                         (pair (address %fa2) (list (pair (address %from_) 
-                                                          (list %txs (pair (address %to_) 
-                                                                           (pair (nat %token_id) (nat %amount))
-                                                                     )
-                                                          )
-                                                    )
-                                              )
-                         )
-          );
+  storage                        (list %transfers (or (pair %xtz_transfer_type (mutez %amount) (address %recipient))
+                                 (pair %token_transfer_type
+                                    (address %contract_address)
+                                    (list %transfer_list
+                                       (pair (address %from_)
+                                             (list %txs (pair (address %to_) (pair (nat %token_id) (nat %amount)))))))));
 
 code { LAMBDA
            (option (pair (pair address bool) (option address)))

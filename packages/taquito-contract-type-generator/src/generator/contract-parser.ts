@@ -35,7 +35,7 @@ export type TypedType = {
             typescriptType: 'string' | 'boolean' | 'number' | 'Date';
         } | {
             kind: 'union';
-            union: TypedType[];
+            union: TypedVar[];
         } | {
             kind: 'object';
             fields: TypedVar[];
@@ -151,7 +151,8 @@ const visitType = (node: MType, options?: { ignorePairName?: boolean }): TypedTy
         const unionVars = node.args.map(x => visitVar(x)).reduce(reduceFlatMap, []).map(x => x);
 
         // Flatten with child unions
-        const union = unionVars.map(x => x.type.kind === 'union' ? x.type.union : [x.type]).reduce(reduceFlatMap, []);
+        const union = unionVars.map(x => !x.name && x.type.kind === 'union' ? x.type.union : [x]).reduce(reduceFlatMap, []);
+        // const union = unionVars.map(x=>x.type);
 
         // const union = unionVars.map(x => x.type);
 

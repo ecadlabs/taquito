@@ -82,16 +82,16 @@ ${tabs(indent)}`;
         }
         if (t.kind === `union`) {
 
-            const getUnionItem = (a: TypedType) => {
-                const itemCode = `${typeToCode(a, indent)}`;
+            const getUnionItem = (a: TypedVar, i: number) => {
+                const itemCode = `${varToCode(a, i, indent + 1)}`;
 
                 // Keep on single line if already on single line
                 if (!itemCode.includes(`\n`)) {
-                    return itemCode;
+                    return `{ ${itemCode} }`;
                 }
 
                 // Indent if multi-line (and remake with extra indent)
-                return typeToCode(a, indent + 1);
+                return `{${toIndentedItems(indent + 1, {}, [`${varToCode(a, i, indent + 2)}`])}}`;
             };
 
             return `(${toIndentedItems(indent, { beforeItem: `| ` },
