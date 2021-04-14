@@ -28,6 +28,8 @@ author: Roxane Letourneau
     - Mainnet: https://api.tez.ie/rpc/mainnet
     - Edonet: https://api.tez.ie/rpc/edonet (edo2net / Chainid is `NetXSgo1ZT2DRUG`)
     - Florencenet: https://api.tez.ie/rpc/florencenet
+- Teznode from LetzBake!:
+    - Mainnet: https://teznode.letzbake.com
 
 ## How to run a node
 

@@ -646,3 +646,22 @@ export function isMichelsonType(ex: Expr): ex is MichelsonType {
    }
 }
 
+export function isInstruction(p: Prim): p is MichelsonInstruction {
+   return Object.prototype.hasOwnProperty.call(instructionIDs, p.prim);
+}
+
+export function assertDataListIfAny(d: MichelsonData): d is MichelsonData[] {
+   if (!Array.isArray(d)) {
+      return false;
+   }
+   for (const v of d) {
+      if ("prim" in v) {
+         if (isInstruction(v)) {
+            throw new MichelsonError(d, `Instruction outside of a lambda: ${JSON.stringify(d)}`);
+         } else if (v.prim === "Elt") {
+            throw new MichelsonError(d, `Elt item outside of a map literal: ${JSON.stringify(d)}`);
+         }
+      }
+   }
+   return true;
+}

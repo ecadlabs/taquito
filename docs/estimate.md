@@ -7,19 +7,19 @@ Taquito's estimate method can be used to estimate fees, gas, and storage associa
 
 ## Estimate Values
 
-[`burnFeeMutez`](https://tezostaquito.io/typedoc/classes/_taquito_taquito.estimate.html#burnfeemutez): The number of Mutez that will be burned for the storage of the operation. Returns a number.
+[`burnFeeMutez`]: The number of Mutez that will be burned for the storage of the operation. Returns a number.
 
-[`gasLimit`](https://tezostaquito.io/typedoc/classes/_taquito_taquito.estimate.html#gaslimit): The limit on the amount of gas a given operation can consume. Returns a number.
+[`gasLimit`]: The limit on the amount of gas a given operation can consume. Returns a number.
 
-[`minimalFeeMutez`](https://tezostaquito.io/typedoc/classes/_taquito_taquito.estimate.html#minimalfeemutez): Minimum fees for the operation according to baker defaults. Returns a number.
+[`minimalFeeMutez`]: Minimum fees for the operation according to baker defaults. Returns a number.
 
-[`storageLimit`](https://tezostaquito.io/typedoc/classes/_taquito_taquito.estimate.html#storagelimit): The limit on the amount of storage an operation can use. Returns a number.
+[`storageLimit`]: The limit on the amount of storage an operation can use. Returns a number.
 
-[`suggestedFeeMutez:`](https://tezostaquito.io/typedoc/classes/_taquito_taquito.estimate.html#suggestedfeemutez) The suggested fee for the operation includes minimal fees and a small buffer. Returns a number.
+[`suggestedFeeMutez:`]: The suggested fee for the operation includes minimal fees and a small buffer. Returns a number.
 
-[`totalCost`](https://tezostaquito.io/typedoc/classes/_taquito_taquito.estimate.html#totalcost): The sum of `minimalFeeMutez` + `burnFeeMutez`. Returns a number.
+[`totalCost`]: The sum of `minimalFeeMutez` + `burnFeeMutez`. Returns a number.
 
-[`usingBaseFeeMutez`](https://tezostaquito.io/typedoc/classes/_taquito_taquito.estimate.html#usingbasefeemutez): Fees according to your specified base fee will ensure that at least minimum fees are used.
+[`usingBaseFeeMutez`]: Fees according to your specified base fee will ensure that at least minimum fees are used.
 
 ### Estimate a transfer operation
 

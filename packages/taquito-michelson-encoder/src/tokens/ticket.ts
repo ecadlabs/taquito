@@ -1,5 +1,4 @@
 import { IntToken } from './comparable/int';
-import { NatToken } from './comparable/nat';
 import { ContractToken } from './contract';
 import { Token, TokenFactory, Semantic } from './token';
 
@@ -8,14 +7,8 @@ export class EncodeTicketError implements Error {
   message = 'Tickets cannot be sent to the blockchain; they are created on-chain';
 }
 
-const readableTicketType = {
-  "prim":"Pair",
-  "args":[
-    {"prim":"contract"},
-    {"prim":"nat"},
-    {"prim":"int"}
-  ]
-}
+const ticketerType = { "prim": "contract" };
+const amountType = { "prim": "int" };
 
 export class TicketToken extends Token {
   static prim = 'ticket';
@@ -36,21 +29,25 @@ export class TicketToken extends Token {
     throw new EncodeTicketError()  
   }
 
-  public Execute(val: any, _semantics?: Semantic) {
-    const ticketer = this.createToken(readableTicketType.args[0], this.idx);
-    const value = this.createToken(readableTicketType.args[1], this.idx);
-    const amount = this.createToken(readableTicketType.args[2], this.idx);
+  public Execute(val: any, semantics?: Semantic) {
+    if (semantics && semantics[TicketToken.prim]) {
+      return semantics[TicketToken.prim](val, this.val);
+    }
+    const ticketer = this.createToken(ticketerType, this.idx);
+    const value = this.createToken(this.val.args[0], this.idx);
+    const amount = this.createToken(amountType, this.idx);
     return {
-      ticketer: ticketer.Execute(val.args[0]),
-      value: value.Execute(val.args[1]),
-      amount: amount.Execute(val.args[2])
+      ticketer: ticketer.Execute(val.args[0], semantics),
+      value: value.Execute(val.args[1], semantics),
+      amount: amount.Execute(val.args[2], semantics)
     }
   }
 
   public ExtractSchema() {
+    const valueSchema = this.createToken(this.val.args[0], this.idx);
     return {
       ticketer: ContractToken.prim,
-      value: NatToken.prim,
+      value: valueSchema.ExtractSchema(),
       amount: IntToken.prim
     }
   }

@@ -3,7 +3,115 @@ title: Versions
 author: Jev Bjorsell
 ---
 
-## 8.0.6-beta.0 Updated beacon-sdk, bug fixed related to contract callback entry point
+
+# Taquito v8.1.0-beta
+
+## Summary
+
+### New features
+
+- Pack/unpack data locally. Now used for fetching big-maps too.
+- New API to fetch multiple bigmap values at once 🚀🚀
+
+### Enhancements
+
+- Expand support for Tickets beyond nat.
+- New edo RPC endpoints in Taquito.
+- Compatibility support for Florencenet (009-PsFLoren)
+
+### Other
+
+- Taquito npm preview registry for current Taquito builds all the time
+- Website preview builds from PR & Website now hosted on Netlify
+
+### Bug fixes
+
+- Nat/Int encoding of large numbers.
+- Graceful error handling for getDelegate method.
+- Save operation hash before executing on the network - better debugging 🚀🚀
+- Fix encoding of lambda value in the michelson-encoder
+
+### Testing improvements
+
+- Better coverage for getBlock endpoint.
+
+### Documentation updates
+
+- [Tickets](https://tezostaquito.io/docs/tickets) 
+- [Local pack/unpack, including bigmaps.](https://tezostaquito.io/docs/maps_bigmaps#local-packing-for-big-maps)
+- Rename Thanos to Temple wallet. 
+- Build time pre-requisites for Taquito.
+- Documentation website examples now uses the edonet testnet
+
+## Pack and unpack data locally
+
+Before v8.1, Taquito provided an API to pack data using Tezos RPC. This release introduces local packing and unpacking data, allowing for security-conscious off-line operations and faster dapps because of fewer RPC requests. allows the getBigMapKeyByID to use the new `michel-codec` packData implementation
+
+Local pack means that fetching big map values is now 50% faster! Big map keys must be encoded using the PACK method, so Taquito needed to use the `rpc.packData()` method. As of v8.1 Taquito, users can opt to pack big map keys locally, eliminating an RPC round trip.
+
+This feature is _opt-in_, meaning that the Taquito user must enable it to benefit from faster big map fetching. The RPC key backing method is still the default. See [Local packing for big maps](https://tezostaquito.io/docs/maps_bigmaps#local-packing-for-big-maps)
+
+## npm preview registry - Delivering continuous delivery
+
+Developers can now test and evaluate new features and bug fixes as soon as possible without having to clone and locally link Taquito. Preview builds are published to our npm preview registry from all pull requests (except PR's from forks).
+
+IMPORTANT NOTE: Preview builds are not official releases. They are helpful for testing and evaluating new features in Taquito. Preview builds may contain incomplete features or features that have not been fully tested. 
+
+## Fetch multiple bigmaps at once.
+
+Taquito now provides a new API `getMultipleValues` that fetches multiple keys in a single call.  Taquito ensures that all fetched keys are fetched from the same block level. Future enhancements for this feature may include Taquito directly fetching multiple big maps from an RPC call as and when such an RPC is added to the Tezos nodes. See docs [here](https://tezostaquito.io/docs/maps_bigmaps#fetch-multiple-big-map-values-at-once)
+
+## Expanded property value support for tickets and better `nat` type support.
+
+The Michelson encoder package initially supported tickets having a value property of type nat, but now it has been updated to support every comparable token. Additionally, when invoking a contract with nat as a parameter, encoding a numeral with more than 21 digits has been fixed.
+
+## Save operation hash before executing on the network - better debugging.
+
+Developers now can calculate the hash of an operation before injection using a newly introduced utility from `utils` package. With this utility, it is possible to obtain the operation hash before sending it to the node.
+
+## Forward compatibility for Florence
+
+v8.1 supports Florence net. All the Taquito integration tests are run against the Florence testnet.
+
+## Documentation Additions and Improvments
+
+Documentation on the Taquito website continues to grow and be refined. Developers can now read docs explaining what tickets are, their use cases, and example code reading tickets with various data values. 
+
+Live code examples on the website now use Edonet. 
+
+CodeBlock and Playground folders, along with contracts that work with live code, now rely on the Edonet testnet.
+
+For enabling local pack (MichelCodecPacker()) for big map values, there are now instructions and documentation about the benefits of doing so. 
+
+Developers can now opt in to use Taquito's local pack implementation when fetching Big Map values. This feature makes fetching Big Map values 50% faster. Big Map keys need to be serialized or PACK'ed, and Taquito relied on the Tezos PACK RPC to PACK the bigmap keys. 
+
+By relying on the local pack implementation, we eliminate one RPC roundtrip when fetching Big Map Values. To enable this feature, developers must call the `tezos. setPackerProvider(new MichelCodecPacker());` on the program's TezosToolkit instance. 
+
+## Website now uses Netlify 
+
+Netlify provides the deployment/hosting of the Taquito website. The primary motivation is so that we get full preview deployments of the website from PRs. 
+
+## More RPC endpoints added to Taquito
+
+New RPC endpoints are added to the Taquito RPC package providing better edonet support while marking endpoints that have been deprecated.
+
+## Graceful error handling for getDelegate method and testing improvements.
+
+The Tezos RPC returns an HTTP 404 when requesting a delegate for an account with no Delegate. Taquito now returns null without throwing an exception for this case.
+
+Test coverage for the getBlock endpoint has been improved
+
+## What's coming next for Taquito?
+
+We will soon be working on integrating Florence, the next Tezos protocol update proposal. We plan to deliver a final version of Taquito v9 much earlier, giving teams a longer runway to upgrade their projects before protocol transition.
+
+Developer Experience is our high-priority item, and we have improvements in our backlog that we plan to start work. We are improving the `michelson-encoder implementation to open the door for Type generation from contracts and to provide easier discoverability of what parameters endpoints and initial storage take. Stay tuned!
+
+We have a good practice of Continuous Delivery in Taquito, but we plan to take this to the next level. Stay tuned! 
+
+If you have feature or issue requests, please create an issue on http://github.com/ecadlabs/taquito/issues or join us on the Taquito community support channel on Telegram https://t.me/tezostaquito
+
+# 8.0.6-beta.0 Updated beacon-sdk, bug fixed related to contract callback entry point
 
 * Updated beacon-sdk to version 2.2.2 #677
 * char2bytes and bytes2char functions (initially in the taquito-tzip16 package) have been added to the taquito-utils package #589

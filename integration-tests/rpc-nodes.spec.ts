@@ -16,25 +16,23 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, setup, protocol }) => {
       let rpcList: Array<string> = [];
       let contractBigMapStorage: string;
 
-      if (protocol === Protocols.PsDELPH1) {
+      if (protocol === Protocols.PtEdo2Zk) {
         rpcList = [
-            'https://api.tez.ie/rpc/delphinet',
-            'https://delphinet.smartpy.io', 
-            'https://delphinet-tezos.giganode.io',
-            'https://rpczero.tzbeta.net/'
+            'https://api.tez.ie/rpc/edonet'
         ];
-        contractBigMapStorage = 'KT1GL4k5wRayrH3KEXkPcqSeWXnoiJqxk1ZA'
+
+        contractBigMapStorage = 'KT1H1Xc8NGmiZYxK7S4F2eixZyNNWBj1x8Ae'
       }
 
-      else if (protocol === Protocols.PsCARTHA) {
+      else if (protocol === Protocols.PsFLorena) {
         rpcList = [
-            'https://api.tez.ie/rpc/carthagenet',
-            'https://carthagenet.smartpy.io', 
-            'https://testnet-tezos.giganode.io',
-            'https://rpcalpha.tzbeta.net/',
-            'https://rpctest.tzbeta.net/'
+           'https://api.tez.ie/rpc/florencenet',
+           //'https://florencenet.smartpy.io', 
+           // 'https://florence-tezos.giganode.io',
+           // 'https://rpcalpha.tzbeta.net/',
+           // 'https://rpctest.tzbeta.net/'
         ];
-        contractBigMapStorage = 'KT1Szqn6iy6jpHf4NXcs6RNj36jqAyYUQwW7';
+        contractBigMapStorage = 'KT1GxaxWUHaFzaYkfqwPsj5x75UYgSXzawnD';
       }
 
 rpcList.forEach(async rpc => {

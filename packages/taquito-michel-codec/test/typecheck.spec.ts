@@ -110,6 +110,12 @@ describe('Typecheck', () => {
         assertDataValid(data, typedef);
     });
 
+    it('assertDataValid: address (bin)', () => {
+        const typedef: MichelsonType = { prim: "address" };
+        const data: MichelsonData = { bytes: "010c21fa1ba5104ea31fcd8b4741f7e84fec3ce9d300" };
+        assertDataValid(data, typedef);
+    });
+
     it('assertDataValid: mutez', () => {
         const typedef: MichelsonType = { prim: "mutez" };
         const data: MichelsonData = { int: "0" };

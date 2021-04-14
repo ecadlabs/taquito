@@ -12,13 +12,15 @@ import { Extension } from './extension/extension';
 import { Forger } from './forger/interface';
 import { RpcForger } from './forger/rpc-forger';
 import { format } from './format';
+import { Packer } from './packer/interface';
+import { RpcPacker } from './packer/rpc-packer';
 import { Signer } from './signer/interface';
 import { NoopSigner } from './signer/noop';
 import { SubscribeProvider } from './subscribe/interface';
 import { PollingSubscribeProvider } from './subscribe/polling-provider';
 import { TzProvider } from './tz/interface';
 import { LegacyWalletProvider, Wallet, WalletProvider } from './wallet';
-import { OperationFactory } from './wallet/opreation-factory';
+import { OperationFactory } from './wallet/operation-factory';
 
 export { MichelsonMap, UnitValue } from '@taquito/michelson-encoder';
 export * from './constants';
@@ -44,7 +46,10 @@ export * from './wallet';
 export { Extension } from './extension/extension';
 export * from './parser/interface';
 export * from './parser/michel-codec-parser';
-export * from './parser/noop-parser'
+export * from './parser/noop-parser';
+export * from './packer/interface';
+export * from './packer/michel-codec-packer';
+export * from './packer/rpc-packer';
 
 export interface SetProviderOptions {
   forger?: Forger;
@@ -54,6 +59,7 @@ export interface SetProviderOptions {
   signer?: Signer;
   protocol?: Protocols;
   config?: Config;
+  packer?: Packer;
 }
 
 /**
@@ -61,11 +67,11 @@ export interface SetProviderOptions {
  * 
  * @param _rpc The RPC server to use
  */
-export class TezosToolkit {
+export class TezosToolkit<TContract extends { methods: unknown, storage: unknown } = { methods: any; storage: any }> {
   private _stream!: SubscribeProvider;
   private _options: SetProviderOptions = {};
   private _rpcClient: RpcClient
-  private _wallet: Wallet;
+  private _wallet: Wallet<TContract>;
   private _context: Context;
   /**
    * @deprecated TezosToolkit.batch has been deprecated in favor of TezosToolkit.contract.batch
@@ -88,7 +94,7 @@ export class TezosToolkit {
     this.setProvider({ rpc: this._rpcClient });
     // tslint:disable-next-line: deprecation
     this.batch = this._context.batch.batch.bind(this._context.batch);
-  } 
+  }
 
   /**
    * @description Sets configuration on the Tezos Taquito instance. Allows user to choose which signer, rpc client, rpc url, forger and so forth
@@ -100,12 +106,13 @@ export class TezosToolkit {
    *
    */
 
-  setProvider({ rpc, stream, signer, protocol, config, forger, wallet }: SetProviderOptions) {
+  setProvider({ rpc, stream, signer, protocol, config, forger, wallet, packer }: SetProviderOptions) {
     this.setRpcProvider(rpc);
     this.setStreamProvider(stream);
     this.setSignerProvider(signer);
     this.setForgerProvider(forger);
     this.setWalletProvider(wallet);
+    this.setPackerProvider(packer);
 
     this._context.proto = protocol;
     this._context.config = config as Required<Config>;
@@ -142,10 +149,10 @@ export class TezosToolkit {
       this._rpcClient = new RpcClient(rpc);
     } else if (rpc instanceof RpcClient) {
       this._rpcClient = rpc;
-    } 
-/*     else if (this._options.rpc === undefined) {
-      this._rpcClient = new RpcClient();
-    } */
+    }
+    /*     else if (this._options.rpc === undefined) {
+          this._rpcClient = new RpcClient();
+        } */
     this._options.rpc = this._rpcClient;
     this._context.rpc = this._rpcClient;
   }
@@ -203,6 +210,20 @@ export class TezosToolkit {
   }
 
   /**
+   * @description Sets Packer provider on the Tezos Taquito instance
+   *
+   * @param options packer to use to interact with the Tezos network
+   *
+   * @example Tezos.setPackerProvider(new MichelCodecPacker())
+   *
+   */
+  setPackerProvider(packer?: SetProviderOptions['packer']){
+    const p = typeof packer === 'undefined' ? this.getFactory(RpcPacker)() : packer;
+    this._options.packer = p;
+    this._context.packer = p;
+  }
+
+  /**
    * @description Provide access to tezos account management
    */
   get tz(): TzProvider {
@@ -212,11 +233,11 @@ export class TezosToolkit {
   /**
    * @description Provide access to smart contract utilities
    */
-  get contract(): ContractProvider {
-    return this._context.contract;
+  get contract(): ContractProvider<TContract> {
+    return this._context.contract as unknown as ContractProvider<TContract>;
   }
 
-  get wallet(): Wallet {
+  get wallet(): Wallet<TContract> {
     return this._wallet;
   }
 

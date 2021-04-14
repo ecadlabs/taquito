@@ -1398,4 +1398,53 @@ describe('RpcClient test', () => {
       expect(rpcUrlCarthagenet).toEqual('https://api.tez.ie/rpc/carthagenet');
     });
   });
+
+  describe('getCurrentPeriod', () => {
+    it('query the right url and data', async done => {
+      const mockedResponse = {
+        "voting_period": {
+          "index": 87,
+          "kind": "proposal",
+          "start_position": 89088
+          },
+        "position": 902,
+        "remaining": 121
+      };
+      
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(mockedResponse));
+      const response = await client.getCurrentPeriod();
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/votes/current_period',
+      });
+      expect(response).toEqual(mockedResponse);
+
+      done();
+    });
+  });
+
+
+  describe('getSuccessorPeriod', () => {
+    it('query the right url and data', async done => {
+      const mockedResponse = {
+        "voting_period": {
+          "index": 87,
+          "kind": "proposal",
+          "start_position": 89088
+          },
+        "position": 902,
+        "remaining": 121
+      };
+      
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(mockedResponse));
+      const response = await client.getSuccessorPeriod();
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/votes/successor_period',
+      });
+      expect(response).toEqual(mockedResponse);
+
+      done();
+    });
+  });
 });

@@ -81,7 +81,7 @@ export interface StorageProvider {
    *
    * @deprecated Deprecated in favor of getBigMapKeyByID
    *
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-script
+   * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-context-contracts-contract-id-big-map-get
    */
   getBigMapKey<T>(contract: string, key: string, schema?: ContractSchema): Promise<T>;
 
@@ -92,13 +92,27 @@ export interface StorageProvider {
    * @param id Big Map ID
    * @param keyToEncode key to query (will be encoded properly according to the schema)
    * @param schema Big Map schema (can be determined using your contract type)
+   * @param block optional block level to fetch the value from
    *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-big-maps-big-map-id-script-expr
    */
-  getBigMapKeyByID<T>(id: string, keyToEncode: string, schema: Schema): Promise<T>;
+  getBigMapKeyByID<T>(id: string, keyToEncode: string, schema: Schema, block?: number): Promise<T>;
+
+  /**
+   *
+   * @description Fetch multiple values in a big map
+   *
+   * @param id Big Map ID
+   * @param keysToEncode Array of keys to query (will be encoded properly according to the schema)
+   * @param schema Big Map schema (can be determined using your contract type)
+   * @param block optional block level to fetch the values from
+   * @returns An object containing the keys queried in the big map and their value in a well-formatted JSON object format
+   *
+   */
+  getBigMapKeysByID<T>(id: string, keysToEncode: string[], schema: Schema, block?: number): Promise<{ [key: string]: T | undefined }>;
 }
 
-export interface ContractProvider extends StorageProvider {
+export interface ContractProvider<TContract extends { methods: unknown, storage: unknown } = { methods: any; storage: any }> extends StorageProvider {
   /**
    *
    * @description Originate a new contract according to the script in parameters. Will sign and inject an operation using the current context
@@ -107,7 +121,7 @@ export interface ContractProvider extends StorageProvider {
    *
    * @param OriginationOperation Originate operation parameter
    */
-  originate(contract: OriginateParams): Promise<OriginationOperation>;
+  originate(contract: OriginateParams): Promise<OriginationOperation<TContract>>;
 
   /**
    *
@@ -138,7 +152,7 @@ export interface ContractProvider extends StorageProvider {
    */
 
   transfer(params: TransferParams): Promise<TransactionOperation>;
-  at<T extends ContractAbstraction<ContractProvider>>(address: string, contractAbstractionComposer?: (abs: ContractAbstraction<ContractProvider>, context: Context) => T): Promise<T>;
+  at<T extends ContractAbstraction<ContractProvider<TContract>, TContract>>(address: string, contractAbstractionComposer?: (abs: ContractAbstraction<ContractProvider<TContract>, TContract>, context: Context) => T): Promise<T>;
 
   /**
    *
@@ -146,5 +160,5 @@ export interface ContractProvider extends StorageProvider {
    *
    * @param params List of operation to batch together
    */
-  batch(params?: ParamsWithKind[]): OperationBatch ;
+  batch(params?: ParamsWithKind[]): OperationBatch<TContract>;
 }

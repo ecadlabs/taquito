@@ -1,0 +1,5222 @@
+[
+  {
+    "data": {
+      "prim": "Unit"
+    },
+    "packed": "05030b"
+  },
+  {
+    "data": {
+      "int": "-64"
+    },
+    "packed": "0500c001"
+  },
+  {
+    "data": {
+      "int": "-63"
+    },
+    "packed": "05007f"
+  },
+  {
+    "data": {
+      "int": "0"
+    },
+    "packed": "050000"
+  },
+  {
+    "data": {
+      "int": "-2"
+    },
+    "packed": "050042"
+  },
+  {
+    "data": {
+      "int": "2"
+    },
+    "packed": "050002"
+  },
+  {
+    "data": {
+      "int": "63"
+    },
+    "packed": "05003f"
+  },
+  {
+    "data": {
+      "int": "64"
+    },
+    "packed": "05008001"
+  },
+  {
+    "data": {
+      "int": "65"
+    },
+    "packed": "05008101"
+  },
+  {
+    "data": {
+      "int": "-65"
+    },
+    "packed": "0500c101"
+  },
+  {
+    "data": {
+      "int": "127"
+    },
+    "packed": "0500bf01"
+  },
+  {
+    "data": {
+      "int": "128"
+    },
+    "packed": "05008002"
+  },
+  {
+    "data": {
+      "int": "129"
+    },
+    "packed": "05008102"
+  },
+  {
+    "data": {
+      "int": "-127"
+    },
+    "packed": "0500ff01"
+  },
+  {
+    "data": {
+      "int": "-1"
+    },
+    "packed": "050041"
+  },
+  {
+    "data": {
+      "int": "191"
+    },
+    "packed": "0500bf02"
+  },
+  {
+    "data": {
+      "int": "192"
+    },
+    "packed": "05008003"
+  },
+  {
+    "data": {
+      "int": "193"
+    },
+    "packed": "05008103"
+  },
+  {
+    "data": {
+      "int": "2028"
+    },
+    "packed": "0500ac1f"
+  },
+  {
+    "data": {
+      "int": "5000"
+    },
+    "packed": "0500884e"
+  },
+  {
+    "data": {
+      "int": "10000"
+    },
+    "packed": "0500909c01"
+  },
+  {
+    "data": {
+      "int": "20000"
+    },
+    "packed": "0500a0b802"
+  },
+  {
+    "data": {
+      "int": "-5000"
+    },
+    "packed": "0500c84e"
+  },
+  {
+    "data": {
+      "int": "-10000"
+    },
+    "packed": "0500d09c01"
+  },
+  {
+    "data": {
+      "int": "-20000"
+    },
+    "packed": "0500e0b802"
+  },
+  {
+    "data": {
+      "int": "1"
+    },
+    "packed": "050001"
+  },
+  {
+    "data": {
+      "int": "0"
+    },
+    "packed": "050000"
+  },
+  {
+    "data": {
+      "int": "1"
+    },
+    "packed": "050001"
+  },
+  {
+    "data": {
+      "int": "63"
+    },
+    "packed": "05003f"
+  },
+  {
+    "data": {
+      "int": "64"
+    },
+    "packed": "05008001"
+  },
+  {
+    "data": {
+      "int": "65"
+    },
+    "packed": "05008101"
+  },
+  {
+    "data": {
+      "int": "127"
+    },
+    "packed": "0500bf01"
+  },
+  {
+    "data": {
+      "int": "128"
+    },
+    "packed": "05008002"
+  },
+  {
+    "data": {
+      "int": "129"
+    },
+    "packed": "05008102"
+  },
+  {
+    "data": {
+      "int": "191"
+    },
+    "packed": "0500bf02"
+  },
+  {
+    "data": {
+      "int": "193"
+    },
+    "packed": "05008103"
+  },
+  {
+    "data": {
+      "int": "192"
+    },
+    "packed": "05008003"
+  },
+  {
+    "data": {
+      "string": "Hello World!"
+    },
+    "packed": "05010000000c48656c6c6f20576f726c6421"
+  },
+  {
+    "data": {
+      "string": "\n"
+    },
+    "packed": "0501000000010a"
+  },
+  {
+    "data": {
+      "string": "HODL: Hold On for Dear Life"
+    },
+    "packed": "05010000001b484f444c3a20486f6c64204f6e20666f722044656172204c696665"
+  },
+  {
+    "data": {
+      "bytes": "303030313233"
+    },
+    "packed": "050a00000006303030313233"
+  },
+  {
+    "data": {
+      "bytes": "4120726f736520627920616e79206f74686572206e616d6520776f756c6420736d656c6c206173207377656574"
+    },
+    "packed": "050a0000002d4120726f736520627920616e79206f74686572206e616d6520776f756c6420736d656c6c206173207377656574"
+  },
+  {
+    "data": {
+      "int": "0"
+    },
+    "packed": "050000"
+  },
+  {
+    "data": {
+      "int": "1"
+    },
+    "packed": "050001"
+  },
+  {
+    "data": {
+      "int": "63"
+    },
+    "packed": "05003f"
+  },
+  {
+    "data": {
+      "int": "65"
+    },
+    "packed": "05008101"
+  },
+  {
+    "data": {
+      "int": "127"
+    },
+    "packed": "0500bf01"
+  },
+  {
+    "data": {
+      "int": "128"
+    },
+    "packed": "05008002"
+  },
+  {
+    "data": {
+      "int": "129"
+    },
+    "packed": "05008102"
+  },
+  {
+    "data": {
+      "int": "191"
+    },
+    "packed": "0500bf02"
+  },
+  {
+    "data": {
+      "int": "192"
+    },
+    "packed": "05008003"
+  },
+  {
+    "data": {
+      "int": "193"
+    },
+    "packed": "05008103"
+  },
+  {
+    "data": {
+      "int": "64"
+    },
+    "packed": "05008001"
+  },
+  {
+    "data": {
+      "prim": "True"
+    },
+    "packed": "05030a"
+  },
+  {
+    "data": {
+      "prim": "False"
+    },
+    "packed": "050303"
+  },
+  {
+    "data": {
+      "bytes": "0002298c03ed7d454a101eb7022bc95f7e5f41ac78"
+    },
+    "packed": "050a000000150002298c03ed7d454a101eb7022bc95f7e5f41ac78"
+  },
+  {
+    "data": {
+      "bytes": "0100000000000000000000000000000000000000000000000000000000000000"
+    },
+    "packed": "050a000000200100000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "data": {
+      "bytes": "17f1d3a73197d7942695638c4fa9ac0fc3688c4f9774b905a14e3a3f171bac586c55e83ff97a1aeffb3af00adb22c6bb08b3f481e3aaa0f1a09e30ed741d8ae4fcf5e095d5d00af600db18cb2c04b3edd03cc744a2888ae40caa232946c5e7e1"
+    },
+    "packed": "050a0000006017f1d3a73197d7942695638c4fa9ac0fc3688c4f9774b905a14e3a3f171bac586c55e83ff97a1aeffb3af00adb22c6bb08b3f481e3aaa0f1a09e30ed741d8ae4fcf5e095d5d00af600db18cb2c04b3edd03cc744a2888ae40caa232946c5e7e1"
+  },
+  {
+    "data": {
+      "bytes": "13e02b6052719f607dacd3a088274f65596bd0d09920b61ab5da61bbdc7f5049334cf11213945d57e5ac7d055d042b7e024aa2b2f08f0a91260805272dc51051c6e47ad4fa403b02b4510b647ae3d1770bac0326a805bbefd48056c8c121bdb80606c4a02ea734cc32acd2b02bc28b99cb3e287e85a763af267492ab572e99ab3f370d275cec1da1aaa9075ff05f79be0ce5d527727d6e118cc9cdc6da2e351aadfd9baa8cbdd3a76d429a695160d12c923ac9cc3baca289e193548608b82801"
+    },
+    "packed": "050a000000c013e02b6052719f607dacd3a088274f65596bd0d09920b61ab5da61bbdc7f5049334cf11213945d57e5ac7d055d042b7e024aa2b2f08f0a91260805272dc51051c6e47ad4fa403b02b4510b647ae3d1770bac0326a805bbefd48056c8c121bdb80606c4a02ea734cc32acd2b02bc28b99cb3e287e85a763af267492ab572e99ab3f370d275cec1da1aaa9075ff05f79be0ce5d527727d6e118cc9cdc6da2e351aadfd9baa8cbdd3a76d429a695160d12c923ac9cc3baca289e193548608b82801"
+  },
+  {
+    "data": {
+      "int": "205027200"
+    },
+    "packed": "050080dec3c301"
+  },
+  {
+    "data": {
+      "int": "1552564995"
+    },
+    "packed": "0500838cd2c80b"
+  },
+  {
+    "data": {
+      "bytes": "00002addb327dbca405f07aeef318bba0ec2f714a755"
+    },
+    "packed": "050a0000001600002addb327dbca405f07aeef318bba0ec2f714a755"
+  },
+  {
+    "data": {
+      "bytes": "000092b72c0fa1064331a641131f572e7f2abb9a890b"
+    },
+    "packed": "050a00000016000092b72c0fa1064331a641131f572e7f2abb9a890b"
+  },
+  {
+    "data": {
+      "bytes": "000145b5e7d31bf6612e61ebfa7a6d929ce7800a55a4"
+    },
+    "packed": "050a00000016000145b5e7d31bf6612e61ebfa7a6d929ce7800a55a4"
+  },
+  {
+    "data": {
+      "bytes": "00025cfa532f50de3e12befc0ad21603835dd7698d35"
+    },
+    "packed": "050a0000001600025cfa532f50de3e12befc0ad21603835dd7698d35"
+  },
+  {
+    "data": {
+      "bytes": "019812c669d9e8ff1a61bf8c57e33b955f074d832600"
+    },
+    "packed": "050a00000016019812c669d9e8ff1a61bf8c57e33b955f074d832600"
+  },
+  {
+    "data": {
+      "bytes": "01122d038abd69be91b4b6803f2f098a088e259e7200"
+    },
+    "packed": "050a0000001601122d038abd69be91b4b6803f2f098a088e259e7200"
+  },
+  {
+    "data": {
+      "bytes": "00aad3f16293766169f7db278c5e0e9db4fb82ffe1cbcc35258059617dc0fec082"
+    },
+    "packed": "050a0000002100aad3f16293766169f7db278c5e0e9db4fb82ffe1cbcc35258059617dc0fec082"
+  },
+  {
+    "data": {
+      "bytes": "0103b524d0184276467c848ac13557fb0ff8bec5907960f72683f22af430503edfc1"
+    },
+    "packed": "050a000000220103b524d0184276467c848ac13557fb0ff8bec5907960f72683f22af430503edfc1"
+  },
+  {
+    "data": {
+      "bytes": "009a85e0f3f47852869ae667adc3b03a20fa9f324d046174dff6834e7d1fab0e8d"
+    },
+    "packed": "050a00000021009a85e0f3f47852869ae667adc3b03a20fa9f324d046174dff6834e7d1fab0e8d"
+  },
+  {
+    "data": {
+      "bytes": "01022c380cd1ff286a0a1a7c3aad6e891d237fa82e2a7cdeec08ccb55e90fdef995f"
+    },
+    "packed": "050a0000002201022c380cd1ff286a0a1a7c3aad6e891d237fa82e2a7cdeec08ccb55e90fdef995f"
+  },
+  {
+    "data": {
+      "bytes": "020368afbb09255d849813712108a4144237dc1fdd5bb74e68335f4c68c12c1e5723"
+    },
+    "packed": "050a00000022020368afbb09255d849813712108a4144237dc1fdd5bb74e68335f4c68c12c1e5723"
+  },
+  {
+    "data": {
+      "bytes": "0203dcb1916c475902f2b1083212e1b4e6f8ce1531710218c7d34340439f47040e7c"
+    },
+    "packed": "050a000000220203dcb1916c475902f2b1083212e1b4e6f8ce1531710218c7d34340439f47040e7c"
+  },
+  {
+    "data": {
+      "bytes": "458aa837"
+    },
+    "packed": "050a00000004458aa837"
+  },
+  {
+    "data": {
+      "prim": "None"
+    },
+    "packed": "050306"
+  },
+  {
+    "data": {
+      "args": [
+        {
+          "int": "123"
+        }
+      ],
+      "prim": "Some"
+    },
+    "packed": "05050900bb01"
+  },
+  {
+    "data": {
+      "args": [
+        {
+          "string": "Goodnight World!"
+        }
+      ],
+      "prim": "Some"
+    },
+    "packed": "0505090100000010476f6f646e6967687420576f726c6421"
+  },
+  {
+    "data": {
+      "bytes": "91ac1e7fd668854fc7a40feec4034e42c06c068cce10622c607fda232db34c8cf5d8da83098dd891cd4cb4299b3fa0352ae323ad99b24541e54b91888fdc8201"
+    },
+    "packed": "050a0000004091ac1e7fd668854fc7a40feec4034e42c06c068cce10622c607fda232db34c8cf5d8da83098dd891cd4cb4299b3fa0352ae323ad99b24541e54b91888fdc8201"
+  },
+  {
+    "data": {
+      "bytes": "80e4e72ffecf72953789625b1125e9f45f432c14e53a01ec68a1e1b77d60cfe96a97443733ba0f7f42db3a56d7a433df2b4fc0035c05ab92d062f33c5bab0244"
+    },
+    "packed": "050a0000004080e4e72ffecf72953789625b1125e9f45f432c14e53a01ec68a1e1b77d60cfe96a97443733ba0f7f42db3a56d7a433df2b4fc0035c05ab92d062f33c5bab0244"
+  },
+  {
+    "data": {
+      "bytes": "22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222"
+    },
+    "packed": "050a0000004022222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222"
+  },
+  {
+    "data": {
+      "bytes": "da632d7f267673fab5a40562778a6890b6ada9665d53d7ff318e3399e032b3986588dadcf3bf3b549592f7b8ea1365273fbef5f4883c3430ed32e8ae24017be1"
+    },
+    "packed": "050a00000040da632d7f267673fab5a40562778a6890b6ada9665d53d7ff318e3399e032b3986588dadcf3bf3b549592f7b8ea1365273fbef5f4883c3430ed32e8ae24017be1"
+  },
+  {
+    "data": {
+      "args": [
+        {
+          "string": "Error"
+        }
+      ],
+      "prim": "Left"
+    },
+    "packed": "05050501000000054572726f72"
+  },
+  {
+    "data": {
+      "args": [
+        {
+          "prim": "True"
+        }
+      ],
+      "prim": "Right"
+    },
+    "packed": "050508030a"
+  },
+  {
+    "data": {
+      "args": [
+        {
+          "string": "Good Night!"
+        },
+        {
+          "int": "5"
+        }
+      ],
+      "prim": "Pair"
+    },
+    "packed": "050707010000000b476f6f64204e69676874210005"
+  },
+  {
+    "data": {
+      "args": [
+        {
+          "int": "120"
+        },
+        {
+          "args": [
+            {
+              "int": "5"
+            },
+            {
+              "string": "What is that?"
+            }
+          ],
+          "prim": "Pair"
+        }
+      ],
+      "prim": "Pair"
+    },
+    "packed": "05070700b80107070005010000000d5768617420697320746861743f"
+  },
+  {
+    "data": [
+      {
+        "int": "1"
+      }
+    ],
+    "packed": "0502000000020001"
+  },
+  {
+    "data": [],
+    "packed": "050200000000"
+  },
+  {
+    "data": [
+      {
+        "int": "1"
+      },
+      {
+        "int": "2"
+      },
+      {
+        "int": "3"
+      }
+    ],
+    "packed": "050200000006000100020003"
+  },
+  {
+    "data": [],
+    "packed": "050200000000"
+  },
+  {
+    "data": [
+      {
+        "int": "1"
+      }
+    ],
+    "packed": "0502000000020001"
+  },
+  {
+    "data": [
+      {
+        "int": "0"
+      },
+      {
+        "int": "10"
+      },
+      {
+        "int": "24"
+      },
+      {
+        "int": "35"
+      },
+      {
+        "int": "100"
+      },
+      {
+        "int": "1000"
+      }
+    ],
+    "packed": "05020000000e0000000a0018002300a40100a80f"
+  },
+  {
+    "data": {
+      "bytes": "00002addb327dbca405f07aeef318bba0ec2f714a755"
+    },
+    "packed": "050a0000001600002addb327dbca405f07aeef318bba0ec2f714a755"
+  },
+  {
+    "data": {
+      "bytes": "000092b72c0fa1064331a641131f572e7f2abb9a890b"
+    },
+    "packed": "050a00000016000092b72c0fa1064331a641131f572e7f2abb9a890b"
+  },
+  {
+    "data": {
+      "bytes": "01122d038abd69be91b4b6803f2f098a088e259e7200"
+    },
+    "packed": "050a0000001601122d038abd69be91b4b6803f2f098a088e259e7200"
+  },
+  {
+    "data": {
+      "bytes": "01122d038abd69be91b4b6803f2f098a088e259e720061626163616261"
+    },
+    "packed": "050a0000001d01122d038abd69be91b4b6803f2f098a088e259e720061626163616261"
+  },
+  {
+    "data": [],
+    "packed": "050200000000"
+  },
+  {
+    "data": {
+      "bytes": "01122d038abd69be91b4b6803f2f098a088e259e7200"
+    },
+    "packed": "050a0000001601122d038abd69be91b4b6803f2f098a088e259e7200"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "int": "0"
+          },
+          {
+            "string": "Hello"
+          }
+        ],
+        "prim": "Elt"
+      },
+      {
+        "args": [
+          {
+            "int": "1"
+          },
+          {
+            "string": "Goodbye"
+          }
+        ],
+        "prim": "Elt"
+      },
+      {
+        "args": [
+          {
+            "int": "2"
+          },
+          {
+            "string": "Goodnight"
+          }
+        ],
+        "prim": "Elt"
+      }
+    ],
+    "packed": "05020000003007040000010000000548656c6c6f070400010100000007476f6f64627965070400020100000009476f6f646e69676874"
+  },
+  {
+    "data": {
+      "bytes": "000092b72c0fa1064331a641131f572e7f2abb9a890b61"
+    },
+    "packed": "050a00000017000092b72c0fa1064331a641131f572e7f2abb9a890b61"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "string": "Lancaster"
+          },
+          {
+            "args": [
+              {
+                "int": "22323"
+              },
+              {
+                "prim": "False"
+              }
+            ],
+            "prim": "Pair"
+          }
+        ],
+        "prim": "Elt"
+      },
+      {
+        "args": [
+          {
+            "string": "Stuart"
+          },
+          {
+            "args": [
+              {
+                "int": "-832988"
+              },
+              {
+                "prim": "True"
+              }
+            ],
+            "prim": "Pair"
+          }
+        ],
+        "prim": "Elt"
+      },
+      {
+        "args": [
+          {
+            "string": "Tudor"
+          },
+          {
+            "args": [
+              {
+                "int": "123"
+              },
+              {
+                "prim": "True"
+              }
+            ],
+            "prim": "Pair"
+          }
+        ],
+        "prim": "Elt"
+      }
+    ],
+    "packed": "050200000040070401000000094c616e636173746572070700b3dc02030307040100000006537475617274070700dcd765030a070401000000055475646f72070700bb01030a"
+  },
+  {
+    "data": [],
+    "packed": "050200000000"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "0502000000080743035b00010320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "DUP"
+      },
+      {
+        "prim": "SWAP"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000805210001034c0320"
+  },
+  {
+    "data": [
+      {
+        "prim": "UNIT"
+      },
+      {
+        "prim": "UNIT"
+      },
+      {
+        "args": [
+          {
+            "int": "3"
+          }
+        ],
+        "prim": "DUP"
+      },
+      {
+        "args": [
+          {
+            "int": "3"
+          }
+        ],
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000c034f034f0521000305200003"
+  },
+  {
+    "data": [
+      {
+        "prim": "DUP"
+      },
+      {
+        "prim": "SWAP"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "0502000000060321034c0320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "int": "0"
+          }
+        ],
+        "prim": "DIG"
+      }
+    ],
+    "packed": "05020000000405700000"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "nat"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "args": [
+          {
+            "prim": "nat"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "args": [
+          {
+            "int": "2"
+          }
+        ],
+        "prim": "DUP"
+      },
+      {
+        "prim": "DROP"
+      },
+      {
+        "prim": "DROP"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000001607430362000107430362000105210002032003200320"
+  },
+  {
+    "data": [
+      {
+        "prim": "UNIT"
+      },
+      {
+        "args": [
+          {
+            "int": "2"
+          }
+        ],
+        "prim": "DUP"
+      },
+      {
+        "args": [
+          {
+            "int": "2"
+          }
+        ],
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000a034f0521000205200002"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "int": "0"
+          }
+        ],
+        "prim": "DUG"
+      }
+    ],
+    "packed": "05020000000405710000"
+  },
+  {
+    "data": [
+      {
+        "prim": "UNIT"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "050200000004034f0320"
+  },
+  {
+    "data": [
+      {
+        "prim": "UNIT"
+      },
+      {
+        "args": [
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "DIG"
+      },
+      {
+        "args": [
+          [
+            {
+              "prim": "DROP"
+            }
+          ]
+        ],
+        "prim": "DIP"
+      }
+    ],
+    "packed": "05020000000f034f05700001051f02000000020320"
+  },
+  {
+    "data": [
+      {
+        "prim": "UNIT"
+      },
+      {
+        "args": [
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "DUG"
+      },
+      {
+        "args": [
+          [
+            {
+              "prim": "DROP"
+            }
+          ]
+        ],
+        "prim": "DIP"
+      }
+    ],
+    "packed": "05020000000f034f05710001051f02000000020320"
+  },
+  {
+    "data": [
+      {
+        "prim": "UNIT",
+        "annots": [
+          ":u"
+        ]
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000a044f000000023a750320"
+  },
+  {
+    "data": [
+      {
+        "prim": "UNIT"
+      },
+      {
+        "args": [
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "DROP"
+      }
+    ],
+    "packed": "050200000006034f05200001"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "int": "0"
+          }
+        ],
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000405200000"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          }
+        ],
+        "prim": "NONE"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "050200000006053e035b0320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "SOME"
+      },
+      {
+        "args": [
+          [],
+          [
+            {
+              "prim": "DROP"
+            }
+          ]
+        ],
+        "prim": "IF_NONE"
+      }
+    ],
+    "packed": "0502000000160743035b00010346072f020000000002000000020320"
+  },
+  {
+    "data": [
+      {
+        "prim": "UNIT"
+      },
+      {
+        "prim": "UNIT"
+      },
+      {
+        "prim": "UNIT"
+      },
+      {
+        "args": [
+          {
+            "int": "3"
+          }
+        ],
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000a034f034f034f05200003"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "SOME"
+      },
+      [
+        {
+          "args": [
+            [],
+            [
+              {
+                "prim": "DROP"
+              }
+            ]
+          ],
+          "prim": "IF_NONE"
+        }
+      ]
+    ],
+    "packed": "05020000001b0743035b00010346020000000e072f020000000002000000020320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "SOME",
+        "annots": [
+          ":s"
+        ]
+      },
+      [
+        {
+          "args": [
+            [],
+            [
+              {
+                "prim": "DROP"
+              }
+            ]
+          ],
+          "prim": "IF_NONE"
+        }
+      ]
+    ],
+    "packed": "0502000000210743035b00010446000000023a73020000000e072f020000000002000000020320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "PAIR"
+      },
+      {
+        "prim": "CAR"
+      }
+    ],
+    "packed": "05020000000a0743035b000103420316"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          }
+        ],
+        "prim": "NONE",
+        "annots": [
+          ":n"
+        ]
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000c063e035b000000023a6e0320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "PAIR",
+        "annots": [
+          "%",
+          "%o"
+        ]
+      },
+      {
+        "prim": "CAR"
+      }
+    ],
+    "packed": "0502000000120743035b00010442000000042520256f0316"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "PAIR",
+        "annots": [
+          "%o"
+        ]
+      },
+      {
+        "prim": "CAR"
+      }
+    ],
+    "packed": "0502000000100743035b0001044200000002256f0316"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "PAIR",
+        "annots": [
+          "%o"
+        ]
+      },
+      {
+        "prim": "CAR"
+      }
+    ],
+    "packed": "0502000000100743035b0001044200000002256f0316"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "PAIR",
+        "annots": [
+          ":p",
+          "%l",
+          "%r"
+        ]
+      },
+      {
+        "prim": "CAR"
+      }
+    ],
+    "packed": "0502000000160743035b00010442000000083a7020256c2025720316"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "PAIR",
+        "annots": [
+          ":p"
+        ]
+      },
+      {
+        "prim": "CAR"
+      }
+    ],
+    "packed": "0502000000100743035b00010442000000023a700316"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "PAIR",
+        "annots": [
+          "%",
+          "%@"
+        ]
+      },
+      {
+        "prim": "CAR"
+      }
+    ],
+    "packed": "0502000000120743035b0001044200000004252025400316"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "args": [
+          {
+            "int": "2"
+          }
+        ],
+        "prim": "PAIR"
+      },
+      {
+        "prim": "CAR"
+      }
+    ],
+    "packed": "05020000000c0743035b0001054200020316"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "PAIR",
+        "annots": [
+          "%l",
+          "%r"
+        ]
+      },
+      {
+        "prim": "CDR",
+        "annots": [
+          "%r"
+        ]
+      }
+    ],
+    "packed": "0502000000190743035b0001044200000005256c2025720417000000022572"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "nat"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "args": [
+          {
+            "prim": "bool"
+          },
+          {
+            "prim": "True"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "args": [
+          {
+            "int": "4"
+          }
+        ],
+        "prim": "PAIR"
+      },
+      {
+        "prim": "CAR"
+      }
+    ],
+    "packed": "05020000001807430362000107430359030a0743035b0001054200040316"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "unit"
+          }
+        ],
+        "prim": "LEFT",
+        "annots": [
+          ":lu",
+          "%l",
+          "%r"
+        ]
+      },
+      {
+        "args": [
+          [],
+          [
+            {
+              "prim": "DROP"
+            },
+            {
+              "args": [
+                {
+                  "prim": "int"
+                },
+                {
+                  "int": "1"
+                }
+              ],
+              "prim": "PUSH"
+            }
+          ]
+        ],
+        "prim": "IF_LEFT"
+      }
+    ],
+    "packed": "0502000000250633036c000000093a6c7520256c202572072e0200000000020000000803200743035b0001"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "unit"
+          }
+        ],
+        "prim": "RIGHT"
+      },
+      [
+        {
+          "args": [
+            [
+              {
+                "prim": "DROP"
+              },
+              {
+                "args": [
+                  {
+                    "prim": "int"
+                  },
+                  {
+                    "int": "1"
+                  }
+                ],
+                "prim": "PUSH"
+              }
+            ],
+            []
+          ],
+          "prim": "IF_LEFT"
+        }
+      ]
+    ],
+    "packed": "05020000001d0544036c0200000014072e020000000803200743035b00010200000000"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "unit"
+          }
+        ],
+        "prim": "LEFT",
+        "annots": [
+          ":lu",
+          "%l"
+        ]
+      },
+      {
+        "args": [
+          [],
+          [
+            {
+              "prim": "DROP"
+            },
+            {
+              "args": [
+                {
+                  "prim": "int"
+                },
+                {
+                  "int": "1"
+                }
+              ],
+              "prim": "PUSH"
+            }
+          ]
+        ],
+        "prim": "IF_LEFT"
+      }
+    ],
+    "packed": "0502000000220633036c000000063a6c7520256c072e0200000000020000000803200743035b0001"
+  },
+  {
+    "data": [
+      {
+        "prim": "DUP"
+      },
+      {
+        "prim": "DUP"
+      },
+      {
+        "prim": "DUP"
+      },
+      {
+        "args": [
+          {
+            "int": "4"
+          }
+        ],
+        "prim": "PAIR"
+      },
+      {
+        "args": [
+          {
+            "int": "3"
+          }
+        ],
+        "prim": "UNPAIR"
+      },
+      {
+        "args": [
+          [
+            {
+              "args": [
+                {
+                  "int": "2"
+                }
+              ],
+              "prim": "DROP"
+            }
+          ]
+        ],
+        "prim": "DIP"
+      }
+    ],
+    "packed": "05020000001903210321032105420004057a0003051f020000000405200002"
+  },
+  {
+    "data": [
+      {
+        "prim": "DUP"
+      },
+      {
+        "args": [
+          {
+            "prim": "int"
+          }
+        ],
+        "prim": "NIL"
+      },
+      {
+        "prim": "SWAP"
+      },
+      {
+        "prim": "CONS"
+      },
+      {
+        "prim": "SIZE"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000e0321053d035b034c031b03450320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "unit"
+          }
+        ],
+        "prim": "RIGHT",
+        "annots": [
+          ":lu",
+          "%l"
+        ]
+      },
+      [
+        {
+          "args": [
+            [
+              {
+                "prim": "DROP"
+              },
+              {
+                "args": [
+                  {
+                    "prim": "int"
+                  },
+                  {
+                    "int": "1"
+                  }
+                ],
+                "prim": "PUSH"
+              }
+            ],
+            []
+          ],
+          "prim": "IF_LEFT"
+        }
+      ]
+    ],
+    "packed": "0502000000270644036c000000063a6c7520256c0200000014072e020000000803200743035b00010200000000"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          }
+        ],
+        "prim": "NIL"
+      },
+      {
+        "args": [
+          [
+            {
+              "prim": "DROP"
+            },
+            {
+              "prim": "DROP"
+            }
+          ],
+          []
+        ],
+        "prim": "IF_CONS"
+      }
+    ],
+    "packed": "050200000014053d035b072d0200000004032003200200000000"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          }
+        ],
+        "prim": "NIL",
+        "annots": [
+          ":ni"
+        ]
+      },
+      {
+        "args": [
+          [
+            {
+              "prim": "DROP"
+            },
+            {
+              "prim": "DROP"
+            }
+          ],
+          []
+        ],
+        "prim": "IF_CONS"
+      }
+    ],
+    "packed": "05020000001b063d035b000000033a6e69072d0200000004032003200200000000"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          }
+        ],
+        "prim": "EMPTY_SET"
+      },
+      {
+        "args": [
+          [
+            {
+              "prim": "DROP"
+            }
+          ]
+        ],
+        "prim": "ITER"
+      }
+    ],
+    "packed": "05020000000d0524035b055202000000020320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          }
+        ],
+        "prim": "EMPTY_SET",
+        "annots": [
+          ":si"
+        ]
+      },
+      {
+        "args": [
+          [
+            {
+              "prim": "DROP"
+            }
+          ]
+        ],
+        "prim": "ITER"
+      }
+    ],
+    "packed": "0502000000140624035b000000033a7369055202000000020320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "prim": "unit"
+          }
+        ],
+        "prim": "EMPTY_MAP"
+      },
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "MEM"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "0502000000100723035b036c0743035b000103390320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "prim": "unit"
+          }
+        ],
+        "prim": "EMPTY_MAP"
+      },
+      {
+        "args": [
+          []
+        ],
+        "prim": "MAP"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000f0723035b036c053802000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "prim": "unit"
+          }
+        ],
+        "prim": "EMPTY_MAP",
+        "annots": [
+          ":miu"
+        ]
+      },
+      {
+        "args": [
+          []
+        ],
+        "prim": "MAP"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "0502000000170823035b036c000000043a6d6975053802000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "prim": "unit"
+          }
+        ],
+        "prim": "EMPTY_MAP"
+      },
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "GET"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "0502000000100723035b036c0743035b000103290320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "prim": "unit"
+          }
+        ],
+        "prim": "EMPTY_MAP"
+      },
+      {
+        "args": [
+          {
+            "prim": "unit"
+          }
+        ],
+        "prim": "NONE"
+      },
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "GET_AND_UPDATE"
+      },
+      {
+        "args": [
+          {
+            "int": "2"
+          }
+        ],
+        "prim": "DROP"
+      }
+    ],
+    "packed": "0502000000160723035b036c053e036c0743035b0001038c05200002"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "prim": "unit"
+          }
+        ],
+        "prim": "EMPTY_MAP"
+      },
+      {
+        "args": [
+          {
+            "prim": "unit"
+          }
+        ],
+        "prim": "NONE"
+      },
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "UPDATE"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "0502000000140723035b036c053e036c0743035b000103500320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "prim": "unit"
+          }
+        ],
+        "prim": "EMPTY_BIG_MAP"
+      },
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "GET"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "0502000000100772035b036c0743035b000103290320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "unit"
+          }
+        ],
+        "prim": "LEFT"
+      },
+      {
+        "args": [
+          [],
+          [
+            {
+              "prim": "DROP"
+            },
+            {
+              "args": [
+                {
+                  "prim": "int"
+                },
+                {
+                  "int": "1"
+                }
+              ],
+              "prim": "PUSH"
+            }
+          ]
+        ],
+        "prim": "IF_LEFT"
+      }
+    ],
+    "packed": "0502000000180533036c072e0200000000020000000803200743035b0001"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "prim": "unit"
+          }
+        ],
+        "prim": "EMPTY_BIG_MAP",
+        "annots": [
+          ":bmiu"
+        ]
+      },
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "GET"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "0502000000190872035b036c000000053a626d69750743035b000103290320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "PAIR"
+      },
+      {
+        "args": [
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "GET"
+      }
+    ],
+    "packed": "05020000000c0743035b0001034205290001"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "PAIR",
+        "annots": [
+          "%l",
+          "%r"
+        ]
+      },
+      {
+        "prim": "CAR",
+        "annots": [
+          "%l"
+        ]
+      }
+    ],
+    "packed": "0502000000190743035b0001044200000005256c202572041600000002256c"
+  },
+  {
+    "data": [
+      {
+        "prim": "DUP"
+      },
+      {
+        "args": [
+          {
+            "int": "0"
+          }
+        ],
+        "prim": "UPDATE"
+      }
+    ],
+    "packed": "050200000006032105500000"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "bool"
+          },
+          {
+            "prim": "True"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "args": [
+          [
+            {
+              "args": [
+                {
+                  "prim": "bool"
+                },
+                {
+                  "prim": "False"
+                }
+              ],
+              "prim": "PUSH"
+            }
+          ]
+        ],
+        "prim": "LOOP"
+      }
+    ],
+    "packed": "05020000001307430359030a05340200000006074303590303"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "bool"
+          },
+          {
+            "prim": "True"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "args": [
+          [],
+          []
+        ],
+        "prim": "IF"
+      }
+    ],
+    "packed": "05020000001207430359030a072c02000000000200000000"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "prim": "int"
+          },
+          [
+            {
+              "args": [
+                {
+                  "prim": "int"
+                },
+                {
+                  "int": "1"
+                }
+              ],
+              "prim": "PUSH"
+            },
+            {
+              "prim": "DROP"
+            }
+          ]
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "SWAP"
+      },
+      {
+        "prim": "EXEC"
+      }
+    ],
+    "packed": "05020000001f093100000011035b035b02000000080743035b0001032000000000034c0326"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          []
+        ],
+        "prim": "DIP"
+      }
+    ],
+    "packed": "050200000007051f0200000000"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "int": "1"
+          },
+          []
+        ],
+        "prim": "DIP"
+      }
+    ],
+    "packed": "050200000009071f00010200000000"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "int": "0"
+          },
+          []
+        ],
+        "prim": "DIP"
+      }
+    ],
+    "packed": "050200000009071f00000200000000"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          }
+        ],
+        "prim": "CAST"
+      }
+    ],
+    "packed": "0502000000040557035b"
+  },
+  {
+    "data": [
+      {
+        "prim": "RENAME"
+      }
+    ],
+    "packed": "0502000000020358"
+  },
+  {
+    "data": [
+      {
+        "prim": "FAILWITH"
+      }
+    ],
+    "packed": "0502000000020327"
+  },
+  {
+    "data": [
+      {
+        "prim": "UNIT"
+      },
+      {
+        "prim": "UNIT"
+      },
+      {
+        "args": [
+          {
+            "int": "3"
+          },
+          [
+            {
+              "prim": "UNIT"
+            },
+            {
+              "prim": "DROP"
+            }
+          ]
+        ],
+        "prim": "DIP"
+      },
+      {
+        "prim": "DROP"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "050200000015034f034f071f00030200000004034f032003200320"
+  },
+  {
+    "data": [
+      {
+        "prim": "DUP"
+      },
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "prim": "int"
+              },
+              {
+                "prim": "int"
+              }
+            ],
+            "prim": "pair"
+          },
+          {
+            "prim": "int"
+          },
+          [
+            {
+              "prim": "CAR"
+            }
+          ]
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "SWAP"
+      },
+      {
+        "prim": "APPLY"
+      },
+      {
+        "prim": "SWAP"
+      },
+      {
+        "prim": "EXEC"
+      }
+    ],
+    "packed": "050200000023032109310000000f0765035b035b035b0200000002031600000000034c0373034c0326"
+  },
+  {
+    "data": [
+      {
+        "prim": "UNIT"
+      },
+      {
+        "prim": "UNIT"
+      },
+      {
+        "args": [
+          {
+            "int": "3"
+          },
+          [
+            {
+              "prim": "UNIT"
+            },
+            {
+              "prim": "DROP"
+            }
+          ]
+        ],
+        "prim": "DIP"
+      },
+      {
+        "prim": "DROP"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "050200000015034f034f071f00030200000004034f032003200320"
+  },
+  {
+    "data": [
+      {
+        "prim": "DUP"
+      },
+      {
+        "prim": "PACK"
+      },
+      {
+        "args": [
+          {
+            "prim": "unit"
+          }
+        ],
+        "prim": "UNPACK"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000a0321030c050d036c0320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "string"
+          }
+        ],
+        "prim": "NIL"
+      },
+      {
+        "prim": "CONCAT"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "050200000008053d0368031a0320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "string"
+          },
+          {
+            "string": ""
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "DUP"
+      },
+      {
+        "prim": "CONCAT"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000f0743036801000000000321031a0320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "prim": "int"
+              },
+              {
+                "prim": "int"
+              }
+            ],
+            "prim": "or"
+          },
+          {
+            "args": [
+              {
+                "int": "1"
+              }
+            ],
+            "prim": "Left"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "args": [
+          [
+            {
+              "args": [
+                {
+                  "prim": "int"
+                }
+              ],
+              "prim": "RIGHT"
+            }
+          ]
+        ],
+        "prim": "LOOP_LEFT"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000001907430764035b035b05050001055302000000040544035b0320"
+  },
+  {
+    "data": [
+      {
+        "prim": "DUP"
+      },
+      {
+        "prim": "PACK"
+      },
+      {
+        "args": [
+          {
+            "prim": "unit"
+          }
+        ],
+        "prim": "UNPACK",
+        "annots": [
+          ":uu"
+        ]
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "0502000000110321030c060d036c000000033a75750320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "ISNAT"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000a0743035b000103560320"
+  },
+  {
+    "data": [
+      {
+        "prim": "LEVEL"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000403760320"
+  },
+  {
+    "data": [
+      {
+        "prim": "NOW"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000403400320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "nat"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "INT"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000a07430362000103300320"
+  },
+  {
+    "data": [
+      {
+        "prim": "AMOUNT"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000403130320"
+  },
+  {
+    "data": [
+      {
+        "prim": "BALANCE"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000403150320"
+  },
+  {
+    "data": [
+      {
+        "prim": "SELF_ADDRESS"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000403770320"
+  },
+  {
+    "data": [
+      {
+        "prim": "TOTAL_VOTING_POWER"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "050200000004037c0320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "bytes"
+          },
+          {
+            "bytes": ""
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "SHA256"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000d074303690a00000000030f0320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "bytes"
+          },
+          {
+            "bytes": ""
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "SHA512"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000d074303690a0000000003100320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "string"
+          },
+          {
+            "string": ""
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "args": [
+          {
+            "prim": "nat"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "args": [
+          {
+            "prim": "nat"
+          },
+          {
+            "int": "2"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "SLICE"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "050200000019074303680100000000074303620001074303620002036f0320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "bytes"
+          },
+          {
+            "bytes": ""
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "BLAKE2B"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000d074303690a00000000030e0320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "bytes"
+          },
+          {
+            "bytes": ""
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "SHA3"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000d074303690a00000000037e0320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "bytes"
+          },
+          {
+            "bytes": ""
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "KECCAK"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000d074303690a00000000037d0320"
+  },
+  {
+    "data": [
+      {
+        "prim": "SENDER"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000403480320"
+  },
+  {
+    "data": [
+      {
+        "prim": "SOURCE"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000403470320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "prim": "bls12_381_g1"
+                  },
+                  {
+                    "prim": "bls12_381_g2"
+                  }
+                ],
+                "prim": "pair"
+              }
+            ],
+            "prim": "list"
+          },
+          []
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "PAIRING_CHECK"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "0502000000130743055f0765038003810200000000037f0320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "nat"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "args": [
+          {
+            "prim": "nat"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "args": [
+          {
+            "int": "2"
+          }
+        ],
+        "prim": "DUP"
+      },
+      {
+        "prim": "DROP"
+      },
+      {
+        "prim": "DROP"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000001607430362000107430362000105210002032003200320"
+  },
+  {
+    "data": [
+      {
+        "prim": "CHAIN_ID"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000403750320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "2"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "ADD"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "0502000000100743035b00010743035b000203120320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "2"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "MUL"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "0502000000100743035b00010743035b0002033a0320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "2"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "EDIV"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "0502000000100743035b00010743035b000203220320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "ABS"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000a0743035b000103110320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "2"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "SUB"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "0502000000100743035b00010743035b0002034b0320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "nat"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "args": [
+          {
+            "prim": "nat"
+          },
+          {
+            "int": "2"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "LSR"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000001007430362000107430362000203360320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "nat"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "args": [
+          {
+            "prim": "nat"
+          },
+          {
+            "int": "2"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "LSL"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000001007430362000107430362000203350320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "NEG",
+        "annots": [
+          "@kek"
+        ]
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "0502000000120743035b0001043b00000004406b656b0320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "nat"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "args": [
+          {
+            "prim": "nat"
+          },
+          {
+            "int": "2"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "OR"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000001007430362000107430362000203410320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "NEQ"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000a0743035b0001033c0320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "nat"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "args": [
+          {
+            "prim": "nat"
+          },
+          {
+            "int": "2"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "XOR"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000001007430362000107430362000203510320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "EQ"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000a0743035b000103250320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "NOT"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000a0743035b0001033f0320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "nat"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "args": [
+          {
+            "prim": "nat"
+          },
+          {
+            "int": "2"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "COMPARE"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000001007430362000107430362000203190320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "LT"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000a0743035b000103370320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "GT"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000a0743035b0001032a0320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "LE"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000a0743035b000103320320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "int": "1"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "GE"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000000a0743035b000103280320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "unit"
+          }
+        ],
+        "prim": "CONTRACT"
+      },
+      {
+        "prim": "DROP"
+      },
+      {
+        "args": [
+          {
+            "prim": "unit"
+          },
+          {
+            "prim": "Unit"
+          }
+        ],
+        "prim": "PUSH"
+      }
+    ],
+    "packed": "05020000000c0555036c03200743036c030b"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "unit"
+          }
+        ],
+        "prim": "CONTRACT",
+        "annots": [
+          "%entrypnt"
+        ]
+      },
+      {
+        "prim": "DROP"
+      },
+      {
+        "args": [
+          {
+            "prim": "unit"
+          },
+          {
+            "prim": "Unit"
+          }
+        ],
+        "prim": "PUSH"
+      }
+    ],
+    "packed": "0502000000190655036c0000000925656e747279706e7403200743036c030b"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "mutez"
+          },
+          {
+            "int": "5"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "args": [
+          {
+            "prim": "unit"
+          },
+          {
+            "prim": "Unit"
+          }
+        ],
+        "prim": "PUSH"
+      },
+      {
+        "prim": "TRANSFER_TOKENS"
+      },
+      {
+        "prim": "DROP"
+      },
+      {
+        "args": [
+          {
+            "prim": "unit"
+          },
+          {
+            "prim": "Unit"
+          }
+        ],
+        "prim": "PUSH"
+      }
+    ],
+    "packed": "0502000000160743036a00050743036c030b034d03200743036c030b"
+  },
+  {
+    "data": [
+      {
+        "prim": "ADDRESS"
+      },
+      {
+        "prim": "DROP"
+      },
+      {
+        "args": [
+          {
+            "prim": "unit"
+          },
+          {
+            "prim": "Unit"
+          }
+        ],
+        "prim": "PUSH"
+      }
+    ],
+    "packed": "05020000000a035403200743036c030b"
+  },
+  {
+    "data": [
+      {
+        "prim": "SOME"
+      },
+      {
+        "prim": "SET_DELEGATE"
+      },
+      {
+        "prim": "DROP"
+      },
+      {
+        "args": [
+          {
+            "prim": "unit"
+          },
+          {
+            "prim": "Unit"
+          }
+        ],
+        "prim": "PUSH"
+      }
+    ],
+    "packed": "05020000000c0346034e03200743036c030b"
+  },
+  {
+    "data": [
+      {
+        "prim": "VOTING_POWER"
+      },
+      {
+        "prim": "DROP"
+      },
+      {
+        "prim": "UNIT"
+      }
+    ],
+    "packed": "050200000006037b0320034f"
+  },
+  {
+    "data": [
+      {
+        "prim": "SOME"
+      },
+      {
+        "args": [
+          [
+            {
+              "args": [
+                {
+                  "prim": "int"
+                },
+                {
+                  "int": "1"
+                }
+              ],
+              "prim": "PUSH"
+            },
+            {
+              "args": [
+                {
+                  "prim": "mutez"
+                },
+                {
+                  "int": "5"
+                }
+              ],
+              "prim": "PUSH"
+            }
+          ]
+        ],
+        "prim": "DIP"
+      },
+      {
+        "args": [
+          [
+            {
+              "args": [
+                {
+                  "prim": "int",
+                  "annots": [
+                    ":p",
+                    "%root"
+                  ]
+                }
+              ],
+              "prim": "parameter"
+            },
+            {
+              "args": [
+                {
+                  "prim": "int",
+                  "annots": [
+                    ":s"
+                  ]
+                }
+              ],
+              "prim": "storage"
+            },
+            {
+              "args": [
+                [
+                  {
+                    "prim": "DROP"
+                  },
+                  {
+                    "args": [
+                      {
+                        "prim": "int"
+                      },
+                      {
+                        "int": "10"
+                      }
+                    ],
+                    "prim": "PUSH"
+                  },
+                  {
+                    "args": [
+                      {
+                        "prim": "operation"
+                      }
+                    ],
+                    "prim": "NIL"
+                  },
+                  {
+                    "prim": "PAIR"
+                  }
+                ]
+              ],
+              "prim": "code"
+            }
+          ]
+        ],
+        "prim": "CREATE_CONTRACT"
+      },
+      {
+        "prim": "DROP"
+      },
+      {
+        "prim": "DROP"
+      },
+      {
+        "args": [
+          {
+            "prim": "unit"
+          },
+          {
+            "prim": "Unit"
+          }
+        ],
+        "prim": "PUSH"
+      }
+    ],
+    "packed": "0502000000550346051f020000000c0743035b00010743036a0005051d020000002f0500045b000000083a702025726f6f740501045b000000023a730502020000000e03200743035b000a053d036d0342032003200743036c030b"
+  },
+  {
+    "data": [
+      {
+        "prim": "SOME"
+      },
+      {
+        "args": [
+          [
+            {
+              "args": [
+                {
+                  "prim": "unit"
+                },
+                {
+                  "prim": "Unit"
+                }
+              ],
+              "prim": "PUSH"
+            },
+            {
+              "args": [
+                {
+                  "prim": "mutez"
+                },
+                {
+                  "int": "5"
+                }
+              ],
+              "prim": "PUSH"
+            }
+          ]
+        ],
+        "prim": "DIP"
+      },
+      {
+        "args": [
+          [
+            {
+              "args": [
+                {
+                  "prim": "unit"
+                }
+              ],
+              "prim": "storage"
+            },
+            {
+              "args": [
+                {
+                  "prim": "unit"
+                }
+              ],
+              "prim": "parameter"
+            },
+            {
+              "args": [
+                [
+                  {
+                    "prim": "DROP"
+                  },
+                  {
+                    "prim": "UNIT"
+                  },
+                  {
+                    "args": [
+                      {
+                        "prim": "operation"
+                      }
+                    ],
+                    "prim": "NIL"
+                  },
+                  {
+                    "prim": "PAIR"
+                  }
+                ]
+              ],
+              "prim": "code"
+            }
+          ]
+        ],
+        "prim": "CREATE_CONTRACT"
+      },
+      {
+        "prim": "DROP"
+      },
+      {
+        "prim": "DROP"
+      },
+      {
+        "args": [
+          {
+            "prim": "unit"
+          },
+          {
+            "prim": "Unit"
+          }
+        ],
+        "prim": "PUSH"
+      }
+    ],
+    "packed": "05020000003f0346051f020000000c0743036c030b0743036a0005051d02000000190501036c0500036c0502020000000a0320034f053d036d0342032003200743036c030b"
+  },
+  {
+    "data": [
+      {
+        "prim": "SOME"
+      },
+      {
+        "args": [
+          [
+            {
+              "args": [
+                {
+                  "prim": "int"
+                },
+                {
+                  "int": "1"
+                }
+              ],
+              "prim": "PUSH"
+            },
+            {
+              "args": [
+                {
+                  "prim": "mutez"
+                },
+                {
+                  "int": "5"
+                }
+              ],
+              "prim": "PUSH"
+            }
+          ]
+        ],
+        "prim": "DIP"
+      },
+      {
+        "args": [
+          [
+            {
+              "args": [
+                {
+                  "prim": "int",
+                  "annots": [
+                    ":p"
+                  ]
+                }
+              ],
+              "prim": "parameter"
+            },
+            {
+              "args": [
+                {
+                  "prim": "int",
+                  "annots": [
+                    ":s"
+                  ]
+                }
+              ],
+              "prim": "storage"
+            },
+            {
+              "args": [
+                [
+                  {
+                    "prim": "DROP"
+                  },
+                  {
+                    "args": [
+                      {
+                        "prim": "int"
+                      },
+                      {
+                        "int": "10"
+                      }
+                    ],
+                    "prim": "PUSH"
+                  },
+                  {
+                    "args": [
+                      {
+                        "prim": "operation"
+                      }
+                    ],
+                    "prim": "NIL"
+                  },
+                  {
+                    "prim": "PAIR"
+                  }
+                ]
+              ],
+              "prim": "code"
+            }
+          ]
+        ],
+        "prim": "CREATE_CONTRACT"
+      },
+      {
+        "prim": "DROP"
+      },
+      {
+        "prim": "DROP"
+      },
+      {
+        "args": [
+          {
+            "prim": "unit"
+          },
+          {
+            "prim": "Unit"
+          }
+        ],
+        "prim": "PUSH"
+      }
+    ],
+    "packed": "05020000004f0346051f020000000c0743035b00010743036a0005051d02000000290500045b000000023a700501045b000000023a730502020000000e03200743035b000a053d036d0342032003200743036c030b"
+  },
+  {
+    "data": [
+      {
+        "prim": "IMPLICIT_ACCOUNT"
+      },
+      {
+        "prim": "DROP"
+      },
+      {
+        "args": [
+          {
+            "prim": "unit"
+          },
+          {
+            "prim": "Unit"
+          }
+        ],
+        "prim": "PUSH"
+      }
+    ],
+    "packed": "05020000000a031e03200743036c030b"
+  },
+  {
+    "data": [
+      {
+        "prim": "HASH_KEY"
+      }
+    ],
+    "packed": "050200000002032b"
+  },
+  {
+    "data": [
+      {
+        "prim": "NEVER"
+      }
+    ],
+    "packed": "0502000000020379"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          [
+            {
+              "args": [
+                {
+                  "prim": "bytes"
+                },
+                {
+                  "bytes": ""
+                }
+              ],
+              "prim": "PUSH"
+            }
+          ]
+        ],
+        "prim": "DIP"
+      },
+      {
+        "prim": "DUP"
+      },
+      {
+        "args": [
+          [
+            {
+              "prim": "CAR"
+            }
+          ]
+        ],
+        "prim": "DIP"
+      },
+      {
+        "prim": "CDR"
+      },
+      {
+        "prim": "CHECK_SIGNATURE"
+      }
+    ],
+    "packed": "05020000001f051f0200000009074303690a000000000321051f0200000002031603170318"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int"
+          },
+          {
+            "prim": "int"
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "050200000015093100000009035b035b0200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "int",
+            "annots": [
+              ":i"
+            ]
+          },
+          {
+            "prim": "int",
+            "annots": [
+              ":i"
+            ]
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "050200000021093100000015045b000000023a69045b000000023a690200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "mutez"
+          },
+          {
+            "prim": "mutez"
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "050200000015093100000009036a036a0200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "key_hash"
+          },
+          {
+            "prim": "key_hash"
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "050200000015093100000009035d035d0200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "bytes"
+          },
+          {
+            "prim": "bytes"
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "050200000015093100000009036903690200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "bls12_381_fr"
+          },
+          {
+            "prim": "bls12_381_fr"
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "050200000015093100000009038203820200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "string"
+          },
+          {
+            "prim": "string"
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "050200000015093100000009036803680200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "bls12_381_g1"
+          },
+          {
+            "prim": "bls12_381_g1"
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "050200000015093100000009038003800200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "bls12_381_g2"
+          },
+          {
+            "prim": "bls12_381_g2"
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "050200000015093100000009038103810200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "address"
+          },
+          {
+            "prim": "address"
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "050200000015093100000009036e036e0200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "unit"
+          },
+          {
+            "prim": "unit"
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "050200000015093100000009036c036c0200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "timestamp"
+          },
+          {
+            "prim": "timestamp"
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "050200000015093100000009036b036b0200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "bool"
+          },
+          {
+            "prim": "bool"
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "050200000015093100000009035903590200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "key"
+          },
+          {
+            "prim": "key"
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "050200000015093100000009035c035c0200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "signature"
+          },
+          {
+            "prim": "signature"
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "050200000015093100000009036703670200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "chain_id"
+          },
+          {
+            "prim": "chain_id"
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "050200000015093100000009037403740200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "prim": "unit"
+              }
+            ],
+            "prim": "option"
+          },
+          {
+            "args": [
+              {
+                "prim": "unit"
+              }
+            ],
+            "prim": "option"
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000001909310000000d0563036c0563036c0200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "prim": "int"
+              }
+            ],
+            "prim": "set",
+            "annots": [
+              ":s"
+            ]
+          },
+          {
+            "args": [
+              {
+                "prim": "int"
+              }
+            ],
+            "prim": "set",
+            "annots": [
+              ":s"
+            ]
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "0502000000250931000000190666035b000000023a730666035b000000023a730200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "operation"
+          },
+          {
+            "prim": "operation"
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "050200000015093100000009036d036d0200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "never"
+          },
+          {
+            "prim": "never"
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "050200000015093100000009037803780200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "prim": "int"
+              }
+            ],
+            "prim": "set"
+          },
+          {
+            "args": [
+              {
+                "prim": "int"
+              }
+            ],
+            "prim": "set"
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000001909310000000d0566035b0566035b0200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "prim": "unit"
+              }
+            ],
+            "prim": "contract"
+          },
+          {
+            "args": [
+              {
+                "prim": "unit"
+              }
+            ],
+            "prim": "contract"
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000001909310000000d055a036c055a036c0200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "nat"
+          },
+          {
+            "prim": "nat"
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "050200000015093100000009036203620200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "prim": "unit"
+              },
+              {
+                "prim": "int"
+              }
+            ],
+            "prim": "or"
+          },
+          {
+            "args": [
+              {
+                "prim": "unit"
+              },
+              {
+                "prim": "int"
+              }
+            ],
+            "prim": "or"
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000001d0931000000110764036c035b0764036c035b0200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "prim": "int",
+                "annots": [
+                  "%x"
+                ]
+              },
+              {
+                "prim": "int",
+                "annots": [
+                  "%y"
+                ]
+              }
+            ],
+            "prim": "pair",
+            "annots": [
+              ":point"
+            ]
+          },
+          {
+            "args": [
+              {
+                "prim": "int",
+                "annots": [
+                  "%x"
+                ]
+              },
+              {
+                "prim": "int",
+                "annots": [
+                  "%y"
+                ]
+              }
+            ],
+            "prim": "pair",
+            "annots": [
+              ":point"
+            ]
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000004909310000003d0865045b000000022578045b000000022579000000063a706f696e740865045b000000022578045b000000022579000000063a706f696e740200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "prim": "unit"
+              },
+              {
+                "prim": "int"
+              }
+            ],
+            "prim": "pair"
+          },
+          {
+            "args": [
+              {
+                "prim": "unit"
+              },
+              {
+                "prim": "int"
+              }
+            ],
+            "prim": "pair"
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000001d0931000000110765036c035b0765036c035b0200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "prim": "int",
+                "annots": [
+                  ":i"
+                ]
+              }
+            ],
+            "prim": "set",
+            "annots": [
+              ":s"
+            ]
+          },
+          {
+            "args": [
+              {
+                "prim": "int",
+                "annots": [
+                  ":i"
+                ]
+              }
+            ],
+            "prim": "set",
+            "annots": [
+              ":s"
+            ]
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "0502000000310931000000250666045b000000023a69000000023a730666045b000000023a69000000023a730200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "prim": "int",
+                    "annots": [
+                      "%x"
+                    ]
+                  },
+                  {
+                    "prim": "int",
+                    "annots": [
+                      "%y"
+                    ]
+                  }
+                ],
+                "prim": "pair",
+                "annots": [
+                  ":point"
+                ]
+              },
+              {
+                "prim": "int",
+                "annots": [
+                  "%z"
+                ]
+              }
+            ],
+            "prim": "pair",
+            "annots": [
+              ":point3d"
+            ]
+          },
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "prim": "int",
+                    "annots": [
+                      "%x"
+                    ]
+                  },
+                  {
+                    "prim": "int",
+                    "annots": [
+                      "%y"
+                    ]
+                  }
+                ],
+                "prim": "pair",
+                "annots": [
+                  ":point"
+                ]
+              },
+              {
+                "prim": "int",
+                "annots": [
+                  "%z"
+                ]
+              }
+            ],
+            "prim": "pair",
+            "annots": [
+              ":point3d"
+            ]
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000007509310000006908650865045b000000022578045b000000022579000000063a706f696e74045b00000002257a000000083a706f696e74336408650865045b000000022578045b000000022579000000063a706f696e74045b00000002257a000000083a706f696e7433640200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "prim": "unit"
+              },
+              {
+                "prim": "int"
+              }
+            ],
+            "prim": "lambda"
+          },
+          {
+            "args": [
+              {
+                "prim": "unit"
+              },
+              {
+                "prim": "int"
+              }
+            ],
+            "prim": "lambda"
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000001d093100000011075e036c035b075e036c035b0200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "prim": "unit",
+                "annots": [
+                  ":u",
+                  "%l"
+                ]
+              },
+              {
+                "prim": "int",
+                "annots": [
+                  ":i",
+                  "%r"
+                ]
+              }
+            ],
+            "prim": "or"
+          },
+          {
+            "args": [
+              {
+                "prim": "unit",
+                "annots": [
+                  ":u",
+                  "%l"
+                ]
+              },
+              {
+                "prim": "int",
+                "annots": [
+                  ":i",
+                  "%r"
+                ]
+              }
+            ],
+            "prim": "or"
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "0502000000410931000000350764046c000000053a7520256c045b000000053a692025720764046c000000053a7520256c045b000000053a692025720200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "prim": "unit",
+                "annots": [
+                  ":n"
+                ]
+              },
+              {
+                "prim": "int",
+                "annots": [
+                  ":t"
+                ]
+              }
+            ],
+            "prim": "lambda",
+            "annots": [
+              ":l"
+            ]
+          },
+          {
+            "args": [
+              {
+                "prim": "unit",
+                "annots": [
+                  ":n"
+                ]
+              },
+              {
+                "prim": "int",
+                "annots": [
+                  ":t"
+                ]
+              }
+            ],
+            "prim": "lambda",
+            "annots": [
+              ":l"
+            ]
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "050200000041093100000035085e046c000000023a6e045b000000023a74000000023a6c085e046c000000023a6e045b000000023a74000000023a6c0200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "prim": "int"
+              },
+              {
+                "prim": "unit"
+              }
+            ],
+            "prim": "map"
+          },
+          {
+            "args": [
+              {
+                "prim": "int"
+              },
+              {
+                "prim": "unit"
+              }
+            ],
+            "prim": "map"
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000001d0931000000110760035b036c0760035b036c0200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "prim": "int"
+              },
+              {
+                "prim": "unit"
+              }
+            ],
+            "prim": "big_map"
+          },
+          {
+            "args": [
+              {
+                "prim": "int"
+              },
+              {
+                "prim": "unit"
+              }
+            ],
+            "prim": "big_map"
+          },
+          []
+        ],
+        "prim": "LAMBDA"
+      },
+      {
+        "prim": "DROP"
+      }
+    ],
+    "packed": "05020000001d0931000000110761035b036c0761035b036c0200000000000000000320"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "prim": "unit"
+                  },
+                  {
+                    "prim": "unit"
+                  }
+                ],
+                "prim": "pair"
+              }
+            ],
+            "prim": "set"
+          }
+        ],
+        "prim": "LEFT"
+      },
+      {
+        "prim": "DROP"
+      },
+      {
+        "prim": "UNIT"
+      }
+    ],
+    "packed": "05020000000e053305660765036c036c0320034f"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "prim": "nat"
+                  },
+                  {
+                    "prim": "nat"
+                  }
+                ],
+                "prim": "pair"
+              }
+            ],
+            "prim": "set"
+          }
+        ],
+        "prim": "LEFT"
+      },
+      {
+        "prim": "DROP"
+      },
+      {
+        "prim": "UNIT"
+      }
+    ],
+    "packed": "05020000000e053305660765036203620320034f"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "prim": "nat"
+                  },
+                  {
+                    "prim": "nat"
+                  }
+                ],
+                "prim": "or"
+              }
+            ],
+            "prim": "set"
+          }
+        ],
+        "prim": "LEFT"
+      },
+      {
+        "prim": "DROP"
+      },
+      {
+        "prim": "UNIT"
+      }
+    ],
+    "packed": "05020000000e053305660764036203620320034f"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "prim": "unit"
+              }
+            ],
+            "prim": "option"
+          }
+        ],
+        "prim": "LEFT"
+      },
+      {
+        "prim": "DROP"
+      },
+      {
+        "prim": "UNIT"
+      }
+    ],
+    "packed": "05020000000a05330563036c0320034f"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "signature"
+          }
+        ],
+        "prim": "LEFT"
+      },
+      {
+        "prim": "DROP"
+      },
+      {
+        "prim": "UNIT"
+      }
+    ],
+    "packed": "050200000008053303670320034f"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "chain_id"
+          }
+        ],
+        "prim": "LEFT"
+      },
+      {
+        "prim": "DROP"
+      },
+      {
+        "prim": "UNIT"
+      }
+    ],
+    "packed": "050200000008053303740320034f"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "key"
+          }
+        ],
+        "prim": "LEFT"
+      },
+      {
+        "prim": "DROP"
+      },
+      {
+        "prim": "UNIT"
+      }
+    ],
+    "packed": "0502000000080533035c0320034f"
+  },
+  {
+    "data": [
+      {
+        "args": [
+          {
+            "prim": "unit"
+          }
+        ],
+        "prim": "LEFT"
+      },
+      {
+        "prim": "DROP"
+      },
+      {
+        "prim": "UNIT"
+      }
+    ],
+    "packed": "0502000000080533036c0320034f"
+  }
+]

@@ -31,7 +31,7 @@ export type BatchKinds =
   | OpKind.TRANSACTION
   | OpKind.DELEGATION;
 
-export class OperationBatch extends OperationEmitter {
+export class OperationBatch<TContract extends { methods: unknown, storage: unknown }> extends OperationEmitter {
   private operations: ParamsWithKind[] = [];
 
   constructor(context: Context, private estimator: EstimationProvider) {
@@ -55,7 +55,7 @@ export class OperationBatch extends OperationEmitter {
    *
    * @param params Transfer operation parameter
    */
-  withContractCall(params: ContractMethod<ContractProvider>) {
+  withContractCall(params: ContractMethod<ContractProvider<TContract>, TContract>) {
     return this.withTransfer(params.toTransferParams());
   }
 
@@ -101,8 +101,8 @@ export class OperationBatch extends OperationEmitter {
       case OpKind.ORIGINATION:
         return createOriginationOperation(
           await this.context.parser.prepareCodeOrigination({
-          ...param,
-        }));
+            ...param,
+          }));
       case OpKind.DELEGATION:
         return createSetDelegateOperation({
           ...param,

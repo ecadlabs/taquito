@@ -1,0 +1,484 @@
+[
+    {
+        "data": {
+            "string": "KT1RvkwF4F7pz1gCoxkyZrG1RkrxQy3gmFTv%foo"
+        },
+        "type": {
+            "prim": "address"
+        },
+        "packed": "050a0000001901be41ee922ddd2cf33201e49d32da0afec571dce300666f6f"
+    },
+    {
+        "data": {
+            "string": "KT1RvkwF4F7pz1gCoxkyZrG1RkrxQy3gmFTv%foo"
+        },
+        "type": {
+            "prim": "string"
+        },
+        "packed": "0501000000284b543152766b7746344637707a3167436f786b795a724731526b7278517933676d46547625666f6f"
+    },
+    {
+        "data": {
+            "string": "NetXynUjJNZm7wi"
+        },
+        "type": {
+            "prim": "chain_id"
+        },
+        "packed": "050a00000004f3d48554"
+    },
+    {
+        "data": {
+            "string": "edpkuBknW28nW72KG6RoHtYW7p12T6GKc7nAbwYX5m8Wd9sDVC9yav"
+        },
+        "type": {
+            "prim": "key"
+        },
+        "packed": "050a00000021004798d2cc98473d7e250c898885718afd2e4efbcb1a1595ab9730761ed830de0f"
+    },
+    {
+        "data": {
+            "string": "tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx"
+        },
+        "type": {
+            "prim": "key_hash"
+        },
+        "packed": "050a000000150002298c03ed7d454a101eb7022bc95f7e5f41ac78"
+    },
+    {
+        "data": [
+            {
+                "prim": "PUSH",
+                "args": [
+                    {
+                        "prim": "nat"
+                    },
+                    {
+                        "int": "1"
+                    }
+                ]
+            },
+            {
+                "prim": "ADD"
+            }
+        ],
+        "type": {
+            "prim": "lambda",
+            "args": [
+                {
+                    "prim": "nat"
+                },
+                {
+                    "prim": "nat"
+                }
+            ]
+        },
+        "packed": "0502000000080743036200010312"
+    },
+    {
+        "data": [
+            {
+                "prim": "PUSH",
+                "args": [
+                    {
+                        "prim": "address"
+                    },
+                    {
+                        "string": "KT1RvkwF4F7pz1gCoxkyZrG1RkrxQy3gmFTv%foo"
+                    }
+                ]
+            },
+            {
+                "prim": "DROP"
+            }
+        ],
+        "type": {
+            "prim": "lambda",
+            "args": [
+                {
+                    "prim": "unit"
+                },
+                {
+                    "prim": "unit"
+                }
+            ]
+        },
+        "packed": "0502000000240743036e0a0000001901be41ee922ddd2cf33201e49d32da0afec571dce300666f6f0320"
+    },
+    {
+        "data": [
+            {
+                "prim": "DROP"
+            },
+            {
+                "prim": "SELF_ADDRESS"
+            }
+        ],
+        "type": {
+            "prim": "lambda",
+            "args": [
+                {
+                    "prim": "unit"
+                },
+                {
+                    "prim": "address"
+                }
+            ]
+        },
+        "packed": "05020000000403200377"
+    },
+    {
+        "data": [
+            {
+                "prim": "CONTRACT",
+                "args": [
+                    {
+                        "prim": "unit"
+                    }
+                ]
+            },
+            {
+                "prim": "DROP"
+            },
+            {
+                "prim": "UNIT"
+            }
+        ],
+        "type": {
+            "prim": "lambda",
+            "args": [
+                {
+                    "prim": "address"
+                },
+                {
+                    "prim": "unit"
+                }
+            ]
+        },
+        "packed": "0502000000080555036c0320034f"
+    },
+    {
+        "data": {
+            "string": "sigXeXB5JD5TaLb3xgTPKjgf9W45judiCmNP9UBdZBdmtHSGBxL1M8ZSUb6LpjGP2MdfUBTB4WHs5APnvyRV1LooU6QHJuDe"
+        },
+        "type": {
+            "prim": "signature"
+        },
+        "packed": "050a0000004049d47dba27bd76208b092f3e500f64818920c817491b8b9094f28c2c2b9c6721b257b8878ce47182122b8ea84aeacd84a8aa28cb1f1fe48a26355a7bca4b8306"
+    },
+    {
+        "data": {
+            "string": "2019-09-26T10:59:51Z"
+        },
+        "type": {
+            "prim": "timestamp"
+        },
+        "packed": "0500a7e8e4d80b"
+    },
+    {
+        "data": [
+            {
+                "string": "KT1S4Kg5NCiQQ8dNtPuMXVAbJguhGLA4mGeP%foo"
+            },
+            {
+                "string": "KT1L8JQ3cq6QB8FTfK33UGYjyzf4zeLCv6g8%bar"
+            },
+            {
+                "string": "KT1D7uG1LBzie2oQ71cosLaArz46z6ppL6yn"
+            }
+        ],
+        "type": {
+            "prim": "list",
+            "args": [
+                {
+                    "prim": "address"
+                }
+            ]
+        },
+        "packed": "0502000000570a0000001901bfb02c20a2edeef97c288c5857d3f5f68d6e19b800666f6f0a00000019017ea0041bb4a78e74b142521bf4d2c92585bd18e9006261720a000000160131c3d20727bd4ea9ae69e5f262245613dcdf83be00"
+    },
+    {
+        "data": [
+            {
+                "prim": "Elt",
+                "args": [
+                    {
+                        "int": "123"
+                    },
+                    {
+                        "string": "2019-10-25T17:00:54Z"
+                    }
+                ]
+            },
+            {
+                "prim": "Elt",
+                "args": [
+                    {
+                        "int": "456"
+                    },
+                    {
+                        "string": "2020-10-29T22:06:47Z"
+                    }
+                ]
+            },
+            {
+                "prim": "Elt",
+                "args": [
+                    {
+                        "int": "789"
+                    },
+                    {
+                        "string": "2021-02-28T20:34:55Z"
+                    }
+                ]
+            }
+        ],
+        "type": {
+            "prim": "map",
+            "args": [
+                {
+                    "prim": "nat"
+                },
+                {
+                    "prim": "timestamp"
+                }
+            ]
+        },
+        "packed": "050200000021070400bb010086a999db0b070400880700b7f3d9f90b070400950c00aff9df830c"
+    },
+    {
+        "data": {
+            "prim": "Some",
+            "args": [
+                {
+                    "string": "NetXynUjJNZm7wi"
+                }
+            ]
+        },
+        "type": {
+            "prim": "option",
+            "args": [
+                {
+                    "prim": "chain_id"
+                }
+            ]
+        },
+        "packed": "0505090a00000004f3d48554"
+    },
+    {
+        "data": {
+            "prim": "None"
+        },
+        "type": {
+            "prim": "option",
+            "args": [
+                {
+                    "prim": "chain_id"
+                }
+            ]
+        },
+        "packed": "050306"
+    },
+    {
+        "data": {
+            "prim": "Left",
+            "args": [
+                {
+                    "string": "NetXynUjJNZm7wi"
+                }
+            ]
+        },
+        "type": {
+            "prim": "or",
+            "args": [
+                {
+                    "prim": "chain_id"
+                },
+                {
+                    "prim": "string"
+                }
+            ]
+        },
+        "packed": "0505050a00000004f3d48554"
+    },
+    {
+        "data": {
+            "prim": "Right",
+            "args": [
+                {
+                    "string": "foo"
+                }
+            ]
+        },
+        "type": {
+            "prim": "or",
+            "args": [
+                {
+                    "prim": "chain_id"
+                },
+                {
+                    "prim": "string"
+                }
+            ]
+        },
+        "packed": "0505080100000003666f6f"
+    },
+    {
+        "data": {
+            "prim": "Pair",
+            "args": [
+                {
+                    "string": "NetXynUjJNZm7wi"
+                },
+                {
+                    "string": "foo"
+                }
+            ]
+        },
+        "type": {
+            "prim": "pair",
+            "args": [
+                {
+                    "prim": "chain_id"
+                },
+                {
+                    "prim": "string"
+                }
+            ]
+        },
+        "packed": "0507070a00000004f3d485540100000003666f6f"
+    },
+    {
+        "proto": "PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA",
+        "data": {
+            "prim": "Pair",
+            "args": [
+                {
+                    "prim": "True"
+                },
+                {
+                    "string": "foo"
+                },
+                {
+                    "int": "-123"
+                }
+            ]
+        },
+        "expect": {
+            "prim": "Pair",
+            "args": [
+                {
+                    "prim": "True"
+                },
+                {
+                    "prim": "Pair",
+                    "args": [
+                        {
+                            "string": "foo"
+                        },
+                        {
+                            "int": "-123"
+                        }
+                    ]
+                }
+            ]
+        },
+        "type": {
+            "prim": "pair",
+            "args": [
+                {
+                    "prim": "bool"
+                },
+                {
+                    "prim": "string"
+                },
+                {
+                    "prim": "int"
+                }
+            ]
+        },
+        "packed": "050707030a07070100000003666f6f00fb01"
+    },
+    {
+        "data": [
+            {
+                "prim": "Pair",
+                "args": [
+                    {
+                        "string": "NetXynUjJNZm7wi"
+                    },
+                    {
+                        "string": "foo"
+                    }
+                ]
+            }
+        ],
+        "type": {
+            "prim": "list",
+            "args": [
+                {
+                    "prim": "pair",
+                    "args": [
+                        {
+                            "prim": "chain_id"
+                        },
+                        {
+                            "prim": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        "packed": "05020000001307070a00000004f3d485540100000003666f6f"
+    },
+    {
+        "data": [
+            {
+                "string": "one"
+            },
+            {
+                "string": "two"
+            },
+            {
+                "string": ""
+            }
+        ],
+        "type": {
+            "prim": "list",
+            "args": [
+                {
+                    "prim": "string"
+                }
+            ]
+        },
+        "packed": "05020000001501000000036f6e65010000000374776f0100000000"
+    },
+    {
+        "data": [
+            [
+                {
+                    "string": "one"
+                }
+            ],
+            [
+                {
+                    "string": "two"
+                }
+            ],
+            []
+        ],
+        "type": {
+            "prim": "list",
+            "args": [
+                {
+                    "prim": "list",
+                    "args": [
+                        {
+                            "prim": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        "packed": "05020000001f020000000801000000036f6e650200000008010000000374776f0200000000"
+    }
+]

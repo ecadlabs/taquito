@@ -1,12 +1,18 @@
-import { MichelsonMap } from '@taquito/taquito';
 import { BigNumber } from 'bignumber.js';
+import { MichelsonMap } from '@taquito/taquito';
 
 export type unit = (true | undefined) & { __type: 'unit' };
 
 export type address = string & { __type: 'address' };
 export type bytes = string & { __type: 'bytes' };
 export type contract = string & { __type: 'contract' };
-export type timestamp = string & { __type: 'timestamp' };
+export type operation = string & { __type: 'operation' };
+export type key = string & { __type: 'key' };
+export type key_hash = string & { __type: 'key_hash' };
+export type signature = string & { __type: 'signature' };
+export type ticket = string & { __type: 'ticket' };
+
+export type timestamp = Date & { __type: 'timestamp' };
 
 export type int = BigNumber & { __type: 'int' };
 export type nat = BigNumber & { __type: 'nat' };
@@ -50,12 +56,12 @@ function subtract<T extends BigNumber>(a: T, b: T): T {
     return a.minus(b) as T;
 }
 
-/** Tezos as casting for strict types */
+/** tas: Tezos 'as' casting for strict types */
 export const tas = {
     address: createStringTypeTas<address>(),
     bytes: createStringTypeTas<bytes>(),
     contract: createStringTypeTas<contract>(),
-    timestamp: (value: string | Date): timestamp => new Date(value).toISOString() as timestamp,
+    timestamp: (value: string | Date): timestamp => new Date(value) as timestamp,
 
     int: createBigNumberTypeTas<int>(),
     nat: createBigNumberTypeTas<nat>(),
@@ -68,4 +74,7 @@ export const tas = {
     // Operations
     add,
     subtract,
+
+    // To number
+    number: (value: string | BigNumber) => Number(value + ''),
 };

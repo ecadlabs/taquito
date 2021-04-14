@@ -1,0 +1,28 @@
+{ parameter
+    (or (pair %make
+           (nat %id)
+           (pair (address %p1) (pair (mutez %fee) (option %otherFee mutez))))
+        (or (nat %join)
+            (or (pair %register2 (nat %id) (address %p2))
+                (or (pair %accept
+                       (nat %id)
+                       (or %result (unit %result1) (or (unit %result2) (unit %ok))))
+                    (or (nat %cancel)
+                        (or (address %setAuth)
+                            (or (unit %confirmAuth) (or (address %setCollector) (unit %free))))))))) ;
+  storage
+    (pair (big_map %entries
+             nat
+                               (or %progress
+                                  (unit %waiting01)
+                                  (or (unit %waiting02)
+                                      (or (address %p1)
+                                          (or (address %p2)
+                                              (or (pair %finished
+                                                     (address %bob)
+                                                     (or %result (unit %result1) (or (unit %result2) (unit %ok))))
+                                                  (option %cancelled address)))))))
+          (pair (address %alice)
+                (pair (address %caleb)
+                      (pair (address %dodge) (pair (nat %count) (bool %free)))))) ;
+  code { PUSH string "XTZ_RECEIVED" }; }

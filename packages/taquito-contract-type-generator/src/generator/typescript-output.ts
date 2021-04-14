@@ -1,18 +1,28 @@
-import { assertExhaustive, GenerateApiError } from './common';
+import { assertExhaustive, GenerateApiError, reduceFlatMap } from './common';
 import { TypedStorage, TypedMethod, TypedType, TypedVar } from './contract-parser';
 
 export type TypescriptCodeOutput = {
-    final: string;
-    typeMapping: string;
+    typesFileContent: string;
+    contractCodeFileContent: string;
     storage: string;
     methods: string;
 };
 
-export const toTypescriptCode = (storage: TypedStorage, methods: TypedMethod[]): TypescriptCodeOutput => {
-    type StrictType = { strictType: string, baseType?: string, raw?: string };
-    const usedStrictTypes = [] as StrictType[];
-    const addStrictType = (strictType: StrictType) => {
-        if (!usedStrictTypes.some(x => x.strictType === strictType.strictType)) {
+export type TypeAliasData = {
+    mode: 'local',
+    fileContent?: string,
+} | {
+    mode: 'file' | 'library',
+    importPath?: string,
+} | {
+    mode: 'simple',
+};
+
+export const toTypescriptCode = (storage: TypedStorage, methods: TypedMethod[], contractName: string, parsedContract: unknown, protocol: { name: string, key: string }, typeAliasData: TypeAliasData): TypescriptCodeOutput => {
+    type TypeAlias = { aliasType: string, simpleTypeDefinition: string, simpleTypeImports?: { name: string, isDefault?: boolean, from: string }[] };
+    const usedStrictTypes = [] as TypeAlias[];
+    const addTypeAlias = (strictType: TypeAlias) => {
+        if (!usedStrictTypes.some(x => x.aliasType === strictType.aliasType)) {
             usedStrictTypes.push(strictType);
         }
     };
@@ -39,23 +49,31 @@ ${tabs(indent)}`;
                 return `${t.typescriptType}`;
             }
 
-            const baseType = t.typescriptType === `number` ? `BigNumber` : t.typescriptType;
-            const strictType = { baseType, strictType: prim };
-            addStrictType(strictType);
+            if (t.typescriptType === 'number') {
+                const simpleBaseType = `string | BigNumber | number`;
+                const typeAlias: TypeAlias = { aliasType: prim, simpleTypeDefinition: `type ${prim} = ${simpleBaseType};`, simpleTypeImports: [{ name: 'BigNumber', isDefault: true, from: 'bignumber.js' }] };
+                addTypeAlias(typeAlias);
 
-            return strictType.strictType;
+                return typeAlias.aliasType;
+            }
+
+            const simpleBaseType = t.typescriptType === 'Date' ? 'Date | string' : t.typescriptType;
+            const typeAlias: TypeAlias = { aliasType: prim, simpleTypeDefinition: `type ${prim} = ${simpleBaseType};` };
+            addTypeAlias(typeAlias);
+
+            return typeAlias.aliasType;
         }
         if (t.kind === `array`) {
             return `Array<${typeToCode(t.array.item, indent)}>`;
         }
         if (t.kind === `map`) {
 
-            const strictType = t.map.isBigMap
-                ? { strictType: `BigMap`, raw: `type BigMap<K, V> = Omit<MichelsonMap<K, V>, 'get'> & { get: (key: K) => Promise<V> }` }
-                : { strictType: `MMap`, raw: `type MMap<K, V> = MichelsonMap<K, V>` };
-            addStrictType(strictType);
+            const typeAlias: TypeAlias = t.map.isBigMap
+                ? { aliasType: `BigMap`, simpleTypeDefinition: 'type BigMap<K, T> = MichelsonMap<K, T>;', simpleTypeImports: [{ name: 'MichelsonMap', from: '@taquito/taquito' }] }
+                : { aliasType: `MMap`, simpleTypeDefinition: 'type MMap<K, T> = MichelsonMap<K, T>;', simpleTypeImports: [{ name: 'MichelsonMap', from: '@taquito/taquito' }] };
+            addTypeAlias(typeAlias);
 
-            return `${strictType.strictType}<${typeToCode(t.map.key, indent)}, ${typeToCode(t.map.value, indent)}>`;
+            return `${typeAlias.aliasType}<${typeToCode(t.map.key, indent)}, ${typeToCode(t.map.value, indent)}>`;
         }
         if (t.kind === `object`) {
             return `{${toIndentedItems(indent, {},
@@ -81,9 +99,9 @@ ${tabs(indent)}`;
             )})`;
         }
         if (t.kind === `unit`) {
-            const strictType = { baseType: `(true | undefined)`, strictType: `unit` };
-            addStrictType(strictType);
-            return strictType.strictType;
+            const typeAlias: TypeAlias = { aliasType: `unit`, simpleTypeDefinition: `type unit = (true | undefined);`, };
+            addTypeAlias(typeAlias);
+            return typeAlias.aliasType;
         }
         if (t.kind === `never`) {
             return `never`;
@@ -106,9 +124,9 @@ ${tabs(indent)}`;
             return `${args[0].name ?? `param`}: ${typeToCode(args[0].type, indent + 1)}`;
         }
 
-        return `params: {${toIndentedItems(indent, {},
-            args.filter(x => x.name || x.type.kind !== `unit`).map((a, i) => varToCode(a, i, indent + 1) + `;`),
-        )}}`;
+        return `${toIndentedItems(indent, {},
+            args.filter(x => x.name || x.type.kind !== `unit`).map((a, i) => varToCode(a, i, indent + 1) + `,`),
+        )}`;
     };
 
     const methodsToCode = (indent: number) => {
@@ -129,40 +147,63 @@ ${tabs(indent)}`;
     const methodsCode = methodsToCode(0);
     const storageCode = storageToCode(0);
 
-    const typeMapping = usedStrictTypes
-        .sort((a, b) => a.strictType.localeCompare(b.strictType))
-        .map(x => {
-            if (x.baseType) {
-                return `type ${x.strictType} = ${x.baseType} & { __type: '${x.strictType}' };`;
-            }
-            if (x.raw) {
-                return `${x.raw};`;
-            }
-            return `// type ${x.strictType} = unknown;`;
-        }).join(`\n`);
+    // Simple type aliases
+    const simpleTypeMappingImportsAll = new Map(usedStrictTypes.map(x => x.simpleTypeImports ?? []).reduce(reduceFlatMap, []).map(x => [`${x?.from}:${x?.name}:${x?.isDefault}`, x]));
+    const simpleTypeMappingImportsFrom = [...simpleTypeMappingImportsAll.values()].reduce((out, x) => {
+        const entry = out[x.from] ?? (out[x.from] = { names: [] });
+        if (x.isDefault) {
+            entry.default = x.name;
+        } else {
+            entry.names.push(x.name);
+        }
+        entry.names.sort((a, b) => a.localeCompare(b));
+        return out;
+    }, {} as { [from: string]: { names: string[], default?: string } });
 
-    //     const typeAliases = `
-    // import { MichelsonMap } from '@taquito/taquito';
-    // import { BigNumber } from 'bignumber.js';
+    const simpleTypeMappingImportsText = Object.keys(simpleTypeMappingImportsFrom)
+        .map(k => {
+            const entry = simpleTypeMappingImportsFrom[k];
+            const items = [entry.default, entry.names.length ? `{ ${entry.names.join(', ')} }` : ''].filter(x => x);
+            return `import ${items.join(', ')} from '${k}';\n`;
+        })
+        .join('');
 
-    // ${typeMapping}
-    //         `.trim();
-    const typeAliases = `import { ${usedStrictTypes.map(x => x.strictType).join(`, `)} } from './type-aliases';`;
+    const simpleTypeMapping = usedStrictTypes
+        .sort((a, b) => a.aliasType.localeCompare(b.aliasType))
+        .map(x => x.simpleTypeDefinition).join(`\n`);
 
-    const finalCode = `
-${typeAliases}
+    const typeAliasesDefinitions =
+        typeAliasData.mode === 'simple' ? `${simpleTypeMappingImportsText}${simpleTypeMapping}`
+            : typeAliasData.mode === 'local' ? typeAliasData.fileContent
+                : `import { ${usedStrictTypes.map(x => x.aliasType).join(`, `)} } from '${typeAliasData.importPath}';`;
+
+    const contractTypeName = `${contractName}ContractType`;
+    const codeName = `${contractName}Code`;
+
+    const typesFileContent = `
+${typeAliasesDefinitions}
 
 ${storageCode}
 
 ${methodsCode}
 
-export type Contract = { methods: Methods, storage: Storage };
+export type ${contractTypeName} = { methods: Methods, storage: Storage, code: { __type: '${codeName}', protocol: string, code: object[] } };
+`;
+
+    const contractCodeFileContent = `
+export const ${codeName}: { __type: '${codeName}', protocol: string, code: object[] } = {
+    __type: '${codeName}',
+    protocol: '${protocol.key}',
+    code: JSON.parse(\`${JSON.stringify(parsedContract)}\`)
+};
 `;
     return {
-        final: finalCode,
+        typesFileContent,
+        contractCodeFileContent,
         storage: storageCode,
         methods: methodsCode,
-        typeMapping,
     };
 
 };
+
+

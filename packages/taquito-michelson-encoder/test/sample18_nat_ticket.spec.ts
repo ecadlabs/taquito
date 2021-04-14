@@ -2,7 +2,8 @@ import BigNumber from 'bignumber.js';
 import { bigMapValue, rpcContractResponse, storage } from '../data/sample18_ticket';
 import { Schema } from '../src/schema/storage';
 
-describe('Schema with a ticket inside a big map in storage', () => {
+describe('Schema with a ticket of type nat inside a big map %tickets in storage', () => {
+    // key of the big map is nat and value is ticket of type nat
     it('Should decode storage properly', () => {
         const schema = new Schema(storage);
         expect(schema.Execute(rpcContractResponse.script.storage)).toEqual({

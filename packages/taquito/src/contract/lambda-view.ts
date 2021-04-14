@@ -1,15 +1,21 @@
 import { MichelsonV1Expression } from '@taquito/rpc';
-import { Contract, ContractAbstraction, WalletContract } from './contract';
+import { Contract, ContractAbstraction, ContractMethod, WalletContract } from './contract';
 import { TezosOperationError } from '../operations/operation-errors';
 import { ContractProvider } from './interface';
 import { Wallet } from '../wallet';
 
-export default class LambdaView {
+export type LambaViewContractOf<TContract extends { methods: unknown, storage: unknown }> = {
+  methods: {};
+  storage: {};
+  view: {} & TContract['methods'];
+};
+
+export default class LambdaView<TContract extends { methods: unknown, storage: unknown }> {
   public readonly voidLambda: Object;
 
   constructor(
-    private lambdaContract: Contract | WalletContract,
-    private viewContract: ContractAbstraction< ContractProvider | Wallet > ,
+    private lambdaContract: Contract<TContract> | WalletContract<TContract>,
+    private viewContract: ContractAbstraction<ContractProvider<TContract> | Wallet<TContract>, TContract>,
     public readonly viewMethod: string = 'default',
     private contractParameter: MichelsonV1Expression = { prim: 'Unit' }
   ) {
@@ -18,14 +24,14 @@ export default class LambdaView {
 
   async execute(): Promise<any> {
     try {
-      await this.lambdaContract.methods.default(this.voidLambda).send();
+      await (this.lambdaContract.methods as unknown as { default: (params: unknown) => { send: () => Promise<void> } }).default(this.voidLambda).send();
     } catch (ex) {
       if (ex instanceof TezosOperationError) {
         const lastError: any = ex.errors[ex.errors.length - 1];
 
         const failedWith = lastError.with;
         return failedWith;
-      } else { 
+      } else {
         throw ex;
       }
     }
@@ -228,7 +234,7 @@ export default class LambdaView {
 
     const args = Array.from(entrypoint.args) as [MichelsonV1Expression, MichelsonV1Expression];
     const [parameter, callbackContract] = args;
-    if( 'annots' in parameter ) {
+    if ('annots' in parameter) {
       delete parameter['annots']
     }
 

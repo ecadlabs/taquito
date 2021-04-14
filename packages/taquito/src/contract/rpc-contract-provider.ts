@@ -1,3 +1,4 @@
+import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { ScriptResponse } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
@@ -25,8 +26,8 @@ import {
 } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
 
-export class RpcContractProvider extends OperationEmitter
-  implements ContractProvider, StorageProvider {
+export class RpcContractProvider<TContract extends { methods: unknown, storage: unknown } = { methods: any; storage: any }> extends OperationEmitter
+  implements ContractProvider<TContract>, StorageProvider {
   constructor(context: Context, private estimator: EstimationProvider) {
     super(context);
   }
@@ -55,7 +56,7 @@ export class RpcContractProvider extends OperationEmitter
 
     const storage = await this.rpc.getStorage(contract);
 
-    return contractSchema.Execute(storage, smartContractAbstractionSemantic(this)) as T; // Cast into T because only the caller can know the true type of the storage
+    return contractSchema.Execute(storage, smartContractAbstractionSemantic(this as ContractProvider<TContract>)) as T; // Cast into T because only the caller can know the true type of the storage
   }
 
   /**
@@ -68,7 +69,7 @@ export class RpcContractProvider extends OperationEmitter
    *
    * @deprecated Deprecated in favor of getBigMapKeyByID
    *
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-script
+   * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-context-contracts-contract-id-big-map-get
    */
   async getBigMapKey<T>(contract: string, key: string, schema?: ContractSchema): Promise<T> {
     if (!schema) {
@@ -97,18 +98,87 @@ export class RpcContractProvider extends OperationEmitter
    * @param id Big Map ID
    * @param keyToEncode key to query (will be encoded properly according to the schema)
    * @param schema Big Map schema (can be determined using your contract type)
+   * @param block optional block level to fetch the values from
    *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-big-maps-big-map-id-script-expr
    */
-  async getBigMapKeyByID<T>(id: string, keyToEncode: string, schema: Schema): Promise<T> {
+  async getBigMapKeyByID<T>(id: string, keyToEncode: string, schema: Schema, block?: number): Promise<T> {
     const { key, type } = schema.EncodeBigMapKey(keyToEncode);
-    const { packed } = await this.context.rpc.packData({ data: key, type });
+    const { packed } = await this.context.packer.packData({ data: key, type });
 
     const encodedExpr = encodeExpr(packed);
 
-    const bigMapValue = await this.context.rpc.getBigMapExpr(id.toString(), encodedExpr);
+    const bigMapValue = block ? await this.context.rpc.getBigMapExpr(id.toString(), encodedExpr, { block: String(block) }) : await this.context.rpc.getBigMapExpr(id.toString(), encodedExpr);
 
-    return schema.ExecuteOnBigMapValue(bigMapValue, smartContractAbstractionSemantic(this)) as T;
+    return schema.ExecuteOnBigMapValue(bigMapValue, smartContractAbstractionSemantic(this as ContractProvider<TContract>)) as T;
+  }
+
+  /**
+   *
+   * @description Fetch multiple values in a big map
+   * All values will be fetched on the same block level. If a block is specified in the request, the values will be fetched at it. 
+   * Otherwise, a first request will be done to the node to fetch the level of the head and all values will be fetched at this level.
+   * If one of the keys does not exist in the big map, its value will be set to undefined.
+   *
+   * @param id Big Map ID
+   * @param keys Array of keys to query (will be encoded properly according to the schema)
+   * @param schema Big Map schema (can be determined using your contract type)
+   * @param block optional block level to fetch the values from
+   * @returns An object containing the keys queried in the big map and their value in a well-formatted JSON object format
+   *
+   */
+  async getBigMapKeysByID<T>(id: string, keys: string[], schema: Schema, block?: number): Promise<{ [key: string]: T | undefined }> {
+    const bigMapValues = Object({ [keys[0]]: undefined });
+    if (keys.length === 1) { // No need to get the block level if only one key
+      let val: T | undefined;
+      try {
+        val = await this.getBigMapKeyByID<T>(id, keys[0], schema, block);
+      } catch (ex) {
+        if (ex instanceof HttpResponseError && ex.status === STATUS_CODE.NOT_FOUND) {
+          val = undefined;
+        } else {
+          throw ex;
+        }
+      }
+      Object.assign(bigMapValues, { [keys[0]]: val });
+
+    } else {
+      let level: number;
+      if (block) {
+        level = block
+      } else {
+        const { header } = await this.context.rpc.getBlock();
+        level = header.level
+      }
+
+      // Execute batch of promises in series
+      const batchSize = 5;
+      let position = 0;
+      let results: Array<(T | undefined)> = [];
+
+      while (position < keys.length) {
+        const keysBatch = keys.slice(position, position + batchSize);
+        results = [...results, ...await Promise.all(keysBatch.map(async (keyToEncode) => {
+          try {
+            return await this.getBigMapKeyByID<T>(id, keyToEncode, schema, level);
+          } catch (ex) {
+            if (ex instanceof HttpResponseError && ex.status === STATUS_CODE.NOT_FOUND) {
+              (keyToEncode as any) = undefined;
+            } else {
+              throw ex;
+            }
+          }
+        })
+        )];
+        position += batchSize;
+      }
+
+      for (let i = 0; i < results.length; i++) {
+        Object.assign(bigMapValues, { [keys[i]]: results[i] })
+      }
+    }
+
+    return bigMapValues;
   }
 
   /**
@@ -121,15 +191,15 @@ export class RpcContractProvider extends OperationEmitter
    *
    * @param OriginationOperation Originate operation parameter
    */
-  async originate(params: OriginateParams) {
+  async originate(params: OriginateParams): Promise<OriginationOperation<TContract>> {
     const estimate = await this.estimate(params, this.estimator.originate.bind(this.estimator));
 
     const publicKeyHash = await this.signer.publicKeyHash();
     const operation = await createOriginationOperation(
       await this.context.parser.prepareCodeOrigination({
-      ...params,
-      ...estimate,
-    }));
+        ...params,
+        ...estimate,
+      }));
     const preparedOrigination = await this.prepareOperation({ operation, source: publicKeyHash });
     const forgedOrigination = await this.forge(preparedOrigination);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(forgedOrigination);
@@ -208,12 +278,12 @@ export class RpcContractProvider extends OperationEmitter
     return new TransactionOperation(hash, operation, source, forgedBytes, opResponse, context);
   }
 
-  async at<T extends ContractAbstraction<ContractProvider>>(address: string, contractAbstractionComposer: ContractAbstractionComposer<T> = x => x as any): Promise<T> {
+  async at<T extends ContractAbstraction<ContractProvider<TContract>, TContract>>(address: string, contractAbstractionComposer: ContractAbstractionComposer<T, TContract> = x => x as any): Promise<T> {
     const script = await this.rpc.getScript(address);
     const entrypoints = await this.rpc.getEntrypoints(address);
     const blockHeader = await this.rpc.getBlockHeader();
     const chainId = blockHeader.chain_id;
-    const abs = new ContractAbstraction(address, script, this, this, entrypoints, chainId);
+    const abs: ContractAbstraction<ContractProvider<TContract>, TContract> = new ContractAbstraction(address, script, this, this, entrypoints, chainId);
     return contractAbstractionComposer(abs, this.context);
   }
 
@@ -237,4 +307,4 @@ export class RpcContractProvider extends OperationEmitter
 
 }
 
-type ContractAbstractionComposer<T> = (abs: ContractAbstraction<ContractProvider>, context: Context) => T 
+type ContractAbstractionComposer<T, TContract extends { methods: unknown, storage: unknown }> = (abs: ContractAbstraction<ContractProvider<TContract>, TContract>, context: Context) => T

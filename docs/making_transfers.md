@@ -1,5 +1,5 @@
 ---
-title: Making Transfers
+title: Transfers
 author: Simon Boissonneault-Robert
 ---
 
