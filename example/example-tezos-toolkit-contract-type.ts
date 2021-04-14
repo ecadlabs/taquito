@@ -1,11 +1,12 @@
+import BigNumber from 'bignumber.js';
 import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
 
 const example = async () => {
 
     type TestContract = {
         methods: {
-            bid: (params: { amount: string }) => void;
-            sell: (params: { id: string }) => void;
+            bid: (amount: BigNumber, for_address?: string) => void;
+            sell: (id: string, metadata: MichelsonMap<string, string>, min_bid?: BigNumber) => void;
         },
         storage: {
             isInitialized: boolean;
@@ -39,8 +40,11 @@ const example = async () => {
 
         // Test Methods
         const methods = contract.methods;
-        methods.bid({ amount: '10' });
-        methods.sell({ id: '42' });
+        const metadata = new MichelsonMap<string,string>();
+        metadata.set('author','Bob');
+        methods.sell('tz123', metadata, new BigNumber(42));
+
+        methods.bid(new BigNumber(1000));
     };
     await originateContract();
 
@@ -59,8 +63,11 @@ const example = async () => {
 
         // Test Methods
         const methods = contract.methods;
-        methods.bid({ amount: '10' });
-        methods.sell({ id: '42' });
+        const metadata = new MichelsonMap<string,string>();
+        metadata.set('author','Bob');
+        methods.sell('tz123', metadata, new BigNumber(42));
+
+        methods.bid(new BigNumber(1000));
     };
     await accessContract();
 
@@ -78,8 +85,11 @@ const example = async () => {
 
         // Test Methods
         const methods = wallet.methods;
-        methods.bid({ amount: '10' });
-        methods.sell({ id: '42' });
+        const metadata = new MichelsonMap<string,string>();
+        metadata.set('author','Bob');
+        methods.sell('tz123', metadata, new BigNumber(42));
+
+        methods.bid(new BigNumber(1000));
     };
     await accessWallet();
 
