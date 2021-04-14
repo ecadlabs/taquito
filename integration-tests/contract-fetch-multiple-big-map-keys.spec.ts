@@ -5,12 +5,14 @@ import BigNumber from 'bignumber.js';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
+    const test = require('jest-retries');
+
     describe(`Test accessing big map abstraction by index using: ${rpc}`, () => {
         beforeEach(async (done) => {
             await setup();
             done();
         });
-        it('originates a contract with empty bigmap and fetches the storage/bigmap', async (done) => {
+        test('originates a contract with empty bigmap and fetches the storage/bigmap', 2, async (done: () => void) => {
             const signer = await Tezos.signer.publicKeyHash();
 
             const bigMapInit = new MichelsonMap();
