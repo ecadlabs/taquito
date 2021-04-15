@@ -34,7 +34,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       const op3 = await LocalTez.wallet.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: maxAmount}).send();
       await op3.confirmation();
 
-     // expect((await Tezos.tz.getBalance(await LocalTez.signer.publicKeyHash())).toString()).toEqual("0")
+      expect((await Tezos.tz.getBalance(await LocalTez.signer.publicKeyHash())).toString()).toEqual("0")
       expect((await Tezos.tz.getBalance(await LocalTez.signer.publicKeyHash())).toString()).toBeDefined
 
       done();
