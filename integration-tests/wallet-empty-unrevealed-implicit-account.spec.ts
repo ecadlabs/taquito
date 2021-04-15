@@ -3,6 +3,9 @@ import { DEFAULT_FEE } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
+
+  const test = require('jest-retries');
+
   describe(`Test emptying an unrevealed implicit wallet account using: ${rpc}`, () => {
     it('does nothing', async (done) => {
       done();
@@ -12,7 +15,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       await setup()
       done()
     })
-    it('creates an unrevealed implicit wallet account, funds it, and empties it', async (done) => {
+    test('creates an unrevealed implicit wallet account, funds it, and empties it', 2, async (done: () => void) => {
       const LocalTez = await createAddress();
       const op = await Tezos.wallet.transfer({ to: await LocalTez.signer.publicKeyHash(), amount: 0.005 }).send();
       await op.confirmation();
