@@ -4,6 +4,8 @@
     "moduleResolution": "node",
     "declarationDir": "dist/types",
     "outDir": "dist/lib",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "typeRoots": [
       "node_modules/@types"
     ]

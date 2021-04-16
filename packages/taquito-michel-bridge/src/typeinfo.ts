@@ -145,7 +145,6 @@ export function getTypeInfo<T extends MichelsonTypeID>(typ: MichelsonType<T>): T
                 } as TypeInfoSaplingState;
                 break;
 
-            case "contract":
             case "never":
             case "operation":
             case "sapling_transaction":

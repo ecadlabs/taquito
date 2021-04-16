@@ -13,7 +13,7 @@ import {
     LongInteger, parseBytes, compareBytes, isDecimal,
     checkDecodeTezosID, UnpackedAnnotations, Nullable,
     UnpackAnnotationsOptions, unpackComb, MichelsonTypeError,
-    isPairType, isPairData, parseDate, compareProto,
+    isPairType, isPairData, parseDate, compareProto, stringify,
 } from "./utils";
 import { decodeBase58Check } from "./base58";
 import { decodeAddressBytes, decodePublicKeyBytes, decodePublicKeyHashBytes } from "./binary";
@@ -237,7 +237,7 @@ function compareMichelsonData(t: MichelsonType, a: MichelsonData, b: MichelsonDa
     }
 
     // Unlikely, types are expected to be verified before the function call
-    throw new MichelsonTypeError(t, undefined, `${typeID(t)}: not comparable values: ${JSON.stringify(a)}, ${JSON.stringify(b)}`);
+    throw new MichelsonTypeError(t, undefined, `${typeID(t)}: not comparable values: ${stringify(a)}, ${stringify(b)}`);
 }
 
 // Simplified version of assertMichelsonInstruction() for previously validated data
@@ -264,7 +264,7 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
             assertDataValidInternal(dc.args[1], tc.args[1], ctx);
             return;
         }
-        throw new MichelsonTypeError(t, d, `pair expected: ${JSON.stringify(d)}`);
+        throw new MichelsonTypeError(t, d, `pair expected: ${stringify(d)}`);
     }
 
     switch (t.prim) {
@@ -273,20 +273,20 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
             if (("int" in d) && isDecimal(d.int)) {
                 return;
             }
-            throw new MichelsonTypeError(t, d, `integer value expected: ${JSON.stringify(d)}`);
+            throw new MichelsonTypeError(t, d, `integer value expected: ${stringify(d)}`);
 
         case "nat":
         case "mutez":
             if (("int" in d) && isNatural(d.int)) {
                 return;
             }
-            throw new MichelsonTypeError(t, d, `natural value expected: ${JSON.stringify(d)}`);
+            throw new MichelsonTypeError(t, d, `natural value expected: ${stringify(d)}`);
 
         case "string":
             if ("string" in d) {
                 return;
             }
-            throw new MichelsonTypeError(t, d, `string value expected: ${JSON.stringify(d)}`);
+            throw new MichelsonTypeError(t, d, `string value expected: ${stringify(d)}`);
 
         case "bytes":
         case "bls12_381_g1":
@@ -294,13 +294,13 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
             if ("bytes" in d && parseBytes(d.bytes) !== null) {
                 return;
             }
-            throw new MichelsonTypeError(t, d, `bytes value expected: ${JSON.stringify(d)}`);
+            throw new MichelsonTypeError(t, d, `bytes value expected: ${stringify(d)}`);
 
         case "bool":
             if (("prim" in d) && (d.prim === "True" || d.prim === "False")) {
                 return;
             }
-            throw new MichelsonTypeError(t, d, `boolean value expected: ${JSON.stringify(d)}`);
+            throw new MichelsonTypeError(t, d, `boolean value expected: ${stringify(d)}`);
 
         case "key_hash":
             if (("string" in d) &&
@@ -317,13 +317,13 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
                     // ignore message
                 }
             }
-            throw new MichelsonTypeError(t, d, `key hash expected: ${JSON.stringify(d)}`);
+            throw new MichelsonTypeError(t, d, `key hash expected: ${stringify(d)}`);
 
         case "timestamp":
             if ((("string" in d) || ("int" in d)) && parseDate(d) !== null) {
                 return;
             }
-            throw new MichelsonTypeError(t, d, `timestamp expected: ${JSON.stringify(d)}`);
+            throw new MichelsonTypeError(t, d, `timestamp expected: ${stringify(d)}`);
 
         case "address":
             if ("string" in d) {
@@ -348,7 +348,7 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
                     // ignore message
                 }
             }
-            throw new MichelsonTypeError(t, d, `address expected: ${JSON.stringify(d)}`);
+            throw new MichelsonTypeError(t, d, `address expected: ${stringify(d)}`);
 
         case "key":
             if (("string" in d) &&
@@ -365,13 +365,13 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
                     // ignore message
                 }
             }
-            throw new MichelsonTypeError(t, d, `public key expected: ${JSON.stringify(d)}`);
+            throw new MichelsonTypeError(t, d, `public key expected: ${stringify(d)}`);
 
         case "unit":
             if (("prim" in d) && d.prim === "Unit") {
                 return;
             }
-            throw new MichelsonTypeError(t, d, `unit value expected: ${JSON.stringify(d)}`);
+            throw new MichelsonTypeError(t, d, `unit value expected: ${stringify(d)}`);
 
         case "signature":
             if (("bytes" in d) || ("string" in d) &&
@@ -382,7 +382,7 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
                     "GenericSignature") !== null) {
                 return;
             }
-            throw new MichelsonTypeError(t, d, `signature expected: ${JSON.stringify(d)}`);
+            throw new MichelsonTypeError(t, d, `signature expected: ${stringify(d)}`);
 
         case "chain_id":
             if ("bytes" in d || "string" in d) {
@@ -391,7 +391,7 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
                     return;
                 }
             }
-            throw new MichelsonTypeError(t, d, `chain id expected: ${JSON.stringify(d)}`);
+            throw new MichelsonTypeError(t, d, `chain id expected: ${stringify(d)}`);
 
         case "operation":
             throw new MichelsonTypeError(t, d, "operation type can't be represented as a literal value");
@@ -409,7 +409,7 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
                     return;
                 }
             }
-            throw new MichelsonTypeError(t, d, `option expected: ${JSON.stringify(d)}`);
+            throw new MichelsonTypeError(t, d, `option expected: ${stringify(d)}`);
 
         case "list":
         case "set":
@@ -421,13 +421,13 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
                         if (prev === undefined) {
                             prev = v;
                         } else if (compareMichelsonData(t.args[0], prev, v) > 0) {
-                            throw new MichelsonTypeError(t, d, `set elements must be ordered: ${JSON.stringify(d)}`);
+                            throw new MichelsonTypeError(t, d, `set elements must be ordered: ${stringify(d)}`);
                         }
                     }
                 }
                 return;
             }
-            throw new MichelsonTypeError(t, d, `${t.prim} expected: ${JSON.stringify(d)}`);
+            throw new MichelsonTypeError(t, d, `${t.prim} expected: ${stringify(d)}`);
 
         case "or":
             if ("prim" in d) {
@@ -439,7 +439,7 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
                     return;
                 }
             }
-            throw new MichelsonTypeError(t, d, `union (or) expected: ${JSON.stringify(d)}`);
+            throw new MichelsonTypeError(t, d, `union (or) expected: ${stringify(d)}`);
 
         case "lambda":
             if (isFunction(d)) {
@@ -453,7 +453,7 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
                 assertScalarTypesEqual(t.args[1], ret[0]);
                 return;
             }
-            throw new MichelsonTypeError(t, d, `function expected: ${JSON.stringify(d)}`);
+            throw new MichelsonTypeError(t, d, `function expected: ${stringify(d)}`);
 
         case "map":
         case "big_map":
@@ -461,31 +461,31 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
                 let prev: MichelsonMapElt | undefined;
                 for (const v of d) {
                     if (!("prim" in v) || v.prim !== "Elt") {
-                        throw new MichelsonTypeError(t, d, `map elements expected: ${JSON.stringify(d)}`);
+                        throw new MichelsonTypeError(t, d, `map elements expected: ${stringify(d)}`);
                     }
                     assertDataValidInternal(v.args[0], t.args[0], ctx);
                     assertDataValidInternal(v.args[1], t.args[1], ctx);
                     if (prev === undefined) {
                         prev = v;
                     } else if (compareMichelsonData(t.args[0], prev.args[0], v.args[0]) > 0) {
-                        throw new MichelsonTypeError(t, d, `map elements must be ordered: ${JSON.stringify(d)}`);
+                        throw new MichelsonTypeError(t, d, `map elements must be ordered: ${stringify(d)}`);
                     }
                 }
                 return;
             }
-            throw new MichelsonTypeError(t, d, `${t.prim} expected: ${JSON.stringify(d)}`);
+            throw new MichelsonTypeError(t, d, `${t.prim} expected: ${stringify(d)}`);
 
         case "bls12_381_fr":
             if ("int" in d && isDecimal(d.int) || "bytes" in d && parseBytes(d.bytes) !== null) {
                 return;
             }
-            throw new MichelsonTypeError(t, d, `BLS12-381 element expected: ${JSON.stringify(d)}`);
+            throw new MichelsonTypeError(t, d, `BLS12-381 element expected: ${stringify(d)}`);
 
         case "sapling_state":
             if (Array.isArray(d)) {
                 return;
             }
-            throw new MichelsonTypeError(t, d, `sapling state expected: ${JSON.stringify(d)}`);
+            throw new MichelsonTypeError(t, d, `sapling state expected: ${stringify(d)}`);
 
         case "ticket":
             assertDataValidInternal(d, {

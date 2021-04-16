@@ -1,6 +1,10 @@
 import { MichelsonType, Prim, util } from "@taquito/michel-codec";
+import { TypeInfo } from "./typeinfo";
 
 export type PairPrim = Extract<MichelsonType<"pair">, Prim>;
+export type Union = { left: unknown, right?: undefined } | { left?: undefined, right: unknown };
+
+export const getField = (t: MichelsonType) => util.unpackAnnotations(t).f?.[0].slice(1);
 
 export function unpackCombFull(t: MichelsonType<"pair">): PairPrim {
     const args = Array.isArray(t) ? t : t.args;
@@ -35,5 +39,12 @@ export function unpackCombFull(t: MichelsonType<"pair">): PairPrim {
                 unpackCombFull(args.slice(1)),
             ]
         };
+    }
+}
+
+export class EncodeError extends Error {
+    constructor(public type: TypeInfo, public data: any, public path?: string[], message?: string) {
+        super((path !== undefined ? path.join(".") + ": " : "") + message || "");
+        Object.setPrototypeOf(this, EncodeError.prototype);
     }
 }

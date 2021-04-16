@@ -1,6 +1,5 @@
 import { MichelsonType } from "@taquito/michel-codec";
 import { getTypeInfo, TypeInfo, ObjectID } from "../src/typeinfo";
-// import util from "util";
 
 describe("Type info", () => {
     it("object", () => {
@@ -104,7 +103,6 @@ describe("Type info", () => {
         };
 
         const ti = getTypeInfo(src);
-        //console.log(util.inspect(ti, false, null));
         expect(ti).toEqual(expected);
     });
 
@@ -200,6 +198,5 @@ describe("Type info", () => {
 
         const ti = getTypeInfo(src);
         expect(ti).toEqual(expected);
-        //console.log(util.inspect(ti, false, null));
     });
 });

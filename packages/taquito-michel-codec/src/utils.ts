@@ -378,3 +378,5 @@ const protoOrder: Record<ProtocolID, number> = {
 export function compareProto(a: ProtocolID, b: ProtocolID): number {
     return protoOrder[a] - protoOrder[b];
 }
+
+export const stringify = (src: unknown) => JSON.stringify(src, (_k, v) => typeof v === "bigint" ? v.toString() : v);
