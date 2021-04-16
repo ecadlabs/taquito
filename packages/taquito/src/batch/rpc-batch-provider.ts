@@ -3,6 +3,7 @@ import { ContractMethod } from '../contract/contract';
 import { EstimationProvider, ContractProvider } from '../contract/interface';
 import {
   createOriginationOperation,
+  createRevealOperation,
   createSetDelegateOperation,
   createTransferOperation,
 } from '../contract/prepare';
@@ -16,6 +17,9 @@ import {
   TransferParams,
   ParamsWithKind,
   isOpWithFee,
+  withKind,
+  RevealParams,
+  isOpRequireReveal,
 } from '../operations/types';
 import { OpKind } from '@taquito/rpc';
 
@@ -152,10 +156,16 @@ export class OperationBatch extends OperationEmitter {
    * @param params Optionally specify the source of the operation
    */
   async send(params?: { source?: string }) {
-    const estimates = await this.estimator.batch(this.operations);
+    const publicKeyHash = await this.signer.publicKeyHash();
+    const publicKey = await this.signer.publicKey();
+    const estimates = await this.estimator.batch(this.operations, { includeRevealOperation: false });
     const ops: RPCOperation[] = [];
     let i = 0;
+    let opRequireReveal = false;
     for (const op of this.operations) {
+      if(isOpRequireReveal(op)){
+        opRequireReveal = true;
+      }
       if (isOpWithFee(op)) {
         const estimated = await this.estimate(op, async () => estimates[i]);
         ops.push(await this.getRPCOp({ ...op, ...estimated }));
@@ -164,11 +174,20 @@ export class OperationBatch extends OperationEmitter {
       }
       i++;
     }
-    const source = (params && params.source) || (await this.signer.publicKeyHash());
-    const opBytes = await this.prepareAndForge({
+    if(opRequireReveal) {
+      const estimateReveal = await this.estimator.reveal();
+      if(estimateReveal){
+        const reveal: withKind<RevealParams, OpKind.REVEAL> = { kind: OpKind.REVEAL }
+        const estimatedReveal = await this.estimate(reveal, async () => estimateReveal);
+        ops.unshift(await createRevealOperation({ ...estimatedReveal}, publicKeyHash, publicKey))
+      }
+    }
+    const source = (params && params.source) || publicKeyHash;
+    const prepared = await this.prepareOperation({
       operation: ops,
       source,
     });
+    const opBytes = await this.forge(prepared);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
     return new BatchOperation(hash, ops, source, forgedBytes, opResponse, context);
   }

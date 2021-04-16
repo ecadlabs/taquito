@@ -69,6 +69,7 @@ describe('RpcContractProvider test', () => {
     setDelegate: jest.Mock<any, any>;
     registerDelegate: jest.Mock<any, any>;
     batch: jest.Mock<any, any>;
+    reveal: jest.Mock<any, any>;
   };
 
   const revealOp = (source: string) => ({
@@ -111,7 +112,8 @@ describe('RpcContractProvider test', () => {
       transfer: jest.fn(),
       registerDelegate: jest.fn(),
       setDelegate: jest.fn(),
-      batch: jest.fn()
+      batch: jest.fn(),
+      reveal: jest.fn()
     };
 
     // Required for operations confirmation polling
@@ -143,6 +145,8 @@ describe('RpcContractProvider test', () => {
     });
     mockRpcClient.preapplyOperations.mockResolvedValue([]);
     mockRpcClient.getChainId.mockResolvedValue('chain-id');
+    const estimateReveal = new Estimate(10500000, 0, 160, 1000);
+    mockEstimate.reveal.mockResolvedValue(estimateReveal);
   });
 
   describe('getStorage', () => {
@@ -645,6 +649,7 @@ describe('RpcContractProvider test', () => {
 
   describe('originate', () => {
     it('should produce a reveal and origination operation', async done => {
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
       const result = await rpcContractProvider.originate({
         delegate: 'test_delegate',
         balance: '200',
@@ -924,6 +929,7 @@ describe('RpcContractProvider test', () => {
       mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
       mockSigner.publicKey.mockResolvedValue('test_pub_key');
       mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+      mockEstimate.reveal.mockResolvedValue(undefined);
       const result = await rpcContractProvider.transfer({
         to: 'test_to',
         amount: 2,
@@ -1037,6 +1043,7 @@ describe('RpcContractProvider test', () => {
       mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
       mockSigner.publicKey.mockResolvedValue('test_pub_key');
       mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+      mockEstimate.reveal.mockResolvedValue(undefined);
       const result = await rpcContractProvider.transfer({
         to: 'test_to',
         amount: 2,
@@ -1141,6 +1148,35 @@ describe('RpcContractProvider test', () => {
               source: 'test_pub_key_hash',
               storage_limit: '1000',
             },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        opbytes: 'test',
+      });
+      done();
+    });
+  });
+
+  describe('reveal', () => {
+    it('should produce a reveal operation', async done => {
+      const estimate = new Estimate(1000000, 0, 64, 250);
+      mockEstimate.reveal.mockResolvedValue(estimate);
+      const result = await rpcContractProvider.reveal({});
+      expect(result.raw).toEqual({
+        counter: 0,
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              counter: '1',
+              fee: '374',
+              gas_limit: '1100',
+              kind: 'reveal',
+              public_key: 'test_pub_key',
+              source: 'test_pub_key_hash',
+              storage_limit: '0',
+            }
           ],
           protocol: 'test_proto',
           signature: 'test_sig',

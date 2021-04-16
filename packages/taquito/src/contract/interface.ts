@@ -3,6 +3,7 @@ import { OperationBatch } from '../batch/rpc-batch-provider';
 import { Context } from '../context';
 import { DelegateOperation } from '../operations/delegate-operation';
 import { OriginationOperation } from '../operations/origination-operation';
+import { RevealOperation } from '../operations/reveal-operation';
 import { TransactionOperation } from '../operations/transaction-operation';
 import {
   DelegateParams,
@@ -10,11 +11,16 @@ import {
   TransferParams,
   RegisterDelegateParams,
   ParamsWithKind,
+  RevealParams,
 } from '../operations/types';
 import { ContractAbstraction } from './contract';
 import { Estimate } from './estimate';
 
 export type ContractSchema = Schema | unknown;
+
+export interface EstimationOptions {
+  includeRevealOperation: boolean
+}
 
 export interface EstimationProvider {
   /**
@@ -25,7 +31,7 @@ export interface EstimationProvider {
    *
    * @param Estimate
    */
-  originate(params: OriginateParams): Promise<Estimate>;
+  originate(params: OriginateParams, estimationOptions?: EstimationOptions): Promise<Estimate>;
 
   /**
    *
@@ -35,7 +41,7 @@ export interface EstimationProvider {
    *
    * @param Estimate
    */
-  transfer({ fee, storageLimit, gasLimit, ...rest }: TransferParams): Promise<Estimate>;
+  transfer({ fee, storageLimit, gasLimit, ...rest }: TransferParams, estimationOptions?: EstimationOptions): Promise<Estimate>;
 
   /**
    *
@@ -45,7 +51,7 @@ export interface EstimationProvider {
    *
    * @param Estimate
    */
-  setDelegate(params: DelegateParams): Promise<Estimate>;
+  setDelegate(params: DelegateParams, estimationOptions?: EstimationOptions): Promise<Estimate>;
 
   /**
    *
@@ -55,8 +61,19 @@ export interface EstimationProvider {
    *
    * @param Estimate
    */
-  registerDelegate(params?: RegisterDelegateParams): Promise<Estimate>;
-  batch(params: ParamsWithKind[]): Promise<Estimate[]>;
+  registerDelegate(params?: RegisterDelegateParams, estimationOptions?: EstimationOptions): Promise<Estimate>;
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for a reveal operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation or undefined if the account is already revealed
+   *
+   * @param Estimate
+   */
+  reveal(params?: RevealParams): Promise<Estimate | undefined> ;
+
+  batch(params: ParamsWithKind[], estimationOptions?: EstimationOptions): Promise<Estimate[]>;
 }
 
 export interface StorageProvider {
@@ -142,6 +159,7 @@ export interface ContractProvider extends StorageProvider {
    * @param RegisterDelegate operation parameter
    */
   registerDelegate(params: RegisterDelegateParams): Promise<DelegateOperation>;
+
   /**
    *
    * @description Transfer tz from current address to a specific address. Will sign and inject an operation using the current context
@@ -150,8 +168,18 @@ export interface ContractProvider extends StorageProvider {
    *
    * @param Transfer operation parameter
    */
-
   transfer(params: TransferParams): Promise<TransactionOperation>;
+
+  /**
+   *
+   * @description Reveal the current address. Will throw an error if the address is already revealed.
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param Reveal operation parameter
+   */
+  reveal(params: RevealParams): Promise<RevealOperation>;
+
   at<T extends ContractAbstraction<ContractProvider>>(address: string, contractAbstractionComposer?: (abs: ContractAbstraction<ContractProvider>, context: Context) => T): Promise<T>;
 
   /**
