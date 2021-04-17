@@ -4,7 +4,8 @@ import { unpackCombFull } from "./utils";
 export const ObjectID: unique symbol = Symbol("object");
 export const UnionID: unique symbol = Symbol("union");
 
-export type TypeID = MichelsonTypeID | typeof ObjectID | typeof UnionID;
+export type RepresentableTypeID = Exclude<MichelsonTypeID, "never" | "operation" | "sapling_transaction">;
+export type TypeID = RepresentableTypeID | typeof ObjectID | typeof UnionID;
 
 type TypeExpr<T extends TypeID> = Extract<MichelsonType<T extends (typeof ObjectID) ? "pair" : T extends (typeof UnionID) ? "or" : T>, Prim>;
 type UnaryTypeID = "option" | "list" | "set" | "contract" | "ticket";
@@ -53,7 +54,8 @@ export type TypeInfo<T extends MichelsonTypeID = MichelsonTypeID> =
     T extends "lambda" ? TypeInfoLambda :
     T extends "map" | "big_map" ? TypeInfoMap<T> :
     T extends "sapling_state" ? TypeInfoSaplingState :
-    TypeInfoPrimitive<T>;
+    T extends RepresentableTypeID ? TypeInfoPrimitive<T> :
+    never;
 
 function collectFields(t: MichelsonType<"pair" | "or">): TypeInfoField[] | null {
     const [args, prim] = Array.isArray(t) ? [t, "pair"] as const : [t.args, t.prim];
