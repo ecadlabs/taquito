@@ -13,7 +13,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
       done()
     })
     //  deepcode ignore only-arrow-functions: not sure how to do it otherwise
-    edonet('Originates a contract having ticket with init and the wallet api', 2, async function (done: () => void) {
+    edonet('Originates a contract having ticket with init and the wallet api', 2, async (done: () => void) => {
       const op = await Tezos.wallet.originate({
         code: ticketCode,
         init: ticketStorage

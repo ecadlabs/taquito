@@ -13,8 +13,8 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup,  }) => {
       done()
     })
     //  deepcode ignore only-arrow-functions: not sure how to do it otherwise
-    edonet('Originates a contract having an empty sapling state in its storage', 2, async function (done: () => void) {
-      const op = await Tezos.contract.originate({
+    edonet('Originates a contract having an empty sapling state in its storage', 2, async (done: () => void) => {  
+        const op = await Tezos.contract.originate({
         code: rpcContractResponse.script.code,
         init: `{}` // empty sapling state
       });
