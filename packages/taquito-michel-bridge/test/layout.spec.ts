@@ -71,15 +71,15 @@ it("layout", () => {
     ];
 
     const expected: Layout = {
-        pair: {
+        object: {
             one: 'int',
             two: 'nat',
             three: 'string',
             four: ['string', 'timestamp'],
             five: { map: ['string', 'int'] },
             six: { list: 'string' },
-            seven: { or: { left: 'string', right: 'timestamp' } },
-            eight: { or: { a: 'string', b: 'int', c: 'bytes', d: 'timestamp' } }
+            seven: { union: { left: 'string', right: 'timestamp' } },
+            eight: { union: { a: 'string', b: 'int', c: 'bytes', d: 'timestamp' } }
         }
     };
 

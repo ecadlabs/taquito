@@ -3,13 +3,13 @@ import { ObjectID, TypeInfo, UnionID, RepresentableTypeID } from "./typeinfo";
 type Type0 = Exclude<RepresentableTypeID, "option" | "list" | "set" | "contract" | "ticket" | "lambda" | "map" | "big_map" | "pair" | "or">;
 type Type1<T extends "option" | "list" | "set" | "contract" | "ticket"> = T extends keyof any ? { [P in T]: Layout } : never;
 type Type2<T extends "lambda" | "map" | "big_map"> = T extends keyof any ? { [P in T]: [Layout, Layout] } : never;
-type ObjectLayout<T extends "or" | "pair"> = T extends keyof any ? { [P in T]: { [key: string]: Layout } } : never;
+type ObjectLayout<T extends "union" | "object"> = T extends keyof any ? { [P in T]: { [key: string]: Layout } } : never;
 
 export type Layout =
     Type0 |
     Type1<"option" | "list" | "set" | "contract" | "ticket"> |
     Type2<"lambda" | "map" | "big_map"> |
-    ObjectLayout<"or" | "pair"> |
+    ObjectLayout<"union" | "object"> |
     [Layout, Layout]; // plain pair
 
 export function getLayout(t: TypeInfo): Layout {
@@ -32,11 +32,11 @@ export function getLayout(t: TypeInfo): Layout {
             return [getLayout(t.left), getLayout(t.right)];
 
         case "or":
-            return { [t.type]: { left: getLayout(t.left), right: getLayout(t.right) } };
+            return { union: { left: getLayout(t.left), right: getLayout(t.right) } };
 
         case ObjectID:
         case UnionID:
-            return { [t.type === ObjectID ? "pair" : "or"]: Object.assign({}, ...t.fields.map(f => ({ [f.field]: getLayout(f) }))) } as ObjectLayout<"or" | "pair">;
+            return { [t.type === ObjectID ? "object" : "union"]: Object.assign({}, ...t.fields.map(f => ({ [f.field]: getLayout(f) }))) } as ObjectLayout<"object" | "union">;
 
         default:
             return t.type;
