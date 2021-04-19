@@ -18,11 +18,17 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, setup, protocol }) => {
 
       if (protocol === Protocols.PtEdo2Zk) {
         rpcList = [
-            'https://api.tez.ie/rpc/edonet',
-            'https://edonet.smartpy.io',
-            'https://edonet-tezos.giganode.io',
+            'https://api.tez.ie/rpc/edonet'
         ];
-        contractBigMapStorage = 'KT1GL4k5wRayrH3KEXkPcqSeWXnoiJqxk1ZA'
+
+        contractBigMapStorage = 'KT1H1Xc8NGmiZYxK7S4F2eixZyNNWBj1x8Ae'
+      }
+
+      else if (protocol === Protocols.PsFLorena) {
+        rpcList = [
+           'https://api.tez.ie/rpc/florencenet',
+        ];
+        contractBigMapStorage = 'KT1GxaxWUHaFzaYkfqwPsj5x75UYgSXzawnD';
       }
 
 rpcList.forEach(async rpc => {
