@@ -1,4 +1,4 @@
-import { BlockResponse, OperationEntry } from '@taquito/rpc';
+import { BlockResponse } from '@taquito/rpc';
 import { from, Observable, ObservableInput, timer } from 'rxjs';
 import {
   concatMap,
@@ -8,6 +8,7 @@ import {
   pluck,
   publishReplay,
   refCount,
+  retry,
   switchMap,
 } from 'rxjs/operators';
 import { Context } from '../context';
@@ -44,16 +45,12 @@ export class PollingSubscribeProvider implements SubscribeProvider {
     refCount()
   );
 
-  constructor(private context: Context, 
-              public readonly POLL_INTERVAL = 20000, 
-              private retries = 10, 
-              private delayInMS = 1000,
-              private maxDelayInMS = 300000) {}
+  constructor(private context: Context, public readonly POLL_INTERVAL = 20000) {}
 
   subscribe(_filter: 'head'): Subscription<string> {
     return new ObservableSubscription(this.newBlock$.pipe(pluck('hash')), 
                                       this.context.config.shouldObservableSubscriptionRetry,
-                                      this.context.config.observableSubscriptionRetries,
+                                      this.context.config.observableSubscriptionRetryFunction,
                                       this.context.config.observableSubscriptionRetryDelay,
                                       this.context.config.observableSubscriptionMaxRetryDelay);
   }
@@ -61,7 +58,7 @@ export class PollingSubscribeProvider implements SubscribeProvider {
   subscribeOperation(filter: Filter): Subscription<OperationContent> {
     return new ObservableSubscription(this.newBlock$.pipe(applyFilter(filter)),
                                       this.context.config.shouldObservableSubscriptionRetry,
-                                      this.context.config.observableSubscriptionRetries,
+                                      this.context.config.observableSubscriptionRetryFunction,
                                       this.context.config.observableSubscriptionRetryDelay,
                                       this.context.config.observableSubscriptionMaxRetryDelay);
   }
