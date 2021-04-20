@@ -20,11 +20,11 @@ A specific token class in the package represents each different Michelson type (
 - `Execute`: To convert Michelson data into familiar-looking javascript data
 - `Encode`: To convert javascript array data to JSON Michelson
 - `EncodeObject`: To convert javascript object data to JSON Michelson
-- `ExtractSchema`: To shows how the data should be structured in the javascript format
+- `ExtractSchema`: To show how the data should be structured in the javascript format
 
-We can reason about Michelson type and data as tree structures. Thus, the methods of the `Token` class use recursion to iterate over a Michelson parameter and create a specific token for each Michelson type encountered (i.e., each node and leaf of the tree).
+We can reason about Michelson types and data as tree structures. Thus, the methods of the `Token` class use recursion to iterate over a Michelson parameter and create a specific token for each Michelson type encountered (i.e., each node and leaf of the tree).
 
-The constructors of the `ParameterSchema` and `Schema` classes take a `MichelsonV1Expression` has a parameter (i.e., a Michelson type in JSON format). These two classes have a composition relationship with the `Token` class as they have a private member named `root`, which is a `Token` instance corresponding to the root type of the Michelson parameter. The root is the starting point of the recursive calls.
+The constructors of the `ParameterSchema` and `Schema` classes take a `MichelsonV1Expression` as a parameter (i.e., a Michelson type in JSON format). These two classes have a composition relationship with the `Token` class as they have a private member named `root`, which is a `Token` instance corresponding to the root type of the Michelson parameter. The root is the starting point of the recursive calls.
 
 ## The Schema class
 
@@ -401,7 +401,7 @@ The `Schema` class is internally used in Taquito:
 - When deploying a contract:
     The `Encode` method allows transforming the javascript object used for the storage into Michelson data.
 - In the tzip16 package:
-    The `FindFirstInTopLevelPair` method allows finding a value in the storage matching a specified type (in this case, the big map named metadata)
+    The `FindFirstInTopLevelPair` method allows finding a value in the storage matching a specified type (in this case, the big map named metadata).
 
 ## The ParameterSchema class
 
