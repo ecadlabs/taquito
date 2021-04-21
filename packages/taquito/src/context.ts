@@ -42,7 +42,7 @@ export const defaultConfig: Partial<Config> = {
   confirmationPollingTimeoutSecond: 180,
   shouldObservableSubscriptionRetry: false,
   observableSubscriptionRetryFunction: retry,
-  observableSubscriptionRetryDelay: 1000, // 1 minute
+  observableSubscriptionRetryDelay: 1000, // 1 second
   observableSubscriptionMaxRetryDelay: 300000 // 5 minutes
 };
 
