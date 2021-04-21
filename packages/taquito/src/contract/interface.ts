@@ -106,10 +106,11 @@ export interface StorageProvider {
    * @param keysToEncode Array of keys to query (will be encoded properly according to the schema)
    * @param schema Big Map schema (can be determined using your contract type)
    * @param block optional block level to fetch the values from
+   * @param batchSize optional batch size representing the number of requests to execute in parallel
    * @returns An object containing the keys queried in the big map and their value in a well-formatted JSON object format
    *
    */
-   getBigMapKeysByID<T>(id: string, keysToEncode: Array<BigMapKeyType>, schema: Schema, block?: number): Promise<MichelsonMap<MichelsonMapKey, T | undefined>>;
+   getBigMapKeysByID<T>(id: string, keysToEncode: Array<BigMapKeyType>, schema: Schema, block?: number, batchSize?: number): Promise<MichelsonMap<MichelsonMapKey, T | undefined>>;
 }
 
 export interface ContractProvider extends StorageProvider {

@@ -124,15 +124,15 @@ export class RpcContractProvider extends OperationEmitter
    * @param keys Array of keys to query (will be encoded properly according to the schema)
    * @param schema Big Map schema (can be determined using your contract type)
    * @param block optional block level to fetch the values from
+   * @param batchSize optional batch size representing the number of requests to execute in parallel
    * @returns A MichelsonMap containing the keys queried in the big map and their value in a well-formatted JSON object format
    *
    */
-  async getBigMapKeysByID<T>(id: string, keys: Array<BigMapKeyType>, schema: Schema, block?: number): Promise<MichelsonMap<MichelsonMapKey, T | undefined>> {
+  async getBigMapKeysByID<T>(id: string, keys: Array<BigMapKeyType>, schema: Schema, block?: number, batchSize: number = 5): Promise<MichelsonMap<MichelsonMapKey, T | undefined>> {
     const level = await this.getBlockForRequest(keys, block)
     const bigMapValues = new MichelsonMap<MichelsonMapKey, T | undefined>();
 
     // Execute batch of promises in series
-    const batchSize = 5;
     let position = 0;
     let results: Array<(T | undefined)> = [];
 

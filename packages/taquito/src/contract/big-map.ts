@@ -37,11 +37,12 @@ export class BigMapAbstraction {
    *
    * @param keysToEncode Array of keys to query (will be encoded properly according to the schema)
    * @param block optional block level to fetch the values from
+   * @param batchSize optional batch size representing the number of requests to execute in parallel
    * @returns A MichelsonMap containing the keys queried in the big map and their value in a well-formatted JSON object format
    *
    */
-  async getMultipleValues<T>(keysToEncode: Array<BigMapKeyType>, block?: number) {
-    return this.provider.getBigMapKeysByID<T>(this.id.toString(), keysToEncode, this.schema, block);
+  async getMultipleValues<T>(keysToEncode: Array<BigMapKeyType>, block?: number, batchSize: number = 5) {
+    return this.provider.getBigMapKeysByID<T>(this.id.toString(), keysToEncode, this.schema, block, batchSize);
   }
 
   toJSON() {

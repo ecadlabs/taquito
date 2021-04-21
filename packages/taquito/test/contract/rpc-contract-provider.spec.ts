@@ -193,7 +193,7 @@ describe('RpcContractProvider test', () => {
         packed: "050a00000016000035e993d8c7aaa42b5e3ccd86a33390ececc73abd",
       });
       mockRpcClient.getBigMapExpr.mockResolvedValue({ int: "3" });
-  
+
       const result = await rpcContractProvider.getBigMapKeyByID(
         "133",
         "tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn",
@@ -218,13 +218,13 @@ describe('RpcContractProvider test', () => {
       expect(mockRpcClient.getBigMapExpr.mock.calls[0][2]).toBeUndefined();
       done();
     });
-  
+
     it("should call getBigMapKeyByID when a block level is specified", async (done) => {
       mockRpcClient.packData.mockResolvedValue({
         packed: "050a00000016000035e993d8c7aaa42b5e3ccd86a33390ececc73abd",
       });
       mockRpcClient.getBigMapExpr.mockResolvedValue({ int: "3" });
-  
+
       const result = await rpcContractProvider.getBigMapKeyByID(
         "133",
         "tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn",
@@ -252,7 +252,7 @@ describe('RpcContractProvider test', () => {
       });
       done();
     });
-  });  
+  });
 
   describe("getBigMapKeysByID", () => {
     it("should call getBigMapKeysByID", async (done) => {
@@ -281,7 +281,7 @@ describe('RpcContractProvider test', () => {
         packed: "050a0000001600001bc28a6b8fb2fb6af99fe3bba054e614539e5f12",
       });
       mockRpcClient.getBigMapExpr.mockResolvedValueOnce({ int: "1" });
-  
+
       const result = await rpcContractProvider.getBigMapKeysByID(
         "133",
         [
@@ -415,7 +415,7 @@ describe('RpcContractProvider test', () => {
         packed: "050a000000160000e7670f32038107a59a2b9cfefae36ea21f5aa63c",
       });
       mockRpcClient.getBigMapExpr.mockResolvedValueOnce({ int: "3" });
-  
+
       const result = await rpcContractProvider.getBigMapKeysByID(
         "133",
         [
@@ -472,11 +472,11 @@ describe('RpcContractProvider test', () => {
         packed: "050a000000160000e7670f32038107a59a2b9cfefae36ea21f5aa63c",
       });
       mockRpcClient.getBigMapExpr.mockResolvedValueOnce({ int: "3" });
-  
+
       const result = await rpcContractProvider.getBigMapKeysByID(
         "133",
         [
-          "tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn", 
+          "tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn",
           "tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN",
         ],
         new Schema({
@@ -534,7 +534,7 @@ describe('RpcContractProvider test', () => {
         'https://test.com'
       );
       mockRpcClient.getBigMapExpr.mockRejectedValue(expectedError);
-  
+
       const result = await rpcContractProvider.getBigMapKeysByID(
         "133",
         [
@@ -569,7 +569,7 @@ describe('RpcContractProvider test', () => {
         packed: "050a000000160000e7670f32038107a59a2b9cfefae36ea21f5aa63c",
       });
       mockRpcClient.getBigMapExpr.mockResolvedValue({ int: "3" });
-  
+
       const result = await rpcContractProvider.getBigMapKeysByID(
         "133",
         [
@@ -603,8 +603,8 @@ describe('RpcContractProvider test', () => {
       mockRpcClient.packData.mockResolvedValue({
         packed: "0507070100000005746573743201000000057465737433",
       });
-      mockRpcClient.getBigMapExpr.mockResolvedValue({  prim: "Pair", args: [{ int: "2" }, { string: "3" }] });
-  
+      mockRpcClient.getBigMapExpr.mockResolvedValue({ prim: "Pair", args: [{ int: "2" }, { string: "3" }] });
+
       const result = await rpcContractProvider.getBigMapKeysByID(
         "133",
         [
@@ -612,13 +612,13 @@ describe('RpcContractProvider test', () => {
         ],
         new Schema({
           prim: "big_map",
-          args: [{ "prim": "pair", "args": [{ "prim": "string", annots: ["%test"] }, { "prim": "string", annots: ["%test2"] }] }, { "prim": "pair", "args":[{ "prim": "int" }, { "prim": "int" }] }],
+          args: [{ "prim": "pair", "args": [{ "prim": "string", annots: ["%test"] }, { "prim": "string", annots: ["%test2"] }] }, { "prim": "pair", "args": [{ "prim": "int" }, { "prim": "int" }] }],
         })
       );
       expect(result.has({ 'test': 'test2', 'test2': 'test3' })).toBeTruthy();
       expect(result.get({ 'test': 'test2', 'test2': 'test3' })).toEqual({
         0: new BigNumber(2),
-        1: new BigNumber(3)      
+        1: new BigNumber(3)
       });
       expect(mockRpcClient.getBlock.mock.calls[0]).toBeUndefined();
       expect(mockRpcClient.packData.mock.calls[0][0]).toEqual({
@@ -633,6 +633,35 @@ describe('RpcContractProvider test', () => {
       expect(mockRpcClient.getBigMapExpr.mock.calls[0][1]).toEqual(
         "exprteZPr9h8pkyKKw9PMFEXqG1jbMBkj4A2KC9Mp5cAAjSrDWvfXs"
       );
+      done();
+    });
+
+    it("getBigMapKeysByID unexpected exception", async (done) => {
+      mockRpcClient.getBlock.mockResolvedValue({ header: { level: 123456 } });
+      const expectedError = new HttpResponseError(
+        'fail',
+        STATUS_CODE.UNAUTHORIZED,
+        'err',
+        'test',
+        'https://test.com'
+      );
+      mockRpcClient.packData.mockRejectedValue(expectedError);
+
+      try {
+        await rpcContractProvider.getBigMapKeysByID(
+          "133",
+          [
+            "tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn",
+            "tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN",
+          ],
+          new Schema({
+            prim: "big_map",
+            args: [{ prim: "address" }, { prim: "nat" }],
+          })
+        )
+      } catch (err) {
+        expect(err).toBeInstanceOf(HttpResponseError);
+      }
       done();
     });
   });
@@ -1210,12 +1239,12 @@ describe('RpcContractProvider test', () => {
       done();
     });
   });
-  
-    describe('originate with noop parser', () => {
-      it('should throw InvalidCodeParameter', async done => {
-        rpcContractProvider['context'].parser = new NoopParser();
-        try {
-          await rpcContractProvider.originate({
+
+  describe('originate with noop parser', () => {
+    it('should throw InvalidCodeParameter', async done => {
+      rpcContractProvider['context'].parser = new NoopParser();
+      try {
+        await rpcContractProvider.originate({
           delegate: 'test_delegate',
           balance: '200',
           code: miStr, // needs to be JSON Michelson
@@ -1224,7 +1253,7 @@ describe('RpcContractProvider test', () => {
           gasLimit: 10600,
           storageLimit: 257,
         });
-      } catch( err) {
+      } catch (err) {
         expect(err).toBeInstanceOf(InvalidCodeParameter);
         expect(err.message).toEqual('Wrong code parameter type, expected an array');
       }
@@ -1240,8 +1269,8 @@ describe('RpcContractProvider test', () => {
           code: [
             { prim: 'parameter', args: [{ prim: 'int' }] },
             {
-                prim: 'code',
-                args: [[{ prim: 'DUP' }]]
+              prim: 'code',
+              args: [[{ prim: 'DUP' }]]
             }
           ],
           storage: 'test',
@@ -1249,36 +1278,36 @@ describe('RpcContractProvider test', () => {
           gasLimit: 10600,
           storageLimit: 257,
         });
-      } catch( err) {
+      } catch (err) {
         expect(err).toBeInstanceOf(InvalidCodeParameter);
         expect(err.message).toEqual('The storage section is missing from the script');
       }
       done();
     });
 
-  it('should throw InvalidInitParameter', async done => {
-    rpcContractProvider['context'].parser = new NoopParser();
-    try {
-      await rpcContractProvider.originate({
-        delegate: 'test_delegate',
-        balance: '200',
-        code: [
-          { prim: 'parameter', args: [{ prim: 'int' }] },
-          {
+    it('should throw InvalidInitParameter', async done => {
+      rpcContractProvider['context'].parser = new NoopParser();
+      try {
+        await rpcContractProvider.originate({
+          delegate: 'test_delegate',
+          balance: '200',
+          code: [
+            { prim: 'parameter', args: [{ prim: 'int' }] },
+            {
               prim: 'code',
               args: [[{ prim: 'DUP' }]]
-          },
-          { prim: 'storage', args: [{ prim: 'pair', args: [{ prim: 'int' }, { prim: 'address' }] }] }
-        ],
-        init: 'test',
-        fee: 10000,
-        gasLimit: 10600,
-        storageLimit: 257,
-      });
-    } catch (err) {
-      expect(err).toBeInstanceOf(InvalidInitParameter);
-      expect(err.message).toEqual('Wrong init parameter type, expected JSON Michelson');
-    }
+            },
+            { prim: 'storage', args: [{ prim: 'pair', args: [{ prim: 'int' }, { prim: 'address' }] }] }
+          ],
+          init: 'test',
+          fee: 10000,
+          gasLimit: 10600,
+          storageLimit: 257,
+        });
+      } catch (err) {
+        expect(err).toBeInstanceOf(InvalidInitParameter);
+        expect(err.message).toEqual('Wrong init parameter type, expected JSON Michelson');
+      }
       done();
     });
 
@@ -1307,6 +1336,6 @@ describe('RpcContractProvider test', () => {
 
         done();
       });
-    }); 
+    });
   });
 });
