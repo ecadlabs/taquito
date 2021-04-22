@@ -379,4 +379,74 @@ export function compareProto(a: ProtocolID, b: ProtocolID): number {
     return protoOrder[a] - protoOrder[b];
 }
 
-export const stringify = (src: unknown) => JSON.stringify(src, (_k, v) => typeof v === "bigint" ? v.toString() : v);
+interface WithTag {
+    [Symbol.toStringTag]: string;
+}
+
+interface WithEntries {
+    entries(): IterableIterator<[unknown, unknown]>;
+}
+
+// stable stringify, not a JSON!
+export interface StringifyOptions {
+    circular?: boolean;
+}
+
+export function stringify(src: unknown, opt?: StringifyOptions): string {
+    function _stringify(src: unknown, path: unknown[], opt?: StringifyOptions): string {
+        if (path.indexOf(src) >= 0) {
+            if (opt?.circular) {
+                return "<circular>";
+            } else {
+                throw new Error("circular reference");
+            }
+        }
+
+        if (typeof src === "bigint") {
+            return String(src) + "n";
+
+        } else if (typeof src === "string") {
+            return "\"" + src + "\"";
+
+        } else if (typeof src === "object" && src !== null) {
+            const p = [...path, src];
+
+            if (src instanceof Date) {
+                return "\"" + src.toISOString() + "\"";
+
+            } else if ((src as Iterable<unknown>)[Symbol.iterator] !== undefined &&
+                (Array.isArray(src) || src instanceof Object.getPrototypeOf(Int8Array) || src instanceof Set || (src as WithEntries).entries === undefined)) {
+                // array like
+                const values: string[] = [];
+                for (const x of src as Iterable<unknown>) {
+                    values.push(_stringify(x, p, opt));
+                }
+                return "[" + values.join(",") + "]";
+
+            } else if ((src as WithEntries).entries !== undefined) {
+                // Map and map like objects
+                const values: string[] = [];
+                for (const [k, v] of (src as WithEntries).entries()) {
+                    values.push(_stringify(k, p, opt) + ":" + _stringify(v, p, opt));
+                }
+                return "[" + values.join(",") + "]";
+
+            } else {
+                // regular object
+                const values: string[] = [];
+                const keys = Object.keys(src).sort();
+                for (const k of keys) {
+                    const v: unknown = (src as any)[k];
+                    if (v !== undefined) {
+                        values.push(k + ":" + _stringify(v, p, opt));
+                    }
+                }
+                return "{" + values.join(",") + "}";
+            }
+        }
+
+        return String(src);
+    }
+
+    return _stringify(src, [], opt);
+}

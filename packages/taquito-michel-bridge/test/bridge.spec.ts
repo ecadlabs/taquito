@@ -2,6 +2,7 @@ import { MichelsonType, Protocol, isDataValid, MichelsonData } from "@taquito/mi
 import { getTypeInfo } from "../src/typeinfo";
 import { encodeData } from "../src/encode";
 import { decodeData } from "../src/decode";
+import { MichelsonMap } from "../src/map";
 
 interface Test {
     title: string;
@@ -201,7 +202,7 @@ const tests: Test[] = [
             { prim: "Elt", args: [{ int: "0" }, { string: "foo" }] },
             { prim: "Elt", args: [{ int: "1" }, { string: "bar" }] }
         ],
-        js: new Map([
+        js: new MichelsonMap([
             [BigInt(0), "foo"],
             [BigInt(1), "bar"],
         ]),

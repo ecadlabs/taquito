@@ -46,13 +46,10 @@ function isUnionData(x: unknown): x is Union {
     return typeof x === "object" && x !== null && ("left" in x && !("right" in x) || !("left" in x) && "right" in x);
 }
 
-type MapData = Map<unknown, unknown> | [unknown, unknown][];
-function isMap(x: unknown): x is MapData {
-    if (x instanceof Map) {
-        return true;
-    } else if (Array.isArray(x)) {
-        for (const v of x) {
-            if (!Array.isArray(v) || v.length !== 2) {
+function isMap(x: unknown): x is Iterable<[unknown, unknown]> {
+    if (typeof x === "object" && x !== null && typeof (x as Iterable<unknown>)[Symbol.iterator] === "function") {
+        for (const kv of x as Iterable<unknown>) {
+            if (!Array.isArray(kv) || kv.length !== 2) {
                 return false;
             }
         }

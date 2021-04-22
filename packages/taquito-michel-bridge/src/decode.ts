@@ -10,6 +10,7 @@ import {
     MichelsonTypeOr,
     util
 } from "@taquito/michel-codec";
+import { MichelsonMap } from "./map";
 import {
     ObjectID,
     TypeInfo,
@@ -237,7 +238,7 @@ export function decodeData(t: TypeInfo, data: MichelsonData, path?: string[]): u
         case "map":
         case "big_map":
             if (Array.isArray(data)) {
-                return new Map((function* (): Generator<[unknown, unknown]> {
+                return new MichelsonMap((function* (): Generator<[unknown, unknown]> {
                     for (const v of data) {
                         if ("prim" in v && v.prim === "Elt") {
                             yield [decodeData(t.key, v.args[0], path), decodeData(t.value, v.args[1], path)];
