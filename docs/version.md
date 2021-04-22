@@ -2,7 +2,53 @@
 title: Versions
 author: Jev Bjorsell
 ---
+# Taquito v8.1.1-beta
 
+## Summary
+
+### Enhancements
+- Dynamically set the polling interval based on the RPC constants
+- Added a configurable delay and number of retries to the ObservableSubscription
+
+### Bug fixes
+- Corrected the prefix for the prefixSig property
+- Corrected sorting of numeric values when encoding
+
+### Documentation updates
+- Added the telegram group to the Website community links
+- Fixed some broken links
+- New documentation about signing with wallet
+
+## Polling interval
+
+After sending an operation with Taquito, we call the confirmation method on the operation. Taquito does polling to the node to fetch new blocks and validate if the operation hash is in the block. Before this change, the polling interval's default value (confirmationPollingIntervalSecond) was set to 10 seconds. In theory, a new block is baked every 30 seconds on the testnets and every 60 seconds on mainnet. However, the time between blocks is shorter on sandboxes. For example, it can be of 5 seconds on Flextesa. A 10-second polling interval is too high for sandboxes and leads to a very high chance of missing the block containing the operation. To improve sandbox users' experience., we now calculate the polling interval value dynamically based on the RPC constants. To consider variations regarding the time between blocks in practice, we divide the value by 3 to reduce the risk of missing a block.
+
+Note that this value was configurable before and can still be configured if needed:
+Tezos.setProvider({config: {confirmationPollingIntervalSecond: 5}})
+
+## Delay and maximum number of attempts for the ObservableSubscription
+
+When users configure the ObservableSubscription to retry on error, the retries were happening immediately and indefinitely, causing call stack exception. Now, when the retry is enabled, the subscription uses a default value of 1 second between retries and a maximum value of 10 retries.
+These values are configurable by the user:
+Tezos.setProvider({ config: { shouldObservableSubscriptionRetry: true, observableSubscriptionRetryDelay: 2000, observableSubscriptionRetries: 3 } });
+
+## prefixSig
+
+The prefixSig property returned by the sign method of the LedgerSigner class was using SIG prefix. The correct prefix is now returned (e.g. EDSIG for tz1, SPSIG for tz2, and P2SIG for tz3).
+
+## Sorting of numeric values
+
+The numerics values (nat, int, and mutez) were not sorted properly by the Michelson Encoder, causing the following RPC Errors: unordered_map_literal or unordered_set_literal. For example, the RPC expects maps to be sorted by ascending keys values. The values were ordered as strings by the Michelson Encoder instead of number, resulting in wrong ordering for the RPC.
+
+## Documentation Additions and Improvements
+
+A link to the Tezos Taquito Telegram group has been added in the Taquito website home page's footer, making it easier to find the group. You are welcome to join this group to access community support and connect with the Taquito team.
+
+We fixed broken links on the Taquito documentation website.
+
+There is new documentation on the website explaining how to produce signatures with the InMemorySigner and the Wallet API, along with examples and tips to keep in mind.
+
+A note on how to use the Kukai wallet for testing on Edonet has been added to the Wallet API documentation.
 
 # Taquito v8.1.0-beta
 

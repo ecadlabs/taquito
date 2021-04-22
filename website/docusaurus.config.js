@@ -33,7 +33,7 @@ module.exports = {
         src: 'img/a_taquito.png'
       },
       items: [
-        { to: 'docs/version', label: 'v8.1.0', position: 'right' },
+        { to: 'docs/version', label: 'v8.1.1', position: 'right' },
         { to: 'docs/quick_start', label: 'Docs', position: 'right' },
         { href: "https://twitter.com/TezosTaquito", label: 'Twitter', position: 'right' },
         { href: "https://github.com/ecadlabs/taquito", label: 'GitHub', position: 'right' }
@@ -60,6 +60,10 @@ module.exports = {
             {
               label: 'Stack Exchange',
               href: 'https://tezos.stackexchange.com/questions/tagged/taquito',
+            },
+            {
+              label: 'Telegram',
+              href: 'https://t.me/tezostaquito',
             },
             {
               label: 'Twitter',

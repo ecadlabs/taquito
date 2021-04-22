@@ -24,6 +24,7 @@ import { LedgerSigner, DerivationType } from '@taquito/ledger-signer';
 import { TezBridgeWallet } from '@taquito/tezbridge-wallet';
 import { Tzip16Module, tzip16, bytes2Char, MichelsonStorageView } from '@taquito/tzip16'
 import { Tzip12Module, tzip12 } from "@taquito/tzip12";
+import { Schema, ParameterSchema } from "@taquito/michelson-encoder";
 import { ThanosWallet } from '@thanos-wallet/dapp';
 import TransportU2F from "@ledgerhq/hw-transport-u2f";
 import Playground from '@theme/Playground';
@@ -110,7 +111,9 @@ export default ({
           ThanosWallet, 
           DerivationType, 
           TransportU2F,
-          compose
+          compose,
+          Schema,
+          ParameterSchema
          }}
         code={children.trim()}
         theme={prism.theme || defaultTheme}

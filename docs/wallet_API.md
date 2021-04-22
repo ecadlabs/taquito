@@ -992,7 +992,7 @@ _Methods:_
 
 1. `bigMap`: a promise that takes a key from the big map in the storage as a parameter and returns the value associated with that key.
 
-2. `storage`: a promise that returns a representation of the storage value(s). The storage is represented as an object whose keys are the name of the values. `map` and `big map` values are returned as an instance of the [BigMapAbstraction](https://tezostaquito.io/typedoc/classes/_taquito_taquito.bigmapabstraction-1.html) while numeric values are returned as BigNumber.
+2. `storage`: a promise that returns a representation of the storage value(s). The storage is represented as an object whose keys are the name of the values. `map` and `big map` values are returned as an instance of the [BigMapAbstraction](https://tezostaquito.io/typedoc/classes/_taquito_taquito.bigmapabstraction.html) while numeric values are returned as BigNumber.
 
 
 

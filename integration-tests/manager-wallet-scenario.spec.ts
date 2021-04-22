@@ -11,7 +11,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
       await setup()
       done()
     })
-    test('tests manager transfer scenarios for Babylon/005 with wallet APi contract', 2, async (done: () => void) => {
+    test('tests manager transfer scenarioswith wallet APi contract', 2, async (done: () => void) => {
       const op = await Tezos.wallet.originate({
         balance: "1",
         code: managerCode,

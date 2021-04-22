@@ -3,7 +3,7 @@ import { BigMapToken } from '../tokens/bigmap';
 import { createToken } from '../tokens/createToken';
 import { OrToken } from '../tokens/or';
 import { PairToken } from '../tokens/pair';
-import { Semantic, Token, TokenValidationError } from '../tokens/token';
+import { BigMapKeyType, Semantic, Token, TokenValidationError } from '../tokens/token';
 import { RpcTransaction } from './model';
 import { Falsy } from './types';
 
@@ -139,7 +139,7 @@ export class Schema {
     return this.bigMap.ValueSchema.Execute(key, semantics);
   }
 
-  EncodeBigMapKey(key: string) {
+  EncodeBigMapKey(key: BigMapKeyType) {
     if (!this.bigMap) {
       throw new Error('No big map schema');
     }

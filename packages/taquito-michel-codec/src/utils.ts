@@ -303,7 +303,7 @@ export function unpackComb<I extends "pair" | "Pair">(id: I, v: I extends "pair"
     }
 
     return {
-        ...v,
+        ...(Array.isArray(vv) ? { prim: id } : vv),
         args: [
             args[0],
             {

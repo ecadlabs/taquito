@@ -11,7 +11,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       await setup()
       done()
     })
-    it('test manager transfers scenarios for Babylon/005 with wallet api contract', async (done) => {
+    it('test manager transfers scenarios with wallet api contract', async (done) => {
       const account1 = await createAddress();
       const account2 = await createAddress();
       const account3 = await createAddress();
