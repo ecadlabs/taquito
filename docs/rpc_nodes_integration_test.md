@@ -9,6 +9,8 @@ author: Roxane Letourneau
 Remove `./rpc-nodes.spec.ts` from `"testPathIgnorePatterns"` in the package.json.
 2. In the integration test folder, run one of the following commands: 
     - **Edonet**: `npm run test:edonet rpc-nodes.spec.ts`
+    - **Florencenet**: `npm run test:florencenet rpc-nodes.spec.ts`
+    - **Both protocols**: `npm run test rpc-nodes.spec.ts`
 
 **When all endpoints are accessible for a node, you will obtain:**
 

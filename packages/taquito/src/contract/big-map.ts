@@ -1,4 +1,4 @@
-import { Schema } from '@taquito/michelson-encoder';
+import { Schema, BigMapKeyType } from '@taquito/michelson-encoder';
 import BigNumber from 'bignumber.js';
 import { ContractProvider } from './interface';
 import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
@@ -15,7 +15,7 @@ export class BigMapAbstraction {
    * @returns Return a well formatted json object of a big map value or undefined if the key is not found in the big map
    *
    */
-  async get<T>(keyToEncode: string, block?: number) {
+  async get<T>(keyToEncode: BigMapKeyType , block?: number) {
     try {
       const id = await this.provider.getBigMapKeyByID<T>(this.id.toString(), keyToEncode, this.schema, block);
       return id;
@@ -37,11 +37,12 @@ export class BigMapAbstraction {
    *
    * @param keysToEncode Array of keys to query (will be encoded properly according to the schema)
    * @param block optional block level to fetch the values from
-   * @returns An object containing the keys queried in the big map and their value in a well-formatted JSON object format
+   * @param batchSize optional batch size representing the number of requests to execute in parallel
+   * @returns A MichelsonMap containing the keys queried in the big map and their value in a well-formatted JSON object format
    *
    */
-  async getMultipleValues<T>(keysToEncode: string[], block?: number) {
-    return this.provider.getBigMapKeysByID<T>(this.id.toString(), keysToEncode, this.schema, block);
+  async getMultipleValues<T>(keysToEncode: Array<BigMapKeyType>, block?: number, batchSize: number = 5) {
+    return this.provider.getBigMapKeysByID<T>(this.id.toString(), keysToEncode, this.schema, block, batchSize);
   }
 
   toJSON() {
