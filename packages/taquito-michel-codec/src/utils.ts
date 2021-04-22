@@ -410,27 +410,25 @@ export function stringify(src: unknown, opt?: StringifyOptions): string {
 
         } else if (typeof src === "object" && src !== null) {
             const p = [...path, src];
-
             if (src instanceof Date) {
                 return "\"" + src.toISOString() + "\"";
+            } else if ((src as Iterable<unknown>)[Symbol.iterator] !== undefined) {
+                if ((Array.isArray(src) || src instanceof Object.getPrototypeOf(Int8Array) || src instanceof Set || (src as WithEntries).entries === undefined)) {
+                    // array like
+                    const values: string[] = [];
+                    for (const x of src as Iterable<unknown>) {
+                        values.push(_stringify(x, p, opt));
+                    }
+                    return "[" + values.join(",") + "]";
+                } else {
+                    // Map and map like objects
+                    const values: string[] = [];
+                    for (const [k, v] of (src as WithEntries).entries()) {
+                        values.push(_stringify(k, p, opt) + ":" + _stringify(v, p, opt));
+                    }
+                    return "[" + values.join(",") + "]";
 
-            } else if ((src as Iterable<unknown>)[Symbol.iterator] !== undefined &&
-                (Array.isArray(src) || src instanceof Object.getPrototypeOf(Int8Array) || src instanceof Set || (src as WithEntries).entries === undefined)) {
-                // array like
-                const values: string[] = [];
-                for (const x of src as Iterable<unknown>) {
-                    values.push(_stringify(x, p, opt));
                 }
-                return "[" + values.join(",") + "]";
-
-            } else if ((src as WithEntries).entries !== undefined) {
-                // Map and map like objects
-                const values: string[] = [];
-                for (const [k, v] of (src as WithEntries).entries()) {
-                    values.push(_stringify(k, p, opt) + ":" + _stringify(v, p, opt));
-                }
-                return "[" + values.join(",") + "]";
-
             } else {
                 // regular object
                 const values: string[] = [];
