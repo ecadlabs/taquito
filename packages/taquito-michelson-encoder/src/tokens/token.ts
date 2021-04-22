@@ -1,5 +1,4 @@
 import { MichelsonV1Expression } from '@taquito/rpc';
-import { MichelsonMapKey } from '../michelson-map';
 
 export abstract class TokenValidationError implements Error {
   name: string = 'ValidationError';
@@ -68,12 +67,14 @@ export abstract class Token {
   }
 }
 
+export type BigMapKeyType = string | number | object;
+
 export abstract class ComparableToken extends Token {
   abstract ToBigMapKey(
-    val: string
+    val: BigMapKeyType
   ): {
-    key: { [key: string]: string };
-    type: { prim: string };
+    key: { [key: string]: string | object[] };
+    type: { prim: string, args?: object[] };
   };
 
   abstract ToKey(val: string): any;

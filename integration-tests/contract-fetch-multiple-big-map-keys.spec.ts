@@ -51,16 +51,17 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
             // Fetch multiples keys
             const bigMapValues = await bigMap.getMultipleValues<BigMapVal>(['tz3PNdfg3Fc8hH4m9iSs7bHgDgugsufJnBZ1', 'tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD', 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn', 'tz3YjfexGakCDeCseXFUpcXPSAN9xHxE9TH2']);
-            expect(bigMapValues['tz3PNdfg3Fc8hH4m9iSs7bHgDgugsufJnBZ1']!['0'].toString()).toEqual('2');
-            expect(bigMapValues['tz3PNdfg3Fc8hH4m9iSs7bHgDgugsufJnBZ1']!['1']).toEqual(expect.objectContaining(new MichelsonMap()));
+            expect(bigMapValues.get('tz3PNdfg3Fc8hH4m9iSs7bHgDgugsufJnBZ1')!['0'].toString()).toEqual('2');
+            expect(bigMapValues.get('tz3PNdfg3Fc8hH4m9iSs7bHgDgugsufJnBZ1')!['1']).toEqual(expect.objectContaining(new MichelsonMap()));
 
-            expect(bigMapValues['tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD']!['0'].toString()).toEqual('3');
-            expect(bigMapValues['tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD']!['1']).toEqual(expect.objectContaining(new MichelsonMap()));
+            expect(bigMapValues.get('tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD')!['0'].toString()).toEqual('3');
+            expect(bigMapValues.get('tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD')!['1']).toEqual(expect.objectContaining(new MichelsonMap()));
 
-            expect(bigMapValues['tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn']).toBeUndefined();
+            expect(bigMapValues.has('tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn')).toBeTruthy();
+            expect(bigMapValues.get('tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn')).toBeUndefined();
 
-            expect(bigMapValues['tz3YjfexGakCDeCseXFUpcXPSAN9xHxE9TH2']!['0'].toString()).toEqual('4');
-            expect(bigMapValues['tz3YjfexGakCDeCseXFUpcXPSAN9xHxE9TH2']!['1']).toEqual(expect.objectContaining(new MichelsonMap()));
+            expect(bigMapValues.get('tz3YjfexGakCDeCseXFUpcXPSAN9xHxE9TH2')!['0'].toString()).toEqual('4');
+            expect(bigMapValues.get('tz3YjfexGakCDeCseXFUpcXPSAN9xHxE9TH2')!['1']).toEqual(expect.objectContaining(new MichelsonMap()));
 
 
             // Specify a level
@@ -68,11 +69,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
             // Fetch multiples keys
             const bigMapValuesWithLevel = await bigMap.getMultipleValues<BigMapVal>(['tz3PNdfg3Fc8hH4m9iSs7bHgDgugsufJnBZ1', 'tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD'], header.level);
-            expect(bigMapValuesWithLevel['tz3PNdfg3Fc8hH4m9iSs7bHgDgugsufJnBZ1']!['0'].toString()).toEqual('2');
-            expect(bigMapValuesWithLevel['tz3PNdfg3Fc8hH4m9iSs7bHgDgugsufJnBZ1']!['1']).toEqual(expect.objectContaining(new MichelsonMap()));
+            expect(bigMapValuesWithLevel.get('tz3PNdfg3Fc8hH4m9iSs7bHgDgugsufJnBZ1')!['0'].toString()).toEqual('2');
+            expect(bigMapValuesWithLevel.get('tz3PNdfg3Fc8hH4m9iSs7bHgDgugsufJnBZ1')!['1']).toEqual(expect.objectContaining(new MichelsonMap()));
 
-            expect(bigMapValuesWithLevel['tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD']!['0'].toString()).toEqual('3');
-            expect(bigMapValuesWithLevel['tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD']!['1']).toEqual(expect.objectContaining(new MichelsonMap()));
+            expect(bigMapValuesWithLevel.get('tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD')!['0'].toString()).toEqual('3');
+            expect(bigMapValuesWithLevel.get('tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD')!['1']).toEqual(expect.objectContaining(new MichelsonMap()));
 
             done();
         });
