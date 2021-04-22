@@ -25,6 +25,7 @@
     "@taquito/tzip12": "^8.1.0-beta-RC.0",
     "@taquito/tzip16": "^8.1.0-beta-RC.0",
     "@taquito/utils": "^8.1.0-beta-RC.0",
+    "@taquito/michelson-encoder": "^8.1.0-beta-RC.0",
     "@thanos-wallet/dapp": "^2.2.1",
     "classnames": "^2.2.6",
     "react": "^17.0.1",
