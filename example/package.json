@@ -12,6 +12,7 @@
     "example": "node -r ts-node/register --preserve-symlinks example-node.ts",
     "example:activation": "node -r ts-node/register --preserve-symlinks example-activate.ts",
     "example:streamer": "node -r ts-node/register --preserve-symlinks example-streamer.ts",
+    "example:streamer-custom": "node -r ts-node/register --preserve-symlinks example-streamer-custom-retry-logic.ts",
     "example:scan-path-ledger": "node -r ts-node/register --preserve-symlinks scan-path-ledger.ts",
     "example:rpc-vs-local-pack-sequential": "node -r ts-node/register --preserve-symlinks example-sequential-bigmap-local-vs-rpc-pack.ts",
     "example:rpc-vs-local-pack-parallel": "node -r ts-node/register --preserve-symlinks example-parallel-bigmap-local-vs-rpc-pack.ts"

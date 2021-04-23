@@ -1,4 +1,4 @@
-import { Observable, Subscription as RXJSSubscription, Subject, timer, NEVER, OperatorFunction } from 'rxjs';
+import { Observable, Subscription as RXJSSubscription, Subject, NEVER, OperatorFunction } from 'rxjs';
 import { Subscription } from './interface';
 import { takeUntil, tap, catchError, retry } from 'rxjs/operators';
 
@@ -12,7 +12,6 @@ export class ObservableSubscription<T> implements Subscription<T> {
               private shouldRetry: boolean = false, 
               private operatorFunction: OperatorFunction<T,T> = retry<T>()) {
     
-    let errorFlag = false;
     obs
       .pipe(
         takeUntil(this.completed$),
