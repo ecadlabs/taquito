@@ -33,7 +33,7 @@ The `signer` method returns the following object:
 }
 ```
 
-## Generating a signature with the Wallet API
+## Generating a signature with Beacon SDK
 You can also sign a string of bytes with a wallet. Unlike the `InMemorySigner`, the wallets require a certain format for the bytes that need to be signed. Here is how the string must be formatted:
 
 ```js
