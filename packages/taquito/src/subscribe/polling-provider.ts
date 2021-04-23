@@ -8,7 +8,6 @@ import {
   pluck,
   publishReplay,
   refCount,
-  retry,
   switchMap,
 } from 'rxjs/operators';
 import { Context } from '../context';
@@ -50,16 +49,12 @@ export class PollingSubscribeProvider implements SubscribeProvider {
   subscribe(_filter: 'head'): Subscription<string> {
     return new ObservableSubscription(this.newBlock$.pipe(pluck('hash')), 
                                       this.context.config.shouldObservableSubscriptionRetry,
-                                      this.context.config.observableSubscriptionRetryFunction,
-                                      this.context.config.observableSubscriptionRetryDelay,
-                                      this.context.config.observableSubscriptionMaxRetryDelay);
+                                      this.context.config.observableSubscriptionRetryFunction);
   }
 
   subscribeOperation(filter: Filter): Subscription<OperationContent> {
     return new ObservableSubscription(this.newBlock$.pipe(applyFilter(filter)),
                                       this.context.config.shouldObservableSubscriptionRetry,
-                                      this.context.config.observableSubscriptionRetryFunction,
-                                      this.context.config.observableSubscriptionRetryDelay,
-                                      this.context.config.observableSubscriptionMaxRetryDelay);
+                                      this.context.config.observableSubscriptionRetryFunction);
   }
 }

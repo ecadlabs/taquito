@@ -1,4 +1,4 @@
-import { Observable, Subscription as RXJSSubscription, Subject, timer } from 'rxjs';
+import { Observable, Subscription as RXJSSubscription, Subject, timer, NEVER, OperatorFunction } from 'rxjs';
 import { Subscription } from './interface';
 import { takeUntil, tap, catchError, retry } from 'rxjs/operators';
 
@@ -10,9 +10,7 @@ export class ObservableSubscription<T> implements Subscription<T> {
 
   constructor(obs: Observable<T>, 
               private shouldRetry: boolean = false, 
-              private operatorFunction: Function = retry, 
-              private delayInMS = 1000, 
-              private maxDelayInMS = 300000) {
+              private operatorFunction: OperatorFunction<T,T> = retry<T>()) {
     
     let errorFlag = false;
     obs
@@ -29,13 +27,8 @@ export class ObservableSubscription<T> implements Subscription<T> {
             this.call(this.closeListeners);
           }
         ),
-        this.shouldRetry ? operatorFunction() : tap(),
-        catchError(() => {
-          delayInMS = errorFlag ? delayInMS*2 : delayInMS;
-          delayInMS = delayInMS < maxDelayInMS ? delayInMS : maxDelayInMS;
-          errorFlag = true;
-          return timer(delayInMS);
-        })
+        this.shouldRetry ? operatorFunction : tap(),
+        catchError(() => NEVER)
       )
       .subscribe();
   }
