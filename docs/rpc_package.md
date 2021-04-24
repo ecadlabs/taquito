@@ -18,7 +18,7 @@ Methods in the RPC package map one-to-one to the corresponding Tezos RPC API end
 
 import { RpcClient } from '@taquito/rpc';
 
-const client = new RpcClient('https://delphinet-tezos.giganode.io', 'NetXjD3HPJJjmcd');
+const client = new RpcClient('https://edonet-tezos.giganode.io', 'NetXjD3HPJJjmcd');
 ```
 
 The `RpcClient` constructor takes the URL of the node you want to use and the chain ID.

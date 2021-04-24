@@ -413,8 +413,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       });
 
       it('Should execute views', async (done) => {
-         // delphinet: KT1DNapRVdG9t74fzAvXLcKDcgxZd1i1TobV
-         // edonet: KT1XKs56Z8iXpYAD3pzfyXC3B4maJciob74X
 
          const contractAbstraction = await Tezos.contract.at(contractAddress, tzip16);
          const metadataViews = await contractAbstraction.tzip16().metadataViews();

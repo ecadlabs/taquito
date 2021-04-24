@@ -7,7 +7,7 @@ import { Protocols } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, knownBaker, knownContract, setup, protocol }) => {
     const Tezos = lib;
-      
+
       beforeEach(async (done) => {
         await setup()
         done()
@@ -27,17 +27,13 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, setup, protocol }) => {
       else if (protocol === Protocols.PsFLorena) {
         rpcList = [
            'https://api.tez.ie/rpc/florencenet',
-           //'https://florencenet.smartpy.io', 
-           // 'https://florence-tezos.giganode.io',
-           // 'https://rpcalpha.tzbeta.net/',
-           // 'https://rpctest.tzbeta.net/'
         ];
         contractBigMapStorage = 'KT1GxaxWUHaFzaYkfqwPsj5x75UYgSXzawnD';
       }
 
 rpcList.forEach(async rpc => {
     Tezos.setRpcProvider(rpc)
-    
+
     const rpcClient: RpcClient = new RpcClient(rpc);
 
     describe(`Test calling all methods from RPC node: ${rpc}`, () => {
@@ -213,14 +209,14 @@ rpcList.forEach(async rpc => {
                   },
                 ],
             }
-              
+
             const forgeOrigination = await rpcClient.forgeOperations(operation);
             expect(forgeOrigination).toBeDefined();
             done()
         })
 
         // We will send invalid signedOpBytes and see if the node returns the expected error message
-        it('Inject an operation in node and broadcast it', async (done) => {  
+        it('Inject an operation in node and broadcast it', async (done) => {
             try{
                 const injectedOperation = await rpcClient.injectOperation('operation');
             } catch (ex) {

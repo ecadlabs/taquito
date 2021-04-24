@@ -24,8 +24,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         });
 
         test('Deploy a contract made with wallet api having metadata stored at on IPFS', 2, async (done: () => void) => {
-            // carthagenet: KT1PBndiMVyeptfQejZKYcSB6YmucaJdXVBQ
-            // delphinet: KT1BfdzrP3ybxSbQCNZrmdk2Y5AQjRK1KKkz
 
             // location of the contract metadata
             const uri = 'ipfs://QmcMUKkhXowQjCPtDVVXyFJd7W9LmC92Gs5kYH1KjEisdj';
@@ -53,8 +51,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         });
 
     test('Should fetch metadata of the wallet api made contract on IPFS', 2, async (done: () => void) => {
-            // carthagenet:KT1PBndiMVyeptfQejZKYcSB6YmucaJdXVBQ
-            // delphinet: KT1BfdzrP3ybxSbQCNZrmdk2Y5AQjRK1KKkz
 
             const contract = await Tezos.wallet.at(contractAddress, tzip16);
             const metadata = await contract.tzip16().getMetadata();
