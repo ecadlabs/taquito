@@ -1,6 +1,6 @@
 {
   "name": "@taquito/remote-signer",
-  "version": "8.1.1",
+  "version": "9.0.0-beta-RC.0",
   "description": "Remote signer provider",
   "keywords": [
     "tezos",
@@ -61,9 +61,9 @@
     ]
   },
   "dependencies": {
-    "@taquito/http-utils": "^8.1.1",
-    "@taquito/taquito": "^8.1.1",
-    "@taquito/utils": "^8.1.1",
+    "@taquito/http-utils": "^9.0.0-beta-RC.0",
+    "@taquito/taquito": "^9.0.0-beta-RC.0",
+    "@taquito/utils": "^9.0.0-beta-RC.0",
     "@types/jest": "^26.0.16",
     "elliptic": "^6.5.4",
     "libsodium-wrappers": "^0.7.8",
