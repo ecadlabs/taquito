@@ -92,10 +92,4 @@ describe('TezosToolkit test', () => {
         expect(toolkit.stream).toEqual(instance);
       });
     });
-
-  test('getVersionInfo returns well formed response', () => {
-    const versionInfo = toolkit.getVersionInfo();
-    expect(versionInfo.commitHash).toBeTruthy();
-    expect(versionInfo.version).toBeTruthy();
-  });
 });
