@@ -18,6 +18,8 @@ import { MichelCodecParser } from './parser/michel-codec-parser';
 import { Packer } from './packer/interface';
 import { RpcPacker } from './packer/rpc-packer';
 import BigNumber from 'bignumber.js';
+import { retry } from 'rxjs/operators';
+import { OperatorFunction } from 'rxjs';
 
 export interface TaquitoProvider<T, K extends Array<any>> {
   new (context: Context, ...rest: K): T;
@@ -31,16 +33,14 @@ export interface Config {
   confirmationPollingTimeoutSecond?: number;
   defaultConfirmationCount?: number;
   shouldObservableSubscriptionRetry?: boolean;
-  observableSubscriptionRetryDelay?: number;
-  observableSubscriptionRetries?: number;
+  observableSubscriptionRetryFunction?: OperatorFunction<any,any>;
 }
 
 export const defaultConfig: Partial<Config> = {
   defaultConfirmationCount: 1,
   confirmationPollingTimeoutSecond: 180,
   shouldObservableSubscriptionRetry: false,
-  observableSubscriptionRetries: 10,
-  observableSubscriptionRetryDelay: 1000
+  observableSubscriptionRetryFunction: retry()
 };
 
 /**
