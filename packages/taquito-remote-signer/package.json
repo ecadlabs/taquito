@@ -29,10 +29,8 @@
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
-    "version-stamp": "node ../taquito/version-stamping.js",
-    "build": "npm run version-stamp && tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts ",
-    "start": "npm run version-stamp && rollup -c rollup.config.ts -w",
-    "postinstall": "npm run version-stamp"
+    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts ",
+    "start": "rollup -c rollup.config.ts -w"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
