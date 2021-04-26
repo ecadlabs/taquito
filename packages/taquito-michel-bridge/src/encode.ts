@@ -46,9 +46,13 @@ function isUnionData(x: unknown): x is Union {
     return typeof x === "object" && x !== null && ("left" in x && !("right" in x) || !("left" in x) && "right" in x);
 }
 
+function isIterable(x: unknown): x is Iterable<unknown> {
+    return typeof x === "object" && x !== null && typeof (x as Iterable<unknown>)[Symbol.iterator] === "function";
+}
+
 function isMap(x: unknown): x is Iterable<[unknown, unknown]> {
-    if (typeof x === "object" && x !== null && typeof (x as Iterable<unknown>)[Symbol.iterator] === "function") {
-        for (const kv of x as Iterable<unknown>) {
+    if (isIterable(x)) {
+        for (const kv of x) {
             if (!Array.isArray(kv) || kv.length !== 2) {
                 return false;
             }
@@ -312,17 +316,17 @@ export function encodeData(t: TypeInfo, data: unknown, opt?: ProtocolOptions, pa
 
         case "list":
         case "set":
-            if (Array.isArray(data)) {
-                return data.map(v => encodeData(t.element, v, opt, path));
+            if (isIterable(data)) {
+                return [...data].map(v => encodeData(t.element, v, opt, path));
             }
-            throw new EncodeError(t, data, path, `array expected: ${util.stringify(data)}`);
+            throw new EncodeError(t, data, path, `Iterable expected: ${util.stringify(data)}`);
 
         case "map":
         case "big_map":
             if (isMap(data)) {
                 return [...data].map<MichelsonMapElt>(v => ({ prim: "Elt", args: [encodeData(t.key, v[0], opt, path), encodeData(t.value, v[1], opt, path)] }));
             }
-            throw new EncodeError(t, data, path, `Map object or [key, value][] expected: ${util.stringify(data)}`);
+            throw new EncodeError(t, data, path, `Iterable<[key, value]> expected: ${util.stringify(data)}`);
 
         case "lambda":
             if (typeof data === "object" && data !== null) {
