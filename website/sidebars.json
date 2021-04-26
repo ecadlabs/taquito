@@ -48,7 +48,7 @@
       "items": ["ledger_integration_test", "rpc_nodes_integration_test"]
     },
     {
-      "Upgrading Guide": ["v7_breaking_changes"]
+      "Upgrading Guide": ["upgrading_guide"]
     },
     {
       "type": "link",

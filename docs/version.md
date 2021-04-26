@@ -2,6 +2,35 @@
 title: Versions
 author: Jev Bjorsell
 ---
+# Taquito v9.0.0-beta
+
+## Summary
+
+### Enhancements
+
+- Florence compatibility support
+- Allows fetching big map with a key of type string, number, or object. 
+- Accept an operator for the retry strategy of the `ObservableSubscription` class
+- Updated beacon-sdk version to v2.2.4 which includes several performance improvements for p2p pairing.
+
+### Documentation updates
+- Added documentation about the Michelson encoder package [here](https://tezostaquito.io/docs/michelson_encoder).
+
+
+## Forward compatibility for Florence
+
+This version ships with official support for the new Florence protocol which will come into effect on Mainnet in May.
+
+## @taquito/taquito - Allows fetching big map with a key of type string, number, or object. 
+
+In the precedent versions, fetching a value in a big map required the parameter to be a string, even in such cases when the key of the big map was a number. The `get` and `getMultipleValues` methods of the `BigMapAbstraction` and `getBigMapKeyByID` and `getBigMapKeysByID` methods of the `RpcContractProvider` class now accept a string, a number or an object for the key we want to fetch.
+
+This introduced a breaking change for the method `getMultipleValues` of the `BigMapAbstraction` class and the method `getBigMapKeysByID` of the `RpcContractProvider` class as they now return a `MichelsonMap` instead of an object. This is meant to support keys of type object that are encountered when the Michelson type of the big map key is a pair.
+
+## @taquito/taquito - Accept an operator for the retry strategy of the ObservableSubscription class
+
+To give more flexibility to the user on the retry strategy, we removed the parameters `observableSubscriptionRetryDelay` and `observableSubscriptionRetries` introduced in version 8.1.1-beta and replaced them to accept an `OperatorFunction`. When users configure the ObservableSubscription to retry on error, we use the `retry` operators from `rxjs` by default. An example showing how to set a custom retry strategy is available [here](https://github.com/ecadlabs/taquito/blob/master/example/example-streamer-custom-retry-logic.ts).
+
 # Taquito v8.1.1-beta
 
 ## Summary
