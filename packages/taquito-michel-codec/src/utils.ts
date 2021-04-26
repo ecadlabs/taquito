@@ -393,6 +393,18 @@ export interface StringifyOptions {
 }
 
 export function stringify(src: unknown, opt?: StringifyOptions): string {
+    function isIterable(x: unknown): x is Iterable<unknown> {
+        return (x as Iterable<unknown>)[Symbol.iterator] !== undefined;
+    }
+
+    function isMap(x: unknown): x is Map<unknown, unknown> {
+        return x instanceof Map || Object.prototype.toString.call(x) === "[object Map]";
+    }
+
+    function isSet(x: unknown): x is Set<unknown> {
+        return x instanceof Set || Object.prototype.toString.call(x) === "[object Set]";
+    }
+
     function _stringify(src: unknown, path: unknown[], opt?: StringifyOptions): string {
         if (path.indexOf(src) >= 0) {
             if (opt?.circular) {
@@ -410,25 +422,17 @@ export function stringify(src: unknown, opt?: StringifyOptions): string {
 
         } else if (typeof src === "object" && src !== null) {
             const p = [...path, src];
+            const values = (x: Iterable<unknown>) => [...x].map(v => _stringify(v, p, opt));
             if (src instanceof Date) {
-                return "\"" + src.toISOString() + "\"";
-            } else if ((src as Iterable<unknown>)[Symbol.iterator] !== undefined) {
-                if ((Array.isArray(src) || src instanceof Object.getPrototypeOf(Int8Array) || src instanceof Set || (src as WithEntries).entries === undefined)) {
-                    // array like
-                    const values: string[] = [];
-                    for (const x of src as Iterable<unknown>) {
-                        values.push(_stringify(x, p, opt));
-                    }
-                    return "[" + values.join(",") + "]";
-                } else {
-                    // Map and map like objects
-                    const values: string[] = [];
-                    for (const [k, v] of (src as WithEntries).entries()) {
-                        values.push(_stringify(k, p, opt) + ":" + _stringify(v, p, opt));
-                    }
-                    return "[" + values.join(",") + "]";
-
-                }
+                return _stringify(src.toISOString(), path, opt);
+            } else if (isMap(src)) {
+                // Map and map like objects
+                return "{" + [...src].map(([k, v]) => _stringify(k, p, opt) + "=>" + _stringify(v, p, opt)).join(",") + "}";
+            } else if (isSet(src)) {
+                return "{" + values(src).join(",") + "}";
+            } else if (isIterable(src)) {
+                // array like
+                return "[" + values(src).join(",") + "]";
             } else {
                 // regular object
                 const values: string[] = [];
@@ -442,7 +446,6 @@ export function stringify(src: unknown, opt?: StringifyOptions): string {
                 return "{" + values.join(",") + "}";
             }
         }
-
         return String(src);
     }
 

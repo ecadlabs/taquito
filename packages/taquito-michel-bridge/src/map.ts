@@ -119,6 +119,6 @@ export class MichelsonMap<K, V> implements Map<K, V> {
     }
 
     get [Symbol.toStringTag](): string {
-        return "MichelsonMap";
+        return "Map";
     }
 }
