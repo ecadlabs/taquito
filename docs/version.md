@@ -11,7 +11,7 @@ author: Jev Bjorsell
 - Florence compatibility support
 - Allows fetching big map with a key of type string, number, or object. 
 - Accept an operator for the retry strategy of the `ObservableSubscription` class
-- Updated beacon-sdk version to v2.2.4 which includes several performance improvements for p2p pairing.
+- Updated beacon-sdk version to v2.2.5 which includes several performance improvements for p2p pairing.
 
 ### Documentation updates
 - Added documentation about the Michelson encoder package [here](https://tezostaquito.io/docs/michelson_encoder).
