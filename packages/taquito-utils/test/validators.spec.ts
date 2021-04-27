@@ -115,6 +115,11 @@ describe('validateSignature', () => {
     ).toEqual(ValidationResult.VALID);
     expect(
       validateSignature(
+        'edsigthp7LbR5JQ1HRnxKdvhphTJs2omjnu6DF7LhRokPbPHXjkv2EqmCwu3KT1jKRZjrrgb749Yao26qMdcDFbXKrjA7KLSKRC'
+      )
+    ).toEqual(ValidationResult.VALID);
+    expect(
+      validateSignature(
         'sigd9ugzpERZmBfyVAAPG4KZfpR4qYA4U51EcALp2hijGgJq3aRqFQANo4hudg3uWbSTaKRKzYhXeoG1TStq5jowaGx1dP9H'
       )
     ).toEqual(ValidationResult.VALID);
