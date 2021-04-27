@@ -1,6 +1,6 @@
 import { createToken } from '../../src/tokens/createToken';
 import { PairToken } from '../../src/tokens/pair';
-import { NeverToken, NeverValidationError } from '../../src/tokens/never'
+import { NeverToken, NeverTokenError } from '../../src/tokens/never'
 import { OptionToken } from '../../src/tokens/option';
 import { ParameterSchema } from '../../src/taquito-michelson-encoder';
 
@@ -18,26 +18,26 @@ describe('Never token', () => {
   });
 
   describe('EncodeObject', () => {
-    it('Should always throw an error on EncodeObject as there are no literal values of this type.', () => {
-      expect(() => tokenNever.EncodeObject('test')).toThrowError(NeverValidationError);
-      expect(() => tokenNeverPair.EncodeObject({ 0: 4, 1: 'test' })).toThrowError(NeverValidationError);
-      expect(() => tokenNeverOption.EncodeObject('test')).toThrowError(NeverValidationError);
+    it('Should throw an error on EncodeObject as there are no literal values of this type.', () => {
+      expect(() => tokenNever.EncodeObject('test')).toThrowError(NeverTokenError);
+      expect(() => tokenNeverPair.EncodeObject({ 0: 4, 1: 'test' })).toThrowError(NeverTokenError);
+      expect(() => tokenNeverOption.EncodeObject('test')).toThrowError(NeverTokenError);
       expect(tokenNeverOption.EncodeObject(null)).toEqual({ prim: 'None' });
     });
   });
 
   describe('Encode', () => {
     it('Should throw an error on Encode as there are no literal values of this type.', () => {
-      expect(() => tokenNever.Encode(['test'])).toThrowError(NeverValidationError);
-      expect(() => tokenNeverPair.Encode([4, 1])).toThrowError(NeverValidationError);
-      expect(() => tokenNeverOption.Encode(['test'])).toThrowError(NeverValidationError);
+      expect(() => tokenNever.Encode(['test'])).toThrowError(NeverTokenError);
+      expect(() => tokenNeverPair.Encode([4, 1])).toThrowError(NeverTokenError);
+      expect(() => tokenNeverOption.Encode(['test'])).toThrowError(NeverTokenError);
       expect(tokenNeverOption.Encode([null])).toEqual({ prim: 'None' });
     });
   });
 
   describe('Execute', () => {
     it('Should throw an error on Execute as there are no literal values of this type', () => {
-      expect(() => tokenNever.Execute('')).toThrowError(NeverValidationError);
+      expect(() => tokenNever.Execute('')).toThrowError(NeverTokenError);
     });
   });
 
