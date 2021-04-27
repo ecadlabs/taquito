@@ -57,6 +57,8 @@ jobs:
     - run: cd integration-tests && npm run test:edonet -- --maxWorkers=8
       env:
         CI: true
+        TEZOS_RPC_EDONET: "http://10.60.41.99:8732"
+        TEZOS_RPC_FLORENCENET: "http://10.60.41.112:8732"
   
   integration-tests-florencenet:
     runs-on: ubuntu-latest
