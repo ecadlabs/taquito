@@ -36,7 +36,7 @@ jobs:
         RUN_INTEGRATION: true
 
   integration-tests-edonet:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     strategy:
       matrix:
         node: [12.x]
