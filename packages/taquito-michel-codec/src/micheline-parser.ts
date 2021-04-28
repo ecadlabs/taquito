@@ -1,6 +1,7 @@
 import { scan, Token, Literal } from './scan';
-import { Expr, Prim, StringLiteral, IntLiteral, BytesLiteral } from './micheline';
+import { Expr, Prim, StringLiteral, IntLiteral, BytesLiteral, sourceReference, List, SourceReference } from './micheline';
 import { expandMacros } from './macros';
+import { ProtocolOptions } from './michelson-types';
 
 export class MichelineParseError extends Error {
     /**
@@ -9,6 +10,7 @@ export class MichelineParseError extends Error {
      */
     constructor(public token: Token | null, message?: string) {
         super(message);
+        Object.setPrototypeOf(this, MichelineParseError.prototype);
     }
 }
 
@@ -19,6 +21,7 @@ export class JSONParseError extends Error {
      */
     constructor(public node: any, message?: string) {
         super(message);
+        Object.setPrototypeOf(this, JSONParseError.prototype);
     }
 }
 
@@ -29,13 +32,13 @@ function isAnnotation(tok: Token): boolean {
 }
 
 const intRe = new RegExp('^-?[0-9]+$');
-const bytesRe = new RegExp('^([0-9a-fA-F]{2})+$');
+const bytesRe = new RegExp('^([0-9a-fA-F]{2})*$');
 
-export interface ParserOptions {
+export interface ParserOptions extends ProtocolOptions {
     /**
      * Expand [Michelson macros](https://tezos.gitlab.io/whitedoc/michelson.html#macros) during parsing.
      */
-    expandMacros: boolean;
+    expandMacros?: boolean;
 }
 
 /**
@@ -71,137 +74,159 @@ export interface ParserOptions {
  * ```
  */
 export class Parser {
-    constructor(private opt?: ParserOptions) { }
-
-    private expand(ex: Prim): Expr {
-        return this.opt?.expandMacros ? expandMacros(ex) : ex;
+    constructor(private opt?: ParserOptions) {
     }
 
-    private parseList(scanner: Iterator<Token>): Expr {
-        const tok = scanner.next();
-        if (tok.done) {
-            throw errEOF;
+    private expand(ex: Prim): Expr {
+        if (this.opt?.expandMacros !== undefined ? this.opt?.expandMacros : true) {
+            const ret = expandMacros(ex, this.opt);
+            if (ret !== ex) {
+                ret[sourceReference] = { ...(ex[sourceReference] || { first: 0, last: 0 }), macro: ex };
+            }
+            return ret;
+        } else {
+            return ex;
+        }
+    }
+
+    private parseListExpr(scanner: Iterator<Token>, start: Token): Expr {
+        const ref: SourceReference = {
+            first: start.first,
+            last: start.last,
+        };
+
+        const expectBracket = start.t === "(";
+        let tok: IteratorResult<Token>;
+        if (expectBracket) {
+            tok = scanner.next();
+            if (tok.done) {
+                throw errEOF;
+            }
+            ref.last = tok.value.last;
+        } else {
+            tok = { value: start };
         }
 
         if (tok.value.t !== Literal.Ident) {
-            throw new MichelineParseError(tok.value, `List: not an identifier: ${tok.value.v}`);
+            throw new MichelineParseError(tok.value, `not an identifier: ${tok.value.v}`);
         }
 
         const ret: Prim = {
             prim: tok.value.v,
+            [sourceReference]: ref,
         };
 
         for (; ;) {
             const tok = scanner.next();
             if (tok.done) {
-                throw errEOF;
-            }
-            if (tok.value.t === ')') {
+                if (expectBracket) {
+                    throw errEOF;
+                }
                 break;
-            }
-            if (isAnnotation(tok.value)) {
+            } else if (tok.value.t === ')') {
+                if (!expectBracket) {
+                    throw new MichelineParseError(tok.value, `unexpected closing bracket`);
+                }
+                ref.last = tok.value.last;
+                break;
+            } else if (isAnnotation(tok.value)) {
                 ret.annots = ret.annots || [];
                 ret.annots.push(tok.value.v);
+                ref.last = tok.value.last;
             } else {
                 ret.args = ret.args || [];
-                ret.args.push(this.parseExpr(scanner, tok.value));
+                const arg = this.parseExpr(scanner, tok.value);
+                ref.last = arg[sourceReference]?.last || ref.last;
+                ret.args.push(arg);
             }
         }
         return this.expand(ret);
     }
 
-    private parseArgs(
-        scanner: Iterator<Token>,
-        prim: string,
-        expectBracket: boolean
-    ): [Prim, boolean] {
+    private parseArgs(scanner: Iterator<Token>, start: Token): [Prim, IteratorResult<Token>] {
         // Identifier with arguments
-        const p: Prim = { prim };
+        const ref: SourceReference = {
+            first: start.first,
+            last: start.last,
+        };
+        const p: Prim = {
+            prim: start.v,
+            [sourceReference]: ref,
+        };
 
         for (; ;) {
             const t = scanner.next();
-            if (t.done) {
-                if (expectBracket) {
-                    throw errEOF;
-                } else {
-                    return [p, true];
-                }
-            } else if (t.value.t === '}') {
-                if (!expectBracket) {
-                    throw new MichelineParseError(t.value, `Seq: unexpected token: ${t.value.v}`);
-                } else {
-                    return [p, true];
-                }
-            } else if (t.value.t === ';') {
-                return [p, false];
+            if (t.done || t.value.t === '}' || t.value.t === ';') {
+                return [p, t];
             }
 
             if (isAnnotation(t.value)) {
+                ref.last = t.value.last;
                 p.annots = p.annots || [];
                 p.annots.push(t.value.v);
             } else {
+                const arg = this.parseExpr(scanner, t.value);
+                ref.last = arg[sourceReference]?.last || ref.last;
                 p.args = p.args || [];
-                p.args.push(this.parseExpr(scanner, t.value));
+                p.args.push(arg);
             }
         }
     }
 
-    private parseSequence(
-        scanner: Iterator<Token>,
-        initialToken: Token | null,
-        expectBracket: boolean
-    ): Expr[] {
-        const seq: Expr[] = [];
-        for (; ;) {
-            let tok: Token;
-            if (initialToken !== null) {
-                tok = initialToken;
-                initialToken = null;
-            } else {
-                const t = scanner.next();
-                if (t.done) {
-                    if (expectBracket) {
-                        throw errEOF;
-                    } else {
-                        return seq;
-                    }
-                }
-                tok = t.value;
-            }
+    private parseSequenceExpr(scanner: Iterator<Token>, start: Token): List<Expr> {
+        const ref: SourceReference = {
+            first: start.first,
+            last: start.last,
+        };
+        const seq: List<Expr> = [];
+        seq[sourceReference] = ref;
 
-            if (tok.t === '}') {
-                if (!expectBracket) {
-                    throw new MichelineParseError(tok, `Seq: unexpected token: ${tok.v}`);
+        const expectBracket = start.t === "{";
+        let tok: IteratorResult<Token> | null = start.t === "{" ? null : { value: start };
+
+        for (; ;) {
+            if (tok === null) {
+                tok = scanner.next();
+                if (!tok.done) {
+                    ref.last = tok.value.last;
+                }
+            }
+            if (tok.done) {
+                if (expectBracket) {
+                    throw errEOF;
                 } else {
                     return seq;
                 }
-            } else if (tok.t === Literal.Ident) {
-                // Identifier with arguments
-                const [itm, done] = this.parseArgs(scanner, tok.v, expectBracket);
-                seq.push(this.expand(itm));
-                if (done) {
+            }
+
+            if (tok.value.t === "}") {
+                if (!expectBracket) {
+                    throw new MichelineParseError(tok.value, `unexpected closing bracket`);
+                } else {
                     return seq;
                 }
+            } else if (tok.value.t === Literal.Ident) {
+                // Identifier with arguments
+                const [itm, n] = this.parseArgs(scanner, tok.value);
+                ref.last = itm[sourceReference]?.last || ref.last;
+                seq.push(this.expand(itm));
+                tok = n;
             } else {
                 // Other
-                seq.push(this.parseExpr(scanner, tok));
+                const ex = this.parseExpr(scanner, tok.value);
+                ref.last = ex[sourceReference]?.last || ref.last;
+                seq.push(ex);
+                tok = null;
+            }
 
-                const t = scanner.next();
-                if (t.done) {
-                    if (expectBracket) {
-                        throw errEOF;
-                    } else {
-                        return seq;
-                    }
-                } else if (t.value.t === '}') {
-                    if (!expectBracket) {
-                        throw new MichelineParseError(t.value, `Seq: unexpected token: ${t.value.v}`);
-                    } else {
-                        return seq;
-                    }
-                } else if (t.value.t !== ';') {
-                    throw new MichelineParseError(t.value, `Seq: unexpected token: ${t.value.v}`);
+            if (tok === null) {
+                tok = scanner.next();
+                if (!tok.done) {
+                    ref.last = tok.value.last;
                 }
+            }
+            if (!tok.done && tok.value.t === ";") {
+                tok = null;
             }
         }
     }
@@ -209,25 +234,22 @@ export class Parser {
     private parseExpr(scanner: Iterator<Token>, tok: Token): Expr {
         switch (tok.t) {
             case Literal.Ident:
-                return this.expand({ prim: tok.v });
+                return this.expand({ prim: tok.v, [sourceReference]: { first: tok.first, last: tok.last } });
 
             case Literal.Number:
-                return { int: tok.v };
+                return { int: tok.v, [sourceReference]: { first: tok.first, last: tok.last } };
 
             case Literal.String:
-                return { string: JSON.parse(tok.v) as string };
+                return { string: JSON.parse(tok.v) as string, [sourceReference]: { first: tok.first, last: tok.last } };
 
             case Literal.Bytes:
-                return { bytes: tok.v.substr(2) };
-
-            case '(':
-                return this.parseList(scanner);
+                return { bytes: tok.v.slice(2), [sourceReference]: { first: tok.first, last: tok.last } };
 
             case '{':
-                return this.parseSequence(scanner, null, true);
+                return this.parseSequenceExpr(scanner, tok);
 
             default:
-                throw new MichelineParseError(tok, `Expr: unexpected token: ${tok.v}`);
+                return this.parseListExpr(scanner, tok);
         }
     }
 
@@ -235,7 +257,7 @@ export class Parser {
      * Parses a Micheline sequence expression, such as smart contract source. Enclosing curly brackets may be omitted.
      * @param src A Micheline sequence `{parameter ...; storage int; code { DUP ; ...};}` or `parameter ...; storage int; code { DUP ; ...};`
      */
-    parseScript(src: string): Expr[] | null {
+    parseSequence(src: string): Expr[] | null {
         // tslint:disable-next-line: strict-type-predicates
         if (typeof src !== "string") {
             throw new TypeError(`string type was expected, got ${typeof src} instead`);
@@ -246,10 +268,26 @@ export class Parser {
         if (tok.done) {
             return null;
         }
+        return this.parseSequenceExpr(scanner, tok.value);
+    }
 
-        return tok.value.t === '{'
-            ? this.parseSequence(scanner, null, true)
-            : this.parseSequence(scanner, tok.value, false);
+    /**
+     * Parse a Micheline sequence expression. Enclosing curly brackets may be omitted.
+     * @param src A Michelson list expression such as `(Pair {Elt "0" 0} 0)` or `Pair {Elt "0" 0} 0`
+     * @returns An AST node or null for empty document.
+     */
+    parseList(src: string): Expr | null {
+        // tslint:disable-next-line: strict-type-predicates
+        if (typeof src !== "string") {
+            throw new TypeError(`string type was expected, got ${typeof src} instead`);
+        }
+
+        const scanner = scan(src);
+        const tok = scanner.next();
+        if (tok.done) {
+            return null;
+        }
+        return this.parseListExpr(scanner, tok.value);
     }
 
     /**
@@ -269,6 +307,25 @@ export class Parser {
             return null;
         }
         return this.parseExpr(scanner, tok.value);
+    }
+
+    /**
+     * Parse a Micheline sequence expression, such as smart contract source. Enclosing curly brackets may be omitted.
+     * An alias for `parseSequence`
+     * @param src A Micheline sequence `{parameter ...; storage int; code { DUP ; ...};}` or `parameter ...; storage int; code { DUP ; ...};`
+     */
+    parseScript(src: string): Expr[] | null {
+        return this.parseSequence(src);
+    }
+
+    /**
+     * Parse a Micheline sequence expression. Enclosing curly brackets may be omitted.
+     * An alias for `parseList`
+     * @param src A Michelson list expression such as `(Pair {Elt "0" 0} 0)` or `Pair {Elt "0" 0} 0`
+     * @returns An AST node or null for empty document.
+     */
+    parseData(src: string): Expr | null {
+        return this.parseList(src);
     }
 
     /**

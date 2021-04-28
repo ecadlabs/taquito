@@ -1,8 +1,12 @@
+/**
+ * @packageDocumentation
+ * @module @taquito/beacon-wallet
+ */
+
 import {
   DAppClient,
   DAppClientOptions,
   RequestPermissionInput,
-  PermissionResponseOutput,
   PermissionScope,
 } from '@airgap/beacon-sdk';
 
@@ -33,27 +37,17 @@ export class MissingRequiredScopes implements Error {
 export class BeaconWallet implements WalletProvider {
   public client: DAppClient;
 
-  private permissions?: PermissionResponseOutput;
-
   constructor(options: DAppClientOptions) {
     this.client = new DAppClient(options);
   }
 
-  private getPermissionOrFail() {
-    if (!this.permissions) {
-      throw new BeaconWalletNotInitialized();
-    }
-
-    return this.permissions;
-  }
-
   private validateRequiredScopesOrFail(
-    permission: PermissionResponseOutput,
+    permissionScopes: PermissionScope[],
     requiredScopes: PermissionScope[]
   ) {
     const mandatoryScope = new Set(requiredScopes);
 
-    for (const scope of permission.scopes) {
+    for (const scope of permissionScopes) {
       if (mandatoryScope.has(scope)) {
         mandatoryScope.delete(scope);
       }
@@ -65,15 +59,7 @@ export class BeaconWallet implements WalletProvider {
   }
 
   async requestPermissions(request?: RequestPermissionInput) {
-    const activeAccount = await this.client.getActiveAccount();
-
-    if (activeAccount) {
-      this.permissions = activeAccount;
-      return;
-    }
-
-    const result = await this.client.requestPermissions(request);
-    this.permissions = result;
+    await this.client.requestPermissions(request);
   }
 
   private removeFeeAndLimit<T extends { gas_limit: any; storage_limit: any; fee: any }>(op: T) {
@@ -81,9 +67,12 @@ export class BeaconWallet implements WalletProvider {
     return rest;
   }
 
-  getPKH() {
-    const { address } = this.getPermissionOrFail();
-    return Promise.resolve(address);
+  async getPKH() {
+    const account = await this.client.getActiveAccount();
+    if (!account) {
+      throw new BeaconWalletNotInitialized();
+    }
+    return account.address;
   }
 
   mapTransferParamsToWalletParams(params: WalletTransferParams) {
@@ -99,16 +88,35 @@ export class BeaconWallet implements WalletProvider {
   }
 
   async sendOperations(params: any[]) {
-    const permissions = this.getPermissionOrFail();
+    const account = await this.client.getActiveAccount();
+    if (!account) {
+      throw new BeaconWalletNotInitialized();
+    }
+    const permissions = account.scopes;
     this.validateRequiredScopesOrFail(permissions, [PermissionScope.OPERATION_REQUEST]);
 
-    const network = permissions.network;
     const { transactionHash } = await this.client.requestOperation({
-      network,
       operationDetails: params.map(op => ({
         ...this.removeFeeAndLimit(op),
       })) as any,
     });
     return transactionHash;
+  }
+ 
+  /**
+   * 
+   * @description Removes all beacon values from the storage. After using this method, this instance is no longer usable. 
+   * You will have to instanciate a new BeaconWallet.
+   */
+  async disconnect() {
+    await this.client.destroy();
+  }
+
+  /**
+   * 
+   * @description This method removes the active account from local storage by setting it to undefined.
+   */
+  async clearActiveAccount() {
+    await this.client.setActiveAccount();
   }
 }

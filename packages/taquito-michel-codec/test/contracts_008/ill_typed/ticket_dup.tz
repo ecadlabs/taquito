@@ -1,0 +1,3 @@
+parameter (ticket %store nat) ;
+storage unit;
+code { UNPAIR; DUP; DROP 2; NIL operation; PAIR }

@@ -1,7 +1,7 @@
 {
   "name": "@taquito/example",
   "private": true,
-  "version": "7.0.0-beta-RC.0",
+  "version": "9.0.0-beta-RC.1",
   "scripts": {
     "example:at": "node -r ts-node/register --preserve-symlinks contract-schema.ts",
     "example:origination": "node -r ts-node/register --preserve-symlinks contract-origination.ts",
@@ -12,16 +12,20 @@
     "example": "node -r ts-node/register --preserve-symlinks example-node.ts",
     "example:activation": "node -r ts-node/register --preserve-symlinks example-activate.ts",
     "example:streamer": "node -r ts-node/register --preserve-symlinks example-streamer.ts",
-    "example:scan-path-ledger": "node -r ts-node/register --preserve-symlinks scan-path-ledger.ts"
+    "example:streamer-custom": "node -r ts-node/register --preserve-symlinks example-streamer-custom-retry-logic.ts",
+    "example:scan-path-ledger": "node -r ts-node/register --preserve-symlinks scan-path-ledger.ts",
+    "example:rpc-vs-local-pack-sequential": "node -r ts-node/register --preserve-symlinks example-sequential-bigmap-local-vs-rpc-pack.ts",
+    "example:rpc-vs-local-pack-parallel": "node -r ts-node/register --preserve-symlinks example-parallel-bigmap-local-vs-rpc-pack.ts"
   },
   "dependencies": {
-    "@ledgerhq/hw-transport-node-hid": "^5.25.0",
-    "@taquito/ledger-signer": "^7.0.0-beta-RC.0",
-    "@taquito/michel-codec": "^7.0.0-beta-RC.0",
-    "@taquito/signer": "^7.0.0-beta-RC.0",
-    "@taquito/taquito": "^7.0.0-beta-RC.0"
+    "@ledgerhq/hw-transport-node-hid": "^5.43.0",
+    "@taquito/ledger-signer": "^9.0.0-beta-RC.1",
+    "@taquito/michel-codec": "^9.0.0-beta-RC.1",
+    "@taquito/signer": "^9.0.0-beta-RC.1",
+    "@taquito/taquito": "^9.0.0-beta-RC.1",
+    "bignumber.js": "^9.0.1"
   },
   "devDependencies": {
-    "ts-node": "^9.0.0"
+    "ts-node": "^9.1.1"
   }
 }

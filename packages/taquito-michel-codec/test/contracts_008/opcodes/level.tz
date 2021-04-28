@@ -1,0 +1,3 @@
+parameter unit;
+storage nat;
+code {DROP; LEVEL; NIL operation; PAIR};

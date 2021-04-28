@@ -5,24 +5,31 @@
     "start": "docusaurus start",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
-    "deploy": "docusaurus deploy"
+    "deploy": "docusaurus deploy",
+    "netlify:preview": "netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json --alias=$short_sha --message 'Deployment for $GITHUB_REF'",
+    "netlify:publish": "netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json --prod --message 'Deployment for $GITHUB_REF'"
   },
   "dependencies": {
-    "@docusaurus/core": "^2.0.0-alpha.63",
-    "@docusaurus/preset-classic": "^2.0.0-alpha.63",
-    "@docusaurus/theme-live-codeblock": "^2.0.0-alpha.63",
-    "@fortawesome/fontawesome-svg-core": "^1.2.32",
-    "@fortawesome/free-solid-svg-icons": "^5.15.1",
-    "@fortawesome/react-fontawesome": "^0.1.11",
+    "@docusaurus/core": "^2.0.0-alpha.70",
+    "@docusaurus/preset-classic": "^2.0.0-alpha.70",
+    "@docusaurus/theme-live-codeblock": "^2.0.0-alpha.70",
+    "@fortawesome/fontawesome-svg-core": "^1.2.34",
+    "@fortawesome/free-solid-svg-icons": "^5.15.2",
+    "@fortawesome/react-fontawesome": "^0.1.14",
     "@ledgerhq/hw-transport-u2f": "^5.28.0",
-    "@taquito/beacon-wallet": "^7.0.0-beta-RC.0",
-    "@taquito/ledger-signer": "^7.0.0-beta-RC.0",
-    "@taquito/signer": "^7.0.0-beta-RC.0",
-    "@taquito/taquito": "^7.0.0-beta-RC.0",
-    "@taquito/utils": "^7.0.0-beta-RC.0",
+    "@taquito/beacon-wallet": "^9.0.0-beta-RC.0",
+    "@taquito/ledger-signer": "^9.0.0-beta-RC.0",
+    "@taquito/signer": "^9.0.0-beta-RC.0",
+    "@taquito/taquito": "^9.0.0-beta-RC.0",
+    "@taquito/tezbridge-wallet": "^9.0.0-beta-RC.0",
+    "@taquito/tzip12": "^9.0.0-beta-RC.0",
+    "@taquito/tzip16": "^9.0.0-beta-RC.0",
+    "@taquito/utils": "^9.0.0-beta-RC.0",
+    "@taquito/michelson-encoder": "^9.0.0-beta-RC.0",
+    "@thanos-wallet/dapp": "^2.2.1",
     "classnames": "^2.2.6",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
   },
   "browserslist": {
     "production": [
@@ -36,5 +43,7 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "typescript": "^4.1.5"
+  }
 }

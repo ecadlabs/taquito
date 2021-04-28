@@ -1,5 +1,5 @@
 import { CONFIGS } from "./config";
-import { MichelsonMap } from "@taquito/taquito";
+import { BigMapAbstraction, MichelsonMap } from "@taquito/taquito";
 import { storageContractWithPairAsKey } from "./data/storage-contract-with-pair-as-key";
 import { mapWithPairAsKeyCode, mapWithPairAsKeyStorage } from "./data/bigmap_with_pair_as_key";
 
@@ -84,7 +84,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           init: mapWithPairAsKeyStorage
         })
         const contract = await op.contract()
-        const storage2 = await contract.storage<any>();
+        const storage2: BigMapAbstraction = await contract.storage();
         const value = await storage2.get({ 'test': 'test2', 'test2': 'test3' })
         expect(value).toEqual('test')
         done();

@@ -1,0 +1,2638 @@
+{
+  "entries": [
+    {
+      "entry": "files/v1alpha2",
+      "value": {
+        "files": [
+          {
+            "path": ".editorconfig",
+            "sha512": "1867df8b430a180a441a4489b41f7013e2b708fff806c1a140f313bbbdd7a91d8938d3853a5b12f39810455e7372e985861bde739cd10a836cef68be6cd7a520"
+          },
+          {
+            "path": ".history/.zsh_history",
+            "sha512": "42c249c53860e6a43572dc1e02ed6ab68feb4bf56e4c20a507157cbfd97f518890403e419f550f1caeb0eef825e69afe21c3e30860e2719befbff533b3ddb55f"
+          },
+          {
+            "path": ".devcontainer/Dockerfile",
+            "sha512": "4987cbf983d166c87d8282d6a6ac62ce739705358006868ab8152f06639b47b5dd5d997c930873308d9e67e11c0ec5c9a405bce9db7bc3761a12481f363b18a7"
+          },
+          {
+            "path": "LICENSE",
+            "sha512": "951623b074e279207d8f16fafc19380b5c9064e47864119134dfc6f95bdebfe53d16510e805f37a1e8ed700db99df7c880b57a746b8a360d7bb457700da7bbd3"
+          },
+          {
+            "path": "website/src/css/custom.css",
+            "sha512": "269c7dbcc2724aeb1ce7074e6abf885d2859212426787d8f6e5c40ac479152d167867154452047bf4b1ae182838be5c46ec7d839282dc3150042c07922eb785f"
+          },
+          {
+            "path": "website/src/pages/styles.module.css",
+            "sha512": "fea9f716d6ea7f4b6f3bafa448cb71a34a45c78209ef485c97b55cefb69e1ca9626ba359bf26f2e799a286f49a8fcb8dece24ec8a5f1f3d1248e56c41bd44ac9"
+          },
+          {
+            "path": "website/src/theme/CodeBlock/styles.module.css",
+            "sha512": "6e7bc8179f43c5b59f26b58818b1383276e2097539e711295a8be2fb881145a1186e6218bda080c93429ff81e4a1a29cc2fef3b9eba210f893968998f8c65caa"
+          },
+          {
+            "path": "website/src/theme/Footer/styles.module.css",
+            "sha512": "4c2d08784a9caeec7cbcfc28aa3c0cf32f97706eb5ee4138a34fb44e35c677c1116c6d4f378f2d030391d66cbb8fede1c324ba4793fcfa68998741995d9213cb"
+          },
+          {
+            "path": "website/src/theme/Playground/styles.module.css",
+            "sha512": "1896d350d3244fdccc92b954df660d0689c099a7fac57c8adfd8d9162312e1a4f847c5f399e1497f6d87b0cd4296b16f3cc3d10bb08b2973ae573f2c7453f4f9"
+          },
+          {
+            "path": ".prettierrc.js",
+            "sha512": "644de898b2ca07dbd4222bea5743aefdaa4b9b33af8517448df05327549a2528621a6c1be9a80100f16c2bf1a565d44e3a5e7dc0d8e0d60cc861263178b41785"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/comparable/address.js",
+            "sha512": "7f57b9618960e1bc2f38aeee886f575d1f812523f6ddfc5ab66ca6d33ccc2184a06e5200b70c9fe87033315e580cab66f7a8841c065763d374f1614b2a68e031"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/lib/base58.js",
+            "sha512": "9783d1d58adfc0bf9863004939fb25b87891ba7882cf705f803181012ee99f6bf9296a11e11d03dffae6915f987ffaa815d0704b997bb83a565bd61c34a1adf0"
+          },
+          {
+            "path": "packages/taquito/dist/lib/operations/batch-operation.js",
+            "sha512": "8ad47e9b83b3ea48f436e7279af79ab835013325a9846ff634246a93c87ba1cefd868750b7c09f1c0849e482b24d16de0f4a42eed7b6e2d037915527eddf88b1"
+          },
+          {
+            "path": "packages/taquito/dist/lib/contract/big-map.js",
+            "sha512": "8a23a14333d639e62c8bb3dade149ed167c6eb2d18dad384eb4542676b3a14c4193d54f590d919a105b2139958d4a37f06d84c4ece4fed363bb1c2410fec5705"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/bigmap.js",
+            "sha512": "366d55ff0a31039759a05c99f2859d904b1b05a7ed87cf30d94853b13906e26fdf43c9e9461bcf3533af8a1ace8f5372beee102d2e1c991a55642c761df43d56"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/comparable/bool.js",
+            "sha512": "044188b4f1b081787b095e07abd59acfebd6aeea78fade24053f1c80c7ed36f62205040f3f3f77545e0974e5810326690a5adad01d90105822c4e13d6fd081de"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/comparable/bytes.js",
+            "sha512": "5b32ec11deaaff922fd39979d9d613f52f1f0264018af36e23dc396b5f77b86f7bf9d9b8a7610e609c1b99813b5f9bccd4df15e6e356a0403cdbbc442b1f5887"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/chain-id.js",
+            "sha512": "cb047de23ea174b1c72bcf55e0d22b4627afc39c67fce1bd83d09be65edfd9bea797ae2b0380b2a037320b546e40b4903c53a8b703f19884b445f58f6f4810c8"
+          },
+          {
+            "path": "packages/taquito-local-forging/dist/lib/codec.js",
+            "sha512": "90a2afb1c93d47794fc9682a4ae9c8b4e9cae52919f5ac0ec23e1efb19e64c3b7aadaa7c1b84ab3cf1489630e60dd10e49c55f7517fb7426d23fb2e2c271f180"
+          },
+          {
+            "path": "packages/taquito-local-forging/dist/lib/michelson/codec.js",
+            "sha512": "139c4dbc4320487178df1f661d570dbfd657b1e39f84f597fa968e3a3b74f2b27fba3f607cd2c047c79369f65486b3b7cceb937455242110ff6c0e2e3bef709c"
+          },
+          {
+            "path": "packages/taquito/dist/lib/forger/composite-forger.js",
+            "sha512": "50c141fc83a6f16998cb0c3b852e08d93fc70e7fa239d30c2fed2d98aec3d2c2425f0012cdf29bffb78968456cb06e792d0c6d81dca28a8de10526e8e42fb419"
+          },
+          {
+            "path": "packages/taquito-local-forging/dist/lib/constants.js",
+            "sha512": "7c07a5a5d002e4561e310054fc90ac05615f37a6796f3ed413f24d691162bbf5d365503c694edac0594d325dbba7cd7164b6db10a9be214646a4085924b7ed0a"
+          },
+          {
+            "path": "packages/taquito-utils/dist/lib/constants.js",
+            "sha512": "f90631a1855f27c26b2d3e9d2e7077b4e4bb3cbcb5c942f1c62b5410e26e9594e50493b958e29dd9a9993efc26b0313e51e82e0ab848042bbd376ef1242d85ac"
+          },
+          {
+            "path": "packages/taquito/dist/lib/constants.js",
+            "sha512": "e2145d797097bef6d4390d933370a51d4869252153a618fcb209cbdeb464fc8974490c5c898ba18de69e5176af4d7c7480bd2acc74f0afa38646f708cf8da803"
+          },
+          {
+            "path": "packages/taquito/dist/lib/context.js",
+            "sha512": "11e9f879e61f78b4704e564db218734a8945a1343a544347bf47a6a5464ef017965af481e88e16d14d0ce8a8ab73c601cda0f4c34daf5647b0d7fb497e155608"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/contract.js",
+            "sha512": "35d7c4b03af898fe01a6709b68dcc8cc8521b8ea1cfb53f8b57decdc705c1a0b8da7854122a1d1b11b628d8eaed55633bd9d1df4a0c3daad41ccc956197b8899"
+          },
+          {
+            "path": "packages/taquito/dist/lib/contract/contract.js",
+            "sha512": "e7818061333a3d1fd9790308edf57c513a490cb8654d11762aa5dcf1c73e3826ead4df459eb22b39aeefd3aba2a938d1359762c2f0742a96fe3a0d927c265e56"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/createToken.js",
+            "sha512": "f5e6485b623567cdd4f1740605ea455b2e84885efbdeee5cce2bcb67802b424f177628aa0efb5f98c4af311af39886944706b08c43e80404617fd09c2957c798"
+          },
+          {
+            "path": "packages/taquito-local-forging/dist/lib/decoder.js",
+            "sha512": "568674645c5fa90e53164e200c81a0e894d30a36481d74575706673db948ad929556fa46a4593a93f9dd4e4ca2fc5921386d8cea0ba0c8ea2cee23b19a8e285f"
+          },
+          {
+            "path": "packages/taquito/dist/lib/operations/delegate-operation.js",
+            "sha512": "b3b7e5965734f5a85851bf1a96251fab2869e87171196d23278cf9d48ad8102187e1b4920c7815aa8d56f88894f68fd85c1316cf52abc77e84b7ca6de4e810ff"
+          },
+          {
+            "path": "packages/taquito/dist/lib/wallet/delegation-operation.js",
+            "sha512": "9d07a1a4183c7b6fa4a2efc3069f0e70507f353efbbb8a72b3c04252dcbbc3df692d0347eca7a2c6333058101030405d8ca4962aaa171365b00874f350f9423c"
+          },
+          {
+            "path": "website/docusaurus.config.js",
+            "sha512": "2e17a78d284ea7bd34830d8b176e40b4ef0fe12b0c48cd0b009973b0198557c1bccc76e3f6725ddd45906b7952b093c647826b6cecf58040cb97028f6ca60e27"
+          },
+          {
+            "path": "packages/taquito-signer/dist/lib/ec-key.js",
+            "sha512": "9c07bfd146fb307548d528795213d75310a85cae21b0726b51ca367ae9b720e399bc0c28d43aee65129a153345f3253c6e5895bae209a2b7e4edffc82e5c26b7"
+          },
+          {
+            "path": "packages/taquito-signer/dist/lib/ed-key.js",
+            "sha512": "62dbdb23883fd4a4c9b67c0381356595bda46fee720be189d963daabe3506a69a3b464821652f478460e7d8ca51a270f6f84c20818aec4d511b1d560a4dd1b11"
+          },
+          {
+            "path": "packages/taquito-local-forging/dist/lib/encoder.js",
+            "sha512": "837d92d943c2fefee563a885117027a10ed75a0c3d23d673fcca369a0b4054508c7ec0c7f1bcbbb92085f3fcafde09d2381f365c9fe37657b577f7e50813fcb6"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/errors.js",
+            "sha512": "0d923aba1f8141c7c345f257b9ce37af2f9e2f2f8338aae214b29f7c6e34d1f68a1c35c1ff7847ca8d70bd84494a12e9367cfb33144a06be5b27c1f30385491e"
+          },
+          {
+            "path": "packages/taquito-remote-signer/dist/lib/errors.js",
+            "sha512": "39828cca93764951baa4adb003a11374653599621445d1e5d75172aa018634605832cb0374d08b69ff5d7a7a522ec37f33717af9956c00d6b6371b791ec967e6"
+          },
+          {
+            "path": "packages/taquito/dist/lib/contract/errors.js",
+            "sha512": "3aaf6e823212b359ec81694d79c0065d93675116a992c46d903ea692690fb9ca31a5fbcc8f492066daaee6cae2ee0580b0617eba1155b5373dcf6b8ed516b04c"
+          },
+          {
+            "path": "packages/taquito/dist/lib/contract/estimate.js",
+            "sha512": "9aa043bcbcc9651bbb50f64235ad65b6de4900b5590b2eecaacc99dfc9cb6de7a4ab38ead13b931f7d6411a7abb4437efa7c64aae0b247999ef95ad1e0b93441"
+          },
+          {
+            "path": "packages/taquito/dist/lib/subscribe/filters.js",
+            "sha512": "4454580b6c49b0d1ba8470d96a64ce4c070c402d7df0855721e557cbfee8b28205ba8af5a1941ab6feeee26ab25a8b9e2f046ae854f6fbc3d9a902a90bb3da64"
+          },
+          {
+            "path": "packages/taquito/dist/lib/format.js",
+            "sha512": "e99a8fe024d205a9b516e8ea00c18f1578e71f579349d0b19462b49defb334137653730b645b11e63401719a7629f58cc8930e697205daa34604c9626827948b"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/lib/formatters.js",
+            "sha512": "cb0319e6e80fafa5b05db9984b410f9617f2f05b9f842d517e8afda6b8d5ddd9cddb1c0445e7edc2e35acf89402548b0c613010962cb6d5b3172fa254579f4fc"
+          },
+          {
+            "path": "packages/taquito-signer/dist/lib/import-key.js",
+            "sha512": "4e1fad91017a63adf08343b4bc12b4916bcad9d6ae5fc4dc4df8ae5c6cd1a1d88340b2e1e17171e8a86cc2295e82d897ef53b5f296ed6cb3e44186d0e6de5228"
+          },
+          {
+            "path": "packages/taquito/dist/lib/contract/index.js",
+            "sha512": "27fcbefbe93e56f27b486d02bf0308361c3179a1175212bca72e25f7f54d1d5b656984267f9907211d946dc7a9dbf6a42b7b1f23765fde0738a5af36b9a76785"
+          },
+          {
+            "path": "packages/taquito/dist/lib/wallet/index.js",
+            "sha512": "58c9a03d548fd4f8d9b05da2572721d0a415243f5bbb6ec9a0a1c0f73ea07afcc7ad7480284c4015303c4dc11c05e032143c2492e52f403ca48c2010d6ed5316"
+          },
+          {
+            "path": "website/src/pages/index.js",
+            "sha512": "4bf7ebd75ea92de62cd8d0d27bec362d0cdf3280e91fc695aaab953981223c9f19b7e6407644b1b175184a8f623ebc833a762541ed930562536eb967e12ffd70"
+          },
+          {
+            "path": "website/src/theme/CodeBlock/index.js",
+            "sha512": "106d9b053f8a4b298888e78b8bfd4dcaf94b60771be0e880bbd1e494eabc704bdf823e7b488120ca516e2dc078188cd6399048712d7879e9cd4c5e07c31dccab"
+          },
+          {
+            "path": "website/src/theme/Footer/index.js",
+            "sha512": "fac8a83464a22250e82689a90eaf6dbb605356fe1adb2309cb55f8688ae96e91987779c85a58d6e0a1f8eb1b3ce443eeb031ab273d25860cc978f0e159c4e075"
+          },
+          {
+            "path": "website/src/theme/Playground/index.js",
+            "sha512": "d9d2cee1e60c0d92560fa0170d73ae4c8802a79d1d9a062e4709cb777f820716a167df78c87cf55339b8528f8e8d5fbcd1b8a54e3e98e511337958df80e95b97"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/comparable/int.js",
+            "sha512": "f1ae58b655dacf0dd04cba86964286ccf55ade76a098dcded065843f19c40141684f3cede75dc6791036511ce59aad88df707cec30f3920859f35d6dd7916acf"
+          },
+          {
+            "path": "packages/taquito/dist/lib/contract/interface.js",
+            "sha512": "84f5c8ae6d7a701b8b1694326d9791c726a48902a29042d5cbe85ed3d00adf4bd8aaa61efeac4998102d6b1960235ae8f3991f409641b9fb3096e1e0942933a1"
+          },
+          {
+            "path": "packages/taquito/dist/lib/forger/interface.js",
+            "sha512": "84f5c8ae6d7a701b8b1694326d9791c726a48902a29042d5cbe85ed3d00adf4bd8aaa61efeac4998102d6b1960235ae8f3991f409641b9fb3096e1e0942933a1"
+          },
+          {
+            "path": "packages/taquito/dist/lib/injector/interface.js",
+            "sha512": "84f5c8ae6d7a701b8b1694326d9791c726a48902a29042d5cbe85ed3d00adf4bd8aaa61efeac4998102d6b1960235ae8f3991f409641b9fb3096e1e0942933a1"
+          },
+          {
+            "path": "packages/taquito/dist/lib/signer/interface.js",
+            "sha512": "84f5c8ae6d7a701b8b1694326d9791c726a48902a29042d5cbe85ed3d00adf4bd8aaa61efeac4998102d6b1960235ae8f3991f409641b9fb3096e1e0942933a1"
+          },
+          {
+            "path": "packages/taquito/dist/lib/subscribe/interface.js",
+            "sha512": "84f5c8ae6d7a701b8b1694326d9791c726a48902a29042d5cbe85ed3d00adf4bd8aaa61efeac4998102d6b1960235ae8f3991f409641b9fb3096e1e0942933a1"
+          },
+          {
+            "path": "packages/taquito/dist/lib/tz/interface.js",
+            "sha512": "84f5c8ae6d7a701b8b1694326d9791c726a48902a29042d5cbe85ed3d00adf4bd8aaa61efeac4998102d6b1960235ae8f3991f409641b9fb3096e1e0942933a1"
+          },
+          {
+            "path": "packages/taquito/dist/lib/wallet/interface.js",
+            "sha512": "84f5c8ae6d7a701b8b1694326d9791c726a48902a29042d5cbe85ed3d00adf4bd8aaa61efeac4998102d6b1960235ae8f3991f409641b9fb3096e1e0942933a1"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/comparable/key_hash.js",
+            "sha512": "a661649b042e793786548cde97226ced958832311f01067d21dc2f565e5477b6743a87000cd0fdf9bb81866305154517fd66165630b3e7a40c39ea9d27a1cc22"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/key.js",
+            "sha512": "b8443e1451342d703ba4155fc000feb0663236d7ce25905bb5808c14394da3f2531827271ea727cc64bce075f0387aed5fecbb2384cf376730567304b962e9c0"
+          },
+          {
+            "path": "packages/taquito/dist/lib/contract/lambda-view.js",
+            "sha512": "db0211441d5ea4c5c4b122092896e557f56d137a8e21312eeb94e6eec7b8edb41a4c166307b0f84e81671d82b12bb4cd5095dddc07c9a8c0590804bfb97086c3"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/lambda.js",
+            "sha512": "cdb681dbfdef5aad6c88a907a59d129b2027073a61f7a2111885fac58f47734a6407a2799d065af5b4765a7dde3ee3f010f4383514d648b567d89d9b73088c9c"
+          },
+          {
+            "path": "packages/taquito/dist/lib/wallet/legacy.js",
+            "sha512": "7570f72f4ad2e0e5754adf7cb62bba8d56e8f9b5d4a7b22e2413cac5a07f59bad54b25f6881498c58796886c41370492755208dcecb8d3dc999917bb91879f25"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/list.js",
+            "sha512": "997f294663a5add2e2ced73f52795695992ffd0a82af4e778d894599cf3611fdd9f7047fd7fcaef8d5086d29b662bafd351ca31286273ce35d7ddec0a90c7b8c"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/lib/macros.js",
+            "sha512": "71767970e60c3df2cf2142882edae72078bfc78da82d0f5ae5260b90b5bbe113c836e4a6b6ec80ac3d44dec34d43facc23fb76bb6c4e3532d54f9c277bd32a1c"
+          },
+          {
+            "path": "packages/taquito/dist/lib/contract/manager-lambda.js",
+            "sha512": "6ac111dfad0a4f2edf7f05106526276250b7b1eff855eb5726b03b7d6190286287a2c2d5ecc53edf7b4a549854ee69ddea1e0fa0d2043acaa39916fa270c10d6"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/map.js",
+            "sha512": "fee2e0f02d57461f364ece0a95860bb7716008e7f604be12145f80fee4f5b64b9d3524c414d7e6232ebb6f4debb08c579cf9acad3f6a1a404cb0973eaa6292c4"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/lib/micheline-emitter.js",
+            "sha512": "3b580f3b6514603e2061c1ffc6180fd7983ab38902fe556d097b1e2cb2781a66b038a80974c1258efee415333a3d7f016e7b5eff2f329ddd4f29e3ec17b8b28c"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/lib/micheline-parser.js",
+            "sha512": "891b0ff5122ef246d04f07772ec4495eeed9822d3b2062a6b3caa90524c3758bbad06d68f1c5e2a7090cc83af8daaedade64ffef536823fc539cffe5a0b1c1a7"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/lib/micheline.js",
+            "sha512": "769739b48ab6bd971c7108fcb1d56ddf856281a42ad3b3333cab8c4c2128602d025cb7b347cc2e203725169c52b90df802af9407a24b2693f11b5c9ce06087fd"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/lib/michelson-contract.js",
+            "sha512": "845b36fabe1c3085f3e8709fa3597d08578b49dc5faa333fde175517cbae7114be4f9b2b855c27087e965dde60e0fbeba0f048d4b445f20c1b35ffda21c36bac"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/michelson-map.js",
+            "sha512": "c1aff8acbeb047d4fa975854204740aca201c76b2d07267aa94821034516a6d7242ef1d64b3148ee984505dae7f1a476af912db1a2e8e8bda872281d7d4c6e40"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/lib/michelson-typecheck.js",
+            "sha512": "ad2dc78c76291e2eae63d41e27d6ea16730f6bb0a3033538f09f6080fa1822b8e2ca74943ca7560f3aa182a5b267c1d6ab41d76b7494b86ecd6e65d5902078a1"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/lib/michelson-types.js",
+            "sha512": "0134f50a60267d8f886f345274ec4736850f93b4cc09195b920a9da6420c0c8ee6fe40eee6a711f4a1f4753c762475de0df34268e7dbce24f687de71a1ada259"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/lib/michelson-validator.js",
+            "sha512": "587b88b16acaacd2a8d966d0a20a7e9329f016fb3de273961f09f55438e7935b22a10db5f0462f0613bf4ea4b8bd08fd2de939c98f181df47011cabe0e95738b"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/schema/model.js",
+            "sha512": "1693ab9af8a3ffe231a898d22cb3484b2beb3f030ab42f941c1e960f6deb89a1bf959c6c5c9067b9a02df732af1e258ea0e0c101000b3fa9303d65720b4a2fe3"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/comparable/mutez.js",
+            "sha512": "65e44f25687c7afd7346ab0732c2d8359c46ef567a61984a75c0734d093de8251ed4a9424a3f6137e5a13f0e293f8831e801a1cfbbc27bd2dfced88339d38b44"
+          },
+          {
+            "path": "packages/taquito/dist/lib/contract/naive-estimate-provider.js",
+            "sha512": "ff72aa8bf7424ce8c8c8d114b506e55a2e5c0c7f21bc79283d3b377e708e420e9232ed800e5abcdd68c61dde274e88d26d1e7a026dfc1a9d108d6976fe0d24b8"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/comparable/nat.js",
+            "sha512": "74fe9f67662e20e62d239534805d6f6954de462b458a810dd49f62d100807a8f80c757841213a7198ca45711649823d5ba23775586015c9fa496928bba1c1e3f"
+          },
+          {
+            "path": "packages/taquito/dist/lib/signer/noop.js",
+            "sha512": "2a46130c1999ca368789e3a44eb79d4bb353f8bbdf4acf03d911b2a5beb5a4a7a1a2d55390402afec3d165b56c5071c3ccda59780bba2d97d61ae00ea21534c1"
+          },
+          {
+            "path": "packages/taquito/dist/lib/subscribe/observable-subscription.js",
+            "sha512": "669c2859a9411476c2035f82c9040cd93d68afaccb5d364158fb3ea60e9c4f1558d5edca270a220b819231c17c2ad90afe825e9fe27c84462fe56a592f1301ab"
+          },
+          {
+            "path": "packages/taquito/dist/lib/operations/operation-emitter.js",
+            "sha512": "20ade2539b6a88ef71ba0292ba1b613d4914f408380f5c6e27f6415a251d4014ddec933f969c3e29745b25bdfdd7d5de4f8bebee3e1f3795f2b3e809ed631aa2"
+          },
+          {
+            "path": "packages/taquito/dist/lib/operations/operation-errors.js",
+            "sha512": "e3600d1da1afe145a7606904c3d40e6e9ac516d41d6cfde57cf60f4c5e24e469c642ba0f6d8876705a4ec258b5d8e1bfad690f0f102fff102c011f41f6d43123"
+          },
+          {
+            "path": "packages/taquito-local-forging/dist/lib/schema/operation.js",
+            "sha512": "4c874b398d21a6749634fd547070b74b46f1413610c1d04966c96812acb0d0d7c0d69c7551924d7348c668b190cf8c1b745c4ec8c2651fc6216d5e19fbe323d8"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/operation.js",
+            "sha512": "8ca1c722f1fbe921eb8dfcb1645a91d1b86cdee77d7c4d89f7277960ec3e87b1725bb6bb5b6d63aa679cd516072631341bdadaeaf38e7c7a2871583cdd4b3371"
+          },
+          {
+            "path": "packages/taquito/dist/lib/wallet/operation.js",
+            "sha512": "1355a6614e2db2a1d70db57dd98f08f62f534eece825886f0ac7543220bbfe9356d0c60a2ef4a7cdabaa6fa40e655a109a249be0e083b5c497d37af33a0cc466"
+          },
+          {
+            "path": "packages/taquito/dist/lib/operations/operations.js",
+            "sha512": "4241627012300df6926f6f0f3804396d7300697e2cbdccea99e8be56cf9d71c49c0b358c3bc4b61023edcc5226af0402bcd871b052420555d1585d976ae16eb9"
+          },
+          {
+            "path": "packages/taquito-rpc/dist/lib/opkind.js",
+            "sha512": "0e60d8f65513650e544e857ef89c748fd0974a7cf0cc35caff5a5b07a631d4596f08b6dec30c8bf1a9bfc489dd935fd6268e0b2498dcd3b5fcff919f37020e78"
+          },
+          {
+            "path": "packages/taquito/dist/lib/wallet/opreation-factory.js",
+            "sha512": "838309d9f5f8263937b471fe801138c227820ddf74bd8713795bfb872e08f49cb93ff94d1065a2d4aef821162a7d889812e65a1b2e6042e4d9aa3584fe236708"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/option.js",
+            "sha512": "051accb3cec6035d56dddead2ac2546c9bf3817a5552a711acee9298266f82e214483b38780d7a47de9558aca8e34edb157b7a0379d5090b98e9c2e3ff0782e8"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/or.js",
+            "sha512": "c0b6dc22c64ce71fc638e4bd95537239a19f162f3c974f15e45cb98e3c363ea980c1582bf841fbb0ca3945e2552a1e40196f85e12dc39eedd52cced67f5c174b"
+          },
+          {
+            "path": "packages/taquito/dist/lib/operations/origination-operation.js",
+            "sha512": "70e30df7e04dd4a0ab0b153269e27022d904a6f3c1e9608cb19622bb3bbf9c3e261c660f5ab2ab8bdaecfb78144b240779075937130b87a40f8e2c1dfe737f7d"
+          },
+          {
+            "path": "packages/taquito/dist/lib/wallet/origination-operation.js",
+            "sha512": "91d7c11c7f1953ae96b6d137d7d359afc3839b68d18e459d72add18d21d9a8f64f9a709a31e8e2a2804d262d4a06f0896223eae5e6c20cd647a0464c469c72ad"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/pair.js",
+            "sha512": "c6d05b39e7a3aad02d215dc3276ae80389631194ec0761ef0968c27812d42962a60422b37ee794ae4beaf2a166372f0d9e0a9743d548dad25fa14c5fea8541fa"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/schema/parameter.js",
+            "sha512": "acc4a32a4439ca5766a0ee1b46d9c8102c152751d7c5afdeaedb1bb22defd0392e3d06c59f68d85f95e144574dea90318a575722126b66839797563a72433e01"
+          },
+          {
+            "path": "packages/taquito/patch.js",
+            "sha512": "4d5849e342eb5c791d14849d4e2060c9698f5f5fee706479d99b5851da11c9ec33769645eb19ec862ec9202ede07f1a6e45326773e54bb0d920f2ceef4679fa4"
+          },
+          {
+            "path": "packages/taquito/dist/lib/subscribe/polling-provider.js",
+            "sha512": "386627ac8d23f34df3bab2e1d5fda53d1080c1255b1280d6dd72269b271afd84fb4d8869d88ee866cc27185e51a70e480460c150f3bef4e8d21a8c5f86cfefea"
+          },
+          {
+            "path": "packages/taquito/dist/lib/contract/prepare.js",
+            "sha512": "134652c6e57afa5cf9e679bda86d55b00d624b881f292d6405e1e5a4d085c21fb3e043359a9d4f4e5850cbe7a77731b545cfb8d6a6ce70c363e3ce630c611f0c"
+          },
+          {
+            "path": "packages/taquito/dist/lib/wallet/receipt.js",
+            "sha512": "a934d2ca1a2c70f36fa1beb0545a2cb544bdcd3e0d9653fea95760851d046221d64e1cf22aa2b0ce8246d5e595d4874538251d56442a3f3221de89fbafc88b4d"
+          },
+          {
+            "path": "packages/taquito/dist/lib/batch/rpc-batch-provider.js",
+            "sha512": "fa94132230bfde48c5e8ee337dfb272f00ec79c9525b710cd26dd0e90b5d5f031de4d3abe6c03b0b5bb75d07790b86f66324d44cb831857937e1991137fbc062"
+          },
+          {
+            "path": "packages/taquito/dist/lib/contract/rpc-contract-provider.js",
+            "sha512": "e9f12a3daea41c9d397629b82479d3d3e9051e83c4cf55dfb0600ec9e898927c06adfea4fe1d243f04f3533d767f78347d8ba991c620658e34361f809c80ae31"
+          },
+          {
+            "path": "packages/taquito/dist/lib/contract/rpc-estimate-provider.js",
+            "sha512": "9798813f68860997624efdce26cbd1615cb1da895d05f6567c82ac261557a03e960a42c2e72dbfe73b8b70bd0d6a96a7ade5622e22d9cbf8a8db7c6843c8dbaa"
+          },
+          {
+            "path": "packages/taquito/dist/lib/forger/rpc-forger.js",
+            "sha512": "33876d2cd943486c957d2a388df90e743e7b3efa916a9f034a649274ccf6f00f74f6712be44246e5d15c5538b53c53e897252fa56cf8bbd2e42a446bffcb702a"
+          },
+          {
+            "path": "packages/taquito/dist/lib/injector/rpc-injector.js",
+            "sha512": "33439e5d63a2fd57b5fcdb9a94d7ad0860cc18dd7e7457cee6093e1b4f9f23126e5931e78cc6350f0667bb845ba791fd98b807bdadb49d44da2826927dbfdb33"
+          },
+          {
+            "path": "packages/taquito/dist/lib/tz/rpc-tz-provider.js",
+            "sha512": "b8973f5b6808aa2a199286481f51c6f9e8edf5970b9fb25f7768aac0319f4614b82adf2ab6d3189636c182cd922473971aed71a409669a801b7696d8b3e394d4"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/lib/scan.js",
+            "sha512": "0688fa100679dd93e764a8068e22ab6b58225602ad77328d728e44257db5bda57b7864f0f8420b7e84b9a4c8965a722b501eaec01c45ae8502ddde7ed402874e"
+          },
+          {
+            "path": "packages/taquito/dist/lib/contract/semantic.js",
+            "sha512": "a86fb625f714446ea0fe67fe56502fd4c4be31dd4395ab4874a9b28cfbebf47ba6b826a4883ab17ce34dc2211f5035dab9e3f6ba5387bc6fbe535a59384410a1"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/set.js",
+            "sha512": "4ab0aaf4affbb0928c698f77e0ecbda4736798db063ac25362acd0cdf105c43cec5ba7a89cb51d60a7f6f3ba08b1640802ab212339a8c938e06d61415fc60e65"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/signature.js",
+            "sha512": "7c8b1a2889760b0b2c38a741906950356589ea532ab63e8d1eabf9b20e1279039350c6bead2c5fab32d4cc7526f16ddf28347dfdeafdbbf5e25830db9ba6ae90"
+          },
+          {
+            "path": "packages/taquito-http-utils/dist/lib/status_code.js",
+            "sha512": "673748bebf088f7222ad49ced652687a27f923316a770f0b26f5b032545a2fba3311be1f48133fa786c44e2845aefe9210c6011164b56ec984d1385eb8e7b7fc"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/schema/storage.js",
+            "sha512": "69c35a030fcaa0f1d9dba5f40b68d122cee15051daa13543c8849e47f224878bca9797458837b6d6a0f214c75a5b17c5d4ccca8edc653706929d849b6486e843"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/comparable/string.js",
+            "sha512": "724e24749b68c0b5212ad88e6468bfdb7ae3f2df5cd7e2daa71229443c6d5229d2765dca3356339c6db15e7bd5987790a3151b4f9b6f545b43ff2c91f98f94e3"
+          },
+          {
+            "path": "packages/taquito-beacon-wallet/dist/taquito-beacon-wallet.es5.js",
+            "sha512": "cc71205eedfdb568832e702c421c61447cc2697ab736eea1291bec550421fe5b9157993830cdc77ee29cc24bbca442bc9f2a66a9efccdc5aa6ebba14c1f343c8"
+          },
+          {
+            "path": "packages/taquito-beacon-wallet/dist/lib/taquito-beacon-wallet.js",
+            "sha512": "55f0381f01332df18b58c8a8f6c3e9a42d3417b6c369393cea712a23c7c3f2b430d51313270c78b628d22cbcd737e0cbda5f949896949b876fbcad908d82a240"
+          },
+          {
+            "path": "packages/taquito-beacon-wallet/dist/taquito-beacon-wallet.umd.js",
+            "sha512": "2c5198d6efcd320c92ccd8802f816f1c4e8aa54b61b27b83a624bc0abc63462b810b84a069065a044b933502eeec68ee6e103b9b52f6f5af6817e9de467d5707"
+          },
+          {
+            "path": "packages/taquito-http-utils/dist/taquito-http-utils.es5.js",
+            "sha512": "e6edd4b8afea8dc55685c427bda9141758b8f842000bab217e4ce6695285b9e830b08d2ca1dba89c9712b493ba94ba38f70d6780e91f938eb3ea7e208fa76634"
+          },
+          {
+            "path": "packages/taquito-http-utils/dist/lib/taquito-http-utils.js",
+            "sha512": "a5fcedd1c17ae43b67aa458ec882c03c8ee75982aa6599469dee803845d680fa75fe4d865fc04548c9b3cb41ae92db7e7c82dbb5b922b09043ca5bbc4ad86ef9"
+          },
+          {
+            "path": "packages/taquito-http-utils/dist/taquito-http-utils.umd.js",
+            "sha512": "9e372842707aa15a970c32c032d382a118820984d03cbfd5841d7180f0680cca75df5ae2f9a82c7ba5273e71ed2aadc2de2e855a3e802a0369da948bcc19d98d"
+          },
+          {
+            "path": "packages/taquito-ledger-signer/dist/taquito-ledger-signer.es5.js",
+            "sha512": "73d9e17390c35f138e76f766de178eedf2aa088212c8b44aa9feba4a2bfa775e01276c96dcc8c425866ccac9dd9da7eb68c4698a5582442859ad7e26e39b5e9c"
+          },
+          {
+            "path": "packages/taquito-ledger-signer/dist/lib/taquito-ledger-signer.js",
+            "sha512": "5ce0faf495123e631c294465296f37be09b4f9ff01853a2d7b83907dd6050b0d2652b6c191624c40698b40531b621838630eddb8139350c1fee624d45d71f520"
+          },
+          {
+            "path": "packages/taquito-ledger-signer/dist/taquito-ledger-signer.umd.js",
+            "sha512": "02392079be706ef29d0e14d2c3cd10de3097fcb3384bd422c71e1a0c378d66e3e20470695409d8c14000da0d36f6b39211b99eb73b7a4603436b541d306737fb"
+          },
+          {
+            "path": "packages/taquito-local-forging/dist/taquito-local-forging.es5.js",
+            "sha512": "93d21506f507bcc6ecd595c2f5cbd5be97de385e8962e63a8fd19a88067d149452858b0205fa82cb131e44c00e79b05a5dbb409c7f77cee310a30d2c7eda47b5"
+          },
+          {
+            "path": "packages/taquito-local-forging/dist/lib/taquito-local-forging.js",
+            "sha512": "0cdb476e185d9c9be482f6a9740c14b89967ae3b1530ff8ce2f1b6dd42e516f84e82e7113aec6be9a83c6bac6c5b61ceb7e37b6646e76d527e7146424702f5c7"
+          },
+          {
+            "path": "packages/taquito-local-forging/dist/taquito-local-forging.umd.js",
+            "sha512": "f9c5365cd96bb6a7fa09cb3c8c1c42bd86fe23642c92a3962e1a27554abeb79c9b3f70aac778ade9d99eeef7ca5253b4252691802c07238650df79125498f751"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/taquito-michel-codec.es5.js",
+            "sha512": "6a1b22392248c443eef676a290b640e5366f52cc133cf0ae6376cfb19c914ea06ebdcf762f08a478c2f6c9329e3f3c1e36d09b774d7c2568b21c48920739d0dd"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/lib/taquito-michel-codec.js",
+            "sha512": "c58d417f064dac7d608ac96dca038be7f1956ab985a0e62dfb7265e5a62e117d8c0a8affe82afd21d62962568082a37b5fa736e028ac38374599482a8c0960e8"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/taquito-michel-codec.umd.js",
+            "sha512": "fcd446cb76d44ef1621f71ce2f236e4cf4807a4ab0995ce3bfbd7c788f0a1ab174af558ee37bfab60f5cb229e3ff589cf708dd6e867d3834102d46bb35e1a2d4"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/taquito-michelson-encoder.es5.js",
+            "sha512": "d9be43e3224a8c55aed6fdbb5e2379589a3eae1c51f3f16fd27ae1918dc0da63dee85d769af4d41a0adb5ee9cf40a42d00ec864bedfb375151c1950db055297f"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/taquito-michelson-encoder.js",
+            "sha512": "d54217084d5744dc34ea3ec016e652e30ef4288bfb08db15056e9597db8e71f67dc639dc85c4c882a37ca6ca2d5079691d3ec5382f30be3f88e996797327cd04"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/taquito-michelson-encoder.umd.js",
+            "sha512": "50020172019046ea5b49869e29e72e7c41f708b81c18f72353a2f51cb13fa6ade4d6b0d16a7c7713528c7a0b179dd6e2f529c8dc5a2e27fd0e797de7894cbfa2"
+          },
+          {
+            "path": "packages/taquito-remote-signer/dist/taquito-remote-signer.es5.js",
+            "sha512": "0dd6d4e4a5b8c69f9f051ca47cb34bcd088a5bcec427cab5c419033657fe378ef8035afaaa80f7d42d6521d1c1b45674444a23d8ca2ddad417d075556ec2f857"
+          },
+          {
+            "path": "packages/taquito-remote-signer/dist/lib/taquito-remote-signer.js",
+            "sha512": "c4983718ded5a359e04b7a89b9d64e0945fe55aa9d22bd6ea181e2e1a80ee83caf47e8b7090358fba362075448161075d9b5634fd9962a2d7a12856c1f9fdf13"
+          },
+          {
+            "path": "packages/taquito-remote-signer/dist/taquito-remote-signer.umd.js",
+            "sha512": "53f66dc41fd7793793914797043bea8501421d242e5bd0d1b232866bb2985805f6756d307da2fef267c80dc2c0b2e8375768e537e330733f5bc74d987373d294"
+          },
+          {
+            "path": "packages/taquito-rpc/dist/taquito-rpc.es5.js",
+            "sha512": "241a128d56f2e04528de3818fc4fce85e23aaaf0638f3a5e487e07d69578e77c040670e2e0b4c3e62f38b14d0fc5ecb9bfc7f4545383ba6b477da2588d883663"
+          },
+          {
+            "path": "packages/taquito-rpc/dist/lib/taquito-rpc.js",
+            "sha512": "5d3280b826545079ae808dc9cfcfa11ca051112f0a1af31429333eebf55ce02f7cb2c8fbc7353542c4cef390a5a609bd5333bfac9a10f3cbe055383447c87f2e"
+          },
+          {
+            "path": "packages/taquito-rpc/dist/taquito-rpc.umd.js",
+            "sha512": "d1607db6505957c846c2ed19618f650fedda86b240a31cf63357f6d54b882a58ceef7734dd2fe3a0b0dc1aa7e454598bb8d27615bbad018e600caad2e5959563"
+          },
+          {
+            "path": "packages/taquito-signer/dist/taquito-signer.es5.js",
+            "sha512": "a18843a908e102443c1a359b0500d02f322c2b17e69804d1d06c7a7117f1a3adfcf886f8607c63cee4717a9b28107e05eb3a803e057af544b9ee3283fdfae4ea"
+          },
+          {
+            "path": "packages/taquito-signer/dist/lib/taquito-signer.js",
+            "sha512": "8393ae84654047172e7425c38a657ea1947e6ef7fdc61cd03cf2dbdce23a47f3cae7db277b067c2acaab1036be53a3729f2949daea5f289b7cd500e1113ae2ad"
+          },
+          {
+            "path": "packages/taquito-signer/dist/taquito-signer.umd.js",
+            "sha512": "cb78a93ca519f8e1a05f573326fd7cf966db4eb5a5366dc48403ddd0c7480a7a5527debbbd72d14e32923df620354e03164b7357dba5acc9003cc35c939f07b9"
+          },
+          {
+            "path": "packages/taquito-tezbridge-signer/dist/taquito-tezbridge-signer.es5.js",
+            "sha512": "a07612a8efc37ad4195d158f2ae7eedac203a7026e711474a8a64ea90d54d4ba0e371a7faa06d8feb83d777289a8ec97077a5dc3d08913b682f63e0bad8479af"
+          },
+          {
+            "path": "packages/taquito-tezbridge-signer/dist/lib/taquito-tezbridge-signer.js",
+            "sha512": "51619498bf0f0708904aa7edf787b26086af08393d0d8f3d438f0c8ded42350e7caf26f091d71c7b293b96c0f14e05baec1948708641dad7f589edf5e87a4556"
+          },
+          {
+            "path": "packages/taquito-tezbridge-signer/dist/taquito-tezbridge-signer.umd.js",
+            "sha512": "33e6e8847649d09eaaaa515ebf5c9eba8e942e0ae6e2f72f48b142baca9328de1ffe6a835e375ef9e4a46cda9194d85cd51df08cd0b9f2c14148799ae112f854"
+          },
+          {
+            "path": "packages/taquito-tezbridge-wallet/dist/taquito-tezbridge-wallet.es5.js",
+            "sha512": "0ba6c0f1f2e43774ee8a3109d452acc38ceaf4bd88ca41849cb5e0ae16ef56924a0a3f1adf6244176ee9868461fb61e7fa1cfe9b3446f3fb6bef192534492c6b"
+          },
+          {
+            "path": "packages/taquito-tezbridge-wallet/dist/lib/taquito-tezbridge-wallet.js",
+            "sha512": "d18d49ee3da6527e785570611a7ec1e7cde2bee54c67ac0bf289e56bb0189df0602c0948c69065201b60324c84ca183dd7de2eb3e9580181c594782d2795f6f8"
+          },
+          {
+            "path": "packages/taquito-tezbridge-wallet/dist/taquito-tezbridge-wallet.umd.js",
+            "sha512": "e67cf2bd9e68a129c0c710476d965945dc382d4ea06e0484bd286645e21a65db7c5482a1236f6ac23de3b4866737cfde2d3a067cfb503706243a00d092e3b2d1"
+          },
+          {
+            "path": "packages/taquito-utils/dist/taquito-utils.es5.js",
+            "sha512": "9f47e8fc5fe90abe937f3d46bfab7ea1ddced7991cfd8b4fdac5c6ceda0691162de7a4a70524c086b251630be22ec37083a8ccdf5852c6790a066b5aefec5643"
+          },
+          {
+            "path": "packages/taquito-utils/dist/lib/taquito-utils.js",
+            "sha512": "77a13f9115ad12d6fce14b472b9b8a0b09c2dabdac86891fd36a9e45128e63001d7ec468abfd47cba5b59de9c114fec555333059bbdf450e099b9864c98f6049"
+          },
+          {
+            "path": "packages/taquito-utils/dist/taquito-utils.umd.js",
+            "sha512": "57d8962dd5dc91ddbee3c907f975110cc3c5a3c06d794bef755461ca757abebb474083da98b469196159a0951fd7061ec8d4b3e6418e9e5a3618dc8895950cd3"
+          },
+          {
+            "path": "packages/taquito/dist/taquito.es5.js",
+            "sha512": "ee5b58ab6a0e9b3c7cc29644b582d474f79d25c426c0365f46a87cb630f6e9a4c11349a73e307a9d1d1aeed7b7780f4928f96d5ebc476ebd0c9f262c7f36ce2b"
+          },
+          {
+            "path": "packages/taquito/dist/lib/taquito.js",
+            "sha512": "5b183728525b9b6bcb772d42a2a2a3952aabcbc29e7a08cb3ca943631045e5b6b461d9b0d94cef1e160ce0034083e1067d070d309714296aeabcc5eb6dbd5222"
+          },
+          {
+            "path": "packages/taquito/dist/taquito.umd.js",
+            "sha512": "6391a2e9e0505f03ffb7470ec3951d7aa3917ebc8770c68fc73ba26a7c973191934544f6cea736bbd88b2316adc67e88d14b71cf592748c46473c1d3053de9f1"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/comparable/timestamp.js",
+            "sha512": "18cb38af9de799d8ef6db25386963fa950cc7fd8b325db367d5c07fe5df638619bbe3d13f9123889a16f4080829035f90c0a841a0810b107df30f0e305f1f90d"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/token.js",
+            "sha512": "2c21e29a5e4a7b750d34069cef12fb559d9cb04b9bf3b729f5fab3c95bbb38668cff76ed002153863f74a862893cb3a22087ec85e5bceddf55c1981b7e37054c"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/tokens.js",
+            "sha512": "48368b7a899fdc320d038d534a6d6bf0272500c71743d1d9bf3e29758d2db7f8bce32f794bc4694c57175400fc76c6856c023429f574827101f2f4ef67775e4b"
+          },
+          {
+            "path": "packages/taquito/dist/lib/operations/transaction-operation.js",
+            "sha512": "8069646f4efd8b426f962aa947f028735059b0ed24df1445e6d42eb86005c1a9feb9ef5caa7a50d5e69980b1bdbab146b1aff100e6d301b81dbd7d3050af52f5"
+          },
+          {
+            "path": "packages/taquito/dist/lib/wallet/transaction-operation.js",
+            "sha512": "f8b1b51a4cbf79ecbf57f13789b6443495bfcfb9cbd7921103617854ebfc47cdc3bf3bfdafa4bbb091bb4b527d8e1e739320e6dd375f46002d02cc54f4b160ee"
+          },
+          {
+            "path": "typedoc.js",
+            "sha512": "0f57726261a3f8f27ce676222b170d8b429fb891e6eb7061a21631282709758d122ef5aaa56c5227e1866fc47444ae719ccf467ce409642b31d5aa03ec555096"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/schema/types.js",
+            "sha512": "9e153af0176a3eb9c340bc30c016b6fc5410466e8f4cd5ce09a73fdb98265c937c30677fbacf526ff7555c93e7da855c8a170fd76798a74693e3fdbcc182380a"
+          },
+          {
+            "path": "packages/taquito-rpc/dist/lib/types.js",
+            "sha512": "9e153af0176a3eb9c340bc30c016b6fc5410466e8f4cd5ce09a73fdb98265c937c30677fbacf526ff7555c93e7da855c8a170fd76798a74693e3fdbcc182380a"
+          },
+          {
+            "path": "packages/taquito/dist/lib/operations/types.js",
+            "sha512": "f8b8c08e25845ab975633e0e6722f7b5bcc1a78c22250daaf701fd873f666bbd172cc34613cfa443359b170f2646ec725b82a88dbd178e73313aaab496896d1d"
+          },
+          {
+            "path": "packages/taquito-local-forging/dist/lib/uint8array-consumer.js",
+            "sha512": "749d1e30b76a0c16f40b4f85daefd4993413619b4ddf03614289d5cec4bfef8c7fac84bc2c337f00e098ecf3b8d7ba4b2d9ddaf3e49a3b671fd3366ac849af2c"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/unit.js",
+            "sha512": "6b39954154d775aea0492825c9e3ca39934e38c4e47d7fe83616d837d89dc76afeff08f492618f01710bdaa2d5e14e2b0b99daf8b8f25a6deb4be8bf12fd897f"
+          },
+          {
+            "path": "packages/taquito-ledger-signer/dist/lib/utils.js",
+            "sha512": "d94d4535614e84973e42b398ddc32fde3fc5cb373cd887d19cadf33e94748283a58ecd82661defe4746525b1681d93aafaebf8059b6934cf1ea0befc96dc6cf3"
+          },
+          {
+            "path": "packages/taquito-local-forging/dist/lib/utils.js",
+            "sha512": "92eda230f95b8d0b907507dd02afc8edf99b5ca31c3d34f0b22e9fa5714050c3815a8d5af9256b70e5abd2d6aa7915a5e9521985044fe7cb1dd9bb594865725a"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/lib/utils.js",
+            "sha512": "e200bb2a11b7864e106e13e7f88b0e9bb5f599efb3fcca2d6d730ffb2983c211325c1bf28fe97d01d08593dc23fff70fa9af454a24be28713780094dadf810e8"
+          },
+          {
+            "path": "packages/taquito-rpc/dist/lib/utils/utils.js",
+            "sha512": "368fc6e948d268cf36adcadf6f95f3bec041b242ccd334381e6491ae0566f59b3f8d7b4688c2dc29220efa2cb1f38ec523c5815c042e351aa967086e9e80521c"
+          },
+          {
+            "path": "packages/taquito-utils/dist/lib/validators.js",
+            "sha512": "7a7c491e86b6571b67cc2c4def71b7322f5a09302a434256f0a7c3c9d751bb029b1627079ee4485095ca580582bb79a63b3f88308dc499925c0df1cc9f4d684a"
+          },
+          {
+            "path": "packages/taquito/dist/lib/contract/view_lambda.js",
+            "sha512": "d910a500f1e21352d1f42a2f03856a353715457173c836330a63d88eaea4068c2d6d297a10d16d23b70f5a3745dfa8da21b1a56e99b23c7922fd0d8b50c25962"
+          },
+          {
+            "path": "packages/taquito/dist/lib/wallet/wallet.js",
+            "sha512": "816eec0fb4c79ad66adcf39273c5a1662f08b8635f890d9df6bcd2e90724b670f9bb8f411e13c522f7ff35a6de0d964226118d9ed2b64e9cb4b55afffd8650a8"
+          },
+          {
+            "path": ".devcontainer/devcontainer.json",
+            "sha512": "0824a8ecee36391a315e77f3fcec0f5d068e8ba2bbfd4a223ff5b646608008770cc044018cffbb47403bc971cea4f19599c934193b7e355b40d5a8455ed6ed0d"
+          },
+          {
+            "path": ".vscode/extensions.json",
+            "sha512": "8d9470210bb86776755a564ee81ec117675c088f5efa519ba708cb60a7f18015e1684942855b4347412413325e522cccc646e12604478364375efbfc46e2cdaa"
+          },
+          {
+            "path": "lerna.json",
+            "sha512": "37a5f6387c67fd13195a90a8c10f740f249997a4a954c729f0d2e7e3205a3d1b4c7bae3ed8670a3d7b422388b640eb846d55ac5b33745854d092776b1b74aff5"
+          },
+          {
+            "path": "example/package-lock.json",
+            "sha512": "f7144301e24bd46bdf3ab1f023c9fc123c85601d397bbdcf355986d30daddd1bb95edb10e08ab5a3aadeb4a1474b1a1f9b87e373e152b74ff3d0461f5b115e6f"
+          },
+          {
+            "path": "integration-tests/package-lock.json",
+            "sha512": "f0f746305bfa290ac3718cd0b5f6724823415e8d5b3398911b51b6884e490eaa8d53df1e033ade90f2f629309ce9183df65f4c687f0c70dcbe71c9f07b7519f6"
+          },
+          {
+            "path": "packages/taquito-ledger-signer/package-lock.json",
+            "sha512": "b4c2bbdc0a25dd629ea6c1d0b837e90ba52d49030d8aa978c9a199f70dddaccfa082af1b6e3d573af349fa9b3784628a09919f3ba678b9f2629327f5b863f45c"
+          },
+          {
+            "path": "website/package-lock.json",
+            "sha512": "540eb3bd6e7a5b8a5a42f056a3d51b5fa94a3f9fa2b7c0583d172ddf7faffc058b93d2ab6ecce55ba76d644e112ddcc6e2e56f6fe6fcab91b283edede931e7a5"
+          },
+          {
+            "path": "example/package.json",
+            "sha512": "8d9e2d1ea53072f3fd59c8b2dfc5c1a540cef87f97a20ed3212f2402e5ca08bd709bbb26fb762b0ff146ead06b198e25b6f5044508ee091ea5a21578d701182c"
+          },
+          {
+            "path": "integration-tests/package.json",
+            "sha512": "0c204334d136fe270ad9ab43216658841edd85d9fc980f957217d7f744884a92c8617535b9fd938eb2ad6b4ba26f47300e5a1bbfec4542f49e9ca74ce8ea3e2f"
+          },
+          {
+            "path": "packages/taquito-beacon-wallet/package.json",
+            "sha512": "25fae90ee760f52a858382400bc2848931ad0c9417d28836d8d7df7d60de0013c508181bd617b9e9ddbd7f41b1c35e1328187c5cb238a1792e2f1606f07cd7bf"
+          },
+          {
+            "path": "packages/taquito-http-utils/package.json",
+            "sha512": "ebfaa78f9c7cfae799e00968f5561e85920918d0b808935bb69a7c88420d7368ba637f1e618d4a66bed14c2e824c3706d1fa8f83c2b8f90fb294d8fb1528810e"
+          },
+          {
+            "path": "packages/taquito-ledger-signer/package.json",
+            "sha512": "a7e6297e3e24f74ec7b6209c45459aa5a3e93ca4dee188500ea6815effe7310e18d0aa11c99a7bfcb7a8121b9bd46443c7c25c79a89eb25dcc8559a44ca5a45e"
+          },
+          {
+            "path": "packages/taquito-local-forging/package.json",
+            "sha512": "45e077e68b016b6f1782d3ccb0b3c6cba98a4e838091a92fce8307617871b97086f64ab7909161280ea03b1f2553d882212d3d8610ad0fe7fc8cfaefd8a69252"
+          },
+          {
+            "path": "packages/taquito-michel-codec/package.json",
+            "sha512": "a178af26745b995f680ed8ee5fe7a15048895d0afe0b1cca401c103574f4ca3b210bdeab6e39dc65093affc65d830123647f111f941951d91308ac7549094df8"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/package.json",
+            "sha512": "ef47797a5b1ab2598df9d79b6068f406f733cf51369f50b99ff401239d03979c7af02241282d496e31e5b1d9e286a4809fdc87c1f8e7bafabb3a0210fdc2e28e"
+          },
+          {
+            "path": "packages/taquito-remote-signer/package.json",
+            "sha512": "14686ec318360cb25ec3dd3453d2280d4c0a46133ca756409d973aeeadc8357174f98b5c39ccbe15ffcc46841289d91e0874b2227dc5be6cce22adbb6f197d44"
+          },
+          {
+            "path": "packages/taquito-rpc/package.json",
+            "sha512": "7e5e876080f483b28a43ddb39569ff7bc444c7cd7fa18fb0ec91190054b8e35efe3682c8eef30e5d5141bb57f373241b320d18184a30241aca45fdda3f8e6860"
+          },
+          {
+            "path": "packages/taquito-signer/package.json",
+            "sha512": "681b11552a9d3be1a494372891b5c46ef2841649f2f786e7c01fe6988bcda32d5629f47389baf57a597ba2eb14124689c2bedb477259b7a6836f92e13a0d0aaa"
+          },
+          {
+            "path": "packages/taquito-tezbridge-signer/package.json",
+            "sha512": "f25e4cec475f7fd3ba6f5e2a1c2856487512956b77c5ee10f4b1806668db5ee6edbbe99fc34ea55caa5ca64552e8c24d673ca5a6c5b13034f71ce884d3727b52"
+          },
+          {
+            "path": "packages/taquito-tezbridge-wallet/package.json",
+            "sha512": "7fdb1615bd880ca703b2d2dc31d73240ad783b2c193adda7e21a3f000a8c2897895c58409c6faf9bde542edcb66b93b4ed924a8c2cad5bf6f577371fb1859ece"
+          },
+          {
+            "path": "packages/taquito-utils/package.json",
+            "sha512": "66df55b5cc6dae2c012adf1e31ce1e7075112f527a63a5090a11d1cb4caa7c6c32e323faf8ee46e1de5ca0007a04a27379ff168a75d7ec79e4376e4899f526c3"
+          },
+          {
+            "path": "packages/taquito/package.json",
+            "sha512": "bdaa9e5c12c7d13ab03daf276f449a36e7820fb419038594cef6b4ecfabece68772c89980a46e524c2f0c38ff397b8f6c1a117e7d4ef161b6ca4b324dbbc7d22"
+          },
+          {
+            "path": "website/package.json",
+            "sha512": "73b3aefc70eba4e7a4955e5517df9cf5c46a74d5e73dbe4d306b23f24f1c46d4aaef25b4155982b5bb8666f722ae55d27887eb7588a7d10d6ff023d90f15efed"
+          },
+          {
+            "path": "website/sidebars.json",
+            "sha512": "a5c819d130b6150070d7790d68e02b75163026317014804bab00c115cd1091266bbddbdee6adcb96598bb9a6e1369aedcc51f84ea6542e58a6ea968bbf518e46"
+          },
+          {
+            "path": "packages/taquito-beacon-wallet/signature.json",
+            "sha512": "c55668ca7dbd0c76d43fb896cd0e0a7be5650128e37ce543be6636e1d19efa622b095ffc929bf72a250c5df50370746edc7a81be36a23c87e96cfd6cb293658a"
+          },
+          {
+            "path": "packages/taquito-http-utils/signature.json",
+            "sha512": "a805d743f5bcea7ca9e61a1c06cb59dcb140f2501b081c2afd494c48371063e1851aaabb50ba461cdacd3b19112386167a86da6dedacf82c3419a6c7332e94cf"
+          },
+          {
+            "path": "packages/taquito-ledger-signer/signature.json",
+            "sha512": "97129810b28fe84f9b266fff14cd225d190df61cf8d756befb8ba6ed4f7fdcd789824565d1c5a04b51491d61fa76bba226d6b32f8a03ef3da1819ddde03865bb"
+          },
+          {
+            "path": "packages/taquito-local-forging/signature.json",
+            "sha512": "939ea43b82dafb12a2c439e57414e8da5382dc03ab1e002ba283b49f8fb2bd524b97996931349f7838af0077a8db9450c54bfb5e0b3a816b8e76467125eb52bc"
+          },
+          {
+            "path": "packages/taquito-michel-codec/signature.json",
+            "sha512": "48f4e072d53b81c4a407e24a68513c7b1f42fb86e7755f6cceca9d0bf03cc3eb548f21c786fe5cca89305774e86376826fc1d0c532ab56817975538add5517eb"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/signature.json",
+            "sha512": "f7ea72809e25b315baa5256a8ebd981ad8b22cc51cba88b853ec66817d91b680d54192f576be02d43366ba426b68bec4a470748da8dc333de0d98e3323079b6a"
+          },
+          {
+            "path": "packages/taquito-remote-signer/signature.json",
+            "sha512": "e9cba88e9145742accb350ac40d61066e680ed1c0f088624486c4d691d86ca5e30c244a9494dd7cd1e7a4b033934116d31aef95d6f135e1582e1ce2d06604b57"
+          },
+          {
+            "path": "packages/taquito-rpc/signature.json",
+            "sha512": "0d83096151f92a379939382220043b4ebcf971ee147b0fc8fe9044814ecacbf10b116792e9b0538e183c0a66257f0b79d9266c8b87636acfa922234f154ffe6a"
+          },
+          {
+            "path": "packages/taquito-signer/signature.json",
+            "sha512": "c6d2a309e8656cb13339319695140039935b5078a7fb66fb6a2d8007e73511566f9a7b568e946f0aab8a4dd4ad7f227cf89979fe986743d1a1e9a484036a8f4d"
+          },
+          {
+            "path": "packages/taquito-tezbridge-signer/signature.json",
+            "sha512": "6105b803f44bd03500523d504ed3af61596dfc2f8b4c2e32b53b91328dc1361773209963d30711cbd7001375f2b51ba072ecc9a605885ba8ddf9b4f078f36507"
+          },
+          {
+            "path": "packages/taquito-tezbridge-wallet/signature.json",
+            "sha512": "f8902983bde9340ce78239c2764eeb4a21206dc8ae9bc6ceda5a4e6ff6594a2d24e052063eb7c5f696d5284c22716234decda085df150cd6bc21263b2043e574"
+          },
+          {
+            "path": "packages/taquito-utils/signature.json",
+            "sha512": "0e970ee2ff43310f66e9d3363d4b680d3487808dc509ead0fa38f1065ebac112b564085303ff193c61c23cce3924405221d547ddbd181a8268f6f8badb040111"
+          },
+          {
+            "path": "packages/taquito/signature.json",
+            "sha512": "0435a5c60d689c4ef56395963cefa851f79831a5558809740aeb613c4de50dd48056b39eceb14e76e6decc7674aa556b4f012a47972ef2557f7e41402a8479e5"
+          },
+          {
+            "path": "tsconfig.base.json",
+            "sha512": "344246cb27646e06fc8538b7d86e9b4e506079a3becedb65eac53fba5a705864af91fed90a1055a09735b1719ba58c8c3efe3f2a716777d07544b47fb60db7e1"
+          },
+          {
+            "path": "example/tsconfig.json",
+            "sha512": "3741e89c9c7469ec86500e02523870646bc7afe74bcb967dcae6777d0ae39af7e15c412f4d5e4904629c9577eda5f5cb02e2bae567d3a41886fd0f256b30e1d3"
+          },
+          {
+            "path": "integration-tests/tsconfig.json",
+            "sha512": "87d1b9bff18267a535f1fc150df8ecfdabd8aa07ec325f3de8ab9bedb922527d8b6f546ad9bb5d38ba7f57d5d450b4dfc36ece3ea060a9f10fc32f2ee0728e1b"
+          },
+          {
+            "path": "packages/taquito-ledger-signer/tsconfig.json",
+            "sha512": "dc1726b9bdf8a3aa303d7562b73327dafca5305a1dc4c2a666bd92a74e5e06ba2363d05e25f46111695c5bfe647e4dc90352d1a9c398158b9c598ec55909a594"
+          },
+          {
+            "path": "tsconfig.json",
+            "sha512": "c1a2fecc4ef2c3bc5ac38de6bd3e07fcecbef45519369f9a0b3340b239fb678fdc4702c83553d53ca7087e4beeb4d004e4f56204a62440f13615408f689d766f"
+          },
+          {
+            "path": "packages/taquito-ledger-signer/tsconfig.prod.json",
+            "sha512": "6f9928704743d6aadadc25fdf791083fad58262f7837a7e00a9353b264bcf023963e5474aed209b69e3b36ff91fc2497ec47a62a39c7c1cb036ef34ff1b6f7c6"
+          },
+          {
+            "path": "tsconfig.prod.json",
+            "sha512": "a5c8efb29907ac1399112f22628324168c9a778b06c7fbba08b1e4ca6d474282e5127c3117d070cb8bd4afdc3991261d5444d4f47ed5adcc86420dabae3afb7e"
+          },
+          {
+            "path": "packages/taquito-ledger-signer/tslint.json",
+            "sha512": "f33eefc26af1bc19e47a6cd1ac52f8a65bebfa55b1113330b66871c40c9ce7675720f20018799b394a34a6aaccafe9644ffa94306988f0a8e3f242d7f0b864ba"
+          },
+          {
+            "path": "tslint.json",
+            "sha512": "30d8b4289f07ac71cedaf2f6f87c9d8464df5692741ee6e335cd11292ea530737a7e20af683e6beea880246021cbd7152e59107b81451ae30156d8b4e1035543"
+          },
+          {
+            "path": "website/yarn.lock",
+            "sha512": "538150107182f6811b5d2e37e78bc206310f3b738791d822a0dcb4fc003b2c0f856276212f4a716e3ffc3494926b5d6cc022bd135c7add012faa604885731d90"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/comparable/address.js.map",
+            "sha512": "eb01296013c3bc8498598343c827ad2b56ebb89c2c5b0b1f97585abfecfad77c98904229fcb6f8eea1f3c5f3cfbdb7ead6d22eda8b3b4f4408cf4b897830abd3"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/lib/base58.js.map",
+            "sha512": "e0517d428078af62e19e39f0483d2634ed89a8da771bdf2d6df8f86edb6bb1cc54784d8e07c320b3575f023f530213ca1bdca24bbb281e55c6ce91ade994e588"
+          },
+          {
+            "path": "packages/taquito/dist/lib/operations/batch-operation.js.map",
+            "sha512": "027d34f383645839c0fc3293476f82b5678335852de77678a230e94a0eb51d43649b30ff9d0dfe743dfe1d6bd935b294782b97eeb525c99bce3811114b5ddf9a"
+          },
+          {
+            "path": "packages/taquito/dist/lib/contract/big-map.js.map",
+            "sha512": "cd3bbd208f73e26c4572a55a9581508ad196bfaa863aaa6c906e556122a4f98b0b43ea77d1945b8b24a937d524a783cee8b7fd206fa218d18adab200afae8fe0"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/bigmap.js.map",
+            "sha512": "0ab2496567ca950d5f9b4f5b2f26b2e7ee0afb272ee98d8a4fb146dd4b248b12f4fca8e64d0e1f41c395fdfdc82c991cf2297e74d3361679921189b779d23d65"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/comparable/bool.js.map",
+            "sha512": "762448d2830cb0e5cbc00b63d38864209252458c8c26fec596a9bd39e29366ee072432ab949501d9721ce6369652b0d77399191bd0d694d85ea671a063234c1f"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/comparable/bytes.js.map",
+            "sha512": "14274f4d5fbc38f549c605077f4c51cb26e44047835dc0162e77920e7a2025e08f53f8e46ad2a8d7d5efe0657a6b8335ad732430babf723dfa01e9c6dbf39fcb"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/chain-id.js.map",
+            "sha512": "bb3ccd0c78ea2b28ab770a5d5bd28ae40f905efb84eac4e1edb4717e2108d743ad23ca25630ed4e283553f4a4eb7d22ee8b579683463e72b29b56e617cef3190"
+          },
+          {
+            "path": "packages/taquito-local-forging/dist/lib/codec.js.map",
+            "sha512": "d9f000de63fc3bd62328318db50ffdd5000f6839e9a2da3e09df03c0ebce52137918340cc724d2fe8a9a2c903b82df990d07203c15680d51c6b6e6f83005c2ab"
+          },
+          {
+            "path": "packages/taquito-local-forging/dist/lib/michelson/codec.js.map",
+            "sha512": "d8f7b1d7b6acbcd69fe396066cd597c94bb66039df43311b8bee53c336fae43ba97c730631537e1031dd706e4c7856cf0d8d3f694d57bff8da88ff7e0c7987f3"
+          },
+          {
+            "path": "packages/taquito/dist/lib/forger/composite-forger.js.map",
+            "sha512": "151c4aaaaed805b1c0fb0c39fa11640128b67172fabaae94abba3390763e6845e4738a5f8cf7b8d00a013fe464945607c9f7892f2716dc2d0a399bff4c15303f"
+          },
+          {
+            "path": "packages/taquito-local-forging/dist/lib/constants.js.map",
+            "sha512": "9af33533459c79ba9cb053223ce76be6bf92f9237dc25c35e6068e1a453e84f0a178bb95c0d2d3ba73982411d4bfb9a915efa10fd3c3ffbd6cde1d88d7e0e85f"
+          },
+          {
+            "path": "packages/taquito-utils/dist/lib/constants.js.map",
+            "sha512": "60386bfe60bb0dd477fda291b40cbaf2528fabc0b7d94e87f724715c9e22f202537c675069658e610a928cb450843f40fc4dc18660388d22a1dd34c9c4bc4aab"
+          },
+          {
+            "path": "packages/taquito/dist/lib/constants.js.map",
+            "sha512": "39a80c1b341c8f3d27954cd39a02f62dbe4b17b38259b9fa9bb1bdfe74040fdbf2efbe8122deff276381bed589500b2b57996cca1ac09c5212d90e3b9b5303e8"
+          },
+          {
+            "path": "packages/taquito/dist/lib/context.js.map",
+            "sha512": "29b7fbe024228fe486b711e0ac2e0050c7c543e849df7fabfa9cdf8293ffc0dda8e4087eafef18bdc077c64ab3315814b996a79909d39d058b6d2c797f82eea8"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/contract.js.map",
+            "sha512": "c421a5d4f2d400b7f9c0fa0cb0515b3b083df4e1911aece274985bccb0b660a2e97e8d238e81205e0ea59188a8f1b8449ab21238d37938553fd746f1f9278bfa"
+          },
+          {
+            "path": "packages/taquito/dist/lib/contract/contract.js.map",
+            "sha512": "714e002c09802c78abc59e0b2e7d7a378d05f3533deab68a10e6dd43644762dd6c580f06cfa6502a1abfe71ce6f222eef0eb1188ad74df37b1aa57d692ad7adb"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/createToken.js.map",
+            "sha512": "5b2e899771f27852bb3b78400d121b5b13f3ad11782b34e65a690c6a72cf69e759ba3682fff34c3b76b8421937fef08cdec22a42eff260aa2fb35a6d5f961717"
+          },
+          {
+            "path": "packages/taquito-local-forging/dist/lib/decoder.js.map",
+            "sha512": "457c1b9df7ba6c7676af154d4a841a5de4a32bf07c02f282e7ba3bb44f35e4c933fa1572c54b01248317322a052e2c46eee3551915e02fe5a59fa5bcf6bd9145"
+          },
+          {
+            "path": "packages/taquito/dist/lib/operations/delegate-operation.js.map",
+            "sha512": "d411072e6fc8b5a59f88612be39f0f4109ad233d3cdd37052057dfabf5c52784e3e7f668a8ae636094081a71035251a6a98ef50c7f88f3ba31e6282dc8ba0711"
+          },
+          {
+            "path": "packages/taquito/dist/lib/wallet/delegation-operation.js.map",
+            "sha512": "eeaa43d768c315b842d5e3fe9bdecff133b21bc88ec6a43a2e5da6635d384ddcc8a610ecc6da5e2cbc959084d8cf099aa2881f0731560b7ec32f16a48def968b"
+          },
+          {
+            "path": "packages/taquito-signer/dist/lib/ec-key.js.map",
+            "sha512": "32e91cb313e87cad9448236e3d3b0056a8914e0c4ccf504769f053ef085cfeac6ae8fafca691b73bdb165f5549269591f80e56c29d912e13d49987c1ae7564a5"
+          },
+          {
+            "path": "packages/taquito-signer/dist/lib/ed-key.js.map",
+            "sha512": "dc4ef8620f17657569480234eb94ef74081f6c2e6666f978230fc086091c03b52a1f3cb1a0a30143a7ba92d540a4b84dbf060ba02c41a1412c8bda311c93a508"
+          },
+          {
+            "path": "packages/taquito-local-forging/dist/lib/encoder.js.map",
+            "sha512": "f445b1d2e47e4a3e7450c4d6c009d5f5e41791e111b9e1f2f99dc47b76dd88f9f2fbb9c5d996ccb5736db60bf13a3b09efefe664f0a878ac2831e9f4967c4161"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/errors.js.map",
+            "sha512": "333db8e9683e9d0a1d9ab34d0d2d90ce81d9a6ab1a892d1d26163a4f6b92c969ba56a03ada2d998dafdf27c7422da02f3948126e1a17cd0275b8cea4f81ae323"
+          },
+          {
+            "path": "packages/taquito-remote-signer/dist/lib/errors.js.map",
+            "sha512": "13fc6522b1b3668a421903e8a3c828bc0da7b760bbebac8e72fadbaac5d0fb40b5506835174c33c8585a76f8588475429b4e105ab34173be681383bb443e2379"
+          },
+          {
+            "path": "packages/taquito/dist/lib/contract/errors.js.map",
+            "sha512": "b63becceaaeefe3f367912ab3ebb828470c36787f0d728dd9554e0d3161b6cd3fdc1c8e2c3938434ec2dbff666e2eeefdbfe1010ea488128db511a1ffaaeceae"
+          },
+          {
+            "path": "packages/taquito/dist/lib/contract/estimate.js.map",
+            "sha512": "1b899fbc5e95674b5c1409a03dbe6a735a03947aa54c02cb44dd669c0102df0045239e505af22c8d5b256d80068a54e79a01f9440bcad52bc369ce4780d18e7b"
+          },
+          {
+            "path": "packages/taquito/dist/lib/subscribe/filters.js.map",
+            "sha512": "d491d1d7a23ea23db9c8d84f5a026901763e98f2d88da2ad5551ee634c5707b78a860119111b859893915be4ea009a0bc0ef1b546d4d18cf31bf079e29425c13"
+          },
+          {
+            "path": "packages/taquito/dist/lib/format.js.map",
+            "sha512": "341bb719f476177583ff4e13d014cd28b2938993ad291ee35825b0f7fc923b4211f674daf2a7062093f5c2d196dfabc443f9ed34d769e44b4d5b332b3b1fec39"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/lib/formatters.js.map",
+            "sha512": "fcbfac897bc58470130ff45defc95d6a63a4f7f91b835afcd111cfd8cf5a097ae90523ef8aa31eaa190e3e0bad60d177546469862c39a76d30071520c4329dbe"
+          },
+          {
+            "path": "packages/taquito-signer/dist/lib/import-key.js.map",
+            "sha512": "b47c65b6d699ee44f223dc49d24703282ff8d68dedc9a4cead222fd84b52812e82f4a4f265b98ab8653370ce8b6f7ad71c9b68bbe9d62ca91da7694895667b02"
+          },
+          {
+            "path": "packages/taquito/dist/lib/contract/index.js.map",
+            "sha512": "0b2d3e671192acdb2aed53f063b27ed7d65cc86632e105623fc87f12a1968dc0f4cacbec19466951f7ce6cde7ee45250c10fc1d2fa430abb2f4270e5376e5451"
+          },
+          {
+            "path": "packages/taquito/dist/lib/wallet/index.js.map",
+            "sha512": "d1c31804f7e217651ae6868d2e9592fee25227c3792f9aa93a0bf445852de98fe1d5443e3c6aa76ee4e17c1cb1e094057d3274a1a41b668854a64e0fb0f43d25"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/comparable/int.js.map",
+            "sha512": "16c677d6a212cd1a9cd19ac04070dbdb8d295b4bb06aa7cd483d5fdb00c784b9a780c9de9bda98149d79730897d3bbc0966c6ffe3078387b3f005d1fb6fafd44"
+          },
+          {
+            "path": "packages/taquito/dist/lib/contract/interface.js.map",
+            "sha512": "8d480f101a811c5bd29cd1f6af12026ce88cceab676ab92f6d260e96b4012113d8ac8dca95f5c6bdee512d05ac5693c25df104a9702c2320962911e86e131669"
+          },
+          {
+            "path": "packages/taquito/dist/lib/forger/interface.js.map",
+            "sha512": "db2c047d320ba003fc6958bbdefc3a2492157184b6a99703d5ae944e16de66dbbd953bcd341491069e6f9c91efeee63867d7dd6c1acd470a6efa9294b68a344d"
+          },
+          {
+            "path": "packages/taquito/dist/lib/injector/interface.js.map",
+            "sha512": "171806b75371f64c23d793f920b121a422046c53cc6961331a3bed9af4d114d8bcd70003fcbfafff44b212ed56e774b32f38e9a1b80e8a85a817ce3897550d5a"
+          },
+          {
+            "path": "packages/taquito/dist/lib/signer/interface.js.map",
+            "sha512": "3c1d4317a69f95e1ad45c2c6036a8249041f66acc0e3334b515ac58dd4069a5c279a5cd21d6901ba9a4647bf3c9f6bf453a9cf02aa15121005f8f4b095556960"
+          },
+          {
+            "path": "packages/taquito/dist/lib/subscribe/interface.js.map",
+            "sha512": "57a0eea1891bb36f2340d3150393ee83b785b413e856c3ac95855d6be8c237077944e7eba4f40f48f7cb7afa4c04cadaa2225e0021c110c6269ad9bba2dccfbe"
+          },
+          {
+            "path": "packages/taquito/dist/lib/tz/interface.js.map",
+            "sha512": "7e1d733b30ca5894d403fe5f046d3af6a6760705f2545a653902b2af96c4e40f0c187b1203912510a76f9e0d5dfafb1e61a21af629dd907667d84202a974b434"
+          },
+          {
+            "path": "packages/taquito/dist/lib/wallet/interface.js.map",
+            "sha512": "65fe5ce265d4590493990e5f186555990a03819e9e958e4a70f4b940be4f88e71ed282784848521aeb85f2b25ebf3f79bb400f499ff5b41bc833886717097492"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/comparable/key_hash.js.map",
+            "sha512": "14eda18b2939af77f9b78fe5e27282b631b2fc7d84ddcc05ac954f703a10822017d971fc82c8ada39cf149bbfaddcf7984ac30603c2d017bcbd558ffbb34dec7"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/key.js.map",
+            "sha512": "503b6db60981be4ece17eb8d051d76f3c1e4f2d82eaf9485367088805f2252f11f0fbc6f302476723a15e6f5ae4f1dc02f808ba379e2221e07fbeb1119fc313a"
+          },
+          {
+            "path": "packages/taquito/dist/lib/contract/lambda-view.js.map",
+            "sha512": "f3181aa2959aad891dceb2b96357d74488cf7569e6b71349fcb262dd72cc8912ca213dfa8567527acd9a5898dd853bb606628877f87d5287d826e8378a232bd1"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/lambda.js.map",
+            "sha512": "665e751d1b1ce1949cd4787b0c7eb09248829e00bf37671a12a6ed989ce25feb6d361798b8a230188a015857ffb55e753fd98600820c0e7e053b4e04a357deb7"
+          },
+          {
+            "path": "packages/taquito/dist/lib/wallet/legacy.js.map",
+            "sha512": "41645888f91f1e53409c464572c2721b57caea00efd901c1956dc8f031f149f2fecaf6408702cc0ac7e638a4c75c2a5e3e8580cd21ab4a38fe69396d6faedbf8"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/list.js.map",
+            "sha512": "0c9f4a23cf5cb6586c5276a5847d612a7b57d9dfacad8d9eb02adefa04b0fc39e697f3d09c02e1dca706470de4854e3485eb379d63b07c965a3d1b21c1e41d2a"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/lib/macros.js.map",
+            "sha512": "79c861a84173276d15a59789b164231ecd6cf0ab7be29a8e4eed01dc42d63a4e65b26a6bfcb9c479198986a3cfdd2c639b4ed21196d179bf9a72296dec1ecb62"
+          },
+          {
+            "path": "packages/taquito/dist/lib/contract/manager-lambda.js.map",
+            "sha512": "ab4bcecd7c004048b57ab9c44ad6ff0cb08d78e6ba819306587d2a528729b698d1ec5468c5a097b6d106d73dd1925578fcfc08dd72da0709c26a9431911ec5e6"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/map.js.map",
+            "sha512": "33d3259a744db20821dcd0142937a7bf4db44599dc5a76cd400a8ce51e18d9e1694dc27ea2058d2f8325a11c509de6cc4a9292a13f8677227ab32e22b69a04d7"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/lib/micheline-emitter.js.map",
+            "sha512": "ec51a8ce1e8e11f4b5332554fbd175b89811683541b7ac87ddf106963d270dfea8e28906109293c7bcd0f63d0a463c66fac6647b50b27a5662449b365df8f85c"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/lib/micheline-parser.js.map",
+            "sha512": "b8c27424d589d38ba6d5c5616aad2be23bd44743bbcd5ab0e7d87e3cb4f16a36a51c45735bf8e694841d2ae5a4699da9dc7cbda876a1bc3c529fa52843f41363"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/lib/micheline.js.map",
+            "sha512": "aa0811ebfa33e72860bf7e15eaadae1aeba198e42cfaf22256f18456c9caa9b5a49c59bcece25ccf84f5cdf9a8a13329ae1dca9bd0d13a80e2766cbeb4bef79c"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/lib/michelson-contract.js.map",
+            "sha512": "b6af24fbff09d63bad132c34f987784f235be3d964967a29e266e1b3da0ed2dddb4577780ddf67d2f295352851b7b1ad39f164d9e9a70cc31af37c7873f5fb9a"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/michelson-map.js.map",
+            "sha512": "fa513da7ada1e7607ac30afd9d0ba011f2f3e776d8a49d74bfb2e01cfab8c02777475acef7ac2566c1811e710cf10b0e39dad23159c4658c200cc2872d432219"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/lib/michelson-typecheck.js.map",
+            "sha512": "3163cfe625fa7e2c85ecbe3201fe81442a1df3961c1685935424219d308517f53a28f79af65672618ae0bebe064438687f1f447b7642dd26cc5d08171e5f66d6"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/lib/michelson-types.js.map",
+            "sha512": "70f169e4653b21f17d4bffa6741281eac445eb1408ffa77d9e67b6b91ae92dd519ac55ed2311884628be69ac4adf6bf50aac8f0387f33ad45de3ea973ecdf5db"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/lib/michelson-validator.js.map",
+            "sha512": "c2268d917685ee39e18393a4853a22ff57cab0c8ae9788b0cb6494c564c68dacbc15acb373834345f1c963b60805e15be2543477103cd3b86a12681b11ddb96e"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/schema/model.js.map",
+            "sha512": "bc8a09a1550381f1d2eaa75374f678e1c27febc482db147d679e46056741e287965ce45427426950ed0a5326ab0432507a664844b4277c4aeae1d3273eb241eb"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/comparable/mutez.js.map",
+            "sha512": "5da59d85126ca23dbf7b2be5819d96440c4c812460a3464ea235ecc40cd4b8092ed465444fa4af07e6ebb9b02ad9ee4929d03be0c195a6f9c709baa282d39ad3"
+          },
+          {
+            "path": "packages/taquito/dist/lib/contract/naive-estimate-provider.js.map",
+            "sha512": "d1bc1aa7205045ee92fd75349f6eb2551804ad864a358894994c098e1af8a8550d1c8cde7c9ded25bccee01b71b737b686f499ba9c42dcfc75eae3cc28a5870c"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/comparable/nat.js.map",
+            "sha512": "f38b938ba21f79866ca157000723ed382cdadf24c4627c97815483c8accd9768bb516ddff075297140ae152c33698573ebcc700550b32a4fa6764d7290bde53f"
+          },
+          {
+            "path": "packages/taquito/dist/lib/signer/noop.js.map",
+            "sha512": "52d660af748298dd1e8a4cf9d09fc0934cca10f67641ccdcd18233c0333b5cc23c5f849f94b93566b650cc11fff381b6cab5e701d0db106762a932b6691c17d3"
+          },
+          {
+            "path": "packages/taquito/dist/lib/subscribe/observable-subscription.js.map",
+            "sha512": "29f1810747d5d53012e7dcff0c0a4072d11e7581a65b65c4568c0ab1f42a5f14fe26b8471383265b8de2c78469f8053acda99548b85d6f6936044c4db359091c"
+          },
+          {
+            "path": "packages/taquito/dist/lib/operations/operation-emitter.js.map",
+            "sha512": "2bb1b8cb60c0ab413454384480874860e4d4b85d910275fc4031bc0c2cb6650ca7f97470eec51dc6189c344d53603f4dddeca473b76318ab1075e405c39f0ab8"
+          },
+          {
+            "path": "packages/taquito/dist/lib/operations/operation-errors.js.map",
+            "sha512": "b1c5b41b1b6ffdbbe826a398b6ca0be0001e765dcfce6a24a9177733ce34eb386469ef14814fc73963381da504bf6440b70bd6b3d5a9bbea95c94c7ea9b117ed"
+          },
+          {
+            "path": "packages/taquito-local-forging/dist/lib/schema/operation.js.map",
+            "sha512": "0bb0ac22a7299a3d24ab6520d5548921fbd1e274bc30411422e17826943f96d61ab1d4de1829129f7fac097a9cc2c2d44bb79a62dced1a7838dd80af575c38dc"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/operation.js.map",
+            "sha512": "94b3371106426d1f1dd5fadbdd2e45e11c48e43e10cf931199bc728c2839121119b0521c1086837126a318ab126553b8a7fdd8b5f54c7df96607e362324edc8b"
+          },
+          {
+            "path": "packages/taquito/dist/lib/wallet/operation.js.map",
+            "sha512": "5dd317cac2bfbb6f2624d38c8c2f96a04d977dc731f887d7f7d4dbff12103adc3fdc1e1588f227243eac118c8224b114809e23b320b096c7013df3a1e5378e54"
+          },
+          {
+            "path": "packages/taquito/dist/lib/operations/operations.js.map",
+            "sha512": "9fdbfddbf8741612932c89d7649ebf85567744d18cdb1baf9665c58d11e4e0c840f069572b17222ddc2908cf1a7219d67668bdb2fe80a71237025d55a6b21a37"
+          },
+          {
+            "path": "packages/taquito-rpc/dist/lib/opkind.js.map",
+            "sha512": "08c6f08341a04d079da0a7cf6b5d063892f7b4de8ae863725846c6bf38dd01607b750047ec065bb8764a2b66ed1c86bfc6313b4cc3b8bc817d0333b055c27c25"
+          },
+          {
+            "path": "packages/taquito/dist/lib/wallet/opreation-factory.js.map",
+            "sha512": "f2c2785f42fa3ab75258293dc6bd372ca6fc1d799db89bf660883d1da4f00d109a2e15d4c386d8bb9ffa18e6aac64ecb0db4c300772d18a978c1ffd7d46ac048"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/option.js.map",
+            "sha512": "77956b380bf3025a5f87100809780b94fee611062e570d4dffa79c3ca55e4b7685823017675636a44f5b376e3fee5921fb19955ff431c3045fe59ff461e96969"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/or.js.map",
+            "sha512": "38bc1203e3bb1e398fe5c7fa2c7a691d9d72d1aadb70f93b2d66e389a30c7af650d4b4b5bcbce9aabfbc53b1108b09959a68178e8d66d1276e45b19858707d27"
+          },
+          {
+            "path": "packages/taquito/dist/lib/operations/origination-operation.js.map",
+            "sha512": "de829e3a1f00250da246b543c19ae1889bb2a142a97b530aca82c2c258c2c14866ce349834ba3bf17104ff47f374b0b3c5d55a8290685bed67ad30a276fed631"
+          },
+          {
+            "path": "packages/taquito/dist/lib/wallet/origination-operation.js.map",
+            "sha512": "d7a915d34af2dd3d901cbc1ad5f0f1b0e786502f5c1ba9ce1b8677c5613c6f123eab57dcd33f8e95c98d3d876bab3033f5077bdb70503daeff31b223d9ac4e5d"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/pair.js.map",
+            "sha512": "f7c4cbf4510eae7448501f60fb41c91981416c01faacfdaa47cbd056491cf759616fa3f33cc1a0beda18b5db2e8f7d3fd7893c2a70bfbc1f0e6e9a62e70de173"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/schema/parameter.js.map",
+            "sha512": "5f64cd28842cafebf369d1aedf71b731cb23fe49ef526448f31fddab7b4fd996e3974761dec405dae00259ac0aade5200e20409bb325ed0d71fc3384ea00a122"
+          },
+          {
+            "path": "packages/taquito/dist/lib/subscribe/polling-provider.js.map",
+            "sha512": "5f896b29af70fcc6db739174b4aee4d3000e088ff2cf4bbd40f0c3b6ce46f77378d38eace612ddb5cbefc278b3bf367b07d0490a84900893d8241a9849894290"
+          },
+          {
+            "path": "packages/taquito/dist/lib/contract/prepare.js.map",
+            "sha512": "26ce52d0900bb5eace8c14ff21a1ee2e20a65d7c2f343727e0f8f9014fe0e8404d1496e08ca66f9231fa1f38922cac8bc6b922285d8f3a35e290e9f649560294"
+          },
+          {
+            "path": "packages/taquito/dist/lib/wallet/receipt.js.map",
+            "sha512": "f30e5aa3c5bf7ec79d1a9ea6c2f60742c68d2399e3c88e29a6e1bea2ae0278e0f29130d6660f99b7147746f5fa467cbbc3b5f2b896ce53e1eae52403d3e64397"
+          },
+          {
+            "path": "packages/taquito/dist/lib/batch/rpc-batch-provider.js.map",
+            "sha512": "f8c64de62a0e1aa36f2b67ed9961b7f77139001db2d9ac457cff85d2b89f17e6859fb33e4f92a5444b20072c93a1643c3ac1661fbeb1f3ec2257a701569019bb"
+          },
+          {
+            "path": "packages/taquito/dist/lib/contract/rpc-contract-provider.js.map",
+            "sha512": "1382b585c7b3fe56befb5ef2ee9be61414f6a09dd509212266bcc1a55a62cb6ab426301e1ad4a67f725c9ee4b917898236512c8f5f9c44630797cccdabd5d76b"
+          },
+          {
+            "path": "packages/taquito/dist/lib/contract/rpc-estimate-provider.js.map",
+            "sha512": "6bf0d097dc792314d7c4708a6a1a3f887c95531bcaf70c6ad52fa0ff1c5e6cfa782631c84942cad673831be0546205de6b135651aebd709c2bfb7c01b539634d"
+          },
+          {
+            "path": "packages/taquito/dist/lib/forger/rpc-forger.js.map",
+            "sha512": "f0d89efbca22576b793b4a884c5a9b2c21262a0e30c6aa8ba3aae58b3be1f2f3d6bc864b77582b6154fb66c1ae7ef6d0e5d1048d5da7f3a264c82695aa982940"
+          },
+          {
+            "path": "packages/taquito/dist/lib/injector/rpc-injector.js.map",
+            "sha512": "ed39239081d61440f0108f37e57e118df633a206e7f68039d5db63df2585204100159a72bba9312e4f06045bb917cf4837a46c0c5f1c141723cf176d659f22a6"
+          },
+          {
+            "path": "packages/taquito/dist/lib/tz/rpc-tz-provider.js.map",
+            "sha512": "5b16e26797690fac2f029c7f197eee52b76ca0019758157dc1066bf3e5f8283641db8d65700be365f6e310efd11dfe5135707dda22ca25f4fc2bd9742b24e1de"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/lib/scan.js.map",
+            "sha512": "c2cc3bf2b9bcd7a8bb6f0f10caf1e6c8915bbf8dc03cab9ce589e28297764818ca018a208c3acadbcba06b5bfb3e49be858a3672da708cec33cc27ffbbb50e5f"
+          },
+          {
+            "path": "packages/taquito/dist/lib/contract/semantic.js.map",
+            "sha512": "5063f2ed25bbd1efc79be634ed1039158304a0d8b6667d408789beccb17af82fbcdd6b15d67f78989fa5c148661efd01fa7d2a46e48ab0d517d46f5b6c7d810d"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/set.js.map",
+            "sha512": "f571ad5660d9820bac0346c5085421ba857e98352bec01d5bacc0aef9fee37d9d5172aefc186b2d332c51c32d1bb935a1c44ad4d65b1865a53058d020b0d38ef"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/signature.js.map",
+            "sha512": "add2048aff79400974218b2c11a0de1178325372c5eb0afca5cc8f93c46281c35b460021bf49082398c5f50be9400367d232f74d91e12a3ab488abf22804124e"
+          },
+          {
+            "path": "packages/taquito-http-utils/dist/lib/status_code.js.map",
+            "sha512": "a438a4c1871950e44fdb9ad48802660e2692a0c5a05ca2273a2d61d301d796aea37f9c219fdcadbc106466aae46387ca5a2cbc1a8d10f4746e627c632d4d6248"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/schema/storage.js.map",
+            "sha512": "05276bfb929f2baecda3b9a6b4f50693ac97b216c298b15bebc7be85d89f8d37842f1e197f15ba70e4dfbf39e5465e5197a7eba849a6430f3412024cb66052c8"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/comparable/string.js.map",
+            "sha512": "9d859dbbd7961f8ac178db51bd8d982e0900a9c0cb85378c65a519d17725451cf80f5fcea1fcfbfde220685fa2db5c031d7bcc75dc050691d35c272d6e6a7bbe"
+          },
+          {
+            "path": "packages/taquito-beacon-wallet/dist/taquito-beacon-wallet.es5.js.map",
+            "sha512": "9717bcc63b3c1541b2c8d73e4b6b272ccd35ad94ebd7a5e8ea096bf9994581aa5a1fc8134d8afedb0d7820bbbe7105a635939c3a301e7c39f2894996d9f3961a"
+          },
+          {
+            "path": "packages/taquito-beacon-wallet/dist/lib/taquito-beacon-wallet.js.map",
+            "sha512": "13c61ed3ca05ba74a9dd7ea5093f5eb20614303f01b87ff57289998c9a23ceb5b171faac17f2532b51b911578327e37bcf100daa55f107ce9b3b8928a0952f78"
+          },
+          {
+            "path": "packages/taquito-beacon-wallet/dist/taquito-beacon-wallet.umd.js.map",
+            "sha512": "9b7a26eba6c8176a5fc412ed06931aa2eb020e0e75501111f794340d62bfeb9856d8c8692986a57c6faedc633ba549762def5ace7ae64c99fbb05fdb4337561f"
+          },
+          {
+            "path": "packages/taquito-http-utils/dist/taquito-http-utils.es5.js.map",
+            "sha512": "11990b8fc9cc0b247265df6c4dc6f7ab0ccdf9132cc60ff1256494d6a696dab5ecfa79587a5bf3ff4f464a746b0a43a26ebe53f4962d5a40e2022264d5eaff79"
+          },
+          {
+            "path": "packages/taquito-http-utils/dist/lib/taquito-http-utils.js.map",
+            "sha512": "a927b2114c78f9e62bee20a1759f0fcfac1b2a1ae525daf360dd118fc17d9eb525a6001162f01a84e5d0dbab1c755b533bb0450731ec07f1d6e4ff4e87a8afb3"
+          },
+          {
+            "path": "packages/taquito-http-utils/dist/taquito-http-utils.umd.js.map",
+            "sha512": "b8281e67a01c781377129f1c6a8a98193e6c467526459bdd5309b1913fe3ae6ac9724e7ec0051ca26fa0aa27d6b1d7b7da9aadd6b3931810e81a1f7c3c7450de"
+          },
+          {
+            "path": "packages/taquito-ledger-signer/dist/taquito-ledger-signer.es5.js.map",
+            "sha512": "92e4b1fc247453a8d6c49a12ab846658434d313626c5449c5a6bad33caf3e5060e5c488d793a43ff0164df35e0ab32ae33e987892ec7c27fd5f04f690d134595"
+          },
+          {
+            "path": "packages/taquito-ledger-signer/dist/lib/taquito-ledger-signer.js.map",
+            "sha512": "b7510c4dfb76703ecc317e14b976e65967480c7b6e2157d46859013314dfb48e75ae1e01205e5dea824caa2694176d20bde4ce79c9427caaa1506002ac574e73"
+          },
+          {
+            "path": "packages/taquito-ledger-signer/dist/taquito-ledger-signer.umd.js.map",
+            "sha512": "604a0610000f418d83a465903f03f43e54d882ff8e930e4b679c374187ae6be03c69e498a5e42c663ec62c039dedc9f30b65e552c3e76b160770c9398f8059d5"
+          },
+          {
+            "path": "packages/taquito-local-forging/dist/taquito-local-forging.es5.js.map",
+            "sha512": "17459ff7cb387f8c37efcace63cfc2c6a4f6ac93c36fc7d8b44d33e9e24a2a92dab7b27e85f2a4cc7039474a0c3ed5dbf80871b6c702addbbf608884fa752c75"
+          },
+          {
+            "path": "packages/taquito-local-forging/dist/lib/taquito-local-forging.js.map",
+            "sha512": "7437986cc4686d304e2c1ca4bd96fa3dc73a5c750ecdd7ff426789652f57cde6155faac4c908756237862bc8b40fcde86c9301c9414e60954d6973957ce7ea4b"
+          },
+          {
+            "path": "packages/taquito-local-forging/dist/taquito-local-forging.umd.js.map",
+            "sha512": "f002b7812c1b6d023c51153f3941819f25f30d7d6f54723fc0364f0698a3c0d756020118a2a34770526d6cb1bd10ce6a1bd78b10742e83fb32057bf48582481c"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/taquito-michel-codec.es5.js.map",
+            "sha512": "16308dfa7f6d66aaa84aec970528f6cdf63b20e4839752860c1ec5454323c6127952c0782abb6cd8ec7c3a0e6c93ad7acbb5a8b8e551a8ea3fac564c13a506f7"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/lib/taquito-michel-codec.js.map",
+            "sha512": "79ece36220a2ac2efcc119c3523c272ebcaa80d0d5ba267db2a9d441165e04520cb3df5227a9d8368a85ea1ba81709902d2a587bb3458eca4eacf06314caac00"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/taquito-michel-codec.umd.js.map",
+            "sha512": "084a53b51a95d510c68c5f996f98430f314aa1e57d3bcf0bd53d2b23f927de2aed4993985bda90843ff082a38ecc08e1961e326a3daeb14b4eedf1f787ac90cc"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/taquito-michelson-encoder.es5.js.map",
+            "sha512": "725a083077a4ccd555df49be9c8a2c3f8ce64dff8d9ead691b95e1326e63bfda70b17154f0a13c26f6b5f5a618728e82c54b4ef1e81d0d2c3c9b4bd9a4b8752f"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/taquito-michelson-encoder.js.map",
+            "sha512": "d907be7ca555cf33f18bcf148ba32e6df6d16d8d0b7997e3205a19c293613c378a396f76e424eaa6371e49d04bc61bb27e93d66d58b2da40f30563525f1bde74"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/taquito-michelson-encoder.umd.js.map",
+            "sha512": "eb352a6261fd9c1db40f1980812dbbda53b60397879ec15dd4a257911f338779478608120fa999827080d269df20594f48dc0727e20a475043518b79382c1313"
+          },
+          {
+            "path": "packages/taquito-remote-signer/dist/taquito-remote-signer.es5.js.map",
+            "sha512": "21a77be5776e46ec790e4db676297197417fbd7131a4858d396bd923b4a102db173252d4f4eff0d26fd169754f1165f7a356837aac9ec23acba9ec5bdb8a5378"
+          },
+          {
+            "path": "packages/taquito-remote-signer/dist/lib/taquito-remote-signer.js.map",
+            "sha512": "1552acfde7a357d6f5b9c250640d599296ff6f818f7affd56cf3ca01a190f753895a9cff909fdcef7cd31a78dacad7f4ef633c67b9ba0dda6fabff20840ca6ee"
+          },
+          {
+            "path": "packages/taquito-remote-signer/dist/taquito-remote-signer.umd.js.map",
+            "sha512": "c3feba3fb62c7ffd9353fdaf7366f0c13bf7ef24f7365df22a6f4aaf1cf9725f36119fb3186fd8cedcd0cb3ed735da7286ec699fcb63ff551ef192d7bc330d8b"
+          },
+          {
+            "path": "packages/taquito-rpc/dist/taquito-rpc.es5.js.map",
+            "sha512": "e49f0f32e38d9e832f5ff230ba818c32392454f80ce89c34ab28e05e995554879b8dda12a40c9d1fae9785d44fad61787f4fed6fc9ae888739aadacc2a4745fa"
+          },
+          {
+            "path": "packages/taquito-rpc/dist/lib/taquito-rpc.js.map",
+            "sha512": "0edd66c4a85fced670d7446f054425ef6fcbcdd45d5cd2b7978807cc32e766069e9bd7dad5872704a70275f8eb9e12739fe560b431fa74c3724ce486310a8a4d"
+          },
+          {
+            "path": "packages/taquito-rpc/dist/taquito-rpc.umd.js.map",
+            "sha512": "a348d37d9db699a4a7e5554540e5d04f6b0694d3c8434e2e3cf85a40fd8d09d70dac321d847d7fc262ccb7fca49f33c3ea6a2fda3561714f3b1255bee496ba5b"
+          },
+          {
+            "path": "packages/taquito-signer/dist/taquito-signer.es5.js.map",
+            "sha512": "1e2ce95b12e7c826b4ab76b923ea68be2529d481e3e2f7a66166e2ef5d18f69295d042de108e504059b010a0e3bff1e70b49722971850cd6f20c74479c87a295"
+          },
+          {
+            "path": "packages/taquito-signer/dist/lib/taquito-signer.js.map",
+            "sha512": "e0f29f97ad5aa7793affff2ac045017324989c68c5b91d0f9e92c31b00fe0bd0df96e1d06f6f59c17225a92c314d5868f2a8669da89d8a89e0c845bc1745c513"
+          },
+          {
+            "path": "packages/taquito-signer/dist/taquito-signer.umd.js.map",
+            "sha512": "79d0e8ec713032eb50322836f1703d62ebd23824de3eec47a794bbd0d50d36a8ba552d3685cd0b87f74d006f2bf8d7bfaf67cebd5ca19ee60945c172be3f37f5"
+          },
+          {
+            "path": "packages/taquito-tezbridge-signer/dist/taquito-tezbridge-signer.es5.js.map",
+            "sha512": "84052a722dbb6776f9ba9065e1fcd1b0f79d751a7d98ac07a8827d2d43d4cebb8ae4b07c957e35dbbf37e7fc1a017f3beaa9a7a6d7d11ebde5ea80562b1f866f"
+          },
+          {
+            "path": "packages/taquito-tezbridge-signer/dist/lib/taquito-tezbridge-signer.js.map",
+            "sha512": "18b24ad31e54e3c4b3b7cb7614bc5231a39d2756147506a7ea490362965112cb5c670b5ec9eeade2a17aa12364a188b32d93be15cc46c6c9849f45617ab711d1"
+          },
+          {
+            "path": "packages/taquito-tezbridge-signer/dist/taquito-tezbridge-signer.umd.js.map",
+            "sha512": "131419d4793997e929a4298c3ea283d243f995253f0360896d9700475061813e2c6acde01c856003ffc1ee4d63aca556eb52fb559e3e94e6e76f95fa0cf78bae"
+          },
+          {
+            "path": "packages/taquito-tezbridge-wallet/dist/taquito-tezbridge-wallet.es5.js.map",
+            "sha512": "dfdc535a27567a312d9957233265ad718c3c254a32dfc171fa054b200b7e30dde86d58646128d458f8587151575933914821aab07347f885768488edf86a96b5"
+          },
+          {
+            "path": "packages/taquito-tezbridge-wallet/dist/lib/taquito-tezbridge-wallet.js.map",
+            "sha512": "ab0f072edc707e99ad2115156791555280e6b6489d00d4aafda3318b6f83f14923cacae6f6baafe828aa099aa46c1bd73b90008c28fa684b1f8faad7eff321d3"
+          },
+          {
+            "path": "packages/taquito-tezbridge-wallet/dist/taquito-tezbridge-wallet.umd.js.map",
+            "sha512": "e1ba4c9b3c006c891fb1c2aee36569fe68b6ed3c0786665398e0458c08b265b24d95afca6ec754efa69d209e704d18869002a7d192f184bbc364d1b6c41ec7a9"
+          },
+          {
+            "path": "packages/taquito-utils/dist/taquito-utils.es5.js.map",
+            "sha512": "c3f5794b968eda4ad4ccb08a4e9feb7b9869c3cc83390fcdcb3379792b2056d25e39d298f2ffff52c2c1e3bbc63e84e85508b9d9b52eab25016ab053123997ac"
+          },
+          {
+            "path": "packages/taquito-utils/dist/lib/taquito-utils.js.map",
+            "sha512": "5cb135f7c142ccc27fdd35da198825ea4c2b5467de7d63ae70d1da9d16f37d3baba2da24e8a35f540ecb47f0a77b162f0f11de7cc8db09c19a210d9ddb42a146"
+          },
+          {
+            "path": "packages/taquito-utils/dist/taquito-utils.umd.js.map",
+            "sha512": "30936d516518680089434058a524bed52ba105ecb81c1feaded9b643c9fa866f7cc8d8d075cad5abd112897ddd30c69e044000dea23781b358b0c7e637378302"
+          },
+          {
+            "path": "packages/taquito/dist/taquito.es5.js.map",
+            "sha512": "cd573c6b8d66f9a0333cefcb59d581a72955f3ae5f00c71462477e2a6a33baf45c87a79d2b356a1a64efa18bc22595152af98db707b2510aca7dde55c509806d"
+          },
+          {
+            "path": "packages/taquito/dist/lib/taquito.js.map",
+            "sha512": "9470f3b1187aca2ae64f3d0ce42dc5ec761064468f06a406ce8c6bf74383104383193b2f2012af8c16681df2f491212a87b332ac58a5ca51878f8d47c9a29a9a"
+          },
+          {
+            "path": "packages/taquito/dist/taquito.umd.js.map",
+            "sha512": "ac64a23702d1a2359bca3ea5543e45c84cc7dc16e4ad2f055c19769113337c14c80625ace3cd0b6f66b878fb94585ac0792cf4e1cd033c246469b693718a5fc9"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/comparable/timestamp.js.map",
+            "sha512": "73c2e0ada997b0508308da2925a521c0990d2961173c3c6651162beb54a30ffa48e41ee6daf37164a12e573a5152d54a8cf77ed834a27570aa8347011914c41f"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/token.js.map",
+            "sha512": "cf4c1343698f0fe60b5d363cc6213a34f436fc1ff263b674787330e19a86b5dd921aadbe4078495edd26aee7e2a18d901d8118b4f1f365f560c1e59c89abf07c"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/tokens.js.map",
+            "sha512": "1a40297000fe3fe40cd489889217898f3b0c77288cdfbe37e57614557c34c1853139a4a4d2ff7bd91f36a63d41e309e686a3282824db3b0d5e5d0a48aaf8ef22"
+          },
+          {
+            "path": "packages/taquito/dist/lib/operations/transaction-operation.js.map",
+            "sha512": "1bdcc26b015dd3aebe132006c4084045997941dd9e7a36b746e1397212e595ce48fcd3239e0e503d0e1c0b65397e525b59ab887a0adda45f568c85db4864f48b"
+          },
+          {
+            "path": "packages/taquito/dist/lib/wallet/transaction-operation.js.map",
+            "sha512": "536c25306e7adda34b03cdffe097b48ee16a17506cb31688d7c50a601e1ac42fa5d78994423732e0623a9e7d80735b900d9bf9baa085b76123c774d0d2961ab8"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/schema/types.js.map",
+            "sha512": "2c1e28c6568261d6a2340d595278a59d39adb619968d8155229b493471d9fb46ed7186ddd858fe22be4b7a59d0761c26abf8f38efaa2436b07e0dfb31b702a03"
+          },
+          {
+            "path": "packages/taquito-rpc/dist/lib/types.js.map",
+            "sha512": "74f2b583fe48066885b78689d02c463274b52b71becdb19f1306fb1c7bbaf63fa7987695f725babcb58a23d772b032877b80340181d70d0b612f49a9d0e3d0e2"
+          },
+          {
+            "path": "packages/taquito/dist/lib/operations/types.js.map",
+            "sha512": "3a911cbe4cdbf62a13596203ec99f766ff4c70e3c55b14152ee7db5d0d78b1f788a4a0b33c8427550c60907da9c6f087348738b35c4abf9965fa9f0022ffcd60"
+          },
+          {
+            "path": "packages/taquito-local-forging/dist/lib/uint8array-consumer.js.map",
+            "sha512": "24b1c7b895967ae17a103b53065bfacda18081e6395837f8aa6dc730761d66b91748370f79843d8d8fbf91d51f077571c2f555a973b593089b44224e29abfbde"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/lib/tokens/unit.js.map",
+            "sha512": "f498d98dd05ab0a7a5acab192ead3f380c084fb85063b6814463bc299836e82b4c100d5bdf5acdd6c42e31b3a079ef16fea017c827e9f33400b8e601e785a71f"
+          },
+          {
+            "path": "packages/taquito-ledger-signer/dist/lib/utils.js.map",
+            "sha512": "fc05c55e7719ad0891f050929b97b39ec03fc1734fcfeebddb4da693a5a587de514f8870c65307a0f29c1459c6387302526942e95ace2b91094d48767a71b767"
+          },
+          {
+            "path": "packages/taquito-local-forging/dist/lib/utils.js.map",
+            "sha512": "f744f0d6982cd2a05881b60b8a4b757defccd3c28ffd48b84f327ff2f5908f3af22c9d268601d612825c40f1829828bab88f3bef1a09a0daa7cf36e29382a1fa"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/lib/utils.js.map",
+            "sha512": "f2e747d81a3b90551c084e5ab44b4ab9b9a32104fd54c02244c2c5ab3a3d4b8e93a680edd7eb6f9ad4599a860b82e740c7ac0eabb76bef1ecf28e89f5aaddfe7"
+          },
+          {
+            "path": "packages/taquito-rpc/dist/lib/utils/utils.js.map",
+            "sha512": "f1c37cdece493de301df86245baf12314dbbd389fddf5b870257f979d6d6ea01ea67a9b271c8b8645134c0b1fe0eb012ec93e85ed42d42e350ee6ccd60c3f719"
+          },
+          {
+            "path": "packages/taquito-utils/dist/lib/validators.js.map",
+            "sha512": "241dfa50909d88042aa3c67f706423ccf76ba76aa609998217eb5c5fd8c15126aa178ac7e1c458bfc2edf3522d7154787d09c3f579f8be5eeb9704faf8015907"
+          },
+          {
+            "path": "packages/taquito/dist/lib/contract/view_lambda.js.map",
+            "sha512": "f6144b96d9345da551b9b93b0b8099a044dcf03a4a80f299ac05818944ab5200ca905a984143f6f58db585b55ed0b814c4a55310f71f62201cc7484d0c6b26b3"
+          },
+          {
+            "path": "packages/taquito/dist/lib/wallet/wallet.js.map",
+            "sha512": "dabfb70844028ebc3caf49e2dbd9a1b3937b01f0513530ca4eda953e56707bf95e92752d235eb698d8fb86a1f61168bf7eb03f610e5997ad4790274a917bf6fa"
+          },
+          {
+            "path": "docs/batch-api.md",
+            "sha512": "68ca552fa52608fe9b6b1c5805b4629b162f6a7c20dc08a12e0736892f5599752e957e66ca847f7d18dbecaa27954267b75e790c32514458553a598f499e2adb"
+          },
+          {
+            "path": "docs/boilerplate.md",
+            "sha512": "6e8489e92357c29f9ca5b30e9579ee1bbf1be6f9e7982f6ce632ff9e64d2b2b81186cd501605509f613702263e1a8428baadf4b2b5afb55c5ccdda888e77438d"
+          },
+          {
+            "path": "code-of-conduct.md",
+            "sha512": "3c03b998bdd54ca3378f0236c4a18e821bfd5a84ce342fdfcd34305b4e65f3fae9233308c26f37fbc63e895ebd59da42f355d1bae71df47cae6d576156509a5f"
+          },
+          {
+            "path": "docs/complex_parameters.md",
+            "sha512": "10057269fc34a2363cca341c9a68c0b88c285d93aa815c887c0c5438a778c04ca1488b2b582a27b9899e8b54685870b58a4a9e509dbefb4aa287fa5a0b614a7b"
+          },
+          {
+            "path": "CONTRIBUTING.md",
+            "sha512": "d6191bd53fa5f70f6aca85a9e3d08fc0744944804492fe863340cdd2a40851bd17b5c5d44c07a57e567b549b00b85e8c768eec7051ae26b3a9c809e5fec173c4"
+          },
+          {
+            "path": "docs/drain_account.md",
+            "sha512": "ab77476959f4be930f54a4087854bb2bedbdb8879ab5edc65e07d6d9bdc46ae0db69799237b49c3cf4dad91d9a4f972354a9043865fe63859544e8a1cd2a467b"
+          },
+          {
+            "path": "docs/estimate.md",
+            "sha512": "68bbf64f2d3e73952b79f2c073f8155675591fa8afd50d6557b3aef2d9730bf59044f14ecb28e08886f2024dd20ea114a2c34bb33c522fc33be356aea947f628"
+          },
+          {
+            "path": "docs/inmemory_signer.md",
+            "sha512": "0a9e6479c7b54b8456237dc69db660ab627f89e8ef1b1d70c897cf35b6735d46a951cbc36a3b2936b67b847e426a304ff2f486aad64ff7787d8a1f78035ca79c"
+          },
+          {
+            "path": "docs/lambda_view.md",
+            "sha512": "29947fba5d463802922b095b25234fd5e6582c3b463b56eb861ab133b2e35241c7a2b7bc76c33af8a8f0416ddf38ce225aeddde7abe7e26435e1a2dc3a4b4867"
+          },
+          {
+            "path": "docs/ledger_integration_test.md",
+            "sha512": "f92f2f432b2303224f861545368d823687dbb1c85686350a5c090b3621ee21c26a1d594d58dcf1c8945600835adefd7a20aaf424097c9962d0457d9c477d1652"
+          },
+          {
+            "path": "docs/ledger_signer.md",
+            "sha512": "59444c08ba35d8a6782c38c06311b97a127c15a28f2cbe50374d3d57c10ae48da7bbe0b92efee7792baec8936ead38e12f978a5f33796c2d177411878a780b65"
+          },
+          {
+            "path": "docs/making_transfers.md",
+            "sha512": "05556e3c9e5941be026c68ccf1b26b58a9ae92528adcbeac7f827a1c28975cdffb672c54e9423d0eea26b630d948303ab67483f24668939727349643c87a08a8"
+          },
+          {
+            "path": "docs/maps_bigmaps.md",
+            "sha512": "889f9d2c72b09480e6e53ee0054ad45097ecbe72162e22e2d2c5ad20f4fc8a4970fa2a8ad24bf445085989b032f665fda704ee640c469e917c188ed4be3efe35"
+          },
+          {
+            "path": "docs/michelsonmap.md",
+            "sha512": "6f299232de9547e211dcb3bd1ef0d9945f6142b9a9dc8af4616a3d909b72b024a4fc495c14dc8923afa20c14dd08c7eee6aba590b37befdf08708dde6930f9b0"
+          },
+          {
+            "path": "docs/originate.md",
+            "sha512": "79083ab06b4a3a699c5e01b07cdf762afec1e558200132ecf66573f595454a4a0d1df65691d69d9f1f18e701840bd8320c29ca2ed451182c470375e81b1b7f43"
+          },
+          {
+            "path": ".github/pull_request_template.md",
+            "sha512": "247c2c62e38ec5157450be24dc40efa7f5c1e429d9f3e7f7288b4e8f25ec12be5f5dd4006831c466c202e1f8ecd237d850fefa69a489e6ef17ec0dbd07e5470a"
+          },
+          {
+            "path": "docs/quick_start.md",
+            "sha512": "294b935c09d8543334cb5084f78c807d1be9663e296dc405af156c764cb925976ed7949b58633a11c556ce36e96cf8ce24808f4b7c9a8507d0725141e285ab8e"
+          },
+          {
+            "path": "integration-tests/README.md",
+            "sha512": "eaa65c364950c259571bc26ef2f611073578f592d29c2e9cad76653e0c3535f25d4c1e49109d9d758ef178d39c46983e87c63f5ed0f617255e6ecaefb88d8bec"
+          },
+          {
+            "path": "packages/taquito-local-forging/README.md",
+            "sha512": "6e73aa298bfdacd2a379973b68b207ae463302821acabce9a29b26ec2fda01248163c4dbbededb96e6cbe4dc2a4b0f5fe582b65d2e3ade9ce7bd8bd387a36ec8"
+          },
+          {
+            "path": "packages/taquito-michel-codec/README.md",
+            "sha512": "1897105d9f4a23fa1dc08cfcac5fc753dac8b9fbe7c9174b1cb1b09bf225c87886e46a009dd46f55530b3549c62eab135f0f22428e8115ea8406dd52782adbcd"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/README.md",
+            "sha512": "1a6b28e62c3b5bb876369ede8580d5dc919f90fa009c7ca09905273056280cdd2dabf2b72a8ef34b9a1a53594d8e085ad0f687e9947292a5deb9f8eb54e3a2cf"
+          },
+          {
+            "path": "packages/taquito-rpc/README.md",
+            "sha512": "b36cb4ca675118a195dc72909bb47a45fdc7e6ace50d764d3647c25ae51a0afe01307d835bd76068c0c2d6c15087382f2ec40dbc5a4e117a88326692a4d530b9"
+          },
+          {
+            "path": "packages/taquito-utils/README.md",
+            "sha512": "c490ab6c91154a3a4364f45fce93659a4338416b811d15c0ea550026c2478a58e5135e7be03708988497459e6c792190bde62e51996f1652596471cfcdfda20a"
+          },
+          {
+            "path": "packages/taquito/README.md",
+            "sha512": "ce19929ea8883fdc2db1a84d36c959d426b0d799ecda2c1ec80ee0ba4b8abeaa13f2ace46670e2742aecb70399c1bcc91629ae83317412fac1984842445cbcc8"
+          },
+          {
+            "path": "README.md",
+            "sha512": "77ee3582a46996f84d8a1fe83c50a41d0ec340d59ecd7b63c3711ebd2843d6fef08aaea6d0f8f5ae73947d230f66a70db86039a7c6e2f1f10c6cc33e3b7989f0"
+          },
+          {
+            "path": "website/README.md",
+            "sha512": "b212361c2330029944918c9f055476f5e1d0fd52d04c56f9c2a927ccb3b9e4fbe47abfd9fc89a44c8f18d305cfc45f47816f4b3989942c9fca848689504017e2"
+          },
+          {
+            "path": "docs/rpc_nodes_integration_test.md",
+            "sha512": "348ffeeed6c5f7ddfc7e61adc1a41ca2f6a9a93199591835be3a4746ec1dbc8fb21454a583797d34765a4e4944a57310da0366198042849e2a6c76d996e6c110"
+          },
+          {
+            "path": "docs/rpc_nodes.md",
+            "sha512": "db21ba31ea6443b3227f8356d54b4fcc480333aa9172fd4ed438cfab8f8b8d76f9a2ea75b0e7559718ab5ba6f3366ef8e1877a63316ae617a2c3eb604eae62cd"
+          },
+          {
+            "path": "docs/rpc_package.md",
+            "sha512": "d35f9309f6045827d1f9111ddaf3845aff9591eed94309846e2d9108639f826603539f13f64846da98f398882d6277ddf01fb3bd1494b7aad23f2dab4a20f791"
+          },
+          {
+            "path": "SECURITY.md",
+            "sha512": "af537538e9dbf2335d1353443d595cc42fa948764269ea36b25d6f5c735b1e05636271b032e2ba4b568b1cbb03cdf7bf2d49107b65f3e0c23a72524f7140e3f8"
+          },
+          {
+            "path": "docs/set_delegate.md",
+            "sha512": "0f1b936acc27dbe8f77310eb013cbe2ed6a658fd29ec7ceb678b9c6fc2998fa15be4f729a1b48743314d96778933a6b2ea952af76df226d2f4ffe15762ba5d1a"
+          },
+          {
+            "path": "docs/smartcontracts.md",
+            "sha512": "478338e81e05e22562721c4a8079b056c5bcfc11cb8e9ec7045e1dd95db1eb3ac88d9b9c60cbd54cc0963be2610f326570b2bab979fd87205453a66001248b24"
+          },
+          {
+            "path": "docs/storage_annotations.md",
+            "sha512": "9c551482ce9b3f79e1e99a5029f24e37178466c0c7e5d92f9aca181b8c4dc3f6c0573fbebf2231edd34a0cf1e94f71b75235ce24b2807e6ba32f1c8e5668dc30"
+          },
+          {
+            "path": "docs/tezbridge_signer.md",
+            "sha512": "f0a1cd604f99d90a443cc892d0de2524d6aaa5dbaa7eb582532791042c04080f63317bd0ee11d174ff323e04c74ad0632b1bef9a2676037dc2f1b67016c9921b"
+          },
+          {
+            "path": "docs/tutorial_links.md",
+            "sha512": "fbd59e3118c6b5b49082a7b3039ebb7e66b601a6c875703cc256af434b463133c48215ad107ad579165b4e73de89eb45a3e9f8d9645419209f92b7b9b6b0ac4d"
+          },
+          {
+            "path": "docs/v7_breaking_changes.md",
+            "sha512": "21f90cb414367fcc85668401e326d0183765e9852c8b37ac7abc1eb53fd6cf56e13b19b0733a7e1e050430ede73ec8bea5e7e2e64763837a8cc9287e4524b2d9"
+          },
+          {
+            "path": "docs/validators.md",
+            "sha512": "70ce0ec4073fbd5295e7b783e82bac0207ea7d3325c9617e85880214763682002bf512c9667b1d811a49cd0ca5a5a7d13b4bde92ef80fb91a374adf61f47e1c2"
+          },
+          {
+            "path": "docs/version.md",
+            "sha512": "9c1e2eda0a24dc698e6583e62370f6502b74a5cf4333f1d6f624b600b324862951b681692dfe8cfcbcba73445004b07a50a3ebeb756f88f8fb529efe3f2e7c0c"
+          },
+          {
+            "path": "docs/wallet_API.md",
+            "sha512": "5f8397c3c592f036b1f4b21b62b1d6426f9b13bfed4520af637065396f3f3250ab3766df76ed59fe3c5acb4a43fcc2e0f3b81169d6651af2a2b1948f62d63788"
+          },
+          {
+            "path": "docs/web3js_taquito.md",
+            "sha512": "40235ddbfca0bc5ea6a8826ad31d8e808611188ebc809fa519ae4d2171b6af9896f9de678fb87f3a57d9bbd224a12147e214d843713ea5877ee0c74763c1a357"
+          },
+          {
+            "path": "website/static/img/a_taquito.png",
+            "sha512": "652a0770ac537709ff6c0df854c9233f11b5ab8fa6c4441f94cd686b9a645257ea08118014e61695aef0115fcd102db297d51feb73b7126ec1072f45d2d9a4c1"
+          },
+          {
+            "path": "website/static/img/boilerplate_screenshot.png",
+            "sha512": "0e75d8b45c5284287ca38bb0529f94f424e2f78c553bf9eb26e75cee2b81aaceee4c9f64b11194181772e9d398a3b1a6c3e243e11b5713b0927cbcbf89ca73ef"
+          },
+          {
+            "path": "website/static/img/cii_badge.png",
+            "sha512": "5c5a9885c3e956b66ffeb9a7c8b3c18802f85acae956eaade98ce1a026af2ead1a737986ae0d78806ba49aa3a2de2c95111572200a73ad065405d21185fc39dd"
+          },
+          {
+            "path": "website/static/img/favicon.png",
+            "sha512": "b51b286090aa06bb8f2b7250383e07d36b66461287f24b3818f7b80e7bc637f786e7be60e8af5a79d7e09080b1914d6871d0ac593fec2f1f920529d759d907da"
+          },
+          {
+            "path": "website/static/img/nomadic.png",
+            "sha512": "d337d7380069cb4ab26dbea2c1ad2bdc38a199a7a0697ad99ba18a3a2f446e7c0507b6bdbd9671fcd97c2a6e224ab9cc37087e3ca129330962b8c35da3fd28ac"
+          },
+          {
+            "path": "website/static/img/Taquito.png",
+            "sha512": "867a6bab6c70ccf6e2e6a5d810c78f60ea1030633de4b3e410990594e11f7326a2c71580898f18e174dd2f4e1814613d9f1b07abed9755b6c36a7005aaa2e195"
+          },
+          {
+            "path": "website/static/img/truffle.png",
+            "sha512": "ef42596fbd04cead1caaa36694332ef9759b358c847cff8cf8147ce158a1f79a65880d753c503308d4169909954266d6b48dfefff216d1a45e07204e05b26bc4"
+          },
+          {
+            "path": "website/static/img/goal.svg",
+            "sha512": "f124f9df5e0e97d856b1749ca57ca83ca989eb7e10896da9e6bfe59bdfce1f9c3c388cd54780e370aee00ce84e7443f76a49f96f101f2268c763f4f651f597fb"
+          },
+          {
+            "path": "website/static/img/ligo.svg",
+            "sha512": "44e7530f7f376ded3da42b6823f8ca702ca663a7293fb5c0c87fbc61c8e7b9066e3d5114f627c99d400e77b9c783363ffb125bb1ceda43a11e04c09013faa9e2"
+          },
+          {
+            "path": "website/static/img/suitecase.svg",
+            "sha512": "f7d1edb08f714ea740797b3c71c241953d02e47084c97e0aeb431ebdded39f26636eb8369da64f7ae3b7329970abf3537c888aef8e84c5f64d629fbec5fefe27"
+          },
+          {
+            "path": "website/static/img/tap.svg",
+            "sha512": "533f3da367ed654e6feb340e2bc417f50e149e374e65222031a26b0dc46d5bb36bc99873155ae95e9694d4b859c03365ee4494c4cb80a7b9db1ca5815c8d3da0"
+          },
+          {
+            "path": "website/static/img/tools.svg",
+            "sha512": "6efa36d98e29fa0bfda5f378090e4bda1565f77e92313106733dcfa19f459ebeae7897b0109a8a238aa2f818b1c49ce73a487d64b255cb5d1a07fe4f5fde141a"
+          },
+          {
+            "path": "website/static/img/tqtezos.svg",
+            "sha512": "944353b2dde43f07123510c67e06dfb0f67ffc4560265127358acb608899f4970716863b789d4a1b68e2a26625942d45376787ccbde43c73e0dbd62b0af374a2"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/tokens/comparable/address.d.ts",
+            "sha512": "3dfe4305c11c31e51d093c3371a448f60b8feab9b5b98e011a1cc68b144d4eadd148bc7e93e411e602207184186a25d2a5cf47d44b68f0a2852daf5ccdd2fc2e"
+          },
+          {
+            "path": "integration-tests/data/badCode.ts",
+            "sha512": "89bb0181ee5b6b82a3401057a638b53477fd0f8497156d5837731bf1de52a358fccbddd525dfb5990ec15c9db9ab739ad4511c5194e824ec62ddcee25e735a4f"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/types/base58.d.ts",
+            "sha512": "cae9e29223d37f6b49677e3a368320cedd68673205ad3cfdf8aacfce1facfbb50bbf14e3fd5708e7c6fe900b52e5866ddb090a6e16118177bc698baf1b531d99"
+          },
+          {
+            "path": "integration-tests/batch-api.spec.ts",
+            "sha512": "c31c7bf12ff06823f8bb754aabeae8f36013baad1942a7492e6b5c5f002b9998ecf07773a75218d59689a35ba8c3c250c6ece8ae7c71a2f2ab11f91ac50c2233"
+          },
+          {
+            "path": "packages/taquito/dist/types/operations/batch-operation.d.ts",
+            "sha512": "ebb4a2b74c71b04e3af30259d9edff60ac82d79f87b8fca010e39f737a12b088d9f46d01b09003dbd9cd9e101db40e7432764f4da68728f0d66eb5ae081f3615"
+          },
+          {
+            "path": "packages/taquito/dist/types/contract/big-map.d.ts",
+            "sha512": "3377bba76366573c5a2ea3ec72eb5a19af95526227a704080820263180115017de9ead361bb5486edb4576a97d09954a2af64d97ae807a4a68d374252ab2752e"
+          },
+          {
+            "path": "integration-tests/data/bigmap_with_pair_as_key.ts",
+            "sha512": "f0d5efcff9937eecbeb4f50cb0067d3a0a96fa153b71b195612d6901a9963c14553736ead882ca38898953abf1c62897abe6bd44e6ad85d16e9ccf9dcc60bd14"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/tokens/bigmap.d.ts",
+            "sha512": "37a555337290629397ad24b6164fee01266e6b589c2fec6551223a24fb8c79b0a90ecad8776cf1e714eb00bd9f76b827563f9d6b47f5380c22c1299624795546"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/tokens/comparable/bool.d.ts",
+            "sha512": "ba9c296167d3df5267b9869399adb42896ada129239a2d3f0c09735a9f61e044e336ef96d38afb0a062fcb5bac045f07fc0c7f3ac80d4eaf1038d7e5a377de27"
+          },
+          {
+            "path": "integration-tests/data/boolean_parameter.ts",
+            "sha512": "ff3ddb5421dd2b1385f55b8b796ffbbe24d53fe9a6c8b0830de3a75ea49480573de45a11dfc25797a57f0eabc3aab57de29f9a4d8b4092712bc32ea746ebf7c6"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/tokens/comparable/bytes.d.ts",
+            "sha512": "1ddfb9ea5401a88707ac776533ffbd5c1764267e1f0e21b3c4f1f2cf7d45490437e35bdaa1751d5a1a2904e575431bcec05fd09ca3659f9e3e01afbd406ecda9"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/tokens/chain-id.d.ts",
+            "sha512": "7034717c2be427c90ff1af41ee1f3211da2f81298bdb372dc73f4a7bf653b063f183ac3a7b46cb6b256e2f61e9a7cfb73cf79b247b2d663612a9bfaace7463a1"
+          },
+          {
+            "path": "packages/taquito-local-forging/dist/types/codec.d.ts",
+            "sha512": "af3bebcf50f61fa27611a64741c8f27fc88428d36a215150ad90ed5f475147870e7db931ea6fca699e07e60a5f971933fd4511734ff0be33c43e1889ff461667"
+          },
+          {
+            "path": "packages/taquito-local-forging/dist/types/michelson/codec.d.ts",
+            "sha512": "5d95634ba9f34fc1697a2d9ae491bbbf0453f3af6afa9b921364b8219cd898b7946582f5d8989dc7f88c84b02a5c902082f97b5bc1a9beea77255ffa745741bc"
+          },
+          {
+            "path": "integration-tests/data/collection_contract.ts",
+            "sha512": "aa8ca7bfe7cdbe3db1cf2fff5379ecff12bc6d5ac98b1f1ca4e13a7168855da97029dcd0d235de5978cdbfebe0e2858f375c7abc1cc23fc15e9a6cb598e3a435"
+          },
+          {
+            "path": "packages/taquito/dist/types/forger/composite-forger.d.ts",
+            "sha512": "5669b79d7f4fb327c9e98d8272aeabd02430e47d2e1a5141865ff2e44105cd3f813f89a4a78aeade84cdcf0c344f80387c8e883fe5f3b724cd8ae2a75a91d265"
+          },
+          {
+            "path": "integration-tests/config.ts",
+            "sha512": "62e17450c07883667f992b9dd7d29b44db116fce0d0e7180ff10046ca1cde4e78fe1f239577aee46224d40db76477a56e45adc2b4bef6d51325248dc6a490916"
+          },
+          {
+            "path": "packages/taquito-local-forging/dist/types/constants.d.ts",
+            "sha512": "e1cd208fed7045dc8e7317be040d2a8279a02f291526095980caf521f6f3ae4747655666d577a0a1199851f66cbb73e3f76f2474ebfb4e5906d930426f100d8f"
+          },
+          {
+            "path": "packages/taquito-utils/dist/types/constants.d.ts",
+            "sha512": "649a276e336facb6ee335fdbb9cfbbead96b09a707ae3cab5d068c6263351d632aadfd76200cd1626570066b3f2980e127c619b4c999ecaa7d8fdcbf65751ab7"
+          },
+          {
+            "path": "packages/taquito/dist/types/constants.d.ts",
+            "sha512": "9972b3a734736289a501f5118c06dd0ab8c5d11e3b2fec3b53605a3eec8367b2798d0d28d1afe9d98595c98b81dcbe1574b4659393cd4a8c84aa362325e653fc"
+          },
+          {
+            "path": "packages/taquito/dist/types/context.d.ts",
+            "sha512": "2223d98134c9b721a349a179f0ed622894dbeb7f3695304d4c7fdf2c15fe6cf836476cae2457dc6c1c711904a89b7594b536e2b95a82d9a74625fcbf2c094591"
+          },
+          {
+            "path": "integration-tests/contract-big-map-access-by-index.spec.ts",
+            "sha512": "77c7d568b62ef08c785c2c2621e2c17bed5fff132b1e910e2a0a0380f1c2f37c15ffa30db7215fc99d10a34d15f78fac66f627bd6726a501956a30c4325beda4"
+          },
+          {
+            "path": "integration-tests/contract-big-map.spec.ts",
+            "sha512": "cad44a45d88bf50e7ad5a5f268256b3dd02292cf0d6055f948631ae4e5812042da18a5e37d0c42a01a5192e7e3f9ba0c7e567861ca0a7ea7c6d96ab69cdb59d9"
+          },
+          {
+            "path": "integration-tests/contract-call-with-xtz-amount.spec.ts",
+            "sha512": "dcfdf1d50aaf3562d09ca026ff4a1a3ab44b92ae4eb1a3f692afd64cc7a0f520834047a0d218b8988aa6782cd89b4f774fb557de89d92005e667dac489b8ad15"
+          },
+          {
+            "path": "integration-tests/contract-collections.spec.ts",
+            "sha512": "ca9a21c324cfeca951f0b1ee347067171ecddd9d7807edb13a67d26d71119dbc717948e05f4f32de83c8a595ab8cb8df87b2769deb6b61987dbc5ded5c9745f4"
+          },
+          {
+            "path": "integration-tests/contract-empty-delegated-implicit-account.spec.ts",
+            "sha512": "12d847c42e2fa1b7c6b2285ced211a915803588ae04a2a936eb21cded4812f9396a96826ec7e0eb1ef59bcf914d6924377567bdf4da2ed344343e6bb48a70c06"
+          },
+          {
+            "path": "integration-tests/contract-empty-revealed-implicit-account.spec.ts",
+            "sha512": "36b24759f461a2730f68e6eb95fd78acf65dced3ad4cb7bfa7d3044b5b6544f58e999604dedcbf161c53fb870cff9965b567bf6cd3f335ceec93656045bd3377"
+          },
+          {
+            "path": "integration-tests/contract-empty-unrevealed-implicit-account.spec.ts",
+            "sha512": "60704b1212c13ffdad8b2e6e8a75d4b7086b39bc60d9833bbda528220d88c2c6bf125ad3c789ebfbdc280eac8987aac640604ca135076e471f5401409a32cf4a"
+          },
+          {
+            "path": "integration-tests/contract-estimation-tests.spec.ts",
+            "sha512": "212095198f79013b1e7e1014442c04103a50807a68c28f5301705ccb41b9f95a903531c3efd8884e55e9ea9fea7bd080eb9549b4453e0a3a8ddad8a14c1f3f81"
+          },
+          {
+            "path": "integration-tests/contract-failwith.spec.ts",
+            "sha512": "1e0b8f02e6d32c4ecd444b6194fc0e65ac671ce7435c877cb47bea0a16404566680579050b01ab3899510df0f09a84c79106a81045770bd2150f1e979e7fcc13"
+          },
+          {
+            "path": "integration-tests/contract-init-with-empty-bigmap.spec.ts",
+            "sha512": "9836a380ceb7322f9002bb0ad2b24cde5a75732d433faf96b6a17f5d698f453d0ec2d6df0cd35ab8cbec384aa725bddbda6aa412113ef272148eb12e3c219308"
+          },
+          {
+            "path": "integration-tests/contract-ligo-increment-contract.spec.ts",
+            "sha512": "cd3f6e0a325f952be31becb5f8e777eee0db312ad06429892d36d005632eb391556cf629fd1f8abc466f8d2cfbf8a84eaa45b2e20aa44be99133ae34624eea0c"
+          },
+          {
+            "path": "integration-tests/contract-manager-that-calls-failwith-contract.spec.ts",
+            "sha512": "7556bfae1a7e14f5cc694c3b1972fc086111890e0d1c88d14b793312d98ae5b34c98b791d22f11349aa86214eb4ed39470c0ef036954c47432a256943e2bab8a"
+          },
+          {
+            "path": "integration-tests/contract-michelson-origination.spec.ts",
+            "sha512": "63f8174e325ac133d40d0a13d95a72c0cf86d7033c17208038a62c2ae925162faea928d6ad361e2809339109ffc6e47041595dee1c9a53d52dec1f2c925d19cc"
+          },
+          {
+            "path": "integration-tests/contract-no-annotations-call-by-index.spec.ts",
+            "sha512": "9c52248e70baf422b01fe36a14ce86405d88094e6bcaf90ab1b881191cf9cd003c3b87f0daee4142c2ef44845c573ba161fd2398b6887236d46edf0585aff47d"
+          },
+          {
+            "path": "integration-tests/contract-originate-contract-with-bool.spec.ts",
+            "sha512": "c82e829fb91914d0e54c19be715d834e6936d9bb080852d5f28ad149c426e1e0db52978c35d49c61b3bf009cbe0377045ed938ee458996d29078715eac0addb1"
+          },
+          {
+            "path": "integration-tests/contract-originate-invalid-string.spec.ts",
+            "sha512": "9b5fe1d5b07f5f898c2c68763e6f1b6ad00874cb15cbbeca2ad215a469fd6d17c5d8ca3eacab5a46146c976fb0f7d22fd90167adf67a001cd688dc7658fc2c40"
+          },
+          {
+            "path": "integration-tests/contract-originate-token-contract.spec.ts",
+            "sha512": "11a413367d34a9d9d0c7ce1920cfd90010d12510ec16406fee80e0ac1e89ea58113f377320b5bbc49e282e962cd6a11684a975323730f28d09b5ca7fce334031"
+          },
+          {
+            "path": "integration-tests/contract-originate-vote-contract.spec.ts",
+            "sha512": "2b41efd59bde389d74f42af1249d7378a499e31e7c7005895ec411ea15f95802a06a522ccfbbec0621e0b113d8b688291f82cbb6ada431a6781cede8a61f9b4d"
+          },
+          {
+            "path": "integration-tests/contract-origination-wrong-order-code-porps.spec.ts",
+            "sha512": "808d5d9f63611a5c29d7e5b0490a4ce1b8729621ba2a2cc5dc02f8b6f46e1b293b0538f86474fe0342a52a7f500893569b94eacd2d0e29879fd89dc143c159d2"
+          },
+          {
+            "path": "example/contract-origination.ts",
+            "sha512": "f93c6970eadc2bfae815824f65d79f098c93f9f2f557559c07291b9debd79cbf2caa787bf8f91b4390996c8416c0f39856e5013aec518ed7d6cb4b7b57699e36"
+          },
+          {
+            "path": "example/contract-origination2.ts",
+            "sha512": "0b65f9828ec8432b04b65eb55b7e6a580fe0d95275821b5cbe04b2e6730920632684cbf6afec7eb87f340650e0c56a38e285a2720533a24504e2255ac0830329"
+          },
+          {
+            "path": "example/contract-origination3.ts",
+            "sha512": "5c71f610439201d13d4fd0c80a206d8331aa0405762385899e7af17703d1c86992021056728a3cee8119c6a0211ee0305fa4640af8d8f2e1c6a4a68900c7f5bd"
+          },
+          {
+            "path": "integration-tests/contract-pair-as-key.spec.ts",
+            "sha512": "dd5b802c79a741d0c4df04753a7a51ee736a33dd21c9a97db45033c41e2424628dd4e876a45f8b202a8fc6b95bb9acc64da12e56215dc35481badcd6d64b8a68"
+          },
+          {
+            "path": "example/contract-schema.ts",
+            "sha512": "86724cc33f6a5bafc4b9ad98d07f624f8931c9594eb5674cd2ca1806b470121677639c529d9daee08141b76165ecde28993a950e8a513572ac37b2d1072f56e5"
+          },
+          {
+            "path": "integration-tests/contract-set-delegate-auto-estimate.spec.ts",
+            "sha512": "8c8d7452c78df7c944a2cddf54c81c7abddf7bbf5bd3b2912d29f78ab00419df4fe86b8a9704722d97fc5307dd50adec21294d3754f53ae4fa3ef8de0eb322f0"
+          },
+          {
+            "path": "integration-tests/contract-simple-delegation.spec.ts",
+            "sha512": "eb0c6f28b3c901fcc81c3239f34aed3e48dabe3123dfacc4d34f7244df6b2e0baf6f082251c46c0148e4eced7c61773206209bdc4855d881b94dd93ef020616a"
+          },
+          {
+            "path": "integration-tests/contract-simple-origination.spec.ts",
+            "sha512": "50f1ddd1c40bd77dcd79599cb2d3fab88e800301e8930b72317e3ba68552acd341d2109698a2e9cc7783b0a7db342fa7bf404095968f9ff23c4e86d51fc6ab79"
+          },
+          {
+            "path": "integration-tests/contract-tx-wait-2-confirmations.spec.ts",
+            "sha512": "f52ca82ef09bda81bb4d084d694d4daf413332aaa74d6d7059aaead4fc9af98540d5fe78f8ad035c32d3700615ddb97c965daca3cc0eb1c9b96c035a21f3faa9"
+          },
+          {
+            "path": "integration-tests/contract-unit-as-param.spec.ts",
+            "sha512": "f6edbfd516777463a99f978377e01ae0cdecc61cb12fb33d3bb6854cd6941aa8216a3b8d96f8e21bf714001b83289cf378f38519298fc18e14f366c2e6e9367d"
+          },
+          {
+            "path": "integration-tests/contract-with-bad-code.spec.ts",
+            "sha512": "08e43ab46c600dbf3f3dbc0968e8698fc84f7b874fdcfe8dae18822c3cd12021eebdf42eb31adf13ea62d1fe827425d11c86a7baf3e204377479951582f42778"
+          },
+          {
+            "path": "integration-tests/contract-with-bigmap-init.spec.ts",
+            "sha512": "9f09d5f2339ee635cbc524e21f1c425babec50623493854d2c432b82cc5cc3cb424f4a00c1f6e38d2dae7f37d7f6e147ac67c6571db94396c47de3ce224e265f"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/tokens/contract.d.ts",
+            "sha512": "430517c6834480f0bab37d94ce57befcafccadb234a95ed14050068e7eae68826fbaa1536266ada32c047fc73a9e36a928c2cc8267ee8870bfadead4264d0ce5"
+          },
+          {
+            "path": "packages/taquito/dist/types/contract/contract.d.ts",
+            "sha512": "eb3005318d98f5da7b189f883b6d9c0284dd42f12bc5489f574e553ed25a0c12b2d98c0eb677fe2bcc0633aa3d7ba131120f7548b20b9ee284a30271ca2b3456"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/tokens/createToken.d.ts",
+            "sha512": "66a9e63f059f34ea5477646f641bbd994d310948ee184998b8a36d04c5f53858f1d66d0660aad7cbf10262adf6e83c838c24874ee343d03515763b90effd788b"
+          },
+          {
+            "path": "packages/taquito-local-forging/dist/types/decoder.d.ts",
+            "sha512": "5be0731e1a5902328f417008edfd28a1f8ffd58becd789a578a69e06b6036b03e76943c2c809f10e827c133061951e7f9cecadb2c440810b42340d9668070ec3"
+          },
+          {
+            "path": "packages/taquito/dist/types/operations/delegate-operation.d.ts",
+            "sha512": "80395735bda83d72cd609157d42e86f8126d9ea99ac335843c9ed6d8dd69e9294d4129578d0077d38445e7d2c250761d8d74870f99edb327d4afaa3656b1723f"
+          },
+          {
+            "path": "packages/taquito/dist/types/wallet/delegation-operation.d.ts",
+            "sha512": "f0ae60c28ab3dcf16a099cf31c7b7a2c0e28cf234d9a4ef5e31a3ec3f2653ef13c9ecdedee7ab67470f21eafeeef5fcf12e82718a75e8ca7101a0312eaadd480"
+          },
+          {
+            "path": "example/deploy-lambda-contract.ts",
+            "sha512": "d94a5f551529949c4828b7fd7591f848fbaf4b08be532c1aefe90459a864d440f16c5bb945cf6c2f01b86f40e634bf97023902bbf3fe23ded2f4b3921b19d6e9"
+          },
+          {
+            "path": "integration-tests/data/deposit_contract.ts",
+            "sha512": "069ef7a5cca4c282b381cecbf68423c3793fc064e3979523e4d1b558446150759cca0d9b611084a5a53c4655853b3e1192d7f1810e91c1b861902ea03a0420b2"
+          },
+          {
+            "path": "integration-tests/data/dexter_contracts.ts",
+            "sha512": "d920795bd4d695ff26a1a2723446b3c83a33cb665f4ccd893f1f7efef59ea2a552fa1feb2d44906aa38ce2d5b28b2ced4acff523aa0516eeafcbfe675625ce42"
+          },
+          {
+            "path": "packages/taquito-signer/dist/types/ec-key.d.ts",
+            "sha512": "9dc9ac5c6e19fd43ad48e6b1db540fc9100f54aa62af7f6c4fe523bd3acaedd501856fe2db59cdc62398202d00e1202e07d166c2382eb82e4a1118c89643877b"
+          },
+          {
+            "path": "packages/taquito-signer/dist/types/ed-key.d.ts",
+            "sha512": "3066c9c370fca305ef23fe3ce3443eff385f0b47713d7c31659fdb8d5cc0bad6868d21b831f48d3873b0c5e8b60284532ab5d6c1e404b6d43e4b2ef6ef7f3add"
+          },
+          {
+            "path": "example/encode-michelson.ts",
+            "sha512": "d647eaab1b42680bc7b8e1a24a865c4f3f74d6538ebc0d553d7f236e3331b2c24889c2e02143a7f016d8de27186c6881fe27e3baa829adb5d59f5db4dfe1b09d"
+          },
+          {
+            "path": "packages/taquito-local-forging/dist/types/encoder.d.ts",
+            "sha512": "1f1ca08dcdab427a028ae08926784b7ab575a18a06e08e3b40e06c3a36b8022f733abab5ec08c3978e96c019f8f187334e2c97ff39576a8aae805cbdf4b1e3be"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/errors.d.ts",
+            "sha512": "2f110a57eccfcb8ddfb71bb58b92036fc5cc8f3683c20cbf5eebe506afad63eea947be615e55821558a25f9c7cc1357a36c7244c3053388b3bcac3d14b6e44a4"
+          },
+          {
+            "path": "packages/taquito-remote-signer/dist/types/errors.d.ts",
+            "sha512": "420fc912e7087f78e96fb40aa494c428fd405910c5d4ee718d0ba038abb46539ff0a3c1d9525f5de0a45ed3ff932e60bef0503dc83f9eac78d12f44faadf7a47"
+          },
+          {
+            "path": "packages/taquito/dist/types/contract/errors.d.ts",
+            "sha512": "31568915089388b0011da64c5050289d69ed3ae325f584719f652636bce45c964d81556a9ee9be4fce86798aafc266f7fd997002d21e8c702850e52f9d40158c"
+          },
+          {
+            "path": "packages/taquito/dist/types/contract/estimate.d.ts",
+            "sha512": "f5c74cffdda9a25bf70ca8da11096c36a5f1576f3af1cbc682538da706ef403fd078165c0178452c8bdd8278cf1ff6f676be66c53e6ca34e2d7bc1c0c2e1a0ed"
+          },
+          {
+            "path": "example/example-activate.ts",
+            "sha512": "5088ee78f78f3a4a08494e0cc8216118c33d9d712bad713aab97832468f9c8fa0817717fb29fa34c4ea6ac4ec66615811b4db13e83fe3aaffd889bda2cd1c43a"
+          },
+          {
+            "path": "example/example-node.ts",
+            "sha512": "6e3b68aaff2026dbad071fa36d0f35729ad51c9ba44d5622a7def92bc314a57282fb11d36d68f4ee76b6987a248e77c8d073ec9b5fdea9c7d542f5c3fe02f19a"
+          },
+          {
+            "path": "example/example-streamer.ts",
+            "sha512": "bf61e79ae9ceff4bbe696f4a13888c7fae485f4e835c3fdb0030d64f7b8f16a08404830496e4576081f20e7d848c1bae32c25b3da3cc45a0294cf05e26e54e24"
+          },
+          {
+            "path": "integration-tests/data/fa2_contract.ts",
+            "sha512": "e269e91480e2620c566c255c4d939abc20adcac1a504acce98c194c0271e21df744dc63ec5607cd5b44511c2c7d624bb98736d27082e4f5573862e4617f87abc"
+          },
+          {
+            "path": "integration-tests/data/failwith.ts",
+            "sha512": "3b08e90c95f542ec5bdc03150ee75dd5c992d1f96dbe71972929c2bb5b3962d948b2f2fb646ef59f71aae17cf2ec1b5b1103a705e1c797ef8953087190e7d19a"
+          },
+          {
+            "path": "packages/taquito/dist/types/subscribe/filters.d.ts",
+            "sha512": "57b603e7516d2a45f985b74dd093109a17959fe4e7e9da0feff832ef7dfa28e4e0ff4fb0f5090bcf7fd69cc50ad01c2119172b2544e7cb7ec6f16c34ed538a43"
+          },
+          {
+            "path": "packages/taquito/dist/types/format.d.ts",
+            "sha512": "87f3e92f385e22f7742000c26ffeb2dc16cf88f4966fc936124bab1fb384644fe197c62eaa812be79b5f24988d190981fdb95a6c818cd46acd91cd8ab0de5275"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/types/formatters.d.ts",
+            "sha512": "d5b2a6fcc1ed59c26750e8f3f07f55e7ca162a3d043cc99ad50d91315d42a91093a00d2912a12f19d512729c40750c8d1f0677a04821e9d2640329600ce2180f"
+          },
+          {
+            "path": "integration-tests/data/id-contract.ts",
+            "sha512": "9288330e53886d81f309247313ab22a83b4e409f9641eb6be16472e9bf6c4c53a70fb5b27ebb633fd0a6c098a1574aa2f87ba22e6712072266441fb1bfa0fc0e"
+          },
+          {
+            "path": "packages/taquito-signer/dist/types/import-key.d.ts",
+            "sha512": "95163b26030a90d4fdb6d76dea71c490fcbdcf32e7aaff11486ac52e08a74cd6bda2305ce81d3179559ad70bf9668273ea5424efaf970c03b852658b2b2fd9a1"
+          },
+          {
+            "path": "index.d.ts",
+            "sha512": "94b1fbbf435df2293dc7c37ca0d248a952c0c79ef5db68b30bfc7ea10aa1d5781cf927f6f961f8b106c1ad246dba390dec75d3562c7386c968ccbb9ec6a504e5"
+          },
+          {
+            "path": "packages/taquito/dist/types/contract/index.d.ts",
+            "sha512": "6d80630154eda17c9f06f38836d22caaa5e4473fd71c2cfba380a7df9464043d2be9a29935a90c24255f46a15df07dc8bc0475f47b20c2966408bc6e72f8a2a5"
+          },
+          {
+            "path": "packages/taquito/dist/types/wallet/index.d.ts",
+            "sha512": "a517746d66e4f0031e90ca5a497ad9f7e3a771ac4e152b08bbd65fb4a0e8b809e3daced193ae20644543796e339f698360596b5aee3f7a7051c40b14c8b3af8a"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/tokens/comparable/int.d.ts",
+            "sha512": "0148afa8051f453fc9dad63bd901f768bf47659e0c054e3b86ebde58ed6f59966459a6d45d5dfa5ac7894384d582c96a1c74439d5115f2dcaf6920a065490e84"
+          },
+          {
+            "path": "packages/taquito/dist/types/contract/interface.d.ts",
+            "sha512": "5add9d35be41259702dee0369584242ddd1e2a9c62d88451199f4bfbe81c743a27b03ffcb46a7e90d5b84683c84a2a81584bad5955cb023b34d47bc36ec8dc76"
+          },
+          {
+            "path": "packages/taquito/dist/types/forger/interface.d.ts",
+            "sha512": "0333c4454c77da9d9ff130c006d2a8f2b97d8207368e261dee28c956eeb1d51ef01d3d2b4948e2c16138e052f9de180b86a300dfc81d6315b5cd867256c15ec1"
+          },
+          {
+            "path": "packages/taquito/dist/types/injector/interface.d.ts",
+            "sha512": "8cdff3c5199787c453aaa4989d08f0b71963c44c80989deabb4ae0e5d9b9c7fb24c210be7cdc70713eba84148311179e884516b46bb6e35571441c161aa7785a"
+          },
+          {
+            "path": "packages/taquito/dist/types/signer/interface.d.ts",
+            "sha512": "69e184d0cc6b4ef97392218842f61d21927f35b8d286e6261d770a47c9a3a31c2e97671e9228670a4811b2d9dc3b8613e6c279a3001319287a5dbe5b82c08d43"
+          },
+          {
+            "path": "packages/taquito/dist/types/subscribe/interface.d.ts",
+            "sha512": "d1ae75a9b5e8b11a1f1887e4c462ff8d4b74203051866d04eec3e5326df2f86d96439f836166262d4d3bc85fb56aa6ea84bc174f036feafe1ebe93f25c70b5d4"
+          },
+          {
+            "path": "packages/taquito/dist/types/tz/interface.d.ts",
+            "sha512": "ee68eb77c2f1247f9edbacd309f598769f234d820f7fc2a076555c5e45097e8ddb32347fdf0a161223fec5c58111f69a4d8348f413558803baf51612365e091a"
+          },
+          {
+            "path": "packages/taquito/dist/types/wallet/interface.d.ts",
+            "sha512": "e33c881e29c0907eb44c3d4e1c5afef6739c048cecd1f2bf38fcfaaf4b87519a4e7cbe73631cc464b85278ebbdb8f753b2313cb4b9ee9350702cfa67a7dca245"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/tokens/comparable/key_hash.d.ts",
+            "sha512": "75b02a3fb4a60a067c68c75223445cd571a4f8ad889095bd652738002e0b3e6d8ce5bb5a379fbbda6cabeb3186512c0fed43bbe2e52a2fe331ce45e9bdad565c"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/tokens/key.d.ts",
+            "sha512": "eb8b81dcb3979ac8904cd4db702009359d5d6d0a43509cfa7e17b9a05e8fe81d030bff799a23c433246fb04c3eaf8e4c32f440c7d993c0b2689c1eecc84f80e1"
+          },
+          {
+            "path": "packages/taquito/dist/types/contract/lambda-view.d.ts",
+            "sha512": "545fa3c45a0a44f6083290c125dd64a7cb4c764b41d8ee065ba895123258279fdaa0e29a93fdf04555ce38d0e8ea946b34bffd5e5cd35ca4885d56ee06d2f955"
+          },
+          {
+            "path": "integration-tests/lambda-view.spec.ts",
+            "sha512": "cf4db983e365ff8b210dc8e0d717e476eab2fdd5c33af7be923a69ac5ef356ddba273f8194b1850c7b7b566283042a2de02dd3c831acbd34245714ed4a9f6885"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/tokens/lambda.d.ts",
+            "sha512": "f721cb2f351c8b931cee346c96c1675d9266fffcf98a8839a4fe8d8d72c640be909fb56449f8a8e2e05e02463e8cac9c0dc3093a40bde436312276a4a051daf5"
+          },
+          {
+            "path": "integration-tests/data/lambda.ts",
+            "sha512": "5995782dee43e034f304bebc3830802ab602a611074ca18925b5f525d497dafd5a7b4d353e335859757691fef72fa3eca5304b7f39149c2bba8d8f5dc99e605f"
+          },
+          {
+            "path": "integration-tests/ledger-signer-falling-tests.spec.ts",
+            "sha512": "a4633d33d75808b8350e707ae5bc34d5e2ca11ea009a0b28690bd379e33cbf5c429158293e4ed2b54a0b1f85a8877a6f0f4cb610dd0911d33e02b2ae347f2b09"
+          },
+          {
+            "path": "integration-tests/ledger-signer.spec.ts",
+            "sha512": "da85ab3250003bffd009ce7f19ba586a80ae254e19c269d28693a161e3213aae11080eb879a8b2d6d465307a1293e48e3daa6e187933a9c0516f67607407d5e7"
+          },
+          {
+            "path": "packages/taquito/dist/types/wallet/legacy.d.ts",
+            "sha512": "5a4e123ec940196e52dbe0975b7434cef50ac154262cda66392d5569dc49a14e46a7d2ecc140bcde38dc328a1394dd208d597056cbd7fa2270dba793af7c9707"
+          },
+          {
+            "path": "integration-tests/data/ligo-simple-contract.ts",
+            "sha512": "b8fac06afe3eba5abf5c175d0482b5a6d3f8ce26e235900dca98cf28f1d2d791eeabb94a192cb5272c94f26ac99ecd495d0ab43b12d165c1f065747776d608c8"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/tokens/list.d.ts",
+            "sha512": "ed3853842590e4bf53be544c27de7747f4a89bdfd8e54411d5f741757fcc10e8288982c130863f065b81776fa4d72d14f6e1da760cb0bcb68818c9301dffd1c8"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/types/macros.d.ts",
+            "sha512": "a94b3979543e579099fd19d7906e1eb9c2bcb7afc12d016a88e022d57ac64f1924535cffc149076d1e7017226a7872face8f194e7a6291a1a7b9394b2f674e51"
+          },
+          {
+            "path": "integration-tests/data/manager_code.ts",
+            "sha512": "8886b3eb7f791df03f95f31b8add57690713a540bc390c636b71ab79667b8678b0907af58be3ab9054aef5e52288a3b0ef12934b3cd5846f9a4014a09163975b"
+          },
+          {
+            "path": "integration-tests/manager-contract-scenario.spec.ts",
+            "sha512": "8a59541d8b29f70790b574750a73a742e455d7fe268992fa0d9b6a64c60e7b50f073ab128752eb1e03fef783a735913cc50c155706a20f56521238f28271ac26"
+          },
+          {
+            "path": "packages/taquito/dist/types/contract/manager-lambda.d.ts",
+            "sha512": "ef11f92f9c08aeb60af14a9007b3988787eb61fea1b7cfa090d26f9efa8ef726c4d7b170f357d1ced5469a91d3bacde56c3a3a2328dc1f426064609152e55031"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/tokens/map.d.ts",
+            "sha512": "9be58472f5606f8abf2f620d52097fac63c45061b17c745b19171d3feb9e7efc60d2ad065d1c00e837aefd80ce2f0f27e8d7905b9c352db592678c13cfafda79"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/types/micheline-emitter.d.ts",
+            "sha512": "1d37e5307bc23e5c30ea22c172b217e025f43288c2edab293b909864b8fb1fda707e48d9e0f57443f1549a7c271be8b54b8c31c5dd5e8a8899acff0844cfdbea"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/types/micheline-parser.d.ts",
+            "sha512": "dd79b9335f971043589a170c060112006f9e57f53f27b1ed125f9456136786a3cba15c7b5993b9390807f710774cc19fdc6b2f1c873bfcf8377aaed22f08906d"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/types/micheline.d.ts",
+            "sha512": "38b513a4abae68170472ddc0a99c6b7d6d5b38c2526eca5146e7985df8ce90dc763bf0f56c1030d128aa2ac6202c40510d4ab855107d61f7c524ca8c7ebc429e"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/types/michelson-contract.d.ts",
+            "sha512": "d3a7d1adafb517db164844efb9cc7bc5930ec6ae35a5c57ce1d3796c4d90092d9019a4354b54043de000fa4e2c56b9cd9050feaf4067128e1e394e332c44ccc0"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/michelson-map.d.ts",
+            "sha512": "8801988f790423821285234ee933c5651d583a8a24b9222a9b0b29abaf193210b43feb6c880518de13abb22150a518577c022c7e6d1fbac7672b8ffda4175ae7"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/types/michelson-typecheck.d.ts",
+            "sha512": "8ed9aa9942738319fe2f1138e6efb605fe255395820cd1aa4293a79da92bc3050b9eab7cfaf095ed52cf320c4a42fde5c19576e430a08388166e23e8b03b1ef3"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/types/michelson-types.d.ts",
+            "sha512": "c6b7ced60343107ad911df726fff4f93a95a15084cdfe0752030885b1f86cd42d1ce6e480ea57d803080ff0a83b006fb0a1628a786574dbf3527a85b521643c2"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/types/michelson-validator.d.ts",
+            "sha512": "3cbb89248795af8cca35e8f751b0c14f8bd464fc3696f6dc09380c0966ab0b408214f8e7d38699a7bb32e66e7e23882d0289fdf20880f2ed7e67925e9a496788"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/schema/model.d.ts",
+            "sha512": "6cbd79d68a6652b4cc2e80d7a91b7e71d7f55933ac3cad1f538fe518b7cf7828393de767fa90f2699aff0881aa7875d314a7c93c4bead2c654bbe3f5a18d7e02"
+          },
+          {
+            "path": "integration-tests/multisig-contract-scenario.spec.ts",
+            "sha512": "f134b6c65fbb9b491e5942ce0a31c93176d6e16e5b1f246c3c5f34903649b0c62240e72327e74a713693833a03c039f27ab6a67b490a0b2f7217b1d7385b1046"
+          },
+          {
+            "path": "integration-tests/data/multisig.ts",
+            "sha512": "c0525196089b4a7a00fe80f942278161010aaacdec86aae3a7f71ec589dd7ba35a7971c454f8e7fda3f550c69f433350e918abb3db54646ed61e1e73b2b8fb16"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/tokens/comparable/mutez.d.ts",
+            "sha512": "f87157ac98a76cde0af8108c6698b701265f35a38746278856ec03d4b42b9295568230057322783675eed38d5f3ebdffd3dee0b68432b8defb99ba293fe4f904"
+          },
+          {
+            "path": "packages/taquito/dist/types/contract/naive-estimate-provider.d.ts",
+            "sha512": "603371be139f3699e8de7304301f796fb60ac8a7fa1d91456f45b55daa507854776787f843b1ae09a85f7e91d4351aaeb05200ec5ecbdcf412bcbe604b78282e"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/tokens/comparable/nat.d.ts",
+            "sha512": "4c9ad81f658b6d0d9cae4a1267b99b23cb2ce50feca797d37bdad962dba3891ea5775d7d182f34f3a9e56e3ead39a97c3acff04dee2481a536e23ecd33266293"
+          },
+          {
+            "path": "packages/taquito/dist/types/signer/noop.d.ts",
+            "sha512": "2702d7c521c5065d2738455dc4f464c89d9c9457eff88ff65fa955e7f15176a880330a066de44fc6da84fa5c41523afd29401100a4db7dd730c0b299712ff1b8"
+          },
+          {
+            "path": "packages/taquito/dist/types/subscribe/observable-subscription.d.ts",
+            "sha512": "58d976a98d1463086093cdb1511a7528c262791296aa3f688df26b8dae8509e78eaa5f42579d7d8d8209732e8d553dd9aa6a55795cb8dc311f6fe056fa11369e"
+          },
+          {
+            "path": "packages/taquito/dist/types/operations/operation-emitter.d.ts",
+            "sha512": "71dae6fd9e4bb752a1216019a66a6660532b27df8e11c9bfa00dfb675847f6ffaf9fe155fcc15fbcd85b1484d431ad72369f8d03f804ec45a313aa63d7c7b24a"
+          },
+          {
+            "path": "packages/taquito/dist/types/operations/operation-errors.d.ts",
+            "sha512": "829a49f6ca1d724e63fdba4c8fa0daed7f3c1682155b24b3abb474c2e67feb15ca4b0b60247b6898f147401d8022aedcad8065ab04d75cc9a55579813cb8f4c8"
+          },
+          {
+            "path": "packages/taquito-local-forging/dist/types/schema/operation.d.ts",
+            "sha512": "c6ab6c9b0aa0fbf526f35501cec025e58c48060b1a0ef573f1964d021f84e2ee111540a634f8ba2c2e74111ac0f8458faad96de090003db253768221999d44ad"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/tokens/operation.d.ts",
+            "sha512": "313ac02797c620635a2a310a0ffa269315da809110b47e1c7ac274041367bfbbd4652f47ba3844a59c0fe74cedcaf032cc02b04a3f4bb0adafa9e3acb7beed8e"
+          },
+          {
+            "path": "packages/taquito/dist/types/wallet/operation.d.ts",
+            "sha512": "1cd117c721c8ea1e81c06a5ab7df4e2fe82e24fe11df049b175a66544fb2978ab16c00db62b302e4674812b761b75ca9eab1bde6606553581f7babd12cd7707d"
+          },
+          {
+            "path": "packages/taquito/dist/types/operations/operations.d.ts",
+            "sha512": "8557aaa54dcb271e603ee7b099e75dabcf846101b342fb98d1ec13ba6a37cbdc69d421f9321b26b4590d8bdfa98cfb0c6233fb6ad6f1f98637ac7bfb17a0faaa"
+          },
+          {
+            "path": "packages/taquito-rpc/dist/types/opkind.d.ts",
+            "sha512": "617d0d0568a701e211020509a7302fb7747588e661536a9b39e2234a9c0e62fdafcf72c295590a34dbfca16cde378f96557dd87be5ac731642b6d57ebb922c5a"
+          },
+          {
+            "path": "packages/taquito/dist/types/wallet/opreation-factory.d.ts",
+            "sha512": "b2e6b574e151cb50200cac90f7e30fcea66d2138377c61462a599878ca82fc421580acefb65c04a8043567997b3587b8e438b41c74eab17d286b73625bfdeab0"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/tokens/option.d.ts",
+            "sha512": "e4786e0b939bc995f14d8180979d35d03e88b6a67cac26ce656f447b955209300acd1334c12c70f2c610dda903cf18f45c280605f1372dc0d6c65b44185e6165"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/tokens/or.d.ts",
+            "sha512": "48109eb889bc96a53f7d1ab8d4e495fa5a668b5e6901f79b3316c5046b5a703cd040b69be7d2185c271bccc27ede77f9db31546c271064a7f1a044b436297dca"
+          },
+          {
+            "path": "packages/taquito/dist/types/operations/origination-operation.d.ts",
+            "sha512": "10aeb9df834f1f768d5dc033eb81bf33e15705cbe4d62c5a364318e48fec51a30c93784cf01e794faef48938410641886577ab4310ad6f0f6fc868dc40f05506"
+          },
+          {
+            "path": "packages/taquito/dist/types/wallet/origination-operation.d.ts",
+            "sha512": "4130d69bc1b6c20ee1c0a2d44246257fd35a42967e05adea08a07185cb09752d2238085ebd85cc85ff5c001420e33d900cf15330f2429aa1d1598616055502e6"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/tokens/pair.d.ts",
+            "sha512": "63d06f0aab4562ae54bf77003388287618b725526a1e3016cee241e980f28711a32430bfd17ae4373a056a05163709aee949a78b938758c17ee8304ca143810e"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/schema/parameter.d.ts",
+            "sha512": "06f687b11ebe78d228d0a5da05fc4455ef9ed81d59d72ce8eb357f73a902c8fb74724dff5621435e821c5a36c36c349a7c44839b3ab4884b08382acbf9843f1e"
+          },
+          {
+            "path": "packages/taquito/dist/types/subscribe/polling-provider.d.ts",
+            "sha512": "511eafe198d3bd4834d868d99a1ef6b4a967bd3e83ac18b1ca4bd3c9d5655e6e64028da6f91d8fcbab61148c3b40edfb1909a9d8f7970f268ac5763d6dc1d768"
+          },
+          {
+            "path": "packages/taquito/dist/types/contract/prepare.d.ts",
+            "sha512": "89ebaae08fc3318ead0289ffe2882304c9e37dc2d532ee2e49c6ffa6ba316143382611a1c0528285f0755f5f7e1ae3becf27cc1baaaeb90b15629436b13b4f62"
+          },
+          {
+            "path": "example/pretty-print-contract.ts",
+            "sha512": "b7acbbd973d8fe66c2e34cf33fa9841eb84d97a681549ffbcd27cb2154ee7cd7a2c0c57bf62242168f2e35cb15cb54ed2a9ccd6222660099eace81b5cc87bccc"
+          },
+          {
+            "path": "packages/taquito/dist/types/wallet/receipt.d.ts",
+            "sha512": "6f9a0582fd57b2d895fd468d8e2fa0b7c5369f2804979af6be35646c63ad76a258793a203f6d1359fca04fea1bf8fb71c803aaea1a70b8c0b50402167377a60c"
+          },
+          {
+            "path": "packages/taquito-ledger-signer/rollup.config.ts",
+            "sha512": "12a63792291d8d3988a79ea31194b889fe17874cde0491c42d444c85a868165a2830d6b55a5c6195c353ee5fe0adcf1b85d3d2628c692c0f5f1f787c250b2ca3"
+          },
+          {
+            "path": "packages/taquito/dist/types/batch/rpc-batch-provider.d.ts",
+            "sha512": "94063136f2174c310e30ce1b74b13714cd9ecc95fded91c59594a0709cf2baf5246bc6357ae35641f97f4febef6ce7f34264ab35662fc56fe708d0a0e971a4c1"
+          },
+          {
+            "path": "packages/taquito/dist/types/contract/rpc-contract-provider.d.ts",
+            "sha512": "d80d7c62c02e512a3466f7ac9beac8481d23d10887180ac1466a3bc5578e3e3d3293f04d41703c76a1058d9a7bfc15ea340dbc44690657831508643f2c2c3ee5"
+          },
+          {
+            "path": "packages/taquito/dist/types/contract/rpc-estimate-provider.d.ts",
+            "sha512": "6cac55fa9c6abcb4d5d389ad3d6f6a2adf433e2375a9e1ed88d31bb0965884f6575fce64dbf351089fa3eb16aab553f773897dade1370e17e12185f35faf1649"
+          },
+          {
+            "path": "packages/taquito/dist/types/forger/rpc-forger.d.ts",
+            "sha512": "ee8720a57365cb3001054db6f6c35174bce95e6efee203a1d5dd97193676b2d027266bef0218fb64d8e78b84b9237e53e23024bfde34a99b10ddf548840c5c56"
+          },
+          {
+            "path": "packages/taquito/dist/types/injector/rpc-injector.d.ts",
+            "sha512": "5f4c69a34875e3e18aab6f4be1a9ab94ca490139c7a0908c902a57a155353ebd60df0b9ef21096dc360e534dbfda8eead71153512a080332a2693639886afe8c"
+          },
+          {
+            "path": "integration-tests/rpc-nodes.spec.ts",
+            "sha512": "080202723e3cd706b5fe37f39e09c0854e9e97be2913a5a457667e9c099183206c8787df9155eb3481a4344228be4100171b676264e192a3748bb88e07616f4b"
+          },
+          {
+            "path": "packages/taquito/dist/types/tz/rpc-tz-provider.d.ts",
+            "sha512": "b0e4aa44c5c366da2b341f77d90dc794d09a092bbdb9b7380428d77292b4aca6d43278245f04153938f66ae70405dd81a409ca8c5d615b09a0e9f14fc23f7551"
+          },
+          {
+            "path": "example/scan-path-ledger.ts",
+            "sha512": "654e133a7d7a3f67f0d048babc19bf23f310e2eaf65a46a666c06b1f9e4af5611d46d8b22b037185f20fe7cbafe35f41130351a6773fe521a95d7a218b2077bc"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/types/scan.d.ts",
+            "sha512": "1daa1b109b5d67852086ecb506ce955538040c76faca6a1c3a754f989c97acdf9b37254539daf98e2fa9ea23b01a9b88b4ade9c1ee536e8496963f3146c3f806"
+          },
+          {
+            "path": "packages/taquito/dist/types/contract/semantic.d.ts",
+            "sha512": "77053eae41486270a02449c35f42a3542b4ac831c4ab95734313c0124c2cbd91295cbd1141b8d3f10a63698a40e77da2e318b2435a42a49bd9d121f2127c25dc"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/tokens/set.d.ts",
+            "sha512": "90ab0dfa2e73216bddc41e9828784189c575093dda0c45c74970f8b1c5f4a4edf3e13df80fd5541adbee5b41e86ec79e56d443c7280c3e5aa1580a2e8aa5ec2b"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/tokens/signature.d.ts",
+            "sha512": "fb600cd149a20ec1d4203fd2a94baba1af3a54ee7d421668177c6b9b690f3b5adaebecb11d38866f631b486dfe478ee4249f3f7cde253de24694c5845f1c55c1"
+          },
+          {
+            "path": "integration-tests/data/smartpy-example-contract.ts",
+            "sha512": "c14cc14c0273028e910b57e10e0abb44b2e34e45add434a2678d79cbbcce11f3374e2ffac91cd6b093f52315e8bee810451de7d89c9fad9a9ad41e45cac2e48e"
+          },
+          {
+            "path": "packages/taquito-http-utils/dist/types/status_code.d.ts",
+            "sha512": "e73a0c29d243799279103fef426cd4ec77b6545367fcba787df2c3579f68d773a940b7030caa072c5a0d9ea21216c578b917a4bccc2ee4d77be47752ce538dff"
+          },
+          {
+            "path": "integration-tests/data/storage-contract-with-pair-as-key.ts",
+            "sha512": "b49231dac14096e84fcf2c8ed97b424306a674ef67fe038eaea250a4cef503fc1e7cb1faf37fb37f151aaaffae1b224388728b777b1108c8b327d310e5e34ff8"
+          },
+          {
+            "path": "integration-tests/data/storage-contract.ts",
+            "sha512": "49815f250d8c1ceffbefec2485ea46e6b29bc9c525285c1da9563f43b3e5799121681058374631823a2c1eb943b46ebc788056600faab6bb330603410815d466"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/schema/storage.d.ts",
+            "sha512": "d05cf743fa2af12650cae5924d0b14eb600f53690c312f532990025bce8d3bc2a821336c509a446e6662058ea2bf3547884e8139940f9ef6cdd8ac67a8e831c6"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/tokens/comparable/string.d.ts",
+            "sha512": "e2a8021de439e9771a14532b03ac8c6abfa05b8c5445e804f4d613952ef8087ba394da58b13ebc5d81a893f12c36198f6397658374d1407cd593addc632035ca"
+          },
+          {
+            "path": "packages/taquito-beacon-wallet/dist/types/taquito-beacon-wallet.d.ts",
+            "sha512": "9b4a5e143538bb929b421d9b8af183b6f057a9c2f2f36117f08672bacba79d55a7e5f243a2de16bb44be055a1238f9ddc02b0f3dae586cf0478755a454bbb3b7"
+          },
+          {
+            "path": "packages/taquito-http-utils/dist/types/taquito-http-utils.d.ts",
+            "sha512": "1c137b7befe1964d5409ac612e485e517b117b2a777aaf62a60965b998f039d0319e22d3a78d0f6ac7a5621a39253dbdc2bc2dc95bb4332418f51a1a3ecf2a46"
+          },
+          {
+            "path": "packages/taquito-ledger-signer/test/taquito-ledger-signer-utils.spec.ts",
+            "sha512": "db7f2a10460a820219bcfecc6cced591efa2301f7f6e9d3670c66758044b12994f5d815dd063fb203daf121789b376509313af93868ea955895517103d1be28c"
+          },
+          {
+            "path": "packages/taquito-ledger-signer/dist/types/taquito-ledger-signer.d.ts",
+            "sha512": "f3bc88863e2edbd53f8e8834a65a76a5b57c36772ee69a413f7c86ce43530894bc9e2bcb5f9c50239d16f6a49c08aee57dd53360a599082fe1fc8bc8577ffc02"
+          },
+          {
+            "path": "packages/taquito-ledger-signer/test/taquito-ledger-signer.spec.ts",
+            "sha512": "f53a0ab9e87c50d84685c0d44e90d199bf9ca7900f7b67b72ef6d11ca1812296f5da81133ac930bd24caff4242618e4b7bdbde0772737db706679fb887f73feb"
+          },
+          {
+            "path": "packages/taquito-ledger-signer/src/taquito-ledger-signer.ts",
+            "sha512": "47fcfc8b5b817a68f657fbfd9ffa88cd8bbc39be0350e572acd39d3149dc970c7e19bb23157a320cd4c6aa8306699a1dd1846095f884aeffb055fe5898d5f74a"
+          },
+          {
+            "path": "packages/taquito-local-forging/dist/types/taquito-local-forging.d.ts",
+            "sha512": "e73b425fea1185aa9234c0d8144f05643bd6db68f22067b8dd8bf6e8306f99973513556558babd5d45bfea80c43355087224576c5a6a551584d8bb1badb1a242"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/types/taquito-michel-codec.d.ts",
+            "sha512": "f8ff56477917f2903392692f066c45c9216590ef01e0a986599a3bfbd2402a354cdb2a521b933578652de068d480075264e2a6b76e06ceb12ec741203a6e1950"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/taquito-michelson-encoder.d.ts",
+            "sha512": "af7ecece379fae7b5cd280898f988dc8f40f732db5093717d81d6c15009747069d3d24388c2ac67ab4a79cb052e4c43c66d820845ac808b380f699a442935b38"
+          },
+          {
+            "path": "packages/taquito-remote-signer/dist/types/taquito-remote-signer.d.ts",
+            "sha512": "c0fae93b49ec88c27c19de6ac039bb85b388ca6c4a388a4d23748422c8356e2aaf26056670070ca8656fe8e672ce941d8f4060c16e527eb3bc2942057e49cb1c"
+          },
+          {
+            "path": "packages/taquito-rpc/dist/types/taquito-rpc.d.ts",
+            "sha512": "7c9a4384dc609f969da7bfe1ecb49fa2dcc321ceb5dffaf6e11920425779c4555945c3500d4a7f02416030d5931b4f6448a1f39060e15bba46ebfd6995fe8510"
+          },
+          {
+            "path": "integration-tests/taquito-rpc.spec.ts",
+            "sha512": "df4492ca636e75a68cf26102471de2b0ae61b607985f15587b5bf4c022e6979667b775553fd1789108fb19a31e1a5cbcf3456c6494168e0250959927fd0bd6f7"
+          },
+          {
+            "path": "packages/taquito-signer/dist/types/taquito-signer.d.ts",
+            "sha512": "b730dffa7375f7684850d77f00920374111a574affd07b3ff08d39915c974c05071e9fb91b055b146b1d103f4754b8c1aaed89eaec3c2284f0ff4d961729ec59"
+          },
+          {
+            "path": "packages/taquito-tezbridge-signer/dist/types/taquito-tezbridge-signer.d.ts",
+            "sha512": "f84760a0c2cb3988216f07a920c56a505313d9a93b8acbefa72980c295595e739d7323ccb42d4c9136a114597a9486ff9aac77923841953c4c046ec9343696b5"
+          },
+          {
+            "path": "packages/taquito-tezbridge-wallet/dist/types/taquito-tezbridge-wallet.d.ts",
+            "sha512": "3f7a10fd9e10aed789c5021fc8042c50a8f851ec78808a410ae2f8632d0373dd55cda1def50f8b378a50b4eb4f4809ccf9ab37d6c26e0aa242e0865cdf6d4691"
+          },
+          {
+            "path": "packages/taquito-utils/dist/types/taquito-utils.d.ts",
+            "sha512": "97ab6e7da0a5d418b5a2a75ce115aaa9d9222fb48eba8084c9692123951efc7cac02fd11e96a43bbc60b57d96022620fb7f2138a8f6ebbdba835eee47c1ed827"
+          },
+          {
+            "path": "packages/taquito/dist/types/taquito.d.ts",
+            "sha512": "52ab5f6500dffab6257f8b2cba25c5948125e174979806eb5773d8924bb0377dbf1c07de5cfd5e6c7abb7cebc69e5b44484a1d37f301c891928c23e91cda0b8d"
+          },
+          {
+            "path": "integration-tests/data/test_lambda_view.ts",
+            "sha512": "b8446ff418037be98e36f44d33434110085f6ac47d295688dde8843be55e98ab0535c38ed77720e4fe8d05aa15fb1da5d048fc043015bb8a58d4c5958337d094"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/tokens/comparable/timestamp.d.ts",
+            "sha512": "9f8a06fcad8cfc6dabff63750f3b7fbe86cbdf64ee14392fe1bb93f6ee9896cd30b165a5ae772aebc74edaddc5c9bc500bdc8e8d72d317b8db4b5fff009a3d84"
+          },
+          {
+            "path": "integration-tests/data/token_bigmap.ts",
+            "sha512": "3cff1021aea07f550b18b3252bba6602f98ede38ac28fb21c234ed712716c9fa7d8f13bbe4e434d6ae571c942a66d339365dca95ffadf608c51ee20a269ec7f5"
+          },
+          {
+            "path": "integration-tests/data/token_without_annotation.ts",
+            "sha512": "55a4e95cc2eb00dca7cb86128d234edb222406c15efe989217c19f0fa20329a3b85dd37c0454534ce9fc5a10681fccb01c4cf6fbb52e30fde7a764625d4140e3"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/tokens/token.d.ts",
+            "sha512": "cadeb6b6e672b637125214160326eb9e346bcc0e47cfefe20c810f08717d82bba3866c1486d42bbafe5bf92567a280c8143e78e8d5f9e5209896c454ccd940cd"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/tokens/tokens.d.ts",
+            "sha512": "1af0e95bec78dd9d58f796aa2602a77976249b2ca3dc63113f3201b0343193f7d7398b2edf7ee7110c4018a8247e30d93e2fc27414fd0aac7826e80bf16109f6"
+          },
+          {
+            "path": "integration-tests/data/tokens.ts",
+            "sha512": "86aec7c1600a892b3cde96876fcc7d44ee2fa34fbaf6b91ec0cd7b3cf33617acb4a0c576c87c710181a44b3822246240253cc01a7e9ba6d940dbbe839f24385f"
+          },
+          {
+            "path": "packages/taquito/dist/types/operations/transaction-operation.d.ts",
+            "sha512": "05c3fa53ab7641a2fb44ff0fc1453fee5be56db5ca56502b5377f0a33bd8eacfda7cd8cb81f3ca714cc8a39cb3bff9ce8333bcfb4911d1652b8c921de2993479"
+          },
+          {
+            "path": "packages/taquito/dist/types/wallet/transaction-operation.d.ts",
+            "sha512": "28eebb440ce352f9187491d74ecbbd048714dcf192c4683a0d5fa397a98ae20923fc90fd7a9336bc3c01161d566c5ab9bebefb686757ffc3627b854b6090120e"
+          },
+          {
+            "path": "integration-tests/type.d.ts",
+            "sha512": "83430117751d3f494c0b0c9ffd68c6ab681ffb95637a914ff5c5be7a0024b40f405496749c606f84e966d44ff3f9a3d74cbf38e601535f949b95a9d86e05134c"
+          },
+          {
+            "path": "packages/taquito-ledger-signer/src/types.d.ts",
+            "sha512": "83430117751d3f494c0b0c9ffd68c6ab681ffb95637a914ff5c5be7a0024b40f405496749c606f84e966d44ff3f9a3d74cbf38e601535f949b95a9d86e05134c"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/schema/types.d.ts",
+            "sha512": "20438fe478b63f8927a101aa5cfaed6b803f88f17f99e0b17883f188f9d4e3c49e34a3288dfbc60777cc6f67776d9949cc00d496d7f2c14987b630e286498f0a"
+          },
+          {
+            "path": "packages/taquito-rpc/dist/types/types.d.ts",
+            "sha512": "9de37087a5d3e0f08a75a8c1a2b70364fe465aa61c6aac2b507b41bb6af89e7ed1dc8bbf572edc6b8d3d4fa61828b722fef06f517723b728ca7f5b998234c39c"
+          },
+          {
+            "path": "packages/taquito/dist/types/operations/types.d.ts",
+            "sha512": "2b1fb8c1cb088a524ef21512abb0c50adb42b5a8ddb0796ccb61493ddd73d965f5f92beb69843025e29532aba74593419ad4e4b42420aab588eca21f69798ea7"
+          },
+          {
+            "path": "integration-tests/data/tzip_7_contract.ts",
+            "sha512": "5ff146e2d9bfccfe51a67fded3a71cfa36007587a2a4970d7e7ffcb5dd68ca8cffbce134e1ad70fd4f3889a835f24355f4656a3c10dbe434267cebc6399fcb7b"
+          },
+          {
+            "path": "packages/taquito-local-forging/dist/types/uint8array-consumer.d.ts",
+            "sha512": "8d72ae411e9495652a7438b4903d2b147ee0d11a274741be2e3b1c85d1d3a8e02ed37c8f430eb9b5b2913f9ccd18842a0e037d05591deed3769dcbd18d558767"
+          },
+          {
+            "path": "packages/taquito-michelson-encoder/dist/types/tokens/unit.d.ts",
+            "sha512": "e84dd6cbbe4116717ec7676377eb317f40cec1b1a5fc6b2a512ae3a50f9e74b19ff30bfd36f28b72c6da51a80129df5d5d009f208c3063241c1639d3152c9742"
+          },
+          {
+            "path": "packages/taquito-ledger-signer/dist/types/utils.d.ts",
+            "sha512": "0e561e1ab7d650309fea1264d900b040b2eed998e4a7250e213515e186fb3244e95e7e4b2276372b64737229f8c9ddb6194066bb38bab8411221f5747bf5e03c"
+          },
+          {
+            "path": "packages/taquito-local-forging/dist/types/utils.d.ts",
+            "sha512": "03e1e850f3ffca95887503f9a2da857dcf3e3741420c97adf5eff1a1bf3e970da02caf82de5a023e220254e7bce06c92b9ce5c1e906c74f476570bb44686e8e0"
+          },
+          {
+            "path": "packages/taquito-michel-codec/dist/types/utils.d.ts",
+            "sha512": "e793873aa0f0c94f4f0234111f4019a9305b9b4f66fe51373ea5a7c7d9fb716fbe92a1d7f9a7713598276eb784168ea4ac5c983b8420534ffac0f305a9f15aae"
+          },
+          {
+            "path": "packages/taquito-rpc/dist/types/utils/utils.d.ts",
+            "sha512": "5006fab10ab85ea4034195bc95d5fbc8e51f374e9fd76b9b6b9d0bc091471209755644247475a153be6ee21fdb6cd6a350512a81e52be321cf0ff56f92acebae"
+          },
+          {
+            "path": "packages/taquito-ledger-signer/src/utils.ts",
+            "sha512": "4bfcbffee92ba0fa3e63ecd92b9f1a478aa0afcc06e5c8ecaca4c4fd1826547ce3de3864c5957dfede29c9cc78136017c71c038f461290d2dd4af473465271c2"
+          },
+          {
+            "path": "packages/taquito-utils/dist/types/validators.d.ts",
+            "sha512": "7a36ebb852c5aef5a12aaf419dd625f065a5f1341e936edd463da2e65b4bb64b7633a815b21309cce624f31ff2e7cd696f1987b92470be160e658d1949be94df"
+          },
+          {
+            "path": "packages/taquito/dist/types/contract/view_lambda.d.ts",
+            "sha512": "75ac1eca911b8328aa267d06bd908f89224f87b4a05fa04e3429cb6b0bfc2a360b94fefa821026655ae5d8ab8063a12d0d52e6237bcde82fa07bc7315e6bc871"
+          },
+          {
+            "path": "integration-tests/data/vote-contract.ts",
+            "sha512": "d72e16b48708e1c15982ea46cc070d7b34cce22cb0fcabe596c6fe16302e6b8d817f2799782f1550a70a92fbee16e1b4f834ec15182623b821526cdf281c0470"
+          },
+          {
+            "path": "integration-tests/wallet-api.spec.ts",
+            "sha512": "e078ddaf463d003f86a448633e327b239802aa73617b047805b6d013dbeaab5d95ef56880825667a4039f0f93493103010fba825e452f42e3ac809f89d8f6216"
+          },
+          {
+            "path": "packages/taquito/dist/types/wallet/wallet.d.ts",
+            "sha512": "19db47c6a9fdf581097ebfa00e54178aaf99c2267eeecff4db1c572eb08341913958754ee91cf053eff12f17e392c4799bf900823f627fa44b82fa4a24366b4f"
+          },
+          {
+            "path": ".github/workflows/codeql-analysis.yml",
+            "sha512": "71d1e1053b703d1c7079f65b380b3c0b99b3f671b0cb1527b48c564b525ca678f69b0ce2f667cc480214e20403a386d5b9562fc3bda3b49d98f02b2ef81d4b28"
+          },
+          {
+            "path": ".github/workflows/deploy_website.yml",
+            "sha512": "8317ff450e7d29a1f5a3facd2293cec3ba0422a3347da73b6b8320ffcb6300e4011738690017e54019eaa5bebebb5c0bd0718bca7cde0fb38a768e7ff29fdcb7"
+          },
+          {
+            "path": ".github/workflows/main.yml",
+            "sha512": "8fa04477fdc1b7adab31182b298e32d6c55aff446494a2e529c1c8d78b1cec8faf7c2e65e8b3afcf37babf3aaccaf4da0c1d81be85317d115c3601d38f16f46a"
+          }
+        ]
+      }
+    },
+    {
+      "entry": "identity/v1alpha2",
+      "value": {
+        "identity": {
+          "keybaseUser": "jevonearth"
+        }
+      }
+    },
+    {
+      "entry": "npmCompatiblePackageJson/v1alpha2",
+      "value": {
+        "packageJsonProperties": [
+          "commitlint",
+          "config",
+          "devDependencies",
+          "jest",
+          "private",
+          "scripts",
+          "workspaces"
+        ],
+        "sha512": "9242860d39346281eaf6e3b9429943ef70422e03871e98bb8611a5951e76dba54ae75804c20772010fe5d0145d69e73fe42b5dc6e16e6a5be80ea51abcdbb9e8"
+      }
+    },
+    {
+      "entry": "packageJson/v1alpha2",
+      "value": {
+        "packageJson": {
+          "private": true,
+          "scripts": {
+            "build": "lerna run build --no-private",
+            "build:all": "lerna run build",
+            "bootstrap": "lerna bootstrap",
+            "test": "jest --collectCoverage",
+            "lint": "lerna run lint",
+            "commit": "git-cz",
+            "precommit": "lerna run --concurrency 1 --stream precommit",
+            "example": "cd example && npm run example",
+            "lerna": "lerna",
+            "build-docs": "typedoc",
+            "gh-pages": "gh-pages"
+          },
+          "workspaces": [
+            "packages/*"
+          ],
+          "jest": {
+            "transform": {
+              ".(ts|tsx)": "ts-jest"
+            },
+            "testPathIgnorePatterns": [
+              "/node_modules/",
+              "/integration-tests/"
+            ],
+            "testEnvironment": "node",
+            "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+            "moduleFileExtensions": [
+              "ts",
+              "tsx",
+              "js"
+            ],
+            "moduleNameMapper": {
+              "^@taquito/rpc$": "<rootDir>/packages/taquito-rpc/src/taquito-rpc.ts",
+              "^@taquito/taquito$": "<rootDir>/packages/taquito/src/taquito.ts",
+              "^@taquito/michelson-encoder$": "<rootDir>/packages/taquito-michelson-encoder/src/taquito-michelson-encoder.ts",
+              "^@taquito/michel-codec$": "<rootDir>/packages/taquito-michel-codec/src/taquito-michel-codec.ts",
+              "^@taquito/http-utils$": "<rootDir>/packages/taquito-http-utils/src/taquito-http-utils.ts",
+              "^@taquito/utils$": "<rootDir>/packages/taquito-utils/src/taquito-utils.ts",
+              "^@taquito/signer$": "<rootDir>/packages/taquito-signer/src/taquito-signer.ts",
+              "^@taquito/local-forging$": "<rootDir>/packages/taquito-local-forging/src/taquito-local-forging.ts"
+            },
+            "coveragePathIgnorePatterns": [
+              "/node_modules/",
+              "/test/"
+            ],
+            "collectCoverageFrom": [
+              "packages/**/src/**/*.{js,ts}"
+            ]
+          },
+          "devDependencies": {
+            "@commitlint/cli": "^11.0.0",
+            "@commitlint/config-conventional": "^11.0.0",
+            "@types/jest": "^26.0.14",
+            "@types/node": "^14.11.5",
+            "colors": "^1.4.0",
+            "commitizen": "^4.2.1",
+            "coveralls": "^3.1.0",
+            "cross-env": "^7.0.2",
+            "cz-conventional-changelog": "^3.3.0",
+            "eslint": "^7.10.0",
+            "gh-pages": "^3.1.0",
+            "husky": "^4.3.0",
+            "jest": "^26.5.2",
+            "jest-config": "^26.5.2",
+            "lerna": "^3.22.1",
+            "lint-staged": "^10.4.0",
+            "lodash.camelcase": "^4.3.0",
+            "prettier": "^2.1.2",
+            "prompt": "^1.0.0",
+            "replace-in-file": "^6.1.0",
+            "rimraf": "^3.0.2",
+            "rollup-plugin-json": "^4.0.0",
+            "rollup-plugin-sourcemaps": "^0.6.3",
+            "rollup-plugin-typescript2": "^0.27.3",
+            "semantic-release": "^17.2.3",
+            "shelljs": "^0.8.4",
+            "ts-jest": "^26.4.1",
+            "ts-node": "^9.0.0",
+            "tslint": "^6.1.3",
+            "tslint-config-prettier": "^1.18.0",
+            "tslint-config-standard": "^9.0.0",
+            "typedoc": "^0.19.2",
+            "typedoc-plugin-lerna-packages": "^0.3.1",
+            "typescript": "^4.1.2"
+          },
+          "config": {
+            "commitizen": {
+              "path": "node_modules/cz-conventional-changelog"
+            }
+          },
+          "commitlint": {
+            "extends": [
+              "@commitlint/config-conventional"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfzr68CRAD9Qy5GYHsngAAX8UQAF7OoKHhkGFA9gZziflviaIH\nHl3U/4GqFeo8K05RBMZ4Hy1jRwmdTcR7n01edwudYjkQUyNsySuN1ucIx1ATHQbG\nZySUZg8SW0qRxotT7ZrngWDPDB806INJzAuSBMOBu2Ped/kU8rWkebUgh9SyNNpF\n0l5joqtY5wSucYLA8EFpxcGcB8qghm3uTC42ChNhkS0raB1cRj/R32WMML2eRmIy\n4xcOrjXoJsU6xON2mIvN1QPj3mOY7nRNBGHl+lT+cDxVBgQlvCIjTfpjV7HWQPfR\n6JCOuu/pTj3GNrYkOxSYqj7vgZxcL1k/XPw8nulzRo5NBCHqREaQ9uV5AOV5Sjl6\n/iwUoalEeet8tcpXj5+MTN7mtd0Mlz+DMYNUWreC0aqfm+cYq4BhFlNHG1Dc7Hfd\n78/Toh0x/oqEuoRel76dRgLs1NE4M+ZzBjVekTM9lf7KsWvI+5GtzUD055Ylq0Md\niyGACRbm2VdKDy2WOY3XAMw7lWB/MdNy/cHOy/aCxYMRHyH2tbouqH+ojGubFnlS\n/+qb52EdrKSIuNRWUkY4KE0R52tYcMNEBDt3vk8bVnmWPQarRNLAWlCEzeu13mMY\n3N8zYyjfvB4zAqchqUpsGEd9emFOY6VeBt5NP01UNRXgwhWLwnzdnT4cqofiWMKY\nwDRIhoGZrwzM3O4U1+L4\n=Is6w\n-----END PGP SIGNATURE-----\n"
+}

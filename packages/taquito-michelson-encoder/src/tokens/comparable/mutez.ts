@@ -56,14 +56,24 @@ export class MutezToken extends ComparableToken {
     return { int: String(val).toString() };
   }
 
-  public ToBigMapKey(val: string) {
+  public ToBigMapKey(val: string | number) {
     return {
-      key: { int: val },
+      key: { int: String(val) },
       type: { prim: MutezToken.prim },
     };
   }
 
   public ToKey({ int }: any) {
     return int;
+  }
+
+  compare(mutez1: string | number, mutez2: string | number) {
+    const o1 = Number(mutez1);
+    const o2 = Number(mutez2);
+    if (o1 === o2) {
+      return 0;
+    }
+
+    return o1 < o2 ? -1 : 1;
   }
 }

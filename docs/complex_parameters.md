@@ -14,7 +14,7 @@ The source code of the contract used in the following examples is available [her
 
 Here we have the storage of the contract defined in Michelson.
 
-This storage uses a pair which is itself composed of a pair and a `map` (annotated as %validators). The nested pair consists of an address (annotated as %owner) and a `bigMap` (annotated as %records). The `map %validators` uses a natural number (`nat`) as its key and an address as its value. The `bigMap %records` uses a value in `bytes` as its key and a pair consisting of nested pairs as its value. In these nested pairs, we find addresses and natural numbers, where some are optional, and a `map` (annotated %data). The `map %data` uses a `string` as its key and the user needs to choose the value of the `map` between different proposed types (`int`, `bytes`, `bool`, ...). We can notice in this example that all the arguments are identified by an annotation.
+The storage uses a pair composed of a nested pair and a `map` (annotated as %validators). The nested pair consists of an address (annotated as %owner) and a `bigMap` (annotated as %records). The `map %validators` use a natural number (`nat`) as its key and address its value. The `bigMap %records` uses a value in `bytes` as its key and a pair consisting of nested pairs as its value. We find addresses and natural numbers in these nested pairs, where some are optional, and a `map` (annotated %data). The `map %data` uses a `string` as its key, and the user needs to choose the value of the `map` between different proposed types (`int,` `bytes,` `bool`, ...). We can notice in this example that an annotation identifies all the arguments.
 
 ```
 storage (pair
@@ -47,13 +47,14 @@ storage (pair
 
 In this example, we originate the contract with initial values in the storage. We use the `MichelsonMap` class' of Taquito to initialize [the maps and the bigMap](https://tezostaquito.io/docs/maps_bigmaps). 
 
-As described above, the `map %data` uses a value that we chose between different types. When using Taquito, we need to surround the chosen argument with curly braces. In the current example, we initialize value in the `map %data` to the boolean true : `{ bool : true }`.
+As described above, the `map %data` uses a value that we chose between different types. When using Taquito, we need to surround the chosen argument with curly braces. In the current example, we initialize the value in the `map %data` to the boolean true: `{ bool: true }`.
 
-Since every argument is identified by an annotation, we can ignore optional values if they are not needed. In the first entry of the `bigMap %records` of this example, we do not specify a value for the `address %address`, the `nat %ttl` and the `nat %validator`, but we define one for the `nat %validator` of the second entry of the bigMap.
+An annotation identifies every argument. Therefore we can ignore optional values if they are not needed. In the first entry of the `bigMap %records` of this example, we do not specify values for the `address %address` or the `nat %ttl` or the `nat %validator` but we define one for the `nat %validator` of the second entry of the bigmap.
 
-```js
-import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet');
+```js live noInline
+// import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
+// import { importKey } from '@taquito/signer';
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/edonet');
 
 //%data
 const dataMap = new MichelsonMap();
@@ -84,21 +85,26 @@ const validatorsMap = new MichelsonMap();
 //key is a nat, value is an address
 validatorsMap.set('1', 'tz1btkXVkVFWLgXa66sbRJa8eeUSwvQFX4kP')
 
-const originationOp = await Tezos.contract.originate({
-    code : contractJSON,
+importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
+.then(() => {
+  return Tezos.contract.originate({
+    code : contractJson,
     storage : {
       owner : 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', //address
       records: recordsBigMap, 
       validators : validatorsMap
     }})
-
-const contract = await originationOp.contract()
-console.log(contract.address)
+}).then((contractOriginated) => {
+  println(`Waiting for confirmation of origination for ${contractOriginated.contractAddress}...`);
+  return contractOriginated.contract();
+}).then((contract) => {
+  println(`Origination completed.`);
+}).catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 ## Calling the function of a contract having a complex object as a parameter
 
-The contract contains a function named `set_child_record`. The parameter of the function is composed of nested pairs regrouping different datatypes (address, `map`, `bytes` and `nat`). Two of its arguments, the `address %address` and the `nat %ttl`, are optional. The `map %data` uses a `string` as its key and the user needs to choose the value of the `map` between different proposed types. 
+The contract contains a function named `set_child_record`. The parameter of the function is composed of nested pairs regrouping different datatypes (address, `map`, `bytes` and `nat`). Two of its arguments, the `address %address` and the `nat %ttl`, are optional. The `map %data` uses a `string` as its key. The user needs to choose the value of the `map` between different proposed types. 
 
 Here is the parameter of the function defined in Michelson :
 
@@ -125,12 +131,12 @@ The way to write the parameter when calling the function of a contract with Taqu
 
 ```js live noInline
 // import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet')
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/edonet')
 // import { importKey } from '@taquito/signer';
 
 importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
 .then(signer => {
-    return Tezos.contract.at('KT1JjYmy6q4xxZGL4qXQGkSra7xNtrEpQ85K')
+    return Tezos.contract.at('KT1AS2FUKNHChjQTeVWep2KnHZoThbUKubi4')
 }).then(myContract => {
     const dataMap = new MichelsonMap();
     dataMap.set("Hello World", { bool : true })
@@ -143,12 +149,12 @@ importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
 
 ```js live noInline
 // import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet')
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/edonet')
 // import { importKey } from '@taquito/signer';
 
 importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
 .then(signer => {
-    return Tezos.contract.at('KT1JjYmy6q4xxZGL4qXQGkSra7xNtrEpQ85K')
+    return Tezos.contract.at('KT1AS2FUKNHChjQTeVWep2KnHZoThbUKubi4')
 }).then(myContract => {
     const dataMap = new MichelsonMap();
     dataMap.set("Hello World", { bool : true })
@@ -165,7 +171,7 @@ importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
     println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
 }).then(hash => {
-    println(`Operation injected: https://better-call.dev/carthagenet/KT1JjYmy6q4xxZGL4qXQGkSra7xNtrEpQ85K/operations`);
+    println(`Operation injected: https://better-call.dev/edo2net/KT1AS2FUKNHChjQTeVWep2KnHZoThbUKubi4/operations`);
 }).catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 #### Call the set_child_record function when optional arguments are null
@@ -174,12 +180,12 @@ The `address %address` and the `nat %ttl` of the `set_child_record` function are
 
 ```js live noInline
 // import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/carthagenet')
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/edonet')
 // import { importKey } from '@taquito/signer';
 
 importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
 .then(signer => {
-    return Tezos.contract.at('KT1JjYmy6q4xxZGL4qXQGkSra7xNtrEpQ85K')
+    return Tezos.contract.at('KT1AS2FUKNHChjQTeVWep2KnHZoThbUKubi4')
 }).then(myContract => {
     const dataMap = new MichelsonMap();
     dataMap.set("Hello World", { nat : '3' })
@@ -196,6 +202,6 @@ importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
     println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
 }).then(hash => {
-    println(`Operation injected: https://better-call.dev/carthagenet/KT1JjYmy6q4xxZGL4qXQGkSra7xNtrEpQ85K/operations`);
+    println(`Operation injected: https://better-call.dev/edo2net/KT1AS2FUKNHChjQTeVWep2KnHZoThbUKubi4/operations`);
 }).catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```

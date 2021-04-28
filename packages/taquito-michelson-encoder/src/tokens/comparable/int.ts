@@ -44,7 +44,7 @@ export class IntToken extends ComparableToken {
       throw err;
     }
 
-    return { int: String(val).toString() };
+    return { int: new BigNumber(val).toFixed() };
   }
 
   public EncodeObject(val: any): any {
@@ -53,17 +53,27 @@ export class IntToken extends ComparableToken {
       throw err;
     }
 
-    return { int: String(val).toString() };
+    return { int: new BigNumber(val).toFixed() };
   }
 
-  public ToBigMapKey(val: string) {
+  public ToBigMapKey(val: string | number) {
     return {
-      key: { int: val },
+      key: { int: String(val) },
       type: { prim: IntToken.prim },
     };
   }
 
   public ToKey({ int }: any) {
     return int;
+  }
+
+  compare(int1: string | number, int2: string | number) {
+    const o1 = Number(int1);
+    const o2 = Number(int2);
+    if (o1 === o2) {
+      return 0;
+    }
+
+    return o1 < o2 ? -1 : 1;
   }
 }

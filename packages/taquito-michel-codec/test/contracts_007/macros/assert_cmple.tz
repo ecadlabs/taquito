@@ -1,0 +1,3 @@
+parameter (pair int int);
+storage unit;
+code {CAR; DUP; CAR; DIP{CDR}; ASSERT_CMPLE; UNIT; NIL operation; PAIR}

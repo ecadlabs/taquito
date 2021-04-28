@@ -1,3 +1,8 @@
+/**
+ * @packageDocumentation
+ * @module @taquito/utils
+ */
+
 /*
  * Some code in this file is originally from sotez and eztz
  * Copyright (c) 2018 Andrew Kishino
@@ -22,6 +27,16 @@ export { prefix, Prefix, prefixLength } from './constants';
 export function encodeExpr(value: string) {
   const blakeHash = blake.blake2b(hex2buf(value), null, 32);
   return b58cencode(blakeHash, prefix['expr']);
+}
+
+/**
+ *
+ * @description Return the operation hash of a signed operation 
+ * @param value Value in hex of a signed operation
+ */
+ export function encodeOpHash(value: string) {
+  const blakeHash = blake.blake2b(hex2buf(value), null, 32);
+  return b58cencode(blakeHash, prefix.o);
 }
 
 /**
@@ -222,3 +237,23 @@ export const buf2hex = (buffer: Buffer): string => {
   });
   return hexParts.join('');
 };
+
+/**
+ *
+ * @description Convert a string to bytes
+ *
+ * @param str String to convert
+ */
+export function char2Bytes(str: string) {
+  return Buffer.from(str, 'utf8').toString('hex');
+}
+
+/**
+ *
+ * @description Convert bytes to a string
+ *
+ * @param str Bytes to convert
+ */
+export function bytes2Char(hex: string): string {
+  return Buffer.from(hex2buf(hex)).toString('utf8');
+}
