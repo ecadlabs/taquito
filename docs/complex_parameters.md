@@ -136,7 +136,7 @@ The way to write the parameter when calling the function of a contract with Taqu
 
 importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
 .then(signer => {
-    return Tezos.contract.at('KT1AS2FUKNHChjQTeVWep2KnHZoThbUKubi4')
+    return Tezos.contract.at('KT1Sh32fitgLhgHA1o1mz5mzkrehZfZaGZJA')
 }).then(myContract => {
     const dataMap = new MichelsonMap();
     dataMap.set("Hello World", { bool : true })
@@ -154,7 +154,7 @@ importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
 
 importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
 .then(signer => {
-    return Tezos.contract.at('KT1AS2FUKNHChjQTeVWep2KnHZoThbUKubi4')
+    return Tezos.contract.at('KT1Sh32fitgLhgHA1o1mz5mzkrehZfZaGZJA')
 }).then(myContract => {
     const dataMap = new MichelsonMap();
     dataMap.set("Hello World", { bool : true })
@@ -171,7 +171,7 @@ importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
     println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
 }).then(hash => {
-    println(`Operation injected: https://better-call.dev/edo2net/KT1AS2FUKNHChjQTeVWep2KnHZoThbUKubi4/operations`);
+    println(`Operation injected: https://better-call.dev/florencenet/KT1Sh32fitgLhgHA1o1mz5mzkrehZfZaGZJA/operations`);
 }).catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 #### Call the set_child_record function when optional arguments are null
@@ -180,12 +180,12 @@ The `address %address` and the `nat %ttl` of the `set_child_record` function are
 
 ```js live noInline
 // import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/edonet')
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/florencenet')
 // import { importKey } from '@taquito/signer';
 
 importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
 .then(signer => {
-    return Tezos.contract.at('KT1AS2FUKNHChjQTeVWep2KnHZoThbUKubi4')
+    return Tezos.contract.at('KT1Sh32fitgLhgHA1o1mz5mzkrehZfZaGZJA')
 }).then(myContract => {
     const dataMap = new MichelsonMap();
     dataMap.set("Hello World", { nat : '3' })
@@ -202,6 +202,6 @@ importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
     println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
 }).then(hash => {
-    println(`Operation injected: https://better-call.dev/edo2net/KT1AS2FUKNHChjQTeVWep2KnHZoThbUKubi4/operations`);
+    println(`Operation injected: https://better-call.dev/florencenet/KT1Sh32fitgLhgHA1o1mz5mzkrehZfZaGZJA/operations`);
 }).catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
