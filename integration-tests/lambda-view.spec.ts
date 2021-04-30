@@ -47,8 +47,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       await op.confirmation()
       const contract = await op.contract();
-      console.log("Originate FA1.2 contract and fetch data from view entrypoints contract address : "+contract.address)
-      //const contract = await Tezos.contract.at('KT1A87ZZL8mBKcWGr34BVsERPCJjfX82iBto');
 
       const getTotalSupply = await contract.views.getTotalSupply([['Unit']]).read();
       expect(getTotalSupply.toString()).toEqual('100');
@@ -147,9 +145,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       await op.confirmation()
       const contract = await op.contract();
-      console.log("Originate FA2 contract and fetch data from view entrypoints contract address : "+contract.address)
-
-      //const contract = await Tezos.contract.at('KT1BkrcPjCXGPrQoYhVGFNwWMMyW2LrgBg9Q');
 
       const balance_of = await contract.views.balance_of([{ owner: 'tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1', token_id: '0' }]).read();
       expect(toJSON(balance_of)).toEqual([{
