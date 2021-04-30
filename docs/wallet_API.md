@@ -330,14 +330,13 @@ Make sure you have the Temple  browser extension installed first.
 ```js live noInline wallet
 
 //import { ThanosWallet } from '@thanos-wallet/dapp';
-
 ThanosWallet.isAvailable()
   .then(() => {
-    const wallet = new ThanosWallet('MyAwesomeDapp');
-
-    wallet.connect('florencenet').then(() => {
-      Tezos.setWalletProvider(wallet);
-      println(`Your address: ${wallet.pkh}`);
+    const mywallet = new ThanosWallet('MyAwesomeDapp');
+    mywallet.connect('florencenet').then(() => {
+      Tezos.setWalletProvider(mywallet);
+      return mywallet.getPKH()}).then((pkh) => {
+      println(`Your address: ${pkh}`);
     });
   })
   .catch((err) => console.log(err));
