@@ -31,7 +31,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 }
             });
             const contract = await op.contract();
-
+            console.log("originates a contract with empty bigmap and fetches the storage/bigmap contract address : "+contract.address)
             interface StorageType {
                 0: BigMapAbstraction,
                 1: string,
