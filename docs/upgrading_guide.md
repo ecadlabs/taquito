@@ -1,13 +1,35 @@
 ---
-title: Upgrading to v7/delphi
+title: Upgrading Guide
 author: Roxane Letourneau
 ---
 
-:::warning Breaking changes
-With this major number update to support the `delphi` Tezos protocol, we have also implemented some breaking changes to the Taquito API. This document explains how to update your projects.
+# Upgrading to version 9
+
+Please take note of the two following breaking changes: 
+- Breaking change introduced for the method `getMultipleValues` of the `BigMapAbstraction` class and the method `getBigMapKeysByID` of the `RpcContractProvider` class: they now return a MichelsonMap instead of an object. This is meant to support keys of type object that are encountered when the Michelson type of the big map key is a `pair`.
+
+- To give more flexibility to the user on the retry strategy used in the `ObservableSubscription` class, we removed the parameters `observableSubscriptionRetryDelay` and `observableSubscriptionRetries` introduced in version `8.1.1-beta` and replaced them to accept an `OperatorFunction`. When users configure the `ObservableSubscription` to retry on error, we use the `retry` operators from `rxjs` by default. An example showing how to set a custom retry strategy is available [here](https://github.com/ecadlabs/taquito/blob/master/example/example-streamer-custom-retry-logic.ts).
+
+
+# Upgrading to version 8
+
+## Breaking change - Typescript upgrade
+
+We decided to update the Typescript version that we are using to take advantage of the newer features it brings in our Michel-Codec package.
+
+You might get the following error if a Typescript upgrade is needed in your project:
+```
+Error: node_modules/@taquito/michel-codec/dist/types/michelson-types.d.ts:122:34 - error TS1110: Type expected.
+export declare type ProtocolID = `${Protocol}`;
+```
+
+# Upgrading to version 7
+
+:::note Breaking changes
+With this major number update to support the `delphi` Tezos protocol, we have also implemented some breaking changes to the Taquito API. The following sections explains how to update your projects.
 :::
 
-This page explains each breaking change, including:
+The following sections explain each breaking change, including:
 
 - the reasons that motivated it,
 - code examples that demonstrate how to update your code (how it was in prior versions versus how it needs to be using v7), and

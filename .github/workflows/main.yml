@@ -34,9 +34,11 @@ jobs:
       env:
         CI: true
         RUN_INTEGRATION: true
+        TEZOS_RPC_EDONET: ${{ secrets.TEZOS_RPC_EDONET }}
+        TEZOS_RPC_FLORENCENET: ${{ secrets.TEZOS_RPC_FLORENCENET }}
 
   integration-tests-edonet:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     strategy:
       matrix:
         node: [12.x]
@@ -57,9 +59,11 @@ jobs:
     - run: cd integration-tests && npm run test:edonet -- --maxWorkers=8
       env:
         CI: true
+        TEZOS_RPC_EDONET: ${{ secrets.TEZOS_RPC_EDONET }}
+        TEZOS_RPC_FLORENCENET: ${{ secrets.TEZOS_RPC_FLORENCENET }}
   
   integration-tests-florencenet:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     strategy:
       matrix:
         node: [12.x]
@@ -80,3 +84,5 @@ jobs:
     - run: cd integration-tests && npm run test:florencenet -- --maxWorkers=8
       env:
         CI: true
+        TEZOS_RPC_EDONET: ${{ secrets.TEZOS_RPC_EDONET }}
+        TEZOS_RPC_FLORENCENET: ${{ secrets.TEZOS_RPC_FLORENCENET }}
