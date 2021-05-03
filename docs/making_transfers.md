@@ -23,10 +23,10 @@ In the following example, we transfer 0.5ꜩ from a `tz1aaYoabvj2DQtpHz74Z83fSNj
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/edonet');
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/florencenet');
 
 render(`Fetching a private key...`);
-fetch('https://api.tez.ie/keys/edonet/', {
+fetch('https://api.tez.ie/keys/florencenet/', {
   method: 'POST',
   headers: { Authorization: 'Bearer taquito-example' },
 })
@@ -46,7 +46,7 @@ fetch('https://api.tez.ie/keys/edonet/', {
     render(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
   })
-  .then((hash) => render(`Operation injected: https://edonet.tzstats.com/${hash}`))
+  .then((hash) => render(`Operation injected: https://florencenet.tzstats.com/${hash}`))
   .catch((error) => render(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
