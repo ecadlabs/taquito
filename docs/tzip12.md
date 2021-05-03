@@ -85,7 +85,7 @@ Here is a flowchart that summarizes the logic perform internally when calling th
 
 Tezos.addExtension(new Tzip12Module());
 
-const contractAddress = "KT1UP8C1r3obEotQmgsEDBSjk4HJJATkBbhU";
+const contractAddress = "KT1SZiCZaED89zBRH2fYTYUa93gwEjVKoC5n";
 const tokenId = 1;
 
 Tezos.contract.at(contractAddress, compose(tzip12, tzip16))
@@ -108,7 +108,7 @@ The same result can also be obtained by calling the off-chain view `token_metada
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = "KT1UP8C1r3obEotQmgsEDBSjk4HJJATkBbhU";
+const contractAddress = "KT1SZiCZaED89zBRH2fYTYUa93gwEjVKoC5n";
 const tokenId = 1;
 
 Tezos.contract.at(contractAddress, tzip16)
@@ -176,7 +176,7 @@ Otherwise, the token metadata won't be found by the `getTokenMetadata` method, a
 
 Tezos.addExtension(new Tzip12Module());
 
-const contractAddress = "KT1SxvP8DVf4coNJBtYzWAgS74tnf6wDP8Ag";
+const contractAddress = "KT1NMRStqeWmxk8yQotMecacrHYsQKMdZQss";
 const tokenId = 1;
 
 Tezos.contract.at(contractAddress, tzip12)

@@ -43,10 +43,10 @@ importKey("p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1")
 ```
 import {  BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit } from '@taquito/taquito';
-const Tezos = new TezosToolkit('https://api.tez.ie/rpc/edonet');
+const Tezos = new TezosToolkit('https://api.tez.ie/rpc/florencenet');
 const option = { name: "nameOfWallet" }
 const wallet = new BeaconWallet(option)
-const network = { type: "edonet" }
+const network = { type: "florencenet" }
 await wallet.requestPermissions({ network })
 Tezos.setWalletProvider(wallet)
 ```
@@ -84,7 +84,7 @@ values={[
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/edonet');
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/florencenet');
 
 // const genericMultisigJSONfile = require('./generic.json')
 // generic.json is referring to Michelson source code in JSON representation
@@ -113,7 +113,7 @@ Tezos.contract
 
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/edonet');
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/florencenet');
 
 // const genericMultisigJSONfile = require('./generic.json')
 // generic.json is referring to Michelson source code in JSON representation
@@ -155,7 +155,7 @@ values={[
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/edonet');
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/florencenet');
 
 // const genericMultisigJSONfile = require('./generic.json')
 // generic.json is referring to Michelson source code in JSON representation
@@ -180,7 +180,7 @@ Tezos.contract
 
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/edonet');
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/florencenet');
 
 // const genericMultisigJSONfile = require('./generic.json')
 // generic.json is referring to Michelson source code in JSON representation
@@ -216,7 +216,7 @@ values={[
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/edonet');
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/florencenet');
 
 // const genericMultisigJSONfile = require('./generic.json')
 // generic.json is referring to Michelson source code in JSON representation
@@ -253,7 +253,7 @@ Tezos.contract
 
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/edonet');
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/florencenet');
 
 // const genericMultisigJSONfile = require('./generic.json')
 // generic.json is referring to Michelson source code in JSON representation
