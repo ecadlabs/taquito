@@ -166,4 +166,4 @@ Tezos.contract
 
 [boilerplate]: https://github.com/ecadlabs/taquito-boilerplate
 [smart_contract_source]: https://ide.ligolang.org/p/CelcoaDRK5mLFDmr5rSWug
-[smart_contract_on_better_call_dev]: https://better-call.dev/florencenet/KT1F7DYSa7fVTNScSDDVVokqmmytpJBB5bs9/operations
+[smart_contract_on_better_call_dev]: https://better-call.dev/florencenet/KT1EPdhCbAssTpehC5hvu9PJSDEmRCmR4v6x/operations
