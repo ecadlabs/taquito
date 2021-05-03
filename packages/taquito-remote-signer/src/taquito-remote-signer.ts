@@ -31,6 +31,8 @@ export interface RemoteSignerOptions {
   headers?: { [key: string]: string };
 }
 
+export { VERSION } from './version';
+
 const pref = {
   ed: {
     pk: prefix['edpk'],

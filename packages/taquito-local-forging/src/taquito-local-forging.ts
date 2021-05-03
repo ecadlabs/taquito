@@ -24,6 +24,8 @@ export function getCodec(codec: CODEC) {
   };
 }
 
+export { VERSION } from './version';
+
 export class LocalForger implements Forger {
   private codec = getCodec(CODEC.MANAGER);
 

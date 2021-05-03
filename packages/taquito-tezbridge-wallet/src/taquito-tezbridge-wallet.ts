@@ -19,6 +19,8 @@ export class TezBridgeNotDetectedError implements Error {
   message: string = 'tezbridge plugin could not be detected in your browser';
 }
 
+export { VERSION } from './version';
+
 export class TezBridgeWallet implements WalletProvider {
   constructor() {
     if (typeof tezbridge === 'undefined') {
