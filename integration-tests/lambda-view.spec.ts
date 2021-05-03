@@ -92,8 +92,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       await op.confirmation()
       const contract = await op.contract();
-      console.log("Originate a contract and fetch data from view entrypoints contract address : "+contract.address)
-      //const contract = await Tezos.contract.at('KT1QXZMKbNYBf2wa9WJ3iXeBFEqd7HqmDh3H');
 
       const getBalance = await contract.views.getBalance('tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY').read();
       expect(toJSON(getBalance)).toEqual({
