@@ -6,7 +6,7 @@ on:
       - master
 jobs:
   publish-website:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
