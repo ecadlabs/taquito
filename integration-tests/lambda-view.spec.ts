@@ -92,7 +92,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       await op.confirmation()
       const contract = await op.contract();
-   
       const getBalance = await contract.views.getBalance('tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY').read();
       expect(toJSON(getBalance)).toEqual({
         balance: '50',
