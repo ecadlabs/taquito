@@ -4,8 +4,7 @@ import { Protocols } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
   const Tezos = lib;
-
-  const edonet = (protocol === Protocols.PtEdo2Zk) ? test && require('jest-retries') : test.skip;
+  const edonet = (protocol === Protocols.PtEdo2Zk) ? require('jest-retries') : test.skip;
 
   describe(`Test origination of a token contract using: ${rpc}`, () => {
 
@@ -13,7 +12,6 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
       await setup();
       done()
     })
-
     edonet('Originates a contract having ticket with init and the wallet api', 2, async (done: () => void) => {
       const op = await Tezos.wallet.originate({
         code: ticketCode,
@@ -64,8 +62,8 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
       await op.confirmation();
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-      
+
       done();
-    }); 
+    });
   });
 })

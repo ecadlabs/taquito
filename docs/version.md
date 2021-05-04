@@ -2,7 +2,82 @@
 title: Versions
 author: Jev Bjorsell
 ---
+# Taquito v9.0.0-beta
 
+## Summary
+
+### Enhancements
+
+- Florence compatibility support
+- Allows fetching big map with a key of type string, number, or object. 
+- Accept an operator for the retry strategy of the `ObservableSubscription` class
+- Updated beacon-sdk version to v2.2.5 which includes several performance improvements for p2p pairing.
+
+### Documentation updates
+- Added documentation about the Michelson encoder package [here](https://tezostaquito.io/docs/michelson_encoder).
+
+
+## Forward compatibility for Florence
+
+This version ships with official support for the new Florence protocol which will come into effect on Mainnet in May.
+
+## @taquito/taquito - Allows fetching big map with a key of type string, number, or object. 
+
+In the precedent versions, fetching a value in a big map required the parameter to be a string, even in such cases when the key of the big map was a number. The `get` and `getMultipleValues` methods of the `BigMapAbstraction` and `getBigMapKeyByID` and `getBigMapKeysByID` methods of the `RpcContractProvider` class now accept a string, a number or an object for the key we want to fetch.
+
+This introduced a breaking change for the method `getMultipleValues` of the `BigMapAbstraction` class and the method `getBigMapKeysByID` of the `RpcContractProvider` class as they now return a `MichelsonMap` instead of an object. This is meant to support keys of type object that are encountered when the Michelson type of the big map key is a pair.
+
+## @taquito/taquito - Accept an operator for the retry strategy of the ObservableSubscription class
+
+To give more flexibility to the user on the retry strategy, we removed the parameters `observableSubscriptionRetryDelay` and `observableSubscriptionRetries` introduced in version 8.1.1-beta and replaced them to accept an `OperatorFunction`. When users configure the ObservableSubscription to retry on error, we use the `retry` operators from `rxjs` by default. An example showing how to set a custom retry strategy is available [here](https://github.com/ecadlabs/taquito/blob/master/example/example-streamer-custom-retry-logic.ts).
+
+# Taquito v8.1.1-beta
+
+## Summary
+
+### Enhancements
+- Dynamically set the polling interval based on the RPC constants
+- Added a configurable delay and number of retries to the ObservableSubscription
+
+### Bug fixes
+- Corrected the prefix for the prefixSig property
+- Corrected sorting of numeric values when encoding
+
+### Documentation updates
+- Added the telegram group to the Website community links
+- Fixed some broken links
+- New documentation about signing with wallet
+
+## Polling interval
+
+After sending an operation with Taquito, we call the confirmation method on the operation. Taquito does polling to the node to fetch new blocks and validate if the operation hash is in the block. Before this change, the polling interval's default value (confirmationPollingIntervalSecond) was set to 10 seconds. In theory, a new block is baked every 30 seconds on the testnets and every 60 seconds on mainnet. However, the time between blocks is shorter on sandboxes. For example, it can be of 5 seconds on Flextesa. A 10-second polling interval is too high for sandboxes and leads to a very high chance of missing the block containing the operation. To improve sandbox users' experience., we now calculate the polling interval value dynamically based on the RPC constants. To consider variations regarding the time between blocks in practice, we divide the value by 3 to reduce the risk of missing a block.
+
+Note that this value was configurable before and can still be configured if needed:
+Tezos.setProvider({config: {confirmationPollingIntervalSecond: 5}})
+
+## Delay and maximum number of attempts for the ObservableSubscription
+
+When users configure the ObservableSubscription to retry on error, the retries were happening immediately and indefinitely, causing call stack exception. Now, when the retry is enabled, the subscription uses a default value of 1 second between retries and a maximum value of 10 retries.
+These values are configurable by the user:
+Tezos.setProvider({ config: { shouldObservableSubscriptionRetry: true, observableSubscriptionRetryDelay: 2000, observableSubscriptionRetries: 3 } });
+
+## prefixSig
+
+The prefixSig property returned by the sign method of the LedgerSigner class was using SIG prefix. The correct prefix is now returned (e.g. EDSIG for tz1, SPSIG for tz2, and P2SIG for tz3).
+
+## Sorting of numeric values
+
+The numerics values (nat, int, and mutez) were not sorted properly by the Michelson Encoder, causing the following RPC Errors: unordered_map_literal or unordered_set_literal. For example, the RPC expects maps to be sorted by ascending keys values. The values were ordered as strings by the Michelson Encoder instead of number, resulting in wrong ordering for the RPC.
+
+## Documentation Additions and Improvements
+
+A link to the Tezos Taquito Telegram group has been added in the Taquito website home page's footer, making it easier to find the group. You are welcome to join this group to access community support and connect with the Taquito team.
+
+We fixed broken links on the Taquito documentation website.
+
+There is new documentation on the website explaining how to produce signatures with the InMemorySigner and the Wallet API, along with examples and tips to keep in mind.
+
+A note on how to use the Kukai wallet for testing on Edonet has been added to the Wallet API documentation.
 
 # Taquito v8.1.0-beta
 

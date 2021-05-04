@@ -81,43 +81,6 @@ const edonetEphemeral = {
   }
 }
 
-const delphinetEphemeral = {
-  rpc: process.env['TEZOS_RPC_DELPHINET'] || 'https://api.tez.ie/rpc/delphinet',
-  knownBaker: 'tz1LpmZmB1yJJBcCrBDLSAStmmugGDEghdVv',
-  knownContract: 'KT1Gm9PeBggJzegaM9sRCz1EymLrWxpWyGXr',
-  knownBigMapContract: 'KT1Nf1CPvF1FFmAan5LiRvcyukyt3Nf4Le9B',
-  protocol: Protocols.PsDELPH1,
-  signerConfig: {
-    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'https://api.tez.ie/keys/delphinet',
-    requestHeaders: { 'Authorization': 'Bearer taquito-example' },
-  }
-}
-
-const carthagenetEphemeral = {
-  rpc: process.env['TEZOS_RPC_CARTHAGENET'] || 'https://api.tez.ie/rpc/carthagenet',
-  knownBaker: 'tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9',
-  knownContract: 'KT1XYa1JPKYVJYVJge89r4w2tShS8JYb1NQh',
-  knownBigMapContract: 'KT1HqWsXrGbHWc9muqkApqWu64WsxCU3FoRf',
-  protocol: Protocols.PsCARTHA,
-  signerConfig: {
-    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'https://api.tez.ie/keys/carthagenet',
-    requestHeaders: { Authorization: 'Bearer taquito-example' },
-  },
-};
-const babylonnetEphemeral = {
-  rpc: process.env['TEZOS_RPC_BABYLONNET'] || 'https://api.tez.ie/rpc/babylonnet',
-  knownBaker: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
-  knownContract: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK',
-  knownBigMapContract: 'KT1T2KjQdqeNzeaSGm9MfzfgMN8rWC94BrTP',
-  protocol: Protocols.PsBabyM1,
-  signerConfig: {
-    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'https://api.tez.ie/keys/babylonnet',
-    requestHeaders: { Authorization: 'Bearer taquito-example' },
-  },
-};
 // Well known faucet key. Can be overridden by setting the `TEZOS_FAUCET_KEY_FILE` environment variable
 const key = {
   email: "fnpurrgy.lnzeqdpg@tezos.example.org",
@@ -166,41 +129,6 @@ const edonetFaucet = {
   }
 }
 
-const delphinetFaucet = {
-  rpc: 'https://api.tez.ie/rpc/delphinet',
-  knownBaker: 'tz1LpmZmB1yJJBcCrBDLSAStmmugGDEghdVv',
-  knownContract: 'KT1Gm9PeBggJzegaM9sRCz1EymLrWxpWyGXr',
-  knownBigMapContract: 'KT1Nf1CPvF1FFmAan5LiRvcyukyt3Nf4Le9B',
-  protocol: Protocols.PsDELPH1,
-  signerConfig: {
-    type: SignerType.FAUCET as SignerType.FAUCET,
-    faucetKey: key,
-  }
-}
-
-const carthagenetFaucet = {
-  rpc: 'https://api.tez.ie/rpc/carthagenet',
-  knownBaker: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
-  knownContract: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK',
-  knownBigMapContract: 'KT1HqWsXrGbHWc9muqkApqWu64WsxCU3FoRf',
-  protocol: Protocols.PsCARTHA,
-  signerConfig: {
-    type: SignerType.FAUCET as SignerType.FAUCET,
-    faucetKey: key,
-  },
-};
-
-const babylonnetFaucet = {
-  rpc: 'https://api.tez.ie/rpc/babylonnet',
-  knownBaker: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
-  knownContract: 'KT1EM2LvxxFGB3Svh9p9HCP2jEEYyHjABMbK',
-  knownBigMapContract: 'KT1T2KjQdqeNzeaSGm9MfzfgMN8rWC94BrTP',
-  protocol: Protocols.PsBabyM1,
-  signerConfig: {
-    type: SignerType.FAUCET as SignerType.FAUCET,
-    faucetKey: key,
-  },
-};
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_FAUCET']) {

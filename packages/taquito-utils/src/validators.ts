@@ -39,7 +39,7 @@ function validatePrefixedValue(value: any, prefixes: Prefix[]) {
   }
 
   // Remove annotation from contract address before doing the validation
-  const contractAddress = /(KT1\w{33})(\%(.*))?/.exec(value);
+  const contractAddress = /^(KT1\w{33})(\%(.*))?/.exec(value);
   if (contractAddress) {
     value = contractAddress[1];
   }

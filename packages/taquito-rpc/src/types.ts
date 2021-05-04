@@ -29,7 +29,7 @@ interface Frozenbalancebycycle {
   rewards: BigNumber;
 }
 
-export type BigMapKey = { key: { [key: string]: string }; type: { prim: string } };
+export type BigMapKey = { key: { [key: string]: string | object[] }; type: { prim: string, args?: object[] } };
 
 export interface BlockFullHeader {
   level: number;

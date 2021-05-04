@@ -49,6 +49,8 @@ export * from './types';
 
 export { OpKind } from './opkind';
 
+export { VERSION } from './version';
+
 const defaultChain = 'main';
 
 interface RPCOptions {
@@ -720,7 +722,7 @@ export class RpcClient {
    *
    * @description Run a piece of code in the current context
    *
-   * @see https://tezos.gitlab.io/007/rpc.html#post-block-id-helpers-scripts-run-code
+   * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-helpers-scripts-run-code
    */
   async runCode(
     code: RPCRunCodeParam,

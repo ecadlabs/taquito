@@ -1,6 +1,6 @@
 {
   "name": "@taquito/michelson-encoder",
-  "version": "8.1.0",
+  "version": "9.0.0",
   "description": "converts michelson data and types into convenient JS/TS objects",
   "keywords": [
     "tezos",
@@ -34,8 +34,9 @@
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
-    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts",
-    "start": "rollup -c rollup.config.ts -w"
+    "version-stamp": "node ../taquito/version-stamping.js",
+    "build": "npm run version-stamp && tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts",
+    "start": "npm run version-stamp && rollup -c rollup.config.ts -w"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
@@ -67,8 +68,8 @@
     ]
   },
   "dependencies": {
-    "@taquito/rpc": "^8.1.0",
-    "@taquito/utils": "^8.1.0",
+    "@taquito/rpc": "^9.0.0",
+    "@taquito/utils": "^9.0.0",
     "bignumber.js": "^9.0.1",
     "fast-json-stable-stringify": "^2.1.0"
   },

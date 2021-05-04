@@ -13,3 +13,4 @@ export * from "./formatters";
 export * from "./binary";
 export { MichelsonError, isMichelsonError, MichelsonTypeError } from "./utils";
 export { MacroError } from "./macros";
+export { VERSION } from './version';

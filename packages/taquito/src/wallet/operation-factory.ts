@@ -50,7 +50,12 @@ export const createNewPollingBasedHeadObservable = (
   sharedHeadOb: Observable<BlockResponse>,
   context: Context,
   scheduler?: SchedulerLike
-): Observable<BlockResponse> => {
+): Observable<BlockResponse> => {  
+  
+  if (context.config.confirmationPollingTimeoutSecond === undefined) {
+    throw new Error('Confirmation polling timeout second can not be undefined!');
+  }
+
   return pollingTimer.pipe(
     switchMap(() => sharedHeadOb),
     distinctUntilKeyChanged('hash'),
@@ -78,9 +83,12 @@ export class OperationFactory {
     cacheUntil(timer(0, 1000))
   );
 
-  private createNewHeadObservable() {
+  private async createNewHeadObservable() {
+    const confirmationPollingIntervalSecond = this.context.config.confirmationPollingIntervalSecond !== undefined 
+                                        ? this.context.config.confirmationPollingIntervalSecond 
+                                        : await this.context.getConfirmationPollingInterval();
     return createNewPollingBasedHeadObservable(
-      timer(0, this.context.config.confirmationPollingIntervalSecond * 1000),
+      timer(0, confirmationPollingIntervalSecond * 1000),
       this.sharedHeadObs,
       this.context
     );
@@ -103,56 +111,56 @@ export class OperationFactory {
     );
   }
 
-  private createHeadObservableFromConfig({ blockIdentifier }: OperationFactoryConfig) {
+  private async createHeadObservableFromConfig({ blockIdentifier }: OperationFactoryConfig) {
     const observableSequence: Observable<BlockResponse>[] = [];
 
     if (blockIdentifier) {
       observableSequence.push(this.createPastBlockWalker(blockIdentifier));
     }
 
-    observableSequence.push(this.createNewHeadObservable());
+    observableSequence.push(await this.createNewHeadObservable());
 
     return concat(...observableSequence);
   }
 
-  createOperation(hash: string, config: OperationFactoryConfig = {}): WalletOperation {
+  async createOperation(hash: string, config: OperationFactoryConfig = {}): Promise<WalletOperation> {
     return new WalletOperation(
       hash,
       this.context.clone(),
-      this.createHeadObservableFromConfig(config)
+      await this.createHeadObservableFromConfig(config)
     );
   }
 
-  createTransactionOperation(
+  async createTransactionOperation(
     hash: string,
     config: OperationFactoryConfig = {}
-  ): TransactionWalletOperation {
+  ): Promise<TransactionWalletOperation> {
     return new TransactionWalletOperation(
       hash,
       this.context.clone(),
-      this.createHeadObservableFromConfig(config)
+      await this.createHeadObservableFromConfig(config)
     );
   }
 
-  createDelegationOperation(
+  async createDelegationOperation(
     hash: string,
     config: OperationFactoryConfig = {}
-  ): DelegationWalletOperation {
+  ): Promise<DelegationWalletOperation> {
     return new DelegationWalletOperation(
       hash,
       this.context.clone(),
-      this.createHeadObservableFromConfig(config)
+      await this.createHeadObservableFromConfig(config)
     );
   }
 
-  createOriginationOperation(
+  async createOriginationOperation(
     hash: string,
     config: OperationFactoryConfig = {}
-  ): OriginationWalletOperation {
+  ): Promise<OriginationWalletOperation> {
     return new OriginationWalletOperation(
       hash,
       this.context.clone(),
-      this.createHeadObservableFromConfig(config)
+      await this.createHeadObservableFromConfig(config)
     );
   }
 }

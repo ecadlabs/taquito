@@ -84,7 +84,7 @@ The example calls the Contracts `main` function of the contract using the key `1
 
 ```js live noInline
 Tezos.contract
-  .at('KT1DVGnhDBCQuVC61Q38gmDZspnTzX2xvfG3')
+  .at('KT1CALwg9Yp3k9Tmurnj1wbJ5BbAZaY26ETy')
   .then((myContract) => {
     return myContract
       .storage()
@@ -201,7 +201,7 @@ Recall that this contract does not annotate the pairs of the key pair either. We
 
 ```js live noInline
 Tezos.contract
-  .at('KT1DJCtBhx579koVCXW5dgqjX1p9UyyJwAYE')
+  .at('KT1EynnXn4vRiDzutnBiRxQ1kDWD5apgeCKF')
   .then((myContract) => {
     return myContract.storage();
   })
@@ -293,7 +293,7 @@ The `get` method of the `MichelsonMap` class accesses values of the map for a sp
 
 ```js live noInline
 Tezos.contract
-  .at('KT1EtGEMF1uVqPHmsC2iR2wVXf41JGRuzJCC')
+  .at('KT1AbDNSccRufFKDhuatjgiC9zGTTxZhhmZJ')
   .then((myContract) => {
     return myContract.storage();
   })
@@ -387,7 +387,7 @@ The `get` method of the `MichelsonMap` class accesses the values of the map and 
 
 ```js live noInline
 Tezos.contract
-  .at('KT1HBAKtTECxgK1SEy2UqgZxKGL1hiGxJywZ')
+  .at('KT1EApdM8d7MHNKUPKMBmGKsjnoudc3T4Gsm')
   .then((myContract) => {
     return myContract
       .storage()
@@ -439,28 +439,33 @@ After that, Taquito will automatically pack the keys locally when you want to fe
 
 It is possible to fetch multiple big map values using Taquito with one call using the `getMultipleValues` method of the `BigMapAbstraction` class. Taquito will ensure that all fetched big maps come from the same block to ensure a consistent state.
 
-The method takes an `array` of `string` (keys) to query and an optional block level as a parameter and returns an object containing the keys and their value in a well-formatted JSON object format.
+The method takes an `array` of keys to query as a parameter and an optional block level and returns a `MichelsonMap` containing the keys and their value in a well-formatted JSON object format. The accepted types for the keys are `string`, `number` or `object` (the last one is used when the type of the keys in the big map is a Michelson `pair`).
+
+In the following example, we will fetch 4 big map values at once. The Michelson type of the big map key is an `address` and the type of its value is a `pair` made of a `nat` and a `map`. We see in the example that the address `tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn` is not a key of the big map, so its value is set to `undefined` in the returned MichelsonMap.
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/edonet');
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/florencenet');
 
 Tezos.contract
-  .at('KT1L3M2v4KjG5Q8AFEPsXkV2Zdade5LUmV7d')
+  .at('KT1LVfXCMSx24SfRud9sJubtHD8SL5DYGJKk')
   .then((contract) => {
     println('Fetching the storage of the contract...')
     return contract.storage()
   })
   .then((storage) => {
-    println('Fetching the big map values...')
+    println('Fetching the big map values...\n')
     return storage['0'].getMultipleValues([
       'tz3PNdfg3Fc8hH4m9iSs7bHgDgugsufJnBZ1', 
       'tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD', 
+      'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
       'tz3YjfexGakCDeCseXFUpcXPSAN9xHxE9TH2'
     ]);
   })
-  .then((values) =>{
-    println(JSON.stringify(values, null, 2))
+  .then((values) => {
+    values.forEach((value, key) => {
+      println(`The value of the key ${key} is:\n${JSON.stringify(value, null, 2)}.\n`)
+    })
   })
   .catch((error) => println(JSON.stringify(error)));
 ```

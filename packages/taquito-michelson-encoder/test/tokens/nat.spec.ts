@@ -41,4 +41,19 @@ describe('Nat token', () => {
       expect(() => token.Encode([{}])).toThrowError(NatValidationError);
     });
   });
+
+  describe('ToBigMapKey', () => {
+  it('accepts a number as parameter', () => {
+      expect(token.ToBigMapKey(10)).toEqual({
+        key: { int: '10' },
+        type: { prim: NatToken.prim },
+      });
+    });
+  it('accepts a string as parameter', () => {
+      expect(token.ToBigMapKey('10')).toEqual({
+        key: { int: '10' },
+        type: { prim: NatToken.prim },
+      });    
+    });
+  });
 });

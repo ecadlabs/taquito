@@ -26,7 +26,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       }
 
       try {
-        // Bypass estimation by specifyint fee & limits
+        // Bypass estimation by specify int fee & limits
         await contract.methods.default(null).send({ fee: 20000, gasLimit: 20000, storageLimit: 0 })
       } catch (ex) {
         expect(ex.message).toMatch('test')

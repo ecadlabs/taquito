@@ -1,6 +1,6 @@
 {
   "name": "@taquito/tzip12",
-  "version": "8.1.0",
+  "version": "9.0.0",
   "description": "Tzip12",
   "keywords": [
     "tezos",
@@ -27,8 +27,9 @@
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "test": "jest --collectCoverage",
-    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts ",
-    "start": "rollup -c rollup.config.ts -w"
+    "version-stamp": "node ../taquito/version-stamping.js",
+    "build": "npm run version-stamp && tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts ",
+    "start": "npm run version-stamp && rollup -c rollup.config.ts -w"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
@@ -58,9 +59,9 @@
     ]
   },
   "dependencies": {
-    "@taquito/michelson-encoder": "^8.1.0",
-    "@taquito/taquito": "^8.1.0",
-    "@taquito/tzip16": "^8.1.0",
+    "@taquito/michelson-encoder": "^9.0.0",
+    "@taquito/taquito": "^9.0.0",
+    "@taquito/tzip16": "^9.0.0",
     "bignumber.js": "^9.0.1"
   },
   "devDependencies": {

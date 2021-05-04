@@ -97,7 +97,7 @@ A sequence diagram can be found [here](tzip16-sequence-diagram#get-the-metadata)
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = "KT1JSB3jbDgGwT8oDf5dyeNZTEXsqAsoc5RN";
+const contractAddress = "KT1T2KNHdrPwLE4TZcGr6mVZt1s6k9j7tHCV";
 
 Tezos.contract.at(contractAddress, tzip16)
 .then(contract => {
@@ -119,7 +119,7 @@ Tezos.contract.at(contractAddress, tzip16)
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = "KT1Xt9XxQDHKyY8W4UrkZwNDmkcEiJUGDrVk";
+const contractAddress = "KT1PmcPVoEeyT6hQb7gNJknoYpx9YpWKWhcE";
 
 Tezos.contract.at(contractAddress, tzip16)
 .then(contract => {
@@ -141,7 +141,7 @@ An example having a SHA256 hash:
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = "KT1AdN1qjUpSqXZJ17uUj7dBS7CByCTQpSun";
+const contractAddress = "KT1HgjtPfdtqYANWdxctH9DeECdAb4jR7eyE";
 
 Tezos.contract.at(contractAddress, tzip16)
 .then(contract => {
@@ -163,7 +163,7 @@ Tezos.contract.at(contractAddress, tzip16)
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = "KT1NQsKsNH2X4v5ofdAo444meDXrPdoEY3se";
+const contractAddress = "KT1C4ANAuqTJa22Xb7dxzdebeFbmvNghh7Pv";
 
 Tezos.contract.at(contractAddress, tzip16)
 .then(contract => {
@@ -180,7 +180,7 @@ Tezos.contract.at(contractAddress, tzip16)
 
 A sequence diagram can be found [here](tzip16-sequence-diagram#execute-a-view).
 
-In the next example, we will run a view named `someJson` that can be found in the metadata of the contract `KT1HJ124AC3fxgq92YTze4EmuHs4T4tzqYtx`. When we inspect those metadata, we can see that this view takes no parameter, has a returnType of bytes and has the following code:
+In the next example, we will run a view named `someJson` that can be found in the metadata of the contract `KT1T2KNHdrPwLE4TZcGr6mVZt1s6k9j7tHCV`. When we inspect those metadata, we can see that this view takes no parameter, has a returnType of bytes and has the following code:
 
 ```
 "code": 
@@ -215,7 +215,7 @@ Try to run the view:
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = "KT1HJ124AC3fxgq92YTze4EmuHs4T4tzqYtx";
+const contractAddress = "KT1T2KNHdrPwLE4TZcGr6mVZt1s6k9j7tHCV";
 
 Tezos.contract.at(contractAddress, tzip16)
 .then(contract => {
@@ -232,7 +232,7 @@ Tezos.contract.at(contractAddress, tzip16)
 .catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
-In the next example, we will run a view named `multiply-the-nat-in-storage` that can be found in the metadata of the contract `KT1XcGsJxQ82EQPnJwi8iVA3Sb44cwcQQ3io`. When we inspect those metadata, we can see that this view takes a `nat` has a parameter, has a returnType of `nat` and has the following instructions: `DUP, CDR, CAR, SWAP, CAR, MUL`.
+In the next example, we will run a view named `multiply-the-nat-in-storage` that can be found in the metadata of the contract `KT1EaeTNwTzxkS45kkTuDN4rqAghDTLn95La`. When we inspect those metadata, we can see that this view takes a `nat` has a parameter, has a returnType of `nat` and has the following instructions: `DUP, CDR, CAR, SWAP, CAR, MUL`.
 
 Try to run the view:
 
@@ -243,7 +243,7 @@ Try to run the view:
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = "KT1A4fFRqbmyTkjThNoqqzpPpuE2FhAT9yez";
+const contractAddress = "KT1EaeTNwTzxkS45kkTuDN4rqAghDTLn95La";
 
 Tezos.contract.at(contractAddress, tzip16)
 .then(contract => {
@@ -271,7 +271,7 @@ In the next example we execute the view `multiply-the-nat-in-storage` in a custo
 // import { MichelsonStorageView } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
 
-const contractAddress = "KT1XcGsJxQ82EQPnJwi8iVA3Sb44cwcQQ3io";
+const contractAddress = "KT1EaeTNwTzxkS45kkTuDN4rqAghDTLn95La";
 
 Tezos.contract.at(contractAddress)
 .then(contract => {

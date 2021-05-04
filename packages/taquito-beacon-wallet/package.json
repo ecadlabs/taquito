@@ -1,6 +1,6 @@
 {
   "name": "@taquito/beacon-wallet",
-  "version": "8.1.0",
+  "version": "9.0.0",
   "description": "Beacon wallet provider",
   "keywords": [
     "tezos",
@@ -30,8 +30,9 @@
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
-    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts ",
-    "start": "rollup -c rollup.config.ts -w"
+    "version-stamp": "node ../taquito/version-stamping.js",
+    "build": "npm run version-stamp && tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts ",
+    "start": "npm run version-stamp && rollup -c rollup.config.ts -w"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
@@ -60,9 +61,9 @@
     ]
   },
   "dependencies": {
-    "@airgap/beacon-sdk": "^2.2.3",
-    "@taquito/taquito": "^8.1.0",
-    "@taquito/utils": "^8.1.0"
+    "@airgap/beacon-sdk": "^2.2.5",
+    "@taquito/taquito": "^9.0.0",
+    "@taquito/utils": "^9.0.0"
   },
   "devDependencies": {
     "@types/chrome": "0.0.126",

@@ -17,6 +17,9 @@ import { ParserProvider } from './parser/interface';
 import { MichelCodecParser } from './parser/michel-codec-parser';
 import { Packer } from './packer/interface';
 import { RpcPacker } from './packer/rpc-packer';
+import BigNumber from 'bignumber.js';
+import { retry } from 'rxjs/operators';
+import { OperatorFunction } from 'rxjs';
 
 export interface TaquitoProvider<T, K extends Array<any>> {
   new (context: Context, ...rest: K): T;
@@ -30,13 +33,14 @@ export interface Config {
   confirmationPollingTimeoutSecond?: number;
   defaultConfirmationCount?: number;
   shouldObservableSubscriptionRetry?: boolean;
+  observableSubscriptionRetryFunction?: OperatorFunction<any,any>;
 }
 
-export const defaultConfig: Required<Config> = {
-  confirmationPollingIntervalSecond: 10,
+export const defaultConfig: Partial<Config> = {
   defaultConfirmationCount: 1,
   confirmationPollingTimeoutSecond: 180,
-  shouldObservableSubscriptionRetry: false
+  shouldObservableSubscriptionRetry: false,
+  observableSubscriptionRetryFunction: retry()
 };
 
 /**
@@ -82,11 +86,11 @@ export class Context {
     this._packer = packer? packer: new RpcPacker(this);
   }
 
-  get config(): Required<Config> {
+  get config(): Partial<Config> {
     return this._config as any;
   }
 
-  set config(value: Required<Config>) {
+  set config(value: Partial<Config>) {
     this._config = {
       ...defaultConfig,
       ...value,
@@ -166,6 +170,28 @@ export class Context {
     }
   }
 
+  async getConfirmationPollingInterval() {
+    try {
+      const constants = await this.rpc.getConstants();
+      let confirmationPollingInterval = BigNumber.sum(constants.time_between_blocks[0], 
+        new BigNumber(constants.delay_per_missing_endorsement!)
+        .multipliedBy(Math.max(0, constants.initial_endorsers! - constants.endorsers_per_block))
+      );
+      
+      // Divide the polling interval by a constant 3
+      // to improvise for polling time to work in prod,
+      // testnet and sandbox enviornment.   
+      confirmationPollingInterval = confirmationPollingInterval.dividedBy(3);  
+      this.config.confirmationPollingIntervalSecond = confirmationPollingInterval.toNumber();
+      return this.config.confirmationPollingIntervalSecond;
+    } catch (exception) {
+      // Return default value if there is
+      // an issue returning from constants
+      // file.
+      return 10;
+    }
+  }
+  
   /**
    * @description Create a copy of the current context. Useful when you have long running operation and you do not want a context change to affect the operation
    */
