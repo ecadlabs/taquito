@@ -19,7 +19,7 @@ import {
   TransferParams,
   RevealParams,
 } from '../operations/types';
-import { Estimate } from './estimate';
+import { Estimate, EstimateProperties } from './estimate';
 import { EstimationOptions, EstimationProvider } from './interface';
 import {
   createOriginationOperation,
@@ -33,14 +33,6 @@ interface Limits {
   fee?: number;
   storageLimit?: number;
   gasLimit?: number;
-}
-
-interface EstimateProperties {
-  milligasLimit: number,
-  storageLimit: number,
-  opSize: number,
-  minimalFeePerStorageByteMutez: number,
-  baseFeeMutez?: number
 }
 
 const mergeLimits = (
@@ -174,7 +166,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    *
    * @param OriginationOperation Originate operation parameter
    */
-  async originate({ fee, storageLimit, gasLimit, ...rest }: OriginateParams, estimationOptions: EstimationOptions = { includeRevealOperation: true }) {
+  async originate({ fee, storageLimit, gasLimit, ...rest }: OriginateParams, estimationOptions: EstimationOptions = { includeRevealOperation: false }) {
     const pkh = await this.signer.publicKeyHash();
     const DEFAULT_PARAMS = await this.getAccountLimits(pkh);
     const op = await createOriginationOperation(
@@ -189,7 +181,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     if (!estimationOptions.includeRevealOperation && isRevealNeeded) {
       estimateProperties.shift();
     }
-    return this.createEstimateObject(estimateProperties);
+    return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
   /**
    *
@@ -199,7 +191,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    *
    * @param TransferOperation Originate operation parameter
    */
-  async transfer({ fee, storageLimit, gasLimit, ...rest }: TransferParams, estimationOptions: EstimationOptions = { includeRevealOperation: true }) {
+  async transfer({ fee, storageLimit, gasLimit, ...rest }: TransferParams, estimationOptions: EstimationOptions = { includeRevealOperation: false }) {
     const pkh = await this.signer.publicKeyHash();
     const DEFAULT_PARAMS = await this.getAccountLimits(pkh);
     const op = await createTransferOperation({
@@ -212,7 +204,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     if (!estimationOptions.includeRevealOperation && isRevealNeeded) {
       estimateProperties.shift();
     }
-    return this.createEstimateObject(estimateProperties);
+    return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
 
   /**
@@ -223,7 +215,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    *
    * @param Estimate
    */
-  async setDelegate({ fee, gasLimit, storageLimit, ...rest }: DelegateParams, estimationOptions: EstimationOptions = { includeRevealOperation: true }) {
+  async setDelegate({ fee, gasLimit, storageLimit, ...rest }: DelegateParams, estimationOptions: EstimationOptions = { includeRevealOperation: false }) {
     const pkh = await this.signer.publicKeyHash();
     const sourceOrDefault = rest.source || pkh;
     const DEFAULT_PARAMS = await this.getAccountLimits(sourceOrDefault);
@@ -237,10 +229,10 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     if (!estimationOptions.includeRevealOperation && isRevealNeeded) {
       estimateProperties.shift();
     }
-    return this.createEstimateObject(estimateProperties);
+    return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
 
-  async batch(params: ParamsWithKind[], estimationOptions: EstimationOptions = { includeRevealOperation: true }) {
+  async batch(params: ParamsWithKind[], estimationOptions: EstimationOptions = { includeRevealOperation: false }) {
     const pkh = await this.signer.publicKeyHash();
     let operations: RPCOperation[] = [];
     const DEFAULT_PARAMS = await this.getAccountLimits(pkh);
@@ -287,7 +279,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     if (!estimationOptions.includeRevealOperation && isRevealNeeded) {
       estimateProperties.shift();
     }
-    return this.createEstimateObjectsArray(estimateProperties);
+    return Estimate.createArrayEstimateInstancesFromProperties(estimateProperties);
   }
 
   /**
@@ -298,7 +290,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    *
    * @param Estimate
    */
-  async registerDelegate(params: RegisterDelegateParams, estimationOptions: EstimationOptions = { includeRevealOperation: true }) {
+  async registerDelegate(params: RegisterDelegateParams, estimationOptions: EstimationOptions = { includeRevealOperation: false }) {
     const pkh = await this.signer.publicKeyHash()
     const DEFAULT_PARAMS = await this.getAccountLimits(pkh);
     const op = await createRegisterDelegateOperation(
@@ -311,7 +303,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     if (!estimationOptions.includeRevealOperation && isRevealNeeded) {
       estimateProperties.shift();
     }
-    return this.createEstimateObject(estimateProperties);
+    return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
 
   /**
@@ -333,7 +325,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
         await this.signer.publicKey()
       )
       const estimateProperties = await this.prepareEstimate({ operation: op, source: pkh });
-      return this.createEstimateObject(estimateProperties);
+      return Estimate.createEstimateInstanceFromProperties(estimateProperties);
     }
   }
 
@@ -360,35 +352,5 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
         await this.signer.publicKey())
     )
     return op;
-  }
-
-  // Create an Estimate instance that include both reveal and operation fees
-  private createEstimateObject(estimateProperties: EstimateProperties[]) {
-    let milligasLimit = 0;
-    let storageLimit = 0;
-    let opSize = 0;
-    let minimalFeePerStorageByteMutez = 0;
-    let baseFeeMutez: number | undefined;
-
-    estimateProperties.forEach(estimate => {
-      milligasLimit += estimate.milligasLimit;
-      storageLimit += estimate.storageLimit;
-      opSize += estimate.opSize;
-      minimalFeePerStorageByteMutez = Math.max(estimate.minimalFeePerStorageByteMutez, minimalFeePerStorageByteMutez);
-      if (estimate.baseFeeMutez) {
-        baseFeeMutez = baseFeeMutez ? baseFeeMutez + estimate.baseFeeMutez : estimate.baseFeeMutez;
-      }
-    })
-    return new Estimate(milligasLimit, storageLimit, opSize, minimalFeePerStorageByteMutez, baseFeeMutez);
-  }
-
-  // Create separate instances of Estimate for each operation from the batch operation
-  private createEstimateObjectsArray(estimateProperties: EstimateProperties[]) {
-    const estimates: Estimate[] = [];
-
-    estimateProperties.forEach(estimate => {
-      estimates.push(new Estimate(estimate.milligasLimit, estimate.storageLimit, estimate.opSize, estimate.minimalFeePerStorageByteMutez, estimate.baseFeeMutez))
-    })
-    return estimates;
   }
 }

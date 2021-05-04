@@ -133,7 +133,7 @@ describe('RPCEstimateProvider test', () => {
       const estimate = await estimateProvider.transfer({
         to: 'test_to',
         amount: 2,
-      });
+      }, { includeRevealOperation: true });
       expect(estimate).toMatchObject({
         gasLimit: 50928,
         storageLimit: 634,
@@ -170,7 +170,7 @@ describe('RPCEstimateProvider test', () => {
       const estimate = await estimateProvider.transfer({
         to: 'test_to',
         amount: 2,
-      });
+      }, { includeRevealOperation: true });
 
       expect(estimate).toMatchObject({
         gasLimit: 46875,
@@ -208,7 +208,7 @@ describe('RPCEstimateProvider test', () => {
       const estimate = await estimateProvider.setDelegate({
         source: 'test',
         delegate: 'test',
-      });
+      }, { includeRevealOperation: true });
 
       expect(estimate).toMatchObject({
         gasLimit: 20100,
@@ -246,7 +246,7 @@ describe('RPCEstimateProvider test', () => {
       const estimate = await estimateProvider.originate({
         code: ligoSample,
         storage: 0,
-      });
+      }, { includeRevealOperation: true });
 
       expect(estimate).toMatchObject({
         gasLimit: 27932,
@@ -284,7 +284,7 @@ describe('RPCEstimateProvider test', () => {
       const estimate = await estimateProvider.transfer({
         to: 'test_to',
         amount: 2,
-      });
+      }, { includeRevealOperation: true });
 
       expect(estimate).toMatchObject({
         gasLimit: 36260,
@@ -322,7 +322,7 @@ describe('RPCEstimateProvider test', () => {
       const estimate = await estimateProvider.transfer({
         to: 'test_to',
         amount: 2,
-      });
+      }, { includeRevealOperation: true });
 
       expect(estimate).toMatchObject({
         gasLimit: 20307,
@@ -360,7 +360,7 @@ describe('RPCEstimateProvider test', () => {
       const estimate = await estimateProvider.transfer({
         to: 'test_to',
         amount: 2,
-      });
+      }, { includeRevealOperation: true });
 
       expect(estimate).toMatchObject({
         gasLimit: 20307,
@@ -706,7 +706,7 @@ describe('RPCEstimateProvider test', () => {
       const estimate = await estimateProvider.batch([
         { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 },
         { kind: OpKind.TRANSACTION, to: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp', amount: 2 }
-      ]);
+      ], { includeRevealOperation: true });
       expect(estimate.length).toEqual(3);
 
       expect(estimate[0]).toMatchObject({
