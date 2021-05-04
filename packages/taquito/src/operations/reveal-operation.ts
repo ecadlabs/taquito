@@ -29,7 +29,7 @@ export class RevealOperation extends Operation
   get operationResults() {
     const revealOp =
       Array.isArray(this.results) &&
-      (this.results.find(op => op.kind === 'transaction') as OperationContentsAndResultReveal);
+      (this.results.find(op => op.kind === 'reveal') as OperationContentsAndResultReveal);
     return revealOp ? [revealOp] : [];
   }
 
