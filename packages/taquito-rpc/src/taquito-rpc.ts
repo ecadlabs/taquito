@@ -49,6 +49,8 @@ export * from './types';
 
 export { OpKind } from './opkind';
 
+export { VERSION } from './version';
+
 const defaultChain = 'main';
 
 interface RPCOptions {

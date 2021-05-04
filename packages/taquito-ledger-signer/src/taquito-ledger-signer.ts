@@ -28,6 +28,8 @@ export const HDPathTemplate = (account: number) => {
   return `44'/1729'/${account}'/0'`;
 };
 
+export { VERSION } from './version';
+
 /**
  *
  * @description Implementation of the Signer interface that will allow signing operation from a Ledger Nano device 
