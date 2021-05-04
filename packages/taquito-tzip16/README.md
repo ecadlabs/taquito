@@ -1,10 +1,10 @@
-# Taquito Utils package 
+# Taquito TZip-16 package
 
-`@taquito/utils` is an npm package that provides developers with utility functionality for Taquito. It can be injected as follows:
+`@taquito/tezbridge-tzip16` is an npm package that provides developers with TZip-16 functionality for Taquito. It can be injected as follows:
 
 ```ts
 import { TezosToolkit } from '@taquito/taquito'
-import { Utilities } from '@taquito/utils'
+import { TZip16 } from '@taquito/tzip16'
 
 ```
 
@@ -12,7 +12,7 @@ See the top-level [https://github.com/ecadlabs/taquito](https://github.com/ecadl
 
 ## API Documentation
 
-TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_utils.html)
+TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_tzip16.html)
 
 ## Disclaimer
 

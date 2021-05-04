@@ -1,19 +1,18 @@
+# Taquito Beacon Wallet package
 
-# Taquito Local forging package
-
-`@taquito/local-forging` is an npm package that provides developers with local forging functionality for Taquito. It can be injected as follow.
+`@taquito/taquito-beacon-wallet` is an npm package that provides developers with beacon wallet functionality for Taquito. It can be injected as follows:
 
 ```ts
 import { TezosToolkit } from '@taquito/taquito'
-import { LocalForger } from '@taquito/local-forging'
-Tezos.setProvider({ forger: localForger })
+import { BeaconWallet } from '@taquito/beacon-wallet'
+
 ```
 
 See the top-level [https://github.com/ecadlabs/taquito](https://github.com/ecadlabs/taquito) file for details on reporting issues, contributing and versioning.
 
 ## API Documentation
 
-TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_local_forging.html)
+TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_beacon_wallet.html)
 
 ## Disclaimer
 

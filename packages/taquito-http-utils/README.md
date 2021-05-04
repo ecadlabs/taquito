@@ -1,10 +1,10 @@
-# Taquito Utils package 
+# Taquito HTTP Utilities package
 
-`@taquito/utils` is an npm package that provides developers with utility functionality for Taquito. It can be injected as follows:
+`@taquito/http-utils` is an npm package that provides developers with Beacon wallet functionality for Taquito. It can be injected as follows:
 
 ```ts
 import { TezosToolkit } from '@taquito/taquito'
-import { Utilities } from '@taquito/utils'
+import { HttpBackend } from '@taquito/http-utils'
 
 ```
 
@@ -12,7 +12,7 @@ See the top-level [https://github.com/ecadlabs/taquito](https://github.com/ecadl
 
 ## API Documentation
 
-TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_utils.html)
+TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_http_utils.html)
 
 ## Disclaimer
 
