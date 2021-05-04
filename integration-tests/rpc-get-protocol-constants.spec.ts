@@ -4,7 +4,6 @@ import { ConstantsResponse } from "@taquito/rpc";
 const rpcUrl = 'https://api.tez.ie/rpc/mainnet';
 const delphinetUrl = 'https://api.tez.ie/rpc/delphinet';
 const Tezos = new TezosToolkit(rpcUrl);
-const TezosDelphi = new TezosToolkit(delphinetUrl);
 
 describe('Fetch constants for all protocols on Mainnet', () => {
     // tests
@@ -18,12 +17,11 @@ describe('Fetch constants for all protocols on Mainnet', () => {
         done();
     })
 
-    // TODO: Test that we aren't getting any extra properties. Currently, tests will pass even if we had extra properties in JSON response
-    it('successfully fetches Proto1 constants at level 1', async (done) => {
+       it('successfully fetches Proto1 constants at level 1', async (done) => {
         try {
             // Get constants for protocol
             const constants = await Tezos.rpc.getConstants({ block: "1" });
-            // expect(constants).toBeInstanceOf(ConstantsResponse);
+            expect(Object.keys(constants)).toHaveLength(24)
             expect(constants).toHaveProperty("proof_of_work_nonce_size", 8);
             expect(constants).toHaveProperty("nonce_length", 32);
             expect(constants).toHaveProperty("max_revelations_per_block", 32);
@@ -44,9 +42,7 @@ describe('Fetch constants for all protocols on Mainnet', () => {
             expect(constants.origination_burn?.toString()).toEqual("257000");
             expect(constants.block_security_deposit.toString()).toEqual("0");
             expect(constants.endorsement_security_deposit.toString()).toEqual("0");
-            if (constants.block_reward) {
-                expect(constants.block_reward?.toString()).toEqual("0");
-            } 
+            expect(constants.block_reward?.toString()).toEqual("0");
             expect(constants.endorsement_reward.toString()).toEqual("0");
             expect(constants.cost_per_byte.toString()).toEqual("1000");
             expect(constants.hard_storage_limit_per_operation.toString()).toEqual("60000");
@@ -59,7 +55,7 @@ describe('Fetch constants for all protocols on Mainnet', () => {
     it('successfully fetches Proto1 constants at level 2', async (done) => {
         try {
             const constants = await Tezos.rpc.getConstants({ block: "2" });
-
+            expect(Object.keys(constants)).toHaveLength(24)
             expect(constants).toHaveProperty("proof_of_work_nonce_size", 8);
             expect(constants).toHaveProperty("nonce_length", 32);
             expect(constants).toHaveProperty("max_revelations_per_block", 32);
@@ -80,9 +76,7 @@ describe('Fetch constants for all protocols on Mainnet', () => {
             expect(constants.origination_burn?.toString()).toEqual("257000");
             expect(constants.block_security_deposit.toString()).toEqual("0");
             expect(constants.endorsement_security_deposit.toString()).toEqual("0");
-            if (constants.block_reward) {
-                expect(constants.block_reward?.toString()).toEqual("0");
-            } 
+            expect(constants.block_reward?.toString()).toEqual("0");
             expect(constants.endorsement_reward.toString()).toEqual("0");
             expect(constants.cost_per_byte.toString()).toEqual("1000");
             expect(constants.hard_storage_limit_per_operation.toString()).toEqual("60000");
@@ -96,7 +90,7 @@ describe('Fetch constants for all protocols on Mainnet', () => {
     it('successfully fetches Proto2 constants at level 100000', async (done) => {
         try {
             const constants = await Tezos.rpc.getConstants({ block: "100000" });
-
+            expect(Object.keys(constants)).toHaveLength(24)
             expect(constants).toHaveProperty("proof_of_work_nonce_size", 8);
             expect(constants).toHaveProperty("nonce_length", 32);
             expect(constants).toHaveProperty("max_revelations_per_block", 32);
@@ -117,9 +111,7 @@ describe('Fetch constants for all protocols on Mainnet', () => {
             expect(constants.origination_burn?.toString()).toEqual("257000");
             expect(constants.block_security_deposit.toString()).toEqual("192000000");
             expect(constants.endorsement_security_deposit.toString()).toEqual("24000000");
-            if (constants.block_reward) {
-                expect(constants.block_reward.toString()).toEqual("16000000");
-            }
+            expect(constants.block_reward?.toString()).toEqual("16000000");
             expect(constants.endorsement_reward.toString()).toEqual("2000000");
             expect(constants.cost_per_byte.toString()).toEqual("1000");
             expect(constants.hard_storage_limit_per_operation.toString()).toEqual("60000");
@@ -132,7 +124,7 @@ describe('Fetch constants for all protocols on Mainnet', () => {
     it('successfully fetches Proto3 constants at level 300000', async (done) => {
         try {
             const constants = await Tezos.rpc.getConstants({ block: "300000" });
-
+            expect(Object.keys(constants)).toHaveLength(25)
             expect(constants).toHaveProperty("proof_of_work_nonce_size", 8);
             expect(constants).toHaveProperty("nonce_length", 32);
             expect(constants).toHaveProperty("max_revelations_per_block", 32);
@@ -154,9 +146,7 @@ describe('Fetch constants for all protocols on Mainnet', () => {
             expect(constants).toHaveProperty("origination_size", 257);
             expect(constants.block_security_deposit.toString()).toEqual("512000000");
             expect(constants.endorsement_security_deposit.toString()).toEqual("64000000");
-            if (constants.block_reward) {
-                expect(constants.block_reward?.toString()).toEqual("16000000");
-            } 
+            expect(constants.block_reward?.toString()).toEqual("16000000");
             expect(constants.endorsement_reward.toString()).toEqual("2000000");
             expect(constants.cost_per_byte.toString()).toEqual("1000");
             expect(constants.hard_storage_limit_per_operation.toString()).toEqual("60000");
@@ -170,7 +160,7 @@ describe('Fetch constants for all protocols on Mainnet', () => {
     it('successfully fetches Proto4 constants at level 600000', async (done) => {
         try {
             const constants = await Tezos.rpc.getConstants({ block: "600000" });
-
+            expect(Object.keys(constants)).toHaveLength(26)
             expect(constants).toHaveProperty("proof_of_work_nonce_size", 8);
             expect(constants).toHaveProperty("nonce_length", 32);
             expect(constants).toHaveProperty("max_revelations_per_block", 32);
@@ -192,16 +182,11 @@ describe('Fetch constants for all protocols on Mainnet', () => {
             expect(constants).toHaveProperty("origination_size", 257);
             expect(constants.block_security_deposit.toString()).toEqual("512000000");
             expect(constants.endorsement_security_deposit.toString()).toEqual("64000000");
-            if (constants.block_reward) {
-                expect(constants.block_reward?.toString()).toEqual("16000000");
-            }
+            expect(constants.block_reward?.toString()).toEqual("16000000");
             expect(constants.endorsement_reward.toString()).toEqual("2000000");
             expect(constants.cost_per_byte.toString()).toEqual("1000");
             expect(constants.hard_storage_limit_per_operation.toString()).toEqual("60000");
-            if (constants.test_chain_duration) {
-                expect(constants.test_chain_duration?.toString()).toEqual("1966080");
-            } 
-
+            expect(constants.test_chain_duration?.toString()).toEqual("1966080");
         } catch (ex) {
             fail(ex);
         }
@@ -212,6 +197,7 @@ describe('Fetch constants for all protocols on Mainnet', () => {
     it('successfully fetches Proto5 constants at level 700000', async (done) => {
         try {
             const constants = await Tezos.rpc.getConstants({ block: "700000" });
+            expect(Object.keys(constants)).toHaveLength(31)
             expect(constants).toHaveProperty("proof_of_work_nonce_size", 8);
             expect(constants).toHaveProperty("nonce_length", 32);
             expect(constants).toHaveProperty("max_revelations_per_block", 32);
@@ -233,32 +219,17 @@ describe('Fetch constants for all protocols on Mainnet', () => {
             expect(constants).toHaveProperty("origination_size", 257);
             expect(constants.block_security_deposit.toString()).toEqual("512000000");
             expect(constants.endorsement_security_deposit.toString()).toEqual("64000000");
-            if (constants.block_reward) {
-                expect(constants.block_reward?.toString()).toEqual("16000000");
-            } 
+            expect(constants.block_reward?.toString()).toEqual("16000000");
             expect(constants.endorsement_reward.toString()).toEqual("2000000");
             expect(constants.cost_per_byte.toString()).toEqual("1000");
             expect(constants.hard_storage_limit_per_operation.toString()).toEqual("60000");
-
-            if (constants.test_chain_duration) {
-                expect(constants.test_chain_duration?.toString()).toEqual("1966080");
-            } 
-            if (constants.quorum_min) {
-                expect(constants).toHaveProperty("quorum_min", 2000);
-            } 
-            if (constants.quorum_max) {
-                expect(constants).toHaveProperty("quorum_max", 7000);
-            }
-            if (constants.min_proposal_quorum) {
-                expect(constants).toHaveProperty("min_proposal_quorum", 500);
-            } 
-            if (constants.initial_endorsers) {
-                expect(constants).toHaveProperty("initial_endorsers", 24);
-            }
-            if (constants.delay_per_missing_endorsement) {
-                expect(constants.delay_per_missing_endorsement.toString()).toEqual("8");
-            }
-        } catch (ex) {
+            expect(constants.test_chain_duration?.toString()).toEqual("1966080");
+            expect(constants).toHaveProperty("quorum_min", 2000);
+            expect(constants).toHaveProperty("quorum_max", 7000);
+            expect(constants).toHaveProperty("min_proposal_quorum", 500);
+            expect(constants).toHaveProperty("initial_endorsers", 24);         
+            expect(constants.delay_per_missing_endorsement?.toString()).toEqual("8");
+            } catch (ex) {
             fail(ex);
         }
         done();
@@ -267,6 +238,7 @@ describe('Fetch constants for all protocols on Mainnet', () => {
     it('successfully fetches Proto6 constants at level 900000', async (done) => {
         try {
             const constants = await Tezos.rpc.getConstants({ block: "900000" });
+            expect(Object.keys(constants)).toHaveLength(31)
             expect(constants).toHaveProperty("proof_of_work_nonce_size", 8);
             expect(constants).toHaveProperty("nonce_length", 32);
             expect(constants).toHaveProperty("max_revelations_per_block", 32);
@@ -288,32 +260,16 @@ describe('Fetch constants for all protocols on Mainnet', () => {
             expect(constants).toHaveProperty("origination_size", 257);
             expect(constants.block_security_deposit.toString()).toEqual("512000000");
             expect(constants.endorsement_security_deposit.toString()).toEqual("64000000");
-            if (constants.baking_reward_per_endorsement) {
-                expect(constants.baking_reward_per_endorsement.toString()).toEqual("1250000,187500");
-            }
+            expect(constants.baking_reward_per_endorsement?.toString()).toEqual("1250000,187500");
             expect(constants.endorsement_reward.toString()).toEqual("1250000,833333");
             expect(constants.cost_per_byte.toString()).toEqual("1000");
             expect(constants.hard_storage_limit_per_operation.toString()).toEqual("60000");
-            if (constants.test_chain_duration) {
-                expect(constants.test_chain_duration?.toString()).toEqual("1966080");
-            } 
-
-            if (constants.quorum_min) {
-                expect(constants).toHaveProperty("quorum_min", 2000);
-            } 
-
-            if (constants.quorum_max) {
-                expect(constants).toHaveProperty("quorum_max", 7000);
-            } 
-            if (constants.min_proposal_quorum) {
-                expect(constants).toHaveProperty("min_proposal_quorum", 500);
-            }
-            if (constants.initial_endorsers) {
-                expect(constants).toHaveProperty("initial_endorsers", 24);
-            }
-            if (constants.delay_per_missing_endorsement) {
-                expect(constants.delay_per_missing_endorsement.toString()).toEqual("8");
-            } 
+            expect(constants.test_chain_duration?.toString()).toEqual("1966080");
+            expect(constants).toHaveProperty("quorum_min", 2000);
+            expect(constants).toHaveProperty("quorum_max", 7000);
+            expect(constants).toHaveProperty("min_proposal_quorum", 500);
+            expect(constants).toHaveProperty("initial_endorsers", 24);
+            expect(constants.delay_per_missing_endorsement?.toString()).toEqual("8");
         } catch (ex) {
             fail(ex);
         }
@@ -323,6 +279,7 @@ describe('Fetch constants for all protocols on Mainnet', () => {
     it('successfully fetches Proto7 constants at level 1212416', async (done) => {
         try {
             const constants = await Tezos.rpc.getConstants({ block: "1212416" });
+            expect(Object.keys(constants)).toHaveLength(31)
             expect(constants).toHaveProperty("proof_of_work_nonce_size", 8);
             expect(constants).toHaveProperty("nonce_length", 32);
             expect(constants).toHaveProperty("max_operation_data_length", 16384);
@@ -343,31 +300,16 @@ describe('Fetch constants for all protocols on Mainnet', () => {
             expect(constants).toHaveProperty("origination_size", 257);
             expect(constants.block_security_deposit.toString()).toEqual("512000000");
             expect(constants.endorsement_security_deposit.toString()).toEqual("64000000");
-            if (constants.baking_reward_per_endorsement) {
-                expect(constants.baking_reward_per_endorsement.toString()).toEqual("1250000,187500");
-            }
+            expect(constants.baking_reward_per_endorsement?.toString()).toEqual("1250000,187500");
             expect(constants.endorsement_reward.toString()).toEqual("1250000,833333");
             expect(constants.cost_per_byte.toString()).toEqual("250");
             expect(constants.hard_storage_limit_per_operation.toString()).toEqual("60000");
-            if (constants.test_chain_duration) {
-                expect(constants.test_chain_duration?.toString()).toEqual("1966080");
-            } 
-            if (constants.quorum_min) {
-                expect(constants).toHaveProperty("quorum_min", 2000);
-            } 
-            if (constants.quorum_max) {
-                expect(constants).toHaveProperty("quorum_max", 7000);
-            } 
-            if (constants.min_proposal_quorum) {
-                expect(constants).toHaveProperty("min_proposal_quorum", 500);
-            } 
-            if (constants.initial_endorsers) {
-                expect(constants).toHaveProperty("initial_endorsers", 24);
-            } 
-            if (constants.delay_per_missing_endorsement) {
-                expect(constants.delay_per_missing_endorsement.toString()).toEqual("8");
-            } 
-
+            expect(constants.test_chain_duration?.toString()).toEqual("1966080");
+            expect(constants).toHaveProperty("quorum_min", 2000);
+            expect(constants).toHaveProperty("quorum_max", 7000);
+            expect(constants).toHaveProperty("min_proposal_quorum", 500);
+            expect(constants).toHaveProperty("initial_endorsers", 24);
+            expect(constants.delay_per_missing_endorsement?.toString()).toEqual("8");
         } catch (ex) {
             fail(ex);
         }
@@ -378,6 +320,7 @@ describe('Fetch constants for all protocols on Mainnet', () => {
     it('successfully fetches Proto8 constants at level 1350000', async (done) => {
         try {
             const constants = await Tezos.rpc.getConstants({ block: "1350000" });
+            expect(Object.keys(constants)).toHaveLength(31)
             expect(constants).toHaveProperty("proof_of_work_nonce_size", 8);
             expect(constants).toHaveProperty("nonce_length", 32);
             expect(constants).toHaveProperty("max_operation_data_length", 16384);
@@ -398,41 +341,19 @@ describe('Fetch constants for all protocols on Mainnet', () => {
             expect(constants).toHaveProperty("origination_size", 257);
             expect(constants.block_security_deposit.toString()).toEqual("512000000");
             expect(constants.endorsement_security_deposit.toString()).toEqual("64000000");
-            if (constants.baking_reward_per_endorsement) {
-                expect(constants.baking_reward_per_endorsement.toString()).toEqual("1250000,187500");
-            } 
+            expect(constants.baking_reward_per_endorsement?.toString()).toEqual("1250000,187500");
             expect(constants.endorsement_reward.toString()).toEqual("1250000,833333");
             expect(constants.cost_per_byte.toString()).toEqual("250");
             expect(constants.hard_storage_limit_per_operation.toString()).toEqual("60000");
-
-            if (constants.test_chain_duration) {
-                expect(constants.test_chain_duration?.toString()).toEqual("1228800");
-            } 
-
-            if (constants.quorum_min) {
-                expect(constants).toHaveProperty("quorum_min", 2000);
-            } 
-
-            if (constants.quorum_max) {
-                expect(constants).toHaveProperty("quorum_max", 7000);
-            } 
-
-            if (constants.min_proposal_quorum) {
-                expect(constants).toHaveProperty("min_proposal_quorum", 500);
-            }
-
-            if (constants.initial_endorsers) {
-                expect(constants).toHaveProperty("initial_endorsers", 24);
-            } 
-
-            if (constants.delay_per_missing_endorsement) {
-                expect(constants.delay_per_missing_endorsement.toString()).toEqual("8");
-            } 
-
+            expect(constants.test_chain_duration?.toString()).toEqual("1228800");
+            expect(constants).toHaveProperty("quorum_min", 2000);
+            expect(constants).toHaveProperty("quorum_max", 7000);
+            expect(constants).toHaveProperty("min_proposal_quorum", 500);
+            expect(constants).toHaveProperty("initial_endorsers", 24);
+            expect(constants.delay_per_missing_endorsement?.toString()).toEqual("8");
         } catch (ex) {
             fail(ex);
         }
         done();
     })
-
 })
