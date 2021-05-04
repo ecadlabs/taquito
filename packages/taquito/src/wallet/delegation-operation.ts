@@ -14,6 +14,11 @@ export class DelegationWalletOperation extends WalletOperation {
 
   public async revealOperation() {
     const operationResult = await this.operationResults();
+    
+    if(!operationResult) {
+      throw new Error('Operation and result found to be undefined!');
+    }
+
     return operationResult.find(x => x.kind === OpKind.REVEAL) as
       | OperationContentsAndResultReveal
       | undefined;
@@ -21,6 +26,11 @@ export class DelegationWalletOperation extends WalletOperation {
 
   public async delegationOperation() {
     const operationResult = await this.operationResults();
+    
+    if(!operationResult) {
+      throw new Error('Operation and result found to be undefined!');
+    }
+
     return operationResult.find(x => x.kind === OpKind.DELEGATION) as
       | OperationContentsAndResultReveal
       | undefined;
