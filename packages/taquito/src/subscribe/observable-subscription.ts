@@ -92,6 +92,6 @@ export class ObservableSubscription<T> implements Subscription<T> {
   }
 
   public close() {
-    this.completed$.next();
+    this.completed$.complete();
   }
 }
