@@ -27,6 +27,7 @@ describe('Map token', () => {
     });
 
     it('Encode properly a map with keys of type string using fromLiteral', () => {
+      // Map keys must be in strictly increasing order
       const map = MichelsonMap.fromLiteral({
         "8": 8,
         "9": 9,
@@ -45,6 +46,7 @@ describe('Map token', () => {
     });
 
     it('Encode properly a map with keys of type int using fromLiteral', () => {
+      // Map keys must be in strictly increasing order
       token = createToken(
         { prim: 'map', args: [{ prim: 'int' }, { prim: 'int' }], annots: [] },
         0
@@ -67,6 +69,7 @@ describe('Map token', () => {
     });
 
     it('Encode properly a map with keys of type nat using fromLiteral', () => {
+      // Map keys must be in strictly increasing order
       token = createToken(
         { prim: 'map', args: [{ prim: 'nat' }, { prim: 'int' }], annots: [] },
         0
@@ -85,6 +88,7 @@ describe('Map token', () => {
     });
 
     it('Encode properly a map with keys of type nat', () => {
+      // Map keys must be in strictly increasing order
       token = createToken(
         { prim: 'map', args: [{ prim: 'nat' }, { prim: 'int' }], annots: [] },
         0
@@ -102,6 +106,7 @@ describe('Map token', () => {
     });
 
     it('Encode properly a map with keys of type mutez', () => {
+      // Map keys must be in strictly increasing order
       token = createToken(
         { prim: 'map', args: [{ prim: 'mutez' }, { prim: 'int' }], annots: [] },
         0
@@ -122,6 +127,43 @@ describe('Map token', () => {
         { prim: 'Elt', args: [{ int: '22' }, { int: '2' }] }
       ]);
     });
+
+    it('Encode properly a map with keys of type key using fromLiteral', () => {
+      // Map keys must be in strictly increasing order
+      token = createToken(
+        { prim: 'map', args: [{ prim: 'key' }, { prim: 'int' }], annots: [] },
+        0
+      ) as MapToken;
+      const map = MichelsonMap.fromLiteral({
+        "edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g": 90,
+        "edpktm3zeGMzfzFuqgyYftt7uNyVRANTjrJCdU7bURwgGb9bRZwmJq": 30,
+        "edpkuNjKKT48xBoT5asPrWdmuM1Yw8D93MwgFgVvtca8jb5pstzaCh": 1,
+      })
+      const result = token.Encode([map]);
+      expect(result).toEqual([
+        { prim: 'Elt', args: [{ string: 'edpktm3zeGMzfzFuqgyYftt7uNyVRANTjrJCdU7bURwgGb9bRZwmJq' }, { int: '30' }] },
+        { prim: 'Elt', args: [{ string: 'edpkuNjKKT48xBoT5asPrWdmuM1Yw8D93MwgFgVvtca8jb5pstzaCh' }, { int: '1' }] },
+        { prim: 'Elt', args: [{ string: 'edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g' }, { int: '90' }] },
+      ]);
+    });
+
+    it('Encode properly a map with keys of type key', () => {
+      // Map keys must be in strictly increasing order
+      token = createToken(
+        { prim: 'map', args: [{ prim: 'key' }, { prim: 'int' }], annots: [] },
+        0
+      ) as MapToken;
+      const map = new MichelsonMap();
+      map.set("edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g", 30);
+      map.set("edpktm3zeGMzfzFuqgyYftt7uNyVRANTjrJCdU7bURwgGb9bRZwmJq", 1);
+      map.set('edpkuNjKKT48xBoT5asPrWdmuM1Yw8D93MwgFgVvtca8jb5pstzaCh', 2);
+      const result = token.Encode([map]);
+      expect(result).toEqual([
+        { prim: 'Elt', args: [{ string: 'edpktm3zeGMzfzFuqgyYftt7uNyVRANTjrJCdU7bURwgGb9bRZwmJq' }, { int: '1' }] },
+        { prim: 'Elt', args: [{ string: 'edpkuNjKKT48xBoT5asPrWdmuM1Yw8D93MwgFgVvtca8jb5pstzaCh' }, { int: '2' }] },
+        { prim: 'Elt', args: [{ string: 'edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g' }, { int: '30' }] },
+      ]);
+    })
   });
 });
 
