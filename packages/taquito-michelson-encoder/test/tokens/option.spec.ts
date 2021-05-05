@@ -62,4 +62,28 @@ describe('Option token', () => {
       expect(unitToken.Execute({ prim: 'None' })).toEqual(null);
     });
   });
+
+  describe('Compare', () => {
+    it('Should compare values properly', () => {
+      expect(token.compare(2, 12)).toEqual(-1);
+      expect(token.compare(22, 2)).toEqual(1);
+      expect(token.compare(null, 12)).toEqual(-1);
+      expect(token.compare(22, null)).toEqual(1);
+    });
+  });
+
+  describe('Tokey', () => {
+    it('Should transform Michelson bytes data to a key of type string', () => {
+      expect(token.ToKey({ prim: 'Some', args: [{ int: '4' }]}).toString()).toEqual('4');
+    });
+  });
+
+  describe('ToBigMapKey', () => {
+    it('Should transform option value to a Michelson big map key', () => {
+      expect(token.ToBigMapKey(5)).toEqual({
+        key: { prim: 'Some', args: [{ int: '5' }]},
+        type: { prim: 'option', args: [{ prim: 'int' }] }
+      });
+    });
+  });
 });
