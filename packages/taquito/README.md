@@ -8,8 +8,13 @@ The `@taquito/taquito` package contains higher level functionality that builds u
 ## CDN Bundle
 
 ```html
+<<<<<<< HEAD
 <script src="https://unpkg.com/@taquito/taquito@9.0.1/dist/taquito.min.js"
 crossorigin="anonymous" integrity="sha384-fv9mBa6ZenQd5gmBCjCEq/3m8WAtNL1Z5Kkifr0Nt08WTsLHInBEo2dDtwqFbYCB"></script>
+=======
+<script src="https://unpkg.com/@taquito/taquito@9.0.0/dist/taquito.min.js"
+crossorigin="anonymous" integrity="sha384-G9SWhzgwZiRRVaxNMg+JHSgabREr8KBXgsVZ49x06qXYTkXebd0hLHv8WA34kFer"></script>
+>>>>>>> 74489caba (Issue-765 Fixed failing build:release step)
 ```
 
 ## API Documentation
