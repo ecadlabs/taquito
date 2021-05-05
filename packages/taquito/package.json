@@ -85,7 +85,7 @@
     "@taquito/utils": "^9.0.0",
     "bignumber.js": "^9.0.1",
     "rx-sandbox": "^1.0.4",
-    "rxjs": "^7.0.0"
+    "rxjs": "^6.0.0"
   },
   "devDependencies": {
     "@babel/types": "7.14.1",
