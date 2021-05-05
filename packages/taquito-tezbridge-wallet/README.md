@@ -1,6 +1,6 @@
 # Taquito Tezbridge Wallet package
 
-`@taquito/tezbridge-wallet` is an npm package that provides developers with ledger signing functionality for Taquito. It can be injected as follows:
+`@taquito/tezbridge-wallet` is an npm package that provides developers with Tezbridge Wallet functionality for Taquito. It can be injected as follows:
 
 ```ts
 import { TezosToolkit } from '@taquito/taquito'

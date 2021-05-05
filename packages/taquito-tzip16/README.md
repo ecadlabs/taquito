@@ -1,10 +1,12 @@
 # Taquito TZip-16 package
 
-`@taquito/tezbridge-tzip16` is an npm package that provides developers with TZip-16 functionality for Taquito. It can be injected as follows:
+`@taquito/tezbridge-tzip16` is an npm package that provides developers with TZip-16 functionality for Taquito. It provides the ability to retrieve metadata associated with a smart contract based on the TZIP-16 standard. The package also provides a way to execute the MichelsonStorageView found in the metadata. It can be injected as follows:
 
 ```ts
-import { TezosToolkit } from '@taquito/taquito'
-import { TZip16 } from '@taquito/tzip16'
+import { TezosToolkit } from '@taquito/taquito';
+import { Tzip16Module } from '@taquito/tzip16';
+const Tezos = new TezosToolkit('rpcUrl');
+Tezos.addExtension(new Tzip16Module());
 
 ```
 

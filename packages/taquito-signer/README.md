@@ -4,7 +4,7 @@
 
 ```ts
 import { TezosToolkit } from '@taquito/taquito'
-import { Signer } from '@taquito/signer'
+import { InMemorySigner } from '@taquito/signer'
 
 ```
 

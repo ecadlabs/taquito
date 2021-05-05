@@ -1,6 +1,6 @@
 # Taquito HTTP Utilities package
 
-`@taquito/http-utils` is an npm package that provides developers with Beacon wallet functionality for Taquito. It can be injected as follows:
+`@taquito/http-utils` is an npm package that provides developers with http functionality for Taquito. It can be injected as follows:
 
 ```ts
 import { TezosToolkit } from '@taquito/taquito'

@@ -1,10 +1,10 @@
 # Taquito Tezbridge Signer package
 
-`@taquito/tezbridge-signer` is an npm package that provides developers with ledger signing functionality for Taquito. It can be injected as follows:
+`@taquito/tezbridge-signer` is an npm package that provides developers with Tezbridge Signer functionality for Taquito. It can be injected as follows:
 
 ```ts
 import { TezosToolkit } from '@taquito/taquito'
-import { tezbridgeSigner } from '@taquito/tezbridge-signer'
+import { TezBridgeSigner } from '@taquito/tezbridge-signer'
 
 ```
 

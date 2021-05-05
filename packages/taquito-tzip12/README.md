@@ -1,10 +1,12 @@
 # Taquito Tzip-12 package
 
-`@taquito/tzip12` is an npm package that provides developers with ledger signing functionality for Taquito. It can be injected as follows:
+`@taquito/tzip12` is an npm package that provides developers with Tzip-12 functionality for Taquito. It can be injected as follows:
 
 ```ts
-import { TezosToolkit } from '@taquito/taquito'
-import { TZip12 } from '@taquito/tzip12'
+import { TezosToolkit } from '@taquito/taquito';
+import { Tzip12Module } from '@taquito/tzip12';
+const Tezos = new TezosToolkit('rpcUrl');
+Tezos.addExtension(new Tzip12Module());
 
 ```
 
