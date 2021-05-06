@@ -1,3 +1,7 @@
+/**
+ * @packageDocumentation
+ * @module @taquito/remote-signer
+ */
 import { HttpBackend, HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import {
   b58cdecode,
@@ -26,6 +30,8 @@ type curves = 'ed' | 'p2' | 'sp';
 export interface RemoteSignerOptions {
   headers?: { [key: string]: string };
 }
+
+export { VERSION } from './version';
 
 const pref = {
   ed: {

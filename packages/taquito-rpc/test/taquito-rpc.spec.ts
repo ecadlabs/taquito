@@ -1,6 +1,7 @@
 import { RpcClient } from '../src/taquito-rpc';
 import BigNumber from 'bignumber.js';
 import { OperationContentsAndResultEndorsement } from '../src/types';
+import { OperationContentsAndResultTransaction } from '../src/types';
 
 /**
  * RpcClient test
@@ -19,7 +20,7 @@ describe('RpcClient test', () => {
   });
 
   it('RpcClient is instantiable', () => {
-    const rpcUrl: string = "test";
+    const rpcUrl: string = 'test';
     expect(new RpcClient(rpcUrl)).toBeInstanceOf(RpcClient);
   });
 
@@ -35,7 +36,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('Should prevent double slashes given one trailing slashe', async done => {
+    it('Should prevent double slashes given one trailing slash', async done => {
       const client = new RpcClient('root.com/test/', 'test', httpBackend as any);
       httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
       await client.getBalance('address');
@@ -59,7 +60,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getBalance', () => {
-    it('query the right url and returns a string', async done => {
+    it('query the right url and return a string', async done => {
       httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
       const balance = await client.getBalance('address');
 
@@ -652,7 +653,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getBlock', () => {
-    it('query the right url and property', async done => {
+    it('query the right url and property for endorsement', async done => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           protocol: 'Pt24m4xiPbLDhVgVfABUjirbmda3yohdN82Sp9FeuAXJ4eV9otd',
@@ -788,6 +789,257 @@ describe('RpcClient test', () => {
         .contents[0] as OperationContentsAndResultEndorsement;
       expect(endorsement.metadata.balance_updates[0].kind).toEqual('contract');
 
+      done();
+    });
+  });
+
+  describe('getBlock', () => {
+    it('query the right url and property for operation', async done => {
+      httpBackend.createRequest.mockReturnValue(
+        Promise.resolve({
+            protocol: 'PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA',
+            chain_id: 'NetXSgo1ZT2DRUG',
+            hash: 'BKjqpGqKggVrYbkBmBUYjLx8QdCUxBLaVGr1GWKho4ziBo1KQFX',
+            header: {
+              level: 90973,
+              proto: 1,
+              predecessor: 'BMF7j462upRKLRWEdmFYTCMK3kuEfbQdR2Apo7noc1ZwzPZi2ji',
+              timestamp: '2021-03-16T17:49:35Z',
+              validation_pass: 4,
+              operations_hash: 'LLoZv71M2tWPD8mMjDhf7QcE5ZaHrtYCu4wFRhmPkBWvwCEMxacei',
+              fitness: [
+                '01',
+                '000000000001635c'
+              ],
+              context: 'CoV8F9ro52txU4rGRGNXfQZgbE3pZVMygNV4UGjf6foKhBMb8MJC',
+              priority: 0,
+              proof_of_work_nonce: '6102c8089c360500',
+              signature: 'sigkj5nVVW6Zq7F9dEstPs5o2s1vTnUfwhsWi3UnmwrjYVwN9gfmXUBArzSLeXEUNQBM4KUYSg385i1ajR9TugSkM2swFzQp'
+            },
+            metadata: {
+              protocol: 'PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA',
+              next_protocol: 'PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA',
+              test_chain_status: {
+                status: 'not_running'
+              },
+              max_operations_ttl: 60,
+              max_operation_data_length: 16384,
+              max_block_header_length: 238,
+              max_operation_list_length: [
+                {
+                  max_size: 32768,
+                  max_op: 32
+                },
+                {
+                  max_size: 32768
+                },
+                {
+                  max_size: 135168,
+                  max_op: 132
+                },
+                {
+                  max_size: 524288
+                }
+              ],
+              baker: 'tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9',
+              level: {
+                level: 90973,
+                level_position: 90972,
+                cycle: 44,
+                cycle_position: 860,
+                voting_period: 22,
+                voting_period_position: 860,
+                expected_commitment: false
+              },
+              level_info: {
+                level: 90973,
+                level_position: 90972,
+                cycle: 44,
+                cycle_position: 860,
+                expected_commitment: false
+              },
+              voting_period_kind: 'proposal',
+              voting_period_info: {
+                voting_period: {
+                  index: 22,
+                  kind: 'proposal',
+                  start_position: 90112,
+                },
+                position: 860,
+                remaining: 3235
+              },
+              nonce_hash: null,
+              consumed_gas: '73225095',
+              deactivated: [
+                
+              ],
+              balance_updates: [
+                {
+                  kind: 'contract',
+                  contract: 'tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9',
+                  change: '-512000000'
+                },
+                {
+                  kind: 'freezer',
+                  category: 'deposits',
+                  delegate: 'tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9',
+                  cycle: 44,
+                  change: '512000000'
+                },
+                {
+                  kind: 'freezer',
+                  category: 'rewards',
+                  delegate: 'tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9',
+                  cycle: 44,
+                  change: '38750000'
+                }
+              ]
+            },
+            operations: [
+              [
+                {
+                  protocol: 'PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA',
+                  chain_id: 'NetXSgo1ZT2DRUG',
+                  hash: 'onefqcSYA5FNfNW68ghLqQajxnM9cZ3vvdNaTDR1Mhv34LBAhaG',
+                  branch: 'BMF7j462upRKLRWEdmFYTCMK3kuEfbQdR2Apo7noc1ZwzPZi2ji',
+                  contents: [
+                    {
+                      kind: 'transaction',
+                      source: 'tz3beCZmQhd5Q1KNMZbiLCarXVo9aqpPHYe8',
+                      fee: '2820',
+                      counter: '184578',
+                      gas_limit: '24760',
+                      storage_limit: '1',
+                      amount: '0',
+                      destination: 'KT1LSuT4NgCQyZK1CWpss7FcJTTw68NDgPyR',
+                      parameters: {
+                        entrypoint: 'mint',
+                        value: {
+                          prim: 'Pair',
+                          args: [
+                            {
+                              string: 'tz3beCZmQhd5Q1KNMZbiLCarXVo9aqpPHYe8'
+                            },
+                            {
+                              int: '100'
+                            }
+                          ]
+                        }
+                      },
+                      metadata: {
+                        balance_updates: [
+                          {
+                            kind: 'contract',
+                            contract: 'tz3beCZmQhd5Q1KNMZbiLCarXVo9aqpPHYe8',
+                            change: '-2820'
+                          },
+                          {
+                            kind: 'freezer',
+                            category: 'fees',
+                            delegate: 'tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9',
+                            cycle: 44,
+                            change: '2820'
+                          }
+                        ],
+                        operation_result: {
+                          status: 'applied',
+                          storage: [
+                            {
+                              int: '33681'
+                            },
+                            {
+                              bytes: '0002a7f8d8600737ff279e4b9a4b1518157b653a314d'
+                            },
+                            {
+                              prim: 'False'
+                            },
+                            {
+                              int: '300'
+                            }
+                          ],
+                          big_map_diff: [
+                            {
+                              action: 'update',
+                              big_map: '33681',
+                              key_hash: 'expruAQuDQJ9ojnpqipCAbR23gBSSff7AxaMT9UBRjpZpiDHfJ6b6L',
+                              key: {
+                                bytes: '0002a7f8d8600737ff279e4b9a4b1518157b653a314d'
+                              },
+                              value: {
+                                prim: 'Pair',
+                                args: [
+                                  {
+                                    int: '102'
+                                  },
+                                  [
+                                    
+                                  ]
+                                ]
+                              }
+                            }
+                          ],
+                          balance_updates: [
+                            {
+                              kind: 'contract',
+                              contract: 'tz3beCZmQhd5Q1KNMZbiLCarXVo9aqpPHYe8',
+                              change: '-250'
+                            }
+                          ],
+                          consumed_gas: '24660',
+                          consumed_milligas: '24659284',
+                          storage_size: '5335',
+                          paid_storage_size_diff: '1',
+                          lazy_storage_diff: [
+                            {
+                              kind: 'big_map',
+                              id: '33681',
+                              diff: {
+                                action: 'update',
+                                updates: [
+                                  {
+                                    key_hash: 'expruAQuDQJ9ojnpqipCAbR23gBSSff7AxaMT9UBRjpZpiDHfJ6b6L',
+                                    key: {
+                                      bytes: '0002a7f8d8600737ff279e4b9a4b1518157b653a314d'
+                                    },
+                                    value: {
+                                      prim: 'Pair',
+                                      args: [
+                                        {
+                                          int: '102'
+                                        },
+                                        [
+                                          
+                                        ]
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ],
+                  signature: 'sigmCS2nZquXi3vXX8p7iwc6TVYC87FsGYkxSgEMiQESbM5dnnP4SGe4YHLRFXuRwcs1VaNLsiFWzVQVnpbNDfAhYhPgRnCG',
+                },
+              ],
+            ],
+          })
+        );
+
+      const response = await client.getBlock();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head',
+      });
+      const transaction = response.operations[0][0]
+        .contents[0] as OperationContentsAndResultTransaction;
+      expect(transaction.metadata.balance_updates[0].kind).toEqual('contract');
+      expect(transaction.metadata.balance_updates[0].change).toEqual('-2820');
+      expect(transaction.metadata.operation_result.status).toEqual('applied');
+      expect(transaction.metadata.operation_result.consumed_gas).toEqual('24660');
       done();
     });
   });
@@ -1144,6 +1396,55 @@ describe('RpcClient test', () => {
       expect(rpcUrlMainnet).toEqual('https://api.tez.ie/rpc/mainnet');
       const rpcUrlCarthagenet = (new RpcClient('https://api.tez.ie/rpc/carthagenet')).getRpcUrl();
       expect(rpcUrlCarthagenet).toEqual('https://api.tez.ie/rpc/carthagenet');
+    });
+  });
+
+  describe('getCurrentPeriod', () => {
+    it('query the right url and data', async done => {
+      const mockedResponse = {
+        "voting_period": {
+          "index": 87,
+          "kind": "proposal",
+          "start_position": 89088
+          },
+        "position": 902,
+        "remaining": 121
+      };
+      
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(mockedResponse));
+      const response = await client.getCurrentPeriod();
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/votes/current_period',
+      });
+      expect(response).toEqual(mockedResponse);
+
+      done();
+    });
+  });
+
+
+  describe('getSuccessorPeriod', () => {
+    it('query the right url and data', async done => {
+      const mockedResponse = {
+        "voting_period": {
+          "index": 87,
+          "kind": "proposal",
+          "start_position": 89088
+          },
+        "position": 902,
+        "remaining": 121
+      };
+      
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(mockedResponse));
+      const response = await client.getSuccessorPeriod();
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/votes/successor_period',
+      });
+      expect(response).toEqual(mockedResponse);
+
+      done();
     });
   });
 });

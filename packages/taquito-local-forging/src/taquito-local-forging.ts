@@ -1,3 +1,8 @@
+/**
+ * @packageDocumentation
+ * @module @taquito/local-forging
+ */
+
 import { ForgeParams, Forger } from '@taquito/taquito';
 import { CODEC } from './constants';
 import { decoders } from './decoder';
@@ -18,6 +23,8 @@ export function getCodec(codec: CODEC) {
     },
   };
 }
+
+export { VERSION } from './version';
 
 export class LocalForger implements Forger {
   private codec = getCodec(CODEC.MANAGER);

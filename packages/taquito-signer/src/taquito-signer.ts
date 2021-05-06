@@ -1,3 +1,7 @@
+/**
+ * @packageDocumentation
+ * @module @taquito/signer
+ */
 import sodium from 'libsodium-wrappers';
 import { hex2buf, mergebuf, b58cencode, prefix } from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
@@ -7,6 +11,7 @@ import pbkdf2 from 'pbkdf2';
 import { mnemonicToSeedSync } from 'bip39';
 
 export * from './import-key';
+export { VERSION } from './version';
 
 /**
  * @description A local implementation of the signer. Will represent a Tezos account and be able to produce signature in its behalf

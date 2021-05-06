@@ -10,7 +10,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await setup()
       done()
     })
-    it('originates a contract and initlizes bigmaps with variants of data', async (done) => {
+    it('originates a contract and initializes bigmaps with variants of data', async (done) => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: storageContract,
@@ -22,6 +22,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             "tz1ccqAEwfPgeoipnXtjAv1iucrpQv3DFmmS": 3,
           }),
           "map2": MichelsonMap.fromLiteral({
+            "12": 3,
             "2": 1,
             '3': 2,
             "1": 2,
@@ -30,6 +31,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           "map3": MichelsonMap.fromLiteral({
             "2": 1,
             '3': 2,
+            "12": 3,
             "1": 2,
             "4": 3,
           }),
@@ -49,6 +51,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           "map6": MichelsonMap.fromLiteral({
             "2": 1,
             '3': 2,
+            "12": 3,
             "1": 2,
             "4": 3,
           }),

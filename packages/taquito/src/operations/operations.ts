@@ -146,14 +146,17 @@ export class Operation {
    * @param interval [10] Polling interval
    * @param timeout [180] Timeout
    */
-  confirmation(confirmations?: number, interval?: number, timeout?: number) {
+  async confirmation(confirmations?: number, interval?: number, timeout?: number) {
     if (typeof confirmations !== 'undefined' && confirmations < 1) {
       throw new Error('Confirmation count must be at least 1');
     }
 
+    const confirmationPollingIntervalSecond = this.context.config.confirmationPollingIntervalSecond !== undefined 
+                                        ? this.context.config.confirmationPollingIntervalSecond 
+                                        : await this.context.getConfirmationPollingInterval();
+
     const {
       defaultConfirmationCount,
-      confirmationPollingIntervalSecond,
       confirmationPollingTimeoutSecond,
     } = this.context.config;
     this._pollingConfig$.next({
@@ -162,6 +165,10 @@ export class Operation {
     } as Required<PollingConfig>);
 
     const conf = confirmations !== undefined ? confirmations : defaultConfirmationCount;
+
+    if (conf === undefined) {
+      throw new Error('Default confirmation count can not be undefined!');
+    }
 
     return new Promise<number>((resolve, reject) => {
       this.confirmed$

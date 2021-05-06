@@ -1,23 +1,24 @@
 import {
     MichelsonContract, MichelsonContractSection, MichelsonType,
-    MichelsonData, MichelsonCode, MichelsonStackType
+    MichelsonData, MichelsonCode, MichelsonReturnType
 } from "./michelson-types";
 import {
     assertContractValid, contractSection,
     contractEntryPoint, assertDataValid,
     assertTypeAnnotationsValid,
-    InstructionTrace, Context, functionType
+    InstructionTrace, Context, functionType,
+    isDataValid, contractEntryPoints
 } from "./michelson-typecheck";
-import { Parser } from "./micheline-parser";
+import { Parser, ParserOptions } from "./micheline-parser";
 import { assertMichelsonContract, assertMichelsonType, assertMichelsonData } from "./michelson-validator";
 
-export interface ContractOptions {
+export interface ContractOptions extends ParserOptions {
     traceCallback?: (t: InstructionTrace) => void;
 }
 
 export class Contract {
     private ctx: Context;
-    public readonly output: MichelsonStackType;
+    public readonly output: MichelsonReturnType;
 
     constructor(public readonly contract: MichelsonContract, opt?: ContractOptions) {
         this.ctx = { contract, ...opt };
@@ -25,7 +26,7 @@ export class Contract {
     }
 
     static parse(src: string | object, opt?: ContractOptions): Contract {
-        const p = new Parser({ expandMacros: true });
+        const p = new Parser(opt);
         const expr = typeof src === "string" ? p.parseScript(src) : p.parseJSON(src);
         if (expr === null) {
             throw new Error("empty contract");
@@ -36,8 +37,8 @@ export class Contract {
         throw undefined;
     }
 
-    static parseTypeExpression(src: string | object): MichelsonType {
-        const p = new Parser({ expandMacros: true });
+    static parseTypeExpression(src: string | object, opt?: ParserOptions): MichelsonType {
+        const p = new Parser(opt);
         const expr = typeof src === "string" ? p.parseScript(src) : p.parseJSON(src);
         if (expr === null) {
             throw new Error("empty type expression");
@@ -48,8 +49,8 @@ export class Contract {
         throw undefined;
     }
 
-    static parseDataExpression(src: string | object): MichelsonData {
-        const p = new Parser({ expandMacros: true });
+    static parseDataExpression(src: string | object, opt?: ParserOptions): MichelsonData {
+        const p = new Parser(opt);
         const expr = typeof src === "string" ? p.parseScript(src) : p.parseJSON(src);
         if (expr === null) {
             throw new Error("empty data expression");
@@ -64,12 +65,20 @@ export class Contract {
         return contractSection(this.contract, section);
     }
 
+    entryPoints(): [string, MichelsonType][] {
+        return contractEntryPoints(this.contract);
+    }
+
     entryPoint(ep?: string): MichelsonType | null {
         return contractEntryPoint(this.contract, ep);
     }
 
-    assertDataValid(t: MichelsonType, d: MichelsonData): void {
-        assertDataValid(t, d, this.ctx);
+    assertDataValid(d: MichelsonData, t: MichelsonType): void {
+        assertDataValid(d, t, this.ctx);
+    }
+
+    isDataValid(d: MichelsonData, t: MichelsonType): boolean {
+        return isDataValid(d, t, this.ctx);
     }
 
     assertParameterValid(ep: string | null, d: MichelsonData): void {
@@ -77,10 +86,19 @@ export class Contract {
         if (t === null) {
             throw new Error(`contract has no entrypoint named ${ep}`);
         }
-        this.assertDataValid(t, d);
+        this.assertDataValid(d, t);
     }
 
-    functionType(inst: MichelsonCode, stack: MichelsonType[]): MichelsonStackType {
+    isParameterValid(ep: string | null, d: MichelsonData): boolean {
+        try {
+            this.assertParameterValid(ep, d);
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
+    functionType(inst: MichelsonCode, stack: MichelsonType[]): MichelsonReturnType {
         return functionType(inst, stack, this.ctx);
     }
 }

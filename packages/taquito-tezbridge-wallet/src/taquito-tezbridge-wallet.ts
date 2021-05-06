@@ -1,3 +1,7 @@
+/**
+ * @packageDocumentation
+ * @module @taquito/tezbridge-wallet
+ */
 import {
   createOriginationOperation,
   createSetDelegateOperation,
@@ -14,6 +18,8 @@ export class TezBridgeNotDetectedError implements Error {
   name: string = 'TezBridgeNotDetectedError';
   message: string = 'tezbridge plugin could not be detected in your browser';
 }
+
+export { VERSION } from './version';
 
 export class TezBridgeWallet implements WalletProvider {
   constructor() {
