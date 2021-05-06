@@ -1,6 +1,6 @@
 import { TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
-import { char2Bytes } from '@taquito/tzip16';
+import { char2Bytes } from '@taquito/utils';
 import { tacoContractTzip16 } from "../integration-tests/data/modified-taco-contract"
 import { MichelsonMap } from "@taquito/taquito";
 const provider = 'https://api.tez.ie/rpc/florencenet';
