@@ -1,6 +1,6 @@
 import { TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
-import { tzip16, Tzip16Module, char2Bytes } from '@taquito/tzip16';
+import { char2Bytes } from '@taquito/tzip16';
 import { tacoContractTzip16 } from "../integration-tests/data/modified-taco-contract"
 import { MichelsonMap } from "@taquito/taquito";
 const provider = 'https://api.tez.ie/rpc/florencenet';
@@ -32,7 +32,7 @@ async function example() {
   );
 
   try {
-    console.log('Deploying Tzip16 contract...');
+    console.log('Deploying Tzip16 contract with hostile strings...');
     const metadataJSON = {
         "name": "test",
         "description": "1;DROP TABLE users \
