@@ -197,12 +197,4 @@ describe('Schema test', () => {
       },
     });
   });
-
-  it(`Should find the value that corresponds to the type ({ prim: 'string', annots: ['%name'] }) in top-level pairs of the storage`, () => {
-    const typeOfValueToFind = { prim: 'string', annots: ['%name'] };
-    const storageSchema = new Schema(storage);
-    const valueFound = storageSchema.FindFirstInTopLevelPair(rpcContractResponse.script.storage, typeOfValueToFind);
-    expect(valueFound).toEqual({ string: 'Token B' });
-  });
-  
 });

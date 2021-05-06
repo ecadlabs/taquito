@@ -1,8 +1,0 @@
-parameter (ticket nat);
-storage address;
-code { CAR ;
-       READ_TICKET ; DIP { DROP } ; UNPAIR ; DIP { UNPAIR } ;
-       DIIP { PUSH nat 1 ; ASSERT_CMPEQ } ;
-       DIP { PUSH nat 42 ; ASSERT_CMPEQ } ;
-       NIL operation ;
-       PAIR }

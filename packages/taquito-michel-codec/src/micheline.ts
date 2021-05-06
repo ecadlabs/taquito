@@ -22,8 +22,8 @@ export interface StringLiteral extends Node {
 /**
  * An AST node representing Michelson int literal.
  */
-export interface IntLiteral<T extends string = string> extends Node {
-    int: T;
+export interface IntLiteral extends Node {
+    int: string;
 }
 
 /**

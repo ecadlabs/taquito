@@ -8,15 +8,13 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   const toJSON = (x: any) => JSON.parse(JSON.stringify(x));
 
-  const test = require('jest-retries');
-
   describe(`Lambda view using: ${rpc}`, () => {
     beforeEach(async done => {
       await setup();
       done()
     });
 
-    test('Originate FA1.2 contract and fetch data from view entrypoints', 2, async (done: () => void) => {
+    it('Originate FA1.2 contract and fetch data from view entrypoints', async done => {
       const mapAccount1 = new MichelsonMap();
       mapAccount1.set('tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY', '25');
       mapAccount1.set('tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE', '25');
@@ -47,6 +45,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       await op.confirmation()
       const contract = await op.contract();
+      //const contract = await Tezos.contract.at('KT1A87ZZL8mBKcWGr34BVsERPCJjfX82iBto');
 
       const getTotalSupply = await contract.views.getTotalSupply([['Unit']]).read();
       expect(getTotalSupply.toString()).toEqual('100');
@@ -61,7 +60,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     })
 
 
-    test('Originate a contract and fetch data from view entrypoints', 2, async (done: () => void) => {
+    it('Originate a contract and fetch data from view entrypoints', async done => {
 
       const mapAccount2 = new MichelsonMap();
       mapAccount2.set('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM', '25');
@@ -92,6 +91,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       await op.confirmation()
       const contract = await op.contract();
+
+      //const contract = await Tezos.contract.at('KT1QXZMKbNYBf2wa9WJ3iXeBFEqd7HqmDh3H');
+
       const getBalance = await contract.views.getBalance('tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY').read();
       expect(toJSON(getBalance)).toEqual({
         balance: '50',
@@ -102,7 +104,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     });
 
 
-    test('Originate FA2 contract and fetch data from view entrypoints', 2, async (done: () => void) => {
+    it('Originate FA2 contract and fetch data from view entrypoints', async done => {
 
       const bigMapLedger = new MichelsonMap();
       bigMapLedger.set('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1', {
@@ -142,6 +144,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       await op.confirmation()
       const contract = await op.contract();
+
+      //const contract = await Tezos.contract.at('KT1BkrcPjCXGPrQoYhVGFNwWMMyW2LrgBg9Q');
 
       const balance_of = await contract.views.balance_of([{ owner: 'tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1', token_id: '0' }]).read();
       expect(toJSON(balance_of)).toEqual([{

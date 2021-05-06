@@ -24,7 +24,6 @@ import {
   createSetDelegateOperation,
   createTransferOperation,
 } from './prepare';
-import { Protocols } from '../constants'
 
 interface Limits {
   fee?: number;
@@ -153,11 +152,10 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
   async originate({ fee, storageLimit, gasLimit, ...rest }: OriginateParams) {
     const pkh = await this.signer.publicKeyHash();
     const DEFAULT_PARAMS = await this.getAccountLimits(pkh);
-    const op = await createOriginationOperation(
-      await this.context.parser.prepareCodeOrigination({
+    const op = await createOriginationOperation({
       ...rest,
       ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
-    }));
+    });
     return (await this.createEstimate({ operation: op, source: pkh }))[0];
   }
   /**
@@ -211,11 +209,10 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
           break;
         case OpKind.ORIGINATION:
           operations.push(
-            await createOriginationOperation(
-              await this.context.parser.prepareCodeOrigination({
+            await createOriginationOperation({
               ...param,
               ...mergeLimits(param, DEFAULT_PARAMS),
-            }))
+            })
           );
           break;
         case OpKind.DELEGATION:

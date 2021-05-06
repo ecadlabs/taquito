@@ -1,3 +1,0 @@
-parameter (pair bls12_381_g2 bls12_381_g2);
-storage (option (bls12_381_g2));
-code {CAR; UNPAIR; ADD; SOME; NIL operation; PAIR}

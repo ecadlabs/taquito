@@ -1,4 +1,4 @@
-import { BlockResponse } from '@taquito/rpc';
+import { BlockResponse, OperationEntry } from '@taquito/rpc';
 import { from, Observable, ObservableInput, timer } from 'rxjs';
 import {
   concatMap,
@@ -47,14 +47,10 @@ export class PollingSubscribeProvider implements SubscribeProvider {
   constructor(private context: Context, public readonly POLL_INTERVAL = 20000) {}
 
   subscribe(_filter: 'head'): Subscription<string> {
-    return new ObservableSubscription(this.newBlock$.pipe(pluck('hash')), 
-                                      this.context.config.shouldObservableSubscriptionRetry,
-                                      this.context.config.observableSubscriptionRetryFunction);
+    return new ObservableSubscription(this.newBlock$.pipe(pluck('hash')), this.context.config.shouldObservableSubscriptionRetry);
   }
 
   subscribeOperation(filter: Filter): Subscription<OperationContent> {
-    return new ObservableSubscription(this.newBlock$.pipe(applyFilter(filter)),
-                                      this.context.config.shouldObservableSubscriptionRetry,
-                                      this.context.config.observableSubscriptionRetryFunction);
+    return new ObservableSubscription(this.newBlock$.pipe(applyFilter(filter)), this.context.config.shouldObservableSubscriptionRetry);
   }
 }

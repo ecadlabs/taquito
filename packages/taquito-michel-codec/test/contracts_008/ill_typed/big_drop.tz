@@ -1,4 +1,0 @@
-parameter unit;
-storage unit;
-code { DROP 1073741824; # = 0x3fffffff + 1
-       DROP; }

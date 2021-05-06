@@ -4,14 +4,14 @@ import { genericMultisig } from "./data/multisig";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
-  const test = require('jest-retries')
+
 
   describe(`Generic Multisig: ${rpc}`, () => {
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    test('test manager transfers scenarios', 2, async (done: () => void) => {
+    it('test manager transfers scenarios for Babylon/005', async (done) => {
       const account1 = await createAddress();
       const account2 = await createAddress();
       const account3 = await createAddress();
@@ -30,7 +30,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       expect(op.status).toEqual('applied')
 
       // Utility function that mimic the PAIR operation of michelson
-      // file deepcode ignore no-any: any is good enough
       const pair = ({ data, type }: any, value: any) => {
         return {
           data: {
@@ -46,7 +45,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
       // Packing the data that need to be sign by each party of the multi-sig
       // The data passed to this step is specific to this multi-sig implementation
-      // file deepcode ignore no-any: any is good enough
       const { packed } = await Tezos.rpc.packData(pair({
         data: {
           prim: 'Pair',

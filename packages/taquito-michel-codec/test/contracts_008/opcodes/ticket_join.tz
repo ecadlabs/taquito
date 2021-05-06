@@ -1,7 +1,0 @@
-parameter (ticket nat);
-storage (option (ticket nat));
-code { UNPAIR ; SWAP ;
-       IF_NONE {} { PAIR ; JOIN_TICKETS ; ASSERT_SOME } ;
-       SOME ;
-       NIL operation ;
-       PAIR }

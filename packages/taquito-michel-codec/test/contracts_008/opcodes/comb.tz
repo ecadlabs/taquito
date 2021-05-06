@@ -1,9 +1,0 @@
-parameter unit;
-storage (pair nat nat nat);
-code { DROP ;
-       PUSH nat 3 ;
-       PUSH nat 2 ;
-       PUSH nat 1 ;
-       NIL operation ;
-       PAIR 4
-     }

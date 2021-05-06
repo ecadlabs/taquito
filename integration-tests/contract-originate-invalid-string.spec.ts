@@ -3,15 +3,13 @@ import { CONFIGS } from "./config";
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const test = require('jest-retries');
-
   describe(`Test invalid data for origination using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    test('fails because there is non-ascii in the init data', 2, async (done: () => void) => {
+    it('fails because non-ascii in init data', async (done) => {
       expect.assertions(1);
       try {
         await Tezos.contract.originate({
@@ -26,10 +24,8 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
           init: `"Copyright ©"`
         })
       } catch (ex) {
-        if (protocol === Protocols.PtEdo2Zk) {
-          expect(ex).toEqual(expect.objectContaining({ message: expect.stringContaining('michelson_v1.invalid_syntactic_constant') }))
-        } else if (protocol === Protocols.PsFLorena) {
-          expect(ex).toEqual(expect.objectContaining({ message: expect.stringContaining('invalid_syntactic_constant') }))
+        if( protocol === Protocols.PsCARTHA) {
+          expect(ex).toEqual(expect.objectContaining({ message: expect.stringContaining('invalidSyntacticConstantError') }))
         } else {
           expect(ex).toEqual(expect.objectContaining({ message: expect.stringContaining('invalid_constant') }))
         }

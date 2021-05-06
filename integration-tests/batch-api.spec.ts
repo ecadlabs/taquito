@@ -1,5 +1,5 @@
 import { CONFIGS } from "./config";
-import { ligoSample, ligoSampleMichelson } from "./data/ligo-simple-contract";
+import { ligoSample } from "./data/ligo-simple-contract";
 import { managerCode } from "./data/manager_code";
 import { MANAGER_LAMBDA, OpKind } from "@taquito/taquito";
 
@@ -116,23 +116,6 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
       await batchOp.confirmation();
 
       expect(batchOp.status).toEqual('applied')
-      done();
-    })
-
-    it('Simple transfers with origination and code in Michelson format', async (done) => {
-      const batch = await Tezos.batch()
-        .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
-        .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
-        .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
-        .withOrigination({
-          balance: "1",
-          code: ligoSampleMichelson,
-          storage: 0,
-        })
-
-      const op = await batch.send();
-      await op.confirmation();
-      expect(op.status).toEqual('applied')
       done();
     })
   });

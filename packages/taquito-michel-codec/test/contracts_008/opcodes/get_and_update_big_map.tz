@@ -1,9 +1,0 @@
-parameter string;
-storage (pair (option nat) (big_map string nat));
-code {
-       UNPAPAIR;
-       GET_AND_UPDATE;
-       PAIR;
-       NIL operation;
-       PAIR
-     }

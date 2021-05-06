@@ -1,8 +1,3 @@
-/**
- * @packageDocumentation
- * @module @taquito/http-utils
- */
-
 import { STATUS_CODE } from './status_code';
 
 // tslint:disable: strict-type-predicates
@@ -13,8 +8,6 @@ const isNode =
 const XMLHttpRequestCTOR = isNode ? require('xhr2-cookies').XMLHttpRequest : XMLHttpRequest;
 
 export * from './status_code';
-
-export { VERSION } from './version';
 
 const defaultTimeout = 30000;
 
@@ -57,7 +50,7 @@ export class HttpBackend {
 
     const str = [];
     for (const p in obj) {
-      if (obj.hasOwnProperty(p) && typeof obj[p] !== 'undefined') {
+      if (obj.hasOwnProperty(p) && obj[p]) {
         const prop = typeof obj[p].toJSON === 'function' ? obj[p].toJSON() : obj[p];
         // query arguments can have no value so we need some way of handling that
         // example https://domain.com/query?all
@@ -104,12 +97,7 @@ export class HttpBackend {
 
       const request = this.createXHR();
       request.open(method || 'GET', `${url}${this.serialize(query)}`);
-      if (!headers['Content-Type']) {
-        request.setRequestHeader('Content-Type', 'application/json');
-      }
-      if (mimeType){
-        request.overrideMimeType(`${mimeType}`);
-      }
+      request.setRequestHeader('Content-Type', 'application/json');
       for (const k in headers) {
         request.setRequestHeader(k, headers[k]);
       }

@@ -1,8 +1,4 @@
-/**
- * @packageDocumentation
- * @module @taquito/rpc
- */
-import { HttpBackend, HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
+import { HttpBackend } from '@taquito/http-utils';
 import BigNumber from 'bignumber.js';
 import {
   BakingRightsQueryArguments,
@@ -35,21 +31,16 @@ import {
   PreapplyResponse,
   ProposalsResponse,
   RawBlockHeaderResponse,
-  RPCRunCodeParam,
   RPCRunOperationParam,
-  RunCodeResult,
   ScriptResponse,
   StorageResponse,
   VotesListingsResponse,
-  VotingPeriodBlockResult,
 } from './types';
 import { castToBigNumber } from './utils/utils';
 
 export * from './types';
 
 export { OpKind } from './opkind';
-
-export { VERSION } from './version';
 
 const defaultChain = 'main';
 
@@ -236,23 +227,13 @@ export class RpcClient {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<DelegateResponse> {
-    let delegate: DelegateResponse;
-    try { 
-      delegate = await this.httpBackend.createRequest<DelegateResponse>({
-        url: this.createURL(
-          `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/delegate`
-        ),
-        method: 'GET',
-      });
-    } catch(ex) {
-      if (ex instanceof HttpResponseError && ex.status === STATUS_CODE.NOT_FOUND) {
-        delegate = null;
-    } else {
-      throw ex;
-    }
+    return this.httpBackend.createRequest<DelegateResponse>({
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/delegate`
+      ),
+      method: 'GET',
+    });
   }
-  return delegate
-}
 
   /**
    *
@@ -263,7 +244,7 @@ export class RpcClient {
    *
    * @deprecated Deprecated in favor of getBigMapKeyByID
    *
-   * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-context-contracts-contract-id-big-map-get
+   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-script
    */
   async getBigMapKey(
     address: string,
@@ -513,8 +494,6 @@ export class RpcClient {
    * @param options contains generic configuration for rpc calls
    *
    * @description Current period kind.
-   * 
-   * @deprecated Deprecated in favor of getCurrentPeriod
    *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-votes-current-period-kind
    */
@@ -716,29 +695,6 @@ export class RpcClient {
     return response;
   }
 
-  /**
-   * @param code Code to run
-   * @param options contains generic configuration for rpc calls
-   *
-   * @description Run a piece of code in the current context
-   *
-   * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-helpers-scripts-run-code
-   */
-  async runCode(
-    code: RPCRunCodeParam,
-    { block }: RPCOptions = defaultRPCOptions
-  ): Promise<RunCodeResult> {
-    const response = await this.httpBackend.createRequest<any>(
-      {
-        url: this.createURL(`/chains/${this.chain}/blocks/${block}/helpers/scripts/run_code`),
-        method: 'POST',
-      },
-      code
-    );
-
-    return response;
-  }
-
   async getChainId() {
     return this.httpBackend.createRequest<string>({
       url: this.createURL(`/chains/${this.chain}/chain_id`),
@@ -784,45 +740,4 @@ export class RpcClient {
     return this.url
   }
 
-  /**
-   *
-   * @param options contains generic configuration for rpc calls
-   *
-   * @description Voting period of current block.
-   * 
-   * @example getCurrentPeriod() will default to current voting period for /main/chains/block/head.
-   *
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-votes-current-period
-   */
-   async getCurrentPeriod({ block }: RPCOptions = defaultRPCOptions): Promise<
-   VotingPeriodBlockResult
- > {
-   const response = await this.httpBackend.createRequest<VotingPeriodBlockResult>({
-     url: this.createURL(`/chains/${this.chain}/blocks/${block}/votes/current_period`),
-     method: 'GET',
-   });
-
-   return response;
- }
-
-   /**
-    *
-    * @param options contains generic configuration for rpc calls
-    *
-    * @description Voting period of next block.
-    * 
-    * @example getSuccessorPeriod() will default to successor voting period for /main/chains/block/head.
-    *
-    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-votes-successor-period
-    */
-    async getSuccessorPeriod({ block }: RPCOptions = defaultRPCOptions): Promise<
-    VotingPeriodBlockResult
-  > {
-    const response = await this.httpBackend.createRequest<VotingPeriodBlockResult>({
-      url: this.createURL(`/chains/${this.chain}/blocks/${block}/votes/successor_period`),
-      method: 'GET',
-    });
- 
-    return response;
-  }
 }

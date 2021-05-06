@@ -1,5 +1,0 @@
-parameter (pair nat nat);
-storage (option bytes);
-code { UNPAIR; SWAP;
-       IF_SOME {SWAP; UNPAIR; SLICE;} {DROP; NONE bytes;};
-       NIL operation; PAIR}

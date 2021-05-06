@@ -14,7 +14,6 @@ describe('validateAddress', () => {
     expect(validateAddress('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D')).toEqual(ValidationResult.VALID);
     expect(validateAddress('tz2TSvNTh2epDMhZHrw73nV9piBX7kLZ9K9m')).toEqual(ValidationResult.VALID);
     expect(validateAddress('tz3VEZ4k6a4Wx42iyev6i2aVAptTRLEAivNN')).toEqual(ValidationResult.VALID);
-    expect(validateAddress('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D%test')).toEqual(ValidationResult.VALID);
 
     // Invalid checksum
     expect(validateAddress('tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hm')).toEqual(
@@ -111,11 +110,6 @@ describe('validateSignature', () => {
     expect(
       validateSignature(
         'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg'
-      )
-    ).toEqual(ValidationResult.VALID);
-    expect(
-      validateSignature(
-        'edsigthp7LbR5JQ1HRnxKdvhphTJs2omjnu6DF7LhRokPbPHXjkv2EqmCwu3KT1jKRZjrrgb749Yao26qMdcDFbXKrjA7KLSKRC'
       )
     ).toEqual(ValidationResult.VALID);
     expect(

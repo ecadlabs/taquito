@@ -1,4 +1,5 @@
 import { MichelsonV1Expression } from '@taquito/rpc';
+import { MichelsonMapKey } from '../michelson-map';
 
 export abstract class TokenValidationError implements Error {
   name: string = 'ValidationError';
@@ -19,13 +20,17 @@ export interface Semantic {
 
 export abstract class Token {
   constructor(
-    protected val: { prim: string; args?: any[]; annots?: any[] },
+    protected val: { prim: string; args: any[]; annots?: any[] },
     protected idx: number,
     protected fac: TokenFactory
-  ) { }
+  ) {}
 
   protected typeWithoutAnnotations() {
-    const removeArgsRec = (val: Token['val']): { prim: string; args?: any[] } => {
+    const removeArgsRec = (val: {
+      prim: string;
+      args: any[];
+      annots?: any[];
+    }): { prim: string; args?: any[] } => {
       if (val.args) {
         return {
           prim: val.prim,
@@ -67,14 +72,12 @@ export abstract class Token {
   }
 }
 
-export type BigMapKeyType = string | number | object;
-
 export abstract class ComparableToken extends Token {
   abstract ToBigMapKey(
-    val: BigMapKeyType
+    val: string
   ): {
-    key: { [key: string]: string | object[] };
-    type: { prim: string, args?: object[] };
+    key: { [key: string]: string };
+    type: { prim: string };
   };
 
   abstract ToKey(val: string): any;

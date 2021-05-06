@@ -1,8 +1,0 @@
-parameter nat;
-storage (map string nat);
-# this contract adds the value passed by parameter to each entry in
-# the stored map.
-code { UNPAIR; SWAP;
-       MAP { CDR; DIP {DUP}; ADD; };
-       DIP { DROP; };
-       NIL operation; PAIR; }

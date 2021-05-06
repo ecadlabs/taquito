@@ -1,12 +1,8 @@
-/**
- * @packageDocumentation
- * @module @taquito/beacon-wallet
- */
-
 import {
   DAppClient,
   DAppClientOptions,
   RequestPermissionInput,
+  PermissionResponseOutput,
   PermissionScope,
 } from '@airgap/beacon-sdk';
 
@@ -19,8 +15,6 @@ import {
   WalletProvider,
   WalletTransferParams,
 } from '@taquito/taquito';
-
-export { VERSION } from './version';
 
 export class BeaconWalletNotInitialized implements Error {
   name = 'BeaconWalletNotInitialized';
@@ -39,17 +33,27 @@ export class MissingRequiredScopes implements Error {
 export class BeaconWallet implements WalletProvider {
   public client: DAppClient;
 
+  private permissions?: PermissionResponseOutput;
+
   constructor(options: DAppClientOptions) {
     this.client = new DAppClient(options);
   }
 
+  private getPermissionOrFail() {
+    if (!this.permissions) {
+      throw new BeaconWalletNotInitialized();
+    }
+
+    return this.permissions;
+  }
+
   private validateRequiredScopesOrFail(
-    permissionScopes: PermissionScope[],
+    permission: PermissionResponseOutput,
     requiredScopes: PermissionScope[]
   ) {
     const mandatoryScope = new Set(requiredScopes);
 
-    for (const scope of permissionScopes) {
+    for (const scope of permission.scopes) {
       if (mandatoryScope.has(scope)) {
         mandatoryScope.delete(scope);
       }
@@ -61,7 +65,15 @@ export class BeaconWallet implements WalletProvider {
   }
 
   async requestPermissions(request?: RequestPermissionInput) {
-    await this.client.requestPermissions(request);
+    const activeAccount = await this.client.getActiveAccount();
+
+    if (activeAccount) {
+      this.permissions = activeAccount;
+      return;
+    }
+
+    const result = await this.client.requestPermissions(request);
+    this.permissions = result;
   }
 
   private removeFeeAndLimit<T extends { gas_limit: any; storage_limit: any; fee: any }>(op: T) {
@@ -69,12 +81,9 @@ export class BeaconWallet implements WalletProvider {
     return rest;
   }
 
-  async getPKH() {
-    const account = await this.client.getActiveAccount();
-    if (!account) {
-      throw new BeaconWalletNotInitialized();
-    }
-    return account.address;
+  getPKH() {
+    const { address } = this.getPermissionOrFail();
+    return Promise.resolve(address);
   }
 
   mapTransferParamsToWalletParams(params: WalletTransferParams) {
@@ -90,11 +99,7 @@ export class BeaconWallet implements WalletProvider {
   }
 
   async sendOperations(params: any[]) {
-    const account = await this.client.getActiveAccount();
-    if (!account) {
-      throw new BeaconWalletNotInitialized();
-    }
-    const permissions = account.scopes;
+    const permissions = this.getPermissionOrFail();
     this.validateRequiredScopesOrFail(permissions, [PermissionScope.OPERATION_REQUEST]);
 
     const { transactionHash } = await this.client.requestOperation({
@@ -116,9 +121,43 @@ export class BeaconWallet implements WalletProvider {
 
   /**
    * 
-   * @description This method removes the active account from local storage by setting it to undefined.
+   * @description Allows to remove an account from the local storage
+   * @param accountIdentifier optional identifier of the account to remove from the storage. 
+   * If none is specified, the active account (if defined) will be removed from the storage.
    */
-  async clearActiveAccount() {
-    await this.client.setActiveAccount();
+  async removeAccount(accountIdentifier?: string) {
+    const accountInfo = accountIdentifier 
+      ? await this.client.getAccount(accountIdentifier)
+      : await this.client.getActiveAccount();
+
+    if (accountInfo) {
+      await this.client.removeAccount(accountInfo.accountIdentifier);
+    }
+  }
+
+  /**
+   * 
+   * @description Allows to remove all accounts and set active account to undefined
+   */
+  async removeAllAccounts() {
+    await this.client.removeAllAccounts();
+  }
+
+  /**
+   * 
+   * @description Return the active account
+   */
+  async getActiveAccount() {
+    const activeAccount = await this.client.getActiveAccount();
+    return activeAccount;
+  }
+
+  /**
+   * 
+   * @description Return all accounts in storage
+   */
+  async getAccounts() {
+    const activeAccount = await this.client.getAccounts();
+    return activeAccount;
   }
 }

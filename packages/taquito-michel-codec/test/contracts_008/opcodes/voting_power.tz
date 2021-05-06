@@ -1,7 +1,0 @@
-parameter key; # A public key
-storage (pair nat nat);
-code { CAR;
-       HASH_KEY; VOTING_POWER; # Get the number of rolls for the key
-       DIP { TOTAL_VOTING_POWER }; # Get the total number of rolls
-       PAIR;
-       NIL operation; PAIR; };

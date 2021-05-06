@@ -1,9 +1,0 @@
-parameter (pair (pair address nat) nat) ;
-storage unit;
-code { CAR ; UNPAIR ; UNPAIR ;
-       CONTRACT (ticket nat) ; ASSERT_SOME ;
-       DIP { TICKET } ;
-       SWAP ; DIP { PUSH mutez 0 } ;
-       TRANSFER_TOKENS ;
-       NIL operation ; SWAP ; CONS ;
-       UNIT ; SWAP ; PAIR }

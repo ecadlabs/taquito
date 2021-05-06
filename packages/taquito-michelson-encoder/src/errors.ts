@@ -14,5 +14,3 @@ export { IntValidationError } from './tokens/comparable/int';
 export { KeyHashValidationError } from './tokens/comparable/key_hash';
 export { MutezValidationError } from './tokens/comparable/mutez';
 export { NatValidationError } from './tokens/comparable/nat';
-
-export { EncodeTicketError } from './tokens/ticket';

@@ -1,7 +1,0 @@
-parameter unit;
-storage (pair (big_map int int) unit);
-code { CDAR;
-       DUP; PACK; DROP;
-       UNIT; SWAP; PAIR;
-       NIL operation;
-       PAIR; }

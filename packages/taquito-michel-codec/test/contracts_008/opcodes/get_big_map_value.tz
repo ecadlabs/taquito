@@ -1,6 +1,0 @@
-parameter string;
-storage (pair (big_map string string) (option string));
-# retrieves the values stored in the big_map on the left side of the
-# pair at the key denoted by the parameter and puts it in the right
-# hand side of the storage
-code {DUP; CAR; DIP{CDAR; DUP}; GET; SWAP; PAIR; NIL operation; PAIR};

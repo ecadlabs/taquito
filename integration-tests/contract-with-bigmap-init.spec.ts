@@ -4,15 +4,13 @@ import { tokenBigmapCode } from "./data/token_bigmap";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  const test = require('jest-retries');
-
   describe(`Token with big map and with initial data using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    test('Originate token contract with big map and with initialize storage/bigmaps',2, async (done: () => void) => {
+    it('Originage token contract with big map and with initialize storage/bigmaps', async (done) => {
       const addr = await Tezos.signer.publicKeyHash();
       const initialStorage = {
         owner: addr,

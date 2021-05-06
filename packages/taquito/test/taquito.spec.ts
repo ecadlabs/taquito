@@ -1,6 +1,7 @@
 import { TezosToolkit, SetProviderOptions } from '../src/taquito';
 import { RpcTzProvider } from '../src/tz/rpc-tz-provider';
 import { RpcContractProvider } from '../src/contract/rpc-contract-provider';
+import { InMemorySigner } from '@taquito/signer';
 import { PollingSubscribeProvider } from '../src/subscribe/polling-provider';
 import { NoopSigner } from '../src/signer/noop';
 import { RpcClient } from '@taquito/rpc';
@@ -92,10 +93,4 @@ describe('TezosToolkit test', () => {
         expect(toolkit.stream).toEqual(instance);
       });
     });
-
-  test('getVersionInfo returns well formed response', () => {
-    const versionInfo = toolkit.getVersionInfo();
-    expect(versionInfo.commitHash).toBeTruthy();
-    expect(versionInfo.version).toBeTruthy();
-  });
 });

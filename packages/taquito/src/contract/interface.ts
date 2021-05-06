@@ -1,6 +1,4 @@
-import { BigMapKeyType, MichelsonMap, MichelsonMapKey, Schema } from '@taquito/michelson-encoder';
-import { OperationBatch } from '../batch/rpc-batch-provider';
-import { Context } from '../context';
+import { Schema } from '@taquito/michelson-encoder';
 import { DelegateOperation } from '../operations/delegate-operation';
 import { OriginationOperation } from '../operations/origination-operation';
 import { TransactionOperation } from '../operations/transaction-operation';
@@ -81,7 +79,7 @@ export interface StorageProvider {
    *
    * @deprecated Deprecated in favor of getBigMapKeyByID
    *
-   * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-context-contracts-contract-id-big-map-get
+   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-script
    */
   getBigMapKey<T>(contract: string, key: string, schema?: ContractSchema): Promise<T>;
 
@@ -92,25 +90,10 @@ export interface StorageProvider {
    * @param id Big Map ID
    * @param keyToEncode key to query (will be encoded properly according to the schema)
    * @param schema Big Map schema (can be determined using your contract type)
-   * @param block optional block level to fetch the value from
    *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-big-maps-big-map-id-script-expr
    */
-  getBigMapKeyByID<T>(id: string, keyToEncode: BigMapKeyType, schema: Schema, block?: number): Promise<T>;
-
-  /**
-   *
-   * @description Fetch multiple values in a big map
-   *
-   * @param id Big Map ID
-   * @param keysToEncode Array of keys to query (will be encoded properly according to the schema)
-   * @param schema Big Map schema (can be determined using your contract type)
-   * @param block optional block level to fetch the values from
-   * @param batchSize optional batch size representing the number of requests to execute in parallel
-   * @returns An object containing the keys queried in the big map and their value in a well-formatted JSON object format
-   *
-   */
-   getBigMapKeysByID<T>(id: string, keysToEncode: Array<BigMapKeyType>, schema: Schema, block?: number, batchSize?: number): Promise<MichelsonMap<MichelsonMapKey, T | undefined>>;
+  getBigMapKeyByID<T>(id: string, keyToEncode: string, schema: Schema): Promise<T>;
 }
 
 export interface ContractProvider extends StorageProvider {
@@ -142,7 +125,7 @@ export interface ContractProvider extends StorageProvider {
    *
    * @param RegisterDelegate operation parameter
    */
-  registerDelegate(params: RegisterDelegateParams): Promise<DelegateOperation>;
+  registerDelegate(params: DelegateParams): Promise<DelegateOperation>;
   /**
    *
    * @description Transfer tz from current address to a specific address. Will sign and inject an operation using the current context
@@ -151,15 +134,6 @@ export interface ContractProvider extends StorageProvider {
    *
    * @param Transfer operation parameter
    */
-
   transfer(params: TransferParams): Promise<TransactionOperation>;
-  at<T extends ContractAbstraction<ContractProvider>>(address: string, contractAbstractionComposer?: (abs: ContractAbstraction<ContractProvider>, context: Context) => T): Promise<T>;
-
-  /**
-   *
-   * @description Batch a group of operation together. Operations will be applied in the order in which they are added to the batch
-   *
-   * @param params List of operation to batch together
-   */
-  batch(params?: ParamsWithKind[]): OperationBatch ;
+  at(address: string, schema?: ContractSchema): Promise<ContractAbstraction<ContractProvider>>;
 }

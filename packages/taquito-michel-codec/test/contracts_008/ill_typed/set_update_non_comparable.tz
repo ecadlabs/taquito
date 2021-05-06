@@ -1,9 +1,0 @@
-# This contract tests the error message in case the UPDATE instruction on set
-# is used with a non-comparable type
-parameter (set nat);
-storage unit;
-code { CAR;
-       PUSH bool True;
-       NIL operation;
-       UPDATE;
-       UNIT; NIL operation; PAIR; }

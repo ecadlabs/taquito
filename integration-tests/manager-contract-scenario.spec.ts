@@ -10,7 +10,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
       await setup()
       done()
     })
-    it('test manager transfers scenarios', async (done) => {
+    it('test manager transfers scenarios for Babylon/005', async (done) => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: managerCode,

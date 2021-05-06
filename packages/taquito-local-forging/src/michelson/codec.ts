@@ -201,19 +201,12 @@ export const primEncoder: Encoder<PrimValue> = value => {
     encodedArgs = pad(encodedArgs.length / 2) + encodedArgs + pad(0);
   }
 
-  if (( value.prim === 'pair' || value.prim === 'Pair' ) && argsCount > 2) {
-    encodedArgs =
-      (encodedAnnots === '')
-        ? (pad(encodedArgs.length / 2) + encodedArgs + pad(0))
-        : (pad(encodedArgs.length / 2) + encodedArgs)
-  }
-
   return `${preamble}${op}${encodedArgs}${encodedAnnots}`;
 };
 
 export const primDecoder = (value: Uint8ArrayConsumer, preamble: Uint8Array) => {
   const hasAnnot = (preamble[0] - 0x03) % 2 === 1;
-  let argsCount = Math.floor((preamble[0] - 0x03) / 2);
+  const argsCount = Math.floor((preamble[0] - 0x03) / 2);
   const op = value
     .consume(1)[0]
     .toString(16)
@@ -221,14 +214,6 @@ export const primDecoder = (value: Uint8ArrayConsumer, preamble: Uint8Array) => 
 
   if (opMapping[op] === 'LAMBDA') {
     value.consume(4);
-  }
-  
-let combPairArgs;
-let combPairAnnots;
-  if ((opMapping[op] === 'pair' || opMapping[op] === 'Pair') && argsCount > 2) {
-    combPairArgs = decodeCombPair(value);
-    argsCount = 0;
-    combPairAnnots = decodeAnnots(value); 
   }
 
   const args = new Array(argsCount).fill(0).map(() => valueDecoder(value));
@@ -241,33 +226,16 @@ let combPairAnnots;
     prim: opMapping[op],
   };
 
-  if(combPairArgs) {
-    result['args'] = combPairArgs as any;
-  }
-
-  else if (args.length) {
+  if (args.length) {
     result['args'] = args as any;
   }
 
-  if (combPairAnnots && (combPairAnnots as any)[0] !== "") {
-    result['annots'] = combPairAnnots as any;
-  }
-
-  else if (hasAnnot) {
+  if (hasAnnot) {
     result['annots'] = decodeAnnots(value) as any;
   }
 
   return result;
 };
-
-export const decodeCombPair: Decoder = (val: Uint8ArrayConsumer) => {
-  const array = new Uint8ArrayConsumer(extractRequiredLen(val));
-      const args = [];
-      while (array.length() > 0) {
-        args.push(valueDecoder(array));
-      }
-      return args;
-}; 
 
 export const encodeAnnots: Encoder<string[]> = (value: string[]) => {
   const mergedAnnot = value

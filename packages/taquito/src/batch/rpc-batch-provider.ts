@@ -99,10 +99,9 @@ export class OperationBatch extends OperationEmitter {
           ...param,
         });
       case OpKind.ORIGINATION:
-        return createOriginationOperation(
-          await this.context.parser.prepareCodeOrigination({
+        return createOriginationOperation({
           ...param,
-        }));
+        });
       case OpKind.DELEGATION:
         return createSetDelegateOperation({
           ...param,

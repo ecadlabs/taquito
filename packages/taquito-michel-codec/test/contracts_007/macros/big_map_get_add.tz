@@ -1,7 +1,0 @@
-parameter (pair (pair %set_pair int (option int)) (pair %check_pair int (option int))) ;
-storage (pair (big_map int int) unit) ;
-code { DUP ; DIP { CDAR } ;
-       DUP ; DIP { CADR; DUP ; CAR ; DIP { CDR } ; UPDATE ; DUP } ;
-       CADR ; DUP ; CDR ; DIP { CAR ; GET } ;
-       IF_SOME { SWAP ; IF_SOME { ASSERT_CMPEQ } {FAIL}} { ASSERT_NONE } ;
-       UNIT ; SWAP ; PAIR ; NIL operation ; PAIR }

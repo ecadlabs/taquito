@@ -36,96 +36,12 @@ Output:
 
 ### Pretty Print a Michelson contract 
 
-```js
+```
     const contract = await Tezos.contract.at('KT1EctCuorV2NfVb1XTQgvzJ88MQtWP8cMMv')
     const p = new Parser()
 
     const michelsonCode = p.parseJSON(contract.script.code as JSON[])
     console.log(emitMicheline(michelsonCode, {indent:"    ", newline: "\n",}))
-```
-
-### Pack Michelson data
-
-Serializes any value of packable type to its optimized binary representation identical to the one used by PACK and UNPACK Michelson instructions.
-Without a type definition (not recommended) the data will be encoded as a binary form of a generic Michelson expression.
-Type definition allows some types like `timestamp` and `address` and other base58 representable types to be encoded to corresponding optimized binary forms borrowed from the Tezos protocol.
-
-```js
-const data: MichelsonData = {
-    string: "KT1RvkwF4F7pz1gCoxkyZrG1RkrxQy3gmFTv%foo"
-};
-
-const typ: MichelsonType = {
-    prim: "address"
-};
-
-const packed = packData(data, typ);
-// 050a0000001901be41ee922ddd2cf33201e49d32da0afec571dce300666f6f
-
-// alternatively
-const packedBytes = packDataBytes(data, typ);
-// { bytes: "050a0000001901be41ee922ddd2cf33201e49d32da0afec571dce300666f6f" }
-```
-
-Without a type definition the base58 encoded address will be treated as a string
-```js
-const data: MichelsonData = {
-    string: "KT1RvkwF4F7pz1gCoxkyZrG1RkrxQy3gmFTv%foo"
-};
-
-const packed = packData(data);
-// 0501000000284b543152766b7746344637707a3167436f786b795a724731526b7278517933676d46547625666f6f
-
-// alternatively
-const packedBytes = packDataBytes(data);
-// {
-//     bytes: "0501000000284b543152766b7746344637707a3167436f786b795a724731526b7278517933676d46547625666f6f" 
-// }
-```
-
-### Unpack Michelson data
-
-Deserialize a byte array into the corresponding Michelson value.
-Without a type definition (not recommended) the binary data will be treated as a binary form of a generic Michelson expression and returned as is.
-Type definition allows some types like `timestamp` and `address` and other types usually encoded in optimized binary forms to be transformed back to their string representations like base58 and ISO timestamps.
-
-```js
-const src = [0x05, 0x00, 0xa7, 0xe8, 0xe4, 0xd8, 0x0b];
-
-const typ: MichelsonType = {
-    prim: "timestamp"
-};
-
-const data = unpackData(src, typ);
-// { string: "2019-09-26T10:59:51Z" }
-```
-
-Alternatively
-```js
-const src = { bytes: "0500a7e8e4d80b" };
-
-const typ: MichelsonType = {
-    prim: "timestamp"
-};
-
-const data = unpackDataBytes(src, typ);
-// { string: "2019-09-26T10:59:51Z" }
-```
-
-Same binary data without a type definition
-```js
-const src = [0x05, 0x00, 0xa7, 0xe8, 0xe4, 0xd8, 0x0b];
-
-const data = unpackData(src);
-// { int: "1569495591" }
-```
-
-Alternatively
-```js
-const src = { bytes: "0500a7e8e4d80b" };
-
-const data = unpackDataBytes(src);
-// { int: "1569495591" }
 ```
 
 ## API Documentation

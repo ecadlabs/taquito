@@ -25,8 +25,6 @@ export default class LambdaView {
 
         const failedWith = lastError.with;
         return failedWith;
-      } else { 
-        throw ex;
       }
     }
   }

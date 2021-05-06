@@ -1,5 +1,0 @@
-# Although this contract is correctly typed, originating it with a forged
-# ticket should be refused
-parameter unit;
-storage (ticket nat);
-code { CDR ; NIL operation ; PAIR }

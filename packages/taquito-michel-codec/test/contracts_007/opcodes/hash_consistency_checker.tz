@@ -1,3 +1,0 @@
-parameter (pair mutez (pair timestamp int)) ;
-storage bytes ;
-code { CAR ; PACK ; BLAKE2B ; NIL operation ; PAIR }

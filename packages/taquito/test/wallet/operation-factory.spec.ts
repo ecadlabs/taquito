@@ -4,7 +4,7 @@ import { Context } from '../../src/context';
 import {
   createNewPollingBasedHeadObservable,
   cacheUntil,
-} from '../../src/wallet/operation-factory';
+} from '../../src/wallet/opreation-factory';
 import { switchMap } from 'rxjs/operators';
 describe('createNewPollingBasedHeadObservable', () => {
   const createFakeBlock = (level: number) => ({ hash: `test_${level}` });

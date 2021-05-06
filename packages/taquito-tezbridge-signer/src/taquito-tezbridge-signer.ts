@@ -1,13 +1,8 @@
-/**
- * @packageDocumentation
- * @module @taquito/tezbridge-signer
- */
 import { b58cdecode, b58cencode, buf2hex, prefix, isValidPrefix } from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
 
 declare var tezbridge: any;
 
-export { VERSION } from './version';
 export class TezBridgeSigner {
   constructor() {
     if (typeof tezbridge === 'undefined') {

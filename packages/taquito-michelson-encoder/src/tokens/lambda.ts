@@ -11,12 +11,8 @@ export class LambdaToken extends Token {
     super(val, idx, fac);
   }
 
-  public Execute(val: any) {
-    if (val.string) {
-      return val.string;
-    } else {
-      return val;
-    }
+  public Execute(val: any): { [key: string]: any } {
+    return val.string;
   }
 
   public Encode(args: any[]): any {

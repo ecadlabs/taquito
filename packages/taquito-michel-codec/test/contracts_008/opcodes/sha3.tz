@@ -1,8 +1,0 @@
-storage (option bytes);
-parameter bytes;
-code
-  {
-    CAR;
-    SHA3; SOME;
-    NIL operation; PAIR
-  }

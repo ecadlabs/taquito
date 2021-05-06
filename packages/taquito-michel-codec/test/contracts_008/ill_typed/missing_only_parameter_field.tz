@@ -1,4 +1,0 @@
-storage unit;
-code { CAR;
-       DUP; NEG; ABS; COMPARE; ASSERT_EQ;
-       UNIT; NIL operation; PAIR }

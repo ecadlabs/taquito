@@ -1,9 +1,0 @@
-parameter unit;
-storage (option bls12_381_fr);
-code {
-       DROP;
-       PUSH bls12_381_fr 0x00;
-       SOME;
-       NIL operation;
-       PAIR;
-     };

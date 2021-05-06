@@ -1,4 +1,4 @@
-import { Context, defaultConfig } from '../../src/context';
+import { defaultConfig } from '../../src/context';
 import { OriginationOperation } from '../../src/operations/origination-operation';
 import { ForgedBytes } from '../../src/operations/types';
 import { OperationContentsAndResult } from '@taquito/rpc';
@@ -72,7 +72,6 @@ describe('Origination operation', () => {
         getBlock: jest.fn(),
       },
       config: { ...defaultConfig },
-      getConfirmationPollingInterval: jest.fn()
     };
 
     fakeContext.rpc.getBlock.mockResolvedValue({
@@ -81,7 +80,6 @@ describe('Origination operation', () => {
         level: 200,
       },
     });
-    fakeContext.getConfirmationPollingInterval.mockResolvedValue(10);
   });
 
   describe('Status', () => {

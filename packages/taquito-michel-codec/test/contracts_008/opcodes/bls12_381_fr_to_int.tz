@@ -1,8 +1,0 @@
-parameter bls12_381_fr;
-storage int;
-code {
-       CAR;
-       INT;
-       NIL operation;
-       PAIR;
-     };

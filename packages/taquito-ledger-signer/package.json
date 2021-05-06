@@ -1,6 +1,6 @@
 {
   "name": "@taquito/ledger-signer",
-  "version": "9.0.0",
+  "version": "7.1.0-preview.1",
   "description": "Ledger signer provider",
   "keywords": [
     "tezos",
@@ -26,9 +26,8 @@
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
-    "version-stamp": "node ../taquito/version-stamping.js",
-    "build": "npm run version-stamp && tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts ",
-    "start": "npm run version-stamp && rollup -c rollup.config.ts -w"
+    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts ",
+    "start": "rollup -c rollup.config.ts -w"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
@@ -57,24 +56,25 @@
     ]
   },
   "dependencies": {
-    "@ledgerhq/hw-transport": "^5.41.0",
-    "@taquito/taquito": "^9.0.0",
-    "@taquito/utils": "^9.0.0",
-    "@types/jest": "^26.0.16",
+    "@ledgerhq/hw-transport": "^5.25.0",
+    "@ledgerhq/hw-transport-node-hid": "^5.25.0",
+    "@taquito/taquito": "^7.1.0-preview.1",
+    "@taquito/utils": "^7.1.0-preview.1",
+    "@types/jest": "^26.0.14",
     "buffer": "^5.6.0",
     "libsodium-wrappers": "^0.7.8"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.16",
+    "@types/jest": "^26.0.14",
     "@types/ledgerhq__hw-transport-node-hid": "^4.22.2",
     "@types/libsodium-wrappers": "^0.7.8",
-    "@types/node": "^14.14.10",
-    "@types/ws": "^7.4.0",
+    "@types/node": "^14.11.5",
+    "@types/ws": "^7.2.7",
     "colors": "^1.4.0",
     "coveralls": "^3.1.0",
     "cross-env": "^7.0.2",
-    "jest": "^26.6.3",
-    "jest-config": "^26.6.3",
+    "jest": "^26.5.2",
+    "jest-config": "^26.5.2",
     "lint-staged": "^10.4.0",
     "lodash.camelcase": "^4.3.0",
     "prettier": "^2.1.2",
@@ -86,12 +86,12 @@
     "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-typescript2": "^0.27.3",
     "shelljs": "^0.8.4",
-    "ts-jest": "^26.4.4",
-    "ts-node": "^9.1.1",
+    "ts-jest": "^26.4.1",
+    "ts-node": "^9.0.0",
     "tslint": "^6.1.2",
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-standard": "^9.0.0",
-    "typescript": "^4.1.5"
+    "typescript": "^4.0.3"
   },
   "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
 }
