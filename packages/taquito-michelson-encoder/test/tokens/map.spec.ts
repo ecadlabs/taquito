@@ -122,6 +122,158 @@ describe('Map token', () => {
         { prim: 'Elt', args: [{ int: '22' }, { int: '2' }] }
       ]);
     });
+
+    it('Encode properly a map with keys of type or', () => {
+      // Map keys must be in strictly increasing order
+      token = createToken(
+        {
+          "prim": "map",
+          "args":
+            [{
+              "prim": "or",
+              "args":
+                [{
+                  "prim": "or",
+                  "args":
+                    [{
+                      "prim": "or",
+                      "args":
+                        [{
+                          "prim": "address",
+                          "annots": ["%myAddress"]
+                        },
+                        { "prim": "bytes", "annots": ["%myBytes"] }]
+                    },
+                    {
+                      "prim": "or",
+                      "args":
+                        [{ "prim": "int", "annots": ["%myInt"] },
+                        { "prim": "nat", "annots": ["%myNat"] }]
+                    }]
+                },
+                {
+                  "prim": "or",
+                  "args":
+                    [{
+                      "prim": "or",
+                      "args":
+                        [{
+                          "prim": "pair",
+                          "args":
+                            [{ "prim": "nat" }, { "prim": "int" }],
+                          "annots": ["%myPair"]
+                        },
+                        {
+                          "prim": "string",
+                          "annots": ["%myString"]
+                        }]
+                    },
+                    { "prim": "mutez", "annots": ["%myTez"] }]
+                }]
+            },
+            { "prim": "nat" }]
+        },
+        0
+      ) as MapToken;
+      const map = new MichelsonMap();
+      map.set({ myTez: 12 }, 3); //RR
+      map.set({ myTez: 2 }, 3); //RR
+      map.set({ myBytes: 'cccc' }, 15) //LLR
+      map.set({ myAddress: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu' }, 5) //LLL
+      map.set({ myNat: 48 }, 16) //LRR
+      map.set({ myPair: { 4: 12, 5: 6 } }, 3); //RLL
+      map.set({ myInt: 4 }, 6) //LRL
+      map.set({ myString: 'test' }, 3); //RLR
+      map.set({ myBytes: 'aaaa' }, 5) //LLR
+      const result = token.Encode([map]);
+      console.log(JSON.stringify(result, null, 2))
+      expect(result).toEqual([
+        { prim: 'Elt', args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ string: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu' }] }] }] }, { int: '5' }] },
+        { prim: 'Elt', args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ bytes: 'aaaa' }] }] }] }, { int: '5' }] },
+        { prim: 'Elt', args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ bytes: 'cccc' }] }] }] }, { int: '15' }] },
+        { prim: 'Elt', args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ prim: 'Left', args: [{ int: '4' }] }] }] }, { int: '6' }] },
+        { prim: 'Elt', args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ int: '48' }] }] }] }, { int: '16' }] },
+        { prim: 'Elt', args: [{ prim: 'Right', args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ prim: 'Pair', args: [{ int: '12' }, { int: '6' }] }] }] }] }, { int: '3' }] },
+        { prim: 'Elt', args: [{ prim: 'Right', args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ string: 'test' }] }] }] }, { int: '3' }] },
+        { prim: 'Elt', args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ int: '2' }] }] }, { int: '3' }] },
+        { prim: 'Elt', args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ int: '12' }] }] }, { int: '3' }] },
+      ]);
+    });
+
+    it('Encode properly a map with keys of type or no annotation', () => {
+      // Map keys must be in strictly increasing order
+      token = createToken(
+        {
+          "prim": "map",
+          "args":
+            [{
+              "prim": "or",
+              "args":
+                [{
+                  "prim": "or",
+                  "args":
+                    [{
+                      "prim": "or",
+                      "args":
+                        [{
+                          "prim": "address"
+                        },
+                        { "prim": "bytes" }]
+                    },
+                    {
+                      "prim": "or",
+                      "args":
+                        [{ "prim": "int" },
+                        { "prim": "nat" }]
+                    }]
+                },
+                {
+                  "prim": "or",
+                  "args":
+                    [{
+                      "prim": "or",
+                      "args":
+                        [{
+                          "prim": "pair",
+                          "args":
+                            [{ "prim": "nat" }, { "prim": "int" }]
+                        },
+                        {
+                          "prim": "string",
+                          
+                        }]
+                    },
+                    { "prim": "mutez" }]
+                }]
+            },
+            { "prim": "nat" }]
+        },
+        0
+      ) as MapToken;
+      const map = new MichelsonMap();
+      map.set({ 6: 12 }, 3); //RR
+      map.set({ 6: 2 }, 3); //RR
+      map.set({ 1: 'cccc' }, 15) //LLR
+      map.set({ 0: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu' }, 5) //LLL
+      map.set({ 3: 48 }, 16) //LRR
+      map.set({ 4: { 4: 12, 5: 6 } }, 3); //RLL
+      map.set({ 2: 4 }, 6) //LRL
+      map.set({ 5: 'test' }, 3); //RLR
+      map.set({ 1: 'aaaa' }, 5) //LLR
+      const result = token.Encode([map]);
+      console.log(JSON.stringify(result, null, 2))
+      expect(result).toEqual([
+        { prim: 'Elt', args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ string: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu' }] }] }] }, { int: '5' }] },
+        { prim: 'Elt', args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ bytes: 'aaaa' }] }] }] }, { int: '5' }] },
+        { prim: 'Elt', args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ bytes: 'cccc' }] }] }] }, { int: '15' }] },
+        { prim: 'Elt', args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ prim: 'Left', args: [{ int: '4' }] }] }] }, { int: '6' }] },
+        { prim: 'Elt', args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ int: '48' }] }] }] }, { int: '16' }] },
+        { prim: 'Elt', args: [{ prim: 'Right', args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ prim: 'Pair', args: [{ int: '12' }, { int: '6' }] }] }] }] }, { int: '3' }] },
+        { prim: 'Elt', args: [{ prim: 'Right', args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ string: 'test' }] }] }] }, { int: '3' }] },
+        { prim: 'Elt', args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ int: '2' }] }] }, { int: '3' }] },
+        { prim: 'Elt', args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ int: '12' }] }] }, { int: '3' }] },
+      ]);
+    });
   });
 });
 
