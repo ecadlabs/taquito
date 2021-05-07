@@ -31,7 +31,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 }
             });
             const contract = await op.contract();
-
+            
             interface StorageType {
                 0: BigMapAbstraction,
                 1: string,

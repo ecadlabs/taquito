@@ -15,6 +15,7 @@ const blake = require('blakejs');
 const bs58check = require('bs58check');
 
 export * from './validators';
+export { VERSION } from './version';
 
 export { prefix, Prefix, prefixLength } from './constants';
 

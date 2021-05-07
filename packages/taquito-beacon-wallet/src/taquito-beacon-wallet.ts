@@ -20,6 +20,8 @@ import {
   WalletTransferParams,
 } from '@taquito/taquito';
 
+export { VERSION } from './version';
+
 export class BeaconWalletNotInitialized implements Error {
   name = 'BeaconWalletNotInitialized';
   message = 'You need to initialize BeaconWallet by calling beaconWallet.requestPermissions first';

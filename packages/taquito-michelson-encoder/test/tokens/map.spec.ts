@@ -164,6 +164,43 @@ describe('Map token', () => {
         { prim: 'Elt', args: [{ string: 'edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g' }, { int: '30' }] },
       ]);
     })
+
+    it('Encode properly a map with keys of type option using fromLiteral', () => {
+      // Map keys must be in strictly increasing order
+      token = createToken(
+        { prim: 'map', args: [{ prim: 'option', args: [{ prim: 'int' }], }, { prim: 'int' }], annots: [] },
+        0
+      ) as MapToken;
+      const map = MichelsonMap.fromLiteral({
+        5: 30,
+        3: 1,
+        22: 1
+      })
+      const result = token.Encode([map]);
+      expect(result).toEqual([
+        { prim: 'Elt', args: [{ prim: 'Some', args: [{ int: '3' }] }, { int: '1' }] },
+        { prim: 'Elt', args: [{ prim: 'Some', args: [{ int: '5' }] }, { int: '30' }] },
+        { prim: 'Elt', args: [{ prim: 'Some', args: [{ int: '22' }] }, { int: '1' }] },
+      ]);
+    });
+
+    it('Encode properly a map with keys of type option', () => {
+      // Map keys must be in strictly increasing order
+      token = createToken(
+        { prim: 'map', args: [{ prim: 'option', args: [{ prim: 'int' }], }, { prim: 'int' }], annots: [] },
+        0
+      ) as MapToken;
+      const map = new MichelsonMap();
+      map.set(5, 30);
+      map.set(3, 1);
+      map.set(22, 1);
+      const result = token.Encode([map]);
+      expect(result).toEqual([
+        { prim: 'Elt', args: [{ prim: 'Some', args: [{ int: '3' }] }, { int: '1' }] },
+        { prim: 'Elt', args: [{ prim: 'Some', args: [{ int: '5' }] }, { int: '30' }] },
+        { prim: 'Elt', args: [{ prim: 'Some', args: [{ int: '22' }] }, { int: '1' }] },
+      ]);
+    });
   });
 });
 

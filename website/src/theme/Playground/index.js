@@ -46,10 +46,10 @@ function println(value) {
   render(_printlnBuffer);
 }
 
-Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/edonet' });
+Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/florencenet' });
 
 ${this.props.wallet ? 
-  `const network = {type:"edonet"};
+  `const network = {type:"florencenet"};
   wallet.requestPermissions({network})
   .then(permission => {
     return Tezos.setWalletProvider(wallet);
@@ -57,7 +57,7 @@ ${this.props.wallet ?
   .then(() => {
     ${this.code}
   });`:
-  `fetch('https://api.tez.ie/keys/edonet/', {
+  `fetch('https://api.tez.ie/keys/florencenet/', {
     method: 'POST',
     headers: { Authorization: 'Bearer taquito-example' },
   })
