@@ -5,7 +5,6 @@ import { MANAGER_LAMBDA } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-
   const test = require('jest-retries');
 
   describe(`Test contract that calls 2nd contract that FAILs: ${rpc}`, () => {
