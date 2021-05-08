@@ -66,6 +66,12 @@ export interface OperationContentsEndorsement {
   level: number;
 }
 
+export interface OperationContentsEndorsementWithSlot  {
+  kind: OpKind.ENDORSEMENT_WITH_SLOT;
+  endorsement: InlinedEndorsement;
+  slot: number;
+}
+
 export interface OperationContentsRevelation {
   kind: OpKind.SEED_NONCE_REVELATION;
   level: number;
@@ -76,6 +82,7 @@ export interface OperationContentsDoubleEndorsement {
   kind: OpKind.DOUBLE_ENDORSEMENT_EVIDENCE;
   op1: InlinedEndorsement;
   op2: InlinedEndorsement;
+  slot?: number;
 }
 
 export interface OperationContentsDoubleBaking {
@@ -160,7 +167,8 @@ export type OperationContents =
   | OperationContentsReveal
   | OperationContentsTransaction
   | OperationContentsOrigination
-  | OperationContentsDelegation;
+  | OperationContentsDelegation
+  | OperationContentsEndorsementWithSlot;
 
 export interface OperationContentsAndResultMetadataExtended {
   balance_updates: OperationMetadataBalanceUpdates[];
@@ -196,6 +204,13 @@ export interface OperationContentsAndResultEndorsement {
   metadata: OperationContentsAndResultMetadataExtended;
 }
 
+export interface OperationContentsAndResultEndorsementWithSlot {
+  kind: OpKind.ENDORSEMENT_WITH_SLOT;
+  endorsement: InlinedEndorsement;
+  slot: number;
+  metadata: OperationContentsAndResultMetadataExtended;
+}
+
 export interface OperationContentsAndResultRevelation {
   kind: OpKind.SEED_NONCE_REVELATION;
   level: number;
@@ -207,6 +222,7 @@ export interface OperationContentsAndResultDoubleEndorsement {
   kind: OpKind.DOUBLE_ENDORSEMENT_EVIDENCE;
   op1: InlinedEndorsement;
   op2: InlinedEndorsement;
+  slot?: number;
   metadata: OperationContentsAndResultMetadata;
 }
 
@@ -285,7 +301,8 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultReveal
   | OperationContentsAndResultTransaction
   | OperationContentsAndResultOrigination
-  | OperationContentsAndResultDelegation;
+  | OperationContentsAndResultDelegation
+  | OperationContentsAndResultEndorsementWithSlot;
 
 export interface OperationEntry {
   protocol: string;
@@ -549,6 +566,7 @@ export interface InternalOperationResult {
 
 export type MetadataBalanceUpdatesKindEnum = 'contract' | 'freezer';
 export type MetadataBalanceUpdatesCategoryEnum = 'rewards' | 'fees' | 'deposits';
+export type MetadataBalanceUpdatesOriginEnum = 'block' | 'migration';
 
 export interface OperationMetadataBalanceUpdates {
   kind: MetadataBalanceUpdatesKindEnum;
@@ -557,6 +575,7 @@ export interface OperationMetadataBalanceUpdates {
   delegate?: string;
   cycle?: number;
   change: string;
+  origin?: MetadataBalanceUpdatesOriginEnum;
 }
 
 export type OperationResultStatusEnum = 'applied' | 'failed' | 'skipped' | 'backtracked';
