@@ -1,6 +1,6 @@
 import { RpcClient } from '../src/taquito-rpc';
 import BigNumber from 'bignumber.js';
-import { OperationContentsAndResultEndorsement } from '../src/types';
+import { OperationContentsAndResultEndorsement, OperationContentsAndResultEndorsementWithSlot } from '../src/types';
 import { OperationContentsAndResultTransaction } from '../src/types';
 
 /**
@@ -1040,6 +1040,93 @@ describe('RpcClient test', () => {
       expect(transaction.metadata.balance_updates[0].change).toEqual('-2820');
       expect(transaction.metadata.operation_result.status).toEqual('applied');
       expect(transaction.metadata.operation_result.consumed_gas).toEqual('24660');
+      done();
+    });
+
+    it('query the right url and property for operation, proto 9, endorsement_with_slot', async done => {
+      httpBackend.createRequest.mockReturnValue(
+        Promise.resolve({
+          "protocol": "PsFLorenaUUuikDWvMDr6fGBRG8kt3e3D3fHoXK1j1BFRxeSH4i",
+          "chain_id": "NetXxkAx4woPLyu",
+          "hash": "BLRWVvWTrqgUt1JL76RnUguKhkqfbHnXVrznXpuCrhxemSuCrb3",
+          "header": {
+            "level": 174209,
+            "proto": 1,
+            "predecessor": "BMarN3hiEmCrSrfeo6qndubHe9FXpPy4qcj3Xr2NBGGfG4Tfcaj",
+            "timestamp": "2021-05-07T18:37:59Z",
+            "validation_pass": 4,
+            "operations_hash": "LLoaFb5cQjcr2pzKbLsmhPN2NgLY5gGs9ePimjRsNyCtgAQejfbXg",
+            "fitness": ["01", "000000000002a880"],
+            "context": "CoWMJU1LmpfMn92zz4Ah1TrwXaSHnRWcy8dcso32AH7miULKad1d",
+            "priority": 0,
+            "proof_of_work_nonce": "08351e3d59170e00",
+            "signature": "sigg9pz9Q5i17nDZpZ3mbbMQsLHNuHX3SxTxHguLwgR9xYL2x17TmH7QfVFsadQTa61QCnq5vuFXkFtymeQKNh74VsWnMu9D"
+          },
+          "metadata": {},
+          "operations": [
+            [
+              {
+                "protocol": "PsFLorenaUUuikDWvMDr6fGBRG8kt3e3D3fHoXK1j1BFRxeSH4i",
+                "chain_id": "NetXxkAx4woPLyu",
+                "hash": "ooYSSxYcgreJQtrzxqyBpBdCntVbnbvHdtqA7RZsFcSDz4XFZJY",
+                "branch": "BMarN3hiEmCrSrfeo6qndubHe9FXpPy4qcj3Xr2NBGGfG4Tfcaj",
+                "contents": [
+                  {
+                    "kind": "endorsement_with_slot",
+                    "endorsement": {
+                      "branch": "BMarN3hiEmCrSrfeo6qndubHe9FXpPy4qcj3Xr2NBGGfG4Tfcaj",
+                      "operations": { "kind": "endorsement", "level": 174208 },
+                      "signature": "signiPFVn2gFXvu7dKxEnifWQgbzan9ca6z7XSS5PyNBin2BufNBTFz9hgM7imvWf2HSj6NY3ECtEvb5xmwiYnUDbpSTUQC6"
+                    },
+                    "slot": 4,
+                    "metadata": {
+                      "balance_updates": [
+                        {
+                          "kind": "contract",
+                          "contract": "tz1VWasoyFGAWZt5K2qZRzP3cWzv3z7MMhP8",
+                          "change": "-320000000",
+                          "origin": "block"
+                        },
+                        {
+                          "kind": "freezer",
+                          "category": "deposits",
+                          "delegate": "tz1VWasoyFGAWZt5K2qZRzP3cWzv3z7MMhP8",
+                          "cycle": 85,
+                          "change": "320000000",
+                          "origin": "block"
+                        },
+                        {
+                          "kind": "freezer",
+                          "category": "rewards",
+                          "delegate": "tz1VWasoyFGAWZt5K2qZRzP3cWzv3z7MMhP8",
+                          "cycle": 85,
+                          "change": "6250000",
+                          "origin": "block"
+                        }
+                      ],
+                      "delegate": "tz1VWasoyFGAWZt5K2qZRzP3cWzv3z7MMhP8",
+                      "slots": [4, 11, 18, 21, 24]
+                    }
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+        )
+      );
+
+      const response = await client.getBlock();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head',
+      });
+      const endorsementWithSlot = response.operations[0][0]
+        .contents[0] as OperationContentsAndResultEndorsementWithSlot;
+      expect(endorsementWithSlot.kind).toEqual('endorsement_with_slot');
+      expect(endorsementWithSlot.metadata.slots).toEqual([4, 11, 18, 21, 24]);
+      expect(endorsementWithSlot.slot).toEqual(4);
       done();
     });
   });
