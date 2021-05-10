@@ -85,7 +85,7 @@
     "@taquito/utils": "^9.0.1",
     "bignumber.js": "^9.0.1",
     "rx-sandbox": "^1.0.4",
-    "rxjs": "^6.0.0"
+    "rxjs": "^6.6.3"
   },
   "devDependencies": {
     "@babel/types": "7.14.1",
@@ -120,7 +120,7 @@
     "tslint": "^6.1.3",
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-standard": "^9.0.0",
-    "typescript": "^4.2.4",
+    "typescript": "^4.1.5",
     "url": "^0.11.0",
     "webpack": "^5.36.2",
     "webpack-assets-manifest": "^5.0.6",
