@@ -42,7 +42,6 @@ export class OrToken extends ComparableToken {
           return { prim: 'Right', args: [val] };
         }
       }
-      // throw new OrTokenValidationError(args, this, `Wrong annotation or index, received ${label} while expecting one of the following: ${String(leftToken.annot())} or ${String(rightToken.annot())}`); 
       return null;
     }
   }
@@ -119,8 +118,17 @@ export class OrToken extends ComparableToken {
     const rightToken = this.createToken(this.val.args[1], this.idx + keyCount);
 
     if (val.prim === 'Right') {
-      return rightToken.Execute(val.args[0], semantics);
+      if (rightToken instanceof OrToken) {
+        return rightToken.Execute(val.args[0], semantics)
+      } else {
+        return {
+          [rightToken.annot()]: rightToken.Execute(val.args[0], semantics),
+        };
+      }
     } else if (val.prim === 'Left') {
+      if (leftToken instanceof OrToken) {
+        return leftToken.Execute(val.args[0], semantics)
+      }
       return {
         [leftToken.annot()]: leftToken.Execute(val.args[0], semantics),
       };

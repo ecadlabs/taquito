@@ -5,16 +5,15 @@ import { mapWithPairAsKeyCode, mapWithPairAsKeyStorage } from "./data/bigmap_wit
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
+  const test = require('jest-retries');
+
   describe(`Storage contract with pair as key using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    // Pair as key is only supported since proto 006
-    // Now that babylone has been removed from Config, this check is not required
-    // if (protocol === Protocols.PsCARTHA) {
-      it('Storage contract with pair as key', async (done) => {
+      test('Storage contract with pair as key', 2, async (done: () => void) => {
         const storageMap = new MichelsonMap();
         // The contract schema in this example has a key with 8 nested pairs
         // (int(nat(string(bytes(mutez(bool(key_hash(timestamp(address)))))))))
@@ -77,7 +76,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         done();
       })
 
-    it('originate contract and init storage with pair as key in map', async (done) => {
+    test('originate contract and init storage with pair as key in map', 2, async (done: () => void) => {
         const op = await Tezos.contract.originate({
           balance: "0",
           code: mapWithPairAsKeyCode,
