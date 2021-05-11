@@ -17,6 +17,7 @@ import elliptic from 'elliptic';
 import toBuffer from 'typedarray-to-buffer';
 import { BadSigningDataError, KeyNotFoundError, OperationNotAuthorizedError } from './errors';
 import { Signer } from '@taquito/taquito';
+import { localForger } from '@taquito/local-forging'
 interface PublicKeyResponse {
   public_key: string;
 }
@@ -123,8 +124,10 @@ export class RemoteSigner implements Signer {
         throw new Error(
           `Signature failed verification against public key:
           {
+            publicKeyHash: ${this.pkh},
             bytes: ${watermarkedBytes},
-            signature: ${signature}
+            signature: ${signature}.
+            operation: ${await localForger.parse(bytes)}
           }`
         );
       }
@@ -219,9 +222,11 @@ export class RemoteSigner implements Signer {
           const [r, s] = match;
           return key.verify(bytesHash, { r, s });
         } catch (e) {
+          console.log('Error while verifying key:', e)
           return false;
         }
       }
+      console.log('match:', match)
       return false;
     }
 

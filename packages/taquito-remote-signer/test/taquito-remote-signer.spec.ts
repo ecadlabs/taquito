@@ -112,7 +112,7 @@ describe('RemoteSigner test', () => {
 
     it('Should fail if signature is invalid', async (done) => {
       const signer = new RemoteSigner(
-        'tz1iD5nmudc4QtfNW14WWaiP7JEDuUHnbXuv',
+        'tz3S73v1q3o1owAdzhgxbpvadGzPGLvqLX26',
         'http://127.0.0.1:6732',
         {},
         httpBackend as any
@@ -121,15 +121,15 @@ describe('RemoteSigner test', () => {
       httpBackend.createRequest
         .mockResolvedValueOnce({
           signature:
-            'sigSpyZVEaJAsudrgCwqM7barZMR7XDB8xrEiEhKNz6hxeGc4EXh2NwM4TgeucxARMHYxGGZsAcwxFx5hfoerrztKtopmvvt', // Invalid signature
+            'p2sigXejNaP3SWoeq7ieJSrYuPqoUiwXhf9SrLsHXhdYKb8YzH694EqRjRJY5krLHC692tD3wU8ymBmKsdBxopZoW9GEoTpydN', // Invalid signature
         })
         .mockResolvedValueOnce({
-          public_key: 'edpkuAhkJ81xGyf4PcmRMHLSaQGbDEpkGhNbcjNVnKWKR8kqkgQR3f',
+          public_key: 'p2pk65QWSrLxbtTGvT4LJJKyF4hbyPwJFEpWYt8P1YCHMp3mh3DmZgB',
         });
 
       await expect(
         signer.sign(
-          '0365cac93523b8c10346c0107cfea5e12ff3c759459020e532f299e2f41082f7cb6d0000f68c4abfa21dfc0c9efcf588190388cac85d9db60f81d6038b79d8030000000000b902000000b405000764045b0000000a2564656372656d656e74045b0000000a25696e6372656d656e740501035b0502020000008503210317057000010321057100020316072e020000002b032105700002032105710003034203210317057000010321057100020316034b051f020000000405200002020000002b0321057000020321057100030342032103170570000103210571000203160312051f0200000004052000020321053d036d0342051f020000000405200003000000020000'
+          '8fb58864f507519e4ea58d78708c99110942b515da6bdaccac7fe2378e60d95d6b023f5b98d1b5aa753abce285b5d10a6aafad72d1e18c0ba0af2de8520002026dc6730077aff62474632e5b2625a43341539d585e553e547a7dbb313b8dd7f86c023f5b98d1b5aa753abce285b5d10a6aafad72d1e1fb03a1af2df70b810280897a0002e34c8b6b18bd7f72d148c7e33255bd2401eab2a400'
         )
       ).rejects.toThrowError(/Signature failed verification against public key/);
 
