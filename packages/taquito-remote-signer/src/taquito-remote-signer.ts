@@ -121,13 +121,14 @@ export class RemoteSigner implements Signer {
 
       const signatureVerified = await this.verify(watermarkedBytes, signature);
       if (!signatureVerified) {
+        const op = await localForger.parse(bytes)
         throw new Error(
           `Signature failed verification against public key:
           {
             publicKeyHash: ${this.pkh},
             bytes: ${watermarkedBytes},
             signature: ${signature}.
-            operation: ${await localForger.parse(bytes)}
+            operation: ${JSON.stringify(op, null, 2)}
           }`
         );
       }
