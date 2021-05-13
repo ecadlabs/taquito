@@ -43,4 +43,26 @@ describe('Key token', () => {
       }
     });
   });
+
+  describe('Tokey', () => {
+    it('Should transform Michelson bytes data to a key of type string', () => {
+      expect(token.ToKey({ "bytes": "00ebcf82872f4942052704e95dc4bfa0538503dbece27414a39b6650bcecbff896" })).toEqual('edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g');
+    });
+  });
+
+  describe('ToBigMapKey', () => {
+    it('Should transform key of type string to a Michelson big map key', () => {
+      expect(token.ToBigMapKey("edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g")).toEqual({
+        key: { string: "edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g" },
+        type: { prim: 'key' }
+      });
+    });
+  });
+
+  describe('compare', () => {
+    it('Should compare key properly', () => {
+      expect(token.compare("edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g", "edpkuNjKKT48xBoT5asPrWdmuM1Yw8D93MwgFgVvtca8jb5pstzaCh")).toEqual(1);
+      expect(token.compare("edpkuNjKKT48xBoT5asPrWdmuM1Yw8D93MwgFgVvtca8jb5pstzaCh", "edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g")).toEqual(-1);
+    });
+  });
 });
