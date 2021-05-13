@@ -242,7 +242,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			done(); 
 		});    
 
-		it('Should test contratAbstraction composition, fetch contract and token metadata of the Fa2 contract', async (done) => {
+		it('Should test contractAbstraction composition, fetch contract and token metadata of the Fa2 contract', async (done) => {
 			Tezos.addExtension(new Tzip16Module());
 
 			// Use the compose function
