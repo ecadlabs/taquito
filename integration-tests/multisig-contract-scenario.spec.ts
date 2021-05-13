@@ -29,7 +29,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       const contract = await op.contract();
       expect(op.status).toEqual('applied')
 
-      // Utility function that mimic the PAIR operation of michelson
+      // Utility function that mimics the PAIR operation of Michelson
       // file deepcode ignore no-any: any is good enough
       const pair = ({ data, type }: any, value: any) => {
         return {
@@ -44,7 +44,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         }
       }
 
-      // Packing the data that need to be sign by each party of the multi-sig
+      // Packing the data that needs to be signed by each party of the multi-sig
       // The data passed to this step is specific to this multi-sig implementation
       // file deepcode ignore no-any: any is good enough
       const { packed } = await Tezos.rpc.packData(pair({
