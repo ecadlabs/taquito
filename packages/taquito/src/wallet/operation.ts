@@ -1,5 +1,5 @@
 import { BlockResponse, OperationContentsAndResult, OperationResultStatusEnum } from '@taquito/rpc';
-import { combineLatest, from, Observable, ReplaySubject, throwError } from 'rxjs';
+import { combineLatest, from, Observable, ReplaySubject } from 'rxjs';
 import {
   distinctUntilChanged,
   filter,
@@ -78,11 +78,7 @@ export class WalletOperation {
    * The promise returned by receipt will resolve only once the transaction is included
    */
   async receipt(): Promise<Receipt> {
-    const operationResults = await this.operationResults();
-    if (!operationResults) {
-      throw new Error('Operation and results found to be undefined!');
-    }
-    return receiptFromOperation(operationResults);
+    return receiptFromOperation(await this.operationResults());
   }
 
   /**
@@ -122,10 +118,6 @@ export class WalletOperation {
 
     const tipBlockHeader = await this.context.rpc.getBlockHeader({ block: tipBlockIdentifier });
     const inclusionBlock = await this._includedInBlock.pipe(first()).toPromise();
-
-    if(!inclusionBlock) {
-      throw new Error('Inclusion block found to be undefined!');
-    }
 
     const levelDiff = tipBlockHeader.level - inclusionBlock.header.level;
 

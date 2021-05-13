@@ -19,11 +19,6 @@ export class TransactionWalletOperation extends WalletOperation {
 
   public async revealOperation() {
     const operationResult = await this.operationResults();
-    
-    if(!operationResult) {
-      throw new Error('Operation and result found to be undefined!');
-    }
-
     return operationResult.find(x => x.kind === OpKind.REVEAL) as
       | OperationContentsAndResultReveal
       | undefined;
@@ -31,11 +26,6 @@ export class TransactionWalletOperation extends WalletOperation {
 
   public async transactionOperation() {
     const operationResult = await this.operationResults();
-    
-    if(!operationResult) {
-      throw new Error('Operation and result found to be undefined!');
-    }
-    
     return operationResult.find(x => x.kind === OpKind.TRANSACTION) as
       | OperationContentsAndResultTransaction
       | undefined;
