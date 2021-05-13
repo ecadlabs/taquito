@@ -74,15 +74,15 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
         it('Deploy a contract having metadata inside another contract same network', async (done) => {
 
-            const metadataBigMAp = new MichelsonMap();
-            metadataBigMAp.set("", char2Bytes(`tezos-storage://${contractAddress}/here`));
+            const metadataBigMap = new MichelsonMap();
+            metadataBigMap.set("", char2Bytes(`tezos-storage://${contractAddress}/here`));
 
             const tacoShopStorageMap = new MichelsonMap();
 
             const op = await Tezos.contract.originate({
                 code: tacoContractTzip16,
                 storage: {
-                    metadata: metadataBigMAp,
+                    metadata: metadataBigMap,
                     taco_shop_storage: tacoShopStorageMap
                 },
             });
