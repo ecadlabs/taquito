@@ -72,6 +72,11 @@ export interface OperationContentsEndorsementWithSlot  {
   slot: number;
 }
 
+export interface OperationContentsFailingNoop {
+  kind: OpKind.FAILING_NOOP;
+  arbitrary: string;
+}
+
 export interface OperationContentsRevelation {
   kind: OpKind.SEED_NONCE_REVELATION;
   level: number;
@@ -168,7 +173,8 @@ export type OperationContents =
   | OperationContentsTransaction
   | OperationContentsOrigination
   | OperationContentsDelegation
-  | OperationContentsEndorsementWithSlot;
+  | OperationContentsEndorsementWithSlot
+  | OperationContentsFailingNoop;
 
 export interface OperationContentsAndResultMetadataExtended {
   balance_updates: OperationMetadataBalanceUpdates[];
@@ -377,7 +383,7 @@ export interface BallotsResponse {
   pass: number;
 }
 
-export type PeriodKindResponse = 'proposal' | 'testing_vote' | 'testing' | 'promotion_vote';
+export type PeriodKindResponse = 'proposal' | 'testing_vote' | 'testing' | 'promotion_vote' | 'exploration' | 'cooldown' | 'promotion' | 'adoption';
 
 export type CurrentProposalResponse = string | null;
 
@@ -481,6 +487,7 @@ export interface OperationBalanceUpdatesItem {
   cycle?: number;
   contract?: string;
   change: string;
+  origin?: MetadataBalanceUpdatesOriginEnum;
 }
 
 export type OperationBalanceUpdates = OperationBalanceUpdatesItem[];
@@ -512,8 +519,8 @@ export interface OperationResultDelegation {
 }
 
 export interface ContractBigMapDiffItem {
-  key_hash: string;
-  key: MichelsonV1Expression;
+  key_hash?: string;
+  key?: MichelsonV1Expression;
   value?: MichelsonV1Expression;
   action?: DiffActionEnum;
   big_map?: BigNumber;
@@ -589,25 +596,33 @@ export type OperationResultStatusEnum = 'applied' | 'failed' | 'skipped' | 'back
 
 export type DiffActionEnum = 'update' | 'remove' | 'copy' | 'alloc';
 
-export type LazyStorageDiffKindEnum = 'big_map' | 'sapling_state';
+// export type LazyStorageDiffKindEnum = 'big_map' | 'sapling_state';
 
-export interface LazyStorageDiff {
-  kind: LazyStorageDiffKindEnum;
-  id: string;
-  diff: LazyStorageDiffBigMap | LazyStorageDiffSaplingState;
-}
+export type LazyStorageDiff = LazyStorageDiffBigMap | LazyStorageDiffSaplingState;
 
 export interface LazyStorageDiffBigMap {
+  kind: 'big_map';
+  id: string;
+  diff: LazyStorageDiffBigMapItems;
+}
+
+export interface LazyStorageDiffSaplingState {
+  kind: 'sapling_state';
+  id: string;
+  diff: LazyStorageDiffSaplingStateItems;
+}
+
+export interface LazyStorageDiffBigMapItems {
   action: DiffActionEnum;
-  updates?: LazyStorageDiffUpdatesBigMap;
+  updates?: LazyStorageDiffUpdatesBigMap[];
   source?: string;
   key_type?: MichelsonV1Expression;
   value_type?: MichelsonV1Expression;
 }
 
-export interface LazyStorageDiffSaplingState {
+export interface LazyStorageDiffSaplingStateItems {
   action: DiffActionEnum;
-  updates?: LazyStorageDiffUpdatesSaplingState;
+  updates?: LazyStorageDiffUpdatesSaplingState[];
   source?: string;
   memo_size?: number;
 }
@@ -731,7 +746,7 @@ export interface TestChainStatus {
 
 export interface MaxOperationListLength {
   max_size: number;
-  max_op: number;
+  max_op?: number;
 }
 
 export interface Level {
