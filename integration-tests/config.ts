@@ -200,6 +200,8 @@ const setupSignerWithEphemeralKey = async (
     const signer = new RemoteSigner(pkh, `${ephemeralUrl}/${id}/`, { headers: requestHeaders });
     Tezos.setSignerProvider(signer);
 
+    console.log(`Created an instance of remoteSigner with pkh:${pkh}, ephemeralUrl:${ephemeralUrl}, id:${id}`)
+
   } catch (e) {
     console.log("An error occurs when trying to fetch an ephemeral key:", e)
   }
