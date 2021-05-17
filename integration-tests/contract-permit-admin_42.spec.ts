@@ -2,17 +2,17 @@ import { CONFIGS } from "./config";
 import { MichelsonMap } from "@taquito/taquito";
 import { Protocols } from "@taquito/taquito";
 import { MichelCodecPacker } from '../packages/taquito/src/packer/michel-codec-packer';
-import { Parser } from '@taquito/michel-codec';
-import { encodeExpr } from "@taquito/utils";
+import { packDataBytes, Parser } from '@taquito/michel-codec';
 import { MichelsonV1Expression, RpcClient } from '@taquito/rpc';
-import { validateSignature } from '../packages/taquito-utils/src/validators';
-
+import { InMemorySigner, importKey } from '@taquito/signer';
 
 CONFIGS().forEach(({ lib, rpc, protocol, setup, createAddress }) => {
    const Tezos = lib;
+   const signer = new InMemorySigner('edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca');
+   Tezos.setSignerProvider(signer)
    const edonet = (protocol === Protocols.PtEdo2Zk) ? test : test.skip;
    const florencenet = (protocol === Protocols.PsFLorena) ? test : test.skip;
-
+   
    describe(`Test of contracts having a permit for tzip-17: ${rpc}`, () => {
 
       beforeEach(async (done) => {
@@ -24,7 +24,6 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup, createAddress }) => {
          
          const LocalTez1 = await createAddress();
          const localTez1Pkh = await LocalTez1.signer.publicKeyHash();
-         console.log(localTez1Pkh)
 
          const op = await Tezos.contract.originate({
             code: `{ parameter nat;
@@ -51,18 +50,16 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup, createAddress }) => {
          });
          
          await op.confirmation();
-         const contractAddress = (await op.contract()).address;
-         console.log("Contract address is : "+contractAddress)
          expect(op.hash).toBeDefined();
          expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);           
          done();
         });        
       });
 
-        edonet('Deploy a contract having a permit', async (done) => {
+      edonet('Deploy a contract having a permit', async (done) => {
          
-         const account = await createAddress();
-         const key = await account.signer.publicKey()
+         const LocalTez2 = await createAddress();
+         const localTez2Pkh = await LocalTez2.signer.publicKeyHash();
          
          const op = await Tezos.contract.originate({
             code: `{ parameter (or (pair %permit key (pair signature bytes)) (nat %wrapped)) ;
@@ -143,66 +140,80 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup, createAddress }) => {
             },
             });
             await op.confirmation();
-            const contractAddress = (await op.contract()).address;
-            console.log(contractAddress)
             expect(op.hash).toBeDefined();
             expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);           
-
             const contract = await op.contract();
             expect(op.status).toEqual('applied')
-   
-            const source = await Tezos.signer.publicKeyHash();
-            const { counter } = await Tezos.rpc.getContract(source);
-            console.log("Counter is : "+ counter)
+
+            //create the permit hash 
+             const parser = new Parser()
+             const permit_hash_data = `Pair "edpkuPTVBFtbYd6gZWryXypSYYq6g7FvyucwphoU78T1vmGkbhj6qb" (Pair "edsigu5hhPSqYUbfgdZFXvpjMnArH1GS9BqQfM3ddhFyBEG2rQSKozQ85yt16X63e8KRrWNFYpCTwRZuQUUaL59B1C5Y1pJAbr6" 0x0f0db0ce6f057a8835adb6a2c617fd8a136b8028fac90aab7b4766def688ea0c)`
+             const permit_hash_type = `(pair %permit key (pair signature bytes))`;
+             const permit_hash_dataJSON  = parser.parseMichelineExpression(permit_hash_data)
+             const permit_hash_typeJSON = parser.parseMichelineExpression(permit_hash_type)
+             const permit_hash_pack = await Tezos.rpc.packData({ data: permit_hash_dataJSON as MichelsonV1Expression, type: permit_hash_typeJSON as MichelsonV1Expression }, { block: "head" })
+             console.log(permit_hash_pack)
+
+
+            // const source = await Tezos.signer.publicKeyHash();
+            // const { counter } = await Tezos.rpc.getContract(source);
          
-            const code = `{(pair
-                   (pair
-                     (address %contract_address)
-                     (chain_id %chain_id))
-                   (pair
-                     (nat %counter)
-                     (bytes %permit_hash))
-                  )}`;
+            // const code = `{(pair
+            //        (pair
+            //          (address %contract_address)
+            //          (chain_id %chain_id))
+            //        (pair
+            //          (nat %counter)
+            //          (bytes %permit_hash))
+            //       )}`;
 
-               const parser = new Parser()
-
-               const parsed = parser.parseMichelineExpression(code)
-               console.log(JSON.stringify(parsed))
-
-            // parsed is: '[{"prim":"pair","args":[{"prim":"pair","args":[{"prim":"address","annots":["%contract_address"]},{"prim":"chain_id","annots":["%chain_id"]}]},{"prim":"pair","args":[{"prim":"nat","annots":["%counter"]},{"prim":"bytes","annots":["%permit_hash"]}]}]}]'
-             
-            //  const localPacker = new MichelCodecPacker();
-            //  const result = await localPacker.packData({
-            //      data: { string: "pair(pair(address %contract_address)(chain_id %chain_id))(pair(nat %counter)(bytes %permit_hash))"},
-            //      type: { prim: "pair","args":[{"prim":"pair","args":[{"prim":"address","annots":["%contract_address"]},{"prim":"chain_id","annots":["%chain_id"]}]},{"prim":"pair","args":[{"prim":"nat","annots":["%counter"]},{"prim":"bytes","annots":["%permit_hash"]}]}] }
-            //  });
-
+            // const data = `(Pair (Pair "`+contract.address+`" "NetXfpUfwJdBox9") (Pair `+counter+` "`+permit_hash_pack+`"))`        
+            // console.log(data)
+            // const type = `(pair(pair(address %contract_address)(chain_id %chain_id))(pair(nat %counter)(bytes %permit_hash)))`;
+            // const dataJSON  = parser.parseMichelineExpression(data)
+            // console.log(dataJSON)
+            // const typeJSON = parser.parseMichelineExpression(type)
+            // console.log(typeJSON)
+            // const pack = await Tezos.rpc.packData({ data: dataJSON as MichelsonV1Expression, type: typeJSON as MichelsonV1Expression });
+            // console.log(pack)
             
-            const data = `(pair (pair (KT1NvV3w3FYUQ5MZgedtfWLkETRfcPcJeti1)(NetXfpUfwJdBox9))(pair (870261)(tz3ZHAGEeas3vQNtD4XcEuERLKUHKY97bbCY)))`
-            const type = `(pair(pair(address %contract_address)(chain_id %chain_id))(pair(nat %counter)(bytes %permit_hash)))`;
-            const dataJSON  = parser.parseMichelineExpression(data)
-            const typeJSON = parser.parseMichelineExpression(type)
-            const pack = await Tezos.rpc.packData({ data: dataJSON as MichelsonV1Expression, type: typeJSON as MichelsonV1Expression });
-            const signature = await Tezos.signer.sign(pack.packed);
+            // const signature = await signer.sign(pack.packed);
 
-            console.log("Signature : "+signature)
-            
-            const validation = validateSignature(signature)
-            console.log("Signature Validation : "+validation)             
+            // const bytes = 0x0f0db0ce6f057a8835adb6a2c617fd8a136b8028fac90aab7b4766def688ea0c
 
-            const op2 = await contract.methods.permit(
-               // key
-               key,
-               // signature
-               signature,
-               //  bytes
-               0x0f0db0ce6f057a8835adb6a2c617fd8a136b8028fac90aab7b4766def688ea0c
-            ).send()
-            console.log(op2)
-            await op2.confirmation();
+            // const theContract = await Tezos.wallet.at("KT1NvV3w3FYUQ5MZgedtfWLkETRfcPcJeti1");
+            // const theOp = 
+            //    await theContract
+            //             .methods
+            //             .check_signature(permit_hash_pack, signature, bytes)
+            //             .send();
+            // await theOp.confirmation();
+
+            // const op2 = await contract.methods.permit(
+            //    // key
+            //    permit_hash_pack,
+            //    // signature
+            //    signature,
+            //    //  bytes
+            //    bytes
+            // ).send()
+            // console.log(op2)
+            // await op2.confirmation();
          done();
         });        
  
+        edonet('Check the pack and sign example in #588', async (done) => {
+            const data = `(Pair (Pair { Elt 1 (Pair (Pair "tz1bDCu64RmcpWahdn9bWrDMi6cu7mXZynHm" "tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu") 0x0501000000026869) } 10000000)(Pair 2 333))`;
+            const type = `(pair (pair (map int (pair (pair address address) bytes)) int) (pair int int))`;
+            const p = new Parser();
+            const dataJSON  = p.parseMichelineExpression(data)
+            const typeJSON = p.parseMichelineExpression(type)
+            const pack = await Tezos.rpc.packData({ data: dataJSON as MichelsonV1Expression, type: typeJSON as MichelsonV1Expression });
+            const sign = await Tezos.signer.sign(pack.packed);
+            console.log(sign)
+            done();
+         });  
+
    test('Permit can be submitted and used', async (done) => {
 
       done();
