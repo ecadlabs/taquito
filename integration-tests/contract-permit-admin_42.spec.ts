@@ -178,7 +178,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup, createAddress }) => {
             //  });
 
             
-            const data = `(pair (pair (KT1NvV3w3FYUQ5MZgedtfWLkETRfcPcJeti1)(NetXfpUfwJdBox9))((pair (870261)(tz3ZHAGEeas3vQNtD4XcEuERLKUHKY97bbCY)))`
+            const data = `(pair (pair (KT1NvV3w3FYUQ5MZgedtfWLkETRfcPcJeti1)(NetXfpUfwJdBox9))(pair (870261)(tz3ZHAGEeas3vQNtD4XcEuERLKUHKY97bbCY)))`
             const type = `(pair(pair(address %contract_address)(chain_id %chain_id))(pair(nat %counter)(bytes %permit_hash)))`;
             const dataJSON  = parser.parseMichelineExpression(data)
             const typeJSON = parser.parseMichelineExpression(type)
