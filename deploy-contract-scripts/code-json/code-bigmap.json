@@ -1,0 +1,55 @@
+[
+    {
+        "prim": "parameter",
+        "args": [
+            {
+                "prim": "unit"
+            }
+        ]
+    },
+    {
+        "prim": "storage",
+        "args": [
+            {
+                "prim": "pair",
+                "args": [
+                    {
+                        "prim": "nat"
+                    },
+                    {
+                        "prim": "big_map",
+                        "args": [
+                            {
+                                "prim": "nat"
+                            },
+                            {
+                                "prim": "string"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "prim": "code",
+        "args": [
+            [
+                {
+                    "prim": "CDR"
+                },
+                {
+                    "prim": "NIL",
+                    "args": [
+                        {
+                            "prim": "operation"
+                        }
+                    ]
+                },
+                {
+                    "prim": "PAIR"
+                }
+            ]
+        ]
+    }
+]
