@@ -9,7 +9,6 @@ import {
 import { Protocols } from '../constants';
 import { Context } from '../context';
 import { Estimate } from '../contract/estimate';
-import { EstimationOptions } from '../contract/interface';
 import { flattenErrors, TezosOperationError, TezosPreapplyFailureError } from './operation-errors';
 import {
   ForgedBytes,
@@ -200,14 +199,14 @@ export abstract class OperationEmitter {
 
   protected async estimate<T extends { fee?: number; gasLimit?: number; storageLimit?: number }>(
     { fee, gasLimit, storageLimit, ...rest }: T,
-    estimator: (param: T, options: EstimationOptions) => Promise<Estimate>
+    estimator: (param: T) => Promise<Estimate>
   ) {
     let calculatedFee = fee;
     let calculatedGas = gasLimit;
     let calculatedStorage = storageLimit;
 
     if (fee === undefined || gasLimit === undefined || storageLimit === undefined) {
-      const estimation = await estimator({ fee, gasLimit, storageLimit, ...(rest as any) }, { includeRevealOperation: false });
+      const estimation = await estimator({ fee, gasLimit, storageLimit, ...(rest as any) });
 
       if (calculatedFee === undefined) {
         calculatedFee = estimation.suggestedFeeMutez;

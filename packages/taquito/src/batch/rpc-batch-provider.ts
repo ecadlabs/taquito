@@ -158,7 +158,7 @@ export class OperationBatch extends OperationEmitter {
   async send(params?: { source?: string }) {
     const publicKeyHash = await this.signer.publicKeyHash();
     const publicKey = await this.signer.publicKey();
-    const estimates = await this.estimator.batch(this.operations, { includeRevealOperation: false });
+    const estimates = await this.estimator.batch(this.operations);
     const ops: RPCOperation[] = [];
     let i = 0;
     let opRequireReveal = false;

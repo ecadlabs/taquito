@@ -11,6 +11,7 @@ import {
   origination,
   transferWithoutAllocation,
   transferWithAllocation,
+  multipleInternalOriginationNoReveal,
 } from './helper';
 import { OpKind } from '@taquito/rpc';
 
@@ -97,7 +98,7 @@ describe('RPCEstimateProvider test', () => {
   });
 
   describe('originate', () => {
-    it('should produce an origination operation, no reveal', async done => {
+    it('should produce a reveal and origination operation', async done => {
       mockRpcClient.runOperation.mockResolvedValue({
         contents: [
           {
@@ -125,29 +126,9 @@ describe('RPCEstimateProvider test', () => {
   });
 
   describe('transfer', () => {
-    test('return the correct estimate for multiple internal origination, reveal needed', async done => {
+    test('return the correct estimate for multiple internal origination', async done => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(multipleInternalOrigination());
-      // Simulate real op size
-      mockRpcClient.forgeOperations.mockResolvedValue(new Array(297).fill('aa').join(''));
-      const estimate = await estimateProvider.transfer({
-        to: 'test_to',
-        amount: 2,
-      }, { includeRevealOperation: true });
-      expect(estimate).toMatchObject({
-        gasLimit: 50928,
-        storageLimit: 634,
-        suggestedFeeMutez: 5654,
-      });
-      done();
-    });
-
-    test('return the correct estimate for multiple internal origination, no reveal', async done => {
-      const op = { 
-        contents: [multipleInternalOrigination().contents[1]], 
-        signature: multipleInternalOrigination().signature
-      }
-      mockRpcClient.runOperation.mockResolvedValue(op);
       // Simulate real op size
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(297).fill('aa').join(''));
       const estimate = await estimateProvider.transfer({
@@ -162,30 +143,25 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    test('return the correct estimate for 2 internal transfer that need allocation, with reveal', async done => {
-      mockRpcClient.getManagerKey.mockResolvedValue(null);
-      mockRpcClient.runOperation.mockResolvedValue(multipleInternalTransfer());
+    test('return the correct estimate for multiple internal origination, no reveal', async done => {
+      mockRpcClient.runOperation.mockResolvedValue(multipleInternalOriginationNoReveal());
       // Simulate real op size
-      mockRpcClient.forgeOperations.mockResolvedValue(new Array(285).fill('aa').join(''));
+      mockRpcClient.forgeOperations.mockResolvedValue(new Array(297).fill('aa').join(''));
       const estimate = await estimateProvider.transfer({
         to: 'test_to',
         amount: 2,
-      }, { includeRevealOperation: true });
-
+      });
       expect(estimate).toMatchObject({
-        gasLimit: 46875,
-        storageLimit: 514,
-        suggestedFeeMutez: 5237,
+        gasLimit: 40928,
+        storageLimit: 634,
+        suggestedFeeMutez: 4590,
       });
       done();
     });
 
-    test('return the correct estimate for 2 internal transfer that need allocation, no reveal', async done => {
-      const op = { 
-        contents: [multipleInternalTransfer().contents[1]], 
-        signature: multipleInternalTransfer().signature
-      }
-      mockRpcClient.runOperation.mockResolvedValue(op);
+    test('return the correct estimate for 2 internal transfer that need allocation', async done => {
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
+      mockRpcClient.runOperation.mockResolvedValue(multipleInternalTransfer());
       // Simulate real op size
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(285).fill('aa').join(''));
       const estimate = await estimateProvider.transfer({
@@ -200,30 +176,9 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    test('return the correct estimate for delegation, with reveal', async done => {
+    test('return the correct estimate for delegation', async done => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(delegate());
-      // Simulate real op size
-      mockRpcClient.forgeOperations.mockResolvedValue(new Array(149).fill('aa').join(''));
-      const estimate = await estimateProvider.setDelegate({
-        source: 'test',
-        delegate: 'test',
-      }, { includeRevealOperation: true });
-
-      expect(estimate).toMatchObject({
-        gasLimit: 20100,
-        storageLimit: 0,
-        suggestedFeeMutez: 2423,
-      });
-      done();
-    });
-
-    test('return the correct estimate for delegation, without reveal', async done => {
-      const op = { 
-        contents: [delegate().contents[1]], 
-        signature: delegate().signature
-      }
-      mockRpcClient.runOperation.mockResolvedValue(op);
       // Simulate real op size
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(149).fill('aa').join(''));
       const estimate = await estimateProvider.setDelegate({
@@ -238,30 +193,9 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    test('return the correct estimate for origination, with reveal', async done => {
+    test('return the correct estimate for origination', async done => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(origination());
-      // Simulate real op size
-      mockRpcClient.forgeOperations.mockResolvedValue(new Array(445).fill('aa').join(''));
-      const estimate = await estimateProvider.originate({
-        code: ligoSample,
-        storage: 0,
-      }, { includeRevealOperation: true });
-
-      expect(estimate).toMatchObject({
-        gasLimit: 27932,
-        storageLimit: 571,
-        suggestedFeeMutez: 3503,
-      });
-      done();
-    });
-
-    test('return the correct estimate for origination, without reveal', async done => {
-      const op = { 
-        contents: [origination().contents[1]], 
-        signature: origination().signature
-      }
-      mockRpcClient.runOperation.mockResolvedValue(op);
       // Simulate real op size
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(445).fill('aa').join(''));
       const estimate = await estimateProvider.originate({
@@ -276,30 +210,9 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    test('return the correct estimate for internal transfer without allocation, with reveal', async done => {
+    test('return the correct estimate for internal transfer without allocation', async done => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(internalTransfer());
-      // Simulate real op size
-      mockRpcClient.forgeOperations.mockResolvedValue(new Array(226).fill('aa').join(''));
-      const estimate = await estimateProvider.transfer({
-        to: 'test_to',
-        amount: 2,
-      }, { includeRevealOperation: true });
-
-      expect(estimate).toMatchObject({
-        gasLimit: 36260,
-        storageLimit: 0,
-        suggestedFeeMutez: 4116,
-      });
-      done();
-    });
-
-    test('return the correct estimate for internal transfer without allocation, without reveal', async done => {
-      const op = { 
-        contents: [internalTransfer().contents[1]], 
-        signature: internalTransfer().signature
-      }
-      mockRpcClient.runOperation.mockResolvedValue(op);
       // Simulate real op size
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(226).fill('aa').join(''));
       const estimate = await estimateProvider.transfer({
@@ -314,30 +227,9 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    test('return the correct estimate for transfer without allocation, with reveal', async done => {
+    test('return the correct estimate for transfer without allocation', async done => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(transferWithoutAllocation());
-      // Simulate real op size
-      mockRpcClient.forgeOperations.mockResolvedValue(new Array(153).fill('aa').join(''));
-      const estimate = await estimateProvider.transfer({
-        to: 'test_to',
-        amount: 2,
-      }, { includeRevealOperation: true });
-
-      expect(estimate).toMatchObject({
-        gasLimit: 20307,
-        storageLimit: 0,
-        suggestedFeeMutez: 2448,
-      });
-      done();
-    });
-
-    test('return the correct estimate for transfer without allocation, without reveal', async done => {
-      const op = { 
-        contents: [transferWithoutAllocation().contents[1]], 
-        signature: transferWithoutAllocation().signature
-      }
-      mockRpcClient.runOperation.mockResolvedValue(op);
       // Simulate real op size
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(153).fill('aa').join(''));
       const estimate = await estimateProvider.transfer({
@@ -352,30 +244,9 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    test('return the correct estimate for transfer with allocation, with reveal', async done => {
+    test('return the correct estimate for transfer with allocation', async done => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(transferWithAllocation());
-      // Simulate real op size
-      mockRpcClient.forgeOperations.mockResolvedValue(new Array(153).fill('aa').join(''));
-      const estimate = await estimateProvider.transfer({
-        to: 'test_to',
-        amount: 2,
-      }, { includeRevealOperation: true });
-
-      expect(estimate).toMatchObject({
-        gasLimit: 20307,
-        storageLimit: 257,
-        suggestedFeeMutez: 2448,
-      });
-      done();
-    });
-
-    test('return the correct estimate for transfer with allocation, without reveal', async done => {
-      const op = { 
-        contents: [transferWithAllocation().contents[1]], 
-        signature: transferWithAllocation().signature
-      }
-      mockRpcClient.runOperation.mockResolvedValue(op);
       // Simulate real op size
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(153).fill('aa').join(''));
       const estimate = await estimateProvider.transfer({
@@ -706,7 +577,7 @@ describe('RPCEstimateProvider test', () => {
       const estimate = await estimateProvider.batch([
         { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 },
         { kind: OpKind.TRANSACTION, to: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp', amount: 2 }
-      ], { includeRevealOperation: true });
+      ]);
       expect(estimate.length).toEqual(3);
 
       expect(estimate[0]).toMatchObject({

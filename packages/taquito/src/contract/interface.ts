@@ -18,10 +18,6 @@ import { Estimate } from './estimate';
 
 export type ContractSchema = Schema | unknown;
 
-export interface EstimationOptions {
-  includeRevealOperation: boolean
-}
-
 export interface EstimationProvider {
   /**
    *
@@ -31,7 +27,7 @@ export interface EstimationProvider {
    *
    * @param Estimate
    */
-  originate(params: OriginateParams, estimationOptions?: EstimationOptions): Promise<Estimate>;
+  originate(params: OriginateParams): Promise<Estimate>;
 
   /**
    *
@@ -41,7 +37,7 @@ export interface EstimationProvider {
    *
    * @param Estimate
    */
-  transfer({ fee, storageLimit, gasLimit, ...rest }: TransferParams, estimationOptions?: EstimationOptions): Promise<Estimate>;
+  transfer({ fee, storageLimit, gasLimit, ...rest }: TransferParams): Promise<Estimate>;
 
   /**
    *
@@ -51,7 +47,7 @@ export interface EstimationProvider {
    *
    * @param Estimate
    */
-  setDelegate(params: DelegateParams, estimationOptions?: EstimationOptions): Promise<Estimate>;
+  setDelegate(params: DelegateParams): Promise<Estimate>;
 
   /**
    *
@@ -61,7 +57,7 @@ export interface EstimationProvider {
    *
    * @param Estimate
    */
-  registerDelegate(params?: RegisterDelegateParams, estimationOptions?: EstimationOptions): Promise<Estimate>;
+  registerDelegate(params?: RegisterDelegateParams): Promise<Estimate>;
 
   /**
    *
@@ -73,7 +69,7 @@ export interface EstimationProvider {
    */
   reveal(params?: RevealParams): Promise<Estimate | undefined> ;
 
-  batch(params: ParamsWithKind[], estimationOptions?: EstimationOptions): Promise<Estimate[]>;
+  batch(params: ParamsWithKind[]): Promise<Estimate[]>;
 }
 
 export interface StorageProvider {
