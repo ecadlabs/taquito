@@ -56,7 +56,7 @@ jobs:
     - run: npm ci
     - run: npm run lerna -- bootstrap
     - run: npm run build
-    - run: cd integration-tests && npm run test:galpha2net-faucet -- --maxWorkers=8
+    - run: cd integration-tests && npm run test:galpha2net-faucet
       env:
         CI: true
         TEZOS_RPC_EDONET: ${{ secrets.TEZOS_RPC_EDONET }}
@@ -81,7 +81,7 @@ jobs:
     - run: npm ci
     - run: npm run lerna -- bootstrap
     - run: npm run build
-    - run: cd integration-tests && npm run test:florencenet-faucet -- --maxWorkers=8
+    - run: cd integration-tests && npm run test:florencenet-faucet
       env:
         CI: true
         TEZOS_RPC_EDONET: ${{ secrets.TEZOS_RPC_EDONET }}
