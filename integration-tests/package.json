@@ -6,6 +6,8 @@
     "test:edonet-faucet": "RUN_EDONET_WITH_FAUCET=true jest --runInBand",
     "test:florencenet": "FLORENCENET=true jest",
     "test:florencenet-faucet": "RUN_FLORENCENET_WITH_FAUCET=true jest --runInBand",
+    "test:galpha2net": "GALPHA2NET=true jest",
+    "test:galpha2net-faucet": "RUN_GALPHA2NET_WITH_FAUCET=true jest --runInBand",
     "test": "jest"
   },
   "version": "9.0.1",

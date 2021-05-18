@@ -104,6 +104,7 @@ export class ContractView {
     private provider: ContractProvider,
     private name: string,
     private chainId: string,
+    private proto: number,
     private callbackParametersSchema: ParameterSchema,
     private parameterSchema: ParameterSchema,
     private args: any[]
@@ -131,8 +132,10 @@ export class ContractView {
       lambdaAddress = DefaultLambdaAddresses.DELPHINET
     } else if (this.chainId === ChainIds.EDONET) {
       lambdaAddress = DefaultLambdaAddresses.EDONET
-    } else if (this.chainId === ChainIds.FLORENCENET) {
+    } else if (this.chainId === ChainIds.FLORENCENET && this.proto === 1) {
       lambdaAddress = DefaultLambdaAddresses.FLORENCENET
+    } else if (this.chainId === ChainIds.GALPHA2NET && this.proto === 2) {
+      lambdaAddress = DefaultLambdaAddresses.GALPHA2NET
     } else if (this.chainId === ChainIds.MAINNET) {
       lambdaAddress = DefaultLambdaAddresses.MAINNET
     } else {
@@ -195,11 +198,12 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
     provider: T,
     private storageProvider: StorageProvider,
     public readonly entrypoints: EntrypointsResponse,
-    private chainId: string
+    private chainId: string,
+    private proto: number
   ) {
     this.schema = Schema.fromRPCResponse({ script: this.script });
     this.parameterSchema = ParameterSchema.fromRPCResponse({ script: this.script });
-    this._initializeMethods(this, address, provider, this.entrypoints.entrypoints, this.chainId);
+    this._initializeMethods(this, address, provider, this.entrypoints.entrypoints, this.chainId, this.proto);
   }
 
   private _initializeMethods(
@@ -209,7 +213,8 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
     entrypoints: {
       [key: string]: object;
     },
-    chainId: string
+    chainId: string,
+    proto: number
   ) {
     const parameterSchema = this.parameterSchema;
     const keys = Object.keys(entrypoints);
@@ -250,6 +255,7 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
                 provider,
                 smartContractMethodName,
                 chainId,
+                proto,
                 smartContractMethodCallbackSchema,
                 smartContractMethodSchemaWithoutCallback,
                 args

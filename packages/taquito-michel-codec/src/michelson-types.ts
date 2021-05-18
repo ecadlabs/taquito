@@ -195,7 +195,8 @@ export enum Protocol {
     PsCARTHA = "PsCARTHAGazKbHtnKfLzQg3kms52kSRpgnDY982a9oYsSXRLQEb",
     PsDELPH1 = "PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo",
     PtEdo2Zk = 'PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA',
-    PsFLorena = 'PsFLorenaUUuikDWvMDr6fGBRG8kt3e3D3fHoXK1j1BFRxeSH4i'
+    PsFLorena = 'PsFLorenaUUuikDWvMDr6fGBRG8kt3e3D3fHoXK1j1BFRxeSH4i',
+    ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK'
 }
 
 export const DefaultProtocol = Protocol.PsDELPH1;

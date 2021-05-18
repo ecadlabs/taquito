@@ -262,7 +262,8 @@ export class Wallet {
     const entrypoints = await this.context.rpc.getEntrypoints(address);
     const blockHeader = await this.context.rpc.getBlockHeader();
     const chainId = blockHeader.chain_id;
-    const abs = new ContractAbstraction(address, script, this, this.context.contract, entrypoints, chainId);
+    const proto = blockHeader.proto;
+    const abs = new ContractAbstraction(address, script, this, this.context.contract, entrypoints, chainId, proto);
     return contractAbstractionComposer(abs, this.context);
   }
 }

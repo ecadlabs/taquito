@@ -4,7 +4,6 @@ import { RemoteSigner } from '@taquito/remote-signer';
 import { HttpBackend } from '@taquito/http-utils';
 import { b58cencode, Prefix, prefix } from '@taquito/utils';
 import { importKey, InMemorySigner } from '@taquito/signer';
-import fs from 'fs';
 
 const nodeCrypto = require('crypto');
 
@@ -53,6 +52,19 @@ interface EphemeralConfig {
 interface FaucetConfig {
   type: SignerType.FAUCET;
   faucetKey: {};
+}
+
+const galpha2netEphemeral = {
+  rpc: process.env['TEZOS_RPC_GALPHA2NET'] || 'https://api.tez.ie/rpc/galpha2net',
+  knownBaker: 'tz3Q67aMz7gSMiQRcW729sXSfuMtkyAHYfqc',
+  knownContract: 'KT1AbbtFyJHDJDfFn2G6XsNDJyNF48KCYs5w',
+  knownBigMapContract: 'KT1PwT3kbNdu3byeDxXL1KFs3yt6BGq1oRds',
+  protocol: Protocols.ProtoALpha,
+  signerConfig: {
+    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
+    keyUrl: 'https://api.tez.ie/keys/galpha2net',
+    requestHeaders: { 'Authorization': 'Bearer taquito-example' },
+  }
 }
 
 const florencenetEphemeral = {
@@ -105,6 +117,18 @@ const key = {
   secret: "122bb47843750982da5c65f7affa0d32971ac876"
 }
 
+const galpha2netFaucet = {
+  rpc: 'https://api.tez.ie/rpc/galpha2net',
+  knownBaker: 'tz3Q67aMz7gSMiQRcW729sXSfuMtkyAHYfqc',
+  knownContract: 'KT1AbbtFyJHDJDfFn2G6XsNDJyNF48KCYs5w',
+  knownBigMapContract: 'KT1PwT3kbNdu3byeDxXL1KFs3yt6BGq1oRds',
+  protocol: Protocols.ProtoALpha,
+  signerConfig: {
+    type: SignerType.FAUCET as SignerType.FAUCET,
+    faucetKey: key,
+  }
+}
+
 const florencenetFaucet = {
   rpc: 'https://api.tez.ie/rpc/florencenet',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
@@ -132,13 +156,19 @@ const edonetFaucet = {
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_FAUCET']) {
-  providers.push(florencenetFaucet, edonetFaucet)
+  providers.push(florencenetFaucet, edonetFaucet, galpha2netFaucet)
 } 
+else if (process.env['RUN_GALPHA2NET_WITH_FAUCET']) {
+  providers.push(galpha2netFaucet)
+}
 else if (process.env['RUN_FLORENCENET_WITH_FAUCET']) {
   providers.push(florencenetFaucet)
 }
 else if (process.env['RUN_EDONET_WITH_FAUCET']) {
   providers.push(edonetFaucet)
+}
+else if (process.env['GALPHA2NET']) {
+  providers.push(galpha2netEphemeral)
 }
 else if (process.env['FLORENCENET']) {
   providers.push(florencenetEphemeral)
@@ -146,7 +176,7 @@ else if (process.env['FLORENCENET']) {
 else if (process.env['EDONET']) {
   providers.push(edonetEphemeral)
 } else {
-  providers.push(florencenetEphemeral, edonetEphemeral)
+  providers.push(florencenetEphemeral, edonetEphemeral, galpha2netEphemeral)
 }
 
 const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE'];

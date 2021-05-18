@@ -24,7 +24,8 @@ export enum Protocols {
   PsCARTHA = 'PsCARTHAGazKbHtnKfLzQg3kms52kSRpgnDY982a9oYsSXRLQEb',
   PsDELPH1 = 'PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo',
   PtEdo2Zk = 'PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA',
-  PsFLorena = 'PsFLorenaUUuikDWvMDr6fGBRG8kt3e3D3fHoXK1j1BFRxeSH4i'
+  PsFLorena = 'PsFLorenaUUuikDWvMDr6fGBRG8kt3e3D3fHoXK1j1BFRxeSH4i',
+  ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK'
 }
 
 export const protocols = {
@@ -33,7 +34,8 @@ export const protocols = {
   '006': [Protocols.PsCARTHA],
   '007': [Protocols.PsDELPH1],
   '008': [Protocols.PtEdo2Zk], // edonet v2
-  '009': [Protocols.PsFLorena]
+  '009': [Protocols.PsFLorena],
+  '010': [Protocols.ProtoALpha]
 };
 
 export enum DefaultLambdaAddresses {
@@ -41,7 +43,8 @@ export enum DefaultLambdaAddresses {
   CARTHAGENET = 'KT1VAy1o1FGiXYfD3YT7x7k5eF5HSHhmc1u6',
   DELPHINET = 'KT19abMFs3haqyKYwqdLjK9GbtofryZLvpiK',
   EDONET = 'KT1A64nVZDccAHGAsf1ZyVajXZcbiwjV3SnN',
-  FLORENCENET = 'KT1KCe3YqGnudsiCWb5twbe2DH5T3EMdLpSE'
+  FLORENCENET = 'KT1KCe3YqGnudsiCWb5twbe2DH5T3EMdLpSE',
+  GALPHA2NET = 'KT1UpvfMW2W38trgR6nTPLPLVQiy4T1xhZ9Q'
 }
 
 export enum ChainIds {
@@ -49,5 +52,6 @@ export enum ChainIds {
   CARTHAGENET = "NetXjD3HPJJjmcd",
   DELPHINET = "NetXm8tYqnMWky1",
   EDONET = "NetXSgo1ZT2DRUG",
-  FLORENCENET = "NetXxkAx4woPLyu"
+  FLORENCENET = "NetXxkAx4woPLyu", // proto = 1
+  GALPHA2NET = "NetXxkAx4woPLyu" // proto = 2
 }
