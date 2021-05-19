@@ -63,7 +63,7 @@ const florencenetEphemeral = {
   protocol: Protocols.PsFLorena,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'http://localhost:3000/florencenet',
+    keyUrl: 'https://api.tez.ie/keys/florencenet',
     requestHeaders: { 'Authorization': 'Bearer taquito-example' },
   }
 }
@@ -76,7 +76,7 @@ const edonetEphemeral = {
   protocol: Protocols.PtEdo2Zk,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'http://localhost:3000/edonet',
+    keyUrl: 'https://api.tez.ie/keys/edonet',
     requestHeaders: { 'Authorization': 'Bearer taquito-example' },
   }
 }
