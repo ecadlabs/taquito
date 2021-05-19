@@ -173,7 +173,11 @@ export class Context {
   async getConfirmationPollingInterval() {
     try {
       const constants = await this.rpc.getConstants();
-      let confirmationPollingInterval = BigNumber.sum(constants.time_between_blocks[0], 
+      let blockTime = constants.time_between_blocks[0];
+      if (constants.minimal_block_delay !== undefined) {
+        blockTime = constants.minimal_block_delay;
+      }
+      let confirmationPollingInterval = BigNumber.sum(blockTime, 
         new BigNumber(constants.delay_per_missing_endorsement!)
         .multipliedBy(Math.max(0, constants.initial_endorsers! - constants.endorsers_per_block))
       );
@@ -182,7 +186,7 @@ export class Context {
       // to improvise for polling time to work in prod,
       // testnet and sandbox enviornment.   
       confirmationPollingInterval = confirmationPollingInterval.dividedBy(3);  
-      this.config.confirmationPollingIntervalSecond = confirmationPollingInterval.toNumber();
+      this.config.confirmationPollingIntervalSecond = confirmationPollingInterval.integerValue(BigNumber.ROUND_CEIL).toNumber();
       return this.config.confirmationPollingIntervalSecond;
     } catch (exception) {
       // Return default value if there is

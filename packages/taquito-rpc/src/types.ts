@@ -599,6 +599,7 @@ export interface OperationContentsAndResultMetadataOrigination {
 
 export type ConstantsResponse =
   ConstantsResponseCommon &
+  ConstantsResponseProto0010 &
   ConstantsResponseProto007 &
   ConstantsResponseProto006 &
   ConstantsResponseProto005 &
@@ -629,6 +630,10 @@ export interface ConstantsResponseCommon {
   cost_per_byte: BigNumber;
   hard_storage_limit_per_operation: BigNumber;
 }
+export interface ConstantsResponseProto0010 {
+  minimal_block_delay?: BigNumber;
+}
+
 export interface ConstantsResponseProto007 extends Omit<ConstantsResponseProto006, 'max_revelations_per_block'> {
   max_anon_ops_per_block?: number;
 }
