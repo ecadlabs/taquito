@@ -95,26 +95,26 @@ const edonetEphemeral = {
 
 // Well known faucet key. Can be overridden by setting the `TEZOS_FAUCET_KEY_FILE` environment variable
 const key = {
-  email: "fnpurrgy.lnzeqdpg@tezos.example.org",
-  password: "iAzeiJVYSt",
+  email: "mfbzlhsv.owpfexem@tezos.example.org",
+  password: "bccbtuRKdr",
   mnemonic: [
-    "year",
-    "buyer",
-    "police",
-    "release",
-    "toilet",
-    "raw",
-    "chalk",
-    "awesome",
-    "cook",
-    "brand",
-    "dog",
-    "blood",
-    "two",
-    "comic",
-    "habit"
+    "addict",
+    "nerve",
+    "amazing",
+    "elevator",
+    "else",
+    "bind",
+    "injury",
+    "cotton",
+    "bind",
+    "judge",
+    "quote",
+    "apple",
+    "equip",
+    "ocean",
+    "tone"
   ],
-  secret: "122bb47843750982da5c65f7affa0d32971ac876"
+  secret: "1e6159006a283a4456bda4f83721afa4bec9ed59"
 }
 
 const galpha2netFaucet = {
