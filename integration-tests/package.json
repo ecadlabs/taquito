@@ -42,8 +42,7 @@
     ],
     "testPathIgnorePatterns": [
       "./ledger-signer.spec.ts",
-      "./ledger-signer-failing-tests.spec.ts",
-      "./rpc-nodes.spec.ts"
+      "./ledger-signer-failing-tests.spec.ts"
     ],
     "reporters": [
       "default",
