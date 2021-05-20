@@ -35,7 +35,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             await op.confirmation();
 
             expect(op.status).toEqual('applied');
-            console.log(op.hash)
             done();
         });
     });
