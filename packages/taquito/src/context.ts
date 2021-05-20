@@ -186,11 +186,9 @@ export class Context {
       // to improvise for polling time to work in prod,
       // testnet and sandbox enviornment.   
       confirmationPollingInterval = confirmationPollingInterval.dividedBy(3);  
-      this.config.confirmationPollingIntervalSecond = confirmationPollingInterval.toNumber();
-      
-      if (this.config.confirmationPollingIntervalSecond === 0) {
-        return 0.1;
-      }
+      this.config.confirmationPollingIntervalSecond = confirmationPollingInterval.toNumber() === 0 ?
+                                                      0.1 :
+                                                      confirmationPollingInterval.toNumber();
       return this.config.confirmationPollingIntervalSecond;
     } catch (exception) {
       // Return default value if there is
