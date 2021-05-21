@@ -118,7 +118,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       done();
     });
 
-    florencenet('Estimate simple origination', async (done) => {
+    galpha2net('Estimate simple origination', async (done) => {
       const estimate = await LowAmountTez.estimate.originate({
         balance: "1",
         code: ligoSample,
@@ -129,9 +129,9 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       expect(estimate.suggestedFeeMutez).toEqual(919);
       expect(estimate.burnFeeMutez).toEqual(142750);
       expect(estimate.minimalFeeMutez).toEqual(819);
-      expect(estimate.totalCost).toEqual(143571);
+      expect(estimate.totalCost).toEqual(143569);
       expect(estimate.usingBaseFeeMutez).toEqual(819);
-      expect(estimate.consumedMilligas).toEqual(2650619);
+      expect(estimate.consumedMilligas).toEqual(2650621);
       done();
     });
 

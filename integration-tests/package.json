@@ -18,10 +18,12 @@
     "@taquito/local-forging": "^9.0.1",
     "@taquito/michel-codec": "^9.0.1",
     "@taquito/remote-signer": "^9.0.1",
+    "@taquito/rpc": "^9.0.1",
     "@taquito/signer": "^9.0.1",
     "@taquito/taquito": "^9.0.1",
     "@taquito/tzip16": "^9.0.1",
     "@taquito/utils": "^9.0.1",
+    "@taquito/michelson-encoder": "^9.0.1",
     "bignumber.js": "^9.0.1"
   },
   "private": true,
@@ -42,8 +44,7 @@
     ],
     "testPathIgnorePatterns": [
       "./ledger-signer.spec.ts",
-      "./ledger-signer-failing-tests.spec.ts",
-      "./rpc-nodes.spec.ts"
+      "./ledger-signer-failing-tests.spec.ts"
     ],
     "reporters": [
       "default",
