@@ -18,6 +18,7 @@
     "@taquito/local-forging": "^9.0.1",
     "@taquito/michel-codec": "^9.0.1",
     "@taquito/remote-signer": "^9.0.1",
+    "@taquito/rpc": "^9.0.1",
     "@taquito/signer": "^9.0.1",
     "@taquito/taquito": "^9.0.1",
     "@taquito/tzip16": "^9.0.1",
