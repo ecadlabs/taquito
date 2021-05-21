@@ -1,11 +1,10 @@
 import { CONFIGS } from "./config";
 import { commonCases, edoCases } from '../packages/taquito-local-forging/test/allTestsCases';
 import { localForger } from '@taquito/local-forging'
-import { Protocols, TezosToolkit } from "@taquito/taquito";
+import { TezosToolkit } from "@taquito/taquito";
 
-CONFIGS().forEach(({ rpc, protocol }) => {
+CONFIGS().forEach(({ rpc }) => {
     const Tezos = new TezosToolkit(rpc);
-    const edonet = (protocol === Protocols.PtEdo2Zk) ? test : test.skip;
 
     describe(`Test local forger: ${rpc}`, () => {
 
@@ -22,7 +21,7 @@ CONFIGS().forEach(({ rpc, protocol }) => {
 
          edoCases.forEach(({ name, operation, expected }) => {
 
-            edonet(`Should give the same result as when forging with the rpc: ${name} (${rpc})`, async done => {
+            it(`Should give the same result as when forging with the rpc: ${name} (${rpc})`, async done => {
                 const result = await localForger.forge(operation);
                 const rpcResult = await Tezos.rpc.forgeOperations(operation);
                 expect(result).toEqual(rpcResult);
