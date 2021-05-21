@@ -90,14 +90,12 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
                     annots: ['%ledger']
                 });
                 const { key, type } = schema.EncodeBigMapKey('tz1btkXVkVFWLgXa66sbRJa8eeUSwvQFX4kP');
-                console.log('key', key, 'type', type)
                 const { packed } = await rpcClient.packData({ data: key, type });
                 const contract = await Tezos.contract.at(knownBigMapContract);
                 const storage: any = await contract.storage();
                 const id = Number(storage.ledger.id);
                 const encodedExpr = encodeExpr(packed);
                 const bigMapValue = await rpcClient.getBigMapExpr(id.toString(), encodedExpr);
-                console.log('bigMapValue', bigMapValue)
                 expect(bigMapValue).toBeDefined();
                 done();
             });
@@ -157,9 +155,7 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
             });
 
             it('Get current period kind', async (done) => {
-                // const currentPeriodKind = await rpcClient.getCurrentPeriodKind();
                 const currentPeriodKind = await rpcClient.getCurrentPeriod();
-                console.log(currentPeriodKind)
                 expect(currentPeriodKind).toBeDefined();
                 done();
             });
@@ -225,7 +221,6 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
 
             it('Simulate the validation of an operation', async (done) => {
                 try {
-                    console.log('protocol', protocol)
                     const operation: any = {
                         branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
                         contents: [
