@@ -23,6 +23,7 @@
     "@taquito/taquito": "^9.0.1",
     "@taquito/tzip16": "^9.0.1",
     "@taquito/utils": "^9.0.1",
+    "@taquito/michelson-encoder": "^9.0.1",
     "bignumber.js": "^9.0.1"
   },
   "private": true,
