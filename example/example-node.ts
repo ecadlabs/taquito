@@ -10,7 +10,7 @@ async function example() {
     const tezos = new TezosToolkit(provider);
 
     console.log('Getting storage...');
-    await tezos.contract.at('KT1HqWsXrGbHWc9muqkApqWu64WsxCU3FoRf').then(async contract => {
+    await tezos.contract.at('KT1W1jh5C5NbcVVvpnBLQT9ekMbR5a8fg6mc').then(async contract => { // knownBigMapContract used in integration tests
       const storage = await contract.storage()
       console.log(storage)
     });
@@ -21,9 +21,9 @@ async function example() {
     });
 
     console.log('Getting big map key...');
-    await tezos.contract.at('KT1HqWsXrGbHWc9muqkApqWu64WsxCU3FoRf').then(async contract => {
+    await tezos.contract.at('KT1W1jh5C5NbcVVvpnBLQT9ekMbR5a8fg6mc').then(async contract => {
       const contractStorage = await contract.storage();
-      const bigMapKey = await (contractStorage as any).ledger.get('tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx')
+      const bigMapKey = await (contractStorage as any).ledger.get('tz1btkXVkVFWLgXa66sbRJa8eeUSwvQFX4kP')
       console.log(bigMapKey)
     });
 

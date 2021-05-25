@@ -23,6 +23,7 @@
     "@taquito/michel-codec": "^9.0.1",
     "@taquito/signer": "^9.0.1",
     "@taquito/taquito": "^9.0.1",
+    "@taquito/tzip16": "^9.0.1",
     "bignumber.js": "^9.0.1"
   },
   "devDependencies": {
