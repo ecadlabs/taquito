@@ -72,6 +72,11 @@ export interface OperationContentsEndorsementWithSlot  {
   slot: number;
 }
 
+export interface OperationContentsFailingNoop {
+  kind: OpKind.FAILING_NOOP;
+  arbitrary: string;
+}
+
 export interface OperationContentsRevelation {
   kind: OpKind.SEED_NONCE_REVELATION;
   level: number;
@@ -168,7 +173,8 @@ export type OperationContents =
   | OperationContentsTransaction
   | OperationContentsOrigination
   | OperationContentsDelegation
-  | OperationContentsEndorsementWithSlot;
+  | OperationContentsEndorsementWithSlot
+  | OperationContentsFailingNoop;
 
 export interface OperationContentsAndResultMetadataExtended {
   balance_updates: OperationMetadataBalanceUpdates[];
@@ -377,7 +383,7 @@ export interface BallotsResponse {
   pass: number;
 }
 
-export type PeriodKindResponse = 'proposal' | 'testing_vote' | 'testing' | 'promotion_vote';
+export type PeriodKindResponse = 'proposal' | 'testing_vote' | 'testing' | 'promotion_vote' | 'exploration' | 'cooldown' | 'promotion' | 'adoption';
 
 export type CurrentProposalResponse = string | null;
 
@@ -481,6 +487,7 @@ export interface OperationBalanceUpdatesItem {
   cycle?: number;
   contract?: string;
   change: string;
+  origin?: MetadataBalanceUpdatesOriginEnum;
 }
 
 export type OperationBalanceUpdates = OperationBalanceUpdatesItem[];
@@ -512,9 +519,15 @@ export interface OperationResultDelegation {
 }
 
 export interface ContractBigMapDiffItem {
-  key_hash: string;
-  key: MichelsonV1Expression;
+  key_hash?: string;
+  key?: MichelsonV1Expression;
   value?: MichelsonV1Expression;
+  action?: DiffActionEnum;
+  big_map?: BigNumber;
+  source_big_map?: BigNumber;
+  destination_big_map?: BigNumber;
+  key_type?: MichelsonV1Expression;
+  value_type?: MichelsonV1Expression;
 }
 
 export type ContractBigMapDiff = ContractBigMapDiffItem[];
@@ -536,6 +549,7 @@ export interface OperationResultTransaction {
   allocated_destination_contract?: boolean;
   errors?: TezosGenericOperationError[];
   consumed_milligas?: string;
+  lazy_storage_diff?: LazyStorageDiff[];
 }
 
 export interface OperationResultReveal {
@@ -580,8 +594,66 @@ export interface OperationMetadataBalanceUpdates {
 
 export type OperationResultStatusEnum = 'applied' | 'failed' | 'skipped' | 'backtracked';
 
+export type DiffActionEnum = 'update' | 'remove' | 'copy' | 'alloc';
+
+// export type LazyStorageDiffKindEnum = 'big_map' | 'sapling_state';
+
+export type LazyStorageDiff = LazyStorageDiffBigMap | LazyStorageDiffSaplingState;
+
+export interface LazyStorageDiffBigMap {
+  kind: 'big_map';
+  id: string;
+  diff: LazyStorageDiffBigMapItems;
+}
+
+export interface LazyStorageDiffSaplingState {
+  kind: 'sapling_state';
+  id: string;
+  diff: LazyStorageDiffSaplingStateItems;
+}
+
+export interface LazyStorageDiffBigMapItems {
+  action: DiffActionEnum;
+  updates?: LazyStorageDiffUpdatesBigMap[];
+  source?: string;
+  key_type?: MichelsonV1Expression;
+  value_type?: MichelsonV1Expression;
+}
+
+export interface LazyStorageDiffSaplingStateItems {
+  action: DiffActionEnum;
+  updates?: LazyStorageDiffUpdatesSaplingState[];
+  source?: string;
+  memo_size?: number;
+}
+
+export interface LazyStorageDiffUpdatesBigMap {
+  key_hash: string;
+  key: MichelsonV1Expression;
+  value?: MichelsonV1Expression;
+}
+
+export type CommitmentsAndCiphertexts = [SaplingTransactionCommitment, SaplingTransactionCiphertext];
+
+export type SaplingTransactionCommitment = string;
+
+export interface LazyStorageDiffUpdatesSaplingState {
+  commitments_and_ciphertexts: CommitmentsAndCiphertexts[];
+  nullifiers: string[];
+}
+
+export interface SaplingTransactionCiphertext {
+  cv: string;
+  epk: string;
+  payload_enc: string;
+  nonce_enc: string;
+  payload_out: string;
+  nonce_out: string;
+}
+
 export interface OperationResultOrigination {
   status: OperationResultStatusEnum;
+  big_map_diff?: ContractBigMapDiff;
   balance_updates?: OperationBalanceUpdates;
   originated_contracts?: string[];
   consumed_gas?: string;
@@ -589,6 +661,7 @@ export interface OperationResultOrigination {
   paid_storage_size_diff?: string;
   errors?: TezosGenericOperationError[];
   consumed_milligas?: string;
+  lazy_storage_diff?: LazyStorageDiff[];
 }
 
 export interface OperationContentsAndResultMetadataOrigination {
@@ -673,7 +746,7 @@ export interface TestChainStatus {
 
 export interface MaxOperationListLength {
   max_size: number;
-  max_op: number;
+  max_op?: number;
 }
 
 export interface Level {
