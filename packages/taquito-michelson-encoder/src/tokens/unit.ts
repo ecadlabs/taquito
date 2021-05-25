@@ -1,7 +1,7 @@
-import { Token, TokenFactory } from './token';
+import { ComparableToken, TokenFactory } from './token';
 import { UnitValue } from '../taquito-michelson-encoder';
 
-export class UnitToken extends Token {
+export class UnitToken extends ComparableToken {
   static prim = 'unit';
 
   constructor(
@@ -21,11 +21,26 @@ export class UnitToken extends Token {
     return { prim: 'Unit' };
   }
 
-  public Execute() {
+  public Execute(_val: { prim: string }) {
     return UnitValue;
   }
 
   public ExtractSchema() {
     return UnitToken.prim;
+  }
+
+  compare(_val1: any, _val2: any) {
+    return 0;
+  }
+
+  ToKey(_val: any) {
+    return UnitValue;
+  }
+
+  ToBigMapKey(_val: any) {
+    return {
+      key: { prim: 'Unit' },
+      type: { prim: UnitToken.prim },
+    };
   }
 }
