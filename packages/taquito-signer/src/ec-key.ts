@@ -45,7 +45,9 @@ export class ECKey {
 
     this._key = decrypt(b58cdecode(this.key, prefix[keyPrefix]));
     const keyPair = new elliptic.ec(this.curve).keyFromPrivate(this._key);
-    const pref = keyPair.getPublic().getY().toArray()[31] % 2 ? 3 : 2;
+    const keyPairY = keyPair.getPublic().getY().toArray();
+    const parityByte = keyPairY.length < 32 ? keyPairY[keyPairY.length - 1] : keyPairY[31];
+    const pref = parityByte % 2 ? 3 : 2;
     const pad = new Array(32).fill(0);
     this._publicKey = toBuffer(
       new Uint8Array([pref].concat(pad.concat(keyPair.getPublic().getX().toArray()).slice(-32)))
