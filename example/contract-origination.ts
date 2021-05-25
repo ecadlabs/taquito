@@ -1,7 +1,7 @@
 import { TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
 
-const provider = 'https://api.tez.ie/rpc/carthagenet';
+const provider = 'https://api.tez.ie/rpc/florencenet';
 
 async function example() {
   const tezos = new TezosToolkit(provider);
