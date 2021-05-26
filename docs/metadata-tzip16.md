@@ -40,7 +40,7 @@ Tezos.addExtension(new Tzip16Module());
   <TabItem value="customMetadataProvider">
 
 
-In some cases, we may want to use a customized metadata provider. The constructor of the `Tzip16Module` class takes an optional metadata provider as a parameter. This allows to inject a custom metadata provider with custom protocol handlers if desired. For example, if we want to use a different IPFS gateway then the default one, which is `ipfs.io`, or if we want to use a different HTTP handler to support authentication or custom headers. Here is an example:
+In some cases, we may want to use a customized metadata provider. The constructor of the `Tzip16Module` class takes an optional metadata provider as a parameter. This allows to inject a custom metadata provider with custom protocol handlers if desired. For example, if we want to use a different IPFS gateway than the default one, which is `ipfs.io`, or if we want to use a different HTTP handler to support authentication or custom headers. Here is an example:
 
 ```js
 import { Handler, IpfsHttpHandler, TezosStorageHandler, MetadataProvider } from '@taquito/tzip16';
@@ -87,7 +87,7 @@ All other methods of the `ContractAbstraction` class can be called as usual on t
 
 The `getMetadata` method returns an object which contains the URI, the metadata in JSON format, an optional SHA256 hash of the metadata and an optional integrity check result.
 
-A sequence diagram can be found [here](tzip16-sequence-diagram#get-the-metadata).
+A sequence diagram can be found [here](./tzip16-sequence-diagram#get-the-metadata).
 #### Tezos-storage example
 
 ```js live noInline
@@ -178,7 +178,7 @@ Tezos.contract.at(contractAddress, tzip16)
 
 ## Execute off-chain views
 
-A sequence diagram can be found [here](tzip16-sequence-diagram#execute-a-view).
+A sequence diagram can be found [here](./tzip16-sequence-diagram#execute-a-view).
 
 In the next example, we will run a view named `someJson` that can be found in the metadata of the contract `KT1T2KNHdrPwLE4TZcGr6mVZt1s6k9j7tHCV`. When we inspect those metadata, we can see that this view takes no parameter, has a returnType of bytes and has the following code:
 
