@@ -159,13 +159,12 @@ export class OperationBatch extends OperationEmitter {
     const publicKeyHash = await this.signer.publicKeyHash();
     const publicKey = await this.signer.publicKey();
     const estimates = await this.estimator.batch(this.operations);
+
+    const revealNeeded = await this.isRevealOpNeeded(this.operations, publicKeyHash);
+    let i = revealNeeded ? 1 : 0;
+
     const ops: RPCOperation[] = [];
-    let i = 0;
-    let opRequireReveal = false;
     for (const op of this.operations) {
-      if(isOpRequireReveal(op)){
-        opRequireReveal = true;
-      }
       if (isOpWithFee(op)) {
         const estimated = await this.estimate(op, async () => estimates[i]);
         ops.push(await this.getRPCOp({ ...op, ...estimated }));
@@ -174,14 +173,12 @@ export class OperationBatch extends OperationEmitter {
       }
       i++;
     }
-    if(opRequireReveal) {
-      const estimateReveal = await this.estimator.reveal();
-      if(estimateReveal){
-        const reveal: withKind<RevealParams, OpKind.REVEAL> = { kind: OpKind.REVEAL }
-        const estimatedReveal = await this.estimate(reveal, async () => estimateReveal);
-        ops.unshift(await createRevealOperation({ ...estimatedReveal}, publicKeyHash, publicKey))
-      }
+    if (revealNeeded) {
+      const reveal: withKind<RevealParams, OpKind.REVEAL> = { kind: OpKind.REVEAL }
+      const estimatedReveal = await this.estimate(reveal, async () => estimates[0]);
+      ops.unshift(await createRevealOperation({ ...estimatedReveal }, publicKeyHash, publicKey))
     }
+
     const source = (params && params.source) || publicKeyHash;
     const prepared = await this.prepareOperation({
       operation: ops,

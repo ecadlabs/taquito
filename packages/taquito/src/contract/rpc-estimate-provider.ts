@@ -10,7 +10,6 @@ import {
 import {
   DelegateParams,
   isOpWithFee,
-  isOpRequireReveal,
   OriginateParams,
   ParamsWithKind,
   PrepareOperationParams,
@@ -231,6 +230,12 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
 
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for a each operation in the batch
+   *
+   * @returns An array of Estimate objects. If a reveal operation is needed, the first element of the array is the Estimate for the reveal operation.
+   */
   async batch(params: ParamsWithKind[]) {
     const pkh = await this.signer.publicKeyHash();
     let operations: RPCOperation[] = [];
@@ -324,20 +329,6 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
       const estimateProperties = await this.prepareEstimate({ operation: op, source: pkh });
       return Estimate.createEstimateInstanceFromProperties(estimateProperties);
     }
-  }
-
-  private isRevealRequiredForOpType(op: RPCOperation[]) {
-    let opRequireReveal = false;
-    for (const operation of op) {
-      if (isOpRequireReveal(operation)) {
-        opRequireReveal = true;
-      }
-    }
-    return opRequireReveal;
-  };
-
-  private async isRevealOpNeeded(op: RPCOperation[], pkh: string) {
-    return (!await this.isAccountRevealRequired(pkh) || !this.isRevealRequiredForOpType(op)) ? false : true;
   }
 
   private async addRevealOp(op: RPCOperation[], pkh: string) {

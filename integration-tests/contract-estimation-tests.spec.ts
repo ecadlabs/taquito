@@ -5,7 +5,7 @@ import { originate, originate2, transferImplicit2 } from "./data/lambda";
 import { ligoSample } from "./data/ligo-simple-contract";
 import { managerCode } from "./data/manager_code";
 
-CONFIGS().forEach(({ lib, setup, createAddress, knownBaker, protocol, rpc }) => {
+CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => {
   const Tezos = lib;
 
   const edonet = (protocol === Protocols.PtEdo2Zk) ? test : test.skip;
@@ -39,7 +39,7 @@ CONFIGS().forEach(({ lib, setup, createAddress, knownBaker, protocol, rpc }) => 
       }
     })
 
-     florencenet('Estimate transfer with allocated destination', async (done) => {
+    florencenet('Estimate transfer with allocated destination', async (done) => {
       const estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 1.9 });
       expect(estimate.gasLimit).toEqual(1527);
       expect(estimate.storageLimit).toEqual(0);
@@ -264,7 +264,7 @@ CONFIGS().forEach(({ lib, setup, createAddress, knownBaker, protocol, rpc }) => 
       const op2 = await contract.methods.do(originate2()).send();
       await op2.confirmation();
       done();
-    }) 
+    })
 
     edonet('Estimate multiple internal origination', async (done) => {
       const tx = contract.methods.do(originate2()).toTransferParams();
@@ -366,5 +366,5 @@ CONFIGS().forEach(({ lib, setup, createAddress, knownBaker, protocol, rpc }) => 
         }));
       done();
     })
-  }); 
+  });
 })

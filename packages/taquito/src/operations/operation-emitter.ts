@@ -13,6 +13,7 @@ import { flattenErrors, TezosOperationError, TezosPreapplyFailureError } from '.
 import {
   ForgedBytes,
   isOpRequireReveal,
+  ParamsWithKind,
   PrepareOperationParams,
   RPCOperation,
   RPCOpWithFee,
@@ -39,11 +40,25 @@ export abstract class OperationEmitter {
 
   constructor(protected context: Context) {}
 
+  protected async isRevealOpNeeded(op: RPCOperation[] | ParamsWithKind[], pkh: string) {
+    return (!await this.isAccountRevealRequired(pkh) || !this.isRevealRequiredForOpType(op)) ? false : true;
+  }
+
   protected async isAccountRevealRequired(publicKeyHash: string) {
     const manager = await this.rpc.getManagerKey(publicKeyHash);
       const haveManager = manager && typeof manager === 'object' ? !!manager.key : !!manager;
       return !haveManager;
   }
+
+  protected isRevealRequiredForOpType(op: RPCOperation[] | ParamsWithKind[]) {
+    let opRequireReveal = false;
+    for (const operation of op) {
+      if (isOpRequireReveal(operation)) {
+        opRequireReveal = true;
+      }
+    }
+    return opRequireReveal;
+  };
 
   // Originally from sotez (Copyright (c) 2018 Andrew Kishino)
   protected async prepareOperation({
