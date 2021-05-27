@@ -37,7 +37,13 @@ export {
   TezosOperationErrorWithMessage,
   TezosPreapplyFailureError,
 } from './operations/operation-errors';
-export { OpKind } from './operations/types';
+export * from './operations/types';
+export { BatchOperation } from './operations/batch-operation';
+export { DelegateOperation } from './operations/delegate-operation';
+export { OriginationOperation } from './operations/origination-operation';
+export { TransactionOperation } from './operations/transaction-operation';
+export { OperationBatch } from './batch/rpc-batch-provider';
+export { Operation } from './operations/operations';
 export * from './signer/interface';
 export * from './subscribe/interface';
 export { SubscribeProvider } from './subscribe/interface';
@@ -70,13 +76,13 @@ export interface VersionInfo {
 
 /**
  * @description Facade class that surfaces all of the libraries capability and allow it's configuration
- * 
+ *
  * @param _rpc The RPC server to use
  */
 export class TezosToolkit {
   private _stream!: SubscribeProvider;
   private _options: SetProviderOptions = {};
-  private _rpcClient: RpcClient
+  private _rpcClient: RpcClient;
   private _wallet: Wallet;
   private _context: Context;
   /**
@@ -87,9 +93,7 @@ export class TezosToolkit {
 
   public readonly format = format;
 
-  constructor(
-    private _rpc: RpcClient | string
-  ) {
+  constructor(private _rpc: RpcClient | string) {
     if (typeof this._rpc === 'string') {
       this._rpcClient = new RpcClient(this._rpc);
     } else {
@@ -100,7 +104,7 @@ export class TezosToolkit {
     this.setProvider({ rpc: this._rpcClient });
     // tslint:disable-next-line: deprecation
     this.batch = this._context.batch.batch.bind(this._context.batch);
-  } 
+  }
 
   /**
    * @description Sets configuration on the Tezos Taquito instance. Allows user to choose which signer, rpc client, rpc url, forger and so forth
@@ -112,7 +116,16 @@ export class TezosToolkit {
    *
    */
 
-  setProvider({ rpc, stream, signer, protocol, config, forger, wallet, packer }: SetProviderOptions) {
+  setProvider({
+    rpc,
+    stream,
+    signer,
+    protocol,
+    config,
+    forger,
+    wallet,
+    packer,
+  }: SetProviderOptions) {
     this.setRpcProvider(rpc);
     this.setStreamProvider(stream);
     this.setSignerProvider(signer);
@@ -155,8 +168,8 @@ export class TezosToolkit {
       this._rpcClient = new RpcClient(rpc);
     } else if (rpc instanceof RpcClient) {
       this._rpcClient = rpc;
-    } 
-/*     else if (this._options.rpc === undefined) {
+    }
+    /*     else if (this._options.rpc === undefined) {
       this._rpcClient = new RpcClient();
     } */
     this._options.rpc = this._rpcClient;
@@ -223,7 +236,7 @@ export class TezosToolkit {
    * @example Tezos.setPackerProvider(new MichelCodecPacker())
    *
    */
-  setPackerProvider(packer?: SetProviderOptions['packer']){
+  setPackerProvider(packer?: SetProviderOptions['packer']) {
     const p = typeof packer === 'undefined' ? this.getFactory(RpcPacker)() : packer;
     this._options.packer = p;
     this._context.packer = p;
@@ -281,7 +294,7 @@ export class TezosToolkit {
 
   /**
    * @description Allow to add a module to the TezosToolkit instance. This method adds the appropriate Providers(s) required by the module to the internal context.
-   * 
+   *
    * @param module extension to add to the TezosToolkit instance
    *
    * @example Tezos.addExtension(new Tzip16Module());
@@ -299,7 +312,7 @@ export class TezosToolkit {
   /**
    * @description Gets an object containing the version of Taquito library and git sha of the commit this library is compiled from
    */
-   getVersionInfo(): VersionInfo {
+  getVersionInfo(): VersionInfo {
     return VERSION;
   }
 }
