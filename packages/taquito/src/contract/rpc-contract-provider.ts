@@ -1,19 +1,24 @@
 import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import { BigMapKeyType, MichelsonMap, MichelsonMapKey, Schema } from '@taquito/michelson-encoder';
-import { ScriptResponse } from '@taquito/rpc';
+import { OpKind, ScriptResponse } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { OperationBatch } from '../batch/rpc-batch-provider';
 import { Context } from '../context';
 import { DelegateOperation } from '../operations/delegate-operation';
 import { OperationEmitter } from '../operations/operation-emitter';
 import { OriginationOperation } from '../operations/origination-operation';
+import { RevealOperation } from '../operations/reveal-operation';
 import { TransactionOperation } from '../operations/transaction-operation';
 import {
   DelegateParams,
+  isOpRequireReveal,
   OriginateParams,
   ParamsWithKind,
   RegisterDelegateParams,
+  RevealParams,
+  RPCOperation,
   TransferParams,
+  withKind,
 } from '../operations/types';
 import { ContractAbstraction } from './contract';
 import { InvalidDelegationSource } from './errors';
@@ -21,6 +26,7 @@ import { ContractProvider, ContractSchema, EstimationProvider, StorageProvider }
 import {
   createOriginationOperation,
   createRegisterDelegateOperation,
+  createRevealOperation,
   createSetDelegateOperation,
   createTransferOperation,
 } from './prepare';
@@ -166,6 +172,21 @@ export class RpcContractProvider extends OperationEmitter
     }
   }
 
+  private async addRevealOperationIfNeeded(operation: RPCOperation, publicKeyHash: string){
+    if(isOpRequireReveal(operation)){
+      const ops: RPCOperation[] = [operation];
+      const publicKey = await this.signer.publicKey();
+      const estimateReveal = await this.estimator.reveal();
+      if(estimateReveal){
+        const reveal: withKind<RevealParams, OpKind.REVEAL> = { kind: OpKind.REVEAL };
+        const estimatedReveal = await this.estimate(reveal, async () => estimateReveal);
+        ops.unshift(await createRevealOperation({ ...estimatedReveal }, publicKeyHash, publicKey));
+        return ops;
+      }
+    }
+    return operation;
+  }
+
   /**
    *
    * @description Originate a new contract according to the script in parameters. Will sign and inject an operation using the current context
@@ -182,10 +203,11 @@ export class RpcContractProvider extends OperationEmitter
     const publicKeyHash = await this.signer.publicKeyHash();
     const operation = await createOriginationOperation(
       await this.context.parser.prepareCodeOrigination({
-        ...params,
-        ...estimate,
-      }));
-    const preparedOrigination = await this.prepareOperation({ operation, source: publicKeyHash });
+      ...params,
+      ...estimate,
+    }));
+    const ops = await this.addRevealOperationIfNeeded(operation, publicKeyHash);
+    const preparedOrigination = await this.prepareOperation({ operation: ops, source: publicKeyHash });
     const forgedOrigination = await this.forge(preparedOrigination);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(forgedOrigination);
     return new OriginationOperation(hash, operation, forgedBytes, opResponse, context, this);
@@ -206,12 +228,15 @@ export class RpcContractProvider extends OperationEmitter
     }
 
     const estimate = await this.estimate(params, this.estimator.setDelegate.bind(this.estimator));
+    const publicKeyHash = await this.signer.publicKeyHash()
     const operation = await createSetDelegateOperation({ ...params, ...estimate });
-    const sourceOrDefault = params.source || (await this.signer.publicKeyHash());
-    const opBytes = await this.prepareAndForge({
-      operation,
+    const sourceOrDefault = params.source || publicKeyHash;
+    const ops = await this.addRevealOperationIfNeeded(operation, publicKeyHash);
+    const prepared = await this.prepareOperation({
+      operation: ops,
       source: sourceOrDefault,
     });
+    const opBytes = await this.forge(prepared);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
     return new DelegateOperation(
       hash,
@@ -238,7 +263,9 @@ export class RpcContractProvider extends OperationEmitter
     );
     const source = await this.signer.publicKeyHash();
     const operation = await createRegisterDelegateOperation({ ...params, ...estimate }, source);
-    const opBytes = await this.prepareAndForge({ operation });
+    const ops = await this.addRevealOperationIfNeeded(operation, source);
+    const prepared = await this.prepareOperation({ operation: ops });
+    const opBytes = await this.forge(prepared);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
     return new DelegateOperation(hash, operation, source, forgedBytes, opResponse, context);
   }
@@ -252,15 +279,43 @@ export class RpcContractProvider extends OperationEmitter
    * @param Transfer operation parameter
    */
   async transfer(params: TransferParams) {
+    const publickKeyHash = await this.signer.publicKeyHash();
     const estimate = await this.estimate(params, this.estimator.transfer.bind(this.estimator));
     const operation = await createTransferOperation({
       ...params,
       ...estimate,
     });
-    const source = params.source || (await this.signer.publicKeyHash());
-    const opBytes = await this.prepareAndForge({ operation, source: params.source });
+    const source = params.source || publickKeyHash;
+    const ops = await this.addRevealOperationIfNeeded(operation, publickKeyHash);
+    const prepared = await this.prepareOperation({ operation: ops, source: params.source });
+    const opBytes = await this.forge(prepared);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
     return new TransactionOperation(hash, operation, source, forgedBytes, opResponse, context);
+  }
+
+  /**
+   *
+   * @description Reveal the current address. Will throw an error if the address is already revealed.
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param RevealParams operation parameter
+   */
+  async reveal(params: RevealParams){
+    const publicKeyHash = await this.signer.publicKeyHash();
+    const estimateReveal = await this.estimator.reveal(params);
+    if(estimateReveal){
+      const estimated = await this.estimate(params, async () => estimateReveal);
+      const operation = await createRevealOperation({
+        ...estimated,
+      }, publicKeyHash, await this.signer.publicKey());
+      const prepared = await this.prepareOperation({ operation, source: publicKeyHash });
+      const opBytes = await this.forge(prepared);
+      const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+      return new RevealOperation(hash, operation, publicKeyHash, forgedBytes, opResponse, context);
+    } else {
+      throw new Error('The current address is already revealed.')
+    }
   }
 
   async at<T extends ContractAbstraction<ContractProvider>>(address: string, contractAbstractionComposer: ContractAbstractionComposer<T> = x => x as any): Promise<T> {
