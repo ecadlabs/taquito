@@ -32,18 +32,8 @@ export * from './contract/big-map';
 export { CompositeForger } from './forger/composite-forger';
 export * from './forger/interface';
 export { RpcForger } from './forger/rpc-forger';
-export {
-  TezosOperationError,
-  TezosOperationErrorWithMessage,
-  TezosPreapplyFailureError,
-} from './operations/operation-errors';
-export * from './operations/types';
-export { BatchOperation } from './operations/batch-operation';
-export { DelegateOperation } from './operations/delegate-operation';
-export { OriginationOperation } from './operations/origination-operation';
-export { TransactionOperation } from './operations/transaction-operation';
+export * from './operations';
 export { OperationBatch } from './batch/rpc-batch-provider';
-export { Operation } from './operations/operations';
 export * from './signer/interface';
 export * from './subscribe/interface';
 export { SubscribeProvider } from './subscribe/interface';

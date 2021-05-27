@@ -1,8 +1,4 @@
-import {
-  OperationContentsAndResult,
-  OperationResultOrigination,
-  OperationContentsAndResultOrigination,
-} from '@taquito/rpc';
+import { OperationContentsAndResult, OperationContentsAndResultOrigination } from '@taquito/rpc';
 import { Context } from '../context';
 import { RpcContractProvider } from '../contract/rpc-contract-provider';
 import { Operation } from './operations';
@@ -20,7 +16,8 @@ import {
  *
  * @warn Currently support only one origination per operation
  */
-export class OriginationOperation extends Operation
+export class OriginationOperation
+  extends Operation
   implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation {
   /**
    * @description Contract address of the newly originated contract
@@ -55,7 +52,7 @@ export class OriginationOperation extends Operation
   get operationResults() {
     const originationOp =
       Array.isArray(this.results) &&
-      (this.results.find(op => op.kind === 'origination') as
+      (this.results.find((op) => op.kind === 'origination') as
         | OperationContentsAndResultOrigination
         | undefined);
 
