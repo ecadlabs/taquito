@@ -63,14 +63,9 @@ export class TezBridgeWallet implements WalletProvider {
     const { operation_id } = await tezbridge.request({
       method: 'inject_operations',
       operations: params.map(op => ({
-        ...this.removeFeeAndLimit(op),
+        op,
       })),
     });
     return operation_id;
-  }
-
-  private removeFeeAndLimit<T extends { gas_limit: any; storage_limit: any; fee: any }>(op: T) {
-    const { fee, gas_limit, storage_limit, ...rest } = op;
-    return rest;
   }
 }

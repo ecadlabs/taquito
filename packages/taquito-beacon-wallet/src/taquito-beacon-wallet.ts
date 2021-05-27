@@ -64,11 +64,6 @@ export class BeaconWallet implements WalletProvider {
     await this.client.requestPermissions(request);
   }
 
-  private removeFeeAndLimit<T extends { gas_limit: any; storage_limit: any; fee: any }>(op: T) {
-    const { fee, gas_limit, storage_limit, ...rest } = op;
-    return rest;
-  }
-
   async getPKH() {
     const account = await this.client.getActiveAccount();
     if (!account) {
@@ -96,10 +91,10 @@ export class BeaconWallet implements WalletProvider {
     }
     const permissions = account.scopes;
     this.validateRequiredScopesOrFail(permissions, [PermissionScope.OPERATION_REQUEST]);
-
+    
     const { transactionHash } = await this.client.requestOperation({
       operationDetails: params.map(op => ({
-        ...this.removeFeeAndLimit(op),
+        op,
       })) as any,
     });
     return transactionHash;
