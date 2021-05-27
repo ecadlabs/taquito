@@ -126,10 +126,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   test('Originate a permit contract and set defaultExpiry', async (done) => {
 =======
 import { MichelsonMap, MichelCodecPacker } from "@taquito/taquito";
-import { Schema } from '../packages/taquito-michelson-encoder/src/taquito-michelson-encoder';
 import { importKey } from '@taquito/signer';
-import { Parser } from '@taquito/michel-codec'
 import { Tzip16Module, char2Bytes, tzip16, bytes2Char } from '@taquito/tzip16';
+import { Parser } from '@taquito/michel-codec'
+import { Schema } from '../packages/taquito-michelson-encoder/src/schema/storage';
 import { permit_admin_42} from "./data/permit_admin_42";
 import { permit_admin_42_expiry} from "./data/permit_admin_42_expiry";
 import { permit_admin_42_set} from "./data/permit_admin_42_set";
@@ -225,7 +225,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         return op.hash;
       })
       .catch(Error) ;
-      console.log("op.operationResults : "+op.operationResults)
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       done();
@@ -403,25 +402,24 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       const contract = await op.contract();
-      console.log("Contract address : "+contract.address)
       expect(op.status).toEqual('applied')
 
       const expiry = 300;
 
       //submit the expiry to the contract
-      Tezos.contract
-      .at(contract.address)
-      .then((c) => {
-        return c.methods.setExpiry(expiry).send();
-      })
-      .then(async (op) => {
-        await op.confirmation(3);
-        return op.hash;
-      })
-      .catch(Error) ;
-      expect(op.hash).toBeDefined();
-      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-      done();
+       Tezos.contract
+       .at(contract.address)
+       .then((c) => {
+         return c.methods.setExpiry(expiry).send();
+       })
+       .then(async (op) => {
+         await op.confirmation(3);
+         return op.hash;
+       })
+       .catch(Error) ;
+       expect(op.hash).toBeDefined();
+       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+       done();
     });
 
     test('Deploy a contract having a permit that can be set', async (done) => {
@@ -457,57 +455,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
         done();
       });
-
-    test('Deploy an fa2 contract having a permit', async (done) => {
-
-      Tezos.addExtension(new Tzip16Module());
-
-        const op = await Tezos.contract.originate({
-        code: fa2Contract_with_permits,
-        storage:
-        {
-        0: new MichelsonMap(),
-        1: new MichelsonMap(),
-        2: 'tz1h1LzP7U8bNNhow8Mt1TNMxb91AjG3p6KH',
-        3: false,
-        4: 0,
-        5: 0,
-        },
-        });
-        await op.confirmation();
-        expect(op.hash).toBeDefined();
-        expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-        const contract = await op.contract();
-        expect(op.status).toEqual('applied')
-
-        const permit_parameter = 'Pair "edpkuPTVBFtbYd6gZWryXypSYYq6g7FvyucwphoU78T1vmGkbhj6qb" (Pair "edsigtfkWys7vyeQy1PnHcBuac1dgj2aJ8Jv3fvoDE5XRtxTMRgJBwVgMTzvhAzBQyjH48ux9KE8jRZBSk4Rv2bfphsfpKP3ggM" 0x0f0db0ce6f057a8835adb6a2c617fd8a136b8028fac90aab7b4766def688ea0c)'
-
-        //submit the permit_parameter to the contract
-        Tezos.contract
-         .at(contract.address)
-         .then((c) => {
-           return c.methods.permit(permit_parameter).send();
-         })
-         .then(async (op) => {
-           await op.confirmation(3);
-           return op.hash;
-         })
-         .catch(Error) ;
-         expect(op.hash).toBeDefined();
-         expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-
-      const op2 = await contract.methods.permit(
-         // key
-         'edpkuPTVBFtbYd6gZWryXypSYYq6g7FvyucwphoU78T1vmGkbhj6qb',
-       // signature
-         'edsigtfkWys7vyeQy1PnHcBuac1dgj2aJ8Jv3fvoDE5XRtxTMRgJBwVgMTzvhAzBQyjH48ux9KE8jRZBSk4Rv2bfphsfpKP3ggM',
-       //  bytes
-         char2Bytes('0x0f0db0ce6f057a8835adb6a2c617fd8a136b8028fac90aab7b4766def688ea0c')
-      ).send()
-      console.log(op2.amount)
-      await op2.confirmation();
-      done();
-    })
 
     test('Permit off-chain views can be executed', async (done) => {
 
