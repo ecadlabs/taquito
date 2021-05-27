@@ -1,4 +1,28 @@
-export * from './types';
+export {
+    OpKind,
+    withKind,
+    ParamsWithKind,
+    RPCOpWithFee,
+    RPCOpWithSource,
+    SourceKinds,
+    GasConsumingOperation,
+    StorageConsumingOperation,
+    FeeConsumingOperation,
+    OriginateParamsBase,
+    OriginateParams,
+    ActivationParams,
+    RPCOriginationOperation,
+    RPCRevealOperation,
+    ForgedBytes,
+    DelegateParams,
+    RegisterDelegateParams,
+    RPCDelegateOperation,
+    TransferParams,
+    RPCTransferOperation,
+    RPCActivateOperation,
+    RPCOperation,
+    PrepareOperationParams
+} from './types';
 export {
   TezosOperationError,
   TezosOperationErrorWithMessage,
