@@ -127,9 +127,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 =======
 import { MichelsonMap, MichelCodecPacker } from "@taquito/taquito";
 import { importKey } from '@taquito/signer';
-import { Tzip16Module, char2Bytes, tzip16, bytes2Char } from '@taquito/tzip16';
-import { Parser } from '@taquito/michel-codec'
-import { Schema } from '../packages/taquito-michelson-encoder/src/schema/storage';
+import { Tzip16Module } from '@taquito/tzip16';
 import { permit_admin_42} from "./data/permit_admin_42";
 import { permit_admin_42_expiry} from "./data/permit_admin_42_expiry";
 import { permit_admin_42_set} from "./data/permit_admin_42_set";
@@ -455,39 +453,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
         done();
       });
-
-    test('Permit off-chain views can be executed', async (done) => {
-
-      Tezos.addExtension(new Tzip16Module());
-      const op = await Tezos.contract.originate({
-        code: fa2Contract_with_permits,
-        storage:
-        {
-          0: new MichelsonMap(),
-          1: new MichelsonMap(),
-          2: 'tz1h1LzP7U8bNNhow8Mt1TNMxb91AjG3p6KH',
-          3: false,
-          4: 0,
-          5: 0,
-        },
-        });
-        await op.confirmation();
-        expect(op.hash).toBeDefined();
-        expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-        const contract = await op.contract();
-        expect(op.status).toEqual('applied')
-        done();
-    });
-
-   // test('Storage tables are accessible: permits, user_expiries, permit_expiries.', async (done) => {
-
-   //    done();
-   // });
-
-   // test('Permit Failure scenarios: Expiry, not enough funds, etc.', async (done) => {
-
-   //    done();
-   // });
   })
 
 
