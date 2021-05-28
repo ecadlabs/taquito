@@ -115,6 +115,21 @@ describe('inmemory-signer', () => {
     done();
   });
 
+  it('Tz2 having "y" coordinate shorter than 32 bytes', async (done) => {
+    const signer = new InMemorySigner('spsk24EJohZHJkZnWEzj3w9wE7BFARpFmq5WAo9oTtqjdJ2t4pyoB3');
+    expect(await signer.publicKey()).toEqual(
+      'sppk7bcmsCiZmrzrfGpPHnZMx73s6pUC4Tf1zdASQ3rgXfq8uGP3wgV'
+    );
+    expect(await signer.publicKeyHash()).toEqual('tz2T7hMiWgLAtpsB1JXEP59h3QA8rNVAP1Ue');
+    expect(await signer.secretKey()).toEqual(
+      'spsk24EJohZHJkZnWEzj3w9wE7BFARpFmq5WAo9oTtqjdJ2t4pyoB3'
+    );
+    expect((await signer.sign('1234', new Uint8Array([3]))).sig).toEqual(
+      'sigmVKa3AcvzDTPGD7rJXkrMh8XMVkVQUkLwGLL3h1APWgicRKBmgjZ3624vqHA2FufBrLTQuPS9YBN1h2Z16kexp9F8NRXp'
+    );
+    done();
+  });
+
   it('Tz3', async (done) => {
     const signer = new InMemorySigner('p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1');
     expect(await signer.publicKey()).toEqual(
