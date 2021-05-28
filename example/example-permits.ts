@@ -1,3 +1,8 @@
+/**
+ * This example of interaction with a permit contract is taken from https://github.com/tqtezos/lorentz-contract-permit.
+ * It is also used in an integration test at integration-tests/contract-permits-set.spec.ts.
+ */
+
 import { ContractAbstraction, ContractProvider, TezosToolkit } from '@taquito/taquito';
 import { InMemorySigner, importKey } from '@taquito/signer';
 import { Parser } from '@taquito/michel-codec';
