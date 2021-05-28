@@ -23,8 +23,8 @@ import { buf2hex, hex2buf } from '@taquito/utils';
       secret
     ).catch((e) => console.error(e));
 
-    const errors_to_missigned_bytes = errors => {
-      const errors_with = errors.map(x => x.with).filter(x => x !== undefined);
+    const errors_to_missigned_bytes = (errors: any[]) => {
+      const errors_with = errors.map((x: { with: any; }) => x.with).filter((x: any) => x !== undefined);
       if (errors_with.length != 1){
         throw ['errors_to_missigned_bytes: expected one error to fail "with" michelson, but found:', errors_with]
       } else {
@@ -62,7 +62,7 @@ import { buf2hex, hex2buf } from '@taquito/utils';
         data: wrapped_param,
         type: wrapped_param_type,
       }).catch(e => console.error('error:', e));
-      var packed_param;
+      var packed_param: string;
       if (raw_packed) {
         packed_param = raw_packed.packed
       } else {
