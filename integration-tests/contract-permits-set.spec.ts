@@ -1,8 +1,8 @@
 import { CONFIGS } from "./config";
-import { MichelsonMap, MichelCodecPacker, ContractAbstraction, ContractProvider } from "@taquito/taquito";
+import { MichelsonMap, MichelCodecPacker } from "@taquito/taquito";
 import { permit_admin_42_set} from "./data/permit_admin_42_set";
-import { MichelsonData, Parser, sourceReference } from '@taquito/michel-codec'
-import { importKey, InMemorySigner } from '@taquito/signer';
+import { Parser } from '@taquito/michel-codec'
+import { importKey } from '@taquito/signer';
 import { buf2hex, hex2buf } from "@taquito/utils";
 
 const blake = require('blakejs');
@@ -10,40 +10,8 @@ const blake = require('blakejs');
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib; 
   Tezos.setPackerProvider(new MichelCodecPacker());
-  const bob_address = 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu';
-  const FAUCET_KEY = {
-    "mnemonic": [
-      "swear",
-      "involve",
-      "mixture",
-      "pyramid",
-      "typical",
-      "swift",
-      "arch",
-      "mention",
-      "decline",
-      "mind",
-      "federal",
-      "lamp",
-      "coffee",
-      "weather",
-      "quote"
-    ],
-    "secret": "782ff5c78fc58df062670fdc27d5a8a8003ecf16",
-    "amount": "32252493855",
-    "pkh": "tz1Xk7HkSwHv6dTEgR7E2WC2yFj4cyyuj2Gh",
-    "password": "zXuYCjc8aq",
-    "email": "fnctuxjz.erhkqxca@tezos.example.org"
-       }
-
-    importKey(
-      Tezos,
-      FAUCET_KEY.email,
-      FAUCET_KEY.password,
-      FAUCET_KEY.mnemonic.join(' '),
-      FAUCET_KEY.secret
-    );
-  
+  const bob_address = 'tz1Xk7HkSwHv6dTEgR7E2WC2yFj4cyyuj2Gh';
+ 
   const errors_to_missigned_bytes = (errors: any[]) => {
     const errors_with = errors.map(x => x.with).filter(x => x !== undefined);
     if (errors_with.length != 1){
@@ -77,6 +45,29 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     beforeEach(async (done) => {
       await setup()
+      await importKey(
+        Tezos,
+        'peqjckge.qkrrajzs@tezos.example.org',
+        'y4BX7qS1UE',
+        [
+          'skate',
+          'damp',
+          'faculty',
+          'morning',
+          'bring',
+          'ridge',
+          'traffic',
+          'initial',
+          'piece',
+          'annual',
+          'give',
+          'say',
+          'wrestle',
+          'rare',
+          'ability',
+        ].join(' '),
+        '7d4c8c3796fdbf4869edb5703758f0e5831f5081'
+      );
         done()
     })
 
@@ -88,8 +79,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         {
         0: new MichelsonMap(),
         1: 300,
-        2: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
-        3: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu'
+        2: bob_address,
+        3: bob_address
         },
         });
         await op.confirmation();
@@ -98,15 +89,13 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         const contract = await op.contract();
         expect(op.status).toEqual('applied')
         const permit_address = (await op.contract()).address
-        console.log('inside: permit_examples');
-        
+
         // Get the contract
         const permit_contract = await Tezos.contract.at(permit_address);
        
         // Check whether bob is actually the admin
         const storage : any = await permit_contract.storage();
-        console.log('bob is admin:', storage['2'] === bob_address);
-       
+
         // Get the signer's public key and a dummy signature to trigger the error
         const signer_key = await Tezos.signer.publicKey().catch(e => console.error(e));
         const dummy_sig = "edsigu5scrvoY2AB7cnHzUd7x7ZvXEMYkArKeehN5ZXNkmfUSkyApHcW5vPcjbuTrnHUMt8mJkWmo8WScNgKL3vu9akFLAXvHxm";
@@ -126,8 +115,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         };
           
         const param_hash =  buf2hex(blake.blake2b(hex2buf(packed_param), null, 32));
-    
-        console.log('permitParamHash:', param_hash);
 
         const expected_param_hash = "0f0db0ce6f057a8835adb6a2c617fd8a136b8028fac90aab7b4766def688ea0c";
         if(param_hash === expected_param_hash) {
@@ -139,23 +126,14 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         // Preapply a transfer with the dummy_sig to extract the bytes_to_sign
         const transfer_params = permit_contract.methods.permit(signer_key, dummy_sig, param_hash).toTransferParams();
         const bytes_to_sign = await Tezos.estimate.transfer(transfer_params).catch((e) => errors_to_missigned_bytes(e.errors));
-        console.log('bytes_to_sign:', bytes_to_sign);
-       
-        console.log('signer key and param hash:', [signer_key, param_hash]);
-
+        
         // Sign the parameter
-        // file deepcode ignore PromiseNotCaughtNode: <please specify a reason of ignoring this>
-        const param_sig = await Tezos.signer.sign(bytes_to_sign)//.then(s => s.prefixSig);
-       
-        // This is what a relayer needs to submit the parameter on the signer's behalf
-        console.log('permit package:', [signer_key, param_sig, param_hash]);
+        const param_sig = await Tezos.signer.sign(bytes_to_sign).then(s => s.prefixSig);
        
         // Submit the permit to the contract
         const permit_op = await permit_contract.methods.permit(signer_key, param_sig, param_hash).send();
-        await permit_op.confirmation().then(() => console.log('permit_op hash:', permit_op.hash));
-       
-        console.log('ending: permit_examples');       
-        done();
-      })
+        await permit_op.confirmation()
+      done();
     })
   })
+})
