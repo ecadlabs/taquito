@@ -128,8 +128,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         const bytes_to_sign = await Tezos.estimate.transfer(transfer_params).catch((e) => errors_to_missigned_bytes(e.errors));
         
         // Sign the parameter
-        const param_sig = await Tezos.signer.sign(bytes_to_sign).then(s => s.prefixSig);
-       
+        const param_sig = await Tezos.signer.sign(bytes_to_sign)
+            .then(s => s.prefixSig)
+            .catch((error) => console.log(JSON.stringify(error)));
+
         // Submit the permit to the contract
         const permit_op = await permit_contract.methods.permit(signer_key, param_sig, param_hash).send();
         await permit_op.confirmation()
