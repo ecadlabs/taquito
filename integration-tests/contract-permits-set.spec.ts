@@ -2,19 +2,54 @@ import { CONFIGS } from "./config";
 import { MichelsonMap, MichelCodecPacker, ContractAbstraction, ContractProvider } from "@taquito/taquito";
 import { permit_admin_42_set} from "./data/permit_admin_42_set";
 import { MichelsonData, Parser, sourceReference } from '@taquito/michel-codec'
-import { InMemorySigner } from '@taquito/signer';
+import { importKey, InMemorySigner } from '@taquito/signer';
 import { buf2hex, hex2buf } from "@taquito/utils";
 
 const blake = require('blakejs');
-
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib; 
   Tezos.setPackerProvider(new MichelCodecPacker());
 
   const bob_address = 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu';
-  const signer: any = new InMemorySigner('edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca');
-  Tezos.setSignerProvider( signer );
+  //const signer: any = new InMemorySigner('edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca');
+  
+  const FAUCET_KEY = {
+    "mnemonic": [
+      "swear",
+      "involve",
+      "mixture",
+      "pyramid",
+      "typical",
+      "swift",
+      "arch",
+      "mention",
+      "decline",
+      "mind",
+      "federal",
+      "lamp",
+      "coffee",
+      "weather",
+      "quote"
+    ],
+    "secret": "782ff5c78fc58df062670fdc27d5a8a8003ecf16",
+    "amount": "32252493855",
+    "pkh": "tz1Xk7HkSwHv6dTEgR7E2WC2yFj4cyyuj2Gh",
+    "password": "zXuYCjc8aq",
+    "email": "fnctuxjz.erhkqxca@tezos.example.org"
+       }
+
+    importKey(
+      Tezos,
+      FAUCET_KEY.email,
+      FAUCET_KEY.password,
+      FAUCET_KEY.mnemonic.join(' '),
+      FAUCET_KEY.secret
+    );
+  
+  
+  
+  //Tezos.setSignerProvider( signer );
 
   // async function permitParamHash(contract: ContractAbstraction<ContractProvider>,
   //   entrypoint: string,
@@ -133,9 +168,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         const bytes_to_sign = await Tezos.estimate.transfer(transfer_params).catch((e) => errors_to_missigned_bytes(e.errors));
         console.log('bytes_to_sign:', bytes_to_sign);
        
+        console.log('signer key and param hash:', [signer_key, param_hash]);
+
         // Sign the parameter
         // file deepcode ignore PromiseNotCaughtNode: <please specify a reason of ignoring this>
-        const param_sig = await Tezos.signer.sign(bytes_to_sign).then(s => s.prefixSig);
+        const param_sig = await Tezos.signer.sign(bytes_to_sign)//.then(s => s.prefixSig);
        
         // This is what a relayer needs to submit the parameter on the signer's behalf
         console.log('permit package:', [signer_key, param_sig, param_hash]);
