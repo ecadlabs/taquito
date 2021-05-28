@@ -10,10 +10,7 @@ const blake = require('blakejs');
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib; 
   Tezos.setPackerProvider(new MichelCodecPacker());
-
   const bob_address = 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu';
-  //const signer: any = new InMemorySigner('edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca');
-  
   const FAUCET_KEY = {
     "mnemonic": [
       "swear",
@@ -46,30 +43,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       FAUCET_KEY.mnemonic.join(' '),
       FAUCET_KEY.secret
     );
-  
-  
-  
-  //Tezos.setSignerProvider( signer );
-
-  // async function permitParamHash(contract: ContractAbstraction<ContractProvider>,
-  //   entrypoint: string,
-  //   parameter: any): Promise<string> {
-  // const wrapped_param : any = contract.methods[entrypoint](parameter).toTransferParams().parameter?.value;
-  // const wrapped_param_type = contract.entrypoints.entrypoints[entrypoint];
-  
-  // const raw_packed = await Tezos.rpc.packData({
-  // data: wrapped_param,
-  // type: wrapped_param_type,
-  // }).catch(e => console.error('error:', e));
-  // var packed_param;
-  // if (raw_packed) {
-  // packed_param = raw_packed.packed
-  // } else {
-  // throw `packing ${wrapped_param} failed`
-  // };
-  
-  // return buf2hex(blake.blake2b(hex2buf(packed_param), null, 32));
-  // }
   
   const errors_to_missigned_bytes = (errors: any[]) => {
     const errors_with = errors.map(x => x.with).filter(x => x !== undefined);
@@ -184,56 +157,5 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         console.log('ending: permit_examples');       
         done();
       })
-    
-    // test('request mint from contract having a permit', async (done) => {
-
-    //     const op = await Tezos.contract.originate({
-    //     code: fa2Contract_with_permits,
-    //     storage:
-    //     {
-    //     0: new MichelsonMap(),
-    //     1: new MichelsonMap(),
-    //     2: 'tz1h1LzP7U8bNNhow8Mt1TNMxb91AjG3p6KH',
-    //     3: false,
-    //     4: 0,
-    //     5: 0,
-    //     },
-    //     });
-    //     await op.confirmation();
-    //     expect(op.hash).toBeDefined();
-    //     expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-    //     const contract = await op.contract();
-    //     contractAddress = (await op.contract()).address;
-    //     expect(op.status).toEqual('applied')
-
-        // console.log(contract.methods);
-        // console.log(await contract.storage())
-        // const opSetAdmin = await contract.methods.setAdministrator("tz1h1LzP7U8bNNhow8Mt1TNMxb91AjG3p6KH").send({ fee: 30000, gasLimit: 200000 })
-        // await opSetAdmin.confirmation();
-        // const opMint = await contract.methods.mint("tz1h1LzP7U8bNNhow8Mt1TNMxb91AjG3p6KH", 10).send({ fee: 30000, gasLimit: 200000 })
-        // console.log('Awaiting confirmation...');
-        // await opMint.confirmation();
-        // console.log(opMint.hash, opMint.includedInBlock);
-        //console.log("Showing final storage...");
-        //console.log(await contract.storage())      
-        //expect(opMint.amount).toEqual(10)
-      //done();
     })
-
-            // it('Should execute views', async (done) => {
-
-        //     const contractAbstraction = await Tezos.contract.at(contractAddress, tzip16);
-        //     const metadataViews = await contractAbstraction.tzip16().metadataViews();
-   
-        //     const viewGetCounterResult = await metadataViews.GetCounter().executeView('Unit');
-        //     expect(viewGetCounterResult.toString()).toEqual('0');
-   
-        //     const viewGetDefaultExpiryResult = await metadataViews.GetDefaultExpiry().executeView();
-        //     expect(viewGetDefaultExpiryResult.toString()).toEqual('1000');
-   
-        //     done();
-        //  });
-    })
-
-//})
-
+  })
