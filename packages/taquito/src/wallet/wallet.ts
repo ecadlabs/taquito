@@ -175,6 +175,20 @@ export class Wallet {
 					...params
 				})
 			);
+
+			// If fee, storageLimit or gasLimit is defined by user
+			// in case of beacon wallet, dont override it by
+			// defaults.
+			if(params.fee && mappedParams.fee) {
+			  mappedParams.fee = params.fee;
+			}
+			if(params.storageLimit && mappedParams.storageLimit) {
+			  mappedParams.storageLimit = params.storageLimit;
+			}
+			if(params.gasLimit && mappedParams.gasLimit) {
+			  mappedParams.gasLimit = params.gasLimit;
+			}
+
 			const opHash = await this.walletProvider.sendOperations([ mappedParams ]);
 			if (!this.context.proto) {
 				this.context.proto = (await this.context.rpc.getBlock()).protocol as Protocols;
