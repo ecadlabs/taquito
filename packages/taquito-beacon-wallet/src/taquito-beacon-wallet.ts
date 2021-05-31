@@ -92,11 +92,7 @@ export class BeaconWallet implements WalletProvider {
     const permissions = account.scopes;
     this.validateRequiredScopesOrFail(permissions, [PermissionScope.OPERATION_REQUEST]);
     
-    const { transactionHash } = await this.client.requestOperation({
-      operationDetails: params.map(op => ({
-        op,
-      })) as any,
-    });
+    const { transactionHash } = await this.client.requestOperation({ operationDetails: params });
     return transactionHash;
   }
  
