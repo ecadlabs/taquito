@@ -69,17 +69,17 @@ export class WalletOperationBatch {
   private async mapOperation(param: WalletParamsWithKind) {
 		switch (param.kind) {
 			case OpKind.TRANSACTION:
-				return await this.walletProvider.mapTransferParamsToWalletParams({
+				return this.walletProvider.mapTransferParamsToWalletParams({
 					...param
 				});
 			case OpKind.ORIGINATION:
-				return await this.walletProvider.mapOriginateParamsToWalletParams(
+				return this.walletProvider.mapOriginateParamsToWalletParams(
 					await this.context.parser.prepareCodeOrigination({
 						...param
 					})
 				);
 			case OpKind.DELEGATION:
-				return await this.walletProvider.mapDelegateParamsToWalletParams({
+				return this.walletProvider.mapDelegateParamsToWalletParams({
 					...param
 				});
 			default:
