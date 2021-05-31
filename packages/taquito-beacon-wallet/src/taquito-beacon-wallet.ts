@@ -19,6 +19,7 @@ import {
   WalletProvider,
   WalletTransferParams,
 } from '@taquito/taquito';
+import { RPCOriginationOperation } from 'taquito/src/operations/types';
 
 export { VERSION } from './version';
 
@@ -72,16 +73,39 @@ export class BeaconWallet implements WalletProvider {
     return account.address;
   }
 
-  mapTransferParamsToWalletParams(params: WalletTransferParams) {
-    return createTransferOperation(params);
+  async mapTransferParamsToWalletParams(params: WalletTransferParams) {
+    return await this.removeDefaultParams(params, await createTransferOperation(params));
   }
 
-  mapOriginateParamsToWalletParams(params: WalletOriginateParams) {
-    return createOriginationOperation(params as any);
+  async mapOriginateParamsToWalletParams(params: WalletOriginateParams) {
+      return await this.removeDefaultParams(params, await createOriginationOperation(params as any));
   }
 
-  mapDelegateParamsToWalletParams(params: WalletDelegateParams) {
-    return createSetDelegateOperation(params as any);
+  async mapDelegateParamsToWalletParams(params: WalletDelegateParams) {
+    return await this.removeDefaultParams(params, await createSetDelegateOperation(params as any));
+  }
+
+  async removeDefaultParams(params: WalletTransferParams|WalletOriginateParams|WalletDelegateParams, operatedParams:any) {
+
+    let enhancedParams: any;
+
+    // If fee, storageLimit or gasLimit is undefined by user
+    // in case of beacon wallet, dont override it by
+    // defaults.
+    if(!params.fee) {
+      let { fee, ...rest } = operatedParams;
+      enhancedParams = rest;
+    }
+    if(!params.storageLimit) {
+      let { storageLimit, ...rest } = operatedParams;
+      enhancedParams = rest;
+    }
+    if(!params.gasLimit) {
+      let { gasLimit, ...rest } = operatedParams;
+      enhancedParams = rest;
+    }
+
+    return enhancedParams;
   }
 
   async sendOperations(params: any[]) {
