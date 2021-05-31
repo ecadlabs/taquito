@@ -19,7 +19,6 @@ import {
   WalletProvider,
   WalletTransferParams,
 } from '@taquito/taquito';
-import { RPCOriginationOperation } from 'taquito/src/operations/types';
 
 export { VERSION } from './version';
 
