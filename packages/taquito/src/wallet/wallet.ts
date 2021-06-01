@@ -175,7 +175,6 @@ export class Wallet {
 					...params
 				})
 			);
-
 			const opHash = await this.walletProvider.sendOperations([ mappedParams ]);
 			if (!this.context.proto) {
 				this.context.proto = (await this.context.rpc.getBlock()).protocol as Protocols;

@@ -85,26 +85,19 @@ export class BeaconWallet implements WalletProvider {
   }
 
   removeDefaultParams(params: WalletTransferParams|WalletOriginateParams|WalletDelegateParams, operatedParams:any) {
-
-    let enhancedParams: any;
-
     // If fee, storageLimit or gasLimit is undefined by user
     // in case of beacon wallet, dont override it by
     // defaults.
     if(!params.fee) {
-      let { fee, ...rest } = operatedParams;
-      enhancedParams = rest;
+      delete operatedParams.fee;
     }
     if(!params.storageLimit) {
-      let { storageLimit, ...rest } = operatedParams;
-      enhancedParams = rest;
+      delete operatedParams.storage_limit;
     }
     if(!params.gasLimit) {
-      let { gasLimit, ...rest } = operatedParams;
-      enhancedParams = rest;
+      delete operatedParams.gas_limit;
     }
-
-    return enhancedParams;
+    return operatedParams;
   }
 
   async sendOperations(params: any[]) {
