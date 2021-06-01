@@ -13,7 +13,6 @@ const isNode =
 const XMLHttpRequestCTOR = isNode ? require('xhr2-cookies').XMLHttpRequest : XMLHttpRequest;
 
 export * from './status_code';
-
 export { VERSION } from './version';
 
 const defaultTimeout = 30000;
