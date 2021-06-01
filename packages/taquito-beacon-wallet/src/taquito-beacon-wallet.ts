@@ -73,15 +73,28 @@ export class BeaconWallet implements WalletProvider {
   }
 
   async mapTransferParamsToWalletParams(params: WalletTransferParams) {
-    return this.removeDefaultParams(params, await createTransferOperation(params));
+    return this.removeDefaultParams(params, await createTransferOperation(this.formatParameters(params)));
   }
 
   async mapOriginateParamsToWalletParams(params: WalletOriginateParams) {
-      return this.removeDefaultParams(params, await createOriginationOperation(params as any));
+      return this.removeDefaultParams(params, await createOriginationOperation(this.formatParameters(params) as any));
   }
 
   async mapDelegateParamsToWalletParams(params: WalletDelegateParams) {
-    return this.removeDefaultParams(params, await createSetDelegateOperation(params as any));
+    return this.removeDefaultParams(params, await createSetDelegateOperation(this.formatParameters(params) as any));
+  }
+
+  formatParameters(params: any) {
+    if (params.fee) {
+      params.fee = params.fee.toString();
+    }
+    if (params.storageLimit) {
+      params.storageLimit = params.storageLimit.toString();
+    }
+    if (params.gasLimit) {
+      params.gasLimit = params.gasLimit.toString();
+    }
+    return params;
   }
 
   removeDefaultParams(params: WalletTransferParams|WalletOriginateParams|WalletDelegateParams, operatedParams:any) {
