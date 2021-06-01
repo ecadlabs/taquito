@@ -77,11 +77,11 @@ export class BeaconWallet implements WalletProvider {
   }
 
   async mapOriginateParamsToWalletParams(params: WalletOriginateParams) {
-      return this.removeDefaultParams(params, await createOriginationOperation(this.formatParameters(params) as any));
+      return this.removeDefaultParams(params, await createOriginationOperation(this.formatParameters(params)));
   }
 
   async mapDelegateParamsToWalletParams(params: WalletDelegateParams) {
-    return this.removeDefaultParams(params, await createSetDelegateOperation(this.formatParameters(params) as any));
+    return this.removeDefaultParams(params, await createSetDelegateOperation(this.formatParameters(params)));
   }
 
   formatParameters(params: any) {
