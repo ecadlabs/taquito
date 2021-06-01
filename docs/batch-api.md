@@ -89,6 +89,7 @@ const batch = await Tezos.contract.batch().withDelegation({
 This method may be one of the most useful ones as it allows you to batch and emit multiple contract calls under one transaction. The parameter is also pretty simple: it takes the function you would call on the contract abstraction object if you would send a single transaction.
 
 ```js
+const contract = await Tezos.wallet.at(VALID_CONTRACT_ADDRESS);
 const batch = await Tezos.wallet.batch()
   .withContractCall(contract.methods.interact('tezos'))
   .withContractCall(contract.methods.wait([['unit']]));
