@@ -9,11 +9,11 @@ import {
   GasConsumingOperation,
   RPCOperation,
   StorageConsumingOperation,
-  hasMetadata,
   hasMetadataWithResult,
 } from './types';
 
-export class BatchOperation extends Operation
+export class BatchOperation
+  extends Operation
   implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation {
   constructor(
     hash: string,
@@ -35,8 +35,8 @@ export class BatchOperation extends Operation
   public get status() {
     return (
       this.results
-        .filter(result => BATCH_KINDS.indexOf(result.kind) !== -1)
-        .map(result => {
+        .filter((result) => BATCH_KINDS.indexOf(result.kind) !== -1)
+        .map((result) => {
           if (hasMetadataWithResult(result)) {
             return result.metadata.operation_result.status;
           } else {

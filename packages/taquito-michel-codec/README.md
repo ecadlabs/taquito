@@ -1,6 +1,6 @@
 [![pkgsign status](https://us-central1-pkgsign.cloudfunctions.net/pkgsign-badge?name=@taquito/michelson-encoder&expectedIdentity=%40jevonearth)](https://github.com/RedpointGames/pkgsign)
 
-# Taquito michel-codec package
+# Taquito michel-codec package 
 
 `@taquito/michel-codec` Converts and validates Michelson expressions between JSON based Michelson and Micheline.
 

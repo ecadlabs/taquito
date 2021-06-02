@@ -1,6 +1,6 @@
 import { DelegateParams, OriginateParams, TransferParams } from '../operations/types';
 
-export type WalletDefinedFields = 'fee' | 'gasLimit' | 'storageLimit' | 'source';
+export type WalletDefinedFields = 'source';
 
 export type WalletTransferParams = Omit<TransferParams, WalletDefinedFields>;
 
