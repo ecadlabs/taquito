@@ -1,7 +1,6 @@
 import { RpcClient } from '../src/taquito-rpc';
 import BigNumber from 'bignumber.js';
-import { LazyStorageDiffBigMap, OperationContentsAndResultEndorsement, OperationContentsAndResultEndorsementWithSlot, OperationResultTransaction } from '../src/types';
-import { OperationContentsAndResultTransaction } from '../src/types';
+import { LazyStorageDiffBigMap, OperationContentsAndResultEndorsement, OperationContentsAndResultEndorsementWithSlot, OperationContentsAndResultOrigination, OperationResultTransaction, OperationContentsAndResultTransaction, LazyStorageDiffSaplingState } from '../src/types';
 
 /**
  * RpcClient test
@@ -1714,6 +1713,117 @@ describe('RpcClient test', () => {
       expect(result.lazy_storage_diff).toBeDefined();
       expect(result.lazy_storage_diff![0].kind).toEqual('big_map');
       expect(result.lazy_storage_diff![0].id).toEqual('514');
+      done();
+    });
+
+    it('query the right url and properties (lazy_storage_diff of kind sapling_state) in transaction operation result, proto 8', async done => {
+      httpBackend.createRequest.mockReturnValue(
+        Promise.resolve({
+          "protocol": "PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA",
+          "chain_id": "NetXSgo1ZT2DRUG",
+          "hash": "BL463rWSReHJRLkwUPdGSS6fDqvJwAVPeaZGTBhEkFbYecAR9Ks",
+          "header": {},
+          "metadata": {},
+          "operations": [
+            [],
+            [],
+            [],
+            [
+              {
+                "protocol": "PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA",
+                "chain_id": "NetXSgo1ZT2DRUG",
+                "hash": "onhF4PVPmPDJjrRfiFf1Tg1wBM4SjQuk5h2Ucx84f42CfAeQtVe",
+                "branch": "BKkgRGNt4kw7EDZvWXQjYVzCQvMsZYkpUSweepc9HZumQ3qSdnv",
+                "contents": [
+                  {
+                    "kind": "origination",
+                    "source": "tz2BG2915vryjQF4kTnqUWC7hQ6Bc4YKZQC4",
+                    "fee": "2138",
+                    "counter": "1000052",
+                    "gas_limit": "8849",
+                    "storage_limit": "1302",
+                    "balance": "0",
+                    "script": {},
+                    "metadata": {
+                      "balance_updates": [],
+                      "operation_result": {
+                        "status": "applied",
+                        "big_map_diff": [],
+                        "balance_updates": [
+                          {
+                            "kind": "contract",
+                            "contract": "tz2BG2915vryjQF4kTnqUWC7hQ6Bc4YKZQC4",
+                            "change": "-261250"
+                          },
+                          {
+                            "kind": "contract",
+                            "contract": "tz2BG2915vryjQF4kTnqUWC7hQ6Bc4YKZQC4",
+                            "change": "-64250"
+                          }
+                        ],
+                        "originated_contracts": [
+                          "KT1RqdcabssqPDfKoBvVNZjPVPBpmuUW4UVe"
+                        ],
+                        "consumed_gas": "8749",
+                        "consumed_milligas": "8748162",
+                        "storage_size": "1045",
+                        "paid_storage_size_diff": "1045",
+                        "lazy_storage_diff": [
+                          {
+                            "kind": "sapling_state",
+                            "id": "12515",
+                            "diff": {
+                              "action": "alloc",
+                              "updates": {
+                                "commitments_and_ciphertexts": [],
+                                "nullifiers": []
+                              },
+                              "memo_size": 8
+                            }
+                          },
+                          {
+                            "kind": "sapling_state",
+                            "id": "12514",
+                            "diff": {
+                              "action": "alloc",
+                              "updates": {
+                                "commitments_and_ciphertexts": [],
+                                "nullifiers": []
+                              },
+                              "memo_size": 8
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "signature": "sigs45ddgjWHNHRNTFxirJahw6ZBFnMTFgNNXvuKAxS7nrgBrVG31TPnwjF9Rma48rf9iuFT7hqJg69MWR5ZsnQkqa3Ekaoj"
+              }
+            ]
+          ]
+        })
+      );
+
+      const response = await client.getBlock();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head',
+      });
+
+      const origination = response.operations[3][0].contents[0] as OperationContentsAndResultOrigination;
+      expect(origination.kind).toEqual('origination');
+      expect(origination.metadata.operation_result.lazy_storage_diff).toBeDefined();
+      const lazy_storage_diff_0 = origination.metadata.operation_result.lazy_storage_diff![0] as LazyStorageDiffSaplingState;
+      expect(lazy_storage_diff_0.kind).toEqual('sapling_state');
+      expect(lazy_storage_diff_0.id).toEqual('12515');
+      expect(lazy_storage_diff_0.diff.action).toEqual('alloc');
+      expect(lazy_storage_diff_0.diff.updates).toBeDefined();
+      expect(lazy_storage_diff_0.diff.updates!.commitments_and_ciphertexts).toBeInstanceOf(Array);
+      expect(lazy_storage_diff_0.diff.updates!.nullifiers).toBeInstanceOf(Array);
+      expect(lazy_storage_diff_0.diff.memo_size).toBeDefined();
+      expect(lazy_storage_diff_0.diff.memo_size).toEqual(8);
       done();
     });
 

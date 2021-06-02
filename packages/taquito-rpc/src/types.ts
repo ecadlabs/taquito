@@ -596,8 +596,6 @@ export type OperationResultStatusEnum = 'applied' | 'failed' | 'skipped' | 'back
 
 export type DiffActionEnum = 'update' | 'remove' | 'copy' | 'alloc';
 
-// export type LazyStorageDiffKindEnum = 'big_map' | 'sapling_state';
-
 export type LazyStorageDiff = LazyStorageDiffBigMap | LazyStorageDiffSaplingState;
 
 export interface LazyStorageDiffBigMap {
@@ -622,7 +620,7 @@ export interface LazyStorageDiffBigMapItems {
 
 export interface LazyStorageDiffSaplingStateItems {
   action: DiffActionEnum;
-  updates?: LazyStorageDiffUpdatesSaplingState[];
+  updates?: LazyStorageDiffUpdatesSaplingState;
   source?: string;
   memo_size?: number;
 }
