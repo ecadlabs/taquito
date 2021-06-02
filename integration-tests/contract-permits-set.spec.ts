@@ -1,7 +1,6 @@
 import { CONFIGS } from "./config";
 import { MichelsonMap, MichelCodecPacker } from "@taquito/taquito";
 import { permit_admin_42_set} from "./data/permit_admin_42_set";
-import { Parser } from '@taquito/michel-codec'
 import { importKey } from '@taquito/signer';
 import { buf2hex, hex2buf } from "@taquito/utils";
 
@@ -18,8 +17,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       throw ['errors_to_missigned_bytes: expected one error to fail "with" michelson, but found:', errors_with]
     } else {
       const error_with = errors_with[0];
-      const p = new Parser();
-      const michelsonCode = p.parseJSON(error_with);
       if (error_with.prim !== 'Pair'){
         throw ['errors_to_missigned_bytes: expected a "Pair", but found:', error_with.prim]
       } else {
@@ -44,7 +41,12 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Tests of contracts having a permit for tzip-17: ${rpc}`, () => {
 
     beforeEach(async (done) => {
-      await setup()
+      await setup(true)      
+        done()
+    })
+
+    test('Create permit hash for an fa2 contract', async (done) => {
+
       await importKey(
         Tezos,
         'peqjckge.qkrrajzs@tezos.example.org',
@@ -68,33 +70,25 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         ].join(' '),
         '7d4c8c3796fdbf4869edb5703758f0e5831f5081'
       );
-        done()
-    })
-
-    test('Create permit hash for an fa2 contract', async (done) => {
-
+      
       const op = await Tezos.contract.originate({
         code: permit_admin_42_set,
         storage:
         {
         0: new MichelsonMap(),
         1: 300,
-        2: bob_address,
-        3: bob_address
+        2: bob_address
         },
         });
         await op.confirmation();
         expect(op.hash).toBeDefined();
         expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-        const contract = await op.contract();
+        const permit_contract = await op.contract();
         expect(op.status).toEqual('applied')
-        const permit_address = (await op.contract()).address
-
-        // Get the contract
-        const permit_contract = await Tezos.contract.at(permit_address);
        
         // Check whether bob is actually the admin
         const storage : any = await permit_contract.storage();
+        expect(storage['2'] === bob_address);
 
         // Get the signer's public key and a dummy signature to trigger the error
         const signer_key = await Tezos.signer.publicKey().catch(e => console.error(e));
@@ -102,7 +96,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
        
         // Get the Blake2B hash of the packed parameter
         const wrapped_param : any = permit_contract.methods['wrapped'](42).toTransferParams().parameter?.value;
-        const wrapped_param_type = contract.entrypoints.entrypoints['wrapped'];       
+        const wrapped_param_type = permit_contract.entrypoints.entrypoints['wrapped'];       
         const raw_packed = await Tezos.rpc.packData({
           data: wrapped_param,
           type: wrapped_param_type,
@@ -120,7 +114,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         if(param_hash === expected_param_hash) {
         } else {
           throw `unexpected param_hash: {param_hash},\n
-          while {expected_param_hash} was expected`;
+          while ${expected_param_hash} was expected`;
         }
         
         // Preapply a transfer with the dummy_sig to extract the bytes_to_sign
@@ -135,6 +129,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         // Submit the permit to the contract
         const permit_op = await permit_contract.methods.permit(signer_key, param_sig, param_hash).send();
         await permit_op.confirmation()
+        expect(permit_op.hash).toBeDefined();
+        expect(permit_op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
       done();
     })
   })
