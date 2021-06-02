@@ -67,7 +67,7 @@
     ]
   },
   "dependencies": {
-    "@taquito/http-utils": "^9.0.1",
+    "@taquito/http-utils": "^9.1.0-beta-RC.1",
     "bignumber.js": "^9.0.1",
     "lodash": "^4.17.20"
   },
