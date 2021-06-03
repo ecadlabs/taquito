@@ -20,7 +20,7 @@
   "dependencies": {
     "@ledgerhq/hw-transport-node-hid": "^5.43.0",
     "@taquito/ledger-signer": "^9.1.0-beta-RC.1",
-    "@taquito/michel-codec": "^9.0.1",
+    "@taquito/michel-codec": "^9.1.0-beta-RC.1",
     "@taquito/signer": "^9.1.0-beta-RC.1",
     "@taquito/taquito": "^9.1.0-beta-RC.1",
     "@taquito/tzip16": "^9.1.0-beta-RC.1",

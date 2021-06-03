@@ -78,11 +78,11 @@
     ]
   },
   "dependencies": {
-    "@taquito/http-utils": "^9.0.1",
-    "@taquito/michel-codec": "^9.0.1",
+    "@taquito/http-utils": "^9.1.0-beta-RC.1",
+    "@taquito/michel-codec": "^9.1.0-beta-RC.1",
     "@taquito/michelson-encoder": "^9.1.0-beta-RC.1",
     "@taquito/rpc": "^9.1.0-beta-RC.1",
-    "@taquito/utils": "^9.0.1",
+    "@taquito/utils": "^9.1.0-beta-RC.1",
     "bignumber.js": "^9.0.1",
     "rx-sandbox": "^1.0.3",
     "rxjs": "^6.6.3"

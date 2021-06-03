@@ -60,9 +60,9 @@
     ]
   },
   "dependencies": {
-    "@taquito/http-utils": "^9.0.1",
+    "@taquito/http-utils": "^9.1.0-beta-RC.1",
     "@taquito/taquito": "^9.1.0-beta-RC.1",
-    "@taquito/utils": "^9.0.1",
+    "@taquito/utils": "^9.1.0-beta-RC.1",
     "@types/jest": "^26.0.16",
     "elliptic": "^6.5.4",
     "libsodium-wrappers": "^0.7.8",
