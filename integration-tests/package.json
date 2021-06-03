@@ -8,7 +8,7 @@
     "test:florencenet-faucet": "RUN_FLORENCENET_WITH_FAUCET=true jest --runInBand",
     "test": "jest"
   },
-  "version": "9.1.0-beta-RC.1",
+  "version": "9.1.0",
   "dependencies": {
     "@ledgerhq/hw-transport": "^5.41.0",
     "@ledgerhq/hw-transport-node-hid": "^5.41.0",

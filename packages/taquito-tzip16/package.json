@@ -1,6 +1,6 @@
 {
   "name": "@taquito/tzip16",
-  "version": "9.1.0-beta-RC.1",
+  "version": "9.1.0",
   "description": "Tzip16",
   "keywords": [
     "tezos",
@@ -58,11 +58,11 @@
     ]
   },
   "dependencies": {
-    "@taquito/http-utils": "^9.1.0-beta-RC.1",
-    "@taquito/michelson-encoder": "^9.1.0-beta-RC.1",
-    "@taquito/rpc": "^9.1.0-beta-RC.1",
-    "@taquito/taquito": "^9.1.0-beta-RC.1",
-    "@taquito/utils": "^9.1.0-beta-RC.1",
+    "@taquito/http-utils": "^9.1.0",
+    "@taquito/michelson-encoder": "^9.1.0",
+    "@taquito/rpc": "^9.1.0",
+    "@taquito/taquito": "^9.1.0",
+    "@taquito/utils": "^9.1.0",
     "bignumber.js": "^9.0.1",
     "crypto-js": "^4.0.0"
   },
