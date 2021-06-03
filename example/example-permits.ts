@@ -4,12 +4,11 @@
  */
 
 import { ContractAbstraction, ContractProvider, TezosToolkit } from '@taquito/taquito';
-import { InMemorySigner, importKey } from '@taquito/signer';
+import { importKey } from '@taquito/signer';
 import { Parser } from '@taquito/michel-codec';
 import { buf2hex, hex2buf } from '@taquito/utils';
 
 const blake = require('blakejs');
-const fs = require("fs");
 const bob_address = 'tz1Xk7HkSwHv6dTEgR7E2WC2yFj4cyyuj2Gh';
 const Tezos = new TezosToolkit('https://api.tez.ie/rpc/florencenet');
 
@@ -31,6 +30,7 @@ const FAUCET_KEY = {
         'setup',
         'rescue',
       ],
+      // deepcode ignore HardcodedNonCryptoSecret: <please specify a reason of ignoring this>
       secret: '35f266fbf0fca752da1342fdfc745a9c608e7b20',
       amount: '4219352756',
       pkh: 'tz1YBMFg1nLAPxBE6djnCPbMRH5PLXQWt8Mg',
