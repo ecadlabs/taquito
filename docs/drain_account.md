@@ -16,13 +16,14 @@ Once we know the associated fees, we can calculate the maximum amount that needs
 Finally, we can do the transfer operation and use the maximum amount we just calculated as the `amount` parameter of the `transfer` function.
 
 :::note
-In the following example, we have not revealed the account that we want to empty. We need to keep in mind that there are fees related to a reveal operation. We are subtracting 1420 mutez from the balance to cover reveal fees.
+In the following example, we have not revealed the account that we want to empty. We need to keep in mind that there are fees related to a reveal operation. We are estimating the reveal fee and subtracting them from the balance to cover reveal fees.
 
-**If the account to drain has already been revealed, you must not subtract this amount (1420 mutez) from the balance.**
+**If the account to drain has already been revealed, you must not subtract reveal fee from the balance.**
 :::
 
 ```js live noInline
 // const Tezos = new TezosToolkit('https://api.tez.ie/rpc/florencenet');
+// import { DEFAULT_FEE } from "@taquito/taquito";
 
 Tezos.signer
   .publicKeyHash()
@@ -33,43 +34,50 @@ Tezos.signer
           balance.toNumber() / 1000000
         } ꜩ.`
       );
-      Tezos.estimate
-        .transfer({
-          to: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
-          amount: balance.toNumber() - 1420,
-          mutez: true,
-        })
-        .then((estimate) => {
-          //Subtract 1420 mutez for fees related to the reveal operation
-          const maxAmount = balance.minus(estimate.suggestedFeeMutez).toNumber() - 1420;
-          println(
-            `The estimated fees related to the emptying operation are ${
-              estimate.suggestedFeeMutez
-            } mutez.\nConsidering the fees, the amount we need to send to empty the account is ${
-              maxAmount / 1000000
-            } ꜩ.`
-          );
-          return Tezos.contract.transfer({
+        return Tezos.estimate
+          .transfer({
             to: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
+            amount: balance.toNumber() - DEFAULT_FEE.REVEAL, // Remove default reveal fee
             mutez: true,
-            amount: maxAmount,
-            fee: estimate.suggestedFeeMutez,
-            gasLimit: estimate.gasLimit,
-            storageLimit: 0,
-          });
-        })
-        .then((op) => {
-          println(`Waiting for confirmation of the draining operation...`);
-          return op.confirmation(1).then(() => op.hash);
-        })
-        .then((hash) => {
-          println(`The account has been emptied.`);
-          return Tezos.tz.getBalance(address);
-        })
-        .then((finalBalance) => {
-          println(`The balance is now ${finalBalance.toNumber() / 1000000} ꜩ.`);
-        });
-    });
+          })
+          .then((estimate) => {
+            Tezos.estimate.reveal()
+              .then((actualRevealFee) => {
+                // Subtract estimated fees related to the reveal operation
+                const maxAmount = balance.minus(
+                  estimate.suggestedFeeMutez + actualRevealFee.suggestedFeeMutez
+                ).toNumber();
+                println(
+                  `The estimated fees related to the emptying operation are ${
+                    estimate.suggestedFeeMutez
+                  } mutez.\nThe estimated fees related to the reveal operation are ${
+                    actualRevealFee.suggestedFeeMutez
+                  } mutez.\nConsidering those fees, the amount we need to send to empty the account is ${
+                    maxAmount / 1000000
+                  } ꜩ.`
+                );
+                return Tezos.contract.transfer({
+                  to: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
+                  mutez: true,
+                  amount: maxAmount,
+                  fee: estimate.suggestedFeeMutez,
+                  gasLimit: estimate.gasLimit,
+                  storageLimit: 0,
+                });
+              })
+              .then((op) => {
+                println(`Waiting for confirmation of the draining operation...`);
+                return op.confirmation(1).then(() => op.hash);
+              })
+              .then((hash) => {
+                println(`The account has been emptied.`);
+                return Tezos.tz.getBalance(address);
+              })
+              .then((finalBalance) => {
+                println(`The balance is now ${finalBalance.toNumber() / 1000000} ꜩ.`);
+              })
+          })
+      })
   })
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
