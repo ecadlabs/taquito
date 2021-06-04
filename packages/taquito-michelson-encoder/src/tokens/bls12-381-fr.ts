@@ -1,6 +1,14 @@
-import { Token, TokenFactory } from './token';
+import { Token, TokenFactory, TokenValidationError } from './token';
 
+export class Bls12381frValidationError extends TokenValidationError {
+  name: string = 'Bls12381frValidationError';
+  constructor(public value: any, public token: Bls12381frToken, message: string) {
+    super(value, token, message);
+  }
+}
 export class Bls12381frToken extends Token {
+  // An element of the BLS12-381 scalar field Fr
+  // see https://tezos.gitlab.io/michelson-reference/#type-bls12_381_fr
   static prim = 'bls12_381_fr';
 
   constructor(
@@ -11,18 +19,41 @@ export class Bls12381frToken extends Token {
     super(val, idx, fac);
   }
 
-  Encode(args: any[]): any {
-    const val = args.pop();
-    return { bytes: val.toString() };
+  private isValid(val: any): Bls12381frValidationError | null {
+    if (typeof val === 'string' && /^[0-9a-fA-F]*$/.test(val) && val.length % 2 === 0) {
+      return null;
+    } else {
+      return new Bls12381frValidationError(val, this, `Invalid bytes: ${val}`);
+    }
   }
 
-  EncodeObject(val: any): any {
-    return { bytes: val.toString() };
+  Encode(args: any[]) {
+    const val = args.pop();
+    if (typeof val === 'number') {
+      return { int: val.toString() };
+    } else {
+      const err = this.isValid(val);
+      if (err) {
+        throw err;
+      }
+      return { bytes: val };
+    }
+  }
+
+  EncodeObject(val: string | number) {
+    if (typeof val === 'number') {
+      return { int: val.toString() };
+    } else {
+      const err = this.isValid(val);
+      if (err) {
+        throw err;
+      }
+      return { bytes: val };
+    }
   }
 
   Execute(val: any): string {
-      console.log('execute', val)
-    return val[Object.keys(val)[0]];
+    return val.bytes;
   }
 
   public ExtractSchema() {

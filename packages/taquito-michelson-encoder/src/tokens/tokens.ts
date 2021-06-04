@@ -32,7 +32,9 @@ import { SetToken } from './set';
 import { ChainIDToken } from './chain-id';
 import { TicketToken } from './ticket';
 import { NeverToken } from './never';
-import { Bls12381frToken } from './bls12-381-fr'
+import { Bls12381frToken } from './bls12-381-fr';
+import { Bls12381g1Token } from './bls12-381-g1';
+import { Bls12381g2Token } from './bls12-381-g2';
 
 export const tokens = [
   PairToken,
@@ -60,5 +62,7 @@ export const tokens = [
   ChainIDToken,
   TicketToken,
   NeverToken,
-  Bls12381frToken
+  Bls12381frToken,
+  Bls12381g1Token,
+  Bls12381g2Token,
 ];
