@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import { TezosToolkit, MichelsonMap, compose } from '@taquito/taquito';
+import { TezosToolkit, MichelsonMap, compose, DEFAULT_FEE } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
 import { 
   validateAddress, 
@@ -113,7 +113,8 @@ export default ({
           TransportU2F,
           compose,
           Schema,
-          ParameterSchema
+          ParameterSchema,
+          DEFAULT_FEE
          }}
         code={children.trim()}
         theme={prism.theme || defaultTheme}
