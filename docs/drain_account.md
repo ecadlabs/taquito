@@ -16,9 +16,9 @@ Once we know the associated fees, we can calculate the maximum amount that needs
 Finally, we can do the transfer operation and use the maximum amount we just calculated as the `amount` parameter of the `transfer` function.
 
 :::note
-In the following example, we have not revealed the account that we want to empty. We need to keep in mind that there are fees related to a reveal operation. We are estimating the reveal fee and subtracting them from the balance to cover reveal fees.
+In the following example, we have not revealed the account that we want to empty. We need to keep in mind that there are fees related to a reveal operation. We are estimating the reveal fees and subtracting them from the balance to cover reveal fees.
 
-**If the account to drain has already been revealed, you must not subtract reveal fee from the balance.**
+**If the account to drain has already been revealed, you must not subtract the reveal fee from the balance.**
 :::
 
 ```js live noInline
