@@ -39,15 +39,105 @@ const USERS = [
     link: 'https://ligolang.org/',
   },
   {
-    caption: 'Truffle',
-    image: '/img/truffle.png',
-    link: 'https://www.trufflesuite.com/',
-  },
-  {
     caption: 'Nomadic Labs',
     image: '/img/nomadic.png',
     link: 'https://www.nomadic-labs.com/',
-  }
+  },
+  {
+    caption: 'Cryptoverse Wars',
+    image: '/img/cryptoverse_wars.png',
+    link: 'https://cryptocodeschool.in/tezos/',
+  },
+  {
+    caption: 'Dexter',
+    image: '/img/Dexter_mobile.svg',
+    link: 'https://dexter.exchange/', 
+  },
+  {
+    caption: 'hic et nunc',
+    image: '/img/hicEtNunc.png',
+    link: 'https://www.hicetnunc.xyz/',
+  },
+  {
+    caption: 'Homebase',
+    image: '/img/homebase.png',
+    link: 'https://tezos-homebase.herokuapp.com/explorer/daos', 
+  },
+  {
+    caption: 'Kiln',
+    image: '/img/kiln.png',
+    link: 'https://www.hicetnunc.xyz/',
+  },
+  {
+    caption: 'Kolibri',
+    image: '/img/kolibri-brand.b0cd3374.png',
+    link: 'https://kolibri.ca/en/',  
+  },
+  {
+    caption: 'Kukai',
+    image: '/img/kukai-logo.svg',
+    link: 'https://wallet.kukai.app/',
+  },
+  {
+    caption: 'Interpop',
+    image: '/img/logo-interpop.svg',
+    link: 'https://www.interpop.io/',
+  },
+  {
+    caption: 'open-tezos',
+    image: '/img/open-tezos.svg',
+    link: 'https://opentezos.com/',
+  },
+  {
+    caption: 'Plenty',
+    image: '/img/plenty.png',
+    link: 'https://www.plentydefi.com/', 
+  },
+  {
+    caption: 'Radion',
+    image: '/img/radion.png',
+    link: 'https://www.radion.fm/', 
+  },
+  {
+    caption: 'Societe General',
+    image: '/img/societe-general.png',
+    link: 'https://www.societegenerale.com/en',
+  },
+  {
+    caption: 'Spruce',
+    image: '/img/spruce.png',
+    link: 'https://www.spruceid.com/', 
+  },
+  {
+    caption: 'Staker DAO',
+    image: '/img/stakerDAO-logo-white.svg',
+    link: 'https://www.stakerdao.com/',
+  },
+  {
+    caption: 'Temple - Tezos Wallet',
+    image: '/img/temple.png',
+    link: 'https://templewallet.com/',
+  },
+  {
+    caption: 'Tezos Mandala',
+    image: '/img/tezos_mandala.png',
+    link: 'https://tezos-mandala.art/',
+  },
+  {
+    caption: 'Tezos Domains',
+    image: '/img/tezos-domains.svg',
+    link: 'https://tezos.domains/',
+  },
+  {
+    caption: 'Truesy',
+    image: '/img/truesy.png',
+    link: 'https://www.truesy.com/',
+  },
+  {
+    caption: 'tzcolors',
+    image: '/img/tz-colors.png',
+    link: 'https://www.tzcolors.io/',
+  },
 ];
 
 export default () => {
