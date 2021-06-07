@@ -1,4 +1,4 @@
-# Taquito Utils package 
+# Taquito Utils package
 
 `@taquito/utils` is an npm package that provides developers with utility functionality for Taquito. It can be injected as follows:
 

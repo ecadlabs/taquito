@@ -310,6 +310,215 @@ export const multipleInternalOrigination = () => {
   };
 };
 
+export const multipleInternalOriginationNoReveal = () => {
+  return {
+    contents: [
+      {
+        kind: 'transaction',
+        source: 'tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD',
+        fee: '0',
+        counter: '294313',
+        gas_limit: '800000',
+        storage_limit: '2000',
+        amount: '0',
+        destination: 'KT1CaQ97jZnvA9KgNFSFoNfGXJXJgMrFvqkb',
+        parameters: {
+          entrypoint: 'do',
+          value: [
+            { prim: 'DROP' },
+            { prim: 'NIL', args: [{ prim: 'operation' }] },
+            { prim: 'NIL', args: [{ prim: 'int' }] },
+            { prim: 'AMOUNT' },
+            { prim: 'NONE', args: [{ prim: 'key_hash' }] },
+            {
+              prim: 'CREATE_CONTRACT',
+              args: [
+                [
+                  { prim: 'parameter', args: [{ prim: 'list', args: [{ prim: 'int' }] }] },
+                  { prim: 'storage', args: [{ prim: 'list', args: [{ prim: 'int' }] }] },
+                  {
+                    prim: 'code',
+                    args: [
+                      [
+                        { prim: 'CAR' },
+                        {
+                          prim: 'MAP',
+                          args: [
+                            [
+                              { prim: 'PUSH', args: [{ prim: 'int' }, { int: '1' }] },
+                              { prim: 'ADD' },
+                            ],
+                          ],
+                        },
+                        { prim: 'NIL', args: [{ prim: 'operation' }] },
+                        { prim: 'PAIR' },
+                      ],
+                    ],
+                  },
+                ],
+              ],
+            },
+            { prim: 'SWAP' },
+            { prim: 'DROP' },
+            { prim: 'CONS' },
+            { prim: 'NIL', args: [{ prim: 'int' }] },
+            { prim: 'AMOUNT' },
+            { prim: 'NONE', args: [{ prim: 'key_hash' }] },
+            {
+              prim: 'CREATE_CONTRACT',
+              args: [
+                [
+                  { prim: 'parameter', args: [{ prim: 'list', args: [{ prim: 'int' }] }] },
+                  { prim: 'storage', args: [{ prim: 'list', args: [{ prim: 'int' }] }] },
+                  {
+                    prim: 'code',
+                    args: [
+                      [
+                        { prim: 'CAR' },
+                        {
+                          prim: 'MAP',
+                          args: [
+                            [
+                              { prim: 'PUSH', args: [{ prim: 'int' }, { int: '1' }] },
+                              { prim: 'ADD' },
+                            ],
+                          ],
+                        },
+                        { prim: 'NIL', args: [{ prim: 'operation' }] },
+                        { prim: 'PAIR' },
+                      ],
+                    ],
+                  },
+                ],
+              ],
+            },
+            { prim: 'SWAP' },
+            { prim: 'DROP' },
+            { prim: 'CONS' },
+          ],
+        },
+        metadata: {
+          balance_updates: [],
+          operation_result: {
+            status: 'applied',
+            storage: { bytes: '012ffebbf1560632ca767bc960ccdb84669d284c2c' },
+            consumed_gas: '17707',
+            storage_size: '232',
+          },
+          internal_operation_results: [
+            {
+              kind: 'origination',
+              source: 'KT1CaQ97jZnvA9KgNFSFoNfGXJXJgMrFvqkb',
+              nonce: 1,
+              balance: '0',
+              script: {
+                code: [
+                  { prim: 'parameter', args: [{ prim: 'list', args: [{ prim: 'int' }] }] },
+                  { prim: 'storage', args: [{ prim: 'list', args: [{ prim: 'int' }] }] },
+                  {
+                    prim: 'code',
+                    args: [
+                      [
+                        { prim: 'CAR' },
+                        {
+                          prim: 'MAP',
+                          args: [
+                            [
+                              { prim: 'PUSH', args: [{ prim: 'int' }, { int: '1' }] },
+                              { prim: 'ADD' },
+                            ],
+                          ],
+                        },
+                        { prim: 'NIL', args: [{ prim: 'operation' }] },
+                        { prim: 'PAIR' },
+                      ],
+                    ],
+                  },
+                ],
+                storage: [],
+              },
+              result: {
+                status: 'applied',
+                big_map_diff: [],
+                balance_updates: [
+                  {
+                    kind: 'contract',
+                    contract: 'tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD',
+                    change: '-60000',
+                  },
+                  {
+                    kind: 'contract',
+                    contract: 'tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD',
+                    change: '-257000',
+                  },
+                ],
+                originated_contracts: ['KT1D1AoSDxnmGk8UWFW7DcT9JP1VpLqUNh4F'],
+                consumed_gas: '11560',
+                storage_size: '60',
+                paid_storage_size_diff: '60',
+              },
+            },
+            {
+              kind: 'origination',
+              source: 'KT1CaQ97jZnvA9KgNFSFoNfGXJXJgMrFvqkb',
+              nonce: 0,
+              balance: '0',
+              script: {
+                code: [
+                  { prim: 'parameter', args: [{ prim: 'list', args: [{ prim: 'int' }] }] },
+                  { prim: 'storage', args: [{ prim: 'list', args: [{ prim: 'int' }] }] },
+                  {
+                    prim: 'code',
+                    args: [
+                      [
+                        { prim: 'CAR' },
+                        {
+                          prim: 'MAP',
+                          args: [
+                            [
+                              { prim: 'PUSH', args: [{ prim: 'int' }, { int: '1' }] },
+                              { prim: 'ADD' },
+                            ],
+                          ],
+                        },
+                        { prim: 'NIL', args: [{ prim: 'operation' }] },
+                        { prim: 'PAIR' },
+                      ],
+                    ],
+                  },
+                ],
+                storage: [],
+              },
+              result: {
+                status: 'applied',
+                big_map_diff: [],
+                balance_updates: [
+                  {
+                    kind: 'contract',
+                    contract: 'tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD',
+                    change: '-60000',
+                  },
+                  {
+                    kind: 'contract',
+                    contract: 'tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD',
+                    change: '-257000',
+                  },
+                ],
+                originated_contracts: ['KT1A5V7HHF7Z7QPn5n9dg4EjzTRJ4mnE21zE'],
+                consumed_gas: '11561',
+                storage_size: '60',
+                paid_storage_size_diff: '60',
+              },
+            },
+          ],
+        },
+      },
+    ],
+    signature:
+      'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg',
+  };
+};
+
 export const multipleInternalTransfer = () => {
   return {
     contents: [

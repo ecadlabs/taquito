@@ -1,6 +1,6 @@
-import { Token, TokenFactory, Semantic } from './token';
+import { Token, TokenFactory, Semantic, ComparableToken } from './token';
 
-export class OptionToken extends Token {
+export class OptionToken extends ComparableToken {
   static prim = 'option';
 
   constructor(
@@ -29,7 +29,7 @@ export class OptionToken extends Token {
     ) {
       return { prim: 'None' };
     }
-    else if ((Array.isArray(value) && (value[value.length-1] === undefined || value[value.length-1] === null))) {
+    else if ((Array.isArray(value) && (value[value.length - 1] === undefined || value[value.length - 1] === null))) {
       value.pop();
       return { prim: 'None' };
     }
@@ -66,5 +66,29 @@ export class OptionToken extends Token {
   public ExtractSignature() {
     const schema = this.createToken(this.val.args[0], 0);
     return [...schema.ExtractSignature(), []];
+  }
+
+  get KeySchema(): ComparableToken {
+    return this.createToken(this.val.args[0], 0) as any;
+  }
+
+  compare(val1: any, val2: any) {
+    if (!val1) {
+      return -1
+    } else if (!val2) {
+      return 1
+    }
+    return this.KeySchema.compare(val1, val2)
+  }
+
+  public ToKey(val: any) {
+    return this.Execute(val);
+  }
+
+  public ToBigMapKey(val: any) {
+    return {
+      key: this.EncodeObject(val),
+      type: this.typeWithoutAnnotations(),
+    };
   }
 }

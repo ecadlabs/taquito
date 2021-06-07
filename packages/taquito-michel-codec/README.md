@@ -1,4 +1,4 @@
-# Taquito michel-codec package
+# Taquito michel-codec package 
 
 `@taquito/michel-codec` Converts and validates Michelson expressions between JSON based Michelson and Micheline.
 

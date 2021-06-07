@@ -1,6 +1,4 @@
-import { Console } from "console";
 import { CONFIGS } from "./config";
-import { parameter } from '../packages/taquito-michelson-encoder/data/sample12_vote_delegation';
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;

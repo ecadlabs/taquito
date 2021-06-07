@@ -9,6 +9,8 @@ import {
   DelegateParams,
   RPCDelegateOperation,
   RegisterDelegateParams,
+  RPCRevealOperation,
+  RevealParams
 } from '../operations/types';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
 import { format } from '../format';
@@ -128,4 +130,23 @@ export const createRegisterDelegateOperation = async (
     storage_limit: storageLimit,
     delegate: source,
   } as RPCDelegateOperation;
+};
+
+export const createRevealOperation = async (
+  {
+    fee = DEFAULT_FEE.REVEAL,
+    gasLimit = DEFAULT_GAS_LIMIT.REVEAL,
+    storageLimit = DEFAULT_STORAGE_LIMIT.REVEAL,
+  }: RevealParams,
+  source: string,
+  publicKey: string,
+) => {
+  return {
+    kind: OpKind.REVEAL,
+    fee,
+    public_key: publicKey,
+    source,
+    gas_limit: gasLimit,
+    storage_limit: storageLimit
+  } as RPCRevealOperation;
 };

@@ -4,6 +4,14 @@ const MINIMAL_FEE_PER_GAS_MUTEZ = 0.1;
 
 const GAS_BUFFER = 100;
 
+export interface EstimateProperties {
+  milligasLimit: number,
+  storageLimit: number,
+  opSize: number,
+  minimalFeePerStorageByteMutez: number,
+  baseFeeMutez?: number
+}
+
 /**
  * Examples of use :
  *
@@ -120,5 +128,28 @@ export class Estimate {
    */
   get consumedMilligas() {
     return Number(this._milligasLimit);
+  }
+
+  static createEstimateInstanceFromProperties(estimateProperties: EstimateProperties[]) {
+    let milligasLimit = 0;
+    let storageLimit = 0;
+    let opSize = 0;
+    let minimalFeePerStorageByteMutez = 0;
+    let baseFeeMutez: number | undefined;
+
+    estimateProperties.forEach(estimate => {
+      milligasLimit += estimate.milligasLimit;
+      storageLimit += estimate.storageLimit;
+      opSize += estimate.opSize;
+      minimalFeePerStorageByteMutez = Math.max(estimate.minimalFeePerStorageByteMutez, minimalFeePerStorageByteMutez);
+      if (estimate.baseFeeMutez) {
+        baseFeeMutez = baseFeeMutez ? baseFeeMutez + estimate.baseFeeMutez : estimate.baseFeeMutez;
+      }
+    })
+    return new Estimate(milligasLimit, storageLimit, opSize, minimalFeePerStorageByteMutez, baseFeeMutez);
+  }
+
+  static createArrayEstimateInstancesFromProperties(estimateProperties: EstimateProperties[]) {
+    return estimateProperties.map(x => new Estimate(x.milligasLimit, x.storageLimit, x.opSize, x.minimalFeePerStorageByteMutez, x.baseFeeMutez))
   }
 }
