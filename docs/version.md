@@ -2,6 +2,66 @@
 title: Versions
 author: Jev Bjorsell
 ---
+# Taquito v9.1.0-beta
+## Summary
+
+### New features
+
+- @taquito/taquito - Added reveal operation on the RpcContractProvider and RPCEstimateProvider classes #772
+- @taquito/taquito & @taquito/beacon-wallet - Ability to specify the fee, storageLimit and gasLimit parameters using the wallet API #866
+
+### Enhancements
+
+- @taquito/taquito - Include estimate for reveal operation on batch estimate #772
+- @taquito/taquito - Export return types of public API methods (BatchOperation, Operation, OperationBatch, TransferParams, ParamsWithKind) #583
+- @taquito/michelson-encoder - Types chain_id, key, option, or, signature, and unit made comparable #603
+-  @taquito/rpc - Added big_map_diff, lazy_storage_diff properties and failing_noop operation to RPC types #870
+- @taquito/beacon-wallet - Updated beacon-sdk to version [2.2.8](https://github.com/airgap-it/beacon-sdk/releases/tag/v2.2.8)
+
+### Bug fixes
+
+- @taquito/signer - Fixed a public key derivation bug in InMemorySigner class #848
+- @taquito/michelson-encoder - Fixed a bug in the `Execute` method of the `OrToken` class
+
+
+
+## @taquito/taquito - Added reveal operation on the `RpcContractProvider` and the `RPCEstimateProvider` classes & Include estimate for reveal operation on batch estimate
+
+When sending an operation using the contract API, Taquito takes care of adding a reveal operation when the account needs to be revealed. This has not changed, but we added a `reveal` method on the `RpcContractProvider` class, allowing to reveal the current account using the contract API without the need to do another operation. The method takes an object as a parameter with optional fee, gasLimit and StorageLimit properties:
+`await Tezos.contract.reveal({});`
+We also added a reveal method on the `RPCEstimateProvider` class, allowing an estimation of the fees, storage and gas related to the operation:
+`await Tezos.estimate.reveal();`
+
+Moreover, when estimating a batch operation where a reveal operation is needed, an `Estimate` object representing the reveal operation will now be returned as the first element of the returned array.
+
+## @taquito/signer - Fixed a public key derivation bug in InMemorySigner class
+
+There was an issue in the derivation of public keys by the InMemorySigner with the `p256` and `secp256k1` curves having a `y` coordinate shorter than 32 bytes. For these specific cases, the returned public key was erroneous. *Please remember that this signer implementation is for development workflows.*
+
+## @taquito/michelson-encoder - Types `chain_id`, `key`, `option`, `or`, `signature`, and `unit` made comparable
+
+Taquito ensures that `map` keys and `set` values of comparable types are sorted in strictly increasing order as requested by the RPC.
+
+## @taquito/michelson-encoder - Fixed a bug in the `Execute` method of the `OrToken` class
+
+The execute method allows converting Michelson data into familiar-looking javascript data. This is used in Taquito to provide a well-formatted JSON object of contract storage. This release includes a bug fix for the OrToken where the right values were not formatted correctly.
+
+## @taquito/taquito & @taquito/beacon-wallet - Ability to specify the fee, storageLimit and gasLimit parameters using the wallet API
+
+We are currently seeing a high number of transactions being backtracked with "storage exhausted" errors in high-traffic dapps in the ecosystem. To mitigate this issue and knowing that dapps are in a better position to assess reasonable values than the wallet, we now provide the ability to specify the storage, gas limit, and fee via the wallet API. As the `beacon-sdk`, which @taquito/beacon-wallet package is built on, accepts those parameters, dapp developers will now have the ability to specify those parameters. One important note is that at the end, it is the wallet that has control over what is actually used when injecting the operation.
+
+
+## What's coming next for Taquito?
+
+We will work on integrating flextesa node into our CI pipeline. We are currently relying on testnets for testing purposes. Since many Taquito users use flextesa for testing, including it in our development process will help provide better support, especially regarding errors encountered during Operation.confirmation() issues.
+
+We started some preliminary work on integrating Granadanet, the next Tezos protocol update proposal. We plan to deliver a final version of Taquito v10 early, giving teams a longer runway to upgrade their projects before protocol transition.
+
+We plan to improve the `michelson-encoder` implementation to open the door for Type generation from contracts and to provide easier discoverability of what parameters endpoints and initial storage take. We opened a discussion on this subject on GitHub where any feedback or suggestions are appreciated: https://github.com/ecadlabs/taquito/discussions/840.
+
+If you have feature or issue requests, please create an issue on http://github.com/ecadlabs/taquito/issues or join us on the Taquito community support channel on Telegram https://t.me/tezostaquito
+
+
 # Taquito v9.0.0-beta
 
 ## Summary
