@@ -46,8 +46,6 @@ function println(value) {
   render(_printlnBuffer);
 }
 
-Tezos.setProvider({ rpc: 'https://api.tez.ie/rpc/florencenet' });
-
 ${this.props.wallet ? 
   `const network = {type:"florencenet"};
   wallet.requestPermissions({network})
@@ -158,6 +156,22 @@ const managerCode = [{"prim": "parameter","args":[{"prim": "or","args":[{"prim":
 
     this.transpile({ code, scope, transformCode, noInline });
   }
+
+  cancel() {
+    const { scope, transformCode, noInline } = this.props;
+    const code =`
+    let _printlnBuffer = "";
+
+    function println(value) {
+      _printlnBuffer += value + "\\n";
+
+      render(_printlnBuffer);
+    }
+    Tezos.rpc.cancelRequest();
+    `
+    this.transpile({ code, scope, transformCode, noInline });
+    
+  }
 }
 
 function Playground({ children, theme, transformCode, ...props }) {
@@ -183,6 +197,10 @@ function Playground({ children, theme, transformCode, ...props }) {
 
   const handleRunCode = () => {
     live.current && live.current.run();
+  };
+
+  const cancelRunCode = () => {
+    live.current && live.current.cancel();
   };
 
   const handleCopyCode = () => {
@@ -237,6 +255,17 @@ function Playground({ children, theme, transformCode, ...props }) {
           onClick={handleRunCode}>
           Run code
           </button>
+        {props.abort ? 
+        <button
+          type="button"
+          aria-label="Cancel example"
+          className={classnames(
+            styles.button,
+            styles.runButton,
+          )}
+          onClick={cancelRunCode}>
+          Cancel
+          </button>:""}
       </div>
       <div className={styles.playgroundPreview}>
         <LivePreview />
