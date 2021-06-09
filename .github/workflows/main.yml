@@ -61,7 +61,7 @@ jobs:
         CI: true
         TEZOS_RPC_EDONET: ${{ secrets.TEZOS_RPC_EDONET }}
         TEZOS_RPC_FLORENCENET: ${{ secrets.TEZOS_RPC_FLORENCENET }}
-        TEZOS_RPC_GRANADANET: ${{ secrets.TEZOS_RPC_GRANADANET }}
+        TEZOS_RPC_GRANADANET: 'http://10.60.41.77:8732'
   
   integration-tests-florencenet:
     runs-on: self-hosted
