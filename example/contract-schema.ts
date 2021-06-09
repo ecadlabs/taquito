@@ -3,12 +3,12 @@ import { InMemorySigner } from '@taquito/signer';
 
 
 async function example() {
-    const provider = 'https://api.tez.ie/rpc/carthagenet';
+    const provider = 'https://api.tez.ie/rpc/florencenet';
     const signer: any = new InMemorySigner('edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca');
     const tezos = new TezosToolkit(provider);
     tezos.setSignerProvider( signer );
     try {
-        const contract = await tezos.contract.at('KT1Q3t3gb8RANMfZozAfSDUXW2UWVqmSR3rr');
+        const contract = await tezos.contract.at('KT1SwtWpUE1TpBF8c4T1c2NsaDGgjKv3Xwy7');
         console.log("Printing contract methods...");
         console.log(contract.methods);
         console.log("Showing initial storage...");

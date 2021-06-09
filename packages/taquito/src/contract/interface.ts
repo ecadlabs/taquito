@@ -3,6 +3,7 @@ import { OperationBatch } from '../batch/rpc-batch-provider';
 import { Context } from '../context';
 import { DelegateOperation } from '../operations/delegate-operation';
 import { OriginationOperation } from '../operations/origination-operation';
+import { RevealOperation } from '../operations/reveal-operation';
 import { TransactionOperation } from '../operations/transaction-operation';
 import {
   DelegateParams,
@@ -10,6 +11,7 @@ import {
   TransferParams,
   RegisterDelegateParams,
   ParamsWithKind,
+  RevealParams,
 } from '../operations/types';
 import { ContractAbstraction } from './contract';
 import { Estimate } from './estimate';
@@ -56,6 +58,17 @@ export interface EstimationProvider {
    * @param Estimate
    */
   registerDelegate(params?: RegisterDelegateParams): Promise<Estimate>;
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for a reveal operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation or undefined if the account is already revealed
+   *
+   * @param Estimate
+   */
+  reveal(params?: RevealParams): Promise<Estimate | undefined> ;
+
   batch(params: ParamsWithKind[]): Promise<Estimate[]>;
 }
 
@@ -143,6 +156,7 @@ export interface ContractProvider extends StorageProvider {
    * @param RegisterDelegate operation parameter
    */
   registerDelegate(params: RegisterDelegateParams): Promise<DelegateOperation>;
+
   /**
    *
    * @description Transfer tz from current address to a specific address. Will sign and inject an operation using the current context
@@ -151,8 +165,18 @@ export interface ContractProvider extends StorageProvider {
    *
    * @param Transfer operation parameter
    */
-
   transfer(params: TransferParams): Promise<TransactionOperation>;
+
+  /**
+   *
+   * @description Reveal the current address. Will throw an error if the address is already revealed.
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param Reveal operation parameter
+   */
+  reveal(params: RevealParams): Promise<RevealOperation>;
+
   at<T extends ContractAbstraction<ContractProvider>>(address: string, contractAbstractionComposer?: (abs: ContractAbstraction<ContractProvider>, context: Context) => T): Promise<T>;
 
   /**

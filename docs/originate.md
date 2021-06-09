@@ -33,8 +33,10 @@ values={[
 This requires a signer to be configured, ie:
 
 ```
-import { importKey } from '@taquito/taquito-signer';
-importKey("p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1")
+import { importKey } from '@taquito/signer';
+import { TezosToolkit } from '@taquito/taquito';
+const Tezos = new TezosToolkit('https://api.tez.ie/rpc/florencenet');
+importKey(Tezos, "p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1")
 ```
 
 </TabItem>

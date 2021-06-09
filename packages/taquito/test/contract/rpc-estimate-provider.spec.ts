@@ -11,7 +11,9 @@ import {
   origination,
   transferWithoutAllocation,
   transferWithAllocation,
+  multipleInternalOriginationNoReveal,
 } from './helper';
+import { OpKind } from '@taquito/rpc';
 
 /**
  * RPCEstimateProvider test
@@ -125,6 +127,7 @@ describe('RPCEstimateProvider test', () => {
 
   describe('transfer', () => {
     test('return the correct estimate for multiple internal origination', async done => {
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(multipleInternalOrigination());
       // Simulate real op size
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(297).fill('aa').join(''));
@@ -140,7 +143,24 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
+    test('return the correct estimate for multiple internal origination, no reveal', async done => {
+      mockRpcClient.runOperation.mockResolvedValue(multipleInternalOriginationNoReveal());
+      // Simulate real op size
+      mockRpcClient.forgeOperations.mockResolvedValue(new Array(297).fill('aa').join(''));
+      const estimate = await estimateProvider.transfer({
+        to: 'test_to',
+        amount: 2,
+      });
+      expect(estimate).toMatchObject({
+        gasLimit: 40928,
+        storageLimit: 634,
+        suggestedFeeMutez: 4590,
+      });
+      done();
+    });
+
     test('return the correct estimate for 2 internal transfer that need allocation', async done => {
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(multipleInternalTransfer());
       // Simulate real op size
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(285).fill('aa').join(''));
@@ -157,6 +177,7 @@ describe('RPCEstimateProvider test', () => {
     });
 
     test('return the correct estimate for delegation', async done => {
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(delegate());
       // Simulate real op size
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(149).fill('aa').join(''));
@@ -173,6 +194,7 @@ describe('RPCEstimateProvider test', () => {
     });
 
     test('return the correct estimate for origination', async done => {
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(origination());
       // Simulate real op size
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(445).fill('aa').join(''));
@@ -189,6 +211,7 @@ describe('RPCEstimateProvider test', () => {
     });
 
     test('return the correct estimate for internal transfer without allocation', async done => {
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(internalTransfer());
       // Simulate real op size
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(226).fill('aa').join(''));
@@ -205,6 +228,7 @@ describe('RPCEstimateProvider test', () => {
     });
 
     test('return the correct estimate for transfer without allocation', async done => {
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(transferWithoutAllocation());
       // Simulate real op size
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(153).fill('aa').join(''));
@@ -221,6 +245,7 @@ describe('RPCEstimateProvider test', () => {
     });
 
     test('return the correct estimate for transfer with allocation', async done => {
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(transferWithAllocation());
       // Simulate real op size
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(153).fill('aa').join(''));
@@ -450,6 +475,128 @@ describe('RPCEstimateProvider test', () => {
         id: 'proto.005-PsBabyM1.gas_exhausted.operation',
         message: '(temporary) proto.005-PsBabyM1.gas_exhausted.operation',
       });
+      done();
+    });
+  });
+
+  describe('batch', () => {
+    it('should produce a batch operation, no reveal', async done => {
+      mockRpcClient.runOperation.mockResolvedValue({
+        contents: [
+          {
+            kind: 'transaction',
+            source: 'tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD',
+            fee: '0',
+            counter: '294313',
+            gas_limit: '800000',
+            storage_limit: '2000',
+            amount: '1700000',
+            destination: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+            metadata: {
+              operation_result: {
+                consumed_gas: 1000,
+              },
+            },
+          },
+          {
+            kind: 'transaction',
+            source: 'tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD',
+            fee: '0',
+            counter: '294313',
+            gas_limit: '800000',
+            storage_limit: '2000',
+            amount: '1700000',
+            destination: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp',
+            metadata: {
+              operation_result: {
+                consumed_gas: 1000,
+              },
+            },
+          },
+        ],
+      });
+      const estimate = await estimateProvider.batch([
+        { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp', amount: 2 }
+      ]);
+      expect(estimate.length).toEqual(2);
+      expect(estimate[0].gasLimit).toEqual(1100);
+      expect(estimate[1].gasLimit).toEqual(1100);
+      done();
+    });
+
+    it('should produce a batch operation, with reveal', async done => {
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
+      mockRpcClient.forgeOperations.mockResolvedValue(new Array(149).fill('aa').join(''));
+      mockRpcClient.runOperation.mockResolvedValue({
+        contents: [
+          {
+            kind: 'reveal',
+            source: 'tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD',
+            fee: '1420',
+            counter: '294312',
+            gas_limit: '10600',
+            storage_limit: '0',
+            public_key: 'sppk7aqSksZan1AGXuKtCz9UBLZZ77e3ZWGpFxR7ig1Z17GneEhSSbH',
+            metadata: {
+              operation_result: { status: 'applied', consumed_gas: '1000' },
+            },
+          },
+          {
+            kind: 'transaction',
+            source: 'tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD',
+            fee: '0',
+            counter: '294313',
+            gas_limit: '800000',
+            storage_limit: '2000',
+            amount: '1700000',
+            destination: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+            metadata: {
+              operation_result: {
+                consumed_gas: 1000,
+              },
+            },
+          },
+          {
+            kind: 'transaction',
+            source: 'tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD',
+            fee: '0',
+            counter: '294313',
+            gas_limit: '800000',
+            storage_limit: '2000',
+            amount: '1700000',
+            destination: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp',
+            metadata: {
+              operation_result: {
+                consumed_gas: 1000,
+              },
+            },
+          },
+        ],
+      });
+      const estimate = await estimateProvider.batch([
+        { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp', amount: 2 }
+      ]);
+      expect(estimate.length).toEqual(3);
+
+      expect(estimate[0]).toMatchObject({
+        gasLimit: 1100,
+        storageLimit: 0,
+        suggestedFeeMutez: 374,
+      });
+
+      expect(estimate[1]).toMatchObject({
+        gasLimit: 1100,
+        storageLimit: 0,
+        suggestedFeeMutez: 385,
+      });
+      expect(estimate[2]).toMatchObject({
+        gasLimit: 1100,
+        storageLimit: 0,
+        suggestedFeeMutez: 385,
+      });
+
       done();
     });
   });

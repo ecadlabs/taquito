@@ -1,6 +1,6 @@
 import { TezosToolkit } from '@taquito/taquito';
 import { voteInitSample, voteSample } from '../integration-tests/data/vote-contract';
-const provider = 'https://api.tez.ie/rpc/carthagenet';
+const provider = 'https://api.tez.ie/rpc/florencenet';
 import { importKey } from '@taquito/signer';
 
 async function example() {

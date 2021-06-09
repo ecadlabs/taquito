@@ -1,24 +1,23 @@
 import {
   BlockHeaderResponse,
-  ManagerKeyResponse,
   OperationContents,
   OperationContentsAndResult,
   OpKind,
   RpcClient,
   RPCRunOperationParam,
 } from '@taquito/rpc';
-import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT, Protocols } from '../constants';
+import { Protocols } from '../constants';
 import { Context } from '../context';
 import { Estimate } from '../contract/estimate';
 import { flattenErrors, TezosOperationError, TezosPreapplyFailureError } from './operation-errors';
 import {
   ForgedBytes,
   isOpRequireReveal,
+  ParamsWithKind,
   PrepareOperationParams,
   RPCOperation,
   RPCOpWithFee,
-  RPCOpWithSource,
-  RPCRevealOperation,
+  RPCOpWithSource
 } from './types';
 
 export interface PreparedOperation {
@@ -41,6 +40,26 @@ export abstract class OperationEmitter {
 
   constructor(protected context: Context) {}
 
+  protected async isRevealOpNeeded(op: RPCOperation[] | ParamsWithKind[], pkh: string) {
+    return (!await this.isAccountRevealRequired(pkh) || !this.isRevealRequiredForOpType(op)) ? false : true;
+  }
+
+  protected async isAccountRevealRequired(publicKeyHash: string) {
+    const manager = await this.rpc.getManagerKey(publicKeyHash);
+      const haveManager = manager && typeof manager === 'object' ? !!manager.key : !!manager;
+      return !haveManager;
+  }
+
+  protected isRevealRequiredForOpType(op: RPCOperation[] | ParamsWithKind[]) {
+    let opRequireReveal = false;
+    for (const operation of op) {
+      if (isOpRequireReveal(operation)) {
+        opRequireReveal = true;
+      }
+    }
+    return opRequireReveal;
+  };
+
   // Originally from sotez (Copyright (c) 2018 Andrew Kishino)
   protected async prepareOperation({
     operation,
@@ -48,7 +67,6 @@ export abstract class OperationEmitter {
   }: PrepareOperationParams): Promise<PreparedOperation> {
     let counter;
     const counters: { [key: string]: number } = {};
-    let requiresReveal = false;
     let ops: RPCOperation[] = [];
     let head: BlockHeaderResponse;
 
@@ -63,24 +81,20 @@ export abstract class OperationEmitter {
 
     // Implicit account who emit the operation
     const publicKeyHash = await this.signer.publicKeyHash();
-
     let counterPromise: Promise<string | undefined> = Promise.resolve(undefined);
-    let managerPromise: Promise<ManagerKeyResponse | undefined> = Promise.resolve(undefined);
+
     for (let i = 0; i < ops.length; i++) {
-      if (isOpRequireReveal(ops[i])) {
-        requiresReveal = true;
+      if (isOpRequireReveal(ops[i]) || ops[i].kind === 'reveal') {
         const { counter } = await this.rpc.getContract(publicKeyHash);
         counterPromise = Promise.resolve(counter);
-        managerPromise = this.rpc.getManagerKey(publicKeyHash);
         break;
       }
     }
 
-    const [header, metadata, headCounter, manager] = await Promise.all([
+    const [header, metadata, headCounter] = await Promise.all([
       blockHeaderPromise,
       blockMetaPromise,
-      counterPromise,
-      managerPromise as any,
+      counterPromise
     ]);
 
     if (!header) {
@@ -92,22 +106,6 @@ export abstract class OperationEmitter {
     }
 
     head = header;
-
-    if (requiresReveal) {
-      const haveManager = manager && typeof manager === 'object' ? !!manager.key : !!manager;
-      if (!haveManager) {
-        const reveal: RPCRevealOperation = {
-          kind: OpKind.REVEAL,
-          fee: DEFAULT_FEE.REVEAL,
-          public_key: await this.signer.publicKey(),
-          source: publicKeyHash,
-          gas_limit: DEFAULT_GAS_LIMIT.REVEAL,
-          storage_limit: DEFAULT_STORAGE_LIMIT.REVEAL,
-        };
-
-        ops.unshift(reveal);
-      }
-    }
 
     counter = parseInt(headCounter || '0', 10);
     if (!counters[publicKeyHash] || counters[publicKeyHash] < counter) {
@@ -190,11 +188,6 @@ export abstract class OperationEmitter {
       },
       counter,
     };
-  }
-
-  protected async prepareAndForge(params: PrepareOperationParams) {
-    const prepared = await this.prepareOperation(params);
-    return this.forge(prepared);
   }
 
   protected async forge({ opOb: { branch, contents, protocol }, counter }: PreparedOperation) {

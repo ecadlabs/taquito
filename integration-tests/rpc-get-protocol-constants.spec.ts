@@ -6,7 +6,7 @@ import { ConstantsResponseCommon, ConstantsResponseProto009, ConstantsResponsePr
 CONFIGS().forEach(({ lib, protocol, rpc }) => {
     const Tezos = lib;
 
-    const galpha2net = (protocol === Protocols.ProtoALpha) ? test : test.skip;
+    const granadanet = (protocol === Protocols.PtGRANADs) ? test : test.skip;
 
     describe('Fetch constants for all protocols on Mainnet', () => {
 
@@ -405,7 +405,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
 
     describe(`Fetch constants for testnet`, () => {
 
-        galpha2net(`succesfully fetches all constants using ${rpc}`, async (done) => {
+        granadanet(`succesfully fetches all constants using ${rpc}`, async (done) => {
             Tezos.setRpcProvider(rpc);
             const constants: ConstantsResponseProto010 & ConstantsResponseCommon = await Tezos.rpc.getConstants();
 
@@ -442,7 +442,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                 delay_per_missing_endorsement: new BigNumber(4),
                 minimal_block_delay: new BigNumber(15),
                 liquidity_baking_subsidy: new BigNumber(2500000),
-                liquidity_baking_sunset_level: 525600,
+                liquidity_baking_sunset_level: 2032928,
                 liquidity_baking_escape_ema_threshold: 1000000
             });
 

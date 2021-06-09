@@ -12,7 +12,6 @@ describe('MichelCodecPacker test', () => {
           data: { string: "2019-09-26T10:59:51Z" },
           type: { prim: "timestamp" }
       });
-      console.log(result)
       expect(result).toEqual({ packed: "0500a7e8e4d80b" });
       done();
     });

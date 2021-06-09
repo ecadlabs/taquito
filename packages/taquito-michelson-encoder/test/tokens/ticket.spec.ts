@@ -193,7 +193,7 @@ describe('Ticket token', () => {
     it('Should execute on readTicketType with ticket of type or with right value', () => {
       expect(tokenTicketOr.Execute({"prim":"Pair","args":[{"string":"KT1PVuv7af4VkPsZVZ8oZz9GSSdGnGBCbFWw"},{"prim":"Right","args":[{"string":"Hello"}]},{"int":"2"}]})).toEqual({
         ticketer: 'KT1PVuv7af4VkPsZVZ8oZz9GSSdGnGBCbFWw',
-        value: 'Hello',
+        value: {1: 'Hello'},
         amount: new BigNumber('2')
       });
     });
