@@ -7,8 +7,8 @@ const defaultTimeout = 30000;
 class CancellableHttpBackend extends HttpBackend {
   private abortCtrl: AbortController;
   constructor() {
-    super(),
-      this.abortCtrl = new AbortController();
+    super();
+    this.abortCtrl = new AbortController();
   }
 
   resetAbortCtrl() {
@@ -106,7 +106,7 @@ export class CancellableRpcClient extends RpcClient {
     cancellableHttpBackend: CancellableHttpBackend = new CancellableHttpBackend()
   ) {
     super(url, chain, cancellableHttpBackend);
-      this.httpBackend = cancellableHttpBackend;
+    this.httpBackend = cancellableHttpBackend;
   }
 
   cancelRequest() {
