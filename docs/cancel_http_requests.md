@@ -5,7 +5,7 @@ author: Roxane Letourneau
 
 Having Taquito implemented in composable modules is a design choice to allow users to customize the modules to meet some of their specific needs.
 
-One of these needs might be the ability to cancel HTTP requests to optimize the network. Indeed, Taquito has heavy methods that make a lot of requests to the RPC. For example, in some cases, users might want to cancel almost immediately a call when using it in interfaces. It is possible to incorporate some logic into the `HttpBackend` and `RpcClient` classes to fulfill this need.
+One of these needs might be the ability to cancel HTTP requests to optimize the network. Indeed, Taquito has heavy methods that make a lot of requests to the RPC. For example, in some cases, users might want to cancel almost immediately a call when using it in user interfaces. It is possible to incorporate some logic into the `HttpBackend` and `RpcClient` classes to fulfill this need.
 
 Here is an example in which we can click the `cancel` button during an estimation call to abort all requests. It will throw an exception.
 
