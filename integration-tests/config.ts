@@ -119,9 +119,9 @@ const key = {
 
 const granadanetFaucet = {
   rpc: 'https://api.tez.ie/rpc/granadanet',
-  knownBaker: 'tz3Q67aMz7gSMiQRcW729sXSfuMtkyAHYfqc',
-  knownContract: 'KT1AbbtFyJHDJDfFn2G6XsNDJyNF48KCYs5w',
-  knownBigMapContract: 'KT1PwT3kbNdu3byeDxXL1KFs3yt6BGq1oRds',
+  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
+  knownContract: 'KT1JMwgeC7MwYiMiZd74gXK6wrY7QNf1NwLX',
+  knownBigMapContract: 'KT1VniFqNCPEq4MXvnjYGvUqdWDhooJM5Nae',
   protocol: Protocols.PtGRANADs,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
