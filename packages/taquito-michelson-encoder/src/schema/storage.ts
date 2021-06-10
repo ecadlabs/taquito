@@ -12,18 +12,24 @@ const schemaTypeSymbol = Symbol.for('taquito-schema-type-symbol');
 // collapse comb pair
 function collapse(val: Token['val'] | any[], prim: string = PairToken.prim): Token['val'] {
   if (Array.isArray(val)) {
-    return collapse({
-      prim: prim,
-      args: val,
-    }, prim);
+    return collapse(
+      {
+        prim: prim,
+        args: val,
+      },
+      prim
+    );
   }
   if (val.prim === prim && val.args?.length! > 2) {
     return {
       ...val,
-      args: [val.args![0], {
-        prim: prim,
-        args: val.args?.slice(1),
-      }],
+      args: [
+        val.args![0],
+        {
+          prim: prim,
+          args: val.args?.slice(1),
+        },
+      ],
     };
   }
   return val;
@@ -32,15 +38,19 @@ function collapse(val: Token['val'] | any[], prim: string = PairToken.prim): Tok
 function deepEqual(a: Token['val'] | any[], b: Token['val'] | any[]): boolean {
   const ac = collapse(a);
   const bc = collapse(b);
-  return ac.prim === bc.prim &&
-    (ac.args === undefined && bc.args === undefined ||
-      ac.args !== undefined && bc.args !== undefined &&
-      ac.args.length === bc.args.length &&
-      ac.args.every((v, i) => deepEqual(v, bc.args?.[i]))) &&
-    (ac.annots === undefined && bc.annots === undefined ||
-      ac.annots !== undefined && bc.annots !== undefined &&
-      ac.annots.length === bc.annots.length &&
-      ac.annots.every((v, i) => v === bc.annots?.[i]));
+  return (
+    ac.prim === bc.prim &&
+    ((ac.args === undefined && bc.args === undefined) ||
+      (ac.args !== undefined &&
+        bc.args !== undefined &&
+        ac.args.length === bc.args.length &&
+        ac.args.every((v, i) => deepEqual(v, bc.args?.[i])))) &&
+    ((ac.annots === undefined && bc.annots === undefined) ||
+      (ac.annots !== undefined &&
+        bc.annots !== undefined &&
+        ac.annots.length === bc.annots.length &&
+        ac.annots.every((v, i) => v === bc.annots?.[i])))
+  );
 }
 
 /**
@@ -109,6 +119,9 @@ export class Schema {
   }
 
   Typecheck(val: any) {
+    if (this.root instanceof BigMapToken && Number(val)) {
+      return true;
+    }
     try {
       this.root.EncodeObject(val);
       return true;
@@ -192,7 +205,7 @@ export class Schema {
    * @description Look up in top-level pairs of the storage to find a value matching the specified type
    *
    * @returns The first value found that match the type or `undefined` if no value is found
-   * 
+   *
    * @param storage storage to parse to find the value
    * @param valueType type of value to look for
    *
@@ -211,8 +224,10 @@ export class Schema {
       if (sch.args === undefined || str.args === undefined) {
         throw new Error('Tokens have no arguments'); // unlikely
       }
-      return this.findValue(sch.args[0], str.args[0], valueToFind) ||
-        this.findValue(sch.args[1], str.args[1], valueToFind);
+      return (
+        this.findValue(sch.args[0], str.args[0], valueToFind) ||
+        this.findValue(sch.args[1], str.args[1], valueToFind)
+      );
     }
   }
 }
