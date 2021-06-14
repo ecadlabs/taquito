@@ -109,6 +109,9 @@ export class Schema {
   }
 
   Typecheck(val: any) {
+    if (this.root instanceof BigMapToken && Number.isInteger(Number(val))) {
+      return true;
+    }
     try {
       this.root.EncodeObject(val);
       return true;
