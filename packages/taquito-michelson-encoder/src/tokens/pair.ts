@@ -1,40 +1,73 @@
 import { Token, TokenFactory, Semantic, ComparableToken } from './token';
 import { OrToken } from './or';
 
+// collapse comb pair
+function collapse(val: Token['val'] | any[], prim: string = PairToken.prim): [any, any] {
+  if (Array.isArray(val)) {
+    return collapse({
+      prim: prim,
+      args: val,
+    }, prim);
+  }
+  if (val.args === undefined) {
+    throw new Error('Token has no arguments');
+  }
+  if (val.args.length > 2) {
+    return [val.args[0], {
+      prim: prim,
+      args: val.args.slice(1),
+    }];
+  }
+  return [val.args[0], val.args[1]];
+}
 export class PairToken extends ComparableToken {
   static prim = 'pair';
 
   constructor(
-    protected val: { prim: string; args: any[]; annots: any[] },
-    protected idx: number,
-    protected fac: TokenFactory
+    val: { prim: string; args: any[]; annots: any[] } | any[],
+    idx: number,
+    fac: TokenFactory
   ) {
-    super(val, idx, fac);
+    super(Array.isArray(val) ? {
+      prim: PairToken.prim,
+      args: val,
+    } : val, idx, fac);
+  }
+
+  private args(): [any, any] {
+    // collapse comb pair
+    return collapse(this.val);
+  }
+
+  private tokens(): [Token, Token] {
+    let cnt = 0;
+    return this.args().map(a => {
+      const tok = this.createToken(a, this.idx + cnt);
+      if (tok instanceof PairToken) {
+        cnt += Object.keys(tok.ExtractSchema()).length;
+      } else {
+        cnt++;
+      }
+      return tok;
+    }) as [Token, Token];
   }
 
   public Encode(args: any[]): any {
-    const leftToken = this.createToken(this.val.args[0], this.idx);
-    let keyCount = 1;
-    if (leftToken instanceof PairToken) {
-      keyCount = Object.keys(leftToken.ExtractSchema()).length;
-    }
-
-    const rightToken = this.createToken(this.val.args[1], this.idx + keyCount);
-
     return {
       prim: 'Pair',
-      args: [leftToken.Encode(args), rightToken.Encode(args)],
+      args: this.tokens().map(t => t.Encode(args)),
     };
   }
 
   public ExtractSignature(): any {
-    const leftToken = this.createToken(this.val.args[0], this.idx);
+    const args = this.args();
+    const leftToken = this.createToken(args[0], this.idx);
     let keyCount = 1;
     if (leftToken instanceof OrToken) {
       keyCount = Object.keys(leftToken.ExtractSchema()).length;
     }
 
-    const rightToken = this.createToken(this.val.args[1], this.idx + keyCount);
+    const rightToken = this.createToken(args[1], this.idx + keyCount);
 
     const newSig = [];
 
@@ -59,13 +92,7 @@ export class PairToken extends ComparableToken {
   }
 
   public EncodeObject(args: any): any {
-    const leftToken = this.createToken(this.val.args[0], this.idx);
-    let keyCount = 1;
-    if (leftToken instanceof PairToken) {
-      keyCount = Object.keys(leftToken.ExtractSchema()).length;
-    }
-
-    const rightToken = this.createToken(this.val.args[1], this.idx + keyCount);
+    const [leftToken, rightToken] = this.tokens();
 
     let leftValue;
     if (leftToken instanceof PairToken && !leftToken.hasAnnotations()) {
@@ -88,7 +115,9 @@ export class PairToken extends ComparableToken {
   }
 
   private traversal(getLeftValue: (token: Token) => any, getRightValue: (token: Token) => any) {
-    const leftToken = this.createToken(this.val.args[0], this.idx);
+    const args = this.args();
+
+    const leftToken = this.createToken(args[0], this.idx);
     let keyCount = 1;
     let leftValue;
     if (leftToken instanceof PairToken && !leftToken.hasAnnotations()) {
@@ -98,7 +127,7 @@ export class PairToken extends ComparableToken {
       leftValue = { [leftToken.annot()]: getLeftValue(leftToken) };
     }
 
-    const rightToken = this.createToken(this.val.args[1], this.idx + keyCount);
+    const rightToken = this.createToken(args[1], this.idx + keyCount);
     let rightValue;
     if (rightToken instanceof PairToken && !rightToken.hasAnnotations()) {
       rightValue = getRightValue(rightToken);
@@ -115,9 +144,10 @@ export class PairToken extends ComparableToken {
   }
 
   public Execute(val: any, semantics?: Semantic): { [key: string]: any } {
+    const args = collapse(val, 'Pair');
     return this.traversal(
-      leftToken => leftToken.Execute(val.args[0], semantics),
-      rightToken => rightToken.Execute(val.args[1], semantics)
+      leftToken => leftToken.Execute(args[0], semantics),
+      rightToken => rightToken.Execute(args[1], semantics)
     );
   }
 
@@ -129,13 +159,7 @@ export class PairToken extends ComparableToken {
   }
 
   public compare(val1: any, val2: any) {
-    const leftToken = this.createToken(this.val.args[0], this.idx);
-    let keyCount = 1;
-    if (leftToken instanceof PairToken) {
-      keyCount = Object.keys(leftToken.ExtractSchema()).length;
-    }
-
-    const rightToken = this.createToken(this.val.args[1], this.idx + keyCount);
+    const [leftToken, rightToken] = this.tokens();
 
     const getValue = (token: Token, args: any) => {
       if (token instanceof PairToken && !token.hasAnnotations()) {

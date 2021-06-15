@@ -1,3 +1,8 @@
+/**
+ * @packageDocumentation
+ * @module @taquito/beacon-wallet
+ */
+
 import {
   DAppClient,
   DAppClientOptions,
@@ -14,6 +19,8 @@ import {
   WalletProvider,
   WalletTransferParams,
 } from '@taquito/taquito';
+
+export { VERSION } from './version';
 
 export class BeaconWalletNotInitialized implements Error {
   name = 'BeaconWalletNotInitialized';
@@ -57,11 +64,6 @@ export class BeaconWallet implements WalletProvider {
     await this.client.requestPermissions(request);
   }
 
-  private removeFeeAndLimit<T extends { gas_limit: any; storage_limit: any; fee: any }>(op: T) {
-    const { fee, gas_limit, storage_limit, ...rest } = op;
-    return rest;
-  }
-
   async getPKH() {
     const account = await this.client.getActiveAccount();
     if (!account) {
@@ -70,16 +72,45 @@ export class BeaconWallet implements WalletProvider {
     return account.address;
   }
 
-  mapTransferParamsToWalletParams(params: WalletTransferParams) {
-    return createTransferOperation(params);
+  async mapTransferParamsToWalletParams(params: WalletTransferParams) {
+    return this.removeDefaultParams(params, await createTransferOperation(this.formatParameters(params)));
   }
 
-  mapOriginateParamsToWalletParams(params: WalletOriginateParams) {
-    return createOriginationOperation(params as any);
+  async mapOriginateParamsToWalletParams(params: WalletOriginateParams) {
+      return this.removeDefaultParams(params, await createOriginationOperation(this.formatParameters(params)));
   }
 
-  mapDelegateParamsToWalletParams(params: WalletDelegateParams) {
-    return createSetDelegateOperation(params as any);
+  async mapDelegateParamsToWalletParams(params: WalletDelegateParams) {
+    return this.removeDefaultParams(params, await createSetDelegateOperation(this.formatParameters(params)));
+  }
+
+  formatParameters(params: any) {
+    if (params.fee) {
+      params.fee = params.fee.toString();
+    }
+    if (params.storageLimit) {
+      params.storageLimit = params.storageLimit.toString();
+    }
+    if (params.gasLimit) {
+      params.gasLimit = params.gasLimit.toString();
+    }
+    return params;
+  }
+
+  removeDefaultParams(params: WalletTransferParams|WalletOriginateParams|WalletDelegateParams, operatedParams:any) {
+    // If fee, storageLimit or gasLimit is undefined by user
+    // in case of beacon wallet, dont override it by
+    // defaults.
+    if(!params.fee) {
+      delete operatedParams.fee;
+    }
+    if(!params.storageLimit) {
+      delete operatedParams.storage_limit;
+    }
+    if(!params.gasLimit) {
+      delete operatedParams.gas_limit;
+    }
+    return operatedParams;
   }
 
   async sendOperations(params: any[]) {
@@ -89,12 +120,8 @@ export class BeaconWallet implements WalletProvider {
     }
     const permissions = account.scopes;
     this.validateRequiredScopesOrFail(permissions, [PermissionScope.OPERATION_REQUEST]);
-
-    const { transactionHash } = await this.client.requestOperation({
-      operationDetails: params.map(op => ({
-        ...this.removeFeeAndLimit(op),
-      })) as any,
-    });
+    
+    const { transactionHash } = await this.client.requestOperation({ operationDetails: params });
     return transactionHash;
   }
  

@@ -1,7 +1,6 @@
 import {
   BlockResponse,
   OperationContentsAndResult,
-  OperationResultStatusEnum,
   OperationContentsAndResultReveal,
 } from '@taquito/rpc';
 import { defer, from, ReplaySubject, timer } from 'rxjs';
@@ -56,13 +55,13 @@ export class Operation {
           throw new Error('Interval must be more than 0');
         }
       }),
-      map(config => ({
+      map((config) => ({
         ...config,
         timeoutAt: Math.ceil(config.timeout / config.interval) + 1,
         count: 0,
       })),
-      switchMap(config => timer(0, config.interval * 1000).pipe(mapTo(config))),
-      tap(config => {
+      switchMap((config) => timer(0, config.interval * 1000).pipe(mapTo(config))),
+      tap((config) => {
         config.count++;
         if (config.count > config.timeoutAt) {
           throw new Error(`Confirmation polling timed out`);
@@ -74,9 +73,9 @@ export class Operation {
   // Observable that emit once operation is seen in a block
   private confirmed$ = this.polling$.pipe(
     switchMapTo(this.currentHead$),
-    map(head => {
+    map((head) => {
       for (let i = 3; i >= 0; i--) {
-        head.operations[i].forEach(op => {
+        head.operations[i].forEach((op) => {
           if (op.hash === this.hash) {
             this._foundAt = head.header.level;
           }
@@ -87,7 +86,7 @@ export class Operation {
         return this._foundAt;
       }
     }),
-    filter(x => x !== undefined),
+    filter((x) => x !== undefined),
     first(),
     shareReplay()
   );
@@ -114,7 +113,7 @@ export class Operation {
   get revealOperation() {
     return (
       Array.isArray(this.results) &&
-      (this.results.find(op => op.kind === 'reveal') as
+      (this.results.find((op) => op.kind === 'reveal') as
         | OperationContentsAndResultReveal
         | undefined)
     );
@@ -130,7 +129,7 @@ export class Operation {
 
   public get status() {
     return (
-      this.results.map(result => {
+      this.results.map((result) => {
         if (hasMetadataWithResult(result)) {
           return result.metadata.operation_result.status;
         } else {
@@ -146,16 +145,17 @@ export class Operation {
    * @param interval [10] Polling interval
    * @param timeout [180] Timeout
    */
-  confirmation(confirmations?: number, interval?: number, timeout?: number) {
+  async confirmation(confirmations?: number, interval?: number, timeout?: number) {
     if (typeof confirmations !== 'undefined' && confirmations < 1) {
       throw new Error('Confirmation count must be at least 1');
     }
 
-    const {
-      defaultConfirmationCount,
-      confirmationPollingIntervalSecond,
-      confirmationPollingTimeoutSecond,
-    } = this.context.config;
+    const confirmationPollingIntervalSecond =
+      this.context.config.confirmationPollingIntervalSecond !== undefined
+        ? this.context.config.confirmationPollingIntervalSecond
+        : await this.context.getConfirmationPollingInterval();
+
+    const { defaultConfirmationCount, confirmationPollingTimeoutSecond } = this.context.config;
     this._pollingConfig$.next({
       interval: interval || confirmationPollingIntervalSecond,
       timeout: timeout || confirmationPollingTimeoutSecond,
@@ -163,15 +163,19 @@ export class Operation {
 
     const conf = confirmations !== undefined ? confirmations : defaultConfirmationCount;
 
+    if (conf === undefined) {
+      throw new Error('Default confirmation count can not be undefined!');
+    }
+
     return new Promise<number>((resolve, reject) => {
       this.confirmed$
         .pipe(
           switchMap(() => this.polling$),
           switchMap(() => this.currentHead$),
-          filter(head => head.header.level - this._foundAt >= conf - 1),
+          filter((head) => head.header.level - this._foundAt >= conf - 1),
           first()
         )
-        .subscribe(_ => {
+        .subscribe((_) => {
           resolve(this._foundAt + (conf - 1));
         }, reject);
     });

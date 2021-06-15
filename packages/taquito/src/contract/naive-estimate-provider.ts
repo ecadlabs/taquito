@@ -80,6 +80,18 @@ export class NaiveEstimateProvider implements EstimationProvider {
     return new Estimate(gasLimit, 0, 157, this._costPerByte, fee);
   }
 
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for a reveal operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation
+   *
+   * @param Estimate
+   */
+  async reveal() {
+    return new Estimate(DEFAULT_GAS_LIMIT.REVEAL * 1000, DEFAULT_STORAGE_LIMIT.REVEAL, 64, this._costPerByte, DEFAULT_FEE.REVEAL);
+  }
+
   async batch(params: ParamsWithKind[]) {
     const estimates: Estimate[] = [];
     for (const param of params) {

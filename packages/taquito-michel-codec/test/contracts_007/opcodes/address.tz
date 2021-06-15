@@ -1,0 +1,3 @@
+parameter (contract unit);
+storage (option address);
+code {CAR; ADDRESS; SOME; NIL operation; PAIR }

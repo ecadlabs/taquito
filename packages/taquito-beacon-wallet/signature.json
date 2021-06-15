@@ -6,31 +6,31 @@
         "files": [
           {
             "path": "dist/taquito-beacon-wallet.es5.js",
-            "sha512": "cc71205eedfdb568832e702c421c61447cc2697ab736eea1291bec550421fe5b9157993830cdc77ee29cc24bbca442bc9f2a66a9efccdc5aa6ebba14c1f343c8"
+            "sha512": "658a1ea5cec9a5a9ff0b67d8cdc4faf66af004c2e294522ba780d88f22dd7c245b5f63cd6866752203fb9408dd7948b73a9b2e979b8c6119507821e178a72ae2"
           },
           {
             "path": "dist/lib/taquito-beacon-wallet.js",
-            "sha512": "55f0381f01332df18b58c8a8f6c3e9a42d3417b6c369393cea712a23c7c3f2b430d51313270c78b628d22cbcd737e0cbda5f949896949b876fbcad908d82a240"
+            "sha512": "0a161618b9beb820232a5446162ffaa02f7bf3ea74b4d3f8a5aaa08b780c8265aa50bd362d82a97db773c466e55c8254ac2655741ec8e76772cf5cb5b3fb75e2"
           },
           {
             "path": "dist/taquito-beacon-wallet.umd.js",
-            "sha512": "2c5198d6efcd320c92ccd8802f816f1c4e8aa54b61b27b83a624bc0abc63462b810b84a069065a044b933502eeec68ee6e103b9b52f6f5af6817e9de467d5707"
+            "sha512": "a725f6e9c038a73ea2e0961c66defa964a05d3ac036aa75b0c583263b50063e75fa85d1adeb47f5c04eca604e38ef66ace3241374e9860e1d7e1e951b3764c59"
           },
           {
             "path": "dist/taquito-beacon-wallet.es5.js.map",
-            "sha512": "9717bcc63b3c1541b2c8d73e4b6b272ccd35ad94ebd7a5e8ea096bf9994581aa5a1fc8134d8afedb0d7820bbbe7105a635939c3a301e7c39f2894996d9f3961a"
+            "sha512": "fe50738a39b96d628188c1cb4994506aab5740b2e713a8a5574c5c10f6961500855c82ffca66c484ba15c45a6c6c8f7302c95e3db23c1b2fdd6bd602a9d74c0a"
           },
           {
             "path": "dist/lib/taquito-beacon-wallet.js.map",
-            "sha512": "13c61ed3ca05ba74a9dd7ea5093f5eb20614303f01b87ff57289998c9a23ceb5b171faac17f2532b51b911578327e37bcf100daa55f107ce9b3b8928a0952f78"
+            "sha512": "9c4e154190c12e1586501d6f83cf68fa115a9f723213c7d37b8f6337d1a2583daf55dff5c1003949f5af889f98c9c4e0190866f12d9d5200865f3ed094da1961"
           },
           {
             "path": "dist/taquito-beacon-wallet.umd.js.map",
-            "sha512": "9b7a26eba6c8176a5fc412ed06931aa2eb020e0e75501111f794340d62bfeb9856d8c8692986a57c6faedc633ba549762def5ace7ae64c99fbb05fdb4337561f"
+            "sha512": "c431f7badafa5d0ac145a51d04cb8d12460fd27a7a4676b08a9a1278933cc4d82e664b6bdebfe1cf87c0e081f3cf27123fcfd1277effdade1da4e6d43f90c6dd"
           },
           {
             "path": "dist/types/taquito-beacon-wallet.d.ts",
-            "sha512": "9b4a5e143538bb929b421d9b8af183b6f057a9c2f2f36117f08672bacba79d55a7e5f243a2de16bb44be055a1238f9ddc02b0f3dae586cf0478755a454bbb3b7"
+            "sha512": "72f96db06619b57573d9323b808f1d89baa70310485ed33b197c0b241b31e8790d88db91e9a35d016e34f0f5f082c7544e899f76a4a95565affd45915b7ac718"
           }
         ]
       }
@@ -67,7 +67,7 @@
           "typings",
           "version"
         ],
-        "sha512": "5b6d1cc1e5a205feba4be3799455ae33b7fb88e6546f860a25b4fa4e57b93c1fd1ca95776895b8ae1087b893f4f00b4ed7c6e4ddbbd0d74a2b8e547673e3c3aa"
+        "sha512": "67c296fde031aa5011bad581cb975edc3d5fbe2afbf299b1e6d7f1c527d7a3047dc0958fbc92d9b4f563b52189fd58cd948bf00bcd1d67a9173f7862d8926dfc"
       }
     },
     {
@@ -75,7 +75,7 @@
       "value": {
         "packageJson": {
           "name": "@taquito/beacon-wallet",
-          "version": "7.1.0-beta.0",
+          "version": "8.0.4-beta.0",
           "description": "Beacon wallet provider",
           "keywords": [
             "tezos",
@@ -135,9 +135,9 @@
             ]
           },
           "dependencies": {
-            "@airgap/beacon-sdk": "^2.0.0",
-            "@taquito/taquito": "^7.1.0-beta.0",
-            "@taquito/utils": "^7.1.0-beta.0"
+            "@airgap/beacon-sdk": "^2.2.1",
+            "@taquito/taquito": "^8.0.4-beta.0",
+            "@taquito/utils": "^8.0.4-beta.0"
           },
           "devDependencies": {
             "@types/chrome": "0.0.126",
@@ -166,12 +166,12 @@
             "tslint": "^6.1.3",
             "tslint-config-prettier": "^1.18.0",
             "tslint-config-standard": "^9.0.0",
-            "typescript": "^4.1.2"
+            "typescript": "^4.1.5"
           },
           "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
         }
       }
     }
   ],
-  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJfz5jTCRAD9Qy5GYHsngAAp5wQAI3uWYqcrBfnKkGOYwTOAf6F\nKYpSPieKtcK2NYdf+46FNeSrvukmdHM3p0DFoiBIUCGyt/EjRtIJsQWNP6MgAnKE\njZnb1x3WW3mV9soZuEuwLuFY0oVSdxXZp7bLNlGHZHdzDkFEWZZDkYr16rNJinZI\ntDmYObs9ixme7rNhaw+tqkJd+MwXSkXjZ7LLFM3Q3oPDAg5FCwN3/XX2v3qey7Dr\neVNHbU3f4lnrnqiGba3asQhBBgww0q0WQIdPd10fjSo+7yMs9vHdRd0cZpUcSbSs\neijKSESqlTuHcyrb9gycyBtPmeVDRQmcbvEKgrQECYZsSFCioIpw2IJCYuVE5lpm\nrkoOrihEBfUISgsTq5aEfEOM7g7hX3OB+uW9jsr1XXXDpd2wOtXB8Q0aHwId8Ecb\n0bpe7/zKNkiHm4LwZ9OIJyLBhWrTLU3CO2NDbRFEdD3uSt8tBU64YiZTrsFQlj5d\nNghoXP/UC7p3/KscIlmgDWKqiq0EMAMDCW2/V09XHCcVNQJUgnipz0rW6XvKGo48\nCmfmuDRp8cBtSP7QIHSJrQonN2TXJ8wr2JIo1b3GUBRRfWunQ4J45vgkIavSGyiw\nUij9c4kewVXSaczxU2bsugFUJ48a/JkdT3KN8SW7uW3T2WzLLkYHZzh+1qBiNuRf\nN8guXXcn5lESxorGC7rC\n=tnV3\n-----END PGP SIGNATURE-----\n"
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJgN/T9CRAD9Qy5GYHsngAAh7sQAJX0r3AUmD/9aOlRG0QHN9J8\nmR+y7rc1xPXHSk2JREYv+qeRY6yM8hoThbYf3UXtywqSK8qGtiu2rjxgMtOJBurq\ng+RNFs6tG1L3q6rmM3A0g030JfQWKO9QvY7E8144kfXJM1CnlLGp8W6T8VIC5Mr5\nNH24DrLaOChD31vHt/tWUVn8ljQNFEzQmf2s50S9c2yud9QnUIyVz1n5QhzwHUpU\nP9XlSpbOw4MLrbrblWHGn1NvrnG1SOevwHqCH6t620uwZcpR1x5qdldVioIAobDh\nKnl4D22gANal7x/of8DQ1kDMXf/r4houuR5HPoSyRtlnbQdOtm4A8xOi8pk2D8VQ\n66NBkHYcDhckQnTzpwpCWlC3q5tR/JZoUY5T9JJuizPdEjwQyBGOjnjN2r02aIFg\nZmxH51vz1QWRDYO7Q02mO2u+bT0T6ojWtDkHGbmFcm6U0ONkXntlRsTzAL8LEjC8\nTzKWDsYBXHi6J30dWBtwfD3PKyq7sEri3+29ktOkbhyg2UeBfCyNNjQq+NTEYeFS\nzGRrbEslFO8EWhkX9VZIwRyJa7VUPRzADNC8W6Iqq6Fu3APaqibDqnm4B5jGHZpK\nHXiYgUuZkHI5pgfjempYULh9v4FHDdcumrCHPxihTxhYGfSZxvG3rc8/St/1bAIl\nFEUWaENtLRCqLLqpHrw7\n=nmc6\n-----END PGP SIGNATURE-----\n"
 }

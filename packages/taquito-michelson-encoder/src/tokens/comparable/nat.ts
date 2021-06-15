@@ -31,7 +31,7 @@ export class NatToken extends ComparableToken {
       throw err;
     }
 
-    return { int: String(val).toString() };
+    return { int: new BigNumber(val).toFixed() };
   }
 
   private isValid(val: any): NatValidationError | null {
@@ -51,21 +51,31 @@ export class NatToken extends ComparableToken {
       throw err;
     }
 
-    return { int: String(val).toString() };
+    return { int: new BigNumber(val).toFixed() };
   }
 
   public ExtractSchema() {
     return NatToken.prim;
   }
 
-  public ToBigMapKey(val: string) {
+  public ToBigMapKey(val: string | number) {
     return {
-      key: { int: val },
+      key: { int: String(val) },
       type: { prim: NatToken.prim },
     };
   }
 
   public ToKey({ int }: any) {
     return int;
+  }
+
+  compare(nat1: string | number, nat2: string | number) {
+    const o1 = Number(nat1);
+    const o2 = Number(nat2);
+    if (o1 === o2) {
+      return 0;
+    }
+
+    return o1 < o2 ? -1 : 1;
   }
 }

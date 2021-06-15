@@ -15,6 +15,10 @@ export type ParamsWithKind =
   | withKind<TransferParams, OpKind.TRANSACTION>
   | withKind<ActivationParams, OpKind.ACTIVATION>;
 
+export type ParamsWithKindExtended =
+  | ParamsWithKind
+  | withKind<RevealParams, OpKind.REVEAL>
+
 export const attachKind = <T, K extends OpKind>(op: T, kind: K) => {
   return { ...op, kind } as withKind<T, K>;
 };
@@ -118,6 +122,7 @@ export type OriginateParamsBase = {
   fee?: number;
   gasLimit?: number;
   storageLimit?: number;
+  mutez?: boolean;
 };
 
 /**
@@ -170,6 +175,13 @@ export interface RPCRevealOperation {
   gas_limit: number;
   storage_limit: number;
 }
+
+export interface RevealParams {
+  fee?: number;
+  gasLimit?: number;
+  storageLimit?: number;
+}
+
 
 /**
  * @description Result of a forge operation contains the operation plus its encoded version

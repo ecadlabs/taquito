@@ -1,6 +1,9 @@
-import { Schema } from '@taquito/michelson-encoder';
+import { BigMapKeyType, MichelsonMap, MichelsonMapKey, Schema } from '@taquito/michelson-encoder';
+import { OperationBatch } from '../batch/rpc-batch-provider';
+import { Context } from '../context';
 import { DelegateOperation } from '../operations/delegate-operation';
 import { OriginationOperation } from '../operations/origination-operation';
+import { RevealOperation } from '../operations/reveal-operation';
 import { TransactionOperation } from '../operations/transaction-operation';
 import {
   DelegateParams,
@@ -8,6 +11,7 @@ import {
   TransferParams,
   RegisterDelegateParams,
   ParamsWithKind,
+  RevealParams,
 } from '../operations/types';
 import { ContractAbstraction } from './contract';
 import { Estimate } from './estimate';
@@ -54,6 +58,17 @@ export interface EstimationProvider {
    * @param Estimate
    */
   registerDelegate(params?: RegisterDelegateParams): Promise<Estimate>;
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for a reveal operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation or undefined if the account is already revealed
+   *
+   * @param Estimate
+   */
+  reveal(params?: RevealParams): Promise<Estimate | undefined> ;
+
   batch(params: ParamsWithKind[]): Promise<Estimate[]>;
 }
 
@@ -79,7 +94,7 @@ export interface StorageProvider {
    *
    * @deprecated Deprecated in favor of getBigMapKeyByID
    *
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-script
+   * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-context-contracts-contract-id-big-map-get
    */
   getBigMapKey<T>(contract: string, key: string, schema?: ContractSchema): Promise<T>;
 
@@ -90,10 +105,25 @@ export interface StorageProvider {
    * @param id Big Map ID
    * @param keyToEncode key to query (will be encoded properly according to the schema)
    * @param schema Big Map schema (can be determined using your contract type)
+   * @param block optional block level to fetch the value from
    *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-big-maps-big-map-id-script-expr
    */
-  getBigMapKeyByID<T>(id: string, keyToEncode: string, schema: Schema): Promise<T>;
+  getBigMapKeyByID<T>(id: string, keyToEncode: BigMapKeyType, schema: Schema, block?: number): Promise<T>;
+
+  /**
+   *
+   * @description Fetch multiple values in a big map
+   *
+   * @param id Big Map ID
+   * @param keysToEncode Array of keys to query (will be encoded properly according to the schema)
+   * @param schema Big Map schema (can be determined using your contract type)
+   * @param block optional block level to fetch the values from
+   * @param batchSize optional batch size representing the number of requests to execute in parallel
+   * @returns An object containing the keys queried in the big map and their value in a well-formatted JSON object format
+   *
+   */
+   getBigMapKeysByID<T>(id: string, keysToEncode: Array<BigMapKeyType>, schema: Schema, block?: number, batchSize?: number): Promise<MichelsonMap<MichelsonMapKey, T | undefined>>;
 }
 
 export interface ContractProvider extends StorageProvider {
@@ -125,7 +155,8 @@ export interface ContractProvider extends StorageProvider {
    *
    * @param RegisterDelegate operation parameter
    */
-  registerDelegate(params: DelegateParams): Promise<DelegateOperation>;
+  registerDelegate(params: RegisterDelegateParams): Promise<DelegateOperation>;
+
   /**
    *
    * @description Transfer tz from current address to a specific address. Will sign and inject an operation using the current context
@@ -135,5 +166,24 @@ export interface ContractProvider extends StorageProvider {
    * @param Transfer operation parameter
    */
   transfer(params: TransferParams): Promise<TransactionOperation>;
-  at(address: string, schema?: ContractSchema): Promise<ContractAbstraction<ContractProvider>>;
+
+  /**
+   *
+   * @description Reveal the current address. Will throw an error if the address is already revealed.
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param Reveal operation parameter
+   */
+  reveal(params: RevealParams): Promise<RevealOperation>;
+
+  at<T extends ContractAbstraction<ContractProvider>>(address: string, contractAbstractionComposer?: (abs: ContractAbstraction<ContractProvider>, context: Context) => T): Promise<T>;
+
+  /**
+   *
+   * @description Batch a group of operation together. Operations will be applied in the order in which they are added to the batch
+   *
+   * @param params List of operation to batch together
+   */
+  batch(params?: ParamsWithKind[]): OperationBatch ;
 }

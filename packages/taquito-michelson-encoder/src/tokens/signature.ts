@@ -1,4 +1,4 @@
-import { Token, TokenFactory, TokenValidationError } from './token';
+import { ComparableToken, TokenFactory, TokenValidationError } from './token';
 import { validateSignature, ValidationResult } from '@taquito/utils';
 
 export class SignatureValidationError extends TokenValidationError {
@@ -8,7 +8,7 @@ export class SignatureValidationError extends TokenValidationError {
   }
 }
 
-export class SignatureToken extends Token {
+export class SignatureToken extends ComparableToken {
   static prim = 'signature';
 
   constructor(
@@ -53,5 +53,16 @@ export class SignatureToken extends Token {
 
   public ExtractSchema() {
     return SignatureToken.prim;
+  }
+
+  ToKey(val: any) {
+    return this.Execute(val);
+  }
+
+  ToBigMapKey(val: string) {
+    return {
+      key: { string: val },
+      type: { prim: SignatureToken.prim },
+    };
   }
 }

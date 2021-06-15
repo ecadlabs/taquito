@@ -1,4 +1,4 @@
-import { Token, TokenFactory, TokenValidationError } from './token';
+import { ComparableToken, TokenFactory, TokenValidationError } from './token';
 import { encodeKey, validatePublicKey, ValidationResult } from '@taquito/utils';
 
 export class KeyValidationError extends TokenValidationError {
@@ -8,7 +8,7 @@ export class KeyValidationError extends TokenValidationError {
   }
 }
 
-export class KeyToken extends Token {
+export class KeyToken extends ComparableToken {
   static prim = 'key';
 
   constructor(
@@ -57,5 +57,16 @@ export class KeyToken extends Token {
 
   public ExtractSchema() {
     return KeyToken.prim;
+  }
+
+  ToKey(val: any) {
+    return this.Execute(val);
+  }
+
+  ToBigMapKey(val: string) {
+    return {
+      key: { string: val },
+      type: { prim: KeyToken.prim },
+    };
   }
 }

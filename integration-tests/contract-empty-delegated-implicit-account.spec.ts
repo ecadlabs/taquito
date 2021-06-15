@@ -2,13 +2,15 @@ import { CONFIGS } from "./config";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker }) => {
   const Tezos = lib;
-  describe(`Test emptying a delegated implicit account using: ${rpc}`, () => {
+  const test = require('jest-retries');
 
+  describe(`Test emptying a delegated implicit account using: ${rpc}`, () => {
+    
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    it('create a new account, delegate it, attempt to empty it despite delegation expect to fail', async (done) => {
+    test('create a new account, delegate it, attempt to empty it despite delegation expect to fail', 2,  async (done: () => void) => {
       const LocalTez = await createAddress();
       const op = await Tezos.contract.transfer({ to: await LocalTez.signer.publicKeyHash(), amount: 2 });
       await op.confirmation();

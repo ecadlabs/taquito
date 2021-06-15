@@ -25,6 +25,332 @@ describe('Map token', () => {
       const result = token.Encode([map]);
       expect(result).toEqual([{ prim: 'Elt', args: [{ string: 'test' }, { int: '1' }] }]);
     });
+
+    it('Encode properly a map with keys of type string using fromLiteral', () => {
+      // Map keys must be in strictly increasing order
+      const map = MichelsonMap.fromLiteral({
+        "8": 8,
+        "9": 9,
+        "10": 10,
+        "11": 11,
+        "12": 12
+      })
+      const result = token.Encode([map]);
+      expect(result).toEqual([
+        { prim: 'Elt', args: [{ string: '10' }, { int: '10' }] },
+        { prim: 'Elt', args: [{ string: '11' }, { int: '11' }] },
+        { prim: 'Elt', args: [{ string: '12' }, { int: '12' }] },
+        { prim: 'Elt', args: [{ string: '8' }, { int: '8' }] },
+        { prim: 'Elt', args: [{ string: '9' }, { int: '9' }] }
+      ]);
+    });
+
+    it('Encode properly a map with keys of type int using fromLiteral', () => {
+      // Map keys must be in strictly increasing order
+      token = createToken(
+        { prim: 'map', args: [{ prim: 'int' }, { prim: 'int' }], annots: [] },
+        0
+      ) as MapToken;
+      const map = MichelsonMap.fromLiteral({
+        "8": 8,
+        "9": 9,
+        "10": 10,
+        "11": 11,
+        "12": 12
+      })
+      const result = token.Encode([map]);
+      expect(result).toEqual([
+        { prim: 'Elt', args: [{ int: '8' }, { int: '8' }] },
+        { prim: 'Elt', args: [{ int: '9' }, { int: '9' }] },
+        { prim: 'Elt', args: [{ int: '10' }, { int: '10' }] },
+        { prim: 'Elt', args: [{ int: '11' }, { int: '11' }] },
+        { prim: 'Elt', args: [{ int: '12' }, { int: '12' }] }
+      ]);
+    });
+
+    it('Encode properly a map with keys of type nat using fromLiteral', () => {
+      // Map keys must be in strictly increasing order
+      token = createToken(
+        { prim: 'map', args: [{ prim: 'nat' }, { prim: 'int' }], annots: [] },
+        0
+      ) as MapToken;
+      const map = MichelsonMap.fromLiteral({
+        8: 3,
+        9: 16,
+        12: 1
+      })
+      const result = token.Encode([map]);
+      expect(result).toEqual([
+        { prim: 'Elt', args: [{ int: '8' }, { int: '3' }] },
+        { prim: 'Elt', args: [{ int: '9' }, { int: '16' }] },
+        { prim: 'Elt', args: [{ int: '12' }, { int: '1' }] },
+      ]);
+    });
+
+    it('Encode properly a map with keys of type nat', () => {
+      // Map keys must be in strictly increasing order
+      token = createToken(
+        { prim: 'map', args: [{ prim: 'nat' }, { prim: 'int' }], annots: [] },
+        0
+      ) as MapToken;
+      const map = new MichelsonMap();
+      map.set(8, 3);
+      map.set(12, 1);
+      map.set(9, 16);
+      const result = token.Encode([map]);
+      expect(result).toEqual([
+        { prim: 'Elt', args: [{ int: '8' }, { int: '3' }] },
+        { prim: 'Elt', args: [{ int: '9' }, { int: '16' }] },
+        { prim: 'Elt', args: [{ int: '12' }, { int: '1' }] },
+      ]);
+    });
+
+    it('Encode properly a map with keys of type mutez', () => {
+      // Map keys must be in strictly increasing order
+      token = createToken(
+        { prim: 'map', args: [{ prim: 'mutez' }, { prim: 'int' }], annots: [] },
+        0
+      ) as MapToken;
+      const map = MichelsonMap.fromLiteral({
+        8: 5,
+        22: 2,
+        9: 4,
+        10: 1,
+        12: 15
+      })
+      const result = token.Encode([map]);
+      expect(result).toEqual([
+        { prim: 'Elt', args: [{ int: '8' }, { int: '5' }] },
+        { prim: 'Elt', args: [{ int: '9' }, { int: '4' }] },
+        { prim: 'Elt', args: [{ int: '10' }, { int: '1' }] },
+        { prim: 'Elt', args: [{ int: '12' }, { int: '15' }] },
+        { prim: 'Elt', args: [{ int: '22' }, { int: '2' }] }
+      ]);
+    });
+
+    it('Encode properly a map with keys of type or', () => {
+      // Map keys must be in strictly increasing order
+      token = createToken(
+        {
+          "prim": "map",
+          "args":
+            [{
+              "prim": "or",
+              "args":
+                [{
+                  "prim": "or",
+                  "args":
+                    [{
+                      "prim": "or",
+                      "args":
+                        [{
+                          "prim": "address",
+                          "annots": ["%myAddress"]
+                        },
+                        { "prim": "bytes", "annots": ["%myBytes"] }]
+                    },
+                    {
+                      "prim": "or",
+                      "args":
+                        [{ "prim": "int", "annots": ["%myInt"] },
+                        { "prim": "nat", "annots": ["%myNat"] }]
+                    }]
+                },
+                {
+                  "prim": "or",
+                  "args":
+                    [{
+                      "prim": "or",
+                      "args":
+                        [{
+                          "prim": "pair",
+                          "args":
+                            [{ "prim": "nat" }, { "prim": "int" }],
+                          "annots": ["%myPair"]
+                        },
+                        {
+                          "prim": "string",
+                          "annots": ["%myString"]
+                        }]
+                    },
+                    { "prim": "mutez", "annots": ["%myTez"] }]
+                }]
+            },
+            { "prim": "nat" }]
+        },
+        0
+      ) as MapToken;
+      const map = new MichelsonMap();
+      map.set({ myTez: 12 }, 3); //RR
+      map.set({ myTez: 2 }, 3); //RR
+      map.set({ myBytes: 'cccc' }, 15) //LLR
+      map.set({ myAddress: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu' }, 5) //LLL
+      map.set({ myNat: 48 }, 16) //LRR
+      map.set({ myPair: { 4: 12, 5: 6 } }, 3); //RLL
+      map.set({ myInt: 4 }, 6) //LRL
+      map.set({ myString: 'test' }, 3); //RLR
+      map.set({ myBytes: 'aaaa' }, 5) //LLR
+      const result = token.Encode([map]);
+      expect(result).toEqual([
+        { prim: 'Elt', args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ string: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu' }] }] }] }, { int: '5' }] },
+        { prim: 'Elt', args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ bytes: 'aaaa' }] }] }] }, { int: '5' }] },
+        { prim: 'Elt', args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ bytes: 'cccc' }] }] }] }, { int: '15' }] },
+        { prim: 'Elt', args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ prim: 'Left', args: [{ int: '4' }] }] }] }, { int: '6' }] },
+        { prim: 'Elt', args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ int: '48' }] }] }] }, { int: '16' }] },
+        { prim: 'Elt', args: [{ prim: 'Right', args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ prim: 'Pair', args: [{ int: '12' }, { int: '6' }] }] }] }] }, { int: '3' }] },
+        { prim: 'Elt', args: [{ prim: 'Right', args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ string: 'test' }] }] }] }, { int: '3' }] },
+        { prim: 'Elt', args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ int: '2' }] }] }, { int: '3' }] },
+        { prim: 'Elt', args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ int: '12' }] }] }, { int: '3' }] },
+      ]);
+    });
+
+    it('Encode properly a map with keys of type or no annotation', () => {
+      // Map keys must be in strictly increasing order
+      token = createToken(
+        {
+          "prim": "map",
+          "args":
+            [{
+              "prim": "or",
+              "args":
+                [{
+                  "prim": "or",
+                  "args":
+                    [{
+                      "prim": "or",
+                      "args":
+                        [{
+                          "prim": "address"
+                        },
+                        { "prim": "bytes" }]
+                    },
+                    {
+                      "prim": "or",
+                      "args":
+                        [{ "prim": "int" },
+                        { "prim": "nat" }]
+                    }]
+                },
+                {
+                  "prim": "or",
+                  "args":
+                    [{
+                      "prim": "or",
+                      "args":
+                        [{
+                          "prim": "pair",
+                          "args":
+                            [{ "prim": "nat" }, { "prim": "int" }]
+                        },
+                        {
+                          "prim": "string",
+                        }]
+                    },
+                    { "prim": "mutez" }]
+                }]
+            },
+            { "prim": "nat" }]
+        },
+        0
+      ) as MapToken;
+      const map = new MichelsonMap();
+      map.set({ 6: 12 }, 3); //RR
+      map.set({ 6: 2 }, 3); //RR
+      map.set({ 1: 'cccc' }, 15) //LLR
+      map.set({ 0: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu' }, 5) //LLL
+      map.set({ 3: 48 }, 16) //LRR
+      map.set({ 4: { 4: 12, 5: 6 } }, 3); //RLL
+      map.set({ 2: 4 }, 6) //LRL
+      map.set({ 5: 'test' }, 3); //RLR
+      map.set({ 1: 'aaaa' }, 5) //LLR
+      const result = token.Encode([map]);
+      expect(result).toEqual([
+        { prim: 'Elt', args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ string: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu' }] }] }] }, { int: '5' }] },
+        { prim: 'Elt', args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ bytes: 'aaaa' }] }] }] }, { int: '5' }] },
+        { prim: 'Elt', args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ bytes: 'cccc' }] }] }] }, { int: '15' }] },
+        { prim: 'Elt', args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ prim: 'Left', args: [{ int: '4' }] }] }] }, { int: '6' }] },
+        { prim: 'Elt', args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ int: '48' }] }] }] }, { int: '16' }] },
+        { prim: 'Elt', args: [{ prim: 'Right', args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ prim: 'Pair', args: [{ int: '12' }, { int: '6' }] }] }] }] }, { int: '3' }] },
+        { prim: 'Elt', args: [{ prim: 'Right', args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ string: 'test' }] }] }] }, { int: '3' }] },
+        { prim: 'Elt', args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ int: '2' }] }] }, { int: '3' }] },
+        { prim: 'Elt', args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ int: '12' }] }] }, { int: '3' }] },
+      ])
+    });
+
+    it('Encode properly a map with keys of type key using fromLiteral', () => {
+      // Map keys must be in strictly increasing order
+      token = createToken(
+        { prim: 'map', args: [{ prim: 'key' }, { prim: 'int' }], annots: [] },
+        0
+      ) as MapToken;
+      const map = MichelsonMap.fromLiteral({
+        "edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g": 90,
+        "edpktm3zeGMzfzFuqgyYftt7uNyVRANTjrJCdU7bURwgGb9bRZwmJq": 30,
+        "edpkuNjKKT48xBoT5asPrWdmuM1Yw8D93MwgFgVvtca8jb5pstzaCh": 1,
+      })
+      const result = token.Encode([map]);
+      expect(result).toEqual([
+        { prim: 'Elt', args: [{ string: 'edpktm3zeGMzfzFuqgyYftt7uNyVRANTjrJCdU7bURwgGb9bRZwmJq' }, { int: '30' }] },
+        { prim: 'Elt', args: [{ string: 'edpkuNjKKT48xBoT5asPrWdmuM1Yw8D93MwgFgVvtca8jb5pstzaCh' }, { int: '1' }] },
+        { prim: 'Elt', args: [{ string: 'edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g' }, { int: '90' }] },
+      ]);
+    });
+
+    it('Encode properly a map with keys of type key', () => {
+      // Map keys must be in strictly increasing order
+      token = createToken(
+        { prim: 'map', args: [{ prim: 'key' }, { prim: 'int' }], annots: [] },
+        0
+      ) as MapToken;
+      const map = new MichelsonMap();
+      map.set("edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g", 30);
+      map.set("edpktm3zeGMzfzFuqgyYftt7uNyVRANTjrJCdU7bURwgGb9bRZwmJq", 1);
+      map.set('edpkuNjKKT48xBoT5asPrWdmuM1Yw8D93MwgFgVvtca8jb5pstzaCh', 2);
+      const result = token.Encode([map]);
+      expect(result).toEqual([
+        { prim: 'Elt', args: [{ string: 'edpktm3zeGMzfzFuqgyYftt7uNyVRANTjrJCdU7bURwgGb9bRZwmJq' }, { int: '1' }] },
+        { prim: 'Elt', args: [{ string: 'edpkuNjKKT48xBoT5asPrWdmuM1Yw8D93MwgFgVvtca8jb5pstzaCh' }, { int: '2' }] },
+        { prim: 'Elt', args: [{ string: 'edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g' }, { int: '30' }] },
+      ]);
+    })
+
+    it('Encode properly a map with keys of type option using fromLiteral', () => {
+      // Map keys must be in strictly increasing order
+      token = createToken(
+        { prim: 'map', args: [{ prim: 'option', args: [{ prim: 'int' }], }, { prim: 'int' }], annots: [] },
+        0
+      ) as MapToken;
+      const map = MichelsonMap.fromLiteral({
+        5: 30,
+        3: 1,
+        22: 1
+      })
+      const result = token.Encode([map]);
+      expect(result).toEqual([
+        { prim: 'Elt', args: [{ prim: 'Some', args: [{ int: '3' }] }, { int: '1' }] },
+        { prim: 'Elt', args: [{ prim: 'Some', args: [{ int: '5' }] }, { int: '30' }] },
+        { prim: 'Elt', args: [{ prim: 'Some', args: [{ int: '22' }] }, { int: '1' }] },
+      ]);
+    });
+
+    it('Encode properly a map with keys of type option', () => {
+      // Map keys must be in strictly increasing order
+      token = createToken(
+        { prim: 'map', args: [{ prim: 'option', args: [{ prim: 'int' }], }, { prim: 'int' }], annots: [] },
+        0
+      ) as MapToken;
+      const map = new MichelsonMap();
+      map.set(5, 30);
+      map.set(3, 1);
+      map.set(22, 1);
+      const result = token.Encode([map]);
+      expect(result).toEqual([
+        { prim: 'Elt', args: [{ prim: 'Some', args: [{ int: '3' }] }, { int: '1' }] },
+        { prim: 'Elt', args: [{ prim: 'Some', args: [{ int: '5' }] }, { int: '30' }] },
+        { prim: 'Elt', args: [{ prim: 'Some', args: [{ int: '22' }] }, { int: '1' }] },
+
+      ]);
+    });
   });
 });
 

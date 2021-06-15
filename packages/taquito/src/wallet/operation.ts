@@ -144,6 +144,10 @@ export class WalletOperation {
 
     const conf = confirmations !== undefined ? confirmations : defaultConfirmationCount;
 
+    if (conf === undefined) {
+      throw new Error('Default confirmation count can not be undefined!');
+    }
+    
     return combineLatest([this._includedInBlock, this.newHead$]).pipe(
       distinctUntilChanged(([, previousHead], [, newHead]) => {
         return previousHead.hash === newHead.hash;

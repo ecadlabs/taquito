@@ -1,14 +1,21 @@
 name: Node.js CI
 
-on: [push]
+on:
+  pull_request:
+  push:
+    branches:
+      - master
 jobs:
   lint-and-test:
     runs-on: self-hosted
+    strategy:
+      matrix:
+        node: [12.x]
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
       with:
-        node-version: 10.x
+        node-version: ${{ matrix.node }}
     - uses: actions/cache@v1
       with:
         path: ~/.npm
@@ -19,6 +26,7 @@ jobs:
     - run: npm run lerna -- bootstrap
     - run: npm run build
     - run: npm run lint
+    - run: npm run build-docs
     - run: npm run test -- --runInBand
     - uses: codecov/codecov-action@v1
       with:
@@ -26,7 +34,10 @@ jobs:
       env:
         CI: true
         RUN_INTEGRATION: true
-  integration-tests-carthagenet:
+        TEZOS_RPC_EDONET: ${{ secrets.TEZOS_RPC_EDONET }}
+        TEZOS_RPC_FLORENCENET: ${{ secrets.TEZOS_RPC_FLORENCENET }}
+
+  integration-tests-edonet:
     runs-on: self-hosted
     strategy:
       matrix:
@@ -45,10 +56,13 @@ jobs:
     - run: npm ci
     - run: npm run lerna -- bootstrap
     - run: npm run build
-    - run: cd integration-tests && npm run test:carthagenet -- --maxWorkers=10
+    - run: cd integration-tests && npm run test:edonet -- --maxWorkers=8
       env:
         CI: true
-  integration-tests-delphinet:
+        TEZOS_RPC_EDONET: ${{ secrets.TEZOS_RPC_EDONET }}
+        TEZOS_RPC_FLORENCENET: ${{ secrets.TEZOS_RPC_FLORENCENET }}
+  
+  integration-tests-florencenet:
     runs-on: self-hosted
     strategy:
       matrix:
@@ -67,6 +81,8 @@ jobs:
     - run: npm ci
     - run: npm run lerna -- bootstrap
     - run: npm run build
-    - run: cd integration-tests && npm run test:delphinet -- --maxWorkers=10
+    - run: cd integration-tests && npm run test:florencenet -- --maxWorkers=8
       env:
         CI: true
+        TEZOS_RPC_EDONET: ${{ secrets.TEZOS_RPC_EDONET }}
+        TEZOS_RPC_FLORENCENET: ${{ secrets.TEZOS_RPC_FLORENCENET }}

@@ -1,6 +1,6 @@
-import { Token, TokenFactory, Semantic } from './token';
+import { Token, TokenFactory, Semantic, ComparableToken } from './token';
 
-export class OrToken extends Token {
+export class OrToken extends ComparableToken {
   static prim = 'or';
 
   constructor(
@@ -118,8 +118,17 @@ export class OrToken extends Token {
     const rightToken = this.createToken(this.val.args[1], this.idx + keyCount);
 
     if (val.prim === 'Right') {
-      return rightToken.Execute(val.args[0], semantics);
+      if (rightToken instanceof OrToken) {
+        return rightToken.Execute(val.args[0], semantics)
+      } else {
+        return {
+          [rightToken.annot()]: rightToken.Execute(val.args[0], semantics),
+        };
+      }
     } else if (val.prim === 'Left') {
+      if (leftToken instanceof OrToken) {
+        return leftToken.Execute(val.args[0], semantics)
+      }
       return {
         [leftToken.annot()]: leftToken.Execute(val.args[0], semantics),
       };
@@ -164,5 +173,60 @@ export class OrToken extends Token {
         ...rightValue,
       })
     );
+  }
+
+  private findToken(label: any): Token | null {
+    const leftToken = this.createToken(this.val.args[0], this.idx);
+    let keyCount = 1;
+    if (leftToken instanceof OrToken) {
+      keyCount = Object.keys(leftToken.ExtractSchema()).length;
+    }
+
+    const rightToken = this.createToken(this.val.args[1], this.idx + keyCount);
+
+    if (String(leftToken.annot()) === String(label) && !(leftToken instanceof OrToken) && leftToken instanceof ComparableToken) {
+      return leftToken
+    } else if (String(rightToken.annot()) === String(label) && !(rightToken instanceof OrToken) && rightToken instanceof ComparableToken) {
+      return rightToken
+    } else {
+      if (leftToken instanceof OrToken) {
+        const tok = leftToken.findToken(label);
+        if (tok) { return tok }
+      }
+
+      if (rightToken instanceof OrToken) {
+        const tok = rightToken.findToken(label)
+        if (tok) { return tok }
+      }
+      return null;
+    }
+  }
+
+  compare(val1: any, val2: any): any {
+    const labelVal1 = Object.keys(val1)[0];
+    const labelVal2 = Object.keys(val2)[0];
+
+    if (labelVal1 === labelVal2) {
+      const token = this.findToken(labelVal1)
+      if (token instanceof ComparableToken) {
+        return token.compare(val1[labelVal1], val2[labelVal1])
+      }
+
+    } else {
+      const encoded1 = JSON.stringify(this.EncodeObject(val1))
+      const encoded2 = JSON.stringify(this.EncodeObject(val2))
+      return encoded1 < encoded2 ? -1 : 1;
+    }
+  }
+
+  public ToKey(val: any) {
+    return this.Execute(val);
+  }
+
+  public ToBigMapKey(val: any) {
+    return {
+      key: this.EncodeObject(val),
+      type: this.typeWithoutAnnotations(),
+    };
   }
 }

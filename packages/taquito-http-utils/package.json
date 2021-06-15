@@ -1,8 +1,10 @@
 {
   "name": "@taquito/http-utils",
-  "version": "7.1.0-beta.0",
+  "version": "9.1.1-beta-RC.0",
   "description": "",
-  "keywords": [],
+  "keywords": [
+    "tezos"
+  ],
   "main": "dist/taquito-http-utils.umd.js",
   "module": "dist/taquito-http-utils.es5.js",
   "typings": "dist/types/taquito-http-utils.d.ts",
@@ -26,8 +28,9 @@
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts'",
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
-    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts ",
-    "start": "rollup -c rollup.config.ts -w"
+    "version-stamp": "node ../taquito/version-stamping.js",
+    "build": "npm run version-stamp && tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts ",
+    "start": "npm run version-stamp && rollup -c rollup.config.ts -w"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
@@ -83,7 +86,7 @@
     "tslint": "^6.1.3",
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-standard": "^9.0.0",
-    "typescript": "^4.1.2"
+    "typescript": "^4.1.5"
   },
   "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
 }

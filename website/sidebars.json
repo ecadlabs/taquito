@@ -5,23 +5,32 @@
       "label": "General",
       "items": [
         "quick_start",
-        "boilerplate",
-        "wallet_API",
-        "making_transfers",
-        "originate",
-        "set_delegate",
-        "smartcontracts",
-        "estimate",
-        "validators",
-        "maps_bigmaps",
-        "web3js_taquito",
-        "rpc_package",
-        "rpc_nodes",
-        "lambda_view",
+        "boilerplate",        
         "batch_API",
+        "set_delegate",
+        "estimate",
+        "lambda_view",
+        "maps_bigmaps",
+        "michelsonmap",
+        "originate",
+        "rpc_nodes",
+        "rpc_package",
+        "signing",
+        "smartcontracts",
+        "tickets",
+        "making_transfers",
         "tutorial_links",
-        "michelsonmap"
+        "tzip12",
+        "metadata-tzip16",
+        "validators",
+        "wallet_API",
+        "web3js_taquito"
       ]
+    },
+    {
+      "type": "category",
+      "label": "Packages",
+      "items": ["michelson_encoder"]
     },
     {
       "type": "category",
@@ -39,7 +48,7 @@
       "items": ["ledger_integration_test", "rpc_nodes_integration_test"]
     },
     {
-      "Upgrading Guide": ["v7_breaking_changes"]
+      "Upgrading Guide": ["upgrading_guide"]
     },
     {
       "type": "link",

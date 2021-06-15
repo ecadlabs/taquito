@@ -1,6 +1,6 @@
 import { Schema } from '@taquito/michelson-encoder';
 import { OpKind, MichelsonV1Expression } from '@taquito/rpc';
-import { Parser, Prim, Expr } from '@taquito/michel-codec';
+import { Prim, Expr } from '@taquito/michel-codec';
 import {
   OriginateParams,
   RPCOriginationOperation,
@@ -9,9 +9,12 @@ import {
   DelegateParams,
   RPCDelegateOperation,
   RegisterDelegateParams,
+  RPCRevealOperation,
+  RevealParams
 } from '../operations/types';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
 import { format } from '../format';
+import { InvalidCodeParameter, InvalidInitParameter } from './errors';
 
 export const createOriginationOperation = async ({
   code,
@@ -22,6 +25,7 @@ export const createOriginationOperation = async ({
   fee = DEFAULT_FEE.ORIGINATION,
   gasLimit = DEFAULT_GAS_LIMIT.ORIGINATION,
   storageLimit = DEFAULT_STORAGE_LIMIT.ORIGINATION,
+  mutez = false
 }: OriginateParams) => {
   // tslint:disable-next-line: strict-type-predicates
   if (storage !== undefined && init !== undefined) {
@@ -30,45 +34,26 @@ export const createOriginationOperation = async ({
     );
   }
 
-  const parser = new Parser({ expandMacros: true });
-
-  let contractCode: Expr[];
-  if (typeof code === 'string') {
-    const c = parser.parseScript(code);
-    if (c === null) {
-      throw new Error('Empty Michelson source');
-    }
-    contractCode = c;
-  } else {
-    const c = parser.parseJSON(code);
-    if (!Array.isArray(c)) {
-      throw new Error('JSON encoded Michelson script must be an array');
-    }
-    const order = ['parameter', 'storage', 'code'];
-    // Ensure correct ordering for RPC
-    contractCode = (c as Prim[]).sort((a, b) => order.indexOf(a.prim) - order.indexOf(b.prim));
+  if(!Array.isArray(code)){
+    throw new InvalidCodeParameter('Wrong code parameter type, expected an array', code);
   }
 
   let contractStorage: Expr | undefined;
   if (storage !== undefined) {
-    const storageType = contractCode.find((p): p is Prim => ('prim' in p) && p.prim === 'storage');
+    const storageType = (code as Expr[]).find((p): p is Prim => ('prim' in p) && p.prim === 'storage');
     if (storageType?.args === undefined) {
-      throw new Error('Missing storage section');
+      throw new InvalidCodeParameter('The storage section is missing from the script', code);
     }
     const schema = new Schema(storageType.args[0] as MichelsonV1Expression); // TODO
     contractStorage = schema.Encode(storage);
-  } else if (typeof init === 'string') {
-    const c = parser.parseMichelineExpression(init);
-    if (c === null) {
-      throw new Error('Empty initial storage value');
-    }
-    contractStorage = c;
-  } else if (typeof init === 'object') {
-    contractStorage = parser.parseJSON(init);
+  } else if (init !== undefined && typeof init === 'object') {
+    contractStorage = init as Expr;
+  } else {
+    throw new InvalidInitParameter('Wrong init parameter type, expected JSON Michelson', init);
   }
 
   const script = {
-    code: contractCode,
+    code,
     storage: contractStorage,
   };
 
@@ -77,7 +62,9 @@ export const createOriginationOperation = async ({
     fee,
     gas_limit: gasLimit,
     storage_limit: storageLimit,
-    balance: format("tz", "mutez", balance).toString(),
+    balance: mutez
+      ? balance.toString()
+      : format('tz', 'mutez', balance).toString(),
     script,
   };
 
@@ -143,4 +130,23 @@ export const createRegisterDelegateOperation = async (
     storage_limit: storageLimit,
     delegate: source,
   } as RPCDelegateOperation;
+};
+
+export const createRevealOperation = async (
+  {
+    fee = DEFAULT_FEE.REVEAL,
+    gasLimit = DEFAULT_GAS_LIMIT.REVEAL,
+    storageLimit = DEFAULT_STORAGE_LIMIT.REVEAL,
+  }: RevealParams,
+  source: string,
+  publicKey: string,
+) => {
+  return {
+    kind: OpKind.REVEAL,
+    fee,
+    public_key: publicKey,
+    source,
+    gas_limit: gasLimit,
+    storage_limit: storageLimit
+  } as RPCRevealOperation;
 };

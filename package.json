@@ -6,12 +6,15 @@
     "bootstrap": "lerna bootstrap",
     "test": "jest --collectCoverage",
     "lint": "lerna run lint",
+    "clean": "lerna clean --yes",
     "commit": "git-cz",
     "precommit": "lerna run --concurrency 1 --stream precommit",
     "example": "cd example && npm run example",
     "lerna": "lerna",
     "build-docs": "typedoc",
-    "gh-pages": "gh-pages"
+    "gh-pages": "gh-pages",
+    "netlify:preview": "netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json --alias=$short_sha --message 'Deployment for $GITHUB_REF'",
+    "netlify:publish": "netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json --prod --message 'Deployment for $GITHUB_REF'"
   },
   "workspaces": [
     "packages/*"
@@ -39,7 +42,9 @@
       "^@taquito/http-utils$": "<rootDir>/packages/taquito-http-utils/src/taquito-http-utils.ts",
       "^@taquito/utils$": "<rootDir>/packages/taquito-utils/src/taquito-utils.ts",
       "^@taquito/signer$": "<rootDir>/packages/taquito-signer/src/taquito-signer.ts",
-      "^@taquito/local-forging$": "<rootDir>/packages/taquito-local-forging/src/taquito-local-forging.ts"
+      "^@taquito/local-forging$": "<rootDir>/packages/taquito-local-forging/src/taquito-local-forging.ts",
+      "^@taquito/tzip16$": "<rootDir>/packages/taquito-tzip16/src/taquito-tzip16.ts",
+      "^@taquito/tzip12$": "<rootDir>/packages/taquito-tzip12/src/taquito-tzip12.ts"
     },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
@@ -62,8 +67,8 @@
     "eslint": "^7.10.0",
     "gh-pages": "^3.1.0",
     "husky": "^4.3.0",
-    "jest": "^26.5.2",
-    "jest-config": "^26.5.2",
+    "jest": "^26.6.3",
+    "jest-config": "^26.6.3",
     "lerna": "^3.22.1",
     "lint-staged": "^10.4.0",
     "lodash.camelcase": "^4.3.0",
@@ -74,16 +79,14 @@
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-typescript2": "^0.27.3",
-    "semantic-release": "^17.2.3",
     "shelljs": "^0.8.4",
     "ts-jest": "^26.4.1",
     "ts-node": "^9.0.0",
     "tslint": "^6.1.3",
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-standard": "^9.0.0",
-    "typedoc": "^0.19.2",
-    "typedoc-plugin-lerna-packages": "^0.3.1",
-    "typescript": "^4.1.2"
+    "typedoc": "^0.20.32",
+    "typescript": "^4.1.5"
   },
   "config": {
     "commitizen": {
