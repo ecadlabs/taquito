@@ -13,8 +13,8 @@ describe('Bytes token', () => {
       });
     });
 
-    it('Should encode Uint8Array to bytes', () => {
-      const uint8 = new Uint8Array([21,31]);
+    it('Should encode Uint8Array to Michelson bytes format', () => {
+      const uint8 = new Uint8Array([21, 31]);
       expect(token.EncodeObject(uint8)).toEqual({
         bytes: '151f',
       });
@@ -22,8 +22,7 @@ describe('Bytes token', () => {
 
     it('Should throw a validation error when bytes are not valid', () => {
       expect(() => token.EncodeObject('test')).toThrowError(BytesValidationError);
-      expect(() => token.EncodeObject(0)).toThrowError(BytesValidationError);
-      expect(() => token.EncodeObject([])).toThrowError(BytesValidationError);
+      expect(() => token.EncodeObject('0')).toThrowError(BytesValidationError);
     });
   });
 
@@ -35,7 +34,7 @@ describe('Bytes token', () => {
     });
 
     it('Should encode Uint8Array to bytes', () => {
-      const uint8 = new Uint8Array([115,2,65]);
+      const uint8 = new Uint8Array([115, 2, 65]);
       expect(token.Encode([uint8])).toEqual({
         bytes: '730241',
       });
