@@ -1,4 +1,4 @@
-import { Token, TokenFactory, ComparableToken, TokenValidationError } from '../token';
+import { TokenFactory, ComparableToken, TokenValidationError } from '../token';
 
 export class BytesValidationError extends TokenValidationError {
   name: string = 'BytesValidationError';
@@ -33,9 +33,14 @@ export class BytesToken extends ComparableToken {
     }
   }
 
-  public Encode(args: any[]): any {
-    const val = args.pop();
+  private convertUint8ArrayToHexString(val: any) {
+    return val.constructor === Uint8Array ? Buffer.from(val).toString('hex') : val;
+  }
 
+  public Encode(args: any[]): any {
+    let val = args.pop();
+
+    val = this.convertUint8ArrayToHexString(val);
     const err = this.isValid(val);
     if (err) {
       throw err;
@@ -44,7 +49,8 @@ export class BytesToken extends ComparableToken {
     return { bytes: String(val).toString() };
   }
 
-  public EncodeObject(val: any) {
+  public EncodeObject(val: string | Uint8Array) {
+    val = this.convertUint8ArrayToHexString(val);
     const err = this.isValid(val);
     if (err) {
       throw err;
