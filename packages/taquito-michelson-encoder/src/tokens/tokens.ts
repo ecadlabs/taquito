@@ -32,6 +32,8 @@ import { SetToken } from './set';
 import { ChainIDToken } from './chain-id';
 import { TicketToken } from './ticket';
 import { NeverToken } from './never';
+import { SaplingStateToken } from './sapling-state';
+import { SaplingTransactionToken } from './sapling-transaction';
 
 export const tokens = [
   PairToken,
@@ -58,5 +60,7 @@ export const tokens = [
   SetToken,
   ChainIDToken,
   TicketToken,
-  NeverToken
+  NeverToken,
+  SaplingStateToken,
+  SaplingTransactionToken,
 ];
