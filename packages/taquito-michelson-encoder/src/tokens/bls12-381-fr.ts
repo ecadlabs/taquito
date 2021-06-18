@@ -20,18 +20,23 @@ export class Bls12381frToken extends Token {
   }
 
   private isValid(val: any): Bls12381frValidationError | null {
-    if (typeof val === 'string' && /^[0-9a-fA-F]*$/.test(val) && val.length % 2 === 0) {
+    if (/^[0-9a-fA-F]*$/.test(val) && val.length % 2 === 0) {
       return null;
     } else {
       return new Bls12381frValidationError(val, this, `Invalid bytes: ${val}`);
     }
   }
 
+  private convertUint8ArrayToHexString(val: any) {
+    return val.constructor === Uint8Array ? Buffer.from(val).toString('hex') : val;
+  }
+
   Encode(args: any[]) {
-    const val = args.pop();
+    let val = args.pop();
     if (typeof val === 'number') {
       return { int: val.toString() };
     } else {
+      val = this.convertUint8ArrayToHexString(val);
       const err = this.isValid(val);
       if (err) {
         throw err;
@@ -40,10 +45,11 @@ export class Bls12381frToken extends Token {
     }
   }
 
-  EncodeObject(val: string | number) {
+  EncodeObject(val: string | Uint8Array | number) {
     if (typeof val === 'number') {
       return { int: val.toString() };
     } else {
+      val = this.convertUint8ArrayToHexString(val);
       const err = this.isValid(val);
       if (err) {
         throw err;

@@ -18,9 +18,16 @@ describe('Bls12-381-g1 token', () => {
       });
     });
 
+    it('Should encode Uint8Array to Michelson bytes format', () => {
+      const uint8 = new Uint8Array([21, 31]);
+      expect(token.EncodeObject(uint8)).toEqual({
+        bytes: '151f',
+      });
+    });
+
     it('Should throw a validation error when bytes are not valid', () => {
       expect(() => token.EncodeObject('test')).toThrowError(Bls12381g1ValidationError);
-      expect(() => token.EncodeObject(4)).toThrowError(Bls12381g1ValidationError);
+      expect(() => token.EncodeObject('4')).toThrowError(Bls12381g1ValidationError);
     });
   });
 
@@ -36,8 +43,16 @@ describe('Bls12-381-g1 token', () => {
       });
     });
 
+    it('Should encode Uint8Array to bytes', () => {
+      const uint8 = new Uint8Array([115, 2, 65]);
+      expect(token.Encode([uint8])).toEqual({
+        bytes: '730241',
+      });
+    });
+
     it('Should throw a validation error when bytes are not valid', () => {
       expect(() => token.Encode(['test'])).toThrowError(Bls12381g1ValidationError);
+      expect(() => token.Encode([23])).toThrowError(Bls12381g1ValidationError);
 
       try {
         token.Encode(['test']);

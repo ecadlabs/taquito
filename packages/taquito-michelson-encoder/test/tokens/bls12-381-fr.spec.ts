@@ -13,6 +13,13 @@ describe('Bls12-381-fr token', () => {
       });
     });
 
+    it('Should encode Uint8Array to Michelson bytes format', () => {
+      const uint8 = new Uint8Array([21, 31]);
+      expect(token.EncodeObject(uint8)).toEqual({
+        bytes: '151f',
+      });
+    });
+
     it('Should encode number to Michelson int format', () => {
       expect(token.EncodeObject(1234)).toEqual({
         int: '1234',
@@ -28,6 +35,13 @@ describe('Bls12-381-fr token', () => {
     it('Should encode bytes string to Michelson bytes format', () => {
       expect(token.Encode(['cafe'])).toEqual({
         bytes: 'cafe',
+      });
+    });
+
+    it('Should encode Uint8Array to bytes', () => {
+      const uint8 = new Uint8Array([115, 2, 65]);
+      expect(token.Encode([uint8])).toEqual({
+        bytes: '730241',
       });
     });
 
