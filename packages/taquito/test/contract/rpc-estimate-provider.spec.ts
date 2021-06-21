@@ -84,8 +84,9 @@ describe('RPCEstimateProvider test', () => {
     mockRpcClient.preapplyOperations.mockResolvedValue([]);
     mockRpcClient.getChainId.mockResolvedValue('chain-id');
     mockRpcClient.getConstants.mockResolvedValue({
-      hard_gas_limit_per_operation: new BigNumber(80000),
+      hard_gas_limit_per_operation: new BigNumber(1040000),
       hard_storage_limit_per_operation: new BigNumber(60000),
+      hard_gas_limit_per_block: new BigNumber(5200000),
       cost_per_byte: new BigNumber(1000),
     });
 
@@ -98,7 +99,7 @@ describe('RPCEstimateProvider test', () => {
   });
 
   describe('originate', () => {
-    it('should produce a reveal and origination operation', async done => {
+    it('should produce a reveal and origination operation', async (done) => {
       mockRpcClient.runOperation.mockResolvedValue({
         contents: [
           {
@@ -126,7 +127,7 @@ describe('RPCEstimateProvider test', () => {
   });
 
   describe('transfer', () => {
-    test('return the correct estimate for multiple internal origination', async done => {
+    test('return the correct estimate for multiple internal origination', async (done) => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(multipleInternalOrigination());
       // Simulate real op size
@@ -143,7 +144,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    test('return the correct estimate for multiple internal origination, no reveal', async done => {
+    test('return the correct estimate for multiple internal origination, no reveal', async (done) => {
       mockRpcClient.runOperation.mockResolvedValue(multipleInternalOriginationNoReveal());
       // Simulate real op size
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(297).fill('aa').join(''));
@@ -159,7 +160,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    test('return the correct estimate for 2 internal transfer that need allocation', async done => {
+    test('return the correct estimate for 2 internal transfer that need allocation', async (done) => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(multipleInternalTransfer());
       // Simulate real op size
@@ -176,7 +177,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    test('return the correct estimate for delegation', async done => {
+    test('return the correct estimate for delegation', async (done) => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(delegate());
       // Simulate real op size
@@ -193,7 +194,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    test('return the correct estimate for origination', async done => {
+    test('return the correct estimate for origination', async (done) => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(origination());
       // Simulate real op size
@@ -210,7 +211,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    test('return the correct estimate for internal transfer without allocation', async done => {
+    test('return the correct estimate for internal transfer without allocation', async (done) => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(internalTransfer());
       // Simulate real op size
@@ -227,7 +228,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    test('return the correct estimate for transfer without allocation', async done => {
+    test('return the correct estimate for transfer without allocation', async (done) => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(transferWithoutAllocation());
       // Simulate real op size
@@ -244,7 +245,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    test('return the correct estimate for transfer with allocation', async done => {
+    test('return the correct estimate for transfer with allocation', async (done) => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(transferWithAllocation());
       // Simulate real op size
@@ -276,7 +277,7 @@ describe('RPCEstimateProvider test', () => {
       });
     };
 
-    it('should produce a reveal and transaction operation', async done => {
+    it('should produce a reveal and transaction operation', async (done) => {
       mockRpcClientRunOperation();
       const estimate = await estimateProvider.transfer({
         to: 'test_to',
@@ -289,7 +290,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    it('should use the maximum storage an account can afford', async done => {
+    it('should use the maximum storage an account can afford', async (done) => {
       mockRpcClientRunOperation();
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('1100'));
       await estimateProvider.transfer({
@@ -303,7 +304,7 @@ describe('RPCEstimateProvider test', () => {
               expect.objectContaining({
                 fee: '0',
                 storage_limit: '1',
-                gas_limit: '80000',
+                gas_limit: '1040000',
               }),
             ]),
           }),
@@ -312,7 +313,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    it('should use the maximum storage the protocol allow if user can afford it', async done => {
+    it('should use the maximum storage the protocol allow if user can afford it', async (done) => {
       mockRpcClientRunOperation();
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('800000000'));
       await estimateProvider.transfer({
@@ -326,7 +327,7 @@ describe('RPCEstimateProvider test', () => {
               expect.objectContaining({
                 fee: '0',
                 storage_limit: '60000',
-                gas_limit: '80000',
+                gas_limit: '1040000',
               }),
             ]),
           }),
@@ -335,7 +336,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    it('should use the storage limit the user specified', async done => {
+    it('should use the storage limit the user specified', async (done) => {
       mockRpcClientRunOperation();
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('1100'));
       await estimateProvider.transfer({
@@ -350,7 +351,7 @@ describe('RPCEstimateProvider test', () => {
               expect.objectContaining({
                 fee: '0',
                 storage_limit: '200',
-                gas_limit: '80000',
+                gas_limit: '1040000',
               }),
             ]),
           }),
@@ -359,7 +360,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    it('should use the gas limit the user specified', async done => {
+    it('should use the gas limit the user specified', async (done) => {
       mockRpcClientRunOperation();
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('10000000000'));
       await estimateProvider.transfer({
@@ -383,7 +384,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    it('should use the fees the user specified', async done => {
+    it('should use the fees the user specified', async (done) => {
       mockRpcClientRunOperation();
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('10000000000'));
       await estimateProvider.transfer({
@@ -398,7 +399,7 @@ describe('RPCEstimateProvider test', () => {
               expect.objectContaining({
                 fee: '10000',
                 storage_limit: '60000',
-                gas_limit: '80000',
+                gas_limit: '1040000',
               }),
             ]),
           }),
@@ -407,7 +408,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    it('should return parsed error from RPC result', async done => {
+    it('should return parsed error from RPC result', async (done) => {
       const params = {
         to: 'test_to',
         amount: 2,
@@ -430,7 +431,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    it('should return parsed error from RPC result', async done => {
+    it('should return parsed error from RPC result', async (done) => {
       const params = {
         to: 'test_to',
         amount: 2,
@@ -454,7 +455,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    it('should return internal error when received from preapply', async done => {
+    it('should return internal error when received from preapply', async (done) => {
       const params = {
         to: 'test_to',
         amount: 2,
@@ -480,7 +481,7 @@ describe('RPCEstimateProvider test', () => {
   });
 
   describe('batch', () => {
-    it('should produce a batch operation, no reveal', async done => {
+    it('should produce a batch operation, no reveal', async (done) => {
       mockRpcClient.runOperation.mockResolvedValue({
         contents: [
           {
@@ -517,7 +518,7 @@ describe('RPCEstimateProvider test', () => {
       });
       const estimate = await estimateProvider.batch([
         { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 },
-        { kind: OpKind.TRANSACTION, to: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp', amount: 2 }
+        { kind: OpKind.TRANSACTION, to: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp', amount: 2 },
       ]);
       expect(estimate.length).toEqual(2);
       expect(estimate[0].gasLimit).toEqual(1100);
@@ -525,7 +526,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    it('should produce a batch operation, with reveal', async done => {
+    it('should produce a batch operation, with reveal', async (done) => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(149).fill('aa').join(''));
       mockRpcClient.runOperation.mockResolvedValue({
@@ -576,7 +577,7 @@ describe('RPCEstimateProvider test', () => {
       });
       const estimate = await estimateProvider.batch([
         { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 },
-        { kind: OpKind.TRANSACTION, to: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp', amount: 2 }
+        { kind: OpKind.TRANSACTION, to: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp', amount: 2 },
       ]);
       expect(estimate.length).toEqual(3);
 
@@ -597,6 +598,111 @@ describe('RPCEstimateProvider test', () => {
         suggestedFeeMutez: 385,
       });
 
+      done();
+    });
+
+    it('runOperation should be called with a gas_limit equal to the hard_gas_limit_per_operation constant', async (done) => {
+      const transactionResult = {
+        kind: 'transaction',
+        metadata: {
+          operation_result: {
+            consumed_gas: 1000,
+          },
+        },
+      };
+      mockRpcClient.forgeOperations.mockResolvedValue(new Array(149).fill('aa').join(''));
+      mockRpcClient.runOperation.mockResolvedValue({
+        contents: [transactionResult, transactionResult, transactionResult, transactionResult],
+      });
+      await estimateProvider.batch([
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+      ]);
+      // using the hard_gas_limit_per_operation which is 1040000,
+      // the total gas_limit of the batch (4*1040000=4160000) is lower than the hard_gas_limit_per_block (5200000)
+      expect(mockRpcClient.runOperation).toHaveBeenCalledWith(
+        expect.objectContaining({
+          operation: expect.objectContaining({
+            contents: expect.arrayContaining([
+              expect.objectContaining({
+                gas_limit: '1040000',
+              }),
+              expect.objectContaining({
+                gas_limit: '1040000',
+              }),
+              expect.objectContaining({
+                gas_limit: '1040000',
+              }),
+              expect.objectContaining({
+                gas_limit: '1040000',
+              }),
+            ]),
+          }),
+        })
+      );
+
+      done();
+    });
+
+    it('runOperation should be called with a gas_limit calculated with the hard_gas_limit_per_block constant and the number of operation in the batch', async (done) => {
+      const transactionResult = {
+        kind: 'transaction',
+        metadata: {
+          operation_result: {
+            consumed_gas: 1000,
+          },
+        },
+      };
+      mockRpcClient.forgeOperations.mockResolvedValue(new Array(149).fill('aa').join(''));
+      mockRpcClient.runOperation.mockResolvedValue({
+        contents: [
+          transactionResult,
+          transactionResult,
+          transactionResult,
+          transactionResult,
+          transactionResult,
+          transactionResult,
+        ],
+      });
+      await estimateProvider.batch([
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+      ]);
+
+      // the gas_limit need to be calculated, can not be set to the hard_gas_limit_per_operation which is 1040000,
+      // otherwise the total gas_limit of the batch is higher (6*1040000=6240000) than hard_gas_limit_per_block (5200000)
+      expect(mockRpcClient.runOperation).toHaveBeenCalledWith(
+        expect.objectContaining({
+          operation: expect.objectContaining({
+            contents: expect.arrayContaining([
+              expect.objectContaining({
+                gas_limit: '742857',
+              }),
+              expect.objectContaining({
+                gas_limit: '742857',
+              }),
+              expect.objectContaining({
+                gas_limit: '742857',
+              }),
+              expect.objectContaining({
+                gas_limit: '742857',
+              }),
+              expect.objectContaining({
+                gas_limit: '742857',
+              }),
+              expect.objectContaining({
+                gas_limit: '742857',
+              }),
+            ]),
+          }),
+        })
+      );
       done();
     });
   });
