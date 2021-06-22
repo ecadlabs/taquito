@@ -9,7 +9,7 @@ The `@taquito/taquito` package contains higher level functionality that builds u
 
 ```html
 <script src="https://unpkg.com/@taquito/taquito@9.1.1/dist/taquito.min.js"
-crossorigin="anonymous" integrity="sha384-88WWFdG2fJCzg/oZNPz16DSNCVdovB/K2BOzg5Eot0WdG3mk/fZ3qyXrhmjTIQtO"></script>
+crossorigin="anonymous" integrity="sha384-J/fQbumWl4COUQGqAUuOkD8k5IfQ7eKEx7lSVxQ28XtSibliAAFNRz5WDHYlz0Vn"></script>
 ```
 
 ## API Documentation
