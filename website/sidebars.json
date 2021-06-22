@@ -44,6 +44,11 @@
     },
     {
       "type": "category",
+      "label": "Modules customization",
+      "items": ["cancel_http_requests"]
+    },
+    {
+      "type": "category",
       "label": "Running integration tests",
       "items": ["ledger_integration_test", "rpc_nodes_integration_test"]
     },

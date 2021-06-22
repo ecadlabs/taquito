@@ -74,10 +74,10 @@ export class RpcClient {
    * @example new RpcClient('https://api.tez.ie/rpc/mainnet', 'main') this will use https://api.tez.ie/rpc/mainnet/chains/main
    */
   constructor(
-    private url: string,
-    private chain: string = defaultChain,
-    private httpBackend: HttpBackend = new HttpBackend()
-  ) { }
+    protected url: string,
+    protected chain: string = defaultChain,
+    protected httpBackend: HttpBackend = new HttpBackend()
+  ) {}
 
   private createURL(path: string) {
     // Trim trailing slashes because it is assumed to be included in path
@@ -238,22 +238,22 @@ export class RpcClient {
     { block }: { block: string } = defaultRPCOptions
   ): Promise<DelegateResponse> {
     let delegate: DelegateResponse;
-    try { 
+    try {
       delegate = await this.httpBackend.createRequest<DelegateResponse>({
         url: this.createURL(
           `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/delegate`
         ),
         method: 'GET',
       });
-    } catch(ex) {
+    } catch (ex) {
       if (ex instanceof HttpResponseError && ex.status === STATUS_CODE.NOT_FOUND) {
         delegate = null;
-    } else {
-      throw ex;
+      } else {
+        throw ex;
+      }
     }
+    return delegate;
   }
-  return delegate
-}
 
   /**
    *
@@ -364,12 +364,12 @@ export class RpcClient {
       'block_security_deposit',
       'endorsement_security_deposit',
       'block_reward',
-      'endorsement_reward', 
+      'endorsement_reward',
       'cost_per_byte',
       'hard_storage_limit_per_operation',
       'test_chain_duration',
-      'baking_reward_per_endorsement', 
-      'delay_per_missing_endorsement'
+      'baking_reward_per_endorsement',
+      'delay_per_missing_endorsement',
     ]);
 
     return {
@@ -514,14 +514,14 @@ export class RpcClient {
    * @param options contains generic configuration for rpc calls
    *
    * @description Current period kind.
-   * 
+   *
    * @deprecated Deprecated in favor of getCurrentPeriod
    *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-votes-current-period-kind
    */
-  async getCurrentPeriodKind({ block }: RPCOptions = defaultRPCOptions): Promise<
-    PeriodKindResponse
-  > {
+  async getCurrentPeriodKind({
+    block,
+  }: RPCOptions = defaultRPCOptions): Promise<PeriodKindResponse> {
     const response = await this.httpBackend.createRequest<PeriodKindResponse>({
       url: this.createURL(`/chains/${this.chain}/blocks/${block}/votes/current_period_kind`),
       method: 'GET',
@@ -538,9 +538,9 @@ export class RpcClient {
    *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-votes-current-proposal
    */
-  async getCurrentProposal({ block }: RPCOptions = defaultRPCOptions): Promise<
-    CurrentProposalResponse
-  > {
+  async getCurrentProposal({
+    block,
+  }: RPCOptions = defaultRPCOptions): Promise<CurrentProposalResponse> {
     const response = await this.httpBackend.createRequest<CurrentProposalResponse>({
       url: this.createURL(`/chains/${this.chain}/blocks/${block}/votes/current_proposal`),
       method: 'GET',
@@ -557,9 +557,9 @@ export class RpcClient {
    *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-votes-current-quorum
    */
-  async getCurrentQuorum({ block }: RPCOptions = defaultRPCOptions): Promise<
-    CurrentQuorumResponse
-  > {
+  async getCurrentQuorum({
+    block,
+  }: RPCOptions = defaultRPCOptions): Promise<CurrentQuorumResponse> {
     const response = await this.httpBackend.createRequest<CurrentQuorumResponse>({
       url: this.createURL(`/chains/${this.chain}/blocks/${block}/votes/current_quorum`),
       method: 'GET',
@@ -576,9 +576,9 @@ export class RpcClient {
    *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-votes-listings
    */
-  async getVotesListings({ block }: RPCOptions = defaultRPCOptions): Promise<
-    VotesListingsResponse
-  > {
+  async getVotesListings({
+    block,
+  }: RPCOptions = defaultRPCOptions): Promise<VotesListingsResponse> {
     const response = await this.httpBackend.createRequest<VotesListingsResponse>({
       url: this.createURL(`/chains/${this.chain}/blocks/${block}/votes/listings`),
       method: 'GET',
@@ -782,7 +782,7 @@ export class RpcClient {
    */
 
   getRpcUrl() {
-    return this.url
+    return this.url;
   }
 
   /**
@@ -790,40 +790,40 @@ export class RpcClient {
    * @param options contains generic configuration for rpc calls
    *
    * @description Voting period of current block.
-   * 
+   *
    * @example getCurrentPeriod() will default to current voting period for /main/chains/block/head.
    *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-votes-current-period
    */
-   async getCurrentPeriod({ block }: RPCOptions = defaultRPCOptions): Promise<
-   VotingPeriodBlockResult
- > {
-   const response = await this.httpBackend.createRequest<VotingPeriodBlockResult>({
-     url: this.createURL(`/chains/${this.chain}/blocks/${block}/votes/current_period`),
-     method: 'GET',
-   });
+  async getCurrentPeriod({
+    block,
+  }: RPCOptions = defaultRPCOptions): Promise<VotingPeriodBlockResult> {
+    const response = await this.httpBackend.createRequest<VotingPeriodBlockResult>({
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/votes/current_period`),
+      method: 'GET',
+    });
 
-   return response;
- }
+    return response;
+  }
 
-   /**
-    *
-    * @param options contains generic configuration for rpc calls
-    *
-    * @description Voting period of next block.
-    * 
-    * @example getSuccessorPeriod() will default to successor voting period for /main/chains/block/head.
-    *
-    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-votes-successor-period
-    */
-    async getSuccessorPeriod({ block }: RPCOptions = defaultRPCOptions): Promise<
-    VotingPeriodBlockResult
-  > {
+  /**
+   *
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Voting period of next block.
+   *
+   * @example getSuccessorPeriod() will default to successor voting period for /main/chains/block/head.
+   *
+   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-votes-successor-period
+   */
+  async getSuccessorPeriod({
+    block,
+  }: RPCOptions = defaultRPCOptions): Promise<VotingPeriodBlockResult> {
     const response = await this.httpBackend.createRequest<VotingPeriodBlockResult>({
       url: this.createURL(`/chains/${this.chain}/blocks/${block}/votes/successor_period`),
       method: 'GET',
     });
- 
+
     return response;
   }
 
