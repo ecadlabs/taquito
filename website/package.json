@@ -10,11 +10,11 @@
     "netlify:publish": "netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json --prod --message 'Deployment for $GITHUB_REF'"
   },
   "dependencies": {
-    "@docusaurus/core": "^2.0.0-alpha.70",
-    "@docusaurus/preset-classic": "^2.0.0-alpha.70",
-    "@docusaurus/theme-live-codeblock": "^2.0.0-alpha.70",
-    "@fortawesome/fontawesome-svg-core": "^1.2.34",
-    "@fortawesome/free-solid-svg-icons": "^5.15.2",
+    "@docusaurus/core": "2.0.0-alpha.70",
+    "@docusaurus/preset-classic": "2.0.0-alpha.70",
+    "@docusaurus/theme-live-codeblock": "2.0.0-alpha.70",
+    "@fortawesome/fontawesome-svg-core": "^1.2.35",
+    "@fortawesome/free-solid-svg-icons": "^5.15.3",
     "@fortawesome/react-fontawesome": "^0.1.14",
     "@ledgerhq/hw-transport-u2f": "^5.28.0",
     "@taquito/beacon-wallet": "^9.1.1",
@@ -28,11 +28,11 @@
     "@taquito/utils": "^9.1.1",
     "@taquito/http-utils": "^9.1.1",
     "@taquito/rpc": "^9.1.1",
-    "@thanos-wallet/dapp": "^2.2.1",
     "abort-controller": "^3.0.0",
-    "classnames": "^2.2.6",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1"
+    "@thanos-wallet/dapp": "^2.2.2",
+    "classnames": "^2.3.1",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4"
   },
   "browserslist": {
     "production": [

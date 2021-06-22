@@ -13,8 +13,17 @@ module.exports = {
     filename: pkg.unpkg,
     crossOriginLoading: 'anonymous'
   },
-  node: {
-    fs: 'empty'
+  resolve: {
+    fallback: {
+      fs: false,
+      http: require.resolve("stream-http"),
+      https: require.resolve("https-browserify"),
+      os: require.resolve("os-browserify/browser"),
+      url: require.resolve("url/"),
+      stream: require.resolve("stream-browserify"),
+      events: require.resolve("events/"),
+      buffer: require.resolve("buffer/")
+    }
   },
   optimization: {
     minimize: true,
