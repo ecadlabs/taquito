@@ -72,16 +72,49 @@ export class BeaconWallet implements WalletProvider {
     return account.address;
   }
 
-  async mapTransferParamsToWalletParams(params: WalletTransferParams) {
-    return this.removeDefaultParams(params, await createTransferOperation(this.formatParameters(params)));
+  async mapTransferParamsToWalletParams(params: () => Promise<WalletTransferParams>) {
+    let walletParams: WalletTransferParams;
+    await this.client.showPrepare();
+    try {
+      walletParams = await params();
+    } catch (err) {
+      await this.client.hideUI();
+      throw err;
+    }
+    return this.removeDefaultParams(
+      walletParams,
+      await createTransferOperation(this.formatParameters(walletParams))
+    );
   }
 
-  async mapOriginateParamsToWalletParams(params: WalletOriginateParams) {
-      return this.removeDefaultParams(params, await createOriginationOperation(this.formatParameters(params)));
+  async mapOriginateParamsToWalletParams(params: () => Promise<WalletOriginateParams>) {
+    let walletParams: WalletOriginateParams;
+    await this.client.showPrepare();
+    try {
+      walletParams = await params();
+    } catch (err) {
+      await this.client.hideUI();
+      throw err;
+    }
+    return this.removeDefaultParams(
+      walletParams,
+      await createOriginationOperation(this.formatParameters(walletParams))
+    );
   }
 
-  async mapDelegateParamsToWalletParams(params: WalletDelegateParams) {
-    return this.removeDefaultParams(params, await createSetDelegateOperation(this.formatParameters(params)));
+  async mapDelegateParamsToWalletParams(params: () => Promise<WalletDelegateParams>) {
+    let walletParams: WalletDelegateParams;
+    await this.client.showPrepare();
+    try {
+      walletParams = await params();
+    } catch (err) {
+      await this.client.hideUI();
+      throw err;
+    }
+    return this.removeDefaultParams(
+      walletParams,
+      await createSetDelegateOperation(this.formatParameters(walletParams))
+    );
   }
 
   formatParameters(params: any) {
@@ -97,17 +130,20 @@ export class BeaconWallet implements WalletProvider {
     return params;
   }
 
-  removeDefaultParams(params: WalletTransferParams|WalletOriginateParams|WalletDelegateParams, operatedParams:any) {
+  removeDefaultParams(
+    params: WalletTransferParams | WalletOriginateParams | WalletDelegateParams,
+    operatedParams: any
+  ) {
     // If fee, storageLimit or gasLimit is undefined by user
     // in case of beacon wallet, dont override it by
     // defaults.
-    if(!params.fee) {
+    if (!params.fee) {
       delete operatedParams.fee;
     }
-    if(!params.storageLimit) {
+    if (!params.storageLimit) {
       delete operatedParams.storage_limit;
     }
-    if(!params.gasLimit) {
+    if (!params.gasLimit) {
       delete operatedParams.gas_limit;
     }
     return operatedParams;
@@ -120,14 +156,14 @@ export class BeaconWallet implements WalletProvider {
     }
     const permissions = account.scopes;
     this.validateRequiredScopesOrFail(permissions, [PermissionScope.OPERATION_REQUEST]);
-    
+
     const { transactionHash } = await this.client.requestOperation({ operationDetails: params });
     return transactionHash;
   }
- 
+
   /**
-   * 
-   * @description Removes all beacon values from the storage. After using this method, this instance is no longer usable. 
+   *
+   * @description Removes all beacon values from the storage. After using this method, this instance is no longer usable.
    * You will have to instanciate a new BeaconWallet.
    */
   async disconnect() {
@@ -135,7 +171,7 @@ export class BeaconWallet implements WalletProvider {
   }
 
   /**
-   * 
+   *
    * @description This method removes the active account from local storage by setting it to undefined.
    */
   async clearActiveAccount() {
