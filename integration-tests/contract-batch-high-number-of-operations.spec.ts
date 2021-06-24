@@ -27,8 +27,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
             const batch = Tezos.contract.batch()
             dests.forEach(({ pkh }) => {
-                // We currently need to bypass the estimate for gapha2net as the hard_gas_limit_per_block is exceeded
-                batch.withTransfer({ to: pkh, amount: 0.001, gasLimit: 1527});
+                batch.withTransfer({ to: pkh, amount: 0.001});
             })
 
             const op = await batch.send();
