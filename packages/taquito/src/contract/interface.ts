@@ -1,4 +1,5 @@
 import { BigMapKeyType, MichelsonMap, MichelsonMapKey, Schema } from '@taquito/michelson-encoder';
+import { SaplingDiffResponse } from '@taquito/rpc';
 import { OperationBatch } from '../batch/rpc-batch-provider';
 import { Context } from '../context';
 import { DelegateOperation } from '../operations/delegate-operation';
@@ -124,6 +125,16 @@ export interface StorageProvider {
    *
    */
    getBigMapKeysByID<T>(id: string, keysToEncode: Array<BigMapKeyType>, schema: Schema, block?: number, batchSize?: number): Promise<MichelsonMap<MichelsonMapKey, T | undefined>>;
+
+  /**
+   *
+   * @description Return a well formatted json object of a sapling state
+   *
+   * @param id Sapling state ID
+   * @param block optional block level to fetch the value from
+   *
+   */
+   getSaplingDiffByID(id: string, block?: number): Promise<SaplingDiffResponse>;
 }
 
 export interface ContractProvider extends StorageProvider {
