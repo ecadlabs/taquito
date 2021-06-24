@@ -118,7 +118,7 @@ async function example() {
       const expected_param_hash = "0f0db0ce6f057a8835adb6a2c617fd8a136b8028fac90aab7b4766def688ea0c";
       if(param_hash === expected_param_hash) {
       } else {
-        throw `unexpected param_hash: {param_hash},\n
+        throw `unexpected param_hash: ${param_hash},\n
         while {expected_param_hash} was expected`;
       }
 
