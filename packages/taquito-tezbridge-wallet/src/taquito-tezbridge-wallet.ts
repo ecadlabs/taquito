@@ -47,22 +47,22 @@ export class TezBridgeWallet implements WalletProvider {
     });
   }
 
-  mapTransferParamsToWalletParams(params: WalletTransferParams) {
-    return createTransferOperation(params);
+  async mapTransferParamsToWalletParams(params: () => Promise<WalletTransferParams>) {
+    return createTransferOperation(await params());
   }
 
-  mapOriginateParamsToWalletParams(params: WalletOriginateParams) {
-    return createOriginationOperation(params as any);
+  async mapOriginateParamsToWalletParams(params: () => Promise<WalletOriginateParams>) {
+    return createOriginationOperation((await params()) as any);
   }
 
-  mapDelegateParamsToWalletParams(params: WalletDelegateParams) {
-    return createSetDelegateOperation(params as any);
+  async mapDelegateParamsToWalletParams(params: () => Promise<WalletDelegateParams>) {
+    return createSetDelegateOperation((await params()) as any);
   }
 
   async sendOperations(params: any[]) {
     const { operation_id } = await tezbridge.request({
       method: 'inject_operations',
-      operations: params.map(op => ({
+      operations: params.map((op) => ({
         ...this.removeFeeAndLimit(op),
       })),
     });

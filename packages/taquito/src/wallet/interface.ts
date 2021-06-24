@@ -17,17 +17,17 @@ export interface WalletProvider {
   /**
    * @description Transform WalletTransferParams into a format compliant with the underlying wallet
    */
-  mapTransferParamsToWalletParams: (params: WalletTransferParams) => Promise<any>;
+  mapTransferParamsToWalletParams: (params: () => Promise<WalletTransferParams>) => Promise<any>;
 
   /**
    * @description Transform WalletOriginateParams into a format compliant with the underlying wallet
    */
-  mapOriginateParamsToWalletParams: (params: WalletOriginateParams) => Promise<any>;
+  mapOriginateParamsToWalletParams: (params: () => Promise<WalletOriginateParams>) => Promise<any>;
 
   /**
    * @description Transform WalletDelegateParams into a format compliant with the underlying wallet
    */
-  mapDelegateParamsToWalletParams: (params: WalletDelegateParams) => Promise<any>;
+  mapDelegateParamsToWalletParams: (params: () => Promise<WalletDelegateParams>) => Promise<any>;
 
   /**
    * @description Request the wallet to send an operation batch

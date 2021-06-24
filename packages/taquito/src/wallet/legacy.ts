@@ -15,16 +15,16 @@ export class LegacyWalletProvider implements WalletProvider {
     return this.context.signer.publicKeyHash();
   }
 
-  async mapTransferParamsToWalletParams(params: WalletTransferParams) {
-    return attachKind(params, OpKind.TRANSACTION);
+  async mapTransferParamsToWalletParams(params: () => Promise<WalletTransferParams>) {
+    return attachKind(await params(), OpKind.TRANSACTION);
   }
 
-  async mapOriginateParamsToWalletParams(params: WalletOriginateParams) {
-    return attachKind(params, OpKind.ORIGINATION);
+  async mapOriginateParamsToWalletParams(params: () => Promise<WalletOriginateParams>) {
+    return attachKind(await params(), OpKind.ORIGINATION);
   }
 
-  async mapDelegateParamsToWalletParams(params: WalletDelegateParams) {
-    return attachKind(params, OpKind.DELEGATION);
+  async mapDelegateParamsToWalletParams(params: () => Promise<WalletDelegateParams>) {
+    return attachKind(await params(), OpKind.DELEGATION);
   }
 
   async sendOperations(params: WalletParamsWithKind[]) {

@@ -10,7 +10,7 @@ compiled
 .awcache
 .rpt2_cache
 website/build/
-assets-manifest.json
+manifest.json
 !.vscode/extensions.json
 website/*.bak
 integration-tests/jest-stare
