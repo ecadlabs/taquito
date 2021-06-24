@@ -21,8 +21,12 @@
     "@taquito/tzip16": "^9.1.1",
     "@taquito/utils": "^9.1.1",
     "bignumber.js": "^9.0.1",
+<<<<<<< HEAD
     "blakejs": "^1.1.0"
 
+=======
+    "blakejs": "^1.1.1"
+>>>>>>> 3777af752... modified packages
   },
   "private": true,
   "jest": {
