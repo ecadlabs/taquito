@@ -53,6 +53,7 @@ describe('RpcContractProvider test', () => {
     packData: jest.Mock<any, any>;
     preapplyOperations: jest.Mock<any, any>;
     getChainId: jest.Mock<any, any>;
+    getSaplingDiffById: jest.Mock<any, any>;
   };
 
   let mockSigner: {
@@ -99,6 +100,7 @@ describe('RpcContractProvider test', () => {
       packData: jest.fn(),
       preapplyOperations: jest.fn(),
       getChainId: jest.fn(),
+      getSaplingDiffById: jest.fn()
     };
 
     mockSigner = {
@@ -1372,6 +1374,38 @@ describe('RpcContractProvider test', () => {
 
         done();
       });
+    });
+  });
+
+  describe("getSaplingDiffByID", () => {
+    it("should call getSaplingDiffById", async (done) => {
+      mockRpcClient.getBlock.mockResolvedValue({ header: { level: 123456 } });
+      mockRpcClient.getSaplingDiffById.mockResolvedValue({"root":"fbc2f4300c01f0b7820d00e3347c8da4ee614674376cbc45359daa54f9b5493e","commitments_and_ciphertexts":[],"nullifiers":[]})
+
+      const result = await rpcContractProvider.getSaplingDiffByID(
+        "133"
+      );
+      expect(result.root).toEqual('fbc2f4300c01f0b7820d00e3347c8da4ee614674376cbc45359daa54f9b5493e');
+      expect(result.commitments_and_ciphertexts).toEqual([]);
+      expect(result.nullifiers).toEqual([]);
+
+      expect(mockRpcClient.getSaplingDiffById.mock.calls[0][0]).toEqual('133');
+      expect(mockRpcClient.getSaplingDiffById.mock.calls[0][1]).toBeUndefined(); // no block specified
+      done();
+    });
+
+    it("should call getSaplingDiffById with a specified block level", async (done) => {
+      mockRpcClient.getBlock.mockResolvedValue({ header: { level: 123456 } });
+      mockRpcClient.getSaplingDiffById.mockResolvedValue({"root":"fbc2f4300c01f0b7820d00e3347c8da4ee614674376cbc45359daa54f9b5493e","commitments_and_ciphertexts":[],"nullifiers":[]})
+
+      const result = await rpcContractProvider.getSaplingDiffByID("133", 654321);
+      expect(result.root).toEqual('fbc2f4300c01f0b7820d00e3347c8da4ee614674376cbc45359daa54f9b5493e');
+      expect(result.commitments_and_ciphertexts).toEqual([]);
+      expect(result.nullifiers).toEqual([]);
+
+      expect(mockRpcClient.getSaplingDiffById.mock.calls[0][0]).toEqual('133');
+      expect(mockRpcClient.getSaplingDiffById.mock.calls[0][1]).toEqual({block:'654321'});
+      done();
     });
   });
 });

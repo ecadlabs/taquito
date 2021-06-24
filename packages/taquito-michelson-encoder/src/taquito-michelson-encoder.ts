@@ -9,5 +9,6 @@ export { Semantic, BigMapKeyType } from './tokens/token';
 export * from './errors';
 
 export const UnitValue = Symbol();
+export const SaplingStateValue = {};
 export * from './michelson-map';
 export { VERSION } from './version';
