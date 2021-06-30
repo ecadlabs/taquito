@@ -449,6 +449,14 @@ export interface PackDataResponse {
 
 export type BigMapResponse = MichelsonV1Expression | MichelsonV1Expression[];
 
+export type SaplingDiffResponse = {
+  root: SaplingTransactionCommitmentHash,
+  commitments_and_ciphertexts: CommitmentsAndCiphertexts[];
+  nullifiers: string[];
+};
+
+export type SaplingTransactionCommitmentHash = string;
+
 export type PreapplyParams = OperationObject[];
 export type PreapplyResponse = {
   contents: OperationContentsAndResult[];

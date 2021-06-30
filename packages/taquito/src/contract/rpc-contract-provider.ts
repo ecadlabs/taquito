@@ -172,6 +172,19 @@ export class RpcContractProvider extends OperationEmitter
     }
   }
 
+  /**
+   *
+   * @description Return a well formatted json object of a sapling state
+   *
+   * @param id Sapling state ID
+   * @param block optional block level to fetch the value from
+   *
+   */
+ async getSaplingDiffByID(id: string, block?: number) {
+  const saplingState = block? await this.context.rpc.getSaplingDiffById(id.toString(), { block: String(block) }) : await this.context.rpc.getSaplingDiffById(id.toString());
+  return saplingState;
+}
+
   private async addRevealOperationIfNeeded(operation: RPCOperation, publicKeyHash: string){
     if(isOpRequireReveal(operation)){
       const ops: RPCOperation[] = [operation];

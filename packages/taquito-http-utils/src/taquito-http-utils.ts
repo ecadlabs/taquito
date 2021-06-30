@@ -17,7 +17,7 @@ export { VERSION } from './version';
 
 const defaultTimeout = 30000;
 
-interface HttpRequestOptions {
+export interface HttpRequestOptions {
   url: string;
   method?: 'GET' | 'POST';
   timeout?: number;
@@ -49,7 +49,7 @@ export class HttpRequestFailed implements Error {
 }
 
 export class HttpBackend {
-  private serialize(obj?: { [key: string]: any }) {
+  protected serialize(obj?: { [key: string]: any }) {
     if (!obj) {
       return '';
     }
@@ -67,7 +67,7 @@ export class HttpBackend {
         // another use case is multiple arguments with the same name
         // they are passed as array
         if (Array.isArray(prop)) {
-          prop.forEach(item => {
+          prop.forEach((item) => {
             str.push(encodeURIComponent(p) + '=' + encodeURIComponent(item));
           });
           continue;
@@ -83,7 +83,7 @@ export class HttpBackend {
     }
   }
 
-  private createXHR(): XMLHttpRequest {
+  protected createXHR(): XMLHttpRequest {
     return new XMLHttpRequestCTOR();
   }
 
@@ -92,7 +92,15 @@ export class HttpBackend {
    * @param options contains options to be passed for the HTTP request (url, method and timeout)
    */
   createRequest<T>(
-    { url, method, timeout, query, headers = {}, json = true, mimeType = undefined}: HttpRequestOptions,
+    {
+      url,
+      method,
+      timeout,
+      query,
+      headers = {},
+      json = true,
+      mimeType = undefined,
+    }: HttpRequestOptions,
     data?: {}
   ) {
     return new Promise<T>((resolve, reject) => {
@@ -101,14 +109,14 @@ export class HttpBackend {
       if (!headers['Content-Type']) {
         request.setRequestHeader('Content-Type', 'application/json');
       }
-      if (mimeType){
+      if (mimeType) {
         request.overrideMimeType(`${mimeType}`);
       }
       for (const k in headers) {
         request.setRequestHeader(k, headers[k]);
       }
       request.timeout = timeout || defaultTimeout;
-      request.onload = function() {
+      request.onload = function () {
         if (this.status >= 200 && this.status < 300) {
           if (json) {
             try {
@@ -132,11 +140,11 @@ export class HttpBackend {
         }
       };
 
-      request.ontimeout = function() {
+      request.ontimeout = function () {
         reject(new Error(`Request timed out after: ${request.timeout}ms`));
       };
 
-      request.onerror = function(err) {
+      request.onerror = function (err) {
         reject(new HttpRequestFailed(url, err));
       };
 

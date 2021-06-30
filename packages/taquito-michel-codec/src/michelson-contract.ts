@@ -51,7 +51,7 @@ export class Contract {
 
     static parseDataExpression(src: string | object, opt?: ParserOptions): MichelsonData {
         const p = new Parser(opt);
-        const expr = typeof src === "string" ? p.parseScript(src) : p.parseJSON(src);
+        const expr: any = typeof src === "string" ? p.parseScript(src) : p.parseJSON(src);
         if (expr === null) {
             throw new Error("empty data expression");
         }

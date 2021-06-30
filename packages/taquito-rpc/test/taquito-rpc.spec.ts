@@ -2232,4 +2232,40 @@ describe('RpcClient test', () => {
       done();
     });
   });
+
+  describe('getSaplingDiffById', () => {
+    it('query the right url', async done => {
+      httpBackend.createRequest.mockResolvedValue({"root":"fbc2f4300c01f0b7820d00e3347c8da4ee614674376cbc45359daa54f9b5493e","commitments_and_ciphertexts":[],"nullifiers":[]});
+      const response = await client.getSaplingDiffById('123');
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/context/sapling/123/get_diff',
+      });
+
+      expect(response.root).toEqual('fbc2f4300c01f0b7820d00e3347c8da4ee614674376cbc45359daa54f9b5493e');
+      expect(response.commitments_and_ciphertexts).toEqual([]);
+      expect(response.nullifiers).toEqual([]);
+
+      done();
+    });
+  });
+
+  describe('getSaplingDiffByContract', () => {
+    it('query the right url', async done => {
+      httpBackend.createRequest.mockResolvedValue({"root":"fbc2f4300c01f0b7820d00e3347c8da4ee614674376cbc45359daa54f9b5493e","commitments_and_ciphertexts":[],"nullifiers":[]});
+      const response = await client.getSaplingDiffByContract('KT18tv2siXNxfc3FkCoS4esPuLqvaYrcGV92');
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/context/contracts/KT18tv2siXNxfc3FkCoS4esPuLqvaYrcGV92/single_sapling_get_diff',
+      });
+
+      expect(response.root).toEqual('fbc2f4300c01f0b7820d00e3347c8da4ee614674376cbc45359daa54f9b5493e');
+      expect(response.commitments_and_ciphertexts).toEqual([]);
+      expect(response.nullifiers).toEqual([]);
+
+      done();
+    });
+  });
 });

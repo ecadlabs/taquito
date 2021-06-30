@@ -34,6 +34,7 @@ import rangeParser from 'parse-numeric-range';
 import Highlight, { defaultProps } from 'prism-react-renderer';
 import defaultTheme from 'prism-react-renderer/themes/palenight';
 import React, { useEffect, useRef, useState } from 'react';
+import { CancellableRpcClient } from './customHttpBackendAndRpcClient';
 
 import styles from './styles.module.css';
 
@@ -79,7 +80,8 @@ export default ({
   }, [button.current, target.current]);
 
   if (live) {
-    const Tezos = new TezosToolkit('https://api.tez.ie/rpc/florencenet');
+    const customRpcClient = new CancellableRpcClient('https://api.tez.ie/rpc/florencenet') 
+    const Tezos = new TezosToolkit(customRpcClient);
     const wallet = new BeaconWallet({name:"exampleWallet"});
 
     return (
