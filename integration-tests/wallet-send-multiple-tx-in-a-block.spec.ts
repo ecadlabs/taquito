@@ -1,5 +1,5 @@
 import { OpKind } from "@taquito/taquito";
-import { InMemorySigner } from "@taquito/signer";
+import { importKey } from "@taquito/signer";
 import { CONFIGS } from "./config";
 import { booleanCode } from "./data/boolean_parameter";
 
@@ -10,9 +10,30 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract }) => {
 
         beforeEach(async (done) => {
             await setup()
-            // temporarily use a key waiting to update the keygen
-            const signer: any = new InMemorySigner('edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca');
-            Tezos.setSignerProvider(signer);
+            // temporarily use a faucet key waiting to update the keygen
+            await importKey(
+                Tezos,
+                'oeqmgekb.yidlohon@tezos.example.org',
+                'CH7w7xY62N',
+                [
+                    "now",
+                    "device",
+                    "cost",
+                    "dance",
+                    "depend",
+                    "picture",
+                    "fatal",
+                    "smile",
+                    "blast",
+                    "leader",
+                    "push",
+                    "famous",
+                    "health",
+                    "evolve",
+                    "orange"
+                ].join(' '),
+                '929737d82bcbfb2ff53daef282dcf70a2f3400e2'
+            );
 
             done()
         })
