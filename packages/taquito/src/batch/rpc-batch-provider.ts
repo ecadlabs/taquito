@@ -105,8 +105,9 @@ export class OperationBatch extends OperationEmitter {
       case OpKind.ORIGINATION:
         return createOriginationOperation(
           await this.context.parser.prepareCodeOrigination({
-          ...param,
-        }));
+            ...param,
+          })
+        );
       case OpKind.DELEGATION:
         return createSetDelegateOperation({
           ...param,
@@ -174,24 +175,27 @@ export class OperationBatch extends OperationEmitter {
       i++;
     }
     if (revealNeeded) {
-      const reveal: withKind<RevealParams, OpKind.REVEAL> = { kind: OpKind.REVEAL }
+      const reveal: withKind<RevealParams, OpKind.REVEAL> = { kind: OpKind.REVEAL };
       const estimatedReveal = await this.estimate(reveal, async () => estimates[0]);
-      ops.unshift(await createRevealOperation({ ...estimatedReveal }, publicKeyHash, publicKey))
+      ops.unshift(await createRevealOperation({ ...estimatedReveal }, publicKeyHash, publicKey));
     }
 
     const source = (params && params.source) || publicKeyHash;
-    const prepared = await this.prepareOperation({
+    const prepared = await this.prepareOpAndSimulation({
       operation: ops,
       source,
+      publicKeyHash,
     });
-    const opBytes = await this.forge(prepared);
-    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
-    return new BatchOperation(hash, ops, source, forgedBytes, opResponse, context);
+    const forgedBytes = await this.forge(prepared.preparedOp);
+    const signedOperation = await this.signOperation(forgedBytes);
+    const opResponse = await this.preValidate(prepared, signedOperation);
+    const hash = await this.injectOperation(signedOperation.opbytes);
+    return new BatchOperation(hash, ops, source, forgedBytes, opResponse, this.context.clone());
   }
 }
 
 export class RPCBatchProvider {
-  constructor(private context: Context, private estimator: EstimationProvider) { }
+  constructor(private context: Context, private estimator: EstimationProvider) {}
 
   /***
    *

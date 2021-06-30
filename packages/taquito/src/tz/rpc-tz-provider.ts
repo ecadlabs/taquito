@@ -26,8 +26,12 @@ export class RpcTzProvider extends OperationEmitter implements TzProvider {
       secret,
     };
 
-    const prepared = await this.prepareOperation({ operation: [operation], source: pkh });
-    const forgedBytes = await this.forge(prepared);
+    const prepared = await this.prepareOpAndSimulation({
+      operation: [operation],
+      source: pkh,
+      publicKeyHash: pkh,
+    });
+    const forgedBytes = await this.forge(prepared.preparedOp);
     const bytes = `${forgedBytes.opbytes}00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000`;
     return new Operation(
       await this.rpc.injectOperation(bytes),

@@ -98,7 +98,7 @@ describe('RPCEstimateProvider test', () => {
   });
 
   describe('originate', () => {
-    it('should produce a reveal and origination operation', async done => {
+    it('should produce a reveal and origination operation', async (done) => {
       mockRpcClient.runOperation.mockResolvedValue({
         contents: [
           {
@@ -126,7 +126,7 @@ describe('RPCEstimateProvider test', () => {
   });
 
   describe('transfer', () => {
-    test('return the correct estimate for multiple internal origination', async done => {
+    test('return the correct estimate for multiple internal origination', async (done) => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(multipleInternalOrigination());
       // Simulate real op size
@@ -143,7 +143,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    test('return the correct estimate for multiple internal origination, no reveal', async done => {
+    test('return the correct estimate for multiple internal origination, no reveal', async (done) => {
       mockRpcClient.runOperation.mockResolvedValue(multipleInternalOriginationNoReveal());
       // Simulate real op size
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(297).fill('aa').join(''));
@@ -159,7 +159,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    test('return the correct estimate for 2 internal transfer that need allocation', async done => {
+    test('return the correct estimate for 2 internal transfer that need allocation', async (done) => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(multipleInternalTransfer());
       // Simulate real op size
@@ -176,7 +176,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    test('return the correct estimate for delegation', async done => {
+    test('return the correct estimate for delegation', async (done) => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(delegate());
       // Simulate real op size
@@ -193,7 +193,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    test('return the correct estimate for origination', async done => {
+    test('return the correct estimate for origination', async (done) => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(origination());
       // Simulate real op size
@@ -210,7 +210,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    test('return the correct estimate for internal transfer without allocation', async done => {
+    test('return the correct estimate for internal transfer without allocation', async (done) => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(internalTransfer());
       // Simulate real op size
@@ -227,7 +227,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    test('return the correct estimate for transfer without allocation', async done => {
+    test('return the correct estimate for transfer without allocation', async (done) => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(transferWithoutAllocation());
       // Simulate real op size
@@ -244,7 +244,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    test('return the correct estimate for transfer with allocation', async done => {
+    test('return the correct estimate for transfer with allocation', async (done) => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(transferWithAllocation());
       // Simulate real op size
@@ -276,7 +276,7 @@ describe('RPCEstimateProvider test', () => {
       });
     };
 
-    it('should produce a reveal and transaction operation', async done => {
+    it('should produce a reveal and transaction operation', async (done) => {
       mockRpcClientRunOperation();
       const estimate = await estimateProvider.transfer({
         to: 'test_to',
@@ -289,7 +289,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    it('should use the maximum storage an account can afford', async done => {
+    it('should use the maximum storage an account can afford', async (done) => {
       mockRpcClientRunOperation();
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('1100'));
       await estimateProvider.transfer({
@@ -312,7 +312,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    it('should use the maximum storage the protocol allow if user can afford it', async done => {
+    it('should use the maximum storage the protocol allow if user can afford it', async (done) => {
       mockRpcClientRunOperation();
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('800000000'));
       await estimateProvider.transfer({
@@ -335,7 +335,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    it('should use the storage limit the user specified', async done => {
+    it('should use the storage limit the user specified', async (done) => {
       mockRpcClientRunOperation();
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('1100'));
       await estimateProvider.transfer({
@@ -359,7 +359,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    it('should use the gas limit the user specified', async done => {
+    it('should use the gas limit the user specified', async (done) => {
       mockRpcClientRunOperation();
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('10000000000'));
       await estimateProvider.transfer({
@@ -383,7 +383,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    it('should use the fees the user specified', async done => {
+    it('should use the fees the user specified', async (done) => {
       mockRpcClientRunOperation();
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('10000000000'));
       await estimateProvider.transfer({
@@ -407,7 +407,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    it('should return parsed error from RPC result', async done => {
+    it('should return parsed error from RPC result', async (done) => {
       const params = {
         to: 'test_to',
         amount: 2,
@@ -430,7 +430,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    it('should return parsed error from RPC result', async done => {
+    it('should return parsed error from RPC result', async (done) => {
       const params = {
         to: 'test_to',
         amount: 2,
@@ -454,7 +454,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    it('should return internal error when received from preapply', async done => {
+    it('should return internal error when received from preapply', async (done) => {
       const params = {
         to: 'test_to',
         amount: 2,
@@ -480,7 +480,7 @@ describe('RPCEstimateProvider test', () => {
   });
 
   describe('batch', () => {
-    it('should produce a batch operation, no reveal', async done => {
+    it('should produce a batch operation, no reveal', async (done) => {
       mockRpcClient.runOperation.mockResolvedValue({
         contents: [
           {
@@ -517,7 +517,7 @@ describe('RPCEstimateProvider test', () => {
       });
       const estimate = await estimateProvider.batch([
         { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 },
-        { kind: OpKind.TRANSACTION, to: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp', amount: 2 }
+        { kind: OpKind.TRANSACTION, to: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp', amount: 2 },
       ]);
       expect(estimate.length).toEqual(2);
       expect(estimate[0].gasLimit).toEqual(1100);
@@ -525,7 +525,7 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
 
-    it('should produce a batch operation, with reveal', async done => {
+    it('should produce a batch operation, with reveal', async (done) => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(149).fill('aa').join(''));
       mockRpcClient.runOperation.mockResolvedValue({
@@ -576,7 +576,7 @@ describe('RPCEstimateProvider test', () => {
       });
       const estimate = await estimateProvider.batch([
         { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 },
-        { kind: OpKind.TRANSACTION, to: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp', amount: 2 }
+        { kind: OpKind.TRANSACTION, to: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp', amount: 2 },
       ]);
       expect(estimate.length).toEqual(3);
 
@@ -597,6 +597,25 @@ describe('RPCEstimateProvider test', () => {
         suggestedFeeMutez: 385,
       });
 
+      done();
+    });
+  });
+
+  describe('Multiple subsequent operations (to send more than one operation in a block)', () => {
+    test('should not increment context counter between operation estimations', async (done) => {
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
+      mockRpcClient.runOperation.mockResolvedValue(multipleInternalOrigination());
+      // Simulate real op size
+      mockRpcClient.forgeOperations.mockResolvedValue(new Array(297).fill('aa').join(''));
+      await estimateProvider.transfer({
+        to: 'test_to',
+        amount: 2,
+      });
+      await estimateProvider.transfer({
+        to: 'test_to',
+        amount: 2,
+      });
+      expect(estimateProvider['context'].counters).toEqual({});
       done();
     });
   });

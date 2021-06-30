@@ -1,8 +1,9 @@
 import {
-  BlockHeaderResponse,
   OperationContents,
   OperationContentsAndResult,
+  OperationObject,
   OpKind,
+  PreapplyResponse,
   RpcClient,
   RPCRunOperationParam,
 } from '@taquito/rpc';
@@ -17,8 +18,12 @@ import {
   PrepareOperationParams,
   RPCOperation,
   RPCOpWithFee,
-  RPCOpWithSource
+  RPCOpWithSource,
 } from './types';
+
+// RPC requires a signature but does not verify it
+const SIGNATURE_STUB =
+  'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg';
 
 export interface PreparedOperation {
   opOb: {
@@ -27,6 +32,19 @@ export interface PreparedOperation {
     protocol: string;
   };
   counter: number;
+}
+
+export interface PreparedOperationSimulation {
+  opOb: {
+    branch: string;
+    contents: OperationContents[];
+  };
+  counter: number;
+}
+
+export interface PreparedOpAndSimulation {
+  preparedOp: PreparedOperation;
+  preparedOpSimulation?: PreparedOperationSimulation;
 }
 
 export abstract class OperationEmitter {
@@ -41,13 +59,15 @@ export abstract class OperationEmitter {
   constructor(protected context: Context) {}
 
   protected async isRevealOpNeeded(op: RPCOperation[] | ParamsWithKind[], pkh: string) {
-    return (!await this.isAccountRevealRequired(pkh) || !this.isRevealRequiredForOpType(op)) ? false : true;
+    return !(await this.isAccountRevealRequired(pkh)) || !this.isRevealRequiredForOpType(op)
+      ? false
+      : true;
   }
 
   protected async isAccountRevealRequired(publicKeyHash: string) {
     const manager = await this.rpc.getManagerKey(publicKeyHash);
-      const haveManager = manager && typeof manager === 'object' ? !!manager.key : !!manager;
-      return !haveManager;
+    const haveManager = manager && typeof manager === 'object' ? !!manager.key : !!manager;
+    return !haveManager;
   }
 
   protected isRevealRequiredForOpType(op: RPCOperation[] | ParamsWithKind[]) {
@@ -58,20 +78,92 @@ export abstract class OperationEmitter {
       }
     }
     return opRequireReveal;
+  }
+
+  private constructOps = (
+    cOps: RPCOperation[],
+    publicKeyHash: string,
+    headCounter: number,
+    counterFunction: (
+      publicKeyHash: string,
+      counter: number,
+      counterScope: { [key: string]: number }
+    ) => { counter: string },
+    source?: string
+  ): OperationContents[] => {
+    const counters = {};
+    // tslint:disable strict-type-predicates
+    return cOps.map((op: RPCOperation) => {
+      switch (op.kind) {
+        case OpKind.ACTIVATION:
+          return {
+            ...op,
+          };
+        case OpKind.REVEAL:
+          return {
+            ...op,
+            ...this.getSource(op, publicKeyHash, source),
+            ...counterFunction(publicKeyHash, headCounter, counters),
+            ...this.getFee(op),
+          };
+        case OpKind.ORIGINATION:
+          return {
+            ...op,
+            balance: typeof op.balance !== 'undefined' ? `${op.balance}` : '0',
+            ...this.getSource(op, publicKeyHash, source),
+            ...counterFunction(publicKeyHash, headCounter, counters),
+            ...this.getFee(op),
+          };
+        case OpKind.TRANSACTION:
+          const cops = {
+            ...op,
+            amount: typeof op.amount !== 'undefined' ? `${op.amount}` : '0',
+            ...this.getSource(op, publicKeyHash, source),
+            ...counterFunction(publicKeyHash, headCounter, counters),
+            ...this.getFee(op),
+          };
+          if (cops.source.toLowerCase().startsWith('kt1')) {
+            throw new Error(
+              `KT1 addresses are not supported as source since ${Protocols.PsBabyM1}`
+            );
+          }
+          return cops;
+        case OpKind.DELEGATION:
+          return {
+            ...op,
+            ...this.getSource(op, publicKeyHash, source),
+            ...counterFunction(publicKeyHash, headCounter, counters),
+            ...this.getFee(op),
+          };
+        default:
+          throw new Error('Unsupported operation');
+      }
+    });
   };
 
-  // Originally from sotez (Copyright (c) 2018 Andrew Kishino)
-  protected async prepareOperation({
+  private getFee = (op: RPCOpWithFee) => {
+    return {
+      // tslint:disable-next-line: strict-type-predicates
+      fee: typeof op.fee === 'undefined' ? '0' : `${op.fee}`,
+      // tslint:disable-next-line: strict-type-predicates
+      gas_limit: typeof op.gas_limit === 'undefined' ? '0' : `${op.gas_limit}`,
+      // tslint:disable-next-line: strict-type-predicates
+      storage_limit: typeof op.storage_limit === 'undefined' ? '0' : `${op.storage_limit}`,
+    };
+  };
+
+  private getSource = (op: RPCOpWithSource, publicKeyHash: string, source?: string) => {
+    return {
+      source: typeof op.source === 'undefined' ? source || publicKeyHash : op.source,
+    };
+  };
+
+  protected async prepareOpAndSimulation({
     operation,
     source,
-  }: PrepareOperationParams): Promise<PreparedOperation> {
-    let counter;
-    const counters: { [key: string]: number } = {};
+    publicKeyHash,
+  }: PrepareOperationParams): Promise<PreparedOpAndSimulation> {
     let ops: RPCOperation[] = [];
-    let head: BlockHeaderResponse;
-
-    const blockHeaderPromise = this.rpc.getBlockHeader();
-    const blockMetaPromise = this.rpc.getBlockMetadata();
 
     if (Array.isArray(operation)) {
       ops = [...operation];
@@ -79,8 +171,45 @@ export abstract class OperationEmitter {
       ops = [operation];
     }
 
-    // Implicit account who emit the operation
-    const publicKeyHash = await this.signer.publicKeyHash();
+    const { counter, hash, protocol } = await this.getCounterHashAndProtocol(ops, publicKeyHash);
+
+    if (!this.context.counters[publicKeyHash] || this.context.counters[publicKeyHash] < counter) {
+      this.context.counters[publicKeyHash] = counter;
+    }
+
+    let preparedOpSimulation;
+    // This is a work around to the counter_in_the_future error returned by the RPC when calling the run_operation
+    // The preparedOpSimulation will be used to prevalidate the operation instead of the preparedOp
+    // The counter of an operation in preparedOpSimulation will be the head counter + 1
+    // The counter in preparedOp will be incremented accordingly if sending many operations in a row by keeping it on the context
+    if (counter !== this.context.counters[publicKeyHash]) {
+      preparedOpSimulation = {
+        opOb: {
+          branch: hash,
+          contents: this.constructOps(ops, publicKeyHash, counter, this.getScopeCounter, source),
+        },
+        counter,
+      };
+    }
+
+    const preparedOp = {
+      opOb: {
+        branch: hash,
+        contents: this.constructOps(ops, publicKeyHash, counter, this.getContextCounter, source),
+        protocol: protocol,
+      },
+      counter,
+    };
+
+    return {
+      preparedOp,
+      preparedOpSimulation,
+    };
+  }
+
+  private async getCounterHashAndProtocol(ops: RPCOperation[], publicKeyHash: string) {
+    const blockHeaderPromise = this.rpc.getBlockHeader();
+    const blockMetaPromise = this.rpc.getBlockMetadata();
     let counterPromise: Promise<string | undefined> = Promise.resolve(undefined);
 
     for (let i = 0; i < ops.length; i++) {
@@ -94,7 +223,7 @@ export abstract class OperationEmitter {
     const [header, metadata, headCounter] = await Promise.all([
       blockHeaderPromise,
       blockMetaPromise,
-      counterPromise
+      counterPromise,
     ]);
 
     if (!header) {
@@ -105,92 +234,94 @@ export abstract class OperationEmitter {
       throw new Error('Unable to fetch latest metadata');
     }
 
-    head = header;
+    const counter = parseInt(headCounter || '0', 10);
+    return {
+      counter,
+      hash: header.hash,
+      protocol: metadata.next_protocol,
+    };
+  }
 
-    counter = parseInt(headCounter || '0', 10);
-    if (!counters[publicKeyHash] || counters[publicKeyHash] < counter) {
-      counters[publicKeyHash] = counter;
+  private getContextCounter = (publicKeyHash: string, headCounter: number) => {
+    if (
+      !this.context.counters[publicKeyHash] ||
+      this.context.counters[publicKeyHash] < headCounter
+    ) {
+      this.context.counters[publicKeyHash] = headCounter;
+    }
+    const opCounter = ++this.context.counters[publicKeyHash];
+    return {
+      counter: `${opCounter}`,
+    };
+  };
+
+  private getScopeCounter = (
+    publicKeyHash: string,
+    headCounter: number,
+    countersScope: { [key: string]: number }
+  ) => {
+    if (!countersScope[publicKeyHash] || countersScope[publicKeyHash] < headCounter) {
+      countersScope[publicKeyHash] = headCounter;
+    }
+    return {
+      counter: `${++countersScope[publicKeyHash]}`,
+    };
+  };
+
+  protected async prepareOperationEstimation({
+    operation,
+    source,
+    publicKeyHash,
+  }: PrepareOperationParams): Promise<PreparedOperationSimulation> {
+    const countersScope: { [key: string]: number } = {};
+    let ops: RPCOperation[] = [];
+
+    if (Array.isArray(operation)) {
+      ops = [...operation];
+    } else {
+      ops = [operation];
     }
 
-    const getFee = (op: RPCOpWithFee) => {
-      const opCounter = ++counters[publicKeyHash];
-      return {
-        counter: `${opCounter}`,
-        // tslint:disable-next-line: strict-type-predicates
-        fee: typeof op.fee === 'undefined' ? '0' : `${op.fee}`,
-        // tslint:disable-next-line: strict-type-predicates
-        gas_limit: typeof op.gas_limit === 'undefined' ? '0' : `${op.gas_limit}`,
-        // tslint:disable-next-line: strict-type-predicates
-        storage_limit: typeof op.storage_limit === 'undefined' ? '0' : `${op.storage_limit}`,
-      };
-    };
+    const { counter, hash, protocol } = await this.getCounterHashAndProtocol(ops, publicKeyHash);
 
-    const getSource = (op: RPCOpWithSource) => {
-      return {
-        source: typeof op.source === 'undefined' ? source || publicKeyHash : op.source,
-      };
-    };
-
-    const constructOps = (cOps: RPCOperation[]): OperationContents[] =>
-      // tslint:disable strict-type-predicates
-      cOps.map((op: RPCOperation) => {
-        switch (op.kind) {
-          case OpKind.ACTIVATION:
-            return {
-              ...op,
-            };
-          case OpKind.REVEAL:
-            return {
-              ...op,
-              ...getSource(op),
-              ...getFee(op),
-            };
-          case OpKind.ORIGINATION:
-            return {
-              ...op,
-              balance: typeof op.balance !== 'undefined' ? `${op.balance}` : '0',
-              ...getSource(op),
-              ...getFee(op),
-            };
-          case OpKind.TRANSACTION:
-            const cops = {
-              ...op,
-              amount: typeof op.amount !== 'undefined' ? `${op.amount}` : '0',
-              ...getSource(op),
-              ...getFee(op),
-            };
-            if (cops.source.toLowerCase().startsWith('kt1')) {
-              throw new Error(
-                `KT1 addresses are not supported as source since ${Protocols.PsBabyM1}`
-              );
-            }
-            return cops;
-          case OpKind.DELEGATION:
-            return {
-              ...op,
-              ...getSource(op),
-              ...getFee(op),
-            };
-          default:
-            throw new Error('Unsupported operation');
-        }
-      });
-
-    const branch = head.hash;
-    const contents = constructOps(ops);
-    const protocol = metadata.next_protocol;
+    if (!countersScope[publicKeyHash] || countersScope[publicKeyHash] < counter) {
+      countersScope[publicKeyHash] = counter;
+    }
 
     return {
       opOb: {
-        branch,
-        contents,
-        protocol,
+        branch: hash,
+        contents: this.constructOps(ops, publicKeyHash, counter, this.getScopeCounter, source),
       },
       counter,
     };
   }
 
-  protected async forge({ opOb: { branch, contents, protocol }, counter }: PreparedOperation) {
+  protected async preValidate(prepared: PreparedOpAndSimulation, forgedOperation: ForgedBytes) {
+    return prepared.preparedOpSimulation
+      ? // If we want to inject many operations in a same block
+        // we call runOperation instead of preapply
+        // to avoid having to produce 2 signatures (op with incremented counter and op used for simulation)
+        this.runOperation({
+          operation: {
+            signature: SIGNATURE_STUB,
+            ...prepared.preparedOpSimulation.opOb,
+          },
+          chain_id: await this.rpc.getChainId(),
+        })
+      : this.preapplyOperation(forgedOperation.opOb);
+  }
+
+  protected async forgeOperation({
+    opOb: { branch, contents },
+  }: PreparedOperation | PreparedOperationSimulation) {
+    return this.context.forger.forge({ branch, contents });
+  }
+
+  protected async forge({
+    opOb: { branch, contents, protocol },
+    counter,
+  }: PreparedOperation): Promise<ForgedBytes> {
     let forgedBytes = await this.context.forger.forge({ branch, contents });
 
     return {
@@ -243,13 +374,33 @@ export abstract class OperationEmitter {
     };
   }
 
-  protected async signAndInject(forgedBytes: ForgedBytes) {
+  protected async signOperation(forgedBytes: ForgedBytes) {
     const signed = await this.signer.sign(forgedBytes.opbytes, new Uint8Array([3]));
     forgedBytes.opbytes = signed.sbytes;
     forgedBytes.opOb.signature = signed.prefixSig;
+    return forgedBytes;
+  }
 
+  protected async runOperation(op: RPCRunOperationParam) {
     const opResponse: OperationContentsAndResult[] = [];
-    const results = await this.rpc.preapplyOperations([forgedBytes.opOb]);
+    const results = await this.rpc.runOperation(op);
+
+    for (let j = 0; j < results.contents.length; j++) {
+      opResponse.push(results.contents[j]);
+    }
+    const errors = flattenErrors(results);
+
+    if (errors.length) {
+      // @ts-ignore
+      throw new TezosOperationError(errors);
+    }
+
+    return opResponse;
+  }
+
+  protected async preapplyOperation(opOb: OperationObject) {
+    const opResponse: OperationContentsAndResult[] = [];
+    const results = await this.rpc.preapplyOperations([opOb]);
 
     if (!Array.isArray(results)) {
       throw new TezosPreapplyFailureError(results);
@@ -267,12 +418,10 @@ export abstract class OperationEmitter {
       // @ts-ignore
       throw new TezosOperationError(errors);
     }
+    return opResponse;
+  }
 
-    return {
-      hash: await this.context.injector.inject(forgedBytes.opbytes),
-      forgedBytes,
-      opResponse,
-      context: this.context.clone(),
-    };
+  protected async injectOperation(signedOperationBytes: string) {
+    return this.context.injector.inject(signedOperationBytes);
   }
 }

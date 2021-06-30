@@ -63,11 +63,8 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
   // Maximum values defined by the protocol
   private async getAccountLimits(pkh: string) {
     const balance = await this.rpc.getBalance(pkh);
-    const {
-      hard_gas_limit_per_operation,
-      hard_storage_limit_per_operation,
-      cost_per_byte,
-    } = await this.rpc.getConstants();
+    const { hard_gas_limit_per_operation, hard_storage_limit_per_operation, cost_per_byte } =
+      await this.rpc.getConstants();
     return {
       fee: 0,
       gasLimit: hard_gas_limit_per_operation.toNumber(),
@@ -86,7 +83,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     let totalGas = 0;
     let totalMilligas = 0;
     let totalStorage = 0;
-    operationResults.forEach(result => {
+    operationResults.forEach((result) => {
       totalStorage +=
         'originated_contracts' in result && typeof result.originated_contracts !== 'undefined'
           ? result.originated_contracts.length * this.ORIGINATION_STORAGE
@@ -105,30 +102,31 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
 
     if (isOpWithFee(content)) {
       return {
-        milligasLimit: (totalMilligas || 0),
+        milligasLimit: totalMilligas || 0,
         storageLimit: Number(totalStorage || 0),
         opSize: size,
-        minimalFeePerStorageByteMutez: costPerByte.toNumber()
-      }
+        minimalFeePerStorageByteMutez: costPerByte.toNumber(),
+      };
     } else {
       return {
         milligasLimit: 0,
         storageLimit: 0,
         opSize: size,
         minimalFeePerStorageByteMutez: costPerByte.toNumber(),
-        baseFeeMutez: 0
-      }
+        baseFeeMutez: 0,
+      };
     }
   }
 
   private async prepareEstimate(params: PrepareOperationParams) {
-    const prepared = await this.prepareOperation(params);
-    const {
-      opbytes,
-      opOb: { branch, contents },
-    } = await this.forge(prepared);
+    const preparedSimulation = await this.prepareOperationEstimation(params);
+    const opbytes = await this.forgeOperation(preparedSimulation);
     let operation: RPCRunOperationParam = {
-      operation: { branch, contents, signature: SIGNATURE_STUB },
+      operation: {
+        branch: preparedSimulation.opOb.branch,
+        contents: preparedSimulation.opOb.contents,
+        signature: SIGNATURE_STUB,
+      },
       chain_id: await this.rpc.getChainId(),
     };
 
@@ -142,11 +140,14 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     }
 
     let numberOfOps = 1;
-    if (Array.isArray(params.operation) && (params.operation.length > 1)) {
-      numberOfOps = (opResponse.contents[0].kind === 'reveal')? (params.operation.length - 1): params.operation.length
-    };
+    if (Array.isArray(params.operation) && params.operation.length > 1) {
+      numberOfOps =
+        opResponse.contents[0].kind === 'reveal'
+          ? params.operation.length - 1
+          : params.operation.length;
+    }
 
-    return opResponse.contents.map(x => {
+    return opResponse.contents.map((x) => {
       return this.getEstimationPropertiesFromOperationContent(
         x,
         // TODO: Calculate a specific opSize for each operation.
@@ -175,7 +176,11 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     );
     const isRevealNeeded = await this.isRevealOpNeeded([op], pkh);
     const ops = isRevealNeeded ? await this.addRevealOp([op], pkh) : op;
-    const estimateProperties = await this.prepareEstimate({ operation: ops, source: pkh });
+    const estimateProperties = await this.prepareEstimate({
+      operation: ops,
+      source: pkh,
+      publicKeyHash: pkh,
+    });
     if (isRevealNeeded) {
       estimateProperties.shift();
     }
@@ -198,7 +203,11 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     });
     const isRevealNeeded = await this.isRevealOpNeeded([op], pkh);
     const ops = isRevealNeeded ? await this.addRevealOp([op], pkh) : op;
-    const estimateProperties = await this.prepareEstimate({ operation: ops, source: pkh });
+    const estimateProperties = await this.prepareEstimate({
+      operation: ops,
+      source: pkh,
+      publicKeyHash: pkh,
+    });
     if (isRevealNeeded) {
       estimateProperties.shift();
     }
@@ -223,7 +232,11 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     });
     const isRevealNeeded = await this.isRevealOpNeeded([op], pkh);
     const ops = isRevealNeeded ? await this.addRevealOp([op], pkh) : op;
-    const estimateProperties = await this.prepareEstimate({ operation: ops, source: pkh });
+    const estimateProperties = await this.prepareEstimate({
+      operation: ops,
+      source: pkh,
+      publicKeyHash: pkh,
+    });
     if (isRevealNeeded) {
       estimateProperties.shift();
     }
@@ -256,7 +269,8 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
               await this.context.parser.prepareCodeOrigination({
                 ...param,
                 ...mergeLimits(param, DEFAULT_PARAMS),
-              }))
+              })
+            )
           );
           break;
         case OpKind.DELEGATION:
@@ -279,7 +293,11 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     }
     const isRevealNeeded = await this.isRevealOpNeeded(operations, pkh);
     operations = isRevealNeeded ? await this.addRevealOp(operations, pkh) : operations;
-    const estimateProperties = await this.prepareEstimate({ operation: operations, source: pkh });
+    const estimateProperties = await this.prepareEstimate({
+      operation: operations,
+      source: pkh,
+      publicKeyHash: pkh,
+    });
 
     return Estimate.createArrayEstimateInstancesFromProperties(estimateProperties);
   }
@@ -293,15 +311,16 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    * @param Estimate
    */
   async registerDelegate(params: RegisterDelegateParams) {
-    const pkh = await this.signer.publicKeyHash()
+    const pkh = await this.signer.publicKeyHash();
     const DEFAULT_PARAMS = await this.getAccountLimits(pkh);
-    const op = await createRegisterDelegateOperation(
-      { ...params, ...DEFAULT_PARAMS },
-      pkh
-    );
+    const op = await createRegisterDelegateOperation({ ...params, ...DEFAULT_PARAMS }, pkh);
     const isRevealNeeded = await this.isRevealOpNeeded([op], pkh);
     const ops = isRevealNeeded ? await this.addRevealOp([op], pkh) : op;
-    const estimateProperties = await this.prepareEstimate({ operation: ops, source: pkh });
+    const estimateProperties = await this.prepareEstimate({
+      operation: ops,
+      source: pkh,
+      publicKeyHash: pkh,
+    });
     if (isRevealNeeded) {
       estimateProperties.shift();
     }
@@ -320,25 +339,37 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     const pkh = await this.signer.publicKeyHash();
     if (await this.isAccountRevealRequired(pkh)) {
       const DEFAULT_PARAMS = await this.getAccountLimits(pkh);
-      const op = await createRevealOperation({
-        ...params, ...DEFAULT_PARAMS
-      },
+      const op = await createRevealOperation(
+        {
+          ...params,
+          ...DEFAULT_PARAMS,
+        },
         pkh,
         await this.signer.publicKey()
-      )
-      const estimateProperties = await this.prepareEstimate({ operation: op, source: pkh });
+      );
+      const estimateProperties = await this.prepareEstimate({
+        operation: op,
+        source: pkh,
+        publicKeyHash: pkh,
+      });
       return Estimate.createEstimateInstanceFromProperties(estimateProperties);
     }
   }
 
   private async addRevealOp(op: RPCOperation[], pkh: string) {
     op.unshift(
-      await createRevealOperation({
-        ...{ fee: DEFAULT_FEE.REVEAL, gasLimit: DEFAULT_GAS_LIMIT.REVEAL, storageLimit: DEFAULT_STORAGE_LIMIT.REVEAL }
-      },
+      await createRevealOperation(
+        {
+          ...{
+            fee: DEFAULT_FEE.REVEAL,
+            gasLimit: DEFAULT_GAS_LIMIT.REVEAL,
+            storageLimit: DEFAULT_STORAGE_LIMIT.REVEAL,
+          },
+        },
         pkh,
-        await this.signer.publicKey())
-    )
+        await this.signer.publicKey()
+      )
+    );
     return op;
   }
 }
