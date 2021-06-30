@@ -2,7 +2,7 @@ const fs = require('fs');
 
 const readmePath = './README.md';
 
-const manifest = require('./assets-manifest.json')
+const manifest = require('./manifest.json')
 const package = require('./package.json')
 
 const integrityRegex = /integrity=\"(.*)\"/;
