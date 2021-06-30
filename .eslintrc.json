@@ -1,0 +1,40 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true,
+        "jest": true,
+        "node": true
+    },
+    "extends": [
+        "eslint:recommended"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": 12,
+        "sourceType": "module"
+    },
+    "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/no-inferrable-types": "off",
+        "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/ban-types": "off",
+        "@typescript-eslint/ban-ts-comment": "off",
+        "no-unused-vars": "off",
+        "no-dupe-class-members": "off",
+        "no-case-declarations": "off",
+        "no-prototype-builtins": "off",
+        "prefer-const": "off",
+        "no-unsafe-finally": "off",
+        "no-useless-escape": "off",
+        "no-undef": "off",
+        "no-redeclare": "off",
+        "no-sparse-arrays": "off",
+        "no-constant-condition": "off",
+        "no-fallthrough": "off",
+        "no-extra-boolean-cast": "off",
+        "no-extra-semi": "off",
+        "no-unreachable": "off"
+    }
+}
