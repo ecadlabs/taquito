@@ -115,19 +115,16 @@
     "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-typescript2": "^0.30.0",
     "shelljs": "^0.8.4",
-    "stream-browserify": "^3.0.0",
-    "stream-http": "^3.2.0",
-    "terser-webpack-plugin": "^5.1.3",
+    "terser-webpack-plugin": "^4.2.3",
     "ts-jest": "^26.4.4",
     "ts-node": "^10.0.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-standard": "^9.0.0",
     "typescript": "^4.1.5",
-    "url": "^0.11.0",
-    "webpack": "^5.38.1",
-    "webpack-assets-manifest": "^5.0.6",
-    "webpack-cli": "^4.7.2",
-    "webpack-subresource-integrity": "^1.5.2"
+    "webpack": "^4.44.2",
+    "webpack-assets-manifest": "^3.1.1",
+    "webpack-cli": "^3.3.12",
+    "webpack-subresource-integrity": "^1.4.1"
   },
   "gitHead": "551e35aeff7d6dcde1c7228npm install4238c0ed3c3aae77e"
 }
