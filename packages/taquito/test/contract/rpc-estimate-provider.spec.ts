@@ -84,8 +84,9 @@ describe('RPCEstimateProvider test', () => {
     mockRpcClient.preapplyOperations.mockResolvedValue([]);
     mockRpcClient.getChainId.mockResolvedValue('chain-id');
     mockRpcClient.getConstants.mockResolvedValue({
-      hard_gas_limit_per_operation: new BigNumber(80000),
+      hard_gas_limit_per_operation: new BigNumber(1040000),
       hard_storage_limit_per_operation: new BigNumber(60000),
+      hard_gas_limit_per_block: new BigNumber(5200000),
       cost_per_byte: new BigNumber(1000),
     });
 
@@ -303,7 +304,7 @@ describe('RPCEstimateProvider test', () => {
               expect.objectContaining({
                 fee: '0',
                 storage_limit: '1',
-                gas_limit: '80000',
+                gas_limit: '1040000',
               }),
             ]),
           }),
@@ -326,7 +327,7 @@ describe('RPCEstimateProvider test', () => {
               expect.objectContaining({
                 fee: '0',
                 storage_limit: '60000',
-                gas_limit: '80000',
+                gas_limit: '1040000',
               }),
             ]),
           }),
@@ -350,7 +351,7 @@ describe('RPCEstimateProvider test', () => {
               expect.objectContaining({
                 fee: '0',
                 storage_limit: '200',
-                gas_limit: '80000',
+                gas_limit: '1040000',
               }),
             ]),
           }),
@@ -398,7 +399,7 @@ describe('RPCEstimateProvider test', () => {
               expect.objectContaining({
                 fee: '10000',
                 storage_limit: '60000',
-                gas_limit: '80000',
+                gas_limit: '1040000',
               }),
             ]),
           }),
@@ -597,6 +598,111 @@ describe('RPCEstimateProvider test', () => {
         suggestedFeeMutez: 385,
       });
 
+      done();
+    });
+
+    it('runOperation should be called with a gas_limit equal to the hard_gas_limit_per_operation constant', async (done) => {
+      const transactionResult = {
+        kind: 'transaction',
+        metadata: {
+          operation_result: {
+            consumed_gas: 1000,
+          },
+        },
+      };
+      mockRpcClient.forgeOperations.mockResolvedValue(new Array(149).fill('aa').join(''));
+      mockRpcClient.runOperation.mockResolvedValue({
+        contents: [transactionResult, transactionResult, transactionResult, transactionResult],
+      });
+      await estimateProvider.batch([
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+      ]);
+      // using the hard_gas_limit_per_operation which is 1040000,
+      // the total gas_limit of the batch (4*1040000=4160000) is lower than the hard_gas_limit_per_block (5200000)
+      expect(mockRpcClient.runOperation).toHaveBeenCalledWith(
+        expect.objectContaining({
+          operation: expect.objectContaining({
+            contents: expect.arrayContaining([
+              expect.objectContaining({
+                gas_limit: '1040000',
+              }),
+              expect.objectContaining({
+                gas_limit: '1040000',
+              }),
+              expect.objectContaining({
+                gas_limit: '1040000',
+              }),
+              expect.objectContaining({
+                gas_limit: '1040000',
+              }),
+            ]),
+          }),
+        })
+      );
+
+      done();
+    });
+
+    it('runOperation should be called with a gas_limit calculated with the hard_gas_limit_per_block constant and the number of operation in the batch', async (done) => {
+      const transactionResult = {
+        kind: 'transaction',
+        metadata: {
+          operation_result: {
+            consumed_gas: 1000,
+          },
+        },
+      };
+      mockRpcClient.forgeOperations.mockResolvedValue(new Array(149).fill('aa').join(''));
+      mockRpcClient.runOperation.mockResolvedValue({
+        contents: [
+          transactionResult,
+          transactionResult,
+          transactionResult,
+          transactionResult,
+          transactionResult,
+          transactionResult,
+        ],
+      });
+      await estimateProvider.batch([
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+      ]);
+
+      // the gas_limit need to be calculated, can not be set to the hard_gas_limit_per_operation which is 1040000,
+      // otherwise the total gas_limit of the batch is higher (6*1040000=6240000) than hard_gas_limit_per_block (5200000)
+      expect(mockRpcClient.runOperation).toHaveBeenCalledWith(
+        expect.objectContaining({
+          operation: expect.objectContaining({
+            contents: expect.arrayContaining([
+              expect.objectContaining({
+                gas_limit: '742857',
+              }),
+              expect.objectContaining({
+                gas_limit: '742857',
+              }),
+              expect.objectContaining({
+                gas_limit: '742857',
+              }),
+              expect.objectContaining({
+                gas_limit: '742857',
+              }),
+              expect.objectContaining({
+                gas_limit: '742857',
+              }),
+              expect.objectContaining({
+                gas_limit: '742857',
+              }),
+            ]),
+          }),
+        })
+      );
       done();
     });
   });

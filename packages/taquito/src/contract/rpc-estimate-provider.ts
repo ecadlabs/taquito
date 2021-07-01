@@ -61,17 +61,41 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
   private readonly OP_SIZE_REVEAL = 128;
 
   // Maximum values defined by the protocol
-  private async getAccountLimits(pkh: string) {
+  private async getAccountLimits(pkh: string, numberOfOps?: number) {
     const balance = await this.rpc.getBalance(pkh);
-    const { hard_gas_limit_per_operation, hard_storage_limit_per_operation, cost_per_byte } =
-      await this.rpc.getConstants();
+    const {
+      hard_gas_limit_per_operation,
+      hard_gas_limit_per_block,
+      hard_storage_limit_per_operation,
+      cost_per_byte,
+    } = await this.rpc.getConstants();
     return {
       fee: 0,
-      gasLimit: hard_gas_limit_per_operation.toNumber(),
+      gasLimit: numberOfOps
+        ? Math.floor(
+            this.ajustGasForBatchOperation(
+              hard_gas_limit_per_block,
+              hard_gas_limit_per_operation,
+              numberOfOps
+            ).toNumber()
+          )
+        : hard_gas_limit_per_operation.toNumber(),
       storageLimit: Math.floor(
         BigNumber.min(balance.dividedBy(cost_per_byte), hard_storage_limit_per_operation).toNumber()
       ),
     };
+  }
+
+  // Fix for Granada where the total gasLimit of a batch can not exceed the hard_gas_limit_per_block.
+  // If the total gasLimit of the batch is higher than the hard_gas_limit_per_block,
+  // the gasLimit is calculated by dividing the hard_gas_limit_per_block by the number of operation in the batch (numberOfOps).
+  // numberOfOps is incremented by 1 for safety in case a reveal operation is needed
+  private ajustGasForBatchOperation(
+    gasLimitBlock: BigNumber,
+    gaslimitOp: BigNumber,
+    numberOfOps: number
+  ) {
+    return BigNumber.min(gaslimitOp, gasLimitBlock.div(numberOfOps + 1));
   }
 
   private getEstimationPropertiesFromOperationContent(
@@ -252,7 +276,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
   async batch(params: ParamsWithKind[]) {
     const pkh = await this.signer.publicKeyHash();
     let operations: RPCOperation[] = [];
-    const DEFAULT_PARAMS = await this.getAccountLimits(pkh);
+    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, params.length);
     for (const param of params) {
       switch (param.kind) {
         case OpKind.TRANSACTION:
@@ -347,11 +371,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
         pkh,
         await this.signer.publicKey()
       );
-      const estimateProperties = await this.prepareEstimate({
-        operation: op,
-        source: pkh,
-        publicKeyHash: pkh,
-      });
+      const estimateProperties = await this.prepareEstimate({ operation: op, source: pkh, publicKeyHash: pkh });
       return Estimate.createEstimateInstanceFromProperties(estimateProperties);
     }
   }

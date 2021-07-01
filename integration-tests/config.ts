@@ -4,7 +4,6 @@ import { RemoteSigner } from '@taquito/remote-signer';
 import { HttpBackend } from '@taquito/http-utils';
 import { b58cencode, Prefix, prefix } from '@taquito/utils';
 import { importKey, InMemorySigner } from '@taquito/signer';
-import fs from 'fs';
 
 const nodeCrypto = require('crypto');
 
@@ -55,6 +54,19 @@ interface FaucetConfig {
   faucetKey: {};
 }
 
+const granadanetEphemeral = {
+  rpc: process.env['TEZOS_RPC_GRANADANET'] || 'https://api.tez.ie/rpc/granadanet',
+  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
+  knownContract: 'KT1JMwgeC7MwYiMiZd74gXK6wrY7QNf1NwLX',
+  knownBigMapContract: 'KT1VniFqNCPEq4MXvnjYGvUqdWDhooJM5Nae',
+  protocol: Protocols.PtGRANADs,
+  signerConfig: {
+    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
+    keyUrl: 'https://api.tez.ie/keys/granadanet',
+    requestHeaders: { 'Authorization': 'Bearer taquito-example' },
+  }
+}
+
 const florencenetEphemeral = {
   rpc: process.env['TEZOS_RPC_FLORENCENET'] || 'https://api.tez.ie/rpc/florencenet',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
@@ -83,26 +95,38 @@ const edonetEphemeral = {
 
 // Well known faucet key. Can be overridden by setting the `TEZOS_FAUCET_KEY_FILE` environment variable
 const key = {
-  email: "fnpurrgy.lnzeqdpg@tezos.example.org",
-  password: "iAzeiJVYSt",
+  email: "mfbzlhsv.owpfexem@tezos.example.org",
+  password: "bccbtuRKdr",
   mnemonic: [
-    "year",
-    "buyer",
-    "police",
-    "release",
-    "toilet",
-    "raw",
-    "chalk",
-    "awesome",
-    "cook",
-    "brand",
-    "dog",
-    "blood",
-    "two",
-    "comic",
-    "habit"
+    "addict",
+    "nerve",
+    "amazing",
+    "elevator",
+    "else",
+    "bind",
+    "injury",
+    "cotton",
+    "bind",
+    "judge",
+    "quote",
+    "apple",
+    "equip",
+    "ocean",
+    "tone"
   ],
-  secret: "122bb47843750982da5c65f7affa0d32971ac876"
+  secret: "1e6159006a283a4456bda4f83721afa4bec9ed59"
+}
+
+const granadanetFaucet = {
+  rpc: 'https://api.tez.ie/rpc/granadanet',
+  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
+  knownContract: 'KT1JMwgeC7MwYiMiZd74gXK6wrY7QNf1NwLX',
+  knownBigMapContract: 'KT1VniFqNCPEq4MXvnjYGvUqdWDhooJM5Nae',
+  protocol: Protocols.PtGRANADs,
+  signerConfig: {
+    type: SignerType.FAUCET as SignerType.FAUCET,
+    faucetKey: key,
+  }
 }
 
 const florencenetFaucet = {
@@ -132,13 +156,19 @@ const edonetFaucet = {
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_FAUCET']) {
-  providers.push(florencenetFaucet, edonetFaucet)
+  providers.push(florencenetFaucet, edonetFaucet, granadanetFaucet)
 } 
+else if (process.env['RUN_GRANADANET_WITH_FAUCET']) {
+  providers.push(granadanetFaucet)
+}
 else if (process.env['RUN_FLORENCENET_WITH_FAUCET']) {
   providers.push(florencenetFaucet)
 }
 else if (process.env['RUN_EDONET_WITH_FAUCET']) {
   providers.push(edonetFaucet)
+}
+else if (process.env['GRANADANET']) {
+  providers.push(granadanetEphemeral)
 }
 else if (process.env['FLORENCENET']) {
   providers.push(florencenetEphemeral)
@@ -146,7 +176,7 @@ else if (process.env['FLORENCENET']) {
 else if (process.env['EDONET']) {
   providers.push(edonetEphemeral)
 } else {
-  providers.push(florencenetEphemeral, edonetEphemeral)
+  providers.push(florencenetEphemeral, edonetEphemeral, granadanetEphemeral)
 }
 
 const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE'];

@@ -368,8 +368,10 @@ export class RpcClient {
       'cost_per_byte',
       'hard_storage_limit_per_operation',
       'test_chain_duration',
-      'baking_reward_per_endorsement',
+      'baking_reward_per_endorsement', 
       'delay_per_missing_endorsement',
+      'minimal_block_delay',
+      'liquidity_baking_subsidy'
     ]);
 
     return {
