@@ -1,7 +1,7 @@
 import { PreapplyResponse, RPCRunOperationParam, OpKind } from '@taquito/rpc';
 import BigNumber from 'bignumber.js';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
-import { OperationEmitter } from '../operations/operation-emitter';
+import { OperationEmitter, SIGNATURE_STUB } from '../operations/operation-emitter';
 import {
   flattenErrors,
   flattenOperationResult,
@@ -50,10 +50,6 @@ const mergeLimits = (
         : userDefinedLimit.storageLimit,
   };
 };
-
-// RPC requires a signature but does not verify it
-const SIGNATURE_STUB =
-  'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg';
 
 export class RPCEstimateProvider extends OperationEmitter implements EstimationProvider {
   private readonly ALLOCATION_STORAGE = 257;
@@ -143,13 +139,14 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
   }
 
   private async prepareEstimate(params: PrepareOperationParams) {
-    const prepared = await this.prepareOperation(params);
-    const {
-      opbytes,
-      opOb: { branch, contents },
-    } = await this.forge(prepared);
+    const preparedSimulation = await this.prepareOperationEstimation(params);
+    const opbytes = await this.forgeOperation(preparedSimulation);
     let operation: RPCRunOperationParam = {
-      operation: { branch, contents, signature: SIGNATURE_STUB },
+      operation: {
+        branch: preparedSimulation.opOb.branch,
+        contents: preparedSimulation.opOb.contents,
+        signature: SIGNATURE_STUB,
+      },
       chain_id: await this.rpc.getChainId(),
     };
 
@@ -199,7 +196,10 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     );
     const isRevealNeeded = await this.isRevealOpNeeded([op], pkh);
     const ops = isRevealNeeded ? await this.addRevealOp([op], pkh) : op;
-    const estimateProperties = await this.prepareEstimate({ operation: ops, source: pkh });
+    const estimateProperties = await this.prepareEstimate({
+      operation: ops,
+      source: pkh,
+    });
     if (isRevealNeeded) {
       estimateProperties.shift();
     }
@@ -222,7 +222,10 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     });
     const isRevealNeeded = await this.isRevealOpNeeded([op], pkh);
     const ops = isRevealNeeded ? await this.addRevealOp([op], pkh) : op;
-    const estimateProperties = await this.prepareEstimate({ operation: ops, source: pkh });
+    const estimateProperties = await this.prepareEstimate({
+      operation: ops,
+      source: pkh
+    });
     if (isRevealNeeded) {
       estimateProperties.shift();
     }
@@ -247,7 +250,10 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     });
     const isRevealNeeded = await this.isRevealOpNeeded([op], pkh);
     const ops = isRevealNeeded ? await this.addRevealOp([op], pkh) : op;
-    const estimateProperties = await this.prepareEstimate({ operation: ops, source: pkh });
+    const estimateProperties = await this.prepareEstimate({
+      operation: ops,
+      source: pkh
+    });
     if (isRevealNeeded) {
       estimateProperties.shift();
     }
@@ -304,7 +310,10 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     }
     const isRevealNeeded = await this.isRevealOpNeeded(operations, pkh);
     operations = isRevealNeeded ? await this.addRevealOp(operations, pkh) : operations;
-    const estimateProperties = await this.prepareEstimate({ operation: operations, source: pkh });
+    const estimateProperties = await this.prepareEstimate({
+      operation: operations,
+      source: pkh
+    });
 
     return Estimate.createArrayEstimateInstancesFromProperties(estimateProperties);
   }
@@ -323,7 +332,10 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     const op = await createRegisterDelegateOperation({ ...params, ...DEFAULT_PARAMS }, pkh);
     const isRevealNeeded = await this.isRevealOpNeeded([op], pkh);
     const ops = isRevealNeeded ? await this.addRevealOp([op], pkh) : op;
-    const estimateProperties = await this.prepareEstimate({ operation: ops, source: pkh });
+    const estimateProperties = await this.prepareEstimate({
+      operation: ops,
+      source: pkh
+    });
     if (isRevealNeeded) {
       estimateProperties.shift();
     }
