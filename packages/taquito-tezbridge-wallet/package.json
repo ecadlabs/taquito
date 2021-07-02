@@ -1,6 +1,6 @@
 {
   "name": "@taquito/tezbridge-wallet",
-  "version": "9.2.0-beta-RC.0",
+  "version": "9.2.0-beta-RC.1",
   "description": "Tezbridge wallet provider",
   "keywords": [
     "tezos",
@@ -61,7 +61,7 @@
     ]
   },
   "dependencies": {
-    "@taquito/taquito": "^9.2.0-beta-RC.0"
+    "@taquito/taquito": "^9.2.0-beta-RC.1"
   },
   "devDependencies": {
     "@types/jest": "^26.0.23",
