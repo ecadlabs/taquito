@@ -153,7 +153,6 @@ export abstract class OperationEmitter {
   };
 
   private getSource = (op: RPCOpWithSource, publicKeyHash: string, source?: string) => {
-    console.log('pkh:', publicKeyHash, 'source:', source, 'opsource:', op.source)
     return {
       source: typeof op.source === 'undefined' ? source || publicKeyHash : op.source,
     };
@@ -171,7 +170,8 @@ export abstract class OperationEmitter {
       ops = [operation];
     }
 
-    const publicKeyHash = source? source: await this.signer.publicKeyHash();
+    // Implicit account who emit the operation
+    const publicKeyHash = await this.signer.publicKeyHash();
 
     const { counter, hash, protocol } = await this.getCounterHashAndProtocol(ops, publicKeyHash);
 
