@@ -1,6 +1,6 @@
 {
   "name": "@taquito/signer",
-  "version": "9.2.0-beta-RC.1",
+  "version": "9.2.0-beta-RC.2",
   "description": "Provide signing functionality to be with taquito",
   "keywords": [
     "tezos",
@@ -67,19 +67,19 @@
     ]
   },
   "dependencies": {
-    "@taquito/taquito": "^9.2.0-beta-RC.1",
-    "@taquito/utils": "^9.2.0-beta-RC.1",
+    "@taquito/taquito": "^9.2.0-beta-RC.2",
+    "@taquito/utils": "^9.2.0-beta-RC.2",
     "bignumber.js": "^9.0.1",
     "bip39": "^3.0.4",
     "elliptic": "^6.5.4",
-    "libsodium-wrappers": "^0.7.9",
+    "libsodium-wrappers": "0.7.8",
     "pbkdf2": "^3.1.2",
     "typedarray-to-buffer": "^4.0.0"
   },
   "devDependencies": {
     "@types/elliptic": "^6.4.12",
     "@types/jest": "^26.0.23",
-    "@types/libsodium-wrappers": "^0.7.9",
+    "@types/libsodium-wrappers": "0.7.8",
     "@types/node": "^15.12.2",
     "@types/pbkdf2": "^3.1.0",
     "@typescript-eslint/eslint-plugin": "^4.28.1",
