@@ -268,5 +268,4 @@ export type RPCOperation =
 export type PrepareOperationParams = {
   operation: RPCOperation | RPCOperation[];
   source?: string;
-  publicKeyHash: string;
 };

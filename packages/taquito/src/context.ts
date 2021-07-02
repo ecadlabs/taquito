@@ -25,7 +25,7 @@ export interface TaquitoProvider<T, K extends Array<any>> {
   new (context: Context, ...rest: K): T;
 }
 
-// The shouldObservableSubscriptionRetrythe parameter is related to the observable in ObservableSubsription class.
+// The shouldObservableSubscriptionRetry parameter is related to the observable in ObservableSubsription class.
 // When set to true, the observable won't die when getBlock rpc call fails; the error will be reported via the error callback,
 // and it will continue to poll for new blocks.
 export interface Config {

@@ -102,32 +102,6 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract }) => {
       expect(op5.status).toBe('applied');
       expect(op6.status).toBe('applied');
 
-      if (op1.includedInBlock != op2.includedInBlock) {
-        expect(op1.includedInBlock).toEqual(op2.includedInBlock - 1);
-      } else {
-        expect(op1.includedInBlock).toEqual(op2.includedInBlock);
-      }
-      if (op2.includedInBlock != op3.includedInBlock) {
-        expect(op2.includedInBlock).toEqual(op3.includedInBlock - 1);
-      } else {
-        expect(op2.includedInBlock).toEqual(op3.includedInBlock);
-      }
-      if (op3.includedInBlock != op4.includedInBlock) {
-        expect(op3.includedInBlock).toEqual(op4.includedInBlock - 1);
-      } else {
-        expect(op3.includedInBlock).toEqual(op4.includedInBlock);
-      }
-      if (op4.includedInBlock != op5.includedInBlock) {
-        expect(op4.includedInBlock).toEqual(op5.includedInBlock - 1);
-      } else {
-        expect(op4.includedInBlock).toEqual(op5.includedInBlock);
-      }
-      if (op5.includedInBlock != op6.includedInBlock) {
-        expect(op5.includedInBlock).toEqual(op6.includedInBlock - 1);
-      } else {
-        expect(op5.includedInBlock).toEqual(op6.includedInBlock);
-      }
-
       done();
     });
   });

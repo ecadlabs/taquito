@@ -183,8 +183,7 @@ export class OperationBatch extends OperationEmitter {
     const source = (params && params.source) || publicKeyHash;
     const prepared = await this.prepareOpAndSimulation({
       operation: ops,
-      source,
-      publicKeyHash,
+      source
     });
     const forgedBytes = await this.forge(prepared.preparedOp);
     const signedOperation = await this.signOperation(forgedBytes);

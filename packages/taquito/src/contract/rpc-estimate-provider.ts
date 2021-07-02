@@ -1,7 +1,7 @@
 import { PreapplyResponse, RPCRunOperationParam, OpKind } from '@taquito/rpc';
 import BigNumber from 'bignumber.js';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
-import { OperationEmitter } from '../operations/operation-emitter';
+import { OperationEmitter, SIGNATURE_STUB } from '../operations/operation-emitter';
 import {
   flattenErrors,
   flattenOperationResult,
@@ -50,10 +50,6 @@ const mergeLimits = (
         : userDefinedLimit.storageLimit,
   };
 };
-
-// RPC requires a signature but does not verify it
-const SIGNATURE_STUB =
-  'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg';
 
 export class RPCEstimateProvider extends OperationEmitter implements EstimationProvider {
   private readonly ALLOCATION_STORAGE = 257;
@@ -203,7 +199,6 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     const estimateProperties = await this.prepareEstimate({
       operation: ops,
       source: pkh,
-      publicKeyHash: pkh,
     });
     if (isRevealNeeded) {
       estimateProperties.shift();
@@ -229,8 +224,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     const ops = isRevealNeeded ? await this.addRevealOp([op], pkh) : op;
     const estimateProperties = await this.prepareEstimate({
       operation: ops,
-      source: pkh,
-      publicKeyHash: pkh,
+      source: pkh
     });
     if (isRevealNeeded) {
       estimateProperties.shift();
@@ -258,8 +252,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     const ops = isRevealNeeded ? await this.addRevealOp([op], pkh) : op;
     const estimateProperties = await this.prepareEstimate({
       operation: ops,
-      source: pkh,
-      publicKeyHash: pkh,
+      source: pkh
     });
     if (isRevealNeeded) {
       estimateProperties.shift();
@@ -319,8 +312,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     operations = isRevealNeeded ? await this.addRevealOp(operations, pkh) : operations;
     const estimateProperties = await this.prepareEstimate({
       operation: operations,
-      source: pkh,
-      publicKeyHash: pkh,
+      source: pkh
     });
 
     return Estimate.createArrayEstimateInstancesFromProperties(estimateProperties);
@@ -342,8 +334,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     const ops = isRevealNeeded ? await this.addRevealOp([op], pkh) : op;
     const estimateProperties = await this.prepareEstimate({
       operation: ops,
-      source: pkh,
-      publicKeyHash: pkh,
+      source: pkh
     });
     if (isRevealNeeded) {
       estimateProperties.shift();
@@ -371,7 +362,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
         pkh,
         await this.signer.publicKey()
       );
-      const estimateProperties = await this.prepareEstimate({ operation: op, source: pkh, publicKeyHash: pkh });
+      const estimateProperties = await this.prepareEstimate({ operation: op, source: pkh });
       return Estimate.createEstimateInstanceFromProperties(estimateProperties);
     }
   }

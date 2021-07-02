@@ -22,7 +22,7 @@ import {
 } from './types';
 
 // RPC requires a signature but does not verify it
-const SIGNATURE_STUB =
+export const SIGNATURE_STUB =
   'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg';
 
 export interface PreparedOperation {
@@ -153,6 +153,7 @@ export abstract class OperationEmitter {
   };
 
   private getSource = (op: RPCOpWithSource, publicKeyHash: string, source?: string) => {
+    console.log('pkh:', publicKeyHash, 'source:', source, 'opsource:', op.source)
     return {
       source: typeof op.source === 'undefined' ? source || publicKeyHash : op.source,
     };
@@ -160,8 +161,7 @@ export abstract class OperationEmitter {
 
   protected async prepareOpAndSimulation({
     operation,
-    source,
-    publicKeyHash,
+    source
   }: PrepareOperationParams): Promise<PreparedOpAndSimulation> {
     let ops: RPCOperation[] = [];
 
@@ -170,6 +170,8 @@ export abstract class OperationEmitter {
     } else {
       ops = [operation];
     }
+
+    const publicKeyHash = source? source: await this.signer.publicKeyHash();
 
     const { counter, hash, protocol } = await this.getCounterHashAndProtocol(ops, publicKeyHash);
 
@@ -270,8 +272,7 @@ export abstract class OperationEmitter {
 
   protected async prepareOperationEstimation({
     operation,
-    source,
-    publicKeyHash,
+    source
   }: PrepareOperationParams): Promise<PreparedOperationSimulation> {
     const countersScope: { [key: string]: number } = {};
     let ops: RPCOperation[] = [];
@@ -282,7 +283,9 @@ export abstract class OperationEmitter {
       ops = [operation];
     }
 
-    const { counter, hash, protocol } = await this.getCounterHashAndProtocol(ops, publicKeyHash);
+    const publicKeyHash = source? source: await this.signer.publicKeyHash();
+
+    const { counter, hash } = await this.getCounterHashAndProtocol(ops, publicKeyHash);
 
     if (!countersScope[publicKeyHash] || countersScope[publicKeyHash] < counter) {
       countersScope[publicKeyHash] = counter;
