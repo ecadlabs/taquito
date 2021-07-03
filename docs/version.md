@@ -2,6 +2,88 @@
 title: Versions
 author: Jev Bjorsell
 ---
+# Taquito v9.2.0-beta
+## Summary
+
+### New features
+
+- Compatibility support for Granadanet
+- @taquito/michelson-encoder - Accept bytes in Uint8Array #375
+- @taquito/michelson-encoder - Added Bls12-381 tokens #888
+- @taquito/michelson-encoder - Added sapling_state and sapling_transaction tokens #586
+- @taquito/rpc - Added sapling RPC #586
+- @taquito/taquito - sapling_state abstraction on storage read #602
+- @taquito/taquito - Possibility to send more than one operation in the same block #955
+
+### Documentation
+
+- @taquito/http-utils - Cancel http requests
+
+### Enhancements
+
+- Updated various dependencies and switched from tslint to eslint
+
+
+## @taquito/michelson-encoder - Accept bytes in Uint8Array
+
+The only format accepted in the Michelson-encoder for the type bytes was the hexadecimal string. We added support for the type Uint8Array. It is now possible to call an entry point or originate a contract using a Uint8Array or a hexadecimal string. 
+
+## @taquito/http-utils - Make http requests cancelable
+
+We received requests from users to use the abort signal to allow making requests cancelable. This implementation would require changes in the high-level API that we will consider in an incoming issue where we envisage providing a new API. Meanwhile, it is possible to customize the HttpBackend and RpcClient classes to support cancelable requests. Here is an example where a custom HttpBackend class is used to be able to cancel all requests: https://tezostaquito.io/docs/cancel_http_requests
+The example, as not specific, might not be ideal for all use cases, so we plan to provide better support for this feature in the future.
+
+## @taquito/michelson-encoder - Added Bls12-381 tokens
+
+The `bls12_381_fr`, `bls12_381_g1`, and `bls12_381_g2` tokens were missing in the Michelson-Encoder since the Edo protocol and have been added. As for the bytes token, their supported format is the hexadecimal string or the Uint8Array.
+
+## @taquito/michelson-encoder - Added sapling_state and sapling_transaction tokens
+
+The `sapling_state` and `sapling_transaction` tokens were missing in the Michelson-Encoder since the Edo protocol and have been added. 
+
+Note that no additional abstractions or ability to decrypt Sapling transactions have been implemented so far.
+
+## @taquito/rpc - Added sapling RPC
+
+The RPC endpoints related to sapling have been added to the RpcClient:
+- the `getSaplingDiffById` method takes a sapling state ID as a parameter and returns its associated values.
+- the `getSaplingDiffByContract` takes the address of a contract as a parameter and returns its sapling state.
+
+## @taquito/taquito - sapling_state abstraction on storage read
+
+When accessing a `sapling_state` in the storage with the RPC, only the sapling state's ID is returned.
+When fetching the storage of a contract containing a `sapling_state`, Taquito will provide an instance of `SaplingStateAbstraction`. The `SaplingStateAbstraction` class has a `getId` and a `getSaplingDiff` methods.
+The `getSaplingDiff` method returns an object of the following type:
+```
+{
+  root: SaplingTransactionCommitmentHash,
+  commitments_and_ciphertexts: CommitmentsAndCiphertexts[];
+  nullifiers: string[];
+}
+```
+
+## @taquito/taquito - Possibility to send several operations in the same block
+
+Unless using the batch API, a specific account was limited to only sending one operation per block. If trying to send a second operation without awaiting confirmation on the first one, a counter exception was thrown by the RPC.
+
+The node accepts the injection of more than one operation from the same account in the same block; the counter needs to be incremented by one for each of them. A limitation comes from the chains/main/blocks/head/helpers/scripts/run_operation and /chains/main/blocks/head/helpers/preapply/operations RPC APIs as they do not take into account the transaction in the mempool when checking the account counter value.
+
+We added a counter property (a map of an account and its counter) on the TezosToolkit instance as a workaround. The counter is incremented when sending more than one operation in a row and used to inject the operation. However, the counter used in the prevalidation or the estimation is the head counter + 1. Note that if you send multiple operations in a block to a contract, the estimate will not take into account the impact of the previous operation on the storage of the contract. Consider using the batch API to send many operations at the same time. The solution presented in this issue is a workaround; the operations will need to be sent from the same TezosToolkit instance as it will hold the counter state.
+
+
+## What's coming next for Taquito?
+
+We will work on integrating flextesa node into our CI pipeline. We are currently relying on testnets for testing purposes. Since many Taquito users use flextesa for testing, including it in our development process will help provide better support, especially regarding errors encountered during Operation.confirmation() issues.
+
+We plan to improve performance issues by implementing some caching. Please have a look at these open discussions: https://github.com/ecadlabs/taquito/discussions/917 https://github.com/ecadlabs/taquito/discussions/916. Any feedback or suggestions are appreciated.
+
+If you have feature or issue requests, please create an issue on http://github.com/ecadlabs/taquito/issues or join us on the Taquito community support channel on Telegram https://t.me/tezostaquito
+
+
+# Taquito v9.1.1-beta
+
+@taquito/beacon-wallet - Updated beacon-sdk to version 2.2.9
+@taquito/michelson-encoder - Fix for unexpected MapTypecheckError when loading contract storage - for cases where a map contains a big map as value #925
 # Taquito v9.1.0-beta
 ## Summary
 
