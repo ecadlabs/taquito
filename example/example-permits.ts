@@ -61,25 +61,43 @@ import { InMemorySigner, importKey } from '@taquito/signer';
 import { Parser } from '@taquito/michel-codec';
 import { buf2hex, hex2buf } from '@taquito/utils';
 
-    const blake = require('blakejs');
-    const fs = require("fs");
-    const bob_address = 'tz1Xk7HkSwHv6dTEgR7E2WC2yFj4cyyuj2Gh';
-    const { email, password, mnemonic, secret } =
-      JSON.parse(
-        fs.readFileSync(require('os').homedir() + '/Downloads/' + bob_address + '.json').toString()
-    );
+const blake = require('blakejs');
+const fs = require("fs");
+const bob_address = 'tz1Xk7HkSwHv6dTEgR7E2WC2yFj4cyyuj2Gh';
+const Tezos = new TezosToolkit('https://api.tez.ie/rpc/florencenet');
 
-    const Tezos = new TezosToolkit('https://api.tez.ie/rpc/florencenet');
-
-    Tezos.setProvider({ signer: InMemorySigner.fromFundraiser(email, password, mnemonic.join(' ')) });
-
+const FAUCET_KEY = {
+    mnemonic: [
+        'cart',
+        'will',
+        'page',
+        'bench',
+        'notice',
+        'leisure',
+        'penalty',
+        'medal',
+        'define',
+        'odor',
+        'ride',
+        'devote',
+        'cannon',
+        'setup',
+        'rescue',
+      ],
+      secret: '35f266fbf0fca752da1342fdfc745a9c608e7b20',
+      amount: '4219352756',
+      pkh: 'tz1YBMFg1nLAPxBE6djnCPbMRH5PLXQWt8Mg',
+      password: 'Fa26j580dQ',
+      email: 'jxmjvauo.guddusns@tezos.example.org',
+    };
+    
     importKey(
       Tezos,
-      email,
-      password,
-      mnemonic.join(' '),
-      secret
-    ).catch((e) => console.error(e));
+      FAUCET_KEY.email,
+      FAUCET_KEY.password,
+      FAUCET_KEY.mnemonic.join(' '),
+      FAUCET_KEY.secret
+    );
 
 <<<<<<< HEAD
     const errors_to_missigned_bytes = errors => {
@@ -219,9 +237,13 @@ async function example() {
   };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   example();
 =======
   example();
 
 
 >>>>>>> 292e1a8c9... finished the tests
+=======
+  example();
+>>>>>>> 32175b6f1... fixes per review

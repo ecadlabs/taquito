@@ -131,7 +131,7 @@ import { permit_admin_42} from "./data/permit_admin_42";
 import { permit_admin_42_expiry} from "./data/permit_admin_42_expiry";
 import { permit_admin_42_set} from "./data/permit_admin_42_set";
 
-CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
+CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
   Tezos.setPackerProvider(new MichelCodecPacker());
@@ -177,72 +177,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         done()
     })
 
-    test('Deploy a contract for admin without permits', async (done) => {
-
-      const LocalTez1 = await createAddress();
-      const localTez1Pkh = await LocalTez1.signer.publicKeyHash();
-
-      const op = await Tezos.contract.originate({
-          code: `{ parameter nat;
-            storage address;
-            code { DUP;
-                    CAR;
-                    DIP { CDR };
-                    PUSH nat 42;
-                    COMPARE;
-                    EQ;
-                    IF {  }
-                      { PUSH string "not 42";
-                        FAILWITH };
-                    DUP;
-                    SENDER;
-                    COMPARE;
-                    EQ;
-                    IF {  }
-                      { PUSH string "not admin";
-                        FAILWITH };
-                    NIL operation;
-                    PAIR }; }`,
-          storage: localTez1Pkh
-      });
-
-      await op.confirmation();
-      expect(op.hash).toBeDefined();
-      const contract = await op.contract();
-      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-
-      //submit the admin parameter to the contract
-      Tezos.contract
-      .at(contract.address)
-      .then((c) => {
-      return c.methods.permit("admin").send();
-      })
-      .then(async (op) => {
-        await op.confirmation(3);
-        return op.hash;
-      })
-      .catch(Error) ;
-      expect(op.hash).toBeDefined();
-      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-      done();
-
-      //submit the 42 parameter to the contract
-      Tezos.contract
-      .at(contract.address)
-      .then((c) => {
-      return c.methods.permit("42").send();
-      })
-      .then(async (op) => {
-        await op.confirmation(3);
-        return op.hash;
-      })
-      .catch(Error) ;
-      expect(op.hash).toBeDefined();
-      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-      done();
-    });
-  });
-
   test('Permit can be submitted and used', async (done) => {
 
       const op = await Tezos.contract.originate({
@@ -273,8 +207,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
             return op.hash;
           })
           .catch(Error) ;
-          expect(op.hash).toBeDefined();
-          expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
 
         //submit 42 to the wrapped entrypoint
         Tezos.contract
@@ -287,8 +219,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
             return op.hash;
           })
         .catch(Error) ;
-        expect(op.hash).toBeDefined();
-        expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
         done();
       });
 
@@ -414,8 +344,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
          return op.hash;
        })
        .catch(Error) ;
-       expect(op.hash).toBeDefined();
-       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
        done();
     });
 
@@ -426,8 +354,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         {
         0: new MichelsonMap(),
         1: 300,
-        2: 'tz1h1LzP7U8bNNhow8Mt1TNMxb91AjG3p6KH',
-        3: 'tz1h1LzP7U8bNNhow8Mt1TNMxb91AjG3p6KH'
+        2: 'tz1h1LzP7U8bNNhow8Mt1TNMxb91AjG3p6KH'
         },
         });
         await op.confirmation();
@@ -447,13 +374,15 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
           return op.hash;
         })
         .catch(Error) ;
-        expect(op.hash).toBeDefined();
-        expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-
         done();
       });
+<<<<<<< HEAD
   })
 
 
 
 >>>>>>> 2964f7fb2... working draft
+=======
+    });
+  })
+>>>>>>> 32175b6f1... fixes per review
