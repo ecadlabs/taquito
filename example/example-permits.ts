@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /**
  * This example of interaction with a permit contract is taken from https://github.com/tqtezos/lorentz-contract-permit.
  * It is also used in an integration test at integration-tests/contract-permits-set.spec.ts.
@@ -48,6 +49,36 @@ const FAUCET_KEY = {
 
     const errors_to_missigned_bytes = (errors: any[]) => {
       const errors_with = errors.map((x: { with: any; }) => x.with).filter((x: any) => x !== undefined);
+=======
+import { ContractAbstraction, ContractProvider, TezosToolkit } from '@taquito/taquito';
+import { InMemorySigner, importKey } from '@taquito/signer';
+import { Parser, emitMicheline } from '@taquito/michel-codec';
+import { ParameterSchema } from '@taquito/michelson-encoder';
+import { buf2hex, hex2buf } from '@taquito/utils';
+
+    const blake = require('blakejs');
+    const fs = require("fs");
+    const bob_address = 'tz1Xk7HkSwHv6dTEgR7E2WC2yFj4cyyuj2Gh';
+    const { email, password, mnemonic, secret } =
+      JSON.parse(
+        fs.readFileSync(require('os').homedir() + '/Downloads/' + bob_address + '.json').toString()
+    );
+
+    const Tezos = new TezosToolkit('https://api.tez.ie/rpc/florencenet');
+
+    Tezos.setProvider({ signer: InMemorySigner.fromFundraiser(email, password, mnemonic.join(' ')) });
+
+    importKey(
+      Tezos,
+      email,
+      password,
+      mnemonic.join(' '),
+      secret
+    ).catch((e) => console.error(e));
+
+    const errors_to_missigned_bytes = errors => {
+      const errors_with = errors.map(x => x.with).filter(x => x !== undefined);
+>>>>>>> 292e1a8c9... finished the tests
       if (errors_with.length != 1){
         throw ['errors_to_missigned_bytes: expected one error to fail "with" michelson, but found:', errors_with]
       } else {
@@ -85,7 +116,11 @@ const FAUCET_KEY = {
         data: wrapped_param,
         type: wrapped_param_type,
       }).catch(e => console.error('error:', e));
+<<<<<<< HEAD
       var packed_param: string;
+=======
+      var packed_param;
+>>>>>>> 292e1a8c9... finished the tests
       if (raw_packed) {
         packed_param = raw_packed.packed
       } else {
@@ -118,7 +153,11 @@ async function example() {
       const expected_param_hash = "0f0db0ce6f057a8835adb6a2c617fd8a136b8028fac90aab7b4766def688ea0c";
       if(param_hash === expected_param_hash) {
       } else {
+<<<<<<< HEAD
         throw `unexpected param_hash: ${param_hash},\n
+=======
+        throw `unexpected param_hash: {param_hash},\n
+>>>>>>> 292e1a8c9... finished the tests
         while {expected_param_hash} was expected`;
       }
 
@@ -128,16 +167,26 @@ async function example() {
       console.log('bytes_to_sign:', bytes_to_sign);
 
       // Sign the parameter
+<<<<<<< HEAD
       const param_sig = await Tezos.signer.sign(bytes_to_sign)
                         .then(s => s.prefixSig)
                         .catch((error) => console.log(JSON.stringify(error)));
+=======
+      // file deepcode ignore PromiseNotCaughtGeneral: <please specify a reason of ignoring this>
+      const param_sig = await Tezos.signer.sign(bytes_to_sign).then(s => s.prefixSig);
+>>>>>>> 292e1a8c9... finished the tests
 
       // This is what a relayer needs to submit the parameter on the signer's behalf
       console.log('permit package:', [signer_key, param_sig, param_hash]);
 
       // Submit the permit to the contract
       const permit_op = await permit_contract.methods.permit(signer_key, param_sig, param_hash).send();
+<<<<<<< HEAD
       await permit_op.confirmation()
+=======
+      // file deepcode ignore PromiseNotCaughtGeneral: <please specify a reason of ignoring this>
+      await permit_op.confirmation().then(() => console.log('permit_op hash:', permit_op.hash));
+>>>>>>> 292e1a8c9... finished the tests
 
       console.log('ending: permit_examples');
     } catch (ex) {
@@ -145,4 +194,10 @@ async function example() {
     }
   };
 
+<<<<<<< HEAD
   example();
+=======
+  example();
+
+
+>>>>>>> 292e1a8c9... finished the tests
