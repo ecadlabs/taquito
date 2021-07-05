@@ -119,6 +119,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "@types/jest": "^26.0.23",
     "@types/node": "^15.12.2",
     "@typescript-eslint/eslint-plugin": "^4.28.1",
@@ -146,6 +147,10 @@
 =======
     "blakejs": "^1.1.0",
 >>>>>>> dd1978583... add blakejs back in as a dependnecy after npm install
+=======
+    "@types/jest": "^26.0.23",
+    "@types/node": "^15.12.2",
+>>>>>>> b9397b309... modified packages
     "jest": "^26.6.3",
     "jest-config": "^26.6.3",
     "jest-retries": "^1.0.1",
