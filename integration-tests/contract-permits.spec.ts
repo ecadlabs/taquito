@@ -51,6 +51,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     test('Permit can be submitted and set', async (done) => {
 <<<<<<< HEAD
+<<<<<<< HEAD
       const op = await Tezos.contract.originate({
         code: permit_admin_42_set,
         storage:
@@ -185,6 +186,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 =======
       console.log("ran this test")
 >>>>>>> 4fd49962e... changes per review
+=======
+>>>>>>> 17caf8144... deal with conflicts
       const op = await Tezos.contract.originate({
         code: permit_admin_42_set,
         storage:

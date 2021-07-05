@@ -5,6 +5,7 @@ export const VERSION = {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "commitHash": "a8e9548e650215186f661033b59299ace72c9ee6",
     "version": "9.2.0"
 =======
@@ -15,6 +16,9 @@ export const VERSION = {
 =======
     "commitHash": "60ced224797ae0a15c5212ce379f4ceb181effed",
 >>>>>>> 46ce21d6d... deal with conflicts
+=======
+    "commitHash": "46ce21d6d08a6b1525118956e043f20200700ae8",
+>>>>>>> 17caf8144... deal with conflicts
     "version": "9.1.1"
 >>>>>>> fb9ac31d3... deal with conflicts
 };
