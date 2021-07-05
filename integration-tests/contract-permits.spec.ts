@@ -127,11 +127,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 =======
 import { MichelsonMap, MichelCodecPacker } from "@taquito/taquito";
 import { importKey } from '@taquito/signer';
-import { Tzip16Module } from '@taquito/tzip16';
 import { permit_admin_42} from "./data/permit_admin_42";
 import { permit_admin_42_expiry} from "./data/permit_admin_42_expiry";
 import { permit_admin_42_set} from "./data/permit_admin_42_set";
-import { fa2Contract_with_permits} from "./data/fa2_contract_with_permits";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
@@ -156,6 +154,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       "weather",
       "quote"
     ],
+    // file deepcode ignore HardcodedNonCryptoSecret/test: <please specify a reason of ignoring this>
     "secret": "782ff5c78fc58df062670fdc27d5a8a8003ecf16",
     "amount": "32252493855",
     "pkh": "tz1Xk7HkSwHv6dTEgR7E2WC2yFj4cyyuj2Gh",

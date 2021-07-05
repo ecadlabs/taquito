@@ -52,8 +52,7 @@ const FAUCET_KEY = {
 =======
 import { ContractAbstraction, ContractProvider, TezosToolkit } from '@taquito/taquito';
 import { InMemorySigner, importKey } from '@taquito/signer';
-import { Parser, emitMicheline } from '@taquito/michel-codec';
-import { ParameterSchema } from '@taquito/michelson-encoder';
+import { Parser } from '@taquito/michel-codec';
 import { buf2hex, hex2buf } from '@taquito/utils';
 
     const blake = require('blakejs');
@@ -168,6 +167,7 @@ async function example() {
 
       // Sign the parameter
 <<<<<<< HEAD
+<<<<<<< HEAD
       const param_sig = await Tezos.signer.sign(bytes_to_sign)
                         .then(s => s.prefixSig)
                         .catch((error) => console.log(JSON.stringify(error)));
@@ -175,6 +175,11 @@ async function example() {
       // file deepcode ignore PromiseNotCaughtGeneral: <please specify a reason of ignoring this>
       const param_sig = await Tezos.signer.sign(bytes_to_sign).then(s => s.prefixSig);
 >>>>>>> 292e1a8c9... finished the tests
+=======
+      const param_sig = await Tezos.signer.sign(bytes_to_sign)
+                        .then(s => s.prefixSig)
+                        .catch((error) => console.log(JSON.stringify(error)));
+>>>>>>> 3d91ae0ec... repair deep code complaints
 
       // This is what a relayer needs to submit the parameter on the signer's behalf
       console.log('permit package:', [signer_key, param_sig, param_hash]);
@@ -182,11 +187,15 @@ async function example() {
       // Submit the permit to the contract
       const permit_op = await permit_contract.methods.permit(signer_key, param_sig, param_hash).send();
 <<<<<<< HEAD
+<<<<<<< HEAD
       await permit_op.confirmation()
 =======
       // file deepcode ignore PromiseNotCaughtGeneral: <please specify a reason of ignoring this>
       await permit_op.confirmation().then(() => console.log('permit_op hash:', permit_op.hash));
 >>>>>>> 292e1a8c9... finished the tests
+=======
+      await permit_op.confirmation()
+>>>>>>> 3d91ae0ec... repair deep code complaints
 
       console.log('ending: permit_examples');
     } catch (ex) {
