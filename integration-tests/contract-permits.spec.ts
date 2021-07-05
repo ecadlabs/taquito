@@ -22,45 +22,10 @@ const blake = require('blakejs');
 const bob_address = 'tz1Xk7HkSwHv6dTEgR7E2WC2yFj4cyyuj2Gh';
 
 const errors_to_missigned_bytes = (errors: any[]) => {
-  const errors_with = errors.map((x) => x.with).filter((x) => x !== undefined);
-  if (errors_with.length != 1) {
-    throw [
-      'errors_to_missigned_bytes: expected one error to fail "with" michelson, but found:',
-      errors_with,
-    ];
-  } else {
-    const error_with = errors_with[0];
-    if (error_with.prim !== 'Pair') {
-      throw ['errors_to_missigned_bytes: expected a "Pair", but found:', error_with.prim];
-    } else {
-      const error_with_args = error_with.args;
-      if (error_with_args.length !== 2) {
-        throw [
-          'errors_to_missigned_bytes: expected two arguments to "Pair", but found:',
-          error_with_args,
-        ];
-      } else {
-        if (error_with_args[0].string !== 'missigned') {
-          throw [
-            'errors_to_missigned_bytes: expected a "missigned" annotation, but found:',
-            error_with_args[0],
-          ];
-        } else {
-          if (typeof error_with_args[1].bytes !== 'string') {
-            throw [
-              'errors_to_missigned_bytes: expected bytes, but found:',
-              error_with_args[1].bytes,
-            ];
-          } else {
-            return error_with_args[1].bytes;
-          }
-        }
-      }
-    }
-  }
+  return errors[1].with.args[1].bytes;
 };
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
   Tezos.setPackerProvider(new MichelCodecPacker());
 
@@ -402,6 +367,167 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(viewGetDefaultExpiryResult.toString()).toEqual('50000');
 
       done();
+    });
+
+    describe(`Test of contracts having a permit for tzip-17: ${rpc}`, () => {
+      beforeEach(async (done) => {
+        await setup(true);
+        done();
+      });
+
+      test('Show that any user can submit the permit hash to use an entrypoint', async (done) => {
+        //following https://github.com/EGuenz/smartpy-permits
+
+        const LocalTez1 = await createAddress();
+        const bootstrap1_address = await LocalTez1.signer.publicKeyHash();
+        const funding_op1 = await Tezos.contract.transfer({
+          to: bootstrap1_address,
+          amount: 0.5,
+        });
+        await funding_op1.confirmation();
+
+        const LocalTez2 = await createAddress();
+        const bootstrap2_address = await LocalTez2.signer.publicKeyHash();
+        const funding_op2 = await Tezos.contract.transfer({
+          to: bootstrap2_address,
+          amount: 0.5,
+        });
+        await funding_op2.confirmation();
+
+        const LocalTez3 = await createAddress();
+        const bootstrap3_address = await LocalTez3.signer.publicKeyHash();
+        const funding_op3 = await Tezos.contract.transfer({
+          to: bootstrap3_address,
+          amount: 0.5,
+        });
+        await funding_op3.confirmation();
+
+        const LocalTez4 = await createAddress();
+        const bootstrap4_address = await LocalTez4.signer.publicKeyHash();
+        const funding_op4 = await Tezos.contract.transfer({
+          to: bootstrap4_address,
+          amount: 0.5,
+        });
+        await funding_op4.confirmation();
+
+        //Originate permit-fa1.2 contract with bootstrap1_address as administrator
+        const url = 'https://storage.googleapis.com/tzip-16/permit_metadata.json';
+        const bytesUrl = char2Bytes(url);
+        const metadata = new MichelsonMap();
+        metadata.set('', bytesUrl);
+
+        const op = await Tezos.contract.originate({
+          code: permit_fa12_smartpy,
+          storage: {
+            administrator: await LocalTez1.signer.publicKeyHash(),
+            balances: new MichelsonMap(),
+            counter: '0',
+            default_expiry: '50000',
+            max_expiry: '2628000',
+            metadata: metadata,
+            paused: false,
+            permit_expiries: new MichelsonMap(),
+            permits: new MichelsonMap(),
+            totalSupply: '100',
+            user_expiries: new MichelsonMap(),
+          },
+        });
+
+        await op.confirmation();
+        expect(op.hash).toBeDefined();
+        expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+        const fa12_contract = await op.contract();
+        const contractAddress = fa12_contract.address;
+        expect(op.status).toEqual('applied');
+
+        //Mint 10 tokens to bootstrap 2
+        const mint_contract = await LocalTez1.contract.at(fa12_contract.address);
+        const mint = await mint_contract.methods.mint(bootstrap2_address, 10).send();
+        expect(mint.hash).toBeDefined();
+        expect(mint.status).toEqual('applied');
+        await mint.confirmation();
+
+        //Observe transfer by non bootstrap2 sender fails
+        const fail_contract = await LocalTez4.contract.at(fa12_contract.address);
+        try {
+          await fail_contract.methods.transfer(bootstrap3_address, bootstrap4_address, 1).send();
+        } catch (errors) {
+          let jsonStr: string = JSON.stringify(errors);
+          let jsonObj = JSON.parse(jsonStr);
+          let error_code = JSON.stringify(jsonObj.errors[1].with.int);
+          expect((error_code = '26'));
+        }
+
+        //Define a fake permit parameter to get the expected unsigned bytes
+        const transfer_param: any = fa12_contract.methods['transfer'](
+          bootstrap2_address,
+          bootstrap3_address,
+          1
+        ).toTransferParams().parameter?.value;
+        const type = fa12_contract.entrypoints.entrypoints['transfer'];
+        const TRANSFER_PARAM_PACKED = await Tezos.rpc.packData({
+          data: transfer_param,
+          type: type,
+        });
+
+        //Get the BLAKE2B of TRANSFER_PARAM_PACKED
+        const packed_param = TRANSFER_PARAM_PACKED.packed;
+        const TRANSFER_PARAM_HASHED = buf2hex(blake.blake2b(hex2buf(packed_param), null, 32));
+
+        //Set a random signature
+        const RAND_SIG =
+          'edsigtfkWys7vyeQy1PnHcBuac1dgj2aJ8Jv3fvoDE5XRtxTMRgJBwVgMTzvhAzBQyjH48ux9KE8jRZBSk4Rv2bfphsfpKP3ggM';
+
+        //Get Bootstrap2's public_key and capture it
+        const PUB_KEY = await LocalTez2.signer.publicKey();
+
+        //Set Fake permit param
+        //PERMIT_PARAM_FAKE="{Pair \"$PUB_KEY\" (Pair \"$RAND_SIG\" $TRANSFER_PARAM_HASHED)}"
+
+        //Set MISSIGNED with bytes returned in error message of fake permit submission
+        const trial_permit_contract = await LocalTez4.contract.at(fa12_contract.address);
+        const bytes_to_sign = await trial_permit_contract.methods
+          .permit([
+            {
+              0: PUB_KEY, //key,
+              1: RAND_SIG, //signature
+              2: TRANSFER_PARAM_HASHED, //bytes
+            },
+          ])
+          .send()
+          .catch((e) => errors_to_missigned_bytes(e.errors));
+
+        //Sign MISSIGNED bytes for bootstrap_address2
+        const SIGNATURE = await LocalTez2.signer.sign(bytes_to_sign).then((s) => s.prefixSig);
+
+        //Craft correct permit parameter
+        //PERMIT_PARAM="{Pair \"$PUB_KEY\" (Pair \"$SIGNATURE\" $TRANSFER_PARAM_HASHED)}"
+
+        //Anyone can submit permit start
+        const signed_permit_contract = await LocalTez4.contract.at(fa12_contract.address);
+        const permit_contract = await signed_permit_contract.methods
+          .permit([
+            {
+              0: PUB_KEY, //key,
+              1: SIGNATURE, //signature
+              2: TRANSFER_PARAM_HASHED, //bytes
+            },
+          ])
+          .send();
+        await permit_contract.confirmation();
+        expect(permit_contract.hash).toBeDefined();
+        expect(permit_contract.status).toEqual('applied');
+
+        //Successfully execute transfer away from bootstrap2  by calling transfer endpoint from any account
+        const successful_transfer = await signed_permit_contract.methods
+          .transfer(bootstrap2_address, bootstrap3_address, 1)
+          .send();
+        await successful_transfer.confirmation();
+        expect(successful_transfer.hash).toBeDefined();
+        expect(successful_transfer.status).toEqual('applied');
+
+        done();
+      });
     });
   });
 <<<<<<< HEAD
