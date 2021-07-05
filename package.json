@@ -98,5 +98,8 @@
     "extends": [
       "@commitlint/config-conventional"
     ]
+  },
+  "dependencies": {
+    "md5": "^2.3.0"
   }
 }
