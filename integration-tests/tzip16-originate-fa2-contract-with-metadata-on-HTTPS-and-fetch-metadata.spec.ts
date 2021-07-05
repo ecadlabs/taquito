@@ -7,6 +7,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
    const Tezos = lib;
    Tezos.addExtension(new Tzip16Module());
    let contractAddress: string;
+   
    describe(`Tzip16 metadata and view on a fa2 contract: ${rpc}`, () => {
 
       beforeEach(async (done) => {

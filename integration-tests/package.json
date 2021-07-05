@@ -12,6 +12,7 @@
   },
   "version": "9.2.0",
   "dependencies": {
+<<<<<<< HEAD
     "@ledgerhq/hw-transport": "^5.51.1",
     "@ledgerhq/hw-transport-node-hid": "^5.51.1",
 <<<<<<< HEAD
@@ -50,6 +51,20 @@
 =======
     "blakejs": "^1.1.1"
 >>>>>>> e99dae2bd... merge conflicts
+=======
+    "@ledgerhq/hw-transport": "^5.41.0",
+    "@ledgerhq/hw-transport-node-hid": "^5.41.0",
+    "@taquito/http-utils": "^9.0.1",
+    "@taquito/local-forging": "^9.0.1",
+    "@taquito/michel-codec": "^9.0.1",
+    "@taquito/remote-signer": "^9.0.1",
+    "@taquito/signer": "^9.0.1",
+    "@taquito/taquito": "^9.0.1",
+    "@taquito/tzip16": "^9.0.1",
+    "@taquito/utils": "^9.0.1",
+    "bignumber.js": "^9.0.1",
+    "blakejs": "^1.1.0"
+>>>>>>> 9f6952644... consoloditaing
   },
   "private": true,
   "jest": {
