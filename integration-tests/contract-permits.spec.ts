@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { CONFIGS } from "./config";
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -9,6 +10,8 @@ import { permit_fa12_smartpy} from "./data/permit_fa12_smartpy";
 import { buf2hex, char2Bytes, hex2buf } from "@taquito/utils";
 import { tzip16, Tzip16Module } from "@taquito/tzip16";
 =======
+=======
+>>>>>>> 2afc206597a8411662969609e117eb2f89c68bfc
 import { CONFIGS } from './config';
 import { MichelsonMap, MichelCodecPacker } from '@taquito/taquito';
 import { permit_admin_42_expiry } from './data/permit_admin_42_expiry';
@@ -16,7 +19,10 @@ import { permit_admin_42_set } from './data/permit_admin_42_set';
 import { permit_fa12_smartpy } from './data/permit_fa12_smartpy';
 import { buf2hex, char2Bytes, hex2buf } from '@taquito/utils';
 import { tzip16, Tzip16Module } from '@taquito/tzip16';
+<<<<<<< HEAD
 >>>>>>> dcf4e7301... formatted documents
+=======
+>>>>>>> 2afc206597a8411662969609e117eb2f89c68bfc
 
 const blake = require('blakejs');
 const bob_address = 'tz1Xk7HkSwHv6dTEgR7E2WC2yFj4cyyuj2Gh';
@@ -38,6 +44,9 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
     test('Permit can be submitted and set', async (done) => {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 2afc206597a8411662969609e117eb2f89c68bfc
       const op = await Tezos.contract.originate({
         code: permit_admin_42_set,
         storage: {
@@ -115,6 +124,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       expect(setExpiryMethodCall.hash).toBeDefined();
       expect(setExpiryMethodCall.status).toEqual('applied');
       done();
+<<<<<<< HEAD
 <<<<<<< HEAD
     }); 
 
@@ -273,6 +283,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         3: await Tezos.signer.publicKeyHash(),
         4: await Tezos.signer.publicKeyHash()
 =======
+=======
+>>>>>>> 2afc206597a8411662969609e117eb2f89c68bfc
     });
 
     test('Originate a permit contract and set defaultExpiry', async (done) => {
@@ -284,7 +296,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           2: 0,
           3: await Tezos.signer.publicKeyHash(),
           4: await Tezos.signer.publicKeyHash(),
+<<<<<<< HEAD
 >>>>>>> dcf4e7301... formatted documents
+=======
+>>>>>>> 2afc206597a8411662969609e117eb2f89c68bfc
         },
       });
       await op.confirmation();
@@ -532,6 +547,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     });
   });
 <<<<<<< HEAD
+<<<<<<< HEAD
 })
 =======
         3: 'tz1h1LzP7U8bNNhow8Mt1TNMxb91AjG3p6KH',
@@ -641,3 +657,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 =======
 });
 >>>>>>> dcf4e7301... formatted documents
+=======
+});
+>>>>>>> 2afc206597a8411662969609e117eb2f89c68bfc

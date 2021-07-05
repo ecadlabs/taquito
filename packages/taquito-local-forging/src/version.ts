@@ -5,6 +5,7 @@ export const VERSION = {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "commitHash": "46ce21d6d08a6b1525118956e043f20200700ae8",
 =======
     "commitHash": "60ced224797ae0a15c5212ce379f4ceb181effed",
@@ -15,6 +16,9 @@ export const VERSION = {
 =======
     "commitHash": "1e4a03b126cdefaf970f298b5d3db43df228e2f9",
 >>>>>>> ff9065f06... more conflict resolutions
+=======
+    "commitHash": "1e4a03b126cdefaf970f298b5d3db43df228e2f9",
+>>>>>>> 2afc206597a8411662969609e117eb2f89c68bfc
     "version": "9.1.1"
 };
 /* tslint:enable */

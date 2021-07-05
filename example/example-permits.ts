@@ -1,13 +1,19 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8f3461239... add credit in doc
+=======
+>>>>>>> 2afc206597a8411662969609e117eb2f89c68bfc
 /**
  * This example of interaction with a permit contract is taken from https://github.com/tqtezos/lorentz-contract-permit.
  * It is also used in an integration test at integration-tests/contract-permits-set.spec.ts.
  */
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 2afc206597a8411662969609e117eb2f89c68bfc
 import { ContractAbstraction, ContractProvider, TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
 import { Parser } from '@taquito/michel-codec';
@@ -18,6 +24,7 @@ const bob_address = 'tz1Xk7HkSwHv6dTEgR7E2WC2yFj4cyyuj2Gh';
 const Tezos = new TezosToolkit('https://api.tez.ie/rpc/florencenet');
 
 const FAUCET_KEY = {
+<<<<<<< HEAD
 <<<<<<< HEAD
     mnemonic: [
         'cart',
@@ -111,6 +118,8 @@ const FAUCET_KEY = {
       if (errors_with.length != 1){
         throw ['errors_to_missigned_bytes: expected one error to fail "with" michelson, but found:', errors_with]
 =======
+=======
+>>>>>>> 2afc206597a8411662969609e117eb2f89c68bfc
   mnemonic: [
     'cart',
     'will',
@@ -164,7 +173,10 @@ const errors_to_missigned_bytes = (errors: any[]) => {
           'errors_to_missigned_bytes: expected two arguments to "Pair", but found:',
           error_with_args,
         ];
+<<<<<<< HEAD
 >>>>>>> dcf4e7301... formatted documents
+=======
+>>>>>>> 2afc206597a8411662969609e117eb2f89c68bfc
       } else {
         if (error_with_args[0].string !== 'missigned') {
           throw [
@@ -183,6 +195,7 @@ const errors_to_missigned_bytes = (errors: any[]) => {
         }
       }
     }
+<<<<<<< HEAD
 <<<<<<< HEAD
 
     async function permitParamHash(contract: ContractAbstraction<ContractProvider>,
@@ -212,6 +225,8 @@ const errors_to_missigned_bytes = (errors: any[]) => {
         return buf2hex(blake.blake2b(hex2buf(packed_param), null, 32));
       }
 =======
+=======
+>>>>>>> 2afc206597a8411662969609e117eb2f89c68bfc
   }
 };
 
@@ -238,7 +253,10 @@ async function permitParamHash(
   }
   return buf2hex(blake.blake2b(hex2buf(packed_param), null, 32));
 }
+<<<<<<< HEAD
 >>>>>>> dcf4e7301... formatted documents
+=======
+>>>>>>> 2afc206597a8411662969609e117eb2f89c68bfc
 
 async function example() {
   try {
@@ -262,6 +280,7 @@ async function example() {
     const param_hash = await permitParamHash(permit_contract, 'wrapped', 42);
     console.log('permitParamHash:', param_hash);
 
+<<<<<<< HEAD
 <<<<<<< HEAD
       const expected_param_hash = "0f0db0ce6f057a8835adb6a2c617fd8a136b8028fac90aab7b4766def688ea0c";
       if(param_hash === expected_param_hash) {
@@ -319,11 +338,14 @@ async function example() {
     } catch (ex) {
       console.error(ex);
 =======
+=======
+>>>>>>> 2afc206597a8411662969609e117eb2f89c68bfc
     const expected_param_hash = '0f0db0ce6f057a8835adb6a2c617fd8a136b8028fac90aab7b4766def688ea0c';
     if (param_hash === expected_param_hash) {
     } else {
       throw `unexpected param_hash: ${param_hash},\n
         while {expected_param_hash} was expected`;
+<<<<<<< HEAD
 >>>>>>> dcf4e7301... formatted documents
     }
 
@@ -340,6 +362,10 @@ async function example() {
   example();
 >>>>>>> 32175b6f1... fixes per review
 =======
+=======
+    }
+
+>>>>>>> 2afc206597a8411662969609e117eb2f89c68bfc
     // Preapply a transfer with the dummy_sig to extract the bytes_to_sign
     const transfer_params = permit_contract.methods
       .permit(signer_key, dummy_sig, param_hash)
@@ -371,4 +397,7 @@ async function example() {
 }
 
 example();
+<<<<<<< HEAD
 >>>>>>> dcf4e7301... formatted documents
+=======
+>>>>>>> 2afc206597a8411662969609e117eb2f89c68bfc

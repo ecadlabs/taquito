@@ -86,8 +86,13 @@
     "@taquito/taquito": "^9.1.1",
     "@taquito/tzip16": "^9.1.1",
     "@taquito/utils": "^9.1.1",
+<<<<<<< HEAD
     "bignumber.js": "^9.0.1"
 >>>>>>> 212693808... fix conflilcts with package.json
+=======
+    "bignumber.js": "^9.0.1",
+    "blakejs": "^1.1.1"
+>>>>>>> 2afc206597a8411662969609e117eb2f89c68bfc
   },
   "private": true,
   "jest": {
@@ -116,6 +121,7 @@
     "testResultsProcessor": "./node_modules/jest-stare"
   },
   "devDependencies": {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -151,6 +157,10 @@
     "@types/jest": "^26.0.23",
     "@types/node": "^15.12.2",
 >>>>>>> b9397b309... modified packages
+=======
+    "@types/jest": "^26.0.16",
+    "@types/node": "^14.14.10",
+>>>>>>> 2afc206597a8411662969609e117eb2f89c68bfc
     "jest": "^26.6.3",
     "jest-config": "^26.6.3",
     "jest-retries": "^1.0.1",
