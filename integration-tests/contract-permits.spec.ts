@@ -50,6 +50,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     })
 
     test('Permit can be submitted and set', async (done) => {
+<<<<<<< HEAD
       const op = await Tezos.contract.originate({
         code: permit_admin_42_set,
         storage:
@@ -181,6 +182,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     test('Permit can be submitted and set', async (done) => {
 
+=======
+      console.log("ran this test")
+>>>>>>> 4fd49962e... changes per review
       const op = await Tezos.contract.originate({
         code: permit_admin_42_set,
         storage:
@@ -207,8 +211,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       })
       const packed_param = raw_packed.packed
       const param_hash =  buf2hex(blake.blake2b(hex2buf(packed_param), null, 32));
-      const transfer_params = permit_contract.methods.permit(signer_key, dummy_sig, param_hash).toTransferParams();
-      const bytes_to_sign = await Tezos.estimate.transfer(transfer_params).catch((e) => errors_to_missigned_bytes(e.errors));
+      //const transfer_params = permit_contract.methods.permit(signer_key, dummy_sig, param_hash).toTransferParams();
+      //const bytes_to_sign = await Tezos.estimate.transfer(transfer_params).catch((e) => errors_to_missigned_bytes(e.errors));
+      
+      const bytes_to_sign = await permit_contract.methods.permit(signer_key, dummy_sig, param_hash).send().catch((e) => errors_to_missigned_bytes(e.errors));
       
       const param_sig = await Tezos.signer.sign(bytes_to_sign)
       .then(s => s.prefixSig)

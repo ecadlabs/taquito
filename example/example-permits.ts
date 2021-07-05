@@ -186,10 +186,14 @@ async function example() {
       if(param_hash === expected_param_hash) {
       } else {
 <<<<<<< HEAD
+<<<<<<< HEAD
         throw `unexpected param_hash: ${param_hash},\n
 =======
         throw `unexpected param_hash: {param_hash},\n
 >>>>>>> 292e1a8c9... finished the tests
+=======
+        throw `unexpected param_hash: ${param_hash},\n
+>>>>>>> 4fd49962e... changes per review
         while {expected_param_hash} was expected`;
       }
 
