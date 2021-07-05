@@ -14,6 +14,7 @@
   "dependencies": {
     "@ledgerhq/hw-transport": "^5.51.1",
     "@ledgerhq/hw-transport-node-hid": "^5.51.1",
+<<<<<<< HEAD
     "@taquito/http-utils": "^9.2.0",
     "@taquito/local-forging": "^9.2.0",
     "@taquito/michel-codec": "^9.2.0",
@@ -25,6 +26,19 @@
     "@taquito/tzip16": "^9.2.0",
     "@taquito/utils": "^9.2.0",
     "bignumber.js": "^9.0.1"
+=======
+    "@taquito/http-utils": "^9.1.1",
+    "@taquito/local-forging": "^9.1.1",
+    "@taquito/michel-codec": "^9.1.1",
+    "@taquito/remote-signer": "^9.1.1",
+    "@taquito/signer": "^9.1.1",
+    "@taquito/taquito": "^9.1.1",
+    "@taquito/tzip16": "^9.1.1",
+    "@taquito/utils": "^9.1.1",
+    "bignumber.js": "^9.0.1",
+    "blakejs": "^1.1.0"
+
+>>>>>>> 405d884c0... added tests for views
   },
   "private": true,
   "jest": {
