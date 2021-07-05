@@ -217,8 +217,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const bytes_to_sign = await permit_contract.methods.permit(signer_key, dummy_sig, param_hash).send().catch((e) => errors_to_missigned_bytes(e.errors));
       
       const param_sig = await Tezos.signer.sign(bytes_to_sign)
-      // .then(s => s.prefixSig)
-      // .catch((error) => console.log(JSON.stringify(error)));
+      .then(s => s.prefixSig)
+      .catch((error) => console.log(JSON.stringify(error)));
 
       const permitMethodCall = await permit_contract.methods.permit(signer_key, param_sig, param_hash).send();
       await permitMethodCall.confirmation();
