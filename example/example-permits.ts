@@ -1,9 +1,13 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 8f3461239... add credit in doc
 /**
  * This example of interaction with a permit contract is taken from https://github.com/tqtezos/lorentz-contract-permit.
  * It is also used in an integration test at integration-tests/contract-permits-set.spec.ts.
  */
 
+<<<<<<< HEAD
 import { ContractAbstraction, ContractProvider, TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
 import { Parser } from '@taquito/michel-codec';
@@ -50,6 +54,8 @@ const FAUCET_KEY = {
     const errors_to_missigned_bytes = (errors: any[]) => {
       const errors_with = errors.map((x: { with: any; }) => x.with).filter((x: any) => x !== undefined);
 =======
+=======
+>>>>>>> 8f3461239... add credit in doc
 import { ContractAbstraction, ContractProvider, TezosToolkit } from '@taquito/taquito';
 import { InMemorySigner, importKey } from '@taquito/signer';
 import { Parser } from '@taquito/michel-codec';
