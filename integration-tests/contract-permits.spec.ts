@@ -48,7 +48,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     })
 
     test('Permit can be submitted and set', async (done) => {
-      console.log("ran this test")
       const op = await Tezos.contract.originate({
         code: permit_admin_42_set,
         storage:
