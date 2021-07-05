@@ -1,5 +1,5 @@
 import { CONFIGS } from './config';
-import { MichelsonMap, MichelCodecPacker, TezosOperationError } from '@taquito/taquito';
+import { MichelsonMap, MichelCodecPacker } from '@taquito/taquito';
 import { permit_admin_42_expiry } from './data/permit_admin_42_expiry';
 import { permit_admin_42_set } from './data/permit_admin_42_set';
 import { permit_fa12_smartpy } from './data/permit_fa12_smartpy';
@@ -325,8 +325,9 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
           .catch((e) => errors_to_missigned_bytes(e.errors));
 
         //Sign MISSIGNED bytes for bootstrap_address2
-        const SIGNATURE = await LocalTez2.signer.sign(bytes_to_sign).then((s) => s.prefixSig);
-
+        const SIGNATURE = await LocalTez2.signer.sign(bytes_to_sign).then((s) => s.prefixSig)
+                                  .catch((error) => console.log(JSON.stringify(error)));
+        
         //Craft correct permit parameter
         //PERMIT_PARAM="{Pair \"$PUB_KEY\" (Pair \"$SIGNATURE\" $TRANSFER_PARAM_HASHED)}"
 
