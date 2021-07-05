@@ -55,6 +55,7 @@
     "@ledgerhq/hw-transport": "^5.41.0",
     "@ledgerhq/hw-transport-node-hid": "^5.41.0",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "@taquito/http-utils": "^9.0.1",
     "@taquito/local-forging": "^9.0.1",
     "@taquito/michel-codec": "^9.0.1",
@@ -76,6 +77,17 @@
     "bignumber.js": "^9.0.1",
     "blakejs": "^1.1.0"
 >>>>>>> 9f6952644... consoloditaing
+=======
+    "@taquito/http-utils": "^9.1.1",
+    "@taquito/local-forging": "^9.1.1",
+    "@taquito/michel-codec": "^9.1.1",
+    "@taquito/remote-signer": "^9.1.1",
+    "@taquito/signer": "^9.1.1",
+    "@taquito/taquito": "^9.1.1",
+    "@taquito/tzip16": "^9.1.1",
+    "@taquito/utils": "^9.1.1",
+    "bignumber.js": "^9.0.1"
+>>>>>>> 212693808... fix conflilcts with package.json
   },
   "private": true,
   "jest": {
