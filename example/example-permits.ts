@@ -75,9 +75,14 @@ import { buf2hex, hex2buf } from '@taquito/utils';
       secret
     ).catch((e) => console.error(e));
 
+<<<<<<< HEAD
     const errors_to_missigned_bytes = errors => {
       const errors_with = errors.map(x => x.with).filter(x => x !== undefined);
 >>>>>>> 292e1a8c9... finished the tests
+=======
+    const errors_to_missigned_bytes = (errors: any[]) => {
+      const errors_with = errors.map((x: { with: any; }) => x.with).filter((x: any) => x !== undefined);
+>>>>>>> b37684627... address lint complaints
       if (errors_with.length != 1){
         throw ['errors_to_missigned_bytes: expected one error to fail "with" michelson, but found:', errors_with]
       } else {
@@ -116,10 +121,14 @@ import { buf2hex, hex2buf } from '@taquito/utils';
         type: wrapped_param_type,
       }).catch(e => console.error('error:', e));
 <<<<<<< HEAD
+<<<<<<< HEAD
       var packed_param: string;
 =======
       var packed_param;
 >>>>>>> 292e1a8c9... finished the tests
+=======
+      var packed_param: string;
+>>>>>>> b37684627... address lint complaints
       if (raw_packed) {
         packed_param = raw_packed.packed
       } else {
