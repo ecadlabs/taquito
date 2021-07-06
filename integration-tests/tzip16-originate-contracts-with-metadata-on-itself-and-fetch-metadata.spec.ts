@@ -28,9 +28,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 "homepage": "https://tezostaquito.io/"
               };
 
-            const metadataBigMAp = new MichelsonMap();
-            metadataBigMAp.set("", char2Bytes('tezos-storage:here'));
-            metadataBigMAp.set("here", char2Bytes(JSON.stringify(metadataJSON)))
+            const metadataBigMap = new MichelsonMap();
+            metadataBigMap.set("", char2Bytes('tezos-storage:here'));
+            metadataBigMap.set("here", char2Bytes(JSON.stringify(metadataJSON)))
 
             // Ligo Taco shop contract modified to include metadata in storage
             // https://ide.ligolang.org/p/-uS469slzUlSm1zwNqHl1A
@@ -40,7 +40,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             const op = await Tezos.contract.originate({
                 code: tacoContractTzip16,
                 storage: {
-                    metadata: metadataBigMAp,
+                    metadata: metadataBigMap,
                     taco_shop_storage: tacoShopStorageMap
                 },
             });
@@ -74,15 +74,15 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
         it('Deploy a contract having metadata inside another contract same network', async (done) => {
 
-            const metadataBigMAp = new MichelsonMap();
-            metadataBigMAp.set("", char2Bytes(`tezos-storage://${contractAddress}/here`));
+            const metadataBigMap = new MichelsonMap();
+            metadataBigMap.set("", char2Bytes(`tezos-storage://${contractAddress}/here`));
 
             const tacoShopStorageMap = new MichelsonMap();
 
             const op = await Tezos.contract.originate({
                 code: tacoContractTzip16,
                 storage: {
-                    metadata: metadataBigMAp,
+                    metadata: metadataBigMap,
                     taco_shop_storage: tacoShopStorageMap
                 },
             });
