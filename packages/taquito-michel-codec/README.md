@@ -1,5 +1,3 @@
-[![pkgsign status](https://us-central1-pkgsign.cloudfunctions.net/pkgsign-badge?name=@taquito/michelson-encoder&expectedIdentity=%40jevonearth)](https://github.com/RedpointGames/pkgsign)
-
 # Taquito michel-codec package 
 
 `@taquito/michel-codec` Converts and validates Michelson expressions between JSON based Michelson and Micheline.
@@ -11,6 +9,7 @@ This package can:
 * Validate Michelson to ensure correctness
 
 See the top-level project [https://github.com/ecadlabs/taquito](https://github.com/ecadlabs/taquito) for details on reporting issues, contributing and versioning.
+
 ## Examples
 
 ### Michelson expression to JSON

@@ -1,5 +1,3 @@
-[![pkgsign status](https://us-central1-pkgsign.cloudfunctions.net/pkgsign-badge?name=@taquito/rpc&expectedIdentity=%40jevonearth)](https://github.com/RedpointGames/pkgsign)
-
 # Taquito RPC package
 
 `@taquito/rpc` is an npm package that provides low level methods, and types to invoke RPC calls from a Nomadic Tezos RPC node.

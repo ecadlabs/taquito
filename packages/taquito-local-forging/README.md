@@ -1,4 +1,3 @@
-[![pkgsign status](https://us-central1-pkgsign.cloudfunctions.net/pkgsign-badge?name=@taquito/local-forging&expectedIdentity=%40jevonearth)](https://github.com/RedpointGames/pkgsign)
 
 # Taquito Local forging package
 
@@ -6,7 +5,7 @@
 
 ```ts
 import { TezosToolkit } from '@taquito/taquito'
-import { localForger } from '@taquito/local-forging'
+import { LocalForger } from '@taquito/local-forging'
 Tezos.setProvider({ forger: localForger })
 ```
 

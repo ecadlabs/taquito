@@ -1,10 +1,12 @@
-# Taquito Utils package
+# Taquito Tzip-12 package
 
-`@taquito/utils` is an npm package that provides developers with utility functionality for Taquito. It can be injected as follows:
+`@taquito/tzip12` is an npm package that provides developers with Tzip-12 functionality for Taquito. It can be injected as follows:
 
 ```ts
-import { TezosToolkit } from '@taquito/taquito'
-import { Utilities } from '@taquito/utils'
+import { TezosToolkit } from '@taquito/taquito';
+import { Tzip12Module } from '@taquito/tzip12';
+const Tezos = new TezosToolkit('rpcUrl');
+Tezos.addExtension(new Tzip12Module());
 
 ```
 
@@ -12,7 +14,7 @@ See the top-level [https://github.com/ecadlabs/taquito](https://github.com/ecadl
 
 ## API Documentation
 
-TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_utils.html)
+TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_tzip12.html)
 
 ## Disclaimer
 
