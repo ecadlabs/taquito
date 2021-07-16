@@ -22,7 +22,7 @@ module.exports = {
   customFields: {
     repoUrl: 'https://github.com/ecadlabs/taquito',
     description:
-      'A TypeScript library suite made available as set of npm packages aiming to make building on top of Tezos easier and more enjoyable.',
+      'A TypeScript library suite made available as a set of npm packages aiming to make building on top of Tezos easier and more enjoyable.',
   },
   themes: [require.resolve('@docusaurus/theme-live-codeblock')],
   themeConfig: {
