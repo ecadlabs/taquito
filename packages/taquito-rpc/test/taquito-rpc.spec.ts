@@ -219,6 +219,54 @@ describe('RpcClient test', () => {
 
       done();
     });
+
+    it('parse the response properly, proto10', async done => {
+      // deposit replaced by deposits
+      httpBackend.createRequest.mockResolvedValue({
+        "balance": "5976016544884",
+        "frozen_balance": "2436709362932",
+        "frozen_balance_by_cycle": [
+          { "cycle": 52, "deposits": "463410000000", "fees": "143599", "rewards": "13998796117" },
+          { "cycle": 53, "deposits": "770072500000", "fees": "784655", "rewards": "23952869735" },
+        ],
+        "staking_balance": "5902972035162",
+        "delegated_contracts": [ "tz1NFs6yP2sXd5vAAbR43bbDRpV2nahDZope" ],
+        "delegated_balance": "0",
+        "deactivated": false,
+        "grace_period": 59,
+        "voting_power": 729
+      });
+      const response = await client.getDelegates('address');
+
+      expect(response).toEqual({
+        balance: new BigNumber('5976016544884'),
+        frozen_balance: new BigNumber('2436709362932'),
+        frozen_balance_by_cycle: [
+          {
+            cycle: 52,
+            deposits: new BigNumber('463410000000'),
+            fees: new BigNumber('143599'),
+            rewards: new BigNumber('13998796117'),
+          },
+          {
+            cycle: 53,
+            deposits: new BigNumber('770072500000'),
+            fees: new BigNumber('784655'),
+            rewards: new BigNumber('23952869735'),
+          },
+        ],
+        staking_balance: new BigNumber('5902972035162'),
+        delegated_contracts: [
+          'tz1NFs6yP2sXd5vAAbR43bbDRpV2nahDZope'
+        ],
+        delegated_balance: new BigNumber('0'),
+        deactivated: false,
+        grace_period: 59,
+        voting_power: 729
+      });
+
+      done();
+    });
   });
 
   describe('getBigMapKey', () => {

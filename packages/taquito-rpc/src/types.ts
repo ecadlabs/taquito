@@ -20,11 +20,13 @@ export interface DelegatesResponse {
   delegated_balance: BigNumber;
   deactivated: boolean;
   grace_period: number;
+  voting_power?: number;
 }
 
 interface Frozenbalancebycycle {
   cycle: number;
-  deposit: BigNumber;
+  deposit?: BigNumber;
+  deposits?: BigNumber;
   fees: BigNumber;
   rewards: BigNumber;
 }
