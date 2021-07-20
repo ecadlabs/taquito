@@ -28,7 +28,10 @@ export class BigMapToken extends Token {
 
   public ExtractSchema() {
     return {
-      [this.KeySchema.ExtractSchema()]: this.ValueSchema.ExtractSchema(),
+      big_map: {
+        key: this.KeySchema.ExtractSchema(),
+        value: this.ValueSchema.ExtractSchema(),
+      },
     };
   }
 

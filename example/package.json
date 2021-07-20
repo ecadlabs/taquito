@@ -15,12 +15,15 @@
     "example:streamer-custom": "node -r ts-node/register --preserve-symlinks example-streamer-custom-retry-logic.ts",
     "example:scan-path-ledger": "node -r ts-node/register --preserve-symlinks scan-path-ledger.ts",
     "example:rpc-vs-local-pack-sequential": "node -r ts-node/register --preserve-symlinks example-sequential-bigmap-local-vs-rpc-pack.ts",
-    "example:rpc-vs-local-pack-parallel": "node -r ts-node/register --preserve-symlinks example-parallel-bigmap-local-vs-rpc-pack.ts"
+    "example:rpc-vs-local-pack-parallel": "node -r ts-node/register --preserve-symlinks example-parallel-bigmap-local-vs-rpc-pack.ts",
+    "example:bigmap-keys-pair": "node -r ts-node/register --preserve-symlinks example-bigmap-keys-as-pair.ts",
+    "example:bigmap-keys-deep-pair": "node -r ts-node/register --preserve-symlinks example-bigmap-keys-as-deep-pair.ts"
   },
   "dependencies": {
     "@ledgerhq/hw-transport-node-hid": "^5.43.0",
     "@taquito/ledger-signer": "^9.2.0",
     "@taquito/michel-codec": "^9.2.0",
+    "@taquito/michelson-encoder": "^9.2.0",
     "@taquito/signer": "^9.2.0",
     "@taquito/taquito": "^9.2.0",
     "@taquito/tzip16": "^9.2.0",
