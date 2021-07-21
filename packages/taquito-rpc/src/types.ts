@@ -513,6 +513,12 @@ export type InternalOperationResultKindEnum =
   | OpKind.ORIGINATION
   | OpKind.DELEGATION;
 
+export type SuccessfulManagerOperationResultKindEnum =
+  | OpKind.REVEAL
+  | OpKind.TRANSACTION
+  | OpKind.ORIGINATION
+  | OpKind.DELEGATION;
+
 export type InternalOperationResultEnum =
   | OperationResultReveal
   | OperationResultTransaction
@@ -586,9 +592,22 @@ export interface InternalOperationResult {
   result: InternalOperationResultEnum;
 }
 
+export interface SuccessfulManagerOperationResult {
+  kind: SuccessfulManagerOperationResultKindEnum;
+  consumed_gas?: string;
+  consumed_milligas?: string;
+  storage?: MichelsonV1Expression;
+  big_map_diff?: ContractBigMapDiff;
+  balance_updates?: OperationBalanceUpdates;
+  originated_contracts?: string[];
+  storage_size?: string;
+  paid_storage_size_diff?: string;
+  lazy_storage_diff?: LazyStorageDiff[];
+}
+
 export type MetadataBalanceUpdatesKindEnum = 'contract' | 'freezer';
 export type MetadataBalanceUpdatesCategoryEnum = 'rewards' | 'fees' | 'deposits';
-export type MetadataBalanceUpdatesOriginEnum = 'block' | 'migration';
+export type MetadataBalanceUpdatesOriginEnum = 'block' | 'migration' | 'subsidy';
 
 export interface OperationMetadataBalanceUpdates {
   kind: MetadataBalanceUpdatesKindEnum;
@@ -804,6 +823,8 @@ export interface BlockMetadata {
   consumed_gas: string;
   deactivated: any[];
   balance_updates: OperationBalanceUpdates;
+  liquidity_baking_escape_ema?: number;
+  implicit_operations_results?: SuccessfulManagerOperationResult[];
 }
 
 export type RPCRunOperationParam = {
