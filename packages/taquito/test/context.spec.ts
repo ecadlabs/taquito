@@ -112,6 +112,6 @@ describe('Taquito context class', () => {
             throw new Error();
         });
         const pollingInterval = await new Context(mockRpcClient).getConfirmationPollingInterval();
-        expect(pollingInterval).toBe(10);
+        expect(pollingInterval).toBe(5);
     });
 });
