@@ -26,7 +26,7 @@ export interface DelegatesResponse {
 interface Frozenbalancebycycle {
   cycle: number;
   deposit?: BigNumber;
-  deposits?: BigNumber;
+  deposits?: BigNumber; // Since Granada, "deposit" is replaced by "deposits"
   fees: BigNumber;
   rewards: BigNumber;
 }
