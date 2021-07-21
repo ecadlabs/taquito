@@ -449,6 +449,14 @@ export interface PackDataResponse {
 
 export type BigMapResponse = MichelsonV1Expression | MichelsonV1Expression[];
 
+export type SaplingDiffResponse = {
+  root: SaplingTransactionCommitmentHash,
+  commitments_and_ciphertexts: CommitmentsAndCiphertexts[];
+  nullifiers: string[];
+};
+
+export type SaplingTransactionCommitmentHash = string;
+
 export type PreapplyParams = OperationObject[];
 export type PreapplyResponse = {
   contents: OperationContentsAndResult[];
@@ -500,6 +508,12 @@ export interface OperationObject {
 }
 
 export type InternalOperationResultKindEnum =
+  | OpKind.REVEAL
+  | OpKind.TRANSACTION
+  | OpKind.ORIGINATION
+  | OpKind.DELEGATION;
+
+export type SuccessfulManagerOperationResultKindEnum =
   | OpKind.REVEAL
   | OpKind.TRANSACTION
   | OpKind.ORIGINATION
@@ -578,9 +592,22 @@ export interface InternalOperationResult {
   result: InternalOperationResultEnum;
 }
 
+export interface SuccessfulManagerOperationResult {
+  kind: SuccessfulManagerOperationResultKindEnum;
+  consumed_gas?: string;
+  consumed_milligas?: string;
+  storage?: MichelsonV1Expression;
+  big_map_diff?: ContractBigMapDiff;
+  balance_updates?: OperationBalanceUpdates;
+  originated_contracts?: string[];
+  storage_size?: string;
+  paid_storage_size_diff?: string;
+  lazy_storage_diff?: LazyStorageDiff[];
+}
+
 export type MetadataBalanceUpdatesKindEnum = 'contract' | 'freezer';
 export type MetadataBalanceUpdatesCategoryEnum = 'rewards' | 'fees' | 'deposits';
-export type MetadataBalanceUpdatesOriginEnum = 'block' | 'migration';
+export type MetadataBalanceUpdatesOriginEnum = 'block' | 'migration' | 'subsidy';
 
 export interface OperationMetadataBalanceUpdates {
   kind: MetadataBalanceUpdatesKindEnum;
@@ -670,6 +697,9 @@ export interface OperationContentsAndResultMetadataOrigination {
 
 export type ConstantsResponse =
   ConstantsResponseCommon &
+  ConstantsResponseProto010 &
+  ConstantsResponseProto009 &
+  ConstantsResponseProto008 &
   ConstantsResponseProto007 &
   ConstantsResponseProto006 &
   ConstantsResponseProto005 &
@@ -700,6 +730,17 @@ export interface ConstantsResponseCommon {
   cost_per_byte: BigNumber;
   hard_storage_limit_per_operation: BigNumber;
 }
+export interface ConstantsResponseProto010 extends ConstantsResponseProto007 {
+  minimal_block_delay?: BigNumber;
+  liquidity_baking_subsidy?: BigNumber;
+  liquidity_baking_sunset_level?: number;
+  liquidity_baking_escape_ema_threshold?: number;
+}
+
+export interface ConstantsResponseProto009 extends ConstantsResponseProto007 {}
+
+export interface ConstantsResponseProto008 extends ConstantsResponseProto007 {}
+
 export interface ConstantsResponseProto007 extends Omit<ConstantsResponseProto006, 'max_revelations_per_block'> {
   max_anon_ops_per_block?: number;
 }
@@ -782,6 +823,8 @@ export interface BlockMetadata {
   consumed_gas: string;
   deactivated: any[];
   balance_updates: OperationBalanceUpdates;
+  liquidity_baking_escape_ema?: number;
+  implicit_operations_results?: SuccessfulManagerOperationResult[];
 }
 
 export type RPCRunOperationParam = {

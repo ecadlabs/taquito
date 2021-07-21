@@ -38,6 +38,7 @@ import {
   RPCRunCodeParam,
   RPCRunOperationParam,
   RunCodeResult,
+  SaplingDiffResponse,
   ScriptResponse,
   StorageResponse,
   VotesListingsResponse,
@@ -367,8 +368,10 @@ export class RpcClient {
       'cost_per_byte',
       'hard_storage_limit_per_operation',
       'test_chain_duration',
-      'baking_reward_per_endorsement',
+      'baking_reward_per_endorsement', 
       'delay_per_missing_endorsement',
+      'minimal_block_delay',
+      'liquidity_baking_subsidy'
     ]);
 
     return {
@@ -824,5 +827,43 @@ export class RpcClient {
     });
 
     return response;
+  }
+
+  /**
+   *
+   * @param id Sapling state ID
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Access the value associated with a sapling state ID.
+   *
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-sapling-sapling-state-id-get-diff
+   */
+   async getSaplingDiffById(
+    id: string,
+    { block }: { block: string } = defaultRPCOptions
+  ): Promise<SaplingDiffResponse> {
+    return this.httpBackend.createRequest<SaplingDiffResponse>({
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/sapling/${id}/get_diff`),
+      method: 'GET',
+    });
+  }
+
+  /**
+   *
+   * @param contract address of the contract we want to get the sapling diff
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Access the value associated with a sapling state.
+   *
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-contracts-contract-id-single-sapling-get-diff
+   */
+   async getSaplingDiffByContract(
+    contract: string,
+    { block }: { block: string } = defaultRPCOptions
+  ): Promise<SaplingDiffResponse> {
+    return this.httpBackend.createRequest<SaplingDiffResponse>({
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/single_sapling_get_diff`),
+      method: 'GET',
+    });
   }
 }

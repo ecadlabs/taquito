@@ -1,15 +1,15 @@
 
 [![pkgsign status](https://us-central1-pkgsign.cloudfunctions.net/pkgsign-badge?name=@taquito/taquito&expectedIdentity=%40jevonearth)](https://github.com/RedpointGames/pkgsign)
 
-# Taquito high level functions
+# Taquito high level functions 
 
 The `@taquito/taquito` package contains higher level functionality that builds upon the other packages in the Tezos Typescript Library Suite.
 
 ## CDN Bundle
 
 ```html
-<script src="https://unpkg.com/@taquito/taquito@9.1.1-beacon.2/dist/taquito.min.js"
-crossorigin="anonymous" integrity="sha384-uJ6fYs1nH/Bfo+kBDmdFIjcdQzetVMad20/HJWEglZM2Qbmb9T1sJlbxCpAdzEYm"></script>
+<script src="https://unpkg.com/@taquito/taquito@9.2.0/dist/taquito.min.js"
+crossorigin="anonymous" integrity="sha384-MDAivRThE/PqrwpkiSDg1mdb2OPPig/PQLAmTnfG00xMVk+QmlpISc1Vl8vt7cFF"></script>
 ```
 
 ## API Documentation

@@ -1,11 +1,8 @@
 import { CONFIGS } from "./config";
 import { ticketCode, ticketStorage } from '../packages/taquito-local-forging/test/data/code_with_ticket';
-import { Protocols } from "@taquito/taquito";
 
-CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-
-  const edonet = (protocol === Protocols.PtEdo2Zk) ? test : test.skip;
 
   describe(`Test origination of a token contract made with wallet api using: ${rpc}`, () => {
 
@@ -14,7 +11,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
       done()
     })
 
-    edonet('Originates a contract having ticket with init and the wallet api', async (done) => {
+    it('Originates a contract having ticket with init and the wallet api', async (done) => {
       const op = await Tezos.wallet.originate({
         code: ticketCode,
         init: ticketStorage
@@ -26,7 +23,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
       done();
     });
 
-    edonet('Originates a contract having ticket with init in JSON and the wallet api', async (done) => {
+    it('Originates a contract having ticket with init in JSON and the wallet api', async (done) => {
       const op = await Tezos.wallet.originate({
         code: ticketCode,
         init: { prim: 'Pair', args: [ { prim: 'None' }, { prim: 'None' } ] }
@@ -37,7 +34,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
       done();
     });
 
-    edonet('Originates a contract having ticket with storage and the wallet api', async (done) => {
+    it('Originates a contract having ticket with storage and the wallet api', async (done) => {
       const op = await Tezos.wallet.originate({
         code: ticketCode,
         storage: {

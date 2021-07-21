@@ -1,6 +1,7 @@
+import { Protocols } from "@taquito/taquito";
 import { CONFIGS } from "./config";
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
   describe(`Test  register delegate: ${rpc}`, () => {
 
@@ -15,12 +16,16 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         await op.confirmation()
         expect(op.hash).toBeDefined();
         expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
-  
+
         const account = await Tezos.rpc.getDelegate(pkh)
         expect(account).toEqual(pkh)
       } catch (ex) {
-        //When running tests more than one time with the same faucet key, the account is already delegated to the given delegate
-        expect(ex.message).toMatch('delegate.unchanged')
+        if (protocol === Protocols.PtGRANADs) {
+          expect(ex.message).toMatch('delegate.already_active')
+        } else {
+          // When running tests more than one time with the same faucet key, the account is already delegated to the given delegate
+          expect(ex.message).toMatch('delegate.unchanged')
+        }
       }
       done();
     });

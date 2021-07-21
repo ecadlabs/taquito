@@ -1,6 +1,14 @@
 import { RpcClient } from '../src/taquito-rpc';
 import BigNumber from 'bignumber.js';
-import { LazyStorageDiffBigMap, OperationContentsAndResultEndorsement, OperationContentsAndResultEndorsementWithSlot, OperationContentsAndResultOrigination, OperationResultTransaction, OperationContentsAndResultTransaction, LazyStorageDiffSaplingState } from '../src/types';
+import { 
+  LazyStorageDiffBigMap, 
+  OperationContentsAndResultEndorsement, 
+  OperationContentsAndResultEndorsementWithSlot, 
+  OperationContentsAndResultOrigination, 
+  OperationResultTransaction, 
+  OperationContentsAndResultTransaction, 
+  LazyStorageDiffSaplingState
+} from '../src/types';
 
 /**
  * RpcClient test
@@ -1827,6 +1835,123 @@ describe('RpcClient test', () => {
       done();
     });
 
+
+    it('Access new properties "liquidity_baking_escape_ema", "implicit_operations_results" and "subsidy" in block metadata, proto 10', async done => {
+      httpBackend.createRequest.mockReturnValue(
+        Promise.resolve(
+          {
+            "protocol": "PtGRANADsDU8R9daYKAgWnQYAJ64omN1o3KMGVCykShA97vQbvV",
+            "chain_id": "NetXz969SFaFn8k",
+            "hash": "BMUN7Jt6hv7pVwnVSULxujYXy6qVaFLVoUbd6sQXsagjXpH4iWw",
+            "header": {
+              "level": 218022,
+              "proto": 2,
+              "predecessor": "BKovSSUyqB2dfs5RtrVfFLDugyYavpQ4ULi5KexV8r6HPXA6QL3",
+              "timestamp": "2021-07-19T23:41:07Z",
+              "validation_pass": 4,
+              "operations_hash": "LLoasnx73KY1xekuqN6qnG7GQUrdr6MsuRxJB5S6rqphsR2oX7sDc",
+              "fitness": [ "01", "00000000000353a5" ],
+              "context": "CoWYkYRZg8KswUR8eq9CcXNUuUiqjnck1enWRXmtPRocSg4kPXo4",
+              "priority": 0,
+              "proof_of_work_nonce": "bc2cc86f02c40200",
+              "liquidity_baking_escape_vote": false,
+              "signature": "sigiHpzCAzTLxdSmuD8c3Tn4yHxfhbKErnZwrW8VGr2Q4Y848RNWfLhRrmp9FQExZtXc9ESQab3trtckRdukrvXd7ruBsL4n"
+            },
+            "metadata": {
+              "protocol": "PtGRANADsDU8R9daYKAgWnQYAJ64omN1o3KMGVCykShA97vQbvV",
+              "next_protocol": "PtGRANADsDU8R9daYKAgWnQYAJ64omN1o3KMGVCykShA97vQbvV",
+              "test_chain_status": { "status": "not_running" },
+              "max_operations_ttl": 120,
+              "max_operation_data_length": 32768,
+              "max_block_header_length": 239,
+              "max_operation_list_length": [
+                { "max_size": 4194304, "max_op": 2048 },
+                { "max_size": 32768 },
+                { "max_size": 135168, "max_op": 132 },
+                { "max_size": 524288 }
+              ],
+              "baker": "tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9",
+              "level_info": {
+                "level": 218022,
+                "level_position": 218021,
+                "cycle": 54,
+                "cycle_position": 933,
+                "expected_commitment": false
+              },
+              "voting_period_info": {
+                "voting_period": { "index": 10, "kind": "proposal", "start_position": 204801 },
+                "position": 13220,
+                "remaining": 7259
+              },
+              "nonce_hash": null,
+              "consumed_gas": "0",
+              "deactivated": [],
+              "balance_updates": [],
+              "liquidity_baking_escape_ema": 283204,
+              "implicit_operations_results": [
+                {
+                  "kind": "transaction",
+                  "storage": [
+                    { "int": "104" },
+                    { "int": "177311484916" },
+                    { "int": "118" },
+                    { "bytes": "01e927f00ef734dfc85919635e9afc9166c83ef9fc00" },
+                    { "bytes": "0115eb0104481a6d7921160bc982c5e0a561cd8a3a00" }
+                  ],
+                  "balance_updates": [
+                    {
+                      "kind": "contract",
+                      "contract": "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5",
+                      "change": "2500000",
+                      "origin": "subsidy"
+                    }
+                  ],
+                  "consumed_gas": "2118",
+                  "consumed_milligas": "2117037",
+                  "storage_size": "4633"
+                }
+              ]
+            },
+            "operations": []
+          }
+        )
+      );
+
+      const response = await client.getBlock();
+
+      expect(response.metadata.liquidity_baking_escape_ema).toEqual(283204);
+      expect(typeof response.metadata.liquidity_baking_escape_ema).toBe("number");
+
+      expect(response.metadata.implicit_operations_results).toBeDefined();
+      expect(response.metadata.implicit_operations_results!).toBeInstanceOf(Array);
+      expect(response.metadata.implicit_operations_results!.length).toEqual(1);
+
+      expect(response.metadata.implicit_operations_results![0].kind).toEqual('transaction');
+
+      expect(response.metadata.implicit_operations_results![0].consumed_gas).toBeDefined();
+      expect(response.metadata.implicit_operations_results![0].consumed_gas).toEqual('2118');
+
+      expect(response.metadata.implicit_operations_results![0].consumed_milligas).toBeDefined();
+      expect(response.metadata.implicit_operations_results![0].consumed_milligas).toEqual('2117037');
+
+      expect(response.metadata.implicit_operations_results![0].storage).toBeDefined();
+      expect(response.metadata.implicit_operations_results![0].big_map_diff).toBeUndefined();
+
+      expect(response.metadata.implicit_operations_results![0].balance_updates).toBeDefined();
+      expect(response.metadata.implicit_operations_results![0].balance_updates![0].origin).toBeDefined();
+      expect(response.metadata.implicit_operations_results![0].balance_updates![0].origin).toEqual('subsidy');
+
+      expect(response.metadata.implicit_operations_results![0].originated_contracts).toBeUndefined();
+
+      expect(response.metadata.implicit_operations_results![0].storage_size).toBeDefined();
+      expect(response.metadata.implicit_operations_results![0].storage_size).toEqual('4633');
+
+      expect(response.metadata.implicit_operations_results![0].paid_storage_size_diff).toBeUndefined();
+      expect(response.metadata.implicit_operations_results![0].lazy_storage_diff).toBeUndefined();
+
+      done();
+    });
+
   });
 
   describe('getBakingRights', () => {
@@ -2228,6 +2353,42 @@ describe('RpcClient test', () => {
         url: 'root/chains/test/blocks/head/votes/successor_period',
       });
       expect(response).toEqual(mockedResponse);
+
+      done();
+    });
+  });
+
+  describe('getSaplingDiffById', () => {
+    it('query the right url', async done => {
+      httpBackend.createRequest.mockResolvedValue({"root":"fbc2f4300c01f0b7820d00e3347c8da4ee614674376cbc45359daa54f9b5493e","commitments_and_ciphertexts":[],"nullifiers":[]});
+      const response = await client.getSaplingDiffById('123');
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/context/sapling/123/get_diff',
+      });
+
+      expect(response.root).toEqual('fbc2f4300c01f0b7820d00e3347c8da4ee614674376cbc45359daa54f9b5493e');
+      expect(response.commitments_and_ciphertexts).toEqual([]);
+      expect(response.nullifiers).toEqual([]);
+
+      done();
+    });
+  });
+
+  describe('getSaplingDiffByContract', () => {
+    it('query the right url', async done => {
+      httpBackend.createRequest.mockResolvedValue({"root":"fbc2f4300c01f0b7820d00e3347c8da4ee614674376cbc45359daa54f9b5493e","commitments_and_ciphertexts":[],"nullifiers":[]});
+      const response = await client.getSaplingDiffByContract('KT18tv2siXNxfc3FkCoS4esPuLqvaYrcGV92');
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/context/contracts/KT18tv2siXNxfc3FkCoS4esPuLqvaYrcGV92/single_sapling_get_diff',
+      });
+
+      expect(response.root).toEqual('fbc2f4300c01f0b7820d00e3347c8da4ee614674376cbc45359daa54f9b5493e');
+      expect(response.commitments_and_ciphertexts).toEqual([]);
+      expect(response.nullifiers).toEqual([]);
 
       done();
     });

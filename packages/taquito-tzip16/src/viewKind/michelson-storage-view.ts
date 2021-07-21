@@ -166,13 +166,9 @@ export class MichelsonStorageView implements View {
             storage: { prim: 'None' },
             input: { prim: 'Pair', args: [arg, storageValue] },
             amount: '0',
-            chain_id: chainId
+            chain_id: chainId,
+            balance: '0'
         };
-
-        // Fix for Edo which required a balance property when calling the run_code endpoint
-        if(protocolHash === Protocols.PtEdo2Zk || protocolHash === Protocols.PsFLorena) {
-            Object.assign(viewScript, { balance: '0' });
-        }
 
         const result: any = await this.rpc.runCode(viewScript as any);
         const viewResultSchema = new ParameterSchema(this.returnType);
