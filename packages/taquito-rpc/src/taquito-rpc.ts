@@ -326,17 +326,27 @@ export class RpcClient {
       balance: new BigNumber(response.balance),
       frozen_balance: new BigNumber(response.frozen_balance),
       frozen_balance_by_cycle: response.frozen_balance_by_cycle.map(
-        ({ deposit, fees, rewards, ...rest }) => ({
-          ...rest,
-          deposit: new BigNumber(deposit),
-          fees: new BigNumber(fees),
-          rewards: new BigNumber(rewards),
-        })
+        ({ deposit, deposits, fees, rewards, ...rest }) => {
+          const castedToBigNumber: any = castToBigNumber({ deposit, deposits, fees, rewards }, [
+            'deposit',
+            'deposits',
+            'fees',
+            'rewards'
+          ]);
+          return {
+            ...rest,
+            deposit: castedToBigNumber.deposit,
+            deposits: castedToBigNumber.deposits,
+            fees: castedToBigNumber.fees,
+            rewards: castedToBigNumber.rewards,
+          }
+        }
       ),
       staking_balance: new BigNumber(response.staking_balance),
       delegated_contracts: response.delegated_contracts,
       delegated_balance: new BigNumber(response.delegated_balance),
       grace_period: response.grace_period,
+      voting_power: response.voting_power
     };
   }
 
