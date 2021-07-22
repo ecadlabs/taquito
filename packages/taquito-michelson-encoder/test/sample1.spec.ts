@@ -11,14 +11,17 @@ describe('Schema test', () => {
     const s = schema.ExtractSchema();
     expect(s).toEqual({
       accounts: {
-        address: {
-          allowances: {
-            map: {
-              key: 'address',
-              value: 'nat',
+        big_map: {
+          key: "address",
+          value: {
+            allowances: {
+              map: {
+                key: 'address',
+                value: 'nat',
+              },
             },
-          },
           balance: 'nat',
+        },
         },
       },
       name: 'string',

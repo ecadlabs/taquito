@@ -14,12 +14,15 @@ describe('Token contract with big map', () => {
     const schema = Schema.fromRPCResponse(rpcContractResponse as any);
     expect(schema.ExtractSchema()).toEqual({
       '0': {
-        address: {
-          '0': 'nat',
-          '1': {
-            map: {
-              key: 'address',
-              value: 'nat',
+        big_map: {
+          key: "address",
+          value: {
+            '0': 'nat',
+            '1': {
+              map: {
+                key: 'address',
+                value: 'nat',
+              },
             },
           },
         },

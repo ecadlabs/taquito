@@ -8,10 +8,13 @@ describe('Baker Registry contract test', () => {
     const schema = new Schema(storage);
     expect(schema.ExtractSchema()).toEqual({
       '0': {
-        key_hash: {
-          data: 'bytes',
-          last_update: 'timestamp',
-          reporter: 'address',
+        big_map : {
+          key: "key_hash",
+          value : {
+            data: 'bytes',
+            last_update: 'timestamp',
+            reporter: 'address',
+          },
         },
       },
       owner: 'address',

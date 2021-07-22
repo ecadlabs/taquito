@@ -13,7 +13,12 @@ describe('Exchange contract test', () => {
   it('Test storage schema', () => {
     const schema = new Schema(storageDexter);
     expect(schema.ExtractSchema()).toEqual({
-      '0': { address: 'nat' },
+      '0': { 
+        big_map: {
+          key: "address",
+          value: "nat"
+        }
+      },
       '1': 'contract',
       '2': 'contract',
       '3': 'nat',
@@ -251,12 +256,15 @@ describe('Exchange contract test', () => {
     const schema = new Schema(storageToken);
     expect(schema.ExtractSchema()).toEqual({
       '0': {
-        address: {
-          '0': 'nat',
-          '1': {
-            map: {
-              key: 'address',
-              value: 'nat',
+        big_map: {
+          key: "address",
+          value: {
+            '0': 'nat',
+            '1': {
+              map: {
+                key: 'address',
+                value: 'nat',
+              },
             },
           },
         },

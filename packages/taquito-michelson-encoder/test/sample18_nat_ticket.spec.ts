@@ -20,21 +20,27 @@ describe('Schema with a ticket of type nat inside a big map %tickets in storage'
             admin: 'address',
             current_id: 'nat',
             tickets: {
-                nat: {
-                    amount: 'int',
-                    ticketer: 'contract',
-                    value: 'nat'
+                big_map: {
+                    key: "nat",
+                    value: {
+                        amount: 'int',
+                        ticketer: 'contract',
+                        value: 'nat'
+                    }
                 }
             },
             token_metadata: {
-                nat: {
-                    '0': 'nat',
-                    '1': {
-                        map: {
-                            key: 'string',
-                            value: 'bytes'
+                big_map: {
+                    key: "nat",
+                    value: {
+                        '0': 'nat',
+                        '1': {
+                            map: {
+                                key: 'string',
+                                value: 'bytes'
+                            }
                         }
-                    }
+                    },
                 }
             }
         });

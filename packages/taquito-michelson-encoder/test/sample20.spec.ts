@@ -11,24 +11,30 @@ describe('Contract test where the value of the map "selling" is a big_map', () =
       _euranov: 'address',
       admin: 'address',
       auctions: {
-        address: {
-          map: {
-            key: 'nat',
-            value: {
-              assetId: 'nat',
-              bidCount: 'nat',
-              claimed: 'bool',
-              creator: 'address',
-              currentBidAmount: 'mutez',
-              currentBidOwner: 'address',
-              duration: 'int',
-              startTime: 'timestamp',
+        big_map: {
+          key: "address",
+          value: {
+            map: {
+              key: 'nat',
+              value: {
+                assetId: 'nat',
+                bidCount: 'nat',
+                claimed: 'bool',
+                creator: 'address',
+                currentBidAmount: 'mutez',
+                currentBidOwner: 'address',
+                duration: 'int',
+                startTime: 'timestamp',
+              },
             },
           },
         },
       },
       authorizedSC: {
-        address: 'bool',
+        big_map: {
+          key: "address",
+          value: "bool",
+        },
       },
       balance: 'int',
       paused: 'bool',
@@ -36,10 +42,13 @@ describe('Contract test where the value of the map "selling" is a big_map', () =
         map: {
           key: 'address',
           value: {
-            nat: {
-              fee: 'nat',
-              owner: 'address',
-              price: 'mutez',
+            big_map: {
+              key: "nat",
+              value: {
+                fee: 'nat',
+                owner: 'address',
+                price: 'mutez',
+              },
             },
           },
         },
