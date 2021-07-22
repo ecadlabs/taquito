@@ -1,0 +1,10 @@
+{
+  "dist/taquito.min.js.LICENSE.txt": {
+    "src": "dist/taquito.min.js.LICENSE.txt",
+    "integrity": "sha384-pE+81vBG8owDheQ4sQHY1QbeG6adUQhaSM8PgX2lI9p/gkeRcRtT9uxDnsk054v3"
+  },
+  "main.js": {
+    "src": "dist/taquito.min.js",
+    "integrity": "sha384-uJ6fYs1nH/Bfo+kBDmdFIjcdQzetVMad20/HJWEglZM2Qbmb9T1sJlbxCpAdzEYm"
+  }
+}

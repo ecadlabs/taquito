@@ -138,7 +138,7 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
     })
 
     describe('Should be able to use Ledger with contract API', () => {
-      jest.setTimeout(120000)
+      jest.setTimeout(240000)
       it('Should originate contract with Ledger', async (done) => {
 
         const fundAccountFirst = await tezos.contract.transfer({ to: 'tz1e42w8ZaGAbM3gucbBy8iRypdbnqUj7oWY', amount: 9 });
