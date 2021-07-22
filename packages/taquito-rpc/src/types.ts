@@ -539,9 +539,9 @@ export interface ContractBigMapDiffItem {
   key?: MichelsonV1Expression;
   value?: MichelsonV1Expression;
   action?: DiffActionEnum;
-  big_map?: BigNumber;
-  source_big_map?: BigNumber;
-  destination_big_map?: BigNumber;
+  big_map?: string;
+  source_big_map?: string;
+  destination_big_map?: string;
   key_type?: MichelsonV1Expression;
   value_type?: MichelsonV1Expression;
 }
