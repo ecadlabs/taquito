@@ -180,6 +180,9 @@ export class Context {
   }
 
   async getConfirmationPollingInterval() {
+    // Granada will generally halve the time between blocks, from 60 seconds to 30 seconds (mainnet).
+    // We reduce the default value in the same proportion, from 10 to 5.
+    const defaultInterval = 5;
     try {
       const constants = await this.rpc.getConstants();
       let blockTime = constants.time_between_blocks[0];
@@ -195,15 +198,21 @@ export class Context {
       // to improvise for polling time to work in prod,
       // testnet and sandbox enviornment.   
       confirmationPollingInterval = confirmationPollingInterval.dividedBy(3);  
-      this.config.confirmationPollingIntervalSecond = confirmationPollingInterval.toNumber() === 0 ?
-                                                      0.1 :
-                                                      confirmationPollingInterval.toNumber();
+
+      if (confirmationPollingInterval.toNumber() > defaultInterval) {
+        // Fix for the transistion from Florence to Granada
+        this.config.confirmationPollingIntervalSecond = defaultInterval;
+      } else {
+        this.config.confirmationPollingIntervalSecond = confirmationPollingInterval.toNumber() === 0 ?
+          0.1 :
+          confirmationPollingInterval.toNumber();
+      }
       return this.config.confirmationPollingIntervalSecond;
     } catch (exception) {
       // Return default value if there is
       // an issue returning from constants
       // file.
-      return 10;
+      return defaultInterval;
     }
   }
 
