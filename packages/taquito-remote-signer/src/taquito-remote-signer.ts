@@ -12,7 +12,8 @@ import {
   mergebuf,
   prefix,
 } from '@taquito/utils';
-import sodium from 'libsodium-wrappers';
+import { verify } from '@stablelib/ed25519';
+import { hash } from '@stablelib/blake2b';
 import elliptic from 'elliptic';
 import toBuffer from 'typedarray-to-buffer';
 import { BadSigningDataError, KeyNotFoundError, OperationNotAuthorizedError } from './errors';
@@ -153,10 +154,9 @@ export class RemoteSigner implements Signer {
   }
 
   async verify(bytes: string, signature: string): Promise<boolean> {
-    await sodium.ready;
     const publicKey = await this.publicKey();
     const curve = publicKey.substring(0, 2) as curves;
-    const _publicKey = toBuffer(b58cdecode(publicKey, pref[curve].pk));
+    const _publicKey = b58cdecode(publicKey, pref[curve].pk);
 
     let signaturePrefix = signature.startsWith('sig')
       ? signature.substr(0, 3)
@@ -166,7 +166,7 @@ export class RemoteSigner implements Signer {
       throw new Error(`Unsupported signature given by remote signer: ${signature}`);
     }
 
-    const publicKeyHash = b58cencode(sodium.crypto_generichash(20, _publicKey), pref[curve].pkh);
+    const publicKeyHash = b58cencode(hash(_publicKey, 20), pref[curve].pkh);
     if (publicKeyHash !== this.pkh) {
       throw new Error(
         `Requested public key does not match the initialized public key hash: {
@@ -185,11 +185,11 @@ export class RemoteSigner implements Signer {
       throw new Error(`Invalid signature provided: ${signature}`);
     }
 
-    const bytesHash = sodium.crypto_generichash(32, hex2buf(bytes));
+    const bytesHash = hash(hex2buf(bytes), 32);
 
     if (curve === 'ed') {
       try {
-        return sodium.crypto_sign_verify_detached(sig, bytesHash, _publicKey);
+        return verify(_publicKey, bytesHash, sig);
       } catch (e) {
         return false;
       }
