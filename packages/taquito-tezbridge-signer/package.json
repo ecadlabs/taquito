@@ -1,6 +1,6 @@
 {
   "name": "@taquito/tezbridge-signer",
-  "version": "9.2.0",
+  "version": "9.2.0-stablelib.0",
   "description": "Tezbridge signer provider",
   "keywords": [
     "tezos",
@@ -61,11 +61,11 @@
     ]
   },
   "dependencies": {
-    "@taquito/utils": "^9.2.0",
+    "@taquito/utils": "^9.2.0-stablelib.0",
     "typedarray-to-buffer": "^4.0.0"
   },
   "devDependencies": {
-    "@taquito/taquito": "^9.2.0",
+    "@taquito/taquito": "^9.2.0-stablelib.0",
     "@types/jest": "^26.0.23",
     "@types/node": "^15.12.2",
     "@types/ws": "^7.4.4",
