@@ -56,19 +56,24 @@ describe('Contract with or token inside a pair token', () => {
     const schema = new ParameterSchema(genericMultisig[0].args[0] as any);
     expect(schema.ExtractSignatures()).toContainEqual(['default', 'unit']);
     expect(schema.ExtractSignatures()).toContainEqual([
-      'main',
-      'nat',
-      'operation',
-      { lambda: { parameters: 'unit', returns: 'list' } },
-      'list',
-    ]);
+        "main", 
+        "nat", 
+        "operation", 
+        {
+          "lambda": {
+                      "parameters": "unit", 
+                      "returns": {"prim": "list", "value": "operation"}
+                    }
+        }, 
+        {"prim": "list", "value": "signature"}
+      ]);
     expect(schema.ExtractSignatures()).toContainEqual([
       'main',
       'nat',
       'change_keys',
       'nat',
-      'list',
-      'list',
+      {"prim": "list", "value": "key"},
+      {"prim": "list", "value": "signature"}
     ]);
   });
 });

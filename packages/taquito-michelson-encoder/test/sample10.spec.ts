@@ -78,12 +78,10 @@ describe('Schema test', () => {
     );
     expect(schema.isMultipleEntryPoint).toBeTruthy();
 
-    expect(schema.ExtractSignatures()).toContainEqual([
-      'transfer',
-      'list',
-      'key_hash',
-      'key',
-      'signature',
-    ]);
+    expect(schema.ExtractSignatures()).toContainEqual(["transfer", 
+        {"prim": "list", "value": {"amount": "mutez", "beneficiary": "contract"}}, 
+        "key_hash", 
+        "key", 
+        "signature"]);
   });
 });
