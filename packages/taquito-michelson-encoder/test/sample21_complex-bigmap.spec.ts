@@ -1,24 +1,9 @@
-import { Parser } from '@taquito/michel-codec'
+import { storage, complex_storage } from '../data/sample_complex_bigmap';
 import { Schema } from '../src/schema/storage';
 
 describe('Complex big_map storage', () => {
   it('Should extract correct bigmap schema', () => {
-    const example_storage_in_michelson = `(pair
-    (pair
-    (pair (address %administrator)
-    (big_map %balances address
-    (pair (map %approvals address nat) (nat %balance))))
-    (pair (nat %counter) (pair (nat %default_expiry) (nat %max_expiry))))
-    (pair
-    (pair (big_map %metadata string bytes)
-    (pair (bool %paused)
-    (big_map %permit_expiries (pair address bytes) (option nat))))
-    (pair (big_map %permits (pair address bytes) timestamp)
-    (pair (nat %totalSupply) (big_map %user_expiries address (option nat))))))`
-    
-    const p = new Parser();
-    const parsed_storage: any = p.parseMichelineExpression(example_storage_in_michelson);
-    const schema = new Schema(parsed_storage);
+    const schema = new Schema(storage);
 
     expect(schema.ExtractSchema()).toEqual({
                                 "administrator": "address",
@@ -75,22 +60,7 @@ describe('Complex big_map storage', () => {
   });
 
   it('Should extract correct bigmap schema for complex key-value pairs', () => {
-    const example_storage_in_michelson = `(pair
-    (pair
-    (pair (address %administrator)
-    (big_map %balances address
-    (pair (map %approvals address nat) (nat %balance))))
-    (pair (nat %counter) (pair (nat %default_expiry) (nat %max_expiry))))
-    (pair
-    (pair (big_map %metadata string bytes)
-    (pair (bool %paused)
-    (big_map %permit_expiries (big_map (pair address bytes) bytes) (option nat))))
-    (pair (big_map %permits (big_map address (pair address bytes)) timestamp)
-    (pair (nat %totalSupply) (big_map %user_expiries address (option nat))))))`
-    
-    const p = new Parser();
-    const parsed_storage: any = p.parseMichelineExpression(example_storage_in_michelson);
-    const schema = new Schema(parsed_storage);
+    const schema = new Schema(complex_storage);
 
     expect(schema.ExtractSchema()).toEqual({
                             "administrator": "address",
