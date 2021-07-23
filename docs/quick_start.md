@@ -85,10 +85,9 @@ The key is a JSON file, which you can use with Taquito as follows:
 
 ```js
 import { TezosToolkit } from '@taquito/taquito';
-import { InMemorySigner, importKey } from '@taquito/signer';
+import { importKey } from '@taquito/signer';
 
 const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
-Tezos.setProvider({ signer: new InMemorySigner() });
 
 const FAUCET_KEY = {
   mnemonic: [
