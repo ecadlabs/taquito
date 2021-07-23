@@ -35,7 +35,12 @@ describe('Schema with a ticket of type timestamp inside a big map %tickets in st
         const schema = new Schema(storage);
         expect(schema.ExtractSchema()).toEqual({
             data: {
-                winners: { address: 'mutez' },
+                winners: { 
+                    big_map: {
+                        key: "address",
+                        value: "mutez" 
+                    }
+                },
                 bets: {
                     map: {
                         key: 'address',
@@ -59,11 +64,14 @@ describe('Schema with a ticket of type timestamp inside a big map %tickets in st
                 admin: 'address'
             },
             tickets: {
-                address: {
-                    amount: 'int',
-                    ticketer: 'contract',
-                    value: 'timestamp'
-                }
+                big_map: {
+                    key: "address",
+                    value: {
+                        amount: 'int',
+                        ticketer: 'contract',
+                        value: 'timestamp'
+                    },
+                },
             }
         });
     });
