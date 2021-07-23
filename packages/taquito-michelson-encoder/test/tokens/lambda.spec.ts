@@ -26,8 +26,7 @@ describe('Lambda token', () => {
             lambda: {
                 parameters: 'unit',
                 returns: {
-                            "prim": "list",
-                            "value": "operation",
+                            list: "operation",
                          }
             }
         });

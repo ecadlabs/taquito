@@ -165,8 +165,7 @@ describe('Schema test', () => {
         '6': 'nat',
       },
       createAccounts:  {
-        "prim": "list",
-        "value": {
+        list: {
           "6": "address",
           "7": "nat",
         },
@@ -191,8 +190,7 @@ describe('Schema test', () => {
     expect(sig).toContainEqual(['balanceOf', 'address', 'contract']);
     expect(sig).toContainEqual(['createAccount', 'address', 'nat']);
     expect(sig).toContainEqual(["createAccounts", {
-                                                      "prim": "list", 
-                                                      "value": {
+                                                      list: {
                                                                 "6": "address", 
                                                                 "7": "nat"
                                                                }

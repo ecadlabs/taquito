@@ -62,18 +62,18 @@ describe('Contract with or token inside a pair token', () => {
         {
           "lambda": {
                       "parameters": "unit", 
-                      "returns": {"prim": "list", "value": "operation"}
+                      "returns": {list: "operation"}
                     }
         }, 
-        {"prim": "list", "value": "signature"}
+        {list: "signature"}
       ]);
     expect(schema.ExtractSignatures()).toContainEqual([
       'main',
       'nat',
       'change_keys',
       'nat',
-      {"prim": "list", "value": "key"},
-      {"prim": "list", "value": "signature"}
+      {list: "key"},
+      {list: "signature"}
     ]);
   });
 });

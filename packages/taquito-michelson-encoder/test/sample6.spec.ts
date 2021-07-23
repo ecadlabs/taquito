@@ -13,12 +13,10 @@ describe('Schema test', () => {
     expect(schema.ExtractSchema()).toEqual({
       key_info: {
         key_groups: {
-          "prim": "list",
-          "value":  {
+          list:  {
             "group_threshold": "nat",
             "signatories":  {
-              "prim": "list",
-              "value": "key",
+              list: "key",
             },
           },
         },
@@ -145,12 +143,10 @@ describe('Schema test', () => {
           Set_delegate: 'key_hash',
           Set_keys: {
             key_groups: {
-              "prim": "list",
-              "value":  {
+              list:  {
                 "group_threshold": "nat",
                 "signatories":  {
-                  "prim": "list",
-                  "value": "key",
+                  list: "key",
                 },
               },
             },
@@ -166,10 +162,8 @@ describe('Schema test', () => {
           },
         },
         signatures: {
-           "prim": "list",
-           "value": {
-             "prim": "list",
-             "value": "signature",
+           list: {
+             list: "signature",
            },
          },
       },
@@ -177,7 +171,7 @@ describe('Schema test', () => {
 
     const signatures = schema.ExtractSignatures();
     expect(signatures).toContainEqual(['Pour', 'signature', 'mutez']);
-    expect(signatures).toContainEqual(['Action', 'Set_delegate', 'key_hash', {"prim": "list", "value": {"prim": "list", "value": "signature"}}]);
+    expect(signatures).toContainEqual(['Action', 'Set_delegate', 'key_hash', {"list": {"list": "signature"}}]);
   });
 
   it('Should encode parameter properly', () => {

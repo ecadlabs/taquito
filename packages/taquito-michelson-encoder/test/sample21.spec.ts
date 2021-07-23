@@ -17,8 +17,7 @@ describe('List token type structure', () => {
     const schema = new Schema(storageType);
 
     expect(schema.ExtractSchema()).toEqual({
-        prim: "list",
-        value: {
+        list: {
         "from": "address",
         "to": "address"
       }
