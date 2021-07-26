@@ -105,14 +105,6 @@ const storageSchema = new Schema(storageType);
 const extractSchema = storageSchema.ExtractSchema();
 println(JSON.stringify(extractSchema, null, 2));
 ```
-Note that for `big_map`, an object is returned where the key is the type of the big map key and the value is the type of the big map value.
-
-```js live noInline 
-const storageType = { prim: 'big_map', args: [{ prim: 'address' }, { prim: 'int' }] };
-const storageSchema = new Schema(storageType);
-const extractSchema = storageSchema.ExtractSchema();
-println(JSON.stringify(extractSchema, null, 2));
-```
 
 Here is another example using a complex storage:
 
