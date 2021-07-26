@@ -67,6 +67,9 @@ export class ListToken extends Token {
   }
 
   public ExtractSchema() {
-    return ListToken.prim;
+    const valueSchema = this.createToken(this.val.args[0], this.idx);
+    return {
+      [ListToken.prim] : valueSchema.ExtractSchema()
+    }
   }
 }

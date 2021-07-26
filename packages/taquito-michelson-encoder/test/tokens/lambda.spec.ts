@@ -25,7 +25,9 @@ describe('Lambda token', () => {
         expect(result).toEqual({
             lambda: {
                 parameters: 'unit',
-                returns: 'list'
+                returns: {
+                            list: "operation",
+                         }
             }
         });
     });
