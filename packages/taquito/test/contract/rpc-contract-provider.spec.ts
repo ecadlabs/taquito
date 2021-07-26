@@ -153,7 +153,7 @@ describe('RpcContractProvider test', () => {
     });
     mockRpcClient.preapplyOperations.mockResolvedValue([]);
     mockRpcClient.getChainId.mockResolvedValue('chain-id');
-    const estimateReveal = new Estimate(10500000, 0, 160, 1000);
+    const estimateReveal = new Estimate(1000000, 0, 64, 250);
     mockEstimate.reveal.mockResolvedValue(estimateReveal);
   });
 
