@@ -2,6 +2,178 @@
 title: Versions
 author: Jev Bjorsell
 ---
+
+# Taquito v10.0.0-beta
+## Summary
+
+### Remaining support for Granadanet
+
+- @taquito/rpc - Support `deposits` field in `frozen_balance` #919
+- @taquito/rpc - Support new fields introduced by Granada in block metadata #918
+
+
+### Bug Fixes
+
+- @taquito/taquito - Drain an unrevealed account #975
+- @taquito/rpc - Type `ContractBigMapDiffItem` has BigNumber's but values are string's #946
+
+### Documentation
+
+- Document usage of Taquito with TezosDomain #912
+- Document storage and fee passing from wallet to dapp #926
+- Add integration tests for Permit contracts (TZIP-17) #661
+
+
+### Enhancements
+
+- **Breaking changes** - @taquito/michelson-encoder - Improvement to the `Schema.ExtractSchema()` method #960 and #933 
+
+
+
+## @taquito/rpc - Support deposits field in frozen_balance
+
+In Granada, when fetching delegate information from the RPC, the `deposit` property in `frozen_balance_by_cycle` has been replaced by `deposits`. The RpcClient supports the new and the old notation.
+
+## @taquito/rpc - Support new fields introduced by Granada in block metadata
+
+The `balance_updates` property in block metadata now includes the new origin `subsidy`, besides the existing ones: `block` and `migration`.
+
+The support for the new `liquidity_baking_escape_ema` and `implicit_operations_results` properties in block metadata has been added in the `RpcClient` class.
+
+
+## @taquito/taquito - Drain an unrevealed account
+
+Since v9.1.0-beta, the fees associated with a reveal operation are estimated using the RPC instead of using the old 1420 default value. When draining an unrevealed account, the fees associated with the reveal operation needs to be subtracted from the initial balance (as well as the fees related to the actual transaction operation). The reveal fee has changed from 1420 to 374 (based on the simulation using the RPC). However, the constants file was still using the 1420 value, leading to a remaining amount of 1046 in the account when trying to empty it. The default value has been adjusted on the constants file to match this change. 
+
+## @taquito/rpc - Type ContractBigMapDiffItem has BigNumber's but values are string's
+
+The type of the `big_map`, `source_big_map`, and `destination_big_map` properties of `ContractBigMapDiffItem` was set as `BigNumber`, but they were not cast to it. The RPC returns these properties in a string format. The type has been changed from `BigNumber` to `string` for them.
+
+## Add integration tests for Permit contracts (TZIP-17)
+
+Examples have been added to the integration tests showing how to manipulate permit contracts using the new data packing feature: https://github.com/ecadlabs/taquito/blob/master/integration-tests/contract-permits.spec.ts
+
+## @taquito/michelson-encoder - Improvement to the Schema.ExtractSchema() method
+
+The`ExtractSchema` method of the `Schema` class indicates how to structure contract storage in javascript given its storage type in Michelson JSON representation. This method can be helpful to find out how the storage object needs to be written when deploying a contract.
+
+### Return the type of element(s) that compose a "list"
+
+Before version 10.0.0-beta, when calling the `Schema.ExtractSchema` method, the Michelson type `list` was represented only by the keyword `list`. This behavior has been changed to return an object where the key is `list` and the value indicates the list's composition.
+
+**Example:**
+```typescript=
+const storageType = {
+    prim: 'list',
+    args: [
+        {
+            prim: 'pair',
+            args: [
+                { prim: 'address', annots: ['%from'] },
+                { prim: 'address', annots: ['%to'] },
+            ],
+        },
+    ],
+};
+const storageSchema = new Schema(storageType);
+const extractSchema = storageSchema.ExtractSchema();
+println(JSON.stringify(extractSchema, null, 2));
+```
+*before version 10.0.0-beta, the returned value was:*
+```typescript=
+'list'
+```
+*in version 10.0.0-beta the returned value is:*
+```typescript=
+{
+    list: {
+        "from": "address",
+        "to": "address"
+    }
+}
+```
+Based on the information returned by the `ExtractSchema` method, the storage can be writen as follow:
+```typescript=
+Tezos.contract
+  .originate({
+    code: contractCode,
+    storage: [
+        {
+          from: "tz1...",
+          to: "tz1..."
+        }
+    ],
+  })
+```
+
+### Breaking changes - Change in the representation of big_map type
+
+The representation of the `big_map` type returned by the `Schema.ExtractSchema` method has changed to increase consistency with the `map` representation. Similar to the `map` type, an object is now returned where its key is `big_map,` and its value is another object having a `key` and a `value` property, indicating the type of the key and value of the big map. At the same time, this change fixed an issue where the key of a big map as pair was not represented properly and returned "[object Object]" instead.
+
+**Example:**
+```typescript=
+const storageType = {
+	prim: 'big_map',
+	annots: [ '%balances' ],
+	args: [
+		{
+			prim: 'address'
+		},
+		{
+			prim: 'pair',
+			args: [ { prim: 'address' }, { prim: 'nat' } ]
+		}
+	]
+};
+const storageSchema = new Schema(storageType);
+const extractSchema = storageSchema.ExtractSchema();
+println(JSON.stringify(extractSchema, null, 2));
+```
+*before version 10.0.0-beta the returned value was:*
+```json=
+{
+    "address": {
+        "0": "address",
+        "1": "nat"
+    }
+}
+```
+*in version 10.0.0-beta the returned value is:*
+```json=
+{
+    "big_map": {
+        "key": "address",
+        "value": {
+            "0": "address",
+            "1": "nat"
+        }
+    }
+}
+```
+Based on the information returned by the `ExtractSchema` method, the storage can be writen as follow:
+```typescript=
+const bigMap = new MichelsonMap();
+bigMap.set('tz1...', { // address 
+        0: 'tz1...', // address
+        1:10 // nat
+    });
+
+Tezos.contract
+  .originate({
+    code: contractCode,
+    storage: bigMap
+  })
+```
+
+## What's coming next for Taquito?
+
+Taquito team is committed to creating the best experience for Taquito users, and we need your feedback!
+Please help us improve Taquito further by filling out this 2-minute survey by EOD August 1 (PST).
+https://forms.gle/mqYySKeaWUUkF5NXA
+Thank you for your time and support!
+
+If you have feature or issue requests, please create an issue on http://github.com/ecadlabs/taquito/issues or join us on the Taquito community support channel on Telegram https://t.me/tezostaquito
+
 # Taquito v9.2.0-beta
 ## Summary
 
