@@ -93,6 +93,21 @@ const edonetEphemeral = {
   }
 }
 
+const sandboxProtocolEphemeral = florencenetEphemeral;
+
+const sandboxEphemeral = {
+  rpc: process.env['TEZOS_RPC_SANDBOX'] || 'http://localhost:8732',
+  knownBaker: sandboxProtocolEphemeral.knownBaker,
+  knownContract: 'KT1WtxvaDHanaLJQUej6GMFFNZ2bV9NFSjde',
+  knownBigMapContract: 'KT1QPThjY15EaJSngX5YiJHL1QBRKEgHxNcW',
+  protocol: sandboxProtocolEphemeral.protocol,
+  signerConfig: {
+    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
+    keyUrl: 'https://api.tez.ie/keys/florencenet',
+    requestHeaders: { 'Authorization': 'Bearer taquito-example' },
+  }
+}
+
 // Well known faucet key. Can be overridden by setting the `TEZOS_FAUCET_KEY_FILE` environment variable
 const key = {
   email: "mfbzlhsv.owpfexem@tezos.example.org",
@@ -175,6 +190,9 @@ else if (process.env['FLORENCENET']) {
 }
 else if (process.env['EDONET']) {
   providers.push(edonetEphemeral)
+}
+else if (process.env['SANDBOX']) {
+  providers.push(sandboxEphemeral)
 } else {
   providers.push(florencenetEphemeral, edonetEphemeral, granadanetEphemeral)
 }

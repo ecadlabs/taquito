@@ -8,6 +8,7 @@
     "test:florencenet-faucet": "RUN_FLORENCENET_WITH_FAUCET=true jest --runInBand",
     "test:granadanet": "GRANADANET=true jest",
     "test:granadanet-faucet": "RUN_GRANADANET_WITH_FAUCET=true jest --runInBand",
+    "test:sandbox": "SANDBOX=true jest",
     "test": "jest"
   },
   "version": "10.1.2",
