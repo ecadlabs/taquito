@@ -10,6 +10,7 @@
     "test:granadanet-faucet": "RUN_GRANADANET_WITH_FAUCET=true jest --runInBand",
     "test:hangzhounet": "HANGZHOUNET=true jest",
     "test:hangzhounet-faucet": "RUN_HANGZHOUNET_WITH_FAUCET=true jest --runInBand",
+    "test:sandbox": "SANDBOX=true jest",
     "test": "jest"
   },
   "version": "10.2.0",
