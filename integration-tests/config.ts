@@ -171,6 +171,9 @@ else if (process.env['GRANADANET']) {
 }
 else if (process.env['HANGZHOUNET']) {
   providers.push(hangzhounetEphemeral)
+}
+else if (process.env['SANDBOX']) {
+  providers.push(sandboxEphemeral)
 } else {
   providers.push(hangzhounetEphemeral, granadanetEphemeral)
 }
