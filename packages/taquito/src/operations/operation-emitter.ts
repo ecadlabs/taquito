@@ -3,7 +3,6 @@ import {
   OperationContentsAndResult,
   OperationObject,
   OpKind,
-  PreapplyResponse,
   RpcClient,
   RPCRunOperationParam,
 } from '@taquito/rpc';
@@ -17,6 +16,8 @@ import {
   ParamsWithKind,
   PrepareOperationParams,
   RPCOperation,
+  RPCOpWithAmount,
+  RPCOpWithBalance,
   RPCOpWithFee,
   RPCOpWithSource,
 } from './types';
@@ -80,7 +81,7 @@ export abstract class OperationEmitter {
     return opRequireReveal;
   }
 
-  private constructOps = (
+  private constructOps = async (
     cOps: RPCOperation[],
     publicKeyHash: string,
     headCounter: number,
@@ -88,57 +89,63 @@ export abstract class OperationEmitter {
       publicKeyHash: string,
       counter: number,
       counterScope: { [key: string]: number }
-    ) => { counter: string },
+    ) => Promise<{ counter: string }>,
     source?: string
-  ): OperationContents[] => {
+  ): Promise<OperationContents[]> => {
     const counters = {};
-    // tslint:disable strict-type-predicates
-    return cOps.map((op: RPCOperation) => {
-      switch (op.kind) {
-        case OpKind.ACTIVATION:
-          return {
-            ...op,
-          };
-        case OpKind.REVEAL:
-          return {
-            ...op,
-            ...this.getSource(op, publicKeyHash, source),
-            ...counterFunction(publicKeyHash, headCounter, counters),
-            ...this.getFee(op),
-          };
-        case OpKind.ORIGINATION:
-          return {
-            ...op,
-            balance: typeof op.balance !== 'undefined' ? `${op.balance}` : '0',
-            ...this.getSource(op, publicKeyHash, source),
-            ...counterFunction(publicKeyHash, headCounter, counters),
-            ...this.getFee(op),
-          };
-        case OpKind.TRANSACTION:
-          const cops = {
-            ...op,
-            amount: typeof op.amount !== 'undefined' ? `${op.amount}` : '0',
-            ...this.getSource(op, publicKeyHash, source),
-            ...counterFunction(publicKeyHash, headCounter, counters),
-            ...this.getFee(op),
-          };
-          if (cops.source.toLowerCase().startsWith('kt1')) {
-            throw new Error(
-              `KT1 addresses are not supported as source since ${Protocols.PsBabyM1}`
-            );
-          }
-          return cops;
-        case OpKind.DELEGATION:
-          return {
-            ...op,
-            ...this.getSource(op, publicKeyHash, source),
-            ...counterFunction(publicKeyHash, headCounter, counters),
-            ...this.getFee(op),
-          };
-        default:
-          throw new Error('Unsupported operation');
-      }
-    });
+    const opArray: OperationContents[] = [];
+    await Promise.all(
+      cOps.map(async (op: RPCOperation) => {
+        switch (op.kind) {
+          case OpKind.ACTIVATION:
+            opArray.push({
+              ...op
+            });
+            return;
+          case OpKind.REVEAL:
+            opArray.push({
+              ...op,
+              ...this.getSource(op as RPCOpWithSource, publicKeyHash, source),
+              ...await counterFunction(publicKeyHash, headCounter, counters),
+              ...this.getFee(op as RPCOpWithFee)
+            });
+            return;
+          case OpKind.ORIGINATION:
+            opArray.push({
+              ...op,
+              ...this.formatBalance(op as RPCOpWithBalance),
+              ...this.getSource(op as RPCOpWithSource, publicKeyHash, source),
+              ...await counterFunction(publicKeyHash, headCounter, counters),
+              ...this.getFee(op as RPCOpWithFee)
+            });
+            return;
+          case OpKind.TRANSACTION:
+            const cops = {
+              ...op,
+              ...this.formatAmount(op as RPCOpWithAmount),
+              ...this.getSource(op as RPCOpWithSource, publicKeyHash, source),
+              ...await counterFunction(publicKeyHash, headCounter, counters),
+              ...this.getFee(op as RPCOpWithFee)
+            };
+            if (cops.source.toLowerCase().startsWith('kt1')) {
+              throw new Error(`KT1 addresses are not supported as source since ${Protocols.PsBabyM1}`);
+            }
+            opArray.push(cops);
+            return;
+          case OpKind.DELEGATION:
+            opArray.push({
+              ...op,
+              ...this.getSource(op as RPCOpWithSource, publicKeyHash, source),
+              ...await counterFunction(publicKeyHash, headCounter, counters),
+              ...this.getFee(op as RPCOpWithFee)
+            });
+            return;
+          default:
+            throw new Error('Unsupported operation');
+        }
+      })
+    );
+    return opArray;
   };
 
   private getFee = (op: RPCOpWithFee) => {
@@ -157,6 +164,16 @@ export abstract class OperationEmitter {
       source: typeof op.source === 'undefined' ? source || publicKeyHash : op.source,
     };
   };
+  private formatBalance = (op: RPCOpWithBalance) => {
+    return {
+      balance: typeof op.balance !== 'undefined' ? `${op.balance}` : '0'
+    }
+  };
+  private formatAmount = (op: RPCOpWithAmount) => {
+    return {
+      amount: typeof op.amount !== 'undefined' ? `${op.amount}` : '0'
+    }
+  };
 
   protected async prepareOpAndSimulation({
     operation,
@@ -173,34 +190,30 @@ export abstract class OperationEmitter {
     // Implicit account who emit the operation
     const publicKeyHash = await this.signer.publicKeyHash();
 
-    const { counter, hash, protocol } = await this.getCounterHashAndProtocol(ops, publicKeyHash);
+    const { hash, protocol } = await this.getHashAndProtocol();
 
-    if (!this.context.counters[publicKeyHash] || this.context.counters[publicKeyHash] < counter) {
-      this.context.counters[publicKeyHash] = counter;
-    }
-
+    const counterFromProvider = await this.context.counterProvider.getCounters(publicKeyHash);
     let preparedOpSimulation;
-    // This is a work around to the counter_in_the_future error returned by the RPC when calling the run_operation
-    // The preparedOpSimulation will be used to prevalidate the operation instead of the preparedOp
-    // The counter of an operation in preparedOpSimulation will be the head counter + 1
-    // The counter in preparedOp will be incremented accordingly if sending many operations in a row by keeping it on the context
-    if (counter !== this.context.counters[publicKeyHash]) {
+    // The last counter from the RPC will be inferior to the last counter from the provider when sending more than one operation per block from the same account.
+    // Pre-validation of an operation cannot be done with a counter greater than the RpcCounter+1, or a counter_in_the_future error is raised by the RPC.
+    // Thus, the pre-validation step must to be performed using the rpcCounter+1, while the injection step requires the appropriate incremented counter.
+    if (counterFromProvider.rpcCounter < counterFromProvider.lastUsedCounter) {
       preparedOpSimulation = {
         opOb: {
           branch: hash,
-          contents: this.constructOps(ops, publicKeyHash, counter, this.getScopeCounter, source),
+          contents: await (this.constructOps(ops, publicKeyHash, counterFromProvider.rpcCounter, this.getScopeCounter, source)),
         },
-        counter,
+        counter: counterFromProvider.rpcCounter,
       };
     }
 
     const preparedOp = {
       opOb: {
         branch: hash,
-        contents: this.constructOps(ops, publicKeyHash, counter, this.getContextCounter, source),
+        contents: await (this.constructOps(ops, publicKeyHash, counterFromProvider.rpcCounter, this.getContextCounter, source)),
         protocol: protocol,
       },
-      counter,
+      counter: counterFromProvider.rpcCounter,
     };
 
     return {
@@ -209,23 +222,13 @@ export abstract class OperationEmitter {
     };
   }
 
-  private async getCounterHashAndProtocol(ops: RPCOperation[], publicKeyHash: string) {
+  private async getHashAndProtocol() {
     const blockHeaderPromise = this.rpc.getBlockHeader();
     const blockMetaPromise = this.rpc.getBlockMetadata();
-    let counterPromise: Promise<string | undefined> = Promise.resolve(undefined);
 
-    for (let i = 0; i < ops.length; i++) {
-      if (isOpRequireReveal(ops[i]) || ops[i].kind === 'reveal') {
-        const { counter } = await this.rpc.getContract(publicKeyHash);
-        counterPromise = Promise.resolve(counter);
-        break;
-      }
-    }
-
-    const [header, metadata, headCounter] = await Promise.all([
+    const [header, metadata] = await Promise.all([
       blockHeaderPromise,
       blockMetaPromise,
-      counterPromise,
     ]);
 
     if (!header) {
@@ -236,28 +239,28 @@ export abstract class OperationEmitter {
       throw new Error('Unable to fetch latest metadata');
     }
 
-    const counter = parseInt(headCounter || '0', 10);
     return {
-      counter,
       hash: header.hash,
       protocol: metadata.next_protocol,
     };
   }
 
-  private getContextCounter = (publicKeyHash: string, headCounter: number) => {
-    if (
-      !this.context.counters[publicKeyHash] ||
-      this.context.counters[publicKeyHash] < headCounter
-    ) {
-      this.context.counters[publicKeyHash] = headCounter;
+  private getContextCounter = async (
+    publicKeyHash: string, 
+    headCounter: number,
+    countersScope: { [key: string]: number }) => {
+    let opCounter = await this.context.counterProvider.getNextCounter(publicKeyHash);
+    const { counter } = await this.getScopeCounter(publicKeyHash, headCounter, countersScope);
+    if (opCounter < Number(counter)) {
+      opCounter = Number(counter);
     }
-    const opCounter = ++this.context.counters[publicKeyHash];
     return {
       counter: `${opCounter}`,
     };
   };
 
-  private getScopeCounter = (
+  // Used for estimation and to properly increment the counter of operations in a batch
+  private getScopeCounter = async (
     publicKeyHash: string,
     headCounter: number,
     countersScope: { [key: string]: number }
@@ -274,7 +277,6 @@ export abstract class OperationEmitter {
     operation,
     source
   }: PrepareOperationParams): Promise<PreparedOperationSimulation> {
-    const countersScope: { [key: string]: number } = {};
     let ops: RPCOperation[] = [];
 
     if (Array.isArray(operation)) {
@@ -285,25 +287,22 @@ export abstract class OperationEmitter {
 
     const publicKeyHash = source? source: await this.signer.publicKeyHash();
 
-    const { counter, hash } = await this.getCounterHashAndProtocol(ops, publicKeyHash);
-
-    if (!countersScope[publicKeyHash] || countersScope[publicKeyHash] < counter) {
-      countersScope[publicKeyHash] = counter;
-    }
+    const { hash } = await this.getHashAndProtocol();
+    const rpcCounter = await this.context.counterProvider.getRpcCounter(publicKeyHash)
 
     return {
       opOb: {
         branch: hash,
-        contents: this.constructOps(ops, publicKeyHash, counter, this.getScopeCounter, source),
+        contents: await (this.constructOps(ops, publicKeyHash, rpcCounter, this.getScopeCounter, source)),
       },
-      counter,
+      counter: rpcCounter,
     };
   }
 
   protected async preValidate(prepared: PreparedOpAndSimulation, forgedOperation: ForgedBytes) {
     return prepared.preparedOpSimulation
-      ? // If we want to inject many operations in a same block
-        // we call runOperation instead of preapply
+      ? // If we want to inject many operations in the same block
+        // operations with a counter greater than `RpcCounter+1` will use the `runOperation` instead of `preapplyOperation`
         // to avoid having to produce 2 signatures (op with incremented counter and op used for simulation)
         this.runOperation({
           operation: {

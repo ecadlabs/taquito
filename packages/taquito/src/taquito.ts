@@ -8,6 +8,8 @@ import { RPCBatchProvider } from './batch/rpc-batch-provider';
 import { Protocols } from './constants';
 import { Config, Context, TaquitoProvider } from './context';
 import { ContractProvider, EstimationProvider } from './contract/interface';
+import { CounterProvider } from './counter/counter-provider';
+import { CounterProviderInterface } from './counter/interface';
 import { Extension } from './extension/extension';
 import { Forger } from './forger/interface';
 import { RpcForger } from './forger/rpc-forger';
@@ -57,6 +59,7 @@ export interface SetProviderOptions {
   protocol?: Protocols;
   config?: Config;
   packer?: Packer;
+  counterProvider?: CounterProviderInterface;
 }
 
 export interface VersionInfo {
@@ -115,6 +118,7 @@ export class TezosToolkit {
     forger,
     wallet,
     packer,
+    counterProvider
   }: SetProviderOptions) {
     this.setRpcProvider(rpc);
     this.setStreamProvider(stream);
@@ -122,6 +126,7 @@ export class TezosToolkit {
     this.setForgerProvider(forger);
     this.setWalletProvider(wallet);
     this.setPackerProvider(packer);
+    this.setCounterProvider(counterProvider);
 
     this._context.proto = protocol;
     this._context.config = config as Partial<Config>;
@@ -232,6 +237,12 @@ export class TezosToolkit {
     this._context.packer = p;
   }
 
+  setCounterProvider(counterProvider?: SetProviderOptions['counterProvider']) {
+    const c = typeof counterProvider === 'undefined' ? this.getFactory(CounterProvider)(): counterProvider;
+    this._options.counterProvider = c;
+    this._context.counterProvider = c;
+  }
+
   /**
    * @description Provide access to tezos account management
    */
@@ -280,6 +291,10 @@ export class TezosToolkit {
    */
   get signer() {
     return this._context.signer;
+  }
+
+  get counterProvider() {
+    return this._context.counterProvider;
   }
 
   /**

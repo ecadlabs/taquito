@@ -51,6 +51,8 @@ export type RPCOpWithSource =
   | RPCOriginationOperation
   | RPCDelegateOperation
   | RPCRevealOperation;
+export type RPCOpWithBalance = RPCOriginationOperation
+export type RPCOpWithAmount = RPCTransferOperation
 
 export const isOpWithFee = <T extends { kind: OpKind }>(
   op: T

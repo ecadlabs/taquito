@@ -20,6 +20,8 @@ import { RpcPacker } from './packer/rpc-packer';
 import BigNumber from 'bignumber.js';
 import { retry } from 'rxjs/operators';
 import { OperatorFunction } from 'rxjs';
+import { CounterProvider } from './counter/counter-provider';
+import { CounterProviderInterface } from './counter/interface';
 
 export interface TaquitoProvider<T, K extends Array<any>> {
   new (context: Context, ...rest: K): T;
@@ -47,7 +49,7 @@ export const defaultConfig: Partial<Config> = {
  * @description Encapsulate common service used throughout different part of the library
  */
 export class Context {
-  private _counters: { [key: string]: number } = {};
+  private _counterProvider: CounterProviderInterface;
   private _rpcClient: RpcClient;
   private _forger: Forger;
   private _parser: ParserProvider;
@@ -70,6 +72,7 @@ export class Context {
     forger?: Forger,
     injector?: Injector,
     packer?: Packer,
+    counters?: CounterProviderInterface,
     wallet?: WalletProvider,
     parser?: ParserProvider
   ) {
@@ -82,6 +85,7 @@ export class Context {
     this._forger = forger ? forger : new RpcForger(this);
     this._injector = injector ? injector : new RpcInjector(this);
     this.operationFactory = new OperationFactory(this);
+    this._counterProvider = counters ? counters : new CounterProvider(this);
     this._walletProvider = wallet ? wallet : new LegacyWalletProvider(this);
     this._parser = parser ? parser : new MichelCodecParser(this);
     this._packer = packer ? packer : new RpcPacker(this);
@@ -162,12 +166,12 @@ export class Context {
     this._packer = value;
   }
 
-  get counters() {
-    return this._counters;
+  get counterProvider() {
+    return this._counterProvider;
   }
 
-  set counters(value: { [key: string]: number }) {
-    this._counters[value.key] = value.counter;
+  set counterProvider(value: CounterProviderInterface) {
+    this._counterProvider = value;
   }
 
   async isAnyProtocolActive(protocol: string[] = []) {
@@ -227,7 +231,8 @@ export class Context {
       this.config,
       this.forger,
       this._injector,
-      this.packer
+      this.packer,
+      this.counterProvider
     );
   }
 }
