@@ -2,7 +2,7 @@ import { TezosToolkit } from '@taquito/taquito';
 import { ligoSample } from '../integration-tests/data/ligo-simple-contract';
 
 import { importKey } from '@taquito/signer';
-const provider = 'https://api.tez.ie/rpc/florencenet';
+const provider = 'https://api.tez.ie/rpc/granadanet';
 
 async function example() {
   const tezos = new TezosToolkit(provider)

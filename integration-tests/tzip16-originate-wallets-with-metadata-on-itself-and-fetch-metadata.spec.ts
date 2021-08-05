@@ -46,6 +46,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             }).send();
             await op.confirmation();
             contractAddress = (await op.contract()).address;
+            console.log("contract address : "+contractAddress)
             expect(op.opHash).toBeDefined();
             done();
         });

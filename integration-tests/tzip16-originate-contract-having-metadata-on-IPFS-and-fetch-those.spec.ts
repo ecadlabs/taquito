@@ -45,6 +45,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             });
             await op.confirmation();
             contractAddress = (await op.contract()).address;
+            console.log("contractAddress : "+contractAddress)
             expect(op.hash).toBeDefined();
             expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
             done();

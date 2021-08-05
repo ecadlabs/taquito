@@ -56,7 +56,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       const getAllowance = await contract.views.getAllowance('tz1XTyqBn4xi9tkRDutpRyQwHxfF8ar4i4Wq', 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM').read();
       expect(getAllowance.toString()).toEqual('25');
-
+      
       done();
     })
 
@@ -142,6 +142,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       await op.confirmation()
       const contract = await op.contract();
+      console.log("contract address : "+contract.address)
 
       const balance_of = await contract.views.balance_of([{ owner: 'tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1', token_id: '0' }]).read();
       expect(toJSON(balance_of)).toEqual([{
