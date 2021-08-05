@@ -1,5 +1,6 @@
 import { TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
+import { voteInitSample, voteSample } from '../integration-tests/data/vote-contract';
 
 const provider = 'https://api.tez.ie/rpc/granadanet';
 
