@@ -29,7 +29,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 			});
 			await op.confirmation();
 			const contractAddress = (await op.contract()).address;
-			console.log("contract address : "+contractAddress)
 
 			const contractAbstraction = await Tezos.contract.at(contractAddress, tzip16);
 			const metadataViews = await contractAbstraction.tzip16().metadataViews();
@@ -75,7 +74,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 			});
 			await op.confirmation();
 			const contractAddress = (await op.contract()).address;
-			console.log("contract address with metadata having a couple of views:"+contractAddress)
 			const contractAbstraction = await Tezos.contract.at(contractAddress, tzip16);
 			const metadataViews = await contractAbstraction.tzip16().metadataViews();
 
