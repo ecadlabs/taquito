@@ -448,7 +448,7 @@ In the following example, we will fetch 4 big map values at once. The Michelson 
 // const Tezos = new TezosToolkit('https://api.tez.ie/rpc/granadanet');
 
 Tezos.contract
-  .at('KT1FyPYNDAGxYZ2GhPcwsP8sn6gDi28BZxEq')
+  .at('KT1VznL7HErrymLxc6EoXsatQ9mEiRE8WL6N')
   .then((contract) => {
     println('Fetching the storage of the contract...')
     return contract.storage()
