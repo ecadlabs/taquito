@@ -67,3 +67,13 @@ const setDelegate = (key: string) => {
   ];
 };
 ```
+
+# How to withdraw delegate
+
+It is possible to `undelegate` by executing a new `setDelegate` operation and not specifying the `delegate` property.
+
+```ts
+// const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+
+await Tezos.contract.setDelegate({ source: 'tz1_source'});
+```
