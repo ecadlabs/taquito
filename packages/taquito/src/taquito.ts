@@ -6,7 +6,7 @@
 import { RpcClient } from '@taquito/rpc';
 import { RPCBatchProvider } from './batch/rpc-batch-provider';
 import { Protocols } from './constants';
-import { Config, Context, TaquitoProvider } from './context';
+import { ConfigConfirmation, ConfigStreamer, Context, TaquitoProvider } from './context';
 import { ContractProvider, EstimationProvider } from './contract/interface';
 import { Extension } from './extension/extension';
 import { Forger } from './forger/interface';
@@ -55,7 +55,7 @@ export interface SetProviderOptions {
   stream?: string | SubscribeProvider;
   signer?: Signer;
   protocol?: Protocols;
-  config?: Config;
+  config?: Partial<ConfigConfirmation> & Partial<ConfigStreamer>;
   packer?: Packer;
 }
 
@@ -124,7 +124,7 @@ export class TezosToolkit {
     this.setPackerProvider(packer);
 
     this._context.proto = protocol;
-    this._context.config = config as Partial<Config>;
+    this._context.config = config as Partial<ConfigConfirmation> & Required<ConfigStreamer>;
   }
 
   /**

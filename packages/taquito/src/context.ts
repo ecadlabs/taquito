@@ -19,28 +19,36 @@ import { Packer } from './packer/interface';
 import { RpcPacker } from './packer/rpc-packer';
 import BigNumber from 'bignumber.js';
 import { retry } from 'rxjs/operators';
-import { OperatorFunction } from 'rxjs';
+import { BehaviorSubject, OperatorFunction } from 'rxjs';
 
 export interface TaquitoProvider<T, K extends Array<any>> {
   new (context: Context, ...rest: K): T;
 }
 
-// The shouldObservableSubscriptionRetry parameter is related to the observable in ObservableSubsription class.
-// When set to true, the observable won't die when getBlock rpc call fails; the error will be reported via the error callback,
-// and it will continue to poll for new blocks.
-export interface Config {
+export interface ConfigConfirmation {
   confirmationPollingIntervalSecond?: number;
   confirmationPollingTimeoutSecond?: number;
   defaultConfirmationCount?: number;
+}
+
+export const defaultConfigConfirmation: Partial<ConfigConfirmation> = {
+  defaultConfirmationCount: 1,
+  confirmationPollingTimeoutSecond: 180
+};
+
+// The shouldObservableSubscriptionRetry parameter is related to the observable in ObservableSubsription class.
+// When set to true, the observable won't die when getBlock rpc call fails; the error will be reported via the error callback,
+// and it will continue to poll for new blocks.
+export interface ConfigStreamer {
+  streamerPollingIntervalMilliseconds?: number;
   shouldObservableSubscriptionRetry?: boolean;
   observableSubscriptionRetryFunction?: OperatorFunction<any, any>;
 }
 
-export const defaultConfig: Partial<Config> = {
-  defaultConfirmationCount: 1,
-  confirmationPollingTimeoutSecond: 180,
+export const defaultConfigStreamer: Required<ConfigStreamer> = {
+  streamerPollingIntervalMilliseconds: 20000,
   shouldObservableSubscriptionRetry: false,
-  observableSubscriptionRetryFunction: retry(),
+  observableSubscriptionRetryFunction: retry()
 };
 
 /**
@@ -66,7 +74,7 @@ export class Context {
     private _rpc: RpcClient | string,
     private _signer: Signer = new NoopSigner(),
     private _proto?: Protocols,
-    private _config?: Partial<Config>,
+    public readonly _config = new BehaviorSubject({...defaultConfigStreamer, ...defaultConfigConfirmation}),
     forger?: Forger,
     injector?: Injector,
     packer?: Packer,
@@ -87,15 +95,16 @@ export class Context {
     this._packer = packer ? packer : new RpcPacker(this);
   }
 
-  get config(): Partial<Config> {
-    return this._config as any;
+  get config(): Partial<ConfigConfirmation> & Required<ConfigStreamer> {
+    return this._config.getValue();
   }
 
-  set config(value: Partial<Config>) {
-    this._config = {
-      ...defaultConfig,
+  set config(value: Partial<ConfigConfirmation> & Required<ConfigStreamer>) {
+    this._config.next({
+      ...defaultConfigConfirmation,
+      ...defaultConfigStreamer,
       ...value,
-    };
+    });
   }
 
   get rpc(): RpcClient {
@@ -224,7 +233,7 @@ export class Context {
       this.rpc,
       this.signer,
       this.proto,
-      this.config,
+      this._config,
       this.forger,
       this._injector,
       this.packer
