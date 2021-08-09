@@ -30,7 +30,7 @@ async function example() {
   );
 
   try {
-    console.log('Deploying Hello world contract...');
+    console.log('Deploying Smart contract for tests...');
     const op = await tezos.contract.originate({
      // balance: '0',
       code: `{ parameter (or (int %decrement) (int %increment)) ;
