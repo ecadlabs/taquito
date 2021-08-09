@@ -1,3 +1,5 @@
+//This contract is used in integration tests where origination of contracts using voting is tested.
+
 import { CONFIGS } from "./config";
 import { voteSample } from "./data/vote-contract";
 

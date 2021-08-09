@@ -95,7 +95,7 @@ The following example shows how to load the contract and view the methods on tha
 // const Tezos = new TezosToolkit('https://api.tez.ie/rpc/granadanet');
 
 Tezos.contract
-  .at('KT1HC2ZF4H1mGbsCujPurWL8YMy2Hcn3w1Ag')
+  .at('KT1WSAFm8PzQPhj5wBFRfneTL8smSaJ45BLt')
   .then((c) => {
     let methods = c.parameterSchema.ExtractSignatures();
     println(JSON.stringify(methods, null, 2));
@@ -118,7 +118,7 @@ We can inspect the transfer params produced by Taquito using the `toTransferPara
 // const Tezos = new TezosToolkit('https://api.tez.ie/rpc/granadanet');
 
 Tezos.contract
-  .at('KT1HC2ZF4H1mGbsCujPurWL8YMy2Hcn3w1Ag')
+  .at('KT1WSAFm8PzQPhj5wBFRfneTL8smSaJ45BLt')
   .then((c) => {
     let incrementParams = c.methods.increment(2).toTransferParams();
     println(JSON.stringify(incrementParams, null, 2));
@@ -138,7 +138,7 @@ Then we wait for the confirmation(3)` to complete. The `3` number tells Taquito 
 // const Tezos = new TezosToolkit('https://api.tez.ie/rpc/granadanet');
 
 Tezos.contract
-  .at('KT1HC2ZF4H1mGbsCujPurWL8YMy2Hcn3w1Ag')
+  .at('KT1WSAFm8PzQPhj5wBFRfneTL8smSaJ45BLt')
   .then((contract) => {
     const i = 7;
 
@@ -149,7 +149,7 @@ Tezos.contract
     println(`Awaiting for ${op.hash} to be confirmed...`);
     return op.confirmation(3).then(() => op.hash);
   })
-  //.then((hash) => println(`Operation injected: https://florence.tzstats.com/${hash}`))
+  .then((hash) => println(`Operation injected: https://granada.tzstats.com/${hash}`))
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 

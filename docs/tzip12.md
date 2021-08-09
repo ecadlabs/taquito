@@ -85,7 +85,7 @@ Here is a flowchart that summarizes the logic perform internally when calling th
 
 Tezos.addExtension(new Tzip12Module());
 
-const contractAddress = "KT1XrX13PXf8LR4WX2hpFNVMhJweaoP98ufM";
+const contractAddress = "KT1AwPsgt55xvtzr8BVMZQMUd69JVHdS927Z";
 const tokenId = 1;
 
 Tezos.contract.at(contractAddress, compose(tzip12, tzip16))

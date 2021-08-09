@@ -108,7 +108,7 @@ Then, you can start initializing the wallet:
 const options = {
   name: 'MyAwesomeDapp',
   iconUrl: 'https://tezostaquito.io/img/favicon.png',
-  preferredNetwork: "grenadanet",
+  preferredNetwork: "granadanet",
   eventHandlers: {
     PERMISSION_REQUEST_SUCCESS: {
       handler: async (data) => {
@@ -137,7 +137,7 @@ The Beacon wallet requires an extra step to set up the network to connect to and
 
 await wallet.requestPermissions({
   network: {
-    type: 'mainnet' | 'florencenet' | 'grandanet' | 'custom',
+    type: 'mainnet' | 'florencenet' | 'granadanet' | 'custom',
   },
 });
 
