@@ -92,10 +92,10 @@ We can inspect the contract methods and data types using the `c.parameterSchema.
 The following example shows how to load the contract and view the methods on that contract.
 
 ```js live noInline
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/florencenet');
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/granadanet');
 
 Tezos.contract
-  .at('KT1EPdhCbAssTpehC5hvu9PJSDEmRCmR4v6x')
+  .at('KT1WSAFm8PzQPhj5wBFRfneTL8smSaJ45BLt')
   .then((c) => {
     let methods = c.parameterSchema.ExtractSignatures();
     println(JSON.stringify(methods, null, 2));
@@ -115,10 +115,10 @@ In Tezos, to call an entrypoint on a contract, one must send a transfer operatio
 We can inspect the transfer params produced by Taquito using the `toTransferParams()` method:
 
 ```js live noInline
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/florencenet');
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/granadanet');
 
 Tezos.contract
-  .at('KT1EPdhCbAssTpehC5hvu9PJSDEmRCmR4v6x')
+  .at('KT1WSAFm8PzQPhj5wBFRfneTL8smSaJ45BLt')
   .then((c) => {
     let incrementParams = c.methods.increment(2).toTransferParams();
     println(JSON.stringify(incrementParams, null, 2));
@@ -135,10 +135,10 @@ We call the `send()` method on the `increment()` method. Taquito then forges thi
 Then we wait for the confirmation(3)` to complete. The `3` number tells Taquito how many confirmations to wait for before resolving the promise. `3` is a good value for this type of demonstration, but we recommend a higher value if you are dealing with mainnet transactions.
 
 ```js live noInline
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/florencenet');
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/granadanet');
 
 Tezos.contract
-  .at('KT1EPdhCbAssTpehC5hvu9PJSDEmRCmR4v6x')
+  .at('KT1WSAFm8PzQPhj5wBFRfneTL8smSaJ45BLt')
   .then((contract) => {
     const i = 7;
 
@@ -149,7 +149,7 @@ Tezos.contract
     println(`Awaiting for ${op.hash} to be confirmed...`);
     return op.confirmation(3).then(() => op.hash);
   })
-  .then((hash) => println(`Operation injected: https://florence.tzstats.com/${hash}`))
+  .then((hash) => println(`Operation injected: https://granada.tzstats.com/${hash}`))
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 

@@ -56,7 +56,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       const getAllowance = await contract.views.getAllowance('tz1XTyqBn4xi9tkRDutpRyQwHxfF8ar4i4Wq', 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM').read();
       expect(getAllowance.toString()).toEqual('25');
-
+      
       done();
     })
 

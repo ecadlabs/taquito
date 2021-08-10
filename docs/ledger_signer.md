@@ -189,7 +189,7 @@ _Note that this example is not intended to be a complete example of paths scanni
 //import { LedgerSigner, DerivationType, HDPathTemplate } from '@taquito/ledger-signer';
 //import { TezosToolkit } from '@taquito/taquito';
 //import TransportU2F from "@ledgerhq/hw-transport-u2f";
-//const Tezos = new TezosToolkit('https://api.tez.ie/rpc/florencenet');
+//const Tezos = new TezosToolkit('https://api.tez.ie/rpc/granadanet');
 
 TransportU2F.create().then((transport) => {
   for (let index = 0, p = Promise.resolve(); index < 10; index++) {

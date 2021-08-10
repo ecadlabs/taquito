@@ -10,7 +10,7 @@
  
  const blake = require('blakejs');
  const bob_address = 'tz1Xk7HkSwHv6dTEgR7E2WC2yFj4cyyuj2Gh';
- const Tezos = new TezosToolkit('https://api.tez.ie/rpc/florencenet');
+ const Tezos = new TezosToolkit('https://api.tez.ie/rpc/granadanet');
  
  const FAUCET_KEY = {
    mnemonic: [

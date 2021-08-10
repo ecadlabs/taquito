@@ -1,9 +1,9 @@
 import { BigMapAbstraction, TezosToolkit, MichelCodecPacker } from '@taquito/taquito';
 import BigNumber from 'bignumber.js';
 
-const rpc = 'https://api.tez.ie/rpc/florencenet';
+const rpc = 'https://api.tez.ie/rpc/granadanet';
 const numberOfValueToFetch = 810; // max 810
-const repeat = 1; // How many time we want to fetch all the keys
+const repeat = 1; // How many times we want to fetch all the keys
 
 async function example() {
 

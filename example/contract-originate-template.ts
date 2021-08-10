@@ -1,8 +1,8 @@
 import { TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
-import { VIEW_LAMBDA } from '../packages/taquito/src/contract/view_lambda';
+import { voteInitSample, voteSample } from '../integration-tests/data/vote-contract';
 
-const provider = 'https://api.tez.ie/rpc/granadanet';
+const provider = 'https://api.tez.ie/rpc/florencenet';
 
 async function example() {
   const tezos = new TezosToolkit(provider);
@@ -31,16 +31,23 @@ async function example() {
   );
 
   try {
-    console.log('Deploying lambda contract...');
+    console.log('Deploying Ligo simple contract...');
     const op = await tezos.contract.originate({
-      code: VIEW_LAMBDA.code,
-      storage: VIEW_LAMBDA.storage,
+      balance: '1',
+      code: voteSample,
+      init: voteInitSample,
+      fee: 30000,
+      storageLimit: 2000,
+      gasLimit: 90000,
     });
 
     console.log('Awaiting confirmation...');
-    const lambdaContract = await op.contract();
-    const lambdaContractAddress = lambdaContract.address
-    console.log(lambdaContractAddress);
+    const contract = await op.contract();
+    console.log('Gas Used', op.consumedGas);
+    console.log('Storage Paid', op.storageDiff);
+    console.log('Storage Size', op.storageSize);
+    console.log('Storage', await contract.storage());
+    console.log('Operation hash:', op.hash, 'Included in block level:', op.includedInBlock);
   } catch (ex) {
     console.error(ex);
   }
