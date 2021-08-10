@@ -138,7 +138,7 @@ Tezos.contract
     println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
   })
-  .then((hash) => println(`Operation injected: https://granadanet.tzstats.com/${hash}`))
+  .then((hash) => println(`Operation injected: https://granada.tzstats.com/${hash}`))
   .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
