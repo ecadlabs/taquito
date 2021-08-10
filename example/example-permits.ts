@@ -117,7 +117,7 @@
      console.log('inside: permit_examples');
  
      // Get the contract
-     const permit_address = 'KT18iJy46FCwGDnPNHouVCR5iSacadNniTj8';
+     const permit_address = 'KT1JDbzCiB5yMTMFrWrRvgBfuPRQ6LJ9Ny3A';
      const permit_contract = await Tezos.contract.at(permit_address);
  
      // Check whether bob is actually the admin

@@ -6,7 +6,7 @@ async function example() {
 
     const tezos = new TezosToolkit('https://api.tez.ie/rpc/granadanet');
     tezos.addExtension(new Tzip16Module());
-    const contract = await tezos.contract.at("KT1T2KNHdrPwLE4TZcGr6mVZt1s6k9j7tHCV", tzip16)
+    const contract = await tezos.contract.at("KT1LhUqpUGfxZaJFMrxAZ6WNAuM8FPjDLBcE", tzip16)
     const metadata = await contract.tzip16().getMetadata();
     console.log(JSON.stringify(metadata, null, 2));
 

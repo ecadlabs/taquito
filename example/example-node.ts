@@ -10,7 +10,7 @@ async function example() {
     const tezos = new TezosToolkit(provider);
 
     console.log('Getting storage...');
-    await tezos.contract.at('KT1W1jh5C5NbcVVvpnBLQT9ekMbR5a8fg6mc').then(async contract => { // knownBigMapContract used in integration tests
+    await tezos.contract.at('KT1VyQwS4oZAdYxuWmMNqJ6CtJFtXQbLZDjJ').then(async contract => { // knownBigMapContract used in integration tests
       const storage = await contract.storage()
       console.log(storage)
     });

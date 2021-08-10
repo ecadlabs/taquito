@@ -265,6 +265,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
         const fa12_contract = await op.contract();
         const contractAddress = fa12_contract.address;
+        console.log("Contract address:"+ contractAddress)
         expect(op.status).toEqual('applied');
 
         //Mint 10 tokens to bootstrap 2
