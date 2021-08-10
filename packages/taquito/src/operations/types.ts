@@ -194,7 +194,7 @@ export interface ForgedBytes {
  */
 export interface DelegateParams {
   source: string;
-  delegate: string;
+  delegate?: string;
   fee?: number;
   gasLimit?: number;
   storageLimit?: number;
@@ -218,7 +218,7 @@ export interface RPCDelegateOperation {
   fee: number;
   gas_limit: number;
   storage_limit: number;
-  delegate: string;
+  delegate?: string;
 }
 
 /**
