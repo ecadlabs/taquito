@@ -1,8 +1,8 @@
 # Taquito Ledger Signer package
 
-`@taquito/ledger-signer` is an npm package that provides developers with ledger signing functionality for Taquito. It implements the Signer interface of Taquito, allowing you to sign operation from a Ledger Nano device.
+`@taquito/ledger-signer` is an npm package that provides developers with ledger signing functionality for Taquito. It implements the Signer interface of Taquito, allowing you to sign operations from a Ledger Nano device.
 
-You first need to import the desired transport from the [LedgerJs library](https://github.com/LedgerHQ/ledgerjs). The Ledger Signer has currently been tested with `@ledgerhq/hw-transport-node-hid` for Node-based application and with `@ledgerhq/hw-transport-u2f` for web applications.
+You first need to import the desired transport from the [LedgerJs library](https://github.com/LedgerHQ/ledgerjs). The Ledger Signer has currently been tested with `@ledgerhq/hw-transport-node-hid` for Node-based applications and with `@ledgerhq/hw-transport-u2f` for web applications.
 You can pass an instance of the transport of your choice to your Ledger Signer as follows:
 
 ```ts

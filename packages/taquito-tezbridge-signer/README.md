@@ -2,7 +2,7 @@
 
 `@taquito/tezbridge-signer` is an npm package that provides developers with Tezbridge Signer functionality for Taquito. 
 
-You first need to include https://www.tezbridge.com/plugin.js in your application to use this signer
+You first need to include https://www.tezbridge.com/plugin.js in your application to use this signer.
 
 ```ts
 import { TezBridgeSigner } from '@taquito/tezbridge-signer'

@@ -1,7 +1,7 @@
 
 # Taquito Local forging package
 
-`@taquito/local-forging` is an npm package that provides developers with local forging functionality for Taquito. It can be injected as follow.
+`@taquito/local-forging` is an npm package that provides developers with local forging functionality for Taquito. It can be injected as follows:
 
 ```ts
 import { TezosToolkit } from '@taquito/taquito'

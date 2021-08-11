@@ -1,6 +1,6 @@
 # Taquito Tzip-12 package
 
-`@taquito/tzip12` is an npm package that provides developers with Tzip-12 functionality for Taquito. The package allows retrieving metadata associated with tokens of FA2 contract. You can find more information about the TZIP-12 standard [here](https://gitlab.com/tzip/tzip/-/blob/master/proposals/tzip-12/tzip-12.md). 
+`@taquito/tzip12` is an npm package that provides developers with Tzip-12 functionality for Taquito. The package allows retrieving metadata associated with tokens of FA2 contracts. You can find more information about the TZIP-12 standard [here](https://gitlab.com/tzip/tzip/-/blob/master/proposals/tzip-12/tzip-12.md). 
 ## How to use the tzip12 package
 
 The package can act as an extension to the well-known Taquito contract abstraction. 
