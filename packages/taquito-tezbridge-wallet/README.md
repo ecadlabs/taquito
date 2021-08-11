@@ -1,11 +1,19 @@
 # Taquito Tezbridge Wallet package
 
-`@taquito/tezbridge-wallet` is an npm package that provides developers with Tezbridge Wallet functionality for Taquito. It can be injected as follows:
+`@taquito/tezbridge-wallet` is an npm package that provides developers with Tezbridge Wallet functionality for Taquito. 
+
+You first need to include https://www.tezbridge.com/plugin.js in your application to use this wallet:
+
+```js
+<script src="https://www.tezbridge.com/plugin.js"></script>
+```
 
 ```ts
 import { TezosToolkit } from '@taquito/taquito'
 import { TezbridgeWallet } from '@taquito/tezbridge-wallet'
 
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+Tezos.setWalletProvider(new TezBridgeWallet());
 ```
 
 See the top-level [https://github.com/ecadlabs/taquito](https://github.com/ecadlabs/taquito) file for details on reporting issues, contributing and versioning.

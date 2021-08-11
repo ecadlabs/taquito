@@ -1,11 +1,13 @@
 # Taquito HTTP Utilities package
 
-`@taquito/http-utils` is an npm package that provides developers with http functionality for Taquito. It can be injected as follows:
+`@taquito/http-utils` is an npm package that provides developers with http functionality for Taquito. 
+
+The `HttpBackend` class contains a `createRequest` method which accepts options to be passed for the HTTP request (url, method, timeout, json, query, headers, mimeType).
 
 ```ts
-import { TezosToolkit } from '@taquito/taquito'
-import { HttpBackend } from '@taquito/http-utils'
+import { HttpBackend } from '@taquito/http-utils';
 
+const http = new HttpBackend();
 ```
 
 See the top-level [https://github.com/ecadlabs/taquito](https://github.com/ecadlabs/taquito) file for details on reporting issues, contributing and versioning.

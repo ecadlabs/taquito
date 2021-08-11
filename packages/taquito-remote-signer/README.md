@@ -3,9 +3,12 @@
 `@taquito/remote-signer` is an npm package that provides developers with remote signing functionality for Taquito. It can be injected as follows:
 
 ```ts
-import { TezosToolkit } from '@taquito/taquito'
-import { RemoteSigner } from '@taquito/remote-signer'
+import { TezosToolkit } from '@taquito/taquito';
+import { RemoteSigner } from '@taquito/remote-signer';
 
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+const signer = new RemoteSigner(pkh, rootUrl, { headers: requestHeaders });
+Tezos.setSignerProvider(signer);
 ```
 
 See the top-level [https://github.com/ecadlabs/taquito](https://github.com/ecadlabs/taquito) file for details on reporting issues, contributing and versioning.

@@ -2,7 +2,7 @@ import { LedgerSigner, DerivationType, HDPathTemplate } from '../src/taquito-led
 import { transformPathToBuffer } from '../src/utils';
 
 /**
- * RemoteSigner test
+ * LedgerSigner test
  */
 describe('LedgerSigner test', () => {
   let mockTransport: {
@@ -19,7 +19,7 @@ describe('LedgerSigner test', () => {
     }
   });
 
-  it('RemoteSigner is instantiable with parameters', () => {
+  it('LedgerSigner is instantiable with parameters', () => {
     expect(
       new LedgerSigner(
         mockTransport,

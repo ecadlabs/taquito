@@ -6,6 +6,8 @@
 ```ts
 import { TezosToolkit } from '@taquito/taquito'
 import { LocalForger } from '@taquito/local-forging'
+
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 Tezos.setProvider({ forger: localForger })
 ```
 

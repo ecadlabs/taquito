@@ -1,11 +1,21 @@
 # Taquito Utils package
 
-`@taquito/utils` is an npm package that provides developers with utility functionality for Taquito. It can be injected as follows:
+`@taquito/utils` is an npm package that provides developers with utility functionality for Taquito. 
 
 ```ts
-import { TezosToolkit } from '@taquito/taquito'
-import { Utilities } from '@taquito/utils'
-
+import { char2Bytes } from '@taquito/utils'; // Convert a string to bytes
+import { bytes2Char } from '@taquito/utils'; // Convert bytes to a string
+import { buf2hex } from '@taquito/utils'; // Convert a buffer to an hex string
+import { mergebuf } from '@taquito/utils'; // Merge 2 buffers together
+import { hex2buf } from '@taquito/utils'; // Convert an hex string to a Uint8Array
+import { encodeKeyHash } from '@taquito/utils'; // Base58 encode a key hash according to its prefix
+import { encodeKey } from '@taquito/utils'; // Base58 encode a key according to its prefix
+import { encodePubKey } from '@taquito/utils'; // Base58 encode a public key using predefined prefix
+import { b58decode } from '@taquito/utils'; // Base58 decode a string with predefined prefix
+import { b58cdecode } from '@taquito/utils'; // Base58 decode a string and remove the prefix from it 
+import { b58cencode } from '@taquito/utils'; // Base58 encode a string or a Uint8Array and append a prefix to it
+import { encodeOpHash } from '@taquito/utils'; // Return the operation hash of a signed operation
+import { encodeExpr } from '@taquito/utils'; // Hash a string using the BLAKE2b algorithm, base58 encode the hash obtained and appends the prefix 'expr' to it
 ```
 
 See the top-level [https://github.com/ecadlabs/taquito](https://github.com/ecadlabs/taquito) file for details on reporting issues, contributing and versioning.

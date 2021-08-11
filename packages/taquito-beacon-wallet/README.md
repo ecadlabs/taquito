@@ -9,7 +9,7 @@ import { BeaconWallet } from '@taquito/beacon-wallet';
 const options = {
   name: 'MyAwesomeDapp',
   iconUrl: 'https://tezostaquito.io/img/favicon.png',
-  preferredNetwork: "florencenet",
+  preferredNetwork: "chosen_network",
   eventHandlers: {
     PERMISSION_REQUEST_SUCCESS: {
       handler: async (data) => {
@@ -23,7 +23,7 @@ const wallet = new BeaconWallet(options);
 // The Beacon wallet requires an extra step to set up the network to connect to and the permissions:
 await wallet.requestPermissions({
   network: {
-    type: 'mainnet' | 'florencenet' | 'edonet' | 'custom',
+    type: 'chosen_network',
   },
 });
 

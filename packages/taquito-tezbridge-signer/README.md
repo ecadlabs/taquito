@@ -1,12 +1,19 @@
 # Taquito Tezbridge Signer package
 
-`@taquito/tezbridge-signer` is an npm package that provides developers with Tezbridge Signer functionality for Taquito. It can be injected as follows:
+`@taquito/tezbridge-signer` is an npm package that provides developers with Tezbridge Signer functionality for Taquito. 
+
+You first need to include https://www.tezbridge.com/plugin.js in your application to use this signer
 
 ```ts
-import { TezosToolkit } from '@taquito/taquito'
 import { TezBridgeSigner } from '@taquito/tezbridge-signer'
+import { TezosToolkit } from "@taquito/taquito";
 
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+Tezos.setProvider({signer: new TezBridgeSigner()})
 ```
+
+For more information on how to use TezBridge see https://docs.tezbridge.com/
+
 
 See the top-level [https://github.com/ecadlabs/taquito](https://github.com/ecadlabs/taquito) file for details on reporting issues, contributing and versioning.
 

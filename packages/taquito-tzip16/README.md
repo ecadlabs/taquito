@@ -1,13 +1,44 @@
 # Taquito TZip-16 package
 
-`@taquito/tezbridge-tzip16` is an npm package that provides developers with TZip-16 functionality for Taquito. It provides the ability to retrieve metadata associated with a smart contract based on the TZIP-16 standard. The package also provides a way to execute the MichelsonStorageView found in the metadata. It can be injected as follows:
+`@taquito/tzip16` is an npm package that provides developers with Tzip-16 functionality for Taquito. It provides the ability to retrieve metadata associated with a smart contract based on the TZIP-16 standard. The package also provides a way to execute the MichelsonStorageView found in the metadata. More information about the TZIP-16 standard can be found [here](https://gitlab.com/tzip/tzip/-/blob/master/proposals/tzip-16/tzip-16.md#introduction).
 
-```ts
+## How to use the tzip16 package
+
+The package can be used as an extension to the well known Taquito contract abstraction. 
+
+1. **We first need to create an instance of `Tzip16Module` and add it as an extension to our `TezosToolkit`**
+
+The constructor of the `Tzip16Module` takes an optional `MetadataProvider` as a parameter. When none is passed, the default `MetadataProvider` of Taquito is instantiated and the default handlers (`HttpHandler`, `IpfsHandler`, and `TezosStorageHandler`) are used.
+
+```js
 import { TezosToolkit } from '@taquito/taquito';
 import { Tzip16Module } from '@taquito/tzip16';
-const Tezos = new TezosToolkit('rpcUrl');
-Tezos.addExtension(new Tzip16Module());
 
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+Tezos.addExtension(new Tzip16Module());
+```
+
+2. **Use the `tzip16` function to extend a contract abstraction**
+
+```js
+import { tzip16 } from '@taquito/tzip16';
+const contract = await Tezos.contract.at("contractAddress", tzip16)
+```
+
+## Get the metadata
+
+```ts
+const metadata = await contract.tzip16().getMetadata();
+```
+
+The `getMetadata` method returns an object which contains the URI, the metadata in JSON format, an optional SHA256 hash of the metadata and an optional integrity check result.
+
+## Execute off-chain views
+
+```ts
+// Initialize off-chain views
+const metadataViews = await contractAbstraction.tzip16().metadataViews();
+const viewResult = await metadataViews.nameOfTheView().executeView(paramOfTheView);
 ```
 
 See the top-level [https://github.com/ecadlabs/taquito](https://github.com/ecadlabs/taquito) file for details on reporting issues, contributing and versioning.
