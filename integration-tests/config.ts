@@ -96,14 +96,14 @@ const edonetEphemeral = {
 const sandboxProtocolEphemeral = florencenetEphemeral;
 
 const sandboxEphemeral = {
-  rpc: process.env['TEZOS_RPC_SANDBOX'] || 'http://localhost:8732',
+  rpc: process.env['TEZOS_RPC_SANDBOX'] || 'http://192.168.86.70:8732',
   knownBaker: sandboxProtocolEphemeral.knownBaker,
   knownContract: 'KT1WtxvaDHanaLJQUej6GMFFNZ2bV9NFSjde',
   knownBigMapContract: 'KT1QPThjY15EaJSngX5YiJHL1QBRKEgHxNcW',
   protocol: sandboxProtocolEphemeral.protocol,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'https://api.tez.ie/keys/florencenet',
+    keyUrl: 'http://localhost:3000/flextesanet',
     requestHeaders: { 'Authorization': 'Bearer taquito-example' },
   }
 }
