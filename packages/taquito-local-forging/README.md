@@ -1,12 +1,13 @@
-[![pkgsign status](https://us-central1-pkgsign.cloudfunctions.net/pkgsign-badge?name=@taquito/local-forging&expectedIdentity=%40jevonearth)](https://github.com/RedpointGames/pkgsign)
 
 # Taquito Local forging package
 
-`@taquito/local-forging` is an npm package that provides developers with local forging functionality for Taquito. It can be injected as follow.
+`@taquito/local-forging` is an npm package that provides developers with local forging functionality for Taquito. It can be injected as follows:
 
 ```ts
 import { TezosToolkit } from '@taquito/taquito'
-import { localForger } from '@taquito/local-forging'
+import { LocalForger } from '@taquito/local-forging'
+
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 Tezos.setProvider({ forger: localForger })
 ```
 
