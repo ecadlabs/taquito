@@ -1,6 +1,7 @@
 import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
 import { tacoContractTzip16 } from "../integration-tests/data/modified-taco-contract"
+import { char2Bytes } from '@taquito/utils';
 
 const provider = 'https://api.tez.ie/rpc/granadanet';
 
