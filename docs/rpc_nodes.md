@@ -17,7 +17,7 @@ author: Roxane Letourneau
 
 - Tezos Giga Node from Tezos Ukraine
     - Mainnet: https://mainnet-tezos.giganode.io
-    - Granada testnet: https://granadanet-tezos.giganode.io
+    - Granada testnet: https://testnet-tezos.giganode.io/
 - SmartPy nodes
     - Mainnet: https://mainnet.smartpy.io
     - Granadanet: https://granadanet.smartpy.io/

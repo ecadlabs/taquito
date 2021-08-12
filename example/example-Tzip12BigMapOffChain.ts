@@ -1,4 +1,3 @@
-import { CONFIGS } from '../integration-tests/config';
 import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
 import { fa2ForTokenMetadataView } from '../integration-tests/data/fa2-for-token-metadata-view';

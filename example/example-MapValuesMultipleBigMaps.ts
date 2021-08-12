@@ -1,6 +1,5 @@
 import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
-import { b58cencode, Prefix, prefix } from '@taquito/utils';
 import { tokenCode } from '../integration-tests/data/tokens';
 
 const provider = 'https://api.tez.ie/rpc/granadanet';

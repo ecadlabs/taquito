@@ -29,7 +29,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         init: noAnnotInit(await Tezos.signer.publicKeyHash())
       })
       const contract = await op.contract()
-      console.log("contect address : "+contract.address)
+      console.log("Contract address : "+contract.address)
 
       // Make a transfer
       const operation = await contract.methods[TRANSFER](ACCOUNT1_ADDRESS, ACCOUNT2_ADDRESS, "1").send();
