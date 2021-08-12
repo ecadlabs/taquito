@@ -706,23 +706,4 @@ describe('RPCEstimateProvider test', () => {
       done();
     });
   });
-
-  describe('Multiple subsequent operations (to send more than one operation in a block)', () => {
-    test('should not increment context counter between operation estimations', async (done) => {
-      mockRpcClient.getManagerKey.mockResolvedValue(null);
-      mockRpcClient.runOperation.mockResolvedValue(multipleInternalOrigination());
-      // Simulate real op size
-      mockRpcClient.forgeOperations.mockResolvedValue(new Array(297).fill('aa').join(''));
-      await estimateProvider.transfer({
-        to: 'test_to',
-        amount: 2,
-      });
-      await estimateProvider.transfer({
-        to: 'test_to',
-        amount: 2,
-      });
-      expect(estimateProvider['context'].counters).toEqual({});
-      done();
-    });
-  });
 });
