@@ -42,7 +42,7 @@ export const defaultConfigConfirmation: Partial<ConfigConfirmation> = {
 export interface ConfigStreamer {
   streamerPollingIntervalMilliseconds?: number;
   shouldObservableSubscriptionRetry?: boolean;
-  observableSubscriptionRetryFunction?: OperatorFunction<any, any>;
+  observableSubscriptionRetryFunction?: OperatorFunction<any,any>;
 }
 
 export const defaultConfigStreamer: Required<ConfigStreamer> = {
@@ -55,7 +55,6 @@ export const defaultConfigStreamer: Required<ConfigStreamer> = {
  * @description Encapsulate common service used throughout different part of the library
  */
 export class Context {
-  private _counters: { [key: string]: number } = {};
   private _rpcClient: RpcClient;
   private _forger: Forger;
   private _parser: ParserProvider;
@@ -79,7 +78,7 @@ export class Context {
     injector?: Injector,
     packer?: Packer,
     wallet?: WalletProvider,
-    parser?: ParserProvider
+    parser?: ParserProvider,
   ) {
     if (typeof this._rpc === 'string') {
       this._rpcClient = new RpcClient(this._rpc);
@@ -91,8 +90,8 @@ export class Context {
     this._injector = injector ? injector : new RpcInjector(this);
     this.operationFactory = new OperationFactory(this);
     this._walletProvider = wallet ? wallet : new LegacyWalletProvider(this);
-    this._parser = parser ? parser : new MichelCodecParser(this);
-    this._packer = packer ? packer : new RpcPacker(this);
+    this._parser = parser? parser: new MichelCodecParser(this);
+    this._packer = packer? packer: new RpcPacker(this);
   }
 
   get config(): Partial<ConfigConfirmation> & Required<ConfigStreamer> {
@@ -171,14 +170,6 @@ export class Context {
     this._packer = value;
   }
 
-  get counters() {
-    return this._counters;
-  }
-
-  set counters(value: { [key: string]: number }) {
-    this._counters[value.key] = value.counter;
-  }
-
   async isAnyProtocolActive(protocol: string[] = []) {
     if (this._proto) {
       return protocol.includes(this._proto);
@@ -202,7 +193,7 @@ export class Context {
         new BigNumber(constants.delay_per_missing_endorsement!)
         .multipliedBy(Math.max(0, constants.initial_endorsers! - constants.endorsers_per_block))
       );
-
+      
       // Divide the polling interval by a constant 3
       // to improvise for polling time to work in prod,
       // testnet and sandbox enviornment.   
@@ -224,7 +215,7 @@ export class Context {
       return defaultInterval;
     }
   }
-
+  
   /**
    * @description Create a copy of the current context. Useful when you have long running operation and you do not want a context change to affect the operation
    */
