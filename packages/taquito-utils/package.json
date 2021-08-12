@@ -63,7 +63,7 @@
     ]
   },
   "dependencies": {
-    "blakejs": "^1.1.0",
+    "blakejs": "^1.1.1",
     "bs58check": "^2.1.2",
     "buffer": "^6.0.3"
   },
