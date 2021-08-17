@@ -36,6 +36,16 @@ export class TicketToken extends Token {
     const ticketer = this.createToken(ticketerType, this.idx);
     const value = this.createToken(this.val.args[0], this.idx);
     const amount = this.createToken(amountType, this.idx);
+
+    if(undefined == val.args[2] &&
+       undefined !== val.args[1].args) {
+      return {
+            ticketer: ticketer.Execute(val.args[0], semantics),
+            value: value.Execute(val.args[1].args[0], semantics),
+            amount: amount.Execute(val.args[1].args[1], semantics)
+      }
+    }
+
     return {
       ticketer: ticketer.Execute(val.args[0], semantics),
       value: value.Execute(val.args[1], semantics),

@@ -3,6 +3,69 @@ title: Versions
 author: Jev Bjorsell
 ---
 
+# Taquito v10.1.0-beta
+
+**Breaking change**
+
+In version 9.2.0-beta of Taquito, the ability to send more than one operation in the same block was added to Taquito. This ability relied on a workaround solution. The `helpers/preapply/operations` and `helpers/scripts/run_operation`  RPC methods do not accept a counter higher than the head `counter + 1` as described in issue [tezos/tezos#376](https://gitlab.com/tezos/tezos/-/issues/376). Despite the limitation of these RPC's, the Tezos protocol itself does allow the inclusion of more than one operation from the same implicit account. In version 9.2.0-beta of Taquito, we introduced an internal counter and simulated the operation using a counter value that the `preapply` & `run_operation` will accept. This allowed Taquito to send many operations in a single block. However, we found that the workaround used may lead to inconsistent states, and results that violate the [principle of least astonishment](https://en.wikipedia.org/wiki/Principle_of_least_astonishment). We decided to remove this feature temporarily.  We aim to reintroduce this feature when Tezos RPC issue [tezos/tezos#376](https://gitlab.com/tezos/tezos/-/issues/376) is addressed and considers the transaction in the mempool when checking the account counter value or otherwise by providing a separate and adapted new interface to support this use case properly.
+
+## Summary
+
+### Enhancements
+
+- @taquito/taquito - Made PollingSubscribeProvider's polling interval configurable #943
+- @taquito/taquito - Possibility to withdraw delegate
+
+### Bug Fixes
+
+- @taquito/taquito - Added a status method for batched transactions using the wallet API #962
+- @taquito/michelson-encoder - Fixed the Schema.ExecuteOnBigMapValue() for ticket token #970
+- @taquito/taquito - Fixed a "Memory leak" in the PollingSubscribeProvider #963
+
+### Documentation
+
+- Updated Taquito website live examples to use Granadanet #993
+- [Documentation for FA2 functionality](https://tezostaquito.io/docs/fa2_parameters) #715
+- [Documentation for confirmation event stream for wallet API](https://tezostaquito.io/docs/confirmation_event_stream) #159
+
+
+
+## @taquito/taquito - Made PollingSubscribeProvider's polling interval configurable
+
+The default streamer set on the `TezosToolkit` used a hardcoded polling interval of 20 seconds, and there was no easy way to change this. To reduce the probability of missing blocks, it is now possible to configure the interval as follow:
+
+```ts
+const tezos = new TezosToolkit('https://api.tez.ie/rpc/mainnet')
+tezos.setProvider({ config: { streamerPollingIntervalMilliseconds: 15000 } });
+
+const sub = tezos.stream.subscribeOperation(filter)
+```
+
+## @taquito/taquito - Possibility to withdraw delegate
+
+It is now possible to `undelegate` by executing a new setDelegate operation and not specifying the delegate property.
+
+```ts
+// const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+
+await Tezos.contract.setDelegate({ source: 'tz1_source'});
+```
+
+## @taquito/taquito - Property status doesn't exist on a batched transaction for the wallet API
+
+When multiple operations were batched together using the `batch` method of the wallet API, the `send()` method returned a value of type `WalletOperation` where the status was missing. `BatchWalletOperation`, which extends the `WalletOperation` class and contains a `status` method, is now returned.
+
+## @taquito/michelson-encoder - Fixed the Schema.ExecuteOnBigMapValue() for ticket token
+
+The `Execute` and `ExecuteOnBigMapValue` methods of the `Schema` class could not deserialize Michelson when ticket values were not in the optimized (Edo) notation. Both representations are now supported.
+
+
+## @taquito/taquito - Fixed a "Memory leak" in the PollingSubscribeProvider
+
+A fix has been made to change the behavior of the `PollingSubscribeProvider`, which was keeping all blocks in memory.
+
+
+
 # Taquito v10.0.0-beta
 ## Summary
 

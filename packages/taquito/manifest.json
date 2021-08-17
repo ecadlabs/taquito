@@ -1,6 +1,6 @@
 {
   "main.js": {
     "src": "dist/taquito.min.js",
-    "integrity": "sha384-N8uh/eS59g8lsPsOrk3Yj5ZfftcrSAfBqBr+ohURYdn6ua/0VUPOTBo9FCskeibF"
+    "integrity": "sha384-QwTAWpX6Y7PEXwMtGbDv/yWB6qAdaa4UlZvcU/UerUw4E8XBZJSLO+jUoKCryRGG"
   }
 }

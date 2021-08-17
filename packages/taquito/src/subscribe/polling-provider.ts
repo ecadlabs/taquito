@@ -6,7 +6,7 @@ import {
   first,
   map,
   pluck,
-  publishReplay,
+  publish,
   refCount,
   switchMap,
 } from 'rxjs/operators';
@@ -36,15 +36,20 @@ const applyFilter = (filter: Filter) =>
   });
 
 export class PollingSubscribeProvider implements SubscribeProvider {
-  private newBlock$ = timer(0, this.POLL_INTERVAL).pipe(
+  // Map the changing polling interval to a timer, which will automatically terminate the previous timer when the next one starts.
+  private timer$ = this.context._config.pipe(
+    switchMap((val) => timer(0, val.streamerPollingIntervalMilliseconds)),
+  )
+
+  private newBlock$ = this.timer$.pipe(
     map(() => this.context),
     switchMap(getLastBlock),
     distinctUntilKeyChanged('hash'),
-    publishReplay(),
+    publish(),
     refCount()
   );
 
-  constructor(private context: Context, public readonly POLL_INTERVAL = 20000) {}
+  constructor(private context: Context) { }
 
   subscribe(_filter: 'head'): Subscription<string> {
     return new ObservableSubscription(this.newBlock$.pipe(pluck('hash')), 

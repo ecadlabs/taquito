@@ -10,7 +10,7 @@
     "test:granadanet-faucet": "RUN_GRANADANET_WITH_FAUCET=true jest --runInBand",
     "test": "jest"
   },
-  "version": "10.0.0",
+  "version": "10.1.0",
   "dependencies": {
     "@ledgerhq/hw-transport": "^5.51.1",
     "@ledgerhq/hw-transport-node-hid": "^5.51.1",
@@ -43,7 +43,7 @@
       "/test/"
     ],
     "testPathIgnorePatterns": [
-       "./ledger-signer.spec.ts",
+      "./ledger-signer.spec.ts",
       "./ledger-signer-failing-tests.spec.ts"
     ],
     "reporters": [

@@ -1,9 +1,8 @@
-import { defaultConfig } from '../../src/context';
+import { defaultConfigConfirmation, defaultConfigStreamer } from '../../src/context';
 import { DelegateOperation } from '../../src/operations/delegate-operation';
 import { ForgedBytes } from '../../src/operations/types';
 import {
   RevealOperationBuilder,
-  TransferOperationBuilder,
   DelegationOperationBuilder,
 } from '../helpers';
 
@@ -16,7 +15,7 @@ describe('Delegation operation', () => {
       rpc: {
         getBlock: jest.fn(),
       },
-      config: { ...defaultConfig },
+      config: { ...defaultConfigConfirmation, ...defaultConfigStreamer },
     };
 
     fakeContext.rpc.getBlock.mockResolvedValue({

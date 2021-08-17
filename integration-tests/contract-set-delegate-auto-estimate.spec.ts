@@ -4,7 +4,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
   const Tezos = lib;
   describe(`Test account delegation with estimation using: ${rpc}`, () => {
 
-    beforeEach(async (done) => {
+    beforeAll(async (done) => {
       await setup(true)
       done()
     })
@@ -31,6 +31,20 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
           expect(ex.message).toMatch('delegate.unchanged')
         }
       }
+      done();
+    });
+
+    it('withdraw delegate with automatic estimate', async (done) => {
+      const pkh = await Tezos.signer.publicKeyHash();
+      const op = await Tezos.contract.setDelegate({
+        source: pkh,
+      })
+      await op.confirmation()
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+
+      const account = await Tezos.rpc.getDelegate(pkh)
+      expect(account).toBe(null)
       done();
     });
   });
