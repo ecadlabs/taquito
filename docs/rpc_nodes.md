@@ -15,6 +15,10 @@ author: Roxane Letourneau
 
 *If you are aware of a public node missing from our list or our information is inaccurate, please help us by submitting an issue or pull request on our GitHub page.*
 
+- ECAD Labs nodes:
+    - Mainnet: https://mainnet.api.tez.ie
+    - Granadanet: https://granadanet.api.tez.ie
+    - Florencenet: https://florencenet.api.tez.ie
 - Tezos Giga Node from Tezos Ukraine
     - Mainnet: https://mainnet-tezos.giganode.io
     - Granada testnet: https://testnet-tezos.giganode.io/
@@ -23,11 +27,7 @@ author: Roxane Letourneau
     - Granadanet: https://granadanet.smartpy.io/
 - Nodes operated by Blockscale on behalf of the Tezos Foundation: 
     - Mainnet: https://rpc.tzbeta.net/
-    - Next protocol/version testnet (Granada): https://rpczero.tzbeta.net/
-- ECAD Labs nodes:
-    - Mainnet: https://api.tez.ie/rpc/mainnet
-    - Florencenet: https://api.tez.ie/rpc/florencenet
-    - Granadanet: https://api.tez.ie/rpc/granadanet
+    - Next protocol/version testnet (Granadanet): https://rpczero.tzbeta.net/
 - Teznode from LetzBake!:
     - Mainnet: https://teznode.letzbake.com
 
