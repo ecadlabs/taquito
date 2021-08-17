@@ -7,10 +7,8 @@ const provider = 'https://api.tez.ie/rpc/granadanet';
 const signer: any = new InMemorySigner('edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca');
 const Tezos = new TezosToolkit(provider);
 Tezos.setSignerProvider( signer );
-console.log("signer : " +JSON.stringify(signer))
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
-  const tezos = lib;
+CONFIGS().forEach(({ rpc, setup }) => {
   const test = require('jest-retries');
   
   describe(`Test origination of a token contract using: ${rpc}`, () => {
@@ -40,8 +38,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         await opMethod.confirmation();
         expect(op.hash).toBeDefined();
         expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
-        console.log("contract address  "+ contract.address)
-        console.log("signer public hash  "+ await Tezos.signer.publicKeyHash())
         done();
     } catch (ex) {
       console.log(JSON.stringify(ex))
