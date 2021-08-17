@@ -1,4 +1,4 @@
-import { Context, defaultConfig } from '../../src/context';
+import { defaultConfigConfirmation } from '../../src/context';
 import { OriginationOperation } from '../../src/operations/origination-operation';
 import { ForgedBytes } from '../../src/operations/types';
 import { OperationContentsAndResult } from '@taquito/rpc';
@@ -71,7 +71,7 @@ describe('Origination operation', () => {
       rpc: {
         getBlock: jest.fn(),
       },
-      config: { ...defaultConfig },
+      config: { ...defaultConfigConfirmation },
       getConfirmationPollingInterval: jest.fn()
     };
 

@@ -123,7 +123,7 @@ export class WalletOperationBatch {
 
     const opHash = await this.walletProvider.sendOperations(ops);
 
-    return this.context.operationFactory.createOperation(opHash);
+    return this.context.operationFactory.createBatchOperation(opHash);
   }
 }
 

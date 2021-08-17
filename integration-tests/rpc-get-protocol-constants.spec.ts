@@ -12,7 +12,6 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
 
         const rpcUrl = 'https://api.tez.ie/rpc/mainnet';
         Tezos.setRpcProvider(rpcUrl)
-        // tests
         it('succesfully fails at fetching constants for level 0', async (done) => {
             try {
                 await Tezos.rpc.getConstants({ block: "0" });
@@ -364,7 +363,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         })
 
         it('successfully fetches Proto9 constants at level 1480000', async (done) => {
-            const constants: ConstantsResponseProto009 & ConstantsResponseCommon = await Tezos.rpc.getConstants();
+            const constants: ConstantsResponseProto009 & ConstantsResponseCommon = await Tezos.rpc.getConstants({ block: "1480000" });
 
             expect(constants).toEqual({
                 proof_of_work_nonce_size: 8,
@@ -398,6 +397,48 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                 min_proposal_quorum: 500,
                 initial_endorsers: 24,
                 delay_per_missing_endorsement: new BigNumber(8)
+            });
+            done();
+        })
+
+        it('successfully fetches Proto10 constants at level 1589492', async (done) => {
+            const constants: ConstantsResponseProto010 & ConstantsResponseCommon = await Tezos.rpc.getConstants({ block: "1589492" });
+
+            expect(constants).toEqual({
+                proof_of_work_nonce_size: 8,
+                nonce_length: 32,
+                max_anon_ops_per_block: 132,
+                max_operation_data_length: 32768,
+                max_proposals_per_delegate: 20,
+                preserved_cycles: 5,
+                blocks_per_cycle: 8192,
+                blocks_per_commitment: 64,
+                blocks_per_roll_snapshot: 512,
+                blocks_per_voting_period: 40960,
+                time_between_blocks: [new BigNumber(60), new BigNumber(40)],
+                endorsers_per_block: 256,
+                hard_gas_limit_per_operation: new BigNumber(1040000),
+                hard_gas_limit_per_block: new BigNumber(5200000),
+                proof_of_work_threshold: new BigNumber(70368744177663),
+                tokens_per_roll: new BigNumber(8000000000),
+                michelson_maximum_type_size: 1000,
+                seed_nonce_revelation_tip: new BigNumber(125000),
+                origination_size: 257,
+                block_security_deposit: new BigNumber(640000000),
+                endorsement_security_deposit: new BigNumber(2500000),
+                baking_reward_per_endorsement: [new BigNumber(78125), new BigNumber(11719)],
+                endorsement_reward: [new BigNumber(78125), new BigNumber(52083)],
+                cost_per_byte: new BigNumber(250),
+                hard_storage_limit_per_operation: new BigNumber(60000),
+                quorum_min: 2000,
+                quorum_max: 7000,
+                min_proposal_quorum: 500,
+                initial_endorsers: 192,
+                delay_per_missing_endorsement: new BigNumber(4),
+                minimal_block_delay: new BigNumber(30),
+                liquidity_baking_subsidy: new BigNumber(2500000),
+                liquidity_baking_sunset_level: 2032928,
+                liquidity_baking_escape_ema_threshold: 1000000
             });
             done();
         })

@@ -38,6 +38,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
                 })
             );
             expect(op.opHash).toBeDefined();
+            expect(await op.status()).toEqual('applied');
             done();
         });
 
@@ -66,6 +67,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
                 })
             );
             expect(op.opHash).toBeDefined();
+            expect(await op.status()).toEqual('applied');
             done();
         });
 
@@ -100,6 +102,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
                 })
             );
             expect(op.opHash).toBeDefined();
+            expect(await op.status()).toEqual('applied');
             done();
         });
 
@@ -126,7 +129,8 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
 
             await batchOp.confirmation();
 
-            expect(await op.status()).toEqual('applied');
+            expect(batchOp.opHash).toBeDefined();
+            expect(await batchOp.status()).toEqual('applied');
             done();
         });
 
@@ -165,6 +169,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
                 })
             );
             expect(batchOp.opHash).toBeDefined();
+            expect(await batchOp.status()).toEqual('applied');
             done();
         });
 
@@ -190,6 +195,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
                 })
             );
             expect(batch.opHash).toBeDefined();
+            expect(await batch.status()).toEqual('applied');
             done();
         });
     });

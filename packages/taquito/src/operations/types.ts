@@ -15,7 +15,9 @@ export type ParamsWithKind =
   | withKind<TransferParams, OpKind.TRANSACTION>
   | withKind<ActivationParams, OpKind.ACTIVATION>;
 
-export type ParamsWithKindExtended = ParamsWithKind | withKind<RevealParams, OpKind.REVEAL>;
+export type ParamsWithKindExtended =
+  | ParamsWithKind
+  | withKind<RevealParams, OpKind.REVEAL>
 
 export const attachKind = <T, K extends OpKind>(op: T, kind: K) => {
   return { ...op, kind } as withKind<T, K>;
@@ -26,7 +28,7 @@ export const findWithKind = <T extends { kind: OpKind }, K extends OpKind>(
   kind: K
 ): (T & { kind: K }) | undefined => {
   if (Array.isArray(arr)) {
-    const found = arr.find((op) => op.kind === kind);
+    const found = arr.find(op => op.kind === kind);
 
     if (found && isKind(found, kind)) {
       return found;
@@ -129,15 +131,15 @@ export type OriginateParamsBase = {
 export type OriginateParams = OriginateParamsBase &
   (
     | {
-        init?: never;
-        /** JS representation of a storage object */
-        storage: any;
-      }
+      init?: never;
+      /** JS representation of a storage object */
+      storage: any;
+    }
     | {
-        /** Initial storage object value. Either Micheline or JSON encoded */
-        init: string | object;
-        storage?: never;
-      }
+      /** Initial storage object value. Either Micheline or JSON encoded */
+      init: string | object;
+      storage?: never;
+    }
   );
 
 export interface ActivationParams {
@@ -180,6 +182,7 @@ export interface RevealParams {
   storageLimit?: number;
 }
 
+
 /**
  * @description Result of a forge operation contains the operation plus its encoded version
  */
@@ -194,7 +197,7 @@ export interface ForgedBytes {
  */
 export interface DelegateParams {
   source: string;
-  delegate: string;
+  delegate?: string;
   fee?: number;
   gasLimit?: number;
   storageLimit?: number;
@@ -218,7 +221,7 @@ export interface RPCDelegateOperation {
   fee: number;
   gas_limit: number;
   storage_limit: number;
-  delegate: string;
+  delegate?: string;
 }
 
 /**

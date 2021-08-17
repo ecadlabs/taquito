@@ -3,7 +3,7 @@ import { TezosToolkit } from '@taquito/taquito';
 async function example() {
   const provider = 'https://api.tez.ie/rpc/mainnet';
   const tezos = new TezosToolkit(provider)
-  tezos.setProvider({ config: { shouldObservableSubscriptionRetry: true } });
+  tezos.setProvider({ config: { shouldObservableSubscriptionRetry: true, streamerPollingIntervalMilliseconds: 15000 } });
   try {
 
     const bakerEndorsementFilter = {

@@ -1,8 +1,5 @@
-[![pkgsign status](https://us-central1-pkgsign.cloudfunctions.net/pkgsign-badge?name=@taquito/michelson-encoder&expectedIdentity=%40jevonearth)](https://github.com/RedpointGames/pkgsign)
 
 # Taquito Michelson Encoder package
-
-> Our current smart contract abstraction feature is currently in preview. It's API is not final, and it may not cover every use case (yet). We will greatly appreciate any feedback on this feature.
 
 `@taquito/michelson-encoder` provides a JavaScript abstraction based on a Tezos Smart contracts code, parameters and storage.
 

@@ -60,7 +60,7 @@ export class ForbiddenInstructionInViewCode implements Error {
     message: string;
 
     constructor(public instruction: string) {
-        this.message = `Erreur found in the code of the view. It contains a forbidden instruction: ${instruction}.`;
+        this.message = `Error found in the code of the view. It contains a forbidden instruction: ${instruction}.`;
     }
 }
 

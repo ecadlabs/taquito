@@ -36,7 +36,7 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
       done();
     });
 
-    it('RemoteSigner is instantiable with default parameters', () => {
+    it('LedgerSigner is instantiable with default parameters', () => {
       expect(
         new LedgerSigner(
           transport
@@ -44,7 +44,7 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
       ).toBeInstanceOf(LedgerSigner);
     });
 
-    it('RemoteSigner is instantiable with parameters', () => {
+    it('LedgerSigner is instantiable with parameters', () => {
       expect(
         new LedgerSigner(
           transport,

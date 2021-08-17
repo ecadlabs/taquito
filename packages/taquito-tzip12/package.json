@@ -1,6 +1,6 @@
 {
   "name": "@taquito/tzip12",
-  "version": "10.0.0",
+  "version": "10.1.0",
   "description": "Tzip12",
   "keywords": [
     "tezos",
@@ -59,9 +59,9 @@
     ]
   },
   "dependencies": {
-    "@taquito/michelson-encoder": "^10.0.0",
-    "@taquito/taquito": "^10.0.0",
-    "@taquito/tzip16": "^10.0.0",
+    "@taquito/michelson-encoder": "^10.1.0",
+    "@taquito/taquito": "^10.1.0",
+    "@taquito/tzip16": "^10.1.0",
     "bignumber.js": "^9.0.1"
   },
   "devDependencies": {
