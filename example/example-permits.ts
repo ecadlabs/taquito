@@ -117,7 +117,7 @@
      console.log('inside: permit_examples');
  
      // Get the contract
-     const permit_address = 'KT18iJy46FCwGDnPNHouVCR5iSacadNniTj8';
+     const permit_address = 'KT1CACzczzBt5dXBJM9z2LgHv7FpThhik39T';
      const permit_contract = await Tezos.contract.at(permit_address);
  
      // Check whether bob is actually the admin
@@ -134,6 +134,7 @@
      console.log('permitParamHash:', param_hash);
  
      const expected_param_hash = '0f0db0ce6f057a8835adb6a2c617fd8a136b8028fac90aab7b4766def688ea0c';
+     // eslint-disable-next-line no-empty
      if (param_hash === expected_param_hash) {
      } else {
        throw `unexpected param_hash: ${param_hash},\n
