@@ -1,6 +1,8 @@
 import { Protocols } from '../constants';
 import { Context } from '../context';
-import { ContractAbstraction, ContractMethod } from '../contract';
+import { ContractAbstraction } from '../contract';
+import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param'
+import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
 import { OpKind, withKind } from '../operations/types';
 import {
   WalletDelegateParams,
@@ -40,7 +42,7 @@ export class WalletOperationBatch {
    *
    * @param params Transfer operation parameter
    */
-  withContractCall(params: ContractMethod<Wallet>) {
+  withContractCall(params: ContractMethod<Wallet> | ContractMethodObject<Wallet>) {
     return this.withTransfer(params.toTransferParams());
   }
 

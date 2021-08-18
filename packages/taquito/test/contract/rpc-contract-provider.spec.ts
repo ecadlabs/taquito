@@ -15,7 +15,7 @@ import {
 } from './data';
 import BigNumber from 'bignumber.js';
 import { Context } from '../../src/context';
-import { ContractMethod } from '../../src/contract/contract';
+import { ContractMethod } from '../../src/contract/contract-methods/contract-method-flat-param';
 import { Estimate } from '../../src/contract/estimate';
 import {
   Protocols,
@@ -30,6 +30,7 @@ import { BigMapAbstraction } from '../../src/contract/big-map';
 import { OpKind, ParamsWithKind } from '../../src/operations/types';
 import { NoopParser } from '../../src/taquito';
 import { OperationBatch } from '../../src/batch/rpc-batch-provider';
+import { ContractMethodObject } from '../../src/contract/contract-methods/contract-method-object-param';
 
 /**
  * RPCContractProvider test
@@ -1274,6 +1275,7 @@ describe('RpcContractProvider test', () => {
       mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
       const result = await rpcContractProvider.at('test');
       expect(result.methods.mint('test', 100)).toBeInstanceOf(ContractMethod);
+      expect(result.methodsObject.mint({0:'test', 1: 100})).toBeInstanceOf(ContractMethodObject);
       done();
     });
   });
