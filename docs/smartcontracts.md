@@ -3,6 +3,9 @@ title: Smart contract interaction
 author: Jev Bjorsell
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 Taquito allows developers to interact with Smart Contracts as if they are "Plain Old Javascript Objects."
 
 The "Machine Language" of Tezos Smart Contracts is named [Michelson][3]. Michelson is a stack-based language that is human-readable. It's possible to author Smart-Contracts directly in Michelson. However, developers can use High-Level Languages (such as [Ligo][0] or [SmartPy][1]) to write smart contracts.
@@ -132,7 +135,7 @@ In the next example, we call the `send()` method. This example requires a differ
 
 We call the `send()` method on the `increment()` method. Taquito then forges this operation into a transfer operation (with a transfer value of zero), signs the operation with our testing key, and injects or broadcasts the operation to the Tezos RPC node.
 
-Then we wait for the confirmation(3)` to complete. The `3` number tells Taquito how many confirmations to wait for before resolving the promise. `3` is a good value for this type of demonstration, but we recommend a higher value if you are dealing with mainnet transactions.
+Then we wait for the `confirmation(3)` to complete. The `3` number tells Taquito how many confirmations to wait for before resolving the promise. `3` is a good value for this type of demonstration, but we recommend a higher value if you are dealing with mainnet transactions.
 
 ```js live noInline
 // const Tezos = new TezosToolkit('https://api.tez.ie/rpc/granadanet');
@@ -152,6 +155,117 @@ Tezos.contract
   .then((hash) => println(`Operation injected: https://granada.tzstats.com/${hash}`))
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
+
+## Choosing between the `methods` or `methodsObject` members to interact with smart contracts
+
+:::note
+Since Taquito version 10.2.0, the parameter can be passed in an object format when calling a smart contract entry point. 
+
+The `ContractAbstraction` class has a new member called `methodsObject`, which serves the same purpose as the `methods` member. The format the smart contract method will expect differs: `methods` expects flattened arguments as `methodsObject expects an object.
+  
+It is to the user's discretion to use his favorite representation. We wanted to provide a way for the users of Taquito to pass an object when calling a contract entry point like it is the case for deploying a contract using the storage parameter.
+
+An example showing the difference is provided below.
+:::
+
+<Tabs
+  defaultValue="flat"
+  values={[
+    {label: 'Flattened arguments', value: 'flat'}, 
+    {label: 'Parameter as an object', value: 'object'}
+  ]}>
+  <TabItem value='flat'>
+
+In the following example, a contract's `set_child_record` method will be called by passing the arguments using the flattened representation. The `methods` member of the `ContractAbstraction` class allows doing so. First, it is possible to obtain details about the signature of the `set_child_record` entry point by using the `getSignature` method as follow: 
+
+```js live noInline
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/granadanet');
+
+Tezos.contract.at('KT1Ho26P3cnTjeLp29VPuHj2rLGfZeUKTdMo')
+  .then((contract) => {
+    println(`List all contract methods: ${Object.keys(contract.methods)}\n`);
+    println(`Inspect the signature of the 'set_child_record' contract method: ${
+      JSON.stringify(contract.methods.set_child_record().getSignature(), null, 2)
+    }`);
+  })
+  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+```
+
+The precedent example returns an array which contains the different possible signatures. Different signatures are possible as the `set_child_record` method contains some optional arguments. In the following example the `set_child_record` method is called by passing the arguments in the flattened way: 
+
+```js live noInline
+// import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/granadanet')
+// import { importKey } from '@taquito/signer';
+
+importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
+.then(signer => {
+    return Tezos.contract.at('KT1Ho26P3cnTjeLp29VPuHj2rLGfZeUKTdMo')
+}).then((contract) => {
+   return contract.methods.set_child_record(
+    'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', //address(optional)
+      new MichelsonMap(), //data
+      'EEEE', //label
+      'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', //owner
+      'FFFF', //parent
+      '10' //ttl(optional)
+   ).send()
+  })
+  .then((op) => {
+    println(`Awaiting for ${op.hash} to be confirmed...`);
+     return op.confirmation().then(() => op.hash);
+  })
+  .then((hash) => println(`Operation injected: https://granada.tzstats.com/${hash}`))
+  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+```
+
+  </TabItem>
+  <TabItem value='object'>
+
+In the following example, a contract's `set_child_record` method will be called by passing the parameter in an object format. The `methodsObject` member of the `ContractAnstraction` class allows doing so. First, it is possible to obtain details about the signature of the `set_child_record` entry point by using the `getSignature` method as follow: 
+
+```js live noInline
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/granadanet');
+
+Tezos.contract.at('KT1Ho26P3cnTjeLp29VPuHj2rLGfZeUKTdMo')
+  .then((contract) => {
+    println(`List all contract methods: ${Object.keys(contract.methodsObject)}\n`);
+    println(`Inspect the signature of the 'set_child_record' contract method: ${JSON.stringify(contract.methodsObject.set_child_record().getSignature(), null, 2)}`);
+  })
+  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+```
+
+The precedent example returns an object giving indication on how to structure the parameter when calling the`set_child_record` method. Here is an example where the `set_child_record` method is called by passing the parameter in an object format: 
+
+```js live noInline
+// import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/granadanet')
+// import { importKey } from '@taquito/signer';
+
+importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
+.then(signer => {
+    return Tezos.contract.at('KT1Ho26P3cnTjeLp29VPuHj2rLGfZeUKTdMo')
+}).then((contract) => {
+   return contract.methodsObject.set_child_record({
+    address: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
+    data: new MichelsonMap(),
+    label: 'EEEE',
+    owner: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', 
+    parent: 'FFFF',
+    ttl: '10'
+   }).send()
+  })
+  .then((op) => {
+    println(`Awaiting for ${op.hash} to be confirmed...`);
+     return op.confirmation().then(() => op.hash);
+  })
+  .then((hash) => println(`Operation injected: https://granada.tzstats.com/${hash}`))
+  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+```
+
+  </TabItem>
+</Tabs>
+
 
 [0]: https://ligolang.org/
 [1]: https://smartpy.io/
