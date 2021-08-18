@@ -2,7 +2,8 @@ import { TezosToolkit } from '@taquito/taquito';
 import { ligoSample } from '../integration-tests/data/ligo-simple-contract';
 
 import { importKey } from '@taquito/signer';
-const provider = 'https://api.tez.ie/rpc/florencenet';
+
+const provider = 'https://api.tez.ie/rpc/granadanet';
 
 async function example() {
   const tezos = new TezosToolkit(provider)
@@ -32,6 +33,7 @@ async function example() {
 
   try {
     console.log('Deploying Ligo simple contract...');
+    
     const op = await tezos.contract.originate({
       balance: '1',
       code: ligoSample,
@@ -40,8 +42,10 @@ async function example() {
       storageLimit: 2000,
       gasLimit: 90000,
     });
+    
     console.log('Awaiting confirmation...');
     const contract = await op.contract();
+    console.log('Ligo simple Contract address',contract.address)
     console.log('Storage', await contract.storage());
     console.log('Operation hash:', op.hash, 'Included in block level:', op.includedInBlock);
   } catch (ex) {

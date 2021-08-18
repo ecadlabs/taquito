@@ -3,14 +3,14 @@ import BigNumber from 'bignumber.js';
 
 const rpc = 'https://api.tez.ie/rpc/granadanet';
 const numberOfValueToFetch = 810; // max 810
-const repeat = 1; // How many times we want to fetch all the keys
+const repeat = 1; // How many time we want to fetch all the keys
 
 async function example() {
 
     try {
         const tezos = new TezosToolkit(rpc);
 
-        const contractAddress = 'KT1PbmJRhHnAR9xdQayCzeBhLve8fVaHPLra';
+        const contractAddress = 'KT1EqRuKupaMJhujqUTizhiVfHKeeaCTAHqV';
         const contract = await tezos.contract.at(contractAddress);
 
         interface StorageType {

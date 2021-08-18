@@ -28,8 +28,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             const uri = 'ipfs://QmcMUKkhXowQjCPtDVVXyFJd7W9LmC92Gs5kYH1KjEisdj';
             const bytesUrl = char2Bytes(uri);
 
-            const metadataBigMAp = new MichelsonMap();
-            metadataBigMAp.set("", bytesUrl);
+            const metadataBigMap = new MichelsonMap();
+            metadataBigMap.set("", bytesUrl);
 
             // Ligo Taco shop contract modified to include metadata in storage
             // https://ide.ligolang.org/p/-uS469slzUlSm1zwNqHl1A
@@ -39,7 +39,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             const op = await Tezos.contract.originate({
                 code: tacoContractTzip16,
                 storage: {
-                    metadata: metadataBigMAp,
+                    metadata: metadataBigMap,
                     taco_shop_storage: tacoShopStorageMap
                 },
             });

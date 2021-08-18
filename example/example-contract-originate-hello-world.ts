@@ -1,10 +1,10 @@
 import { TezosToolkit } from '@taquito/taquito';
-import { voteInitSample, voteSample } from '../integration-tests/data/vote-contract';
-const provider = 'https://api.tez.ie/rpc/florencenet';
 import { importKey } from '@taquito/signer';
 
+const provider = 'https://api.tez.ie/rpc/florencenet';
+
 async function example() {
-  const tezos = new TezosToolkit(provider)
+  const tezos = new TezosToolkit(provider);
   await importKey(
     tezos,
     'peqjckge.qkrrajzs@tezos.example.org',
@@ -30,17 +30,25 @@ async function example() {
   );
 
   try {
-    console.log('Deploying Ligo simple contract...');
+    console.log('Deploying Hello world contract...');
     const op = await tezos.contract.originate({
-      balance: '1',
-      code: voteSample,
-      init: voteInitSample,
-      fee: 30000,
-      storageLimit: 2000,
-      gasLimit: 90000,
+      balance: '0',
+      code: `parameter string;
+            storage string;
+            code {CAR;
+                  PUSH string "Hello ";
+                  CONCAT;
+                  NIL operation; PAIR};
+            `,
+      init: `"test1234"`,
     });
+
     console.log('Awaiting confirmation...');
     const contract = await op.contract();
+    console.log('Hello world Contract address',contract.address)
+    console.log('Gas Used', op.consumedGas);
+    console.log('Storage Paid', op.storageDiff);
+    console.log('Storage Size', op.storageSize);
     console.log('Storage', await contract.storage());
     console.log('Operation hash:', op.hash, 'Included in block level:', op.includedInBlock);
   } catch (ex) {
