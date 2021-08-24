@@ -1,6 +1,6 @@
 {
   "name": "@taquito/tzip12",
-  "version": "10.1.0",
+  "version": "10.1.0-methodsObject.1",
   "description": "Tzip12",
   "keywords": [
     "tezos",
@@ -10,6 +10,10 @@
   "main": "dist/taquito-tzip12.umd.js",
   "module": "dist/taquito-tzip12.es5.js",
   "typings": "dist/types/taquito-tzip12.d.ts",
+  "files": [
+    "dist",
+    "signature.json"
+  ],
   "publishConfig": {
     "access": "public"
   },
@@ -59,9 +63,9 @@
     ]
   },
   "dependencies": {
-    "@taquito/michelson-encoder": "^10.1.0",
-    "@taquito/taquito": "^10.1.0",
-    "@taquito/tzip16": "^10.1.0",
+    "@taquito/michelson-encoder": "^10.1.0-methodsObject.1",
+    "@taquito/taquito": "^10.1.0-methodsObject.1",
+    "@taquito/tzip16": "^10.1.0-methodsObject.1",
     "bignumber.js": "^9.0.1"
   },
   "devDependencies": {
