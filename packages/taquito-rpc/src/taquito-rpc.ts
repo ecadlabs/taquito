@@ -46,6 +46,8 @@ import {
 } from './types';
 import { castToBigNumber } from './utils/utils';
 
+export { castToBigNumber };
+
 export * from './types';
 
 export { OpKind } from './opkind';
