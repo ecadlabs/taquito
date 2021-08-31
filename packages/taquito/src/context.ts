@@ -85,7 +85,6 @@ export class Context {
     } else {
       this._rpcClient = this._rpc;
     }
-    this.config = _config as any;
     this._forger = forger ? forger : new RpcForger(this);
     this._injector = injector ? injector : new RpcInjector(this);
     this.operationFactory = new OperationFactory(this);
@@ -102,6 +101,7 @@ export class Context {
     this._config.next({
       ...defaultConfigConfirmation,
       ...defaultConfigStreamer,
+      ...this._config,
       ...value,
     });
   }
@@ -199,14 +199,9 @@ export class Context {
       // testnet and sandbox enviornment.   
       confirmationPollingInterval = confirmationPollingInterval.dividedBy(3);  
 
-      if (confirmationPollingInterval.toNumber() > defaultInterval) {
-        // Fix for the transistion from Florence to Granada
-        this.config.confirmationPollingIntervalSecond = defaultInterval;
-      } else {
-        this.config.confirmationPollingIntervalSecond = confirmationPollingInterval.toNumber() === 0 ?
-          0.1 :
-          confirmationPollingInterval.toNumber();
-      }
+      this.config.confirmationPollingIntervalSecond = confirmationPollingInterval.toNumber() === 0 ?
+        0.1 :
+        confirmationPollingInterval.toNumber();
       return this.config.confirmationPollingIntervalSecond;
     } catch (exception) {
       // Return default value if there is
