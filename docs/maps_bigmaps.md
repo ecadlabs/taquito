@@ -445,7 +445,7 @@ In the following example, we will fetch 4 big map values at once. The Michelson 
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/granadanet');
+// const Tezos = new TezosToolkit('https://granadanet.api.tez.ie');
 
 Tezos.contract
   .at('KT1VznL7HErrymLxc6EoXsatQ9mEiRE8WL6N')
