@@ -181,7 +181,7 @@ else if (process.env['EDONET']) {
 
 const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE'];
 
-jest.setTimeout(60000 * 10);
+jest.setTimeout(60000 * 10 * 2);
 
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
   if (forger === ForgerType.LOCAL) {
@@ -251,7 +251,7 @@ export const CONFIGS = () => {
 
     const configs = providers.map(({ rpc, knownBaker, knownContract, protocol, knownBigMapContract, signerConfig }) => {
       const Tezos = new TezosToolkit(rpc);
-      Tezos.setProvider({ config: { confirmationPollingTimeoutSecond:300 } });
+      Tezos.setProvider({ config: { confirmationPollingTimeoutSecond:420 } });
 
       setupForger(Tezos, forger)
 
@@ -276,7 +276,7 @@ export const CONFIGS = () => {
         },
         createAddress: async () => {
           const tezos = new TezosToolkit(rpc);
-          tezos.setProvider({ config: { confirmationPollingTimeoutSecond:300 } });
+          tezos.setProvider({ config: { confirmationPollingTimeoutSecond:420 } });
 
           const keyBytes = Buffer.alloc(32);
           nodeCrypto.randomFillSync(keyBytes)
