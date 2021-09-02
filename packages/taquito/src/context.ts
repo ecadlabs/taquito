@@ -27,11 +27,11 @@ export interface TaquitoProvider<T, K extends Array<any>> {
 
 export interface ConfigConfirmation {
   confirmationPollingIntervalSecond?: number;
-  confirmationPollingTimeoutSecond?: number;
-  defaultConfirmationCount?: number;
+  confirmationPollingTimeoutSecond: number;
+  defaultConfirmationCount: number;
 }
 
-export const defaultConfigConfirmation: Partial<ConfigConfirmation> = {
+export const defaultConfigConfirmation: ConfigConfirmation = {
   defaultConfirmationCount: 1,
   confirmationPollingTimeoutSecond: 180
 };
@@ -40,12 +40,12 @@ export const defaultConfigConfirmation: Partial<ConfigConfirmation> = {
 // When set to true, the observable won't die when getBlock rpc call fails; the error will be reported via the error callback,
 // and it will continue to poll for new blocks.
 export interface ConfigStreamer {
-  streamerPollingIntervalMilliseconds?: number;
-  shouldObservableSubscriptionRetry?: boolean;
-  observableSubscriptionRetryFunction?: OperatorFunction<any,any>;
+  streamerPollingIntervalMilliseconds: number;
+  shouldObservableSubscriptionRetry: boolean;
+  observableSubscriptionRetryFunction: OperatorFunction<any,any>;
 }
 
-export const defaultConfigStreamer: Required<ConfigStreamer> = {
+export const defaultConfigStreamer: ConfigStreamer = {
   streamerPollingIntervalMilliseconds: 20000,
   shouldObservableSubscriptionRetry: false,
   observableSubscriptionRetryFunction: retry()
@@ -93,15 +93,19 @@ export class Context {
     this._packer = packer? packer: new RpcPacker(this);
   }
 
-  get config(): Partial<ConfigConfirmation> & Required<ConfigStreamer> {
+  get config(): ConfigConfirmation & ConfigStreamer {
     return this._config.getValue();
   }
 
-  set config(value: Partial<ConfigConfirmation> & Required<ConfigStreamer>) {
+  set config(value: ConfigConfirmation & ConfigStreamer) {
     this._config.next({
-      ...defaultConfigConfirmation,
-      ...defaultConfigStreamer,
-      ...this._config,
+      ...value,
+    });
+  }
+
+  setPartialConfig(value: Partial<ConfigConfirmation> & Partial<ConfigStreamer>) {
+    this._config.next({
+      ...this._config.getValue(),
       ...value,
     });
   }

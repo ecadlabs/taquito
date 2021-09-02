@@ -125,7 +125,7 @@ export class TezosToolkit {
 
     this._context.proto = protocol;
     if(config) {
-      this._context.config = config as Partial<ConfigConfirmation> & Required<ConfigStreamer>;
+      this._context.setPartialConfig(config);
     }
   }
 
