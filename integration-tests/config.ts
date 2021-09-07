@@ -24,6 +24,7 @@ interface Config {
   knownTzip1216Contract: string; // See example/example-Tzip12BigMapOffChain.ts
   protocol: Protocols;
   signerConfig: EphemeralConfig | FaucetConfig;
+  isSandbox?: boolean;
 }
 /**
  * SignerType specifies the different signer options used in the integration test suite. EPHEMERAL_KEY relies on a the [tezos-key-get-api](https://github.com/ecadlabs/tezos-key-gen-api)
@@ -82,6 +83,21 @@ const granadanetEphemeral = {
     keyUrl: 'https://api.tez.ie/keys/granadanet',
     requestHeaders: { 'Authorization': 'Bearer taquito-example' },
   }
+}
+
+const sandboxEphemeral = {
+  rpc: process.env['TEZOS_RPC_SANDBOX'] || 'http://192.168.86.86:8732',
+  knownBaker: 'tz1YPSCGWXwBdTncK2aCctSZAXWvGsGwVJqU',
+  knownContract: 'KT191BtyaVcfDfBHZAZahuLXoWvBVEb52qK3',
+  knownBigMapContract: 'KT1MZDvKKkHvkLRPhrVY7D8UFi56wwUSeNsU',
+  knownTzip1216Contract: 'KT1NWn9vmDxsdhYXZv4Rn2v3UpaF6vewiX31',
+  protocol: sandboxProtocolEphemeral.protocol,
+  signerConfig: {
+    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
+    keyUrl: 'http://localhost:3000/flextesanet',
+    requestHeaders: { 'Authorization': 'Bearer taquito-example' },
+  },
+  isSandbox: true
 }
 
 // Well known faucet key. Can be overridden by setting the `TEZOS_FAUCET_KEY_FILE` environment variable
@@ -247,46 +263,47 @@ const setupWithFaucetKey = async (Tezos: TezosToolkit, signerConfig: FaucetConfi
 
 export const CONFIGS = () => {
   return forgers.reduce((prev, forger: ForgerType) => {
+    const configs = providers.map(({ rpc, knownBaker, knownContract, protocol, knownBigMapContract, knownTzip1216Contract, signerConfig, isSandbox }) => {
+    const Tezos = new TezosToolkit(new RpcClientCache(new RpcClient(rpc)));
+    Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: 300 } });
 
-    const configs = providers.map(({ rpc, knownBaker, knownContract, protocol, knownBigMapContract, knownTzip1216Contract, signerConfig }) => {
-      const Tezos = new TezosToolkit(new RpcClientCache(new RpcClient(rpc)));
-      Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: 300 } });
+    setupForger(Tezos, forger)
 
-      setupForger(Tezos, forger)
-
-      return {
-        rpc,
-        knownBaker,
-        knownContract,
-        protocol,
-        lib: Tezos,
-        knownBigMapContract,
-        knownTzip1216Contract,
-        signerConfig,
-        setup: async (preferFreshKey: boolean = false) => {
-          if (signerConfig.type === SignerType.FAUCET) {
-            await setupWithFaucetKey(Tezos, signerConfig);
-          } else if (signerConfig.type === SignerType.EPHEMERAL_KEY) {
-            if (preferFreshKey) {
-              await setupSignerWithFreshKey(Tezos, signerConfig);
-            } else {
-              await setupSignerWithEphemeralKey(Tezos, signerConfig);
-            }
+    return {
+      rpc,
+      knownBaker,
+      knownContract,
+      protocol,
+      lib: Tezos,
+      knownBigMapContract,
+      knownTzip1216Contract,
+      signerConfig,
+      isSandbox,
+      setup: async (preferFreshKey: boolean = false) => {
+        if (signerConfig.type === SignerType.FAUCET) {
+          await setupWithFaucetKey(Tezos, signerConfig);
+        } else if (signerConfig.type === SignerType.EPHEMERAL_KEY) {
+          if (preferFreshKey) {
+            await setupSignerWithFreshKey(Tezos, signerConfig);
+          } else {
+            await setupSignerWithEphemeralKey(Tezos, signerConfig);
           }
-        },
-        createAddress: async () => {
-          const tezos = new TezosToolkit(new RpcClientCache(new RpcClient(rpc)));
-
-          const keyBytes = Buffer.alloc(32);
-          nodeCrypto.randomFillSync(keyBytes)
-
-          const key = b58cencode(new Uint8Array(keyBytes), prefix[Prefix.P2SK]);
-          await importKey(tezos, key);
-
-          return tezos;
         }
-      };
-    });
-    return [...prev, ...configs]
+      },
+      createAddress: async () => {
+        const tezos = new TezosToolkit(new RpcClientCache(new RpcClient(rpc)));
+
+        const keyBytes = Buffer.alloc(32);
+        nodeCrypto.randomFillSync(keyBytes)
+
+        const key = b58cencode(new Uint8Array(keyBytes), prefix[Prefix.P2SK]);
+        await importKey(tezos, key);
+
+        return tezos;
+      }
+    };
+  });
+  
+  return [...prev, ...configs]
   }, [] as ConfigWithSetup[]);
 };

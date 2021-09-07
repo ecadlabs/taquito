@@ -17,7 +17,9 @@
     "example:rpc-vs-local-pack-sequential": "node -r ts-node/register --preserve-symlinks example-sequential-bigmap-local-vs-rpc-pack.ts",
     "example:rpc-vs-local-pack-parallel": "node -r ts-node/register --preserve-symlinks example-parallel-bigmap-local-vs-rpc-pack.ts",
     "example:bigmap-keys-pair": "node -r ts-node/register --preserve-symlinks example-bigmap-keys-as-pair.ts",
-    "example:bigmap-keys-deep-pair": "node -r ts-node/register --preserve-symlinks example-bigmap-keys-as-deep-pair.ts"
+    "example:bigmap-keys-deep-pair": "node -r ts-node/register --preserve-symlinks example-bigmap-keys-as-deep-pair.ts",
+    "example:deploy-contracts": "node -r ts-node/register --preserve-symlinks deploy-integration-tests-contracts.ts",
+    "example:deploy-lambda-contracts": "node -r ts-node/register --preserve-symlinks deploy-lambda-contract.ts"
   },
   "dependencies": {
     "@ledgerhq/hw-transport-node-hid": "^5.43.0",

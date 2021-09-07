@@ -48,6 +48,7 @@ export enum DefaultLambdaAddresses {
   FLORENCENET = 'KT1KCe3YqGnudsiCWb5twbe2DH5T3EMdLpSE',
   GRANADANET = 'KT1BCun2vsA4GBQvsKAuGD5x873MfW2jsN9z',
   HANGZHOUNET = 'KT1PWtBAr1hjK9M9s9oZNZFbfzPdkkD6PSJR'
+  FLEXTESANET = 'KT1J8ut3TBs9jzTrokUS4yrpk2xxdmapFkhe'
 }
 
 export enum ChainIds {
@@ -58,4 +59,5 @@ export enum ChainIds {
   FLORENCENET = "NetXxkAx4woPLyu",
   GRANADANET = "NetXz969SFaFn8k", 
   HANGZHOUNET = "NetXZSsxBpMQeAT"
+  FLEXTESANET = "NetXfpUfwJdBox9"
 }
