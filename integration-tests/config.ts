@@ -22,6 +22,7 @@ interface Config {
   knownBigMapContract: string;
   protocol: Protocols;
   signerConfig: EphemeralConfig | FaucetConfig;
+  isSandbox?: boolean;
 }
 /**
  * SignerType specifies the different signer options used in the integration test suite. EPHEMERAL_KEY relies on a the [tezos-key-get-api](https://github.com/ecadlabs/tezos-key-gen-api)
@@ -96,16 +97,17 @@ const edonetEphemeral = {
 const sandboxProtocolEphemeral = florencenetEphemeral;
 
 const sandboxEphemeral = {
-  rpc: process.env['TEZOS_RPC_SANDBOX'] || 'http://192.168.86.70:8732',
-  knownBaker: sandboxProtocolEphemeral.knownBaker,
-  knownContract: 'KT1WtxvaDHanaLJQUej6GMFFNZ2bV9NFSjde',
-  knownBigMapContract: 'KT1QPThjY15EaJSngX5YiJHL1QBRKEgHxNcW',
+  rpc: process.env['TEZOS_RPC_SANDBOX'] || 'http://192.168.86.86:8732',
+  knownBaker: 'tz1YPSCGWXwBdTncK2aCctSZAXWvGsGwVJqU',
+  knownContract: 'KT191BtyaVcfDfBHZAZahuLXoWvBVEb52qK3',
+  knownBigMapContract: 'KT1MZDvKKkHvkLRPhrVY7D8UFi56wwUSeNsU',
   protocol: sandboxProtocolEphemeral.protocol,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'http://localhost:3000/flextesanet',
     requestHeaders: { 'Authorization': 'Bearer taquito-example' },
-  }
+  },
+  isSandbox: true
 }
 
 // Well known faucet key. Can be overridden by setting the `TEZOS_FAUCET_KEY_FILE` environment variable
@@ -267,7 +269,7 @@ const setupWithFaucetKey = async (Tezos: TezosToolkit, signerConfig: FaucetConfi
 export const CONFIGS = () => {
   return forgers.reduce((prev, forger: ForgerType) => {
 
-    const configs = providers.map(({ rpc, knownBaker, knownContract, protocol, knownBigMapContract, signerConfig }) => {
+    const configs = providers.map(({ rpc, knownBaker, knownContract, protocol, knownBigMapContract, signerConfig, isSandbox }) => {
       const Tezos = new TezosToolkit(rpc);
       Tezos.setProvider({ config: { confirmationPollingTimeoutSecond:300 } });
 
@@ -281,6 +283,7 @@ export const CONFIGS = () => {
         lib: Tezos,
         knownBigMapContract,
         signerConfig,
+        isSandbox,
         setup: async (preferFreshKey: boolean = false) => {
           if (signerConfig.type === SignerType.FAUCET) {
             await setupWithFaucetKey(Tezos, signerConfig);

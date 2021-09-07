@@ -133,6 +133,8 @@ export class ContractView {
       lambdaAddress = DefaultLambdaAddresses.GRANADANET
     } else if (this.chainId === ChainIds.MAINNET) {
       lambdaAddress = DefaultLambdaAddresses.MAINNET
+    } else if (this.chainId === ChainIds.FLEXTESANET) {
+      lambdaAddress = DefaultLambdaAddresses.FLEXTESANET
     } else {
       throw new UndefinedLambdaContractError()
     }
