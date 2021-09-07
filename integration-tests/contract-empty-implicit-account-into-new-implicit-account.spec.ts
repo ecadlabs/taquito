@@ -1,3 +1,4 @@
+import { BigNumber } from "bignumber.js";
 import { CONFIGS } from "./config";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
@@ -28,7 +29,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
             const estimate = await sender.estimate.transfer({
                 to: receiver_pkh,
-                amount: (balance.toNumber()/1000000) - 2,
+                amount: balance.dividedBy(new BigNumber(1000000)).minus(new BigNumber(2)).toNumber(),
             });
 
             // Emptying the account

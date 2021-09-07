@@ -5,12 +5,14 @@ import { originate, originate2, transferImplicit2 } from "./data/lambda";
 import { ligoSample } from "./data/ligo-simple-contract";
 import { managerCode } from "./data/manager_code";
 
-CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => {
+CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc, isSandbox }) => {
   const Tezos = lib;
 
   const edonet = (protocol === Protocols.PtEdo2Zk) ? test : test.skip;
-  const florencenet = (protocol === Protocols.PsFLorena) ? test : test.skip;
+  const florencenet = ( (protocol === Protocols.PsFLorena) && isSandbox !== true ) 
+                      ? test : test.skip;
   const granadanet = (protocol === Protocols.PtGRANADs) ? test : test.skip;
+  const flextesanet = isSandbox ? test : test.skip;
 
   describe(`Estimate scenario using: ${rpc}`, () => {
     let LowAmountTez: TezosToolkit;
@@ -38,6 +40,19 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       } finally {
         done()
       }
+    })
+
+    flextesanet('Estimate transfer with allocated destination', async (done) => {
+      const estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 1.9 });
+      expect(estimate.gasLimit).toEqual(1527);
+      expect(estimate.storageLimit).toEqual(0);
+      expect(estimate.suggestedFeeMutez).toEqual(504);
+      expect(estimate.burnFeeMutez).toEqual(0);
+      expect(estimate.minimalFeeMutez).toEqual(404);
+      expect(estimate.totalCost).toEqual(404);
+      expect(estimate.usingBaseFeeMutez).toEqual(404);
+      expect(estimate.consumedMilligas).toEqual(1427000);
+      done();
     })
 
     granadanet('Estimate transfer with allocated destination', async (done) => {
@@ -79,6 +94,19 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       done();
     })
 
+    flextesanet('Estimate transfer with unallocated destination', async (done) => {
+      const estimate = await LowAmountTez.estimate.transfer({ to: await (await createAddress()).signer.publicKeyHash(), amount: 1.7 });
+      expect(estimate.gasLimit).toEqual(1527);
+      expect(estimate.storageLimit).toEqual(257);
+      expect(estimate.suggestedFeeMutez).toEqual(504);
+      expect(estimate.burnFeeMutez).toEqual(64250);
+      expect(estimate.minimalFeeMutez).toEqual(404);
+      expect(estimate.totalCost).toEqual(64654);
+      expect(estimate.usingBaseFeeMutez).toEqual(404);
+      expect(estimate.consumedMilligas).toEqual(1427000);
+      done();
+    });
+
     granadanet('Estimate transfer with unallocated destination', async (done) => {
       const estimate = await LowAmountTez.estimate.transfer({ to: await (await createAddress()).signer.publicKeyHash(), amount: 1.7 });
       expect(estimate.gasLimit).toEqual(1520);
@@ -115,6 +143,23 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       expect(estimate.totalCost).toEqual(64656);
       expect(estimate.usingBaseFeeMutez).toEqual(406);
       expect(estimate.consumedMilligas).toEqual(1427000);
+      done();
+    });
+
+    flextesanet('Estimate simple origination', async (done) => {
+      const estimate = await LowAmountTez.estimate.originate({
+        balance: "1",
+        code: ligoSample,
+        storage: 0,
+      })
+      expect(estimate.gasLimit).toEqual(2751);
+      expect(estimate.storageLimit).toEqual(571);
+      expect(estimate.suggestedFeeMutez).toEqual(919);
+      expect(estimate.burnFeeMutez).toEqual(142750);
+      expect(estimate.minimalFeeMutez).toEqual(819);
+      expect(estimate.totalCost).toEqual(143569);
+      expect(estimate.usingBaseFeeMutez).toEqual(819);
+      expect(estimate.consumedMilligas).toEqual(2650621);
       done();
     });
 
@@ -169,6 +214,22 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       done();
     });
 
+    flextesanet('Estimate setDelegate', async (done) => {
+      const estimate = await LowAmountTez.estimate.setDelegate({
+        delegate: knownBaker,
+        source: await LowAmountTez.signer.publicKeyHash(),
+      })
+      expect(estimate.gasLimit).toEqual(1100);
+      expect(estimate.storageLimit).toEqual(0);
+      expect(estimate.suggestedFeeMutez).toEqual(457);
+      expect(estimate.burnFeeMutez).toEqual(0);
+      expect(estimate.minimalFeeMutez).toEqual(357);
+      expect(estimate.totalCost).toEqual(357);
+      expect(estimate.usingBaseFeeMutez).toEqual(357);
+      expect(estimate.consumedMilligas).toEqual(1000000);
+      done();
+    })
+
     granadanet('Estimate setDelegate', async (done) => {
       const estimate = await LowAmountTez.estimate.setDelegate({
         delegate: knownBaker,
@@ -217,6 +278,20 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       done();
     })
 
+    flextesanet('Estimate internal transfer to allocated implicit', async (done) => {
+      const tx = contract.methods.do(MANAGER_LAMBDA.transferImplicit(knownBaker, 50)).toTransferParams();
+      const estimate = await LowAmountTez.estimate.transfer(tx)
+      expect(estimate.gasLimit).toEqual(4936);
+      expect(estimate.storageLimit).toEqual(0);
+      expect(estimate.suggestedFeeMutez).toEqual(918);
+      expect(estimate.burnFeeMutez).toEqual(0);
+      expect(estimate.minimalFeeMutez).toEqual(818);
+      expect(estimate.totalCost).toEqual(818);
+      expect(estimate.usingBaseFeeMutez).toEqual(818);
+      expect(estimate.consumedMilligas).toEqual(4835751);
+      done();
+    })
+
     granadanet('Estimate internal transfer to allocated implicit', async (done) => {
       const tx = contract.methods.do(MANAGER_LAMBDA.transferImplicit(knownBaker, 50)).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx)
@@ -256,6 +331,24 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       expect(estimate.totalCost).toEqual(820);
       expect(estimate.usingBaseFeeMutez).toEqual(820);
       expect(estimate.consumedMilligas).toEqual(4838226);
+      done();
+    })
+
+    flextesanet('Estimate to multiple internal transfer to unallocated account', async (done) => {
+      const tx = contract.methods.do(transferImplicit2(
+        await (await createAddress()).signer.publicKeyHash(),
+        await (await createAddress()).signer.publicKeyHash(),
+        50)
+      ).toTransferParams();
+      const estimate = await LowAmountTez.estimate.transfer(tx)
+      expect(estimate.gasLimit).toEqual(6522);
+      expect(estimate.storageLimit).toEqual(514);
+      expect(estimate.suggestedFeeMutez).toEqual(1136);
+      expect(estimate.burnFeeMutez).toEqual(128500);
+      expect(estimate.minimalFeeMutez).toEqual(1036);
+      expect(estimate.totalCost).toEqual(129536);
+      expect(estimate.usingBaseFeeMutez).toEqual(1036);
+      expect(estimate.consumedMilligas).toEqual(6421121);
       done();
     })
 
@@ -313,6 +406,20 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       done();
     })
 
+    flextesanet('Estimate internal origination', async (done) => {
+      const tx = contract.methods.do(originate()).toTransferParams();
+      const estimate = await LowAmountTez.estimate.transfer(tx)
+      expect(estimate.gasLimit).toEqual(5489);
+      expect(estimate.storageLimit).toEqual(317);
+      expect(estimate.suggestedFeeMutez).toEqual(979);
+      expect(estimate.burnFeeMutez).toEqual(79250);
+      expect(estimate.minimalFeeMutez).toEqual(879);
+      expect(estimate.totalCost).toEqual(80129);
+      expect(estimate.usingBaseFeeMutez).toEqual(879);
+      expect(estimate.consumedMilligas).toEqual(5388151);
+      done();
+    })
+
     granadanet('Estimate internal origination', async (done) => {
       const tx = contract.methods.do(originate()).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx)
@@ -352,6 +459,23 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       expect(estimate.totalCost).toEqual(80132);
       expect(estimate.usingBaseFeeMutez).toEqual(882);
       expect(estimate.consumedMilligas).toEqual(5390686);
+      done();
+    })
+
+    flextesanet('Estimate multiple internal origination', async (done) => {
+      const tx = contract.methods.do(originate2()).toTransferParams();
+      const estimate = await LowAmountTez.estimate.transfer(tx)
+      expect(estimate.gasLimit).toEqual(7626);
+      expect(estimate.storageLimit).toEqual(634);
+      expect(estimate.suggestedFeeMutez).toEqual(1258);
+      expect(estimate.burnFeeMutez).toEqual(158500);
+      expect(estimate.minimalFeeMutez).toEqual(1158);
+      expect(estimate.totalCost).toEqual(159658);
+      expect(estimate.usingBaseFeeMutez).toEqual(1158);
+      expect(estimate.consumedMilligas).toEqual(7525921);
+      // Do the actual operation
+      const op2 = await contract.methods.do(originate2()).send();
+      await op2.confirmation();
       done();
     })
 
@@ -419,6 +543,19 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       await transfer.confirmation();
       done()
     })
+
+    flextesanet('Estimate transfer to regular address', async (done) => {
+      let estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) });
+      expect(estimate.gasLimit).toEqual(1527);
+      expect(estimate.storageLimit).toEqual(0);
+      expect(estimate.suggestedFeeMutez).toEqual(502);
+      expect(estimate.burnFeeMutez).toEqual(0);
+      expect(estimate.minimalFeeMutez).toEqual(402);
+      expect(estimate.totalCost).toEqual(402);
+      expect(estimate.usingBaseFeeMutez).toEqual(402);
+      expect(estimate.consumedMilligas).toEqual(1427000);
+      done();
+    });
 
     granadanet('Estimate transfer to regular address', async (done) => {
       let estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) });
