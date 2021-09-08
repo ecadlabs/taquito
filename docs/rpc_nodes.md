@@ -19,9 +19,6 @@ author: Roxane Letourneau
     - Mainnet: https://mainnet.api.tez.ie
     - Granadanet: https://granadanet.api.tez.ie
     - Florencenet: https://florencenet.api.tez.ie
-- Tezos Giga Node from Tezos Ukraine
-    - Mainnet: https://mainnet-tezos.giganode.io
-    - Granada testnet: https://testnet-tezos.giganode.io/
 - SmartPy nodes
     - Mainnet: https://mainnet.smartpy.io
     - Granadanet: https://granadanet.smartpy.io/
@@ -30,6 +27,10 @@ author: Roxane Letourneau
     - Next protocol/version testnet (Granadanet): https://rpczero.tzbeta.net/
 - Teznode from LetzBake!:
     - Mainnet: https://teznode.letzbake.com
+- ~~Tezos Giga Node from Tezos Ukraine~~ Will cease to operate on Oct 1st 2021. See
+  [Announcment](https://twitter.com/GigaNode/status/1435265400699342854)
+    - ~~Mainnet: https://mainnet-tezos.giganode.io~~
+    - ~~Granada testnet: https://testnet-tezos.giganode.io/~~
 
 ## How to run a node
 
