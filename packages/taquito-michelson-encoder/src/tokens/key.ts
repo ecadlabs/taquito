@@ -1,5 +1,7 @@
 import { ComparableToken, TokenFactory, TokenValidationError } from './token';
-import { encodeKey, validatePublicKey, ValidationResult } from '@taquito/utils';
+import { encodeKey, validatePublicKey, ValidationResult, Prefix } from '@taquito/utils';
+
+const publicKeyPrefixLength = 4;
 
 export class KeyValidationError extends TokenValidationError {
   name: string = 'KeyValidationError';
@@ -68,5 +70,26 @@ export class KeyToken extends ComparableToken {
       key: { string: val },
       type: { prim: KeyToken.prim },
     };
+  }
+
+  compare(key1: string, key2: string): number {
+    const keyPrefix1 = this.getPrefix(key1);
+    const keyPrefix2 = this.getPrefix(key2);
+
+    if (keyPrefix1 === Prefix.EDPK && keyPrefix2 !== Prefix.EDPK) {
+      return -1;
+    }
+    else if (keyPrefix1 === Prefix.SPPK && keyPrefix2 !== Prefix.SPPK) {
+      return keyPrefix2 === Prefix.EDPK ? 1 : -1;
+    }
+    else if (keyPrefix1 === Prefix.P2PK && keyPrefix2 !== Prefix.P2PK) {
+      return 1;
+    }
+
+    return super.compare(key1, key2);
+  }
+
+  private getPrefix(val: string) {
+    return val.substring(0, publicKeyPrefixLength);
   }
 }
