@@ -44,9 +44,9 @@ describe('Key token', () => {
     });
   });
 
-  describe('Tokey', () => {
+  describe('ToKey', () => {
     it('Should transform Michelson bytes data to a key of type string', () => {
-      expect(token.ToKey({ "bytes": "00ebcf82872f4942052704e95dc4bfa0538503dbece27414a39b6650bcecbff896" })).toEqual('edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g');
+      expect(token.ToKey({ bytes: "00ebcf82872f4942052704e95dc4bfa0538503dbece27414a39b6650bcecbff896" })).toEqual('edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g');
     });
   });
 
