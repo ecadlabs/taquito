@@ -1,5 +1,5 @@
 import { ComparableToken, TokenFactory, TokenValidationError } from './token';
-import { encodeKey, validatePublicKey, ValidationResult, Prefix } from '@taquito/utils';
+import { encodeKey, validatePublicKey, ValidationResult, Prefix, b58cdecode, prefix } from '@taquito/utils';
 
 const publicKeyPrefixLength = 4;
 
@@ -82,8 +82,14 @@ export class KeyToken extends ComparableToken {
     else if (keyPrefix1 === Prefix.SPPK && keyPrefix2 !== Prefix.SPPK) {
       return keyPrefix2 === Prefix.EDPK ? 1 : -1;
     }
-    else if (keyPrefix1 === Prefix.P2PK && keyPrefix2 !== Prefix.P2PK) {
-      return 1;
+    else if (keyPrefix1 === Prefix.P2PK) {
+      if (keyPrefix2 !== Prefix.P2PK) {
+        return 1;
+      }
+
+      const keyBytes1 = this.getP256PublicKeyComparableBytes(key1);
+      const keyBytes2 = this.getP256PublicKeyComparableBytes(key2);
+      return Buffer.compare(keyBytes1, keyBytes2);
     }
 
     return super.compare(key1, key2);
@@ -91,5 +97,9 @@ export class KeyToken extends ComparableToken {
 
   private getPrefix(val: string) {
     return val.substring(0, publicKeyPrefixLength);
+  }
+
+  private getP256PublicKeyComparableBytes(p2pk: string) {
+    return b58cdecode(p2pk, prefix[Prefix.P2PK]).slice(1);
   }
 }
