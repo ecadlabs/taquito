@@ -1,4 +1,76 @@
+import { retry, tap } from 'rxjs/operators';
 import { Context } from '../src/context';
+
+describe('Configurations for the confirmation methods and streamer', () => {
+    let mockRpcClient: any;
+    let context: Context;
+
+    beforeAll(() => {
+        mockRpcClient = {
+            getConstants: jest.fn()
+        };
+        context = new Context(mockRpcClient);
+    });
+
+    it('Context is initialized with default config values except for the confirmationPollingIntervalSecond property', () => {
+        expect(context.config.confirmationPollingIntervalSecond).toBeUndefined();
+        expect(context.config.confirmationPollingTimeoutSecond).toEqual(180);
+        expect(context.config.defaultConfirmationCount).toEqual(1);
+        expect(context.config.streamerPollingIntervalMilliseconds).toEqual(20000);
+        expect(context.config.shouldObservableSubscriptionRetry).toBeFalsy();
+        expect(context.config.observableSubscriptionRetryFunction.prototype).toEqual(retry().prototype);
+    });
+
+    it('Calling the getConfirmationPollingInterval should set the confirmationPollingIntervalSecond based on RPC constants', async (done) => {
+        mockRpcClient.getConstants.mockResolvedValue({
+            "time_between_blocks": [
+                "30",
+                "20"
+            ],
+            "endorsers_per_block": 32,
+            "minimal_block_delay": 15,
+            "initial_endorsers": 24,
+            "delay_per_missing_endorsement": "4"
+        });
+        await context.getConfirmationPollingInterval();
+        expect(context.config.confirmationPollingIntervalSecond).toEqual(5);
+        expect(context.config.confirmationPollingTimeoutSecond).toEqual(180);
+        expect(context.config.defaultConfirmationCount).toEqual(1);
+        expect(context.config.streamerPollingIntervalMilliseconds).toEqual(20000);
+        expect(context.config.shouldObservableSubscriptionRetry).toBeFalsy();
+        expect(context.config.observableSubscriptionRetryFunction.prototype).toEqual(retry().prototype);
+        done()
+    });
+
+    it('Configurations for the confirmation methods and streamer are customizable via the config setter', () => {
+        context.config = {
+            confirmationPollingIntervalSecond: 10,
+            confirmationPollingTimeoutSecond: 300,
+            defaultConfirmationCount: 2,
+            streamerPollingIntervalMilliseconds: 10000,
+            shouldObservableSubscriptionRetry: true,
+            observableSubscriptionRetryFunction: tap()
+        }
+        expect(context.config.confirmationPollingIntervalSecond).toEqual(10);
+        expect(context.config.confirmationPollingTimeoutSecond).toEqual(300);
+        expect(context.config.defaultConfirmationCount).toEqual(2);
+        expect(context.config.streamerPollingIntervalMilliseconds).toEqual(10000);
+        expect(context.config.shouldObservableSubscriptionRetry).toBeTruthy();
+        expect(context.config.observableSubscriptionRetryFunction.prototype).toEqual(tap().prototype);
+    });
+
+    it('Configurations for the confirmation methods and streamer can be partially customized using the setPartialConfig method', () => {
+        context.setPartialConfig({
+            defaultConfirmationCount: 3,
+            streamerPollingIntervalMilliseconds: 4000
+        });
+        expect(context.config.confirmationPollingIntervalSecond).toEqual(10);
+        expect(context.config.defaultConfirmationCount).toEqual(3);
+        expect(context.config.streamerPollingIntervalMilliseconds).toEqual(4000);
+        expect(context.config.shouldObservableSubscriptionRetry).toBeTruthy();
+        expect(context.config.observableSubscriptionRetryFunction.prototype).toEqual(tap().prototype);
+    });
+})
 
 describe('Taquito context class', () => {
 
