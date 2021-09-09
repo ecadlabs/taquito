@@ -3,7 +3,7 @@ import { ligoSample } from '../integration-tests/data/ligo-simple-contract';
 
 import { importKey } from '@taquito/signer';
 
-const provider = 'https://api.tez.ie/rpc/granadanet';
+const provider = 'https://granadanet.api.tez.ie';
 
 async function example() {
   const tezos = new TezosToolkit(provider)

@@ -23,7 +23,7 @@ In the following example, we transfer 0.5ꜩ from a `tz1aaYoabvj2DQtpHz74Z83fSNj
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/granadanet');
+// const Tezos = new TezosToolkit('https://granadanet.api.tez.ie');
 
 render(`Fetching a private key...`);
 fetch('https://api.tez.ie/keys/granadanet/', {
