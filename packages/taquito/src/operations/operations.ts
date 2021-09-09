@@ -3,8 +3,9 @@ import {
   OperationContentsAndResult,
   OperationContentsAndResultReveal,
 } from '@taquito/rpc';
-import { defer, from, ReplaySubject, timer } from 'rxjs';
+import { defer, EMPTY, from, of, ReplaySubject, timer } from 'rxjs';
 import {
+  catchError,
   filter,
   first,
   map,
@@ -107,7 +108,11 @@ export class Operation {
     public readonly results: OperationContentsAndResult[],
     protected readonly context: Context
   ) {
-    this.confirmed$.pipe(first()).subscribe();
+    this.confirmed$.pipe(first(),
+      catchError(() => {
+        return of(EMPTY)
+      })
+    ).subscribe();
   }
 
   get revealOperation() {
