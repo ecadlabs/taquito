@@ -2,7 +2,7 @@ import { TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
 import { VIEW_LAMBDA } from '../packages/taquito/src/contract/view_lambda';
 
-const provider = 'https://api.tez.ie/rpc/granadanet';
+const provider = 'https://granadanet.api.tez.ie';
 
 async function example() {
   const tezos = new TezosToolkit(provider);

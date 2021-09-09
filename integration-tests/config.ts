@@ -55,7 +55,7 @@ interface FaucetConfig {
 }
 
 const granadanetEphemeral = {
-  rpc: process.env['TEZOS_RPC_GRANADANET'] || 'https://api.tez.ie/rpc/granadanet',
+  rpc: process.env['TEZOS_RPC_GRANADANET'] || 'https://granadanet.api.tez.ie',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1JMwgeC7MwYiMiZd74gXK6wrY7QNf1NwLX',
   knownBigMapContract: 'KT1VniFqNCPEq4MXvnjYGvUqdWDhooJM5Nae',
@@ -68,7 +68,7 @@ const granadanetEphemeral = {
 }
 
 const florencenetEphemeral = {
-  rpc: process.env['TEZOS_RPC_FLORENCENET'] || 'https://api.tez.ie/rpc/florencenet',
+  rpc: process.env['TEZOS_RPC_FLORENCENET'] || 'https://florencenet.api.tez.ie',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1BRwtrBfiC2paqoSw4nakJ2EGLCGuoprLQ',
   knownBigMapContract: 'KT1W1jh5C5NbcVVvpnBLQT9ekMbR5a8fg6mc',
@@ -118,7 +118,7 @@ const key = {
 }
 
 const granadanetFaucet = {
-  rpc: 'https://api.tez.ie/rpc/granadanet',
+  rpc: 'https://granadanet.api.tez.ie',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1JMwgeC7MwYiMiZd74gXK6wrY7QNf1NwLX',
   knownBigMapContract: 'KT1VniFqNCPEq4MXvnjYGvUqdWDhooJM5Nae',
@@ -130,7 +130,7 @@ const granadanetFaucet = {
 }
 
 const florencenetFaucet = {
-  rpc: 'https://api.tez.ie/rpc/florencenet',
+  rpc: 'https://florencenet.api.tez.ie/',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1BRwtrBfiC2paqoSw4nakJ2EGLCGuoprLQ',
   knownBigMapContract: 'KT1W1jh5C5NbcVVvpnBLQT9ekMbR5a8fg6mc',
@@ -274,7 +274,7 @@ export const CONFIGS = () => {
           }
         },
         createAddress: async () => {
-          const tezos = new TezosToolkit(rpc)
+          const tezos = new TezosToolkit(rpc);
 
           const keyBytes = Buffer.alloc(32);
           nodeCrypto.randomFillSync(keyBytes)

@@ -1,6 +1,7 @@
 import { BlockResponse, OperationContentsAndResult, OperationResultStatusEnum } from '@taquito/rpc';
-import { combineLatest, from, Observable, ReplaySubject } from 'rxjs';
+import { combineLatest, from, Observable, of, ReplaySubject } from 'rxjs';
 import {
+  catchError,
   distinctUntilChanged,
   filter,
   first,
@@ -92,7 +93,7 @@ export class WalletOperation {
     protected readonly context: Context,
     private _newHead$: Observable<BlockResponse>
   ) {
-    this.confirmed$.pipe(first()).subscribe();
+    this.confirmed$.pipe(first(), catchError(() => of(undefined))).subscribe();
   }
 
   async getCurrentConfirmation() {
@@ -147,7 +148,7 @@ export class WalletOperation {
     if (conf === undefined) {
       throw new Error('Default confirmation count can not be undefined!');
     }
-    
+
     return combineLatest([this._includedInBlock, this.newHead$]).pipe(
       distinctUntilChanged(([, previousHead], [, newHead]) => {
         return previousHead.hash === newHead.hash;

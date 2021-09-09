@@ -163,10 +163,6 @@ export class Operation {
 
     const conf = confirmations !== undefined ? confirmations : defaultConfirmationCount;
 
-    if (conf === undefined) {
-      throw new Error('Default confirmation count can not be undefined!');
-    }
-
     return new Promise<number>((resolve, reject) => {
       this.confirmed$
         .pipe(

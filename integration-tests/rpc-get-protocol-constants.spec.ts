@@ -10,7 +10,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
 
     describe('Fetch constants for all protocols on Mainnet', () => {
 
-        const rpcUrl = 'https://api.tez.ie/rpc/mainnet';
+        const rpcUrl = 'https://mainnet.api.tez.ie/';
         Tezos.setRpcProvider(rpcUrl)
         it('succesfully fails at fetching constants for level 0', async (done) => {
             try {

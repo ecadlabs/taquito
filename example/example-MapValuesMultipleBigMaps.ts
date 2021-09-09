@@ -2,7 +2,7 @@ import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
 import { tokenCode } from '../integration-tests/data/tokens';
 
-const provider = 'https://api.tez.ie/rpc/granadanet';
+const provider = 'https://granadanet.api.tez.ie';
 
 async function example() {
   const tezos = new TezosToolkit(provider)

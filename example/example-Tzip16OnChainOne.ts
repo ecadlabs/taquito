@@ -3,7 +3,7 @@ import { importKey } from '@taquito/signer';
 import { contractCode, metadataViewsExample1 } from '../integration-tests/data/metadataViews';
 import { char2Bytes } from '@taquito/utils';
 
-const provider = 'https://api.tez.ie/rpc/granadanet';
+const provider = 'https://granadanet.api.tez.ie';
 
 async function example() {
   const tezos = new TezosToolkit(provider)
