@@ -97,10 +97,10 @@ const edonetEphemeral = {
 const sandboxProtocolEphemeral = florencenetEphemeral;
 
 const sandboxEphemeral = {
-  rpc: process.env['TEZOS_RPC_SANDBOX'] || 'http://192.168.86.86:8732',
+  rpc: process.env['TEZOS_RPC_SANDBOX'] || 'http://macmini:8732',
   knownBaker: 'tz1YPSCGWXwBdTncK2aCctSZAXWvGsGwVJqU',
-  knownContract: 'KT191BtyaVcfDfBHZAZahuLXoWvBVEb52qK3',
-  knownBigMapContract: 'KT1MZDvKKkHvkLRPhrVY7D8UFi56wwUSeNsU',
+  knownContract: 'KT1DakgiubRjBXfUd5XNa3HNWgovcTo8uGU6',
+  knownBigMapContract: 'KT1BUjJJhUnV9fUKqEfkDyTxcDNDLf5eTk1L',
   protocol: sandboxProtocolEphemeral.protocol,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,

@@ -3,7 +3,11 @@ import { importKey } from '@taquito/signer';
 import { knownContract } from './data/knownContract';
 import { knownBigMapContract } from './data/knownBigMapContract';
 
+<<<<<<< HEAD
 const provider = 'https://granadanet.api.tez.ie';
+=======
+const provider = 'http://macmini:8732';
+>>>>>>> 1254fc9f9 (Issue-457 More CI job changes)
 
 async function example() {
   const tezos = new TezosToolkit(provider);
