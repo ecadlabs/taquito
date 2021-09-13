@@ -2,7 +2,7 @@ import { TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
 import { VIEW_LAMBDA } from '../packages/taquito/src/contract/view_lambda';
 
-const provider = 'http://192.168.86.86:8732';
+const provider = 'http://macmini:8732';
 
 async function example() {
   const tezos = new TezosToolkit(provider);

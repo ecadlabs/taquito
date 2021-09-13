@@ -3,7 +3,7 @@ import { importKey } from '@taquito/signer';
 import { knownContract } from './data/knownContract';
 import { knownBigMapContract } from './data/knownBigMapContract';
 
-const provider = 'http://192.168.86.86:8732';
+const provider = 'http://macmini:8732';
 
 async function example() {
   const tezos = new TezosToolkit(provider);
