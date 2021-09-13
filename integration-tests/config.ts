@@ -86,7 +86,7 @@ const granadanetEphemeral = {
 }
 
 const sandboxEphemeral = {
-  rpc: process.env['TEZOS_RPC_SANDBOX'] || 'http://192.168.86.86:8732',
+  rpc: process.env['TEZOS_RPC_SANDBOX'] || 'http://macmini:8732',
   knownBaker: 'tz1YPSCGWXwBdTncK2aCctSZAXWvGsGwVJqU',
   knownContract: 'KT191BtyaVcfDfBHZAZahuLXoWvBVEb52qK3',
   knownBigMapContract: 'KT1MZDvKKkHvkLRPhrVY7D8UFi56wwUSeNsU',
