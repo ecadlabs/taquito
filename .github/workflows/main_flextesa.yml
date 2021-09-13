@@ -11,19 +11,19 @@ jobs:
       matrix:
         node: [12.x]
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node }}
-    - uses: actions/cache@v1
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
-    - run: npm ci
-    - run: npm run lerna -- bootstrap
-    - run: npm run build
+    #- uses: actions/checkout@v2
+    #- uses: actions/setup-node@v1
+    #  with:
+    #    node-version: ${{ matrix.node }}
+    #- uses: actions/cache@v1
+    #  with:
+    #    path: ~/.npm
+    #    key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+    #    restore-keys: |
+    #      ${{ runner.os }}-node-
+    #- run: npm ci
+    #- run: npm run lerna -- bootstrap
+    #- run: npm run build
     - run: docker image rm bitnami/redis --force
     - run: docker image rm ecadlabs/signatory:latest --force
     - run: rm -rf ~/.tezos_client/
