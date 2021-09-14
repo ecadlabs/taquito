@@ -24,8 +24,7 @@ jobs:
     #- run: npm ci
     #- run: npm run lerna -- bootstrap
     #- run: npm run build
-    - run: docker image rm bitnami/redis --force
-    - run: docker image rm ecadlabs/signatory:latest --force
+    - run: docker rm -f my-sandbox tezos-key-gen-api_redis_1 tezos-key-gen-api_signatory_1
     - run: rm -rf ~/.tezos_client/
     - run: docker run --rm --name my-sandbox --detach -p 8732:20000  tqtezos/flextesa:20210602 flobox start   
     - run: cd integration-tests && npm run test:florencenet -- --maxWorkers=8
