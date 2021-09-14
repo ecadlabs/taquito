@@ -26,9 +26,9 @@ jobs:
     #    restore-keys: |
     #      ${{ runner.os }}-node-
     - run: cd taquito-repo
-    - run: npm ci
-    - run: npm run lerna -- bootstrap
-    - run: npm run build
+    - run: cd taquito-repo && npm ci
+    - run: cd taquito-repo && npm run lerna -- bootstrap
+    - run: cd taquito-repo && npm run build
     - run: docker rm -f my-sandbox tezos-key-gen-api_redis_1 tezos-key-gen-api_signatory_1
     - run: rm -rf ~/.tezos_client/
     - run: docker run --rm --name my-sandbox --detach -p 8732:20000  tqtezos/flextesa:20210602 flobox start   
