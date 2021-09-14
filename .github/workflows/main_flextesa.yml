@@ -11,19 +11,23 @@ jobs:
       matrix:
         node: [12.x]
     steps:
-    #- uses: actions/checkout@v2
-    #- uses: actions/setup-node@v1
-    #  with:
-    #    node-version: ${{ matrix.node }}
-    #- uses: actions/cache@v1
-    #  with:
-    #    path: ~/.npm
-    #    key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-    #    restore-keys: |
-    #      ${{ runner.os }}-node-
-    #- run: npm ci
-    #- run: npm run lerna -- bootstrap
-    #- run: npm run build
+    - uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node }}
+    - uses: actions/checkout@v2
+      with:
+        repository: ecadlabs/taquito
+        ref: 457-flextesa-kunal-2
+        path: taquito-repo
+    - uses: actions/cache@v1
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+    - run: npm ci
+    - run: npm run lerna -- bootstrap
+    - run: npm run build
     - run: docker rm -f my-sandbox tezos-key-gen-api_redis_1 tezos-key-gen-api_signatory_1
     - run: rm -rf ~/.tezos_client/
     - run: docker run --rm --name my-sandbox --detach -p 8732:20000  tqtezos/flextesa:20210602 flobox start   
@@ -32,10 +36,8 @@ jobs:
         repository: kjaiswal/tezos-key-gen-api
         ref: 457-flextesa-support-kunal
         path: keygen
-    - uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node }}
     - run: docker-compose up
+    - run: npm ci
     - run: npm run build
     - run: npm run start
     #- run: cd integration-tests && npm run test:florencenet -- --maxWorkers=8
