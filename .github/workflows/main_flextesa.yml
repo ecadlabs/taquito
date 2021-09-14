@@ -29,7 +29,8 @@ jobs:
     - run: docker run --rm --name my-sandbox --detach -p 8732:20000  tqtezos/flextesa:20210602 flobox start   
     - uses: actions/checkout@v2
       with:
-        repository: ecadlabs/tezos-key-gen-api
+        repository: kjaiswal/tezos-key-gen-api
+        ref: 457-flextesa-support-kunal
     - uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node }}
