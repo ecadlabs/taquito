@@ -37,10 +37,10 @@ jobs:
         repository: kjaiswal/tezos-key-gen-api
         ref: 457-flextesa-support-kunal
         path: keygen
-    - run: docker-compose up
-    - run: npm ci
-    - run: npm run build
-    - run: npm run start
+    - run: cd keygen && docker-compose up &
+    - run: cd keygen && npm ci
+    - run: cd keygen && npm run build
+    - run: cd keygen && npm run start &
     #- run: cd integration-tests && npm run test:florencenet -- --maxWorkers=8
     #  env:
     #    CI: true
