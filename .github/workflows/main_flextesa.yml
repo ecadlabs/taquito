@@ -27,7 +27,9 @@ jobs:
     - run: docker rm -f my-sandbox tezos-key-gen-api_redis_1 tezos-key-gen-api_signatory_1
     - run: rm -rf ~/.tezos_client/
     - run: docker run --rm --name my-sandbox --detach -p 8732:20000  tqtezos/flextesa:20210602 flobox start   
-    - uses: actions/checkout@v2 tezos-key-gen-api
+    - uses: actions/checkout@v2
+      with:
+        tezos-key-gen-api
     - uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node }}
