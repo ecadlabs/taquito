@@ -25,6 +25,7 @@ jobs:
     #    key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
     #    restore-keys: |
     #      ${{ runner.os }}-node-
+    - run: cd taquito-repo
     - run: npm ci
     - run: npm run lerna -- bootstrap
     - run: npm run build
