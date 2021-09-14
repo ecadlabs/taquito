@@ -31,6 +31,7 @@ jobs:
       with:
         repository: kjaiswal/tezos-key-gen-api
         ref: 457-flextesa-support-kunal
+        path: keygen
     - uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node }}
