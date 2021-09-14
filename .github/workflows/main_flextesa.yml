@@ -33,7 +33,7 @@ jobs:
     - uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node }}
-    - run: docker compose up
+    - run: docker-compose up
     - run: npm run build
     - run: npm run start
     #- run: cd integration-tests && npm run test:florencenet -- --maxWorkers=8
