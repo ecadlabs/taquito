@@ -20,6 +20,7 @@ import { RpcPacker } from './packer/rpc-packer';
 import BigNumber from 'bignumber.js';
 import { retry } from 'rxjs/operators';
 import { BehaviorSubject, OperatorFunction } from 'rxjs';
+import { Extension } from './taquito';
 
 export interface TaquitoProvider<T, K extends Array<any>> {
   new (context: Context, ...rest: K): T;
@@ -62,7 +63,8 @@ export class Context {
   private _walletProvider: WalletProvider;
   public readonly operationFactory: OperationFactory;
   private _packer: Packer;
-
+  private _extensions: { [name:string]: Extension } = {}
+  private extensionsConfiguration: Function[] = [];
   public readonly tz = new RpcTzProvider(this);
   public readonly estimate = new RPCEstimateProvider(this);
   public readonly contract = new RpcContractProvider(this, this.estimate);
@@ -229,4 +231,36 @@ export class Context {
       this.packer
     );
   }
+
+/*   addExtension(ext: {name: string, extension: Extension}){
+    this._extensions[ext.name] = ext.extension;
+  };
+
+  getExtension(name:string){
+    return this._extensions[name];
+  } */
+
+ /*  addRpcWrapper(rpc: RpcClient){
+    if(this.getExtension('ContractLibrary')){
+      return new RpcWrapper(this, this.getExtension('ContractLibrary') as ContractLibraryModule);
+    } else { 
+      return rpc;
+    }
+  } */
+
+  addExtensionsConfiguration(fx:Function){
+    this.extensionsConfiguration.push(fx)
+  }
+
+  configureExtensions(){
+    this.extensionsConfiguration.forEach(element => {
+      element();
+    });
+  }
+
+/*   configureRpcWrapper(rpcWrapper: RpcClient){
+    //prend le rpc
+    //remplace le par le nouveau rpc
+    this.rpc = rpcWrapper
+  } */
 }

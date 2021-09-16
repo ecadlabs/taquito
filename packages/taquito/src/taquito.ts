@@ -166,6 +166,7 @@ export class TezosToolkit {
     } */
     this._options.rpc = this._rpcClient;
     this._context.rpc = this._rpcClient;
+    this._context.configureExtensions();
   }
 
   /**
@@ -291,8 +292,12 @@ export class TezosToolkit {
    *
    * @example Tezos.addExtension(new Tzip16Module());
    */
-  addExtension(module: Extension) {
-    module.configureContext(this._context);
+  addExtension(module: Extension | Extension[]) {
+    if(Array.isArray(module)){
+      module.forEach(extension => extension.configureContext(this._context));
+    } else {
+      module.configureContext(this._context);
+    }
   }
 
   getFactory<T, K extends Array<any>>(ctor: TaquitoProvider<T, K>) {

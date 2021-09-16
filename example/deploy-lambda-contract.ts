@@ -1,49 +1,15 @@
 import { TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
 import { VIEW_LAMBDA } from '../packages/taquito/src/contract/view_lambda';
+import {b58cdecode, Prefix, prefix} from '../packages/taquito-utils/src/taquito-utils'
 
 const provider = 'https://granadanet.api.tez.ie';
 
 async function example() {
-  const tezos = new TezosToolkit(provider);
-  await importKey(
-    tezos,
-    'peqjckge.qkrrajzs@tezos.example.org',
-    'y4BX7qS1UE',
-    [
-      'skate',
-      'damp',
-      'faculty',
-      'morning',
-      'bring',
-      'ridge',
-      'traffic',
-      'initial',
-      'piece',
-      'annual',
-      'give',
-      'say',
-      'wrestle',
-      'rare',
-      'ability',
-    ].join(' '),
-    '7d4c8c3796fdbf4869edb5703758f0e5831f5081'
-  );
-
-  try {
-    console.log('Deploying lambda contract...');
-    const op = await tezos.contract.originate({
-      code: VIEW_LAMBDA.code,
-      storage: VIEW_LAMBDA.storage,
-    });
-
-    console.log('Awaiting confirmation...');
-    const lambdaContract = await op.contract();
-    const lambdaContractAddress = lambdaContract.address
-    console.log(lambdaContractAddress);
-  } catch (ex) {
-    console.error(ex);
-  }
+  console.log(b58cdecode('p2pk67c5b5THCj5fyksX1C13etdUpLR9BDYvJUuJNrxeGqCgbY3NFpV', prefix[Prefix.P2PK]))
+  console.log(b58cdecode('p2pk65shUHKhx7zUSF7e8KZ2inmQ5aMS4jRBUmK6aCis4oaHoiWPXoT', prefix[Prefix.P2PK]))
+  console.log(b58cdecode('edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g', prefix[Prefix.P2PK]))
+  console.log(b58cdecode('edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g', prefix[Prefix.P2PK]))
 }
 
 // tslint:disable-next-line: no-floating-promises
