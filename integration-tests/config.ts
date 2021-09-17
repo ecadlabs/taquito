@@ -276,7 +276,6 @@ export const CONFIGS = () => {
         },
         createAddress: async () => {
           const tezos = new TezosToolkit(rpc);
-          tezos.setProvider({ config: { confirmationPollingTimeoutSecond:300 } });
 
           const keyBytes = Buffer.alloc(32);
           nodeCrypto.randomFillSync(keyBytes)

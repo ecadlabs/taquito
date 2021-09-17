@@ -1,6 +1,6 @@
 import { HttpBackend } from '@taquito/http-utils';
 import { OperationNotFound } from '../errors';
-import { IndexerInterface } from '../taquito-indexer';
+import { IndexerInterface, opHash } from '../taquito-indexer';
 import { OperationContents } from '../types-indexers';
 import { OperationsQuery } from './query/operation-by-hash';
 import { operationsStandardizerFactory } from './standardize-operations-tezgraph';
@@ -33,7 +33,7 @@ export class TezGraphIndexer implements IndexerInterface {
      * @param hash
      * @returns An array of OperationContents
      */
-    async getOperation(hash: string) {
+    async getOperation(hash: opHash) {
         let operations: Array<OperationContents> = [];
         let opResponse: TezGraphOperationByHashResponse;
         let cursor: string | undefined;

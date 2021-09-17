@@ -1,7 +1,7 @@
 import { TezosToolkit } from '@taquito/taquito';
 
 async function example() {
-  const provider = 'https://api.tez.ie/rpc/mainnet';
+  const provider = 'https://mainnet.api.tez.ie/';
   const tezos = new TezosToolkit(provider)
   tezos.setProvider({ config: { shouldObservableSubscriptionRetry: true, streamerPollingIntervalMilliseconds: 15000 } });
   try {

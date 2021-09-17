@@ -3,7 +3,7 @@ import { importKey } from '@taquito/signer';
 import { fa2ForTokenMetadataView } from '../integration-tests/data/fa2-for-token-metadata-view';
 import { b58cencode, char2Bytes, Prefix, prefix } from '@taquito/utils';
 
-const provider = 'https://api.tez.ie/rpc/granadanet';
+const provider = 'https://granadanet.api.tez.ie';
 
 const nodeCrypto = require('crypto');
 

@@ -1,6 +1,6 @@
 {
   "name": "@taquito/local-forging",
-  "version": "10.1.0",
+  "version": "10.1.2",
   "description": "Provide local forging functionality to be with taquito",
   "keywords": [
     "tezos",
@@ -67,11 +67,11 @@
     ]
   },
   "dependencies": {
-    "@taquito/utils": "^10.1.0",
+    "@taquito/utils": "^10.1.2",
     "bignumber.js": "^9.0.1"
   },
   "devDependencies": {
-    "@taquito/taquito": "^10.1.0",
+    "@taquito/taquito": "^10.1.2",
     "@types/jest": "^26.0.23",
     "@types/node": "^15.12.2",
     "@typescript-eslint/eslint-plugin": "^4.28.1",

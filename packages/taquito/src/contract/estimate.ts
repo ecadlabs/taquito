@@ -52,7 +52,7 @@ export class Estimate {
   constructor(
     private readonly _milligasLimit: number | string,
     private readonly _storageLimit: number | string,
-    private readonly opSize: number | string,
+    public readonly opSize: number | string,
     private readonly minimalFeePerStorageByteMutez: number | string,
     /**
      * @description Base fee in mutez (1 mutez = 1e10−6 tez)
