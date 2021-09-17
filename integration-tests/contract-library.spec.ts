@@ -1,9 +1,10 @@
 import { CONFIGS } from "./config";
-import { ContractsLibraryModule } from '../packages/taquito/src/contract/contractLibrary/contractLibraryModule'
+import { ContractsLibrary } from '../packages/taquito-contracts-library/src/taquito-contracts-library'
 import BigNumber from 'bignumber.js';
-import { Tzip16Module } from "@taquito/tzip16";
+import { script } from '../packages/taquito-contracts-library/test/data/contract-script';
+import { entrypoints } from '../packages/taquito-contracts-library/test/data/contract-entrypoints';
 
-CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract, knownContract }) => {
+CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
     const Tezos = lib;
     describe(`Test contractLibrary: ${rpc}`, () => {
 
@@ -12,16 +13,10 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract, knownContract }) => {
             done()
         })
 
-        it('The at method loads the script and entrypoint from the contractsLibrary instead of the Rpc', async (done) => {
-            const script = await Tezos.rpc.getScript(knownBigMapContract);
-            const entrypoints = await Tezos.rpc.getEntrypoints(knownBigMapContract);
-            const contractsLibrary = new ContractsLibraryModule();
+        it('configures contractsLibrary on the TezosToolkit instance', async (done) => {
+            const contractsLibrary = new ContractsLibrary();
             contractsLibrary.addContract({
                 [knownBigMapContract]: {
-                    script,
-                    entrypoints
-                },
-                [knownContract]:{
                     script,
                     entrypoints
                 }

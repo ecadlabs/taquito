@@ -64,7 +64,7 @@ export class Context {
   public readonly operationFactory: OperationFactory;
   private _packer: Packer;
   private _extensions: { [name:string]: Extension } = {}
-  private extensionsConfiguration: Function[] = [];
+  private providerDecorator: Function[] = [];
   public readonly tz = new RpcTzProvider(this);
   public readonly estimate = new RPCEstimateProvider(this);
   public readonly contract = new RpcContractProvider(this, this.estimate);
@@ -248,14 +248,24 @@ export class Context {
     }
   } */
 
-  addExtensionsConfiguration(fx:Function){
-    this.extensionsConfiguration.push(fx)
+  registerProviderDecorator(fx: (context: Context) => Context){
+    this.providerDecorator.push(fx)
   }
 
-  configureExtensions(){
-    this.extensionsConfiguration.forEach(element => {
-      element();
-    });
+  withExtensions() {
+    let currentContext = this;
+
+    this.providerDecorator.forEach((decorator) => {
+      currentContext = decorator(currentContext.clone())
+    })
+
+    return currentContext;
+
+    //return this.providerDecorator.reduce((previousContext, decorator) => decorator(previousContext.clone()), this);
+  }
+
+  augmentContext() {
+        
   }
 
 /*   configureRpcWrapper(rpcWrapper: RpcClient){

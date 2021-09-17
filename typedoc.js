@@ -16,6 +16,7 @@ module.exports = {
     './packages/taquito-tzip12/src/taquito-tzip12.ts',
     './packages/taquito-tzip16/src/taquito-tzip16.ts',
     './packages/taquito-utils/src/taquito-utils.ts',
+    './packages/taquito-utils/src/taquito-contracts-library.ts',
   ],
   exclude: [
     '**/*.spec.ts',

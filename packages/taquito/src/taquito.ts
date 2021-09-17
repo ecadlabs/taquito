@@ -166,7 +166,6 @@ export class TezosToolkit {
     } */
     this._options.rpc = this._rpcClient;
     this._context.rpc = this._rpcClient;
-    this._context.configureExtensions();
   }
 
   /**
