@@ -31,7 +31,7 @@ jobs:
     - run: cd taquito-repo && npm run build
     - run: docker rm -f my-sandbox keygen_redis_1 keygen_signatory_1
     - run: rm -rf ~/.tezos_client/
-    - run: docker run --rm --name my-sandbox --detach -p 8732:20000  tqtezos/flextesa:20210602 flobox start   
+    - run: docker run --rm --name my-sandbox --network github_runner --detach -p 8732:20000  tqtezos/flextesa:20210602 flobox start   
     - uses: actions/checkout@v2
       with:
         repository: kjaiswal/tezos-key-gen-api
