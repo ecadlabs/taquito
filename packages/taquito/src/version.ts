@@ -3,6 +3,6 @@
 /* tslint:disable */
 export const VERSION = {
     "commitHash": "eb5b2c4973cd11098b68ce62eb6702dea376e569",
-    "version": "10.1.1"
+    "version": "10.1.2"
 };
 /* tslint:enable */
