@@ -1,6 +1,6 @@
 {
   "name": "@taquito/utils",
-  "version": "10.1.1",
+  "version": "10.1.2",
   "description": "converts michelson data and types into convenient JS/TS objects",
   "keywords": [
     "tezos",
