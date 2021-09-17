@@ -1,7 +1,7 @@
 import { Parser, emitMicheline } from '@taquito/michel-codec'
 import { TezosToolkit } from '@taquito/taquito';
 
-const provider = 'https://api.tez.ie/rpc/mainnet';
+const provider = 'https://mainnet.api.tez.ie/';
 
 const example = async () => {
 
