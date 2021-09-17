@@ -232,22 +232,6 @@ export class Context {
     );
   }
 
-/*   addExtension(ext: {name: string, extension: Extension}){
-    this._extensions[ext.name] = ext.extension;
-  };
-
-  getExtension(name:string){
-    return this._extensions[name];
-  } */
-
- /*  addRpcWrapper(rpc: RpcClient){
-    if(this.getExtension('ContractLibrary')){
-      return new RpcWrapper(this, this.getExtension('ContractLibrary') as ContractLibraryModule);
-    } else { 
-      return rpc;
-    }
-  } */
-
   registerProviderDecorator(fx: (context: Context) => Context){
     this.providerDecorator.push(fx)
   }
@@ -260,17 +244,5 @@ export class Context {
     })
 
     return currentContext;
-
-    //return this.providerDecorator.reduce((previousContext, decorator) => decorator(previousContext.clone()), this);
   }
-
-  augmentContext() {
-        
-  }
-
-/*   configureRpcWrapper(rpcWrapper: RpcClient){
-    //prend le rpc
-    //remplace le par le nouveau rpc
-    this.rpc = rpcWrapper
-  } */
 }
