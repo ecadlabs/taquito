@@ -3,12 +3,14 @@ import { RpcClient } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_bigmap';
+import { HttpBackendForRPCCache } from './HttPBackendForRPCCache';
 
 CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup, protocol, rpc }) => {
     const Tezos = lib;
 
     beforeEach(async (done) => {
-        await setup();
+        await setup();1
+        Tezos.setProvider({ rpc: new RpcClient(rpc, 'main', new HttpBackendForRPCCache()) });
         done();
     });
 
@@ -20,12 +22,27 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
         Tezos.setRpcProvider(rpc);
 
         const rpcClient: RpcClient = new RpcClient(rpc);
+        Tezos.setProvider({ rpc: new RpcClient(rpc, 'main', new HttpBackendForRPCCache()) });
+       //const rpcClient: RpcClient = new RpcClient(rpc, 'main', new HttpBackendForRPCCache())
 
         describe(`Test calling all methods from RPC node: ${rpc}`, () => {
             it('Get the head block hash', async (done) => {
                 const blockHash = await rpcClient.getBlockHash();
                 expect(blockHash).toBeDefined();
-                done();
+             
+                                			        // Count the Rpc calls
+					let user = await Tezos.signer.publicKeyHash();
+					let rpcCountingMapContents: Map<String, number> | undefined;
+					rpcCountingMapContents = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache)[
+					  'rpcCountingMap'
+					];
+					if (rpcCountingMapContents === undefined) {
+					  console.log('RPC count is undefined');
+					} else {
+						console.log(rpcCountingMapContents);
+					  expect(rpcCountingMapContents.size).toEqual(8);
+					}
+                    done();
             });
 
             it('List the ancestors of the head block', async (done) => {

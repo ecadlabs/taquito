@@ -68,8 +68,8 @@ export class RpcClient {
    *
    * @param url rpc root url
    * @param chain chain (default main)
-   * @param httpBackend Http backend that issue http request.
-   * You can override it by providing your own if you which to hook in the request/response
+   * @param httpBackend Http backend that issues http requests.
+   * You can override it by providing your own if you wish to hook in the request/response
    *
    * @example new RpcClient('https://mainnet.api.tez.ie/', 'main') this will use https://mainnet.api.tez.ie//chains/main
    */

@@ -2,6 +2,7 @@ import { localForger } from '@taquito/local-forging';
 import { CompositeForger, RpcForger, TezosToolkit, Protocols } from '@taquito/taquito';
 import { RemoteSigner } from '@taquito/remote-signer';
 import { HttpBackend } from '@taquito/http-utils';
+import { HttpBackendForRPCCache } from "./HttPBackendForRPCCache";
 import { b58cencode, Prefix, prefix } from '@taquito/utils';
 import { importKey, InMemorySigner } from '@taquito/signer';
 

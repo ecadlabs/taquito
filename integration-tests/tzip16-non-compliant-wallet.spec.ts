@@ -1,5 +1,7 @@
 import { CONFIGS } from "./config";
 import { tzip16, Tzip16Module, BigMapMetadataNotFound } from '@taquito/tzip16';
+import { RpcClient } from "@taquito/rpc";
+import { HttpBackendForRPCCache } from "./HttPBackendForRPCCache";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
@@ -9,6 +11,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
         beforeEach(async (done) => {
             await setup()
+            Tezos.setProvider({ rpc: new RpcClient(rpc, 'main', new HttpBackendForRPCCache()) });
             done()
         })
         it('Deploy a simple contract using wallet api having no metadata and try to fetch metadata', async (done) => {
@@ -40,6 +43,19 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 expect(ex).toBeInstanceOf(BigMapMetadataNotFound);
             }
             done();
+                  // Count the Rpc calls
+      let user = await Tezos.signer.publicKeyHash();
+      let rpcCountingMapContents: Map<String, number> | undefined;
+      rpcCountingMapContents = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache)[
+        'rpcCountingMap'
+      ];
+      if (rpcCountingMapContents === undefined) {
+        console.log('RPC count is undefined');
+      } else {
+        console.log(rpcCountingMapContents);
+        expect(rpcCountingMapContents.size).toEqual(14);
+      }
+            
         });
     });
 })

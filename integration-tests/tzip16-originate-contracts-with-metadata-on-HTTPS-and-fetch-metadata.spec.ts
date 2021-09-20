@@ -2,6 +2,8 @@ import { CONFIGS } from "./config";
 import { tacoContractTzip16 } from "./data/modified-taco-contract"
 import { MichelsonMap } from "@taquito/taquito";
 import { tzip16, Tzip16Module, char2Bytes } from '@taquito/tzip16';
+import { RpcClient } from "@taquito/rpc";
+import { HttpBackendForRPCCache } from "./HttPBackendForRPCCache";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
@@ -17,6 +19,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
         beforeEach(async (done) => {
             await setup()
+            Tezos.setProvider({ rpc: new RpcClient(rpc, 'main', new HttpBackendForRPCCache()) });
             done()
         })
          test('Deploy a contract having empty metadata stored at an HTTPS URL', 2, async (done: () => void) => {
@@ -48,6 +51,18 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(op.hash).toBeDefined();
             expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
             done();
+            // Count the Rpc calls
+let user = await Tezos.signer.publicKeyHash();
+let rpcCountingMapContents: Map<String, number> | undefined;
+rpcCountingMapContents = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache)[
+  'rpcCountingMap'
+];
+if (rpcCountingMapContents === undefined) {
+  console.log('RPC count is undefined');
+} else {
+	console.log(rpcCountingMapContents);
+  expect(rpcCountingMapContents.size).toEqual(14);
+        };
         }); 
 
         test('Fetch the empty metadata of the contract', 2, async (done: () => void) => {
@@ -60,6 +75,18 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(metadata.sha256Hash).toBeUndefined();
             expect(metadata.metadata).toEqual({});
             done();
+            // Count the Rpc calls
+let user = await Tezos.signer.publicKeyHash();
+let rpcCountingMapContents: Map<String, number> | undefined;
+rpcCountingMapContents = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache)[
+  'rpcCountingMap'
+];
+if (rpcCountingMapContents === undefined) {
+  console.log('RPC count is undefined');
+} else {
+	console.log(rpcCountingMapContents);
+  expect(rpcCountingMapContents.size).toEqual(14);
+        };
         });
 
          test('Deploy a contract having valid metadata stored at an HTTPS URL', 2, async (done: () => void) => {
@@ -88,6 +115,18 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(op.hash).toBeDefined();
             expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
             done();
+            // Count the Rpc calls
+let user = await Tezos.signer.publicKeyHash();
+let rpcCountingMapContents: Map<String, number> | undefined;
+rpcCountingMapContents = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache)[
+  'rpcCountingMap'
+];
+if (rpcCountingMapContents === undefined) {
+  console.log('RPC count is undefined');
+} else {
+	console.log(rpcCountingMapContents);
+  expect(rpcCountingMapContents.size).toEqual(14);
+        };
         });
 
         test('Deploy a contract having valid metadata which contains emoji stored at an HTTPS URL', 2, async (done: () => void) => {
@@ -117,6 +156,18 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(op.hash).toBeDefined();
             expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
             done();
+            // Count the Rpc calls
+let user = await Tezos.signer.publicKeyHash();
+let rpcCountingMapContents: Map<String, number> | undefined;
+rpcCountingMapContents = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache)[
+  'rpcCountingMap'
+];
+if (rpcCountingMapContents === undefined) {
+  console.log('RPC count is undefined');
+} else {
+	console.log(rpcCountingMapContents);
+  expect(rpcCountingMapContents.size).toEqual(14);
+        };
         });
 
         test('Fetch the metadata which contains emoji of the contract', 2, async (done: () => void) => {
@@ -145,6 +196,18 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 }
             });
             done();
+            // Count the Rpc calls
+let user = await Tezos.signer.publicKeyHash();
+let rpcCountingMapContents: Map<String, number> | undefined;
+rpcCountingMapContents = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache)[
+  'rpcCountingMap'
+];
+if (rpcCountingMapContents === undefined) {
+  console.log('RPC count is undefined');
+} else {
+	console.log(rpcCountingMapContents);
+  expect(rpcCountingMapContents.size).toEqual(14);
+        };
         });
 
         test('Deploy a contract having invalid metadata stored at an HTTPS URL', 2, async (done: () => void) => {
@@ -174,6 +237,18 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(op.hash).toBeDefined();
             expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
             done();
+            // Count the Rpc calls
+let user = await Tezos.signer.publicKeyHash();
+let rpcCountingMapContents: Map<String, number> | undefined;
+rpcCountingMapContents = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache)[
+  'rpcCountingMap'
+];
+if (rpcCountingMapContents === undefined) {
+  console.log('RPC count is undefined');
+} else {
+	console.log(rpcCountingMapContents);
+  expect(rpcCountingMapContents.size).toEqual(14);
+        };
         });
 
         test('Should fail to fetch invalid metadata of the contract', 2, async (done: () => void) => {
@@ -186,6 +261,18 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             }
 
             done();
+            // Count the Rpc calls
+let user = await Tezos.signer.publicKeyHash();
+let rpcCountingMapContents: Map<String, number> | undefined;
+rpcCountingMapContents = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache)[
+  'rpcCountingMap'
+];
+if (rpcCountingMapContents === undefined) {
+  console.log('RPC count is undefined');
+} else {
+	console.log(rpcCountingMapContents);
+  expect(rpcCountingMapContents.size).toEqual(14);
+        };
         }); 
     });
 })

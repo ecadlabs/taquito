@@ -6,6 +6,8 @@ import { Tzip12Module } from '../packages/taquito-tzip12/src/tzip12-extension';
 import { TokenIdNotFound, InvalidTokenMetadata } from '../packages/taquito-tzip12/src/tzip12-errors';
 import { fa2TokenFactory } from './data/fa2-token-factory';
 import { fa2ForTokenMetadataView } from './data/fa2-for-token-metadata-view';
+import { HttpBackendForRPCCache } from './HttPBackendForRPCCache';
+import { RpcClient } from '@taquito/rpc';
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 	const Tezos = lib;
@@ -15,6 +17,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
  	 describe(`Deploy a Fa2 contract and fetch metadata (token metadata are in the big map %token_metadata): ${rpc}`, () => {
 		beforeEach(async (done) => {
 			await setup();
+			Tezos.setProvider({ rpc: new RpcClient(rpc, 'main', new HttpBackendForRPCCache()) });
 			done();
 		});
 
@@ -101,6 +104,18 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			expect(op.hash).toBeDefined();
 			expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
 			done();
+			        // Count the Rpc calls
+					let user = await Tezos.signer.publicKeyHash();
+					let rpcCountingMapContents: Map<String, number> | undefined;
+					rpcCountingMapContents = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache)[
+					  'rpcCountingMap'
+					];
+					if (rpcCountingMapContents === undefined) {
+					  console.log('RPC count is undefined');
+					} else {
+						console.log(rpcCountingMapContents);
+					  expect(rpcCountingMapContents.size).toEqual(14);
+					}
 		});
 
 		it('Should test contractAbstraction composition, fetch contract and token metadata of the Fa2 contract', async (done) => {
@@ -157,6 +172,18 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 				expect(err).toBeInstanceOf(TokenIdNotFound);
 			}
 			done();
+			        // Count the Rpc calls
+					let user = await Tezos.signer.publicKeyHash();
+					let rpcCountingMapContents: Map<String, number> | undefined;
+					rpcCountingMapContents = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache)[
+					  'rpcCountingMap'
+					];
+					if (rpcCountingMapContents === undefined) {
+					  console.log('RPC count is undefined');
+					} else {
+						console.log(rpcCountingMapContents);
+					  expect(rpcCountingMapContents.size).toEqual(8);
+					}
 		});
 	});  
 
@@ -239,10 +266,23 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
 			expect(op.hash).toBeDefined();
 			expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+			        // Count the Rpc calls
+					let user = await Tezos.signer.publicKeyHash();
+					let rpcCountingMapContents: Map<String, number> | undefined;
+					rpcCountingMapContents = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache)[
+					  'rpcCountingMap'
+					];
+					if (rpcCountingMapContents === undefined) {
+					  console.log('RPC count is undefined');
+					} else {
+					  console.log(rpcCountingMapContents);
+					  expect(rpcCountingMapContents.size).toEqual(21);
+					}
 			done(); 
 		});    
 
-		it('Should test contractAbstraction composition, fetch contract and token metadata of the Fa2 contract', async (done) => {
+		it('Should test contractAbstraction composition, fetch contract and token metadata of the Fa2 contract', 
+		async (done) => {
 			Tezos.addExtension(new Tzip16Module());
 
 			// Use the compose function
@@ -289,6 +329,17 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 				expect(err).toBeInstanceOf(TokenIdNotFound);
 			}
 			done();
+						        // // Count the Rpc calls
+								// let user = await Tezos.signer.publicKeyHash();
+								// let rpcCountingMapContents: Map<String, number> | undefined;
+								// rpcCountingMapContents = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache)[
+								//   'rpcCountingMap'
+								// ];
+								// if (rpcCountingMapContents === undefined) {
+								//   console.log('RPC count is undefined');
+								// } else {
+								//   expect(rpcCountingMapContents.size).toEqual(5);
+								// }
 		});
 	}); 
 });

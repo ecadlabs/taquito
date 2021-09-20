@@ -2,6 +2,8 @@ import { CONFIGS } from './config';
 import { MichelsonMap } from '@taquito/taquito';
 import { tzip16, Tzip16Module, char2Bytes } from '@taquito/tzip16';
 import { contractCode, metadataViewsExample1, metadataViewsExample2 } from './data/metadataViews';
+import { HttpBackendForRPCCache } from './HttPBackendForRPCCache';
+import { RpcClient } from '@taquito/rpc';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
 	const Tezos = lib;
@@ -11,6 +13,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 	describe(`Execute views example from TZComet: ${rpc}`, () => {
 		beforeEach(async (done) => {
 			await setup();
+			Tezos.setProvider({ rpc: new RpcClient(rpc, 'main', new HttpBackendForRPCCache()) });
 			done();
 		});
 
@@ -57,6 +60,18 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 			);
 
 			done();
+				        // Count the Rpc calls
+						let user = await Tezos.signer.publicKeyHash();
+						let rpcCountingMapContents: Map<String, number> | undefined;
+						rpcCountingMapContents = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache)[
+						  'rpcCountingMap'
+						];
+						if (rpcCountingMapContents === undefined) {
+						  console.log('RPC count is undefined');
+						} else {
+							console.log(rpcCountingMapContents);
+						  expect(rpcCountingMapContents.size).toEqual(14);
+						}
 		});
 
 	test('Deploy a contract with metadata having a couple of views (example taken from TZComet) and call the views',2, async (done: () => void) => {
@@ -99,6 +114,18 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 			expect(viewContractAddressResult.toString()).toEqual(contractAddress);
 
 			done();
+				        // Count the Rpc calls
+						let user = await Tezos.signer.publicKeyHash();
+						let rpcCountingMapContents: Map<String, number> | undefined;
+						rpcCountingMapContents = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache)[
+						  'rpcCountingMap'
+						];
+						if (rpcCountingMapContents === undefined) {
+						  console.log('RPC count is undefined');
+						} else {
+							console.log(rpcCountingMapContents);
+						  expect(rpcCountingMapContents.size).toEqual(14);
+						}
 		})
 	});
 });
