@@ -99,8 +99,8 @@ const sandboxProtocolEphemeral = florencenetEphemeral;
 const sandboxEphemeral = {
   rpc: process.env['TEZOS_RPC_SANDBOX'] || 'http://macmini:8732',
   knownBaker: 'tz1YPSCGWXwBdTncK2aCctSZAXWvGsGwVJqU',
-  knownContract: 'KT1DakgiubRjBXfUd5XNa3HNWgovcTo8uGU6',
-  knownBigMapContract: 'KT1BUjJJhUnV9fUKqEfkDyTxcDNDLf5eTk1L',
+  knownContract: 'sandbox_known_contract',
+  knownBigMapContract: 'sandbox_known_bigmap_contract',
   protocol: sandboxProtocolEphemeral.protocol,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
