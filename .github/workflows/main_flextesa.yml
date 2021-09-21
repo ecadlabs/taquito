@@ -36,6 +36,9 @@ jobs:
         repository: kjaiswal/tezos-key-gen-api
         ref: 457-flextesa-support-kunal
         path: keygen_${{ env.UUID }}
+    - run: cd keygen_${{ env.UUID }}/src && sed -i 's/keygen_redis_1/keygen_${{ env.UUID }}_redis_1/g' config.ts
+    - run: cd keygen_${{ env.UUID }} && sed -i 's/macmini/flextesa_sandbox_${{ env.UUID }}/g' pools-config.single.json
+    - run: cd keygen_${{ env.UUID }} && sed -i 's/keygen_signatory_1/keygen_${{ env.UUID }}_signatory_1/g' pools-config.single.json
     - run: cd keygen_${{ env.UUID }} && docker-compose up &
     - run: cd keygen_${{ env.UUID }} && npm ci
     - run: cd keygen_${{ env.UUID }} && npm run build
