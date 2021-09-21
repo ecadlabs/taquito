@@ -285,14 +285,22 @@ describe('Map token', () => {
       ) as MapToken;
       const map = MichelsonMap.fromLiteral({
         "edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g": 90,
+        "sppk7aTKnmX5WV17KPo3LanjfPLoXTuNjkQTdLx2bYDqHPLVVCbSwoj": 45,
         "edpktm3zeGMzfzFuqgyYftt7uNyVRANTjrJCdU7bURwgGb9bRZwmJq": 30,
+        "p2pk65shUHKhx7zUSF7e8KZ2inmQ5aMS4jRBUmK6aCis4oaHoiWPXoT": 99,
         "edpkuNjKKT48xBoT5asPrWdmuM1Yw8D93MwgFgVvtca8jb5pstzaCh": 1,
+        "p2pk67c5b5THCj5fyksX1C13etdUpLR9BDYvJUuJNrxeGqCgbY3NFpV": 60,
+        "p2pk66xmhjiN7LpfrDGFwpxPtJxkLtPjQ6HUxJbKmRbxSR7RMpamDwi": 70,
       })
       const result = token.Encode([map]);
       expect(result).toEqual([
         { prim: 'Elt', args: [{ string: 'edpktm3zeGMzfzFuqgyYftt7uNyVRANTjrJCdU7bURwgGb9bRZwmJq' }, { int: '30' }] },
         { prim: 'Elt', args: [{ string: 'edpkuNjKKT48xBoT5asPrWdmuM1Yw8D93MwgFgVvtca8jb5pstzaCh' }, { int: '1' }] },
         { prim: 'Elt', args: [{ string: 'edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g' }, { int: '90' }] },
+        { prim: 'Elt', args: [{ string: 'sppk7aTKnmX5WV17KPo3LanjfPLoXTuNjkQTdLx2bYDqHPLVVCbSwoj' }, { int: '45' }] },
+        { prim: 'Elt', args: [{ string: 'p2pk66xmhjiN7LpfrDGFwpxPtJxkLtPjQ6HUxJbKmRbxSR7RMpamDwi' }, { int: '70' }] },
+        { prim: 'Elt', args: [{ string: 'p2pk67c5b5THCj5fyksX1C13etdUpLR9BDYvJUuJNrxeGqCgbY3NFpV' }, { int: '60' }] },
+        { prim: 'Elt', args: [{ string: 'p2pk65shUHKhx7zUSF7e8KZ2inmQ5aMS4jRBUmK6aCis4oaHoiWPXoT' }, { int: '99' }] },
       ]);
     });
 
@@ -304,13 +312,21 @@ describe('Map token', () => {
       ) as MapToken;
       const map = new MichelsonMap();
       map.set("edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g", 30);
+      map.set('p2pk67c5b5THCj5fyksX1C13etdUpLR9BDYvJUuJNrxeGqCgbY3NFpV', 23);
       map.set("edpktm3zeGMzfzFuqgyYftt7uNyVRANTjrJCdU7bURwgGb9bRZwmJq", 1);
       map.set('edpkuNjKKT48xBoT5asPrWdmuM1Yw8D93MwgFgVvtca8jb5pstzaCh', 2);
+      map.set('sppk7aTKnmX5WV17KPo3LanjfPLoXTuNjkQTdLx2bYDqHPLVVCbSwoj', 17);
+      map.set('p2pk65shUHKhx7zUSF7e8KZ2inmQ5aMS4jRBUmK6aCis4oaHoiWPXoT', 17);
+      map.set('p2pk66xmhjiN7LpfrDGFwpxPtJxkLtPjQ6HUxJbKmRbxSR7RMpamDwi', 90);
       const result = token.Encode([map]);
       expect(result).toEqual([
         { prim: 'Elt', args: [{ string: 'edpktm3zeGMzfzFuqgyYftt7uNyVRANTjrJCdU7bURwgGb9bRZwmJq' }, { int: '1' }] },
         { prim: 'Elt', args: [{ string: 'edpkuNjKKT48xBoT5asPrWdmuM1Yw8D93MwgFgVvtca8jb5pstzaCh' }, { int: '2' }] },
         { prim: 'Elt', args: [{ string: 'edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g' }, { int: '30' }] },
+        { prim: 'Elt', args: [{ string: 'sppk7aTKnmX5WV17KPo3LanjfPLoXTuNjkQTdLx2bYDqHPLVVCbSwoj' }, { int: '17' }] },
+        { prim: 'Elt', args: [{ string: 'p2pk66xmhjiN7LpfrDGFwpxPtJxkLtPjQ6HUxJbKmRbxSR7RMpamDwi' }, { int: '90' }] },
+        { prim: 'Elt', args: [{ string: 'p2pk67c5b5THCj5fyksX1C13etdUpLR9BDYvJUuJNrxeGqCgbY3NFpV' }, { int: '23' }] },
+        { prim: 'Elt', args: [{ string: 'p2pk65shUHKhx7zUSF7e8KZ2inmQ5aMS4jRBUmK6aCis4oaHoiWPXoT' }, { int: '17' }] },
       ]);
     })
 
