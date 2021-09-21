@@ -39,7 +39,7 @@ export class HttpBackendForRPCCache extends HttpBackend {
 
       let counter = this.rpcCountingMap.get(url);
       if (counter) {
-        this.rpcCountingMap.set(url, counter++);        
+        this.rpcCountingMap.set(url,++counter);        
       } else {
         this.rpcCountingMap.set(url, 1);
       }
