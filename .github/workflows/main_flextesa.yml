@@ -20,9 +20,9 @@ jobs:
         repository: ecadlabs/taquito
         ref: 457-flextesa-kunal-2
         path: taquito_${{ env.UUID }}
-    #- run: cd taquito_${{ env.UUID }} && npm ci
-    #- run: cd taquito_${{ env.UUID }} && npm run lerna -- bootstrap
-    #- run: cd taquito_${{ env.UUID }} && npm run build
+    - run: cd taquito_${{ env.UUID }} && npm ci
+    - run: cd taquito_${{ env.UUID }} && npm run lerna -- bootstrap
+    - run: cd taquito_${{ env.UUID }} && npm run build
     - run: rm -rf ~/.tezos_client/
     - run: docker run --rm --name flextesa_sandbox_${{ env.UUID }} --network github_runner -p 8732:20000 --detach  tqtezos/flextesa:20210602 flobox start   
     - run: sudo add-apt-repository -yu ppa:serokell/tezos && sudo apt-get install -y tezos-client
