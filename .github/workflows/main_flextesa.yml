@@ -44,6 +44,7 @@ jobs:
     - run: cd keygen_${{ env.UUID }} && npm run build
     - run: cd keygen_${{ env.UUID }} && npm run start &
     - run: cd taquito_${{ env.UUID }}/example/ && sed -i 's/macmini/flextesa_sandbox_${{ env.UUID }}/g' deploy-flextesa-contracts.ts
+    - run: wget http://flextesa_sandbox_${{ env.UUID }}:8732/chains/main/blocks/head/context/contracts
     - run: cd taquito_${{ env.UUID }}/example/ && npm run example:deploy-flextesa-contracts
     - run: cd taquito_${{ env.UUID }}/packages/taquito && npm run build
 
