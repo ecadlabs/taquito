@@ -6,7 +6,7 @@ on:
       - 457-flextesa-kunal-2
 jobs:
   integration-tests-flextesanet:
-    runs-on: flexteza-runner-1
+    runs-on: flexteza
     strategy:
       matrix:
         node: [12.x]
