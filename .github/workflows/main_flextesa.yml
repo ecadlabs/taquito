@@ -26,10 +26,10 @@ jobs:
     - run: rm -rf ~/.tezos_client/
     - run: docker run --rm --name flextesa_sandbox_${{ env.UUID }} --network github_runner -p 8732:20000 --detach  tqtezos/flextesa:20210602 flobox start   
     - run: sudo add-apt-repository -yu ppa:serokell/tezos && sudo apt-get install -y tezos-client
-    - run: tezos-client import secret key alice unencrypted:edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq --force
-    - run: tezos-client transfer 190000 from alice to tz1Rb18fBaZxkzDgFGAbcBZzxLCYdxyLryVX --burn-cap 0.06425
-    - run: tezos-client transfer 100000 from alice to tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys --burn-cap 0.06425
-    - run: tezos-client transfer 100000 from alice to tz1ioFRium9QWhYeu49zoAw2Z4HYCHRgrF9f --burn-cap 0.06425  
+    - run: tezos-client -A flextesa_sandbox_${{ env.UUID }} -P 20000 import secret key alice unencrypted:edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq --force
+    - run: tezos-client -A flextesa_sandbox_${{ env.UUID }} -P 20000 transfer 190000 from alice to tz1Rb18fBaZxkzDgFGAbcBZzxLCYdxyLryVX --burn-cap 0.06425
+    - run: tezos-client -A flextesa_sandbox_${{ env.UUID }} -P 20000 transfer 100000 from alice to tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys --burn-cap 0.06425
+    - run: tezos-client -A flextesa_sandbox_${{ env.UUID }} -P 20000 transfer 100000 from alice to tz1ioFRium9QWhYeu49zoAw2Z4HYCHRgrF9f --burn-cap 0.06425  
     - uses: actions/checkout@v2
       with:
         repository: kjaiswal/tezos-key-gen-api
@@ -43,10 +43,8 @@ jobs:
     - run: cd keygen_${{ env.UUID }} && npm run build
     - run: cd keygen_${{ env.UUID }} && npm run start &
     - run: cd taquito_${{ env.UUID }}/example/ && sed -i 's/macmini/flextesa_sandbox_${{ env.UUID }}/g' deploy-flextesa-contracts.ts
-    #- run: wget http://0.0.0.0:8732/chains/main/blocks/head/context/contracts
     - run: cd taquito_${{ env.UUID }}/example/ && npm run example:deploy-flextesa-contracts
     - run: cd taquito_${{ env.UUID }}/packages/taquito && npm run build
-
     #- run: cd integration-tests && npm run test:florencenet -- --maxWorkers=8
     #  env:
     #    CI: true
