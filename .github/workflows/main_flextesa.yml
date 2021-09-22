@@ -12,14 +12,14 @@ jobs:
         node: [12.x]
     steps:
     - run: echo UUID=$(date +%s) >> $GITHUB_ENV
-    - uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node }}
-    - uses: actions/checkout@v2
-      with:
-        repository: ecadlabs/taquito
-        ref: 457-flextesa-kunal-2
-        path: taquito_${{ env.UUID }}
+    #- uses: actions/setup-node@v1
+    #  with:
+    #    node-version: ${{ matrix.node }}
+    #- uses: actions/checkout@v2
+    #  with:
+    #    repository: ecadlabs/taquito
+    #    ref: 457-flextesa-kunal-2
+    #    path: taquito_${{ env.UUID }}
     #- uses: actions/cache@v1
     #  with:
     #    path: ~/.npm
