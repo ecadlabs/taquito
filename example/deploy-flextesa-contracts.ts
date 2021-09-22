@@ -5,7 +5,7 @@ import { knownBigMapContract } from './data/knownBigMapContract';
 import { VIEW_LAMBDA } from '../packages/taquito/src/contract/view_lambda';
 const { exec } = require("child_process");
 
-const provider = 'http://macmini:8732';
+const provider = 'http://macmini:20000';
 
 async function example() {
   const tezos = new TezosToolkit(provider);
