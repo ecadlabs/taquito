@@ -1,6 +1,6 @@
 {
   "name": "@taquito/michelson-encoder",
-  "version": "10.1.0-methodsObject.1",
+  "version": "10.1.0-methodsObject.2",
   "description": "converts michelson data and types into convenient JS/TS objects",
   "keywords": [
     "tezos",
@@ -68,13 +68,13 @@
     ]
   },
   "dependencies": {
-    "@taquito/rpc": "^10.1.0-methodsObject.1",
-    "@taquito/utils": "^10.1.0-methodsObject.1",
+    "@taquito/rpc": "10.1.0-methodsObject.2",
+    "@taquito/utils": "10.1.0-methodsObject.2",
     "bignumber.js": "^9.0.1",
     "fast-json-stable-stringify": "^2.1.0"
   },
   "devDependencies": {
-    "@taquito/rpc": "^9.1.0",
+    "@taquito/rpc": "10.1.0-methodsObject.2",
     "@types/jest": "^26.0.23",
     "@types/node": "^15.12.2",
     "@typescript-eslint/eslint-plugin": "^4.28.1",
