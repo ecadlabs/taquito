@@ -49,7 +49,7 @@ tezos.setProvider({ signer: new TezBridgeSigner() });
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/granadanet');
+// const Tezos = new TezosToolkit('https://granadanet.api.tez.ie');
 
 Tezos.tz
   .getBalance('tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY')

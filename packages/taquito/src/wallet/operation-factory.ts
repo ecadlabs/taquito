@@ -52,10 +52,6 @@ export const createNewPollingBasedHeadObservable = (
   context: Context,
   scheduler?: SchedulerLike
 ): Observable<BlockResponse> => {  
-  
-  if (context.config.confirmationPollingTimeoutSecond === undefined) {
-    throw new Error('Confirmation polling timeout second can not be undefined!');
-  }
 
   return pollingTimer.pipe(
     switchMap(() => sharedHeadOb),

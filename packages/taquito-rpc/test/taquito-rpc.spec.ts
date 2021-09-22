@@ -2349,9 +2349,9 @@ describe('RpcClient test', () => {
 
   describe('getRpcUrl', () => {
     it('return the RPC Url', () => {
-      const url: string = 'https://api.tez.ie/rpc/mainnet';
+      const url: string = 'https://mainnet.api.tez.ie/';
       const rpcUrlMainnet = (new RpcClient(url)).getRpcUrl();
-      expect(rpcUrlMainnet).toEqual('https://api.tez.ie/rpc/mainnet');
+      expect(rpcUrlMainnet).toEqual('https://mainnet.api.tez.ie/');
       const rpcUrlCarthagenet = (new RpcClient('https://api.tez.ie/rpc/carthagenet')).getRpcUrl();
       expect(rpcUrlCarthagenet).toEqual('https://api.tez.ie/rpc/carthagenet');
     });

@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
             await setup()
             done()
         })
-        test('reveals the sender account, creates an unrevealed implicit account, empties the sender account into the created one', 2,  async (done: () => void) => {
+        it('reveals the sender account, creates an unrevealed implicit account, empties the sender account into the created one', async (done) => {
             const receiver = await createAddress();
             const receiver_pkh = await receiver.signer.publicKeyHash();
 
@@ -35,13 +35,21 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
             const totalFees = estimate.suggestedFeeMutez + estimate.burnFeeMutez;
             const maxAmount = balance.minus(totalFees).toNumber();
             
+            // Temporary fix, see https://gitlab.com/tezos/tezos/-/issues/1754
+            // we need to increase the gasLimit and fee returned by the estimation
+            const gasBuffer = 500;
+            const MINIMAL_FEE_PER_GAS_MUTEZ = 0.1;
+            const increasedFee = (gasBuffer: number, opSize: number) => {
+                return (gasBuffer) * MINIMAL_FEE_PER_GAS_MUTEZ + opSize
+            }
+
             const opTransfer = await sender.contract.transfer({
                 to: receiver_pkh,
                 mutez: true,
-                amount: maxAmount,
-                fee: estimate.suggestedFeeMutez,
-                gasLimit: 1900,
-                storageLimit: estimate.storageLimit
+                amount: maxAmount - increasedFee(gasBuffer, Number(estimate.opSize)),
+                fee: estimate.suggestedFeeMutez + increasedFee(gasBuffer, Number(estimate.opSize)), // baker fees
+                gasLimit: estimate.gasLimit + gasBuffer,
+                storageLimit: estimate.storageLimit 
             });
 
             await opTransfer.confirmation();

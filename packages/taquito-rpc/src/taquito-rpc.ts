@@ -46,6 +46,8 @@ import {
 } from './types';
 import { castToBigNumber } from './utils/utils';
 
+export { castToBigNumber } from './utils/utils';
+
 export * from './types';
 
 export { OpKind } from './opkind';
@@ -71,7 +73,7 @@ export class RpcClient {
    * @param httpBackend Http backend that issue http request.
    * You can override it by providing your own if you which to hook in the request/response
    *
-   * @example new RpcClient('https://api.tez.ie/rpc/mainnet', 'main') this will use https://api.tez.ie/rpc/mainnet/chains/main
+   * @example new RpcClient('https://mainnet.api.tez.ie/', 'main') this will use https://mainnet.api.tez.ie//chains/main
    */
   constructor(
     protected url: string,

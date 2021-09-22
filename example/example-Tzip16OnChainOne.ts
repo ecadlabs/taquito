@@ -1,11 +1,12 @@
-import { TezosToolkit } from '@taquito/taquito';
+import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
-import { voteInitSample, voteSample } from '../integration-tests/data/vote-contract';
+import { contractCode, metadataViewsExample1 } from '../integration-tests/data/metadataViews';
+import { char2Bytes } from '@taquito/utils';
 
-const provider = 'https://api.tez.ie/rpc/florencenet';
+const provider = 'https://granadanet.api.tez.ie';
 
 async function example() {
-  const tezos = new TezosToolkit(provider);
+  const tezos = new TezosToolkit(provider)
   await importKey(
     tezos,
     'peqjckge.qkrrajzs@tezos.example.org',
@@ -29,20 +30,25 @@ async function example() {
     ].join(' '),
     '7d4c8c3796fdbf4869edb5703758f0e5831f5081'
   );
-
+  
   try {
-    console.log('Deploying Ligo simple contract...');
+    console.log('Deploying Tzip16OffChainOne contract...');
+   
+    const metadataBigMAp = new MichelsonMap();
+    metadataBigMAp.set("", char2Bytes('tezos-storage:here'));
+    metadataBigMAp.set("here", char2Bytes(JSON.stringify(metadataViewsExample1)))
+
     const op = await tezos.contract.originate({
-      balance: '1',
-      code: voteSample,
-      init: voteInitSample,
-      fee: 30000,
-      storageLimit: 2000,
-      gasLimit: 90000,
+      code: contractCode,
+      storage: {
+        0: 7,
+        metadata: metadataBigMAp
+      }
     });
 
     console.log('Awaiting confirmation...');
     const contract = await op.contract();
+    console.log('Tzip16OffChainOne Contract address',contract.address)
     console.log('Gas Used', op.consumedGas);
     console.log('Storage Paid', op.storageDiff);
     console.log('Storage Size', op.storageSize);

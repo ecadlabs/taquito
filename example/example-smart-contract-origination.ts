@@ -1,7 +1,7 @@
 import { TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
 
-const provider = 'https://api.tez.ie/rpc/granadanet';
+const provider = 'https://granadanet.api.tez.ie';
 
 async function example() {
   const tezos = new TezosToolkit(provider);
@@ -30,7 +30,7 @@ async function example() {
   );
 
   try {
-    console.log('Deploying Smart contract for tests...');
+    console.log('Deploying SmartContract for tests...');
     const op = await tezos.contract.originate({
      // balance: '0',
       code: `{ parameter (or (int %decrement) (int %increment)) ;
@@ -68,7 +68,7 @@ async function example() {
 
     console.log('Awaiting confirmation...');
     const contract = await op.contract();
-    console.log("Contract address is : "+contract.address);
+    console.log("SmartContract address is : "+contract.address);
     console.log('Gas Used', op.consumedGas);
     console.log('Storage Paid', op.storageDiff);
     console.log('Storage Size', op.storageSize);

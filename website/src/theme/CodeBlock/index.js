@@ -38,7 +38,7 @@ import { CancellableRpcClient } from './customHttpBackendAndRpcClient';
 
 import styles from './styles.module.css';
 
-
+const wallet = new BeaconWallet({name:"exampleWallet"});
 const highlightLinesRangeRegex = /{([\d,-]+)}/;
 
 export default ({
@@ -80,9 +80,8 @@ export default ({
   }, [button.current, target.current]);
 
   if (live) {
-    const customRpcClient = new CancellableRpcClient('https://api.tez.ie/rpc/granadanet') 
+    const customRpcClient = new CancellableRpcClient('https://granadanet.api.tez.ie') 
     const Tezos = new TezosToolkit(customRpcClient);
-    const wallet = new BeaconWallet({name:"exampleWallet"});
 
     return (
       <Playground

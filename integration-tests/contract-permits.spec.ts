@@ -36,6 +36,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       const permit_contract = await op.contract();
+
       expect(op.status).toEqual('applied');
 
       const signer_key = await Tezos.signer.publicKey();
