@@ -26,11 +26,12 @@ jobs:
     #    key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
     #    restore-keys: |
     #      ${{ runner.os }}-node-
-    - run: cd taquito_${{ env.UUID }} && npm ci
-    - run: cd taquito_${{ env.UUID }} && npm run lerna -- bootstrap
-    - run: cd taquito_${{ env.UUID }} && npm run build
-    - run: rm -rf ~/.tezos_client/
+    #- run: cd taquito_${{ env.UUID }} && npm ci
+    #- run: cd taquito_${{ env.UUID }} && npm run lerna -- bootstrap
+    #- run: cd taquito_${{ env.UUID }} && npm run build
+    #- run: rm -rf ~/.tezos_client/
     - run: docker run --rm --name flextesa_sandbox_${{ env.UUID }} --network github_runner --detach -p 8732:20000  tqtezos/flextesa:20210602 flobox start   
+    - run: wget http://flextesa_sandbox_${{ env.UUID }}:20000/chains/main/blocks/head/context/contracts
     - uses: actions/checkout@v2
       with:
         repository: kjaiswal/tezos-key-gen-api
