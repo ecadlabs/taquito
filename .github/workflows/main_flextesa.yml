@@ -12,26 +12,20 @@ jobs:
         node: [12.x]
     steps:
     - run: echo UUID=$(date +%s) >> $GITHUB_ENV
-    #- uses: actions/setup-node@v1
-    #  with:
-    #    node-version: ${{ matrix.node }}
-    #- uses: actions/checkout@v2
-    #  with:
-    #    repository: ecadlabs/taquito
-    #    ref: 457-flextesa-kunal-2
-    #    path: taquito_${{ env.UUID }}
-    #- uses: actions/cache@v1
-    #  with:
-    #    path: ~/.npm
-    #    key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-    #    restore-keys: |
-    #      ${{ runner.os }}-node-
-    #- run: cd taquito_${{ env.UUID }} && npm ci
-    #- run: cd taquito_${{ env.UUID }} && npm run lerna -- bootstrap
-    #- run: cd taquito_${{ env.UUID }} && npm run build
-    #- run: rm -rf ~/.tezos_client/
+    - uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node }}
+    - uses: actions/checkout@v2
+      with:
+        repository: ecadlabs/taquito
+        ref: 457-flextesa-kunal-2
+        path: taquito_${{ env.UUID }}
+    - run: cd taquito_${{ env.UUID }} && npm ci
+    - run: cd taquito_${{ env.UUID }} && npm run lerna -- bootstrap
+    - run: cd taquito_${{ env.UUID }} && npm run build
+    - run: rm -rf ~/.tezos_client/
     - run: docker run --rm --name flextesa_sandbox_${{ env.UUID }} --network github_runner -p 8732:20000 --detach  tqtezos/flextesa:20210602 flobox start   
-    - run: wget --output-document - http://flextesa_sandbox_${{ env.UUID }}:20000/chains/main/blocks/head/context/contracts
+    #- run: wget --output-document - http://flextesa_sandbox_${{ env.UUID }}:20000/chains/main/blocks/head/context/contracts
     - uses: actions/checkout@v2
       with:
         repository: kjaiswal/tezos-key-gen-api
@@ -45,7 +39,7 @@ jobs:
     - run: cd keygen_${{ env.UUID }} && npm run build
     - run: cd keygen_${{ env.UUID }} && npm run start &
     - run: cd taquito_${{ env.UUID }}/example/ && sed -i 's/macmini/flextesa_sandbox_${{ env.UUID }}/g' deploy-flextesa-contracts.ts
-    - run: wget http://0.0.0.0:8732/chains/main/blocks/head/context/contracts
+    #- run: wget http://0.0.0.0:8732/chains/main/blocks/head/context/contracts
     - run: cd taquito_${{ env.UUID }}/example/ && npm run example:deploy-flextesa-contracts
     - run: cd taquito_${{ env.UUID }}/packages/taquito && npm run build
 
