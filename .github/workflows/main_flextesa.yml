@@ -12,6 +12,7 @@ jobs:
         node: [12.x]
     steps:
     - run: echo UUID=$(date +%s) >> $GITHUB_ENV
+    - run: echo RUNNER_NAME = $(docker inspect -f '{{.Name}}' $HOSTNAME | sed -e 's/^\///g') >> GITHUB_ENV
     - uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node }}
@@ -46,6 +47,7 @@ jobs:
     - run: cd taquito_${{ env.UUID }}/example/ && npm run example:deploy-flextesa-contracts
     - run: cd taquito_${{ env.UUID }}/packages/taquito && npm run build
     - run: cd taquito_${{ env.UUID }}/integration-tests/ && sed -i 's/macmini/flextesa_sandbox_${{ env.UUID }}/g' config.ts
+    - run: cd taquito_${{ env.UUID }}/integration-tests/ && sed -i 's/runner_name/${{ env.RUNNER_NAME }}/g' config.ts
     - run: cd taquito_${{ env.UUID }}/integration-tests && npm run test:sandbox -- --maxWorkers=8
       env:
         CI: true
