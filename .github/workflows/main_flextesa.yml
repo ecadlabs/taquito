@@ -12,7 +12,7 @@ jobs:
         node: [12.x]
     steps:
     - run: echo UUID=$(date +%s) >> $GITHUB_ENV
-    - run: echo RUNNER_NAME = $(docker inspect -f '{{.Name}}' $HOSTNAME | sed -e 's/^\///g') >> GITHUB_ENV
+    - run: echo RUNNER_NAME = $(docker inspect -f '{{.Name}}' $HOSTNAME | sed -e 's/^\///g') >> $GITHUB_ENV
     - uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node }}
