@@ -52,4 +52,4 @@ jobs:
       env:
         CI: true
     - run: docker rm -f flextesa_sandbox_${{ env.UUID }} keygen_${{ env.UUID }}_redis_1 keygen_${{ env.UUID }}_signatory_1
-      - if: always()
+      if: always()
