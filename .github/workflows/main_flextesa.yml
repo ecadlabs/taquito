@@ -45,8 +45,7 @@ jobs:
     - run: cd taquito_${{ env.UUID }}/example/ && sed -i 's/macmini/flextesa_sandbox_${{ env.UUID }}/g' deploy-flextesa-contracts.ts
     - run: cd taquito_${{ env.UUID }}/example/ && npm run example:deploy-flextesa-contracts
     - run: cd taquito_${{ env.UUID }}/packages/taquito && npm run build
-    #- run: cd integration-tests && npm run test:florencenet -- --maxWorkers=8
-    #  env:
-    #    CI: true
-    #    TEZOS_RPC_FLORENCENET: ${{ secrets.TEZOS_RPC_FLORENCENET }}
+    - run: cd integration-tests && npm run test:sandbox -- --maxWorkers=8
+      env:
+        CI: true
     - run: docker rm -f flextesa_sandbox_${{ env.UUID }} keygen_${{ env.UUID }}_redis_1 keygen_${{ env.UUID }}_signatory_1
