@@ -36,7 +36,7 @@ jobs:
         RUN_INTEGRATION: true
         TEZOS_RPC_FLORENCENET: ${{ secrets.TEZOS_RPC_FLORENCENET }}
 
-integration-tests-hangzhounet:
+  integration-tests-hangzhounet:
     runs-on: self-hosted
     strategy:
       matrix:
