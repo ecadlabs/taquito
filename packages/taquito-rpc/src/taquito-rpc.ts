@@ -54,13 +54,13 @@ export { OpKind } from './opkind';
 
 export { VERSION } from './version';
 
-const defaultChain = 'main';
+export const defaultChain = 'main';
 
-interface RPCOptions {
+export interface RPCOptions {
   block: string;
 }
 
-const defaultRPCOptions: RPCOptions = { block: 'head' };
+export const defaultRPCOptions: RPCOptions = { block: 'head' };
 
 /***
  * @description RpcClient allows interaction with Tezos network through an rpc node
