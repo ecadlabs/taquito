@@ -54,6 +54,7 @@ jobs:
 
   clean-up:
     if: always()
+    runs-on: flexteza
     needs: integration-tests-flextesanet
     steps:
     - run: docker rm -f flextesa_sandbox_${{ env.UUID }} keygen_${{ env.UUID }}_redis_1 keygen_${{ env.UUID }}_signatory_1
