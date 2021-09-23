@@ -1,5 +1,5 @@
 import { localForger } from '@taquito/local-forging';
-import { CompositeForger, RpcForger, TezosToolkit, Protocols } from '@taquito/taquito';
+import { CompositeForger, RpcForger, TezosToolkit, Protocols, ChainIds } from '@taquito/taquito';
 import { RemoteSigner } from '@taquito/remote-signer';
 import { HttpBackend } from '@taquito/http-utils';
 import { b58cencode, Prefix, prefix } from '@taquito/utils';
@@ -21,6 +21,7 @@ interface Config {
   knownContract: string;
   knownBigMapContract: string;
   protocol: Protocols;
+  chainId: ChainIds;
   signerConfig: EphemeralConfig | FaucetConfig;
 }
 /**
@@ -54,12 +55,27 @@ interface FaucetConfig {
   faucetKey: {};
 }
 
+const hangzhounetEphemeral = {
+  rpc: process.env['TEZOS_RPC_GRANADANET'] || 'https://hangzhounet.api.tez.ie',
+  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
+  knownContract: 'KT1QJcNitf3wTfcnWAW8qKHEc7Z8duq83pZe',
+  knownBigMapContract: 'KT1GaKdvTeQ9RDErHCU1cKD9mJaaRZxjycnX',
+  protocol: Protocols.PtGRANADs,
+  chainId: ChainIds.HANGZHOUNET,
+  signerConfig: {
+    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
+    keyUrl: 'https://api.tez.ie/keys/hangzhounet',
+    requestHeaders: { 'Authorization': 'Bearer taquito-example' },
+  }
+}
+
 const granadanetEphemeral = {
   rpc: process.env['TEZOS_RPC_GRANADANET'] || 'https://granadanet.api.tez.ie',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1JMwgeC7MwYiMiZd74gXK6wrY7QNf1NwLX',
   knownBigMapContract: 'KT1VniFqNCPEq4MXvnjYGvUqdWDhooJM5Nae',
   protocol: Protocols.PtGRANADs,
+  chainId: ChainIds.GRANADANET,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'https://api.tez.ie/keys/granadanet',
@@ -73,22 +89,10 @@ const florencenetEphemeral = {
   knownContract: 'KT1BRwtrBfiC2paqoSw4nakJ2EGLCGuoprLQ',
   knownBigMapContract: 'KT1W1jh5C5NbcVVvpnBLQT9ekMbR5a8fg6mc',
   protocol: Protocols.PsFLorena,
+  chainId: ChainIds.FLORENCENET,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'https://api.tez.ie/keys/florencenet',
-    requestHeaders: { 'Authorization': 'Bearer taquito-example' },
-  }
-}
-
-const edonetEphemeral = {
-  rpc: process.env['TEZOS_RPC_EDONET'] || 'https://api.tez.ie/rpc/edonet',
-  knownBaker: 'tz1R55a2HQbXUAzWKJYE5bJp3UvvawwCm9Pr',
-  knownContract: 'KT1MTFjUeqBeZoFeW1NLSrzJdcS5apFiUXoB',
-  knownBigMapContract: 'KT1Aqk5xE36Kx7JUUV8VMx4t9jLgQn4MBWQk',
-  protocol: Protocols.PtEdo2Zk,
-  signerConfig: {
-    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'https://api.tez.ie/keys/edonet',
     requestHeaders: { 'Authorization': 'Bearer taquito-example' },
   }
 }
@@ -117,12 +121,47 @@ const key = {
   secret: "1e6159006a283a4456bda4f83721afa4bec9ed59"
 }
 
+const hangzhounetFaucet = {
+  rpc: 'https://hangzhounet.api.tez.ie',
+  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
+  knownContract: 'KT1QJcNitf3wTfcnWAW8qKHEc7Z8duq83pZe',
+  knownBigMapContract: 'KT1GaKdvTeQ9RDErHCU1cKD9mJaaRZxjycnX',
+  protocol: Protocols.PtGRANADs,
+  chainId: ChainIds.HANGZHOUNET,
+  signerConfig: {
+    type: SignerType.FAUCET as SignerType.FAUCET,
+    faucetKey: {
+      "mnemonic": [
+        "alien",
+        "volume",
+        "bulk",
+        "siege",
+        "chat",
+        "obtain",
+        "similar",
+        "fashion",
+        "cupboard",
+        "slide",
+        "drama",
+        "inch",
+        "table",
+        "obey",
+        "window"
+      ],
+      "email": "cdzvfmhp.qtzvajmc@teztnets.xyz",
+      "password": "ysPz4DVnjF",
+      "secret": "a36e4c50a3d331dd3438ee1d5d3c09d87834b522"
+    },
+  }
+}
+
 const granadanetFaucet = {
   rpc: 'https://granadanet.api.tez.ie',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1JMwgeC7MwYiMiZd74gXK6wrY7QNf1NwLX',
   knownBigMapContract: 'KT1VniFqNCPEq4MXvnjYGvUqdWDhooJM5Nae',
   protocol: Protocols.PtGRANADs,
+  chainId: ChainIds.GRANADANET,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
     faucetKey: key,
@@ -135,18 +174,7 @@ const florencenetFaucet = {
   knownContract: 'KT1BRwtrBfiC2paqoSw4nakJ2EGLCGuoprLQ',
   knownBigMapContract: 'KT1W1jh5C5NbcVVvpnBLQT9ekMbR5a8fg6mc',
   protocol: Protocols.PsFLorena,
-  signerConfig: {
-    type: SignerType.FAUCET as SignerType.FAUCET,
-    faucetKey: key,
-  }
-}
-
-const edonetFaucet = {
-  rpc: 'https://api.tez.ie/rpc/edonet',
-  knownBaker: 'tz1R55a2HQbXUAzWKJYE5bJp3UvvawwCm9Pr',
-  knownContract: 'KT1MTFjUeqBeZoFeW1NLSrzJdcS5apFiUXoB',
-  knownBigMapContract: 'KT1Aqk5xE36Kx7JUUV8VMx4t9jLgQn4MBWQk',
-  protocol: Protocols.PtEdo2Zk,
+  chainId: ChainIds.FLORENCENET,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
     faucetKey: key,
@@ -156,16 +184,16 @@ const edonetFaucet = {
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_FAUCET']) {
-  providers.push(florencenetFaucet, edonetFaucet, granadanetFaucet)
-} 
+  providers.push(hangzhounetFaucet, florencenetFaucet, granadanetFaucet)
+}
 else if (process.env['RUN_GRANADANET_WITH_FAUCET']) {
   providers.push(granadanetFaucet)
 }
 else if (process.env['RUN_FLORENCENET_WITH_FAUCET']) {
   providers.push(florencenetFaucet)
 }
-else if (process.env['RUN_EDONET_WITH_FAUCET']) {
-  providers.push(edonetFaucet)
+else if (process.env['RUN_HANGZHOUNET_WITH_FAUCET']) {
+  providers.push(hangzhounetFaucet)
 }
 else if (process.env['GRANADANET']) {
   providers.push(granadanetEphemeral)
@@ -173,10 +201,10 @@ else if (process.env['GRANADANET']) {
 else if (process.env['FLORENCENET']) {
   providers.push(florencenetEphemeral)
 }
-else if (process.env['EDONET']) {
-  providers.push(edonetEphemeral)
+else if (process.env['HANGZHOUNET']) {
+  providers.push(hangzhounetEphemeral)
 } else {
-  providers.push(florencenetEphemeral, edonetEphemeral, granadanetEphemeral)
+  providers.push(florencenetEphemeral, hangzhounetEphemeral, granadanetEphemeral)
 }
 
 const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE'];
@@ -249,9 +277,9 @@ const setupWithFaucetKey = async (Tezos: TezosToolkit, signerConfig: FaucetConfi
 export const CONFIGS = () => {
   return forgers.reduce((prev, forger: ForgerType) => {
 
-    const configs = providers.map(({ rpc, knownBaker, knownContract, protocol, knownBigMapContract, signerConfig }) => {
+    const configs = providers.map(({ rpc, knownBaker, knownContract, protocol, chainId, knownBigMapContract, signerConfig }) => {
       const Tezos = new TezosToolkit(rpc);
-      Tezos.setProvider({ config: { confirmationPollingTimeoutSecond:300 } });
+      Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: 300 } });
 
       setupForger(Tezos, forger)
 
@@ -260,6 +288,7 @@ export const CONFIGS = () => {
         knownBaker,
         knownContract,
         protocol,
+        chainId,
         lib: Tezos,
         knownBigMapContract,
         signerConfig,

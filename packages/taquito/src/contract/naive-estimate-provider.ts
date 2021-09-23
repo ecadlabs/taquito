@@ -11,12 +11,7 @@ export class NaiveEstimateProvider implements EstimationProvider {
   constructor(
     private readonly protocol: Protocols,
   ) {
-    if (this.protocol === Protocols.PsCARTHA) {
-      this._costPerByte = 1000;
-    }
-    else {
       this._costPerByte = 250;
-    }
   }
   /**
    *

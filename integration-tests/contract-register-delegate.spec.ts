@@ -19,7 +19,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
 
         const account = await Tezos.rpc.getDelegate(pkh)
         expect(account).toEqual(pkh)
-      } catch (ex) {
+      } catch (ex: any) {
         if (protocol === Protocols.PtGRANADs) {
           expect(ex.message).toMatch('delegate.already_active')
         } else {

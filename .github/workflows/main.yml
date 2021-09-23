@@ -36,6 +36,32 @@ jobs:
         RUN_INTEGRATION: true
         TEZOS_RPC_FLORENCENET: ${{ secrets.TEZOS_RPC_FLORENCENET }}
 
+integration-tests-hangzhounet:
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        node: [12.x]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node }}
+    - uses: actions/cache@v1
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+    - run: npm ci
+    - run: npm run lerna -- bootstrap
+    - run: npm run build
+    - run: cd integration-tests && npm run test:hangzhounet-faucet -- --maxWorkers=8
+      env:
+        CI: true
+        TEZOS_RPC_FLORENCENET: ${{ secrets.TEZOS_RPC_FLORENCENET }}
+        TEZOS_RPC_GRANADANET: 'http://10.60.41.77:8732'
+        TEZOS_RPC_HANGZHOUNET: 'https://hangzhounet.api.tez.ie'
+
   integration-tests-granadanet:
     runs-on: self-hosted
     strategy:
