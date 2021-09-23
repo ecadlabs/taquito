@@ -51,4 +51,7 @@ jobs:
     - run: cd taquito_${{ env.UUID }}/integration-tests && npm run test:sandbox -- --maxWorkers=8
       env:
         CI: true
+  clean-up:
+    if: always()
+    needs: integration-tests-flextesanet
     - run: docker rm -f flextesa_sandbox_${{ env.UUID }} keygen_${{ env.UUID }}_redis_1 keygen_${{ env.UUID }}_signatory_1
