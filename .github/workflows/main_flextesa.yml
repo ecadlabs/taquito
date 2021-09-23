@@ -45,6 +45,7 @@ jobs:
     - run: cd taquito_${{ env.UUID }}/example/ && sed -i 's/macmini/flextesa_sandbox_${{ env.UUID }}/g' deploy-flextesa-contracts.ts
     - run: cd taquito_${{ env.UUID }}/example/ && npm run example:deploy-flextesa-contracts
     - run: cd taquito_${{ env.UUID }}/packages/taquito && npm run build
+    - run: cd taquito_${{ env.UUID }}/integration-tests/ && sed -i 's/macmini/flextesa_sandbox_${{ env.UUID }}/g' config.ts
     - run: cd taquito_${{ env.UUID }}/integration-tests && npm run test:sandbox -- --maxWorkers=8
       env:
         CI: true

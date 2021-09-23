@@ -97,7 +97,7 @@ const edonetEphemeral = {
 const sandboxProtocolEphemeral = florencenetEphemeral;
 
 const sandboxEphemeral = {
-  rpc: process.env['TEZOS_RPC_SANDBOX'] || 'http://macmini:8732',
+  rpc: process.env['TEZOS_RPC_SANDBOX'] || 'http://macmini:20000',
   knownBaker: 'tz1YPSCGWXwBdTncK2aCctSZAXWvGsGwVJqU',
   knownContract: 'sandbox_known_contract',
   knownBigMapContract: 'sandbox_known_bigmap_contract',
