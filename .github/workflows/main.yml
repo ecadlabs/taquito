@@ -55,7 +55,7 @@ jobs:
     - run: npm ci
     - run: npm run lerna -- bootstrap
     - run: npm run build
-    - run: cd integration-tests && npm run test:hangzhounet-faucet -- --maxWorkers=8
+    - run: cd integration-tests && npm run test:hangzhounet-faucet
       env:
         CI: true
         TEZOS_RPC_FLORENCENET: ${{ secrets.TEZOS_RPC_FLORENCENET }}
