@@ -13,9 +13,9 @@ jobs:
     steps:
     - run: echo UUID=$(date +%s) >> $GITHUB_ENV
     - run: echo RUNNER_NAME=$(docker inspect -f '{{.Name}}' $HOSTNAME | sed -e 's/^\///g') >> $GITHUB_ENV
-    - run: echo FLEXTESA_PORT_ONE=8777 >> $GITHUB_ENV
+    - run: echo FLEXTESA_PORT_ONE=8732;FLEXTESA_PORT_TWO=20000 >> $GITHUB_ENV
       if: ${{endsWith(env.RUNNER_NAME, '-1-1')}}
-    - run: echo FLEXTESA_PORT_ONE=8778 >> $GITHUB_ENV
+    - run: echo FLEXTESA_PORT_ONE=8733;FLEXTESA_PORT_TWO=20001 >> $GITHUB_ENV
       if: ${{endsWith(env.RUNNER_NAME, '-1-2')}}
     - uses: actions/setup-node@v1
       with:
@@ -29,7 +29,7 @@ jobs:
     - run: cd taquito_${{ env.UUID }} && npm run lerna -- bootstrap
     - run: cd taquito_${{ env.UUID }} && npm run build
     - run: rm -rf ~/.tezos_client/
-    - run: docker run --rm --name flextesa_sandbox_${{ env.UUID }} --network github_runner -p ${{ env.FLEXTESA_PORT_ONE }}:20000 --detach  tqtezos/flextesa:20210602 flobox start   
+    - run: docker run --rm --name flextesa_sandbox_${{ env.UUID }} --network github_runner -p ${{ env.FLEXTESA_PORT_ONE }}:${{ env.FLEXTESA_PORT_TWO }} --detach  tqtezos/flextesa:20210602 flobox start   
     - run: sudo add-apt-repository -yu ppa:serokell/tezos && sudo apt-get install -y tezos-client
     - run: tezos-client -A flextesa_sandbox_${{ env.UUID }} -P 20000 import secret key alice unencrypted:edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq --force
     - run: tezos-client -A flextesa_sandbox_${{ env.UUID }} -P 20000 transfer 190000 from alice to tz1Rb18fBaZxkzDgFGAbcBZzxLCYdxyLryVX --burn-cap 0.06425
