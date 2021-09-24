@@ -14,9 +14,9 @@ jobs:
     - run: echo UUID=$(date +%s) >> $GITHUB_ENV
     - run: echo RUNNER_NAME=$(docker inspect -f '{{.Name}}' $HOSTNAME | sed -e 's/^\///g') >> $GITHUB_ENV
     - run: echo FLEXTESA_PORT_ONE=8777 >> $GITHUB_ENV
-      if: $${{env.RUNNER_NAME =~ 1$ }}
+      if: $${{endsWith(env.RUNNER_NAME, '-1-1')}}
     - run: echo FLEXTESA_PORT_ONE=8778 >> $GITHUB_ENV
-      if: $${{env.RUNNER_NAME =~ 2$ }}
+      if: $${{endsWith(env.RUNNER_NAME, '-1-2')}}
     - uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node }}
