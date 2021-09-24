@@ -13,8 +13,8 @@ jobs:
     steps:
     - run: echo UUID=$(date +%s) >> $GITHUB_ENV
     - run: echo RUNNER_NAME=$(docker inspect -f '{{.Name}}' $HOSTNAME | sed -e 's/^\///g') >> $GITHUB_ENV
-    - run: test [[ env.RUNNER_NAME =~ 1$ ]] && echo FLEXTESA_PORT_ONE=8777 >> $GITHUB_ENV
-    - run: test [[ env.RUNNER_NAME =~ 2$ ]] && echo FLEXTESA_PORT_ONE=8778 >> $GITHUB_ENV
+    - run: [[ env.RUNNER_NAME =~ 1$ ]] && echo FLEXTESA_PORT_ONE=8777 >> $GITHUB_ENV
+    - run: [[ env.RUNNER_NAME =~ 2$ ]] && echo FLEXTESA_PORT_ONE=8778 >> $GITHUB_ENV
     - uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node }}
