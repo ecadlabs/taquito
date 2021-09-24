@@ -3,11 +3,11 @@ import { CONFIGS } from "./config";
 import BigNumber from 'bignumber.js';
 import { ConstantsResponseCommon, ConstantsResponseProto009, ConstantsResponseProto010 } from "@taquito/rpc";
 
-CONFIGS().forEach(({ lib, protocol, chainId, rpc }) => {
+CONFIGS().forEach(({ lib, protocol, rpc }) => {
     const Tezos = lib;
 
-    const granadanet = (protocol === Protocols.PtGRANADs && chainId === ChainIds.GRANADANET) ? test : test.skip;
-    const hangzhounet = (protocol === Protocols.PtGRANADs && chainId === ChainIds.HANGZHOUNET)? test : test.skip;
+    const granadanet = (protocol === Protocols.PtGRANADs) ? test : test.skip;
+    const hangzhounet = (protocol === Protocols.PtHangzH) ? test : test.skip;
 
     describe('Fetch constants for all protocols on Mainnet', () => {
 

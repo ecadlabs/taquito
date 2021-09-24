@@ -5,12 +5,12 @@ import { originate, originate2, transferImplicit2 } from "./data/lambda";
 import { ligoSample } from "./data/ligo-simple-contract";
 import { managerCode } from "./data/manager_code";
 
-CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, chainId,rpc }) => {
+CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
   const Tezos = lib;
 
   const florencenet = (protocol === Protocols.PsFLorena) ? test : test.skip;
-  const granadanet = (protocol === Protocols.PtGRANADs && chainId === ChainIds.GRANADANET) ? test : test.skip;
-  const hangzhounet = (protocol === Protocols.PtGRANADs && chainId === ChainIds.HANGZHOUNET) ? test : test.skip;
+  const granadanet = (protocol === Protocols.PtGRANADs) ? test : test.skip;
+  const hangzhounet = (protocol === Protocols.PtHangzH) ? test : test.skip;
 
   describe(`Estimate scenario using: ${rpc}`, () => {
     let LowAmountTez: TezosToolkit;

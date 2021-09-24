@@ -21,7 +21,6 @@ interface Config {
   knownContract: string;
   knownBigMapContract: string;
   protocol: Protocols;
-  chainId: ChainIds;
   signerConfig: EphemeralConfig | FaucetConfig;
 }
 /**
@@ -61,7 +60,6 @@ const hangzhounetEphemeral = {
   knownContract: 'KT1QJcNitf3wTfcnWAW8qKHEc7Z8duq83pZe',
   knownBigMapContract: 'KT1GaKdvTeQ9RDErHCU1cKD9mJaaRZxjycnX',
   protocol: Protocols.PtGRANADs,
-  chainId: ChainIds.HANGZHOUNET,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'https://api.tez.ie/keys/hangzhounet',
@@ -75,7 +73,6 @@ const granadanetEphemeral = {
   knownContract: 'KT1JMwgeC7MwYiMiZd74gXK6wrY7QNf1NwLX',
   knownBigMapContract: 'KT1VniFqNCPEq4MXvnjYGvUqdWDhooJM5Nae',
   protocol: Protocols.PtGRANADs,
-  chainId: ChainIds.GRANADANET,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'https://api.tez.ie/keys/granadanet',
@@ -89,7 +86,6 @@ const florencenetEphemeral = {
   knownContract: 'KT1BRwtrBfiC2paqoSw4nakJ2EGLCGuoprLQ',
   knownBigMapContract: 'KT1W1jh5C5NbcVVvpnBLQT9ekMbR5a8fg6mc',
   protocol: Protocols.PsFLorena,
-  chainId: ChainIds.FLORENCENET,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'https://api.tez.ie/keys/florencenet',
@@ -127,30 +123,29 @@ const hangzhounetFaucet = {
   knownContract: 'KT1QJcNitf3wTfcnWAW8qKHEc7Z8duq83pZe',
   knownBigMapContract: 'KT1GaKdvTeQ9RDErHCU1cKD9mJaaRZxjycnX',
   protocol: Protocols.PtGRANADs,
-  chainId: ChainIds.HANGZHOUNET,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
     faucetKey: {
       "mnemonic": [
-        "alien",
-        "volume",
-        "bulk",
-        "siege",
-        "chat",
-        "obtain",
-        "similar",
-        "fashion",
-        "cupboard",
-        "slide",
-        "drama",
-        "inch",
-        "table",
-        "obey",
-        "window"
+        "party",
+        "scan",
+        "excuse",
+        "assist",
+        "lunch",
+        "ice",
+        "ivory",
+        "toss",
+        "recall",
+        "rely",
+        "wheel",
+        "drill",
+        "glimpse",
+        "length",
+        "forest"
       ],
-      "email": "cdzvfmhp.qtzvajmc@teztnets.xyz",
-      "password": "ysPz4DVnjF",
-      "secret": "a36e4c50a3d331dd3438ee1d5d3c09d87834b522"
+      "email": "auyjsbkh.jzgahqcs@teztnets.xyz",
+      "password": "sGgsyhU2Xk",
+      "secret": "0f99026650b8ea6df12d737059356b481865b205"
     },
   }
 }
@@ -161,7 +156,6 @@ const granadanetFaucet = {
   knownContract: 'KT1JMwgeC7MwYiMiZd74gXK6wrY7QNf1NwLX',
   knownBigMapContract: 'KT1VniFqNCPEq4MXvnjYGvUqdWDhooJM5Nae',
   protocol: Protocols.PtGRANADs,
-  chainId: ChainIds.GRANADANET,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
     faucetKey: key,
@@ -174,7 +168,6 @@ const florencenetFaucet = {
   knownContract: 'KT1BRwtrBfiC2paqoSw4nakJ2EGLCGuoprLQ',
   knownBigMapContract: 'KT1W1jh5C5NbcVVvpnBLQT9ekMbR5a8fg6mc',
   protocol: Protocols.PsFLorena,
-  chainId: ChainIds.FLORENCENET,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
     faucetKey: key,
@@ -277,7 +270,7 @@ const setupWithFaucetKey = async (Tezos: TezosToolkit, signerConfig: FaucetConfi
 export const CONFIGS = () => {
   return forgers.reduce((prev, forger: ForgerType) => {
 
-    const configs = providers.map(({ rpc, knownBaker, knownContract, protocol, chainId, knownBigMapContract, signerConfig }) => {
+    const configs = providers.map(({ rpc, knownBaker, knownContract, protocol, knownBigMapContract, signerConfig }) => {
       const Tezos = new TezosToolkit(rpc);
       Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: 300 } });
 
@@ -288,7 +281,6 @@ export const CONFIGS = () => {
         knownBaker,
         knownContract,
         protocol,
-        chainId,
         lib: Tezos,
         knownBigMapContract,
         signerConfig,
