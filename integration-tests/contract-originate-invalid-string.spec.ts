@@ -1,6 +1,7 @@
+import { Protocols } from "@taquito/taquito";
 import { CONFIGS } from "./config";
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
   const test = require('jest-retries');
 
@@ -25,7 +26,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           init: `"Copyright ©"`
         })
       } catch (ex) {
-        expect(ex).toEqual(expect.objectContaining({ message: expect.stringContaining('invalid_syntactic_constant') }))
+        if (protocol === Protocols.PsFLorena || protocol === Protocols.PtGRANADs) {
+          expect(ex).toEqual(expect.objectContaining({ message: expect.stringContaining('invalid_syntactic_constant') }))
+        } else {
+          expect(ex).toEqual(expect.objectContaining({ message: expect.stringContaining('non_printable_character') }))
+        }
       }
       done();
     });

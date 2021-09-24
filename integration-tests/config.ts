@@ -26,7 +26,7 @@ interface Config {
 /**
  * SignerType specifies the different signer options used in the integration test suite. EPHEMERAL_KEY relies on a the [tezos-key-get-api](https://github.com/ecadlabs/tezos-key-gen-api)
  */
-enum SignerType {
+export enum SignerType {
   FAUCET,
   EPHEMERAL_KEY,
 }
@@ -59,7 +59,7 @@ const hangzhounetEphemeral = {
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1QJcNitf3wTfcnWAW8qKHEc7Z8duq83pZe',
   knownBigMapContract: 'KT1GaKdvTeQ9RDErHCU1cKD9mJaaRZxjycnX',
-  protocol: Protocols.PtGRANADs,
+  protocol: Protocols.PtHangzH,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'https://api.tez.ie/keys/hangzhounet',
@@ -122,30 +122,30 @@ const hangzhounetFaucet = {
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1QJcNitf3wTfcnWAW8qKHEc7Z8duq83pZe',
   knownBigMapContract: 'KT1GaKdvTeQ9RDErHCU1cKD9mJaaRZxjycnX',
-  protocol: Protocols.PtGRANADs,
+  protocol: Protocols.PtHangzH,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
     faucetKey: {
       "mnemonic": [
-        "party",
-        "scan",
-        "excuse",
-        "assist",
-        "lunch",
-        "ice",
-        "ivory",
+        "accident",
         "toss",
-        "recall",
-        "rely",
-        "wheel",
-        "drill",
-        "glimpse",
-        "length",
-        "forest"
+        "exchange",
+        "employ",
+        "climb",
+        "pull",
+        "vault",
+        "skill",
+        "submit",
+        "width",
+        "pupil",
+        "apple",
+        "upset",
+        "movie",
+        "glass"
       ],
-      "email": "auyjsbkh.jzgahqcs@teztnets.xyz",
-      "password": "sGgsyhU2Xk",
-      "secret": "0f99026650b8ea6df12d737059356b481865b205"
+      "email": "xlgkgjyb.raaskmfk@teztnets.xyz",
+      "password": "GOhL2PMP4M",
+      "secret": "b5950975ef9d2e63ca8e935e5c8e2e8830af15b5"
     },
   }
 }

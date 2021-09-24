@@ -85,7 +85,7 @@ export const commonCases: TestCase[] = [
       contents: [
         {
           kind: 'endorsement',
-          level: -300,
+          level: 300,
         },
       ],
     },

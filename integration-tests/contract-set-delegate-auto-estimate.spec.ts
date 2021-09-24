@@ -50,6 +50,8 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
         if (await Tezos.rpc.getDelegate(pkh) === pkh) {
           // Forbidden delegate deletion when self is a registered delegate
           expect(ex.message).toMatch('delegate.no_deletion')
+        } else {
+          throw ex
         }
       }
       done();
