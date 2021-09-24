@@ -13,9 +13,9 @@ jobs:
     steps:
     - run: echo UUID=$(date +%s) >> $GITHUB_ENV
     - run: echo RUNNER_NAME=$(docker inspect -f '{{.Name}}' $HOSTNAME | sed -e 's/^\///g') >> $GITHUB_ENV
-    - run: echo FLEXTESA_PORT_ONE=8732,FLEXTESA_PORT_TWO=20000 >> $GITHUB_ENV
+    - run: echo FLEXTESA_PORT_ONE=8732 >> $GITHUB_ENV && echo FLEXTESA_PORT_TWO=20000 >> $GITHUB_ENV
       if: ${{endsWith(env.RUNNER_NAME, '-1-1')}}
-    - run: echo FLEXTESA_PORT_ONE=8733,FLEXTESA_PORT_TWO=20001 >> $GITHUB_ENV
+    - run: echo FLEXTESA_PORT_ONE=8733 >> $GITHUB_ENV && echo FLEXTESA_PORT_TWO=20001 >> $GITHUB_ENV
       if: ${{endsWith(env.RUNNER_NAME, '-1-2')}}
     - uses: actions/setup-node@v1
       with:
