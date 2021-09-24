@@ -1,10 +1,11 @@
 import { TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
+import { RpcCacheDecorator } from '../packages/taquito-rpc/src/rpc-cache'
 
 const provider = 'https://granadanet.api.tez.ie';
 
 async function example() {
-  const tezos = new TezosToolkit(provider);
+  const tezos = new TezosToolkit(new RpcCacheDecorator(provider));
   await importKey(
     tezos,
     'peqjckge.qkrrajzs@tezos.example.org',
@@ -30,27 +31,12 @@ async function example() {
   );
 
   try {
-    console.log('Deploying Hello world contract...');
-    const op = await tezos.contract.originate({
-      balance: '0',
-      code: `parameter string;
-            storage string;
-            code {CAR;
-                  PUSH string "Hello ";
-                  CONCAT;
-                  NIL operation; PAIR};
-            `,
-      init: `"test1234"`,
-    });
-
-    console.log('Awaiting confirmation...');
-    const contract = await op.contract();
-    console.log('Hello world Contract address',contract.address)
-    console.log('Gas Used', op.consumedGas);
-    console.log('Storage Paid', op.storageDiff);
-    console.log('Storage Size', op.storageSize);
-    console.log('Storage', await contract.storage());
-    console.log('Operation hash:', op.hash, 'Included in block level:', op.includedInBlock);
+    const b = await tezos.rpc.getBlockHash();
+    console.log(b)
+    setTimeout(async () => {
+      const b2 = await tezos.rpc.getBlockHash();
+      console.log(b2)
+    }, 500);
   } catch (ex) {
     console.error(ex);
   }

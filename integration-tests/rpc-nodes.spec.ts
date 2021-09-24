@@ -1,5 +1,5 @@
 import { CONFIGS } from './config';
-import { RpcClient } from '@taquito/rpc';
+import { RpcCacheDecorator, RpcClient } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_bigmap';
@@ -19,7 +19,7 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
     rpcList.forEach(async (rpc) => {
         Tezos.setRpcProvider(rpc);
 
-        const rpcClient: RpcClient = new RpcClient(rpc);
+        const rpcClient = new RpcClient(rpc);
 
         describe(`Test calling all methods from RPC node: ${rpc}`, () => {
             it('Get the head block hash', async (done) => {
