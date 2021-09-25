@@ -10,8 +10,6 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, signerConfig }) => {
         });
         it('Batch estimate including reveal', async (done) => {
             try {
-                const pkh = await Tezos.signer.publicKeyHash()
-                console.log(pkh, await Tezos.tz.getDelegate(pkh))
                 const batchOpEstimate = await Tezos.estimate
                     .batch([
                         { kind: OpKind.DELEGATION, source: await Tezos.signer.publicKeyHash(), delegate: knownBaker },

@@ -227,7 +227,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       expect(estimate.minimalFeeMutez).toEqual(687);
       expect(estimate.totalCost).toEqual(687);
       expect(estimate.usingBaseFeeMutez).toEqual(687);
-      expect(estimate.consumedMilligas).toEqual(3509241);
+      expect(estimate.consumedMilligas).toEqual(3509355);
       done();
     })
 
@@ -273,7 +273,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       expect(estimate.minimalFeeMutez).toEqual(889);
       expect(estimate.totalCost).toEqual(129389);
       expect(estimate.usingBaseFeeMutez).toEqual(889);
-      expect(estimate.consumedMilligas).toEqual(4936002);
+      expect(estimate.consumedMilligas).toEqual(4936116);
       done();
     })
 
@@ -316,14 +316,14 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
     hangzhounet('Estimate internal origination', async (done) => {
       const tx = contract.methods.do(originate()).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx)
-      expect(estimate.gasLimit).toEqual(3599);
+      expect(estimate.gasLimit).toEqual(3600);
       expect(estimate.storageLimit).toEqual(317);
       expect(estimate.suggestedFeeMutez).toEqual(792);
       expect(estimate.burnFeeMutez).toEqual(79250);
       expect(estimate.minimalFeeMutez).toEqual(692);
       expect(estimate.totalCost).toEqual(79942);
       expect(estimate.usingBaseFeeMutez).toEqual(692);
-      expect(estimate.consumedMilligas).toEqual(3498938);
+      expect(estimate.consumedMilligas).toEqual(3499052);
       done();
     })
 
@@ -365,7 +365,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       expect(estimate.minimalFeeMutez).toEqual(899);
       expect(estimate.totalCost).toEqual(159399);
       expect(estimate.usingBaseFeeMutez).toEqual(899);
-      expect(estimate.consumedMilligas).toEqual(4915396);
+      expect(estimate.consumedMilligas).toEqual(4915510);
       // Do the actual operation
       const op2 = await contract.methods.do(originate2()).send();
       await op2.confirmation();
