@@ -1,26 +1,25 @@
 {
-  "name": "@taquito/tzip16",
-  "version": "10.1.2",
-  "description": "Tzip16",
+  "name": "@taquito/indexer",
+  "version": "10.1.0",
+  "description": "Access indexed Tezos block-chain data",
   "keywords": [
     "tezos",
-    "blockchain",
-    "tzip16"
+    "indexer"
   ],
-  "main": "dist/taquito-tzip16.umd.js",
-  "module": "dist/taquito-tzip16.es5.js",
-  "typings": "dist/types/taquito-tzip16.d.ts",
+  "main": "dist/taquito-indexer.umd.js",
+  "module": "dist/taquito-indexer.es5.js",
+  "typings": "dist/types/taquito-indexer.d.ts",
   "files": [
     "signature.json",
     "dist"
   ],
-  "publishConfig": {
-    "access": "public"
-  },
   "author": "Roxane Letourneau <roxane@ecadlabs.com>",
   "repository": {
     "type": "git",
     "url": ""
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "license": "MIT",
   "engines": {
@@ -30,7 +29,6 @@
     "lint": "eslint --ext .js,.ts .",
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
-    "test": "jest --collectCoverage",
     "version-stamp": "node ../taquito/version-stamping.js",
     "build": "npm run version-stamp && tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts ",
     "start": "npm run version-stamp && rollup -c rollup.config.ts -w"
@@ -53,6 +51,10 @@
       "tsx",
       "js"
     ],
+    "moduleNameMapper": {
+      "^@taquito/utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts",
+      "^@taquito/rpc$": "<rootDir>/../taquito-rpc/src/taquito-rpc.ts"
+    },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/test/"
@@ -62,19 +64,15 @@
     ]
   },
   "dependencies": {
-    "@taquito/http-utils": "^10.1.2",
-    "@taquito/michelson-encoder": "^10.1.2",
-    "@taquito/rpc": "^10.1.2",
-    "@taquito/taquito": "^10.1.2",
-    "@taquito/utils": "^10.1.2",
-    "bignumber.js": "^9.0.1",
-    "crypto-js": "^4.0.0"
+    "@taquito/http-utils": "^10.1.0",
+    "@taquito/rpc": "^10.1.0",
+    "bignumber.js": "^9.0.1"
   },
   "devDependencies": {
-    "@types/crypto-js": "^4.0.1",
     "@types/jest": "^26.0.23",
+    "@types/estree": "^0.0.47",
     "@types/node": "^15.12.2",
-    "@types/ws": "^7.4.4",
+    "@types/superagent": "^4.1.11",
     "@typescript-eslint/eslint-plugin": "^4.28.1",
     "@typescript-eslint/parser": "^4.28.1",
     "colors": "^1.4.0",
@@ -98,7 +96,6 @@
     "ts-node": "^10.0.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-standard": "^9.0.0",
-    "typedoc": "^0.20.36",
     "typescript": "^4.1.5"
   },
   "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
