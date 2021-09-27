@@ -59,12 +59,15 @@ jobs:
     - run: cd taquito_${{ env.UUID }}/integration-tests && npm run test:sandbox contract-permits.spec.ts -- --maxWorkers=8
       env:
         CI: true
+      if: always()
     - run: cd taquito_${{ env.UUID }}/integration-tests && npm run test:sandbox call-contract-method-manual-steps.spec.ts -- --maxWorkers=8
       env:
         CI: true
+      if: always()
     - run: cd taquito_${{ env.UUID }}/integration-tests && npm run test:sandbox wallet-send-multiple-tx-in-a-block.spec.ts -- --maxWorkers=8
       env:
         CI: true
+      if: always()
     - run: docker rm -f flextesa_sandbox_${{ env.UUID }} keygen_${{ env.UUID }}_redis_1 keygen_${{ env.UUID }}_signatory_1
       if: always()
     - run: rm -rf  keygen_${{ env.UUID }} taquito_${{ env.UUID }}
