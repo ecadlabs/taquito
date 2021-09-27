@@ -1,5 +1,5 @@
 import { CONFIGS } from './config';
-import { RpcCacheDecorator, RpcClient } from '@taquito/rpc';
+import { RpcClientCache, RpcClient } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_bigmap';
@@ -19,7 +19,7 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
     rpcList.forEach(async (rpc) => {
         Tezos.setRpcProvider(rpc);
 
-        const rpcClient = new RpcClient(rpc);
+        const rpcClient = new RpcClientCache(new RpcClient(rpc));
 
         describe(`Test calling all methods from RPC node: ${rpc}`, () => {
             it('Get the head block hash', async (done) => {
@@ -213,7 +213,7 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
             it('Inject an operation in node and broadcast it', async (done) => {
                 try {
                     const injectedOperation = await rpcClient.injectOperation('operation');
-                } catch (ex) {
+                } catch (ex: any) {
                     expect(ex.message).toMatch('Invalid_argument "Hex.to_char: 112 is an invalid char');
                 }
                 done();
@@ -244,7 +244,7 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
                     };
 
                     await rpcClient.preapplyOperations([operation]);
-                } catch (ex) {
+                } catch (ex: any) {
                     expect(ex.message).toMatch('contract.counter_in_the_past');
                 }
                 done();
@@ -289,9 +289,16 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
                     };
 
                     await rpcClient.runOperation(operation);
-                } catch (ex) {
+                } catch (ex: any) {
                     expect(ex.message).toMatch('contract.counter_in_the_past');
                 }
+                done();
+            });
+
+            it('getSuccessorPeriod', async (done) => {
+                const successorPeriod = await rpcClient.getSuccessorPeriod();
+                console.log(successorPeriod)
+                expect(successorPeriod).toBeDefined();
                 done();
             });
         });

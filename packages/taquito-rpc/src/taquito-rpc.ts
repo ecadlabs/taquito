@@ -51,7 +51,7 @@ export { castToBigNumber } from './utils/utils';
 
 export * from './rpc-client-interface';
 
-export * from './rpc-cache';
+export * from './rpc-client-modules/rpc-cache';
 
 export * from './types';
 
