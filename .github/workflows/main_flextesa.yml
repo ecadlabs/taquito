@@ -3,7 +3,7 @@ name: Node.js CI for Flextesa
 on:
   push:
     branches:
-      - 457-flextesa-kunal-2
+      - 457-flextesa-kunal-2-1
 jobs:
   integration-tests-flextesanet:
     runs-on: flexteza
@@ -23,7 +23,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         repository: ecadlabs/taquito
-        ref: 457-flextesa-kunal-2
+        ref: 457-flextesa-kunal-2-1
         path: taquito_${{ env.UUID }}
     - run: cd taquito_${{ env.UUID }} && npm ci
     - run: cd taquito_${{ env.UUID }} && npm run lerna -- bootstrap
@@ -65,6 +65,10 @@ jobs:
         CI: true
       if: always()
     - run: cd taquito_${{ env.UUID }}/integration-tests && npm run test:sandbox wallet-send-multiple-tx-in-a-block.spec.ts -- --maxWorkers=8
+      env:
+        CI: true
+      if: always()
+    - run: cd taquito_${{ env.UUID }}/integration-tests && npm run test:sandbox -- --maxWorkers=8
       env:
         CI: true
       if: always()
