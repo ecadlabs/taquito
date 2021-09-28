@@ -2,10 +2,17 @@
 # yarn lockfile v1
 
 
+<<<<<<< HEAD
 "@airgap/beacon-sdk@^2.3.3":
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/@airgap/beacon-sdk/-/beacon-sdk-2.3.3.tgz#be07035eb0e8073e296ea34fe38e611a55fa4f09"
   integrity sha512-kfW9V03v6IcvxvO8Y9uxrqhng6/2KRxHLK7jqtv0qhNE+KFsoIBn1Z/jCFc0zfLQOCbO5vcesV4ZfH7ejltpbQ==
+=======
+"@airgap/beacon-sdk@^2.3.0":
+  version "2.3.1"
+  resolved "https://registry.npmjs.org/@airgap/beacon-sdk/-/beacon-sdk-2.3.1.tgz"
+  integrity sha512-KhlerqRlI9LxkxY6sq5ar5g6KuzEEGEacnMg7AWxL/Pdq3WXGfMrdzVOO+4wOgB8f1/A8MRn0l/zjwAFZqAvYA==
+>>>>>>> b4f66211d (Putting lock files back)
   dependencies:
     "@types/chrome" "0.0.115"
     "@types/libsodium-wrappers" "0.7.7"
@@ -1867,6 +1874,7 @@
   dependencies:
     defer-to-connect "^1.0.1"
 
+<<<<<<< HEAD
 "@taquito/beacon-wallet@10.2.0":
   version "10.2.0"
   resolved "https://registry.yarnpkg.com/@taquito/beacon-wallet/-/beacon-wallet-10.2.0.tgz#b149712a2b42d97706f76f478b1eee109210af80"
@@ -1891,10 +1899,37 @@
     "@ledgerhq/hw-transport" "^5.51.1"
     "@taquito/taquito" "^10.2.0"
     "@taquito/utils" "^10.2.0"
+=======
+"@taquito/beacon-wallet@10.1.2":
+  version "10.1.2"
+  resolved "https://registry.yarnpkg.com/@taquito/beacon-wallet/-/beacon-wallet-10.1.2.tgz#863b14e1a96d34abd942bbbac234fff99ed95b53"
+  integrity sha512-tlaPF8pioGtgavrp7g756duUNxdfTjq3zaykgPR2C+9PhmE6MDLW36/mHgzP+mJiB2m7BoeUGk9ODIsTr+nAfA==
+  dependencies:
+    "@airgap/beacon-sdk" "^2.3.0"
+    "@taquito/taquito" "^10.1.2"
+    "@taquito/utils" "^10.1.2"
+
+"@taquito/http-utils@10.1.2", "@taquito/http-utils@^10.1.2":
+  version "10.1.2"
+  resolved "https://registry.yarnpkg.com/@taquito/http-utils/-/http-utils-10.1.2.tgz#d137a17f1d517e6b40f907cd937991d3b635c2e0"
+  integrity sha512-L8Ft0IZ+uX7WdpIjVmvv2mPBuBQaDbeCxVnU9K2vw54XWEojT/yq0ckavCPYlFeiurJ1m75avFQiQuHYErI7ug==
+  dependencies:
+    xhr2-cookies "^1.1.0"
+
+"@taquito/ledger-signer@10.1.2":
+  version "10.1.2"
+  resolved "https://registry.yarnpkg.com/@taquito/ledger-signer/-/ledger-signer-10.1.2.tgz#fa27e896756247b972dc51b1e91ec2310edf0c59"
+  integrity sha512-6xMiDdQsIoDJ25h+VbYaoXTvpxQFMhvqGTQZSZQYSRlfMLCJB8S9rf/lrFsZNbm6eHL4Eb4sZcy81oNxA+6pyw==
+  dependencies:
+    "@ledgerhq/hw-transport" "^5.51.1"
+    "@taquito/taquito" "^10.1.2"
+    "@taquito/utils" "^10.1.2"
+>>>>>>> b4f66211d (Putting lock files back)
     "@types/jest" "^26.0.23"
     buffer "^6.0.3"
     libsodium-wrappers "0.7.8"
 
+<<<<<<< HEAD
 "@taquito/michel-codec@^10.2.0":
   version "10.2.0"
   resolved "https://registry.yarnpkg.com/@taquito/michel-codec/-/michel-codec-10.2.0.tgz#778517f4f3bc1398ec09822b427dd86936a3e76a"
@@ -1926,6 +1961,39 @@
   dependencies:
     "@taquito/taquito" "^10.2.0"
     "@taquito/utils" "^10.2.0"
+=======
+"@taquito/michel-codec@^10.1.2":
+  version "10.1.2"
+  resolved "https://registry.yarnpkg.com/@taquito/michel-codec/-/michel-codec-10.1.2.tgz#1f1ac02d94f9c5bfa0d13fd19600334fbdc19a0e"
+  integrity sha512-v30acFO+r1/De5fQBMjIagyogFq4Q429wnzuuzKAdL5+6BEDM952WMxRVW7FtpqBbcP72ZFMAJ3Z/R4QIvZ08g==
+
+"@taquito/michelson-encoder@10.1.2", "@taquito/michelson-encoder@^10.1.2":
+  version "10.1.2"
+  resolved "https://registry.yarnpkg.com/@taquito/michelson-encoder/-/michelson-encoder-10.1.2.tgz#70800f81ec3c8adc4f97779b7739842b906e8f50"
+  integrity sha512-3MHO5ryl5dusdp6SvB+eYOfzvOxOXTI46lR4a5q16oMZyRFIdtzUfu9/7Ov5lKAKrMq42wugJnQDXNiaf69qUQ==
+  dependencies:
+    "@taquito/rpc" "^10.1.2"
+    "@taquito/utils" "^10.1.2"
+    bignumber.js "^9.0.1"
+    fast-json-stable-stringify "^2.1.0"
+
+"@taquito/rpc@10.1.2", "@taquito/rpc@^10.1.2":
+  version "10.1.2"
+  resolved "https://registry.yarnpkg.com/@taquito/rpc/-/rpc-10.1.2.tgz#c8e0138e884a04c474693529a79e8848ed6446de"
+  integrity sha512-qpPrNC6cx3oW59LoPbFE+8S+fXjix/WQC3gS45re50I3wBODZhe7cjjdvWx7x/O/Dp3A1Kz/9CKXk+vruRU7Mw==
+  dependencies:
+    "@taquito/http-utils" "^10.1.2"
+    bignumber.js "^9.0.1"
+    lodash "^4.17.21"
+
+"@taquito/signer@10.1.2":
+  version "10.1.2"
+  resolved "https://registry.yarnpkg.com/@taquito/signer/-/signer-10.1.2.tgz#adab363c0164742e58403e40726231ed82610c82"
+  integrity sha512-CDnEBloVxgyVn4ZDnUTz0lmjVhiv1sTyU1fO2KLksIMI0ZB3dpt+KpUGiqR/vIN5t3iC9Rw3UUQ4nMm1qnx+jg==
+  dependencies:
+    "@taquito/taquito" "^10.1.2"
+    "@taquito/utils" "^10.1.2"
+>>>>>>> b4f66211d (Putting lock files back)
     bignumber.js "^9.0.1"
     bip39 "^3.0.4"
     elliptic "^6.5.4"
@@ -1933,6 +2001,7 @@
     pbkdf2 "^3.1.2"
     typedarray-to-buffer "^4.0.0"
 
+<<<<<<< HEAD
 "@taquito/taquito@10.2.0", "@taquito/taquito@^10.2.0":
   version "10.2.0"
   resolved "https://registry.yarnpkg.com/@taquito/taquito/-/taquito-10.2.0.tgz#cd81cc91fe497dfa64cb3b6e64833ed5cff41aa2"
@@ -1943,10 +2012,23 @@
     "@taquito/michelson-encoder" "^10.2.0"
     "@taquito/rpc" "^10.2.0"
     "@taquito/utils" "^10.2.0"
+=======
+"@taquito/taquito@10.1.2", "@taquito/taquito@^10.1.2":
+  version "10.1.2"
+  resolved "https://registry.yarnpkg.com/@taquito/taquito/-/taquito-10.1.2.tgz#5968d193febec4756e65dbdf202327ae0dceb8af"
+  integrity sha512-y4tUp+AOHtKfOZO4cxKKjjkNqMy/LoUKMLbRwq8aUSeAeONw6WhjlCjGTBz3nZ2Q1wbV0Dp9GpD15491lsPzzQ==
+  dependencies:
+    "@taquito/http-utils" "^10.1.2"
+    "@taquito/michel-codec" "^10.1.2"
+    "@taquito/michelson-encoder" "^10.1.2"
+    "@taquito/rpc" "^10.1.2"
+    "@taquito/utils" "^10.1.2"
+>>>>>>> b4f66211d (Putting lock files back)
     bignumber.js "^9.0.1"
     rx-sandbox "^1.0.4"
     rxjs "^6.6.3"
 
+<<<<<<< HEAD
 "@taquito/tezbridge-wallet@10.2.0":
   version "10.2.0"
   resolved "https://registry.yarnpkg.com/@taquito/tezbridge-wallet/-/tezbridge-wallet-10.2.0.tgz#81165e2df846c194b4234b2fc46ca990d2ce97fc"
@@ -1981,6 +2063,42 @@
   version "10.2.0"
   resolved "https://registry.yarnpkg.com/@taquito/utils/-/utils-10.2.0.tgz#ccc458ee714cb2c2c099842260acd39b660cf47e"
   integrity sha512-UF8XZG/F9LItXENFuw43w/kaQGjMpAjMnTNBAGFo5Qzq95iZgmhfnp8B0gAAEas53Yu0DpFyPUj7LTOlIBOG7g==
+=======
+"@taquito/tezbridge-wallet@10.1.2":
+  version "10.1.2"
+  resolved "https://registry.yarnpkg.com/@taquito/tezbridge-wallet/-/tezbridge-wallet-10.1.2.tgz#4010d959318c545bff8e8f744227e3a23c995de5"
+  integrity sha512-FY7KKk2FpQ8Bi98oyyza499KIeXC3rSg4Xh/nxciAA4TQaV39gEMoHqOxPmbK4EtfZl6KwoVxjdM8qMWP/Q7Sw==
+  dependencies:
+    "@taquito/taquito" "^10.1.2"
+
+"@taquito/tzip12@10.1.2":
+  version "10.1.2"
+  resolved "https://registry.yarnpkg.com/@taquito/tzip12/-/tzip12-10.1.2.tgz#43d181fbc10f6e1ec0236f48c556146bcbebf3b5"
+  integrity sha512-plJAiKapmZ+d1x0fZ9+alK/8XXJ0FuUw9/g4x4s86ZDjqBYt3j4f3ioU7rma7IBGTyF7LRjZSM9SOZTuvo8mWQ==
+  dependencies:
+    "@taquito/michelson-encoder" "^10.1.2"
+    "@taquito/taquito" "^10.1.2"
+    "@taquito/tzip16" "^10.1.2"
+    bignumber.js "^9.0.1"
+
+"@taquito/tzip16@10.1.2", "@taquito/tzip16@^10.1.2":
+  version "10.1.2"
+  resolved "https://registry.yarnpkg.com/@taquito/tzip16/-/tzip16-10.1.2.tgz#ac345d04cb73de06972735d5955350fd4f1506a6"
+  integrity sha512-d7HOvTmOACWUcNOL9nAofjCMshSqV4Zu38nVDt/AxgvHtqauFTw2Tv3zC7KEKCAddnr6TrJPTu09X79v7wIxCw==
+  dependencies:
+    "@taquito/http-utils" "^10.1.2"
+    "@taquito/michelson-encoder" "^10.1.2"
+    "@taquito/rpc" "^10.1.2"
+    "@taquito/taquito" "^10.1.2"
+    "@taquito/utils" "^10.1.2"
+    bignumber.js "^9.0.1"
+    crypto-js "^4.0.0"
+
+"@taquito/utils@10.1.2", "@taquito/utils@^10.1.2":
+  version "10.1.2"
+  resolved "https://registry.yarnpkg.com/@taquito/utils/-/utils-10.1.2.tgz#3418af43748c06c63c5066040bdd34bb9ce9afc2"
+  integrity sha512-IlgNVL4tEKaQvP9jnS8tMRyOTZbFNxby3emtqcQVu5t3JYG36cyDNxHswCQK7ozN+e3GRP9q/L2iUMeKbGtWJQ==
+>>>>>>> b4f66211d (Putting lock files back)
   dependencies:
     blakejs "^1.1.0"
     bs58check "^2.1.2"
