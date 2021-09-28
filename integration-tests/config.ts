@@ -221,7 +221,7 @@ const setupSignerWithFreshKey = async (
   let count = 0;
   const maxTries = 3;
   
-  while(true) {
+  while(count != maxTries) {
     try {
       const key = await httpClient.createRequest<string>({
         url: keyUrl,
