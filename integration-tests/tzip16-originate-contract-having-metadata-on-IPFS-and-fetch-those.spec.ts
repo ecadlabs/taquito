@@ -22,6 +22,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const customMetadataProvider = new MetadataProvider(customHandler);
 
   Tezos.addExtension(new Tzip16Module(customMetadataProvider));
+  Tezos.setProvider({ rpc: new RpcClient(rpc, 'main', new HttpBackendForRPCCache()) });
 
   let contractAddress: string;
 
@@ -58,17 +59,35 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       done();
       // Count the Rpc calls
-      let user = await Tezos.signer.publicKeyHash();
-      let rpcCountingMapContents: Map<String, number> | undefined;
-      rpcCountingMapContents = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache)[
-        'rpcCountingMap'
-      ];
-      if (rpcCountingMapContents === undefined) {
-        console.log('RPC count is undefined');
-      } else {
-        console.log(rpcCountingMapContents);
-        expect(rpcCountingMapContents.size).toEqual(14);
-      }
+      const countRpc = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache).rpcCountingMap;
+      expect(countRpc.size).toEqual(14);
+      const signer = await Tezos.signer.publicKeyHash();
+      expect(
+        countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${signer}/balance`)
+      ).toEqual(2);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/context/constants`)).toEqual(5);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/metadata`)).toEqual(5);
+      expect(
+        countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${signer}/manager_key`)
+      ).toEqual(2);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/header`)).toEqual(4);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${signer}`)).toEqual(3);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/helpers/forge/operations`)).toEqual(3);
+      expect(countRpc.get(`${rpc}/chains/main/chain_id`)).toEqual(2);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/helpers/scripts/run_operation`)).toEqual(
+        2
+      );
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/helpers/preapply/operations`)).toEqual(1);
+      expect(countRpc.get(`${rpc}/injection/operation`)).toEqual(1);
+      //expect(countRpc.get(`${rpc}/chains/main/blocks/head`)).toEqual(3);
+      expect(
+        countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${contractAddress}/script`)
+      ).toEqual(1);
+      expect(
+        countRpc.get(
+          `${rpc}/chains/main/blocks/head/context/contracts/${contractAddress}/entrypoints`
+        )
+      ).toEqual(1);
     });
     it('Should fetch metadata of the contract on IPFS', async (done) => {
       const contract = await Tezos.contract.at(contractAddress, tzip16);
@@ -79,7 +98,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       expect(metadata.uri).toEqual('ipfs://QmcMUKkhXowQjCPtDVVXyFJd7W9LmC92Gs5kYH1KjEisdj');
       expect(metadata2.uri).toEqual('ipfs://QmcMUKkhXowQjCPtDVVXyFJd7W9LmC92Gs5kYH1KjEisdj');
-      
+
       expect(metadata.integrityCheckResult).toBeUndefined();
       expect(metadata.sha256Hash).toBeUndefined();
       expect(metadata.metadata).toEqual({
@@ -97,20 +116,15 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           location: 'https://ligolang.org/docs/tutorials/get-started/tezos-taco-shop-payout',
         },
       });
-
+      const countRpc = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache).rpcCountingMap;
+      expect(countRpc.size).toEqual(5);
+      const signer = await Tezos.signer.publicKeyHash();
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${contractAddress}/script`)).toEqual(2);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${contractAddress}/entrypoints`)).toEqual(2);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/header`)).toEqual(2);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/helpers/scripts/pack_data`)).toEqual(1);
+      //expect(countRpc.get(`${rpc}/chains/main/blocks/head/context/big_maps/67674/expru5X1yxJG6ezR2uHMotwMLNmSzQyh5t1vUnhjx4cS6Pv9qE1Sdo`)).toEqual(1);
       done();
-      // Count the Rpc calls
-      let user = await Tezos.signer.publicKeyHash();
-      let rpcCountingMapContents: Map<String, number> | undefined;
-      rpcCountingMapContents = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache)[
-        'rpcCountingMap'
-      ];
-      if (rpcCountingMapContents === undefined) {
-        console.log('RPC count is undefined');
-      } else {
-        console.log(rpcCountingMapContents);
-        expect(rpcCountingMapContents.size).toEqual(5);
-      }
     });
   });
 });

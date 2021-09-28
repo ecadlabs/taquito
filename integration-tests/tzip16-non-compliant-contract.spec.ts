@@ -6,11 +6,11 @@ import { RpcClient } from '@taquito/rpc';
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   Tezos.addExtension(new Tzip16Module());
+  Tezos.setProvider({ rpc: new RpcClient(rpc, 'main', new HttpBackendForRPCCache()) });
 
   describe(`Tzip16 failing test: ${rpc}`, () => {
     beforeEach(async (done) => {
       await setup();
-      Tezos.setProvider({ rpc: new RpcClient(rpc, 'main', new HttpBackendForRPCCache()) });
       done();
     });
     it('Deploy a simple contract having no metadata and try to fetch metadata', async (done) => {
@@ -47,19 +47,47 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       } catch (ex) {
         expect(ex).toBeInstanceOf(BigMapMetadataNotFound);
       }
-      done();
       // Count the Rpc calls
-      let user = await Tezos.signer.publicKeyHash();
-      let rpcCountingMapContents: Map<String, number> | undefined;
-      rpcCountingMapContents = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache)[
-        'rpcCountingMap'
-      ];
-      if (rpcCountingMapContents === undefined) {
-        console.log('RPC count is undefined');
-      } else {
-        console.log(rpcCountingMapContents);
-        expect(rpcCountingMapContents.size).toEqual(14);
-      }
+      const countRpc = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache).rpcCountingMap;
+      const signer = await Tezos.signer.publicKeyHash();
+      expect(countRpc.size).toEqual(14);
+      expect(
+        countRpc.get(
+          `${rpc}/chains/main/blocks/head/context/contracts/${signer}/balance`
+        )
+      ).toEqual(2);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/context/constants`)).toEqual(5);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/metadata`)).toEqual(5);
+      expect(
+        countRpc.get(
+          `${rpc}/chains/main/blocks/head/context/contracts/${signer}/manager_key`
+        )
+      ).toEqual(2);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/header`)).toEqual(5);
+      expect(
+        countRpc.get(
+          `${rpc}/chains/main/blocks/head/context/contracts/${signer}`
+        )
+      ).toEqual(3);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/helpers/forge/operations`)).toEqual(3);
+      expect(countRpc.get(`${rpc}/chains/main/chain_id`)).toEqual(2);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/helpers/scripts/run_operation`)).toEqual(
+        2
+      );
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/helpers/preapply/operations`)).toEqual(1);
+      expect(countRpc.get(`${rpc}/injection/operation`)).toEqual(1);
+      //expect(countRpc.get(`${rpc}/chains/main/blocks/head`)).toEqual(9);
+      expect(
+        countRpc.get(
+          `${rpc}/chains/main/blocks/head/context/contracts/${contractAddress}/script`
+        )
+      ).toEqual(2);
+      expect(
+        countRpc.get(
+          `${rpc}/chains/main/blocks/head/context/contracts/${contractAddress}/entrypoints`
+        )
+      ).toEqual(2);
+      done();
     });
   });
 });
