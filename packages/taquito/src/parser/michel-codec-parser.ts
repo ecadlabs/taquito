@@ -1,16 +1,15 @@
 import { Context } from '../context';
 import { ParserProvider } from './interface';
-import { Expr, Parser, Prim } from '@taquito/michel-codec';
-import { Protocols } from '../constants';
+import { Expr, Parser, Prim, ProtocolID } from '@taquito/michel-codec';
 import { OriginateParams } from '../operations/types';
 import { InvalidInitParameter, InvalidCodeParameter } from '../contract/errors';
 
 export class MichelCodecParser implements ParserProvider {
     constructor(private context: Context) { }
 
-    private async getNextProto() {
+    private async getNextProto(): Promise<ProtocolID> {
         const { next_protocol } = await this.context.rpc.getBlockMetadata();
-        return next_protocol as Protocols;
+        return next_protocol as ProtocolID;
     }
 
     async parseScript(src: string): Promise<Expr[] | null> {
