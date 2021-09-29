@@ -225,6 +225,7 @@ export const CONFIGS = () => {
 
     const configs = providers.map(({ rpc, knownBaker, knownContract, protocol, knownBigMapContract, knownTzip1216Contract, signerConfig }) => {
       const Tezos = new TezosToolkit(rpc);
+      Tezos.setProvider({ config: { confirmationPollingTimeoutSecond:300 } });
 
       setupForger(Tezos, forger)
 
