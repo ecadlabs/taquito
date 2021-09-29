@@ -74,7 +74,7 @@ class ContractMethodTzip17<T extends ContractProvider | Wallet> {
   }
 
   private async packTransfeerParam() {
-    const rawPacked = await this.context.rpc.packData({
+    const rawPacked = await this.context.packer.packData({
       data: this.createTransferParam()!,
       type: this.parameterType
     });
