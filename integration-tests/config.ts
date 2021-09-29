@@ -213,10 +213,10 @@ const setupSignerWithFreshKey = async (
   { keyUrl, requestHeaders }: EphemeralConfig
 ) => {
   const httpClient = new HttpBackend();
-  let count = 0;
-  const maxTries = 3;
-  
-  while(count != maxTries) {
+  let count=0;
+  const retries=3;
+
+  while(count != retries) {
     try {
       const key = await httpClient.createRequest<string>({
         url: keyUrl,
@@ -227,10 +227,9 @@ const setupSignerWithFreshKey = async (
       const signer = new InMemorySigner(key!);
       Tezos.setSignerProvider(signer);
     } catch (e) {
-      if (++count == maxTries) console.log("An error occurs when trying to fetch a fresh key:", e)
+      if(++count == retries) console.log("An error occurs when trying to fetch a fresh key:", e)
     }
   }
-
 };
 
 const setupSignerWithEphemeralKey = async (
