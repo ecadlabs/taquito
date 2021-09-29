@@ -52,23 +52,15 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const signer = await Tezos.signer.publicKeyHash();
       expect(countRpc.size).toEqual(14);
       expect(
-        countRpc.get(
-          `${rpc}/chains/main/blocks/head/context/contracts/${signer}/balance`
-        )
+        countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${signer}/balance`)
       ).toEqual(2);
       expect(countRpc.get(`${rpc}/chains/main/blocks/head/context/constants`)).toEqual(5);
       expect(countRpc.get(`${rpc}/chains/main/blocks/head/metadata`)).toEqual(5);
       expect(
-        countRpc.get(
-          `${rpc}/chains/main/blocks/head/context/contracts/${signer}/manager_key`
-        )
+        countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${signer}/manager_key`)
       ).toEqual(2);
       expect(countRpc.get(`${rpc}/chains/main/blocks/head/header`)).toEqual(5);
-      expect(
-        countRpc.get(
-          `${rpc}/chains/main/blocks/head/context/contracts/${signer}`
-        )
-      ).toEqual(3);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${signer}`)).toEqual(3);
       expect(countRpc.get(`${rpc}/chains/main/blocks/head/helpers/forge/operations`)).toEqual(3);
       expect(countRpc.get(`${rpc}/chains/main/chain_id`)).toEqual(2);
       expect(countRpc.get(`${rpc}/chains/main/blocks/head/helpers/scripts/run_operation`)).toEqual(
@@ -78,9 +70,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(countRpc.get(`${rpc}/injection/operation`)).toEqual(1);
       //expect(countRpc.get(`${rpc}/chains/main/blocks/head`)).toEqual(9);
       expect(
-        countRpc.get(
-          `${rpc}/chains/main/blocks/head/context/contracts/${contractAddress}/script`
-        )
+        countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${contractAddress}/script`)
       ).toEqual(2);
       expect(
         countRpc.get(

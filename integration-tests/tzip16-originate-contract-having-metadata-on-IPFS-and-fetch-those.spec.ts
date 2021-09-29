@@ -119,8 +119,14 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const countRpc = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache).rpcCountingMap;
       expect(countRpc.size).toEqual(5);
       const signer = await Tezos.signer.publicKeyHash();
-      expect(countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${contractAddress}/script`)).toEqual(2);
-      expect(countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${contractAddress}/entrypoints`)).toEqual(2);
+      expect(
+        countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${contractAddress}/script`)
+      ).toEqual(2);
+      expect(
+        countRpc.get(
+          `${rpc}/chains/main/blocks/head/context/contracts/${contractAddress}/entrypoints`
+        )
+      ).toEqual(2);
       expect(countRpc.get(`${rpc}/chains/main/blocks/head/header`)).toEqual(2);
       expect(countRpc.get(`${rpc}/chains/main/blocks/head/helpers/scripts/pack_data`)).toEqual(1);
       //expect(countRpc.get(`${rpc}/chains/main/blocks/head/context/big_maps/67674/expru5X1yxJG6ezR2uHMotwMLNmSzQyh5t1vUnhjx4cS6Pv9qE1Sdo`)).toEqual(1);
