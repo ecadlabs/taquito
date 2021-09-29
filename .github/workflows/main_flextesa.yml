@@ -50,7 +50,7 @@ jobs:
     - run: cd keygen_${{ env.UUID }} && docker-compose up &
     - run: cd keygen_${{ env.UUID }} && npm ci
     - run: cd keygen_${{ env.UUID }} && npm run build
-    - run: cd keygen_${{ env.UUID }} && npm run start &> keygen_${{ env.UUID }}_log.log
+    - run: cd keygen_${{ env.UUID }} && npm run start > keygen_${{ env.UUID }}_log.log 2>&1 &
     - run: cd taquito_${{ env.UUID }}/example/ && sed -i 's/macmini/flextesa_sandbox_${{ env.UUID }}/g' deploy-flextesa-contracts.ts
     - run: cd taquito_${{ env.UUID }}/example/ && npm run example:deploy-flextesa-contracts
     - run: cd taquito_${{ env.UUID }}/packages/taquito && npm run build
