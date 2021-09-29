@@ -244,18 +244,23 @@ const setupSignerWithEphemeralKey = async (
   const ephemeralUrl = `${keyUrl}/ephemeral`;
   const httpClient = new HttpBackend();
 
-  try {
-    const { id, pkh } = await httpClient.createRequest({
-      url: ephemeralUrl,
-      method: 'POST',
-      headers: requestHeaders,
-    });
+  let count=0;
+  const retries=3;
 
-    const signer = new RemoteSigner(pkh, `${ephemeralUrl}/${id}/`, { headers: requestHeaders });
-    Tezos.setSignerProvider(signer);
+  while(count != retries) {
+    try {
+      const { id, pkh } = await httpClient.createRequest({
+        url: ephemeralUrl,
+        method: 'POST',
+        headers: requestHeaders,
+      });
 
-  } catch (e) {
-    console.log("An error occurs when trying to fetch an ephemeral key:", e)
+      const signer = new RemoteSigner(pkh, `${ephemeralUrl}/${id}/`, { headers: requestHeaders });
+      Tezos.setSignerProvider(signer);
+
+    } catch (e) {
+      if(++count == retries) console.log("An error occurs when trying to fetch an ephemeral key:", e)
+    }
   }
 };
 
