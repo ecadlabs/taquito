@@ -29,11 +29,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         init: noAnnotInit(await Tezos.signer.publicKeyHash())
       })
       const contract = await op.contract()
-      console.log(contract.address)
 
       // Make a transfer
-      console.log('sig',contract.parameterSchema.ExtractSignatures())
-      console.log('schema',contract.parameterSchema.ExtractSchema())
 
       const operation = await contract.methodsObject[TRANSFER]({
           0: ACCOUNT1_ADDRESS, 
@@ -53,8 +50,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(account2[BALANCE].toString()).toEqual('1')
 
       // Approve
-      console.log('sig',contract.parameterSchema.ExtractSignatures())
-      console.log('schema',contract.parameterSchema.ExtractSchema())
       const operation2 = await contract.methodsObject[APPROVE]({
           2: ACCOUNT2_ADDRESS, 
           3: "1"
