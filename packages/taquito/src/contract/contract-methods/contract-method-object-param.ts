@@ -6,6 +6,10 @@ import { ParameterSchema } from "@taquito/michelson-encoder";
 import { ContractMethodInterface, ExplicitTransferParams, SendParams } from './contract-method-interface';
 import { DEFAULT_SMART_CONTRACT_METHOD_NAME } from '../contract';
 
+/**
+ * @description Utility class to send smart contract operation
+ * The format for the arguments is the object representation
+ */
 export class ContractMethodObject<T extends ContractProvider | Wallet> implements ContractMethodInterface {
     constructor(
         private provider: T,

@@ -9,6 +9,7 @@ import { InvalidParameterError } from '../errors';
 
 /**
  * @description Utility class to send smart contract operation
+ * The format for the arguments is the flattened representation
  */
 export class ContractMethod<T extends ContractProvider | Wallet> implements ContractMethodInterface {
   constructor(

@@ -161,9 +161,9 @@ Tezos.contract
 :::note
 Since Taquito version 10.2.0, the parameter can be passed in an object format when calling a smart contract entry point. 
 
-The `ContractAbstraction` class has a new member called `methodsObject`, which serves the same purpose as the `methods` member. The format the smart contract method will expect differs: `methods` expects flattened arguments as `methodsObject expects an object.
+The `ContractAbstraction` class has a new member called `methodsObject`, which serves the same purpose as the `methods` member. The format expected by the smart contract method differs: `methods` expects flattened arguments while `methodsObject` expects an object.
   
-It is to the user's discretion to use his favorite representation. We wanted to provide a way for the users of Taquito to pass an object when calling a contract entry point like it is the case for deploying a contract using the storage parameter.
+It is at the user's discretion to use their preferred representation. We wanted to provide Taquito users with a way to pass an object when calling a contract entry point using a format similar to that used by the storage parameter when deploying a contract.
 
 An example showing the difference is provided below.
 :::
@@ -222,7 +222,7 @@ importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
   </TabItem>
   <TabItem value='object'>
 
-In the following example, a contract's `set_child_record` method will be called by passing the parameter in an object format. The `methodsObject` member of the `ContractAnstraction` class allows doing so. First, it is possible to obtain details about the signature of the `set_child_record` entry point by using the `getSignature` method as follow: 
+In the following example, a contract's `set_child_record` method will be called by passing the parameter in an object format. The `methodsObject` member of the `ContractAbstraction` class allows doing so. First, it is possible to obtain details about the signature of the `set_child_record` entry point by using the `getSignature` method as follow: 
 
 ```js live noInline
 // const Tezos = new TezosToolkit('https://api.tez.ie/rpc/granadanet');
