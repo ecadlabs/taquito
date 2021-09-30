@@ -6,11 +6,11 @@ import { RpcClient } from '@taquito/rpc';
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   Tezos.addExtension(new Tzip16Module());
-  Tezos.setProvider({ rpc: new RpcClient(rpc, 'main', new HttpBackendForRPCCache()) });
 
   describe(`Tzip16 failing test: ${rpc}`, () => {
     beforeEach(async (done) => {
       await setup();
+      Tezos.setProvider({ rpc: new RpcClient(rpc, 'main', new HttpBackendForRPCCache()) });
       done();
     });
     it('Deploy a simple contract having no metadata and try to fetch metadata', async (done) => {

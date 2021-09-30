@@ -8,12 +8,12 @@ import { RpcClient } from '@taquito/rpc';
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   Tezos.addExtension(new Tzip16Module());
-  Tezos.setProvider({ rpc: new RpcClient(rpc, 'main', new HttpBackendForRPCCache()) });
   const test = require('jest-retries');
 
   describe(`Execute views example from TZComet: ${rpc}`, () => {
     beforeEach(async (done) => {
       await setup();
+      Tezos.setProvider({ rpc: new RpcClient(rpc, 'main', new HttpBackendForRPCCache()) });
       done();
     });
 
@@ -61,30 +61,28 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(view1000RandomCharactersResult.toString()).toEqual(
         '3488f2807fd9c671d0924896a5848488e4edf26c29e0002316c42660ad4167246167072495adddc4ba742238d966204e72ec5ad3ef2037445313f12b032a9e23fc47b93a4a5f529a5a029f0c4a258191bf7b469d62b173cf820c5993de7ce39fc3f75f19da85ddbbf8efe32a51abd10c903acb7fdafcfb6e4f10cf37d23b261104f53622c17c47a65834b8be5534df1d4721169d63eb031e0d2a47afd6fcc4f6f02c5d152c17c2e15b8b2f192fcf8b912fdac43a10242e2b2573daac7106b34e6519c06f3c95f6b4b4349a90c3949d33ff21dddb12fb1d17af20b499167c2fb6afeb7b726c7846ddf862c2d1c9da5b3788ac947f04d05e2726870d3b092d72600e06fe47ffce19ea888b98dfc0703f32dc3b17054084e5d983789c8596bc36fb82c40dcba161271c311d5dc948965712bc282f4dc3483b847c8dd3908838e30f5698a068cc5c4ff85c72c99c2d45e6599dc7dd55e97383ff5de05035a70d2c88b1f64417dea21113a802f0f3991ae20960aaee71a46708b86b05b06c51786e057517a208ec106339dfc34f898873f7b5a833aa637f2c5111fbfc86231d8905192982077e23584e4d6a4cf42bf0076322425ad0dea0cf1676102c3f179d833afe5e600ab1d247f00e87a0a76034b93a324f5816ae6127794ac34696cbd09552c4a6f5d6c5485e4ad8fd7823e19159a16b9746cce3b8a22a0ebda3709dd932da3b9b7f387b0b87045cc0318f04920eb5619c69aa8f3e6fd4649644631b7536198bf66a70a8cfbdd2537255f63ab8e972561a1a2a13a495932cb391858fcf19cdb6a20ac36cc07ac2fdd1aad2e76247c2a861942014b996bda9fefb458fb9960c0554aa916e6f4146eeaf06f41cd050d20125adad989c9160b111230184f9ddf9194f554ee08a10961299293386d18fbe1ba1fd2740146ab760c790f3721e470bf06740ed65656a26c6dcea0d5c1a33c6bb2e45cc0b2eac6919d03a5ba34895f2ec75140231f2ddd188dc34b035a47021f5d2c68235fe70153d895221bbfd12af3bf819790d099d2a0b8e804ade159ffc95eed7df4c0d0328076d35ddf5df76bbba473231c71568025d40cb19f6121ab5793204f30314cb44533d4ef6e512e6c5dbb7769819f1ffe23690e13f1325e182a732c0e6e03ff9f9887122b32e4fc525034e9c00f9159a98b9f9302e44bbd2eb6317dac650e2d265119d333138c00a36e390290e468d236c1e031642e7cdd5f39117857241ac9d11ebbd3d23c599ce9c78523ea145ef4c851de0092ebd976ea4a7bba8716fab4fd05868390723f8148f6058fd35bb1674a6e794a4ff53efbb8c5cd6a9402e166bbcb662ac71df601767550656699de965a1434879ce99fb50bb54d35e500173451fbdaaa89169951b3fa10652f0e11e28901e'
       );
-
-      done();
       // Count the Rpc calls
       const countRpc = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache).rpcCountingMap;
       expect(countRpc.size).toEqual(19);
       const signer = await Tezos.signer.publicKeyHash();
       expect(
         countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${signer}/balance`)
-      ).toEqual(2);
-      expect(countRpc.get(`${rpc}/chains/main/blocks/head/context/constants`)).toEqual(5);
-      expect(countRpc.get(`${rpc}/chains/main/blocks/head/metadata`)).toEqual(5);
+      ).toEqual(1);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/context/constants`)).toEqual(3);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/metadata`)).toEqual(4);
       expect(
         countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${signer}/manager_key`)
       ).toEqual(2);
-      //expect(countRpc.get(`${rpc}/chains/main/blocks/head/header`)).toEqual(5);
-      expect(countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${signer}`)).toEqual(3);
-      expect(countRpc.get(`${rpc}/chains/main/blocks/head/helpers/forge/operations`)).toEqual(3);
-      expect(countRpc.get(`${rpc}/chains/main/chain_id`)).toEqual(7);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/header`)).toEqual(4);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${signer}`)).toEqual(2);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/helpers/forge/operations`)).toEqual(2);
+      expect(countRpc.get(`${rpc}/chains/main/chain_id`)).toEqual(6);
       expect(countRpc.get(`${rpc}/chains/main/blocks/head/helpers/scripts/run_operation`)).toEqual(
-        2
+        1
       );
       expect(countRpc.get(`${rpc}/chains/main/blocks/head/helpers/preapply/operations`)).toEqual(1);
       expect(countRpc.get(`${rpc}/injection/operation`)).toEqual(1);
-      expect(countRpc.get(`${rpc}/chains/main/blocks/head`)).toEqual(17);
+      //expect(countRpc.get(`${rpc}/chains/main/blocks/head`)).toEqual(8);
       expect(
         countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${contractAddress}/script`)
       ).toEqual(3);
@@ -100,6 +98,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${contractAddress}/balance`)
       ).toEqual(5);
       expect(countRpc.get(`${rpc}/chains/main/blocks/head/helpers/scripts/run_code`)).toEqual(5);
+      done();
     });
 
     test('Deploy a contract with metadata having a couple of views (example taken from TZComet) and call the views', async (done: () => void) => {
@@ -150,91 +149,65 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const viewContractAddressResult = await metadataViews['get-contract-address']().executeView();
       expect(viewContractAddressResult.toString()).toEqual(contractAddress);
 
-      done();
+
       // Count the Rpc calls
       const countRpc = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache).rpcCountingMap;
       expect(countRpc.size).toEqual(19);
+      const signer = await Tezos.signer.publicKeyHash();
       expect(
         countRpc.get(
-          `${rpc}/chains/main/blocks/head/context/contracts/tz2JFszH41SQmJmSrv7X673GJnLTxuPkUyA6/balance`
+          `${rpc}/chains/main/blocks/head/context/contracts/${signer}/balance`
+        )
+      ).toEqual(1);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/context/constants`)).toEqual(2);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/metadata`)).toEqual(4);
+      expect(
+        countRpc.get(
+          `${rpc}/chains/main/blocks/head/context/contracts/${signer}/manager_key`
         )
       ).toEqual(2);
-      expect(countRpc.get(`${rpc}/chains/main/blocks/head/context/constants`)).toEqual(9);
-      expect(countRpc.get(`${rpc}/chains/main/blocks/head/metadata`)).toEqual(10);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/header`)).toEqual(4);
       expect(
         countRpc.get(
-          `${rpc}/chains/main/blocks/head/context/contracts/tz2JFszH41SQmJmSrv7X673GJnLTxuPkUyA6/manager_key`
+          `${rpc}/chains/main/blocks/head/context/contracts/${signer}`
         )
       ).toEqual(2);
-      expect(countRpc.get(`${rpc}/chains/main/blocks/head/header`)).toEqual(10);
-      expect(
-        countRpc.get(
-          `${rpc}/chains/main/blocks/head/context/contracts/tz2JFszH41SQmJmSrv7X673GJnLTxuPkUyA6`
-        )
-      ).toEqual(3);
-      expect(countRpc.get(`${rpc}/chains/main/blocks/head/helpers/forge/operations`)).toEqual(6);
-      expect(countRpc.get(`${rpc}/chains/main/chain_id`)).toEqual(15);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/helpers/forge/operations`)).toEqual(2);
+      expect(countRpc.get(`${rpc}/chains/main/chain_id`)).toEqual(7);
       expect(countRpc.get(`${rpc}/chains/main/blocks/head/helpers/scripts/run_operation`)).toEqual(
-        4
+        1
       );
-      expect(countRpc.get(`${rpc}/chains/main/blocks/head/helpers/preapply/operations`)).toEqual(2);
-      expect(countRpc.get(`${rpc}/injection/operation`)).toEqual(2);
-      //expect(countRpc.get(`${rpc}/chains/main/blocks/head`)).toEqual(22);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/helpers/preapply/operations`)).toEqual(1);
+      expect(countRpc.get(`${rpc}/injection/operation`)).toEqual(1);
+      //expect(countRpc.get(`${rpc}/chains/main/blocks/head`)).toEqual(19);
       expect(
         countRpc.get(
-          `${rpc}/chains/main/blocks/head/context/contracts/KT1FRayCvvvFDyQiRoYNsKitvUmn4tzwUsYk/script`
+          `${rpc}/chains/main/blocks/head/context/contracts/${contractAddress}/script`
         )
-      ).toEqual(3);
-      expect(
-        countRpc.get(
-          `${rpc}/chains/main/blocks/head/context/contracts/KT1FRayCvvvFDyQiRoYNsKitvUmn4tzwUsYk/entrypoints`
-        )
-      ).toEqual(2);
-      expect(countRpc.get(`${rpc}/chains/main/blocks/head/helpers/scripts/pack_data`)).toEqual(4);
-      expect(
-        countRpc.get(
-          `${rpc}/chains/main/blocks/head/context/big_maps/67582/expru5X1yxJG6ezR2uHMotwMLNmSzQyh5t1vUnhjx4cS6Pv9qE1Sdo`
-        )
-      ).toEqual(1);
-      expect(
-        countRpc.get(
-          `${rpc}/chains/main/blocks/head/context/big_maps/67582/expruaHzyjwFcmFKHqR49qdxwJupAna6ygSKo2mFJQtqZQjid5t8GK`
-        )
-      ).toEqual(1);
-      expect(
-        countRpc.get(
-          `${rpc}/chains/main/blocks/head/context/contracts/KT1FRayCvvvFDyQiRoYNsKitvUmn4tzwUsYk/balance`
-        )
-      ).toEqual(5);
-      expect(countRpc.get(`${rpc}/chains/main/blocks/head/helpers/scripts/run_code`)).toEqual(11);
-      expect(
-        countRpc.get(
-          `${rpc}/chains/main/blocks/head/context/contracts/tz2KMGu4ZMgC5wKnEgAbvNGL4oTm7fXwxFsy/balance`
-        )
-      ).toEqual(2);
-      expect(
-        countRpc.get(
-          `${rpc}/chains/main/blocks/head/context/contracts/tz2KMGu4ZMgC5wKnEgAbvNGL4oTm7fXwxFsy/manager_key`
-        )
-      ).toEqual(2);
-      expect(
-        countRpc.get(
-          `${rpc}/chains/main/blocks/head/context/contracts/tz2KMGu4ZMgC5wKnEgAbvNGL4oTm7fXwxFsy`
-        )
-      ).toEqual(3);
-      expect(
-        countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${contractAddress}/script`)
       ).toEqual(3);
       expect(
         countRpc.get(
           `${rpc}/chains/main/blocks/head/context/contracts/${contractAddress}/entrypoints`
         )
       ).toEqual(2);
-      //expect(countRpc.get(`${rpc}/chains/main/blocks/head/context/big_maps/67583/expru5X1yxJG6ezR2uHMotwMLNmSzQyh5t1vUnhjx4cS6Pv9qE1Sdo`)).toEqual(1);
-      //expect(countRpc.get(`${rpc}/chains/main/blocks/head/context/big_maps/67583/expruaHzyjwFcmFKHqR49qdxwJupAna6ygSKo2mFJQtqZQjid5t8GK`)).toEqual(1);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/helpers/scripts/pack_data`)).toEqual(2);
+      // expect(
+      //   countRpc.get(
+      //     `${rpc}/chains/main/blocks/head/context/big_maps/67582/expru5X1yxJG6ezR2uHMotwMLNmSzQyh5t1vUnhjx4cS6Pv9qE1Sdo`
+      //   )
+      // ).toEqual(1);
+      // expect(
+      //   countRpc.get(
+      //     `${rpc}/chains/main/blocks/head/context/big_maps/67582/expruaHzyjwFcmFKHqR49qdxwJupAna6ygSKo2mFJQtqZQjid5t8GK`
+      //   )
+      // ).toEqual(1);
       expect(
-        countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${contractAddress}/balance`)
+        countRpc.get(
+          `${rpc}/chains/main/blocks/head/context/contracts/${contractAddress}/balance`
+        )
       ).toEqual(6);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/helpers/scripts/run_code`)).toEqual(6);
+      done();
     });
   });
 });

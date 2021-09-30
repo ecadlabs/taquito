@@ -5,12 +5,12 @@ import { HttpBackendForRPCCache } from './HttPBackendForRPCCache';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  Tezos.setProvider({ rpc: new RpcClient(rpc, 'main', new HttpBackendForRPCCache()) });
   Tezos.addExtension(new Tzip16Module());
 
   describe(`Tzip16 failing test: ${rpc}`, () => {
     beforeEach(async (done) => {
       await setup();
+      Tezos.setProvider({ rpc: new RpcClient(rpc, 'main', new HttpBackendForRPCCache()) });
       done();
     });
     it('Deploy a simple contract using wallet api having no metadata and try to fetch metadata', async (done) => {
@@ -80,18 +80,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         )
       ).toEqual(2);
       done();
-      // Count the Rpc calls
-      //   let user = await Tezos.signer.publicKeyHash();
-      //   let rpcCountingMapContents: Map<String, number> | undefined;
-      //   rpcCountingMapContents = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache)[
-      //     'rpcCountingMap'
-      //   ];
-      //   if (rpcCountingMapContents === undefined) {
-      //     console.log('RPC count is undefined');
-      //   } else {
-      //     console.log(rpcCountingMapContents);
-      //     expect(rpcCountingMapContents.size).toEqual(14);
-      //   }
     });
   });
 });

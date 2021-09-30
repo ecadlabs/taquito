@@ -57,7 +57,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       contractAddress = (await op.contract()).address;
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-      done();
+
       // Count the Rpc calls
       const countRpc = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache).rpcCountingMap;
       expect(countRpc.size).toEqual(14);
@@ -88,6 +88,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           `${rpc}/chains/main/blocks/head/context/contracts/${contractAddress}/entrypoints`
         )
       ).toEqual(1);
+      done();
     });
     it('Should fetch metadata of the contract on IPFS', async (done) => {
       const contract = await Tezos.contract.at(contractAddress, tzip16);
