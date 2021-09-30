@@ -265,8 +265,9 @@ export class Wallet {
     contractAbstractionComposer: (abs: ContractAbstraction<Wallet>, context: Context) => T = (x) =>
       x as any
   ): Promise<T> {
-    const script = await this.context.rpc.getScript(address);
-    const entrypoints = await this.context.rpc.getEntrypoints(address);
+    const rpc = this.context.withExtensions().rpc;
+    const script = await rpc.getScript(address);
+    const entrypoints = await rpc.getEntrypoints(address);
     const blockHeader = await this.context.rpc.getBlockHeader();
     const chainId = blockHeader.chain_id;
     const abs = new ContractAbstraction(
