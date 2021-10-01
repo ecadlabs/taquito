@@ -1,16 +1,26 @@
 import { CONFIGS } from "./config";
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, isSandbox }) => {
   const Tezos = lib;
   const test = require('jest-retries');
 
   beforeEach(async (done) => {
     await setup();
-    Tezos.setProvider({
-      config: {
-        confirmationPollingIntervalSecond: 10
-      }
-    })
+    
+    if (isSandbox) {
+      Tezos.setProvider({
+        config: {
+          confirmationPollingIntervalSecond: 5
+        }
+      })
+    } else {
+      Tezos.setProvider({
+        config: {
+          confirmationPollingIntervalSecond: 10
+        }
+      })
+    }
+    
     done();
   })
 
