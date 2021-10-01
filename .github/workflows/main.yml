@@ -57,7 +57,7 @@ jobs:
     - run: cd integration-tests && npm run test:hangzhounet -- --maxWorkers=8
       env:
         CI: true
-        TEZOS_RPC_HANGZHOUNET: 'https://hangzhounet.api.tez.ie'
+        TEZOS_RPC_HANGZHOUNET: 'http://10.60.41.80:8732'
 
   integration-tests-granadanet:
     runs-on: ecad-taquito
