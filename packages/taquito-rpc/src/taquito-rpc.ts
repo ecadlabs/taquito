@@ -56,11 +56,11 @@ export { VERSION } from './version';
 
 const defaultChain = 'main';
 
-interface RPCOptions {
+export interface RPCOptions {
   block: string;
 }
 
-const defaultRPCOptions: RPCOptions = { block: 'head' };
+export const defaultRPCOptions: RPCOptions = { block: 'head' };
 
 /***
  * @description RpcClient allows interaction with Tezos network through an rpc node
@@ -81,7 +81,7 @@ export class RpcClient {
     protected httpBackend: HttpBackend = new HttpBackend()
   ) {}
 
-  private createURL(path: string) {
+  protected createURL(path: string) {
     // Trim trailing slashes because it is assumed to be included in path
     return `${this.url.replace(/\/+$/g, '')}${path}`;
   }
