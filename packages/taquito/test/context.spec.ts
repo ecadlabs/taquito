@@ -1,4 +1,6 @@
+import { RpcClient } from '@taquito/rpc';
 import { retry, tap } from 'rxjs/operators';
+import { Protocols } from '../src/constants';
 import { Context } from '../src/context';
 
 describe('Configurations for the confirmation methods and streamer', () => {
@@ -187,3 +189,51 @@ describe('Taquito context class', () => {
         expect(pollingInterval).toBe(5);
     });
 });
+
+describe('registerProviderDecorator', () => {
+    let rpcClient: RpcClient;
+    let context: Context;
+
+    beforeAll(() => {
+        rpcClient = new RpcClient('url1');
+        context = new Context(rpcClient);
+    });
+
+    it('Add a decorator to the context that replace the RpcClient', () => {
+
+        // The decorator is a function that receives a context as parameter, replaces the RpcClient on it and returns the context
+        const setNewRpcClient = (context: Context) => {
+            context.rpc = new RpcClient('url2');
+            return context;
+        }
+        // save the decorator on the context
+        context.registerProviderDecorator(setNewRpcClient);
+
+        // call the withExtensions method to access a cloned context with the applied decorator
+        expect(context.rpc.getRpcUrl()).toEqual('url1');
+        expect(context.withExtensions().rpc.getRpcUrl()).toEqual('url2');
+    });
+
+    it('Add multiple decorators on the context', () => {
+
+        // The decorator 1 is a function that receives a context as parameter, replaces the RpcClient on it and returns the context
+        const setNewRpcClient = (context: Context) => {
+            context.rpc = new RpcClient('url2');
+            return context;
+        };
+        context.registerProviderDecorator(setNewRpcClient);
+
+        // The decorator 2 is a function that receives a context as parameter, replaces the proto on it and returns the context
+        const setNewProto = (context: Context) => {
+            context.proto = Protocols.PtGRANADs;
+            return context;
+        }
+        context.registerProviderDecorator(setNewProto);
+
+        // call the withExtensions method to access a cloned context with the applied decorator
+        expect(context.rpc.getRpcUrl()).toEqual('url1');
+        expect(context.withExtensions().rpc.getRpcUrl()).toEqual('url2');
+        expect(context.proto).toBeUndefined();
+        expect(context.withExtensions().proto).toEqual(Protocols.PtGRANADs);
+    });
+})

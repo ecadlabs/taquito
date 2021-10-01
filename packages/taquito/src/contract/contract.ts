@@ -1,99 +1,15 @@
 import { ParameterSchema, Schema } from '@taquito/michelson-encoder';
 import { EntrypointsResponse, ScriptResponse } from '@taquito/rpc';
 import { ChainIds, DefaultLambdaAddresses } from '../constants';
-import { TransactionOperation } from '../operations/transaction-operation';
-import { TransferParams } from '../operations/types';
-import { TransactionWalletOperation, Wallet } from '../wallet';
+import { Wallet } from '../wallet';
+import { ContractMethodFactory } from './contract-methods/contract-method-factory';
+import { ContractMethod } from './contract-methods/contract-method-flat-param';
+import { ContractMethodObject } from './contract-methods/contract-method-object-param';
 import { InvalidParameterError, UndefinedLambdaContractError } from './errors';
 import { ContractProvider, StorageProvider } from './interface';
 import LambdaView from './lambda-view';
 
-interface SendParams {
-  fee?: number;
-  storageLimit?: number;
-  gasLimit?: number;
-  amount: number;
-  source?: string;
-  mutez?: boolean;
-}
-
-// Ensure that all parameter that are not in SendParams are defined
-type ExplicitTransferParams = Required<Omit<TransferParams, keyof SendParams>> & SendParams;
-
-const DEFAULT_SMART_CONTRACT_METHOD_NAME = 'default';
-
-/**
- * @description Utility class to send smart contract operation
- */
-export class ContractMethod<T extends ContractProvider | Wallet> {
-  constructor(
-    private provider: T,
-    private address: string,
-    private parameterSchema: ParameterSchema,
-    private name: string,
-    private args: any[],
-    private isMultipleEntrypoint = true,
-    private isAnonymous = false
-  ) { }
-
-  /**
-   * @description Get the schema of the smart contract method
-   */
-  get schema() {
-    return this.isAnonymous
-      ? this.parameterSchema.ExtractSchema()[this.name]
-      : this.parameterSchema.ExtractSchema();
-  }
-
-  /**
-   *
-   * @description Send the smart contract operation
-   *
-   * @param Options generic operation parameter
-   */
-  send(
-    params: Partial<SendParams> = {}
-  ): Promise<T extends Wallet ? TransactionWalletOperation : TransactionOperation> {
-    if (this.provider instanceof Wallet) {
-      // TODO got around TS2352: Conversion of type 'T & Wallet' to type 'Wallet' by adding `as unknown`. Needs clarification
-      return (this.provider as unknown as Wallet).transfer(this.toTransferParams(params)).send() as any;
-    } else {
-      return this.provider.transfer(this.toTransferParams(params)) as any;
-    }
-  }
-
-  /**
-   *
-   * @description Create transfer params to be used with TezosToolkit.contract.transfer methods
-   *
-   * @param Options generic transfer operation parameters
-   */
-  toTransferParams({
-    fee,
-    gasLimit,
-    storageLimit,
-    source,
-    amount = 0,
-    mutez = false,
-  }: Partial<SendParams> = {}): TransferParams {
-    const fullTransferParams: ExplicitTransferParams = {
-      to: this.address,
-      amount,
-      fee,
-      mutez,
-      source,
-      gasLimit,
-      storageLimit,
-      parameter: {
-        entrypoint: this.isMultipleEntrypoint ? this.name : 'default',
-        value: this.isAnonymous
-          ? this.parameterSchema.Encode(this.name, ...this.args)
-          : this.parameterSchema.Encode(...this.args),
-      },
-    };
-    return fullTransferParams;
-  }
-}
+export const DEFAULT_SMART_CONTRACT_METHOD_NAME = 'default';
 
 /**
  * @description Utility class to retrieve data from a smart contract's storage without incurring fees via a contract's view method
@@ -176,12 +92,20 @@ const isContractProvider = (variableToCheck: any): variableToCheck is ContractPr
  * @description Smart contract abstraction
  */
 export class ContractAbstraction<T extends ContractProvider | Wallet> {
+  private contractMethodFactory = new ContractMethodFactory<T>()
   /**
    * @description Contains methods that are implemented by the target Tezos Smart Contract, and offers the user to call the Smart Contract methods as if they were native TS/JS methods.
    * NB: if the contract contains annotation it will include named properties; if not it will be indexed by a number.
    *
    */
   public methods: { [key: string]: (...args: any[]) => ContractMethod<T> } = {};
+  /**
+   * @description Contains methods that are implemented by the target Tezos Smart Contract, and offers the user to call the Smart Contract methods as if they were native TS/JS methods.
+   * `methodsObject` serves the exact same purpose as the `methods` member. The difference is that it allows passing the parameter in an object format when calling the smart contract method (instead of the flattened representation)
+   * NB: if the contract contains annotation it will include named properties; if not it will be indexed by a number.
+   *
+   */
+  public methodsObject: { [key: string]: (args?: any) => ContractMethodObject<T> } = {};
 
   public views: { [key: string]: (...args: any[]) => ContractView } = {};
 
@@ -218,11 +142,9 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
         const smartContractMethodSchema = new ParameterSchema(
           entrypoints[smartContractMethodName]
         );
-        const method = function (...args: any[]) {
 
-          validateArgs(args, smartContractMethodSchema, smartContractMethodName);
-
-          return new ContractMethod<T>(
+        this.methods[smartContractMethodName] = function (...args: any[]) {
+          return currentContract.contractMethodFactory.createContractMethodFlatParams(
             provider,
             address,
             smartContractMethodSchema,
@@ -230,7 +152,16 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
             args
           );
         };
-        this.methods[smartContractMethodName] = method;
+
+        this.methodsObject[smartContractMethodName] = function (args: any) {
+          return currentContract.contractMethodFactory.createContractMethodObjectParam(
+            provider,
+            address,
+            smartContractMethodSchema,
+            smartContractMethodName,
+            args
+          );
+        };
 
         if (isContractProvider(provider)) {
           if (isView(smartContractMethodSchema)) {
@@ -268,13 +199,8 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
       );
 
       anonymousMethods.forEach(smartContractMethodName => {
-        const method = function (...args: any[]) {
-          validateArgs(
-            [smartContractMethodName, ...args],
-            parameterSchema,
-            smartContractMethodName
-          );
-          return new ContractMethod<T>(
+        this.methods[smartContractMethodName] = function (...args: any[]) {
+          return currentContract.contractMethodFactory.createContractMethodFlatParams(
             provider,
             address,
             parameterSchema,
@@ -284,13 +210,23 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
             true
           );
         };
-        this.methods[smartContractMethodName] = method;
+
+        this.methodsObject[smartContractMethodName] = function (args: any) {
+          return currentContract.contractMethodFactory.createContractMethodObjectParam(
+            provider,
+            address,
+            parameterSchema,
+            smartContractMethodName,
+            args,
+            false,
+            true
+          );
+        };
       });
     } else {
       const smartContractMethodSchema = this.parameterSchema;
-      const method = function (...args: any[]) {
-        validateArgs(args, parameterSchema, DEFAULT_SMART_CONTRACT_METHOD_NAME);
-        return new ContractMethod<T>(
+      this.methods[DEFAULT_SMART_CONTRACT_METHOD_NAME] = function (...args: any[]) {
+        return currentContract.contractMethodFactory.createContractMethodFlatParams(
           provider,
           address,
           smartContractMethodSchema,
@@ -299,7 +235,17 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
           false
         );
       };
-      this.methods[DEFAULT_SMART_CONTRACT_METHOD_NAME] = method;
+
+      this.methodsObject[DEFAULT_SMART_CONTRACT_METHOD_NAME] = function (args: any) {
+        return currentContract.contractMethodFactory.createContractMethodObjectParam(
+          provider,
+          address,
+          smartContractMethodSchema,
+          DEFAULT_SMART_CONTRACT_METHOD_NAME,
+          args,
+          false
+        );
+      };
     }
   }
 

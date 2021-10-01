@@ -1,5 +1,5 @@
 import { Context } from '../context';
-import { ContractMethod } from '../contract/contract';
+import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
 import { EstimationProvider, ContractProvider } from '../contract/interface';
 import {
   createOriginationOperation,
@@ -22,6 +22,7 @@ import {
   isOpRequireReveal,
 } from '../operations/types';
 import { OpKind } from '@taquito/rpc';
+import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
 
 export const BATCH_KINDS = [
   OpKind.ACTIVATION,
@@ -59,7 +60,7 @@ export class OperationBatch extends OperationEmitter {
    *
    * @param params Transfer operation parameter
    */
-  withContractCall(params: ContractMethod<ContractProvider>) {
+  withContractCall(params: ContractMethod<ContractProvider> | ContractMethodObject<ContractProvider>) {
     return this.withTransfer(params.toTransferParams());
   }
 
