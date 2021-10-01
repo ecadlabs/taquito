@@ -10,6 +10,10 @@
   "main": "dist/taquito-tzip12.umd.js",
   "module": "dist/taquito-tzip12.es5.js",
   "typings": "dist/types/taquito-tzip12.d.ts",
+  "files": [
+    "dist",
+    "signature.json"
+  ],
   "publishConfig": {
     "access": "public"
   },

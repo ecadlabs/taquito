@@ -55,7 +55,19 @@ export class ParameterSchema {
         throw ex;
       }
 
-      throw new Error(`Unable to encode storage object. ${ex}`);
+      throw new Error(`Unable to encode parameter. ${ex}`);
+    }
+  }
+
+  EncodeObject(_value?: any) {
+    try {
+      return this.root.EncodeObject(_value);
+    } catch (ex) {
+      if (ex instanceof TokenValidationError) {
+        throw ex;
+      }
+
+      throw new Error(`Unable to encode parameter object. ${ex}`);
     }
   }
 

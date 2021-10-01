@@ -22,6 +22,7 @@
     "@taquito/rpc": "^10.1.2",
     "@taquito/signer": "^10.1.2",
     "@taquito/taquito": "^10.1.2",
+    "@taquito/tzip12": "^10.1.2",
     "@taquito/tzip16": "^10.1.2",
     "@taquito/utils": "^10.1.2",
     "bignumber.js": "^9.0.1"
