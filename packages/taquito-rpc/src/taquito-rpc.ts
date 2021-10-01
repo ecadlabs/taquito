@@ -49,9 +49,9 @@ import { castToBigNumber } from './utils/utils';
 
 export { castToBigNumber } from './utils/utils';
 
-export * from './rpc-client-interface';
+export { RPCOptions, defaultChain, defaultRPCOptions, RpcClientInterface } from './rpc-client-interface';
 
-export * from './rpc-client-modules/rpc-cache';
+export { RpcClientCache } from './rpc-client-modules/rpc-cache';
 
 export * from './types';
 
@@ -78,7 +78,7 @@ export class RpcClient implements RpcClientInterface {
     protected httpBackend: HttpBackend = new HttpBackend()
   ) {}
 
-  private createURL(path: string) {
+  protected createURL(path: string) {
     // Trim trailing slashes because it is assumed to be included in path
     return `${this.url.replace(/\/+$/g, '')}${path}`;
   }

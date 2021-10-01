@@ -20,6 +20,7 @@ import { RpcPacker } from './packer/rpc-packer';
 import BigNumber from 'bignumber.js';
 import { retry } from 'rxjs/operators';
 import { BehaviorSubject, OperatorFunction } from 'rxjs';
+import { Extension } from './taquito';
 
 export interface TaquitoProvider<T, K extends Array<any>> {
   new (context: Context, ...rest: K): T;
@@ -62,7 +63,8 @@ export class Context {
   private _walletProvider: WalletProvider;
   public readonly operationFactory: OperationFactory;
   private _packer: Packer;
-
+  private _extensions: { [name:string]: Extension } = {}
+  private providerDecorator: Function[] = [];
   public readonly tz = new RpcTzProvider(this);
   public readonly estimate = new RPCEstimateProvider(this);
   public readonly contract = new RpcContractProvider(this, this.estimate);
@@ -228,5 +230,27 @@ export class Context {
       this._injector,
       this.packer
     );
+  }
+
+  /**
+   * @description Allows extensions set on the TezosToolkit to inject logic into the context
+   */
+  registerProviderDecorator(fx: (context: Context) => Context){
+    this.providerDecorator.push(fx)
+  }
+
+  /**
+   * @description Applies the decorators on a cloned instance of the context and returned this cloned instance.
+   * The decorators are functions that inject logic into the context.
+   * They are provided by the extensions set on the TezosToolkit by calling the registerProviderDecorator method.
+   */
+  withExtensions() {
+    let currentContext = this;
+
+    this.providerDecorator.forEach((decorator) => {
+      currentContext = decorator(currentContext.clone())
+    })
+
+    return currentContext;
   }
 }

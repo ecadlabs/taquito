@@ -158,12 +158,12 @@ export class TezosToolkit {
   setRpcProvider(rpc?: SetProviderOptions['rpc']) {
     if (typeof rpc === 'string') {
       this._rpcClient = new RpcClient(rpc);
-    } else if (rpc instanceof RpcClient) {
+    } else if (rpc === undefined) {
+      // do nothing, RPC is required in the constructor, do not override it
+    }
+    else {
       this._rpcClient = rpc;
     }
-    /*     else if (this._options.rpc === undefined) {
-      this._rpcClient = new RpcClient();
-    } */
     this._options.rpc = this._rpcClient;
     this._context.rpc = this._rpcClient;
   }
@@ -291,8 +291,12 @@ export class TezosToolkit {
    *
    * @example Tezos.addExtension(new Tzip16Module());
    */
-  addExtension(module: Extension) {
-    module.configureContext(this._context);
+  addExtension(module: Extension | Extension[]) {
+    if(Array.isArray(module)){
+      module.forEach(extension => extension.configureContext(this._context));
+    } else {
+      module.configureContext(this._context);
+    }
   }
 
   getFactory<T, K extends Array<any>>(ctor: TaquitoProvider<T, K>) {

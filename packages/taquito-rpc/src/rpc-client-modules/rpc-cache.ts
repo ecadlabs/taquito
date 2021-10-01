@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js';
 import { defaultRPCOptions, RpcClientInterface, RPCOptions } from '../rpc-client-interface';
 import {
     BakingRightsQueryArguments,
@@ -706,7 +707,7 @@ export class RpcClientCache implements RpcClientInterface {
      *
      * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-helpers-scripts-pack-data
      */
-    async packData(data: PackDataParams, { block }: RPCOptions = defaultRPCOptions) {
+    async packData(data: PackDataParams, { block }: RPCOptions = defaultRPCOptions): Promise<{ packed: string; gas: BigNumber | 'unaccounted' | undefined }> {
         const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'packData', [block, data]);
         if (this.has(key)) {
             return this.get(key);

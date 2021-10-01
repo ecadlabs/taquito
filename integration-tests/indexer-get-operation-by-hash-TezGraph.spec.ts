@@ -7,8 +7,7 @@ describe(`Fetch operation by hash`, () => {
   });
   it('Should retrieve and properly format a batch operation on mainnet using TezGraph indexer', async (done) => {
     const hash = 'opEa6VG7KsXJKAHC4NYYvSUTugJgHRmbrg61PfGDrvmaXAe4coA';
-    // Temporarily use staging url to retrieve the new status property
-    const idx = new TezGraphIndexer('https://mainnet.staging.tezgraph.tez.ie/graphql');
+    const idx = new TezGraphIndexer('https://mainnet.tezgraph.tez.ie/graphql');
     const op = await idx.getOperation(hash);
 
     expect(op.length).toEqual(11);

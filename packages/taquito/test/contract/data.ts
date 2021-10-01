@@ -2586,3 +2586,48 @@ export const tokenInit = (k: string): MichelsonData => ({
     },
   ],
 });
+
+export const entrypointsGenericMultisig = {
+  entrypoints: {
+    main: {
+      prim: 'pair',
+      args: [
+        {
+          prim: 'pair',
+          args: [
+            { prim: 'nat', annots: [ '%counter' ] },
+            {
+              prim: 'or',
+              args: [
+                {
+                  prim: 'lambda',
+                  args: [
+                    { prim: 'unit' },
+                    { prim: 'list', args: [ { prim: 'operation' } ] }
+                  ],
+                  annots: [ '%operation' ]
+                },
+                {
+                  prim: 'pair',
+                  args: [
+                    { prim: 'nat', annots: [ '%threshold' ] },
+                    { prim: 'list', args: [ { prim: 'key' } ], annots: [ '%keys' ] }
+                  ],
+                  annots: [ '%change_keys' ]
+                }
+              ],
+              annots: [ ':action' ]
+            }
+          ],
+          annots: [ ':payload' ]
+        },
+        {
+          prim: 'list',
+          args: [ { prim: 'option', args: [ { prim: 'signature' } ] } ],
+          annots: [ '%sigs' ]
+        }
+      ]
+    },
+    default: { prim: 'unit' }
+  }
+};

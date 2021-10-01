@@ -1,6 +1,6 @@
 {
   "name": "@taquito/indexer",
-  "version": "10.1.0",
+  "version": "10.1.2",
   "description": "Access indexed Tezos block-chain data",
   "keywords": [
     "tezos",
@@ -64,8 +64,8 @@
     ]
   },
   "dependencies": {
-    "@taquito/http-utils": "^10.1.0",
-    "@taquito/rpc": "^10.1.0",
+    "@taquito/http-utils": "^10.1.2",
+    "@taquito/rpc": "^10.1.2",
     "bignumber.js": "^9.0.1"
   },
   "devDependencies": {

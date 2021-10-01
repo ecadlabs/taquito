@@ -297,7 +297,6 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
 
             it('getSuccessorPeriod', async (done) => {
                 const successorPeriod = await rpcClient.getSuccessorPeriod();
-                console.log(successorPeriod)
                 expect(successorPeriod).toBeDefined();
                 done();
             });
