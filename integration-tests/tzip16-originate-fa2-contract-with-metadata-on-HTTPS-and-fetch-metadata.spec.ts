@@ -382,7 +382,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       // Count the Rpc calls
       const countRpc = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache).rpcCountingMap;
       expect(countRpc.size).toEqual(9);
-      const signer = await Tezos.signer.publicKeyHash();
       expect(
         countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${contractAddress}/script`)
       ).toEqual(1);
