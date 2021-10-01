@@ -27,7 +27,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
             const estimate = await sender.estimate.transfer({
                 to: receiver_pkh,
-                amount: (balance.toNumber()/1000000) - 2,
+                amount: (Math.ceil(balance.toNumber()/1000000) - 2),
             });
 
             // Emptying the account

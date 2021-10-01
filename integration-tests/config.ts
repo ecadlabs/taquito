@@ -60,6 +60,7 @@ const hangzhounetEphemeral = {
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1QJcNitf3wTfcnWAW8qKHEc7Z8duq83pZe',
   knownBigMapContract: 'KT1GaKdvTeQ9RDErHCU1cKD9mJaaRZxjycnX',
+  knownTzip1216Contract: 'KT1TcMiEqu9a3zULJwkhLzbngBzUX7JruNU5',
   protocol: Protocols.PtHangzH,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
@@ -125,6 +126,7 @@ const hangzhounetFaucet = {
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1QJcNitf3wTfcnWAW8qKHEc7Z8duq83pZe',
   knownBigMapContract: 'KT1GaKdvTeQ9RDErHCU1cKD9mJaaRZxjycnX',
+  knownTzip1216Contract: 'KT1TcMiEqu9a3zULJwkhLzbngBzUX7JruNU5',
   protocol: Protocols.PtHangzH,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
