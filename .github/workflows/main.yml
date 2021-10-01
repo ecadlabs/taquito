@@ -7,7 +7,7 @@ on:
       - master
 jobs:
   lint-and-test:
-    runs-on: self-hosted
+    runs-on: ecad-taquito
     strategy:
       matrix:
         node: [12.x]
@@ -36,7 +36,7 @@ jobs:
         RUN_INTEGRATION: true
 
   integration-tests-hangzhounet:
-    runs-on: self-hosted
+    runs-on: ecad-taquito
     strategy:
       matrix:
         node: [12.x]
@@ -60,7 +60,7 @@ jobs:
         TEZOS_RPC_HANGZHOUNET: 'https://hangzhounet.api.tez.ie'
 
   integration-tests-granadanet:
-    runs-on: self-hosted
+    runs-on: ecad-taquito
     strategy:
       matrix:
         node: [12.x]
