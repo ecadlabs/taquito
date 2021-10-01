@@ -6,7 +6,7 @@ on:
       - 457-flextesa-kunal-2-1
 jobs:
   integration-tests-flextesanet:
-    runs-on: ['self-hosted', 'flexteza']
+    runs-on: [self-hosted, flexteza]
     strategy:
       matrix:
         node: [12.x]
