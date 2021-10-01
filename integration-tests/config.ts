@@ -262,6 +262,7 @@ const setupSignerWithFreshKey = async (
       const signer = new InMemorySigner(key!);
       Tezos.setSignerProvider(signer);
     } catch (e) {
+      jest.setTimeout(3000);
       if(++count == retries) console.log("An error occurs when trying to fetch a fresh key:", e)
     }
   }
@@ -289,6 +290,7 @@ const setupSignerWithEphemeralKey = async (
       Tezos.setSignerProvider(signer);
 
     } catch (e) {
+      jest.setTimeout(3000);
       if(++count == retries) console.log("An error occurs when trying to fetch an ephemeral key:", e)
     }
   }
