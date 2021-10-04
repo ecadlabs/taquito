@@ -1,6 +1,6 @@
 import { constants } from "buffer";
 import { RpcClientCache } from "../src/rpc-client-modules/rpc-cache"
-import { rpcUrl, blockHash, liveBlocks, balance, storage, script, contract, managerKey, delegate, bigmapValue, delegates, blockHeader, blockMetadata, bakingRights, endorsingRights, ballotList, ballots, currentPeriodKind, currentProposal, currentQuorum, votesListing, porposals, entryPoints, chainId, packData, currentPeriod, successorPeriod } from "./data/rpc-responses";
+import { rpcUrl, blockHash, liveBlocks, balance, storage, script, contract, managerKey, delegate, bigmapValue, delegates, blockHeader, blockMetadata, bakingRights, endorsingRights, ballotList, ballots, currentPeriodKind, currentProposal, currentQuorum, votesListing, porposals, entryPoints, chainId, packData, currentPeriod, successorPeriod, blockResponse } from "./data/rpc-responses";
 
 /**
  * RpcClientCache test
@@ -12,6 +12,7 @@ describe('RpcClientCache test', () => {
     beforeEach(() => {
         mockRpcClient = {
             getRpcUrl: jest.fn(),
+            getBlock: jest.fn(),
             getBlockHash: jest.fn(),
             getLiveBlocks: jest.fn(),
             getBalance: jest.fn(),
@@ -44,6 +45,7 @@ describe('RpcClientCache test', () => {
 
 
         mockRpcClient.getRpcUrl.mockReturnValue(rpcUrl);
+        mockRpcClient.getBlock.mockResolvedValue(Promise.resolve(blockResponse));  
         mockRpcClient.getBlockHash.mockResolvedValue(Promise.resolve(blockHash));  
         mockRpcClient.getLiveBlocks.mockResolvedValue(Promise.resolve(liveBlocks));
         mockRpcClient.getBalance.mockResolvedValue(balance);
@@ -82,6 +84,7 @@ describe('RpcClientCache test', () => {
 
     it('getAllCachedData', async done => {
         await rpcCache.getBlockHash();
+        await rpcCache.getBlock();
         await rpcCache.getLiveBlocks();
         await rpcCache.getBalance('address');
         await rpcCache.getStorage('address');
@@ -110,6 +113,7 @@ describe('RpcClientCache test', () => {
         await rpcCache.getSuccessorPeriod();
 
         expect(rpcCache.getAllCachedData()['rpcTest/getBlockHash/head/'].response).toEqual(blockHash);
+        expect(rpcCache.getAllCachedData()['rpcTest/getBlock/head/'].response).toEqual(blockResponse);
         expect(rpcCache.getAllCachedData()['rpcTest/getLiveBlocks/head/'].response).toEqual(liveBlocks);
         expect(rpcCache.getAllCachedData()['rpcTest/getBalance/head/address/'].response).toEqual(balance);
         expect(rpcCache.getAllCachedData()['rpcTest/getStorage/head/address/'].response).toEqual(storage);
@@ -142,6 +146,7 @@ describe('RpcClientCache test', () => {
     it('getAllCachedData when block level is different from head', async done => {
         const block = { block: '1111' }
         await rpcCache.getBlockHash(block);
+        await rpcCache.getBlock(block);
         await rpcCache.getLiveBlocks(block);
         await rpcCache.getBalance('address', block);
         await rpcCache.getStorage('address', block);
@@ -170,6 +175,7 @@ describe('RpcClientCache test', () => {
         await rpcCache.getSuccessorPeriod(block);
 
         expect(rpcCache.getAllCachedData()[`rpcTest/getBlockHash/${block.block}/`].response).toEqual(blockHash);
+        expect(rpcCache.getAllCachedData()[`rpcTest/getBlock/${block.block}/`].response).toEqual(blockResponse);
         expect(rpcCache.getAllCachedData()[`rpcTest/getLiveBlocks/${block.block}/`].response).toEqual(liveBlocks);
         expect(rpcCache.getAllCachedData()[`rpcTest/getBalance/${block.block}/address/`].response).toEqual(balance);
         expect(rpcCache.getAllCachedData()[`rpcTest/getStorage/${block.block}/address/`].response).toEqual(storage);
@@ -201,6 +207,7 @@ describe('RpcClientCache test', () => {
 
     it('deleteAllCachedData', async done => {
         await rpcCache.getBlockHash();
+        await rpcCache.getBlock();
         await rpcCache.getLiveBlocks();
         await rpcCache.getBalance('address');
         await rpcCache.getStorage('address');

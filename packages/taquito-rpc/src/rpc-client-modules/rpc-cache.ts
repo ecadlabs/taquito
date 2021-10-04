@@ -369,7 +369,14 @@ export class RpcClientCache implements RpcClientInterface {
      * @example getBlock({ block: BL8fTiWcSxWCjiMVnDkbh6EuhqVPZzgWheJ2dqwrxYRm9AephXh~2 }) will return an offset of 2 blocks from given block hash..
      */
     async getBlock({ block }: RPCOptions = defaultRPCOptions): Promise<BlockResponse> {
-        return this.rpcClient.getBlock({ block });
+        const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getBlock', [block]);
+        if (this.has(key)) {
+            return this.get(key);
+        } else {
+            const response = await this.rpcClient.getBlock({ block });
+            this.put(key, response);
+            return response;
+        }
     }
 
     /**
