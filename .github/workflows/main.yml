@@ -7,7 +7,7 @@ on:
       - master
 jobs:
   lint-and-test:
-    runs-on: self-hosted
+    runs-on: ecad-taquito
     strategy:
       matrix:
         node: [12.x]
@@ -37,7 +37,7 @@ jobs:
         TEZOS_RPC_FLORENCENET: ${{ secrets.TEZOS_RPC_FLORENCENET }}
 
   integration-tests-granadanet:
-    runs-on: self-hosted
+    runs-on: ecad-taquito
     strategy:
       matrix:
         node: [12.x]
@@ -62,7 +62,7 @@ jobs:
         TEZOS_RPC_GRANADANET: 'http://10.60.41.77:8732'
   
   integration-tests-florencenet:
-    runs-on: self-hosted
+    runs-on: ecad-taquito
     strategy:
       matrix:
         node: [12.x]
