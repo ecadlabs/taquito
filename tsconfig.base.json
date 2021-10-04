@@ -45,6 +45,9 @@
       ],
       "@taquito/indexer": [
         "taquito-indexer/src/taquito-indexer.ts"
+      ],
+      "@taquito/contracts-library": [
+        "taquito-contracts-library/src/taquito-contracts-library.ts"
       ]
     }
   }

@@ -4,35 +4,34 @@ import { entrypoints } from './data/contract-entrypoints';
 import { ContractsLibrary } from '../src/taquito-contracts-library';
 
 describe('RpcWrapperContractsLibrary tests', () => {
-    let mockHttpBackend: {
-        createRequest: jest.Mock<any, any>
-    };
+    let mockRpcClient: any;
 
     beforeEach(() => {
-        mockHttpBackend = {
-            createRequest: jest.fn()
+        mockRpcClient = {
+            getScript: jest.fn(),
+            getEntrypoints: jest.fn()
         };
     });
 
     it('RpcWrapperContractsLibrary is instantiable', () => {
         expect(
-            new RpcWrapperContractsLibrary('rpcUrl', 'main', mockHttpBackend as any, new ContractsLibrary())
+            new RpcWrapperContractsLibrary(mockRpcClient as any, new ContractsLibrary())
         ).toBeInstanceOf(RpcWrapperContractsLibrary);
     });
 
     it('get script from RPC when contract is not in the library', async (done) => {
-        mockHttpBackend.createRequest.mockResolvedValue('script-from-http');
+        mockRpcClient.getScript.mockResolvedValue('script-from-rpc');
         const contractAddress = 'KT1NGV6nvvedwwjMjCsWY6Vfm6p1q5sMMLDY';
-        const rpcWrapper = new RpcWrapperContractsLibrary('rpcUrl', 'main', mockHttpBackend as any, new ContractsLibrary());
+        const rpcWrapper = new RpcWrapperContractsLibrary(mockRpcClient as any, new ContractsLibrary());
         const script = await rpcWrapper.getScript(contractAddress);
-        expect(script).toEqual('script-from-http');
+        expect(script).toEqual('script-from-rpc');
         done()
     });
 
     it('get entrypoints from RPC when contract is not in the library', async (done) => {
-        mockHttpBackend.createRequest.mockResolvedValue('entrypoints-from-http');
+        mockRpcClient.getEntrypoints.mockResolvedValue('entrypoints-from-http');
         const contractAddress = 'KT1NGV6nvvedwwjMjCsWY6Vfm6p1q5sMMLDY';
-        const rpcWrapper = new RpcWrapperContractsLibrary('rpcUrl', 'main', mockHttpBackend as any, new ContractsLibrary());
+        const rpcWrapper = new RpcWrapperContractsLibrary(mockRpcClient as any, new ContractsLibrary());
         const entrypoints = await rpcWrapper.getEntrypoints(contractAddress);
         expect(entrypoints).toEqual('entrypoints-from-http');
         done()
@@ -49,7 +48,7 @@ describe('RpcWrapperContractsLibrary tests', () => {
             }
         })
 
-        const rpcWrapper = new RpcWrapperContractsLibrary('rpcUrl', 'main', mockHttpBackend as any, contractLib);
+        const rpcWrapper = new RpcWrapperContractsLibrary(mockRpcClient as any, contractLib);
         expect(await rpcWrapper.getScript(contractAddress)).toEqual(script);
         expect(await rpcWrapper.getEntrypoints(contractAddress)).toEqual(entrypoints);
         done()
