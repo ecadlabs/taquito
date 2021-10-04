@@ -34,14 +34,14 @@ jobs:
     - run: whoami
     - run: wget https://github.com/serokell/tezos-packaging/releases/latest/download/tezos-client
     - run: chmod +x tezos-client
-    - run: mkdir -p $HOME/.local/bin
-    - run: mv tezos-client $HOME/.local/bin
-    - run: echo 'export PATH="$HOME/.local/bin:$PATH"' >> $HOME/.bashrc
-    - run: source $HOME/.bashrc
-    - run: tezos-client -A flextesa_sandbox_${{ env.UUID }} -P ${{ env.FLEXTESA_PORT_TWO }} import secret key alice unencrypted:edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq --force
-    - run: tezos-client -A flextesa_sandbox_${{ env.UUID }} -P ${{ env.FLEXTESA_PORT_TWO }} transfer 190000 from alice to tz1Rb18fBaZxkzDgFGAbcBZzxLCYdxyLryVX --burn-cap 0.06425
-    - run: tezos-client -A flextesa_sandbox_${{ env.UUID }} -P ${{ env.FLEXTESA_PORT_TWO }} transfer 100000 from alice to tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys --burn-cap 0.06425
-    - run: tezos-client -A flextesa_sandbox_${{ env.UUID }} -P ${{ env.FLEXTESA_PORT_TWO }} transfer 100000 from alice to tz1ioFRium9QWhYeu49zoAw2Z4HYCHRgrF9f --burn-cap 0.06425  
+    #- run: mkdir -p $HOME/.local/bin
+    #- run: mv tezos-client $HOME/.local/bin
+    #- run: echo 'export PATH="$HOME/.local/bin:$PATH"' >> $HOME/.bashrc
+    #- run: source $HOME/.bashrc
+    - run: ./tezos-client -A flextesa_sandbox_${{ env.UUID }} -P ${{ env.FLEXTESA_PORT_TWO }} import secret key alice unencrypted:edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq --force
+    - run: ./tezos-client -A flextesa_sandbox_${{ env.UUID }} -P ${{ env.FLEXTESA_PORT_TWO }} transfer 190000 from alice to tz1Rb18fBaZxkzDgFGAbcBZzxLCYdxyLryVX --burn-cap 0.06425
+    - run: ./tezos-client -A flextesa_sandbox_${{ env.UUID }} -P ${{ env.FLEXTESA_PORT_TWO }} transfer 100000 from alice to tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys --burn-cap 0.06425
+    - run: ./tezos-client -A flextesa_sandbox_${{ env.UUID }} -P ${{ env.FLEXTESA_PORT_TWO }} transfer 100000 from alice to tz1ioFRium9QWhYeu49zoAw2Z4HYCHRgrF9f --burn-cap 0.06425  
     - uses: actions/checkout@v2
       with:
         repository: kjaiswal/tezos-key-gen-api
