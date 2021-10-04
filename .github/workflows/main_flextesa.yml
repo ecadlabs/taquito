@@ -31,6 +31,7 @@ jobs:
     - run: rm -rf ~/.tezos_client/
     - run: docker run --rm --name flextesa_sandbox_${{ env.UUID }} --network github_runner -p ${{ env.FLEXTESA_PORT_ONE }}:${{ env.FLEXTESA_PORT_TWO }} --detach  tqtezos/flextesa:20210602 flobox start   
     #- run: sudo add-apt-repository -yu ppa:serokell/tezos && sudo apt-get install -y tezos-client
+    - run: whoami
     - run: wget https://github.com/serokell/tezos-packaging/releases/latest/download/tezos-client
     - run: chmod +x tezos-client
     - run: mkdir -p $HOME/.local/bin
