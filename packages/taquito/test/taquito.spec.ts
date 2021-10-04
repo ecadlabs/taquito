@@ -62,9 +62,9 @@ describe('TezosToolkit test', () => {
         toolkit = new TezosToolkit('rpc');
         expect(toolkit.rpc).toBeInstanceOf(RpcClient);
         toolkit.setProvider({ rpc: 'test' });
-        expect(toolkit.rpc['url']).toEqual('test');
+        expect(toolkit.rpc.getRpcUrl()).toEqual('test');
         toolkit.setProvider({ [key]: 'test' as any });
-        expect(toolkit.rpc['url']).toEqual('test');
+        expect(toolkit.rpc.getRpcUrl()).toEqual('test');
       });
     });
 

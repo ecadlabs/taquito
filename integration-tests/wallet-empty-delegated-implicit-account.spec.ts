@@ -29,7 +29,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker }) => {
       expect.assertions(1)
       try {
         await LocalTez.wallet.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: maxAmount}).send();
-      } catch (ex) {
+      } catch (ex:any) {
           expect(ex.message).toMatch('empty_implicit_delegated_contract')
       }
       done();

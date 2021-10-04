@@ -4,6 +4,7 @@
  */
 import { HttpBackend, HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import BigNumber from 'bignumber.js';
+import { defaultChain, defaultRPCOptions, RpcClientInterface, RPCOptions } from './rpc-client-interface';
 import {
   BakingRightsQueryArguments,
   BakingRightsResponse,
@@ -48,24 +49,20 @@ import { castToBigNumber } from './utils/utils';
 
 export { castToBigNumber } from './utils/utils';
 
+export { RPCOptions, defaultChain, defaultRPCOptions, RpcClientInterface } from './rpc-client-interface';
+
+export { RpcClientCache } from './rpc-client-modules/rpc-cache';
+
 export * from './types';
 
 export { OpKind } from './opkind';
 
 export { VERSION } from './version';
 
-const defaultChain = 'main';
-
-export interface RPCOptions {
-  block: string;
-}
-
-export const defaultRPCOptions: RPCOptions = { block: 'head' };
-
 /***
  * @description RpcClient allows interaction with Tezos network through an rpc node
  */
-export class RpcClient {
+export class RpcClient implements RpcClientInterface {
   /**
    *
    * @param url rpc root url

@@ -699,6 +699,7 @@ export interface OperationContentsAndResultMetadataOrigination {
 
 export type ConstantsResponse =
   ConstantsResponseCommon &
+  ConstantsResponseProto011 &
   ConstantsResponseProto010 &
   ConstantsResponseProto009 &
   ConstantsResponseProto008 &
@@ -731,6 +732,12 @@ export interface ConstantsResponseCommon {
   endorsement_reward: BigNumber | BigNumber[]; // BigNumber[] since proto 006, BigNumber before
   cost_per_byte: BigNumber;
   hard_storage_limit_per_operation: BigNumber;
+}
+
+export interface ConstantsResponseProto011 extends Omit<ConstantsResponseProto010, 'michelson_maximum_type_size'> {
+  max_micheline_node_count?: number;
+  max_allowed_global_constants_depth?: number;
+  max_micheline_bytes_limit?: number;
 }
 export interface ConstantsResponseProto010 extends ConstantsResponseProto007 {
   minimal_block_delay?: BigNumber;
