@@ -5,6 +5,7 @@ import { HttpBackend } from '@taquito/http-utils';
 import { HttpBackendForRPCCache } from "./HttPBackendForRPCCache";
 import { b58cencode, Prefix, prefix } from '@taquito/utils';
 import { importKey, InMemorySigner } from '@taquito/signer';
+import { RpcClient, RpcClientCache } from '@taquito/rpc';
 
 const nodeCrypto = require('crypto');
 
@@ -279,7 +280,7 @@ export const CONFIGS = () => {
   return forgers.reduce((prev, forger: ForgerType) => {
 
     const configs = providers.map(({ rpc, knownBaker, knownContract, protocol, knownBigMapContract, knownTzip1216Contract, signerConfig }) => {
-      const Tezos = new TezosToolkit(rpc);
+      const Tezos = new TezosToolkit(new RpcClientCache(new RpcClient(rpc)));
       Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: 300 } });
 
       setupForger(Tezos, forger)
@@ -305,7 +306,7 @@ export const CONFIGS = () => {
           }
         },
         createAddress: async () => {
-          const tezos = new TezosToolkit(rpc);
+          const tezos = new TezosToolkit(new RpcClientCache(new RpcClient(rpc)));
 
           const keyBytes = Buffer.alloc(32);
           nodeCrypto.randomFillSync(keyBytes)

@@ -1,5 +1,5 @@
 import { CONFIGS } from './config';
-import { RpcClient } from '@taquito/rpc';
+import { RpcClientCache, RpcClient } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_bigmap';
@@ -19,7 +19,7 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
     rpcList.forEach(async (rpc) => {
         Tezos.setRpcProvider(rpc);
 
-        const rpcClient: RpcClient = new RpcClient(rpc);
+        const rpcClient = new RpcClientCache(new RpcClient(rpc));
 
         describe(`Test calling all methods from RPC node: ${rpc}`, () => {
             it('Get the head block hash', async (done) => {
@@ -292,6 +292,12 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
                 } catch (ex: any) {
                     expect(ex.message).toMatch('contract.counter_in_the_past');
                 }
+                done();
+            });
+
+            it('getSuccessorPeriod', async (done) => {
+                const successorPeriod = await rpcClient.getSuccessorPeriod();
+                expect(successorPeriod).toBeDefined();
                 done();
             });
         });

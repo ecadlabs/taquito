@@ -1,4 +1,4 @@
-import { RpcClient } from '@taquito/rpc';
+import { RpcClient, RpcClientInterface } from '@taquito/rpc';
 import { Protocols } from './constants';
 import { Forger } from './forger/interface';
 import { RpcForger } from './forger/rpc-forger';
@@ -56,7 +56,7 @@ export const defaultConfigStreamer: ConfigStreamer = {
  * @description Encapsulate common service used throughout different part of the library
  */
 export class Context {
-  private _rpcClient: RpcClient;
+  private _rpcClient: RpcClientInterface;
   private _forger: Forger;
   private _parser: ParserProvider;
   private _injector: Injector;
@@ -72,7 +72,7 @@ export class Context {
   public readonly wallet = new Wallet(this);
 
   constructor(
-    private _rpc: RpcClient | string,
+    private _rpc: RpcClientInterface | string,
     private _signer: Signer = new NoopSigner(),
     private _proto?: Protocols,
     public readonly _config = new BehaviorSubject({...defaultConfigStreamer, ...defaultConfigConfirmation}),
@@ -112,11 +112,11 @@ export class Context {
     });
   }
 
-  get rpc(): RpcClient {
+  get rpc(): RpcClientInterface {
     return this._rpcClient;
   }
 
-  set rpc(value: RpcClient) {
+  set rpc(value: RpcClientInterface) {
     this._rpcClient = value;
   }
 

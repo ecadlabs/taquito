@@ -3,7 +3,7 @@
  * @module @taquito/taquito
  */
 
-import { RpcClient } from '@taquito/rpc';
+import { RpcClient, RpcClientInterface } from '@taquito/rpc';
 import { RPCBatchProvider } from './batch/rpc-batch-provider';
 import { Protocols } from './constants';
 import { ConfigConfirmation, ConfigStreamer, Context, TaquitoProvider } from './context';
@@ -51,7 +51,7 @@ export * from './packer/rpc-packer';
 export interface SetProviderOptions {
   forger?: Forger;
   wallet?: WalletProvider;
-  rpc?: string | RpcClient;
+  rpc?: string | RpcClientInterface;
   stream?: string | SubscribeProvider;
   signer?: Signer;
   protocol?: Protocols;
@@ -72,7 +72,7 @@ export interface VersionInfo {
 export class TezosToolkit {
   private _stream!: SubscribeProvider;
   private _options: SetProviderOptions = {};
-  private _rpcClient: RpcClient;
+  private _rpcClient: RpcClientInterface;
   private _wallet: Wallet;
   private _context: Context;
   /**
@@ -83,7 +83,7 @@ export class TezosToolkit {
 
   public readonly format = format;
 
-  constructor(private _rpc: RpcClient | string) {
+  constructor(private _rpc: RpcClientInterface | string) {
     if (typeof this._rpc === 'string') {
       this._rpcClient = new RpcClient(this._rpc);
     } else {
@@ -158,12 +158,12 @@ export class TezosToolkit {
   setRpcProvider(rpc?: SetProviderOptions['rpc']) {
     if (typeof rpc === 'string') {
       this._rpcClient = new RpcClient(rpc);
-    } else if (rpc instanceof RpcClient) {
+    } else if (rpc === undefined) {
+      // do nothing, RPC is required in the constructor, do not override it
+    }
+    else {
       this._rpcClient = rpc;
     }
-    /*     else if (this._options.rpc === undefined) {
-      this._rpcClient = new RpcClient();
-    } */
     this._options.rpc = this._rpcClient;
     this._context.rpc = this._rpcClient;
   }
@@ -273,7 +273,7 @@ export class TezosToolkit {
   /**
    * @description Provide access to the currently used rpc client
    */
-  get rpc(): RpcClient {
+  get rpc(): RpcClientInterface {
     return this._context.rpc;
   }
 

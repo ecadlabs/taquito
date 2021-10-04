@@ -61,7 +61,7 @@ export class ContractsLibrary implements Extension {
 
 	configureContext(context: Context) {
 		context.registerProviderDecorator((context: Context) => {
-			context.rpc = new RpcWrapperContractsLibrary(context.rpc['url'], context.rpc['chain'], context.rpc['httpBackend'], this);
+			context.rpc = new RpcWrapperContractsLibrary(context.rpc, this);
 			return context;
 		});
 	}
