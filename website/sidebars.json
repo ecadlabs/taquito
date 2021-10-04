@@ -34,7 +34,7 @@
     {
       "type": "category",
       "label": "Packages",
-      "items": ["michelson_encoder", "indexer", "contracts-library"]
+      "items": ["michelson_encoder", "contracts-library"]
     },
     {
       "type": "category",
