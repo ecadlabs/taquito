@@ -27,12 +27,12 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
 
                 const account = await Tezos.rpc.getDelegate(pkh);
                 expect(account).toEqual(pkh);
-            } catch (ex) {
-                if (protocol === Protocols.PtGRANADs) {
-                    expect(ex.message).toMatch('delegate.already_active')
+            } catch (ex: any) {
+                if (protocol === Protocols.PsFLorena) {
+                    expect(ex.message).toMatch('delegate.unchanged')
                 } else {
                     // When running tests more than one time with the same faucet key, the account is already delegated to the given delegate
-                    expect(ex.message).toMatch('delegate.unchanged')
+                    expect(ex.message).toMatch('delegate.already_active')
                 }
             }
             done();

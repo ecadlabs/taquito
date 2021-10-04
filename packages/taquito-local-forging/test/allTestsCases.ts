@@ -1,4 +1,4 @@
-import { opMapping } from '../src/constants';
+import { opMapping, opMappingReverse } from '../src/constants';
 import { 
   rpcContractResponse, 
   rpcContractResponse2, 
@@ -22,18 +22,6 @@ import { tokenBigmapCode, tokenBigmapStorage } from './data/token_big_map';
 import { noAnnotCode, noAnnotInit } from './data/token_without_annotations';
 import { voteInitSample, voteSample } from './data/vote_contract';
 
-function extractOp (startIndex: number, endIndex: number) {
-  const result = [];
-  let i = startIndex;
-  for (i; i <= endIndex; i++) {
-    let key = i.toString(16);
-    if (key.length === 1) {
-      key = '0' + key;
-    }
-    result.push(opMapping[key]);
-  }
-  return result;
-};
 interface TestCase {
   name: string;
   operation: any;
@@ -97,7 +85,7 @@ export const commonCases: TestCase[] = [
       contents: [
         {
           kind: 'endorsement',
-          level: -300,
+          level: 300,
         },
       ],
     },
@@ -461,7 +449,7 @@ export const commonCases: TestCase[] = [
     },
   },
   // In `opMapping` from the file `constants.ts`, the operations before `LEVEL` are common to the protocols (delphi and edo)
-  ...extractOp(0, 117).map(op => {
+  ...Object.keys(opMappingReverse).map(op => {
     return {
       name: `Origination operation (${op})`,
       operation: {
@@ -583,34 +571,7 @@ export const commonCases: TestCase[] = [
         },
       ],
     },
-  } 
-];
-
-export const edoCases: TestCase[] = [
-  // In `opMapping` from the file `constants.ts`, the operations from `LEVEL` to `GET_AND_UPDATE` have been added in the edo protocol
-  ...extractOp(118, 140).map(op => {
-    return {
-      name: `Origination operation (${op})`,
-      operation: {
-        branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
-        contents: [
-          {
-            kind: 'origination',
-            counter: '1',
-            source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-            fee: '10000',
-            gas_limit: '10',
-            storage_limit: '10',
-            balance: '0',
-            script: {
-              code: genericCode(op),
-              storage: genericStorage,
-            },
-          },
-        ],
-      },
-    };
-  }),
+  },
   {
     name: 'Origination where storage is a pair of 2 optional annotated tickets',
     operation: {
@@ -841,5 +802,5 @@ export const edoCases: TestCase[] = [
         },
       ],
     },
-  },
+  }
 ];

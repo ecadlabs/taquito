@@ -3,7 +3,6 @@ import { CONFIGS } from "./config";
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
     const Tezos = lib;
     describe(`Test emptying a revealed implicit account into a new implicit account using: ${rpc}`, () => {
-        const test = require('jest-retries');
 
         beforeEach(async (done) => {
             await setup()
@@ -28,7 +27,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
             const estimate = await sender.estimate.transfer({
                 to: receiver_pkh,
-                amount: (balance.toNumber()/1000000) - 2,
+                amount: (Math.ceil(balance.toNumber()/1000000) - 2),
             });
 
             // Emptying the account

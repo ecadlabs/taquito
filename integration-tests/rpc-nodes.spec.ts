@@ -213,7 +213,7 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
             it('Inject an operation in node and broadcast it', async (done) => {
                 try {
                     const injectedOperation = await rpcClient.injectOperation('operation');
-                } catch (ex) {
+                } catch (ex: any) {
                     expect(ex.message).toMatch('Invalid_argument "Hex.to_char: 112 is an invalid char');
                 }
                 done();
@@ -227,7 +227,7 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
                             {
                                 kind: 'origination',
                                 counter: '1',
-                                source: 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
+                                source: await Tezos.signer.publicKeyHash(),
                                 fee: '10000',
                                 gas_limit: '10',
                                 storage_limit: '10',
@@ -244,7 +244,7 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
                     };
 
                     await rpcClient.preapplyOperations([operation]);
-                } catch (ex) {
+                } catch (ex: any) {
                     expect(ex.message).toMatch('contract.counter_in_the_past');
                 }
                 done();
@@ -272,7 +272,7 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
                                 {
                                     kind: 'origination',
                                     counter: '1',
-                                    source: 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
+                                    source: await Tezos.signer.publicKeyHash(),
                                     fee: '10000',
                                     gas_limit: '10',
                                     storage_limit: '10',
@@ -289,7 +289,7 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
                     };
 
                     await rpcClient.runOperation(operation);
-                } catch (ex) {
+                } catch (ex: any) {
                     expect(ex.message).toMatch('contract.counter_in_the_past');
                 }
                 done();
