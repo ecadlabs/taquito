@@ -24,12 +24,10 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
           init: `"Copyright ©"`
         }).send()
       } catch (ex) {
-        if (protocol === Protocols.PtEdo2Zk) {
-          expect(ex).toEqual(expect.objectContaining({ message: expect.stringContaining('michelson_v1.invalid_syntactic_constant') }))
-        } else if (protocol === Protocols.PsFLorena || protocol === Protocols.PtGRANADs) {
+        if (protocol === Protocols.PsFLorena || protocol === Protocols.PtGRANADs) {
           expect(ex).toEqual(expect.objectContaining({ message: expect.stringContaining('invalid_syntactic_constant') }))
         } else {
-          expect(ex).toEqual(expect.objectContaining({ message: expect.stringContaining('invalid_constant') }))
+          expect(ex).toEqual(expect.objectContaining({ message: expect.stringContaining('non_printable_character') }))
         }
       }
       done();

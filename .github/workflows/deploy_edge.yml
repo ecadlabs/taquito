@@ -7,7 +7,7 @@ on:
       - master
 jobs:
   deply-edge-package:
-    runs-on: self-hosted
+    runs-on: ecad-taquito
     if: ${{ github.event_name == 'pull_request' || github.ref == 'refs/heads/master' }}
     strategy:
       matrix:

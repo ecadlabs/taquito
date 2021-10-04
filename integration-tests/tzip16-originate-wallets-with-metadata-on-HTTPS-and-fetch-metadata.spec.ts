@@ -175,7 +175,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             const contract = await Tezos.wallet.at(contractAddressInvalidMetadata, tzip16);
             try {
                 await contract.tzip16().getMetadata();
-            } catch (error) {
+            } catch (error:any) {
                 expect(error.message).toContain(`Invalid metadata`);
             }
 

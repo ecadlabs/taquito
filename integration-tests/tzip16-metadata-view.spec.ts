@@ -79,7 +79,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
 			try {
 				await metadataViews['an-empty-useless-view']().executeView();
-			} catch (e) {
+			} catch (e:any) {
 				expect(e.message).toContain('Http error response');
 			}
 
