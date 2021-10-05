@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@airgap/beacon-sdk@^2.3.0":
-  version "2.3.1"
-  resolved "https://registry.npmjs.org/@airgap/beacon-sdk/-/beacon-sdk-2.3.1.tgz"
-  integrity sha512-KhlerqRlI9LxkxY6sq5ar5g6KuzEEGEacnMg7AWxL/Pdq3WXGfMrdzVOO+4wOgB8f1/A8MRn0l/zjwAFZqAvYA==
+"@airgap/beacon-sdk@^2.3.3":
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/@airgap/beacon-sdk/-/beacon-sdk-2.3.3.tgz#be07035eb0e8073e296ea34fe38e611a55fa4f09"
+  integrity sha512-kfW9V03v6IcvxvO8Y9uxrqhng6/2KRxHLK7jqtv0qhNE+KFsoIBn1Z/jCFc0zfLQOCbO5vcesV4ZfH7ejltpbQ==
   dependencies:
     "@types/chrome" "0.0.115"
     "@types/libsodium-wrappers" "0.7.7"
@@ -1867,65 +1867,65 @@
   dependencies:
     defer-to-connect "^1.0.1"
 
-"@taquito/beacon-wallet@10.1.2":
-  version "10.1.2"
-  resolved "https://registry.yarnpkg.com/@taquito/beacon-wallet/-/beacon-wallet-10.1.2.tgz#863b14e1a96d34abd942bbbac234fff99ed95b53"
-  integrity sha512-tlaPF8pioGtgavrp7g756duUNxdfTjq3zaykgPR2C+9PhmE6MDLW36/mHgzP+mJiB2m7BoeUGk9ODIsTr+nAfA==
+"@taquito/beacon-wallet@10.2.0-beta-RC.0":
+  version "10.2.0-beta-RC.0"
+  resolved "https://registry.yarnpkg.com/@taquito/beacon-wallet/-/beacon-wallet-10.2.0-beta-RC.0.tgz#e6076dba97a078dc22e25fd1a294326f1bbc4350"
+  integrity sha512-8KYMfu7lTZI4x7FF8S3ukMzdE7pDo0NGYq3lF9tk1OcWWuGIy58qF7nwfl7GisxZ3d+ZEZEiLTnOWzKaxIO/Vw==
   dependencies:
-    "@airgap/beacon-sdk" "^2.3.0"
-    "@taquito/taquito" "^10.1.2"
-    "@taquito/utils" "^10.1.2"
+    "@airgap/beacon-sdk" "^2.3.3"
+    "@taquito/taquito" "^10.2.0-beta-RC.0"
+    "@taquito/utils" "^10.2.0-beta-RC.0"
 
-"@taquito/http-utils@10.1.2", "@taquito/http-utils@^10.1.2":
-  version "10.1.2"
-  resolved "https://registry.yarnpkg.com/@taquito/http-utils/-/http-utils-10.1.2.tgz#d137a17f1d517e6b40f907cd937991d3b635c2e0"
-  integrity sha512-L8Ft0IZ+uX7WdpIjVmvv2mPBuBQaDbeCxVnU9K2vw54XWEojT/yq0ckavCPYlFeiurJ1m75avFQiQuHYErI7ug==
+"@taquito/http-utils@10.2.0-beta-RC.0", "@taquito/http-utils@^10.2.0-beta-RC.0":
+  version "10.2.0-beta-RC.0"
+  resolved "https://registry.yarnpkg.com/@taquito/http-utils/-/http-utils-10.2.0-beta-RC.0.tgz#3867909689748fb2ebf5d59fc7c70191ef122fcc"
+  integrity sha512-go6ZMQEOoUiNHOZyrwPtdyqNSbeSBozat2X7Urq05kp4+IJUPFOE0ydJcsg07/+HlhFsL5juhYm8g6OUr4najw==
   dependencies:
     xhr2-cookies "^1.1.0"
 
-"@taquito/ledger-signer@10.1.2":
-  version "10.1.2"
-  resolved "https://registry.yarnpkg.com/@taquito/ledger-signer/-/ledger-signer-10.1.2.tgz#fa27e896756247b972dc51b1e91ec2310edf0c59"
-  integrity sha512-6xMiDdQsIoDJ25h+VbYaoXTvpxQFMhvqGTQZSZQYSRlfMLCJB8S9rf/lrFsZNbm6eHL4Eb4sZcy81oNxA+6pyw==
+"@taquito/ledger-signer@10.2.0-beta-RC.0":
+  version "10.2.0-beta-RC.0"
+  resolved "https://registry.yarnpkg.com/@taquito/ledger-signer/-/ledger-signer-10.2.0-beta-RC.0.tgz#db2d355423849653b45a013f26a3e17906223002"
+  integrity sha512-/iVQPb3JCaGoRJ/8FdwtBZLwN8JwuhnWMe8GT5upEVAiuCN9BPfrhjCWg9g63L7zKAKQKcvxN1zmlqVo8V4XTQ==
   dependencies:
     "@ledgerhq/hw-transport" "^5.51.1"
-    "@taquito/taquito" "^10.1.2"
-    "@taquito/utils" "^10.1.2"
+    "@taquito/taquito" "^10.2.0-beta-RC.0"
+    "@taquito/utils" "^10.2.0-beta-RC.0"
     "@types/jest" "^26.0.23"
     buffer "^6.0.3"
     libsodium-wrappers "0.7.8"
 
-"@taquito/michel-codec@^10.1.2":
-  version "10.1.2"
-  resolved "https://registry.yarnpkg.com/@taquito/michel-codec/-/michel-codec-10.1.2.tgz#1f1ac02d94f9c5bfa0d13fd19600334fbdc19a0e"
-  integrity sha512-v30acFO+r1/De5fQBMjIagyogFq4Q429wnzuuzKAdL5+6BEDM952WMxRVW7FtpqBbcP72ZFMAJ3Z/R4QIvZ08g==
+"@taquito/michel-codec@^10.2.0-beta-RC.0":
+  version "10.2.0-beta-RC.0"
+  resolved "https://registry.yarnpkg.com/@taquito/michel-codec/-/michel-codec-10.2.0-beta-RC.0.tgz#66d5f6ab895f2539274eccb457d7f788695e1d9b"
+  integrity sha512-DosewFvV/SVQv/jmnPOPFRK3iqrnEBzQe+JIu4/2aOtKayBAqRAWujKoDhyyFVcQN4IE/CJ4Dp1Ilk2IkyWpJw==
 
-"@taquito/michelson-encoder@10.1.2", "@taquito/michelson-encoder@^10.1.2":
-  version "10.1.2"
-  resolved "https://registry.yarnpkg.com/@taquito/michelson-encoder/-/michelson-encoder-10.1.2.tgz#70800f81ec3c8adc4f97779b7739842b906e8f50"
-  integrity sha512-3MHO5ryl5dusdp6SvB+eYOfzvOxOXTI46lR4a5q16oMZyRFIdtzUfu9/7Ov5lKAKrMq42wugJnQDXNiaf69qUQ==
+"@taquito/michelson-encoder@10.2.0-beta-RC.0", "@taquito/michelson-encoder@^10.2.0-beta-RC.0":
+  version "10.2.0-beta-RC.0"
+  resolved "https://registry.yarnpkg.com/@taquito/michelson-encoder/-/michelson-encoder-10.2.0-beta-RC.0.tgz#9321cd25cde4bfcddd1bed3eed8993202944df4f"
+  integrity sha512-svy0ZCOuNoVgU+m7Mm9GKINfOTUKkLjJjW46JuMNw8QGMQdNxfBEPvyNNad/bksF19GOgPFtFpeRCWMuSy9EwA==
   dependencies:
-    "@taquito/rpc" "^10.1.2"
-    "@taquito/utils" "^10.1.2"
+    "@taquito/rpc" "^10.2.0-beta-RC.0"
+    "@taquito/utils" "^10.2.0-beta-RC.0"
     bignumber.js "^9.0.1"
     fast-json-stable-stringify "^2.1.0"
 
-"@taquito/rpc@10.1.2", "@taquito/rpc@^10.1.2":
-  version "10.1.2"
-  resolved "https://registry.yarnpkg.com/@taquito/rpc/-/rpc-10.1.2.tgz#c8e0138e884a04c474693529a79e8848ed6446de"
-  integrity sha512-qpPrNC6cx3oW59LoPbFE+8S+fXjix/WQC3gS45re50I3wBODZhe7cjjdvWx7x/O/Dp3A1Kz/9CKXk+vruRU7Mw==
+"@taquito/rpc@10.2.0-beta-RC.0", "@taquito/rpc@^10.2.0-beta-RC.0":
+  version "10.2.0-beta-RC.0"
+  resolved "https://registry.yarnpkg.com/@taquito/rpc/-/rpc-10.2.0-beta-RC.0.tgz#6e520977d867a16c442aa8276c924e429b5c2f18"
+  integrity sha512-9xTC9CbrmaQXlmWV4QMdbzU24ZMqQKT80yqExz/Pkz/tnYdq2WPZMYp2IxYtKQUhPnDK8WeLS9L5hLRrlDTT5w==
   dependencies:
-    "@taquito/http-utils" "^10.1.2"
+    "@taquito/http-utils" "^10.2.0-beta-RC.0"
     bignumber.js "^9.0.1"
     lodash "^4.17.21"
 
-"@taquito/signer@10.1.2":
-  version "10.1.2"
-  resolved "https://registry.yarnpkg.com/@taquito/signer/-/signer-10.1.2.tgz#adab363c0164742e58403e40726231ed82610c82"
-  integrity sha512-CDnEBloVxgyVn4ZDnUTz0lmjVhiv1sTyU1fO2KLksIMI0ZB3dpt+KpUGiqR/vIN5t3iC9Rw3UUQ4nMm1qnx+jg==
+"@taquito/signer@10.2.0-beta-RC.0":
+  version "10.2.0-beta-RC.0"
+  resolved "https://registry.yarnpkg.com/@taquito/signer/-/signer-10.2.0-beta-RC.0.tgz#56036effd92d5f8f64b8cc62e1db0b0a64fbeed6"
+  integrity sha512-VE4QYdafWdXzUHKSltYSmKiE5OMVxqBSLjrkf44HmnsHbQ4l47ljEWzzlMWhme4Id/9HJJJyBpXlbfIJvs8w9Q==
   dependencies:
-    "@taquito/taquito" "^10.1.2"
-    "@taquito/utils" "^10.1.2"
+    "@taquito/taquito" "^10.2.0-beta-RC.0"
+    "@taquito/utils" "^10.2.0-beta-RC.0"
     bignumber.js "^9.0.1"
     bip39 "^3.0.4"
     elliptic "^6.5.4"
@@ -1933,54 +1933,54 @@
     pbkdf2 "^3.1.2"
     typedarray-to-buffer "^4.0.0"
 
-"@taquito/taquito@10.1.2", "@taquito/taquito@^10.1.2":
-  version "10.1.2"
-  resolved "https://registry.yarnpkg.com/@taquito/taquito/-/taquito-10.1.2.tgz#5968d193febec4756e65dbdf202327ae0dceb8af"
-  integrity sha512-y4tUp+AOHtKfOZO4cxKKjjkNqMy/LoUKMLbRwq8aUSeAeONw6WhjlCjGTBz3nZ2Q1wbV0Dp9GpD15491lsPzzQ==
+"@taquito/taquito@10.2.0-beta-RC.0", "@taquito/taquito@^10.2.0-beta-RC.0":
+  version "10.2.0-beta-RC.0"
+  resolved "https://registry.yarnpkg.com/@taquito/taquito/-/taquito-10.2.0-beta-RC.0.tgz#d27dbc2d4dd25e2d51786509071651c3d679aced"
+  integrity sha512-hqd8lUIqq8tXGl0k3/xoJqz5Rj+Wqdjo4LHFMtYOyonRtxh2by96W8e/ku8IKotso8+SpAT3wBWh2j3fpbwL5Q==
   dependencies:
-    "@taquito/http-utils" "^10.1.2"
-    "@taquito/michel-codec" "^10.1.2"
-    "@taquito/michelson-encoder" "^10.1.2"
-    "@taquito/rpc" "^10.1.2"
-    "@taquito/utils" "^10.1.2"
+    "@taquito/http-utils" "^10.2.0-beta-RC.0"
+    "@taquito/michel-codec" "^10.2.0-beta-RC.0"
+    "@taquito/michelson-encoder" "^10.2.0-beta-RC.0"
+    "@taquito/rpc" "^10.2.0-beta-RC.0"
+    "@taquito/utils" "^10.2.0-beta-RC.0"
     bignumber.js "^9.0.1"
     rx-sandbox "^1.0.4"
     rxjs "^6.6.3"
 
-"@taquito/tezbridge-wallet@10.1.2":
-  version "10.1.2"
-  resolved "https://registry.yarnpkg.com/@taquito/tezbridge-wallet/-/tezbridge-wallet-10.1.2.tgz#4010d959318c545bff8e8f744227e3a23c995de5"
-  integrity sha512-FY7KKk2FpQ8Bi98oyyza499KIeXC3rSg4Xh/nxciAA4TQaV39gEMoHqOxPmbK4EtfZl6KwoVxjdM8qMWP/Q7Sw==
+"@taquito/tezbridge-wallet@10.2.0-beta-RC.0":
+  version "10.2.0-beta-RC.0"
+  resolved "https://registry.yarnpkg.com/@taquito/tezbridge-wallet/-/tezbridge-wallet-10.2.0-beta-RC.0.tgz#07e4321c0d3cd1f8d641059d7468b6929a48a198"
+  integrity sha512-QyCG3Y5Vg/ZgjPyAjU+UiIFV/RkAMxBEdIVY2PNXHFE7XzOObaKTMoQ5EDZ/OeMmUApyygfwY0ij31sIg7GT/w==
   dependencies:
-    "@taquito/taquito" "^10.1.2"
+    "@taquito/taquito" "^10.2.0-beta-RC.0"
 
-"@taquito/tzip12@10.1.2":
-  version "10.1.2"
-  resolved "https://registry.yarnpkg.com/@taquito/tzip12/-/tzip12-10.1.2.tgz#43d181fbc10f6e1ec0236f48c556146bcbebf3b5"
-  integrity sha512-plJAiKapmZ+d1x0fZ9+alK/8XXJ0FuUw9/g4x4s86ZDjqBYt3j4f3ioU7rma7IBGTyF7LRjZSM9SOZTuvo8mWQ==
+"@taquito/tzip12@10.2.0-beta-RC.0":
+  version "10.2.0-beta-RC.0"
+  resolved "https://registry.yarnpkg.com/@taquito/tzip12/-/tzip12-10.2.0-beta-RC.0.tgz#32192ae9cdb98ea9c5b00ed89a180cea1d2922d5"
+  integrity sha512-QdKJsEqV8rs+EYOQxtdfqnsnRVCizEzjwqnAfHWDzyuRCjbnFKTH9ZyFudAMsulbvBK4ql3IF/mLFuNuP4bTww==
   dependencies:
-    "@taquito/michelson-encoder" "^10.1.2"
-    "@taquito/taquito" "^10.1.2"
-    "@taquito/tzip16" "^10.1.2"
+    "@taquito/michelson-encoder" "^10.2.0-beta-RC.0"
+    "@taquito/taquito" "^10.2.0-beta-RC.0"
+    "@taquito/tzip16" "^10.2.0-beta-RC.0"
     bignumber.js "^9.0.1"
 
-"@taquito/tzip16@10.1.2", "@taquito/tzip16@^10.1.2":
-  version "10.1.2"
-  resolved "https://registry.yarnpkg.com/@taquito/tzip16/-/tzip16-10.1.2.tgz#ac345d04cb73de06972735d5955350fd4f1506a6"
-  integrity sha512-d7HOvTmOACWUcNOL9nAofjCMshSqV4Zu38nVDt/AxgvHtqauFTw2Tv3zC7KEKCAddnr6TrJPTu09X79v7wIxCw==
+"@taquito/tzip16@10.2.0-beta-RC.0", "@taquito/tzip16@^10.2.0-beta-RC.0":
+  version "10.2.0-beta-RC.0"
+  resolved "https://registry.yarnpkg.com/@taquito/tzip16/-/tzip16-10.2.0-beta-RC.0.tgz#6cb9c4aaba0587d95ca6d15f325b6e6eee44c94e"
+  integrity sha512-Cfu6Vdi31fl24eZaFt6+VE7KPL4wr/s+Wwozh5UPQbCMNVspJMD8KwnvDKpNHa/lynWo5Q51oH6ZnvRJF7G20Q==
   dependencies:
-    "@taquito/http-utils" "^10.1.2"
-    "@taquito/michelson-encoder" "^10.1.2"
-    "@taquito/rpc" "^10.1.2"
-    "@taquito/taquito" "^10.1.2"
-    "@taquito/utils" "^10.1.2"
+    "@taquito/http-utils" "^10.2.0-beta-RC.0"
+    "@taquito/michelson-encoder" "^10.2.0-beta-RC.0"
+    "@taquito/rpc" "^10.2.0-beta-RC.0"
+    "@taquito/taquito" "^10.2.0-beta-RC.0"
+    "@taquito/utils" "^10.2.0-beta-RC.0"
     bignumber.js "^9.0.1"
     crypto-js "^4.0.0"
 
-"@taquito/utils@10.1.2", "@taquito/utils@^10.1.2":
-  version "10.1.2"
-  resolved "https://registry.yarnpkg.com/@taquito/utils/-/utils-10.1.2.tgz#3418af43748c06c63c5066040bdd34bb9ce9afc2"
-  integrity sha512-IlgNVL4tEKaQvP9jnS8tMRyOTZbFNxby3emtqcQVu5t3JYG36cyDNxHswCQK7ozN+e3GRP9q/L2iUMeKbGtWJQ==
+"@taquito/utils@10.2.0-beta-RC.0", "@taquito/utils@^10.2.0-beta-RC.0":
+  version "10.2.0-beta-RC.0"
+  resolved "https://registry.yarnpkg.com/@taquito/utils/-/utils-10.2.0-beta-RC.0.tgz#5b28a0c1cc9a85c1453774c4d5ef4905fe5bf8c6"
+  integrity sha512-vkjamISPOicjiKlPHG59u3yqXPEM8p3FHvnKQ5VFYcuYy6LSuAvf0OJysE5yQcmwshpStfz+GDqwldvYL/+BuQ==
   dependencies:
     blakejs "^1.1.0"
     bs58check "^2.1.2"
