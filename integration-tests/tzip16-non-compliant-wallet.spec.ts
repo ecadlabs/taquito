@@ -50,13 +50,13 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         expect(ex).toBeInstanceOf(BigMapMetadataNotFound);
       }
       // Count the Rpc calls
-      const countRpc = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache).rpcCountingMap;
+      const countRpc = ((Tezos.rpc as RpcClient)['httpBackend'] as HttpBackendForRPCCache).rpcCountingMap
       const signer = await Tezos.signer.publicKeyHash();
       expect(countRpc.size).toEqual(14);
       expect(
         countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${signer}/balance`)
       ).toEqual(1);
-      expect(countRpc.get(`${rpc}/chains/main/blocks/head/context/constants`)).toEqual(3);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/context/constants`)).toEqual(2);
       expect(countRpc.get(`${rpc}/chains/main/blocks/head/metadata`)).toEqual(5);
       expect(
         countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${signer}/manager_key`)

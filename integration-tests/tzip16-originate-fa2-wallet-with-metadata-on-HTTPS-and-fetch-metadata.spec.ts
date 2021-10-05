@@ -72,14 +72,14 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       contractAddress = (await op.contract()).address;
       expect(op.opHash).toBeDefined();
       // Count the Rpc calls
-      const countRpc = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache).rpcCountingMap;
+      const countRpc = ((Tezos.rpc as RpcClient)['httpBackend'] as HttpBackendForRPCCache).rpcCountingMap
       expect(countRpc.size).toEqual(14);
       const signer = await Tezos.signer.publicKeyHash();
       expect(countRpc.get(`${rpc}/chains/main/blocks/head/metadata`)).toEqual(5);
       expect(
         countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${signer}/balance`)
       ).toEqual(1);
-      expect(countRpc.get(`${rpc}/chains/main/blocks/head/context/constants`)).toEqual(3);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/context/constants`)).toEqual(2);
       expect(
         countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${signer}/manager_key`)
       ).toEqual(2);
@@ -356,7 +356,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       });
 
       // Count the Rpc calls
-      const countRpc = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache).rpcCountingMap;
+      const countRpc = ((Tezos.rpc as RpcClient)['httpBackend'] as HttpBackendForRPCCache).rpcCountingMap
       expect(countRpc.size).toEqual(5);
       const signer = await Tezos.signer.publicKeyHash();
       expect(
@@ -386,7 +386,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       expect(viewGetDefaultExpiryResult.toString()).toEqual('1000');
 
       // Count the Rpc calls
-      const countRpc = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache).rpcCountingMap;
+      const countRpc = ((Tezos.rpc as RpcClient)['httpBackend'] as HttpBackendForRPCCache).rpcCountingMap
       expect(countRpc.size).toEqual(9);
       const signer = await Tezos.signer.publicKeyHash();
       expect(
