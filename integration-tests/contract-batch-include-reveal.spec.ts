@@ -24,46 +24,9 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
 
       expect(batchOpEstimate.length).toEqual(3);
 
-      // Count the Rpc calls
-      let user = await Tezos.signer.publicKeyHash();
-      let value = 1;
-      let rpcCountingMapContents: Map<String, number> | undefined;
-      rpcCountingMapContents = (Tezos.rpc['httpBackend'] as HttpBackendForRPCCache)[
-        'rpcCountingMap'
-      ];
-      if (rpcCountingMapContents === undefined) {
-        console.log('RPC count is undefined');
-      } else {
-        expect(rpcCountingMapContents.size).toEqual(9);
-        expect(
-          rpcCountingMapContents.get(
-            `${rpc}/chains/main/blocks/head/context/contracts/${user}/balance`
-          )
-        );
-        expect(
-          rpcCountingMapContents.get(`${rpc}/chains/main/blocks/head/context/constants`)
-        ).toEqual(value);
-        expect(
-          rpcCountingMapContents.get(
-            `${rpc}/chains/main/blocks/head/context/contracts/${user}/manager_key`
-          )
-        ).toEqual(value);
-        expect(rpcCountingMapContents.get(`${rpc}/chains/main/blocks/head/header`)).toEqual(value);
-        expect(rpcCountingMapContents.get(`${rpc}/chains/main/blocks/head/metadata`)).toEqual(
-          value
-        );
-        expect(
-          rpcCountingMapContents.get(`${rpc}/chains/main/blocks/head/context/contracts/${user}`)
-        ).toEqual(value);
-        expect(
-          rpcCountingMapContents.get(`${rpc}/chains/main/blocks/head/helpers/forge/operations`)
-        ).toEqual(value);
-        expect(rpcCountingMapContents.get(`${rpc}/chains/main/chain_id`)).toEqual(value);
-        expect(
-          rpcCountingMapContents.get(`${rpc}/chains/main/blocks/head/helpers/scripts/run_operation`)
-        ).toEqual(value);
+     
         done();
-      }
+
     });
 
     it('Batch estimate where reveal is not needed', async (done) => {

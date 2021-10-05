@@ -10,7 +10,7 @@ import {
 import { fa2TokenFactory } from './data/fa2-token-factory';
 import { fa2ForTokenMetadataView } from './data/fa2-for-token-metadata-view';
 import { HttpBackendForRPCCache } from './HttPBackendForRPCCache';
-import { RpcClient } from '@taquito/rpc';
+import { RpcClient, RpcClientCache } from '@taquito/rpc';
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
