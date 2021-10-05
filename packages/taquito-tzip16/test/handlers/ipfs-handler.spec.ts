@@ -6,15 +6,15 @@ describe('Tzip16 http handler test', () => {
     };
     let mockContractAbstraction: any = {};
     let mockContext: any = {};
-    
+
     const ipfsHandler = new IpfsHttpHandler();
 
 	beforeEach(() => {
 		mockHttpBackend = {
             createRequest: jest.fn()
         };
-        
-        ipfsHandler['_httpBackend'] = mockHttpBackend as any;
+
+        ipfsHandler['httpBackend'] = mockHttpBackend as any;
     })
 
 	it('Should return a string representing the metadata fetched by the httpBackend', async (done) => {
@@ -25,7 +25,7 @@ describe('Tzip16 http handler test', () => {
             location: '//QmcMUKkhXowQjCPtDVVXyFJd7W9LmC92Gs5kYH1KjEisdjn'
         }
         const metadata = await ipfsHandler.getMetadata(mockContractAbstraction, tzip16Uri, mockContext)
-		
+
 		expect(metadata).toEqual(`{ "name": "Taquito test" }`);
 		done();
 	});
