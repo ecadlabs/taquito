@@ -1,6 +1,6 @@
 {
   "name": "@taquito/michel-codec",
-  "version": "10.1.2",
+  "version": "10.2.0-beta-RC.0",
   "description": "Michelson parser/validator/formatter",
   "keywords": [
     "tezos",
