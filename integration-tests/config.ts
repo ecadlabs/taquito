@@ -248,17 +248,23 @@ const setupSignerWithFreshKey = async (
   { keyUrl, requestHeaders }: EphemeralConfig
 ) => {
   const httpClient = new HttpBackend();
+  let count=0;
+  const retries=3;
+  
+  while(count != retries) {
     try {
-      const key = await httpClient.createRequest<string>({
-        url: keyUrl,
-        method: 'POST',
-        headers: requestHeaders,
-        json: false,
-      });
-      const signer = new InMemorySigner(key!);
-      Tezos.setSignerProvider(signer);
-    } catch (e) {
-      console.log("An error occurs when trying to fetch a fresh key:", e)
+        const key = await httpClient.createRequest<string>({
+          url: keyUrl,
+          method: 'POST',
+          headers: requestHeaders,
+          json: false,
+        });
+        const signer = new InMemorySigner(key!);
+        Tezos.setSignerProvider(signer);
+      } catch (e) {
+        setTimeout(function(){}, 3000);
+        if(++count == retries) console.log("An error occurs when trying to fetch a fresh key:", e)
+    }
   }
 };
 
@@ -268,7 +274,10 @@ const setupSignerWithEphemeralKey = async (
 ) => {
   const ephemeralUrl = `${keyUrl}/ephemeral`;
   const httpClient = new HttpBackend();
-
+  let count=0;
+  const retries=3;
+  
+  while(count != retries) {
     try {
       const { id, pkh } = await httpClient.createRequest({
         url: ephemeralUrl,
@@ -280,8 +289,10 @@ const setupSignerWithEphemeralKey = async (
       Tezos.setSignerProvider(signer);
 
     } catch (e) {
-      console.log("An error occurs when trying to fetch an ephemeral key:", e)
+      setTimeout(function(){}, 3000);
+      if(++count == retries) console.log("An error occurs when trying to fetch an ephemeral key:", e)
     }
+  }
 };
 
 const setupWithFaucetKey = async (Tezos: TezosToolkit, signerConfig: FaucetConfig) => {
