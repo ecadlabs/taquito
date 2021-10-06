@@ -3,6 +3,109 @@ title: Versions
 author: Jev Bjorsell
 ---
 
+# Taquito v10.2.0-beta
+
+## Summary
+
+### New features
+- @taquito/contract-library - [Performance] Embed popular contracts into your application using the new ContractAbstraction instantiation #1049
+- @taquito/rpc - [Performance] Enable RPC caching in your application using the RpcClient cache implementation #924
+- @taquito/taquito - [DevExp] Taquito Entrypoint methods now accept javascript object format for contract method calls (parametric calls are unchanged!) #915
+
+### Enhancements
+
+- Compatibility support for Hangzhounet
+- Allow to set HttpBackend on IpfsHttpHandler #1092
+
+## @taquito/contract-library - Ability to bundle smart-contract scripts and entrypoints for ContractAbstration instantiation
+
+A new package named `@taquito/contract-library` has been added to the Taquito library. 
+
+To improve (d)App performance, we aim to provide ways to reduce the number of calls made by Taquito to the RPC. The `@taquito/contracts-library` package allows developers to embed the smart-contract scripts into the application, preventing Taquito from loading this data from the RPC for every user.
+
+The ContractsLibrary class is populated by at project compile time, using contract addresses and their corresponding script and entry points. The `ContractsLibrary` is then injected into a `TezosToolkit` as an extension using the toolkits `addExtension` method.
+
+When creating a ContractAbstraction instance using the `at` method of the Contract or the Wallet API, if a `ContractsLibrary` is present on the TezosToolkit instance, the script and entry points of matching contracts will be loaded from the ContractsLibrary. Otherwise, the values will be fetched from the RPC as usual.
+
+**Example of use:**
+```ts
+import { ContractsLibrary } from '@taquito/contracts-library';
+import { TezosToolkit } from '@taquito/taquito';
+
+const contractsLibrary = new ContractsLibrary();
+const Tezos = new TezosToolkit('rpc');
+
+contractsLibrary.addContract({
+    'contractAddress1': {
+        script: script1, // script should be obtained from Tezos.rpc.getScript('contractAddress1')
+        entrypoints: entrypoints1 // entrypoints should be obtained from Tezos.rpc.getEntrypoints('contractAddress1')
+    },
+    'contractAddress2': {
+        script: script2,
+        entrypoints: entrypoints2
+    },
+    //...
+})
+
+Tezos.addExtension(contractsLibrary);
+
+// The script and entrypoints are loaded from the contractsLibrary instead of the RPC
+const contract = await Tezos.contract.at('contractAddress1');
+```
+
+
+## @taquito/RPC - New RpcClient implementation that caches RPC data
+
+Similar to the new `ContractsLibrary` feature, Taquito provides an additional way to increase dApp performance by caching some RPC data. To do so, we offer a new `RpcClient` implementation named `RpcClientCache`
+
+The constructor of the `RpcClientCache` class takes an `RpcClient` instance as a parameter and an optional TTL (time to live). By default, the TTL is of 1000 milliseconds. The `RpcClientCache` acts as a decorator over the `RpcClient` instance. The `RpcClient` responses are cached for the period defined by the TTL.
+
+**Example of use:**
+```ts
+import { TezosToolkit } from '@taquito/taquito';
+import { RpcClient, RpcClientCache } from '@taquito/rpc';
+
+const rpcClient = new RpcClient('replace_with_RPC_URL');
+const tezos = new TezosToolkit(new RpcClientCache(rpcClient));
+```
+
+## @taquito/taquito - New Taquito Entrypoint methods accept javascript object format for contract method calls
+
+The ContractAbstraction class has a new member called `methodsObject`, which serves the same purpose as the `methods` member. The format expected by the smart contract method differs: `methods` expects flattened arguments while `methodsObject` expects an object.
+
+It is to the user's discretion to use their preferred representation. We wanted to provide Taquito users with a way to pass an object when calling a contract entry point using a format similar to the storage parameter used when deploying a contract.
+
+A comparison between both methods is available here: https://tezostaquito.io/docs/smartcontracts#choosing-between-the-methods-or-methodsobject-members-to-interact-with-smart-contracts
+
+## Compatibility support for Hangzhounet
+
+This version ships with basic compatibility support for the new Hangzhou protocol. New features, such as support for new Michelson instructions, types and constants, will follow in future Taquito releases.
+
+## What's coming next for Taquito?
+
+We started preliminary work on integrating Hangzhounet, the next Tezos protocol update proposal. We plan to deliver a final version of Taquito v11 early, giving teams a longer runway to upgrade their projects before protocol transition.
+
+If you have feature or issue requests, please create an issue on http://github.com/ecadlabs/taquito/issues or join us on the Taquito community support channel on Telegram https://t.me/tezostaquito
+
+# Taquito v10.1.3-beta
+
+## Bug fix - [Key ordering](https://github.com/ecadlabs/taquito/pull/1044)
+Fixed key sorting in literal sets and maps when these collections have mixed key types.
+
+## Upgrade beacon-sdk to version 2.3.3
+This beacon-sdk release includes:
+- updated Kukai logo
+- hangzhounet support
+- fix for [#269 Pairing with Kukai blocked](https://github.com/airgap-it/beacon-sdk/issues/269) (from -beta.0)
+
+# Taquito v10.1.2-beta
+
+Bug fix - Unhandled operation confirmation error #1040 & #1024
+
+# Taquito v10.1.1-beta
+
+Bug fix where the custom polling interval values for the confirmation methods were overridden with the default ones.
+
 # Taquito v10.1.0-beta
 
 **Breaking change**
