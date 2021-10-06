@@ -259,11 +259,12 @@ const setupSignerWithFreshKey = async (
           headers: requestHeaders,
           json: false,
         });
+        console.log("the key is: ", key);
+        await new Promise((r) => setTimeout(r, 3000));
         const signer = new InMemorySigner(key!);
         Tezos.setSignerProvider(signer);
         count = retries -1;
-      } catch (e) {
-        // await new Promise((r) => setTimeout(r, 3000));
+      } catch (e) {        
         console.log("An error occurs when trying to fetch a fresh key:", e)
     }
   }
@@ -286,12 +287,11 @@ const setupSignerWithEphemeralKey = async (
         method: 'POST',
         headers: requestHeaders,
       });
-
+      await new Promise((r) => setTimeout(r, 3000));
       const signer = new RemoteSigner(pkh, `${ephemeralUrl}/${id}/`, { headers: requestHeaders });
       Tezos.setSignerProvider(signer);
       count = retries -1;
     } catch (e) {
-      // await new Promise((r) => setTimeout(r, 3000));
       console.log("An error occurs when trying to fetch an ephemeral key:", e)
     }
    }
