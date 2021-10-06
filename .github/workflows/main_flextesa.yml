@@ -58,17 +58,17 @@ jobs:
     - run: cd taquito_${{ env.UUID }}/packages/taquito && npm run build
     - run: cd taquito_${{ env.UUID }}/integration-tests/ && sed -i 's/macmini/flextesa_sandbox_${{ env.UUID }}/g' config.ts
     - run: cd taquito_${{ env.UUID }}/integration-tests/ && sed -i 's/runner_name/${{ env.RUNNER_NAME }}/g' config.ts
-    # - run: cd taquito_${{ env.UUID }}/integration-tests && npm run test:sandbox -- --maxWorkers=8
+    - run: cd taquito_${{ env.UUID }}/integration-tests && npm run test:sandbox -- --maxWorkers=8
+      env:
+        CI: true
+    # - run: cd taquito_${{ env.UUID }}/integration-tests && npm run test:sandbox contract-permits.spec.ts -- --maxWorkers=8
     #   env:
     #     CI: true
-    - run: cd taquito_${{ env.UUID }}/integration-tests && npm run test:sandbox contract-permits.spec.ts -- --maxWorkers=8
-      env:
-        CI: true
-      if: always()
-    - run: cd taquito_${{ env.UUID }}/integration-tests && npm run test:sandbox call-contract-method-manual-steps.spec.ts -- --maxWorkers=8
-      env:
-        CI: true
-      if: always()
+    #   if: always()
+    # - run: cd taquito_${{ env.UUID }}/integration-tests && npm run test:sandbox call-contract-method-manual-steps.spec.ts -- --maxWorkers=8
+    #   env:
+    #     CI: true
+    #   if: always()
     # - run: cd taquito_${{ env.UUID }}/integration-tests && npm run test:sandbox wallet-api.spec.ts -- --maxWorkers=8
     #   env:
     #     CI: true
