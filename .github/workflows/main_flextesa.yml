@@ -65,10 +65,10 @@ jobs:
       env:
         CI: true
       if: always()
-    # - run: cd taquito_${{ env.UUID }}/integration-tests && npm run test:sandbox call-contract-method-manual-steps.spec.ts -- --maxWorkers=8
-    #   env:
-    #     CI: true
-    #   if: always()
+    - run: cd taquito_${{ env.UUID }}/integration-tests && npm run test:sandbox call-contract-method-manual-steps.spec.ts -- --maxWorkers=8
+      env:
+        CI: true
+      if: always()
     # - run: cd taquito_${{ env.UUID }}/integration-tests && npm run test:sandbox wallet-api.spec.ts -- --maxWorkers=8
     #   env:
     #     CI: true
