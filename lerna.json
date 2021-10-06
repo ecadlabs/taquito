@@ -7,5 +7,5 @@
     "packages/taquito-michel-codec/pack-test-tool",
     "website"
   ],
-  "version": "10.2.0-beta-RC.0"
+  "version": "10.2.0"
 }
