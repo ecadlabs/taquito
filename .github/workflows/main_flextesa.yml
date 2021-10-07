@@ -61,7 +61,7 @@ jobs:
     # - run: cd taquito_${{ env.UUID }}/integration-tests && npm run test:sandbox -- --maxWorkers=8
     #   env:
     #     CI: true
-    - run: cd taquito_${{ env.UUID }}/integration-tests && npm run test:sandbox contract-batch-high-number-of-operations.spec.ts -- --maxWorkers=8
+    - run: cd taquito_${{ env.UUID }}/integration-tests && npm run test:sandbox contract-simple-origination.spec.ts -- --maxWorkers=8
       env:
         CI: true
       if: always()
