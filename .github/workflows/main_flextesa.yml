@@ -1,4 +1,4 @@
-name: Node.js CI for Flextesa-Roxane
+name: Node.js CI for Flextesa
 
 on:
   push:
@@ -23,7 +23,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         repository: ecadlabs/taquito
-        ref: 457-flextesa-kunal-2-1
+        ref: flextesa-roxane
         path: taquito_${{ env.UUID }}
     - run: cd taquito_${{ env.UUID }} && npm ci
     - run: cd taquito_${{ env.UUID }} && npm run lerna -- bootstrap
