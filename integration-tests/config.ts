@@ -235,7 +235,13 @@ const setupSignerWithFreshKey = async (
   { keyUrl, requestHeaders }: EphemeralConfig
 ) => {
   const httpClient = new HttpBackend();
-
+  const infoPool: any = await httpClient.createRequest<string>({
+    url: keyUrl,
+    method: 'GET',
+    headers: requestHeaders,
+    json: true
+  });
+  console.log('nb of keys',infoPool['count'])
   try {
     await fetchKeyWithRetryAndDelay(async () => {
       const key = await httpClient.createRequest<string>({
