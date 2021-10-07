@@ -47,14 +47,18 @@ const formattedInput: string =
     .join(" ");
 ```
 
-After formatting the string properly, you can convert it into bytes, for examples with the `char2Bytes` function of the `@taquito/utils` package:
+After formatting the string properly, you can convert it into bytes, for example, with the `char2Bytes` function of the `@taquito/utils` package:
 
 ```js
 import { char2Bytes } from "@taquito/utils";
 
-const bytes = "05" + char2Bytes(formattedInput);
+const bytes = char2Bytes(formattedInput);
+const payloadBytes = "05" + "01" + char2Bytes(bytes.length) + bytes;
 ```
-> Note: the bytes must be a Micheline expression and must then be prefixed with `05`
+The bytes representation of the string must be prefixed with 3 pieces of information:
+- "05" indicates that this is a Micheline expression
+- "01" indicates that a string was converted to bytes
+- the number of characters in the byte string
 
 Once you have your bytes, you can send them to the wallet to have them signed:
 
@@ -62,8 +66,8 @@ Once you have your bytes, you can send them to the wallet to have them signed:
 import { RequestSignPayloadInput, SigningType } from "@airgap/beacon-sdk";
 
 const payload: RequestSignPayloadInput = {
-    signingType: SigningType.MICHELINE,
-    payload: bytes,
+    signingType: SigningType.RAW,
+    payload: payloadBytes,
     sourceAddress: userAddress
   };
 const signedPayload = await wallet.client.requestSignPayload(payload);
@@ -98,12 +102,13 @@ const formattedInput: string =
     .join(" ");
     
 // The bytes to sign
-const bytes = "05" + char2Bytes(formattedInput);
+const bytes = char2Bytes(formattedInput);
+const payloadBytes = "05" + "01" + char2Bytes(bytes.length) + bytes;
 
 // The payload to send to the wallet
 const payload: RequestSignPayloadInput = {
-    signingType: SigningType.MICHELINE,
-    payload: bytes,
+    signingType: SigningType.RAW,
+    payload: payloadBytes,
     sourceAddress: userAddress
   };
   
@@ -122,7 +127,7 @@ const contract = await Tezos.wallet.at(CONTRACT_ADDRESS);
 const op = 
     await contract
             .methods
-            .check_signature(public_key, signature, bytes)
+            .check_signature(public_key, signature, payloadBytes)
             .send();
 await op.confirmation();
 ```
@@ -136,4 +141,4 @@ A fraudulent dapp could convince less tech-savvy users to sign arbitrary data an
 
 A signature can also be used in a replay attack when a dapp uses the same signature multiple times to gain access to a contract functionality. A signature should be used one single time and destroyed and a smart contract should implement a verification process to ensure the signature hasn't been used already.
 
-*April 2021 - Taquito version 8.1.0*
+*October 2021 - Taquito version 10.2.0*
