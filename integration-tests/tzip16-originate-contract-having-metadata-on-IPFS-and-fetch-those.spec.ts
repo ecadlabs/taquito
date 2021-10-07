@@ -2,6 +2,8 @@ import { CONFIGS } from './config';
 import { tacoContractTzip16 } from './data/modified-taco-contract';
 import { MichelsonMap } from '@taquito/taquito';
 import { char2Bytes, tzip16, Tzip16Module, IpfsHttpHandler, Handler, MetadataProvider } from '@taquito/tzip16';
+import { RpcClient, RpcClientCache } from '@taquito/rpc';
+import { HttpBackendForRPCCache } from './HttPBackendForRPCCache';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
@@ -18,7 +20,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     describe(`Originating contracts having metadata stored at HTTPS URL using: ${rpc}`, () => {
         beforeEach(async (done) => {
-            await setup();
+            await setup(false);
+            Tezos.setRpcProvider(new RpcClientCache(new RpcClient(rpc, 'main', new HttpBackendForRPCCache())))
             done();
         });
 

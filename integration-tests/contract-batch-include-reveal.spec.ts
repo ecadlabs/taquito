@@ -1,11 +1,8 @@
 import { OpKind } from '@taquito/taquito';
 import { CONFIGS } from './config';
-import { HttpBackendForRPCCache } from './HttPBackendForRPCCache';
-import { RpcClient } from '@taquito/rpc';
 
 CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
   const Tezos = lib;
-  Tezos.setProvider({ rpc: new RpcClient(rpc, 'main', new HttpBackendForRPCCache()) });
   describe(`Test contract.batch using: ${rpc}`, () => {
     beforeEach(async (done) => {
       await setup(true);
