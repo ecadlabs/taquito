@@ -1,9 +1,9 @@
-name: Node.js CI for Flextesa
+name: Node.js CI for Flextesa-Roxane
 
 on:
   push:
     branches:
-      - 457-flextesa-roxane
+      - flextesa-roxane
 jobs:
   integration-tests-flextesanet:
     runs-on: [self-hosted, flexteza]
