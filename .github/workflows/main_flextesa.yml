@@ -3,7 +3,7 @@ name: Node.js CI for Flextesa
 on:
   push:
     branches:
-      - 457-flextesa-kunal-2-1
+      - 457-flextesa-roxane
 jobs:
   integration-tests-flextesanet:
     runs-on: [self-hosted, flexteza]
