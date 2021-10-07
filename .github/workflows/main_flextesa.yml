@@ -53,8 +53,8 @@ jobs:
     - run: cd keygen_${{ env.UUID }} && npm ci
     - run: cd keygen_${{ env.UUID }} && npm run build
     - run: cd keygen_${{ env.UUID }} && npm run start > keygen_${{ env.UUID }}_log.log 2>&1 &
-    - run: curl --location --request POST 'http://${{ env.RUNNER_NAME }}:3000/flextesanet' --header 'Authorization: Bearer taquito-example'
-    - run: curl --location --request POST 'http://${{ env.RUNNER_NAME }}:3000/flextesanet/ephemeral' --header 'Authorization: Bearer taquito-example' 
+    - run: "curl --location --request POST 'http://${{ env.RUNNER_NAME }}:3000/flextesanet' --header 'Authorization: Bearer taquito-example'"
+    - run: "curl --location --request POST 'http://${{ env.RUNNER_NAME }}:3000/flextesanet/ephemeral' --header 'Authorization: Bearer taquito-example'" 
     - run: cd taquito_${{ env.UUID }}/example/ && sed -i 's/macmini/flextesa_sandbox_${{ env.UUID }}/g' deploy-flextesa-contracts.ts
     - run: cd taquito_${{ env.UUID }}/example/ && npm run example:deploy-flextesa-contracts
     - run: cd taquito_${{ env.UUID }}/packages/taquito && npm run build
