@@ -58,7 +58,7 @@ const payloadBytes = "05" + "01" + char2Bytes(bytes.length) + bytes;
 The bytes representation of the string must be prefixed with 3 pieces of information:
 - "05" indicates that this is a Micheline expression
 - "01" indicates that a string was converted to bytes
-- the number of characters in the byte string
+- the number of characters in the byte string encoded on 4 bytes
 
 Once you have your bytes, you can send them to the wallet to have them signed:
 
@@ -66,7 +66,7 @@ Once you have your bytes, you can send them to the wallet to have them signed:
 import { RequestSignPayloadInput, SigningType } from "@airgap/beacon-sdk";
 
 const payload: RequestSignPayloadInput = {
-    signingType: SigningType.RAW,
+    signingType: SigningType.MICHELINE,
     payload: payloadBytes,
     sourceAddress: userAddress
   };
@@ -107,7 +107,7 @@ const payloadBytes = "05" + "01" + char2Bytes(bytes.length) + bytes;
 
 // The payload to send to the wallet
 const payload: RequestSignPayloadInput = {
-    signingType: SigningType.RAW,
+    signingType: SigningType.MICHELINE,
     payload: payloadBytes,
     sourceAddress: userAddress
   };
