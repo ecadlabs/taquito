@@ -56,7 +56,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(
         countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${signer}/balance`)
       ).toEqual(1);
-      expect(countRpc.get(`${rpc}/chains/main/blocks/head/context/constants`)).toEqual(3);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/context/constants`)).toEqual(2);//?
       expect(
         countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${signer}/manager_key`)
       ).toEqual(2);
@@ -140,7 +140,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(
         countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${signer}/balance`)
       ).toEqual(1);
-      expect(countRpc.get(`${rpc}/chains/main/blocks/head/context/constants`)).toEqual(2);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/context/constants`)).toEqual(1);//?
       expect(
         countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${signer}/manager_key`)
       ).toEqual(2);
@@ -200,7 +200,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(
         countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${signer}/balance`)
       ).toEqual(1);
-      expect(countRpc.get(`${rpc}/chains/main/blocks/head/context/constants`)).toEqual(2);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/context/constants`)).toEqual(1);//?
       expect(
         countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${signer}/manager_key`)
       ).toEqual(2);
@@ -301,7 +301,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(
         countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${signer}/balance`)
       ).toEqual(1);
-      expect(countRpc.get(`${rpc}/chains/main/blocks/head/context/constants`)).toEqual(2);
+      expect(countRpc.get(`${rpc}/chains/main/blocks/head/context/constants`)).toEqual(1);//?
       expect(
         countRpc.get(`${rpc}/chains/main/blocks/head/context/contracts/${signer}/manager_key`)
       ).toEqual(2);
