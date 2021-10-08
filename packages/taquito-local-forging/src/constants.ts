@@ -179,7 +179,10 @@ export const opMapping: { [key: string]: string } = {
   '89': 'READ_TICKET',
   '8a': 'SPLIT_TICKET',
   '8b': 'JOIN_TICKETS',
-  '8c': 'GET_AND_UPDATE'
+  '8c': 'GET_AND_UPDATE',
+  '8d': 'chest',
+  '8e': 'chest_key',
+  '8f': 'OPEN_CHEST'
 };
 
 export const opMappingReverse = (() => {
