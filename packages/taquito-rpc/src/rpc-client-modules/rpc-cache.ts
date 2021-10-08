@@ -42,7 +42,7 @@ import {
 interface CachedDataInterface {
     [key: string]: {
         handle: Function;
-        response: any;
+        response: Promise<any>;
     };
 }
 const defaultTtl = 1000;
@@ -93,7 +93,7 @@ export class RpcClientCache implements RpcClientInterface {
         return this._cache[key].response;
     }
 
-    private put(key: string, response: any) {
+    private put(key: string, response: Promise<any>) {
         let handle = setTimeout(() => {
             return this.remove(key);
         }, this.ttl);
@@ -119,7 +119,7 @@ export class RpcClientCache implements RpcClientInterface {
         if (this.has(key)) {
             return this.get(key);
         } else {
-            const response = await this.rpcClient.getBlockHash({ block });
+            const response = this.rpcClient.getBlockHash({ block });
             this.put(key, response);
             return response;
         }
@@ -138,7 +138,7 @@ export class RpcClientCache implements RpcClientInterface {
         if (this.has(key)) {
             return this.get(key);
         } else {
-            const response = await this.rpcClient.getLiveBlocks({ block });
+            const response = this.rpcClient.getLiveBlocks({ block });
             this.put(key, response);
             return response;
         }
@@ -158,7 +158,7 @@ export class RpcClientCache implements RpcClientInterface {
         if (this.has(key)) {
             return this.get(key);
         } else {
-            const response = await this.rpcClient.getBalance(address, { block });
+            const response = this.rpcClient.getBalance(address, { block });
             this.put(key, response);
             return response;
         }
@@ -178,7 +178,7 @@ export class RpcClientCache implements RpcClientInterface {
         if (this.has(key)) {
             return this.get(key);
         } else {
-            const response = await this.rpcClient.getStorage(address, { block });
+            const response = this.rpcClient.getStorage(address, { block });
             this.put(key, response);
             return response;
         }
@@ -198,7 +198,7 @@ export class RpcClientCache implements RpcClientInterface {
         if (this.has(key)) {
             return this.get(key);
         } else {
-            const response = await this.rpcClient.getScript(address, { block });
+            const response = this.rpcClient.getScript(address, { block });
             this.put(key, response);
             return response;
         }
@@ -218,7 +218,7 @@ export class RpcClientCache implements RpcClientInterface {
         if (this.has(key)) {
             return this.get(key);
         } else {
-            const response = await this.rpcClient.getContract(address, { block });
+            const response = this.rpcClient.getContract(address, { block });
             this.put(key, response);
             return response;
         }
@@ -241,7 +241,7 @@ export class RpcClientCache implements RpcClientInterface {
         if (this.has(key)) {
             return this.get(key);
         } else {
-            const response = await this.rpcClient.getManagerKey(address, { block });
+            const response = this.rpcClient.getManagerKey(address, { block });
             this.put(key, response);
             return response;
         }
@@ -261,7 +261,7 @@ export class RpcClientCache implements RpcClientInterface {
         if (this.has(key)) {
             return this.get(key);
         } else {
-            const response = await this.rpcClient.getDelegate(address, { block });
+            const response = this.rpcClient.getDelegate(address, { block });
             this.put(key, response);
             return response;
         }
@@ -287,7 +287,7 @@ export class RpcClientCache implements RpcClientInterface {
         if (this.has(keyUrl)) {
             return this.get(keyUrl);
         } else {
-            const response = await this.rpcClient.getBigMapKey(address, key, { block });
+            const response = this.rpcClient.getBigMapKey(address, key, { block });
             this.put(keyUrl, response);
             return response;
         }
@@ -312,7 +312,7 @@ export class RpcClientCache implements RpcClientInterface {
         if (this.has(key)) {
             return this.get(key);
         } else {
-            const response = await this.rpcClient.getBigMapExpr(id, expr, { block });
+            const response = this.rpcClient.getBigMapExpr(id, expr, { block });
             this.put(key, response);
             return response;
         }
@@ -332,7 +332,7 @@ export class RpcClientCache implements RpcClientInterface {
         if (this.has(key)) {
             return this.get(key);
         } else {
-            const response = await this.rpcClient.getDelegates(address, { block });
+            const response = this.rpcClient.getDelegates(address, { block });
             this.put(key, response);
             return response;
         }
@@ -351,7 +351,7 @@ export class RpcClientCache implements RpcClientInterface {
         if (this.has(key)) {
             return this.get(key);
         } else {
-            const response = await this.rpcClient.getConstants({ block });
+            const response = this.rpcClient.getConstants({ block });
             this.put(key, response);
             return response;
         }
@@ -373,7 +373,7 @@ export class RpcClientCache implements RpcClientInterface {
         if (this.has(key)) {
             return this.get(key);
         } else {
-            const response = await this.rpcClient.getBlock({ block });
+            const response = this.rpcClient.getBlock({ block });
             this.put(key, response);
             return response;
         }
@@ -392,7 +392,7 @@ export class RpcClientCache implements RpcClientInterface {
         if (this.has(key)) {
             return this.get(key);
         } else {
-            const response = await this.rpcClient.getBlockHeader({ block });
+            const response = this.rpcClient.getBlockHeader({ block });
             this.put(key, response);
             return response;
         }
@@ -411,7 +411,7 @@ export class RpcClientCache implements RpcClientInterface {
         if (this.has(key)) {
             return this.get(key);
         } else {
-            const response = await this.rpcClient.getBlockMetadata({ block });
+            const response = this.rpcClient.getBlockMetadata({ block });
             this.put(key, response);
             return response;
         }
@@ -434,7 +434,7 @@ export class RpcClientCache implements RpcClientInterface {
         if (this.has(key)) {
             return this.get(key);
         } else {
-            const response = await this.rpcClient.getBakingRights(args, { block });
+            const response = this.rpcClient.getBakingRights(args, { block });
             this.put(key, response);
             return response;
         }
@@ -457,7 +457,7 @@ export class RpcClientCache implements RpcClientInterface {
         if (this.has(key)) {
             return this.get(key);
         } else {
-            const response = await this.rpcClient.getEndorsingRights(args, { block });
+            const response = this.rpcClient.getEndorsingRights(args, { block });
             this.put(key, response);
             return response;
         }
@@ -475,7 +475,7 @@ export class RpcClientCache implements RpcClientInterface {
         if (this.has(key)) {
             return this.get(key);
         } else {
-            const response = await this.rpcClient.getBallotList({ block });
+            const response = this.rpcClient.getBallotList({ block });
             this.put(key, response);
             return response;
         }
@@ -494,7 +494,7 @@ export class RpcClientCache implements RpcClientInterface {
         if (this.has(key)) {
             return this.get(key);
         } else {
-            const response = await this.rpcClient.getBallots({ block });
+            const response = this.rpcClient.getBallots({ block });
             this.put(key, response);
             return response;
         }
@@ -515,7 +515,7 @@ export class RpcClientCache implements RpcClientInterface {
         if (this.has(key)) {
             return this.get(key);
         } else {
-            const response = await this.rpcClient.getCurrentPeriodKind({ block });
+            const response = this.rpcClient.getCurrentPeriodKind({ block });
             this.put(key, response);
             return response;
         }
@@ -534,7 +534,7 @@ export class RpcClientCache implements RpcClientInterface {
         if (this.has(key)) {
             return this.get(key);
         } else {
-            const response = await this.rpcClient.getCurrentProposal({ block });
+            const response = this.rpcClient.getCurrentProposal({ block });
             this.put(key, response);
             return response;
         }
@@ -553,7 +553,7 @@ export class RpcClientCache implements RpcClientInterface {
         if (this.has(key)) {
             return this.get(key);
         } else {
-            const response = await this.rpcClient.getCurrentQuorum({ block });
+            const response = this.rpcClient.getCurrentQuorum({ block });
             this.put(key, response);
             return response;
         }
@@ -572,7 +572,7 @@ export class RpcClientCache implements RpcClientInterface {
         if (this.has(key)) {
             return this.get(key);
         } else {
-            const response = await this.rpcClient.getVotesListings({ block });
+            const response = this.rpcClient.getVotesListings({ block });
             this.put(key, response);
             return response;
         }
@@ -591,7 +591,7 @@ export class RpcClientCache implements RpcClientInterface {
         if (this.has(key)) {
             return this.get(key);
         } else {
-            const response = await this.rpcClient.getProposals({ block });
+            const response = this.rpcClient.getProposals({ block });
             this.put(key, response);
             return response;
         }
@@ -656,7 +656,7 @@ export class RpcClientCache implements RpcClientInterface {
         if (this.has(key)) {
             return this.get(key);
         } else {
-            const response = await this.rpcClient.getEntrypoints(contract, { block });
+            const response = this.rpcClient.getEntrypoints(contract, { block });
             this.put(key, response);
             return response;
         }
@@ -697,7 +697,7 @@ export class RpcClientCache implements RpcClientInterface {
         if (this.has(key)) {
             return this.get(key);
         } else {
-            const response = await this.rpcClient.getChainId();
+            const response = this.rpcClient.getChainId();
             this.put(key, response);
             return response;
         }
@@ -719,7 +719,7 @@ export class RpcClientCache implements RpcClientInterface {
         if (this.has(key)) {
             return this.get(key);
         } else {
-            const response = await this.rpcClient.packData(data, { block });
+            const response = this.rpcClient.packData(data, { block });
             this.put(key, response);
             return response;
         }
@@ -748,7 +748,7 @@ export class RpcClientCache implements RpcClientInterface {
         if (this.has(key)) {
             return this.get(key);
         } else {
-            const response = await this.rpcClient.getCurrentPeriod({ block });
+            const response = this.rpcClient.getCurrentPeriod({ block });
             this.put(key, response);
             return response;
         }
@@ -769,7 +769,7 @@ export class RpcClientCache implements RpcClientInterface {
         if (this.has(key)) {
             return this.get(key);
         } else {
-            const response = await this.rpcClient.getSuccessorPeriod({ block });
+            const response = this.rpcClient.getSuccessorPeriod({ block });
             this.put(key, response);
             return response;
         }
@@ -792,7 +792,7 @@ export class RpcClientCache implements RpcClientInterface {
         if (this.has(key)) {
             return this.get(key);
         } else {
-            const response = await this.rpcClient.getSaplingDiffById(id, { block });
+            const response = this.rpcClient.getSaplingDiffById(id, { block });
             this.put(key, response);
             return response;
         }
@@ -815,7 +815,7 @@ export class RpcClientCache implements RpcClientInterface {
         if (this.has(key)) {
             return this.get(key);
         } else {
-            const response = await this.rpcClient.getSaplingDiffByContract(contract, { block });
+            const response = this.rpcClient.getSaplingDiffByContract(contract, { block });
             this.put(key, response);
             return response;
         }

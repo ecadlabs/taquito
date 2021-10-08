@@ -45,34 +45,34 @@ describe('RpcClientCache test', () => {
 
 
         mockRpcClient.getRpcUrl.mockReturnValue(rpcUrl);
-        mockRpcClient.getBlock.mockResolvedValue(Promise.resolve(blockResponse));  
-        mockRpcClient.getBlockHash.mockResolvedValue(Promise.resolve(blockHash));  
-        mockRpcClient.getLiveBlocks.mockResolvedValue(Promise.resolve(liveBlocks));
-        mockRpcClient.getBalance.mockResolvedValue(balance);
-        mockRpcClient.getStorage.mockResolvedValue(Promise.resolve(storage));
-        mockRpcClient.getScript.mockResolvedValue(Promise.resolve(script));
-        mockRpcClient.getContract.mockResolvedValue(Promise.resolve(contract));
-        mockRpcClient.getManagerKey.mockResolvedValue(Promise.resolve(managerKey));
-        mockRpcClient.getDelegate.mockResolvedValue(Promise.resolve(delegate));
-        mockRpcClient.getBigMapExpr.mockResolvedValue(Promise.resolve(bigmapValue));
-        mockRpcClient.getDelegates.mockResolvedValue(Promise.resolve(delegates));
-        mockRpcClient.getConstants.mockResolvedValue(Promise.resolve(constants));
-        mockRpcClient.getBlockHeader.mockResolvedValue(Promise.resolve(blockHeader));
-        mockRpcClient.getBlockMetadata.mockResolvedValue(Promise.resolve(blockMetadata));
-        mockRpcClient.getBakingRights.mockResolvedValue(Promise.resolve(bakingRights));
-        mockRpcClient.getEndorsingRights.mockResolvedValue(Promise.resolve(endorsingRights));
-        mockRpcClient.getBallotList.mockResolvedValue(Promise.resolve(ballotList));
-        mockRpcClient.getBallots.mockResolvedValue(Promise.resolve(ballots));
-        mockRpcClient.getCurrentPeriodKind.mockResolvedValue(Promise.resolve(currentPeriodKind));
-        mockRpcClient.getCurrentProposal.mockResolvedValue(Promise.resolve(currentProposal));
-        mockRpcClient.getCurrentQuorum.mockResolvedValue(Promise.resolve(currentQuorum));
-        mockRpcClient.getVotesListings.mockResolvedValue(Promise.resolve(votesListing));
-        mockRpcClient.getProposals.mockResolvedValue(Promise.resolve(porposals));
-        mockRpcClient.getEntrypoints.mockResolvedValue(Promise.resolve(entryPoints));
-        mockRpcClient.getChainId.mockResolvedValue(Promise.resolve(chainId));
-        mockRpcClient.packData.mockResolvedValue(Promise.resolve(packData));
-        mockRpcClient.getCurrentPeriod.mockResolvedValue(Promise.resolve(currentPeriod));
-        mockRpcClient.getSuccessorPeriod.mockResolvedValue(Promise.resolve(successorPeriod));
+        mockRpcClient.getBlock.mockReturnValue(blockResponse);  
+        mockRpcClient.getBlockHash.mockReturnValue(blockHash);  
+        mockRpcClient.getLiveBlocks.mockReturnValue(liveBlocks);
+        mockRpcClient.getBalance.mockReturnValue(balance);
+        mockRpcClient.getStorage.mockReturnValue(storage);
+        mockRpcClient.getScript.mockReturnValue(script);
+        mockRpcClient.getContract.mockReturnValue(contract);
+        mockRpcClient.getManagerKey.mockReturnValue(managerKey);
+        mockRpcClient.getDelegate.mockReturnValue(delegate);
+        mockRpcClient.getBigMapExpr.mockReturnValue(bigmapValue);
+        mockRpcClient.getDelegates.mockReturnValue(delegates);
+        mockRpcClient.getConstants.mockReturnValue(constants);
+        mockRpcClient.getBlockHeader.mockReturnValue(blockHeader);
+        mockRpcClient.getBlockMetadata.mockReturnValue(blockMetadata);
+        mockRpcClient.getBakingRights.mockReturnValue(bakingRights);
+        mockRpcClient.getEndorsingRights.mockReturnValue(endorsingRights);
+        mockRpcClient.getBallotList.mockReturnValue(ballotList);
+        mockRpcClient.getBallots.mockReturnValue(ballots);
+        mockRpcClient.getCurrentPeriodKind.mockReturnValue(currentPeriodKind);
+        mockRpcClient.getCurrentProposal.mockReturnValue(currentProposal);
+        mockRpcClient.getCurrentQuorum.mockReturnValue(currentQuorum);
+        mockRpcClient.getVotesListings.mockReturnValue(votesListing);
+        mockRpcClient.getProposals.mockReturnValue(porposals);
+        mockRpcClient.getEntrypoints.mockReturnValue(entryPoints);
+        mockRpcClient.getChainId.mockReturnValue(chainId);
+        mockRpcClient.packData.mockReturnValue(packData);
+        mockRpcClient.getCurrentPeriod.mockReturnValue(currentPeriod);
+        mockRpcClient.getSuccessorPeriod.mockReturnValue(successorPeriod);
 
         rpcCache = new RpcClientCache(mockRpcClient);
     });
@@ -242,7 +242,7 @@ describe('RpcClientCache test', () => {
     });
 
     it('retrieves the block hash by calling the mocked RpcClient, not from the cache', async done => {
-        mockRpcClient.getBlockHash.mockResolvedValue(Promise.resolve('BlockHash'));
+        mockRpcClient.getBlockHash.mockReturnValue('BlockHash');
         const blockHash = await rpcCache.getBlockHash();
         expect(mockRpcClient.getBlockHash).toHaveBeenCalledTimes(1);
         expect(blockHash).toEqual('BlockHash');
@@ -251,7 +251,7 @@ describe('RpcClientCache test', () => {
     });
 
     it('The first call to getBlockHash retrieves the block hash by calling the mocked RpcClient, the second request hits the cache', async done => {
-        mockRpcClient.getBlockHash.mockResolvedValue(Promise.resolve('BlockHash'));
+        mockRpcClient.getBlockHash.mockReturnValue('BlockHash');
         await rpcCache.getBlockHash();
         await rpcCache.getBlockHash();
         // mockRpcClient should only be called once
