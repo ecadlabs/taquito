@@ -1,4 +1,4 @@
-import { opMapping, opMappingReverse } from '../src/constants';
+import { opMapping } from '../src/constants';
 import { 
   rpcContractResponse, 
   rpcContractResponse2, 
@@ -21,6 +21,7 @@ import { genericCode, genericStorage } from './data/generic_contract';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_big_map';
 import { noAnnotCode, noAnnotInit } from './data/token_without_annotations';
 import { voteInitSample, voteSample } from './data/vote_contract';
+import { chestCode, chestStorage } from './data/contract_with_chest';
 
 function extractOp (startIndex: number, endIndex: number) {
   const result = [];
@@ -844,6 +845,27 @@ export const hangzhouCases: TestCase[] = [
     };
   }),
   {
+    name: 'Origination of a contract that contains the types chest, chest_key and the instruction OPEN_CHEST',
+    operation: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: 'origination',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          balance: '0',
+          script: {
+            code: chestCode,
+            storage: chestStorage,
+          },
+        },
+      ],
+    },
+  },
+  {
     name: 'Register global constant',
     operation: {
       branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
@@ -865,7 +887,7 @@ export const hangzhouCases: TestCase[] = [
                 "int": "999"
               }
             ]
-          },
+          }
         },
       ],
     },
