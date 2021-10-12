@@ -22,6 +22,7 @@ import { tokenBigmapCode, tokenBigmapStorage } from './data/token_big_map';
 import { noAnnotCode, noAnnotInit } from './data/token_without_annotations';
 import { voteInitSample, voteSample } from './data/vote_contract';
 import { chestCode, chestStorage } from './data/contract_with_chest';
+import { storageContractWithConstant, codeContractWithConstant } from './data/contract_with_constant'
 
 function extractOp (startIndex: number, endIndex: number) {
   const result = [];
@@ -891,5 +892,26 @@ export const hangzhouCases: TestCase[] = [
         },
       ],
     },
-  }
+  },
+  {
+    name: 'Origination of a contract that contains the type constant',
+    operation: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: 'origination',
+          counter: '7423380',
+          source: 'tz1TJGsZxvr6aBGUqfQVxufesTtA7QGi696D',
+          fee: '670',
+          gas_limit: '2360',
+          storage_limit: '481',
+          balance: '0',
+          script: {
+            code: codeContractWithConstant,
+            storage:storageContractWithConstant,
+          },
+        },
+      ],
+    },
+  },
 ];
