@@ -1,4 +1,4 @@
-import { opMapping, opMappingReverse } from '../src/constants';
+import { opMapping } from '../src/constants';
 import { 
   rpcContractResponse, 
   rpcContractResponse2, 
@@ -21,6 +21,20 @@ import { genericCode, genericStorage } from './data/generic_contract';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_big_map';
 import { noAnnotCode, noAnnotInit } from './data/token_without_annotations';
 import { voteInitSample, voteSample } from './data/vote_contract';
+import { chestCode, chestStorage } from './data/contract_with_chest';
+
+function extractOp (startIndex: number, endIndex: number) {
+  const result = [];
+  let i = startIndex;
+  for (i; i <= endIndex; i++) {
+    let key = i.toString(16);
+    if (key.length === 1) {
+      key = '0' + key;
+    }
+    result.push(opMapping[key]);
+  }
+  return result;
+};
 
 interface TestCase {
   name: string;
@@ -448,8 +462,8 @@ export const commonCases: TestCase[] = [
       ],
     },
   },
-  // In `opMapping` from the file `constants.ts`, the operations before `LEVEL` are common to the protocols (delphi and edo)
-  ...Object.keys(opMappingReverse).map(op => {
+  // In `opMapping` from the file `constants.ts`, the operations and types starting at `chest` were added in the hangzhou protocol
+  ...extractOp(0, 140).map(op => {
     return {
       name: `Origination operation (${op})`,
       operation: {
@@ -798,6 +812,54 @@ export const commonCases: TestCase[] = [
           script: {
             code: example10.script.code,
             storage: [],
+          },
+        },
+      ],
+    },
+  }
+];
+
+export const hangzhouCases: TestCase[] = [
+  // In `opMapping` from the file `constants.ts`, the operations and types starting at `chest` were added in the hangzhou protocol
+  ...extractOp(141, 143).map(op => {
+    return {
+      name: `Origination operation (${op})`,
+      operation: {
+        branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+        contents: [
+          {
+            kind: 'origination',
+            counter: '1',
+            source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+            fee: '10000',
+            gas_limit: '10',
+            storage_limit: '10',
+            balance: '0',
+            script: {
+              code: genericCode(op),
+              storage: genericStorage,
+            },
+          },
+        ],
+      },
+    };
+  }),
+  {
+    name: 'Origination of a contract that contains the types chest, chest_key and the instruction OPEN_CHEST',
+    operation: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: 'origination',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          balance: '0',
+          script: {
+            code: chestCode,
+            storage: chestStorage,
           },
         },
       ],
