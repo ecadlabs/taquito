@@ -34,6 +34,8 @@ export enum CODEC {
   OP_SEED_NONCE_REVELATION = 'seed_nonce_revelation',
   OP_REVEAL = 'reveal',
   OP_PROPOSALS = 'proposals',
+  OP_REGISTER_GLOBAL_CONSTANT = 'register_global_constant',
+  VALUE = 'value',
   MANAGER = 'manager',
 }
 
@@ -179,7 +181,13 @@ export const opMapping: { [key: string]: string } = {
   '89': 'READ_TICKET',
   '8a': 'SPLIT_TICKET',
   '8b': 'JOIN_TICKETS',
-  '8c': 'GET_AND_UPDATE'
+  '8c': 'GET_AND_UPDATE',
+  '8d': 'chest',
+  '8e': 'chest_key',
+  '8f': 'OPEN_CHEST',
+  '90': 'VIEW',
+  '91': 'view',
+  '92': 'constant'
 };
 
 export const opMappingReverse = (() => {
@@ -201,6 +209,7 @@ export const kindMapping: { [key: number]: string } = {
   0x00: 'endorsement',
   0x01: 'seed_nonce_revelation',
   0x05: 'proposals',
+  0x6f: 'register_global_constant'
 };
 
 export const kindMappingReverse = (() => {
