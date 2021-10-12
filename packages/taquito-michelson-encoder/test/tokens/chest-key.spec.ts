@@ -3,7 +3,7 @@ import { ChestKeyValidationError, ChestKeyToken } from '../../src/tokens/chest-k
 describe('ChestKey token', () => {
     let token: ChestKeyToken;
     beforeEach(() => {
-        token = new ChestKeyToken({ prim: 'chest-key', args: [], annots: [] }, 0, null as any);
+        token = new ChestKeyToken({ prim: 'chest_key', args: [], annots: [] }, 0, null as any);
     });
 
     describe('EncodeObject', () => {
@@ -77,7 +77,7 @@ describe('ChestKey token', () => {
 
     describe('ExtractSchema', () => {
         it('test schema', () => {
-            expect(token.ExtractSchema()).toEqual('chest-key');
+            expect(token.ExtractSchema()).toEqual('chest_key');
         });
     });
 });
