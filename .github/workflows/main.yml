@@ -82,4 +82,3 @@ jobs:
       env:
         CI: true
         TEZOS_RPC_GRANADANET: 'http://10.60.41.77:8732'
-        
