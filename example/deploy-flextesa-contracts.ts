@@ -100,6 +100,31 @@ async function example() {
     const lambdaContractAddress = lambdaContract.address
     console.log(lambdaContractAddress);
 
+
+    const tezos12 = new TezosToolkit(provider)
+    await importKey(
+      tezos12,
+      'peqjckge.qkrrajzs@tezos.example.org',
+      'y4BX7qS1UE',
+      [
+        'skate',
+        'damp',
+        'faculty',
+        'morning',
+        'bring',
+        'ridge',
+        'traffic',
+        'initial',
+        'piece',
+        'annual',
+        'give',
+        'say',
+        'wrestle',
+        'rare',
+        'ability',
+      ].join(' '),
+      '7d4c8c3796fdbf4869edb5703758f0e5831f5081'
+    );
     console.log('Deploying Tzip12BigMapsOffChain contract...');
     
     const LocalTez1 = await createAddress();
@@ -155,10 +180,10 @@ async function example() {
     });
 
 
-    const op12 = await tezos.contract.originate({
+    const op12 = await tezos12.contract.originate({
       code: fa2ForTokenMetadataView,
       storage: {
-        administrator: await tezos.signer.publicKeyHash(),
+        administrator: await tezos12.signer.publicKeyHash(),
         all_tokens: '2',
         ledger12,
         metadata,
