@@ -7,7 +7,7 @@ import { fa2ForTokenMetadataView } from '../integration-tests/data/fa2-for-token
 import { b58cencode, char2Bytes, Prefix, prefix } from '@taquito/utils';
 
 const { exec } = require("child_process");
-
+const nodeCrypto = require('crypto');
 const provider = 'http://macmini:20000';
 
 async function createAddress() {
