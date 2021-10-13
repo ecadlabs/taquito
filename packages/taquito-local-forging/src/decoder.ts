@@ -10,6 +10,7 @@ import {
   proposalsDecoder,
   publicKeyDecoder,
   tz1Decoder,
+  valueParameterDecoder,
   zarithDecoder,
 } from './codec';
 import { CODEC } from './constants';
@@ -23,6 +24,7 @@ import {
   operationDecoder,
   OriginationSchema,
   ProposalsSchema,
+  RegisterGlobalConstantSchema,
   RevealSchema,
   schemaDecoder,
   SeedNonceRevelationSchema,
@@ -49,6 +51,7 @@ export const decoders: { [key: string]: Decoder } = {
   [CODEC.PROPOSAL_ARR]: proposalsDecoder,
   [CODEC.PARAMETERS]: parametersDecoder,
   [CODEC.ADDRESS]: addressDecoder,
+  [CODEC.VALUE]: valueParameterDecoder
 };
 
 decoders[CODEC.OPERATION] = operationDecoder(decoders);
@@ -68,4 +71,5 @@ decoders[CODEC.OP_SEED_NONCE_REVELATION] = (val: Uint8ArrayConsumer) =>
 decoders[CODEC.OP_PROPOSALS] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(ProposalsSchema)(val);
 decoders[CODEC.OP_REVEAL] = (val: Uint8ArrayConsumer) => schemaDecoder(decoders)(RevealSchema)(val);
+decoders[CODEC.OP_REGISTER_GLOBAL_CONSTANT] = (val: Uint8ArrayConsumer) => schemaDecoder(decoders)(RegisterGlobalConstantSchema)(val);
 decoders[CODEC.MANAGER] = schemaDecoder(decoders)(ManagerOperationSchema);

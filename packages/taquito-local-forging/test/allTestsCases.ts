@@ -22,6 +22,7 @@ import { tokenBigmapCode, tokenBigmapStorage } from './data/token_big_map';
 import { noAnnotCode, noAnnotInit } from './data/token_without_annotations';
 import { voteInitSample, voteSample } from './data/vote_contract';
 import { chestCode, chestStorage } from './data/contract_with_chest';
+import { storageContractWithConstant, codeContractWithConstant } from './data/contract_with_constant'
 
 function extractOp (startIndex: number, endIndex: number) {
   const result = [];
@@ -821,7 +822,7 @@ export const commonCases: TestCase[] = [
 
 export const hangzhouCases: TestCase[] = [
   // In `opMapping` from the file `constants.ts`, the operations and types starting at `chest` were added in the hangzhou protocol
-  ...extractOp(141, 143).map(op => {
+  ...extractOp(141, 146).map(op => {
     return {
       name: `Origination operation (${op})`,
       operation: {
@@ -864,5 +865,53 @@ export const hangzhouCases: TestCase[] = [
         },
       ],
     },
-  }
+  },
+  {
+    name: 'Register global constant',
+    operation: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: 'register_global_constant',
+          counter: '7423375',
+          source: 'tz1TJGsZxvr6aBGUqfQVxufesTtA7QGi696D',
+          fee: '372',
+          gas_limit: '1330',
+          storage_limit: '93',
+          value: {
+            "prim": "Pair",
+            "args": [
+              {
+                "int": "999"
+              },
+              {
+                "int": "999"
+              }
+            ]
+          }
+        },
+      ],
+    },
+  },
+  {
+    name: 'Origination of a contract that contains the type constant',
+    operation: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: 'origination',
+          counter: '7423380',
+          source: 'tz1TJGsZxvr6aBGUqfQVxufesTtA7QGi696D',
+          fee: '670',
+          gas_limit: '2360',
+          storage_limit: '481',
+          balance: '0',
+          script: {
+            code: codeContractWithConstant,
+            storage:storageContractWithConstant,
+          },
+        },
+      ],
+    },
+  },
 ];
