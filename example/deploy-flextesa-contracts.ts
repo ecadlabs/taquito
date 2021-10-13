@@ -107,15 +107,15 @@ async function example() {
     const LocalTez2 = await createAddress();
     const localTez2Pkh = await LocalTez2.signer.publicKeyHash();
 
-    const ledger = new MichelsonMap();
-    ledger.set(
+    const ledger12 = new MichelsonMap();
+    ledger12.set(
       {
         0: localTez1Pkh,
         1: 0
       },
       '20000'
     );
-    ledger.set(
+    ledger12.set(
       {
         0: localTez2Pkh,
         1: 1
@@ -160,7 +160,7 @@ async function example() {
       storage: {
         administrator: await tezos.signer.publicKeyHash(),
         all_tokens: '2',
-        ledger,
+        ledger12,
         metadata,
         operators,
         paused: false,
