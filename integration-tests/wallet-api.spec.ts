@@ -7,19 +7,19 @@ CONFIGS().forEach(({ lib, rpc, setup, isSandbox }) => {
   beforeEach(async (done) => {
     await setup();
     
-    if (isSandbox) {
-      Tezos.setProvider({
-        config: {
-          confirmationPollingIntervalSecond: 5
-        }
-      })
-    } else {
-      Tezos.setProvider({
-        config: {
-          confirmationPollingIntervalSecond: 10
-        }
-      })
-    }
+    // if (isSandbox) {
+    //   Tezos.setProvider({
+    //     config: {
+    //       confirmationPollingIntervalSecond: 5
+    //     }
+    //   })
+    // } else {
+      // Tezos.setProvider({
+      //   config: {
+      //     confirmationPollingIntervalSecond: 10
+      //   }
+      // })
+    // }
     
     done();
   })
