@@ -1,6 +1,6 @@
 import { CONFIGS } from "./config";
 
-CONFIGS().forEach(({ lib, rpc, setup, isSandbox }) => {
+CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   const test = require('jest-retries');
 
