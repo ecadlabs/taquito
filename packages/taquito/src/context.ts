@@ -208,13 +208,11 @@ export class Context {
       this.config.confirmationPollingIntervalSecond = confirmationPollingInterval.toNumber() === 0 ?
         0.1 :
         confirmationPollingInterval.toNumber();
-      console.log("confirmationPollingIntervalSecond: ", this.config.confirmationPollingIntervalSecond);
       return this.config.confirmationPollingIntervalSecond;
     } catch (exception) {
       // Return default value if there is
       // an issue returning from constants
       // file.
-      console.log("confirmationPollingIntervalSecond defaultInterval: ", defaultInterval);
       return defaultInterval;
     }
   }
