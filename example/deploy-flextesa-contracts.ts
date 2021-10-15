@@ -100,7 +100,7 @@ async function example() {
     const lambdaContractAddress = lambdaContract.address
     console.log(lambdaContractAddress);
 
-    exec("cd ../integration-tests && sed -i 's/sandbox_known_contract/"+contractknownContract.address+"/g' config.ts", (error, stdout, stderr) => {
+    exec("cd ../integration-tests && sed -i 's/sandbox_known_contract/"+contractknownContract.address+"/g' config.ts", (error: Error, stdout: string, stderr: string) => {
         if (error) {
             console.log(`error: ${error.message}`);
             return;
@@ -109,10 +109,11 @@ async function example() {
             console.log(`stderr: ${stderr}`);
             return;
         }
+        console.log(`stdout: ${stdout}`);
         console.log("Integration tests sandbox config updated with know contract: "+contractknownContract.address);
     });
 
-    exec("cd ../integration-tests && sed -i 's/sandbox_known_bigmap_contract/"+contractknownBigMapContract.address+"/g' config.ts", (error, stdout, stderr) => {
+    exec("cd ../integration-tests && sed -i 's/sandbox_known_bigmap_contract/"+contractknownBigMapContract.address+"/g' config.ts", (error: Error, stdout: string, stderr: string) => {
       if (error) {
           console.log(`error: ${error.message}`);
           return;
@@ -121,10 +122,11 @@ async function example() {
           console.log(`stderr: ${stderr}`);
           return;
       }
+      console.log(`stdout: ${stdout}`);
       console.log("Integration tests sandbox config updated with know bigmap contract: "+contractknownBigMapContract.address);
     });
 
-    exec("cd ../integration-tests && sed -i 's/flextesa_default_lambda_address/"+lambdaContractAddress+"/g' lambda-view.spec.ts", (error, stdout, stderr) => {
+    exec("cd ../integration-tests && sed -i 's/flextesa_default_lambda_address/"+lambdaContractAddress+"/g' lambda-view.spec.ts", (error: Error, stdout: string, stderr: string) => {
         if (error) {
             console.log(`error: ${error.message}`);
             return;
@@ -133,6 +135,7 @@ async function example() {
             console.log(`stderr: ${stderr}`);
             return;
         }
+        console.log(`stdout: ${stdout}`);
         console.log("Integration test lambda-view.spec.ts file updated with flextesa default lambda address: "+lambdaContractAddress);
     });
     // tslint:disable-next-line: no-floating-promises
