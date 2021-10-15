@@ -51,8 +51,6 @@ export class ContractView {
       lambdaAddress = DefaultLambdaAddresses.HANGZHOUNET
     } else if (this.chainId === ChainIds.MAINNET) {
       lambdaAddress = DefaultLambdaAddresses.MAINNET
-    } else if (this.chainId === ChainIds.FLEXTESANET) {
-      lambdaAddress = DefaultLambdaAddresses.FLEXTESANET
     } else {
       throw new UndefinedLambdaContractError()
     }

@@ -124,7 +124,7 @@ async function example() {
       console.log("Integration tests sandbox config updated with know bigmap contract: "+contractknownBigMapContract.address);
     });
 
-    exec("cd ../packages/taquito/src && sed -i 's/flextesa_default_lambda_address/"+lambdaContractAddress+"/g' constants.ts", (error, stdout, stderr) => {
+    exec("cd ../integration-tests && sed -i 's/flextesa_default_lambda_address/"+lambdaContractAddress+"/g' lambda-view.spec.ts", (error, stdout, stderr) => {
         if (error) {
             console.log(`error: ${error.message}`);
             return;
@@ -133,7 +133,7 @@ async function example() {
             console.log(`stderr: ${stderr}`);
             return;
         }
-        console.log("Taquito constants file updated with flextesa default lambda address: "+lambdaContractAddress);
+        console.log("Integration test lambda-view.spec.ts file updated with flextesa default lambda address: "+lambdaContractAddress);
     });
     // tslint:disable-next-line: no-floating-promises
     await exampleTzip12();
