@@ -57,7 +57,6 @@ jobs:
     - run: "curl --location --request POST 'http://${{ env.RUNNER_NAME }}:3000/flextesanet/ephemeral' --header 'Authorization: Bearer taquito-example'" 
     - run: cd taquito_${{ env.UUID }}/example/ && sed -i 's/macmini/flextesa_sandbox_${{ env.UUID }}/g' deploy-flextesa-contracts.ts
     - run: cd taquito_${{ env.UUID }}/example/ && npm run example:deploy-flextesa-contracts
-    - run: cd taquito_${{ env.UUID }}/packages/taquito && npm run build
     - run: cd taquito_${{ env.UUID }}/integration-tests/ && sed -i 's/macmini/flextesa_sandbox_${{ env.UUID }}/g' config.ts
     - run: cd taquito_${{ env.UUID }}/integration-tests/ && sed -i 's/runner_name/${{ env.RUNNER_NAME }}/g' config.ts
     - run: cd taquito_${{ env.UUID }}/integration-tests && npm run test:sandbox lambda-view.spec.ts -- --maxWorkers=8

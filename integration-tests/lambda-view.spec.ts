@@ -49,18 +49,18 @@ CONFIGS().forEach(({ lib, rpc, setup, isSandbox }) => {
       await op.confirmation()
       const contract = await op.contract();
 
-      const totalSupplyContractView = await contract.views.getTotalSupply([['Unit']]);
-      const getTotalSupply = isSandbox ? totalSupplyContractView.read(flextesaLambdaAddress) : totalSupplyContractView.read();
+      const totalSupplyContractView = contract.views.getTotalSupply([['Unit']]);
+      const getTotalSupply = isSandbox ? await totalSupplyContractView.read(flextesaLambdaAddress) : await totalSupplyContractView.read();
 console.log("++++++++++++++++++ ", getTotalSupply);
       expect(getTotalSupply.toString()).toEqual('100');
 
-      const balanceContractView = await contract.views.getBalance('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1');
-      const getBalance = isSandbox ? balanceContractView.read(flextesaLambdaAddress) : balanceContractView.read();
+      const balanceContractView = contract.views.getBalance('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1');
+      const getBalance = isSandbox ? await balanceContractView.read(flextesaLambdaAddress) : await balanceContractView.read();
 
       expect(getBalance.toString()).toEqual('50');
 
-      const allowanceContractView = await contract.views.getAllowance('tz1XTyqBn4xi9tkRDutpRyQwHxfF8ar4i4Wq', 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
-      const getAllowance = isSandbox ? allowanceContractView.read(flextesaLambdaAddress) : allowanceContractView.read();
+      const allowanceContractView = contract.views.getAllowance('tz1XTyqBn4xi9tkRDutpRyQwHxfF8ar4i4Wq', 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
+      const getAllowance = isSandbox ? await allowanceContractView.read(flextesaLambdaAddress) : await allowanceContractView.read();
       expect(getAllowance.toString()).toEqual('25');
       
       done();
@@ -98,8 +98,8 @@ console.log("++++++++++++++++++ ", getTotalSupply);
 
       await op.confirmation()
       const contract = await op.contract();
-      const balanceContractView = await contract.views.getBalance('tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY');
-      const getBalance = isSandbox ? balanceContractView.read(flextesaLambdaAddress) : balanceContractView.read();
+      const balanceContractView = contract.views.getBalance('tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY');
+      const getBalance = isSandbox ? await balanceContractView.read(flextesaLambdaAddress) : await balanceContractView.read();
       expect(toJSON(getBalance)).toEqual({
         balance: '50',
         owner: 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY'
@@ -150,8 +150,8 @@ console.log("++++++++++++++++++ ", getTotalSupply);
       await op.confirmation()
       const contract = await op.contract();
 
-      const balanceOfContractView = await contract.views.balance_of([{ owner: 'tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1', token_id: '0' }]);
-      const balance_of = isSandbox ? balanceOfContractView.read(flextesaLambdaAddress) : balanceOfContractView.read();
+      const balanceOfContractView = contract.views.balance_of([{ owner: 'tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1', token_id: '0' }]);
+      const balance_of = isSandbox ? await balanceOfContractView.read(flextesaLambdaAddress) : await balanceOfContractView.read();
       expect(toJSON(balance_of)).toEqual([{
         "balance": "50",
         "request": {
