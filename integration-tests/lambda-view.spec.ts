@@ -51,7 +51,6 @@ CONFIGS().forEach(({ lib, rpc, setup, isSandbox }) => {
 
       const totalSupplyContractView = contract.views.getTotalSupply([['Unit']]);
       const getTotalSupply = isSandbox ? await totalSupplyContractView.read(flextesaLambdaAddress) : await totalSupplyContractView.read();
-console.log("++++++++++++++++++ ", getTotalSupply);
       expect(getTotalSupply.toString()).toEqual('100');
 
       const balanceContractView = contract.views.getBalance('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1');

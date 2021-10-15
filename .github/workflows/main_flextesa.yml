@@ -42,17 +42,35 @@ jobs:
         repository: kjaiswal/tezos-key-gen-api
         ref: 457-flextesa-support-kunal
         path: keygen_${{ env.UUID }}
-    - run: cd keygen_${{ env.UUID }}/src && sed -i 's/keygen_redis_1/keygen_${{ env.UUID }}_redis_1/g' config.ts
+    #- run: cd keygen_${{ env.UUID }}/src && sed -i 's/keygen_redis_1/keygen_${{ env.UUID }}_redis_1/g' config.ts
     - run: cd keygen_${{ env.UUID }} && sed -i 's/macmini/flextesa_sandbox_${{ env.UUID }}/g' pools-config.single.json
     - run: cd keygen_${{ env.UUID }} && sed -i 's/keygen_signatory_1/keygen_${{ env.UUID }}_signatory_1/g' pools-config.single.json
     - run: cd keygen_${{ env.UUID }} && sed -i 's/6379/6380/g' docker-compose.yml && sed -i 's/6732/6733/g' docker-compose.yml
       if: ${{endsWith(env.RUNNER_NAME, '-2')}}
-    - run: cd keygen_${{ env.UUID }} && sed -i 's/20000/20001/g' pools-config.single.json && sed -i 's/6732/6733/g' pools-config.single.json && sed -i 's/6379/6380/g' src/config.ts
+    - run: cd keygen_${{ env.UUID }} && sed -i 's/20000/20001/g' pools-config.single.json && sed -i 's/6732/6733/g' pools-config.single.json
       if: ${{endsWith(env.RUNNER_NAME, '-2')}}
     - run: cd keygen_${{ env.UUID }} && docker-compose up &
+      env:
+        REDIS_HOST: keygen_${{ env.UUID }}_redis_1
+        REDIS_PORT: 6379
+      if: ${{endsWith(env.RUNNER_NAME, '-1')}}    
+    - run: cd keygen_${{ env.UUID }} && docker-compose up &
+      env:
+        REDIS_HOST: keygen_${{ env.UUID }}_redis_1
+        REDIS_PORT: 6380
+      if: ${{endsWith(env.RUNNER_NAME, '-2')}}    
     - run: cd keygen_${{ env.UUID }} && npm ci
     - run: cd keygen_${{ env.UUID }} && npm run build
     - run: cd keygen_${{ env.UUID }} && npm run start > keygen_${{ env.UUID }}_log.log 2>&1 &
+      env:
+        REDIS_HOST: keygen_${{ env.UUID }}_redis_1
+        REDIS_PORT: 6379
+      if: ${{endsWith(env.RUNNER_NAME, '-1')}}    
+    - run: cd keygen_${{ env.UUID }} && npm run start > keygen_${{ env.UUID }}_log.log 2>&1 &
+      env:
+        REDIS_HOST: keygen_${{ env.UUID }}_redis_1
+        REDIS_PORT: 6380
+      if: ${{endsWith(env.RUNNER_NAME, '-2')}}    
     - run: "curl --location --request POST 'http://${{ env.RUNNER_NAME }}:3000/flextesanet' --header 'Authorization: Bearer taquito-example'"
     - run: "curl --location --request POST 'http://${{ env.RUNNER_NAME }}:3000/flextesanet/ephemeral' --header 'Authorization: Bearer taquito-example'" 
     - run: cd taquito_${{ env.UUID }}/example/ && sed -i 's/macmini/flextesa_sandbox_${{ env.UUID }}/g' deploy-flextesa-contracts.ts
