@@ -31,7 +31,10 @@ interface Frozenbalancebycycle {
   rewards: BigNumber;
 }
 
-export type BigMapKey = { key: { [key: string]: string | object[] }; type: { prim: string, args?: object[] } };
+export type BigMapKey = {
+  key: { [key: string]: string | object[] };
+  type: { prim: string; args?: object[] };
+};
 
 export interface BlockFullHeader {
   level: number;
@@ -68,7 +71,7 @@ export interface OperationContentsEndorsement {
   level: number;
 }
 
-export interface OperationContentsEndorsementWithSlot  {
+export interface OperationContentsEndorsementWithSlot {
   kind: OpKind.ENDORSEMENT_WITH_SLOT;
   endorsement: InlinedEndorsement;
   slot: number;
@@ -385,7 +388,15 @@ export interface BallotsResponse {
   pass: number;
 }
 
-export type PeriodKindResponse = 'proposal' | 'testing_vote' | 'testing' | 'promotion_vote' | 'exploration' | 'cooldown' | 'promotion' | 'adoption';
+export type PeriodKindResponse =
+  | 'proposal'
+  | 'testing_vote'
+  | 'testing'
+  | 'promotion_vote'
+  | 'exploration'
+  | 'cooldown'
+  | 'promotion'
+  | 'adoption';
 
 export type CurrentProposalResponse = string | null;
 
@@ -452,7 +463,7 @@ export interface PackDataResponse {
 export type BigMapResponse = MichelsonV1Expression | MichelsonV1Expression[];
 
 export type SaplingDiffResponse = {
-  root: SaplingTransactionCommitmentHash,
+  root: SaplingTransactionCommitmentHash;
   commitments_and_ciphertexts: CommitmentsAndCiphertexts[];
   nullifiers: string[];
 };
@@ -483,7 +494,10 @@ export interface MichelsonV1ExpressionExtended {
   annots?: string[];
 }
 
-export type MichelsonV1Expression = MichelsonV1ExpressionBase | MichelsonV1ExpressionExtended | MichelsonV1Expression[];
+export type MichelsonV1Expression =
+  | MichelsonV1ExpressionBase
+  | MichelsonV1ExpressionExtended
+  | MichelsonV1Expression[];
 
 export interface ScriptedContracts {
   code: MichelsonV1Expression[];
@@ -660,7 +674,10 @@ export interface LazyStorageDiffUpdatesBigMap {
   value?: MichelsonV1Expression;
 }
 
-export type CommitmentsAndCiphertexts = [SaplingTransactionCommitment, SaplingTransactionCiphertext];
+export type CommitmentsAndCiphertexts = [
+  SaplingTransactionCommitment,
+  SaplingTransactionCiphertext
+];
 
 export type SaplingTransactionCommitment = string;
 
@@ -697,8 +714,7 @@ export interface OperationContentsAndResultMetadataOrigination {
   internal_operation_results?: InternalOperationResult[];
 }
 
-export type ConstantsResponse =
-  ConstantsResponseCommon &
+export type ConstantsResponse = ConstantsResponseCommon &
   ConstantsResponseProto011 &
   ConstantsResponseProto010 &
   ConstantsResponseProto009 &
@@ -734,7 +750,8 @@ export interface ConstantsResponseCommon {
   hard_storage_limit_per_operation: BigNumber;
 }
 
-export interface ConstantsResponseProto011 extends Omit<ConstantsResponseProto010, 'michelson_maximum_type_size'> {
+export interface ConstantsResponseProto011
+  extends Omit<ConstantsResponseProto010, 'michelson_maximum_type_size'> {
   max_micheline_node_count?: number;
   max_allowed_global_constants_depth?: number;
   max_micheline_bytes_limit?: number;
@@ -750,7 +767,8 @@ export interface ConstantsResponseProto009 extends ConstantsResponseProto007 {}
 
 export interface ConstantsResponseProto008 extends ConstantsResponseProto007 {}
 
-export interface ConstantsResponseProto007 extends Omit<ConstantsResponseProto006, 'max_revelations_per_block'> {
+export interface ConstantsResponseProto007
+  extends Omit<ConstantsResponseProto006, 'max_revelations_per_block'> {
   max_anon_ops_per_block?: number;
 }
 
@@ -770,7 +788,8 @@ export interface ConstantsResponseProto004 extends ConstantsResponseProto003 {
   test_chain_duration?: BigNumber;
 }
 
-export interface ConstantsResponseProto003 extends Omit<ConstantsResponseProto001And002, 'origination_burn'> {
+export interface ConstantsResponseProto003
+  extends Omit<ConstantsResponseProto001And002, 'origination_burn'> {
   origination_size?: number;
   max_proposals_per_delegate?: number;
 }
@@ -858,7 +877,7 @@ export type RunCodeResult = {
   storage: MichelsonV1Expression;
   operations: InternalOperationResult[];
   big_map_diff?: ContractBigMapDiff;
-}
+};
 
 export type EntrypointsResponse = {
   entrypoints: { [key: string]: Object };
@@ -889,3 +908,8 @@ export interface VotingPeriodBlockResult {
   position: number;
   remaining: number;
 }
+
+export type UnparsingModeEnum = 'Readable' | 'Optimized' | 'Optimized_legacy';
+export type UnparsingMode = {
+  unparsing_mode: UnparsingModeEnum;
+};

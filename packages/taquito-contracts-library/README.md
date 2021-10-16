@@ -8,7 +8,7 @@ import { ContractsLibrary } from '@taquito/contracts-library';
 const contractsLibrary = new ContractsLibrary();
 contractsLibrary.addContract({
     'contractAddress1': {
-        script: script1, // obtained from Tezos.rpc.getScript('contractAddress1')
+        script: script1, // obtained from Tezos.rpc.getNormalizedScript('contractAddress1')
         entrypoints: entrypoints1 // obtained from Tezos.rpc.getEntrypoints('contractAddress1')
     },
     'contractAddress2': {

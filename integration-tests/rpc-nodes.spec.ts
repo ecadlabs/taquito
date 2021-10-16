@@ -52,6 +52,12 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
                 done();
             });
 
+            it(`Access the script of the contract and normalize it using the requested unparsing mode`, async (done) => {
+                const script = await rpcClient.getNormalizedScript(knownContract);
+                expect(script).toBeDefined();
+                done();
+            });
+
             it(`Access the complete status of a contract`, async (done) => {
                 const contract = await rpcClient.getContract(knownContract);
                 expect(contract).toBeDefined();
