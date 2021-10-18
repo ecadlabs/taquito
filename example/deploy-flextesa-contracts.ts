@@ -250,7 +250,7 @@ async function exampleTzip12() {
     console.log('Storage', await contract.storage());
     console.log('Operation hash:', op.hash, 'Included in block level:', op.includedInBlock);
 
-    exec("cd ../integration-tests && sed -i 's/sandbox_known_tzip1216_contract/"+contract.address+"/g' config.ts", (error, stdout, stderr) => {
+    exec("cd ../integration-tests && sed -i 's/sandbox_known_tzip1216_contract/"+contract.address+"/g' config.ts", (error: Error, stdout: string, stderr: string) => {
       if (error) {
           console.log(`error: ${error.message}`);
           return;
@@ -259,6 +259,7 @@ async function exampleTzip12() {
           console.log(`stderr: ${stderr}`);
           return;
       }
+      console.log(`stdout: ${stdout}`);
       console.log("Integration tests sandbox config updated with Tzip12BigMapsOffChain contract address: "+contract.address);
     });
 
