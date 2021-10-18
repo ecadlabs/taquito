@@ -69,7 +69,8 @@
   "dependencies": {
     "@taquito/http-utils": "^10.2.0",
     "bignumber.js": "^9.0.1",
-    "lodash": "^4.17.21"
+    "lodash.get": "^4.4.2",
+    "lodash.set": "^4.3.2"
   },
   "devDependencies": {
     "@types/jest": "^26.0.23",
