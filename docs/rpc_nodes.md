@@ -17,6 +17,7 @@ author: Roxane Letourneau
 
 - ECAD Labs nodes:
     - Mainnet: https://mainnet.api.tez.ie
+    - Hangzhounet: https://hangzhounet.api.tez.ie/
     - Granadanet: https://granadanet.api.tez.ie
     - Florencenet: https://florencenet.api.tez.ie
 - SmartPy nodes
