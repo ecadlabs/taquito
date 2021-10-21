@@ -28,6 +28,7 @@
         "metadata-tzip16",
         "validators",
         "wallet_API",
+        "wallets",
         "web3js_taquito"
       ]
     },
