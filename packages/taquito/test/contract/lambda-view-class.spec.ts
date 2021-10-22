@@ -10,78 +10,68 @@ describe('LambdaView test', () => {
 
   beforeEach(() => {
     mockRpcClientView = {
-      getScript: jest.fn(),
+      getNormalizedScript: jest.fn(),
       getBlockHeader: jest.fn(),
       getEntrypoints: jest.fn(),
     };
 
-    mockRpcClientView.getScript.mockResolvedValue(script);
+    mockRpcClientView.getNormalizedScript.mockResolvedValue(script);
     mockRpcClientView.getBlockHeader.mockResolvedValue(header);
 
-    toolkitView = new TezosToolkit("url");
-    toolkitView["_context"].rpc = mockRpcClientView;
+    toolkitView = new TezosToolkit('url');
+    toolkitView['_context'].rpc = mockRpcClientView;
 
     mockRpcClientLambda = {
-      getScript: jest.fn(),
+      getNormalizedScript: jest.fn(),
       getBlockHeader: jest.fn(),
       getEntrypoints: jest.fn(),
     };
 
-    mockRpcClientLambda.getScript.mockResolvedValue({
+    mockRpcClientLambda.getNormalizedScript.mockResolvedValue({
       code: [
         {
-          prim: "parameter",
+          prim: 'parameter',
           args: [
             {
-              prim: "lambda",
+              prim: 'lambda',
               args: [
-                { prim: "unit" },
+                { prim: 'unit' },
                 {
-                  prim: "pair",
-                  args: [
-                    { prim: "list", args: [{ prim: "operation" }] },
-                    { prim: "unit" },
-                  ],
+                  prim: 'pair',
+                  args: [{ prim: 'list', args: [{ prim: 'operation' }] }, { prim: 'unit' }],
                 },
               ],
             },
           ],
         },
-        { prim: "storage", args: [{ prim: "unit" }] },
+        { prim: 'storage', args: [{ prim: 'unit' }] },
         {
-          prim: "code",
-          args: [[{ prim: "CAR" }, { prim: "UNIT" }, { prim: "EXEC" }]],
+          prim: 'code',
+          args: [[{ prim: 'CAR' }, { prim: 'UNIT' }, { prim: 'EXEC' }]],
         },
       ],
-      storage: { prim: "Unit" },
+      storage: { prim: 'Unit' },
     });
     mockRpcClientLambda.getBlockHeader.mockResolvedValue(header);
     mockRpcClientLambda.getEntrypoints.mockResolvedValue({ entrypoints: {} });
 
-    toolkitLambda = new TezosToolkit("url");
-    toolkitLambda["_context"].rpc = mockRpcClientLambda;
+    toolkitLambda = new TezosToolkit('url');
+    toolkitLambda['_context'].rpc = mockRpcClientLambda;
   });
 
-
-  it("LambdaView is instantiable with parameters", async (done) => {
+  it('LambdaView is instantiable with parameters', async (done) => {
     mockRpcClientView.getEntrypoints.mockResolvedValue(entrypoints);
-    const viewContract = await toolkitView.contract.at(
-      "KT1A87ZZL8mBKcWGr34BVsERPCJjfX82iBto"
-    );
-    const lambdaContract = await toolkitLambda.contract.at(
-      "KT1VAy1o1FGiXYfD3YT7x7k5eF5HSHhmc1u6"
-    );
+    const viewContract = await toolkitView.contract.at('KT1A87ZZL8mBKcWGr34BVsERPCJjfX82iBto');
+    const lambdaContract = await toolkitLambda.contract.at('KT1VAy1o1FGiXYfD3YT7x7k5eF5HSHhmc1u6');
+
+    expect(new LambdaView(lambdaContract, viewContract, 'getAllowance')).toBeInstanceOf(LambdaView);
 
     expect(
-      new LambdaView(lambdaContract, viewContract, "getAllowance")
-    ).toBeInstanceOf(LambdaView);
-
-    expect(
-      new LambdaView(lambdaContract, viewContract, "getAllowance", {
-        prim: "Pair",
+      new LambdaView(lambdaContract, viewContract, 'getAllowance', {
+        prim: 'Pair',
         args: [
-          { string: "tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1" },
-          { string: "tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE" },
+          { string: 'tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1' },
+          { string: 'tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE' },
         ],
       })
     ).toBeInstanceOf(LambdaView);
@@ -89,212 +79,196 @@ describe('LambdaView test', () => {
     done();
   });
 
-
-  it("Should create a valid voidLambda", async (done) => {
+  it('Should create a valid voidLambda', async (done) => {
     mockRpcClientView.getEntrypoints.mockResolvedValue(entrypoints);
-    const viewContract = await toolkitView.contract.at(
-      "KT1A87ZZL8mBKcWGr34BVsERPCJjfX82iBto"
-    );
-    const lambdaContract = await toolkitLambda.contract.at(
-      "KT1VAy1o1FGiXYfD3YT7x7k5eF5HSHhmc1u6"
-    );
+    const viewContract = await toolkitView.contract.at('KT1A87ZZL8mBKcWGr34BVsERPCJjfX82iBto');
+    const lambdaContract = await toolkitLambda.contract.at('KT1VAy1o1FGiXYfD3YT7x7k5eF5HSHhmc1u6');
 
-    const lambda = new LambdaView(lambdaContract, viewContract, "getAllowance", {
-      prim: "Pair",
+    const lambda = new LambdaView(lambdaContract, viewContract, 'getAllowance', {
+      prim: 'Pair',
       args: [
-        { string: "tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1" },
-        { string: "tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE" },
+        { string: 'tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1' },
+        { string: 'tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE' },
       ],
     });
 
     expect(lambda.voidLambda).toEqual([
-      { prim: "PUSH", args: [{ prim: "mutez" }, { int: "0" }] },
-      { prim: "NONE", args: [{ prim: "key_hash" }] },
+      { prim: 'PUSH', args: [{ prim: 'mutez' }, { int: '0' }] },
+      { prim: 'NONE', args: [{ prim: 'key_hash' }] },
       {
-        prim: "CREATE_CONTRACT",
+        prim: 'CREATE_CONTRACT',
         args: [
           [
-            { prim: "parameter", args: [{ prim: "nat" }] },
-            { prim: "storage", args: [{ prim: "unit" }] },
+            { prim: 'parameter', args: [{ prim: 'nat' }] },
+            { prim: 'storage', args: [{ prim: 'unit' }] },
             {
-              prim: "code",
-              args: [[{ prim: "CAR" }, { prim: "FAILWITH" }]],
+              prim: 'code',
+              args: [[{ prim: 'CAR' }, { prim: 'FAILWITH' }]],
             },
           ],
         ],
       },
       {
-        prim: "DIP",
+        prim: 'DIP',
         args: [
           [
             {
-              prim: "DIP",
+              prim: 'DIP',
               args: [
                 [
                   {
-                    prim: "LAMBDA",
+                    prim: 'LAMBDA',
                     args: [
                       {
-                        prim: "pair",
-                        args: [{ prim: "address" }, { prim: "unit" }],
+                        prim: 'pair',
+                        args: [{ prim: 'address' }, { prim: 'unit' }],
                       },
                       {
-                        prim: "pair",
-                        args: [
-                          { prim: "list", args: [{ prim: "operation" }] },
-                          { prim: "unit" },
-                        ],
+                        prim: 'pair',
+                        args: [{ prim: 'list', args: [{ prim: 'operation' }] }, { prim: 'unit' }],
                       },
                       [
-                        { prim: "CAR" },
-                        { prim: "CONTRACT", args: [{ prim: "nat" }] },
+                        { prim: 'CAR' },
+                        { prim: 'CONTRACT', args: [{ prim: 'nat' }] },
                         {
-                          prim: "IF_NONE",
+                          prim: 'IF_NONE',
                           args: [
                             [
                               {
-                                prim: "PUSH",
-                                args: [
-                                  { prim: "string" },
-                                  { string: `Callback type unmatched` },
-                                ],
+                                prim: 'PUSH',
+                                args: [{ prim: 'string' }, { string: `Callback type unmatched` }],
                               },
-                              { prim: "FAILWITH" },
+                              { prim: 'FAILWITH' },
                             ],
                             [],
                           ],
                         },
                         {
-                          prim: "PUSH",
+                          prim: 'PUSH',
                           args: [
                             {
-                              prim: "pair",
+                              prim: 'pair',
                               args: [
                                 {
-                                  prim: "address",
+                                  prim: 'address',
                                 },
                                 {
-                                  prim: "address",
+                                  prim: 'address',
                                 },
                               ],
                             },
                             {
-                              prim: "Pair",
+                              prim: 'Pair',
                               args: [
                                 {
-                                  string: "tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1",
+                                  string: 'tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1',
                                 },
                                 {
-                                  string: "tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE",
+                                  string: 'tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE',
                                 },
                               ],
                             },
                           ],
                         },
-                        { prim: "PAIR" },
+                        { prim: 'PAIR' },
                         {
-                          prim: "DIP",
+                          prim: 'DIP',
                           args: [
                             [
                               {
-                                prim: "PUSH",
+                                prim: 'PUSH',
                                 args: [
-                                  { prim: "address" },
+                                  { prim: 'address' },
                                   {
                                     string: `KT1A87ZZL8mBKcWGr34BVsERPCJjfX82iBto%getAllowance`,
                                   },
                                 ],
                               },
-                              { prim: "DUP" },
+                              { prim: 'DUP' },
                               {
-                                prim: "CONTRACT",
+                                prim: 'CONTRACT',
                                 args: [
                                   {
-                                    prim: "pair",
+                                    prim: 'pair',
                                     args: [
                                       {
-                                        prim: "pair",
+                                        prim: 'pair',
                                         args: [
                                           {
-                                            prim: "address",
+                                            prim: 'address',
                                           },
                                           {
-                                            prim: "address",
+                                            prim: 'address',
                                           },
                                         ],
                                       },
                                       {
-                                        prim: "contract",
-                                        args: [{ prim: "nat" }],
+                                        prim: 'contract',
+                                        args: [{ prim: 'nat' }],
                                       },
                                     ],
                                   },
                                 ],
                               },
                               {
-                                prim: "IF_NONE",
+                                prim: 'IF_NONE',
                                 args: [
                                   [
                                     {
-                                      prim: "PUSH",
+                                      prim: 'PUSH',
                                       args: [
-                                        { prim: "string" },
+                                        { prim: 'string' },
                                         { string: `Contract does not exist` },
                                       ],
                                     },
-                                    { prim: "FAILWITH" },
+                                    { prim: 'FAILWITH' },
                                   ],
-                                  [{ prim: "DIP", args: [[{ prim: "DROP" }]] }],
+                                  [{ prim: 'DIP', args: [[{ prim: 'DROP' }]] }],
                                 ],
                               },
                               {
-                                prim: "PUSH",
-                                args: [{ prim: "mutez" }, { int: "0" }],
+                                prim: 'PUSH',
+                                args: [{ prim: 'mutez' }, { int: '0' }],
                               },
                             ],
                           ],
                         },
-                        { prim: "TRANSFER_TOKENS" },
+                        { prim: 'TRANSFER_TOKENS' },
                         {
-                          prim: "DIP",
-                          args: [
-                            [{ prim: "NIL", args: [{ prim: "operation" }] }],
-                          ],
+                          prim: 'DIP',
+                          args: [[{ prim: 'NIL', args: [{ prim: 'operation' }] }]],
                         },
-                        { prim: "CONS" },
-                        { prim: "DIP", args: [[{ prim: "UNIT" }]] },
-                        { prim: "PAIR" },
+                        { prim: 'CONS' },
+                        { prim: 'DIP', args: [[{ prim: 'UNIT' }]] },
+                        { prim: 'PAIR' },
                       ],
                     ],
                   },
                 ],
               ],
             },
-            { prim: "APPLY" },
+            { prim: 'APPLY' },
             {
-              prim: "DIP",
+              prim: 'DIP',
               args: [
                 [
                   {
-                    prim: "PUSH",
-                    args: [
-                      { prim: "address" },
-                      { string: "KT1VAy1o1FGiXYfD3YT7x7k5eF5HSHhmc1u6" },
-                    ],
+                    prim: 'PUSH',
+                    args: [{ prim: 'address' }, { string: 'KT1VAy1o1FGiXYfD3YT7x7k5eF5HSHhmc1u6' }],
                   },
-                  { prim: "DUP" },
+                  { prim: 'DUP' },
                   {
-                    prim: "CONTRACT",
+                    prim: 'CONTRACT',
                     args: [
                       {
-                        prim: "lambda",
+                        prim: 'lambda',
                         args: [
-                          { prim: "unit" },
+                          { prim: 'unit' },
                           {
-                            prim: "pair",
+                            prim: 'pair',
                             args: [
-                              { prim: "list", args: [{ prim: "operation" }] },
-                              { prim: "unit" },
+                              { prim: 'list', args: [{ prim: 'operation' }] },
+                              { prim: 'unit' },
                             ],
                           },
                         ],
@@ -302,69 +276,61 @@ describe('LambdaView test', () => {
                     ],
                   },
                   {
-                    prim: "IF_NONE",
+                    prim: 'IF_NONE',
                     args: [
                       [
                         {
-                          prim: "PUSH",
-                          args: [
-                            { prim: "string" },
-                            { string: `Contract does not exists` },
-                          ],
+                          prim: 'PUSH',
+                          args: [{ prim: 'string' }, { string: `Contract does not exists` }],
                         },
-                        { prim: "FAILWITH" },
+                        { prim: 'FAILWITH' },
                       ],
-                      [{ prim: "DIP", args: [[{ prim: "DROP" }]] }],
+                      [{ prim: 'DIP', args: [[{ prim: 'DROP' }]] }],
                     ],
                   },
-                  { prim: "PUSH", args: [{ prim: "mutez" }, { int: "0" }] },
+                  { prim: 'PUSH', args: [{ prim: 'mutez' }, { int: '0' }] },
                 ],
               ],
             },
-            { prim: "TRANSFER_TOKENS" },
+            { prim: 'TRANSFER_TOKENS' },
             {
-              prim: "DIP",
-              args: [[{ prim: "NIL", args: [{ prim: "operation" }] }]],
+              prim: 'DIP',
+              args: [[{ prim: 'NIL', args: [{ prim: 'operation' }] }]],
             },
-            { prim: "CONS" },
+            { prim: 'CONS' },
           ],
         ],
       },
-      { prim: "CONS" },
-      { prim: "DIP", args: [[{ prim: "UNIT" }]] },
-      { prim: "PAIR" },
+      { prim: 'CONS' },
+      { prim: 'DIP', args: [[{ prim: 'UNIT' }]] },
+      { prim: 'PAIR' },
     ]);
 
     done();
   });
 
-
   it(`Should fail to create a LambdaView instance if entrypoints[this.viewMethod].prim !== 'pair'`, async (done) => {
     mockRpcClientView.getEntrypoints.mockResolvedValue({
       entrypoints: {
         getAllowance: {
-          prim: "nat",
+          prim: 'nat',
           args: [
-            { prim: "pair", args: [{ prim: "address" }, { prim: "address" }] },
-            { prim: "contract", args: [{ prim: "nat" }] },
+            { prim: 'pair', args: [{ prim: 'address' }, { prim: 'address' }] },
+            { prim: 'contract', args: [{ prim: 'nat' }] },
           ],
         },
       },
     });
-    const viewContract = await toolkitView.contract.at(
-      "KT1A87ZZL8mBKcWGr34BVsERPCJjfX82iBto"
-    );
-    const lambdaContract = await toolkitLambda.contract.at(
-      "KT1VAy1o1FGiXYfD3YT7x7k5eF5HSHhmc1u6"
-    );
+    const viewContract = await toolkitView.contract.at('KT1A87ZZL8mBKcWGr34BVsERPCJjfX82iBto');
+    const lambdaContract = await toolkitLambda.contract.at('KT1VAy1o1FGiXYfD3YT7x7k5eF5HSHhmc1u6');
 
     expect(
       () =>
-        new LambdaView(lambdaContract, viewContract, "getAllowance", {
-          prim: "Pair",
+        new LambdaView(lambdaContract, viewContract, 'getAllowance', {
+          prim: 'Pair',
           args: [
-            { string: "tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1" },
-            { string: "tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE" },
+            { string: 'tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1' },
+            { string: 'tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE' },
           ],
         })
     ).toThrow(`Expected {'prim': 'pair', ..} but found {'prim': nat, ..}`);
@@ -372,34 +338,29 @@ describe('LambdaView test', () => {
     done();
   });
 
-
   it(`Should fail to create a LambdaView instance if length of args entrypoint !== 2`, async (done) => {
     mockRpcClientView.getEntrypoints.mockResolvedValue({
       entrypoints: {
         getAllowance: {
-          prim: "pair",
+          prim: 'pair',
           args: [
-            { prim: "pair", args: [{ prim: "address" }, { prim: "address" }] },
-            { prim: "contract", args: [{ prim: "nat" }] },
-            { prim: "contract", args: [{ prim: "nat" }] },
+            { prim: 'pair', args: [{ prim: 'address' }, { prim: 'address' }] },
+            { prim: 'contract', args: [{ prim: 'nat' }] },
+            { prim: 'contract', args: [{ prim: 'nat' }] },
           ],
         },
       },
     });
-    const viewContract = await toolkitView.contract.at(
-      "KT1A87ZZL8mBKcWGr34BVsERPCJjfX82iBto"
-    );
-    const lambdaContract = await toolkitLambda.contract.at(
-      "KT1VAy1o1FGiXYfD3YT7x7k5eF5HSHhmc1u6"
-    );
+    const viewContract = await toolkitView.contract.at('KT1A87ZZL8mBKcWGr34BVsERPCJjfX82iBto');
+    const lambdaContract = await toolkitLambda.contract.at('KT1VAy1o1FGiXYfD3YT7x7k5eF5HSHhmc1u6');
 
     expect(
       () =>
-        new LambdaView(lambdaContract, viewContract, "getAllowance", {
-          prim: "Pair",
+        new LambdaView(lambdaContract, viewContract, 'getAllowance', {
+          prim: 'Pair',
           args: [
-            { string: "tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1" },
-            { string: "tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE" },
+            { string: 'tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1' },
+            { string: 'tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE' },
           ],
         })
     ).toThrowError(/Expected an Array of length 2, but found:/);
@@ -407,33 +368,28 @@ describe('LambdaView test', () => {
     done();
   });
 
-
   it(`Should fail to create a LambdaView instance if callbackContract.prim !== 'contract'`, async (done) => {
     mockRpcClientView.getEntrypoints.mockResolvedValue({
       entrypoints: {
         getAllowance: {
-          prim: "pair",
+          prim: 'pair',
           args: [
-            { prim: "pair", args: [{ prim: "address" }, { prim: "address" }] },
-            { prim: "pair", args: [{ prim: "address" }, { prim: "address" }] },
+            { prim: 'pair', args: [{ prim: 'address' }, { prim: 'address' }] },
+            { prim: 'pair', args: [{ prim: 'address' }, { prim: 'address' }] },
           ],
         },
       },
     });
-    const viewContract = await toolkitView.contract.at(
-      "KT1A87ZZL8mBKcWGr34BVsERPCJjfX82iBto"
-    );
-    const lambdaContract = await toolkitLambda.contract.at(
-      "KT1VAy1o1FGiXYfD3YT7x7k5eF5HSHhmc1u6"
-    );
+    const viewContract = await toolkitView.contract.at('KT1A87ZZL8mBKcWGr34BVsERPCJjfX82iBto');
+    const lambdaContract = await toolkitLambda.contract.at('KT1VAy1o1FGiXYfD3YT7x7k5eF5HSHhmc1u6');
 
     expect(
       () =>
-        new LambdaView(lambdaContract, viewContract, "getAllowance", {
-          prim: "Pair",
+        new LambdaView(lambdaContract, viewContract, 'getAllowance', {
+          prim: 'Pair',
           args: [
-            { string: "tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1" },
-            { string: "tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE" },
+            { string: 'tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1' },
+            { string: 'tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE' },
           ],
         })
     ).toThrowError(/Expected a {prim: 'contract', ...}, but found:/);
@@ -441,33 +397,28 @@ describe('LambdaView test', () => {
     done();
   });
 
-
   it(`Should fail to create a LambdaView instance if callbackContract.args.length !== 1`, async (done) => {
     mockRpcClientView.getEntrypoints.mockResolvedValue({
       entrypoints: {
         getAllowance: {
-          prim: "pair",
+          prim: 'pair',
           args: [
-            { prim: "pair", args: [{ prim: "address" }, { prim: "address" }] },
-            { prim: "contract", args: [{ prim: "nat" }, { prim: "nat" }] },
+            { prim: 'pair', args: [{ prim: 'address' }, { prim: 'address' }] },
+            { prim: 'contract', args: [{ prim: 'nat' }, { prim: 'nat' }] },
           ],
         },
       },
     });
-    const viewContract = await toolkitView.contract.at(
-      "KT1A87ZZL8mBKcWGr34BVsERPCJjfX82iBto"
-    );
-    const lambdaContract = await toolkitLambda.contract.at(
-      "KT1VAy1o1FGiXYfD3YT7x7k5eF5HSHhmc1u6"
-    );
+    const viewContract = await toolkitView.contract.at('KT1A87ZZL8mBKcWGr34BVsERPCJjfX82iBto');
+    const lambdaContract = await toolkitLambda.contract.at('KT1VAy1o1FGiXYfD3YT7x7k5eF5HSHhmc1u6');
 
     expect(
       () =>
-        new LambdaView(lambdaContract, viewContract, "getAllowance", {
-          prim: "Pair",
+        new LambdaView(lambdaContract, viewContract, 'getAllowance', {
+          prim: 'Pair',
           args: [
-            { string: "tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1" },
-            { string: "tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE" },
+            { string: 'tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1' },
+            { string: 'tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE' },
           ],
         })
     ).toThrowError(/Expected a single argument to 'contract', but found:/);
@@ -475,47 +426,39 @@ describe('LambdaView test', () => {
     done();
   });
 
-
   it(`Should fail to create a LambdaView instance if the view entrypoint does not exist`, async (done) => {
     mockRpcClientView.getEntrypoints.mockResolvedValue({
       entrypoints: {
         getAllowance: {
-          prim: "pair",
+          prim: 'pair',
           args: [
-            { prim: "pair", args: [{ prim: "address" }, { prim: "address" }] },
-            { prim: "contract", args: [{ prim: "nat" }, { prim: "nat" }] },
+            { prim: 'pair', args: [{ prim: 'address' }, { prim: 'address' }] },
+            { prim: 'contract', args: [{ prim: 'nat' }, { prim: 'nat' }] },
           ],
         },
       },
     });
-    const viewContract = await toolkitView.contract.at(
-      "KT1A87ZZL8mBKcWGr34BVsERPCJjfX82iBto"
-    );
-    const lambdaContract = await toolkitLambda.contract.at(
-      "KT1VAy1o1FGiXYfD3YT7x7k5eF5HSHhmc1u6"
-    );
+    const viewContract = await toolkitView.contract.at('KT1A87ZZL8mBKcWGr34BVsERPCJjfX82iBto');
+    const lambdaContract = await toolkitLambda.contract.at('KT1VAy1o1FGiXYfD3YT7x7k5eF5HSHhmc1u6');
 
-    expect(
-      () => new LambdaView(lambdaContract, viewContract, "test")
-    ).toThrowError(
-      "Contract at KT1A87ZZL8mBKcWGr34BVsERPCJjfX82iBto does not have entrypoint: test"
+    expect(() => new LambdaView(lambdaContract, viewContract, 'test')).toThrowError(
+      'Contract at KT1A87ZZL8mBKcWGr34BVsERPCJjfX82iBto does not have entrypoint: test'
     );
 
     done();
   });
 
-
-  it(`Should fail to create a LambdaView instance if the callback has no args`, async done => {
+  it(`Should fail to create a LambdaView instance if the callback has no args`, async (done) => {
     mockRpcClientView.getEntrypoints.mockResolvedValue({
       entrypoints: {
         getAllowance: {
-          prim: "pair",
+          prim: 'pair',
           args: [
             {
-              prim: "pair",
-              args: [{ prim: "address" }, { prim: "address" }],
+              prim: 'pair',
+              args: [{ prim: 'address' }, { prim: 'address' }],
             },
-            { prim: "contract" },
+            { prim: 'contract' },
           ],
         },
       },
@@ -524,11 +467,10 @@ describe('LambdaView test', () => {
     const viewContract = await toolkitView.contract.at('KT1A87ZZL8mBKcWGr34BVsERPCJjfX82iBto');
     const lambdaContract = await toolkitLambda.contract.at('KT1VAy1o1FGiXYfD3YT7x7k5eF5HSHhmc1u6');
 
-    expect(
-      () => new LambdaView(lambdaContract, viewContract, "getAllowance")
-    ).toThrowError("Callback contract args undefined");
+    expect(() => new LambdaView(lambdaContract, viewContract, 'getAllowance')).toThrowError(
+      'Callback contract args undefined'
+    );
 
     done();
   });
-})
-
+});

@@ -4,7 +4,12 @@
  */
 import { HttpBackend, HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import BigNumber from 'bignumber.js';
-import { defaultChain, defaultRPCOptions, RpcClientInterface, RPCOptions } from './rpc-client-interface';
+import {
+  defaultChain,
+  defaultRPCOptions,
+  RpcClientInterface,
+  RPCOptions,
+} from './rpc-client-interface';
 import {
   BakingRightsQueryArguments,
   BakingRightsResponse,
@@ -42,6 +47,7 @@ import {
   SaplingDiffResponse,
   ScriptResponse,
   StorageResponse,
+  UnparsingMode,
   VotesListingsResponse,
   VotingPeriodBlockResult,
 } from './types';
@@ -49,7 +55,12 @@ import { castToBigNumber } from './utils/utils';
 
 export { castToBigNumber } from './utils/utils';
 
-export { RPCOptions, defaultChain, defaultRPCOptions, RpcClientInterface } from './rpc-client-interface';
+export {
+  RPCOptions,
+  defaultChain,
+  defaultRPCOptions,
+  RpcClientInterface,
+} from './rpc-client-interface';
 
 export { RpcClientCache } from './rpc-client-modules/rpc-cache';
 
@@ -177,6 +188,31 @@ export class RpcClient implements RpcClientInterface {
       ),
       method: 'GET',
     });
+  }
+
+  /**
+   *
+   * @param address contract address from which we want to retrieve the script
+   * @param unparsingMode default is { unparsing_mode: "Readable" }
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Access the script of the contract and normalize it using the requested unparsing mode.
+   *
+   */
+  async getNormalizedScript(
+    address: string,
+    unparsingMode: UnparsingMode = { unparsing_mode: 'Readable' },
+    { block }: { block: string } = defaultRPCOptions
+  ): Promise<ScriptResponse> {
+    return this.httpBackend.createRequest<ScriptResponse>(
+      {
+        url: this.createURL(
+          `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/script/normalized`
+        ),
+        method: 'POST',
+      },
+      unparsingMode
+    );
   }
 
   /**
@@ -330,7 +366,7 @@ export class RpcClient implements RpcClientInterface {
             'deposit',
             'deposits',
             'fees',
-            'rewards'
+            'rewards',
           ]);
           return {
             ...rest,
@@ -338,14 +374,14 @@ export class RpcClient implements RpcClientInterface {
             deposits: castedToBigNumber.deposits,
             fees: castedToBigNumber.fees,
             rewards: castedToBigNumber.rewards,
-          }
+          };
         }
       ),
       staking_balance: new BigNumber(response.staking_balance),
       delegated_contracts: response.delegated_contracts,
       delegated_balance: new BigNumber(response.delegated_balance),
       grace_period: response.grace_period,
-      voting_power: response.voting_power
+      voting_power: response.voting_power,
     };
   }
 
@@ -377,10 +413,10 @@ export class RpcClient implements RpcClientInterface {
       'cost_per_byte',
       'hard_storage_limit_per_operation',
       'test_chain_duration',
-      'baking_reward_per_endorsement', 
+      'baking_reward_per_endorsement',
       'delay_per_missing_endorsement',
       'minimal_block_delay',
-      'liquidity_baking_subsidy'
+      'liquidity_baking_subsidy',
     ]);
 
     return {
@@ -847,7 +883,7 @@ export class RpcClient implements RpcClientInterface {
    *
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-sapling-sapling-state-id-get-diff
    */
-   async getSaplingDiffById(
+  async getSaplingDiffById(
     id: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<SaplingDiffResponse> {
@@ -866,12 +902,14 @@ export class RpcClient implements RpcClientInterface {
    *
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-contracts-contract-id-single-sapling-get-diff
    */
-   async getSaplingDiffByContract(
+  async getSaplingDiffByContract(
     contract: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<SaplingDiffResponse> {
     return this.httpBackend.createRequest<SaplingDiffResponse>({
-      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/single_sapling_get_diff`),
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/single_sapling_get_diff`
+      ),
       method: 'GET',
     });
   }

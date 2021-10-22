@@ -1,7 +1,7 @@
 import { Protocols } from '../constants';
 import { Context } from '../context';
 import { ContractAbstraction } from '../contract';
-import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param'
+import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
 import { OpKind, withKind } from '../operations/types';
 import {
@@ -266,7 +266,7 @@ export class Wallet {
       x as any
   ): Promise<T> {
     const rpc = this.context.withExtensions().rpc;
-    const script = await rpc.getScript(address);
+    const script = await rpc.getNormalizedScript(address);
     const entrypoints = await rpc.getEntrypoints(address);
     const blockHeader = await this.context.rpc.getBlockHeader();
     const chainId = blockHeader.chain_id;
