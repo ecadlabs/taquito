@@ -62,7 +62,7 @@
     "@taquito/utils": "^10.2.0",
     "@types/jest": "^26.0.23",
     "buffer": "^6.0.3",
-    "libsodium-wrappers": "0.7.8"
+    "libsodium-wrappers": "0.7.9"
   },
   "devDependencies": {
     "@types/jest": "^26.0.23",
