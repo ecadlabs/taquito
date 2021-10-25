@@ -1,5 +1,5 @@
 {
-  imports: {
+  "imports": {
     "@taquito/taquito": "./packages/taquito",
     "@taquito/http-utils": "./packages/taquito-http-utils",
     "@taquito/michel-codec": "./packages/taquito-michel-codec",
