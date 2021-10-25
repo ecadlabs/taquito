@@ -100,6 +100,9 @@ async function example() {
     const lambdaContractAddress = lambdaContract.address
     console.log(lambdaContractAddress);
 
+    const blockHeader = await tezos.rpc.getBlockHeader();
+    const sandboxProtocol = blockHeader.protocol;
+
     exec("cd ../integration-tests && sed -i 's/sandbox_known_contract/"+contractknownContract.address+"/g' config.ts", (error: Error, stdout: string, stderr: string) => {
         if (error) {
             console.log(`error: ${error.message}`);
@@ -137,6 +140,20 @@ async function example() {
         }
         console.log(`stdout: ${stdout}`);
         console.log("Integration test sandbox config updated with flextesa default lambda address: "+lambdaContractAddress);
+    });
+
+
+    exec("cd ../integration-tests && sed -i 's/sandbox_protocol/"+sandboxProtocol+"/g' config.ts", (error: Error, stdout: string, stderr: string) => {
+      if (error) {
+          console.log(`error: ${error.message}`);
+          return;
+      }
+      if (stderr) {
+          console.log(`stderr: ${stderr}`);
+          return;
+      }
+      console.log(`stdout: ${stdout}`);
+      console.log("Integration test sandbox config updated with sandbox protocol: "+sandboxProtocol);
     });
     // tslint:disable-next-line: no-floating-promises
     await exampleTzip12();

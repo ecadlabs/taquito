@@ -93,7 +93,7 @@ const sandboxEphemeral = {
   knownBigMapContract: 'sandbox_known_bigmap_contract',
   knownTzip1216Contract: 'sandbox_known_tzip1216_contract',
   flextesaLambdaAddress: process.env['LAMBDA_ADDRESS_SANDBOX'] || 'flextesa_default_lambda_address',
-  protocol: sandboxProtocolEphemeral.protocol,
+  protocol: process.env['PROTOCOL_SANDBOX'] || 'sandbox_protocol',
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: process.env['SANDBOX_RUNNER'] || 'http://runner_name:3000/flextesanet',
