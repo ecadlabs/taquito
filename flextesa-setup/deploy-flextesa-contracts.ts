@@ -126,7 +126,7 @@ async function example() {
       console.log("Integration tests sandbox config updated with know bigmap contract: "+contractknownBigMapContract.address);
     });
 
-    exec("cd ../integration-tests && sed -i 's/flextesa_default_lambda_address/"+lambdaContractAddress+"/g' lambda-view.spec.ts", (error: Error, stdout: string, stderr: string) => {
+    exec("cd ../integration-tests && sed -i 's/flextesa_default_lambda_address/"+lambdaContractAddress+"/g' config.ts", (error: Error, stdout: string, stderr: string) => {
         if (error) {
             console.log(`error: ${error.message}`);
             return;
@@ -136,7 +136,7 @@ async function example() {
             return;
         }
         console.log(`stdout: ${stdout}`);
-        console.log("Integration test lambda-view.spec.ts file updated with flextesa default lambda address: "+lambdaContractAddress);
+        console.log("Integration test sandbox config updated with flextesa default lambda address: "+lambdaContractAddress);
     });
     // tslint:disable-next-line: no-floating-promises
     await exampleTzip12();

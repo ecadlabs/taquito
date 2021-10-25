@@ -25,6 +25,7 @@ interface Config {
   protocol: Protocols;
   signerConfig: EphemeralConfig | FaucetConfig;
   isSandbox?: boolean;
+  flextesaLambdaAddress?: string;
 }
 /**
  * SignerType specifies the different signer options used in the integration test suite. EPHEMERAL_KEY relies on a the [tezos-key-get-api](https://github.com/ecadlabs/tezos-key-gen-api)
@@ -91,6 +92,7 @@ const sandboxEphemeral = {
   knownContract: 'sandbox_known_contract',
   knownBigMapContract: 'sandbox_known_bigmap_contract',
   knownTzip1216Contract: 'sandbox_known_tzip1216_contract',
+  flextesaLambdaAddress: process.env['LAMBDA_ADDRESS_SANDBOX'] || 'flextesa_default_lambda_address',
   protocol: sandboxProtocolEphemeral.protocol,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
