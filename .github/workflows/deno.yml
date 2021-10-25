@@ -31,8 +31,9 @@ jobs:
         uses: denoland/setup-deno@v1
         with:
           deno-version: v1.x
+
       - name: Generate deno test file
-        run: echo "const {TezosToolkit} = await import( 'https://cdn.skypack.dev/@taquito/taquito' ); console.log(TezosToolkit);">deno-index.ts
+        run: echo "import {TezosToolkit} from '@taquito/taquito'; console.log(TezosToolkit);">deno-index.ts
 
       - name: Build
-        run: DENO_DIR=./ deno run --allow-net --allow-read --unstable deno-index.ts
+        run: DENO_DIR=./ deno run --allow-net --allow-read --unstable --import-map ./deno-import-map.json deno-index.ts

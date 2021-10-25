@@ -1,0 +1,15 @@
+{
+  imports: {
+    "@taquito/taquito": "./packages/taquito",
+    "@taquito/http-utils": "./packages/taquito-http-utils",
+    "@taquito/michel-codec": "./packages/taquito-michel-codec",
+    "@taquito/michelson-encoder": "./packages/taquito-michelson-encoder",
+    "@taquito/rpc": "./packages/taquito-rpc",
+    "@taquito/utils": "./packages/taquito-utils",
+    "bignumber.js": "https://ga.jspm.io/npm:bignumber.js@9.0.1/bignumber.js",
+    "buffer": "https://ga.jspm.io/npm:@jspm/core@2.0.0-beta.12/nodelibs/deno/buffer.ts",
+    "fast-json-stable-stringify": "https://ga.jspm.io/npm:fast-json-stable-stringify@2.1.0/index.js",
+    "rxjs": "https://ga.jspm.io/npm:rxjs@6.6.7/index.js",
+    "rxjs/operators": "https://ga.jspm.io/npm:rxjs@6.6.7/operators/index.js"
+  }
+}
