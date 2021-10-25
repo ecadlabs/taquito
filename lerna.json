@@ -5,7 +5,8 @@
     "integration-tests",
     "packages/*",
     "packages/taquito-michel-codec/pack-test-tool",
-    "website"
+    "website",
+    "flextesa-setup"
   ],
   "version": "11.0.0-beta-RC.0"
 }
