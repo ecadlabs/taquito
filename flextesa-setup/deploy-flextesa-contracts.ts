@@ -1,14 +1,14 @@
 import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
-import { knownContract } from './data/knownContract';
-import { knownBigMapContract } from './data/knownBigMapContract';
+import { knownContract } from '../example/data/knownContract';
+import { knownBigMapContract } from '../example/data/knownBigMapContract';
 import { VIEW_LAMBDA } from '../packages/taquito/src/contract/view_lambda';
 import { fa2ForTokenMetadataView } from '../integration-tests/data/fa2-for-token-metadata-view';
 import { b58cencode, char2Bytes, Prefix, prefix } from '@taquito/utils';
 
 const { exec } = require("child_process");
 const nodeCrypto = require('crypto');
-const provider = 'http://macmini:20000';
+const provider = process.env['TEZOS_RPC_SANDBOX'] || 'http://macmini:20000';
 
 async function createAddress() {
   const tezos = new TezosToolkit(provider)
