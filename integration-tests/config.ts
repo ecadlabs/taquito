@@ -22,7 +22,7 @@ interface Config {
   knownContract: string;
   knownBigMapContract: string;
   knownTzip1216Contract: string; // See example/example-Tzip12BigMapOffChain.ts
-  protocol: Protocols;
+  protocol: Protocols | string;
   signerConfig: EphemeralConfig | FaucetConfig;
   isSandbox?: boolean;
   flextesaLambdaAddress?: string;
