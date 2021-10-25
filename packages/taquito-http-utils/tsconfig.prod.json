@@ -4,7 +4,9 @@
     "declarationDir": "./dist/types",
     "outDir": "./dist/lib",
     "typeRoots": ["./node_modules/@types"],
-    "jsx": "react"
+    "jsx": "react",
+    "module": "ES2020",
+    "target": "ES6"
   },
   "include": ["./src/**/*"]
 }
