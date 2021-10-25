@@ -75,6 +75,11 @@ jobs:
     - run: cd taquito_${{ env.UUID }}/flextesa-setup/ && npm run setup:deploy-flextesa-contracts
       env:
         TEZOS_RPC_SANDBOX: 'http://flextesa_sandbox_${{ env.UUID }}:20000'
+      if: ${{endsWith(env.RUNNER_NAME, '-1')}}
+    - run: cd taquito_${{ env.UUID }}/flextesa-setup/ && npm run setup:deploy-flextesa-contracts
+      env:
+        TEZOS_RPC_SANDBOX: 'http://flextesa_sandbox_${{ env.UUID }}:20001'
+      if: ${{endsWith(env.RUNNER_NAME, '-2')}}
     - run: cd taquito_${{ env.UUID }}/integration-tests/ && sed -i 's/runner_name/${{ env.RUNNER_NAME }}/g' config.ts
     - run: cd taquito_${{ env.UUID }}/integration-tests && npm run test:sandbox -- --maxWorkers=8
       env:

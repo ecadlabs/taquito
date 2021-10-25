@@ -4,12 +4,11 @@ import { tzip7Contract } from './data/tzip_7_contract';
 import { testContract } from './data/test_lambda_view';
 import { fa2Contract } from './data/fa2_contract';
 
-CONFIGS().forEach(({ lib, rpc, setup, isSandbox }) => {
+CONFIGS().forEach(({ lib, rpc, setup, isSandbox, flextesaLambdaAddress }) => {
   const Tezos = lib;
   const toJSON = (x: any) => JSON.parse(JSON.stringify(x));
 
   const test = require('jest-retries');
-  const flextesaLambdaAddress = 'flextesa_default_lambda_address';
 
   describe(`Lambda view using: ${rpc}`, () => {
     beforeEach(async done => {
