@@ -24,7 +24,7 @@ const xhrModule = (
   }
 )()
 
-const XMLHttpRequestCTOR = async () => await import(xhrModule)
+const XMLHttpRequestCTOR = await import(xhrModule) as XMLHttpRequest
 
 export * from './status_code';
 export { VERSION } from './version';
@@ -97,16 +97,16 @@ export class HttpBackend {
     }
   }
 
-  protected async createXHR(): Promise<XMLHttpRequest> {
-    const ctor = await XMLHttpRequestCTOR()
-    return new ctor()
+  protected createXHR(): XMLHttpRequest {
+    // @ts-ignore
+    return new XMLHttpRequestCTOR();
   }
 
   /**
    *
    * @param options contains options to be passed for the HTTP request (url, method and timeout)
    */
-  createRequest(
+   createRequest<T>(
     {
       url,
       method,
@@ -118,57 +118,57 @@ export class HttpBackend {
     }: HttpRequestOptions,
     data?: {}
   ) {
-    return this.createXHR()
-      .then(request => {
-        request.open(method || 'GET', `${url}${this.serialize(query)}`);
-        if (!headers['Content-Type']) {
-          request.setRequestHeader('Content-Type', 'application/json');
-        }
-        if (mimeType) {
-          request.overrideMimeType(`${mimeType}`);
-        }
-        for (const k in headers) {
-          request.setRequestHeader(k, headers[k]);
-        }
-        request.timeout = timeout || defaultTimeout;
-        request.onload = function () {
-          if (this.status >= 200 && this.status < 300) {
-            if (json) {
-              try {
-                return Promise.resolve(JSON.parse(request.response));
-              } catch (ex) {
-                return Promise.reject(new Error(`Unable to parse response: ${request.response}`));
-              }
-            } else {
-              return Promise.resolve(request.response);
+    return new Promise<T>((resolve, reject) => {
+      const request = this.createXHR();
+      request.open(method || 'GET', `${url}${this.serialize(query)}`);
+      if (!headers['Content-Type']) {
+        request.setRequestHeader('Content-Type', 'application/json');
+      }
+      if (mimeType) {
+        request.overrideMimeType(`${mimeType}`);
+      }
+      for (const k in headers) {
+        request.setRequestHeader(k, headers[k]);
+      }
+      request.timeout = timeout || defaultTimeout;
+      request.onload = function () {
+        if (this.status >= 200 && this.status < 300) {
+          if (json) {
+            try {
+              resolve(JSON.parse(request.response));
+            } catch (ex) {
+              reject(new Error(`Unable to parse response: ${request.response}`));
             }
           } else {
-            return Promise.reject(
-              new HttpResponseError(
-                `Http error response: (${this.status}) ${request.response}`,
-                this.status as STATUS_CODE,
-                request.statusText,
-                request.response,
-                url
-              )
-            );
+            resolve(request.response);
           }
-        };
-
-        request.ontimeout = function () {
-          return Promise.reject(new Error(`Request timed out after: ${request.timeout}ms`));
-        };
-
-        request.onerror = function (err) {
-          return Promise.reject(new HttpRequestFailed(url, err));
-        };
-
-        if (data) {
-          const dataStr = JSON.stringify(data);
-          request.send(dataStr);
         } else {
-          request.send();
+          reject(
+            new HttpResponseError(
+              `Http error response: (${this.status}) ${request.response}`,
+              this.status as STATUS_CODE,
+              request.statusText,
+              request.response,
+              url
+            )
+          );
         }
-      })
+      };
+
+      request.ontimeout = function () {
+        reject(new Error(`Request timed out after: ${request.timeout}ms`));
+      };
+
+      request.onerror = function (err) {
+        reject(new HttpRequestFailed(url, err));
+      };
+
+      if (data) {
+        const dataStr = JSON.stringify(data);
+        request.send(dataStr);
+      } else {
+        request.send();
+      }
+    });
   }
 }
