@@ -1,0 +1,16 @@
+{
+  "name": "@taquito/flextesa-setup",
+  "private": true,
+  "version": "10.2.0",
+  "scripts": {
+    "setup:deploy-flextesa-contracts": "node -r ts-node/register --preserve-symlinks deploy-flextesa-contracts.ts"
+  },
+  "dependencies": {
+    "@taquito/signer": "^10.2.0",
+    "@taquito/taquito": "^10.2.0",
+    "@taquito/utils": "^10.2.0"
+  },
+  "devDependencies": {
+    "ts-node": "^9.1.1"
+  }
+}
