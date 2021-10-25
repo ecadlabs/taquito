@@ -35,4 +35,4 @@ jobs:
         run: echo "const {TezosToolkit} = await import( 'https://cdn.skypack.dev/@taquito/taquito' ); console.log(TezosToolkit);">deno-index.ts
 
       - name: Build
-        run: DENO_DIR=./ deno --allow-net --allow-read --unstable deno-index.ts
+        run: DENO_DIR=./ deno run --allow-net --allow-read --unstable deno-index.ts
