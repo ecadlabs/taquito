@@ -102,6 +102,8 @@ async function example() {
 
     const blockHeader = await tezos.rpc.getBlockHeader();
     const sandboxProtocol = blockHeader.protocol;
+    const metadata = await tezos.rpc.getBlockMetadata();
+    const baker = metadata.baker;
 
     exec("cd ../integration-tests && sed -i 's/sandbox_known_contract/"+contractknownContract.address+"/g' config.ts", (error: Error, stdout: string, stderr: string) => {
         if (error) {
@@ -154,6 +156,19 @@ async function example() {
       }
       console.log(`stdout: ${stdout}`);
       console.log("Integration test sandbox config updated with sandbox protocol: "+sandboxProtocol);
+    });
+
+    exec("cd ../integration-tests && sed -i 's/sandbox_baker/"+baker+"/g' config.ts", (error: Error, stdout: string, stderr: string) => {
+      if (error) {
+          console.log(`error: ${error.message}`);
+          return;
+      }
+      if (stderr) {
+          console.log(`stderr: ${stderr}`);
+          return;
+      }
+      console.log(`stdout: ${stdout}`);
+      console.log("Integration test sandbox config updated with sandbox baker: "+baker);
     });
     // tslint:disable-next-line: no-floating-promises
     await exampleTzip12();
