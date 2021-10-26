@@ -102,7 +102,7 @@ const florencenetEphemeral = {
 
 const sandboxEphemeral = {
   rpc: process.env['TEZOS_RPC_SANDBOX'] || 'http://macmini:20000',
-  knownBaker: 'tz1YPSCGWXwBdTncK2aCctSZAXWvGsGwVJqU',
+  knownBaker: process.env['BAKER_SANDBOX'] || 'sandbox_baker',
   knownContract: 'sandbox_known_contract',
   knownBigMapContract: 'sandbox_known_bigmap_contract',
   knownTzip1216Contract: 'sandbox_known_tzip1216_contract',
