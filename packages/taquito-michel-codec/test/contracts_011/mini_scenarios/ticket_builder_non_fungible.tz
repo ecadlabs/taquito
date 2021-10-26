@@ -1,0 +1,47 @@
+## A simple non-fungible token contract implemented using tickets of
+## type [ticket nat] with amounts of 1.
+
+## To store and transfer the tokens see ticket_wallet_non_fungible.tz
+
+## For fungible tokens, see ticket_builder_fungible.tz
+
+parameter (or (ticket %burn nat) (contract %mint_destination (ticket nat)));
+storage (pair (address %manager) (nat %counter));
+code
+  {
+    AMOUNT; PUSH mutez 0; ASSERT_CMPEQ;
+
+    UNPAIR 3;
+    IF_LEFT
+      {
+        # Burn entrypoint
+
+        # Check that the ticket is ticketed by ourselves
+        READ_TICKET; CAR; SELF_ADDRESS; ASSERT_CMPEQ;
+
+        # Drop the ticket
+        DROP;
+
+        # Finish
+        NIL operation
+      }
+      {
+        # Mint entrypoint
+
+        # Authenticate SENDER
+        DUP @manager 2; SENDER; ASSERT_CMPEQ;
+
+        # Mint the token
+        PUSH @amount nat 1;
+        DUP @counter 4;
+        TICKET;
+
+        # Send it
+        PUSH mutez 0; SWAP; TRANSFER_TOKENS;
+        NIL operation; SWAP; CONS;
+
+        # Increment counter
+        DIP 2 {PUSH nat 1; ADD};
+      };
+    PAIR 3
+  }
