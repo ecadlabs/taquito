@@ -39,7 +39,7 @@ interface ConfigWithSetup extends Config {
   lib: TezosToolkit;
   setup: (preferFreshKey?: boolean) => Promise<void>;
   createAddress: () => Promise<TezosToolkit>;
-  protocol: Protocols;
+  protocol: Protocols | string;
 }
 /**
  * EphemeralConfig contains configuration for interacting with the [tezos-key-gen-api](https://github.com/ecadlabs/tezos-key-gen-api)
