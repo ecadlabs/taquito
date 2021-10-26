@@ -93,6 +93,11 @@ We hope to reduce the attack surface for software supply chain attacks by doing 
 
 Releases will be (git tags and npm packages) will be signed either by [keybase/jevonearth][2] or [keybase/simrob][3]. Releases not signed or signed by other keys should not be expected.
 
+## Taquito Users Getting Started
+
+To start using Taquito in your application, please visit [Taquito QuickStart](https://tezostaquito.io/docs/quick_start).
+Alternatively, get started with the [Taquito boilerplate project](https://github.com/ecadlabs/taquito-boilerplate#getting-started) 
+
 ## Contributors Getting Started
 
 ### NPM Scripts
