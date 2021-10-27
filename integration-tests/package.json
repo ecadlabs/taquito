@@ -47,7 +47,9 @@
     ],
     "testPathIgnorePatterns": [
       "./ledger-signer.spec.ts",
-      "./ledger-signer-failing-tests.spec.ts"
+      "./ledger-signer-failing-tests.spec.ts",
+      "./tzip16-originate-wallet-having-metadata-on-IPFS-and-fetch-those.spec.ts",
+      "./tzip16-originate-contract-having-metadata-on-IPFS-and-fetch-those.spec.ts"
     ],
     "reporters": [
       "default",
