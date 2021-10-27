@@ -141,7 +141,7 @@ async function example() {
             return;
         }
         console.log(`stdout: ${stdout}`);
-        console.log("Integration test sandbox config updated with flextesa default lambda address: "+lambdaContractAddress);
+        console.log("Integration test sandbox config updated with flextesa default lambda address: "+process.env['LAMBDA_ADDRESS_SANDBOX']);
     });
 
 
@@ -155,7 +155,7 @@ async function example() {
           return;
       }
       console.log(`stdout: ${stdout}`);
-      console.log("Integration test sandbox config updated with sandbox protocol: "+sandboxProtocol);
+      console.log("Integration test sandbox config updated with sandbox protocol: "+process.env['PROTOCOL_SANDBOX']);
     });
 
     exec("echo BAKER_SANDBOX="+baker+" >> $GITHUB_ENV", (error: Error, stdout: string, stderr: string) => {
@@ -168,7 +168,7 @@ async function example() {
           return;
       }
       console.log(`stdout: ${stdout}`);
-      console.log("Integration test sandbox config updated with sandbox baker: "+baker);
+      console.log("Integration test sandbox config updated with sandbox baker: "+process.env['BAKER_SANDBOX']);
     });
     // tslint:disable-next-line: no-floating-promises
     await exampleTzip12();
