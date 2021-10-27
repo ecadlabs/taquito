@@ -95,5 +95,5 @@ jobs:
       if: ${{endsWith(env.RUNNER_NAME, '-2')}}
     - run: docker rm -f flextesa_sandbox_${{ env.UUID }} keygen_${{ env.UUID }}_redis_1 keygen_${{ env.UUID }}_signatory_1
       if: always()
-    #- run: rm -rf  keygen_${{ env.UUID }} taquito_${{ env.UUID }}
-    #  if: always()
+    - run: rm -rf  keygen_${{ env.UUID }} taquito_${{ env.UUID }}
+      if: always()
