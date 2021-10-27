@@ -131,7 +131,7 @@ async function example() {
       console.log("Integration tests sandbox config updated with know bigmap contract: "+contractknownBigMapContract.address);
     });
 
-    exec("echo LAMBDA_ADDRESS_SANDBOX='"+lambdaContractAddress+"' >> $GITHUB_ENV", (error: Error, stdout: string, stderr: string) => {
+    exec("cd ../integration-tests && sed -i 's/flextesa_default_lambda_address/"+lambdaContractAddress+"/g' config.ts", (error: Error, stdout: string, stderr: string) => {
         if (error) {
             console.log(`error: ${error.message}`);
             return;
@@ -141,11 +141,11 @@ async function example() {
             return;
         }
         console.log(`stdout: ${stdout}`);
-        console.log("Integration test sandbox config updated with flextesa default lambda address: "+process.env['LAMBDA_ADDRESS_SANDBOX']);
+        console.log("Integration test sandbox config updated with flextesa default lambda address: "+lambdaContractAddress);
     });
 
 
-    exec("echo PROTOCOL_SANDBOX='"+sandboxProtocol+"' >> $GITHUB_ENV", (error: Error, stdout: string, stderr: string) => {
+    exec("cd ../integration-tests && sed -i 's/sandbox_protocol/"+sandboxProtocol+"/g' config.ts", (error: Error, stdout: string, stderr: string) => {
       if (error) {
           console.log(`error: ${error.message}`);
           return;
@@ -155,10 +155,10 @@ async function example() {
           return;
       }
       console.log(`stdout: ${stdout}`);
-      console.log("Integration test sandbox config updated with sandbox protocol: "+process.env['PROTOCOL_SANDBOX']);
+      console.log("Integration test sandbox config updated with sandbox protocol: "+sandboxProtocol);
     });
 
-    exec("echo BAKER_SANDBOX='"+baker+"' >> $GITHUB_ENV", (error: Error, stdout: string, stderr: string) => {
+    exec("cd ../integration-tests && sed -i 's/sandbox_baker/"+baker+"/g' config.ts", (error: Error, stdout: string, stderr: string) => {
       if (error) {
           console.log(`error: ${error.message}`);
           return;
@@ -168,7 +168,7 @@ async function example() {
           return;
       }
       console.log(`stdout: ${stdout}`);
-      console.log("Integration test sandbox config updated with sandbox baker: "+process.env['BAKER_SANDBOX']);
+      console.log("Integration test sandbox config updated with sandbox baker: "+baker);
     });
     // tslint:disable-next-line: no-floating-promises
     await exampleTzip12();
