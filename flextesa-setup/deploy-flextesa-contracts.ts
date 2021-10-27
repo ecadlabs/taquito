@@ -131,7 +131,7 @@ async function example() {
       console.log("Integration tests sandbox config updated with know bigmap contract: "+contractknownBigMapContract.address);
     });
 
-    exec("echo LAMBDA_ADDRESS_SANDBOX="+lambdaContractAddress+" >> $GITHUB_ENV", (error: Error, stdout: string, stderr: string) => {
+    exec("echo LAMBDA_ADDRESS_SANDBOX='"+lambdaContractAddress+"' >> $GITHUB_ENV", (error: Error, stdout: string, stderr: string) => {
         if (error) {
             console.log(`error: ${error.message}`);
             return;
@@ -145,7 +145,7 @@ async function example() {
     });
 
 
-    exec("echo PROTOCOL_SANDBOX="+sandboxProtocol+" >> $GITHUB_ENV", (error: Error, stdout: string, stderr: string) => {
+    exec("echo PROTOCOL_SANDBOX='"+sandboxProtocol+"' >> $GITHUB_ENV", (error: Error, stdout: string, stderr: string) => {
       if (error) {
           console.log(`error: ${error.message}`);
           return;
@@ -158,7 +158,7 @@ async function example() {
       console.log("Integration test sandbox config updated with sandbox protocol: "+process.env['PROTOCOL_SANDBOX']);
     });
 
-    exec("echo BAKER_SANDBOX="+baker+" >> $GITHUB_ENV", (error: Error, stdout: string, stderr: string) => {
+    exec("echo BAKER_SANDBOX='"+baker+"' >> $GITHUB_ENV", (error: Error, stdout: string, stderr: string) => {
       if (error) {
           console.log(`error: ${error.message}`);
           return;
