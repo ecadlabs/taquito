@@ -263,7 +263,7 @@ const setupWithFaucetKey = async (Tezos: TezosToolkit, signerConfig: FaucetConfi
 
 export const CONFIGS = () => {
   return forgers.reduce((prev, forger: ForgerType) => {
-    const configs = providers.map(({ rpc, knownBaker, knownContract, protocol, knownBigMapContract, knownTzip1216Contract, signerConfig, isSandbox }) => {
+    const configs = providers.map(({ rpc, knownBaker, knownContract, protocol, knownBigMapContract, knownTzip1216Contract, flextesaLambdaAddress, signerConfig, isSandbox }) => {
     const Tezos = new TezosToolkit(new RpcClientCache(new RpcClient(rpc)));
     Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: 300 } });
 
@@ -277,6 +277,7 @@ export const CONFIGS = () => {
       lib: Tezos,
       knownBigMapContract,
       knownTzip1216Contract,
+      flextesaLambdaAddress,
       signerConfig,
       isSandbox,
       setup: async (preferFreshKey: boolean = false) => {
