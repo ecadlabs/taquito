@@ -96,7 +96,7 @@ const sandboxEphemeral = {
   protocol: 'sandbox_protocol',
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: process.env['SANDBOX_RUNNER'],
+    keyUrl: process.env['SANDBOX_RUNNER'] || 'http://runner_name:3000/flextesanet',
     requestHeaders: { 'Authorization': 'Bearer taquito-example' },
   },
   isSandbox: true
