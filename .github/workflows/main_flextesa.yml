@@ -81,13 +81,13 @@ jobs:
         TEZOS_RPC_SANDBOX: 'http://flextesa_sandbox_${{ env.UUID }}:20001'
       if: ${{endsWith(env.RUNNER_NAME, '-2')}}
     - run: cd taquito_${{ env.UUID }}/integration-tests/ && sed -i 's/runner_name/${{ env.RUNNER_NAME }}/g' config.ts
-    - run: cd taquito_${{ env.UUID }}/integration-tests && npm run test:sandbox -- --maxWorkers=8
+    - run: cd taquito_${{ env.UUID }}/integration-tests && npm run test:sandbox lambda-view.spec.ts -- --maxWorkers=8
       env:
         CI: true
         TEZOS_RPC_SANDBOX: 'http://flextesa_sandbox_${{ env.UUID }}:20000'
         SANDBOX_RUNNER: 'http://${{ env.RUNNER_NAME }}:3000/flextesanet'
       if: ${{endsWith(env.RUNNER_NAME, '-1')}}
-    - run: cd taquito_${{ env.UUID }}/integration-tests && npm run test:sandbox -- --maxWorkers=8
+    - run: cd taquito_${{ env.UUID }}/integration-tests && npm run test:sandbox lambda-view.spec.ts -- --maxWorkers=8
       env:
         CI: true
         TEZOS_RPC_SANDBOX: 'http://flextesa_sandbox_${{ env.UUID }}:20001'
