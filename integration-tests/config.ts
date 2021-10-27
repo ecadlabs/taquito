@@ -102,12 +102,12 @@ const florencenetEphemeral = {
 
 const sandboxEphemeral = {
   rpc: process.env['TEZOS_RPC_SANDBOX'],
-  knownBaker: process.env['BAKER_SANDBOX'],
+  knownBaker: 'sandbox_baker',
   knownContract: 'sandbox_known_contract',
   knownBigMapContract: 'sandbox_known_bigmap_contract',
   knownTzip1216Contract: 'sandbox_known_tzip1216_contract',
-  flextesaLambdaAddress: process.env['LAMBDA_ADDRESS_SANDBOX'],
-  protocol: process.env['PROTOCOL_SANDBOX'],
+  flextesaLambdaAddress: 'flextesa_default_lambda_address',
+  protocol: 'sandbox_protocol',
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: process.env['SANDBOX_RUNNER'],
