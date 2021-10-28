@@ -2,7 +2,7 @@ import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
 import { fa2Contract } from '../integration-tests/data/fa2_contract';
 
-const provider = 'https://granadanet.api.tez.ie';
+const provider = 'https://hangzhounet.api.tez.ie';
 
 async function example() {
   const tezos = new TezosToolkit(provider)

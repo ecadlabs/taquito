@@ -97,7 +97,7 @@ A sequence diagram can be found [here](./tzip16-sequence-diagram#get-the-metadat
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = "KT1MLzjnFAF4pii67pm6k71nzWfiZernpNw1";
+const contractAddress = "KT1G4gTu78wYdNfGBDy75N1r9evq5iTM8Hy5";
 
 Tezos.contract.at(contractAddress, tzip16)
 .then(contract => {
@@ -119,7 +119,7 @@ Tezos.contract.at(contractAddress, tzip16)
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = "KT1Q6dKgnqLdnyBp8r9hRjq4UD7EhkpFubgM";
+const contractAddress = "KT1AekHCGmUU7ZdfBhEdrVJM34CzGRB3iEXF";
 
 Tezos.contract.at(contractAddress, tzip16)
 .then(contract => {
@@ -141,7 +141,7 @@ An example having a SHA256 hash:
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = "KT1EE1jRWhFmgf8FvqaA35gcxjSwNPGBZ27y";
+const contractAddress = "KT1BwB2pkYy87NMmpsp2gBwzrNuo6dm4bXq9";
 
 Tezos.contract.at(contractAddress, tzip16)
 .then(contract => {
@@ -163,7 +163,7 @@ Tezos.contract.at(contractAddress, tzip16)
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = "KT19VgjBNxxroMGsW3hd6kATpcuno6CiG4nU";
+const contractAddress = "KT1Fh7B2gpBhYuQB5Ac1No42YDa6fvyqTyRC";
 
 Tezos.contract.at(contractAddress, tzip16)
 .then(contract => {
@@ -215,7 +215,7 @@ Try to run the view:
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = "KT1LhUqpUGfxZaJFMrxAZ6WNAuM8FPjDLBcE";
+const contractAddress = "KT1FT56z7FFJz2jTvEsjECj16cqNQfyrePhX";
 
 Tezos.contract.at(contractAddress, tzip16)
 .then(contract => {
@@ -243,7 +243,7 @@ Try to run the view:
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = "KT1GqWXHeeJHEHVPcqJYfKDuHkdpkJevjeAc";
+const contractAddress = "KT1QCnt2H2m9oTueZ4HTxAXHLZwi2iYw3otG";
 
 Tezos.contract.at(contractAddress, tzip16)
 .then(contract => {
@@ -271,7 +271,7 @@ In the next example we execute the view `multiply-the-nat-in-storage` in a custo
 // import { MichelsonStorageView } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
 
-const contractAddress = "KT1GqWXHeeJHEHVPcqJYfKDuHkdpkJevjeAc";
+const contractAddress = "KT1QCnt2H2m9oTueZ4HTxAXHLZwi2iYw3otG";
 
 Tezos.contract.at(contractAddress)
 .then(contract => {

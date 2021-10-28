@@ -18,11 +18,11 @@ author: Roxane Letourneau
 - ECAD Labs nodes:
     - Mainnet: https://mainnet.api.tez.ie
     - Hangzhounet: https://hangzhounet.api.tez.ie/
-    - Granadanet: https://granadanet.api.tez.ie
+    - Granadanet: https://hangzhounet.api.tez.ie
     - Florencenet: https://florencenet.api.tez.ie
 - SmartPy nodes
     - Mainnet: https://mainnet.smartpy.io
-    - Granadanet: https://granadanet.smartpy.io/
+    - Granadanet: https://hangzhounet.smartpy.io/
 - Nodes operated by Blockscale on behalf of the Tezos Foundation: 
     - Mainnet: https://rpc.tzbeta.net/
     - Next protocol/version testnet (Granadanet): https://rpczero.tzbeta.net/

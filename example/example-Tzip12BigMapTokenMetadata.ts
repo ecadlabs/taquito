@@ -3,7 +3,7 @@ import { importKey } from '@taquito/signer';
 import { b58cencode, char2Bytes, Prefix, prefix } from '@taquito/utils';
 import { fa2TokenFactory } from '../integration-tests/data/fa2-token-factory';
 
-const provider = 'https://granadanet.api.tez.ie';
+const provider = 'https://hangzhounet.api.tez.ie';
 
 const nodeCrypto = require('crypto');
 

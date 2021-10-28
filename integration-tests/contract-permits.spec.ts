@@ -36,6 +36,8 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       const permit_contract = await op.contract();
+      
+      console.log("permit contract address:"+permit_contract.address)
 
       expect(op.status).toEqual('applied');
 

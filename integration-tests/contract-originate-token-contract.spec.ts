@@ -28,6 +28,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
       contract = await op.contract();
+      console.log("contract address : "+contract.address)
       const opMethod = await contract.methods.mint(await Tezos.signer.publicKeyHash(), 100).send();
 
       await opMethod.confirmation();

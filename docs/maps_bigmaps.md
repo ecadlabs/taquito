@@ -84,7 +84,7 @@ The example calls the Contracts `main` function of the contract using the key `1
 
 ```js live noInline
 Tezos.contract
-  .at('KT1LHDgMpmMk8Bcb3hCCuAjb2dLjd1No8imY')
+  .at('KT19wVPEoWLkCqdCdAAwoQhh84NZZRsmXvns')
   .then((myContract) => {
     return myContract
       .storage()
@@ -201,7 +201,7 @@ Recall that this contract does not annotate the pairs of the key pair either. We
 
 ```js live noInline
 Tezos.contract
-  .at('KT1DLmrFWNn3o4zScTNpVE6VveAcFubBkmXW')
+  .at('KT1CeazerRRYAnUKVgGBoRvarNELbejzMPD5')
   .then((myContract) => {
     return myContract.storage();
   })
@@ -293,7 +293,7 @@ The `get` method of the `MichelsonMap` class accesses values of the map for a sp
 
 ```js live noInline
 Tezos.contract
-  .at('KT1EVET15soTY4Hy21amhh3tXqsPbC5GSJiC')
+  .at('KT1KgzvUrrufPYdFSJRhTUkU3pqHJbncTDcy')
   .then((myContract) => {
     return myContract.storage();
   })
@@ -387,7 +387,7 @@ The `get` method of the `MichelsonMap` class accesses the values of the map and 
 
 ```js live noInline
 Tezos.contract
-  .at('KT1GPMgq9BWFnKjBQk5LJkGJNHv2PeP2kLqk')
+  .at('KT1GzLBiCY4RYDUqpyGSxUiuLYfiSN5zUWXT')
   .then((myContract) => {
     return myContract
       .storage()
@@ -445,10 +445,10 @@ In the following example, we will fetch 4 big map values at once. The Michelson 
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://granadanet.api.tez.ie');
+// const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
 
 Tezos.contract
-  .at('KT1VznL7HErrymLxc6EoXsatQ9mEiRE8WL6N')
+  .at('KT1CYH2LNFwYPLGXenEwtXaPeAy5ActRB3SX')
   .then((contract) => {
     println('Fetching the storage of the contract...')
     return contract.storage()
@@ -458,7 +458,6 @@ Tezos.contract
     return storage['0'].getMultipleValues([
       'tz3PNdfg3Fc8hH4m9iSs7bHgDgugsufJnBZ1', 
       'tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD', 
-      'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
       'tz3YjfexGakCDeCseXFUpcXPSAN9xHxE9TH2'
     ]);
   })
