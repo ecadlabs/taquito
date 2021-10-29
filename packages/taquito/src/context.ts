@@ -21,6 +21,7 @@ import BigNumber from 'bignumber.js';
 import { retry } from 'rxjs/operators';
 import { BehaviorSubject, OperatorFunction } from 'rxjs';
 import { Extension } from './taquito';
+import { DefaultGlobalConstantsProvider } from './global-constant/default-global-constants-provider';
 
 export interface TaquitoProvider<T, K extends Array<any>> {
   new (context: Context, ...rest: K): T;
@@ -70,6 +71,7 @@ export class Context {
   public readonly contract = new RpcContractProvider(this, this.estimate);
   public readonly batch = new RPCBatchProvider(this, this.estimate);
   public readonly wallet = new Wallet(this);
+  public readonly globalConstantsProvider = new DefaultGlobalConstantsProvider();
 
   constructor(
     private _rpc: RpcClientInterface | string,

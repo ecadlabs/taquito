@@ -1,6 +1,4 @@
-import { Schema } from '@taquito/michelson-encoder';
-import { OpKind, MichelsonV1Expression } from '@taquito/rpc';
-import { Prim, Expr } from '@taquito/michel-codec';
+import { OpKind } from '@taquito/rpc';
 import {
   OriginateParams,
   RPCOriginationOperation,
@@ -16,11 +14,9 @@ import {
 } from '../operations/types';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
 import { format } from '../format';
-import { InvalidCodeParameter, InvalidInitParameter } from './errors';
 
 export const createOriginationOperation = async ({
   code,
-  init,
   balance = "0",
   delegate,
   storage,
@@ -29,35 +25,6 @@ export const createOriginationOperation = async ({
   storageLimit = DEFAULT_STORAGE_LIMIT.ORIGINATION,
   mutez = false
 }: OriginateParams) => {
-  // tslint:disable-next-line: strict-type-predicates
-  if (storage !== undefined && init !== undefined) {
-    throw new Error(
-      "Storage and Init cannot be set a the same time. Please either use storage or init but not both.",
-    );
-  }
-
-  if(!Array.isArray(code)){
-    throw new InvalidCodeParameter('Wrong code parameter type, expected an array', code);
-  }
-
-  let contractStorage: Expr | undefined;
-  if (storage !== undefined) {
-    const storageType = (code as Expr[]).find((p): p is Prim => ('prim' in p) && p.prim === 'storage');
-    if (storageType?.args === undefined) {
-      throw new InvalidCodeParameter('The storage section is missing from the script', code);
-    }
-    const schema = new Schema(storageType.args[0] as MichelsonV1Expression); // TODO
-    contractStorage = schema.Encode(storage);
-  } else if (init !== undefined && typeof init === 'object') {
-    contractStorage = init as Expr;
-  } else {
-    throw new InvalidInitParameter('Wrong init parameter type, expected JSON Michelson', init);
-  }
-
-  const script = {
-    code,
-    storage: contractStorage,
-  };
 
   const operation: RPCOriginationOperation = {
     kind: OpKind.ORIGINATION,
@@ -67,7 +34,10 @@ export const createOriginationOperation = async ({
     balance: mutez
       ? balance.toString()
       : format('tz', 'mutez', balance).toString(),
-    script,
+    script: {
+      code,
+      storage
+    },
   };
 
   if (delegate) {

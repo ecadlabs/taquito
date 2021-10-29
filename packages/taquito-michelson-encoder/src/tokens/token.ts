@@ -17,6 +17,10 @@ export interface Semantic {
   [key: string]: (value: MichelsonV1Expression, schema: MichelsonV1Expression) => any;
 }
 
+export interface EncodingSemantic {
+  [key: string]: (args: any, schema: MichelsonV1Expression) => MichelsonV1Expression;
+}
+
 export abstract class Token {
   constructor(
     protected val: { prim: string; args?: any[]; annots?: any[] },
@@ -58,9 +62,9 @@ export abstract class Token {
 
   public abstract Execute(val: any, semantics?: Semantic): any;
 
-  public abstract Encode(_args: any[]): any;
+  public abstract Encode(_args: any[], semantics?: Semantic): any;
 
-  public abstract EncodeObject(args: any): any;
+  public abstract EncodeObject(args: any, semantics?: Semantic): any;
 
   public ExtractSignature() {
     return [[this.ExtractSchema()]];

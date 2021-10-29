@@ -31,7 +31,7 @@ import {
   createRegisterGlobalConstantOperation,
   createRevealOperation,
   createSetDelegateOperation,
-  createTransferOperation,
+  createTransferOperation
 } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
 
@@ -67,7 +67,7 @@ export class RpcContractProvider
 
     const storage = await this.rpc.getStorage(contract);
 
-    return contractSchema.Execute(storage, smartContractAbstractionSemantic(this)) as T; // Cast into T because only the caller can know the true type of the storage
+    return contractSchema.Execute(storage, smartContractAbstractionSemantic(this.context)) as T; // Cast into T because only the caller can know the true type of the storage
   }
 
   /**
@@ -128,7 +128,7 @@ export class RpcContractProvider
       ? await this.context.rpc.getBigMapExpr(id.toString(), encodedExpr, { block: String(block) })
       : await this.context.rpc.getBigMapExpr(id.toString(), encodedExpr);
 
-    return schema.ExecuteOnBigMapValue(bigMapValue, smartContractAbstractionSemantic(this)) as T;
+    return schema.ExecuteOnBigMapValue(bigMapValue, smartContractAbstractionSemantic(this.context)) as T;
   }
 
   /**
@@ -244,10 +244,12 @@ export class RpcContractProvider
 
     const publicKeyHash = await this.signer.publicKeyHash();
     const operation = await createOriginationOperation(
-      await this.context.parser.prepareCodeOrigination({
-        ...params,
-        ...estimate,
-      })
+      this.formatStorageProperty(
+        await this.context.parser.prepareCodeOrigination({
+          ...params,
+          ...estimate,
+        })
+      )
     );
     const ops = await this.addRevealOperationIfNeeded(operation, publicKeyHash);
     const preparedOrigination = await this.prepareOperation({

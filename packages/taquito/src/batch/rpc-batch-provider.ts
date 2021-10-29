@@ -6,7 +6,7 @@ import {
   createRegisterGlobalConstantOperation,
   createRevealOperation,
   createSetDelegateOperation,
-  createTransferOperation,
+  createTransferOperation
 } from '../contract/prepare';
 import { BatchOperation } from '../operations/batch-operation';
 import { OperationEmitter } from '../operations/operation-emitter';
@@ -117,9 +117,12 @@ export class OperationBatch extends OperationEmitter {
         });
       case OpKind.ORIGINATION:
         return createOriginationOperation(
-          await this.context.parser.prepareCodeOrigination({
-          ...param,
-        }));
+          this.formatStorageProperty(
+            await this.context.parser.prepareCodeOrigination({
+              ...param
+            })
+          )
+        );
       case OpKind.DELEGATION:
         return createSetDelegateOperation({
           ...param,

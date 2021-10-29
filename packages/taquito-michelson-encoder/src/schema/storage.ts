@@ -154,9 +154,9 @@ export class Schema {
     }
   }
 
-  Encode(_value?: any) {
+  Encode(_value?: any, semantics?: Semantic) {
     try {
-      return this.root.EncodeObject(_value);
+      return this.root.EncodeObject(_value, semantics);
     } catch (ex) {
       if (ex instanceof TokenValidationError) {
         throw ex;

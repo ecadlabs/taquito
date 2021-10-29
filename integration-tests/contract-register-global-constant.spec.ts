@@ -60,24 +60,12 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
 
     hangzhounet('registers a global constant and deploy a contract with the constant', async (done) => {
       const constantAddress = 'expruu5BTdW7ajqJ9XPTF3kgcV78pRiaBW3Gq31mgp3WSYjjUBYxre';
+      const constantValue = { prim: 'int' };
 
+      Tezos.globalConstant.loadGlobalConstant({ [constantAddress]: constantValue })
       try {
         const op = await Tezos.contract.registerGlobalConstant({
-          value: {
-            prim: 'IF_LEFT',
-            args: [
-              [
-                {
-                  prim: 'IF_LEFT',
-                  args: [[{ prim: 'SWAP' }, { prim: 'SUB' }], [{ prim: 'ADD' }]]
-                }
-              ],
-              [
-                { prim: 'DROP', args: [{ int: '2' }] },
-                { prim: 'PUSH', args: [{ prim: 'int' }, { int: '0' }] }
-              ]
-            ]
-          }
+          value: constantValue
         });
         await op.confirmation();
         expect(op.globalAddress).toEqual(constantAddress);
@@ -123,7 +111,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
           }
         ],
         // TODO: Replace `init` property with `storage` when `constant` will be supported in the `Michelson-Encoder` package
-        init: { int: '4' }
+        storage: '4' 
       });
       await op.confirmation();
       expect(op.hash).toBeDefined();

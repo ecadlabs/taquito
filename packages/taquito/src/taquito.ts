@@ -7,6 +7,7 @@ import { RpcClient, RpcClientInterface } from '@taquito/rpc';
 import { RPCBatchProvider } from './batch/rpc-batch-provider';
 import { Protocols } from './constants';
 import { ConfigConfirmation, ConfigStreamer, Context, TaquitoProvider } from './context';
+import { DefaultGlobalConstantsProvider } from './global-constant/default-global-constants-provider';
 import { ContractProvider, EstimationProvider } from './contract/interface';
 import { Extension } from './extension/extension';
 import { Forger } from './forger/interface';
@@ -239,6 +240,13 @@ export class TezosToolkit {
    */
   get tz(): TzProvider {
     return this._context.tz;
+  }
+
+  /**
+   * @description Allow to manage global constants that are used by contracts
+   */
+   get globalConstant(): DefaultGlobalConstantsProvider {
+    return this._context.globalConstantsProvider;
   }
 
   /**
