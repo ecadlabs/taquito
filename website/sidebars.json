@@ -60,6 +60,9 @@
       "Upgrading Guide": ["upgrading_guide"]
     },
     {
+      "Flextesa Support": ["flextesa"]
+    },
+    {
       "type": "link",
       "label": "TypeDoc Reference",
       "href": "https://tezostaquito.io/typedoc"
