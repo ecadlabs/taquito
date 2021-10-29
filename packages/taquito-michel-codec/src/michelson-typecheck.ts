@@ -394,12 +394,6 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
         }
         throw new MichelsonTypeError(t, d, `chain id expected: ${JSON.stringify(d)}`);
 
-    case "operation":
-        throw new MichelsonTypeError(t, d, "operation type can't be represented as a literal value");
-
-    case "contract":
-        throw new MichelsonTypeError(t, d, "contract type can't be represented as a literal value");
-
         // Complex types
     case "option":
         if ("prim" in d) {
@@ -500,7 +494,7 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
         return;
 
     default:
-        throw new MichelsonTypeError(t, d, `unexpected type: ${typeID(t)}`);
+        throw new MichelsonTypeError(t, d, `type ${typeID(t)} don't have Michelson literal representation`);
     }
 }
 

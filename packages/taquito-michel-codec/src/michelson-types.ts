@@ -88,6 +88,8 @@ export type MichelsonTypeNever = Type0<"never">;
 export type MichelsonTypeBLS12_381_G1 = Type0<"bls12_381_g1">;
 export type MichelsonTypeBLS12_381_G2 = Type0<"bls12_381_g2">;
 export type MichelsonTypeBLS12_381_FR = Type0<"bls12_381_fr">;
+export type MichelsonTypeChestKey = Type0<"chest_key">;
+export type MichelsonTypeChest = Type0<"chest">;
 
 type TypeList<T extends MichelsonType[]> = T & Node;
 export type MichelsonTypePair<T extends MichelsonType[]> = TypeX<"pair", T> | TypeList<T>;
@@ -134,7 +136,9 @@ export type MichelsonType<T extends MichelsonTypeID = MichelsonTypeID> =
     T extends "bls12_381_g2" ? MichelsonTypeBLS12_381_G2 :
     T extends "bls12_381_fr" ? MichelsonTypeBLS12_381_FR :
     T extends "sapling_transaction" ? MichelsonTypeSaplingTransaction :
-    MichelsonTypeSaplingState;
+    T extends "sapling_state" ? MichelsonTypeSaplingState :
+    T extends "chest_key" ? MichelsonTypeChestKey :
+    MichelsonTypeChest;
 
 // Data
 
