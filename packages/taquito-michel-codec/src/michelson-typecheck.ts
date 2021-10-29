@@ -7,7 +7,8 @@ import {
     Protocol,
     refContract,
     MichelsonTypeAddress,
-    ProtoGreaterOfEqual
+    ProtoGreaterOfEqual,
+    MichelsonContractView
 } from "./michelson-types";
 import {
     unpackAnnotations, MichelsonError, isNatural,
@@ -1628,6 +1629,10 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
             args(0, ["chest_key"], ["chest"], ["nat"]);
             return [annotateVar({ prim: "or", args: [{ prim: "bytes" }, { prim: "bool" }] }), ...stack.slice(3)];
 
+        case "VIEW":
+            args(0, null, ["address"]);
+            return [annotateVar({ prim: "option", args: [instruction.args[1]] }), ...stack.slice(2)];
+
         default:
             throw new MichelsonError((instruction as MichelsonCode), `unexpected instruction: ${(instruction as Prim).prim}`);
         }
@@ -1652,6 +1657,16 @@ export function contractSection<T extends "parameter" | "storage" | "code">(cont
         }
     }
     throw new MichelsonError(contract, `missing contract section: ${section}`);
+}
+
+export function contractViews(contract: MichelsonContract): { [name: string]: MichelsonContractView } {
+    const views: { [name: string]: MichelsonContractView } = {};
+    for (const s of contract) {
+        if (s.prim === "view") {
+            views[s.args[0].string] = s;
+        }
+    }
+    return views;
 }
 
 function isContract(v: Expr): v is MichelsonContract {
@@ -1707,27 +1722,36 @@ export function contractEntryPoints(src: MichelsonContract | MichelsonType): [st
 // Contract validation
 
 export function assertContractValid(contract: MichelsonContract, ctx?: Context): MichelsonReturnType {
-    const parameter = contractSection(contract, "parameter").args[0];
-    assertTypeAnnotationsValid(parameter, true);
-
-    const storage = contractSection(contract, "storage").args[0];
-    assertTypeAnnotationsValid(storage);
-
-    const arg: MichelsonType = {
-        prim: "pair",
-        args: [
-            { ...parameter, ...{ annots: ["@parameter"] } },
-            { ...storage, ...{ annots: ["@storage"] } },
-        ]
+    const assertSection = (parameter: MichelsonType, storage: MichelsonType, ret: MichelsonType, code: InstructionList): MichelsonReturnType  => {
+        assertTypeAnnotationsValid(parameter, true);
+        assertTypeAnnotationsValid(storage);
+        const arg: MichelsonType = {
+            prim: "pair",
+            args: [
+                { ...parameter, ...{ annots: ["@parameter"] } },
+                { ...storage, ...{ annots: ["@storage"] } },
+            ]
+        };
+        const out =  functionTypeInternal(code, [arg], { ...ctx, ...{ contract } });
+        if ("failed" in out) {
+            return out;
+        }
+    
+        try {
+            assertStacksEqual(out, [ret]);
+        } catch (err) {
+            if (err instanceof MichelsonError) {
+                throw new MichelsonInstructionError(code, out, err.message);
+            } else {
+                throw err;
+            }
+        }
+        return out;
     };
 
+    const parameter = contractSection(contract, "parameter").args[0];
+    const storage = contractSection(contract, "storage").args[0];
     const code = contractSection(contract, "code").args[0];
-    const ret = functionTypeInternal(code, [arg], { ...ctx, ...{ contract } });
-
-    if ("failed" in ret) {
-        return ret;
-    }
-
     const expected: MichelsonType = {
         prim: "pair",
         args: [
@@ -1735,15 +1759,10 @@ export function assertContractValid(contract: MichelsonContract, ctx?: Context):
             storage,
         ]
     };
+    const ret = assertSection(parameter, storage, expected, code);
 
-    try {
-        assertStacksEqual(ret, [expected]);
-    } catch (err) {
-        if (err instanceof MichelsonError) {
-            throw new MichelsonInstructionError(code, ret, err.message);
-        } else {
-            throw err;
-        }
+    for (const view of Object.values(contractViews(contract))) {
+        assertSection(view.args[1], storage, view.args[2], view.args[3]);
     }
 
     return ret;

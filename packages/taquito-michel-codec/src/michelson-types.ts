@@ -20,7 +20,7 @@ type MichelsonNoArgInstructionID = "ABS" | "ADD" | "ADDRESS" | "AMOUNT" | "AND" 
 type MichelsonRegularInstructionID = "CONTRACT" | "CREATE_CONTRACT" | "DIG" | "DIP" | "DROP" |
 "DUG" | "DUP" | "EMPTY_BIG_MAP" | "EMPTY_MAP" | "EMPTY_SET" | "GET" | "IF" | "IF_CONS" | "IF_LEFT" |
 "IF_NONE" | "ITER" | "LAMBDA" | "LEFT" | "LOOP" | "LOOP_LEFT" | "MAP" | "NIL" | "NONE" | "PAIR" |
-"PUSH" | "RIGHT" | "SAPLING_EMPTY_STATE" | "UNPACK" | "UNPAIR" | "UPDATE" | "CAST" |
+"PUSH" | "RIGHT" | "SAPLING_EMPTY_STATE" | "UNPACK" | "UNPAIR" | "UPDATE" | "CAST" | "VIEW" |
 // legacy
 "CREATE_ACCOUNT" | "STEPS_TO_QUOTA";
 
@@ -48,6 +48,7 @@ export type MichelsonInstruction =
     InstrX<"EMPTY_BIG_MAP", [MichelsonType, MichelsonType]> |
     InstrX<"LAMBDA", [MichelsonType, MichelsonType, InstructionList]> |
     InstrX<"DIP", [IntLiteral, InstructionList] | [InstructionList]> |
+    InstrX<"VIEW", [StringLiteral, MichelsonType]> |
     InstrPrim<"DROP" | "PAIR" | "UNPAIR" | "DUP" | "GET" | "UPDATE", [IntLiteral]>;
 
 // Types
@@ -163,24 +164,21 @@ export type MichelsonData =
 
 // Top level script sections
 
-export type MichelsonSectionID = "parameter" | "storage" | "code";
+export type MichelsonSectionID = "parameter" | "storage" | "code" | "view";
 type SectionPrim<PT extends MichelsonSectionID, AT extends Expr[]> = PrimX<PT, AT>;
 
 export type MichelsonContractParameter = SectionPrim<"parameter", [MichelsonType]>;
 export type MichelsonContractStorage = SectionPrim<"storage", [MichelsonType]>;
 export type MichelsonContractCode = SectionPrim<"code", [InstructionList]>;
+export type MichelsonContractView = SectionPrim<"view", [StringLiteral, MichelsonType, MichelsonType, InstructionList]>;
 
-export type MichelsonContract =
-    [MichelsonContractParameter, MichelsonContractStorage, MichelsonContractCode] |
-    [MichelsonContractParameter, MichelsonContractCode, MichelsonContractStorage] |
-    [MichelsonContractStorage, MichelsonContractParameter, MichelsonContractCode] |
-    [MichelsonContractStorage, MichelsonContractCode, MichelsonContractParameter] |
-    [MichelsonContractCode, MichelsonContractStorage, MichelsonContractParameter] |
-    [MichelsonContractCode, MichelsonContractParameter, MichelsonContractStorage];
+export type MichelsonContract = MichelsonContractSection[];
 
-export type MichelsonContractSection<T extends MichelsonSectionID> =
+export type MichelsonContractSection<T extends MichelsonSectionID = MichelsonSectionID> =
     T extends "parameter" ? MichelsonContractParameter :
-    T extends "storage" ? MichelsonContractStorage : MichelsonContractCode;
+    T extends "storage" ? MichelsonContractStorage : 
+    T extends "view" ? MichelsonContractView : 
+    MichelsonContractCode;
 
 // Code analysis types
 export interface MichelsonTypeFailed {

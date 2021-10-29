@@ -1,4 +1,4 @@
-import { Prim, Expr, IntLiteral } from "./micheline";
+import { Prim, Expr, IntLiteral, StringLiteral } from "./micheline";
 import { Tuple, NoArgs, ReqArgs, MichelsonError } from "./utils";
 import {
     MichelsonCode, MichelsonType, MichelsonData, MichelsonContract, MichelsonNoArgInstruction,
@@ -22,7 +22,7 @@ export const instructionIDs: Record<MichelsonInstruction["prim"], true> = Object
     "CONTRACT": true, "CREATE_CONTRACT": true, "DIG": true, "DIP": true, "DROP": true,
     "DUG": true, "DUP": true, "EMPTY_BIG_MAP": true, "EMPTY_MAP": true, "EMPTY_SET": true, "GET": true, "IF": true, "IF_CONS": true, "IF_LEFT": true,
     "IF_NONE": true, "ITER": true, "LAMBDA": true, "LEFT": true, "LOOP": true, "LOOP_LEFT": true, "MAP": true, "NIL": true, "NONE": true, "PAIR": true,
-    "PUSH": true, "RIGHT": true, "SAPLING_EMPTY_STATE": true, "UNPACK": true, "UNPAIR": true, "UPDATE": true, "CAST": true,
+    "PUSH": true, "RIGHT": true, "SAPLING_EMPTY_STATE": true, "UNPACK": true, "UNPAIR": true, "UPDATE": true, "CAST": true, "VIEW": true,
 } as const);
 
 const simpleComparableTypeIDs: Record<MichelsonSimpleComparableTypeID, true> = {
@@ -89,6 +89,13 @@ function assertIntLiteral(ex: Expr): ex is IntLiteral {
         return true;
     }
     throw new MichelsonValidationError(ex, "int literal expected");
+}
+
+function assertStringLiteral(ex: Expr): ex is StringLiteral {
+    if ("string" in ex) {
+        return true;
+    }
+    throw new MichelsonValidationError(ex, "string literal expected");
 }
 
 function assertArgs<N extends number>(ex: Prim, n: N):
@@ -269,6 +276,14 @@ export function assertMichelsonInstruction(ex: Expr): ex is MichelsonCode {
                 if (assertSeq(ex.args[2])) {
                     assertMichelsonInstruction(ex.args[2]);
                 }
+            }
+            break;
+
+        case "VIEW":
+            /* istanbul ignore else */
+            if (assertArgs(ex, 2)) {
+                assertStringLiteral(ex.args[0]);
+                assertMichelsonType(ex.args[1]);
             }
             break;
 
@@ -563,31 +578,49 @@ export function assertMichelsonContract(ex: Expr): ex is MichelsonContract {
         const ent: { [sec: string]: boolean } = {};
         for (const sec of ex) {
             if (assertPrim(sec)) {
-                if (sec.prim !== "code" && sec.prim !== "parameter" && sec.prim !== "storage") {
-                    throw new MichelsonValidationError(ex, `unexpected contract section: ${sec.prim}`);
+                if (sec.prim !== "view") {
+                    if (sec.prim in ent) {
+                        throw new MichelsonValidationError(ex, `duplicate contract section: ${sec.prim}`);
+                    }
+                    ent[sec.prim] = true;
                 }
-                if (sec.prim in ent) {
-                    throw new MichelsonValidationError(ex, `duplicate contract section: ${sec.prim}`);
-                }
-                ent[sec.prim] = true;
 
                 /* istanbul ignore else */
-                if (assertArgs(sec, 1)) {
-                    switch (sec.prim) {
-                    case "code":
+                switch (sec.prim) {
+                case "code":
+                    if (assertArgs(sec, 1)) {
                         /* istanbul ignore else */
                         if (assertSeq(sec.args[0])) {
                             assertMichelsonInstruction(sec.args[0]);
                         }
-                        break;
+                    }
+                    break;
 
-                    case "parameter":
+                case "parameter":
+                    if (assertArgs(sec, 1)) {
                         assertMichelsonPassableType(sec.args[0]);
-                        break;
+                    }
+                    break;
 
-                    case "storage":
+                case "storage":
+                    if (assertArgs(sec, 1)) {
                         assertMichelsonStorableType(sec.args[0]);
                     }
+                    break;
+
+                case "view":
+                    if (assertArgs(sec, 4)) {
+                        assertStringLiteral(sec.args[0]);
+                        assertMichelsonPassableType(sec.args[1]);
+                        assertMichelsonPassableType(sec.args[2]);
+                        if (assertSeq(sec.args[3])) {
+                            assertMichelsonInstruction(sec.args[3]);
+                        }
+                    }
+                    break;
+
+                default:
+                    throw new MichelsonValidationError(ex, `unexpected contract section: ${sec.prim}`);
                 }
             }
         }
