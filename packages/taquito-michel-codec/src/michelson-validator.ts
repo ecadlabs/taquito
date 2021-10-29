@@ -7,6 +7,8 @@ import {
 
 // Michelson validator
 
+const maxViewNameLength = 31;
+
 const noArgInstructionIDs: Record<MichelsonNoArgInstruction["prim"], true> = {
     "ABS": true, "ADD": true, "ADDRESS": true, "AMOUNT": true, "AND": true, "APPLY": true, "BALANCE": true,
     "BLAKE2B": true, "CAR": true, "CDR": true, "CHAIN_ID": true, "CHECK_SIGNATURE": true, "COMPARE": true, "CONCAT": true, "CONS": true, "EDIV": true,
@@ -282,8 +284,12 @@ export function assertMichelsonInstruction(ex: Expr): ex is MichelsonCode {
         case "VIEW":
             /* istanbul ignore else */
             if (assertArgs(ex, 2)) {
-                assertStringLiteral(ex.args[0]);
-                assertMichelsonType(ex.args[1]);
+                if (assertStringLiteral(ex.args[0])) {
+                    assertViewNameValid(ex.args[0]);
+                }
+                if (assertMichelsonType(ex.args[1])) {
+                    assertMichelsonPushableType(ex.args[1]);
+                }
             }
             break;
 
@@ -384,6 +390,17 @@ export function assertMichelsonBigMapStorableType(ex: Expr): ex is MichelsonType
         }
     }
     return true;
+}
+
+const viewRe = new RegExp("^[a-zA-Z0-9_.%@]*$");
+
+export function assertViewNameValid(name: StringLiteral): void {
+    if (name.string.length > maxViewNameLength) {
+        throw new MichelsonValidationError(name, `view name too long: ${name.string}`);
+    }
+    if (!viewRe.test(name.string)) {
+        throw new MichelsonValidationError(name, `invalid character(s) in view name: ${name.string}`);
+    }
 }
 
 /**
@@ -575,14 +592,15 @@ export function assertMichelsonData(ex: Expr): ex is MichelsonData {
 export function assertMichelsonContract(ex: Expr): ex is MichelsonContract {
     /* istanbul ignore else */
     if (assertSeq(ex)) {
-        const ent: { [sec: string]: boolean } = {};
+        const toplevelSec: { [sec: string]: boolean } = {};
+        const views: { [name: string]: boolean } = {};
         for (const sec of ex) {
             if (assertPrim(sec)) {
                 if (sec.prim !== "view") {
-                    if (sec.prim in ent) {
+                    if (sec.prim in toplevelSec) {
                         throw new MichelsonValidationError(ex, `duplicate contract section: ${sec.prim}`);
                     }
-                    ent[sec.prim] = true;
+                    toplevelSec[sec.prim] = true;
                 }
 
                 /* istanbul ignore else */
@@ -610,9 +628,17 @@ export function assertMichelsonContract(ex: Expr): ex is MichelsonContract {
 
                 case "view":
                     if (assertArgs(sec, 4)) {
-                        assertStringLiteral(sec.args[0]);
-                        assertMichelsonPassableType(sec.args[1]);
-                        assertMichelsonPassableType(sec.args[2]);
+                        if (assertStringLiteral(sec.args[0])) {
+                            const name = sec.args[0];
+                            if (name.string in views) {
+                                throw new MichelsonValidationError(ex, `duplicate view name: ${name.string}`);
+                            }
+                            views[name.string] = true;
+                            assertViewNameValid(name);
+                        }
+
+                        assertMichelsonPushableType(sec.args[1]);
+                        assertMichelsonPushableType(sec.args[2]);
                         if (assertSeq(sec.args[3])) {
                             assertMichelsonInstruction(sec.args[3]);
                         }

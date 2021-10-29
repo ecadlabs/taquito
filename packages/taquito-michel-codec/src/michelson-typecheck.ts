@@ -1630,8 +1630,11 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
             return [annotateVar({ prim: "or", args: [{ prim: "bytes" }, { prim: "bool" }] }), ...stack.slice(3)];
 
         case "VIEW":
-            args(0, null, ["address"]);
+        {
+            const s = args(0, null, ["address"]);
+            ensurePushableType(s[0]);
             return [annotateVar({ prim: "option", args: [instruction.args[1]] }), ...stack.slice(2)];
+        }
 
         default:
             throw new MichelsonError((instruction as MichelsonCode), `unexpected instruction: ${(instruction as Prim).prim}`);
