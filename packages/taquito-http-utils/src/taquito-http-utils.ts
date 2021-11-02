@@ -10,7 +10,7 @@ const isNode =
   typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
 // tslint:enable: strict-type-predicates
 
-const XMLHttpRequestCTOR = isNode ? require('xhr2-cookies').XMLHttpRequest : XMLHttpRequest;
+const XMLHttpRequestCTOR = isNode ? require('neo-xhr').XMLHttpRequest : XMLHttpRequest;
 
 export * from './status_code';
 export { VERSION } from './version';

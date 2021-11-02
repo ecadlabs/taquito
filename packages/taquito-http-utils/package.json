@@ -59,7 +59,7 @@
     ]
   },
   "dependencies": {
-    "xhr2-cookies": "^1.1.0"
+    "neo-xhr": "^1.1.1"
   },
   "devDependencies": {
     "@types/jest": "^26.0.23",
