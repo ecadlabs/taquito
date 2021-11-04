@@ -3,6 +3,7 @@ import { ContractMethod } from '../contract/contract-methods/contract-method-fla
 import { EstimationProvider, ContractProvider } from '../contract/interface';
 import {
   createOriginationOperation,
+  createRegisterGlobalConstantOperation,
   createRevealOperation,
   createSetDelegateOperation,
   createTransferOperation,
@@ -19,7 +20,7 @@ import {
   isOpWithFee,
   withKind,
   RevealParams,
-  isOpRequireReveal,
+  RegisterGlobalConstantParams,
 } from '../operations/types';
 import { OpKind } from '@taquito/rpc';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
@@ -97,6 +98,17 @@ export class OperationBatch extends OperationEmitter {
     return this;
   }
 
+  /**
+   *
+   * @description Add an operation to register a global constant to the batch
+   *
+   * @param params RegisterGlobalConstant operation parameter
+   */
+   withRegisterGlobalConstant(params: RegisterGlobalConstantParams) {
+    this.operations.push({ kind: OpKind.REGISTER_GLOBAL_CONSTANT, ...params });
+    return this;
+  }
+
   private async getRPCOp(param: ParamsWithKind) {
     switch (param.kind) {
       case OpKind.TRANSACTION:
@@ -116,6 +128,10 @@ export class OperationBatch extends OperationEmitter {
         return {
           ...param,
         };
+      case OpKind.REGISTER_GLOBAL_CONSTANT:
+        return createRegisterGlobalConstantOperation({
+          ...param,
+        });
       default:
         throw new Error(`Unsupported operation kind: ${(param as any).kind}`);
     }
@@ -141,6 +157,9 @@ export class OperationBatch extends OperationEmitter {
           break;
         case OpKind.ACTIVATION:
           this.withActivation(param);
+          break;
+        case OpKind.REGISTER_GLOBAL_CONSTANT:
+          this.withRegisterGlobalConstant(param);
           break;
         default:
           throw new Error(`Unsupported operation kind: ${(param as any).kind}`);

@@ -1,6 +1,5 @@
 import { PreapplyResponse, RPCRunOperationParam, OpKind, ConstantsResponse } from '@taquito/rpc';
 import BigNumber from 'bignumber.js';
-import { constants } from 'buffer';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
 import { OperationEmitter } from '../operations/operation-emitter';
 import {
@@ -18,6 +17,7 @@ import {
   RPCOperation,
   TransferParams,
   RevealParams,
+  RegisterGlobalConstantParams,
 } from '../operations/types';
 import { Estimate, EstimateProperties } from './estimate';
 import { EstimationProvider } from './interface';
@@ -27,6 +27,7 @@ import {
   createRevealOperation,
   createSetDelegateOperation,
   createTransferOperation,
+  createRegisterGlobalConstantOperation
 } from './prepare';
 
 interface Limits {
@@ -118,6 +119,8 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
       totalMilligas += Number(result.consumed_milligas) || 0;
       totalStorage +=
         'paid_storage_size_diff' in result ? Number(result.paid_storage_size_diff) || 0 : 0;
+      totalStorage +=
+        ('storage_size' in result && 'global_address' in result) ? Number(result.storage_size) || 0 : 0;
     });
 
     if (totalGas !== 0 && totalMilligas === 0) {
@@ -303,6 +306,14 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
             ...DEFAULT_PARAMS,
           });
           break;
+        case OpKind.REGISTER_GLOBAL_CONSTANT:
+          operations.push(
+            await createRegisterGlobalConstantOperation({
+              ...param,
+              ...mergeLimits(param, DEFAULT_PARAMS),
+            })
+          );
+          break;
         default:
           throw new Error(`Unsupported operation kind: ${(param as any).kind}`);
       }
@@ -360,6 +371,31 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
       const estimateProperties = await this.prepareEstimate({ operation: op, source: pkh }, protocolConstants);
       return Estimate.createEstimateInstanceFromProperties(estimateProperties);
     }
+  }
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for an registerGlobalConstant operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation
+   *
+   * @param params registerGlobalConstant operation parameter
+   */
+  async registerGlobalConstant({ fee, storageLimit, gasLimit, ...rest }: RegisterGlobalConstantParams) {
+    const pkh = await this.signer.publicKeyHash();
+    const protocolConstants = await this.rpc.getConstants();
+    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
+    const op = await createRegisterGlobalConstantOperation({
+       ...rest, 
+       ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS) 
+    });
+    const isRevealNeeded = await this.isRevealOpNeeded([op], pkh);
+    const ops = isRevealNeeded ? await this.addRevealOp([op], pkh) : op;
+    const estimateProperties = await this.prepareEstimate({ operation: ops, source: pkh }, protocolConstants);
+    if (isRevealNeeded) {
+      estimateProperties.shift();
+    }
+    return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
 
   private async addRevealOp(op: RPCOperation[], pkh: string) {
