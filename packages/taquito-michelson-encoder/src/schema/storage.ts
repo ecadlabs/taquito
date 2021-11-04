@@ -228,7 +228,7 @@ export class Schema {
    * 
    * @example
    * ```
-   * Usefull to find all global constants in a script, an array of GlobalConstantToken is returned:
+   * Useful to find all global constants in a script, an array of GlobalConstantToken is returned:
    * 
    * const schema = new Schema(script);
    * const allGlobalConstantTokens = schema.findToken('constant');
