@@ -63,21 +63,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
 
       try {
         const op = await Tezos.contract.registerGlobalConstant({
-          value: {
-            prim: 'IF_LEFT',
-            args: [
-              [
-                {
-                  prim: 'IF_LEFT',
-                  args: [[{ prim: 'SWAP' }, { prim: 'SUB' }], [{ prim: 'ADD' }]]
-                }
-              ],
-              [
-                { prim: 'DROP', args: [{ int: '2' }] },
-                { prim: 'PUSH', args: [{ prim: 'int' }, { int: '0' }] }
-              ]
-            ]
-          }
+          value: { "prim":"int" }
         });
         await op.confirmation();
         expect(op.globalAddress).toEqual(constantAddress);
