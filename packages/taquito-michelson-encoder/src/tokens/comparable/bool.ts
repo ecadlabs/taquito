@@ -48,4 +48,12 @@ export class BoolToken extends ComparableToken {
       return -1;
     }
   }
+
+  findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
+    if (BoolToken.prim === tokenToFind) {
+      tokens.push(this);
+    }
+    return tokens;
+  };
+
 }

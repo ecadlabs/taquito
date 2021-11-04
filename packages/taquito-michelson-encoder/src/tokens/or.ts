@@ -229,4 +229,20 @@ export class OrToken extends ComparableToken {
       type: this.typeWithoutAnnotations(),
     };
   }
+
+  findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
+    if (OrToken.prim === tokenToFind) {
+      tokens.push(this);
+    }
+    this.traversal(
+      leftToken => leftToken.findAndReturnTokens(tokenToFind, tokens),
+      rightToken => rightToken.findAndReturnTokens(tokenToFind, tokens),
+      (leftValue, rightValue) => ({
+        ...leftValue,
+        ...rightValue,
+      })
+    );
+    return tokens;
+  };
+
 }

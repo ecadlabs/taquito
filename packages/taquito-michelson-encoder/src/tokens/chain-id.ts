@@ -66,4 +66,12 @@ export class ChainIDToken extends ComparableToken {
       type: { prim: ChainIDToken.prim },
     };
   }
+
+  findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
+    if (ChainIDToken.prim === tokenToFind) {
+      tokens.push(this);
+    }
+    return tokens;
+  };
+
 }

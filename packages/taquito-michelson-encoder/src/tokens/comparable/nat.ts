@@ -78,4 +78,12 @@ export class NatToken extends ComparableToken {
 
     return o1 < o2 ? -1 : 1;
   }
+
+  findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
+    if (NatToken.prim === tokenToFind) {
+      tokens.push(this);
+    }
+    return tokens;
+  };
+
 }

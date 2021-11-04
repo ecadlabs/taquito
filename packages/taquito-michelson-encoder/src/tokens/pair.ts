@@ -184,4 +184,13 @@ export class PairToken extends ComparableToken {
 
     throw new Error('Not a comparable pair');
   }
+
+  findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
+    if (PairToken.prim === tokenToFind) {
+      tokens.push(this);
+    }
+    this.tokens().map(t => t.findAndReturnTokens(tokenToFind, tokens))
+    return tokens;
+  };
+
 }
