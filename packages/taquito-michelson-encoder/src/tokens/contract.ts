@@ -56,4 +56,12 @@ export class ContractToken extends Token {
   public ExtractSchema() {
     return ContractToken.prim;
   }
+
+  findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
+    if (ContractToken.prim === tokenToFind) {
+      tokens.push(this);
+    }
+    return tokens;
+  };
+
 }

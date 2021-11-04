@@ -74,9 +74,11 @@ export class WalletOperationBatch {
         return this.walletProvider.mapTransferParamsToWalletParams(async () => param);
       case OpKind.ORIGINATION:
         return this.walletProvider.mapOriginateParamsToWalletParams(async () =>
-          this.context.parser.prepareCodeOrigination({
-            ...param,
-          })
+          await this.context.prepareProvider.formatStorageProperty(
+            await this.context.parser.prepareCodeOrigination({
+              ...param,
+            })
+          )
         );
       case OpKind.DELEGATION:
         return this.walletProvider.mapDelegateParamsToWalletParams(async () => param);
@@ -168,10 +170,14 @@ export class Wallet {
    */
   originate(params: WalletOriginateParams) {
     return this.walletCommand(async () => {
-      const mappedParams = await this.walletProvider.mapOriginateParamsToWalletParams(() =>
-        this.context.parser.prepareCodeOrigination({
-          ...params,
-        })
+      let parsed = await this.context.parser.prepareCodeOrigination({
+        ...params,
+      })
+      if (!this.walletProvider.skipConstantExpansion) {
+        parsed = await this.context.prepareProvider.formatStorageProperty(parsed)
+      }
+      const mappedParams = await this.walletProvider.mapOriginateParamsToWalletParams(async () =>
+        parsed
       );
       const opHash = await this.walletProvider.sendOperations([mappedParams]);
       if (!this.context.proto) {

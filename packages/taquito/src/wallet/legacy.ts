@@ -9,6 +9,7 @@ import {
 import { WalletParamsWithKind } from './wallet';
 
 export class LegacyWalletProvider implements WalletProvider {
+  skipConstantExpansion = true;
   constructor(private context: Context) {}
 
   async getPKH(): Promise<string> {
@@ -28,7 +29,7 @@ export class LegacyWalletProvider implements WalletProvider {
   }
 
   async sendOperations(params: WalletParamsWithKind[]) {
-    const op = await this.context.batch.batch(params as any).send();
+    const op = await this.context.contract.batch(params as any).send();
     return op.hash;
   }
 }

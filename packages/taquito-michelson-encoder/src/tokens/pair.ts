@@ -1,5 +1,6 @@
-import { Token, TokenFactory, Semantic, ComparableToken } from './token';
+import { Token, TokenFactory, Semantic, ComparableToken, EncodingSemantic } from './token';
 import { OrToken } from './or';
+import { GlobalConstantToken } from './constant';
 
 // collapse comb pair
 function collapse(val: Token['val'] | any[], prim: string = PairToken.prim): [any, any] {
@@ -24,7 +25,7 @@ export class PairToken extends ComparableToken {
   static prim = 'pair';
 
   constructor(
-    val: { prim: string; args: any[]; annots: any[] } | any[],
+    val: { prim: string; args: any[]; annots?: any[] } | any[],
     idx: number,
     fac: TokenFactory
   ) {
@@ -91,26 +92,35 @@ export class PairToken extends ComparableToken {
     return this.Execute(val);
   }
 
-  public EncodeObject(args: any): any {
+  public EncodeObject(args: any, encodingSemantics?: EncodingSemantic): any {
     const [leftToken, rightToken] = this.tokens();
 
+    const localArgs = args;
     let leftValue;
-    if (leftToken instanceof PairToken && !leftToken.hasAnnotations()) {
+    if ((leftToken instanceof PairToken || leftToken instanceof GlobalConstantToken) && !leftToken.hasAnnotations()) {
       leftValue = args;
     } else {
-      leftValue = args[leftToken.annot()];
+      const annotation = leftToken.annot()
+      leftValue = localArgs[annotation];
+      if(rightToken instanceof GlobalConstantToken){
+        delete localArgs[annotation];
+      }
     }
 
     let rightValue;
-    if (rightToken instanceof PairToken && !rightToken.hasAnnotations()) {
+    if ((rightToken instanceof PairToken || rightToken instanceof GlobalConstantToken) && !rightToken.hasAnnotations()) {
       rightValue = args;
     } else {
-      rightValue = args[rightToken.annot()];
+      const annotation = rightToken.annot()
+      rightValue = localArgs[annotation];
+      if(leftToken instanceof GlobalConstantToken){
+        delete localArgs[annotation];
+      }
     }
 
     return {
       prim: 'Pair',
-      args: [leftToken.EncodeObject(leftValue), rightToken.EncodeObject(rightValue)],
+      args: [leftToken.EncodeObject(leftValue, encodingSemantics), rightToken.EncodeObject(rightValue, encodingSemantics)],
     };
   }
 
@@ -184,4 +194,13 @@ export class PairToken extends ComparableToken {
 
     throw new Error('Not a comparable pair');
   }
+
+  findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
+    if (PairToken.prim === tokenToFind) {
+      tokens.push(this);
+    }
+    this.tokens().map(t => t.findAndReturnTokens(tokenToFind, tokens))
+    return tokens;
+  };
+
 }

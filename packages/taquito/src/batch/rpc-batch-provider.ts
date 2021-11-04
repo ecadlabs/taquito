@@ -6,7 +6,7 @@ import {
   createRegisterGlobalConstantOperation,
   createRevealOperation,
   createSetDelegateOperation,
-  createTransferOperation
+  createTransferOperation,
 } from '../contract/prepare';
 import { BatchOperation } from '../operations/batch-operation';
 import { OperationEmitter } from '../operations/operation-emitter';
@@ -117,11 +117,10 @@ export class OperationBatch extends OperationEmitter {
         });
       case OpKind.ORIGINATION:
         return createOriginationOperation(
-          this.formatStorageProperty(
+          await this.context.prepareProvider.formatStorageProperty(
             await this.context.parser.prepareCodeOrigination({
-              ...param
-            })
-          )
+              ...param,
+            }))
         );
       case OpKind.DELEGATION:
         return createSetDelegateOperation({
@@ -201,6 +200,7 @@ export class OperationBatch extends OperationEmitter {
       const estimatedReveal = await this.estimate(reveal, async () => estimates[0]);
       ops.unshift(await createRevealOperation({ ...estimatedReveal }, publicKeyHash, publicKey))
     }
+    console.log('ttttttttttttttttttttttttttttttttttttttt',JSON.stringify(ops))
 
     const source = (params && params.source) || publicKeyHash;
     const prepared = await this.prepareOperation({

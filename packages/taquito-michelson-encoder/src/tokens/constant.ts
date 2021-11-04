@@ -1,7 +1,14 @@
-import { Semantic, Token, TokenFactory, TokenValidationError } from './token';
+import { Semantic, EncodingSemantic, Token, TokenFactory, TokenValidationError } from './token';
 
-export class GlobalConstantValidationError extends TokenValidationError {
-  name: string = 'GlobalConstantValidationError';
+export class GlobalConstantEncodingError extends TokenValidationError {
+  name: string = 'GlobalConstantEncodingError';
+  constructor(public value: any, public token: GlobalConstantToken, message: string) {
+    super(value, token, message);
+  }
+}
+
+export class GlobalConstantDecodingError extends TokenValidationError {
+  name: string = 'GlobalConstantDecodingError';
   constructor(public value: any, public token: GlobalConstantToken, message: string) {
     super(value, token, message);
   }
@@ -11,40 +18,36 @@ export class GlobalConstantToken extends Token {
   static prim = 'constant';
 
   constructor(
-    protected val: { prim: string; args: any[]; annots: any[] },
+    protected val: { prim: string; args: any[]; annots?: any[] },
     protected idx: number,
     protected fac: TokenFactory
   ) {
     super(val, idx, fac);
   }
 
-  public Execute(val: { string: string }, semantic?: Semantic) {
+  public Execute(val: any, semantic?: Semantic) {
     if (semantic && semantic[GlobalConstantToken.prim]) {
       return semantic[GlobalConstantToken.prim](val as any, this.val);
-    }
-    return val.string;
-  }
-
-  public Encode(args: any[], semantic?: Semantic): any {
-    if (semantic && semantic[GlobalConstantToken.prim]) {
-      return semantic[GlobalConstantToken.prim](args, this.val);
     } else {
-      throw new GlobalConstantValidationError(
-        args,
-        this,
-        `The expression associated with the global constant hash ${this.val.args[0]['string']} needs to be provided to the Michelson-Encoder.`
+      throw new GlobalConstantDecodingError(val, this, `Unable to decode a value represented by a global constants. Please provide an expanded script to the Michelson-Encoder or semantics for the decoding. The following global constant hash was encountered: ${this.val.args[0]['string']}.`
       );
     }
   }
 
-  public EncodeObject(val: any, semantic?: Semantic): any {
+  public Encode(args: any[], semantic?: EncodingSemantic): any {
+    if (semantic && semantic[GlobalConstantToken.prim]) {
+      return semantic[GlobalConstantToken.prim](args, this.val);
+    } else {
+      throw new GlobalConstantEncodingError(args, this, `Unable to encode a script containing global constants. Please provide an expanded script to the Michelson-Encoder or semantics for the encoding. The following global constant hash was encountered: ${this.val.args[0]['string']}.`
+      );
+    }
+  }
+
+  public EncodeObject(val: any, semantic?: EncodingSemantic): any {
     if (semantic && semantic[GlobalConstantToken.prim]) {
       return semantic[GlobalConstantToken.prim](val, this.val);
     } else {
-      throw new GlobalConstantValidationError(
-        val,
-        this,
-        `The expression associated with the global constant hash ${this.val.args[0]['string']} needs to be provided to the Michelson-Encoder.`
+      throw new GlobalConstantEncodingError(val, this, `Unable to encode a script containing global constants. Please provide an expanded script to the Michelson-Encoder or semantics for the encoding. The following global constant hash was encountered: ${this.val.args[0]['string']}.`
       );
     }
   }
@@ -52,4 +55,12 @@ export class GlobalConstantToken extends Token {
   public ExtractSchema() {
     return GlobalConstantToken.prim;
   }
+
+  findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
+    if (GlobalConstantToken.prim === tokenToFind) {
+      tokens.push(this);
+    }
+    return tokens;
+  };
+
 }

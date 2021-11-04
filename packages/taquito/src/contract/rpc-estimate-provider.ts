@@ -197,7 +197,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     const protocolConstants = await this.rpc.getConstants();
     const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
     const op = await createOriginationOperation(
-      this.formatStorageProperty(
+      await this.context.prepareProvider.formatStorageProperty(
         await this.context.parser.prepareCodeOrigination({
           ...rest,
           ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
@@ -287,7 +287,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
         case OpKind.ORIGINATION:
           operations.push(
             await createOriginationOperation(
-              this.formatStorageProperty(
+              await this.context.prepareProvider.formatStorageProperty(
                 await this.context.parser.prepareCodeOrigination({
                   ...param,
                   ...mergeLimits(param, DEFAULT_PARAMS),

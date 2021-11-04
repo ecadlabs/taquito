@@ -3,13 +3,11 @@ import { BigMapAbstraction } from './big-map';
 import BigNumber from 'bignumber.js';
 import { MichelsonV1Expression } from '@taquito/rpc';
 import { SaplingStateAbstraction } from './sapling-state-abstraction';
-import { Context } from '../context';
-
-type GlobalConstantMichelsonType = { prim: 'constant', args: [{ string: string }] };
+import { ContractProvider } from './interface';
 
 // Override the default michelson encoder semantic to provide richer abstraction over storage properties
-export const smartContractAbstractionSemantic: (c: Context) => Semantic = (
-  context: Context
+export const smartContractAbstractionSemantic: (p: ContractProvider) => Semantic = (
+  provider: ContractProvider
 ) => ({
   // Provide a specific abstraction for BigMaps
   big_map: (val: MichelsonV1Expression, code: MichelsonV1Expression) => {
@@ -18,7 +16,7 @@ export const smartContractAbstractionSemantic: (c: Context) => Semantic = (
       return {};
     } else {
       const schema = new Schema(code);
-      return new BigMapAbstraction(new BigNumber(val.int), schema, context.contract);
+      return new BigMapAbstraction(new BigNumber(val.int), schema, provider);
     }
   },
   sapling_state: (val: MichelsonV1Expression) => {
@@ -26,15 +24,8 @@ export const smartContractAbstractionSemantic: (c: Context) => Semantic = (
       // Return an empty object in case of missing sapling state ID
       return {};
     } else {
-      return new SaplingStateAbstraction(new BigNumber(val.int), context.contract);
+      return new SaplingStateAbstraction(new BigNumber(val.int), provider);
     }
-  },
-  // Replace the constant hash by the corresponding Michelson value
-  constant: (args: any, constantHash: MichelsonV1Expression) => {
-    const hash = (constantHash as GlobalConstantMichelsonType).args[0]['string'];
-    const value = context.globalConstantsProvider.getGlobalConstantByHash(hash);
-    const schema = new Schema(value);
-    return schema.Execute(args);
   }
   /*
   // TODO: embed useful other abstractions
@@ -43,14 +34,23 @@ export const smartContractAbstractionSemantic: (c: Context) => Semantic = (
   */
 });
 
-export const encodingSemantic: (p: Context) => EncodingSemantic = (
-  context: Context
+export const encodingSemantic: (encodingRules: any) => EncodingSemantic = (
+  encodingRules: any
 ) => ({
-  // Replace the constant hash by the corresponding Michelson value
+  // The Encode method of the Schema class allows to transform the storage parameter into Michelson data.
+  // The encodingSemantic function will override the default logic of the EncodeObject method of the GlobalConstant token in the Michelson-Encoder.
+  // By default GlobalConstant.EncodeObject throws an exception because the global constant hides part of the Michelson type; a global constant can replace any Michelson expression. 
+  // The Michelson-Encoder does not "know" what a global constant hash stand for, so the appropriate tokens represented by thee underlying Michelson type can not be created by the Michelson-Encoder.
+  // By providing the global constant hash and their associated Michelson value to the Michelson-Encoder using the encodingSemantic function,
+  // the storage parameter can now be encoded against the corresponding Michelson values.
   constant: (args: any, constantHash: MichelsonV1Expression) => {
     const hash = (constantHash as GlobalConstantMichelsonType).args[0]['string'];
-    const value = context.globalConstantsProvider.getGlobalConstantByHash(hash);
-    const schema = new Schema(value);
-    return schema.Encode(args);
+    if (hash in encodingRules) {
+      const value: MichelsonV1Expression = encodingRules[hash];
+      const schema = new Schema(value);
+      return schema.Encode(args);
+    }
   }
 });
+
+type GlobalConstantMichelsonType = { prim: 'constant', args: [{ string: string }] };

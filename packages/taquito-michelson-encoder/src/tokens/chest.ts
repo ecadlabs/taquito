@@ -55,4 +55,12 @@ export class ChestToken extends Token {
   public ExtractSchema() {
     return ChestToken.prim;
   }
+
+  findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
+    if (ChestToken.prim === tokenToFind) {
+      tokens.push(this);
+    }
+    return tokens;
+  };
+
 }

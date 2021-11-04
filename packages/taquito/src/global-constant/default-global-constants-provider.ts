@@ -1,10 +1,6 @@
-import { MichelsonV1Expression } from "@taquito/rpc";
+import { GlobalConstantHashAndValue } from "@taquito/michel-codec";
 
 type GlobalConstant = string;
-
-interface GlobalConstantHashAndValue {
-    [globalConstantHash: string]: MichelsonV1Expression;
-}
 
 export class DefaultGlobalConstantsProvider {
     private _globalConstantsLibrary: GlobalConstantHashAndValue = {};
@@ -12,12 +8,12 @@ export class DefaultGlobalConstantsProvider {
     loadGlobalConstant(globalConstant: GlobalConstantHashAndValue) {
         for (let hash in globalConstant) {
             Object.assign(this._globalConstantsLibrary, {
-                [hash]: { ...globalConstant[hash] },
+                [hash]: globalConstant[hash]
             });
         }
     }
 
-    getGlobalConstantByHash(hash: GlobalConstant) {
+    async getGlobalConstantByHash(hash: GlobalConstant) {
         const value = this._globalConstantsLibrary[hash];
         if(!value) {
             throw new Error(`Please load the value associated with the constant ${hash} using the loadGlobalConstant method.`)

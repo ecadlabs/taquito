@@ -1,24 +1,18 @@
 import {
   BlockHeaderResponse,
-  MichelsonV1Expression,
   OperationContents,
   OperationContentsAndResult,
   OpKind,
   RpcClientInterface,
   RPCRunOperationParam,
 } from '@taquito/rpc';
-import { InvalidCodeParameter, InvalidInitParameter } from '../contract/errors';
-import { Expr, Prim } from '@taquito/michel-codec';
-import { Schema } from '@taquito/michelson-encoder';
 import { Protocols } from '../constants';
 import { Context } from '../context';
 import { Estimate } from '../contract/estimate';
-import { encodingSemantic } from '../contract/semantic';
 import { flattenErrors, TezosOperationError, TezosPreapplyFailureError } from './operation-errors';
 import {
   ForgedBytes,
   isOpRequireReveal,
-  OriginateParams,
   ParamsWithKind,
   PrepareOperationParams,
   RPCOperation,
@@ -45,35 +39,6 @@ export abstract class OperationEmitter {
   }
 
   constructor(protected context: Context) {}
-
-  protected formatStorageProperty(params: OriginateParams) {
-    if (params.storage !== undefined && params.init !== undefined) {
-      throw new Error(
-        "Storage and Init cannot be set a the same time. Please either use storage or init but not both.",
-      );
-    }
-    if (!Array.isArray(params.code)) {
-      throw new InvalidCodeParameter('Wrong code parameter type, expected an array', params.code);
-    }
-    if (params.storage !== undefined) {
-      const storageType = (params.code as Expr[]).find((p): p is Prim => ('prim' in p) && p.prim === 'storage');
-      if (storageType?.args === undefined) {
-        throw new InvalidCodeParameter('The storage section is missing from the script', params.code);
-      }
-      const schema = new Schema(storageType.args[0] as MichelsonV1Expression);
-      return {
-        ...params,
-        storage: schema.Encode(params.storage, encodingSemantic(this.context))
-      };
-    } else if (params.init !== undefined && typeof params.init === 'object') {
-      return {
-        ...params,
-        storage: params.init as Expr
-      };
-    } else {
-      throw new InvalidInitParameter('Wrong init parameter type, expected JSON Michelson', params.init);
-    }
-  };
     
   protected async isRevealOpNeeded(op: RPCOperation[] | ParamsWithKind[], pkh: string) {
     return (!await this.isAccountRevealRequired(pkh) || !this.isRevealRequiredForOpType(op)) ? false : true;

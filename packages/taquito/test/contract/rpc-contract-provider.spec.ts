@@ -1335,7 +1335,7 @@ describe('RpcContractProvider test', () => {
           gasLimit: 10600,
           storageLimit: 257,
         });
-      } catch (err) {
+      } catch (err: any) {
         expect(err).toBeInstanceOf(InvalidCodeParameter);
         expect(err.message).toEqual('Wrong code parameter type, expected an array');
       }
@@ -1360,7 +1360,7 @@ describe('RpcContractProvider test', () => {
           gasLimit: 10600,
           storageLimit: 257,
         });
-      } catch (err) {
+      } catch (err: any) {
         expect(err).toBeInstanceOf(InvalidCodeParameter);
         expect(err.message).toEqual('The storage section is missing from the script');
       }
@@ -1389,7 +1389,7 @@ describe('RpcContractProvider test', () => {
           gasLimit: 10600,
           storageLimit: 257,
         });
-      } catch (err) {
+      } catch (err:any) {
         expect(err).toBeInstanceOf(InvalidInitParameter);
         expect(err.message).toEqual('Wrong init parameter type, expected JSON Michelson');
       }

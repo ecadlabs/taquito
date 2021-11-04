@@ -9,6 +9,7 @@ export type WalletOriginateParams = Omit<OriginateParams, WalletDefinedFields>;
 export type WalletDelegateParams = Omit<DelegateParams, WalletDefinedFields>;
 
 export interface WalletProvider {
+  skipConstantExpansion?: boolean;
   /**
    * @description Request the public key hash from the wallet
    */

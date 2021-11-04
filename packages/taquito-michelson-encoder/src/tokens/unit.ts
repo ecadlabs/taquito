@@ -1,4 +1,4 @@
-import { ComparableToken, TokenFactory } from './token';
+import { ComparableToken, Token, TokenFactory } from './token';
 import { UnitValue } from '../taquito-michelson-encoder';
 
 export class UnitToken extends ComparableToken {
@@ -43,4 +43,12 @@ export class UnitToken extends ComparableToken {
       type: { prim: UnitToken.prim },
     };
   }
+
+  findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
+    if (UnitToken.prim === tokenToFind) {
+      tokens.push(this);
+    }
+    return tokens;
+  };
+
 }

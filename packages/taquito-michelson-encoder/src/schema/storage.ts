@@ -3,7 +3,7 @@ import { BigMapToken } from '../tokens/bigmap';
 import { createToken } from '../tokens/createToken';
 import { OrToken } from '../tokens/or';
 import { PairToken } from '../tokens/pair';
-import { BigMapKeyType, Semantic, Token, TokenValidationError } from '../tokens/token';
+import { BigMapKeyType, EncodingSemantic, Semantic, Token, TokenValidationError } from '../tokens/token';
 import { RpcTransaction } from './model';
 import { Falsy } from './types';
 
@@ -154,9 +154,9 @@ export class Schema {
     }
   }
 
-  Encode(_value?: any, semantics?: Semantic) {
+  Encode(_value?: any, encodingSemantics?: EncodingSemantic) {
     try {
-      return this.root.EncodeObject(_value, semantics);
+      return this.root.EncodeObject(this.removeTopLevelAnnotation(_value), encodingSemantics);
     } catch (ex) {
       if (ex instanceof TokenValidationError) {
         throw ex;
@@ -218,4 +218,26 @@ export class Schema {
         this.findValue(sch.args[1], str.args[1], valueToFind);
     }
   }
+
+  /**
+   * @description Look up the schema to find any occurrence of a particular token.
+   *
+   * @returns an array of tokens of the specified kind or an empty array if no token was found
+   * 
+   * @param tokenToFind string representing the prim property of the token to find
+   * 
+   * @example
+   * ```
+   * Usefull to find all global constants in a script, an array of GlobalConstantToken is returned:
+   * 
+   * const schema = new Schema(script);
+   * const allGlobalConstantTokens = schema.findToken('constant');
+   * ```
+   *
+   */
+  findToken(tokenToFind: string): Array<Token> {
+    let tokens: Array<Token> = [];
+    return this.root.findAndReturnTokens(tokenToFind, tokens);
+  }
+
 }

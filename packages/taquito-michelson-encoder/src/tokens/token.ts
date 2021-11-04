@@ -56,6 +56,10 @@ export abstract class Token {
     return Array.isArray(this.val.annots) && this.val.annots.length;
   }
 
+  get tokenVal() {
+    return this.val;
+  }
+
   public createToken = this.fac;
 
   public abstract ExtractSchema(): any;
@@ -69,6 +73,8 @@ export abstract class Token {
   public ExtractSignature() {
     return [[this.ExtractSchema()]];
   }
+
+  abstract findAndReturnTokens(tokenToFind: string, tokens: Array<Token>): Array<Token>;
 }
 
 export type BigMapKeyType = string | number | object;

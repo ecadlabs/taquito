@@ -1,4 +1,4 @@
-import { Token, TokenFactory, Semantic, ComparableToken } from './token';
+import { Token, TokenFactory, Semantic, ComparableToken, EncodingSemantic } from './token';
 
 export class OrToken extends ComparableToken {
   static prim = 'or';
@@ -76,7 +76,7 @@ export class OrToken extends ComparableToken {
     return newSig;
   }
 
-  public EncodeObject(args: any): any {
+  public EncodeObject(args: any, encodingSemantics?: EncodingSemantic): any {
     const label = Object.keys(args)[0];
 
     const leftToken = this.createToken(this.val.args[0], this.idx);
@@ -88,19 +88,19 @@ export class OrToken extends ComparableToken {
     const rightToken = this.createToken(this.val.args[1], this.idx + keyCount);
 
     if (String(leftToken.annot()) === String(label) && !(leftToken instanceof OrToken)) {
-      return { prim: 'Left', args: [leftToken.EncodeObject(args[label])] };
+      return { prim: 'Left', args: [leftToken.EncodeObject(args[label], encodingSemantics)] };
     } else if (String(rightToken.annot()) === String(label) && !(rightToken instanceof OrToken)) {
-      return { prim: 'Right', args: [rightToken.EncodeObject(args[label])] };
+      return { prim: 'Right', args: [rightToken.EncodeObject(args[label], encodingSemantics)] };
     } else {
       if (leftToken instanceof OrToken) {
-        let val = leftToken.EncodeObject(args);
+        let val = leftToken.EncodeObject(args, encodingSemantics);
         if (val) {
           return { prim: 'Left', args: [val] };
         }
       }
 
       if (rightToken instanceof OrToken) {
-        let val = rightToken.EncodeObject(args);
+        let val = rightToken.EncodeObject(args, encodingSemantics);
         if (val) {
           return { prim: 'Right', args: [val] };
         }
@@ -229,4 +229,20 @@ export class OrToken extends ComparableToken {
       type: this.typeWithoutAnnotations(),
     };
   }
+
+  findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
+    if (OrToken.prim === tokenToFind) {
+      tokens.push(this);
+    }
+    this.traversal(
+      leftToken => leftToken.findAndReturnTokens(tokenToFind, tokens),
+      rightToken => rightToken.findAndReturnTokens(tokenToFind, tokens),
+      (leftValue, rightValue) => ({
+        ...leftValue,
+        ...rightValue,
+      })
+    );
+    return tokens;
+  };
+
 }

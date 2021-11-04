@@ -2,6 +2,7 @@ import { scan, Token, Literal } from './scan';
 import { Expr, Prim, StringLiteral, IntLiteral, BytesLiteral, sourceReference, List, SourceReference } from './micheline';
 import { expandMacros } from './macros';
 import { ProtocolOptions } from './michelson-types';
+import { expandGlobalConstants } from './global-constants';
 
 export class MichelineParseError extends Error {
     /**
@@ -25,6 +26,10 @@ export class JSONParseError extends Error {
     }
 }
 
+export interface GlobalConstantHashAndValue {
+    [globalConstantHash: string]: Expr;
+}
+
 const errEOF = new MichelineParseError(null, 'Unexpected EOF');
 
 function isAnnotation(tok: Token): boolean {
@@ -39,6 +44,7 @@ export interface ParserOptions extends ProtocolOptions {
      * Expand [Michelson macros](https://tezos.gitlab.io/whitedoc/michelson.html#macros) during parsing.
      */
     expandMacros?: boolean;
+    expandGlobalConstant?: GlobalConstantHashAndValue;
 }
 
 /**
@@ -78,6 +84,13 @@ export class Parser {
     }
 
     private expand(ex: Prim): Expr {
+        if (this.opt?.expandGlobalConstant !== undefined && ex.prim === 'constant') {
+            const ret = expandGlobalConstants(ex, this.opt.expandGlobalConstant);
+            if (ret !== ex) {
+                ret[sourceReference] = { ...(ex[sourceReference] || { first: 0, last: 0 }), globalConstant: ex };
+            }
+            return ret;
+        }
         if (this.opt?.expandMacros !== undefined ? this.opt?.expandMacros : true) {
             const ret = expandMacros(ex, this.opt);
             if (ret !== ex) {
