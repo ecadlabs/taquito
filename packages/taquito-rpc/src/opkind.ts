@@ -11,5 +11,6 @@ export enum OpKind {
   DOUBLE_BAKING_EVIDENCE = 'double_baking_evidence',
   PROPOSALS = 'proposals',
   BALLOT = 'ballot',
-  FAILING_NOOP = 'failing_noop'
+  FAILING_NOOP = 'failing_noop',
+  REGISTER_GLOBAL_CONSTANT = 'register_global_constant'
 }
