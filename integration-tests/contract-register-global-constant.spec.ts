@@ -66,7 +66,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
           value: { "prim":"int" }
         });
         await op.confirmation();
-        expect(op.globalAddress).toEqual(constantAddress);
+        expect(op.globalConstantHash).toEqual(constantAddress);
       } catch (ex: any) {
         // We can not register the same constant multiple time
         expect(ex.message).toMatch(/context.storage_error/);

@@ -8,7 +8,7 @@ import TabItem from '@theme/TabItem';
 
 ## Description of the `Global Constants` feature
 
-The `Global Constants` is a feature introduced in the Hangzhou protocol. Its goal is to allow users to originate larger contracts or share code between contracts by using registered constants. 
+The `Global Constants` feature is introduced in the Hangzhou protocol. Its goal is to allow users to originate larger contracts or share code between contracts by using registered constants. 
 
 This feature brings the following: 
 - A new kind of operation, named `register_global_constant`, allows users to register Micheline expressions in the global table of constants. 
@@ -18,19 +18,19 @@ This feature brings the following:
 
 - Alice wants to originate a contract, but its code is so large that it does not fit the Tezos size limit for contracts.
 - Alice registers a chosen expression from her contract to the global table of constants by sending a `register_global_constant` operation to the node.
-- The precedent operation returns the index of the registered constant, which correspond to the hash of the expression (Blake2b hash + Base58 encode + prefix expr)
+- The precedent operation returns the index of the registered constant, which corresponds to the hash of the expression (Blake2b hash + Base58 encode + prefix expr)
 - Alice replaces the newly registered expression in the code of her contract with the primitive `constant` and the corresponding hash.
-- Alice can now originate her contract has its size has been compressed.
+- Alice can now originate her contract, as its size has been compressed.
 
 ## How to register a global constant with Taquito?
 
 ### Contract API
 
-A `registerGlobalConstant` method is available on the `ContractProvider` class. A `value` representing the Micheline expression to register in its JSON format is minimally required as a parameter. The `registerGlobalConstant` method returns an instance of `RegisterGlobalConstantOperation` containing a `globalAddress` member that corresponds to the index(hash) of the newly registered constant.
+A `registerGlobalConstant` method is available on the `ContractProvider` class. A `value` representing the Micheline expression to register in its JSON format is minimally required as a parameter. The `registerGlobalConstant` method returns an instance of `RegisterGlobalConstantOperation` containing a `globalConstantHash` member that corresponds to the index(hash) of the newly registered constant.
 
 *Note that an expression can only be registered once and will result in an error from the node if trying to register the same constant multiple times.*
 
-*Note that the conversion between Micheline and its JSON format can be achieved using the `@taquito/michel-coded` if needed.*
+*Note that the conversion between Micheline and its JSON format can be achieved using the `@taquito/michel-codec` if needed.*
 
 **Here is a simple example:**
 
@@ -46,10 +46,10 @@ const op = await Tezos.contract.registerGlobalConstant({
 
 await op.confirmation();
 
-const hash = op.globalAddress; // expr...
+const hash = op.globalConstantHash; // expr...
 ```
 
-The registered expression can be replaced by its corresponding hash in the contract code as follow:
+The registered expression can be replaced by its corresponding hash in the contract code as follows:
 
 <Tabs
 defaultValue="withConst"
