@@ -84,20 +84,6 @@ const granadanetEphemeral = {
   }
 }
 
-const florencenetEphemeral = {
-  rpc: process.env['TEZOS_RPC_FLORENCENET'] || 'https://florencenet.api.tez.ie',
-  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1BRwtrBfiC2paqoSw4nakJ2EGLCGuoprLQ',
-  knownBigMapContract: 'KT1W1jh5C5NbcVVvpnBLQT9ekMbR5a8fg6mc',
-  knownTzip1216Contract: 'KT1NWn9vmDxsdhYXZv4Rn2v3UpaF6vewiX31',
-  protocol: Protocols.PsFLorena,
-  signerConfig: {
-    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'https://api.tez.ie/keys/florencenet',
-    requestHeaders: { 'Authorization': 'Bearer taquito-example' },
-  }
-}
-
 // Well known faucet key. Can be overridden by setting the `TEZOS_FAUCET_KEY_FILE` environment variable
 const key = {
   email: "mfbzlhsv.owpfexem@tezos.example.org",
@@ -123,7 +109,7 @@ const key = {
 }
 
 const hangzhounetFaucet = {
-  rpc: 'https://hangzhounet.api.tez.ie',
+  rpc: process.env['TEZOS_RPC_HANGZHOUNET'] || 'https://hangzhounet.api.tez.ie',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1QJcNitf3wTfcnWAW8qKHEc7Z8duq83pZe',
   knownBigMapContract: 'KT1GaKdvTeQ9RDErHCU1cKD9mJaaRZxjycnX',
@@ -169,29 +155,13 @@ const granadanetFaucet = {
   }
 }
 
-const florencenetFaucet = {
-  rpc: 'https://florencenet.api.tez.ie/',
-  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1BRwtrBfiC2paqoSw4nakJ2EGLCGuoprLQ',
-  knownBigMapContract: 'KT1W1jh5C5NbcVVvpnBLQT9ekMbR5a8fg6mc',
-  knownTzip1216Contract: 'KT1NWn9vmDxsdhYXZv4Rn2v3UpaF6vewiX31',
-  protocol: Protocols.PsFLorena,
-  signerConfig: {
-    type: SignerType.FAUCET as SignerType.FAUCET,
-    faucetKey: key,
-  }
-}
-
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_FAUCET']) {
-  providers.push(hangzhounetFaucet, florencenetFaucet, granadanetFaucet)
+  providers.push(hangzhounetFaucet, granadanetFaucet)
 }
 else if (process.env['RUN_GRANADANET_WITH_FAUCET']) {
   providers.push(granadanetFaucet)
-}
-else if (process.env['RUN_FLORENCENET_WITH_FAUCET']) {
-  providers.push(florencenetFaucet)
 }
 else if (process.env['RUN_HANGZHOUNET_WITH_FAUCET']) {
   providers.push(hangzhounetFaucet)
@@ -199,13 +169,10 @@ else if (process.env['RUN_HANGZHOUNET_WITH_FAUCET']) {
 else if (process.env['GRANADANET']) {
   providers.push(granadanetEphemeral)
 }
-else if (process.env['FLORENCENET']) {
-  providers.push(florencenetEphemeral)
-}
 else if (process.env['HANGZHOUNET']) {
   providers.push(hangzhounetEphemeral)
 } else {
-  providers.push(florencenetEphemeral, hangzhounetEphemeral, granadanetEphemeral)
+  providers.push(hangzhounetEphemeral, granadanetEphemeral)
 }
 
 const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE'];
