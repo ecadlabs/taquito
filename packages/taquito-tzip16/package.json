@@ -68,7 +68,7 @@
     "@taquito/taquito": "^10.2.0",
     "@taquito/utils": "^10.2.0",
     "bignumber.js": "^9.0.1",
-    "crypto-js": "^4.0.0"
+    "crypto-js": "^4.1.1"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.0.1",
