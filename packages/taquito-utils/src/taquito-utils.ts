@@ -26,7 +26,7 @@ export { prefix, Prefix, prefixLength } from './constants';
  * @param value Value in hex
  */
 export function encodeExpr(value: string) {
-  const blakeHash = blake.blake2b(hex2buf(value), null, 32);
+  const blakeHash = blake.blake2b(hex2buf(value), undefined, 32);
   return b58cencode(blakeHash, prefix['expr']);
 }
 
@@ -36,7 +36,7 @@ export function encodeExpr(value: string) {
  * @param value Value in hex of a signed operation
  */
  export function encodeOpHash(value: string) {
-  const blakeHash = blake.blake2b(hex2buf(value), null, 32);
+  const blakeHash = blake.blake2b(hex2buf(value), undefined, 32);
   return b58cencode(blakeHash, prefix.o);
 }
 
