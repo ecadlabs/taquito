@@ -13,8 +13,8 @@ import { Buffer } from 'buffer';
 import { Prefix, prefix, prefixLength } from './constants';
 import { validatePkAndExtractPrefix } from './verify-signature';
 import { hash } from '@stablelib/blake2b';
-const blake = require('blakejs');
-const bs58check = require('bs58check');
+import blake from 'blakejs';
+import bs58check from 'bs58check';
 
 export * from './validators';
 export { VERSION } from './version';
