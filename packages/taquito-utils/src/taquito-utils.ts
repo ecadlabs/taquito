@@ -11,8 +11,8 @@
 
 import { Buffer } from 'buffer';
 import { prefix } from './constants';
-const blake = require('blakejs');
-const bs58check = require('bs58check');
+import blake from 'blakejs';
+import bs58check from 'bs58check';
 
 export * from './validators';
 export { VERSION } from './version';
