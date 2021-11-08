@@ -75,7 +75,7 @@ Then we call the `read()` method, which takes an optional lambda contract addres
 
 ```js live noInline
 Tezos.contract
-  .at('KT1QuxRAVL9g9BE6JbQLTDpr7D8B2qEVew5U')
+  .at('KT1TtnRXptiSLE8r8UTwNTCEP5qfAo33QG1P')
   .then((contract) => {
     return contract.views.getTotalSupply([['Unit']]).read();
   })
@@ -87,7 +87,7 @@ Tezos.contract
 
 ```js live noInline
 Tezos.contract
-  .at('KT1QuxRAVL9g9BE6JbQLTDpr7D8B2qEVew5U')
+  .at('KT1TtnRXptiSLE8r8UTwNTCEP5qfAo33QG1P')
   .then((contract) => {
     return contract.views.getBalance('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1').read();
   })
@@ -119,7 +119,7 @@ Taquito internally contains a list of lambda contracts. Thus, there is no need t
 
 ```js live noInline
 Tezos.contract
-  .at('KT1Pwxmvbwn1nQZhq6Cd9v1sVJruLE7tyFA8')
+  .at('KT19BRuwQZYaGAtdJ112RLbcePLf4DiZYZes')
   .then((contract) => {
     return contract.views
       .balance_of([{ owner: 'tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1', token_id: '0' }])
@@ -133,7 +133,7 @@ Tezos.contract
 
 ```js live noInline
 Tezos.contract
-  .at('KT1QuxRAVL9g9BE6JbQLTDpr7D8B2qEVew5U')
+  .at('KT1TtnRXptiSLE8r8UTwNTCEP5qfAo33QG1P')
   .then((contract) => {
     return contract.views.getBalance('tz1XTyqBn4xi9tkRDutpRyQwHxfF8ar4i4Wq').read();
   })
