@@ -87,7 +87,7 @@ const granadanetEphemeral = {
 }
 
 const sandboxEphemeral = {
-  rpc: process.env['TEZOS_RPC_SANDBOX'] || 'http://macmini:20000',
+  rpc: process.env['TEZOS_RPC_SANDBOX'] || 'http://localhost:8732',
   knownBaker: 'sandbox_baker',
   knownContract: 'sandbox_known_contract',
   knownBigMapContract: 'sandbox_known_bigmap_contract',
@@ -96,8 +96,8 @@ const sandboxEphemeral = {
   protocol: 'sandbox_protocol',
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: process.env['SANDBOX_RUNNER'] || 'http://runner_name:3000/flextesanet',
-    requestHeaders: { 'Authorization': 'Bearer taquito-example' },
+    keyUrl: process.env['SANDBOX_RUNNER'] || 'http://localhost:3000/flextesanet',
+    requestHeaders: { 'Authorization': 'Bearer flextesanet-t0k3n' },
   },
   isSandbox: true
 }
