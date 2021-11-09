@@ -1,0 +1,18 @@
+storage (option (sapling_transaction 8));
+parameter (or (sapling_transaction 8) (sapling_state 8));
+code { UNPAIR ;
+       IF_LEFT
+         {
+           DIP {DROP;};
+           SOME;
+         }
+         { DIP {ASSERT_SOME;};
+           SWAP ;
+           SAPLING_VERIFY_UPDATE;
+           ASSERT_SOME;
+           DROP ;
+           NONE (sapling_transaction 8) ;
+         };
+       NIL operation;
+       PAIR;
+     }

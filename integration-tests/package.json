@@ -23,7 +23,8 @@
     "@taquito/tzip12": "^10.2.0",
     "@taquito/tzip16": "^10.2.0",
     "@taquito/utils": "^10.2.0",
-    "bignumber.js": "^9.0.1"
+    "bignumber.js": "^9.0.1",
+    "blakejs": "^1.1.1"
   },
   "private": true,
   "jest": {

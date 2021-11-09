@@ -5,7 +5,7 @@ import { Protocols, TezosToolkit } from "@taquito/taquito";
 
 CONFIGS().forEach(({ rpc, protocol }) => {
     const Tezos = new TezosToolkit(rpc);
-    const hangzhou = (protocol === Protocols.PtHangzH) ? test : test.skip;
+    const hangzhou = (protocol === Protocols.PtHangz2) ? test : test.skip;
 
     describe(`Test local forger: ${rpc}`, () => {
 
