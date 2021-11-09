@@ -9,20 +9,20 @@ interface PrimX<PT extends string = string, AT extends Expr[] = Expr[]> extends 
 
 // Instructions
 type MichelsonNoArgInstructionID = "ABS" | "ADD" | "ADDRESS" | "AMOUNT" | "AND" | "APPLY" | "BALANCE" |
-    "BLAKE2B" | "CAR" | "CDR" | "CHAIN_ID" | "CHECK_SIGNATURE" | "COMPARE" | "CONCAT" | "CONS" | "EDIV" |
-    "EQ" | "EXEC" | "FAILWITH" | "GE" | "GET_AND_UPDATE" | "GT" | "HASH_KEY" | "IMPLICIT_ACCOUNT" |
-    "INT" | "ISNAT" | "JOIN_TICKETS" | "KECCAK" | "LE" | "LEVEL" | "LSL" | "LSR" | "LT" | "MEM" | "MUL" |
-    "NEG" | "NEQ" | "NEVER" | "NOT" | "NOW" | "OR" | "PACK" | "PAIRING_CHECK" | "READ_TICKET" |
-    "SAPLING_VERIFY_UPDATE" | "SELF" | "SELF_ADDRESS" | "SENDER" | "SET_DELEGATE" | "SHA256" | "SHA3" |
-    "SHA512" | "SIZE" | "SLICE" | "SOME" | "SOURCE" | "SPLIT_TICKET" | "SUB" | "SWAP" | "TICKET" |
-    "TOTAL_VOTING_POWER" | "TRANSFER_TOKENS" | "UNIT" | "VOTING_POWER" | "XOR" | "RENAME";
+"BLAKE2B" | "CAR" | "CDR" | "CHAIN_ID" | "CHECK_SIGNATURE" | "COMPARE" | "CONCAT" | "CONS" | "EDIV" |
+"EQ" | "EXEC" | "FAILWITH" | "GE" | "GET_AND_UPDATE" | "GT" | "HASH_KEY" | "IMPLICIT_ACCOUNT" |
+"INT" | "ISNAT" | "JOIN_TICKETS" | "KECCAK" | "LE" | "LEVEL" | "LSL" | "LSR" | "LT" | "MEM" | "MUL" |
+"NEG" | "NEQ" | "NEVER" | "NOT" | "NOW" | "OR" | "PACK" | "PAIRING_CHECK" | "READ_TICKET" |
+"SAPLING_VERIFY_UPDATE" | "SELF" | "SELF_ADDRESS" | "SENDER" | "SET_DELEGATE" | "SHA256" | "SHA3" |
+"SHA512" | "SIZE" | "SLICE" | "SOME" | "SOURCE" | "SPLIT_TICKET" | "SUB" | "SWAP" | "TICKET" |
+"TOTAL_VOTING_POWER" | "TRANSFER_TOKENS" | "UNIT" | "VOTING_POWER" | "XOR" | "RENAME" | "OPEN_CHEST";
 
 type MichelsonRegularInstructionID = "CONTRACT" | "CREATE_CONTRACT" | "DIG" | "DIP" | "DROP" |
-    "DUG" | "DUP" | "EMPTY_BIG_MAP" | "EMPTY_MAP" | "EMPTY_SET" | "GET" | "IF" | "IF_CONS" | "IF_LEFT" |
-    "IF_NONE" | "ITER" | "LAMBDA" | "LEFT" | "LOOP" | "LOOP_LEFT" | "MAP" | "NIL" | "NONE" | "PAIR" |
-    "PUSH" | "RIGHT" | "SAPLING_EMPTY_STATE" | "UNPACK" | "UNPAIR" | "UPDATE" | "CAST" |
-    // legacy
-    "CREATE_ACCOUNT" | "STEPS_TO_QUOTA";
+"DUG" | "DUP" | "EMPTY_BIG_MAP" | "EMPTY_MAP" | "EMPTY_SET" | "GET" | "IF" | "IF_CONS" | "IF_LEFT" |
+"IF_NONE" | "ITER" | "LAMBDA" | "LEFT" | "LOOP" | "LOOP_LEFT" | "MAP" | "NIL" | "NONE" | "PAIR" |
+"PUSH" | "RIGHT" | "SAPLING_EMPTY_STATE" | "UNPACK" | "UNPAIR" | "UPDATE" | "CAST" | "VIEW" |
+// legacy
+"CREATE_ACCOUNT" | "STEPS_TO_QUOTA";
 
 export type MichelsonInstructionID = MichelsonNoArgInstructionID | MichelsonRegularInstructionID;
 type InstrPrim<PT extends MichelsonInstructionID, AT extends Expr[]> = Prim<PT, AT>;
@@ -48,16 +48,18 @@ export type MichelsonInstruction =
     InstrX<"EMPTY_BIG_MAP", [MichelsonType, MichelsonType]> |
     InstrX<"LAMBDA", [MichelsonType, MichelsonType, InstructionList]> |
     InstrX<"DIP", [IntLiteral, InstructionList] | [InstructionList]> |
+    InstrX<"VIEW", [StringLiteral, MichelsonType]> |
     InstrPrim<"DROP" | "PAIR" | "UNPAIR" | "DUP" | "GET" | "UPDATE", [IntLiteral]>;
 
 // Types
 
 export type MichelsonSimpleComparableTypeID = "string" | "nat" | "int" | "bytes" | "bool" | "mutez" |
-    "key_hash" | "address" | "timestamp" | "never" | "key" | "unit" | "signature" | "chain_id";
+"key_hash" | "address" | "timestamp" | "never" | "key" | "unit" | "signature" | "chain_id";
 
 export type MichelsonTypeID = MichelsonSimpleComparableTypeID |
-    "option" | "list" | "set" | "contract" | "operation" | "pair" | "or" | "lambda" | "map" | "big_map" |
-    "sapling_transaction" | "sapling_state" | "ticket" | "bls12_381_g1" | "bls12_381_g2" | "bls12_381_fr";
+"option" | "list" | "set" | "contract" | "operation" | "pair" | "or" | "lambda" | "map" | "big_map" |
+"sapling_transaction" | "sapling_state" | "ticket" | "bls12_381_g1" | "bls12_381_g2" | "bls12_381_fr" |
+"chest_key" | "chest";
 
 type Type0<PT extends MichelsonTypeID> = Prim0<PT>;
 type TypeX<PT extends MichelsonTypeID, AT extends Expr[]> = PrimX<PT, AT>;
@@ -86,6 +88,8 @@ export type MichelsonTypeNever = Type0<"never">;
 export type MichelsonTypeBLS12_381_G1 = Type0<"bls12_381_g1">;
 export type MichelsonTypeBLS12_381_G2 = Type0<"bls12_381_g2">;
 export type MichelsonTypeBLS12_381_FR = Type0<"bls12_381_fr">;
+export type MichelsonTypeChestKey = Type0<"chest_key">;
+export type MichelsonTypeChest = Type0<"chest">;
 
 type TypeList<T extends MichelsonType[]> = T & Node;
 export type MichelsonTypePair<T extends MichelsonType[]> = TypeX<"pair", T> | TypeList<T>;
@@ -132,7 +136,9 @@ export type MichelsonType<T extends MichelsonTypeID = MichelsonTypeID> =
     T extends "bls12_381_g2" ? MichelsonTypeBLS12_381_G2 :
     T extends "bls12_381_fr" ? MichelsonTypeBLS12_381_FR :
     T extends "sapling_transaction" ? MichelsonTypeSaplingTransaction :
-    MichelsonTypeSaplingState;
+    T extends "sapling_state" ? MichelsonTypeSaplingState :
+    T extends "chest_key" ? MichelsonTypeChestKey :
+    MichelsonTypeChest;
 
 // Data
 
@@ -162,26 +168,23 @@ export type MichelsonData =
 
 // Top level script sections
 
-export type MichelsonSectionID = "parameter" | "storage" | "code";
+export type MichelsonSectionID = "parameter" | "storage" | "code" | "view";
 type SectionPrim<PT extends MichelsonSectionID, AT extends Expr[]> = PrimX<PT, AT>;
 
 export type MichelsonContractParameter = SectionPrim<"parameter", [MichelsonType]>;
 export type MichelsonContractStorage = SectionPrim<"storage", [MichelsonType]>;
 export type MichelsonContractCode = SectionPrim<"code", [InstructionList]>;
+export type MichelsonContractView = SectionPrim<"view", [StringLiteral, MichelsonType, MichelsonType, InstructionList]>;
 
-export type MichelsonContract =
-    [MichelsonContractParameter, MichelsonContractStorage, MichelsonContractCode] |
-    [MichelsonContractParameter, MichelsonContractCode, MichelsonContractStorage] |
-    [MichelsonContractStorage, MichelsonContractParameter, MichelsonContractCode] |
-    [MichelsonContractStorage, MichelsonContractCode, MichelsonContractParameter] |
-    [MichelsonContractCode, MichelsonContractStorage, MichelsonContractParameter] |
-    [MichelsonContractCode, MichelsonContractParameter, MichelsonContractStorage];
+export type MichelsonContract = MichelsonContractSection[];
 
-export type MichelsonContractSection<T extends MichelsonSectionID> =
+export type MichelsonContractSection<T extends MichelsonSectionID = MichelsonSectionID> =
     T extends "parameter" ? MichelsonContractParameter :
-    T extends "storage" ? MichelsonContractStorage : MichelsonContractCode;
+    T extends "storage" ? MichelsonContractStorage : 
+    T extends "view" ? MichelsonContractView : 
+    MichelsonContractCode;
 
-// Code analysis types 
+// Code analysis types
 export interface MichelsonTypeFailed {
     failed: MichelsonType;
 }
@@ -189,21 +192,50 @@ export interface MichelsonTypeFailed {
 export type MichelsonReturnType = MichelsonType[] | MichelsonTypeFailed;
 
 export enum Protocol {
+    Ps9mPmXa = "Ps9mPmXaRzmzk35gbAYNCAw6UXdE2qoABTHbN2oEEc1qM7CwT9P",
+    PtCJ7pwo = "PtCJ7pwoxe8JasnHY8YonnLYjcVHmhiARPJvqcC6VfHT5s8k8sY",
+    PsYLVpVv = "PsYLVpVvgbLhAhoqAkMFUo6gudkJ9weNXhUYCiLDzcUpFpkk8Wt",
+    PsddFKi3 = "PsddFKi32cMJ2qPjf43Qv5GDWLDPZb3T3bF6fLKiF5HtvHNU7aP",
     Pt24m4xi = "Pt24m4xiPbLDhVgVfABUjirbmda3yohdN82Sp9FeuAXJ4eV9otd",
     PsBABY5H = "PsBABY5HQTSkA4297zNHfsZNKtxULfL18y95qb3m53QJiXGmrbU",
     PsBabyM1 = "PsBabyM1eUXZseaJdmXFApDSBqj8YBfwELoxZHHW77EMcAbbwAS",
     PsCARTHA = "PsCARTHAGazKbHtnKfLzQg3kms52kSRpgnDY982a9oYsSXRLQEb",
     PsDELPH1 = "PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo",
-    PtEdo2Zk = 'PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA',
-    PsFLorena = 'PsFLorenaUUuikDWvMDr6fGBRG8kt3e3D3fHoXK1j1BFRxeSH4i',
-    PtGRANADs = 'PtGRANADsDU8R9daYKAgWnQYAJ64omN1o3KMGVCykShA97vQbvV',
-    PtHangzH = 'PtHangzHogokSuiMHemCuowEavgYTP8J5qQ9fQS793MHYFpCY3r',
-    PtHangz2 = 'PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx'
+    PtEdoTez = "PtEdoTezd3RHSC31mpxxo1npxFjoWWcFgQtxapi51Z8TLu6v6Uq",
+    PtEdo2Zk = "PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA",
+    PsFLoren = "PsFLorenaUUuikDWvMDr6fGBRG8kt3e3D3fHoXK1j1BFRxeSH4i",
+    PsFLorena = "PsFLorenaUUuikDWvMDr6fGBRG8kt3e3D3fHoXK1j1BFRxeSH4i",
+    PtGRANAD = "PtGRANADsDU8R9daYKAgWnQYAJ64omN1o3KMGVCykShA97vQbvV",
+    PtGRANADs = "PtGRANADsDU8R9daYKAgWnQYAJ64omN1o3KMGVCykShA97vQbvV",
+    PtHangzH = "PtHangzHogokSuiMHemCuowEavgYTP8J5qQ9fQS793MHYFpCY3r",
+    PtHangz2 = "PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx"
 }
 
-export const DefaultProtocol = Protocol.PsDELPH1;
+export const DefaultProtocol = Protocol.PtGRANAD;
 
 export type ProtocolID = `${Protocol}`;
+
+const protoLevel: Record<ProtocolID, number> = {
+    Ps9mPmXaRzmzk35gbAYNCAw6UXdE2qoABTHbN2oEEc1qM7CwT9P: 0,
+    PtCJ7pwoxe8JasnHY8YonnLYjcVHmhiARPJvqcC6VfHT5s8k8sY: 1,
+    PsYLVpVvgbLhAhoqAkMFUo6gudkJ9weNXhUYCiLDzcUpFpkk8Wt: 2,
+    PsddFKi32cMJ2qPjf43Qv5GDWLDPZb3T3bF6fLKiF5HtvHNU7aP: 3,
+    Pt24m4xiPbLDhVgVfABUjirbmda3yohdN82Sp9FeuAXJ4eV9otd: 4,
+    PsBABY5HQTSkA4297zNHfsZNKtxULfL18y95qb3m53QJiXGmrbU: 5,
+    PsBabyM1eUXZseaJdmXFApDSBqj8YBfwELoxZHHW77EMcAbbwAS: 5,
+    PsCARTHAGazKbHtnKfLzQg3kms52kSRpgnDY982a9oYsSXRLQEb: 6,
+    PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo: 7,
+    PtEdoTezd3RHSC31mpxxo1npxFjoWWcFgQtxapi51Z8TLu6v6Uq: 8,
+    PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA: 8,
+    PsFLorenaUUuikDWvMDr6fGBRG8kt3e3D3fHoXK1j1BFRxeSH4i: 9,
+    PtGRANADsDU8R9daYKAgWnQYAJ64omN1o3KMGVCykShA97vQbvV: 10,
+    PtHangzHogokSuiMHemCuowEavgYTP8J5qQ9fQS793MHYFpCY3r: 11,
+    PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx: 11
+};
+
+export function ProtoGreaterOfEqual(a: ProtocolID, b: ProtocolID): boolean {
+    return protoLevel[a] >= protoLevel[b];
+}
 
 export interface ProtocolOptions {
     protocol?: ProtocolID;
