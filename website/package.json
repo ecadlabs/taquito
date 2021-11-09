@@ -23,6 +23,7 @@
     "@taquito/michelson-encoder": "10.2.0",
     "@taquito/rpc": "10.2.0",
     "@taquito/signer": "10.2.0",
+    "@taquito/remote-signer": "10.2.0",
     "@taquito/taquito": "10.2.0",
     "@taquito/tezbridge-wallet": "10.2.0",
     "@taquito/tzip12": "10.2.0",

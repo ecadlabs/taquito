@@ -26,6 +26,7 @@
     "node": ">=6.0.0"
   },
   "scripts": {
+    "test": "jest --coverage",
     "lint": "eslint --ext .js,.ts .",
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
