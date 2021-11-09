@@ -56,7 +56,7 @@ This example will demonstrate how to estimate the fees related to calling a smar
 // const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
 
 Tezos.contract
-  .at('KT1JdpENG4Mv6Xv8dSjb5f6UviegUw7XSQg3')
+  .at('KT1NcdpzokZQY4sLmCBUwLnMHQCCQ6rRXYwS')
   .then((contract) => {
     const i = 7;
 

@@ -119,7 +119,7 @@ Taquito internally contains a list of lambda contracts. Thus, there is no need t
 
 ```js live noInline
 Tezos.contract
-  .at('KT1LNMrk8orMQ85zbwK25996dPhDxfSicvKh')
+  .at('KT1Tf2JXZP8wXjdgndsgMKM1uW9M4CC5rbWL')
   .then((contract) => {
     return contract.views
       .balance_of([{ owner: 'tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1', token_id: '0' }])

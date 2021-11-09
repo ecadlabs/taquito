@@ -148,7 +148,7 @@ Calling smart contract operations requires a configured signer; in this example 
 
 ```js live noInline
 Tezos.contract
-  .at('KT1Gx18RNNvFvrv1gb9abBWCqxEPyFT5duTP')
+  .at('KT1NcdpzokZQY4sLmCBUwLnMHQCCQ6rRXYwS')
   .then((contract) => {
     const i = 7;
 
