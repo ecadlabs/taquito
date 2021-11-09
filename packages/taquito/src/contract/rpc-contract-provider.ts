@@ -7,6 +7,7 @@ import { Context } from '../context';
 import { DelegateOperation } from '../operations/delegate-operation';
 import { OperationEmitter } from '../operations/operation-emitter';
 import { OriginationOperation } from '../operations/origination-operation';
+import { RegisterGlobalConstantOperation } from '../operations/register-global-constant-operation';
 import { RevealOperation } from '../operations/reveal-operation';
 import { TransactionOperation } from '../operations/transaction-operation';
 import {
@@ -15,6 +16,7 @@ import {
   OriginateParams,
   ParamsWithKind,
   RegisterDelegateParams,
+  RegisterGlobalConstantParams,
   RevealParams,
   RPCOperation,
   TransferParams,
@@ -26,6 +28,7 @@ import { ContractProvider, ContractSchema, EstimationProvider, StorageProvider }
 import {
   createOriginationOperation,
   createRegisterDelegateOperation,
+  createRegisterGlobalConstantOperation,
   createRevealOperation,
   createSetDelegateOperation,
   createTransferOperation,
@@ -365,10 +368,29 @@ export class RpcContractProvider
     }
   }
 
-  async at<T extends ContractAbstraction<ContractProvider>>(
-    address: string,
-    contractAbstractionComposer: ContractAbstractionComposer<T> = (x) => x as any
-  ): Promise<T> {
+  /**
+   *
+   * @description Register a Micheline expression in a global table of constants. Will sign and inject an operation using the current context
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param params registerGlobalConstant operation parameter
+   */
+  async registerGlobalConstant(params: RegisterGlobalConstantParams) {
+    const publickKeyHash = await this.signer.publicKeyHash();
+    const estimate = await this.estimate(params, this.estimator.registerGlobalConstant.bind(this.estimator));
+    const operation = await createRegisterGlobalConstantOperation({
+      ...params,
+      ...estimate,
+    });
+    const ops = await this.addRevealOperationIfNeeded(operation, publickKeyHash);
+    const prepared = await this.prepareOperation({ operation: ops, source: publickKeyHash });
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new RegisterGlobalConstantOperation(hash, operation, publickKeyHash, forgedBytes, opResponse, context);
+  }
+
+  async at<T extends ContractAbstraction<ContractProvider>>(address: string, contractAbstractionComposer: ContractAbstractionComposer<T> = x => x as any): Promise<T> {
     const rpc = this.context.withExtensions().rpc;
     const script = await rpc.getNormalizedScript(address);
     const entrypoints = await rpc.getEntrypoints(address);
