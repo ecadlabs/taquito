@@ -16,9 +16,9 @@ export class RegisterGlobalConstantOperation extends Operation
     implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation {
 
     /**
-     * @description Global address of the newly registered constant
+     * @description Hash (index) of the newly registered constant
      */
-    public readonly globalAddress?: string;
+    public readonly globalConstantHash?: string;
     constructor(
         hash: string,
         private readonly params: RPCRegisterGlobalConstantOperation,
@@ -29,7 +29,7 @@ export class RegisterGlobalConstantOperation extends Operation
     ) {
         super(hash, raw, results, context);
 
-        this.globalAddress = this.operationResults && this.operationResults.global_address;
+        this.globalConstantHash = this.operationResults && this.operationResults.global_address;
     }
 
     get operationResults() {

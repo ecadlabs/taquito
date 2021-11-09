@@ -86,7 +86,7 @@ describe('RegisterGlobalConstant operation', () => {
             successfulResult,
             fakeContext
         );
-        expect(op.globalAddress).toEqual('exprvNeeFGy8M7xhmaq7bkQcd3RsXc7ogv2HwL1dciubXdgPHEMRH2');
+        expect(op.globalConstantHash).toEqual('exprvNeeFGy8M7xhmaq7bkQcd3RsXc7ogv2HwL1dciubXdgPHEMRH2');
     });
 
     it('global address is undefined given an wrong result', () => {
@@ -105,7 +105,7 @@ describe('RegisterGlobalConstant operation', () => {
                 result,
                 fakeContext
             );
-            expect(op.globalAddress).toBeUndefined();
+            expect(op.globalConstantHash).toBeUndefined();
         });
     });
 
