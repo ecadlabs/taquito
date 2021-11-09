@@ -208,6 +208,10 @@ export const primEncoder: Encoder<PrimValue> = value => {
         : (pad(encodedArgs.length / 2) + encodedArgs)
   }
 
+  if (value.prim === 'view' && value.args) {
+    encodedArgs = pad(encodedArgs.length / 2) + encodedArgs + pad(0);
+  }
+
   return `${preamble}${op}${encodedArgs}${encodedAnnots}`;
 };
 
@@ -219,10 +223,22 @@ export const primDecoder = (value: Uint8ArrayConsumer, preamble: Uint8Array) => 
     .toString(16)
     .padStart(2, '0');
 
+  const result: Partial<PrimValue> = {
+    prim: opMapping[op],
+  };
+
   if (opMapping[op] === 'LAMBDA') {
     value.consume(4);
   }
-  
+
+  if (opMapping[op] === 'view') {
+    if (argsCount != 0) {
+      return primViewDecoder(value, result) as any;
+    } else {
+      return result;
+    }
+  }
+
 let combPairArgs;
 let combPairAnnots;
   if ((opMapping[op] === 'pair' || opMapping[op] === 'Pair') && argsCount > 2) {
@@ -236,10 +252,6 @@ let combPairAnnots;
   if (opMapping[op] === 'LAMBDA') {
     value.consume(4);
   }
-
-  const result: Partial<PrimValue> = {
-    prim: opMapping[op],
-  };
 
   if(combPairArgs) {
     result['args'] = combPairArgs as any;
@@ -259,6 +271,13 @@ let combPairAnnots;
 
   return result;
 };
+
+const primViewDecoder = (value: Uint8ArrayConsumer, result: Partial<PrimValue>) => {
+  value.consume(4);
+  result['args'] = new Array(4).fill(0).map(() => valueDecoder(value)) as any;
+  value.consume(4);
+  return result;
+}
 
 export const decodeCombPair: Decoder = (val: Uint8ArrayConsumer) => {
   const array = new Uint8ArrayConsumer(extractRequiredLen(val));

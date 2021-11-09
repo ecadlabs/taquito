@@ -59,10 +59,10 @@ interface FaucetConfig {
 const hangzhounetEphemeral = {
   rpc: process.env['TEZOS_RPC_HANGZHOUNET'] || 'https://hangzhounet.api.tez.ie',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1QJcNitf3wTfcnWAW8qKHEc7Z8duq83pZe',
-  knownBigMapContract: 'KT1GaKdvTeQ9RDErHCU1cKD9mJaaRZxjycnX',
-  knownTzip1216Contract: 'KT1TcMiEqu9a3zULJwkhLzbngBzUX7JruNU5',
-  protocol: Protocols.PtHangzH,
+  knownContract: 'KT1XfoRSZ88ioYHbuEKqHxJPawm9Rqc54uoy',
+  knownBigMapContract: 'KT1CnRSbp71FU8nz4xNEkcaASgMQDjNN85jd',
+  knownTzip1216Contract: 'KT1KquwVmLtq9StwCK46vpwRCxowqhcoV4g1',
+  protocol: Protocols.PtHangz2,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'https://api.tez.ie/keys/hangzhounet',
@@ -109,12 +109,12 @@ const key = {
 }
 
 const hangzhounetFaucet = {
-  rpc: 'https://hangzhounet.api.tez.ie',
+  rpc: process.env['TEZOS_RPC_HANGZHOUNET'] || 'https://hangzhounet.api.tez.ie',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1QJcNitf3wTfcnWAW8qKHEc7Z8duq83pZe',
-  knownBigMapContract: 'KT1GaKdvTeQ9RDErHCU1cKD9mJaaRZxjycnX',
-  knownTzip1216Contract: 'KT1TcMiEqu9a3zULJwkhLzbngBzUX7JruNU5',
-  protocol: Protocols.PtHangzH,
+  knownContract: 'KT1XfoRSZ88ioYHbuEKqHxJPawm9Rqc54uoy',
+  knownBigMapContract: 'KT1CnRSbp71FU8nz4xNEkcaASgMQDjNN85jd',
+  knownTzip1216Contract: 'KT1KquwVmLtq9StwCK46vpwRCxowqhcoV4g1',
+  protocol: Protocols.PtHangz2,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
     faucetKey: {
