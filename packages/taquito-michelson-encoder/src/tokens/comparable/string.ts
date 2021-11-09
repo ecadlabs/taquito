@@ -39,4 +39,12 @@ export class StringToken extends ComparableToken {
       type: { prim: StringToken.prim },
     };
   }
+
+  findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
+    if (StringToken.prim === tokenToFind) {
+      tokens.push(this);
+    }
+    return tokens;
+  };
+
 }

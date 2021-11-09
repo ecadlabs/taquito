@@ -43,4 +43,12 @@ export class TimestampToken extends ComparableToken {
       type: { prim: TimestampToken.prim },
     };
   }
+
+  findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
+    if (TimestampToken.prim === tokenToFind) {
+      tokens.push(this);
+    }
+    return tokens;
+  };
+
 }

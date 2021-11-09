@@ -104,4 +104,14 @@ export class BigMapToken extends Token {
       );
     }
   }
+
+  findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
+    if (BigMapToken.prim === tokenToFind) {
+      tokens.push(this);
+    }
+    this.KeySchema.findAndReturnTokens(tokenToFind, tokens);
+    this.ValueSchema.findAndReturnTokens(tokenToFind, tokens);
+    return tokens;
+  };
+
 }
