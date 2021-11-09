@@ -98,7 +98,7 @@ The following example shows how to load the contract and view the methods on tha
 // const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
 
 Tezos.contract
-  .at('KT1L3Jp9ZtJWovty7iXceefwpj1E2FXyivBC')
+  .at('KT1UNTXxGgDMAD6pvVfLbuAMKie51FryR1Jy')
   .then((c) => {
     let methods = c.parameterSchema.ExtractSignatures();
     println(JSON.stringify(methods, null, 2));
@@ -121,7 +121,7 @@ We can inspect the transfer params produced by Taquito using the `toTransferPara
 // const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
 
 Tezos.contract
-  .at('KT1L3Jp9ZtJWovty7iXceefwpj1E2FXyivBC')
+  .at('KT1UNTXxGgDMAD6pvVfLbuAMKie51FryR1Jy')
   .then((c) => {
     let incrementParams = c.methods.increment(2).toTransferParams();
     println(JSON.stringify(incrementParams, null, 2));
@@ -141,7 +141,7 @@ Then we wait for the `confirmation(3)` to complete. The `3` number tells Taquito
 // const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
 
 Tezos.contract
-  .at('KT1L3Jp9ZtJWovty7iXceefwpj1E2FXyivBC')
+  .at('KT1UNTXxGgDMAD6pvVfLbuAMKie51FryR1Jy')
   .then((contract) => {
     const i = 7;
 
@@ -181,7 +181,7 @@ In the following example, a contract's `set_child_record` method will be called 
 ```js live noInline
 // const Tezos = new TezosToolkit('https://api.tez.ie/rpc/hangzhounet');
 
-Tezos.contract.at('KT1PFvpHj5yobmxke1Du7yT9qRZrRmjDEFVf')
+Tezos.contract.at('KT1CfFBaLoUrgv93k8668KCCcu2hNDNYPz4L')
   .then((contract) => {
     println(`List all contract methods: ${Object.keys(contract.methods)}\n`);
     println(`Inspect the signature of the 'set_child_record' contract method: ${
@@ -200,7 +200,7 @@ The preceding example returns an array which contains the different possible sig
 
 importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
 .then(signer => {
-    return Tezos.contract.at('KT1PFvpHj5yobmxke1Du7yT9qRZrRmjDEFVf')
+    return Tezos.contract.at('KT1CfFBaLoUrgv93k8668KCCcu2hNDNYPz4L')
 }).then((contract) => {
    return contract.methods.set_child_record(
     'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', //address(optional)
@@ -227,7 +227,7 @@ In the following example, a contract's `set_child_record` method will be called 
 ```js live noInline
 // const Tezos = new TezosToolkit('https://api.tez.ie/rpc/hangzhounet');
 
-Tezos.contract.at('KT1PFvpHj5yobmxke1Du7yT9qRZrRmjDEFVf')
+Tezos.contract.at('KT1CfFBaLoUrgv93k8668KCCcu2hNDNYPz4L')
   .then((contract) => {
     println(`List all contract methods: ${Object.keys(contract.methodsObject)}\n`);
     println(`Inspect the signature of the 'set_child_record' contract method: ${JSON.stringify(contract.methodsObject.set_child_record().getSignature(), null, 2)}`);
@@ -244,7 +244,7 @@ The precedent example returns an object giving indication on how to structure th
 
 importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
 .then(signer => {
-    return Tezos.contract.at('KT1PFvpHj5yobmxke1Du7yT9qRZrRmjDEFVf')
+    return Tezos.contract.at('KT1CfFBaLoUrgv93k8668KCCcu2hNDNYPz4L')
 }).then((contract) => {
    return contract.methodsObject.set_child_record({
     address: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',

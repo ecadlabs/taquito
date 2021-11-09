@@ -8,7 +8,7 @@ async function example() {
     const tezos = new TezosToolkit(provider);
     tezos.setSignerProvider( signer );
     try {
-        const contract = await tezos.contract.at('KT1Ea2YGUsBPoBDwVKcvqSVNZaZnHdtoKVnY');
+        const contract = await tezos.contract.at('KT1KxMdSBa9ippgTWwU7d1FkzTF5CirUkcp4');
         console.log("Printing contract methods...");
         console.log(contract.methods);
         console.log("Showing initial storage...");

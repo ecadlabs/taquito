@@ -476,7 +476,7 @@ The `transfer` method takes an object with only two required properties: the `to
 
 ```js live noInline wallet
 Tezos.wallet
-  .transfer({ to: 'KT1G2ZozHorN94Xt79kpqnUA5ymp4BYHbudY', amount: 0.2 })
+  .transfer({ to: 'KT1B4WtE3MSEjGKnucRL5xhqnXCEX1QkLGPx', amount: 0.2 })
   .send()
   .then((op) => {
     println(`Waiting for ${op.opHash} to be confirmed...`)
@@ -504,7 +504,7 @@ Fortunately, Taquito will make this operation go like a breeze! First, you need 
 
 ```js
 const contract = await 
-Tezos.wallet.at('KT1G2ZozHorN94Xt79kpqnUA5ymp4BYHbudY');
+Tezos.wallet.at('KT1B4WtE3MSEjGKnucRL5xhqnXCEX1QkLGPx');
 
 ```
 
@@ -530,7 +530,7 @@ Most of the time, the process is simple: you take the contract abstraction you c
 ```js live noInline wallet
 
 Tezos.wallet
-  .at('KT18nzFc41EJg4yonQT48Rpo1tAP49VicCUq')
+  .at('KT1WeQJ34tL4mwVyPJHNCq9VsrGUgFdFEdNp')
   .then((contract) => contract.methods.areYouThere(true).send())
   .then((op) => {
     println(`Hash: ${op.opHash}`);
@@ -559,7 +559,7 @@ In the case of multiple arguments (for example if the entrypoint expects a pair)
 ```js live noInline wallet
 
 Tezos.wallet
-  .at('KT18nzFc41EJg4yonQT48Rpo1tAP49VicCUq')
+  .at('KT1WeQJ34tL4mwVyPJHNCq9VsrGUgFdFEdNp')
   .then((contract) =>
     contract.methods.addName('tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb', 'Alice').send()
   )
