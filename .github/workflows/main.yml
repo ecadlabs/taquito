@@ -35,6 +35,30 @@ jobs:
         CI: true
         RUN_INTEGRATION: true
 
+  integration-tests-idiazabalnet:
+    runs-on: ecad-taquito
+    strategy:
+      matrix:
+        node: [12.x]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node }}
+    - uses: actions/cache@v1
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+    - run: npm ci
+    - run: npm run lerna -- bootstrap
+    - run: npm run build
+    - run: cd integration-tests && npm run test:idiazabalnet-faucet
+      env:
+        CI: true
+        TEZOS_RPC_IDIAZABALNET: 'https://idiazabalnet.ecadinfra.com'
+
   integration-tests-hangzhounet:
     runs-on: ecad-taquito
     strategy:
