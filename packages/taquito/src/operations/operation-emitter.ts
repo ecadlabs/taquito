@@ -171,6 +171,12 @@ export abstract class OperationEmitter {
               ...getSource(op),
               ...getFee(op),
             };
+          case OpKind.REGISTER_GLOBAL_CONSTANT:
+            return {
+              ...op,
+              ...getSource(op),
+              ...getFee(op),
+            }
           default:
             throw new Error('Unsupported operation');
         }

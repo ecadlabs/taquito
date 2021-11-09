@@ -77,6 +77,7 @@ describe('RpcContractProvider test', () => {
     registerDelegate: jest.Mock<any, any>;
     batch: jest.Mock<any, any>;
     reveal: jest.Mock<any, any>;
+    registerGlobalConstant: jest.Mock<any, any>;
   };
 
   const revealOp = (source: string) => ({
@@ -123,6 +124,7 @@ describe('RpcContractProvider test', () => {
       setDelegate: jest.fn(),
       batch: jest.fn(),
       reveal: jest.fn(),
+      registerGlobalConstant: jest.fn()
     };
 
     // Required for operations confirmation polling
@@ -1250,6 +1252,38 @@ describe('RpcContractProvider test', () => {
               public_key: 'test_pub_key',
               source: 'test_pub_key_hash',
               storage_limit: '0',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        opbytes: 'test',
+      });
+      done();
+    });
+  });
+
+  describe('registerGlobalConstant', () => {
+    it('should produce a reveal and registerGlobalConstant operation', async done => {
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.registerGlobalConstant.mockResolvedValue(estimate);
+      const result = await rpcContractProvider.registerGlobalConstant({
+        value: {"prim":"Pair","args":[{"int":"999"},{"int":"999"}]}
+      });
+      expect(result.raw).toEqual({
+        counter: 0,
+        opOb: {
+          branch: 'test',
+          contents: [
+            revealOp('test_pub_key_hash'),
+            {
+              value: {"prim":"Pair","args":[{"int":"999"},{"int":"999"}]},
+              counter: '2',
+              fee: '475',
+              gas_limit: '1330',
+              kind: 'register_global_constant',
+              source: 'test_pub_key_hash',
+              storage_limit: '93',
             },
           ],
           protocol: 'test_proto',

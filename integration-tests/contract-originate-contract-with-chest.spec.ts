@@ -3,7 +3,7 @@ import { CONFIGS } from "./config";
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const hangzhounet = (protocol === Protocols.PtHangzH) ? test : test.skip;
+  const hangzhounet = (protocol === Protocols.PtHangz2) ? test : test.skip;
   describe(`Originate contract with timelock types (chest or chest_key) in storage and retrieve its value: ${rpc}`, () => {
 
     beforeEach(async (done) => {

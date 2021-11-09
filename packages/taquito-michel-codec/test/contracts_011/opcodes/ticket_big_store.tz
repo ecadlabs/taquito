@@ -1,0 +1,3 @@
+parameter nat ;
+storage (big_map unit (ticket nat));
+code { UNPAIR ; PUSH nat 1 ; SWAP ; TICKET ; SOME ; UNIT ; UPDATE ; NIL operation ; PAIR } ;

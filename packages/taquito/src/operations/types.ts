@@ -3,6 +3,7 @@ import {
   InternalOperationResultKindEnum,
   OpKind,
   TransactionOperationParameter,
+  MichelsonV1Expression,
 } from '@taquito/rpc';
 
 export { OpKind } from '@taquito/rpc';
@@ -13,7 +14,8 @@ export type ParamsWithKind =
   | withKind<OriginateParams, OpKind.ORIGINATION>
   | withKind<DelegateParams, OpKind.DELEGATION>
   | withKind<TransferParams, OpKind.TRANSACTION>
-  | withKind<ActivationParams, OpKind.ACTIVATION>;
+  | withKind<ActivationParams, OpKind.ACTIVATION>
+  | withKind<RegisterGlobalConstantParams, OpKind.REGISTER_GLOBAL_CONSTANT>;
 
 export type ParamsWithKindExtended =
   | ParamsWithKind
@@ -47,23 +49,25 @@ export type RPCOpWithFee =
   | RPCTransferOperation
   | RPCOriginationOperation
   | RPCDelegateOperation
-  | RPCRevealOperation;
+  | RPCRevealOperation
+  | RPCRegisterGlobalConstantOperation;
 export type RPCOpWithSource =
   | RPCTransferOperation
   | RPCOriginationOperation
   | RPCDelegateOperation
-  | RPCRevealOperation;
+  | RPCRevealOperation
+  | RPCRegisterGlobalConstantOperation;
 
 export const isOpWithFee = <T extends { kind: OpKind }>(
   op: T
 ): op is withKind<T, InternalOperationResultKindEnum> => {
-  return ['transaction', 'delegation', 'origination', 'reveal'].indexOf(op.kind) !== -1;
+  return ['transaction', 'delegation', 'origination', 'reveal', 'register_global_constant'].indexOf(op.kind) !== -1;
 };
 
 export const isOpRequireReveal = <T extends { kind: OpKind }>(
   op: T
 ): op is withKind<T, Exclude<InternalOperationResultKindEnum, OpKind.REVEAL>> => {
-  return ['transaction', 'delegation', 'origination'].indexOf(op.kind) !== -1;
+  return ['transaction', 'delegation', 'origination', 'register_global_constant'].indexOf(op.kind) !== -1;
 };
 
 export type SourceKinds = InternalOperationResultKindEnum;
@@ -239,6 +243,29 @@ export interface TransferParams {
 }
 
 /**
+ * @description RPC register global constant operation
+ */
+ export interface RPCRegisterGlobalConstantOperation {
+  kind: OpKind.REGISTER_GLOBAL_CONSTANT;
+  fee: number;
+  gas_limit: number;
+  storage_limit: number;
+  source: string;
+  value: MichelsonV1Expression;
+}
+
+/**
+ * @description Parameters for the `registerGlobalConstant` method
+ */
+export interface RegisterGlobalConstantParams {
+  value: MichelsonV1Expression;
+  source?: string;
+  fee?: number;
+  gasLimit?: number;
+  storageLimit?: number;
+}
+
+/**
  * @description RPC transfer operation
  */
 export interface RPCTransferOperation {
@@ -266,7 +293,8 @@ export type RPCOperation =
   | RPCTransferOperation
   | RPCDelegateOperation
   | RPCRevealOperation
-  | RPCActivateOperation;
+  | RPCActivateOperation
+  | RPCRegisterGlobalConstantOperation;
 
 export type PrepareOperationParams = {
   operation: RPCOperation | RPCOperation[];

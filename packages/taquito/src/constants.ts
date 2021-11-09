@@ -26,7 +26,7 @@ export enum Protocols {
   PtEdo2Zk = 'PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA',
   PsFLorena = 'PsFLorenaUUuikDWvMDr6fGBRG8kt3e3D3fHoXK1j1BFRxeSH4i',
   PtGRANADs = 'PtGRANADsDU8R9daYKAgWnQYAJ64omN1o3KMGVCykShA97vQbvV',
-  PtHangzH = 'PtHangzHogokSuiMHemCuowEavgYTP8J5qQ9fQS793MHYFpCY3r'
+  PtHangz2 = 'PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx'
 }
 
 export const protocols = {
@@ -37,7 +37,7 @@ export const protocols = {
   '008': [Protocols.PtEdo2Zk], // edonet v2
   '009': [Protocols.PsFLorena],
   '010': [Protocols.PtGRANADs],
-  '011': [Protocols.PtHangzH]
+  '011': [Protocols.PtHangz2] // hangzhou v2
 };
 
 export enum DefaultLambdaAddresses {
@@ -47,7 +47,7 @@ export enum DefaultLambdaAddresses {
   EDONET = 'KT1A64nVZDccAHGAsf1ZyVajXZcbiwjV3SnN',
   FLORENCENET = 'KT1KCe3YqGnudsiCWb5twbe2DH5T3EMdLpSE',
   GRANADANET = 'KT1BCun2vsA4GBQvsKAuGD5x873MfW2jsN9z',
-  HANGZHOUNET = 'KT1UHUE6ZxjMuFPnPqgDSt13A6zFAAWDReso'
+  HANGZHOUNET = 'KT1PWtBAr1hjK9M9s9oZNZFbfzPdkkD6PSJR'
 }
 
 export enum ChainIds {
@@ -57,5 +57,5 @@ export enum ChainIds {
   EDONET = "NetXSgo1ZT2DRUG",
   FLORENCENET = "NetXxkAx4woPLyu",
   GRANADANET = "NetXz969SFaFn8k", 
-  HANGZHOUNET = "NetXuXoGoLxNK6o"
+  HANGZHOUNET = "NetXZSsxBpMQeAT"
 }
