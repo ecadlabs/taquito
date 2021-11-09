@@ -4,7 +4,7 @@ const crypto = require('crypto');
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
     const Tezos = lib;
-    const hangzhounet = protocol === Protocols.PtHangzH ? test : test.skip;
+    const hangzhounet = protocol === Protocols.PtHangz2 ? test : test.skip;
 
     describe(`Test contract.batch to register global constant using: ${rpc}`, () => {
         const randomAnnots = () => crypto.randomBytes(3).toString('hex');

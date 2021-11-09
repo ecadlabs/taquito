@@ -7,7 +7,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
     const Tezos = lib;
 
     const granadanet = (protocol === Protocols.PtGRANADs) ? test : test.skip;
-    const hangzhounet = (protocol === Protocols.PtHangzH) ? test : test.skip;
+    const hangzhounet = (protocol === Protocols.PtHangz2) ? test : test.skip;
 
     describe('Fetch constants for all protocols on Mainnet', () => {
 
@@ -483,7 +483,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                 baking_reward_per_endorsement: [new BigNumber(78125), new BigNumber(11719)],
                 endorsement_reward: [new BigNumber(78125), new BigNumber(52083)],
                 cost_per_byte: new BigNumber(250),
-                hard_storage_limit_per_operation: new BigNumber(32768),
+                hard_storage_limit_per_operation: new BigNumber(60000),
                 quorum_min: 2000,
                 quorum_max: 7000,
                 min_proposal_quorum: 500,
@@ -495,7 +495,9 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                 liquidity_baking_escape_ema_threshold: 100000,
                 max_allowed_global_constants_depth: 10000,
                 max_micheline_bytes_limit: 50000,
-                max_micheline_node_count: 50000
+                max_micheline_node_count: 50000,
+                michelson_maximum_type_size: 2001,
+                cache_layout:[new BigNumber(100000000)]
             });
 
             done();
