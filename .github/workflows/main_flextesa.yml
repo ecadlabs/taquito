@@ -31,12 +31,12 @@ jobs:
     - run: rm -rf ~/.tezos_client/
     - run: docker run --rm --name flextesa_sandbox_${{ env.UUID }} --network github_runner --detach  tqtezos/flextesa:20210602 flobox start   
     - run: sudo apt install ca-certificates && sudo add-apt-repository -yu ppa:serokell/tezos && sudo apt-get install -y tezos-client
-    - run: tezos-client -A flextesa_sandbox_${{ env.UUID }} -P 20002 import secret key alice unencrypted:edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq --force
-    - run: tezos-client -A flextesa_sandbox_${{ env.UUID }} -P ${{ env.FLEXTESA_PORT_TWO }} import secret key bob unencrypted:edsk3RFfvaFaxbHx8BMtEW1rKQcPtDML3LXjNqMNLCzC3wLC1bWbAt --force    
-    - run: tezos-client -A flextesa_sandbox_${{ env.UUID }} -P ${{ env.FLEXTESA_PORT_TWO }} transfer 1990000 from bob to tz1Rb18fBaZxkzDgFGAbcBZzxLCYdxyLryVX --burn-cap 0.06425
-    - run: tezos-client -A flextesa_sandbox_${{ env.UUID }} -P ${{ env.FLEXTESA_PORT_TWO }} transfer 1700000 from alice to tz1Rb18fBaZxkzDgFGAbcBZzxLCYdxyLryVX --burn-cap 0.06425
-    - run: tezos-client -A flextesa_sandbox_${{ env.UUID }} -P ${{ env.FLEXTESA_PORT_TWO }} transfer 100000 from alice to tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys --burn-cap 0.06425
-    - run: tezos-client -A flextesa_sandbox_${{ env.UUID }} -P ${{ env.FLEXTESA_PORT_TWO }} transfer 100000 from alice to tz1ioFRium9QWhYeu49zoAw2Z4HYCHRgrF9f --burn-cap 0.06425  
+    - run: tezos-client -A flextesa_sandbox_${{ env.UUID }} -P 20000 import secret key alice unencrypted:edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq --force
+    - run: tezos-client -A flextesa_sandbox_${{ env.UUID }} -P 20000 import secret key bob unencrypted:edsk3RFfvaFaxbHx8BMtEW1rKQcPtDML3LXjNqMNLCzC3wLC1bWbAt --force    
+    - run: tezos-client -A flextesa_sandbox_${{ env.UUID }} -P 20000 transfer 1990000 from bob to tz1Rb18fBaZxkzDgFGAbcBZzxLCYdxyLryVX --burn-cap 0.06425
+    - run: tezos-client -A flextesa_sandbox_${{ env.UUID }} -P 20000 transfer 1700000 from alice to tz1Rb18fBaZxkzDgFGAbcBZzxLCYdxyLryVX --burn-cap 0.06425
+    - run: tezos-client -A flextesa_sandbox_${{ env.UUID }} -P 20000 transfer 100000 from alice to tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys --burn-cap 0.06425
+    - run: tezos-client -A flextesa_sandbox_${{ env.UUID }} -P 20000 transfer 100000 from alice to tz1ioFRium9QWhYeu49zoAw2Z4HYCHRgrF9f --burn-cap 0.06425  
     - uses: actions/checkout@v2
       with:
         repository: kjaiswal/tezos-key-gen-api
