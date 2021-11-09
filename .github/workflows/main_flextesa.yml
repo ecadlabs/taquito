@@ -31,69 +31,69 @@ jobs:
     - run: rm -rf ~/.tezos_client/
     - run: docker run --rm --name flextesa_sandbox_${{ env.UUID }} --network github_runner --detach  tqtezos/flextesa:20210602 flobox start   
     - run: sudo apt install ca-certificates && sudo add-apt-repository -yu ppa:serokell/tezos && sudo apt-get install -y tezos-client
-    - run: tezos-client -E http://flextesa_sandbox_${{ env.UUID }} import secret key alice unencrypted:edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq --force
-    - run: tezos-client -E http://flextesa_sandbox_${{ env.UUID }} import secret key bob unencrypted:edsk3RFfvaFaxbHx8BMtEW1rKQcPtDML3LXjNqMNLCzC3wLC1bWbAt --force    
-    - run: tezos-client -E http://flextesa_sandbox_${{ env.UUID }} transfer 1990000 from bob to tz1Rb18fBaZxkzDgFGAbcBZzxLCYdxyLryVX --burn-cap 0.06425
-    # - run: tezos-client -E flextesa_sandbox_${{ env.UUID }} transfer 1700000 from alice to tz1Rb18fBaZxkzDgFGAbcBZzxLCYdxyLryVX --burn-cap 0.06425
-    # - run: tezos-client -E flextesa_sandbox_${{ env.UUID }} transfer 100000 from alice to tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys --burn-cap 0.06425
-    # - run: tezos-client -E flextesa_sandbox_${{ env.UUID }} transfer 100000 from alice to tz1ioFRium9QWhYeu49zoAw2Z4HYCHRgrF9f --burn-cap 0.06425  
-    # - uses: actions/checkout@v2
-    #   with:
-    #     repository: kjaiswal/tezos-key-gen-api
-    #     ref: 457-flextesa-support-kunal
-    #     path: keygen_${{ env.UUID }}
-    # - run: cd keygen_${{ env.UUID }} && sed -i 's/macmini/flextesa_sandbox_${{ env.UUID }}/g' pools-config.single.json
-    # - run: cd keygen_${{ env.UUID }} && sed -i 's/keygen_signatory_1/keygen_${{ env.UUID }}_signatory_1/g' pools-config.single.json
-    # - run: cd keygen_${{ env.UUID }} && sed -i 's/6379/6380/g' docker-compose.yml && sed -i 's/6732/6733/g' docker-compose.yml
-    #   if: ${{endsWith(env.RUNNER_NAME, '-2')}}
-    # - run: cd keygen_${{ env.UUID }} && sed -i 's/20000/20001/g' pools-config.single.json && sed -i 's/6732/6733/g' pools-config.single.json
-    #   if: ${{endsWith(env.RUNNER_NAME, '-2')}}
-    # - run: cd keygen_${{ env.UUID }} && docker-compose up &
-    #   env:
-    #     REDIS_HOST: keygen_${{ env.UUID }}_redis_1
-    #     REDIS_PORT: 6379
-    #   if: ${{endsWith(env.RUNNER_NAME, '-1')}}    
-    # - run: cd keygen_${{ env.UUID }} && docker-compose up &
-    #   env:
-    #     REDIS_HOST: keygen_${{ env.UUID }}_redis_1
-    #     REDIS_PORT: 6380
-    #   if: ${{endsWith(env.RUNNER_NAME, '-2')}}    
-    # - run: cd keygen_${{ env.UUID }} && npm ci
-    # - run: cd keygen_${{ env.UUID }} && npm run build
-    # - run: cd keygen_${{ env.UUID }} && npm run start > keygen_${{ env.UUID }}_log.log 2>&1 &
-    #   env:
-    #     REDIS_HOST: keygen_${{ env.UUID }}_redis_1
-    #     REDIS_PORT: 6379
-    #   if: ${{endsWith(env.RUNNER_NAME, '-1')}}    
-    # - run: cd keygen_${{ env.UUID }} && npm run start > keygen_${{ env.UUID }}_log.log 2>&1 &
-    #   env:
-    #     REDIS_HOST: keygen_${{ env.UUID }}_redis_1
-    #     REDIS_PORT: 6380
-    #   if: ${{endsWith(env.RUNNER_NAME, '-2')}}    
-    # - run: "curl --location --request POST 'http://${{ env.RUNNER_NAME }}:3000/flextesanet' --header 'Authorization: Bearer taquito-example'"
-    # - run: "curl --location --request POST 'http://${{ env.RUNNER_NAME }}:3000/flextesanet/ephemeral' --header 'Authorization: Bearer taquito-example'" 
-    # - run: cd taquito_${{ env.UUID }}/flextesa-setup/ && npm run setup:deploy-flextesa-contracts
-    #   env:
-    #     TEZOS_RPC_SANDBOX: 'http://flextesa_sandbox_${{ env.UUID }}:20000'
-    #   if: ${{endsWith(env.RUNNER_NAME, '-1')}}
-    # - run: cd taquito_${{ env.UUID }}/flextesa-setup/ && npm run setup:deploy-flextesa-contracts
-    #   env:
-    #     TEZOS_RPC_SANDBOX: 'http://flextesa_sandbox_${{ env.UUID }}:20001'
-    #   if: ${{endsWith(env.RUNNER_NAME, '-2')}}
-    # - run: cd taquito_${{ env.UUID }}/integration-tests/ && sed -i 's/runner_name/${{ env.RUNNER_NAME }}/g' config.ts
-    # - run: cd taquito_${{ env.UUID }}/integration-tests && npm run test:sandbox -- --maxWorkers=8
-    #   env:
-    #     CI: true
-    #     TEZOS_RPC_SANDBOX: 'http://flextesa_sandbox_${{ env.UUID }}:20000'
-    #     SANDBOX_RUNNER: 'http://${{ env.RUNNER_NAME }}:3000/flextesanet'
-    #   if: ${{endsWith(env.RUNNER_NAME, '-1')}}
-    # - run: cd taquito_${{ env.UUID }}/integration-tests && npm run test:sandbox -- --maxWorkers=8
-    #   env:
-    #     CI: true
-    #     TEZOS_RPC_SANDBOX: 'http://flextesa_sandbox_${{ env.UUID }}:20001'
-    #     SANDBOX_RUNNER: 'http://${{ env.RUNNER_NAME }}:3000/flextesanet'
-    #   if: ${{endsWith(env.RUNNER_NAME, '-2')}}
-    # - run: docker rm -f flextesa_sandbox_${{ env.UUID }} keygen_${{ env.UUID }}_redis_1 keygen_${{ env.UUID }}_signatory_1
-    #   if: always()
-    # - run: rm -rf  keygen_${{ env.UUID }} taquito_${{ env.UUID }}
-    #   if: always()
+    - run: tezos-client -A flextesa_sandbox_${{ env.UUID }} -P 20002 import secret key alice unencrypted:edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq --force
+    - run: tezos-client -A flextesa_sandbox_${{ env.UUID }} -P ${{ env.FLEXTESA_PORT_TWO }} import secret key bob unencrypted:edsk3RFfvaFaxbHx8BMtEW1rKQcPtDML3LXjNqMNLCzC3wLC1bWbAt --force    
+    - run: tezos-client -A flextesa_sandbox_${{ env.UUID }} -P ${{ env.FLEXTESA_PORT_TWO }} transfer 1990000 from bob to tz1Rb18fBaZxkzDgFGAbcBZzxLCYdxyLryVX --burn-cap 0.06425
+    - run: tezos-client -A flextesa_sandbox_${{ env.UUID }} -P ${{ env.FLEXTESA_PORT_TWO }} transfer 1700000 from alice to tz1Rb18fBaZxkzDgFGAbcBZzxLCYdxyLryVX --burn-cap 0.06425
+    - run: tezos-client -A flextesa_sandbox_${{ env.UUID }} -P ${{ env.FLEXTESA_PORT_TWO }} transfer 100000 from alice to tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys --burn-cap 0.06425
+    - run: tezos-client -A flextesa_sandbox_${{ env.UUID }} -P ${{ env.FLEXTESA_PORT_TWO }} transfer 100000 from alice to tz1ioFRium9QWhYeu49zoAw2Z4HYCHRgrF9f --burn-cap 0.06425  
+    - uses: actions/checkout@v2
+      with:
+        repository: kjaiswal/tezos-key-gen-api
+        ref: 457-flextesa-support-kunal
+        path: keygen_${{ env.UUID }}
+    - run: cd keygen_${{ env.UUID }} && sed -i 's/macmini/flextesa_sandbox_${{ env.UUID }}/g' pools-config.single.json
+    - run: cd keygen_${{ env.UUID }} && sed -i 's/keygen_signatory_1/keygen_${{ env.UUID }}_signatory_1/g' pools-config.single.json
+    - run: cd keygen_${{ env.UUID }} && sed -i 's/6379/6380/g' docker-compose.yml && sed -i 's/6732/6733/g' docker-compose.yml
+      if: ${{endsWith(env.RUNNER_NAME, '-2')}}
+    - run: cd keygen_${{ env.UUID }} && sed -i 's/20000/20001/g' pools-config.single.json && sed -i 's/6732/6733/g' pools-config.single.json
+      if: ${{endsWith(env.RUNNER_NAME, '-2')}}
+    - run: cd keygen_${{ env.UUID }} && docker-compose up &
+      env:
+        REDIS_HOST: keygen_${{ env.UUID }}_redis_1
+        REDIS_PORT: 6379
+      if: ${{endsWith(env.RUNNER_NAME, '-1')}}    
+    - run: cd keygen_${{ env.UUID }} && docker-compose up &
+      env:
+        REDIS_HOST: keygen_${{ env.UUID }}_redis_1
+        REDIS_PORT: 6380
+      if: ${{endsWith(env.RUNNER_NAME, '-2')}}    
+    - run: cd keygen_${{ env.UUID }} && npm ci
+    - run: cd keygen_${{ env.UUID }} && npm run build
+    - run: cd keygen_${{ env.UUID }} && npm run start > keygen_${{ env.UUID }}_log.log 2>&1 &
+      env:
+        REDIS_HOST: keygen_${{ env.UUID }}_redis_1
+        REDIS_PORT: 6379
+      if: ${{endsWith(env.RUNNER_NAME, '-1')}}    
+    - run: cd keygen_${{ env.UUID }} && npm run start > keygen_${{ env.UUID }}_log.log 2>&1 &
+      env:
+        REDIS_HOST: keygen_${{ env.UUID }}_redis_1
+        REDIS_PORT: 6380
+      if: ${{endsWith(env.RUNNER_NAME, '-2')}}    
+    - run: "curl --location --request POST 'http://${{ env.RUNNER_NAME }}:3000/flextesanet' --header 'Authorization: Bearer taquito-example'"
+    - run: "curl --location --request POST 'http://${{ env.RUNNER_NAME }}:3000/flextesanet/ephemeral' --header 'Authorization: Bearer taquito-example'" 
+    - run: cd taquito_${{ env.UUID }}/flextesa-setup/ && npm run setup:deploy-flextesa-contracts
+      env:
+        TEZOS_RPC_SANDBOX: 'http://flextesa_sandbox_${{ env.UUID }}:20000'
+      if: ${{endsWith(env.RUNNER_NAME, '-1')}}
+    - run: cd taquito_${{ env.UUID }}/flextesa-setup/ && npm run setup:deploy-flextesa-contracts
+      env:
+        TEZOS_RPC_SANDBOX: 'http://flextesa_sandbox_${{ env.UUID }}:20001'
+      if: ${{endsWith(env.RUNNER_NAME, '-2')}}
+    - run: cd taquito_${{ env.UUID }}/integration-tests/ && sed -i 's/runner_name/${{ env.RUNNER_NAME }}/g' config.ts
+    - run: cd taquito_${{ env.UUID }}/integration-tests && npm run test:sandbox -- --maxWorkers=8
+      env:
+        CI: true
+        TEZOS_RPC_SANDBOX: 'http://flextesa_sandbox_${{ env.UUID }}:20000'
+        SANDBOX_RUNNER: 'http://${{ env.RUNNER_NAME }}:3000/flextesanet'
+      if: ${{endsWith(env.RUNNER_NAME, '-1')}}
+    - run: cd taquito_${{ env.UUID }}/integration-tests && npm run test:sandbox -- --maxWorkers=8
+      env:
+        CI: true
+        TEZOS_RPC_SANDBOX: 'http://flextesa_sandbox_${{ env.UUID }}:20001'
+        SANDBOX_RUNNER: 'http://${{ env.RUNNER_NAME }}:3000/flextesanet'
+      if: ${{endsWith(env.RUNNER_NAME, '-2')}}
+    - run: docker rm -f flextesa_sandbox_${{ env.UUID }} keygen_${{ env.UUID }}_redis_1 keygen_${{ env.UUID }}_signatory_1
+      if: always()
+    - run: rm -rf  keygen_${{ env.UUID }} taquito_${{ env.UUID }}
+      if: always()
