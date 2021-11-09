@@ -22,7 +22,8 @@ import { tokenBigmapCode, tokenBigmapStorage } from './data/token_big_map';
 import { noAnnotCode, noAnnotInit } from './data/token_without_annotations';
 import { voteInitSample, voteSample } from './data/vote_contract';
 import { chestCode, chestStorage } from './data/contract_with_chest';
-import { storageContractWithConstant, codeContractWithConstant } from './data/contract_with_constant'
+import { storageContractWithConstant, codeContractWithConstant } from './data/contract_with_constant';
+import { codeViewsTopLevel, storageViewsTopLevel } from './data/contract_views_top_level';
 
 function extractOp (startIndex: number, endIndex: number) {
   const result = [];
@@ -909,6 +910,27 @@ export const hangzhouCases: TestCase[] = [
           script: {
             code: codeContractWithConstant,
             storage:storageContractWithConstant,
+          },
+        },
+      ],
+    },
+  },
+  {
+    name: 'Origination of a contract that contains top level views',
+    operation: {
+      branch: 'BKyBAx2JDtoFLjcv6tUZTBPDxjcA22JMxqCzFPGBWU4FmTX3uoD',
+      contents: [
+        {
+          kind: 'origination',
+          counter: '8642842',
+          source: 'tz2J1jtUzAj4CdYKCh78ubARBiotbGKceXfb',
+          fee: '1104',
+          gas_limit: '1565',
+          storage_limit: '872',
+          balance: '0',
+          script: {
+            code: codeViewsTopLevel,
+            storage: storageViewsTopLevel,
           },
         },
       ],

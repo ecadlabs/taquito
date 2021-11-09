@@ -1,0 +1,11 @@
+# Attempt to use `PUSH sapling_state 0` where 0 is the ID of a sapling state.
+# sapling_state is not allowed in the instruction PUSH.
+parameter unit;
+storage unit;
+code { DROP;
+       PUSH (sapling_state 8) 0;
+       DROP;
+       PUSH unit Unit;
+       NIL operation;
+       PAIR;
+     }

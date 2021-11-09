@@ -34,7 +34,7 @@ export class MichelsonError<T extends Expr = Expr> extends Error {
     }
 }
 
-export function isMichelsonError<T extends Expr = Expr>(err: any): err is MichelsonError<T> {
+export function isMichelsonError<T extends Expr = Expr>(err: unknown): err is MichelsonError<T> {
     return err instanceof MichelsonError;
 }
 
@@ -75,7 +75,7 @@ export class LongInteger {
         }
         if (typeof arg === "string") {
             for (let i = 0; i < arg.length; i++) {
-                let c = arg.charCodeAt(i);
+                const c = arg.charCodeAt(i);
                 if (i === 0 && c === 0x2d) {
                     this.neg = true;
                 } else {
@@ -173,7 +173,7 @@ export interface UnpackAnnotationsOptions {
     emptyFields?: boolean;
 }
 
-const annRe = /^(@%|@%%|%@|[@:%]([_0-9a-zA-Z][_0-9a-zA-Z\.%@]*)?)$/;
+const annRe = /^(@%|@%%|%@|[@:%]([_0-9a-zA-Z][_0-9a-zA-Z.%@]*)?)$/;
 
 export function unpackAnnotations(p: Prim | Expr[], opt?: UnpackAnnotationsOptions): UnpackedAnnotations {
     if (Array.isArray(p)) {
@@ -194,24 +194,24 @@ export function unpackAnnotations(p: Prim | Expr[], opt?: UnpackAnnotationsOptio
                 }
 
                 switch (v[0]) {
-                    case "%":
-                        if (opt?.emptyFields || v.length > 1) {
-                            field = field || [];
-                            field.push(v);
-                        }
-                        break;
-                    case ":":
-                        if (v.length > 1) {
-                            type = type || [];
-                            type.push(v);
-                        }
-                        break;
-                    case "@":
-                        if (opt?.emptyVar || v.length > 1) {
-                            vars = vars || [];
-                            vars.push(v);
-                        }
-                        break;
+                case "%":
+                    if (opt?.emptyFields || v.length > 1) {
+                        field = field || [];
+                        field.push(v);
+                    }
+                    break;
+                case ":":
+                    if (v.length > 1) {
+                        type = type || [];
+                        type.push(v);
+                    }
+                    break;
+                case "@":
+                    if (opt?.emptyVar || v.length > 1) {
+                        vars = vars || [];
+                        vars.push(v);
+                    }
+                    break;
                 }
             }
         }
@@ -220,12 +220,12 @@ export function unpackAnnotations(p: Prim | Expr[], opt?: UnpackAnnotationsOptio
 }
 
 export type TezosIDType = "BlockHash" | "OperationHash" | "OperationListHash" | "OperationListListHash" |
-    "ProtocolHash" | "ContextHash" | "ED25519PublicKeyHash" | "SECP256K1PublicKeyHash" |
-    "P256PublicKeyHash" | "ContractHash" | "CryptoboxPublicKeyHash" | "ED25519Seed" |
-    "ED25519PublicKey" | "SECP256K1SecretKey" | "P256SecretKey" | "ED25519EncryptedSeed" |
-    "SECP256K1EncryptedSecretKey" | "P256EncryptedSecretKey" | "SECP256K1PublicKey" |
-    "P256PublicKey" | "SECP256K1Scalar" | "SECP256K1Element" | "ED25519SecretKey" |
-    "ED25519Signature" | "SECP256K1Signature" | "P256Signature" | "GenericSignature" | "ChainID";
+"ProtocolHash" | "ContextHash" | "ED25519PublicKeyHash" | "SECP256K1PublicKeyHash" |
+"P256PublicKeyHash" | "ContractHash" | "CryptoboxPublicKeyHash" | "ED25519Seed" |
+"ED25519PublicKey" | "SECP256K1SecretKey" | "P256SecretKey" | "ED25519EncryptedSeed" |
+"SECP256K1EncryptedSecretKey" | "P256EncryptedSecretKey" | "SECP256K1PublicKey" |
+"P256PublicKey" | "SECP256K1Scalar" | "SECP256K1Element" | "ED25519SecretKey" |
+"ED25519Signature" | "SECP256K1Signature" | "P256Signature" | "GenericSignature" | "ChainID";
 
 export type TezosIDPrefix = [number, number[]]; // payload length, prefix
 
