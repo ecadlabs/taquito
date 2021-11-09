@@ -57,7 +57,7 @@ interface FaucetConfig {
 }
 
 const idiazabalnetEphemeral = {
-  rpc: process.env['TEZOS_RPC_IDIAZABALNET'] || 'https://idiazabalnet.ecadinfra.com/',
+  rpc: process.env['TEZOS_RPC_IDIAZABALNET'] || 'https://idiazabalnet.ecadinfra.com',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1QKhea82d31wkTAdZpLzpPTTXuAMqYFMrh',
   knownBigMapContract: 'KT1CNdUVZjWbKQwQkSqZckNKEdCeWvvJiXC7',
@@ -123,7 +123,7 @@ const key = {
 }
 
 const idiazabalnetFaucet = {
-  rpc: process.env['TEZOS_RPC_IDIAZABALNET'] || 'https://idiazabalnet.ecadinfra.com/',
+  rpc: process.env['TEZOS_RPC_IDIAZABALNET'] || 'https://idiazabalnet.ecadinfra.com',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1QKhea82d31wkTAdZpLzpPTTXuAMqYFMrh',
   knownBigMapContract: 'KT1CNdUVZjWbKQwQkSqZckNKEdCeWvvJiXC7',
