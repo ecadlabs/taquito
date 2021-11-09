@@ -56,6 +56,20 @@ interface FaucetConfig {
   faucetKey: {};
 }
 
+const idiazabalnetEphemeral = {
+  rpc: process.env['TEZOS_RPC_IDIAZABALNET'] || 'https://idiazabalnet.ecadinfra.com/',
+  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
+  knownContract: 'KT1QKhea82d31wkTAdZpLzpPTTXuAMqYFMrh',
+  knownBigMapContract: 'KT1CNdUVZjWbKQwQkSqZckNKEdCeWvvJiXC7',
+  knownTzip1216Contract: 'KT19e8k9FjyAyxhA5ByhsRXMXSWb3mEzRqBL',
+  protocol: Protocols.PtIdiaza,
+  signerConfig: {
+    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
+    keyUrl: 'https://api.tez.ie/keys/idiazabalnet',
+    requestHeaders: { 'Authorization': 'Bearer taquito-example' },
+  }
+}
+
 const hangzhounetEphemeral = {
   rpc: process.env['TEZOS_RPC_HANGZHOUNET'] || 'https://hangzhounet.api.tez.ie',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
@@ -106,6 +120,42 @@ const key = {
     "tone"
   ],
   secret: "1e6159006a283a4456bda4f83721afa4bec9ed59"
+}
+
+const idiazabalnetFaucet = {
+  rpc: process.env['TEZOS_RPC_IDIAZABALNET'] || 'https://idiazabalnet.ecadinfra.com/',
+  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
+  knownContract: 'KT1QKhea82d31wkTAdZpLzpPTTXuAMqYFMrh',
+  knownBigMapContract: 'KT1CNdUVZjWbKQwQkSqZckNKEdCeWvvJiXC7',
+  knownTzip1216Contract: 'KT19e8k9FjyAyxhA5ByhsRXMXSWb3mEzRqBL',
+  protocol: Protocols.PtIdiaza,
+  signerConfig: {
+    type: SignerType.FAUCET as SignerType.FAUCET,
+    faucetKey: {
+      "pkh": "tz1S6Y5J1i5JbXQf9eigvrZdghtjCApC8gUG",
+      "mnemonic": [
+        "throw",
+        "rose",
+        "girl",
+        "arrange",
+        "practice",
+        "fiber",
+        "speed",
+        "delay",
+        "economy",
+        "wine",
+        "cable",
+        "copper",
+        "sweet",
+        "bag",
+        "wasp"
+      ],
+      "email": "hxkxykcy.edpwomka@teztnets.xyz",
+      "password": "vzVIvhuItq",
+      "amount": "143524244923",
+      "secret": "c83d1fba98e408bc142b3a9568a27207e5544b99"
+    },
+  }
 }
 
 const hangzhounetFaucet = {
@@ -166,11 +216,17 @@ else if (process.env['RUN_GRANADANET_WITH_FAUCET']) {
 else if (process.env['RUN_HANGZHOUNET_WITH_FAUCET']) {
   providers.push(hangzhounetFaucet)
 }
+else if (process.env['RUN_IDIAZABALNET_WITH_FAUCET']) {
+  providers.push(idiazabalnetFaucet)
+}
 else if (process.env['GRANADANET']) {
   providers.push(granadanetEphemeral)
 }
 else if (process.env['HANGZHOUNET']) {
   providers.push(hangzhounetEphemeral)
+}
+else if (process.env['IDIAZABALNET']) {
+  providers.push(idiazabalnetEphemeral)
 } else {
   providers.push(hangzhounetEphemeral, granadanetEphemeral)
 }
