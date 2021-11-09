@@ -85,8 +85,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
           value: expression1
         });
         await op.confirmation();
-        expect(op.globalAddress).toEqual(constantHash1);
-
+        expect(op.globalConstantHash).toEqual(constantHash1);
       } catch (ex: any) {
         // If the expression 1 is already registered, the operation fails
         // We can not register the same constant multiple time
@@ -99,7 +98,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
           value: expression2
         });
         await op2.confirmation();
-        expect(op2.globalAddress).toEqual(constantHash2);
+        expect(op2.globalConstantHash).toEqual(constantHash2);
       } catch (ex: any) {
         expect(ex.message).toMatch(/context.storage_error/);
       }
