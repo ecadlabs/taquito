@@ -9,6 +9,7 @@
         "batch_API",
         "confirmation_event_stream",
         "set_delegate",
+        "dapp_prelaunch",
         "estimate",
         "fa2_parameters",
         "lambda_view",
@@ -28,6 +29,7 @@
         "metadata-tzip16",
         "validators",
         "wallet_API",
+        "wallets",
         "web3js_taquito"
       ]
     },

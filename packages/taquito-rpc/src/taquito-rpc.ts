@@ -417,6 +417,7 @@ export class RpcClient implements RpcClientInterface {
       'delay_per_missing_endorsement',
       'minimal_block_delay',
       'liquidity_baking_subsidy',
+      'cache_layout'
     ]);
 
     return {
