@@ -8,7 +8,7 @@ import { b58cencode, char2Bytes, Prefix, prefix } from '@taquito/utils';
 
 const { exec } = require("child_process");
 const nodeCrypto = require('crypto');
-const provider = process.env['TEZOS_RPC_SANDBOX'] || 'http://macmini:20000';
+const provider = process.env['TEZOS_RPC_SANDBOX'] || 'http://localhost:8732';
 
 async function createAddress() {
   const tezos = new TezosToolkit(provider)
