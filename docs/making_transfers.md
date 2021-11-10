@@ -46,7 +46,7 @@ fetch('https://api.tez.ie/keys/hangzhounet/', {
     render(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
   })
-  .then((hash) => render(`Operation injected: https://hangzhounet.tzstats.com/${hash}`))
+  .then((hash) => render(`Operation injected: https://hangzhou.tzstats.com/${hash}`))
   .catch((error) => render(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 

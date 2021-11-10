@@ -47,8 +47,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       await op.confirmation()
       const contract = await op.contract();
-      
-      console.log("lambda_view #1 contract address: "+ contract.address)
 
       const getTotalSupply = await contract.views.getTotalSupply([['Unit']]).read();
       expect(getTotalSupply.toString()).toEqual('100');
@@ -144,7 +142,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       await op.confirmation()
       const contract = await op.contract();
-      console.log("lambda_view #2 contract address: "+ contract.address)
 
       const balance_of = await contract.views.balance_of([{ owner: 'tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1', token_id: '0' }]).read();
       expect(toJSON(balance_of)).toEqual([{

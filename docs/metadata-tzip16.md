@@ -180,7 +180,7 @@ Tezos.contract.at(contractAddress, tzip16)
 
 A sequence diagram can be found [here](./tzip16-sequence-diagram#execute-a-view).
 
-In the next example, we will run a view named `someJson` that can be found in the metadata of the contract `KT1LhUqpUGfxZaJFMrxAZ6WNAuM8FPjDLBcE`. When we inspect those metadata, we can see that this view takes no parameter, has a returnType of bytes and has the following code:
+In the next example, we will run a view named `someJson` that can be found in the metadata of the contract `KT1Vms3NQK8rCQJ6JkimLFtAC9NhpAq9vLqE`. When we inspect those metadata, we can see that this view takes no parameter, has a returnType of bytes and has the following code:
 
 ```
 "code": 
@@ -232,7 +232,7 @@ Tezos.contract.at(contractAddress, tzip16)
 .catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
-In the next example, we will run a view named `multiply-the-nat-in-storage` that can be found in the metadata of the contract `KT1GqWXHeeJHEHVPcqJYfKDuHkdpkJevjeAc`. When we inspect those metadata, we can see that this view takes a `nat` has a parameter, has a returnType of `nat` and has the following instructions: `DUP, CDR, CAR, SWAP, CAR, MUL`.
+In the next example, we will run a view named `multiply-the-nat-in-storage` that can be found in the metadata of the contract `KT19rDkTYg1355Wp1XM5Q23CxuLgRnA3SiGq`. When we inspect those metadata, we can see that this view takes a `nat` has a parameter, has a returnType of `nat` and has the following instructions: `DUP, CDR, CAR, SWAP, CAR, MUL`.
 
 Try to run the view:
 
