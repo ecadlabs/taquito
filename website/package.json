@@ -15,7 +15,7 @@
     "@docusaurus/theme-live-codeblock": "2.0.0-alpha.70",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
-    "@fortawesome/react-fontawesome": "^0.1.15",
+    "@fortawesome/react-fontawesome": "^0.1.16",
     "@ledgerhq/hw-transport-u2f": "^5.28.0",
     "@taquito/beacon-wallet": "11.0.0-beta-RC.0",
     "@taquito/http-utils": "11.0.0-beta-RC.0",
