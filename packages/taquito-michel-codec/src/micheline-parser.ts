@@ -20,7 +20,7 @@ export class JSONParseError extends Error {
      * @param node A node caused the error
      * @param message An error message
      */
-    constructor(public node: any, message?: string) {
+    constructor(public node: unknown, message?: string) {
         super(message);
         Object.setPrototypeOf(this, JSONParseError.prototype);
     }
@@ -33,11 +33,11 @@ export interface GlobalConstantHashAndValue {
 const errEOF = new MichelineParseError(null, 'Unexpected EOF');
 
 function isAnnotation(tok: Token): boolean {
-    return tok.t === Literal.Ident && (tok.v[0] === '@' || tok.v[0] === '%' || tok.v[0] === ':');
+    return tok.t === Literal.Ident && (tok.v[0] === "@" || tok.v[0] === "%" || tok.v[0] === ":");
 }
 
-const intRe = new RegExp('^-?[0-9]+$');
-const bytesRe = new RegExp('^([0-9a-fA-F]{2})*$');
+const intRe = new RegExp("^-?[0-9]+$");
+const bytesRe = new RegExp("^([0-9a-fA-F]{2})*$");
 
 export interface ParserOptions extends ProtocolOptions {
     /**
@@ -136,9 +136,9 @@ export class Parser {
                     throw errEOF;
                 }
                 break;
-            } else if (tok.value.t === ')') {
+            } else if (tok.value.t === ")") {
                 if (!expectBracket) {
-                    throw new MichelineParseError(tok.value, `unexpected closing bracket`);
+                    throw new MichelineParseError(tok.value, "unexpected closing bracket");
                 }
                 ref.last = tok.value.last;
                 break;
@@ -169,7 +169,7 @@ export class Parser {
 
         for (; ;) {
             const t = scanner.next();
-            if (t.done || t.value.t === '}' || t.value.t === ';') {
+            if (t.done || t.value.t === "}" || t.value.t === ";") {
                 return [p, t];
             }
 
@@ -214,7 +214,7 @@ export class Parser {
 
             if (tok.value.t === "}") {
                 if (!expectBracket) {
-                    throw new MichelineParseError(tok.value, `unexpected closing bracket`);
+                    throw new MichelineParseError(tok.value, "unexpected closing bracket");
                 } else {
                     return seq;
                 }
@@ -246,23 +246,23 @@ export class Parser {
 
     private parseExpr(scanner: Iterator<Token>, tok: Token): Expr {
         switch (tok.t) {
-            case Literal.Ident:
-                return this.expand({ prim: tok.v, [sourceReference]: { first: tok.first, last: tok.last } });
+        case Literal.Ident:
+            return this.expand({ prim: tok.v, [sourceReference]: { first: tok.first, last: tok.last } });
 
-            case Literal.Number:
-                return { int: tok.v, [sourceReference]: { first: tok.first, last: tok.last } };
+        case Literal.Number:
+            return { int: tok.v, [sourceReference]: { first: tok.first, last: tok.last } };
 
-            case Literal.String:
-                return { string: JSON.parse(tok.v) as string, [sourceReference]: { first: tok.first, last: tok.last } };
+        case Literal.String:
+            return { string: JSON.parse(tok.v) as string, [sourceReference]: { first: tok.first, last: tok.last } };
 
-            case Literal.Bytes:
-                return { bytes: tok.v.slice(2), [sourceReference]: { first: tok.first, last: tok.last } };
+        case Literal.Bytes:
+            return { bytes: tok.v.slice(2), [sourceReference]: { first: tok.first, last: tok.last } };
 
-            case '{':
-                return this.parseSequenceExpr(scanner, tok);
+        case "{":
+            return this.parseSequenceExpr(scanner, tok);
 
-            default:
-                return this.parseListExpr(scanner, tok);
+        default:
+            return this.parseListExpr(scanner, tok);
         }
     }
 
@@ -354,17 +354,17 @@ export class Parser {
         if (Array.isArray(src)) {
             const ret: Expr[] = [];
             for (const n of src) {
-                if (n === null || typeof n !== 'object') {
+                if (n === null || typeof n !== "object") {
                     throw new JSONParseError(n, `unexpected sequence element: ${n}`);
                 }
                 ret.push(this.parseJSON(n));
             }
             return ret;
 
-        } else if ('prim' in src) {
-            const p = src as { prim: any, annots?: any[], args?: any[] };
+        } else if ("prim" in src) {
+            const p = src as { prim: unknown, annots?: unknown[], args?: unknown[] };
             if (
-                typeof p.prim === 'string' &&
+                typeof p.prim === "string" &&
                 (p.annots === undefined || Array.isArray(p.annots)) &&
                 (p.args === undefined || Array.isArray(p.args))
             ) {
@@ -374,7 +374,7 @@ export class Parser {
 
                 if (p.annots !== undefined) {
                     for (const a of p.annots) {
-                        if (typeof a !== 'string') {
+                        if (typeof a !== "string") {
                             throw new JSONParseError(a, `string expected: ${a}`);
                         }
                     }
@@ -384,7 +384,7 @@ export class Parser {
                 if (p.args !== undefined) {
                     ret.args = [];
                     for (const a of p.args) {
-                        if (a === null || typeof a !== 'object') {
+                        if (a === null || typeof a !== "object") {
                             throw new JSONParseError(a, `unexpected argument: ${a}`);
                         }
                         ret.args.push(this.parseJSON(a));
@@ -395,21 +395,21 @@ export class Parser {
             }
 
             throw new JSONParseError(src, `malformed prim expression: ${src}`);
-        } else if ('string' in src) {
-            if (typeof (src as any).string === 'string') {
+        } else if ("string" in src) {
+            if (typeof (src as StringLiteral).string === "string") {
                 return { string: (src as StringLiteral).string };
             }
 
             throw new JSONParseError(src, `malformed string literal: ${src}`);
-        } else if ('int' in src) {
-            if (typeof (src as any).int === 'string' && intRe.test((src as IntLiteral).int)) {
+        } else if ("int" in src) {
+            if (typeof (src as IntLiteral).int === "string" && intRe.test((src as IntLiteral).int)) {
                 return { int: (src as IntLiteral).int };
             }
 
             throw new JSONParseError(src, `malformed int literal: ${src}`);
-        } else if ('bytes' in src) {
+        } else if ("bytes" in src) {
             if (
-                typeof (src as any).bytes === 'string' &&
+                typeof (src as BytesLiteral).bytes === "string" &&
                 bytesRe.test((src as BytesLiteral).bytes)
             ) {
                 return { bytes: (src as BytesLiteral).bytes };

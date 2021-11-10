@@ -1,0 +1,3 @@
+parameter (pair nat address) ;
+storage bool;
+code { CAR ; UNPAIR ; VIEW "add" bool; IF_SOME { DROP ; PUSH bool True} { PUSH bool False }; NIL operation ; PAIR } ;

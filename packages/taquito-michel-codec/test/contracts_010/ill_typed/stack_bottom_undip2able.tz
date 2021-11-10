@@ -1,0 +1,6 @@
+parameter unit;
+storage unit;
+code {
+       DUP;
+       DIP 2 { DUP };
+     }

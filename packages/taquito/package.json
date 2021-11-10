@@ -1,6 +1,6 @@
 {
   "name": "@taquito/taquito",
-  "version": "10.2.0",
+  "version": "11.0.0-beta-RC.0",
   "description": "High level functionality that builds upon the other packages in the Tezos Typescript Library Suite.",
   "keywords": [
     "tezos",
@@ -78,11 +78,11 @@
     ]
   },
   "dependencies": {
-    "@taquito/http-utils": "^10.2.0",
-    "@taquito/michel-codec": "^10.2.0",
-    "@taquito/michelson-encoder": "^10.2.0",
-    "@taquito/rpc": "^10.2.0",
-    "@taquito/utils": "^10.2.0",
+    "@taquito/http-utils": "^11.0.0-beta-RC.0",
+    "@taquito/michel-codec": "^11.0.0-beta-RC.0",
+    "@taquito/michelson-encoder": "^11.0.0-beta-RC.0",
+    "@taquito/rpc": "^11.0.0-beta-RC.0",
+    "@taquito/utils": "^11.0.0-beta-RC.0",
     "bignumber.js": "^9.0.1",
     "rx-sandbox": "^1.0.4",
     "rxjs": "^6.6.3"
@@ -118,7 +118,7 @@
     "ts-node": "^10.0.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-standard": "^9.0.0",
-    "typescript": "^4.1.5",
+    "typescript": "~4.1.5",
     "webpack": "^4.44.2",
     "webpack-assets-manifest": "^3.1.1",
     "webpack-cli": "^3.3.12",

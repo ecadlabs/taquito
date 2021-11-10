@@ -162,7 +162,7 @@ export function validateSignature(value: any): ValidationResult {
    * @example
    * ```
    * import { validatePublicKey } from '@taquito/utils';
-   * const publicKey = 'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg'
+   * const publicKey = 'edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g'
    * const validation = validatePublicKey(publicKey)
    * console.log(validation)
    * // This example return 3 which correspond to VALID
