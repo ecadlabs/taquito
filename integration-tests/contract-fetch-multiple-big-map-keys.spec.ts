@@ -32,7 +32,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 }
             });
             const contract = await op.contract();
-            console.log("contractAddress : "+ contract.address);
             
             interface StorageType {
                 0: BigMapAbstraction,
