@@ -47,6 +47,11 @@ const USERS = [
     link: 'https://www.nomadic-labs.com/',
   },
   {
+    caption: 'Blockwatch',
+    image: '/img/bw-logo-white.png',
+    link: 'https://blockwatch.cc/blog/tag/tezos/'
+  },
+  {
     caption: 'Cryptoverse Wars',
     image: '/img/cryptoverse_wars.png',
     link: 'https://cryptocodeschool.in/tezos/',
