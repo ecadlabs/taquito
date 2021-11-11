@@ -10,6 +10,7 @@ One of these needs might be the ability to cancel HTTP requests to optimize the 
 Here is an example in which we can click the `cancel` button during an estimation call to abort all requests. It will throw an exception.
 
 ```js live noInline abort
+a security check test
 const amount = 2;
 const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
 
