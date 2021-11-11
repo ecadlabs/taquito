@@ -2,17 +2,11 @@ name: "CodeQL"
 
 on:
   push:
-    branches: [master, ]
-  pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [master]
-  schedule:
-    - cron: '0 14 * * 1'
 
 jobs:
   analyse:
     name: Analyse
-    runs-on: ubuntu-latest
+    runs-on: ecad-taquito
 
     steps:
     - name: Checkout repository
