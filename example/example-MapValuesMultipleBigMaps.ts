@@ -2,9 +2,9 @@ import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
 import { tokenCode } from '../integration-tests/data/tokens';
 
-const provider = 'https://granadanet.api.tez.ie';
+const provider = 'https://hangzhounet.api.tez.ie';
 
-async function example() {
+async function exampleMapValueMultipleBigMaps(): Promise<void> {
   const tezos = new TezosToolkit(provider)
   await importKey(
     tezos,
@@ -65,4 +65,4 @@ async function example() {
 }
 
 // tslint:disable-next-line: no-floating-promises
-example();
+exampleMapValueMultipleBigMaps();

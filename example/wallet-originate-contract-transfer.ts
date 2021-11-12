@@ -1,9 +1,9 @@
 import { TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
 
-const provider = 'https://granadanet.api.tez.ie';
+const provider = 'https://hangzhounet.api.tez.ie';
 
-async function example() {
+async function exampleWalletOriginateContractTransfer() {
   const tezos = new TezosToolkit(provider);
   await importKey(
     tezos,
@@ -74,4 +74,4 @@ async function example() {
   }
 }
 
-example();
+exampleWalletOriginateContractTransfer();

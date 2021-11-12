@@ -34,7 +34,7 @@ type SigPrefix = Prefix.EDSIG | Prefix.SPSIG | Prefix.P2SIG | Prefix.SIG;
  * ```
  *
  */
-export async function verifySignature(messageBytes: string, publicKey: string, signature: string): Promise<boolean> {
+async function verifySignature(messageBytes: string, publicKey: string, signature: string): Promise<boolean> {
     await sodium.ready;
 
     const pkPrefix = validatePkAndExtractPrefix(publicKey);

@@ -11,7 +11,7 @@ import { TezosToolkit } from '@taquito/taquito';
  * @param mnemonic Faucet mnemonic
  * @param secret Faucet secret
  */
-export async function importKey(
+async function importKey(
   toolkit: TezosToolkit,
   privateKeyOrEmail: string,
   passphrase?: string,

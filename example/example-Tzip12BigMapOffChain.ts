@@ -19,7 +19,7 @@ async function createAddress() {
   return tezos;
 }
 
-async function example() {
+async function exampleTZip12BigMapOffChain() {
   const tezos = new TezosToolkit(provider)
   await importKey(
     tezos,
@@ -129,4 +129,4 @@ async function example() {
 }
 
 // tslint:disable-next-line: no-floating-promises
-example();
+exampleTZip12BigMapOffChain();

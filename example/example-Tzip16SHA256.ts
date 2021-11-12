@@ -3,9 +3,9 @@ import { importKey } from '@taquito/signer';
 import { tacoContractTzip16 } from "../integration-tests/data/modified-taco-contract"
 import { char2Bytes } from '@taquito/utils';
 
-const provider = 'https://granadanet.api.tez.ie';
+const provider = 'https://hangzhounet.api.tez.ie';
 
-async function example() {
+async function exampleTzip16SHA256() {
   const tezos = new TezosToolkit(provider)
   await importKey(
     tezos,
@@ -70,4 +70,4 @@ async function example() {
 }
 
 // tslint:disable-next-line: no-floating-promises
-example();
+exampleTzip16SHA256();

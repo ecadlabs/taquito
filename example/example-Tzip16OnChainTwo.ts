@@ -3,9 +3,9 @@ import { importKey } from '@taquito/signer';
 import { contractCode, metadataViewsExample2 } from '../integration-tests/data/metadataViews';
 import { char2Bytes } from '@taquito/utils';
 
-const provider = 'https://granadanet.api.tez.ie';
+const provider = 'https://hangzhounet.api.tez.ie';
 
-async function example() {
+async function exampleTzip16OnChainTwo() {
   const tezos = new TezosToolkit(provider)
   await importKey(
     tezos,
@@ -60,4 +60,4 @@ async function example() {
 }
 
 // tslint:disable-next-line: no-floating-promises
-example();
+exampleTzip16OnChainTwo();
