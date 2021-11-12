@@ -57,7 +57,7 @@ jobs:
     - run: cd integration-tests && npm run test:idiazabalnet-faucet
       env:
         CI: true
-        TEZOS_RPC_IDIAZABALNET: 'https://idiazabalnet.ecadinfra.com'
+        TEZOS_RPC_IDIAZABALNET: 'http://ecad-idiazabalnet-full.i.tez.ie:8732'
 
   integration-tests-idiazabalnet:
     runs-on: ecad-taquito
@@ -81,4 +81,4 @@ jobs:
     - run: cd integration-tests && npm run test:idiazabalnet -- --maxWorkers=8
       env:
         CI: true
-        TEZOS_RPC_IDIAZABALNET: 'https://idiazabalnet.ecadinfra.com'
+        TEZOS_RPC_IDIAZABALNET: 'http://ecad-idiazabalnet-full.i.tez.ie:8732'
