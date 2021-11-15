@@ -791,11 +791,11 @@ export interface ConstantsResponseCommon {
   hard_storage_limit_per_operation: BigNumber;
 }
 
-export interface ConstantsResponseProto011
-  extends Omit<ConstantsResponseProto010, 'michelson_maximum_type_size'> {
+export interface ConstantsResponseProto011 extends ConstantsResponseProto010 {
   max_micheline_node_count?: number;
   max_allowed_global_constants_depth?: number;
   max_micheline_bytes_limit?: number;
+  cache_layout?: BigNumber[];
 }
 export interface ConstantsResponseProto010 extends ConstantsResponseProto007 {
   minimal_block_delay?: BigNumber;

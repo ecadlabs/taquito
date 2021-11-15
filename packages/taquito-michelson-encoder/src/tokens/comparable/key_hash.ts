@@ -19,7 +19,7 @@ export class KeyHashToken extends ComparableToken {
     super(val, idx, fac);
   }
 
-  public Execute(val: { bytes: string; string: string }): string {
+  public Execute(val: { bytes: string; string: string }) {
     if (val.string) {
       return val.string;
     }
@@ -74,4 +74,12 @@ export class KeyHashToken extends ComparableToken {
       type: { prim: KeyHashToken.prim },
     };
   }
+
+  findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
+    if (KeyHashToken.prim === tokenToFind) {
+      tokens.push(this);
+    }
+    return tokens;
+  };
+
 }

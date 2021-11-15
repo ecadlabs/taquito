@@ -5,7 +5,7 @@ const crypto = require('crypto');
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const hangzhounet = protocol === Protocols.PtHangzH ? test : test.skip;
+  const hangzhounet = protocol === Protocols.PtHangz2 ? test : test.skip;
 
   describe(`Register global constants using: ${rpc}`, () => {
     const randomAnnots = () => crypto.randomBytes(3).toString('hex');
@@ -59,16 +59,47 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
     );
 
     hangzhounet('registers a global constant and deploy a contract with the constant', async (done) => {
-      const constantAddress = 'expruu5BTdW7ajqJ9XPTF3kgcV78pRiaBW3Gq31mgp3WSYjjUBYxre';
+      const expression1 = { "prim": "int" }
+      const constantHash1 = 'expruu5BTdW7ajqJ9XPTF3kgcV78pRiaBW3Gq31mgp3WSYjjUBYxre';
+
+      const expression2 = {
+        "prim": "IF_LEFT",
+        "args":
+          [[{
+            "prim": "IF_LEFT",
+            "args":
+              [[{ "prim": "SWAP" }, { "prim": "SUB" }],
+              [{ "prim": "ADD" }]]
+          }],
+          [{ "prim": "DROP", "args": [{ "int": "2" }] },
+          {
+            "prim": "PUSH",
+            "args": [{ "prim": "int" }, { "int": "0" }]
+          }]]
+      };
+      const constantHash2 = 'expruLxwnPPDw8ZNu9oX51oWGUkRnuGrvqxrvN5W4eYZxRBQShmbLe'
 
       try {
+        // try to register the expression 1
         const op = await Tezos.contract.registerGlobalConstant({
-          value: { "prim":"int" }
+          value: expression1
         });
         await op.confirmation();
-        expect(op.globalAddress).toEqual(constantAddress);
+        expect(op.globalConstantHash).toEqual(constantHash1);
       } catch (ex: any) {
+        // If the expression 1 is already registered, the operation fails
         // We can not register the same constant multiple time
+        expect(ex.message).toMatch(/context.storage_error/);
+      }
+
+      try {
+        // try to register the expression 2
+        const op2 = await Tezos.contract.registerGlobalConstant({
+          value: expression2
+        });
+        await op2.confirmation();
+        expect(op2.globalConstantHash).toEqual(constantHash2);
+      } catch (ex: any) {
         expect(ex.message).toMatch(/context.storage_error/);
       }
 
@@ -92,7 +123,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
               }
             ]
           },
-          { prim: 'storage', args: [{ prim: 'constant', args: [{ string: `${constantAddress}` }] }] },
+          { prim: 'storage', args: [{ prim: 'constant', args: [{ string: constantHash1 }] }] },
           {
             prim: 'code',
             args: [
@@ -100,7 +131,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                 { prim: 'UNPAIR' },
                 {
                   prim: 'constant',
-                  args: [{ string: 'expruLxwnPPDw8ZNu9oX51oWGUkRnuGrvqxrvN5W4eYZxRBQShmbLe' }]
+                  args: [{ string: constantHash2 }]
                 },
                 { prim: 'NIL', args: [{ prim: 'operation' }] },
                 { prim: 'PAIR' }

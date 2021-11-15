@@ -92,4 +92,12 @@ export class AddressToken extends ComparableToken {
       return super.compare(address1, address2);
     }
   }
+
+  findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
+    if (AddressToken.prim === tokenToFind) {
+      tokens.push(this);
+    }
+    return tokens;
+  };
+
 }

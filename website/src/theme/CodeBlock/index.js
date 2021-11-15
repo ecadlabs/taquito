@@ -7,6 +7,7 @@
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { TezosToolkit, MichelsonMap, compose, DEFAULT_FEE } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
+import { verifySignature } from '@taquito/utils';
 import { 
   validateAddress, 
   validateChain, 
@@ -115,7 +116,8 @@ export default ({
           compose,
           Schema,
           ParameterSchema,
-          DEFAULT_FEE
+          DEFAULT_FEE,
+          verifySignature
          }}
         code={children.trim()}
         theme={prism.theme || defaultTheme}

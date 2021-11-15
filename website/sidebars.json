@@ -9,12 +9,14 @@
         "batch_API",
         "confirmation_event_stream",
         "set_delegate",
+        "dapp_prelaunch",
         "estimate",
         "fa2_parameters",
         "lambda_view",
         "maps_bigmaps",
         "michelsonmap",
         "originate",
+        "global_constant",
         "rpc_nodes",
         "rpc_package",
         "signing",
@@ -34,17 +36,17 @@
     },
     {
       "type": "category",
-      "label": "Packages",
-      "items": ["michelson_encoder", "contracts-library"]
-    },
-    {
-      "type": "category",
       "label": "Signer",
       "items": ["inmemory_signer", "tezbridge_signer", "ledger_signer"]
     },
     {
       "type": "category",
-      "label": "Advanced",
+      "label": "Packages",
+      "items": ["michelson_encoder", "contracts-library"]
+    },
+    {
+      "type": "category",
+      "label": "Advanced Examples",
       "items": ["complex_parameters", "storage_annotations", "drain_account"]
     },
     {

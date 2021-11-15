@@ -59,10 +59,10 @@ interface FaucetConfig {
 const hangzhounetEphemeral = {
   rpc: process.env['TEZOS_RPC_HANGZHOUNET'] || 'https://hangzhounet.api.tez.ie',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1QJcNitf3wTfcnWAW8qKHEc7Z8duq83pZe',
-  knownBigMapContract: 'KT1GaKdvTeQ9RDErHCU1cKD9mJaaRZxjycnX',
-  knownTzip1216Contract: 'KT1TcMiEqu9a3zULJwkhLzbngBzUX7JruNU5',
-  protocol: Protocols.PtHangzH,
+  knownContract: 'KT1XfoRSZ88ioYHbuEKqHxJPawm9Rqc54uoy',
+  knownBigMapContract: 'KT1CnRSbp71FU8nz4xNEkcaASgMQDjNN85jd',
+  knownTzip1216Contract: 'KT1KquwVmLtq9StwCK46vpwRCxowqhcoV4g1',
+  protocol: Protocols.PtHangz2,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'https://api.tez.ie/keys/hangzhounet',
@@ -111,33 +111,33 @@ const key = {
 const hangzhounetFaucet = {
   rpc: process.env['TEZOS_RPC_HANGZHOUNET'] || 'https://hangzhounet.api.tez.ie',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1QJcNitf3wTfcnWAW8qKHEc7Z8duq83pZe',
-  knownBigMapContract: 'KT1GaKdvTeQ9RDErHCU1cKD9mJaaRZxjycnX',
-  knownTzip1216Contract: 'KT1TcMiEqu9a3zULJwkhLzbngBzUX7JruNU5',
-  protocol: Protocols.PtHangzH,
+  knownContract: 'KT1XfoRSZ88ioYHbuEKqHxJPawm9Rqc54uoy',
+  knownBigMapContract: 'KT1CnRSbp71FU8nz4xNEkcaASgMQDjNN85jd',
+  knownTzip1216Contract: 'KT1KquwVmLtq9StwCK46vpwRCxowqhcoV4g1',
+  protocol: Protocols.PtHangz2,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
     faucetKey: {
       "mnemonic": [
-        "accident",
-        "toss",
-        "exchange",
-        "employ",
-        "climb",
-        "pull",
-        "vault",
-        "skill",
-        "submit",
-        "width",
-        "pupil",
-        "apple",
-        "upset",
-        "movie",
-        "glass"
+        "hero",
+        "calm",
+        "fever",
+        "defense",
+        "sound",
+        "amount",
+        "critic",
+        "quote",
+        "finger",
+        "strong",
+        "face",
+        "magnet",
+        "promote",
+        "opinion",
+        "flash"
       ],
-      "email": "xlgkgjyb.raaskmfk@teztnets.xyz",
-      "password": "GOhL2PMP4M",
-      "secret": "b5950975ef9d2e63ca8e935e5c8e2e8830af15b5"
+      "email": "xzuhshlh.ehwpsgne@teztnets.xyz",
+      "password": "aWMyUsXNia",
+      "secret": "dea0160b4d432daf03be1f00424f04bdb9d776a9"
     },
   }
 }

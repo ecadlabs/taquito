@@ -1,4 +1,4 @@
-import { ComparableToken, TokenFactory, TokenValidationError } from './token';
+import { ComparableToken, Token, TokenFactory, TokenValidationError } from './token';
 import { encodeKey, validatePublicKey, ValidationResult, Prefix, b58cdecode, prefix } from '@taquito/utils';
 
 const publicKeyPrefixLength = 4;
@@ -21,7 +21,7 @@ export class KeyToken extends ComparableToken {
     super(val, idx, fac);
   }
 
-  public Execute(val: { bytes: string; string: string }): string {
+  public Execute(val: { bytes: string; string: string }) {
     if (val.string) {
       return val.string;
     }
@@ -102,4 +102,12 @@ export class KeyToken extends ComparableToken {
   private getP256PublicKeyComparableBytes(p2pk: string) {
     return b58cdecode(p2pk, prefix[Prefix.P2PK]).slice(1);
   }
+
+  findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
+    if (KeyToken.prim === tokenToFind) {
+      tokens.push(this);
+    }
+    return tokens;
+  };
+
 }
