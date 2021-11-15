@@ -94,7 +94,7 @@ export const commonCases: TestCase[] = [
       ],
     },
   },
-  {
+/*   {
     name: 'Endorsement',
     operation: {
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
@@ -105,7 +105,7 @@ export const commonCases: TestCase[] = [
         },
       ],
     },
-  },
+  }, */
   {
     name: 'Seed nonce revelation',
     operation: {
