@@ -84,7 +84,6 @@
     "@taquito/rpc": "^11.0.0-beta-RC.0",
     "@taquito/utils": "^11.0.0-beta-RC.0",
     "bignumber.js": "^9.0.1",
-    "rx-sandbox": "^1.0.4",
     "rxjs": "^6.6.3"
   },
   "devDependencies": {
@@ -122,7 +121,8 @@
     "webpack": "^4.44.2",
     "webpack-assets-manifest": "^3.1.1",
     "webpack-cli": "^3.3.12",
-    "webpack-subresource-integrity": "^1.4.1"
+    "webpack-subresource-integrity": "^1.4.1",
+    "rx-sandbox": "^1.0.4"
   },
   "gitHead": "551e35aeff7d6dcde1c7228npm install4238c0ed3c3aae77e"
 }
