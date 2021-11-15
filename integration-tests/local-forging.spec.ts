@@ -5,7 +5,7 @@ import { Protocols, TezosToolkit } from "@taquito/taquito";
 
 CONFIGS().forEach(({ rpc, protocol }) => {
     const Tezos = new TezosToolkit(rpc);
-    const hangzhou = (protocol === Protocols.PtHangz2) ? test : test.skip;
+    const hangzhounetOrHigher = (protocol === Protocols.PtHangz2 || protocol === Protocols.PtIdiaza) ? test : test.skip;
 
     describe(`Test local forger: ${rpc}`, () => {
 
@@ -22,7 +22,7 @@ CONFIGS().forEach(({ rpc, protocol }) => {
 
         hangzhouCases.forEach(({ name, operation, expected }) => {
 
-            hangzhou(`Should give the same result as when forging with the rpc: ${name} (${rpc})`, async done => {
+            hangzhounetOrHigher(`Should give the same result as when forging with the rpc: ${name} (${rpc})`, async done => {
                 const result = await localForger.forge(operation);
                 const rpcResult = await Tezos.rpc.forgeOperations(operation);
                 expect(result).toEqual(rpcResult);
