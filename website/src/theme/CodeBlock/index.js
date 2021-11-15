@@ -7,7 +7,7 @@
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { TezosToolkit, MichelsonMap, compose, DEFAULT_FEE } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
-import { verifySignature } from '@taquito/remote-signer';
+import { verifySignature } from '@taquito/utils';
 import { 
   validateAddress, 
   validateChain, 

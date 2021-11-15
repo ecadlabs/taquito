@@ -119,25 +119,25 @@ const hangzhounetFaucet = {
     type: SignerType.FAUCET as SignerType.FAUCET,
     faucetKey: {
       "mnemonic": [
-        "accident",
-        "toss",
-        "exchange",
-        "employ",
-        "climb",
-        "pull",
-        "vault",
-        "skill",
-        "submit",
-        "width",
-        "pupil",
-        "apple",
-        "upset",
-        "movie",
-        "glass"
+        "hero",
+        "calm",
+        "fever",
+        "defense",
+        "sound",
+        "amount",
+        "critic",
+        "quote",
+        "finger",
+        "strong",
+        "face",
+        "magnet",
+        "promote",
+        "opinion",
+        "flash"
       ],
-      "email": "xlgkgjyb.raaskmfk@teztnets.xyz",
-      "password": "GOhL2PMP4M",
-      "secret": "b5950975ef9d2e63ca8e935e5c8e2e8830af15b5"
+      "email": "xzuhshlh.ehwpsgne@teztnets.xyz",
+      "password": "aWMyUsXNia",
+      "secret": "dea0160b4d432daf03be1f00424f04bdb9d776a9"
     },
   }
 }

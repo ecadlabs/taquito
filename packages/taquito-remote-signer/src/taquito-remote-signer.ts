@@ -11,14 +11,13 @@ import {
   isValidPrefix,
   mergebuf,
   prefix,
+  verifySignature
 } from '@taquito/utils';
 import sodium from 'libsodium-wrappers';
 import toBuffer from 'typedarray-to-buffer';
 import { BadSigningDataError, KeyNotFoundError, OperationNotAuthorizedError } from './errors';
 import { Signer } from '@taquito/taquito';
-import { verifySignature } from './utils';
 
-export { verifySignature } from './utils';
 interface PublicKeyResponse {
   public_key: string;
 }
@@ -122,7 +121,7 @@ export class RemoteSigner implements Signer {
 
       const pk = await this.publicKey();
       await this.verifyPublicKey(pk);
-      const signatureVerified = await verifySignature(watermarkedBytes, pk, signature);
+      const signatureVerified = verifySignature(watermarkedBytes, pk, signature);
       if (!signatureVerified) {
         throw new Error(
           `Signature failed verification against public key:
