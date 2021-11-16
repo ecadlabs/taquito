@@ -725,7 +725,6 @@ describe('RpcContractProvider test', () => {
 
   describe('originate', () => {
     it('should produce a reveal and origination operation', async (done) => {
-      mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo' });
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       const result = await rpcContractProvider.originate({
         delegate: 'test_delegate',
@@ -758,7 +757,7 @@ describe('RpcContractProvider test', () => {
               storage_limit: '257',
             },
           ],
-          protocol: 'PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo',
+          protocol: 'test_proto',
           signature: 'test_sig',
         },
         opbytes: 'test',
@@ -767,7 +766,6 @@ describe('RpcContractProvider test', () => {
     });
 
     it('should not convert balance to mutez when mutez flag is set to true', async (done) => {
-      mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo' });
       const result = await rpcContractProvider.originate({
         delegate: 'test_delegate',
         balance: '200',
@@ -800,7 +798,7 @@ describe('RpcContractProvider test', () => {
               storage_limit: '257',
             },
           ],
-          protocol: 'PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo',
+          protocol: 'test_proto',
           signature: 'test_sig',
         },
         opbytes: 'test',
@@ -809,7 +807,6 @@ describe('RpcContractProvider test', () => {
     });
 
     it('estimate when no fees are specified', async (done) => {
-      mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo' });
       const estimate = new Estimate(1000, 1000, 180, 1000);
       mockEstimate.originate.mockResolvedValue(estimate);
 
@@ -841,7 +838,7 @@ describe('RpcContractProvider test', () => {
               storage_limit: estimate.storageLimit.toString(),
             },
           ],
-          protocol: 'PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo',
+          protocol: 'test_proto',
           signature: 'test_sig',
         },
         opbytes: 'test',

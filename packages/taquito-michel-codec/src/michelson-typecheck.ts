@@ -8,8 +8,7 @@ import {
     refContract,
     MichelsonTypeAddress,
     ProtoGreaterOfEqual,
-    MichelsonContractView,
-    ProtoInferiorTo
+    MichelsonContractView
 } from "./michelson-types";
 import {
     unpackAnnotations, MichelsonError, isNatural,
@@ -960,7 +959,7 @@ function functionTypeInternal(inst: MichelsonCode, stack: MichelsonType[], ctx: 
         case "FAILWITH":
         {
             const s = args(0, null)[0];
-            if(!ProtoInferiorTo(proto, Protocol.PtEdo2Zk)){
+            if (ProtoGreaterOfEqual(proto, Protocol.PtEdo2Zk)) {
                 ensurePackableType(s);
             }
             return { failed: s };
