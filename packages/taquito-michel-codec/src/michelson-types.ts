@@ -237,6 +237,10 @@ export function ProtoGreaterOfEqual(a: ProtocolID, b: ProtocolID): boolean {
     return protoLevel[a] >= protoLevel[b];
 }
 
+export function ProtoInferiorTo(a: ProtocolID, b: ProtocolID): boolean {
+    return protoLevel[a] < protoLevel[b];
+}
+
 export interface ProtocolOptions {
     protocol?: ProtocolID;
 }
