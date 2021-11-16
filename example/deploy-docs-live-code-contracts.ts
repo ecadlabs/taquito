@@ -7,7 +7,7 @@
 ///   with the desired chain (e.g. hangzhou) to match the originated scripts with their locations in the Docs.
 ///   The script will also produce a json file of contracts to use in the code examples in taquito/examples
 ///   Execute this script from the ~/taquito/example dir with
-///    node -r ts-node/register ~/taquito/example/deploy-docs-live-code-contracts.ts
+///    node -r ts-node/register deploy-docs-live-code-contracts.ts
 
 import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
 import { InMemorySigner } from '@taquito/signer';
@@ -83,29 +83,28 @@ async function originateTheContracts() {
   checkBalances();
 
   console.log('originating...');
-   tslint:disable-next-line: no-floating-promises
-   contract_catalogue.set('IncrementContract', await originateIncrementContract());
-   contract_catalogue.set('LambdaViewOne', await originateLambda1());
-   contract_catalogue.set('LambdaViewTwo', await originateLambda2());
-   contract_catalogue.set('BigMapPairasMap', await originateBigMapsPairasMapKeys());
+  contract_catalogue.set('IncrementContract', await originateIncrementContract());
+  contract_catalogue.set('LambdaViewOne', await originateLambda1());
+  contract_catalogue.set('LambdaViewTwo', await originateLambda2());
+  contract_catalogue.set('BigMapPairasMap', await originateBigMapsPairasMapKeys());
   contract_catalogue.set('BigMapValuesComplexKeys', await originateBigMapsComplexKeys());
   contract_catalogue.set('BigMapInitialStorage', await originateBigMapsInitialStorage());
-   contract_catalogue.set('BigMapsMultipleValues', await originateMapValueMultipleBigMaps());
-   contract_catalogue.set(
-     'SmartContractComplexStorage',
-     await originateSmartContractComplexStorage()
-   );
-   contract_catalogue.set('Tzip12BigMapOffChain', await originateTZip12BigMapOffChain());
-   contract_catalogue.set('Tzip16Storage', await originateTzip16Storage());
-   contract_catalogue.set('Tzip16HTTPS', await originateTzip16Https());
-   contract_catalogue.set('Tzip16SHA256', await originateTzip16SHA256());
-   contract_catalogue.set('Tzip16IPFS', await originateTzip16IPFS());
-   contract_catalogue.set('Tzip16OffChainOne', await originateTzip16OnChainOne());
-   contract_catalogue.set('Tzip16OffChainTwo', await originateTzip16OnChainTwo());
-   contract_catalogue.set('WalletContract', await originateWalletOriginateContractTransfer());
-   contract_catalogue.set('WalletAreYouThereContract', await originateWalletOriginateAreYouThere());
-   contract_catalogue.set('TokenContract', await originateTokenContract());
-   contract_catalogue.set('BigMapPackContract', await originateBigMapPackContract());
+  contract_catalogue.set('BigMapsMultipleValues', await originateMapValueMultipleBigMaps());
+  contract_catalogue.set(
+    'SmartContractComplexStorage',
+    await originateSmartContractComplexStorage()
+  );
+  contract_catalogue.set('Tzip12BigMapOffChain', await originateTZip12BigMapOffChain());
+  contract_catalogue.set('Tzip16Storage', await originateTzip16Storage());
+  contract_catalogue.set('Tzip16HTTPS', await originateTzip16Https());
+  contract_catalogue.set('Tzip16SHA256', await originateTzip16SHA256());
+  contract_catalogue.set('Tzip16IPFS', await originateTzip16IPFS());
+  contract_catalogue.set('Tzip16OffChainOne', await originateTzip16OnChainOne());
+  contract_catalogue.set('Tzip16OffChainTwo', await originateTzip16OnChainTwo());
+  contract_catalogue.set('WalletContract', await originateWalletOriginateContractTransfer());
+  contract_catalogue.set('WalletAreYouThereContract', await originateWalletOriginateAreYouThere());
+  contract_catalogue.set('TokenContract', await originateTokenContract());
+  contract_catalogue.set('BigMapPackContract', await originateBigMapPackContract());
 
   json_contract_catalogue();
 
@@ -325,7 +324,7 @@ async function originateBigMapsInitialStorage() {
       },
       20
     );
-    
+
     const storageBigMap = new MichelsonMap();
     storageBigMap.set(
       {
