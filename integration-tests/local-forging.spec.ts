@@ -12,7 +12,6 @@ CONFIGS().forEach(({ rpc, protocol }) => {
         commonCases.forEach(({ name, operation, expected }) => {
 
             it(`Should give the same result as when forging with the rpc: ${name} (${rpc})`, async done => {
-                console.log(name)
                 if(protocol === Protocols.PtIdiaza && name === 'Endorsement') {
                     // skip
                     console.log('Temporarily skip endorsement forging for Idiazabalnet')
