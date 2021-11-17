@@ -155,7 +155,7 @@ Once done, you can pack the data using the `packDataBytes` function available in
 To finish, use one of the methods presented above to sign the packed data (with the `InMemorySigner` like in this example or with the Beacon SDK).
 
 :::caution
-In the previous example, the data are packed locally using the `packDataBytes` function of the `@taquito/michel-codec` package instead of the RPC. Users should be cautious and verify the packed bytes before signing them if they are packed using the RPC. This precaution is to avoid signing unwanted operations in cases where the RPC could be malicious or compromised.
+In the previous example, the data is packed locally in Taquito using the `packDataBytes` function of the `@taquito/michel-codec` package instead of the RPC. You should always verify the packed bytes before signing or requesting that they be signed when using the RPC to pack. This precaution helps protect you and your applications users from RPC nodes that have been compromised. A node that is operated by a bad actor, or compromised by a bad actor could return a fully formed operation that does not correspond to the input provided to the RPC endpoint.
 :::
 
 ## Sending the signature to a smart contract
