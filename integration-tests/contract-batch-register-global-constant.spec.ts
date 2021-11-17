@@ -13,7 +13,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
             done();
         });
 
-        hangzhounet('Batch transfer and register global constant operations', async (done) => {
+        hangzhounet('Verify the contract.batch transfer and register global constant operations', async (done) => {
             const batchOp = await Tezos.contract
                 .batch([
                     { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 },

@@ -8,7 +8,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, signerConfig }) => {
             await setup(true);
             done();
         });
-        it('Batch estimate including reveal', async (done) => {
+        it('Verify the contract.batch estimate when including reveal', async (done) => {
             try {
                 const batchOpEstimate = await Tezos.estimate
                     .batch([
@@ -29,7 +29,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, signerConfig }) => {
             done();
         });
 
-        it('Batch estimate where reveal is not needed', async (done) => {
+        it('Verify the contract.batch estimate where reveal is not needed', async (done) => {
 
             try {
                 // do a reveal operation first
