@@ -801,8 +801,12 @@ export class RpcClient implements RpcClientInterface {
    * @param options contains generic configuration for rpc calls
    *
    * @description Computes the serialized version of a data expression using the same algorithm as script instruction PACK
+   * Note: Users should be cautious if signing data packed with the RPC. They should always verify the packed bytes before signing them. 
+   * This precaution is to avoid signing unwanted operations in cases where the RPC could be malicious or compromised. 
+   * The safest solution to pack and sign data would be to use the `packDataBytes` function available in the `@taquito/michel-codec` package.
    *
    * @example packData({ data: { string: "test" }, type: { prim: "string" } })
+   *
    *
    * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-helpers-scripts-pack-data
    */
