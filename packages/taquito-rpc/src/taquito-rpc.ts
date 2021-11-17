@@ -417,7 +417,12 @@ export class RpcClient implements RpcClientInterface {
       'delay_per_missing_endorsement',
       'minimal_block_delay',
       'liquidity_baking_subsidy',
-      'cache_layout'
+      'cache_layout',
+      'baking_reward_fixed_portion',
+      'baking_reward_bonus_per_slot',
+      'endorsing_reward_per_slot',
+      'round_durations',
+      'double_baking_punishment'
     ]);
 
     return {

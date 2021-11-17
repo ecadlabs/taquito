@@ -3,7 +3,7 @@ import { importKey } from '@taquito/signer';
 import { fa2ForTokenMetadataView } from '../integration-tests/data/fa2-for-token-metadata-view';
 import { b58cencode, char2Bytes, Prefix, prefix } from '@taquito/utils';
 
-const provider = 'https://hangzhounet.api.tez.ie';
+const provider = 'https://idiazabalnet.ecadinfra.com';
 
 const nodeCrypto = require('crypto');
 
@@ -23,26 +23,26 @@ async function example() {
   const tezos = new TezosToolkit(provider)
   await importKey(
     tezos,
-    'dkpiyvzn.dsijlnlh@teztnets.xyz',
-    'R5eBIrotRR',
+    'pqugfnyp.aricovrw@teztnets.xyz',
+    'PwMXISc7HK',
     [
-      "rebuild",
-      "local",
-      "wasp",
-      "quantum",
-      "illegal",
+      "drift",
+      "winner",
+      "prevent",
+      "sorry",
+      "loud",
       "pattern",
-      "write",
-      "torch",
-      "practice",
-      "this",
-      "abuse",
-      "recipe",
-      "door",
-      "diesel",
-      "garment",
+      "easy",
+      "buffalo",
+      "surround",
+      "exist",
+      "accuse",
+      "volume",
+      "loop",
+      "day",
+      "club",
     ].join(' '),
-    '30f062741f625b373ad735cd4bd1049b8a4028fe'
+    '844a986d27f7989859bc82ebce16f293ab0f2da6'
   );
   
   try {
