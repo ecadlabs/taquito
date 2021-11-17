@@ -27,7 +27,7 @@ export enum Protocols {
   PsFLorena = 'PsFLorenaUUuikDWvMDr6fGBRG8kt3e3D3fHoXK1j1BFRxeSH4i',
   PtGRANADs = 'PtGRANADsDU8R9daYKAgWnQYAJ64omN1o3KMGVCykShA97vQbvV',
   PtHangz2 = 'PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx',
-  PtIdiaza = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK'
+  PtIdiaza = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK' // temporary protocol hash
 }
 
 export const protocols = {

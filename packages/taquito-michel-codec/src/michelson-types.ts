@@ -209,7 +209,7 @@ export enum Protocol {
     PtGRANADs = "PtGRANADsDU8R9daYKAgWnQYAJ64omN1o3KMGVCykShA97vQbvV",
     PtHangzH = "PtHangzHogokSuiMHemCuowEavgYTP8J5qQ9fQS793MHYFpCY3r",
     PtHangz2 = "PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx",
-    PtIdiaza = "ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK"
+    PtIdiaza = "ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK" // temporary protocol hash
 }
 
 export const DefaultProtocol = Protocol.PtGRANAD;
