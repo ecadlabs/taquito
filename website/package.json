@@ -20,6 +20,7 @@
     "@taquito/beacon-wallet": "11.0.0-beta-RC.1",
     "@taquito/http-utils": "11.0.0-beta-RC.1",
     "@taquito/ledger-signer": "11.0.0-beta-RC.1",
+    "@taquito/michel-codec": "^11.0.0-beta-RC.1",
     "@taquito/michelson-encoder": "11.0.0-beta-RC.1",
     "@taquito/remote-signer": "11.0.0-beta-RC.1",
     "@taquito/rpc": "11.0.0-beta-RC.1",
