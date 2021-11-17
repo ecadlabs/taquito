@@ -12,13 +12,3 @@ export class BadSigningDataError implements Error {
   public name: string = 'BadSigningData';
   constructor(public message: string, public innerException: any, public readonly data: any) {}
 }
-
-export class InvalidPublicKeyError implements Error {
-  public name: string = 'InvalidPublicKeyError';
-  constructor(public message: string) {}
-}
-
-export class InvalidSignatureError implements Error {
-  public name: string = 'InvalidSignatureError';
-  constructor(public message: string) {}
-}
