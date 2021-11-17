@@ -5,12 +5,12 @@ import { CONFIGS } from './config';
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
 
-    describe(`Test obtain operation hash before sending the operation to the node ${rpc}`, () => {
+    describe(`Tests of obtaining an operation hash before sending the operation to the node ${rpc}`, () => {
         beforeEach(async (done) => {
             await setup(true);
             done();
         });
-        test('Estimates, forges, signs, obtains the operation hash and injects the operation', async (done) => {
+        test('Verify estimation, forging, signing, obtaining the operation hash, and injecting the operation', async (done) => {
             // We deploy a simple contract that will be used in the next steps
             const code = `parameter nat; storage nat; code { CAR ; NIL operation ; PAIR }`;
             const opOrigination = await Tezos.contract.originate({

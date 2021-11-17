@@ -12,7 +12,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        it('Test batch with 150 operations', async (done) => {
+        it('Verify contract.batch with 150 operations', async (done) => {
             const dests: { key: string, pkh: string }[] = [];
             const batchSize = 150;
 

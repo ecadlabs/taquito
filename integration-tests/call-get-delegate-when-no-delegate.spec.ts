@@ -9,7 +9,7 @@ CONFIGS().forEach(({ rpc, setup, createAddress }) => {
       await setup(true)
       done()
     })
-    test('returns null when the account has no delegate', 2, async (done: () => void) => {
+    test('Verify null is returned for getDelegate when the account has no delegate', 2, async (done: () => void) => {
       const LocalTez = await createAddress()
       const signer = await LocalTez.signer.publicKeyHash();
 
