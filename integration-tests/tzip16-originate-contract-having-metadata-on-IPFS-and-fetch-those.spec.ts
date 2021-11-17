@@ -25,7 +25,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         it('Deploy a contract having metadata stored at on IPFS', async (done) => {
 
             // location of the contract metadata
-            const uri = 'ipfs://QmcMUKkhXowQjCPtDVVXyFJd7W9LmC92Gs5kYH1KjEisdj';
+            const uri = 'ipfs://QmXnASUptTDnfhmcoznFqz3S1Mxu7X1zqo2YwbTN3nW52V';
             const bytesUrl = char2Bytes(uri);
 
             const metadataBigMap = new MichelsonMap();
@@ -55,7 +55,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             const contract = await Tezos.contract.at(contractAddress, tzip16);
             const metadata = await contract.tzip16().getMetadata();
 
-            expect(metadata.uri).toEqual('ipfs://QmcMUKkhXowQjCPtDVVXyFJd7W9LmC92Gs5kYH1KjEisdj');
+            expect(metadata.uri).toEqual('ipfs://QmXnASUptTDnfhmcoznFqz3S1Mxu7X1zqo2YwbTN3nW52V');
             expect(metadata.integrityCheckResult).toBeUndefined();
             expect(metadata.sha256Hash).toBeUndefined();
             expect(metadata.metadata).toEqual({
