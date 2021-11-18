@@ -756,6 +756,7 @@ export interface OperationContentsAndResultMetadataOrigination {
 }
 
 export type ConstantsResponse = ConstantsResponseCommon &
+  ConstantsResponseProto012 &
   ConstantsResponseProto011 &
   ConstantsResponseProto010 &
   ConstantsResponseProto009 &
@@ -789,6 +790,38 @@ export interface ConstantsResponseCommon {
   endorsement_reward: BigNumber | BigNumber[]; // BigNumber[] since proto 006, BigNumber before
   cost_per_byte: BigNumber;
   hard_storage_limit_per_operation: BigNumber;
+}
+
+export type Ratio = { numerator: number; denominator: number }
+export interface ConstantsResponseProto012
+	extends Omit<
+			ConstantsResponseProto011,
+			| 'minimal_block_delay'
+			| 'baking_reward_per_endorsement'
+			| 'initial_endorsers'
+			| 'delay_per_missing_endorsement'
+			| 'test_chain_duration'
+			| 'blocks_per_roll_snapshot'
+			| 'time_between_blocks'
+			| 'endorsers_per_block'
+			| 'block_security_deposit'
+			| 'endorsement_security_deposit'
+			| 'endorsement_reward'
+		> {
+	blocks_per_stake_snapshot?: number;
+	baking_reward_fixed_portion?: BigNumber;
+	baking_reward_bonus_per_slot?: BigNumber;
+	endorsing_reward_per_slot?: BigNumber;
+	max_operations_time_to_live?: number;
+	round_durations?: BigNumber[];
+	consensus_committee_size?: number;
+	consensus_threshold?: number;
+	minimal_participation_ratio?: Ratio;
+	max_slashing_period?: number;
+	frozen_deposits_percentage?: number;
+	double_baking_punishment?: BigNumber;
+	ratio_of_frozen_deposits_slashed_per_double_endorsement?: Ratio;
+	delegate_selection?: 'random' | string[][];
 }
 
 export interface ConstantsResponseProto011 extends ConstantsResponseProto010 {

@@ -1,13 +1,14 @@
 import { Protocols } from "@taquito/taquito";
 import { CONFIGS } from "./config";
 import BigNumber from 'bignumber.js';
-import { ConstantsResponseCommon, ConstantsResponseProto009, ConstantsResponseProto010, ConstantsResponseProto011 } from "@taquito/rpc";
+import { ConstantsResponseCommon, ConstantsResponseProto009, ConstantsResponseProto010, ConstantsResponseProto011, ConstantsResponseProto012 } from "@taquito/rpc";
 
 CONFIGS().forEach(({ lib, protocol, rpc }) => {
     const Tezos = lib;
 
     const granadanet = (protocol === Protocols.PtGRANADs) ? test : test.skip;
     const hangzhounet = (protocol === Protocols.PtHangz2) ? test : test.skip;
+    const idiazabalnet = (protocol === Protocols.PtIdiaza) ? test : test.skip;
 
     describe('Fetch constants for all protocols on Mainnet', () => {
 
@@ -497,7 +498,64 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                 max_micheline_bytes_limit: 50000,
                 max_micheline_node_count: 50000,
                 michelson_maximum_type_size: 2001,
-                cache_layout:[new BigNumber(100000000)]
+                cache_layout: [new BigNumber(100000000)]
+            });
+
+            done();
+        })
+
+        idiazabalnet(`succesfully fetches all constants for idiazabalnet using ${rpc}`, async (done) => {
+            Tezos.setRpcProvider(rpc);
+            const constants: ConstantsResponseProto012 & ConstantsResponseCommon = await Tezos.rpc.getConstants();
+
+            expect(constants).toEqual({
+                proof_of_work_nonce_size: 8,
+                nonce_length: 32,
+                max_anon_ops_per_block: 132,
+                max_operation_data_length: 32768,
+                max_proposals_per_delegate: 20,
+                preserved_cycles: 3,
+                blocks_per_cycle: 2048,
+                blocks_per_commitment: 64,
+                blocks_per_voting_period: 40960,
+                hard_gas_limit_per_operation: new BigNumber(1040000),
+                hard_gas_limit_per_block: new BigNumber(5200000),
+                proof_of_work_threshold: new BigNumber(-1),
+                tokens_per_roll: new BigNumber(8000000000),
+                seed_nonce_revelation_tip: new BigNumber(125000),
+                origination_size: 257,
+                cost_per_byte: new BigNumber(1000),
+                hard_storage_limit_per_operation: new BigNumber(60000),
+                quorum_min: 2000,
+                quorum_max: 7000,
+                min_proposal_quorum: 500,
+                liquidity_baking_subsidy: new BigNumber(2500000),
+                liquidity_baking_sunset_level: 525600,
+                liquidity_baking_escape_ema_threshold: 100000,
+                max_allowed_global_constants_depth: 10000,
+                max_micheline_bytes_limit: 50000,
+                max_micheline_node_count: 50000,
+                michelson_maximum_type_size: 2001,
+                cache_layout: [new BigNumber(100000000), new BigNumber(240000), new BigNumber(2560)],
+                blocks_per_stake_snapshot: 512,
+                baking_reward_fixed_portion: new BigNumber(10000000),
+                baking_reward_bonus_per_slot: new BigNumber(4286),
+                endorsing_reward_per_slot: new BigNumber(2857),
+                max_operations_time_to_live: 120,
+                round_durations: [new BigNumber(30), new BigNumber(45)],
+                consensus_committee_size: 7000,
+                consensus_threshold: 4667,
+                minimal_participation_ratio: {
+                    denominator: 3,
+                    numerator: 2,
+                },
+                max_slashing_period: 2,
+                frozen_deposits_percentage: 10,
+                double_baking_punishment: new BigNumber(640000000),
+                ratio_of_frozen_deposits_slashed_per_double_endorsement: {
+                    denominator: 2,
+                    numerator: 1,
+                }
             });
 
             done();

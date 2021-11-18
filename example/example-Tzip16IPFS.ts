@@ -34,7 +34,7 @@ async function example() {
   try {
     console.log('Deploying Tzip16IPFS contract...');
      // location of the contract metadata
-     const uri = 'ipfs://QmcMUKkhXowQjCPtDVVXyFJd7W9LmC92Gs5kYH1KjEisdj';
+     const uri = 'ipfs://QmXnASUptTDnfhmcoznFqz3S1Mxu7X1zqo2YwbTN3nW52V';
      const bytesUrl = char2Bytes(uri);
 
      const metadataBigMap = new MichelsonMap();
