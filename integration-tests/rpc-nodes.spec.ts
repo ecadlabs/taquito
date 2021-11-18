@@ -1,11 +1,13 @@
 import { CONFIGS } from './config';
-import { RpcClient } from '@taquito/rpc';
+import { RpcClientCache, RpcClient } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_bigmap';
+import { Protocols } from '@taquito/taquito';
 
 CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup, protocol, rpc }) => {
     const Tezos = lib;
+    const skipIdiazabalnet = protocol === Protocols.PtIdiaza ? test.skip : test;
 
     beforeEach(async (done) => {
         await setup();
@@ -19,7 +21,7 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
     rpcList.forEach(async (rpc) => {
         Tezos.setRpcProvider(rpc);
 
-        const rpcClient: RpcClient = new RpcClient(rpc);
+        const rpcClient = new RpcClientCache(new RpcClient(rpc));
 
         describe(`Test calling all methods from RPC node: ${rpc}`, () => {
             it('Get the head block hash', async (done) => {
@@ -52,6 +54,12 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
                 done();
             });
 
+            it(`Access the script of the contract and normalize it using the requested unparsing mode`, async (done) => {
+                const script = await rpcClient.getNormalizedScript(knownContract);
+                expect(script).toBeDefined();
+                done();
+            });
+
             it(`Access the complete status of a contract`, async (done) => {
                 const contract = await rpcClient.getContract(knownContract);
                 expect(contract).toBeDefined();
@@ -64,7 +72,7 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
                 done();
             });
 
-            it(`Access the delegate of a contract`, async (done) => {
+            skipIdiazabalnet(`Access the delegate of a contract`, async (done) => {
                 const delegate = await rpcClient.getDelegate(knownBaker);
                 expect(delegate).toBeDefined();
                 done();
@@ -100,7 +108,7 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
                 done();
             });
 
-            it(`Fetches information about a delegate from RPC`, async (done) => {
+            skipIdiazabalnet(`Fetches information about a delegate from RPC`, async (done) => {
                 const delegates = await rpcClient.getDelegates(knownBaker);
                 expect(delegates).toBeDefined();
                 done();
@@ -213,7 +221,7 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
             it('Inject an operation in node and broadcast it', async (done) => {
                 try {
                     const injectedOperation = await rpcClient.injectOperation('operation');
-                } catch (ex) {
+                } catch (ex: any) {
                     expect(ex.message).toMatch('Invalid_argument "Hex.to_char: 112 is an invalid char');
                 }
                 done();
@@ -227,7 +235,7 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
                             {
                                 kind: 'origination',
                                 counter: '1',
-                                source: 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
+                                source: await Tezos.signer.publicKeyHash(),
                                 fee: '10000',
                                 gas_limit: '10',
                                 storage_limit: '10',
@@ -244,7 +252,7 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
                     };
 
                     await rpcClient.preapplyOperations([operation]);
-                } catch (ex) {
+                } catch (ex: any) {
                     expect(ex.message).toMatch('contract.counter_in_the_past');
                 }
                 done();
@@ -272,7 +280,7 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
                                 {
                                     kind: 'origination',
                                     counter: '1',
-                                    source: 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
+                                    source: await Tezos.signer.publicKeyHash(),
                                     fee: '10000',
                                     gas_limit: '10',
                                     storage_limit: '10',
@@ -289,9 +297,15 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
                     };
 
                     await rpcClient.runOperation(operation);
-                } catch (ex) {
+                } catch (ex: any) {
                     expect(ex.message).toMatch('contract.counter_in_the_past');
                 }
+                done();
+            });
+
+            it('getSuccessorPeriod', async (done) => {
+                const successorPeriod = await rpcClient.getSuccessorPeriod();
+                expect(successorPeriod).toBeDefined();
                 done();
             });
         });

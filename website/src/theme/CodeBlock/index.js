@@ -7,6 +7,7 @@
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { TezosToolkit, MichelsonMap, compose, DEFAULT_FEE } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
+import { verifySignature } from '@taquito/utils';
 import { 
   validateAddress, 
   validateChain, 
@@ -25,6 +26,7 @@ import { TezBridgeWallet } from '@taquito/tezbridge-wallet';
 import { Tzip16Module, tzip16, bytes2Char, MichelsonStorageView } from '@taquito/tzip16'
 import { Tzip12Module, tzip12 } from "@taquito/tzip12";
 import { Schema, ParameterSchema } from "@taquito/michelson-encoder";
+import { Parser, packDataBytes, MichelsonData, MichelsonType } from '@taquito/michel-codec';
 import { ThanosWallet } from '@thanos-wallet/dapp';
 import TransportU2F from "@ledgerhq/hw-transport-u2f";
 import Playground from '@theme/Playground';
@@ -80,7 +82,7 @@ export default ({
   }, [button.current, target.current]);
 
   if (live) {
-    const customRpcClient = new CancellableRpcClient('https://granadanet.api.tez.ie') 
+    const customRpcClient = new CancellableRpcClient('https://hangzhounet.api.tez.ie') 
     const Tezos = new TezosToolkit(customRpcClient);
 
     return (
@@ -115,7 +117,12 @@ export default ({
           compose,
           Schema,
           ParameterSchema,
-          DEFAULT_FEE
+          DEFAULT_FEE,
+          verifySignature,
+          Parser, 
+          packDataBytes, 
+          MichelsonData, 
+          MichelsonType
          }}
         code={children.trim()}
         theme={prism.theme || defaultTheme}

@@ -65,4 +65,12 @@ export class Bls12381frToken extends Token {
   public ExtractSchema() {
     return Bls12381frToken.prim;
   }
+
+  findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
+    if (Bls12381frToken.prim === tokenToFind) {
+      tokens.push(this);
+    }
+    return tokens;
+  };
+
 }

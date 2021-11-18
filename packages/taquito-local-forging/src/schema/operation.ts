@@ -74,6 +74,15 @@ export const ProposalsSchema = {
   proposals: 'proposalArr',
 };
 
+export const RegisterGlobalConstantSchema = {
+  source: 'pkh',
+  fee: 'zarith',
+  counter: 'zarith',
+  gas_limit: 'zarith',
+  storage_limit: 'zarith',
+  value: 'value',
+}
+
 export const operationEncoder = (encoders: { [key: string]: (val: {}) => string }) => (operation: {
   kind: string;
 }) => {

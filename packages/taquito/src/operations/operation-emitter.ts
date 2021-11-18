@@ -3,7 +3,7 @@ import {
   OperationContents,
   OperationContentsAndResult,
   OpKind,
-  RpcClient,
+  RpcClientInterface,
   RPCRunOperationParam,
 } from '@taquito/rpc';
 import { Protocols } from '../constants';
@@ -30,7 +30,7 @@ export interface PreparedOperation {
 }
 
 export abstract class OperationEmitter {
-  get rpc(): RpcClient {
+  get rpc(): RpcClientInterface {
     return this.context.rpc;
   }
 
@@ -171,6 +171,12 @@ export abstract class OperationEmitter {
               ...getSource(op),
               ...getFee(op),
             };
+          case OpKind.REGISTER_GLOBAL_CONSTANT:
+            return {
+              ...op,
+              ...getSource(op),
+              ...getFee(op),
+            }
           default:
             throw new Error('Unsupported operation');
         }

@@ -1,6 +1,6 @@
 {
   "name": "@taquito/tzip16",
-  "version": "10.1.2",
+  "version": "11.0.1",
   "description": "Tzip16",
   "keywords": [
     "tezos",
@@ -38,7 +38,7 @@
   "lint-staged": {
     "{src,test}/**/*.ts": [
       "prettier --write",
-      "tslint --fix",
+      "eslint --fix",
       "git add"
     ]
   },
@@ -62,13 +62,13 @@
     ]
   },
   "dependencies": {
-    "@taquito/http-utils": "^10.1.2",
-    "@taquito/michelson-encoder": "^10.1.2",
-    "@taquito/rpc": "^10.1.2",
-    "@taquito/taquito": "^10.1.2",
-    "@taquito/utils": "^10.1.2",
+    "@taquito/http-utils": "^11.0.1",
+    "@taquito/michelson-encoder": "^11.0.1",
+    "@taquito/rpc": "^11.0.1",
+    "@taquito/taquito": "^11.0.1",
+    "@taquito/utils": "^11.0.1",
     "bignumber.js": "^9.0.1",
-    "crypto-js": "^4.0.0"
+    "crypto-js": "^4.1.1"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.0.1",
@@ -99,7 +99,7 @@
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-standard": "^9.0.0",
     "typedoc": "^0.20.36",
-    "typescript": "^4.1.5"
+    "typescript": "~4.1.5"
   },
   "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
 }

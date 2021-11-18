@@ -35,7 +35,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       await op.confirmation();
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-      const permit_contract = await op.contract();
+      const permit_contract = await op.contract();    
 
       expect(op.status).toEqual('applied');
 
@@ -327,8 +327,8 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
         //Sign MISSIGNED bytes for bootstrap_address2
         const SIGNATURE = await LocalTez2.signer.sign(bytes_to_sign).then((s) => s.prefixSig)
-                                  .catch((error) => console.log(JSON.stringify(error)));
-        
+          .catch((error) => console.log(JSON.stringify(error)));
+
         //Craft correct permit parameter
         //PERMIT_PARAM="{Pair \"$PUB_KEY\" (Pair \"$SIGNATURE\" $TRANSFER_PARAM_HASHED)}"
 

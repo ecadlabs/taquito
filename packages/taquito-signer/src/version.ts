@@ -2,7 +2,7 @@
 // IMPORTANT: THIS FILE IS AUTO GENERATED! DO NOT MANUALLY EDIT OR CHECKIN!
 /* tslint:disable */
 export const VERSION = {
-    "commitHash": "eb5b2c4973cd11098b68ce62eb6702dea376e569",
-    "version": "10.1.1"
+    "commitHash": "8d7ecc86ce608bff9ee8c6cf0cd7d795263b8bda",
+    "version": "11.0.1"
 };
 /* tslint:enable */

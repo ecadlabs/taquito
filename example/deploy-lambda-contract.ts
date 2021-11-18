@@ -2,32 +2,32 @@ import { TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
 import { VIEW_LAMBDA } from '../packages/taquito/src/contract/view_lambda';
 
-const provider = 'https://granadanet.api.tez.ie';
+const provider = 'https://idiazabalnet.ecadinfra.com';
 
 async function example() {
   const tezos = new TezosToolkit(provider);
   await importKey(
     tezos,
-    'peqjckge.qkrrajzs@tezos.example.org',
-    'y4BX7qS1UE',
+    'pqugfnyp.aricovrw@teztnets.xyz',
+    'PwMXISc7HK',
     [
-      'skate',
-      'damp',
-      'faculty',
-      'morning',
-      'bring',
-      'ridge',
-      'traffic',
-      'initial',
-      'piece',
-      'annual',
-      'give',
-      'say',
-      'wrestle',
-      'rare',
-      'ability',
+      "drift",
+      "winner",
+      "prevent",
+      "sorry",
+      "loud",
+      "pattern",
+      "easy",
+      "buffalo",
+      "surround",
+      "exist",
+      "accuse",
+      "volume",
+      "loop",
+      "day",
+      "club",
     ].join(' '),
-    '7d4c8c3796fdbf4869edb5703758f0e5831f5081'
+    '844a986d27f7989859bc82ebce16f293ab0f2da6'
   );
 
   try {

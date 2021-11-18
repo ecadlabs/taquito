@@ -76,4 +76,12 @@ export class IntToken extends ComparableToken {
 
     return o1 < o2 ? -1 : 1;
   }
+
+  findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
+    if (IntToken.prim === tokenToFind) {
+      tokens.push(this);
+    }
+    return tokens;
+  };
+
 }

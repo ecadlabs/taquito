@@ -53,4 +53,12 @@ export class SaplingTransactionToken extends Token {
       },
     };
   }
+
+  findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
+    if (SaplingTransactionToken.prim === tokenToFind) {
+      tokens.push(this);
+    }
+    return tokens;
+  };
+
 }

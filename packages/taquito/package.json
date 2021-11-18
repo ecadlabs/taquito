@@ -1,6 +1,6 @@
 {
   "name": "@taquito/taquito",
-  "version": "10.1.2",
+  "version": "11.0.1",
   "description": "High level functionality that builds upon the other packages in the Tezos Typescript Library Suite.",
   "keywords": [
     "tezos",
@@ -47,7 +47,7 @@
   "lint-staged": {
     "{src,test}/**/*.ts": [
       "prettier --write",
-      "tslint --fix",
+      "eslint --fix",
       "git add"
     ]
   },
@@ -78,13 +78,12 @@
     ]
   },
   "dependencies": {
-    "@taquito/http-utils": "^10.1.2",
-    "@taquito/michel-codec": "^10.1.2",
-    "@taquito/michelson-encoder": "^10.1.2",
-    "@taquito/rpc": "^10.1.2",
-    "@taquito/utils": "^10.1.2",
+    "@taquito/http-utils": "^11.0.1",
+    "@taquito/michel-codec": "^11.0.1",
+    "@taquito/michelson-encoder": "^11.0.1",
+    "@taquito/rpc": "^11.0.1",
+    "@taquito/utils": "^11.0.1",
     "bignumber.js": "^9.0.1",
-    "rx-sandbox": "^1.0.4",
     "rxjs": "^6.6.3"
   },
   "devDependencies": {
@@ -112,13 +111,14 @@
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-typescript2": "^0.30.0",
+    "rx-sandbox": "^1.0.4",
     "shelljs": "^0.8.4",
     "terser-webpack-plugin": "^4.2.3",
     "ts-jest": "^26.4.4",
     "ts-node": "^10.0.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-standard": "^9.0.0",
-    "typescript": "^4.1.5",
+    "typescript": "~4.1.5",
     "webpack": "^4.44.2",
     "webpack-assets-manifest": "^3.1.1",
     "webpack-cli": "^3.3.12",

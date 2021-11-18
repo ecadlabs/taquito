@@ -1139,3 +1139,97 @@ export const preapplyResultFrom = (_params: TransferParams) => {
   ];
   return errorBuilder(result);
 };
+
+export const registerGlobalConstantNoReveal = {
+  contents: [
+    {
+      kind: 'register_global_constant',
+      source: 'tz2EAB6atB3w7tJPwYF43vymDShZtGLh8TRb',
+      fee: '0',
+      counter: '8642842',
+      gas_limit: '1040000',
+      storage_limit: '32768',
+      value: {
+        prim: 'Pair',
+        args: [{ int: '998' }, { int: '999' }]
+      },
+      metadata: {
+        balance_updates: [],
+        operation_result: {
+          status: 'applied',
+          balance_updates: [
+            {
+              kind: 'contract',
+              contract: 'tz2EAB6atB3w7tJPwYF43vymDShZtGLh8TRb',
+              change: '-18250',
+              origin: 'block'
+            }
+          ],
+          consumed_gas: '1230',
+          storage_size: '73',
+          global_address: 'exprui2KzJsukZATaHBgRCM3vZEZtwYMW3rdJwHm5pCX3KeXVC1Koc'
+        }
+      }
+    }
+  ],
+  signature: 'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg'
+};
+
+export const registerGlobalConstantWithReveal = {
+  contents: [
+    {
+      kind: 'reveal',
+      source: 'tz2EAB6atB3w7tJPwYF43vymDShZtGLh8TRb',
+      fee: '1420',
+      counter: '294312',
+      gas_limit: '10600',
+      storage_limit: '0',
+      public_key: 'sppk7aqSksZan1AGXuKtCz9UBLZZ77e3ZWGpFxR7ig1Z17GneEhSSbH',
+      metadata: {
+        balance_updates: [
+          { kind: 'contract', contract: 'tz2EAB6atB3w7tJPwYF43vymDShZtGLh8TRb', change: '-1420' },
+          {
+            kind: 'freezer',
+            category: 'fees',
+            delegate: 'tz1Ke2h7sDdakHJQh8WX4Z372du1KChsksyU',
+            cycle: 104,
+            change: '1420'
+          }
+        ],
+        operation_result: { status: 'applied', consumed_gas: '10000' }
+      }
+    },
+    registerGlobalConstantNoReveal.contents[0]
+  ],
+  signature: 'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg'
+};
+
+export const registerGlobalConstantWithError = {
+  contents: [
+    {
+      ...registerGlobalConstantNoReveal.contents[0],
+      metadata: {
+        balance_updates: [],
+        operation_result: {
+          status: 'failed',
+          errors: [
+            {
+              kind: 'branch',
+              id: 'proto.011-PtHangzH.Expression_already_registered'
+            },
+            {
+              kind: 'permanent',
+              id: 'proto.011-PtHangzH.context.storage_error',
+              existing_key: [
+                'global_constant',
+                'f4b54fa94f3255df3ab6a95d0112964d825642706d42de848b3c507ff4602c4a',
+                'len'
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ],
+  signature: 'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg'
+};
