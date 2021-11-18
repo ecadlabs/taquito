@@ -82,7 +82,7 @@ export default ({
   }, [button.current, target.current]);
 
   if (live) {
-    const customRpcClient = new CancellableRpcClient('https://granadanet.api.tez.ie') 
+    const customRpcClient = new CancellableRpcClient('https://hangzhounet.api.tez.ie') 
     const Tezos = new TezosToolkit(customRpcClient);
 
     return (
