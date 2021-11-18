@@ -3,6 +3,12 @@ title: Versions
 author: Jev Bjorsell
 ---
 
+# Taquito v11.0.1-beta
+
+## Bug fix
+There was an issue with lodash imports in @taquito/rpc package that was causing the following error: Error: Cannot find module 'lodash/get'
+
+
 # Taquito v11.0.0-beta
 
 ## Summary
