@@ -3,9 +3,11 @@ import { RpcClientCache, RpcClient } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_bigmap';
+import { Protocols } from '@taquito/taquito';
 
 CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup, protocol, rpc }) => {
     const Tezos = lib;
+    const skipIdiazabalnet = protocol === Protocols.PtIdiaza ? test.skip : test;
 
     beforeEach(async (done) => {
         await setup();
@@ -70,7 +72,7 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
                 done();
             });
 
-            it(`Access the delegate of a contract`, async (done) => {
+            skipIdiazabalnet(`Access the delegate of a contract`, async (done) => {
                 const delegate = await rpcClient.getDelegate(knownBaker);
                 expect(delegate).toBeDefined();
                 done();
@@ -106,7 +108,7 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
                 done();
             });
 
-            it(`Fetches information about a delegate from RPC`, async (done) => {
+            skipIdiazabalnet(`Fetches information about a delegate from RPC`, async (done) => {
                 const delegates = await rpcClient.getDelegates(knownBaker);
                 expect(delegates).toBeDefined();
                 done();
