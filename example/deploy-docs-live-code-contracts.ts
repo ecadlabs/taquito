@@ -592,7 +592,7 @@ async function originateTzip16SHA256() {
 async function originateTzip16IPFS() {
   tezos.setSignerProvider(signer);
   try {
-    const uri = 'ipfs://QmcMUKkhXowQjCPtDVVXyFJd7W9LmC92Gs5kYH1KjEisdj';
+    const uri = 'ipfs://QmXnASUptTDnfhmcoznFqz3S1Mxu7X1zqo2YwbTN3nW52V';
     const bytesUrl = char2Bytes(uri);
 
     const metadataBigMap = new MichelsonMap();
