@@ -163,11 +163,7 @@ Tezos.contract.at(contractAddress, tzip16)
 
 Tezos.addExtension(new Tzip16Module());
 
-<<<<<<< HEAD
-const contractAddress = "KT1PpnY5yeGTcHTxMP2t15YX8SLqpWPaP8Xa";
-=======
-const contractAddress = "KT1R1bBELgmyGv4aCGPMMgwzqsC6MYpuGZ9P";
->>>>>>> master
+const contractAddress = "KT1NP2ZVLxWaSBQryDzUujmdv27ubJWZRckv";
 
 Tezos.contract.at(contractAddress, tzip16)
 .then(contract => {
