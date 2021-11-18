@@ -1,5 +1,5 @@
-const getByPath = require('lodash/get');
-const setByPath = require('lodash/set');
+const getByPath = require('lodash.get');
+const setByPath = require('lodash.set');
 import BigNumber from 'bignumber.js';
 
 /**
