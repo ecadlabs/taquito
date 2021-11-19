@@ -965,8 +965,7 @@ Both the [Madfish](https://www.madfish.solutions/) ([Temple Wallet](https://temp
 
 With a major version release, comes an opportunity for us to make some breaking changes.
 
-We have published an [upgrade guide](https://tezostaquito.io/docs/v7_breaking_changes) to help guide developers and making these changes as easy to adopt as possible.
-
+We have published an [upgrade guide](https://tezostaquito.io/docs/upgrading_guide) to help guide developers and making these changes as easy to adopt as possible.
 
 The three most notable changes are:
 
