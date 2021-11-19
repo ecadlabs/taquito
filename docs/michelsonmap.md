@@ -15,8 +15,7 @@ Taquito reads maps in the storage of smart contracts and translates them into an
 - _The key/value methods_: they allow you to manipulate the keys and values in the map
 - _The update methods_: they transform the map itself, for example, by deleting elements or clearing out the map entirely.
 
-This tutorial uses a [simple smart contract deployed on edonet](https://better-call.dev/edo2net/KT1E7jtyoejiFWJnomA51SSW6jtZnwTApHT8/operations) with a map that contains addresses as keys and tez as values. We will use all the methods available in Taquito's `MichelsonMap` to check the map, extract values and modify them!
-
+This tutorial uses a [simple smart contract deployed on hangzhou2net](https://better-call.dev/hangzhou2net/KT1PAW3ghZyysrArcexyj6VUU7NZF8tHKoZR/operations) with a map that contains addresses as keys and tez as values. We will use all the methods available in Taquito's `MichelsonMap` to check the map, extract values and modify them!
 
 > Note: Taquito is written in TypeScript; we will also use TypeScript to interact with the contract storage.
 
@@ -28,7 +27,7 @@ This paragraph is a little reminder of how to use Taquito to fetch the storage o
 import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
 import { BigNumber } from 'bignumber.js';
 
-const contractAddress: string = 'KT1E7jtyoejiFWJnomA51SSW6jtZnwTApHT8';
+const contractAddress: string = 'KT1PAW3ghZyysrArcexyj6VUU7NZF8tHKoZR';
 
 const Tezos = new TezosToolkit('https://testnet-tezos.giganode.io');
 
