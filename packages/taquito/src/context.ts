@@ -20,7 +20,8 @@ import { RpcPacker } from './packer/rpc-packer';
 import BigNumber from 'bignumber.js';
 import { retry } from 'rxjs/operators';
 import { BehaviorSubject, OperatorFunction } from 'rxjs';
-import { Extension } from './taquito';
+import { InterfaceGlobalConstantsProvider } from './global-constants/interface-global-constants-provider';
+import { DefaultGlobalConstantsProvider } from './global-constants/default-global-constants-provider';
 
 export interface TaquitoProvider<T, K extends Array<any>> {
   new (context: Context, ...rest: K): T;
@@ -63,8 +64,8 @@ export class Context {
   private _walletProvider: WalletProvider;
   public readonly operationFactory: OperationFactory;
   private _packer: Packer;
-  private _extensions: { [name:string]: Extension } = {}
   private providerDecorator: Function[] = [];
+  private _globalConstantsProvider: InterfaceGlobalConstantsProvider;
   public readonly tz = new RpcTzProvider(this);
   public readonly estimate = new RPCEstimateProvider(this);
   public readonly contract = new RpcContractProvider(this, this.estimate);
@@ -81,6 +82,7 @@ export class Context {
     packer?: Packer,
     wallet?: WalletProvider,
     parser?: ParserProvider,
+    globalConstantsProvider?: InterfaceGlobalConstantsProvider
   ) {
     if (typeof this._rpc === 'string') {
       this._rpcClient = new RpcClient(this._rpc);
@@ -93,6 +95,7 @@ export class Context {
     this._walletProvider = wallet ? wallet : new LegacyWalletProvider(this);
     this._parser = parser? parser: new MichelCodecParser(this);
     this._packer = packer? packer: new RpcPacker(this);
+    this._globalConstantsProvider = globalConstantsProvider? globalConstantsProvider: new DefaultGlobalConstantsProvider();
   }
 
   get config(): ConfigConfirmation & ConfigStreamer {
@@ -174,6 +177,14 @@ export class Context {
 
   set packer(value: Packer) {
     this._packer = value;
+  }
+
+  get globalConstantsProvider() {
+    return this._globalConstantsProvider;
+  }
+
+  set globalConstantsProvider(value: InterfaceGlobalConstantsProvider) {
+    this._globalConstantsProvider = value;
   }
 
   async isAnyProtocolActive(protocol: string[] = []) {

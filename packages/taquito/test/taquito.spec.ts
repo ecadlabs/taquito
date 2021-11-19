@@ -1,10 +1,13 @@
-import { TezosToolkit, SetProviderOptions } from '../src/taquito';
+import { TezosToolkit, SetProviderOptions, Wallet } from '../src/taquito';
 import { RpcTzProvider } from '../src/tz/rpc-tz-provider';
 import { RpcContractProvider } from '../src/contract/rpc-contract-provider';
 import { PollingSubscribeProvider } from '../src/subscribe/polling-provider';
 import { NoopSigner } from '../src/signer/noop';
 import { RpcClient } from '@taquito/rpc';
 import { retry } from 'rxjs/operators';
+import { DefaultGlobalConstantsProvider } from '../src/global-constants/default-global-constants-provider';
+import { RPCEstimateProvider } from '../src/contract/rpc-estimate-provider';
+import { OperationFactory } from '../src/wallet/operation-factory';
 
 describe('TezosToolkit test', () => {
   let mockRpcClient: any;
@@ -38,8 +41,19 @@ describe('TezosToolkit test', () => {
     });
 
     mockRpcClient.getManagerKey.mockResolvedValue('test');
-    toolkit = new TezosToolkit('url');
-    toolkit['_context'].rpc = mockRpcClient;
+    toolkit = new TezosToolkit(mockRpcClient);
+  });
+
+  it('the default providers are set on the TezosToolkit at instantiation', () => {
+    const tezos = new TezosToolkit('rpc');
+    expect(tezos.globalConstants).toBeInstanceOf(DefaultGlobalConstantsProvider);
+    expect(tezos.contract).toBeInstanceOf(RpcContractProvider);
+    expect(tezos.estimate).toBeInstanceOf(RPCEstimateProvider);
+    expect(tezos.operation).toBeInstanceOf(OperationFactory);
+    expect(tezos.signer).toBeInstanceOf(NoopSigner);
+    expect(tezos.stream).toBeInstanceOf(PollingSubscribeProvider);
+    expect(tezos.tz).toBeInstanceOf(RpcTzProvider);
+    expect(tezos.wallet).toBeInstanceOf(Wallet);
   });
 
   it('setProvider with string should create rpc provider', () => {
@@ -54,6 +68,10 @@ describe('TezosToolkit test', () => {
     'stream',
     'protocol',
     'config',
+    'forger',
+    'wallet',
+    'packer',
+    'globalConstantsProvider'
   ];
   providerKey
     .filter(x => x !== 'rpc')
@@ -94,7 +112,7 @@ describe('TezosToolkit test', () => {
       });
     });
 
-  test('getVersionInfo returns well formed response', () => {
+  it('getVersionInfo returns well formed response', () => {
     const versionInfo = toolkit.getVersionInfo();
     expect(versionInfo.commitHash).toBeTruthy();
     expect(versionInfo.version).toBeTruthy();
