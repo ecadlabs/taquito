@@ -5,6 +5,7 @@ import { HttpBackend } from '@taquito/http-utils';
 import { b58cencode, Prefix, prefix } from '@taquito/utils';
 import { importKey, InMemorySigner } from '@taquito/signer';
 import { RpcClient, RpcClientCache } from '@taquito/rpc';
+import { fromMapleFaucet } from '@taquito/faucet';
 
 const nodeCrypto = require('crypto');
 
@@ -79,7 +80,7 @@ const hangzhounetEphemeral = {
   protocol: Protocols.PtHangz2,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'https://api.tez.ie/keys/hangzhounet',
+    keyUrl: 'hangzhounet',
     requestHeaders: { 'Authorization': 'Bearer taquito-example' },
   }
 }
@@ -93,7 +94,7 @@ const granadanetEphemeral = {
   protocol: Protocols.PtGRANADs,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'https://api.tez.ie/keys/granadanet',
+    keyUrl: 'granadanet',
     requestHeaders: { 'Authorization': 'Bearer taquito-example' },
   }
 }
@@ -247,18 +248,15 @@ const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
 
 const setupSignerWithFreshKey = async (
   Tezos: TezosToolkit,
-  { keyUrl, requestHeaders }: EphemeralConfig
+  { keyUrl }: EphemeralConfig
 ) => {
-  const httpClient = new HttpBackend();
 
   try {
-    const key = await httpClient.createRequest<string>({
-      url: keyUrl,
-      method: 'POST',
-      headers: requestHeaders,
-      json: false,
-    });
-    const signer = new InMemorySigner(key!);
+    const signer = await fromMapleFaucet({
+      apiKey: "8f35a138-0bf4-4061-97c2-edbb99f6afe3",
+      network: keyUrl,
+      type: 'FRESH'
+    })
     Tezos.setSignerProvider(signer);
   } catch (e) {
     console.log("An error occurs when trying to fetch a fresh key:", e)
@@ -267,19 +265,15 @@ const setupSignerWithFreshKey = async (
 
 const setupSignerWithEphemeralKey = async (
   Tezos: TezosToolkit,
-  { keyUrl, requestHeaders }: EphemeralConfig
+  { keyUrl }: EphemeralConfig
 ) => {
-  const ephemeralUrl = `${keyUrl}/ephemeral`;
-  const httpClient = new HttpBackend();
 
   try {
-    const { id, pkh } = await httpClient.createRequest({
-      url: ephemeralUrl,
-      method: 'POST',
-      headers: requestHeaders,
-    });
-
-    const signer = new RemoteSigner(pkh, `${ephemeralUrl}/${id}/`, { headers: requestHeaders });
+    const signer = await fromMapleFaucet({
+      apiKey: "8f35a138-0bf4-4061-97c2-edbb99f6afe3",
+      network: `${keyUrl}-ephemeral`,
+      type: 'EPHEMERAL'
+    })
     Tezos.setSignerProvider(signer);
 
   } catch (e) {

@@ -17,6 +17,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
             const sender_pkh = await sender.signer.publicKeyHash();
             const op = await Tezos.contract.transfer({ to: sender_pkh, amount: 10 });
             await op.confirmation();
+            console.log(op.hash)
             
             // Sending 1 token from the account we want to empty
             // This will do the reveal operation automatically

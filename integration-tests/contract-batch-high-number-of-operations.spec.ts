@@ -8,7 +8,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     describe(`Test contract.batch containing a high number of operations using: ${rpc}`, () => {
         beforeEach(async (done) => {
-            await setup(true);
+            await setup();
             done();
         });
 

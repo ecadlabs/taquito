@@ -16,7 +16,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         hangzhounetOrHigher('Batch transfer and register global constant operations', async (done) => {
             const batchOp = await Tezos.contract
                 .batch([
-                    { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 },
+                    { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.0001 },
                     {
                         kind: OpKind.REGISTER_GLOBAL_CONSTANT,
                         value: {
@@ -27,7 +27,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                     }
                 ])
                 .with([
-                    { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 },
+                    { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.0001 },
                     {
                         kind: OpKind.REGISTER_GLOBAL_CONSTANT,
                         value: {
