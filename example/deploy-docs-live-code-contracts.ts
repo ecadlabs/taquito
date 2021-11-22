@@ -105,6 +105,7 @@ async function originateTheContracts() {
   contract_catalogue.set('WalletAreYouThereContract', await originateWalletOriginateAreYouThere());
   contract_catalogue.set('TokenContract', await originateTokenContract());
   contract_catalogue.set('BigMapPackContract', await originateBigMapPackContract());
+  contract_catalogue.set('MichelsonMap', await originateMichelsonMap());
 
   json_contract_catalogue();
 
@@ -345,7 +346,7 @@ async function originateBigMapsInitialStorage() {
       code: contractMapBigMap,
       storage: {
         thebigmap: storageBigMap,
-        theMap: storageMap,
+        themap: storageMap,
       },
     });
 
@@ -965,4 +966,26 @@ async function originateBigMapPackContract() {
   }
 }
 
+async function originateMichelsonMap() {
+  tezos.setSignerProvider(signer);
+  try {
+    console.log('Deploying Michelson Tutorial contract...');
+    const op = await tezos.contract.originate({
+      code: `parameter (pair address mutez);
+      storage (map address mutez);
+      code { DUP ; CAR ; SWAP ; CDR ; SWAP ; DUP ; DUG 2 ; CDR ; DIG 2 ; CAR ; SWAP ; SOME ; SWAP ; UPDATE ; NIL operation ; PAIR }`,
+      init: [{
+        prim: 'Elt',
+        args: [{ string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn' }, { int: '0' }],
+      }],
+    });
+
+    const contract = await op.contract();
+    console.log('Michelson Tutorial Contract address', contract.address);
+    return contract.address;
+
+  } catch (ex) {
+    console.error(ex);
+  }
+}
 originateTheContracts();
