@@ -17,18 +17,19 @@ author: Roxane Letourneau
 
 - ECAD Labs nodes:
     - Mainnet: https://mainnet.api.tez.ie
-    - Hangzhounet: https://hangzhounet.api.tez.ie/
-    - Granadanet: https://granadanet.api.tez.ie
-    - Florencenet: https://florencenet.api.tez.ie
-- SmartPy nodes
+    - Hangzhounet: https://hangzhounet.api.tez.ie protocol `PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx`
+    - Granadanet: https://granadanet.api.tez.ie protocol `PtGRANADsDU8R9daYKAgWnQYAJ64omN1o3KMGVCykShA97vQbvV`
+    - Idiazabalnet: https://idiazabalnet.ecadinfra.com/ protocol: `ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK`
+        - Idiazabalnet is an early testnet protocol that will become the `I` proposal. It includes many features, the most notable being the new "tenderbake" consensus algorithim. 
+- SmartPy public Tezos nodes
     - Mainnet: https://mainnet.smartpy.io
     - Granadanet: https://granadanet.smartpy.io/
-- Nodes operated by Blockscale on behalf of the Tezos Foundation: 
+- Blockscale public nodes operated on behalf of the Tezos Foundation: 
     - Mainnet: https://rpc.tzbeta.net/
     - Next protocol/version testnet (Granadanet): https://rpczero.tzbeta.net/
-- Teznode from LetzBake!:
+- Teznode Public nodes operated by LetzBake!:
     - Mainnet: https://teznode.letzbake.com
-- ~~Tezos Giga Node from Tezos Ukraine~~ Will cease to operate on Oct 1st 2021. See
+- ~~Tezos Giga Node from Tezos Ukraine~~ Was expected cease to operations on Oct 1st 2021, but status is unkown. See
   [Announcment](https://twitter.com/GigaNode/status/1435265400699342854)
     - ~~Mainnet: https://mainnet-tezos.giganode.io~~
     - ~~Granada testnet: https://testnet-tezos.giganode.io/~~

@@ -74,4 +74,12 @@ export class KeyHashToken extends ComparableToken {
       type: { prim: KeyHashToken.prim },
     };
   }
+
+  findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
+    if (KeyHashToken.prim === tokenToFind) {
+      tokens.push(this);
+    }
+    return tokens;
+  };
+
 }

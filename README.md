@@ -1,4 +1,5 @@
-<span style="display:block;text-align:center">![Logo](https://tezostaquito.io/img/Taquito.png)</span>
+<span style="display:block;text-align:center">![Logo](https://gateway.pinata.cloud/ipfs/QmNdScKzKP3WUutxuEjqYZtVcQAvK3m9XMK5ZuvaxxrrgX)</span>
+
 
 A TypeScript library suite for development on the Tezos blockchain
 
@@ -6,8 +7,6 @@ A TypeScript library suite for development on the Tezos blockchain
 [![codecov](https://codecov.io/gh/ecadlabs/taquito/branch/master/graph/badge.svg)](https://codecov.io/gh/ecadlabs/taquito)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/3204/badge)](https://bestpractices.coreinfrastructure.org/projects/3204)
 [![npm version](https://badge.fury.io/js/%40taquito%2Ftaquito.svg)](https://badge.fury.io/js/%40taquito%2Ftaquito)
-
-_WARNING: This project is in beta. We welcome users and feedback. Please be aware that this project is a work in progress._
 
 ## Community support channels
 
@@ -98,26 +97,48 @@ Releases will be (git tags and npm packages) will be signed either by [keybase/j
 To start using Taquito in your application, please visit [Taquito QuickStart](https://tezostaquito.io/docs/quick_start).
 Alternatively, get started with the [Taquito boilerplate project](https://github.com/ecadlabs/taquito-boilerplate#getting-started) 
 
+## Supported versions of Node.js®
+
+| Node.js version  |     |
+| ---------------- | --- |
+| v12              | ✅  |
+| v14              | ✅  |
+| v16              | ✅  |
+| v17              | ❌  |
+
 ## Contributors Getting Started
 
-### NPM Scripts
+### Setup and build the Taquito project 
 
-See the top-level `package.json` file. Some common targets are:
-
-* `npm run test`: Run tests
-* `npm run build`: Generate bundles and typings, create docs
-* `npm run lint`: Lints code
-* `npm run example`: Run an example node js app that does a tour of all the functionality
-* `npm run commit`: Commit using conventional commit style
-
-### Development Environment Setup
+__Make sure you have a version of Node.js supported by Taquito__
 
 * Install lerna globally `npm install -g lerna`
 * Run `npm install`
 * Run `lerna bootstrap --force-local`
 * Run `npm run build`
 
-#### Once you have modified any package:
+
+### Useful npm command targets
+
+See the top-level `package.json` file. Some common targets are:
+
+* `npm run test`: Run all unit tests
+* `npm run build`: Generate bundles and typings, create docs for all packages
+* `npm run lint`: Lints code
+* `npm run example`: Run an example node js app that does a tour of all the functionality
+
+### Running Integration Tests
+
+The Taquito integration tests are located in the `/integration-tests/` directory. Ensure you have completed the build steps as described earlier in this README file.
+
+To run the integration tests run `npm run test`. The integration test suite runs all tests against the current tezos protocol testnet, and typically also against the previous and next protocol testnets. See the `scripts` property in the `integration-tests/package.json` file for specific test targets.
+
+There are many integration tests, and as they interact with real testnets, they can be slow, and occasionally tests may fail due to extrinsic reasons related to public testnets.
+
+
+#### Modifying Taquito source
+
+After making a change to Taquito, linting and running the unit test suite should let you know if your changes are working well with the rest of the project.
 
 * Run `npm run lint`
 * Run `npm run test`

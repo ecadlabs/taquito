@@ -10,7 +10,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
 
   const florencenet = (protocol === Protocols.PsFLorena) ? test : test.skip;
   const granadanet = (protocol === Protocols.PtGRANADs) ? test : test.skip;
-  const hangzhounet = (protocol === Protocols.PtHangzH) ? test : test.skip;
+  const hangzhounet = (protocol === Protocols.PtHangz2) ? test : test.skip;
 
   describe(`Estimate scenario using: ${rpc}`, () => {
     let LowAmountTez: TezosToolkit;
@@ -124,14 +124,14 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
         code: ligoSample,
         storage: 0,
       })
-      expect(estimate.gasLimit).toEqual(1538);
+      expect(estimate.gasLimit).toEqual(1539);
       expect(estimate.storageLimit).toEqual(571);
       expect(estimate.suggestedFeeMutez).toEqual(801);
       expect(estimate.burnFeeMutez).toEqual(142750);
       expect(estimate.minimalFeeMutez).toEqual(701);
       expect(estimate.totalCost).toEqual(143451);
       expect(estimate.usingBaseFeeMutez).toEqual(701);
-      expect(estimate.consumedMilligas).toEqual(1437383);
+      expect(estimate.consumedMilligas).toEqual(1438103);
       done();
     });
 
@@ -220,14 +220,14 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
     hangzhounet('Estimate internal transfer to allocated implicit', async (done) => {
       const tx = contract.methods.do(MANAGER_LAMBDA.transferImplicit(knownBaker, 50)).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx)
-      expect(estimate.gasLimit).toEqual(3610);
+      expect(estimate.gasLimit).toEqual(3613);
       expect(estimate.storageLimit).toEqual(0);
-      expect(estimate.suggestedFeeMutez).toEqual(789);
+      expect(estimate.suggestedFeeMutez).toEqual(790);
       expect(estimate.burnFeeMutez).toEqual(0);
-      expect(estimate.minimalFeeMutez).toEqual(689);
-      expect(estimate.totalCost).toEqual(689);
-      expect(estimate.usingBaseFeeMutez).toEqual(689);
-      expect(estimate.consumedMilligas).toEqual(3509697);
+      expect(estimate.minimalFeeMutez).toEqual(690);
+      expect(estimate.totalCost).toEqual(690);
+      expect(estimate.usingBaseFeeMutez).toEqual(690);
+      expect(estimate.consumedMilligas).toEqual(3512397);
       done();
     })
 
@@ -266,14 +266,14 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
         50)
       ).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx)
-      expect(estimate.gasLimit).toEqual(5037);
+      expect(estimate.gasLimit).toEqual(5040);
       expect(estimate.storageLimit).toEqual(514);
       expect(estimate.suggestedFeeMutez).toEqual(991);
       expect(estimate.burnFeeMutez).toEqual(128500);
       expect(estimate.minimalFeeMutez).toEqual(891);
       expect(estimate.totalCost).toEqual(129391);
       expect(estimate.usingBaseFeeMutez).toEqual(891);
-      expect(estimate.consumedMilligas).toEqual(4936458);
+      expect(estimate.consumedMilligas).toEqual(4939518);
       done();
     })
 
@@ -316,14 +316,14 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
     hangzhounet('Estimate internal origination', async (done) => {
       const tx = contract.methods.do(originate()).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx)
-      expect(estimate.gasLimit).toEqual(3600);
+      expect(estimate.gasLimit).toEqual(3606);
       expect(estimate.storageLimit).toEqual(317);
-      expect(estimate.suggestedFeeMutez).toEqual(794);
+      expect(estimate.suggestedFeeMutez).toEqual(795);
       expect(estimate.burnFeeMutez).toEqual(79250);
-      expect(estimate.minimalFeeMutez).toEqual(694);
-      expect(estimate.totalCost).toEqual(79944);
-      expect(estimate.usingBaseFeeMutez).toEqual(694);
-      expect(estimate.consumedMilligas).toEqual(3499394);
+      expect(estimate.minimalFeeMutez).toEqual(695);
+      expect(estimate.totalCost).toEqual(79945);
+      expect(estimate.usingBaseFeeMutez).toEqual(695);
+      expect(estimate.consumedMilligas).toEqual(3505874);
       done();
     })
 
@@ -358,14 +358,14 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
     hangzhounet('Estimate multiple internal origination', async (done) => {
       const tx = contract.methods.do(originate2()).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx)
-      expect(estimate.gasLimit).toEqual(5016);
+      expect(estimate.gasLimit).toEqual(5027);
       expect(estimate.storageLimit).toEqual(634);
-      expect(estimate.suggestedFeeMutez).toEqual(1001);
+      expect(estimate.suggestedFeeMutez).toEqual(1002);
       expect(estimate.burnFeeMutez).toEqual(158500);
-      expect(estimate.minimalFeeMutez).toEqual(901);
-      expect(estimate.totalCost).toEqual(159401);
-      expect(estimate.usingBaseFeeMutez).toEqual(901);
-      expect(estimate.consumedMilligas).toEqual(4915852);
+      expect(estimate.minimalFeeMutez).toEqual(902);
+      expect(estimate.totalCost).toEqual(159402);
+      expect(estimate.usingBaseFeeMutez).toEqual(902);
+      expect(estimate.consumedMilligas).toEqual(4926472);
       // Do the actual operation
       const op2 = await contract.methods.do(originate2()).send();
       await op2.confirmation();

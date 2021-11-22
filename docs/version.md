@@ -3,6 +3,129 @@ title: Versions
 author: Jev Bjorsell
 ---
 
+# Taquito v11.0.1-beta
+
+## Bug fix
+There was an issue with lodash imports in @taquito/rpc package that was causing the following error: Error: Cannot find module 'lodash/get'
+
+
+# Taquito v11.0.0-beta
+
+## Summary
+
+This release of Taquito supports the upcoming Hangzhou protocol. As usual, this version supports the current protocol, Granada, and the next protocol Hangzhou.
+
+We encourage all developers to update their projects to use version Taquito v11 as soon as is practical and absolutely before the Tezos mainnet transition from Granada to Hangzhou.
+
+### New features - Hangzhou protocol
+- `@taquito/taquito` - Support for the new operation kind `register_global_constant` on the contract, batch and estimate APIs #1075
+- ``@taquito/local-forging` 
+    - Support the new types and instructions related to operations-on-timelock #1070
+    - Support the new `constant` primitive #1077
+    - Support the new operation kind `register_global_constant` #1077
+    - Support the new high-level section `view` and the `VIEW` instruction #1074
+- `@taquito/michelson-encoder` - Support new types related to operations-on-timelock #1071
+- `@taquito/michel-codec` 
+    - Support the new types and instruction related to operations-on-timelock #1072
+    - Support the new high-level section `view` and the `VIEW` instruction #1073
+
+### New features - General
+- `@taquito/utils` - Provide utility to verify signatures #611
+- `@taquito/rpc` - Support for the RPC endpoint`context/contracts/{contract}/script/normalized`. #1114
+
+### Documentation
+- Add documentation on how to sign Michelson data #588: https://tezostaquito.io/docs/signing#signing-michelson-data
+- Add a "dApp pre-launch checklist" to website documentation #1135: https://tezostaquito.io/docs/dapp_prelaunch
+- Add a documentation page about wallets #1123: https://tezostaquito.io/docs/wallets
+
+### Others
+- Preliminary support for Idiazabalnet protocol
+- `@taquito/beacon-wallet` - The beacon-sdk is updated to version 2.3.7: https://github.com/airgap-it/beacon-sdk/releases/tag/v2.3.7
+- Migrate supported companion DApps to Hangzhou: Beacon Test DApp, Taquito React, and Metadata explorer #1065
+
+
+
+## Important note:
+
+Please note that the `Michelson-Encoder` does not support the global constant in this current release (11.0.0-beta). The expanded contract scripts need to be used with the `Michelson-Encoder` until further support. This brings the following limitation: only the 'init' property can be used if you want to originate a contract having a global constant in the storage section of its code. Do not use the `storage` property, which depends on the `Michelson-Encoder`.
+
+Here an example:
+```ts
+const op = await Tezos.contract.originate({
+  code: [
+    { prim: 'parameter', args: [ ...] },
+    { prim: 'storage', args: [{ prim: 'constant', args: [{ string: 'expr...' }] }] },
+    { prim: 'code', args: [ ... ] } ],
+  init: // The storage property can't be used until global constants are supported in by the Michelson-Encoder. Please use the `init` property instead.
+});
+```
+
+## `@taquito/taquito` - Support the new operation kind `register_global_constant` on the contract, batch and estimate APIs
+
+The new manager operation `register_global_constant` has been added to the contract, batch, and estimate APIs.  This new operation allows users to register Micheline expressions in a global table of constants. 
+
+A `registerGlobalConstant` method is available on the `ContractProvider` class. A `value` representing the Micheline expression to register in its JSON format is required as a parameter. The `registerGlobalConstant` method returns an instance of `RegisterGlobalConstantOperation` containing a `globalConstantHash` member that corresponds to the index(hash) of the newly registered constant.
+
+```ts
+const op = await Tezos.contract.registerGlobalConstant({
+    value: { "prim": "or",
+                "args":
+                  [ { "prim": "int", "annots": [ "%decrement" ] },
+                    { "prim": "int", "annots": [ "%increment" ] } ] }
+    });
+await op.confirmation();
+const hash = op.globalConstantHash; // expr...
+```
+
+After registering an expression as a global constant, the occurrences of this expression in a smart contract code can be replaced by its corresponding hash, allowing users to originate larger contracts. More details about the new `global constant` feature and examples using the batch API are available on the following documentation page: https://tezostaquito.io/docs/global_constant 
+    
+## `@taquito/michelson-encoder` - Support new types related to operations-on-timelock
+
+New tokens (ChestToken and ChestKeyToken) have been implemented in the Michelson-encoder package to support the new types `chest` and `chest_key` and allow data conversion between Michelson and js.
+
+## `@taquito/utils` - Provide utility to verify signatures
+
+Taquito provides a function named `verifySignature` that allows verifying signatures of payloads. The function takes a message, a public key, and a signature as parameters and returns a boolean indicating if the signature matches. 
+The crypto library [stablelib](https://www.npmjs.com/package/@stablelib/ed25519) is used instead of [libsodium](https://www.npmjs.com/package/libsodium) in order not to drastically increase the bundle size of the `@taquito/utils` package.
+
+Here is an example of use:
+
+```typescript=
+import { verifySignature } from '@taquito/remote-signer';
+
+const message = '03d0c10e3ed11d7c6e3357f6ef335bab9e8f2bd54d0ce20c482e241191a6e4b8ce6c01be917311d9ac46959750e405d57e268e2ed9e174a80794fbd504e12a4a000141eb3781afed2f69679ff2bbe1c5375950b0e40d00ff000000005e05050505050507070100000024747a32526773486e74516b72794670707352466261313652546656503539684b72654a4d07070100000024747a315a6672455263414c42776d4171776f6e525859565142445439426a4e6a42484a750001';
+const pk = 'sppk7c7hkPj47yjYFEHX85q46sFJGw6RBrqoVSHwAJAT4e14KJwzoey';
+const sig = 'spsig1cdLkp1RLgUHAp13aRFkZ6MQDPp7xCnjAExGL3MBSdMDmT6JgQSX8cufyDgJRM3sinFtiCzLbsyP6d365EHoNevxhT47nx'
+
+await verifySignature(message, pk, sig);
+```
+
+## `@taquito/rpc` - Support for the RPC endpoint`context/contracts/{contract}/script/normalized`
+
+A new method on the RpcClient named `getNormalizedScript` is available. If global constants are present in the code of a smart contract, `getNormalizedScript` returns the expanded script. In contrast, the global constants are not expanded in the response provided by the `getScript` method. 
+
+Internally in Taquito, the usage of `getScript` has been replaced by `getNormalizedScript` to ensure that all script passed to the Michelson-Encoder won't contain global constant because the `Michelson-Encoder` does not support the global constant in this current release (11.0.0-beta). 
+
+## Preliminary support for Idiazabalnet protocol
+
+This release includes preliminary support for the Idiazabal protocol to allow early testing.
+Please note the following:
+- The protocol constant `cost_per_byte` is mistakenly set to `1000` instead of `250`. Meaning that storage costs are higher than on the precedent testnet until this is fixed in the next I network.
+- The `Endorsement` operation has new required properties `slot`, `round` and `block_payload_hash` that are not yet supported in the `@taquito/local-forging` package.
+- The RPC `context/delegates/${address}` has new properties that are not yet supported in the `@taquito/rpc` package.
+
+## What's coming next for Taquito?
+
+We plan to provide abstractions for some of the new Hangzhou features. For example, an addition to the ContractAbstration will allow running on-chain views and an abstraction that will make using the new timelock feature easier.
+
+If you have feature or issue requests, please create an issue on http://github.com/ecadlabs/taquito/issues or join us on the Taquito community support channel on Telegram https://t.me/tezostaquito
+
+# Taquito v10.2.1-beta
+
+- Updated beacon-sdk to version 2.3.5: https://github.com/airgap-it/beacon-sdk/releases/tag/v2.3.5
+- RpcClientCache - Store the Promises instead of the resolved values in the cache: 
+When requests were done in parallel to the same RPC endpoint, they were not hitting the cache. This is solved by storing the promise in the cache as soon as the first request is made. If another request tries to reach the same URL, during the configured TTL, the cached promise is returned.
+More details can be found here: https://github.com/ecadlabs/taquito/discussions/916
 # Taquito v10.2.0-beta
 
 ## Summary
@@ -842,8 +965,7 @@ Both the [Madfish](https://www.madfish.solutions/) ([Temple Wallet](https://temp
 
 With a major version release, comes an opportunity for us to make some breaking changes.
 
-We have published an [upgrade guide](https://tezostaquito.io/docs/v7_breaking_changes) to help guide developers and making these changes as easy to adopt as possible.
-
+We have published an [upgrade guide](https://tezostaquito.io/docs/upgrading_guide) to help guide developers and making these changes as easy to adopt as possible.
 
 The three most notable changes are:
 

@@ -19,6 +19,8 @@ export { VERSION } from './version';
 
 export { prefix, Prefix, prefixLength } from './constants';
 
+export { verifySignature } from './verify-signature';
+
 /**
  *
  * @description Hash a string using the BLAKE2b algorithm, base58 encode the hash obtained and appends the prefix 'expr' to it

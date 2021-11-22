@@ -8,8 +8,8 @@ author: Roxane Letourneau
 1. The RPC nodes' integration tests are disabled by default.  
 Remove `./rpc-nodes.spec.ts` from `"testPathIgnorePatterns"` in the package.json.
 2. In the integration test folder, run one of the following commands: 
-    - **Florencenet**: `npm run test:florencenet rpc-nodes.spec.ts`
-    - **Granadanet**: `npm run test:granadanet rpc-nodes.spec.ts`
+    - **Florencenet**: `npm run test:hangzhounet rpc-nodes.spec.ts`
+    - **Granadanet**: `npm run test:hangzhounet rpc-nodes.spec.ts`
     - **Both protocols**: `npm run test rpc-nodes.spec.ts`
 
 **When all endpoints are accessible for a node, you will obtain:**

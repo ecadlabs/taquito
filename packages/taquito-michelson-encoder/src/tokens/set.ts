@@ -67,4 +67,13 @@ export class SetToken extends Token {
   public ExtractSchema() {
     return SetToken.prim;
   }
+
+  findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
+    if (SetToken.prim === tokenToFind) {
+      tokens.push(this);
+    }
+    this.KeySchema.findAndReturnTokens(tokenToFind, tokens);
+    return tokens;
+  };
+
 }

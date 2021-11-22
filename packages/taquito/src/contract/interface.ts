@@ -4,6 +4,7 @@ import { OperationBatch } from '../batch/rpc-batch-provider';
 import { Context } from '../context';
 import { DelegateOperation } from '../operations/delegate-operation';
 import { OriginationOperation } from '../operations/origination-operation';
+import { RegisterGlobalConstantOperation } from '../operations/register-global-constant-operation';
 import { RevealOperation } from '../operations/reveal-operation';
 import { TransactionOperation } from '../operations/transaction-operation';
 import {
@@ -13,6 +14,7 @@ import {
   RegisterDelegateParams,
   ParamsWithKind,
   RevealParams,
+  RegisterGlobalConstantParams,
 } from '../operations/types';
 import { ContractAbstraction } from './contract';
 import { Estimate } from './estimate';
@@ -71,6 +73,16 @@ export interface EstimationProvider {
   reveal(params?: RevealParams): Promise<Estimate | undefined> ;
 
   batch(params: ParamsWithKind[]): Promise<Estimate[]>;
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for registering an expression (registerGlobalConstant operation) 
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation or undefined if the account is already revealed
+   *
+   * @param params registerGlobalConstant operation parameter
+   */
+  registerGlobalConstant(params: RegisterGlobalConstantParams): Promise<Estimate>;
 }
 
 export interface StorageProvider {
@@ -197,4 +209,14 @@ export interface ContractProvider extends StorageProvider {
    * @param params List of operation to batch together
    */
   batch(params?: ParamsWithKind[]): OperationBatch ;
+
+  /**
+   *
+   * @description Register a Micheline expression in a global table of constants. Will sign and inject an operation using the current context
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param params registerGlobalConstant operation parameter
+   */
+  registerGlobalConstant(params: RegisterGlobalConstantParams): Promise<RegisterGlobalConstantOperation>;
 }

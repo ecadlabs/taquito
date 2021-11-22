@@ -1,13 +1,14 @@
 import { RpcClient } from '../src/taquito-rpc';
 import BigNumber from 'bignumber.js';
-import {
-  LazyStorageDiffBigMap,
-  OperationContentsAndResultEndorsement,
-  OperationContentsAndResultEndorsementWithSlot,
-  OperationContentsAndResultOrigination,
-  OperationResultTransaction,
-  OperationContentsAndResultTransaction,
+import { 
+  LazyStorageDiffBigMap, 
+  OperationContentsAndResultEndorsement, 
+  OperationContentsAndResultEndorsementWithSlot, 
+  OperationContentsAndResultOrigination, 
+  OperationResultTransaction, 
+  OperationContentsAndResultTransaction, 
   LazyStorageDiffSaplingState,
+  OperationContentsAndResultRegisterGlobalConstant
 } from '../src/types';
 
 /**
@@ -2029,6 +2030,131 @@ describe('RpcClient test', () => {
 
       done();
     });
+
+    it('fetches a block having a RegisterGlobalConstant operation and it validates its properties, proto 11', async done => {
+      httpBackend.createRequest.mockReturnValue(
+        Promise.resolve(
+          {
+            "protocol": "PtHangzHogokSuiMHemCuowEavgYTP8J5qQ9fQS793MHYFpCY3r",
+            "chain_id": "NetXuXoGoLxNK6o",
+            "hash": "BLGJTp5epczxcqaKkDdpPSKStBQ9FbLDR8qjprW1LE5SbkzmyCJ",
+            "header": {},
+            "metadata": {},
+            "operations": [
+              [],
+              [],
+              [],
+              [
+                {
+                  "protocol": "PtHangzHogokSuiMHemCuowEavgYTP8J5qQ9fQS793MHYFpCY3r",
+                  "chain_id": "NetXuXoGoLxNK6o",
+                  "hash": "ooG5DTHDKCeJTSaJhmQqxc2K4CVt5qYJaCXCupaMxAMAabcAJkc",
+                  "branch": "BLU4Led8FWFT9WiYgSLbFb9AJ6eTi4LxfwshHpvZwsupuKzLeLN",
+                  "contents": [
+                    {
+                      "kind": "register_global_constant",
+                      "source": "tz1TJGsZxvr6aBGUqfQVxufesTtA7QGi696D",
+                      "fee": "372",
+                      "counter": "7423375",
+                      "gas_limit": "1330",
+                      "storage_limit": "93",
+                      "value": {
+                        "prim": "Pair",
+                        "args": [
+                          {
+                            "int": "999"
+                          },
+                          {
+                            "int": "999"
+                          }
+                        ]
+                      },
+                      "metadata": {
+                        "balance_updates": [
+                          {
+                            "kind": "contract",
+                            "contract": "tz1TJGsZxvr6aBGUqfQVxufesTtA7QGi696D",
+                            "change": "-372",
+                            "origin": "block"
+                          },
+                          {
+                            "kind": "freezer",
+                            "category": "fees",
+                            "delegate": "tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE",
+                            "cycle": 17,
+                            "change": "372",
+                            "origin": "block"
+                          }
+                        ],
+                        "operation_result": {
+                          "status": "applied",
+                          "balance_updates": [
+                            {
+                              "kind": "contract",
+                              "contract": "tz1TJGsZxvr6aBGUqfQVxufesTtA7QGi696D",
+                              "change": "-18250",
+                              "origin": "block"
+                            }
+                          ],
+                          "consumed_gas": "1230",
+                          "storage_size": "73",
+                          "global_address": "exprvNeeFGy8M7xhmaq7bkQcd3RsXc7ogv2HwL1dciubXdgPHEMRH2"
+                        }
+                      }
+                    }
+                  ],
+                  "signature": "sigVW23SZBAnGLYQSDxN8y4YvMLUkZ13bBRHSoQSBpLASZvKgXZWWmp1q1iaqqV4hr3xRN9neYong8jHqxak2Y5vRYK8LaBY"
+                }
+              ]
+            ]
+          }
+        )
+      );
+
+      const response = await client.getBlock();
+
+      expect(response.operations[3][0].contents[0].kind).toEqual('register_global_constant');
+      const content = response.operations[3][0].contents[0] as OperationContentsAndResultRegisterGlobalConstant;
+      expect(content.source).toEqual("tz1TJGsZxvr6aBGUqfQVxufesTtA7QGi696D");
+      expect(content.fee).toEqual("372");
+      expect(content.counter).toEqual("7423375");
+      expect(content.gas_limit).toEqual("1330");
+      expect(content.storage_limit).toEqual("93");
+      expect(content.value).toEqual({
+        "prim": "Pair",
+        "args": [
+          {
+            "int": "999"
+          },
+          {
+            "int": "999"
+          }
+        ]
+      });
+      expect(content.metadata.balance_updates[0].kind).toEqual("contract");
+      expect(content.metadata.balance_updates[0].contract).toBeDefined();
+      expect(content.metadata.balance_updates[0].contract).toEqual('tz1TJGsZxvr6aBGUqfQVxufesTtA7QGi696D');
+      expect(content.metadata.balance_updates[0].change).toBeDefined();
+      expect(content.metadata.balance_updates[0].change).toEqual('-372');
+      expect(content.metadata.balance_updates[0].origin).toBeDefined();
+      expect(content.metadata.balance_updates[0].origin).toEqual('block');
+      expect(content.metadata.balance_updates[0].category).toBeUndefined();
+      expect(content.metadata.balance_updates[0].delegate).toBeUndefined();
+      expect(content.metadata.balance_updates[0].cycle).toBeUndefined();
+
+      expect(content.metadata.operation_result.global_address).toBeDefined();
+      expect(content.metadata.operation_result.status).toEqual('applied');
+      expect(content.metadata.operation_result.balance_updates).toBeDefined();
+      expect(content.metadata.operation_result.global_address).toEqual("exprvNeeFGy8M7xhmaq7bkQcd3RsXc7ogv2HwL1dciubXdgPHEMRH2");
+      expect(content.metadata.operation_result.consumed_gas).toBeDefined();
+      expect(content.metadata.operation_result.storage_size).toBeDefined();
+      expect(content.metadata.operation_result.errors).toBeUndefined();
+
+      expect(content.metadata.internal_operation_results).toBeUndefined();
+
+      done();
+    });
+
   });
 
   describe('getBakingRights', () => {

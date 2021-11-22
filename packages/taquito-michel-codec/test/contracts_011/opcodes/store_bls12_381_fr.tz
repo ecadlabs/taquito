@@ -1,0 +1,3 @@
+parameter bls12_381_fr;
+storage (option (bls12_381_fr));
+code {CAR; SOME; NIL operation; PAIR}

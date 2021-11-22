@@ -27,4 +27,12 @@ export class OperationToken extends Token {
   public ExtractSchema() {
     return OperationToken.prim;
   }
+
+  findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
+    if (OperationToken.prim === tokenToFind) {
+      tokens.push(this);
+    }
+    return tokens;
+  };
+
 }

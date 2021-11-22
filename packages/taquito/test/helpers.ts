@@ -5,6 +5,7 @@ import {
   OperationContentsAndResultReveal,
   OperationContentsAndResultOrigination,
   OperationContentsAndResultDelegation,
+  OperationContentsAndResultRegisterGlobalConstant,
 } from '@taquito/rpc';
 
 const defaultTransferData = {
@@ -50,6 +51,16 @@ const defaultOrigininateData = {
     code: [],
     storage: {},
   },
+};
+
+const defaultRegisterGlobalConstantData = {
+  kind: OpKind.REGISTER_GLOBAL_CONSTANT as OpKind.REGISTER_GLOBAL_CONSTANT,
+  source: 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
+  fee: '2991',
+  counter: '121619',
+  gas_limit: '26260',
+  storage_limit: '257',
+  value: {int: '0'}
 };
 
 const defaultResult = {
@@ -152,6 +163,34 @@ export class RevealOperationBuilder {
   }
 
   build(): OperationContentsAndResultReveal {
+    return {
+      ...this.data,
+      metadata: {
+        balance_updates: [],
+        operation_result: this.result,
+      },
+    };
+  }
+}
+
+export class RegisterGlobalConstantOperationBuilder {
+  private result: OperationContentsAndResultRegisterGlobalConstant['metadata']['operation_result'] = defaultResult;
+  private data: Omit<OperationContentsAndResultRegisterGlobalConstant, 'metadata'>;
+
+  constructor(
+    private _data: Partial<Omit<OperationContentsAndResultRegisterGlobalConstant, 'metadata'>> = {}
+  ) {
+    this.data = { ...defaultRegisterGlobalConstantData, ...this._data };
+  }
+
+  withResult(
+    result: Partial<OperationContentsAndResultRegisterGlobalConstant['metadata']['operation_result']>
+  ) {
+    this.result = { ...defaultResult, ...result };
+    return this;
+  }
+
+  build(): OperationContentsAndResultRegisterGlobalConstant {
     return {
       ...this.data,
       metadata: {

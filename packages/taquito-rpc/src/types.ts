@@ -166,6 +166,16 @@ export interface OperationContentsDelegation {
   delegate?: string;
 }
 
+export interface OperationContentsRegisterGlobalConstant {
+  kind: OpKind.REGISTER_GLOBAL_CONSTANT;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  value: MichelsonV1Expression;
+}
+
 export type OperationContents =
   | OperationContentsEndorsement
   | OperationContentsRevelation
@@ -179,7 +189,8 @@ export type OperationContents =
   | OperationContentsOrigination
   | OperationContentsDelegation
   | OperationContentsEndorsementWithSlot
-  | OperationContentsFailingNoop;
+  | OperationContentsFailingNoop
+  | OperationContentsRegisterGlobalConstant;
 
 export interface OperationContentsAndResultMetadataExtended {
   balance_updates: OperationMetadataBalanceUpdates[];
@@ -202,6 +213,12 @@ export interface OperationContentsAndResultMetadataTransaction {
 export interface OperationContentsAndResultMetadataDelegation {
   balance_updates: OperationMetadataBalanceUpdates[];
   operation_result: OperationResultDelegation;
+  internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataRegisterGlobalConstant {
+  balance_updates: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultRegisterGlobalConstant;
   internal_operation_results?: InternalOperationResult[];
 }
 
@@ -301,6 +318,17 @@ export interface OperationContentsAndResultDelegation {
   metadata: OperationContentsAndResultMetadataDelegation;
 }
 
+export interface OperationContentsAndResultRegisterGlobalConstant {
+  kind: OpKind.REGISTER_GLOBAL_CONSTANT;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  value: MichelsonV1Expression;
+  metadata: OperationContentsAndResultMetadataRegisterGlobalConstant
+}
+
 export type OperationContentsAndResult =
   | OperationContentsAndResultEndorsement
   | OperationContentsAndResultRevelation
@@ -313,7 +341,8 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultTransaction
   | OperationContentsAndResultOrigination
   | OperationContentsAndResultDelegation
-  | OperationContentsAndResultEndorsementWithSlot;
+  | OperationContentsAndResultEndorsementWithSlot
+  | OperationContentsAndResultRegisterGlobalConstant;
 
 export interface OperationEntry {
   protocol: string;
@@ -527,7 +556,8 @@ export type InternalOperationResultKindEnum =
   | OpKind.REVEAL
   | OpKind.TRANSACTION
   | OpKind.ORIGINATION
-  | OpKind.DELEGATION;
+  | OpKind.DELEGATION
+  | OpKind.REGISTER_GLOBAL_CONSTANT;
 
 export type SuccessfulManagerOperationResultKindEnum =
   | OpKind.REVEAL
@@ -539,13 +569,23 @@ export type InternalOperationResultEnum =
   | OperationResultReveal
   | OperationResultTransaction
   | OperationResultDelegation
-  | OperationResultOrigination;
+  | OperationResultOrigination
+  | OperationResultRegisterGlobalConstant;
 
 export interface OperationResultDelegation {
   status: OperationResultStatusEnum;
   consumed_gas?: string;
   errors?: TezosGenericOperationError[];
   consumed_milligas?: string;
+}
+
+export interface OperationResultRegisterGlobalConstant {
+  status: OperationResultStatusEnum;
+  balance_updates?: OperationBalanceUpdates;
+  consumed_gas?: string;
+  storage_size?: string;
+  global_address?: string;
+  errors?: TezosGenericOperationError[];
 }
 
 export interface ContractBigMapDiffItem {
@@ -605,6 +645,7 @@ export interface InternalOperationResult {
   balance?: string;
   delegate?: string;
   script?: ScriptedContracts;
+  value?: MichelsonV1Expression;
   result: InternalOperationResultEnum;
 }
 
@@ -715,6 +756,7 @@ export interface OperationContentsAndResultMetadataOrigination {
 }
 
 export type ConstantsResponse = ConstantsResponseCommon &
+  ConstantsResponseProto012 &
   ConstantsResponseProto011 &
   ConstantsResponseProto010 &
   ConstantsResponseProto009 &
@@ -750,11 +792,43 @@ export interface ConstantsResponseCommon {
   hard_storage_limit_per_operation: BigNumber;
 }
 
-export interface ConstantsResponseProto011
-  extends Omit<ConstantsResponseProto010, 'michelson_maximum_type_size'> {
+export type Ratio = { numerator: number; denominator: number }
+export interface ConstantsResponseProto012
+	extends Omit<
+			ConstantsResponseProto011,
+			| 'minimal_block_delay'
+			| 'baking_reward_per_endorsement'
+			| 'initial_endorsers'
+			| 'delay_per_missing_endorsement'
+			| 'test_chain_duration'
+			| 'blocks_per_roll_snapshot'
+			| 'time_between_blocks'
+			| 'endorsers_per_block'
+			| 'block_security_deposit'
+			| 'endorsement_security_deposit'
+			| 'endorsement_reward'
+		> {
+	blocks_per_stake_snapshot?: number;
+	baking_reward_fixed_portion?: BigNumber;
+	baking_reward_bonus_per_slot?: BigNumber;
+	endorsing_reward_per_slot?: BigNumber;
+	max_operations_time_to_live?: number;
+	round_durations?: BigNumber[];
+	consensus_committee_size?: number;
+	consensus_threshold?: number;
+	minimal_participation_ratio?: Ratio;
+	max_slashing_period?: number;
+	frozen_deposits_percentage?: number;
+	double_baking_punishment?: BigNumber;
+	ratio_of_frozen_deposits_slashed_per_double_endorsement?: Ratio;
+	delegate_selection?: 'random' | string[][];
+}
+
+export interface ConstantsResponseProto011 extends ConstantsResponseProto010 {
   max_micheline_node_count?: number;
   max_allowed_global_constants_depth?: number;
   max_micheline_bytes_limit?: number;
+  cache_layout?: BigNumber[];
 }
 export interface ConstantsResponseProto010 extends ConstantsResponseProto007 {
   minimal_block_delay?: BigNumber;

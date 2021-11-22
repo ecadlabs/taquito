@@ -1,4 +1,4 @@
-import { TokenFactory, ComparableToken, TokenValidationError } from '../token';
+import { TokenFactory, ComparableToken, TokenValidationError, Token } from '../token';
 
 export class BytesValidationError extends TokenValidationError {
   name: string = 'BytesValidationError';
@@ -75,4 +75,12 @@ export class BytesToken extends ComparableToken {
 
     return bytes;
   }
+
+  findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
+    if (BytesToken.prim === tokenToFind) {
+      tokens.push(this);
+    }
+    return tokens;
+  };
+
 }
