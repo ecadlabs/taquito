@@ -35,78 +35,94 @@ export const tezos = new TezosToolkit(provider);
 
 let contract_catalogue = new Map();
 
+const users: Array<string> = [
+  'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
+  'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
+  'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY',
+  'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5',
+  'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx',
+  'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
+  'tz1L9r8mWmRPndRhuvMCWESLGSVeFzQ9NAWx',
+  'tz1NhNv9g7rtcjyNsH8Zqu79giY5aTqDDrzB',
+  'tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE',
+  'tz1XTyqBn4xi9tkRDutpRyQwHxfF8ar4i4Wq',
+];
+
 let user_addresses = new Map();
-user_addresses.set('TestFunder', 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys');
-user_addresses.set('Alice', 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb');
-user_addresses.set('Deborah', 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY');
-user_addresses.set('Eddy', 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5');
-user_addresses.set('Freda', 'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx');
-user_addresses.set('Glen', 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr');
-user_addresses.set('Validation', 'tz1L9r8mWmRPndRhuvMCWESLGSVeFzQ9NAWx');
-user_addresses.set('WalletReceiver', 'tz1NhNv9g7rtcjyNsH8Zqu79giY5aTqDDrzB');
-user_addresses.set('Allowances', 'tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE');
-user_addresses.set('BigMapLedger', 'tz1XTyqBn4xi9tkRDutpRyQwHxfF8ar4i4Wq');
+user_addresses.set('TestFunder', users[0]);
+user_addresses.set('Alice', users[1]);
+user_addresses.set('Deborah', users[2]);
+user_addresses.set('Eddy', users[3]);
+user_addresses.set('Freda', users[4]);
+user_addresses.set('Glen', users[5]);
+user_addresses.set('Validation', users[6]);
+user_addresses.set('WalletReceiver', users[7]);
+user_addresses.set('Allowances', users[8]);
+user_addresses.set('BigMapLedger', users[9]);
 
-const min_balance = 100;
+var low_balance: Array<string> = [];
 
-async function checkBalances() {
+const min_balance = 100000000;
+
+async function checkBalances(users) {
   console.log('checking funds...');
   try {
-    user_addresses.forEach(async (value: string, key: string) => {
-      const user_balance: any = await tezos.tz.getBalance(value);
+    for (var i = 0; i < users.length; i++) {
+      const user_balance: any = await tezos.tz.getBalance(users[i]);
       if (user_balance < min_balance) {
-        tezos.setSignerProvider(signer);
-        console.log(`${key} has a too-low balance of ${user_balance / 1000000}.`);
-        console.log(`Transfering ${min_balance} ꜩ to ${key}...`);
-        await transferMinBalance();
-        console.log(`Transfer complete`);
-      } else {
-        console.log(`${key} has an ok balance of ${user_balance / 1000000}.`);
+        low_balance.push(users[i]);
       }
+    }
+  } catch (ex) {
+    console.error(ex);
+  }
 
-      async function transferMinBalance() {
-        await tezos.contract
-          .transfer({ to: value, amount: min_balance })
-          .then((op) => {
-            console.log(`Waiting for ${op.hash} of transfer to ${value} to be confirmed...`);
-            return op.confirmation(1).then(() => op.hash);
-          })
-          .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
-      }
-    });
+  console.log(`Low balance addresses : ` + low_balance);
+  tezos.setSignerProvider(signer);
+  try {
+    for (var i = 0; i < low_balance.length; i++) {
+      console.log("Funding low balance address :"+low_balance[i])
+      const fundAccountFirst = await tezos.contract.transfer({
+        to: low_balance[i],
+        amount: min_balance / 1000000,
+      });
+      await fundAccountFirst.confirmation();
+
+    }
   } catch (ex) {
     console.error(ex);
   }
 }
 
 async function originateTheContracts() {
-  checkBalances();
+  checkBalances(users);
 
-  console.log('originating...');
-  contract_catalogue.set('IncrementContract', await originateIncrementContract());
-  contract_catalogue.set('LambdaViewOne', await originateLambda1());
-  contract_catalogue.set('LambdaViewTwo', await originateLambda2());
-  contract_catalogue.set('BigMapPairasMap', await originateBigMapsPairasMapKeys());
-  contract_catalogue.set('BigMapValuesComplexKeys', await originateBigMapsComplexKeys());
-  contract_catalogue.set('BigMapInitialStorage', await originateBigMapsInitialStorage());
-  contract_catalogue.set('BigMapsMultipleValues', await originateMapValueMultipleBigMaps());
-  contract_catalogue.set(
-    'SmartContractComplexStorage',
-    await originateSmartContractComplexStorage()
-  );
-  contract_catalogue.set('Tzip12BigMapOffChain', await originateTZip12BigMapOffChain());
-  contract_catalogue.set('Tzip16Storage', await originateTzip16Storage());
-  contract_catalogue.set('Tzip16HTTPS', await originateTzip16Https());
-  contract_catalogue.set('Tzip16SHA256', await originateTzip16SHA256());
-  contract_catalogue.set('Tzip16IPFS', await originateTzip16IPFS());
-  contract_catalogue.set('Tzip16OffChainOne', await originateTzip16OnChainOne());
-  contract_catalogue.set('Tzip16OffChainTwo', await originateTzip16OnChainTwo());
-  contract_catalogue.set('WalletContract', await originateWalletOriginateContractTransfer());
-  contract_catalogue.set('WalletAreYouThereContract', await originateWalletOriginateAreYouThere());
-  contract_catalogue.set('TokenContract', await originateTokenContract());
-  contract_catalogue.set('BigMapPackContract', await originateBigMapPackContract());
+   console.log('originating...');
+   contract_catalogue.set('IncrementContract', await originateIncrementContract());
+   contract_catalogue.set('LambdaViewOne', await originateLambda1());
+   contract_catalogue.set('LambdaViewTwo', await originateLambda2());
+   contract_catalogue.set('BigMapPairasMap', await originateBigMapsPairasMapKeys());
+   contract_catalogue.set('BigMapValuesComplexKeys', await originateBigMapsComplexKeys());
+   contract_catalogue.set('BigMapInitialStorage', await originateBigMapsInitialStorage());
+   contract_catalogue.set('BigMapsMultipleValues', await originateMapValueMultipleBigMaps());
+   contract_catalogue.set(
+     'SmartContractComplexStorage',
+     await originateSmartContractComplexStorage()
+   );
+   contract_catalogue.set('Tzip12BigMapOffChain', await originateTZip12BigMapOffChain());
+   contract_catalogue.set('Tzip16Storage', await originateTzip16Storage());
+   contract_catalogue.set('Tzip16HTTPS', await originateTzip16Https());
+   contract_catalogue.set('Tzip16SHA256', await originateTzip16SHA256());
+   contract_catalogue.set('Tzip16IPFS', await originateTzip16IPFS());
+   contract_catalogue.set('Tzip16OffChainOne', await originateTzip16OnChainOne());
+   contract_catalogue.set('Tzip16OffChainTwo', await originateTzip16OnChainTwo());
+   contract_catalogue.set('WalletContract', await originateWalletOriginateContractTransfer());
+   contract_catalogue.set('WalletAreYouThereContract', await originateWalletOriginateAreYouThere());
+   contract_catalogue.set('TokenContract', await originateTokenContract());
+   contract_catalogue.set('BigMapPackContract', await originateBigMapPackContract());
+   contract_catalogue.set('MichelsonMap', await originateMichelsonMap());
 
-  json_contract_catalogue();
+   json_contract_catalogue();
 
   function json_contract_catalogue() {
     console.log(' ');
@@ -345,7 +361,7 @@ async function originateBigMapsInitialStorage() {
       code: contractMapBigMap,
       storage: {
         thebigmap: storageBigMap,
-        theMap: storageMap,
+        themap: storageMap,
       },
     });
 
@@ -965,4 +981,27 @@ async function originateBigMapPackContract() {
   }
 }
 
+async function originateMichelsonMap() {
+  tezos.setSignerProvider(signer);
+  try {
+    console.log('Deploying Michelson Tutorial contract...');
+    const op = await tezos.contract.originate({
+      code: `parameter (pair address mutez);
+      storage (map address mutez);
+      code { DUP ; CAR ; SWAP ; CDR ; SWAP ; DUP ; DUG 2 ; CDR ; DIG 2 ; CAR ; SWAP ; SOME ; SWAP ; UPDATE ; NIL operation ; PAIR }`,
+      init: [
+        {
+          prim: 'Elt',
+          args: [{ string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn' }, { int: '0' }],
+        },
+      ],
+    });
+
+    const contract = await op.contract();
+    console.log('Michelson Tutorial Contract address', contract.address);
+    return contract.address;
+  } catch (ex) {
+    console.error(ex);
+  }
+}
 originateTheContracts();
