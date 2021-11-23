@@ -123,7 +123,7 @@ async function originateTheContracts() {
    contract_catalogue.set('MichelsonMap', await originateMichelsonMap());
 
    json_contract_catalogue();
-
+  
   function json_contract_catalogue() {
     console.log(' ');
     console.log('The Contract Catalogue :');
