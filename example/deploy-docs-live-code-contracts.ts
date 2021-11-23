@@ -64,7 +64,7 @@ var low_balance: Array<string> = [];
 
 const min_balance = 100000000;
 
-async function checkBalances(users) {
+async function checkBalances(users: string | any[]) {
   console.log('checking funds...');
   try {
     for (var i = 0; i < users.length; i++) {
