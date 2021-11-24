@@ -10,7 +10,9 @@
  */
 
 import { Buffer } from 'buffer';
-import { prefix } from './constants';
+import { Prefix, prefix, prefixLength } from './constants';
+import  { validatePkAndExtractPrefix } from './verify-signature'
+import { hash } from '@stablelib/blake2b'
 const blake = require('blakejs');
 const bs58check = require('bs58check');
 
@@ -19,7 +21,7 @@ export { VERSION } from './version';
 
 export { prefix, Prefix, prefixLength } from './constants';
 
-export { verifySignature } from './verify-signature';
+export { verifySignature, validatePkAndExtractPrefix} from './verify-signature';
 
 /**
  *
@@ -240,6 +242,41 @@ export const buf2hex = (buffer: Buffer): string => {
   });
   return hexParts.join('');
 };
+
+/**
+ * 
+ *  @description Gets Tezos address (PKH) from Public Key
+ * 
+ *  @param publicKey Public Key
+ *  @returns A string of the Tezos address (PKH) that was derived from the given Public Key
+ */
+ export const getPkhfromPk = (publicKey: string): string => {
+   let encodingPrefix;
+   let prefixLen;
+
+  const keyPrefix = validatePkAndExtractPrefix(publicKey);
+  const decoded = b58cdecode(publicKey, prefix[keyPrefix]);
+
+  switch (keyPrefix) {
+    case Prefix.EDPK:
+      encodingPrefix = prefix['tz1'];
+      prefixLen = prefixLength['tz1'];
+      break;
+    case Prefix.SPPK:
+      encodingPrefix = prefix['tz2'];
+      prefixLen = prefixLength['tz2'];
+      break;
+    case Prefix.P2PK:
+      encodingPrefix = prefix['tz3'];
+      prefixLen = prefixLength['tz3'];
+      break;
+  }
+
+  const hashed = hash(decoded, prefixLen);
+  const result = b58cencode(hashed, encodingPrefix);
+
+  return result;
+}
 
 /**
  *
