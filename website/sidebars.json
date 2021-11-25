@@ -31,7 +31,8 @@
         "validators",
         "wallet_API",
         "wallets",
-        "web3js_taquito"
+        "web3js_taquito",
+        "taquito_utils"
       ]
     },
     {
@@ -42,7 +43,7 @@
     {
       "type": "category",
       "label": "Packages",
-      "items": ["michelson_encoder", "contracts-library"]
+      "items": ["michelson_encoder", "contracts-library", "taquito_utils"]
     },
     {
       "type": "category",
