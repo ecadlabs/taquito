@@ -524,7 +524,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                 tokens_per_roll: new BigNumber(8000000000),
                 seed_nonce_revelation_tip: new BigNumber(125000),
                 origination_size: 257,
-                cost_per_byte: new BigNumber(1000),
+                cost_per_byte: new BigNumber(250),
                 hard_storage_limit_per_operation: new BigNumber(60000),
                 quorum_min: 2000,
                 quorum_max: 7000,
