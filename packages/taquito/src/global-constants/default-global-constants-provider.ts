@@ -1,8 +1,8 @@
 import { GlobalConstantHashAndValue } from "@taquito/michel-codec";
 import { GlobalConstantNotFound } from "./error";
-import { GlobalConstantHash, InterfaceGlobalConstantsProvider } from "./interface-global-constants-provider";
+import { GlobalConstantHash, GlobalConstantsProvider } from "./interface-global-constants-provider";
 
-export class DefaultGlobalConstantsProvider implements InterfaceGlobalConstantsProvider {
+export class DefaultGlobalConstantsProvider implements GlobalConstantsProvider {
     private _globalConstantsLibrary: GlobalConstantHashAndValue = {};
 
     /**
@@ -19,7 +19,7 @@ export class DefaultGlobalConstantsProvider implements InterfaceGlobalConstantsP
 
     /**
      *
-     * @description Retrieve a the Michelson value of a global constant based on its hash
+     * @description Retrieve the Michelson value of a global constant based on its hash
      *
      * @param hash a string representing the global constant hash
      * @returns Expr, the JSON Michelson value
