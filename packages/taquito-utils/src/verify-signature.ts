@@ -63,7 +63,7 @@ function validateMessageNotEmpty(message: string) {
 
 export function validatePkAndExtractPrefix(publicKey: string): PkPrefix {
     if (publicKey === '') {
-        throw new InvalidPublicKeyError(`The public key provided for verifying signature cannot be empty.`);
+        throw new InvalidPublicKeyError(`The public key provided cannot be empty.`);
     }
     const pkPrefix = publicKey.substring(0, 4);
     const validation = validatePublicKey(publicKey);

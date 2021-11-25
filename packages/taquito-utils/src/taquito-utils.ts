@@ -259,16 +259,16 @@ export const buf2hex = (buffer: Buffer): string => {
 
   switch (keyPrefix) {
     case Prefix.EDPK:
-      encodingPrefix = prefix['tz1'];
-      prefixLen = prefixLength['tz1'];
+      encodingPrefix = prefix[Prefix.TZ1];
+      prefixLen = prefixLength[Prefix.TZ1];
       break;
     case Prefix.SPPK:
-      encodingPrefix = prefix['tz2'];
-      prefixLen = prefixLength['tz2'];
+      encodingPrefix = prefix[Prefix.TZ2];
+      prefixLen = prefixLength[Prefix.TZ2];
       break;
     case Prefix.P2PK:
-      encodingPrefix = prefix['tz3'];
-      prefixLen = prefixLength['tz3'];
+      encodingPrefix = prefix[Prefix.TZ3];
+      prefixLen = prefixLength[Prefix.TZ3];
       break;
   }
 

@@ -16,6 +16,7 @@ import { b58cdecode } from '@taquito/utils'; // Base58 decode a string and remov
 import { b58cencode } from '@taquito/utils'; // Base58 encode a string or a Uint8Array and append a prefix to it
 import { encodeOpHash } from '@taquito/utils'; // Return the operation hash of a signed operation
 import { encodeExpr } from '@taquito/utils'; // Hash a string using the BLAKE2b algorithm, base58 encode the hash obtained and appends the prefix 'expr' to it
+import { getPkhfromPk } from '@taquito/utils'; // Returns Tezos address (PKH) of a given Public Key
 ```
 
 See the top-level [https://github.com/ecadlabs/taquito](https://github.com/ecadlabs/taquito) file for details on reporting issues, contributing and versioning.
