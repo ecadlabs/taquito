@@ -95,7 +95,7 @@ async function checkBalances(users: string | any[]) {
 }
 
 async function originateTheContracts() {
-  checkBalances(users);
+  await checkBalances(users);
 
    console.log('originating...');
    contract_catalogue.set('IncrementContract', await originateIncrementContract());
