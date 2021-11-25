@@ -12,8 +12,8 @@ import { Extension } from './extension/extension';
 import { Forger } from './forger/interface';
 import { RpcForger } from './forger/rpc-forger';
 import { format } from './format';
-import { DefaultGlobalConstantsProvider } from './global-constants/default-global-constants-provider';
-import { InterfaceGlobalConstantsProvider } from './global-constants/interface-global-constants-provider';
+import { GlobalConstantsProvider } from './global-constants/interface-global-constants-provider';
+import { NoopGlobalConstantsProvider } from './global-constants/noop-global-constants-provider';
 import { Packer } from './packer/interface';
 import { RpcPacker } from './packer/rpc-packer';
 import { Signer } from './signer/interface';
@@ -49,6 +49,9 @@ export * from './parser/noop-parser';
 export * from './packer/interface';
 export * from './packer/michel-codec-packer';
 export * from './packer/rpc-packer';
+export * from './global-constants/default-global-constants-provider';
+export * from './global-constants/error';
+export * from './global-constants/interface-global-constants-provider';
 
 export interface SetProviderOptions {
   forger?: Forger;
@@ -59,7 +62,7 @@ export interface SetProviderOptions {
   protocol?: Protocols;
   config?: Partial<ConfigConfirmation> & Partial<ConfigStreamer>;
   packer?: Packer;
-  globalConstantsProvider?: InterfaceGlobalConstantsProvider;
+  globalConstantsProvider?: GlobalConstantsProvider;
 }
 
 export interface VersionInfo {
@@ -256,7 +259,7 @@ export class TezosToolkit {
    *
    */
    setGlobalConstantsProvider(globalConstantsProvider?: SetProviderOptions['globalConstantsProvider']) {
-    const g = typeof globalConstantsProvider === 'undefined' ? new DefaultGlobalConstantsProvider() : globalConstantsProvider;
+    const g = typeof globalConstantsProvider === 'undefined' ? new NoopGlobalConstantsProvider() : globalConstantsProvider;
     this._options.globalConstantsProvider = g;
     this._context.globalConstantsProvider = g;
   }

@@ -20,8 +20,8 @@ import { RpcPacker } from './packer/rpc-packer';
 import BigNumber from 'bignumber.js';
 import { retry } from 'rxjs/operators';
 import { BehaviorSubject, OperatorFunction } from 'rxjs';
-import { InterfaceGlobalConstantsProvider } from './global-constants/interface-global-constants-provider';
-import { DefaultGlobalConstantsProvider } from './global-constants/default-global-constants-provider';
+import { GlobalConstantsProvider } from './global-constants/interface-global-constants-provider';
+import { NoopGlobalConstantsProvider } from './global-constants/noop-global-constants-provider';
 
 export interface TaquitoProvider<T, K extends Array<any>> {
   new (context: Context, ...rest: K): T;
@@ -65,7 +65,7 @@ export class Context {
   public readonly operationFactory: OperationFactory;
   private _packer: Packer;
   private providerDecorator: Function[] = [];
-  private _globalConstantsProvider: InterfaceGlobalConstantsProvider;
+  private _globalConstantsProvider: GlobalConstantsProvider;
   public readonly tz = new RpcTzProvider(this);
   public readonly estimate = new RPCEstimateProvider(this);
   public readonly contract = new RpcContractProvider(this, this.estimate);
@@ -82,7 +82,7 @@ export class Context {
     packer?: Packer,
     wallet?: WalletProvider,
     parser?: ParserProvider,
-    globalConstantsProvider?: InterfaceGlobalConstantsProvider
+    globalConstantsProvider?: GlobalConstantsProvider
   ) {
     if (typeof this._rpc === 'string') {
       this._rpcClient = new RpcClient(this._rpc);
@@ -95,7 +95,7 @@ export class Context {
     this._walletProvider = wallet ? wallet : new LegacyWalletProvider(this);
     this._parser = parser? parser: new MichelCodecParser(this);
     this._packer = packer? packer: new RpcPacker(this);
-    this._globalConstantsProvider = globalConstantsProvider? globalConstantsProvider: new DefaultGlobalConstantsProvider();
+    this._globalConstantsProvider = globalConstantsProvider? globalConstantsProvider: new NoopGlobalConstantsProvider();
   }
 
   get config(): ConfigConfirmation & ConfigStreamer {
@@ -183,7 +183,7 @@ export class Context {
     return this._globalConstantsProvider;
   }
 
-  set globalConstantsProvider(value: InterfaceGlobalConstantsProvider) {
+  set globalConstantsProvider(value: GlobalConstantsProvider) {
     this._globalConstantsProvider = value;
   }
 

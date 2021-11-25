@@ -162,3 +162,64 @@ const batchOp = await Tezos.contract.batch([
 
 await batchOp.confirmation();
 ```
+
+## How to deploy a contract using the storage property if I use global constant in the storage part of the code?
+
+Taquito needs the Michelson value of global constants to encode the storage argument properly into the corresponding Michelson data. To do so, you will need to set a global constant provider on the `TezosToolkit` instance. 
+
+Note that there is no RPC endpoint available at that time (v11.1.0) that allows fetching global constant values based on their hashes. Taquito provides a default global constant provider named `DefaultGlobalConstantsProvider` where the hash and corresponding JSON Michelson value must be manually provisioned using its `loadGlobalConstant` method. 
+
+Instead of using the `DefaultGlobalConstantsProvider`, a user can inject a custom provider. The global constant provider needs to implement the `GlobalConstantsProvider` interface and define a `getGlobalConstantByHash` method. Different global constant providers (i.e., built on the RPC or indexers) will be included in Taquito in the future.
+
+**Here is a complete example:**
+```ts
+import { TezosToolkit, DefaultGlobalConstantsProvider } from '@taquito/taquito';
+
+// create an instance of the `DefaultGlobalConstantsProvider`, load the global constants used in the contract, inject the instance on the TezosToolkit
+const expression = { "prim": "int" }
+const constantHash = 'expruu5BTdW7ajqJ9XPTF3kgcV78pRiaBW3Gq31mgp3WSYjjUBYxre';
+
+const Tezos = new TezosToolkit('rpc_url');
+const globalConstantProvider = new DefaultGlobalConstantsProvider();
+globalConstantProvider.loadGlobalConstant({
+  [constantHash]: expression
+})
+Tezos.setGlobalConstantsProvider(globalConstantProvider);
+
+// The `getGlobalConstantByHash` method of the configured global constant provider is internally called when preparing the operation. This allows accessing the right Michelson type to encode the storage object into the corresponding Michelson data properly.
+const op = await Tezos.contract.originate({
+     code: [{
+         prim: 'parameter',
+         args: [{
+             prim: 'or',
+             args: [{
+                 prim: 'or',
+                 args: [
+                     { prim: 'int', annots: ['%decrement'] },
+                     { prim: 'int', annots: ['%increment'] }
+                 ]
+             },
+             { prim: 'unit', annots: ['%reset'] }]
+         }]
+     },
+     { prim: 'storage', args: [{ prim: 'constant', args: [{ string: constantHash }] }] },
+     {
+         prim: 'code',
+         args: [
+             [
+                 { prim: 'UNPAIR' },
+                 {
+                     prim: 'constant',
+                     args: [{ string: constantHash2 }]
+                 },
+                 { prim: 'NIL', args: [{ prim: 'operation' }] },
+                 { prim: 'PAIR' }
+             ]
+         ]
+     }
+     ],
+     storage: 4
+ });
+
+await op.confirmation();
+```

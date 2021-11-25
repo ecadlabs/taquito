@@ -1,63 +1,110 @@
 import { Parser, ParserOptions } from '../src/micheline-parser';
-import { Expr } from '../src/micheline';
+import {
+  globalConstant,
+  globalConstantJSON,
+  script,
+  scriptJSON,
+} from './helpers/global-constants-helpers';
 
-describe('Global constants', () => {
+describe('Expand global constants', () => {
+  const registeredIntExprJSON = { prim: 'int' };
+  const registeredDropExprJSON = { prim: 'DROP', args: [{ int: '2' }] };
 
-    it('Expands global constants', () => {
+  const parserOptions: ParserOptions = {
+    expandGlobalConstant: {
+      constantHashInt: registeredIntExprJSON,
+      constantHashDrop: registeredDropExprJSON,
+    },
+  };
 
-        const registeredExpr = {
-            "prim": "pair",
-            "args":
-                [{
-                    "prim": "address",
-                    "annots": ["%addr"]
-                },
-                {
-                    "prim": "option",
-                    "args": [{ "prim": "key_hash" }],
-                    "annots": ["%key"]
-                }],
-            "annots": ["%mgr2"]
-        }
+  const p = new Parser(parserOptions);
 
-        const constantHash = 'expru5X5fvCer8tbRkSAtwyVCs9FUCq46JQG7QCAkhZSumjbZBUGzb';
-        const globalConstant = { "prim": 'constant', "args": [{ "string": constantHash }] };
+  it('Expands global constants in script using parseJSON', () => {
+    expect(
+      p.parseJSON(
+        scriptJSON(
+          globalConstantJSON('constantHashInt'),
+          globalConstantJSON('constantHashDrop')
+        )
+      )
+    ).toEqual(scriptJSON(registeredIntExprJSON, registeredDropExprJSON));
+  });
 
-        const script = (constant: Expr) => [{
-            "prim": "parameter", "args": []
-        },
-        {
-            "prim": "storage",
-            "args":
-                [{
-                    "prim": "pair",
-                    "args":
-                        [{
-                            "prim": "pair",
-                            "args":
-                                [{
-                                    "prim": "address",
-                                    "annots": ["%addr"]
-                                },
-                                {
-                                    "prim": "option",
-                                    "args": [{ "prim": "key_hash" }],
-                                    "annots": ["%key"]
-                                }],
-                            "annots": ["%mgr1"]
-                        }, constant]
-                }]
-        },
-        {
-            "prim": "code", "args":[]
-        }];
+  it('Expands global constants in script using parseSequence', () => {
+    expect(
+      JSON.stringify(
+        p.parseSequence(
+          script(
+            globalConstant('constantHashInt'),
+            globalConstant('constantHashDrop')
+          )
+        )
+      )
+    ).toEqual(
+      JSON.stringify(scriptJSON(registeredIntExprJSON, registeredDropExprJSON))
+    );
+  });
 
-        const parserOptions: ParserOptions = {
-            expandGlobalConstant: { [constantHash]: registeredExpr }
-        };
+  it('Expands global constants in script using parseList', () => {
+    expect(
+      JSON.stringify(
+        p.parseList(
+          `IF_LEFT { IF_LEFT { SWAP ; SUB } { ADD } } { ${globalConstant(
+            'constantHashDrop'
+          )} ; PUSH int 0 }`
+        )
+      )
+    ).toEqual(
+      JSON.stringify({
+        prim: 'IF_LEFT',
+        args: [
+          [
+            {
+              prim: 'IF_LEFT',
+              args: [[{ prim: 'SWAP' }, { prim: 'SUB' }], [{ prim: 'ADD' }]],
+            },
+          ],
+          [
+            registeredDropExprJSON,
+            {
+              prim: 'PUSH',
+              args: [{ prim: 'int' }, { int: '0' }],
+            },
+          ],
+        ],
+      })
+    );
+  });
 
-        const p = new Parser(parserOptions);
+  it('Expands global constants in script using parseMichelineExpression', () => {
+    expect(
+      JSON.stringify(
+        p.parseMichelineExpression(
+          `(or (${globalConstant('constantHashInt')}) (${globalConstant(
+            'constantHashInt'
+          )}))`
+        )
+      )
+    ).toEqual(
+      JSON.stringify({
+        prim: 'or',
+        args: [registeredIntExprJSON, registeredIntExprJSON],
+      })
+    );
+  });
 
-        expect(p.parseJSON(script(globalConstant))).toEqual(script(registeredExpr))
-    });
+  it('Expands global constants in script using parseScript', () => {
+    expect(
+      JSON.stringify(
+        p.parseScript(
+          script(
+            globalConstant('constantHashInt'),
+            globalConstant('constantHashDrop')
+          )
+        )
+      )
+    ).toEqual(
+      JSON.stringify(scriptJSON(registeredIntExprJSON, registeredDropExprJSON))
+    );
+  });
 });

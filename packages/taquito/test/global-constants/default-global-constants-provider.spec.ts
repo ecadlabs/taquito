@@ -102,9 +102,11 @@ describe('DefaultGlobalConstantsProvider tests', () => {
         const defaultGlobalConstantsProvider = new DefaultGlobalConstantsProvider();
         const hash = 'expru5X5fvCer8tbRkSAtwyVCs9FUCq46JQG7QCAkhZSumjbZBUGzb';
 
-        expect(
-            defaultGlobalConstantsProvider.getGlobalConstantByHash(hash)
-        ).rejects.toThrowError(/Please load the value associated with the constant expru5X5fvCer8tbRkSAtwyVCs9FUCq46JQG7QCAkhZSumjbZBUGzb using the loadGlobalConstant method of the DefaultGlobalConstantsProvider./)
+        try {
+            await defaultGlobalConstantsProvider.getGlobalConstantByHash(hash)
+        } catch(err: any) {
+            expect(err.message).toEqual("Please load the value associated with the constant expru5X5fvCer8tbRkSAtwyVCs9FUCq46JQG7QCAkhZSumjbZBUGzb using the loadGlobalConstant method of the DefaultGlobalConstantsProvider.")
+        }
         done()
     });
 

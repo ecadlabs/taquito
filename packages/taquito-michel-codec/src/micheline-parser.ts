@@ -44,6 +44,20 @@ export interface ParserOptions extends ProtocolOptions {
      * Expand [Michelson macros](https://tezos.gitlab.io/whitedoc/michelson.html#macros) during parsing.
      */
     expandMacros?: boolean;
+    /**
+     * Expand global constants during parsing. 
+     * `expandGlobalConstant` expects an object where the keys are global constant hashes and the values are the corresponding JSON Micheline expressions.
+     * @example
+     * ```
+     * const parserOptions: ParserOptions = {
+     *  expandGlobalConstant: {
+     *      'expr...': { prim: 'DROP', args: [{ int: '2' }] }
+     *  }
+     * }
+     * 
+     * const p = new Parser(parserOptions);
+     * ```
+     */
     expandGlobalConstant?: GlobalConstantHashAndValue;
 }
 

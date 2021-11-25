@@ -5,9 +5,9 @@ import { PollingSubscribeProvider } from '../src/subscribe/polling-provider';
 import { NoopSigner } from '../src/signer/noop';
 import { RpcClient } from '@taquito/rpc';
 import { retry } from 'rxjs/operators';
-import { DefaultGlobalConstantsProvider } from '../src/global-constants/default-global-constants-provider';
 import { RPCEstimateProvider } from '../src/contract/rpc-estimate-provider';
 import { OperationFactory } from '../src/wallet/operation-factory';
+import { NoopGlobalConstantsProvider } from '../src/global-constants/noop-global-constants-provider';
 
 describe('TezosToolkit test', () => {
   let mockRpcClient: any;
@@ -46,7 +46,7 @@ describe('TezosToolkit test', () => {
 
   it('the default providers are set on the TezosToolkit at instantiation', () => {
     const tezos = new TezosToolkit('rpc');
-    expect(tezos.globalConstants).toBeInstanceOf(DefaultGlobalConstantsProvider);
+    expect(tezos.globalConstants).toBeInstanceOf(NoopGlobalConstantsProvider);
     expect(tezos.contract).toBeInstanceOf(RpcContractProvider);
     expect(tezos.estimate).toBeInstanceOf(RPCEstimateProvider);
     expect(tezos.operation).toBeInstanceOf(OperationFactory);
