@@ -124,11 +124,10 @@ const { signature } = signedPayload;
 
 Taquito also offers the possibility to sign Michelson code. This feature can be useful, for example, if you need to send a lambda to a contract to be executed but want to restrict the number of users who can submit a lambda by verifiying the signer's address. The signing of Michelson code requires the use of the `michel-codec` package:
 
-```ts
-import { TezosToolkit } from '@taquito/taquito';
-import { Parser, MichelsonV1Expression } from '@taquito/michel-codec';
-
-const Tezos = new TezosToolkit(NODE_RPC_URL);
+```js live noInline
+// import { TezosToolkit } from '@taquito/taquito';
+// import { Parser, packDataBytes, MichelsonData, MichelsonType } from '@taquito/michel-codec';
+// const Tezos = new TezosToolkit(NODE_RPC_URL);
 
 const data = `(Pair (Pair { Elt 1
                   (Pair (Pair "tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN" "tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx")
@@ -136,20 +135,28 @@ const data = `(Pair (Pair { Elt 1
             10000000)
       (Pair 2 333))`;
 const type = `(pair (pair (map int (pair (pair address address) bytes)) int) (pair int int))`;
+// We first use the `Parser` class and its `parseMichelineExpression` method to transform the Michelson data and type into their JSON representation
 const p = new Parser();
 const dataJSON = p.parseMichelineExpression(data);
 const typeJSON = p.parseMichelineExpression(type);
-const pack = await Tezos.rpc.packData({
-  data: dataJSON as MichelsonV1Expression,
-  type: typeJSON as MichelsonV1Expression,
-});
-const sign = await Tezos.signer.sign(pack.packed);
+
+const packed = packDataBytes(
+  dataJSON, // as MichelsonData
+  typeJSON // as MichelsonType
+);
+Tezos.signer.sign(packed.bytes)
+.then((signed) => println(JSON.stringify(signed, null, 2)))
+.catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 First, you provide the Michelson code to be signed as a string along with its type.  
 Then, you create a new instance of the `michel-codec` parser and call the `parseMichelineExpression` on it to get the JSON representation of the Michelson code and type.  
-Once done, you can pack the data using the `packData` method available on `Tezos.rpc` (after creating an instance of the `TezosToolkit`).  
+Once done, you can pack the data using the `packDataBytes` function available in the `@taquito/michel-codec` package.  
 To finish, use one of the methods presented above to sign the packed data (with the `InMemorySigner` like in this example or with the Beacon SDK).
+
+:::caution
+In the previous example, the data is packed locally in Taquito using the `packDataBytes` function of the `@taquito/michel-codec` package instead of the RPC. You should always verify the packed bytes before signing or requesting that they be signed when using the RPC to pack. This precaution helps protect you and your applications users from RPC nodes that have been compromised. A node that is operated by a bad actor, or compromised by a bad actor could return a fully formed operation that does not correspond to the input provided to the RPC endpoint.
+:::
 
 ## Sending the signature to a smart contract
 

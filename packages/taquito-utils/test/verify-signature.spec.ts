@@ -226,7 +226,7 @@ describe('utils signature validation tests', () => {
             const sig = 'spsig1cdLkp1RLgUHAp13aRFkZ6MQDPp7xCnjAExGL3MBSdMDmT6JgQSX8cufyDgJRM3sinFtiCzLbsyP6d365EHoNevxhT47nx'
 
             expect(() => verifySignature(message, pk, sig)).toThrowError(InvalidPublicKeyError);
-            expect(() => verifySignature(message, pk, sig)).toThrowError(/public key provided for verifying signature cannot be empty/);
+            expect(() => verifySignature(message, pk, sig)).toThrowError(/public key provided cannot be empty/);
         });
 
         it('Should throw InvalidPublicKeyError if the prefix of the public key is unknown', () => {

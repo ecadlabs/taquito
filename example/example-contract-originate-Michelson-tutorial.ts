@@ -30,40 +30,20 @@ async function example() {
   );
 
   try {
-    console.log('Deploying Wallet Test contract...');
+    console.log('Deploying Michelson Tutorial contract...');
     const op = await tezos.contract.originate({
-      balance: '0',
-      code: `parameter unit;
-      storage int;
-      code { PUSH address "tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr" ;
-             CONTRACT unit ;
-             IF_NONE { PUSH string "Not a contract" ; FAILWITH } { DUP ; DIP { DROP } } ;
-             DUP ;
-             AMOUNT ;
-             UNIT ;
-             TRANSFER_TOKENS ;
-             NIL operation ;
-             DIG 1 ;
-             DUP ;
-             DUG 2 ;
-             CONS ;
-             DIG 3 ;
-             DUP ;
-             DUG 4 ;
-             CDR ;
-             DIG 1 ;
-             DUP ;
-             DUG 2 ;
-             PAIR ;
-             DIP { DROP 4 } }
-            `,
-      init: `0`,
+      code: `parameter (pair address mutez);
+      storage (map address mutez);
+      code { DUP ; CAR ; SWAP ; CDR ; SWAP ; DUP ; DUG 2 ; CDR ; DIG 2 ; CAR ; SWAP ; SOME ; SWAP ; UPDATE ; NIL operation ; PAIR }`,
+      init: [{
+        prim: 'Elt',
+        args: [{ string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn' }, { int: '0' }],
+      }],
     });
 
     console.log('Awaiting confirmation...');
     const contract = await op.contract();
-    const contractAddress = (await op.contract()).address;
-    console.log('contractAddress', contractAddress);
+    console.log('Michelson Tutorial Contract address', contract.address);
     console.log('Gas Used', op.consumedGas);
     console.log('Storage Paid', op.storageDiff);
     console.log('Storage Size', op.storageSize);
@@ -74,4 +54,5 @@ async function example() {
   }
 }
 
+// tslint:disable-next-line: no-floating-promises
 example();

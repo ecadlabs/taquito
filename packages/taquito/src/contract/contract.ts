@@ -41,14 +41,12 @@ export class ContractView {
     // TODO Verify if the 'customLambdaAdress' is a valid originated contract and if not, return an appropriate error message. 
     if (customLambdaAddress) {
       lambdaAddress = customLambdaAddress
-    } else if (this.chainId === ChainIds.EDONET) {
-      lambdaAddress = DefaultLambdaAddresses.EDONET
-    } else if (this.chainId === ChainIds.FLORENCENET) {
-      lambdaAddress = DefaultLambdaAddresses.FLORENCENET
     } else if (this.chainId === ChainIds.GRANADANET) {
       lambdaAddress = DefaultLambdaAddresses.GRANADANET
     } else if (this.chainId === ChainIds.HANGZHOUNET) {
       lambdaAddress = DefaultLambdaAddresses.HANGZHOUNET
+    } else if (this.chainId === ChainIds.IDIAZABALNET) {
+      lambdaAddress = DefaultLambdaAddresses.IDIAZABALNET
     } else if (this.chainId === ChainIds.MAINNET) {
       lambdaAddress = DefaultLambdaAddresses.MAINNET
     } else {

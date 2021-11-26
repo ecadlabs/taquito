@@ -5,7 +5,7 @@ const crypto = require('crypto');
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const hangzhounet = protocol === Protocols.PtHangz2 ? test : test.skip;
+  const hangzhounetOrHigher = (protocol === Protocols.PtHangz2 || protocol === Protocols.PtIdiaza) ? test : test.skip;
 
   describe(`Register global constants using: ${rpc}`, () => {
     const randomAnnots = () => crypto.randomBytes(3).toString('hex');
@@ -16,7 +16,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done();
     });
     
-    hangzhounet('Register a Micheline expression to the global table of constants', async (done) => {
+    hangzhounetOrHigher('Register a Micheline expression to the global table of constants', async (done) => {
       // We use a randomized annots in the Micheline expression because an expression can only be registered once.
       const op = await Tezos.contract.registerGlobalConstant({
         value: {
@@ -39,7 +39,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done();
     });
 
-    hangzhounet(
+    hangzhounetOrHigher(
       'Register a Micheline expression to the global table of constants with auto-estimation of the fee, storage limit and gas limit',
       async (done) => {
         const op = await Tezos.contract.registerGlobalConstant({
@@ -58,7 +58,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       }
     );
 
-    hangzhounet('registers a global constant and deploy a contract with the constant', async (done) => {
+    hangzhounetOrHigher('registers a global constant and deploy a contract with the constant', async (done) => {
       const expression1 = { "prim": "int" }
       const constantHash1 = 'expruu5BTdW7ajqJ9XPTF3kgcV78pRiaBW3Gq31mgp3WSYjjUBYxre';
 
