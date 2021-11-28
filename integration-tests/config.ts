@@ -250,10 +250,14 @@ const setupSignerWithFreshKey = async (
   Tezos: TezosToolkit,
   { keyUrl }: EphemeralConfig
 ) => {
+  const mapleApiKey = process.env['TEZOS_MAPLE_API_KEY'];
+  if (! mapleApiKey) {
+    throw new Error("Please configure your API key for Maple Faucet.")
+  }
 
   try {
     const signer = await fromMapleFaucet({
-      apiKey: "8f35a138-0bf4-4061-97c2-edbb99f6afe3",
+      apiKey: mapleApiKey,
       network: keyUrl,
       type: 'FRESH'
     })
@@ -267,10 +271,14 @@ const setupSignerWithEphemeralKey = async (
   Tezos: TezosToolkit,
   { keyUrl }: EphemeralConfig
 ) => {
+  const mapleApiKey = process.env['TEZOS_MAPLE_API_KEY'];
+  if (! mapleApiKey) {
+    throw new Error("Please configure your API key for Maple Faucet.")
+  }
 
   try {
     const signer = await fromMapleFaucet({
-      apiKey: "8f35a138-0bf4-4061-97c2-edbb99f6afe3",
+      apiKey: mapleApiKey,
       network: `${keyUrl}-ephemeral`,
       type: 'EPHEMERAL'
     })

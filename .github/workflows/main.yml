@@ -82,6 +82,7 @@ jobs:
       env:
         CI: true
         TEZOS_RPC_IDIAZABALNET: 'http://ecad-idiazabalnet-full.i.tez.ie:8732'
+        TEZOS_MAPLE_API_KEY: ${{ secrets.TEZOS_MAPLE_API_KEY }}
     
   integration-tests-granadanet:
     runs-on: ecad-taquito
@@ -106,3 +107,4 @@ jobs:
       env:
         CI: true
         TEZOS_RPC_GRANADANET: 'http://10.60.41.77:8732'
+        TEZOS_MAPLE_API_KEY: ${{ secrets.TEZOS_MAPLE_API_KEY }}

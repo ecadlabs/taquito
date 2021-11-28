@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
     const Tezos = lib;
     const skipIdiazabalnet = protocol === Protocols.PtIdiaza ? test.skip : test;
 
-    beforeEach(async (done) => {
+    beforeAll(async (done) => {
         await setup();
         done();
     });
