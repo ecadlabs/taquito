@@ -11,8 +11,11 @@
 
 import { Buffer } from 'buffer';
 import { Prefix, prefix, prefixLength } from './constants';
-import  { validatePkAndExtractPrefix } from './verify-signature'
-import { hash } from '@stablelib/blake2b'
+import  { validatePkAndExtractPrefix } from './verify-signature';
+import { hash } from '@stablelib/blake2b';
+import { valueEncoder, MichelsonValue } from '../../taquito-local-forging/src/michelson/codec';
+import { MichelsonV1Expression } from '../../taquito-rpc/src/types';
+
 const blake = require('blakejs');
 const bs58check = require('bs58check');
 
@@ -237,11 +240,25 @@ export const buf2hex = (buffer: Buffer): string => {
   const hexParts: string[] = [];
   byteArray.forEach((byte: any) => {
     const hex = byte.toString(16);
-    const paddedHex = `00${hex}`.slice(-2);
+  const paddedHex = `00${hex}`.slice(-2);
     hexParts.push(paddedHex);
   });
   return hexParts.join('');
 };
+
+/**
+ * 
+ * @description Gets the Global Constant Hash of a Michelson expression
+ * 
+ * @param michelsonExpression Michelson expression
+ * @returns A string of the Global Constant Hash
+ */
+export const getGlobalConstantHash = (michelsonExpression: MichelsonV1Expression): string => {
+  const forged = valueEncoder(<MichelsonValue>michelsonExpression);
+  const encoded = encodeExpr(forged);
+
+  return encoded;
+}
 
 /**
  * 

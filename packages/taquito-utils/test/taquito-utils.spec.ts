@@ -1,4 +1,4 @@
-import { encodeExpr, char2Bytes, bytes2Char, encodeOpHash, getPkhfromPk } from '../src/taquito-utils';
+import { encodeExpr, char2Bytes, bytes2Char, encodeOpHash, getPkhfromPk, getGlobalConstantHash } from '../src/taquito-utils';
 
 describe('Encode expr', () => {
   it('Should encode expression properly', () => {
@@ -113,5 +113,22 @@ describe('Public Key conversions', () => {
     expect(() => {
       getPkhfromPk(publicKey)
     }).toThrowError();
-  })
+  });
+});
+
+describe('Michelson expression to Global Constant Hash conversions', () => {
+  it('Should get global constant hash from Michelson expression', () => {
+    const michelsonExp = {prim: "Pair", args: [{int:"999"},{int:"999"}]};
+    const result = getGlobalConstantHash(michelsonExp);
+
+    expect(result).toEqual('exprvNeeFGy8M7xhmaq7bkQcd3RsXc7ogv2HwL1dciubXdgPHEMRH2');
+  });
+
+  it('Should get error when passing an empty Michelson expression', () => {
+    const michelsonExp = {};
+
+    expect(() => {
+      getGlobalConstantHash(michelsonExp)
+    }).toThrowError();
+  });
 });

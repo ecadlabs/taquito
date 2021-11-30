@@ -17,6 +17,7 @@ import { b58cencode } from '@taquito/utils'; // Base58 encode a string or a Uint
 import { encodeOpHash } from '@taquito/utils'; // Return the operation hash of a signed operation
 import { encodeExpr } from '@taquito/utils'; // Hash a string using the BLAKE2b algorithm, base58 encode the hash obtained and appends the prefix 'expr' to it
 import { getPkhfromPk } from '@taquito/utils'; // Returns Tezos address (PKH) of a given Public Key
+import { getGlobalConstantHash } from '@taquito/utils'; // Returns Global Constant Hash of a Michelson expression
 ```
 
 See the top-level [https://github.com/ecadlabs/taquito](https://github.com/ecadlabs/taquito) file for details on reporting issues, contributing and versioning.
