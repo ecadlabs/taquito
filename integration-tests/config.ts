@@ -71,7 +71,7 @@ const idiazabalnetEphemeral = {
 }
 
 const hangzhounetEphemeral: Config = {
-  rpc: process.env['TEZOS_RPC_HANGZHOUNET'] || 'http://hangzhounet-1.i.tez.ie:8732',
+  rpc: process.env['TEZOS_RPC_HANGZHOUNET'] || 'https://hangzhounet.api.tez.ie',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1XfoRSZ88ioYHbuEKqHxJPawm9Rqc54uoy',
   knownBigMapContract: 'KT1CnRSbp71FU8nz4xNEkcaASgMQDjNN85jd',
