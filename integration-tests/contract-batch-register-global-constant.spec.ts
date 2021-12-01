@@ -6,7 +6,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
     const Tezos = lib;
     const hangzhounet = protocol === Protocols.PtHangz2 ? test : test.skip;
 
-    describe(`Test contract.batch to register global constant using: ${rpc}`, () => {
+    describe(`Test contract.batch to register global constant through contract api using: ${rpc}`, () => {
         const randomAnnots = () => crypto.randomBytes(3).toString('hex');
         beforeEach(async (done) => {
             await setup(true);

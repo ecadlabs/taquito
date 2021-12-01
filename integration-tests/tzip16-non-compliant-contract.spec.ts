@@ -5,13 +5,13 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
     Tezos.addExtension(new Tzip16Module());
 
-    describe(`Tzip16 failing test: ${rpc}`, () => {
+    describe(`Test contract origination of a Tzip16 non-complaint contract through contract api using: ${rpc}`, () => {
 
         beforeEach(async (done) => {
             await setup()
             done()
         })
-        it('Deploy a simple contract having no metadata and try to fetch metadata', async (done) => {
+        it('Verify contract.originate for a simple contract having no metadata and then try to fetch metadata', async (done) => {
 
             const value = '1234';
             const code =

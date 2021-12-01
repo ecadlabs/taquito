@@ -3,7 +3,7 @@ import { CONFIGS } from "./config";
 CONFIGS().forEach(({ rpc, setup, createAddress }) => {
   const test = require('jest-retries');
 
-  describe(`Test trying to get the delegate when there is none: ${rpc}`, () => {
+  describe(`Test obtaining the delegate when there is none: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup(true)

@@ -17,13 +17,13 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     let contractAddress: string;
 
-    describe(`Originating contracts made with wallet api having metadata stored at HTTPS URL using: ${rpc}`, () => {
+    describe(`Test contract origination having metadata stored at HTTPS URL through wallet api using: ${rpc}`, () => {
         beforeEach(async (done) => {
             await setup();
             done();
         });
 
-        test('Deploy a contract made with wallet api having metadata stored at on IPFS', 2, async (done: () => void) => {
+        test('Verify wallet.originate for a contract having metadata stored on IPFS', 2, async (done: () => void) => {
 
             // location of the contract metadata
             const uri = 'ipfs://QmXnASUptTDnfhmcoznFqz3S1Mxu7X1zqo2YwbTN3nW52V';
@@ -50,7 +50,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-    test('Should fetch metadata of the wallet api made contract on IPFS', 2, async (done: () => void) => {
+    test('Verify that the metadata for the contract having metadata stored on IPFS can be fetched', 2, async (done: () => void) => {
 
             const contract = await Tezos.wallet.at(contractAddress, tzip16);
             const metadata = await contract.tzip16().getMetadata();

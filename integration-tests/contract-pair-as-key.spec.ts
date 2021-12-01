@@ -7,13 +7,13 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   const test = require('jest-retries');
 
-  describe(`Storage contract with pair as key using: ${rpc}`, () => {
+  describe(`Test contract origination with pair as key in storage through contract api using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup()
       done()
     })
-      test('Storage contract with pair as key', 2, async (done: () => void) => {
+      test('Verify contract.originate for a contract with pair as a key', 2, async (done: () => void) => {
         const storageMap = new MichelsonMap();
         // The contract schema in this example has a key with 8 nested pairs
         // (int(nat(string(bytes(mutez(bool(key_hash(timestamp(address)))))))))
@@ -76,7 +76,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         done();
       })
 
-    test('originate contract and init storage with pair as key in map', 2, async (done: () => void) => {
+    test('Verify contract.originate for a contract with pair as a key in map ', 2, async (done: () => void) => {
         const op = await Tezos.contract.originate({
           balance: "0",
           code: mapWithPairAsKeyCode,

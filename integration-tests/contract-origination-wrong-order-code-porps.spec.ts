@@ -3,13 +3,13 @@ import { smartpySample } from "./data/smartpy-example-contract";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  describe(`Originate contract with code properties in atypical order : ${rpc}`, () => {
+  describe(`Test contract origination with code properties in atypical order through contract api: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    it('originates a contract despite the code storage,parameter,code props are in wrong order', async (done) => {
+    it('Verify contract.originate for a contract despite the code storage,parameter,code props are in wrong order', async (done) => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: smartpySample,

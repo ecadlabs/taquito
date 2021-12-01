@@ -3,13 +3,13 @@ import { CONFIGS } from "./config";
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  describe(`Test  register delegate: ${rpc}`, () => {
+  describe(`Test address register delegate through contract api: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup(true)
       done()
     })
-    it('registers the current address as delegate', async (done) => {
+    it('As a User I want to verify that I can register the current address as delegate using contract.registerDelegate', async (done) => {
       try {
         const pkh = await Tezos.signer.publicKeyHash();
         const op = await Tezos.contract.registerDelegate({});

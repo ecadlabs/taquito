@@ -4,13 +4,13 @@ import { MichelsonMap } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  describe(`Token contract with empty big map origination scenario using: ${rpc}`, () => {
+  describe(`Test contract origination with empty BigMap origination scenario through contract api using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    it('Originate contract and init bigmap to empty map', async (done) => {
+    it('Verify contract.originate for a contract and init the BigMap to empty map', async (done) => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: tokenBigmapCode,

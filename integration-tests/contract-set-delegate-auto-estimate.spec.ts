@@ -2,13 +2,13 @@ import { CONFIGS } from "./config";
 
 CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
   const Tezos = lib;
-  describe(`Test account delegation with estimation using: ${rpc}`, () => {
+  describe(`Test account delegation with estimation through contract api using: ${rpc}`, () => {
 
     beforeAll(async (done) => {
       await setup(true)
       done()
     })
-    it('delegates account to known baker with automatic estimate', async (done) => {
+    it('As a User I want to verify that I can delegate account to known baker with automatic estimate', async (done) => {
       const delegate = knownBaker
       const pkh = await Tezos.signer.publicKeyHash();
       try {
@@ -34,7 +34,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
       done();
     });
 
-    it('withdraw delegate with automatic estimate', async (done) => {
+    it('As a User I want to verify that I can withdraw delegate with automatic estimate', async (done) => {
       const pkh = await Tezos.signer.publicKeyHash();
       try {
         const op = await Tezos.contract.setDelegate({

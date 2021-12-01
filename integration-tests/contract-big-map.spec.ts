@@ -4,13 +4,13 @@ import { MichelsonMap } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  describe(`Test contract with multiple bigmap variations using: ${rpc}`, () => {
+  describe(`Test contract origination with initialized BigMap with variants of data through contract api using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    it('originates a contract and initializes bigmaps with variants of data', async (done) => {
+    it('Verify contract.originate with initialized BigMap with variants of data', async (done) => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: storageContract,

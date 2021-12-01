@@ -10,11 +10,11 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
     const hangzhounet = (protocol === Protocols.PtHangz2) ? test : test.skip;
     const idiazabalnet = (protocol === Protocols.PtIdiaza) ? test : test.skip;
 
-    describe('Fetch constants for all protocols on Mainnet', () => {
+    describe('Test fetching constants for all protocols on Mainnet', () => {
 
         const rpcUrl = 'https://mainnet-archive.api.tez.ie/';
         Tezos.setRpcProvider(rpcUrl)
-        it('succesfully fails at fetching constants for level 0', async (done) => {
+        it('Verify that rpc.getConstants fails at fetching constants for level 0', async (done) => {
             try {
                 await Tezos.rpc.getConstants({ block: "0" });
                 expect.assertions(1);
@@ -24,7 +24,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
             done();
         })
 
-        it('successfully fetches Proto1 constants at level 1', async (done) => {
+        it('Verify that rpc.getConstants successfully fetches Proto1 constants at level 1', async (done) => {
             // Get constants for protocol
             const constants = await Tezos.rpc.getConstants({ block: "1" });
             expect(Object.keys(constants)).toHaveLength(24)
@@ -55,7 +55,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
             done();
         })
 
-        it('successfully fetches Proto1 constants at level 2', async (done) => {
+        it('Verify that rpc.getConstants successfully fetches Proto1 constants at level 2', async (done) => {
             const constants = await Tezos.rpc.getConstants({ block: "2" });
             expect(Object.keys(constants)).toHaveLength(24)
             expect(constants).toHaveProperty("proof_of_work_nonce_size", 8);
@@ -86,7 +86,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         })
 
 
-        it('successfully fetches Proto2 constants at level 100000', async (done) => {
+        it('Verify that rpc.getConstants successfully fetches Proto2 constants at level 100000', async (done) => {
             const constants = await Tezos.rpc.getConstants({ block: "100000" });
             expect(Object.keys(constants)).toHaveLength(24)
             expect(constants).toHaveProperty("proof_of_work_nonce_size", 8);
@@ -116,7 +116,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
             done();
         })
 
-        it('successfully fetches Proto3 constants at level 300000', async (done) => {
+        it('Verify that rpc.getConstants successfully fetches Proto3 constants at level 300000', async (done) => {
             const constants = await Tezos.rpc.getConstants({ block: "300000" });
             expect(Object.keys(constants)).toHaveLength(25)
             expect(constants).toHaveProperty("proof_of_work_nonce_size", 8);
@@ -148,7 +148,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         })
 
 
-        it('successfully fetches Proto4 constants at level 600000', async (done) => {
+          it('Verify that rpc.getConstants successfully fetches Proto4 constants at level 600000', async (done) => {
             const constants = await Tezos.rpc.getConstants({ block: "600000" });
             expect(Object.keys(constants)).toHaveLength(26)
             expect(constants).toHaveProperty("proof_of_work_nonce_size", 8);
@@ -181,7 +181,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         })
 
 
-        it('successfully fetches Proto5 constants at level 700000', async (done) => {
+        it('Verify that rpc.getConstants successfully fetches Proto5 constants at level 700000', async (done) => {
             const constants = await Tezos.rpc.getConstants({ block: "700000" });
             expect(Object.keys(constants)).toHaveLength(31)
             expect(constants).toHaveProperty("proof_of_work_nonce_size", 8);
@@ -218,7 +218,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
             done();
         })
 
-        it('successfully fetches Proto6 constants at level 900000', async (done) => {
+        it('Verify that rpc.getConstants successfully fetches Proto6 constants at level 900000', async (done) => {
             const constants = await Tezos.rpc.getConstants({ block: "900000" });
             expect(Object.keys(constants)).toHaveLength(31)
             expect(constants).toHaveProperty("proof_of_work_nonce_size", 8);
@@ -255,7 +255,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
             done();
         })
 
-        it('successfully fetches Proto7 constants at level 1212416', async (done) => {
+          it('Verify that rpc.getConstants successfully fetches Proto7 constants at level 1212416', async (done) => {
             const constants = await Tezos.rpc.getConstants({ block: "1212416" });
             expect(Object.keys(constants)).toHaveLength(31)
             expect(constants).toHaveProperty("proof_of_work_nonce_size", 8);
@@ -292,7 +292,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         })
 
 
-        it('successfully fetches Proto8 constants at level 1350000', async (done) => {
+        it('Verify that rpc.getConstants successfully fetches Proto8 constants at level 1350000', async (done) => {
             const constants = await Tezos.rpc.getConstants({ block: "1350000" });
             expect(Object.keys(constants)).toHaveLength(31)
             expect(constants).toHaveProperty("proof_of_work_nonce_size", 8);
@@ -328,7 +328,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
             done();
         })
 
-        it('successfully fetches Proto9 constants at level 1480000', async (done) => {
+        it('Verify that rpc.getConstants successfully fetches Proto9 constants at level 1480000', async (done) => {
             const constants: ConstantsResponseProto009 & ConstantsResponseCommon = await Tezos.rpc.getConstants({ block: "1480000" });
 
             expect(constants).toEqual({
@@ -367,7 +367,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
             done();
         })
 
-        it('successfully fetches Proto10 constants at level 1589492', async (done) => {
+        it('Verify that rpc.getConstants successfully fetches Proto10 constants at level 1589492', async (done) => {
             const constants: ConstantsResponseProto010 & ConstantsResponseCommon = await Tezos.rpc.getConstants({ block: "1589492" });
 
             expect(constants).toEqual({
@@ -410,9 +410,9 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         })
     })
 
-    describe(`Fetch constants for testnet`, () => {
+    describe(`Test fetching constants for testnet`, () => {
 
-        granadanet(`succesfully fetches all constants for granadanet using ${rpc}`, async (done) => {
+        granadanet(`Verify that rpc.getConstants successfully fetches all constants for granadanet using ${rpc}`, async (done) => {
             Tezos.setRpcProvider(rpc);
             const constants: ConstantsResponseProto010 & ConstantsResponseCommon = await Tezos.rpc.getConstants();
 
@@ -456,7 +456,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
             done();
         })
 
-        hangzhounet(`succesfully fetches all constants for hangzhounet using ${rpc}`, async (done) => {
+        hangzhounet(`Verify that rpc.getConstants successfully fetches all constants for hangzhounet using ${rpc}`, async (done) => {
             Tezos.setRpcProvider(rpc);
             const constants: ConstantsResponseProto011 & ConstantsResponseCommon = await Tezos.rpc.getConstants();
 
@@ -504,7 +504,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
             done();
         })
 
-        idiazabalnet(`succesfully fetches all constants for idiazabalnet using ${rpc}`, async (done) => {
+        idiazabalnet(`Verify that rpc.getConstants successfully fetches all constants for idiazabalnet using ${rpc}`, async (done) => {
             Tezos.setRpcProvider(rpc);
             const constants: ConstantsResponseProto012 & ConstantsResponseCommon = await Tezos.rpc.getConstants();
 

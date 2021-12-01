@@ -6,12 +6,12 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
   const Tezos = lib;
   const test = require('jest-retries');
 
-  describe(`Manager TZ: ${rpc}`, () => {
+  describe(`Test TZ Manager through wallet api: ${rpc}`, () => {
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    test('tests manager transfer scenarioswith wallet APi contract', 2, async (done: () => void) => {
+    test('Verify wallet.transfer from one Baker to another', 2, async (done: () => void) => {
       const op = await Tezos.wallet.originate({
         balance: "1",
         code: managerCode,

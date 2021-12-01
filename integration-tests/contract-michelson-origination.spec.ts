@@ -3,13 +3,13 @@ import { idMichelsonCode, idInitData } from "./data/id-contract"
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  describe(`Originating a plain Michelson contract using: ${rpc}`, () => {
+  describe(`Test contract origination in a plain Michelson through contract api using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    it('Origination of an ID contract written in plain Michelson', async (done) => {
+    it('Verify contract.originate for an ID contract written in plain Michelson', async (done) => {
       const op = await Tezos.contract.originate({
         balance: "0",
         code: idMichelsonCode,

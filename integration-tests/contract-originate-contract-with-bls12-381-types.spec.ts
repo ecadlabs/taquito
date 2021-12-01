@@ -2,13 +2,13 @@ import { CONFIGS } from './config';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  describe(`contract originations and method calls to test the types bls12_381_fr, bls12_381_g1 and bls12_381_g2 using: ${rpc}`, () => {
+  describe(`Test contract origination and method calls with types bls12_381_fr, bls12_381_g1 and bls12_381_g2 through contract api using: ${rpc}`, () => {
     beforeEach(async (done) => {
       await setup();
       done();
     });
 
-    it('Originate a contract with a hex string matching type bls12_381_fr in initial storage and update the storage value via default method call ', async (
+    it('Verify contract.originate for a contract with a hex string matching type bls12_381_fr in initial storage and update the storage value via default method call', async (
       done
     ) => {
       const op = await Tezos.contract.originate({
@@ -41,14 +41,14 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it('Originate a contract with a hex string matching type bls12_381_g1 in initial storage and update storage value via default method call ', async (
+    it('Verify contract.originate for a contract with a hex string matching type bls12_381_g1 in initial storage and update storage value via default method call', async (
       done
     ) => {
       const op = await Tezos.contract.originate({
         code: `
         parameter (pair bls12_381_g1 bls12_381_fr);
         storage (option (bls12_381_g1));
-        code {CAR; UNPAIR; MUL; SOME; NIL operation; PAIR}        
+        code {CAR; UNPAIR; MUL; SOME; NIL operation; PAIR}
         `,
         storage:
           '0572cbea904d67468808c8eb50a9450c9721db309128012543902d0ac358a62ae28f75bb8f1c7c42c39a8c5529bf0f4e166a9d8cabc673a322fda673779d8e3822ba3ecb8670e461f73bb9021d5fd76a4c56d9d4cd16bd1bba86881979749d28'
@@ -79,12 +79,12 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it('Originate a contract with empty initial storage and update storage value via default method call with a hex string matching type bls12_381_g2', async (done) => {
+    it('Verify contract.originate for a contract with empty initial storage and update storage value via default method call with a hex string matching type bls12_381_g2', async (done) => {
       const op = await Tezos.contract.originate({
         code: `
         parameter bls12_381_g2;
         storage (option (bls12_381_g2));
-        code {CAR; SOME; NIL operation; PAIR}     
+        code {CAR; SOME; NIL operation; PAIR}
         `,
         storage: null,
       })

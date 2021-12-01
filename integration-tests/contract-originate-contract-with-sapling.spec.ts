@@ -8,13 +8,13 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   const test = require('jest-retries');
 
-  describe(`Test origination of contracts with sapling using: ${rpc}`, () => {
+  describe(`Test contract origination with sapling through contract api using: ${rpc}`, () => {
     beforeEach(async (done) => {
       await setup();
       done();
     });
 
-    test('Originates a contract with sapling states in its storage', 2, async (done: () => void) => {
+    test('Verify contract.originate for a contract with sapling states in its storage', 2, async (done: () => void) => {
       const op = await Tezos.contract.originate({
         code: saplingContract,
         storage: {

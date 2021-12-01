@@ -9,13 +9,13 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     let contractAddress: string;
     let contractMetadataInAnotherContract: string;
 
-    describe(`Originating contracts having metadata stored on chain: ${rpc}`, () => {
+    describe(`Test contract origination having metadata stored on chain through contract api using: ${rpc}`, () => {
 
         beforeEach(async (done) => {
             await setup()
             done()
         })
-        it('Deploy a contract having metadata inside its own storage', async (done) => {
+        it('Verify contract.originate for a contract having metadata inside its own storage', async (done) => {
 
             const metadataJSON = {
                 "name": "test",
@@ -51,7 +51,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        it('Fetch the metadata in the contract itself', async (done) => {
+        it('Verify the metadata for a contract having metadata inside its own storage can be fetched', async (done) => {
 
             const contract = await Tezos.wallet.at(contractAddress, tzip16);
             const metadata = await contract.tzip16().getMetadata();
@@ -72,7 +72,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        it('Deploy a contract having metadata inside another contract same network', async (done) => {
+        it('Verify contract.originate for a contract having metadata inside another contract same network', async (done) => {
 
             const metadataBigMap = new MichelsonMap();
             metadataBigMap.set("", char2Bytes(`tezos-storage://${contractAddress}/here`));
@@ -93,7 +93,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        it('Fetch the metadata in the storage of the other contract', async (done) => {
+        it('Verify that metadata for contract having metadata inside another contract on the same network can be fetched', async (done) => {
 
             const contract = await Tezos.wallet.at(contractMetadataInAnotherContract, tzip16);
             const metadata = await contract.tzip16().getMetadata();
@@ -113,6 +113,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
               });
             done();
         });
-        
+
     });
 })

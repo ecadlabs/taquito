@@ -5,7 +5,7 @@ import { contractWithKeyCollections } from "./data/contract-with-key-collections
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
-  describe(`Test contract with key collections using: ${rpc}`, () => {
+  describe(`Test contract origination with key collections through contract api using: ${rpc}`, () => {
     type Storage = { keySet: string[], keyMap: MichelsonMap<string, number>; }
 
     beforeEach(async (done) => {
@@ -13,7 +13,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it('Originate a contract with set and map of keys and change them using corresponding methods', async (done) => {
+    it('Verify contract.originate for a contract with set and map of keys and change them using corresponding methods', async (done) => {
       const initialStorage: Storage = {
         keySet: [
           'edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g',
@@ -54,7 +54,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         'sppk7cudBXaXQUvbxb3f7tpKVSm6yKaYmjzqnPqvK6MrxFnnyxDEiim',
         'p2pk66DZ3igTFpyqeezoqvFycrD5dHpJC6idPL4CWLCU1qT3Fu9j15V',
         'sppk7ZWnHCVLsPE4CDFUTH424Qj2gUiJ3sp581nvexfz21w8gPjRVce'
-      ] 
+      ]
       const setOp = await contract.methods['setSet'](newKeySet).send();
       await setOp.confirmation();
       storage = await contract.storage<Storage>();

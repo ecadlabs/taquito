@@ -6,7 +6,7 @@ import { MANAGER_LAMBDA, OpKind } from '@taquito/taquito';
 CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, createAddress }) => {
     const Tezos = lib;
     const test = require('jest-retries');
-    describe(`Test contract.batch using: ${rpc}`, () => {
+    describe(`Test contract.batch through contract api using: ${rpc}`, () => {
         beforeEach(async (done) => {
             await setup();
             done();

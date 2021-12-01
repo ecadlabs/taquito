@@ -6,7 +6,7 @@ const crypto = require('crypto');
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
 
-    describe(`Test contract.batch containing a high number of operations using: ${rpc}`, () => {
+    describe(`Test contract.batch containing a high number of operations through contract api using: ${rpc}`, () => {
         beforeEach(async (done) => {
             await setup(true);
             done();

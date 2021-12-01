@@ -3,13 +3,13 @@ import { depositContractCode, depositContractStorage } from "./data/deposit_cont
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  describe(`Test contract call with amount using: ${rpc}`, () => {
+  describe(`Test contract origination and obtaining with amount through contract api using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    it('originates a contract and sends base layer tokens when calling contract methods', async (done) => {
+    it('Verify contract.originate for a contract and send base layer token when calling contract methods', async (done) => {
       const op = await Tezos.contract.originate({
         balance: "0",
         code: depositContractCode,

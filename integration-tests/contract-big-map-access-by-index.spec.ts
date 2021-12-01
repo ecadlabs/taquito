@@ -4,13 +4,13 @@ import { MichelsonMap, MichelCodecPacker } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
   const Tezos = lib;
-  describe(`Test accessing big map abstraction by index using: ${rpc}`, () => {
+  describe(`Test contract origination with empty BigMap accessing big map abstraction by index through contract api using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    it('originates a contract with empty bigmap and fetches the storage/bigmap', async (done) => {
+    it('Verify contract.originate with empty BigMap and the Storage/BigMap can be fetched', async (done) => {
       // Deploy a contract with a big map
       const op = await Tezos.contract.originate({
         balance: "1",
@@ -33,7 +33,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
     })
 
 
-    it('Return undefined when BigMap key is not found', async (done) => {
+    it('Verify that it returns undefined when BigMap key is not found', async (done) => {
       const myContract = await Tezos.contract.at(knownBigMapContract);
       const contractStorage: any = await myContract.storage();
       const value = await contractStorage.ledger.get("tz1NortRftucvAkD1J58L32EhSVrQEWJCEnB")
@@ -41,7 +41,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
       done()
     })
 
-    it('originates a contract with empty bigmap and fetches value in the bigMap using local packing', async (done) => {
+    it('Verify contract.originate with empty BigMap and the value in the BigMap can be fetched using local packing', async (done) => {
 
       // Configure the Tezostoolkit to use the MichelCodecPacker (the data will be packed locally instead of using the rpc)
       Tezos.setPackerProvider(new MichelCodecPacker());

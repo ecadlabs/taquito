@@ -70,8 +70,8 @@ const idiazabalnetEphemeral = {
   }
 }
 
-const hangzhounetEphemeral = {
-  rpc: process.env['TEZOS_RPC_HANGZHOUNET'] || 'https://hangzhounet.api.tez.ie',
+const hangzhounetEphemeral: Config = {
+  rpc: process.env['TEZOS_RPC_HANGZHOUNET'] || 'http://hangzhounet-1.i.tez.ie:8732',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1XfoRSZ88ioYHbuEKqHxJPawm9Rqc54uoy',
   knownBigMapContract: 'KT1CnRSbp71FU8nz4xNEkcaASgMQDjNN85jd',
@@ -84,7 +84,7 @@ const hangzhounetEphemeral = {
   }
 }
 
-const granadanetEphemeral = {
+const granadanetEphemeral: Config = {
   rpc: process.env['TEZOS_RPC_GRANADANET'] || 'https://granadanet.api.tez.ie',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1JMwgeC7MwYiMiZd74gXK6wrY7QNf1NwLX',
@@ -158,7 +158,7 @@ const idiazabalnetFaucet = {
   }
 }
 
-const hangzhounetFaucet = {
+const hangzhounetFaucet: Config = {
   rpc: process.env['TEZOS_RPC_HANGZHOUNET'] || 'https://hangzhounet.api.tez.ie',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1XfoRSZ88ioYHbuEKqHxJPawm9Rqc54uoy',

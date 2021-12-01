@@ -7,14 +7,14 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
    const Tezos = lib;
    Tezos.addExtension(new Tzip16Module());
    let contractAddress: string;
-   describe(`Tzip16 metadata and view on a fa2 contract: ${rpc}`, () => {
+   describe(`Test contract origination of a fa2 contract having Tzip16 metadata and view through contract api using: ${rpc}`, () => {
 
       beforeEach(async (done) => {
          await setup()
          done()
       })
 
-      it('Should deploy a Fa2 contract having metadata on HTTPS', async (done) => {
+      it('Verify contract.originate for a Fa2 contract having metadata on HTTPS', async (done) => {
 
          const LocalTez1 = await createAddress();
          const localTez1Pkh = await LocalTez1.signer.publicKeyHash();
@@ -68,7 +68,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
          done();
       });
 
-      it('Should fetch metadata of the Fa2 contract', async (done) => {
+      it('Verify that metadata for a Fa2 contract can be fetched', async (done) => {
 
          const contract = await Tezos.contract.at(contractAddress, tzip16);
          const metadata = await contract.tzip16().getMetadata();
@@ -412,7 +412,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
          done();
       });
 
-      it('Should execute views', async (done) => {
+      it('Verify that Fa2 contract view can be executed', async (done) => {
 
          const contractAbstraction = await Tezos.contract.at(contractAddress, tzip16);
          const metadataViews = await contractAbstraction.tzip16().metadataViews();

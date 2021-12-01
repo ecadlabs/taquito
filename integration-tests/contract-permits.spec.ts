@@ -17,13 +17,13 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
   Tezos.setPackerProvider(new MichelCodecPacker());
 
-  describe(`Test of contracts having a permit for tzip-17: ${rpc}`, () => {
+  describe(`Test contract origination with having a permit for tzip-17 through contract api: ${rpc}`, () => {
     beforeEach(async (done) => {
       await setup(true);
       done();
     });
 
-    test('Permit can be submitted and set', async (done) => {
+    test('Verify contract.originate for a permit contract', async (done) => {
       const op = await Tezos.contract.originate({
         code: permit_admin_42_set,
         storage: {
@@ -35,7 +35,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       await op.confirmation();
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-      const permit_contract = await op.contract();    
+      const permit_contract = await op.contract();
 
       expect(op.status).toEqual('applied');
 
@@ -73,7 +73,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       done();
     });
 
-    test('Originate a permit contract and set expiry', async (done) => {
+    test('Verify contract.originate for a permit contract and expiry can be set', async (done) => {
       const op = await Tezos.contract.originate({
         code: permit_admin_42_expiry,
         storage: {
@@ -104,7 +104,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       done();
     });
 
-    test('Originate a permit contract and set defaultExpiry', async (done) => {
+    test('Verify contract.originate for a permit contract and defaultExpiry can be set', async (done) => {
       const op = await Tezos.contract.originate({
         code: permit_admin_42_expiry,
         storage: {
@@ -133,7 +133,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       done();
     });
 
-    test('Originate a permit fa1.2 contract with metadata views', async (done) => {
+    test('Verify contract.originate for a permit fa1.2 contract with metadata views', async (done) => {
       const url = 'https://storage.googleapis.com/tzip-16/permit_metadata.json';
       const bytesUrl = char2Bytes(url);
       const metadata = new MichelsonMap();
@@ -197,13 +197,13 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       done();
     });
 
-    describe(`Test of contracts having a permit for tzip-17: ${rpc}`, () => {
+    describe(`Test contract having a permit for tzip-17: ${rpc}`, () => {
       beforeEach(async (done) => {
         await setup(true);
         done();
       });
 
-      test('Show that any user can submit the permit hash to use an entrypoint', async (done) => {
+      test('As a User I want to verify that I can submit the permit hash to use an entrypoint\n', async (done) => {
         //following https://github.com/EGuenz/smartpy-permits
 
         const LocalTez1 = await createAddress();

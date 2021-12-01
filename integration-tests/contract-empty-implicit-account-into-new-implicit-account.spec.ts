@@ -2,13 +2,13 @@ import { CONFIGS } from "./config";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
     const Tezos = lib;
-    describe(`Test emptying a revealed implicit account into a new implicit account using: ${rpc}`, () => {
+    describe(`Test emptying a revealed implicit account into a new implicit account through contract api using: ${rpc}`, () => {
 
         beforeEach(async (done) => {
             await setup()
             done()
         })
-        it('reveals the sender account, creates an unrevealed implicit account, empties the sender account into the created one', async (done) => {
+        it('Verify that a new unrevealed implicit account can be created from the sender account and the sender account can be emptied into the created one.', async (done) => {
             const receiver = await createAddress();
             const receiver_pkh = await receiver.signer.publicKeyHash();
 
@@ -17,7 +17,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
             const sender_pkh = await sender.signer.publicKeyHash();
             const op = await Tezos.contract.transfer({ to: sender_pkh, amount: 10 });
             await op.confirmation();
-            
+
             // Sending 1 token from the account we want to empty
             // This will do the reveal operation automatically
             const op2 = await sender.contract.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 1 });
@@ -33,7 +33,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
             // Emptying the account
             const totalFees = estimate.suggestedFeeMutez + estimate.burnFeeMutez;
             const maxAmount = balance.minus(totalFees).toNumber();
-            
+
             // Temporary fix, see https://gitlab.com/tezos/tezos/-/issues/1754
             // we need to increase the gasLimit and fee returned by the estimation
             const gasBuffer = 500;
@@ -48,7 +48,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
                 amount: maxAmount - increasedFee(gasBuffer, Number(estimate.opSize)),
                 fee: estimate.suggestedFeeMutez + increasedFee(gasBuffer, Number(estimate.opSize)), // baker fees
                 gasLimit: estimate.gasLimit + gasBuffer,
-                storageLimit: estimate.storageLimit 
+                storageLimit: estimate.storageLimit
             });
 
             await opTransfer.confirmation();

@@ -4,14 +4,14 @@ import { depositContractCode, depositContractStorage } from "./data/deposit_cont
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   const test = require('jest-retries');
-  
-  describe(`Test contract with unit as params using: ${rpc}`, () => {
+
+  describe(`Test contract origination with unit as params through contract api using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    test('Originates contract and calls deposit method with unit param', 2 , async (done: () => void) => {
+    test('Verify contract.originate for a contract and call deposit method with unit param', 2 , async (done: () => void) => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: depositContractCode,

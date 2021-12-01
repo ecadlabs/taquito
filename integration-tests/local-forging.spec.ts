@@ -11,7 +11,7 @@ CONFIGS().forEach(({ rpc, protocol }) => {
 
         commonCases.forEach(({ name, operation, expected }) => {
 
-            it(`Should give the same result as when forging with the rpc: ${name} (${rpc})`, async done => {
+            it(`Verify that .forge for local forge will return same result as for network forge for rpc: ${name} (${rpc})`, async done => {
                 if(protocol === Protocols.PtIdiaza && name === 'Endorsement') {
                     // skip
                     console.log('Temporarily skip endorsement forging for Idiazabalnet')
@@ -27,13 +27,13 @@ CONFIGS().forEach(({ rpc, protocol }) => {
 
         hangzhouCases.forEach(({ name, operation, expected }) => {
 
-            hangzhounetOrHigher(`Should give the same result as when forging with the rpc: ${name} (${rpc})`, async done => {
+            hangzhounetOrHigher(`Verify that .forge for local forge will return same result as for hangzhounet or higher network forge for rpc: ${name} (${rpc})`, async done => {
                 const result = await localForger.forge(operation);
                 const rpcResult = await Tezos.rpc.forgeOperations(operation);
                 expect(result).toEqual(rpcResult);
                 expect(await localForger.parse(result)).toEqual(expected || operation);
                 done();
             });
-        }); 
+        });
     });
 })

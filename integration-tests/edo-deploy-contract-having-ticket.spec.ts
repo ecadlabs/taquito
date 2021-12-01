@@ -6,13 +6,14 @@ const test = require('jest-retries');
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
-  describe(`Test origination of a token contract using: ${rpc}`, () => {
+  describe(`Test contract origination having ticket with init through contract api using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup();
       done()
     })
-    test('Originates a contract having ticket with init and the wallet api', 2, async (done: () => void) => {
+    test('Verify contract.originate for a contract having ticket with init', 2, async (done: () => void) => {
+      // TODO: Replace it with contract.originate
       const op = await Tezos.wallet.originate({
         code: ticketCode,
         init: ticketStorage
@@ -24,7 +25,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    test('Originates a contract having ticket with init and the contract api', 2, async (done: () => void) => {
+    test('Verify originate.contract for a contract having ticket with init', 2, async (done: () => void) => {
       const op = await Tezos.contract.originate({
         code: ticketCode,
         init: `(Pair None None)`
@@ -37,7 +38,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    test('Originates a contract having ticket with init in JSON and the contract api', 2, async (done: () => void) => {
+    test('Verify contract.originate having ticket with init in JSON', 2, async (done: () => void) => {
       const op = await Tezos.contract.originate({
         code: ticketCode,
         init: { prim: 'Pair', args: [ { prim: 'None' }, { prim: 'None' } ] }
@@ -50,7 +51,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    test('Originates a contract having ticket with storage and the contract api', 2, async (done: () => void) => {
+    test('Verify contract.originate for a contract having ticket with storage', 2, async (done: () => void) => {
       const op = await Tezos.contract.originate({
         code: ticketCode,
         storage: {

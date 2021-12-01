@@ -5,12 +5,12 @@ import { MANAGER_LAMBDA } from "@taquito/taquito";
 CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
   const Tezos = lib;
 
-  describe(`Manager TZ: ${rpc}`, () => {
+  describe(`Test TZ Manager through contract api: ${rpc}`, () => {
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    it('test manager transfers scenarios', async (done) => {
+    it('Verify contract.transfer from one Baker to another', async (done) => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: managerCode,

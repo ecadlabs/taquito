@@ -3,7 +3,7 @@ import { CONFIGS, SignerType } from './config';
 
 CONFIGS().forEach(({ lib, rpc, setup, knownBaker, signerConfig }) => {
     const Tezos = lib;
-    describe(`Test contract.batch using: ${rpc}`, () => {
+    describe(`Test contract.batch estimate when including reveal through contract api using: ${rpc}`, () => {
         beforeEach(async (done) => {
             await setup(true);
             done();

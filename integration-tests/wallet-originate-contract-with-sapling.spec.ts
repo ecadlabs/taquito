@@ -6,14 +6,14 @@ import { SaplingStateValue } from '../packages/taquito-michelson-encoder/src/taq
 CONFIGS().forEach(({ lib, rpc, setup,  }) => {
   const Tezos = lib;
 
-  describe(`Test origination of contracts made with wallet api with sapling using: ${rpc}`, () => {
+  describe(`Test contract origination with sapling through wallet api using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup();
       done()
     })
 
-    it('Originates a contract made with wallet api with sapling states in its storage', async (done) => {
+    it('Verify wallet.originate for a contract with sapling states in its storage', async (done) => {
       const op = await Tezos.wallet.originate({
         code: saplingContract,
         storage: {
@@ -25,7 +25,7 @@ CONFIGS().forEach(({ lib, rpc, setup,  }) => {
       await op.confirmation();
       expect(op.opHash).toBeDefined();
       done();
-    }); 
+    });
 
   });
 })

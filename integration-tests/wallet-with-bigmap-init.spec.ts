@@ -4,13 +4,13 @@ import { tokenBigmapCode } from "./data/token_bigmap";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  describe(`Token with big map and with initial data using: ${rpc}`, () => {
+  describe(`Test token contract origination with big map and with initial data through wallet api using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    it('Originate token contract made from wallet API with big map and with initialize storage/bigmaps', async (done) => {
+    it('Verify wallet.originate for a token contract with BigMap and with initialized Storage/BigMap', async (done) => {
       const addr = await Tezos.signer.publicKeyHash();
       const initialStorage = {
         owner: addr,

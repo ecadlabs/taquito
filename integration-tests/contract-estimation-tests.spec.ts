@@ -12,7 +12,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
   const granadanet = (protocol === Protocols.PtGRANADs) ? test : test.skip;
   const hangzhounet = (protocol === Protocols.PtHangz2) ? test : test.skip;
 
-  describe(`Estimate scenario using: ${rpc}`, () => {
+  describe(`Test estimate scenarios through contract api using: ${rpc}`, () => {
     let LowAmountTez: TezosToolkit;
     let contract: Contract;
     const amt = 2000000 + DEFAULT_FEE.REVEAL;
@@ -40,7 +40,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       }
     })
 
-    hangzhounet('Estimate transfer with allocated destination', async (done) => {
+    hangzhounet('Verify .estimate.transfer with allocated destination result on hangzhounet', async (done) => {
       const estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 1.9 });
       expect(estimate.gasLimit).toEqual(1520);
       expect(estimate.storageLimit).toEqual(0);
@@ -53,7 +53,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     })
 
-    granadanet('Estimate transfer with allocated destination', async (done) => {
+    granadanet('Verify .estimate.transfer with allocated destination result on granadanet', async (done) => {
       const estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 1.9 });
       expect(estimate.gasLimit).toEqual(1520);
       expect(estimate.storageLimit).toEqual(0);
@@ -66,7 +66,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     })
 
-    florencenet('Estimate transfer with allocated destination', async (done) => {
+    florencenet('Verify .estimate.transfer with allocated destination result on florencenet', async (done) => {
       const estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 1.9 });
       expect(estimate.gasLimit).toEqual(1527);
       expect(estimate.storageLimit).toEqual(0);
@@ -79,7 +79,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     })
 
-    hangzhounet('Estimate transfer with unallocated destination', async (done) => {
+    hangzhounet('Verify .estimate.transfer with unallocated destination result for hangzhounet', async (done) => {
       const estimate = await LowAmountTez.estimate.transfer({ to: await (await createAddress()).signer.publicKeyHash(), amount: 1.7 });
       expect(estimate.gasLimit).toEqual(1520);
       expect(estimate.storageLimit).toEqual(257);
@@ -92,7 +92,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     });
 
-    granadanet('Estimate transfer with unallocated destination', async (done) => {
+    granadanet('Verify .estimate.transfer with unallocated destination result for granadanet', async (done) => {
       const estimate = await LowAmountTez.estimate.transfer({ to: await (await createAddress()).signer.publicKeyHash(), amount: 1.7 });
       expect(estimate.gasLimit).toEqual(1520);
       expect(estimate.storageLimit).toEqual(257);
@@ -105,7 +105,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     });
 
-    florencenet('Estimate transfer with unallocated destination', async (done) => {
+    florencenet('Verify .estimate.transfer with unallocated destination result for florencenet', async (done) => {
       const estimate = await LowAmountTez.estimate.transfer({ to: await (await createAddress()).signer.publicKeyHash(), amount: 1.7 });
       expect(estimate.gasLimit).toEqual(1527);
       expect(estimate.storageLimit).toEqual(257);
@@ -118,7 +118,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     });
 
-    hangzhounet('Estimate simple origination', async (done) => {
+    hangzhounet('Verify .estimate.originate simple contract result for hangzhounet', async (done) => {
       const estimate = await LowAmountTez.estimate.originate({
         balance: "1",
         code: ligoSample,
@@ -135,7 +135,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     });
 
-    granadanet('Estimate simple origination', async (done) => {
+    granadanet('Verify .estimate.originate simple contract result for granadanet', async (done) => {
       const estimate = await LowAmountTez.estimate.originate({
         balance: "1",
         code: ligoSample,
@@ -152,7 +152,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     });
 
-    florencenet('Estimate simple origination', async (done) => {
+    florencenet('Verify .estimate.originate simple contract result for florencenet', async (done) => {
       const estimate = await LowAmountTez.estimate.originate({
         balance: "1",
         code: ligoSample,
@@ -169,7 +169,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     });
 
-    hangzhounet('Estimate setDelegate', async (done) => {
+    hangzhounet('Verify .estimate.setDelegate result for hangzhounet', async (done) => {
       const estimate = await LowAmountTez.estimate.setDelegate({
         delegate: knownBaker,
         source: await LowAmountTez.signer.publicKeyHash(),
@@ -185,7 +185,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     })
 
-    granadanet('Estimate setDelegate', async (done) => {
+    granadanet('Verify .estimate.setDelegate result for hangzhounet granadanet', async (done) => {
       const estimate = await LowAmountTez.estimate.setDelegate({
         delegate: knownBaker,
         source: await LowAmountTez.signer.publicKeyHash(),
@@ -201,7 +201,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     })
 
-    florencenet('Estimate setDelegate', async (done) => {
+    florencenet('Verify .estimate.setDelegate result for hangzhounet florencenet', async (done) => {
       const estimate = await LowAmountTez.estimate.setDelegate({
         delegate: knownBaker,
         source: await LowAmountTez.signer.publicKeyHash(),
@@ -217,7 +217,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     })
 
-    hangzhounet('Estimate internal transfer to allocated implicit', async (done) => {
+    hangzhounet('Verify .estimate.transfer for internal transfer to allocated implicit for hangzhounet', async (done) => {
       const tx = contract.methods.do(MANAGER_LAMBDA.transferImplicit(knownBaker, 50)).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx)
       expect(estimate.gasLimit).toEqual(3613);
@@ -231,7 +231,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     })
 
-    granadanet('Estimate internal transfer to allocated implicit', async (done) => {
+    granadanet('Verify .estimate.transfer for internal transfer to allocated implicit for granadanet', async (done) => {
       const tx = contract.methods.do(MANAGER_LAMBDA.transferImplicit(knownBaker, 50)).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx)
       expect(estimate.gasLimit).toEqual(3807);
@@ -245,7 +245,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     })
 
-    florencenet('Estimate internal transfer to allocated implicit', async (done) => {
+    florencenet('Verify .estimate.transfer for internal transfer to allocated implicit for florencenet', async (done) => {
       const tx = contract.methods.do(MANAGER_LAMBDA.transferImplicit(knownBaker, 50)).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx)
       expect(estimate.gasLimit).toEqual(4936);
@@ -259,7 +259,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     })
 
-    hangzhounet('Estimate to multiple internal transfer to unallocated account', async (done) => {
+    hangzhounet('Verify .estimate.transfer for multiple internal transfers to unallocated account for hangzhounet', async (done) => {
       const tx = contract.methods.do(transferImplicit2(
         await (await createAddress()).signer.publicKeyHash(),
         await (await createAddress()).signer.publicKeyHash(),
@@ -277,7 +277,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     })
 
-    granadanet('Estimate to multiple internal transfer to unallocated account', async (done) => {
+    granadanet('Verify .estimate.transfer for multiple internal transfers to unallocated account for granadanet', async (done) => {
       const tx = contract.methods.do(transferImplicit2(
         await (await createAddress()).signer.publicKeyHash(),
         await (await createAddress()).signer.publicKeyHash(),
@@ -295,7 +295,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     })
 
-    florencenet('Estimate to multiple internal transfer to unallocated account', async (done) => {
+    florencenet('Verify .estimate.transfer for multiple internal transfers to unallocated account for florencenet', async (done) => {
       const tx = contract.methods.do(transferImplicit2(
         await (await createAddress()).signer.publicKeyHash(),
         await (await createAddress()).signer.publicKeyHash(),
@@ -313,7 +313,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     })
 
-    hangzhounet('Estimate internal origination', async (done) => {
+    hangzhounet('Verify .estimate.transfer for internal origination for hangzhounet', async (done) => {
       const tx = contract.methods.do(originate()).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx)
       expect(estimate.gasLimit).toEqual(3606);
@@ -327,7 +327,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     })
 
-    granadanet('Estimate internal origination', async (done) => {
+    granadanet('Verify .estimate.transfer for internal origination for granadanet', async (done) => {
       const tx = contract.methods.do(originate()).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx)
       expect(estimate.gasLimit).toEqual(3794);
@@ -341,7 +341,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     })
 
-    florencenet('Estimate internal origination', async (done) => {
+    florencenet('Verify .estimate.transfer for internal origination for florencenet', async (done) => {
       const tx = contract.methods.do(originate()).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx)
       expect(estimate.gasLimit).toEqual(5489);
@@ -355,7 +355,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     })
 
-    hangzhounet('Estimate multiple internal origination', async (done) => {
+    hangzhounet('Verify .estimate.transfer for multiple internal originations for hangzhounet', async (done) => {
       const tx = contract.methods.do(originate2()).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx)
       expect(estimate.gasLimit).toEqual(5027);
@@ -372,7 +372,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     })
 
-    granadanet('Estimate multiple internal origination', async (done) => {
+    granadanet('Verify .estimate.transfer for multiple internal originations for granadanet', async (done) => {
       const tx = contract.methods.do(originate2()).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx)
       expect(estimate.gasLimit).toEqual(5208);
@@ -389,7 +389,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     })
 
-    florencenet('Estimate multiple internal origination', async (done) => {
+    florencenet('Verify .estimate.transfer for multiple internal originations for florencenet', async (done) => {
       const tx = contract.methods.do(originate2()).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx)
       expect(estimate.gasLimit).toEqual(7626);
@@ -407,7 +407,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
     })
   })
 
-  describe(`Estimate with very low balance using: ${rpc}`, () => {
+  describe(`Test estimate scenarios with very low balance using: ${rpc}`, () => {
     let LowAmountTez: TezosToolkit;
     const amt = 2000 + DEFAULT_FEE.REVEAL;
 
@@ -420,7 +420,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done()
     })
 
-    hangzhounet('Estimate transfer to regular address', async (done) => {
+    hangzhounet('Verify .estimate.transfer to regular address for hangzhounet', async (done) => {
       let estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) });
       expect(estimate.gasLimit).toEqual(1520);
       expect(estimate.storageLimit).toEqual(0);
@@ -433,7 +433,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     });
 
-    granadanet('Estimate transfer to regular address', async (done) => {
+    granadanet('Verify .estimate.transfer to regular address for granadanet', async (done) => {
       let estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) });
       expect(estimate.gasLimit).toEqual(1520);
       expect(estimate.storageLimit).toEqual(0);
@@ -446,7 +446,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     });
 
-    florencenet('Estimate transfer to regular address', async (done) => {
+    florencenet('Verify .estimate.transfer to regular address for florencenet', async (done) => {
       let estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) });
       expect(estimate.gasLimit).toEqual(1527);
       expect(estimate.storageLimit).toEqual(0);
@@ -459,7 +459,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     });
 
-    it('Estimate transfer to regular address with a fixed fee', async (done) => {
+    it('Verify .estimate.transfer to regular address with a fixed fee', async (done) => {
       // fee, gasLimit and storage limit are not taken into account
       const params = { fee: 2000, to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) }
 
@@ -471,7 +471,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     });
 
-    it('Estimate transfer to regular address with insufficient balance', async (done) => {
+    it('Verify .estimate.transfer to regular address with insufficient balance', async (done) => {
       await expect(
         LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt })
       ).rejects.toEqual(
@@ -481,7 +481,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     });
 
-    it('Estimate transfer to regular address with insufficient balance to pay storage for allocation', async (done) => {
+    it('Verify .estimate.transfer to regular address with insufficient balance to pay storage for allocation', async (done) => {
       await expect(
         LowAmountTez.estimate.transfer({ to: await (await createAddress()).signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) })
       ).rejects.toEqual(
@@ -491,7 +491,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     });
 
-    it('Estimate origination with insufficient balance to pay storage', async (done) => {
+    it('Verify .estimate.transfer for origination with influence balance to pay storage', async (done) => {
       await expect(LowAmountTez.estimate.originate({
         balance: "0",
         code: ligoSample,

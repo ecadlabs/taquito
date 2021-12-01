@@ -4,14 +4,14 @@ import { ticketCode, ticketStorage } from '../packages/taquito-local-forging/tes
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
-  describe(`Test origination of a token contract made with wallet api using: ${rpc}`, () => {
+  describe(`Test contract origination having ticket with init through wallet api using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup();
       done()
     })
 
-    it('Originates a contract having ticket with init and the wallet api', async (done) => {
+    it('Verify wallet.contract for a contract having ticket with init', async (done) => {
       const op = await Tezos.wallet.originate({
         code: ticketCode,
         init: ticketStorage
@@ -23,7 +23,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it('Originates a contract having ticket with init in JSON and the wallet api', async (done) => {
+    it('Verify contract.originate having ticket with init in JSON', async (done) => {
       const op = await Tezos.wallet.originate({
         code: ticketCode,
         init: { prim: 'Pair', args: [ { prim: 'None' }, { prim: 'None' } ] }
@@ -34,7 +34,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it('Originates a contract having ticket with storage and the wallet api', async (done) => {
+    it('Verify wallet.originate for a contract having ticket with storage', async (done) => {
       const op = await Tezos.wallet.originate({
         code: ticketCode,
         storage: {
@@ -45,8 +45,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       await op.confirmation();
       expect(op.opHash).toBeDefined();
-      
+
       done();
-    }); 
+    });
   });
 })

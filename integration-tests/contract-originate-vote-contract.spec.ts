@@ -5,13 +5,13 @@ import { voteSample } from "./data/vote-contract";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  describe(`Originate a voting contract using: ${rpc}`, () => {
+  describe(`Test contract origination of a vote contract through contract api using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    it('originates a voting contract and inits the storage', async (done) => {
+    it('Verify contract.originate for a voting contract and init the storage', async (done) => {
       // TODO: probably remove this as very expensive
       const op = await Tezos.contract.originate({
         balance: "1",

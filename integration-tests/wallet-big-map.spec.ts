@@ -7,15 +7,15 @@ import { storage } from '../packages/taquito-michelson-encoder/data/proto005/uni
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
-  describe(`Test wallet with multiple bigmap variations using: ${rpc}`, () => {
+  describe(`Test contract origination with initialized BigMap with variants of data through wallet api using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup()
       done()
     })
 
-    it('originates a contract and initializes bigmaps with variants of data using the wallet API', async (done) => {
-     
+    it('Verify wallet.originate with initialized BigMap with variants of data', async (done) => {
+
         const op = await Tezos.wallet.originate({
         balance: "1",
         code: storageContract,

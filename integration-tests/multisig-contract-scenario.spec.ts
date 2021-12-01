@@ -6,12 +6,12 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
   const test = require('jest-retries')
 
-  describe(`Generic Multisig: ${rpc}`, () => {
+  describe(`Test originating multisig contract through contract api: ${rpc}`, () => {
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    test('test manager transfers scenarios', 2, async (done: () => void) => {
+    test('Verify contract.originate for a contract with multiple signatures', 2, async (done: () => void) => {
       const account1 = await createAddress();
       const account2 = await createAddress();
       const account3 = await createAddress();

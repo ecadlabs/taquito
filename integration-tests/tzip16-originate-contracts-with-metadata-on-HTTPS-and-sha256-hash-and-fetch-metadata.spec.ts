@@ -11,14 +11,14 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     const test = require('jest-retries');
 
-    describe(`Originating contracts having metadata stored at HTTPS URL using: ${rpc}`, () => {
+    describe(`Test contract origination having having a sha256 hash in URI through contract api using: ${rpc}`, () => {
 
         beforeEach(async (done) => {
             await setup()
             done()
         })
 
-        test('Deploy a contract having a sha256 hash in URI', 2, async (done: () => void) => {
+        test('Verify contract.originate for a contract having a sha256 hash in URI', 2, async (done: () => void) => {
 
             // location of the contract metadata
             const urlPercentEncoded = encodeURIComponent('//storage.googleapis.com/tzip-16/taco-shop-metadata.json');
@@ -49,7 +49,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        test('Fetch metadata of the contract having a sha256 hash in URI', 2, async (done: () => void) => {
+        test('Verify that the metadata for the contract having a sha256 hash in URI can be fetched', 2, async (done: () => void) => {
 
             const contract = await Tezos.contract.at(contractAddress, tzip16);
             const metadata = await contract.tzip16().getMetadata();
@@ -77,7 +77,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        test('Deploy a contract having an invalid sha256 hash in URI', 2, async (done: () => void) => {
+        test('Verify contract.originate for a contract having an invalid sha256 hash in URI', 2, async (done: () => void) => {
 
             // location of the contract metadata
             const urlPercentEncoded = encodeURIComponent('//storage.googleapis.com/tzip-16/taco-shop-metadata.json');
@@ -108,7 +108,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        test('Fetch metadata of the contract having an invalid sha256 hash in URI', 2, async (done: () => void) => {
+        test('Verify that the metadata for the contract having an invalid sha256 hash in URI can be fetched', 2, async (done: () => void) => {
 
             const contract = await Tezos.contract.at(contractAddressInvalidHash, tzip16);
             const metadata = await contract.tzip16().getMetadata();

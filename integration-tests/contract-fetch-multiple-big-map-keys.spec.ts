@@ -7,13 +7,13 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
     const test = require('jest-retries');
 
-    describe(`Test accessing big map abstraction by index using: ${rpc}`, () => {
+    describe(`Test contract origination with multiple BigMap variations through contract api using: ${rpc}`, () => {
         beforeEach(async (done) => {
             await setup();
             done();
         });
-        test('originates a contract with empty bigmap and fetches the storage/bigmap', 2, async (done: () => void) => {
-            
+        test('Verify contract.originate for a contract with multiple BigMap (also fetching the Storage/BigMap)', 2, async (done: () => void) => {
+
             const signer = await Tezos.signer.publicKeyHash();
 
             const bigMapInit = new MichelsonMap();
@@ -32,7 +32,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 }
             });
             const contract = await op.contract();
-            
+
             interface StorageType {
                 0: BigMapAbstraction,
                 1: string,

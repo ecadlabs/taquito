@@ -24,61 +24,61 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
         const rpcClient = new RpcClientCache(new RpcClient(rpc));
 
         describe(`Test calling all methods from RPC node: ${rpc}`, () => {
-            it('Get the head block hash', async (done) => {
+            it('Verify rpcClient.getBlockHash returns the head block hash', async (done) => {
                 const blockHash = await rpcClient.getBlockHash();
                 expect(blockHash).toBeDefined();
                 done();
             });
 
-            it('List the ancestors of the head block', async (done) => {
+            it('Verify rpcClient.getLiveBlocks returns the ancestors of the head block', async (done) => {
                 const liveBlocks = await rpcClient.getLiveBlocks();
                 expect(liveBlocks).toBeDefined();
                 done();
             });
 
-            it(`Access the balance of an address`, async (done) => {
+            it(`Verify rpcClient.getBalance for known baker returns an access the balance of an address`, async (done) => {
                 const balance = await rpcClient.getBalance(knownBaker);
                 expect(balance).toBeDefined();
                 done();
             });
 
-            it(`Access the data of a contract`, async (done) => {
+            it(`Verify that rpcClient.getStorage for know contract returns an access the data of a contract`, async (done) => {
                 const storage = await rpcClient.getStorage(knownContract);
                 expect(storage).toBeDefined();
                 done();
             });
 
-            it(`Access the code and data of a contract`, async (done) => {
+              it(`Verify that rpcClient.getScript for know contract returns an  access the code and data of a contract`, async (done) => {
                 const script = await rpcClient.getScript(knownContract);
                 expect(script).toBeDefined();
                 done();
             });
 
-            it(`Access the script of the contract and normalize it using the requested unparsing mode`, async (done) => {
+            it(`Verify that rpcClient.getNormalizedScript for known contract returns an access the script of the contract and normalize it using the requested unparsing mode`, async (done) => {
                 const script = await rpcClient.getNormalizedScript(knownContract);
                 expect(script).toBeDefined();
                 done();
             });
 
-            it(`Access the complete status of a contract`, async (done) => {
+            it(`Verify that pcClient.getContract returns an access the complete status of a contract`, async (done) => {
                 const contract = await rpcClient.getContract(knownContract);
                 expect(contract).toBeDefined();
                 done();
             });
 
-            it(`Access the manager key of a contract`, async (done) => {
+            it(`Verify that rpcClient.getManagerKey for known baker returns an access the manager key of a contract`, async (done) => {
                 const managerKey = await rpcClient.getManagerKey(knownBaker);
                 expect(managerKey).toBeDefined();
                 done();
             });
 
-            skipIdiazabalnet(`Access the delegate of a contract`, async (done) => {
+              skipIdiazabalnet(`Verify that rpcClient.getDelegate for known baker returns an access the delegate of a contract`, async (done) => {
                 const delegate = await rpcClient.getDelegate(knownBaker);
                 expect(delegate).toBeDefined();
                 done();
             });
 
-            it(`Access the value associated with a key in a big map`, async (done) => {
+            it(`Verify that rpcClient.getBigMapExpr for encoded expression returns Access the value associated with a key in a big map `, async (done) => {
                 const schema = new Schema({
                     prim: 'big_map',
                     args: [
@@ -108,91 +108,91 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
                 done();
             });
 
-            skipIdiazabalnet(`Fetches information about a delegate from RPC`, async (done) => {
+            skipIdiazabalnet(`Verify that rpcClient.getDelegates for known baker returns information about a delegate from RPC`, async (done) => {
                 const delegates = await rpcClient.getDelegates(knownBaker);
                 expect(delegates).toBeDefined();
                 done();
             });
 
-            it('Get all constants from RPC', async (done) => {
+            it('Verify that rpcClient.getConstants returns all constants from RPC', async (done) => {
                 const constants = await rpcClient.getConstants();
                 expect(constants).toBeDefined();
                 done();
             });
 
-            it('Get all the information about a block', async (done) => {
+            it('Verify that rpcClient.getBlock returns all the information about a block', async (done) => {
                 const blockInfo = await rpcClient.getBlock();
                 expect(blockInfo).toBeDefined();
                 done();
             });
 
-            it('Get the whole block header', async (done) => {
+            it('Verify that rpcClient.getBlockHeader returns whole block header', async (done) => {
                 const blockHeader = await rpcClient.getBlockHeader();
                 expect(blockHeader).toBeDefined();
                 done();
             });
 
-            it('Get all the metadata associated to the block', async (done) => {
+            it('Verify that rpcClient.getBlockMetadata returns all metadata associated to the block', async (done) => {
                 const blockMetadata = await rpcClient.getBlockMetadata();
                 expect(blockMetadata).toBeDefined();
                 done();
             });
 
-            it('Retrieves the list of delegates allowed to bake a block', async (done) => {
+            it('Verify that pcClient.getBakingRights retrieves the list of delegates allowed to bake a block', async (done) => {
                 const bakingRights = await rpcClient.getBakingRights();
                 expect(bakingRights).toBeDefined();
                 done();
             });
 
-            it('Retrieves the list of delegates allowed to endorse a block', async (done) => {
+            it('Verify that rpcClient.getEndorsingRights retrieves the list of delegates allowed to endorse a block', async (done) => {
                 const endorsingRights = await rpcClient.getEndorsingRights();
                 expect(endorsingRights).toBeDefined();
                 done();
             });
 
-            it('Get ballots casted so far during a voting period', async (done) => {
+            it('Verify that rpcClient.getBallotList returns ballots casted so far during a voting period', async (done) => {
                 const ballotList = await rpcClient.getBallotList();
                 expect(ballotList).toBeDefined();
                 done();
             });
 
-            it('Get sum of ballots casted so far during a voting period', async (done) => {
+            it('Verify that rpcClient.getBallots returns sum of ballots casted so far during a voting period', async (done) => {
                 const ballot = await rpcClient.getBallots();
                 expect(ballot).toBeDefined();
                 done();
             });
 
-            it('Get current period kind', async (done) => {
+            it('Verify that rpcClient.getCurrentPeriod returns current period kind', async (done) => {
                 const currentPeriodKind = await rpcClient.getCurrentPeriod();
                 expect(currentPeriodKind).toBeDefined();
                 done();
             });
 
-            it('Get current proposal under evaluation', async (done) => {
+            it('Verify that rpcClient.getCurrentProposal returns current proposal under evaluation', async (done) => {
                 const currentProposalUnderEvaluation = await rpcClient.getCurrentProposal();
                 expect(currentProposalUnderEvaluation).toBeDefined();
                 done();
             });
 
-            it('Get current expected quorum', async (done) => {
+            it('Verify that rpcClient.getCurrentQuorum returns current expected quorum', async (done) => {
                 const currentQuorum = await rpcClient.getCurrentQuorum();
                 expect(currentQuorum).toBeDefined();
                 done();
             });
 
-            it('List of delegates with their voting weight, in number of rolls', async (done) => {
+            it('Verify that rpcClient.getVotesListings returns list of delegates with their voting weight, in number of rolls', async (done) => {
                 const voteListings = await rpcClient.getVotesListings();
                 expect(voteListings).toBeDefined();
                 done();
             });
 
-            it('List of proposals with number of supporters', async (done) => {
+            it('Verify that rpcClient.getProposals returns list of proposals with number of supporters', async (done) => {
                 const proposals = await rpcClient.getProposals();
                 expect(proposals).toBeDefined();
                 done();
             });
 
-            it('Forge an operation returning the unsigned bytes', async (done) => {
+            it('Verify that rpcClient.forgeOperations for the operation forges an operation returning the unsigned bytes', async (done) => {
                 const operation: any = {
                     branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
                     contents: [
@@ -218,7 +218,7 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
             });
 
             // We will send invalid signedOpBytes and see if the node returns the expected error message
-            it('Inject an operation in node and broadcast it', async (done) => {
+            it('Verify that rpcClient.injectOperation injects an operation in node and broadcasts it', async (done) => {
                 try {
                     const injectedOperation = await rpcClient.injectOperation('operation');
                 } catch (ex: any) {
@@ -227,7 +227,7 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
                 done();
             });
 
-            it('Simulate the validation of an operation', async (done) => {
+            it('Verify that rpcClient.preapplyOperations simulates the validation of an operation', async (done) => {
                 try {
                     const operation: any = {
                         branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
@@ -258,19 +258,19 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
                 done();
             });
 
-            it('Get the list of entrypoints of the contract', async (done) => {
+            it('erify that rpcClient.getEntrypoints for known contract returns list of entrypoints of the contract', async (done) => {
                 const entrypoints = await rpcClient.getEntrypoints(knownContract);
                 expect(entrypoints).toBeDefined();
                 done();
             });
 
-            it('Get chain ID', async (done) => {
+            it('Verify that rpcClient.getChainId returns chain ID', async (done) => {
                 const chainId = await rpcClient.getChainId();
                 expect(chainId).toBeDefined();
                 done();
             });
 
-            it('Run an operation without signature checks', async (done) => {
+            it('Verify that rpcClient.runOperation for an operation runs an operation without signature checks', async (done) => {
                 try {
                     const operation: any = {
                         chain_id: 'NetXjD3HPJJjmcd',
