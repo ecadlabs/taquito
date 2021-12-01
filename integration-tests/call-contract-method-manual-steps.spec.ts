@@ -5,7 +5,7 @@ import { CONFIGS } from './config';
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
 
-    describe(`Test of obtaining an operation hash before sending the operation to the node ${rpc}`, () => {
+    describe(`Tests of obtaining an operation hash before sending the operation to the node ${rpc}`, () => {
         beforeEach(async (done) => {
             await setup(true);
             done();
