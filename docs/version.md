@@ -3,6 +3,11 @@ title: Versions
 author: Jev Bjorsell
 ---
 
+# Taquito v11.0.2-beta
+
+- `@taquito/beacon-wallet` - The beacon-sdk is updated to version 2.3.8
+- `@taquito/utils` - Utility function to get Tezos Address (PKH) from a public key #643
+
 # Taquito v11.0.1-beta
 
 ## Bug fix
