@@ -27,7 +27,8 @@ import {
 import { contractMap8pairs } from './data/contractMap8pairs';
 import { char2Bytes } from '@taquito/utils';
 
-const provider = 'https://hangzhounet.api.tez.ie';
+//const provider = 'https://hangzhounet.api.tez.ie';
+const provider = 'https://idiazabalnet.ecadinfra.com';
 export const signer: any = new InMemorySigner(
   'edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca'
 );
@@ -72,6 +73,7 @@ async function checkBalances(users: string | any[]) {
       if (user_balance < min_balance) {
         low_balance.push(users[i]);
       }
+      console.log(users[i], user_balance)
     }
   } catch (ex) {
     console.error(ex);
@@ -86,6 +88,7 @@ async function checkBalances(users: string | any[]) {
         to: low_balance[i],
         amount: min_balance / 1000000,
       });
+      console.log
       await fundAccountFirst.confirmation();
 
     }
