@@ -3,33 +3,34 @@ title: Taquito Smart Contract Library
 id: contracts_library
 author: Michael Kernaghan
 ---
+The contracts used in Taquito Integration Tests and in Taquito Documentation Live Code Examples are test data and require curation. Here we collect the contracts, give them names, demonstrate their properties and describe their use. 
 
- * Basic Contracts
+ * **Basic Contracts**
    * [IncrementContract](#incrementcontract)
    * [MichelsonMap](#michelsonmap)
- * Lambda Contracts
+ * **Lambda Contracts**
    * [LambdaViewOne](#lambdaviewone)
    * [LambdaViewTwo](#lambdaviewtwo)
- * BigMap Contracts
+ * **BigMap Contracts**
    * [BigMapPairasMap](#bigmappairasmap)
    * [BigMapValuesComplexKeys](#bigmapvaluescomplexkeys)
    * [BigMapInitialStorage](#bigmapinitialstorage)
    * [BigMapsMultipleValues](#bigmapsmultiplevalues)
    * [SmartContractComplexStorage](#smartcontractcomplexstorage)
    * [BigMapPackContract](#bigmappackcontract)
- * Tzip7 Contracts
+ * **Tzip7 Contracts**
    * [TokenContract](#tokencontract)
         * [Read about Tzip7](https://hackernoon.com/a-beginners-guide-to-tezos-tzip-7-proposal-rj2032iy)
- * Tzip12 Contracts
+ * **Tzip12 Contracts**
    * [Tzip12BigMapOffChain](#tzip12bigmapoffchain)
- * Tzip 16 Contracts
+ * **Tzip 16 Contracts**
    * [Tzip16Storage](#tzip16storage)
    * [Tzip16HTTPS](#tzip16https)
    * [Tzip16SHA256](#tzip16sha256)
    * [Tzip16IPFS](#tzip16ipfs)
    * [Tzip16OffChainOne](#tzip16offchainone)
    * [Tzip16OffChainTwo](#tzip16offchaintwo)
- * Wallet Contracts
+ * **Wallet Contracts**
    * [WalletContract](#walletcontract)
    * [WalletAreYouThereContract](#walletareyouttherecontract)
 
