@@ -12,7 +12,10 @@ export class TimestampToken extends ComparableToken {
   }
 
   public Execute(val: { string?: string; int?: string }) {
-    if (val.string) {
+    if (val.string && /^\d{10}(\.\d)?$/.test(val.string)) {
+      const timestamp = +val.string;
+      return new Date(Number(timestamp) * 1000).toISOString();
+    } else if (val.string) {
       return new Date(val.string).toISOString();
     } else if (val.int) {
       return new Date(Number(val.int) * 1000).toISOString();
