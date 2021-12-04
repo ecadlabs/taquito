@@ -961,7 +961,7 @@ export type RPCRunViewParam = {
   source?: string;
   payer?: string;
   gas?: BigNumber;
-  unparsing_mode: UnparsingModeEnum;
+  unparsing_mode?: UnparsingModeEnum;
 };
 
 export type RunViewResult = {
