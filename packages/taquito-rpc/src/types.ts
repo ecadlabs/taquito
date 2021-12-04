@@ -953,6 +953,21 @@ export type RunCodeResult = {
   big_map_diff?: ContractBigMapDiff;
 };
 
+export type RPCRunViewParam = {
+  contract: string;
+  entrypoint: string;
+  input: MichelsonV1Expression;
+  chain_id: string;
+  source?: string;
+  payer?: string;
+  gas?: BigNumber;
+  unparsing_mode: UnparsingModeEnum;
+};
+
+export type RunViewResult = {
+  data: MichelsonV1Expression;
+};
+
 export type EntrypointsResponse = {
   entrypoints: { [key: string]: Object };
   unreachable?: { path: ('Left' | 'Right')[] };

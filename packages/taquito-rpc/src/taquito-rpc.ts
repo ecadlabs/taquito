@@ -43,7 +43,9 @@ import {
   RawBlockHeaderResponse,
   RPCRunCodeParam,
   RPCRunOperationParam,
+  RPCRunViewParam,
   RunCodeResult,
+  RunViewResult,
   SaplingDiffResponse,
   ScriptResponse,
   StorageResponse,
@@ -792,6 +794,26 @@ export class RpcClient implements RpcClientInterface {
 
     return response;
   }
+
+  /**
+   * @param viewParams Parameters of the view to run
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Simulate a call to a view following the TZIP-4 standard. See https://gitlab.com/tzip/tzip/-/blob/master/proposals/tzip-4/tzip-4.md#view-entrypoints.
+   *
+   */
+  async runView({ unparsing_mode = 'Readable', ...rest}: RPCRunViewParam , { block }: RPCOptions = defaultRPCOptions): Promise<RunViewResult> {
+    return this.httpBackend.createRequest<any>(
+      {
+        url: this.createURL(`/chains/${this.chain}/blocks/${block}/helpers/scripts/run_view`),
+        method: 'POST',
+      },
+      {
+        unparsing_mode,
+        rest
+      }
+    );
+  };
 
   async getChainId() {
     return this.httpBackend.createRequest<string>({

@@ -31,7 +31,9 @@ import {
   ProposalsResponse,
   RPCRunCodeParam,
   RPCRunOperationParam,
+  RPCRunViewParam,
   RunCodeResult,
+  RunViewResult,
   SaplingDiffResponse,
   ScriptResponse,
   StorageResponse,
@@ -766,6 +768,17 @@ export class RpcClientCache implements RpcClientInterface {
   ): Promise<RunCodeResult> {
     return this.rpcClient.runCode(code, { block });
   }
+
+  /**
+   * @param viewParams Parameters of the view to run
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Simulate a call to a view following the TZIP-4 standard. See https://gitlab.com/tzip/tzip/-/blob/master/proposals/tzip-4/tzip-4.md#view-entrypoints.
+   *
+   */
+   async runView(viewParams: RPCRunViewParam, { block }: RPCOptions = defaultRPCOptions): Promise<RunViewResult> {
+    return this.rpcClient.runView(viewParams, { block });
+  };
 
   async getChainId() {
     const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getChainId', []);

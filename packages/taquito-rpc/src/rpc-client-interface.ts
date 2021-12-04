@@ -30,7 +30,9 @@ import {
   ProposalsResponse,
   RPCRunCodeParam,
   RPCRunOperationParam,
+  RPCRunViewParam,
   RunCodeResult,
+  RunViewResult,
   SaplingDiffResponse,
   ScriptResponse,
   StorageResponse,
@@ -88,6 +90,7 @@ export interface RpcClientInterface {
   getEntrypoints(contract: string, options?: RPCOptions): Promise<EntrypointsResponse>;
   runOperation(op: RPCRunOperationParam, options?: RPCOptions): Promise<PreapplyResponse>;
   runCode(code: RPCRunCodeParam, options?: RPCOptions): Promise<RunCodeResult>;
+  runView(viewParams: RPCRunViewParam, options?: RPCOptions): Promise<RunViewResult>;
   getChainId(): Promise<string>;
   packData(
     data: PackDataParams,

@@ -31,7 +31,9 @@ import {
   RPCOptions,
   RPCRunCodeParam,
   RPCRunOperationParam,
+  RPCRunViewParam,
   RunCodeResult,
+  RunViewResult,
   SaplingDiffResponse,
   ScriptResponse,
   UnparsingMode,
@@ -214,6 +216,9 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   ): Promise<RunCodeResult> {
     return this.rpc.runCode(code, { block });
   }
+  async runView(viewParams: RPCRunViewParam, { block }: RPCOptions = defaultRPCOptions): Promise<RunViewResult> {
+    return this.rpc.runView(viewParams, { block });
+  };
   async getChainId(): Promise<string> {
     return this.rpc.getChainId();
   }
