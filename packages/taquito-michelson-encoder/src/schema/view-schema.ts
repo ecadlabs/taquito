@@ -13,10 +13,10 @@ export class ViewSchema {
 
     /**
      *
-     * @description Create an instance of ViewSchema fore each view in a script
+     * @description Create an instance of ViewSchema for each view in a script
      *
      * @param val contract script obtained from the RPC
-     * @returns array of ViewSchemas or empty array if there is no view in the contract
+     * @returns array of ViewSchema or empty array if there is no view in the contract
      */
     static fromRPCResponse(val: { script: ScriptResponse }) {
         let allViewSchema: ViewSchema[] = [];
