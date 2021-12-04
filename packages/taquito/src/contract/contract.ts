@@ -1,5 +1,5 @@
 import { ParameterSchema, Schema } from '@taquito/michelson-encoder';
-import { EntrypointsResponse, ScriptResponse } from '@taquito/rpc';
+import { EntrypointsResponse, RpcClientInterface, ScriptResponse } from '@taquito/rpc';
 import { ChainIds, DefaultLambdaAddresses } from '../constants';
 import { Wallet } from '../wallet';
 import { ContractMethodFactory } from './contract-methods/contract-method-factory';
@@ -14,51 +14,31 @@ export const DEFAULT_SMART_CONTRACT_METHOD_NAME = 'default';
 /**
  * @description Utility class to retrieve data from a smart contract's storage without incurring fees via a contract's view method
  */
-export class ContractView {
+ export class ContractView {
   constructor(
     private currentContract: ContractAbstraction<ContractProvider | Wallet>,
-    private provider: ContractProvider,
     private name: string,
-    private chainId: string,
     private callbackParametersSchema: ParameterSchema,
     private parameterSchema: ParameterSchema,
-    private args: any[]
+    private args: any[],
+    private rpc: RpcClientInterface
   ) { }
 
   /**
    *
-   * @description Find which lambda contract to use based on the current network, 
-   * encode parameters to Michelson, 
-   * create an instance of Lambdaview to retrive data, and
-   * Decode Michelson response 
+   * @description Simulate a call to a view following the TZIP-4 standard. 
+   * See https://gitlab.com/tzip/tzip/-/blob/master/proposals/tzip-4/tzip-4.md#view-entrypoints. 
    *
-   * @param Options Address of a lambda contract (sandbox users)
    */
-  async read(customLambdaAddress?: string) {
-
-    let lambdaAddress;
-
-    // TODO Verify if the 'customLambdaAdress' is a valid originated contract and if not, return an appropriate error message. 
-    if (customLambdaAddress) {
-      lambdaAddress = customLambdaAddress
-    } else if (this.chainId === ChainIds.GRANADANET) {
-      lambdaAddress = DefaultLambdaAddresses.GRANADANET
-    } else if (this.chainId === ChainIds.HANGZHOUNET) {
-      lambdaAddress = DefaultLambdaAddresses.HANGZHOUNET
-    } else if (this.chainId === ChainIds.IDIAZABALNET) {
-      lambdaAddress = DefaultLambdaAddresses.IDIAZABALNET
-    } else if (this.chainId === ChainIds.MAINNET) {
-      lambdaAddress = DefaultLambdaAddresses.MAINNET
-    } else {
-      throw new UndefinedLambdaContractError()
-    }
-
-    const lambdaContract = await this.provider.at(lambdaAddress);
+  async read(chainId?: ChainIds) {
     const arg = this.parameterSchema.Encode(...this.args);
-    const lambdaView = new LambdaView(lambdaContract, this.currentContract, this.name, arg);
-    const failedWith = await lambdaView.execute();
-    const response = this.callbackParametersSchema.Execute(failedWith);
-    return response;
+    const result = await this.rpc.runView({
+      contract: this.currentContract.address,
+      entrypoint: this.name,
+      input: arg,
+      chain_id: chainId? chainId: await this.rpc.getChainId()
+  });
+    return this.callbackParametersSchema.Execute(result.data);
   }
 
 }
@@ -117,11 +97,11 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
     provider: T,
     private storageProvider: StorageProvider,
     public readonly entrypoints: EntrypointsResponse,
-    private chainId: string
+    private rpc: RpcClientInterface
   ) {
     this.schema = Schema.fromRPCResponse({ script: this.script });
     this.parameterSchema = ParameterSchema.fromRPCResponse({ script: this.script });
-    this._initializeMethods(this, address, provider, this.entrypoints.entrypoints, this.chainId);
+    this._initializeMethods(this, address, provider, this.entrypoints.entrypoints, this.rpc);
   }
 
   private _initializeMethods(
@@ -131,7 +111,7 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
     entrypoints: {
       [key: string]: object;
     },
-    chainId: string
+    rpc: RpcClientInterface
   ) {
     const parameterSchema = this.parameterSchema;
     const keys = Object.keys(entrypoints);
@@ -176,12 +156,11 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
               validateArgs(args, smartContractMethodSchemaWithoutCallback, smartContractMethodName);
               return new ContractView(
                 currentContract,
-                provider,
                 smartContractMethodName,
-                chainId,
                 smartContractMethodCallbackSchema,
                 smartContractMethodSchemaWithoutCallback,
-                args
+                args,
+                rpc
               );
             };
             this.views[smartContractMethodName] = view;

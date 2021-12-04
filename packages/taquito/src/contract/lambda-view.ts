@@ -4,6 +4,10 @@ import { TezosOperationError } from '../operations/operation-errors';
 import { ContractProvider } from './interface';
 import { Wallet } from '../wallet';
 
+/**
+   *
+   * @deprecated LambdaView has been deprecated in favor of rpc.runView to simulate calls to views following the TZIP-4 standard
+   */
 export default class LambdaView {
   public readonly voidLambda: Object;
 
