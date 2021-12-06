@@ -5,6 +5,7 @@ author: Michael Kernaghan
 ---
 
 The contracts used in Taquito Integration Tests and in Taquito Documentation Live Code Examples are test data and require curation. Here we collect the contracts, give them names, demonstrate their properties and describe their use.
+
 To determine if a contract has an FA1.2 interface we can use 
 ```
 tezos-client check contract KT1CfFBaLoUrgv93k8668KCCcu2hNDNYPz4L implements fa1.2
@@ -40,6 +41,8 @@ A contract has an FA2 interface if it has entrypoints: transfer, balance_of, and
   - [WalletContract](#walletcontract)
   - [WalletAreYouThereContract](#walletareyouttherecontract)
 
+# Basic Contracts
+
 ## IncrementContract
 
 [KT1NcdpzokZQY4sLmCBUwLnMHQCCQ6rRXYwS](https://better-call.dev/hangzhou2net/KT1NcdpzokZQY4sLmCBUwLnMHQCCQ6rRXYwS/code)
@@ -47,7 +50,7 @@ A contract has an FA2 interface if it has entrypoints: transfer, balance_of, and
 This contract serves as the default introductory example on the [Ligo-WEB-IDE](https://ide.ligolang.org/p/CelcoaDRK5mLFDmr5rSWug)
 It has two endpoints, %decrement and %increment. The contract is used to demo addition and subtraction by a smart contract. This contract has neither an FA1.2 nor an FA2 interface.
 
-Entrypoints:
+#### Entrypoints:
   * decrement
   * increment
 
@@ -59,22 +62,23 @@ The contract supports a [Michelson Tutorial](https://tezostaquito.io/docs/michel
 
 - [See the full tutorial](https://claudebarde.medium.com/?p=8d8be9930662)
 
-Entrypoints:
+#### Entrypoints:
   * default
 
-## LambdaViewContract
-
-[KT1LNMrk8orMQ85zbwK25996dPhDxfSicvKh](https://better-call.dev/hangzhou2net/KT1LNMrk8orMQ85zbwK25996dPhDxfSicvKh/code)
-
+# Lambda Contracts
 We can send contract address, view method, and parameters as its own "view" to a simple lambda contract that always fails. We refer to this method as a "lambda view." The result of invoking our always-failing lambda contract is an error from the blockchain.
 
 That may not sound very useful, but the brilliant part is that the error we receive contains the information we requested! We can not incur a fee for requesting data or waiting for confirmation from the network to call view methods.
 
 Taquito internally contains a list of lambda contracts. Thus, there is no need to deploy a lambda contract if you are using Mainnet, Hangzhounet, or Granadanet. Taquito will detect the current network and use the appropriate lambda contract.
 
+## LambdaViewContract
+
+[KT1LNMrk8orMQ85zbwK25996dPhDxfSicvKh](https://better-call.dev/hangzhou2net/KT1LNMrk8orMQ85zbwK25996dPhDxfSicvKh/code)
+
 Not a supported FA1.2 contract. Almost an Fa2 interface but it is missing update_operators.
 
-Entrypoints:
+#### Entrypoints:
   * approve
   * getAllowance
   * getBalance
@@ -88,11 +92,13 @@ Entrypoints:
 
 This contact is another example of a Lambda contract, this time involving a token. It is not a supported FA1.2 contract but does have an FA2 interface.
 
-Entrypoints:
+#### Entrypoints:
   * balance_of
   * token_metadata_registry
   * transfer
   * update_operators
+
+# Contracts with Maps
 
 ## MapWithPairasMapContract
 
@@ -115,7 +121,7 @@ theMap_value pair
 
 Note the lack of annotations. If the storage does not annotate its properties, the caller must use numeric indexes instead.
 
-Entrypoints:
+#### Entrypoints:
   * default
 
 ## MapWithComplexKeysContract
@@ -127,7 +133,7 @@ This contract has a single default entrypoint that produces a map:
 ```js
 Pair 10 (Pair 20 (Pair "Hello" (Pair 0xffff (Pair 100 (Pair False (Pair "tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx" (Pair 1570374509 "tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx")))))))
 ```
-Entrypoints:
+#### Entrypoints:
   * default
 
 ## MapWithInitialStorageContract
@@ -145,7 +151,7 @@ storage map(nat, $map_1_value)
   current_stock nat
   max_price mutez
 ```
-Entrypoints:
+#### Entrypoints:
   * default
 
 ## MapWithMapandBigmapContract
@@ -166,8 +172,10 @@ themap_key pair
   @address_10 address
 @int_11 int
 ```
-Entrypoints:
+#### Entrypoints:
   * default
+
+# Contracts with BigMaps
 
 ## BigMapsMultipleValuesContract
 
@@ -186,7 +194,7 @@ storage pair
   @map_6 map(address, nat)
 @big_map_2_value map(address, nat)
 ```
-Entrypoints:
+#### Entrypoints:
   * approve
   * burn
   * getAdministrator
@@ -241,7 +249,7 @@ Entrypoints
 
 By default, a call to an RPC node is used to pack data when fetching values from a big map. Big map keys need to be serialized or packed and Taquito relies on the PACK functionality of a Tezos RPC node to pack the big map keys. This may be considered inefficient as it adds a request to a remote node to fetch data.
 
-Now, Taquito allows you to pack the required data locally to fetch values from a big map. By relying on the local pack implementation, Taquito eliminates one RPC roundtrip when fetching big map values. This feature makes fetching big map values 50% faster.
+Now, Taquito allows you to pack the required data locally to fetch values from a big map. By relying on the local pack implementation, Taquito eliminates one RPC roundtrip when fetching big map values. 
 
 This contract is for demonstrating packing. Not a supported FA1.2 contract. The storage is simple:
 ```js
@@ -251,6 +259,9 @@ storage pair
 ```
 Entrypoints
   * default
+
+# Tzip-12 Contracts
+The @taquito/tzip12 package allows retrieving metadata associated with tokens of FA2 contract. You can find more information about the TZIP-12 standard [here](https://gitlab.com/tezos/tzip/-/blob/master/proposals/tzip-12/tzip-12.md).
 
 ## TokenContract
 
@@ -272,7 +283,7 @@ storage pair
 @big_map_2_value map(address, nat)
 ```
 
-Entrypoints:
+#### Entrypoints:
   * approve
   * burn
   * getAdministrator
@@ -311,7 +322,7 @@ tokens_value pair
   total_supply nat
 ```
 
-Entrypoints:
+#### Entrypoints:
   * balance_of
   * mint
   * mutez_transfer
@@ -320,6 +331,17 @@ Entrypoints:
   * set_pause
   * transfer
   * update_operators
+
+#### Metadata:
+```
+name: Test Taquito FA2 token_metadata view
+description: This is a test to retrieve tokens metadata from a view %token_metadata
+interfaces: TZIP-012
+```
+
+# Tzip-16 Contracts
+The @taquito/tzip16 package allows retrieving metadata associated with a smart contract. These metadata can be stored on-chain (tezos-storage) or off-chain (HTTP(S) or IPFS). The package also provides a way to execute the MichelsonStorageView found in the metadata. More information about the TZIP-16 standard can be found [here](https://gitlab.com/tezos/tzip/-/blob/master/proposals/tzip-16/tzip-16.md#introduction).
+
 
 ## Tzip16StorageContract
 
@@ -335,8 +357,18 @@ taco_shop_storage_value pair
   max_price mutez
 ```
 
-Entrypoints:
+#### Entrypoints:
   * default
+
+#### Metadata:
+```
+name: test
+description: A metadata test
+version: 0.1
+license: MIT
+authors: Taquito
+homepage: https://tezostaquito.io/
+```
 
 ## Tzip16HTTPSContract
 
@@ -351,8 +383,17 @@ taco_shop_storage_value pair
   current_stock nat
   max_price mutez
 ```
-Entrypoints:
+#### Entrypoints:
   * default
+
+#### Metadata:
+```
+name: Taquito test with valid metadata
+description: This is metadata test for Taquito integration tests with the Ligo Taco shop contract modified to include metadata in storage
+version: 7.1.0-beta.0
+license: MIT
+homepage: https://github.com/ecadlabs/taquito
+```
 
 ## Tzip16SHA256Contract
 
@@ -368,12 +409,21 @@ taco_shop_storage_value pair
   max_price mutez
 ```
 
-Entrypoints:
+#### Entrypoints:
   * default
+
+#### Metadata:
+```
+name: Taquito test with valid metadata
+description: This is metadata test for Taquito integration tests with the Ligo Taco shop contract modified to include metadata in storage
+version: 7.1.0-beta.0
+license: MIT
+homepage: https://github.com/ecadlabs/taquito
+```
 
 ## Tzip16IPFSContract
 
-[KT1PpnY5yeGTcHTxMP2t15YX8SLqpWPaP8Xa](https://better-call.dev/hangzhou2net/KT1PpnY5yeGTcHTxMP2t15YX8SLqpWPaP8Xa/code)
+[KT1NP2ZVLxWaSBQryDzUujmdv27ubJWZRckv](https://better-call.dev/hangzhou2net/KT1NP2ZVLxWaSBQryDzUujmdv27ubJWZRckv/code)
 
 ```js
 storage pair
@@ -385,8 +435,17 @@ taco_shop_storage_value pair
   max_price mutez
 ```
 
-Entrypoints:
+#### Entrypoints:
   * default
+
+#### Metadata:
+```
+name: Taquito test with valid metadata
+description: This is metadata test for Taquito integration tests with the Ligo Taco shop contract modified to include metadata in storage
+version: 7.1.0-beta.0
+license: MIT
+homepage: https://github.com/ecadlabs/taquitoj
+```
 
 ## Tzip16OffChainContractOne
 
@@ -397,8 +456,14 @@ storage pair
   @nat_2 nat
   metadata big_map(string, bytes)
 ```
-Entrypoints:
+#### Entrypoints:
   * default
+
+#### Metadata:
+```
+description: This contract has bytes-returning off-chain-views.
+license: MIT
+```
 
 ## Tzip16OffChainContractTwo
 
@@ -409,8 +474,14 @@ storage pair
   @nat_2 nat
   metadata big_map(string, bytes)
 ```
-Entrypoints:
+#### Entrypoints:
   * default
+
+#### Metadata:
+```
+description: This contract has bytes-returning off-chain-views.
+license: MIT
+```
 
 ## WalletContract
 
@@ -421,7 +492,7 @@ storage pair
   @nat_2 nat
   metadata big_map(string, bytes)
 ```
-Entrypoints:
+#### Entrypoints:
   * default
 
 
@@ -438,7 +509,7 @@ storage pair
   names map(address, string)
 ```
 
-Entrypoints:
+#### Entrypoints:
   * addName
   * areYouThere
   * changeMessage
