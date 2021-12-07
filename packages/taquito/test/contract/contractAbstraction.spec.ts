@@ -1,11 +1,12 @@
 import { Context } from '../../src/context';
-import { ContractAbstraction, MANAGER_LAMBDA } from '../../src/contract';
+import { ContractAbstraction, ContractView, InvalidParameterError, MANAGER_LAMBDA } from '../../src/contract';
 import { ContractMethod } from '../../src/contract/contract-methods/contract-method-flat-param';
 import { ContractMethodObject } from '../../src/contract/contract-methods/contract-method-object-param';
 import { RpcContractProvider } from '../../src/contract/rpc-contract-provider';
 import { noAnnotCode } from '../../../../integration-tests/data/token_without_annotation';
 import { genericMultisig } from '../../../../integration-tests/data/multisig';
 import { entrypointsGenericMultisig } from './data';
+import { OnChainView } from '../../src/contract/contract-methods/contract-on-chain-view';
 
 describe('ContractAbstraction test', () => {
   let rpcContractProvider: RpcContractProvider;
@@ -36,7 +37,8 @@ describe('ContractAbstraction test', () => {
         rpcContractProvider,
         rpcContractProvider,
         entrypointsGenericMultisig,
-        'chain_test'
+        'chain_test',
+        mockRpcClient as any
       );
 
       // Calling the smart contract main method using flat arguments
@@ -153,7 +155,8 @@ describe('ContractAbstraction test', () => {
         rpcContractProvider,
         rpcContractProvider,
         entrypointsGenericMultisig,
-        'chain_test'
+        'chain_test',
+        mockRpcClient as any
       );
 
       // Calling the smart contract main method using flat arguments
@@ -280,7 +283,8 @@ describe('ContractAbstraction test', () => {
         rpcContractProvider,
         rpcContractProvider,
         { entrypoints: {} },
-        'chain_test'
+        'chain_test',
+        mockRpcClient as any
       );
 
       const method0 = contratcAbs.methods[0]('tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', '1');
@@ -352,7 +356,8 @@ describe('ContractAbstraction test', () => {
         rpcContractProvider,
         rpcContractProvider,
         { entrypoints: {} },
-        'chain_test'
+        'chain_test',
+        mockRpcClient as any
       );
 
       const method2 = contratcAbs.methods[2]('tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', '1');
@@ -404,6 +409,49 @@ describe('ContractAbstraction test', () => {
           }
         }
       });
+      done();
+    });
+  });
+
+  describe('On-chain views initialization', () => {
+    const fakeScriptWithViews = {
+      code: [
+        {
+          prim: 'view',
+          args: [
+            { string: 'add' },
+            { prim: 'nat' },
+            { prim: 'nat' },
+            [{ prim: 'UNPAIR' }, { prim: 'ADD' }],
+          ],
+        },
+        {
+          prim: 'view',
+          args: [
+            { string: 'id' },
+            { prim: 'nat' },
+            { prim: 'pair', args: [{ prim: 'nat' }, { prim: 'nat' }] },
+            [],
+          ],
+        },
+        { prim: 'parameter', args: [{ prim: 'nat' }] },
+        { prim: 'storage', args: [{ prim: 'nat' }] },
+        { prim: 'code', args: [] },
+      ],
+      storage: [{ "int": "2" }],
+    };
+
+    it('populate the contractViews member with a function matching each view name from the script', async (done) => {
+      const contratcAbs = new ContractAbstraction('contractAddress', fakeScriptWithViews, rpcContractProvider, rpcContractProvider, { entrypoints: {} }, 'chain_test', mockRpcClient as any);
+
+      expect(Object.keys(contratcAbs.contractViews).length).toEqual(2);
+
+      const viewAdd = contratcAbs.contractViews.add();
+      expect(viewAdd).toBeInstanceOf(OnChainView);
+
+      const viewId = contratcAbs.contractViews.id();
+      expect(viewId).toBeInstanceOf(OnChainView);
+
       done();
     });
   });

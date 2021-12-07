@@ -1,10 +1,11 @@
-import { ParameterSchema, Schema } from '@taquito/michelson-encoder';
-import { EntrypointsResponse, ScriptResponse } from '@taquito/rpc';
+import { ParameterSchema, Schema, ViewSchema } from '@taquito/michelson-encoder';
+import { EntrypointsResponse, RpcClientInterface, ScriptResponse } from '@taquito/rpc';
 import { ChainIds, DefaultLambdaAddresses } from '../constants';
 import { Wallet } from '../wallet';
 import { ContractMethodFactory } from './contract-methods/contract-method-factory';
 import { ContractMethod } from './contract-methods/contract-method-flat-param';
 import { ContractMethodObject } from './contract-methods/contract-method-object-param';
+import { OnChainView } from './contract-methods/contract-on-chain-view';
 import { InvalidParameterError, UndefinedLambdaContractError } from './errors';
 import { ContractProvider, StorageProvider } from './interface';
 import LambdaView from './lambda-view';
@@ -71,6 +72,7 @@ const validateArgs = (args: any[], schema: ParameterSchema, name: string) => {
   }
 };
 
+// lambda view tzip4
 const isView = (schema: ParameterSchema): boolean => {
   let isView = false;
   const sigs = schema.ExtractSignatures();
@@ -90,7 +92,7 @@ const isContractProvider = (variableToCheck: any): variableToCheck is ContractPr
  * @description Smart contract abstraction
  */
 export class ContractAbstraction<T extends ContractProvider | Wallet> {
-  private contractMethodFactory = new ContractMethodFactory<T>()
+  private contractMethodFactory: ContractMethodFactory<T>;
   /**
    * @description Contains methods that are implemented by the target Tezos Smart Contract, and offers the user to call the Smart Contract methods as if they were native TS/JS methods.
    * NB: if the contract contains annotation it will include named properties; if not it will be indexed by a number.
@@ -104,12 +106,22 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
    *
    */
   public methodsObject: { [key: string]: (args?: any) => ContractMethodObject<T> } = {};
-
+  /**
+   * @description Contains lamda views (tzip4) that are implemented by the target Tezos Smart Contract, and offers the user to call the lambda views as if they were native TS/JS methods.
+   * NB: These are the view defined in the tzip4 standard, not the views introduced by the Hangzhou protocol.
+   */
   public views: { [key: string]: (...args: any[]) => ContractView } = {};
+  /**
+   * @description Contains on-chain views that are defined by the target Tezos Smart Contract, and offers the user to simulate the views execution as if they were native TS/JS methods.
+   * NB: the expected format for the parameter when calling a smart contract view is the object format (same format as for the storage) and not the flattened representation.
+   *
+   */
+  public contractViews: { [key: string]: (args?: any) => OnChainView } = {};
 
   public readonly schema: Schema;
 
   public readonly parameterSchema: ParameterSchema;
+  public readonly viewSchema: ViewSchema[];
 
   constructor(
     public readonly address: string,
@@ -117,16 +129,22 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
     provider: T,
     private storageProvider: StorageProvider,
     public readonly entrypoints: EntrypointsResponse,
-    private chainId: string
+    private chainId: string,
+    rpc: RpcClientInterface
   ) {
+    this.contractMethodFactory = new ContractMethodFactory(provider, address);
     this.schema = Schema.fromRPCResponse({ script: this.script });
     this.parameterSchema = ParameterSchema.fromRPCResponse({ script: this.script });
-    this._initializeMethods(this, address, provider, this.entrypoints.entrypoints, this.chainId);
+
+    this.viewSchema = ViewSchema.fromRPCResponse({ script: this.script });
+    if (this.viewSchema.length !== 0) {
+      this._initializeOnChainViews(this, rpc, this.viewSchema);
+    }
+    this._initializeMethods(this, provider, this.entrypoints.entrypoints, this.chainId);  
   }
 
   private _initializeMethods(
     currentContract: ContractAbstraction<T>,
-    address: string,
     provider: T,
     entrypoints: {
       [key: string]: object;
@@ -143,8 +161,6 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
 
         this.methods[smartContractMethodName] = function (...args: any[]) {
           return currentContract.contractMethodFactory.createContractMethodFlatParams(
-            provider,
-            address,
             smartContractMethodSchema,
             smartContractMethodName,
             args
@@ -153,8 +169,6 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
 
         this.methodsObject[smartContractMethodName] = function (args: any) {
           return currentContract.contractMethodFactory.createContractMethodObjectParam(
-            provider,
-            address,
             smartContractMethodSchema,
             smartContractMethodName,
             args
@@ -199,8 +213,6 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
       anonymousMethods.forEach(smartContractMethodName => {
         this.methods[smartContractMethodName] = function (...args: any[]) {
           return currentContract.contractMethodFactory.createContractMethodFlatParams(
-            provider,
-            address,
             parameterSchema,
             smartContractMethodName,
             args,
@@ -211,8 +223,6 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
 
         this.methodsObject[smartContractMethodName] = function (args: any) {
           return currentContract.contractMethodFactory.createContractMethodObjectParam(
-            provider,
-            address,
             parameterSchema,
             smartContractMethodName,
             args,
@@ -225,8 +235,6 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
       const smartContractMethodSchema = this.parameterSchema;
       this.methods[DEFAULT_SMART_CONTRACT_METHOD_NAME] = function (...args: any[]) {
         return currentContract.contractMethodFactory.createContractMethodFlatParams(
-          provider,
-          address,
           smartContractMethodSchema,
           DEFAULT_SMART_CONTRACT_METHOD_NAME,
           args,
@@ -236,8 +244,6 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
 
       this.methodsObject[DEFAULT_SMART_CONTRACT_METHOD_NAME] = function (args: any) {
         return currentContract.contractMethodFactory.createContractMethodObjectParam(
-          provider,
-          address,
           smartContractMethodSchema,
           DEFAULT_SMART_CONTRACT_METHOD_NAME,
           args,
@@ -245,6 +251,23 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
         );
       };
     }
+  }
+
+  private _initializeOnChainViews(currentContract: ContractAbstraction<T>, rpc: RpcClientInterface, allContractViews: ViewSchema[]){
+    const storageType = this.schema.val;
+    const storageValue = this.script.storage;
+
+    allContractViews.forEach((viewSchema) => {
+      this.contractViews[viewSchema.viewName] = function (args: any) {
+        return currentContract.contractMethodFactory.createContractViewObjectParam(
+          rpc,
+          viewSchema,
+          storageType,
+          storageValue,
+          args
+        );
+      };
+    })
   }
 
   /**
