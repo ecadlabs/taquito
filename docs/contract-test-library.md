@@ -11,7 +11,6 @@ To determine if a contract has an FA1.2 interface we can use
 tezos-client check contract KT1CfFBaLoUrgv93k8668KCCcu2hNDNYPz4L implements fa1.2
 ```
 A contract has an FA2 interface if it has entrypoints: transfer, balance_of, and update_operators
-
 - **Basic Contracts**
   - [IncrementContract](#incrementcontract)
   - [MichelsonMapContract](#michelsonmapcontract)
@@ -515,3 +514,28 @@ storage pair
   * changeMessage
   * decrement
   * increment
+
+
+|                                | Type    | Interface? | Metadata | Default Endpoint |
+|--------------------------------|---------|------------|----------|------------------|
+| IncrementContract              | Basic   |            |          |                  |
+| MichelsonMapContract           | Basic   |            |          | default          |
+| LambdaViewContract             | Lambda  |            |          |                  |
+| LambdaViewWithTokenContract    | Lambda  | FA2        |          |                  |
+| MapWithWithSingleMapForStorage | Maps    |            |          | default          |
+| MapWithPairasMapContract       | Maps    |            |          | default          |
+| MapWithComplexKeysContract     | Maps    |            |          | default          |
+| MapWithInitialStorageContract  | Maps    |            |          | default          |
+| BigMapsMultipleValuesContract  | BigMaps | FA1.2      |          |                  |
+| BigMapsComplexStorageContract  | BigMaps |            |          |                  |
+| BigMapPackContract             | BigMaps |            |          | default          |
+| Tzip12BigMapOffChainContract   | Tzip-12 |            | metadata |                  |
+| Tzip16StorageContract          | Tzip-16 |            | metadata | default          |
+| Tzip16HTTPSContract            | Tzip-16 |            | metadata | default          |
+| Tzip16SHA256Contract           | Tzip-16 |            | metadata | default          |
+| Tzip16IPFSContract             | Tzip-16 |            | metadata | default          |
+| Tzip16OffChainContractOne      | Tzip-16 |            | metadata | default          |
+| Tzip16OffChainContractTwo      | Tzip-16 |            | metadata | default          |
+| WalletContract                 | Wallet  |            |          | default          |
+| WalletAreYouThereContract      | Wallet  |            |          |                  |
+| TokenContract                  | Token   | FA2        |          |                  |
