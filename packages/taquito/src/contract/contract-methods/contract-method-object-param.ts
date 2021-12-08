@@ -22,8 +22,8 @@ export class ContractMethodObject<T extends ContractProvider | Wallet> implement
     ) { }
 
     /**
-   * @description Get the signature of the smart contract method
-   */
+     * @description Get the signature of the smart contract method
+     */
     getSignature() {
         return this.isAnonymous
             ? this.parameterSchema.ExtractSchema()[this.name]

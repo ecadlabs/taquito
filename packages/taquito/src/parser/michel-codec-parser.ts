@@ -1,8 +1,10 @@
 import { Context } from '../context';
 import { ParserProvider } from './interface';
-import { Expr, Parser, Prim, ProtocolID } from '@taquito/michel-codec';
+import { Expr, GlobalConstantHashAndValue, Parser, Prim, ProtocolID } from '@taquito/michel-codec';
 import { OriginateParams } from '../operations/types';
 import { InvalidInitParameter, InvalidCodeParameter } from '../contract/errors';
+import { Schema, Token } from '@taquito/michelson-encoder';
+import { MichelsonV1Expression } from '@taquito/rpc';
 
 export class MichelCodecParser implements ParserProvider {
     constructor(private context: Context) { }
@@ -32,6 +34,25 @@ export class MichelCodecParser implements ParserProvider {
         parsedParams.code = await this.formatCodeParam(params.code);
         if (params.init) {
             parsedParams.init = await this.formatInitParam(params.init);
+        } else if (params.storage) {
+            const storageType = (parsedParams.code as Expr[]).find((p): p is Prim => ('prim' in p) && p.prim === 'storage');
+            if (!storageType?.args) {
+                throw new InvalidCodeParameter('The storage section is missing from the script', params.code);
+            }
+            const schema = new Schema(storageType.args[0] as MichelsonV1Expression);
+            const globalconstantsHashAndValue = await this.findGlobalConstantsHashAndValue(schema);
+
+            if (Object.keys(globalconstantsHashAndValue).length !== 0) {
+                // If there are global constants in the storage part of the contract code,
+                // they need to be locally expanded in order to encode the storage arguments
+                const p = new Parser({ expandGlobalConstant: globalconstantsHashAndValue });
+                const storageTypeNoGlobalConst = p.parseJSON(storageType.args[0]);
+                const schemaNoGlobalConst = new Schema(storageTypeNoGlobalConst)
+                parsedParams.init = schemaNoGlobalConst.Encode(params.storage);
+            } else {
+                parsedParams.init = schema.Encode(params.storage);
+            }
+            delete parsedParams.storage;
         }
         return parsedParams;
     }
@@ -66,4 +87,23 @@ export class MichelCodecParser implements ParserProvider {
         }
         return parsedInit;
     }
+
+    private async findGlobalConstantsHashAndValue(schema: Schema) {
+        const globalConstantTokens = schema.findToken('constant');
+        let globalConstantsHashAndValue: GlobalConstantHashAndValue = {}
+
+        if (globalConstantTokens.length !== 0) {
+            for (let token of globalConstantTokens) {
+                const tokenArgs = token.tokenVal.args;
+                if (tokenArgs) {
+                    const hash: string = tokenArgs[0]['string'];
+                    const michelineValue = await this.context.globalConstantsProvider.getGlobalConstantByHash(hash);
+                    Object.assign(globalConstantsHashAndValue, {
+                        [hash]: michelineValue
+                    });
+                }
+            }
+        }
+        return globalConstantsHashAndValue;
+    };
 }
