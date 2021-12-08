@@ -78,7 +78,7 @@ export class Schema {
     return 'prim' in val && Array.isArray(val.args);
   }
 
-  constructor(val: MichelsonV1Expression) {
+  constructor(readonly val: MichelsonV1Expression) {
     this.root = createToken(val, 0);
 
     if (this.root instanceof BigMapToken) {

@@ -276,7 +276,8 @@ export class Wallet {
       this,
       this.context.contract,
       entrypoints,
-      chainId
+      chainId,
+      rpc
     );
     return contractAbstractionComposer(abs, this.context);
   }

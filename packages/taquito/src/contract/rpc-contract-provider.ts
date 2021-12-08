@@ -396,7 +396,7 @@ export class RpcContractProvider
     const entrypoints = await rpc.getEntrypoints(address);
     const blockHeader = await this.rpc.getBlockHeader();
     const chainId = blockHeader.chain_id;
-    const abs = new ContractAbstraction(address, script, this, this, entrypoints, chainId);
+    const abs = new ContractAbstraction(address, script, this, this, entrypoints, chainId, rpc);
     return contractAbstractionComposer(abs, this.context);
   }
 
