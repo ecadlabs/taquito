@@ -12,9 +12,9 @@ module.exports = function (context, options) {
             https: false,
             os: false,
             path: false,
-            stream: false,
+            stream: require.resolve('stream-browserify'),
             crypto: false,
-            buffer: false
+            buffer: require.resolve('buffer')
           },
         },
       };
