@@ -36,7 +36,7 @@ export class MichelCodecParser implements ParserProvider {
             parsedParams.init = await this.formatInitParam(params.init);
         } else if (params.storage) {
             const storageType = (parsedParams.code as Expr[]).find((p): p is Prim => ('prim' in p) && p.prim === 'storage');
-            if (storageType?.args === undefined) {
+            if (!storageType?.args) {
                 throw new InvalidCodeParameter('The storage section is missing from the script', params.code);
             }
             const schema = new Schema(storageType.args[0] as MichelsonV1Expression);

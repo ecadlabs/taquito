@@ -4,7 +4,7 @@ import {
   globalConstantJSON,
   script,
   scriptJSON,
-} from './helpers/global-constants-helpers';
+} from './helpers/global-constants-helper';
 
 describe('Expand global constants', () => {
   const registeredIntExprJSON = { prim: 'int' };
@@ -19,7 +19,7 @@ describe('Expand global constants', () => {
 
   const p = new Parser(parserOptions);
 
-  it('Expands global constants in script using parseJSON', () => {
+  it('Should expand global constants in script using parseJSON', () => {
     expect(
       p.parseJSON(
         scriptJSON(
@@ -30,7 +30,7 @@ describe('Expand global constants', () => {
     ).toEqual(scriptJSON(registeredIntExprJSON, registeredDropExprJSON));
   });
 
-  it('Expands global constants in script using parseSequence', () => {
+  it('Should expand global constants in script using parseSequence', () => {
     expect(
       JSON.stringify(
         p.parseSequence(
@@ -45,7 +45,7 @@ describe('Expand global constants', () => {
     );
   });
 
-  it('Expands global constants in script using parseList', () => {
+  it('Should expand global constants in script using parseList', () => {
     expect(
       JSON.stringify(
         p.parseList(
@@ -76,7 +76,7 @@ describe('Expand global constants', () => {
     );
   });
 
-  it('Expands global constants in script using parseMichelineExpression', () => {
+  it('Should expand global constants in script using parseMichelineExpression', () => {
     expect(
       JSON.stringify(
         p.parseMichelineExpression(
@@ -93,7 +93,7 @@ describe('Expand global constants', () => {
     );
   });
 
-  it('Expands global constants in script using parseScript', () => {
+  it('Should expand global constants in script using parseScript', () => {
     expect(
       JSON.stringify(
         p.parseScript(

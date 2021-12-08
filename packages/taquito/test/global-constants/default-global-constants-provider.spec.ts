@@ -1,27 +1,26 @@
 import { DefaultGlobalConstantsProvider } from '../../src/global-constants/default-global-constants-provider';
 
 describe('DefaultGlobalConstantsProvider tests', () => {
+    const michelineExpr = {
+        "prim": "pair",
+        "args":
+            [{
+                "prim": "address",
+                "annots": ["%addr"]
+            },
+            {
+                "prim": "option",
+                "args": [{ "prim": "key_hash" }],
+                "annots": ["%key"]
+            }],
+        "annots": ["%mgr2"]
+    };
     it('DefaultGlobalConstantsProvider is instantiable', () => {
         expect(new DefaultGlobalConstantsProvider()).toBeInstanceOf(DefaultGlobalConstantsProvider);
     });
 
     it('register a global constant and retrieve the value by its hash', async (done) => {
         const hash = 'expru5X5fvCer8tbRkSAtwyVCs9FUCq46JQG7QCAkhZSumjbZBUGzb';
-        const michelineExpr = {
-            "prim": "pair",
-            "args":
-                [{
-                    "prim": "address",
-                    "annots": ["%addr"]
-                },
-                {
-                    "prim": "option",
-                    "args": [{ "prim": "key_hash" }],
-                    "annots": ["%key"]
-                }],
-            "annots": ["%mgr2"]
-        };
-
         const defaultGlobalConstantsProvider = new DefaultGlobalConstantsProvider();
 
         defaultGlobalConstantsProvider.loadGlobalConstant({
@@ -34,20 +33,6 @@ describe('DefaultGlobalConstantsProvider tests', () => {
 
     it('register two global constants at the same time and retrieve their value by their hash', async (done) => {
         const hash = 'expru5X5fvCer8tbRkSAtwyVCs9FUCq46JQG7QCAkhZSumjbZBUGzb';
-        const michelineExpr = {
-            "prim": "pair",
-            "args":
-                [{
-                    "prim": "address",
-                    "annots": ["%addr"]
-                },
-                {
-                    "prim": "option",
-                    "args": [{ "prim": "key_hash" }],
-                    "annots": ["%key"]
-                }],
-            "annots": ["%mgr2"]
-        };
         const hash2 = "expruu5BTdW7ajqJ9XPTF3kgcV78pRiaBW3Gq31mgp3WSYjjUBYxre";
         const michelineExpr2 = { prim: "int" };
 
@@ -65,22 +50,7 @@ describe('DefaultGlobalConstantsProvider tests', () => {
 
     it('register two global constants not at the same time and retrieve their value by their hash', async (done) => {
         const defaultGlobalConstantsProvider = new DefaultGlobalConstantsProvider();
-
         const hash = 'expru5X5fvCer8tbRkSAtwyVCs9FUCq46JQG7QCAkhZSumjbZBUGzb';
-        const michelineExpr = {
-            "prim": "pair",
-            "args":
-                [{
-                    "prim": "address",
-                    "annots": ["%addr"]
-                },
-                {
-                    "prim": "option",
-                    "args": [{ "prim": "key_hash" }],
-                    "annots": ["%key"]
-                }],
-            "annots": ["%mgr2"]
-        };
 
         defaultGlobalConstantsProvider.loadGlobalConstant({
             [hash]: michelineExpr
