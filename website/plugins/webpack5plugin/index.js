@@ -13,7 +13,8 @@ module.exports = function (context, options) {
             os: false,
             path: false,
             stream: false,
-            crypto: false
+            crypto: false,
+            buffer: false
           },
         },
       };
