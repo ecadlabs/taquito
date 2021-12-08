@@ -84,7 +84,6 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                 await op.confirmation();
                 expect(op.globalConstantHash).toEqual(constantHash2);
             } catch (ex: any) {
-                console.log(JSON.stringify(ex))
                 expect(ex.message).toMatch(/context.storage_error/);
             }
 
