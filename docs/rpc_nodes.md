@@ -19,10 +19,7 @@ author: Roxane Letourneau
     - Mainnet: https://mainnet.api.tez.ie
     - Hangzhounet: https://hangzhounet.api.tez.ie protocol `PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx`
     - ~~Granadanet: https://granadanet.api.tez.ie protocol~~ ~~`PtGRANADsDU8R9daYKAgWnQYAJ64omN1o3KMGVCykShA97vQbvV`~~
-        - Granadanet has been replaced with Kaizen, which is now running Hangzhou.
-    - Kaizen: https://rpc.kaizen.teztnets.xyz/ protocol: `PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx`
-        - Kaizen RPC endpoint: https://rpc.kaizen.teztnets.xyz
-        - Kaizen is a long-running testnet that will follow mainnet protocol upgrades.
+        - Granadanet has been replaced with Hangzhou.
     - Idiazabalnet: https://idiazabalnet.ecadinfra.com/ protocol: `ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK`
         - Idiazabalnet is an early testnet protocol that will become the `I` proposal. It includes many features, the most notable being the new "tenderbake" consensus algorithim. 
 - SmartPy public Tezos nodes
