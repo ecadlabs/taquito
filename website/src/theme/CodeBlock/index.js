@@ -40,6 +40,10 @@ import { CancellableRpcClient } from './customHttpBackendAndRpcClient';
 
 import styles from './styles.module.css';
 
+// To solve the ReferenceError: Buffer is not defined when running live code examples
+// see https://lifesaver.codes/answer/meteor-1-5-beta-16-and-beta-17-showed-referenceerror-buffer-is-not-defined-client-side
+global.Buffer = global.Buffer || require("buffer").Buffer; 
+
 const wallet = new BeaconWallet({name:"exampleWallet"});
 const highlightLinesRangeRegex = /{([\d,-]+)}/;
 
