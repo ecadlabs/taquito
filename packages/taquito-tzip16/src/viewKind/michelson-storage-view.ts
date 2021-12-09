@@ -138,7 +138,6 @@ export class MichelsonStorageView implements View {
         const contractBalance = (await this.rpc.getBalance(this.contract.address)).toString();
         const block = await this.rpc.getBlock();
         const blockTimestamp = block.header.timestamp.toString();
-        const protocolHash = block.protocol;
 
         const code = this.adaptViewCodeToContext(this.code, contractBalance, blockTimestamp, chainId);
 

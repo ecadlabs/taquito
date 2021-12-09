@@ -1,7 +1,8 @@
-import { scan, Token, Literal } from "./scan";
-import { Expr, Prim, StringLiteral, IntLiteral, BytesLiteral, sourceReference, List, SourceReference } from "./micheline";
-import { expandMacros } from "./macros";
-import { ProtocolOptions } from "./michelson-types";
+import { scan, Token, Literal } from './scan';
+import { Expr, Prim, StringLiteral, IntLiteral, BytesLiteral, sourceReference, List, SourceReference } from './micheline';
+import { expandMacros } from './macros';
+import { ProtocolOptions } from './michelson-types';
+import { expandGlobalConstants } from './global-constants';
 
 export class MichelineParseError extends Error {
     /**
@@ -25,7 +26,11 @@ export class JSONParseError extends Error {
     }
 }
 
-const errEOF = new MichelineParseError(null, "Unexpected EOF");
+export interface GlobalConstantHashAndValue {
+    [globalConstantHash: string]: Expr;
+}
+
+const errEOF = new MichelineParseError(null, 'Unexpected EOF');
 
 function isAnnotation(tok: Token): boolean {
     return tok.t === Literal.Ident && (tok.v[0] === "@" || tok.v[0] === "%" || tok.v[0] === ":");
@@ -39,6 +44,21 @@ export interface ParserOptions extends ProtocolOptions {
      * Expand [Michelson macros](https://tezos.gitlab.io/whitedoc/michelson.html#macros) during parsing.
      */
     expandMacros?: boolean;
+    /**
+     * Expand global constants during parsing. 
+     * `expandGlobalConstant` expects an object where the keys are global constant hashes and the values are the corresponding JSON Micheline expressions.
+     * @example
+     * ```
+     * const parserOptions: ParserOptions = {
+     *  expandGlobalConstant: {
+     *      'expr...': { prim: 'DROP', args: [{ int: '2' }] }
+     *  }
+     * }
+     * 
+     * const p = new Parser(parserOptions);
+     * ```
+     */
+    expandGlobalConstant?: GlobalConstantHashAndValue;
 }
 
 /**
@@ -78,6 +98,13 @@ export class Parser {
     }
 
     private expand(ex: Prim): Expr {
+        if (this.opt?.expandGlobalConstant !== undefined && ex.prim === 'constant') {
+            const ret = expandGlobalConstants(ex, this.opt.expandGlobalConstant);
+            if (ret !== ex) {
+                ret[sourceReference] = { ...(ex[sourceReference] || { first: 0, last: 0 }), globalConstant: ex };
+            }
+            return ret;
+        }
         if (this.opt?.expandMacros !== undefined ? this.opt?.expandMacros : true) {
             const ret = expandMacros(ex, this.opt);
             if (ret !== ex) {

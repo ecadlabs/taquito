@@ -4,6 +4,7 @@ export type SourceReference = {
     first: number;
     last: number;
     macro?: Expr;
+    globalConstant?: Expr;
 };
 
 export const sourceReference: unique symbol = Symbol("source_reference");
