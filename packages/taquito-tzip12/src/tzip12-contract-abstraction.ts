@@ -1,6 +1,6 @@
 import { MichelsonMap, Schema } from '@taquito/michelson-encoder';
 import { ContractAbstraction, ContractProvider, Wallet } from '@taquito/taquito';
-import { Tzip16ContractAbstraction, MetadataContext, View, bytes2Char, MetadataInterface } from '@taquito/tzip16'
+import { Tzip16ContractAbstraction, MetadataContext, View, bytes2Char, HttpHandler } from '@taquito/tzip16'
 import { InvalidTokenMetadata, TokenIdNotFound, TokenMetadataNotFound } from './tzip12-errors';
 
 const tokenMetadataBigMapType = {
@@ -13,7 +13,10 @@ const tokenMetadataBigMapType = {
     annots: ['%token_metadata']
 };
 
+const tokenMetadataUriType = { prim: "string", annots: ["%token_metadata_uri"] };
+
 type BigMapId = { int: string };
+type TokenMetadataUri = { string: string };
 
 export interface TokenMetadata {
     token_id: number,
@@ -70,8 +73,34 @@ export class Tzip12ContractAbstraction {
      * @returns An object of type `TokenMetadata`
      */
     async getTokenMetadata(tokenId: number) {
+        const tokenMetadataUri = await this.retrieveTokenMetadataFromTokenMetadataUri(tokenId);
+        if(tokenMetadataUri) {
+            return tokenMetadataUri
+        };
         const tokenMetadata = await this.retrieveTokenMetadataFromView(tokenId);
         return (!tokenMetadata) ? this.retrieveTokenMetadataFromBigMap(tokenId) : tokenMetadata;
+    }
+
+    private async retrieveTokenMetadataFromTokenMetadataUri(tokenId: number) {
+        let tokenMetadata: TokenMetadata | undefined;
+        const tokenMetadataUri = this.contractAbstraction.schema.FindFirstInTopLevelPair<TokenMetadataUri>(
+            this.contractAbstraction.script.storage,
+            tokenMetadataUriType
+        );
+        if (tokenMetadataUri && tokenMetadataUri.string && tokenMetadataUri.string.includes('{tokenId}') && tokenMetadataUri.string.includes('http')) {
+            const parsedUri = tokenMetadataUri.string.replace('{tokenId}', tokenId.toString());
+            const httpHandler = this.context.metadataProvider.getHandler('http');
+            if (httpHandler instanceof HttpHandler) {
+                tokenMetadata = await httpHandler.httpBackend.createRequest({
+                    url: parsedUri
+                })
+            }
+            Object.assign(tokenMetadata, { 'token_id': tokenId });
+            if (!('decimals' in tokenMetadata!)) {
+                throw new InvalidTokenMetadata();
+            }
+        }
+        return tokenMetadata;
     }
 
     private async retrieveTokenMetadataFromView(tokenId: number) {
@@ -117,7 +146,7 @@ export class Tzip12ContractAbstraction {
                     this.context
                 );
                 return metadataFromUri.metadata;
-            } catch (e) {
+            } catch (e: any) {
                 if (e.name === 'InvalidUri') {
                     console.warn(`The URI ${bytes2Char(uri)} is present in the token metadata, but is invalid.`);
                 } else {
@@ -148,8 +177,9 @@ export class Tzip12ContractAbstraction {
         }
         if(!('decimals' in tokenMetadataDecoded)) {
             throw new InvalidTokenMetadata();
-        } 
-        return tokenMetadataDecoded;
+        } else {
+            return tokenMetadataDecoded as any;
+        }
     }
 
     private async retrieveTokenMetadataFromBigMap(tokenId: number) {

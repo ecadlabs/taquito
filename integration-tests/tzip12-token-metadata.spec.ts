@@ -1,5 +1,5 @@
 import { CONFIGS } from './config';
-import { compose, MichelsonMap } from '@taquito/taquito';
+import { compose, MichelsonMap, Protocols } from '@taquito/taquito';
 import { tzip16, Tzip16Module, char2Bytes } from '@taquito/tzip16';
 import { tzip12 } from '../packages/taquito-tzip12/src/composer';
 import { Tzip12Module } from '../packages/taquito-tzip12/src/tzip12-extension';
@@ -7,7 +7,8 @@ import { TokenIdNotFound, InvalidTokenMetadata } from '../packages/taquito-tzip1
 import { fa2TokenFactory } from './data/fa2-token-factory';
 import { fa2ForTokenMetadataView } from './data/fa2-for-token-metadata-view';
 
-CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
+CONFIGS().forEach(({ lib, rpc, setup, createAddress, protocol }) => {
+	const hangzhounet = (protocol === Protocols.PtHangz2) ? test : test.skip;
 	const Tezos = lib;
 	let contractAddress: string;
 	let contractAddress2: string;
@@ -291,4 +292,50 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			done();
 		});
 	}); 
+
+	describe(`Fetch token metadata using token_metadata_uri: ${rpc}`, () => {
+		beforeEach(async (done) => {
+			await setup();
+			done();
+		});
+
+		hangzhounet('Should fetch token metadata using the `token_metadata_uri` method', async (done) => {
+			Tezos.addExtension(new Tzip12Module());
+
+			const contract = await Tezos.contract.at('KT1L4bfiyqsqLJU3p1PyPxn1pqBSND5vfjNi', tzip12);
+
+			const tokenMetadata = await contract.tzip12().getTokenMetadata(100002);
+			expect(tokenMetadata).toEqual({
+				"token_id": 100002,
+				"name": "The Great Motorbike #2",
+				"description": "A cool motorbike",
+				"artifactUri": "ipfs://Qmczq6s37o6vyzc41WkdTgmNsXoc1nUJ36DHgt8ncWDYE4/2.mp4",
+				"displayUri": "ipfs://QmSRdFAjo9nng3qHE5rETJRYhTtpH9uHA3hxU9stB9JxFz",
+				"thumbnailUri": "ipfs://QmSRdFAjo9nng3qHE5rETJRYhTtpH9uHA3hxU9stB9JxFz",
+				"symbol": "",
+				"tags": [],
+				"creators": [],
+				"formats": [{
+					"uri": "ipfs://QmSRdFAjo9nng3qHE5rETJRYhTtpH9uHA3hxU9stB9JxFz",
+					"mimeType": "image/png"
+				}, {
+					"uri": "ipfs://Qmczq6s37o6vyzc41WkdTgmNsXoc1nUJ36DHgt8ncWDYE4/2.mp4",
+					"mimeType": "video/mp4"
+				}],
+				"decimals": 0,
+				"isBooleanAmount": false,
+				"shouldPreferSymbol": false,
+				"attributes": [{
+					"name": "Serial Nr.",
+					"type": "number",
+					"value": 2
+				}, {
+					"name": "Archetype",
+					"value": "The Great Motorbike"
+				}]
+			});
+
+			done();
+		});
+	});
 });

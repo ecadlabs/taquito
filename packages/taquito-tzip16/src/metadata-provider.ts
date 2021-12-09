@@ -5,6 +5,7 @@ import { InvalidMetadata, InvalidUri, ProtocolNotSupported } from './tzip16-erro
 import { calculateSHA256Hash } from './tzip16-utils';
 
 export interface MetadataProviderInterface {
+    getHandler(key: string): Handler | undefined;
     provideMetadata(contractAbstraction: ContractAbstraction<ContractProvider | Wallet>, uri: string, context: MetadataContext): Promise<MetadataEnvelope>;
 }
 
@@ -34,7 +35,11 @@ export interface Tzip16Uri {
 export class MetadataProvider implements MetadataProviderInterface {
     private readonly PROTOCOL_REGEX = /(?:sha256\:\/\/0x(.*)\/)?(https?|ipfs|tezos-storage)\:(.*)/;
 
-    constructor(private handlers: Map<string, Handler>) {}
+    constructor(private handlers: Map<string, Handler>) {};
+
+    getHandler(key: string){
+        return this.handlers.get(key);
+    }
 
     /**
      * @description Fetch the metadata by using the appropriate handler based on the protcol found in the URI
