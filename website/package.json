@@ -1,5 +1,5 @@
 {
-  "name": "taquito/website",
+  "name": "@taquito/website",
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
