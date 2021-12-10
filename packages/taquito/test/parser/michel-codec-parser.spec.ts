@@ -1,9 +1,12 @@
 import { OriginateParams } from '../../src/operations/types';
-import { Context, MichelCodecParser, Protocols, InvalidCodeParameter } from '../../src/taquito';
+import { Context, MichelCodecParser, Protocols, InvalidCodeParameter, DefaultGlobalConstantsProvider } from '../../src/taquito';
 
 describe('MichelCodec parser', () => {
     const mockRpcClient = {
         getBlockMetadata: jest.fn()
+    };
+    const mockGlobalConstantsProvider = {
+        getGlobalConstantByHash: jest.fn()
     };
 
     mockRpcClient.getBlockMetadata.mockResolvedValue({
@@ -118,10 +121,43 @@ describe('MichelCodec parser', () => {
 
             try {
                 await parser.prepareCodeOrigination(originateParams);
-            } catch (err) {
+            } catch (err: any) {
                 expect(err).toBeInstanceOf(InvalidCodeParameter);
                 expect(err.message).toBe('Invalid code parameter');
             }
+
+            done();
+        });
+
+        it('expands global constants before encoding storage arguments', async (done) => {
+            const context = new Context(mockRpcClient as any);
+            mockGlobalConstantsProvider.getGlobalConstantByHash.mockResolvedValue({ prim: 'int' });
+            context.globalConstantsProvider = mockGlobalConstantsProvider;
+            const parser = new MichelCodecParser(context);
+
+            const code = [
+                { prim: 'parameter', args: [{ prim: 'int' }] },
+                { prim: 'storage', args: [{ prim: 'constant', args: [{ string: 'expruu5BTdW7ajqJ9XPTF3kgcV78pRiaBW3Gq31mgp3WSYjjUBYxre' }] }] },
+                {
+                    prim: 'code',
+                    args: [[{ prim: 'DUP' }]]
+                }
+            ];
+
+            const result = await parser.prepareCodeOrigination({ code, storage: 10 });
+
+            expect(result).toEqual(
+                {
+                    code: [
+                        { prim: 'parameter', args: [{ prim: 'int' }] },
+                        { prim: 'storage', args: [{ prim: 'constant', args: [{ string: 'expruu5BTdW7ajqJ9XPTF3kgcV78pRiaBW3Gq31mgp3WSYjjUBYxre' }] }] },
+                        {
+                            prim: 'code',
+                            args: [[{ prim: 'DUP' }]]
+                        }
+                    ],
+                    init: { int: '10' }
+                });
 
             done();
         });

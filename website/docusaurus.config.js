@@ -8,7 +8,7 @@ module.exports = {
   organizationName: 'ecadlabs',
   scripts: ['https://buttons.github.io/buttons.js', {
     src:
-      'https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js',
     async: true,
   }, {
     src:
@@ -33,7 +33,7 @@ module.exports = {
         src: 'img/a_taquito.png'
       },
       items: [
-        { to: 'docs/version', label: 'v11.0.1', position: 'right' },
+        { to: 'docs/version', label: 'v11.0.2', position: 'right' },
         { to: 'docs/quick_start', label: 'Docs', position: 'right' },
         { href: "https://twitter.com/TezosTaquito", label: 'Twitter', position: 'right' },
         { href: "https://github.com/ecadlabs/taquito", label: 'GitHub', position: 'right' }
@@ -113,4 +113,5 @@ module.exports = {
       }
     ],
   ],
+  plugins: [require.resolve('./plugins/webpack5plugin/index.js')],
 };

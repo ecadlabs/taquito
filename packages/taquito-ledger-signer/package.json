@@ -1,6 +1,6 @@
 {
   "name": "@taquito/ledger-signer",
-  "version": "11.0.1",
+  "version": "11.1.0-beta-RC.0",
   "description": "Ledger signer provider",
   "keywords": [
     "tezos",
@@ -58,8 +58,8 @@
   },
   "dependencies": {
     "@ledgerhq/hw-transport": "^5.51.1",
-    "@taquito/taquito": "^11.0.1",
-    "@taquito/utils": "^11.0.1",
+    "@taquito/taquito": "^11.1.0-beta-RC.0",
+    "@taquito/utils": "^11.1.0-beta-RC.0",
     "@types/jest": "^26.0.24",
     "buffer": "^6.0.3",
     "libsodium-wrappers": "0.7.8"

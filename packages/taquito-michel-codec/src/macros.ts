@@ -1,5 +1,5 @@
 import { Prim, Expr, IntLiteral } from "./micheline";
-import { DefaultProtocol, Protocol, ProtocolOptions, ProtoGreaterOfEqual } from "./michelson-types";
+import { DefaultProtocol, Protocol, ProtocolOptions, ProtoInferiorTo } from "./michelson-types";
 import { Tuple, NoArgs, ReqArgs, NoAnnots } from "./utils";
 
 export class MacroError extends Error {
@@ -383,7 +383,25 @@ export function expandMacros(ex: Prim, opt?: ProtocolOptions): Expr {
 
     // UNPAPPAIIR macro
     if (unpairRe.test(ex.prim)) {
-        if (ProtoGreaterOfEqual(proto,  Protocol.PtEdo2Zk)) {
+        if (ProtoInferiorTo(proto,  Protocol.PtEdo2Zk) && assertArgs(ex, 0)) {
+            const { r } = parsePairUnpairExpr(ex, ex.prim.slice(3), ex.annots || [], (l, r, top) => [top, ...(r || []), ...(l || [])]);
+            return r.map(([v, a]) => {
+                const leaf: Prim[] = [
+                    { prim: "DUP" },
+                    mkPrim({ prim: "CAR", annots: a[0] !== null ? [a[0]] : undefined }),
+                    {
+                        prim: "DIP",
+                        args: [[mkPrim({ prim: "CDR", annots: a[1] !== null ? [a[1]] : undefined })]],
+                    }
+                ];
+
+                return v === 0 ? leaf : {
+                    prim: "DIP",
+                    args: v === 1 ? [[leaf]] : [{ int: String(v) }, [leaf]],
+                };
+            });
+        }
+        else {
             if (ex.prim === "UNPAIR") {
                 return ex;
             }
@@ -401,23 +419,6 @@ export function expandMacros(ex: Prim, opt?: ProtocolOptions): Expr {
                     };
                 });
             }
-        } else if (assertArgs(ex, 0)) {
-            const { r } = parsePairUnpairExpr(ex, ex.prim.slice(3), ex.annots || [], (l, r, top) => [top, ...(r || []), ...(l || [])]);
-            return r.map(([v, a]) => {
-                const leaf: Prim[] = [
-                    { prim: "DUP" },
-                    mkPrim({ prim: "CAR", annots: a[0] !== null ? [a[0]] : undefined }),
-                    {
-                        prim: "DIP",
-                        args: [[mkPrim({ prim: "CDR", annots: a[1] !== null ? [a[1]] : undefined })]],
-                    }
-                ];
-
-                return v === 0 ? leaf : {
-                    prim: "DIP",
-                    args: v === 1 ? [[leaf]] : [{ int: String(v) }, [leaf]],
-                };
-            });
         }
     }
 
@@ -530,14 +531,7 @@ export function expandMacros(ex: Prim, opt?: ProtocolOptions): Expr {
     if (duupRe.test(ex.prim)) {
         let n = 0;
         while (ex.prim[1 + n] === "U") { n++; }
-        if (ProtoGreaterOfEqual(proto,  Protocol.PtEdo2Zk)) {
-            if (n === 1) {
-                return ex;
-            }
-            if (assertArgs(ex, 0)) {
-                return mkPrim({ prim: "DUP", args: [{ int: String(n) }], annots: ex.annots });
-            }
-        } else {
+        if (ProtoInferiorTo(proto, Protocol.PtEdo2Zk)){
             if (n === 1) {
                 if (ex.args === undefined) {
                     return ex; // skip
@@ -575,6 +569,14 @@ export function expandMacros(ex: Prim, opt?: ProtocolOptions): Expr {
                         args: [{ int: String(n) }],
                     },
                 ];
+            }
+        }
+        else {
+            if (n === 1) {
+                return ex;
+            }
+            if (assertArgs(ex, 0)) {
+                return mkPrim({ prim: "DUP", args: [{ int: String(n) }], annots: ex.annots });
             }
         }
     }

@@ -12,6 +12,8 @@ import { Extension } from './extension/extension';
 import { Forger } from './forger/interface';
 import { RpcForger } from './forger/rpc-forger';
 import { format } from './format';
+import { GlobalConstantsProvider } from './global-constants/interface-global-constants-provider';
+import { NoopGlobalConstantsProvider } from './global-constants/noop-global-constants-provider';
 import { Packer } from './packer/interface';
 import { RpcPacker } from './packer/rpc-packer';
 import { Signer } from './signer/interface';
@@ -47,6 +49,9 @@ export * from './parser/noop-parser';
 export * from './packer/interface';
 export * from './packer/michel-codec-packer';
 export * from './packer/rpc-packer';
+export * from './global-constants/default-global-constants-provider';
+export * from './global-constants/error';
+export * from './global-constants/interface-global-constants-provider';
 
 export interface SetProviderOptions {
   forger?: Forger;
@@ -57,6 +62,7 @@ export interface SetProviderOptions {
   protocol?: Protocols;
   config?: Partial<ConfigConfirmation> & Partial<ConfigStreamer>;
   packer?: Packer;
+  globalConstantsProvider?: GlobalConstantsProvider;
 }
 
 export interface VersionInfo {
@@ -115,6 +121,7 @@ export class TezosToolkit {
     forger,
     wallet,
     packer,
+    globalConstantsProvider
   }: SetProviderOptions) {
     this.setRpcProvider(rpc);
     this.setStreamProvider(stream);
@@ -122,6 +129,7 @@ export class TezosToolkit {
     this.setForgerProvider(forger);
     this.setWalletProvider(wallet);
     this.setPackerProvider(packer);
+    this.setGlobalConstantsProvider(globalConstantsProvider);
 
     this._context.proto = protocol;
     if(config) {
@@ -235,6 +243,28 @@ export class TezosToolkit {
   }
 
   /**
+   * @description Sets global constants provider on the Tezos Taquito instance
+   *
+   * @param options globalConstantsProvider to use to interact with the Tezos network
+   *
+   * @example 
+   * ```
+   * const globalConst = new DefaultGlobalConstantsProvider();
+   * globalConst.loadGlobalConstant({
+   *  "expruu5BTdW7ajqJ9XPTF3kgcV78pRiaBW3Gq31mgp3WSYjjUBYxre": { prim: "int" },
+   *  // ...
+   * })
+   * Tezos.setGlobalConstantsProvider(globalConst);
+   * ```
+   *
+   */
+   setGlobalConstantsProvider(globalConstantsProvider?: SetProviderOptions['globalConstantsProvider']) {
+    const g = typeof globalConstantsProvider === 'undefined' ? new NoopGlobalConstantsProvider() : globalConstantsProvider;
+    this._options.globalConstantsProvider = g;
+    this._context.globalConstantsProvider = g;
+  }
+
+  /**
    * @description Provide access to tezos account management
    */
   get tz(): TzProvider {
@@ -282,6 +312,13 @@ export class TezosToolkit {
    */
   get signer() {
     return this._context.signer;
+  }
+
+  /**
+   * @description Provide access to the currently used globalConstantsProvider
+   */
+   get globalConstants() {
+    return this._context.globalConstantsProvider;
   }
 
   /**
