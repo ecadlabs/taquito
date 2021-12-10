@@ -88,7 +88,6 @@ async function checkBalances(users: string | any[]) {
         to: low_balance[i],
         amount: min_balance / 1000000,
       });
-      console.log;
       await fundAccountFirst.confirmation();
     }
   } catch (ex) {
