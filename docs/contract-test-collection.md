@@ -137,7 +137,7 @@ A simple contract with a default entrypoint that takes unit. Not a supported FA1
 
 #### Entrypoints:
   * default
-
+#### Storage:
 ```js
 storage (pair
           (pair (address %theAddress)
@@ -195,6 +195,7 @@ storage (map nat (pair (nat %current_stock) (mutez %max_price)));
 storage (pair (big_map %thebigmap (pair nat address) int)
               (map %themap (pair nat address) int));
 ```
+
 
 # Contracts with BigMaps
 
@@ -280,7 +281,9 @@ This contract is for demonstrating packing. Not a supported FA1.2 contract.
 #### Storage:
 ```js
 storage (pair nat (big_map nat string));
-```
+```  
+
+
 # Tzip-12 Contracts
 The @taquito/tzip12 package allows retrieving metadata associated with tokens of FA2 contract. You can find more information about the TZIP-12 standard [here](https://gitlab.com/tezos/tzip/-/blob/master/proposals/tzip-12/tzip-12.md).
 
