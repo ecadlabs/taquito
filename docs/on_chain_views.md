@@ -7,6 +7,7 @@ author: Roxane Letourneau
 
 - The `On-chain views` feature was introduced in the Hangzhou protocol. 
 - Views are meant to be called by a contract. It can be the contract where the view is defined or another contract.
+- Views help to avoid the need to use callbacks in contracts.
 - Views take arguments as input and may depend on the contract's storage declaring the view.
 - Views are read-only and won't modify the contract's storage where the view is defined.
 - Views return a result as output which is immediately available on the stack of the caller contract.
@@ -109,7 +110,7 @@ code {
 
 The following live code example shows a contract (`contractCallFib`) calling the view `fib` of another contract (`contractTopLevelViews`). 
 
-The example first shows the initial storage of the contract `contractCallFib`. It calls the default entry point of `contractCallFib` with the value of its storage + 1 and the address of the contract `contractTopLevelViews`. A call is made the `fib` view of `contractTopLevelViews` with the `storage + 1` as argument. The view returns the value of the Fibonacci sequence at the position represented by `storage + 1`. The storage of `contractCallFib` is updated to the result of the view.
+The example first shows the initial storage of the contract `contractCallFib`. It calls the default entry point of `contractCallFib` with the value of its storage + 1 and the address of the contract `contractTopLevelViews`. A call is made to the `fib` view of `contractTopLevelViews` with the `storage + 1` as argument. The view returns the value of the Fibonacci sequence at the position represented by `storage + 1`. The storage of `contractCallFib` is updated to the result of the view.
 
 ```js live noInline
 const contractTopLevelViews = 'KT1KJbtwARB2w3yN5fRjBE6CXJh5t9Hbbbpv';
@@ -144,7 +145,7 @@ Taquito offers the ability to simulate the result of on-chain views.
 
 The user can create an instance of `ContractAbstraction` using the `at` method of the Contract or Wallet API with the contract's address that defines the views. The `contractViews` member of the `ContractAbstraction` instance is dynamically populated with methods that match the on-chain view names. 
 
-*`contractViews` is an object where the key is the view name, and the value is a function that takes the view arguments in parameter and returns an instance of `OnChainView` class.*
+*`contractViews` is an object where the key is the view name, and the value is a function that takes the view arguments as a parameter and returns an instance of `OnChainView` class.*
 
 If the view takes multiple arguments, the view parameter is expected in an object format and not flattened arguments.
 
