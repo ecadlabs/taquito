@@ -23,26 +23,26 @@ async function example() {
   const tezos = new TezosToolkit(provider)
   await importKey(
     tezos,
-    'pqugfnyp.aricovrw@teztnets.xyz',
-    'PwMXISc7HK',
+    "tvpdppwu.malcebyl@teztnets.xyz",
+    'RPz8wnGw6q',
     [
-      "drift",
-      "winner",
-      "prevent",
-      "sorry",
-      "loud",
-      "pattern",
-      "easy",
-      "buffalo",
-      "surround",
-      "exist",
-      "accuse",
-      "volume",
-      "loop",
-      "day",
-      "club",
+      "young",
+      "you",
+      "issue",
+      "belt",
+      "kitten",
+      "three",
+      "face",
+      "ocean",
+      "myth",
+      "tag",
+      "athlete",
+      "purpose",
+      "farm",
+      "room",
+      "grant"
     ].join(' '),
-    '844a986d27f7989859bc82ebce16f293ab0f2da6'
+    '3da657a79c89a3a39c762d95ea6cb01b99d3e0a2'
   );
   
   try {

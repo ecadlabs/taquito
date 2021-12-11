@@ -59,9 +59,9 @@ interface FaucetConfig {
 const idiazabalnetEphemeral = {
   rpc: process.env['TEZOS_RPC_IDIAZABALNET'] || 'https://idiazabalnet.ecadinfra.com',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1QHWLJKC6nnnPKRT4PVEY8qKmJJb3gSGts',
-  knownBigMapContract: 'KT1UVKLtsgpN3eQf6kmHdKbsYTkEhB16eJyA',
-  knownTzip1216Contract: 'KT1P2fiZGYgBpKZHZenSXSq8ztRz3mvXQ9um',
+  knownContract: 'KT1NJrSTnzaZqNGzX5rVzoDfFZVdeuZDU9hN',
+  knownBigMapContract: 'KT1GCB2mXmgcMdrn6zaet4UWs5MWatmpHDUX',
+  knownTzip1216Contract: 'KT1KXdVYZqQknfLr6DUpGZFUi6Vd6wy5BAfP',
   protocol: Protocols.PtIdiaza,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
@@ -84,36 +84,12 @@ const hangzhounetEphemeral = {
   }
 }
 
-// Well known faucet key. Can be overridden by setting the `TEZOS_FAUCET_KEY_FILE` environment variable
-const key = {
-  email: "mfbzlhsv.owpfexem@tezos.example.org",
-  password: "bccbtuRKdr",
-  mnemonic: [
-    "addict",
-    "nerve",
-    "amazing",
-    "elevator",
-    "else",
-    "bind",
-    "injury",
-    "cotton",
-    "bind",
-    "judge",
-    "quote",
-    "apple",
-    "equip",
-    "ocean",
-    "tone"
-  ],
-  secret: "1e6159006a283a4456bda4f83721afa4bec9ed59"
-}
-
 const idiazabalnetFaucet = {
   rpc: process.env['TEZOS_RPC_IDIAZABALNET'] || 'https://idiazabalnet.ecadinfra.com',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1QHWLJKC6nnnPKRT4PVEY8qKmJJb3gSGts',
-  knownBigMapContract: 'KT1UVKLtsgpN3eQf6kmHdKbsYTkEhB16eJyA',
-  knownTzip1216Contract: 'KT1P2fiZGYgBpKZHZenSXSq8ztRz3mvXQ9um',
+  knownContract: 'KT1NJrSTnzaZqNGzX5rVzoDfFZVdeuZDU9hN',
+  knownBigMapContract: 'KT1GCB2mXmgcMdrn6zaet4UWs5MWatmpHDUX',
+  knownTzip1216Contract: 'KT1KXdVYZqQknfLr6DUpGZFUi6Vd6wy5BAfP',
   protocol: Protocols.PtIdiaza,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,

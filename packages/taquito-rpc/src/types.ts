@@ -792,7 +792,9 @@ export interface ConstantsResponseCommon {
   hard_storage_limit_per_operation: BigNumber;
 }
 
-export type Ratio = { numerator: number; denominator: number }
+export type Ratio = { numerator: number; denominator: number };
+
+export type RoundDuration = { round0: BigNumber, round1: BigNumber };
 export interface ConstantsResponseProto012
 	extends Omit<
 			ConstantsResponseProto011,
@@ -813,7 +815,7 @@ export interface ConstantsResponseProto012
 	baking_reward_bonus_per_slot?: BigNumber;
 	endorsing_reward_per_slot?: BigNumber;
 	max_operations_time_to_live?: number;
-	round_durations?: BigNumber[];
+	round_durations?: RoundDuration;
 	consensus_committee_size?: number;
 	consensus_threshold?: number;
 	minimal_participation_ratio?: Ratio;
