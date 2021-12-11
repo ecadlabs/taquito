@@ -22,7 +22,7 @@ async function example() {
         console.log("Showing final storage...");
         console.log(await contract.storage())
     } catch (ex) {
-        console.log(ex.errors[1].with)
+        console.log(ex)
     }
 }
 

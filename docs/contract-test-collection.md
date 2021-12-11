@@ -144,7 +144,6 @@ storage (pair
                 (map %theMap (pair nat address) (pair (mutez %amount) (int %quantity))))
           (int %theNumber));
 ```
-Note the lack of annotations. If the storage does not annotate its properties, the caller must use numeric indexes instead.
 
 ## MapWithComplexKeysContract
 
@@ -170,6 +169,7 @@ storage (map
                                               (pair key_hash (pair timestamp address))))))))
           int);
 ```
+Note the lack of annotations. If the storage does not annotate its properties, the caller must use numeric indexes instead.
 
 ## MapWithInitialStorageContract
 
