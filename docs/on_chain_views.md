@@ -130,7 +130,7 @@ Tezos.contract.at(contractCallFib)
               .then(() => {
                 return contract.storage()
                   .then((finalStorage) => {
-                    println(`The storage is now ${finalStorage} which correspond to the value of the Fibonacci sequence at position ${fibPosition}.`);
+                    println(`The storage is now ${finalStorage} which corresponds to the value of the Fibonacci sequence at position ${fibPosition}.`);
                   })
               })
           })
@@ -177,4 +177,4 @@ Tezos.contract.at(contractTopLevelViews)
 On-chain views should not be confused with lambda views which are also available on the ContractAbstraction class. See the documentation for [lambda_view](lambda_view.md).
 :::
 
-Follow this link for more information about on-chain views: https://tezos.gitlab.io/011/michelson.html#michelsonviews-011
+Follow this link for more information about on-chain views: https://tezos.gitlab.io/active/michelson.html#operations-on-views
