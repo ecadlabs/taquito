@@ -59,9 +59,9 @@ interface FaucetConfig {
 const idiazabalnetEphemeral = {
   rpc: process.env['TEZOS_RPC_IDIAZABALNET'] || 'https://idiazabalnet.ecadinfra.com',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1NJrSTnzaZqNGzX5rVzoDfFZVdeuZDU9hN',
-  knownBigMapContract: 'KT1GCB2mXmgcMdrn6zaet4UWs5MWatmpHDUX',
-  knownTzip1216Contract: 'KT1KXdVYZqQknfLr6DUpGZFUi6Vd6wy5BAfP',
+  knownContract: 'KT1UUS3M31GpFS4k5xQtp97oWGDhdzdT9mNJ',
+  knownBigMapContract: 'KT1VFM8dyKv2YTFdLBZm8seJKgFnn7RMrDtv',
+  knownTzip1216Contract: 'KT1PiiNe7icQHeaQ4Z8m27FVhYWQ2pPGMots',
   protocol: Protocols.PtIdiaza,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
@@ -87,9 +87,9 @@ const hangzhounetEphemeral = {
 const idiazabalnetFaucet = {
   rpc: process.env['TEZOS_RPC_IDIAZABALNET'] || 'https://idiazabalnet.ecadinfra.com',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1NJrSTnzaZqNGzX5rVzoDfFZVdeuZDU9hN',
-  knownBigMapContract: 'KT1GCB2mXmgcMdrn6zaet4UWs5MWatmpHDUX',
-  knownTzip1216Contract: 'KT1KXdVYZqQknfLr6DUpGZFUi6Vd6wy5BAfP',
+  knownContract: 'KT1UUS3M31GpFS4k5xQtp97oWGDhdzdT9mNJ',
+  knownBigMapContract: 'KT1VFM8dyKv2YTFdLBZm8seJKgFnn7RMrDtv',
+  knownTzip1216Contract: 'KT1PiiNe7icQHeaQ4Z8m27FVhYWQ2pPGMots',
   protocol: Protocols.PtIdiaza,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
