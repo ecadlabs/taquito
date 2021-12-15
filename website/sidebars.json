@@ -25,6 +25,7 @@
         "tickets",
         "transaction_limits",
         "making_transfers",
+        "on_chain_views",
         "tutorial_links",
         "tzip12",
         "metadata-tzip16",
