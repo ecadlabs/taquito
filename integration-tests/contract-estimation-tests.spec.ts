@@ -181,7 +181,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       expect(estimate.minimalFeeMutez).toEqual(688);
       expect(estimate.totalCost).toEqual(688);
       expect(estimate.usingBaseFeeMutez).toEqual(688);
-      expect(estimate.consumedMilligas).toEqual(3513645);
+      expect(estimate.consumedMilligas).toEqual(3513759);
       done();
     })
 
@@ -217,7 +217,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       expect(estimate.minimalFeeMutez).toEqual(890);
       expect(estimate.totalCost).toEqual(129390);
       expect(estimate.usingBaseFeeMutez).toEqual(890);
-      expect(estimate.consumedMilligas).toEqual(4942146);
+      expect(estimate.consumedMilligas).toEqual(4942260);
       done();
     })
 
@@ -245,7 +245,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       expect(estimate.minimalFeeMutez).toEqual(693);
       expect(estimate.totalCost).toEqual(79943);
       expect(estimate.usingBaseFeeMutez).toEqual(693);
-      expect(estimate.consumedMilligas).toEqual(3507042);
+      expect(estimate.consumedMilligas).toEqual(3507156);
       done();
     })
 
@@ -269,7 +269,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
     idiazabalnet('Estimate multiple internal origination', async (done) => {
       const tx = contract.methods.do(originate2()).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx)
-      expect(estimate.gasLimit).toEqual(5029);
+      expect(estimate.gasLimit).toEqual(5030);
       expect(estimate.storageLimit).toEqual(634);
       expect(estimate.suggestedFeeMutez).toEqual(1000);
       expect(estimate.burnFeeMutez).toEqual(158500);
