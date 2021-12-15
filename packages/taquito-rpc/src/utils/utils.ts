@@ -31,12 +31,6 @@ export function castToBigNumber(data: any, keys?: any): object {
       return;
     }
 
-    if (typeof item === 'object') {
-      res = castToBigNumber(item);
-      setByPath(response, key, res);
-      return;
-    }
-
     res = new BigNumber(item);
     setByPath(response, key, res);
   });

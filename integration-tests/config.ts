@@ -62,7 +62,7 @@ const idiazabalnetEphemeral = {
   knownContract: 'KT1UUS3M31GpFS4k5xQtp97oWGDhdzdT9mNJ',
   knownBigMapContract: 'KT1VFM8dyKv2YTFdLBZm8seJKgFnn7RMrDtv',
   knownTzip1216Contract: 'KT1PiiNe7icQHeaQ4Z8m27FVhYWQ2pPGMots',
-  protocol: Protocols.PtIdiaza,
+  protocol: Protocols.ProtoALpha,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'https://api.tez.ie/keys/idiazabalnet',
@@ -90,7 +90,7 @@ const idiazabalnetFaucet = {
   knownContract: 'KT1UUS3M31GpFS4k5xQtp97oWGDhdzdT9mNJ',
   knownBigMapContract: 'KT1VFM8dyKv2YTFdLBZm8seJKgFnn7RMrDtv',
   knownTzip1216Contract: 'KT1PiiNe7icQHeaQ4Z8m27FVhYWQ2pPGMots',
-  protocol: Protocols.PtIdiaza,
+  protocol: Protocols.ProtoALpha,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
     faucetKey: {

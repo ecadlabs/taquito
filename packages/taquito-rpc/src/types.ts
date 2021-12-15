@@ -793,12 +793,9 @@ export interface ConstantsResponseCommon {
 }
 
 export type Ratio = { numerator: number; denominator: number };
-
-export type RoundDuration = { round0: BigNumber, round1: BigNumber };
 export interface ConstantsResponseProto012
 	extends Omit<
 			ConstantsResponseProto011,
-			| 'minimal_block_delay'
 			| 'baking_reward_per_endorsement'
 			| 'initial_endorsers'
 			| 'delay_per_missing_endorsement'
@@ -815,7 +812,6 @@ export interface ConstantsResponseProto012
 	baking_reward_bonus_per_slot?: BigNumber;
 	endorsing_reward_per_slot?: BigNumber;
 	max_operations_time_to_live?: number;
-	round_durations?: RoundDuration;
 	consensus_committee_size?: number;
 	consensus_threshold?: number;
 	minimal_participation_ratio?: Ratio;
@@ -824,6 +820,7 @@ export interface ConstantsResponseProto012
 	double_baking_punishment?: BigNumber;
 	ratio_of_frozen_deposits_slashed_per_double_endorsement?: Ratio;
 	delegate_selection?: 'random' | string[][];
+  delay_increment_per_round?: BigNumber;
 }
 
 export interface ConstantsResponseProto011 extends ConstantsResponseProto010 {

@@ -5,7 +5,7 @@ import { depositContractCode, depositContractStorage } from "./data/deposit_cont
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
   const testRetry = require('jest-retries');
-  const skipIdiazabalnet = protocol === Protocols.PtIdiaza ? test.skip : testRetry;
+  const skipIdiazabalnet = protocol === Protocols.ProtoALpha ? test.skip : testRetry;
   
   describe(`Test contract with unit as params using: ${rpc}`, () => {
 

@@ -27,7 +27,7 @@ export enum Protocols {
   PsFLorena = 'PsFLorenaUUuikDWvMDr6fGBRG8kt3e3D3fHoXK1j1BFRxeSH4i',
   PtGRANADs = 'PtGRANADsDU8R9daYKAgWnQYAJ64omN1o3KMGVCykShA97vQbvV',
   PtHangz2 = 'PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx',
-  PtIdiaza = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK' // temporary protocol hash
+  ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK' // temporary protocol hash
 }
 
 export const protocols = {
@@ -39,7 +39,7 @@ export const protocols = {
   '009': [Protocols.PsFLorena],
   '010': [Protocols.PtGRANADs],
   '011': [Protocols.PtHangz2], // hangzhou v2,
-  '012': [Protocols.PtIdiaza]
+  '012': [Protocols.ProtoALpha]
 };
 
 export enum DefaultLambdaAddresses {

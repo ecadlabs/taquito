@@ -559,7 +559,8 @@ describe('RpcClient test', () => {
           "liquidity_baking_sunset_level": 525600,
           "liquidity_baking_escape_ema_threshold": 100000,
           "max_operations_time_to_live": 120,
-          "round_durations": { "round0": "30", "round1": "45" },
+          "minimal_block_delay":"30",
+          "delay_increment_per_round":"15",
           "consensus_committee_size": 7000,
           "consensus_threshold": 4667,
           "minimal_participation_ratio": { "numerator": 2, "denominator": 3 },
@@ -609,10 +610,8 @@ describe('RpcClient test', () => {
         baking_reward_bonus_per_slot: new BigNumber(4286),
         endorsing_reward_per_slot: new BigNumber(2857),
         max_operations_time_to_live: 120,
-        round_durations: {
-          round0: new BigNumber("30"), 
-          round1: new BigNumber("45")
-        },
+        minimal_block_delay:new BigNumber(30),
+        delay_increment_per_round:new BigNumber(15),
         consensus_committee_size: 7000,
         consensus_threshold: 4667,
         minimal_participation_ratio: {

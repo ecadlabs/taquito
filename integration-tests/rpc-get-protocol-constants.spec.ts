@@ -7,7 +7,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
     const Tezos = lib;
 
     const hangzhounet = (protocol === Protocols.PtHangz2) ? test : test.skip;
-    const idiazabalnet = (protocol === Protocols.PtIdiaza) ? test : test.skip;
+    const idiazabalnet = (protocol === Protocols.ProtoALpha) ? test : test.skip;
 
     describe('Fetch constants for all protocols on Mainnet', () => {
 
@@ -543,7 +543,6 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                 baking_reward_bonus_per_slot: new BigNumber(4286),
                 endorsing_reward_per_slot: new BigNumber(2857),
                 max_operations_time_to_live: 120,
-                round_durations: {round0: new BigNumber("30"), round1: new BigNumber("45")},
                 consensus_committee_size: 7000,
                 consensus_threshold: 4667,
                 minimal_participation_ratio: {
@@ -556,7 +555,9 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                 ratio_of_frozen_deposits_slashed_per_double_endorsement: {
                     denominator: 2,
                     numerator: 1,
-                }
+                },
+                minimal_block_delay: new BigNumber(30),
+                delay_increment_per_round: new BigNumber(15)
             });
 
             done();

@@ -5,7 +5,7 @@ import { Protocols, ViewSimulationError } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const hangzhounetOrHigher = (protocol === Protocols.PtHangz2 || protocol === Protocols.PtIdiaza) ? test : test.skip;
+  const hangzhounetOrHigher = (protocol === Protocols.PtHangz2 || protocol === Protocols.ProtoALpha) ? test : test.skip;
   describe(`On chain views using the contract API: ${rpc}`, () => {
 
     beforeEach(async (done) => {
