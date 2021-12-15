@@ -1,6 +1,7 @@
+import { HttpResponseError } from '@taquito/http-utils';
 import { ParameterSchema } from '@taquito/michelson-encoder';
 import { RpcClientInterface, MichelsonV1Expression, MichelsonV1ExpressionExtended } from '@taquito/rpc';
-import { ContractAbstraction, ContractProvider, Protocols, Wallet } from '@taquito/taquito';
+import { ContractAbstraction, ContractProvider, Wallet, ViewSimulationError } from '@taquito/taquito';
 import { ForbiddenInstructionInViewCode, InvalidViewParameterError, NoParameterExpectedError } from '../tzip16-errors';
 import { View } from './interface';
 
@@ -169,7 +170,26 @@ export class MichelsonStorageView implements View {
             balance: '0'
         };
 
-        const result: any = await this.rpc.runCode(viewScript as any);
+        let result: any;
+        try {
+          result = await this.rpc.runCode(viewScript as any);
+        } catch(error: any) {
+          const parsedError = JSON.parse(error.body);
+
+          parsedError.forEach((x: any) => {
+            if (x.id.includes('script_rejected')) {
+              throw new ViewSimulationError(`Failed to execute the contract view ${parsedError}`)
+            } 
+          });
+          throw new HttpResponseError(
+            error.message,
+            error.status,
+            error.statusText,
+            error.body,
+            error.url
+          );
+        }
+
         const viewResultSchema = new ParameterSchema(this.returnType);
         return viewResultSchema.Execute(result.storage.args[0]);
     }
