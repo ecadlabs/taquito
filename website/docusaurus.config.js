@@ -33,7 +33,7 @@ module.exports = {
         src: 'img/a_taquito.png'
       },
       items: [
-        { to: 'docs/version', label: 'v11.0.2', position: 'right' },
+        { to: 'docs/version', label: 'v11.1.0', position: 'right' },
         { to: 'docs/quick_start', label: 'Docs', position: 'right' },
         { href: "https://twitter.com/TezosTaquito", label: 'Twitter', position: 'right' },
         { href: "https://github.com/ecadlabs/taquito", label: 'GitHub', position: 'right' }
