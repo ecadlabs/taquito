@@ -114,8 +114,8 @@ async function originateTheContracts() {
    contract_catalogue.set('Tzip16HTTPS', await originateTzip16Https());
    contract_catalogue.set('Tzip16SHA256', await originateTzip16SHA256());
    contract_catalogue.set('Tzip16IPFS', await originateTzip16IPFS());
-   contract_catalogue.set('Tzip16OffChainOne', await originateTzip16OnChainOne());
-   contract_catalogue.set('Tzip16OffChainTwo', await originateTzip16OnChainTwo());
+   contract_catalogue.set('Tzip16OffChainJSON', await originateTzip16OnChainJSON());
+   contract_catalogue.set('Tzip16OffChainMultiply', await originateTzip16OnChainMultiply());
    contract_catalogue.set('WalletContract', await originateWalletOriginateContractTransfer());
    contract_catalogue.set('WalletAreYouThereContract', await originateWalletOriginateAreYouThere());
    contract_catalogue.set('TokenContract', await originateTokenContract());
@@ -632,7 +632,7 @@ async function originateTzip16IPFS() {
   }
 }
 
-async function originateTzip16OnChainOne() {
+async function originateTzip16OnChainJSON() {
   tezos.setSignerProvider(signer);
   try {
     const metadataBigMAp = new MichelsonMap();
@@ -648,14 +648,14 @@ async function originateTzip16OnChainOne() {
     });
     await op.confirmation();
     const contract = await op.contract();
-    console.log('Tzip16OnChainOne : ' + contract.address);
+    console.log('Tzip16OnChainJSON : ' + contract.address);
     return contract.address;
   } catch (ex) {
     console.error(ex);
   }
 }
 
-async function originateTzip16OnChainTwo() {
+async function originateTzip16OnChainMultiply() {
   tezos.setSignerProvider(signer);
   try {
     const metadataBigMAp = new MichelsonMap();
@@ -671,7 +671,7 @@ async function originateTzip16OnChainTwo() {
     });
     await op.confirmation();
     const contract = await op.contract();
-    console.log('Tzip16OnChainTwo : ' + contract.address);
+    console.log('Tzip16OnChainMultiply : ' + contract.address);
     return contract.address;
   } catch (ex) {
     console.error(ex);
