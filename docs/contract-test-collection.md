@@ -12,13 +12,15 @@ The contracts used in Taquito Integration Tests and in Taquito Documentation Liv
 - **Lambda Contracts**
   - [LambdaViewContract](#lambdaviewcontract)
   - [LambdaViewWithTokenContract](#lambdaviewwithtokencontract)
+  - [LambdaViewWithStoredCounter](#lambdaviewwithstoredcountercontract)
 - **Map and BigMap Contracts**
   - [MapWithPairasMapContract](#mapwithpairasmapcontract)
   - [MapWithValuesComplexKeysContract](#mapwithvaluescomplexkeyscontract)
   - [MapWithInitialStorageContract](#mapwithinitialstoragecontract)
   - [MapWithMapandBigmapContract](#mapwithmapandbigmapcontract)
   - [BigMapsMultipleValuesContract](#bigmapsmultiplevaluescontract)
-  - [BigMapsComplexStorageContract](#smartcontractcomplexstoragecontract)
+  - [BigMapsComplexStorageContract](#bigmapscomplexstoragecontract)
+  - [BigMapsWithLedgerContract](#bigmapswithledgercontract)
   - [BigMapPackContract](#bigmappackcontract)
 - **Tzip7 Contracts**
   - [TokenContract](#tokencontract)
@@ -125,6 +127,21 @@ storage (pair
                                                        (pair (nat %decimals)
                                                              (map %extras string string)))))))
           (nat %total_supply));
+```
+
+## LambdaViewWithStoredCounterContract
+
+[KT1J5Vbek6SAgUStzb3HEMdrgRnMaanxNkNB](https://better-call.dev/hangzhou2net/KT1J5Vbek6SAgUStzb3HEMdrgRnMaanxNkNB/code)
+
+This contact is a Lambda contract with a stored counter. The contract is used in some Taquito Integration Tests in generic tests of such features as transfers.
+
+#### Entrypoints:
+  * default
+  * main
+
+#### Storage:
+```js
+storage (pair (nat %stored_counter) (pair (nat %threshold) (list %keys key)));
 ```
 
 # Contracts with Maps
@@ -263,6 +280,31 @@ storage (pair
                                       (pair (address %owner) (option %ttl nat)))
                                     (option %validator nat))))
           (map %validators nat address));
+```
+## BigMapsWithLedgerContract
+
+[KT1Ds2LC3QqxVVqh95VdfxTmBsRZZBrh8Pgm](https://better-call.dev/hangzhou2net/KT1Ds2LC3QqxVVqh95VdfxTmBsRZZBrh8Pgm/code)
+
+This contract is used in Taquito integration tests. Not a supported FA1.2 contract, since Entrypoint "transfer" has type (pair (pair (address %0) (address %1)) (nat %2)), but should have type  (pair address address nat). Also not an FA2 contract as it does not have an entrypoint for update_operators.
+
+#### Entrypoints
+  * approve
+  * burn
+  * getAllowance
+  * getBalance
+  * getTotalSupply
+  * mint
+  * setOwner
+  * setPause
+  * transfer
+
+#### Storage:
+```js
+storage (pair
+          (pair
+            (big_map %ledger address (pair (map %allowances address nat) (nat %balance)))
+            (address %owner))
+          (pair (bool %paused) (nat %totalSupply)));
 ```
 
 ## BigMapPackContract
