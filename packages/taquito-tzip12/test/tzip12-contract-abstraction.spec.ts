@@ -1,4 +1,4 @@
-import { MichelsonMap } from '@taquito/taquito';
+import { MichelsonMap, ViewSimulationError } from '@taquito/taquito';
 import { char2Bytes, InvalidUri } from '@taquito/tzip16';
 import { Tzip12ContractAbstraction } from '../src/tzip12-contract-abstraction';
 import { InvalidTokenMetadata, TokenIdNotFound, TokenMetadataNotFound } from '../src/tzip12-errors';
@@ -153,13 +153,13 @@ describe('Tzip12 contract abstraction test', () => {
         done();
     });
 
-    it('Test 2 for executeTokenMetadataView(): Should throw TokenIdNotFound', async (done) => {
+    it('Test 2 for executeTokenMetadataView(): Should throw ViewSimulationError', async (done) => {
 
         mockMichelsonStorageView.executeView.mockImplementation(() => {
-            throw new Error();
+            throw new ViewSimulationError('');
         });
 
-        expect(tzip12Abs['executeTokenMetadataView'](mockMichelsonStorageView, 0)).rejects.toEqual(new TokenIdNotFound(0));
+        expect(tzip12Abs['executeTokenMetadataView'](mockMichelsonStorageView, 0)).rejects.toEqual(new ViewSimulationError(''));
         done();
     });
 
