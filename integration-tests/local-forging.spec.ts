@@ -5,14 +5,14 @@ import { Protocols, TezosToolkit } from "@taquito/taquito";
 
 CONFIGS().forEach(({ rpc, protocol }) => {
     const Tezos = new TezosToolkit(rpc);
-    const hangzhounetOrHigher = (protocol === Protocols.PtHangz2 || protocol === Protocols.PtIdiaza) ? test : test.skip;
+    const hangzhounetOrHigher = (protocol === Protocols.PtHangz2 || protocol === Protocols.ProtoALpha) ? test : test.skip;
 
     describe(`Test local forger: ${rpc}`, () => {
 
         commonCases.forEach(({ name, operation, expected }) => {
 
             it(`Should give the same result as when forging with the rpc: ${name} (${rpc})`, async done => {
-                if(protocol === Protocols.PtIdiaza && name === 'Endorsement') {
+                if(protocol === Protocols.ProtoALpha && name === 'Endorsement') {
                     // skip
                     console.log('Temporarily skip endorsement forging for Idiazabalnet')
                 } else {

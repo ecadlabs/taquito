@@ -3,6 +3,110 @@ title: Versions
 author: Jev Bjorsell
 ---
 
+# Taquito v11.1.0-beta
+
+## Summary
+### New features
+- @taquito/taquito - Support for simulating contract views #1117
+- @taquito/michel-codec - Option added to the Parser to expand global constants in script #1219
+- @taquito/taquito - Support contract origination using the storage property when there are global constants in the storage part of the contract code #1220
+### Bug Fixes
+- @taquito/michelson-encoder - Fixed the Timestamp token to support decoding UNIX string format #1109
+
+## @taquito/taquito - Support for simulating contract views
+
+Taquito provides an abstraction on the `ContractAbstraction` class, allowing to simulate the execution of the on-chain views.
+
+When an instance of `ContractAbstraction` is created using the `at` method of the Contract or Wallet API, the `contractViews` member of the `ContractAbstraction` instance is dynamically populated with methods that match the on-chain view names.
+
+*The `contractViews` member is an object where the key is the view name, and the value is a function that takes the view arguments as a parameter and returns an instance of `OnChainView` class.*
+
+When a view argument is of a complex type (i.e., a `pair`), the view parameter is expected in an object format and not as "flattened arguments".
+
+*The "object format" refers to the same format used when deploying a contract using the `storage` property. The "flattened arguments" is the format used when calling a contract entry point using the `methods` member. We plan to move away from the "flattened arguments" format in favor of the object one.*
+
+As an example, if the Michelson view argument type is `{ prim: 'pair', args: [{ prim: 'nat' }, { prim: 'address' }] }`, the parameter expected by Taquito will have the following format `{0: 'nat', 1: 'address'}` instead of `nat, address`.
+
+A method named `getSignature` on the `OnChainView` class allows inspecting the parameter and the returned type of the view.
+
+The `executeView` method of the `OnChainView` class allows simulating the view. It takes a `viewCaller` as a parameter representing the contract address which is the caller of the view, and an optional `source` which is the public key hash of the account that initialized this view execution.
+
+Here is an example where a contract contains a view named `myView`, it can be simulated as follow:
+
+```typescript=
+const contract = Tezos.contract.at('KT1...');
+const res = contract.contractViews.myView(param).executeView({
+    viewCaller: 'KT1...' 
+});
+```
+
+Here is the link to the documentation page: https://tezostaquito.io/docs/on_chain_views
+
+## @taquito/michel-codec - Option added to the Parser to expand global constants in a script
+
+An optional `expandGlobalConstant` property has been added to the `ParserOptions` allowing to expand the global constants in a script using the `Parser` class. The hashes and corresponding registered expressions need to be provided as follow:
+
+```typescript=
+const parserOptions: ParserOptions = {
+    expandGlobalConstant: {
+      constantHash: registeredExprJSON,
+      ...
+    },
+};
+
+const p = new Parser(parserOptions);
+```
+
+## @taquito/taquito - Support contract origination using the storage property when there are global constants in the storage part of the contract code
+
+In the release note v11.0.0-beta, there was a note about the following limitation:
+> Only the 'init' property can be used if you want to originate a contract having a global constant in the storage section of its code. Do not use the `storage` property, which depends on the `Michelson-Encoder`.
+> 
+> Here is an example:
+> ```typescript=
+> const op = await Tezos.contract.originate({
+>   code: [
+>     { prim: 'parameter', args: [ ...] },
+>     { prim: 'storage', args: [{ prim: 'constant', args: [{ string: 'expr...' }] }] },
+>     { prim: 'code', args: [ ... ] } ],
+>   init: // The storage property can't be used. Please use the `init` property instead.
+> });
+> ```
+
+It is now possible to deploy a contract having a global constant in the storage part of its contract code using the storage property. Internally, Taquito uses the michel-codec `Parser` and its `expandGlobalConstant` option to feed the MichelsonEncoder, which is responsible for transforming the `storage` property into Michelson, with a script that doesn't contain global constant.
+
+A global constants provider has been added to the `TezosToolkit` class. Currently, Taquito provides a `DefaultGlobalConstantsProvider`, which can be injected in the TezosToolkit and where the user needs to specify the hashes and corresponding expressions used in its contracts.
+
+Here is a example:
+```typescript=
+import { TezosToolkit, DefaultGlobalConstantsProvider } from '@taquito/taquito';
+
+// create an instance of the `DefaultGlobalConstantsProvider`, load the global constants used in the contract, inject the instance on the TezosToolkit
+const expression = { "prim": "int" }
+const constantHash = 'expruu5BTdW7ajqJ9XPTF3kgcV78pRiaBW3Gq31mgp3WSYjjUBYxre';
+
+const Tezos = new TezosToolkit('rpc_url');
+const globalConstantProvider = new DefaultGlobalConstantsProvider();
+globalConstantProvider.loadGlobalConstant({
+  [constantHash]: expression
+})
+Tezos.setGlobalConstantsProvider(globalConstantProvider);
+```
+
+We plan to support other global constant providers in the future that will depend on indexers or the RPC.
+
+Here is a link to the documentation: https://tezostaquito.io/docs/global_constant#how-to-deploy-a-contract-using-the-storage-property-if-i-use-global-constant-in-the-storage-part-of-the-code
+
+## @taquito/michelson-encoder - Fixed the Timestamp token to support decoding UNIX string format
+
+The Michelson-Encoder did not correctly support the UNIX string format. Therefore, Michelson data having the format "string":"1613034908" could not be decoded and generated the following error:
+```
+RangeError: Invalid time value
+  at Date.toISOString
+  at TimestampToken.Execute
+```
+This format is now supported in the Timestamp token of the Michelson-encoder.
+
 # Taquito v11.0.2-beta
 
 - `@taquito/beacon-wallet` - The beacon-sdk is updated to version 2.3.8

@@ -3,60 +3,36 @@ import { importKey } from '@taquito/signer';
 import { knownContract } from './data/knownContract';
 import { knownBigMapContract } from './data/knownBigMapContract';
 
-//const provider = 'https://idiazabalnet.ecadinfra.com';
-const provider = 'https://hangzhounet.api.tez.ie';
+const provider = 'https://idiazabalnet.ecadinfra.com';
 
 async function example() {
   const tezos = new TezosToolkit(provider);
 
-  // await importKey(
-  //   tezos,
-  //   'pqugfnyp.aricovrw@teztnets.xyz',
-  //   'PwMXISc7HK',
-  //   [
-  //     "drift",
-  //     "winner",
-  //     "prevent",
-  //     "sorry",
-  //     "loud",
-  //     "pattern",
-  //     "easy",
-  //     "buffalo",
-  //     "surround",
-  //     "exist",
-  //     "accuse",
-  //     "volume",
-  //     "loop",
-  //     "day",
-  //     "club",
-  //   ].join(' '),
-  //   '844a986d27f7989859bc82ebce16f293ab0f2da6'
-  // );
-
   await importKey(
-    tezos,
-    'pmoprbnb.xsleomnq@teztnets.xyz',
-    '1LcZtKp4uj',
-    [
-      "truth",
-		"review",
-		"more",
-		"tail",
-		"practice",
-		"secret",
-		"holiday",
-		"that",
-		"silent",
-		"bid",
-		"art",
-		"logic",
-		"update",
-		"coin",
-		"glad"
-    ].join(' '),
-    '4343e38f2125c262bd3e3939203b097b91fe5243'
-  );
+     tezos,
+     'pqugfnyp.aricovrw@teztnets.xyz',
+     'PwMXISc7HK',
+     [
+       "drift",
+       "winner",
+       "prevent",
+       "sorry",
+       "loud",
+       "pattern",
+       "easy",
+       "buffalo",
+       "surround",
+       "exist",
+       "accuse",
+       "volume",
+       "loop",
+       "day",
+       "club",
+     ].join(' '),
+     '844a986d27f7989859bc82ebce16f293ab0f2da6'
+   );
 
+  
   try {
     console.log('Deploying the knownContract...');
     const opknownContract = await tezos.contract.originate({

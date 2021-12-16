@@ -153,7 +153,7 @@ It can sometimes be useful or more practical to set an operator before sending a
 ```typescript
 import { TezosToolkit } from "@taquito/taquito";
 
-const Tezos = await new TezosTooolkit(RPC_URL);
+const Tezos = await new TezosToolkit(RPC_URL);
 const dappContract = await Tezos.wallet.at(DAPP_CONTRACT_ADDRESS);
 const tokenContract = await Tezos.wallet.at(FA2_CONTRACT_ADDRESS);
 const batchOp = await Tezos.wallet.batch()

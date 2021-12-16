@@ -329,7 +329,7 @@ describe('OnChainView test', () => {
     done();
   });
 
-  it('should throw a ViewSimulationError error if the view simulation fail', async (done) => {
+  it('should throw the original error when it does not contain a "with" property', async (done) => {
     const httpError = new HttpResponseError(
       'fail',
       STATUS_CODE.FORBIDDEN,
@@ -344,10 +344,7 @@ describe('OnChainView test', () => {
         viewCaller: 'KT1TRHzT3HdLe3whe35q6rNxavGx8WVFHSpH'
       })
     } catch(error: any) {
-      expect(error).toBeInstanceOf(ViewSimulationError);
-      expect(error.message).toEqual('Failed to execute the contract view.');
-      expect(error.originalError).toEqual(httpError);
-      expect(error.failWith).toBeUndefined();
+      expect(error).toBeInstanceOf(HttpResponseError);
     }
 
     done();
@@ -369,9 +366,8 @@ describe('OnChainView test', () => {
       })
     } catch(error: any) {
       expect(error).toBeInstanceOf(ViewSimulationError);
-      expect(error.message).toEqual('Failed to execute the contract view. View simulation failed with: {"prim":"Unit"}');
+      expect(error.message).toEqual('The simulation of the on-chain view named add failed with: {"prim":"Unit"}');
       expect(error.originalError).toEqual(httpError);
-      expect(error.failWith).toEqual({"prim":"Unit"});
     }
 
     done();

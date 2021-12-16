@@ -421,8 +421,8 @@ export class RpcClient implements RpcClientInterface {
       'baking_reward_fixed_portion',
       'baking_reward_bonus_per_slot',
       'endorsing_reward_per_slot',
-      'round_durations',
-      'double_baking_punishment'
+      'double_baking_punishment',
+      'delay_increment_per_round'
     ]);
 
     return {
