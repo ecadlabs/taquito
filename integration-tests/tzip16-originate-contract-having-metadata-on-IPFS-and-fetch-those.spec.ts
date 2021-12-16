@@ -25,11 +25,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         it('Deploy a contract having metadata stored at on IPFS', async (done) => {
 
             // location of the contract metadata
-            const uri = 'ipfs://QmcMUKkhXowQjCPtDVVXyFJd7W9LmC92Gs5kYH1KjEisdj';
+            const uri = 'ipfs://QmXnASUptTDnfhmcoznFqz3S1Mxu7X1zqo2YwbTN3nW52V';
             const bytesUrl = char2Bytes(uri);
 
-            const metadataBigMAp = new MichelsonMap();
-            metadataBigMAp.set("", bytesUrl);
+            const metadataBigMap = new MichelsonMap();
+            metadataBigMap.set("", bytesUrl);
 
             // Ligo Taco shop contract modified to include metadata in storage
             // https://ide.ligolang.org/p/-uS469slzUlSm1zwNqHl1A
@@ -39,7 +39,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             const op = await Tezos.contract.originate({
                 code: tacoContractTzip16,
                 storage: {
-                    metadata: metadataBigMAp,
+                    metadata: metadataBigMap,
                     taco_shop_storage: tacoShopStorageMap
                 },
             });
@@ -55,7 +55,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             const contract = await Tezos.contract.at(contractAddress, tzip16);
             const metadata = await contract.tzip16().getMetadata();
 
-            expect(metadata.uri).toEqual('ipfs://QmcMUKkhXowQjCPtDVVXyFJd7W9LmC92Gs5kYH1KjEisdj');
+            expect(metadata.uri).toEqual('ipfs://QmXnASUptTDnfhmcoznFqz3S1Mxu7X1zqo2YwbTN3nW52V');
             expect(metadata.integrityCheckResult).toBeUndefined();
             expect(metadata.sha256Hash).toBeUndefined();
             expect(metadata.metadata).toEqual({

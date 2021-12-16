@@ -2,7 +2,8 @@
  * @packageDocumentation
  * @module @taquito/signer
  */
-import sodium from 'libsodium-wrappers';
+import { openSecretBox } from '@stablelib/nacl';
+import { hash } from '@stablelib/blake2b';
 import { hex2buf, mergebuf, b58cencode, prefix } from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
 import { Tz1 } from './ed-key';
@@ -18,25 +19,18 @@ export { VERSION } from './version';
  *
  * @warn If running in production and dealing with tokens that have real value, it is strongly recommended to use a HSM backed signer so that private key material is not stored in memory or on disk
  *
- * @warn Calling this constructor directly is discouraged as it do not await for sodium library to be loaded.
- *
- * Consider doing:
- *
- * ```const sodium = require('libsodium-wrappers'); await sodium.ready;```
- *
- * The recommended usage is to use InMemorySigner.fromSecretKey('edsk', 'passphrase')
  */
 export class InMemorySigner {
   private _key!: Tz1 | ECKey;
 
   static fromFundraiser(email: string, password: string, mnemonic: string) {
+    console.log('hello')
     let seed = mnemonicToSeedSync(mnemonic, `${email}${password}`);
     const key = b58cencode(seed.slice(0, 32), prefix.edsk2);
     return new InMemorySigner(key);
   }
 
   static async fromSecretKey(key: string, passphrase?: string) {
-    await sodium.ready;
     return new InMemorySigner(key, passphrase);
   }
 
@@ -61,11 +55,7 @@ export class InMemorySigner {
         const encryptedSk = constructedKey.slice(8);
         const encryptionKey = pbkdf2.pbkdf2Sync(passphrase, salt, 32768, 32, 'sha512');
 
-        return sodium.crypto_secretbox_open_easy(
-          new Uint8Array(encryptedSk),
-          new Uint8Array(24),
-          new Uint8Array(encryptionKey)
-        );
+        return openSecretBox(new Uint8Array(encryptionKey), new Uint8Array(24), new Uint8Array(encryptedSk));
       };
     }
 
@@ -98,9 +88,7 @@ export class InMemorySigner {
       bb = mergebuf(watermark, bb);
     }
 
-    // Ensure sodium is ready before calling crypto_generichash otherwise the function do not exists
-    await sodium.ready;
-    const bytesHash = toBuffer(sodium.crypto_generichash(32, bb));
+    const bytesHash = hash(bb, 32);
 
     return this._key.sign(bytes, bytesHash);
   }

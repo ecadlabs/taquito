@@ -11,6 +11,7 @@ import {
   isValidPrefix,
   mergebuf,
   prefix,
+  verifySignature
 } from '@taquito/utils';
 import { verify } from '@stablelib/ed25519';
 import { hash } from '@stablelib/blake2b';
@@ -18,6 +19,7 @@ import elliptic from 'elliptic';
 import toBuffer from 'typedarray-to-buffer';
 import { BadSigningDataError, KeyNotFoundError, OperationNotAuthorizedError } from './errors';
 import { Signer } from '@taquito/taquito';
+
 interface PublicKeyResponse {
   public_key: string;
 }
@@ -119,7 +121,9 @@ export class RemoteSigner implements Signer {
 
       const decoded = b58cdecode(signature, prefix[pref]);
 
-      const signatureVerified = await this.verify(watermarkedBytes, signature);
+      const pk = await this.publicKey();
+      await this.verifyPublicKey(pk);
+      const signatureVerified = verifySignature(watermarkedBytes, pk, signature);
       if (!signatureVerified) {
         throw new Error(
           `Signature failed verification against public key:
@@ -153,18 +157,9 @@ export class RemoteSigner implements Signer {
     }
   }
 
-  async verify(bytes: string, signature: string): Promise<boolean> {
-    const publicKey = await this.publicKey();
+  async verifyPublicKey(publicKey: string) {
     const curve = publicKey.substring(0, 2) as curves;
     const _publicKey = b58cdecode(publicKey, pref[curve].pk);
-
-    let signaturePrefix = signature.startsWith('sig')
-      ? signature.substr(0, 3)
-      : signature.substr(0, 5);
-
-    if (!isValidPrefix(signaturePrefix)) {
-      throw new Error(`Unsupported signature given by remote signer: ${signature}`);
-    }
 
     const publicKeyHash = b58cencode(hash(_publicKey, 20), pref[curve].pkh);
     if (publicKeyHash !== this.pkh) {
@@ -175,56 +170,5 @@ export class RemoteSigner implements Signer {
         }`
       );
     }
-
-    let sig;
-    if (signature.substring(0, 3) === 'sig') {
-      sig = b58cdecode(signature, prefix.sig);
-    } else if (signature.substring(0, 5) === `${curve}sig`) {
-      sig = b58cdecode(signature, pref[curve].sig);
-    } else {
-      throw new Error(`Invalid signature provided: ${signature}`);
-    }
-
-    const bytesHash = hash(hex2buf(bytes), 32);
-
-    if (curve === 'ed') {
-      try {
-        return verify(_publicKey, bytesHash, sig);
-      } catch (e) {
-        return false;
-      }
-    }
-
-    if (curve === 'sp') {
-      const key = new elliptic.ec('secp256k1').keyFromPublic(_publicKey);
-      const hexSig = buf2hex(toBuffer(sig));
-      const match = hexSig.match(/([a-f\d]{64})/gi);
-      if (match) {
-        try {
-          const [r, s] = match;
-          return key.verify(bytesHash, { r, s });
-        } catch (e) {
-          return false;
-        }
-      }
-      return false;
-    }
-
-    if (curve === 'p2') {
-      const key = new elliptic.ec('p256').keyFromPublic(_publicKey);
-      const hexSig = buf2hex(toBuffer(sig));
-      const match = hexSig.match(/([a-f\d]{64})/gi);
-      if (match) {
-        try {
-          const [r, s] = match;
-          return key.verify(bytesHash, { r, s });
-        } catch (e) {
-          return false;
-        }
-      }
-      return false;
-    }
-
-    throw new Error(`Curve '${curve}' not supported`);
   }
 }

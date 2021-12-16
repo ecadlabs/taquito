@@ -91,4 +91,13 @@ export class OptionToken extends ComparableToken {
       type: this.typeWithoutAnnotations(),
     };
   }
+
+  findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
+    if (OptionToken.prim === tokenToFind) {
+      tokens.push(this);
+    }
+    this.subToken().findAndReturnTokens(tokenToFind, tokens);
+    return tokens;
+  };
+
 }

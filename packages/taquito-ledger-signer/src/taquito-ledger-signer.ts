@@ -14,7 +14,7 @@ import {
   validateResponse,
   extractValue
 } from './utils';
-import sodium from 'libsodium-wrappers';
+import { hash } from '@stablelib/blake2b';
 
 export type LedgerTransport = Pick<Transport<string>, 'send' | 'decorateAppAPIMethods' | 'setScrambleKey'>
 
@@ -102,8 +102,7 @@ export class LedgerSigner implements Signer {
 
     const prefixes = this.getPrefixes();
     const publicKey = b58cencode(compressedPublicKey, prefixes.prefPk);
-    await sodium.ready;
-    const publicKeyHash = b58cencode(sodium.crypto_generichash(20, compressedPublicKey), prefixes.prefPkh);
+    const publicKeyHash = b58cencode(hash(compressedPublicKey, 20), prefixes.prefPkh);
 
     this._publicKey = publicKey;
     this._publicKeyHash = publicKeyHash;

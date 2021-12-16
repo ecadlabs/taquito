@@ -68,4 +68,12 @@ export class SaplingStateToken extends Token {
       },
     };
   }
+
+  findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
+    if (SaplingStateToken.prim === tokenToFind) {
+      tokens.push(this);
+    }
+    return tokens;
+  };
+
 }

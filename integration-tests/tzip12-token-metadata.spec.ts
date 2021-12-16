@@ -160,7 +160,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 		});
 	});  
 
- 	describe(`Deploy a Fa2 contract and fetch metadata (token metadata are obtain from a view %token_metadata): ${rpc}`, () => {
+ 	describe(`Deploy a Fa2 contract and fetch metadata (token metadata are obtained from a view %token_metadata): ${rpc}`, () => {
 		beforeEach(async (done) => {
 			await setup();
 			done();

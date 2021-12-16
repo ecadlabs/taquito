@@ -117,10 +117,34 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
 
       expect(batchOp.status).toEqual('applied')
       done();
-    })
+    });
+
+    it('Chain contract calls using `methodsObject` method', async (done) => {
+      const op = await Tezos.contract.originate({
+        balance: "1",
+        code: managerCode,
+        init: { "string": await Tezos.signer.publicKeyHash() },
+      })
+
+      const contract = await op.contract();
+      expect(op.status).toEqual('applied')
+
+      const batch = Tezos.batch()
+        .withTransfer({ to: contract.address, amount: 1 })
+        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 50)))
+        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.setDelegate(knownBaker)))
+        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.removeDelegate()))
+
+      const batchOp = await batch.send();
+
+      await batchOp.confirmation();
+
+      expect(batchOp.status).toEqual('applied')
+      done();
+    });
 
     it('Simple transfers with origination and code in Michelson format', async (done) => {
-      const batch = await Tezos.batch()
+      const batch = Tezos.batch()
         .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
         .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
         .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })

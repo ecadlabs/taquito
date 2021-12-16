@@ -1,9 +1,10 @@
 import { localForger } from '@taquito/local-forging';
-import { CompositeForger, RpcForger, TezosToolkit, Protocols } from '@taquito/taquito';
+import { CompositeForger, RpcForger, TezosToolkit, Protocols, ChainIds } from '@taquito/taquito';
 import { RemoteSigner } from '@taquito/remote-signer';
 import { HttpBackend } from '@taquito/http-utils';
 import { b58cencode, Prefix, prefix } from '@taquito/utils';
 import { importKey, InMemorySigner } from '@taquito/signer';
+import { RpcClient, RpcClientCache } from '@taquito/rpc';
 
 const nodeCrypto = require('crypto');
 
@@ -20,13 +21,14 @@ interface Config {
   knownBaker: string;
   knownContract: string;
   knownBigMapContract: string;
+  knownTzip1216Contract: string; // See example/example-Tzip12BigMapOffChain.ts
   protocol: Protocols;
   signerConfig: EphemeralConfig | FaucetConfig;
 }
 /**
  * SignerType specifies the different signer options used in the integration test suite. EPHEMERAL_KEY relies on a the [tezos-key-get-api](https://github.com/ecadlabs/tezos-key-gen-api)
  */
-enum SignerType {
+export enum SignerType {
   FAUCET,
   EPHEMERAL_KEY,
 }
@@ -54,129 +56,123 @@ interface FaucetConfig {
   faucetKey: {};
 }
 
-const granadanetEphemeral = {
-  rpc: process.env['TEZOS_RPC_GRANADANET'] || 'https://api.tez.ie/rpc/granadanet',
+const idiazabalnetEphemeral = {
+  rpc: process.env['TEZOS_RPC_IDIAZABALNET'] || 'https://idiazabalnet.ecadinfra.com',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1JMwgeC7MwYiMiZd74gXK6wrY7QNf1NwLX',
-  knownBigMapContract: 'KT1VniFqNCPEq4MXvnjYGvUqdWDhooJM5Nae',
-  protocol: Protocols.PtGRANADs,
+  knownContract: 'KT1UUS3M31GpFS4k5xQtp97oWGDhdzdT9mNJ',
+  knownBigMapContract: 'KT1VFM8dyKv2YTFdLBZm8seJKgFnn7RMrDtv',
+  knownTzip1216Contract: 'KT1PiiNe7icQHeaQ4Z8m27FVhYWQ2pPGMots',
+  protocol: Protocols.ProtoALpha,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'https://api.tez.ie/keys/granadanet',
+    keyUrl: 'https://api.tez.ie/keys/idiazabalnet',
     requestHeaders: { 'Authorization': 'Bearer taquito-example' },
   }
 }
 
-const florencenetEphemeral = {
-  rpc: process.env['TEZOS_RPC_FLORENCENET'] || 'https://api.tez.ie/rpc/florencenet',
+const hangzhounetEphemeral = {
+  rpc: process.env['TEZOS_RPC_HANGZHOUNET'] || 'https://hangzhounet.api.tez.ie',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1BRwtrBfiC2paqoSw4nakJ2EGLCGuoprLQ',
-  knownBigMapContract: 'KT1W1jh5C5NbcVVvpnBLQT9ekMbR5a8fg6mc',
-  protocol: Protocols.PsFLorena,
+  knownContract: 'KT1XfoRSZ88ioYHbuEKqHxJPawm9Rqc54uoy',
+  knownBigMapContract: 'KT1CnRSbp71FU8nz4xNEkcaASgMQDjNN85jd',
+  knownTzip1216Contract: 'KT1KquwVmLtq9StwCK46vpwRCxowqhcoV4g1',
+  protocol: Protocols.PtHangz2,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'https://api.tez.ie/keys/florencenet',
+    keyUrl: 'https://api.tez.ie/keys/hangzhounet',
     requestHeaders: { 'Authorization': 'Bearer taquito-example' },
   }
 }
 
-const edonetEphemeral = {
-  rpc: process.env['TEZOS_RPC_EDONET'] || 'https://api.tez.ie/rpc/edonet',
-  knownBaker: 'tz1R55a2HQbXUAzWKJYE5bJp3UvvawwCm9Pr',
-  knownContract: 'KT1MTFjUeqBeZoFeW1NLSrzJdcS5apFiUXoB',
-  knownBigMapContract: 'KT1Aqk5xE36Kx7JUUV8VMx4t9jLgQn4MBWQk',
-  protocol: Protocols.PtEdo2Zk,
-  signerConfig: {
-    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'https://api.tez.ie/keys/edonet',
-    requestHeaders: { 'Authorization': 'Bearer taquito-example' },
-  }
-}
-
-// Well known faucet key. Can be overridden by setting the `TEZOS_FAUCET_KEY_FILE` environment variable
-const key = {
-  email: "mfbzlhsv.owpfexem@tezos.example.org",
-  password: "bccbtuRKdr",
-  mnemonic: [
-    "addict",
-    "nerve",
-    "amazing",
-    "elevator",
-    "else",
-    "bind",
-    "injury",
-    "cotton",
-    "bind",
-    "judge",
-    "quote",
-    "apple",
-    "equip",
-    "ocean",
-    "tone"
-  ],
-  secret: "1e6159006a283a4456bda4f83721afa4bec9ed59"
-}
-
-const granadanetFaucet = {
-  rpc: 'https://api.tez.ie/rpc/granadanet',
+const idiazabalnetFaucet = {
+  rpc: process.env['TEZOS_RPC_IDIAZABALNET'] || 'https://idiazabalnet.ecadinfra.com',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1JMwgeC7MwYiMiZd74gXK6wrY7QNf1NwLX',
-  knownBigMapContract: 'KT1VniFqNCPEq4MXvnjYGvUqdWDhooJM5Nae',
-  protocol: Protocols.PtGRANADs,
+  knownContract: 'KT1UUS3M31GpFS4k5xQtp97oWGDhdzdT9mNJ',
+  knownBigMapContract: 'KT1VFM8dyKv2YTFdLBZm8seJKgFnn7RMrDtv',
+  knownTzip1216Contract: 'KT1PiiNe7icQHeaQ4Z8m27FVhYWQ2pPGMots',
+  protocol: Protocols.ProtoALpha,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
-    faucetKey: key,
+    faucetKey: {
+      "pkh": "tz1S6Y5J1i5JbXQf9eigvrZdghtjCApC8gUG",
+      "mnemonic": [
+        "throw",
+        "rose",
+        "girl",
+        "arrange",
+        "practice",
+        "fiber",
+        "speed",
+        "delay",
+        "economy",
+        "wine",
+        "cable",
+        "copper",
+        "sweet",
+        "bag",
+        "wasp"
+      ],
+      "email": "hxkxykcy.edpwomka@teztnets.xyz",
+      "password": "vzVIvhuItq",
+      "amount": "143524244923",
+      "secret": "c83d1fba98e408bc142b3a9568a27207e5544b99"
+    },
   }
 }
 
-const florencenetFaucet = {
-  rpc: 'https://api.tez.ie/rpc/florencenet',
+const hangzhounetFaucet = {
+  rpc: process.env['TEZOS_RPC_HANGZHOUNET'] || 'https://hangzhounet.api.tez.ie',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1BRwtrBfiC2paqoSw4nakJ2EGLCGuoprLQ',
-  knownBigMapContract: 'KT1W1jh5C5NbcVVvpnBLQT9ekMbR5a8fg6mc',
-  protocol: Protocols.PsFLorena,
+  knownContract: 'KT1XfoRSZ88ioYHbuEKqHxJPawm9Rqc54uoy',
+  knownBigMapContract: 'KT1CnRSbp71FU8nz4xNEkcaASgMQDjNN85jd',
+  knownTzip1216Contract: 'KT1KquwVmLtq9StwCK46vpwRCxowqhcoV4g1',
+  protocol: Protocols.PtHangz2,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
-    faucetKey: key,
-  }
-}
-
-const edonetFaucet = {
-  rpc: 'https://api.tez.ie/rpc/edonet',
-  knownBaker: 'tz1R55a2HQbXUAzWKJYE5bJp3UvvawwCm9Pr',
-  knownContract: 'KT1MTFjUeqBeZoFeW1NLSrzJdcS5apFiUXoB',
-  knownBigMapContract: 'KT1Aqk5xE36Kx7JUUV8VMx4t9jLgQn4MBWQk',
-  protocol: Protocols.PtEdo2Zk,
-  signerConfig: {
-    type: SignerType.FAUCET as SignerType.FAUCET,
-    faucetKey: key,
+    faucetKey: {
+      "mnemonic": [
+        "hero",
+        "calm",
+        "fever",
+        "defense",
+        "sound",
+        "amount",
+        "critic",
+        "quote",
+        "finger",
+        "strong",
+        "face",
+        "magnet",
+        "promote",
+        "opinion",
+        "flash"
+      ],
+      "email": "xzuhshlh.ehwpsgne@teztnets.xyz",
+      "password": "aWMyUsXNia",
+      "secret": "dea0160b4d432daf03be1f00424f04bdb9d776a9"
+    },
   }
 }
 
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_FAUCET']) {
-  providers.push(florencenetFaucet, edonetFaucet, granadanetFaucet)
-} 
-else if (process.env['RUN_GRANADANET_WITH_FAUCET']) {
-  providers.push(granadanetFaucet)
+  providers.push(hangzhounetFaucet, idiazabalnetFaucet)
 }
-else if (process.env['RUN_FLORENCENET_WITH_FAUCET']) {
-  providers.push(florencenetFaucet)
+else if (process.env['RUN_HANGZHOUNET_WITH_FAUCET']) {
+  providers.push(hangzhounetFaucet)
 }
-else if (process.env['RUN_EDONET_WITH_FAUCET']) {
-  providers.push(edonetFaucet)
+else if (process.env['RUN_IDIAZABALNET_WITH_FAUCET']) {
+  providers.push(idiazabalnetFaucet)
 }
-else if (process.env['GRANADANET']) {
-  providers.push(granadanetEphemeral)
+else if (process.env['HANGZHOUNET']) {
+  providers.push(hangzhounetEphemeral)
 }
-else if (process.env['FLORENCENET']) {
-  providers.push(florencenetEphemeral)
+else if (process.env['IDIAZABALNET']) {
+  providers.push(idiazabalnetEphemeral)
 }
-else if (process.env['EDONET']) {
-  providers.push(edonetEphemeral)
-} else {
-  providers.push(florencenetEphemeral, edonetEphemeral, granadanetEphemeral)
+else {
+  providers.push(hangzhounetEphemeral, idiazabalnetEphemeral)
 }
 
 const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE'];
@@ -249,8 +245,9 @@ const setupWithFaucetKey = async (Tezos: TezosToolkit, signerConfig: FaucetConfi
 export const CONFIGS = () => {
   return forgers.reduce((prev, forger: ForgerType) => {
 
-    const configs = providers.map(({ rpc, knownBaker, knownContract, protocol, knownBigMapContract, signerConfig }) => {
-      const Tezos = new TezosToolkit(rpc);
+    const configs = providers.map(({ rpc, knownBaker, knownContract, protocol, knownBigMapContract, knownTzip1216Contract, signerConfig }) => {
+      const Tezos = new TezosToolkit(new RpcClientCache(new RpcClient(rpc)));
+      Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: 300 } });
 
       setupForger(Tezos, forger)
 
@@ -261,6 +258,7 @@ export const CONFIGS = () => {
         protocol,
         lib: Tezos,
         knownBigMapContract,
+        knownTzip1216Contract,
         signerConfig,
         setup: async (preferFreshKey: boolean = false) => {
           if (signerConfig.type === SignerType.FAUCET) {
@@ -274,7 +272,7 @@ export const CONFIGS = () => {
           }
         },
         createAddress: async () => {
-          const tezos = new TezosToolkit(rpc)
+          const tezos = new TezosToolkit(new RpcClientCache(new RpcClient(rpc)));
 
           const keyBytes = Buffer.alloc(32);
           nodeCrypto.randomFillSync(keyBytes)

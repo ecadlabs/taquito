@@ -7,12 +7,16 @@
         "quick_start",
         "boilerplate",        
         "batch_API",
+        "confirmation_event_stream",
         "set_delegate",
+        "dapp_prelaunch",
         "estimate",
+        "fa2_parameters",
         "lambda_view",
         "maps_bigmaps",
         "michelsonmap",
         "originate",
+        "global_constant",
         "rpc_nodes",
         "rpc_package",
         "signing",
@@ -21,18 +25,16 @@
         "tickets",
         "transaction_limits",
         "making_transfers",
+        "on_chain_views",
         "tutorial_links",
         "tzip12",
         "metadata-tzip16",
         "validators",
         "wallet_API",
-        "web3js_taquito"
+        "wallets",
+        "web3js_taquito",
+        "taquito_utils"
       ]
-    },
-    {
-      "type": "category",
-      "label": "Packages",
-      "items": ["michelson_encoder"]
     },
     {
       "type": "category",
@@ -41,13 +43,18 @@
     },
     {
       "type": "category",
-      "label": "Advanced",
+      "label": "Packages",
+      "items": ["michelson_encoder", "contracts-library", "taquito_utils"]
+    },
+    {
+      "type": "category",
+      "label": "Advanced Examples",
       "items": ["complex_parameters", "storage_annotations", "drain_account"]
     },
     {
       "type": "category",
       "label": "Modules customization",
-      "items": ["cancel_http_requests"]
+      "items": ["rpc-cache", "cancel_http_requests"]
     },
     {
       "type": "category",

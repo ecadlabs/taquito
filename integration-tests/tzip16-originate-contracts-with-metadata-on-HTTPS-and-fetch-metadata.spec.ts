@@ -68,8 +68,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             const url = 'https://storage.googleapis.com/tzip-16/taco-shop-metadata.json';
             const bytesUrl = char2Bytes(url);
 
-            const metadataBigMAp = new MichelsonMap();
-            metadataBigMAp.set("", bytesUrl);
+            const metadataBigMap = new MichelsonMap();
+            metadataBigMap.set("", bytesUrl);
 
             // Ligo Taco shop contract modified to include metadata in storage
             // https://ide.ligolang.org/p/-uS469slzUlSm1zwNqHl1A
@@ -80,7 +80,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             const op = await Tezos.contract.originate({
                 code: tacoContractTzip16,
                 storage: {
-                    metadata: metadataBigMAp,
+                    metadata: metadataBigMap,
                     taco_shop_storage: tacoShopStorageMap
                 },
             });
@@ -181,7 +181,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             const contract = await Tezos.contract.at(contractAddressInvalidMetadata, tzip16);
             try {
                 await contract.tzip16().getMetadata();
-            } catch (error) {
+            } catch (error:any) {
                 expect(error.message).toContain(`Invalid metadata`);
             }
 

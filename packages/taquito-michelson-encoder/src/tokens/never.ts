@@ -29,4 +29,12 @@ export class NeverToken extends Token {
   public ExtractSchema() {
     return NeverToken.prim;
   }
+
+  findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
+    if (NeverToken.prim === tokenToFind) {
+      tokens.push(this);
+    }
+    return tokens;
+  };
+
 }

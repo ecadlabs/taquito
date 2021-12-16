@@ -1,4 +1,4 @@
-import { RpcClient } from '@taquito/rpc';
+import { RpcClient, RpcClientInterface } from '@taquito/rpc';
 import { Protocols } from './constants';
 import { Forger } from './forger/interface';
 import { RpcForger } from './forger/rpc-forger';
@@ -19,43 +19,53 @@ import { Packer } from './packer/interface';
 import { RpcPacker } from './packer/rpc-packer';
 import BigNumber from 'bignumber.js';
 import { retry } from 'rxjs/operators';
-import { OperatorFunction } from 'rxjs';
+import { BehaviorSubject, OperatorFunction } from 'rxjs';
+import { GlobalConstantsProvider } from './global-constants/interface-global-constants-provider';
+import { NoopGlobalConstantsProvider } from './global-constants/noop-global-constants-provider';
 
 export interface TaquitoProvider<T, K extends Array<any>> {
   new (context: Context, ...rest: K): T;
 }
 
+export interface ConfigConfirmation {
+  confirmationPollingIntervalSecond?: number;
+  confirmationPollingTimeoutSecond: number;
+  defaultConfirmationCount: number;
+}
+
+export const defaultConfigConfirmation: ConfigConfirmation = {
+  defaultConfirmationCount: 1,
+  confirmationPollingTimeoutSecond: 180
+};
+
 // The shouldObservableSubscriptionRetry parameter is related to the observable in ObservableSubsription class.
 // When set to true, the observable won't die when getBlock rpc call fails; the error will be reported via the error callback,
 // and it will continue to poll for new blocks.
-export interface Config {
-  confirmationPollingIntervalSecond?: number;
-  confirmationPollingTimeoutSecond?: number;
-  defaultConfirmationCount?: number;
-  shouldObservableSubscriptionRetry?: boolean;
-  observableSubscriptionRetryFunction?: OperatorFunction<any, any>;
+export interface ConfigStreamer {
+  streamerPollingIntervalMilliseconds: number;
+  shouldObservableSubscriptionRetry: boolean;
+  observableSubscriptionRetryFunction: OperatorFunction<any,any>;
 }
 
-export const defaultConfig: Partial<Config> = {
-  defaultConfirmationCount: 1,
-  confirmationPollingTimeoutSecond: 180,
+export const defaultConfigStreamer: ConfigStreamer = {
+  streamerPollingIntervalMilliseconds: 20000,
   shouldObservableSubscriptionRetry: false,
-  observableSubscriptionRetryFunction: retry(),
+  observableSubscriptionRetryFunction: retry()
 };
 
 /**
  * @description Encapsulate common service used throughout different part of the library
  */
 export class Context {
-  private _counters: { [key: string]: number } = {};
-  private _rpcClient: RpcClient;
+  private _rpcClient: RpcClientInterface;
   private _forger: Forger;
   private _parser: ParserProvider;
   private _injector: Injector;
   private _walletProvider: WalletProvider;
   public readonly operationFactory: OperationFactory;
   private _packer: Packer;
-
+  private providerDecorator: Function[] = [];
+  private _globalConstantsProvider: GlobalConstantsProvider;
   public readonly tz = new RpcTzProvider(this);
   public readonly estimate = new RPCEstimateProvider(this);
   public readonly contract = new RpcContractProvider(this, this.estimate);
@@ -63,46 +73,53 @@ export class Context {
   public readonly wallet = new Wallet(this);
 
   constructor(
-    private _rpc: RpcClient | string,
+    private _rpc: RpcClientInterface | string,
     private _signer: Signer = new NoopSigner(),
     private _proto?: Protocols,
-    private _config?: Partial<Config>,
+    public readonly _config = new BehaviorSubject({...defaultConfigStreamer, ...defaultConfigConfirmation}),
     forger?: Forger,
     injector?: Injector,
     packer?: Packer,
     wallet?: WalletProvider,
-    parser?: ParserProvider
+    parser?: ParserProvider,
+    globalConstantsProvider?: GlobalConstantsProvider
   ) {
     if (typeof this._rpc === 'string') {
       this._rpcClient = new RpcClient(this._rpc);
     } else {
       this._rpcClient = this._rpc;
     }
-    this.config = _config as any;
     this._forger = forger ? forger : new RpcForger(this);
     this._injector = injector ? injector : new RpcInjector(this);
     this.operationFactory = new OperationFactory(this);
     this._walletProvider = wallet ? wallet : new LegacyWalletProvider(this);
-    this._parser = parser ? parser : new MichelCodecParser(this);
-    this._packer = packer ? packer : new RpcPacker(this);
+    this._parser = parser? parser: new MichelCodecParser(this);
+    this._packer = packer? packer: new RpcPacker(this);
+    this._globalConstantsProvider = globalConstantsProvider? globalConstantsProvider: new NoopGlobalConstantsProvider();
   }
 
-  get config(): Partial<Config> {
-    return this._config as any;
+  get config(): ConfigConfirmation & ConfigStreamer {
+    return this._config.getValue();
   }
 
-  set config(value: Partial<Config>) {
-    this._config = {
-      ...defaultConfig,
+  set config(value: ConfigConfirmation & ConfigStreamer) {
+    this._config.next({
       ...value,
-    };
+    });
   }
 
-  get rpc(): RpcClient {
+  setPartialConfig(value: Partial<ConfigConfirmation> & Partial<ConfigStreamer>) {
+    this._config.next({
+      ...this._config.getValue(),
+      ...value,
+    });
+  }
+
+  get rpc(): RpcClientInterface {
     return this._rpcClient;
   }
 
-  set rpc(value: RpcClient) {
+  set rpc(value: RpcClientInterface) {
     this._rpcClient = value;
   }
 
@@ -162,12 +179,12 @@ export class Context {
     this._packer = value;
   }
 
-  get counters() {
-    return this._counters;
+  get globalConstantsProvider() {
+    return this._globalConstantsProvider;
   }
 
-  set counters(value: { [key: string]: number }) {
-    this._counters[value.key] = value.counter;
+  set globalConstantsProvider(value: GlobalConstantsProvider) {
+    this._globalConstantsProvider = value;
   }
 
   async isAnyProtocolActive(protocol: string[] = []) {
@@ -193,20 +210,15 @@ export class Context {
         new BigNumber(constants.delay_per_missing_endorsement!)
         .multipliedBy(Math.max(0, constants.initial_endorsers! - constants.endorsers_per_block))
       );
-
+      
       // Divide the polling interval by a constant 3
       // to improvise for polling time to work in prod,
       // testnet and sandbox enviornment.   
       confirmationPollingInterval = confirmationPollingInterval.dividedBy(3);  
 
-      if (confirmationPollingInterval.toNumber() > defaultInterval) {
-        // Fix for the transistion from Florence to Granada
-        this.config.confirmationPollingIntervalSecond = defaultInterval;
-      } else {
-        this.config.confirmationPollingIntervalSecond = confirmationPollingInterval.toNumber() === 0 ?
-          0.1 :
-          confirmationPollingInterval.toNumber();
-      }
+      this.config.confirmationPollingIntervalSecond = confirmationPollingInterval.toNumber() === 0 ?
+        0.1 :
+        confirmationPollingInterval.toNumber();
       return this.config.confirmationPollingIntervalSecond;
     } catch (exception) {
       // Return default value if there is
@@ -215,7 +227,7 @@ export class Context {
       return defaultInterval;
     }
   }
-
+  
   /**
    * @description Create a copy of the current context. Useful when you have long running operation and you do not want a context change to affect the operation
    */
@@ -224,10 +236,32 @@ export class Context {
       this.rpc,
       this.signer,
       this.proto,
-      this.config,
+      this._config,
       this.forger,
       this._injector,
       this.packer
     );
+  }
+
+  /**
+   * @description Allows extensions set on the TezosToolkit to inject logic into the context
+   */
+  registerProviderDecorator(fx: (context: Context) => Context){
+    this.providerDecorator.push(fx)
+  }
+
+  /**
+   * @description Applies the decorators on a cloned instance of the context and returned this cloned instance.
+   * The decorators are functions that inject logic into the context.
+   * They are provided by the extensions set on the TezosToolkit by calling the registerProviderDecorator method.
+   */
+  withExtensions() {
+    let currentContext = this;
+
+    this.providerDecorator.forEach((decorator) => {
+      currentContext = decorator(currentContext.clone())
+    })
+
+    return currentContext;
   }
 }

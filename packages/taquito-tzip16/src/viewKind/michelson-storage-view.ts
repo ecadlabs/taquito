@@ -1,5 +1,5 @@
 import { ParameterSchema } from '@taquito/michelson-encoder';
-import { RpcClient, MichelsonV1Expression, MichelsonV1ExpressionExtended } from '@taquito/rpc';
+import { RpcClientInterface, MichelsonV1Expression, MichelsonV1ExpressionExtended } from '@taquito/rpc';
 import { ContractAbstraction, ContractProvider, Protocols, Wallet } from '@taquito/taquito';
 import { ForbiddenInstructionInViewCode, InvalidViewParameterError, NoParameterExpectedError } from '../tzip16-errors';
 import { View } from './interface';
@@ -8,7 +8,7 @@ export class MichelsonStorageView implements View {
     constructor(
         private viewName: string,
         private contract: ContractAbstraction<ContractProvider | Wallet>,
-        private rpc: RpcClient,
+        private rpc: RpcClientInterface,
         private returnType: MichelsonV1Expression,
         private code: MichelsonV1ExpressionExtended[],
         private viewParameterType?: MichelsonV1ExpressionExtended
@@ -138,7 +138,6 @@ export class MichelsonStorageView implements View {
         const contractBalance = (await this.rpc.getBalance(this.contract.address)).toString();
         const block = await this.rpc.getBlock();
         const blockTimestamp = block.header.timestamp.toString();
-        const protocolHash = block.protocol;
 
         const code = this.adaptViewCodeToContext(this.code, contractBalance, blockTimestamp, chainId);
 

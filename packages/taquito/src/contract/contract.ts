@@ -1,99 +1,16 @@
-import { ParameterSchema, Schema } from '@taquito/michelson-encoder';
-import { EntrypointsResponse, ScriptResponse } from '@taquito/rpc';
+import { ParameterSchema, Schema, ViewSchema } from '@taquito/michelson-encoder';
+import { EntrypointsResponse, RpcClientInterface, ScriptResponse } from '@taquito/rpc';
 import { ChainIds, DefaultLambdaAddresses } from '../constants';
-import { TransactionOperation } from '../operations/transaction-operation';
-import { TransferParams } from '../operations/types';
-import { TransactionWalletOperation, Wallet } from '../wallet';
+import { Wallet } from '../wallet';
+import { ContractMethodFactory } from './contract-methods/contract-method-factory';
+import { ContractMethod } from './contract-methods/contract-method-flat-param';
+import { ContractMethodObject } from './contract-methods/contract-method-object-param';
+import { OnChainView } from './contract-methods/contract-on-chain-view';
 import { InvalidParameterError, UndefinedLambdaContractError } from './errors';
 import { ContractProvider, StorageProvider } from './interface';
 import LambdaView from './lambda-view';
 
-interface SendParams {
-  fee?: number;
-  storageLimit?: number;
-  gasLimit?: number;
-  amount: number;
-  source?: string;
-  mutez?: boolean;
-}
-
-// Ensure that all parameter that are not in SendParams are defined
-type ExplicitTransferParams = Required<Omit<TransferParams, keyof SendParams>> & SendParams;
-
-const DEFAULT_SMART_CONTRACT_METHOD_NAME = 'default';
-
-/**
- * @description Utility class to send smart contract operation
- */
-export class ContractMethod<T extends ContractProvider | Wallet> {
-  constructor(
-    private provider: T,
-    private address: string,
-    private parameterSchema: ParameterSchema,
-    private name: string,
-    private args: any[],
-    private isMultipleEntrypoint = true,
-    private isAnonymous = false
-  ) { }
-
-  /**
-   * @description Get the schema of the smart contract method
-   */
-  get schema() {
-    return this.isAnonymous
-      ? this.parameterSchema.ExtractSchema()[this.name]
-      : this.parameterSchema.ExtractSchema();
-  }
-
-  /**
-   *
-   * @description Send the smart contract operation
-   *
-   * @param Options generic operation parameter
-   */
-  send(
-    params: Partial<SendParams> = {}
-  ): Promise<T extends Wallet ? TransactionWalletOperation : TransactionOperation> {
-    if (this.provider instanceof Wallet) {
-      // TODO got around TS2352: Conversion of type 'T & Wallet' to type 'Wallet' by adding `as unknown`. Needs clarification
-      return (this.provider as unknown as Wallet).transfer(this.toTransferParams(params)).send() as any;
-    } else {
-      return this.provider.transfer(this.toTransferParams(params)) as any;
-    }
-  }
-
-  /**
-   *
-   * @description Create transfer params to be used with TezosToolkit.contract.transfer methods
-   *
-   * @param Options generic transfer operation parameters
-   */
-  toTransferParams({
-    fee,
-    gasLimit,
-    storageLimit,
-    source,
-    amount = 0,
-    mutez = false,
-  }: Partial<SendParams> = {}): TransferParams {
-    const fullTransferParams: ExplicitTransferParams = {
-      to: this.address,
-      amount,
-      fee,
-      mutez,
-      source,
-      gasLimit,
-      storageLimit,
-      parameter: {
-        entrypoint: this.isMultipleEntrypoint ? this.name : 'default',
-        value: this.isAnonymous
-          ? this.parameterSchema.Encode(this.name, ...this.args)
-          : this.parameterSchema.Encode(...this.args),
-      },
-    };
-    return fullTransferParams;
-  }
-}
+export const DEFAULT_SMART_CONTRACT_METHOD_NAME = 'default';
 
 /**
  * @description Utility class to retrieve data from a smart contract's storage without incurring fees via a contract's view method
@@ -125,12 +42,12 @@ export class ContractView {
     // TODO Verify if the 'customLambdaAdress' is a valid originated contract and if not, return an appropriate error message. 
     if (customLambdaAddress) {
       lambdaAddress = customLambdaAddress
-    } else if (this.chainId === ChainIds.EDONET) {
-      lambdaAddress = DefaultLambdaAddresses.EDONET
-    } else if (this.chainId === ChainIds.FLORENCENET) {
-      lambdaAddress = DefaultLambdaAddresses.FLORENCENET
     } else if (this.chainId === ChainIds.GRANADANET) {
       lambdaAddress = DefaultLambdaAddresses.GRANADANET
+    } else if (this.chainId === ChainIds.HANGZHOUNET) {
+      lambdaAddress = DefaultLambdaAddresses.HANGZHOUNET
+    } else if (this.chainId === ChainIds.IDIAZABALNET) {
+      lambdaAddress = DefaultLambdaAddresses.IDIAZABALNET
     } else if (this.chainId === ChainIds.MAINNET) {
       lambdaAddress = DefaultLambdaAddresses.MAINNET
     } else {
@@ -155,6 +72,7 @@ const validateArgs = (args: any[], schema: ParameterSchema, name: string) => {
   }
 };
 
+// lambda view tzip4
 const isView = (schema: ParameterSchema): boolean => {
   let isView = false;
   const sigs = schema.ExtractSignatures();
@@ -174,18 +92,36 @@ const isContractProvider = (variableToCheck: any): variableToCheck is ContractPr
  * @description Smart contract abstraction
  */
 export class ContractAbstraction<T extends ContractProvider | Wallet> {
+  private contractMethodFactory: ContractMethodFactory<T>;
   /**
    * @description Contains methods that are implemented by the target Tezos Smart Contract, and offers the user to call the Smart Contract methods as if they were native TS/JS methods.
    * NB: if the contract contains annotation it will include named properties; if not it will be indexed by a number.
    *
    */
   public methods: { [key: string]: (...args: any[]) => ContractMethod<T> } = {};
-
+  /**
+   * @description Contains methods that are implemented by the target Tezos Smart Contract, and offers the user to call the Smart Contract methods as if they were native TS/JS methods.
+   * `methodsObject` serves the exact same purpose as the `methods` member. The difference is that it allows passing the parameter in an object format when calling the smart contract method (instead of the flattened representation)
+   * NB: if the contract contains annotation it will include named properties; if not it will be indexed by a number.
+   *
+   */
+  public methodsObject: { [key: string]: (args?: any) => ContractMethodObject<T> } = {};
+  /**
+   * @description Contains lamda views (tzip4) that are implemented by the target Tezos Smart Contract, and offers the user to call the lambda views as if they were native TS/JS methods.
+   * NB: These are the view defined in the tzip4 standard, not the views introduced by the Hangzhou protocol.
+   */
   public views: { [key: string]: (...args: any[]) => ContractView } = {};
+  /**
+   * @description Contains on-chain views that are defined by the target Tezos Smart Contract, and offers the user to simulate the views execution as if they were native TS/JS methods.
+   * NB: the expected format for the parameter when calling a smart contract view is the object format (same format as for the storage) and not the flattened representation.
+   *
+   */
+  public contractViews: { [key: string]: (args?: any) => OnChainView } = {};
 
   public readonly schema: Schema;
 
   public readonly parameterSchema: ParameterSchema;
+  public readonly viewSchema: ViewSchema[];
 
   constructor(
     public readonly address: string,
@@ -193,16 +129,22 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
     provider: T,
     private storageProvider: StorageProvider,
     public readonly entrypoints: EntrypointsResponse,
-    private chainId: string
+    private chainId: string,
+    rpc: RpcClientInterface
   ) {
+    this.contractMethodFactory = new ContractMethodFactory(provider, address);
     this.schema = Schema.fromRPCResponse({ script: this.script });
     this.parameterSchema = ParameterSchema.fromRPCResponse({ script: this.script });
-    this._initializeMethods(this, address, provider, this.entrypoints.entrypoints, this.chainId);
+
+    this.viewSchema = ViewSchema.fromRPCResponse({ script: this.script });
+    if (this.viewSchema.length !== 0) {
+      this._initializeOnChainViews(this, rpc, this.viewSchema);
+    }
+    this._initializeMethods(this, provider, this.entrypoints.entrypoints, this.chainId);  
   }
 
   private _initializeMethods(
     currentContract: ContractAbstraction<T>,
-    address: string,
     provider: T,
     entrypoints: {
       [key: string]: object;
@@ -216,19 +158,22 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
         const smartContractMethodSchema = new ParameterSchema(
           entrypoints[smartContractMethodName]
         );
-        const method = function (...args: any[]) {
 
-          validateArgs(args, smartContractMethodSchema, smartContractMethodName);
-
-          return new ContractMethod<T>(
-            provider,
-            address,
+        this.methods[smartContractMethodName] = function (...args: any[]) {
+          return currentContract.contractMethodFactory.createContractMethodFlatParams(
             smartContractMethodSchema,
             smartContractMethodName,
             args
           );
         };
-        this.methods[smartContractMethodName] = method;
+
+        this.methodsObject[smartContractMethodName] = function (args: any) {
+          return currentContract.contractMethodFactory.createContractMethodObjectParam(
+            smartContractMethodSchema,
+            smartContractMethodName,
+            args
+          );
+        };
 
         if (isContractProvider(provider)) {
           if (isView(smartContractMethodSchema)) {
@@ -266,15 +211,8 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
       );
 
       anonymousMethods.forEach(smartContractMethodName => {
-        const method = function (...args: any[]) {
-          validateArgs(
-            [smartContractMethodName, ...args],
-            parameterSchema,
-            smartContractMethodName
-          );
-          return new ContractMethod<T>(
-            provider,
-            address,
+        this.methods[smartContractMethodName] = function (...args: any[]) {
+          return currentContract.contractMethodFactory.createContractMethodFlatParams(
             parameterSchema,
             smartContractMethodName,
             args,
@@ -282,23 +220,54 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
             true
           );
         };
-        this.methods[smartContractMethodName] = method;
+
+        this.methodsObject[smartContractMethodName] = function (args: any) {
+          return currentContract.contractMethodFactory.createContractMethodObjectParam(
+            parameterSchema,
+            smartContractMethodName,
+            args,
+            false,
+            true
+          );
+        };
       });
     } else {
       const smartContractMethodSchema = this.parameterSchema;
-      const method = function (...args: any[]) {
-        validateArgs(args, parameterSchema, DEFAULT_SMART_CONTRACT_METHOD_NAME);
-        return new ContractMethod<T>(
-          provider,
-          address,
+      this.methods[DEFAULT_SMART_CONTRACT_METHOD_NAME] = function (...args: any[]) {
+        return currentContract.contractMethodFactory.createContractMethodFlatParams(
           smartContractMethodSchema,
           DEFAULT_SMART_CONTRACT_METHOD_NAME,
           args,
           false
         );
       };
-      this.methods[DEFAULT_SMART_CONTRACT_METHOD_NAME] = method;
+
+      this.methodsObject[DEFAULT_SMART_CONTRACT_METHOD_NAME] = function (args: any) {
+        return currentContract.contractMethodFactory.createContractMethodObjectParam(
+          smartContractMethodSchema,
+          DEFAULT_SMART_CONTRACT_METHOD_NAME,
+          args,
+          false
+        );
+      };
     }
+  }
+
+  private _initializeOnChainViews(currentContract: ContractAbstraction<T>, rpc: RpcClientInterface, allContractViews: ViewSchema[]){
+    const storageType = this.schema.val;
+    const storageValue = this.script.storage;
+
+    allContractViews.forEach((viewSchema) => {
+      this.contractViews[viewSchema.viewName] = function (args: any) {
+        return currentContract.contractMethodFactory.createContractViewObjectParam(
+          rpc,
+          viewSchema,
+          storageType,
+          storageValue,
+          args
+        );
+      };
+    })
   }
 
   /**

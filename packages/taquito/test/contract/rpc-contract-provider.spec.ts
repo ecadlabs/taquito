@@ -15,7 +15,7 @@ import {
 } from './data';
 import BigNumber from 'bignumber.js';
 import { Context } from '../../src/context';
-import { ContractMethod } from '../../src/contract/contract';
+import { ContractMethod } from '../../src/contract/contract-methods/contract-method-flat-param';
 import { Estimate } from '../../src/contract/estimate';
 import {
   Protocols,
@@ -34,6 +34,7 @@ import { BigMapAbstraction } from '../../src/contract/big-map';
 import { OpKind, ParamsWithKind } from '../../src/operations/types';
 import { NoopParser } from '../../src/taquito';
 import { OperationBatch } from '../../src/batch/rpc-batch-provider';
+import { ContractMethodObject } from '../../src/contract/contract-methods/contract-method-object-param';
 
 /**
  * RPCContractProvider test
@@ -43,6 +44,7 @@ describe('RpcContractProvider test', () => {
   let mockRpcClient: {
     // deepcode ignore no-any: any is good enough
     getScript: jest.Mock<any, any>;
+    getNormalizedScript: jest.Mock<any, any>;
     getStorage: jest.Mock<any, any>;
     getBigMapExpr: jest.Mock<any, any>;
     getBigMapKey: jest.Mock<any, any>;
@@ -58,7 +60,6 @@ describe('RpcContractProvider test', () => {
     preapplyOperations: jest.Mock<any, any>;
     getChainId: jest.Mock<any, any>;
     getSaplingDiffById: jest.Mock<any, any>;
-    runOperation: jest.Mock<any, any>;
   };
 
   let mockSigner: {
@@ -76,6 +77,7 @@ describe('RpcContractProvider test', () => {
     registerDelegate: jest.Mock<any, any>;
     batch: jest.Mock<any, any>;
     reveal: jest.Mock<any, any>;
+    registerGlobalConstant: jest.Mock<any, any>;
   };
 
   const revealOp = (source: string) => ({
@@ -94,6 +96,7 @@ describe('RpcContractProvider test', () => {
       getEntrypoints: jest.fn(),
       getBlock: jest.fn(),
       getScript: jest.fn(),
+      getNormalizedScript: jest.fn(),
       getManagerKey: jest.fn(),
       getStorage: jest.fn(),
       getBigMapKey: jest.fn(),
@@ -106,7 +109,6 @@ describe('RpcContractProvider test', () => {
       preapplyOperations: jest.fn(),
       getChainId: jest.fn(),
       getSaplingDiffById: jest.fn(),
-      runOperation: jest.fn(),
     };
 
     mockSigner = {
@@ -122,6 +124,7 @@ describe('RpcContractProvider test', () => {
       setDelegate: jest.fn(),
       batch: jest.fn(),
       reveal: jest.fn(),
+      registerGlobalConstant: jest.fn()
     };
 
     // Required for operations confirmation polling
@@ -153,13 +156,13 @@ describe('RpcContractProvider test', () => {
     });
     mockRpcClient.preapplyOperations.mockResolvedValue([]);
     mockRpcClient.getChainId.mockResolvedValue('chain-id');
-    const estimateReveal = new Estimate(10500000, 0, 160, 1000);
+    const estimateReveal = new Estimate(1000000, 0, 64, 250);
     mockEstimate.reveal.mockResolvedValue(estimateReveal);
   });
 
   describe('getStorage', () => {
     it('should call getStorage', async (done) => {
-      mockRpcClient.getScript.mockResolvedValue({ code: [sample] });
+      mockRpcClient.getNormalizedScript.mockResolvedValue({ code: [sample] });
       mockRpcClient.getStorage.mockResolvedValue(sampleStorage);
       const result = await rpcContractProvider.getStorage('test');
       expect(result).toEqual({
@@ -174,7 +177,7 @@ describe('RpcContractProvider test', () => {
 
   describe('getBigMapKey', () => {
     it('should call getBigMapKey', async (done) => {
-      mockRpcClient.getScript.mockResolvedValue({ code: [sample] });
+      mockRpcClient.getNormalizedScript.mockResolvedValue({ code: [sample] });
       mockRpcClient.getBigMapKey.mockResolvedValue(sampleBigMapValue);
       // tslint:disable-next-line: deprecation
       const result = await rpcContractProvider.getBigMapKey(
@@ -722,6 +725,7 @@ describe('RpcContractProvider test', () => {
 
   describe('originate', () => {
     it('should produce a reveal and origination operation', async (done) => {
+      mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo' });
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       const result = await rpcContractProvider.originate({
         delegate: 'test_delegate',
@@ -754,7 +758,7 @@ describe('RpcContractProvider test', () => {
               storage_limit: '257',
             },
           ],
-          protocol: 'test_proto',
+          protocol: 'PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo',
           signature: 'test_sig',
         },
         opbytes: 'test',
@@ -763,6 +767,7 @@ describe('RpcContractProvider test', () => {
     });
 
     it('should not convert balance to mutez when mutez flag is set to true', async (done) => {
+      mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo' });
       const result = await rpcContractProvider.originate({
         delegate: 'test_delegate',
         balance: '200',
@@ -795,7 +800,7 @@ describe('RpcContractProvider test', () => {
               storage_limit: '257',
             },
           ],
-          protocol: 'test_proto',
+          protocol: 'PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo',
           signature: 'test_sig',
         },
         opbytes: 'test',
@@ -804,6 +809,7 @@ describe('RpcContractProvider test', () => {
     });
 
     it('estimate when no fees are specified', async (done) => {
+      mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo' });
       const estimate = new Estimate(1000, 1000, 180, 1000);
       mockEstimate.originate.mockResolvedValue(estimate);
 
@@ -835,7 +841,7 @@ describe('RpcContractProvider test', () => {
               storage_limit: estimate.storageLimit.toString(),
             },
           ],
-          protocol: 'test_proto',
+          protocol: 'PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo',
           signature: 'test_sig',
         },
         opbytes: 'test',
@@ -1260,6 +1266,38 @@ describe('RpcContractProvider test', () => {
     });
   });
 
+  describe('registerGlobalConstant', () => {
+    it('should produce a reveal and registerGlobalConstant operation', async done => {
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.registerGlobalConstant.mockResolvedValue(estimate);
+      const result = await rpcContractProvider.registerGlobalConstant({
+        value: {"prim":"Pair","args":[{"int":"999"},{"int":"999"}]}
+      });
+      expect(result.raw).toEqual({
+        counter: 0,
+        opOb: {
+          branch: 'test',
+          contents: [
+            revealOp('test_pub_key_hash'),
+            {
+              value: {"prim":"Pair","args":[{"int":"999"},{"int":"999"}]},
+              counter: '2',
+              fee: '475',
+              gas_limit: '1330',
+              kind: 'register_global_constant',
+              source: 'test_pub_key_hash',
+              storage_limit: '93',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        opbytes: 'test',
+      });
+      done();
+    });
+  });
+
   describe('at', () => {
     it('should return contract method', async (done) => {
       mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
@@ -1270,7 +1308,7 @@ describe('RpcContractProvider test', () => {
         },
       });
       mockRpcClient.preapplyOperations.mockResolvedValue([]);
-      mockRpcClient.getScript.mockResolvedValue({
+      mockRpcClient.getNormalizedScript.mockResolvedValue({
         code: tokenCode,
         storage: tokenInit,
       });
@@ -1282,6 +1320,7 @@ describe('RpcContractProvider test', () => {
       mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
       const result = await rpcContractProvider.at('test');
       expect(result.methods.mint('test', 100)).toBeInstanceOf(ContractMethod);
+      expect(result.methodsObject.mint({ 0: 'test', 1: 100 })).toBeInstanceOf(ContractMethodObject);
       done();
     });
   });
@@ -1375,8 +1414,12 @@ describe('RpcContractProvider test', () => {
           },
         ];
 
+        const opBatch = new OperationBatch(rpcContractProvider['context'], mockEstimate);
+
         expect(rpcContractProvider.batch()).toBeInstanceOf(OperationBatch);
-        expect(rpcContractProvider.batch(opToBatch)).toBeInstanceOf(OperationBatch);
+        expect(rpcContractProvider.batch()).toEqual(opBatch);
+
+        expect(rpcContractProvider.batch(opToBatch)).toEqual(opBatch.with(opToBatch));
 
         done();
       });
@@ -1421,91 +1464,6 @@ describe('RpcContractProvider test', () => {
 
       expect(mockRpcClient.getSaplingDiffById.mock.calls[0][0]).toEqual('133');
       expect(mockRpcClient.getSaplingDiffById.mock.calls[0][1]).toEqual({ block: '654321' });
-      done();
-    });
-  });
-
-  describe('Multiple subsequent operations (to send more than one operation in a block)', () => {
-    it('should increment context counter between operations', async (done) => {
-      mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
-      mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
-      mockRpcClient.preapplyOperations.mockResolvedValue([]);
-      mockRpcClient.getManagerKey.mockResolvedValue('test');
-      mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
-      mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
-      mockSigner.publicKey.mockResolvedValue('test_pub_key');
-      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
-      mockEstimate.reveal.mockResolvedValue(undefined);
-      mockRpcClient.runOperation.mockReturnValue({ contents: [] });
-
-      expect(rpcContractProvider['context'].counters['test_pub_key_hash']).toBeUndefined();
-
-      await rpcContractProvider.transfer({
-        to: 'test_to',
-        amount: 2,
-        fee: 10000,
-        gasLimit: 10600,
-        storageLimit: 300,
-      });
-      expect(rpcContractProvider['context'].counters['test_pub_key_hash']).toBe(1);
-
-      await rpcContractProvider.registerDelegate({
-        fee: 10000,
-        gasLimit: 10600,
-        storageLimit: 257,
-      });
-      expect(rpcContractProvider['context'].counters['test_pub_key_hash']).toBe(2);
-
-      await rpcContractProvider.setDelegate({
-        source: 'test_source',
-        delegate: 'test_delegate',
-        fee: 10000,
-        gasLimit: 10600,
-        storageLimit: 257,
-      });
-      expect(rpcContractProvider['context'].counters['test_pub_key_hash']).toBe(3);
-
-      await rpcContractProvider.originate({
-        delegate: 'test_delegate',
-        balance: '200',
-        code: miStr,
-        init: miInit,
-        fee: 10000,
-        gasLimit: 10600,
-        storageLimit: 257,
-        mutez: true,
-      });
-      expect(rpcContractProvider['context'].counters['test_pub_key_hash']).toBe(4);
-
-      const resultLastTransfer = await rpcContractProvider.transfer({
-        to: 'test_to',
-        amount: 2,
-        fee: 10000,
-        gasLimit: 10600,
-        storageLimit: 300,
-      });
-      expect(rpcContractProvider['context'].counters['test_pub_key_hash']).toBe(5);
-      expect(resultLastTransfer.raw).toEqual({
-        counter: 0,
-        opOb: {
-          branch: 'test',
-          contents: [
-            {
-              amount: '2000000',
-              counter: '5',
-              destination: 'test_to',
-              fee: '10000',
-              gas_limit: '10600',
-              kind: 'transaction',
-              source: 'test_pub_key_hash',
-              storage_limit: '300',
-            },
-          ],
-          protocol: 'test_proto',
-          signature: 'test_sig',
-        },
-        opbytes: 'test',
-      });
       done();
     });
   });

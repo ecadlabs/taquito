@@ -91,4 +91,14 @@ export class MapToken extends Token {
       },
     };
   }
+
+  findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
+    if (MapToken.prim === tokenToFind) {
+      tokens.push(this);
+    }
+    this.KeySchema.findAndReturnTokens(tokenToFind, tokens);
+    this.ValueSchema.findAndReturnTokens(tokenToFind, tokens);
+    return tokens;
+  };
+
 }

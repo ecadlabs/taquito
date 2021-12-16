@@ -15,21 +15,25 @@ author: Roxane Letourneau
 
 *If you are aware of a public node missing from our list or our information is inaccurate, please help us by submitting an issue or pull request on our GitHub page.*
 
-- Tezos Giga Node from Tezos Ukraine
-    - Mainnet: https://mainnet-tezos.giganode.io
-    - Edo testnet: https://edonet-tezos.giganode.io
-- SmartPy nodes
-    - Mainnet: https://mainnet.smartpy.io
-    - Edonet: https://edonet.smartpy.io/
-- Nodes operated by Blockscale on behalf of the Tezos Foundation: 
-    - Mainnet: https://rpc.tzbeta.net/
-    - Next protocol/version testnet (Edonet): https://rpczero.tzbeta.net/
 - ECAD Labs nodes:
-    - Mainnet: https://api.tez.ie/rpc/mainnet
-    - Edonet: https://api.tez.ie/rpc/edonet (edo2net / Chainid is `NetXSgo1ZT2DRUG`)
-    - Florencenet: https://api.tez.ie/rpc/florencenet
-- Teznode from LetzBake!:
+    - Mainnet: https://mainnet.api.tez.ie
+    - Hangzhounet: https://hangzhounet.api.tez.ie protocol `PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx`
+    - ~~Granadanet: https://granadanet.api.tez.ie protocol~~ ~~`PtGRANADsDU8R9daYKAgWnQYAJ64omN1o3KMGVCykShA97vQbvV`~~
+        - Granadanet has been replaced with Hangzhou.
+    - Idiazabalnet: https://idiazabalnet.ecadinfra.com/ protocol: `ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK`
+        - Idiazabalnet is an early testnet protocol that will become the `I` proposal. It includes many features, the most notable being the new "tenderbake" consensus algorithim. 
+- SmartPy public Tezos nodes
+    - Mainnet: https://mainnet.smartpy.io
+    - Granadanet: https://granadanet.smartpy.io/
+- Blockscale public nodes operated on behalf of the Tezos Foundation: 
+    - Mainnet: https://rpc.tzbeta.net/
+    - Next protocol/version testnet (Granadanet): https://rpczero.tzbeta.net/
+- Teznode Public nodes operated by LetzBake!:
     - Mainnet: https://teznode.letzbake.com
+- ~~Tezos Giga Node from Tezos Ukraine~~ Was expected cease to operations on Oct 1st 2021, but status is unkown. See
+  [Announcment](https://twitter.com/GigaNode/status/1435265400699342854)
+    - ~~Mainnet: https://mainnet-tezos.giganode.io~~
+    - ~~Granada testnet: https://testnet-tezos.giganode.io/~~
 
 ## How to run a node
 

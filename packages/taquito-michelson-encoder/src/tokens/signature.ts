@@ -1,4 +1,4 @@
-import { ComparableToken, TokenFactory, TokenValidationError } from './token';
+import { ComparableToken, Token, TokenFactory, TokenValidationError } from './token';
 import { validateSignature, ValidationResult } from '@taquito/utils';
 
 export class SignatureValidationError extends TokenValidationError {
@@ -65,4 +65,12 @@ export class SignatureToken extends ComparableToken {
       type: { prim: SignatureToken.prim },
     };
   }
+
+  findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
+    if (SignatureToken.prim === tokenToFind) {
+      tokens.push(this);
+    }
+    return tokens;
+  };
+
 }

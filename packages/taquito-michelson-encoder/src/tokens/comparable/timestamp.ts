@@ -12,7 +12,9 @@ export class TimestampToken extends ComparableToken {
   }
 
   public Execute(val: { string?: string; int?: string }) {
-    if (val.string) {
+    if (val.string && /^\d+$/.test(val.string)) {
+      return new Date(Number(val.string) * 1000).toISOString();
+    } else if (val.string) {
       return new Date(val.string).toISOString();
     } else if (val.int) {
       return new Date(Number(val.int) * 1000).toISOString();
@@ -43,4 +45,12 @@ export class TimestampToken extends ComparableToken {
       type: { prim: TimestampToken.prim },
     };
   }
+
+  findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
+    if (TimestampToken.prim === tokenToFind) {
+      tokens.push(this);
+    }
+    return tokens;
+  };
+
 }

@@ -1,8 +1,9 @@
 import { Context } from '../context';
-import { ContractMethod } from '../contract/contract';
+import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
 import { EstimationProvider, ContractProvider } from '../contract/interface';
 import {
   createOriginationOperation,
+  createRegisterGlobalConstantOperation,
   createRevealOperation,
   createSetDelegateOperation,
   createTransferOperation,
@@ -19,9 +20,10 @@ import {
   isOpWithFee,
   withKind,
   RevealParams,
-  isOpRequireReveal,
+  RegisterGlobalConstantParams,
 } from '../operations/types';
 import { OpKind } from '@taquito/rpc';
+import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
 
 export const BATCH_KINDS = [
   OpKind.ACTIVATION,
@@ -59,7 +61,7 @@ export class OperationBatch extends OperationEmitter {
    *
    * @param params Transfer operation parameter
    */
-  withContractCall(params: ContractMethod<ContractProvider>) {
+  withContractCall(params: ContractMethod<ContractProvider> | ContractMethodObject<ContractProvider>) {
     return this.withTransfer(params.toTransferParams());
   }
 
@@ -96,6 +98,17 @@ export class OperationBatch extends OperationEmitter {
     return this;
   }
 
+  /**
+   *
+   * @description Add an operation to register a global constant to the batch
+   *
+   * @param params RegisterGlobalConstant operation parameter
+   */
+   withRegisterGlobalConstant(params: RegisterGlobalConstantParams) {
+    this.operations.push({ kind: OpKind.REGISTER_GLOBAL_CONSTANT, ...params });
+    return this;
+  }
+
   private async getRPCOp(param: ParamsWithKind) {
     switch (param.kind) {
       case OpKind.TRANSACTION:
@@ -105,9 +118,8 @@ export class OperationBatch extends OperationEmitter {
       case OpKind.ORIGINATION:
         return createOriginationOperation(
           await this.context.parser.prepareCodeOrigination({
-            ...param,
-          })
-        );
+          ...param,
+        }));
       case OpKind.DELEGATION:
         return createSetDelegateOperation({
           ...param,
@@ -116,6 +128,10 @@ export class OperationBatch extends OperationEmitter {
         return {
           ...param,
         };
+      case OpKind.REGISTER_GLOBAL_CONSTANT:
+        return createRegisterGlobalConstantOperation({
+          ...param,
+        });
       default:
         throw new Error(`Unsupported operation kind: ${(param as any).kind}`);
     }
@@ -141,6 +157,9 @@ export class OperationBatch extends OperationEmitter {
           break;
         case OpKind.ACTIVATION:
           this.withActivation(param);
+          break;
+        case OpKind.REGISTER_GLOBAL_CONSTANT:
+          this.withRegisterGlobalConstant(param);
           break;
         default:
           throw new Error(`Unsupported operation kind: ${(param as any).kind}`);
@@ -175,26 +194,24 @@ export class OperationBatch extends OperationEmitter {
       i++;
     }
     if (revealNeeded) {
-      const reveal: withKind<RevealParams, OpKind.REVEAL> = { kind: OpKind.REVEAL };
+      const reveal: withKind<RevealParams, OpKind.REVEAL> = { kind: OpKind.REVEAL }
       const estimatedReveal = await this.estimate(reveal, async () => estimates[0]);
-      ops.unshift(await createRevealOperation({ ...estimatedReveal }, publicKeyHash, publicKey));
+      ops.unshift(await createRevealOperation({ ...estimatedReveal }, publicKeyHash, publicKey))
     }
 
     const source = (params && params.source) || publicKeyHash;
-    const prepared = await this.prepareOpAndSimulation({
+    const prepared = await this.prepareOperation({
       operation: ops,
-      source
+      source,
     });
-    const forgedBytes = await this.forge(prepared.preparedOp);
-    const signedOperation = await this.signOperation(forgedBytes);
-    const opResponse = await this.preValidate(prepared, signedOperation);
-    const hash = await this.injectOperation(signedOperation.opbytes);
-    return new BatchOperation(hash, ops, source, forgedBytes, opResponse, this.context.clone());
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new BatchOperation(hash, ops, source, forgedBytes, opResponse, context);
   }
 }
 
 export class RPCBatchProvider {
-  constructor(private context: Context, private estimator: EstimationProvider) {}
+  constructor(private context: Context, private estimator: EstimationProvider) { }
 
   /***
    *

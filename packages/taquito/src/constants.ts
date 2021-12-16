@@ -2,13 +2,13 @@ export enum DEFAULT_GAS_LIMIT {
   DELEGATION = 10600,
   ORIGINATION = 10600,
   TRANSFER = 10600,
-  REVEAL = 10600,
+  REVEAL = 1100,
 }
 export enum DEFAULT_FEE {
   DELEGATION = 1257,
   ORIGINATION = 10000,
   TRANSFER = 10000,
-  REVEAL = 1420,
+  REVEAL = 374,
 }
 export enum DEFAULT_STORAGE_LIMIT {
   DELEGATION = 0,
@@ -25,7 +25,9 @@ export enum Protocols {
   PsDELPH1 = 'PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo',
   PtEdo2Zk = 'PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA',
   PsFLorena = 'PsFLorenaUUuikDWvMDr6fGBRG8kt3e3D3fHoXK1j1BFRxeSH4i',
-  PtGRANADs = 'PtGRANADsDU8R9daYKAgWnQYAJ64omN1o3KMGVCykShA97vQbvV'
+  PtGRANADs = 'PtGRANADsDU8R9daYKAgWnQYAJ64omN1o3KMGVCykShA97vQbvV',
+  PtHangz2 = 'PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx',
+  ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK' // temporary protocol hash
 }
 
 export const protocols = {
@@ -35,7 +37,9 @@ export const protocols = {
   '007': [Protocols.PsDELPH1],
   '008': [Protocols.PtEdo2Zk], // edonet v2
   '009': [Protocols.PsFLorena],
-  '010': [Protocols.PtGRANADs]
+  '010': [Protocols.PtGRANADs],
+  '011': [Protocols.PtHangz2], // hangzhou v2,
+  '012': [Protocols.ProtoALpha]
 };
 
 export enum DefaultLambdaAddresses {
@@ -44,7 +48,9 @@ export enum DefaultLambdaAddresses {
   DELPHINET = 'KT19abMFs3haqyKYwqdLjK9GbtofryZLvpiK',
   EDONET = 'KT1A64nVZDccAHGAsf1ZyVajXZcbiwjV3SnN',
   FLORENCENET = 'KT1KCe3YqGnudsiCWb5twbe2DH5T3EMdLpSE',
-  GRANADANET = 'KT1BCun2vsA4GBQvsKAuGD5x873MfW2jsN9z'
+  GRANADANET = 'KT1BCun2vsA4GBQvsKAuGD5x873MfW2jsN9z',
+  HANGZHOUNET = 'KT1PWtBAr1hjK9M9s9oZNZFbfzPdkkD6PSJR',
+  IDIAZABALNET = 'KT1HEnAszfBjRgUpXYfHNaHnjFbb6iZY247J'
 }
 
 export enum ChainIds {
@@ -53,5 +59,7 @@ export enum ChainIds {
   DELPHINET = "NetXm8tYqnMWky1",
   EDONET = "NetXSgo1ZT2DRUG",
   FLORENCENET = "NetXxkAx4woPLyu",
-  GRANADANET = "NetXz969SFaFn8k" 
+  GRANADANET = "NetXz969SFaFn8k", 
+  HANGZHOUNET = "NetXZSsxBpMQeAT",
+  IDIAZABALNET = "NetXWya5crRz7LC"
 }

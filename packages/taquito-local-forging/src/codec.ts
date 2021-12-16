@@ -296,3 +296,13 @@ export const parametersEncoder = (val: { entrypoint: string; value: MichelsonVal
   const length = (parameters.length / 2).toString(16).padStart(8, '0');
   return `ff${encodedEntrypoint}${length}${parameters}`;
 };
+
+export const valueParameterEncoder = (value: MichelsonValue) => {
+  const valueEncoded = valueEncoder(value);
+  return `${pad(valueEncoded.length / 2)}${valueEncoded}`;
+}
+
+export const valueParameterDecoder = (val: Uint8ArrayConsumer) => {
+  const value = extractRequiredLen(val);
+  return valueDecoder(new Uint8ArrayConsumer(value));
+}

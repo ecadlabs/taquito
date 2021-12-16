@@ -3,15 +3,17 @@
  * @module @taquito/taquito
  */
 
-import { RpcClient } from '@taquito/rpc';
+import { RpcClient, RpcClientInterface } from '@taquito/rpc';
 import { RPCBatchProvider } from './batch/rpc-batch-provider';
 import { Protocols } from './constants';
-import { Config, Context, TaquitoProvider } from './context';
+import { ConfigConfirmation, ConfigStreamer, Context, TaquitoProvider } from './context';
 import { ContractProvider, EstimationProvider } from './contract/interface';
 import { Extension } from './extension/extension';
 import { Forger } from './forger/interface';
 import { RpcForger } from './forger/rpc-forger';
 import { format } from './format';
+import { GlobalConstantsProvider } from './global-constants/interface-global-constants-provider';
+import { NoopGlobalConstantsProvider } from './global-constants/noop-global-constants-provider';
 import { Packer } from './packer/interface';
 import { RpcPacker } from './packer/rpc-packer';
 import { Signer } from './signer/interface';
@@ -47,16 +49,20 @@ export * from './parser/noop-parser';
 export * from './packer/interface';
 export * from './packer/michel-codec-packer';
 export * from './packer/rpc-packer';
+export * from './global-constants/default-global-constants-provider';
+export * from './global-constants/error';
+export * from './global-constants/interface-global-constants-provider';
 
 export interface SetProviderOptions {
   forger?: Forger;
   wallet?: WalletProvider;
-  rpc?: string | RpcClient;
+  rpc?: string | RpcClientInterface;
   stream?: string | SubscribeProvider;
   signer?: Signer;
   protocol?: Protocols;
-  config?: Config;
+  config?: Partial<ConfigConfirmation> & Partial<ConfigStreamer>;
   packer?: Packer;
+  globalConstantsProvider?: GlobalConstantsProvider;
 }
 
 export interface VersionInfo {
@@ -72,7 +78,7 @@ export interface VersionInfo {
 export class TezosToolkit {
   private _stream!: SubscribeProvider;
   private _options: SetProviderOptions = {};
-  private _rpcClient: RpcClient;
+  private _rpcClient: RpcClientInterface;
   private _wallet: Wallet;
   private _context: Context;
   /**
@@ -83,7 +89,7 @@ export class TezosToolkit {
 
   public readonly format = format;
 
-  constructor(private _rpc: RpcClient | string) {
+  constructor(private _rpc: RpcClientInterface | string) {
     if (typeof this._rpc === 'string') {
       this._rpcClient = new RpcClient(this._rpc);
     } else {
@@ -101,7 +107,7 @@ export class TezosToolkit {
    *
    * @param options rpc url or rpcClient to use to interact with the Tezos network
    *
-   * @example Tezos.setProvider({rpc: 'https://api.tez.ie/rpc/mainnet', signer: new InMemorySigner.fromSecretKey(“edsk...”)})
+   * @example Tezos.setProvider({rpc: 'https://mainnet.api.tez.ie/', signer: new InMemorySigner.fromSecretKey(“edsk...”)})
    * @example Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: 300 }})
    *
    */
@@ -115,6 +121,7 @@ export class TezosToolkit {
     forger,
     wallet,
     packer,
+    globalConstantsProvider
   }: SetProviderOptions) {
     this.setRpcProvider(rpc);
     this.setStreamProvider(stream);
@@ -122,9 +129,12 @@ export class TezosToolkit {
     this.setForgerProvider(forger);
     this.setWalletProvider(wallet);
     this.setPackerProvider(packer);
+    this.setGlobalConstantsProvider(globalConstantsProvider);
 
     this._context.proto = protocol;
-    this._context.config = config as Partial<Config>;
+    if(config) {
+      this._context.setPartialConfig(config);
+    }
   }
 
   /**
@@ -150,18 +160,18 @@ export class TezosToolkit {
    *
    * @param options rpc url or rpcClient to use to interact with the Tezos network
    *
-   * @example Tezos.setRpcProvider('https://api.tez.ie/rpc/mainnet')
+   * @example Tezos.setRpcProvider('https://mainnet.api.tez.ie/')
    *
    */
   setRpcProvider(rpc?: SetProviderOptions['rpc']) {
     if (typeof rpc === 'string') {
       this._rpcClient = new RpcClient(rpc);
-    } else if (rpc instanceof RpcClient) {
+    } else if (rpc === undefined) {
+      // do nothing, RPC is required in the constructor, do not override it
+    }
+    else {
       this._rpcClient = rpc;
     }
-    /*     else if (this._options.rpc === undefined) {
-      this._rpcClient = new RpcClient();
-    } */
     this._options.rpc = this._rpcClient;
     this._context.rpc = this._rpcClient;
   }
@@ -233,6 +243,28 @@ export class TezosToolkit {
   }
 
   /**
+   * @description Sets global constants provider on the Tezos Taquito instance
+   *
+   * @param options globalConstantsProvider to use to interact with the Tezos network
+   *
+   * @example 
+   * ```
+   * const globalConst = new DefaultGlobalConstantsProvider();
+   * globalConst.loadGlobalConstant({
+   *  "expruu5BTdW7ajqJ9XPTF3kgcV78pRiaBW3Gq31mgp3WSYjjUBYxre": { prim: "int" },
+   *  // ...
+   * })
+   * Tezos.setGlobalConstantsProvider(globalConst);
+   * ```
+   *
+   */
+   setGlobalConstantsProvider(globalConstantsProvider?: SetProviderOptions['globalConstantsProvider']) {
+    const g = typeof globalConstantsProvider === 'undefined' ? new NoopGlobalConstantsProvider() : globalConstantsProvider;
+    this._options.globalConstantsProvider = g;
+    this._context.globalConstantsProvider = g;
+  }
+
+  /**
    * @description Provide access to tezos account management
    */
   get tz(): TzProvider {
@@ -271,7 +303,7 @@ export class TezosToolkit {
   /**
    * @description Provide access to the currently used rpc client
    */
-  get rpc(): RpcClient {
+  get rpc(): RpcClientInterface {
     return this._context.rpc;
   }
 
@@ -283,14 +315,25 @@ export class TezosToolkit {
   }
 
   /**
+   * @description Provide access to the currently used globalConstantsProvider
+   */
+   get globalConstants() {
+    return this._context.globalConstantsProvider;
+  }
+
+  /**
    * @description Allow to add a module to the TezosToolkit instance. This method adds the appropriate Providers(s) required by the module to the internal context.
    *
    * @param module extension to add to the TezosToolkit instance
    *
    * @example Tezos.addExtension(new Tzip16Module());
    */
-  addExtension(module: Extension) {
-    module.configureContext(this._context);
+  addExtension(module: Extension | Extension[]) {
+    if(Array.isArray(module)){
+      module.forEach(extension => extension.configureContext(this._context));
+    } else {
+      module.configureContext(this._context);
+    }
   }
 
   getFactory<T, K extends Array<any>>(ctor: TaquitoProvider<T, K>) {

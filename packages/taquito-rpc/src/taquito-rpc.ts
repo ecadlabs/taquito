@@ -5,6 +5,12 @@
 import { HttpBackend, HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import BigNumber from 'bignumber.js';
 import {
+  defaultChain,
+  defaultRPCOptions,
+  RpcClientInterface,
+  RPCOptions,
+} from './rpc-client-interface';
+import {
   BakingRightsQueryArguments,
   BakingRightsResponse,
   BalanceResponse,
@@ -41,10 +47,22 @@ import {
   SaplingDiffResponse,
   ScriptResponse,
   StorageResponse,
+  UnparsingMode,
   VotesListingsResponse,
   VotingPeriodBlockResult,
 } from './types';
 import { castToBigNumber } from './utils/utils';
+
+export { castToBigNumber } from './utils/utils';
+
+export {
+  RPCOptions,
+  defaultChain,
+  defaultRPCOptions,
+  RpcClientInterface,
+} from './rpc-client-interface';
+
+export { RpcClientCache } from './rpc-client-modules/rpc-cache';
 
 export * from './types';
 
@@ -52,18 +70,10 @@ export { OpKind } from './opkind';
 
 export { VERSION } from './version';
 
-const defaultChain = 'main';
-
-interface RPCOptions {
-  block: string;
-}
-
-const defaultRPCOptions: RPCOptions = { block: 'head' };
-
 /***
  * @description RpcClient allows interaction with Tezos network through an rpc node
  */
-export class RpcClient {
+export class RpcClient implements RpcClientInterface {
   /**
    *
    * @param url rpc root url
@@ -71,7 +81,7 @@ export class RpcClient {
    * @param httpBackend Http backend that issue http request.
    * You can override it by providing your own if you which to hook in the request/response
    *
-   * @example new RpcClient('https://api.tez.ie/rpc/mainnet', 'main') this will use https://api.tez.ie/rpc/mainnet/chains/main
+   * @example new RpcClient('https://mainnet.api.tez.ie/', 'main') this will use https://mainnet.api.tez.ie//chains/main
    */
   constructor(
     protected url: string,
@@ -79,7 +89,7 @@ export class RpcClient {
     protected httpBackend: HttpBackend = new HttpBackend()
   ) {}
 
-  private createURL(path: string) {
+  protected createURL(path: string) {
     // Trim trailing slashes because it is assumed to be included in path
     return `${this.url.replace(/\/+$/g, '')}${path}`;
   }
@@ -178,6 +188,31 @@ export class RpcClient {
       ),
       method: 'GET',
     });
+  }
+
+  /**
+   *
+   * @param address contract address from which we want to retrieve the script
+   * @param unparsingMode default is { unparsing_mode: "Readable" }
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Access the script of the contract and normalize it using the requested unparsing mode.
+   *
+   */
+  async getNormalizedScript(
+    address: string,
+    unparsingMode: UnparsingMode = { unparsing_mode: 'Readable' },
+    { block }: { block: string } = defaultRPCOptions
+  ): Promise<ScriptResponse> {
+    return this.httpBackend.createRequest<ScriptResponse>(
+      {
+        url: this.createURL(
+          `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/script/normalized`
+        ),
+        method: 'POST',
+      },
+      unparsingMode
+    );
   }
 
   /**
@@ -331,7 +366,7 @@ export class RpcClient {
             'deposit',
             'deposits',
             'fees',
-            'rewards'
+            'rewards',
           ]);
           return {
             ...rest,
@@ -339,14 +374,14 @@ export class RpcClient {
             deposits: castedToBigNumber.deposits,
             fees: castedToBigNumber.fees,
             rewards: castedToBigNumber.rewards,
-          }
+          };
         }
       ),
       staking_balance: new BigNumber(response.staking_balance),
       delegated_contracts: response.delegated_contracts,
       delegated_balance: new BigNumber(response.delegated_balance),
       grace_period: response.grace_period,
-      voting_power: response.voting_power
+      voting_power: response.voting_power,
     };
   }
 
@@ -378,10 +413,16 @@ export class RpcClient {
       'cost_per_byte',
       'hard_storage_limit_per_operation',
       'test_chain_duration',
-      'baking_reward_per_endorsement', 
+      'baking_reward_per_endorsement',
       'delay_per_missing_endorsement',
       'minimal_block_delay',
-      'liquidity_baking_subsidy'
+      'liquidity_baking_subsidy',
+      'cache_layout',
+      'baking_reward_fixed_portion',
+      'baking_reward_bonus_per_slot',
+      'endorsing_reward_per_slot',
+      'double_baking_punishment',
+      'delay_increment_per_round'
     ]);
 
     return {
@@ -765,8 +806,13 @@ export class RpcClient {
    * @param options contains generic configuration for rpc calls
    *
    * @description Computes the serialized version of a data expression using the same algorithm as script instruction PACK
+   * Note: You should always verify the packed bytes before signing or requesting that they be signed when using the the RPC to pack. 
+   * This precaution helps protect you and your applications users from RPC nodes that have been compromised. 
+   * A node that is operated by a bad actor, or compromised by a bad actor could return a fully formed operation that does not correspond to the input provided to the RPC endpoint. 
+   * A safer solution to pack and sign data would be to use the `packDataBytes` function available in the `@taquito/michel-codec` package.
    *
    * @example packData({ data: { string: "test" }, type: { prim: "string" } })
+   *
    *
    * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-helpers-scripts-pack-data
    */
@@ -848,7 +894,7 @@ export class RpcClient {
    *
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-sapling-sapling-state-id-get-diff
    */
-   async getSaplingDiffById(
+  async getSaplingDiffById(
     id: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<SaplingDiffResponse> {
@@ -867,12 +913,14 @@ export class RpcClient {
    *
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-contracts-contract-id-single-sapling-get-diff
    */
-   async getSaplingDiffByContract(
+  async getSaplingDiffByContract(
     contract: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<SaplingDiffResponse> {
     return this.httpBackend.createRequest<SaplingDiffResponse>({
-      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/single_sapling_get_diff`),
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/single_sapling_get_diff`
+      ),
       method: 'GET',
     });
   }

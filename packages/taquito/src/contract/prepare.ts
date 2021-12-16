@@ -10,7 +10,9 @@ import {
   RPCDelegateOperation,
   RegisterDelegateParams,
   RPCRevealOperation,
-  RevealParams
+  RevealParams,
+  RegisterGlobalConstantParams,
+  RPCRegisterGlobalConstantOperation
 } from '../operations/types';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
 import { format } from '../format';
@@ -149,4 +151,22 @@ export const createRevealOperation = async (
     gas_limit: gasLimit,
     storage_limit: storageLimit
   } as RPCRevealOperation;
+};
+
+export const createRegisterGlobalConstantOperation = async ({
+  value,
+  source,
+  fee,
+  gasLimit,
+  storageLimit,
+}: RegisterGlobalConstantParams
+) => {
+  return {
+    kind: OpKind.REGISTER_GLOBAL_CONSTANT,
+    value,
+    fee,
+    gas_limit: gasLimit,
+    storage_limit: storageLimit,
+    source
+  } as RPCRegisterGlobalConstantOperation;
 };

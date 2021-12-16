@@ -22,6 +22,7 @@ import {
   timeoutWith,
 } from 'rxjs/operators';
 import { Context } from '../context';
+import { BatchWalletOperation } from './batch-operation';
 import { DelegationWalletOperation } from './delegation-operation';
 import { WalletOperation } from './operation';
 import { OriginationWalletOperation } from './origination-operation';
@@ -51,10 +52,6 @@ export const createNewPollingBasedHeadObservable = (
   context: Context,
   scheduler?: SchedulerLike
 ): Observable<BlockResponse> => {  
-  
-  if (context.config.confirmationPollingTimeoutSecond === undefined) {
-    throw new Error('Confirmation polling timeout second can not be undefined!');
-  }
 
   return pollingTimer.pipe(
     switchMap(() => sharedHeadOb),
@@ -125,6 +122,14 @@ export class OperationFactory {
 
   async createOperation(hash: string, config: OperationFactoryConfig = {}): Promise<WalletOperation> {
     return new WalletOperation(
+      hash,
+      this.context.clone(),
+      await this.createHeadObservableFromConfig(config)
+    );
+  }
+
+  async createBatchOperation(hash: string, config: OperationFactoryConfig = {}): Promise<BatchWalletOperation> {
+    return new BatchWalletOperation(
       hash,
       this.context.clone(),
       await this.createHeadObservableFromConfig(config)

@@ -7,6 +7,7 @@ import { Context } from '../context';
 import { DelegateOperation } from '../operations/delegate-operation';
 import { OperationEmitter } from '../operations/operation-emitter';
 import { OriginationOperation } from '../operations/origination-operation';
+import { RegisterGlobalConstantOperation } from '../operations/register-global-constant-operation';
 import { RevealOperation } from '../operations/reveal-operation';
 import { TransactionOperation } from '../operations/transaction-operation';
 import {
@@ -15,6 +16,7 @@ import {
   OriginateParams,
   ParamsWithKind,
   RegisterDelegateParams,
+  RegisterGlobalConstantParams,
   RevealParams,
   RPCOperation,
   TransferParams,
@@ -26,6 +28,7 @@ import { ContractProvider, ContractSchema, EstimationProvider, StorageProvider }
 import {
   createOriginationOperation,
   createRegisterDelegateOperation,
+  createRegisterGlobalConstantOperation,
   createRevealOperation,
   createSetDelegateOperation,
   createTransferOperation,
@@ -52,7 +55,7 @@ export class RpcContractProvider
    */
   async getStorage<T>(contract: string, schema?: ContractSchema): Promise<T> {
     if (!schema) {
-      schema = await this.rpc.getScript(contract);
+      schema = await this.rpc.getNormalizedScript(contract);
     }
 
     let contractSchema: Schema;
@@ -81,7 +84,7 @@ export class RpcContractProvider
    */
   async getBigMapKey<T>(contract: string, key: string, schema?: ContractSchema): Promise<T> {
     if (!schema) {
-      schema = await this.rpc.getScript(contract);
+      schema = await this.rpc.getNormalizedScript(contract);
     }
 
     let contractSchema: Schema;
@@ -110,13 +113,20 @@ export class RpcContractProvider
    *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-big-maps-big-map-id-script-expr
    */
-  async getBigMapKeyByID<T>(id: string, keyToEncode: BigMapKeyType, schema: Schema, block?: number): Promise<T> {
+  async getBigMapKeyByID<T>(
+    id: string,
+    keyToEncode: BigMapKeyType,
+    schema: Schema,
+    block?: number
+  ): Promise<T> {
     const { key, type } = schema.EncodeBigMapKey(keyToEncode);
     const { packed } = await this.context.packer.packData({ data: key, type });
 
     const encodedExpr = encodeExpr(packed);
 
-    const bigMapValue = block? await this.context.rpc.getBigMapExpr(id.toString(), encodedExpr, { block: String(block) }) : await this.context.rpc.getBigMapExpr(id.toString(), encodedExpr);
+    const bigMapValue = block
+      ? await this.context.rpc.getBigMapExpr(id.toString(), encodedExpr, { block: String(block) })
+      : await this.context.rpc.getBigMapExpr(id.toString(), encodedExpr);
 
     return schema.ExecuteOnBigMapValue(bigMapValue, smartContractAbstractionSemantic(this)) as T;
   }
@@ -136,18 +146,26 @@ export class RpcContractProvider
    * @returns A MichelsonMap containing the keys queried in the big map and their value in a well-formatted JSON object format
    *
    */
-  async getBigMapKeysByID<T>(id: string, keys: Array<BigMapKeyType>, schema: Schema, block?: number, batchSize: number = 5): Promise<MichelsonMap<MichelsonMapKey, T | undefined>> {
-    const level = await this.getBlockForRequest(keys, block)
+  async getBigMapKeysByID<T>(
+    id: string,
+    keys: Array<BigMapKeyType>,
+    schema: Schema,
+    block?: number,
+    batchSize: number = 5
+  ): Promise<MichelsonMap<MichelsonMapKey, T | undefined>> {
+    const level = await this.getBlockForRequest(keys, block);
     const bigMapValues = new MichelsonMap<MichelsonMapKey, T | undefined>();
 
     // Execute batch of promises in series
     let position = 0;
-    let results: Array<(T | undefined)> = [];
+    let results: Array<T | undefined> = [];
 
     while (position < keys.length) {
       const keysBatch = keys.slice(position, position + batchSize);
-      const batch = keysBatch.map((keyToEncode) => this.getBigMapValueOrUndefined<T>(keyToEncode, id, schema, level))
-      results = [...results, ...await Promise.all(batch)]
+      const batch = keysBatch.map((keyToEncode) =>
+        this.getBigMapValueOrUndefined<T>(keyToEncode, id, schema, level)
+      );
+      results = [...results, ...(await Promise.all(batch))];
       position += batchSize;
     }
 
@@ -159,15 +177,22 @@ export class RpcContractProvider
   }
 
   private async getBlockForRequest(keys: Array<BigMapKeyType>, block?: number) {
-    return keys.length === 1 || typeof block !== 'undefined' ? block : (await this.rpc.getBlock())?.header.level
+    return keys.length === 1 || typeof block !== 'undefined'
+      ? block
+      : (await this.rpc.getBlock())?.header.level;
   }
 
-  private async getBigMapValueOrUndefined<T>(keyToEncode: BigMapKeyType, id: string, schema: Schema, level?: number) {
+  private async getBigMapValueOrUndefined<T>(
+    keyToEncode: BigMapKeyType,
+    id: string,
+    schema: Schema,
+    level?: number
+  ) {
     try {
       return await this.getBigMapKeyByID<T>(id, keyToEncode, schema, level);
     } catch (ex) {
       if (ex instanceof HttpResponseError && ex.status === STATUS_CODE.NOT_FOUND) {
-        return
+        return;
       } else {
         throw ex;
       }
@@ -183,16 +208,18 @@ export class RpcContractProvider
    *
    */
   async getSaplingDiffByID(id: string, block?: number) {
-    const saplingState = block ? await this.context.rpc.getSaplingDiffById(id.toString(), { block: String(block) }) : await this.context.rpc.getSaplingDiffById(id.toString());
+    const saplingState = block
+      ? await this.context.rpc.getSaplingDiffById(id.toString(), { block: String(block) })
+      : await this.context.rpc.getSaplingDiffById(id.toString());
     return saplingState;
   }
 
-  private async addRevealOperationIfNeeded(operation: RPCOperation, publicKeyHash: string){
-    if(isOpRequireReveal(operation)){
+  private async addRevealOperationIfNeeded(operation: RPCOperation, publicKeyHash: string) {
+    if (isOpRequireReveal(operation)) {
       const ops: RPCOperation[] = [operation];
       const publicKey = await this.signer.publicKey();
       const estimateReveal = await this.estimator.reveal();
-      if(estimateReveal){
+      if (estimateReveal) {
         const reveal: withKind<RevealParams, OpKind.REVEAL> = { kind: OpKind.REVEAL };
         const estimatedReveal = await this.estimate(reveal, async () => estimateReveal);
         ops.unshift(await createRevealOperation({ ...estimatedReveal }, publicKeyHash, publicKey));
@@ -219,25 +246,17 @@ export class RpcContractProvider
     const operation = await createOriginationOperation(
       await this.context.parser.prepareCodeOrigination({
         ...params,
-      ...estimate,
-    }));
-    const ops = await this.addRevealOperationIfNeeded(operation, publicKeyHash);
-    const preparedOrigination = await this.prepareOpAndSimulation({
-      operation: ops,
-      source: publicKeyHash
-    });
-    const forgedOrigination = await this.forge(preparedOrigination.preparedOp);
-    const signedOperation = await this.signOperation(forgedOrigination);
-    const opResponse = await this.preValidate(preparedOrigination, signedOperation);
-    const hash = await this.injectOperation(signedOperation.opbytes);
-    return new OriginationOperation(
-      hash,
-      operation,
-      signedOperation,
-      opResponse,
-      this.context.clone(),
-      this
+        ...estimate,
+      })
     );
+    const ops = await this.addRevealOperationIfNeeded(operation, publicKeyHash);
+    const preparedOrigination = await this.prepareOperation({
+      operation: ops,
+      source: publicKeyHash,
+    });
+    const forgedOrigination = await this.forge(preparedOrigination);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(forgedOrigination);
+    return new OriginationOperation(hash, operation, forgedBytes, opResponse, context, this);
   }
 
   /**
@@ -259,21 +278,19 @@ export class RpcContractProvider
     const operation = await createSetDelegateOperation({ ...params, ...estimate });
     const sourceOrDefault = params.source || publicKeyHash;
     const ops = await this.addRevealOperationIfNeeded(operation, publicKeyHash);
-    const prepared = await this.prepareOpAndSimulation({
+    const prepared = await this.prepareOperation({
       operation: ops,
-      source: sourceOrDefault
+      source: sourceOrDefault,
     });
-    const opBytes = await this.forge(prepared.preparedOp);
-    const signedOperation = await this.signOperation(opBytes);
-    const opResponse = await this.preValidate(prepared, signedOperation);
-    const hash = await this.injectOperation(signedOperation.opbytes);
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
     return new DelegateOperation(
       hash,
       operation,
       sourceOrDefault,
-      signedOperation,
+      forgedBytes,
       opResponse,
-      this.context.clone()
+      context
     );
   }
 
@@ -293,19 +310,10 @@ export class RpcContractProvider
     const source = await this.signer.publicKeyHash();
     const operation = await createRegisterDelegateOperation({ ...params, ...estimate }, source);
     const ops = await this.addRevealOperationIfNeeded(operation, source);
-    const prepared = await this.prepareOpAndSimulation({ operation: ops, source });
-    const opBytes = await this.forge(prepared.preparedOp);
-    const signedOperation = await this.signOperation(opBytes);
-    const opResponse = await this.preValidate(prepared, signedOperation);
-    const hash = await this.injectOperation(signedOperation.opbytes);
-    return new DelegateOperation(
-      hash,
-      operation,
-      source,
-      signedOperation,
-      opResponse,
-      this.context.clone()
-    );
+    const prepared = await this.prepareOperation({ operation: ops });
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new DelegateOperation(hash, operation, source, forgedBytes, opResponse, context);
   }
 
   /**
@@ -317,30 +325,18 @@ export class RpcContractProvider
    * @param Transfer operation parameter
    */
   async transfer(params: TransferParams) {
-    const publicKeyHash = await this.signer.publicKeyHash();
+    const publickKeyHash = await this.signer.publicKeyHash();
     const estimate = await this.estimate(params, this.estimator.transfer.bind(this.estimator));
     const operation = await createTransferOperation({
       ...params,
       ...estimate,
     });
-    const source = params.source || publicKeyHash;
-    const ops = await this.addRevealOperationIfNeeded(operation, publicKeyHash);
-    const prepared = await this.prepareOpAndSimulation({
-      operation: ops,
-      source
-    });
-    const forgedOperation = await this.forge(prepared.preparedOp);
-    const signedOperation = await this.signOperation(forgedOperation);
-    const opResponse = await this.preValidate(prepared, signedOperation);
-    const hash = await this.injectOperation(signedOperation.opbytes);
-    return new TransactionOperation(
-      hash,
-      operation,
-      source,
-      signedOperation,
-      opResponse,
-      this.context.clone()
-    );
+    const source = params.source || publickKeyHash;
+    const ops = await this.addRevealOperationIfNeeded(operation, publickKeyHash);
+    const prepared = await this.prepareOperation({ operation: ops, source: params.source });
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new TransactionOperation(hash, operation, source, forgedBytes, opResponse, context);
   }
 
   /**
@@ -363,33 +359,44 @@ export class RpcContractProvider
         publicKeyHash,
         await this.signer.publicKey()
       );
-      const prepared = await this.prepareOpAndSimulation({ operation, source: publicKeyHash });
-      const opBytes = await this.forge(prepared.preparedOp);
-      const signedOperation = await this.signOperation(opBytes);
-      const opResponse = await this.preValidate(prepared, signedOperation);
-      const hash = await this.injectOperation(signedOperation.opbytes);
-      return new RevealOperation(
-        hash,
-        operation,
-        publicKeyHash,
-        signedOperation,
-        opResponse,
-        this.context.clone()
-      );
+      const prepared = await this.prepareOperation({ operation, source: publicKeyHash });
+      const opBytes = await this.forge(prepared);
+      const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+      return new RevealOperation(hash, operation, publicKeyHash, forgedBytes, opResponse, context);
     } else {
       throw new Error('The current address is already revealed.');
     }
   }
 
-  async at<T extends ContractAbstraction<ContractProvider>>(
-    address: string,
-    contractAbstractionComposer: ContractAbstractionComposer<T> = (x) => x as any
-  ): Promise<T> {
-    const script = await this.rpc.getScript(address);
-    const entrypoints = await this.rpc.getEntrypoints(address);
+  /**
+   *
+   * @description Register a Micheline expression in a global table of constants. Will sign and inject an operation using the current context
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param params registerGlobalConstant operation parameter
+   */
+  async registerGlobalConstant(params: RegisterGlobalConstantParams) {
+    const publickKeyHash = await this.signer.publicKeyHash();
+    const estimate = await this.estimate(params, this.estimator.registerGlobalConstant.bind(this.estimator));
+    const operation = await createRegisterGlobalConstantOperation({
+      ...params,
+      ...estimate,
+    });
+    const ops = await this.addRevealOperationIfNeeded(operation, publickKeyHash);
+    const prepared = await this.prepareOperation({ operation: ops, source: publickKeyHash });
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new RegisterGlobalConstantOperation(hash, operation, publickKeyHash, forgedBytes, opResponse, context);
+  }
+
+  async at<T extends ContractAbstraction<ContractProvider>>(address: string, contractAbstractionComposer: ContractAbstractionComposer<T> = x => x as any): Promise<T> {
+    const rpc = this.context.withExtensions().rpc;
+    const script = await rpc.getNormalizedScript(address);
+    const entrypoints = await rpc.getEntrypoints(address);
     const blockHeader = await this.rpc.getBlockHeader();
     const chainId = blockHeader.chain_id;
-    const abs = new ContractAbstraction(address, script, this, this, entrypoints, chainId);
+    const abs = new ContractAbstraction(address, script, this, this, entrypoints, chainId, rpc);
     return contractAbstractionComposer(abs, this.context);
   }
 

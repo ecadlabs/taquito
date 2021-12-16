@@ -1,12 +1,12 @@
 {
   "name": "@taquito/example",
   "private": true,
-  "version": "9.2.0-stablelib.0",
+  "version": "11.1.0",
   "scripts": {
     "example:at": "node -r ts-node/register --preserve-symlinks contract-schema.ts",
-    "example:origination": "node -r ts-node/register --preserve-symlinks contract-origination.ts",
-    "example:origination2": "node -r ts-node/register --preserve-symlinks contract-origination2.ts",
-    "example:origination3": "node -r ts-node/register --preserve-symlinks contract-origination3.ts",
+    "example:origination": "node -r ts-node/register --preserve-symlinks example-contract-originate-hello-world.ts",
+    "example:origination2": "node -r ts-node/register --preserve-symlinks example-contract-originate-Ligo-Simple.ts",
+    "example:origination3": "node -r ts-node/register --preserve-symlinks example-contract-originate-Ligo-vote.ts",
     "example:pretty-print": "node -r ts-node/register --preserve-symlinks pretty-print-contract.ts",
     "example:encode-michelson": "node -r ts-node/register --preserve-symlinks encode-michelson.ts",
     "example": "node -r ts-node/register --preserve-symlinks example-node.ts",
@@ -15,15 +15,19 @@
     "example:streamer-custom": "node -r ts-node/register --preserve-symlinks example-streamer-custom-retry-logic.ts",
     "example:scan-path-ledger": "node -r ts-node/register --preserve-symlinks scan-path-ledger.ts",
     "example:rpc-vs-local-pack-sequential": "node -r ts-node/register --preserve-symlinks example-sequential-bigmap-local-vs-rpc-pack.ts",
-    "example:rpc-vs-local-pack-parallel": "node -r ts-node/register --preserve-symlinks example-parallel-bigmap-local-vs-rpc-pack.ts"
+    "example:rpc-vs-local-pack-parallel": "node -r ts-node/register --preserve-symlinks example-parallel-bigmap-local-vs-rpc-pack.ts",
+    "example:bigmap-keys-pair": "node -r ts-node/register --preserve-symlinks example-bigmap-keys-as-pair.ts",
+    "example:bigmap-keys-deep-pair": "node -r ts-node/register --preserve-symlinks example-bigmap-keys-as-deep-pair.ts"
   },
   "dependencies": {
     "@ledgerhq/hw-transport-node-hid": "^5.43.0",
-    "@taquito/ledger-signer": "^9.2.0-stablelib.0",
-    "@taquito/michel-codec": "^9.2.0-stablelib.0",
-    "@taquito/signer": "^9.2.0-stablelib.0",
-    "@taquito/taquito": "^9.2.0-stablelib.0",
-    "@taquito/tzip16": "^9.2.0-stablelib.0",
+    "@taquito/ledger-signer": "^11.1.0",
+    "@taquito/michel-codec": "^11.1.0",
+    "@taquito/michelson-encoder": "^11.1.0",
+    "@taquito/signer": "^11.1.0",
+    "@taquito/taquito": "^11.1.0",
+    "@taquito/tzip16": "^11.1.0",
+    "@taquito/utils": "^11.1.0",
     "bignumber.js": "^9.0.1"
   },
   "devDependencies": {

@@ -2,6 +2,576 @@
 title: Versions
 author: Jev Bjorsell
 ---
+
+# Taquito v11.1.0-beta
+
+## Summary
+### New features
+- @taquito/taquito - Support for simulating contract views #1117
+- @taquito/michel-codec - Option added to the Parser to expand global constants in script #1219
+- @taquito/taquito - Support contract origination using the storage property when there are global constants in the storage part of the contract code #1220
+### Bug Fixes
+- @taquito/michelson-encoder - Fixed the Timestamp token to support decoding UNIX string format #1109
+
+## @taquito/taquito - Support for simulating contract views
+
+Taquito provides an abstraction on the `ContractAbstraction` class, allowing to simulate the execution of the on-chain views.
+
+When an instance of `ContractAbstraction` is created using the `at` method of the Contract or Wallet API, the `contractViews` member of the `ContractAbstraction` instance is dynamically populated with methods that match the on-chain view names.
+
+*The `contractViews` member is an object where the key is the view name, and the value is a function that takes the view arguments as a parameter and returns an instance of `OnChainView` class.*
+
+When a view argument is of a complex type (i.e., a `pair`), the view parameter is expected in an object format and not as "flattened arguments".
+
+*The "object format" refers to the same format used when deploying a contract using the `storage` property. The "flattened arguments" is the format used when calling a contract entry point using the `methods` member. We plan to move away from the "flattened arguments" format in favor of the object one.*
+
+As an example, if the Michelson view argument type is `{ prim: 'pair', args: [{ prim: 'nat' }, { prim: 'address' }] }`, the parameter expected by Taquito will have the following format `{0: 'nat', 1: 'address'}` instead of `nat, address`.
+
+A method named `getSignature` on the `OnChainView` class allows inspecting the parameter and the returned type of the view.
+
+The `executeView` method of the `OnChainView` class allows simulating the view. It takes a `viewCaller` as a parameter representing the contract address which is the caller of the view, and an optional `source` which is the public key hash of the account that initialized this view execution.
+
+Here is an example where a contract contains a view named `myView`, it can be simulated as follow:
+
+```typescript=
+const contract = Tezos.contract.at('KT1...');
+const res = contract.contractViews.myView(param).executeView({
+    viewCaller: 'KT1...' 
+});
+```
+
+Here is the link to the documentation page: https://tezostaquito.io/docs/on_chain_views
+
+## @taquito/michel-codec - Option added to the Parser to expand global constants in a script
+
+An optional `expandGlobalConstant` property has been added to the `ParserOptions` allowing to expand the global constants in a script using the `Parser` class. The hashes and corresponding registered expressions need to be provided as follow:
+
+```typescript=
+const parserOptions: ParserOptions = {
+    expandGlobalConstant: {
+      constantHash: registeredExprJSON,
+      ...
+    },
+};
+
+const p = new Parser(parserOptions);
+```
+
+## @taquito/taquito - Support contract origination using the storage property when there are global constants in the storage part of the contract code
+
+In the release note v11.0.0-beta, there was a note about the following limitation:
+> Only the 'init' property can be used if you want to originate a contract having a global constant in the storage section of its code. Do not use the `storage` property, which depends on the `Michelson-Encoder`.
+> 
+> Here is an example:
+> ```typescript=
+> const op = await Tezos.contract.originate({
+>   code: [
+>     { prim: 'parameter', args: [ ...] },
+>     { prim: 'storage', args: [{ prim: 'constant', args: [{ string: 'expr...' }] }] },
+>     { prim: 'code', args: [ ... ] } ],
+>   init: // The storage property can't be used. Please use the `init` property instead.
+> });
+> ```
+
+It is now possible to deploy a contract having a global constant in the storage part of its contract code using the storage property. Internally, Taquito uses the michel-codec `Parser` and its `expandGlobalConstant` option to feed the MichelsonEncoder, which is responsible for transforming the `storage` property into Michelson, with a script that doesn't contain global constant.
+
+A global constants provider has been added to the `TezosToolkit` class. Currently, Taquito provides a `DefaultGlobalConstantsProvider`, which can be injected in the TezosToolkit and where the user needs to specify the hashes and corresponding expressions used in its contracts.
+
+Here is a example:
+```typescript=
+import { TezosToolkit, DefaultGlobalConstantsProvider } from '@taquito/taquito';
+
+// create an instance of the `DefaultGlobalConstantsProvider`, load the global constants used in the contract, inject the instance on the TezosToolkit
+const expression = { "prim": "int" }
+const constantHash = 'expruu5BTdW7ajqJ9XPTF3kgcV78pRiaBW3Gq31mgp3WSYjjUBYxre';
+
+const Tezos = new TezosToolkit('rpc_url');
+const globalConstantProvider = new DefaultGlobalConstantsProvider();
+globalConstantProvider.loadGlobalConstant({
+  [constantHash]: expression
+})
+Tezos.setGlobalConstantsProvider(globalConstantProvider);
+```
+
+We plan to support other global constant providers in the future that will depend on indexers or the RPC.
+
+Here is a link to the documentation: https://tezostaquito.io/docs/global_constant#how-to-deploy-a-contract-using-the-storage-property-if-i-use-global-constant-in-the-storage-part-of-the-code
+
+## @taquito/michelson-encoder - Fixed the Timestamp token to support decoding UNIX string format
+
+The Michelson-Encoder did not correctly support the UNIX string format. Therefore, Michelson data having the format "string":"1613034908" could not be decoded and generated the following error:
+```
+RangeError: Invalid time value
+  at Date.toISOString
+  at TimestampToken.Execute
+```
+This format is now supported in the Timestamp token of the Michelson-encoder.
+
+# Taquito v11.0.2-beta
+
+- `@taquito/beacon-wallet` - The beacon-sdk is updated to version 2.3.8
+- `@taquito/utils` - Utility function to get Tezos Address (PKH) from a public key #643
+
+# Taquito v11.0.1-beta
+
+## Bug fix
+There was an issue with lodash imports in @taquito/rpc package that was causing the following error: Error: Cannot find module 'lodash/get'
+
+
+# Taquito v11.0.0-beta
+
+## Summary
+
+This release of Taquito supports the upcoming Hangzhou protocol. As usual, this version supports the current protocol, Granada, and the next protocol Hangzhou.
+
+We encourage all developers to update their projects to use version Taquito v11 as soon as is practical and absolutely before the Tezos mainnet transition from Granada to Hangzhou.
+
+### New features - Hangzhou protocol
+- `@taquito/taquito` - Support for the new operation kind `register_global_constant` on the contract, batch and estimate APIs #1075
+- ``@taquito/local-forging` 
+    - Support the new types and instructions related to operations-on-timelock #1070
+    - Support the new `constant` primitive #1077
+    - Support the new operation kind `register_global_constant` #1077
+    - Support the new high-level section `view` and the `VIEW` instruction #1074
+- `@taquito/michelson-encoder` - Support new types related to operations-on-timelock #1071
+- `@taquito/michel-codec` 
+    - Support the new types and instruction related to operations-on-timelock #1072
+    - Support the new high-level section `view` and the `VIEW` instruction #1073
+
+### New features - General
+- `@taquito/utils` - Provide utility to verify signatures #611
+- `@taquito/rpc` - Support for the RPC endpoint`context/contracts/{contract}/script/normalized`. #1114
+
+### Documentation
+- Add documentation on how to sign Michelson data #588: https://tezostaquito.io/docs/signing#signing-michelson-data
+- Add a "dApp pre-launch checklist" to website documentation #1135: https://tezostaquito.io/docs/dapp_prelaunch
+- Add a documentation page about wallets #1123: https://tezostaquito.io/docs/wallets
+
+### Others
+- Preliminary support for Idiazabalnet protocol
+- `@taquito/beacon-wallet` - The beacon-sdk is updated to version 2.3.7: https://github.com/airgap-it/beacon-sdk/releases/tag/v2.3.7
+- Migrate supported companion DApps to Hangzhou: Beacon Test DApp, Taquito React, and Metadata explorer #1065
+
+
+
+## Important note:
+
+Please note that the `Michelson-Encoder` does not support the global constant in this current release (11.0.0-beta). The expanded contract scripts need to be used with the `Michelson-Encoder` until further support. This brings the following limitation: only the 'init' property can be used if you want to originate a contract having a global constant in the storage section of its code. Do not use the `storage` property, which depends on the `Michelson-Encoder`.
+
+Here an example:
+```ts
+const op = await Tezos.contract.originate({
+  code: [
+    { prim: 'parameter', args: [ ...] },
+    { prim: 'storage', args: [{ prim: 'constant', args: [{ string: 'expr...' }] }] },
+    { prim: 'code', args: [ ... ] } ],
+  init: // The storage property can't be used until global constants are supported in by the Michelson-Encoder. Please use the `init` property instead.
+});
+```
+
+## `@taquito/taquito` - Support the new operation kind `register_global_constant` on the contract, batch and estimate APIs
+
+The new manager operation `register_global_constant` has been added to the contract, batch, and estimate APIs.  This new operation allows users to register Micheline expressions in a global table of constants. 
+
+A `registerGlobalConstant` method is available on the `ContractProvider` class. A `value` representing the Micheline expression to register in its JSON format is required as a parameter. The `registerGlobalConstant` method returns an instance of `RegisterGlobalConstantOperation` containing a `globalConstantHash` member that corresponds to the index(hash) of the newly registered constant.
+
+```ts
+const op = await Tezos.contract.registerGlobalConstant({
+    value: { "prim": "or",
+                "args":
+                  [ { "prim": "int", "annots": [ "%decrement" ] },
+                    { "prim": "int", "annots": [ "%increment" ] } ] }
+    });
+await op.confirmation();
+const hash = op.globalConstantHash; // expr...
+```
+
+After registering an expression as a global constant, the occurrences of this expression in a smart contract code can be replaced by its corresponding hash, allowing users to originate larger contracts. More details about the new `global constant` feature and examples using the batch API are available on the following documentation page: https://tezostaquito.io/docs/global_constant 
+    
+## `@taquito/michelson-encoder` - Support new types related to operations-on-timelock
+
+New tokens (ChestToken and ChestKeyToken) have been implemented in the Michelson-encoder package to support the new types `chest` and `chest_key` and allow data conversion between Michelson and js.
+
+## `@taquito/utils` - Provide utility to verify signatures
+
+Taquito provides a function named `verifySignature` that allows verifying signatures of payloads. The function takes a message, a public key, and a signature as parameters and returns a boolean indicating if the signature matches. 
+The crypto library [stablelib](https://www.npmjs.com/package/@stablelib/ed25519) is used instead of [libsodium](https://www.npmjs.com/package/libsodium) in order not to drastically increase the bundle size of the `@taquito/utils` package.
+
+Here is an example of use:
+
+```typescript=
+import { verifySignature } from '@taquito/remote-signer';
+
+const message = '03d0c10e3ed11d7c6e3357f6ef335bab9e8f2bd54d0ce20c482e241191a6e4b8ce6c01be917311d9ac46959750e405d57e268e2ed9e174a80794fbd504e12a4a000141eb3781afed2f69679ff2bbe1c5375950b0e40d00ff000000005e05050505050507070100000024747a32526773486e74516b72794670707352466261313652546656503539684b72654a4d07070100000024747a315a6672455263414c42776d4171776f6e525859565142445439426a4e6a42484a750001';
+const pk = 'sppk7c7hkPj47yjYFEHX85q46sFJGw6RBrqoVSHwAJAT4e14KJwzoey';
+const sig = 'spsig1cdLkp1RLgUHAp13aRFkZ6MQDPp7xCnjAExGL3MBSdMDmT6JgQSX8cufyDgJRM3sinFtiCzLbsyP6d365EHoNevxhT47nx'
+
+await verifySignature(message, pk, sig);
+```
+
+## `@taquito/rpc` - Support for the RPC endpoint`context/contracts/{contract}/script/normalized`
+
+A new method on the RpcClient named `getNormalizedScript` is available. If global constants are present in the code of a smart contract, `getNormalizedScript` returns the expanded script. In contrast, the global constants are not expanded in the response provided by the `getScript` method. 
+
+Internally in Taquito, the usage of `getScript` has been replaced by `getNormalizedScript` to ensure that all script passed to the Michelson-Encoder won't contain global constant because the `Michelson-Encoder` does not support the global constant in this current release (11.0.0-beta). 
+
+## Preliminary support for Idiazabalnet protocol
+
+This release includes preliminary support for the Idiazabal protocol to allow early testing.
+Please note the following:
+- The protocol constant `cost_per_byte` is mistakenly set to `1000` instead of `250`. Meaning that storage costs are higher than on the precedent testnet until this is fixed in the next I network.
+- The `Endorsement` operation has new required properties `slot`, `round` and `block_payload_hash` that are not yet supported in the `@taquito/local-forging` package.
+- The RPC `context/delegates/${address}` has new properties that are not yet supported in the `@taquito/rpc` package.
+
+## What's coming next for Taquito?
+
+We plan to provide abstractions for some of the new Hangzhou features. For example, an addition to the ContractAbstration will allow running on-chain views and an abstraction that will make using the new timelock feature easier.
+
+If you have feature or issue requests, please create an issue on http://github.com/ecadlabs/taquito/issues or join us on the Taquito community support channel on Telegram https://t.me/tezostaquito
+
+# Taquito v10.2.1-beta
+
+- Updated beacon-sdk to version 2.3.5: https://github.com/airgap-it/beacon-sdk/releases/tag/v2.3.5
+- RpcClientCache - Store the Promises instead of the resolved values in the cache: 
+When requests were done in parallel to the same RPC endpoint, they were not hitting the cache. This is solved by storing the promise in the cache as soon as the first request is made. If another request tries to reach the same URL, during the configured TTL, the cached promise is returned.
+More details can be found here: https://github.com/ecadlabs/taquito/discussions/916
+# Taquito v10.2.0-beta
+
+## Summary
+
+### New features
+- @taquito/contract-library - [Performance] Embed popular contracts into your application using the new ContractAbstraction instantiation #1049
+- @taquito/rpc - [Performance] Enable RPC caching in your application using the RpcClient cache implementation #924
+- @taquito/taquito - [DevExp] Taquito Entrypoint methods now accept javascript object format for contract method calls (parametric calls are unchanged!) #915
+
+### Enhancements
+
+- Compatibility support for Hangzhounet
+- Allow to set HttpBackend on IpfsHttpHandler #1092
+
+## @taquito/contract-library - Ability to bundle smart-contract scripts and entrypoints for ContractAbstration instantiation
+
+A new package named `@taquito/contract-library` has been added to the Taquito library. 
+
+To improve (d)App performance, we aim to provide ways to reduce the number of calls made by Taquito to the RPC. The `@taquito/contracts-library` package allows developers to embed the smart-contract scripts into the application, preventing Taquito from loading this data from the RPC for every user.
+
+The ContractsLibrary class is populated by at project compile time, using contract addresses and their corresponding script and entry points. The `ContractsLibrary` is then injected into a `TezosToolkit` as an extension using the toolkits `addExtension` method.
+
+When creating a ContractAbstraction instance using the `at` method of the Contract or the Wallet API, if a `ContractsLibrary` is present on the TezosToolkit instance, the script and entry points of matching contracts will be loaded from the ContractsLibrary. Otherwise, the values will be fetched from the RPC as usual.
+
+**Example of use:**
+```ts
+import { ContractsLibrary } from '@taquito/contracts-library';
+import { TezosToolkit } from '@taquito/taquito';
+
+const contractsLibrary = new ContractsLibrary();
+const Tezos = new TezosToolkit('rpc');
+
+contractsLibrary.addContract({
+    'contractAddress1': {
+        script: script1, // script should be obtained from Tezos.rpc.getScript('contractAddress1')
+        entrypoints: entrypoints1 // entrypoints should be obtained from Tezos.rpc.getEntrypoints('contractAddress1')
+    },
+    'contractAddress2': {
+        script: script2,
+        entrypoints: entrypoints2
+    },
+    //...
+})
+
+Tezos.addExtension(contractsLibrary);
+
+// The script and entrypoints are loaded from the contractsLibrary instead of the RPC
+const contract = await Tezos.contract.at('contractAddress1');
+```
+
+
+## @taquito/RPC - New RpcClient implementation that caches RPC data
+
+Similar to the new `ContractsLibrary` feature, Taquito provides an additional way to increase dApp performance by caching some RPC data. To do so, we offer a new `RpcClient` implementation named `RpcClientCache`
+
+The constructor of the `RpcClientCache` class takes an `RpcClient` instance as a parameter and an optional TTL (time to live). By default, the TTL is of 1000 milliseconds. The `RpcClientCache` acts as a decorator over the `RpcClient` instance. The `RpcClient` responses are cached for the period defined by the TTL.
+
+**Example of use:**
+```ts
+import { TezosToolkit } from '@taquito/taquito';
+import { RpcClient, RpcClientCache } from '@taquito/rpc';
+
+const rpcClient = new RpcClient('replace_with_RPC_URL');
+const tezos = new TezosToolkit(new RpcClientCache(rpcClient));
+```
+
+## @taquito/taquito - New Taquito Entrypoint methods accept javascript object format for contract method calls
+
+The ContractAbstraction class has a new member called `methodsObject`, which serves the same purpose as the `methods` member. The format expected by the smart contract method differs: `methods` expects flattened arguments while `methodsObject` expects an object.
+
+It is to the user's discretion to use their preferred representation. We wanted to provide Taquito users with a way to pass an object when calling a contract entry point using a format similar to the storage parameter used when deploying a contract.
+
+A comparison between both methods is available here: https://tezostaquito.io/docs/smartcontracts#choosing-between-the-methods-or-methodsobject-members-to-interact-with-smart-contracts
+
+## Compatibility support for Hangzhounet
+
+This version ships with basic compatibility support for the new Hangzhou protocol. New features, such as support for new Michelson instructions, types and constants, will follow in future Taquito releases.
+
+## What's coming next for Taquito?
+
+We started preliminary work on integrating Hangzhounet, the next Tezos protocol update proposal. We plan to deliver a final version of Taquito v11 early, giving teams a longer runway to upgrade their projects before protocol transition.
+
+If you have feature or issue requests, please create an issue on http://github.com/ecadlabs/taquito/issues or join us on the Taquito community support channel on Telegram https://t.me/tezostaquito
+
+# Taquito v10.1.3-beta
+
+## Bug fix - [Key ordering](https://github.com/ecadlabs/taquito/pull/1044)
+Fixed key sorting in literal sets and maps when these collections have mixed key types.
+
+## Upgrade beacon-sdk to version 2.3.3
+This beacon-sdk release includes:
+- updated Kukai logo
+- hangzhounet support
+- fix for [#269 Pairing with Kukai blocked](https://github.com/airgap-it/beacon-sdk/issues/269) (from -beta.0)
+
+# Taquito v10.1.2-beta
+
+Bug fix - Unhandled operation confirmation error #1040 & #1024
+
+# Taquito v10.1.1-beta
+
+Bug fix where the custom polling interval values for the confirmation methods were overridden with the default ones.
+
+# Taquito v10.1.0-beta
+
+**Breaking change**
+
+In version 9.2.0-beta of Taquito, the ability to send more than one operation in the same block was added to Taquito. This ability relied on a workaround solution. The `helpers/preapply/operations` and `helpers/scripts/run_operation`  RPC methods do not accept a counter higher than the head `counter + 1` as described in issue [tezos/tezos#376](https://gitlab.com/tezos/tezos/-/issues/376). Despite the limitation of these RPC's, the Tezos protocol itself does allow the inclusion of more than one operation from the same implicit account. In version 9.2.0-beta of Taquito, we introduced an internal counter and simulated the operation using a counter value that the `preapply` & `run_operation` will accept. This allowed Taquito to send many operations in a single block. However, we found that the workaround used may lead to inconsistent states, and results that violate the [principle of least astonishment](https://en.wikipedia.org/wiki/Principle_of_least_astonishment). We decided to remove this feature temporarily.  We aim to reintroduce this feature when Tezos RPC issue [tezos/tezos#376](https://gitlab.com/tezos/tezos/-/issues/376) is addressed and considers the transaction in the mempool when checking the account counter value or otherwise by providing a separate and adapted new interface to support this use case properly.
+
+## Summary
+
+### Enhancements
+
+- @taquito/taquito - Made PollingSubscribeProvider's polling interval configurable #943
+- @taquito/taquito - Possibility to withdraw delegate
+
+### Bug Fixes
+
+- @taquito/taquito - Added a status method for batched transactions using the wallet API #962
+- @taquito/michelson-encoder - Fixed the Schema.ExecuteOnBigMapValue() for ticket token #970
+- @taquito/taquito - Fixed a "Memory leak" in the PollingSubscribeProvider #963
+
+### Documentation
+
+- Updated Taquito website live examples to use Granadanet #993
+- [Documentation for FA2 functionality](https://tezostaquito.io/docs/fa2_parameters) #715
+- [Documentation for confirmation event stream for wallet API](https://tezostaquito.io/docs/confirmation_event_stream) #159
+
+
+
+## @taquito/taquito - Made PollingSubscribeProvider's polling interval configurable
+
+The default streamer set on the `TezosToolkit` used a hardcoded polling interval of 20 seconds, and there was no easy way to change this. To reduce the probability of missing blocks, it is now possible to configure the interval as follow:
+
+```ts
+const tezos = new TezosToolkit('https://api.tez.ie/rpc/mainnet')
+tezos.setProvider({ config: { streamerPollingIntervalMilliseconds: 15000 } });
+
+const sub = tezos.stream.subscribeOperation(filter)
+```
+
+## @taquito/taquito - Possibility to withdraw delegate
+
+It is now possible to `undelegate` by executing a new setDelegate operation and not specifying the delegate property.
+
+```ts
+// const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+
+await Tezos.contract.setDelegate({ source: 'tz1_source'});
+```
+
+## @taquito/taquito - Property status doesn't exist on a batched transaction for the wallet API
+
+When multiple operations were batched together using the `batch` method of the wallet API, the `send()` method returned a value of type `WalletOperation` where the status was missing. `BatchWalletOperation`, which extends the `WalletOperation` class and contains a `status` method, is now returned.
+
+## @taquito/michelson-encoder - Fixed the Schema.ExecuteOnBigMapValue() for ticket token
+
+The `Execute` and `ExecuteOnBigMapValue` methods of the `Schema` class could not deserialize Michelson when ticket values were not in the optimized (Edo) notation. Both representations are now supported.
+
+
+## @taquito/taquito - Fixed a "Memory leak" in the PollingSubscribeProvider
+
+A fix has been made to change the behavior of the `PollingSubscribeProvider`, which was keeping all blocks in memory.
+
+
+
+# Taquito v10.0.0-beta
+## Summary
+
+### Remaining support for Granadanet
+
+- @taquito/rpc - Support `deposits` field in `frozen_balance` #919
+- @taquito/rpc - Support new fields introduced by Granada in block metadata #918
+
+
+### Bug Fixes
+
+- @taquito/taquito - Drain an unrevealed account #975
+- @taquito/rpc - Type `ContractBigMapDiffItem` has BigNumber's but values are string's #946
+
+### Documentation
+
+- Document usage of Taquito with TezosDomain #912
+- Document storage and fee passing from wallet to dapp #926
+- Add integration tests for Permit contracts (TZIP-17) #661
+
+
+### Enhancements
+
+- **Breaking changes** - @taquito/michelson-encoder - Improvement to the `Schema.ExtractSchema()` method #960 and #933 
+
+
+
+## @taquito/rpc - Support deposits field in frozen_balance
+
+In Granada, when fetching delegate information from the RPC, the `deposit` property in `frozen_balance_by_cycle` has been replaced by `deposits`. The RpcClient supports the new and the old notation.
+
+## @taquito/rpc - Support new fields introduced by Granada in block metadata
+
+The `balance_updates` property in block metadata now includes the new origin `subsidy`, besides the existing ones: `block` and `migration`.
+
+The support for the new `liquidity_baking_escape_ema` and `implicit_operations_results` properties in block metadata has been added in the `RpcClient` class.
+
+
+## @taquito/taquito - Drain an unrevealed account
+
+Since v9.1.0-beta, the fees associated with a reveal operation are estimated using the RPC instead of using the old 1420 default value. When draining an unrevealed account, the fees associated with the reveal operation needs to be subtracted from the initial balance (as well as the fees related to the actual transaction operation). The reveal fee has changed from 1420 to 374 (based on the simulation using the RPC). However, the constants file was still using the 1420 value, leading to a remaining amount of 1046 in the account when trying to empty it. The default value has been adjusted on the constants file to match this change. 
+
+## @taquito/rpc - Type ContractBigMapDiffItem has BigNumber's but values are string's
+
+The type of the `big_map`, `source_big_map`, and `destination_big_map` properties of `ContractBigMapDiffItem` was set as `BigNumber`, but they were not cast to it. The RPC returns these properties in a string format. The type has been changed from `BigNumber` to `string` for them.
+
+## Add integration tests for Permit contracts (TZIP-17)
+
+Examples have been added to the integration tests showing how to manipulate permit contracts using the new data packing feature: https://github.com/ecadlabs/taquito/blob/master/integration-tests/contract-permits.spec.ts
+
+## @taquito/michelson-encoder - Improvement to the Schema.ExtractSchema() method
+
+The`ExtractSchema` method of the `Schema` class indicates how to structure contract storage in javascript given its storage type in Michelson JSON representation. This method can be helpful to find out how the storage object needs to be written when deploying a contract.
+
+### Return the type of element(s) that compose a "list"
+
+Before version 10.0.0-beta, when calling the `Schema.ExtractSchema` method, the Michelson type `list` was represented only by the keyword `list`. This behavior has been changed to return an object where the key is `list` and the value indicates the list's composition.
+
+**Example:**
+```typescript=
+const storageType = {
+    prim: 'list',
+    args: [
+        {
+            prim: 'pair',
+            args: [
+                { prim: 'address', annots: ['%from'] },
+                { prim: 'address', annots: ['%to'] },
+            ],
+        },
+    ],
+};
+const storageSchema = new Schema(storageType);
+const extractSchema = storageSchema.ExtractSchema();
+println(JSON.stringify(extractSchema, null, 2));
+```
+*before version 10.0.0-beta, the returned value was:*
+```typescript=
+'list'
+```
+*in version 10.0.0-beta the returned value is:*
+```typescript=
+{
+    list: {
+        "from": "address",
+        "to": "address"
+    }
+}
+```
+Based on the information returned by the `ExtractSchema` method, the storage can be writen as follow:
+```typescript=
+Tezos.contract
+  .originate({
+    code: contractCode,
+    storage: [
+        {
+          from: "tz1...",
+          to: "tz1..."
+        }
+    ],
+  })
+```
+
+### Breaking changes - Change in the representation of big_map type
+
+The representation of the `big_map` type returned by the `Schema.ExtractSchema` method has changed to increase consistency with the `map` representation. Similar to the `map` type, an object is now returned where its key is `big_map,` and its value is another object having a `key` and a `value` property, indicating the type of the key and value of the big map. At the same time, this change fixed an issue where the key of a big map as pair was not represented properly and returned "[object Object]" instead.
+
+**Example:**
+```typescript=
+const storageType = {
+	prim: 'big_map',
+	annots: [ '%balances' ],
+	args: [
+		{
+			prim: 'address'
+		},
+		{
+			prim: 'pair',
+			args: [ { prim: 'address' }, { prim: 'nat' } ]
+		}
+	]
+};
+const storageSchema = new Schema(storageType);
+const extractSchema = storageSchema.ExtractSchema();
+println(JSON.stringify(extractSchema, null, 2));
+```
+*before version 10.0.0-beta the returned value was:*
+```json=
+{
+    "address": {
+        "0": "address",
+        "1": "nat"
+    }
+}
+```
+*in version 10.0.0-beta the returned value is:*
+```json=
+{
+    "big_map": {
+        "key": "address",
+        "value": {
+            "0": "address",
+            "1": "nat"
+        }
+    }
+}
+```
+Based on the information returned by the `ExtractSchema` method, the storage can be writen as follow:
+```typescript=
+const bigMap = new MichelsonMap();
+bigMap.set('tz1...', { // address 
+        0: 'tz1...', // address
+        1:10 // nat
+    });
+
+Tezos.contract
+  .originate({
+    code: contractCode,
+    storage: bigMap
+  })
+```
+
+## What's coming next for Taquito?
+
+Taquito team is committed to creating the best experience for Taquito users, and we need your feedback!
+Please help us improve Taquito further by filling out this 2-minute survey by EOD August 1 (PST).
+https://forms.gle/mqYySKeaWUUkF5NXA
+Thank you for your time and support!
+
+If you have feature or issue requests, please create an issue on http://github.com/ecadlabs/taquito/issues or join us on the Taquito community support channel on Telegram https://t.me/tezostaquito
+
 # Taquito v9.2.0-beta
 ## Summary
 
@@ -504,8 +1074,7 @@ Both the [Madfish](https://www.madfish.solutions/) ([Temple Wallet](https://temp
 
 With a major version release, comes an opportunity for us to make some breaking changes.
 
-We have published an [upgrade guide](https://tezostaquito.io/docs/v7_breaking_changes) to help guide developers and making these changes as easy to adopt as possible.
-
+We have published an [upgrade guide](https://tezostaquito.io/docs/upgrading_guide) to help guide developers and making these changes as easy to adopt as possible.
 
 The three most notable changes are:
 

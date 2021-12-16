@@ -14,7 +14,7 @@ You can set the limits manually or let `Tezos.estimate` calculate an estimate of
 
 To set the fees manually:
 ```typescript
-const contract = await Tezos.wallet.at('contratAddress');
+const contract = await Tezos.wallet.at('contractAddress');
 const op = await contract.methods.simple_param(5).send({
       storageLimit: 800,
       gasLimit: 8000,
@@ -24,7 +24,7 @@ const op = await contract.methods.simple_param(5).send({
 
 To set the fees using `Tezos.estimate`:
 ```typescript
-const contract = await Tezos.wallet.at('contratAddress');
+const contract = await Tezos.wallet.at('contractAddress');
 
 const estimateOp = await contract.methods.simple_param(5).toTransferParams({});
 const { gasLimit, 

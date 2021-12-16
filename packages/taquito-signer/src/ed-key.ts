@@ -1,4 +1,5 @@
-import sodium from 'libsodium-wrappers';
+import { hash } from '@stablelib/blake2b';
+import { generateKeyPairFromSeed, sign } from '@stablelib/ed25519';
 import { b58cencode, b58cdecode, prefix, buf2hex, Prefix, isValidPrefix } from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
 
@@ -33,14 +34,10 @@ export class Tz1 {
   }
 
   private async init() {
-    await sodium.ready;
     if (this._key.length !== 64) {
-      const { publicKey, privateKey } = sodium.crypto_sign_seed_keypair(
-        new Uint8Array(this._key),
-        'uint8array'
-      );
+      const { publicKey, secretKey } = generateKeyPairFromSeed(this._key);
       this._publicKey = publicKey;
-      this._key = privateKey;
+      this._key = secretKey;
     }
     return true;
   }
@@ -52,10 +49,7 @@ export class Tz1 {
    */
   async sign(bytes: string, bytesHash: Uint8Array) {
     await this.isInit;
-    const signature = sodium.crypto_sign_detached(
-      new Uint8Array(bytesHash),
-      new Uint8Array(this._key)
-    );
+    const signature = sign(this._key, bytesHash);
     const signatureBuffer = toBuffer(signature);
     const sbytes = bytes + buf2hex(signatureBuffer);
 
@@ -80,8 +74,7 @@ export class Tz1 {
    */
   async publicKeyHash(): Promise<string> {
     await this.isInit;
-    await sodium.ready;
-    return b58cencode(sodium.crypto_generichash(20, new Uint8Array(this._publicKey)), prefix.tz1);
+    return b58cencode(hash(this._publicKey, 20), prefix.tz1);
   }
 
   /**
@@ -89,13 +82,9 @@ export class Tz1 {
    */
   async secretKey(): Promise<string> {
     await this.isInit;
-    await sodium.ready;
     let key = this._key;
-    const { privateKey } = sodium.crypto_sign_seed_keypair(
-      new Uint8Array(key).slice(0, 32),
-      'uint8array'
-    );
-    key = toBuffer(privateKey);
+    const { secretKey } = generateKeyPairFromSeed(key.slice(0, 32));
+    key = toBuffer(secretKey);
 
     return b58cencode(key, prefix[`edsk`]);
   }

@@ -78,7 +78,7 @@ export class Schema {
     return 'prim' in val && Array.isArray(val.args);
   }
 
-  constructor(val: MichelsonV1Expression) {
+  constructor(readonly val: MichelsonV1Expression) {
     this.root = createToken(val, 0);
 
     if (this.root instanceof BigMapToken) {
@@ -218,4 +218,26 @@ export class Schema {
         this.findValue(sch.args[1], str.args[1], valueToFind);
     }
   }
+
+  /**
+   * @description Look up the schema to find any occurrence of a particular token.
+   *
+   * @returns an array of tokens of the specified kind or an empty array if no token was found
+   * 
+   * @param tokenToFind string representing the prim property of the token to find
+   * 
+   * @example
+   * ```
+   * Useful to find all global constants in a script, an array of GlobalConstantToken is returned:
+   * 
+   * const schema = new Schema(script);
+   * const allGlobalConstantTokens = schema.findToken('constant');
+   * ```
+   *
+   */
+  findToken(tokenToFind: string): Array<Token> {
+    let tokens: Array<Token> = [];
+    return this.root.findAndReturnTokens(tokenToFind, tokens);
+  }
+
 }

@@ -1,5 +1,5 @@
-import sodium from 'libsodium-wrappers';
-import { b58cencode, b58cdecode, prefix, buf2hex, Prefix, isValidPrefix } from '@taquito/utils';
+import { hash } from '@stablelib/blake2b';
+import { b58cencode, b58cdecode, prefix, isValidPrefix } from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
 import elliptic from 'elliptic';
 
@@ -84,11 +84,7 @@ export class ECKey {
    * @returns Encoded public key hash
    */
   async publicKeyHash(): Promise<string> {
-    await sodium.ready;
-    return b58cencode(
-      sodium.crypto_generichash(20, new Uint8Array(this._publicKey)),
-      pref[this.curve].pkh
-    );
+    return b58cencode(hash(this._publicKey, 20), pref[this.curve].pkh);
   }
 
   /**

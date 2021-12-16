@@ -7,6 +7,7 @@
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { TezosToolkit, MichelsonMap, compose, DEFAULT_FEE } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
+import { verifySignature } from '@taquito/utils';
 import { 
   validateAddress, 
   validateChain, 
@@ -25,6 +26,7 @@ import { TezBridgeWallet } from '@taquito/tezbridge-wallet';
 import { Tzip16Module, tzip16, bytes2Char, MichelsonStorageView } from '@taquito/tzip16'
 import { Tzip12Module, tzip12 } from "@taquito/tzip12";
 import { Schema, ParameterSchema } from "@taquito/michelson-encoder";
+import { Parser, packDataBytes } from '@taquito/michel-codec';
 import { ThanosWallet } from '@thanos-wallet/dapp';
 import TransportU2F from "@ledgerhq/hw-transport-u2f";
 import Playground from '@theme/Playground';
@@ -38,7 +40,11 @@ import { CancellableRpcClient } from './customHttpBackendAndRpcClient';
 
 import styles from './styles.module.css';
 
+// To solve the ReferenceError: Buffer is not defined when running live code examples
+// see https://lifesaver.codes/answer/meteor-1-5-beta-16-and-beta-17-showed-referenceerror-buffer-is-not-defined-client-side
+global.Buffer = global.Buffer || require("buffer").Buffer; 
 
+const wallet = new BeaconWallet({name:"exampleWallet"});
 const highlightLinesRangeRegex = /{([\d,-]+)}/;
 
 export default ({
@@ -80,9 +86,8 @@ export default ({
   }, [button.current, target.current]);
 
   if (live) {
-    const customRpcClient = new CancellableRpcClient('https://api.tez.ie/rpc/florencenet') 
+    const customRpcClient = new CancellableRpcClient('https://hangzhounet.api.tez.ie') 
     const Tezos = new TezosToolkit(customRpcClient);
-    const wallet = new BeaconWallet({name:"exampleWallet"});
 
     return (
       <Playground
@@ -116,7 +121,10 @@ export default ({
           compose,
           Schema,
           ParameterSchema,
-          DEFAULT_FEE
+          DEFAULT_FEE,
+          verifySignature,
+          Parser, 
+          packDataBytes, 
          }}
         code={children.trim()}
         theme={prism.theme || defaultTheme}

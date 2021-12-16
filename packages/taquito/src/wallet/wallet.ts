@@ -1,6 +1,8 @@
 import { Protocols } from '../constants';
 import { Context } from '../context';
-import { ContractAbstraction, ContractMethod } from '../contract';
+import { ContractAbstraction } from '../contract';
+import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
+import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
 import { OpKind, withKind } from '../operations/types';
 import {
   WalletDelegateParams,
@@ -40,7 +42,7 @@ export class WalletOperationBatch {
    *
    * @param params Transfer operation parameter
    */
-  withContractCall(params: ContractMethod<Wallet>) {
+  withContractCall(params: ContractMethod<Wallet> | ContractMethodObject<Wallet>) {
     return this.withTransfer(params.toTransferParams());
   }
 
@@ -123,7 +125,7 @@ export class WalletOperationBatch {
 
     const opHash = await this.walletProvider.sendOperations(ops);
 
-    return this.context.operationFactory.createOperation(opHash);
+    return this.context.operationFactory.createBatchOperation(opHash);
   }
 }
 
@@ -263,8 +265,9 @@ export class Wallet {
     contractAbstractionComposer: (abs: ContractAbstraction<Wallet>, context: Context) => T = (x) =>
       x as any
   ): Promise<T> {
-    const script = await this.context.rpc.getScript(address);
-    const entrypoints = await this.context.rpc.getEntrypoints(address);
+    const rpc = this.context.withExtensions().rpc;
+    const script = await rpc.getNormalizedScript(address);
+    const entrypoints = await rpc.getEntrypoints(address);
     const blockHeader = await this.context.rpc.getBlockHeader();
     const chainId = blockHeader.chain_id;
     const abs = new ContractAbstraction(
@@ -273,7 +276,8 @@ export class Wallet {
       this,
       this.context.contract,
       entrypoints,
-      chainId
+      chainId,
+      rpc
     );
     return contractAbstractionComposer(abs, this.context);
   }

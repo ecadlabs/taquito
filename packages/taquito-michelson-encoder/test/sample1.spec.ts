@@ -11,14 +11,17 @@ describe('Schema test', () => {
     const s = schema.ExtractSchema();
     expect(s).toEqual({
       accounts: {
-        address: {
-          allowances: {
-            map: {
-              key: 'address',
-              value: 'nat',
+        big_map: {
+          key: "address",
+          value: {
+            allowances: {
+              map: {
+                key: 'address',
+                value: 'nat',
+              },
             },
-          },
           balance: 'nat',
+        },
         },
       },
       name: 'string',
@@ -161,7 +164,12 @@ describe('Schema test', () => {
         '5': 'address',
         '6': 'nat',
       },
-      createAccounts: 'list',
+      createAccounts:  {
+        list: {
+          "6": "address",
+          "7": "nat",
+        },
+      },
       transfer: {
         '0': 'address',
         '1': 'nat',
@@ -177,12 +185,17 @@ describe('Schema test', () => {
   it('Should extract signature properly', () => {
     const schema = new ParameterSchema(params);
     const sig = schema.ExtractSignatures();
-
     expect(sig).toContainEqual(['allowance', 'address', 'address', 'contract']);
     expect(sig).toContainEqual(['approve', 'address', 'nat']);
     expect(sig).toContainEqual(['balanceOf', 'address', 'contract']);
     expect(sig).toContainEqual(['createAccount', 'address', 'nat']);
-    expect(sig).toContainEqual(['createAccounts', 'list']);
+    expect(sig).toContainEqual(["createAccounts", {
+                                                      list: {
+                                                                "6": "address", 
+                                                                "7": "nat"
+                                                               }
+                                                    }
+                              ]);
     expect(sig).toContainEqual(['transfer', 'address', 'nat']);
     expect(sig).toContainEqual(['transferFrom', 'address', 'address', 'nat']);
   });

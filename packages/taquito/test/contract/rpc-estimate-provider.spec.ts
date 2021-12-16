@@ -12,6 +12,9 @@ import {
   transferWithoutAllocation,
   transferWithAllocation,
   multipleInternalOriginationNoReveal,
+  registerGlobalConstantNoReveal,
+  registerGlobalConstantWithReveal,
+  registerGlobalConstantWithError,
 } from './helper';
 import { OpKind } from '@taquito/rpc';
 
@@ -514,21 +517,29 @@ describe('RPCEstimateProvider test', () => {
               },
             },
           },
+          registerGlobalConstantNoReveal.contents[0],
         ],
       });
       const estimate = await estimateProvider.batch([
         { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 },
         { kind: OpKind.TRANSACTION, to: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp', amount: 2 },
+        {
+          kind: OpKind.REGISTER_GLOBAL_CONSTANT, value: {
+            prim: 'Pair',
+            args: [{ int: '998' }, { int: '999' }]
+          }
+        },
       ]);
-      expect(estimate.length).toEqual(2);
+      expect(estimate.length).toEqual(3);
       expect(estimate[0].gasLimit).toEqual(1100);
       expect(estimate[1].gasLimit).toEqual(1100);
+      expect(estimate[2].gasLimit).toEqual(1330);
       done();
     });
 
     it('should produce a batch operation, with reveal', async (done) => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
-      mockRpcClient.forgeOperations.mockResolvedValue(new Array(149).fill('aa').join(''));
+      mockRpcClient.forgeOperations.mockResolvedValue(new Array(224).fill('aa').join(''));
       mockRpcClient.runOperation.mockResolvedValue({
         contents: [
           {
@@ -543,6 +554,7 @@ describe('RPCEstimateProvider test', () => {
               operation_result: { status: 'applied', consumed_gas: '1000' },
             },
           },
+          registerGlobalConstantNoReveal.contents[0],
           {
             kind: 'transaction',
             source: 'tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD',
@@ -576,23 +588,35 @@ describe('RPCEstimateProvider test', () => {
         ],
       });
       const estimate = await estimateProvider.batch([
+        {
+          kind: OpKind.REGISTER_GLOBAL_CONSTANT, value: {
+            prim: 'Pair',
+            args: [{ int: '998' }, { int: '999' }]
+          }
+        },
         { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 },
         { kind: OpKind.TRANSACTION, to: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp', amount: 2 },
       ]);
-      expect(estimate.length).toEqual(3);
+      expect(estimate.length).toEqual(4);
 
       expect(estimate[0]).toMatchObject({
         gasLimit: 1100,
         storageLimit: 0,
         suggestedFeeMutez: 374,
       });
-
       expect(estimate[1]).toMatchObject({
+        gasLimit: 1330,
+        storageLimit: 73,
+        suggestedFeeMutez: 408,
+      });
+      expect(estimate[2].suggestedFeeMutez).toEqual(385)
+      expect(estimate[3].suggestedFeeMutez).toEqual(385)
+      expect(estimate[2]).toMatchObject({
         gasLimit: 1100,
         storageLimit: 0,
         suggestedFeeMutez: 385,
       });
-      expect(estimate[2]).toMatchObject({
+      expect(estimate[3]).toMatchObject({
         gasLimit: 1100,
         storageLimit: 0,
         suggestedFeeMutez: 385,
@@ -707,21 +731,146 @@ describe('RPCEstimateProvider test', () => {
     });
   });
 
-  describe('Multiple subsequent operations (to send more than one operation in a block)', () => {
-    test('should not increment context counter between operation estimations', async (done) => {
+  describe('registerGlobalConstant', () => {
+    it('should return the correct estimate for registerGlobalConstant operation', async (done) => {
+      mockRpcClient.runOperation.mockResolvedValue(registerGlobalConstantNoReveal);
+      const estimate = await estimateProvider.registerGlobalConstant({
+        value: {
+          "prim": "Pair",
+          "args": [{ "int": "998" }, { "int": "999" }]
+        }
+      });
+      expect(estimate).toMatchObject({
+        gasLimit: 1330,
+        storageLimit: 73,
+        suggestedFeeMutez: 335,
+      });
+      done();
+    });
+
+    it('should produce a reveal and a registerGlobalConstant operation', async (done) => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
-      mockRpcClient.runOperation.mockResolvedValue(multipleInternalOrigination());
-      // Simulate real op size
-      mockRpcClient.forgeOperations.mockResolvedValue(new Array(297).fill('aa').join(''));
-      await estimateProvider.transfer({
-        to: 'test_to',
-        amount: 2,
+      mockRpcClient.runOperation.mockResolvedValue(registerGlobalConstantWithReveal);
+      const estimate = await estimateProvider.registerGlobalConstant({
+        value: {
+          "prim": "Pair",
+          "args": [{ "int": "998" }, { "int": "999" }]
+        }
       });
-      await estimateProvider.transfer({
-        to: 'test_to',
-        amount: 2,
+      expect(estimate).toMatchObject({
+        gasLimit: 1330,
+        storageLimit: 73,
+        suggestedFeeMutez: 335,
       });
-      expect(estimateProvider['context'].counters).toEqual({});
+      done();
+    });
+
+    it('should use the storage limit the user specified', async (done) => {
+      mockRpcClient.runOperation.mockResolvedValue(registerGlobalConstantNoReveal);
+      mockRpcClient.getBalance.mockResolvedValue(new BigNumber('1100'));
+      await estimateProvider.registerGlobalConstant({
+        value: {
+          "prim": "Pair",
+          "args": [{ "int": "998" }, { "int": "999" }]
+        },
+        storageLimit: 200,
+      });
+      expect(mockRpcClient.runOperation).toHaveBeenCalledWith(
+        expect.objectContaining({
+          operation: expect.objectContaining({
+            contents: expect.arrayContaining([
+              expect.objectContaining({
+                fee: '0',
+                storage_limit: '200',
+                gas_limit: '1040000',
+              }),
+            ]),
+          }),
+        })
+      );
+      done();
+    });
+
+    it('should use the gas limit the user specified', async (done) => {
+      mockRpcClient.runOperation.mockResolvedValue(registerGlobalConstantNoReveal);
+      mockRpcClient.getBalance.mockResolvedValue(new BigNumber('10000000000'));
+      await estimateProvider.registerGlobalConstant({
+        value: {
+          "prim": "Pair",
+          "args": [{ "int": "998" }, { "int": "999" }]
+        },
+        gasLimit: 200,
+      });
+      expect(mockRpcClient.runOperation).toHaveBeenCalledWith(
+        expect.objectContaining({
+          operation: expect.objectContaining({
+            contents: expect.arrayContaining([
+              expect.objectContaining({
+                fee: '0',
+                storage_limit: '60000',
+                gas_limit: '200',
+              }),
+            ]),
+          }),
+        })
+      );
+      done();
+    });
+
+    it('should use the fees the user specified', async (done) => {
+      mockRpcClient.runOperation.mockResolvedValue(registerGlobalConstantNoReveal);
+      mockRpcClient.getBalance.mockResolvedValue(new BigNumber('10000000000'));
+      await estimateProvider.registerGlobalConstant({
+        value: {
+          "prim": "Pair",
+          "args": [{ "int": "998" }, { "int": "999" }]
+        },
+        fee: 10000,
+      });
+      expect(mockRpcClient.runOperation).toHaveBeenCalledWith(
+        expect.objectContaining({
+          operation: expect.objectContaining({
+            contents: expect.arrayContaining([
+              expect.objectContaining({
+                fee: '10000',
+                storage_limit: '60000',
+                gas_limit: '1040000',
+              }),
+            ]),
+          }),
+        })
+      );
+      done();
+    });
+
+    it('should return parsed error from RPC result', async (done) => {
+      mockRpcClient.runOperation.mockResolvedValue(registerGlobalConstantWithError);
+
+      await expect(estimateProvider.registerGlobalConstant({
+        value: {
+          "prim": "Pair",
+          "args": [{ "int": "998" }, { "int": "999" }]
+        }
+      })).rejects.toMatchObject({
+        errors:
+          [{
+            kind: 'branch',
+            id: 'proto.011-PtHangzH.Expression_already_registered'
+          },
+          {
+            kind: 'permanent',
+            id: 'proto.011-PtHangzH.context.storage_error',
+            existing_key: [
+              'global_constant',
+              'f4b54fa94f3255df3ab6a95d0112964d825642706d42de848b3c507ff4602c4a',
+              'len'
+            ]
+          }],
+        name: 'TezosOperationError',
+        id: 'proto.011-PtHangzH.context.storage_error',
+        kind: 'permanent',
+        message: '(permanent) proto.011-PtHangzH.context.storage_error'
+      });
       done();
     });
   });

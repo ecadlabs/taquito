@@ -2,6 +2,7 @@ import {
   MichelsonV1ExpressionBase,
   OperationResultDelegation,
   OperationResultOrigination,
+  OperationResultRegisterGlobalConstant,
   OperationResultReveal,
   OperationResultTransaction,
   PreapplyResponse,
@@ -52,6 +53,7 @@ export class TezosPreapplyFailureError implements Error {
 export type MergedOperationResult = OperationResultDelegation &
   OperationResultOrigination &
   OperationResultTransaction &
+  OperationResultRegisterGlobalConstant &
   OperationResultReveal & {
     fee?: string;
   };

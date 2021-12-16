@@ -42,6 +42,9 @@
       ],
       "@taquito/local-forging": [
         "taquito-local-forging/src/taquito-local-forging.ts"
+      ],
+      "@taquito/contracts-library": [
+        "taquito-contracts-library/src/taquito-contracts-library.ts"
       ]
     }
   }

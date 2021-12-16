@@ -1,6 +1,6 @@
 {
   "name": "@taquito/tzip12",
-  "version": "9.2.0-stablelib.0",
+  "version": "11.1.0",
   "description": "Tzip12",
   "keywords": [
     "tezos",
@@ -10,6 +10,10 @@
   "main": "dist/taquito-tzip12.umd.js",
   "module": "dist/taquito-tzip12.es5.js",
   "typings": "dist/types/taquito-tzip12.d.ts",
+  "files": [
+    "dist",
+    "signature.json"
+  ],
   "publishConfig": {
     "access": "public"
   },
@@ -34,7 +38,7 @@
   "lint-staged": {
     "{src,test}/**/*.ts": [
       "prettier --write",
-      "tslint --fix",
+      "eslint --fix",
       "git add"
     ]
   },
@@ -59,9 +63,9 @@
     ]
   },
   "dependencies": {
-    "@taquito/michelson-encoder": "^9.2.0-stablelib.0",
-    "@taquito/taquito": "^9.2.0-stablelib.0",
-    "@taquito/tzip16": "^9.2.0-stablelib.0",
+    "@taquito/michelson-encoder": "^11.1.0",
+    "@taquito/taquito": "^11.1.0",
+    "@taquito/tzip16": "^11.1.0",
     "bignumber.js": "^9.0.1"
   },
   "devDependencies": {
@@ -92,7 +96,7 @@
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-standard": "^9.0.0",
     "typedoc": "^0.20.36",
-    "typescript": "^4.1.5"
+    "typescript": "~4.1.5"
   },
   "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
 }

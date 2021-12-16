@@ -30,24 +30,121 @@ const FEATURES = [
 const USERS = [
   {
     caption: 'Tocqueville Group',
-    image: '/img/tqtezos.svg',
+    // image: '/img/tqtezos.svg',
+    image: 'https://tqtezos.com/img/tq.png',
     link: 'https://tqtezos.com',
   },
   {
     caption: 'Ligo',
-    image: '/img/ligo.svg',
+    // image: '/img/ligo.svg',
+    image: 'https://ligolang.org/img/logo.svg',
     link: 'https://ligolang.org/',
   },
   {
-    caption: 'Truffle',
-    image: '/img/truffle.png',
-    link: 'https://www.trufflesuite.com/',
+    caption: 'Nomadic Labs',
+    // image: '/img/nomadic.png',
+    image: 'https://www.nomadic-labs.com/wp-content/uploads/2021/06/cropped-nomadic-labs-logo-white.png',
+    link: 'https://www.nomadic-labs.com/',
   },
   {
-    caption: 'Nomadic Labs',
-    image: '/img/nomadic.png',
-    link: 'https://www.nomadic-labs.com/',
-  }
+    caption: 'Blockwatch',
+    image: '/img/bw-logo-white.png',
+    link: 'https://blockwatch.cc/blog/tag/tezos/'
+  },
+  {
+    caption: 'Cryptoverse Wars',
+    image: '/img/cryptoverse_wars.png',
+    link: 'https://cryptocodeschool.in/tezos/',
+  },
+  {
+    caption: 'hic et nunc',
+    image: '/img/hicEtNunc.png',
+    link: 'https://www.hicetnunc.xyz/',
+  },
+  {
+    caption: 'Homebase',
+    image: 'https://tezos-homebase.herokuapp.com/static/media/homebase_logo.e04d3c7c.svg',
+    link: 'https://tezos-homebase.herokuapp.com/explorer/daos', 
+  },
+  {
+    caption: 'Kiln',
+    image: 'https://tezos-kiln.org/logo.svg',
+    link: 'https://tezos-kiln.org/',
+  },
+  {
+    caption: 'Kolibri',
+    image: '/img/kolibri-logo.png',
+    link: 'https://kolibri.finance/',  
+  },
+  {
+    caption: 'Kukai',
+    image: '/img/kukai-logo.svg',
+    link: 'https://wallet.kukai.app/',
+  },
+  {
+    caption: 'Interpop',
+    // image: '/img/logo-interpop.svg',
+    image: 'https://www.interpop.io/images/logo.png',
+    link: 'https://www.interpop.io/',
+  },
+  {
+    caption: 'open-tezos',
+    // image: '/img/open-tezos.svg',
+    image: 'https://opentezos.com/img/logo.svg',
+    link: 'https://opentezos.com/',
+  },
+  {
+    caption: 'Plenty',
+    // image: '/img/plenty.png',
+    image:  'img/plenty.png',
+    link: 'https://www.plentydefi.com/', 
+  },
+  {
+    caption: 'QuipuSwap',
+    image: '/img/quipuswap-logo.png',
+    link: 'https://quipuswap.com/', 
+  },
+  {
+    caption: 'Radion',
+    image: '/img/radion.png',
+    link: 'https://www.radion.fm/', 
+  },
+  {
+    caption: 'Spruce',
+    // image: '/img/spruce.png',
+    image: 'https://uploads-ssl.webflow.com/5f37276ebba6e91b4cdefcea/5f398730ecda61a7494906ba_Spruce_Logo_Horizontal.png',
+    link: 'https://www.spruceid.com/', 
+  },
+  {
+    caption: 'Staker DAO',
+    image: 'https://www.stakerdao.com/webroot/images/stakerDAO-logo-white.svg',
+    link: 'https://www.stakerdao.com/',
+  },
+  {
+    caption: 'Temple - Tezos Wallet',
+    image: '/img/temple-logo.png',
+    link: 'https://templewallet.com/',
+  },
+  {
+    caption: 'Tezos Mandala',
+    image: '/img/tezos_mandala.png',
+    link: 'https://tezos-mandala.art/',
+  },
+  {
+    caption: 'Tezos Domains',
+    image: 'https://d33wubrfki0l68.cloudfront.net/5c38e6c562ae78abd4114db5d484ea7a88eb50eb/b7611/assets/img/td-logo01-bright.svg',
+    link: 'https://tezos.domains/',
+  },
+  {
+    caption: 'Truesy',
+    image: '/img/truesy.png',
+    link: 'https://www.truesy.com/',
+  },
+  {
+    caption: 'tzcolors',
+    image: '/img/tz-colors.png',
+    link: 'https://www.tzcolors.io/',
+  },
 ];
 
 export default () => {

@@ -52,7 +52,7 @@ describe('MichelsonStorageView test', () => {
 		}
 		catch (e) {
 			expect(e).toBeInstanceOf(ForbiddenInstructionInViewCode);
-			expect(e.message).toEqual('Erreur found in the code of the view. It contains a forbidden instruction: AMOUNT.')
+			expect(e.message).toEqual('Error found in the code of the view. It contains a forbidden instruction: AMOUNT.')
 		}
 		done();
 	});
@@ -73,7 +73,7 @@ describe('MichelsonStorageView test', () => {
 		}
 		catch (e) {
 			expect(e).toBeInstanceOf(ForbiddenInstructionInViewCode);
-			expect(e.message).toEqual('Erreur found in the code of the view. It contains a forbidden instruction: CREATE_CONTRACT.')
+			expect(e.message).toEqual('Error found in the code of the view. It contains a forbidden instruction: CREATE_CONTRACT.')
 		}
 		done();
 	});
@@ -94,7 +94,7 @@ describe('MichelsonStorageView test', () => {
 		}
 		catch (e) {
 			expect(e).toBeInstanceOf(ForbiddenInstructionInViewCode);
-			expect(e.message).toEqual('Erreur found in the code of the view. It contains a forbidden instruction: SENDER.')
+			expect(e.message).toEqual('Error found in the code of the view. It contains a forbidden instruction: SENDER.')
 		}
 		done();
 	});
@@ -114,7 +114,7 @@ describe('MichelsonStorageView test', () => {
 		}
 		catch (e) {
 			expect(e).toBeInstanceOf(ForbiddenInstructionInViewCode);
-			expect(e.message).toEqual('Erreur found in the code of the view. It contains a forbidden instruction: SET_DELEGATE.')
+			expect(e.message).toEqual('Error found in the code of the view. It contains a forbidden instruction: SET_DELEGATE.')
 		}
 		done();
 	});
@@ -134,7 +134,7 @@ describe('MichelsonStorageView test', () => {
 		}
 		catch (e) {
 			expect(e).toBeInstanceOf(ForbiddenInstructionInViewCode);
-			expect(e.message).toEqual('Erreur found in the code of the view. It contains a forbidden instruction: SOURCE.')
+			expect(e.message).toEqual('Error found in the code of the view. It contains a forbidden instruction: SOURCE.')
 		}
 		done();
 	});
@@ -154,7 +154,7 @@ describe('MichelsonStorageView test', () => {
 		}
 		catch (e) {
 			expect(e).toBeInstanceOf(ForbiddenInstructionInViewCode);
-			expect(e.message).toEqual('Erreur found in the code of the view. It contains a forbidden instruction: TRANSFER_TOKENS.')
+			expect(e.message).toEqual('Error found in the code of the view. It contains a forbidden instruction: TRANSFER_TOKENS.')
 		}
 		done();
 	});
@@ -174,7 +174,7 @@ describe('MichelsonStorageView test', () => {
 		}
 		catch (e) {
 			expect(e).toBeInstanceOf(ForbiddenInstructionInViewCode);
-			expect(e.message).toEqual('Erreur found in the code of the view. It contains a forbidden instruction: TRANSFER_TOKENS.')
+			expect(e.message).toEqual('Error found in the code of the view. It contains a forbidden instruction: TRANSFER_TOKENS.')
 		}
 		done();
 	});
@@ -195,7 +195,7 @@ describe('MichelsonStorageView test', () => {
 		}
 		catch (e) {
 			expect(e).toBeInstanceOf(ForbiddenInstructionInViewCode);
-			expect(e.message).toEqual('Erreur found in the code of the view. It contains a forbidden instruction: the instruction SELF should only be used before ADDRESS.')
+			expect(e.message).toEqual('Error found in the code of the view. It contains a forbidden instruction: the instruction SELF should only be used before ADDRESS.')
 		}
 		done();
 	});
@@ -216,7 +216,7 @@ describe('MichelsonStorageView test', () => {
 		}
 		catch (e) {
 			expect(e).toBeInstanceOf(ForbiddenInstructionInViewCode);
-			expect(e.message).toEqual('Erreur found in the code of the view. It contains a forbidden instruction: the instruction SELF should only be used before ADDRESS.')
+			expect(e.message).toEqual('Error found in the code of the view. It contains a forbidden instruction: the instruction SELF should only be used before ADDRESS.')
 		}
 		done();
 	});

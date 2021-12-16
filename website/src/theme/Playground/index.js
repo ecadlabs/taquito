@@ -47,7 +47,7 @@ function println(value) {
 }
 
 ${this.props.wallet ? 
-  `const network = {type:"florencenet"};
+  `const network = {type:"hangzhounet"};
   wallet.requestPermissions({network})
   .then(permission => {
     return Tezos.setWalletProvider(wallet);
@@ -55,7 +55,7 @@ ${this.props.wallet ?
   .then(() => {
     ${this.code}
   });`:
-  `fetch('https://api.tez.ie/keys/florencenet/', {
+  `fetch('https://api.tez.ie/keys/hangzhounet/', {
     method: 'POST',
     headers: { Authorization: 'Bearer taquito-example' },
   })

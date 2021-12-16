@@ -1,9 +1,13 @@
-import { TezosToolkit, SetProviderOptions } from '../src/taquito';
+import { TezosToolkit, SetProviderOptions, Wallet } from '../src/taquito';
 import { RpcTzProvider } from '../src/tz/rpc-tz-provider';
 import { RpcContractProvider } from '../src/contract/rpc-contract-provider';
 import { PollingSubscribeProvider } from '../src/subscribe/polling-provider';
 import { NoopSigner } from '../src/signer/noop';
 import { RpcClient } from '@taquito/rpc';
+import { retry } from 'rxjs/operators';
+import { RPCEstimateProvider } from '../src/contract/rpc-estimate-provider';
+import { OperationFactory } from '../src/wallet/operation-factory';
+import { NoopGlobalConstantsProvider } from '../src/global-constants/noop-global-constants-provider';
 
 describe('TezosToolkit test', () => {
   let mockRpcClient: any;
@@ -37,8 +41,19 @@ describe('TezosToolkit test', () => {
     });
 
     mockRpcClient.getManagerKey.mockResolvedValue('test');
-    toolkit = new TezosToolkit('url');
-    toolkit['_context'].rpc = mockRpcClient;
+    toolkit = new TezosToolkit(mockRpcClient);
+  });
+
+  it('the default providers are set on the TezosToolkit at instantiation', () => {
+    const tezos = new TezosToolkit('rpc');
+    expect(tezos.globalConstants).toBeInstanceOf(NoopGlobalConstantsProvider);
+    expect(tezos.contract).toBeInstanceOf(RpcContractProvider);
+    expect(tezos.estimate).toBeInstanceOf(RPCEstimateProvider);
+    expect(tezos.operation).toBeInstanceOf(OperationFactory);
+    expect(tezos.signer).toBeInstanceOf(NoopSigner);
+    expect(tezos.stream).toBeInstanceOf(PollingSubscribeProvider);
+    expect(tezos.tz).toBeInstanceOf(RpcTzProvider);
+    expect(tezos.wallet).toBeInstanceOf(Wallet);
   });
 
   it('setProvider with string should create rpc provider', () => {
@@ -53,6 +68,10 @@ describe('TezosToolkit test', () => {
     'stream',
     'protocol',
     'config',
+    'forger',
+    'wallet',
+    'packer',
+    'globalConstantsProvider'
   ];
   providerKey
     .filter(x => x !== 'rpc')
@@ -61,9 +80,9 @@ describe('TezosToolkit test', () => {
         toolkit = new TezosToolkit('rpc');
         expect(toolkit.rpc).toBeInstanceOf(RpcClient);
         toolkit.setProvider({ rpc: 'test' });
-        expect(toolkit.rpc['url']).toEqual('test');
+        expect(toolkit.rpc.getRpcUrl()).toEqual('test');
         toolkit.setProvider({ [key]: 'test' as any });
-        expect(toolkit.rpc['url']).toEqual('test');
+        expect(toolkit.rpc.getRpcUrl()).toEqual('test');
       });
     });
 
@@ -93,9 +112,40 @@ describe('TezosToolkit test', () => {
       });
     });
 
-  test('getVersionInfo returns well formed response', () => {
+  it('getVersionInfo returns well formed response', () => {
     const versionInfo = toolkit.getVersionInfo();
     expect(versionInfo.commitHash).toBeTruthy();
     expect(versionInfo.version).toBeTruthy();
   });
+
+  it("setProvider allows to change configurations for the confirmation methods and streamer", () => {
+    // There is default config set on the context class:
+    expect(toolkit["_context"].config.confirmationPollingIntervalSecond).toBeUndefined();
+    expect(toolkit["_context"].config.confirmationPollingTimeoutSecond).toEqual(180);
+    expect(toolkit["_context"].config.defaultConfirmationCount).toEqual(1);
+    expect(toolkit["_context"].config.streamerPollingIntervalMilliseconds).toEqual(20000);
+    expect(toolkit["_context"].config.shouldObservableSubscriptionRetry).toBeFalsy();
+    expect(toolkit["_context"].config.observableSubscriptionRetryFunction.prototype).toEqual(retry().prototype);
+    
+    // can customize one of the config: confirmationPollingTimeoutSecond
+    toolkit.setProvider({ config: { confirmationPollingTimeoutSecond:2 } })
+    expect(toolkit["_context"].config.confirmationPollingIntervalSecond).toBeUndefined();
+    expect(toolkit["_context"].config.confirmationPollingTimeoutSecond).toEqual(2);
+    expect(toolkit["_context"].config.defaultConfirmationCount).toEqual(1);
+    expect(toolkit["_context"].config.streamerPollingIntervalMilliseconds).toEqual(20000);
+    expect(toolkit["_context"].config.shouldObservableSubscriptionRetry).toBeFalsy();
+    expect(toolkit["_context"].config.observableSubscriptionRetryFunction.prototype).toEqual(retry().prototype);
+
+    // can customize another config: confirmationPollingIntervalSecond
+    // confirmationPollingTimeoutSecond should remain to 2 as set precedently
+    toolkit.setProvider({ config: { confirmationPollingIntervalSecond:40 } });
+    expect(toolkit["_context"].config.confirmationPollingIntervalSecond).toBeDefined();
+    expect(toolkit["_context"].config.confirmationPollingIntervalSecond).toEqual(40);
+    expect(toolkit["_context"].config.confirmationPollingTimeoutSecond).toEqual(2);
+    expect(toolkit["_context"].config.defaultConfirmationCount).toEqual(1);
+    expect(toolkit["_context"].config.streamerPollingIntervalMilliseconds).toEqual(20000);
+    expect(toolkit["_context"].config.shouldObservableSubscriptionRetry).toBeFalsy();
+    expect(toolkit["_context"].config.observableSubscriptionRetryFunction.prototype).toEqual(retry().prototype);
+});
+
 });

@@ -75,7 +75,7 @@ Then we call the `read()` method, which takes an optional lambda contract addres
 
 ```js live noInline
 Tezos.contract
-  .at('KT1JoWijNpTUTqd2eZFA9X519aXANctKu5fV')
+  .at('KT1LNMrk8orMQ85zbwK25996dPhDxfSicvKh')
   .then((contract) => {
     return contract.views.getTotalSupply([['Unit']]).read();
   })
@@ -87,7 +87,7 @@ Tezos.contract
 
 ```js live noInline
 Tezos.contract
-  .at('KT1JoWijNpTUTqd2eZFA9X519aXANctKu5fV')
+  .at('KT1LNMrk8orMQ85zbwK25996dPhDxfSicvKh')
   .then((contract) => {
     return contract.views.getBalance('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1').read();
   })
@@ -112,14 +112,14 @@ const lambdaContractAddress = lambdaContract.address;
 ```
 
 :::note
-Taquito internally contains a list of lambda contracts. Thus, no need to deploy a lambda contract if you are using Mainnet, Florencenet, or Edonet. Taquito will detect the current network and use the appropriate lambda contract.
+Taquito internally contains a list of lambda contracts. Thus, there is no need to deploy a lambda contract if you are using Mainnet, Hangzhounet, or Granadanet. Taquito will detect the current network and use the appropriate lambda contract.
 :::
 
 **More examples:**
 
 ```js live noInline
 Tezos.contract
-  .at('KT1GZoupPzM3SxtCp2mHEGqBxN1EpiXCRyTZ')
+  .at('KT1Tf2JXZP8wXjdgndsgMKM1uW9M4CC5rbWL')
   .then((contract) => {
     return contract.views
       .balance_of([{ owner: 'tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1', token_id: '0' }])
@@ -133,7 +133,7 @@ Tezos.contract
 
 ```js live noInline
 Tezos.contract
-  .at('KT1JoWijNpTUTqd2eZFA9X519aXANctKu5fV')
+  .at('KT1LNMrk8orMQ85zbwK25996dPhDxfSicvKh')
   .then((contract) => {
     return contract.views.getBalance('tz1XTyqBn4xi9tkRDutpRyQwHxfF8ar4i4Wq').read();
   })
