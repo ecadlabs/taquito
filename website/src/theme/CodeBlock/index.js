@@ -6,7 +6,6 @@
  */
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { TezosToolkit, MichelsonMap, compose, DEFAULT_FEE } from '@taquito/taquito';
-import { importKey } from '@taquito/signer';
 import { verifySignature } from '@taquito/utils';
 import { 
   validateAddress, 
@@ -19,15 +18,15 @@ import {
   prefix, 
   Prefix 
 } from '@taquito/utils';
-import {  BeaconWallet } from '@taquito/beacon-wallet';
-import { InMemorySigner } from '@taquito/signer';
-import { LedgerSigner, DerivationType } from '@taquito/ledger-signer';
+// import {  BeaconWallet } from '@taquito/beacon-wallet';
+import { InMemorySigner, importKey } from '@taquito/signer';
+// import { LedgerSigner, DerivationType } from '@taquito/ledger-signer';
 import { TezBridgeWallet } from '@taquito/tezbridge-wallet';
 import { Tzip16Module, tzip16, bytes2Char, MichelsonStorageView } from '@taquito/tzip16'
 import { Tzip12Module, tzip12 } from "@taquito/tzip12";
 import { Schema, ParameterSchema } from "@taquito/michelson-encoder";
 import { Parser, packDataBytes } from '@taquito/michel-codec';
-import { ThanosWallet } from '@thanos-wallet/dapp';
+// import { TempleWallet } from "@temple-wallet/dapp";
 import TransportU2F from "@ledgerhq/hw-transport-u2f";
 import Playground from '@theme/Playground';
 import classnames from 'classnames';
@@ -40,11 +39,7 @@ import { CancellableRpcClient } from './customHttpBackendAndRpcClient';
 
 import styles from './styles.module.css';
 
-// To solve the ReferenceError: Buffer is not defined when running live code examples
-// see https://lifesaver.codes/answer/meteor-1-5-beta-16-and-beta-17-showed-referenceerror-buffer-is-not-defined-client-side
-global.Buffer = global.Buffer || require("buffer").Buffer; 
-
-const wallet = new BeaconWallet({name:"exampleWallet"});
+// const wallet = new BeaconWallet({name:"exampleWallet"});
 const highlightLinesRangeRegex = /{([\d,-]+)}/;
 
 export default ({
@@ -93,7 +88,7 @@ export default ({
       <Playground
         scope={{ ...React, 
           Tezos, 
-          wallet,
+          // wallet,
           importKey,
           validateAddress, 
           validateChain, 
@@ -105,9 +100,9 @@ export default ({
           prefix, 
           Prefix, 
           MichelsonMap, 
-          BeaconWallet, 
+          // BeaconWallet, 
           InMemorySigner, 
-          LedgerSigner,
+          // LedgerSigner,
           Tzip16Module,
           tzip16,
           bytes2Char,
@@ -115,8 +110,8 @@ export default ({
           Tzip12Module, 
           tzip12,
           TezBridgeWallet,
-          ThanosWallet, 
-          DerivationType, 
+          // TempleWallet, 
+          // DerivationType, 
           TransportU2F,
           compose,
           Schema,
