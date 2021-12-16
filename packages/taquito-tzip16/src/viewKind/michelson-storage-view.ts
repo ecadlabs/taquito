@@ -175,7 +175,7 @@ export class MichelsonStorageView implements View {
           result = await this.rpc.runCode(viewScript as any);
         } catch(error: any) {
           const failWith = validateAndExtractFailwith(error)
-          throw failWith? new ViewSimulationError(`The Simulation of the on-chain view failed with: ${JSON.stringify(failWith)}`, error): error;
+          throw failWith? new ViewSimulationError(`The Simulation of the Michelson view failed with: ${JSON.stringify(failWith)}`, error): error;
         }
 
         const viewResultSchema = new ParameterSchema(this.returnType);
