@@ -2,8 +2,6 @@
   "name": "integration-tests",
   "scripts": {
     "test:faucet": "RUN_WITH_FAUCET=true jest --runInBand",
-    "test:granadanet": "GRANADANET=true jest",
-    "test:granadanet-faucet": "RUN_GRANADANET_WITH_FAUCET=true jest --runInBand",
     "test:hangzhounet": "HANGZHOUNET=true jest",
     "test:hangzhounet-faucet": "RUN_HANGZHOUNET_WITH_FAUCET=true jest --runInBand",
     "test:idiazabalnet": "IDIAZABALNET=true jest",
