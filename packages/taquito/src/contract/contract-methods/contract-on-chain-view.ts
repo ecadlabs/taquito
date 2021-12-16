@@ -164,7 +164,7 @@ export class OnChainView {
             storage = (await this._rpc.runCode(viewScript)).storage as MichelsonV1ExpressionExtended;
         } catch (error: any) {
             const failWith = validateAndExtractFailwith(error);
-            throw failWith? new ViewSimulationError(`The simulation of the on-chain ${this._smartContractViewSchema.viewName} failed with: ${JSON.stringify(failWith)}`, error): error;
+            throw failWith? new ViewSimulationError(`The simulation of the on-chain view named ${this._smartContractViewSchema.viewName} failed with: ${JSON.stringify(failWith)}`, error): error;
         }
         if (!storage.args) {
             throw new ViewSimulationError(`View simulation failed with an invalid result: ${storage}`)

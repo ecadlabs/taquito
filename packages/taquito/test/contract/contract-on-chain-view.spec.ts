@@ -366,7 +366,7 @@ describe('OnChainView test', () => {
       })
     } catch(error: any) {
       expect(error).toBeInstanceOf(ViewSimulationError);
-      expect(error.message).toEqual('The simulation of the on-chain add failed with: {"prim":"Unit"}');
+      expect(error.message).toEqual('The simulation of the on-chain view named add failed with: {"prim":"Unit"}');
       expect(error.originalError).toEqual(httpError);
     }
 
