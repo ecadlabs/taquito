@@ -50,20 +50,10 @@ export class InvalidViewParameterError implements Error {
 
 export class ViewSimulationError implements Error {
   name: string = 'ViewSimulationError';
-  message: string;
-  failWith?: MichelsonV1Expression;
-
-  constructor(details: string, public originalError?: any) {
-    this.message = details;
-    if (originalError instanceof HttpResponseError) {
-      const failedWith = extractFailedWithDetails(originalError);
-      this.message = failedWith? `${details} View simulation failed with: ${JSON.stringify(failedWith)}`: details;
-      this.failWith = failedWith;
-    }
-  }
+  constructor(public message: string, public originalError?: any) {}
 }
 
-const extractFailedWithDetails = (error: HttpResponseError): MichelsonV1Expression | undefined => {
+export const validateAndExtractFailwith = (error: HttpResponseError): MichelsonV1Expression | undefined => {
   if (isJsonString(error.body)) {
     const parsedError = JSON.parse(error.body);
     if (Array.isArray(parsedError) && 'with' in parsedError[parsedError.length - 1]) {

@@ -1,15 +1,17 @@
+import { Protocols } from "@taquito/taquito";
 import { CONFIGS } from "./config";
 import { depositContractCode, depositContractStorage } from "./data/deposit_contract";
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
+  const skipIdiazabalnet = protocol === Protocols.ProtoALpha ? test.skip : test;
   describe(`Test contract call with amount using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    it('originates a contract and sends base layer tokens when calling contract methods', async (done) => {
+    skipIdiazabalnet('originates a contract and sends base layer tokens when calling contract methods', async (done) => {
       const op = await Tezos.contract.originate({
         balance: "0",
         code: depositContractCode,

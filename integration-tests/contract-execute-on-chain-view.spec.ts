@@ -1,11 +1,12 @@
 import { codeViewsTopLevel } from "../packages/taquito-local-forging/test/data/contract_views_top_level";
 import { CONFIGS } from "./config";
 import BigNumber from 'bignumber.js';
-import { Protocols, ViewSimulationError } from "@taquito/taquito";
+import { Protocols } from "@taquito/taquito";
+import { HttpResponseError } from "@taquito/http-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const hangzhounetOrHigher = (protocol === Protocols.PtHangz2 || protocol === Protocols.PtIdiaza) ? test : test.skip;
+  const hangzhounetOrHigher = (protocol === Protocols.PtHangz2 || protocol === Protocols.ProtoALpha) ? test : test.skip;
   describe(`On chain views using the contract API: ${rpc}`, () => {
 
     beforeEach(async (done) => {
@@ -73,7 +74,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         // view that always fails
         await contract.contractViews.test_failwith(3).executeView({ viewCaller: contract.address });
       } catch (error: any) {
-        expect(error).toBeInstanceOf(ViewSimulationError)
+        expect(error).toBeInstanceOf(HttpResponseError)
       }
 
       const viewSuccResult = await contract.contractViews.succ({ 0: 16, 1: contract.address }).executeView({ source, viewCaller: contract.address });

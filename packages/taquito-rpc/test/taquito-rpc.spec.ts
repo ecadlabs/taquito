@@ -522,6 +522,114 @@ describe('RpcClient test', () => {
     });
   });
 
+  describe('getConstants Proto012', () => {
+    it('query the right url and casts property to BigNumber', async (done) => {
+      httpBackend.createRequest.mockReturnValue(
+        Promise.resolve({
+          "proof_of_work_nonce_size": 8,
+          "nonce_length": 32,
+          "max_anon_ops_per_block": 132,
+          "max_operation_data_length": 32768,
+          "max_proposals_per_delegate": 20,
+          "max_micheline_node_count": 50000,
+          "max_micheline_bytes_limit": 50000,
+          "max_allowed_global_constants_depth": 10000,
+          "cache_layout": ["100000000", "240000", "2560"],
+          "michelson_maximum_type_size": 2001,
+          "preserved_cycles": 3,
+          "blocks_per_cycle": 2048,
+          "blocks_per_commitment": 64,
+          "blocks_per_stake_snapshot": 512,
+          "blocks_per_voting_period": 40960,
+          "hard_gas_limit_per_operation": "1040000",
+          "hard_gas_limit_per_block": "5200000",
+          "proof_of_work_threshold": "-1",
+          "tokens_per_roll": "8000000000",
+          "seed_nonce_revelation_tip": "125000",
+          "origination_size": 257,
+          "baking_reward_fixed_portion": "10000000",
+          "baking_reward_bonus_per_slot": "4286",
+          "endorsing_reward_per_slot": "2857",
+          "cost_per_byte": "250",
+          "hard_storage_limit_per_operation": "60000",
+          "quorum_min": 2000,
+          "quorum_max": 7000,
+          "min_proposal_quorum": 500,
+          "liquidity_baking_subsidy": "2500000",
+          "liquidity_baking_sunset_level": 525600,
+          "liquidity_baking_escape_ema_threshold": 100000,
+          "max_operations_time_to_live": 120,
+          "minimal_block_delay":"30",
+          "delay_increment_per_round":"15",
+          "consensus_committee_size": 7000,
+          "consensus_threshold": 4667,
+          "minimal_participation_ratio": { "numerator": 2, "denominator": 3 },
+          "max_slashing_period": 2,
+          "frozen_deposits_percentage": 10,
+          "double_baking_punishment": "640000000",
+          "ratio_of_frozen_deposits_slashed_per_double_endorsement": { "numerator": 1, "denominator": 2 }
+        })
+      );
+      const response = await client.getConstants();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/context/constants',
+      });
+      expect(response).toEqual({
+        proof_of_work_nonce_size: 8,
+        nonce_length: 32,
+        max_anon_ops_per_block: 132,
+        max_operation_data_length: 32768,
+        max_proposals_per_delegate: 20,
+        preserved_cycles: 3,
+        blocks_per_cycle: 2048,
+        blocks_per_commitment: 64,
+        blocks_per_voting_period: 40960,
+        hard_gas_limit_per_operation: new BigNumber(1040000),
+        hard_gas_limit_per_block: new BigNumber(5200000),
+        proof_of_work_threshold: new BigNumber(-1),
+        tokens_per_roll: new BigNumber(8000000000),
+        seed_nonce_revelation_tip: new BigNumber(125000),
+        origination_size: 257,
+        cost_per_byte: new BigNumber(250),
+        hard_storage_limit_per_operation: new BigNumber(60000),
+        quorum_min: 2000,
+        quorum_max: 7000,
+        min_proposal_quorum: 500,
+        liquidity_baking_subsidy: new BigNumber(2500000),
+        liquidity_baking_sunset_level: 525600,
+        liquidity_baking_escape_ema_threshold: 100000,
+        max_allowed_global_constants_depth: 10000,
+        max_micheline_bytes_limit: 50000,
+        max_micheline_node_count: 50000,
+        michelson_maximum_type_size: 2001,
+        cache_layout: [new BigNumber(100000000), new BigNumber(240000), new BigNumber(2560)],
+        blocks_per_stake_snapshot: 512,
+        baking_reward_fixed_portion: new BigNumber(10000000),
+        baking_reward_bonus_per_slot: new BigNumber(4286),
+        endorsing_reward_per_slot: new BigNumber(2857),
+        max_operations_time_to_live: 120,
+        minimal_block_delay:new BigNumber(30),
+        delay_increment_per_round:new BigNumber(15),
+        consensus_committee_size: 7000,
+        consensus_threshold: 4667,
+        minimal_participation_ratio: {
+            denominator: 3,
+            numerator: 2,
+        },
+        max_slashing_period: 2,
+        frozen_deposits_percentage: 10,
+        double_baking_punishment: new BigNumber(640000000),
+        ratio_of_frozen_deposits_slashed_per_double_endorsement: {
+            denominator: 2,
+            numerator: 1,
+        }
+    })
+      done();
+    });
+  });
+
   describe('getConstants Proto007', () => {
     it('query the right url and casts property to BigNumber', async (done) => {
       httpBackend.createRequest.mockReturnValue(

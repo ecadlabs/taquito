@@ -59,10 +59,10 @@ interface FaucetConfig {
 const idiazabalnetEphemeral = {
   rpc: process.env['TEZOS_RPC_IDIAZABALNET'] || 'https://idiazabalnet.ecadinfra.com',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1QKhea82d31wkTAdZpLzpPTTXuAMqYFMrh',
-  knownBigMapContract: 'KT1CNdUVZjWbKQwQkSqZckNKEdCeWvvJiXC7',
-  knownTzip1216Contract: 'KT19e8k9FjyAyxhA5ByhsRXMXSWb3mEzRqBL',
-  protocol: Protocols.PtIdiaza,
+  knownContract: 'KT1UUS3M31GpFS4k5xQtp97oWGDhdzdT9mNJ',
+  knownBigMapContract: 'KT1VFM8dyKv2YTFdLBZm8seJKgFnn7RMrDtv',
+  knownTzip1216Contract: 'KT1PiiNe7icQHeaQ4Z8m27FVhYWQ2pPGMots',
+  protocol: Protocols.ProtoALpha,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'https://api.tez.ie/keys/idiazabalnet',
@@ -84,51 +84,13 @@ const hangzhounetEphemeral = {
   }
 }
 
-const granadanetEphemeral = {
-  rpc: process.env['TEZOS_RPC_GRANADANET'] || 'https://granadanet.api.tez.ie',
-  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1JMwgeC7MwYiMiZd74gXK6wrY7QNf1NwLX',
-  knownBigMapContract: 'KT1VniFqNCPEq4MXvnjYGvUqdWDhooJM5Nae',
-  knownTzip1216Contract: 'KT1UbCaj7rCgiNi9X5oMnAsFSXSkGjwycL4p',
-  protocol: Protocols.PtGRANADs,
-  signerConfig: {
-    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'https://api.tez.ie/keys/granadanet',
-    requestHeaders: { 'Authorization': 'Bearer taquito-example' },
-  }
-}
-
-// Well known faucet key. Can be overridden by setting the `TEZOS_FAUCET_KEY_FILE` environment variable
-const key = {
-  email: "mfbzlhsv.owpfexem@tezos.example.org",
-  password: "bccbtuRKdr",
-  mnemonic: [
-    "addict",
-    "nerve",
-    "amazing",
-    "elevator",
-    "else",
-    "bind",
-    "injury",
-    "cotton",
-    "bind",
-    "judge",
-    "quote",
-    "apple",
-    "equip",
-    "ocean",
-    "tone"
-  ],
-  secret: "1e6159006a283a4456bda4f83721afa4bec9ed59"
-}
-
 const idiazabalnetFaucet = {
   rpc: process.env['TEZOS_RPC_IDIAZABALNET'] || 'https://idiazabalnet.ecadinfra.com',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1QKhea82d31wkTAdZpLzpPTTXuAMqYFMrh',
-  knownBigMapContract: 'KT1CNdUVZjWbKQwQkSqZckNKEdCeWvvJiXC7',
-  knownTzip1216Contract: 'KT19e8k9FjyAyxhA5ByhsRXMXSWb3mEzRqBL',
-  protocol: Protocols.PtIdiaza,
+  knownContract: 'KT1UUS3M31GpFS4k5xQtp97oWGDhdzdT9mNJ',
+  knownBigMapContract: 'KT1VFM8dyKv2YTFdLBZm8seJKgFnn7RMrDtv',
+  knownTzip1216Contract: 'KT1PiiNe7icQHeaQ4Z8m27FVhYWQ2pPGMots',
+  protocol: Protocols.ProtoALpha,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
     faucetKey: {
@@ -192,26 +154,10 @@ const hangzhounetFaucet = {
   }
 }
 
-const granadanetFaucet = {
-  rpc: 'https://granadanet.api.tez.ie',
-  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1JMwgeC7MwYiMiZd74gXK6wrY7QNf1NwLX',
-  knownBigMapContract: 'KT1VniFqNCPEq4MXvnjYGvUqdWDhooJM5Nae',
-  knownTzip1216Contract: 'KT1UbCaj7rCgiNi9X5oMnAsFSXSkGjwycL4p',
-  protocol: Protocols.PtGRANADs,
-  signerConfig: {
-    type: SignerType.FAUCET as SignerType.FAUCET,
-    faucetKey: key,
-  }
-}
-
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_FAUCET']) {
-  providers.push(hangzhounetFaucet, granadanetFaucet)
-}
-else if (process.env['RUN_GRANADANET_WITH_FAUCET']) {
-  providers.push(granadanetFaucet)
+  providers.push(hangzhounetFaucet, idiazabalnetFaucet)
 }
 else if (process.env['RUN_HANGZHOUNET_WITH_FAUCET']) {
   providers.push(hangzhounetFaucet)
@@ -219,16 +165,14 @@ else if (process.env['RUN_HANGZHOUNET_WITH_FAUCET']) {
 else if (process.env['RUN_IDIAZABALNET_WITH_FAUCET']) {
   providers.push(idiazabalnetFaucet)
 }
-else if (process.env['GRANADANET']) {
-  providers.push(granadanetEphemeral)
-}
 else if (process.env['HANGZHOUNET']) {
   providers.push(hangzhounetEphemeral)
 }
 else if (process.env['IDIAZABALNET']) {
   providers.push(idiazabalnetEphemeral)
-} else {
-  providers.push(hangzhounetEphemeral, granadanetEphemeral)
+}
+else {
+  providers.push(hangzhounetEphemeral, idiazabalnetEphemeral)
 }
 
 const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE'];
