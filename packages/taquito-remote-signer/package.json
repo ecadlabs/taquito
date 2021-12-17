@@ -67,11 +67,9 @@
     "@taquito/taquito": "^11.1.0",
     "@taquito/utils": "^11.1.0",
     "@types/jest": "^26.0.24",
-    "elliptic": "^6.5.4",
     "typedarray-to-buffer": "^4.0.0"
   },
   "devDependencies": {
-    "@types/elliptic": "^6.4.12",
     "@types/jest": "^26.0.24",
     "@types/node": "^15.12.2",
     "@types/ws": "^7.4.4",

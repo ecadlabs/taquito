@@ -24,7 +24,6 @@ export class InMemorySigner {
   private _key!: Tz1 | ECKey;
 
   static fromFundraiser(email: string, password: string, mnemonic: string) {
-    console.log('hello')
     let seed = mnemonicToSeedSync(mnemonic, `${email}${password}`);
     const key = b58cencode(seed.slice(0, 32), prefix.edsk2);
     return new InMemorySigner(key);
@@ -55,7 +54,11 @@ export class InMemorySigner {
         const encryptedSk = constructedKey.slice(8);
         const encryptionKey = pbkdf2.pbkdf2Sync(passphrase, salt, 32768, 32, 'sha512');
 
-        return openSecretBox(new Uint8Array(encryptionKey), new Uint8Array(24), new Uint8Array(encryptedSk));
+        return openSecretBox(
+          new Uint8Array(encryptionKey), 
+          new Uint8Array(24), 
+          new Uint8Array(encryptedSk)
+        );
       };
     }
 

@@ -84,7 +84,10 @@ export class ECKey {
    * @returns Encoded public key hash
    */
   async publicKeyHash(): Promise<string> {
-    return b58cencode(hash(this._publicKey, 20), pref[this.curve].pkh);
+    return b58cencode(
+      hash(new Uint8Array(this._publicKey), 20), 
+      pref[this.curve].pkh
+    );
   }
 
   /**

@@ -13,9 +13,7 @@ import {
   prefix,
   verifySignature
 } from '@taquito/utils';
-import { verify } from '@stablelib/ed25519';
 import { hash } from '@stablelib/blake2b';
-import elliptic from 'elliptic';
 import toBuffer from 'typedarray-to-buffer';
 import { BadSigningDataError, KeyNotFoundError, OperationNotAuthorizedError } from './errors';
 import { Signer } from '@taquito/taquito';

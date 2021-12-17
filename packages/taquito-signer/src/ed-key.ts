@@ -1,6 +1,6 @@
 import { hash } from '@stablelib/blake2b';
 import { generateKeyPairFromSeed, sign } from '@stablelib/ed25519';
-import { b58cencode, b58cdecode, prefix, buf2hex, Prefix, isValidPrefix } from '@taquito/utils';
+import { b58cencode, b58cdecode, prefix, buf2hex, isValidPrefix } from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
 
 /**
@@ -35,7 +35,7 @@ export class Tz1 {
 
   private async init() {
     if (this._key.length !== 64) {
-      const { publicKey, secretKey } = generateKeyPairFromSeed(this._key);
+      const { publicKey, secretKey } = generateKeyPairFromSeed(new Uint8Array(this._key));
       this._publicKey = publicKey;
       this._key = secretKey;
     }
@@ -49,7 +49,10 @@ export class Tz1 {
    */
   async sign(bytes: string, bytesHash: Uint8Array) {
     await this.isInit;
-    const signature = sign(this._key, bytesHash);
+    const signature = sign(
+      new Uint8Array(this._key), 
+      new Uint8Array(bytesHash)
+    );
     const signatureBuffer = toBuffer(signature);
     const sbytes = bytes + buf2hex(signatureBuffer);
 
@@ -74,7 +77,7 @@ export class Tz1 {
    */
   async publicKeyHash(): Promise<string> {
     await this.isInit;
-    return b58cencode(hash(this._publicKey, 20), prefix.tz1);
+    return b58cencode(hash(new Uint8Array(this._publicKey), 20), prefix.tz1);
   }
 
   /**
@@ -83,7 +86,9 @@ export class Tz1 {
   async secretKey(): Promise<string> {
     await this.isInit;
     let key = this._key;
-    const { secretKey } = generateKeyPairFromSeed(key.slice(0, 32));
+    const { secretKey } = generateKeyPairFromSeed(
+      new Uint8Array(key).slice(0, 32)
+    );
     key = toBuffer(secretKey);
 
     return b58cencode(key, prefix[`edsk`]);
