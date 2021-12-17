@@ -1,6 +1,7 @@
 {
   "private": true,
   "scripts": {
+    "version-stamp": "lerna run version-stamp",
     "build": "lerna run build --no-private",
     "build:all": "lerna run build",
     "bootstrap": "lerna bootstrap",
