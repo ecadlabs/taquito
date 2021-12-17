@@ -9,7 +9,8 @@ import { validateAddress, ValidationResult } from "@taquito/utils";
 import {
     InvalidViewSimulationContext,
     InvalidViewParameterError,
-    ViewSimulationError
+    ViewSimulationError,
+    validateAndExtractFailwith
 } from "../errors";
 
 const runCodeHelper = (
@@ -162,7 +163,8 @@ export class OnChainView {
         try {
             storage = (await this._rpc.runCode(viewScript)).storage as MichelsonV1ExpressionExtended;
         } catch (error: any) {
-            throw new ViewSimulationError('Failed to execute the contract view.', error);
+            const failWith = validateAndExtractFailwith(error);
+            throw failWith? new ViewSimulationError(`The simulation of the on-chain view named ${this._smartContractViewSchema.viewName} failed with: ${JSON.stringify(failWith)}`, error): error;
         }
         if (!storage.args) {
             throw new ViewSimulationError(`View simulation failed with an invalid result: ${storage}`)
