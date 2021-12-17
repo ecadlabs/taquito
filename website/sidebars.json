@@ -33,7 +33,8 @@
         "wallet_API",
         "wallets",
         "web3js_taquito",
-        "taquito_utils"
+        "taquito_utils",
+        "contracts_collection"
       ]
     },
     {

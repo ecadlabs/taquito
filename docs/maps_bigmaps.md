@@ -195,7 +195,7 @@ Tezos.contract
 
 The `get` method of the `MichelsonMap` class accesses values of the map for a specified key.
 
-This example accesses the map using its `theMap` annotation. If the storage does now annotate its properties, the caller must use numeric indexes instead.
+This example accesses the map using its `theMap` annotation. If the storage does not annotate its properties, the caller must use numeric indexes instead.
 
 Recall that this contract does not annotate the pairs of the key pair either. We use numeric indexes for this also.
 
