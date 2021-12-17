@@ -113,7 +113,7 @@ Tezos.contract
   </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline wallet
+```js
 // import { TezosToolkit } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
 
@@ -180,7 +180,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline wallet
+```js
 // import { TezosToolkit } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
 
@@ -253,7 +253,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline wallet
+```js
 // import { TezosToolkit } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
 

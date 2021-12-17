@@ -189,7 +189,7 @@ Make sure you have the Beacon browser extension installed (the extension offers 
 
 
 
-```js live noInline wallet
+```js live
 
 //import { BeaconWallet } from '@taquito/beacon-wallet';
 
@@ -327,7 +327,7 @@ Make sure you have the Temple browser extension installed first.
 
 
 
-```js live noInline wallet
+```js live
 
 //import { ThanosWallet } from '@thanos-wallet/dapp';
 ThanosWallet.isAvailable()
@@ -419,7 +419,7 @@ const userAddress = await wallet.getPKH();
 
 
 
-```js live noInline wallet
+```js live
 
 //import { TezBridgeWallet } from '@taquito/tezbridge-wallet';
 const wallet = new TezBridgeWallet();
@@ -442,7 +442,7 @@ Although it is possible to transfer tokens directly from the wallets, Taquito of
 
 
 
-```js live noInline wallet
+```js live
 
 Tezos.wallet
   .transfer({ to: 'tz1NhNv9g7rtcjyNsH8Zqu79giY5aTqDDrzB', amount: 0.2 })
@@ -474,7 +474,7 @@ The `transfer` method takes an object with only two required properties: the `to
 
 
 
-```js live noInline wallet
+```js live
 Tezos.wallet
   .transfer({ to: 'KT1B4WtE3MSEjGKnucRL5xhqnXCEX1QkLGPx', amount: 0.2 })
   .send()
@@ -527,7 +527,7 @@ Most of the time, the process is simple: you take the contract abstraction you c
 
 
 
-```js live noInline wallet
+```js live
 
 Tezos.wallet
   .at('KT1WeQJ34tL4mwVyPJHNCq9VsrGUgFdFEdNp')
@@ -556,7 +556,7 @@ In the case of multiple arguments (for example if the entrypoint expects a pair)
 
 
 
-```js live noInline wallet
+```js live
 
 Tezos.wallet
   .at('KT1WeQJ34tL4mwVyPJHNCq9VsrGUgFdFEdNp')
