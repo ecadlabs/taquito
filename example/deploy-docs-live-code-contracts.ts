@@ -117,8 +117,8 @@ async function originateTheContracts() {
   contract_catalogue.set('Tzip16HTTPSContract', await originateTzip16Https());
   contract_catalogue.set('Tzip16SHA256Contract', await originateTzip16SHA256());
   contract_catalogue.set('Tzip16IPFSContract', await originateTzip16IPFS());
-  contract_catalogue.set('Tzip16OffChainContractOne', await originateTzip16OnChainJSON());
-  contract_catalogue.set('Tzip16OffChainContractTwo', await originateTzip16OnChainMultiply());
+  contract_catalogue.set('Tzip16OffChainContractJSON', await originateTzip16OnChainJSON());
+  contract_catalogue.set('Tzip16OffChainContractMultiply', await originateTzip16OnChainMultiply());
   contract_catalogue.set('WalletContract', await originateWalletOriginateContractTransfer());
   contract_catalogue.set('WalletAreYouThereContract', await originateWalletOriginateAreYouThere());
   contract_catalogue.set('TokenContract', await originateTokenContract());
