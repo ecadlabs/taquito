@@ -1,5 +1,5 @@
 ---
-title: Ledger signer
+title: Ledger Signer
 author: Roxane Letourneau
 ---
 

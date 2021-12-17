@@ -9,10 +9,10 @@ The contracts used in Taquito Integration Tests and in Taquito Documentation Liv
 - **Basic Contracts**
   - [IncrementContract](#incrementcontract)
   - [MichelsonMapContract](#michelsonmapcontract)
+  - [GenericMultisigContract](#genericmultisigcontract)
 - **Lambda Contracts**
   - [LambdaViewContract](#lambdaviewcontract)
   - [LambdaViewWithTokenContract](#lambdaviewwithtokencontract)
-  - [LambdaViewWithStoredCounter](#lambdaviewwithstoredcountercontract)
 - **Map and BigMap Contracts**
   - [MapWithPairasMapContract](#mapwithpairasmapcontract)
   - [MapWithValuesComplexKeysContract](#mapwithvaluescomplexkeyscontract)
@@ -70,6 +70,20 @@ The contract supports a [Michelson Tutorial](https://tezostaquito.io/docs/michel
   ```js
   storage (map address mutez);
   ```
+## GenericMultisigContract
+
+[KT1J5Vbek6SAgUStzb3HEMdrgRnMaanxNkNB](https://better-call.dev/hangzhou2net/KT1J5Vbek6SAgUStzb3HEMdrgRnMaanxNkNB/code)
+
+This contact has a stored counter. The contract is used in some Taquito Integration Tests for generic tests of such features as transfers.
+
+#### Entrypoints:
+  * default
+  * main
+
+#### Storage:
+```js
+storage (pair (nat %stored_counter) (pair (nat %threshold) (list %keys key)));
+```
 
 # Lambda Contracts
 We can send contract address, view method, and parameters as its own "view" to a simple lambda contract that always fails. We refer to this method as a "lambda view." The result of invoking our always-failing lambda contract is an error from the blockchain.
@@ -127,21 +141,6 @@ storage (pair
                                                        (pair (nat %decimals)
                                                              (map %extras string string)))))))
           (nat %total_supply));
-```
-
-## LambdaViewWithStoredCounterContract
-
-[KT1J5Vbek6SAgUStzb3HEMdrgRnMaanxNkNB](https://better-call.dev/hangzhou2net/KT1J5Vbek6SAgUStzb3HEMdrgRnMaanxNkNB/code)
-
-This contact is a Lambda contract with a stored counter. The contract is used in some Taquito Integration Tests in generic tests of such features as transfers.
-
-#### Entrypoints:
-  * default
-  * main
-
-#### Storage:
-```js
-storage (pair (nat %stored_counter) (pair (nat %threshold) (list %keys key)));
 ```
 
 # Contracts with Maps
