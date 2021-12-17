@@ -31,6 +31,6 @@
     "bignumber.js": "^9.0.1"
   },
   "devDependencies": {
-    "ts-node": "^9.1.1"
+    "ts-node": "^10.4.0"
   }
 }
