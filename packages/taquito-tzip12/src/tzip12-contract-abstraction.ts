@@ -93,12 +93,7 @@ export class Tzip12ContractAbstraction {
     }
 
     private async executeTokenMetadataView(tokenMetadataView: View, tokenId: number): Promise<TokenMetadata> {
-        let tokenMetadata;
-        try {
-            tokenMetadata = await tokenMetadataView.executeView(tokenId);
-        } catch (err) {
-            throw new TokenIdNotFound(tokenId);
-        }
+        const tokenMetadata = await tokenMetadataView.executeView(tokenId);
         const tokenMap = Object.values(tokenMetadata)[1];
         if (!MichelsonMap.isMichelsonMap(tokenMap)) {
             throw new TokenMetadataNotFound(this.contractAbstraction.address);
@@ -117,7 +112,7 @@ export class Tzip12ContractAbstraction {
                     this.context
                 );
                 return metadataFromUri.metadata;
-            } catch (e) {
+            } catch (e: any) {
                 if (e.name === 'InvalidUri') {
                     console.warn(`The URI ${bytes2Char(uri)} is present in the token metadata, but is invalid.`);
                 } else {
@@ -149,7 +144,7 @@ export class Tzip12ContractAbstraction {
         if(!('decimals' in tokenMetadataDecoded)) {
             throw new InvalidTokenMetadata();
         } 
-        return tokenMetadataDecoded;
+        return tokenMetadataDecoded as TokenMetadata;
     }
 
     private async retrieveTokenMetadataFromBigMap(tokenId: number) {
