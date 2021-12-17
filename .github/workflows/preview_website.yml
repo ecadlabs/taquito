@@ -19,6 +19,7 @@ jobs:
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-node-
+    - run: sudo apt-get install libudev-dev
     - run: npm ci
     - run: npm run lerna -- bootstrap
     - run: npm run lerna run build
