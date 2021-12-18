@@ -10,8 +10,8 @@
   },
   "version": "11.1.0",
   "dependencies": {
-    "@ledgerhq/hw-transport": "^5.51.1",
-    "@ledgerhq/hw-transport-node-hid": "^5.51.1",
+    "@ledgerhq/hw-transport": "^6.20.0",
+    "@ledgerhq/hw-transport-node-hid": "^6.20.0",
     "@taquito/http-utils": "^11.1.0",
     "@taquito/local-forging": "^11.1.0",
     "@taquito/michel-codec": "^11.1.0",
@@ -43,7 +43,6 @@
       "/test/"
     ],
     "testPathIgnorePatterns": [
-      "./ledger-signer.spec.ts",
       "./ledger-signer-failing-tests.spec.ts"
     ],
     "reporters": [
@@ -61,7 +60,7 @@
     "jest": "^26.6.3",
     "jest-config": "^26.6.3",
     "jest-retries": "^1.0.1",
-    "jest-stare": "2.2.2",
+    "jest-stare": "2.3.0",
     "lint-staged": "^12.1.2",
     "ts-jest": "^26.4.4",
     "ts-node": "^10.4.0",

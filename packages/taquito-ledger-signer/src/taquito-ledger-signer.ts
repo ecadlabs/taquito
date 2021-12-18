@@ -16,7 +16,7 @@ import {
 } from './utils';
 import sodium from 'libsodium-wrappers';
 
-export type LedgerTransport = Pick<Transport<string>, 'send' | 'decorateAppAPIMethods' | 'setScrambleKey'>
+export type LedgerTransport = Pick<Transport, 'send' | 'decorateAppAPIMethods' | 'setScrambleKey'>
 
 export enum DerivationType {
   ED25519 = 0x00, // tz1

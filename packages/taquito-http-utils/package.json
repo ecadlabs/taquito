@@ -62,9 +62,10 @@
     "xhr2-cookies": "^1.1.0"
   },
   "devDependencies": {
+    "@types/bluebird": "^3.5.36",
     "@types/jest": "^26.0.23",
     "@types/node": "^17.0.0",
-    "@types/superagent": "^4.1.11",
+    "@types/superagent": "^4.1.13",
     "@typescript-eslint/eslint-plugin": "^5.7.0",
     "@typescript-eslint/parser": "^5.7.0",
     "colors": "^1.4.0",
@@ -86,6 +87,7 @@
     "shelljs": "^0.8.4",
     "ts-jest": "^26.4.4",
     "ts-node": "^10.4.0",
+    "ts-toolbelt": "^9.6.0",
     "typescript": "~4.1.5"
   },
   "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
