@@ -69,7 +69,7 @@
   "dependencies": {
     "@taquito/taquito": "^11.1.0",
     "@taquito/utils": "^11.1.0",
-    "bignumber.js": "^9.0.1",
+    "bignumber.js": "^9.0.2",
     "bip39": "^3.0.4",
     "elliptic": "^6.5.4",
     "libsodium-wrappers": "0.7.8",

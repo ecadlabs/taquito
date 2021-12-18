@@ -72,7 +72,7 @@
     "@taquito/rpc": "^11.1.0",
     "@taquito/taquito": "^11.1.0",
     "@taquito/utils": "^11.1.0",
-    "bignumber.js": "^9.0.1"
+    "bignumber.js": "^9.0.2"
   },
   "devDependencies": {
     "@types/jest": "^26.0.23",
