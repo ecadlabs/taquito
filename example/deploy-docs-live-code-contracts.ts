@@ -17,6 +17,7 @@ import { contractIncrementing } from './data/contractIncrementing';
 import { contractMapBigMap } from './data/contractMapInitialStorage';
 import { contractMapTacoShop } from './data/contractSingleMapStorage'
 import { contractJson } from './data/contractJson';
+import { contractOnChainViews } from './data/contractOnChainViews';
 import { tokenCode, tokenInit } from '../integration-tests/data/tokens';
 import { fa2ForTokenMetadataView } from '../integration-tests/data/fa2-for-token-metadata-view';
 import { tacoContractTzip16 } from '../integration-tests/data/modified-taco-contract';
@@ -112,6 +113,9 @@ async function originateTheContracts() {
     'BigMapsComplexStorageContract',
     await originateSmartContractComplexStorage()
   );
+  contract_catalogue.set('ContractCallFib', await originateContractCallFib());
+  contract_catalogue.set('ContractTopLevelViews', await originateContractTopLevelViews());
+  contract_catalogue.set('TokenContract', await originateTokenContract());
   contract_catalogue.set('Tzip12BigMapOffChainContract', await originateTZip12BigMapOffChain());
   contract_catalogue.set('Tzip16StorageContract', await originateTzip16Storage());
   contract_catalogue.set('Tzip16HTTPSContract', await originateTzip16Https());
@@ -121,7 +125,6 @@ async function originateTheContracts() {
   contract_catalogue.set('Tzip16OffChainContractMultiply', await originateTzip16OnChainMultiply());
   contract_catalogue.set('WalletContract', await originateWalletOriginateContractTransfer());
   contract_catalogue.set('WalletAreYouThereContract', await originateWalletOriginateAreYouThere());
-  contract_catalogue.set('TokenContract', await originateTokenContract());
   contract_catalogue.set('BigMapPackContract', await originateBigMapPackContract());
 
   json_contract_catalogue();
@@ -459,6 +462,43 @@ async function originateSmartContractComplexStorage() {
     await op.confirmation();
     const contract = await op.contract();
     console.log('BigMapsComplexStorageContract : ' + contract.address);
+    return contract.address;
+  } catch (ex) {
+    console.error(ex);
+  }
+}
+
+async function originateContractCallFib() {
+  tezos.setSignerProvider(signer);
+  try {
+    const op = await tezos.contract.originate({
+      code: ` parameter (pair nat address);
+      storage nat;
+      code { CAR ;
+             UNPAIR ;
+             VIEW "fib" nat ;
+             { IF_NONE { { UNIT ; FAILWITH } } { NIL operation ; PAIR } } }`,
+      storage: 1        
+    });
+    await op.confirmation();
+    const contract = await op.contract();
+    console.log('ContractCallFib : ' + contract.address);
+    return contract.address;
+  } catch (ex) {
+    console.error(ex);
+  }
+}
+
+async function originateContractTopLevelViews() {
+  tezos.setSignerProvider(signer);
+  try {
+    const op = await tezos.contract.originate({
+      code: contractOnChainViews,
+      storage: 1        
+    });
+    await op.confirmation();
+    const contract = await op.contract();
+    console.log('ContractOnChainViews : ' + contract.address);
     return contract.address;
   } catch (ex) {
     console.error(ex);
