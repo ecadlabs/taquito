@@ -22,6 +22,9 @@ The contracts used in Taquito Integration Tests and in Taquito Documentation Liv
   - [BigMapsComplexStorageContract](#bigmapscomplexstoragecontract)
   - [BigMapsWithLedgerContract](#bigmapswithledgercontract)
   - [BigMapPackContract](#bigmappackcontract)
+- **On Chain Views**
+  - [ContractCallFib](#contractcallfib)
+  - [contractTopLevelViews](#contracttoplevelviews)
 - **Tzip7 Contracts**
   - [TokenContract](#tokencontract)
 - **Tzip12 Contracts**
@@ -323,16 +326,47 @@ This contract is for demonstrating packing. Not a supported FA1.2 contract.
 ```js
 storage (pair nat (big_map nat string));
 ```  
+# On Chain Views Contracts
+Views are meant to be called by a contract using the Michelson Instruction View followed by the view name and its result type. See [TaquitoDocs](https://tezostaquito.io/docs/on_chain_views) for more details.
 
+## ContractCallFib
+This contract is used to demonstrate On Chain views. It calls the view 'fib' in another contract called contractTopLevelViews.
 
-# Tzip-12 Contracts
-The @taquito/tzip12 package allows retrieving metadata associated with tokens of FA2 contract. You can find more information about the TZIP-12 standard [here](https://gitlab.com/tezos/tzip/-/blob/master/proposals/tzip-12/tzip-12.md).
+[KT1T8FPwfbfWK5ir7A5bj6coqttKwhwchdnD](https://better-call.dev/hangzhou2net/KT1T8FPwfbfWK5ir7A5bj6coqttKwhwchdnD/code)
+
+#### Entrypoints
+  * default
+
+#### Storage:
+```js
+storage nat;
+```  
+## ContractTopLevelViews
+
+This contract has a series of views which are sections of Michelson Code, for example:
+
+```js
+view "add" nat nat { UNPAIR ; ADD } ;
+```
+which can be called by other contracts to calculate and return some value.
+
+[KT1KJbtwARB2w3yN5fRjBE6CXJh5t9Hbbbpv](https://better-call.dev/hangzhou2net/KT1KJbtwARB2w3yN5fRjBE6CXJh5t9Hbbbpv/code)
+
+#### Entrypoints
+  * default
+
+#### Storage:
+```js
+storage nat ;
+```  
+# Tzip-7 Contracts
+Tzip-7 introduced the approvable ledger: [Tzip-7](https://gitlab.com/tezos/tzip/-/blob/master/proposals/tzip-7/tzip-7.md)
 
 ## TokenContract
 
 [KT1KxMdSBa9ippgTWwU7d1FkzTF5CirUkcp4](https://better-call.dev/hangzhou2net/KT1KxMdSBa9ippgTWwU7d1FkzTF5CirUkcp4/code)
 
-- [Read about Tzip7](https://hackernoon.com/a-beginners-guide-to-tezos-tzip-7-proposal-rj2032iy)
+- [A Beginner's Guide to Tezos Tzip-7 Prooposal](https://claudebarde.medium.com/a-beginners-guide-to-tezos-tzip-7-proposal-90a8b816af7e)
 
 This contract has an FA1.2 interface.  To determine if a contract has an FA1.2 interface we can use 
 ```
@@ -356,6 +390,11 @@ tezos-client check contract KT1CfFBaLoUrgv93k8668KCCcu2hNDNYPz4L implements fa1.
 storage (pair (big_map address (pair nat (map address nat)))
               (pair address (pair bool nat)));
 ```
+
+# Tzip-12 Contracts
+The @taquito/tzip12 package allows retrieving metadata associated with tokens of FA2 contract. You can find more information about the TZIP-12 standard [here](https://gitlab.com/tezos/tzip/-/blob/master/proposals/tzip-12/tzip-12.md).
+
+
 ## Tzip12BigMapOffChainContract
 
 [KT1Gn8tB1gdaST4eTwZUqsNJTRLZU5a4abXv](https://better-call.dev/hangzhou2net/KT1Gn8tB1gdaST4eTwZUqsNJTRLZU5a4abXv/code)
