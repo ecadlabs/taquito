@@ -7,7 +7,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
     const Tezos = lib;
 
     const hangzhounet = (protocol === Protocols.PtHangz2) ? test : test.skip;
-    const idiazabalnet = (protocol === Protocols.ProtoALpha) ? test : test.skip;
+    const ithacanet = (protocol === Protocols.PsiThaCaT) ? test : test.skip;
 
     describe('Fetch constants for all protocols on Mainnet', () => {
 
@@ -505,7 +505,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
             done();
         })
 
-        idiazabalnet(`succesfully fetches all constants for idiazabalnet using ${rpc}`, async (done) => {
+        ithacanet(`succesfully fetches all constants for ithacanet using ${rpc}`, async (done) => {
             Tezos.setRpcProvider(rpc);
             const constants: ConstantsResponseProto012 & ConstantsResponseCommon = await Tezos.rpc.getConstants();
 

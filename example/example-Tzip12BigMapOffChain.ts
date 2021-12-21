@@ -3,7 +3,7 @@ import { importKey } from '@taquito/signer';
 import { fa2ForTokenMetadataView } from '../integration-tests/data/fa2-for-token-metadata-view';
 import { b58cencode, char2Bytes, Prefix, prefix } from '@taquito/utils';
 
-const provider = 'https://idiazabalnet.ecadinfra.com';
+const provider = 'https://ithacanetnet.ecadinfra.com';
 
 const nodeCrypto = require('crypto');
 

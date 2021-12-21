@@ -56,8 +56,8 @@ interface FaucetConfig {
   faucetKey: {};
 }
 
-const idiazabalnetEphemeral = {
-  rpc: process.env['TEZOS_RPC_IDIAZABALNET'] || 'https://idiazabalnet.ecadinfra.com',
+const ithacanetEphemeral = {
+  rpc: process.env['TEZOS_RPC_ITHACANET'] || 'https://ithacanet.ecadinfra.com',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1UUS3M31GpFS4k5xQtp97oWGDhdzdT9mNJ',
   knownBigMapContract: 'KT1VFM8dyKv2YTFdLBZm8seJKgFnn7RMrDtv',
@@ -65,7 +65,7 @@ const idiazabalnetEphemeral = {
   protocol: Protocols.ProtoALpha,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'https://api.tez.ie/keys/idiazabalnet',
+    keyUrl: 'https://api.tez.ie/keys/ithacanet',
     requestHeaders: { 'Authorization': 'Bearer taquito-example' },
   }
 }
@@ -84,8 +84,8 @@ const hangzhounetEphemeral = {
   }
 }
 
-const idiazabalnetFaucet = {
-  rpc: process.env['TEZOS_RPC_IDIAZABALNET'] || 'https://idiazabalnet.ecadinfra.com',
+const ithacanetFaucet = {
+  rpc: process.env['TEZOS_RPC_ITHACANET'] || 'https://ithacanet.ecadinfra.com',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1UUS3M31GpFS4k5xQtp97oWGDhdzdT9mNJ',
   knownBigMapContract: 'KT1VFM8dyKv2YTFdLBZm8seJKgFnn7RMrDtv',
@@ -157,22 +157,22 @@ const hangzhounetFaucet = {
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_FAUCET']) {
-  providers.push(hangzhounetFaucet, idiazabalnetFaucet)
+  providers.push(hangzhounetFaucet, ithacanetFaucet)
 }
 else if (process.env['RUN_HANGZHOUNET_WITH_FAUCET']) {
   providers.push(hangzhounetFaucet)
 }
-else if (process.env['RUN_IDIAZABALNET_WITH_FAUCET']) {
-  providers.push(idiazabalnetFaucet)
+else if (process.env['RUN_ITHACANET_WITH_FAUCET']) {
+  providers.push(ithacanetFaucet)
 }
 else if (process.env['HANGZHOUNET']) {
   providers.push(hangzhounetEphemeral)
 }
-else if (process.env['IDIAZABALNET']) {
-  providers.push(idiazabalnetEphemeral)
+else if (process.env['ITHACANET']) {
+  providers.push(ithacanetEphemeral)
 }
 else {
-  providers.push(hangzhounetEphemeral, idiazabalnetEphemeral)
+  providers.push(hangzhounetEphemeral, ithacanetEphemeral)
 }
 
 const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE'];
