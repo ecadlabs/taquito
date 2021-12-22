@@ -2,7 +2,7 @@ import { TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
 import { VIEW_LAMBDA } from '../packages/taquito/src/contract/view_lambda';
 
-const provider = 'https://ithacanet.ecadinfra.com';
+const provider = 'http://ecad-ithacanet-archive.i.tez.ie:8732/';
 
 async function example() {
   const tezos = new TezosToolkit(provider);

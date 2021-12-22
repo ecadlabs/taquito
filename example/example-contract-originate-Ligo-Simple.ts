@@ -3,7 +3,7 @@ import { ligoSample } from '../integration-tests/data/ligo-simple-contract';
 
 import { importKey } from '@taquito/signer';
 
-const provider = 'https://hangzhounet.api.tez.ie';
+const provider = 'http://ecad-ithacanet-archive.i.tez.ie:8732/'
 
 async function example() {
   const tezos = new TezosToolkit(provider)

@@ -2,7 +2,7 @@ import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
 import { tzip7Contract } from '../integration-tests/data/tzip_7_contract';
 
-const provider = 'https://hangzhounet.api.tez.ie';
+const provider = 'http://ecad-ithacanet-archive.i.tez.ie:8732/'
 
 async function example() {
   const tezos = new TezosToolkit(provider)

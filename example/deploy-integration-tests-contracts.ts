@@ -3,7 +3,7 @@ import { importKey } from '@taquito/signer';
 import { knownContract } from './data/knownContract';
 import { knownBigMapContract } from './data/knownBigMapContract';
 
-const provider = 'https://ithacanet.ecadinfra.com';
+const provider = 'http://ecad-ithacanet-archive.i.tez.ie:8732/';
 
 async function example() {
   const tezos = new TezosToolkit(provider);

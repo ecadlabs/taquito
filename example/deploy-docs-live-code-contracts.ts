@@ -28,7 +28,7 @@ import {
 import { contractMap8pairs } from './data/contractMap8pairs';
 import { char2Bytes } from '@taquito/utils';
 
-const provider = 'https://hangzhounet.api.tez.ie';
+const provider = 'http://ecad-ithacanet-archive.i.tez.ie:8732/';
 export const signer: any = new InMemorySigner(
   'edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca'
 );

@@ -2,7 +2,7 @@ import { TezosToolkit } from '../packages/taquito/src/taquito';
 import { RpcClient } from '../packages/taquito-rpc/src/taquito-rpc';
 import { castToString } from '../packages/taquito-rpc/src/utils/utils';
 
-const provider = 'https://hangzhounet.api.tez.ie';
+const provider = 'http://ecad-ithacanet-archive.i.tez.ie:8732/'
 const client = new RpcClient(provider);
 
 async function example() {

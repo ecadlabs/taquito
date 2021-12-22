@@ -3,7 +3,7 @@ import { importKey } from '@taquito/signer';
 import { tacoContractTzip16 } from "../integration-tests/data/modified-taco-contract"
 import { char2Bytes } from '@taquito/utils';
 
-const provider = 'https://hangzhounet.api.tez.ie';
+const provider = 'http://ecad-ithacanet-archive.i.tez.ie:8732/'
 
 async function example() {
   const tezos = new TezosToolkit(provider)
