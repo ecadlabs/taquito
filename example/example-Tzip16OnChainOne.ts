@@ -3,7 +3,7 @@ import { importKey } from '@taquito/signer';
 import { contractCode, metadataViewsExample1 } from '../integration-tests/data/metadataViews';
 import { char2Bytes } from '@taquito/utils';
 
-const provider = 'http://ecad-ithacanet-archive.i.tez.ie:8732/'
+const provider = 'http://ecad-ithacanet-full.i.tez.ie:8732'
 
 async function example() {
   const tezos = new TezosToolkit(provider)

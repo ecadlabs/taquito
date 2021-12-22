@@ -1,7 +1,7 @@
 import { TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
 
-const provider = 'http://ecad-ithacanet-archive.i.tez.ie:8732/'
+const provider = 'http://ecad-ithacanet-full.i.tez.ie:8732'
 
 async function example() {
   const tezos = new TezosToolkit(provider);

@@ -5,7 +5,7 @@ import { depositContractCode, depositContractStorage } from "./data/deposit_cont
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
   const testRetry = require('jest-retries');
-  const skipIdiazabalnet = protocol === Protocols.ProtoALpha ? test.skip : testRetry;
+  const skipIthacanet = protocol === Protocols.PsiThaCaT ? test.skip : testRetry;
   
   describe(`Test contract with unit as params using: ${rpc}`, () => {
 
@@ -13,7 +13,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       await setup()
       done()
     })
-    skipIdiazabalnet('Originates contract and calls deposit method with unit param', 2 , async (done: () => void) => {
+    skipIthacanet('Originates contract and calls deposit method with unit param', 2 , async (done: () => void) => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: depositContractCode,

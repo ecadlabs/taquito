@@ -57,12 +57,12 @@ interface FaucetConfig {
 }
 
 const ithacanetEphemeral = {
-  rpc: process.env['TEZOS_RPC_ITHACANET'] || 'https://ithacanet.ecadinfra.com',
+  rpc: process.env['TEZOS_RPC_ITHACANET'] || 'http://ecad-ithacanet-full.i.tez.ie:8732',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1UUS3M31GpFS4k5xQtp97oWGDhdzdT9mNJ',
   knownBigMapContract: 'KT1VFM8dyKv2YTFdLBZm8seJKgFnn7RMrDtv',
   knownTzip1216Contract: 'KT1PiiNe7icQHeaQ4Z8m27FVhYWQ2pPGMots',
-  protocol: Protocols.ProtoALpha,
+  protocol: Protocols.PsiThaCaT,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'https://api.tez.ie/keys/ithacanet',
@@ -85,12 +85,12 @@ const hangzhounetEphemeral = {
 }
 
 const ithacanetFaucet = {
-  rpc: process.env['TEZOS_RPC_ITHACANET'] || 'https://ithacanet.ecadinfra.com',
+  rpc: process.env['TEZOS_RPC_ITHACANET'] || 'http://ecad-ithacanet-full.i.tez.ie:8732',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1UUS3M31GpFS4k5xQtp97oWGDhdzdT9mNJ',
   knownBigMapContract: 'KT1VFM8dyKv2YTFdLBZm8seJKgFnn7RMrDtv',
   knownTzip1216Contract: 'KT1PiiNe7icQHeaQ4Z8m27FVhYWQ2pPGMots',
-  protocol: Protocols.ProtoALpha,
+  protocol: Protocols.PsiThaCaT,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
     faucetKey: {

@@ -4,14 +4,14 @@ import { depositContractCode, depositContractStorage } from "./data/deposit_cont
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const skipIdiazabalnet = protocol === Protocols.ProtoALpha ? test.skip : test;
+  const skipIthacanet = protocol === Protocols.PsiThaCaT ? test.skip : test;
   describe(`Test contract call with amount using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    skipIdiazabalnet('originates a contract and sends base layer tokens when calling contract methods', async (done) => {
+    skipIthacanet('originates a contract and sends base layer tokens when calling contract methods', async (done) => {
       const op = await Tezos.contract.originate({
         balance: "0",
         code: depositContractCode,

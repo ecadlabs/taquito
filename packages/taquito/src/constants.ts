@@ -40,7 +40,8 @@ export const protocols = {
   '009': [Protocols.PsFLorena],
   '010': [Protocols.PtGRANADs],
   '011': [Protocols.PtHangz2], // hangzhou v2,
-  '012': [Protocols.ProtoALpha]
+  '012': [Protocols.PsiThaCaT], //Ithaca
+  '013': [Protocols.ProtoALpha] 
 };
 
 export enum DefaultLambdaAddresses {
@@ -51,7 +52,7 @@ export enum DefaultLambdaAddresses {
   FLORENCENET = 'KT1KCe3YqGnudsiCWb5twbe2DH5T3EMdLpSE',
   GRANADANET = 'KT1BCun2vsA4GBQvsKAuGD5x873MfW2jsN9z',
   HANGZHOUNET = 'KT1PWtBAr1hjK9M9s9oZNZFbfzPdkkD6PSJR',
-  IDIAZABALNET = 'KT1HEnAszfBjRgUpXYfHNaHnjFbb6iZY247J'
+  ITHACANET = 'KT1HEnAszfBjRgUpXYfHNaHnjFbb6iZY247J'
 }
 
 export enum ChainIds {
@@ -62,5 +63,5 @@ export enum ChainIds {
   FLORENCENET = "NetXxkAx4woPLyu",
   GRANADANET = "NetXz969SFaFn8k", 
   HANGZHOUNET = "NetXZSsxBpMQeAT",
-  IDIAZABALNET = "NetXWya5crRz7LC"
+  ITHACANET = "NetXbhmtAbMukLc"
 }

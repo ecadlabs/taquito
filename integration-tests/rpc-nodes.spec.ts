@@ -7,7 +7,7 @@ import { Protocols } from '@taquito/taquito';
 
 CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup, protocol, rpc }) => {
     const Tezos = lib;
-    const skipIdiazabalnet = protocol === Protocols.ProtoALpha ? test.skip : test;
+    const skipIthacanet = protocol === Protocols.PsiThaCaT ? test.skip : test;
 
     beforeEach(async (done) => {
         await setup();
@@ -72,7 +72,7 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
                 done();
             });
 
-            skipIdiazabalnet(`Access the delegate of a contract`, async (done) => {
+            skipIthacanet(`Access the delegate of a contract`, async (done) => {
                 const delegate = await rpcClient.getDelegate(knownBaker);
                 expect(delegate).toBeDefined();
                 done();
@@ -108,7 +108,7 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
                 done();
             });
 
-            skipIdiazabalnet(`Fetches information about a delegate from RPC`, async (done) => {
+            skipIthacanet(`Fetches information about a delegate from RPC`, async (done) => {
                 const delegates = await rpcClient.getDelegates(knownBaker);
                 expect(delegates).toBeDefined();
                 done();
