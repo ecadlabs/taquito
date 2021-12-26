@@ -58,11 +58,10 @@ interface FaucetConfig {
 
 const ithacanetEphemeral = {
   rpc: process.env['TEZOS_RPC_ITHACANET'] || 'http://ecad-ithacanet-full.i.tez.ie:8732',
-  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD', //ECAD LABS Ithacanet baker
-  //These contracts are the same used in Faucet below:
-  knownContract: 'KT1UUS3M31GpFS4k5xQtp97oWGDhdzdT9mNJ', //Get from ~/example/deploy-integration-tests-contracts.ts
-  knownBigMapContract: 'KT1VFM8dyKv2YTFdLBZm8seJKgFnn7RMrDtv', //Get from ~/example/deploy-integration-tests-contracts.ts
-  knownTzip1216Contract: 'KT1PiiNe7icQHeaQ4Z8m27FVhYWQ2pPGMots', // Use contract Tzip12BigMapOffChain from ~/example/deploy-docs-live-code-contracts.ts
+  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD', 
+  knownContract: 'KT1J3BCZt5o8CA1xgqbV9Z1iEgoxuS1RamTa',
+  knownBigMapContract: 'KT1VC9dVmYYHyUXEw1KU8Ms6BmtvsGJNarZy', 
+  knownTzip1216Contract: 'KT1DWbrEN9BzoutK5LYfSe9DWrt7D2aoaoTJ', 
   protocol: Protocols.PsiThaCaT,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
@@ -75,7 +74,7 @@ const hangzhounetEphemeral = {
   rpc: process.env['TEZOS_RPC_HANGZHOUNET'] || 'https://hangzhounet.api.tez.ie',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1XfoRSZ88ioYHbuEKqHxJPawm9Rqc54uoy',
-  knownBigMapContract: 'KT1CnRSbp71FU8nz4xNEkcaASgMQDjNN85jd',
+  knownBigMapContract: 'KT1VC9dVmYYHyUXEw1KU8Ms6BmtvsGJNarZy',
   knownTzip1216Contract: 'KT1KquwVmLtq9StwCK46vpwRCxowqhcoV4g1',
   protocol: Protocols.PtHangz2,
   signerConfig: {
@@ -88,9 +87,9 @@ const hangzhounetEphemeral = {
 const ithacanetFaucet = {
   rpc: process.env['TEZOS_RPC_ITHACANET'] || 'http://ecad-ithacanet-full.i.tez.ie:8732',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1UUS3M31GpFS4k5xQtp97oWGDhdzdT9mNJ',
+  knownContract: 'KT1J3BCZt5o8CA1xgqbV9Z1iEgoxuS1RamTa',
   knownBigMapContract: 'KT1VFM8dyKv2YTFdLBZm8seJKgFnn7RMrDtv',
-  knownTzip1216Contract: 'KT1PiiNe7icQHeaQ4Z8m27FVhYWQ2pPGMots',
+  knownTzip1216Contract: 'KT1DWbrEN9BzoutK5LYfSe9DWrt7D2aoaoTJ',
   protocol: Protocols.PsiThaCaT,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
