@@ -59,7 +59,7 @@ jobs:
         CI: true
         TEZOS_RPC_HANGZHOUNET: ${{ secrets.TEZOS_RPC_HANGZHOUNET }}
 
-  integration-tests-ithicanet:
+  integration-tests-ithacanet:
     runs-on: ecad-taquito
     strategy:
       matrix:
