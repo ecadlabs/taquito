@@ -15,7 +15,7 @@ import { tzip7Contract } from '../integration-tests/data/tzip_7_contract';
 import { contractMapPairKey } from './data/contractMapPairKey';
 import { contractIncrementing } from './data/contractIncrementing';
 import { contractMapBigMap } from './data/contractMapInitialStorage';
-import { contractMapTacoShop } from './data/contractSingleMapStorage'
+import { contractMapTacoShop } from './data/contractSingleMapStorage';
 import { contractJson } from './data/contractJson';
 import { tokenCode, tokenInit } from '../integration-tests/data/tokens';
 import { fa2ForTokenMetadataView } from '../integration-tests/data/fa2-for-token-metadata-view';
@@ -37,6 +37,7 @@ export const tezos = new TezosToolkit(provider);
 let contract_catalogue = new Map();
 
 const users: Array<string> = [
+  //live code examples
   'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
   'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
   'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY',
@@ -47,20 +48,19 @@ const users: Array<string> = [
   'tz1NhNv9g7rtcjyNsH8Zqu79giY5aTqDDrzB',
   'tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE',
   'tz1XTyqBn4xi9tkRDutpRyQwHxfF8ar4i4Wq',
-  'tz1cT7uTbvGV3BDjW4xsEYXeJm2d7Uwfrott',
 ];
 
 let user_addresses = new Map();
 user_addresses.set('TestFunder', users[0]);
-// user_addresses.set('Alice', users[1]);
-// user_addresses.set('Deborah', users[2]);
-// user_addresses.set('Eddy', users[3]);
-// user_addresses.set('Freda', users[4]);
-// user_addresses.set('Glen', users[5]);
-// user_addresses.set('Validation', users[6]);
-// user_addresses.set('WalletReceiver', users[7]);
-// user_addresses.set('Allowances', users[8]);
-// user_addresses.set('BigMapLedger', users[9]);
+user_addresses.set('Alice', users[1]);
+user_addresses.set('Deborah', users[2]);
+user_addresses.set('Eddy', users[3]);
+user_addresses.set('Freda', users[4]);
+user_addresses.set('Glen', users[5]);
+user_addresses.set('Validation', users[6]);
+user_addresses.set('WalletReceiver', users[7]);
+user_addresses.set('Allowances', users[8]);
+user_addresses.set('BigMapLedger', users[9]);
 user_addresses.set('IntegrationTestUser', users[10]);
 
 var low_balance: Array<string> = [];
@@ -100,33 +100,39 @@ async function checkBalances(users: string | any[]) {
 async function originateTheContracts() {
   await checkBalances(users);
 
-  // console.log('originating...');
-  // contract_catalogue.set('IncrementContract', await originateIncrementContract());
-  // contract_catalogue.set('MichelsonMapContract', await originateMichelsonMap());
-  // contract_catalogue.set('LambdaViewContract', await originateLambda1());
-  // contract_catalogue.set('LambdaViewWithTokenContract', await originateLambda2());  
-  // contract_catalogue.set('MapWithWithSingleMapForStorage', await originateMapWithSingleMapForStorage());
-  // contract_catalogue.set('MapWithPairasMapContract', await originateMapWithPairasMapKeys());
-  // contract_catalogue.set('MapWithComplexKeysContract', await originateMapWithComplexKeys());
-  // contract_catalogue.set('MapWithInitialStorageContract', await originateInitialStorageWithMapAndBigMap());
-  // contract_catalogue.set('BigMapsMultipleValuesContract', await originateMapValueMultipleBigMaps());
-  // contract_catalogue.set(
-  //   'BigMapsComplexStorageContract',
-  //   await originateSmartContractComplexStorage()
-  // );
-  // contract_catalogue.set('Tzip12BigMapOffChainContract', await originateTZip12BigMapOffChain());
-  // contract_catalogue.set('Tzip16StorageContract', await originateTzip16Storage());
-  // contract_catalogue.set('Tzip16HTTPSContract', await originateTzip16Https());
-  // contract_catalogue.set('Tzip16SHA256Contract', await originateTzip16SHA256());
-  // contract_catalogue.set('Tzip16IPFSContract', await originateTzip16IPFS());
-  // contract_catalogue.set('Tzip16OffChainContractOne', await originateTzip16OnChainOne());
-  // contract_catalogue.set('Tzip16OffChainContractTwo', await originateTzip16OnChainTwo());
-  // contract_catalogue.set('WalletContract', await originateWalletOriginateContractTransfer());
-  // contract_catalogue.set('WalletAreYouThereContract', await originateWalletOriginateAreYouThere());
-  // contract_catalogue.set('TokenContract', await originateTokenContract());
-  // contract_catalogue.set('BigMapPackContract', await originateBigMapPackContract());
+  console.log('originating...');
+  contract_catalogue.set('IncrementContract', await originateIncrementContract());
+  contract_catalogue.set('MichelsonMapContract', await originateMichelsonMap());
+  contract_catalogue.set('LambdaViewContract', await originateLambda1());
+  contract_catalogue.set('LambdaViewWithTokenContract', await originateLambda2());
+  contract_catalogue.set(
+    'MapWithWithSingleMapForStorage',
+    await originateMapWithSingleMapForStorage()
+  );
+  contract_catalogue.set('MapWithPairasMapContract', await originateMapWithPairasMapKeys());
+  contract_catalogue.set('MapWithComplexKeysContract', await originateMapWithComplexKeys());
+  contract_catalogue.set(
+    'MapWithInitialStorageContract',
+    await originateInitialStorageWithMapAndBigMap()
+  );
+  contract_catalogue.set('BigMapsMultipleValuesContract', await originateMapValueMultipleBigMaps());
+  contract_catalogue.set(
+    'BigMapsComplexStorageContract',
+    await originateSmartContractComplexStorage()
+  );
+  contract_catalogue.set('Tzip12BigMapOffChainContract', await originateTZip12BigMapOffChain());
+  contract_catalogue.set('Tzip16StorageContract', await originateTzip16Storage());
+  contract_catalogue.set('Tzip16HTTPSContract', await originateTzip16Https());
+  contract_catalogue.set('Tzip16SHA256Contract', await originateTzip16SHA256());
+  contract_catalogue.set('Tzip16IPFSContract', await originateTzip16IPFS());
+  contract_catalogue.set('Tzip16OffChainContractOne', await originateTzip16OnChainOne());
+  contract_catalogue.set('Tzip16OffChainContractTwo', await originateTzip16OnChainTwo());
+  contract_catalogue.set('WalletContract', await originateWalletOriginateContractTransfer());
+  contract_catalogue.set('WalletAreYouThereContract', await originateWalletOriginateAreYouThere());
+  contract_catalogue.set('TokenContract', await originateTokenContract());
+  contract_catalogue.set('BigMapPackContract', await originateBigMapPackContract());
 
-  // json_contract_catalogue();
+  json_contract_catalogue();
 
   function json_contract_catalogue() {
     console.log(' ');
@@ -386,11 +392,10 @@ async function originateMapWithSingleMapForStorage() {
     storageMap.set('2', { current_stock: '120', max_price: '20' });
     storageMap.set('3', { current_stock: '50', max_price: '60' });
 
-    const op = await tezos.contract
-      .originate({
-        code: contractMapTacoShop,
-        storage: storageMap,
-      });
+    const op = await tezos.contract.originate({
+      code: contractMapTacoShop,
+      storage: storageMap,
+    });
 
     await (await op).confirmation();
     const contract = await op.contract();
