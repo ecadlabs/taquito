@@ -28,5 +28,6 @@ module.exports = {
     '/coverage/**',
   ],
   name: 'Taquito',
-  excludePrivate: true
+  excludePrivate: true,
+  gaID: 'G-SJYHCP5Z8P'
 };
