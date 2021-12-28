@@ -60,7 +60,7 @@ const ithacanetEphemeral = {
   rpc: process.env['TEZOS_RPC_ITHACANET'] || 'https://ithacanet.ecadinfra.com/',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD', 
   knownContract: 'KT1J3BCZt5o8CA1xgqbV9Z1iEgoxuS1RamTa',
-  knownBigMapContract: 'KT1VFM8dyKv2YTFdLBZm8seJKgFnn7RMrDtv', 
+  knownBigMapContract: 'KT1VC9dVmYYHyUXEw1KU8Ms6BmtvsGJNarZy', 
   knownTzip1216Contract: 'KT1DWbrEN9BzoutK5LYfSe9DWrt7D2aoaoTJ', 
   protocol: Protocols.PsiThaCa,
   signerConfig: {
@@ -115,7 +115,7 @@ const ithacanetFaucet = {
       "email": "lcmxowve.lmlksvxa@teztnets.xyz",
       "password": "rudDJKxp44",
       "amount": "116492897916",
-      "activation_code": "0dfbf62414e7f10dbb47fc3b16cfd6b95d99c22c"
+      "secret": "0dfbf62414e7f10dbb47fc3b16cfd6b95d99c22c"
     }
   },
 };
