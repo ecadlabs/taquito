@@ -12,6 +12,7 @@ compiled
 website/build/
 manifest.json
 !.vscode/extensions.json
+website/*.bak
 integration-tests/jest-stare
 packages/taquito/src/version.ts
 packages/taquito-beacon-wallet/src/version.ts
