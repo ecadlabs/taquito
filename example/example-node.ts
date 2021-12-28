@@ -2,7 +2,7 @@ import { TezosToolkit } from '../packages/taquito/src/taquito';
 import { RpcClient } from '../packages/taquito-rpc/src/taquito-rpc';
 import { castToString } from '../packages/taquito-rpc/src/utils/utils';
 
-const provider = 'http://ecad-ithacanet-full.i.tez.ie:8732'
+const provider = 'https://ithacanet.ecadinfra.com/'
 const client = new RpcClient(provider);
 
 async function example() {

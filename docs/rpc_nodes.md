@@ -21,14 +21,17 @@ author: Roxane Letourneau
     - Ithacanet: https://ithacanet.ecadinfra.com/ protocol: `PsiThaCaT47Zboaw71QWScM8sXeMM7bbQFncK9FLqYc6EKdpjVP`
 - SmartPy public Tezos nodes
     - Mainnet: https://mainnet.smartpy.io
+    - Hangzhounet: https://hangzhounet.smartpy.io/
+    - Ithacanet: https://ithacanet.smartpy.io/
 - Blockscale public nodes operated on behalf of the Tezos Foundation: 
     - Mainnet: https://rpc.tzbeta.net/
-    - Next protocol/version testnet (Granadanet): https://rpczero.tzbeta.net/
+    - Next protocol/version testnet (Ithacanet): https://rpczero.tzbeta.net/
 - Teznode Public nodes operated by LetzBake!:
     - Mainnet: https://teznode.letzbake.com
 - ~~Tezos Giga Node from Tezos Ukraine~~ Was expected cease to operations on Oct 1st 2021, but status is unkown. See
   [Announcment](https://twitter.com/GigaNode/status/1435265400699342854)
     - ~~Mainnet: https://mainnet-tezos.giganode.io~~
+    - Hangzhou testnet: https://testnet-tezos.giganode.io/
 
 ## How to run a node
 

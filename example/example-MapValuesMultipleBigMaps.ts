@@ -2,7 +2,7 @@ import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
 import { tokenCode } from '../integration-tests/data/tokens';
 
-const provider = 'http://ecad-ithacanet-full.i.tez.ie:8732'
+const provider = 'https://ithacanet.ecadinfra.com/'
 
 async function example() {
   const tezos = new TezosToolkit(provider)

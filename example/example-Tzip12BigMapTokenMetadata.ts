@@ -3,7 +3,7 @@ import { importKey } from '@taquito/signer';
 import { b58cencode, char2Bytes, Prefix, prefix } from '@taquito/utils';
 import { fa2TokenFactory } from '../integration-tests/data/fa2-token-factory';
 
-const provider = 'http://ecad-ithacanet-full.i.tez.ie:8732'
+const provider = 'https://ithacanet.ecadinfra.com/'
 
 const nodeCrypto = require('crypto');
 

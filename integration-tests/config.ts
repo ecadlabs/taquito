@@ -57,10 +57,10 @@ interface FaucetConfig {
 }
 
 const ithacanetEphemeral = {
-  rpc: process.env['TEZOS_RPC_ITHACANET'] || 'http://ecad-ithacanet-full.i.tez.ie:8732',
+  rpc: process.env['TEZOS_RPC_ITHACANET'] || 'https://ithacanet.ecadinfra.com/',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD', 
   knownContract: 'KT1J3BCZt5o8CA1xgqbV9Z1iEgoxuS1RamTa',
-  knownBigMapContract: 'KT1VC9dVmYYHyUXEw1KU8Ms6BmtvsGJNarZy', 
+  knownBigMapContract: 'KT1VFM8dyKv2YTFdLBZm8seJKgFnn7RMrDtv', 
   knownTzip1216Contract: 'KT1DWbrEN9BzoutK5LYfSe9DWrt7D2aoaoTJ', 
   protocol: Protocols.PsiThaCa,
   signerConfig: {
@@ -74,7 +74,7 @@ const hangzhounetEphemeral = {
   rpc: process.env['TEZOS_RPC_HANGZHOUNET'] || 'https://hangzhounet.api.tez.ie',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1XfoRSZ88ioYHbuEKqHxJPawm9Rqc54uoy',
-  knownBigMapContract: 'KT1VC9dVmYYHyUXEw1KU8Ms6BmtvsGJNarZy',
+  knownBigMapContract: 'KT1CnRSbp71FU8nz4xNEkcaASgMQDjNN85jd',
   knownTzip1216Contract: 'KT1KquwVmLtq9StwCK46vpwRCxowqhcoV4g1',
   protocol: Protocols.PtHangz2,
   signerConfig: {
@@ -85,38 +85,38 @@ const hangzhounetEphemeral = {
 };
 
 const ithacanetFaucet = {
-  rpc: process.env['TEZOS_RPC_ITHACANET'] || 'http://ecad-ithacanet-full.i.tez.ie:8732',
+  rpc: process.env['TEZOS_RPC_ITHACANET'] || 'https://ithacanet.ecadinfra.com/',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1J3BCZt5o8CA1xgqbV9Z1iEgoxuS1RamTa',
-  knownBigMapContract: 'KT1VFM8dyKv2YTFdLBZm8seJKgFnn7RMrDtv',
+  knownBigMapContract: 'KT1VC9dVmYYHyUXEw1KU8Ms6BmtvsGJNarZy',
   knownTzip1216Contract: 'KT1DWbrEN9BzoutK5LYfSe9DWrt7D2aoaoTJ',
   protocol: Protocols.PsiThaCa,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
-    faucetKey: {
-      pkh: 'tz1S6Y5J1i5JbXQf9eigvrZdghtjCApC8gUG',
-      mnemonic: [
-        'throw',
-        'rose',
-        'girl',
-        'arrange',
-        'practice',
-        'fiber',
-        'speed',
-        'delay',
-        'economy',
-        'wine',
-        'cable',
-        'copper',
-        'sweet',
-        'bag',
-        'wasp',
+      faucetKey: {  
+      "pkh": "tz1LyuwEK3cPX8eHankqJW6hKJNpXAEPZaQz",
+      "mnemonic": [
+        "source",
+        "fantasy",
+        "diary",
+        "situate",
+        "spring",
+        "prize",
+        "solution",
+        "dawn",
+        "exotic",
+        "butter",
+        "barrel",
+        "garden",
+        "transfer",
+        "alcohol",
+        "edit"
       ],
-      email: 'hxkxykcy.edpwomka@teztnets.xyz',
-      password: 'vzVIvhuItq',
-      amount: '143524244923',
-      secret: 'c83d1fba98e408bc142b3a9568a27207e5544b99',
-    },
+      "email": "lcmxowve.lmlksvxa@teztnets.xyz",
+      "password": "rudDJKxp44",
+      "amount": "116492897916",
+      "activation_code": "0dfbf62414e7f10dbb47fc3b16cfd6b95d99c22c"
+    }
   },
 };
 
