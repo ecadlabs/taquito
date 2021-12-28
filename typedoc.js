@@ -29,6 +29,5 @@ module.exports = {
   ],
   name: 'Taquito',
   excludePrivate: true,
-  gaID: 'G-SJYHCP5Z8P',
-  media: './website/static/img/'
+  gaID: 'G-SJYHCP5Z8P'
 };
