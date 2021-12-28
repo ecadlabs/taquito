@@ -7,7 +7,7 @@ import { Protocols } from '@taquito/taquito';
 
 CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup, protocol, rpc }) => {
     const Tezos = lib;
-    const skipIthacanet = protocol === Protocols.PsiThaCaT ? test.skip : test;
+    const skipIthacanet = protocol === Protocols.PsiThaCa ? test.skip : test;
 
     beforeEach(async (done) => {
         await setup();

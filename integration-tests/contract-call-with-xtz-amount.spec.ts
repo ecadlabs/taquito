@@ -4,7 +4,7 @@ import { depositContractCode, depositContractStorage } from "./data/deposit_cont
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const skipIthacanet = protocol === Protocols.PsiThaCaT ? test.skip : test;
+  const skipIthacanet = protocol === Protocols.PsiThaCa ? test.skip : test;
   describe(`Test contract call with amount using: ${rpc}`, () => {
 
     beforeEach(async (done) => {

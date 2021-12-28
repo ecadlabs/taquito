@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
   const Tezos = lib;
 
   const hangzhounet = (protocol === Protocols.PtHangz2) ? test : test.skip;
-  const ithacanet = (protocol === Protocols.PsiThaCaT) ? test : test.skip;
+  const ithacanet = (protocol === Protocols.PsiThaCa) ? test : test.skip;
 
   describe(`Estimate scenario using: ${rpc}`, () => {
     let LowAmountTez: TezosToolkit;
@@ -245,7 +245,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       expect(estimate.minimalFeeMutez).toEqual(693);
       expect(estimate.totalCost).toEqual(79943);
       expect(estimate.usingBaseFeeMutez).toEqual(693);
-      expect(estimate.consumedMilligas).toEqual(3506928);
+      expect(estimate.consumedMilligas).toEqual(3507042);
       done();
     })
 
@@ -327,7 +327,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       // fee, gasLimit and storage limit are not taken into account
       const params = { fee: 2000, to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) }
 
-      if (protocol === Protocols.PsiThaCaT) {
+      if (protocol === Protocols.PsiThaCa) {
         await expect(LowAmountTez.estimate.transfer(params)).rejects.toEqual(
           expect.objectContaining({
             message: expect.stringContaining('balance_too_low'),

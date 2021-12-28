@@ -6,7 +6,7 @@ import { HttpResponseError } from "@taquito/http-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const hangzhounetOrHigher = (protocol === Protocols.PtHangz2 || protocol === Protocols.PsiThaCaT) ? test : test.skip;
+  const hangzhounetOrHigher = (protocol === Protocols.PtHangz2 || protocol === Protocols.PsiThaCa) ? test : test.skip;
   describe(`On chain views using the contract API: ${rpc}`, () => {
 
     beforeEach(async (done) => {

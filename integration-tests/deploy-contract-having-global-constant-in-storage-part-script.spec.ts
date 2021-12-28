@@ -4,7 +4,7 @@ import { voteSampleGlobalConstants } from './data/vote_contract_global_constant_
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
     const Tezos = lib;
-    const hangzhounetOrHigher = (protocol === Protocols.PtHangz2 || protocol === Protocols.PsiThaCaT) ? test : test.skip;
+    const hangzhounetOrHigher = (protocol === Protocols.PtHangz2 || protocol === Protocols.PsiThaCa) ? test : test.skip;
 
     describe(`Originate a voting contract having two global constants in the storage section of its code: ${rpc}`, () => {
         const globalConstant1 = {
