@@ -37,7 +37,7 @@ module.exports = {
           type: 'docsVersionDropdown',
           position: 'right',
         },
-        { to: 'docs/quick_start', label: 'Docs', position: 'right' },
+        { to: 'docs/version', label: 'Release Notes', position: 'right' },
         { href: "https://twitter.com/TezosTaquito", label: 'Twitter', position: 'right' },
         { href: "https://github.com/ecadlabs/taquito", label: 'GitHub', position: 'right' }
       ]
