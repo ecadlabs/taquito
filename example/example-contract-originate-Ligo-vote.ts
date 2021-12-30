@@ -2,7 +2,7 @@ import { TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
 import { voteInitSample, voteSample } from '../integration-tests/data/vote-contract';
 
-const provider = 'https://hangzhounet.api.tez.ie';
+const provider = 'https://ithacanet.ecadinfra.com/'
 
 async function example() {
   const tezos = new TezosToolkit(provider);

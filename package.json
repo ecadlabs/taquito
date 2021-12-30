@@ -13,9 +13,7 @@
     "example": "cd example && npm run example",
     "lerna": "lerna",
     "build-docs": "typedoc",
-    "gh-pages": "gh-pages",
-    "netlify:preview": "netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json --alias=$short_sha --message 'Deployment for $GITHUB_REF'",
-    "netlify:publish": "netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json --prod --message 'Deployment for $GITHUB_REF'"
+    "gh-pages": "gh-pages"
   },
   "workspaces": [
     "packages/*"

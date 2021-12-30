@@ -15,8 +15,9 @@ import { tzip7Contract } from '../integration-tests/data/tzip_7_contract';
 import { contractMapPairKey } from './data/contractMapPairKey';
 import { contractIncrementing } from './data/contractIncrementing';
 import { contractMapBigMap } from './data/contractMapInitialStorage';
-import { contractMapTacoShop } from './data/contractSingleMapStorage'
+import { contractMapTacoShop } from './data/contractSingleMapStorage';
 import { contractJson } from './data/contractJson';
+import { contractOnChainViews } from './data/contractOnChainViews';
 import { tokenCode, tokenInit } from '../integration-tests/data/tokens';
 import { fa2ForTokenMetadataView } from '../integration-tests/data/fa2-for-token-metadata-view';
 import { tacoContractTzip16 } from '../integration-tests/data/modified-taco-contract';
@@ -28,7 +29,7 @@ import {
 import { contractMap8pairs } from './data/contractMap8pairs';
 import { char2Bytes } from '@taquito/utils';
 
-const provider = 'https://hangzhounet.api.tez.ie';
+const provider = 'https://ithacanet.ecadinfra.com/';
 export const signer: any = new InMemorySigner(
   'edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca'
 );
@@ -37,6 +38,7 @@ export const tezos = new TezosToolkit(provider);
 let contract_catalogue = new Map();
 
 const users: Array<string> = [
+  //live code examples
   'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
   'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
   'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY',
@@ -60,6 +62,7 @@ user_addresses.set('Validation', users[6]);
 user_addresses.set('WalletReceiver', users[7]);
 user_addresses.set('Allowances', users[8]);
 user_addresses.set('BigMapLedger', users[9]);
+user_addresses.set('IntegrationTestUser', users[10]);
 
 var low_balance: Array<string> = [];
 
@@ -102,26 +105,34 @@ async function originateTheContracts() {
   contract_catalogue.set('IncrementContract', await originateIncrementContract());
   contract_catalogue.set('MichelsonMapContract', await originateMichelsonMap());
   contract_catalogue.set('LambdaViewContract', await originateLambda1());
-  contract_catalogue.set('LambdaViewWithTokenContract', await originateLambda2());  
-  contract_catalogue.set('MapWithWithSingleMapForStorage', await originateMapWithSingleMapForStorage());
+  contract_catalogue.set('LambdaViewWithTokenContract', await originateLambda2());
+  contract_catalogue.set(
+    'MapWithWithSingleMapForStorage',
+    await originateMapWithSingleMapForStorage()
+  );
   contract_catalogue.set('MapWithPairasMapContract', await originateMapWithPairasMapKeys());
   contract_catalogue.set('MapWithComplexKeysContract', await originateMapWithComplexKeys());
-  contract_catalogue.set('MapWithInitialStorageContract', await originateInitialStorageWithMapAndBigMap());
+  contract_catalogue.set(
+    'MapWithInitialStorageContract',
+    await originateInitialStorageWithMapAndBigMap()
+  );
   contract_catalogue.set('BigMapsMultipleValuesContract', await originateMapValueMultipleBigMaps());
   contract_catalogue.set(
     'BigMapsComplexStorageContract',
     await originateSmartContractComplexStorage()
   );
+  contract_catalogue.set('ContractCallFib', await originateContractCallFib());
+  contract_catalogue.set('ContractTopLevelViews', await originateContractTopLevelViews());
+  contract_catalogue.set('TokenContract', await originateTokenContract());
   contract_catalogue.set('Tzip12BigMapOffChainContract', await originateTZip12BigMapOffChain());
   contract_catalogue.set('Tzip16StorageContract', await originateTzip16Storage());
   contract_catalogue.set('Tzip16HTTPSContract', await originateTzip16Https());
   contract_catalogue.set('Tzip16SHA256Contract', await originateTzip16SHA256());
   contract_catalogue.set('Tzip16IPFSContract', await originateTzip16IPFS());
-  contract_catalogue.set('Tzip16OffChainContractOne', await originateTzip16OnChainOne());
-  contract_catalogue.set('Tzip16OffChainContractTwo', await originateTzip16OnChainTwo());
+  contract_catalogue.set('Tzip16OffChainContractJSON', await originateTzip16OnChainJSON());
+  contract_catalogue.set('Tzip16OffChainContractMultiply', await originateTzip16OnChainMultiply());
   contract_catalogue.set('WalletContract', await originateWalletOriginateContractTransfer());
   contract_catalogue.set('WalletAreYouThereContract', await originateWalletOriginateAreYouThere());
-  contract_catalogue.set('TokenContract', await originateTokenContract());
   contract_catalogue.set('BigMapPackContract', await originateBigMapPackContract());
 
   json_contract_catalogue();
@@ -384,11 +395,10 @@ async function originateMapWithSingleMapForStorage() {
     storageMap.set('2', { current_stock: '120', max_price: '20' });
     storageMap.set('3', { current_stock: '50', max_price: '60' });
 
-    const op = await tezos.contract
-      .originate({
-        code: contractMapTacoShop,
-        storage: storageMap,
-      });
+    const op = await tezos.contract.originate({
+      code: contractMapTacoShop,
+      storage: storageMap,
+    });
 
     await (await op).confirmation();
     const contract = await op.contract();
@@ -459,6 +469,43 @@ async function originateSmartContractComplexStorage() {
     await op.confirmation();
     const contract = await op.contract();
     console.log('BigMapsComplexStorageContract : ' + contract.address);
+    return contract.address;
+  } catch (ex) {
+    console.error(ex);
+  }
+}
+
+async function originateContractCallFib() {
+  tezos.setSignerProvider(signer);
+  try {
+    const op = await tezos.contract.originate({
+      code: ` parameter (pair nat address);
+      storage nat;
+      code { CAR ;
+             UNPAIR ;
+             VIEW "fib" nat ;
+             { IF_NONE { { UNIT ; FAILWITH } } { NIL operation ; PAIR } } }`,
+      storage: 1        
+    });
+    await op.confirmation();
+    const contract = await op.contract();
+    console.log('ContractCallFib : ' + contract.address);
+    return contract.address;
+  } catch (ex) {
+    console.error(ex);
+  }
+}
+
+async function originateContractTopLevelViews() {
+  tezos.setSignerProvider(signer);
+  try {
+    const op = await tezos.contract.originate({
+      code: contractOnChainViews,
+      storage: 1        
+    });
+    await op.confirmation();
+    const contract = await op.contract();
+    console.log('ContractOnChainViews : ' + contract.address);
     return contract.address;
   } catch (ex) {
     console.error(ex);
@@ -657,7 +704,7 @@ async function originateTzip16IPFS() {
   }
 }
 
-async function originateTzip16OnChainOne() {
+async function originateTzip16OnChainJSON() {
   tezos.setSignerProvider(signer);
   try {
     const metadataBigMAp = new MichelsonMap();
@@ -673,14 +720,14 @@ async function originateTzip16OnChainOne() {
     });
     await op.confirmation();
     const contract = await op.contract();
-    console.log('Tzip16OnChainContractOne : ' + contract.address);
+    console.log('Tzip16OnChainContractJSON : ' + contract.address);
     return contract.address;
   } catch (ex) {
     console.error(ex);
   }
 }
 
-async function originateTzip16OnChainTwo() {
+async function originateTzip16OnChainMultiply() {
   tezos.setSignerProvider(signer);
   try {
     const metadataBigMAp = new MichelsonMap();
@@ -696,7 +743,7 @@ async function originateTzip16OnChainTwo() {
     });
     await op.confirmation();
     const contract = await op.contract();
-    console.log('Tzip16OnChainContractTwo : ' + contract.address);
+    console.log('Tzip16OnChainContractMultiply : ' + contract.address);
     return contract.address;
   } catch (ex) {
     console.error(ex);
