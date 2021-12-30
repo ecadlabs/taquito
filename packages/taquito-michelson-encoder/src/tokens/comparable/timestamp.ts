@@ -51,6 +51,5 @@ export class TimestampToken extends ComparableToken {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }

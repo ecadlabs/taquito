@@ -65,8 +65,7 @@
   "dependencies": {
     "@taquito/michelson-encoder": "^11.1.0",
     "@taquito/taquito": "^11.1.0",
-    "@taquito/tzip16": "^11.1.0",
-    "bignumber.js": "^9.0.2"
+    "@taquito/tzip16": "^11.1.0"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.36",

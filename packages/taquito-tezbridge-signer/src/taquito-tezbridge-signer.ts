@@ -5,6 +5,7 @@
 import { b58cdecode, b58cencode, buf2hex, prefix, isValidPrefix } from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
 
+// eslint-disable-next-line no-var
 declare var tezbridge: any;
 
 export { VERSION } from './version';

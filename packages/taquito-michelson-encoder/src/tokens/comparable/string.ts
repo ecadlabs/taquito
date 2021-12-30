@@ -45,6 +45,5 @@ export class StringToken extends ComparableToken {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }

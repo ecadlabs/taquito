@@ -11,8 +11,8 @@
 
 import { Buffer } from 'buffer';
 import { Prefix, prefix, prefixLength } from './constants';
-import  { validatePkAndExtractPrefix } from './verify-signature'
-import { hash } from '@stablelib/blake2b'
+import { validatePkAndExtractPrefix } from './verify-signature';
+import { hash } from '@stablelib/blake2b';
 const blake = require('blakejs');
 const bs58check = require('bs58check');
 
@@ -21,7 +21,7 @@ export { VERSION } from './version';
 
 export { prefix, Prefix, prefixLength } from './constants';
 
-export { verifySignature, validatePkAndExtractPrefix} from './verify-signature';
+export { verifySignature, validatePkAndExtractPrefix } from './verify-signature';
 
 /**
  *
@@ -36,10 +36,10 @@ export function encodeExpr(value: string) {
 
 /**
  *
- * @description Return the operation hash of a signed operation 
+ * @description Return the operation hash of a signed operation
  * @param value Value in hex of a signed operation
  */
- export function encodeOpHash(value: string) {
+export function encodeOpHash(value: string) {
   const blakeHash = blake.blake2b(hex2buf(value), null, 32);
   return b58cencode(blakeHash, prefix.o);
 }
@@ -86,7 +86,7 @@ export function b58decode(payload: string) {
     [prefix.tz3.toString()]: '0002',
   };
 
-  let pref = prefixMap[new Uint8Array(buf.slice(0, 3)).toString()];
+  const pref = prefixMap[new Uint8Array(buf.slice(0, 3)).toString()];
   if (pref) {
     // tz addresses
     const hex = buf2hex(buf.slice(3));
@@ -244,15 +244,15 @@ export const buf2hex = (buffer: Buffer): string => {
 };
 
 /**
- * 
+ *
  *  @description Gets Tezos address (PKH) from Public Key
- * 
+ *
  *  @param publicKey Public Key
  *  @returns A string of the Tezos address (PKH) that was derived from the given Public Key
  */
- export const getPkhfromPk = (publicKey: string): string => {
-   let encodingPrefix;
-   let prefixLen;
+export const getPkhfromPk = (publicKey: string): string => {
+  let encodingPrefix;
+  let prefixLen;
 
   const keyPrefix = validatePkAndExtractPrefix(publicKey);
   const decoded = b58cdecode(publicKey, prefix[keyPrefix]);
@@ -276,7 +276,7 @@ export const buf2hex = (buffer: Buffer): string => {
   const result = b58cencode(hashed, encodingPrefix);
 
   return result;
-}
+};
 
 /**
  *

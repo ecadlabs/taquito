@@ -49,6 +49,5 @@ export class UnitToken extends ComparableToken {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }

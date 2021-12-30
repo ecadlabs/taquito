@@ -5,11 +5,10 @@
 
 import { STATUS_CODE } from './status_code';
 
-// tslint:disable: strict-type-predicates
 const isNode =
   typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
-// tslint:enable: strict-type-predicates
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const XMLHttpRequestCTOR = isNode ? require('xhr2-cookies').XMLHttpRequest : XMLHttpRequest;
 
 export * from './status_code';
@@ -56,6 +55,7 @@ export class HttpBackend {
 
     const str = [];
     for (const p in obj) {
+      // eslint-disable-next-line no-prototype-builtins
       if (obj.hasOwnProperty(p) && typeof obj[p] !== 'undefined') {
         const prop = typeof obj[p].toJSON === 'function' ? obj[p].toJSON() : obj[p];
         // query arguments can have no value so we need some way of handling that
@@ -101,6 +101,7 @@ export class HttpBackend {
       json = true,
       mimeType = undefined,
     }: HttpRequestOptions,
+    // eslint-disable-next-line @typescript-eslint/ban-types
     data?: {}
   ) {
     return new Promise<T>((resolve, reject) => {

@@ -1,4 +1,5 @@
-const { resolve, relative } = require('path');
+/* eslint-disable @typescript-eslint/no-var-requires */
+const { resolve } = require('path');
 const { writeFileSync } = require('fs-extra');
 const { version } = require('./package.json');
 let commitHash = process.env.GIT_COMMIT;

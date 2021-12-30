@@ -1,8 +1,8 @@
 import { Forger, ForgeParams, ForgeResponse } from './interface';
 
 export class ForgingMismatchError implements Error {
-  name: string = 'ForgingMismatchError';
-  message: string = 'Forging mismatch error';
+  name = 'ForgingMismatchError';
+  message = 'Forging mismatch error';
   constructor(public results: string[]) {}
 }
 
@@ -15,7 +15,7 @@ export class CompositeForger implements Forger {
 
   async forge({ branch, contents }: ForgeParams): Promise<ForgeResponse> {
     const results = await Promise.all(
-      this.forgers.map(forger => {
+      this.forgers.map((forger) => {
         return forger.forge({ branch, contents });
       })
     );

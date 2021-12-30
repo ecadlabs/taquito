@@ -2,7 +2,7 @@ import { Token, TokenFactory, ComparableToken, TokenValidationError } from '../t
 import { encodeKeyHash, validateKeyHash, ValidationResult } from '@taquito/utils';
 
 export class KeyHashValidationError extends TokenValidationError {
-  name: string = 'KeyHashValidationError';
+  name = 'KeyHashValidationError';
   constructor(public value: any, public token: KeyHashToken, message: string) {
     super(value, token, message);
   }
@@ -80,6 +80,5 @@ export class KeyHashToken extends ComparableToken {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }

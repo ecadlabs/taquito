@@ -23,13 +23,12 @@ export class OptionToken extends ComparableToken {
 
   public Encode(args: any): any {
     const value = args;
-    if (
-      value === undefined ||
-      value === null
-    ) {
+    if (value === undefined || value === null) {
       return { prim: 'None' };
-    }
-    else if ((Array.isArray(value) && (value[value.length - 1] === undefined || value[value.length - 1] === null))) {
+    } else if (
+      Array.isArray(value) &&
+      (value[value.length - 1] === undefined || value[value.length - 1] === null)
+    ) {
       value.pop();
       return { prim: 'None' };
     }
@@ -74,11 +73,11 @@ export class OptionToken extends ComparableToken {
 
   compare(val1: any, val2: any) {
     if (!val1) {
-      return -1
+      return -1;
     } else if (!val2) {
-      return 1
+      return 1;
     }
-    return this.KeySchema.compare(val1, val2)
+    return this.KeySchema.compare(val1, val2);
   }
 
   public ToKey(val: any) {
@@ -98,6 +97,5 @@ export class OptionToken extends ComparableToken {
     }
     this.subToken().findAndReturnTokens(tokenToFind, tokens);
     return tokens;
-  };
-
+  }
 }

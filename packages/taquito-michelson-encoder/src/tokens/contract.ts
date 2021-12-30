@@ -2,7 +2,7 @@ import { encodePubKey, validateAddress, ValidationResult } from '@taquito/utils'
 import { Token, TokenFactory, TokenValidationError } from './token';
 
 export class ContractValidationError extends TokenValidationError {
-  name: string = 'ContractValidationError';
+  name = 'ContractValidationError';
   constructor(public value: any, public token: ContractToken, message: string) {
     super(value, token, message);
   }
@@ -62,6 +62,5 @@ export class ContractToken extends Token {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }

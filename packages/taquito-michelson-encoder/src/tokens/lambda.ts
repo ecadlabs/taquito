@@ -43,9 +43,8 @@ export class LambdaToken extends Token {
     if (LambdaToken.prim === tokenToFind) {
       tokens.push(this);
     }
-    this.createToken(this.val.args[0], this.idx).findAndReturnTokens(tokenToFind, tokens)
-    this.createToken(this.val.args[1], this.idx).findAndReturnTokens(tokenToFind, tokens)
+    this.createToken(this.val.args[0], this.idx).findAndReturnTokens(tokenToFind, tokens);
+    this.createToken(this.val.args[1], this.idx).findAndReturnTokens(tokenToFind, tokens);
     return tokens;
-  };
-
+  }
 }

@@ -151,7 +151,7 @@ export class RpcContractProvider
     keys: Array<BigMapKeyType>,
     schema: Schema,
     block?: number,
-    batchSize: number = 5
+    batchSize = 5
   ): Promise<MichelsonMap<MichelsonMapKey, T | undefined>> {
     const level = await this.getBlockForRequest(keys, block);
     const bigMapValues = new MichelsonMap<MichelsonMapKey, T | undefined>();
@@ -378,7 +378,10 @@ export class RpcContractProvider
    */
   async registerGlobalConstant(params: RegisterGlobalConstantParams) {
     const publickKeyHash = await this.signer.publicKeyHash();
-    const estimate = await this.estimate(params, this.estimator.registerGlobalConstant.bind(this.estimator));
+    const estimate = await this.estimate(
+      params,
+      this.estimator.registerGlobalConstant.bind(this.estimator)
+    );
     const operation = await createRegisterGlobalConstantOperation({
       ...params,
       ...estimate,
@@ -387,10 +390,20 @@ export class RpcContractProvider
     const prepared = await this.prepareOperation({ operation: ops, source: publickKeyHash });
     const opBytes = await this.forge(prepared);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
-    return new RegisterGlobalConstantOperation(hash, operation, publickKeyHash, forgedBytes, opResponse, context);
+    return new RegisterGlobalConstantOperation(
+      hash,
+      operation,
+      publickKeyHash,
+      forgedBytes,
+      opResponse,
+      context
+    );
   }
 
-  async at<T extends ContractAbstraction<ContractProvider>>(address: string, contractAbstractionComposer: ContractAbstractionComposer<T> = x => x as any): Promise<T> {
+  async at<T extends ContractAbstraction<ContractProvider>>(
+    address: string,
+    contractAbstractionComposer: ContractAbstractionComposer<T> = (x) => x as any
+  ): Promise<T> {
     const rpc = this.context.withExtensions().rpc;
     const script = await rpc.getNormalizedScript(address);
     const entrypoints = await rpc.getEntrypoints(address);
