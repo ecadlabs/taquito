@@ -213,7 +213,9 @@ export class Context {
       }
       let confirmationPollingInterval = BigNumber.sum(
         blockTime,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         new BigNumber(constants.delay_per_missing_endorsement!).multipliedBy(
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           Math.max(0, constants.initial_endorsers! - constants.endorsers_per_block)
         )
       );

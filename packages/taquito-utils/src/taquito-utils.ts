@@ -160,7 +160,12 @@ export function encodeKeyHash(value: string) {
  * @param hex Hex string to convert
  */
 export const hex2buf = (hex: string): Uint8Array => {
-  return new Uint8Array(hex.match(/[\da-f]{2}/gi)!.map((h) => parseInt(h, 16)));
+  const match = hex.match(/[\da-f]{2}/gi);
+  if (match) {
+    return new Uint8Array(match.map((h) => parseInt(h, 16)));
+  } else {
+    throw new Error(`Unable to convert ${hex} to a Uint8Array`);
+  }
 };
 
 /**

@@ -24,7 +24,7 @@ function collapse(val: Token['val'] | any[], prim: string = PairToken.prim): Tok
     return {
       ...val,
       args: [
-        val.args![0],
+        val.args?.[0],
         {
           prim: prim,
           args: val.args?.slice(1),

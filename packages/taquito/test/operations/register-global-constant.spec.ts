@@ -175,7 +175,7 @@ describe('RegisterGlobalConstant operation', () => {
       fakeContext
     );
     expect(op.errors).toBeDefined();
-    expect(op.errors![0]).toEqual({
+    expect(op.errors?.[0]).toEqual({
       kind: 'temporary',
       id: 'proto.011-PtHangzH.storage_exhausted.operation',
     });

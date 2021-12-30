@@ -240,9 +240,9 @@ export abstract class OperationEmitter {
     }
 
     return {
-      fee: calculatedFee!,
-      gasLimit: calculatedGas!,
-      storageLimit: calculatedStorage!,
+      fee: calculatedFee,
+      gasLimit: calculatedGas,
+      storageLimit: calculatedStorage,
     };
   }
 

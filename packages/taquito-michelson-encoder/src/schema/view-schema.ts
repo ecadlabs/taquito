@@ -44,6 +44,7 @@ export class ViewSchema {
     if (val.length !== 4 || !('string' in val[0])) {
       throw new InvalidScriptError(`Invalid on-chain view: ${JSON.stringify(val)}`);
     }
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.viewName = val[0]['string']!;
     this.viewArgsType = val[1] as MichelsonV1ExpressionExtended;
     this.viewReturnType = val[2] as MichelsonV1ExpressionExtended;
