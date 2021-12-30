@@ -59,7 +59,7 @@ jobs:
         CI: true
         TEZOS_RPC_HANGZHOUNET: ${{ secrets.TEZOS_RPC_HANGZHOUNET }}
 
-  integration-tests-idiazabalnet:
+  integration-tests-ithacanet:
     runs-on: ecad-taquito
     strategy:
       matrix:
@@ -78,7 +78,7 @@ jobs:
     - run: npm ci
     - run: npm run lerna -- bootstrap
     - run: npm run build
-    - run: cd integration-tests && npm run test:idiazabalnet -- --maxWorkers=8
+    - run: cd integration-tests && npm run test:ithacanet -- --maxWorkers=8
       env:
         CI: true
-        TEZOS_RPC_IDIAZABALNET: ${{ secrets.TEZOS_RPC_IDIAZABALNET }}
+        TEZOS_RPC_ITHACANET: ${{ secrets.TEZOS_RPC_ITHACANET }}

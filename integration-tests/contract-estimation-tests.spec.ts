@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
   const Tezos = lib;
 
   const hangzhounet = (protocol === Protocols.PtHangz2) ? test : test.skip;
-  const idiazabalnet = (protocol === Protocols.ProtoALpha) ? test : test.skip;
+  const ithacanet = (protocol === Protocols.PsiThaCa) ? test : test.skip;
 
   describe(`Estimate scenario using: ${rpc}`, () => {
     let LowAmountTez: TezosToolkit;
@@ -52,7 +52,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     })
 
-    idiazabalnet('Estimate transfer with allocated destination', async (done) => {
+    ithacanet('Estimate transfer with allocated destination', async (done) => {
       const estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 1.9 });
       expect(estimate.gasLimit).toEqual(1521);
       expect(estimate.storageLimit).toEqual(0);
@@ -78,7 +78,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     });
 
-    idiazabalnet('Estimate transfer with unallocated destination', async (done) => {
+    ithacanet('Estimate transfer with unallocated destination', async (done) => {
       const estimate = await LowAmountTez.estimate.transfer({ to: await (await createAddress()).signer.publicKeyHash(), amount: 1.7 });
       expect(estimate.gasLimit).toEqual(1521);
       expect(estimate.storageLimit).toEqual(257);
@@ -108,7 +108,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     });
 
-    idiazabalnet('Estimate simple origination', async (done) => {
+    ithacanet('Estimate simple origination', async (done) => {
       const estimate = await LowAmountTez.estimate.originate({
         balance: "1",
         code: ligoSample,
@@ -141,7 +141,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     })
 
-    idiazabalnet('Estimate setDelegate', async (done) => {
+    ithacanet('Estimate setDelegate', async (done) => {
       const estimate = await LowAmountTez.estimate.setDelegate({
         delegate: knownBaker,
         source: await LowAmountTez.signer.publicKeyHash(),
@@ -171,7 +171,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     })
 
-    idiazabalnet('Estimate internal transfer to allocated implicit', async (done) => {
+    ithacanet('Estimate internal transfer to allocated implicit', async (done) => {
       const tx = contract.methods.do(MANAGER_LAMBDA.transferImplicit(knownBaker, 50)).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx)
       expect(estimate.gasLimit).toEqual(3614);
@@ -181,7 +181,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       expect(estimate.minimalFeeMutez).toEqual(688);
       expect(estimate.totalCost).toEqual(688);
       expect(estimate.usingBaseFeeMutez).toEqual(688);
-      expect(estimate.consumedMilligas).toEqual(3513759);
+      expect(estimate.consumedMilligas).toEqual(3513873);
       done();
     })
 
@@ -203,7 +203,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     })
 
-    idiazabalnet('Estimate to multiple internal transfer to unallocated account', async (done) => {
+    ithacanet('Estimate to multiple internal transfer to unallocated account', async (done) => {
       const tx = contract.methods.do(transferImplicit2(
         await (await createAddress()).signer.publicKeyHash(),
         await (await createAddress()).signer.publicKeyHash(),
@@ -217,7 +217,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       expect(estimate.minimalFeeMutez).toEqual(890);
       expect(estimate.totalCost).toEqual(129390);
       expect(estimate.usingBaseFeeMutez).toEqual(890);
-      expect(estimate.consumedMilligas).toEqual(4942260);
+      expect(estimate.consumedMilligas).toEqual(4942374);
       done();
     })
 
@@ -235,7 +235,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     })
 
-    idiazabalnet('Estimate internal origination', async (done) => {
+    ithacanet('Estimate internal origination', async (done) => {
       const tx = contract.methods.do(originate()).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx)
       expect(estimate.gasLimit).toEqual(3608);
@@ -245,7 +245,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       expect(estimate.minimalFeeMutez).toEqual(693);
       expect(estimate.totalCost).toEqual(79943);
       expect(estimate.usingBaseFeeMutez).toEqual(693);
-      expect(estimate.consumedMilligas).toEqual(3507156);
+      expect(estimate.consumedMilligas).toEqual(3507270);
       done();
     })
 
@@ -266,7 +266,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     })
 
-    idiazabalnet('Estimate multiple internal origination', async (done) => {
+    ithacanet('Estimate multiple internal origination', async (done) => {
       const tx = contract.methods.do(originate2()).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx)
       expect(estimate.gasLimit).toEqual(5030);
@@ -276,7 +276,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       expect(estimate.minimalFeeMutez).toEqual(900);
       expect(estimate.totalCost).toEqual(159400);
       expect(estimate.usingBaseFeeMutez).toEqual(900);
-      expect(estimate.consumedMilligas).toEqual(4928940);
+      expect(estimate.consumedMilligas).toEqual(4929168);
       // Do the actual operation
       const op2 = await contract.methods.do(originate2()).send();
       await op2.confirmation();
@@ -310,7 +310,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     });
 
-    idiazabalnet('Estimate transfer to regular address', async (done) => {
+    ithacanet('Estimate transfer to regular address', async (done) => {
       let estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) });
       expect(estimate.gasLimit).toEqual(1521);
       expect(estimate.storageLimit).toEqual(0);
@@ -327,7 +327,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       // fee, gasLimit and storage limit are not taken into account
       const params = { fee: 2000, to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) }
 
-      if (protocol === Protocols.ProtoALpha) {
+      if (protocol === Protocols.PsiThaCa) {
         await expect(LowAmountTez.estimate.transfer(params)).rejects.toEqual(
           expect.objectContaining({
             message: expect.stringContaining('balance_too_low'),

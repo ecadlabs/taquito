@@ -4,8 +4,8 @@
     "test:faucet": "RUN_WITH_FAUCET=true jest --runInBand",
     "test:hangzhounet": "HANGZHOUNET=true jest",
     "test:hangzhounet-faucet": "RUN_HANGZHOUNET_WITH_FAUCET=true jest --runInBand",
-    "test:idiazabalnet": "IDIAZABALNET=true jest",
-    "test:idiazabalnet-faucet": "RUN_IDIAZABALNET_WITH_FAUCET=true jest --runInBand",
+    "test:ithacanet": "ITHACANET=true jest",
+    "test:ithacanet-faucet": "RUN_ITHACANET_WITH_FAUCET=true jest --runInBand",
     "test": "jest"
   },
   "version": "11.1.0",
