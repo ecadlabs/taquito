@@ -1,0 +1,229 @@
+{
+  "version-11.0.0/docs": [
+    {
+      "type": "category",
+      "label": "General",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-11.0.0/quick_start"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/boilerplate"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/batch_API"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/confirmation_event_stream"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/set_delegate"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/dapp_prelaunch"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/estimate"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/fa2_parameters"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/lambda_view"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/maps_bigmaps"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/michelsonmap"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/originate"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/global_constant"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/rpc_nodes"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/rpc_package"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/signing"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/smartcontracts"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/tezos_domains"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/tickets"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/transaction_limits"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/making_transfers"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/tutorial_links"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/tzip12"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/metadata-tzip16"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/validators"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/wallet_API"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/wallets"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/web3js_taquito"
+        }
+      ],
+      "collapsible": true,
+      "collapsed": true
+    },
+    {
+      "type": "category",
+      "label": "Signer",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-11.0.0/inmemory_signer"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/tezbridge_signer"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/ledger_signer"
+        }
+      ],
+      "collapsible": true,
+      "collapsed": true
+    },
+    {
+      "type": "category",
+      "label": "Packages",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-11.0.0/michelson_encoder"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/contracts-library"
+        }
+      ],
+      "collapsible": true,
+      "collapsed": true
+    },
+    {
+      "type": "category",
+      "label": "Advanced Examples",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-11.0.0/complex_parameters"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/storage_annotations"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/drain_account"
+        }
+      ],
+      "collapsible": true,
+      "collapsed": true
+    },
+    {
+      "type": "category",
+      "label": "Modules customization",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-11.0.0/rpc-cache"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/cancel_http_requests"
+        }
+      ],
+      "collapsible": true,
+      "collapsed": true
+    },
+    {
+      "type": "category",
+      "label": "Running integration tests",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-11.0.0/ledger_integration_test"
+        },
+        {
+          "type": "doc",
+          "id": "version-11.0.0/rpc_nodes_integration_test"
+        }
+      ],
+      "collapsible": true,
+      "collapsed": true
+    },
+    {
+      "type": "category",
+      "collapsed": true,
+      "collapsible": true,
+      "label": "Upgrading Guide",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-11.0.0/upgrading_guide"
+        }
+      ]
+    },
+    {
+      "type": "link",
+      "label": "TypeDoc Reference",
+      "href": "https://tezostaquito.io/typedoc"
+    }
+  ]
+}
