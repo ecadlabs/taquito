@@ -3,7 +3,7 @@ import { InMemorySigner } from '@taquito/signer';
 
 
 async function example() {
-    const provider = 'https://hangzhounet.api.tez.ie';
+    const provider = 'https://ithacanet.ecadinfra.com/';
     const signer: any = new InMemorySigner('edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca');
         const tezos = new TezosToolkit(provider);
     tezos.setSignerProvider( signer );
