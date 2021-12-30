@@ -20,7 +20,7 @@
     "example:bigmap-keys-deep-pair": "node -r ts-node/register --preserve-symlinks example-bigmap-keys-as-deep-pair.ts"
   },
   "dependencies": {
-    "@ledgerhq/hw-transport-node-hid": "^5.43.0",
+    "@ledgerhq/hw-transport-node-hid": "^6.20.0",
     "@taquito/ledger-signer": "^11.1.0",
     "@taquito/michel-codec": "^11.1.0",
     "@taquito/michelson-encoder": "^11.1.0",
@@ -28,9 +28,10 @@
     "@taquito/taquito": "^11.1.0",
     "@taquito/tzip16": "^11.1.0",
     "@taquito/utils": "^11.1.0",
-    "bignumber.js": "^9.0.1"
+    "bignumber.js": "^9.0.2"
   },
   "devDependencies": {
-    "ts-node": "^9.1.1"
+    "@types/node-hid": "^1.3.1",
+    "ts-node": "^10.4.0"
   }
 }

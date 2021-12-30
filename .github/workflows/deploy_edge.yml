@@ -33,6 +33,7 @@ jobs:
     - run: npm run lerna -- bootstrap
     - run: find packages/ -mindepth 1 -maxdepth 2 -name README.md | xargs sed -i '1s/^/# WARNING This build is produced from a feature branch and could contain unreviewed changes from the public. Use with caution, do not use in production\n\n/'
     - run: npm run lerna -- version "${TARGET_VERSION}" --no-push --no-git-tag-version --yes
+    - run: npm run version-stamp
     - run: npm run build
     - run: cd packages/taquito && npm run build:release && cd ../..
     - run: git config user.email "actions@github.com" && git config user.name "Github Actions"
