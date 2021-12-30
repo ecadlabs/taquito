@@ -121,7 +121,6 @@ export class MichelsonMap<K extends MichelsonMapKey, T> {
 
   *entries(): Generator<[K, T]> {
     for (const key of this.valueMap.keys()) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       yield [this.keyMap.get(key)!, this.valueMap.get(key)!];
     }
   }

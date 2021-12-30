@@ -59,7 +59,6 @@ export class KeyHashToken extends ComparableToken {
     return KeyHashToken.prim;
   }
 
-  // tslint:disable-next-line: variable-name
   public ToKey({ string, bytes }: any) {
     if (string) {
       return string;

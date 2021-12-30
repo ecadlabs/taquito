@@ -55,7 +55,6 @@ export class AddressToken extends ComparableToken {
     return { string: val };
   }
 
-  // tslint:disable-next-line: variable-name
   public Execute(val: { bytes: string; string: string }): string {
     if (val.string) {
       return val.string;
@@ -68,7 +67,6 @@ export class AddressToken extends ComparableToken {
     return AddressToken.prim;
   }
 
-  // tslint:disable-next-line: variable-name
   public ToKey({ bytes, string }: any) {
     if (string) {
       return string;

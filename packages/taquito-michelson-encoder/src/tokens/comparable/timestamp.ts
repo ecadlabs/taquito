@@ -34,7 +34,6 @@ export class TimestampToken extends ComparableToken {
     return TimestampToken.prim;
   }
 
-  // tslint:disable-next-line: variable-name
   public ToKey({ string }: any) {
     return string;
   }

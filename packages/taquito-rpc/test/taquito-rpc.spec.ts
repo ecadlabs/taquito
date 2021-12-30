@@ -293,7 +293,6 @@ describe('RpcClient test', () => {
 
   describe('getBigMapKey', () => {
     it('query the right url', async (done) => {
-      // tslint:disable-next-line: deprecation
       await client.getBigMapKey('address', { key: 'test', type: 'string' } as any);
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'POST',

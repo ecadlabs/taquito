@@ -21,17 +21,14 @@ export const isPrim = (value: MichelsonValue): value is PrimValue => {
 };
 
 export const isBytes = (value: MichelsonValue): value is BytesValue => {
-  // tslint:disable-next-line: strict-type-predicates
   return 'bytes' in value && typeof value.bytes === 'string';
 };
 
 export const isString = (value: MichelsonValue): value is StringValue => {
-  // tslint:disable-next-line: strict-type-predicates
   return 'string' in value && typeof value.string === 'string';
 };
 
 export const isInt = (value: MichelsonValue): value is IntValue => {
-  // tslint:disable-next-line: strict-type-predicates
   return 'int' in value && typeof value.int === 'string';
 };
 

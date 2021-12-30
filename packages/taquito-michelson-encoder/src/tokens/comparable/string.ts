@@ -28,7 +28,6 @@ export class StringToken extends ComparableToken {
     return { string: val };
   }
 
-  // tslint:disable-next-line: variable-name
   public ToKey({ string }: any) {
     return string;
   }

@@ -67,7 +67,6 @@ export class BytesToken extends ComparableToken {
     return BytesToken.prim;
   }
 
-  // tslint:disable-next-line: variable-name
   public ToKey({ bytes, string }: any) {
     if (string) {
       return string;

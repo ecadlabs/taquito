@@ -8,7 +8,6 @@ import { STATUS_CODE } from './status_code';
 const isNode =
   typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const XMLHttpRequestCTOR = isNode ? require('xhr2-cookies').XMLHttpRequest : XMLHttpRequest;
 
 export * from './status_code';
@@ -101,7 +100,6 @@ export class HttpBackend {
       json = true,
       mimeType = undefined,
     }: HttpRequestOptions,
-    // eslint-disable-next-line @typescript-eslint/ban-types
     data?: {}
   ) {
     return new Promise<T>((resolve, reject) => {

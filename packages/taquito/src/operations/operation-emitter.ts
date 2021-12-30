@@ -116,11 +116,8 @@ export abstract class OperationEmitter {
       const opCounter = ++counters[publicKeyHash];
       return {
         counter: `${opCounter}`,
-        // tslint:disable-next-line: strict-type-predicates
         fee: typeof op.fee === 'undefined' ? '0' : `${op.fee}`,
-        // tslint:disable-next-line: strict-type-predicates
         gas_limit: typeof op.gas_limit === 'undefined' ? '0' : `${op.gas_limit}`,
-        // tslint:disable-next-line: strict-type-predicates
         storage_limit: typeof op.storage_limit === 'undefined' ? '0' : `${op.storage_limit}`,
       };
     };
@@ -132,7 +129,6 @@ export abstract class OperationEmitter {
     };
 
     const constructOps = (cOps: RPCOperation[]): OperationContents[] =>
-      // tslint:disable strict-type-predicates
       cOps.map((op: RPCOperation) => {
         switch (op.kind) {
           case OpKind.ACTIVATION:

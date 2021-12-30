@@ -96,7 +96,6 @@ export class RpcContractProvider
 
     const encodedKey = contractSchema.EncodeBigMapKey(key);
 
-    // tslint:disable-next-line: deprecation
     const val = await this.rpc.getBigMapKey(contract, encodedKey);
 
     return contractSchema.ExecuteOnBigMapValue(val) as T; // Cast into T because only the caller can know the true type of the storage

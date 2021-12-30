@@ -287,7 +287,6 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
    * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-context-contracts-contract-id-big-map-get
    */
   public bigMap(key: string) {
-    // tslint:disable-next-line: deprecation
     return this.storageProvider.getBigMapKey(this.address, key, this.schema);
   }
 }
