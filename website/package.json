@@ -38,6 +38,8 @@
     "@taquito/utils": "11.1.0",
     "@thanos-wallet/dapp": "^2.2.2",
     "abort-controller": "^3.0.0",
+    "ansi-regex": "^6.0.1",
+    "axios": "^0.24.0",
     "buffer": "^6.0.3",
     "classnames": "^2.3.1",
     "clipboard": "^2.0.8",
