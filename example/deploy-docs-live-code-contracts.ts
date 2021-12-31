@@ -129,8 +129,8 @@ async function originateTheContracts() {
   contract_catalogue.set('Tzip16HTTPSContract', await originateTzip16Https());
   contract_catalogue.set('Tzip16SHA256Contract', await originateTzip16SHA256());
   contract_catalogue.set('Tzip16IPFSContract', await originateTzip16IPFS());
-  contract_catalogue.set('Tzip16OffChainContractJSON', await originateTzip16OnChainJSON());
-  contract_catalogue.set('Tzip16OffChainContractMultiply', await originateTzip16OnChainMultiply());
+  contract_catalogue.set('Tzip16OffChainContractJSON', await originateTzip16OffChainJSON());
+  contract_catalogue.set('Tzip16OffChainContractMultiply', await originateTzip16OffChainMultiply());
   contract_catalogue.set('WalletContract', await originateWalletOriginateContractTransfer());
   contract_catalogue.set('WalletAreYouThereContract', await originateWalletOriginateAreYouThere());
   contract_catalogue.set('BigMapPackContract', await originateBigMapPackContract());
@@ -704,7 +704,7 @@ async function originateTzip16IPFS() {
   }
 }
 
-async function originateTzip16OnChainJSON() {
+async function originateTzip16OffChainJSON() {
   tezos.setSignerProvider(signer);
   try {
     const metadataBigMAp = new MichelsonMap();
@@ -727,7 +727,7 @@ async function originateTzip16OnChainJSON() {
   }
 }
 
-async function originateTzip16OnChainMultiply() {
+async function originateTzip16OffChainMultiply() {
   tezos.setSignerProvider(signer);
   try {
     const metadataBigMAp = new MichelsonMap();
