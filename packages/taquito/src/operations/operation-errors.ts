@@ -23,7 +23,7 @@ const isErrorWithMessage = (error: any): error is TezosOperationErrorWithMessage
 };
 
 export class TezosOperationError implements Error {
-  name: string = 'TezosOperationError';
+  name = 'TezosOperationError';
   id: string;
   kind: string;
   message: string;
@@ -44,8 +44,8 @@ export class TezosOperationError implements Error {
 }
 
 export class TezosPreapplyFailureError implements Error {
-  name: string = 'TezosPreapplyFailureError';
-  message: string = 'Preapply returned an unexpected result';
+  name = 'TezosPreapplyFailureError';
+  message = 'Preapply returned an unexpected result';
 
   constructor(public result: any) {}
 }
@@ -64,9 +64,9 @@ export type MergedOperationResult = OperationResultDelegation &
 // - When an operation is made using the batch API
 // - Smart contract call can contains internal operation results when they call other smart contract internally or originate contracts
 export const flattenOperationResult = (response: PreapplyResponse | PreapplyResponse[]) => {
-  let results = Array.isArray(response) ? response : [response];
+  const results = Array.isArray(response) ? response : [response];
 
-  let returnedResults: MergedOperationResult[] = [];
+  const returnedResults: MergedOperationResult[] = [];
   for (let i = 0; i < results.length; i++) {
     for (let j = 0; j < results[i].contents.length; j++) {
       const content = results[i].contents[j];
@@ -77,7 +77,9 @@ export const flattenOperationResult = (response: PreapplyResponse | PreapplyResp
         });
 
         if (Array.isArray(content.metadata.internal_operation_results)) {
-          content.metadata.internal_operation_results.forEach(x => returnedResults.push(x.result));
+          content.metadata.internal_operation_results.forEach((x) =>
+            returnedResults.push(x.result)
+          );
         }
       }
     }
@@ -93,7 +95,7 @@ export const flattenErrors = (
   response: PreapplyResponse | PreapplyResponse[],
   status = 'failed'
 ) => {
-  let results = Array.isArray(response) ? response : [response];
+  const results = Array.isArray(response) ? response : [response];
 
   let errors: TezosGenericOperationError[] = [];
   // Transaction that do not fail will be backtracked in case one failure occur

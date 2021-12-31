@@ -1,7 +1,7 @@
 import { TokenFactory, ComparableToken, TokenValidationError, Token } from '../token';
 
 export class BytesValidationError extends TokenValidationError {
-  name: string = 'BytesValidationError';
+  name = 'BytesValidationError';
   constructor(public value: any, public token: BytesToken, message: string) {
     super(value, token, message);
   }
@@ -67,7 +67,6 @@ export class BytesToken extends ComparableToken {
     return BytesToken.prim;
   }
 
-  // tslint:disable-next-line: variable-name
   public ToKey({ bytes, string }: any) {
     if (string) {
       return string;
@@ -81,6 +80,5 @@ export class BytesToken extends ComparableToken {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }

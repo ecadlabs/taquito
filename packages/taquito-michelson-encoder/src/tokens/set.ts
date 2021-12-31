@@ -1,7 +1,7 @@
 import { Token, TokenFactory, Semantic, TokenValidationError, ComparableToken } from './token';
 
 export class SetValidationError extends TokenValidationError {
-  name: string = 'SetValidationError';
+  name = 'SetValidationError';
   constructor(public value: any, public token: SetToken, message: string) {
     super(value, token, message);
   }
@@ -74,6 +74,5 @@ export class SetToken extends Token {
     }
     this.KeySchema.findAndReturnTokens(tokenToFind, tokens);
     return tokens;
-  };
-
+  }
 }

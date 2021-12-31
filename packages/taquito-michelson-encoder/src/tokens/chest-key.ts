@@ -1,7 +1,7 @@
 import { Token, TokenFactory, TokenValidationError } from './token';
 
 export class ChestKeyValidationError extends TokenValidationError {
-  name: string = 'ChestKeyValidationError';
+  name = 'ChestKeyValidationError';
   constructor(public value: any, public token: ChestKeyToken, message: string) {
     super(value, token, message);
   }
@@ -61,6 +61,5 @@ export class ChestKeyToken extends Token {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }
