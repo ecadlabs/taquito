@@ -103,6 +103,8 @@
     ]
   },
   "dependencies": {
+    "ansi-regex": "^6.0.1",
+    "axios": "^0.24.0",
     "blakejs": "^1.1.1"
   }
 }
