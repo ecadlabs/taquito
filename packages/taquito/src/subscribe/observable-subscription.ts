@@ -1,5 +1,4 @@
-/* eslint-disable no-dupe-class-members */
-import { Observable, Subject, NEVER, OperatorFunction } from 'rxjs';
+import { Observable, Subscription as RXJSSubscription, Subject, NEVER, OperatorFunction } from 'rxjs';
 import { Subscription } from './interface';
 import { takeUntil, tap, catchError, retry } from 'rxjs/operators';
 
@@ -9,11 +8,10 @@ export class ObservableSubscription<T> implements Subscription<T> {
   private closeListeners: Array<() => void> = [];
   private completed$ = new Subject();
 
-  constructor(
-    obs: Observable<T>,
-    private shouldRetry: boolean = false,
-    private operatorFunction: OperatorFunction<T, T> = retry<T>()
-  ) {
+  constructor(obs: Observable<T>, 
+              private shouldRetry: boolean = false, 
+              private operatorFunction: OperatorFunction<T,T> = retry<T>()) {
+    
     obs
       .pipe(
         takeUntil(this.completed$),
@@ -37,7 +35,6 @@ export class ObservableSubscription<T> implements Subscription<T> {
   private call<K>(listeners: Array<(val: K) => void>, value?: K) {
     for (const l of listeners) {
       try {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         l(value!);
       } catch (ex) {
         console.error(ex);
@@ -53,6 +50,7 @@ export class ObservableSubscription<T> implements Subscription<T> {
   }
 
   public on(type: 'error', cb: (error: Error) => void): void;
+  // tslint:disable-next-line: unified-signatures
   public on(type: 'data', cb: (data: T) => void): void;
   public on(type: 'close', cb: () => void): void;
 
@@ -73,6 +71,7 @@ export class ObservableSubscription<T> implements Subscription<T> {
   }
 
   public off(type: 'error', cb: (error: Error) => void): void;
+  // tslint:disable-next-line: unified-signatures
   public off(type: 'data', cb: (data: T) => void): void;
   public off(type: 'close', cb: () => void): void;
 

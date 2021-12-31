@@ -28,7 +28,7 @@ const testStorage = {
 
 describe('Exchange contract test', () => {
   it('Test storage schema', () => {
-    const schema = new Schema(storage.args[0] as any);
+    const schema = new Schema(storage!.args[0] as any);
     expect(schema.Execute(testStorage)).toEqual({
       mgr1: {
         addr: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
@@ -42,7 +42,7 @@ describe('Exchange contract test', () => {
   });
 
   it('Test storage schema', () => {
-    const schema = new Schema(storage.args[0] as any);
+    const schema = new Schema(storage!.args[0] as any);
     expect(
       schema.Encode({
         mgr1: {
@@ -89,7 +89,7 @@ describe('Exchange contract test', () => {
   });
 
   it('Test storage schema with undefined property', () => {
-    const schema = new Schema(storage.args[0] as any);
+    const schema = new Schema(storage!.args[0] as any);
     expect(
       schema.Encode({
         mgr1: {
@@ -135,17 +135,17 @@ describe('Exchange contract test', () => {
   });
 
   it('Test execute parameter', () => {
-    const schema = new ParameterSchema(parameter.args[0]);
+    const schema = new ParameterSchema(parameter!.args[0]);
     expect(schema.Execute({ prim: 'None' })).toEqual(null);
   });
 
   it('Test execute parameter', () => {
-    const schema = new ParameterSchema(parameter.args[0]);
+    const schema = new ParameterSchema(parameter!.args[0]);
     expect(schema.Encode(null)).toEqual({ prim: 'None' });
   });
 
   it('Test execute parameter', () => {
-    const schema = new ParameterSchema(parameter.args[0]);
+    const schema = new ParameterSchema(parameter!.args[0]);
     expect(schema.Encode('tz1Zwusa1tLQHRyB1KL1p44KjgDbi5KjNKay')).toEqual({
       prim: 'Some',
       args: [{ string: 'tz1Zwusa1tLQHRyB1KL1p44KjgDbi5KjNKay' }],
@@ -153,7 +153,7 @@ describe('Exchange contract test', () => {
   });
 
   it('Should extract signature properly', () => {
-    const schema = new ParameterSchema(parameter.args[0]);
+    const schema = new ParameterSchema(parameter!.args[0]);
     expect(schema.ExtractSignatures()).toContainEqual(['key_hash']);
     expect(schema.ExtractSignatures()).toContainEqual([]);
   });

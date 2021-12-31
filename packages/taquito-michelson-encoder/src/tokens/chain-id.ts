@@ -2,7 +2,7 @@ import { Token, TokenFactory, ComparableToken, TokenValidationError } from './to
 import { validateChain, ValidationResult } from '@taquito/utils';
 
 export class ChainIDValidationError extends TokenValidationError {
-  name = 'ChainIDValidationError';
+  name: string = 'ChainIDValidationError';
   constructor(public value: any, public token: ChainIDToken, message: string) {
     super(value, token, message);
   }
@@ -55,6 +55,7 @@ export class ChainIDToken extends ComparableToken {
     return { string: val };
   }
 
+  // tslint:disable-next-line: variable-name
   public ToKey({ string }: any) {
     return string;
   }
@@ -71,5 +72,6 @@ export class ChainIDToken extends ComparableToken {
       tokens.push(this);
     }
     return tokens;
-  }
+  };
+
 }

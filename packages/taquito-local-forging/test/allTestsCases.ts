@@ -1,35 +1,31 @@
 import { opMapping } from '../src/constants';
-import {
-  rpcContractResponse,
-  rpcContractResponse2,
-  rpcContractResponse4,
-  rpcContractResponse5,
-  rpcContractResponse7,
+import { 
+  rpcContractResponse, 
+  rpcContractResponse2, 
+  rpcContractResponse4, 
+  rpcContractResponse5, 
+  rpcContractResponse7, 
   example9,
-  example10,
+  example10 
 } from './data/code_with_sapling';
-import {
-  ticketCode,
-  ticketCode2,
-  ticketCode3,
-  ticketCode4,
-  ticketStorage,
-  ticketStorage2,
-  ticketStorage3,
-  ticketStorage4,
+import { ticketCode, 
+  ticketCode2, 
+  ticketCode3, 
+  ticketCode4, 
+  ticketStorage, 
+  ticketStorage2, 
+  ticketStorage3, 
+  ticketStorage4 
 } from './data/code_with_ticket';
 import { genericCode, genericStorage } from './data/generic_contract';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_big_map';
 import { noAnnotCode, noAnnotInit } from './data/token_without_annotations';
 import { voteInitSample, voteSample } from './data/vote_contract';
 import { chestCode, chestStorage } from './data/contract_with_chest';
-import {
-  storageContractWithConstant,
-  codeContractWithConstant,
-} from './data/contract_with_constant';
+import { storageContractWithConstant, codeContractWithConstant } from './data/contract_with_constant';
 import { codeViewsTopLevel, storageViewsTopLevel } from './data/contract_views_top_level';
 
-function extractOp(startIndex: number, endIndex: number) {
+function extractOp (startIndex: number, endIndex: number) {
   const result = [];
   let i = startIndex;
   for (i; i <= endIndex; i++) {
@@ -40,7 +36,7 @@ function extractOp(startIndex: number, endIndex: number) {
     result.push(opMapping[key]);
   }
   return result;
-}
+};
 
 interface TestCase {
   name: string;
@@ -469,7 +465,7 @@ export const commonCases: TestCase[] = [
     },
   },
   // In `opMapping` from the file `constants.ts`, the operations and types starting at `chest` were added in the hangzhou protocol
-  ...extractOp(0, 140).map((op) => {
+  ...extractOp(0, 140).map(op => {
     return {
       name: `Origination operation (${op})`,
       operation: {
@@ -822,12 +818,12 @@ export const commonCases: TestCase[] = [
         },
       ],
     },
-  },
+  }
 ];
 
 export const hangzhouCases: TestCase[] = [
   // In `opMapping` from the file `constants.ts`, the operations and types starting at `chest` were added in the hangzhou protocol
-  ...extractOp(141, 146).map((op) => {
+  ...extractOp(141, 146).map(op => {
     return {
       name: `Origination operation (${op})`,
       operation: {
@@ -884,16 +880,16 @@ export const hangzhouCases: TestCase[] = [
           gas_limit: '1330',
           storage_limit: '93',
           value: {
-            prim: 'Pair',
-            args: [
+            "prim": "Pair",
+            "args": [
               {
-                int: '999',
+                "int": "999"
               },
               {
-                int: '999',
-              },
-            ],
-          },
+                "int": "999"
+              }
+            ]
+          }
         },
       ],
     },
@@ -913,7 +909,7 @@ export const hangzhouCases: TestCase[] = [
           balance: '0',
           script: {
             code: codeContractWithConstant,
-            storage: storageContractWithConstant,
+            storage:storageContractWithConstant,
           },
         },
       ],

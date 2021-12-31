@@ -101,5 +101,8 @@
     "extends": [
       "@commitlint/config-conventional"
     ]
+  },
+  "dependencies": {
+    "blakejs": "^1.1.1"
   }
 }

@@ -2,7 +2,7 @@ import { Token, TokenFactory, ComparableToken, TokenValidationError } from '../t
 import { b58decode, encodePubKey, validateAddress, ValidationResult } from '@taquito/utils';
 
 export class AddressValidationError extends TokenValidationError {
-  name = 'AddressValidationError';
+  name: string = 'AddressValidationError';
   constructor(public value: any, public token: AddressToken, message: string) {
     super(value, token, message);
   }
@@ -55,6 +55,7 @@ export class AddressToken extends ComparableToken {
     return { string: val };
   }
 
+  // tslint:disable-next-line: variable-name
   public Execute(val: { bytes: string; string: string }): string {
     if (val.string) {
       return val.string;
@@ -67,6 +68,7 @@ export class AddressToken extends ComparableToken {
     return AddressToken.prim;
   }
 
+  // tslint:disable-next-line: variable-name
   public ToKey({ bytes, string }: any) {
     if (string) {
       return string;
@@ -96,5 +98,6 @@ export class AddressToken extends ComparableToken {
       tokens.push(this);
     }
     return tokens;
-  }
+  };
+
 }

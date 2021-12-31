@@ -1,11 +1,14 @@
 import { defaultConfigConfirmation, defaultConfigStreamer } from '../../src/context';
 import { DelegateOperation } from '../../src/operations/delegate-operation';
 import { ForgedBytes } from '../../src/operations/types';
-import { RevealOperationBuilder, DelegationOperationBuilder } from '../helpers';
+import {
+  RevealOperationBuilder,
+  DelegationOperationBuilder,
+} from '../helpers';
 
 describe('Delegation operation', () => {
   let fakeContext: any;
-  const fakeForgedBytes = {} as ForgedBytes;
+  let fakeForgedBytes = {} as ForgedBytes;
 
   beforeEach(() => {
     fakeContext = {
@@ -63,6 +66,7 @@ describe('Delegation operation', () => {
 
   it('revealStatus should be unknown when there is no reveal operation', () => {
     const txBuilder = new DelegationOperationBuilder();
+    const revealBuilder = new RevealOperationBuilder();
 
     const op = new DelegateOperation(
       'test_hash',

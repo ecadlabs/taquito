@@ -6,7 +6,7 @@ import { OriginationOperationBuilder, RevealOperationBuilder } from '../helpers'
 
 describe('Origination operation', () => {
   let fakeContext: any;
-  const fakeForgedBytes = {} as ForgedBytes;
+  let fakeForgedBytes = {} as ForgedBytes;
 
   const successfulResult = [
     {
@@ -72,7 +72,7 @@ describe('Origination operation', () => {
         getBlock: jest.fn(),
       },
       config: { ...defaultConfigConfirmation },
-      getConfirmationPollingInterval: jest.fn(),
+      getConfirmationPollingInterval: jest.fn()
     };
 
     fakeContext.rpc.getBlock.mockResolvedValue({
@@ -127,7 +127,7 @@ describe('Origination operation', () => {
         [{ kind: 'origination', metadata: {} }],
       ];
 
-      wrongResults.forEach((result) => {
+      wrongResults.forEach(result => {
         const op = new OriginationOperation(
           'test_hash',
           {} as any,
@@ -142,7 +142,7 @@ describe('Origination operation', () => {
   });
 
   describe('Contract', () => {
-    it('should return proper confirmation head', async (done) => {
+    it('should return proper confirmation head', async done => {
       const fakeContractProvider: any = {
         at: jest.fn(),
       };
@@ -161,7 +161,7 @@ describe('Origination operation', () => {
       done();
     });
 
-    it('should create a contract given a successful result', async (done) => {
+    it('should create a contract given a successful result', async done => {
       const fakeContractProvider: any = {
         at: jest.fn(),
       };
@@ -181,7 +181,7 @@ describe('Origination operation', () => {
       done();
     });
 
-    it('should throw an error if no contract is available', async (done) => {
+    it('should throw an error if no contract is available', async done => {
       const fakeContractProvider: any = {
         at: jest.fn(),
       };

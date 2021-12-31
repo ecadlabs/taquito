@@ -27,7 +27,7 @@ import {
   createRevealOperation,
   createSetDelegateOperation,
   createTransferOperation,
-  createRegisterGlobalConstantOperation,
+  createRegisterGlobalConstantOperation
 } from './prepare';
 
 interface Limits {
@@ -120,9 +120,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
       totalStorage +=
         'paid_storage_size_diff' in result ? Number(result.paid_storage_size_diff) || 0 : 0;
       totalStorage +=
-        'storage_size' in result && 'global_address' in result
-          ? Number(result.storage_size) || 0
-          : 0;
+        ('storage_size' in result && 'global_address' in result) ? Number(result.storage_size) || 0 : 0;
     });
 
     if (totalGas !== 0 && totalMilligas === 0) {
@@ -154,7 +152,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
       opbytes,
       opOb: { branch, contents },
     } = await this.forge(prepared);
-    const operation: RPCRunOperationParam = {
+    let operation: RPCRunOperationParam = {
       operation: { branch, contents, signature: SIGNATURE_STUB },
       chain_id: await this.rpc.getChainId(),
     };
@@ -206,10 +204,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     );
     const isRevealNeeded = await this.isRevealOpNeeded([op], pkh);
     const ops = isRevealNeeded ? await this.addRevealOp([op], pkh) : op;
-    const estimateProperties = await this.prepareEstimate(
-      { operation: ops, source: pkh },
-      protocolConstants
-    );
+    const estimateProperties = await this.prepareEstimate({ operation: ops, source: pkh }, protocolConstants);
     if (isRevealNeeded) {
       estimateProperties.shift();
     }
@@ -233,10 +228,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     });
     const isRevealNeeded = await this.isRevealOpNeeded([op], pkh);
     const ops = isRevealNeeded ? await this.addRevealOp([op], pkh) : op;
-    const estimateProperties = await this.prepareEstimate(
-      { operation: ops, source: pkh },
-      protocolConstants
-    );
+    const estimateProperties = await this.prepareEstimate({ operation: ops, source: pkh }, protocolConstants);
     if (isRevealNeeded) {
       estimateProperties.shift();
     }
@@ -262,10 +254,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     });
     const isRevealNeeded = await this.isRevealOpNeeded([op], pkh);
     const ops = isRevealNeeded ? await this.addRevealOp([op], pkh) : op;
-    const estimateProperties = await this.prepareEstimate(
-      { operation: ops, source: pkh },
-      protocolConstants
-    );
+    const estimateProperties = await this.prepareEstimate({ operation: ops, source: pkh }, protocolConstants);
     if (isRevealNeeded) {
       estimateProperties.shift();
     }
@@ -331,10 +320,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     }
     const isRevealNeeded = await this.isRevealOpNeeded(operations, pkh);
     operations = isRevealNeeded ? await this.addRevealOp(operations, pkh) : operations;
-    const estimateProperties = await this.prepareEstimate(
-      { operation: operations, source: pkh },
-      protocolConstants
-    );
+    const estimateProperties = await this.prepareEstimate({ operation: operations, source: pkh }, protocolConstants);
 
     return Estimate.createArrayEstimateInstancesFromProperties(estimateProperties);
   }
@@ -354,10 +340,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     const op = await createRegisterDelegateOperation({ ...params, ...DEFAULT_PARAMS }, pkh);
     const isRevealNeeded = await this.isRevealOpNeeded([op], pkh);
     const ops = isRevealNeeded ? await this.addRevealOp([op], pkh) : op;
-    const estimateProperties = await this.prepareEstimate(
-      { operation: ops, source: pkh },
-      protocolConstants
-    );
+    const estimateProperties = await this.prepareEstimate({ operation: ops, source: pkh }, protocolConstants);
     if (isRevealNeeded) {
       estimateProperties.shift();
     }
@@ -385,10 +368,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
         pkh,
         await this.signer.publicKey()
       );
-      const estimateProperties = await this.prepareEstimate(
-        { operation: op, source: pkh },
-        protocolConstants
-      );
+      const estimateProperties = await this.prepareEstimate({ operation: op, source: pkh }, protocolConstants);
       return Estimate.createEstimateInstanceFromProperties(estimateProperties);
     }
   }
@@ -401,25 +381,17 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    *
    * @param params registerGlobalConstant operation parameter
    */
-  async registerGlobalConstant({
-    fee,
-    storageLimit,
-    gasLimit,
-    ...rest
-  }: RegisterGlobalConstantParams) {
+  async registerGlobalConstant({ fee, storageLimit, gasLimit, ...rest }: RegisterGlobalConstantParams) {
     const pkh = await this.signer.publicKeyHash();
     const protocolConstants = await this.rpc.getConstants();
     const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
     const op = await createRegisterGlobalConstantOperation({
-      ...rest,
-      ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
+       ...rest, 
+       ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS) 
     });
     const isRevealNeeded = await this.isRevealOpNeeded([op], pkh);
     const ops = isRevealNeeded ? await this.addRevealOp([op], pkh) : op;
-    const estimateProperties = await this.prepareEstimate(
-      { operation: ops, source: pkh },
-      protocolConstants
-    );
+    const estimateProperties = await this.prepareEstimate({ operation: ops, source: pkh }, protocolConstants);
     if (isRevealNeeded) {
       estimateProperties.shift();
     }

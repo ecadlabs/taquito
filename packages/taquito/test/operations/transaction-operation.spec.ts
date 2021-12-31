@@ -6,9 +6,9 @@ import { TransferOperationBuilder, RevealOperationBuilder } from '../helpers';
 
 describe('Transfer operation', () => {
   let fakeContext: any;
-  const fakeForgedBytes = {} as ForgedBytes;
+  let fakeForgedBytes = {} as ForgedBytes;
 
-  const successfulResult = [
+  const successfulResult = ([
     {
       kind: 'transaction',
       source: 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
@@ -78,7 +78,7 @@ describe('Transfer operation', () => {
         ],
       },
     },
-  ] as unknown as OperationContentsAndResult[];
+  ] as unknown) as OperationContentsAndResult[];
 
   beforeEach(() => {
     fakeContext = {
@@ -149,6 +149,7 @@ describe('Transfer operation', () => {
 
   it('revealStatus should be unknown when there is no reveal operation', () => {
     const txBuilder = new TransferOperationBuilder();
+    const revealBuilder = new RevealOperationBuilder();
 
     const op = new TransactionOperation(
       'test_hash',

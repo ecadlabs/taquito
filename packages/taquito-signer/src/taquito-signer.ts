@@ -30,7 +30,7 @@ export class InMemorySigner {
   private _key!: Tz1 | ECKey;
 
   static fromFundraiser(email: string, password: string, mnemonic: string) {
-    const seed = mnemonicToSeedSync(mnemonic, `${email}${password}`);
+    let seed = mnemonicToSeedSync(mnemonic, `${email}${password}`);
     const key = b58cencode(seed.slice(0, 32), prefix.edsk2);
     return new InMemorySigner(key);
   }

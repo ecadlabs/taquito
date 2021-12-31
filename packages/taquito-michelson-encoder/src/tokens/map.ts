@@ -2,7 +2,7 @@ import { MichelsonMap } from '../michelson-map';
 import { ComparableToken, Semantic, Token, TokenFactory, TokenValidationError } from './token';
 
 export class MapValidationError extends TokenValidationError {
-  name = 'MapValidationError';
+  name: string = 'MapValidationError';
   constructor(public value: any, public token: MapToken, message: string) {
     super(value, token, message);
   }
@@ -38,7 +38,7 @@ export class MapToken extends Token {
   public Execute(val: any[], semantics?: Semantic): { [key: string]: any } {
     const map = new MichelsonMap(this.val);
 
-    val.forEach((current) => {
+    val.forEach(current => {
       map.set(
         this.KeySchema.ToKey(current.args[0]),
         this.ValueSchema.Execute(current.args[1], semantics)
@@ -57,7 +57,7 @@ export class MapToken extends Token {
 
     return Array.from(val.keys())
       .sort((a: any, b: any) => this.KeySchema.compare(a, b))
-      .map((key) => {
+      .map(key => {
         return {
           prim: 'Elt',
           args: [this.KeySchema.EncodeObject(key), this.ValueSchema.EncodeObject(val.get(key))],
@@ -75,7 +75,7 @@ export class MapToken extends Token {
 
     return Array.from(val.keys())
       .sort((a: any, b: any) => this.KeySchema.compare(a, b))
-      .map((key) => {
+      .map(key => {
         return {
           prim: 'Elt',
           args: [this.KeySchema.EncodeObject(key), this.ValueSchema.EncodeObject(val.get(key))],
@@ -99,5 +99,6 @@ export class MapToken extends Token {
     this.KeySchema.findAndReturnTokens(tokenToFind, tokens);
     this.ValueSchema.findAndReturnTokens(tokenToFind, tokens);
     return tokens;
-  }
+  };
+
 }

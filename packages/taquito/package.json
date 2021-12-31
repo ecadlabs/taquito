@@ -47,7 +47,8 @@
   "lint-staged": {
     "{src,test}/**/*.ts": [
       "prettier --write",
-      "eslint --fix"
+      "eslint --fix",
+      "git add"
     ]
   },
   "jest": {

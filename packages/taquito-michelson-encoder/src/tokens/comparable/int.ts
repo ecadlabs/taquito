@@ -2,7 +2,7 @@ import { Token, TokenFactory, ComparableToken, TokenValidationError } from '../t
 import BigNumber from 'bignumber.js';
 
 export class IntValidationError extends TokenValidationError {
-  name = 'IntValidationError';
+  name: string = 'IntValidationError';
   constructor(public value: any, public token: IntToken, message: string) {
     super(value, token, message);
   }
@@ -82,5 +82,6 @@ export class IntToken extends ComparableToken {
       tokens.push(this);
     }
     return tokens;
-  }
+  };
+
 }

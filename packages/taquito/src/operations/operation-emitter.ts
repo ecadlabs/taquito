@@ -17,7 +17,7 @@ import {
   PrepareOperationParams,
   RPCOperation,
   RPCOpWithFee,
-  RPCOpWithSource,
+  RPCOpWithSource
 } from './types';
 
 export interface PreparedOperation {
@@ -41,15 +41,13 @@ export abstract class OperationEmitter {
   constructor(protected context: Context) {}
 
   protected async isRevealOpNeeded(op: RPCOperation[] | ParamsWithKind[], pkh: string) {
-    return !(await this.isAccountRevealRequired(pkh)) || !this.isRevealRequiredForOpType(op)
-      ? false
-      : true;
+    return (!await this.isAccountRevealRequired(pkh) || !this.isRevealRequiredForOpType(op)) ? false : true;
   }
 
   protected async isAccountRevealRequired(publicKeyHash: string) {
     const manager = await this.rpc.getManagerKey(publicKeyHash);
-    const haveManager = manager && typeof manager === 'object' ? !!manager.key : !!manager;
-    return !haveManager;
+      const haveManager = manager && typeof manager === 'object' ? !!manager.key : !!manager;
+      return !haveManager;
   }
 
   protected isRevealRequiredForOpType(op: RPCOperation[] | ParamsWithKind[]) {
@@ -60,15 +58,17 @@ export abstract class OperationEmitter {
       }
     }
     return opRequireReveal;
-  }
+  };
 
   // Originally from sotez (Copyright (c) 2018 Andrew Kishino)
   protected async prepareOperation({
     operation,
     source,
   }: PrepareOperationParams): Promise<PreparedOperation> {
+    let counter;
     const counters: { [key: string]: number } = {};
     let ops: RPCOperation[] = [];
+    let head: BlockHeaderResponse;
 
     const blockHeaderPromise = this.rpc.getBlockHeader();
     const blockMetaPromise = this.rpc.getBlockMetadata();
@@ -94,7 +94,7 @@ export abstract class OperationEmitter {
     const [header, metadata, headCounter] = await Promise.all([
       blockHeaderPromise,
       blockMetaPromise,
-      counterPromise,
+      counterPromise
     ]);
 
     if (!header) {
@@ -105,9 +105,9 @@ export abstract class OperationEmitter {
       throw new Error('Unable to fetch latest metadata');
     }
 
-    const head = header;
+    head = header;
 
-    const counter = parseInt(headCounter || '0', 10);
+    counter = parseInt(headCounter || '0', 10);
     if (!counters[publicKeyHash] || counters[publicKeyHash] < counter) {
       counters[publicKeyHash] = counter;
     }
@@ -116,8 +116,11 @@ export abstract class OperationEmitter {
       const opCounter = ++counters[publicKeyHash];
       return {
         counter: `${opCounter}`,
+        // tslint:disable-next-line: strict-type-predicates
         fee: typeof op.fee === 'undefined' ? '0' : `${op.fee}`,
+        // tslint:disable-next-line: strict-type-predicates
         gas_limit: typeof op.gas_limit === 'undefined' ? '0' : `${op.gas_limit}`,
+        // tslint:disable-next-line: strict-type-predicates
         storage_limit: typeof op.storage_limit === 'undefined' ? '0' : `${op.storage_limit}`,
       };
     };
@@ -129,6 +132,7 @@ export abstract class OperationEmitter {
     };
 
     const constructOps = (cOps: RPCOperation[]): OperationContents[] =>
+      // tslint:disable strict-type-predicates
       cOps.map((op: RPCOperation) => {
         switch (op.kind) {
           case OpKind.ACTIVATION:
@@ -148,7 +152,7 @@ export abstract class OperationEmitter {
               ...getSource(op),
               ...getFee(op),
             };
-          case OpKind.TRANSACTION: {
+          case OpKind.TRANSACTION:
             const cops = {
               ...op,
               amount: typeof op.amount !== 'undefined' ? `${op.amount}` : '0',
@@ -161,7 +165,6 @@ export abstract class OperationEmitter {
               );
             }
             return cops;
-          }
           case OpKind.DELEGATION:
             return {
               ...op,
@@ -173,7 +176,7 @@ export abstract class OperationEmitter {
               ...op,
               ...getSource(op),
               ...getFee(op),
-            };
+            }
           default:
             throw new Error('Unsupported operation');
         }
@@ -194,7 +197,7 @@ export abstract class OperationEmitter {
   }
 
   protected async forge({ opOb: { branch, contents, protocol }, counter }: PreparedOperation) {
-    const forgedBytes = await this.context.forger.forge({ branch, contents });
+    let forgedBytes = await this.context.forger.forge({ branch, contents });
 
     return {
       opbytes: forgedBytes,
@@ -240,9 +243,9 @@ export abstract class OperationEmitter {
     }
 
     return {
-      fee: calculatedFee,
-      gasLimit: calculatedGas,
-      storageLimit: calculatedStorage,
+      fee: calculatedFee!,
+      gasLimit: calculatedGas!,
+      storageLimit: calculatedStorage!,
     };
   }
 
@@ -267,6 +270,7 @@ export abstract class OperationEmitter {
     const errors = flattenErrors(results);
 
     if (errors.length) {
+      // @ts-ignore
       throw new TezosOperationError(errors);
     }
 

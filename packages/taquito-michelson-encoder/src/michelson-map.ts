@@ -15,7 +15,7 @@ const isMapType = (
 };
 
 export class MapTypecheckError implements Error {
-  name = 'MapTypecheckError';
+  name: string = 'MapTypecheckError';
   message: string;
 
   constructor(public readonly value: any, public readonly type: any, errorType: 'key' | 'value') {
@@ -26,7 +26,7 @@ export class MapTypecheckError implements Error {
 /**
  * @description Michelson Map is an abstraction over the michelson native map. It supports complex Pair as key
  */
-export class MichelsonMap<K extends MichelsonMapKey, T> {
+export class MichelsonMap<K extends MichelsonMapKey, T extends any> {
   private valueMap = new Map<string, T>();
   private keyMap = new Map<string, K>();
 
@@ -69,7 +69,7 @@ export class MichelsonMap<K extends MichelsonMapKey, T> {
 
   static fromLiteral(obj: { [key: string]: any }, mapType?: MichelsonV1Expression) {
     const map = new MichelsonMap(mapType);
-    Object.keys(obj).forEach((key) => {
+    Object.keys(obj).forEach(key => {
       map.set(key, obj[key]);
     });
     return map;
@@ -121,7 +121,6 @@ export class MichelsonMap<K extends MichelsonMapKey, T> {
 
   *entries(): Generator<[K, T]> {
     for (const key of this.valueMap.keys()) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       yield [this.keyMap.get(key)!, this.valueMap.get(key)!];
     }
   }

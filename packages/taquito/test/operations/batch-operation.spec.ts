@@ -11,9 +11,9 @@ import {
 
 describe('Batch operation', () => {
   let fakeContext: any;
-  const fakeForgedBytes = {} as ForgedBytes;
+  let fakeForgedBytes = {} as ForgedBytes;
 
-  const successfulResult = [
+  const successfulResult = ([
     {
       kind: 'transaction',
       source: 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
@@ -220,7 +220,7 @@ describe('Batch operation', () => {
         ],
       },
     },
-  ] as unknown as OperationContentsAndResult[];
+  ] as unknown) as OperationContentsAndResult[];
 
   beforeEach(() => {
     fakeContext = {

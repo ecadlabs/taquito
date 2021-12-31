@@ -9,20 +9,15 @@ export class BigMapAbstraction {
   /**
    *
    * @description Fetch one value in a big map
-   *
+   * 
    * @param keysToEncode Key to query (will be encoded properly according to the schema)
    * @param block optional block level to fetch the values from (head will be use by default)
    * @returns Return a well formatted json object of a big map value or undefined if the key is not found in the big map
    *
    */
-  async get<T>(keyToEncode: BigMapKeyType, block?: number) {
+  async get<T>(keyToEncode: BigMapKeyType , block?: number) {
     try {
-      const id = await this.provider.getBigMapKeyByID<T>(
-        this.id.toString(),
-        keyToEncode,
-        this.schema,
-        block
-      );
+      const id = await this.provider.getBigMapKeyByID<T>(this.id.toString(), keyToEncode, this.schema, block);
       return id;
     } catch (e) {
       if (e instanceof HttpResponseError && e.status === STATUS_CODE.NOT_FOUND) {
@@ -36,7 +31,7 @@ export class BigMapAbstraction {
   /**
    *
    * @description Fetch multiple values in a big map
-   * All values will be fetched on the same block level. If a block is specified in the request, the values will be fetched at it.
+   * All values will be fetched on the same block level. If a block is specified in the request, the values will be fetched at it. 
    * Otherwise, a first request will be done to the node to fetch the level of the head and all values will be fetched at this level.
    * If one of the keys does not exist in the big map, its value will be set to undefined.
    *
@@ -46,14 +41,8 @@ export class BigMapAbstraction {
    * @returns A MichelsonMap containing the keys queried in the big map and their value in a well-formatted JSON object format
    *
    */
-  async getMultipleValues<T>(keysToEncode: Array<BigMapKeyType>, block?: number, batchSize = 5) {
-    return this.provider.getBigMapKeysByID<T>(
-      this.id.toString(),
-      keysToEncode,
-      this.schema,
-      block,
-      batchSize
-    );
+  async getMultipleValues<T>(keysToEncode: Array<BigMapKeyType>, block?: number, batchSize: number = 5) {
+    return this.provider.getBigMapKeysByID<T>(this.id.toString(), keysToEncode, this.schema, block, batchSize);
   }
 
   toJSON() {

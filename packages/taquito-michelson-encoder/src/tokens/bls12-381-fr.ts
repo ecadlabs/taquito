@@ -1,7 +1,7 @@
 import { Token, TokenFactory, TokenValidationError } from './token';
 
 export class Bls12381frValidationError extends TokenValidationError {
-  name = 'Bls12381frValidationError';
+  name: string = 'Bls12381frValidationError';
   constructor(public value: any, public token: Bls12381frToken, message: string) {
     super(value, token, message);
   }
@@ -71,5 +71,6 @@ export class Bls12381frToken extends Token {
       tokens.push(this);
     }
     return tokens;
-  }
+  };
+
 }

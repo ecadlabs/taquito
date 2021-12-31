@@ -1,5 +1,6 @@
 import {
   rpcContractResponse,
+  storage,
   bigMapDiff,
   bigMapValue,
 } from '../../data/proto005/token_contract_with_bigmap';
@@ -14,7 +15,7 @@ describe('Token contract with big map', () => {
     expect(schema.ExtractSchema()).toEqual({
       '0': {
         big_map: {
-          key: 'address',
+          key: "address",
           value: {
             '0': 'nat',
             '1': {

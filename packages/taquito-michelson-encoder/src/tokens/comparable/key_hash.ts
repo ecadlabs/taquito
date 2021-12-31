@@ -2,7 +2,7 @@ import { Token, TokenFactory, ComparableToken, TokenValidationError } from '../t
 import { encodeKeyHash, validateKeyHash, ValidationResult } from '@taquito/utils';
 
 export class KeyHashValidationError extends TokenValidationError {
-  name = 'KeyHashValidationError';
+  name: string = 'KeyHashValidationError';
   constructor(public value: any, public token: KeyHashToken, message: string) {
     super(value, token, message);
   }
@@ -59,6 +59,7 @@ export class KeyHashToken extends ComparableToken {
     return KeyHashToken.prim;
   }
 
+  // tslint:disable-next-line: variable-name
   public ToKey({ string, bytes }: any) {
     if (string) {
       return string;
@@ -79,5 +80,6 @@ export class KeyHashToken extends ComparableToken {
       tokens.push(this);
     }
     return tokens;
-  }
+  };
+
 }

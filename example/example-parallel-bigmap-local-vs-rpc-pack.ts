@@ -59,6 +59,7 @@ async function example() {
 
 
 
+// tslint:disable-next-line: no-floating-promises
 example();
 
 // Code to deploy the contract used in the example:

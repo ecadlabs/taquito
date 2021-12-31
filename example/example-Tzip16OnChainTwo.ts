@@ -59,4 +59,5 @@ async function example() {
   }
 }
 
+// tslint:disable-next-line: no-floating-promises
 example();

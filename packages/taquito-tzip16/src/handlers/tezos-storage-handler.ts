@@ -18,7 +18,7 @@ const typeOfValueToFind = {
 type BigMapId = { int: string };
 
 export class TezosStorageHandler implements Handler {
-  private readonly TEZOS_STORAGE_REGEX = /^(?:\/\/(KT1\w{33})(?:\.(.+))?\/)?([\w|%]+)$/;
+  private readonly TEZOS_STORAGE_REGEX = /^(?:\/\/(KT1\w{33})(?:\.(.+))?\/)?([\w|\%]+)$/;
 
   async getMetadata(
     contractAbstraction: ContractAbstraction<ContractProvider | Wallet>,

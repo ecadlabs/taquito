@@ -53,7 +53,7 @@ describe('Parse Tezos storage URI test', () => {
 });
 
 describe('Tzip16 tezos storage handler test', () => {
-  const mockContractAbstraction: any = {};
+  let mockContractAbstraction: any = {};
   let mockRpcClient: {
     getNormalizedScript: jest.Mock<any, any>;
   };

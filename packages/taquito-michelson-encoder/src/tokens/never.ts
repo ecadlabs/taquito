@@ -1,11 +1,11 @@
 import { Token, TokenFactory, TokenValidationError } from './token';
 
 export class NeverTokenError extends TokenValidationError {
-  name = 'NeverTokenError';
-  constructor(public value: any, public token: NeverToken, message: string) {
-    super(value, token, message);
+    name: string = 'NeverTokenError';
+    constructor(public value: any, public token: NeverToken, message: string) {
+      super(value, token, message);
+    }
   }
-}
 
 export class NeverToken extends Token {
   static prim = 'never';
@@ -35,5 +35,6 @@ export class NeverToken extends Token {
       tokens.push(this);
     }
     return tokens;
-  }
+  };
+
 }

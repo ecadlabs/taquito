@@ -1,7 +1,7 @@
 import { Token, TokenFactory, Semantic, TokenValidationError } from './token';
 
 export class ListValidationError extends TokenValidationError {
-  name = 'ListValidationError';
+  name: string = 'ListValidationError';
   constructor(public value: any, public token: ListToken, message: string) {
     super(value, token, message);
   }
@@ -69,15 +69,16 @@ export class ListToken extends Token {
   public ExtractSchema() {
     const valueSchema = this.createToken(this.val.args[0], this.idx);
     return {
-      [ListToken.prim]: valueSchema.ExtractSchema(),
-    };
+      [ListToken.prim] : valueSchema.ExtractSchema()
+    }
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
     if (ListToken.prim === tokenToFind) {
       tokens.push(this);
     }
-    this.createToken(this.val.args[0], this.idx).findAndReturnTokens(tokenToFind, tokens);
+    this.createToken(this.val.args[0], this.idx).findAndReturnTokens(tokenToFind, tokens)
     return tokens;
-  }
+  };
+
 }

@@ -70,7 +70,7 @@ export class RpcClientCache implements RpcClientInterface {
    *
    */
   deleteAllCachedData() {
-    for (const key in this._cache) {
+    for (let key in this._cache) {
       delete this._cache[key];
     }
   }
@@ -102,7 +102,7 @@ export class RpcClientCache implements RpcClientInterface {
   }
 
   private put(key: string, response: Promise<any>) {
-    const handle = setTimeout(() => {
+    let handle = setTimeout(() => {
       return this.remove(key);
     }, this.ttl);
 

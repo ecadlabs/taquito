@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const { resolve } = require('path');
+const { resolve, relative } = require('path');
 const { writeFileSync } = require('fs-extra');
 const { version } = require('./package.json');
 let commitHash = process.env.GIT_COMMIT;
@@ -31,7 +30,9 @@ function writeData(commitHash, version) {
     const file = resolve('.', 'src', 'version.ts');
     const content = `
 // IMPORTANT: THIS FILE IS AUTO GENERATED! DO NOT MANUALLY EDIT OR CHECKIN!
+/* tslint:disable */
 export const VERSION = ${JSON.stringify(versionInfo, null, 4)};
+/* tslint:enable */
 `
     console.log(content)
     writeFileSync(file, content)

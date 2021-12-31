@@ -60,6 +60,7 @@
     "@ledgerhq/hw-transport": "^6.20.0",
     "@taquito/taquito": "^11.1.0",
     "@taquito/utils": "^11.1.0",
+    "@types/jest": "^26.0.24",
     "buffer": "^6.0.3",
     "libsodium-wrappers": "0.7.8"
   },

@@ -1,8 +1,8 @@
 import { Forger, ForgeParams, ForgeResponse } from './interface';
 
 export class ForgingMismatchError implements Error {
-  name = 'ForgingMismatchError';
-  message = 'Forging mismatch error';
+  name: string = 'ForgingMismatchError';
+  message: string = 'Forging mismatch error';
   constructor(public results: string[]) {}
 }
 
@@ -15,7 +15,7 @@ export class CompositeForger implements Forger {
 
   async forge({ branch, contents }: ForgeParams): Promise<ForgeResponse> {
     const results = await Promise.all(
-      this.forgers.map((forger) => {
+      this.forgers.map(forger => {
         return forger.forge({ branch, contents });
       })
     );
@@ -24,10 +24,8 @@ export class CompositeForger implements Forger {
       throw new Error('At least one forger must be specified');
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     let lastResult: string = results.pop()!; // Assumed to be more than one since we
     while (results.length) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const currentResult = results.pop()!;
 
       if (currentResult !== lastResult) {

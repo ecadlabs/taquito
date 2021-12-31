@@ -28,30 +28,31 @@ import { WalletOperation } from './operation';
 import { OriginationWalletOperation } from './origination-operation';
 import { TransactionWalletOperation } from './transaction-operation';
 
-export const cacheUntil =
-  <T>(cacheUntilObs: Observable<any>): MonoTypeOperatorFunction<T> =>
-  (source) => {
-    let subject: ReplaySubject<T> | null = null;
+export const cacheUntil = <T>(
+  cacheUntilObs: Observable<any>
+): MonoTypeOperatorFunction<T> => source => {
+  let subject: ReplaySubject<T> | null = null;
 
-    return defer(() => {
-      if (!subject) {
-        subject = new ReplaySubject<T>();
-        source.pipe(first()).subscribe(subject);
-        cacheUntilObs.pipe(first()).subscribe(() => {
-          subject = null;
-        });
-      }
+  return defer(() => {
+    if (!subject) {
+      subject = new ReplaySubject<T>();
+      source.pipe(first()).subscribe(subject);
+      cacheUntilObs.pipe(first()).subscribe(() => {
+        subject = null;
+      });
+    }
 
-      return subject;
-    });
-  };
+    return subject;
+  });
+};
 
 export const createNewPollingBasedHeadObservable = (
   pollingTimer: Observable<number>,
   sharedHeadOb: Observable<BlockResponse>,
   context: Context,
   scheduler?: SchedulerLike
-): Observable<BlockResponse> => {
+): Observable<BlockResponse> => {  
+
   return pollingTimer.pipe(
     switchMap(() => sharedHeadOb),
     distinctUntilKeyChanged('hash'),
@@ -80,10 +81,9 @@ export class OperationFactory {
   );
 
   private async createNewHeadObservable() {
-    const confirmationPollingIntervalSecond =
-      this.context.config.confirmationPollingIntervalSecond !== undefined
-        ? this.context.config.confirmationPollingIntervalSecond
-        : await this.context.getConfirmationPollingInterval();
+    const confirmationPollingIntervalSecond = this.context.config.confirmationPollingIntervalSecond !== undefined 
+                                        ? this.context.config.confirmationPollingIntervalSecond 
+                                        : await this.context.getConfirmationPollingInterval();
     return createNewPollingBasedHeadObservable(
       timer(0, confirmationPollingIntervalSecond * 1000),
       this.sharedHeadObs,
@@ -91,16 +91,16 @@ export class OperationFactory {
     );
   }
 
-  private createPastBlockWalker(startBlock: string, count = 1) {
+  private createPastBlockWalker(startBlock: string, count: number = 1) {
     return from(this.context.rpc.getBlock({ block: startBlock })).pipe(
-      switchMap((block) => {
+      switchMap(block => {
         if (count === 1) {
           return of(block);
         }
 
         return range(block.header.level, count - 1).pipe(
           startWith(block),
-          concatMap(async (level) => {
+          concatMap(async level => {
             return this.context.rpc.getBlock({ block: String(level) });
           })
         );
@@ -120,10 +120,7 @@ export class OperationFactory {
     return concat(...observableSequence);
   }
 
-  async createOperation(
-    hash: string,
-    config: OperationFactoryConfig = {}
-  ): Promise<WalletOperation> {
+  async createOperation(hash: string, config: OperationFactoryConfig = {}): Promise<WalletOperation> {
     return new WalletOperation(
       hash,
       this.context.clone(),
@@ -131,10 +128,7 @@ export class OperationFactory {
     );
   }
 
-  async createBatchOperation(
-    hash: string,
-    config: OperationFactoryConfig = {}
-  ): Promise<BatchWalletOperation> {
+  async createBatchOperation(hash: string, config: OperationFactoryConfig = {}): Promise<BatchWalletOperation> {
     return new BatchWalletOperation(
       hash,
       this.context.clone(),

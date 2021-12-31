@@ -1,4 +1,4 @@
-import { OperationContentsAndResult } from '@taquito/rpc';
+import { OperationContentsAndResult, OperationResultStatusEnum } from '@taquito/rpc';
 import { BATCH_KINDS } from '../batch/rpc-batch-provider';
 import { Context } from '../context';
 import { flattenErrors, flattenOperationResult } from './operation-errors';
@@ -14,8 +14,7 @@ import {
 
 export class BatchOperation
   extends Operation
-  implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation
-{
+  implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation {
   constructor(
     hash: string,
     private readonly params: RPCOperation[],

@@ -11,7 +11,7 @@ import {
   isValidPrefix,
   mergebuf,
   prefix,
-  verifySignature,
+  verifySignature
 } from '@taquito/utils';
 import sodium from 'libsodium-wrappers';
 import toBuffer from 'typedarray-to-buffer';
@@ -109,7 +109,7 @@ export class RemoteSigner implements Signer {
         },
         watermarkedBytes
       );
-      const pref = signature.startsWith('sig')
+      let pref = signature.startsWith('sig')
         ? signature.substring(0, 3)
         : signature.substring(0, 5);
 

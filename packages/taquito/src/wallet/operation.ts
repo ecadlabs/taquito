@@ -16,8 +16,8 @@ import { Receipt, receiptFromOperation } from './receipt';
 export type OperationStatus = 'pending' | 'unknown' | OperationResultStatusEnum;
 
 export class MissedBlockDuringConfirmationError implements Error {
-  name = 'MissedBlockDuringConfirmationError';
-  message =
+  name: string = 'MissedBlockDuringConfirmationError';
+  message: string =
     'Taquito missed a block while waiting for operation confirmation and was not able to find the operation';
 }
 
@@ -33,7 +33,7 @@ export class WalletOperation {
 
   private lastHead: BlockResponse | undefined;
   protected newHead$: Observable<BlockResponse> = this._newHead$.pipe(
-    tap((newHead) => {
+    tap(newHead => {
       if (
         !this._included &&
         this.lastHead &&
@@ -49,7 +49,7 @@ export class WalletOperation {
 
   // Observable that emit once operation is seen in a block
   private confirmed$ = this.newHead$.pipe(
-    map((head) => {
+    map(head => {
       for (const opGroup of head.operations) {
         for (const op of opGroup) {
           if (op.hash === this.opHash) {
@@ -93,12 +93,7 @@ export class WalletOperation {
     protected readonly context: Context,
     private _newHead$: Observable<BlockResponse>
   ) {
-    this.confirmed$
-      .pipe(
-        first(),
-        catchError(() => of(undefined))
-      )
-      .subscribe();
+    this.confirmed$.pipe(first(), catchError(() => of(undefined))).subscribe();
   }
 
   async getCurrentConfirmation() {
@@ -116,7 +111,7 @@ export class WalletOperation {
       .toPromise();
   }
 
-  async isInCurrentBranch(tipBlockIdentifier = 'head') {
+  async isInCurrentBranch(tipBlockIdentifier: string = 'head') {
     // By default it is assumed that the operation is in the current branch
     if (!this._included) {
       return true;
