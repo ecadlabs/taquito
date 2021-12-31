@@ -21,21 +21,20 @@ export const isPrim = (value: MichelsonValue): value is PrimValue => {
 };
 
 export const isBytes = (value: MichelsonValue): value is BytesValue => {
-  // tslint:disable-next-line: strict-type-predicates
   return 'bytes' in value && typeof value.bytes === 'string';
 };
 
 export const isString = (value: MichelsonValue): value is StringValue => {
-  // tslint:disable-next-line: strict-type-predicates
   return 'string' in value && typeof value.string === 'string';
 };
 
 export const isInt = (value: MichelsonValue): value is IntValue => {
-  // tslint:disable-next-line: strict-type-predicates
   return 'int' in value && typeof value.int === 'string';
 };
 
-export const scriptEncoder: Encoder<{ code: MichelsonValue; storage: MichelsonValue }> = script => {
+export const scriptEncoder: Encoder<{ code: MichelsonValue; storage: MichelsonValue }> = (
+  script
+) => {
   const code = valueEncoder(script.code);
   const storage = valueEncoder(script.storage);
   return `${pad(code.length / 2, 8)}${code}${pad(storage.length / 2, 8)}${storage}`;
@@ -53,7 +52,7 @@ export const scriptDecoder: Decoder = (value: Uint8ArrayConsumer) => {
 
 export const valueEncoder: Encoder<MichelsonValue> = (value: MichelsonValue) => {
   if (Array.isArray(value)) {
-    const encoded = value.map(x => valueEncoder(x)).join('');
+    const encoded = value.map((x) => valueEncoder(x)).join('');
     const len = encoded.length / 2;
     return `02${pad(len)}${encoded}`;
   } else if (isPrim(value)) {
@@ -78,13 +77,14 @@ export const valueDecoder: Decoder = (value: Uint8ArrayConsumer) => {
       return stringDecoder(value);
     case 0x00:
       return intDecoder(value);
-    case 0x02:
+    case 0x02: {
       const val = new Uint8ArrayConsumer(extractRequiredLen(value));
       const results = [];
       while (val.length() > 0) {
         results.push(valueDecoder(val));
       }
       return results;
+    }
     default:
       return primDecoder(value, preamble);
   }
@@ -96,7 +96,7 @@ export const extractRequiredLen = (value: Uint8ArrayConsumer, bytesLength = 4) =
   return value.consume(valueLen);
 };
 
-export const bytesEncoder: Encoder<BytesValue> = value => {
+export const bytesEncoder: Encoder<BytesValue> = (value) => {
   if (!/^([A-Fa-f0-9]{2})*$/.test(value.bytes)) {
     throw new Error(`Invalid hex string: ${value.bytes}`);
   }
@@ -112,7 +112,7 @@ export const bytesDecoder: Decoder = (value: Uint8ArrayConsumer) => {
   };
 };
 
-export const stringEncoder: Encoder<StringValue> = value => {
+export const stringEncoder: Encoder<StringValue> = (value) => {
   const str = Buffer.from(value.string, 'utf8').toString('hex');
   const hexLength = str.length / 2;
   return `01${pad(hexLength)}${str}`;
@@ -139,6 +139,7 @@ export const intEncoder: Encoder<IntValue> = ({ int }) => {
 
   const splitted = binary.padStart(pad, '0').match(/\d{6,7}/g);
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const reversed = splitted!.reverse();
 
   reversed[0] = positiveMark + reversed[0];
@@ -185,7 +186,7 @@ export const intDecoder = (value: Uint8ArrayConsumer): IntValue => {
   };
 };
 
-export const primEncoder: Encoder<PrimValue> = value => {
+export const primEncoder: Encoder<PrimValue> = (value) => {
   const hasAnnot = +Array.isArray(value.annots);
   const argsCount = Array.isArray(value.args) ? value.args.length : 0;
 
@@ -194,18 +195,18 @@ export const primEncoder: Encoder<PrimValue> = value => {
 
   const op = opMappingReverse[value.prim];
 
-  let encodedArgs = (value.args || []).map(arg => valueEncoder(arg)).join('');
+  let encodedArgs = (value.args || []).map((arg) => valueEncoder(arg)).join('');
   const encodedAnnots = Array.isArray(value.annots) ? encodeAnnots(value.annots) : '';
 
   if (value.prim === 'LAMBDA' && argsCount) {
     encodedArgs = pad(encodedArgs.length / 2) + encodedArgs + pad(0);
   }
 
-  if (( value.prim === 'pair' || value.prim === 'Pair' ) && argsCount > 2) {
+  if ((value.prim === 'pair' || value.prim === 'Pair') && argsCount > 2) {
     encodedArgs =
-      (encodedAnnots === '')
-        ? (pad(encodedArgs.length / 2) + encodedArgs + pad(0))
-        : (pad(encodedArgs.length / 2) + encodedArgs)
+      encodedAnnots === ''
+        ? pad(encodedArgs.length / 2) + encodedArgs + pad(0)
+        : pad(encodedArgs.length / 2) + encodedArgs;
   }
 
   if (value.prim === 'view' && value.args) {
@@ -218,10 +219,7 @@ export const primEncoder: Encoder<PrimValue> = value => {
 export const primDecoder = (value: Uint8ArrayConsumer, preamble: Uint8Array) => {
   const hasAnnot = (preamble[0] - 0x03) % 2 === 1;
   let argsCount = Math.floor((preamble[0] - 0x03) / 2);
-  const op = value
-    .consume(1)[0]
-    .toString(16)
-    .padStart(2, '0');
+  const op = value.consume(1)[0].toString(16).padStart(2, '0');
 
   const result: Partial<PrimValue> = {
     prim: opMapping[op],
@@ -239,12 +237,12 @@ export const primDecoder = (value: Uint8ArrayConsumer, preamble: Uint8Array) => 
     }
   }
 
-let combPairArgs;
-let combPairAnnots;
+  let combPairArgs;
+  let combPairAnnots;
   if ((opMapping[op] === 'pair' || opMapping[op] === 'Pair') && argsCount > 2) {
     combPairArgs = decodeCombPair(value);
     argsCount = 0;
-    combPairAnnots = decodeAnnots(value); 
+    combPairAnnots = decodeAnnots(value);
   }
 
   const args = new Array(argsCount).fill(0).map(() => valueDecoder(value));
@@ -253,19 +251,15 @@ let combPairAnnots;
     value.consume(4);
   }
 
-  if(combPairArgs) {
+  if (combPairArgs) {
     result['args'] = combPairArgs as any;
-  }
-
-  else if (args.length) {
+  } else if (args.length) {
     result['args'] = args as any;
   }
 
-  if (combPairAnnots && (combPairAnnots as any)[0] !== "") {
+  if (combPairAnnots && (combPairAnnots as any)[0] !== '') {
     result['annots'] = combPairAnnots as any;
-  }
-
-  else if (hasAnnot) {
+  } else if (hasAnnot) {
     result['annots'] = decodeAnnots(value) as any;
   }
 
@@ -277,20 +271,20 @@ const primViewDecoder = (value: Uint8ArrayConsumer, result: Partial<PrimValue>) 
   result['args'] = new Array(4).fill(0).map(() => valueDecoder(value)) as any;
   value.consume(4);
   return result;
-}
+};
 
 export const decodeCombPair: Decoder = (val: Uint8ArrayConsumer) => {
   const array = new Uint8ArrayConsumer(extractRequiredLen(val));
-      const args = [];
-      while (array.length() > 0) {
-        args.push(valueDecoder(array));
-      }
-      return args;
-}; 
+  const args = [];
+  while (array.length() > 0) {
+    args.push(valueDecoder(array));
+  }
+  return args;
+};
 
 export const encodeAnnots: Encoder<string[]> = (value: string[]) => {
   const mergedAnnot = value
-    .map(x => {
+    .map((x) => {
       return Buffer.from(x, 'utf8').toString('hex');
     })
     .join('20');
@@ -305,5 +299,5 @@ export const decodeAnnots: Decoder = (val: Uint8ArrayConsumer): string[] => {
   const restOfAnnot = val.consume(annotLen);
 
   const restOfAnnotHex = Buffer.from(restOfAnnot).toString('hex');
-  return restOfAnnotHex.split('20').map(x => Buffer.from(x, 'hex').toString('utf8'));
+  return restOfAnnotHex.split('20').map((x) => Buffer.from(x, 'hex').toString('utf8'));
 };

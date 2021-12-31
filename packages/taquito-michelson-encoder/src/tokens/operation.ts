@@ -33,6 +33,5 @@ export class OperationToken extends Token {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }

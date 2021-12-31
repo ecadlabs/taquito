@@ -47,7 +47,7 @@ export class OriginationWalletOperation extends WalletOperation {
 
   public async contract() {
     const op = await this.originationOperation();
-    const address = (op!.metadata.operation_result.originated_contracts || [])[0];
+    const address = (op?.metadata.operation_result.originated_contracts || [])[0];
     return this.context.wallet.at(address);
   }
 }

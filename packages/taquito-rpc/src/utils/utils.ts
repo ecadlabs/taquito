@@ -16,7 +16,7 @@ export function castToBigNumber(data: any, keys?: any): object {
   if (typeof keys === 'undefined') {
     keys = Object.keys(data);
   }
-  let response: any = returnArray ? [] : {};
+  const response: any = returnArray ? [] : {};
 
   keys.forEach((key: any) => {
     const item = getByPath(data, key);
@@ -49,7 +49,7 @@ export function castToString(data: any, keys?: any): object {
   if (typeof keys === 'undefined') {
     keys = Object.keys(data);
   }
-  let response: any = returnArray ? [] : {};
+  const response: any = returnArray ? [] : {};
 
   keys.forEach((key: any) => {
     const item = data[key];

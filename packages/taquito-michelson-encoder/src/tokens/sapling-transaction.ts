@@ -1,7 +1,7 @@
 import { Token, TokenFactory, TokenValidationError } from './token';
 
 export class SaplingTransactionValidationError extends TokenValidationError {
-  name: string = 'SaplingTransactionValidationError';
+  name = 'SaplingTransactionValidationError';
   constructor(public value: any, public token: SaplingTransactionToken, message: string) {
     super(value, token, message);
   }
@@ -59,6 +59,5 @@ export class SaplingTransactionToken extends Token {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }

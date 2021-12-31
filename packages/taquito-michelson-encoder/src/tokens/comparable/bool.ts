@@ -54,6 +54,5 @@ export class BoolToken extends ComparableToken {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }

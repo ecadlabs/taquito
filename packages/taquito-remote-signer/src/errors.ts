@@ -1,14 +1,14 @@
 export class KeyNotFoundError implements Error {
-  public name: string = 'KeyNotFoundError';
+  public name = 'KeyNotFoundError';
   constructor(public message: string, public innerException: any) {}
 }
 
 export class OperationNotAuthorizedError implements Error {
-  public name: string = 'OperationNotAuthorized';
+  public name = 'OperationNotAuthorized';
   constructor(public message: string, public innerException: any) {}
 }
 
 export class BadSigningDataError implements Error {
-  public name: string = 'BadSigningData';
+  public name = 'BadSigningData';
   constructor(public message: string, public innerException: any, public readonly data: any) {}
 }
