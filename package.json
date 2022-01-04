@@ -13,6 +13,7 @@
     "example": "cd example && npm run example",
     "lerna": "lerna",
     "build-docs": "typedoc",
+    "serve-docs": "cd website && npm run build",
     "gh-pages": "gh-pages"
   },
   "workspaces": [
