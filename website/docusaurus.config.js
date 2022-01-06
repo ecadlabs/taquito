@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 module.exports = {
   title: 'Taquito',
   tagline: 'A TypeScript library suite for development on the Tezos blockchain.',
@@ -101,6 +103,11 @@ module.exports = {
     gtag: {
       trackingID: 'UA-148358030-1',
     },
+    algolia: {
+      apiKey: process.env.ALGOLIA_SEARCH_API_KEY,
+      indexName: 'taquito',
+      appId: process.env.ALGOLIA_APPLICATION_ID,
+    }
   },
   presets: [
     [
@@ -112,7 +119,7 @@ module.exports = {
         docs: {
           path: './docs',
           sidebarPath: require.resolve('./sidebars.json'),
-          includeCurrentVersion: false
+          includeCurrentVersion: true
         }
       }
     ],
