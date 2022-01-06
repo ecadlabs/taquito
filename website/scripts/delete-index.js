@@ -3,8 +3,8 @@ require('dotenv').config();
 const algoliasearch = require('algoliasearch');
 
 const client = algoliasearch(
-  process.env.APPLICATION_ID, 
-  process.env.API_KEY
+  process.env.ALGOLIA_APPLICATION_ID, 
+  process.env.ALGOLIA_UPDATE_API_KEY
 ); 
 const index = client.initIndex('taquito');
 
