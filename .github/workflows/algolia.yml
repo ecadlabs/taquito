@@ -25,7 +25,6 @@ jobs:
     - name: Run delete script
       run: npm run delete-index
     - name: Registry login
-      uses: actions/checkout@v2
       run: |
         docker run -it -e "CONFIG=$(cat ./config.json | jq -r tostring)" \
           -e API_KEY=${{secrets.ALGOLIA_UPDATE_API_KEY}} \
