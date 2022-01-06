@@ -6,7 +6,7 @@ on:
     branches:
       - master
 jobs:
-  deply-edge-package:
+  deploy-edge-package:
     runs-on: ecad-taquito
     if: ${{ github.event_name == 'pull_request' || github.ref == 'refs/heads/master' }}
     strategy:
