@@ -9,14 +9,7 @@ import TabItem from '@theme/TabItem';
 
 The contracts used in Taquito Integration Tests and in Taquito Documentation Live Code Examples are test data and require curation. Here we collect the contracts, give them names, demonstrate their properties and describe their use.
 
-To determine if a contract has an FA1.2 interface we can use
-```
-tezos-client check contract KT1CfFBaLoUrgv93k8668KCCcu2hNDNYPz4L implements fa1.2
-```
-
-A contract has an FA2 interface if it has entrypoints: transfer, balance_of, and update_operators
-
-Each contract will include the storage in Michelson and the storage as Javascript as used by Taquito. 
+Each contract description will include the storage in Michelson and the storage as Javascript as used by Taquito. 
 
 - **Basic Contracts**
   - [IncrementContract](#incrementcontract)
@@ -46,8 +39,8 @@ Each contract will include the storage in Michelson and the storage as Javascrip
   - [Tzip16HTTPSContract](#tzip16httpscontract)
   - [Tzip16SHA256Contract](#tzip16sha256contract)
   - [Tzip16IPFSContract](#tzip16ipfscontract)
-  - [Tzip16OffChainContractOne](#tzip16offchaincontractone)
-  - [Tzip16OffChainContractTwo](#tzip16offchaincontracttwo)
+  - [Tzip16OffChainContractJSON](#tzip16offchaincontractjson)
+  - [Tzip16OffChainContractMultiply](#tzip16offchaincontractmultiply)
 - **Wallet Contracts**
   - [WalletContract](#walletcontract)
   - [WalletAreYouThereContract](#walletareyouttherecontract)
@@ -458,9 +451,8 @@ values={[
 ```js
 storage (pair (big_map %thebigmap (pair nat address) int)
               (map %themap (pair nat address) int
-```
 ));
-
+```
 </TabItem>
   <TabItem value="taquito">
 
@@ -897,7 +889,11 @@ Tzip-7 introduced the approvable ledger: [Tzip-7](https://gitlab.com/tezos/tzip/
 
 - [A Beginner's Guide to Tezos Tzip-7 Prooposal](https://claudebarde.medium.com/a-beginners-guide-to-tezos-tzip-7-proposal-90a8b816af7e)
 
-This contract has an FA1.2 interface. 
+This contract has an FA1.2 interface. To determine if a contract has an FA1.2 interface we can use
+
+```
+tezos-client check contract KT1CfFBaLoUrgv93k8668KCCcu2hNDNYPz4L implements fa1.2
+```
 
 #### Entrypoints:
 
@@ -944,6 +940,9 @@ storage (pair (big_map address (pair nat (map address nat)))
 # Tzip-12 Contracts
 
 The @taquito/tzip12 package allows retrieving metadata associated with tokens of an FA2 contract. You can find more information about the TZIP-12 standard [here](https://gitlab.com/tezos/tzip/-/blob/master/proposals/tzip-12/tzip-12.md).
+
+
+A contract has an FA2 interface if it has entrypoints: transfer, balance_of, and update_operators
 
 ## Tzip12BigMapOffChainContract
 
