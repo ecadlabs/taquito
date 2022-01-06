@@ -11,7 +11,6 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-    - run: cd website
     - uses: actions/setup-node@v1
       with:
         node-version: 14.x
@@ -21,12 +20,12 @@ jobs:
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-node-
-    - run: npm ci
+    - run: cd website && npm ci
     - name: Run delete script
-      run: cd .. && npm run delete-index
+      run: cd website && npm run delete-index
     - name: Registry login
       run: |
-        docker run -it -e "CONFIG=$(cat ./config.json | jq -r tostring)" \
+        docker run -it -e "CONFIG=$(cat ./website/config.json | jq -r tostring)" \
           -e API_KEY=${{secrets.ALGOLIA_UPDATE_API_KEY}} \
           -e APPLICATION_ID=${{secrets.ALGOLIA_APPLICATION_ID}} \
           algolia/docsearch-scraper
