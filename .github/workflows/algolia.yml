@@ -23,7 +23,7 @@ jobs:
           ${{ runner.os }}-node-
     - run: npm ci
     - name: Run delete script
-      run: npm run delete-index
+      run: cd .. && npm run delete-index
     - name: Registry login
       run: |
         docker run -it -e "CONFIG=$(cat ./config.json | jq -r tostring)" \
