@@ -2,13 +2,16 @@ name: Algolia indexing
 
 on:
   push:
+    branches: [master]
   pull_request:
-    branches: [main]
-
+    branches: [master]
+  schedule:
+    - cron: '0 0 * * *'
 jobs:
   delete-current-algolia-index:
     env:
       ALGOLIA_UPDATE_API_KEY: ${{secrets.ALGOLIA_UPDATE_API_KEY}}
+      ALGOLIA_SEARCH_API_KEY: ${{secrets.ALGOLIA_SEARCH_API_KEY}}
       ALGOLIA_APPLICATION_ID: ${{secrets.ALGOLIA_APPLICATION_ID}}
     runs-on: ecad-taquito
     steps:
