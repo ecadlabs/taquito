@@ -197,15 +197,19 @@ storage (pair
   <TabItem value="taquito">
 
 ```js
-import { VIEW_LAMBDA } from '@taquito/taquito';
+const allowances = new MichelsonMap();
+    const ledger = new MichelsonMap();
+    ledger.set('tz1btkXVkVFWLgXa66sbRJa8eeUSwvQFX4kP', { allowances, balance: '100' });
 
-const op = await tezos.contract.originate({
-  code: VIEW_LAMBDA.code,
-  storage: VIEW_LAMBDA.storage,
-});
-
-const lambdaContract = await op.contract();
-const lambdaContractAddress = lambdaContract.address;
+    const opknownBigMapContract = await tezos.contract.originate({
+      code: knownBigMapContract,
+      storage: {
+        ledger,
+        owner: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+        paused: true,
+        totalSupply: '100',
+      },
+    });   }
 ```
 
 </TabItem>
