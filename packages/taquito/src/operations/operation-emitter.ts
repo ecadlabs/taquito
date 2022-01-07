@@ -17,7 +17,7 @@ import {
   PrepareOperationParams,
   RPCOperation,
   RPCOpWithFee,
-  RPCOpWithSource
+  RPCOpWithSource,
 } from './types';
 
 export interface PreparedOperation {
@@ -41,13 +41,15 @@ export abstract class OperationEmitter {
   constructor(protected context: Context) {}
 
   protected async isRevealOpNeeded(op: RPCOperation[] | ParamsWithKind[], pkh: string) {
-    return (!await this.isAccountRevealRequired(pkh) || !this.isRevealRequiredForOpType(op)) ? false : true;
+    return !(await this.isAccountRevealRequired(pkh)) || !this.isRevealRequiredForOpType(op)
+      ? false
+      : true;
   }
 
   protected async isAccountRevealRequired(publicKeyHash: string) {
     const manager = await this.rpc.getManagerKey(publicKeyHash);
-      const haveManager = manager && typeof manager === 'object' ? !!manager.key : !!manager;
-      return !haveManager;
+    const haveManager = manager && typeof manager === 'object' ? !!manager.key : !!manager;
+    return !haveManager;
   }
 
   protected isRevealRequiredForOpType(op: RPCOperation[] | ParamsWithKind[]) {
@@ -58,7 +60,7 @@ export abstract class OperationEmitter {
       }
     }
     return opRequireReveal;
-  };
+  }
 
   // Originally from sotez (Copyright (c) 2018 Andrew Kishino)
   protected async prepareOperation({
@@ -70,7 +72,7 @@ export abstract class OperationEmitter {
     let ops: RPCOperation[] = [];
     let head: BlockHeaderResponse;
 
-    const blockHeaderPromise = this.rpc.getBlockHeader();
+    const blockHeaderPromise = this.rpc.getBlockHeader({ block: 'head~2' });
     const blockMetaPromise = this.rpc.getBlockMetadata();
 
     if (Array.isArray(operation)) {
@@ -94,7 +96,7 @@ export abstract class OperationEmitter {
     const [header, metadata, headCounter] = await Promise.all([
       blockHeaderPromise,
       blockMetaPromise,
-      counterPromise
+      counterPromise,
     ]);
 
     if (!header) {
@@ -176,7 +178,7 @@ export abstract class OperationEmitter {
               ...op,
               ...getSource(op),
               ...getFee(op),
-            }
+            };
           default:
             throw new Error('Unsupported operation');
         }
