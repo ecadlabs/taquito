@@ -107,6 +107,7 @@ module.exports = {
       apiKey: process.env.ALGOLIA_SEARCH_API_KEY,
       indexName: 'taquito',
       appId: process.env.ALGOLIA_APPLICATION_ID,
+      contextualSearch: true
     }
   },
   presets: [
