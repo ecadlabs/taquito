@@ -2,8 +2,12 @@ import { TransactionOperation } from '../../operations/transaction-operation';
 import { TransferParams } from '../../operations/types';
 import { ContractProvider } from '../interface';
 import { TransactionWalletOperation, Wallet } from '../../wallet';
-import { ParameterSchema } from "@taquito/michelson-encoder";
-import { ContractMethodInterface, ExplicitTransferParams, SendParams } from './contract-method-interface';
+import { ParameterSchema } from '@taquito/michelson-encoder';
+import {
+  ContractMethodInterface,
+  ExplicitTransferParams,
+  SendParams,
+} from './contract-method-interface';
 import { DEFAULT_SMART_CONTRACT_METHOD_NAME } from '../contract';
 import { InvalidParameterError } from '../errors';
 
@@ -11,7 +15,9 @@ import { InvalidParameterError } from '../errors';
  * @description Utility class to send smart contract operation
  * The format for the arguments is the flattened representation
  */
-export class ContractMethod<T extends ContractProvider | Wallet> implements ContractMethodInterface {
+export class ContractMethod<T extends ContractProvider | Wallet>
+  implements ContractMethodInterface
+{
   constructor(
     private provider: T,
     private address: string,
@@ -20,15 +26,15 @@ export class ContractMethod<T extends ContractProvider | Wallet> implements Cont
     private args: any[],
     private isMultipleEntrypoint = true,
     private isAnonymous = false
-  ) { }
+  ) {}
 
-  private validateArgs (args: any[], schema: ParameterSchema, name: string) {
+  private validateArgs(args: any[], schema: ParameterSchema, name: string) {
     const sigs = schema.ExtractSignatures();
-  
+
     if (!sigs.find((x: any[]) => x.length === args.length)) {
       throw new InvalidParameterError(name, sigs, args);
     }
-  };
+  }
 
   /**
    * @description Get the schema of the smart contract method
@@ -42,17 +48,17 @@ export class ContractMethod<T extends ContractProvider | Wallet> implements Cont
   /**
    * @description Get the signature of the smart contract method
    */
-   getSignature() {
-    if(this.isAnonymous){
+  getSignature() {
+    if (this.isAnonymous) {
       const sig = this.parameterSchema.ExtractSignatures().find((x: any[]) => x[0] === this.name);
-      if(sig){
+      if (sig) {
         sig.shift();
         return sig;
       }
     } else {
       const sig = this.parameterSchema.ExtractSignatures();
-      return (sig.length == 1)? sig[0]: sig;
-      }
+      return sig.length == 1 ? sig[0] : sig;
+    }
   }
 
   /**
@@ -65,7 +71,9 @@ export class ContractMethod<T extends ContractProvider | Wallet> implements Cont
     params: Partial<SendParams> = {}
   ): Promise<T extends Wallet ? TransactionWalletOperation : TransactionOperation> {
     if (this.provider instanceof Wallet) {
-      return (this.provider as unknown as Wallet).transfer(this.toTransferParams(params)).send() as any;
+      return (this.provider as unknown as Wallet)
+        .transfer(this.toTransferParams(params))
+        .send() as any;
     } else {
       return this.provider.transfer(this.toTransferParams(params)) as any;
     }

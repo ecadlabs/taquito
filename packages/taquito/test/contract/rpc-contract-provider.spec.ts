@@ -124,7 +124,7 @@ describe('RpcContractProvider test', () => {
       setDelegate: jest.fn(),
       batch: jest.fn(),
       reveal: jest.fn(),
-      registerGlobalConstant: jest.fn()
+      registerGlobalConstant: jest.fn(),
     };
 
     // Required for operations confirmation polling
@@ -179,7 +179,6 @@ describe('RpcContractProvider test', () => {
     it('should call getBigMapKey', async (done) => {
       mockRpcClient.getNormalizedScript.mockResolvedValue({ code: [sample] });
       mockRpcClient.getBigMapKey.mockResolvedValue(sampleBigMapValue);
-      // tslint:disable-next-line: deprecation
       const result = await rpcContractProvider.getBigMapKey(
         'test',
         'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn'
@@ -725,7 +724,9 @@ describe('RpcContractProvider test', () => {
 
   describe('originate', () => {
     it('should produce a reveal and origination operation', async (done) => {
-      mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo' });
+      mockRpcClient.getBlockMetadata.mockResolvedValue({
+        next_protocol: 'PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo',
+      });
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       const result = await rpcContractProvider.originate({
         delegate: 'test_delegate',
@@ -767,7 +768,9 @@ describe('RpcContractProvider test', () => {
     });
 
     it('should not convert balance to mutez when mutez flag is set to true', async (done) => {
-      mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo' });
+      mockRpcClient.getBlockMetadata.mockResolvedValue({
+        next_protocol: 'PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo',
+      });
       const result = await rpcContractProvider.originate({
         delegate: 'test_delegate',
         balance: '200',
@@ -809,7 +812,9 @@ describe('RpcContractProvider test', () => {
     });
 
     it('estimate when no fees are specified', async (done) => {
-      mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo' });
+      mockRpcClient.getBlockMetadata.mockResolvedValue({
+        next_protocol: 'PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo',
+      });
       const estimate = new Estimate(1000, 1000, 180, 1000);
       mockEstimate.originate.mockResolvedValue(estimate);
 
@@ -1267,11 +1272,11 @@ describe('RpcContractProvider test', () => {
   });
 
   describe('registerGlobalConstant', () => {
-    it('should produce a reveal and registerGlobalConstant operation', async done => {
+    it('should produce a reveal and registerGlobalConstant operation', async (done) => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.registerGlobalConstant.mockResolvedValue(estimate);
       const result = await rpcContractProvider.registerGlobalConstant({
-        value: {"prim":"Pair","args":[{"int":"999"},{"int":"999"}]}
+        value: { prim: 'Pair', args: [{ int: '999' }, { int: '999' }] },
       });
       expect(result.raw).toEqual({
         counter: 0,
@@ -1280,7 +1285,7 @@ describe('RpcContractProvider test', () => {
           contents: [
             revealOp('test_pub_key_hash'),
             {
-              value: {"prim":"Pair","args":[{"int":"999"},{"int":"999"}]},
+              value: { prim: 'Pair', args: [{ int: '999' }, { int: '999' }] },
               counter: '2',
               fee: '475',
               gas_limit: '1330',

@@ -2,7 +2,7 @@ import { Token, TokenFactory, ComparableToken, TokenValidationError } from '../t
 import BigNumber from 'bignumber.js';
 
 export class MutezValidationError extends TokenValidationError {
-  name: string = 'MutezValidationError';
+  name = 'MutezValidationError';
   constructor(public value: any, public token: MutezToken, message: string) {
     super(value, token, message);
   }
@@ -82,6 +82,5 @@ export class MutezToken extends ComparableToken {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }

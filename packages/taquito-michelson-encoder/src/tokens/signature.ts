@@ -2,7 +2,7 @@ import { ComparableToken, Token, TokenFactory, TokenValidationError } from './to
 import { validateSignature, ValidationResult } from '@taquito/utils';
 
 export class SignatureValidationError extends TokenValidationError {
-  name: string = 'SignatureValidationError';
+  name = 'SignatureValidationError';
   constructor(public value: any, public token: SignatureToken, message: string) {
     super(value, token, message);
   }
@@ -71,6 +71,5 @@ export class SignatureToken extends ComparableToken {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }

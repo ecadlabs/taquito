@@ -7,8 +7,8 @@ export class EncodeTicketError implements Error {
   message = 'Tickets cannot be sent to the blockchain; they are created on-chain';
 }
 
-const ticketerType = { "prim": "contract" };
-const amountType = { "prim": "int" };
+const ticketerType = { prim: 'contract' };
+const amountType = { prim: 'int' };
 
 export class TicketToken extends Token {
   static prim = 'ticket';
@@ -26,11 +26,11 @@ export class TicketToken extends Token {
   }
 
   public Encode(_args: any[]): any {
-    throw new EncodeTicketError()
+    throw new EncodeTicketError();
   }
 
   public EncodeObject(_args: any): any {
-    throw new EncodeTicketError()  
+    throw new EncodeTicketError();
   }
 
   public Execute(val: any, semantics?: Semantic) {
@@ -41,28 +41,27 @@ export class TicketToken extends Token {
     const value = this.valueToken;
     const amount = this.createToken(amountType, this.idx);
 
-    if(undefined === val.args[2] &&
-       undefined !== val.args[1].args) {
+    if (undefined === val.args[2] && undefined !== val.args[1].args) {
       return {
-            ticketer: ticketer.Execute(val.args[0], semantics),
-            value: value.Execute(val.args[1].args[0], semantics),
-            amount: amount.Execute(val.args[1].args[1], semantics)
-      }
+        ticketer: ticketer.Execute(val.args[0], semantics),
+        value: value.Execute(val.args[1].args[0], semantics),
+        amount: amount.Execute(val.args[1].args[1], semantics),
+      };
     }
 
     return {
       ticketer: ticketer.Execute(val.args[0], semantics),
       value: value.Execute(val.args[1], semantics),
-      amount: amount.Execute(val.args[2], semantics)
-    }
+      amount: amount.Execute(val.args[2], semantics),
+    };
   }
 
   public ExtractSchema() {
     return {
       ticketer: ContractToken.prim,
       value: this.valueToken.ExtractSchema(),
-      amount: IntToken.prim
-    }
+      amount: IntToken.prim,
+    };
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
@@ -71,6 +70,5 @@ export class TicketToken extends Token {
     }
     this.valueToken.findAndReturnTokens(tokenToFind, tokens);
     return tokens;
-  };
-
+  }
 }

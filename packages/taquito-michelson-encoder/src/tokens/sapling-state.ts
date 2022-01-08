@@ -1,7 +1,7 @@
 import { Semantic, Token, TokenFactory, TokenValidationError } from './token';
 
 export class SaplingStateValidationError extends TokenValidationError {
-  name: string = 'SaplingStateValidationError';
+  name = 'SaplingStateValidationError';
   constructor(public value: any, public token: SaplingStateToken, message: string) {
     super(value, token, message);
   }
@@ -74,6 +74,5 @@ export class SaplingStateToken extends Token {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }
