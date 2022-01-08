@@ -1,0 +1,47 @@
+name: Algolia indexing
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+jobs:
+  delete-current-algolia-index:
+    env:
+      ALGOLIA_UPDATE_API_KEY: ${{secrets.ALGOLIA_UPDATE_API_KEY}}
+      ALGOLIA_SEARCH_API_KEY: ${{secrets.ALGOLIA_SEARCH_API_KEY}}
+      ALGOLIA_APPLICATION_ID: ${{secrets.ALGOLIA_APPLICATION_ID}}
+    runs-on: ecad-taquito
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: 14.x
+    - uses: actions/cache@v1
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+    - run: cd website && npm ci
+    - name: Run delete script
+      run: cd website && npm run delete-index
+    - name: Registry login
+      run: |
+        docker run --rm -e "CONFIG=$(cat ./website/config.json | jq -r tostring)" \
+          -e API_KEY=${{secrets.ALGOLIA_UPDATE_API_KEY}} \
+          -e APPLICATION_ID=${{secrets.ALGOLIA_APPLICATION_ID}} \
+          algolia/docsearch-scraper
+      
+
+
+
+
+
+
+
+
+
+
+
+
+

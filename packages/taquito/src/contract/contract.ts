@@ -1,5 +1,10 @@
 import { ParameterSchema, Schema, ViewSchema } from '@taquito/michelson-encoder';
-import { EntrypointsResponse, RpcClientInterface, ScriptResponse } from '@taquito/rpc';
+import {
+  EntrypointsResponse,
+  MichelsonV1Expression,
+  RpcClientInterface,
+  ScriptResponse,
+} from '@taquito/rpc';
 import { ChainIds, DefaultLambdaAddresses } from '../constants';
 import { Wallet } from '../wallet';
 import { ContractMethodFactory } from './contract-methods/contract-method-factory';
@@ -71,11 +76,13 @@ const validateArgs = (args: any[], schema: ParameterSchema, name: string) => {
 };
 
 // lambda view tzip4
-const isView = (schema: ParameterSchema): boolean => {
+const isView = (entrypoint: MichelsonV1Expression): boolean => {
   let isView = false;
-  const sigs = schema.ExtractSignatures();
-  if (sigs[0][sigs[0].length - 1] === 'contract') {
-    isView = true;
+  if ('prim' in entrypoint && entrypoint.prim === 'pair' && entrypoint.args) {
+    const lastElement = entrypoint.args[entrypoint.args.length - 1];
+    if ('prim' in lastElement && lastElement.prim === 'contract') {
+      isView = true;
+    }
   }
   return isView;
 };
@@ -172,7 +179,7 @@ export class ContractAbstraction<T extends ContractProvider | Wallet> {
         };
 
         if (isContractProvider(provider)) {
-          if (isView(smartContractMethodSchema)) {
+          if (isView(entrypoints[smartContractMethodName])) {
             const view = function (...args: any[]) {
               const entrypointParamWithoutCallback = (entrypoints[smartContractMethodName] as any)
                 .args[0];

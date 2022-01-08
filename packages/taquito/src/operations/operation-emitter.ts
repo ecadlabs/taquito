@@ -70,7 +70,7 @@ export abstract class OperationEmitter {
     const counters: { [key: string]: number } = {};
     let ops: RPCOperation[] = [];
 
-    const blockHeaderPromise = this.rpc.getBlockHeader();
+    const blockHeaderPromise = this.rpc.getBlockHeader({ block: 'head~2' });
     const blockMetaPromise = this.rpc.getBlockMetadata();
 
     if (Array.isArray(operation)) {
