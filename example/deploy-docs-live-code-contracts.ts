@@ -35,7 +35,7 @@ export const signer: any = new InMemorySigner(
 );
 export const tezos = new TezosToolkit(provider);
 
-let contract_catalogue = new Map();
+const contract_catalogue = new Map();
 
 const users: Array<string> = [
   //live code examples
@@ -51,7 +51,7 @@ const users: Array<string> = [
   'tz1XTyqBn4xi9tkRDutpRyQwHxfF8ar4i4Wq',
 ];
 
-let user_addresses = new Map();
+const user_addresses = new Map();
 user_addresses.set('TestFunder', users[0]);
 user_addresses.set('Alice', users[1]);
 user_addresses.set('Deborah', users[2]);
@@ -64,7 +64,7 @@ user_addresses.set('Allowances', users[8]);
 user_addresses.set('BigMapLedger', users[9]);
 user_addresses.set('IntegrationTestUser', users[10]);
 
-var low_balance: Array<string> = [];
+const low_balance: Array<string> = [];
 
 const min_balance = 100000000;
 

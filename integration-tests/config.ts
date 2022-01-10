@@ -14,7 +14,8 @@ enum ForgerType {
   COMPOSITE = 'composite',
 }
 
-const forgers: ForgerType[] = [ForgerType.COMPOSITE];
+//const forgers: ForgerType[] = [ForgerType.COMPOSITE];
+const forgers: ForgerType[] = [ForgerType.RPC];
 
 interface Config {
   rpc: string;

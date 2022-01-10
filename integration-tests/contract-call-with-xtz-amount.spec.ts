@@ -1,10 +1,12 @@
 import { Protocols } from "@taquito/taquito";
 import { CONFIGS } from "./config";
-import { depositContractCode, depositContractStorage } from "./data/deposit_contract";
+import { depositContractCodeHangzhou, depositContractStorageHangzhou } from "./data/deposit_contract_hangzhou";
+import { depositContractCodeIthaca, depositContractStorageIthaca } from "./data/deposit_contract_ithaca";
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
   const skipIthacanet = protocol === Protocols.PsiThaCa ? test.skip : test;
+  const skipHangzhounet = protocol === Protocols.PtHangz2 ? test.skip : test;
   describe(`Test contract call with amount using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
@@ -14,8 +16,30 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
     skipIthacanet('originates a contract and sends base layer tokens when calling contract methods', async (done) => {
       const op = await Tezos.contract.originate({
         balance: "0",
-        code: depositContractCode,
-        init: depositContractStorage
+        code: depositContractCodeHangzhou,
+        init: depositContractStorageHangzhou
+      })
+      const contract = await op.contract()
+
+      const operation = await contract.methods.deposit(null).send({ amount: 1, });
+      await operation.confirmation();
+      expect(operation.status).toEqual('applied')
+      let balance = await Tezos.tz.getBalance(contract.address);
+      expect(balance.toString()).toEqual("1000000")
+
+      const operationMutez = await contract.methods.deposit(null).send({ amount: 1, mutez: true } as any);
+      await operationMutez.confirmation();
+      expect(operationMutez.status).toEqual('applied')
+      balance = await Tezos.tz.getBalance(contract.address);
+      expect(balance.toString()).toEqual("1000001")
+      done();
+    })
+
+    skipHangzhounet('originates a contract and sends base layer tokens when calling contract methods', async (done) => {
+      const op = await Tezos.contract.originate({
+        balance: "0",
+        code: depositContractCodeIthaca,
+        init: depositContractStorageIthaca
       })
       const contract = await op.contract()
 
