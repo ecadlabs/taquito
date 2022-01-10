@@ -470,44 +470,9 @@ storage (map nat (pair (nat %current_stock) (mutez %max_price)));
 
 ```js
 const storageMap = new MichelsonMap();
-storageMap.set(
-  {
-    0: '1',
-    1: user_addresses.get('Freda'),
-  },
-  10
-);
-storageMap.set(
-  {
-    0: '2',
-    1: user_addresses.get('Freda'),
-  },
-  20
-);
-
-const storageBigMap = new MichelsonMap();
-storageBigMap.set(
-  {
-    0: '10',
-    1: user_addresses.get('Eddy'),
-  },
-  100
-);
-storageBigMap.set(
-  {
-    0: '20',
-    1: user_addresses.get('Eddy'),
-  },
-  200
-);
-
-const op = await tezos.contract.originate({
-  code: contractMapBigMap,
-  storage: {
-    thebigmap: storageBigMap,
-    themap: storageMap,
-  },
-});
+storageMap.set('1', { current_stock: '10000', max_price: '50' });
+storageMap.set('2', { current_stock: '120', max_price: '20' });
+storageMap.set('3', { current_stock: '50', max_price: '60' });
 ```
 
 </TabItem>
