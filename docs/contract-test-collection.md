@@ -9,7 +9,7 @@ import TabItem from '@theme/TabItem';
 
 The contracts used in Taquito Integration Tests and in Taquito Documentation Live Code Examples are test data and require curation. Here we collect the contracts, give them names, demonstrate their properties and describe their use.
 
-Each contract description will include the storage in Michelson and the storage as Javascript as used by Taquito. 
+Each contract description will include the storage in Michelson and the storage as Javascript as used by Taquito.
 
 - **Basic Contracts**
   - [IncrementContract](#incrementcontract)
@@ -75,7 +75,7 @@ storage int
   <TabItem value="taquito">
 
 ```js
-storage: 1
+storage: 1;
 ```
 
 </TabItem>
@@ -206,7 +206,6 @@ const allowances = new MichelsonMap();
       storage: {
         ledger,
         owner: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-        paused: true,
         totalSupply: '100',
       },
     });   }
@@ -253,41 +252,41 @@ storage (pair
   <TabItem value="taquito">
 
 ```js
-    const bigMapLedger = new MichelsonMap();
-    bigMapLedger.set('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1', {
-      allowances: ['tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY'],
-      balance: '50'
-    });
-    bigMapLedger.set('tz1XTyqBn4xi9tkRDutpRyQwHxfF8ar4i4Wq', {
-      allowances: ['tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE'],
-      balance: '50',
-    });
+const bigMapLedger = new MichelsonMap();
+bigMapLedger.set('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1', {
+  allowances: ['tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY'],
+  balance: '50',
+});
+bigMapLedger.set('tz1XTyqBn4xi9tkRDutpRyQwHxfF8ar4i4Wq', {
+  allowances: ['tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE'],
+  balance: '50',
+});
 
-    const tokenMetadataBigMap = new MichelsonMap();
-    tokenMetadataBigMap.set('0', {
-      token_id: '0',
-      symbol: 'hello',
-      name: 'test',
-      decimals: '0',
-      extras: new MichelsonMap()
-    });
-    tokenMetadataBigMap.set('1', {
-      token_id: '1',
-      symbol: 'world',
-      name: 'test2',
-      decimals: '0',
-      extras: new MichelsonMap()
-    });
+const tokenMetadataBigMap = new MichelsonMap();
+tokenMetadataBigMap.set('0', {
+  token_id: '0',
+  symbol: 'hello',
+  name: 'test',
+  decimals: '0',
+  extras: new MichelsonMap(),
+});
+tokenMetadataBigMap.set('1', {
+  token_id: '1',
+  symbol: 'world',
+  name: 'test2',
+  decimals: '0',
+  extras: new MichelsonMap(),
+});
 
-    const op = await tezos.contract.originate({
-      balance: "1",
-      code: fa2Contract,
-      storage: {
-        ledger: bigMapLedger,
-        token_metadata: tokenMetadataBigMap,
-        total_supply: '100'
-      },
-    })
+const op = await tezos.contract.originate({
+  balance: '1',
+  code: fa2Contract,
+  storage: {
+    ledger: bigMapLedger,
+    token_metadata: tokenMetadataBigMap,
+    total_supply: '100',
+  },
+});
 ```
 
   </TabItem>
@@ -327,37 +326,38 @@ storage (pair
 
 ```js
 const storageMap = new MichelsonMap();
-    storageMap.set(
-      {
-        0: '1',
-        1: user_addresses.get('Freda'),
-      },
-      { quantity: '10', amount: '100' }
-    );
-    storageMap.set(
-      {
-        0: '2',
-        1: user_addresses.get('Deborah'),
-      },
-      { quantity: '20', amount: '200' }
-    );
-    storageMap.set(
-      {
-        0: '3',
-        1: user_addresses.get('Eddy'),
-      },
-      { quantity: '30', amount: '300' }
-    );
+storageMap.set(
+  {
+    0: '1',
+    1: user_addresses.get('Freda'),
+  },
+  { quantity: '10', amount: '100' }
+);
+storageMap.set(
+  {
+    0: '2',
+    1: user_addresses.get('Deborah'),
+  },
+  { quantity: '20', amount: '200' }
+);
+storageMap.set(
+  {
+    0: '3',
+    1: user_addresses.get('Eddy'),
+  },
+  { quantity: '30', amount: '300' }
+);
 
-    const op = await tezos.contract.originate({
-      code: contractMapPairKey,
-      storage: {
-        theAddress: user_addresses.get('Alice'),
-        theMap: storageMap,
-        theNumber: 10,
-      },
-    });
-  ```
+const op = await tezos.contract.originate({
+  code: contractMapPairKey,
+  storage: {
+    theAddress: user_addresses.get('Alice'),
+    theMap: storageMap,
+    theNumber: 10,
+  },
+});
+```
+
 </TabItem>
 </Tabs>
 
@@ -401,42 +401,43 @@ storage (map
   <TabItem value="taquito">
 
 ```js
-    const storageMap = new MichelsonMap();
-    storageMap.set(
-      {
-        0: '1',
-        1: '2',
-        2: 'test',
-        3: 'cafe',
-        4: '10',
-        5: true,
-        6: user_addresses.get('Eddy'),
-        7: '2019-09-06T15:08:29.000Z',
-        8: user_addresses.get('Eddy'),
-      },
-      100
-    );
+const storageMap = new MichelsonMap();
+storageMap.set(
+  {
+    0: '1',
+    1: '2',
+    2: 'test',
+    3: 'cafe',
+    4: '10',
+    5: true,
+    6: user_addresses.get('Eddy'),
+    7: '2019-09-06T15:08:29.000Z',
+    8: user_addresses.get('Eddy'),
+  },
+  100
+);
 
-    storageMap.set(
-      {
-        0: '10',
-        1: '20',
-        2: 'Hello',
-        3: 'ffff',
-        4: '100',
-        5: false,
-        6: user_addresses.get('Freda'),
-        7: '2019-10-06T15:08:29.000Z',
-        8: user_addresses.get('Freda'),
-      },
-      1000
-    );
+storageMap.set(
+  {
+    0: '10',
+    1: '20',
+    2: 'Hello',
+    3: 'ffff',
+    4: '100',
+    5: false,
+    6: user_addresses.get('Freda'),
+    7: '2019-10-06T15:08:29.000Z',
+    8: user_addresses.get('Freda'),
+  },
+  1000
+);
 
-    const op = await tezos.contract.originate({
-      code: contractMap8pairs,
-      storage: storageMap,
-    });
-  ```
+const op = await tezos.contract.originate({
+  code: contractMap8pairs,
+  storage: storageMap,
+});
+```
+
 </TabItem>
 </Tabs>
 
@@ -461,54 +462,54 @@ values={[
 <TabItem value="michelson">
 
 ```js
-storage (pair (big_map %thebigmap (pair nat address) int)
-              (map %themap (pair nat address) int
-));
+storage (map nat (pair (nat %current_stock) (mutez %max_price)));
 ```
+
 </TabItem>
   <TabItem value="taquito">
 
 ```js
 const storageMap = new MichelsonMap();
-    storageMap.set(
-      {
-        0: '1',
-        1: user_addresses.get('Freda'),
-      },
-      10
-    );
-    storageMap.set(
-      {
-        0: '2',
-        1: user_addresses.get('Freda'),
-      },
-      20
-    );
+storageMap.set(
+  {
+    0: '1',
+    1: user_addresses.get('Freda'),
+  },
+  10
+);
+storageMap.set(
+  {
+    0: '2',
+    1: user_addresses.get('Freda'),
+  },
+  20
+);
 
-    const storageBigMap = new MichelsonMap();
-    storageBigMap.set(
-      {
-        0: '10',
-        1: user_addresses.get('Eddy'),
-      },
-      100
-    );
-    storageBigMap.set(
-      {
-        0: '20',
-        1: user_addresses.get('Eddy'),
-      },
-      200
-    );
+const storageBigMap = new MichelsonMap();
+storageBigMap.set(
+  {
+    0: '10',
+    1: user_addresses.get('Eddy'),
+  },
+  100
+);
+storageBigMap.set(
+  {
+    0: '20',
+    1: user_addresses.get('Eddy'),
+  },
+  200
+);
 
-    const op = await tezos.contract.originate({
-      code: contractMapBigMap,
-      storage: {
-        thebigmap: storageBigMap,
-        themap: storageMap,
-      },
-    });
+const op = await tezos.contract.originate({
+  code: contractMapBigMap,
+  storage: {
+    thebigmap: storageBigMap,
+    themap: storageMap,
+  },
+});
 ```
+
 </TabItem>
 </Tabs>
 
@@ -519,7 +520,8 @@ const storageMap = new MichelsonMap();
 The get method of the MichelsonMap class accesses the values of the map and values of the bigMap. The difference is that the value gets returned directly for a map while the get method on a bigMap returns a promise.
 
 #### Entrypoints:
-  * default
+
+- default
 
 <Tabs
 defaultValue="michelson"
@@ -533,6 +535,7 @@ values={[
 storage (pair (big_map %thebigmap (pair nat address) int)
               (map %themap (pair nat address) int));
 ```
+
 </TabItem>
   <TabItem value="taquito">
 
@@ -564,8 +567,8 @@ Tezos.contract
       });
   })
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
-
 ```
+
 </TabItem>
 </Tabs>
 
@@ -610,21 +613,22 @@ storage (pair (big_map address (pair nat (map address nat)))
 
 ```js
 const bigMapInit = new MichelsonMap();
-    bigMapInit.set(signer, { 0: '1', 1: new MichelsonMap() });
-    bigMapInit.set(user_addresses.get('Eddy'), { 0: '2', 1: new MichelsonMap() });
-    bigMapInit.set(user_addresses.get('Glen'), { 0: '3', 1: new MichelsonMap() });
-    bigMapInit.set(user_addresses.get('Freda'), { 0: '4', 1: new MichelsonMap() });
+bigMapInit.set(signer, { 0: '1', 1: new MichelsonMap() });
+bigMapInit.set(user_addresses.get('Eddy'), { 0: '2', 1: new MichelsonMap() });
+bigMapInit.set(user_addresses.get('Glen'), { 0: '3', 1: new MichelsonMap() });
+bigMapInit.set(user_addresses.get('Freda'), { 0: '4', 1: new MichelsonMap() });
 
-    const op = await tezos.contract.originate({
-      code: tokenCode,
-      storage: {
-        0: bigMapInit,
-        1: signer,
-        2: true,
-        3: '3',
-      },
-    });
-  ```
+const op = await tezos.contract.originate({
+  code: tokenCode,
+  storage: {
+    0: bigMapInit,
+    1: signer,
+    2: true,
+    3: '3',
+  },
+});
+```
+
 </TabItem>
 </Tabs>
 
@@ -634,7 +638,7 @@ const bigMapInit = new MichelsonMap();
 
 This contract is used in many Taquito documentation Live Code Examples to demonstrate how to get data from a complex storage. Not a supported FA1.2 contract.
 
-The storage uses a pair composed of a nested pair and a map (annotated as %validators). The nested pair consists of an address (annotated as %owner) and a bigMap (annotated as %records). The map %validators use a natural number (nat) as its key and address its value. The bigMap %records uses a value in bytes as its key and a pair consisting of nested pairs as its value. We find addresses and natural numbers in these nested pairs, where some are optional, and a map (annotated %data). The map %data uses a string as its key, and the user needs to choose the value of the map between different proposed types (int, bytes, bool, ...). 
+The storage uses a pair composed of a nested pair and a map (annotated as %validators). The nested pair consists of an address (annotated as %owner) and a bigMap (annotated as %records). The map %validators use a natural number (nat) as its key and address its value. The bigMap %records uses a value in bytes as its key and a pair consisting of nested pairs as its value. We find addresses and natural numbers in these nested pairs, where some are optional, and a map (annotated %data). The map %data uses a string as its key, and the user needs to choose the value of the map between different proposed types (int, bytes, bool, ...).
 
 #### Entrypoints
 
@@ -679,36 +683,37 @@ storage (pair
                                     (option %validator nat))))
           (map %validators nat address));
 ```
+
 </TabItem>
   <TabItem value="taquito">
 
 ```js
-    const dataMap = new MichelsonMap();
-    dataMap.set('Hello', { bool: true });
+const dataMap = new MichelsonMap();
+dataMap.set('Hello', { bool: true });
 
-    const recordsBigMap = new MichelsonMap();
-    recordsBigMap.set('FFFF', {
-      data: dataMap,
-      owner: user_addresses.get('Glen'),
-    });
-    recordsBigMap.set('AAAA', {
-      data: dataMap,
-      owner: user_addresses.get('Glen'),
-      validator: '1',
-    });
+const recordsBigMap = new MichelsonMap();
+recordsBigMap.set('FFFF', {
+  data: dataMap,
+  owner: user_addresses.get('Glen'),
+});
+recordsBigMap.set('AAAA', {
+  data: dataMap,
+  owner: user_addresses.get('Glen'),
+  validator: '1',
+});
 
-    const validatorsMap = new MichelsonMap();
-    validatorsMap.set('1', user_addresses.get('Deborah'));
+const validatorsMap = new MichelsonMap();
+validatorsMap.set('1', user_addresses.get('Deborah'));
 
-    const op = await tezos.contract.originate({
-      code: contractJson,
-      storage: {
-        owner: user_addresses.get('Glen'),
-        records: recordsBigMap,
-        validators: validatorsMap,
-      },
-    });
-  ```
+const op = await tezos.contract.originate({
+  code: contractJson,
+  storage: {
+    owner: user_addresses.get('Glen'),
+    records: recordsBigMap,
+    validators: validatorsMap,
+  },
+});
+```
 
 </TabItem>
 </Tabs>
@@ -752,19 +757,20 @@ storage (pair
 
 ```js
 const allowances = new MichelsonMap();
-    const ledger = new MichelsonMap();
-    ledger.set('tz1btkXVkVFWLgXa66sbRJa8eeUSwvQFX4kP', { allowances, balance: '100' });
+const ledger = new MichelsonMap();
+ledger.set('tz1btkXVkVFWLgXa66sbRJa8eeUSwvQFX4kP', { allowances, balance: '100' });
 
-    const opknownBigMapContract = await tezos.contract.originate({
-      code: knownBigMapContract,
-      storage: {
-        ledger,
-        owner: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-        paused: true,
-        totalSupply: '100',
-      },
-    });
+const opknownBigMapContract = await tezos.contract.originate({
+  code: knownBigMapContract,
+  storage: {
+    ledger,
+    owner: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+    paused: true,
+    totalSupply: '100',
+  },
+});
 ```
+
 </TabItem>
 </Tabs>
 
@@ -800,18 +806,18 @@ storage (pair nat (big_map nat string));
 ```js
 const bigmap = new MichelsonMap();
 
-    for (let i = 1; i <= 410; i++) {
-      bigmap.set(i, `${i}`);
-    }
+for (let i = 1; i <= 410; i++) {
+  bigmap.set(i, `${i}`);
+}
 
-    const op = await tezos.contract.originate({
-      code,
-      storage: {
-        0: '10',
-        1: bigmap,
-      },
-      storageLimit: 32500,
-    });
+const op = await tezos.contract.originate({
+  code,
+  storage: {
+    0: '10',
+    1: bigmap,
+  },
+  storageLimit: 32500,
+});
 ```
 
 </TabItem>
@@ -847,7 +853,7 @@ storage nat
   <TabItem value="taquito">
 
 ```js
-storage: 1
+storage: 1;
 ```
 
 </TabItem>
@@ -885,7 +891,7 @@ storage nat
   <TabItem value="taquito">
 
 ```js
-storage: 1
+storage: 1;
 ```
 
 </TabItem>
@@ -937,25 +943,19 @@ storage (pair (big_map address (pair nat (map address nat)))
   <TabItem value="taquito">
 
 ```js
-    export const tokenStorage = (k: string) => ({
-      "prim": "Pair", "args": [[
-        {
-          prim: 'Elt',
-          args: [
-            { string: k },
-            { prim: 'Pair', args: [{ "int": "2" }, []] }
-          ]
-        }
-      ], { "prim": "Pair", "args": [{ "string": k }, { "prim": "Pair", "args": [{ "prim": "False" }, { "int": "200" }] }] }]
-    });
+const pkh = await Tezos.signer.publicKeyHash();
+const bigMap = new MichelsonMap();
+bigMap.set(pkh, {
+    0: "2",
+    1: new MichelsonMap()
+});
 
-    const op = await tezos.contract.originate({
-      balance: '1',
-      code: tokenCode,
-      storage: tokenStorage(await tezos.signer.publicKeyHash()),
-      fee: 150000,
-      storageLimit: 10000,
-      gasLimit: 400000,
+storage: {
+    0: bigMap,
+    1: pkh,
+    2: true,
+    3: "200"
+}
 ```
 
 </TabItem>
@@ -964,7 +964,6 @@ storage (pair (big_map address (pair nat (map address nat)))
 # Tzip-12 Contracts
 
 The @taquito/tzip12 package allows retrieving metadata associated with tokens of an FA2 contract. You can find more information about the TZIP-12 standard [here](https://gitlab.com/tezos/tzip/-/blob/master/proposals/tzip-12/tzip-12.md).
-
 
 A contract has an FA2 interface if it has entrypoints: transfer, balance_of, and update_operators
 
@@ -1083,6 +1082,7 @@ description: This is a test to retrieve tokens metadata from a view %token_metad
 interfaces: TZIP-012
 
 ```
+
 </TabItem>
 </Tabs>
 
@@ -1124,29 +1124,30 @@ storage (pair (big_map %metadata string bytes)
   <TabItem value="taquito">
 
 ```js
-    const metadataJSON = {
-      name: 'test',
-      description: 'A metadata test',
-      version: '0.1',
-      license: 'MIT',
-      authors: ['Taquito <https://tezostaquito.io/>'],
-      homepage: 'https://tezostaquito.io/',
-    };
+const metadataJSON = {
+  name: 'test',
+  description: 'A metadata test',
+  version: '0.1',
+  license: 'MIT',
+  authors: ['Taquito <https://tezostaquito.io/>'],
+  homepage: 'https://tezostaquito.io/',
+};
 
-    const metadataBigMap = new MichelsonMap();
-    metadataBigMap.set('', char2Bytes('tezos-storage:here'));
-    metadataBigMap.set('here', char2Bytes(JSON.stringify(metadataJSON)));
+const metadataBigMap = new MichelsonMap();
+metadataBigMap.set('', char2Bytes('tezos-storage:here'));
+metadataBigMap.set('here', char2Bytes(JSON.stringify(metadataJSON)));
 
-    const tacoShopStorageMap = new MichelsonMap();
+const tacoShopStorageMap = new MichelsonMap();
 
-    const op = await tezos.contract.originate({
-      code: tacoContractTzip16,
-      storage: {
-        metadata: metadataBigMap,
-        taco_shop_storage: tacoShopStorageMap,
-      },
-    });
+const op = await tezos.contract.originate({
+  code: tacoContractTzip16,
+  storage: {
+    metadata: metadataBigMap,
+    taco_shop_storage: tacoShopStorageMap,
+  },
+});
 ```
+
 </TabItem>
   <TabItem value="metadata">
 
@@ -1162,12 +1163,11 @@ homepage: https://tezostaquito.io/
 </TabItem>
 </Tabs>
 
-
 ## Tzip16HTTPSContract
 
 [KT1P8w7Xeobq4xSk4W2JTjfDgQHxkTeg9ftT](https://better-call.dev/hangzhou2net/KT1P8w7Xeobq4xSk4W2JTjfDgQHxkTeg9ftT/code)
 
-In this example the storage holds a URL that refers to the metadata. 
+In this example the storage holds a URL that refers to the metadata.
 
 #### Entrypoints:
 
@@ -1191,22 +1191,22 @@ storage (pair (big_map %metadata string bytes)
   <TabItem value="taquito">
 
 ```js
- const url = 'https://storage.googleapis.com/tzip-16/taco-shop-metadata.json';
-    const bytesUrl = char2Bytes(url);
+const url = 'https://storage.googleapis.com/tzip-16/taco-shop-metadata.json';
+const bytesUrl = char2Bytes(url);
 
-    const metadataBigMap = new MichelsonMap();
-    metadataBigMap.set('', bytesUrl);
+const metadataBigMap = new MichelsonMap();
+metadataBigMap.set('', bytesUrl);
 
-    const tacoShopStorageMap = new MichelsonMap();
-    tacoShopStorageMap.set('1', { current_stock: '10000', max_price: '50' });
+const tacoShopStorageMap = new MichelsonMap();
+tacoShopStorageMap.set('1', { current_stock: '10000', max_price: '50' });
 
-    const op = await tezos.contract.originate({
-      code: tacoContractTzip16,
-      storage: {
-        metadata: metadataBigMap,
-        taco_shop_storage: tacoShopStorageMap,
-      },
-    });
+const op = await tezos.contract.originate({
+  code: tacoContractTzip16,
+  storage: {
+    metadata: metadataBigMap,
+    taco_shop_storage: tacoShopStorageMap,
+  },
+});
 ```
 
 </TabItem>
@@ -1227,7 +1227,7 @@ homepage: https://github.com/ecadlabs/taquito
 
 [KT1KB3L4p27PsDs27n2E7ZY9fxVXewHDEbVP](https://better-call.dev/hangzhou2net/KT1KB3L4p27PsDs27n2E7ZY9fxVXewHDEbVP/code)
 
-In this example the storage holds a URL encrypted with SHA 256 that refers to the metadata. 
+In this example the storage holds a URL encrypted with SHA 256 that refers to the metadata.
 
 #### Entrypoints:
 
@@ -1252,26 +1252,27 @@ storage (pair (big_map %metadata string bytes)
 
 ```js
 const urlPercentEncoded = encodeURIComponent(
-      '//storage.googleapis.com/tzip-16/taco-shop-metadata.json'
-    );
-    const metadataSha256 = '0x7e99ecf3a4490e3044ccdf319898d77380a2fc20aae36b6e40327d678399d17b';
-    const url = 'sha256://' + metadataSha256 + '/https:' + urlPercentEncoded;
-    const bytesUrl = char2Bytes(url);
+  '//storage.googleapis.com/tzip-16/taco-shop-metadata.json'
+);
+const metadataSha256 = '0x7e99ecf3a4490e3044ccdf319898d77380a2fc20aae36b6e40327d678399d17b';
+const url = 'sha256://' + metadataSha256 + '/https:' + urlPercentEncoded;
+const bytesUrl = char2Bytes(url);
 
-    const metadataBigMap = new MichelsonMap();
-    metadataBigMap.set('', bytesUrl);
+const metadataBigMap = new MichelsonMap();
+metadataBigMap.set('', bytesUrl);
 
-    const tacoShopStorageMap = new MichelsonMap();
-    tacoShopStorageMap.set('1', { current_stock: '10000', max_price: '50' });
+const tacoShopStorageMap = new MichelsonMap();
+tacoShopStorageMap.set('1', { current_stock: '10000', max_price: '50' });
 
-    const op = await tezos.contract.originate({
-      code: tacoContractTzip16,
-      storage: {
-        metadata: metadataBigMap,
-        taco_shop_storage: tacoShopStorageMap,
-      },
-    });
+const op = await tezos.contract.originate({
+  code: tacoContractTzip16,
+  storage: {
+    metadata: metadataBigMap,
+    taco_shop_storage: tacoShopStorageMap,
+  },
+});
 ```
+
 </TabItem>
   <TabItem value="metadata">
 
@@ -1282,6 +1283,7 @@ version: 7.1.0-beta.0
 license: MIT
 homepage: https://github.com/ecadlabs/taquito
 ```
+
 </TabItem>
 </Tabs>
 
@@ -1289,7 +1291,7 @@ homepage: https://github.com/ecadlabs/taquito
 
 [KT1NP2ZVLxWaSBQryDzUujmdv27ubJWZRckv](https://better-call.dev/hangzhou2net/KT1NP2ZVLxWaSBQryDzUujmdv27ubJWZRckv/code)
 
-In this example the storage holds an IPFS location that refers to the metadata. 
+In this example the storage holds an IPFS location that refers to the metadata.
 
 #### Entrypoints:
 
@@ -1304,7 +1306,6 @@ values={[
 ]}>
 <TabItem value="michelson">
 
-
 ```js
 storage (pair (big_map %metadata string bytes)
               (map %taco_shop_storage nat (pair (nat %current_stock) (mutez %max_price))));
@@ -1315,21 +1316,22 @@ storage (pair (big_map %metadata string bytes)
 
 ```js
 const uri = 'ipfs://QmXnASUptTDnfhmcoznFqz3S1Mxu7X1zqo2YwbTN3nW52V';
-    const bytesUrl = char2Bytes(uri);
+const bytesUrl = char2Bytes(uri);
 
-    const metadataBigMap = new MichelsonMap();
-    metadataBigMap.set('', bytesUrl);
+const metadataBigMap = new MichelsonMap();
+metadataBigMap.set('', bytesUrl);
 
-    const tacoShopStorageMap = new MichelsonMap();
+const tacoShopStorageMap = new MichelsonMap();
 
-    const op = await tezos.contract.originate({
-      code: tacoContractTzip16,
-      storage: {
-        metadata: metadataBigMap,
-        taco_shop_storage: tacoShopStorageMap,
-      },
-    });
+const op = await tezos.contract.originate({
+  code: tacoContractTzip16,
+  storage: {
+    metadata: metadataBigMap,
+    taco_shop_storage: tacoShopStorageMap,
+  },
+});
 ```
+
 </TabItem>
   <TabItem value="metadata">
 
@@ -1340,13 +1342,13 @@ version: 7.1.0-beta.0
 license: MIT
 homepage: https://github.com/ecadlabs/taquitoj
 ```
+
 </TabItem>
 </Tabs>
 
 ## Tzip16OffChainContractJSON
 
 [KT1Vms3NQK8rCQJ6JkimLFtAC9NhpAq9vLqE](https://better-call.dev/hangzhou2net/KT1Vms3NQK8rCQJ6JkimLFtAC9NhpAq9vLqE/code)
-
 
 This contract has a view named `someJson` that can be found in the metadata. When we inspect those metadata, we can see that this view takes no parameter and has a returnType of bytes.
 
@@ -1372,17 +1374,18 @@ storage (pair nat (big_map %metadata string bytes));
 
 ```js
 const metadataBigMAp = new MichelsonMap();
-    metadataBigMAp.set('', char2Bytes('tezos-storage:here'));
-    metadataBigMAp.set('here', char2Bytes(JSON.stringify(metadataViewsExample1)));
+metadataBigMAp.set('', char2Bytes('tezos-storage:here'));
+metadataBigMAp.set('here', char2Bytes(JSON.stringify(metadataViewsExample1)));
 
-    const op = await tezos.contract.originate({
-      code: contractCode,
-      storage: {
-        0: 7,
-        metadata: metadataBigMAp,
-      },
-    });
+const op = await tezos.contract.originate({
+  code: contractCode,
+  storage: {
+    0: 7,
+    metadata: metadataBigMAp,
+  },
+});
 ```
+
 </TabItem>
   <TabItem value="metadata">
 
@@ -1390,6 +1393,7 @@ const metadataBigMAp = new MichelsonMap();
 description: This contract has bytes-returning off-chain-views.
 license: MIT
 ```
+
 </TabItem>
 </Tabs>
 
@@ -1415,22 +1419,24 @@ values={[
 ```js
 storage (pair nat (big_map %metadata string bytes));
 ```
+
 </TabItem>
   <TabItem value="taquito">
 
 ```js
 const metadataBigMAp = new MichelsonMap();
-    metadataBigMAp.set('', char2Bytes('tezos-storage:here'));
-    metadataBigMAp.set('here', char2Bytes(JSON.stringify(metadataViewsExample2)));
+metadataBigMAp.set('', char2Bytes('tezos-storage:here'));
+metadataBigMAp.set('here', char2Bytes(JSON.stringify(metadataViewsExample2)));
 
-    const op = await tezos.contract.originate({
-      code: contractCode,
-      storage: {
-        0: 7,
-        metadata: metadataBigMAp,
-      },
-    });
+const op = await tezos.contract.originate({
+  code: contractCode,
+  storage: {
+    0: 7,
+    metadata: metadataBigMAp,
+  },
+});
 ```
+
 </TabItem>
   <TabItem value="metadata">
 
@@ -1438,6 +1444,7 @@ const metadataBigMAp = new MichelsonMap();
 description: This contract has bytes-returning off-chain-views.
 license: MIT
 ```
+
 </TabItem>
 </Tabs>
 
@@ -1447,15 +1454,14 @@ license: MIT
 
 Transactions to smart contracts operate in the same fashion as transactions to an implicit account, the only difference being the `KT1...` address. You will also receive a transaction hash and have to wait for the transaction to be confirmed. Once confirmed, it can be the right time to update the user's/contract's balance, for example.
 
-Sending a transaction to a smart contract to update its storage will be a different type of action as it implies targetting a specific entrypoint and formatting correctly the data to be sent. 
+Sending a transaction to a smart contract to update its storage will be a different type of action as it implies targetting a specific entrypoint and formatting correctly the data to be sent.
 
 Fortunately, Taquito will make this operation go like a breeze! First, you need the contract abstraction created with the address of the smart contract you are targeting:
 
 ```js
-const contract = await 
-Tezos.wallet.at('KT1B4WtE3MSEjGKnucRL5xhqnXCEX1QkLGPx');
-
+const contract = await Tezos.wallet.at('KT1B4WtE3MSEjGKnucRL5xhqnXCEX1QkLGPx');
 ```
+
 This line creates a contract abstraction with multiple methods named after the contract entrypoints. For example, if you have a `transfer` entrypoint in your contract, you will also have a `.transfer()` method in the `contract` object. Each method accepts parameters required by the contract entrypoint.
 
 For more details see [Taquito Wallet API doc](https://tezostaquito.io/docs/wallet_API)
@@ -1480,7 +1486,7 @@ storage int
   <TabItem value="taquito">
 
 ```js
-storage: 1
+storage: 1;
 ```
 
 </TabItem>
@@ -1512,6 +1518,7 @@ values={[
 storage (pair (pair (bool %areyouthere) (int %integer))
               (pair (string %message) (map %names address string)));
 ```
+
 </TabItem>
   <TabItem value="taquito">
 
@@ -1521,6 +1528,7 @@ storage (pair (pair (bool %areyouthere) (int %integer))
             { Elt 0x00006b82198cb179e8306c1bedd08f12dc863f328886 "Alice" ;
               Elt 0x0000b2e19a9e74440d86c59f13dab8a18ff873e889ea "HEllo!" }))`,
 ```
+
 </TabItem>
 </Tabs>
 
