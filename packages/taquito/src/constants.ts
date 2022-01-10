@@ -28,7 +28,7 @@ export enum Protocols {
   PtGRANADs = 'PtGRANADsDU8R9daYKAgWnQYAJ64omN1o3KMGVCykShA97vQbvV',
   PtHangz2 = 'PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx',
   PsiThaCa = 'PsiThaCaT47Zboaw71QWScM8sXeMM7bbQFncK9FLqYc6EKdpjVP',
-  ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK' // temporary protocol hash
+  ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK', // temporary protocol hash
 }
 
 export const protocols = {
@@ -41,7 +41,7 @@ export const protocols = {
   '010': [Protocols.PtGRANADs],
   '011': [Protocols.PtHangz2], // hangzhou v2,
   '012': [Protocols.PsiThaCa], //Ithaca
-  '013': [Protocols.ProtoALpha] 
+  '013': [Protocols.ProtoALpha],
 };
 
 export enum DefaultLambdaAddresses {
@@ -52,16 +52,16 @@ export enum DefaultLambdaAddresses {
   FLORENCENET = 'KT1KCe3YqGnudsiCWb5twbe2DH5T3EMdLpSE',
   GRANADANET = 'KT1BCun2vsA4GBQvsKAuGD5x873MfW2jsN9z',
   HANGZHOUNET = 'KT1PWtBAr1hjK9M9s9oZNZFbfzPdkkD6PSJR',
-  ITHACANET = 'KT1CsEGfRHWeuUQFh9LfVFLVMbm7DFBuHPPU'
+  ITHACANET = 'KT1CsEGfRHWeuUQFh9LfVFLVMbm7DFBuHPPU',
 }
 
 export enum ChainIds {
-  MAINNET = "NetXdQprcVkpaWU",
-  CARTHAGENET = "NetXjD3HPJJjmcd",
-  DELPHINET = "NetXm8tYqnMWky1",
-  EDONET = "NetXSgo1ZT2DRUG",
-  FLORENCENET = "NetXxkAx4woPLyu",
-  GRANADANET = "NetXz969SFaFn8k", 
-  HANGZHOUNET = "NetXZSsxBpMQeAT",
-  ITHACANET = "NetXbhmtAbMukLc"
+  MAINNET = 'NetXdQprcVkpaWU',
+  CARTHAGENET = 'NetXjD3HPJJjmcd',
+  DELPHINET = 'NetXm8tYqnMWky1',
+  EDONET = 'NetXSgo1ZT2DRUG',
+  FLORENCENET = 'NetXxkAx4woPLyu',
+  GRANADANET = 'NetXz969SFaFn8k',
+  HANGZHOUNET = 'NetXZSsxBpMQeAT',
+  ITHACANET = 'NetXbhmtAbMukLc',
 }

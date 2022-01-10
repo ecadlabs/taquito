@@ -2,7 +2,7 @@ import { Token, TokenFactory, ComparableToken, TokenValidationError } from '../t
 import BigNumber from 'bignumber.js';
 
 export class NatValidationError extends TokenValidationError {
-  name: string = 'NatValidationError';
+  name = 'NatValidationError';
   constructor(public value: any, public token: NatToken, message: string) {
     super(value, token, message);
   }
@@ -84,6 +84,5 @@ export class NatToken extends ComparableToken {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }

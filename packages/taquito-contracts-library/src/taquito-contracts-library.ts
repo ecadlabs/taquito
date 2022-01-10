@@ -48,7 +48,7 @@ export class ContractsLibrary implements Extension {
    *
    */
   addContract(contract: ContractsData) {
-    for (let contractAddress in contract) {
+    for (const contractAddress in contract) {
       this.validateContractAddress(contractAddress);
       this.validateContractScriptFormat(contract[contractAddress].script, contractAddress);
       Object.assign(this._contractsLibrary, {

@@ -1,7 +1,7 @@
 import { Token, TokenFactory, TokenValidationError } from './token';
 
 export class Bls12381g2ValidationError extends TokenValidationError {
-  name: string = 'Bls12381g2ValidationError';
+  name = 'Bls12381g2ValidationError';
   constructor(public value: any, public token: Bls12381g2Token, message: string) {
     super(value, token, message);
   }
@@ -20,7 +20,7 @@ export class Bls12381g2Token extends Token {
   }
 
   private isValid(val: any): Bls12381g2ValidationError | null {
-    if ( /^[0-9a-fA-F]*$/.test(val) && val.length % 2 === 0) {
+    if (/^[0-9a-fA-F]*$/.test(val) && val.length % 2 === 0) {
       return null;
     } else {
       return new Bls12381g2ValidationError(val, this, `Invalid bytes: ${val}`);
@@ -63,6 +63,5 @@ export class Bls12381g2Token extends Token {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }

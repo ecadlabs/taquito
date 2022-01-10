@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import { Context } from '../../src/context';
-import { ContractAbstraction, ContractView, InvalidParameterError, MANAGER_LAMBDA } from '../../src/contract';
+import { ContractAbstraction, MANAGER_LAMBDA } from '../../src/contract';
 import { ContractMethod } from '../../src/contract/contract-methods/contract-method-flat-param';
 import { ContractMethodObject } from '../../src/contract/contract-methods/contract-method-object-param';
 import { RpcContractProvider } from '../../src/contract/rpc-contract-provider';
@@ -27,12 +28,11 @@ describe('ContractAbstraction test', () => {
 
   describe('Calling the `toTansferParams` method on a `ContractMethod` and a `ContractMethodObject` should return the same value', () => {
     it('calls the main method of a contract having annotations (genericMultisig where action is change_keys)', async (done) => {
-
       const contratcAbs = new ContractAbstraction(
         'contractAddress',
         {
           code: genericMultisig,
-          storage: {}
+          storage: {},
         },
         rpcContractProvider,
         rpcContractProvider,
@@ -47,11 +47,21 @@ describe('ContractAbstraction test', () => {
         'change_keys',
         2,
         ['edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g'],
-        ['sigb1FKPeiRgPApxqBMpyBSMpwgnbzhaMcqQcTVwMz82MSzNLBrmRUuVZVgWTBFGcoWQcjTyhfJaxjFtfvB6GGHkfwpxBkFd']
+        [
+          'sigb1FKPeiRgPApxqBMpyBSMpwgnbzhaMcqQcTVwMz82MSzNLBrmRUuVZVgWTBFGcoWQcjTyhfJaxjFtfvB6GGHkfwpxBkFd',
+        ]
       );
 
       expect(methodMainChangeKeys).toBeInstanceOf(ContractMethod);
-      expect(methodMainChangeKeys.getSignature()).toEqual([["nat", "operation", {"lambda": {"parameters": "unit", "returns": {"list": "operation"}}}, {"list": "signature"}], ["nat", "change_keys", "nat", {"list": "key"}, {"list": "signature"}]])
+      expect(methodMainChangeKeys.getSignature()).toEqual([
+        [
+          'nat',
+          'operation',
+          { lambda: { parameters: 'unit', returns: { list: 'operation' } } },
+          { list: 'signature' },
+        ],
+        ['nat', 'change_keys', 'nat', { list: 'key' }, { list: 'signature' }],
+      ]);
 
       // Calling the smart contract main method using an object as a parameter where the keys are the annotations
       const methodObjectMainChangeKeys = contratcAbs.methodsObject.main({
@@ -61,13 +71,13 @@ describe('ContractAbstraction test', () => {
             // the chosen action is change_keys (rather than operation)
             change_keys: {
               threshold: 2,
-              keys: ['edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g']
-            }
-          }
+              keys: ['edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g'],
+            },
+          },
         },
         sigs: [
-          'sigb1FKPeiRgPApxqBMpyBSMpwgnbzhaMcqQcTVwMz82MSzNLBrmRUuVZVgWTBFGcoWQcjTyhfJaxjFtfvB6GGHkfwpxBkFd'
-        ]
+          'sigb1FKPeiRgPApxqBMpyBSMpwgnbzhaMcqQcTVwMz82MSzNLBrmRUuVZVgWTBFGcoWQcjTyhfJaxjFtfvB6GGHkfwpxBkFd',
+        ],
       });
 
       expect(methodObjectMainChangeKeys).toBeInstanceOf(ContractMethodObject);
@@ -77,80 +87,82 @@ describe('ContractAbstraction test', () => {
           action: {
             change_keys: {
               threshold: 'nat',
-              keys: { list: 'key' }
+              keys: { list: 'key' },
             },
             operation: {
-              'lambda': {
-                "parameters": "unit",
-                "returns": {
-                  "list": "operation",
+              lambda: {
+                parameters: 'unit',
+                returns: {
+                  list: 'operation',
                 },
-             }
-            }
-          }
+              },
+            },
+          },
         },
-        sigs: { list: 'signature' }
-      })
-      expect(methodObjectMainChangeKeys.toTransferParams()).toEqual(methodMainChangeKeys.toTransferParams());
+        sigs: { list: 'signature' },
+      });
+      expect(methodObjectMainChangeKeys.toTransferParams()).toEqual(
+        methodMainChangeKeys.toTransferParams()
+      );
       expect(methodObjectMainChangeKeys.toTransferParams()).toEqual({
-        "to": "contractAddress",
-        "amount": 0,
-        "mutez": false,
-        "parameter": {
-          "entrypoint": "main",
-          "value": {
-            "prim": "Pair",
-            "args": [
+        to: 'contractAddress',
+        amount: 0,
+        mutez: false,
+        parameter: {
+          entrypoint: 'main',
+          value: {
+            prim: 'Pair',
+            args: [
               {
-                "prim": "Pair",
-                "args": [
+                prim: 'Pair',
+                args: [
                   {
-                    "int": "2"
+                    int: '2',
                   },
                   {
-                    "prim": "Right",
-                    "args": [
+                    prim: 'Right',
+                    args: [
                       {
-                        "prim": "Pair",
-                        "args": [
+                        prim: 'Pair',
+                        args: [
                           {
-                            "int": "2"
+                            int: '2',
                           },
                           [
                             {
-                              "string": "edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g"
-                            }
-                          ]
-                        ]
-                      }
-                    ]
-                  }
-                ]
+                              string: 'edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g',
+                            },
+                          ],
+                        ],
+                      },
+                    ],
+                  },
+                ],
               },
               [
                 {
-                  "prim": "Some",
-                  "args": [
+                  prim: 'Some',
+                  args: [
                     {
-                      "string": "sigb1FKPeiRgPApxqBMpyBSMpwgnbzhaMcqQcTVwMz82MSzNLBrmRUuVZVgWTBFGcoWQcjTyhfJaxjFtfvB6GGHkfwpxBkFd"
-                    }
-                  ]
-                }
-              ]
-            ]
-          }
-        }
+                      string:
+                        'sigb1FKPeiRgPApxqBMpyBSMpwgnbzhaMcqQcTVwMz82MSzNLBrmRUuVZVgWTBFGcoWQcjTyhfJaxjFtfvB6GGHkfwpxBkFd',
+                    },
+                  ],
+                },
+              ],
+            ],
+          },
+        },
       });
       done();
     });
 
     it('calls the main method of a contract having annotations (genericMultisig where action is operation)', async (done) => {
-
       const contratcAbs = new ContractAbstraction(
         'contractAddress',
         {
           code: genericMultisig,
-          storage: {}
+          storage: {},
         },
         rpcContractProvider,
         rpcContractProvider,
@@ -164,7 +176,9 @@ describe('ContractAbstraction test', () => {
         '2', // Counter
         'operation', // Sub function
         MANAGER_LAMBDA.transferImplicit('tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh', 500), // Action
-        ['sigb1FKPeiRgPApxqBMpyBSMpwgnbzhaMcqQcTVwMz82MSzNLBrmRUuVZVgWTBFGcoWQcjTyhfJaxjFtfvB6GGHkfwpxBkFd'] // Signature list
+        [
+          'sigb1FKPeiRgPApxqBMpyBSMpwgnbzhaMcqQcTVwMz82MSzNLBrmRUuVZVgWTBFGcoWQcjTyhfJaxjFtfvB6GGHkfwpxBkFd',
+        ] // Signature list
       );
 
       expect(methodMainoperation).toBeInstanceOf(ContractMethod);
@@ -175,110 +189,112 @@ describe('ContractAbstraction test', () => {
           counter: 2,
           action: {
             // the chosen action is operation (rather than change_keys)
-            operation: MANAGER_LAMBDA.transferImplicit('tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh', 500)
-          }
+            operation: MANAGER_LAMBDA.transferImplicit('tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh', 500),
+          },
         },
         sigs: [
-          'sigb1FKPeiRgPApxqBMpyBSMpwgnbzhaMcqQcTVwMz82MSzNLBrmRUuVZVgWTBFGcoWQcjTyhfJaxjFtfvB6GGHkfwpxBkFd'
-        ]
+          'sigb1FKPeiRgPApxqBMpyBSMpwgnbzhaMcqQcTVwMz82MSzNLBrmRUuVZVgWTBFGcoWQcjTyhfJaxjFtfvB6GGHkfwpxBkFd',
+        ],
       });
 
       expect(methodObjectMainoperation).toBeInstanceOf(ContractMethodObject);
 
-      expect(methodObjectMainoperation.toTransferParams()).toEqual(methodMainoperation.toTransferParams());
+      expect(methodObjectMainoperation.toTransferParams()).toEqual(
+        methodMainoperation.toTransferParams()
+      );
       expect(methodObjectMainoperation.toTransferParams()).toEqual({
-        "to": "contractAddress",
-        "amount": 0,
-        "mutez": false,
-        "parameter": {
-          "entrypoint": "main",
-          "value": {
-            "prim": "Pair",
-            "args": [
+        to: 'contractAddress',
+        amount: 0,
+        mutez: false,
+        parameter: {
+          entrypoint: 'main',
+          value: {
+            prim: 'Pair',
+            args: [
               {
-                "prim": "Pair",
-                "args": [
+                prim: 'Pair',
+                args: [
                   {
-                    "int": "2"
+                    int: '2',
                   },
                   {
-                    "prim": "Left",
-                    "args": [
+                    prim: 'Left',
+                    args: [
                       [
                         {
-                          "prim": "DROP"
+                          prim: 'DROP',
                         },
                         {
-                          "prim": "NIL",
-                          "args": [
+                          prim: 'NIL',
+                          args: [
                             {
-                              "prim": "operation"
-                            }
-                          ]
+                              prim: 'operation',
+                            },
+                          ],
                         },
                         {
-                          "prim": "PUSH",
-                          "args": [
+                          prim: 'PUSH',
+                          args: [
                             {
-                              "prim": "key_hash"
+                              prim: 'key_hash',
                             },
                             {
-                              "string": "tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh"
-                            }
-                          ]
+                              string: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
+                            },
+                          ],
                         },
                         {
-                          "prim": "IMPLICIT_ACCOUNT"
+                          prim: 'IMPLICIT_ACCOUNT',
                         },
                         {
-                          "prim": "PUSH",
-                          "args": [
+                          prim: 'PUSH',
+                          args: [
                             {
-                              "prim": "mutez"
+                              prim: 'mutez',
                             },
                             {
-                              "int": "500"
-                            }
-                          ]
+                              int: '500',
+                            },
+                          ],
                         },
                         {
-                          "prim": "UNIT"
+                          prim: 'UNIT',
                         },
                         {
-                          "prim": "TRANSFER_TOKENS"
+                          prim: 'TRANSFER_TOKENS',
                         },
                         {
-                          "prim": "CONS"
-                        }
-                      ]
-                    ]
-                  }
-                ]
+                          prim: 'CONS',
+                        },
+                      ],
+                    ],
+                  },
+                ],
               },
               [
                 {
-                  "prim": "Some",
-                  "args": [
+                  prim: 'Some',
+                  args: [
                     {
-                      "string": "sigb1FKPeiRgPApxqBMpyBSMpwgnbzhaMcqQcTVwMz82MSzNLBrmRUuVZVgWTBFGcoWQcjTyhfJaxjFtfvB6GGHkfwpxBkFd"
-                    }
-                  ]
-                }
-              ]
-            ]
-          }
-        }
+                      string:
+                        'sigb1FKPeiRgPApxqBMpyBSMpwgnbzhaMcqQcTVwMz82MSzNLBrmRUuVZVgWTBFGcoWQcjTyhfJaxjFtfvB6GGHkfwpxBkFd',
+                    },
+                  ],
+                },
+              ],
+            ],
+          },
+        },
       });
       done();
     });
 
     it('calls the first entry point (0) of a contract having no annotation', async (done) => {
-
       const contratcAbs = new ContractAbstraction(
         'contractAddress',
         {
           code: noAnnotCode,
-          storage: []
+          storage: [],
         },
         rpcContractProvider,
         rpcContractProvider,
@@ -287,71 +303,74 @@ describe('ContractAbstraction test', () => {
         mockRpcClient as any
       );
 
-      const method0 = contratcAbs.methods[0]('tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', '1');
+      const method0 = contratcAbs.methods[0](
+        'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+        'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+        '1'
+      );
       expect(method0).toBeInstanceOf(ContractMethod);
-      expect(method0.getSignature()).toEqual(["address", "address", "nat"])
+      expect(method0.getSignature()).toEqual(['address', 'address', 'nat']);
 
       const methodObject0 = contratcAbs.methodsObject[0]({
         0: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
         1: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
-        2: '1'
+        2: '1',
       });
       expect(methodObject0).toBeInstanceOf(ContractMethodObject);
-      expect(methodObject0.getSignature()).toEqual({0:"address", 1:"address", 2:"nat"})
+      expect(methodObject0.getSignature()).toEqual({ 0: 'address', 1: 'address', 2: 'nat' });
 
       expect(methodObject0.toTransferParams()).toEqual(method0.toTransferParams());
       expect(methodObject0.toTransferParams()).toEqual({
-        "to": "contractAddress",
-        "amount": 0,
-        "mutez": false,
-        "parameter": {
-          "entrypoint": "default",
-          "value": {
-            "prim": "Left",
-            "args": [
+        to: 'contractAddress',
+        amount: 0,
+        mutez: false,
+        parameter: {
+          entrypoint: 'default',
+          value: {
+            prim: 'Left',
+            args: [
               {
-                "prim": "Left",
-                "args": [
+                prim: 'Left',
+                args: [
                   {
-                    "prim": "Left",
-                    "args": [
+                    prim: 'Left',
+                    args: [
                       {
-                        "prim": "Pair",
-                        "args": [
+                        prim: 'Pair',
+                        args: [
                           {
-                            "string": "tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu"
+                            string: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
                           },
                           {
-                            "prim": "Pair",
-                            "args": [
+                            prim: 'Pair',
+                            args: [
                               {
-                                "string": "tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu"
+                                string: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
                               },
                               {
-                                "int": "1"
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        }
-      })
+                                int: '1',
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      });
       done();
     });
 
     it('calls the third entry point (2) of a contract having no annotation', async (done) => {
-
       const contratcAbs = new ContractAbstraction(
         'contractAddress',
         {
           code: noAnnotCode,
-          storage: []
+          storage: [],
         },
         rpcContractProvider,
         rpcContractProvider,
@@ -365,49 +384,49 @@ describe('ContractAbstraction test', () => {
 
       const methodObject2 = contratcAbs.methodsObject[2]({
         2: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
-        3: '1'
+        3: '1',
       });
       expect(methodObject2).toBeInstanceOf(ContractMethodObject);
 
       expect(methodObject2.toTransferParams()).toEqual(method2.toTransferParams());
       expect(methodObject2.toTransferParams()).toEqual({
-        "to": "contractAddress",
-        "amount": 0,
-        "mutez": false,
-        "parameter": {
-          "entrypoint": "default",
-          "value": {
-            "prim": "Left",
-            "args": [
+        to: 'contractAddress',
+        amount: 0,
+        mutez: false,
+        parameter: {
+          entrypoint: 'default',
+          value: {
+            prim: 'Left',
+            args: [
               {
-                "prim": "Left",
-                "args": [
+                prim: 'Left',
+                args: [
                   {
-                    "prim": "Right",
-                    "args": [
+                    prim: 'Right',
+                    args: [
                       {
-                        "prim": "Right",
-                        "args": [
+                        prim: 'Right',
+                        args: [
                           {
-                            "prim": "Pair",
-                            "args": [
+                            prim: 'Pair',
+                            args: [
                               {
-                                "string": "tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu"
+                                string: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
                               },
                               {
-                                "int": "1"
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        }
+                                int: '1',
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        },
       });
       done();
     });
@@ -438,11 +457,19 @@ describe('ContractAbstraction test', () => {
         { prim: 'storage', args: [{ prim: 'nat' }] },
         { prim: 'code', args: [] },
       ],
-      storage: [{ "int": "2" }],
+      storage: [{ int: '2' }],
     };
 
     it('populate the contractViews member with a function matching each view name from the script', async (done) => {
-      const contratcAbs = new ContractAbstraction('contractAddress', fakeScriptWithViews, rpcContractProvider, rpcContractProvider, { entrypoints: {} }, 'chain_test', mockRpcClient as any);
+      const contratcAbs = new ContractAbstraction(
+        'contractAddress',
+        fakeScriptWithViews,
+        rpcContractProvider,
+        rpcContractProvider,
+        { entrypoints: {} },
+        'chain_test',
+        mockRpcClient as any
+      );
 
       expect(Object.keys(contratcAbs.contractViews).length).toEqual(2);
 
