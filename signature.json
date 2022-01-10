@@ -1917,7 +1917,11 @@
             "sha512": "d94a5f551529949c4828b7fd7591f848fbaf4b08be532c1aefe90459a864d440f16c5bb945cf6c2f01b86f40e634bf97023902bbf3fe23ded2f4b3921b19d6e9"
           },
           {
-            "path": "integration-tests/data/deposit_contract.ts",
+            "path": "integration-tests/data/deposit_contract_hangzhou.ts",
+            "sha512": "069ef7a5cca4c282b381cecbf68423c3793fc064e3979523e4d1b558446150759cca0d9b611084a5a53c4655853b3e1192d7f1810e91c1b861902ea03a0420b2"
+          },
+          {
+            "path": "integration-tests/data/deposit_contract_ithaca.ts",
             "sha512": "069ef7a5cca4c282b381cecbf68423c3793fc064e3979523e4d1b558446150759cca0d9b611084a5a53c4655853b3e1192d7f1810e91c1b861902ea03a0420b2"
           },
           {
