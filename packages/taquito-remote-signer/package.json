@@ -7,7 +7,7 @@
     "blockchain"
   ],
   "main": "dist/taquito-remote-signer.umd.js",
-  "module": "dist/taquito-remote-signer.es5.js",
+  "module": "dist/taquito-remote-signer.es6.js",
   "typings": "dist/types/taquito-remote-signer.d.ts",
   "files": [
     "signature.json",
