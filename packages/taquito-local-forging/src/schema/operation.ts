@@ -84,7 +84,7 @@ export const RegisterGlobalConstantSchema = {
 };
 
 export const operationEncoder =
-  (encoders: { [key: string]: (val: {}) => string }) => (operation: { kind: string }) => {
+  (encoders: { [key: string]: (val: object) => string }) => (operation: { kind: string }) => {
     if (!(operation.kind in encoders) || !(operation.kind in kindMappingReverse)) {
       throw new Error(`Unsupported operation kind: ${operation.kind}`);
     }
@@ -114,7 +114,7 @@ export const operationDecoder =
   };
 
 export const schemaEncoder =
-  (encoders: { [key: string]: (val: {}) => string }) =>
+  (encoders: { [key: string]: (val: object) => string }) =>
   (schema: { [key: string]: string | string[] }) =>
   <T extends { [key: string]: any }>(value: T) => {
     const keys = Object.keys(schema);

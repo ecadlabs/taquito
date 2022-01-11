@@ -45,7 +45,7 @@ function extractOp(startIndex: number, endIndex: number) {
 interface TestCase {
   name: string;
   operation: any;
-  expected?: {};
+  expected?: object;
 }
 
 export const commonCases: TestCase[] = [

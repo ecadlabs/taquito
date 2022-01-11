@@ -64,7 +64,7 @@ export class Context {
   private _walletProvider: WalletProvider;
   public readonly operationFactory: OperationFactory;
   private _packer: Packer;
-  private providerDecorator: Function[] = [];
+  private providerDecorator: Array<(context: Context) => Context> = [];
   private _globalConstantsProvider: GlobalConstantsProvider;
   public readonly tz = new RpcTzProvider(this);
   public readonly estimate = new RPCEstimateProvider(this);
@@ -263,14 +263,12 @@ export class Context {
    * The decorators are functions that inject logic into the context.
    * They are provided by the extensions set on the TezosToolkit by calling the registerProviderDecorator method.
    */
-  withExtensions() {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    let currentContext = this;
-
+  withExtensions = (): Context => {
+    let clonedContext = this.clone();
     this.providerDecorator.forEach((decorator) => {
-      currentContext = decorator(currentContext.clone());
+      clonedContext = decorator(clonedContext);
     });
 
-    return currentContext;
-  }
+    return clonedContext;
+  };
 }

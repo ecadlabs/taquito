@@ -955,7 +955,7 @@ export type RunCodeResult = {
 };
 
 export type EntrypointsResponse = {
-  entrypoints: { [key: string]: Object };
+  entrypoints: { [key: string]: MichelsonV1ExpressionExtended };
   unreachable?: { path: ('Left' | 'Right')[] };
 };
 

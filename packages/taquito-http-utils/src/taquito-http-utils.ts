@@ -100,7 +100,7 @@ export class HttpBackend {
       json = true,
       mimeType = undefined,
     }: HttpRequestOptions,
-    data?: {}
+    data?: object | string
   ) {
     return new Promise<T>((resolve, reject) => {
       const request = this.createXHR();
