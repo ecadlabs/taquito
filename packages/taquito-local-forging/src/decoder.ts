@@ -33,11 +33,11 @@ import {
 import { Uint8ArrayConsumer } from './uint8array-consumer';
 import { toHexString } from './utils';
 
-export type Decoder = (val: Uint8ArrayConsumer) => string | number | {} | undefined;
+export type Decoder = (val: Uint8ArrayConsumer) => string | number | object | undefined;
 
 export const decoders: { [key: string]: Decoder } = {
-  [CODEC.SECRET]: val => toHexString(val.consume(20)),
-  [CODEC.RAW]: val => toHexString(val.consume(32)),
+  [CODEC.SECRET]: (val) => toHexString(val.consume(20)),
+  [CODEC.RAW]: (val) => toHexString(val.consume(32)),
   [CODEC.TZ1]: tz1Decoder,
   [CODEC.BRANCH]: branchDecoder,
   [CODEC.ZARITH]: zarithDecoder,
@@ -51,7 +51,7 @@ export const decoders: { [key: string]: Decoder } = {
   [CODEC.PROPOSAL_ARR]: proposalsDecoder,
   [CODEC.PARAMETERS]: parametersDecoder,
   [CODEC.ADDRESS]: addressDecoder,
-  [CODEC.VALUE]: valueParameterDecoder
+  [CODEC.VALUE]: valueParameterDecoder,
 };
 
 decoders[CODEC.OPERATION] = operationDecoder(decoders);
@@ -71,5 +71,6 @@ decoders[CODEC.OP_SEED_NONCE_REVELATION] = (val: Uint8ArrayConsumer) =>
 decoders[CODEC.OP_PROPOSALS] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(ProposalsSchema)(val);
 decoders[CODEC.OP_REVEAL] = (val: Uint8ArrayConsumer) => schemaDecoder(decoders)(RevealSchema)(val);
-decoders[CODEC.OP_REGISTER_GLOBAL_CONSTANT] = (val: Uint8ArrayConsumer) => schemaDecoder(decoders)(RegisterGlobalConstantSchema)(val);
+decoders[CODEC.OP_REGISTER_GLOBAL_CONSTANT] = (val: Uint8ArrayConsumer) =>
+  schemaDecoder(decoders)(RegisterGlobalConstantSchema)(val);
 decoders[CODEC.MANAGER] = schemaDecoder(decoders)(ManagerOperationSchema);
