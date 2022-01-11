@@ -8,7 +8,7 @@
   ],
   "main": "dist/taquito.umd.js",
   "unpkg": "dist/taquito.min.js",
-  "module": "dist/taquito.es5.js",
+  "module": "dist/taquito.es6.js",
   "typings": "dist/types/taquito.d.ts",
   "files": [
     "signature.json",

@@ -8,7 +8,7 @@
     "ledger"
   ],
   "main": "dist/taquito-ledger-signer.umd.js",
-  "module": "dist/taquito-ledger-signer.es5.js",
+  "module": "dist/taquito-ledger-signer.es6.js",
   "typings": "dist/types/taquito-ledger-signer.d.ts",
   "publishConfig": {
     "access": "public"

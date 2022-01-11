@@ -8,7 +8,7 @@
     "websocket"
   ],
   "main": "dist/taquito-tezbridge-signer.umd.js",
-  "module": "dist/taquito-tezbridge-signer.es5.js",
+  "module": "dist/taquito-tezbridge-signer.es6.js",
   "typings": "dist/types/taquito-tezbridge-signer.d.ts",
   "files": [
     "signature.json",

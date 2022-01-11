@@ -9,7 +9,7 @@
     "smart-contract"
   ],
   "main": "dist/taquito-utils.umd.js",
-  "module": "dist/taquito-utils.es5.js",
+  "module": "dist/taquito-utils.es6.js",
   "typings": "dist/types/taquito-utils.d.ts",
   "files": [
     "dist",
