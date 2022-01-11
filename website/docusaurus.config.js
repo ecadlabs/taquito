@@ -112,7 +112,7 @@ module.exports = {
         docs: {
           path: '../docs',
           sidebarPath: require.resolve('./sidebars.json'),
-          includeCurrentVersion: false
+          includeCurrentVersion: true
         }
       }
     ],
