@@ -98,7 +98,7 @@
     "ts-jest": "^26.4.4",
     "ts-node": "^10.4.0",
     "ts-toolbelt": "^9.6.0",
-    "typedoc": "^0.22.10",
+    "typedoc": "^0.20.36",
     "typescript": "~4.1.5"
   },
   "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
