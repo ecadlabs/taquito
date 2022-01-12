@@ -140,11 +140,11 @@ println(`Calling the validateBlock function with ${block} returns ${validation}.
 //invalid checksum
 const invalidBlock ='BMEdgRZbJJrtByoA5Jyuvy8mzp8mefbcrno82nQCAEbBCUhog';
 const invalidValidation = validateBlock(invalidBlock);
-println(`Calling the validateSignature function with ${invalidBlock} returns ${invalidValidation}.`);
+println(`Calling the validateBlock function with ${invalidBlock} returns ${invalidValidation}.`);
 ```
 ### Validate an Operation Hash
 
-The `validateBlock` function is used to check whether a block hash is valid.
+The `validateOperation` function is used to check whether an operation hash is valid.
 
 ```js live noInline
 import { validateOperation } from '@taquito/utils';
@@ -152,16 +152,16 @@ import { validateOperation } from '@taquito/utils';
 //valid
 const operation ='ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj';
 const validation = validateOperation(operation);
-println(`Calling the validateBlock function with ${operation} returns ${validation}.`);
+println(`Calling the validateOperation function with ${operation} returns ${validation}.`);
 
 //invalid checksum
 const invalidOperation ='ont3n75kMA2xeoTdxkGM23h5XhWgyP51WEznc4zCDtGNz1TWSz';
 const invalidValidation = validateOperation(invalidOperation);
-println(`Calling the validateSignature function with ${invalidOperation} returns ${invalidValidation}.`);
+println(`Calling the validateOperation function with ${invalidOperation} returns ${invalidValidation}.`);
 ```
 ### Validate a Protocol Hash
 
-The `validateBlock` function is used to check whether a block hash is valid.
+The `validateProtocol` function is used to check whether a protocol hash is valid.
 
 ```js live noInline
 import { validateProtocol } from '@taquito/utils';
@@ -169,12 +169,12 @@ import { validateProtocol } from '@taquito/utils';
 //valid
 const protocol ='PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx';
 const validation = validateProtocol(protocol);
-println(`Calling the validateBlock function with ${protocol} returns ${validation}.`);
+println(`Calling the validateProtocol function with ${protocol} returns ${validation}.`);
 
 //invalid checksum
 const invalidProtocol ='PsBABY5HQTSkA4297zNHfsZNKtxULfL18y95b3m53QJiXGmrbU';
 const invalidValidation = validateProtocol(invalidProtocol);
-println(`Calling the validateSignature function with ${invalidProtocol} returns ${invalidValidation}.`);
+println(`Calling the validateProtocol function with ${invalidProtocol} returns ${invalidValidation}.`);
 ```
 
 # Verification of a signature

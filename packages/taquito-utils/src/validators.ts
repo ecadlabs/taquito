@@ -188,9 +188,9 @@ export function validatePublicKey(value: any): ValidationResult {
  *
  * @example
  * ```
- * import { validateOperationHash } from '@taquito/utils';
+ * import { validateOperation } from '@taquito/utils';
  * const operationHash = 'oo6JPEAy8VuMRGaFuMmLNFFGdJgiaKfnmT1CpHJfKP3Ye5ZahiP'
- * const validation = validateOperationHash(operationHash)
+ * const validation = validateOperation(operationHash)
  * console.log(validation)
  * // This example return 3 which correspond to VALID
  * ```
@@ -207,9 +207,9 @@ export function validateOperation(value: any): ValidationResult {
  *
  * @example
  * ```
- * import { validateProtocolHash } from '@taquito/utils';
+ * import { validateProtocol } from '@taquito/utils';
  * const protocolHash = 'PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx'
- * const validation = validateProtocolHash(protocolHash)
+ * const validation = validateProtocol(protocolHash)
  * console.log(validation)
  * // This example return 3 which correspond to VALID
  * ```
@@ -219,16 +219,16 @@ export function validateProtocol(value: any): ValidationResult {
 }
 
 /**
- * @description Used to check if a protocol hash is valid.
+ * @description Used to check if a block hash is valid.
  *
  * @returns
  * 0 (NO_PREFIX_MATCHED), 1 (INVALID_CHECKSUM), 2 (INVALID_LENGTH) or 3 (VALID).
  *
  * @example
  * ```
- * import { validateBlockHash } from '@taquito/utils';
+ * import { validateBlock } from '@taquito/utils';
  * const blockHash = 'PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx'
- * const validation = validateBlockHash(blockHash)
+ * const validation = validateBlock(blockHash)
  * console.log(validation)
  * // This example return 3 which correspond to VALID
  * ```
