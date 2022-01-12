@@ -4,8 +4,7 @@
     "example",
     "integration-tests",
     "packages/*",
-    "packages/taquito-michel-codec/pack-test-tool",
-    "website"
+    "packages/taquito-michel-codec/pack-test-tool"
   ],
   "version": "11.1.0"
 }
