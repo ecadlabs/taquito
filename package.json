@@ -12,8 +12,8 @@
     "precommit": "lerna run --concurrency 1 --stream precommit",
     "example": "cd example && npm run example",
     "lerna": "lerna",
-    "build-docs": "typedoc --logLevel Verbose; ls -aR website/build/typedoc",
-    "check-docs": "typedoc --listInvalidSymbolLinks; ls -aR website/build/typedoc",
+    "build-docs": "typedoc --logLevel Verbose; ls -aR website/build/",
+    "check-docs": "typedoc --listInvalidSymbolLinks; ls -aR website/build/",
     "gh-pages": "gh-pages",
     "nuke:node_modules": "if [ -d node_modules ]; then rm -Rf node_modules; fi; for d in **/*/node_modules; do echo $d; if [ -d $d ]; then rm -Rf $d; fi; done",
     "nuke:dist": "if [ -d dist ]; then rm -Rf dist; fi; for d in **/*/dist; do echo $d; if [ -d $d ]; then rm -Rf $d; fi; done"
