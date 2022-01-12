@@ -62,6 +62,9 @@ const implicitPrefix = [Prefix.TZ1, Prefix.TZ2, Prefix.TZ3];
 const contractPrefix = [Prefix.KT1];
 const signaturePrefix = [Prefix.EDSIG, Prefix.P2SIG, Prefix.SPSIG, Prefix.SIG];
 const pkPrefix = [Prefix.EDPK, Prefix.SPPK, Prefix.P2PK];
+const operationPrefix = [Prefix.O];
+const protocolPrefix = [Prefix.P];
+const blockPrefix = [Prefix.B]
 
 /**
  * @description Used to check if an address or a contract address is valid.
@@ -81,6 +84,7 @@ const pkPrefix = [Prefix.EDPK, Prefix.SPPK, Prefix.P2PK];
 export function validateAddress(value: any): ValidationResult {
   return validatePrefixedValue(value, [...implicitPrefix, ...contractPrefix]);
 }
+
 /**
  * @description Used to check if a chain id is valid.
  *
@@ -99,6 +103,7 @@ export function validateAddress(value: any): ValidationResult {
 export function validateChain(value: any): ValidationResult {
   return validatePrefixedValue(value, [Prefix.NET]);
 }
+
 /**
  * @description Used to check if a contract address is valid.
  *
@@ -117,6 +122,7 @@ export function validateChain(value: any): ValidationResult {
 export function validateContractAddress(value: any): ValidationResult {
   return validatePrefixedValue(value, contractPrefix);
 }
+
 /**
  * @description Used to check if a key hash is valid.
  *
@@ -135,6 +141,7 @@ export function validateContractAddress(value: any): ValidationResult {
 export function validateKeyHash(value: any): ValidationResult {
   return validatePrefixedValue(value, implicitPrefix);
 }
+
 /**
  * @description Used to check if a signature is valid.
  *
@@ -153,8 +160,9 @@ export function validateKeyHash(value: any): ValidationResult {
 export function validateSignature(value: any): ValidationResult {
   return validatePrefixedValue(value, signaturePrefix);
 }
+
 /**
- * @description Used to check if a signature is valid.
+ * @description Used to check if a public key is valid.
  *
  * @returns
  * 0 (NO_PREFIX_MATCHED), 1 (INVALID_CHECKSUM), 2 (INVALID_LENGTH) or 3 (VALID).
@@ -170,4 +178,61 @@ export function validateSignature(value: any): ValidationResult {
  */
 export function validatePublicKey(value: any): ValidationResult {
   return validatePrefixedValue(value, pkPrefix);
+}
+
+/**
+ * @description Used to check if an operation hash is valid.
+ *
+ * @returns
+ * 0 (NO_PREFIX_MATCHED), 1 (INVALID_CHECKSUM), 2 (INVALID_LENGTH) or 3 (VALID).
+ *
+ * @example
+ * ```
+ * import { validateOperationHash } from '@taquito/utils';
+ * const operationHash = 'oo6JPEAy8VuMRGaFuMmLNFFGdJgiaKfnmT1CpHJfKP3Ye5ZahiP'
+ * const validation = validateOperationHash(operationHash)
+ * console.log(validation)
+ * // This example return 3 which correspond to VALID
+ * ```
+ */
+export function validateOperation(value: any): ValidationResult {
+  return validatePrefixedValue(value, operationPrefix);
+}
+
+/**
+ * @description Used to check if a protocol hash is valid.
+ *
+ * @returns
+ * 0 (NO_PREFIX_MATCHED), 1 (INVALID_CHECKSUM), 2 (INVALID_LENGTH) or 3 (VALID).
+ *
+ * @example
+ * ```
+ * import { validateProtocolHash } from '@taquito/utils';
+ * const protocolHash = 'PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx'
+ * const validation = validateProtocolHash(protocolHash)
+ * console.log(validation)
+ * // This example return 3 which correspond to VALID
+ * ```
+ */
+export function validateProtocol(value: any): ValidationResult {
+  return validatePrefixedValue(value, protocolPrefix);
+}
+
+/**
+ * @description Used to check if a protocol hash is valid.
+ *
+ * @returns
+ * 0 (NO_PREFIX_MATCHED), 1 (INVALID_CHECKSUM), 2 (INVALID_LENGTH) or 3 (VALID).
+ *
+ * @example
+ * ```
+ * import { validateBlockHash } from '@taquito/utils';
+ * const blockHash = 'PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx'
+ * const validation = validateBlockHash(blockHash)
+ * console.log(validation)
+ * // This example return 3 which correspond to VALID
+ * ```
+ */
+export function validateBlock(value: any): ValidationResult {
+  return validatePrefixedValue(value, blockPrefix);
 }
