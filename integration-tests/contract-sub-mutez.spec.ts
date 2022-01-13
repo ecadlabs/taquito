@@ -24,8 +24,13 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                   `,
             init: `0`,
           });
-        const contract = await op.contract();
-        console.log('Originated with SUB on Hangzhounet: ' + contract.address);
+          await op.confirmation()
+          expect(op.hash).toBeDefined();
+          expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+          const contract = await op.contract();
+    
+          expect(await contract.storage()).toBeTruthy();
+
       }
     );
 
@@ -59,8 +64,12 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                    `,
              init: `0`,
            });
-         const contract = await op.contract();
-         console.log('Originated with SUB MUTEZ on Ithacanet: ' + contract.address);
+           await op.confirmation()
+           expect(op.hash).toBeDefined();
+           expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+           const contract = await op.contract();
+     
+           expect(await contract.storage()).toBeTruthy();
        }
      );
 
