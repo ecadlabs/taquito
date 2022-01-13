@@ -8,7 +8,7 @@
     "tzip16"
   ],
   "main": "dist/taquito-tzip16.umd.js",
-  "module": "dist/taquito-tzip16.es5.js",
+  "module": "dist/taquito-tzip16.es6.js",
   "typings": "dist/types/taquito-tzip16.d.ts",
   "files": [
     "signature.json",

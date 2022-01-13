@@ -42,7 +42,7 @@ import {
 
 interface CachedDataInterface {
   [key: string]: {
-    handle: Function;
+    handle: () => void;
     response: Promise<any>;
   };
 }

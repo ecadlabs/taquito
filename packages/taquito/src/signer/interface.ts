@@ -8,7 +8,7 @@ export interface Signer {
    * @param magicByte Magic bytes 1 for block, 2 for endorsement, 3 for generic, 5 for the PACK format of michelson
    */
   sign(
-    op: {},
+    op: string,
     magicByte?: Uint8Array
   ): Promise<{
     bytes: string;

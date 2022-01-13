@@ -33,6 +33,7 @@ import {
   EntrypointsResponse,
   ForgeOperationsParams,
   ManagerKeyResponse,
+  MichelsonV1ExpressionExtended,
   OperationHash,
   PackDataParams,
   PackDataResponse,
@@ -422,7 +423,7 @@ export class RpcClient implements RpcClientInterface {
       'baking_reward_bonus_per_slot',
       'endorsing_reward_per_slot',
       'double_baking_punishment',
-      'delay_increment_per_round'
+      'delay_increment_per_round',
     ]);
 
     return {
@@ -736,7 +737,7 @@ export class RpcClient implements RpcClientInterface {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<EntrypointsResponse> {
     const contractResponse = await this.httpBackend.createRequest<{
-      entrypoints: { [key: string]: Object };
+      entrypoints: { [key: string]: MichelsonV1ExpressionExtended };
     }>({
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/entrypoints`
@@ -806,9 +807,9 @@ export class RpcClient implements RpcClientInterface {
    * @param options contains generic configuration for rpc calls
    *
    * @description Computes the serialized version of a data expression using the same algorithm as script instruction PACK
-   * Note: You should always verify the packed bytes before signing or requesting that they be signed when using the the RPC to pack. 
-   * This precaution helps protect you and your applications users from RPC nodes that have been compromised. 
-   * A node that is operated by a bad actor, or compromised by a bad actor could return a fully formed operation that does not correspond to the input provided to the RPC endpoint. 
+   * Note: You should always verify the packed bytes before signing or requesting that they be signed when using the the RPC to pack.
+   * This precaution helps protect you and your applications users from RPC nodes that have been compromised.
+   * A node that is operated by a bad actor, or compromised by a bad actor could return a fully formed operation that does not correspond to the input provided to the RPC endpoint.
    * A safer solution to pack and sign data would be to use the `packDataBytes` function available in the `@taquito/michel-codec` package.
    *
    * @example packData({ data: { string: "test" }, type: { prim: "string" } })

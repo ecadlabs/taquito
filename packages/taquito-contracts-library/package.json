@@ -6,7 +6,7 @@
     "tezos"
   ],
   "main": "dist/taquito-contracts-library.umd.js",
-  "module": "dist/taquito-contracts-library.es5.js",
+  "module": "dist/taquito-contracts-library.es6.js",
   "typings": "dist/types/taquito-contracts-library.d.ts",
   "files": [
     "signature.json",

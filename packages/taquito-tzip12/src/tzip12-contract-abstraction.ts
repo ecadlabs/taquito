@@ -91,7 +91,7 @@ export class Tzip12ContractAbstraction {
     }
   }
 
-  private hasTokenMetadataView(views: {}) {
+  private hasTokenMetadataView(views: object) {
     for (const view of Object.keys(views)) {
       if (view === 'token_metadata') {
         return true;

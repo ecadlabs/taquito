@@ -8,7 +8,7 @@
     "rpc"
   ],
   "main": "dist/taquito-rpc.umd.js",
-  "module": "dist/taquito-rpc.es5.js",
+  "module": "dist/taquito-rpc.es6.js",
   "typings": "dist/types/taquito-rpc.d.ts",
   "files": [
     "signature.json",

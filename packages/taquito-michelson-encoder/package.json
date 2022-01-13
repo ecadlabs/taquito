@@ -9,7 +9,7 @@
     "smart-contract"
   ],
   "main": "dist/taquito-michelson-encoder.umd.js",
-  "module": "dist/taquito-michelson-encoder.es5.js",
+  "module": "dist/taquito-michelson-encoder.es6.js",
   "typings": "dist/types/taquito-michelson-encoder.d.ts",
   "files": [
     "signature.json",

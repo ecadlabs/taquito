@@ -25,7 +25,7 @@ export enum Prefix {
 
   NET = 'Net',
   NCE = 'nce',
-  B = 'b',
+  B = 'B',
   O = 'o',
   LO = 'Lo',
   LLO = 'LLo',

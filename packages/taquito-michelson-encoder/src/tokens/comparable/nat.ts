@@ -66,7 +66,7 @@ export class NatToken extends ComparableToken {
   }
 
   public ToKey({ int }: any) {
-    return int;
+    return new BigNumber(int);
   }
 
   compare(nat1: string | number, nat2: string | number) {
