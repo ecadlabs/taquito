@@ -13,7 +13,9 @@
     "example": "cd example && npm run example",
     "lerna": "lerna",
     "build-docs": "typedoc",
-    "gh-pages": "gh-pages"
+    "gh-pages": "gh-pages",
+    "netlify:preview": "netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json --alias=$short_sha --message 'Deployment for $GITHUB_REF'",
+    "netlify:publish": "netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json --prod --message 'Deployment for $GITHUB_REF'"
   },
   "workspaces": [
     "packages/*"
@@ -77,6 +79,7 @@
     "lerna": "^4.0.0",
     "lint-staged": "^12.1.2",
     "lodash.camelcase": "^4.3.0",
+    "netlify-cli": "^8.8.0",
     "prettier": "^2.5.1",
     "prompt": "^1.2.0",
     "replace-in-file": "^6.3.2",
