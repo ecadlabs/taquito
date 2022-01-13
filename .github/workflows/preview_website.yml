@@ -4,14 +4,6 @@ on:
   pull_request:
     branches: [master]
 
-env:
-  CI: true
-  NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-  NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-  ALGOLIA_APPLICATION_ID: "example"
-  ALGOLIA_SEARCH_API_KEY: "example"
-  ALGOLIA_UPDATE_API_KEY: "example"
-
 jobs:
 ## This job will deploy the netlify preview builds
   publish-website-preview:
@@ -30,9 +22,17 @@ jobs:
     - run: npm ci
     - run: npm run lerna -- bootstrap
     - run: npm run lerna run build
+      env:
+        ALGOLIA_APPLICATION_ID: "example"
+        ALGOLIA_SEARCH_API_KEY: "example"
+        ALGOLIA_UPDATE_API_KEY: "example"
     - run: npm run build-docs
     - run: echo "short_sha=${GITHUB_SHA:0:8}" >> $GITHUB_ENV
     - run: npm run netlify:preview
+      env:
+        CI: true
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
     - uses: actions/github-script@v3
       with:

@@ -21,6 +21,10 @@ jobs:
     - run: npm ci
     - run: npm run lerna -- bootstrap
     - run: npm run lerna run build
+      env:
+        ALGOLIA_APPLICATION_ID: ${{ secrets.ALGOLIA_APPLICATION_ID }}
+        ALGOLIA_SEARCH_API_KEY: ${{ secrets.ALGOLIA_SEARCH_API_KEY }}
+        ALGOLIA_UPDATE_API_KEY: ${{ secrets.ALGOLIA_UPDATE_API_KEY }}
     - run: npm run build-docs
     - run: npm run netlify:publish
       env:
