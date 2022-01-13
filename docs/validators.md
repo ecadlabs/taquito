@@ -66,9 +66,7 @@ import { validateContractAddress } from '@taquito/utils';
 //valid
 const contractAddress = 'KT1AfxAKKLnEg6rQ6kHdvCWwagjSaxEwURSJ';
 const validation = validateContractAddress(contractAddress);
-println(
-  `Calling the validateContractAddress function with ${contractAddress} returns ${validation}.`
-);
+println(`Calling the validateContractAddress function with ${contractAddress} returns ${validation}.`);
 ```
 
 ### Validate a chain
@@ -88,9 +86,7 @@ println(`Calling the validateChain function with ${chainId} returns ${validation
 //invalid prefix
 const chainIdWithoutPrefix = 'XdQprcVkpaWU';
 const invalidValidation = validateChain(chainIdWithoutPrefix);
-println(
-  `Calling the validateChain function with ${chainIdWithoutPrefix} returns ${invalidValidation}.`
-);
+println(`Calling the validateChain function with ${chainIdWithoutPrefix} returns ${invalidValidation}.`);
 ```
 
 ### Validate a public key
@@ -119,18 +115,66 @@ The `validateSignature` function is used to check if a signature is valid.
 import { validateSignature } from '@taquito/utils';
 
 //valid
-const signature =
-  'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg';
+const signature = 'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg';
 const validation = validateSignature(signature);
 println(`Calling the validateSignature function with ${signature} returns ${validation}.`);
 
 //invalid checksum
-const invalidSignature =
-  'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuM';
+const invalidSignature = 'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuM';
 const invalidValidation = validateSignature(invalidSignature);
-println(
-  `Calling the validateSignature function with ${invalidSignature} returns ${invalidValidation}.`
-);
+println(`Calling the validateSignature function with ${invalidSignature} returns ${invalidValidation}.`);
+```
+
+### Validate a Block Hash
+
+The `validateBlock` function is used to check whether a block hash is valid.
+
+```js live noInline
+import { validateBlock } from '@taquito/utils';
+
+//valid
+const block ='BLJjnzaPtSsxykZ9pLTFLSfsKuiN3z7SjSPDPWwbE4Q68u5EpBw';
+const validation = validateBlock(block);
+println(`Calling the validateBlock function with ${block} returns ${validation}.`);
+
+//invalid checksum
+const invalidBlock ='BMEdgRZbJJrtByoA5Jyuvy8mzp8mefbcrno82nQCAEbBCUhog';
+const invalidValidation = validateBlock(invalidBlock);
+println(`Calling the validateBlock function with ${invalidBlock} returns ${invalidValidation}.`);
+```
+### Validate an Operation Hash
+
+The `validateOperation` function is used to check whether an operation hash is valid.
+
+```js live noInline
+import { validateOperation } from '@taquito/utils';
+
+//valid
+const operation ='ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj';
+const validation = validateOperation(operation);
+println(`Calling the validateOperation function with ${operation} returns ${validation}.`);
+
+//invalid checksum
+const invalidOperation ='ont3n75kMA2xeoTdxkGM23h5XhWgyP51WEznc4zCDtGNz1TWSz';
+const invalidValidation = validateOperation(invalidOperation);
+println(`Calling the validateOperation function with ${invalidOperation} returns ${invalidValidation}.`);
+```
+### Validate a Protocol Hash
+
+The `validateProtocol` function is used to check whether a protocol hash is valid.
+
+```js live noInline
+import { validateProtocol } from '@taquito/utils';
+
+//valid
+const protocol ='PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx';
+const validation = validateProtocol(protocol);
+println(`Calling the validateProtocol function with ${protocol} returns ${validation}.`);
+
+//invalid checksum
+const invalidProtocol ='PsBABY5HQTSkA4297zNHfsZNKtxULfL18y95b3m53QJiXGmrbU';
+const invalidValidation = validateProtocol(invalidProtocol);
+println(`Calling the validateProtocol function with ${invalidProtocol} returns ${invalidValidation}.`);
 ```
 
 # Verification of a signature
@@ -147,5 +191,5 @@ const pk = 'sppk7c7hkPj47yjYFEHX85q46sFJGw6RBrqoVSHwAJAT4e14KJwzoey';
 const sig = 'spsig1cdLkp1RLgUHAp13aRFkZ6MQDPp7xCnjAExGL3MBSdMDmT6JgQSX8cufyDgJRM3sinFtiCzLbsyP6d365EHoNevxhT47nx'
 
 const isValid = verifySignature(message, pk, sig);
-println(isValid) ;
-;
+println(isValid);
+```
