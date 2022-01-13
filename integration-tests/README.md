@@ -74,7 +74,7 @@ To run tests against a node which is not preconfigured in Taquito you can use
 
 ## How to use a faucet instead of the keygen api
 
-By default the itegration tests will use an ephemeral key handled by the Keygen API. To use a faucet instead you can use the cli option <testnet>-faucet>, like this:
+By default the integration tests will use an ephemeral key handled by the Keygen API. To use a faucet instead you can use the cli option <testnet>-faucet, like this:
 
 ```
 npm run test:hangzhounet-faucet "manager-wallet-scenario.spec.ts"
