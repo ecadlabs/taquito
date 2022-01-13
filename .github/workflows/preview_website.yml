@@ -29,6 +29,9 @@ jobs:
         CI: true
         NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
         NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        ALGOLIA_APPLICATION_ID: example
+        ALGOLIA_SEARCH_API_KEY: example
+        ALGOLIA_UPDATE_API_KEY: example
     - uses: actions/github-script@v3
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
