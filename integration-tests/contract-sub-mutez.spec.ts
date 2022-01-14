@@ -5,6 +5,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
   const skipIthacanet = protocol === Protocols.PsiThaCa ? test.skip : test;
   const skipHangzhounet = protocol === Protocols.PtHangz2 ? test.skip : test;
+  const skipHangzhouAndIthaca = protocol === Protocols.PtHangz2 || Protocols.PsiThaCa ? test.skip : test;
 
   describe(`Test contract call with amount using: ${rpc}`, () => {
     beforeEach(async (done) => {
@@ -51,7 +52,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
        }
      });
 
-     skipHangzhounet(
+     skipHangzhouAndIthaca(
        'originate a contract on Ithaca with SUB MUTEZ',
        async () => {
          const op = await Tezos.contract.originate({
