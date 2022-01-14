@@ -1,4 +1,5 @@
 import { encodePubKey, validateAddress, ValidationResult } from '@taquito/utils';
+import { TokenSchema } from '../schema/types';
 import { Token, TokenFactory, TokenValidationError } from './token';
 
 export class ContractValidationError extends TokenValidationError {
@@ -55,6 +56,16 @@ export class ContractToken extends Token {
 
   public ExtractSchema() {
     return ContractToken.prim;
+  }
+
+  generateSchema(): { __michelsonType: string; schema: { parameter: TokenSchema } } {
+    const valueSchema = this.createToken(this.val.args[0], 0);
+    return {
+      __michelsonType: ContractToken.prim,
+      schema: {
+        parameter: valueSchema.generateSchema(),
+      },
+    };
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {

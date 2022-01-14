@@ -1,5 +1,6 @@
 import { Token, TokenFactory, Semantic, ComparableToken } from './token';
 import { OrToken } from './or';
+import { TokenSchema } from '../schema/types';
 
 // collapse comb pair
 function collapse(val: Token['val'] | any[], prim: string = PairToken.prim): [any, any] {
@@ -168,6 +169,28 @@ export class PairToken extends ComparableToken {
       (leftToken) => leftToken.ExtractSchema(),
       (rightToken) => rightToken.ExtractSchema()
     );
+  }
+
+  generateSchema(): TokenSchema {
+    return {
+      __michelsonType: PairToken.prim,
+      schema: this.traversal(
+        (leftToken) => {
+          if (leftToken instanceof PairToken && !leftToken.hasAnnotations()) {
+            return leftToken.generateSchema().schema;
+          } else {
+            return leftToken.generateSchema();
+          }
+        },
+        (rightToken) => {
+          if (rightToken instanceof PairToken && !rightToken.hasAnnotations()) {
+            return rightToken.generateSchema().schema;
+          } else {
+            return rightToken.generateSchema();
+          }
+        }
+      ),
+    };
   }
 
   public compare(val1: any, val2: any) {

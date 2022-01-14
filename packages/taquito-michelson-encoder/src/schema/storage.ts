@@ -5,7 +5,7 @@ import { OrToken } from '../tokens/or';
 import { PairToken } from '../tokens/pair';
 import { BigMapKeyType, Semantic, Token, TokenValidationError } from '../tokens/token';
 import { RpcTransaction } from './model';
-import { Falsy } from './types';
+import { Falsy, TokenSchema } from './types';
 
 const schemaTypeSymbol = Symbol.for('taquito-schema-type-symbol');
 
@@ -178,6 +178,10 @@ export class Schema {
 
   ExtractSchema() {
     return this.removeTopLevelAnnotation(this.root.ExtractSchema());
+  }
+
+  generateSchema(): TokenSchema {
+    return this.removeTopLevelAnnotation(this.root.generateSchema());
   }
 
   /**

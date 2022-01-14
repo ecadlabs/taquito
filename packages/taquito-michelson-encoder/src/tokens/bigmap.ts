@@ -1,4 +1,5 @@
 import { MichelsonMap } from '../michelson-map';
+import { TokenSchema } from '../schema/types';
 import { ComparableToken, Semantic, Token, TokenFactory, TokenValidationError } from './token';
 
 export class BigMapValidationError extends TokenValidationError {
@@ -31,6 +32,16 @@ export class BigMapToken extends Token {
       big_map: {
         key: this.KeySchema.ExtractSchema(),
         value: this.ValueSchema.ExtractSchema(),
+      },
+    };
+  }
+
+  generateSchema(): { __michelsonType: string; schema: { key: TokenSchema; value: TokenSchema } } {
+    return {
+      __michelsonType: BigMapToken.prim,
+      schema: {
+        key: this.KeySchema.generateSchema(),
+        value: this.ValueSchema.generateSchema(),
       },
     };
   }

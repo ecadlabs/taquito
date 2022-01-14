@@ -57,6 +57,15 @@ export class GlobalConstantToken extends Token {
     return GlobalConstantToken.prim;
   }
 
+  generateSchema(): { __michelsonType: string; schema: { hash: string } } {
+    return {
+      __michelsonType: GlobalConstantToken.prim,
+      schema: {
+        hash: this.val.args[0]['string'],
+      },
+    };
+  }
+
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
     if (GlobalConstantToken.prim === tokenToFind) {
       tokens.push(this);

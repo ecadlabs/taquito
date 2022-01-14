@@ -1,3 +1,4 @@
+import { TokenSchema } from '../schema/types';
 import { IntToken } from './comparable/int';
 import { ContractToken } from './contract';
 import { Token, TokenFactory, Semantic } from './token';
@@ -61,6 +62,26 @@ export class TicketToken extends Token {
       ticketer: ContractToken.prim,
       value: this.valueToken.ExtractSchema(),
       amount: IntToken.prim,
+    };
+  }
+
+  generateSchema(): {
+    __michelsonType: string;
+    schema: { value: TokenSchema; ticketer: TokenSchema; amount: TokenSchema };
+  } {
+    return {
+      __michelsonType: TicketToken.prim,
+      schema: {
+        value: this.valueToken.generateSchema(),
+        ticketer: {
+          __michelsonType: ContractToken.prim,
+          schema: ContractToken.prim,
+        },
+        amount: {
+          __michelsonType: IntToken.prim,
+          schema: IntToken.prim,
+        },
+      },
     };
   }
 

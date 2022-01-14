@@ -68,6 +68,13 @@ export class SetToken extends Token {
     return SetToken.prim;
   }
 
+  generateSchema() {
+    return {
+      __michelsonType: SetToken.prim,
+      schema: this.KeySchema.generateSchema(),
+    };
+  }
+
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
     if (SetToken.prim === tokenToFind) {
       tokens.push(this);

@@ -18,6 +18,10 @@ export class ListToken extends Token {
     super(val, idx, fac);
   }
 
+  get valueSchema() {
+    return this.createToken(this.val.args[0], this.idx);
+  }
+
   private isValid(value: any): ListValidationError | null {
     if (Array.isArray(value)) {
       return null;
@@ -67,9 +71,15 @@ export class ListToken extends Token {
   }
 
   public ExtractSchema() {
-    const valueSchema = this.createToken(this.val.args[0], this.idx);
     return {
-      [ListToken.prim]: valueSchema.ExtractSchema(),
+      [ListToken.prim]: this.valueSchema.ExtractSchema(),
+    };
+  }
+
+  generateSchema() {
+    return {
+      __michelsonType: ListToken.prim,
+      schema: this.valueSchema.generateSchema(),
     };
   }
 
