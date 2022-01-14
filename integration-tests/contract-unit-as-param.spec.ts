@@ -8,6 +8,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const testRetry = require('jest-retries');
   const skipIthacanet = protocol === Protocols.PsiThaCa ? test.skip : testRetry;
   const skipHangzhounet = protocol === Protocols.PtHangz2 ? test.skip : test;
+  const skipHangzhouAndIthaca = protocol === Protocols.PtHangz2 || Protocols.PsiThaCa ? test.skip : test;
   
   describe(`Test contract with unit as params using: ${rpc}`, () => {
 
@@ -29,7 +30,8 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done();
     })
 
-    skipHangzhounet('Originates contract and calls deposit method with unit param', async (done: () => void) => {
+    skipHangzhouAndIthaca('Originates contract and calls deposit method with unit param', async (done: () => void) => {
+      //restore to skipHangzhou when forger supports new sub_mutez for Ithaca
       const op = await Tezos.contract.originate({
         balance: "1",
         code: depositContractCodeIthaca,

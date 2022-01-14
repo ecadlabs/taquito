@@ -60,6 +60,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
     });
 
     skipHangzhouAndIthaca(
+      //restore to skipHangzhou when forger supports new sub_mutez for Ithaca
       'originates a contract on Ithaca with SUB MUTEZ and sends base layer tokens when calling contract methods',
       async (done) => {
         const op = await Tezos.contract.originate({
