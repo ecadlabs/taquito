@@ -69,6 +69,15 @@ export class SaplingStateToken extends Token {
     };
   }
 
+  generateSchema(): { __michelsonType: string; schema: { memoSize: string } } {
+    return {
+      __michelsonType: SaplingStateToken.prim,
+      schema: {
+        memoSize: this.val.args[0]['int'],
+      },
+    };
+  }
+
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
     if (SaplingStateToken.prim === tokenToFind) {
       tokens.push(this);

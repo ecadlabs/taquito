@@ -11,6 +11,14 @@ export class LambdaToken extends Token {
     super(val, idx, fac);
   }
 
+  get paramSchema() {
+    return this.createToken(this.val.args[0], this.idx);
+  }
+
+  get returnSchema() {
+    return this.createToken(this.val.args[1], this.idx + 1);
+  }
+
   public Execute(val: any) {
     if (val.string) {
       return val.string;
@@ -29,12 +37,20 @@ export class LambdaToken extends Token {
   }
 
   public ExtractSchema() {
-    const leftToken = this.createToken(this.val.args[0], this.idx);
-    const rightToken = this.createToken(this.val.args[1], this.idx + 1);
     return {
       [LambdaToken.prim]: {
-        parameters: leftToken.ExtractSchema(),
-        returns: rightToken.ExtractSchema(),
+        parameters: this.paramSchema.ExtractSchema(),
+        returns: this.returnSchema.ExtractSchema(),
+      },
+    };
+  }
+
+  generateSchema() {
+    return {
+      __michelsonType: LambdaToken.prim,
+      schema: {
+        parameters: this.paramSchema.generateSchema(),
+        returns: this.returnSchema.generateSchema(),
       },
     };
   }
