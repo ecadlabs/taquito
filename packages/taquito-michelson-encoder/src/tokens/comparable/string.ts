@@ -1,7 +1,8 @@
+import { BaseTokenSchema } from '../../schema/types';
 import { Token, TokenFactory, ComparableToken } from '../token';
 
 export class StringToken extends ComparableToken {
-  static prim = 'string';
+  static prim: 'string' = 'string';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -17,6 +18,13 @@ export class StringToken extends ComparableToken {
 
   public ExtractSchema() {
     return StringToken.prim;
+  }
+
+  generateSchema(): BaseTokenSchema {
+    return {
+      __michelsonType: StringToken.prim,
+      schema: StringToken.prim,
+    };
   }
 
   public Encode(args: any[]): any {

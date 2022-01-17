@@ -1,5 +1,5 @@
 import { encodePubKey, validateAddress, ValidationResult } from '@taquito/utils';
-import { TokenSchema } from '../schema/types';
+import { ContractTokenSchema } from '../schema/types';
 import { Token, TokenFactory, TokenValidationError } from './token';
 
 export class ContractValidationError extends TokenValidationError {
@@ -10,7 +10,7 @@ export class ContractValidationError extends TokenValidationError {
 }
 
 export class ContractToken extends Token {
-  static prim = 'contract';
+  static prim: 'contract' = 'contract';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -58,7 +58,7 @@ export class ContractToken extends Token {
     return ContractToken.prim;
   }
 
-  generateSchema(): { __michelsonType: string; schema: { parameter: TokenSchema } } {
+  generateSchema(): ContractTokenSchema {
     const valueSchema = this.createToken(this.val.args[0], 0);
     return {
       __michelsonType: ContractToken.prim,

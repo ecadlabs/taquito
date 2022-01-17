@@ -1,5 +1,6 @@
 import { ComparableToken, Token, TokenFactory, TokenValidationError } from './token';
 import { validateSignature, ValidationResult } from '@taquito/utils';
+import { BaseTokenSchema } from '../schema/types';
 
 export class SignatureValidationError extends TokenValidationError {
   name = 'SignatureValidationError';
@@ -9,7 +10,7 @@ export class SignatureValidationError extends TokenValidationError {
 }
 
 export class SignatureToken extends ComparableToken {
-  static prim = 'signature';
+  static prim: 'signature' = 'signature';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -53,6 +54,13 @@ export class SignatureToken extends ComparableToken {
 
   public ExtractSchema() {
     return SignatureToken.prim;
+  }
+
+  generateSchema(): BaseTokenSchema {
+    return {
+      __michelsonType: SignatureToken.prim,
+      schema: SignatureToken.prim,
+    };
   }
 
   ToKey(val: any) {

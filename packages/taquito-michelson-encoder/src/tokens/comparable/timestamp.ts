@@ -1,7 +1,8 @@
+import { BaseTokenSchema } from '../../schema/types';
 import { Token, TokenFactory, ComparableToken } from '../token';
 
 export class TimestampToken extends ComparableToken {
-  static prim = 'timestamp';
+  static prim: 'timestamp' = 'timestamp';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -32,6 +33,13 @@ export class TimestampToken extends ComparableToken {
 
   public ExtractSchema() {
     return TimestampToken.prim;
+  }
+
+  generateSchema(): BaseTokenSchema {
+    return {
+      __michelsonType: TimestampToken.prim,
+      schema: TimestampToken.prim,
+    };
   }
 
   public ToKey({ string }: any) {

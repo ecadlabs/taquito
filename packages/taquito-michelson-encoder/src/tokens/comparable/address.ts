@@ -1,5 +1,6 @@
 import { Token, TokenFactory, ComparableToken, TokenValidationError } from '../token';
 import { b58decode, encodePubKey, validateAddress, ValidationResult } from '@taquito/utils';
+import { BaseTokenSchema } from '../../schema/types';
 
 export class AddressValidationError extends TokenValidationError {
   name = 'AddressValidationError';
@@ -9,7 +10,7 @@ export class AddressValidationError extends TokenValidationError {
 }
 
 export class AddressToken extends ComparableToken {
-  static prim = 'address';
+  static prim: 'address' = 'address';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -65,6 +66,13 @@ export class AddressToken extends ComparableToken {
 
   public ExtractSchema() {
     return AddressToken.prim;
+  }
+
+  generateSchema(): BaseTokenSchema {
+    return {
+      __michelsonType: AddressToken.prim,
+      schema: AddressToken.prim,
+    };
   }
 
   public ToKey({ bytes, string }: any) {

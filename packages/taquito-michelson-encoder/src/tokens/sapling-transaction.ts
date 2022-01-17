@@ -1,3 +1,4 @@
+import { SaplingTransactionTokenSchema } from '../schema/types';
 import { Token, TokenFactory, TokenValidationError } from './token';
 
 export class SaplingTransactionValidationError extends TokenValidationError {
@@ -8,7 +9,7 @@ export class SaplingTransactionValidationError extends TokenValidationError {
 }
 
 export class SaplingTransactionToken extends Token {
-  static prim = 'sapling_transaction';
+  static prim: 'sapling_transaction' = 'sapling_transaction';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -54,7 +55,7 @@ export class SaplingTransactionToken extends Token {
     };
   }
 
-  generateSchema(): { __michelsonType: string; schema: { memoSize: string } } {
+  generateSchema(): SaplingTransactionTokenSchema {
     return {
       __michelsonType: SaplingTransactionToken.prim,
       schema: {

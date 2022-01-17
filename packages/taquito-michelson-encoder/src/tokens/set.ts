@@ -1,3 +1,4 @@
+import { SetTokenSchema } from '../schema/types';
 import { Token, TokenFactory, Semantic, TokenValidationError, ComparableToken } from './token';
 
 export class SetValidationError extends TokenValidationError {
@@ -8,7 +9,7 @@ export class SetValidationError extends TokenValidationError {
 }
 
 export class SetToken extends Token {
-  static prim = 'set';
+  static prim: 'set' = 'set';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -68,7 +69,7 @@ export class SetToken extends Token {
     return SetToken.prim;
   }
 
-  generateSchema() {
+  generateSchema(): SetTokenSchema {
     return {
       __michelsonType: SetToken.prim,
       schema: this.KeySchema.generateSchema(),

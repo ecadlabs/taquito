@@ -1,7 +1,8 @@
+import { BaseTokenSchema } from '../../schema/types';
 import { Token, TokenFactory, ComparableToken } from '../token';
 
 export class BoolToken extends ComparableToken {
-  static prim = 'bool';
+  static prim: 'bool' = 'bool';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -26,6 +27,13 @@ export class BoolToken extends ComparableToken {
 
   public ExtractSchema() {
     return BoolToken.prim;
+  }
+
+  generateSchema(): BaseTokenSchema {
+    return {
+      __michelsonType: BoolToken.prim,
+      schema: BoolToken.prim,
+    };
   }
 
   ToBigMapKey(val: string): { key: { [key: string]: string }; type: { prim: string } } {

@@ -1,7 +1,8 @@
+import { OptionTokenSchema } from '../schema/types';
 import { Token, TokenFactory, Semantic, ComparableToken } from './token';
 
 export class OptionToken extends ComparableToken {
-  static prim = 'option';
+  static prim: 'option' = 'option';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -62,7 +63,7 @@ export class OptionToken extends ComparableToken {
     return this.schema().ExtractSchema();
   }
 
-  generateSchema() {
+  generateSchema(): OptionTokenSchema {
     return {
       __michelsonType: OptionToken.prim,
       schema: this.schema().generateSchema(),
