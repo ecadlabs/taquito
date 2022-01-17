@@ -1,5 +1,6 @@
 import { Token, TokenFactory, ComparableToken, TokenValidationError } from './token';
 import { validateChain, ValidationResult } from '@taquito/utils';
+import { BaseTokenSchema } from '../schema/types';
 
 export class ChainIDValidationError extends TokenValidationError {
   name = 'ChainIDValidationError';
@@ -9,7 +10,7 @@ export class ChainIDValidationError extends TokenValidationError {
 }
 
 export class ChainIDToken extends ComparableToken {
-  static prim = 'chain_id';
+  static prim: 'chain_id' = 'chain_id';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -33,6 +34,13 @@ export class ChainIDToken extends ComparableToken {
 
   public ExtractSchema() {
     return ChainIDToken.prim;
+  }
+
+  generateSchema(): BaseTokenSchema {
+    return {
+      __michelsonType: ChainIDToken.prim,
+      schema: ChainIDToken.prim,
+    };
   }
 
   public Encode(args: any[]): any {

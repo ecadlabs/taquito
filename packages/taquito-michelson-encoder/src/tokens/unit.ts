@@ -1,8 +1,9 @@
 import { ComparableToken, Token, TokenFactory } from './token';
+import { BaseTokenSchema } from '../schema/types';
 import { UnitValue } from '../taquito-michelson-encoder';
 
 export class UnitToken extends ComparableToken {
-  static prim = 'unit';
+  static prim: 'unit' = 'unit';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -27,6 +28,13 @@ export class UnitToken extends ComparableToken {
 
   public ExtractSchema() {
     return UnitToken.prim;
+  }
+
+  generateSchema(): BaseTokenSchema {
+    return {
+      __michelsonType: UnitToken.prim,
+      schema: UnitToken.prim,
+    };
   }
 
   compare(_val1: any, _val2: any) {

@@ -1,4 +1,4 @@
-import { TokenSchema } from '../schema/types';
+import { TicketTokenSchema } from '../schema/types';
 import { IntToken } from './comparable/int';
 import { ContractToken } from './contract';
 import { Token, TokenFactory, Semantic } from './token';
@@ -12,7 +12,7 @@ const ticketerType = { prim: 'contract' };
 const amountType = { prim: 'int' };
 
 export class TicketToken extends Token {
-  static prim = 'ticket';
+  static prim: 'ticket' = 'ticket';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -65,10 +65,7 @@ export class TicketToken extends Token {
     };
   }
 
-  generateSchema(): {
-    __michelsonType: string;
-    schema: { value: TokenSchema; ticketer: TokenSchema; amount: TokenSchema };
-  } {
+  generateSchema(): TicketTokenSchema {
     return {
       __michelsonType: TicketToken.prim,
       schema: {

@@ -1,3 +1,4 @@
+import { BaseTokenSchema } from '../schema/types';
 import { Token, TokenFactory, TokenValidationError } from './token';
 
 export class ChestValidationError extends TokenValidationError {
@@ -7,7 +8,7 @@ export class ChestValidationError extends TokenValidationError {
   }
 }
 export class ChestToken extends Token {
-  static prim = 'chest';
+  static prim: 'chest' = 'chest';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -54,6 +55,13 @@ export class ChestToken extends Token {
 
   public ExtractSchema() {
     return ChestToken.prim;
+  }
+
+  generateSchema(): BaseTokenSchema {
+    return {
+      __michelsonType: ChestToken.prim,
+      schema: ChestToken.prim,
+    };
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {

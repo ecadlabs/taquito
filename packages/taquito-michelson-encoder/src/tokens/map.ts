@@ -1,5 +1,5 @@
 import { MichelsonMap } from '../michelson-map';
-import { TokenSchema } from '../schema/types';
+import { MapTokenSchema } from '../schema/types';
 import { ComparableToken, Semantic, Token, TokenFactory, TokenValidationError } from './token';
 
 export class MapValidationError extends TokenValidationError {
@@ -10,7 +10,7 @@ export class MapValidationError extends TokenValidationError {
 }
 
 export class MapToken extends Token {
-  static prim = 'map';
+  static prim: 'map' = 'map';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -93,7 +93,7 @@ export class MapToken extends Token {
     };
   }
 
-  generateSchema(): { __michelsonType: string; schema: { key: TokenSchema; value: TokenSchema } } {
+  generateSchema(): MapTokenSchema {
     return {
       __michelsonType: MapToken.prim,
       schema: {

@@ -1,3 +1,4 @@
+import { SaplingStateTokenSchema } from '../schema/types';
 import { Semantic, Token, TokenFactory, TokenValidationError } from './token';
 
 export class SaplingStateValidationError extends TokenValidationError {
@@ -8,7 +9,7 @@ export class SaplingStateValidationError extends TokenValidationError {
 }
 
 export class SaplingStateToken extends Token {
-  static prim = 'sapling_state';
+  static prim: 'sapling_state' = 'sapling_state';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -69,7 +70,7 @@ export class SaplingStateToken extends Token {
     };
   }
 
-  generateSchema(): { __michelsonType: string; schema: { memoSize: string } } {
+  generateSchema(): SaplingStateTokenSchema {
     return {
       __michelsonType: SaplingStateToken.prim,
       schema: {

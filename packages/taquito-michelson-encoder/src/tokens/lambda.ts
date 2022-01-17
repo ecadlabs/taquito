@@ -1,7 +1,8 @@
+import { LambdaTokenSchema } from '../schema/types';
 import { Token, TokenFactory } from './token';
 
 export class LambdaToken extends Token {
-  static prim = 'lambda';
+  static prim: 'lambda' = 'lambda';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -45,7 +46,7 @@ export class LambdaToken extends Token {
     };
   }
 
-  generateSchema() {
+  generateSchema(): LambdaTokenSchema {
     return {
       __michelsonType: LambdaToken.prim,
       schema: {

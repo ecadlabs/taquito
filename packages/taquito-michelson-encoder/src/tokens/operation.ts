@@ -1,7 +1,8 @@
+import { BaseTokenSchema } from '../schema/types';
 import { Token, TokenFactory } from './token';
 
 export class OperationToken extends Token {
-  static prim = 'operation';
+  static prim: 'operation' = 'operation';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -26,6 +27,13 @@ export class OperationToken extends Token {
 
   public ExtractSchema() {
     return OperationToken.prim;
+  }
+
+  generateSchema(): BaseTokenSchema {
+    return {
+      __michelsonType: OperationToken.prim,
+      schema: OperationToken.prim,
+    };
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {

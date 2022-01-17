@@ -62,12 +62,7 @@ export abstract class Token {
 
   public abstract ExtractSchema(): any;
 
-  generateSchema(): TokenSchema {
-    return {
-      __michelsonType: this.val.prim,
-      schema: this.val.prim,
-    };
-  }
+  abstract generateSchema(): TokenSchema;
 
   public abstract Execute(val: any, semantics?: Semantic): any;
 

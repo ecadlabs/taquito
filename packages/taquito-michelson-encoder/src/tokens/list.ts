@@ -1,3 +1,4 @@
+import { ListTokenSchema } from '../schema/types';
 import { Token, TokenFactory, Semantic, TokenValidationError } from './token';
 
 export class ListValidationError extends TokenValidationError {
@@ -8,7 +9,7 @@ export class ListValidationError extends TokenValidationError {
 }
 
 export class ListToken extends Token {
-  static prim = 'list';
+  static prim: 'list' = 'list';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -76,7 +77,7 @@ export class ListToken extends Token {
     };
   }
 
-  generateSchema() {
+  generateSchema(): ListTokenSchema {
     return {
       __michelsonType: ListToken.prim,
       schema: this.valueSchema.generateSchema(),

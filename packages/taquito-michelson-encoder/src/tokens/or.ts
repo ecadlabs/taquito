@@ -1,8 +1,8 @@
-import { TokenSchema } from '../schema/types';
+import { OrTokenSchema } from '../schema/types';
 import { Token, TokenFactory, Semantic, ComparableToken } from './token';
 
 export class OrToken extends ComparableToken {
-  static prim = 'or';
+  static prim: 'or' = 'or';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -176,7 +176,7 @@ export class OrToken extends ComparableToken {
     );
   }
 
-  generateSchema(): TokenSchema {
+  generateSchema(): OrTokenSchema {
     return {
       __michelsonType: OrToken.prim,
       schema: this.traversal(

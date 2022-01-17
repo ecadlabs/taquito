@@ -7,6 +7,7 @@ import {
   b58cdecode,
   prefix,
 } from '@taquito/utils';
+import { BaseTokenSchema } from '../schema/types';
 
 const publicKeyPrefixLength = 4;
 
@@ -18,7 +19,7 @@ export class KeyValidationError extends TokenValidationError {
 }
 
 export class KeyToken extends ComparableToken {
-  static prim = 'key';
+  static prim: 'key' = 'key';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -66,6 +67,13 @@ export class KeyToken extends ComparableToken {
 
   public ExtractSchema() {
     return KeyToken.prim;
+  }
+
+  generateSchema(): BaseTokenSchema {
+    return {
+      __michelsonType: KeyToken.prim,
+      schema: KeyToken.prim,
+    };
   }
 
   ToKey(val: any) {

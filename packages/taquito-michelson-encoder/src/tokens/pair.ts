@@ -1,6 +1,6 @@
 import { Token, TokenFactory, Semantic, ComparableToken } from './token';
 import { OrToken } from './or';
-import { TokenSchema } from '../schema/types';
+import { PairTokenSchema } from '../schema/types';
 
 // collapse comb pair
 function collapse(val: Token['val'] | any[], prim: string = PairToken.prim): [any, any] {
@@ -28,7 +28,7 @@ function collapse(val: Token['val'] | any[], prim: string = PairToken.prim): [an
   return [val.args[0], val.args[1]];
 }
 export class PairToken extends ComparableToken {
-  static prim = 'pair';
+  static prim: 'pair' = 'pair';
 
   constructor(
     val: { prim: string; args: any[]; annots: any[] } | any[],
@@ -171,7 +171,7 @@ export class PairToken extends ComparableToken {
     );
   }
 
-  generateSchema(): TokenSchema {
+  generateSchema(): PairTokenSchema {
     return {
       __michelsonType: PairToken.prim,
       schema: this.traversal(
