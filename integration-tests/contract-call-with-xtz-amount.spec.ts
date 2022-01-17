@@ -62,13 +62,15 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
     skipHangzhouAndIthaca(
       //restore to skipHangzhou when forger supports new sub_mutez for Ithaca
       'originates a contract on Ithaca with SUB MUTEZ and sends base layer tokens when calling contract methods',
+     
       async (done) => {
+        try {
         const op = await Tezos.contract.originate({
           balance: '0',
           code: depositContractCodeIthaca,
           init: depositContractStorageIthaca,
         });
-        const contract = await op.contract();
+        const contract = await op.contract();   
 
         const operation = await contract.methods.deposit(null).send({ amount: 1 });
         await operation.confirmation();
@@ -84,7 +86,9 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         balance = await Tezos.tz.getBalance(contract.address);
         expect(balance.toString()).toEqual('1000001');
         done();
-      }
+      } catch (ex) {
+        console.error(ex);
+      }}
     );
 
     skipHangzhounet('fail to originate a contract on Ithaca with SUB', async () => {

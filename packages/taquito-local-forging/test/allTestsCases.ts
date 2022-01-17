@@ -23,6 +23,7 @@ import { tokenBigmapCode, tokenBigmapStorage } from './data/token_big_map';
 import { noAnnotCode, noAnnotInit } from './data/token_without_annotations';
 import { voteInitSample, voteSample } from './data/vote_contract';
 import { chestCode, chestStorage } from './data/contract_with_chest';
+import { submutezCode, submutezStorage } from './data/contract_with_sub_mutez';
 import {
   storageContractWithConstant,
   codeContractWithConstant,
@@ -940,4 +941,32 @@ export const hangzhouCases: TestCase[] = [
       ],
     },
   },
+];
+
+export const ithacaCases: TestCase[] = [
+    // In `opMapping` from the file `constants.ts`, the operations and types starting at `sub_mutez` were added in the ithaca protocol
+    ...extractOp(147, 148).map((op) => {
+    return {
+      name: `Origination of a contract that contains the instruction (${op})`,
+      operation: {
+        branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+        contents: [
+          {
+            kind: 'origination',
+            counter: '1',
+            source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+            fee: '10000',
+            gas_limit: '10',
+            storage_limit: '10',
+            balance: '0',
+            script: {
+              code: submutezCode,
+              storage: submutezStorage,
+            },
+          },
+        ],
+      },
+    };
+  },
+    )
 ];
