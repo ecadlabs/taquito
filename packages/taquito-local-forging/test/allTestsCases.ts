@@ -944,8 +944,8 @@ export const hangzhouCases: TestCase[] = [
 ];
 
 export const ithacaCases: TestCase[] = [
-    // In `opMapping` from the file `constants.ts`, the operations and types starting at `sub_mutez` were added in the ithaca protocol
-    ...extractOp(147, 148).map((op) => {
+  // In `opMapping` from the file `constants.ts`, the operations and types starting at `sub_mutez` were added in the ithaca protocol
+  ...extractOp(147, 147).map((op) => {
     return {
       name: `Origination of a contract that contains the instruction (${op})`,
       operation: {
@@ -967,6 +967,5 @@ export const ithacaCases: TestCase[] = [
         ],
       },
     };
-  },
-    )
+  }),
 ];
