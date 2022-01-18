@@ -12,9 +12,7 @@ import {
 } from 'rxjs/operators';
 import { Context } from '../context';
 import { Receipt, receiptFromOperation } from './receipt';
-import { validateOperation, ValidationResult } from '@taquito/utils';
-import { InvalidOperationHashError } from '@taquito/utils/src/errors';
-
+import { validateOperation, ValidationResult, InvalidOperationHashError } from '@taquito/utils';
 
 export type OperationStatus = 'pending' | 'unknown' | OperationResultStatusEnum;
 

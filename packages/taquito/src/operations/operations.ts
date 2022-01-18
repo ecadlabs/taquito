@@ -17,12 +17,7 @@ import {
 } from 'rxjs/operators';
 import { Context } from '../context';
 import { ForgedBytes, hasMetadataWithResult } from './types';
-
-import { InvalidOperationHashError } from '@taquito/utils/src/errors';
-import { 
-  validateOperation, 
-  ValidationResult,
-} from '@taquito/utils';
+import { validateOperation, ValidationResult, InvalidOperationHashError } from '@taquito/utils';
 
 interface PollingConfig {
   timeout: number;
@@ -116,7 +111,7 @@ export class Operation {
   ) {
     if (validateOperation(this.hash) !== ValidationResult.VALID) {
       throw new InvalidOperationHashError(`Invalid Operation Hash`);
-    };
+    }
 
     this.confirmed$.pipe(first(),
       catchError(() => {

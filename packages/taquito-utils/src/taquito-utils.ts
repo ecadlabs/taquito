@@ -22,6 +22,7 @@ export { VERSION } from './version';
 export { prefix, Prefix, prefixLength } from './constants';
 
 export { verifySignature, validatePkAndExtractPrefix } from './verify-signature';
+export * from './errors';
 
 /**
  *
