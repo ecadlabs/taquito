@@ -9,42 +9,31 @@ CONFIGS().forEach(({ rpc, protocol }) => {
 
     describe(`Test local forger: ${rpc}`, () => {
 
-        // commonCases.forEach(({ name, operation, expected }) => {
+         commonCases.forEach(({ name, operation, expected }) => {
 
-        //     it(`Should give the same result as when forging with the rpc: ${name} (${rpc})`, async done => {
-        //         //if(protocol === Protocols.PsiThaCa && name === 'Endorsement') {
-        //             // skip
-        //           //  console.log('Temporarily skip endorsement forging for Ithacanet')
-        //         //} else {
-        //             const result = await localForger.forge(operation);
-        //             const rpcResult = await Tezos.rpc.forgeOperations(operation);
-        //             expect(result).toEqual(rpcResult);
-        //             expect(await localForger.parse(result)).toEqual(expected || operation);
-        //         //}
-        //         done();
-        //     });
-        // });
+             it(`Should give the same result as when forging with the rpc: ${name} (${rpc})`, async done => {
+                 if(protocol === Protocols.PsiThaCa && name === 'Endorsement') {
+                     // skip
+                     console.log('Temporarily skip endorsement forging for Ithacanet')
+                 } else {
+                     const result = await localForger.forge(operation);
+                     const rpcResult = await Tezos.rpc.forgeOperations(operation);
+                     expect(result).toEqual(rpcResult);
+                     expect(await localForger.parse(result)).toEqual(expected || operation);
+                 }
+                 done();
+             });
+         });
 
-        // hangzhouCases.forEach(({ name, operation, expected }) => {
+         hangzhouCases.forEach(({ name, operation, expected }) => {
 
-        //     hangzhounetOrHigher(`Should give the same result as when forging with the rpc: ${name} (${rpc})`, async done => {
-        //         const result = await localForger.forge(operation);
-        //         const rpcResult = await Tezos.rpc.forgeOperations(operation);
-        //         expect(result).toEqual(rpcResult);
-        //         expect(await localForger.parse(result)).toEqual(expected || operation);
-        //         done();
-        //     });
-        // }); 
-
-        ithacaCases.forEach(({ name, operation, expected }) => {
-
-            hangzhounetOrHigher(`Should give the same result as when forging with the rpc: ${name} (${rpc})`, async done => {
-                const result = await localForger.forge(operation);
-                const rpcResult = await Tezos.rpc.forgeOperations(operation);
-                expect(result).toEqual(rpcResult);
-                expect(await localForger.parse(result)).toEqual(expected || operation);
-                done();
-            });
-        }); 
+             hangzhounetOrHigher(`Should give the same result as when forging with the rpc: ${name} (${rpc})`, async done => {
+                 const result = await localForger.forge(operation);
+                 const rpcResult = await Tezos.rpc.forgeOperations(operation);
+                 expect(result).toEqual(rpcResult);
+                 expect(await localForger.parse(result)).toEqual(expected || operation);
+                 done();
+             });
+         }); 
     });
 })
