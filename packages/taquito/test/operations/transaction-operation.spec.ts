@@ -89,7 +89,7 @@ describe('Transfer operation', () => {
     };
 
     fakeContext.rpc.getBlock.mockResolvedValue({
-      operations: [[{ hash: 'test_hash' }], [], [], []],
+      operations: [[{ hash: 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj' }], [], [], []],
       header: {
         level: 200,
       },
@@ -97,7 +97,7 @@ describe('Transfer operation', () => {
   });
   it('should contains compute the consummed gas, storage diff and storage size properly', () => {
     const op = new TransactionOperation(
-      'test_hash',
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       {} as any,
       '',
       fakeForgedBytes,
@@ -114,7 +114,7 @@ describe('Transfer operation', () => {
     const revealBuilder = new RevealOperationBuilder();
 
     const op = new TransactionOperation(
-      'test_hash',
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       {} as any,
       '',
       fakeForgedBytes,
@@ -133,7 +133,7 @@ describe('Transfer operation', () => {
     const revealBuilder = new RevealOperationBuilder();
 
     const op = new TransactionOperation(
-      'test_hash',
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       {} as any,
       '',
       fakeForgedBytes,
@@ -151,7 +151,7 @@ describe('Transfer operation', () => {
     const txBuilder = new TransferOperationBuilder();
 
     const op = new TransactionOperation(
-      'test_hash',
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       {} as any,
       '',
       fakeForgedBytes,

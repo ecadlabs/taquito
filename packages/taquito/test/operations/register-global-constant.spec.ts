@@ -71,7 +71,7 @@ describe('RegisterGlobalConstant operation', () => {
     };
 
     fakeContext.rpc.getBlock.mockResolvedValue({
-      operations: [[{ hash: 'test_hash' }], [], [], []],
+      operations: [[{ hash: 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj' }], [], [], []],
       header: {
         level: 200,
       },
@@ -79,7 +79,7 @@ describe('RegisterGlobalConstant operation', () => {
   });
   it('should contains the global address of the newly registered constant given a successful result', () => {
     const op = new RegisterGlobalConstantOperation(
-      'test_hash',
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       {} as any,
       '',
       fakeForgedBytes,
@@ -98,7 +98,7 @@ describe('RegisterGlobalConstant operation', () => {
 
     wrongResults.forEach((result) => {
       const op = new RegisterGlobalConstantOperation(
-        'test_hash',
+        'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
         {} as any,
         '',
         fakeForgedBytes,
@@ -111,7 +111,7 @@ describe('RegisterGlobalConstant operation', () => {
 
   it('should return the registered expression', () => {
     const op = new RegisterGlobalConstantOperation(
-      'test_hash',
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       { value: { int: '0' } } as any,
       '',
       fakeForgedBytes,
@@ -123,7 +123,7 @@ describe('RegisterGlobalConstant operation', () => {
 
   it('should return the fee', () => {
     const op = new RegisterGlobalConstantOperation(
-      'test_hash',
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       { fee: 450 } as any,
       '',
       fakeForgedBytes,
@@ -135,7 +135,7 @@ describe('RegisterGlobalConstant operation', () => {
 
   it('should return the gasLimit', () => {
     const op = new RegisterGlobalConstantOperation(
-      'test_hash',
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       { gas_limit: 450 } as any,
       '',
       fakeForgedBytes,
@@ -146,7 +146,7 @@ describe('RegisterGlobalConstant operation', () => {
   });
   it('should return the storageLimit', () => {
     const op = new RegisterGlobalConstantOperation(
-      'test_hash',
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       { storage_limit: 450 } as any,
       '',
       fakeForgedBytes,
@@ -160,7 +160,7 @@ describe('RegisterGlobalConstant operation', () => {
     const txBuilder = new RegisterGlobalConstantOperationBuilder();
 
     const op = new RegisterGlobalConstantOperation(
-      'test_hash',
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       {} as any,
       '',
       fakeForgedBytes,
@@ -183,7 +183,7 @@ describe('RegisterGlobalConstant operation', () => {
 
   it('error should be undefined when no error', () => {
     const op = new RegisterGlobalConstantOperation(
-      'test_hash',
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       {} as any,
       '',
       fakeForgedBytes,
@@ -198,7 +198,7 @@ describe('RegisterGlobalConstant operation', () => {
     const revealBuilder = new RevealOperationBuilder();
 
     const op = new RegisterGlobalConstantOperation(
-      'test_hash',
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       {} as any,
       '',
       fakeForgedBytes,
@@ -217,7 +217,7 @@ describe('RegisterGlobalConstant operation', () => {
     const revealBuilder = new RevealOperationBuilder();
 
     const op = new RegisterGlobalConstantOperation(
-      'test_hash',
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       {} as any,
       '',
       fakeForgedBytes,
@@ -235,7 +235,7 @@ describe('RegisterGlobalConstant operation', () => {
     const txBuilder = new RegisterGlobalConstantOperationBuilder();
 
     const op = new RegisterGlobalConstantOperation(
-      'test_hash',
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       {} as any,
       '',
       fakeForgedBytes,

@@ -155,6 +155,7 @@ describe('RpcContractProvider test', () => {
       packed: '747a325542477245424b7a7a5736686a586a78786951464a4e6736575232626d3647454e',
     });
     mockRpcClient.preapplyOperations.mockResolvedValue([]);
+    mockRpcClient.injectOperation.mockResolvedValue('oo6JPEAy8VuMRGaFuMmLNFFGdJgiaKfnmT1CpHJfKP3Ye5ZahiP')
     mockRpcClient.getChainId.mockResolvedValue('chain-id');
     const estimateReveal = new Estimate(1000000, 0, 64, 250);
     mockEstimate.reveal.mockResolvedValue(estimateReveal);
