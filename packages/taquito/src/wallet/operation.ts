@@ -12,6 +12,9 @@ import {
 } from 'rxjs/operators';
 import { Context } from '../context';
 import { Receipt, receiptFromOperation } from './receipt';
+import { validateOperation, ValidationResult } from '@taquito/utils';
+import { InvalidOperationHashError } from '@taquito/utils/src/errors';
+
 
 export type OperationStatus = 'pending' | 'unknown' | OperationResultStatusEnum;
 
@@ -93,6 +96,9 @@ export class WalletOperation {
     protected readonly context: Context,
     private _newHead$: Observable<BlockResponse>
   ) {
+    if (validateOperation(this.opHash) !== ValidationResult.VALID) {
+      throw new InvalidOperationHashError('Invalid operation hash');
+    }
     this.confirmed$
       .pipe(
         first(),

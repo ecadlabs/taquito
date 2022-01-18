@@ -18,6 +18,12 @@ import {
 import { Context } from '../context';
 import { ForgedBytes, hasMetadataWithResult } from './types';
 
+import { InvalidOperationHashError } from '@taquito/utils/src/errors';
+import { 
+  validateOperation, 
+  ValidationResult,
+} from '@taquito/utils';
+
 interface PollingConfig {
   timeout: number;
   interval: number;
@@ -108,6 +114,10 @@ export class Operation {
     public readonly results: OperationContentsAndResult[],
     protected readonly context: Context
   ) {
+    if (validateOperation(this.hash) !== ValidationResult.VALID) {
+      throw new InvalidOperationHashError(`Invalid Operation Hash`);
+    };
+
     this.confirmed$.pipe(first(),
       catchError(() => {
         return of(EMPTY)
