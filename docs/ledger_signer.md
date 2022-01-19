@@ -12,7 +12,7 @@ The Ledger Signer implements the Signer interface of Taquito, allowing you to si
 You need to have the [Tezos Wallet app](https://support.ledger.com/hc/en-us/articles/360016057774-Tezos-XTZ-) installed and opened on your Ledger device when using the Ledger Signer.
 :::
 
-You first need to import the desired transport from the [LedgerJs library](https://github.com/LedgerHQ/ledgerjs). The Ledger Signer has currently been tested with `@ledgerhq/hw-transport-node-hid` for Node-based application and with ~~`@ledgerhq/hw-transport-u2f`~~ and `@ledgerhq/hw-transport-webhid` for web applications.
+You first need to import the desired transport from the [LedgerJs library](https://github.com/LedgerHQ/ledgerjs). The Ledger Signer has currently been tested with `@ledgerhq/hw-transport-node-hid` for Node-based applications and with ~~`@ledgerhq/hw-transport-u2f`~~ and `@ledgerhq/hw-transport-webhid` for web applications.
 
 :::note
 `@ledgerhq/hw-transport-u2f` has been deprecated and expires on February 22.
@@ -20,7 +20,7 @@ You first need to import the desired transport from the [LedgerJs library](https
 
 `@ledgerhq/hw-transport-webhid` is only supported on Chromium based browsers and has to be enabled by a specific configuration flag (chrome://flags/#enable-experimental-web-platform-features)
 
-See the following link for reference and migration guide: https://github.com/LedgerHQ/ledgerjs/blob/master/docs/migrate_webusb.md.
+See the following link for a reference and migration guide: https://github.com/LedgerHQ/ledgerjs/blob/master/docs/migrate_webusb.md.
 :::
 
 You can pass an instance of the transport of your choice to your Ledger Signer as follows:
