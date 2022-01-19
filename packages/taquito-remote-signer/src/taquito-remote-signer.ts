@@ -66,7 +66,7 @@ export class RemoteSigner implements Signer {
     private http = new HttpBackend()
   ) {
     if (validateKeyHash(this.pkh) !== ValidationResult.VALID) {
-      throw  new InvalidKeyHashError('Invalid Public Key Hash');
+      throw  new InvalidKeyHashError(`Invalid Public Key Hash: ${this.pkh}`);
     }
   }
 

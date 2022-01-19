@@ -95,7 +95,7 @@ export class WalletOperation {
     private _newHead$: Observable<BlockResponse>
   ) {
     if (validateOperation(this.opHash) !== ValidationResult.VALID) {
-      throw new InvalidOperationHashError('Invalid operation hash');
+      throw new InvalidOperationHashError(`Invalid operation hash: ${this.opHash}`);
     }
     this.confirmed$
       .pipe(
