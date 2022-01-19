@@ -30,6 +30,55 @@ describe('Token contract with big map', () => {
       '2': 'bool',
       '3': 'nat',
     });
+
+    expect(schema.generateSchema()).toEqual({
+      __michelsonType: 'pair',
+      schema: {
+        '0': {
+          __michelsonType: 'big_map',
+          schema: {
+            key: {
+              __michelsonType: 'address',
+              schema: 'address'
+            },
+            value: {
+              __michelsonType: 'pair',
+              schema: {
+                '0': {
+                  __michelsonType: 'nat',
+                  schema: 'nat'
+                },
+                '1': {
+                  __michelsonType: 'map',
+                  schema: {
+                    key: {
+                      __michelsonType: 'address',
+                      schema: 'address'
+                    },
+                    value: {
+                      __michelsonType: 'nat',
+                      schema: 'nat'
+                    },
+                  },
+                },
+              }
+            },
+          },
+        },
+        '1': {
+          __michelsonType: 'address',
+          schema: 'address'
+        },
+        '2': {
+          __michelsonType: 'bool',
+          schema: 'bool'
+        },
+        '3': {
+          __michelsonType: 'nat',
+          schema: 'nat'
+        },
+      }
+    });
   });
 
   it('should encode a big map key properly', () => {
