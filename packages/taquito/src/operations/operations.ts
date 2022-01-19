@@ -110,7 +110,7 @@ export class Operation {
     protected readonly context: Context
   ) {
     if (validateOperation(this.hash) !== ValidationResult.VALID) {
-      throw new InvalidOperationHashError(`Invalid Operation Hash`);
+      throw new InvalidOperationHashError(`Invalid Operation Hash: ${this.hash}`);
     }
 
     this.confirmed$.pipe(first(),

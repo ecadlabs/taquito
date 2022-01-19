@@ -14,21 +14,21 @@ export class RpcTzProvider extends OperationEmitter implements TzProvider {
 
   async getBalance(address: string): Promise<BigNumber> {
     if (validateAddress(address) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid address`);
+      throw new InvalidAddressError(`Invalid address: ${address}`);
     }
     return this.rpc.getBalance(address);
   }
 
   async getDelegate(address: string): Promise<string | null> {
     if (validateAddress(address) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid address`);
+      throw new InvalidAddressError(`Invalid address: ${address}`);
     }
     return this.rpc.getDelegate(address);
   }
 
   async activate(pkh: string, secret: string) {
     if (validateKeyHash(pkh) !== ValidationResult.VALID) {
-      throw new InvalidKeyHashError(`Invalid Public Key Hash`);
+      throw new InvalidKeyHashError(`Invalid Public Key Hash: ${pkh}`);
     }
     const operation: RPCActivateOperation = {
       kind: OpKind.ACTIVATION,

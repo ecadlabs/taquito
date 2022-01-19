@@ -165,7 +165,7 @@ describe('RpcContractProvider test', () => {
     it('should call getStorage', async (done) => {
       mockRpcClient.getNormalizedScript.mockResolvedValue({ code: [sample] });
       mockRpcClient.getStorage.mockResolvedValue(sampleStorage);
-      const result = await rpcContractProvider.getStorage('test');
+      const result = await rpcContractProvider.getStorage('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D');
       expect(result).toEqual({
         '0': {},
         '1': 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
@@ -181,7 +181,7 @@ describe('RpcContractProvider test', () => {
       mockRpcClient.getNormalizedScript.mockResolvedValue({ code: [sample] });
       mockRpcClient.getBigMapKey.mockResolvedValue(sampleBigMapValue);
       const result = await rpcContractProvider.getBigMapKey(
-        'test',
+        'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
         'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn'
       );
       expect(result).toEqual({
@@ -193,7 +193,7 @@ describe('RpcContractProvider test', () => {
           })
         ),
       });
-      expect(mockRpcClient.getBigMapKey.mock.calls[0][0]).toEqual('test');
+      expect(mockRpcClient.getBigMapKey.mock.calls[0][0]).toEqual('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D');
       expect(mockRpcClient.getBigMapKey.mock.calls[0][1]).toEqual({
         key: { bytes: '000035e993d8c7aaa42b5e3ccd86a33390ececc73abd' },
         type: { prim: 'bytes' },
@@ -941,7 +941,7 @@ describe('RpcContractProvider test', () => {
   describe('transfer', () => {
     it('should produce a reveal and transaction operation', async (done) => {
       const result = await rpcContractProvider.transfer({
-        to: 'test_to',
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
         fee: 10000,
         gasLimit: 10600,
@@ -956,7 +956,7 @@ describe('RpcContractProvider test', () => {
             {
               amount: '2000000',
               counter: '2',
-              destination: 'test_to',
+              destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
               fee: '10000',
               gas_limit: '10600',
               kind: 'transaction',
@@ -977,7 +977,7 @@ describe('RpcContractProvider test', () => {
       mockEstimate.transfer.mockResolvedValue(estimate);
 
       const result = await rpcContractProvider.transfer({
-        to: 'test_to',
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
       });
       expect(result.raw).toEqual({
@@ -989,7 +989,7 @@ describe('RpcContractProvider test', () => {
             {
               amount: '2000000',
               counter: '2',
-              destination: 'test_to',
+              destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
               fee: estimate.suggestedFeeMutez.toString(),
               gas_limit: estimate.gasLimit.toString(),
               kind: 'transaction',
@@ -1016,7 +1016,7 @@ describe('RpcContractProvider test', () => {
       mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
       mockEstimate.reveal.mockResolvedValue(undefined);
       const result = await rpcContractProvider.transfer({
-        to: 'test_to',
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
         fee: 10000,
         gasLimit: 10600,
@@ -1030,7 +1030,7 @@ describe('RpcContractProvider test', () => {
             {
               amount: '2000000',
               counter: '1',
-              destination: 'test_to',
+              destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
               fee: '10000',
               gas_limit: '10600',
               kind: 'transaction',
@@ -1048,7 +1048,7 @@ describe('RpcContractProvider test', () => {
 
     it('should return parsed error from RPC result', async (done) => {
       const params = {
-        to: 'test_to',
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
         fee: 10000,
         gasLimit: 10600,
@@ -1071,7 +1071,7 @@ describe('RpcContractProvider test', () => {
 
     it('should return parsed error from RPC result', async (done) => {
       const params = {
-        to: 'test_to',
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
         fee: 10000,
         gasLimit: 10600,
@@ -1096,7 +1096,7 @@ describe('RpcContractProvider test', () => {
 
     it('should return internal error when received from preapply', async (done) => {
       const params = {
-        to: 'test_to',
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
         fee: 10000,
         gasLimit: 10600,
@@ -1130,7 +1130,7 @@ describe('RpcContractProvider test', () => {
       mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
       mockEstimate.reveal.mockResolvedValue(undefined);
       const result = await rpcContractProvider.transfer({
-        to: 'test_to',
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
         fee: 10000,
         gasLimit: 10600,
@@ -1144,7 +1144,7 @@ describe('RpcContractProvider test', () => {
             {
               amount: '2000000',
               counter: '1',
-              destination: 'test_to',
+              destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
               fee: '10000',
               gas_limit: '10600',
               kind: 'transaction',
@@ -1166,8 +1166,8 @@ describe('RpcContractProvider test', () => {
       const estimate = new Estimate(1000000, 1000, 180, 1000);
       mockEstimate.setDelegate.mockResolvedValue(estimate);
       const result = await rpcContractProvider.setDelegate({
-        source: 'test_source',
-        delegate: 'test_delegate',
+        source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+        delegate: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
       });
       expect(result.raw).toEqual({
         counter: 0,
@@ -1176,12 +1176,12 @@ describe('RpcContractProvider test', () => {
           contents: [
             revealOp('test_pub_key_hash'),
             {
-              delegate: 'test_delegate',
+              delegate: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
               counter: '2',
               fee: '490',
               gas_limit: '1100',
               kind: 'delegation',
-              source: 'test_source',
+              source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
               storage_limit: '1000',
             },
           ],
@@ -1324,7 +1324,7 @@ describe('RpcContractProvider test', () => {
       mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
       mockSigner.publicKey.mockResolvedValue('test_pub_key');
       mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
-      const result = await rpcContractProvider.at('test');
+      const result = await rpcContractProvider.at('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D');
       expect(result.methods.mint('test', 100)).toBeInstanceOf(ContractMethod);
       expect(result.methodsObject.mint({ 0: 'test', 1: 100 })).toBeInstanceOf(ContractMethodObject);
       done();
@@ -1344,7 +1344,7 @@ describe('RpcContractProvider test', () => {
           gasLimit: 10600,
           storageLimit: 257,
         });
-      } catch (err) {
+      } catch (err: any) {
         expect(err).toBeInstanceOf(InvalidCodeParameter);
         expect(err.message).toEqual('Wrong code parameter type, expected an array');
       }
@@ -1369,7 +1369,7 @@ describe('RpcContractProvider test', () => {
           gasLimit: 10600,
           storageLimit: 257,
         });
-      } catch (err) {
+      } catch (err: any) {
         expect(err).toBeInstanceOf(InvalidCodeParameter);
         expect(err.message).toEqual('The storage section is missing from the script');
       }
@@ -1398,7 +1398,7 @@ describe('RpcContractProvider test', () => {
           gasLimit: 10600,
           storageLimit: 257,
         });
-      } catch (err) {
+      } catch (err: any) {
         expect(err).toBeInstanceOf(InvalidInitParameter);
         expect(err.message).toEqual('Wrong init parameter type, expected JSON Michelson');
       }
@@ -1410,12 +1410,12 @@ describe('RpcContractProvider test', () => {
         const opToBatch: ParamsWithKind[] = [
           {
             kind: OpKind.TRANSACTION,
-            to: 'test',
+            to: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
             amount: 2,
           },
           {
             kind: OpKind.TRANSACTION,
-            to: 'test',
+            to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
             amount: 2,
           },
         ];

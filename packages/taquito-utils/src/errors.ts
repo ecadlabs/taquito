@@ -13,6 +13,10 @@ export class InvalidMessageError implements Error {
   constructor(public message: string) {}
 }
 
+export class InvalidContractAddressError implements Error {
+  public name = 'InvalidContractAddressError';
+  constructor(public message: string) {}
+}
 export class InvalidAddressError implements Error {
   public name = 'InvalidAddressError';
   constructor(public message: string) {}

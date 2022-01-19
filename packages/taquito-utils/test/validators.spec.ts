@@ -68,11 +68,11 @@ describe('validateKeyHash', () => {
 
 describe('validateContractAddress', () => {
   it('Validate contract address properly', () => {
-    expect(validateContractAddress('tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn')).toEqual(
-      ValidationResult.NO_PREFIX_MATCHED
-    );
     expect(validateContractAddress('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D')).toEqual(
       ValidationResult.VALID
+    );
+    expect(validateContractAddress('tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn')).toEqual(
+      ValidationResult.NO_PREFIX_MATCHED
     );
     expect(validateContractAddress('tz2TSvNTh2epDMhZHrw73nV9piBX7kLZ9K9m')).toEqual(
       ValidationResult.NO_PREFIX_MATCHED
