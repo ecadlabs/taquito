@@ -13,9 +13,10 @@ import {
   prefix,
   verifySignature,
   validateKeyHash,
-  ValidationResult
+  ValidationResult,
+  InvalidKeyHashError
 } from '@taquito/utils';
-import { InvalidKeyHashError } from '@taquito/utils/src/errors';
+
 import sodium from 'libsodium-wrappers';
 import toBuffer from 'typedarray-to-buffer';
 import { BadSigningDataError, KeyNotFoundError, OperationNotAuthorizedError } from './errors';
