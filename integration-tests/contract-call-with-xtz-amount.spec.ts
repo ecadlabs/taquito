@@ -13,7 +13,8 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
   const skipIthacanet = protocol === Protocols.PsiThaCa ? test.skip : test;
   const skipHangzhounet = protocol === Protocols.PtHangz2 ? test.skip : test;
-  const skipHangzhouAndIthaca = protocol === Protocols.PtHangz2 || Protocols.PsiThaCa ? test.skip : test;
+  const skipHangzhouAndIthaca =
+    protocol === Protocols.PtHangz2 || Protocols.PsiThaCa ? test.skip : test;
 
   describe(`Test contract call with amount using: ${rpc}`, () => {
     beforeEach(async (done) => {
@@ -55,7 +56,9 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
           init: depositContractStorageIthaca,
         });
       } catch (error: any) {
-        expect(error.message).toContain("Http error response: (400) Failed to parse the request body: No case matched:")
+        expect(error.message).toContain(
+          'Http error response: (400) Failed to parse the request body: No case matched:'
+        );
       }
     });
 
@@ -88,14 +91,16 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
     );
 
     skipHangzhounet('fail to originate a contract on Ithaca with SUB', async () => {
-       try {
+      try {
         await Tezos.contract.originate({
           balance: '0',
           code: depositContractCodeHangzhou,
           init: depositContractStorageHangzhou,
         });
       } catch (error: any) {
-        expect(error.message).toContain("(permanent) proto.012-PsiThaCa.michelson_v1.deprecated_instruction")
+        expect(error.message).toContain(
+          '(permanent) proto.012-PsiThaCa.michelson_v1.deprecated_instruction'
+        );
       }
     });
   });
