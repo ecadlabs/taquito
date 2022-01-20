@@ -226,10 +226,10 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    */
   async transfer({ fee, storageLimit, gasLimit, ...rest }: TransferParams) {
     if (validateAddress(rest.to) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid source address: ${rest.source}`);
+      throw new InvalidAddressError(`Invalid 'to' address: ${rest.to}`);
     }
     if (rest.source && validateAddress(rest.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid delegate address: ${rest.source}`);
+      throw new InvalidAddressError(`Invalid 'source' address: ${rest.source}`);
     }
     const pkh = await this.signer.publicKeyHash();
     const protocolConstants = await this.rpc.getConstants();

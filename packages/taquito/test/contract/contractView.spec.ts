@@ -86,7 +86,7 @@ describe('ContractView test', () => {
         transfer: {
           prim: 'pair',
           args: [
-            { prim: 'pair', args: [{ prim: 'address', annots: ['KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D'] }, { prim: 'address' }] },
+            { prim: 'pair', args: [{ prim: 'address', annots: ['test'] }, { prim: 'address' }] },
             { prim: 'nat' },
           ],
         },

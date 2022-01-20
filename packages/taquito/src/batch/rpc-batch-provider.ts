@@ -83,7 +83,7 @@ export class OperationBatch extends OperationEmitter {
    */
   withDelegation(params: DelegateParams) {
     if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid source address: ${params.delegate}`);
+      throw new InvalidAddressError(`Invalid source address: ${params.source}`);
     }
     if (params.delegate && validateAddress(params.delegate) !== ValidationResult.VALID) {
       throw new InvalidAddressError(`Invalid delegate address: ${params.delegate}`);
