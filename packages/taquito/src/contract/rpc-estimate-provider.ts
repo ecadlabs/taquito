@@ -259,7 +259,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    * @param Estimate
    */
   async setDelegate({ fee, gasLimit, storageLimit, ...rest }: DelegateParams) {
-    if (validateAddress(rest.source) !== ValidationResult.VALID) {
+    if (rest.source && validateAddress(rest.source) !== ValidationResult.VALID) {
       throw new InvalidAddressError(`Invalid source address: ${rest.source}`);
     }
     if (rest.delegate && validateAddress(rest.delegate) !== ValidationResult.VALID) {
