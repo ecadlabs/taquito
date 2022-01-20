@@ -20,7 +20,8 @@ type SigPrefix = Prefix.EDSIG | Prefix.SPSIG | Prefix.P2SIG | Prefix.SIG;
 /**
  * @description Verify signature of a payload
  *
- * @param messageBytes The forged message including the magic byte (1 for block, 2 for endorsement, 3 for generic, 5 for the PACK format of michelson)
+ * @param messageBytes The forged message including the magic byte (11 for block, 
+ *        12 for preendorsement, 13 for endorsement, 3 for generic, 5 for the PACK format of michelson)
  * @param publicKey The public key to verify the signature against
  * @param signature The signature to verify
  * @returns A boolean indicating if the signature matches
