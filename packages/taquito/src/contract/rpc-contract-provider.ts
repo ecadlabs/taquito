@@ -280,10 +280,10 @@ export class RpcContractProvider
    */
   async setDelegate(params: DelegateParams) {
     if ( params.source && validateAddress(params.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid Source Address: ${params.source}`);
+      throw new InvalidAddressError(`Invalid source Address: ${params.source}`);
     }
     if (params.delegate && validateAddress(params.delegate) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid Delegate Address: ${params.delegate}`);
+      throw new InvalidAddressError(`Invalid delegate Address: ${params.delegate}`);
     }
 
     // Since babylon delegation source cannot smart contract
