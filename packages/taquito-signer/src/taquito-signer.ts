@@ -8,7 +8,7 @@ import toBuffer from 'typedarray-to-buffer';
 import { Tz1 } from './ed-key';
 import { Tz2, ECKey, Tz3 } from './ec-key';
 import pbkdf2 from 'pbkdf2';
-import { mnemonicToSeedSync } from 'bip39';
+import { mnemonicToSeedSync } from './mnemonicToSeedSync';
 
 export * from './import-key';
 export { VERSION } from './version';
