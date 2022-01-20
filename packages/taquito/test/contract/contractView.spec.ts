@@ -108,7 +108,7 @@ describe('ContractView test', () => {
       },
     });
 
-    const result = await rpcContractProvider.at('test');
+    const result = await rpcContractProvider.at('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D');
 
     expect(() => result.views.transfer()).toThrow(); // Entry point transfer is not a view
     expect(result.views.getTotalSupply([['Unit']])).toBeInstanceOf(ContractView);

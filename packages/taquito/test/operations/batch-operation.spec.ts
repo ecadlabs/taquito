@@ -231,7 +231,7 @@ describe('Batch operation', () => {
     };
 
     fakeContext.rpc.getBlock.mockResolvedValue({
-      operations: [[{ hash: 'test_hash' }], [], [], []],
+      operations: [[{ hash: 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj' }], [], [], []],
       header: {
         level: 200,
       },
@@ -239,7 +239,7 @@ describe('Batch operation', () => {
   });
   it('should contains compute the consummed gas, storage diff and storage size properly', () => {
     const op = new BatchOperation(
-      'test_hash',
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       {} as any,
       '',
       fakeForgedBytes,
@@ -255,7 +255,7 @@ describe('Batch operation', () => {
       const revealBuilder = new RevealOperationBuilder();
 
       const op = new BatchOperation(
-        'test_hash',
+        'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
         {} as any,
         '',
         fakeForgedBytes,
@@ -271,7 +271,7 @@ describe('Batch operation', () => {
       const txBuilder = new TransferOperationBuilder();
 
       const op = new BatchOperation(
-        'test_hash',
+        'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
         {} as any,
         '',
         fakeForgedBytes,
@@ -291,7 +291,7 @@ describe('Batch operation', () => {
       const txBuilder = new OriginationOperationBuilder();
 
       const op = new BatchOperation(
-        'test_hash',
+        'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
         {} as any,
         '',
         fakeForgedBytes,
@@ -311,7 +311,7 @@ describe('Batch operation', () => {
       const txBuilder = new DelegationOperationBuilder();
 
       const op = new BatchOperation(
-        'test_hash',
+        'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
         {} as any,
         '',
         fakeForgedBytes,
@@ -332,7 +332,7 @@ describe('Batch operation', () => {
       const originationBuilder = new OriginationOperationBuilder();
 
       const op = new BatchOperation(
-        'test_hash',
+        'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
         {} as any,
         '',
         fakeForgedBytes,
