@@ -1,3 +1,4 @@
+const webpack = require('webpack');
 module.exports = function (context, options) {
   return {
     name: 'webpack5-plugin',
@@ -12,9 +13,14 @@ module.exports = function (context, options) {
             path: false,
             stream: require.resolve('stream-browserify'),
             crypto: false,
-            buffer: require.resolve('buffer')
+            buffer: require.resolve('buffer/'),
           },
         },
+        plugins: [
+          new webpack.ProvidePlugin({
+              Buffer: ['buffer', 'Buffer'],
+          }),
+      ],
       };
     },
   };

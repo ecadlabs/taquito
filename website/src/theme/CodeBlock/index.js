@@ -31,7 +31,7 @@ import { Tzip12Module, tzip12 } from "@taquito/tzip12";
 import { Schema, ParameterSchema } from "@taquito/michelson-encoder";
 import { Parser, packDataBytes } from '@taquito/michel-codec';
 import { ThanosWallet } from '@thanos-wallet/dapp';
-import TransportU2F from "@ledgerhq/hw-transport-u2f";
+import TransportWebHID from "@ledgerhq/hw-transport-webhid";
 import Playground from '@theme/Playground';
 import classnames from 'classnames';
 import Clipboard from 'clipboard';
@@ -42,10 +42,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { CancellableRpcClient } from './customHttpBackendAndRpcClient';
 
 import styles from './styles.module.css';
-
-// To solve the ReferenceError: Buffer is not defined when running live code examples
-// see https://lifesaver.codes/answer/meteor-1-5-beta-16-and-beta-17-showed-referenceerror-buffer-is-not-defined-client-side
-global.Buffer = global.Buffer || require("buffer").Buffer; 
 
 const wallet = new BeaconWallet({name:"exampleWallet"});
 const highlightLinesRangeRegex = /{([\d,-]+)}/;
@@ -123,7 +119,7 @@ export default ({
           TezBridgeWallet,
           ThanosWallet, 
           DerivationType, 
-          TransportU2F,
+          TransportWebHID,
           compose,
           Schema,
           ParameterSchema,
