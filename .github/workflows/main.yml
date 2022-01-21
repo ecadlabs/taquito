@@ -4,31 +4,42 @@ on:
   pull_request:
   push:
     branches:
-      - master
+      - '**'
+
 jobs:
   lint-and-test:
-    runs-on: ecad-taquito
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node: [12.x]
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
+    - name: Setup Node
+      uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node }}
-    - uses: actions/cache@v1
+    - name: Lerna Cache
+      uses: actions/cache@v2
+      id: lerna-cache
       with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
-    - run: npm ci
-    - run: npm run lerna -- bootstrap
-    - run: npm run build
-    - run: npm run lint
-    - run: npm run build-docs
-    - run: npm run test -- --runInBand
-    - uses: codecov/codecov-action@v1
+        path: |
+          node_modules
+          */*/node_modules
+        key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+    - name: NPM CI
+      run: npm ci
+    - name: Lerna Bootstrap
+      run: npm run lerna -- bootstrap
+    - name: NPM Build
+      run: npm run build
+    - name: NPM Lint
+      run: npm run lint
+    - name: NPM Build Docs
+      run: npm run build-docs
+    - name: NPM Test
+      run: npm run test -- --runInBand
+    - name: Codecov
+      uses: codecov/codecov-action@v1
       with:
         file: .coverage/*.json
       env:
@@ -36,49 +47,72 @@ jobs:
         RUN_INTEGRATION: true
 
   integration-tests-hangzhounet:
-    runs-on: ecad-taquito
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node: [12.x]
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
+    - name: Setup Node
+      uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node }}
-    - uses: actions/cache@v1
+    - name: Lerna Cache
+      uses: actions/cache@v2
+      id: lerna-cache
       with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
-    - run: npm ci
-    - run: npm run lerna -- bootstrap
-    - run: npm run build
-    - run: cd integration-tests && npm run test:hangzhounet -- --maxWorkers=8
+        path: |
+          node_modules
+          */*/node_modules
+        key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+    - name: NPM CI
+      run: npm ci
+      if: steps.lerna-cache.outputs.cache-hit != 'true'
+    - name: Lerna Bootstrap
+      run: npm run lerna -- bootstrap
+    - name: NPM Build
+      run: npm run build
+    - name: Tailscale
+      uses: tailscale/github-action@v1
+      with:
+        authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+    - name: Run Integration Test
+      run: cd integration-tests && npm run test:hangzhounet -- --maxWorkers=8
       env:
         CI: true
         TEZOS_RPC_HANGZHOUNET: ${{ secrets.TEZOS_RPC_HANGZHOUNET }}
 
   integration-tests-ithacanet:
-    runs-on: ecad-taquito
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node: [12.x]
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
+    - name: Setup Node
+      uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node }}
-    - uses: actions/cache@v1
+    - name: Lerna Cache
+      uses: actions/cache@v2
+      id: lerna-cache
       with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
-    - run: npm ci
-    - run: npm run lerna -- bootstrap
-    - run: npm run build
-    - run: cd integration-tests && npm run test:ithacanet -- --maxWorkers=8
+        path: |
+          node_modules
+          */*/node_modules
+        key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+    - name: NPM CI
+      run: npm ci
+    - name: Lerna Bootstrap
+      run: npm run lerna -- bootstrap
+    - name: NPM Build
+      run: npm run build
+    - name: Tailscale
+      uses: tailscale/github-action@v1
+      with:
+        authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+    - name: Run Integration Test
+      run: cd integration-tests && npm run test:ithacanet -- --maxWorkers=8
       env:
         CI: true
         TEZOS_RPC_ITHACANET: ${{ secrets.TEZOS_RPC_ITHACANET }}
