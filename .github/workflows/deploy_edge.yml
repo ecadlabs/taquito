@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   deploy-edge-package:
-    runs-on: ecad-taquito
+    runs-on: ubuntu-latest
     if: ${{ github.event_name == 'pull_request' || github.ref == 'refs/heads/master' }}
     strategy:
       matrix:
