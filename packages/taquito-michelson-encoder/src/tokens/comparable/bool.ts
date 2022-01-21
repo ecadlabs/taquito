@@ -25,6 +25,10 @@ export class BoolToken extends ComparableToken {
     return { prim: val ? 'True' : 'False' };
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return BoolToken.prim;
   }

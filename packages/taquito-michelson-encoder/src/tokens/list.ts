@@ -71,6 +71,10 @@ export class ListToken extends Token {
     }, []);
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return {
       [ListToken.prim]: this.valueSchema.ExtractSchema(),

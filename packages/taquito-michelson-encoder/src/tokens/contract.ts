@@ -54,6 +54,10 @@ export class ContractToken extends Token {
     return { string: val };
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return ContractToken.prim;
   }

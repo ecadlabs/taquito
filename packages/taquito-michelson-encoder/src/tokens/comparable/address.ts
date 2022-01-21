@@ -64,6 +64,10 @@ export class AddressToken extends ComparableToken {
     return encodePubKey(val.bytes);
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return AddressToken.prim;
   }

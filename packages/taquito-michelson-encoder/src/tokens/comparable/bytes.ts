@@ -64,6 +64,10 @@ export class BytesToken extends ComparableToken {
     return val.bytes;
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return BytesToken.prim;
   }

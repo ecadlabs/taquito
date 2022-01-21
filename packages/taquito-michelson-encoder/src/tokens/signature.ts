@@ -52,6 +52,10 @@ export class SignatureToken extends ComparableToken {
     return { string: val };
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return SignatureToken.prim;
   }

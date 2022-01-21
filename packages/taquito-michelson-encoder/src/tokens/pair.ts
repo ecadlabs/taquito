@@ -164,6 +164,10 @@ export class PairToken extends ComparableToken {
     );
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema(): any {
     return this.traversal(
       (leftToken) => leftToken.ExtractSchema(),

@@ -56,6 +56,10 @@ export class KeyHashToken extends ComparableToken {
     return { string: val };
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return KeyHashToken.prim;
   }

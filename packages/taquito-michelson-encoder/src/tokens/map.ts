@@ -84,6 +84,10 @@ export class MapToken extends Token {
       });
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return {
       map: {

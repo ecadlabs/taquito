@@ -27,6 +27,11 @@ export class NeverToken extends Token {
   public Execute(val: any) {
     throw new NeverTokenError(val, this, 'There is no literal value for the type never.');
   }
+
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return NeverToken.prim;
   }

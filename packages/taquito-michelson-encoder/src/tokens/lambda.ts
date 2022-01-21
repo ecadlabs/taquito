@@ -37,6 +37,10 @@ export class LambdaToken extends Token {
     return val;
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return {
       [LambdaToken.prim]: {

@@ -47,6 +47,10 @@ export class SaplingTransactionToken extends Token {
     return { bytes: String(val).toString() };
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   ExtractSchema() {
     return {
       [SaplingTransactionToken.prim]: {
