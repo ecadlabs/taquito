@@ -425,7 +425,7 @@ export class RpcContractProvider
     );
   }
 
-  async at<T extends ContractAbstraction<ContractProvider>>(
+  async at<T extends ContractAbstraction<ContractProvider> = ContractAbstraction<ContractProvider>>(
     address: string,
     contractAbstractionComposer: ContractAbstractionComposer<T> = (x) => x as any
   ): Promise<T> {
