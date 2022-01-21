@@ -16,15 +16,16 @@ jobs:
       VERDACCIO_TOKEN: ${{ secrets.EDGE_VERDACCIO_TOKEN }}
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
+    - uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node }}
-    - uses: actions/cache@v1
+    - name: Lerna Cache
+      uses: actions/cache@v2
+      id: lerna-build-cache
       with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
+        path: |
+          packages/*/dist
+        key: ${{ runner.os }}-${{ hashFiles('packages/*/src/*.ts') }}
     - run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
     - run: echo "PACKAGE_VERSION=`node -p "require('./packages/taquito/package.json').version"`" >> $GITHUB_ENV
     - run: echo "BRANCH_NAME=`echo $GITHUB_REF | cut -d'/' -f 3`" >> $GITHUB_ENV
