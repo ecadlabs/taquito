@@ -5,8 +5,8 @@ on:
     branches: [master]
 
 concurrency:
-  group: preview-website-${{ github.ref }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.ref != 'refs/heads/master' || github.run_number }}
+  cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
 
 jobs:
 ## This job will deploy the netlify preview builds
