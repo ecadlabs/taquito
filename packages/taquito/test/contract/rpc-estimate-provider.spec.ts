@@ -136,7 +136,7 @@ describe('RPCEstimateProvider test', () => {
       // Simulate real op size
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(297).fill('aa').join(''));
       const estimate = await estimateProvider.transfer({
-        to: 'test_to',
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
       });
       expect(estimate).toMatchObject({
@@ -152,7 +152,7 @@ describe('RPCEstimateProvider test', () => {
       // Simulate real op size
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(297).fill('aa').join(''));
       const estimate = await estimateProvider.transfer({
-        to: 'test_to',
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
       });
       expect(estimate).toMatchObject({
@@ -169,7 +169,7 @@ describe('RPCEstimateProvider test', () => {
       // Simulate real op size
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(285).fill('aa').join(''));
       const estimate = await estimateProvider.transfer({
-        to: 'test_to',
+        to: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
         amount: 2,
       });
       expect(estimate).toMatchObject({
@@ -186,8 +186,8 @@ describe('RPCEstimateProvider test', () => {
       // Simulate real op size
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(149).fill('aa').join(''));
       const estimate = await estimateProvider.setDelegate({
-        source: 'test',
-        delegate: 'test',
+        source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+        delegate: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
       });
       expect(estimate).toMatchObject({
         gasLimit: 10100,
@@ -220,7 +220,7 @@ describe('RPCEstimateProvider test', () => {
       // Simulate real op size
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(226).fill('aa').join(''));
       const estimate = await estimateProvider.transfer({
-        to: 'test_to',
+        to: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
         amount: 2,
       });
       expect(estimate).toMatchObject({
@@ -237,7 +237,7 @@ describe('RPCEstimateProvider test', () => {
       // Simulate real op size
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(153).fill('aa').join(''));
       const estimate = await estimateProvider.transfer({
-        to: 'test_to',
+        to: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
         amount: 2,
       });
       expect(estimate).toMatchObject({
@@ -254,7 +254,7 @@ describe('RPCEstimateProvider test', () => {
       // Simulate real op size
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(153).fill('aa').join(''));
       const estimate = await estimateProvider.transfer({
-        to: 'test_to',
+        to: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
         amount: 2,
       });
       expect(estimate).toMatchObject({
@@ -283,7 +283,7 @@ describe('RPCEstimateProvider test', () => {
     it('should produce a reveal and transaction operation', async (done) => {
       mockRpcClientRunOperation();
       const estimate = await estimateProvider.transfer({
-        to: 'test_to',
+        to: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
         amount: 2,
         fee: 10000,
         gasLimit: 10600,
@@ -297,7 +297,7 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClientRunOperation();
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('1100'));
       await estimateProvider.transfer({
-        to: 'test_to',
+        to: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
         amount: 2,
       });
       expect(mockRpcClient.runOperation).toHaveBeenCalledWith(
@@ -320,7 +320,7 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClientRunOperation();
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('800000000'));
       await estimateProvider.transfer({
-        to: 'test_to',
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
       });
       expect(mockRpcClient.runOperation).toHaveBeenCalledWith(
@@ -343,7 +343,7 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClientRunOperation();
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('1100'));
       await estimateProvider.transfer({
-        to: 'test_to',
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
         storageLimit: 200,
       });
@@ -367,7 +367,7 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClientRunOperation();
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('10000000000'));
       await estimateProvider.transfer({
-        to: 'test_to',
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
         gasLimit: 200,
       });
@@ -391,7 +391,7 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClientRunOperation();
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('10000000000'));
       await estimateProvider.transfer({
-        to: 'test_to',
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
         fee: 10000,
       });
@@ -413,7 +413,7 @@ describe('RPCEstimateProvider test', () => {
 
     it('should return parsed error from RPC result', async (done) => {
       const params = {
-        to: 'test_to',
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
         fee: 10000,
         gasLimit: 10600,
@@ -436,7 +436,7 @@ describe('RPCEstimateProvider test', () => {
 
     it('should return parsed error from RPC result', async (done) => {
       const params = {
-        to: 'test_to',
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
         fee: 10000,
         gasLimit: 10600,
@@ -460,7 +460,7 @@ describe('RPCEstimateProvider test', () => {
 
     it('should return internal error when received from preapply', async (done) => {
       const params = {
-        to: 'test_to',
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
         fee: 10000,
         gasLimit: 10600,

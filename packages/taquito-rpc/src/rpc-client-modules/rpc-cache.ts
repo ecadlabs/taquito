@@ -42,7 +42,7 @@ import {
 
 interface CachedDataInterface {
   [key: string]: {
-    handle: Function;
+    handle: () => void;
     response: Promise<any>;
   };
 }
@@ -70,7 +70,7 @@ export class RpcClientCache implements RpcClientInterface {
    *
    */
   deleteAllCachedData() {
-    for (let key in this._cache) {
+    for (const key in this._cache) {
       delete this._cache[key];
     }
   }
@@ -102,7 +102,7 @@ export class RpcClientCache implements RpcClientInterface {
   }
 
   private put(key: string, response: Promise<any>) {
-    let handle = setTimeout(() => {
+    const handle = setTimeout(() => {
       return this.remove(key);
     }, this.ttl);
 

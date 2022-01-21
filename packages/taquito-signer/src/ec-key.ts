@@ -94,7 +94,7 @@ export class ECKey {
    * @returns Encoded private key
    */
   async secretKey(): Promise<string> {
-    let key = this._key;
+    const key = this._key;
 
     return b58cencode(key, pref[this.curve].sk);
   }

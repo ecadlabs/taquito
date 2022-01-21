@@ -79,17 +79,17 @@ describe('ContractView test', () => {
     mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
   });
 
-  it('should return contract views', async (done) => {
+  it('should create instances of ContractView for the entry points that match the tzip4 view signature', async (done) => {
+    // The tzip4 view signature is a pair where its second arguments is a contract.
     mockRpcClient.getEntrypoints.mockResolvedValue({
       entrypoints: {
         transfer: {
           prim: 'pair',
           args: [
-            { prim: 'pair', args: [{ prim: 'address' }, { prim: 'address' }] },
+            { prim: 'pair', args: [{ prim: 'address', annots: ['test'] }, { prim: 'address' }] },
             { prim: 'nat' },
           ],
         },
-        mint: { prim: 'nat' },
         getTotalSupply: {
           prim: 'pair',
           args: [{ prim: 'unit' }, { prim: 'contract', args: [{ prim: 'nat' }] }],
@@ -105,11 +105,12 @@ describe('ContractView test', () => {
             { prim: 'contract', args: [{ prim: 'nat' }] },
           ],
         },
-        approve: { prim: 'pair', args: [{ prim: 'address' }, { prim: 'nat' }] },
       },
     });
 
-    const result = await rpcContractProvider.at('test');
+    const result = await rpcContractProvider.at('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D');
+
+    expect(() => result.views.transfer()).toThrow(); // Entry point transfer is not a view
     expect(result.views.getTotalSupply([['Unit']])).toBeInstanceOf(ContractView);
     expect(result.views.getBalance('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1')).toBeInstanceOf(
       ContractView
@@ -127,69 +128,6 @@ describe('ContractView test', () => {
         'test'
       )
     ).toThrowError(InvalidParameterError);
-    done();
-  });
-
-  it('should return contract views', async (done) => {
-    mockRpcClient.getEntrypoints.mockResolvedValue({
-      entrypoints: {
-        transfer: {
-          prim: 'pair',
-          args: [
-            { prim: 'pair', args: [{ prim: 'address' }, { prim: 'address' }] },
-            { prim: 'nat' },
-          ],
-        },
-        mint: { prim: 'nat' },
-        getTotalSupply: {
-          prim: 'pair',
-          args: [{ prim: 'unit' }, { prim: 'contract', args: [{ prim: 'nat' }] }],
-        },
-        getBalance: {
-          prim: 'pair',
-          args: [
-            { prim: 'address', annots: [':owner', '%viewParam'] },
-            {
-              prim: 'contract',
-              args: [{ prim: 'nat' }],
-              annots: ['%viewCallbackTo'],
-            },
-          ],
-        },
-        getAllowance: {
-          prim: 'pair',
-          args: [
-            {
-              prim: 'pair',
-              args: [
-                { prim: 'address', annots: [':owner'] },
-                { prim: 'address', annots: [':spender'] },
-              ],
-              annots: ['%viewParam'],
-            },
-            {
-              prim: 'contract',
-              args: [{ prim: 'nat' }],
-              annots: ['%viewCallbackTo'],
-            },
-          ],
-          annots: ['%getAllowance'],
-        },
-        approve: { prim: 'pair', args: [{ prim: 'address' }, { prim: 'nat' }] },
-      },
-    });
-
-    const result = await rpcContractProvider.at('test');
-
-    expect(result.views.getBalance('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1')).toBeInstanceOf(
-      ContractView
-    );
-    expect(
-      result.views.getAllowance(
-        'tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1',
-        'tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE'
-      )
-    ).toBeInstanceOf(ContractView);
     done();
   });
 });

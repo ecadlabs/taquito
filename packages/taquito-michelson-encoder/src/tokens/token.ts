@@ -1,7 +1,7 @@
 import { MichelsonV1Expression } from '@taquito/rpc';
 
 export abstract class TokenValidationError implements Error {
-  name: string = 'ValidationError';
+  name = 'ValidationError';
   public message: string;
 
   constructor(public value: any, public token: Token, baseMessage: string) {
@@ -22,14 +22,14 @@ export abstract class Token {
     protected val: { prim: string; args?: any[]; annots?: any[] },
     protected idx: number,
     protected fac: TokenFactory
-  ) { }
+  ) {}
 
   protected typeWithoutAnnotations() {
     const removeArgsRec = (val: Token['val']): { prim: string; args?: any[] } => {
       if (val.args) {
         return {
           prim: val.prim,
-          args: val.args.map(x => removeArgsRec(x)),
+          args: val.args.map((x) => removeArgsRec(x)),
         };
       } else {
         return {
@@ -42,10 +42,11 @@ export abstract class Token {
   }
 
   annot() {
-    return (Array.isArray(this.val.annots) && this.val.annots.length > 0
-      ? this.val.annots[0]
-      : String(this.idx)
-    ).replace(/(%|\:)(_Liq_entry_)?/, '');
+    return (
+      Array.isArray(this.val.annots) && this.val.annots.length > 0
+        ? this.val.annots[0]
+        : String(this.idx)
+    ).replace(/(%|:)(_Liq_entry_)?/, '');
   }
 
   hasAnnotations() {
@@ -76,11 +77,9 @@ export abstract class Token {
 export type BigMapKeyType = string | number | object;
 
 export abstract class ComparableToken extends Token {
-  abstract ToBigMapKey(
-    val: BigMapKeyType
-  ): {
+  abstract ToBigMapKey(val: BigMapKeyType): {
     key: { [key: string]: string | object[] };
-    type: { prim: string, args?: object[] };
+    type: { prim: string; args?: object[] };
   };
 
   abstract ToKey(val: string): any;

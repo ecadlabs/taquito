@@ -9,7 +9,7 @@ import toBuffer from 'typedarray-to-buffer';
 import { Tz1 } from './ed-key';
 import { Tz2, ECKey, Tz3 } from './ec-key';
 import pbkdf2 from 'pbkdf2';
-import { mnemonicToSeedSync } from 'bip39';
+import { mnemonicToSeedSync } from './mnemonicToSeedSync';
 
 export * from './import-key';
 export { VERSION } from './version';
@@ -24,7 +24,7 @@ export class InMemorySigner {
   private _key!: Tz1 | ECKey;
 
   static fromFundraiser(email: string, password: string, mnemonic: string) {
-    let seed = mnemonicToSeedSync(mnemonic, `${email}${password}`);
+    const seed = mnemonicToSeedSync(mnemonic, `${email}${password}`);
     const key = b58cencode(seed.slice(0, 32), prefix.edsk2);
     return new InMemorySigner(key);
   }

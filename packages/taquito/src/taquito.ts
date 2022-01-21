@@ -40,6 +40,7 @@ export * from './signer/interface';
 export * from './subscribe/interface';
 export { SubscribeProvider } from './subscribe/interface';
 export { PollingSubscribeProvider } from './subscribe/polling-provider';
+export { ObservableSubscription } from './subscribe/observable-subscription';
 export * from './tz/interface';
 export * from './wallet';
 export { Extension } from './extension/extension';
@@ -98,7 +99,6 @@ export class TezosToolkit {
     this._context = new Context(_rpc);
     this._wallet = new Wallet(this._context);
     this.setProvider({ rpc: this._rpcClient });
-    // tslint:disable-next-line: deprecation
     this.batch = this._context.batch.batch.bind(this._context.batch);
   }
 
@@ -121,7 +121,7 @@ export class TezosToolkit {
     forger,
     wallet,
     packer,
-    globalConstantsProvider
+    globalConstantsProvider,
   }: SetProviderOptions) {
     this.setRpcProvider(rpc);
     this.setStreamProvider(stream);
@@ -132,7 +132,7 @@ export class TezosToolkit {
     this.setGlobalConstantsProvider(globalConstantsProvider);
 
     this._context.proto = protocol;
-    if(config) {
+    if (config) {
       this._context.setPartialConfig(config);
     }
   }
@@ -168,8 +168,7 @@ export class TezosToolkit {
       this._rpcClient = new RpcClient(rpc);
     } else if (rpc === undefined) {
       // do nothing, RPC is required in the constructor, do not override it
-    }
-    else {
+    } else {
       this._rpcClient = rpc;
     }
     this._options.rpc = this._rpcClient;
@@ -247,7 +246,7 @@ export class TezosToolkit {
    *
    * @param options globalConstantsProvider to use to interact with the Tezos network
    *
-   * @example 
+   * @example
    * ```
    * const globalConst = new DefaultGlobalConstantsProvider();
    * globalConst.loadGlobalConstant({
@@ -258,8 +257,13 @@ export class TezosToolkit {
    * ```
    *
    */
-   setGlobalConstantsProvider(globalConstantsProvider?: SetProviderOptions['globalConstantsProvider']) {
-    const g = typeof globalConstantsProvider === 'undefined' ? new NoopGlobalConstantsProvider() : globalConstantsProvider;
+  setGlobalConstantsProvider(
+    globalConstantsProvider?: SetProviderOptions['globalConstantsProvider']
+  ) {
+    const g =
+      typeof globalConstantsProvider === 'undefined'
+        ? new NoopGlobalConstantsProvider()
+        : globalConstantsProvider;
     this._options.globalConstantsProvider = g;
     this._context.globalConstantsProvider = g;
   }
@@ -317,7 +321,7 @@ export class TezosToolkit {
   /**
    * @description Provide access to the currently used globalConstantsProvider
    */
-   get globalConstants() {
+  get globalConstants() {
     return this._context.globalConstantsProvider;
   }
 
@@ -329,8 +333,8 @@ export class TezosToolkit {
    * @example Tezos.addExtension(new Tzip16Module());
    */
   addExtension(module: Extension | Extension[]) {
-    if(Array.isArray(module)){
-      module.forEach(extension => extension.configureContext(this._context));
+    if (Array.isArray(module)) {
+      module.forEach((extension) => extension.configureContext(this._context));
     } else {
       module.configureContext(this._context);
     }

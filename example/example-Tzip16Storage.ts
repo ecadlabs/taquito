@@ -3,7 +3,7 @@ import { importKey } from '@taquito/signer';
 import { tacoContractTzip16 } from "../integration-tests/data/modified-taco-contract"
 import { char2Bytes } from '@taquito/utils';
 
-const provider = 'https://hangzhounet.api.tez.ie';
+const provider = 'https://ithacanet.ecadinfra.com/'
 
 async function example() {
   const tezos = new TezosToolkit(provider)
@@ -75,5 +75,4 @@ async function example() {
   }
 }
 
-// tslint:disable-next-line: no-floating-promises
 example();

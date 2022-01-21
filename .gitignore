@@ -8,6 +8,7 @@ coverage
 dist
 compiled
 .awcache
+.env
 .rpt2_cache
 website/build/
 manifest.json

@@ -5,6 +5,24 @@ describe('ImportKey', () => {
   let mockRpcClient: any;
   let toolkit: TezosToolkit;
 
+  const mnemonics = [
+    "shoe",
+    "input",
+    "also",
+    "elephant",
+    "network",
+    "noise",
+    "vocal",
+    "drastic",
+    "worry",
+    "unveil",
+    "tumble",
+    "test",
+    "illegal",
+    "album",
+    "tuna"
+  ].join(' ');
+
   beforeEach(() => {
     mockRpcClient = {
       getBlock: jest.fn(),
@@ -26,7 +44,7 @@ describe('ImportKey', () => {
 
     // Required for operations confirmation polling
     mockRpcClient.getBlock.mockResolvedValue({
-      operations: [[{ hash: 'test' }], [], [], []],
+      operations: [[{ hash: 'oo6JPEAy8VuMRGaFuMmLNFFGdJgiaKfnmT1CpHJfKP3Ye5ZahiP' }], [], [], []],
       header: {
         level: 0,
       },
@@ -50,18 +68,18 @@ describe('ImportKey', () => {
 
   it('should use InMemorySigner and activate faucet account when called with {privateKeyOrEmail, passphrase, mnemonic, secret} parameters', async done => {
     // Mock fake operation hash
-    mockRpcClient.injectOperation.mockResolvedValue('test');
+    mockRpcClient.injectOperation.mockResolvedValue('oo6JPEAy8VuMRGaFuMmLNFFGdJgiaKfnmT1CpHJfKP3Ye5ZahiP');
     expect(toolkit.signer).toEqual({});
-    await importKey(toolkit, 'anEmail', 'testPassword', 'some mnemonic', 'secret');
+    await importKey(toolkit, 'hbgpdcvg.beavuxsa@teztnets.xyz', 'dcsBZzXg7d', mnemonics, '837f402873eff00fa0b0977c08725b1f8d78a94b');
     expect(toolkit.signer).toBeInstanceOf(InMemorySigner);
     expect(mockRpcClient.forgeOperations).toHaveBeenCalledWith({
       branch: 'test',
       contents: [
-        { kind: 'activate_account', pkh: 'tz1hY6N55Br4KrPahoyNUrvSSyaYz5yaRcRW', secret: 'secret' },
+        { kind: 'activate_account', pkh: 'tz1gaD8adax6qAST1a79sj78XfyPs5k9Nj78', secret: '837f402873eff00fa0b0977c08725b1f8d78a94b' },
       ],
     });
     expect(mockRpcClient.injectOperation).toHaveBeenCalled();
-    expect(await toolkit.signer.publicKeyHash()).toEqual('tz1hY6N55Br4KrPahoyNUrvSSyaYz5yaRcRW');
+    expect(await toolkit.signer.publicKeyHash()).toEqual('tz1gaD8adax6qAST1a79sj78XfyPs5k9Nj78');
     done();
   });
 
@@ -71,10 +89,10 @@ describe('ImportKey', () => {
     // Mock fake operation hash
     mockRpcClient.injectOperation.mockResolvedValue('test');
     expect(toolkit.signer).toEqual({});
-    await importKey(toolkit, 'anEmail', 'testPassword', 'some mnemonic', 'secret');
+    await importKey(toolkit, 'hbgpdcvg.beavuxsa@teztnets.xyz"', 'dcsBZzXg7d', mnemonics, '837f402873eff00fa0b0977c08725b1f8d78a94b');
     expect(toolkit.signer).toBeInstanceOf(InMemorySigner);
     expect(mockRpcClient.injectOperation).not.toHaveBeenCalled();
-    expect(await toolkit.signer.publicKeyHash()).toEqual('tz1hY6N55Br4KrPahoyNUrvSSyaYz5yaRcRW');
+    expect(await toolkit.signer.publicKeyHash()).toEqual('tz1bg7HTLJxHrDcivFUSTx8TLNsJcty7j9r5');
     done();
   });
 });
