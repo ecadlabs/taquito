@@ -16,14 +16,6 @@ jobs:
     - uses: actions/setup-node@v2
       with:
         node-version: 14.x
-    - name: Lerna Cache
-      uses: actions/cache@v2
-      id: lerna-cache
-      with:
-        path: |
-          node_modules
-          **/*/node_modules
-        key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
     - run: cd website && npm ci
     - name: Run delete script
       run: cd website && npm run delete-index
