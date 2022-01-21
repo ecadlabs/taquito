@@ -22,9 +22,13 @@ import { retry } from 'rxjs/operators';
 import { BehaviorSubject, OperatorFunction } from 'rxjs';
 import { GlobalConstantsProvider } from './global-constants/interface-global-constants-provider';
 import { NoopGlobalConstantsProvider } from './global-constants/noop-global-constants-provider';
+import { BlockIdProviderCreator } from './block-id-provider/interface';
+import { RpcBlockIdProviderCreator } from './block-id-provider/rpc-block-id-provider';
+import { TzReadProvider } from './read-provider/interface';
+import { RpcReadAdapter } from './read-provider/rpc-read-adapter';
 
 export interface TaquitoProvider<T, K extends Array<any>> {
-  new (context: Context, ...rest: K): T;
+  new(context: Context, ...rest: K): T;
 }
 
 export interface ConfigConfirmation {
@@ -66,6 +70,8 @@ export class Context {
   private _packer: Packer;
   private providerDecorator: Array<(context: Context) => Context> = [];
   private _globalConstantsProvider: GlobalConstantsProvider;
+  private _blockIdProviderCreator: BlockIdProviderCreator;
+  private _readProvider: TzReadProvider;
   public readonly tz = new RpcTzProvider(this);
   public readonly estimate = new RPCEstimateProvider(this);
   public readonly contract = new RpcContractProvider(this, this.estimate);
@@ -85,7 +91,9 @@ export class Context {
     packer?: Packer,
     wallet?: WalletProvider,
     parser?: ParserProvider,
-    globalConstantsProvider?: GlobalConstantsProvider
+    globalConstantsProvider?: GlobalConstantsProvider,
+    blockCreator?: BlockIdProviderCreator,
+    readProvider?: TzReadProvider
   ) {
     if (typeof this._rpc === 'string') {
       this._rpcClient = new RpcClient(this._rpc);
@@ -101,6 +109,8 @@ export class Context {
     this._globalConstantsProvider = globalConstantsProvider
       ? globalConstantsProvider
       : new NoopGlobalConstantsProvider();
+    this._blockIdProviderCreator = blockCreator ? blockCreator : new RpcBlockIdProviderCreator();
+    this._readProvider = readProvider? readProvider: new RpcReadAdapter(this._rpcClient)
   }
 
   get config(): ConfigConfirmation & ConfigStreamer {
@@ -190,6 +200,22 @@ export class Context {
 
   set globalConstantsProvider(value: GlobalConstantsProvider) {
     this._globalConstantsProvider = value;
+  }
+
+  get blockCreator() {
+    return this._blockIdProviderCreator;
+  }
+
+  set blockCreator(value: BlockIdProviderCreator) {
+    this._blockIdProviderCreator = value;
+  }
+
+  get readProvider() {
+    return this._readProvider;
+  }
+
+  set readProvider(value: TzReadProvider) {
+    this._readProvider = value;
   }
 
   async isAnyProtocolActive(protocol: string[] = []) {
