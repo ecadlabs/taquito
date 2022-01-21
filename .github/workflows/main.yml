@@ -22,10 +22,11 @@ jobs:
       id: lerna-cache
       with:
         path: |
-          **/node_modules
-        key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          packages/*/dist
+        key: ${{ runner.os }}-${{ hashFiles('packages/*/src/*.ts') }}
     - run: npm ci
     - run: npm run lerna -- bootstrap
+    - run: npm run build
 
 
   lint-and-test:
@@ -41,14 +42,15 @@ jobs:
         node-version: ${{ matrix.node }}
     - name: Lerna Cache
       uses: actions/cache@v2
-      id: lerna-cache
+      id: lerna-build-cache
       with:
         path: |
-          **/node_modules
-        key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          packages/*/dist
+        key: ${{ runner.os }}-${{ hashFiles('packages/*/src/*.ts') }}
     - run: npm ci
     - run: npm run lerna -- bootstrap
     - run: npm run build
+      if: steps.lerna-build-cache.outputs.cache-hit != 'true'
     - run: npm run lint
     - run: npm run build-docs
     - run: npm run test -- --runInBand
