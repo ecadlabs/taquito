@@ -62,6 +62,10 @@ export class SaplingStateToken extends Token {
     }
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   ExtractSchema() {
     return {
       [SaplingStateToken.prim]: {

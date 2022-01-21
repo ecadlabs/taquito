@@ -71,10 +71,17 @@ export class ParameterSchema {
     }
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   ExtractSchema() {
     return this.root.ExtractSchema();
   }
 
+  /**
+   * @description Produce a schema grouping together all the entry points of a contract.
+   */
   generateSchema(): TokenSchema {
     return this.root.generateSchema();
   }

@@ -176,10 +176,18 @@ export class Schema {
     }
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   ExtractSchema() {
     return this.removeTopLevelAnnotation(this.root.ExtractSchema());
   }
 
+  /**
+   * @description Produce a representation of the storage schema. 
+   * Note: Provide guidance on how to write the storage object for the origination operation with Taquito.
+   */
   generateSchema(): TokenSchema {
     return this.removeTopLevelAnnotation(this.root.generateSchema());
   }

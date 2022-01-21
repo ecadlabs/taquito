@@ -53,6 +53,10 @@ export class ChestKeyToken extends Token {
     return val.bytes;
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return ChestKeyToken.prim;
   }

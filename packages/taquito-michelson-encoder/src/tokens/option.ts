@@ -59,6 +59,10 @@ export class OptionToken extends ComparableToken {
     return this.schema().Execute(val.args[0], semantics);
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return this.schema().ExtractSchema();
   }

@@ -60,6 +60,10 @@ export abstract class Token {
 
   public createToken = this.fac;
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public abstract ExtractSchema(): any;
 
   abstract generateSchema(): TokenSchema;
