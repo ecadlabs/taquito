@@ -5,6 +5,11 @@ on:
   push:
     branches:
       - master
+
+concurrency:
+  group: edge-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   deploy-edge-package:
     runs-on: ecad-taquito

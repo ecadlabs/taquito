@@ -5,9 +5,12 @@ on:
   push:
     branches:
       - master
+
+concurrency:
+  group: integration-tests-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-
-
   lint-and-test:
     runs-on: ecad-taquito
     strategy:

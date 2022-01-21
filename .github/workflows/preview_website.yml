@@ -4,6 +4,10 @@ on:
   pull_request:
     branches: [master]
 
+concurrency:
+  group: preview-website-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
 ## This job will deploy the netlify preview builds
   publish-website-preview:

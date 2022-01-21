@@ -3,6 +3,11 @@ name: Algolia indexing
 on:
   schedule:
     - cron: '0 0 * * *'
+
+concurrency:
+  group: algolia-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   delete-current-algolia-index:
     env:
