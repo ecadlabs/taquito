@@ -5,8 +5,8 @@ on:
     - cron: '0 0 * * *'
 
 concurrency:
-  group: algolia-${{ github.ref }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.ref != 'refs/heads/master' || github.run_number }}
+  cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
 
 jobs:
   delete-current-algolia-index:
