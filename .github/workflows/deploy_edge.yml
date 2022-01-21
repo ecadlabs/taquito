@@ -25,7 +25,7 @@ jobs:
       with:
         path: |
           node_modules
-          */*/node_modules
+          **/*/node_modules
         key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
     - run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
     - run: echo "PACKAGE_VERSION=`node -p "require('./packages/taquito/package.json').version"`" >> $GITHUB_ENV

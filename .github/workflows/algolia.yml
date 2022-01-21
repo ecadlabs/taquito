@@ -22,7 +22,7 @@ jobs:
       with:
         path: |
           node_modules
-          */*/node_modules
+          **/*/node_modules
         key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
     - run: cd website && npm ci
     - name: Run delete script

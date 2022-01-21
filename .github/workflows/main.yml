@@ -22,7 +22,7 @@ jobs:
       with:
         path: |
           node_modules
-          */*/node_modules
+          **/*/node_modules
         key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
     - run: npm ci
     - run: npm run lerna -- bootstrap
@@ -54,7 +54,7 @@ jobs:
       with:
         path: |
           node_modules
-          */*/node_modules
+          **/*/node_modules
         key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
     - run: npm ci
     - run: npm run lerna -- bootstrap
@@ -80,7 +80,7 @@ jobs:
       with:
         path: |
           node_modules
-          */*/node_modules
+          **/*/node_modules
         key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
     - run: npm ci
     - run: npm run lerna -- bootstrap
