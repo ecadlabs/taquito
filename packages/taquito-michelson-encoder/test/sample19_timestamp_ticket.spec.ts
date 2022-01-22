@@ -35,10 +35,10 @@ describe('Schema with a ticket of type timestamp inside a big map %tickets in st
         const schema = new Schema(storage);
         expect(schema.ExtractSchema()).toEqual({
             data: {
-                winners: { 
+                winners: {
                     big_map: {
                         key: "address",
-                        value: "mutez" 
+                        value: "mutez"
                     }
                 },
                 bets: {
@@ -72,6 +72,129 @@ describe('Schema with a ticket of type timestamp inside a big map %tickets in st
                         value: 'timestamp'
                     },
                 },
+            }
+        });
+
+        expect(schema.generateSchema()).toEqual({
+            __michelsonType: 'pair',
+            schema: {
+                data: {
+                    __michelsonType: 'pair',
+                    schema: {
+                        winners: {
+                            __michelsonType: "big_map",
+                            schema: {
+                                key: {
+                                    __michelsonType: "address",
+                                    schema: "address"
+                                },
+                                value: {
+                                    __michelsonType: "mutez",
+                                    schema: "mutez"
+                                }
+                            }
+                        },
+                        bets: {
+                            __michelsonType: 'map',
+                            schema: {
+                                key: {
+                                    __michelsonType: "address",
+                                    schema: "address"
+                                },
+                                value: {
+                                    __michelsonType: "nat",
+                                    schema: "nat"
+                                }
+                            }
+                        },
+                        current_pot: {
+                            __michelsonType: "mutez",
+                            schema: "mutez"
+                        },
+                        opened_at: {
+                            __michelsonType: "timestamp",
+                            schema: "timestamp"
+                        },
+                        settings: {
+                            __michelsonType: 'pair',
+                            schema: {
+                                pool_type: {
+                                    __michelsonType: "string",
+                                    schema: "string"
+                                },
+                                entrance_fee: {
+                                    __michelsonType: "mutez",
+                                    schema: "mutez"
+                                },
+                                minimum_bet: {
+                                    __michelsonType: "mutez",
+                                    schema: "mutez"
+                                },
+                                open_period: {
+                                    __michelsonType: "int",
+                                    schema: "int"
+                                },
+                                validation_delay: {
+                                    __michelsonType: "int",
+                                    schema: "int"
+                                },
+                                ticket_validity: {
+                                    __michelsonType: "int",
+                                    schema: "int"
+                                },
+                                max_capacity: {
+                                    __michelsonType: "nat",
+                                    schema: "nat"
+                                }
+                            }
+                        },
+                        validator: {
+                            __michelsonType: 'option',
+                            schema: {
+                                __michelsonType: 'address',
+                                schema: "address"
+                            }
+                        },
+                        pending_validation: {
+                            __michelsonType: 'bool',
+                            schema: "bool"
+                        },
+                        oracle: {
+                            __michelsonType: 'address',
+                            schema: "address"
+                        },
+                        admin: {
+                            __michelsonType: 'address',
+                            schema: "address"
+                        }
+                    }
+                },
+                tickets: {
+                    __michelsonType: 'big_map',
+                    schema: {
+                        key: {
+                            __michelsonType: 'address',
+                            schema: "address"
+                        },
+                        value: {
+                            __michelsonType: 'ticket',
+                            schema: {
+                                amount: {
+                                    __michelsonType: 'int',
+                                    schema: "int"
+                                },
+                                ticketer: {
+                                    __michelsonType: 'contract',
+                                    schema: "contract"
+                                },
+                                value: {
+                                    __michelsonType: 'timestamp',
+                                    schema: "timestamp"
+                                }
+                            }
+                        },
+                    },
+                }
             }
         });
     });

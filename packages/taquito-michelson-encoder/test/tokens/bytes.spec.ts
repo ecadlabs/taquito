@@ -50,4 +50,13 @@ describe('Bytes token', () => {
       }
     });
   });
+
+  describe('generateSchema', () => {
+    it('Should generate the schema properly', () => {
+      expect(token.generateSchema()).toEqual({
+        __michelsonType: 'bytes',
+        schema: 'bytes'
+      });
+    });
+  });
 });

@@ -1,5 +1,6 @@
 import { Token, TokenFactory, ComparableToken, TokenValidationError } from '../token';
 import { encodeKeyHash, validateKeyHash, ValidationResult } from '@taquito/utils';
+import { BaseTokenSchema } from '../../schema/types';
 
 export class KeyHashValidationError extends TokenValidationError {
   name = 'KeyHashValidationError';
@@ -9,7 +10,7 @@ export class KeyHashValidationError extends TokenValidationError {
 }
 
 export class KeyHashToken extends ComparableToken {
-  static prim = 'key_hash';
+  static prim: 'key_hash' = 'key_hash';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -55,8 +56,19 @@ export class KeyHashToken extends ComparableToken {
     return { string: val };
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return KeyHashToken.prim;
+  }
+
+  generateSchema(): BaseTokenSchema {
+    return {
+      __michelsonType: KeyHashToken.prim,
+      schema: KeyHashToken.prim,
+    };
   }
 
   public ToKey({ string, bytes }: any) {

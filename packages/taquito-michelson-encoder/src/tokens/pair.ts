@@ -1,5 +1,6 @@
 import { Token, TokenFactory, Semantic, ComparableToken } from './token';
 import { OrToken } from './or';
+import { PairTokenSchema } from '../schema/types';
 
 // collapse comb pair
 function collapse(val: Token['val'] | any[], prim: string = PairToken.prim): [any, any] {
@@ -27,7 +28,7 @@ function collapse(val: Token['val'] | any[], prim: string = PairToken.prim): [an
   return [val.args[0], val.args[1]];
 }
 export class PairToken extends ComparableToken {
-  static prim = 'pair';
+  static prim: 'pair' = 'pair';
 
   constructor(
     val: { prim: string; args: any[]; annots: any[] } | any[],
@@ -163,11 +164,37 @@ export class PairToken extends ComparableToken {
     );
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema(): any {
     return this.traversal(
       (leftToken) => leftToken.ExtractSchema(),
       (rightToken) => rightToken.ExtractSchema()
     );
+  }
+
+  generateSchema(): PairTokenSchema {
+    return {
+      __michelsonType: PairToken.prim,
+      schema: this.traversal(
+        (leftToken) => {
+          if (leftToken instanceof PairToken && !leftToken.hasAnnotations()) {
+            return leftToken.generateSchema().schema;
+          } else {
+            return leftToken.generateSchema();
+          }
+        },
+        (rightToken) => {
+          if (rightToken instanceof PairToken && !rightToken.hasAnnotations()) {
+            return rightToken.generateSchema().schema;
+          } else {
+            return rightToken.generateSchema();
+          }
+        }
+      ),
+    };
   }
 
   public compare(val1: any, val2: any) {

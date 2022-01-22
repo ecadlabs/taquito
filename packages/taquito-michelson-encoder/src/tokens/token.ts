@@ -1,4 +1,5 @@
 import { MichelsonV1Expression } from '@taquito/rpc';
+import { TokenSchema } from '../schema/types';
 
 export abstract class TokenValidationError implements Error {
   name = 'ValidationError';
@@ -59,7 +60,13 @@ export abstract class Token {
 
   public createToken = this.fac;
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public abstract ExtractSchema(): any;
+
+  abstract generateSchema(): TokenSchema;
 
   public abstract Execute(val: any, semantics?: Semantic): any;
 
