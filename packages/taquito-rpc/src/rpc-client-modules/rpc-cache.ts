@@ -42,6 +42,8 @@ import {
 
 import { 
   InvalidAddressError,
+  InvalidContractAddressError,
+  validateContractAddress,
   validateAddress,
   ValidationResult
 } from '@taquito/utils'
@@ -126,6 +128,12 @@ export class RpcClientCache implements RpcClientInterface {
       throw new InvalidAddressError(`Invalid address: ${address}`)
     }
   }
+
+  private validateContract(address: string) {
+    if (validateContractAddress(address) !== ValidationResult.VALID) {
+      throw new InvalidContractAddressError(`Invalid contract address: ${address}`)
+    }
+  }
   /**
    *
    * @param options contains generic configuration for rpc calls
@@ -201,7 +209,7 @@ export class RpcClientCache implements RpcClientInterface {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<StorageResponse> {
-    this.validateAddress(address);
+    this.validateContract(address);
     const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getStorage', [block, address]);
     if (this.has(key)) {
       return this.get(key);
@@ -225,7 +233,7 @@ export class RpcClientCache implements RpcClientInterface {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<ScriptResponse> {
-    this.validateAddress(address);
+    this.validateContract(address);
     const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getScript', [block, address]);
     if (this.has(key)) {
       return this.get(key);
@@ -250,7 +258,7 @@ export class RpcClientCache implements RpcClientInterface {
     unparsingMode: UnparsingMode = { unparsing_mode: 'Readable' },
     { block }: { block: string } = defaultRPCOptions
   ): Promise<ScriptResponse> {
-    this.validateAddress(address);
+    this.validateContract(address);
     const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getNormalizedScript', [
       block,
       address,
@@ -745,7 +753,7 @@ export class RpcClientCache implements RpcClientInterface {
     contract: string,
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<EntrypointsResponse> {
-    this.validateAddress(contract);
+    this.validateContract(contract);
     const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getEntrypoints', [
       block,
       contract,

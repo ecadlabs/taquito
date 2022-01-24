@@ -204,6 +204,9 @@ export class Wallet {
    * @param delegateParams operation parameter
    */
   setDelegate(params: WalletDelegateParams) {
+    if (params.delegate && validateAddress(params.delegate) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(`Invalid address error: ${params.delegate}`);
+    }
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapDelegateParamsToWalletParams(
         async () => params

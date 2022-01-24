@@ -107,6 +107,12 @@ export class RpcClient implements RpcClientInterface {
     }
   }
 
+  private validateContract(address: string) {
+    if (validateAddress(address) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(`Invalid address: ${address}`)
+    }
+  }
+
   /**
    *
    * @param options contains generic configuration for rpc calls
@@ -175,7 +181,7 @@ export class RpcClient implements RpcClientInterface {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<StorageResponse> {
-    this.validateAddress(address);
+    this.validateContract(address);
     return this.httpBackend.createRequest<StorageResponse>({
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/storage`
@@ -197,7 +203,7 @@ export class RpcClient implements RpcClientInterface {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<ScriptResponse> {
-    this.validateAddress(address);
+    this.validateContract(address);
     return this.httpBackend.createRequest<ScriptResponse>({
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/script`
@@ -220,7 +226,7 @@ export class RpcClient implements RpcClientInterface {
     unparsingMode: UnparsingMode = { unparsing_mode: 'Readable' },
     { block }: { block: string } = defaultRPCOptions
   ): Promise<ScriptResponse> {
-    this.validateAddress(address);
+    this.validateContract(address);
     return this.httpBackend.createRequest<ScriptResponse>(
       {
         url: this.createURL(
@@ -757,7 +763,7 @@ export class RpcClient implements RpcClientInterface {
     contract: string,
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<EntrypointsResponse> {
-    this.validateAddress(contract);
+    this.validateContract(contract);
     const contractResponse = await this.httpBackend.createRequest<{
       entrypoints: { [key: string]: MichelsonV1ExpressionExtended };
     }>({
