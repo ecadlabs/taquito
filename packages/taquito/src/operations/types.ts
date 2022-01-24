@@ -5,13 +5,14 @@ import {
   TransactionOperationParameter,
   MichelsonV1Expression,
 } from '@taquito/rpc';
+import { Contract } from '../contract';
 
 export { OpKind } from '@taquito/rpc';
 
 export type withKind<T, K extends OpKind> = T & { kind: K };
 
 export type ParamsWithKind =
-  | withKind<OriginateParams, OpKind.ORIGINATION>
+  | withKind<OriginateParams<Contract>, OpKind.ORIGINATION>
   | withKind<DelegateParams, OpKind.DELEGATION>
   | withKind<TransferParams, OpKind.TRANSACTION>
   | withKind<ActivationParams, OpKind.ACTIVATION>
@@ -132,12 +133,12 @@ export type OriginateParamsBase = {
 /**
  * @description Parameters for originate method
  */
-export type OriginateParams = OriginateParamsBase &
+export type OriginateParams<TContract extends Contract = Contract> = OriginateParamsBase &
   (
     | {
       init?: never;
       /** JS representation of a storage object */
-      storage: any;
+      storage: TContract['storage'];
     }
     | {
       /** Initial storage object value. Either Micheline or JSON encoded */

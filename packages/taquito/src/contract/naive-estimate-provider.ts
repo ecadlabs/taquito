@@ -1,5 +1,6 @@
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT, Protocols } from '../constants';
 import { OriginateParams, TransferParams, ParamsWithKind, RegisterGlobalConstantParams } from '../operations/types';
+import { Contract } from './contract';
 import { Estimate } from './estimate';
 import { EstimationProvider } from './interface';
 
@@ -26,11 +27,11 @@ export class NaiveEstimateProvider implements EstimationProvider {
    *
    * @param OriginationOperation Originate operation parameter
    */
-  async originate({
+  async originate<TContract extends Contract = Contract>({
     fee = DEFAULT_FEE.ORIGINATION,
     storageLimit = DEFAULT_STORAGE_LIMIT.ORIGINATION,
     gasLimit = DEFAULT_GAS_LIMIT.ORIGINATION * 1000,
-  }: OriginateParams) {
+  }: OriginateParams<TContract>) {
     return new Estimate(gasLimit, storageLimit, 185, this._costPerByte, fee);
   }
 

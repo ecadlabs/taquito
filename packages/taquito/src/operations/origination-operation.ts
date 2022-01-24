@@ -1,7 +1,6 @@
 import { OperationContentsAndResult, OperationContentsAndResultOrigination } from '@taquito/rpc';
 import { Context } from '../context';
-import { ContractAbstraction } from '../contract/contract';
-import { ContractProvider } from '../contract/interface';
+import { Contract } from '../contract/contract';
 import { RpcContractProvider } from '../contract/rpc-contract-provider';
 import { Operation } from './operations';
 import {
@@ -18,7 +17,7 @@ import {
  *
  * @warn Currently support only one origination per operation
  */
-export class OriginationOperation
+export class OriginationOperation<TContract extends Contract = Contract> 
   extends Operation
   implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation {
   /**
@@ -99,12 +98,12 @@ export class OriginationOperation
   /**
    * @description Provide the contract abstract of the newly originated contract
    */
-  async contract<T extends ContractAbstraction<ContractProvider> = ContractAbstraction<ContractProvider>>(confirmations?: number, interval?: number, timeout?: number) {
+  async contract(confirmations?: number, interval?: number, timeout?: number) {
     if (!this.contractAddress) {
       throw new Error('No contract was originated in this operation');
     }
 
     await this.confirmation(confirmations, interval, timeout);
-    return this.contractProvider.at<T>(this.contractAddress);
+    return this.contractProvider.at<TContract>(this.contractAddress);
   }
 }
