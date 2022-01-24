@@ -6,9 +6,9 @@ import { TransferOperationBuilder, RevealOperationBuilder } from '../helpers';
 
 describe('Transfer operation', () => {
   let fakeContext: any;
-  let fakeForgedBytes = {} as ForgedBytes;
+  const fakeForgedBytes = {} as ForgedBytes;
 
-  const successfulResult = ([
+  const successfulResult = [
     {
       kind: 'transaction',
       source: 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
@@ -78,7 +78,7 @@ describe('Transfer operation', () => {
         ],
       },
     },
-  ] as unknown) as OperationContentsAndResult[];
+  ] as unknown as OperationContentsAndResult[];
 
   beforeEach(() => {
     fakeContext = {
@@ -89,7 +89,7 @@ describe('Transfer operation', () => {
     };
 
     fakeContext.rpc.getBlock.mockResolvedValue({
-      operations: [[{ hash: 'test_hash' }], [], [], []],
+      operations: [[{ hash: 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj' }], [], [], []],
       header: {
         level: 200,
       },
@@ -97,7 +97,7 @@ describe('Transfer operation', () => {
   });
   it('should contains compute the consummed gas, storage diff and storage size properly', () => {
     const op = new TransactionOperation(
-      'test_hash',
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       {} as any,
       '',
       fakeForgedBytes,
@@ -114,7 +114,7 @@ describe('Transfer operation', () => {
     const revealBuilder = new RevealOperationBuilder();
 
     const op = new TransactionOperation(
-      'test_hash',
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       {} as any,
       '',
       fakeForgedBytes,
@@ -133,7 +133,7 @@ describe('Transfer operation', () => {
     const revealBuilder = new RevealOperationBuilder();
 
     const op = new TransactionOperation(
-      'test_hash',
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       {} as any,
       '',
       fakeForgedBytes,
@@ -149,10 +149,9 @@ describe('Transfer operation', () => {
 
   it('revealStatus should be unknown when there is no reveal operation', () => {
     const txBuilder = new TransferOperationBuilder();
-    const revealBuilder = new RevealOperationBuilder();
 
     const op = new TransactionOperation(
-      'test_hash',
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       {} as any,
       '',
       fakeForgedBytes,

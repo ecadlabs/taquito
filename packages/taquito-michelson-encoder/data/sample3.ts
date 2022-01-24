@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 export const rpcContractResponse = {
   manager: 'tz1LBEKXaxQbd5Gtzbc1ATCwc3pppu81aWGc',
   balance: '5468344480',

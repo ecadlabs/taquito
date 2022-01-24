@@ -1,14 +1,15 @@
+import { BaseTokenSchema } from '../schema/types';
 import { Token, TokenFactory, TokenValidationError } from './token';
 
 export class NeverTokenError extends TokenValidationError {
-    name: string = 'NeverTokenError';
-    constructor(public value: any, public token: NeverToken, message: string) {
-      super(value, token, message);
-    }
+  name = 'NeverTokenError';
+  constructor(public value: any, public token: NeverToken, message: string) {
+    super(value, token, message);
   }
+}
 
 export class NeverToken extends Token {
-  static prim = 'never';
+  static prim: 'never' = 'never';
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
     protected idx: number,
@@ -26,8 +27,20 @@ export class NeverToken extends Token {
   public Execute(val: any) {
     throw new NeverTokenError(val, this, 'There is no literal value for the type never.');
   }
+
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return NeverToken.prim;
+  }
+
+  generateSchema(): BaseTokenSchema {
+    return {
+      __michelsonType: NeverToken.prim,
+      schema: NeverToken.prim,
+    };
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
@@ -35,6 +48,5 @@ export class NeverToken extends Token {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }

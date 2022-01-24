@@ -58,7 +58,7 @@ export const proposalsDecoder = (proposal: Uint8ArrayConsumer): string[] => {
 };
 
 export const proposalsEncoder = (proposals: string[]): string => {
-  return pad(32 * proposals.length) + proposals.map(x => proposalEncoder(x)).join('');
+  return pad(32 * proposals.length) + proposals.map((x) => proposalEncoder(x)).join('');
 };
 
 export const ballotEncoder = (ballot: string): string => {
@@ -189,10 +189,11 @@ export const addressDecoder = (val: Uint8ArrayConsumer) => {
   switch (preamble[0]) {
     case 0x00:
       return pkhDecoder(val);
-    case 0x01:
+    case 0x01: {
       const address = prefixDecoder(Prefix.KT1)(val);
       val.consume(1);
       return address;
+    }
     default:
       throw new Error('Invalid Address');
   }
@@ -204,8 +205,8 @@ export const zarithEncoder = (n: string): string => {
   if (nn.isNaN()) {
     throw new TypeError(`Invalid zarith number ${n}`);
   }
+  // eslint-disable-next-line no-constant-condition
   while (true) {
-    // eslint-disable-line
     if (nn.lt(128)) {
       if (nn.lt(16)) fn.push('0');
       fn.push(nn.toString(16));
@@ -229,7 +230,7 @@ export const zarithDecoder = (n: Uint8ArrayConsumer): string => {
 
   let num = new BigNumber(0);
   for (let i = mostSignificantByte; i >= 0; i -= 1) {
-    let tmp = n.get(i) & 0x7f;
+    const tmp = n.get(i) & 0x7f;
     num = num.multipliedBy(128);
     num = num.plus(tmp);
   }
@@ -300,9 +301,9 @@ export const parametersEncoder = (val: { entrypoint: string; value: MichelsonVal
 export const valueParameterEncoder = (value: MichelsonValue) => {
   const valueEncoded = valueEncoder(value);
   return `${pad(valueEncoded.length / 2)}${valueEncoded}`;
-}
+};
 
 export const valueParameterDecoder = (val: Uint8ArrayConsumer) => {
   const value = extractRequiredLen(val);
   return valueDecoder(new Uint8ArrayConsumer(value));
-}
+};

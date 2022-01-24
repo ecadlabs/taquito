@@ -2,7 +2,7 @@ import { TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
 import { VIEW_LAMBDA } from '../packages/taquito/src/contract/view_lambda';
 
-const provider = 'https://idiazabalnet.ecadinfra.com';
+const provider = 'https://ithacanet.ecadinfra.com/';
 
 async function example() {
   const tezos = new TezosToolkit(provider);
@@ -46,5 +46,4 @@ async function example() {
   }
 }
 
-// tslint:disable-next-line: no-floating-promises
 example();

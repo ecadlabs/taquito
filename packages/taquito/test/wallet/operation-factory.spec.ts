@@ -1,5 +1,5 @@
 import { rxSandbox } from 'rx-sandbox';
-import { defer, of } from 'rxjs';
+import { defer } from 'rxjs';
 import { Context } from '../../src/context';
 import {
   createNewPollingBasedHeadObservable,
@@ -9,7 +9,7 @@ import { switchMap } from 'rxjs/operators';
 describe('createNewPollingBasedHeadObservable', () => {
   const createFakeBlock = (level: number) => ({ hash: `test_${level}` });
 
-  it('Should resolve give a new head each time it polls', async done => {
+  it('Should resolve give a new head each time it polls', async (done) => {
     const { cold, flush, scheduler, getMessages, e, advanceTo, s } = rxSandbox.create();
     const timer = cold<number>('a-b');
 
@@ -48,7 +48,7 @@ describe('createNewPollingBasedHeadObservable', () => {
     done();
   });
 
-  it('Should not emit new head if the hash did not changed', async done => {
+  it('Should not emit new head if the hash did not changed', async (done) => {
     const { cold, flush, scheduler, getMessages, e, advanceTo, s } = rxSandbox.create();
     const timer = cold<number>('a-b');
 
@@ -88,7 +88,7 @@ describe('createNewPollingBasedHeadObservable', () => {
 });
 
 describe('Cache until operator', () => {
-  it('should subscribe to source and replay the last value until cacheInvalidator emits', async done => {
+  it('should subscribe to source and replay the last value until cacheInvalidator emits', async (done) => {
     const { cold, flush, hot, getMessages, e, s } = rxSandbox.create();
     const vals = [cold('a'), cold('b'), cold('c'), cold('d')];
 

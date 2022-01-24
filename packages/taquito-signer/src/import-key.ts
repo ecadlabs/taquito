@@ -25,7 +25,7 @@ export async function importKey(
     let op;
     try {
       op = await toolkit.tz.activate(pkh, secret);
-    } catch (ex) {
+    } catch (ex: any) {
       const isInvalidActivationError = ex && ex.body && /Invalid activation/.test(ex.body);
       if (!isInvalidActivationError) {
         throw ex;

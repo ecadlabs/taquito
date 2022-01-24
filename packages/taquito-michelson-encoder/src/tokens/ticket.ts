@@ -1,3 +1,4 @@
+import { TicketTokenSchema } from '../schema/types';
 import { IntToken } from './comparable/int';
 import { ContractToken } from './contract';
 import { Token, TokenFactory, Semantic } from './token';
@@ -7,11 +8,11 @@ export class EncodeTicketError implements Error {
   message = 'Tickets cannot be sent to the blockchain; they are created on-chain';
 }
 
-const ticketerType = { "prim": "contract" };
-const amountType = { "prim": "int" };
+const ticketerType = { prim: 'contract' };
+const amountType = { prim: 'int' };
 
 export class TicketToken extends Token {
-  static prim = 'ticket';
+  static prim: 'ticket' = 'ticket';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -26,11 +27,11 @@ export class TicketToken extends Token {
   }
 
   public Encode(_args: any[]): any {
-    throw new EncodeTicketError()
+    throw new EncodeTicketError();
   }
 
   public EncodeObject(_args: any): any {
-    throw new EncodeTicketError()  
+    throw new EncodeTicketError();
   }
 
   public Execute(val: any, semantics?: Semantic) {
@@ -41,28 +42,48 @@ export class TicketToken extends Token {
     const value = this.valueToken;
     const amount = this.createToken(amountType, this.idx);
 
-    if(undefined === val.args[2] &&
-       undefined !== val.args[1].args) {
+    if (undefined === val.args[2] && undefined !== val.args[1].args) {
       return {
-            ticketer: ticketer.Execute(val.args[0], semantics),
-            value: value.Execute(val.args[1].args[0], semantics),
-            amount: amount.Execute(val.args[1].args[1], semantics)
-      }
+        ticketer: ticketer.Execute(val.args[0], semantics),
+        value: value.Execute(val.args[1].args[0], semantics),
+        amount: amount.Execute(val.args[1].args[1], semantics),
+      };
     }
 
     return {
       ticketer: ticketer.Execute(val.args[0], semantics),
       value: value.Execute(val.args[1], semantics),
-      amount: amount.Execute(val.args[2], semantics)
-    }
+      amount: amount.Execute(val.args[2], semantics),
+    };
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return {
       ticketer: ContractToken.prim,
       value: this.valueToken.ExtractSchema(),
-      amount: IntToken.prim
-    }
+      amount: IntToken.prim,
+    };
+  }
+
+  generateSchema(): TicketTokenSchema {
+    return {
+      __michelsonType: TicketToken.prim,
+      schema: {
+        value: this.valueToken.generateSchema(),
+        ticketer: {
+          __michelsonType: ContractToken.prim,
+          schema: ContractToken.prim,
+        },
+        amount: {
+          __michelsonType: IntToken.prim,
+          schema: IntToken.prim,
+        },
+      },
+    };
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
@@ -71,6 +92,5 @@ export class TicketToken extends Token {
     }
     this.valueToken.findAndReturnTokens(tokenToFind, tokens);
     return tokens;
-  };
-
+  }
 }

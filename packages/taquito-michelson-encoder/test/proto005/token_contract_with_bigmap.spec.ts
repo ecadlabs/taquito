@@ -1,6 +1,5 @@
 import {
   rpcContractResponse,
-  storage,
   bigMapDiff,
   bigMapValue,
 } from '../../data/proto005/token_contract_with_bigmap';
@@ -15,7 +14,7 @@ describe('Token contract with big map', () => {
     expect(schema.ExtractSchema()).toEqual({
       '0': {
         big_map: {
-          key: "address",
+          key: 'address',
           value: {
             '0': 'nat',
             '1': {
@@ -30,6 +29,55 @@ describe('Token contract with big map', () => {
       '1': 'address',
       '2': 'bool',
       '3': 'nat',
+    });
+
+    expect(schema.generateSchema()).toEqual({
+      __michelsonType: 'pair',
+      schema: {
+        '0': {
+          __michelsonType: 'big_map',
+          schema: {
+            key: {
+              __michelsonType: 'address',
+              schema: 'address'
+            },
+            value: {
+              __michelsonType: 'pair',
+              schema: {
+                '0': {
+                  __michelsonType: 'nat',
+                  schema: 'nat'
+                },
+                '1': {
+                  __michelsonType: 'map',
+                  schema: {
+                    key: {
+                      __michelsonType: 'address',
+                      schema: 'address'
+                    },
+                    value: {
+                      __michelsonType: 'nat',
+                      schema: 'nat'
+                    },
+                  },
+                },
+              }
+            },
+          },
+        },
+        '1': {
+          __michelsonType: 'address',
+          schema: 'address'
+        },
+        '2': {
+          __michelsonType: 'bool',
+          schema: 'bool'
+        },
+        '3': {
+          __michelsonType: 'nat',
+          schema: 'nat'
+        },
+      }
     });
   });
 

@@ -1,15 +1,16 @@
 import { encodePubKey, validateAddress, ValidationResult } from '@taquito/utils';
+import { ContractTokenSchema } from '../schema/types';
 import { Token, TokenFactory, TokenValidationError } from './token';
 
 export class ContractValidationError extends TokenValidationError {
-  name: string = 'ContractValidationError';
+  name = 'ContractValidationError';
   constructor(public value: any, public token: ContractToken, message: string) {
     super(value, token, message);
   }
 }
 
 export class ContractToken extends Token {
-  static prim = 'contract';
+  static prim: 'contract' = 'contract';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -53,8 +54,22 @@ export class ContractToken extends Token {
     return { string: val };
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return ContractToken.prim;
+  }
+
+  generateSchema(): ContractTokenSchema {
+    const valueSchema = this.createToken(this.val.args[0], 0);
+    return {
+      __michelsonType: ContractToken.prim,
+      schema: {
+        parameter: valueSchema.generateSchema(),
+      },
+    };
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
@@ -62,6 +77,5 @@ export class ContractToken extends Token {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }

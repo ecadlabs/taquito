@@ -1,0 +1,46 @@
+name: Algolia indexing
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.ref != 'refs/heads/master' || github.run_number }}
+  cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
+
+jobs:
+  delete-current-algolia-index:
+    env:
+      ALGOLIA_UPDATE_API_KEY: ${{secrets.ALGOLIA_UPDATE_API_KEY}}
+      ALGOLIA_SEARCH_API_KEY: ${{secrets.ALGOLIA_SEARCH_API_KEY}}
+      ALGOLIA_APPLICATION_ID: ${{secrets.ALGOLIA_APPLICATION_ID}}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - uses: actions/setup-node@v2
+      with:
+        node-version: 14.x
+    - run: cd website && npm ci
+    - name: Run delete script
+      run: cd website && npm run delete-index
+    - name: Registry login
+      run: |
+        docker run --rm -e "CONFIG=$(cat ./website/config.json | jq -r tostring)" \
+          -e API_KEY=${{secrets.ALGOLIA_UPDATE_API_KEY}} \
+          -e APPLICATION_ID=${{secrets.ALGOLIA_APPLICATION_ID}} \
+          algolia/docsearch-scraper
+      
+
+
+
+
+
+
+
+
+
+
+
+
+

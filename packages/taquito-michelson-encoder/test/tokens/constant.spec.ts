@@ -112,4 +112,15 @@ describe('Global constant token', () => {
         });
     });
 
+    describe('generateSchema', () => {
+        it('Should generate the schema properly', () => {
+            expect(token.generateSchema()).toEqual({
+                __michelsonType: 'constant',
+                schema: {
+                    hash: 'expru5X5fvCer8tbRkSAtwyVCs9FUCq46JQG7QCAkhZSumjbZBUGzb'
+                }
+            });
+        });
+    });
+
 });

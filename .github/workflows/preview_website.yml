@@ -4,6 +4,10 @@ on:
   pull_request:
     branches: [master]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.ref != 'refs/heads/master' || github.run_number }}
+  cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
+
 jobs:
 ## This job will deploy the netlify preview builds
   publish-website-preview:
@@ -13,16 +17,20 @@ jobs:
     - uses: actions/setup-node@v1
       with:
         node-version: 16.x
-    - uses: actions/cache@v1
+    - name: Lerna Cache
+      uses: actions/cache@v2
+      id: lerna-build-cache
       with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
-    - run: sudo apt-get install libudev-dev
+        path: |
+          packages/*/dist
+        key: ${{ runner.os }}-${{ hashFiles('packages/*/src/*.ts') }}
     - run: npm ci
     - run: npm run lerna -- bootstrap
     - run: npm run lerna run build
+      env:
+        ALGOLIA_APPLICATION_ID: "example"
+        ALGOLIA_SEARCH_API_KEY: "example"
+        ALGOLIA_UPDATE_API_KEY: "example"
     - run: npm run build-docs
     - run: echo "short_sha=${GITHUB_SHA:0:8}" >> $GITHUB_ENV
     - run: npm run netlify:preview
@@ -30,6 +38,7 @@ jobs:
         CI: true
         NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
         NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
     - uses: actions/github-script@v3
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
@@ -47,5 +56,5 @@ jobs:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
         SLACK_USERNAME: Taquito Notifications
         SLACK_ICON: https://imgur.com/1zlqzFu
-        SLACK_TITLE: Message 
+        SLACK_TITLE: Message
         SLACK_MESSAGE: There is a new deployment preview available for Taquito at https://${{ env.short_sha }}--tezostaquito.netlify.app

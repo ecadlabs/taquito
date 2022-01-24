@@ -13,12 +13,15 @@ import {
   validateKeyHash, 
   validateContractAddress, 
   validatePublicKey, 
-  validateSignature, 
+  validateSignature,
+  validateBlock,
+  validateProtocol,
+  validateOperation, 
   b58cencode, 
   prefix, 
   Prefix 
 } from '@taquito/utils';
-// import {  BeaconWallet } from '@taquito/beacon-wallet';
+import {  BeaconWallet } from '@taquito/beacon-wallet';
 import { InMemorySigner, importKey } from '@taquito/signer';
 import { LedgerSigner, DerivationType } from '@taquito/ledger-signer';
 import { TezBridgeWallet } from '@taquito/tezbridge-wallet';
@@ -26,8 +29,8 @@ import { Tzip16Module, tzip16, bytes2Char, MichelsonStorageView } from '@taquito
 import { Tzip12Module, tzip12 } from "@taquito/tzip12";
 import { Schema, ParameterSchema } from "@taquito/michelson-encoder";
 import { Parser, packDataBytes } from '@taquito/michel-codec';
-import { TempleWallet } from "@temple-wallet/dapp";
-import TransportU2F from "@ledgerhq/hw-transport-u2f";
+import { ThanosWallet } from '@thanos-wallet/dapp';
+import TransportWebHID from "@ledgerhq/hw-transport-webhid";
 import Playground from '@theme/Playground';
 import classnames from 'classnames';
 import Clipboard from 'clipboard';
@@ -39,6 +42,13 @@ import { CancellableRpcClient } from './customHttpBackendAndRpcClient';
 
 import styles from './styles.module.css';
 
+let wallet; 
+if (typeof window !== 'undefined') {
+  console.log('You are on the browser')
+  // solve localStorage is not defined Error when building server
+  // can use localStorage on the browser, not on the server
+  wallet = new BeaconWallet({name:"exampleWallet"});
+} 
 // const wallet = new BeaconWallet({name:"exampleWallet"});
 const highlightLinesRangeRegex = /{([\d,-]+)}/;
 
@@ -88,14 +98,17 @@ export default ({
       <Playground
         scope={{ ...React, 
           Tezos, 
-          // wallet,
+          wallet,
           importKey,
           validateAddress, 
           validateChain, 
           validateKeyHash, 
           validateContractAddress, 
           validatePublicKey, 
-          validateSignature, 
+          validateSignature,
+          validateBlock,
+          validateOperation,
+          validateProtocol,
           b58cencode, 
           prefix, 
           Prefix, 
@@ -109,9 +122,9 @@ export default ({
           Tzip12Module, 
           tzip12,
           TezBridgeWallet,
-          TempleWallet, 
+          ThanosWallet, 
           DerivationType, 
-          TransportU2F,
+          TransportWebHID,
           compose,
           Schema,
           ParameterSchema,
