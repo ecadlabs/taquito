@@ -100,24 +100,10 @@ type DefaultViews = Record<string, (...args: any[]) => ContractView>;
 type DefaultContractViews = Record<string, (args?: any) => OnChainView>;
 type DefaultStorage = unknown; // Record<string, unknown>;
 
-type ContractType<
-  TProvider extends ContractProvider | Wallet,
-  TMethods extends DefaultMethods<TProvider> = DefaultMethods<TProvider>,
-  TMethodsObject extends DefaultMethodsObject<TProvider> = DefaultMethodsObject<TProvider>,
-  TViews extends DefaultViews = DefaultViews,
-  TContractViews extends DefaultContractViews = DefaultContractViews,
-  TStorage extends DefaultStorage = DefaultStorage
-> = {
-  methods: TMethods;
-  methodsObject: TMethodsObject;
-  views: TViews;
-  contractViews: TContractViews;
-  storage: <T=TStorage>() => Promise<T>; 
-}
 type PromiseReturnType<T extends (...args: any) => any> = T extends (...args: any) => Promise<infer R> ? R : any;
-export type ContractStorageType<T extends ContractType<ContractProvider|Wallet>> = PromiseReturnType<T['storage']>;
-export type DefaultContractType = ContractType<ContractProvider>;
-export type DefaultWalletType = ContractType<Wallet>;
+export type ContractStorageType<T extends ContractAbstraction<ContractProvider|Wallet>> = PromiseReturnType<T['storage']>;
+export type DefaultContractType = ContractAbstraction<ContractProvider>;
+export type DefaultWalletType = ContractAbstraction<Wallet>;
 
 /**
  * @description Smart contract abstraction
