@@ -44,10 +44,9 @@ import styles from './styles.module.css';
 
 let wallet; 
 if (typeof window !== 'undefined') {
-  console.log('You are on the browser')
   // solve localStorage is not defined Error when building server
   // can use localStorage on the browser, not on the server
-  wallet = new BeaconWallet({name:"exampleWallet"});
+  wallet = new BeaconWallet({ name:"exampleWallet" });
 } 
 
 const highlightLinesRangeRegex = /{([\d,-]+)}/;
