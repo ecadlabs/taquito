@@ -1,6 +1,6 @@
 import { OperationContentsAndResult, OperationContentsAndResultOrigination } from '@taquito/rpc';
 import { Context } from '../context';
-import { Contract } from '../contract/contract';
+import { DefaultContractType } from '../contract/contract';
 import { RpcContractProvider } from '../contract/rpc-contract-provider';
 import { Operation } from './operations';
 import {
@@ -17,7 +17,7 @@ import {
  *
  * @warn Currently support only one origination per operation
  */
-export class OriginationOperation<TContract extends Contract = Contract> 
+export class OriginationOperation<TContract extends DefaultContractType = DefaultContractType> 
   extends Operation
   implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation {
   /**

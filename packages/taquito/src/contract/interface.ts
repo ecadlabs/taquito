@@ -16,7 +16,7 @@ import {
   RevealParams,
   RegisterGlobalConstantParams,
 } from '../operations/types';
-import { Contract } from './contract';
+import { ContractAbstraction, ContractStorageType, DefaultContractType } from './contract';
 import { Estimate } from './estimate';
 
 export type ContractSchema = Schema | unknown;
@@ -30,7 +30,7 @@ export interface EstimationProvider {
    *
    * @param Estimate
    */
-  originate<TContract extends Contract = Contract>(params: OriginateParams<TContract>): Promise<Estimate>;
+  originate(params: OriginateParams): Promise<Estimate>;
 
   /**
    *
@@ -158,7 +158,7 @@ export interface ContractProvider extends StorageProvider {
    *
    * @param OriginationOperation Originate operation parameter
    */
-  originate<TContract extends Contract = Contract>(contract: OriginateParams<TContract>): Promise<OriginationOperation>;
+  originate<TContract extends DefaultContractType = DefaultContractType>(contract: OriginateParams<ContractStorageType<TContract>>): Promise<OriginationOperation>;
 
   /**
    *
@@ -200,7 +200,7 @@ export interface ContractProvider extends StorageProvider {
    */
   reveal(params: RevealParams): Promise<RevealOperation>;
 
-  at<T extends Contract>(address: string, contractAbstractionComposer?: (abs: Contract, context: Context) => T): Promise<T>;
+  at<T extends ContractAbstraction<ContractProvider>>(address: string, contractAbstractionComposer?: (abs: ContractAbstraction<ContractProvider>, context: Context) => T): Promise<T>;
 
   /**
    *

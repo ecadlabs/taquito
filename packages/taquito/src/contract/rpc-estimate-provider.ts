@@ -30,7 +30,6 @@ import {
   createRegisterGlobalConstantOperation,
 } from './prepare';
 import { validateAddress, InvalidAddressError, ValidationResult } from '@taquito/utils';
-import { Contract } from './contract';
 
 interface Limits {
   fee?: number;
@@ -196,7 +195,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    *
    * @param OriginationOperation Originate operation parameter
    */
-  async originate<TContract extends Contract = Contract>({ fee, storageLimit, gasLimit, ...rest }: OriginateParams<TContract>) {
+  async originate({ fee, storageLimit, gasLimit, ...rest }: OriginateParams) {
     const pkh = await this.signer.publicKeyHash();
     const protocolConstants = await this.rpc.getConstants();
     const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);

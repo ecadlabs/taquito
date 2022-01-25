@@ -22,7 +22,7 @@ import {
   TransferParams,
   withKind,
 } from '../operations/types';
-import { Contract, ContractAbstraction } from './contract';
+import { DefaultContractType, ContractStorageType, ContractAbstraction } from './contract';
 import { InvalidDelegationSource } from './errors';
 import { ContractProvider, ContractSchema, EstimationProvider, StorageProvider } from './interface';
 import {
@@ -250,7 +250,7 @@ export class RpcContractProvider
    *
    * @param OriginationOperation Originate operation parameter
    */
-  async originate<TContract extends Contract = Contract>(params: OriginateParams<TContract>) {
+  async originate<TContract extends DefaultContractType = DefaultContractType>(params: OriginateParams<ContractStorageType<TContract>>) {
     const estimate = await this.estimate(params, this.estimator.originate.bind(this.estimator));
 
     const publicKeyHash = await this.signer.publicKeyHash();
@@ -425,7 +425,7 @@ export class RpcContractProvider
     );
   }
 
-  async at<T extends Contract = Contract>(
+  async at<T extends DefaultContractType = DefaultContractType>(
     address: string,
     contractAbstractionComposer: ContractAbstractionComposer<T> = (x) => x as any
   ): Promise<T> {
@@ -461,6 +461,6 @@ export class RpcContractProvider
 }
 
 type ContractAbstractionComposer<T> = (
-  abs: Contract,
+  abs: ContractAbstraction<ContractProvider>,
   context: Context
 ) => T;
