@@ -3,9 +3,12 @@ import { IntToken } from './comparable/int';
 import { ContractToken } from './contract';
 import { Token, TokenFactory, Semantic } from './token';
 
-export class EncodeTicketError implements Error {
+export class EncodeTicketError extends Error {
   name = 'TicketEncodeError';
-  message = 'Tickets cannot be sent to the blockchain; they are created on-chain';
+
+  constructor() {
+    super('Tickets cannot be sent to the blockchain; they are created on-chain');
+  }
 }
 
 const ticketerType = { prim: 'contract' };
