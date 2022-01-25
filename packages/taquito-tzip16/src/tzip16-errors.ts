@@ -1,7 +1,7 @@
 export class BigMapMetadataNotFound extends Error {
   name = 'BigMapMetadataNotFound';
 
-  constructor(public info: string) {
+  constructor() {
     super(
       'Non-compliance with the TZIP-016 standard. No big map named metadata was found in the contract storage.'
     );
@@ -18,7 +18,7 @@ export class MetadataNotFound extends Error {
 
 export class UriNotFound extends Error {
   name = 'UriNotFound';
-  constructor(public info: string) {
+  constructor() {
     super('Non-compliance with the TZIP-016 standard. No URI found in the contract storage.');
   }
 }
