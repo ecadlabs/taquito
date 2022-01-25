@@ -49,7 +49,7 @@ if (typeof window !== 'undefined') {
   // can use localStorage on the browser, not on the server
   wallet = new BeaconWallet({name:"exampleWallet"});
 } 
-// const wallet = new BeaconWallet({name:"exampleWallet"});
+
 const highlightLinesRangeRegex = /{([\d,-]+)}/;
 
 export default ({
