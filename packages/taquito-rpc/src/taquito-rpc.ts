@@ -56,6 +56,7 @@ import { castToBigNumber } from './utils/utils';
 import { 
   InvalidAddressError, 
   validateAddress, 
+  validateContractAddress, 
   ValidationResult 
 } from '@taquito/utils'
 
@@ -108,7 +109,7 @@ export class RpcClient implements RpcClientInterface {
   }
 
   private validateContract(address: string) {
-    if (validateAddress(address) !== ValidationResult.VALID) {
+    if (validateContractAddress(address) !== ValidationResult.VALID) {
       throw new InvalidAddressError(`Invalid address: ${address}`)
     }
   }
