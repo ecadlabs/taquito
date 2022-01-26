@@ -115,7 +115,7 @@ const ithacanetFaucet = {
         "email": "noriqgjl.gtsyulgy@teztnets.xyz",
         "password": "st3sZBRLWF",
         "amount": "118887604096",
-        "activation_code": "7d414378d9071328313cca699d6922f1b59d076a"
+        "secret": "7d414378d9071328313cca699d6922f1b59d076a"
     }
   },
 };

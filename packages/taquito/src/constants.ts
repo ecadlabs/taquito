@@ -55,6 +55,7 @@ export enum DefaultLambdaAddresses {
   GRANADANET = 'KT1BCun2vsA4GBQvsKAuGD5x873MfW2jsN9z',
   HANGZHOUNET = 'KT1PWtBAr1hjK9M9s9oZNZFbfzPdkkD6PSJR',
   ITHACANET = 'KT1CsEGfRHWeuUQFh9LfVFLVMbm7DFBuHPPU',
+  ITHACANET2 = 'KT1KzvybYb2zAHHMkkXpZhR6Sm2g7KSUx1wa',
 }
 
 export enum ChainIds {
@@ -66,4 +67,5 @@ export enum ChainIds {
   GRANADANET = 'NetXz969SFaFn8k',
   HANGZHOUNET = 'NetXZSsxBpMQeAT',
   ITHACANET = 'NetXbhmtAbMukLc',
+  ITHACANET2 = 'NetXbhmtAbMukLc',
 }
