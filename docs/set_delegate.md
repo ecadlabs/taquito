@@ -3,14 +3,16 @@ title: Delegation
 author: Simon Boissonneault-Robert
 ---
 
-# Delegation and Baking/Staking
+# Delegation and Baking
 
-## What is baking (staking) in Tezos?
-Staking is a concept of participation in forming blocks in any blockchain using the Proof-of-Stake consensus algorithm. In Tezos we call this term "Baking". Everyone who holds Tezos coins can produce, sign, and validate blocks to get rewards in proportion to their stake. 
+## What is baking in Tezos?
+"Baking" in Tezos is a generalized concept of participation in forming blocks on the blockchain using the Proof-of-Stake consensus algorithm. Everyone who holds Tezos coins can produce, sign, and validate blocks to get rewards in proportion to their stake. 
 
-To become a baker, all you need to do is to run your own node with a baking software and keep it online and up to date. 
+To become a baker, all you need to do is to run your own node with baking software and keep it online and up to date. You will also need a minimum of 8000ꜩ (XTZ) to participate in baking. 
 
-## What is Delegation?
+Note: the minimum amount needed to have baking rights might change as new protocols get rolled out in the future.
+
+## What is delegation?
 Delegation is when you give your baking rights to another person (baker). This mechanism in Tezos allows users to participate in staking and receive Tezos rewards without running their own node.
 
 In Tezos, a delegation operation will set the delegate of an address.
@@ -20,7 +22,7 @@ When the `Babylon/proto005` protocol amendment came into effect, it changed how 
 ## Delegate from an implicit address (`tz1` prefix)
 Taquito has two main methods that facilitate a delegate operation, `setDelegate()` and `registerDelegate()`
 
-The main difference between the 2 methods is that `registerDelegate()` will set the delegate to the current address while`setDelegate()` will set the delegate to another address (baker).
+The difference between the 2 methods is that `registerDelegate()` will set the delegate to the current address while `setDelegate()` will set the delegate to another address (baker).
 
 ### setDelegate()
 Use `setDelegate()` to delegate your coins to a registered delegate (baker).
@@ -52,7 +54,7 @@ A call to the KT1's smart contract's `do` method must be made to delegate to a K
 
 > **Why doesn't Taquito abstract KT1 manager accounts so I can just call setDelegate()**
 >
-> For the time being, we regard KT1 manager accounts as a regular smart contract. It is possible to have a smart contract that is not following the manager.tz conventions, and that also delegates to a baker. The correct lambda to pass to a contract to delegate is application/wallet specific. Therefore Taquito does not make any assumption on the KT1.
+> For the time being, we regard KT1 manager accounts as regular smart contracts. It is possible to have a smart contract that is not following the manager.tz conventions, and that also delegates to a baker. The correct lambda to pass to a contract to delegate is application/wallet specific. Therefore Taquito does not make any assumption on the KT1.
 
 ### Example of delegation for a KT1
 
