@@ -35,7 +35,7 @@ export class ContractView {
    *
    * @description Find which lambda contract to use based on the current network,
    * encode parameters to Michelson,
-   * create an instance of Lambdaview to retrive data, and
+   * create an instance of Lambdaview to retrieve data, and
    * Decode Michelson response
    *
    * @param Options Address of a lambda contract (sandbox users)
@@ -43,7 +43,7 @@ export class ContractView {
   async read(customLambdaAddress?: string) {
     let lambdaAddress;
 
-    // TODO Verify if the 'customLambdaAdress' is a valid originated contract and if not, return an appropriate error message.
+    // TODO Verify if the 'customLambdaAdress' is a valid originated contract and if not, return an appropriate error message.  
     if (customLambdaAddress) {
       lambdaAddress = customLambdaAddress;
     } else if (this.chainId === ChainIds.GRANADANET) {
@@ -52,6 +52,8 @@ export class ContractView {
       lambdaAddress = DefaultLambdaAddresses.HANGZHOUNET;
     } else if (this.chainId === ChainIds.ITHACANET) {
       lambdaAddress = DefaultLambdaAddresses.ITHACANET;
+    } else if (this.chainId === ChainIds.ITHACANET2) {
+      lambdaAddress = DefaultLambdaAddresses.ITHACANET2;
     } else if (this.chainId === ChainIds.MAINNET) {
       lambdaAddress = DefaultLambdaAddresses.MAINNET;
     } else {
