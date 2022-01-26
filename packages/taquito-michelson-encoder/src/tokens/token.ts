@@ -1,11 +1,11 @@
 import { MichelsonV1Expression } from '@taquito/rpc';
 import { TokenSchema } from '../schema/types';
 
-export abstract class TokenValidationError implements Error {
+export abstract class TokenValidationError extends Error {
   name = 'ValidationError';
-  public message: string;
 
   constructor(public value: any, public token: Token, baseMessage: string) {
+    super();
     const annot = this.token.annot();
     const annotText = annot ? `[${annot}] ` : '';
     this.message = `${annotText}${baseMessage}`;

@@ -1,46 +1,51 @@
 import { HttpResponseError } from '@taquito/http-utils';
 import { MichelsonV1Expression } from '@taquito/rpc';
 
-export class InvalidParameterError implements Error {
+export class InvalidParameterError extends Error {
   name = 'Invalid parameters error';
-  message: string;
   constructor(public smartContractMethodName: string, public sigs: any[], public args: any[]) {
-    this.message = `${smartContractMethodName} Received ${
-      args.length
-    } arguments while expecting one of the following signatures (${JSON.stringify(sigs)})`;
+    super(
+      `${smartContractMethodName} Received ${
+        args.length
+      } arguments while expecting one of the following signatures (${JSON.stringify(sigs)})`
+    );
   }
 }
 
-export class UndefinedLambdaContractError implements Error {
+export class UndefinedLambdaContractError extends Error {
   name = 'Undefined LambdaContract error';
-  message: string;
   constructor() {
-    this.message =
-      'This might happen if you are using a sandbox. Please provide the address of a lambda contract as a parameter of the read method.';
+    super(
+      'This might happen if you are using a sandbox. Please provide the address of a lambda contract as a parameter of the read method.'
+    );
   }
 }
-export class InvalidDelegationSource implements Error {
+export class InvalidDelegationSource extends Error {
   name = 'Invalid delegation source error';
-  message: string;
 
   constructor(public source: string) {
-    this.message = `Since Babylon delegation source can no longer be a contract address ${source}. Please use the smart contract abstraction to set your delegate.`;
+    super(
+      `Since Babylon delegation source can no longer be a contract address ${source}. Please use the smart contract abstraction to set your delegate.`
+    );
   }
 }
 
-export class InvalidCodeParameter implements Error {
+export class InvalidCodeParameter extends Error {
   public name = 'InvalidCodeParameter';
-  constructor(public message: string, public readonly data: any) {}
+  constructor(public message: string, public readonly data: any) {
+    super(message);
+  }
 }
 
-export class InvalidInitParameter implements Error {
+export class InvalidInitParameter extends Error {
   public name = 'InvalidInitParameter';
-  constructor(public message: string, public readonly data: any) {}
+  constructor(public message: string, public readonly data: any) {
+    super(message);
+  }
 }
 
-export class InvalidViewParameterError implements Error {
+export class InvalidViewParameterError extends Error {
   name = 'Invalid view parameters error';
-  message: string;
   cause: any;
   constructor(
     public smartContractViewName: string,
@@ -48,16 +53,20 @@ export class InvalidViewParameterError implements Error {
     public args: any,
     public originalError: any
   ) {
-    this.message = `Unable to encode the parameter of the view: ${smartContractViewName}. Received ${args} as parameter while expecting one of the following signatures (${JSON.stringify(
-      sigs
-    )})`;
+    super(
+      `Unable to encode the parameter of the view: ${smartContractViewName}. Received ${args} as parameter while expecting one of the following signatures (${JSON.stringify(
+        sigs
+      )})`
+    );
     this.cause = originalError;
   }
 }
 
-export class ViewSimulationError implements Error {
+export class ViewSimulationError extends Error {
   name = 'ViewSimulationError';
-  constructor(public message: string, public originalError?: any) {}
+  constructor(public message: string, public originalError?: any) {
+    super(message);
+  }
 }
 
 export const validateAndExtractFailwith = (
@@ -80,10 +89,9 @@ const isJsonString = (str: string) => {
   return true;
 };
 
-export class InvalidViewSimulationContext implements Error {
+export class InvalidViewSimulationContext extends Error {
   public name = 'InvalidViewSimulationContext';
-  public message: string;
   constructor(public info: string) {
-    this.message = `${info} Please configure the context of the view execution in the executeView method.`;
+    super(`${info} Please configure the context of the view execution in the executeView method.`);
   }
 }
