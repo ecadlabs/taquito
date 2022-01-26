@@ -34,6 +34,79 @@ describe('Schema test', () => {
         },
       },
     });
+
+    expect(schema.generateSchema()).toEqual({
+      __michelsonType: 'or',
+      schema: {
+        '0': {
+          __michelsonType: 'pair',
+          schema: {
+            '0': {
+              __michelsonType: 'address',
+              schema: 'address',
+            },
+            '1': {
+              __michelsonType: 'string',
+              schema: 'string',
+            },
+            '2': {
+              __michelsonType: 'option',
+              schema: {
+                __michelsonType: 'bytes',
+                schema: 'bytes',
+              },
+            },
+          },
+        },
+        '1': {
+          __michelsonType: 'mutez',
+          schema: 'mutez',
+        },
+        '2': {
+          __michelsonType: 'pair',
+          schema: {
+            '2': {
+              __michelsonType: 'address',
+              schema: 'address',
+            },
+            '3': {
+              __michelsonType: 'bool',
+              schema: 'bool',
+            },
+          },
+        },
+        '3': {
+          __michelsonType: 'lambda',
+          schema: {
+            parameters: {
+              __michelsonType: 'pair',
+              schema: {
+                3: {
+                  __michelsonType: 'address',
+                  schema: 'address',
+                },
+                4: {
+                  __michelsonType: 'string',
+                  schema: 'string',
+                },
+                5: {
+                  __michelsonType: 'option',
+                  schema: {
+                    __michelsonType: 'bytes',
+                    schema: 'bytes',
+                  },
+                },
+              },
+            },
+            returns: {
+              __michelsonType: 'operation',
+              schema: 'operation',
+            },
+          },
+        },
+      },
+    });
+
     expect({
       args: [
         {

@@ -37,4 +37,13 @@ describe('Address token', () => {
       }
     });
   });
+
+  describe('generateSchema', () => {
+    it('Should generate the schema properly', () => {
+      expect(token.generateSchema()).toEqual({
+        __michelsonType: 'address',
+        schema: 'address',
+      });
+    });
+  });
 });

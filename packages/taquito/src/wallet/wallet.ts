@@ -11,6 +11,14 @@ import {
   WalletTransferParams,
 } from './interface';
 
+import {
+  validateAddress,
+  validateContractAddress,
+  InvalidContractAddressError,
+  InvalidAddressError,
+  ValidationResult,
+} from '@taquito/utils';
+
 export interface PKHOption {
   forceRefetch?: boolean;
 }
@@ -32,6 +40,9 @@ export class WalletOperationBatch {
    * @param params Transfer operation parameter
    */
   withTransfer(params: WalletTransferParams) {
+    if (validateAddress(params.to) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(`Invalid 'to' address: ${params.to}`);
+    }
     this.operations.push({ kind: OpKind.TRANSACTION, ...params });
     return this;
   }
@@ -53,6 +64,9 @@ export class WalletOperationBatch {
    * @param params Delegation operation parameter
    */
   withDelegation(params: WalletDelegateParams) {
+    if (params.delegate && validateAddress(params.delegate) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(`Invalid delegate address: ${params.delegate}`);
+    }
     this.operations.push({ kind: OpKind.DELEGATION, ...params });
     return this;
   }
@@ -190,6 +204,9 @@ export class Wallet {
    * @param delegateParams operation parameter
    */
   setDelegate(params: WalletDelegateParams) {
+    if (params.delegate && validateAddress(params.delegate) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(`Invalid address error: ${params.delegate}`);
+    }
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapDelegateParamsToWalletParams(
         async () => params
@@ -226,6 +243,9 @@ export class Wallet {
    * @param params operation parameter
    */
   transfer(params: WalletTransferParams) {
+    if (validateAddress(params.to) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(`Invalid 'to' address: ${params.to}`);
+    }
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapTransferParamsToWalletParams(
         async () => params
@@ -265,6 +285,9 @@ export class Wallet {
     contractAbstractionComposer: (abs: ContractAbstraction<Wallet>, context: Context) => T = (x) =>
       x as any
   ): Promise<T> {
+    if (validateContractAddress(address) !== ValidationResult.VALID) {
+      throw new InvalidContractAddressError(`Invalid contract address: ${address}`);
+    }
     const rpc = this.context.withExtensions().rpc;
     const script = await rpc.getNormalizedScript(address);
     const entrypoints = await rpc.getEntrypoints(address);
@@ -276,7 +299,8 @@ export class Wallet {
       this,
       this.context.contract,
       entrypoints,
-      chainId
+      chainId,
+      rpc
     );
     return contractAbstractionComposer(abs, this.context);
   }

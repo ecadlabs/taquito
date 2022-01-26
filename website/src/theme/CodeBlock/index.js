@@ -14,7 +14,10 @@ import {
   validateKeyHash, 
   validateContractAddress, 
   validatePublicKey, 
-  validateSignature, 
+  validateSignature,
+  validateBlock,
+  validateProtocol,
+  validateOperation, 
   b58cencode, 
   prefix, 
   Prefix 
@@ -26,8 +29,9 @@ import { TezBridgeWallet } from '@taquito/tezbridge-wallet';
 import { Tzip16Module, tzip16, bytes2Char, MichelsonStorageView } from '@taquito/tzip16'
 import { Tzip12Module, tzip12 } from "@taquito/tzip12";
 import { Schema, ParameterSchema } from "@taquito/michelson-encoder";
+import { Parser, packDataBytes } from '@taquito/michel-codec';
 import { ThanosWallet } from '@thanos-wallet/dapp';
-import TransportU2F from "@ledgerhq/hw-transport-u2f";
+import TransportWebHID from "@ledgerhq/hw-transport-webhid";
 import Playground from '@theme/Playground';
 import classnames from 'classnames';
 import Clipboard from 'clipboard';
@@ -81,7 +85,7 @@ export default ({
   }, [button.current, target.current]);
 
   if (live) {
-    const customRpcClient = new CancellableRpcClient('https://granadanet.api.tez.ie') 
+    const customRpcClient = new CancellableRpcClient('https://hangzhounet.api.tez.ie') 
     const Tezos = new TezosToolkit(customRpcClient);
 
     return (
@@ -95,7 +99,10 @@ export default ({
           validateKeyHash, 
           validateContractAddress, 
           validatePublicKey, 
-          validateSignature, 
+          validateSignature,
+          validateBlock,
+          validateOperation,
+          validateProtocol,
           b58cencode, 
           prefix, 
           Prefix, 
@@ -112,12 +119,14 @@ export default ({
           TezBridgeWallet,
           ThanosWallet, 
           DerivationType, 
-          TransportU2F,
+          TransportWebHID,
           compose,
           Schema,
           ParameterSchema,
           DEFAULT_FEE,
-          verifySignature
+          verifySignature,
+          Parser, 
+          packDataBytes, 
          }}
         code={children.trim()}
         theme={prism.theme || defaultTheme}

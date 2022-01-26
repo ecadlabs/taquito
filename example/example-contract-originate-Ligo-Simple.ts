@@ -3,7 +3,7 @@ import { ligoSample } from '../integration-tests/data/ligo-simple-contract';
 
 import { importKey } from '@taquito/signer';
 
-const provider = 'https://granadanet.api.tez.ie';
+const provider = 'https://ithacanet.ecadinfra.com/'
 
 async function example() {
   const tezos = new TezosToolkit(provider)
@@ -53,5 +53,4 @@ async function example() {
   }
 }
 
-// tslint:disable-next-line: no-floating-promises
 example();

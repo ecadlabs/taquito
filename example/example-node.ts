@@ -2,7 +2,7 @@ import { TezosToolkit } from '../packages/taquito/src/taquito';
 import { RpcClient } from '../packages/taquito-rpc/src/taquito-rpc';
 import { castToString } from '../packages/taquito-rpc/src/utils/utils';
 
-const provider = 'https://granadanet.api.tez.ie';
+const provider = 'https://ithacanet.ecadinfra.com/'
 const client = new RpcClient(provider);
 
 async function example() {
@@ -10,7 +10,7 @@ async function example() {
     const tezos = new TezosToolkit(provider);
 
     console.log('Getting storage...');
-    await tezos.contract.at('KT1VniFqNCPEq4MXvnjYGvUqdWDhooJM5Nae').then(async contract => { // knownBigMapContract used in integration tests
+    await tezos.contract.at('KT1UuzwkGJEoFJGY2XV21NdJeJ4tgXWmfbGE').then(async contract => { // knownBigMapContract used in integration tests
       const storage = await contract.storage()
       console.log(storage)
     });
@@ -21,7 +21,7 @@ async function example() {
     });
 
     console.log('Getting big map key...');
-    await tezos.contract.at('KT1VniFqNCPEq4MXvnjYGvUqdWDhooJM5Nae').then(async contract => {
+    await tezos.contract.at('KT1UuzwkGJEoFJGY2XV21NdJeJ4tgXWmfbGE').then(async contract => {
       const contractStorage = await contract.storage();
       const bigMapKey = await (contractStorage as any).ledger.get('tz1btkXVkVFWLgXa66sbRJa8eeUSwvQFX4kP')
       console.log(bigMapKey)
@@ -53,5 +53,4 @@ async function example() {
   }
 }
 
-// tslint:disable-next-line: no-floating-promises
 example();

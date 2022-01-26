@@ -7,6 +7,10 @@ describe('Schema test', () => {
     const schema = new ParameterSchema(params8);
     const storage = schema.ExtractSchema();
     expect(storage).toEqual('string');
+    expect(schema.generateSchema()).toEqual({
+      __michelsonType: 'string',
+      schema: 'string',
+    });
     expect({ string: 'test' }).toEqual(schema.Encode('test'));
     expect(schema.isMultipleEntryPoint).toBeFalsy();
 

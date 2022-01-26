@@ -33,6 +33,7 @@ import {
   EntrypointsResponse,
   ForgeOperationsParams,
   ManagerKeyResponse,
+  MichelsonV1ExpressionExtended,
   OperationHash,
   PackDataParams,
   PackDataResponse,
@@ -52,6 +53,12 @@ import {
   VotingPeriodBlockResult,
 } from './types';
 import { castToBigNumber } from './utils/utils';
+import {
+  InvalidAddressError,
+  validateAddress,
+  validateContractAddress,
+  ValidationResult,
+} from '@taquito/utils';
 
 export { castToBigNumber } from './utils/utils';
 
@@ -92,6 +99,18 @@ export class RpcClient implements RpcClientInterface {
   protected createURL(path: string) {
     // Trim trailing slashes because it is assumed to be included in path
     return `${this.url.replace(/\/+$/g, '')}${path}`;
+  }
+
+  private validateAddress(address: string) {
+    if (validateAddress(address) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(`Invalid address: ${address}`);
+    }
+  }
+
+  private validateContract(address: string) {
+    if (validateContractAddress(address) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(`Invalid address: ${address}`);
+    }
   }
 
   /**
@@ -139,6 +158,7 @@ export class RpcClient implements RpcClientInterface {
     address: string,
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<BalanceResponse> {
+    this.validateAddress(address);
     const balance = await this.httpBackend.createRequest<BalanceResponse>({
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/balance`
@@ -161,6 +181,7 @@ export class RpcClient implements RpcClientInterface {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<StorageResponse> {
+    this.validateContract(address);
     return this.httpBackend.createRequest<StorageResponse>({
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/storage`
@@ -182,6 +203,7 @@ export class RpcClient implements RpcClientInterface {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<ScriptResponse> {
+    this.validateContract(address);
     return this.httpBackend.createRequest<ScriptResponse>({
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/script`
@@ -204,6 +226,7 @@ export class RpcClient implements RpcClientInterface {
     unparsingMode: UnparsingMode = { unparsing_mode: 'Readable' },
     { block }: { block: string } = defaultRPCOptions
   ): Promise<ScriptResponse> {
+    this.validateContract(address);
     return this.httpBackend.createRequest<ScriptResponse>(
       {
         url: this.createURL(
@@ -228,6 +251,7 @@ export class RpcClient implements RpcClientInterface {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<ContractResponse> {
+    this.validateAddress(address);
     const contractResponse = await this.httpBackend.createRequest<ContractResponse>({
       url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/contracts/${address}`),
       method: 'GET',
@@ -251,6 +275,7 @@ export class RpcClient implements RpcClientInterface {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<ManagerKeyResponse> {
+    this.validateAddress(address);
     return this.httpBackend.createRequest<ManagerKeyResponse>({
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/manager_key`
@@ -272,6 +297,7 @@ export class RpcClient implements RpcClientInterface {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<DelegateResponse> {
+    this.validateAddress(address);
     let delegate: DelegateResponse;
     try {
       delegate = await this.httpBackend.createRequest<DelegateResponse>({
@@ -306,6 +332,7 @@ export class RpcClient implements RpcClientInterface {
     key: BigMapKey,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<BigMapGetResponse> {
+    this.validateAddress(address);
     return this.httpBackend.createRequest<BigMapGetResponse>(
       {
         url: this.createURL(
@@ -351,6 +378,7 @@ export class RpcClient implements RpcClientInterface {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<DelegatesResponse> {
+    this.validateAddress(address);
     const response = await this.httpBackend.createRequest<DelegatesResponse>({
       url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/delegates/${address}`),
       method: 'GET',
@@ -417,7 +445,12 @@ export class RpcClient implements RpcClientInterface {
       'delay_per_missing_endorsement',
       'minimal_block_delay',
       'liquidity_baking_subsidy',
-      'cache_layout'
+      'cache_layout',
+      'baking_reward_fixed_portion',
+      'baking_reward_bonus_per_slot',
+      'endorsing_reward_per_slot',
+      'double_baking_punishment',
+      'delay_increment_per_round',
     ]);
 
     return {
@@ -730,8 +763,9 @@ export class RpcClient implements RpcClientInterface {
     contract: string,
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<EntrypointsResponse> {
+    this.validateContract(contract);
     const contractResponse = await this.httpBackend.createRequest<{
-      entrypoints: { [key: string]: Object };
+      entrypoints: { [key: string]: MichelsonV1ExpressionExtended };
     }>({
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/entrypoints`
@@ -801,8 +835,13 @@ export class RpcClient implements RpcClientInterface {
    * @param options contains generic configuration for rpc calls
    *
    * @description Computes the serialized version of a data expression using the same algorithm as script instruction PACK
+   * Note: You should always verify the packed bytes before signing or requesting that they be signed when using the the RPC to pack.
+   * This precaution helps protect you and your applications users from RPC nodes that have been compromised.
+   * A node that is operated by a bad actor, or compromised by a bad actor could return a fully formed operation that does not correspond to the input provided to the RPC endpoint.
+   * A safer solution to pack and sign data would be to use the `packDataBytes` function available in the `@taquito/michel-codec` package.
    *
    * @example packData({ data: { string: "test" }, type: { prim: "string" } })
+   *
    *
    * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-helpers-scripts-pack-data
    */

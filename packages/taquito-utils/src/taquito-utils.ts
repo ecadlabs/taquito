@@ -10,7 +10,9 @@
  */
 
 import { Buffer } from 'buffer';
-import { prefix } from './constants';
+import { Prefix, prefix, prefixLength } from './constants';
+import { validatePkAndExtractPrefix } from './verify-signature';
+import { hash } from '@stablelib/blake2b';
 import blake from 'blakejs';
 import bs58check from 'bs58check';
 
@@ -19,7 +21,8 @@ export { VERSION } from './version';
 
 export { prefix, Prefix, prefixLength } from './constants';
 
-export { verifySignature } from './verify-signature';
+export { verifySignature, validatePkAndExtractPrefix } from './verify-signature';
+export * from './errors';
 
 /**
  *
@@ -34,10 +37,10 @@ export function encodeExpr(value: string) {
 
 /**
  *
- * @description Return the operation hash of a signed operation 
+ * @description Return the operation hash of a signed operation
  * @param value Value in hex of a signed operation
  */
- export function encodeOpHash(value: string) {
+export function encodeOpHash(value: string) {
   const blakeHash = blake.blake2b(hex2buf(value), undefined, 32);
   return b58cencode(blakeHash, prefix.o);
 }
@@ -84,7 +87,7 @@ export function b58decode(payload: string) {
     [prefix.tz3.toString()]: '0002',
   };
 
-  let pref = prefixMap[new Uint8Array(buf.slice(0, 3)).toString()];
+  const pref = prefixMap[new Uint8Array(buf.slice(0, 3)).toString()];
   if (pref) {
     // tz addresses
     const hex = buf2hex(buf.slice(3));
@@ -158,7 +161,12 @@ export function encodeKeyHash(value: string) {
  * @param hex Hex string to convert
  */
 export const hex2buf = (hex: string): Uint8Array => {
-  return new Uint8Array(hex.match(/[\da-f]{2}/gi)!.map((h) => parseInt(h, 16)));
+  const match = hex.match(/[\da-f]{2}/gi);
+  if (match) {
+    return new Uint8Array(match.map((h) => parseInt(h, 16)));
+  } else {
+    throw new Error(`Unable to convert ${hex} to a Uint8Array`);
+  }
 };
 
 /**
@@ -239,6 +247,41 @@ export const buf2hex = (buffer: Buffer): string => {
     hexParts.push(paddedHex);
   });
   return hexParts.join('');
+};
+
+/**
+ *
+ *  @description Gets Tezos address (PKH) from Public Key
+ *
+ *  @param publicKey Public Key
+ *  @returns A string of the Tezos address (PKH) that was derived from the given Public Key
+ */
+export const getPkhfromPk = (publicKey: string): string => {
+  let encodingPrefix;
+  let prefixLen;
+
+  const keyPrefix = validatePkAndExtractPrefix(publicKey);
+  const decoded = b58cdecode(publicKey, prefix[keyPrefix]);
+
+  switch (keyPrefix) {
+    case Prefix.EDPK:
+      encodingPrefix = prefix[Prefix.TZ1];
+      prefixLen = prefixLength[Prefix.TZ1];
+      break;
+    case Prefix.SPPK:
+      encodingPrefix = prefix[Prefix.TZ2];
+      prefixLen = prefixLength[Prefix.TZ2];
+      break;
+    case Prefix.P2PK:
+      encodingPrefix = prefix[Prefix.TZ3];
+      prefixLen = prefixLength[Prefix.TZ3];
+      break;
+  }
+
+  const hashed = hash(decoded, prefixLen);
+  const result = b58cencode(hashed, encodingPrefix);
+
+  return result;
 };
 
 /**

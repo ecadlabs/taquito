@@ -1,14 +1,15 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { RpcClient } from '../src/taquito-rpc';
 import BigNumber from 'bignumber.js';
-import { 
-  LazyStorageDiffBigMap, 
-  OperationContentsAndResultEndorsement, 
-  OperationContentsAndResultEndorsementWithSlot, 
-  OperationContentsAndResultOrigination, 
-  OperationResultTransaction, 
-  OperationContentsAndResultTransaction, 
+import {
+  LazyStorageDiffBigMap,
+  OperationContentsAndResultEndorsement,
+  OperationContentsAndResultEndorsementWithSlot,
+  OperationContentsAndResultOrigination,
+  OperationResultTransaction,
+  OperationContentsAndResultTransaction,
   LazyStorageDiffSaplingState,
-  OperationContentsAndResultRegisterGlobalConstant
+  OperationContentsAndResultRegisterGlobalConstant,
 } from '../src/types';
 
 /**
@@ -20,6 +21,8 @@ describe('RpcClient test', () => {
     createRequest: jest.Mock<any, any>;
   };
 
+  const contractAddress = 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D';
+
   beforeEach(() => {
     httpBackend = {
       createRequest: jest.fn(),
@@ -28,7 +31,7 @@ describe('RpcClient test', () => {
   });
 
   it('RpcClient is instantiable', () => {
-    const rpcUrl: string = 'test';
+    const rpcUrl = 'test';
     expect(new RpcClient(rpcUrl)).toBeInstanceOf(RpcClient);
   });
 
@@ -36,10 +39,10 @@ describe('RpcClient test', () => {
     it('Should prevent double slashes given multiple trailing slashes', async (done) => {
       const client = new RpcClient('root.com/test///', 'test', httpBackend as any);
       httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
-      await client.getBalance('address');
+      await client.getBalance(contractAddress);
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root.com/test/chains/test/blocks/head/context/contracts/address/balance',
+        url: `root.com/test/chains/test/blocks/head/context/contracts/${contractAddress}/balance`,
       });
       done();
     });
@@ -47,10 +50,10 @@ describe('RpcClient test', () => {
     it('Should prevent double slashes given one trailing slash', async (done) => {
       const client = new RpcClient('root.com/test/', 'test', httpBackend as any);
       httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
-      await client.getBalance('address');
+      await client.getBalance(contractAddress);
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root.com/test/chains/test/blocks/head/context/contracts/address/balance',
+        url: `root.com/test/chains/test/blocks/head/context/contracts/${contractAddress}/balance`,
       });
       done();
     });
@@ -58,10 +61,10 @@ describe('RpcClient test', () => {
     it('Should prevent double slashes given no trailing slash', async (done) => {
       const client = new RpcClient('root.com/test', 'test', httpBackend as any);
       httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
-      await client.getBalance('address');
+      await client.getBalance(contractAddress);
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root.com/test/chains/test/blocks/head/context/contracts/address/balance',
+        url: `root.com/test/chains/test/blocks/head/context/contracts/${contractAddress}/balance`,
       });
       done();
     });
@@ -70,11 +73,11 @@ describe('RpcClient test', () => {
   describe('getBalance', () => {
     it('query the right url and return a string', async (done) => {
       httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
-      const balance = await client.getBalance('address');
+      const balance = await client.getBalance(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root/chains/test/blocks/head/context/contracts/address/balance',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/balance`,
       });
       expect(balance).toBeInstanceOf(BigNumber);
       expect(balance.toString()).toEqual('10000');
@@ -85,11 +88,11 @@ describe('RpcClient test', () => {
 
   describe('getStorage', () => {
     it('query the right url', async (done) => {
-      await client.getStorage('address');
+      await client.getStorage(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root/chains/test/blocks/head/context/contracts/address/storage',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/storage`,
       });
 
       done();
@@ -98,11 +101,11 @@ describe('RpcClient test', () => {
 
   describe('getScript', () => {
     it('query the right url', async (done) => {
-      await client.getScript('address');
+      await client.getScript(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root/chains/test/blocks/head/context/contracts/address/script',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/script`,
       });
 
       done();
@@ -111,11 +114,11 @@ describe('RpcClient test', () => {
 
   describe('getNormalizedScript', () => {
     it('query the right url', async (done) => {
-      await client.getNormalizedScript('address');
+      await client.getNormalizedScript(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'POST',
-        url: 'root/chains/test/blocks/head/context/contracts/address/script/normalized',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/script/normalized`,
       });
       expect(httpBackend.createRequest.mock.calls[0][1]).toEqual({ unparsing_mode: 'Readable' });
 
@@ -126,11 +129,11 @@ describe('RpcClient test', () => {
   describe('getContract', () => {
     it('query the right url', async (done) => {
       httpBackend.createRequest.mockResolvedValue({ balance: '10000' });
-      const response = await client.getContract('address');
+      const response = await client.getContract(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root/chains/test/blocks/head/context/contracts/address',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}`,
       });
 
       expect(response.balance).toBeInstanceOf(BigNumber);
@@ -142,11 +145,11 @@ describe('RpcClient test', () => {
 
   describe('getManagerKey', () => {
     it('query the right url', async (done) => {
-      await client.getManagerKey('address');
+      await client.getManagerKey(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root/chains/test/blocks/head/context/contracts/address/manager_key',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/manager_key`,
       });
 
       done();
@@ -155,11 +158,11 @@ describe('RpcClient test', () => {
 
   describe('getDelegate', () => {
     it('query the right url', async (done) => {
-      await client.getDelegate('address');
+      await client.getDelegate(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root/chains/test/blocks/head/context/contracts/address/delegate',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/delegate`,
       });
 
       done();
@@ -199,11 +202,11 @@ describe('RpcClient test', () => {
 
     it('query the right url', async (done) => {
       httpBackend.createRequest.mockResolvedValue(sampleResponse);
-      await client.getDelegates('address');
+      await client.getDelegates(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root/chains/test/blocks/head/context/delegates/address',
+        url: `root/chains/test/blocks/head/context/delegates/${contractAddress}`,
       });
 
       done();
@@ -211,7 +214,7 @@ describe('RpcClient test', () => {
 
     it('parse the response properly', async (done) => {
       httpBackend.createRequest.mockResolvedValue(sampleResponse);
-      const response = await client.getDelegates('address');
+      const response = await client.getDelegates(contractAddress);
 
       expect(response).toEqual({
         balance: new BigNumber('5092341810457'),
@@ -259,7 +262,7 @@ describe('RpcClient test', () => {
         grace_period: 59,
         voting_power: 729,
       });
-      const response = await client.getDelegates('address');
+      const response = await client.getDelegates(contractAddress);
 
       expect(response).toEqual({
         balance: new BigNumber('5976016544884'),
@@ -292,11 +295,10 @@ describe('RpcClient test', () => {
 
   describe('getBigMapKey', () => {
     it('query the right url', async (done) => {
-      // tslint:disable-next-line: deprecation
-      await client.getBigMapKey('address', { key: 'test', type: 'string' } as any);
+      await client.getBigMapKey(contractAddress, { key: 'test', type: 'string' } as any);
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'POST',
-        url: 'root/chains/test/blocks/head/context/contracts/address/big_map_get',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/big_map_get`,
       });
 
       expect(httpBackend.createRequest.mock.calls[0][1]).toEqual({ key: 'test', type: 'string' });
@@ -518,6 +520,114 @@ describe('RpcClient test', () => {
         ],
       });
 
+      done();
+    });
+  });
+
+  describe('getConstants Proto012', () => {
+    it('query the right url and casts property to BigNumber', async (done) => {
+      httpBackend.createRequest.mockReturnValue(
+        Promise.resolve({
+          proof_of_work_nonce_size: 8,
+          nonce_length: 32,
+          max_anon_ops_per_block: 132,
+          max_operation_data_length: 32768,
+          max_proposals_per_delegate: 20,
+          max_micheline_node_count: 50000,
+          max_micheline_bytes_limit: 50000,
+          max_allowed_global_constants_depth: 10000,
+          cache_layout: ['100000000', '240000', '2560'],
+          michelson_maximum_type_size: 2001,
+          preserved_cycles: 3,
+          blocks_per_cycle: 2048,
+          blocks_per_commitment: 64,
+          blocks_per_stake_snapshot: 512,
+          blocks_per_voting_period: 40960,
+          hard_gas_limit_per_operation: '1040000',
+          hard_gas_limit_per_block: '5200000',
+          proof_of_work_threshold: '-1',
+          tokens_per_roll: '8000000000',
+          seed_nonce_revelation_tip: '125000',
+          origination_size: 257,
+          baking_reward_fixed_portion: '10000000',
+          baking_reward_bonus_per_slot: '4286',
+          endorsing_reward_per_slot: '2857',
+          cost_per_byte: '250',
+          hard_storage_limit_per_operation: '60000',
+          quorum_min: 2000,
+          quorum_max: 7000,
+          min_proposal_quorum: 500,
+          liquidity_baking_subsidy: '2500000',
+          liquidity_baking_sunset_level: 525600,
+          liquidity_baking_escape_ema_threshold: 100000,
+          max_operations_time_to_live: 120,
+          minimal_block_delay: '30',
+          delay_increment_per_round: '15',
+          consensus_committee_size: 7000,
+          consensus_threshold: 4667,
+          minimal_participation_ratio: { numerator: 2, denominator: 3 },
+          max_slashing_period: 2,
+          frozen_deposits_percentage: 10,
+          double_baking_punishment: '640000000',
+          ratio_of_frozen_deposits_slashed_per_double_endorsement: { numerator: 1, denominator: 2 },
+        })
+      );
+      const response = await client.getConstants();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/context/constants',
+      });
+      expect(response).toEqual({
+        proof_of_work_nonce_size: 8,
+        nonce_length: 32,
+        max_anon_ops_per_block: 132,
+        max_operation_data_length: 32768,
+        max_proposals_per_delegate: 20,
+        preserved_cycles: 3,
+        blocks_per_cycle: 2048,
+        blocks_per_commitment: 64,
+        blocks_per_voting_period: 40960,
+        hard_gas_limit_per_operation: new BigNumber(1040000),
+        hard_gas_limit_per_block: new BigNumber(5200000),
+        proof_of_work_threshold: new BigNumber(-1),
+        tokens_per_roll: new BigNumber(8000000000),
+        seed_nonce_revelation_tip: new BigNumber(125000),
+        origination_size: 257,
+        cost_per_byte: new BigNumber(250),
+        hard_storage_limit_per_operation: new BigNumber(60000),
+        quorum_min: 2000,
+        quorum_max: 7000,
+        min_proposal_quorum: 500,
+        liquidity_baking_subsidy: new BigNumber(2500000),
+        liquidity_baking_sunset_level: 525600,
+        liquidity_baking_escape_ema_threshold: 100000,
+        max_allowed_global_constants_depth: 10000,
+        max_micheline_bytes_limit: 50000,
+        max_micheline_node_count: 50000,
+        michelson_maximum_type_size: 2001,
+        cache_layout: [new BigNumber(100000000), new BigNumber(240000), new BigNumber(2560)],
+        blocks_per_stake_snapshot: 512,
+        baking_reward_fixed_portion: new BigNumber(10000000),
+        baking_reward_bonus_per_slot: new BigNumber(4286),
+        endorsing_reward_per_slot: new BigNumber(2857),
+        max_operations_time_to_live: 120,
+        minimal_block_delay: new BigNumber(30),
+        delay_increment_per_round: new BigNumber(15),
+        consensus_committee_size: 7000,
+        consensus_threshold: 4667,
+        minimal_participation_ratio: {
+          denominator: 3,
+          numerator: 2,
+        },
+        max_slashing_period: 2,
+        frozen_deposits_percentage: 10,
+        double_baking_punishment: new BigNumber(640000000),
+        ratio_of_frozen_deposits_slashed_per_double_endorsement: {
+          denominator: 2,
+          numerator: 1,
+        },
+      });
       done();
     });
   });
@@ -2031,109 +2141,111 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('fetches a block having a RegisterGlobalConstant operation and it validates its properties, proto 11', async done => {
+    it('fetches a block having a RegisterGlobalConstant operation and it validates its properties, proto 11', async (done) => {
       httpBackend.createRequest.mockReturnValue(
-        Promise.resolve(
-          {
-            "protocol": "PtHangzHogokSuiMHemCuowEavgYTP8J5qQ9fQS793MHYFpCY3r",
-            "chain_id": "NetXuXoGoLxNK6o",
-            "hash": "BLGJTp5epczxcqaKkDdpPSKStBQ9FbLDR8qjprW1LE5SbkzmyCJ",
-            "header": {},
-            "metadata": {},
-            "operations": [
-              [],
-              [],
-              [],
-              [
-                {
-                  "protocol": "PtHangzHogokSuiMHemCuowEavgYTP8J5qQ9fQS793MHYFpCY3r",
-                  "chain_id": "NetXuXoGoLxNK6o",
-                  "hash": "ooG5DTHDKCeJTSaJhmQqxc2K4CVt5qYJaCXCupaMxAMAabcAJkc",
-                  "branch": "BLU4Led8FWFT9WiYgSLbFb9AJ6eTi4LxfwshHpvZwsupuKzLeLN",
-                  "contents": [
-                    {
-                      "kind": "register_global_constant",
-                      "source": "tz1TJGsZxvr6aBGUqfQVxufesTtA7QGi696D",
-                      "fee": "372",
-                      "counter": "7423375",
-                      "gas_limit": "1330",
-                      "storage_limit": "93",
-                      "value": {
-                        "prim": "Pair",
-                        "args": [
+        Promise.resolve({
+          protocol: 'PtHangzHogokSuiMHemCuowEavgYTP8J5qQ9fQS793MHYFpCY3r',
+          chain_id: 'NetXuXoGoLxNK6o',
+          hash: 'BLGJTp5epczxcqaKkDdpPSKStBQ9FbLDR8qjprW1LE5SbkzmyCJ',
+          header: {},
+          metadata: {},
+          operations: [
+            [],
+            [],
+            [],
+            [
+              {
+                protocol: 'PtHangzHogokSuiMHemCuowEavgYTP8J5qQ9fQS793MHYFpCY3r',
+                chain_id: 'NetXuXoGoLxNK6o',
+                hash: 'ooG5DTHDKCeJTSaJhmQqxc2K4CVt5qYJaCXCupaMxAMAabcAJkc',
+                branch: 'BLU4Led8FWFT9WiYgSLbFb9AJ6eTi4LxfwshHpvZwsupuKzLeLN',
+                contents: [
+                  {
+                    kind: 'register_global_constant',
+                    source: 'tz1TJGsZxvr6aBGUqfQVxufesTtA7QGi696D',
+                    fee: '372',
+                    counter: '7423375',
+                    gas_limit: '1330',
+                    storage_limit: '93',
+                    value: {
+                      prim: 'Pair',
+                      args: [
+                        {
+                          int: '999',
+                        },
+                        {
+                          int: '999',
+                        },
+                      ],
+                    },
+                    metadata: {
+                      balance_updates: [
+                        {
+                          kind: 'contract',
+                          contract: 'tz1TJGsZxvr6aBGUqfQVxufesTtA7QGi696D',
+                          change: '-372',
+                          origin: 'block',
+                        },
+                        {
+                          kind: 'freezer',
+                          category: 'fees',
+                          delegate: 'tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE',
+                          cycle: 17,
+                          change: '372',
+                          origin: 'block',
+                        },
+                      ],
+                      operation_result: {
+                        status: 'applied',
+                        balance_updates: [
                           {
-                            "int": "999"
+                            kind: 'contract',
+                            contract: 'tz1TJGsZxvr6aBGUqfQVxufesTtA7QGi696D',
+                            change: '-18250',
+                            origin: 'block',
                           },
-                          {
-                            "int": "999"
-                          }
-                        ]
-                      },
-                      "metadata": {
-                        "balance_updates": [
-                          {
-                            "kind": "contract",
-                            "contract": "tz1TJGsZxvr6aBGUqfQVxufesTtA7QGi696D",
-                            "change": "-372",
-                            "origin": "block"
-                          },
-                          {
-                            "kind": "freezer",
-                            "category": "fees",
-                            "delegate": "tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE",
-                            "cycle": 17,
-                            "change": "372",
-                            "origin": "block"
-                          }
                         ],
-                        "operation_result": {
-                          "status": "applied",
-                          "balance_updates": [
-                            {
-                              "kind": "contract",
-                              "contract": "tz1TJGsZxvr6aBGUqfQVxufesTtA7QGi696D",
-                              "change": "-18250",
-                              "origin": "block"
-                            }
-                          ],
-                          "consumed_gas": "1230",
-                          "storage_size": "73",
-                          "global_address": "exprvNeeFGy8M7xhmaq7bkQcd3RsXc7ogv2HwL1dciubXdgPHEMRH2"
-                        }
-                      }
-                    }
-                  ],
-                  "signature": "sigVW23SZBAnGLYQSDxN8y4YvMLUkZ13bBRHSoQSBpLASZvKgXZWWmp1q1iaqqV4hr3xRN9neYong8jHqxak2Y5vRYK8LaBY"
-                }
-              ]
-            ]
-          }
-        )
+                        consumed_gas: '1230',
+                        storage_size: '73',
+                        global_address: 'exprvNeeFGy8M7xhmaq7bkQcd3RsXc7ogv2HwL1dciubXdgPHEMRH2',
+                      },
+                    },
+                  },
+                ],
+                signature:
+                  'sigVW23SZBAnGLYQSDxN8y4YvMLUkZ13bBRHSoQSBpLASZvKgXZWWmp1q1iaqqV4hr3xRN9neYong8jHqxak2Y5vRYK8LaBY',
+              },
+            ],
+          ],
+        })
       );
 
       const response = await client.getBlock();
 
       expect(response.operations[3][0].contents[0].kind).toEqual('register_global_constant');
-      const content = response.operations[3][0].contents[0] as OperationContentsAndResultRegisterGlobalConstant;
-      expect(content.source).toEqual("tz1TJGsZxvr6aBGUqfQVxufesTtA7QGi696D");
-      expect(content.fee).toEqual("372");
-      expect(content.counter).toEqual("7423375");
-      expect(content.gas_limit).toEqual("1330");
-      expect(content.storage_limit).toEqual("93");
+      const content = response.operations[3][0]
+        .contents[0] as OperationContentsAndResultRegisterGlobalConstant;
+      expect(content.source).toEqual('tz1TJGsZxvr6aBGUqfQVxufesTtA7QGi696D');
+      expect(content.fee).toEqual('372');
+      expect(content.counter).toEqual('7423375');
+      expect(content.gas_limit).toEqual('1330');
+      expect(content.storage_limit).toEqual('93');
       expect(content.value).toEqual({
-        "prim": "Pair",
-        "args": [
+        prim: 'Pair',
+        args: [
           {
-            "int": "999"
+            int: '999',
           },
           {
-            "int": "999"
-          }
-        ]
+            int: '999',
+          },
+        ],
       });
-      expect(content.metadata.balance_updates[0].kind).toEqual("contract");
+      expect(content.metadata.balance_updates[0].kind).toEqual('contract');
       expect(content.metadata.balance_updates[0].contract).toBeDefined();
-      expect(content.metadata.balance_updates[0].contract).toEqual('tz1TJGsZxvr6aBGUqfQVxufesTtA7QGi696D');
+      expect(content.metadata.balance_updates[0].contract).toEqual(
+        'tz1TJGsZxvr6aBGUqfQVxufesTtA7QGi696D'
+      );
       expect(content.metadata.balance_updates[0].change).toBeDefined();
       expect(content.metadata.balance_updates[0].change).toEqual('-372');
       expect(content.metadata.balance_updates[0].origin).toBeDefined();
@@ -2145,7 +2257,9 @@ describe('RpcClient test', () => {
       expect(content.metadata.operation_result.global_address).toBeDefined();
       expect(content.metadata.operation_result.status).toEqual('applied');
       expect(content.metadata.operation_result.balance_updates).toBeDefined();
-      expect(content.metadata.operation_result.global_address).toEqual("exprvNeeFGy8M7xhmaq7bkQcd3RsXc7ogv2HwL1dciubXdgPHEMRH2");
+      expect(content.metadata.operation_result.global_address).toEqual(
+        'exprvNeeFGy8M7xhmaq7bkQcd3RsXc7ogv2HwL1dciubXdgPHEMRH2'
+      );
       expect(content.metadata.operation_result.consumed_gas).toBeDefined();
       expect(content.metadata.operation_result.storage_size).toBeDefined();
       expect(content.metadata.operation_result.errors).toBeUndefined();
@@ -2154,7 +2268,6 @@ describe('RpcClient test', () => {
 
       done();
     });
-
   });
 
   describe('getBakingRights', () => {
@@ -2422,11 +2535,11 @@ describe('RpcClient test', () => {
   describe('getEntrypoints', () => {
     it('query the right url and data', async (done) => {
       httpBackend.createRequest.mockReturnValue({ entrypoints: {} });
-      const response = await client.getEntrypoints('test');
+      const response = await client.getEntrypoints(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root/chains/test/blocks/head/context/contracts/test/entrypoints',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/entrypoints`,
       });
       expect(response).toEqual({ entrypoints: {} });
       done();
@@ -2504,7 +2617,7 @@ describe('RpcClient test', () => {
 
   describe('getRpcUrl', () => {
     it('return the RPC Url', () => {
-      const url: string = 'https://mainnet.api.tez.ie/';
+      const url = 'https://mainnet.api.tez.ie/';
       const rpcUrlMainnet = new RpcClient(url).getRpcUrl();
       expect(rpcUrlMainnet).toEqual('https://mainnet.api.tez.ie/');
       const rpcUrlCarthagenet = new RpcClient('https://api.tez.ie/rpc/carthagenet').getRpcUrl();

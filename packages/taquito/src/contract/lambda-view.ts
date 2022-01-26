@@ -5,11 +5,11 @@ import { ContractProvider } from './interface';
 import { Wallet } from '../wallet';
 
 export default class LambdaView {
-  public readonly voidLambda: Object;
+  public readonly voidLambda: object;
 
   constructor(
     private lambdaContract: Contract | WalletContract,
-    private viewContract: ContractAbstraction< ContractProvider | Wallet > ,
+    private viewContract: ContractAbstraction<ContractProvider | Wallet>,
     public readonly viewMethod: string = 'default',
     private contractParameter: MichelsonV1Expression = { prim: 'Unit' }
   ) {
@@ -25,13 +25,13 @@ export default class LambdaView {
 
         const failedWith = lastError.with;
         return failedWith;
-      } else { 
+      } else {
         throw ex;
       }
     }
   }
 
-  private createVoidLambda(): Object {
+  private createVoidLambda(): object {
     const [parameter, callback] = this.getView();
 
     let contractArgs: MichelsonV1Expression[] = [
@@ -228,8 +228,8 @@ export default class LambdaView {
 
     const args = Array.from(entrypoint.args) as [MichelsonV1Expression, MichelsonV1Expression];
     const [parameter, callbackContract] = args;
-    if( 'annots' in parameter ) {
-      delete parameter['annots']
+    if ('annots' in parameter) {
+      delete parameter['annots'];
     }
 
     if (!('prim' in callbackContract) || !callbackContract.args) {

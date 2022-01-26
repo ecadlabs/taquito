@@ -1,13 +1,11 @@
 export class InvalidAddressError extends Error {
-    constructor(message: string) {
-        super(message);
-        Object.setPrototypeOf(this, InvalidAddressError.prototype)
-    }
+  constructor(message: string) {
+    super(message);
+  }
 }
 
 export class InvalidScriptFormatError extends Error {
-    constructor(message: string) {
-        super(message);
-        Object.setPrototypeOf(this, InvalidScriptFormatError.prototype)
-    }
+  constructor(message: string) {
+    super(message);
+  }
 }

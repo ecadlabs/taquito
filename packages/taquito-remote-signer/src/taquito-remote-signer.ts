@@ -11,8 +11,12 @@ import {
   isValidPrefix,
   mergebuf,
   prefix,
-  verifySignature
+  verifySignature,
+  validateKeyHash,
+  ValidationResult,
+  InvalidKeyHashError,
 } from '@taquito/utils';
+
 import sodium from 'libsodium-wrappers';
 import toBuffer from 'typedarray-to-buffer';
 import { BadSigningDataError, KeyNotFoundError, OperationNotAuthorizedError } from './errors';
@@ -61,7 +65,11 @@ export class RemoteSigner implements Signer {
     private rootUrl: string,
     private options: RemoteSignerOptions = {},
     private http = new HttpBackend()
-  ) {}
+  ) {
+    if (validateKeyHash(this.pkh) !== ValidationResult.VALID) {
+      throw new InvalidKeyHashError(`Invalid Public Key Hash: ${this.pkh}`);
+    }
+  }
 
   async publicKeyHash(): Promise<string> {
     return this.pkh;
@@ -109,7 +117,7 @@ export class RemoteSigner implements Signer {
         },
         watermarkedBytes
       );
-      let pref = signature.startsWith('sig')
+      const pref = signature.startsWith('sig')
         ? signature.substring(0, 3)
         : signature.substring(0, 5);
 

@@ -4,7 +4,7 @@ const crypto = require('crypto');
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
     const Tezos = lib;
-    const hangzhounet = protocol === Protocols.PtHangz2 ? test : test.skip;
+    const hangzhounetOrHigher = (protocol === Protocols.PtHangz2 || protocol === Protocols.PsiThaCa) ? test : test.skip;
 
     describe(`Test contract.batch to register global constant using: ${rpc}`, () => {
         const randomAnnots = () => crypto.randomBytes(3).toString('hex');
@@ -13,7 +13,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
             done();
         });
 
-        hangzhounet('Batch transfer and register global constant operations', async (done) => {
+        hangzhounetOrHigher('Batch transfer and register global constant operations', async (done) => {
             const batchOp = await Tezos.contract
                 .batch([
                     { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 },

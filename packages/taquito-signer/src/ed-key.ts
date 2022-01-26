@@ -1,5 +1,5 @@
 import sodium from 'libsodium-wrappers';
-import { b58cencode, b58cdecode, prefix, buf2hex, Prefix, isValidPrefix } from '@taquito/utils';
+import { b58cencode, b58cdecode, prefix, buf2hex, isValidPrefix } from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
 
 /**

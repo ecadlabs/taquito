@@ -12,11 +12,14 @@ import {
   WalletTransferParams,
 } from '@taquito/taquito';
 
+// eslint-disable-next-line no-var
 declare var tezbridge: any;
 
-export class TezBridgeNotDetectedError implements Error {
-  name: string = 'TezBridgeNotDetectedError';
-  message: string = 'tezbridge plugin could not be detected in your browser';
+export class TezBridgeNotDetectedError extends Error {
+  name = 'TezBridgeNotDetectedError';
+  constructor() {
+    super('tezbridge plugin could not be detected in your browser');
+  }
 }
 
 export { VERSION } from './version';

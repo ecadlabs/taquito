@@ -25,13 +25,16 @@
         "tickets",
         "transaction_limits",
         "making_transfers",
+        "on_chain_views",
         "tutorial_links",
         "tzip12",
         "metadata-tzip16",
         "validators",
         "wallet_API",
         "wallets",
-        "web3js_taquito"
+        "web3js_taquito",
+        "taquito_utils",
+        "contracts_collection"
       ]
     },
     {
@@ -42,7 +45,7 @@
     {
       "type": "category",
       "label": "Packages",
-      "items": ["michelson_encoder", "contracts-library"]
+      "items": ["michelson_encoder", "contracts-library", "taquito_utils"]
     },
     {
       "type": "category",

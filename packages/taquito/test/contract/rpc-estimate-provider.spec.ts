@@ -136,7 +136,7 @@ describe('RPCEstimateProvider test', () => {
       // Simulate real op size
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(297).fill('aa').join(''));
       const estimate = await estimateProvider.transfer({
-        to: 'test_to',
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
       });
       expect(estimate).toMatchObject({
@@ -152,7 +152,7 @@ describe('RPCEstimateProvider test', () => {
       // Simulate real op size
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(297).fill('aa').join(''));
       const estimate = await estimateProvider.transfer({
-        to: 'test_to',
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
       });
       expect(estimate).toMatchObject({
@@ -169,7 +169,7 @@ describe('RPCEstimateProvider test', () => {
       // Simulate real op size
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(285).fill('aa').join(''));
       const estimate = await estimateProvider.transfer({
-        to: 'test_to',
+        to: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
         amount: 2,
       });
       expect(estimate).toMatchObject({
@@ -186,8 +186,8 @@ describe('RPCEstimateProvider test', () => {
       // Simulate real op size
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(149).fill('aa').join(''));
       const estimate = await estimateProvider.setDelegate({
-        source: 'test',
-        delegate: 'test',
+        source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+        delegate: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
       });
       expect(estimate).toMatchObject({
         gasLimit: 10100,
@@ -220,7 +220,7 @@ describe('RPCEstimateProvider test', () => {
       // Simulate real op size
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(226).fill('aa').join(''));
       const estimate = await estimateProvider.transfer({
-        to: 'test_to',
+        to: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
         amount: 2,
       });
       expect(estimate).toMatchObject({
@@ -237,7 +237,7 @@ describe('RPCEstimateProvider test', () => {
       // Simulate real op size
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(153).fill('aa').join(''));
       const estimate = await estimateProvider.transfer({
-        to: 'test_to',
+        to: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
         amount: 2,
       });
       expect(estimate).toMatchObject({
@@ -254,7 +254,7 @@ describe('RPCEstimateProvider test', () => {
       // Simulate real op size
       mockRpcClient.forgeOperations.mockResolvedValue(new Array(153).fill('aa').join(''));
       const estimate = await estimateProvider.transfer({
-        to: 'test_to',
+        to: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
         amount: 2,
       });
       expect(estimate).toMatchObject({
@@ -283,7 +283,7 @@ describe('RPCEstimateProvider test', () => {
     it('should produce a reveal and transaction operation', async (done) => {
       mockRpcClientRunOperation();
       const estimate = await estimateProvider.transfer({
-        to: 'test_to',
+        to: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
         amount: 2,
         fee: 10000,
         gasLimit: 10600,
@@ -297,7 +297,7 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClientRunOperation();
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('1100'));
       await estimateProvider.transfer({
-        to: 'test_to',
+        to: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
         amount: 2,
       });
       expect(mockRpcClient.runOperation).toHaveBeenCalledWith(
@@ -320,7 +320,7 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClientRunOperation();
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('800000000'));
       await estimateProvider.transfer({
-        to: 'test_to',
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
       });
       expect(mockRpcClient.runOperation).toHaveBeenCalledWith(
@@ -343,7 +343,7 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClientRunOperation();
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('1100'));
       await estimateProvider.transfer({
-        to: 'test_to',
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
         storageLimit: 200,
       });
@@ -367,7 +367,7 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClientRunOperation();
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('10000000000'));
       await estimateProvider.transfer({
-        to: 'test_to',
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
         gasLimit: 200,
       });
@@ -391,7 +391,7 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClientRunOperation();
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('10000000000'));
       await estimateProvider.transfer({
-        to: 'test_to',
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
         fee: 10000,
       });
@@ -413,7 +413,7 @@ describe('RPCEstimateProvider test', () => {
 
     it('should return parsed error from RPC result', async (done) => {
       const params = {
-        to: 'test_to',
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
         fee: 10000,
         gasLimit: 10600,
@@ -436,7 +436,7 @@ describe('RPCEstimateProvider test', () => {
 
     it('should return parsed error from RPC result', async (done) => {
       const params = {
-        to: 'test_to',
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
         fee: 10000,
         gasLimit: 10600,
@@ -460,7 +460,7 @@ describe('RPCEstimateProvider test', () => {
 
     it('should return internal error when received from preapply', async (done) => {
       const params = {
-        to: 'test_to',
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
         fee: 10000,
         gasLimit: 10600,
@@ -524,10 +524,11 @@ describe('RPCEstimateProvider test', () => {
         { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 },
         { kind: OpKind.TRANSACTION, to: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp', amount: 2 },
         {
-          kind: OpKind.REGISTER_GLOBAL_CONSTANT, value: {
+          kind: OpKind.REGISTER_GLOBAL_CONSTANT,
+          value: {
             prim: 'Pair',
-            args: [{ int: '998' }, { int: '999' }]
-          }
+            args: [{ int: '998' }, { int: '999' }],
+          },
         },
       ]);
       expect(estimate.length).toEqual(3);
@@ -589,10 +590,11 @@ describe('RPCEstimateProvider test', () => {
       });
       const estimate = await estimateProvider.batch([
         {
-          kind: OpKind.REGISTER_GLOBAL_CONSTANT, value: {
+          kind: OpKind.REGISTER_GLOBAL_CONSTANT,
+          value: {
             prim: 'Pair',
-            args: [{ int: '998' }, { int: '999' }]
-          }
+            args: [{ int: '998' }, { int: '999' }],
+          },
         },
         { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 },
         { kind: OpKind.TRANSACTION, to: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp', amount: 2 },
@@ -609,8 +611,8 @@ describe('RPCEstimateProvider test', () => {
         storageLimit: 73,
         suggestedFeeMutez: 408,
       });
-      expect(estimate[2].suggestedFeeMutez).toEqual(385)
-      expect(estimate[3].suggestedFeeMutez).toEqual(385)
+      expect(estimate[2].suggestedFeeMutez).toEqual(385);
+      expect(estimate[3].suggestedFeeMutez).toEqual(385);
       expect(estimate[2]).toMatchObject({
         gasLimit: 1100,
         storageLimit: 0,
@@ -736,9 +738,9 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClient.runOperation.mockResolvedValue(registerGlobalConstantNoReveal);
       const estimate = await estimateProvider.registerGlobalConstant({
         value: {
-          "prim": "Pair",
-          "args": [{ "int": "998" }, { "int": "999" }]
-        }
+          prim: 'Pair',
+          args: [{ int: '998' }, { int: '999' }],
+        },
       });
       expect(estimate).toMatchObject({
         gasLimit: 1330,
@@ -753,9 +755,9 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClient.runOperation.mockResolvedValue(registerGlobalConstantWithReveal);
       const estimate = await estimateProvider.registerGlobalConstant({
         value: {
-          "prim": "Pair",
-          "args": [{ "int": "998" }, { "int": "999" }]
-        }
+          prim: 'Pair',
+          args: [{ int: '998' }, { int: '999' }],
+        },
       });
       expect(estimate).toMatchObject({
         gasLimit: 1330,
@@ -770,8 +772,8 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('1100'));
       await estimateProvider.registerGlobalConstant({
         value: {
-          "prim": "Pair",
-          "args": [{ "int": "998" }, { "int": "999" }]
+          prim: 'Pair',
+          args: [{ int: '998' }, { int: '999' }],
         },
         storageLimit: 200,
       });
@@ -796,8 +798,8 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('10000000000'));
       await estimateProvider.registerGlobalConstant({
         value: {
-          "prim": "Pair",
-          "args": [{ "int": "998" }, { "int": "999" }]
+          prim: 'Pair',
+          args: [{ int: '998' }, { int: '999' }],
         },
         gasLimit: 200,
       });
@@ -822,8 +824,8 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('10000000000'));
       await estimateProvider.registerGlobalConstant({
         value: {
-          "prim": "Pair",
-          "args": [{ "int": "998" }, { "int": "999" }]
+          prim: 'Pair',
+          args: [{ int: '998' }, { int: '999' }],
         },
         fee: 10000,
       });
@@ -846,16 +848,18 @@ describe('RPCEstimateProvider test', () => {
     it('should return parsed error from RPC result', async (done) => {
       mockRpcClient.runOperation.mockResolvedValue(registerGlobalConstantWithError);
 
-      await expect(estimateProvider.registerGlobalConstant({
-        value: {
-          "prim": "Pair",
-          "args": [{ "int": "998" }, { "int": "999" }]
-        }
-      })).rejects.toMatchObject({
-        errors:
-          [{
+      await expect(
+        estimateProvider.registerGlobalConstant({
+          value: {
+            prim: 'Pair',
+            args: [{ int: '998' }, { int: '999' }],
+          },
+        })
+      ).rejects.toMatchObject({
+        errors: [
+          {
             kind: 'branch',
-            id: 'proto.011-PtHangzH.Expression_already_registered'
+            id: 'proto.011-PtHangzH.Expression_already_registered',
           },
           {
             kind: 'permanent',
@@ -863,13 +867,14 @@ describe('RPCEstimateProvider test', () => {
             existing_key: [
               'global_constant',
               'f4b54fa94f3255df3ab6a95d0112964d825642706d42de848b3c507ff4602c4a',
-              'len'
-            ]
-          }],
+              'len',
+            ],
+          },
+        ],
         name: 'TezosOperationError',
         id: 'proto.011-PtHangzH.context.storage_error',
         kind: 'permanent',
-        message: '(permanent) proto.011-PtHangzH.context.storage_error'
+        message: '(permanent) proto.011-PtHangzH.context.storage_error',
       });
       done();
     });

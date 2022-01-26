@@ -14,6 +14,44 @@ describe('Schema test', () => {
         key: 'key_hash',
       },
     });
+
+    expect(schema.generateSchema()).toEqual({
+      __michelsonType: 'pair',
+      schema: {
+        mgr1: {
+          __michelsonType: 'pair',
+          schema: {
+            addr: {
+              __michelsonType: 'address',
+              schema: 'address',
+            },
+            key: {
+              __michelsonType: 'option',
+              schema: {
+                __michelsonType: 'key_hash',
+                schema: 'key_hash',
+              },
+            },
+          },
+        },
+        mgr2: {
+          __michelsonType: 'pair',
+          schema: {
+            addr: {
+              __michelsonType: 'address',
+              schema: 'address',
+            },
+            key: {
+              __michelsonType: 'option',
+              schema: {
+                __michelsonType: 'key_hash',
+                schema: 'key_hash',
+              },
+            },
+          },
+        },
+      },
+    });
   });
 
   it('Should parse storage properly', () => {

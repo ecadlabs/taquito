@@ -187,7 +187,9 @@ export const opMapping: { [key: string]: string } = {
   '8f': 'OPEN_CHEST',
   '90': 'VIEW',
   '91': 'view',
-  '92': 'constant'
+  '92': 'constant',
+  '93': 'SUB_MUTEZ',
+  //'94': 'ASSERT_SOME',
 };
 
 export const opMappingReverse = (() => {
@@ -209,7 +211,7 @@ export const kindMapping: { [key: number]: string } = {
   0x00: 'endorsement',
   0x01: 'seed_nonce_revelation',
   0x05: 'proposals',
-  0x6f: 'register_global_constant'
+  0x6f: 'register_global_constant',
 };
 
 export const kindMappingReverse = (() => {

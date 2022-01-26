@@ -42,7 +42,7 @@ const op = await contract.methods.simple_param(5).send({
 
 You can find below examples of the error messages you may get from different wallets when the limits are not set properly or the operation runs out of gas:
 
-![](https://i.imgur.com/P1esNV2.png)
+![](https://i.imgur.com/jztFyxS.png)
 
 ![](https://i.imgur.com/TbGgcRC.png)
 

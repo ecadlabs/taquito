@@ -28,6 +28,6 @@ export default {
     typescript({ tsconfig: './tsconfig.prod.json', useTsconfigDeclarationDir: true }),
 
     // Resolve source maps to the original source
-    sourceMaps(),
+    sourceMaps()
   ],
 };

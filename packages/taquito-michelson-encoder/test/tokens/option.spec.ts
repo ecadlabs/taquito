@@ -74,15 +74,27 @@ describe('Option token', () => {
 
   describe('Tokey', () => {
     it('Should transform Michelson bytes data to a key of type string', () => {
-      expect(token.ToKey({ prim: 'Some', args: [{ int: '4' }]}).toString()).toEqual('4');
+      expect(token.ToKey({ prim: 'Some', args: [{ int: '4' }] }).toString()).toEqual('4');
     });
   });
 
   describe('ToBigMapKey', () => {
     it('Should transform option value to a Michelson big map key', () => {
       expect(token.ToBigMapKey(5)).toEqual({
-        key: { prim: 'Some', args: [{ int: '5' }]},
-        type: { prim: 'option', args: [{ prim: 'int' }] }
+        key: { prim: 'Some', args: [{ int: '5' }] },
+        type: { prim: 'option', args: [{ prim: 'int' }] },
+      });
+    });
+  });
+
+  describe('generateSchema', () => {
+    it('Should generate the schema properly', () => {
+      expect(token.generateSchema()).toEqual({
+        __michelsonType: 'option',
+        schema: {
+          __michelsonType: 'int',
+          schema: 'int',
+        },
       });
     });
   });

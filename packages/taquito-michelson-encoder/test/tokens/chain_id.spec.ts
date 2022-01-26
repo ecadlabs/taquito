@@ -28,4 +28,13 @@ describe('Chain ID token', () => {
       expect(() => token.Encode([{}])).toThrowError(ChainIDValidationError);
     });
   });
+
+  describe('generateSchema', () => {
+    it('Should generate the schema properly', () => {
+      expect(token.generateSchema()).toEqual({
+        __michelsonType: 'chain_id',
+        schema: 'chain_id',
+      });
+    });
+  });
 });

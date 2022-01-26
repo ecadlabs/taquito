@@ -25,7 +25,7 @@ export enum Prefix {
 
   NET = 'Net',
   NCE = 'nce',
-  B = 'b',
+  B = 'B',
   O = 'o',
   LO = 'Lo',
   LLO = 'LLo',
@@ -93,5 +93,5 @@ export const prefixLength: { [key: string]: number } = {
   [Prefix.NET]: 4,
   [Prefix.B]: 32,
   [Prefix.P]: 32,
-  [Prefix.O]: 32
+  [Prefix.O]: 32,
 };

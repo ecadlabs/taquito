@@ -34,17 +34,26 @@ describe('Mutez token', () => {
   });
 
   describe('ToBigMapKey', () => {
-  it('accepts a number as parameter', () => {
+    it('accepts a number as parameter', () => {
       expect(token.ToBigMapKey(10000000)).toEqual({
         key: { int: '10000000' },
         type: { prim: MutezToken.prim },
       });
     });
-  it('accepts a string as parameter', () => {
+    it('accepts a string as parameter', () => {
       expect(token.ToBigMapKey('10000000')).toEqual({
         key: { int: '10000000' },
         type: { prim: MutezToken.prim },
-      });    
+      });
+    });
+  });
+
+  describe('generateSchema', () => {
+    it('Should generate the schema properly', () => {
+      expect(token.generateSchema()).toEqual({
+        __michelsonType: 'mutez',
+        schema: 'mutez',
+      });
     });
   });
 });

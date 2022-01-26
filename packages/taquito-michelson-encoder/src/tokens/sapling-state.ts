@@ -1,14 +1,15 @@
+import { SaplingStateTokenSchema } from '../schema/types';
 import { Semantic, Token, TokenFactory, TokenValidationError } from './token';
 
 export class SaplingStateValidationError extends TokenValidationError {
-  name: string = 'SaplingStateValidationError';
+  name = 'SaplingStateValidationError';
   constructor(public value: any, public token: SaplingStateToken, message: string) {
     super(value, token, message);
   }
 }
 
 export class SaplingStateToken extends Token {
-  static prim = 'sapling_state';
+  static prim: 'sapling_state' = 'sapling_state';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -61,10 +62,23 @@ export class SaplingStateToken extends Token {
     }
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   ExtractSchema() {
     return {
       [SaplingStateToken.prim]: {
         'memo-size': Number(this.val.args[0]['int']),
+      },
+    };
+  }
+
+  generateSchema(): SaplingStateTokenSchema {
+    return {
+      __michelsonType: SaplingStateToken.prim,
+      schema: {
+        memoSize: this.val.args[0]['int'],
       },
     };
   }
@@ -74,6 +88,5 @@ export class SaplingStateToken extends Token {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }

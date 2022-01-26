@@ -29,19 +29,19 @@ describe('Map token', () => {
     it('Encode properly a map with keys of type string using fromLiteral', () => {
       // Map keys must be in strictly increasing order
       const map = MichelsonMap.fromLiteral({
-        "8": 8,
-        "9": 9,
-        "10": 10,
-        "11": 11,
-        "12": 12
-      })
+        '8': 8,
+        '9': 9,
+        '10': 10,
+        '11': 11,
+        '12': 12,
+      });
       const result = token.Encode([map]);
       expect(result).toEqual([
         { prim: 'Elt', args: [{ string: '10' }, { int: '10' }] },
         { prim: 'Elt', args: [{ string: '11' }, { int: '11' }] },
         { prim: 'Elt', args: [{ string: '12' }, { int: '12' }] },
         { prim: 'Elt', args: [{ string: '8' }, { int: '8' }] },
-        { prim: 'Elt', args: [{ string: '9' }, { int: '9' }] }
+        { prim: 'Elt', args: [{ string: '9' }, { int: '9' }] },
       ]);
     });
 
@@ -52,19 +52,19 @@ describe('Map token', () => {
         0
       ) as MapToken;
       const map = MichelsonMap.fromLiteral({
-        "8": 8,
-        "9": 9,
-        "10": 10,
-        "11": 11,
-        "12": 12
-      })
+        '8': 8,
+        '9': 9,
+        '10': 10,
+        '11': 11,
+        '12': 12,
+      });
       const result = token.Encode([map]);
       expect(result).toEqual([
         { prim: 'Elt', args: [{ int: '8' }, { int: '8' }] },
         { prim: 'Elt', args: [{ int: '9' }, { int: '9' }] },
         { prim: 'Elt', args: [{ int: '10' }, { int: '10' }] },
         { prim: 'Elt', args: [{ int: '11' }, { int: '11' }] },
-        { prim: 'Elt', args: [{ int: '12' }, { int: '12' }] }
+        { prim: 'Elt', args: [{ int: '12' }, { int: '12' }] },
       ]);
     });
 
@@ -77,8 +77,8 @@ describe('Map token', () => {
       const map = MichelsonMap.fromLiteral({
         8: 3,
         9: 16,
-        12: 1
-      })
+        12: 1,
+      });
       const result = token.Encode([map]);
       expect(result).toEqual([
         { prim: 'Elt', args: [{ int: '8' }, { int: '3' }] },
@@ -116,15 +116,15 @@ describe('Map token', () => {
         22: 2,
         9: 4,
         10: 1,
-        12: 15
-      })
+        12: 15,
+      });
       const result = token.Encode([map]);
       expect(result).toEqual([
         { prim: 'Elt', args: [{ int: '8' }, { int: '5' }] },
         { prim: 'Elt', args: [{ int: '9' }, { int: '4' }] },
         { prim: 'Elt', args: [{ int: '10' }, { int: '1' }] },
         { prim: 'Elt', args: [{ int: '12' }, { int: '15' }] },
-        { prim: 'Elt', args: [{ int: '22' }, { int: '2' }] }
+        { prim: 'Elt', args: [{ int: '22' }, { int: '2' }] },
       ]);
     });
 
@@ -132,75 +132,164 @@ describe('Map token', () => {
       // Map keys must be in strictly increasing order
       token = createToken(
         {
-          "prim": "map",
-          "args":
-            [{
-              "prim": "or",
-              "args":
-                [{
-                  "prim": "or",
-                  "args":
-                    [{
-                      "prim": "or",
-                      "args":
-                        [{
-                          "prim": "address",
-                          "annots": ["%myAddress"]
+          prim: 'map',
+          args: [
+            {
+              prim: 'or',
+              args: [
+                {
+                  prim: 'or',
+                  args: [
+                    {
+                      prim: 'or',
+                      args: [
+                        {
+                          prim: 'address',
+                          annots: ['%myAddress'],
                         },
-                        { "prim": "bytes", "annots": ["%myBytes"] }]
+                        { prim: 'bytes', annots: ['%myBytes'] },
+                      ],
                     },
                     {
-                      "prim": "or",
-                      "args":
-                        [{ "prim": "int", "annots": ["%myInt"] },
-                        { "prim": "nat", "annots": ["%myNat"] }]
-                    }]
+                      prim: 'or',
+                      args: [
+                        { prim: 'int', annots: ['%myInt'] },
+                        { prim: 'nat', annots: ['%myNat'] },
+                      ],
+                    },
+                  ],
                 },
                 {
-                  "prim": "or",
-                  "args":
-                    [{
-                      "prim": "or",
-                      "args":
-                        [{
-                          "prim": "pair",
-                          "args":
-                            [{ "prim": "nat" }, { "prim": "int" }],
-                          "annots": ["%myPair"]
+                  prim: 'or',
+                  args: [
+                    {
+                      prim: 'or',
+                      args: [
+                        {
+                          prim: 'pair',
+                          args: [{ prim: 'nat' }, { prim: 'int' }],
+                          annots: ['%myPair'],
                         },
                         {
-                          "prim": "string",
-                          "annots": ["%myString"]
-                        }]
+                          prim: 'string',
+                          annots: ['%myString'],
+                        },
+                      ],
                     },
-                    { "prim": "mutez", "annots": ["%myTez"] }]
-                }]
+                    { prim: 'mutez', annots: ['%myTez'] },
+                  ],
+                },
+              ],
             },
-            { "prim": "nat" }]
+            { prim: 'nat' },
+          ],
         },
         0
       ) as MapToken;
       const map = new MichelsonMap();
       map.set({ myTez: 12 }, 3); //RR
       map.set({ myTez: 2 }, 3); //RR
-      map.set({ myBytes: 'cccc' }, 15) //LLR
-      map.set({ myAddress: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu' }, 5) //LLL
-      map.set({ myNat: 48 }, 16) //LRR
+      map.set({ myBytes: 'cccc' }, 15); //LLR
+      map.set({ myAddress: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu' }, 5); //LLL
+      map.set({ myNat: 48 }, 16); //LRR
       map.set({ myPair: { 4: 12, 5: 6 } }, 3); //RLL
-      map.set({ myInt: 4 }, 6) //LRL
+      map.set({ myInt: 4 }, 6); //LRL
       map.set({ myString: 'test' }, 3); //RLR
-      map.set({ myBytes: 'aaaa' }, 5) //LLR
+      map.set({ myBytes: 'aaaa' }, 5); //LLR
       const result = token.Encode([map]);
       expect(result).toEqual([
-        { prim: 'Elt', args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ string: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu' }] }] }] }, { int: '5' }] },
-        { prim: 'Elt', args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ bytes: 'aaaa' }] }] }] }, { int: '5' }] },
-        { prim: 'Elt', args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ bytes: 'cccc' }] }] }] }, { int: '15' }] },
-        { prim: 'Elt', args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ prim: 'Left', args: [{ int: '4' }] }] }] }, { int: '6' }] },
-        { prim: 'Elt', args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ int: '48' }] }] }] }, { int: '16' }] },
-        { prim: 'Elt', args: [{ prim: 'Right', args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ prim: 'Pair', args: [{ int: '12' }, { int: '6' }] }] }] }] }, { int: '3' }] },
-        { prim: 'Elt', args: [{ prim: 'Right', args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ string: 'test' }] }] }] }, { int: '3' }] },
-        { prim: 'Elt', args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ int: '2' }] }] }, { int: '3' }] },
-        { prim: 'Elt', args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ int: '12' }] }] }, { int: '3' }] },
+        {
+          prim: 'Elt',
+          args: [
+            {
+              prim: 'Left',
+              args: [
+                {
+                  prim: 'Left',
+                  args: [
+                    { prim: 'Left', args: [{ string: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu' }] },
+                  ],
+                },
+              ],
+            },
+            { int: '5' },
+          ],
+        },
+        {
+          prim: 'Elt',
+          args: [
+            {
+              prim: 'Left',
+              args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ bytes: 'aaaa' }] }] }],
+            },
+            { int: '5' },
+          ],
+        },
+        {
+          prim: 'Elt',
+          args: [
+            {
+              prim: 'Left',
+              args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ bytes: 'cccc' }] }] }],
+            },
+            { int: '15' },
+          ],
+        },
+        {
+          prim: 'Elt',
+          args: [
+            {
+              prim: 'Left',
+              args: [{ prim: 'Right', args: [{ prim: 'Left', args: [{ int: '4' }] }] }],
+            },
+            { int: '6' },
+          ],
+        },
+        {
+          prim: 'Elt',
+          args: [
+            {
+              prim: 'Left',
+              args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ int: '48' }] }] }],
+            },
+            { int: '16' },
+          ],
+        },
+        {
+          prim: 'Elt',
+          args: [
+            {
+              prim: 'Right',
+              args: [
+                {
+                  prim: 'Left',
+                  args: [
+                    { prim: 'Left', args: [{ prim: 'Pair', args: [{ int: '12' }, { int: '6' }] }] },
+                  ],
+                },
+              ],
+            },
+            { int: '3' },
+          ],
+        },
+        {
+          prim: 'Elt',
+          args: [
+            {
+              prim: 'Right',
+              args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ string: 'test' }] }] }],
+            },
+            { int: '3' },
+          ],
+        },
+        {
+          prim: 'Elt',
+          args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ int: '2' }] }] }, { int: '3' }],
+        },
+        {
+          prim: 'Elt',
+          args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ int: '12' }] }] }, { int: '3' }],
+        },
       ]);
     });
 
@@ -208,73 +297,159 @@ describe('Map token', () => {
       // Map keys must be in strictly increasing order
       token = createToken(
         {
-          "prim": "map",
-          "args":
-            [{
-              "prim": "or",
-              "args":
-                [{
-                  "prim": "or",
-                  "args":
-                    [{
-                      "prim": "or",
-                      "args":
-                        [{
-                          "prim": "address"
+          prim: 'map',
+          args: [
+            {
+              prim: 'or',
+              args: [
+                {
+                  prim: 'or',
+                  args: [
+                    {
+                      prim: 'or',
+                      args: [
+                        {
+                          prim: 'address',
                         },
-                        { "prim": "bytes" }]
+                        { prim: 'bytes' },
+                      ],
                     },
                     {
-                      "prim": "or",
-                      "args":
-                        [{ "prim": "int" },
-                        { "prim": "nat" }]
-                    }]
+                      prim: 'or',
+                      args: [{ prim: 'int' }, { prim: 'nat' }],
+                    },
+                  ],
                 },
                 {
-                  "prim": "or",
-                  "args":
-                    [{
-                      "prim": "or",
-                      "args":
-                        [{
-                          "prim": "pair",
-                          "args":
-                            [{ "prim": "nat" }, { "prim": "int" }]
+                  prim: 'or',
+                  args: [
+                    {
+                      prim: 'or',
+                      args: [
+                        {
+                          prim: 'pair',
+                          args: [{ prim: 'nat' }, { prim: 'int' }],
                         },
                         {
-                          "prim": "string",
-                        }]
+                          prim: 'string',
+                        },
+                      ],
                     },
-                    { "prim": "mutez" }]
-                }]
+                    { prim: 'mutez' },
+                  ],
+                },
+              ],
             },
-            { "prim": "nat" }]
+            { prim: 'nat' },
+          ],
         },
         0
       ) as MapToken;
       const map = new MichelsonMap();
       map.set({ 6: 12 }, 3); //RR
       map.set({ 6: 2 }, 3); //RR
-      map.set({ 1: 'cccc' }, 15) //LLR
-      map.set({ 0: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu' }, 5) //LLL
-      map.set({ 3: 48 }, 16) //LRR
+      map.set({ 1: 'cccc' }, 15); //LLR
+      map.set({ 0: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu' }, 5); //LLL
+      map.set({ 3: 48 }, 16); //LRR
       map.set({ 4: { 4: 12, 5: 6 } }, 3); //RLL
-      map.set({ 2: 4 }, 6) //LRL
+      map.set({ 2: 4 }, 6); //LRL
       map.set({ 5: 'test' }, 3); //RLR
-      map.set({ 1: 'aaaa' }, 5) //LLR
+      map.set({ 1: 'aaaa' }, 5); //LLR
       const result = token.Encode([map]);
       expect(result).toEqual([
-        { prim: 'Elt', args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ string: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu' }] }] }] }, { int: '5' }] },
-        { prim: 'Elt', args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ bytes: 'aaaa' }] }] }] }, { int: '5' }] },
-        { prim: 'Elt', args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ bytes: 'cccc' }] }] }] }, { int: '15' }] },
-        { prim: 'Elt', args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ prim: 'Left', args: [{ int: '4' }] }] }] }, { int: '6' }] },
-        { prim: 'Elt', args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ int: '48' }] }] }] }, { int: '16' }] },
-        { prim: 'Elt', args: [{ prim: 'Right', args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ prim: 'Pair', args: [{ int: '12' }, { int: '6' }] }] }] }] }, { int: '3' }] },
-        { prim: 'Elt', args: [{ prim: 'Right', args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ string: 'test' }] }] }] }, { int: '3' }] },
-        { prim: 'Elt', args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ int: '2' }] }] }, { int: '3' }] },
-        { prim: 'Elt', args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ int: '12' }] }] }, { int: '3' }] },
-      ])
+        {
+          prim: 'Elt',
+          args: [
+            {
+              prim: 'Left',
+              args: [
+                {
+                  prim: 'Left',
+                  args: [
+                    { prim: 'Left', args: [{ string: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu' }] },
+                  ],
+                },
+              ],
+            },
+            { int: '5' },
+          ],
+        },
+        {
+          prim: 'Elt',
+          args: [
+            {
+              prim: 'Left',
+              args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ bytes: 'aaaa' }] }] }],
+            },
+            { int: '5' },
+          ],
+        },
+        {
+          prim: 'Elt',
+          args: [
+            {
+              prim: 'Left',
+              args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ bytes: 'cccc' }] }] }],
+            },
+            { int: '15' },
+          ],
+        },
+        {
+          prim: 'Elt',
+          args: [
+            {
+              prim: 'Left',
+              args: [{ prim: 'Right', args: [{ prim: 'Left', args: [{ int: '4' }] }] }],
+            },
+            { int: '6' },
+          ],
+        },
+        {
+          prim: 'Elt',
+          args: [
+            {
+              prim: 'Left',
+              args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ int: '48' }] }] }],
+            },
+            { int: '16' },
+          ],
+        },
+        {
+          prim: 'Elt',
+          args: [
+            {
+              prim: 'Right',
+              args: [
+                {
+                  prim: 'Left',
+                  args: [
+                    { prim: 'Left', args: [{ prim: 'Pair', args: [{ int: '12' }, { int: '6' }] }] },
+                  ],
+                },
+              ],
+            },
+            { int: '3' },
+          ],
+        },
+        {
+          prim: 'Elt',
+          args: [
+            {
+              prim: 'Right',
+              args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ string: 'test' }] }] }],
+            },
+            { int: '3' },
+          ],
+        },
+        {
+          prim: 'Elt',
+          args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ int: '2' }] }] }, { int: '3' }],
+        },
+        {
+          prim: 'Elt',
+          args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ int: '12' }] }] }, { int: '3' }],
+        },
+      ]);
     });
 
     it('Encode properly a map with keys of type key using fromLiteral', () => {
@@ -284,23 +459,65 @@ describe('Map token', () => {
         0
       ) as MapToken;
       const map = MichelsonMap.fromLiteral({
-        "edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g": 90,
-        "sppk7aTKnmX5WV17KPo3LanjfPLoXTuNjkQTdLx2bYDqHPLVVCbSwoj": 45,
-        "edpktm3zeGMzfzFuqgyYftt7uNyVRANTjrJCdU7bURwgGb9bRZwmJq": 30,
-        "p2pk65shUHKhx7zUSF7e8KZ2inmQ5aMS4jRBUmK6aCis4oaHoiWPXoT": 99,
-        "edpkuNjKKT48xBoT5asPrWdmuM1Yw8D93MwgFgVvtca8jb5pstzaCh": 1,
-        "p2pk67c5b5THCj5fyksX1C13etdUpLR9BDYvJUuJNrxeGqCgbY3NFpV": 60,
-        "p2pk66xmhjiN7LpfrDGFwpxPtJxkLtPjQ6HUxJbKmRbxSR7RMpamDwi": 70,
-      })
+        edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g: 90,
+        sppk7aTKnmX5WV17KPo3LanjfPLoXTuNjkQTdLx2bYDqHPLVVCbSwoj: 45,
+        edpktm3zeGMzfzFuqgyYftt7uNyVRANTjrJCdU7bURwgGb9bRZwmJq: 30,
+        p2pk65shUHKhx7zUSF7e8KZ2inmQ5aMS4jRBUmK6aCis4oaHoiWPXoT: 99,
+        edpkuNjKKT48xBoT5asPrWdmuM1Yw8D93MwgFgVvtca8jb5pstzaCh: 1,
+        p2pk67c5b5THCj5fyksX1C13etdUpLR9BDYvJUuJNrxeGqCgbY3NFpV: 60,
+        p2pk66xmhjiN7LpfrDGFwpxPtJxkLtPjQ6HUxJbKmRbxSR7RMpamDwi: 70,
+      });
       const result = token.Encode([map]);
       expect(result).toEqual([
-        { prim: 'Elt', args: [{ string: 'edpktm3zeGMzfzFuqgyYftt7uNyVRANTjrJCdU7bURwgGb9bRZwmJq' }, { int: '30' }] },
-        { prim: 'Elt', args: [{ string: 'edpkuNjKKT48xBoT5asPrWdmuM1Yw8D93MwgFgVvtca8jb5pstzaCh' }, { int: '1' }] },
-        { prim: 'Elt', args: [{ string: 'edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g' }, { int: '90' }] },
-        { prim: 'Elt', args: [{ string: 'sppk7aTKnmX5WV17KPo3LanjfPLoXTuNjkQTdLx2bYDqHPLVVCbSwoj' }, { int: '45' }] },
-        { prim: 'Elt', args: [{ string: 'p2pk66xmhjiN7LpfrDGFwpxPtJxkLtPjQ6HUxJbKmRbxSR7RMpamDwi' }, { int: '70' }] },
-        { prim: 'Elt', args: [{ string: 'p2pk67c5b5THCj5fyksX1C13etdUpLR9BDYvJUuJNrxeGqCgbY3NFpV' }, { int: '60' }] },
-        { prim: 'Elt', args: [{ string: 'p2pk65shUHKhx7zUSF7e8KZ2inmQ5aMS4jRBUmK6aCis4oaHoiWPXoT' }, { int: '99' }] },
+        {
+          prim: 'Elt',
+          args: [
+            { string: 'edpktm3zeGMzfzFuqgyYftt7uNyVRANTjrJCdU7bURwgGb9bRZwmJq' },
+            { int: '30' },
+          ],
+        },
+        {
+          prim: 'Elt',
+          args: [
+            { string: 'edpkuNjKKT48xBoT5asPrWdmuM1Yw8D93MwgFgVvtca8jb5pstzaCh' },
+            { int: '1' },
+          ],
+        },
+        {
+          prim: 'Elt',
+          args: [
+            { string: 'edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g' },
+            { int: '90' },
+          ],
+        },
+        {
+          prim: 'Elt',
+          args: [
+            { string: 'sppk7aTKnmX5WV17KPo3LanjfPLoXTuNjkQTdLx2bYDqHPLVVCbSwoj' },
+            { int: '45' },
+          ],
+        },
+        {
+          prim: 'Elt',
+          args: [
+            { string: 'p2pk66xmhjiN7LpfrDGFwpxPtJxkLtPjQ6HUxJbKmRbxSR7RMpamDwi' },
+            { int: '70' },
+          ],
+        },
+        {
+          prim: 'Elt',
+          args: [
+            { string: 'p2pk67c5b5THCj5fyksX1C13etdUpLR9BDYvJUuJNrxeGqCgbY3NFpV' },
+            { int: '60' },
+          ],
+        },
+        {
+          prim: 'Elt',
+          args: [
+            { string: 'p2pk65shUHKhx7zUSF7e8KZ2inmQ5aMS4jRBUmK6aCis4oaHoiWPXoT' },
+            { int: '99' },
+          ],
+        },
       ]);
     });
 
@@ -311,36 +528,82 @@ describe('Map token', () => {
         0
       ) as MapToken;
       const map = new MichelsonMap();
-      map.set("edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g", 30);
+      map.set('edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g', 30);
       map.set('p2pk67c5b5THCj5fyksX1C13etdUpLR9BDYvJUuJNrxeGqCgbY3NFpV', 23);
-      map.set("edpktm3zeGMzfzFuqgyYftt7uNyVRANTjrJCdU7bURwgGb9bRZwmJq", 1);
+      map.set('edpktm3zeGMzfzFuqgyYftt7uNyVRANTjrJCdU7bURwgGb9bRZwmJq', 1);
       map.set('edpkuNjKKT48xBoT5asPrWdmuM1Yw8D93MwgFgVvtca8jb5pstzaCh', 2);
       map.set('sppk7aTKnmX5WV17KPo3LanjfPLoXTuNjkQTdLx2bYDqHPLVVCbSwoj', 17);
       map.set('p2pk65shUHKhx7zUSF7e8KZ2inmQ5aMS4jRBUmK6aCis4oaHoiWPXoT', 17);
       map.set('p2pk66xmhjiN7LpfrDGFwpxPtJxkLtPjQ6HUxJbKmRbxSR7RMpamDwi', 90);
       const result = token.Encode([map]);
       expect(result).toEqual([
-        { prim: 'Elt', args: [{ string: 'edpktm3zeGMzfzFuqgyYftt7uNyVRANTjrJCdU7bURwgGb9bRZwmJq' }, { int: '1' }] },
-        { prim: 'Elt', args: [{ string: 'edpkuNjKKT48xBoT5asPrWdmuM1Yw8D93MwgFgVvtca8jb5pstzaCh' }, { int: '2' }] },
-        { prim: 'Elt', args: [{ string: 'edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g' }, { int: '30' }] },
-        { prim: 'Elt', args: [{ string: 'sppk7aTKnmX5WV17KPo3LanjfPLoXTuNjkQTdLx2bYDqHPLVVCbSwoj' }, { int: '17' }] },
-        { prim: 'Elt', args: [{ string: 'p2pk66xmhjiN7LpfrDGFwpxPtJxkLtPjQ6HUxJbKmRbxSR7RMpamDwi' }, { int: '90' }] },
-        { prim: 'Elt', args: [{ string: 'p2pk67c5b5THCj5fyksX1C13etdUpLR9BDYvJUuJNrxeGqCgbY3NFpV' }, { int: '23' }] },
-        { prim: 'Elt', args: [{ string: 'p2pk65shUHKhx7zUSF7e8KZ2inmQ5aMS4jRBUmK6aCis4oaHoiWPXoT' }, { int: '17' }] },
+        {
+          prim: 'Elt',
+          args: [
+            { string: 'edpktm3zeGMzfzFuqgyYftt7uNyVRANTjrJCdU7bURwgGb9bRZwmJq' },
+            { int: '1' },
+          ],
+        },
+        {
+          prim: 'Elt',
+          args: [
+            { string: 'edpkuNjKKT48xBoT5asPrWdmuM1Yw8D93MwgFgVvtca8jb5pstzaCh' },
+            { int: '2' },
+          ],
+        },
+        {
+          prim: 'Elt',
+          args: [
+            { string: 'edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g' },
+            { int: '30' },
+          ],
+        },
+        {
+          prim: 'Elt',
+          args: [
+            { string: 'sppk7aTKnmX5WV17KPo3LanjfPLoXTuNjkQTdLx2bYDqHPLVVCbSwoj' },
+            { int: '17' },
+          ],
+        },
+        {
+          prim: 'Elt',
+          args: [
+            { string: 'p2pk66xmhjiN7LpfrDGFwpxPtJxkLtPjQ6HUxJbKmRbxSR7RMpamDwi' },
+            { int: '90' },
+          ],
+        },
+        {
+          prim: 'Elt',
+          args: [
+            { string: 'p2pk67c5b5THCj5fyksX1C13etdUpLR9BDYvJUuJNrxeGqCgbY3NFpV' },
+            { int: '23' },
+          ],
+        },
+        {
+          prim: 'Elt',
+          args: [
+            { string: 'p2pk65shUHKhx7zUSF7e8KZ2inmQ5aMS4jRBUmK6aCis4oaHoiWPXoT' },
+            { int: '17' },
+          ],
+        },
       ]);
-    })
+    });
 
     it('Encode properly a map with keys of type option using fromLiteral', () => {
       // Map keys must be in strictly increasing order
       token = createToken(
-        { prim: 'map', args: [{ prim: 'option', args: [{ prim: 'int' }], }, { prim: 'int' }], annots: [] },
+        {
+          prim: 'map',
+          args: [{ prim: 'option', args: [{ prim: 'int' }] }, { prim: 'int' }],
+          annots: [],
+        },
         0
       ) as MapToken;
       const map = MichelsonMap.fromLiteral({
         5: 30,
         3: 1,
-        22: 1
-      })
+        22: 1,
+      });
       const result = token.Encode([map]);
       expect(result).toEqual([
         { prim: 'Elt', args: [{ prim: 'Some', args: [{ int: '3' }] }, { int: '1' }] },
@@ -352,7 +615,11 @@ describe('Map token', () => {
     it('Encode properly a map with keys of type option', () => {
       // Map keys must be in strictly increasing order
       token = createToken(
-        { prim: 'map', args: [{ prim: 'option', args: [{ prim: 'int' }], }, { prim: 'int' }], annots: [] },
+        {
+          prim: 'map',
+          args: [{ prim: 'option', args: [{ prim: 'int' }] }, { prim: 'int' }],
+          annots: [],
+        },
         0
       ) as MapToken;
       const map = new MichelsonMap();
@@ -364,8 +631,25 @@ describe('Map token', () => {
         { prim: 'Elt', args: [{ prim: 'Some', args: [{ int: '3' }] }, { int: '1' }] },
         { prim: 'Elt', args: [{ prim: 'Some', args: [{ int: '5' }] }, { int: '30' }] },
         { prim: 'Elt', args: [{ prim: 'Some', args: [{ int: '22' }] }, { int: '1' }] },
-
       ]);
+    });
+  });
+
+  describe('generateSchema', () => {
+    it('Should generate the schema properly', () => {
+      expect(token.generateSchema()).toEqual({
+        __michelsonType: 'map',
+        schema: {
+          key: {
+            __michelsonType: 'string',
+            schema: 'string',
+          },
+          value: {
+            __michelsonType: 'int',
+            schema: 'int',
+          },
+        },
+      });
     });
   });
 });
@@ -463,6 +747,33 @@ describe('Map token with pair', () => {
       expect(result.get({ 0: 'test1', 1: 'test' })).toBeInstanceOf(BigNumber);
       expect(result.get({ 0: 'test1', 1: 'test' }).toString()).toEqual('3');
       expect(result.get({ 1: 'test', 0: 'test1' }).toString()).toEqual('3');
+    });
+  });
+
+  describe('generateSchema', () => {
+    it('Should generate the schema properly', () => {
+      expect(token.generateSchema()).toEqual({
+        __michelsonType: 'map',
+        schema: {
+          key: {
+            __michelsonType: 'pair',
+            schema: {
+              0: {
+                __michelsonType: 'string',
+                schema: 'string',
+              },
+              1: {
+                __michelsonType: 'string',
+                schema: 'string',
+              },
+            },
+          },
+          value: {
+            __michelsonType: 'int',
+            schema: 'int',
+          },
+        },
+      });
     });
   });
 });
@@ -567,6 +878,31 @@ describe('Map token with annotated pair', () => {
 
       expect(result.get({ test: 'test1', test2: 'test' })).toBeInstanceOf(BigNumber);
       expect(result.get({ test: 'test1', test2: 'test' }).toString()).toEqual('3');
+    });
+  });
+
+  it('Should generate the schema properly', () => {
+    expect(token.generateSchema()).toEqual({
+      __michelsonType: 'map',
+      schema: {
+        key: {
+          __michelsonType: 'pair',
+          schema: {
+            test: {
+              __michelsonType: 'string',
+              schema: 'string',
+            },
+            test2: {
+              __michelsonType: 'string',
+              schema: 'string',
+            },
+          },
+        },
+        value: {
+          __michelsonType: 'int',
+          schema: 'int',
+        },
+      },
     });
   });
 });
@@ -829,5 +1165,85 @@ describe('Map token with complex pair', () => {
         )
       );
     });
+  });
+
+  it('Should generate the schema properly', () => {
+    expect(token.generateSchema()).toEqual({
+      __michelsonType: 'map',
+      schema: {
+        key: {
+          __michelsonType: 'pair',
+          schema: {
+            0: {
+              __michelsonType: 'int',
+              schema: 'int',
+            },
+            1: {
+              __michelsonType: 'nat',
+              schema: 'nat',
+            },
+            2: {
+              __michelsonType: 'string',
+              schema: 'string',
+            },
+            3: {
+              __michelsonType: 'bytes',
+              schema: 'bytes',
+            },
+            4: {
+              __michelsonType: 'mutez',
+              schema: 'mutez',
+            },
+            5: {
+              __michelsonType: 'bool',
+              schema: 'bool',
+            },
+            6: {
+              __michelsonType: 'key_hash',
+              schema: 'key_hash',
+            },
+            7: {
+              __michelsonType: 'timestamp',
+              schema: 'timestamp',
+            },
+            8: {
+              __michelsonType: 'address',
+              schema: 'address',
+            },
+          },
+        },
+        value: {
+          __michelsonType: 'int',
+          schema: 'int',
+        },
+      },
+    });
+  });
+});
+
+describe('Map token with nat as key and nat as value', () => {
+  let token: MapToken;
+  beforeEach(() => {
+    token = createToken(
+      {
+        prim: 'map',
+        args: [{ prim: 'nat' }, { prim: 'nat' }],
+        annots: [],
+      },
+      0
+    ) as MapToken;
+  });
+
+  it('Execute should deserialize type nat in BigNumber', () => {
+    const result = token.Execute([
+      {
+        prim: 'Elt',
+        args: [{ int: '5' }, { int: '2' }],
+      },
+    ]) as MichelsonMap<any, any>;
+
+    expect(result).toBeInstanceOf(MichelsonMap);
+    expect(result.keys().next().value).toMatchObject(new BigNumber(5));
+    expect(result.values().next().value).toMatchObject(new BigNumber(2));
   });
 });
