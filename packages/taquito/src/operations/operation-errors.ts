@@ -22,13 +22,13 @@ const isErrorWithMessage = (error: any): error is TezosOperationErrorWithMessage
   return 'with' in error;
 };
 
-export class TezosOperationError implements Error {
+export class TezosOperationError extends Error {
   name = 'TezosOperationError';
   id: string;
   kind: string;
-  message: string;
 
   constructor(public errors: TezosGenericOperationError[]) {
+    super();
     // Last error is 'often' the one with more detail
     const lastError = errors[errors.length - 1];
 
@@ -43,11 +43,12 @@ export class TezosOperationError implements Error {
   }
 }
 
-export class TezosPreapplyFailureError implements Error {
+export class TezosPreapplyFailureError extends Error {
   name = 'TezosPreapplyFailureError';
-  message = 'Preapply returned an unexpected result';
 
-  constructor(public result: any) {}
+  constructor(public result: any) {
+    super('Preapply returned an unexpected result');
+  }
 }
 
 export type MergedOperationResult = OperationResultDelegation &
