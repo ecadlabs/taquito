@@ -297,7 +297,7 @@ export class ContractAbstraction<T extends ContractProvider | Wallet,
   /**
    * @description Return a friendly representation of the smart contract storage
    */
-  public storage<T = TStorage>() {
+  public storage<T extends TStorage = TStorage>() {
     return this.storageProvider.getStorage<T>(this.address, this.schema);
   }
 
