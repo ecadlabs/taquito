@@ -17,13 +17,6 @@ jobs:
     - uses: actions/setup-node@v2
       with:
         node-version: 16.x
-    - name: Lerna Cache
-      uses: actions/cache@v2
-      id: lerna-build-cache
-      with:
-        path: |
-          packages/*/dist
-        key: ${{ runner.os }}-${{ hashFiles('packages/*/src/*.ts') }}
     - run: npm ci
     - run: npm run lerna -- bootstrap
     - run: npm run lerna run build
