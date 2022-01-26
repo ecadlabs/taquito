@@ -505,6 +505,24 @@ describe('Ticket token', () => {
           },
         },
       });
+
+      expect(schema.generateSchema()).toEqual({
+        __michelsonType: 'ticket',
+        schema: {
+          ticketer: {
+            __michelsonType: 'contract',
+            schema: 'contract'
+          },
+          value: {
+            __michelsonType: 'string',
+            schema: 'string'
+          },
+          amount: {
+            __michelsonType: 'int',
+            schema: 'int'
+          }
+        }
+      });
     });
   });
 });

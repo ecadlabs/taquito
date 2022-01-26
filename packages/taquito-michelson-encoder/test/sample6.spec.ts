@@ -378,6 +378,125 @@ describe('Schema test', () => {
       },
     });
 
+    expect(schema.generateSchema()).toEqual({
+      __michelsonType: "or",
+      schema: {
+        Pour: {
+          __michelsonType: "option",
+          schema: {
+            __michelsonType: "pair",
+            schema: {
+              pour_amount: {
+                __michelsonType: "mutez",
+                schema: 'mutez'
+              },
+              pour_auth: {
+                __michelsonType: "signature",
+                schema: 'signature'
+              }
+            }
+          }
+        },
+        Action: {
+          __michelsonType: "pair",
+          schema: {
+            action_input: {
+              __michelsonType: "or",
+              schema: {
+                Set_delegate: {
+                  __michelsonType: "option",
+                  schema: {
+                    __michelsonType: "key_hash",
+                    schema: "key_hash"
+                  }
+                },
+                Set_keys: {
+                  __michelsonType: "pair",
+                  schema: {
+                    key_groups: {
+                      __michelsonType: "list",
+                      schema: {
+                        __michelsonType: "pair",
+                        schema: {
+                          group_threshold: {
+                            __michelsonType: "nat",
+                            schema: "nat"
+                          },
+                          signatories: {
+                            __michelsonType: "list",
+                            schema: {
+                              __michelsonType: "key",
+                              schema: "key"
+                            },
+                          }
+                        }
+                      },
+                    },
+                    overall_threshold: {
+                      __michelsonType: "nat",
+                      schema: "nat"
+                    },
+                  }
+                },
+                Set_pour: {
+                  __michelsonType: "option",
+                  schema: {
+                    __michelsonType: "pair",
+                    schema: {
+                      pour_authorizer: {
+                        __michelsonType: "key",
+                        schema: 'key'
+                      },
+                      pour_dest: {
+                        __michelsonType: "contract",
+                        schema: {
+                          parameter: {
+                          __michelsonType: "unit",
+                          schema: 'unit'
+                        }
+                      }
+                      }
+                    }
+                  }
+                },
+                Transfer: {
+                  __michelsonType: "pair",
+                  schema: {
+                    dest: {
+                      __michelsonType: "contract",
+                      schema: {
+                        parameter: {
+                        __michelsonType: "unit",
+                        schema: 'unit'
+                      }
+                    }
+                    },
+                    transfer_amount: {
+                      __michelsonType: "mutez",
+                      schema: 'mutez'
+                    },
+                  }
+                },
+              }
+            },
+            signatures: {
+              __michelsonType: "list",
+              schema: {
+                __michelsonType: "list",
+                schema: {
+                  __michelsonType: "option",
+                  schema: {
+                    __michelsonType: "signature",
+                    schema: 'signature'
+                  }
+                }
+              },
+            },
+          }
+        },
+      }
+    });
+
     const signatures = schema.ExtractSignatures();
     expect(signatures).toContainEqual(['Pour', 'signature', 'mutez']);
     expect(signatures).toContainEqual([

@@ -4,6 +4,9 @@ module.exports = function (context, options) {
     name: 'webpack5-plugin',
     configureWebpack(config, isServer, utils) {
       return {
+        node: {
+          __dirname: true
+        },
         resolve: {
           fallback: {
             fs: false,

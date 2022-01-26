@@ -24,13 +24,13 @@ import {
 } from '../operations/types';
 import { OpKind } from '@taquito/rpc';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
-import {
-  validateAddress,
-  validateKeyHash,
-  InvalidAddressError,
-  InvalidKeyHashError,
-  ValidationResult,
-} from '@taquito/utils';
+import { 
+  validateAddress, 
+  validateKeyHash, 
+  InvalidAddressError, 
+  InvalidKeyHashError, 
+  ValidationResult 
+} from '@taquito/utils'
 
 export const BATCH_KINDS = [
   OpKind.ACTIVATION,
@@ -59,7 +59,7 @@ export class OperationBatch extends OperationEmitter {
    */
   withTransfer(params: TransferParams) {
     if (validateAddress(params.to) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid 'to' address: ${params.to}`);
+      throw new InvalidAddressError(`Invalid 'to' address: ${params.to}`)
     }
     this.operations.push({ kind: OpKind.TRANSACTION, ...params });
     return this;

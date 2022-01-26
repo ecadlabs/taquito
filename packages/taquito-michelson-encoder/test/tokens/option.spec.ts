@@ -98,4 +98,16 @@ describe('Option token', () => {
       });
     });
   });
+
+  describe('generateSchema', () => {
+    it('Should generate the schema properly', () => {
+      expect(token.generateSchema()).toEqual({
+        __michelsonType: 'option',
+        schema: {
+          __michelsonType: 'int',
+          schema: 'int'
+        }
+      });
+    });
+  });
 });

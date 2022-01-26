@@ -34,12 +34,12 @@ import {
   createTransferOperation,
 } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
-import {
+import { 
   validateAddress,
   validateContractAddress,
   InvalidContractAddressError,
-  InvalidAddressError,
-  ValidationResult,
+  InvalidAddressError, 
+  ValidationResult 
 } from '@taquito/utils';
 export class RpcContractProvider
   extends OperationEmitter
@@ -279,7 +279,7 @@ export class RpcContractProvider
    * @param SetDelegate operation parameter
    */
   async setDelegate(params: DelegateParams) {
-    if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
+    if ( params.source && validateAddress(params.source) !== ValidationResult.VALID) {
       throw new InvalidAddressError(`Invalid source Address: ${params.source}`);
     }
     if (params.delegate && validateAddress(params.delegate) !== ValidationResult.VALID) {

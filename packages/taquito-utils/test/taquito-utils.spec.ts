@@ -122,3 +122,34 @@ describe('Public Key conversions', () => {
     }).toThrowError();
   });
 });
+
+describe('Public Key conversions', () => {
+  it('Should be able to get PKH from tz1/ed25519 Public Key', () => {
+    const publicKey = 'edpku61nGAwkeoA7PQJEFWmrVP1eWrSTVoHgCaF2isjWqDeGdux37k';
+    const result = getPkhfromPk(publicKey);
+
+    expect(result).toEqual('tz1ipB38oB5F76HnbTRqWPLEnVtCgj6yf2nB');
+  });
+
+  it('Should be able to get PKH from tz2/secp256k1 Public Key', () => {
+    const publicKey = 'sppk7czKu6So3zDWjhBPBv9wgCrBAfbEFoKYzEaKUsjhNr5Ug6E4Sn1';
+    const result = getPkhfromPk(publicKey);
+
+    expect(result).toEqual('tz2Gsf1Q857wUzkNGzHsJNC98z881UutMwjg');
+  });
+
+  it('Should be able to get PKH from tz3/p256 Public Key', () => {
+    const publicKey = 'p2pk67BANWUUX2fod9EQbv8ev7GGLpb4UXvLHEVVMiHBSWPHgyzf1tv';
+    const result = getPkhfromPk(publicKey);
+
+    expect(result).toEqual('tz3daYfTrShLBfH24hv2kGwXD5y2bApH83RC');
+  });
+
+  it('Should throw and error when passed an invalid Public Key', () => {
+    const publicKey = 'randomstring';
+
+    expect(() => {
+      getPkhfromPk(publicKey)
+    }).toThrowError();
+  })
+});
