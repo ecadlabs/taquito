@@ -29,7 +29,7 @@ export class KeyToken extends ComparableToken {
     super(val, idx, fac);
   }
 
-  public Execute(val: { bytes: string; string: string }): string {
+  public Execute(val: { bytes: string; string: string }) {
     if (val.string) {
       return val.string;
     }
