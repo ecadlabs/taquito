@@ -1,13 +1,13 @@
 import { CONFIGS } from './config';
+import { Protocols } from '@taquito/taquito';
 import { RpcClientCache, RpcClient } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_bigmap';
-import { Protocols } from '@taquito/taquito';
 
 CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup, protocol, rpc }) => {
     const Tezos = lib;
-    const skipIthacanet = protocol === Protocols.PsiThaCa ? test.skip : test;
+    const skipIthacanet = protocol === Protocols.Psithaca2 ? test.skip : test;
 
     beforeEach(async (done) => {
         await setup();
@@ -72,7 +72,7 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
                 done();
             });
 
-            skipIthacanet(`Access the delegate of a contract`, async (done) => {
+            it(`Access the delegate of a contract`, async (done) => {
                 const delegate = await rpcClient.getDelegate(knownBaker);
                 expect(delegate).toBeDefined();
                 done();
@@ -108,7 +108,7 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
                 done();
             });
 
-            skipIthacanet(`Fetches information about a delegate from RPC`, async (done) => {
+            it(`Fetches information about a delegate from RPC`, async (done) => {
                 const delegates = await rpcClient.getDelegates(knownBaker);
                 expect(delegates).toBeDefined();
                 done();
@@ -227,7 +227,7 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
                 done();
             });
 
-            it('Simulate the validation of an operation', async (done) => {
+            skipIthacanet('Simulate the validation of an operation', async (done) => {
                 try {
                     const operation: any = {
                         branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
@@ -248,7 +248,7 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
                         ],
                         protocol: `${protocol}`,
                         signature:
-                            'edsigtcagjMz6xtr45ummgsxgj7V6tQGRMerspzSVLJuE2bmBv6dGffCXYqokNgymY7uY7c97kpFrzMr5dhjqwKGsUb6kSP3B97'
+                            'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg'
                     };
 
                     await rpcClient.preapplyOperations([operation]);

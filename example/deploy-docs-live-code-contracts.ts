@@ -485,7 +485,7 @@ async function originateContractCallFib() {
              UNPAIR ;
              VIEW "fib" nat ;
              { IF_NONE { { UNIT ; FAILWITH } } { NIL operation ; PAIR } } }`,
-      storage: 1        
+      storage: 1,
     });
     await op.confirmation();
     const contract = await op.contract();
@@ -501,7 +501,7 @@ async function originateContractTopLevelViews() {
   try {
     const op = await tezos.contract.originate({
       code: contractOnChainViews,
-      storage: 1        
+      storage: 1,
     });
     await op.confirmation();
     const contract = await op.contract();
