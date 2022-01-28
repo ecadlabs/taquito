@@ -21,6 +21,8 @@ describe('RpcClient test', () => {
     createRequest: jest.Mock<any, any>;
   };
 
+  const contractAddress = 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D';
+
   beforeEach(() => {
     httpBackend = {
       createRequest: jest.fn(),
@@ -37,10 +39,10 @@ describe('RpcClient test', () => {
     it('Should prevent double slashes given multiple trailing slashes', async (done) => {
       const client = new RpcClient('root.com/test///', 'test', httpBackend as any);
       httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
-      await client.getBalance('address');
+      await client.getBalance(contractAddress);
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root.com/test/chains/test/blocks/head/context/contracts/address/balance',
+        url: `root.com/test/chains/test/blocks/head/context/contracts/${contractAddress}/balance`,
       });
       done();
     });
@@ -48,10 +50,10 @@ describe('RpcClient test', () => {
     it('Should prevent double slashes given one trailing slash', async (done) => {
       const client = new RpcClient('root.com/test/', 'test', httpBackend as any);
       httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
-      await client.getBalance('address');
+      await client.getBalance(contractAddress);
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root.com/test/chains/test/blocks/head/context/contracts/address/balance',
+        url: `root.com/test/chains/test/blocks/head/context/contracts/${contractAddress}/balance`,
       });
       done();
     });
@@ -59,10 +61,10 @@ describe('RpcClient test', () => {
     it('Should prevent double slashes given no trailing slash', async (done) => {
       const client = new RpcClient('root.com/test', 'test', httpBackend as any);
       httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
-      await client.getBalance('address');
+      await client.getBalance(contractAddress);
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root.com/test/chains/test/blocks/head/context/contracts/address/balance',
+        url: `root.com/test/chains/test/blocks/head/context/contracts/${contractAddress}/balance`,
       });
       done();
     });
@@ -71,11 +73,11 @@ describe('RpcClient test', () => {
   describe('getBalance', () => {
     it('query the right url and return a string', async (done) => {
       httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
-      const balance = await client.getBalance('address');
+      const balance = await client.getBalance(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root/chains/test/blocks/head/context/contracts/address/balance',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/balance`,
       });
       expect(balance).toBeInstanceOf(BigNumber);
       expect(balance.toString()).toEqual('10000');
@@ -86,11 +88,11 @@ describe('RpcClient test', () => {
 
   describe('getStorage', () => {
     it('query the right url', async (done) => {
-      await client.getStorage('address');
+      await client.getStorage(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root/chains/test/blocks/head/context/contracts/address/storage',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/storage`,
       });
 
       done();
@@ -99,11 +101,11 @@ describe('RpcClient test', () => {
 
   describe('getScript', () => {
     it('query the right url', async (done) => {
-      await client.getScript('address');
+      await client.getScript(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root/chains/test/blocks/head/context/contracts/address/script',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/script`,
       });
 
       done();
@@ -112,11 +114,11 @@ describe('RpcClient test', () => {
 
   describe('getNormalizedScript', () => {
     it('query the right url', async (done) => {
-      await client.getNormalizedScript('address');
+      await client.getNormalizedScript(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'POST',
-        url: 'root/chains/test/blocks/head/context/contracts/address/script/normalized',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/script/normalized`,
       });
       expect(httpBackend.createRequest.mock.calls[0][1]).toEqual({ unparsing_mode: 'Readable' });
 
@@ -127,11 +129,11 @@ describe('RpcClient test', () => {
   describe('getContract', () => {
     it('query the right url', async (done) => {
       httpBackend.createRequest.mockResolvedValue({ balance: '10000' });
-      const response = await client.getContract('address');
+      const response = await client.getContract(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root/chains/test/blocks/head/context/contracts/address',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}`,
       });
 
       expect(response.balance).toBeInstanceOf(BigNumber);
@@ -143,11 +145,11 @@ describe('RpcClient test', () => {
 
   describe('getManagerKey', () => {
     it('query the right url', async (done) => {
-      await client.getManagerKey('address');
+      await client.getManagerKey(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root/chains/test/blocks/head/context/contracts/address/manager_key',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/manager_key`,
       });
 
       done();
@@ -156,11 +158,11 @@ describe('RpcClient test', () => {
 
   describe('getDelegate', () => {
     it('query the right url', async (done) => {
-      await client.getDelegate('address');
+      await client.getDelegate(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root/chains/test/blocks/head/context/contracts/address/delegate',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/delegate`,
       });
 
       done();
@@ -200,11 +202,11 @@ describe('RpcClient test', () => {
 
     it('query the right url', async (done) => {
       httpBackend.createRequest.mockResolvedValue(sampleResponse);
-      await client.getDelegates('address');
+      await client.getDelegates(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root/chains/test/blocks/head/context/delegates/address',
+        url: `root/chains/test/blocks/head/context/delegates/${contractAddress}`,
       });
 
       done();
@@ -212,7 +214,7 @@ describe('RpcClient test', () => {
 
     it('parse the response properly', async (done) => {
       httpBackend.createRequest.mockResolvedValue(sampleResponse);
-      const response = await client.getDelegates('address');
+      const response = await client.getDelegates(contractAddress);
 
       expect(response).toEqual({
         balance: new BigNumber('5092341810457'),
@@ -260,7 +262,7 @@ describe('RpcClient test', () => {
         grace_period: 59,
         voting_power: 729,
       });
-      const response = await client.getDelegates('address');
+      const response = await client.getDelegates(contractAddress);
 
       expect(response).toEqual({
         balance: new BigNumber('5976016544884'),
@@ -293,10 +295,10 @@ describe('RpcClient test', () => {
 
   describe('getBigMapKey', () => {
     it('query the right url', async (done) => {
-      await client.getBigMapKey('address', { key: 'test', type: 'string' } as any);
+      await client.getBigMapKey(contractAddress, { key: 'test', type: 'string' } as any);
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'POST',
-        url: 'root/chains/test/blocks/head/context/contracts/address/big_map_get',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/big_map_get`,
       });
 
       expect(httpBackend.createRequest.mock.calls[0][1]).toEqual({ key: 'test', type: 'string' });
@@ -2533,11 +2535,11 @@ describe('RpcClient test', () => {
   describe('getEntrypoints', () => {
     it('query the right url and data', async (done) => {
       httpBackend.createRequest.mockReturnValue({ entrypoints: {} });
-      const response = await client.getEntrypoints('test');
+      const response = await client.getEntrypoints(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root/chains/test/blocks/head/context/contracts/test/entrypoints',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/entrypoints`,
       });
       expect(response).toEqual({ entrypoints: {} });
       done();

@@ -1,23 +1,25 @@
-export class TokenMetadataNotFound implements Error {
+export class TokenMetadataNotFound extends Error {
   name = 'TokenMetadataNotFound';
-  message: string;
 
   constructor(public address: string) {
-    this.message = `No token metadata was found for the contract: ${address}`;
+    super(`No token metadata was found for the contract: ${address}`);
   }
 }
 
-export class TokenIdNotFound implements Error {
+export class TokenIdNotFound extends Error {
   name = 'TokenIdNotFound';
-  message: string;
 
   constructor(public tokenId: number) {
-    this.message = `Could not find token metadata for the token ID: ${tokenId}`;
+    super(`Could not find token metadata for the token ID: ${tokenId}`);
   }
 }
 
-export class InvalidTokenMetadata implements Error {
+export class InvalidTokenMetadata extends Error {
   name = 'InvalidTokenMetadata';
-  message =
-    'Non-compliance with the TZIP-012 standard. The required property `decimals` is missing.';
+
+  constructor() {
+    super(
+      'Non-compliance with the TZIP-012 standard. The required property `decimals` is missing.'
+    );
+  }
 }

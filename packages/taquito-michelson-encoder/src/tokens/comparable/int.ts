@@ -1,5 +1,6 @@
 import { Token, TokenFactory, ComparableToken, TokenValidationError } from '../token';
 import BigNumber from 'bignumber.js';
+import { BaseTokenSchema } from '../../schema/types';
 
 export class IntValidationError extends TokenValidationError {
   name = 'IntValidationError';
@@ -9,7 +10,7 @@ export class IntValidationError extends TokenValidationError {
 }
 
 export class IntToken extends ComparableToken {
-  static prim = 'int';
+  static prim: 'int' = 'int';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -23,8 +24,19 @@ export class IntToken extends ComparableToken {
     return new BigNumber(val[Object.keys(val)[0]]);
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return IntToken.prim;
+  }
+
+  generateSchema(): BaseTokenSchema {
+    return {
+      __michelsonType: IntToken.prim,
+      schema: IntToken.prim,
+    };
   }
 
   private isValid(val: any): IntValidationError | null {

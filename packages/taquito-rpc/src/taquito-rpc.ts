@@ -53,6 +53,13 @@ import {
   VotingPeriodBlockResult,
 } from './types';
 import { castToBigNumber } from './utils/utils';
+import { 
+  InvalidAddressError, 
+  validateAddress, 
+  validateContractAddress, 
+  ValidationResult 
+} from '@taquito/utils'
+
 
 export { castToBigNumber } from './utils/utils';
 
@@ -93,6 +100,18 @@ export class RpcClient implements RpcClientInterface {
   protected createURL(path: string) {
     // Trim trailing slashes because it is assumed to be included in path
     return `${this.url.replace(/\/+$/g, '')}${path}`;
+  }
+
+  private validateAddress(address: string) {
+    if (validateAddress(address) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(`Invalid address: ${address}`)
+    }
+  }
+
+  private validateContract(address: string) {
+    if (validateContractAddress(address) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(`Invalid address: ${address}`)
+    }
   }
 
   /**
@@ -140,6 +159,7 @@ export class RpcClient implements RpcClientInterface {
     address: string,
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<BalanceResponse> {
+    this.validateAddress(address);
     const balance = await this.httpBackend.createRequest<BalanceResponse>({
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/balance`
@@ -162,6 +182,7 @@ export class RpcClient implements RpcClientInterface {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<StorageResponse> {
+    this.validateContract(address);
     return this.httpBackend.createRequest<StorageResponse>({
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/storage`
@@ -183,6 +204,7 @@ export class RpcClient implements RpcClientInterface {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<ScriptResponse> {
+    this.validateContract(address);
     return this.httpBackend.createRequest<ScriptResponse>({
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/script`
@@ -205,6 +227,7 @@ export class RpcClient implements RpcClientInterface {
     unparsingMode: UnparsingMode = { unparsing_mode: 'Readable' },
     { block }: { block: string } = defaultRPCOptions
   ): Promise<ScriptResponse> {
+    this.validateContract(address);
     return this.httpBackend.createRequest<ScriptResponse>(
       {
         url: this.createURL(
@@ -229,6 +252,7 @@ export class RpcClient implements RpcClientInterface {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<ContractResponse> {
+    this.validateAddress(address);
     const contractResponse = await this.httpBackend.createRequest<ContractResponse>({
       url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/contracts/${address}`),
       method: 'GET',
@@ -252,6 +276,7 @@ export class RpcClient implements RpcClientInterface {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<ManagerKeyResponse> {
+    this.validateAddress(address);
     return this.httpBackend.createRequest<ManagerKeyResponse>({
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/manager_key`
@@ -273,6 +298,7 @@ export class RpcClient implements RpcClientInterface {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<DelegateResponse> {
+    this.validateAddress(address);
     let delegate: DelegateResponse;
     try {
       delegate = await this.httpBackend.createRequest<DelegateResponse>({
@@ -307,6 +333,7 @@ export class RpcClient implements RpcClientInterface {
     key: BigMapKey,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<BigMapGetResponse> {
+    this.validateAddress(address);
     return this.httpBackend.createRequest<BigMapGetResponse>(
       {
         url: this.createURL(
@@ -352,6 +379,7 @@ export class RpcClient implements RpcClientInterface {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<DelegatesResponse> {
+    this.validateAddress(address);
     const response = await this.httpBackend.createRequest<DelegatesResponse>({
       url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/delegates/${address}`),
       method: 'GET',
@@ -736,6 +764,7 @@ export class RpcClient implements RpcClientInterface {
     contract: string,
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<EntrypointsResponse> {
+    this.validateContract(contract);
     const contractResponse = await this.httpBackend.createRequest<{
       entrypoints: { [key: string]: MichelsonV1ExpressionExtended };
     }>({

@@ -25,7 +25,7 @@ export interface HttpRequestOptions {
   mimeType?: string;
 }
 
-export class HttpResponseError implements Error {
+export class HttpResponseError extends Error {
   public name = 'HttpResponse';
 
   constructor(
@@ -34,15 +34,16 @@ export class HttpResponseError implements Error {
     public statusText: string,
     public body: string,
     public url: string
-  ) {}
+  ) {
+    super(message);
+  }
 }
 
-export class HttpRequestFailed implements Error {
+export class HttpRequestFailed extends Error {
   public name = 'HttpRequestFailed';
-  public message: string;
 
   constructor(public url: string, public innerEvent: any) {
-    this.message = `Request to ${url} failed`;
+    super(`Request to ${url} failed`);
   }
 }
 

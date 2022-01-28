@@ -22,17 +22,19 @@ import {
 
 export { VERSION } from './version';
 
-export class BeaconWalletNotInitialized implements Error {
+export class BeaconWalletNotInitialized extends Error {
   name = 'BeaconWalletNotInitialized';
-  message = 'You need to initialize BeaconWallet by calling beaconWallet.requestPermissions first';
+
+  constructor() {
+    super('You need to initialize BeaconWallet by calling beaconWallet.requestPermissions first');
+  }
 }
 
-export class MissingRequiredScopes implements Error {
+export class MissingRequiredScopes extends Error {
   name = 'MissingRequiredScopes';
-  message: string;
 
   constructor(public requiredScopes: PermissionScope[]) {
-    this.message = `Required permissions scopes were not granted: ${requiredScopes.join(',')}`;
+    super(`Required permissions scopes were not granted: ${requiredScopes.join(',')}`);
   }
 }
 

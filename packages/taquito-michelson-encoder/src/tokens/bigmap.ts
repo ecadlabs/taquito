@@ -1,4 +1,5 @@
 import { MichelsonMap } from '../michelson-map';
+import { BigMapTokenSchema } from '../schema/types';
 import { ComparableToken, Semantic, Token, TokenFactory, TokenValidationError } from './token';
 
 export class BigMapValidationError extends TokenValidationError {
@@ -9,7 +10,7 @@ export class BigMapValidationError extends TokenValidationError {
 }
 
 export class BigMapToken extends Token {
-  static prim = 'big_map';
+  static prim: 'big_map' = 'big_map';
   constructor(
     protected val: { prim: string; args: any[]; annots?: any[] },
     protected idx: number,
@@ -26,11 +27,25 @@ export class BigMapToken extends Token {
     return this.createToken(this.val.args[0], 0) as unknown as ComparableToken;
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return {
       big_map: {
         key: this.KeySchema.ExtractSchema(),
         value: this.ValueSchema.ExtractSchema(),
+      },
+    };
+  }
+
+  generateSchema(): BigMapTokenSchema {
+    return {
+      __michelsonType: BigMapToken.prim,
+      schema: {
+        key: this.KeySchema.generateSchema(),
+        value: this.ValueSchema.generateSchema(),
       },
     };
   }

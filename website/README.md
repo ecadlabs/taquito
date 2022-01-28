@@ -15,6 +15,7 @@ This website was created with [Docusaurus](https://docusaurus.io/).
   - [Making versioned copies of the current documentation](#making-versioned-copies-of-the-current-documentation)
   - [Updating `versions.json`](#updating-versionsjson)
   - [Editing specific versions](#editing-specific-versions)
+- [Updating Docusaurus Configs](#updating-docusaurus-configs)
 - [Full Documentation](#full-documentation)
 
 # Get Started in 5 Minutes
@@ -22,15 +23,18 @@ This website was created with [Docusaurus](https://docusaurus.io/).
 1. Make sure all the dependencies for the website are installed:
 
 ```sh
-# Install dependencies
-$ yarn
+$ npm install
+```
+2. Build the Docusaurus website
+```sh
+$ npm run build
 ```
 
-2. Run your dev server:
+
+3. Run the Docusaurus website locally
 
 ```sh
-# Start the site
-$ yarn start
+$ npm run serve
 ```
 
 ## Directory Structure
@@ -174,7 +178,7 @@ Everything under `docs/` is the latest version of our documentation. When writin
 npm run docusaurus docs:version {version_number}
 ```
 
-with `{version_number}` replaced by an actual version (e.g. `11.0.2`) 
+with `{version_number}` replaced by an actual version (e.g. `11.0.2`, `11.1.0`) 
 
 ## Updating `versions.json`
 
@@ -186,6 +190,13 @@ To edit documentation for specific versions, simply only edit the version you wa
 Doing so will only update the version that you just edited and leave everything else as is.
 
 For more information on versioning, click [here](https://docusaurus.io/docs/versioning)
+
+# Updating Docusaurus Configs
+`docusaurus.config.js` contains the main configurations needed for the website.
+
+It contains various properties needed to create and customize your website.
+
+API documentation for `docusaurus.config.js` [here](https://docusaurus.io/docs/api/docusaurus-config)
 
 # Full Documentation
 

@@ -1,3 +1,4 @@
+import { BaseTokenSchema } from '../schema/types';
 import { Token, TokenFactory, TokenValidationError } from './token';
 
 export class Bls12381g2ValidationError extends TokenValidationError {
@@ -9,7 +10,7 @@ export class Bls12381g2ValidationError extends TokenValidationError {
 export class Bls12381g2Token extends Token {
   // A point on the BLS12-381 curve G2
   // See https://tezos.gitlab.io/michelson-reference/#type-bls12_381_g2
-  static prim = 'bls12_381_g2';
+  static prim: 'bls12_381_g2' = 'bls12_381_g2';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -54,8 +55,19 @@ export class Bls12381g2Token extends Token {
     return val.bytes;
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return Bls12381g2Token.prim;
+  }
+
+  generateSchema(): BaseTokenSchema {
+    return {
+      __michelsonType: Bls12381g2Token.prim,
+      schema: Bls12381g2Token.prim,
+    };
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {

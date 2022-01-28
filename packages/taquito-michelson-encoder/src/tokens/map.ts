@@ -1,4 +1,5 @@
 import { MichelsonMap } from '../michelson-map';
+import { MapTokenSchema } from '../schema/types';
 import { ComparableToken, Semantic, Token, TokenFactory, TokenValidationError } from './token';
 
 export class MapValidationError extends TokenValidationError {
@@ -9,7 +10,7 @@ export class MapValidationError extends TokenValidationError {
 }
 
 export class MapToken extends Token {
-  static prim = 'map';
+  static prim: 'map' = 'map';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -83,11 +84,25 @@ export class MapToken extends Token {
       });
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return {
       map: {
         key: this.KeySchema.ExtractSchema(),
         value: this.ValueSchema.ExtractSchema(),
+      },
+    };
+  }
+
+  generateSchema(): MapTokenSchema {
+    return {
+      __michelsonType: MapToken.prim,
+      schema: {
+        key: this.KeySchema.generateSchema(),
+        value: this.ValueSchema.generateSchema(),
       },
     };
   }

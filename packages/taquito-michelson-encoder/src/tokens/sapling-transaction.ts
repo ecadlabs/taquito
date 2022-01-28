@@ -1,3 +1,4 @@
+import { SaplingTransactionTokenSchema } from '../schema/types';
 import { Token, TokenFactory, TokenValidationError } from './token';
 
 export class SaplingTransactionValidationError extends TokenValidationError {
@@ -8,7 +9,7 @@ export class SaplingTransactionValidationError extends TokenValidationError {
 }
 
 export class SaplingTransactionToken extends Token {
-  static prim = 'sapling_transaction';
+  static prim: 'sapling_transaction' = 'sapling_transaction';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -46,10 +47,23 @@ export class SaplingTransactionToken extends Token {
     return { bytes: String(val).toString() };
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   ExtractSchema() {
     return {
       [SaplingTransactionToken.prim]: {
         'memo-size': Number(this.val.args[0]['int']),
+      },
+    };
+  }
+
+  generateSchema(): SaplingTransactionTokenSchema {
+    return {
+      __michelsonType: SaplingTransactionToken.prim,
+      schema: {
+        memoSize: this.val.args[0]['int'],
       },
     };
   }

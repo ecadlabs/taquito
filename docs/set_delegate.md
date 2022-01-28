@@ -3,15 +3,29 @@ title: Delegation
 author: Simon Boissonneault-Robert
 ---
 
-# Examples demonstrating delegation for the various address types
+# Delegation and Baking
+
+## What is baking in Tezos?
+"Baking" in Tezos is a generalized concept of participation in forming blocks on the blockchain using the Proof-of-Stake consensus algorithm. Everyone who holds Tezos coins can produce, sign, and validate blocks to get rewards in proportion to their stake. 
+
+To become a baker, all you need to do is to run your own node with baking software and keep it online and up to date. You will also need a minimum of 8000ꜩ (XTZ) to participate in baking. 
+
+Note: the minimum amount needed to have baking rights might change as new protocols get rolled out in the future.
+
+## What is delegation?
+Delegation is when you give your baking rights to another person (baker). This mechanism in Tezos allows users to participate in staking and receive Tezos rewards without running their own node.
 
 In Tezos, a delegation operation will set the delegate of an address.
 
 When the `Babylon/proto005` protocol amendment came into effect, it changed how delegation from KT1 addresses work. Calling the KT1's smart contract `do` method is required to set the delegate for a KT1 account.  The `do` method takes a lambda function, and it is the logic of this function that causes the desired delegation to happen.
 
-## Delegate from an implicit tz1 address
+## Delegate from an implicit address (`tz1` prefix)
+Taquito has two main methods that facilitate a delegate operation, `setDelegate()` and `registerDelegate()`
 
-This scenario is the simplest delegation scenario.
+The difference between the 2 methods is that `registerDelegate()` will set the delegate to the current address while `setDelegate()` will set the delegate to another address (baker).
+
+### setDelegate()
+Use `setDelegate()` to delegate your coins to a registered delegate (baker).
 
 ```js
 // const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
@@ -19,7 +33,8 @@ This scenario is the simplest delegation scenario.
 await Tezos.contract.setDelegate({ source: 'tz1_source', delegate: 'tz1_baker' });
 ```
 
-Register as a delegate
+### registerDelegate()
+To run a delegate you must first be registered. Use`registerDelegate()` to accomplish this.
 
 ```js
 // const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
@@ -27,7 +42,7 @@ Register as a delegate
 await Tezos.contract.registerDelegate({});
 ```
 
-## Delegation involving "originated" KT1 addresses
+## Delegation involving originated addresses (`KT1` prefix)
 
 Pre-`Babylon/proto005`, it was common to have "script-less" KT1 addresses. This circumstance changed when the Tezos blockchain migrated to the new `Babylon/proto005` protocol.
 
@@ -39,9 +54,9 @@ A call to the KT1's smart contract's `do` method must be made to delegate to a K
 
 > **Why doesn't Taquito abstract KT1 manager accounts so I can just call setDelegate()**
 >
-> For the time being, we regard KT1 manager accounts as a regular smart contract. It is possible to have a smart contract that is not following the manager.tz conventions, and that also delegates to a baker. The correct lambda to pass to a contract to delegate is application/wallet specific. Therefore Taquito does not make any assumption on the KT1.
+> For the time being, we regard KT1 manager accounts as regular smart contracts. It is possible to have a smart contract that is not following the manager.tz conventions, and that also delegates to a baker. The correct lambda to pass to a contract to delegate is application/wallet specific. Therefore Taquito does not make any assumption on the KT1.
 
-### Example of delegation for a KT1 on Florence/Proto009
+### Example of delegation for a KT1
 
 ```js
 // const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
@@ -68,7 +83,7 @@ const setDelegate = (key: string) => {
 };
 ```
 
-# How to withdraw delegate
+## How to withdraw delegate
 
 It is possible to `undelegate` by executing a new `setDelegate` operation and not specifying the `delegate` property.
 
