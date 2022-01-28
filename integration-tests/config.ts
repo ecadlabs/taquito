@@ -22,7 +22,7 @@ interface Config {
   knownContract: string;
   knownBigMapContract: string;
   knownTzip1216Contract: string; // Use contract Tzip12BigMapOffChain from ~/example/deploy-docs-live-code-contracts.ts
-  knownSaplingContract: string; //Originate with ~/taquito/integration-tests/contract-originate-contract-with-sapling.spec.ts
+  knownSaplingContract: string; //Originate with ~/taquito/integration-tests/contract-originate-contract-with-single-sapling-state.spec.ts
   protocol: Protocols;
   signerConfig: EphemeralConfig | FaucetConfig;
 }

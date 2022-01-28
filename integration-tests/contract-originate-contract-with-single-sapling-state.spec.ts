@@ -22,18 +22,6 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
        await op.confirmation();
        expect(op.hash).toBeDefined();
        expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-
-       const contract = await op.contract()
-
-       console.log("Single Sapling State Contract address on Ithacanet "+contract.address)
-
-       // const storage = await contract.storage();
-       // const saplingStateLedger1 = await storage.ledger1.getSaplingDiff();
-
-       // expect(saplingStateLedger1.root).toBeDefined();
-       // expect(saplingStateLedger1.nullifiers.length).toEqual(0);
-       // expect(saplingStateLedger1.commitments_and_ciphertexts.length).toEqual(0);
-
        done();
      });
 
@@ -45,18 +33,6 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       await op.confirmation();
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-
-      const contract = await op.contract()
-
-      console.log("Single Sapling State Contract address on Hangzhounet "+contract.address)
-
-      // const storage = await contract.storage();
-      // const saplingStateLedger1 = await storage.ledger1.getSaplingDiff();
-
-      // expect(saplingStateLedger1.root).toBeDefined();
-      // expect(saplingStateLedger1.nullifiers.length).toEqual(0);
-      // expect(saplingStateLedger1.commitments_and_ciphertexts.length).toEqual(0);
-
       done();
     });
   });
