@@ -181,7 +181,9 @@ export class Wallet {
    *
    * @param originateParams Originate operation parameter
    */
-  originate<TWallet extends DefaultWalletType = DefaultWalletType>(params: WalletOriginateParams<ContractStorageType<TWallet>>): { send: () => Promise<OriginationWalletOperation<TWallet>> } {
+  originate<TWallet extends DefaultWalletType = DefaultWalletType>(
+    params: WalletOriginateParams<ContractStorageType<TWallet>>
+  ): { send: () => Promise<OriginationWalletOperation<TWallet>> } {
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapOriginateParamsToWalletParams(() =>
         this.context.parser.prepareCodeOrigination({
