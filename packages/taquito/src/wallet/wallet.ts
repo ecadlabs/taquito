@@ -4,6 +4,7 @@ import { ContractAbstraction, ContractStorageType, DefaultWalletType } from '../
 import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
 import { OpKind, withKind } from '../operations/types';
+import { OriginationWalletOperation } from './origination-operation';
 import {
   WalletDelegateParams,
   WalletOriginateParams,
@@ -18,7 +19,6 @@ import {
   InvalidAddressError, 
   ValidationResult 
 } from '@taquito/utils'
-import { OriginationWalletOperation } from './origination-operation';
 
 export interface PKHOption {
   forceRefetch?: boolean;
