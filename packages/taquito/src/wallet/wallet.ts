@@ -1,6 +1,6 @@
 import { Protocols } from '../constants';
 import { Context } from '../context';
-import { ContractAbstraction } from '../contract';
+import { ContractAbstraction, DefaultWalletType } from '../contract';
 import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
 import { OpKind, withKind } from '../operations/types';
@@ -18,6 +18,7 @@ import {
   InvalidAddressError, 
   ValidationResult 
 } from '@taquito/utils'
+import { OriginationWalletOperation } from './origination-operation';
 
 export interface PKHOption {
   forceRefetch?: boolean;
@@ -180,7 +181,7 @@ export class Wallet {
    *
    * @param originateParams Originate operation parameter
    */
-  originate(params: WalletOriginateParams) {
+  originate<TWallet extends DefaultWalletType = DefaultWalletType>(params: WalletOriginateParams): { send: () => Promise<OriginationWalletOperation<TWallet>> } {
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapOriginateParamsToWalletParams(() =>
         this.context.parser.prepareCodeOrigination({
@@ -191,7 +192,7 @@ export class Wallet {
       if (!this.context.proto) {
         this.context.proto = (await this.context.rpc.getBlock()).protocol as Protocols;
       }
-      return this.context.operationFactory.createOriginationOperation(opHash);
+      return this.context.operationFactory.createOriginationOperation(opHash) as Promise<OriginationWalletOperation<TWallet>>;
     });
   }
 

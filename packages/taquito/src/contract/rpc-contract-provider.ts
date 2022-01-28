@@ -267,7 +267,7 @@ export class RpcContractProvider
     });
     const forgedOrigination = await this.forge(preparedOrigination);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(forgedOrigination);
-    return new OriginationOperation(hash, operation, forgedBytes, opResponse, context, this);
+    return new OriginationOperation<TContract>(hash, operation, forgedBytes, opResponse, context, this);
   }
 
   /**
