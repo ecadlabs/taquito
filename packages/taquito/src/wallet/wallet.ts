@@ -1,6 +1,6 @@
 import { Protocols } from '../constants';
 import { Context } from '../context';
-import { ContractAbstraction, DefaultWalletType } from '../contract';
+import { ContractAbstraction, ContractStorageType, DefaultWalletType } from '../contract';
 import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
 import { OpKind, withKind } from '../operations/types';
@@ -78,7 +78,7 @@ export class WalletOperationBatch {
    *
    * @param params Origination operation parameter
    */
-  withOrigination(params: WalletOriginateParams) {
+  withOrigination<TWallet extends DefaultWalletType = DefaultWalletType>(params: WalletOriginateParams<ContractStorageType<TWallet>>) {
     this.operations.push({ kind: OpKind.ORIGINATION, ...params });
     return this;
   }
@@ -181,11 +181,11 @@ export class Wallet {
    *
    * @param originateParams Originate operation parameter
    */
-  originate<TWallet extends DefaultWalletType = DefaultWalletType>(params: WalletOriginateParams): { send: () => Promise<OriginationWalletOperation<TWallet>> } {
+  originate<TWallet extends DefaultWalletType = DefaultWalletType>(params: WalletOriginateParams<TWallet>): { send: () => Promise<OriginationWalletOperation<TWallet>> } {
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapOriginateParamsToWalletParams(() =>
         this.context.parser.prepareCodeOrigination({
-          ...params,
+          ...params as WalletOriginateParams,
         })
       );
       const opHash = await this.walletProvider.sendOperations([mappedParams]);
