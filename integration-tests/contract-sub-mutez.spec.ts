@@ -3,9 +3,9 @@ import { CONFIGS } from './config';
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const skipIthacanet = protocol === Protocols.PsiThaCa ? test.skip : test;
+  const skipIthacanet = protocol === Protocols.Psithaca2 ? test.skip : test;
   const skipHangzhounet = protocol === Protocols.PtHangz2 ? test.skip : test;
-  const skipHangzhouAndIthaca = protocol === Protocols.PtHangz2 || Protocols.PsiThaCa ? test.skip : test;
+  const skipHangzhouAndIthaca = protocol === Protocols.PtHangz2 || Protocols.Psithaca2 ? test.skip : test;
 
   describe(`Test contract call with amount using: ${rpc}`, () => {
     beforeEach(async (done) => {

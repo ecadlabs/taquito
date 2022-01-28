@@ -22,6 +22,7 @@ interface Config {
   knownContract: string;
   knownBigMapContract: string;
   knownTzip1216Contract: string; // Use contract Tzip12BigMapOffChain from ~/example/deploy-docs-live-code-contracts.ts
+  knownSaplingContract: string; //Originate with ~/taquito/integration-tests/contract-originate-contract-with-sapling.spec.ts
   protocol: Protocols;
   signerConfig: EphemeralConfig | FaucetConfig;
 }
@@ -57,11 +58,12 @@ interface FaucetConfig {
 }
 
 const ithacanetEphemeral = {
-  rpc: process.env['TEZOS_RPC_ITHACANET'] || 'https://ithacanet.ecadinfra.com/',
+  rpc: process.env['TEZOS_RPC_ITHACANET'] || 'http://ecad-ithacanet-full.i.tez.ie:8732/',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD', 
   knownContract: 'KT19oXBkAz1njVaTEypSzxGorWAFy6wnLLe1',
   knownBigMapContract: 'KT1JmL7j8CY371kRF2oZoJmzi7EUWbLPjEqZ', 
-  knownTzip1216Contract: 'KT1GxL96iix8MCTsCA1DBVfnZ4Gdk7EZW4Eq', 
+  knownTzip1216Contract: 'KT1GxL96iix8MCTsCA1DBVfnZ4Gdk7EZW4Eq',
+  knownSaplingContract: 'KT1CDenBWcgWjNZULc9GbJRTnQZQXYWrVT7k',
   protocol: Protocols.Psithaca2,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
@@ -76,6 +78,7 @@ const hangzhounetEphemeral = {
   knownContract: 'KT1XfoRSZ88ioYHbuEKqHxJPawm9Rqc54uoy',
   knownBigMapContract: 'KT1CnRSbp71FU8nz4xNEkcaASgMQDjNN85jd',
   knownTzip1216Contract: 'KT1KquwVmLtq9StwCK46vpwRCxowqhcoV4g1',
+  knownSaplingContract: 'KT1BQPN49fBF4C9vY5piQiA16mMik3hambku',
   protocol: Protocols.PtHangz2,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
@@ -85,11 +88,12 @@ const hangzhounetEphemeral = {
 };
 
 const ithacanetFaucet = {
-  rpc: process.env['TEZOS_RPC_ITHACANET'] || 'https://ithacanet.ecadinfra.com/',
+  rpc: process.env['TEZOS_RPC_ITHACANET'] || 'http://ecad-ithacanet-full.i.tez.ie:8732/',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT19oXBkAz1njVaTEypSzxGorWAFy6wnLLe1',
   knownBigMapContract: 'KT1JmL7j8CY371kRF2oZoJmzi7EUWbLPjEqZ',
   knownTzip1216Contract: 'KT1GxL96iix8MCTsCA1DBVfnZ4Gdk7EZW4Eq',
+  knownSaplingContract: 'KT1CDenBWcgWjNZULc9GbJRTnQZQXYWrVT7k',
   protocol: Protocols.Psithaca2,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
@@ -126,6 +130,7 @@ const hangzhounetFaucet = {
   knownContract: 'KT1XfoRSZ88ioYHbuEKqHxJPawm9Rqc54uoy',
   knownBigMapContract: 'KT1CnRSbp71FU8nz4xNEkcaASgMQDjNN85jd',
   knownTzip1216Contract: 'KT1KquwVmLtq9StwCK46vpwRCxowqhcoV4g1',
+  knownSaplingContract: 'KT1BQPN49fBF4C9vY5piQiA16mMik3hambku',
   protocol: Protocols.PtHangz2,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
@@ -246,6 +251,7 @@ export const CONFIGS = () => {
         protocol,
         knownBigMapContract,
         knownTzip1216Contract,
+        knownSaplingContract,
         signerConfig,
       }) => {
         const Tezos = new TezosToolkit(new RpcClientCache(new RpcClient(rpc)));
@@ -261,6 +267,7 @@ export const CONFIGS = () => {
           lib: Tezos,
           knownBigMapContract,
           knownTzip1216Contract,
+          knownSaplingContract,
           signerConfig,
           setup: async (preferFreshKey: boolean = false) => {
             if (signerConfig.type === SignerType.FAUCET) {

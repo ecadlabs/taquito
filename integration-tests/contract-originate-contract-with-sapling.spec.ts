@@ -34,6 +34,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         ledger2: SaplingStateAbstraction
       }
 
+      console.log("Sapling Contract address "+contract.address)
+
       const storage: StorageType = await contract.storage();
       const saplingStateLedger1 = await storage.ledger1.getSaplingDiff();
 

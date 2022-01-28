@@ -5,7 +5,7 @@ import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_bigmap';
 
-CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup, protocol, rpc }) => {
+CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, knownSaplingContract, setup, protocol, rpc }) => {
     const Tezos = lib;
     const skipIthacanet = protocol === Protocols.Psithaca2 ? test.skip : test;
 
@@ -108,7 +108,8 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
                 done();
             });
 
-            it(`Fetches information about a delegate from RPC`, async (done) => {
+            //pending https://github.com/ecadlabs/taquito/issues/1255
+            skipIthacanet(`Fetches information about a delegate from RPC`, async (done) => {
                 const delegates = await rpcClient.getDelegates(knownBaker);
                 expect(delegates).toBeDefined();
                 done();
@@ -227,9 +228,9 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
                 done();
             });
 
-            skipIthacanet('Simulate the validation of an operation', async (done) => {
-                try {
-                    const operation: any = {
+            it('Simulate the validation of an operation', async (done) => {
+                try {                   
+                    const operation: any = {                       
                         branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
                         contents: [
                             {
@@ -272,8 +273,12 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
 
             it('Run an operation without signature checks', async (done) => {
                 try {
+                    const chainId = await rpcClient.getChainId();
+                    expect(chainId).toBeDefined();
+                    
                     const operation: any = {
-                        chain_id: 'NetXjD3HPJJjmcd',
+                        
+                        chain_id: chainId,
                         operation: {
                             branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
                             contents: [
@@ -306,6 +311,33 @@ CONFIGS().forEach(({ lib, knownBaker, knownContract, knownBigMapContract, setup,
             it('getSuccessorPeriod', async (done) => {
                 const successorPeriod = await rpcClient.getSuccessorPeriod();
                 expect(successorPeriod).toBeDefined();
+                done();
+            });
+
+            //`getSaplingDiffById` method takes a sapling state ID as a parameter and 
+            // returns its associated values.       
+              it('getSaplingDiffById', async (done) => {
+                  const saplingDiffById = await rpcClient.getSaplingDiffById("168");
+                  expect(saplingDiffById).toBeDefined();
+                  done();
+              });
+
+            // //`getSaplingDiffByContract` takes the address of a contract as a parameter and returns its sapling state.
+             it('getSaplingDiffByContract', async (done) => {
+                try {
+                const saplingDiffByContract = await rpcClient.getSaplingDiffByContract(knownSaplingContract);
+                  console.log("saplingDiffByContract: "+saplingDiffByContract)
+                  expect(saplingDiffByContract).toBeDefined();
+                } catch (ex: any) {
+                    expect(ex.message).toMatch('fbc2f4300c01f0b7820d00e3347c8da4ee614674376cbc45359daa54f9b5493e');
+                }
+                done();
+                  done();
+              });
+
+            it('getNormalizedScript', async (done) => {
+                const normalizedScript = await rpcClient.getNormalizedScript(knownContract);
+                expect(normalizedScript).toBeDefined();
                 done();
             });
         });
