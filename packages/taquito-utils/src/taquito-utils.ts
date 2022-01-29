@@ -100,9 +100,9 @@ export function b58decode(payload: string) {
 
 /**
  *
- * @description Base58 encode a public key using predefined prefix
+ * @description Base58 encode an address using predefined prefix
  *
- * @param value Public Key to base58 encode
+ * @param value Address to base58 encode (tz1, tz2, tz3 or KT1)
  */
 export function encodePubKey(value: string) {
   if (value.substring(0, 2) === '00') {
@@ -140,7 +140,7 @@ export function encodeKey(value: string) {
  *
  * @description Base58 encode a key hash according to its prefix
  *
- * @param value Key to base58 encode
+ * @param value Key hash to base58 encode
  */
 export function encodeKeyHash(value: string) {
   if (value[0] === '0') {
