@@ -22,7 +22,7 @@ import {
   TransferParams,
   withKind,
 } from '../operations/types';
-import { ContractAbstraction } from './contract';
+import { DefaultContractType, ContractStorageType, ContractAbstraction } from './contract';
 import { InvalidDelegationSource } from './errors';
 import { ContractProvider, ContractSchema, EstimationProvider, StorageProvider } from './interface';
 import {
@@ -250,7 +250,7 @@ export class RpcContractProvider
    *
    * @param OriginationOperation Originate operation parameter
    */
-  async originate(params: OriginateParams) {
+  async originate<TContract extends DefaultContractType = DefaultContractType>(params: OriginateParams<ContractStorageType<TContract>>) {
     const estimate = await this.estimate(params, this.estimator.originate.bind(this.estimator));
 
     const publicKeyHash = await this.signer.publicKeyHash();
@@ -267,7 +267,7 @@ export class RpcContractProvider
     });
     const forgedOrigination = await this.forge(preparedOrigination);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(forgedOrigination);
-    return new OriginationOperation(hash, operation, forgedBytes, opResponse, context, this);
+    return new OriginationOperation<TContract>(hash, operation, forgedBytes, opResponse, context, this);
   }
 
   /**
@@ -425,7 +425,7 @@ export class RpcContractProvider
     );
   }
 
-  async at<T extends ContractAbstraction<ContractProvider>>(
+  async at<T extends DefaultContractType = DefaultContractType>(
     address: string,
     contractAbstractionComposer: ContractAbstractionComposer<T> = (x) => x as any
   ): Promise<T> {
