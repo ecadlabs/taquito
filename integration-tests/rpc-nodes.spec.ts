@@ -18,6 +18,7 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
     const skipIthacanet = protocol === Protocols.Psithaca2 ? test.skip : test;
+    const skipHangzhounet = protocol === Protocols.PtHangz2 ? test.skip : test;
 
     beforeEach(async (done) => {
       await setup();
@@ -328,18 +329,10 @@ CONFIGS().forEach(
         });
 
         it('getSaplingDiffByContract', async (done) => {
-          try {
             const saplingDiffByContract = await rpcClient.getSaplingDiffByContract(
               knownSaplingContract
             );
-            console.log('saplingDiffByContract: ' + saplingDiffByContract);
             expect(saplingDiffByContract).toBeDefined();
-          } catch (ex: any) {
-            expect(ex.message).toMatch(
-              'fbc2f4300c01f0b7820d00e3347c8da4ee614674376cbc45359daa54f9b5493e'
-            );
-          }
-          done();
           done();
         });
 
