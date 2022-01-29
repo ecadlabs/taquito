@@ -99,7 +99,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         });
       } catch (error: any) {
         expect(error.message).toContain(
-          '(permanent) proto.012-PsiThaCa.michelson_v1.deprecated_instruction'
+          '(permanent) proto.012-Psithaca.michelson_v1.deprecated_instruction'
         );
       }
     });
