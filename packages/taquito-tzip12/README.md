@@ -7,14 +7,14 @@
 ## General Information
 
 There are two scenarios to obtain the metadata of a token:
-1. They can be obtained from executing an off-chain view named `token_metadata` present in the contract metadata
+1. The metadata can be obtained from executing an off-chain view named `token_metadata` present in the contract metadata
 2. or from a big map named `token_metadata` in the contract storage. 
 
 The `getTokenMetadata` method of the `Tzip12ContractAbstraction` class will find the token metadata with precedence for the off-chain view, if there is one, as specified in the standard. Please refer to the following link for complete documentation on [TZIP-012#Token Metadata](https://gitlab.com/tezos/tzip/-/blob/master/proposals/tzip-12/tzip-12.md#token-metadata).
 
 ## Install
 
-The package can be used to extend the well-known Taquito contract abstraction. The `@taquito/tzip12` and the `@taquito/taquito` packages need to be installed as follow:
+The package can be used to extend the well-known Taquito contract abstraction. The `@taquito/tzip12` and the `@taquito/taquito` packages need to be installed as follows:
 ```
 npm i --save @taquito/tzip12
 npm i --save @taquito/taquito
@@ -42,7 +42,7 @@ const contract = await Tezos.contract.at("contractAddress", tzip12)
 await contract.tzip12().getTokenMetadata(1);
 ```
 
-The `getTokenMetadata` method takes a number as a parameter that represents the token_id and returns an object matching this interface :
+The `getTokenMetadata` method takes a number as a parameter that represents the token_id and returns an object matching this interface:
 ```
 interface TokenMetadata {
     token_id: number,

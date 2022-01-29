@@ -47,7 +47,7 @@ Tezos.setProvider({
 
 ### Using a testnet faucet key
 
-To load a faucet key (available from https://teztnets.xyz/) for working a public testnet, use the `importKey` function.
+To load a faucet key (available from https://teztnets.xyz/) for working with a public testnet, use the `importKey` function.
 
 ```js
 import { TezosToolkit } from '@taquito/taquito';
