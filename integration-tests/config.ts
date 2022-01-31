@@ -59,10 +59,10 @@ interface FaucetConfig {
 const ithacanetEphemeral = {
   rpc: process.env['TEZOS_RPC_ITHACANET'] || 'https://ithacanet.ecadinfra.com/',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD', 
-  knownContract: 'KT1J3BCZt5o8CA1xgqbV9Z1iEgoxuS1RamTa',
-  knownBigMapContract: 'KT1VC9dVmYYHyUXEw1KU8Ms6BmtvsGJNarZy', 
-  knownTzip1216Contract: 'KT1DWbrEN9BzoutK5LYfSe9DWrt7D2aoaoTJ', 
-  protocol: Protocols.PsiThaCa,
+  knownContract: 'KT19oXBkAz1njVaTEypSzxGorWAFy6wnLLe1',
+  knownBigMapContract: 'KT1JmL7j8CY371kRF2oZoJmzi7EUWbLPjEqZ', 
+  knownTzip1216Contract: 'KT1GxL96iix8MCTsCA1DBVfnZ4Gdk7EZW4Eq', 
+  protocol: Protocols.Psithaca2,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'https://api.tez.ie/keys/ithacanet',
@@ -87,35 +87,35 @@ const hangzhounetEphemeral = {
 const ithacanetFaucet = {
   rpc: process.env['TEZOS_RPC_ITHACANET'] || 'https://ithacanet.ecadinfra.com/',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1J3BCZt5o8CA1xgqbV9Z1iEgoxuS1RamTa',
-  knownBigMapContract: 'KT1VC9dVmYYHyUXEw1KU8Ms6BmtvsGJNarZy',
-  knownTzip1216Contract: 'KT1DWbrEN9BzoutK5LYfSe9DWrt7D2aoaoTJ',
-  protocol: Protocols.PsiThaCa,
+  knownContract: 'KT19oXBkAz1njVaTEypSzxGorWAFy6wnLLe1',
+  knownBigMapContract: 'KT1JmL7j8CY371kRF2oZoJmzi7EUWbLPjEqZ',
+  knownTzip1216Contract: 'KT1GxL96iix8MCTsCA1DBVfnZ4Gdk7EZW4Eq',
+  protocol: Protocols.Psithaca2,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
       faucetKey: {  
-      "pkh": "tz1LyuwEK3cPX8eHankqJW6hKJNpXAEPZaQz",
-      "mnemonic": [
-        "source",
-        "fantasy",
-        "diary",
-        "situate",
-        "spring",
-        "prize",
-        "solution",
-        "dawn",
-        "exotic",
-        "butter",
-        "barrel",
-        "garden",
-        "transfer",
-        "alcohol",
-        "edit"
-      ],
-      "email": "lcmxowve.lmlksvxa@teztnets.xyz",
-      "password": "rudDJKxp44",
-      "amount": "116492897916",
-      "secret": "0dfbf62414e7f10dbb47fc3b16cfd6b95d99c22c"
+        "pkh": "tz1LJLhMszojav8EfN9hMZAPBSH21ocamx7n",
+        "mnemonic": [
+          "escape",
+          "camera",
+          "credit",
+          "endorse",
+          "auto",
+          "lamp",
+          "advance",
+          "orange",
+          "fluid",
+          "virus",
+          "argue",
+          "knee",
+          "pluck",
+          "remove",
+          "scheme"
+        ],
+        "email": "noriqgjl.gtsyulgy@teztnets.xyz",
+        "password": "st3sZBRLWF",
+        "amount": "118887604096",
+        "secret": "7d414378d9071328313cca699d6922f1b59d076a"
     }
   },
 };

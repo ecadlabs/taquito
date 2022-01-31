@@ -1,4 +1,5 @@
 import { Context } from '../context';
+import { ContractStorageType, DefaultContractType } from '../contract/contract';
 import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
 import { EstimationProvider, ContractProvider } from '../contract/interface';
 import {
@@ -112,7 +113,7 @@ export class OperationBatch extends OperationEmitter {
    *
    * @param params Origination operation parameter
    */
-  withOrigination(params: OriginateParams) {
+  withOrigination<TContract extends DefaultContractType = DefaultContractType>(params: OriginateParams<ContractStorageType<TContract>>) {
     this.operations.push({ kind: OpKind.ORIGINATION, ...params });
     return this;
   }

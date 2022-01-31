@@ -379,10 +379,11 @@ export enum Protocol {
   PtHangzH = 'PtHangzHogokSuiMHemCuowEavgYTP8J5qQ9fQS793MHYFpCY3r',
   PtHangz2 = 'PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx',
   PsiThaCa = 'PsiThaCaT47Zboaw71QWScM8sXeMM7bbQFncK9FLqYc6EKdpjVP',
+  Psithaca2 = 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK', // temporary protocol hash
 }
 
-export const DefaultProtocol = Protocol.PtHangz2;
+export const DefaultProtocol = Protocol.Psithaca2;
 
 export type ProtocolID = `${Protocol}`;
 
@@ -403,7 +404,8 @@ const protoLevel: Record<ProtocolID, number> = {
   PtHangzHogokSuiMHemCuowEavgYTP8J5qQ9fQS793MHYFpCY3r: 11,
   PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx: 11,
   PsiThaCaT47Zboaw71QWScM8sXeMM7bbQFncK9FLqYc6EKdpjVP: 12,
-  ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK: 13,
+  Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A: 13,
+  ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK: 14,
 };
 
 export function ProtoGreaterOfEqual(a: ProtocolID, b: ProtocolID): boolean {
