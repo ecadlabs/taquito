@@ -31,7 +31,7 @@ import { validateAddress } from '@taquito/utils';
 
 const pkh = 'tz1L9r8mWmRPndRhuvMCWESLGSVeFzQ9NAWx';
 console.log(validateAddress(pkh));
-// ouput: 3 which is valid
+// output: 3 which is valid
 ```
 
 **Key hash validation**
@@ -41,7 +41,7 @@ import { validateKeyHash } from '@taquito/utils';
 
 const keyHash = 'tz1L9r8mWmRPndRhuvMCWESLGSVeFzQ9NAWx';
 console.log(validateKeyHash(keyHash));
-// ouput: 3 which is valid
+// output: 3 which is valid
 ```
 
 **Contract address validation**
@@ -51,7 +51,7 @@ import { validateContractAddress } from '@taquito/utils';
 
 const contractAddress = 'KT1AfxAKKLnEg6rQ6kHdvCWwagjSaxEwURSJ';
 console.log(validateContractAddress(contractAddress));
-// ouput: 3 which is valid
+// output: 3 which is valid
 ```
 
 **Chain id validation**
@@ -61,7 +61,7 @@ import { validateChain } from '@taquito/utils';
 
 const chainId = 'NetXdQprcVkpaWU';
 console.log(validateChain(chainId));
-// ouput: 3 which is valid
+// output: 3 which is valid
 ```
 
 **Public key validation**
@@ -71,17 +71,17 @@ import { validatePublicKey } from '@taquito/utils';
 
 const publicKey = 'edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g';
 console.log(validatePublicKey(publicKey));
-// ouput: 3 which is valid
+// output: 3 which is valid
 ```
 
 **Signature validation**
 
-```js live noInline
+```ts
 import { validateSignature } from '@taquito/utils';
 
 const signature = 'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg';
 console.log(validateSignature(signature));
-// ouput: 3 which is valid
+// output: 3 which is valid
 ```
 
 **Block hash validation**
@@ -91,7 +91,7 @@ import { validateBlock } from '@taquito/utils';
 
 const block ='BLJjnzaPtSsxykZ9pLTFLSfsKuiN3z7SjSPDPWwbE4Q68u5EpBw';
 console.log(validateBlock(block));
-// ouput: 3 which is valid
+// output: 3 which is valid
 ```
 
 **Operation hash validation**
@@ -101,18 +101,18 @@ import { validateOperation } from '@taquito/utils';
 
 const operation ='ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj';
 console.log(validateOperation(operation));
-// ouput: 3 which is valid
+// output: 3 which is valid
 ```
 
 **Protocol hash validation**
 
-```js live noInline
+```ts
 import { validateProtocol } from '@taquito/utils';
 
 //valid
 const protocol ='PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx';
 console.log(validateProtocol(protocol));
-// ouput: 3 which is valid
+// output: 3 which is valid
 ```
 
 ### Verification of a signature
@@ -133,7 +133,7 @@ console.log(isValid);
 
 ### Utility functions
 
-**Conversion between hexadecimal and ASCII string**
+**Conversion between hexadecimal and ASCII strings**
 ```ts
 import { char2Bytes, bytes2Char } from '@taquito/utils';
 
@@ -147,7 +147,7 @@ console.log(bytes2Char(hex));
 // output: https://storage.googleapis.com/tzip-16/fa2-views.json
 ```
 
-**Conversion between buffer and hexadecimal string**
+**Conversion between buffer and hexadecimal strings**
 
 ```ts
 import { buf2hex, hex2buf } from '@taquito/utils';
@@ -192,7 +192,7 @@ console.log(encodeKey('0060842d4ba23a9940ef5dcf4404fdaa430cfaaccb5029fad06cb5ea8
 // output: edpkuNjKKT48xBoT5asPrWdmuM1Yw8D93MwgFgVvtca8jb5pstzaCh
 ```
 
-**Base58 encode an address using predefined prefix**
+**Base58 encode an address using a predefined prefix**
 ```ts
 import { encodePubKey } from '@taquito/utils'; 
 
@@ -203,7 +203,7 @@ console.log(encodePubKey('01f9b689a478253793bd92357c5e08e5ebcd8db47600'));
 // output: KT1XM8VUFBiM9AC5czWU15fEeE9nmuEYWt3Y
 ```
 
-**Base58 decode a string with predefined prefix**
+**Base58 decode a string with a predefined prefix**
 
 ```ts
 import { b58decode } from '@taquito/utils'; 
@@ -242,7 +242,7 @@ console.log(encodeOpHash(opBytesSigned));
 
 **Generate expression hash**
 
-Hash a string using the BLAKE2b algorithm, base58 encode the hash obtained and appends the prefix 'expr' to it.
+Hash a string using the BLAKE2b algorithm, base58 encode the hash obtained and append the prefix 'expr' to it.
 
 ```ts
 import { encodeExpr } from '@taquito/utils'; 
