@@ -13,8 +13,8 @@ import { Buffer } from 'buffer';
 import { Prefix, prefix, prefixLength } from './constants';
 import { validatePkAndExtractPrefix } from './verify-signature';
 import { hash } from '@stablelib/blake2b';
-const blake = require('blakejs');
-const bs58check = require('bs58check');
+import blake from 'blakejs';
+import bs58check from 'bs58check';
 
 export * from './validators';
 export { VERSION } from './version';
@@ -31,7 +31,7 @@ export * from './errors';
  * @param value Value in hex
  */
 export function encodeExpr(value: string) {
-  const blakeHash = blake.blake2b(hex2buf(value), null, 32);
+  const blakeHash = blake.blake2b(hex2buf(value), undefined, 32);
   return b58cencode(blakeHash, prefix['expr']);
 }
 
@@ -40,8 +40,8 @@ export function encodeExpr(value: string) {
  * @description Return the operation hash of a signed operation
  * @param value Value in hex of a signed operation
  */
-export function encodeOpHash(value: string) {
-  const blakeHash = blake.blake2b(hex2buf(value), null, 32);
+ export function encodeOpHash(value: string) {
+  const blakeHash = blake.blake2b(hex2buf(value), undefined, 32);
   return b58cencode(blakeHash, prefix.o);
 }
 
