@@ -37,11 +37,11 @@ It is also possible to instantiate the `TezosToolkit` with a class that implemen
 
 ### Choosing between the contract or the wallet APIs
 
-In most cases, you want to use the Wallet API when you give the users of your dapp the freedom to choose the wallet of their choice to interact with it. The Contract API is more suited for back-end applications and forging/signing offline (for example, using the inMemorySigner). You would also use the Contract API to build a wallet.
+In most cases, you want to use the Wallet API when you give the users of your dapp the freedom to choose the wallet of their choice to interact with. The Contract API is more suited for back-end applications and forging/signing offline (for example, using the inMemorySigner). You would also use the Contract API to build a wallet.
 
 **Configure a signer to use the Contract API**
 
-Sending operation using the Contract API requires a signer to be configured. Taquito provides different signers implementation (e.g. see the `taquito/remote-signer`, `taquito/signer` and `taquito/legder-signer`). Here is an example using the `InMemorySigner`:
+Sending operations using the Contract API requires a signer to be configured. Taquito provides different signer implementations (e.g. see the `taquito/remote-signer`, `taquito/signer` and `taquito/legder-signer`). Here is an example using the `InMemorySigner`:
 
 ```js
 import { InMemorySigner } from '@taquito/signer';
@@ -57,7 +57,7 @@ await Tezos.contract.transfer({ to: publicKeyHash, amount: 2 });
 
 **Configure a wallet to use the Wallet API**
 
-Sending operation using the Wallet API requires a wallet to be configured. The wallet API supports different kinds of wallets. For example, the `BeaconWallet` from the `@taquito/beacon-wallet` can be used. Use the `setWalletProvider` method of the `TezosToolkit` to set the wallet and refer to the `@taquito/beacon-wallet` for specific configuration:
+Sending operations using the Wallet API requires a wallet to be configured. The wallet API supports different kinds of wallets. For example, the `BeaconWallet` from the `@taquito/beacon-wallet` can be used. Use the `setWalletProvider` method of the `TezosToolkit` to set the wallet and refer to the `@taquito/beacon-wallet` for specific configuration:
 
 ```ts
 import { TezosToolkit } from '@taquito/taquito';
