@@ -58,7 +58,7 @@ interface FaucetConfig {
 }
 
 const ithacanetEphemeral = {
-  rpc: process.env['TEZOS_RPC_ITHACANET'] || 'http://ithacanet.ecadinfra.com/',
+  rpc: process.env['TEZOS_RPC_ITHACANET'] || 'https://ithacanet.ecadinfra.com/',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD', 
   knownContract: 'KT19oXBkAz1njVaTEypSzxGorWAFy6wnLLe1',
   knownBigMapContract: 'KT1JmL7j8CY371kRF2oZoJmzi7EUWbLPjEqZ', 
@@ -73,7 +73,7 @@ const ithacanetEphemeral = {
 };
 
 const hangzhounetEphemeral = {
-  rpc: process.env['TEZOS_RPC_HANGZHOUNET'] || 'http://hangzhounet.api.tez.ie',
+  rpc: process.env['TEZOS_RPC_HANGZHOUNET'] || 'https://hangzhounet.api.tez.ie',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1XfoRSZ88ioYHbuEKqHxJPawm9Rqc54uoy',
   knownBigMapContract: 'KT1CnRSbp71FU8nz4xNEkcaASgMQDjNN85jd',
@@ -88,7 +88,7 @@ const hangzhounetEphemeral = {
 };
 
 const ithacanetFaucet = {
-  rpc: process.env['TEZOS_RPC_ITHACANET'] || 'http://ithacanet.ecadinfra.com/',
+  rpc: process.env['TEZOS_RPC_ITHACANET'] || 'https://ithacanet.ecadinfra.com/',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT19oXBkAz1njVaTEypSzxGorWAFy6wnLLe1',
   knownBigMapContract: 'KT1JmL7j8CY371kRF2oZoJmzi7EUWbLPjEqZ',
@@ -125,7 +125,7 @@ const ithacanetFaucet = {
 };
 
 const hangzhounetFaucet = {
-  rpc: process.env['TEZOS_RPC_HANGZHOUNET'] || 'http://hangzhounet.api.tez.ie/',
+  rpc: process.env['TEZOS_RPC_HANGZHOUNET'] || 'https://hangzhounet.api.tez.ie/',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1XfoRSZ88ioYHbuEKqHxJPawm9Rqc54uoy',
   knownBigMapContract: 'KT1CnRSbp71FU8nz4xNEkcaASgMQDjNN85jd',
