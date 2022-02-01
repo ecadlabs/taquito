@@ -1,7 +1,7 @@
 {
   "name": "@taquito/example",
   "private": true,
-  "version": "11.2.0-beta-RC.0",
+  "version": "11.2.0",
   "scripts": {
     "example:at": "node -r ts-node/register --preserve-symlinks contract-schema.ts",
     "example:origination": "node -r ts-node/register --preserve-symlinks example-contract-originate-hello-world.ts",
@@ -21,13 +21,13 @@
   },
   "dependencies": {
     "@ledgerhq/hw-transport-node-hid": "^6.20.0",
-    "@taquito/ledger-signer": "^11.2.0-beta-RC.0",
-    "@taquito/michel-codec": "^11.2.0-beta-RC.0",
-    "@taquito/michelson-encoder": "^11.2.0-beta-RC.0",
-    "@taquito/signer": "^11.2.0-beta-RC.0",
-    "@taquito/taquito": "^11.2.0-beta-RC.0",
-    "@taquito/tzip16": "^11.2.0-beta-RC.0",
-    "@taquito/utils": "^11.2.0-beta-RC.0",
+    "@taquito/ledger-signer": "^11.2.0",
+    "@taquito/michel-codec": "^11.2.0",
+    "@taquito/michelson-encoder": "^11.2.0",
+    "@taquito/signer": "^11.2.0",
+    "@taquito/taquito": "^11.2.0",
+    "@taquito/tzip16": "^11.2.0",
+    "@taquito/utils": "^11.2.0",
     "bignumber.js": "^9.0.2"
   },
   "devDependencies": {
