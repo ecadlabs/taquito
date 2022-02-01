@@ -18,7 +18,6 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
     const skipIthacanet = protocol === Protocols.Psithaca2 ? test.skip : test;
-    const skipHangzhounet = protocol === Protocols.PtHangz2 ? test.skip : test;
 
     beforeEach(async (done) => {
       await setup();
