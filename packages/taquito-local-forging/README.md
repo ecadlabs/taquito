@@ -1,8 +1,46 @@
 
-# Taquito Local forging package
+# Taquito Local Forging package
+*TypeDoc style documentation is available [here](https://tezostaquito.io/typedoc/modules/_taquito_local_forging.html)*
 
-`@taquito/local-forging` is an npm package that provides developers with local forging functionality for Taquito. It can be injected as follows:
+## General Information
 
+_Forging_ is the act of encoding your operation shell into its binary representation. Forging can be done either remotely by the RPC node, or locally. `@taquito/local-forging` is an npm package that provides developers with local forging functionality.
+
+
+Operations must be _forged_ and _signed_ before it gets injected to the blockchain.
+
+Example of an unforged operation:
+```
+{
+  branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+    contents: [
+        {
+          kind: 'origination',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          balance: '0',
+          script: [Object]
+        }
+    ]
+}
+```
+
+A forged operation:
+```
+a99b946c97ada0f42c1bdeae0383db7893351232a832d00d0cd716eb6f66e5616d0035e993d8c7aaa42b5e3ccd86a33390ececc73abd904e010a0a000000000011020000000c0500036c0501036c0502038d00000002030b
+```
+
+The forged values can then be parsed back into its JSON counterpart
+
+## Install
+Install the package as follows
+```
+npm install @taquito/local-forging
+```
+## Usage
 ```ts
 import { TezosToolkit } from '@taquito/taquito'
 import { LocalForger } from '@taquito/local-forging'
@@ -11,11 +49,8 @@ const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 Tezos.setProvider({ forger: localForger })
 ```
 
+## Additional Info
 See the top-level [https://github.com/ecadlabs/taquito](https://github.com/ecadlabs/taquito) file for details on reporting issues, contributing and versioning.
-
-## API Documentation
-
-TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_local_forging.html)
 
 ## Disclaimer
 

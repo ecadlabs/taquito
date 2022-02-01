@@ -15,14 +15,14 @@ npm install @taquito/ledger-signer
 ### Prerequisites
 To use the Ledger Signer we must first import the desired transport from the [LedgerJs library](https://github.com/LedgerHQ/ledgerjs).
 
-The Ledger Signer has currently been tested with `@ledgerhq/hw-transport-node-hid` for Node-based applications and with `@ledgerhq/hw-transport-u2f` for web applications.
+The Ledger Signer has currently been tested with `@ledgerhq/hw-transport-node-hid` for Node-based applications and with `@ledgerhq/hw-transport-webhi` for web applications.
 
 Pass an instance of the transport of your choice to the Ledger Signer as follows:
 ```ts
-import TransportU2F from '@ledgerhq/hw-transport-u2f';
+import transportWeb from '@ledgerhq/hw-transport-webhi';
 import { LedgerSigner } from '@taquito/ledger-signer';
 
-const transport = await TransportU2F.create();
+const transport = await transportWeb.create();
 const ledgerSigner = new LedgerSigner(transport);
 ```
 
@@ -31,7 +31,7 @@ The constructor of the `LedgerSigner` class takes three other optional parameter
 - `path`: **default value is "44'/1729'/0'/0'"**  
   You can use as a parameter the `HDPathTemplate` which refers to `44'/1729'/${account}'/0'`. You have to specify what is the index of the account you want to use. Or you can also use a complete path as a parameter. More details about paths [here](https://tezostaquito.io/docs/ledger_signer#derivation-paths-hd-wallet--bip-standards)
 - `prompt`: **default is true**  
-  If true, you will be asked on your Ledger device to send your public key for validation. **_Note that confirmation is required when using `@ledgerhq/hw-transport-u2f`, so you should not set this parameter to false if you are using this transport._**
+  If true, you will be asked on your Ledger device to send your public key for validation. **_Note that confirmation is required when using `@ledgerhq/hw-transport-webhi`, so you should not set this parameter to false if you are using this transport._**
 - `derivationType`: **default is DerivationType.ED25519**  
   It can be DerivationType.ED25519 (tz1), DerivationType.SECP256K1 (tz2) or DerivationType.P256 (tz3).
 
@@ -50,12 +50,12 @@ const ledgerSigner = new LedgerSigner(
 
 ```ts
 import { LedgerSigner } from '@taquito/ledger-signer';
-import TransportNodeHid from '@ledgerhq/hw-transport-node-hid';
+import TransportWeb from '@ledgerhq/hw-transport-webhi';
 import { TezosToolkit } from '@taquito/taquito';
 
 const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 
-const transport = await TransportNodeHid.create();
+const transport = await TransportWeb.create();
 const ledgerSigner = new LedgerSigner(transport);
 
 Tezos.setProvider({ signer: ledgerSigner });
