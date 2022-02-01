@@ -335,12 +335,6 @@ CONFIGS().forEach(
             expect(saplingDiffByContract).toBeDefined();
           done();
         });
-
-        it('getNormalizedScript', async (done) => {
-          const normalizedScript = await rpcClient.getNormalizedScript(knownContract);
-          expect(normalizedScript).toBeDefined();
-          done();
-        });
       });
     });
   }
