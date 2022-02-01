@@ -192,7 +192,9 @@ export class MichelsonStorageView implements View {
       const failWith = validateAndExtractFailwith(error);
       throw failWith
         ? new ViewSimulationError(
-            `The Simulation of the Michelson view failed with: ${JSON.stringify(failWith)}`,
+            `The simulation of the Michelson view failed with: ${JSON.stringify(failWith)}`,
+            this.viewName,
+            failWith,
             error
           )
         : error;
