@@ -191,11 +191,9 @@ Make sure you have the Beacon browser extension installed (the extension offers 
 
 ```js live noInline wallet
 
-//import { BeaconWallet } from '@taquito/beacon-wallet';
-
-
-const options = { name: 'MyAwesomeDapp' };
-const wallet = new BeaconWallet(options);
+// import { BeaconWallet } from '@taquito/beacon-wallet';
+// const options = { name: 'exampleWallet' };
+// const wallet = new BeaconWallet(options);
 
 wallet
   .requestPermissions({ network: { type: 'hangzhounet' } })
