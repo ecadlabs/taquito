@@ -2,6 +2,8 @@
 title: On-chain views
 author: Roxane Letourneau
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 ## On-chain views description
 
@@ -112,6 +114,14 @@ The following live code example shows a contract (`contractCallFib`) calling the
 
 The example first shows the initial storage of the contract `contractCallFib`. It calls the default entry point of `contractCallFib` with the value of its storage + 1 and the address of the contract `contractTopLevelViews`. A call is made to the `fib` view of `contractTopLevelViews` with the `storage + 1` as argument. The view returns the value of the Fibonacci sequence at the position represented by `storage + 1`. The storage of `contractCallFib` is updated to the result of the view.
 
+<Tabs
+defaultValue="contractAPI"
+values={[
+{label: 'Contract API', value: 'contractAPI'},
+{label: 'Wallet API', value: 'walletAPI'}
+]}>
+<TabItem value="contractAPI">
+
 ```js live noInline
 const contractTopLevelViews = 'KT1KJbtwARB2w3yN5fRjBE6CXJh5t9Hbbbpv';
 const contractCallFib = 'KT1T8FPwfbfWK5ir7A5bj6coqttKwhwchdnD';
@@ -138,6 +148,37 @@ Tezos.contract.at(contractCallFib)
   })
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
+</TabItem>
+  <TabItem value="walletAPI">
+
+```js live noInline
+const contractTopLevelViews = 'KT1KJbtwARB2w3yN5fRjBE6CXJh5t9Hbbbpv';
+const contractCallFib = 'KT1T8FPwfbfWK5ir7A5bj6coqttKwhwchdnD';
+
+Tezos.wallet.at(contractCallFib)
+  .then((contract) => {
+    contract.storage()
+      .then((storage) => {
+        println(`The initial storage of ${contractCallFib} is :${storage}.`);
+        const fibPosition = storage.toNumber() + 1;
+        println(`Calling the default method of ${contractCallFib} will call the view fib of ${contractTopLevelViews} with ${fibPosition}.`);
+        return contract.methodsObject.default({ 0: fibPosition, 1: contractTopLevelViews }).send()
+          .then((op) => {
+            println(`Waiting for ${op.hash} to be confirmed...`);
+            return op.confirmation().then(() => op.hash)
+              .then(() => {
+                return contract.storage()
+                  .then((finalStorage) => {
+                    println(`The storage is now ${finalStorage} which corresponds to the value of the Fibonacci sequence at position ${fibPosition}.`);
+                  })
+              })
+          })
+      })
+  })
+  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+```  
+  </TabItem>
+</Tabs>
 
 ## How to simulate a view execution using Taquito
 
@@ -157,6 +198,14 @@ The `executeView` method of the `OnChainView` class allows simulating the view. 
 
 Here is an example:
 
+<Tabs
+defaultValue="contractAPI"
+values={[
+{label: 'Contract API', value: 'contractAPI'},
+{label: 'Wallet API', value: 'walletAPI'}
+]}>
+<TabItem value="contractAPI">
+
 ```js live noInline
 const contractTopLevelViews = 'KT1KJbtwARB2w3yN5fRjBE6CXJh5t9Hbbbpv';
 const contractCallFib = 'KT1T8FPwfbfWK5ir7A5bj6coqttKwhwchdnD';
@@ -172,6 +221,25 @@ Tezos.contract.at(contractTopLevelViews)
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
+</TabItem>
+  <TabItem value="walletAPI">
+
+```js live noInline
+const contractTopLevelViews = 'KT1KJbtwARB2w3yN5fRjBE6CXJh5t9Hbbbpv';
+const contractCallFib = 'KT1T8FPwfbfWK5ir7A5bj6coqttKwhwchdnD';
+const fibPosition = 7;
+
+Tezos.wallet.at(contractTopLevelViews)
+  .then((contract) => {
+    return contract.contractViews.fib(fibPosition).executeView({ viewCaller: contractCallFib })
+      .then((viewResult) => {
+        println(`The result of the view simulation is ${viewResult}.`);
+      })
+  })
+  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+```  
+  </TabItem>
+</Tabs>
 
 :::caution
 On-chain views should not be confused with lambda views which are also available on the ContractAbstraction class. See the documentation for [lambda_view](lambda_view.md).

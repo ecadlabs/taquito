@@ -2,6 +2,8 @@
 title: Transfers
 author: Simon Boissonneault-Robert
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 # Examples demonstrating transfers between various address types
 
@@ -20,6 +22,14 @@ await Tezos.contract.transfer({ to: contract.address, amount: 1 });
 ```
 
 In the following example, we transfer 0.5ꜩ from a `tz1aaYoabvj2DQtpHz74Z83fSNjY29asdBfZ` address that signs the operation to `tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY`.
+
+<Tabs
+defaultValue="contractAPI"
+values={[
+{label: 'Contract API', value: 'contractAPI'},
+{label: 'Wallet API', value: 'walletAPI'}
+]}>
+<TabItem value="contractAPI">
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
@@ -49,6 +59,40 @@ fetch('https://api.tez.ie/keys/hangzhounet/', {
   .then((hash) => render(`Operation injected: https://hangzhou.tzstats.com/${hash}`))
   .catch((error) => render(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
+
+</TabItem>
+  <TabItem value="walletAPI">
+
+```js live noInline
+// import { TezosToolkit } from '@taquito/taquito';
+// const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
+
+render(`Fetching a private key...`);
+fetch('https://api.tez.ie/keys/hangzhounet/', {
+  method: 'POST',
+  headers: { Authorization: 'Bearer taquito-example' },
+})
+  .then((response) => response.text())
+  .then((privateKey) => {
+    render(`Importing the private key...`);
+    return importKey(Tezos, privateKey);
+  })
+  .then(() => {
+    const amount = 0.5;
+    const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
+
+    render(`Transfering ${amount} ꜩ to ${address}...`);
+    return Tezos.wallet.transfer({ to: address, amount: amount }).send();
+  })
+  .then((op) => {
+    render(`Waiting for ${op.opHash} to be confirmed...`);
+    return op.confirmation(1).then(() => op.opHash);
+  })
+  .then((hash) => render(`Operation injected: https://hangzhou.tzstats.com/${hash}`))
+  .catch((error) => render(`Error: ${JSON.stringify(error, null, 2)}`));
+``` 
+  </TabItem>
+</Tabs>
 
 ## Transfers involving "originated" KT1 addresses
 

@@ -2,7 +2,6 @@
 title: TZIP-12 Token Metadata
 author: Roxane Letourneau
 ---
-
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
@@ -77,6 +76,14 @@ Here is a flowchart that summarizes the logic perform internally when calling th
 
 ### Example where the token metadata are obtained from an off-chain view `token_metadata`
 
+<Tabs
+defaultValue="contractAPI"
+values={[
+{label: 'Contract API', value: 'contractAPI'},
+{label: 'Wallet API', value: 'walletAPI'}
+]}>
+<TabItem value="contractAPI">
+
 ```js live noInline
 // import { TezosToolkit, compose } from '@taquito/taquito';
 // import { Tzip12Module, tzip12 } from "@taquito/tzip12";
@@ -98,8 +105,42 @@ Tezos.contract.at(contractAddress, compose(tzip12, tzip16))
 })
 .catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
+</TabItem>
+  <TabItem value="walletAPI">
+
+```js live noInline
+// import { TezosToolkit, compose } from '@taquito/taquito';
+// import { Tzip12Module, tzip12 } from "@taquito/tzip12";
+// import { tzip16 } from "@taquito/tzip16";
+// const Tezos = new TezosToolkit('rpc_url');
+
+Tezos.addExtension(new Tzip12Module());
+
+const contractAddress = "KT1Gn8tB1gdaST4eTwZUqsNJTRLZU5a4abXv";
+const tokenId = 1;
+
+Tezos.wallet.at(contractAddress, compose(tzip12, tzip16))
+.then(wallet => {
+  println(`Fetching the token metadata for the token ID ${tokenId}...`);
+  return wallet.tzip12().getTokenMetadata(tokenId);
+})
+.then (tokenMetadata => {
+  println(JSON.stringify(tokenMetadata, null, 2));
+})
+.catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
+```   
+  </TabItem>
+</Tabs>
 
 The same result can also be obtained by calling the off-chain view `token_metadata` using the `taquito-tzip16` package:
+
+<Tabs
+defaultValue="contractAPI"
+values={[
+{label: 'Contract API', value: 'contractAPI'},
+{label: 'Wallet API', value: 'walletAPI'}
+]}>
+<TabItem value="contractAPI">
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
@@ -127,6 +168,37 @@ Tezos.contract.at(contractAddress, tzip16)
 })
 .catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
+</TabItem>
+  <TabItem value="walletAPI">
+
+```js live noInline
+// import { TezosToolkit } from '@taquito/taquito';
+// import { Tzip16Module, tzip16, bytes2Char } from "@taquito/tzip16";
+// const Tezos = new TezosToolkit('rpc_url');
+
+Tezos.addExtension(new Tzip16Module());
+
+const contractAddress = "KT1Gn8tB1gdaST4eTwZUqsNJTRLZU5a4abXv";
+const tokenId = 1;
+
+Tezos.wallet.at(contractAddress, tzip16)
+.then(wallet => {
+  println(`Initialising the views for ${contractAddress}...`);
+  return wallet.tzip16().metadataViews();
+})
+.then (views => {
+  return views['token_metadata']().executeView(tokenId)
+}).then (result => {
+  println('Result of the view token_metadata:');
+  println(`name: ${bytes2Char((Object.values(result)[1]).get('name'))}`);
+  println(`decimals: ${bytes2Char((Object.values(result)[1]).get('decimals'))}`);
+  println(`symbol: ${bytes2Char((Object.values(result)[1]).get('symbol'))}`);
+  println(`extra: ${bytes2Char((Object.values(result)[1]).get('extra'))}`);
+})
+.catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
+```    
+  </TabItem>
+</Tabs>
 
 *Note that an off-chain view `all-tokens` should also be present in the contract metadata allowing the user to know with which token ID the `token_metadata` can be called.*
 ### Example where the token metadata are found in the big map `%token_metadata`
@@ -169,6 +241,14 @@ prim: 'big_map',
 Otherwise, the token metadata won't be found by the `getTokenMetadata` method, and a `TokenMetadataNotFound` error will be thrown.
 :::
 
+<Tabs
+defaultValue="contractAPI"
+values={[
+{label: 'Contract API', value: 'contractAPI'},
+{label: 'Wallet API', value: 'walletAPI'}
+]}>
+<TabItem value="contractAPI">
+
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip12Module, tzip12 } from "@taquito/tzip12";
@@ -189,6 +269,31 @@ Tezos.contract.at(contractAddress, tzip12)
 })
 .catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
+</TabItem>
+  <TabItem value="walletAPI">
+
+```js live noInline
+// import { TezosToolkit } from '@taquito/taquito';
+// import { Tzip12Module, tzip12 } from "@taquito/tzip12";
+// const Tezos = new TezosToolkit('rpc_url');
+
+Tezos.addExtension(new Tzip12Module());
+
+const contractAddress = "KT1LKW2Ny5yUgWpE1zZbJpckM1mRtf54VmEu";
+const tokenId = 1;
+
+Tezos.wallet.at(contractAddress, tzip12)
+.then(wallet => {
+  println(`Fetching the token metadata for the token ID ${tokenId} of ${contractAddress}...`);
+  return wallet.tzip12().getTokenMetadata(tokenId);
+})
+.then (tokenMetadata => {
+  println(JSON.stringify(tokenMetadata, null, 2));
+})
+.catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
+```   
+  </TabItem>
+</Tabs>
 
 #### For more information on the contracts used in the examples: 
 

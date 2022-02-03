@@ -3,6 +3,9 @@ title: Quick Start
 author: Simon Boissonneault-Robert
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 ## Installing Taquito using npm
 
 > For quick-start, you may also like to try out our template/boilerplate app [here][boilerplate]
@@ -127,6 +130,14 @@ importKey(
 
 The transfer operation requires a configured signer. In this example, we will use a private key to fetch a key service implemented for demonstration purposes. You should only use this key service for testing and development purposes.
 
+<Tabs
+defaultValue="contractAPI"
+values={[
+{label: 'Contract API', value: 'contractAPI'},
+{label: 'Wallet API', value: 'walletAPI'}
+]}>
+<TabItem value="contractAPI">
+
 ```js live noInline
 const amount = 2;
 const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
@@ -142,9 +153,39 @@ Tezos.contract
   .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
+</TabItem>
+  <TabItem value="walletAPI">
+
+```js live noInline
+const amount = 2;
+const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
+
+println(`Transfering ${amount} ꜩ to ${address}...`);
+Tezos.wallet
+  .transfer({ to: address, amount: amount })
+  .send()
+  .then((op) => {
+    println(`Waiting for ${op.opHash} to be confirmed...`);
+    return op.confirmation(1).then(() => op.opHash);
+  })
+  .then((hash) => println(`Operation injected: https://hangzhou.tzstats.com/${hash}`))
+  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+```
+
+  </TabItem>
+</Tabs>
+
 ### Interact with a smart contract
 
 Calling smart contract operations requires a configured signer; in this example we will use a faucet key. The Ligo source code for the smart contract [KT1NcdpzokZQY4sLmCBUwLnMHQCCQ6rRXYwS][smart_contract_on_better_call_dev] used in this example can be found in a [Ligo Web IDE][smart_contract_source].
+
+<Tabs
+defaultValue="contractAPI"
+values={[
+{label: 'Contract API', value: 'contractAPI'},
+{label: 'Wallet API', value: 'walletAPI'}
+]}>
+<TabItem value="contractAPI">
 
 ```js live noInline
 Tezos.contract
@@ -162,6 +203,30 @@ Tezos.contract
   .then((hash) => println(`Operation injected: https://hangzhou.tzstats.com/${hash}`))
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
+
+</TabItem>
+  <TabItem value="walletAPI">
+
+```js live noInline
+Tezos.wallet
+  .at('KT1NcdpzokZQY4sLmCBUwLnMHQCCQ6rRXYwS')
+  .then((wallet) => {
+    const i = 7;
+
+    println(`Incrementing storage value by ${i}...`);
+    return wallet.methods.increment(i).send();
+  })
+  .then((op) => {
+    println(`Waiting for ${op.opHash} to be confirmed...`);
+    return op.confirmation(1).then(() => op.opHash);
+  })
+  .then((hash) => println(`Operation injected: https://hangzhou.tzstats.com/${hash}`))
+  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+```
+
+
+  </TabItem>
+</Tabs>
 
 [boilerplate]: https://github.com/ecadlabs/taquito-boilerplate
 [smart_contract_source]: https://ide.ligolang.org/p/CelcoaDRK5mLFDmr5rSWug

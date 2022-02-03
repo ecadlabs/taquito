@@ -2,6 +2,8 @@
 title: Estimate Operations
 author: Edmond Lee & Roxane Letourneau
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 Taquito's estimate method can be used to estimate fees, gas, and storage associated with an operation.
 
@@ -51,6 +53,14 @@ Tezos.estimate
 
 This example will demonstrate how to estimate the fees related to calling a smart contract. The Ligo source code for the smart contract used in this example is at [Ligo Web IDE](https://ide.ligolang.org/p/N2QTykOAXBkXmiKcRCyg3Q).
 
+<Tabs
+defaultValue="contractAPI"
+values={[
+{label: 'Contract API', value: 'contractAPI'},
+{label: 'Wallet API', value: 'walletAPI'}
+]}>
+<TabItem value="contractAPI">
+
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
@@ -77,6 +87,37 @@ Tezos.contract
   })
   .catch((error) => console.table(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
+</TabItem>
+  <TabItem value="walletAPI">
+
+```js live noInline
+// import { TezosToolkit } from '@taquito/taquito';
+// const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
+
+Tezos.wallet
+  .at('KT1NcdpzokZQY4sLmCBUwLnMHQCCQ6rRXYwS')
+  .then((wallet) => {
+    const i = 7;
+
+    return wallet.methods.increment(i).toTransferParams({});
+  })
+  .then((op) => {
+    println(`Estimating the smart contract call : `);
+    return Tezos.estimate.transfer(op);
+  })
+  .then((est) => {
+    println(`burnFeeMutez : ${est.burnFeeMutez}, 
+    gasLimit : ${est.gasLimit}, 
+    minimalFeeMutez : ${est.minimalFeeMutez}, 
+    storageLimit : ${est.storageLimit}, 
+    suggestedFeeMutez : ${est.suggestedFeeMutez}, 
+    totalCost : ${est.totalCost}, 
+    usingBaseFeeMutez : ${est.usingBaseFeeMutez}`);
+  })
+  .catch((error) => console.table(`Error: ${JSON.stringify(error, null, 2)}`));
+```
+ </TabItem>
+</Tabs>
 
 ### Estimate a contract origination
 
@@ -97,12 +138,12 @@ Tezos.estimate
     },
   })
   .then((originationOp) => {
-    println(`burnFeeMutez : ${originationOp.burnFeeMutez}, 
-    gasLimit : ${originationOp.gasLimit}, 
-    minimalFeeMutez : ${originationOp.minimalFeeMutez}, 
-    storageLimit : ${originationOp.storageLimit}, 
-    suggestedFeeMutez : ${originationOp.suggestedFeeMutez}, 
-    totalCost : ${originationOp.totalCost}, 
+    println(`burnFeeMutez : ${originationOp.burnFeeMutez},
+    gasLimit : ${originationOp.gasLimit},
+    minimalFeeMutez : ${originationOp.minimalFeeMutez},
+    storageLimit : ${originationOp.storageLimit},
+    suggestedFeeMutez : ${originationOp.suggestedFeeMutez},
+    totalCost : ${originationOp.totalCost},
     usingBaseFeeMutez : ${originationOp.usingBaseFeeMutez}`);
   })
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
