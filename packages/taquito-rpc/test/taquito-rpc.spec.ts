@@ -2722,4 +2722,27 @@ describe('RpcClient test', () => {
       done();
     });
   });
+
+  describe('getProtocols', () => {
+    it('query the right url and return a ProtocolsResponse', async (done) => {
+      httpBackend.createRequest.mockReturnValue(
+        Promise.resolve({
+          protocol: 'PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx',
+          next_protocol: 'PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx',
+        })
+      );
+      const protocols = await client.getProtocols();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/protocols`,
+      });
+      expect(protocols.next_protocol).toEqual(
+        'PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx'
+      );
+      expect(protocols.protocol).toEqual('PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx');
+
+      done();
+    });
+  });
 });

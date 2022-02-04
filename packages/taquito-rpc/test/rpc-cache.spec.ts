@@ -1,4 +1,3 @@
-import { constants } from 'buffer';
 import { RpcClientCache } from '../src/rpc-client-modules/rpc-cache';
 import {
   rpcUrl,
@@ -29,6 +28,8 @@ import {
   currentPeriod,
   successorPeriod,
   blockResponse,
+  protocols,
+  constants,
 } from './data/rpc-responses';
 
 /**
@@ -74,6 +75,7 @@ describe('RpcClientCache test', () => {
       packData: jest.fn(),
       getCurrentPeriod: jest.fn(),
       getSuccessorPeriod: jest.fn(),
+      getProtocols: jest.fn(),
     };
 
     mockRpcClient.getRpcUrl.mockReturnValue(rpcUrl);
@@ -106,6 +108,7 @@ describe('RpcClientCache test', () => {
     mockRpcClient.packData.mockReturnValue(packData);
     mockRpcClient.getCurrentPeriod.mockReturnValue(currentPeriod);
     mockRpcClient.getSuccessorPeriod.mockReturnValue(successorPeriod);
+    mockRpcClient.getProtocols.mockReturnValue(protocols);
 
     rpcCache = new RpcClientCache(mockRpcClient);
   });
@@ -148,6 +151,7 @@ describe('RpcClientCache test', () => {
     });
     await rpcCache.getCurrentPeriod();
     await rpcCache.getSuccessorPeriod();
+    await rpcCache.getProtocols();
 
     expect(rpcCache.getAllCachedData()['rpcTest/getBlockHash/head/'].response).toEqual(blockHash);
     expect(rpcCache.getAllCachedData()['rpcTest/getBlock/head/'].response).toEqual(blockResponse);
@@ -155,21 +159,23 @@ describe('RpcClientCache test', () => {
     expect(rpcCache.getAllCachedData()[`rpcTest/getBalance/head/${address}/`].response).toEqual(
       balance
     );
-    expect(rpcCache.getAllCachedData()[`rpcTest/getStorage/head/${contractAddress}/`].response).toEqual(
-      storage
-    );
-    expect(rpcCache.getAllCachedData()[`rpcTest/getScript/head/${contractAddress}/`].response).toEqual(script);
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getStorage/head/${contractAddress}/`].response
+    ).toEqual(storage);
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getScript/head/${contractAddress}/`].response
+    ).toEqual(script);
     expect(
       rpcCache.getAllCachedData()[
         `rpcTest/getNormalizedScript/head/${contractAddress}/{"unparsing_mode":"Readable"}/`
       ].response
     ).toEqual(script);
-    expect(rpcCache.getAllCachedData()[`rpcTest/getContract/head/${contractAddress}/`].response).toEqual(
-      contract
-    );
-    expect(rpcCache.getAllCachedData()[`rpcTest/getManagerKey/head/${contractAddress}/`].response).toEqual(
-      managerKey
-    );
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getContract/head/${contractAddress}/`].response
+    ).toEqual(contract);
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getManagerKey/head/${contractAddress}/`].response
+    ).toEqual(managerKey);
     expect(rpcCache.getAllCachedData()[`rpcTest/getDelegate/head/${address}/`].response).toEqual(
       delegate
     );
@@ -205,9 +211,9 @@ describe('RpcClientCache test', () => {
     expect(rpcCache.getAllCachedData()['rpcTest/getVotesListings/head/'].response).toEqual(
       votesListing
     );
-    expect(rpcCache.getAllCachedData()[`rpcTest/getEntrypoints/head/${contractAddress}/`].response).toEqual(
-      entryPoints
-    );
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getEntrypoints/head/${contractAddress}/`].response
+    ).toEqual(entryPoints);
     expect(rpcCache.getAllCachedData()['rpcTest/getChainId/'].response).toEqual(chainId);
     expect(
       rpcCache.getAllCachedData()[
@@ -220,6 +226,7 @@ describe('RpcClientCache test', () => {
     expect(rpcCache.getAllCachedData()['rpcTest/getSuccessorPeriod/head/'].response).toEqual(
       successorPeriod
     );
+    expect(rpcCache.getAllCachedData()['rpcTest/getProtocols/head/'].response).toEqual(protocols);
 
     rpcCache.deleteAllCachedData();
     done();
@@ -263,6 +270,7 @@ describe('RpcClientCache test', () => {
     );
     await rpcCache.getCurrentPeriod(block);
     await rpcCache.getSuccessorPeriod(block);
+    await rpcCache.getProtocols(block);
 
     expect(rpcCache.getAllCachedData()[`rpcTest/getBlockHash/${block.block}/`].response).toEqual(
       blockHash
@@ -291,7 +299,8 @@ describe('RpcClientCache test', () => {
       rpcCache.getAllCachedData()[`rpcTest/getContract/${block.block}/${contractAddress}/`].response
     ).toEqual(contract);
     expect(
-      rpcCache.getAllCachedData()[`rpcTest/getManagerKey/${block.block}/${contractAddress}/`].response
+      rpcCache.getAllCachedData()[`rpcTest/getManagerKey/${block.block}/${contractAddress}/`]
+        .response
     ).toEqual(managerKey);
     expect(
       rpcCache.getAllCachedData()[`rpcTest/getDelegate/${block.block}/${address}/`].response
@@ -336,7 +345,8 @@ describe('RpcClientCache test', () => {
       rpcCache.getAllCachedData()[`rpcTest/getVotesListings/${block.block}/`].response
     ).toEqual(votesListing);
     expect(
-      rpcCache.getAllCachedData()[`rpcTest/getEntrypoints/${block.block}/${contractAddress}/`].response
+      rpcCache.getAllCachedData()[`rpcTest/getEntrypoints/${block.block}/${contractAddress}/`]
+        .response
     ).toEqual(entryPoints);
     expect(rpcCache.getAllCachedData()[`rpcTest/getChainId/`].response).toEqual(chainId);
     expect(
@@ -350,6 +360,9 @@ describe('RpcClientCache test', () => {
     expect(
       rpcCache.getAllCachedData()[`rpcTest/getSuccessorPeriod/${block.block}/`].response
     ).toEqual(successorPeriod);
+    expect(rpcCache.getAllCachedData()[`rpcTest/getProtocols/${block.block}/`].response).toEqual(
+      protocols
+    );
 
     rpcCache.deleteAllCachedData();
     done();
@@ -388,6 +401,7 @@ describe('RpcClientCache test', () => {
     });
     await rpcCache.getCurrentPeriod();
     await rpcCache.getSuccessorPeriod();
+    await rpcCache.getProtocols();
 
     rpcCache.deleteAllCachedData();
 
