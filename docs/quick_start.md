@@ -80,8 +80,7 @@ Tezos.setProvider({
 
 #### Importing a Faucet Key
 
-"Faucet Keys" allows you to get Tezos tokens on the various Tezos "testnets." You can download a faucet key from https://faucet.tzalpha.net/
-The key is a JSON file, which you can use with Taquito as follows:
+"Faucet Keys" allows you to get Tezos tokens on the various Tezos "testnets." You can download a faucet key for the current and upcoming protocols at https://teztnets.xyz/. The key is a JSON file, which you can use with Taquito as follows:
 
 ```js
 import { TezosToolkit } from '@taquito/taquito';
@@ -107,7 +106,7 @@ const FAUCET_KEY = {
     'setup',
     'rescue',
   ],
-  secret: '35f266fbf0fca752da1342fdfc745a9c608e7b20',
+  activation_code: '35f266fbf0fca752da1342fdfc745a9c608e7b20',
   amount: '4219352756',
   pkh: 'tz1YBMFg1nLAPxBE6djnCPbMRH5PLXQWt8Mg',
   password: 'Fa26j580dQ',
