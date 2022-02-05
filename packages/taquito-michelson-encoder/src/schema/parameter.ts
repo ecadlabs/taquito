@@ -3,7 +3,7 @@ import { Token, Semantic, TokenValidationError } from '../tokens/token';
 import { OrToken } from '../tokens/or';
 import { OptionToken } from '../tokens/option';
 import { ScriptResponse, MichelsonV1ExpressionExtended, MichelsonV1Expression } from '@taquito/rpc';
-import { Falsy } from './types';
+import { Falsy, TokenSchema } from './types';
 
 /**
  * @warn Our current smart contract abstraction feature is currently in preview. It's API is not final, and it may not cover every use case (yet). We will greatly appreciate any feedback on this feature.
@@ -71,8 +71,19 @@ export class ParameterSchema {
     }
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   ExtractSchema() {
     return this.root.ExtractSchema();
+  }
+
+  /**
+   * @description Produce a schema grouping together all the entry points of a contract.
+   */
+  generateSchema(): TokenSchema {
+    return this.root.generateSchema();
   }
 
   ExtractSignatures() {

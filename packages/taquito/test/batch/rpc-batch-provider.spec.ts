@@ -95,6 +95,7 @@ describe('OperationBatch test', () => {
         mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
         mockRpcClient.preapplyOperations.mockResolvedValue([]);
         mockRpcClient.getChainId.mockResolvedValue('chain-id');
+        mockRpcClient.injectOperation.mockResolvedValue('onwtjK2Q32ndjF9zbEPPtmifdBq5qB59wjMP2oCH22mARjyKnGP')
 
     });
 

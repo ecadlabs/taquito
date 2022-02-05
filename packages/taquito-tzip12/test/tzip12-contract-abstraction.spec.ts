@@ -155,11 +155,11 @@ describe('Tzip12 contract abstraction test', () => {
 
   it('Test 2 for executeTokenMetadataView(): Should throw ViewSimulationError', async (done) => {
     mockMichelsonStorageView.executeView.mockImplementation(() => {
-      throw new ViewSimulationError('');
+      throw new ViewSimulationError('view simulation failed', 'test');
     });
 
     expect(tzip12Abs['executeTokenMetadataView'](mockMichelsonStorageView, 0)).rejects.toEqual(
-      new ViewSimulationError('')
+      new ViewSimulationError('view simulation failed', 'test')
     );
     done();
   });

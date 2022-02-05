@@ -132,12 +132,12 @@ export type OriginateParamsBase = {
 /**
  * @description Parameters for originate method
  */
-export type OriginateParams = OriginateParamsBase &
+export type OriginateParams<TStorage = any> = OriginateParamsBase &
   (
     | {
       init?: never;
       /** JS representation of a storage object */
-      storage: any;
+      storage: TStorage;
     }
     | {
       /** Initial storage object value. Either Micheline or JSON encoded */

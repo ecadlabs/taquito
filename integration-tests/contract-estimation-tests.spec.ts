@@ -10,6 +10,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
 
   const hangzhounet = (protocol === Protocols.PtHangz2) ? test : test.skip;
   const ithacanet = (protocol === Protocols.PsiThaCa) ? test : test.skip;
+  const skipIthacanet = protocol === Protocols.Psithaca2 ? test.skip : test;
 
   describe(`Estimate scenario using: ${rpc}`, () => {
     let LowAmountTez: TezosToolkit;
@@ -323,7 +324,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     });
 
-    it('Estimate transfer to regular address with a fixed fee', async (done) => {
+  skipIthacanet('Estimate transfer to regular address with a fixed fee', async (done) => {
       // fee, gasLimit and storage limit are not taken into account
       const params = { fee: 2000, to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) }
 

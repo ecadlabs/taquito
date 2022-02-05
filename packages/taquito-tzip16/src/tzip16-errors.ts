@@ -1,85 +1,100 @@
-export class BigMapMetadataNotFound implements Error {
+export class BigMapMetadataNotFound extends Error {
   name = 'BigMapMetadataNotFound';
-  message =
-    'Non-compliance with the TZIP-016 standard. No big map named metadata was found in the contract storage.';
+
+  constructor() {
+    super(
+      'Non-compliance with the TZIP-016 standard. No big map named metadata was found in the contract storage.'
+    );
+  }
 }
 
-export class MetadataNotFound implements Error {
+export class MetadataNotFound extends Error {
   name = 'MetadataNotFound';
-  message: string;
 
   constructor(public info: string) {
-    this.message = `No metadata was found in the contract storage. ${info}`;
+    super(`No metadata was found in the contract storage. ${info}`);
   }
 }
 
-export class UriNotFound implements Error {
+export class UriNotFound extends Error {
   name = 'UriNotFound';
-  message = 'Non-compliance with the TZIP-016 standard. No URI found in the contract storage.';
+  constructor() {
+    super('Non-compliance with the TZIP-016 standard. No URI found in the contract storage.');
+  }
 }
 
-export class InvalidUri implements Error {
+export class InvalidUri extends Error {
   name = 'InvalidUri';
-  message: string;
 
   constructor(public uri: string) {
-    this.message = `Non-compliance with the TZIP-016 standard. The URI is invalid: ${uri}.`;
+    super(`Non-compliance with the TZIP-016 standard. The URI is invalid: ${uri}.`);
   }
 }
 
-export class InvalidMetadata implements Error {
+export class InvalidMetadata extends Error {
   name = 'InvalidMetadata';
-  message: string;
 
   constructor(public invalidMetadata: string) {
-    this.message = `The metadata found at the pointed ressource are not compliant with tzip16 standard: ${invalidMetadata}.`;
+    super(
+      `The metadata found at the pointed ressource are not compliant with tzip16 standard: ${invalidMetadata}.`
+    );
   }
 }
 
-export class ProtocolNotSupported implements Error {
+export class ProtocolNotSupported extends Error {
   name = 'ProtocolNotSupported';
-  message: string;
 
   constructor(public protocol: string) {
-    this.message = `The protocol found in the URI is not supported: ${protocol}.`;
+    super(`The protocol found in the URI is not supported: ${protocol}.`);
   }
 }
 
-export class InvalidMetadataType implements Error {
+export class InvalidMetadataType extends Error {
   name = 'InvalidMetadataType';
-  message =
-    'The contract does not comply with the tzip16 standard. The type of metadata should be bytes.';
+
+  constructor() {
+    super(
+      'The contract does not comply with the tzip16 standard. The type of metadata should be bytes.'
+    );
+  }
 }
 
-export class UnconfiguredMetadataProviderError implements Error {
+export class UnconfiguredMetadataProviderError extends Error {
   name = 'UnconfiguredMetadataProviderError';
-  message =
-    'No metadata provider has been configured. The default one can be configured by calling addExtension(new Tzip16Module()) on your TezosToolkit instance.';
+
+  constructor() {
+    super(
+      'No metadata provider has been configured. The default one can be configured by calling addExtension(new Tzip16Module()) on your TezosToolkit instance.'
+    );
+  }
 }
 
-export class ForbiddenInstructionInViewCode implements Error {
+export class ForbiddenInstructionInViewCode extends Error {
   name = 'ForbiddenInstructionInViewCode';
-  message: string;
 
   constructor(public instruction: string) {
-    this.message = `Error found in the code of the view. It contains a forbidden instruction: ${instruction}.`;
+    super(
+      `Error found in the code of the view. It contains a forbidden instruction: ${instruction}.`
+    );
   }
 }
 
-export class NoParameterExpectedError implements Error {
+export class NoParameterExpectedError extends Error {
   name = 'NoParameterExpectedError';
-  message: string;
+
   constructor(public viewName: string, public args: any[]) {
-    this.message = `${viewName} Received ${args.length} arguments while expecting no parameter or 'Unit'`;
+    super(`${viewName} Received ${args.length} arguments while expecting no parameter or 'Unit'`);
   }
 }
 
-export class InvalidViewParameterError implements Error {
+export class InvalidViewParameterError extends Error {
   name = 'InvalidViewParameterError';
-  message: string;
+
   constructor(public viewName: string, public sigs: any[], public args: any[]) {
-    this.message = `${viewName} Received ${
-      args.length
-    } arguments while expecting one of the following signatures (${JSON.stringify(sigs)})`;
+    super(
+      `${viewName} Received ${
+        args.length
+      } arguments while expecting one of the following signatures (${JSON.stringify(sigs)})`
+    );
   }
 }

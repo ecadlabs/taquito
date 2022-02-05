@@ -1,15 +1,24 @@
 import { Protocols } from '../constants';
 import { Context } from '../context';
-import { ContractAbstraction } from '../contract';
+import { ContractAbstraction, ContractStorageType, DefaultWalletType } from '../contract';
 import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
 import { OpKind, withKind } from '../operations/types';
+import { OriginationWalletOperation } from './origination-operation';
 import {
   WalletDelegateParams,
   WalletOriginateParams,
   WalletProvider,
   WalletTransferParams,
 } from './interface';
+
+import { 
+  validateAddress,
+  validateContractAddress,
+  InvalidContractAddressError,
+  InvalidAddressError, 
+  ValidationResult 
+} from '@taquito/utils'
 
 export interface PKHOption {
   forceRefetch?: boolean;
@@ -32,6 +41,9 @@ export class WalletOperationBatch {
    * @param params Transfer operation parameter
    */
   withTransfer(params: WalletTransferParams) {
+    if (validateAddress(params.to) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(`Invalid 'to' address: ${params.to}`)
+    }
     this.operations.push({ kind: OpKind.TRANSACTION, ...params });
     return this;
   }
@@ -53,6 +65,9 @@ export class WalletOperationBatch {
    * @param params Delegation operation parameter
    */
   withDelegation(params: WalletDelegateParams) {
+    if (params.delegate && validateAddress(params.delegate) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(`Invalid delegate address: ${params.delegate}`);
+    }
     this.operations.push({ kind: OpKind.DELEGATION, ...params });
     return this;
   }
@@ -63,7 +78,7 @@ export class WalletOperationBatch {
    *
    * @param params Origination operation parameter
    */
-  withOrigination(params: WalletOriginateParams) {
+  withOrigination<TWallet extends DefaultWalletType = DefaultWalletType>(params: WalletOriginateParams<ContractStorageType<TWallet>>) {
     this.operations.push({ kind: OpKind.ORIGINATION, ...params });
     return this;
   }
@@ -166,18 +181,20 @@ export class Wallet {
    *
    * @param originateParams Originate operation parameter
    */
-  originate(params: WalletOriginateParams) {
+  originate<TWallet extends DefaultWalletType = DefaultWalletType>(
+    params: WalletOriginateParams<ContractStorageType<TWallet>>
+  ): { send: () => Promise<OriginationWalletOperation<TWallet>> } {
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapOriginateParamsToWalletParams(() =>
         this.context.parser.prepareCodeOrigination({
-          ...params,
+          ...params as WalletOriginateParams,
         })
       );
       const opHash = await this.walletProvider.sendOperations([mappedParams]);
       if (!this.context.proto) {
         this.context.proto = (await this.context.rpc.getBlock()).protocol as Protocols;
       }
-      return this.context.operationFactory.createOriginationOperation(opHash);
+      return this.context.operationFactory.createOriginationOperation(opHash) as Promise<OriginationWalletOperation<TWallet>>;
     });
   }
 
@@ -190,6 +207,9 @@ export class Wallet {
    * @param delegateParams operation parameter
    */
   setDelegate(params: WalletDelegateParams) {
+    if (params.delegate && validateAddress(params.delegate) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(`Invalid address error: ${params.delegate}`);
+    }
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapDelegateParamsToWalletParams(
         async () => params
@@ -226,6 +246,9 @@ export class Wallet {
    * @param params operation parameter
    */
   transfer(params: WalletTransferParams) {
+    if (validateAddress(params.to) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(`Invalid 'to' address: ${params.to}`);
+    }
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapTransferParamsToWalletParams(
         async () => params
@@ -265,6 +288,9 @@ export class Wallet {
     contractAbstractionComposer: (abs: ContractAbstraction<Wallet>, context: Context) => T = (x) =>
       x as any
   ): Promise<T> {
+    if (validateContractAddress(address) !== ValidationResult.VALID) {
+      throw new InvalidContractAddressError(`Invalid contract address: ${address}`);
+    }
     const rpc = this.context.withExtensions().rpc;
     const script = await rpc.getNormalizedScript(address);
     const entrypoints = await rpc.getEntrypoints(address);

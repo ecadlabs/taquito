@@ -108,7 +108,7 @@ describe('ContractView test', () => {
       },
     });
 
-    const result = await rpcContractProvider.at('test');
+    const result = await rpcContractProvider.at('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D');
 
     expect(() => result.views.transfer()).toThrow(); // Entry point transfer is not a view
     expect(result.views.getTotalSupply([['Unit']])).toBeInstanceOf(ContractView);
@@ -121,13 +121,20 @@ describe('ContractView test', () => {
         'tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE'
       )
     ).toBeInstanceOf(ContractView);
-    expect(() =>
+
+    try {
       result.views.getAllowance(
         'tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1',
         'tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE',
         'test'
-      )
-    ).toThrowError(InvalidParameterError);
+      );
+    } catch (e) {
+      expect(e.message).toContain(
+        `getAllowance Received 3 arguments while expecting one of the following signatures`
+      );
+      expect(e).toBeInstanceOf(Error);
+      expect(e).toBeInstanceOf(InvalidParameterError);
+    }
     done();
   });
 });

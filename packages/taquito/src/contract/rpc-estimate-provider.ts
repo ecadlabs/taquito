@@ -29,6 +29,7 @@ import {
   createTransferOperation,
   createRegisterGlobalConstantOperation,
 } from './prepare';
+import { validateAddress, InvalidAddressError, ValidationResult } from '@taquito/utils';
 
 interface Limits {
   fee?: number;
@@ -224,6 +225,12 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    * @param TransferOperation Originate operation parameter
    */
   async transfer({ fee, storageLimit, gasLimit, ...rest }: TransferParams) {
+    if (validateAddress(rest.to) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(`Invalid 'to' address: ${rest.to}`);
+    }
+    if (rest.source && validateAddress(rest.source) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(`Invalid 'source' address: ${rest.source}`);
+    }
     const pkh = await this.signer.publicKeyHash();
     const protocolConstants = await this.rpc.getConstants();
     const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
@@ -252,6 +259,13 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    * @param Estimate
    */
   async setDelegate({ fee, gasLimit, storageLimit, ...rest }: DelegateParams) {
+    if (rest.source && validateAddress(rest.source) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(`Invalid source address: ${rest.source}`);
+    }
+    if (rest.delegate && validateAddress(rest.delegate) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(`Invalid delegate address: ${rest.delegate}`);
+    }
+
     const pkh = await this.signer.publicKeyHash();
     const sourceOrDefault = rest.source || pkh;
     const protocolConstants = await this.rpc.getConstants();

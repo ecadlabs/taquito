@@ -76,7 +76,7 @@ describe('Origination operation', () => {
     };
 
     fakeContext.rpc.getBlock.mockResolvedValue({
-      operations: [[{ hash: 'test_hash' }], [], [], []],
+      operations: [[{ hash: 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj' }], [], [], []],
       header: {
         level: 200,
       },
@@ -90,7 +90,7 @@ describe('Origination operation', () => {
       const revealBuilder = new RevealOperationBuilder();
       const fakeContractProvider: any = {};
       const op = new OriginationOperation(
-        'test_hash',
+        'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
         {} as any,
         fakeForgedBytes,
         [
@@ -109,7 +109,7 @@ describe('Origination operation', () => {
     it('should contains the originated contract address given a successful result', () => {
       const fakeContractProvider: any = {};
       const op = new OriginationOperation(
-        'test_hash',
+        'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
         {} as any,
         fakeForgedBytes,
         successfulResult,
@@ -129,7 +129,7 @@ describe('Origination operation', () => {
 
       wrongResults.forEach((result) => {
         const op = new OriginationOperation(
-          'test_hash',
+          'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
           {} as any,
           fakeForgedBytes,
           result,
@@ -149,7 +149,7 @@ describe('Origination operation', () => {
 
       fakeContractProvider.at.mockResolvedValue('contract');
       const op = new OriginationOperation(
-        'test_hash',
+        'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
         {} as any,
         {} as any,
         successfulResult,
@@ -168,7 +168,7 @@ describe('Origination operation', () => {
 
       fakeContractProvider.at.mockResolvedValue('contract');
       const op = new OriginationOperation(
-        'test_hash',
+        'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
         {} as any,
         fakeForgedBytes,
         successfulResult,
@@ -188,7 +188,7 @@ describe('Origination operation', () => {
 
       fakeContractProvider.at.mockResolvedValue('contract');
       const op = new OriginationOperation(
-        'test_hash',
+        'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
         {} as any,
         fakeForgedBytes,
         'wrong_result' as any,

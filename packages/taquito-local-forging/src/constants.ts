@@ -187,7 +187,9 @@ export const opMapping: { [key: string]: string } = {
   '8f': 'OPEN_CHEST',
   '90': 'VIEW',
   '91': 'view',
-  '92': 'constant'
+  '92': 'constant',
+  '93': 'SUB_MUTEZ',
+  //'94': 'ASSERT_SOME',
 };
 
 export const opMappingReverse = (() => {

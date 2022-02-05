@@ -6,10 +6,11 @@ import {
 } from '@taquito/rpc';
 import { Observable } from 'rxjs';
 import { Context } from '../context';
+import { DefaultWalletType } from '../contract/contract';
 import { findWithKind } from '../operations/types';
 import { WalletOperation, OperationStatus } from './operation';
 
-export class OriginationWalletOperation extends WalletOperation {
+export class OriginationWalletOperation<TWallet extends DefaultWalletType = DefaultWalletType> extends WalletOperation {
   constructor(
     public readonly opHash: string,
     protected readonly context: Context,
@@ -48,6 +49,6 @@ export class OriginationWalletOperation extends WalletOperation {
   public async contract() {
     const op = await this.originationOperation();
     const address = (op?.metadata.operation_result.originated_contracts || [])[0];
-    return this.context.wallet.at(address);
+    return this.context.wallet.at<TWallet>(address);
   }
 }

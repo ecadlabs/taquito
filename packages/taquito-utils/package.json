@@ -1,6 +1,6 @@
 {
   "name": "@taquito/utils",
-  "version": "11.1.0",
+  "version": "11.2.0",
   "description": "converts michelson data and types into convenient JS/TS objects",
   "keywords": [
     "tezos",
@@ -65,6 +65,7 @@
   "dependencies": {
     "@stablelib/blake2b": "^1.0.1",
     "@stablelib/ed25519": "^1.0.2",
+    "@types/bs58check": "^2.1.0",
     "blakejs": "^1.1.1",
     "bs58check": "^2.1.2",
     "buffer": "^6.0.3",

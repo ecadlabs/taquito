@@ -634,6 +634,24 @@ describe('Map token', () => {
       ]);
     });
   });
+
+  describe('generateSchema', () => {
+    it('Should generate the schema properly', () => {
+      expect(token.generateSchema()).toEqual({
+        __michelsonType: 'map',
+        schema: {
+          key: {
+            __michelsonType: 'string',
+            schema: 'string'
+          },
+          value: {
+            __michelsonType: 'int',
+            schema: 'int'
+          }
+        }
+      });
+    });
+  });
 });
 
 describe('Map token with pair', () => {
@@ -729,6 +747,33 @@ describe('Map token with pair', () => {
       expect(result.get({ 0: 'test1', 1: 'test' })).toBeInstanceOf(BigNumber);
       expect(result.get({ 0: 'test1', 1: 'test' }).toString()).toEqual('3');
       expect(result.get({ 1: 'test', 0: 'test1' }).toString()).toEqual('3');
+    });
+  });
+
+  describe('generateSchema', () => {
+    it('Should generate the schema properly', () => {
+      expect(token.generateSchema()).toEqual({
+        __michelsonType: 'map',
+        schema: {
+          key: {
+            __michelsonType: 'pair',
+            schema: {
+              0: {
+                __michelsonType: 'string',
+                schema: 'string'
+              },
+              1: {
+                __michelsonType: 'string',
+                schema: 'string'
+              }
+            }
+          },
+          value: {
+            __michelsonType: 'int',
+            schema: 'int'
+          }
+        }
+      });
     });
   });
 });
@@ -833,6 +878,31 @@ describe('Map token with annotated pair', () => {
 
       expect(result.get({ test: 'test1', test2: 'test' })).toBeInstanceOf(BigNumber);
       expect(result.get({ test: 'test1', test2: 'test' }).toString()).toEqual('3');
+    });
+  });
+
+  it('Should generate the schema properly', () => {
+    expect(token.generateSchema()).toEqual({
+      __michelsonType: 'map',
+      schema: {
+        key: {
+          __michelsonType: 'pair',
+          schema: {
+            test: {
+              __michelsonType: 'string',
+              schema: 'string'
+            },
+            test2: {
+              __michelsonType: 'string',
+              schema: 'string'
+            }
+          }
+        },
+        value: {
+          __michelsonType: 'int',
+          schema: 'int'
+        }
+      }
     });
   });
 });
@@ -1094,6 +1164,59 @@ describe('Map token with complex pair', () => {
           '101'
         )
       );
+    });
+  });
+
+  it('Should generate the schema properly', () => {
+    expect(token.generateSchema()).toEqual({
+      __michelsonType: 'map',
+      schema: {
+        key: {
+          __michelsonType: 'pair',
+          schema: {
+            0: {
+              __michelsonType: 'int',
+              schema: 'int'
+            },
+            1: {
+              __michelsonType: 'nat',
+              schema: 'nat'
+            },
+            2: {
+              __michelsonType: 'string',
+              schema: 'string'
+            },
+            3: {
+              __michelsonType: 'bytes',
+              schema: 'bytes'
+            },
+            4: {
+              __michelsonType: 'mutez',
+              schema: 'mutez'
+            },
+            5: {
+              __michelsonType: 'bool',
+              schema: 'bool'
+            },
+            6: {
+              __michelsonType: 'key_hash',
+              schema: 'key_hash'
+            },
+            7: {
+              __michelsonType: 'timestamp',
+              schema: 'timestamp'
+            },
+            8: {
+              __michelsonType: 'address',
+              schema: 'address'
+            },
+          }
+        },
+        value: {
+          __michelsonType: 'int',
+          schema: 'int'
+        }
+      }
     });
   });
 });

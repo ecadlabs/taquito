@@ -8,9 +8,9 @@ describe('Baker Registry contract test', () => {
     const schema = new Schema(storage);
     expect(schema.ExtractSchema()).toEqual({
       '0': {
-        big_map : {
+        big_map: {
           key: "key_hash",
-          value : {
+          value: {
             data: 'bytes',
             last_update: 'timestamp',
             reporter: 'address',
@@ -20,6 +20,56 @@ describe('Baker Registry contract test', () => {
       owner: 'address',
       signup_fee: 'mutez',
       update_fee: 'mutez',
+    });
+
+    expect(schema.generateSchema()).toEqual({
+      __michelsonType: "pair",
+      schema: {
+        '0': {
+          __michelsonType: "big_map",
+          schema: {
+            key: {
+              __michelsonType: "key_hash",
+              schema: "key_hash"
+            },
+            value: {
+              __michelsonType: "pair",
+              schema: {
+                data: {
+                  __michelsonType: "option",
+                  schema: {
+                    __michelsonType: 'bytes',
+                    schema: "bytes"
+                  }
+                },
+                last_update: {
+                  __michelsonType: 'timestamp',
+                  schema: "timestamp"
+                },
+                reporter: {
+                  __michelsonType: "option",
+                  schema: {
+                    __michelsonType: 'address',
+                    schema: "address"
+                  }
+                },
+              }
+            },
+          },
+        },
+        owner: {
+          __michelsonType: 'address',
+          schema: "address"
+        },
+        signup_fee: {
+          __michelsonType: 'mutez',
+          schema: "mutez"
+        },
+        update_fee: {
+          __michelsonType: 'mutez',
+          schema: "mutez"
+        },
+      }
     });
   });
 
@@ -68,6 +118,58 @@ describe('Baker Registry contract test', () => {
         update_fee: 'mutez',
       },
       withdraw: 'contract',
+    });
+
+    console.log(JSON.stringify(schema.generateSchema(), null, 2))
+    expect(schema.generateSchema()).toEqual({
+      __michelsonType: "or",
+      schema: {
+        set_data: {
+          __michelsonType: "pair",
+          schema: {
+            delegate: {
+              __michelsonType: "key_hash",
+              schema: 'key_hash'
+            },
+            data: {
+              __michelsonType: "option",
+              schema: {
+                __michelsonType: "bytes",
+                schema: 'bytes'
+              }
+            },
+            reporter: {
+              __michelsonType: "option",
+              schema: {
+                __michelsonType: "address",
+                schema: 'address'
+              }
+            },
+          }
+        },
+        set_fees: {
+          __michelsonType: "pair",
+          schema: {
+            signup_fee: {
+              __michelsonType: "mutez",
+              schema: 'mutez'
+            },
+            update_fee: {
+              __michelsonType: "mutez",
+              schema: 'mutez'
+            },
+          }
+        },
+        withdraw: {
+          __michelsonType: "contract",
+          schema: {
+            parameter: {
+              __michelsonType: "unit",
+              schema: "unit"
+            }
+          }
+        },
+      }
     });
 
     expect(schema.ExtractSignatures()).toContainEqual(['set_data', 'key_hash', 'bytes', 'address']);

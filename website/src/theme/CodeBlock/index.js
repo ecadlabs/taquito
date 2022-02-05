@@ -6,7 +6,6 @@
  */
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { TezosToolkit, MichelsonMap, compose, DEFAULT_FEE } from '@taquito/taquito';
-import { importKey } from '@taquito/signer';
 import { verifySignature } from '@taquito/utils';
 import { 
   validateAddress, 
@@ -22,8 +21,8 @@ import {
   prefix, 
   Prefix 
 } from '@taquito/utils';
-import {  BeaconWallet } from '@taquito/beacon-wallet';
-import { InMemorySigner } from '@taquito/signer';
+import { BeaconWallet } from '@taquito/beacon-wallet';
+import { InMemorySigner, importKey } from '@taquito/signer';
 import { LedgerSigner, DerivationType } from '@taquito/ledger-signer';
 import { TezBridgeWallet } from '@taquito/tezbridge-wallet';
 import { Tzip16Module, tzip16, bytes2Char, MichelsonStorageView } from '@taquito/tzip16'
@@ -31,7 +30,7 @@ import { Tzip12Module, tzip12 } from "@taquito/tzip12";
 import { Schema, ParameterSchema } from "@taquito/michelson-encoder";
 import { Parser, packDataBytes } from '@taquito/michel-codec';
 import { ThanosWallet } from '@thanos-wallet/dapp';
-import TransportU2F from "@ledgerhq/hw-transport-u2f";
+import TransportWebHID from "@ledgerhq/hw-transport-webhid";
 import Playground from '@theme/Playground';
 import classnames from 'classnames';
 import Clipboard from 'clipboard';
@@ -43,11 +42,13 @@ import { CancellableRpcClient } from './customHttpBackendAndRpcClient';
 
 import styles from './styles.module.css';
 
-// To solve the ReferenceError: Buffer is not defined when running live code examples
-// see https://lifesaver.codes/answer/meteor-1-5-beta-16-and-beta-17-showed-referenceerror-buffer-is-not-defined-client-side
-global.Buffer = global.Buffer || require("buffer").Buffer; 
+let wallet; 
+if (typeof window !== 'undefined') {
+  // solve localStorage is not defined Error when building server
+  // can use localStorage on the browser, not on the server
+  wallet = new BeaconWallet({ name:"exampleWallet" });
+} 
 
-const wallet = new BeaconWallet({name:"exampleWallet"});
 const highlightLinesRangeRegex = /{([\d,-]+)}/;
 
 export default ({
@@ -111,7 +112,6 @@ export default ({
           prefix, 
           Prefix, 
           MichelsonMap, 
-          BeaconWallet, 
           InMemorySigner, 
           LedgerSigner,
           Tzip16Module,
@@ -123,7 +123,7 @@ export default ({
           TezBridgeWallet,
           ThanosWallet, 
           DerivationType, 
-          TransportU2F,
+          TransportWebHID,
           compose,
           Schema,
           ParameterSchema,

@@ -1,6 +1,6 @@
 import { prefix, prefixLength, Prefix } from './constants';
 
-const bs58check = require('bs58check');
+import bs58check from 'bs58check';
 
 export enum ValidationResult {
   NO_PREFIX_MATCHED,

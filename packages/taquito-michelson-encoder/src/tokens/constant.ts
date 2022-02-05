@@ -1,3 +1,4 @@
+import { ConstantTokenSchema } from '../schema/types';
 import { Semantic, Token, TokenFactory, TokenValidationError } from './token';
 
 export class GlobalConstantEncodingError extends TokenValidationError {
@@ -15,7 +16,7 @@ export class GlobalConstantDecodingError extends TokenValidationError {
 }
 
 export class GlobalConstantToken extends Token {
-  static prim = 'constant';
+  static prim: 'constant' = 'constant';
 
   constructor(
     protected val: { prim: string; args: any[]; annots?: any[] },
@@ -53,8 +54,21 @@ export class GlobalConstantToken extends Token {
     );
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return GlobalConstantToken.prim;
+  }
+
+  generateSchema(): ConstantTokenSchema {
+    return {
+      __michelsonType: GlobalConstantToken.prim,
+      schema: {
+        hash: this.val.args[0]['string'],
+      },
+    };
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {

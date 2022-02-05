@@ -5,7 +5,7 @@ import { OrToken } from '../tokens/or';
 import { PairToken } from '../tokens/pair';
 import { BigMapKeyType, Semantic, Token, TokenValidationError } from '../tokens/token';
 import { RpcTransaction } from './model';
-import { Falsy } from './types';
+import { Falsy, TokenSchema } from './types';
 
 const schemaTypeSymbol = Symbol.for('taquito-schema-type-symbol');
 
@@ -176,8 +176,20 @@ export class Schema {
     }
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   ExtractSchema() {
     return this.removeTopLevelAnnotation(this.root.ExtractSchema());
+  }
+
+  /**
+   * @description Produce a representation of the storage schema. 
+   * Note: Provide guidance on how to write the storage object for the origination operation with Taquito.
+   */
+  generateSchema(): TokenSchema {
+    return this.removeTopLevelAnnotation(this.root.generateSchema());
   }
 
   /**

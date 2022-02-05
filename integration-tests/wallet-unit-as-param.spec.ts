@@ -6,9 +6,9 @@ import { depositContractCodeIthaca, depositContractStorageIthaca } from "./data/
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
   const testRetry = require('jest-retries');
-  const skipIthacanet = protocol === Protocols.PsiThaCa ? test.skip : testRetry;
+  const skipIthacanet = protocol === Protocols.Psithaca2 ? test.skip : testRetry;
   const skipHangzhounet = protocol === Protocols.PtHangz2 ? test.skip : test;
-  const skipHangzhouAndIthaca = protocol === Protocols.PtHangz2 || Protocols.PsiThaCa ? test.skip : test;
+  const skipHangzhouAndIthaca = protocol === Protocols.PtHangz2 || Protocols.Psithaca2 ? test.skip : test;
 
   describe(`Test contract made with wallet API with unit as params using: ${rpc}`, () => {
     beforeEach(async (done) => {

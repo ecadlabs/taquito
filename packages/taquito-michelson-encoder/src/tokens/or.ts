@@ -1,7 +1,8 @@
+import { OrTokenSchema } from '../schema/types';
 import { Token, TokenFactory, Semantic, ComparableToken } from './token';
 
 export class OrToken extends ComparableToken {
-  static prim = 'or';
+  static prim: 'or' = 'or';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -164,6 +165,11 @@ export class OrToken extends ComparableToken {
 
     return res;
   }
+
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema(): any {
     return this.traversal(
       (leftToken) => leftToken.ExtractSchema(),
@@ -173,6 +179,32 @@ export class OrToken extends ComparableToken {
         ...rightValue,
       })
     );
+  }
+
+  generateSchema(): OrTokenSchema {
+    return {
+      __michelsonType: OrToken.prim,
+      schema: this.traversal(
+        (leftToken) => {
+          if (leftToken instanceof OrToken && !leftToken.hasAnnotations()) {
+            return leftToken.generateSchema().schema;
+          } else {
+            return leftToken.generateSchema();
+          }
+        },
+        (rightToken) => {
+          if (rightToken instanceof OrToken && !rightToken.hasAnnotations()) {
+            return rightToken.generateSchema().schema;
+          } else {
+            return rightToken.generateSchema();
+          }
+        },
+        (leftValue, rightValue) => ({
+          ...leftValue,
+          ...rightValue,
+        })
+      ),
+    };
   }
 
   private findToken(label: any): Token | null {

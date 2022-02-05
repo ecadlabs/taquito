@@ -16,10 +16,10 @@ describe('RpcTzProvider test', () => {
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('10000'));
 
       const provider = new RpcTzProvider(new Context(mockRpcClient as any));
-      const result = await provider.getBalance('test-address');
+      const result = await provider.getBalance('tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn');
       expect(result).toBeInstanceOf(BigNumber);
       expect(result.toString()).toStrictEqual('10000');
-      expect(mockRpcClient.getBalance.mock.calls[0][0]).toEqual('test-address');
+      expect(mockRpcClient.getBalance.mock.calls[0][0]).toEqual('tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn');
       done();
     });
   });
@@ -33,9 +33,9 @@ describe('RpcTzProvider test', () => {
       mockRpcClient.getDelegate.mockResolvedValue('KT1G393LjojNshvMdf68XQD24Hwjn7xarzNe');
 
       const provider = new RpcTzProvider(new Context(mockRpcClient as any));
-      const result = await provider.getDelegate('test-address');
+      const result = await provider.getDelegate('tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn');
       expect(result).toStrictEqual('KT1G393LjojNshvMdf68XQD24Hwjn7xarzNe');
-      expect(mockRpcClient.getDelegate.mock.calls[0][0]).toEqual('test-address');
+      expect(mockRpcClient.getDelegate.mock.calls[0][0]).toEqual('tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn');
       done();
     });
   });
@@ -75,20 +75,22 @@ describe('RpcTzProvider test', () => {
 
       mockRpcClient.getManagerKey.mockResolvedValue('test');
       mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
-      mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
+      mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'BLJjnzaPtSsxykZ9pLTFLSfsKuiN3z7SjSPDPWwbE4Q68u5EpBw' });
       mockRpcClient.preapplyOperations.mockResolvedValue([]);
       mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
       mockRpcClient.forgeOperations.mockResolvedValue('test');
+      mockRpcClient.injectOperation.mockResolvedValue('ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj');
+
       const provider = new RpcTzProvider(new Context(mockRpcClient as any, mockSigner as any));
-      const result = await provider.activate('test', '123');
+      const result = await provider.activate('tz2TSvNTh2epDMhZHrw73nV9piBX7kLZ9K9m', '123');
       expect(result.raw).toEqual({
         counter: 0,
         opOb: {
-          branch: 'test',
+          branch: 'BLJjnzaPtSsxykZ9pLTFLSfsKuiN3z7SjSPDPWwbE4Q68u5EpBw',
           contents: [
             {
               kind: 'activate_account',
-              pkh: 'test',
+              pkh: 'tz2TSvNTh2epDMhZHrw73nV9piBX7kLZ9K9m',
               secret: '123',
             },
           ],

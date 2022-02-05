@@ -117,6 +117,13 @@ __Make sure you have a version of Node.js supported by Taquito__
 * Run `lerna bootstrap --force-local`
 * Run `npm run build`
 
+---
+**NOTE**
+If you are getting the following error on a fresh install: `fatal error: libudev.h: No such file or directory`;
+try installing the package libudev-dev.
+Example for Ubuntu: `sudo apt-get install libudev-dev`
+
+---
 
 ### Useful npm command targets
 

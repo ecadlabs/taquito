@@ -56,4 +56,13 @@ describe('Nat token', () => {
       });    
     });
   });
+
+  describe('generateSchema', () => {
+    it('Should generate the schema properly', () => {
+      expect(token.generateSchema()).toEqual({
+        __michelsonType: 'nat',
+        schema: 'nat'
+      });
+    });
+  });
 });

@@ -1,9 +1,10 @@
 import { Forger, ForgeParams, ForgeResponse } from './interface';
 
-export class ForgingMismatchError implements Error {
+export class ForgingMismatchError extends Error {
   name = 'ForgingMismatchError';
-  message = 'Forging mismatch error';
-  constructor(public results: string[]) {}
+  constructor(public results: string[]) {
+    super('Forging mismatch error');
+  }
 }
 
 export class CompositeForger implements Forger {
