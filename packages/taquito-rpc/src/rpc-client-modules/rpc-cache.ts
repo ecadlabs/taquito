@@ -29,6 +29,7 @@ import {
   PreapplyParams,
   PreapplyResponse,
   ProposalsResponse,
+  ProtocolsResponse,
   RPCRunCodeParam,
   RPCRunOperationParam,
   RunCodeResult,
@@ -40,13 +41,13 @@ import {
   VotingPeriodBlockResult,
 } from '../types';
 
-import { 
+import {
   InvalidAddressError,
   InvalidContractAddressError,
   validateContractAddress,
   validateAddress,
-  ValidationResult
-} from '@taquito/utils'
+  ValidationResult,
+} from '@taquito/utils';
 
 interface CachedDataInterface {
   [key: string]: {
@@ -125,13 +126,13 @@ export class RpcClientCache implements RpcClientInterface {
 
   private validateAddress(address: string) {
     if (validateAddress(address) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid address: ${address}`)
+      throw new InvalidAddressError(`Invalid address: ${address}`);
     }
   }
 
   private validateContract(address: string) {
     if (validateContractAddress(address) !== ValidationResult.VALID) {
-      throw new InvalidContractAddressError(`Invalid contract address: ${address}`)
+      throw new InvalidContractAddressError(`Invalid contract address: ${address}`);
     }
   }
   /**
@@ -931,6 +932,17 @@ export class RpcClientCache implements RpcClientInterface {
       return this.get(key);
     } else {
       const response = this.rpcClient.getSaplingDiffByContract(contract, { block });
+      this.put(key, response);
+      return response;
+    }
+  }
+
+  async getProtocols({ block }: { block: string } = defaultRPCOptions): Promise<ProtocolsResponse> {
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getProtocols', [block]);
+    if (this.has(key)) {
+      return this.get(key);
+    } else {
+      const response = this.rpcClient.getProtocols({ block });
       this.put(key, response);
       return response;
     }
