@@ -123,7 +123,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js
+```js live noInline wallet
 const amount = 0.5;
 const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
 

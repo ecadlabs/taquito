@@ -156,7 +156,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline
+```js live noInline wallet
 const amount = 2;
 const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
 
@@ -207,7 +207,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline
+```js live noInline wallet
 Tezos.wallet
   .at('KT1NcdpzokZQY4sLmCBUwLnMHQCCQ6rRXYwS')
   .then((wallet) => {

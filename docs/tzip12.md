@@ -108,7 +108,7 @@ Tezos.contract.at(contractAddress, compose(tzip12, tzip16))
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline
+```js live noInline wallet
 // import { TezosToolkit, compose } from '@taquito/taquito';
 // import { Tzip12Module, tzip12 } from "@taquito/tzip12";
 // import { tzip16 } from "@taquito/tzip16";
@@ -171,7 +171,7 @@ Tezos.contract.at(contractAddress, tzip16)
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline
+```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16, bytes2Char } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
@@ -272,7 +272,7 @@ Tezos.contract.at(contractAddress, tzip12)
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline
+```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip12Module, tzip12 } from "@taquito/tzip12";
 // const Tezos = new TezosToolkit('rpc_url');

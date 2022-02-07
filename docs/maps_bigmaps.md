@@ -67,7 +67,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline
+```js live noInline wallet
 import { MichelsonMap } from '@taquito/taquito';
 // import { TezosToolkit } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
@@ -132,7 +132,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline
+```js live noInline wallet
 import { MichelsonMap } from '@taquito/taquito';
 
 Tezos.wallet
@@ -215,7 +215,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline
+```js live noInline wallet
 Tezos.wallet
   .at('KT1Xjhpt7EB4kZvoSaeYE4zi47wYcdMAuDjD')
   .then((myContract) => {
@@ -338,7 +338,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline
+```js live noInline wallet
 import { MichelsonMap } from '@taquito/taquito';
 
 const storageMap = new MichelsonMap();
@@ -431,7 +431,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline
+```js live noInline wallet
 Tezos.wallet
   .at('KT1BhFn1n1h4HJCxaRvoWEHPcp5UpAYbH3XN')
   .then((myContract) => {
@@ -531,7 +531,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline
+```js live noInline wallet
 const storageMap = new MichelsonMap();
 storageMap.set(
   {
@@ -621,7 +621,7 @@ Tezos.contract
 </TabItem>
 <TabItem value="walletAPI">
 
-```js live noInline
+```js live noInline wallet
 Tezos.wallet
   .at('KT1Jykv4V9tWbdJVff1jLx9tEs54hE442EX2')
   .then((myContract) => {
@@ -725,7 +725,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline
+```js live noInline wallet
 import { MichelsonMap } from '@taquito/taquito';
 
 const storageMap = new MichelsonMap();
@@ -827,7 +827,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline
+```js live noInline wallet
 Tezos.wallet
   .at('KT1JdWjaxKb9Qr8beactUzW9dEH5iDpUcXuF')
   .then((myContract) => {
@@ -926,7 +926,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline
+```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
 

@@ -151,7 +151,7 @@ Tezos.contract.at(contractCallFib)
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline
+```js live noInline wallet
 const contractTopLevelViews = 'KT1KJbtwARB2w3yN5fRjBE6CXJh5t9Hbbbpv';
 const contractCallFib = 'KT1T8FPwfbfWK5ir7A5bj6coqttKwhwchdnD';
 
@@ -164,8 +164,8 @@ Tezos.wallet.at(contractCallFib)
         println(`Calling the default method of ${contractCallFib} will call the view fib of ${contractTopLevelViews} with ${fibPosition}.`);
         return contract.methodsObject.default({ 0: fibPosition, 1: contractTopLevelViews }).send()
           .then((op) => {
-            println(`Waiting for ${op.hash} to be confirmed...`);
-            return op.confirmation().then(() => op.hash)
+            println(`Waiting for ${op.opHash} to be confirmed...`);
+            return op.confirmation().then(() => op.opHash)
               .then(() => {
                 return contract.storage()
                   .then((finalStorage) => {
@@ -224,7 +224,7 @@ Tezos.contract.at(contractTopLevelViews)
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline
+```js live noInline wallet
 const contractTopLevelViews = 'KT1KJbtwARB2w3yN5fRjBE6CXJh5t9Hbbbpv';
 const contractCallFib = 'KT1T8FPwfbfWK5ir7A5bj6coqttKwhwchdnD';
 const fibPosition = 7;

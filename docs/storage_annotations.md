@@ -61,7 +61,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline
+```js live noInline wallet
 // const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
 
 Tezos.wallet
@@ -136,7 +136,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline
+```js live noInline wallet
 // const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
 
 Tezos.wallet
@@ -214,7 +214,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline
+```js live noInline wallet
 // const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
 
 Tezos.wallet

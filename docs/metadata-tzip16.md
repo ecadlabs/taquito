@@ -116,7 +116,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline
+```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16 } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
@@ -173,7 +173,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline
+```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16 } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
@@ -230,7 +230,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline
+```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16 } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
@@ -288,7 +288,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline
+```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16 } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
@@ -383,7 +383,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline
+```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16, bytes2Char } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
@@ -455,7 +455,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline
+```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16 } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
@@ -534,7 +534,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline
+```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
 // import { MichelsonStorageView } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');

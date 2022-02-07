@@ -63,7 +63,7 @@ fetch('https://api.tez.ie/keys/hangzhounet/', {
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline
+```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
 
