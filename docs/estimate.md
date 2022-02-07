@@ -53,14 +53,6 @@ Tezos.estimate
 
 This example will demonstrate how to estimate the fees related to calling a smart contract. The Ligo source code for the smart contract used in this example is at [Ligo Web IDE](https://ide.ligolang.org/p/N2QTykOAXBkXmiKcRCyg3Q).
 
-<Tabs
-defaultValue="contractAPI"
-values={[
-{label: 'Contract API', value: 'contractAPI'},
-{label: 'Wallet API', value: 'walletAPI'}
-]}>
-<TabItem value="contractAPI">
-
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
@@ -69,7 +61,6 @@ Tezos.contract
   .at('KT1NcdpzokZQY4sLmCBUwLnMHQCCQ6rRXYwS')
   .then((contract) => {
     const i = 7;
-
     return contract.methods.increment(i).toTransferParams({});
   })
   .then((op) => {
@@ -87,38 +78,6 @@ Tezos.contract
   })
   .catch((error) => console.table(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
-</TabItem>
-  <TabItem value="walletAPI">
-
-```js live noInline
-// import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
-
-Tezos.wallet
-  .at('KT1NcdpzokZQY4sLmCBUwLnMHQCCQ6rRXYwS')
-  .then((wallet) => {
-    const i = 7;
-
-    return wallet.methods.increment(i).toTransferParams({});
-  })
-  .then((op) => {
-    println(`Estimating the smart contract call : `);
-    return Tezos.estimate.transfer(op);
-  })
-  .then((est) => {
-    println(`burnFeeMutez : ${est.burnFeeMutez}, 
-    gasLimit : ${est.gasLimit}, 
-    minimalFeeMutez : ${est.minimalFeeMutez}, 
-    storageLimit : ${est.storageLimit}, 
-    suggestedFeeMutez : ${est.suggestedFeeMutez}, 
-    totalCost : ${est.totalCost}, 
-    usingBaseFeeMutez : ${est.usingBaseFeeMutez}`);
-  })
-  .catch((error) => console.table(`Error: ${JSON.stringify(error, null, 2)}`));
-```
- </TabItem>
-</Tabs>
-
 ### Estimate a contract origination
 
 In this example, we will use the estimate method of Taquito on a contract origination. The `genericMultisigJSONfile` variable contains a Michelson Smart Contract.
