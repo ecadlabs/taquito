@@ -329,10 +329,16 @@ CONFIGS().forEach(
         });
 
         it('getSaplingDiffByContract', async (done) => {
-            const saplingDiffByContract = await rpcClient.getSaplingDiffByContract(
-              knownSaplingContract
-            );
-            expect(saplingDiffByContract).toBeDefined();
+          const saplingDiffByContract = await rpcClient.getSaplingDiffByContract(
+            knownSaplingContract
+          );
+          expect(saplingDiffByContract).toBeDefined();
+          done();
+        });
+
+        it('getProtocols', async (done) => {
+          const protocols = await rpcClient.getProtocols();
+          expect(protocols).toEqual({ protocol, next_protocol: protocol });
           done();
         });
       });

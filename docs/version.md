@@ -3,6 +3,141 @@ title: Versions
 author: Jev Bjorsell
 ---
 
+# Taquito v11.2.0-beta
+
+## Summary
+### New features
+
+- @taquito/utils - Implemented additional hash checksum validation functions in Taquito #95
+
+### Improvements
+
+- Upgrade to ES6 #1020
+- @taquito/signer - Removed dependency on bip39, which has unneeded translation files #1110
+- @taquito/michelson-encoder - Deprecated the `ExtractSchema` method in favor of `generateSchema` #1252, #1303, #1304
+- Added validation to different hashes being passed in the Taquito codebase #1311
+- @taquito/taquito & @taquito/tzip16 - Better error abstraction on view calls #641 & #1297
+
+### Bug Fixes
+
+- @taquito/tzip12 - `TokenIdNotFound` error was incorrectly thrown on metadata view failure #1210
+- `Schema` deserialized `map nat-nat` as `MichelsonMap<string, BigNumber>` instead of `MichelsonMap<BigNumber, BigNumber>` #1140
+- Custom errors extend `Error` instead of implementing it #973
+- @taquito/beacon-wallet - Fixed error `Cannot read property 'DAppClient' of undefined` #787
+- Removed CommonJS module loading that was causing rollup.js to break #1098
+
+### Documentation
+
+- Added a search bar to the Taquito website
+- Allow website users to view Taquito docs based on specific versions #1208
+- @taquito/ledger-signer - Replacement of the deprecated transport `@ledgerhq/hw-transport-node-hid` by `@ledgerhq/hw-transport-u2f`: https://tezostaquito.io/docs/ledger_signer
+- Improved documentation showing the difference between `setDelegate` and `RegisterDelegate` methods: https://tezostaquito.io/docs/set_delegate
+- Improvements of the README files
+
+
+
+## @taquito/utils - Implemented additional hash checksum validation functions in Taquito
+
+Added utility functions to validate operation, block, and protocol hash.
+
+Example of use:
+```typescript=
+import { validateBlock, validateOperation, validateProtocol } from '@taquito/utils';
+
+const block ='BLJjnzaPtSsxykZ9pLTFLSfsKuiN3z7SjSPDPWwbE4Q68u5EpBw';
+const validation = validateBlock(block);
+
+const operation ='ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj';
+const validation = validateOperation(operation);
+
+const protocol ='PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx';
+const validation = validateProtocol(protocol);
+```
+
+## @taquito/signer - Removed dependency on bip39
+
+The dependency on bip39, which has unneeded translation files, has been removed. This change decreases the bundle size from 1 MB to 795kB.
+
+## @taquito/michelson-encoder - Deprecated the `ExtractSchema` method in favor of `generateSchema`
+
+Based on a Michelson type, `ExtractSchema` returns the schema as expected by Taquito for the storage or entry point of a contract.
+Users can use this method to discover how to write the storage property when deploying a contract or the parameter when calling a smart contract entry point using the `methodsObject` property.
+
+However, the `ExtractSchema` method is missing important detail for some types and is not uniform across all tokens (i.e., there was no distinction between `or` and `pair` types, `option` was not represented). Improvements to the generated schema have been implemented in a new method called `generateSchema`.
+
+`ExtractSchema` has been deprecated to give time to migrate from the `ExtractSchema` to the `generateSchema` method as it includes breaking changes.
+
+For each token, `generateSchema` returns an object of type `TokenSchema`. TokenSchema has a property `__michelsonType`, a string, and a property `schema` that contains information on the schema of the subtoken when applicable.
+
+### Examples:
+
+The michelson type: `{ prim: 'option', args: [{ prim: 'int' }], annots: [] }` will be represented as follows by the generateSchema method:
+```json=
+{
+    __michelsonType: 'option',
+    schema: {
+            __michelsonType: 'int',
+          schema: 'int'
+    }
+}
+```
+
+The michelson type: `{ prim: 'pair', args: [{ prim: 'int', annots: ['test'] }, { prim: 'string', annots: ['test2'] }], }` will be represented as follows by the generateSchema method:
+```json=
+// Nested pair will be brought to the same level (as it is the case with the ExtractSchema)
+{
+    __michelsonType: 'pair',
+    schema: {
+        test: {
+            __michelsonType: 'int',
+            schema: 'int'
+        },
+        test2: {
+            __michelsonType: 'string',
+            schema: 'string'
+        }
+    }
+}
+```
+
+The michelson type: `{ prim: 'map', args: [{ prim: 'string' }, { prim: 'int' }], annots: [] }` will be represented as follows by the generateSchema method:
+```json=
+// schema of a map has `key` and `value` properties
+{
+    __michelsonType: 'map',
+    schema: {
+        key: {
+            __michelsonType: 'string',
+            schema: 'string'
+        },
+        value: {
+            __michelsonType: 'int',
+            schema: 'int'
+        }
+    }
+}
+```
+
+## Added validation to different hashes being passed in the Taquito codebase
+
+Instead of leaving them to the node, hash validations have been implemented locally in Taquito. We included checksum validation for parameters of regular operations (i.e.: transfer/delegation/origination addresses).
+
+## @taquito/taquito & @taquito/tzip16 - Better error abstraction on view calls
+
+A `ViewSimulationError` is returned when a view simulation fails, which now contains an optional `failWith` property, making it easier to access the `FAILWITH` messages.
+
+## @taquito/tzip12 - `TokenIdNotFound` was incorrectly trown on metadata view failure
+
+The `getTokenMetadata` method of the `Tzip12ContractAbstraction` class was throwing a `TokenIdNotFound` error when the execution of a token metadata view failed. However, failures can be related to other reasons related to the Tezos node, which does not mean that the token metadata does not exist. The error handling has been improved at the `@taquito/tzip16` package level; if a view simulation reaches a `FAILWITH` instruction, a `ViewSimulationError` is returned. Otherwise, the original `HttpResponseError` is thrown.
+
+## Custom errors should extend Error
+
+The custom errors were implementing the Error class instead of extending it. Thus, `errorFromTaquito instanceof Error` was returning `false`. This issue has been fixed.
+
+## @taquito/beacon-wallet - Fixed error `Cannot read property 'DAppClient' of undefined`
+
+The error `Cannot read property 'DAppClient' of undefined` was thrown when using the `@taquito/beacon-wallet` package without npm. This has been fixed by replacing the global name from `beaconSdk` to `beacon` in the taquito-beacon-wallet.umd.js compiled file.
+
 # Taquito v11.1.0-beta
 
 ## Summary

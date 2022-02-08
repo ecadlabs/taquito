@@ -27,6 +27,7 @@ import {
   PreapplyParams,
   PreapplyResponse,
   ProposalsResponse,
+  ProtocolsResponse,
   RpcClientInterface,
   RPCOptions,
   RPCRunCodeParam,
@@ -241,5 +242,8 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<SaplingDiffResponse> {
     return this.rpc.getSaplingDiffByContract(contract, { block });
+  }
+  async getProtocols({ block }: RPCOptions = defaultRPCOptions): Promise<ProtocolsResponse> {
+    return this.rpc.getProtocols({ block });
   }
 }
