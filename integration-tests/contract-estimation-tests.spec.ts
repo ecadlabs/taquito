@@ -7,10 +7,8 @@ import { managerCode } from "./data/manager_code";
 
 CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
   const Tezos = lib;
-
   const hangzhounet = (protocol === Protocols.PtHangz2) ? test : test.skip;
   const ithacanet = (protocol === Protocols.PsiThaCa) ? test : test.skip;
-  const skipIthacanet = protocol === Protocols.Psithaca2 ? test.skip : test;
 
   describe(`Estimate scenario using: ${rpc}`, () => {
     let LowAmountTez: TezosToolkit;
@@ -324,11 +322,11 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       done();
     });
 
-  skipIthacanet('Estimate transfer to regular address with a fixed fee', async (done) => {
+  it('Estimate transfer to regular address with a fixed fee', async (done) => {
       // fee, gasLimit and storage limit are not taken into account
       const params = { fee: 2000, to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) }
 
-      if (protocol === Protocols.PsiThaCa) {
+      if (protocol === Protocols.Psithaca2) {
         await expect(LowAmountTez.estimate.transfer(params)).rejects.toEqual(
           expect.objectContaining({
             message: expect.stringContaining('balance_too_low'),
