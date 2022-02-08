@@ -2,6 +2,7 @@ import { RpcClient } from '@taquito/rpc';
 import { retry, tap } from 'rxjs/operators';
 import { Protocols } from '../src/constants';
 import { Context } from '../src/context';
+import BigNumber from 'bignumber.js';
 
 describe('Configurations for the confirmation methods and streamer', () => {
     let mockRpcClient: any;
@@ -35,11 +36,11 @@ describe('Configurations for the confirmation methods and streamer', () => {
 
         // Check all getter properties (to catch missing properties that might be added in the future)
         const getterKeys = Object.entries(Object.getOwnPropertyDescriptors(Object.getPrototypeOf(cloned)))
-            .filter(x => !!x[1].get).map(x=>x[0]);
+            .filter(x => !!x[1].get).map(x => x[0]);
 
-        for(const key of getterKeys){
+        for (const key of getterKeys) {
             const keyTyped = key as keyof typeof context;
-            try{
+            try {
                 expect(cloned[keyTyped] === context[keyTyped]).toBeTruthy();
             } catch {
                 throw new Error(`context.clone did not clone '${key}'`);
@@ -59,13 +60,13 @@ describe('Configurations for the confirmation methods and streamer', () => {
     it('Calling the getConfirmationPollingInterval should set the confirmationPollingIntervalSecond based on RPC constants', async (done) => {
         mockRpcClient.getConstants.mockResolvedValue({
             "time_between_blocks": [
-                "30",
-                "20"
+                new BigNumber("30"),
+                new BigNumber("20")
             ],
             "endorsers_per_block": 32,
-            "minimal_block_delay": 15,
+            "minimal_block_delay": new BigNumber(15),
             "initial_endorsers": 24,
-            "delay_per_missing_endorsement": "4"
+            "delay_per_missing_endorsement": new BigNumber("4")
         });
         await context.getConfirmationPollingInterval();
         expect(context.config.confirmationPollingIntervalSecond).toEqual(5);
@@ -110,13 +111,13 @@ describe('Configurations for the confirmation methods and streamer', () => {
 describe('Taquito context class', () => {
 
     let mockRpcClient: any;
-  
+
     beforeEach(() => {
-      mockRpcClient = {
-        getConstants: jest.fn()
-      };
+        mockRpcClient = {
+            getConstants: jest.fn()
+        };
     });
-    
+
     it('getConfirmationPollingInterval should return polling interval for sandbox environment', async () => {
         mockRpcClient.getConstants.mockResolvedValue({
             "proof_of_work_nonce_size": 8,
@@ -130,8 +131,8 @@ describe('Taquito context class', () => {
             "blocks_per_roll_snapshot": 128,
             "blocks_per_voting_period": 4096,
             "time_between_blocks": [
-            "2",
-            "3"
+                new BigNumber("2"),
+                new BigNumber("3")
             ],
             "endorsers_per_block": 32,
             "hard_gas_limit_per_operation": "1040000",
@@ -144,12 +145,12 @@ describe('Taquito context class', () => {
             "block_security_deposit": "512000000",
             "endorsement_security_deposit": "64000000",
             "baking_reward_per_endorsement": [
-            "1250000",
-            "187500"
+                "1250000",
+                "187500"
             ],
             "endorsement_reward": [
-            "1250000",
-            "833333"
+                "1250000",
+                "833333"
             ],
             "cost_per_byte": "250",
             "hard_storage_limit_per_operation": "60000",
@@ -161,7 +162,7 @@ describe('Taquito context class', () => {
             "delay_per_missing_endorsement": "1"
         });
         const pollingInterval = await new Context(mockRpcClient).getConfirmationPollingInterval();
-        expect(pollingInterval).toBe(2/3);
+        expect(pollingInterval).toBe(2 / 3);
     });
 
     it('getConfirmationPollingInterval should return polling interval for production environment', async () => {
@@ -177,8 +178,8 @@ describe('Taquito context class', () => {
             "blocks_per_roll_snapshot": 128,
             "blocks_per_voting_period": 4096,
             "time_between_blocks": [
-            "30",
-            "20"
+                "30",
+                "20"
             ],
             "endorsers_per_block": 32,
             "hard_gas_limit_per_operation": "1040000",
@@ -191,13 +192,13 @@ describe('Taquito context class', () => {
             "block_security_deposit": "512000000",
             "endorsement_security_deposit": "64000000",
             "baking_reward_per_endorsement": [
-            "1250000",
-            "187500"
+                "1250000",
+                "187500"
             ],
-            "minimal_block_delay": 15,
+            "minimal_block_delay": new BigNumber(15),
             "endorsement_reward": [
-            "1250000",
-            "833333"
+                "1250000",
+                "833333"
             ],
             "cost_per_byte": "250",
             "hard_storage_limit_per_operation": "60000",
@@ -212,7 +213,7 @@ describe('Taquito context class', () => {
         expect(pollingInterval).toBe(5);
 
     });
-    
+
 
     it('getConfirmationPollingInterval should return polling interval when rpc call to get constants file fails', async () => {
         mockRpcClient.getConstants.mockImplementation(() => {

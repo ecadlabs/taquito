@@ -22,8 +22,6 @@ import { retry } from 'rxjs/operators';
 import { BehaviorSubject, OperatorFunction } from 'rxjs';
 import { GlobalConstantsProvider } from './global-constants/interface-global-constants-provider';
 import { NoopGlobalConstantsProvider } from './global-constants/noop-global-constants-provider';
-import { BlockIdProviderCreator } from './block-id-provider/interface';
-import { RpcBlockIdProviderCreator } from './block-id-provider/rpc-block-id-provider';
 import { TzReadProvider } from './read-provider/interface';
 import { RpcReadAdapter } from './read-provider/rpc-read-adapter';
 
@@ -70,7 +68,6 @@ export class Context {
   private _packer: Packer;
   private providerDecorator: Array<(context: Context) => Context> = [];
   private _globalConstantsProvider: GlobalConstantsProvider;
-  private _blockIdProviderCreator: BlockIdProviderCreator;
   private _readProvider: TzReadProvider;
   public readonly tz = new RpcTzProvider(this);
   public readonly estimate = new RPCEstimateProvider(this);
@@ -92,7 +89,6 @@ export class Context {
     wallet?: WalletProvider,
     parser?: ParserProvider,
     globalConstantsProvider?: GlobalConstantsProvider,
-    blockCreator?: BlockIdProviderCreator,
     readProvider?: TzReadProvider
   ) {
     if (typeof this._rpc === 'string') {
@@ -109,8 +105,7 @@ export class Context {
     this._globalConstantsProvider = globalConstantsProvider
       ? globalConstantsProvider
       : new NoopGlobalConstantsProvider();
-    this._blockIdProviderCreator = blockCreator ? blockCreator : new RpcBlockIdProviderCreator();
-    this._readProvider = readProvider? readProvider: new RpcReadAdapter(this._rpcClient)
+    this._readProvider = readProvider ? readProvider : new RpcReadAdapter(this)
   }
 
   get config(): ConfigConfirmation & ConfigStreamer {
@@ -202,14 +197,6 @@ export class Context {
     this._globalConstantsProvider = value;
   }
 
-  get blockCreator() {
-    return this._blockIdProviderCreator;
-  }
-
-  set blockCreator(value: BlockIdProviderCreator) {
-    this._blockIdProviderCreator = value;
-  }
-
   get readProvider() {
     return this._readProvider;
   }
@@ -222,7 +209,7 @@ export class Context {
     if (this._proto) {
       return protocol.includes(this._proto);
     } else {
-      const { next_protocol } = await this.rpc.getBlockMetadata();
+      const next_protocol = await this.readProvider.getNextProtocol('head');
       return protocol.includes(next_protocol);
     }
   }
@@ -232,24 +219,9 @@ export class Context {
     // We reduce the default value in the same proportion, from 10 to 5.
     const defaultInterval = 5;
     try {
-      const constants = await this.rpc.getConstants();
-      let blockTime = constants.time_between_blocks[0];
-      if (constants.minimal_block_delay !== undefined) {
-        blockTime = constants.minimal_block_delay;
-      }
-      let confirmationPollingInterval = BigNumber.sum(
-        blockTime,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        new BigNumber(constants.delay_per_missing_endorsement!).multipliedBy(
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          Math.max(0, constants.initial_endorsers! - constants.endorsers_per_block)
-        )
-      );
-
-      // Divide the polling interval by a constant 3
-      // to improvise for polling time to work in prod,
-      // testnet and sandbox enviornment.
-      confirmationPollingInterval = confirmationPollingInterval.dividedBy(3);
+      const constants = await this.readProvider.getProtocolConstants('head');
+      const blockTime = constants.minimal_block_delay ? constants.minimal_block_delay : constants.time_between_blocks ? constants.time_between_blocks[0] : new BigNumber(defaultInterval);
+      const confirmationPollingInterval = blockTime.dividedBy(3);
 
       this.config.confirmationPollingIntervalSecond =
         confirmationPollingInterval.toNumber() === 0 ? 0.1 : confirmationPollingInterval.toNumber();
@@ -277,6 +249,7 @@ export class Context {
       this._walletProvider,
       this._parser,
       this._globalConstantsProvider,
+      this._readProvider
     );
   }
 

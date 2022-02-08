@@ -1,120 +1,132 @@
-import { EntrypointsResponse, MichelsonV1Expression, SaplingDiffResponse, ScriptedContracts } from '@taquito/rpc';
+import { EntrypointsResponse, MichelsonV1Expression, SaplingDiffResponse } from '@taquito/rpc';
 import BigNumber from 'bignumber.js';
-import { BlockIdProvider } from '../block-id-provider/interface';
+
+export type BigMapQuery = {
+  id: string, 
+  expr: string
+}
+
+export type SaplingStateQuery = {
+  id: string
+}
+
+// block identifier can be head, a block relative to head, a block hash or a block level
+export type BlockIdentifier = 'head' | `head~${number}` | `B${string}` | number;
 
 export interface TzReadProvider {
-
   /**
    * @description Access the balance of a contract.
    * @param address address from which we want to retrieve the balance
+   * @param block from which we want to retrieve the balance
    * @returns the balance in mutez
    */
-    getBalance(address: string, block: BlockIdProvider): Promise<BigNumber>;
+  getBalance(address: string, block: BlockIdentifier): Promise<BigNumber>;
 
   /**
    * @description Access the delegate of a contract, if any.
    * @param address contract address from which we want to retrieve the delegate (baker)
+   * @param block from which we want to retrieve the delegate
+   * @returns the public key hash of the delegate or null if no delegate
    */
-    getDelegate(address: string, block: BlockIdProvider): Promise<string | null>;
+  getDelegate(address: string, block: BlockIdentifier): Promise<string | null>;
 
   /**
    * @description Access the next protocol hash
-   * @see RpcClient.getBlockMetadata().next_protocol
+   * @param block from which we want to retrieve the next protocol hash
    */
-    getNextProtocol(block: BlockIdProvider): Promise<string>;
+  getNextProtocol(block: BlockIdentifier): Promise<string>;
 
   /**
-   * @description Acess protocol constants needed in Taquito
-   * @see RpcClient.getConstants()
+   * @description Access protocol constants used in Taquito
+   * @param block from which we want to retrieve the constants
    */
-    getProtocolConstants(block: BlockIdProvider):Promise<{
-      time_between_blocks: BigNumber[];
-      minimal_block_delay?: BigNumber;
-      hard_gas_limit_per_operation: BigNumber;
-      hard_gas_limit_per_block: BigNumber;
-      hard_storage_limit_per_operation: BigNumber;
-      cost_per_byte: BigNumber;
-    }>;
+  getProtocolConstants(block: BlockIdentifier): Promise<{
+    time_between_blocks?: BigNumber[];
+    minimal_block_delay?: BigNumber;
+    hard_gas_limit_per_operation: BigNumber;
+    hard_gas_limit_per_block: BigNumber;
+    hard_storage_limit_per_operation: BigNumber;
+    cost_per_byte: BigNumber;
+  }>;
 
   /**
-   * @description Access the code of a contract
+   * @description Access the code of a smart contract
    * @param contract contract address from which we want to retrieve the code
-   * @see RpcClient.getNormalizedScript().code
+   * @returns an object with a property code that represents the smart contract code.
+   * The code must be in the JSON format and not contain global constant
    */
-    getContractCode(contract: string): Promise<MichelsonV1Expression[]>;
+  getContractCode(contract: string): Promise<{ code: MichelsonV1Expression[] }>;
 
   /**
    * @description Access the storage of a contract
    * @param contract contract address from which we want to retrieve the storage
+   * @param block from which we want to retrieve the storage value
    */
-    getStorage(contract: string, block: BlockIdProvider): Promise<MichelsonV1Expression>;
+  getStorage(contract: string, block: BlockIdentifier): Promise<MichelsonV1Expression>;
+
+/**
+ * @description Access the storage Michelson type of a contract and its value
+ * @param contract contract address from which we want to retrieve the storage
+ * @param block from which we want to retrieve the storage value
+ */
+  getStorageTypeAndValue(contract: string, block: BlockIdentifier): Promise<{
+    storageType: MichelsonV1Expression,
+    storageValue: MichelsonV1Expression
+  }>;
 
   /**
    * @description Access the block hash
-   * @param blockIdentifier
-   * @example getBlockHash('head~2');
-   * @see RpcCLient.getBlockHeader().hash
    */
-    getBlockHash(block: BlockIdProvider): Promise<string>;
+  getBlockHash(block: BlockIdentifier): Promise<string>;
 
   /**
    * @description Access the block level
-   * @param blockIdentifier
-   * @example getBlockLevel('head~2');
-   * @see RpcClient.getBlock().header.level 
-   * @see RpcClient.getBlockHeader().level
    */
-    getBlockLevel(block: BlockIdProvider): Promise<number>;
-    
+  getBlockLevel(block: BlockIdentifier): Promise<number>;
+
   /**
-   * @description Access the counter of a contract
+   * @description Access the counter of an address
    * @param pkh from which we want to retrieve the counter
-   * @see RpcCLient.getContract().counter
+   * @param block from which we want to retrieve the counter
    */
-    getCounter(pkh: string, block: BlockIdProvider): Promise<number>;
+  getCounter(pkh: string, block: BlockIdentifier): Promise<string>;
 
   /**
    * @description Access the timestamp of a block
+   * @param block from which we want to retrieve the timestamp
    * @returns date ISO format zero UTC offset ("2022-01-19T22:37:07Z")
-   * @see RpcClient.getBlock().header.timestamp
    */
-    getBlockTimestamp(block: BlockIdProvider): Promise<string>
+  getBlockTimestamp(block: BlockIdentifier): Promise<string>
 
   /**
    * @description Access the value associated with a key in a big map.
-   * @param id Big Map ID
-   * @param expr Expression hash to query (A b58check encoded Blake2b hash of the expression)
+   * @param bigMapQuery Big Map ID and Expression hash to query (A b58check encoded Blake2b hash of the expression)
+   * @param block from which we want to retrieve the big map value
    */
-    getBigMapExpr(id: string, expr: string, block: BlockIdProvider): Promise<MichelsonV1Expression>;
-    
+  getBigMapValue(bigMapQuery: BigMapQuery, block: BlockIdentifier): Promise<MichelsonV1Expression>;
+
   /**
    * @description Access the value associated with a sapling state ID.
    * @param id Sapling state ID
+   * @param block from which we want to retrieve the sapling state
    */
-    getSaplingDiffById(id:string, block: BlockIdProvider): Promise<SaplingDiffResponse>;
+  getSaplingDiffById(saplingStateQuery: SaplingStateQuery, block: BlockIdentifier): Promise<SaplingDiffResponse>;
 
   /**
    * @description Return the list of entrypoints of the contract
    * @param contract address of the contract we want to get the entrypoints of
    */
-    getEntrypoints(contract: string): Promise<EntrypointsResponse>;
+  getEntrypoints(contract: string): Promise<EntrypointsResponse>;
 
   /**
    * @description Access the chain id
-   * @see RpcClient.getBlockHeader().chain_id
    */
-    getChainId(): Promise<string>
+  getChainId(): Promise<string>
 
   /**
    * @description Indicate if an account is revealed
    * @param publicKeyHash of the account 
-   * note: Currently determined by calling RpcClient.getManagerKey()
+   * @param block from which we want to know if the account is revealed
    */
-    isAccountRevealed(publicKeyHash: string, block: BlockIdProvider): Promise<boolean>;
-
-  /**
-   * @description List the ancestors of the given block which, if referred to as the branch in an operation header, are recent enough for that operation to be included in the current block.
-   */
-    getLiveBlocks(block: BlockIdProvider): Promise<string[]>
-
+  isAccountRevealed(publicKeyHash: string, block: BlockIdentifier): Promise<boolean>;
 }

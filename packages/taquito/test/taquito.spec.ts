@@ -71,7 +71,8 @@ describe('TezosToolkit test', () => {
     'forger',
     'wallet',
     'packer',
-    'globalConstantsProvider'
+    'globalConstantsProvider',
+    'readProvider'
   ];
   providerKey
     .filter(x => x !== 'rpc')

@@ -16,6 +16,8 @@ import { GlobalConstantsProvider } from './global-constants/interface-global-con
 import { NoopGlobalConstantsProvider } from './global-constants/noop-global-constants-provider';
 import { Packer } from './packer/interface';
 import { RpcPacker } from './packer/rpc-packer';
+import { TzReadProvider } from './read-provider/interface';
+import { RpcReadAdapter } from './read-provider/rpc-read-adapter';
 import { Signer } from './signer/interface';
 import { NoopSigner } from './signer/noop';
 import { SubscribeProvider } from './subscribe/interface';
@@ -53,11 +55,14 @@ export * from './packer/rpc-packer';
 export * from './global-constants/default-global-constants-provider';
 export * from './global-constants/error';
 export * from './global-constants/interface-global-constants-provider';
+export * from './read-provider/interface';
+export * from './read-provider/rpc-read-adapter';
 
 export interface SetProviderOptions {
   forger?: Forger;
   wallet?: WalletProvider;
   rpc?: string | RpcClientInterface;
+  readProvider?: TzReadProvider;
   stream?: string | SubscribeProvider;
   signer?: Signer;
   protocol?: Protocols;
@@ -122,6 +127,7 @@ export class TezosToolkit {
     wallet,
     packer,
     globalConstantsProvider,
+    readProvider
   }: SetProviderOptions) {
     this.setRpcProvider(rpc);
     this.setStreamProvider(stream);
@@ -130,6 +136,7 @@ export class TezosToolkit {
     this.setWalletProvider(wallet);
     this.setPackerProvider(packer);
     this.setGlobalConstantsProvider(globalConstantsProvider);
+    this.setReadProvider(readProvider);
 
     this._context.proto = protocol;
     if (config) {
@@ -266,6 +273,19 @@ export class TezosToolkit {
         : globalConstantsProvider;
     this._options.globalConstantsProvider = g;
     this._context.globalConstantsProvider = g;
+  }
+
+  /**
+   * @description Sets read provider on the Tezos Taquito instance
+   * By default reads are done from the RPC usign the RpcReadAdapter class, this can be overridden to read from an indexer that implements the TzReadProvider interface
+   *
+   * @param options TzReadProvider to use to interact with the Tezos network
+   *
+   */
+  setReadProvider(readProvider?: SetProviderOptions['readProvider']) {
+    const readP = typeof readProvider === 'undefined' ? this.getFactory(RpcReadAdapter)(): readProvider;
+    this._options.readProvider = readP;
+    this._context.readProvider = readP;
   }
 
   /**
