@@ -4,11 +4,7 @@
  */
 
 import { STATUS_CODE } from './status_code';
-
-const isNode =
-  typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
-
-const XMLHttpRequestCTOR = isNode ? require('xhr2-cookies').XMLHttpRequest : XMLHttpRequest;
+import axios from 'axios';
 
 export * from './status_code';
 export { VERSION } from './version';
@@ -83,77 +79,55 @@ export class HttpBackend {
     }
   }
 
-  protected createXHR(): XMLHttpRequest {
-    return new XMLHttpRequestCTOR();
-  }
-
   /**
    *
    * @param options contains options to be passed for the HTTP request (url, method and timeout)
    */
-  createRequest<T>(
+  async createRequest<T>(
     {
       url,
       method,
-      timeout,
+      timeout = defaultTimeout,
       query,
       headers = {},
-      json = true,
-      mimeType = undefined,
+      json = true
     }: HttpRequestOptions,
     data?: object | string
   ) {
-    return new Promise<T>((resolve, reject) => {
-      const request = this.createXHR();
-      request.open(method || 'GET', `${url}${this.serialize(query)}`);
-      if (!headers['Content-Type']) {
-        request.setRequestHeader('Content-Type', 'application/json');
-      }
-      if (mimeType) {
-        request.overrideMimeType(`${mimeType}`);
-      }
-      for (const k in headers) {
-        request.setRequestHeader(k, headers[k]);
-      }
-      request.timeout = timeout || defaultTimeout;
-      request.onload = function () {
-        if (this.status >= 200 && this.status < 300) {
-          if (json) {
-            try {
-              resolve(JSON.parse(request.response));
-            } catch (ex) {
-              reject(new Error(`Unable to parse response: ${request.response}`));
-            }
-          } else {
-            resolve(request.response);
-          }
-        } else {
-          reject(
-            new HttpResponseError(
-              `Http error response: (${this.status}) ${request.response}`,
-              this.status as STATUS_CODE,
-              request.statusText,
-              request.response,
-              url
-            )
-          );
-        }
-      };
+    let resType: 'text' | 'json';
+    let transformResponse = undefined;
 
-      request.ontimeout = function () {
-        reject(new Error(`Request timed out after: ${request.timeout}ms`));
-      };
+    if (!headers['Content-Type']) {
+      headers['Content-Type'] = 'application/json'
+    };
+    if (!json) {
+      resType = 'text'
+      transformResponse = [(v: any) => v]
+    } else {
+      resType = 'json';
+    }
+  
+    let response;
+    try {
+      response = await axios.request<T>({
+        url: url + this.serialize(query),
+        method: method ?? 'GET',
+        headers: headers,
+        responseType: resType,
+        transformResponse,
+        timeout: timeout,
+        data: data,
+      });
+    } catch (err: any) {
+      throw new HttpResponseError(
+        `Http error response: (${err.response.status}) ${JSON.stringify(err.response.data)}`,
+        err.response.status as STATUS_CODE,
+        err.response.statusText,
+        JSON.stringify(err.response.data),
+        url + this.serialize(query)
+      )
+    }
 
-      request.onerror = function (err) {
-        reject(new HttpRequestFailed(url, err));
-      };
-
-      if (data) {
-        const dataStr = JSON.stringify(data);
-        request.send(dataStr);
-      } else {
-        request.send();
-      }
-    });
+    return response.data
   }
 }

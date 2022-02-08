@@ -59,6 +59,7 @@
     ]
   },
   "dependencies": {
+    "axios": "^0.25.0",
     "xhr2-cookies": "^1.1.0"
   },
   "devDependencies": {
