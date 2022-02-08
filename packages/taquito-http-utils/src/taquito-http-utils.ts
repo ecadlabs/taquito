@@ -99,7 +99,8 @@ export class HttpBackend {
 
     if (!headers['Content-Type']) {
       headers['Content-Type'] = 'application/json'
-    };
+    }
+
     if (!json) {
       resType = 'text'
       transformResponse = [(v: any) => v]
