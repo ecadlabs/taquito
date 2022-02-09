@@ -25,9 +25,9 @@ author: Roxane Letourneau
 | SmartPy          | Ithacanet   | https://ithacanet.smartpy.io/      | [Check](https://ithacanet.smartpy.io/chains/main/blocks/head/header)    |
 | Tezos Foundation | Mainnet     | https://rpc.tzbeta.net/            | [Check](https://rpc.tzbeta.net/chains/main/blocks/head/header)      |
 | Tezos Foundation | Ithacanet   | https://rpczero.tzbeta.net/        | [Check](https://rpczero.tzbeta.net/chains/main/blocks/head/header)      |
-| LetzBake!        | Mainnet     | https://teznode.letzbake.com       |  [Check](https://hangzhounet.api.tez.ie/chains/main/blocks/head/header)     |
-| GigaNode         | Mainnet     | https://mainnet-tezos.giganode.io  |  [Check](https://hangzhounet.api.tez.ie/chains/main/blocks/head/header)     |
-| GigaNode         | Hangzhounet | https://testnet-tezos.giganode.io/ | [Check](https://hangzhounet.api.tez.ie/chains/main/blocks/head/header)      |
+| LetzBake!        | Mainnet     | https://teznode.letzbake.com       |  [Check](https://teznode.letzbake.com/chains/main/blocks/head/header)     |
+| GigaNode         | Mainnet     | https://mainnet-tezos.giganode.io  |  [Check](https://mainnet-tezos.giganode.io/chains/main/blocks/head/header)     |
+| GigaNode         | Hangzhounet | https://testnet-tezos.giganode.io/ | [Check](https://testnet-tezos.giganode.io/chains/main/blocks/head/header)      |
 
 
 ## How to run a node
