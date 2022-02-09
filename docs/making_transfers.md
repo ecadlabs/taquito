@@ -67,24 +67,12 @@ fetch('https://api.tez.ie/keys/hangzhounet/', {
 // import { TezosToolkit } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
 
-render(`Fetching a private key...`);
-fetch('https://api.tez.ie/keys/hangzhounet/', {
-  method: 'POST',
-  headers: { Authorization: 'Bearer taquito-example' },
-})
-  .then((response) => response.text())
-  .then((privateKey) => {
-    render(`Importing the private key...`);
-    return importKey(Tezos, privateKey);
-  })
-  .then(() => {
     const amount = 0.5;
     const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
 
     render(`Transfering ${amount} ꜩ to ${address}...`);
-    return Tezos.wallet.transfer({ to: address, amount: amount }).send();
-  })
-  .then((op) => {
+    return Tezos.wallet.transfer({ to: address, amount: amount }).send()
+.then((op) => {
     render(`Waiting for ${op.opHash} to be confirmed...`);
     return op.confirmation(1).then(() => op.opHash);
   })
