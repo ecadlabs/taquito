@@ -3,14 +3,27 @@ import { MichelsonStorageView } from '../../src/viewKind/michelson-storage-view'
 
 describe('MichelsonStorageView test', () => {
   const mockContractAbstraction: any = {};
-  let mockRpcClient: any;
+  let mockRpcClient: {
+    runCode: jest.Mock<any, any>;
+    getBlock: jest.Mock<any, any>;
+  };
+  let mockReadProvider: {
+    getChainId: jest.Mock<any, any>;
+    getBalance: jest.Mock<any, any>;
+    getBlockTimestamp: jest.Mock<any, any>;
+    getStorage: jest.Mock<any, any>;
+  };
 
   beforeEach(() => {
     mockRpcClient = {
+      runCode: jest.fn(),
       getBlock: jest.fn(),
+    };
+    mockReadProvider = {
       getBalance: jest.fn(),
       getChainId: jest.fn(),
-      runCode: jest.fn(),
+      getBlockTimestamp: jest.fn(),
+      getStorage: jest.fn(),
     };
 
     mockContractAbstraction.address = 'KT1test';
@@ -37,16 +50,17 @@ describe('MichelsonStorageView test', () => {
           prim: 'code',
           args: [[{ prim: 'PUSH', args: [{ prim: 'nat' }, { int: '42' }] }, { prim: 'FAILWITH' }]],
         },
-      ],
-      storage: { prim: 'Pair', args: [{ int: '7' }, { int: '38671' }] },
+      ]
     };
 
     mockRpcClient.getBlock.mockResolvedValue({
       operations: [[{ hash: 'test' }], [], [], []],
       header: { timestamp: '2021-01-06T05:14:43Z' },
     });
-    mockRpcClient.getBalance.mockResolvedValue('0');
-    mockRpcClient.getChainId.mockResolvedValue('NetTest');
+    mockReadProvider.getBalance.mockResolvedValue('0');
+    mockReadProvider.getChainId.mockResolvedValue('NetTest');
+    mockReadProvider.getBlockTimestamp.mockResolvedValue('2021-01-06T05:14:43Z');
+    mockReadProvider.getStorage.mockResolvedValue({ prim: 'Pair', args: [{ int: '7' }, { int: '38671' }] })
   });
 
   it('Should succesfully execute a view that get the balance of the contrat', async (done) => {
@@ -58,7 +72,8 @@ describe('MichelsonStorageView test', () => {
     const michelsonStorageView = new MichelsonStorageView(
       'test',
       mockContractAbstraction,
-      mockRpcClient,
+      mockRpcClient as any,
+      mockReadProvider as any,
       { prim: 'mutez', args: [], annots: [] },
       [
         { prim: 'DROP', args: [], annots: [] },
@@ -76,7 +91,8 @@ describe('MichelsonStorageView test', () => {
     const michelsonStorageView = new MichelsonStorageView(
       'test',
       mockContractAbstraction,
-      mockRpcClient,
+      mockRpcClient as any,
+      mockReadProvider as any,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       viewCode
     );
@@ -102,7 +118,8 @@ describe('MichelsonStorageView test', () => {
     const michelsonStorageView = new MichelsonStorageView(
       'test',
       mockContractAbstraction,
-      mockRpcClient,
+      mockRpcClient as any,
+      mockReadProvider as any,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       viewCode
     );
@@ -127,7 +144,8 @@ describe('MichelsonStorageView test', () => {
     const michelsonStorageView = new MichelsonStorageView(
       'test',
       mockContractAbstraction,
-      mockRpcClient,
+      mockRpcClient as any,
+      mockReadProvider as any,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       viewCode
     );
@@ -148,7 +166,8 @@ describe('MichelsonStorageView test', () => {
     const michelsonStorageView = new MichelsonStorageView(
       'test',
       mockContractAbstraction,
-      mockRpcClient,
+      mockRpcClient as any,
+      mockReadProvider as any,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       viewCode
     );
@@ -169,7 +188,8 @@ describe('MichelsonStorageView test', () => {
     const michelsonStorageView = new MichelsonStorageView(
       'test',
       mockContractAbstraction,
-      mockRpcClient,
+      mockRpcClient as any,
+      mockReadProvider as any,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       viewCode
     );
@@ -190,7 +210,8 @@ describe('MichelsonStorageView test', () => {
     const michelsonStorageView = new MichelsonStorageView(
       'test',
       mockContractAbstraction,
-      mockRpcClient,
+      mockRpcClient as any,
+      mockReadProvider as any,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       viewCode
     );
@@ -213,7 +234,8 @@ describe('MichelsonStorageView test', () => {
     const michelsonStorageView = new MichelsonStorageView(
       'test',
       mockContractAbstraction,
-      mockRpcClient,
+      mockRpcClient as any,
+      mockReadProvider as any,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       viewCode
     );
@@ -238,7 +260,8 @@ describe('MichelsonStorageView test', () => {
     const michelsonStorageView = new MichelsonStorageView(
       'test',
       mockContractAbstraction,
-      mockRpcClient,
+      mockRpcClient as any,
+      mockReadProvider as any,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       viewCode
     );
@@ -260,7 +283,8 @@ describe('MichelsonStorageView test', () => {
     const michelsonStorageView = new MichelsonStorageView(
       'test',
       mockContractAbstraction,
-      mockRpcClient,
+      mockRpcClient as any,
+      mockReadProvider as any,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       viewCode
     );
@@ -291,7 +315,8 @@ describe('MichelsonStorageView test', () => {
     const michelsonStorageView = new MichelsonStorageView(
       'test',
       mockContractAbstraction,
-      mockRpcClient,
+      mockRpcClient as any,
+      mockReadProvider as any,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       viewCode
     );
@@ -317,7 +342,8 @@ describe('MichelsonStorageView test', () => {
     const michelsonStorageView = new MichelsonStorageView(
       'test',
       mockContractAbstraction,
-      mockRpcClient,
+      mockRpcClient as any,
+      mockReadProvider as any,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       viewCode
     );
@@ -358,7 +384,8 @@ describe('MichelsonStorageView test', () => {
     const michelsonStorageView = new MichelsonStorageView(
       'test',
       mockContractAbstraction,
-      mockRpcClient,
+      mockRpcClient as any,
+      mockReadProvider as any,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       viewCode
     );
@@ -404,7 +431,8 @@ describe('MichelsonStorageView test', () => {
     const michelsonStorageView = new MichelsonStorageView(
       'test',
       mockContractAbstraction,
-      mockRpcClient,
+      mockRpcClient as any,
+      mockReadProvider as any,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       viewCode
     );
@@ -443,7 +471,8 @@ describe('MichelsonStorageView test', () => {
     const michelsonStorageView = new MichelsonStorageView(
       'test',
       mockContractAbstraction,
-      mockRpcClient,
+      mockRpcClient as any,
+      mockReadProvider as any,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       [{ prim: 'CAR', args: [], annots: [] }] // code
     );
@@ -458,7 +487,8 @@ describe('MichelsonStorageView test', () => {
     const michelsonStorageView = new MichelsonStorageView(
       'test',
       mockContractAbstraction,
-      mockRpcClient,
+      mockRpcClient as any,
+      mockReadProvider as any,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       [{ prim: 'CAR', args: [], annots: [] }] // code
     );
@@ -473,7 +503,8 @@ describe('MichelsonStorageView test', () => {
     const michelsonStorageView = new MichelsonStorageView(
       'test',
       mockContractAbstraction,
-      mockRpcClient,
+      mockRpcClient as any,
+      mockReadProvider as any,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       [{ prim: 'CAR', args: [], annots: [] }], // code
       { args: [], prim: 'unit', annots: [] }
@@ -489,7 +520,8 @@ describe('MichelsonStorageView test', () => {
     const michelsonStorageView = new MichelsonStorageView(
       'test',
       mockContractAbstraction,
-      mockRpcClient,
+      mockRpcClient as any,
+      mockReadProvider as any,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       [{ prim: 'CAR', args: [], annots: [] }], // code
       { args: [], prim: 'unit', annots: [] }
@@ -505,7 +537,8 @@ describe('MichelsonStorageView test', () => {
     const michelsonStorageView = new MichelsonStorageView(
       'test',
       mockContractAbstraction,
-      mockRpcClient,
+      mockRpcClient as any,
+      mockReadProvider as any,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       [{ prim: 'CAR', args: [], annots: [] }], // code
       { args: [], prim: 'unit', annots: [] }
@@ -523,7 +556,8 @@ describe('MichelsonStorageView test', () => {
     const michelsonStorageView = new MichelsonStorageView(
       'test',
       mockContractAbstraction,
-      mockRpcClient,
+      mockRpcClient as any,
+      mockReadProvider as any,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       [{ prim: 'CAR', args: [], annots: [] }] // code
     );

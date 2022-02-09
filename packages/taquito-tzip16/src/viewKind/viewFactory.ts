@@ -1,5 +1,5 @@
 import { RpcClientInterface } from '@taquito/rpc';
-import { ContractAbstraction, ContractProvider, Wallet } from '@taquito/taquito';
+import { ContractAbstraction, ContractProvider, Wallet, TzReadProvider } from '@taquito/taquito';
 import { ViewImplementation, ViewImplementationType } from '../metadata-interface';
 import { MichelsonStorageView } from './michelson-storage-view';
 
@@ -7,6 +7,7 @@ export class ViewFactory {
     getView(
         viewName: string,
         rpc: RpcClientInterface,
+        readProvider: TzReadProvider,
         contract: ContractAbstraction<ContractProvider | Wallet>,
         viewImplementation: ViewImplementation
     ) {
@@ -23,6 +24,7 @@ export class ViewFactory {
                     viewName,
                     contract,
                     rpc,
+                    readProvider,
                     viewValues.returnType as any,
                     viewValues.code as any,
                     viewValues.parameter as any

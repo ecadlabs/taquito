@@ -15,6 +15,10 @@ describe('Tzip16 contract abstraction test', () => {
     getBigMapKeyByID: jest.Mock<any, any>;
   };
 
+  let mockReadProvider: { 
+    getStorage: jest.Mock<any, any>;
+  };
+
   beforeEach(() => {
     mockMetadataProvider = {
       provideMetadata: jest.fn(),
@@ -28,6 +32,10 @@ describe('Tzip16 contract abstraction test', () => {
       getBigMapKeyByID: jest.fn(),
     };
 
+    mockReadProvider = {
+      getStorage: jest.fn(),
+    }    
+
     mockMetadataProvider.provideMetadata.mockResolvedValue({
       uri: 'https://test',
       metadata: { name: 'Taquito test' },
@@ -35,12 +43,10 @@ describe('Tzip16 contract abstraction test', () => {
 
     mockContext['metadataProvider'] = mockMetadataProvider;
     mockContext['contract'] = mockRpcContractProvider;
+    mockContext['readProvider'] = mockReadProvider;
 
     mockContractAbstraction['schema'] = mockSchema;
-    mockContractAbstraction['script'] = {
-      script: {
-        code: [],
-        storage: {
+    mockReadProvider.getStorage.mockResolvedValue({
           prim: 'Pair',
           args: [
             {
@@ -48,9 +54,7 @@ describe('Tzip16 contract abstraction test', () => {
             },
             [],
           ],
-        },
-      },
-    };
+        })
   });
 
   it('Should get the metadata', async (done) => {
