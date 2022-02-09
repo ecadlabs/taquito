@@ -10,7 +10,7 @@ describe('ContractView test', () => {
     getNormalizedScript: jest.Mock<any, any>;
     getStorage: jest.Mock<any, any>;
     getEntrypoints: jest.Mock<any, any>;
-    getBlockHeader: jest.Mock<any, any>;
+    getChainId: jest.Mock<any, any>;
   };
 
   let mockSigner: {
@@ -31,7 +31,7 @@ describe('ContractView test', () => {
       getEntrypoints: jest.fn(),
       getNormalizedScript: jest.fn(),
       getStorage: jest.fn(),
-      getBlockHeader: jest.fn(),
+      getChainId: jest.fn(),
     };
 
     mockSigner = {
@@ -52,24 +52,7 @@ describe('ContractView test', () => {
       mockEstimate as any
     );
 
-    mockRpcClient.getBlockHeader.mockResolvedValue({
-      protocol: 'PsCARTHAGazKbHtnKfLzQg3kms52kSRpgnDY982a9oYsSXRLQEb',
-      chain_id: 'NetXjD3HPJJjmcd',
-      hash: 'BMCnvCbzC9v4HxTXWpUpaA7hooFVkQGfg16zMgzeb3eUNVB58S1',
-      level: 847136,
-      proto: 2,
-      predecessor: 'BLqnKLAfqAf5pjoVMkj4VztdmmksSu3fx3q2eRTwTRL2CGvgws2',
-      timestamp: '2020-11-04T18:39:20Z',
-      validation_pass: 4,
-      operations_hash: 'LLoZpwx6pGPmWYdSns1WHJ9GL4UFxGdjn9nWL3KFvXNKa2ioHuXSb',
-      fitness: ['01', '00000000000ced1f'],
-      context: 'CoVmCTMPFiauJwp59yFm45K3LCKNJeeSzhBggF6nVJgrrnPTxyTV',
-      priority: 0,
-      proof_of_work_nonce: '7073f75508b30400',
-      seed_nonce_hash: 'nceUd4hqZULXQPyioXpWBsv2qVEAf77wP52impoDVPF6rgG1X1R48',
-      signature:
-        'siguQC9rv8ZRoH7jsxQPDiQN37GPKccxsVaqgRSDuTsfbjX4NcHgx9MS1CEfQYK7PgSxfjokia6ZRpdGJnde1y3BPjpKeftf',
-    });
+    mockRpcClient.getChainId.mockResolvedValue('NetXjD3HPJJjmcd');
     mockRpcClient.getNormalizedScript.mockResolvedValue({
       code: tokenCode,
       storage: tokenInit,

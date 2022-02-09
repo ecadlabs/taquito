@@ -64,8 +64,18 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
   private readonly OP_SIZE_REVEAL = 128;
 
   // Maximum values defined by the protocol
-  private async getAccountLimits(pkh: string, constants: ConstantsResponse, numberOfOps?: number) {
-    const balance = await this.rpc.getBalance(pkh);
+  private async getAccountLimits(
+    pkh: string,
+    constants: Pick<
+      ConstantsResponse,
+      | 'hard_gas_limit_per_operation'
+      | 'hard_gas_limit_per_block'
+      | 'hard_storage_limit_per_operation'
+      | 'cost_per_byte'
+    >,
+    numberOfOps?: number
+  ) {
+    const balance = await this.context.readProvider.getBalance(pkh, 'head');
     const {
       hard_gas_limit_per_operation,
       hard_gas_limit_per_block,
@@ -149,7 +159,10 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     }
   }
 
-  private async prepareEstimate(params: PrepareOperationParams, constants: ConstantsResponse) {
+  private async prepareEstimate(
+    params: PrepareOperationParams,
+    constants: Pick<ConstantsResponse, 'cost_per_byte'>
+  ) {
     const prepared = await this.prepareOperation(params);
     const {
       opbytes,
@@ -157,7 +170,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     } = await this.forge(prepared);
     const operation: RPCRunOperationParam = {
       operation: { branch, contents, signature: SIGNATURE_STUB },
-      chain_id: await this.rpc.getChainId(),
+      chain_id: await this.context.readProvider.getChainId(),
     };
 
     const { opResponse } = await this.simulate(operation);
@@ -197,7 +210,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    */
   async originate({ fee, storageLimit, gasLimit, ...rest }: OriginateParams) {
     const pkh = await this.signer.publicKeyHash();
-    const protocolConstants = await this.rpc.getConstants();
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
     const op = await createOriginationOperation(
       await this.context.parser.prepareCodeOrigination({
@@ -232,7 +245,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
       throw new InvalidAddressError(`Invalid 'source' address: ${rest.source}`);
     }
     const pkh = await this.signer.publicKeyHash();
-    const protocolConstants = await this.rpc.getConstants();
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
     const op = await createTransferOperation({
       ...rest,
@@ -268,7 +281,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
 
     const pkh = await this.signer.publicKeyHash();
     const sourceOrDefault = rest.source || pkh;
-    const protocolConstants = await this.rpc.getConstants();
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const DEFAULT_PARAMS = await this.getAccountLimits(sourceOrDefault, protocolConstants);
     const op = await createSetDelegateOperation({
       ...rest,
@@ -295,7 +308,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
   async batch(params: ParamsWithKind[]) {
     const pkh = await this.signer.publicKeyHash();
     let operations: RPCOperation[] = [];
-    const protocolConstants = await this.rpc.getConstants();
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants, params.length);
     for (const param of params) {
       switch (param.kind) {
@@ -363,7 +376,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    */
   async registerDelegate(params: RegisterDelegateParams) {
     const pkh = await this.signer.publicKeyHash();
-    const protocolConstants = await this.rpc.getConstants();
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
     const op = await createRegisterDelegateOperation({ ...params, ...DEFAULT_PARAMS }, pkh);
     const isRevealNeeded = await this.isRevealOpNeeded([op], pkh);
@@ -389,7 +402,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
   async reveal(params?: RevealParams) {
     const pkh = await this.signer.publicKeyHash();
     if (await this.isAccountRevealRequired(pkh)) {
-      const protocolConstants = await this.rpc.getConstants();
+      const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
       const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
       const op = await createRevealOperation(
         {
@@ -422,7 +435,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     ...rest
   }: RegisterGlobalConstantParams) {
     const pkh = await this.signer.publicKeyHash();
-    const protocolConstants = await this.rpc.getConstants();
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
     const op = await createRegisterGlobalConstantOperation({
       ...rest,

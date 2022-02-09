@@ -15,7 +15,7 @@ import {
   InvalidViewParameterError,
   NoParameterExpectedError,
 } from '../tzip16-errors';
-import { validateAndExtractFailwith } from '@taquito/taquito';
+import { validateAndExtractFailwith, TzReadProvider } from '@taquito/taquito';
 import { View } from './interface';
 
 export class MichelsonStorageView implements View {
@@ -23,6 +23,7 @@ export class MichelsonStorageView implements View {
     private viewName: string,
     private contract: ContractAbstraction<ContractProvider | Wallet>,
     private rpc: RpcClientInterface,
+    private readProvider: TzReadProvider,
     private returnType: MichelsonV1Expression,
     private code: MichelsonV1ExpressionExtended[],
     private viewParameterType?: MichelsonV1ExpressionExtended
@@ -147,13 +148,14 @@ export class MichelsonStorageView implements View {
 
     const storageType: any = this.contract.script.code.find((x: any) => x.prim === 'storage');
     const storageArgs = storageType.args[0];
-    const storageValue: any = this.contract.script.storage;
 
     // currentContext
-    const chainId = await this.rpc.getChainId();
-    const contractBalance = (await this.rpc.getBalance(this.contract.address)).toString();
-    const block = await this.rpc.getBlock();
-    const blockTimestamp = block.header.timestamp.toString();
+    const storageValue: any = await this.readProvider.getStorage(this.contract.address, 'head');
+    const chainId = await this.readProvider.getChainId();
+    const contractBalance = (
+      await this.readProvider.getBalance(this.contract.address, 'head')
+    ).toString();
+    const blockTimestamp = await this.readProvider.getBlockTimestamp('head');
 
     const code = this.adaptViewCodeToContext(this.code, contractBalance, blockTimestamp, chainId);
 
