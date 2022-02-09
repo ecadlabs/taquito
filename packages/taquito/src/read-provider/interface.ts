@@ -1,4 +1,4 @@
-import { EntrypointsResponse, MichelsonV1Expression, SaplingDiffResponse } from '@taquito/rpc';
+import { EntrypointsResponse, MichelsonV1Expression, SaplingDiffResponse, ScriptedContracts } from '@taquito/rpc';
 import BigNumber from 'bignumber.js';
 
 export type BigMapQuery = {
@@ -55,7 +55,7 @@ export interface TzReadProvider {
   * @param block from which we want to retrieve the storage value
   * @returns Note: The code must be in the JSON format and not contain global constant
   */
-  getScript(contract: string, block: BlockIdentifier): Promise<{ code: MichelsonV1Expression[] }>;
+  getScript(contract: string, block: BlockIdentifier): Promise<ScriptedContracts>;
 
   /**
    * @description Access the storage of a contract
