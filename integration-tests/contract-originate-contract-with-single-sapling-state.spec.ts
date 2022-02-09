@@ -5,8 +5,8 @@ import { singleSaplingStateContractHangzhou } from './data/single_sapling_state_
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const skipIthacanet = protocol === Protocols.Psithaca2 ? test.skip : test;
-  const skipHangzhounet = protocol === Protocols.PtHangz2 ? test.skip : test;
+  const ithacanet = protocol === Protocols.Psithaca2 ? test: test.skip;
+  const hangzhounet = protocol === Protocols.PtHangz2 ? test: test.skip;
 
   describe(`Test origination of contracts with sapling using: ${rpc}`, () => {
     beforeEach(async (done) => {
@@ -14,7 +14,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done();
     });
 
-     skipHangzhounet('Originates a contract with a single sapling state in its storage for Ithaca', async (done: () => void) => {
+    ithacanet('Originates a contract with a single sapling state in its storage for Ithaca', async (done: () => void) => {
        const op = await Tezos.contract.originate({
         code: singleSaplingStateContract,
          init: '{}'
@@ -25,7 +25,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
        done();
      });
 
-    skipIthacanet('Originates a contract with a single sapling state in its storage for Hangzhou', async (done: () => void) => {
+     hangzhounet('Originates a contract with a single sapling state in its storage for Hangzhou', async (done: () => void) => {
       const op = await Tezos.contract.originate({
         code: singleSaplingStateContractHangzhou,
         init: '{}'
