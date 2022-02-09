@@ -12,16 +12,19 @@ import { OnChainView } from '../../src/contract/contract-methods/contract-on-cha
 describe('ContractAbstraction test', () => {
   let rpcContractProvider: RpcContractProvider;
   let mockRpcClient: {};
+  let mockReadProvider: {};
   let mockSigner: {};
   let mockEstimate: {};
 
   beforeEach(() => {
     mockRpcClient = {};
+    mockReadProvider = {};
     mockSigner = {};
     mockEstimate = {};
+    const context = new Context(mockRpcClient as any, mockSigner as any);
+    context.readProvider = mockReadProvider as any;
     rpcContractProvider = new RpcContractProvider(
-      // deepcode ignore no-any: any is good enough
-      new Context(mockRpcClient as any, mockSigner as any),
+      context,
       mockEstimate as any
     );
   });
@@ -30,15 +33,13 @@ describe('ContractAbstraction test', () => {
     it('calls the main method of a contract having annotations (genericMultisig where action is change_keys)', async (done) => {
       const contratcAbs = new ContractAbstraction(
         'contractAddress',
-        {
-          code: genericMultisig,
-          storage: {},
-        },
+        { code: genericMultisig },
         rpcContractProvider,
         rpcContractProvider,
         entrypointsGenericMultisig,
         'chain_test',
-        mockRpcClient as any
+        mockRpcClient as any,
+        mockReadProvider as any
       );
 
       // Calling the smart contract main method using flat arguments
@@ -161,14 +162,14 @@ describe('ContractAbstraction test', () => {
       const contratcAbs = new ContractAbstraction(
         'contractAddress',
         {
-          code: genericMultisig,
-          storage: {},
+          code: genericMultisig
         },
         rpcContractProvider,
         rpcContractProvider,
         entrypointsGenericMultisig,
         'chain_test',
-        mockRpcClient as any
+        mockRpcClient as any,
+        mockReadProvider as any
       );
 
       // Calling the smart contract main method using flat arguments
@@ -293,14 +294,14 @@ describe('ContractAbstraction test', () => {
       const contratcAbs = new ContractAbstraction(
         'contractAddress',
         {
-          code: noAnnotCode,
-          storage: [],
+          code: noAnnotCode
         },
         rpcContractProvider,
         rpcContractProvider,
         { entrypoints: {} },
         'chain_test',
-        mockRpcClient as any
+        mockRpcClient as any,
+        mockReadProvider as any
       );
 
       const method0 = contratcAbs.methods[0](
@@ -368,15 +369,13 @@ describe('ContractAbstraction test', () => {
     it('calls the third entry point (2) of a contract having no annotation', async (done) => {
       const contratcAbs = new ContractAbstraction(
         'contractAddress',
-        {
-          code: noAnnotCode,
-          storage: [],
-        },
+        { code: noAnnotCode },
         rpcContractProvider,
         rpcContractProvider,
         { entrypoints: {} },
         'chain_test',
-        mockRpcClient as any
+        mockRpcClient as any,
+        mockReadProvider as any
       );
 
       const method2 = contratcAbs.methods[2]('tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', '1');
@@ -468,7 +467,8 @@ describe('ContractAbstraction test', () => {
         rpcContractProvider,
         { entrypoints: {} },
         'chain_test',
-        mockRpcClient as any
+        mockRpcClient as any,
+        mockReadProvider as any
       );
 
       expect(Object.keys(contratcAbs.contractViews).length).toEqual(2);

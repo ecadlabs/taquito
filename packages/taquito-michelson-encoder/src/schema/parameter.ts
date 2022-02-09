@@ -11,7 +11,7 @@ import { Falsy, TokenSchema } from './types';
 export class ParameterSchema {
   private root: Token;
 
-  static fromRPCResponse(val: { script: ScriptResponse }) {
+  static fromRPCResponse(val: { script: { code: ScriptResponse['code'] } }) {
     const parameter: Falsy<MichelsonV1ExpressionExtended> =
       val &&
       val.script &&

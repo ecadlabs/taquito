@@ -18,7 +18,7 @@ export class ViewSchema {
    * @param val contract script obtained from the RPC
    * @returns array of ViewSchema or empty array if there is no view in the contract
    */
-  static fromRPCResponse(val: { script: ScriptResponse }) {
+  static fromRPCResponse(val: { script: { code: ScriptResponse['code'] } }) {
     const allViewSchema: ViewSchema[] = [];
 
     const views =

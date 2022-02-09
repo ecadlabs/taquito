@@ -191,9 +191,6 @@ export class Wallet {
         })
       );
       const opHash = await this.walletProvider.sendOperations([mappedParams]);
-      if (!this.context.proto) {
-        this.context.proto = (await this.context.rpc.getBlock()).protocol as Protocols;
-      }
       return this.context.operationFactory.createOriginationOperation(opHash) as Promise<OriginationWalletOperation<TWallet>>;
     });
   }
@@ -292,18 +289,19 @@ export class Wallet {
       throw new InvalidContractAddressError(`Invalid contract address: ${address}`);
     }
     const rpc = this.context.withExtensions().rpc;
-    const script = await rpc.getNormalizedScript(address);
-    const entrypoints = await rpc.getEntrypoints(address);
-    const blockHeader = await this.context.rpc.getBlockHeader();
-    const chainId = blockHeader.chain_id;
+    const readProvider = this.context.withExtensions().readProvider;
+    const contractCode = await readProvider.getContractCode(address);
+    const entrypoints = await readProvider.getEntrypoints(address);
+    const chainId = await this.context.readProvider.getChainId();
     const abs = new ContractAbstraction(
       address,
-      script,
+      contractCode,
       this,
       this.context.contract,
       entrypoints,
       chainId,
-      rpc
+      rpc,
+      readProvider
     );
     return contractAbstractionComposer(abs, this.context);
   }

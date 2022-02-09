@@ -6,6 +6,7 @@ import {
   ScriptResponse,
 } from '@taquito/rpc';
 import { ChainIds, DefaultLambdaAddresses } from '../constants';
+import { TzReadProvider } from '../read-provider/interface';
 import { Wallet } from '../wallet';
 import { ContractMethodFactory } from './contract-methods/contract-method-factory';
 import { ContractMethod } from './contract-methods/contract-method-flat-param';
@@ -150,12 +151,13 @@ export class ContractAbstraction<T extends ContractProvider | Wallet,
 
   constructor(
     public readonly address: string,
-    public readonly script: ScriptResponse,
+    public readonly script: { code: ScriptResponse['code'] },
     provider: T,
     private storageProvider: StorageProvider,
     public readonly entrypoints: EntrypointsResponse,
     private chainId: string,
-    rpc: RpcClientInterface
+    rpc: RpcClientInterface,
+    private readProvider: TzReadProvider
   ) {
     this.contractMethodFactory = new ContractMethodFactory(provider, address);
     this.schema = Schema.fromRPCResponse({ script: this.script });
@@ -163,7 +165,7 @@ export class ContractAbstraction<T extends ContractProvider | Wallet,
 
     this.viewSchema = ViewSchema.fromRPCResponse({ script: this.script });
     if (this.viewSchema.length !== 0) {
-      this._initializeOnChainViews(this, rpc, this.viewSchema);
+      this._initializeOnChainViews(this, rpc, this.readProvider, this.viewSchema);
     }
     this._initializeMethods(this, provider, this.entrypoints.entrypoints, this.chainId);
   }
@@ -278,18 +280,18 @@ export class ContractAbstraction<T extends ContractProvider | Wallet,
   private _initializeOnChainViews(
     currentContract: ContractAbstraction<T>,
     rpc: RpcClientInterface,
+    readProvider: TzReadProvider,
     allContractViews: ViewSchema[]
   ) {
     const storageType = this.schema.val;
-    const storageValue = this.script.storage;
 
     allContractViews.forEach((viewSchema) => {
       (this.contractViews as DefaultContractViews)[viewSchema.viewName] = function (args: any) {
         return currentContract.contractMethodFactory.createContractViewObjectParam(
           rpc,
+          readProvider,
           viewSchema,
           storageType,
-          storageValue,
           args
         );
       };

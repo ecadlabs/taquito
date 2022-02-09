@@ -68,7 +68,7 @@ export class Schema {
   // TODO: Should we deprecate this?
   private bigMap?: BigMapToken;
 
-  static fromRPCResponse(val: { script: ScriptResponse }) {
+  static fromRPCResponse(val: { script: { code: ScriptResponse['code'] } }) {
     const storage: Falsy<MichelsonV1ExpressionExtended> =
       val &&
       val.script &&
