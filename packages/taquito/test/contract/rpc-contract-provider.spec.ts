@@ -42,7 +42,6 @@ import { ContractMethodObject } from '../../src/contract/contract-methods/contra
 describe('RpcContractProvider test', () => {
   let rpcContractProvider: RpcContractProvider;
   let mockRpcClient: {
-    // deepcode ignore no-any: any is good enough
     getScript: jest.Mock<any, any>;
     getNormalizedScript: jest.Mock<any, any>;
     getStorage: jest.Mock<any, any>;
@@ -60,17 +59,16 @@ describe('RpcContractProvider test', () => {
     preapplyOperations: jest.Mock<any, any>;
     getChainId: jest.Mock<any, any>;
     getSaplingDiffById: jest.Mock<any, any>;
+    getProtocols: jest.Mock<any, any>;
   };
 
   let mockSigner: {
-    // deepcode ignore no-any: any is good enough
     publicKeyHash: jest.Mock<any, any>;
     publicKey: jest.Mock<any, any>;
     sign: jest.Mock<any, any>;
   };
 
   let mockEstimate: {
-    // deepcode ignore no-any: any is good enough
     originate: jest.Mock<any, any>;
     transfer: jest.Mock<any, any>;
     setDelegate: jest.Mock<any, any>;
@@ -109,6 +107,7 @@ describe('RpcContractProvider test', () => {
       preapplyOperations: jest.fn(),
       getChainId: jest.fn(),
       getSaplingDiffById: jest.fn(),
+      getProtocols: jest.fn(),
     };
 
     mockSigner = {
@@ -136,7 +135,6 @@ describe('RpcContractProvider test', () => {
     });
 
     rpcContractProvider = new RpcContractProvider(
-      // deepcode ignore no-any: any is good enough
       new Context(mockRpcClient as any, mockSigner as any),
       mockEstimate as any
     );
@@ -147,7 +145,7 @@ describe('RpcContractProvider test', () => {
     });
     mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
     mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
-    mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
+    mockRpcClient.getProtocols.mockResolvedValue({ next_protocol: 'test_proto' });
     mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
     mockSigner.publicKey.mockResolvedValue('test_pub_key');
     mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
@@ -155,7 +153,9 @@ describe('RpcContractProvider test', () => {
       packed: '747a325542477245424b7a7a5736686a586a78786951464a4e6736575232626d3647454e',
     });
     mockRpcClient.preapplyOperations.mockResolvedValue([]);
-    mockRpcClient.injectOperation.mockResolvedValue('oo6JPEAy8VuMRGaFuMmLNFFGdJgiaKfnmT1CpHJfKP3Ye5ZahiP')
+    mockRpcClient.injectOperation.mockResolvedValue(
+      'oo6JPEAy8VuMRGaFuMmLNFFGdJgiaKfnmT1CpHJfKP3Ye5ZahiP'
+    );
     mockRpcClient.getChainId.mockResolvedValue('chain-id');
     const estimateReveal = new Estimate(1000000, 0, 64, 250);
     mockEstimate.reveal.mockResolvedValue(estimateReveal);
@@ -163,8 +163,10 @@ describe('RpcContractProvider test', () => {
 
   describe('getStorage', () => {
     it('should call getStorage', async (done) => {
-      mockRpcClient.getNormalizedScript.mockResolvedValue({ code: [sample] });
-      mockRpcClient.getStorage.mockResolvedValue(sampleStorage);
+      mockRpcClient.getNormalizedScript.mockResolvedValue({
+        code: [sample],
+        storage: sampleStorage,
+      });
       const result = await rpcContractProvider.getStorage('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D');
       expect(result).toEqual({
         '0': {},
@@ -193,7 +195,9 @@ describe('RpcContractProvider test', () => {
           })
         ),
       });
-      expect(mockRpcClient.getBigMapKey.mock.calls[0][0]).toEqual('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D');
+      expect(mockRpcClient.getBigMapKey.mock.calls[0][0]).toEqual(
+        'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D'
+      );
       expect(mockRpcClient.getBigMapKey.mock.calls[0][1]).toEqual({
         key: { bytes: '000035e993d8c7aaa42b5e3ccd86a33390ececc73abd' },
         type: { prim: 'bytes' },
@@ -230,7 +234,7 @@ describe('RpcContractProvider test', () => {
       expect(mockRpcClient.getBigMapExpr.mock.calls[0][1]).toEqual(
         'expruc6BZL8Lz2pipLAwGEqGwUjbdMzbVikNvD589fhVf4tKSG58ic'
       );
-      expect(mockRpcClient.getBigMapExpr.mock.calls[0][2]).toBeUndefined();
+      expect(mockRpcClient.getBigMapExpr.mock.calls[0][2]).toEqual({ block: 'head' });
       done();
     });
 
@@ -271,7 +275,7 @@ describe('RpcContractProvider test', () => {
 
   describe('getBigMapKeysByID', () => {
     it('should call getBigMapKeysByID', async (done) => {
-      mockRpcClient.getBlock.mockResolvedValue({ header: { level: 123456 } });
+      mockRpcClient.getBlockHeader.mockResolvedValue({ level: 123456 });
       mockRpcClient.packData.mockResolvedValueOnce({
         packed: '050a00000016000035e993d8c7aaa42b5e3ccd86a33390ececc73abd',
       });
@@ -414,7 +418,7 @@ describe('RpcContractProvider test', () => {
     });
 
     it('getBigMapKeysByID should set value to undefined for key that does not exist', async (done) => {
-      mockRpcClient.getBlock.mockResolvedValue({ header: { level: 123456 } });
+      mockRpcClient.getBlockHeader.mockResolvedValue({ level: 123456 });
       mockRpcClient.packData.mockResolvedValueOnce({
         packed: '050a00000016000035e993d8c7aaa42b5e3ccd86a33390ececc73abd',
       });
@@ -725,7 +729,7 @@ describe('RpcContractProvider test', () => {
 
   describe('originate', () => {
     it('should produce a reveal and origination operation', async (done) => {
-      mockRpcClient.getBlockMetadata.mockResolvedValue({
+      mockRpcClient.getProtocols.mockResolvedValue({
         next_protocol: 'PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo',
       });
       mockRpcClient.getManagerKey.mockResolvedValue(null);
@@ -769,7 +773,7 @@ describe('RpcContractProvider test', () => {
     });
 
     it('should not convert balance to mutez when mutez flag is set to true', async (done) => {
-      mockRpcClient.getBlockMetadata.mockResolvedValue({
+      mockRpcClient.getProtocols.mockResolvedValue({
         next_protocol: 'PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo',
       });
       const result = await rpcContractProvider.originate({
@@ -813,7 +817,7 @@ describe('RpcContractProvider test', () => {
     });
 
     it('estimate when no fees are specified', async (done) => {
-      mockRpcClient.getBlockMetadata.mockResolvedValue({
+      mockRpcClient.getProtocols.mockResolvedValue({
         next_protocol: 'PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo',
       });
       const estimate = new Estimate(1000, 1000, 180, 1000);
@@ -1449,7 +1453,7 @@ describe('RpcContractProvider test', () => {
       expect(result.nullifiers).toEqual([]);
 
       expect(mockRpcClient.getSaplingDiffById.mock.calls[0][0]).toEqual('133');
-      expect(mockRpcClient.getSaplingDiffById.mock.calls[0][1]).toBeUndefined(); // no block specified
+      expect(mockRpcClient.getSaplingDiffById.mock.calls[0][1]).toEqual({ block: 'head' }); // no block specified
       done();
     });
 

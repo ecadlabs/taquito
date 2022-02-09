@@ -1,6 +1,6 @@
 import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import { BigMapKeyType, MichelsonMap, MichelsonMapKey, Schema } from '@taquito/michelson-encoder';
-import { OpKind, ScriptResponse } from '@taquito/rpc';
+import { MichelsonV1Expression, OpKind, ScriptResponse } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { OperationBatch } from '../batch/rpc-batch-provider';
 import { Context } from '../context';
@@ -34,12 +34,12 @@ import {
   createTransferOperation,
 } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
-import { 
+import {
   validateAddress,
   validateContractAddress,
   InvalidContractAddressError,
-  InvalidAddressError, 
-  ValidationResult 
+  InvalidAddressError,
+  ValidationResult,
 } from '@taquito/utils';
 export class RpcContractProvider
   extends OperationEmitter
@@ -63,8 +63,9 @@ export class RpcContractProvider
     if (validateContractAddress(contract) !== ValidationResult.VALID) {
       throw new InvalidContractAddressError(`Invalid contract address: ${contract}`);
     }
+    const script = await this.context.readProvider.getScript(contract, 'head');
     if (!schema) {
-      schema = await this.rpc.getNormalizedScript(contract);
+      schema = script;
     }
 
     let contractSchema: Schema;
@@ -74,9 +75,7 @@ export class RpcContractProvider
       contractSchema = Schema.fromRPCResponse({ script: schema as ScriptResponse });
     }
 
-    const storage = await this.rpc.getStorage(contract);
-
-    return contractSchema.Execute(storage, smartContractAbstractionSemantic(this)) as T; // Cast into T because only the caller can know the true type of the storage
+    return contractSchema.Execute(script.storage, smartContractAbstractionSemantic(this)) as T; // Cast into T because only the caller can know the true type of the storage
   }
 
   /**
@@ -136,8 +135,14 @@ export class RpcContractProvider
     const encodedExpr = encodeExpr(packed);
 
     const bigMapValue = block
-      ? await this.context.rpc.getBigMapExpr(id.toString(), encodedExpr, { block: String(block) })
-      : await this.context.rpc.getBigMapExpr(id.toString(), encodedExpr);
+      ? await this.context.readProvider.getBigMapValue(
+          { id: id.toString(), expr: encodedExpr },
+          block
+        )
+      : await this.context.readProvider.getBigMapValue(
+          { id: id.toString(), expr: encodedExpr },
+          'head'
+        );
 
     return schema.ExecuteOnBigMapValue(bigMapValue, smartContractAbstractionSemantic(this)) as T;
   }
@@ -190,7 +195,7 @@ export class RpcContractProvider
   private async getBlockForRequest(keys: Array<BigMapKeyType>, block?: number) {
     return keys.length === 1 || typeof block !== 'undefined'
       ? block
-      : (await this.rpc.getBlock())?.header.level;
+      : await this.context.readProvider.getBlockLevel('head');
   }
 
   private async getBigMapValueOrUndefined<T>(
@@ -220,8 +225,8 @@ export class RpcContractProvider
    */
   async getSaplingDiffByID(id: string, block?: number) {
     const saplingState = block
-      ? await this.context.rpc.getSaplingDiffById(id.toString(), { block: String(block) })
-      : await this.context.rpc.getSaplingDiffById(id.toString());
+      ? await this.context.readProvider.getSaplingDiffById({ id: id.toString() }, block)
+      : await this.context.readProvider.getSaplingDiffById({ id: id.toString() }, 'head');
     return saplingState;
   }
 
@@ -250,7 +255,9 @@ export class RpcContractProvider
    *
    * @param OriginationOperation Originate operation parameter
    */
-  async originate<TContract extends DefaultContractType = DefaultContractType>(params: OriginateParams<ContractStorageType<TContract>>) {
+  async originate<TContract extends DefaultContractType = DefaultContractType>(
+    params: OriginateParams<ContractStorageType<TContract>>
+  ) {
     const estimate = await this.estimate(params, this.estimator.originate.bind(this.estimator));
 
     const publicKeyHash = await this.signer.publicKeyHash();
@@ -267,7 +274,14 @@ export class RpcContractProvider
     });
     const forgedOrigination = await this.forge(preparedOrigination);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(forgedOrigination);
-    return new OriginationOperation<TContract>(hash, operation, forgedBytes, opResponse, context, this);
+    return new OriginationOperation<TContract>(
+      hash,
+      operation,
+      forgedBytes,
+      opResponse,
+      context,
+      this
+    );
   }
 
   /**
@@ -279,7 +293,7 @@ export class RpcContractProvider
    * @param SetDelegate operation parameter
    */
   async setDelegate(params: DelegateParams) {
-    if ( params.source && validateAddress(params.source) !== ValidationResult.VALID) {
+    if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
       throw new InvalidAddressError(`Invalid source Address: ${params.source}`);
     }
     if (params.delegate && validateAddress(params.delegate) !== ValidationResult.VALID) {
@@ -347,7 +361,9 @@ export class RpcContractProvider
       throw new InvalidAddressError(`Invalid address passed in 'to' parameter: ${params.to}`);
     }
     if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid address passed in 'source' parameter: ${params.source}`);
+      throw new InvalidAddressError(
+        `Invalid address passed in 'source' parameter: ${params.source}`
+      );
     }
 
     const publickKeyHash = await this.signer.publicKeyHash();
@@ -433,11 +449,20 @@ export class RpcContractProvider
       throw new InvalidContractAddressError(`Invalid contract address: ${address}`);
     }
     const rpc = this.context.withExtensions().rpc;
-    const script = await rpc.getNormalizedScript(address);
-    const entrypoints = await rpc.getEntrypoints(address);
-    const blockHeader = await this.rpc.getBlockHeader();
-    const chainId = blockHeader.chain_id;
-    const abs = new ContractAbstraction(address, script, this, this, entrypoints, chainId, rpc);
+    const readProvider = this.context.withExtensions().readProvider;
+    const script = await readProvider.getScript(address, 'head');
+    const entrypoints = await readProvider.getEntrypoints(address);
+    const chainId = await this.context.readProvider.getChainId();
+    const abs = new ContractAbstraction(
+      address,
+      script,
+      this,
+      this,
+      entrypoints,
+      chainId,
+      rpc,
+      readProvider
+    );
     return contractAbstractionComposer(abs, this.context);
   }
 

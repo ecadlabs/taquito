@@ -18,6 +18,9 @@ describe('Tzip12 contract abstraction test', () => {
   let mockRpcContractProvider: {
     getBigMapKeyByID: jest.Mock<any, any>;
   };
+  let mockReadProvider: {
+    getStorage: jest.Mock<any, any>;
+  };
 
   beforeEach(() => {
     mockMetadataProvider = {
@@ -36,26 +39,26 @@ describe('Tzip12 contract abstraction test', () => {
     mockRpcContractProvider = {
       getBigMapKeyByID: jest.fn(),
     };
+    mockReadProvider = {
+      getStorage: jest.fn(),
+    };
     mockContractAbstraction.address = 'test';
     mockContractAbstraction['schema'] = mockSchema;
-    mockContractAbstraction['script'] = {
-      script: {
-        code: [],
-        storage: {
-          prim: 'Pair',
-          args: [
-            {
-              int: '20350',
-            },
-            [],
-          ],
+    mockReadProvider.getStorage.mockResolvedValue({
+      prim: 'Pair',
+      args: [
+        {
+          int: '20350',
         },
-      },
-    };
+        [],
+      ],
+    });
+
+    mockContext['metadataProvider'] = mockMetadataProvider;
+    mockContext['readProvider'] = mockReadProvider;
+    mockContext['contract'] = mockRpcContractProvider;
     tzip12Abs = new Tzip12ContractAbstraction(mockContractAbstraction, mockContext);
     tzip12Abs['_tzip16ContractAbstraction'] = mockTzip16ContractAbstraction;
-    mockContext['metadataProvider'] = mockMetadataProvider;
-    mockContext['contract'] = mockRpcContractProvider;
   });
 
   it('Test 1 for getContractMetadata(): Should return the `Tzip-016` contract metadata', async (done) => {
