@@ -2,7 +2,7 @@ import { EntrypointsResponse, MichelsonV1Expression, SaplingDiffResponse } from 
 import BigNumber from 'bignumber.js';
 
 export type BigMapQuery = {
-  id: string, 
+  id: string,
   expr: string
 }
 
@@ -49,13 +49,13 @@ export interface TzReadProvider {
     cost_per_byte: BigNumber;
   }>;
 
-  /**
-   * @description Access the code of a smart contract
-   * @param contract contract address from which we want to retrieve the code
-   * @returns an object with a property code that represents the smart contract code.
-   * The code must be in the JSON format and not contain global constant
-   */
-  getContractCode(contract: string): Promise<{ code: MichelsonV1Expression[] }>;
+ /**
+  * @description Access the script (code and storage) of a smart contract
+  * @param contract contract address from which we want to retrieve the script
+  * @param block from which we want to retrieve the storage value
+  * @returns Note: The code must be in the JSON format and not contain global constant
+  */
+  getScript(contract: string, block: BlockIdentifier): Promise<{ code: MichelsonV1Expression[] }>;
 
   /**
    * @description Access the storage of a contract
@@ -64,11 +64,11 @@ export interface TzReadProvider {
    */
   getStorage(contract: string, block: BlockIdentifier): Promise<MichelsonV1Expression>;
 
-/**
- * @description Access the storage Michelson type of a contract and its value
- * @param contract contract address from which we want to retrieve the storage
- * @param block from which we want to retrieve the storage value
- */
+  /**
+   * @description Access the storage Michelson type of a contract and its value
+   * @param contract contract address from which we want to retrieve the storage
+   * @param block from which we want to retrieve the storage value
+   */
   getStorageTypeAndValue(contract: string, block: BlockIdentifier): Promise<{
     storageType: MichelsonV1Expression,
     storageValue: MichelsonV1Expression

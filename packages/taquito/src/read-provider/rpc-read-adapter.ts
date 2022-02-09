@@ -1,4 +1,4 @@
-import { EntrypointsResponse, MichelsonV1Expression, MichelsonV1ExpressionExtended, SaplingDiffResponse } from "@taquito/rpc";
+import { EntrypointsResponse, MichelsonV1Expression, MichelsonV1ExpressionExtended, SaplingDiffResponse, ScriptedContracts } from "@taquito/rpc";
 import BigNumber from 'bignumber.js';
 import { Context } from "../context";
 import { BigMapQuery, BlockIdentifier, SaplingStateQuery, TzReadProvider } from "./interface";
@@ -62,14 +62,13 @@ export class RpcReadAdapter implements TzReadProvider {
     }
 
     /**
-     * @description Access the code of a smart contract
-     * @param contract contract address from which we want to retrieve the code
-     * @returns an object with a property code that represents the smart contract code.
-     * The code must be in the JSON format and not contain global constant
+     * @description Access the script (code and storage) of a smart contract
+     * @param contract contract address from which we want to retrieve the script
+     * @param block from which we want to retrieve the storage value
+     * @returns Note: The code must be in the JSON format and not contain global constant
      */
-    async getContractCode(contract: string): Promise<{ code: MichelsonV1Expression[] }> {
-        const { code } = await this.context.rpc.getNormalizedScript(contract);
-        return { code };
+    async getScript(contract: string, block: BlockIdentifier): Promise<ScriptedContracts> {
+        return this.context.rpc.getNormalizedScript(contract, { unparsing_mode: 'Readable' }, { block: String(block) });
     }
 
     /**

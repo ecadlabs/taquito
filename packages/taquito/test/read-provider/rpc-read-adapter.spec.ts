@@ -222,21 +222,23 @@ describe('RpcReadAdapter test', () => {
             done();
         });
 
+        it(`should get the code of a smart contract given its address: ${block}`, async done => {
+            mockRpcClient.getNormalizedScript.mockResolvedValue({
+                "code": contractCodeSample,
+                "storage": contractStorage
+            });
+    
+            const result = await readProvider.getScript('KT1NcdpzokZQY4sLmCBUwLnMHQCCQ6rRXYwS', block);
+            expect(result).toEqual({
+                code: contractCodeSample,
+                storage: contractStorage
+            });
+    
+            expect(mockRpcClient.getNormalizedScript.mock.calls[0][0]).toEqual('KT1NcdpzokZQY4sLmCBUwLnMHQCCQ6rRXYwS');
+            done();
+        });
+
     })
-    it(`should get the code of a smart contract given its address`, async done => {
-        mockRpcClient.getNormalizedScript.mockResolvedValue({
-            "code": contractCodeSample,
-            "storage": contractStorage
-        });
-
-        const result = await readProvider.getContractCode('KT1NcdpzokZQY4sLmCBUwLnMHQCCQ6rRXYwS');
-        expect(result).toEqual({
-            code: contractCodeSample
-        });
-
-        expect(mockRpcClient.getNormalizedScript.mock.calls[0][0]).toEqual('KT1NcdpzokZQY4sLmCBUwLnMHQCCQ6rRXYwS');
-        done();
-    });
 
     it(`should get the chain id`, async done => {
         mockRpcClient.getChainId.mockResolvedValue('NetXdQprcVkpaWU');
