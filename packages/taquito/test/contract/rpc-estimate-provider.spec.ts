@@ -38,6 +38,7 @@ describe('RPCEstimateProvider test', () => {
     preapplyOperations: jest.Mock<any, any>;
     getChainId: jest.Mock<any, any>;
     getConstants: jest.Mock<any, any>;
+    getProtocols: jest.Mock<any, any>;
   };
 
   let mockSigner: {
@@ -62,6 +63,7 @@ describe('RPCEstimateProvider test', () => {
       preapplyOperations: jest.fn(),
       getChainId: jest.fn(),
       getConstants: jest.fn(),
+      getProtocols: jest.fn(),
     };
 
     mockSigner = {
@@ -83,6 +85,7 @@ describe('RPCEstimateProvider test', () => {
     mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
     mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
     mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
+    mockRpcClient.getProtocols.mockResolvedValue({ next_protocol: 'test_proto' });
     mockRpcClient.forgeOperations.mockResolvedValue('1234');
     mockRpcClient.preapplyOperations.mockResolvedValue([]);
     mockRpcClient.getChainId.mockResolvedValue('chain-id');
@@ -524,10 +527,11 @@ describe('RPCEstimateProvider test', () => {
         { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 },
         { kind: OpKind.TRANSACTION, to: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp', amount: 2 },
         {
-          kind: OpKind.REGISTER_GLOBAL_CONSTANT, value: {
+          kind: OpKind.REGISTER_GLOBAL_CONSTANT,
+          value: {
             prim: 'Pair',
-            args: [{ int: '998' }, { int: '999' }]
-          }
+            args: [{ int: '998' }, { int: '999' }],
+          },
         },
       ]);
       expect(estimate.length).toEqual(3);
@@ -589,10 +593,11 @@ describe('RPCEstimateProvider test', () => {
       });
       const estimate = await estimateProvider.batch([
         {
-          kind: OpKind.REGISTER_GLOBAL_CONSTANT, value: {
+          kind: OpKind.REGISTER_GLOBAL_CONSTANT,
+          value: {
             prim: 'Pair',
-            args: [{ int: '998' }, { int: '999' }]
-          }
+            args: [{ int: '998' }, { int: '999' }],
+          },
         },
         { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 },
         { kind: OpKind.TRANSACTION, to: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp', amount: 2 },
@@ -609,8 +614,8 @@ describe('RPCEstimateProvider test', () => {
         storageLimit: 73,
         suggestedFeeMutez: 408,
       });
-      expect(estimate[2].suggestedFeeMutez).toEqual(385)
-      expect(estimate[3].suggestedFeeMutez).toEqual(385)
+      expect(estimate[2].suggestedFeeMutez).toEqual(385);
+      expect(estimate[3].suggestedFeeMutez).toEqual(385);
       expect(estimate[2]).toMatchObject({
         gasLimit: 1100,
         storageLimit: 0,
@@ -736,9 +741,9 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClient.runOperation.mockResolvedValue(registerGlobalConstantNoReveal);
       const estimate = await estimateProvider.registerGlobalConstant({
         value: {
-          "prim": "Pair",
-          "args": [{ "int": "998" }, { "int": "999" }]
-        }
+          prim: 'Pair',
+          args: [{ int: '998' }, { int: '999' }],
+        },
       });
       expect(estimate).toMatchObject({
         gasLimit: 1330,
@@ -753,9 +758,9 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClient.runOperation.mockResolvedValue(registerGlobalConstantWithReveal);
       const estimate = await estimateProvider.registerGlobalConstant({
         value: {
-          "prim": "Pair",
-          "args": [{ "int": "998" }, { "int": "999" }]
-        }
+          prim: 'Pair',
+          args: [{ int: '998' }, { int: '999' }],
+        },
       });
       expect(estimate).toMatchObject({
         gasLimit: 1330,
@@ -770,8 +775,8 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('1100'));
       await estimateProvider.registerGlobalConstant({
         value: {
-          "prim": "Pair",
-          "args": [{ "int": "998" }, { "int": "999" }]
+          prim: 'Pair',
+          args: [{ int: '998' }, { int: '999' }],
         },
         storageLimit: 200,
       });
@@ -796,8 +801,8 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('10000000000'));
       await estimateProvider.registerGlobalConstant({
         value: {
-          "prim": "Pair",
-          "args": [{ "int": "998" }, { "int": "999" }]
+          prim: 'Pair',
+          args: [{ int: '998' }, { int: '999' }],
         },
         gasLimit: 200,
       });
@@ -822,8 +827,8 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('10000000000'));
       await estimateProvider.registerGlobalConstant({
         value: {
-          "prim": "Pair",
-          "args": [{ "int": "998" }, { "int": "999" }]
+          prim: 'Pair',
+          args: [{ int: '998' }, { int: '999' }],
         },
         fee: 10000,
       });
@@ -846,16 +851,18 @@ describe('RPCEstimateProvider test', () => {
     it('should return parsed error from RPC result', async (done) => {
       mockRpcClient.runOperation.mockResolvedValue(registerGlobalConstantWithError);
 
-      await expect(estimateProvider.registerGlobalConstant({
-        value: {
-          "prim": "Pair",
-          "args": [{ "int": "998" }, { "int": "999" }]
-        }
-      })).rejects.toMatchObject({
-        errors:
-          [{
+      await expect(
+        estimateProvider.registerGlobalConstant({
+          value: {
+            prim: 'Pair',
+            args: [{ int: '998' }, { int: '999' }],
+          },
+        })
+      ).rejects.toMatchObject({
+        errors: [
+          {
             kind: 'branch',
-            id: 'proto.011-PtHangzH.Expression_already_registered'
+            id: 'proto.011-PtHangzH.Expression_already_registered',
           },
           {
             kind: 'permanent',
@@ -863,13 +870,14 @@ describe('RPCEstimateProvider test', () => {
             existing_key: [
               'global_constant',
               'f4b54fa94f3255df3ab6a95d0112964d825642706d42de848b3c507ff4602c4a',
-              'len'
-            ]
-          }],
+              'len',
+            ],
+          },
+        ],
         name: 'TezosOperationError',
         id: 'proto.011-PtHangzH.context.storage_error',
         kind: 'permanent',
-        message: '(permanent) proto.011-PtHangzH.context.storage_error'
+        message: '(permanent) proto.011-PtHangzH.context.storage_error',
       });
       done();
     });
