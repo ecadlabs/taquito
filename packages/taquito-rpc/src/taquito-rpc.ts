@@ -41,6 +41,7 @@ import {
   PreapplyParams,
   PreapplyResponse,
   ProposalsResponse,
+  ProtocolsResponse,
   RawBlockHeaderResponse,
   RPCRunCodeParam,
   RPCRunOperationParam,
@@ -53,13 +54,12 @@ import {
   VotingPeriodBlockResult,
 } from './types';
 import { castToBigNumber } from './utils/utils';
-import { 
-  InvalidAddressError, 
-  validateAddress, 
-  validateContractAddress, 
-  ValidationResult 
-} from '@taquito/utils'
-
+import {
+  InvalidAddressError,
+  validateAddress,
+  validateContractAddress,
+  ValidationResult,
+} from '@taquito/utils';
 
 export { castToBigNumber } from './utils/utils';
 
@@ -104,13 +104,13 @@ export class RpcClient implements RpcClientInterface {
 
   private validateAddress(address: string) {
     if (validateAddress(address) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid address: ${address}`)
+      throw new InvalidAddressError(`Invalid address: ${address}`);
     }
   }
 
   private validateContract(address: string) {
     if (validateContractAddress(address) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid address: ${address}`)
+      throw new InvalidAddressError(`Invalid address: ${address}`);
     }
   }
 
@@ -951,6 +951,13 @@ export class RpcClient implements RpcClientInterface {
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/single_sapling_get_diff`
       ),
+      method: 'GET',
+    });
+  }
+
+  async getProtocols({ block }: { block: string } = defaultRPCOptions): Promise<ProtocolsResponse> {
+    return this.httpBackend.createRequest<ProtocolsResponse>({
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/protocols`),
       method: 'GET',
     });
   }

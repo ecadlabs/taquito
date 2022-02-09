@@ -64,7 +64,12 @@ export class InvalidViewParameterError extends Error {
 
 export class ViewSimulationError extends Error {
   name = 'ViewSimulationError';
-  constructor(public message: string, public originalError?: any) {
+  constructor(
+    public message: string,
+    public viewName: string,
+    public failWith?: MichelsonV1Expression,
+    public originalError?: any
+  ) {
     super(message);
   }
 }

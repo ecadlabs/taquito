@@ -14,6 +14,39 @@ describe('Configurations for the confirmation methods and streamer', () => {
         context = new Context(mockRpcClient);
     });
 
+    it('Context clone copies all known properties', () => {
+        const cloned = context.clone();
+
+        // Known properties
+        expect(cloned.rpc === context.rpc).toBeTruthy();
+        expect(cloned.signer === context.signer).toBeTruthy();
+        expect(cloned.proto === context.proto).toBeTruthy();
+        expect(cloned.config === context.config).toBeTruthy();
+        expect(cloned.forger === context.forger).toBeTruthy();
+        expect(cloned.injector === context.injector).toBeTruthy();
+        expect(cloned.packer === context.packer).toBeTruthy();
+        expect(cloned.walletProvider === context.walletProvider).toBeTruthy();
+        expect(cloned.parser === context.parser).toBeTruthy();
+        expect(cloned.globalConstantsProvider === context.globalConstantsProvider).toBeTruthy();
+    });
+
+    it('Context clone copies all getter properties', () => {
+        const cloned = context.clone();
+
+        // Check all getter properties (to catch missing properties that might be added in the future)
+        const getterKeys = Object.entries(Object.getOwnPropertyDescriptors(Object.getPrototypeOf(cloned)))
+            .filter(x => !!x[1].get).map(x=>x[0]);
+
+        for(const key of getterKeys){
+            const keyTyped = key as keyof typeof context;
+            try{
+                expect(cloned[keyTyped] === context[keyTyped]).toBeTruthy();
+            } catch {
+                throw new Error(`context.clone did not clone '${key}'`);
+            }
+        }
+    });
+
     it('Context is initialized with default config values except for the confirmationPollingIntervalSecond property', () => {
         expect(context.config.confirmationPollingIntervalSecond).toBeUndefined();
         expect(context.config.confirmationPollingTimeoutSecond).toEqual(180);
