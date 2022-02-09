@@ -4,8 +4,8 @@ import { Context } from "../context";
 import { BigMapQuery, BlockIdentifier, SaplingStateQuery, TzReadProvider } from "./interface";
 
 /**
-     * @description Converts calls from TzReadProvider into calls to the wrapped RpcClient in a format it can understand.
-     */
+ * @description Converts calls from TzReadProvider into calls to the wrapped RpcClient in a format it can understand.
+ */
 export class RpcReadAdapter implements TzReadProvider {
     constructor(private context: Context) { }
 
