@@ -21,7 +21,7 @@ import {
   prefix, 
   Prefix 
 } from '@taquito/utils';
-import {  BeaconWallet } from '@taquito/beacon-wallet';
+import { BeaconWallet } from '@taquito/beacon-wallet';
 import { InMemorySigner, importKey } from '@taquito/signer';
 import { LedgerSigner, DerivationType } from '@taquito/ledger-signer';
 import { TezBridgeWallet } from '@taquito/tezbridge-wallet';

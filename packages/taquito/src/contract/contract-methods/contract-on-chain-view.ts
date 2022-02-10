@@ -183,12 +183,17 @@ export class OnChainView {
             `The simulation of the on-chain view named ${
               this._smartContractViewSchema.viewName
             } failed with: ${JSON.stringify(failWith)}`,
+            this._smartContractViewSchema.viewName,
+            failWith,
             error
           )
         : error;
     }
     if (!storage.args) {
-      throw new ViewSimulationError(`View simulation failed with an invalid result: ${storage}`);
+      throw new ViewSimulationError(
+        `View simulation failed with an invalid result: ${storage}`,
+        this._smartContractViewSchema.viewName
+      );
     }
     return this._smartContractViewSchema.decodeViewResult(storage.args[0]);
   }

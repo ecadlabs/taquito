@@ -988,3 +988,8 @@ export type UnparsingModeEnum = 'Readable' | 'Optimized' | 'Optimized_legacy';
 export type UnparsingMode = {
   unparsing_mode: UnparsingModeEnum;
 };
+
+export type ProtocolsResponse = {
+  protocol: string;
+  next_protocol: string;
+};

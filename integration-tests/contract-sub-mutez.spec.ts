@@ -3,16 +3,15 @@ import { CONFIGS } from './config';
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const skipIthacanet = protocol === Protocols.PsiThaCa ? test.skip : test;
-  const skipHangzhounet = protocol === Protocols.PtHangz2 ? test.skip : test;
-  const skipHangzhouAndIthaca = protocol === Protocols.PtHangz2 || Protocols.PsiThaCa ? test.skip : test;
+  const ithacanet = protocol === Protocols.Psithaca2 ? test: test.skip;
+  const hangzhounet = protocol === Protocols.PtHangz2 ? test: test.skip;
 
   describe(`Test contract call with amount using: ${rpc}`, () => {
     beforeEach(async (done) => {
       await setup();
       done();
     });
-    skipIthacanet(
+    hangzhounet(
       'originate a contract on Hangzhou with SUB',
       async () => {
         const op = await Tezos.contract.originate({
@@ -35,7 +34,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       }
     );
 
-     skipIthacanet('fail to originate a contract on Hangzhou with SUB_MUTEZ', async () => {
+    hangzhounet('fail to originate a contract on Hangzhou with SUB_MUTEZ', async () => {
        try {
          await Tezos.contract.originate({
              code: `{ parameter (or (or (mutez %decrement) (mutez %increment)) (mutez %reset)) ;
@@ -52,7 +51,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
        }
      });
 
-     skipHangzhouAndIthaca(
+     ithacanet(
        'originate a contract on Ithaca with SUB MUTEZ',
        //restore to skipHangzhou when forger supports new sub_mutez for Ithaca
        async () => {
@@ -75,7 +74,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
        }
      );
 
-     skipHangzhounet('fail to originate a contract on Ithaca with SUB', async () => {
+     ithacanet('fail to originate a contract on Ithaca with SUB', async () => {
         try {
          await Tezos.contract.originate({
              code: `{ parameter (or (or (mutez %decrement) (mutez %increment)) (mutez %reset)) ;
@@ -88,7 +87,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
              init: `0`,
            });
        } catch (error: any) {
-         expect(error.message).toContain("(permanent) proto.012-PsiThaCa.michelson_v1.deprecated_instruction")
+         expect(error.message).toContain("(permanent) proto.012-Psithaca.michelson_v1.deprecated_instruction")
        }
      });
   });
