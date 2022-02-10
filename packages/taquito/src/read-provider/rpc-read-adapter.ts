@@ -81,23 +81,6 @@ export class RpcReadAdapter implements TzReadProvider {
     }
 
     /**
-     * @description Access the storage Michelson type of a contract and its value
-     * @param contract contract address from which we want to retrieve the storage
-     * @param block from which we want to retrieve the storage value
-     */
-    async getStorageTypeAndValue(contract: string, block: BlockIdentifier): Promise<{
-        storageType: MichelsonV1Expression,
-        storageValue: MichelsonV1Expression
-    }> {
-        const { code, storage } = await this.context.rpc.getNormalizedScript(contract, { unparsing_mode: 'Readable' }, { block: String(block) });
-        const storageType = (code.find((x: any) => x.prim === 'storage') as MichelsonV1ExpressionExtended);
-        if (!storageType || !Array.isArray(storageType.args)) {
-            throw new Error('Invalid contract code')
-        }
-        return { storageType: storageType.args[0], storageValue: storage }
-    }
-
-    /**
      * @description Access the block hash
      */
     async getBlockHash(block: BlockIdentifier): Promise<string> {

@@ -115,24 +115,6 @@ describe('RpcReadAdapter test', () => {
             done();
         });
 
-        it(`should get the storage type and value of a contract at block: ${block}`, async done => {
-            mockRpcClient.getNormalizedScript.mockResolvedValue({
-                "code": contractCodeSample,
-                "storage": contractStorage
-            });
-
-            const result = await readProvider.getStorageTypeAndValue('KT1NcdpzokZQY4sLmCBUwLnMHQCCQ6rRXYwS', block);
-            expect(result).toEqual({
-                storageType,
-                storageValue: contractStorage
-            });
-
-            expect(mockRpcClient.getNormalizedScript.mock.calls[0][0]).toEqual('KT1NcdpzokZQY4sLmCBUwLnMHQCCQ6rRXYwS');
-            expect(mockRpcClient.getNormalizedScript.mock.calls[0][1]).toEqual({ "unparsing_mode": "Readable" });
-            expect(mockRpcClient.getNormalizedScript.mock.calls[0][2]).toEqual({ "block": `${block}` });
-            done();
-        });
-
         it(`should get the block hash at block: ${block}`, async done => {
             mockRpcClient.getBlockHeader.mockResolvedValue(blockHeader);
 

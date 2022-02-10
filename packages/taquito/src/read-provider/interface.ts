@@ -65,16 +65,6 @@ export interface TzReadProvider {
   getStorage(contract: string, block: BlockIdentifier): Promise<MichelsonV1Expression>;
 
   /**
-   * @description Access the storage Michelson type of a contract and its value
-   * @param contract contract address from which we want to retrieve the storage
-   * @param block from which we want to retrieve the storage value
-   */
-  getStorageTypeAndValue(contract: string, block: BlockIdentifier): Promise<{
-    storageType: MichelsonV1Expression,
-    storageValue: MichelsonV1Expression
-  }>;
-
-  /**
    * @description Access the block hash
    */
   getBlockHash(block: BlockIdentifier): Promise<string>;

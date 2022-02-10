@@ -53,12 +53,6 @@ export class ReadWrapperContractsLibrary implements TzReadProvider {
   getStorage(contract: string, block: BlockIdentifier): Promise<MichelsonV1Expression> {
     return this.readProvider.getStorage(contract, block);
   }
-  getStorageTypeAndValue(
-    contract: string,
-    block: BlockIdentifier
-  ): Promise<{ storageType: MichelsonV1Expression; storageValue: MichelsonV1Expression }> {
-    return this.readProvider.getStorageTypeAndValue(contract, block);
-  }
   getBlockHash(block: BlockIdentifier): Promise<string> {
     return this.readProvider.getBlockHash(block);
   }
