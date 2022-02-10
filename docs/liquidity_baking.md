@@ -28,7 +28,7 @@ _Parameters_: no parameter, only the subsidy in tez is sent with the transaction
     - __tokensSold__: the amount of tzBTC to sell
     - __minXtzBought__: the minimum amount of XTZ expected to be received
     - __deadline__: the expiry time of the transaction
-- [__%xtzToToken__](https://gitlab.com/dexter2tz/dexter2tz/-/blob/liquidity_baking/dexter.liquidity_baking.mligo#L261): exchange XTZ for tzBTC  
+- [__%xtzToToken__](minXtzBought): exchange XTZ for tzBTC  
   _Parameters_:
     - __to__: the account address that will receive the tzBTC tokens
     - __minTokensBought__: the minimum amount of tzBTC expected to be received
