@@ -87,6 +87,21 @@ const hangzhounetEphemeral = {
   },
 };
 
+const mondaynetEphemeral = {
+  rpc: process.env['TEZOS_RPC_MONDAYNET'] || 'http://mondaynet.ecadinfra.com:8732',
+  knownBaker: 'tz1ck3EJwzFpbLVmXVuEn5Ptwzc6Aj14mHSH', 
+  knownContract: 'KT1Avz2xXFRdg9bDGVn1UNqhVWb475JXZvJY',
+  knownBigMapContract: 'KT1HeGq5CgZZC9smw4zrU8dnS7nufJF1ycYD', 
+  knownTzip1216Contract: 'KT1WMvHmJWZLMUwwrnncqQDkUSZAz8o51Gdw',
+  knownSaplingContract: '',
+  protocol: Protocols.ProtoALpha,
+  signerConfig: {
+    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
+    keyUrl: 'http://key-gen-1.i.tez.ie:3010/mondaynet',
+    requestHeaders: { Authorization: 'Bearer taquito' },
+  },
+};
+
 const ithacanetFaucet = {
   rpc: process.env['TEZOS_RPC_ITHACANET'] || 'https://ithacanet.ecadinfra.com/',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
@@ -171,6 +186,8 @@ if (process.env['RUN_WITH_FAUCET']) {
   providers.push(hangzhounetEphemeral);
 } else if (process.env['ITHACANET']) {
   providers.push(ithacanetEphemeral);
+} else if (process.env['MONDAYNET']) {
+  providers.push(mondaynetEphemeral);
 } else {
   providers.push(hangzhounetEphemeral, ithacanetEphemeral);
 }
