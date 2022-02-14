@@ -11,17 +11,15 @@ import {
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const skipIthacanet = protocol === Protocols.Psithaca2 ? test.skip : test;
-  const skipHangzhounet = protocol === Protocols.PtHangz2 ? test.skip : test;
-  const skipHangzhouAndIthaca =
-    protocol === Protocols.PtHangz2 || Protocols.Psithaca2 ? test.skip : test;
+  const ithacanet = protocol === Protocols.Psithaca2 ? test: test.skip;
+  const hangzhounet = protocol === Protocols.PtHangz2 ? test: test.skip;
 
   describe(`Test contract call with amount using: ${rpc}`, () => {
     beforeEach(async (done) => {
       await setup();
       done();
     });
-    skipIthacanet(
+    hangzhounet(
       'originates a contract on Hangzhou with SUB and sends base layer tokens when calling contract methods',
       async (done) => {
         const op = await Tezos.contract.originate({
@@ -48,7 +46,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       }
     );
 
-    skipIthacanet('fail to originate a contract on Hangzhou with SUB_MUTEZ', async () => {
+    hangzhounet('fail to originate a contract on Hangzhou with SUB_MUTEZ', async () => {
       try {
         await Tezos.contract.originate({
           balance: '0',
@@ -62,8 +60,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       }
     });
 
-    skipHangzhouAndIthaca(
-      //restore to skipHangzhou when forger supports new sub_mutez for Ithaca
+    ithacanet(
       'originates a contract on Ithaca with SUB MUTEZ and sends base layer tokens when calling contract methods',
       async (done) => {
         const op = await Tezos.contract.originate({
@@ -90,7 +87,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       }
     );
 
-    skipHangzhounet('fail to originate a contract on Ithaca with SUB', async () => {
+    ithacanet('fail to originate a contract on Ithaca with SUB', async () => {
       try {
         await Tezos.contract.originate({
           balance: '0',

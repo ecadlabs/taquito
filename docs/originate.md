@@ -40,7 +40,7 @@ importKey(Tezos, "p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1")
 ```
 
 </TabItem>
-  <TabItem value="walletAPI">
+  <TabItem value="walletAPI"> 
 
 ```
 import {  BeaconWallet } from '@taquito/beacon-wallet';

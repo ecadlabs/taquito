@@ -219,7 +219,6 @@ code { DUP ;
     const contractAddress = (await op.contract()).address;
     console.log('contractAddress', contractAddress);
     console.log('Storage', await contract.storage());
-    ;
   } catch (ex) {
     console.error(ex);
   }
