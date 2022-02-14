@@ -90,8 +90,8 @@ export default ({
   }, [button.current, target.current]);
 
   if (live) {
-    const customRpcClient = new CancellableRpcClient('https://hangzhounet.api.tez.ie') 
-    const Tezos = new TezosToolkit(customRpcClient);
+    // const customRpcClient = new CancellableRpcClient('https://hangzhounet.api.tez.ie') 
+    const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
 
     return (
       <Playground
