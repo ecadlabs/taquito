@@ -38,7 +38,6 @@ import rangeParser from 'parse-numeric-range';
 import Highlight, { defaultProps } from 'prism-react-renderer';
 import defaultTheme from 'prism-react-renderer/themes/palenight';
 import React, { useEffect, useRef, useState } from 'react';
-import { CancellableRpcClient } from './customHttpBackendAndRpcClient';
 
 import styles from './styles.module.css';
 
