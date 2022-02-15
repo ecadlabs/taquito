@@ -44,6 +44,77 @@ describe('Schema with a ticket of type nat inside a big map %tickets in storage'
                 }
             }
         });
+
+        expect(schema.generateSchema()).toEqual({
+            __michelsonType: 'pair',
+            schema: {
+                admin: {
+                    __michelsonType: 'address',
+                    schema: 'address'
+                },
+                current_id: {
+                    __michelsonType: 'nat',
+                    schema: 'nat'
+                },
+                tickets: {
+                    __michelsonType: "big_map",
+                    schema: {
+                        key: {
+                            __michelsonType: 'nat',
+                            schema: 'nat'
+                        },
+                        value: {
+                            __michelsonType: "ticket",
+                            schema: {
+                                amount: {
+                                    __michelsonType: 'int',
+                                    schema: 'int'
+                                },
+                                ticketer: {
+                                    __michelsonType: 'contract',
+                                    schema: 'contract'
+                                },
+                                value: {
+                                    __michelsonType: 'nat',
+                                    schema: 'nat'
+                                }
+                            }
+                        }
+                    }
+                },
+                token_metadata: {
+                    __michelsonType: "big_map",
+                    schema: {
+                        key: {
+                            __michelsonType: 'nat',
+                            schema: 'nat'
+                        },
+                        value: {
+                            __michelsonType: 'pair',
+                            schema: {
+                                '0': {
+                                    __michelsonType: 'nat',
+                                    schema: 'nat'
+                                },
+                                '1': {
+                                    __michelsonType: 'map',
+                                    schema: {
+                                        key: {
+                                            __michelsonType: 'string',
+                                            schema: 'string'
+                                        },
+                                        value: {
+                                            __michelsonType: 'bytes',
+                                            schema: 'bytes'
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                    }
+                }
+            }
+        });
     });
 
     it('Should parse big map value properly', () => {
@@ -51,7 +122,7 @@ describe('Schema with a ticket of type nat inside a big map %tickets in storage'
             prim: 'big_map',
             args: [{ prim: 'nat' }, { prim: 'ticket', args: [{ prim: 'nat' }] }],
             annots: ['%tickets']
-          });
+        });
         const value = schema.ExecuteOnBigMapValue(bigMapValue);
         expect(value).toEqual({
             ticketer: 'KT1EAMUQC1yJ2sRPNPpLHVMGCzroYGe1C1ea',

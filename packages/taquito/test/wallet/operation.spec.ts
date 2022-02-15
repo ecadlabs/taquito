@@ -25,10 +25,10 @@ describe('WalletOperation', () => {
     it('Should emit confirmation after receiving seeing operation in block', async done => {
       const { cold, flush, getMessages, e, s } = rxSandbox.create();
       const blockObs = cold<BlockResponse>('--a', {
-        a: createFakeBlock(1, 'test_hash'),
+        a: createFakeBlock(1, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj'),
       });
 
-      const op = new WalletOperation('test_hash', new Context('url'), blockObs);
+      const op = new WalletOperation('ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj', new Context('url'), blockObs);
 
       const messages = getMessages(op.confirmationObservable(1));
 
@@ -36,7 +36,7 @@ describe('WalletOperation', () => {
 
       const expected = e('--(a|)', {
         a: expect.objectContaining({
-          block: createFakeBlock(1, 'test_hash'),
+          block: createFakeBlock(1, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj'),
           expectedConfirmation: 1,
           currentConfirmation: 1,
           completed: true,
@@ -52,10 +52,10 @@ describe('WalletOperation', () => {
     it('given 2 confirmation it should emit confirmation with complete false after seeing operation in a block', async done => {
       const { cold, flush, getMessages, e, s } = rxSandbox.create();
       const blockObs = cold<BlockResponse>('--a', {
-        a: createFakeBlock(1, 'test_hash'),
+        a: createFakeBlock(1, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj'),
       });
 
-      const op = new WalletOperation('test_hash', new Context('url'), blockObs);
+      const op = new WalletOperation('ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj', new Context('url'), blockObs);
 
       const messages = getMessages(op.confirmationObservable(2));
 
@@ -63,7 +63,7 @@ describe('WalletOperation', () => {
 
       const expected = e('--a', {
         a: expect.objectContaining({
-          block: createFakeBlock(1, 'test_hash'),
+          block: createFakeBlock(1, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj'),
           expectedConfirmation: 2,
           currentConfirmation: 1,
           completed: false,
@@ -79,11 +79,11 @@ describe('WalletOperation', () => {
     it('Should emit 2 confirmation given the operation is included in the first block and a new head is applied on top', async done => {
       const { cold, flush, getMessages, e, s } = rxSandbox.create();
       const blockObs = cold<BlockResponse>('--a--b', {
-        a: createFakeBlock(1, 'test_hash'),
+        a: createFakeBlock(1, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj'),
         b: createFakeBlock(2),
       });
 
-      const op = new WalletOperation('test_hash', new Context('url'), blockObs);
+      const op = new WalletOperation('ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj', new Context('url'), blockObs);
 
       const messages = getMessages(op.confirmationObservable(2));
 
@@ -91,7 +91,7 @@ describe('WalletOperation', () => {
 
       const expected = e('--a--(b|)', {
         a: expect.objectContaining({
-          block: createFakeBlock(1, 'test_hash'),
+          block: createFakeBlock(1, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj'),
           expectedConfirmation: 2,
           currentConfirmation: 1,
           completed: false,
@@ -115,10 +115,10 @@ describe('WalletOperation', () => {
     it('should return a receipt after the operation is included in a block', async done => {
       const { cold, flush } = rxSandbox.create();
       const blockObs = cold<BlockResponse>('--a', {
-        a: createFakeBlock(1, 'test_hash'),
+        a: createFakeBlock(1, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj'),
       });
 
-      const op = new WalletOperation('test_hash', new Context('url'), blockObs);
+      const op = new WalletOperation('ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj', new Context('url'), blockObs);
 
       flush();
       const receipt = await op.receipt();
@@ -141,10 +141,10 @@ describe('WalletOperation', () => {
     it('should return operation result after the operation is included in a block', async done => {
       const { cold, flush } = rxSandbox.create();
       const blockObs = cold<BlockResponse>('--a', {
-        a: createFakeBlock(1, 'test_hash'),
+        a: createFakeBlock(1, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj'),
       });
 
-      const op = new WalletOperation('test_hash', new Context('url'), blockObs);
+      const op = new WalletOperation('ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj', new Context('url'), blockObs);
 
       flush();
       const result = await op.operationResults();
@@ -162,7 +162,7 @@ describe('WalletOperation', () => {
         a: createFakeBlock(1),
       });
 
-      const op = new WalletOperation('test_hash', new Context('url'), blockObs);
+      const op = new WalletOperation('ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj', new Context('url'), blockObs);
 
       flush();
 
@@ -174,11 +174,11 @@ describe('WalletOperation', () => {
     it('should return 1 when there is 1 confirmation', async done => {
       const { cold, flush, s } = rxSandbox.create();
       const blockObs = cold<BlockResponse>('--a', {
-        a: createFakeBlock(1, 'test_hash'),
+        a: createFakeBlock(1, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj'),
       });
 
       const op = new WalletOperation(
-        'test_hash',
+        'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
         {
           rpc: {
             getBlock: jest.fn().mockResolvedValue(createFakeBlock(1)),
@@ -198,12 +198,12 @@ describe('WalletOperation', () => {
     it('should return 2 when there is 2 confirmation', async done => {
       const { cold, flush, s } = rxSandbox.create();
       const blockObs = cold<BlockResponse>('--a-b', {
-        a: createFakeBlock(1, 'test_hash'),
+        a: createFakeBlock(1, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj'),
         b: createFakeBlock(2),
       });
 
       const op = new WalletOperation(
-        'test_hash',
+        'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
         {
           rpc: {
             getBlock: jest.fn().mockResolvedValue(createFakeBlock(2)),

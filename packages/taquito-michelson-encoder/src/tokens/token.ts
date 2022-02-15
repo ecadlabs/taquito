@@ -1,10 +1,11 @@
 import { MichelsonV1Expression } from '@taquito/rpc';
+import { TokenSchema } from '../schema/types';
 
-export abstract class TokenValidationError implements Error {
-  name: string = 'ValidationError';
-  public message: string;
+export abstract class TokenValidationError extends Error {
+  name = 'ValidationError';
 
   constructor(public value: any, public token: Token, baseMessage: string) {
+    super();
     const annot = this.token.annot();
     const annotText = annot ? `[${annot}] ` : '';
     this.message = `${annotText}${baseMessage}`;
@@ -22,14 +23,14 @@ export abstract class Token {
     protected val: { prim: string; args?: any[]; annots?: any[] },
     protected idx: number,
     protected fac: TokenFactory
-  ) { }
+  ) {}
 
   protected typeWithoutAnnotations() {
     const removeArgsRec = (val: Token['val']): { prim: string; args?: any[] } => {
       if (val.args) {
         return {
           prim: val.prim,
-          args: val.args.map(x => removeArgsRec(x)),
+          args: val.args.map((x) => removeArgsRec(x)),
         };
       } else {
         return {
@@ -42,10 +43,11 @@ export abstract class Token {
   }
 
   annot() {
-    return (Array.isArray(this.val.annots) && this.val.annots.length > 0
-      ? this.val.annots[0]
-      : String(this.idx)
-    ).replace(/(%|\:)(_Liq_entry_)?/, '');
+    return (
+      Array.isArray(this.val.annots) && this.val.annots.length > 0
+        ? this.val.annots[0]
+        : String(this.idx)
+    ).replace(/(%|:)(_Liq_entry_)?/, '');
   }
 
   hasAnnotations() {
@@ -58,7 +60,13 @@ export abstract class Token {
 
   public createToken = this.fac;
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public abstract ExtractSchema(): any;
+
+  abstract generateSchema(): TokenSchema;
 
   public abstract Execute(val: any, semantics?: Semantic): any;
 
@@ -76,11 +84,9 @@ export abstract class Token {
 export type BigMapKeyType = string | number | object;
 
 export abstract class ComparableToken extends Token {
-  abstract ToBigMapKey(
-    val: BigMapKeyType
-  ): {
+  abstract ToBigMapKey(val: BigMapKeyType): {
     key: { [key: string]: string | object[] };
-    type: { prim: string, args?: object[] };
+    type: { prim: string; args?: object[] };
   };
 
   abstract ToKey(val: string): any;

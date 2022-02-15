@@ -2,10 +2,20 @@ This website was created with [Docusaurus](https://docusaurus.io/).
 
 # What's In This Document
 
+- [What's In This Document](#whats-in-this-document)
 - [Get Started in 5 Minutes](#get-started-in-5-minutes)
-- [Directory Structure](#directory-structure)
+  - [Directory Structure](#directory-structure)
 - [Editing Content](#editing-content)
+  - [Editing an existing docs page](#editing-an-existing-docs-page)
 - [Adding Content](#adding-content)
+  - [Adding a new docs page to an existing sidebar](#adding-a-new-docs-page-to-an-existing-sidebar)
+  - [Adding items to your site's top navigation bar](#adding-items-to-your-sites-top-navigation-bar)
+  - [Adding custom pages](#adding-custom-pages)
+- [Documentation Versioning](#documentation-versioning)
+  - [Making versioned copies of the current documentation](#making-versioned-copies-of-the-current-documentation)
+  - [Updating `versions.json`](#updating-versionsjson)
+  - [Editing specific versions](#editing-specific-versions)
+- [Updating Docusaurus Configs](#updating-docusaurus-configs)
 - [Full Documentation](#full-documentation)
 
 # Get Started in 5 Minutes
@@ -13,20 +23,23 @@ This website was created with [Docusaurus](https://docusaurus.io/).
 1. Make sure all the dependencies for the website are installed:
 
 ```sh
-# Install dependencies
-$ yarn
+$ npm install
+```
+2. Build the Docusaurus website
+```sh
+$ npm run build
 ```
 
-2. Run your dev server:
+
+3. Run the Docusaurus website locally
 
 ```sh
-# Start the site
-$ yarn start
+$ npm run serve
 ```
 
 ## Directory Structure
 
-Your project file structure should look something like this
+This project structure is a slightly modified version of Docusaurus' auto generated build
 
 ```
 my-docusaurus/
@@ -35,18 +48,21 @@ my-docusaurus/
     doc-2.md
     doc-3.md
   website/
-    blog/
-      2016-3-11-oldest-post.md
-      2017-10-24-newest-post.md
-    core/
     node_modules/
-    pages/
-    static/
+    build/
+    plugins/
+    src/
       css/
+      pages/
+      theme/
+    static/
       img/
+    versioned_docs/
+    versioned_sidebars/
+    docusaurus.config.js
     package.json
-    sidebar.json
-    siteConfig.js
+    sidebars.json
+    versions.json
 ```
 
 # Editing Content
@@ -67,23 +83,6 @@ Edit me...
 ```
 
 For more information about docs, click [here](https://docusaurus.io/docs/en/navigation)
-
-## Editing an existing blog post
-
-Edit blog posts by navigating to `website/blog` and editing the corresponding post:
-
-`website/blog/post-to-be-edited.md`
-
-```markdown
----
-id: post-needs-edit
-title: This Blog Post Needs To Be Edited
----
-
-Edit me...
-```
-
-For more information about blog posts, click [here](https://docusaurus.io/docs/en/adding-blog)
 
 # Adding Content
 
@@ -126,37 +125,6 @@ My new content here..
 
 For more information about adding new docs, click [here](https://docusaurus.io/docs/en/navigation)
 
-## Adding a new blog post
-
-1. Make sure there is a header link to your blog in `website/siteConfig.js`:
-
-`website/siteConfig.js`
-
-```javascript
-headerLinks: [
-    ...
-    { blog: true, label: 'Blog' },
-    ...
-]
-```
-
-2. Create the blog post with the format `YYYY-MM-DD-My-Blog-Post-Title.md` in `website/blog`:
-
-`website/blog/2018-05-21-New-Blog-Post.md`
-
-```markdown
----
-author: Frank Li
-authorURL: https://twitter.com/foobarbaz
-authorFBID: 503283835
-title: New Blog Post
----
-
-Lorem Ipsum...
-```
-
-For more information about blog posts, click [here](https://docusaurus.io/docs/en/adding-blog)
-
 ## Adding items to your site's top navigation bar
 
 1. Add links to docs, custom pages or external links by editing the headerLinks field of `website/siteConfig.js`:
@@ -198,8 +166,37 @@ For more information about the navigation bar, click [here](https://docusaurus.i
   ...
 }
 ```
-
 For more information about custom pages, click [here](https://docusaurus.io/docs/en/custom-pages).
+
+
+# Documentation Versioning
+## Making versioned copies of the current documentation
+Everything under `docs/` is the latest version of our documentation. When writing docs for a release candidate, you can version documents under `docs/` by running:
+
+```
+# Generate versioned copy of docs/ under versioned_docs/
+npm run docusaurus docs:version {version_number}
+```
+
+with `{version_number}` replaced by an actual version (e.g. `11.0.2`, `11.1.0`) 
+
+## Updating `versions.json`
+
+After generating the versioned copy, you will also need to update `versions.json` with the latest version number.
+
+## Editing specific versions
+To edit documentation for specific versions, simply only edit the version you want to change under `versioned_docs/`. 
+
+Doing so will only update the version that you just edited and leave everything else as is.
+
+For more information on versioning, click [here](https://docusaurus.io/docs/versioning)
+
+# Updating Docusaurus Configs
+`docusaurus.config.js` contains the main configurations needed for the website.
+
+It contains various properties needed to create and customize your website.
+
+API documentation for `docusaurus.config.js` [here](https://docusaurus.io/docs/api/docusaurus-config)
 
 # Full Documentation
 

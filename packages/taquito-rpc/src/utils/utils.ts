@@ -1,14 +1,9 @@
-const getByPath = require('lodash.get');
-const setByPath = require('lodash.set');
 import BigNumber from 'bignumber.js';
 
 /**
  * Casts object/array items to BigNumber
- * keys support lodash path notation
  * @param data input object or array
  * @param keys keys for processing or all items if not defined
- *
- * @see https://lodash.com/docs/#get
  *
  */
 export function castToBigNumber(data: any, keys?: any): object {
@@ -16,10 +11,10 @@ export function castToBigNumber(data: any, keys?: any): object {
   if (typeof keys === 'undefined') {
     keys = Object.keys(data);
   }
-  let response: any = returnArray ? [] : {};
+  const response: any = returnArray ? [] : {};
 
   keys.forEach((key: any) => {
-    const item = getByPath(data, key);
+    const item = data[key];
     let res: any;
     if (typeof item === 'undefined') {
       return;
@@ -27,12 +22,12 @@ export function castToBigNumber(data: any, keys?: any): object {
 
     if (Array.isArray(item)) {
       res = castToBigNumber(item);
-      setByPath(response, key, res);
+      response[key] = res;
       return;
     }
 
     res = new BigNumber(item);
-    setByPath(response, key, res);
+    response[key] = res;
   });
 
   return response;
@@ -49,7 +44,7 @@ export function castToString(data: any, keys?: any): object {
   if (typeof keys === 'undefined') {
     keys = Object.keys(data);
   }
-  let response: any = returnArray ? [] : {};
+  const response: any = returnArray ? [] : {};
 
   keys.forEach((key: any) => {
     const item = data[key];

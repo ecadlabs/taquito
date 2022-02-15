@@ -1,14 +1,15 @@
+import { ListTokenSchema } from '../schema/types';
 import { Token, TokenFactory, Semantic, TokenValidationError } from './token';
 
 export class ListValidationError extends TokenValidationError {
-  name: string = 'ListValidationError';
+  name = 'ListValidationError';
   constructor(public value: any, public token: ListToken, message: string) {
     super(value, token, message);
   }
 }
 
 export class ListToken extends Token {
-  static prim = 'list';
+  static prim: 'list' = 'list';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -16,6 +17,10 @@ export class ListToken extends Token {
     protected fac: TokenFactory
   ) {
     super(val, idx, fac);
+  }
+
+  get valueSchema() {
+    return this.createToken(this.val.args[0], this.idx);
   }
 
   private isValid(value: any): ListValidationError | null {
@@ -66,19 +71,28 @@ export class ListToken extends Token {
     }, []);
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
-    const valueSchema = this.createToken(this.val.args[0], this.idx);
     return {
-      [ListToken.prim] : valueSchema.ExtractSchema()
-    }
+      [ListToken.prim]: this.valueSchema.ExtractSchema(),
+    };
+  }
+
+  generateSchema(): ListTokenSchema {
+    return {
+      __michelsonType: ListToken.prim,
+      schema: this.valueSchema.generateSchema(),
+    };
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
     if (ListToken.prim === tokenToFind) {
       tokens.push(this);
     }
-    this.createToken(this.val.args[0], this.idx).findAndReturnTokens(tokenToFind, tokens)
+    this.createToken(this.val.args[0], this.idx).findAndReturnTokens(tokenToFind, tokens);
     return tokens;
-  };
-
+  }
 }

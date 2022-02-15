@@ -326,7 +326,7 @@ export interface OperationContentsAndResultRegisterGlobalConstant {
   gas_limit: string;
   storage_limit: string;
   value: MichelsonV1Expression;
-  metadata: OperationContentsAndResultMetadataRegisterGlobalConstant
+  metadata: OperationContentsAndResultMetadataRegisterGlobalConstant;
 }
 
 export type OperationContentsAndResult =
@@ -792,36 +792,35 @@ export interface ConstantsResponseCommon {
   hard_storage_limit_per_operation: BigNumber;
 }
 
-export type Ratio = { numerator: number; denominator: number }
+export type Ratio = { numerator: number; denominator: number };
 export interface ConstantsResponseProto012
-	extends Omit<
-			ConstantsResponseProto011,
-			| 'minimal_block_delay'
-			| 'baking_reward_per_endorsement'
-			| 'initial_endorsers'
-			| 'delay_per_missing_endorsement'
-			| 'test_chain_duration'
-			| 'blocks_per_roll_snapshot'
-			| 'time_between_blocks'
-			| 'endorsers_per_block'
-			| 'block_security_deposit'
-			| 'endorsement_security_deposit'
-			| 'endorsement_reward'
-		> {
-	blocks_per_stake_snapshot?: number;
-	baking_reward_fixed_portion?: BigNumber;
-	baking_reward_bonus_per_slot?: BigNumber;
-	endorsing_reward_per_slot?: BigNumber;
-	max_operations_time_to_live?: number;
-	round_durations?: BigNumber[];
-	consensus_committee_size?: number;
-	consensus_threshold?: number;
-	minimal_participation_ratio?: Ratio;
-	max_slashing_period?: number;
-	frozen_deposits_percentage?: number;
-	double_baking_punishment?: BigNumber;
-	ratio_of_frozen_deposits_slashed_per_double_endorsement?: Ratio;
-	delegate_selection?: 'random' | string[][];
+  extends Omit<
+    ConstantsResponseProto011,
+    | 'baking_reward_per_endorsement'
+    | 'initial_endorsers'
+    | 'delay_per_missing_endorsement'
+    | 'test_chain_duration'
+    | 'blocks_per_roll_snapshot'
+    | 'time_between_blocks'
+    | 'endorsers_per_block'
+    | 'block_security_deposit'
+    | 'endorsement_security_deposit'
+    | 'endorsement_reward'
+  > {
+  blocks_per_stake_snapshot?: number;
+  baking_reward_fixed_portion?: BigNumber;
+  baking_reward_bonus_per_slot?: BigNumber;
+  endorsing_reward_per_slot?: BigNumber;
+  max_operations_time_to_live?: number;
+  consensus_committee_size?: number;
+  consensus_threshold?: number;
+  minimal_participation_ratio?: Ratio;
+  max_slashing_period?: number;
+  frozen_deposits_percentage?: number;
+  double_baking_punishment?: BigNumber;
+  ratio_of_frozen_deposits_slashed_per_double_endorsement?: Ratio;
+  delegate_selection?: 'random' | string[][];
+  delay_increment_per_round?: BigNumber;
 }
 
 export interface ConstantsResponseProto011 extends ConstantsResponseProto010 {
@@ -837,8 +836,10 @@ export interface ConstantsResponseProto010 extends ConstantsResponseProto007 {
   liquidity_baking_escape_ema_threshold?: number;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ConstantsResponseProto009 extends ConstantsResponseProto007 {}
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ConstantsResponseProto008 extends ConstantsResponseProto007 {}
 
 export interface ConstantsResponseProto007
@@ -969,7 +970,7 @@ export type RunViewResult = {
 };
 
 export type EntrypointsResponse = {
-  entrypoints: { [key: string]: Object };
+  entrypoints: { [key: string]: MichelsonV1ExpressionExtended };
   unreachable?: { path: ('Left' | 'Right')[] };
 };
 
@@ -1001,4 +1002,9 @@ export interface VotingPeriodBlockResult {
 export type UnparsingModeEnum = 'Readable' | 'Optimized' | 'Optimized_legacy';
 export type UnparsingMode = {
   unparsing_mode: UnparsingModeEnum;
+};
+
+export type ProtocolsResponse = {
+  protocol: string;
+  next_protocol: string;
 };

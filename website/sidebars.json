@@ -25,6 +25,7 @@
         "tickets",
         "transaction_limits",
         "making_transfers",
+        "on_chain_views",
         "tutorial_links",
         "tzip12",
         "metadata-tzip16",
@@ -32,7 +33,7 @@
         "wallet_API",
         "wallets",
         "web3js_taquito",
-        "taquito_utils"
+        "contracts_collection"
       ]
     },
     {

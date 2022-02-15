@@ -1,7 +1,8 @@
+import { OrTokenSchema } from '../schema/types';
 import { Token, TokenFactory, Semantic, ComparableToken } from './token';
 
 export class OrToken extends ComparableToken {
-  static prim = 'or';
+  static prim: 'or' = 'or';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -30,14 +31,14 @@ export class OrToken extends ComparableToken {
       return { prim: 'Right', args: [rightToken.Encode(args)] };
     } else {
       if (leftToken instanceof OrToken) {
-        let val = leftToken.Encode(args);
+        const val = leftToken.Encode(args);
         if (val) {
           return { prim: 'Left', args: [val] };
         }
       }
 
       if (rightToken instanceof OrToken) {
-        let val = rightToken.Encode(args);
+        const val = rightToken.Encode(args);
         if (val) {
           return { prim: 'Right', args: [val] };
         }
@@ -93,14 +94,14 @@ export class OrToken extends ComparableToken {
       return { prim: 'Right', args: [rightToken.EncodeObject(args[label])] };
     } else {
       if (leftToken instanceof OrToken) {
-        let val = leftToken.EncodeObject(args);
+        const val = leftToken.EncodeObject(args);
         if (val) {
           return { prim: 'Left', args: [val] };
         }
       }
 
       if (rightToken instanceof OrToken) {
-        let val = rightToken.EncodeObject(args);
+        const val = rightToken.EncodeObject(args);
         if (val) {
           return { prim: 'Right', args: [val] };
         }
@@ -119,7 +120,7 @@ export class OrToken extends ComparableToken {
 
     if (val.prim === 'Right') {
       if (rightToken instanceof OrToken) {
-        return rightToken.Execute(val.args[0], semantics)
+        return rightToken.Execute(val.args[0], semantics);
       } else {
         return {
           [rightToken.annot()]: rightToken.Execute(val.args[0], semantics),
@@ -127,7 +128,7 @@ export class OrToken extends ComparableToken {
       }
     } else if (val.prim === 'Left') {
       if (leftToken instanceof OrToken) {
-        return leftToken.Execute(val.args[0], semantics)
+        return leftToken.Execute(val.args[0], semantics);
       }
       return {
         [leftToken.annot()]: leftToken.Execute(val.args[0], semantics),
@@ -164,15 +165,46 @@ export class OrToken extends ComparableToken {
 
     return res;
   }
+
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema(): any {
     return this.traversal(
-      leftToken => leftToken.ExtractSchema(),
-      rightToken => rightToken.ExtractSchema(),
+      (leftToken) => leftToken.ExtractSchema(),
+      (rightToken) => rightToken.ExtractSchema(),
       (leftValue, rightValue) => ({
         ...leftValue,
         ...rightValue,
       })
     );
+  }
+
+  generateSchema(): OrTokenSchema {
+    return {
+      __michelsonType: OrToken.prim,
+      schema: this.traversal(
+        (leftToken) => {
+          if (leftToken instanceof OrToken && !leftToken.hasAnnotations()) {
+            return leftToken.generateSchema().schema;
+          } else {
+            return leftToken.generateSchema();
+          }
+        },
+        (rightToken) => {
+          if (rightToken instanceof OrToken && !rightToken.hasAnnotations()) {
+            return rightToken.generateSchema().schema;
+          } else {
+            return rightToken.generateSchema();
+          }
+        },
+        (leftValue, rightValue) => ({
+          ...leftValue,
+          ...rightValue,
+        })
+      ),
+    };
   }
 
   private findToken(label: any): Token | null {
@@ -184,19 +216,31 @@ export class OrToken extends ComparableToken {
 
     const rightToken = this.createToken(this.val.args[1], this.idx + keyCount);
 
-    if (String(leftToken.annot()) === String(label) && !(leftToken instanceof OrToken) && leftToken instanceof ComparableToken) {
-      return leftToken
-    } else if (String(rightToken.annot()) === String(label) && !(rightToken instanceof OrToken) && rightToken instanceof ComparableToken) {
-      return rightToken
+    if (
+      String(leftToken.annot()) === String(label) &&
+      !(leftToken instanceof OrToken) &&
+      leftToken instanceof ComparableToken
+    ) {
+      return leftToken;
+    } else if (
+      String(rightToken.annot()) === String(label) &&
+      !(rightToken instanceof OrToken) &&
+      rightToken instanceof ComparableToken
+    ) {
+      return rightToken;
     } else {
       if (leftToken instanceof OrToken) {
         const tok = leftToken.findToken(label);
-        if (tok) { return tok }
+        if (tok) {
+          return tok;
+        }
       }
 
       if (rightToken instanceof OrToken) {
-        const tok = rightToken.findToken(label)
-        if (tok) { return tok }
+        const tok = rightToken.findToken(label);
+        if (tok) {
+          return tok;
+        }
       }
       return null;
     }
@@ -207,14 +251,13 @@ export class OrToken extends ComparableToken {
     const labelVal2 = Object.keys(val2)[0];
 
     if (labelVal1 === labelVal2) {
-      const token = this.findToken(labelVal1)
+      const token = this.findToken(labelVal1);
       if (token instanceof ComparableToken) {
-        return token.compare(val1[labelVal1], val2[labelVal1])
+        return token.compare(val1[labelVal1], val2[labelVal1]);
       }
-
     } else {
-      const encoded1 = JSON.stringify(this.EncodeObject(val1))
-      const encoded2 = JSON.stringify(this.EncodeObject(val2))
+      const encoded1 = JSON.stringify(this.EncodeObject(val1));
+      const encoded2 = JSON.stringify(this.EncodeObject(val2));
       return encoded1 < encoded2 ? -1 : 1;
     }
   }
@@ -235,14 +278,13 @@ export class OrToken extends ComparableToken {
       tokens.push(this);
     }
     this.traversal(
-      leftToken => leftToken.findAndReturnTokens(tokenToFind, tokens),
-      rightToken => rightToken.findAndReturnTokens(tokenToFind, tokens),
+      (leftToken) => leftToken.findAndReturnTokens(tokenToFind, tokens),
+      (rightToken) => rightToken.findAndReturnTokens(tokenToFind, tokens),
       (leftValue, rightValue) => ({
         ...leftValue,
         ...rightValue,
       })
     );
     return tokens;
-  };
-
+  }
 }

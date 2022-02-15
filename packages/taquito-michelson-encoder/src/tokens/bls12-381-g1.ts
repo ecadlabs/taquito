@@ -1,7 +1,8 @@
+import { BaseTokenSchema } from '../schema/types';
 import { Token, TokenFactory, TokenValidationError } from './token';
 
 export class Bls12381g1ValidationError extends TokenValidationError {
-  name: string = 'Bls12381g1ValidationError';
+  name = 'Bls12381g1ValidationError';
   constructor(public value: any, public token: Bls12381g1Token, message: string) {
     super(value, token, message);
   }
@@ -9,7 +10,7 @@ export class Bls12381g1ValidationError extends TokenValidationError {
 export class Bls12381g1Token extends Token {
   // A point on the BLS12-381 curve G1
   // See https://tezos.gitlab.io/michelson-reference/#type-bls12_381_g1
-  static prim = 'bls12_381_g1';
+  static prim: 'bls12_381_g1' = 'bls12_381_g1';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -54,8 +55,19 @@ export class Bls12381g1Token extends Token {
     return val.bytes;
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return Bls12381g1Token.prim;
+  }
+
+  generateSchema(): BaseTokenSchema {
+    return {
+      __michelsonType: Bls12381g1Token.prim,
+      schema: Bls12381g1Token.prim,
+    };
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
@@ -63,6 +75,5 @@ export class Bls12381g1Token extends Token {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }

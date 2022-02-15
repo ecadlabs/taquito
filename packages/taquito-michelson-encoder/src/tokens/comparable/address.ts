@@ -1,15 +1,16 @@
 import { Token, TokenFactory, ComparableToken, TokenValidationError } from '../token';
 import { b58decode, encodePubKey, validateAddress, ValidationResult } from '@taquito/utils';
+import { BaseTokenSchema } from '../../schema/types';
 
 export class AddressValidationError extends TokenValidationError {
-  name: string = 'AddressValidationError';
+  name = 'AddressValidationError';
   constructor(public value: any, public token: AddressToken, message: string) {
     super(value, token, message);
   }
 }
 
 export class AddressToken extends ComparableToken {
-  static prim = 'address';
+  static prim: 'address' = 'address';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -55,7 +56,6 @@ export class AddressToken extends ComparableToken {
     return { string: val };
   }
 
-  // tslint:disable-next-line: variable-name
   public Execute(val: { bytes: string; string: string }): string {
     if (val.string) {
       return val.string;
@@ -64,11 +64,21 @@ export class AddressToken extends ComparableToken {
     return encodePubKey(val.bytes);
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return AddressToken.prim;
   }
 
-  // tslint:disable-next-line: variable-name
+  generateSchema(): BaseTokenSchema {
+    return {
+      __michelsonType: AddressToken.prim,
+      schema: AddressToken.prim,
+    };
+  }
+
   public ToKey({ bytes, string }: any) {
     if (string) {
       return string;
@@ -98,6 +108,5 @@ export class AddressToken extends ComparableToken {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }

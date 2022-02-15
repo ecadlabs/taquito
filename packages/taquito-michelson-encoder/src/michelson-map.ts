@@ -6,7 +6,7 @@ import stringify from 'fast-json-stable-stringify';
 // Used in order to identify all object that are of type MichelsonMap even if they come from different module
 const michelsonMapTypeSymbol = Symbol.for('taquito-michelson-map-type-symbol');
 
-export type MichelsonMapKey = Array<any> | Object | string | boolean | number;
+export type MichelsonMapKey = Array<any> | object | string | boolean | number;
 
 const isMapType = (
   value: MichelsonV1Expression
@@ -14,19 +14,18 @@ const isMapType = (
   return 'args' in value && Array.isArray(value.args) && value.args.length === 2;
 };
 
-export class MapTypecheckError implements Error {
-  name: string = 'MapTypecheckError';
-  message: string;
+export class MapTypecheckError extends Error {
+  name = 'MapTypecheckError';
 
   constructor(public readonly value: any, public readonly type: any, errorType: 'key' | 'value') {
-    this.message = `${errorType} not compliant with underlying michelson type`;
+    super(`${errorType} not compliant with underlying michelson type`);
   }
 }
 
 /**
  * @description Michelson Map is an abstraction over the michelson native map. It supports complex Pair as key
  */
-export class MichelsonMap<K extends MichelsonMapKey, T extends any> {
+export class MichelsonMap<K extends MichelsonMapKey, T> {
   private valueMap = new Map<string, T>();
   private keyMap = new Map<string, K>();
 
@@ -69,7 +68,7 @@ export class MichelsonMap<K extends MichelsonMapKey, T extends any> {
 
   static fromLiteral(obj: { [key: string]: any }, mapType?: MichelsonV1Expression) {
     const map = new MichelsonMap(mapType);
-    Object.keys(obj).forEach(key => {
+    Object.keys(obj).forEach((key) => {
       map.set(key, obj[key]);
     });
     return map;
@@ -121,6 +120,7 @@ export class MichelsonMap<K extends MichelsonMapKey, T extends any> {
 
   *entries(): Generator<[K, T]> {
     for (const key of this.valueMap.keys()) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       yield [this.keyMap.get(key)!, this.valueMap.get(key)!];
     }
   }

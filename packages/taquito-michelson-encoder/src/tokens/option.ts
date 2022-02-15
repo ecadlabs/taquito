@@ -1,7 +1,8 @@
+import { OptionTokenSchema } from '../schema/types';
 import { Token, TokenFactory, Semantic, ComparableToken } from './token';
 
 export class OptionToken extends ComparableToken {
-  static prim = 'option';
+  static prim: 'option' = 'option';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -15,6 +16,10 @@ export class OptionToken extends ComparableToken {
     return this.createToken(this.val.args[0], this.idx);
   }
 
+  schema(): Token {
+    return this.createToken(this.val.args[0], 0);
+  }
+
   annot(): string {
     return Array.isArray(this.val.annots)
       ? super.annot()
@@ -23,30 +28,27 @@ export class OptionToken extends ComparableToken {
 
   public Encode(args: any): any {
     const value = args;
-    if (
-      value === undefined ||
-      value === null
-    ) {
+    if (value === undefined || value === null) {
       return { prim: 'None' };
-    }
-    else if ((Array.isArray(value) && (value[value.length - 1] === undefined || value[value.length - 1] === null))) {
+    } else if (
+      Array.isArray(value) &&
+      (value[value.length - 1] === undefined || value[value.length - 1] === null)
+    ) {
       value.pop();
       return { prim: 'None' };
     }
 
-    const schema = this.createToken(this.val.args[0], 0);
-    return { prim: 'Some', args: [schema.Encode(args)] };
+    return { prim: 'Some', args: [this.schema().Encode(args)] };
   }
 
   public EncodeObject(args: any): any {
-    const schema = this.createToken(this.val.args[0], 0);
     const value = args;
 
     if (value === undefined || value === null) {
       return { prim: 'None' };
     }
 
-    return { prim: 'Some', args: [schema.EncodeObject(value)] };
+    return { prim: 'Some', args: [this.schema().EncodeObject(value)] };
   }
 
   public Execute(val: any, semantics?: Semantic) {
@@ -54,31 +56,39 @@ export class OptionToken extends ComparableToken {
       return null;
     }
 
-    const schema = this.createToken(this.val.args[0], 0);
-    return schema.Execute(val.args[0], semantics);
+    return this.schema().Execute(val.args[0], semantics);
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
-    const schema = this.createToken(this.val.args[0], 0);
-    return schema.ExtractSchema();
+    return this.schema().ExtractSchema();
+  }
+
+  generateSchema(): OptionTokenSchema {
+    return {
+      __michelsonType: OptionToken.prim,
+      schema: this.schema().generateSchema(),
+    };
   }
 
   public ExtractSignature() {
-    const schema = this.createToken(this.val.args[0], 0);
-    return [...schema.ExtractSignature(), []];
+    return [...this.schema().ExtractSignature(), []];
   }
 
   get KeySchema(): ComparableToken {
-    return this.createToken(this.val.args[0], 0) as any;
+    return this.schema() as any;
   }
 
   compare(val1: any, val2: any) {
     if (!val1) {
-      return -1
+      return -1;
     } else if (!val2) {
-      return 1
+      return 1;
     }
-    return this.KeySchema.compare(val1, val2)
+    return this.KeySchema.compare(val1, val2);
   }
 
   public ToKey(val: any) {
@@ -98,6 +108,5 @@ export class OptionToken extends ComparableToken {
     }
     this.subToken().findAndReturnTokens(tokenToFind, tokens);
     return tokens;
-  };
-
+  }
 }

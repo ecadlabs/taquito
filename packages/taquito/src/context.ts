@@ -20,7 +20,8 @@ import { RpcPacker } from './packer/rpc-packer';
 import BigNumber from 'bignumber.js';
 import { retry } from 'rxjs/operators';
 import { BehaviorSubject, OperatorFunction } from 'rxjs';
-import { Extension } from './taquito';
+import { GlobalConstantsProvider } from './global-constants/interface-global-constants-provider';
+import { NoopGlobalConstantsProvider } from './global-constants/noop-global-constants-provider';
 
 export interface TaquitoProvider<T, K extends Array<any>> {
   new (context: Context, ...rest: K): T;
@@ -34,7 +35,7 @@ export interface ConfigConfirmation {
 
 export const defaultConfigConfirmation: ConfigConfirmation = {
   defaultConfirmationCount: 1,
-  confirmationPollingTimeoutSecond: 180
+  confirmationPollingTimeoutSecond: 180,
 };
 
 // The shouldObservableSubscriptionRetry parameter is related to the observable in ObservableSubsription class.
@@ -43,13 +44,13 @@ export const defaultConfigConfirmation: ConfigConfirmation = {
 export interface ConfigStreamer {
   streamerPollingIntervalMilliseconds: number;
   shouldObservableSubscriptionRetry: boolean;
-  observableSubscriptionRetryFunction: OperatorFunction<any,any>;
+  observableSubscriptionRetryFunction: OperatorFunction<any, any>;
 }
 
 export const defaultConfigStreamer: ConfigStreamer = {
   streamerPollingIntervalMilliseconds: 20000,
   shouldObservableSubscriptionRetry: false,
-  observableSubscriptionRetryFunction: retry()
+  observableSubscriptionRetryFunction: retry(),
 };
 
 /**
@@ -63,8 +64,8 @@ export class Context {
   private _walletProvider: WalletProvider;
   public readonly operationFactory: OperationFactory;
   private _packer: Packer;
-  private _extensions: { [name:string]: Extension } = {}
-  private providerDecorator: Function[] = [];
+  private providerDecorator: Array<(context: Context) => Context> = [];
+  private _globalConstantsProvider: GlobalConstantsProvider;
   public readonly tz = new RpcTzProvider(this);
   public readonly estimate = new RPCEstimateProvider(this);
   public readonly contract = new RpcContractProvider(this, this.estimate);
@@ -75,12 +76,16 @@ export class Context {
     private _rpc: RpcClientInterface | string,
     private _signer: Signer = new NoopSigner(),
     private _proto?: Protocols,
-    public readonly _config = new BehaviorSubject({...defaultConfigStreamer, ...defaultConfigConfirmation}),
+    public readonly _config = new BehaviorSubject({
+      ...defaultConfigStreamer,
+      ...defaultConfigConfirmation,
+    }),
     forger?: Forger,
     injector?: Injector,
     packer?: Packer,
     wallet?: WalletProvider,
     parser?: ParserProvider,
+    globalConstantsProvider?: GlobalConstantsProvider
   ) {
     if (typeof this._rpc === 'string') {
       this._rpcClient = new RpcClient(this._rpc);
@@ -91,8 +96,11 @@ export class Context {
     this._injector = injector ? injector : new RpcInjector(this);
     this.operationFactory = new OperationFactory(this);
     this._walletProvider = wallet ? wallet : new LegacyWalletProvider(this);
-    this._parser = parser? parser: new MichelCodecParser(this);
-    this._packer = packer? packer: new RpcPacker(this);
+    this._parser = parser ? parser : new MichelCodecParser(this);
+    this._packer = packer ? packer : new RpcPacker(this);
+    this._globalConstantsProvider = globalConstantsProvider
+      ? globalConstantsProvider
+      : new NoopGlobalConstantsProvider();
   }
 
   get config(): ConfigConfirmation & ConfigStreamer {
@@ -140,16 +148,16 @@ export class Context {
     return this._signer;
   }
 
+  set signer(value: Signer) {
+    this._signer = value;
+  }
+
   get walletProvider() {
     return this._walletProvider;
   }
 
   set walletProvider(value: WalletProvider) {
     this._walletProvider = value;
-  }
-
-  set signer(value: Signer) {
-    this._signer = value;
   }
 
   set proto(value: Protocols | undefined) {
@@ -176,6 +184,14 @@ export class Context {
     this._packer = value;
   }
 
+  get globalConstantsProvider() {
+    return this._globalConstantsProvider;
+  }
+
+  set globalConstantsProvider(value: GlobalConstantsProvider) {
+    this._globalConstantsProvider = value;
+  }
+
   async isAnyProtocolActive(protocol: string[] = []) {
     if (this._proto) {
       return protocol.includes(this._proto);
@@ -195,19 +211,22 @@ export class Context {
       if (constants.minimal_block_delay !== undefined) {
         blockTime = constants.minimal_block_delay;
       }
-      let confirmationPollingInterval = BigNumber.sum(blockTime, 
-        new BigNumber(constants.delay_per_missing_endorsement!)
-        .multipliedBy(Math.max(0, constants.initial_endorsers! - constants.endorsers_per_block))
+      let confirmationPollingInterval = BigNumber.sum(
+        blockTime,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        new BigNumber(constants.delay_per_missing_endorsement!).multipliedBy(
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          Math.max(0, constants.initial_endorsers! - constants.endorsers_per_block)
+        )
       );
-      
+
       // Divide the polling interval by a constant 3
       // to improvise for polling time to work in prod,
-      // testnet and sandbox enviornment.   
-      confirmationPollingInterval = confirmationPollingInterval.dividedBy(3);  
+      // testnet and sandbox enviornment.
+      confirmationPollingInterval = confirmationPollingInterval.dividedBy(3);
 
-      this.config.confirmationPollingIntervalSecond = confirmationPollingInterval.toNumber() === 0 ?
-        0.1 :
-        confirmationPollingInterval.toNumber();
+      this.config.confirmationPollingIntervalSecond =
+        confirmationPollingInterval.toNumber() === 0 ? 0.1 : confirmationPollingInterval.toNumber();
       return this.config.confirmationPollingIntervalSecond;
     } catch (exception) {
       // Return default value if there is
@@ -216,7 +235,7 @@ export class Context {
       return defaultInterval;
     }
   }
-  
+
   /**
    * @description Create a copy of the current context. Useful when you have long running operation and you do not want a context change to affect the operation
    */
@@ -228,15 +247,18 @@ export class Context {
       this._config,
       this.forger,
       this._injector,
-      this.packer
+      this.packer,
+      this._walletProvider,
+      this._parser,
+      this._globalConstantsProvider,
     );
   }
 
   /**
    * @description Allows extensions set on the TezosToolkit to inject logic into the context
    */
-  registerProviderDecorator(fx: (context: Context) => Context){
-    this.providerDecorator.push(fx)
+  registerProviderDecorator(fx: (context: Context) => Context) {
+    this.providerDecorator.push(fx);
   }
 
   /**
@@ -244,13 +266,12 @@ export class Context {
    * The decorators are functions that inject logic into the context.
    * They are provided by the extensions set on the TezosToolkit by calling the registerProviderDecorator method.
    */
-  withExtensions() {
-    let currentContext = this;
-
+  withExtensions = (): Context => {
+    let clonedContext = this.clone();
     this.providerDecorator.forEach((decorator) => {
-      currentContext = decorator(currentContext.clone())
-    })
+      clonedContext = decorator(clonedContext);
+    });
 
-    return currentContext;
-  }
+    return clonedContext;
+  };
 }

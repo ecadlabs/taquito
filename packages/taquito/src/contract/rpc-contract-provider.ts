@@ -22,7 +22,7 @@ import {
   TransferParams,
   withKind,
 } from '../operations/types';
-import { ContractAbstraction } from './contract';
+import { DefaultContractType, ContractStorageType, ContractAbstraction } from './contract';
 import { InvalidDelegationSource } from './errors';
 import { ContractProvider, ContractSchema, EstimationProvider, StorageProvider } from './interface';
 import {
@@ -34,7 +34,13 @@ import {
   createTransferOperation,
 } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
-
+import { 
+  validateAddress,
+  validateContractAddress,
+  InvalidContractAddressError,
+  InvalidAddressError, 
+  ValidationResult 
+} from '@taquito/utils';
 export class RpcContractProvider
   extends OperationEmitter
   implements ContractProvider, StorageProvider
@@ -54,6 +60,9 @@ export class RpcContractProvider
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-script
    */
   async getStorage<T>(contract: string, schema?: ContractSchema): Promise<T> {
+    if (validateContractAddress(contract) !== ValidationResult.VALID) {
+      throw new InvalidContractAddressError(`Invalid contract address: ${contract}`);
+    }
     if (!schema) {
       schema = await this.rpc.getNormalizedScript(contract);
     }
@@ -83,6 +92,9 @@ export class RpcContractProvider
    * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-context-contracts-contract-id-big-map-get
    */
   async getBigMapKey<T>(contract: string, key: string, schema?: ContractSchema): Promise<T> {
+    if (validateContractAddress(contract) !== ValidationResult.VALID) {
+      throw new InvalidContractAddressError(`Invalid contract address: ${contract}`);
+    }
     if (!schema) {
       schema = await this.rpc.getNormalizedScript(contract);
     }
@@ -96,7 +108,6 @@ export class RpcContractProvider
 
     const encodedKey = contractSchema.EncodeBigMapKey(key);
 
-    // tslint:disable-next-line: deprecation
     const val = await this.rpc.getBigMapKey(contract, encodedKey);
 
     return contractSchema.ExecuteOnBigMapValue(val) as T; // Cast into T because only the caller can know the true type of the storage
@@ -151,7 +162,7 @@ export class RpcContractProvider
     keys: Array<BigMapKeyType>,
     schema: Schema,
     block?: number,
-    batchSize: number = 5
+    batchSize = 5
   ): Promise<MichelsonMap<MichelsonMapKey, T | undefined>> {
     const level = await this.getBlockForRequest(keys, block);
     const bigMapValues = new MichelsonMap<MichelsonMapKey, T | undefined>();
@@ -239,7 +250,7 @@ export class RpcContractProvider
    *
    * @param OriginationOperation Originate operation parameter
    */
-  async originate(params: OriginateParams) {
+  async originate<TContract extends DefaultContractType = DefaultContractType>(params: OriginateParams<ContractStorageType<TContract>>) {
     const estimate = await this.estimate(params, this.estimator.originate.bind(this.estimator));
 
     const publicKeyHash = await this.signer.publicKeyHash();
@@ -256,7 +267,7 @@ export class RpcContractProvider
     });
     const forgedOrigination = await this.forge(preparedOrigination);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(forgedOrigination);
-    return new OriginationOperation(hash, operation, forgedBytes, opResponse, context, this);
+    return new OriginationOperation<TContract>(hash, operation, forgedBytes, opResponse, context, this);
   }
 
   /**
@@ -268,6 +279,13 @@ export class RpcContractProvider
    * @param SetDelegate operation parameter
    */
   async setDelegate(params: DelegateParams) {
+    if ( params.source && validateAddress(params.source) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(`Invalid source Address: ${params.source}`);
+    }
+    if (params.delegate && validateAddress(params.delegate) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(`Invalid delegate Address: ${params.delegate}`);
+    }
+
     // Since babylon delegation source cannot smart contract
     if (/kt1/i.test(params.source)) {
       throw new InvalidDelegationSource(params.source);
@@ -325,6 +343,13 @@ export class RpcContractProvider
    * @param Transfer operation parameter
    */
   async transfer(params: TransferParams) {
+    if (validateAddress(params.to) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(`Invalid address passed in 'to' parameter: ${params.to}`);
+    }
+    if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(`Invalid address passed in 'source' parameter: ${params.source}`);
+    }
+
     const publickKeyHash = await this.signer.publicKeyHash();
     const estimate = await this.estimate(params, this.estimator.transfer.bind(this.estimator));
     const operation = await createTransferOperation({
@@ -378,7 +403,10 @@ export class RpcContractProvider
    */
   async registerGlobalConstant(params: RegisterGlobalConstantParams) {
     const publickKeyHash = await this.signer.publicKeyHash();
-    const estimate = await this.estimate(params, this.estimator.registerGlobalConstant.bind(this.estimator));
+    const estimate = await this.estimate(
+      params,
+      this.estimator.registerGlobalConstant.bind(this.estimator)
+    );
     const operation = await createRegisterGlobalConstantOperation({
       ...params,
       ...estimate,
@@ -387,16 +415,29 @@ export class RpcContractProvider
     const prepared = await this.prepareOperation({ operation: ops, source: publickKeyHash });
     const opBytes = await this.forge(prepared);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
-    return new RegisterGlobalConstantOperation(hash, operation, publickKeyHash, forgedBytes, opResponse, context);
+    return new RegisterGlobalConstantOperation(
+      hash,
+      operation,
+      publickKeyHash,
+      forgedBytes,
+      opResponse,
+      context
+    );
   }
 
-  async at<T extends ContractAbstraction<ContractProvider>>(address: string, contractAbstractionComposer: ContractAbstractionComposer<T> = x => x as any): Promise<T> {
+  async at<T extends DefaultContractType = DefaultContractType>(
+    address: string,
+    contractAbstractionComposer: ContractAbstractionComposer<T> = (x) => x as any
+  ): Promise<T> {
+    if (validateContractAddress(address) !== ValidationResult.VALID) {
+      throw new InvalidContractAddressError(`Invalid contract address: ${address}`);
+    }
     const rpc = this.context.withExtensions().rpc;
     const script = await rpc.getNormalizedScript(address);
     const entrypoints = await rpc.getEntrypoints(address);
     const blockHeader = await this.rpc.getBlockHeader();
     const chainId = blockHeader.chain_id;
-    const abs = new ContractAbstraction(address, script, this, this, entrypoints, chainId);
+    const abs = new ContractAbstraction(address, script, this, this, entrypoints, chainId, rpc);
     return contractAbstractionComposer(abs, this.context);
   }
 

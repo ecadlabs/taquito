@@ -33,4 +33,13 @@ describe('Signature token', () => {
             expect(token.compare('edsigteqgHGYbzsxxFmQjGSf9eeNjTML4g6GBqryKvy7uy6y2XczT6C3ehhfzCBgQBdAMy9NLoD6MZVzCUbtSUoSC1iWAgPXGdW', 'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg')).toEqual(-1);
         });
     });
+
+    describe('generateSchema', () => {
+        it('Should generate the schema properly', () => {
+          expect(token.generateSchema()).toEqual({
+            __michelsonType: 'signature',
+            schema: 'signature'
+          });
+        });
+      });
 });

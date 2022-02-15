@@ -2,32 +2,32 @@ import { TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
 import { VIEW_LAMBDA } from '../packages/taquito/src/contract/view_lambda';
 
-const provider = 'https://idiazabalnet.ecadinfra.com';
+const provider = 'https://ithacanet.ecadinfra.com/';
 
 async function example() {
   const tezos = new TezosToolkit(provider);
   await importKey(
     tezos,
-    'pqugfnyp.aricovrw@teztnets.xyz',
-    'PwMXISc7HK',
+    'noriqgjl.gtsyulgy@teztnets.xyz',
+    'st3sZBRLWF',
     [
-      "drift",
-      "winner",
-      "prevent",
-      "sorry",
-      "loud",
-      "pattern",
-      "easy",
-      "buffalo",
-      "surround",
-      "exist",
-      "accuse",
-      "volume",
-      "loop",
-      "day",
-      "club",
+     "escape",
+     "camera",
+     "credit",
+     "endorse",
+     "auto",
+     "lamp",
+     "advance",
+     "orange",
+     "fluid",
+     "virus",
+     "argue",
+     "knee",
+     "pluck",
+     "remove",
+     "scheme"
     ].join(' '),
-    '844a986d27f7989859bc82ebce16f293ab0f2da6'
+    '7d414378d9071328313cca699d6922f1b59d076a'
   );
 
   try {
@@ -46,5 +46,4 @@ async function example() {
   }
 }
 
-// tslint:disable-next-line: no-floating-promises
 example();

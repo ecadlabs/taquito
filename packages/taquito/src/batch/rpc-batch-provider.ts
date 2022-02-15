@@ -1,4 +1,5 @@
 import { Context } from '../context';
+import { ContractStorageType, DefaultContractType } from '../contract/contract';
 import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
 import { EstimationProvider, ContractProvider } from '../contract/interface';
 import {
@@ -24,6 +25,13 @@ import {
 } from '../operations/types';
 import { OpKind } from '@taquito/rpc';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
+import { 
+  validateAddress, 
+  validateKeyHash, 
+  InvalidAddressError, 
+  InvalidKeyHashError, 
+  ValidationResult 
+} from '@taquito/utils'
 
 export const BATCH_KINDS = [
   OpKind.ACTIVATION,
@@ -51,6 +59,9 @@ export class OperationBatch extends OperationEmitter {
    * @param params Transfer operation parameter
    */
   withTransfer(params: TransferParams) {
+    if (validateAddress(params.to) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(`Invalid 'to' address: ${params.to}`)
+    }
     this.operations.push({ kind: OpKind.TRANSACTION, ...params });
     return this;
   }
@@ -72,6 +83,12 @@ export class OperationBatch extends OperationEmitter {
    * @param params Delegation operation parameter
    */
   withDelegation(params: DelegateParams) {
+    if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(`Invalid source address: ${params.source}`);
+    }
+    if (params.delegate && validateAddress(params.delegate) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(`Invalid delegate address: ${params.delegate}`);
+    }
     this.operations.push({ kind: OpKind.DELEGATION, ...params });
     return this;
   }
@@ -83,6 +100,9 @@ export class OperationBatch extends OperationEmitter {
    * @param params Activation operation parameter
    */
   withActivation({ pkh, secret }: ActivationParams) {
+    if (validateKeyHash(pkh) !== ValidationResult.VALID) {
+      throw new InvalidKeyHashError(`Invalid Key Hash: ${pkh}`);
+    }
     this.operations.push({ kind: OpKind.ACTIVATION, pkh, secret });
     return this;
   }
@@ -93,7 +113,7 @@ export class OperationBatch extends OperationEmitter {
    *
    * @param params Origination operation parameter
    */
-  withOrigination(params: OriginateParams) {
+  withOrigination<TContract extends DefaultContractType = DefaultContractType>(params: OriginateParams<ContractStorageType<TContract>>) {
     this.operations.push({ kind: OpKind.ORIGINATION, ...params });
     return this;
   }

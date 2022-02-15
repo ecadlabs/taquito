@@ -1,37 +1,50 @@
 import { Token, TokenFactory, Semantic, ComparableToken } from './token';
 import { OrToken } from './or';
+import { PairTokenSchema } from '../schema/types';
 
 // collapse comb pair
 function collapse(val: Token['val'] | any[], prim: string = PairToken.prim): [any, any] {
   if (Array.isArray(val)) {
-    return collapse({
-      prim: prim,
-      args: val,
-    }, prim);
+    return collapse(
+      {
+        prim: prim,
+        args: val,
+      },
+      prim
+    );
   }
   if (val.args === undefined) {
     throw new Error('Token has no arguments');
   }
   if (val.args.length > 2) {
-    return [val.args[0], {
-      prim: prim,
-      args: val.args.slice(1),
-    }];
+    return [
+      val.args[0],
+      {
+        prim: prim,
+        args: val.args.slice(1),
+      },
+    ];
   }
   return [val.args[0], val.args[1]];
 }
 export class PairToken extends ComparableToken {
-  static prim = 'pair';
+  static prim: 'pair' = 'pair';
 
   constructor(
     val: { prim: string; args: any[]; annots: any[] } | any[],
     idx: number,
     fac: TokenFactory
   ) {
-    super(Array.isArray(val) ? {
-      prim: PairToken.prim,
-      args: val,
-    } : val, idx, fac);
+    super(
+      Array.isArray(val)
+        ? {
+            prim: PairToken.prim,
+            args: val,
+          }
+        : val,
+      idx,
+      fac
+    );
   }
 
   private args(): [any, any] {
@@ -41,7 +54,7 @@ export class PairToken extends ComparableToken {
 
   private tokens(): [Token, Token] {
     let cnt = 0;
-    return this.args().map(a => {
+    return this.args().map((a) => {
       const tok = this.createToken(a, this.idx + cnt);
       if (tok instanceof PairToken) {
         cnt += Object.keys(tok.ExtractSchema()).length;
@@ -55,7 +68,7 @@ export class PairToken extends ComparableToken {
   public Encode(args: any[]): any {
     return {
       prim: 'Pair',
-      args: this.tokens().map(t => t.Encode(args)),
+      args: this.tokens().map((t) => t.Encode(args)),
     };
   }
 
@@ -146,16 +159,42 @@ export class PairToken extends ComparableToken {
   public Execute(val: any, semantics?: Semantic): { [key: string]: any } {
     const args = collapse(val, 'Pair');
     return this.traversal(
-      leftToken => leftToken.Execute(args[0], semantics),
-      rightToken => rightToken.Execute(args[1], semantics)
+      (leftToken) => leftToken.Execute(args[0], semantics),
+      (rightToken) => rightToken.Execute(args[1], semantics)
     );
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema(): any {
     return this.traversal(
-      leftToken => leftToken.ExtractSchema(),
-      rightToken => rightToken.ExtractSchema()
+      (leftToken) => leftToken.ExtractSchema(),
+      (rightToken) => rightToken.ExtractSchema()
     );
+  }
+
+  generateSchema(): PairTokenSchema {
+    return {
+      __michelsonType: PairToken.prim,
+      schema: this.traversal(
+        (leftToken) => {
+          if (leftToken instanceof PairToken && !leftToken.hasAnnotations()) {
+            return leftToken.generateSchema().schema;
+          } else {
+            return leftToken.generateSchema();
+          }
+        },
+        (rightToken) => {
+          if (rightToken instanceof PairToken && !rightToken.hasAnnotations()) {
+            return rightToken.generateSchema().schema;
+          } else {
+            return rightToken.generateSchema();
+          }
+        }
+      ),
+    };
   }
 
   public compare(val1: any, val2: any) {
@@ -189,8 +228,7 @@ export class PairToken extends ComparableToken {
     if (PairToken.prim === tokenToFind) {
       tokens.push(this);
     }
-    this.tokens().map(t => t.findAndReturnTokens(tokenToFind, tokens))
+    this.tokens().map((t) => t.findAndReturnTokens(tokenToFind, tokens));
     return tokens;
-  };
-
+  }
 }

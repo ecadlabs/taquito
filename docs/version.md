@@ -3,6 +3,245 @@ title: Versions
 author: Jev Bjorsell
 ---
 
+# Taquito v11.2.0-beta
+
+## Summary
+### New features
+
+- @taquito/utils - Implemented additional hash checksum validation functions in Taquito #95
+
+### Improvements
+
+- Upgrade to ES6 #1020
+- @taquito/signer - Removed dependency on bip39, which has unneeded translation files #1110
+- @taquito/michelson-encoder - Deprecated the `ExtractSchema` method in favor of `generateSchema` #1252, #1303, #1304
+- Added validation to different hashes being passed in the Taquito codebase #1311
+- @taquito/taquito & @taquito/tzip16 - Better error abstraction on view calls #641 & #1297
+
+### Bug Fixes
+
+- @taquito/tzip12 - `TokenIdNotFound` error was incorrectly thrown on metadata view failure #1210
+- `Schema` deserialized `map nat-nat` as `MichelsonMap<string, BigNumber>` instead of `MichelsonMap<BigNumber, BigNumber>` #1140
+- Custom errors extend `Error` instead of implementing it #973
+- @taquito/beacon-wallet - Fixed error `Cannot read property 'DAppClient' of undefined` #787
+- Removed CommonJS module loading that was causing rollup.js to break #1098
+
+### Documentation
+
+- Added a search bar to the Taquito website
+- Allow website users to view Taquito docs based on specific versions #1208
+- @taquito/ledger-signer - Replacement of the deprecated transport `@ledgerhq/hw-transport-node-hid` by `@ledgerhq/hw-transport-u2f`: https://tezostaquito.io/docs/ledger_signer
+- Improved documentation showing the difference between `setDelegate` and `RegisterDelegate` methods: https://tezostaquito.io/docs/set_delegate
+- Improvements of the README files
+
+
+
+## @taquito/utils - Implemented additional hash checksum validation functions in Taquito
+
+Added utility functions to validate operation, block, and protocol hash.
+
+Example of use:
+```typescript=
+import { validateBlock, validateOperation, validateProtocol } from '@taquito/utils';
+
+const block ='BLJjnzaPtSsxykZ9pLTFLSfsKuiN3z7SjSPDPWwbE4Q68u5EpBw';
+const validation = validateBlock(block);
+
+const operation ='ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj';
+const validation = validateOperation(operation);
+
+const protocol ='PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx';
+const validation = validateProtocol(protocol);
+```
+
+## @taquito/signer - Removed dependency on bip39
+
+The dependency on bip39, which has unneeded translation files, has been removed. This change decreases the bundle size from 1 MB to 795kB.
+
+## @taquito/michelson-encoder - Deprecated the `ExtractSchema` method in favor of `generateSchema`
+
+Based on a Michelson type, `ExtractSchema` returns the schema as expected by Taquito for the storage or entry point of a contract.
+Users can use this method to discover how to write the storage property when deploying a contract or the parameter when calling a smart contract entry point using the `methodsObject` property.
+
+However, the `ExtractSchema` method is missing important detail for some types and is not uniform across all tokens (i.e., there was no distinction between `or` and `pair` types, `option` was not represented). Improvements to the generated schema have been implemented in a new method called `generateSchema`.
+
+`ExtractSchema` has been deprecated to give time to migrate from the `ExtractSchema` to the `generateSchema` method as it includes breaking changes.
+
+For each token, `generateSchema` returns an object of type `TokenSchema`. TokenSchema has a property `__michelsonType`, a string, and a property `schema` that contains information on the schema of the subtoken when applicable.
+
+### Examples:
+
+The michelson type: `{ prim: 'option', args: [{ prim: 'int' }], annots: [] }` will be represented as follows by the generateSchema method:
+```json=
+{
+    __michelsonType: 'option',
+    schema: {
+            __michelsonType: 'int',
+          schema: 'int'
+    }
+}
+```
+
+The michelson type: `{ prim: 'pair', args: [{ prim: 'int', annots: ['test'] }, { prim: 'string', annots: ['test2'] }], }` will be represented as follows by the generateSchema method:
+```json=
+// Nested pair will be brought to the same level (as it is the case with the ExtractSchema)
+{
+    __michelsonType: 'pair',
+    schema: {
+        test: {
+            __michelsonType: 'int',
+            schema: 'int'
+        },
+        test2: {
+            __michelsonType: 'string',
+            schema: 'string'
+        }
+    }
+}
+```
+
+The michelson type: `{ prim: 'map', args: [{ prim: 'string' }, { prim: 'int' }], annots: [] }` will be represented as follows by the generateSchema method:
+```json=
+// schema of a map has `key` and `value` properties
+{
+    __michelsonType: 'map',
+    schema: {
+        key: {
+            __michelsonType: 'string',
+            schema: 'string'
+        },
+        value: {
+            __michelsonType: 'int',
+            schema: 'int'
+        }
+    }
+}
+```
+
+## Added validation to different hashes being passed in the Taquito codebase
+
+Instead of leaving them to the node, hash validations have been implemented locally in Taquito. We included checksum validation for parameters of regular operations (i.e.: transfer/delegation/origination addresses).
+
+## @taquito/taquito & @taquito/tzip16 - Better error abstraction on view calls
+
+A `ViewSimulationError` is returned when a view simulation fails, which now contains an optional `failWith` property, making it easier to access the `FAILWITH` messages.
+
+## @taquito/tzip12 - `TokenIdNotFound` was incorrectly trown on metadata view failure
+
+The `getTokenMetadata` method of the `Tzip12ContractAbstraction` class was throwing a `TokenIdNotFound` error when the execution of a token metadata view failed. However, failures can be related to other reasons related to the Tezos node, which does not mean that the token metadata does not exist. The error handling has been improved at the `@taquito/tzip16` package level; if a view simulation reaches a `FAILWITH` instruction, a `ViewSimulationError` is returned. Otherwise, the original `HttpResponseError` is thrown.
+
+## Custom errors should extend Error
+
+The custom errors were implementing the Error class instead of extending it. Thus, `errorFromTaquito instanceof Error` was returning `false`. This issue has been fixed.
+
+## @taquito/beacon-wallet - Fixed error `Cannot read property 'DAppClient' of undefined`
+
+The error `Cannot read property 'DAppClient' of undefined` was thrown when using the `@taquito/beacon-wallet` package without npm. This has been fixed by replacing the global name from `beaconSdk` to `beacon` in the taquito-beacon-wallet.umd.js compiled file.
+
+# Taquito v11.1.0-beta
+
+## Summary
+### New features
+- @taquito/taquito - Support for simulating contract views #1117
+- @taquito/michel-codec - Option added to the Parser to expand global constants in script #1219
+- @taquito/taquito - Support contract origination using the storage property when there are global constants in the storage part of the contract code #1220
+### Bug Fixes
+- @taquito/michelson-encoder - Fixed the Timestamp token to support decoding UNIX string format #1109
+
+## @taquito/taquito - Support for simulating contract views
+
+Taquito provides an abstraction on the `ContractAbstraction` class, allowing to simulate the execution of the on-chain views.
+
+When an instance of `ContractAbstraction` is created using the `at` method of the Contract or Wallet API, the `contractViews` member of the `ContractAbstraction` instance is dynamically populated with methods that match the on-chain view names.
+
+*The `contractViews` member is an object where the key is the view name, and the value is a function that takes the view arguments as a parameter and returns an instance of `OnChainView` class.*
+
+When a view argument is of a complex type (i.e., a `pair`), the view parameter is expected in an object format and not as "flattened arguments".
+
+*The "object format" refers to the same format used when deploying a contract using the `storage` property. The "flattened arguments" is the format used when calling a contract entry point using the `methods` member. We plan to move away from the "flattened arguments" format in favor of the object one.*
+
+As an example, if the Michelson view argument type is `{ prim: 'pair', args: [{ prim: 'nat' }, { prim: 'address' }] }`, the parameter expected by Taquito will have the following format `{0: 'nat', 1: 'address'}` instead of `nat, address`.
+
+A method named `getSignature` on the `OnChainView` class allows inspecting the parameter and the returned type of the view.
+
+The `executeView` method of the `OnChainView` class allows simulating the view. It takes a `viewCaller` as a parameter representing the contract address which is the caller of the view, and an optional `source` which is the public key hash of the account that initialized this view execution.
+
+Here is an example where a contract contains a view named `myView`, it can be simulated as follow:
+
+```typescript=
+const contract = Tezos.contract.at('KT1...');
+const res = contract.contractViews.myView(param).executeView({
+    viewCaller: 'KT1...' 
+});
+```
+
+Here is the link to the documentation page: https://tezostaquito.io/docs/on_chain_views
+
+## @taquito/michel-codec - Option added to the Parser to expand global constants in a script
+
+An optional `expandGlobalConstant` property has been added to the `ParserOptions` allowing to expand the global constants in a script using the `Parser` class. The hashes and corresponding registered expressions need to be provided as follow:
+
+```typescript=
+const parserOptions: ParserOptions = {
+    expandGlobalConstant: {
+      constantHash: registeredExprJSON,
+      ...
+    },
+};
+
+const p = new Parser(parserOptions);
+```
+
+## @taquito/taquito - Support contract origination using the storage property when there are global constants in the storage part of the contract code
+
+In the release note v11.0.0-beta, there was a note about the following limitation:
+> Only the 'init' property can be used if you want to originate a contract having a global constant in the storage section of its code. Do not use the `storage` property, which depends on the `Michelson-Encoder`.
+> 
+> Here is an example:
+> ```typescript=
+> const op = await Tezos.contract.originate({
+>   code: [
+>     { prim: 'parameter', args: [ ...] },
+>     { prim: 'storage', args: [{ prim: 'constant', args: [{ string: 'expr...' }] }] },
+>     { prim: 'code', args: [ ... ] } ],
+>   init: // The storage property can't be used. Please use the `init` property instead.
+> });
+> ```
+
+It is now possible to deploy a contract having a global constant in the storage part of its contract code using the storage property. Internally, Taquito uses the michel-codec `Parser` and its `expandGlobalConstant` option to feed the MichelsonEncoder, which is responsible for transforming the `storage` property into Michelson, with a script that doesn't contain global constant.
+
+A global constants provider has been added to the `TezosToolkit` class. Currently, Taquito provides a `DefaultGlobalConstantsProvider`, which can be injected in the TezosToolkit and where the user needs to specify the hashes and corresponding expressions used in its contracts.
+
+Here is a example:
+```typescript=
+import { TezosToolkit, DefaultGlobalConstantsProvider } from '@taquito/taquito';
+
+// create an instance of the `DefaultGlobalConstantsProvider`, load the global constants used in the contract, inject the instance on the TezosToolkit
+const expression = { "prim": "int" }
+const constantHash = 'expruu5BTdW7ajqJ9XPTF3kgcV78pRiaBW3Gq31mgp3WSYjjUBYxre';
+
+const Tezos = new TezosToolkit('rpc_url');
+const globalConstantProvider = new DefaultGlobalConstantsProvider();
+globalConstantProvider.loadGlobalConstant({
+  [constantHash]: expression
+})
+Tezos.setGlobalConstantsProvider(globalConstantProvider);
+```
+
+We plan to support other global constant providers in the future that will depend on indexers or the RPC.
+
+Here is a link to the documentation: https://tezostaquito.io/docs/global_constant#how-to-deploy-a-contract-using-the-storage-property-if-i-use-global-constant-in-the-storage-part-of-the-code
+
+## @taquito/michelson-encoder - Fixed the Timestamp token to support decoding UNIX string format
+
+The Michelson-Encoder did not correctly support the UNIX string format. Therefore, Michelson data having the format "string":"1613034908" could not be decoded and generated the following error:
+```
+RangeError: Invalid time value
+  at Date.toISOString
+  at TimestampToken.Execute
+```
+This format is now supported in the Timestamp token of the Michelson-encoder.
+
 # Taquito v11.0.2-beta
 
 - `@taquito/beacon-wallet` - The beacon-sdk is updated to version 2.3.8

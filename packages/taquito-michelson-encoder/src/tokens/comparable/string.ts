@@ -1,7 +1,8 @@
+import { BaseTokenSchema } from '../../schema/types';
 import { Token, TokenFactory, ComparableToken } from '../token';
 
 export class StringToken extends ComparableToken {
-  static prim = 'string';
+  static prim: 'string' = 'string';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -15,8 +16,19 @@ export class StringToken extends ComparableToken {
     return val[Object.keys(val)[0]];
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return StringToken.prim;
+  }
+
+  generateSchema(): BaseTokenSchema {
+    return {
+      __michelsonType: StringToken.prim,
+      schema: StringToken.prim,
+    };
   }
 
   public Encode(args: any[]): any {
@@ -28,7 +40,6 @@ export class StringToken extends ComparableToken {
     return { string: val };
   }
 
-  // tslint:disable-next-line: variable-name
   public ToKey({ string }: any) {
     return string;
   }
@@ -45,6 +56,5 @@ export class StringToken extends ComparableToken {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }

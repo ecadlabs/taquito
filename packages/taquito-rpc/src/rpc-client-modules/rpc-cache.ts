@@ -29,6 +29,7 @@ import {
   PreapplyParams,
   PreapplyResponse,
   ProposalsResponse,
+  ProtocolsResponse,
   RPCRunCodeParam,
   RPCRunOperationParam,
   RPCRunViewParam,
@@ -42,9 +43,17 @@ import {
   VotingPeriodBlockResult,
 } from '../types';
 
+import {
+  InvalidAddressError,
+  InvalidContractAddressError,
+  validateContractAddress,
+  validateAddress,
+  ValidationResult,
+} from '@taquito/utils';
+
 interface CachedDataInterface {
   [key: string]: {
-    handle: Function;
+    handle: () => void;
     response: Promise<any>;
   };
 }
@@ -72,7 +81,7 @@ export class RpcClientCache implements RpcClientInterface {
    *
    */
   deleteAllCachedData() {
-    for (let key in this._cache) {
+    for (const key in this._cache) {
       delete this._cache[key];
     }
   }
@@ -104,7 +113,7 @@ export class RpcClientCache implements RpcClientInterface {
   }
 
   private put(key: string, response: Promise<any>) {
-    let handle = setTimeout(() => {
+    const handle = setTimeout(() => {
       return this.remove(key);
     }, this.ttl);
 
@@ -114,6 +123,18 @@ export class RpcClientCache implements RpcClientInterface {
   private remove(key: string) {
     if (key in this._cache) {
       delete this._cache[key];
+    }
+  }
+
+  private validateAddress(address: string) {
+    if (validateAddress(address) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(`Invalid address: ${address}`);
+    }
+  }
+
+  private validateContract(address: string) {
+    if (validateContractAddress(address) !== ValidationResult.VALID) {
+      throw new InvalidContractAddressError(`Invalid contract address: ${address}`);
     }
   }
   /**
@@ -167,6 +188,7 @@ export class RpcClientCache implements RpcClientInterface {
     address: string,
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<BalanceResponse> {
+    this.validateAddress(address);
     const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getBalance', [block, address]);
     if (this.has(key)) {
       return this.get(key);
@@ -190,6 +212,7 @@ export class RpcClientCache implements RpcClientInterface {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<StorageResponse> {
+    this.validateContract(address);
     const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getStorage', [block, address]);
     if (this.has(key)) {
       return this.get(key);
@@ -213,6 +236,7 @@ export class RpcClientCache implements RpcClientInterface {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<ScriptResponse> {
+    this.validateContract(address);
     const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getScript', [block, address]);
     if (this.has(key)) {
       return this.get(key);
@@ -237,6 +261,7 @@ export class RpcClientCache implements RpcClientInterface {
     unparsingMode: UnparsingMode = { unparsing_mode: 'Readable' },
     { block }: { block: string } = defaultRPCOptions
   ): Promise<ScriptResponse> {
+    this.validateContract(address);
     const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getNormalizedScript', [
       block,
       address,
@@ -264,6 +289,7 @@ export class RpcClientCache implements RpcClientInterface {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<ContractResponse> {
+    this.validateAddress(address);
     const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getContract', [block, address]);
     if (this.has(key)) {
       return this.get(key);
@@ -287,6 +313,7 @@ export class RpcClientCache implements RpcClientInterface {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<ManagerKeyResponse> {
+    this.validateAddress(address);
     const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getManagerKey', [block, address]);
     if (this.has(key)) {
       return this.get(key);
@@ -310,6 +337,7 @@ export class RpcClientCache implements RpcClientInterface {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<DelegateResponse> {
+    this.validateAddress(address);
     const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getDelegate', [block, address]);
     if (this.has(key)) {
       return this.get(key);
@@ -336,6 +364,7 @@ export class RpcClientCache implements RpcClientInterface {
     key: BigMapKey,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<BigMapGetResponse> {
+    this.validateAddress(address);
     const keyUrl = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getBigMapKey', [
       block,
       address,
@@ -388,6 +417,7 @@ export class RpcClientCache implements RpcClientInterface {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<DelegatesResponse> {
+    this.validateAddress(address);
     const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getDelegates', [block, address]);
     if (this.has(key)) {
       return this.get(key);
@@ -726,6 +756,7 @@ export class RpcClientCache implements RpcClientInterface {
     contract: string,
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<EntrypointsResponse> {
+    this.validateContract(contract);
     const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getEntrypoints', [
       block,
       contract,
@@ -914,6 +945,17 @@ export class RpcClientCache implements RpcClientInterface {
       return this.get(key);
     } else {
       const response = this.rpcClient.getSaplingDiffByContract(contract, { block });
+      this.put(key, response);
+      return response;
+    }
+  }
+
+  async getProtocols({ block }: { block: string } = defaultRPCOptions): Promise<ProtocolsResponse> {
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getProtocols', [block]);
+    if (this.has(key)) {
+      return this.get(key);
+    } else {
+      const response = this.rpcClient.getProtocols({ block });
       this.put(key, response);
       return response;
     }

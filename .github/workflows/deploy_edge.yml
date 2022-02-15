@@ -5,9 +5,14 @@ on:
   push:
     branches:
       - master
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.ref != 'refs/heads/master' || github.run_number }}
+  cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
+
 jobs:
-  deply-edge-package:
-    runs-on: ecad-taquito
+  deploy-edge-package:
+    runs-on: ubuntu-latest
     if: ${{ github.event_name == 'pull_request' || github.ref == 'refs/heads/master' }}
     strategy:
       matrix:
@@ -16,15 +21,9 @@ jobs:
       VERDACCIO_TOKEN: ${{ secrets.EDGE_VERDACCIO_TOKEN }}
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
+    - uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node }}
-    - uses: actions/cache@v1
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
     - run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
     - run: echo "PACKAGE_VERSION=`node -p "require('./packages/taquito/package.json').version"`" >> $GITHUB_ENV
     - run: echo "BRANCH_NAME=`echo $GITHUB_REF | cut -d'/' -f 3`" >> $GITHUB_ENV
@@ -33,6 +32,7 @@ jobs:
     - run: npm run lerna -- bootstrap
     - run: find packages/ -mindepth 1 -maxdepth 2 -name README.md | xargs sed -i '1s/^/# WARNING This build is produced from a feature branch and could contain unreviewed changes from the public. Use with caution, do not use in production\n\n/'
     - run: npm run lerna -- version "${TARGET_VERSION}" --no-push --no-git-tag-version --yes
+    - run: npm run version-stamp
     - run: npm run build
     - run: cd packages/taquito && npm run build:release && cd ../..
     - run: git config user.email "actions@github.com" && git config user.name "Github Actions"

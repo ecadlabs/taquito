@@ -21,7 +21,8 @@ interface Config {
   knownBaker: string;
   knownContract: string;
   knownBigMapContract: string;
-  knownTzip1216Contract: string; // See example/example-Tzip12BigMapOffChain.ts
+  knownTzip1216Contract: string; // Use contract Tzip12BigMapOffChain from ~/example/deploy-docs-live-code-contracts.ts
+  knownSaplingContract: string; //Originate with ~/taquito/integration-tests/contract-originate-contract-with-single-sapling-state.spec.ts
   protocol: Protocols;
   signerConfig: EphemeralConfig | FaucetConfig;
 }
@@ -56,19 +57,20 @@ interface FaucetConfig {
   faucetKey: {};
 }
 
-const idiazabalnetEphemeral = {
-  rpc: process.env['TEZOS_RPC_IDIAZABALNET'] || 'https://idiazabalnet.ecadinfra.com',
-  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1QKhea82d31wkTAdZpLzpPTTXuAMqYFMrh',
-  knownBigMapContract: 'KT1CNdUVZjWbKQwQkSqZckNKEdCeWvvJiXC7',
-  knownTzip1216Contract: 'KT19e8k9FjyAyxhA5ByhsRXMXSWb3mEzRqBL',
-  protocol: Protocols.PtIdiaza,
+const ithacanetEphemeral = {
+  rpc: process.env['TEZOS_RPC_ITHACANET'] || 'https://ithacanet.ecadinfra.com/',
+  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD', 
+  knownContract: 'KT19oXBkAz1njVaTEypSzxGorWAFy6wnLLe1',
+  knownBigMapContract: 'KT1JmL7j8CY371kRF2oZoJmzi7EUWbLPjEqZ', 
+  knownTzip1216Contract: 'KT1GxL96iix8MCTsCA1DBVfnZ4Gdk7EZW4Eq',
+  knownSaplingContract: 'KT1CDenBWcgWjNZULc9GbJRTnQZQXYWrVT7k',
+  protocol: Protocols.Psithaca2,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'https://api.tez.ie/keys/idiazabalnet',
-    requestHeaders: { 'Authorization': 'Bearer taquito-example' },
-  }
-}
+    keyUrl: 'https://api.tez.ie/keys/ithacanet',
+    requestHeaders: { Authorization: 'Bearer taquito-example' },
+  },
+};
 
 const hangzhounetEphemeral = {
   rpc: process.env['TEZOS_RPC_HANGZHOUNET'] || 'https://hangzhounet.api.tez.ie',
@@ -76,159 +78,101 @@ const hangzhounetEphemeral = {
   knownContract: 'KT1XfoRSZ88ioYHbuEKqHxJPawm9Rqc54uoy',
   knownBigMapContract: 'KT1CnRSbp71FU8nz4xNEkcaASgMQDjNN85jd',
   knownTzip1216Contract: 'KT1KquwVmLtq9StwCK46vpwRCxowqhcoV4g1',
+  knownSaplingContract: 'KT1MfdF2jdYF4Ug4DmcDJ3GaLNW7RBMA9hkB',
   protocol: Protocols.PtHangz2,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'https://api.tez.ie/keys/hangzhounet',
-    requestHeaders: { 'Authorization': 'Bearer taquito-example' },
-  }
-}
+    requestHeaders: { Authorization: 'Bearer taquito-example' },
+  },
+};
 
-const granadanetEphemeral = {
-  rpc: process.env['TEZOS_RPC_GRANADANET'] || 'https://granadanet.api.tez.ie',
+const ithacanetFaucet = {
+  rpc: process.env['TEZOS_RPC_ITHACANET'] || 'https://ithacanet.ecadinfra.com/',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1JMwgeC7MwYiMiZd74gXK6wrY7QNf1NwLX',
-  knownBigMapContract: 'KT1VniFqNCPEq4MXvnjYGvUqdWDhooJM5Nae',
-  knownTzip1216Contract: 'KT1UbCaj7rCgiNi9X5oMnAsFSXSkGjwycL4p',
-  protocol: Protocols.PtGRANADs,
-  signerConfig: {
-    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'https://api.tez.ie/keys/granadanet',
-    requestHeaders: { 'Authorization': 'Bearer taquito-example' },
-  }
-}
-
-// Well known faucet key. Can be overridden by setting the `TEZOS_FAUCET_KEY_FILE` environment variable
-const key = {
-  email: "mfbzlhsv.owpfexem@tezos.example.org",
-  password: "bccbtuRKdr",
-  mnemonic: [
-    "addict",
-    "nerve",
-    "amazing",
-    "elevator",
-    "else",
-    "bind",
-    "injury",
-    "cotton",
-    "bind",
-    "judge",
-    "quote",
-    "apple",
-    "equip",
-    "ocean",
-    "tone"
-  ],
-  secret: "1e6159006a283a4456bda4f83721afa4bec9ed59"
-}
-
-const idiazabalnetFaucet = {
-  rpc: process.env['TEZOS_RPC_IDIAZABALNET'] || 'https://idiazabalnet.ecadinfra.com',
-  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1QKhea82d31wkTAdZpLzpPTTXuAMqYFMrh',
-  knownBigMapContract: 'KT1CNdUVZjWbKQwQkSqZckNKEdCeWvvJiXC7',
-  knownTzip1216Contract: 'KT19e8k9FjyAyxhA5ByhsRXMXSWb3mEzRqBL',
-  protocol: Protocols.PtIdiaza,
+  knownContract: 'KT19oXBkAz1njVaTEypSzxGorWAFy6wnLLe1',
+  knownBigMapContract: 'KT1JmL7j8CY371kRF2oZoJmzi7EUWbLPjEqZ',
+  knownTzip1216Contract: 'KT1GxL96iix8MCTsCA1DBVfnZ4Gdk7EZW4Eq',
+  knownSaplingContract: 'KT1CDenBWcgWjNZULc9GbJRTnQZQXYWrVT7k',
+  protocol: Protocols.Psithaca2,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
-    faucetKey: {
-      "pkh": "tz1S6Y5J1i5JbXQf9eigvrZdghtjCApC8gUG",
-      "mnemonic": [
-        "throw",
-        "rose",
-        "girl",
-        "arrange",
-        "practice",
-        "fiber",
-        "speed",
-        "delay",
-        "economy",
-        "wine",
-        "cable",
-        "copper",
-        "sweet",
-        "bag",
-        "wasp"
-      ],
-      "email": "hxkxykcy.edpwomka@teztnets.xyz",
-      "password": "vzVIvhuItq",
-      "amount": "143524244923",
-      "secret": "c83d1fba98e408bc142b3a9568a27207e5544b99"
-    },
-  }
-}
+      faucetKey: {  
+        "pkh": "tz1LJLhMszojav8EfN9hMZAPBSH21ocamx7n",
+        "mnemonic": [
+          "escape",
+          "camera",
+          "credit",
+          "endorse",
+          "auto",
+          "lamp",
+          "advance",
+          "orange",
+          "fluid",
+          "virus",
+          "argue",
+          "knee",
+          "pluck",
+          "remove",
+          "scheme"
+        ],
+        "email": "noriqgjl.gtsyulgy@teztnets.xyz",
+        "password": "st3sZBRLWF",
+        "amount": "118887604096",
+        "secret": "7d414378d9071328313cca699d6922f1b59d076a"
+    }
+  },
+};
 
 const hangzhounetFaucet = {
-  rpc: process.env['TEZOS_RPC_HANGZHOUNET'] || 'https://hangzhounet.api.tez.ie',
+  rpc: process.env['TEZOS_RPC_HANGZHOUNET'] || 'https://hangzhounet.api.tez.ie/',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1XfoRSZ88ioYHbuEKqHxJPawm9Rqc54uoy',
   knownBigMapContract: 'KT1CnRSbp71FU8nz4xNEkcaASgMQDjNN85jd',
   knownTzip1216Contract: 'KT1KquwVmLtq9StwCK46vpwRCxowqhcoV4g1',
+  knownSaplingContract: 'KT1MfdF2jdYF4Ug4DmcDJ3GaLNW7RBMA9hkB',
   protocol: Protocols.PtHangz2,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
     faucetKey: {
-      "mnemonic": [
-        "hero",
-        "calm",
-        "fever",
-        "defense",
-        "sound",
-        "amount",
-        "critic",
-        "quote",
-        "finger",
-        "strong",
-        "face",
-        "magnet",
-        "promote",
-        "opinion",
-        "flash"
+      mnemonic: [
+        'hero',
+        'calm',
+        'fever',
+        'defense',
+        'sound',
+        'amount',
+        'critic',
+        'quote',
+        'finger',
+        'strong',
+        'face',
+        'magnet',
+        'promote',
+        'opinion',
+        'flash',
       ],
-      "email": "xzuhshlh.ehwpsgne@teztnets.xyz",
-      "password": "aWMyUsXNia",
-      "secret": "dea0160b4d432daf03be1f00424f04bdb9d776a9"
+      email: 'xzuhshlh.ehwpsgne@teztnets.xyz',
+      password: 'aWMyUsXNia',
+      secret: 'dea0160b4d432daf03be1f00424f04bdb9d776a9',
     },
-  }
-}
-
-const granadanetFaucet = {
-  rpc: 'https://granadanet.api.tez.ie',
-  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1JMwgeC7MwYiMiZd74gXK6wrY7QNf1NwLX',
-  knownBigMapContract: 'KT1VniFqNCPEq4MXvnjYGvUqdWDhooJM5Nae',
-  knownTzip1216Contract: 'KT1UbCaj7rCgiNi9X5oMnAsFSXSkGjwycL4p',
-  protocol: Protocols.PtGRANADs,
-  signerConfig: {
-    type: SignerType.FAUCET as SignerType.FAUCET,
-    faucetKey: key,
-  }
-}
+  },
+};
 
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_FAUCET']) {
-  providers.push(hangzhounetFaucet, granadanetFaucet)
-}
-else if (process.env['RUN_GRANADANET_WITH_FAUCET']) {
-  providers.push(granadanetFaucet)
-}
-else if (process.env['RUN_HANGZHOUNET_WITH_FAUCET']) {
-  providers.push(hangzhounetFaucet)
-}
-else if (process.env['RUN_IDIAZABALNET_WITH_FAUCET']) {
-  providers.push(idiazabalnetFaucet)
-}
-else if (process.env['GRANADANET']) {
-  providers.push(granadanetEphemeral)
-}
-else if (process.env['HANGZHOUNET']) {
-  providers.push(hangzhounetEphemeral)
-}
-else if (process.env['IDIAZABALNET']) {
-  providers.push(idiazabalnetEphemeral)
+  providers.push(hangzhounetFaucet, ithacanetFaucet);
+} else if (process.env['RUN_HANGZHOUNET_WITH_FAUCET']) {
+  providers.push(hangzhounetFaucet);
+} else if (process.env['RUN_ITHACANET_WITH_FAUCET']) {
+  providers.push(ithacanetFaucet);
+} else if (process.env['HANGZHOUNET']) {
+  providers.push(hangzhounetEphemeral);
+} else if (process.env['ITHACANET']) {
+  providers.push(ithacanetEphemeral);
 } else {
-  providers.push(hangzhounetEphemeral, granadanetEphemeral)
+  providers.push(hangzhounetEphemeral, ithacanetEphemeral);
 }
 
 const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE'];
@@ -261,7 +205,7 @@ const setupSignerWithFreshKey = async (
     const signer = new InMemorySigner(key!);
     Tezos.setSignerProvider(signer);
   } catch (e) {
-    console.log("An error occurs when trying to fetch a fresh key:", e)
+    console.log('An error occurs when trying to fetch a fresh key:', e);
   }
 };
 
@@ -281,9 +225,8 @@ const setupSignerWithEphemeralKey = async (
 
     const signer = new RemoteSigner(pkh, `${ephemeralUrl}/${id}/`, { headers: requestHeaders });
     Tezos.setSignerProvider(signer);
-
   } catch (e) {
-    console.log("An error occurs when trying to fetch an ephemeral key:", e)
+    console.log('An error occurs when trying to fetch an ephemeral key:', e);
   }
 };
 
@@ -300,46 +243,57 @@ const setupWithFaucetKey = async (Tezos: TezosToolkit, signerConfig: FaucetConfi
 
 export const CONFIGS = () => {
   return forgers.reduce((prev, forger: ForgerType) => {
-
-    const configs = providers.map(({ rpc, knownBaker, knownContract, protocol, knownBigMapContract, knownTzip1216Contract, signerConfig }) => {
-      const Tezos = new TezosToolkit(new RpcClientCache(new RpcClient(rpc)));
-      Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: 300 } });
-
-      setupForger(Tezos, forger)
-
-      return {
+    const configs = providers.map(
+      ({
         rpc,
         knownBaker,
         knownContract,
         protocol,
-        lib: Tezos,
         knownBigMapContract,
         knownTzip1216Contract,
+        knownSaplingContract,
         signerConfig,
-        setup: async (preferFreshKey: boolean = false) => {
-          if (signerConfig.type === SignerType.FAUCET) {
-            await setupWithFaucetKey(Tezos, signerConfig);
-          } else if (signerConfig.type === SignerType.EPHEMERAL_KEY) {
-            if (preferFreshKey) {
-              await setupSignerWithFreshKey(Tezos, signerConfig);
-            } else {
-              await setupSignerWithEphemeralKey(Tezos, signerConfig);
+      }) => {
+        const Tezos = new TezosToolkit(new RpcClientCache(new RpcClient(rpc)));
+        Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: 300 } });
+
+        setupForger(Tezos, forger);
+
+        return {
+          rpc,
+          knownBaker,
+          knownContract,
+          protocol,
+          lib: Tezos,
+          knownBigMapContract,
+          knownTzip1216Contract,
+          knownSaplingContract,
+          signerConfig,
+          setup: async (preferFreshKey: boolean = false) => {
+            if (signerConfig.type === SignerType.FAUCET) {
+              await setupWithFaucetKey(Tezos, signerConfig);
+            } else if (signerConfig.type === SignerType.EPHEMERAL_KEY) {
+              if (preferFreshKey) {
+                await setupSignerWithFreshKey(Tezos, signerConfig);
+              } else {
+                await setupSignerWithEphemeralKey(Tezos, signerConfig);
+              }
             }
-          }
-        },
-        createAddress: async () => {
-          const tezos = new TezosToolkit(new RpcClientCache(new RpcClient(rpc)));
+          },
+          createAddress: async () => {
+            const tezos = new TezosToolkit(new RpcClientCache(new RpcClient(rpc)));
 
-          const keyBytes = Buffer.alloc(32);
-          nodeCrypto.randomFillSync(keyBytes)
+            const keyBytes = Buffer.alloc(32);
+            nodeCrypto.randomFillSync(keyBytes);
 
-          const key = b58cencode(new Uint8Array(keyBytes), prefix[Prefix.P2SK]);
-          await importKey(tezos, key);
+            const key = b58cencode(new Uint8Array(keyBytes), prefix[Prefix.P2SK]);
+            await importKey(tezos, key);
 
-          return tezos;
-        }
-      };
-    });
-    return [...prev, ...configs]
+            return tezos;
+          },
+        };
+      }
+    );
+    return [...prev, ...configs];
   }, [] as ConfigWithSetup[]);
 };

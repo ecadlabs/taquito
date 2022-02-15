@@ -3,34 +3,36 @@ import { importKey } from '@taquito/signer';
 import { knownContract } from './data/knownContract';
 import { knownBigMapContract } from './data/knownBigMapContract';
 
-const provider = 'https://idiazabalnet.ecadinfra.com';
+const provider = 'https://ithacanet.ecadinfra.com/';
 
 async function example() {
   const tezos = new TezosToolkit(provider);
 
   await importKey(
-    tezos,
-    'pqugfnyp.aricovrw@teztnets.xyz',
-    'PwMXISc7HK',
-    [
-      "drift",
-      "winner",
-      "prevent",
-      "sorry",
-      "loud",
-      "pattern",
-      "easy",
-      "buffalo",
-      "surround",
-      "exist",
-      "accuse",
-      "volume",
-      "loop",
-      "day",
-      "club",
-    ].join(' '),
-    '844a986d27f7989859bc82ebce16f293ab0f2da6'
-  );
+     tezos,
+     'noriqgjl.gtsyulgy@teztnets.xyz',
+     'st3sZBRLWF',
+     [
+      "escape",
+      "camera",
+      "credit",
+      "endorse",
+      "auto",
+      "lamp",
+      "advance",
+      "orange",
+      "fluid",
+      "virus",
+      "argue",
+      "knee",
+      "pluck",
+      "remove",
+      "scheme"
+     ].join(' '),
+     '7d414378d9071328313cca699d6922f1b59d076a'
+   );
+
+  
   try {
     console.log('Deploying the knownContract...');
     const opknownContract = await tezos.contract.originate({

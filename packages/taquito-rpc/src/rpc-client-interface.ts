@@ -28,6 +28,7 @@ import {
   PreapplyParams,
   PreapplyResponse,
   ProposalsResponse,
+  ProtocolsResponse,
   RPCRunCodeParam,
   RPCRunOperationParam,
   RPCRunViewParam,
@@ -101,4 +102,5 @@ export interface RpcClientInterface {
   getSuccessorPeriod(options?: RPCOptions): Promise<VotingPeriodBlockResult>;
   getSaplingDiffById(id: string, options?: RPCOptions): Promise<SaplingDiffResponse>;
   getSaplingDiffByContract(contract: string, options?: RPCOptions): Promise<SaplingDiffResponse>;
+  getProtocols(options?: RPCOptions): Promise<ProtocolsResponse>;
 }
