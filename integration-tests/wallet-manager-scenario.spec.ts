@@ -4,14 +4,13 @@ import { MANAGER_LAMBDA } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
   const Tezos = lib;
-  const test = require('jest-retries');
 
   describe(`Manager TZ: ${rpc}`, () => {
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    test('tests manager transfer scenarioswith wallet APi contract', 2, async (done: () => void) => {
+    test('tests manager transfer scenarioswith wallet APi contract', async (done: () => void) => {
       const op = await Tezos.wallet.originate({
         balance: "1",
         code: managerCode,
@@ -21,13 +20,13 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
       expect(op.status).toBeTruthy
       // Transfer from implicit account (tz1) to contract (kt1_alice)
       // A regular transfer operation is made. No smart contract calls required for this scenario.
-      const opTransferToContract = await Tezos.wallet.transfer({ to: contract.address, amount: 1 }).send();
+      const opTransferToContract = await Tezos.wallet.transfer({ to: contract.address, amount: 0.01 }).send();
       await opTransferToContract.confirmation();
       expect(op.status).toBeTruthy
       // Transfer from contract (kt1_alice) to implicit account (tz1)
       // We pass a lambda function to the kt1_alice contracts `do` entrypoint. The lambda code causes the contract to transfer
       // the specified number (50) of mutez to the target address.
-      const opTransfer = await contract.methods.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 50)).send({ amount: 0 })
+      const opTransfer = await contract.methods.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)).send({ amount: 0 })
       await opTransfer.confirmation();
       expect(opTransfer.status).toBeTruthy
       // Set delegate on contract kt1_alice by passing a lambda function to kt1_alice's `do` entrypoint

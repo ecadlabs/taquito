@@ -2,7 +2,6 @@ import { CONFIGS } from "./config";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker }) => {
   const Tezos = lib;
-  const test = require('jest-retries');
 
   describe(`Test emptying a delegated implicit account using: ${rpc}`, () => {
     
@@ -10,9 +9,9 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker }) => {
       await setup()
       done()
     })
-    test('create a new account, delegate it, attempt to empty it despite delegation expect to fail', 2,  async (done: () => void) => {
+    test('create a new account, delegate it, attempt to empty it despite delegation expect to fail', async (done: () => void) => {
       const LocalTez = await createAddress();
-      const op = await Tezos.contract.transfer({ to: await LocalTez.signer.publicKeyHash(), amount: 2 });
+      const op = await Tezos.contract.transfer({ to: await LocalTez.signer.publicKeyHash(), amount: 0.02 });
       await op.confirmation();
 
       // Delegating from the account we want to empty
@@ -20,7 +19,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker }) => {
       const op2 = await LocalTez.contract.setDelegate({ delegate: knownBaker, source: await LocalTez.signer.publicKeyHash() });
       await op2.confirmation();
 
-      const estimate = await LocalTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 0.5 });
+      const estimate = await LocalTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 0.005 });
 
       // Emptying the account
       // The max amount that can be sent now is the total balance minus the fees (no need for reveal fees)

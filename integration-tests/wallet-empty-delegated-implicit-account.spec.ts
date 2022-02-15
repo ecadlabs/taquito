@@ -2,7 +2,7 @@ import { CONFIGS } from "./config";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker }) => {
   const Tezos = lib;
-  const test = require('jest-retries')
+
 
   describe(`Test emptying a delegated implicit wallet account using: ${rpc}`, () => {
 
@@ -10,7 +10,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker }) => {
       await setup()
       done()
     })
-    test('creates a new wallet account, delegates it, and attempts to empty it despite the delegation being expected to fail', 2, async (done: () => void) => {
+    test('creates a new wallet account, delegates it, and attempts to empty it despite the delegation being expected to fail', async (done: () => void) => {
       const LocalTez = await createAddress();
       const op = await Tezos.wallet.transfer({ to: await LocalTez.signer.publicKeyHash(), amount: 2 }).send();
       await op.confirmation();

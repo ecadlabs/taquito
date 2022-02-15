@@ -7,7 +7,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
     const Tezos = lib;
 
     const hangzhounet = (protocol === Protocols.PtHangz2) ? test : test.skip;
-    const ithacanet = (protocol === Protocols.PsiThaCa) ? test : test.skip;
+    const ithacanet = (protocol === Protocols.Psithaca2) ? test : test.skip;
 
     describe('Fetch constants for all protocols on Mainnet', () => {
 
