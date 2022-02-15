@@ -11,6 +11,10 @@ export { VERSION } from './version';
 
 const defaultTimeout = 30000;
 
+enum ResponseType  {
+  TEXT = 'text',
+  JSON = 'json'
+}
 export interface HttpRequestOptions {
   url: string;
   method?: 'GET' | 'POST';
@@ -94,7 +98,7 @@ export class HttpBackend {
     }: HttpRequestOptions,
     data?: object | string
   ) {
-    let resType: 'text' | 'json';
+    let resType: ResponseType;
     let transformResponse = undefined;
 
     if (!headers['Content-Type']) {
@@ -102,10 +106,10 @@ export class HttpBackend {
     }
 
     if (!json) {
-      resType = 'text'
+      resType = ResponseType.TEXT
       transformResponse = [(v: any) => v]
     } else {
-      resType = 'json';
+      resType = ResponseType.JSON;
     }
   
     let response;
@@ -120,13 +124,25 @@ export class HttpBackend {
         data: data,
       });
     } catch (err: any) {
-      throw new HttpResponseError(
-        `Http error response: (${err.response.status}) ${JSON.stringify(err.response.data)}`,
-        err.response.status as STATUS_CODE,
-        err.response.statusText,
-        JSON.stringify(err.response.data),
-        url + this.serialize(query)
-      )
+      if (err.response) {
+        let errorData;
+
+        if (typeof err.response.data === 'object') {
+          errorData =  JSON.stringify(err.response.data);
+        } else {
+          errorData = err.response.data;
+        }
+        
+        throw new HttpResponseError(
+          `Http error response: (${err.response.status}) ${errorData}`,
+          err.response.status as STATUS_CODE,
+          err.response.statusText,
+          errorData,
+          url + this.serialize(query)
+        )
+      } else {
+        throw new Error(err)
+      }
     }
 
     return response.data
