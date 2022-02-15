@@ -10,10 +10,6 @@ import { packDataBytes } from "@taquito/michel-codec"
 const blake = require('blakejs');
 const bob_address = 'tz1Xk7HkSwHv6dTEgR7E2WC2yFj4cyyuj2Gh';
 
-const errors_to_missigned_bytes = (errors: any[]) => {
-  return errors[1].with.args[1].bytes;
-};
-
 const create_bytes_to_sign = async (Tezos: TezosToolkit, contractAddress: string, methodHash: string) => {
   const chainId = await Tezos.rpc.getChainId();
   
@@ -70,10 +66,7 @@ const create_bytes_to_sign = async (Tezos: TezosToolkit, contractAddress: string
       }
     ]
   };
-  // const sigParamPacked = await Tezos.rpc.packData({
-  // data: sigParamData,
-  // type: sigParamType
-  // });
+  
   const sigParamPacked = packDataBytes(sigParamData, sigParamType);
   // signs the hash    
   const signature = await Tezos.signer.sign(sigParamPacked.bytes);
@@ -120,16 +113,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       });
       const packed_param = raw_packed.packed;
       const param_hash = buf2hex(blake.blake2b(hex2buf(packed_param), null, 32));
-      /*const bytes_to_sign = await permit_contract.methods
-        .permit(signer_key, dummy_sig, param_hash)
-        .send()
-        .catch((e) => errors_to_missigned_bytes(e.errors));*/
-        
-        //The error here catches the bytes that are needed, so we have to catch the error for later use.
-        /*const param_sig = await Tezos.signer
-        .sign(bytes_to_sign)
-        .then((s) => s.prefixSig)
-        .catch((error) => console.log(JSON.stringify(error)));*/
+      
       const param_sig = await create_bytes_to_sign(Tezos, permit_contract.address, param_hash)
 
       const permitMethodCall = await permit_contract.methods
@@ -377,29 +361,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
         //Get Bootstrap2's public_key and capture it
         const PUB_KEY = await LocalTez2.signer.publicKey();
-
-        //Set Fake permit param
-        //PERMIT_PARAM_FAKE="{Pair \"$PUB_KEY\" (Pair \"$RAND_SIG\" $TRANSFER_PARAM_HASHED)}"
-
-        //Set MISSIGNED with bytes returned in error message of fake permit submission
-        /*const trial_permit_contract = await LocalTez4.contract.at(fa12_contract.address);
-        const bytes_to_sign = await trial_permit_contract.methods
-          .permit([
-            {
-              0: PUB_KEY, //key,
-              1: RAND_SIG, //signature
-              2: TRANSFER_PARAM_HASHED, //bytes
-            },
-          ])
-          .send()
-          .catch((e) => errors_to_missigned_bytes(e.errors));*/
-
-        //Sign MISSIGNED bytes for bootstrap_address2
-        /*const SIGNATURE = await LocalTez2.signer.sign(bytes_to_sign).then((s) => s.prefixSig)
-          .catch((error) => console.log(JSON.stringify(error)));*/
-
-        //Craft correct permit parameter
-        //PERMIT_PARAM="{Pair \"$PUB_KEY\" (Pair \"$SIGNATURE\" $TRANSFER_PARAM_HASHED)}"
         const SIGNATURE = await create_bytes_to_sign(LocalTez2, fa12_contract.address, TRANSFER_PARAM_HASHED)
         
         //Anyone can submit permit start
