@@ -115,10 +115,6 @@
         {
           "type": "doc",
           "id": "version-11.0.2/web3js_taquito"
-        },
-        {
-          "type": "doc",
-          "id": "version-11.0.2/taquito_utils"
         }
       ],
       "collapsible": true,

@@ -122,10 +122,6 @@
         },
         {
           "type": "doc",
-          "id": "version-11.1.0/taquito_utils"
-        },
-        {
-          "type": "doc",
           "id": "version-11.1.0/contracts_collection"
         }
       ],
