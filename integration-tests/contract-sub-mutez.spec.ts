@@ -47,7 +47,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
              init: `0`,
            });
        } catch (error: any) {
-         expect(error.message).toContain("Http error response: (400) Failed to parse the request body: No case matched:")
+         expect(error.message).toContain("Http error response: (400)")
        }
      });
 

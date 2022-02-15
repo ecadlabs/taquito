@@ -14,8 +14,9 @@ export class IpfsHttpHandler implements Handler {
         return this.httpBackend.createRequest<string>({
             url: `https://${this._ipfsGateway}/ipfs/${location.substring(2)}/`,
             method: 'GET',
-            headers: {'Content-Type': 'text/plain'},
-            mimeType: "text; charset=utf-8",
+            headers: {
+              'Content-Type': 'text/plain; charset=utf-8'
+            },
             json: false
         })
     }
