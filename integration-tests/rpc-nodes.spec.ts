@@ -231,7 +231,7 @@ CONFIGS().forEach(
           try {
             const injectedOperation = await rpcClient.injectOperation('operation');
           } catch (ex: any) {
-            expect(ex.message).toMatch('Hex.to_char: 112 is an invalid char');
+            expect(ex.message).toMatch('Invalid_argument "Hex.to_char: 112 is an invalid char');
           }
           done();
         });
