@@ -8,7 +8,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await setup()
       done()
     })
-    test('transfers 0.02 tez and waits for 2 confirmations', async (done: () => void) => {
+    test('transfers 0.02 tez and waits for 2 confirmations', async (done) => {
       const op = await Tezos.contract.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
       await op.confirmation()
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)

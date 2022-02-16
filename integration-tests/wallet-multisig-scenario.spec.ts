@@ -10,7 +10,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       await setup()
       done()
     })
-    test('test manager transfers scenarios for wallet api contract', async (done: () => void) => {
+    test('test manager transfers scenarios for wallet api contract', async (done) => {
       const account1 = await createAddress();
       const account2 = await createAddress();
       const account3 = await createAddress();

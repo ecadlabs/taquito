@@ -10,7 +10,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker }) => {
       await setup()
       done()
     })
-    test('creates a new wallet account, delegates it, and attempts to empty it despite the delegation being expected to fail', async (done: () => void) => {
+    test('creates a new wallet account, delegates it, and attempts to empty it despite the delegation being expected to fail', async (done) => {
       const LocalTez = await createAddress();
       const op = await Tezos.wallet.transfer({ to: await LocalTez.signer.publicKeyHash(), amount: 2 }).send();
       await op.confirmation();

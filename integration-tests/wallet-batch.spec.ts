@@ -12,7 +12,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
             done();
         });
 
-        test('Simple transfers with origination (with code in JSON Michelson format)', async (done: () => void) => {
+        test('Simple transfers with origination (with code in JSON Michelson format)', async (done) => {
             const batch = Tezos.wallet
                 .batch()
                 .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
@@ -41,7 +41,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
             done();
         });
 
-        test('Simple transfers with origination (with code in Michelson format)', async (done: () => void) => {
+        test('Simple transfers with origination (with code in Michelson format)', async (done) => {
             const batch = Tezos.wallet
                 .batch()
                 .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
@@ -70,7 +70,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
             done();
         });
 
-        test('Simple transfers with origination using with', async (done: () => void) => {
+        test('Simple transfers with origination using with', async (done) => {
             const op = await Tezos.wallet
                 .batch([
                     {
@@ -105,7 +105,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
             done();
         });
 
-        test('Test batch from account with low balance', async (done: () => void) => {
+        test('Test batch from account with low balance', async (done) => {
             const LocalTez = await createAddress();
             const op = await Tezos.wallet.transfer({ to: await LocalTez.wallet.pkh(), amount: 2 }).send();
             await op.confirmation();
@@ -133,7 +133,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
             done();
         });
 
-        test('Chain contract calls', async (done: () => void) => {
+        test('Chain contract calls', async (done) => {
             const op = await Tezos.wallet
                 .originate({
                     balance: '1',
@@ -172,7 +172,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
             done();
         });
 
-        test('Batch transfers and method call', async (done: () => void) => {
+        test('Batch transfers and method call', async (done) => {
             const contract = await Tezos.wallet.at(knownContract);
             const batch = await Tezos.wallet
                 .batch([

@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await setup()
       done()
     })
-    test('Test contract made with wallet API with no annotations for methods', async (done: () => void) => {
+    test('Test contract made with wallet API with no annotations for methods', async (done) => {
       // Constants to replace annotations
       const ACCOUNTS = '0';
       const BALANCE = '0';

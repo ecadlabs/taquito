@@ -14,7 +14,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       await setup()
       done()
     })
-    hangzhounet('Originates contract and calls deposit method with unit param', async (done: () => void) => {
+    hangzhounet('Originates contract and calls deposit method with unit param', async (done) => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: depositContractCodeHangzhou,
@@ -28,7 +28,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done();
     })
 
-    ithacanet('Originates contract and calls deposit method with unit param', async (done: () => void) => {
+    ithacanet('Originates contract and calls deposit method with unit param', async (done) => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: depositContractCodeIthaca,
