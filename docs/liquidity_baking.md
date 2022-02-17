@@ -64,10 +64,11 @@ import { TezosToolkit } from "@taquito/taquito"
 // to take into account the subsidy added to the LB contract
 // when the transaction will be baked
 const creditSubsidy = (xtzPool: BigNumber | number): BigNumber => {
+    const LIQUIDITY_BAKING_SUBSIDY = 2500000;
     if (BigNumber.isBigNumber(xtzPool)) {
-      return xtzPool.plus(new BigNumber(2500000));
+      return xtzPool.plus(new BigNumber(LIQUIDITY_BAKING_SUBSIDY));
     } else {
-      return new BigNumber(xtzPool).plus(new BigNumber(2500000));
+      return new BigNumber(xtzPool).plus(new BigNumber(LIQUIDITY_BAKING_SUBSIDY));
     }
   };
 
@@ -94,7 +95,7 @@ const tokenToXtzXtzOutput = (p: {
       tokenPool_.isGreaterThan(0)
     ) {
       // Includes 0.1% fee and 0.1% burn calculated separatedly: 
-      // 999/1000 * 999/1000 = 998100/1000000
+      // 999/1000 * 999/1000 = 998001/1000000
       let numerator = new BigNumber(tokenIn)
         .times(new BigNumber(xtzPool))
         .times(new BigNumber(998001));
