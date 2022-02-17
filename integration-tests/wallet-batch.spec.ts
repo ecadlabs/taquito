@@ -5,7 +5,6 @@ import { MANAGER_LAMBDA, OpKind } from '@taquito/taquito';
 
 CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }) => {
     const Tezos = lib;
-    const test = require('jest-retries');
     
     describe(`Test wallet.batch using: ${rpc}`, () => {
         beforeEach(async (done) => {
@@ -13,12 +12,12 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
             done();
         });
 
-        test('Simple transfers with origination (with code in JSON Michelson format)', 2, async (done: () => void) => {
+        test('Simple transfers with origination (with code in JSON Michelson format)', async (done) => {
             const batch = Tezos.wallet
                 .batch()
-                .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
-                .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
-                .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
+                .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
+                .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
+                .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
                 .withOrigination({
                     balance: '1',
                     code: ligoSample,
@@ -42,12 +41,12 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
             done();
         });
 
-        test('Simple transfers with origination (with code in Michelson format)', 2, async (done: () => void) => {
+        test('Simple transfers with origination (with code in Michelson format)', async (done) => {
             const batch = Tezos.wallet
                 .batch()
-                .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
-                .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
-                .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
+                .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
+                .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
+                .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
                 .withOrigination({
                     balance: '1',
                     code: ligoSampleMichelson,
@@ -71,13 +70,13 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
             done();
         });
 
-        test('Simple transfers with origination using with', 2, async (done: () => void) => {
+        test('Simple transfers with origination using with', async (done) => {
             const op = await Tezos.wallet
                 .batch([
                     {
                         kind: OpKind.TRANSACTION,
                         to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
-                        amount: 2
+                        amount: 0.02
                     },
                     {
                         kind: OpKind.ORIGINATION,
@@ -86,8 +85,8 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
                         storage: 0
                     }
                 ])
-                .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
-                .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
+                .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
+                .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
                 .send();
 
             const conf1 = await op.confirmation();
@@ -106,7 +105,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
             done();
         });
 
-        test('Test batch from account with low balance', 2, async (done: () => void) => {
+        test('Test batch from account with low balance', async (done) => {
             const LocalTez = await createAddress();
             const op = await Tezos.wallet.transfer({ to: await LocalTez.wallet.pkh(), amount: 2 }).send();
             await op.confirmation();
@@ -134,7 +133,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
             done();
         });
 
-        test('Chain contract calls', 2, async (done: () => void) => {
+        test('Chain contract calls', async (done) => {
             const op = await Tezos.wallet
                 .originate({
                     balance: '1',
@@ -150,7 +149,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
                 .batch()
                 .withTransfer({ to: contract.address, amount: 1 })
                 .withContractCall(
-                    contract.methods.do(MANAGER_LAMBDA.transferImplicit('tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh', 50))
+                    contract.methods.do(MANAGER_LAMBDA.transferImplicit('tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh', 5))
                 )
                 .withContractCall(contract.methods.do(MANAGER_LAMBDA.setDelegate(knownBaker)))
                 .withContractCall(contract.methods.do(MANAGER_LAMBDA.removeDelegate()));
@@ -173,12 +172,12 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
             done();
         });
 
-        test('Batch transfers and method call', 2, async (done: () => void) => {
+        test('Batch transfers and method call', async (done) => {
             const contract = await Tezos.wallet.at(knownContract);
             const batch = await Tezos.wallet
                 .batch([
-                    { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 },
-                    { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 },
+                    { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 },
+                    { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 },
                     { kind: OpKind.TRANSACTION, ...contract.methods.default([['Unit']]).toTransferParams() }
                 ])
                 .send();

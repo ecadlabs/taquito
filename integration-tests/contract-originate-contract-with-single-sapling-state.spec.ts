@@ -14,7 +14,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done();
     });
 
-    ithacanet('Originates a contract with a single sapling state in its storage for Ithaca', async (done: () => void) => {
+    ithacanet('Originates a contract with a single sapling state in its storage for Ithaca', async (done) => {
        const op = await Tezos.contract.originate({
         code: singleSaplingStateContract,
          init: '{}'
@@ -25,7 +25,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
        done();
      });
 
-     hangzhounet('Originates a contract with a single sapling state in its storage for Hangzhou', async (done: () => void) => {
+     hangzhounet('Originates a contract with a single sapling state in its storage for Hangzhou', async (done) => {
       const op = await Tezos.contract.originate({
         code: singleSaplingStateContractHangzhou,
         init: '{}'

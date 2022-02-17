@@ -13,7 +13,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, signerConfig }) => {
                 const batchOpEstimate = await Tezos.estimate
                     .batch([
                         { kind: OpKind.DELEGATION, source: await Tezos.signer.publicKeyHash(), delegate: knownBaker },
-                        { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 },
+                        { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 },
                     ])
 
                 expect(batchOpEstimate.length).toEqual(3);
@@ -39,7 +39,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, signerConfig }) => {
                 const batchOpEstimate = await Tezos.estimate
                     .batch([
                         { kind: OpKind.DELEGATION, source: await Tezos.signer.publicKeyHash(), delegate: knownBaker },
-                        { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 },
+                        { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 },
                     ])
 
                 expect(batchOpEstimate.length).toEqual(2);
