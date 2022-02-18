@@ -98,6 +98,18 @@ console.log('-- Packed data:', packedData);
 
 You can simulate the `PACK` instruction from Michelson with the `packData` method.
 
+```js
+// runs view
+const view = await client.runView({
+  contract: 'contractAddress',
+  entrypoint: 'contractEntrypoint',
+  chain_id: 'chainId',
+  input: {
+    string: 'testInput'
+  }
+});
+```
+
 ## Full documentation
 
 You can find the full documentation at the following address: [https://tezostaquito.io/typedoc/classes/\_taquito_rpc.rpcclient.html](https://tezostaquito.io/typedoc/classes/_taquito_rpc.rpcclient.html)

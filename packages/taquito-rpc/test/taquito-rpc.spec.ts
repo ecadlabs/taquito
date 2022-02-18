@@ -2545,6 +2545,7 @@ describe('RpcClient test', () => {
       done();
     });
   });
+
   describe('runOperation', () => {
     it('query the right url and data', async (done) => {
       const testData = {};
@@ -2561,6 +2562,23 @@ describe('RpcClient test', () => {
       done();
     });
   });
+
+  describe('runView', () => {
+    it('query the right url and data', async (done) => {
+      const testData = {
+        unparsing_mode: "Readable"
+      };
+
+      await client.runView(testData as any);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'POST',
+        url: 'root/chains/test/blocks/head/helpers/scripts/run_view'
+      });
+      expect(httpBackend.createRequest.mock.calls[0][1]).toEqual(testData);
+      done();
+    })
+  })
 
   describe('packData', () => {
     it('query the right url and data', async (done) => {

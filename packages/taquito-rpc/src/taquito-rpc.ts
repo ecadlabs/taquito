@@ -840,7 +840,7 @@ export class RpcClient implements RpcClientInterface {
       },
       {
         unparsing_mode,
-        rest
+        ...rest
       }
     );
   };
