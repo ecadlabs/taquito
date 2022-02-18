@@ -86,7 +86,7 @@ CONFIGS().forEach(
           done();
         });
 
-        it('runView', async (done) => {
+        it('Executes tzip4 views by calling runView ', async (done) => {
           let chainId: string;
 
           if (protocol === Protocols.Psithaca2) {
@@ -96,17 +96,17 @@ CONFIGS().forEach(
           }
 
           const params: RPCRunViewParam = {
-            contract: 'KT1LNMrk8orMQ85zbwK25996dPhDxfSicvKh',
+            contract: knownBigMapContract,
             entrypoint: 'getBalance',
             chain_id: chainId,
             input: {
-              string: 'tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1'
+              string: 'tz1btkXVkVFWLgXa66sbRJa8eeUSwvQFX4kP'
             }
           }
 
           const views = await Tezos.rpc.runView(params)
           expect(views).toBeDefined();
-          expect(views).toEqual({"data": {"int": "50"}});
+          expect(views).toEqual({"data": {"int": "100"}});
           done();
         });
 

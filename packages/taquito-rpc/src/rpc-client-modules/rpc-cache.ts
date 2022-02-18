@@ -807,9 +807,12 @@ export class RpcClientCache implements RpcClientInterface {
    * @description Simulate a call to a view following the TZIP-4 standard. See https://gitlab.com/tzip/tzip/-/blob/master/proposals/tzip-4/tzip-4.md#view-entrypoints.
    *
    */
-   async runView(viewParams: RPCRunViewParam, { block }: RPCOptions = defaultRPCOptions): Promise<RunViewResult> {
-    return this.rpcClient.runView(viewParams, { block });
-  };
+   async runView({ unparsing_mode = 'Readable', ...rest }: RPCRunViewParam, { block }: RPCOptions = defaultRPCOptions): Promise<RunViewResult> {
+    return this.rpcClient.runView({
+      unparsing_mode,
+      ...rest
+    }, { block });
+  }
 
   async getChainId() {
     const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getChainId', []);

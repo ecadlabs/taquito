@@ -843,7 +843,7 @@ export class RpcClient implements RpcClientInterface {
         ...rest
       }
     );
-  };
+  }
 
   async getChainId() {
     return this.httpBackend.createRequest<string>({
