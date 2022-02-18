@@ -1,0 +1,135 @@
+import { BlockResponse } from '@taquito/rpc';
+import { BehaviorSubject, from, Observable, ObservableInput, OperatorFunction, timer } from 'rxjs';
+import {
+  concatMap,
+  distinctUntilKeyChanged,
+  first,
+  pluck,
+  publish,
+  refCount,
+  retry,
+  switchMap,
+} from 'rxjs/operators';
+import { Context } from '../context';
+import { evaluateFilter } from './filters';
+import { Filter, SubscribeProvider, Subscription, OperationContent } from './interface';
+import { ObservableSubscription } from './observable-subscription';
+import BigNumber from 'bignumber.js';
+
+export interface PollingSubscribeProviderConfig {
+  streamerPollingIntervalMilliseconds?: number;
+  shouldObservableSubscriptionRetry: boolean;
+  observableSubscriptionRetryFunction: OperatorFunction<any, any>;
+}
+
+export const defaultConfigStreamer: PollingSubscribeProviderConfig = {
+  shouldObservableSubscriptionRetry: false,
+  observableSubscriptionRetryFunction: retry(),
+};
+
+const getLastBlock = (context: Context) => {
+  return from(context.rpc.getBlock()).pipe(first());
+};
+
+const applyFilter = (filter: Filter) =>
+  concatMap<BlockResponse, ObservableInput<OperationContent>>((block) => {
+    return new Observable<OperationContent>((sub) => {
+      for (const ops of block.operations) {
+        for (const op of ops) {
+          for (const content of op.contents) {
+            if (evaluateFilter({ hash: op.hash, ...content }, filter)) {
+              sub.next({ hash: op.hash, ...content });
+            }
+          }
+        }
+      }
+      sub.complete();
+    });
+  });
+
+export class PollingSubscribeProvider implements SubscribeProvider {
+  private _config$: BehaviorSubject<PollingSubscribeProviderConfig>;
+  // Map the changing polling interval to a timer, which will automatically terminate the previous timer when the next one starts.
+  private timer$: Observable<number>;
+
+  private newBlock$: Observable<BlockResponse>;
+
+  constructor(private context: Context, config: Partial<PollingSubscribeProviderConfig> = {}) {
+    this._config$ = new BehaviorSubject({
+      ...defaultConfigStreamer,
+      ...config,
+    });
+    this.timer$ = this._config$.pipe(
+      pluck('streamerPollingIntervalMilliseconds'),
+      switchMap((streamerPollingIntervalMilliseconds) => {
+        if (!streamerPollingIntervalMilliseconds) {
+          return from(this.getConfirmationPollingInterval()).pipe(
+            switchMap((interval) => {
+              return timer(0, interval);
+            })
+          );
+        } else {
+          return timer(0, streamerPollingIntervalMilliseconds);
+        }
+      })
+    );
+    this.newBlock$ = this.timer$.pipe(
+      switchMap(() => getLastBlock(this.context)),
+      distinctUntilKeyChanged('hash'),
+      publish(),
+      refCount()
+    );
+  }
+
+  get config() {
+    return this._config$.getValue();
+  }
+
+  private async getConfirmationPollingInterval() {
+    if (!this.config.streamerPollingIntervalMilliseconds) {
+      const defaultIntervalTestnetsMainnet = 5000;
+      const defaultIntervalSandbox = 1000;
+      try {
+        const constants = await this.context.readProvider.getProtocolConstants('head');
+        const blockTime = constants.minimal_block_delay
+          ? constants.minimal_block_delay.multipliedBy(1000)
+          : constants.time_between_blocks
+          ? constants.time_between_blocks[0].multipliedBy(1000)
+          : new BigNumber(defaultIntervalTestnetsMainnet);
+        const confirmationPollingInterval = blockTime.dividedBy(3);
+
+        this.config.streamerPollingIntervalMilliseconds =
+          confirmationPollingInterval.toNumber() === 0
+            ? defaultIntervalSandbox
+            : confirmationPollingInterval.toNumber();
+      } catch (exception) {
+        return defaultIntervalTestnetsMainnet;
+      }
+    }
+    return this.config.streamerPollingIntervalMilliseconds;
+  }
+
+  subscribeBlock(_filter: 'head'): Subscription<BlockResponse> {
+    return new ObservableSubscription(
+      this.newBlock$,
+      this.config.shouldObservableSubscriptionRetry,
+      this.config.observableSubscriptionRetryFunction
+    );
+  }
+
+  subscribe(_filter: 'head'): Subscription<string> {
+    return new ObservableSubscription(
+      this.newBlock$.pipe(pluck('hash')),
+      this.config.shouldObservableSubscriptionRetry,
+      this.config.observableSubscriptionRetryFunction
+    );
+  }
+
+  subscribeOperation(filter: Filter): Subscription<OperationContent> {
+    return new ObservableSubscription(
+      this.newBlock$.pipe(applyFilter(filter)),
+      this.config.shouldObservableSubscriptionRetry,
+      this.config.observableSubscriptionRetryFunction
+    );
+  }
+}

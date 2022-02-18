@@ -17,9 +17,10 @@ import {
  *
  * @warn Currently support only one origination per operation
  */
-export class OriginationOperation<TContract extends DefaultContractType = DefaultContractType> 
+export class OriginationOperation<TContract extends DefaultContractType = DefaultContractType>
   extends Operation
-  implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation {
+  implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation
+{
   /**
    * @description Contract address of the newly originated contract
    */
@@ -98,12 +99,12 @@ export class OriginationOperation<TContract extends DefaultContractType = Defaul
   /**
    * @description Provide the contract abstract of the newly originated contract
    */
-  async contract(confirmations?: number, interval?: number, timeout?: number) {
+  async contract(confirmations?: number, timeout?: number) {
     if (!this.contractAddress) {
       throw new Error('No contract was originated in this operation');
     }
 
-    await this.confirmation(confirmations, interval, timeout);
+    await this.confirmation(confirmations, timeout);
     return this.contractProvider.at<TContract>(this.contractAddress);
   }
 }

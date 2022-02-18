@@ -1,23 +1,18 @@
-import {
-  BlockResponse,
-  OperationContentsAndResult,
-  OperationContentsAndResultReveal,
-} from '@taquito/rpc';
-import { defer, EMPTY, from, of, ReplaySubject, timer } from 'rxjs';
+import { OperationContentsAndResult, OperationContentsAndResultReveal } from '@taquito/rpc';
+import { defer, EMPTY, of, ReplaySubject, throwError } from 'rxjs';
 import {
   catchError,
   filter,
   first,
   map,
-  mapTo,
   shareReplay,
   switchMap,
-  switchMapTo,
-  tap,
+  timeoutWith,
 } from 'rxjs/operators';
 import { Context } from '../context';
 import { ForgedBytes, hasMetadataWithResult } from './types';
 import { validateOperation, ValidationResult, InvalidOperationHashError } from '@taquito/utils';
+import { createObservableFromSubscription } from '../subscribe/create-observable-from-subscription';
 
 interface PollingConfig {
   timeout: number;
@@ -30,51 +25,19 @@ interface PollingConfig {
 export class Operation {
   private _pollingConfig$ = new ReplaySubject<PollingConfig>(1);
 
-  private _currentHeadPromise: Promise<BlockResponse> | undefined = undefined;
-
-  // Caching the current head for one second
-  private currentHead$ = defer(() => {
-    if (!this._currentHeadPromise) {
-      this._currentHeadPromise = this.context.rpc.getBlock();
-      timer(1000)
-        .pipe(first())
-        .subscribe(() => {
-          this._currentHeadPromise = undefined;
-        });
-    }
-    return from(this._currentHeadPromise);
-  });
-
-  // Polling observable that emit until timeout is reached
-  private polling$ = defer(() =>
-    this._pollingConfig$.pipe(
-      tap(({ timeout, interval }) => {
-        if (timeout <= 0) {
-          throw new Error('Timeout must be more than 0');
-        }
-
-        if (interval <= 0) {
-          throw new Error('Interval must be more than 0');
-        }
-      }),
-      map((config) => ({
-        ...config,
-        timeoutAt: Math.ceil(config.timeout / config.interval) + 1,
-        count: 0,
-      })),
-      switchMap((config) => timer(0, config.interval * 1000).pipe(mapTo(config))),
-      tap((config) => {
-        config.count++;
-        if (config.count > config.timeoutAt) {
-          throw new Error(`Confirmation polling timed out`);
-        }
-      })
-    )
+  private currentHead$ = this._pollingConfig$.pipe(
+    switchMap((config) => {
+      return defer(() =>
+        createObservableFromSubscription(this.context.stream.subscribeBlock('head'))
+      ).pipe(
+        timeoutWith(config.timeout * 1000, throwError(new Error('Confirmation polling timed out')))
+      );
+    }),
+    shareReplay({ refCount: true })
   );
 
   // Observable that emit once operation is seen in a block
-  private confirmed$ = this.polling$.pipe(
-    switchMapTo(this.currentHead$),
+  private confirmed$ = this.currentHead$.pipe(
     map((head) => {
       for (let i = 3; i >= 0; i--) {
         head.operations[i].forEach((op) => {
@@ -113,11 +76,14 @@ export class Operation {
       throw new InvalidOperationHashError(`Invalid Operation Hash: ${this.hash}`);
     }
 
-    this.confirmed$.pipe(first(),
-      catchError(() => {
-        return of(EMPTY)
-      })
-    ).subscribe();
+    this.confirmed$
+      .pipe(
+        first(),
+        catchError(() => {
+          return of(EMPTY);
+        })
+      )
+      .subscribe();
   }
 
   get revealOperation() {
@@ -152,22 +118,15 @@ export class Operation {
   /**
    *
    * @param confirmations [0] Number of confirmation to wait for
-   * @param interval [10] Polling interval
    * @param timeout [180] Timeout
    */
-  async confirmation(confirmations?: number, interval?: number, timeout?: number) {
+  async confirmation(confirmations?: number, timeout?: number) {
     if (typeof confirmations !== 'undefined' && confirmations < 1) {
       throw new Error('Confirmation count must be at least 1');
     }
 
-    const confirmationPollingIntervalSecond =
-      this.context.config.confirmationPollingIntervalSecond !== undefined
-        ? this.context.config.confirmationPollingIntervalSecond
-        : await this.context.getConfirmationPollingInterval();
-
     const { defaultConfirmationCount, confirmationPollingTimeoutSecond } = this.context.config;
     this._pollingConfig$.next({
-      interval: interval || confirmationPollingIntervalSecond,
       timeout: timeout || confirmationPollingTimeoutSecond,
     } as Required<PollingConfig>);
 
@@ -176,7 +135,6 @@ export class Operation {
     return new Promise<number>((resolve, reject) => {
       this.confirmed$
         .pipe(
-          switchMap(() => this.polling$),
           switchMap(() => this.currentHead$),
           filter((head) => head.header.level - this._foundAt >= conf - 1),
           first()
