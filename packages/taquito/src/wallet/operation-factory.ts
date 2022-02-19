@@ -2,6 +2,7 @@ import { BlockResponse } from '@taquito/rpc';
 import { concat, defer, from, Observable, of, range, SchedulerLike, throwError } from 'rxjs';
 import { concatMap, shareReplay, startWith, switchMap, timeoutWith } from 'rxjs/operators';
 import { Context } from '../context';
+import { BlockIdentifier } from '../read-provider/interface';
 import { createObservableFromSubscription } from '../subscribe/create-observable-from-subscription';
 import { BatchWalletOperation } from './batch-operation';
 import { DelegationWalletOperation } from './delegation-operation';
@@ -44,7 +45,7 @@ export class OperationFactory {
   }
 
   private createPastBlockWalker(startBlock: string, count = 1) {
-    return from(this.context.rpc.getBlock({ block: startBlock })).pipe(
+    return from(this.context.readProvider.getBlock(startBlock as BlockIdentifier)).pipe(
       switchMap((block) => {
         if (count === 1) {
           return of(block);
@@ -53,7 +54,9 @@ export class OperationFactory {
         return range(block.header.level, count - 1).pipe(
           startWith(block),
           concatMap(async (level) => {
-            return this.context.rpc.getBlock({ block: String(level) });
+            return this.context.readProvider.getBlock(
+              typeof level === 'number' ? level : level.header.level
+            );
           })
         );
       })

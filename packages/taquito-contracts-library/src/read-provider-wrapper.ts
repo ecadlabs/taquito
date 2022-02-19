@@ -1,5 +1,6 @@
 import { BigNumber } from 'bignumber.js';
 import {
+  BlockResponse,
   EntrypointsResponse,
   MichelsonV1Expression,
   SaplingDiffResponse,
@@ -38,9 +39,7 @@ export class ReadWrapperContractsLibrary implements TzReadProvider {
   getNextProtocol(block: BlockIdentifier): Promise<string> {
     return this.readProvider.getNextProtocol(block);
   }
-  getProtocolConstants(
-    block: BlockIdentifier
-  ): Promise<{
+  getProtocolConstants(block: BlockIdentifier): Promise<{
     time_between_blocks?: BigNumber[] | undefined;
     minimal_block_delay?: BigNumber | undefined;
     hard_gas_limit_per_operation: BigNumber;
@@ -79,5 +78,11 @@ export class ReadWrapperContractsLibrary implements TzReadProvider {
   }
   isAccountRevealed(publicKeyHash: string, block: BlockIdentifier): Promise<boolean> {
     return this.readProvider.isAccountRevealed(publicKeyHash, block);
+  }
+  getBlock(block: BlockIdentifier): Promise<BlockResponse> {
+    return this.readProvider.getBlock(block);
+  }
+  getLiveBlocks(block: BlockIdentifier): Promise<string[]> {
+    return this.readProvider.getLiveBlocks(block);
   }
 }
