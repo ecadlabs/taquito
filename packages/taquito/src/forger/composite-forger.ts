@@ -1,4 +1,4 @@
-import { Forger, ForgeParams, ForgeResponse } from './interface';
+import { Forger, ForgeParams, ForgeResponse } from '@taquito/local-forging';
 
 export class ForgingMismatchError extends Error {
   name = 'ForgingMismatchError';

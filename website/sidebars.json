@@ -54,7 +54,7 @@
     {
       "type": "category",
       "label": "Modules customization",
-      "items": ["rpc-cache", "cancel_http_requests"]
+      "items": ["forger", "rpc-cache", "cancel_http_requests"]
     },
     {
       "type": "category",

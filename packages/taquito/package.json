@@ -78,6 +78,7 @@
   },
   "dependencies": {
     "@taquito/http-utils": "^11.2.0",
+    "@taquito/local-forging": "^11.2.0",
     "@taquito/michel-codec": "^11.2.0",
     "@taquito/michelson-encoder": "^11.2.0",
     "@taquito/rpc": "^11.2.0",

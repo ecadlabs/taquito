@@ -71,7 +71,7 @@
     "bignumber.js": "^9.0.2"
   },
   "devDependencies": {
-    "@taquito/taquito": "^11.2.0",
+    "@taquito/rpc": "^11.2.0",
     "@types/bluebird": "^3.5.36",
     "@types/jest": "^26.0.23",
     "@types/node": "^17.0.0",

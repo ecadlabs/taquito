@@ -3,7 +3,7 @@
  * @module @taquito/local-forging
  */
 
-import { ForgeParams, Forger } from '@taquito/taquito';
+import { ForgeParams, Forger } from './interface';
 import { CODEC } from './constants';
 import { decoders } from './decoder';
 import { encoders } from './encoder';
@@ -13,6 +13,7 @@ export { CODEC } from './constants';
 export * from './decoder';
 export * from './encoder';
 export * from './uint8array-consumer';
+export * from './interface';
 
 export function getCodec(codec: CODEC) {
   return {
