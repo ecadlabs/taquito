@@ -1,14 +1,20 @@
-import { EntrypointsResponse, MichelsonV1Expression, SaplingDiffResponse, ScriptedContracts } from '@taquito/rpc';
+import {
+  BlockResponse,
+  EntrypointsResponse,
+  MichelsonV1Expression,
+  SaplingDiffResponse,
+  ScriptedContracts,
+} from '@taquito/rpc';
 import BigNumber from 'bignumber.js';
 
 export type BigMapQuery = {
-  id: string,
-  expr: string
-}
+  id: string;
+  expr: string;
+};
 
 export type SaplingStateQuery = {
-  id: string
-}
+  id: string;
+};
 
 // block identifier can be head, a block relative to head, a block hash or a block level
 export type BlockIdentifier = 'head' | `head~${number}` | `B${string}` | number;
@@ -49,12 +55,12 @@ export interface TzReadProvider {
     cost_per_byte: BigNumber;
   }>;
 
- /**
-  * @description Access the script (code and storage) of a smart contract
-  * @param contract contract address from which we want to retrieve the script
-  * @param block from which we want to retrieve the storage value
-  * @returns Note: The code must be in the JSON format and not contain global constant
-  */
+  /**
+   * @description Access the script (code and storage) of a smart contract
+   * @param contract contract address from which we want to retrieve the script
+   * @param block from which we want to retrieve the storage value
+   * @returns Note: The code must be in the JSON format and not contain global constant
+   */
   getScript(contract: string, block: BlockIdentifier): Promise<ScriptedContracts>;
 
   /**
@@ -86,7 +92,7 @@ export interface TzReadProvider {
    * @param block from which we want to retrieve the timestamp
    * @returns date ISO format zero UTC offset ("2022-01-19T22:37:07Z")
    */
-  getBlockTimestamp(block: BlockIdentifier): Promise<string>
+  getBlockTimestamp(block: BlockIdentifier): Promise<string>;
 
   /**
    * @description Access the value associated with a key in a big map.
@@ -100,7 +106,10 @@ export interface TzReadProvider {
    * @param id Sapling state ID
    * @param block from which we want to retrieve the sapling state
    */
-  getSaplingDiffById(saplingStateQuery: SaplingStateQuery, block: BlockIdentifier): Promise<SaplingDiffResponse>;
+  getSaplingDiffById(
+    saplingStateQuery: SaplingStateQuery,
+    block: BlockIdentifier
+  ): Promise<SaplingDiffResponse>;
 
   /**
    * @description Return the list of entrypoints of the contract
@@ -111,12 +120,24 @@ export interface TzReadProvider {
   /**
    * @description Access the chain id
    */
-  getChainId(): Promise<string>
+  getChainId(): Promise<string>;
 
   /**
    * @description Indicate if an account is revealed
-   * @param publicKeyHash of the account 
+   * @param publicKeyHash of the account
    * @param block from which we want to know if the account is revealed
    */
   isAccountRevealed(publicKeyHash: string, block: BlockIdentifier): Promise<boolean>;
+
+  /**
+   * @description Return all the information about a block
+   * @param block from which we want to retrieve the information
+   */
+  getBlock(block: BlockIdentifier): Promise<BlockResponse>;
+
+  /**
+   * @description Return a list of the ancestors of the given block which, if referred to as the branch in an operation header, are recent enough for that operation to be included in the current block.
+   * @param block from which we want to retrieve the information
+   */
+  getLiveBlocks(block: BlockIdentifier): Promise<string[]>;
 }
