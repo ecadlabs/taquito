@@ -229,7 +229,7 @@ export class Context {
   }
 
   /**
-   * @description Allows extensions set on the TezosToolkit to inject logic into the context
+   * @description Allows extensions set on the TezosToolkit to inject logic into the context 
    */
   registerProviderDecorator(fx: (context: Context) => Context) {
     this.providerDecorator.push(fx);
