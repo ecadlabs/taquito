@@ -7,7 +7,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   beforeEach(async (done) => {
     await setup();
-    Tezos.setStreamProvider(Tezos.getFactory(PollingSubscribeProvider)({ streamerPollingIntervalMilliseconds: 6000 }));
+    Tezos.setStreamProvider(Tezos.getFactory(PollingSubscribeProvider)({ pollingIntervalMilliseconds: 6000 }));
     done();
   })
 

@@ -17,7 +17,7 @@ import { ObservableSubscription } from './observable-subscription';
 import BigNumber from 'bignumber.js';
 
 export interface PollingSubscribeProviderConfig {
-  streamerPollingIntervalMilliseconds?: number;
+  pollingIntervalMilliseconds?: number;
   shouldObservableSubscriptionRetry: boolean;
   observableSubscriptionRetryFunction: OperatorFunction<any, any>;
 }
@@ -60,16 +60,16 @@ export class PollingSubscribeProvider implements SubscribeProvider {
       ...config,
     });
     this.timer$ = this._config$.pipe(
-      pluck('streamerPollingIntervalMilliseconds'),
-      switchMap((streamerPollingIntervalMilliseconds) => {
-        if (!streamerPollingIntervalMilliseconds) {
+      pluck('pollingIntervalMilliseconds'),
+      switchMap((pollingIntervalMilliseconds) => {
+        if (!pollingIntervalMilliseconds) {
           return from(this.getConfirmationPollingInterval()).pipe(
             switchMap((interval) => {
               return timer(0, interval);
             })
           );
         } else {
-          return timer(0, streamerPollingIntervalMilliseconds);
+          return timer(0, pollingIntervalMilliseconds);
         }
       })
     );
@@ -86,7 +86,7 @@ export class PollingSubscribeProvider implements SubscribeProvider {
   }
 
   private async getConfirmationPollingInterval() {
-    if (!this.config.streamerPollingIntervalMilliseconds) {
+    if (!this.config.pollingIntervalMilliseconds) {
       const defaultIntervalTestnetsMainnet = 5000;
       const defaultIntervalSandbox = 1000;
       try {
@@ -98,7 +98,7 @@ export class PollingSubscribeProvider implements SubscribeProvider {
           : new BigNumber(defaultIntervalTestnetsMainnet);
         const confirmationPollingInterval = blockTime.dividedBy(3);
 
-        this.config.streamerPollingIntervalMilliseconds =
+        this.config.pollingIntervalMilliseconds =
           confirmationPollingInterval.toNumber() === 0
             ? defaultIntervalSandbox
             : confirmationPollingInterval.toNumber();
@@ -106,7 +106,7 @@ export class PollingSubscribeProvider implements SubscribeProvider {
         return defaultIntervalTestnetsMainnet;
       }
     }
-    return this.config.streamerPollingIntervalMilliseconds;
+    return this.config.pollingIntervalMilliseconds;
   }
 
   subscribeBlock(_filter: 'head'): Subscription<BlockResponse> {
