@@ -41,9 +41,7 @@ CONFIGS().forEach(({ rpc, protocol }) => {
 
             ithacanet(`Should give the same result as when forging with the rpc: ${name} (${rpc})`, async done => {
                 const result = await localForger.forge(operation);
-                console.log('loc', result)
                 const rpcResult = await Tezos.rpc.forgeOperations(operation);
-                console.log('rpc', rpcResult)
                 expect(result).toEqual(rpcResult);
                 expect(await localForger.parse(result)).toEqual(expected || operation);
                 done();
