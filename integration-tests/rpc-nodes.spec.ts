@@ -1,6 +1,6 @@
 import { CONFIGS } from './config';
-import { Protocols } from '@taquito/taquito';
-import { RpcClientCache, RpcClient } from '@taquito/rpc';
+import { Protocols, ChainIds } from '@taquito/taquito';
+import { RpcClientCache, RpcClient, RPCRunViewParam } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_bigmap';
@@ -18,7 +18,6 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
     const skipIthacanet = protocol === Protocols.Psithaca2 ? test.skip : test;
-    const skipHangzhounet = protocol === Protocols.PtHangz2 ? test.skip : test;
 
     beforeEach(async (done) => {
       await setup();
@@ -84,6 +83,30 @@ CONFIGS().forEach(
         it(`Access the delegate of a contract`, async (done) => {
           const delegate = await rpcClient.getDelegate(knownBaker);
           expect(delegate).toBeDefined();
+          done();
+        });
+
+        it('Executes tzip4 views by calling runView ', async (done) => {
+          let chainId: string;
+
+          if (protocol === Protocols.Psithaca2) {
+            chainId = ChainIds.ITHACANET2
+          } else {
+            chainId = ChainIds.HANGZHOUNET
+          }
+
+          const params: RPCRunViewParam = {
+            contract: knownBigMapContract,
+            entrypoint: 'getBalance',
+            chain_id: chainId,
+            input: {
+              string: 'tz1btkXVkVFWLgXa66sbRJa8eeUSwvQFX4kP'
+            }
+          }
+
+          const views = await Tezos.rpc.runView(params)
+          expect(views).toBeDefined();
+          expect(views).toEqual({"data": {"int": "100"}});
           done();
         });
 

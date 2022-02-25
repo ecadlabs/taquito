@@ -10,6 +10,7 @@ import {
   OperationContentsAndResultTransaction,
   LazyStorageDiffSaplingState,
   OperationContentsAndResultRegisterGlobalConstant,
+  RPCRunViewParam,
 } from '../src/types';
 
 /**
@@ -2545,6 +2546,7 @@ describe('RpcClient test', () => {
       done();
     });
   });
+
   describe('runOperation', () => {
     it('query the right url and data', async (done) => {
       const testData = {};
@@ -2561,6 +2563,57 @@ describe('RpcClient test', () => {
       done();
     });
   });
+
+  describe('runView', () => {
+    it('query the right url and data', async (done) => {
+      const testData: RPCRunViewParam = {
+        contract: 'test',
+        entrypoint: 'test',
+        chain_id: 'test',
+        input: {
+          string: 'test'
+        }
+      };
+
+      await client.runView(testData);
+      
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'POST',
+        url: 'root/chains/test/blocks/head/helpers/scripts/run_view'
+      });
+      expect(httpBackend.createRequest.mock.calls[0][1]).toEqual({
+        contract: 'test',
+        entrypoint: 'test',
+        chain_id: 'test',
+        input: {
+          string: 'test'
+        },
+        unparsing_mode: 'Readable'
+      });
+      done();
+    });
+
+    it('query the right url and data with unparsing_mode overriden', async (done) => {
+      const testData: RPCRunViewParam = {
+        contract: 'test',
+        entrypoint: 'test',
+        chain_id: 'test',
+        input: {
+          string: 'test'
+        },
+        unparsing_mode: 'Optimized'
+      }
+
+      await client.runView(testData);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'POST',
+        url: 'root/chains/test/blocks/head/helpers/scripts/run_view'
+      });
+      expect(httpBackend.createRequest.mock.calls[0][1]).toEqual(testData);
+      done();
+    })
+  })
 
   describe('packData', () => {
     it('query the right url and data', async (done) => {

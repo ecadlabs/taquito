@@ -59,7 +59,7 @@
     ]
   },
   "dependencies": {
-    "xhr2-cookies": "^1.1.0"
+    "axios": "^0.25.0"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.36",

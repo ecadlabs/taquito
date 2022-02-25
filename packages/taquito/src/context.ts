@@ -1,6 +1,6 @@
 import { RpcClient, RpcClientInterface } from '@taquito/rpc';
 import { Protocols } from './constants';
-import { Forger } from './forger/interface';
+import { Forger } from '@taquito/local-forging';
 import { RpcForger } from './forger/rpc-forger';
 import { Injector } from './injector/interface';
 import { RpcInjector } from './injector/rpc-injector';

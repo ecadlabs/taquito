@@ -3,6 +3,7 @@ import { InMemorySigner, importKey } from '../src/taquito-signer';
 
 describe('ImportKey', () => {
   let mockRpcClient: any;
+  let mockLocalForger: any;
   let toolkit: TezosToolkit;
 
   const mnemonics = [
@@ -31,10 +32,13 @@ describe('ImportKey', () => {
       getStorage: jest.fn(),
       getBlockHeader: jest.fn(),
       getContract: jest.fn(),
-      forgeOperations: jest.fn(),
       injectOperation: jest.fn(),
       preapplyOperations: jest.fn(),
       getProtocols: jest.fn(),
+    };
+
+    mockLocalForger = {
+      forge: jest.fn(),
     };
 
     mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
@@ -58,6 +62,8 @@ describe('ImportKey', () => {
     toolkit['_rpcClient'] = mockRpcClient;
     toolkit['_context'].rpc = mockRpcClient;
     toolkit['_options'].rpc = mockRpcClient;
+    toolkit['_context'].forger = mockLocalForger;
+    toolkit['_options'].forger = mockLocalForger;
   });
 
   it('should use InMemorySigner when importKey is called', async (done) => {
@@ -83,7 +89,7 @@ describe('ImportKey', () => {
       '837f402873eff00fa0b0977c08725b1f8d78a94b'
     );
     expect(toolkit.signer).toBeInstanceOf(InMemorySigner);
-    expect(mockRpcClient.forgeOperations).toHaveBeenCalledWith({
+    expect(mockLocalForger.forge).toHaveBeenCalledWith({
       branch: 'test',
       contents: [
         {
@@ -100,9 +106,7 @@ describe('ImportKey', () => {
 
   it('should use InMemorySigner and skip activate faucet account when called with already activated account', async (done) => {
     // Mock RPC error when activation is already done
-    mockRpcClient.forgeOperations.mockRejectedValue({ body: 'Invalid activation' });
-    // Mock fake operation hash
-    mockRpcClient.injectOperation.mockResolvedValue('test');
+    mockRpcClient.injectOperation.mockRejectedValue({ body: 'Invalid activation' });
     expect(toolkit.signer).toEqual({});
     await importKey(
       toolkit,
@@ -112,7 +116,6 @@ describe('ImportKey', () => {
       '837f402873eff00fa0b0977c08725b1f8d78a94b'
     );
     expect(toolkit.signer).toBeInstanceOf(InMemorySigner);
-    expect(mockRpcClient.injectOperation).not.toHaveBeenCalled();
     expect(await toolkit.signer.publicKeyHash()).toEqual('tz1bg7HTLJxHrDcivFUSTx8TLNsJcty7j9r5');
     done();
   });

@@ -74,7 +74,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
 
     test(
       'originates a contract with empty bigmap and fetches the storage/bigmap',
-      async (done: () => void) => {
+      async (done) => {
         const signer = await Tezos.signer.publicKeyHash();
 
         const bigMapInit = new MichelsonMap();
