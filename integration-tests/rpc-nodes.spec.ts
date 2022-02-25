@@ -17,8 +17,10 @@ CONFIGS().forEach(
     rpc,
   }) => {
     const Tezos = lib;
+    const ithacanet = protocol === Protocols.Psithaca2 ? test : test.skip;
+    const hangzhounet = protocol === Protocols.PtHangz2 ? test : test.skip;
 
-    beforeEach(async (done) => {
+    beforeAll(async (done) => {
       await setup();
       done();
     });
@@ -169,15 +171,46 @@ CONFIGS().forEach(
           done();
         });
 
-        it('Retrieves the list of delegates allowed to bake a block', async (done) => {
-          const bakingRights = await rpcClient.getBakingRights();
+        hangzhounet('Retrieves the list of delegates allowed to bake a block', async (done) => {
+          const bakingRights = await rpcClient.getBakingRights({
+            max_priority: 2
+          });
           expect(bakingRights).toBeDefined();
+          expect(bakingRights[0].priority).toBeDefined();
+          expect(bakingRights[0].round).toBeUndefined();
           done();
         });
 
-        it('Retrieves the list of delegates allowed to endorse a block', async (done) => {
+        ithacanet('Retrieves the list of delegates allowed to bake a block', async (done) => {
+          const bakingRights = await rpcClient.getBakingRights({
+            max_round: '2'
+          });
+          expect(bakingRights).toBeDefined();
+          expect(bakingRights[0].round).toBeDefined();
+          expect(bakingRights[0].priority).toBeUndefined();
+          done();
+        });
+
+        hangzhounet('Retrieves the list of delegates allowed to endorse a block', async (done) => {
           const endorsingRights = await rpcClient.getEndorsingRights();
           expect(endorsingRights).toBeDefined();
+          expect(endorsingRights[0].delegate).toBeDefined();
+          expect(typeof endorsingRights[0].delegate).toEqual('string');
+          expect(endorsingRights[0].delegates).toBeUndefined();
+          done();
+        });
+
+        ithacanet('Retrieves the list of delegates allowed to endorse a block', async (done) => {
+          const endorsingRights = await rpcClient.getEndorsingRights();
+          expect(endorsingRights).toBeDefined();
+          expect(endorsingRights[0].delegates).toBeDefined();
+          expect(endorsingRights[0].delegates![0].delegate).toBeDefined();
+          expect(typeof endorsingRights[0].delegates![0].delegate).toEqual('string');
+          expect(endorsingRights[0].delegates![0].endorsing_power).toBeDefined();
+          expect(typeof endorsingRights[0].delegates![0].endorsing_power).toEqual('number');
+          expect(endorsingRights[0].delegates![0].first_slot).toBeDefined();
+          expect(typeof endorsingRights[0].delegates![0].first_slot).toEqual('number');
+          expect(endorsingRights[0].delegate).toBeUndefined();
           done();
         });
 
