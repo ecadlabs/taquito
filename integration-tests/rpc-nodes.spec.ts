@@ -17,7 +17,6 @@ CONFIGS().forEach(
     rpc,
   }) => {
     const Tezos = lib;
-    const skipIthacanet = protocol === Protocols.Psithaca2 ? test.skip : test;
 
     beforeEach(async (done) => {
       await setup();
@@ -140,8 +139,7 @@ CONFIGS().forEach(
           done();
         });
 
-        //pending https://github.com/ecadlabs/taquito/issues/1255
-        skipIthacanet(`Fetches information about a delegate from RPC`, async (done) => {
+        it(`Fetches information about a delegate from RPC`, async (done) => {
           const delegates = await rpcClient.getDelegates(knownBaker);
           expect(delegates).toBeDefined();
           done();

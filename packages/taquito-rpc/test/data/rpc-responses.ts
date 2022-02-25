@@ -2484,3 +2484,930 @@ export const protocols = {
   protocol: 'PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx',
   next_protocol: 'PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx',
 };
+
+export const delegatesIthacanetSample = {
+  full_balance: '1198951292321',
+  current_frozen_deposits: '120167343864',
+  frozen_deposits: '120167343864',
+  staking_balance: '1203308804406',
+  delegated_contracts: ['tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD'],
+  delegated_balance: '4357512085',
+  deactivated: false,
+  grace_period: 37,
+  voting_power: 199,
+};
+
+export const blockIthacanetSample = {
+  protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+  chain_id: 'NetXnHfVqm9iesp',
+  hash: 'BMGdK16iMkm4YmgAneYuvd7B4R5S8nYQKFfKzXCKMHP1FqS5hXQ',
+  header: {
+    level: 135596,
+    proto: 2,
+    predecessor: 'BLgx6Cr7DYwXEexuz828mBUqCKotCXo8PRAN55A9wovUrYWvao8',
+    timestamp: '2022-02-24T01:09:20Z',
+    validation_pass: 4,
+    operations_hash: 'LLoaKP1SEeTE1ziKFRHipDYihitAoTHhEZbiartSvehqMPvu7v661',
+    fitness: ['02', '000211ac', '', 'ffffffff', '00000000'],
+    context: 'CoVkVfBsmMSCeTLcBesUe4TdhDhvZxhm8SN48Rky5B3aD8U92hY9',
+    payload_hash: 'vh28CE8X2KKMvt5S4aGzPdMq5FpcfVRSoeyU3D3TUdVyk9zucR31',
+    payload_round: 0,
+    proof_of_work_nonce: '409a3f3f250d0100',
+    liquidity_baking_escape_vote: false,
+    signature:
+      'sigtWPWubCNXDfaH7NZQcei2hzBbHKQtw56z2WRvrmyPNBLRYP2cNAycFob1Dr8MBbbCGtCUny2BaEbzBa4kVEadMNrGp6Mk',
+  },
+  metadata: {
+    protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+    next_protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+    test_chain_status: {
+      status: 'not_running',
+    },
+    max_operations_ttl: 120,
+    max_operation_data_length: 32768,
+    max_block_header_length: 289,
+    max_operation_list_length: [
+      {
+        max_size: 4194304,
+        max_op: 2048,
+      },
+      {
+        max_size: 32768,
+      },
+      {
+        max_size: 135168,
+        max_op: 132,
+      },
+      {
+        max_size: 524288,
+      },
+    ],
+    proposer: 'tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9',
+    baker: 'tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9',
+    level_info: {
+      level: 135596,
+      level_position: 135595,
+      cycle: 33,
+      cycle_position: 427,
+      expected_commitment: false,
+    },
+    voting_period_info: {
+      voting_period: {
+        index: 6,
+        kind: 'proposal',
+        start_position: 122880,
+      },
+      position: 12715,
+      remaining: 7764,
+    },
+    nonce_hash: null,
+    consumed_gas: '1000000',
+    deactivated: [],
+    balance_updates: [
+      {
+        kind: 'accumulator',
+        category: 'block fees',
+        change: '-1500',
+        origin: 'block',
+      },
+      {
+        kind: 'minted',
+        category: 'baking rewards',
+        change: '-5000000',
+        origin: 'block',
+      },
+      {
+        kind: 'contract',
+        contract: 'tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9',
+        change: '5001500',
+        origin: 'block',
+      },
+      {
+        kind: 'minted',
+        category: 'baking bonuses',
+        change: '-4217424',
+        origin: 'block',
+      },
+      {
+        kind: 'contract',
+        contract: 'tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9',
+        change: '4217424',
+        origin: 'block',
+      },
+    ],
+    liquidity_baking_escape_ema: 119624,
+    implicit_operations_results: [
+      {
+        kind: 'transaction',
+        storage: [
+          {
+            int: '1',
+          },
+          {
+            int: '338987500100',
+          },
+          {
+            int: '100',
+          },
+          {
+            bytes: '01e927f00ef734dfc85919635e9afc9166c83ef9fc00',
+          },
+          {
+            bytes: '0115eb0104481a6d7921160bc982c5e0a561cd8a3a00',
+          },
+        ],
+        balance_updates: [
+          {
+            kind: 'minted',
+            category: 'subsidy',
+            change: '-2500000',
+            origin: 'subsidy',
+          },
+          {
+            kind: 'contract',
+            contract: 'KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5',
+            change: '2500000',
+            origin: 'subsidy',
+          },
+        ],
+        consumed_gas: '225',
+        consumed_milligas: '224023',
+        storage_size: '4632',
+      },
+    ],
+  },
+  operations: [
+    [
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'ooqwt58nxiSHAsmwaBDux3LoEkNE9p14v1TXtnB4CfEaobgHuZ2',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 0,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1iZ9LkpAhN8X1L6RpBtfy3wxpEWzFrXz8j',
+              endorsement_power: 206,
+            },
+          },
+        ],
+        signature:
+          'sigT3AuNgusteshSqt2J5aha7iSsYAXsYVGAr62RNZkrd1Gp6JjY59CtD33a4zyv57ZwV7J5JvWRD7uZrwaE6NSzmP61SGkb',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'opZP7VfVcdqY5ivF5tyFYr48SR4wj74wrc4hQHyQWLv5azBZtiN',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 1,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1RuHDSj9P7mNNhfKxsyLGRDahTX5QD1DdP',
+              endorsement_power: 121,
+            },
+          },
+        ],
+        signature:
+          'sigdipDBAxcvLShbKRHNkBoSxxFUr2bTnoVsaM3df8zZhmNex1SefwfNmBJQPePvXSyePWMHSxQiDxpCDkzppEEade6eaSjh',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'onxcESouatMhSqYxmtQPtM99df28TYavNR2izyJtULDG29eq5FY',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 2,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1RJ74UepJA9tigjoEeUEFajowzVB3QQaVx',
+              endorsement_power: 257,
+            },
+          },
+        ],
+        signature:
+          'sigeNkH2F3rFUha9Qr1kunmoTHMsWcDKtjh6owGkmBu1xJW7VWfFvgGJtz3qvi2a7npnTfLzVPKroAQwTc8XjY3rMNwDZuUr',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'op2gAd6kzpWPViXxC5QhH62HhtRjjthf2QT78C9vC7epL9V5sxo',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 3,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9',
+              endorsement_power: 1227,
+            },
+          },
+        ],
+        signature:
+          'sigVwJmrALwEdqetE3Z6EDJyGpett54p4A68xKSpvZMnS2aJZa6Dqr6hiQFroEaV97VsZdVoBZZK1pn7o5CvwZ6BuHG89v7j',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'oorGPbxDrdFc8aZfa7BSLm2v2x3DEWdnThvvq6sxwv2Xbra74A9',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 4,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1XMiZwHpHZ8a1AfwRWKfzLskJgZNyV8PHs',
+              endorsement_power: 139,
+            },
+          },
+        ],
+        signature:
+          'sigRz9Ev7mwTiRtVdBegKCGHLqWz3JSt8HwwmmPoTNYEHyijovj62MRHQBAuaKVi6c7rwoP2451v1ejKB1diHYvgQ2L9iVBj',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'opLpk7KV13f8ZkjZrf15PW6gjaiBAeJeWgz3xsgcHv538afebPR',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 5,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1XGwK6kkiJaq2ZEJYcWEj5Tc8bcV6pNHqV',
+              endorsement_power: 48,
+            },
+          },
+        ],
+        signature:
+          'sigXSUhDQmNG4PuQR6Eaz5ffDsL3upXZ1QwsSd7Q4LTTkkucbsYTqorgpY9dh28XtcTFkxi6cGYN2cUUPvDaMXZxX4nJ4Zg2',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'op55vJPHBNdwmAztCGSEezNgUBMLrLa19F7FXGt4mXmYBJ2rz6i',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 7,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1cg5EqC3WdZgRSvGJeW328S4KQNrT4jvyv',
+              endorsement_power: 264,
+            },
+          },
+        ],
+        signature:
+          'sigWtL6YhYswrxoBxACy7P8dwrcWW4syiTeeggTL5sLyS1PdQUYaTMVgvTzWmdX5LdpC4JSB5o3xxF941ac3nbnFtzXgwMYc',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'onxq8YLBdsL8AJy81MXrsSMKdBKFnLk7GVqAUxjjoCLFt6D8HMN',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 8,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1NGS7FEGGfEFp5XRVkHBqVqSQ8VuumF9j3',
+              endorsement_power: 33,
+            },
+          },
+        ],
+        signature:
+          'sigpDY5wQs7Rxo7sFTcJUkxzXeBMvbnseLZaLAT5JB95iGS9ndwdQF1WYLSdAYDhwiXKuZpcGDFLHipHYizpQh8qQFg8xrYU',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'onqHgJw1HWxoHucpim35NQ2t4V4sPzJmPTPhru4cxuBJuMjQzwh',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 10,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1TGKSrZrBpND3PELJ43nVdyadoeiM1WMzb',
+              endorsement_power: 164,
+            },
+          },
+        ],
+        signature:
+          'sigUfJLBuU6HnaCVRDvFG6YELjMy3YmoMwj8ohgaYt9mTQUbK28AkfxjDcck72e3LsL6KGBZZjmSWDwwU6DtJanM5orRTubY',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'ooCYNg4ZMQWt3yzfyrDbmK6dtyMuwYr6spj2eCCoJf76iZeP3mP',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 12,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1MeT8NACB8Q4uV9dPQ3YxXBmYgapbxQxQ5',
+              endorsement_power: 782,
+            },
+          },
+        ],
+        signature:
+          'sigWwS6Cqc32rrngX136d2KKfp9SgBDdosgA2HoALEk62tRMjU6LJSa6m6SDnrKitAZrXTtD9VguMCc61X8oUuYyYt5nT1CF',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'opDt75d4MTscbTgXzcJVrKD25QPofMpkTzofCAeRZgskLYwbJX5',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 13,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1dqPQn5HXNJ7yjcqBx2w6sozjPXTV1kpfh',
+              endorsement_power: 156,
+            },
+          },
+        ],
+        signature:
+          'sigijCvAxjub2QdmhNT4wQkppQDYrKAxt7MN1v9iwRszcR3bMkKK6VfACHpy7RkQ4VvN3caPMJf6rhnLRdgpAqpQrAwj6KBT',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'oohJgzphmFhuqPzhhSgMThmeuUQNmpqbwUMjc2tPCGryQTFDCQ8',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 17,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE',
+              endorsement_power: 237,
+            },
+          },
+        ],
+        signature:
+          'sigQkUSHt6izTh7TNn3GTtELiL6rypCYUYHFPU65FXWojV6xhsL7jDkJipxSLvpPhshK8d7EebWSe2PhFrtqgUWBbuGibNtm',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'ooQnVunqu4u6KVD65kKfruyh4fUDLD8ahqmvg3tWQbo1WX6yreK',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 18,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1NiaviJwtMbpEcNqSP6neeoBYj8Brb3QPv',
+              endorsement_power: 240,
+            },
+          },
+        ],
+        signature:
+          'sigqVDESVHH7tkjtyuM63TsL28C3HSjmesdGJn7ALFKVQHn1Ciw23PhAXeeR3iS9LtVihM7LQy4hqjZhZqCWnP5BmoPgXSFr',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'ooUzJx1JK2uMnSxzwTzN7VCaaGropVm32w1CMXc25fLwBvNoSiF',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 20,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1LQ32syCNyGj6FdAuJfko42Wep87iYZk8k',
+              endorsement_power: 159,
+            },
+          },
+        ],
+        signature:
+          'sigTcHdNzSGKd3WoKTcwFYvZXseN3oya2eNnRWvnh3yjDoqjB4mJedUrvVPHb3XphnejGhmqscWQeqo8qz5SMJGFvSLsaU5R',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'onfyPPCxtU937rMKNtkXV978ckQSnTqgM9VMEsB18ha9QXHZbyw',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 28,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1funU3PjPsuXvmtXMgnAckY1s4pNT6V7WJ',
+              endorsement_power: 152,
+            },
+          },
+        ],
+        signature:
+          'sigfiyUP39iz8GGq6opn5eMiUqGCJ1vRWF8r92ByyeL7zhGe7b21WEKREYNmAPfhcWFWHm9rFRB5uav4LMFd2V6NCwkQtsaF',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'ooosvu7cCgZZG9E8SYgrNBFBJcVtTnrhhuoEuckNGzsEi5ug8uk',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 29,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz3Q67aMz7gSMiQRcW729sXSfuMtkyAHYfqc',
+              endorsement_power: 158,
+            },
+          },
+        ],
+        signature:
+          'sigqFLE4Q2uZ6yMo8QWjrsbzVKV4bWNWbppP5ZhLDsvL83HbzJQG2ABHbCALrqXNrZR1znRcvAaB7JYEHDScw9tqWVN2VpKt',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'ooT5Fy1ZkamhGPBKSE6uFhQicoaZJNBC4AsoWo9F9v7W6AVRvpv',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 33,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1cXeGHP8Urj2pQRwpAkCdPGbCdqFUPsQwU',
+              endorsement_power: 163,
+            },
+          },
+        ],
+        signature:
+          'sigvGuQyTgdreAChYGAjUYR76pQSKKTq7ed4vFuzSGe6sZyiSa1uXS8wRDqH5nXTugTKs6S7sSDps4UsT6SRuTXQFN5iDekk',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'onway6W9qLwef1ejbEFPtKiU6wzjubKfj6YorREHtiaZhNQuRuD',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 35,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1ituzNz9MGaMSL9dVDN7jE5SArCEWNmZbS',
+              endorsement_power: 161,
+            },
+          },
+        ],
+        signature:
+          'sigN9vEVaZerpXewKGoDUhXqDoyw69jawRuewDAf55z839E4JSaW3KDGX3AZHN5vRxPxiQLTUmvnUCTxK73fQL63aJ8CMiLF',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'op2tvcwvEN8vDoBQdHinKCpJpq5xr8uhXjESfNpQg4dUYKXv3RC',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 43,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1hm7NuCGNSKZQLQSawjUnehJcX8yCBcCAq',
+              endorsement_power: 162,
+            },
+          },
+        ],
+        signature:
+          'sigmCvUw4dFVcru7Vpa4yiQKh8M5zX4EPXNwg5VTggXDiQmxTeZdwsKggZJwh3CDyiBWvLL7gnnbCK644Kwy59xXpZvQi19h',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'onr9HZHYKAgRxrZKgvQWraBGaGAoWGqtEaT8bArT9JzfxisgWTw',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 44,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1Q7YBzLJkw87c2FdwaWuGKyacSDc4QghzQ',
+              endorsement_power: 137,
+            },
+          },
+        ],
+        signature:
+          'sigwKZiwNPK4mw5eEBBGh8TNNGuhuQ2snncTLWuQhMxs9GFxMFRD8GrkLUwsPQV84Qcr6pwbFFPFQx5U6TUBT7ZXU9jovyLY',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'opUPRQxsDU1XsppujmWr66YwQLD135vApq6EbVz7mtY58EKCSGq',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 46,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1NFs6yP2sXd5vAAbR43bbDRpV2nahDZope',
+              endorsement_power: 117,
+            },
+          },
+        ],
+        signature:
+          'siggYsKR7C7hMFfUXNv4KvUx9t2djbZxVHeSJQvd5Zcmz8tg5bCZLmXV8rwAeB5bFahuVn5z6iAp8SMXT35peAPc37256pEE',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'ooM4BoirczR6W8hXEVsYQ8cHerbHbE9in4z5wMS2AhxvP2Ufad4',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 47,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1KkJtLB9pMdLKNpVRNZw9zmysrxKmYcRGU',
+              endorsement_power: 158,
+            },
+          },
+        ],
+        signature:
+          'sigpDri9hyWVNm6VrnS8Kr4yY3bdNXEWwXPmUEMbvJSM6nLEgzHczAN9QQ73WiHv6xJdjdhgUjitkHkyU8tsmEHSpJMGLrTt',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'ooLKxLjcVBoeB2GJ2QNg6afi4HwUQ2upCfaxWsjT4k1nrtxmL8h',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 48,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1V9CRVyKP3roXsnjcFJP3p9DSXX63KL7iP',
+              endorsement_power: 166,
+            },
+          },
+        ],
+        signature:
+          'sigVjebUbAjkjvw1wyvQ73FyEn9GJfnytuqN9Xd3ghEzaFyacaWEiD7c1ANv67XYDgrquV3GsHF29booHXinSjGjP4cAgcRU',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'oo36GYoDhvBuhb4wqFRRZ2ugLJNkKfHGmcaHhjLCg9SgdiQPJSY',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 54,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1Zt8QQ9aBznYNk5LUBjtME9DuExomw9YRs',
+              endorsement_power: 153,
+            },
+          },
+        ],
+        signature:
+          'sigV2Cfek4NvEY5CvN91nJLfAG2xG7r8hAt3nZQFPNYu5Qtz3TEQbYLxfwbs8UozKvv8bwAzVk35L9VKgcMUkaEZ3NHsYYg1',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'oopWQdrwuxWCBkw7qaVesBLCsGExxuhRuU7FJqQuA9pQcr7nPzw',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 59,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1e841Z7k7XHSoTSyHyBHG2Gijv7DzzjEBb',
+              endorsement_power: 170,
+            },
+          },
+        ],
+        signature:
+          'signyax1oDM1SxWoQir1aMRNXnm1zDnSvLyZnGdPZzh8kqYiK7GqiNb9tP3DUxcLnZeYtiQbWNuBCf6eZzXnXtc7mUhYXAHV',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'oo4t2WvJgwZhAsf5CwcDtKCfSkiaKp9wTNYL7LuAbJ9k3sJvTEg',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 61,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1e42w8ZaGAbM3gucbBy8iRypdbnqUj7oWY',
+              endorsement_power: 74,
+            },
+          },
+        ],
+        signature:
+          'signNkorAErY1hBzFRkzeMTqUy6inFFTd9EmpYPKfFyUGX139DyHtsfUHfumPFHeomLtXZMmGQ5g2vi4R1tveaS9yQvz7aba',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'opUy2TmnHxDqjUt3Ht7dCsWyLLNz9sRpA1eC5qZqkhyvHND67pu',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 64,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1QXAAasy8TciwfvDC4a7MWo1tm3K37uN9Y',
+              endorsement_power: 153,
+            },
+          },
+        ],
+        signature:
+          'sigtoch1ijiGuNGW3qHtAngiEDhEqL5T4acdNEGKt4ew2NoPNkxScgshoxttV45NYxKpLNw6J3FQHPRyaT22fGgwbd9ySu3k',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'ooArbFfPVgM6mc3RUroxf2qsimXProumPK6XuidgfjosoT2VN34',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 70,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1MvCE9dczhoij2bd4sLL2AfVuMtWfFAoCN',
+              endorsement_power: 137,
+            },
+          },
+        ],
+        signature:
+          'sigb2eh47AatunkNSZPVpsZg9nqGqu8GG2C24Hx4D6SoRJ1sz4jgFPjAhP1rk9BkRJ8GfM3AYyY7PGdFqzod3a6q1Wk4ZRVK',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'ood93Z7NmwMeLSo2dW8tBUBst3p3ogcEmkUrDR9T8coHrVApZzF',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 71,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1PirbogVqfmBT9XCuYJ1KnDx4bnMSYfGru',
+              endorsement_power: 119,
+            },
+          },
+        ],
+        signature:
+          'sigiSzxJ1dSeHujvRtv1VKCAc5V1mu5ftRfyutfgKyjjCLGRrNG73k8jb5nqjiTu9T79L4oKdf1g7AEQMCK6eENWPcaMwfFN',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'onjvGqyScQLdGb5cMPwHbnd9UVmh3MhcUze3P1wGHSXRarfxAwY',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 75,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1edUYGqBtteStneTGDBrQWTFmq9cnEELiW',
+              endorsement_power: 135,
+            },
+          },
+        ],
+        signature:
+          'siggwc4K8yWEU8ttzA8HhQh15zV2fYcyK6nfbuVGVs3G2TbM1nVrJxLiC6sHKqBtBuofiC8pYzDLJxVY9zdCzGqBhyMPCw4M',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'opBqy3cLQugeT2xVvKoJUn3yLp79hzuXHc7r5BqSa5HHHFddYgB',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 85,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
+              endorsement_power: 139,
+            },
+          },
+        ],
+        signature:
+          'sigoZ5bh1XPA8kHFkBCs4U9Dq6nT9Ng3i9LENKKCHg8k96TP4KVcFmh1iyVTpxSSiM8V21bnZ7W91KsDL2vekru1ACXsU8Yp',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'opCRv7Ewfh3s96PDiVKPC2c4A9oT6nf8FVeQYB2EUEJFT81UTET',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 90,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1SFbdg2jjkixHNU1Jm9f8JA4pYnMXsgATC',
+              endorsement_power: 5,
+            },
+          },
+        ],
+        signature:
+          'sigcmrbc6rZnDpEkR268Pvzz2GPSRi8nWnTthYXt8L6Tg9pB4vzdh4uy8gKYrMQFbJTwRSsyPa31xR5u8FMH9xMAfrWn9r48',
+      },
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'op9TeE362FGyayWVRghVrRxm2FdezqPdqJRM4VTeq5C6ievFDkd',
+        branch: 'BLzJ1MtqtmWwnG6ZdX7LPygJGvaE51eDqX55KVQM4HNHcVbeDKs',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 116,
+            level: 135595,
+            round: 0,
+            block_payload_hash: 'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6',
+            metadata: {
+              balance_updates: [],
+              delegate: 'tz1RBECWBXv4tKcuDbxYmBguvdn8wzjrejHg',
+              endorsement_power: 143,
+            },
+          },
+        ],
+        signature:
+          'sigQ5nhdCPRiddmNUYLXCeBk5qs3T6fxMiitKgFJQg5Nuo8sqJTamyJctbF5Gt7MrDZEdiCcmZBj4dEHa9fjDLyCSdgHsL3x',
+      },
+    ],
+    [],
+    [],
+    [
+      {
+        protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+        chain_id: 'NetXnHfVqm9iesp',
+        hash: 'oowvQuTHNxiG8x1TzewhUHtKGLhFPbhiaaHJFKpUnvkv2h3RDsz',
+        branch: 'BLZNxWPKB9CGGZ8bCYvkq7NwHZNHLuCHnueiJz7QFEzUztT4TjP',
+        contents: [
+          {
+            kind: 'set_deposits_limit',
+            source: 'tz2FViF6XzJ4PqD5TTuaAtZScmiwpJBGBpSh',
+            fee: '1500',
+            counter: '146662',
+            gas_limit: '1000',
+            storage_limit: '10000',
+            limit: '3',
+            metadata: {
+              balance_updates: [
+                {
+                  kind: 'contract',
+                  contract: 'tz2FViF6XzJ4PqD5TTuaAtZScmiwpJBGBpSh',
+                  change: '-1500',
+                  origin: 'block',
+                },
+                {
+                  kind: 'accumulator',
+                  category: 'block fees',
+                  change: '1500',
+                  origin: 'block',
+                },
+              ],
+              operation_result: {
+                status: 'applied',
+                consumed_gas: '1000',
+                consumed_milligas: '1000000',
+              },
+            },
+          },
+        ],
+        signature:
+          'sigegUy94SxjpBw2MwKMsqFjEjbeoQu8VdcXciXRryv4KA1hMT2gGKRCKnDFinKHaaWGCZskHzo2Hb6XB1iV6gonUdhBuCuN',
+      },
+    ],
+  ],
+};
