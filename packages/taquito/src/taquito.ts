@@ -4,13 +4,12 @@
  */
 
 import { RpcClient, RpcClientInterface } from '@taquito/rpc';
+import { LocalForger, Forger } from '@taquito/local-forging';
 import { RPCBatchProvider } from './batch/rpc-batch-provider';
 import { Protocols } from './constants';
 import { ConfigConfirmation, ConfigStreamer, Context, TaquitoProvider } from './context';
 import { ContractProvider, EstimationProvider } from './contract/interface';
 import { Extension } from './extension/extension';
-import { Forger } from './forger/interface';
-import { RpcForger } from './forger/rpc-forger';
 import { format } from './format';
 import { GlobalConstantsProvider } from './global-constants/interface-global-constants-provider';
 import { NoopGlobalConstantsProvider } from './global-constants/noop-global-constants-provider';
@@ -26,13 +25,13 @@ import { LegacyWalletProvider, Wallet, WalletProvider } from './wallet';
 import { OperationFactory } from './wallet/operation-factory';
 
 export { MichelsonMap, UnitValue } from '@taquito/michelson-encoder';
+export { Forger, ForgeParams, ForgeResponse } from '@taquito/local-forging';
 export * from './constants';
 export * from './context';
 export { TaquitoProvider } from './context';
 export * from './contract';
 export * from './contract/big-map';
 export { CompositeForger } from './forger/composite-forger';
-export * from './forger/interface';
 export { RpcForger } from './forger/rpc-forger';
 export * from './operations';
 export { OperationBatch } from './batch/rpc-batch-provider';
@@ -184,9 +183,14 @@ export class TezosToolkit {
    *
    */
   setForgerProvider(forger?: SetProviderOptions['forger']) {
-    const f = typeof forger === 'undefined' ? this.getFactory(RpcForger)() : forger;
-    this._options.forger = f;
-    this._context.forger = f;
+    if (typeof forger !== 'undefined') {
+      this._options.forger = forger;
+      this._context.forger = forger;
+    } else if (this._options.forger === undefined) {
+      const f = new LocalForger();
+      this._options.forger = f;
+      this._context.forger = f;
+    }
   }
 
   /**
