@@ -11,6 +11,7 @@ describe('ContractView test', () => {
     getStorage: jest.Mock<any, any>;
     getEntrypoints: jest.Mock<any, any>;
     getBlockHeader: jest.Mock<any, any>;
+    runView: jest.Mock<any, any>;
   };
 
   let mockSigner: {
@@ -32,6 +33,7 @@ describe('ContractView test', () => {
       getNormalizedScript: jest.fn(),
       getStorage: jest.fn(),
       getBlockHeader: jest.fn(),
+      runView: jest.fn()
     };
 
     mockSigner = {
@@ -137,4 +139,23 @@ describe('ContractView test', () => {
     }
     done();
   });
+
+  it('Should be able to execute tzip4 views', async (done) => {
+    mockRpcClient.runView.mockResolvedValue({
+      "data": {"int": "100"}
+    });
+
+    const result = await mockRpcClient.runView({
+      contract: 'test',
+      entrypoint: 'getBalance',
+      chain_id: 'test',
+      input: {
+        string: 'test'
+      }
+    });
+
+    expect(result).toBeDefined();
+    expect(result).toEqual({"data": {"int": "100"}});
+    done();
+  })
 });

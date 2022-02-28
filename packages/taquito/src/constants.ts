@@ -46,18 +46,6 @@ export const protocols = {
   '014': [Protocols.ProtoALpha],
 };
 
-export enum DefaultLambdaAddresses {
-  MAINNET = 'KT1CPuTzwC7h7uLXd5WQmpMFso1HxrLBUtpE',
-  CARTHAGENET = 'KT1VAy1o1FGiXYfD3YT7x7k5eF5HSHhmc1u6',
-  DELPHINET = 'KT19abMFs3haqyKYwqdLjK9GbtofryZLvpiK',
-  EDONET = 'KT1A64nVZDccAHGAsf1ZyVajXZcbiwjV3SnN',
-  FLORENCENET = 'KT1KCe3YqGnudsiCWb5twbe2DH5T3EMdLpSE',
-  GRANADANET = 'KT1BCun2vsA4GBQvsKAuGD5x873MfW2jsN9z',
-  HANGZHOUNET = 'KT1PWtBAr1hjK9M9s9oZNZFbfzPdkkD6PSJR',
-  ITHACANET = 'KT1CsEGfRHWeuUQFh9LfVFLVMbm7DFBuHPPU',
-  ITHACANET2 = 'KT1H2a5vGkMLFGBPMs6oRRJshCvYeXSBSadn',
-}
-
 export enum ChainIds {
   MAINNET = 'NetXdQprcVkpaWU',
   CARTHAGENET = 'NetXjD3HPJJjmcd',

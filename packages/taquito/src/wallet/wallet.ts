@@ -294,15 +294,12 @@ export class Wallet {
     const rpc = this.context.withExtensions().rpc;
     const script = await rpc.getNormalizedScript(address);
     const entrypoints = await rpc.getEntrypoints(address);
-    const blockHeader = await this.context.rpc.getBlockHeader();
-    const chainId = blockHeader.chain_id;
     const abs = new ContractAbstraction(
       address,
       script,
       this,
       this.context.contract,
       entrypoints,
-      chainId,
       rpc
     );
     return contractAbstractionComposer(abs, this.context);

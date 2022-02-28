@@ -4,11 +4,10 @@ title: Lambda View
 ---
 
 :::caution note
-Since a call is made to the lambda contract, a signer needs to be configured on your TezosToolkit instance.
+Lambda View implementation have recently changed due to a recent protocol update. Lambda Views now utilize the `run_view` endpoint. For more information refer to [this document](https://tezos.gitlab.io/CHANGES.html?highlight=run_view#id1) 
 :::
-
-The lambda view is a way to retrieve data from a smart contract's storage
-without incurring fees via a contract's view method. This solution is a temporary solution that we will address in a future protocol update.
+Lambda View is a way to retrieve data from a smart contract's storage
+without incurring fees via a contract's view method. 
 
 ## Recap: Views & Callbacks
 
@@ -36,24 +35,8 @@ Another drawback is speed: since we're invoking a contract method, we have to wa
 acceptable if the application you're working on requires consistent, faster
 response times.
 
-## Enter Lambda View
-
-We can work around these limitations to send our contract address,
-view method, and parameters as its own "view" to a simple lambda contract that
-_always_ fails. We refer to this method as a "lambda view."
-
-The result of invoking our always-failing lambda contract is an error from the
-blockchain. That may not sound very useful, but the brilliant part is that the
-error we receive contains the information we requested!  We can _not_
-incur a fee for requesting data or waiting for confirmation from the network to call view methods.
-
-## Considerations
-
-- This method for retrieving data from the blockchain is not considered ideal. A
-  future protocol update will make this goal easier to attain without the use of
-  a lambda view.
-
-- Invoking the lambda view in the browser will raise errors in the web console.
+### `run_view` endpoint
+Fortunately with the recently implemented `run_view` endpoint, users can now run views without needing to inject operations into the blockchain. This means that no fees will be incurred when running views using this endpoint.
 
 ## Usage
 
@@ -71,8 +54,7 @@ Taquito dynamically creates a `getAllowance`, `getBalance` and `getTotalSupply` 
 Parameters must not include the callback parameter
 :::
 
-Then we call the `read()` method, which takes an optional lambda contract address. _This optional parameter is useful for the sandbox users as they will need to deploy and use their lambda contract._
-
+Then we call the `read()` method, which takes an optional lambda contract address. 
 ```js live noInline
 Tezos.contract
   .at('KT1LNMrk8orMQ85zbwK25996dPhDxfSicvKh')
@@ -96,24 +78,6 @@ Tezos.contract
   })
   .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
-
-**How to deploy a lambda contract (sandbox users):**
-
-```js
-import { VIEW_LAMBDA } from '@taquito/taquito';
-
-const op = await tezos.contract.originate({
-  code: VIEW_LAMBDA.code,
-  storage: VIEW_LAMBDA.storage,
-});
-
-const lambdaContract = await op.contract();
-const lambdaContractAddress = lambdaContract.address;
-```
-
-:::note
-Taquito internally contains a list of lambda contracts. Thus, there is no need to deploy a lambda contract if you are using Mainnet, Hangzhounet, or Granadanet. Taquito will detect the current network and use the appropriate lambda contract.
-:::
 
 **More examples:**
 
