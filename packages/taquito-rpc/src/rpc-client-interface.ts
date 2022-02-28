@@ -80,7 +80,6 @@ export interface RpcClientInterface {
   ): Promise<EndorsingRightsResponse>;
   getBallotList(options?: RPCOptions): Promise<BallotListResponse>;
   getBallots(options?: RPCOptions): Promise<BallotsResponse>;
-  getCurrentPeriodKind(options?: RPCOptions): Promise<PeriodKindResponse>;
   getCurrentProposal(options?: RPCOptions): Promise<CurrentProposalResponse>;
   getCurrentQuorum(options?: RPCOptions): Promise<CurrentQuorumResponse>;
   getVotesListings(options?: RPCOptions): Promise<VotesListingsResponse>;

@@ -163,11 +163,6 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   async getBallots({ block }: RPCOptions = defaultRPCOptions): Promise<BallotsResponse> {
     return this.rpc.getBallots({ block });
   }
-  async getCurrentPeriodKind({
-    block,
-  }: RPCOptions = defaultRPCOptions): Promise<PeriodKindResponse> {
-    return this.rpc.getCurrentPeriodKind({ block });
-  }
   async getCurrentProposal({
     block,
   }: RPCOptions = defaultRPCOptions): Promise<CurrentProposalResponse> {
@@ -217,11 +212,17 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   ): Promise<RunCodeResult> {
     return this.rpc.runCode(code, { block });
   }
-  async runView({ unparsing_mode = 'Readable', ...rest }: RPCRunViewParam, { block }: RPCOptions = defaultRPCOptions): Promise<RunViewResult> {
-    return this.rpc.runView({
-      unparsing_mode,
-      ...rest
-    }, { block });
+  async runView(
+    { unparsing_mode = 'Readable', ...rest }: RPCRunViewParam,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<RunViewResult> {
+    return this.rpc.runView(
+      {
+        unparsing_mode,
+        ...rest,
+      },
+      { block }
+    );
   }
   async getChainId(): Promise<string> {
     return this.rpc.getChainId();
