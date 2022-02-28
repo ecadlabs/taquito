@@ -1231,7 +1231,24 @@ export const submutezCode = [
                       args: [[{ prim: 'DIP', args: [[{ prim: 'DUP' }]] }, { prim: 'SWAP' }]],
                     },
                     { prim: 'SUB_MUTEZ' },
-                    { prim: 'ASSERT_SOME' },
+                    [
+                      {
+                        prim: 'IF_NONE',
+                        args: [
+                          [
+                            [
+                              {
+                                prim: 'UNIT',
+                              },
+                              {
+                                prim: 'FAILWITH',
+                              },
+                            ],
+                          ],
+                          [],
+                        ],
+                      },
+                    ],
                     {
                       prim: 'DIP',
                       args: [
