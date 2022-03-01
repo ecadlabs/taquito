@@ -32,12 +32,15 @@ describe('RPCEstimateProvider test', () => {
     getBlock: jest.Mock<any, any>;
     getContract: jest.Mock<any, any>;
     getBlockMetadata: jest.Mock<any, any>;
-    forgeOperations: jest.Mock<any, any>;
     runOperation: jest.Mock<any, any>;
     injectOperation: jest.Mock<any, any>;
     preapplyOperations: jest.Mock<any, any>;
     getChainId: jest.Mock<any, any>;
     getConstants: jest.Mock<any, any>;
+  };
+
+  let mockForger: {
+    forge: jest.Mock<any, any>;
   };
 
   let mockSigner: {
@@ -57,11 +60,14 @@ describe('RPCEstimateProvider test', () => {
       getBlockHeader: jest.fn(),
       getBlockMetadata: jest.fn(),
       getContract: jest.fn(),
-      forgeOperations: jest.fn(),
       injectOperation: jest.fn(),
       preapplyOperations: jest.fn(),
       getChainId: jest.fn(),
       getConstants: jest.fn(),
+    };
+
+    mockForger = {
+      forge: jest.fn(),
     };
 
     mockSigner = {
@@ -83,7 +89,7 @@ describe('RPCEstimateProvider test', () => {
     mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
     mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
     mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
-    mockRpcClient.forgeOperations.mockResolvedValue('1234');
+    mockForger.forge.mockResolvedValue('1234');
     mockRpcClient.preapplyOperations.mockResolvedValue([]);
     mockRpcClient.getChainId.mockResolvedValue('chain-id');
     mockRpcClient.getConstants.mockResolvedValue({
@@ -96,9 +102,9 @@ describe('RPCEstimateProvider test', () => {
     mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
     mockSigner.publicKey.mockResolvedValue('test_pub_key');
     mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
-    estimateProvider = new RPCEstimateProvider(
-      new Context(mockRpcClient as any, mockSigner as any)
-    );
+    const context = new Context(mockRpcClient as any, mockSigner as any);
+    context.forger = mockForger;
+    estimateProvider = new RPCEstimateProvider(context);
   });
 
   describe('originate', () => {
@@ -134,7 +140,7 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(multipleInternalOrigination());
       // Simulate real op size
-      mockRpcClient.forgeOperations.mockResolvedValue(new Array(297).fill('aa').join(''));
+      mockForger.forge.mockResolvedValue(new Array(297).fill('aa').join(''));
       const estimate = await estimateProvider.transfer({
         to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
@@ -150,7 +156,7 @@ describe('RPCEstimateProvider test', () => {
     test('return the correct estimate for multiple internal origination, no reveal', async (done) => {
       mockRpcClient.runOperation.mockResolvedValue(multipleInternalOriginationNoReveal());
       // Simulate real op size
-      mockRpcClient.forgeOperations.mockResolvedValue(new Array(297).fill('aa').join(''));
+      mockForger.forge.mockResolvedValue(new Array(297).fill('aa').join(''));
       const estimate = await estimateProvider.transfer({
         to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
@@ -167,7 +173,7 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(multipleInternalTransfer());
       // Simulate real op size
-      mockRpcClient.forgeOperations.mockResolvedValue(new Array(285).fill('aa').join(''));
+      mockForger.forge.mockResolvedValue(new Array(285).fill('aa').join(''));
       const estimate = await estimateProvider.transfer({
         to: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
         amount: 2,
@@ -184,7 +190,7 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(delegate());
       // Simulate real op size
-      mockRpcClient.forgeOperations.mockResolvedValue(new Array(149).fill('aa').join(''));
+      mockForger.forge.mockResolvedValue(new Array(149).fill('aa').join(''));
       const estimate = await estimateProvider.setDelegate({
         source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         delegate: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
@@ -201,7 +207,7 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(origination());
       // Simulate real op size
-      mockRpcClient.forgeOperations.mockResolvedValue(new Array(445).fill('aa').join(''));
+      mockForger.forge.mockResolvedValue(new Array(445).fill('aa').join(''));
       const estimate = await estimateProvider.originate({
         code: ligoSample,
         storage: 0,
@@ -218,7 +224,7 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(internalTransfer());
       // Simulate real op size
-      mockRpcClient.forgeOperations.mockResolvedValue(new Array(226).fill('aa').join(''));
+      mockForger.forge.mockResolvedValue(new Array(226).fill('aa').join(''));
       const estimate = await estimateProvider.transfer({
         to: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
         amount: 2,
@@ -235,7 +241,7 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(transferWithoutAllocation());
       // Simulate real op size
-      mockRpcClient.forgeOperations.mockResolvedValue(new Array(153).fill('aa').join(''));
+      mockForger.forge.mockResolvedValue(new Array(153).fill('aa').join(''));
       const estimate = await estimateProvider.transfer({
         to: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
         amount: 2,
@@ -252,7 +258,7 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(transferWithAllocation());
       // Simulate real op size
-      mockRpcClient.forgeOperations.mockResolvedValue(new Array(153).fill('aa').join(''));
+      mockForger.forge.mockResolvedValue(new Array(153).fill('aa').join(''));
       const estimate = await estimateProvider.transfer({
         to: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
         amount: 2,
@@ -524,10 +530,11 @@ describe('RPCEstimateProvider test', () => {
         { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 },
         { kind: OpKind.TRANSACTION, to: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp', amount: 2 },
         {
-          kind: OpKind.REGISTER_GLOBAL_CONSTANT, value: {
+          kind: OpKind.REGISTER_GLOBAL_CONSTANT,
+          value: {
             prim: 'Pair',
-            args: [{ int: '998' }, { int: '999' }]
-          }
+            args: [{ int: '998' }, { int: '999' }],
+          },
         },
       ]);
       expect(estimate.length).toEqual(3);
@@ -539,7 +546,7 @@ describe('RPCEstimateProvider test', () => {
 
     it('should produce a batch operation, with reveal', async (done) => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
-      mockRpcClient.forgeOperations.mockResolvedValue(new Array(224).fill('aa').join(''));
+      mockForger.forge.mockResolvedValue(new Array(224).fill('aa').join(''));
       mockRpcClient.runOperation.mockResolvedValue({
         contents: [
           {
@@ -589,10 +596,11 @@ describe('RPCEstimateProvider test', () => {
       });
       const estimate = await estimateProvider.batch([
         {
-          kind: OpKind.REGISTER_GLOBAL_CONSTANT, value: {
+          kind: OpKind.REGISTER_GLOBAL_CONSTANT,
+          value: {
             prim: 'Pair',
-            args: [{ int: '998' }, { int: '999' }]
-          }
+            args: [{ int: '998' }, { int: '999' }],
+          },
         },
         { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 },
         { kind: OpKind.TRANSACTION, to: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp', amount: 2 },
@@ -609,8 +617,8 @@ describe('RPCEstimateProvider test', () => {
         storageLimit: 73,
         suggestedFeeMutez: 408,
       });
-      expect(estimate[2].suggestedFeeMutez).toEqual(385)
-      expect(estimate[3].suggestedFeeMutez).toEqual(385)
+      expect(estimate[2].suggestedFeeMutez).toEqual(385);
+      expect(estimate[3].suggestedFeeMutez).toEqual(385);
       expect(estimate[2]).toMatchObject({
         gasLimit: 1100,
         storageLimit: 0,
@@ -634,7 +642,7 @@ describe('RPCEstimateProvider test', () => {
           },
         },
       };
-      mockRpcClient.forgeOperations.mockResolvedValue(new Array(149).fill('aa').join(''));
+      mockForger.forge.mockResolvedValue(new Array(149).fill('aa').join(''));
       mockRpcClient.runOperation.mockResolvedValue({
         contents: [transactionResult, transactionResult, transactionResult, transactionResult],
       });
@@ -679,7 +687,7 @@ describe('RPCEstimateProvider test', () => {
           },
         },
       };
-      mockRpcClient.forgeOperations.mockResolvedValue(new Array(149).fill('aa').join(''));
+      mockForger.forge.mockResolvedValue(new Array(149).fill('aa').join(''));
       mockRpcClient.runOperation.mockResolvedValue({
         contents: [
           transactionResult,
@@ -736,9 +744,9 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClient.runOperation.mockResolvedValue(registerGlobalConstantNoReveal);
       const estimate = await estimateProvider.registerGlobalConstant({
         value: {
-          "prim": "Pair",
-          "args": [{ "int": "998" }, { "int": "999" }]
-        }
+          prim: 'Pair',
+          args: [{ int: '998' }, { int: '999' }],
+        },
       });
       expect(estimate).toMatchObject({
         gasLimit: 1330,
@@ -753,9 +761,9 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClient.runOperation.mockResolvedValue(registerGlobalConstantWithReveal);
       const estimate = await estimateProvider.registerGlobalConstant({
         value: {
-          "prim": "Pair",
-          "args": [{ "int": "998" }, { "int": "999" }]
-        }
+          prim: 'Pair',
+          args: [{ int: '998' }, { int: '999' }],
+        },
       });
       expect(estimate).toMatchObject({
         gasLimit: 1330,
@@ -770,8 +778,8 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('1100'));
       await estimateProvider.registerGlobalConstant({
         value: {
-          "prim": "Pair",
-          "args": [{ "int": "998" }, { "int": "999" }]
+          prim: 'Pair',
+          args: [{ int: '998' }, { int: '999' }],
         },
         storageLimit: 200,
       });
@@ -796,8 +804,8 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('10000000000'));
       await estimateProvider.registerGlobalConstant({
         value: {
-          "prim": "Pair",
-          "args": [{ "int": "998" }, { "int": "999" }]
+          prim: 'Pair',
+          args: [{ int: '998' }, { int: '999' }],
         },
         gasLimit: 200,
       });
@@ -822,8 +830,8 @@ describe('RPCEstimateProvider test', () => {
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('10000000000'));
       await estimateProvider.registerGlobalConstant({
         value: {
-          "prim": "Pair",
-          "args": [{ "int": "998" }, { "int": "999" }]
+          prim: 'Pair',
+          args: [{ int: '998' }, { int: '999' }],
         },
         fee: 10000,
       });
@@ -846,16 +854,18 @@ describe('RPCEstimateProvider test', () => {
     it('should return parsed error from RPC result', async (done) => {
       mockRpcClient.runOperation.mockResolvedValue(registerGlobalConstantWithError);
 
-      await expect(estimateProvider.registerGlobalConstant({
-        value: {
-          "prim": "Pair",
-          "args": [{ "int": "998" }, { "int": "999" }]
-        }
-      })).rejects.toMatchObject({
-        errors:
-          [{
+      await expect(
+        estimateProvider.registerGlobalConstant({
+          value: {
+            prim: 'Pair',
+            args: [{ int: '998' }, { int: '999' }],
+          },
+        })
+      ).rejects.toMatchObject({
+        errors: [
+          {
             kind: 'branch',
-            id: 'proto.011-PtHangzH.Expression_already_registered'
+            id: 'proto.011-PtHangzH.Expression_already_registered',
           },
           {
             kind: 'permanent',
@@ -863,13 +873,14 @@ describe('RPCEstimateProvider test', () => {
             existing_key: [
               'global_constant',
               'f4b54fa94f3255df3ab6a95d0112964d825642706d42de848b3c507ff4602c4a',
-              'len'
-            ]
-          }],
+              'len',
+            ],
+          },
+        ],
         name: 'TezosOperationError',
         id: 'proto.011-PtHangzH.context.storage_error',
         kind: 'permanent',
-        message: '(permanent) proto.011-PtHangzH.context.storage_error'
+        message: '(permanent) proto.011-PtHangzH.context.storage_error',
       });
       done();
     });

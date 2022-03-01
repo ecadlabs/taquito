@@ -22,6 +22,7 @@ export enum CODEC {
   PROPOSAL = 'proposal',
   PROPOSAL_ARR = 'proposalArr',
   INT32 = 'int32',
+  INT16 = 'int16',
   PARAMETERS = 'parameters',
   ADDRESS = 'address',
   OPERATION = 'operation',
@@ -189,7 +190,6 @@ export const opMapping: { [key: string]: string } = {
   '91': 'view',
   '92': 'constant',
   '93': 'SUB_MUTEZ',
-  //'94': 'ASSERT_SOME',
 };
 
 export const opMappingReverse = (() => {

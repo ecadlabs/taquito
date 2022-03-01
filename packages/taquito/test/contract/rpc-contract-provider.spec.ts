@@ -54,7 +54,6 @@ describe('RpcContractProvider test', () => {
     getBlock: jest.Mock<any, any>;
     getContract: jest.Mock<any, any>;
     getBlockMetadata: jest.Mock<any, any>;
-    forgeOperations: jest.Mock<any, any>;
     injectOperation: jest.Mock<any, any>;
     packData: jest.Mock<any, any>;
     preapplyOperations: jest.Mock<any, any>;
@@ -67,6 +66,10 @@ describe('RpcContractProvider test', () => {
     publicKeyHash: jest.Mock<any, any>;
     publicKey: jest.Mock<any, any>;
     sign: jest.Mock<any, any>;
+  };
+
+  let mockForger: {
+    forge: jest.Mock<any, any>;
   };
 
   let mockEstimate: {
@@ -103,12 +106,15 @@ describe('RpcContractProvider test', () => {
       getBlockHeader: jest.fn(),
       getBlockMetadata: jest.fn(),
       getContract: jest.fn(),
-      forgeOperations: jest.fn(),
       injectOperation: jest.fn(),
       packData: jest.fn(),
       preapplyOperations: jest.fn(),
       getChainId: jest.fn(),
       getSaplingDiffById: jest.fn(),
+    };
+
+    mockForger = {
+      forge: jest.fn(),
     };
 
     mockSigner = {
@@ -135,9 +141,11 @@ describe('RpcContractProvider test', () => {
       },
     });
 
+    const context = new Context(mockRpcClient as any, mockSigner as any);
+    context.forger = mockForger;
     rpcContractProvider = new RpcContractProvider(
       // deepcode ignore no-any: any is good enough
-      new Context(mockRpcClient as any, mockSigner as any),
+      context,
       mockEstimate as any
     );
 
@@ -155,7 +163,9 @@ describe('RpcContractProvider test', () => {
       packed: '747a325542477245424b7a7a5736686a586a78786951464a4e6736575232626d3647454e',
     });
     mockRpcClient.preapplyOperations.mockResolvedValue([]);
-    mockRpcClient.injectOperation.mockResolvedValue('oo6JPEAy8VuMRGaFuMmLNFFGdJgiaKfnmT1CpHJfKP3Ye5ZahiP')
+    mockRpcClient.injectOperation.mockResolvedValue(
+      'oo6JPEAy8VuMRGaFuMmLNFFGdJgiaKfnmT1CpHJfKP3Ye5ZahiP'
+    );
     mockRpcClient.getChainId.mockResolvedValue('chain-id');
     const estimateReveal = new Estimate(1000000, 0, 64, 250);
     mockEstimate.reveal.mockResolvedValue(estimateReveal);
@@ -193,7 +203,9 @@ describe('RpcContractProvider test', () => {
           })
         ),
       });
-      expect(mockRpcClient.getBigMapKey.mock.calls[0][0]).toEqual('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D');
+      expect(mockRpcClient.getBigMapKey.mock.calls[0][0]).toEqual(
+        'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D'
+      );
       expect(mockRpcClient.getBigMapKey.mock.calls[0][1]).toEqual({
         key: { bytes: '000035e993d8c7aaa42b5e3ccd86a33390ececc73abd' },
         type: { prim: 'bytes' },
