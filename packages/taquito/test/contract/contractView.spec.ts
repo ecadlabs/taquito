@@ -117,8 +117,6 @@ describe('ContractView test', () => {
 
   });
 
-  
-
   it('should create instances of ContractView for the entry points that match the tzip4 view signature', async (done) => {
     // The tzip4 view signature is a pair where its second arguments is a contract.
     const result = await rpcContractProvider.at('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D');
