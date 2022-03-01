@@ -3,6 +3,8 @@ import { tokenInit, tokenCode } from './data';
 import { Context } from '../../src/context';
 import { ContractView } from '../../src/contract/contract';
 import { InvalidParameterError } from '../../src/contract/errors';
+import { ChainIds } from '../../src/constants';
+
 
 describe('ContractView test', () => {
   let rpcContractProvider: RpcContractProvider;
@@ -12,6 +14,7 @@ describe('ContractView test', () => {
     getEntrypoints: jest.Mock<any, any>;
     getBlockHeader: jest.Mock<any, any>;
     runView: jest.Mock<any, any>;
+    getChainId: jest.Mock<any, any>;
   };
 
   let mockSigner: {
@@ -33,7 +36,8 @@ describe('ContractView test', () => {
       getNormalizedScript: jest.fn(),
       getStorage: jest.fn(),
       getBlockHeader: jest.fn(),
-      runView: jest.fn()
+      runView: jest.fn(),
+      getChainId: jest.fn()
     };
 
     mockSigner = {
@@ -79,10 +83,7 @@ describe('ContractView test', () => {
     mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
     mockSigner.publicKey.mockResolvedValue('test_pub_key');
     mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
-  });
 
-  it('should create instances of ContractView for the entry points that match the tzip4 view signature', async (done) => {
-    // The tzip4 view signature is a pair where its second arguments is a contract.
     mockRpcClient.getEntrypoints.mockResolvedValue({
       entrypoints: {
         transfer: {
@@ -110,6 +111,16 @@ describe('ContractView test', () => {
       },
     });
 
+    mockRpcClient.runView.mockResolvedValue({
+      "data": {"int": "100"}
+    });
+
+  });
+
+  
+
+  it('should create instances of ContractView for the entry points that match the tzip4 view signature', async (done) => {
+    // The tzip4 view signature is a pair where its second arguments is a contract.
     const result = await rpcContractProvider.at('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D');
 
     expect(() => result.views.transfer()).toThrow(); // Entry point transfer is not a view
@@ -140,22 +151,21 @@ describe('ContractView test', () => {
     done();
   });
 
-  it('Should be able to execute tzip4 views', async (done) => {
-    mockRpcClient.runView.mockResolvedValue({
-      "data": {"int": "100"}
-    });
+  it('Should be able to execute tzip4 views by calling the read method (without passing chainId)', async (done) => {
+    mockRpcClient.getChainId.mockResolvedValue('NetXnHfVqm9iesp');
 
-    const result = await mockRpcClient.runView({
-      contract: 'test',
-      entrypoint: 'getBalance',
-      chain_id: 'test',
-      input: {
-        string: 'test'
-      }
-    });
+    const contractView = await rpcContractProvider.at('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D');
+    const result = await contractView.views.getBalance('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1').read()
 
-    expect(result).toBeDefined();
-    expect(result).toEqual({"data": {"int": "100"}});
+    expect(result.toString()).toEqual('100')
     done();
-  })
+  });
+
+  it('Should be able to execute tzip4 views by calling the read method (with passing chainId)', async (done) => {
+    const contractView = await rpcContractProvider.at('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D');
+    const result = await contractView.views.getBalance('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1').read(ChainIds.ITHACANET2);
+    
+    expect(result.toString()).toEqual('100');
+    done();
+  });
 });

@@ -4,7 +4,7 @@ title: Lambda View
 ---
 
 :::caution note
-Lambda View implementation have recently changed due to a recent protocol update. Lambda Views now utilize the `run_view` endpoint. For more information refer to [this document](https://tezos.gitlab.io/CHANGES.html?highlight=run_view#id1) 
+Lambda View implementation have recently changed due to a recent protocol update. Lambda Views now utilize the `run_view` endpoint. For more information refer to [this document](https://tezos.gitlab.io/CHANGES.html?highlight=run_view#id16) 
 :::
 Lambda View is a way to retrieve data from a smart contract's storage
 without incurring fees via a contract's view method. 
@@ -54,7 +54,7 @@ Taquito dynamically creates a `getAllowance`, `getBalance` and `getTotalSupply` 
 Parameters must not include the callback parameter
 :::
 
-Then we call the `read()` method, which takes an optional lambda contract address. 
+Then we call the `read()` method. (Note that we have no longer need a lambda contract)
 ```js live noInline
 Tezos.contract
   .at('KT1LNMrk8orMQ85zbwK25996dPhDxfSicvKh')
