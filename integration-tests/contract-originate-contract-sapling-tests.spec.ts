@@ -58,10 +58,6 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done();
     });
 
-    // In this test we try a contract which creates an empty sapling state on the
-    //  fly. It then applies a list of transactions, checks they are correct and
-    //  drops the result. We make several shields in the same list (since the state
-    //  is drop).
     test('Originates a Sapling Drop contract', async (done) => {
       const op = await Tezos.contract.originate({
         code: saplingContractDrop,
@@ -71,9 +67,6 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       const contract = await op.contract();
-
-      const saplingDiffById = await rpcClient.getSaplingDiffById('168');
-      expect(saplingDiffById).toBeDefined();
 
       Tezos.contract.at(contract.address).then((contract) => {
         const objects = Object.keys(contract.methodsObject);
@@ -93,9 +86,6 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       const contract = await op.contract();
 
-      const saplingDiffById = await rpcClient.getSaplingDiffById('168');
-      expect(saplingDiffById).toBeDefined();
-
       Tezos.contract.at(contract.address).then((contract) => {
         const objects = Object.keys(contract.methodsObject);
         expect(objects).toContain('default');
@@ -113,9 +103,6 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
 
-      const saplingDiffById = await rpcClient.getSaplingDiffById('168');
-      expect(saplingDiffById).toBeDefined();
-      done();
     });
 
     hangzhounet('Should fail to originate a Push Sapling State contract', async (done) => {
@@ -155,9 +142,6 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       const contract = await op.contract();
-
-      const saplingDiffById = await rpcClient.getSaplingDiffById('168');
-      expect(saplingDiffById).toBeDefined();
 
       Tezos.contract.at(contract.address).then((contract) => {
         const objects = Object.keys(contract.methodsObject);
