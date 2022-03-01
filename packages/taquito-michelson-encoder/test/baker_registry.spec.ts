@@ -120,7 +120,6 @@ describe('Baker Registry contract test', () => {
       withdraw: 'contract',
     });
 
-    console.log(JSON.stringify(schema.generateSchema(), null, 2))
     expect(schema.generateSchema()).toEqual({
       __michelsonType: "or",
       schema: {

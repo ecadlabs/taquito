@@ -5,13 +5,13 @@ import {
   RpcClientInterface,
   ScriptResponse,
 } from '@taquito/rpc';
-import { ChainIds, DefaultLambdaAddresses } from '../constants';
+import { ChainIds } from '../constants';
 import { Wallet } from '../wallet';
 import { ContractMethodFactory } from './contract-methods/contract-method-factory';
 import { ContractMethod } from './contract-methods/contract-method-flat-param';
 import { ContractMethodObject } from './contract-methods/contract-method-object-param';
 import { OnChainView } from './contract-methods/contract-on-chain-view';
-import { InvalidParameterError, UndefinedLambdaContractError } from './errors';
+import { InvalidParameterError } from './errors';
 import { ContractProvider, StorageProvider } from './interface';
 import LambdaView from './lambda-view';
 
@@ -23,49 +23,22 @@ export const DEFAULT_SMART_CONTRACT_METHOD_NAME = 'default';
 export class ContractView {
   constructor(
     private currentContract: ContractAbstraction<ContractProvider | Wallet>,
-    private provider: ContractProvider,
     private name: string,
-    private chainId: string,
     private callbackParametersSchema: ParameterSchema,
     private parameterSchema: ParameterSchema,
-    private args: any[]
+    private args: any[],
+    private rpc: RpcClientInterface
   ) {}
 
-  /**
-   *
-   * @description Find which lambda contract to use based on the current network,
-   * encode parameters to Michelson,
-   * create an instance of Lambdaview to retrieve data, and
-   * Decode Michelson response
-   *
-   * @param Options Address of a lambda contract (sandbox users)
-   */
-  async read(customLambdaAddress?: string) {
-    let lambdaAddress;
-
-    // TODO Verify if the 'customLambdaAdress' is a valid originated contract and if not, return an appropriate error message.  
-    if (customLambdaAddress) {
-      lambdaAddress = customLambdaAddress;
-    } else if (this.chainId === ChainIds.GRANADANET) {
-      lambdaAddress = DefaultLambdaAddresses.GRANADANET;
-    } else if (this.chainId === ChainIds.HANGZHOUNET) {
-      lambdaAddress = DefaultLambdaAddresses.HANGZHOUNET;
-    } else if (this.chainId === ChainIds.ITHACANET) {
-      lambdaAddress = DefaultLambdaAddresses.ITHACANET;
-    } else if (this.chainId === ChainIds.ITHACANET2) {
-      lambdaAddress = DefaultLambdaAddresses.ITHACANET2;
-    } else if (this.chainId === ChainIds.MAINNET) {
-      lambdaAddress = DefaultLambdaAddresses.MAINNET;
-    } else {
-      throw new UndefinedLambdaContractError();
-    }
-
-    const lambdaContract = await this.provider.at(lambdaAddress);
+  async read(chainId?: ChainIds) {
     const arg = this.parameterSchema.Encode(...this.args);
-    const lambdaView = new LambdaView(lambdaContract, this.currentContract, this.name, arg);
-    const failedWith = await lambdaView.execute();
-    const response = this.callbackParametersSchema.Execute(failedWith);
-    return response;
+    const result = await this.rpc.runView({
+      contract: this.currentContract.address,
+      entrypoint: this.name,
+      input: arg,
+      chain_id: chainId? chainId: await this.rpc.getChainId()
+    });
+    return this.callbackParametersSchema.Execute(result.data);
   }
 }
 
@@ -154,8 +127,7 @@ export class ContractAbstraction<T extends ContractProvider | Wallet,
     provider: T,
     private storageProvider: StorageProvider,
     public readonly entrypoints: EntrypointsResponse,
-    private chainId: string,
-    rpc: RpcClientInterface
+    private rpc: RpcClientInterface
   ) {
     this.contractMethodFactory = new ContractMethodFactory(provider, address);
     this.schema = Schema.fromRPCResponse({ script: this.script });
@@ -165,16 +137,15 @@ export class ContractAbstraction<T extends ContractProvider | Wallet,
     if (this.viewSchema.length !== 0) {
       this._initializeOnChainViews(this, rpc, this.viewSchema);
     }
-    this._initializeMethods(this, provider, this.entrypoints.entrypoints, this.chainId);
+    this._initializeMethods(this, this.entrypoints.entrypoints, this.rpc);
   }
 
   private _initializeMethods(
     currentContract: ContractAbstraction<T>,
-    provider: T,
     entrypoints: {
       [key: string]: object;
     },
-    chainId: string
+    rpc: RpcClientInterface
   ) {
     const parameterSchema = this.parameterSchema;
     const keys = Object.keys(entrypoints);
@@ -198,31 +169,28 @@ export class ContractAbstraction<T extends ContractProvider | Wallet,
           );
         };
 
-        if (isContractProvider(provider)) {
-          if (isView(entrypoints[smartContractMethodName])) {
-            const view = function (...args: any[]) {
-              const entrypointParamWithoutCallback = (entrypoints[smartContractMethodName] as any)
-                .args[0];
-              const smartContractMethodSchemaWithoutCallback = new ParameterSchema(
-                entrypointParamWithoutCallback
-              );
-              const parametersCallback = (entrypoints[smartContractMethodName] as any).args[1]
-                .args[0];
-              const smartContractMethodCallbackSchema = new ParameterSchema(parametersCallback);
+        if (isView(entrypoints[smartContractMethodName])) {
+          const view = function (...args: any[]) {
+            const entrypointParamWithoutCallback = (entrypoints[smartContractMethodName] as any)
+              .args[0];
+            const smartContractMethodSchemaWithoutCallback = new ParameterSchema(
+              entrypointParamWithoutCallback
+            );
+            const parametersCallback = (entrypoints[smartContractMethodName] as any).args[1]
+              .args[0];
+            const smartContractMethodCallbackSchema = new ParameterSchema(parametersCallback);
 
-              validateArgs(args, smartContractMethodSchemaWithoutCallback, smartContractMethodName);
-              return new ContractView(
-                currentContract,
-                provider,
-                smartContractMethodName,
-                chainId,
-                smartContractMethodCallbackSchema,
-                smartContractMethodSchemaWithoutCallback,
-                args
-              );
-            };
-            (this.views as DefaultViews)[smartContractMethodName] = view;
-          }
+            validateArgs(args, smartContractMethodSchemaWithoutCallback, smartContractMethodName);
+            return new ContractView(
+              currentContract,
+              smartContractMethodName,
+              smartContractMethodCallbackSchema,
+              smartContractMethodSchemaWithoutCallback,
+              args,
+              rpc
+            );
+          };
+          (this.views as DefaultViews)[smartContractMethodName] = view;
         }
       });
 
