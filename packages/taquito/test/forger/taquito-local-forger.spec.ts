@@ -3,11 +3,11 @@ import { Context, Protocols } from '../../src/taquito';
 
 describe('Taquito local forger', () => {
   const mockRpcClient = {
-    getBlockMetadata: jest.fn(),
+    getProtocols: jest.fn(),
   };
 
   beforeEach(() => {
-    mockRpcClient.getBlockMetadata.mockResolvedValue({
+    mockRpcClient.getProtocols.mockResolvedValue({
       next_protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
     });
   });
@@ -27,7 +27,7 @@ describe('Taquito local forger', () => {
       branch: 'BMbqNeX9fZKsuKmu5B2gX7ayA9ZUNjbHEeHCgYd7VdTMsTCALFF',
       contents: [],
     });
-    expect(mockRpcClient.getBlockMetadata).toHaveBeenCalledTimes(0);
+    expect(mockRpcClient.getProtocols).toHaveBeenCalledTimes(0);
 
     done();
   });
@@ -42,7 +42,7 @@ describe('Taquito local forger', () => {
       branch: 'BMbqNeX9fZKsuKmu5B2gX7ayA9ZUNjbHEeHCgYd7VdTMsTCALFF',
       contents: [],
     });
-    expect(mockRpcClient.getBlockMetadata).toHaveBeenCalledTimes(1);
+    expect(mockRpcClient.getProtocols).toHaveBeenCalledTimes(1);
 
     done();
   });

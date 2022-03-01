@@ -1,17 +1,78 @@
 import { CONFIGS } from './config';
-import { MichelsonMap, MichelCodecPacker } from '@taquito/taquito';
+import { MichelsonMap, MichelCodecPacker, TezosToolkit } from '@taquito/taquito';
 import { permit_admin_42_expiry } from './data/permit_admin_42_expiry';
 import { permit_admin_42_set } from './data/permit_admin_42_set';
 import { permit_fa12_smartpy } from './data/permit_fa12_smartpy';
 import { buf2hex, char2Bytes, hex2buf } from '@taquito/utils';
 import { tzip16, Tzip16Module } from '@taquito/tzip16';
+import { packDataBytes } from "@taquito/michel-codec"
 
 const blake = require('blakejs');
 const bob_address = 'tz1Xk7HkSwHv6dTEgR7E2WC2yFj4cyyuj2Gh';
 
-const errors_to_missigned_bytes = (errors: any[]) => {
-  return errors[1].with.args[1].bytes;
-};
+const create_bytes_to_sign = async (Tezos: TezosToolkit, contractAddress: string, methodHash: string) => {
+  const chainId = await Tezos.rpc.getChainId();
+  
+  const contract = await Tezos.contract.at(contractAddress)
+  const contractStorage: any = await contract.storage();
+  let counter = 0;
+  if(contractStorage.hasOwnProperty("counter")){
+    counter = contractStorage.counter.toNumber();
+  } else {
+    counter = contractStorage["1"].toNumber();
+  }
+  const sigParamData: any = {
+    prim: "Pair",
+    args: [
+      {
+        prim: "Pair",
+        args: [
+          {
+            string: chainId
+          },
+          {
+            string: contractAddress
+          }
+        ]
+      },
+      {
+        prim: "Pair",
+        args: [
+          {
+            int: counter
+          },
+          {
+            bytes: methodHash
+          }
+        ]
+      }
+    ]
+  };
+  const sigParamType: any = {
+    prim: "pair",
+    args: [
+      {
+        prim: "pair",
+        args: [
+          {
+            prim: "chain_id"
+          },
+          { prim: "address" }
+        ]
+      },
+      {
+        prim: "pair",
+        args: [{ prim: "nat" }, { prim: "bytes" }]
+      }
+    ]
+  };
+  
+  const sigParamPacked = packDataBytes(sigParamData, sigParamType);
+  // signs the hash    
+  const signature = await Tezos.signer.sign(sigParamPacked.bytes);
+
+  return signature.sig
+}
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
@@ -52,16 +113,8 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       });
       const packed_param = raw_packed.packed;
       const param_hash = buf2hex(blake.blake2b(hex2buf(packed_param), null, 32));
-      const bytes_to_sign = await permit_contract.methods
-        .permit(signer_key, dummy_sig, param_hash)
-        .send()
-        .catch((e) => errors_to_missigned_bytes(e.errors));
-
-      //The error here catches the bytes that are needed, so we have to catch the error for later use.
-      const param_sig = await Tezos.signer
-        .sign(bytes_to_sign)
-        .then((s) => s.prefixSig)
-        .catch((error) => console.log(JSON.stringify(error)));
+      
+      const param_sig = await create_bytes_to_sign(Tezos, permit_contract.address, param_hash)
 
       const permitMethodCall = await permit_contract.methods
         .permit(signer_key, param_sig, param_hash)
@@ -308,30 +361,8 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
         //Get Bootstrap2's public_key and capture it
         const PUB_KEY = await LocalTez2.signer.publicKey();
-
-        //Set Fake permit param
-        //PERMIT_PARAM_FAKE="{Pair \"$PUB_KEY\" (Pair \"$RAND_SIG\" $TRANSFER_PARAM_HASHED)}"
-
-        //Set MISSIGNED with bytes returned in error message of fake permit submission
-        const trial_permit_contract = await LocalTez4.contract.at(fa12_contract.address);
-        const bytes_to_sign = await trial_permit_contract.methods
-          .permit([
-            {
-              0: PUB_KEY, //key,
-              1: RAND_SIG, //signature
-              2: TRANSFER_PARAM_HASHED, //bytes
-            },
-          ])
-          .send()
-          .catch((e) => errors_to_missigned_bytes(e.errors));
-
-        //Sign MISSIGNED bytes for bootstrap_address2
-        const SIGNATURE = await LocalTez2.signer.sign(bytes_to_sign).then((s) => s.prefixSig)
-          .catch((error) => console.log(JSON.stringify(error)));
-
-        //Craft correct permit parameter
-        //PERMIT_PARAM="{Pair \"$PUB_KEY\" (Pair \"$SIGNATURE\" $TRANSFER_PARAM_HASHED)}"
-
+        const SIGNATURE = await create_bytes_to_sign(LocalTez2, fa12_contract.address, TRANSFER_PARAM_HASHED)
+        
         //Anyone can submit permit start
         const signed_permit_contract = await LocalTez4.contract.at(fa12_contract.address);
         const permit_contract = await signed_permit_contract.methods

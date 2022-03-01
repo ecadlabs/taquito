@@ -1,6 +1,6 @@
 import { ForgedBytes } from '../../src/operations/types';
 import { OperationContentsAndResult } from '@taquito/rpc';
-import { defaultConfigConfirmation, defaultConfigStreamer } from '../../src/context';
+import { defaultConfigConfirmation } from '../../src/context';
 import { RegisterGlobalConstantOperation } from '../../src/operations/register-global-constant-operation';
 import { RegisterGlobalConstantOperationBuilder, RevealOperationBuilder } from '../helpers';
 
@@ -67,7 +67,7 @@ describe('RegisterGlobalConstant operation', () => {
       rpc: {
         getBlock: jest.fn(),
       },
-      config: { ...defaultConfigConfirmation, ...defaultConfigStreamer },
+      config: { ...defaultConfigConfirmation },
     };
 
     fakeContext.rpc.getBlock.mockResolvedValue({

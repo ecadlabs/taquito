@@ -25,6 +25,7 @@ describe('OperationBatch test', () => {
     preapplyOperations: jest.Mock<any, any>;
     getChainId: jest.Mock<any, any>;
     getSaplingDiffById: jest.Mock<any, any>;
+    getProtocols: jest.Mock<any, any>;
   };
 
   let mockSigner: {
@@ -64,6 +65,7 @@ describe('OperationBatch test', () => {
       preapplyOperations: jest.fn(),
       getChainId: jest.fn(),
       getSaplingDiffById: jest.fn(),
+      getProtocols: jest.fn(),
     };
 
     mockSigner = {
@@ -97,6 +99,7 @@ describe('OperationBatch test', () => {
     mockRpcClient.getContract.mockResolvedValue({ counter: 123456 });
     mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
     mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
+    mockRpcClient.getProtocols.mockResolvedValue({ next_protocol: 'test_proto' });
     mockRpcClient.getManagerKey.mockResolvedValue('test');
     mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
     mockSigner.publicKey.mockResolvedValue('test_pub_key');

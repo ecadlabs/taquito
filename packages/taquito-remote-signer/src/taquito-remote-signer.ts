@@ -16,8 +16,7 @@ import {
   ValidationResult,
   InvalidKeyHashError
 } from '@taquito/utils';
-
-import sodium from 'libsodium-wrappers';
+import { hash } from '@stablelib/blake2b';
 import toBuffer from 'typedarray-to-buffer';
 import { BadSigningDataError, KeyNotFoundError, OperationNotAuthorizedError } from './errors';
 import { Signer } from '@taquito/taquito';
@@ -164,11 +163,10 @@ export class RemoteSigner implements Signer {
   }
 
   async verifyPublicKey(publicKey: string) {
-    await sodium.ready;
     const curve = publicKey.substring(0, 2) as curves;
-    const _publicKey = toBuffer(b58cdecode(publicKey, pref[curve].pk));
+    const _publicKey = b58cdecode(publicKey, pref[curve].pk);
 
-    const publicKeyHash = b58cencode(sodium.crypto_generichash(20, _publicKey), pref[curve].pkh);
+    const publicKeyHash = b58cencode(hash(_publicKey, 20), pref[curve].pkh);
     if (publicKeyHash !== this.pkh) {
       throw new Error(
         `Requested public key does not match the initialized public key hash: {

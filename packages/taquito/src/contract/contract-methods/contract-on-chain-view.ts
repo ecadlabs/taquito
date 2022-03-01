@@ -6,6 +6,7 @@ import {
   RPCRunCodeParam,
 } from '@taquito/rpc';
 import { validateAddress, ValidationResult } from '@taquito/utils';
+import { TzReadProvider } from '../../read-provider/interface';
 import {
   InvalidViewSimulationContext,
   InvalidViewParameterError,
@@ -59,10 +60,10 @@ export interface ExecutionContextParams {
 export class OnChainView {
   constructor(
     private _rpc: RpcClientInterface,
+    private _readProvider: TzReadProvider,
     private _contractAddress: string,
     private _smartContractViewSchema: ViewSchema,
     private _contractStorageType: MichelsonV1Expression,
-    private _contractStorageValue: MichelsonV1Expression,
     private _args: any = 'Unit'
   ) {}
 
@@ -83,8 +84,9 @@ export class OnChainView {
    */
   async executeView(executionContext: ExecutionContextParams) {
     this.verifyContextExecution(executionContext);
-    const balance = (await this._rpc.getBalance(this._contractAddress)).toString();
-    const chainId = await this._rpc.getChainId();
+    const balance = (await this._readProvider.getBalance(this._contractAddress, 'head')).toString();
+    const chainId = await this._readProvider.getChainId();
+    const storage = await this._readProvider.getStorage(this._contractAddress, 'head');
     return this.executeViewAndDecodeResult(
       runCodeHelper(
         this._smartContractViewSchema.viewArgsType,
@@ -96,7 +98,7 @@ export class OnChainView {
           balance
         ),
         this.transformArgsToMichelson(),
-        this._contractStorageValue,
+        storage,
         balance,
         chainId,
         executionContext.source

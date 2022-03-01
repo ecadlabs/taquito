@@ -12,8 +12,8 @@ export class MichelCodecParser implements ParserProvider {
 
   private async getNextProto(): Promise<ProtocolID> {
     if (!this.context.proto) {
-      const { next_protocol } = await this.context.rpc.getBlockMetadata();
-      this.context.proto = next_protocol as Protocols;
+      const nextProto = await this.context.readProvider.getNextProtocol('head');
+      this.context.proto = nextProto as Protocols;
     }
     return this.context.proto as ProtocolID;
   }

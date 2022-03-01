@@ -1,7 +1,7 @@
 import { ForgedBytes } from '../../src/operations/types';
 import { OperationContentsAndResult } from '@taquito/rpc';
 import { BatchOperation } from '../../src/operations/batch-operation';
-import { defaultConfigConfirmation, defaultConfigStreamer } from '../../src/context';
+import { defaultConfigConfirmation } from '../../src/context';
 import {
   RevealOperationBuilder,
   TransferOperationBuilder,
@@ -227,7 +227,7 @@ describe('Batch operation', () => {
       rpc: {
         getBlock: jest.fn(),
       },
-      config: { ...defaultConfigConfirmation, ...defaultConfigStreamer },
+      config: { ...defaultConfigConfirmation },
     };
 
     fakeContext.rpc.getBlock.mockResolvedValue({

@@ -57,7 +57,7 @@ describe('RpcTzProvider test', () => {
         getManagerKey: jest.fn(),
         getStorage: jest.fn(),
         getBlockHeader: jest.fn(),
-        getBlockMetadata: jest.fn(),
+        getProtocols: jest.fn(),
         getContract: jest.fn(),
         injectOperation: jest.fn(),
         preapplyOperations: jest.fn(),
@@ -85,7 +85,7 @@ describe('RpcTzProvider test', () => {
         hash: 'BLJjnzaPtSsxykZ9pLTFLSfsKuiN3z7SjSPDPWwbE4Q68u5EpBw',
       });
       mockRpcClient.preapplyOperations.mockResolvedValue([]);
-      mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
+      mockRpcClient.getProtocols.mockResolvedValue({ next_protocol: 'test_proto' });
       mockForger.forge.mockResolvedValue('test');
       mockRpcClient.injectOperation.mockResolvedValue(
         'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj'

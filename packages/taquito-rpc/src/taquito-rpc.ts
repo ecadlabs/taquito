@@ -37,12 +37,10 @@ import {
   OperationHash,
   PackDataParams,
   PackDataResponse,
-  PeriodKindResponse,
   PreapplyParams,
   PreapplyResponse,
   ProposalsResponse,
   ProtocolsResponse,
-  RawBlockHeaderResponse,
   RPCRunCodeParam,
   RPCRunOperationParam,
   RPCRunViewParam,
@@ -387,32 +385,37 @@ export class RpcClient implements RpcClientInterface {
       method: 'GET',
     });
 
+    const castedResponse: any = castToBigNumber(response, [
+      'balance',
+      'full_balance',
+      'current_frozen_deposits',
+      'frozen_deposits',
+      'frozen_balance',
+      'frozen_deposits_limit',
+      'staking_balance',
+      'delegated_balance',
+    ]);
+
     return {
-      deactivated: response.deactivated,
-      balance: new BigNumber(response.balance),
-      frozen_balance: new BigNumber(response.frozen_balance),
-      frozen_balance_by_cycle: response.frozen_balance_by_cycle.map(
-        ({ deposit, deposits, fees, rewards, ...rest }) => {
-          const castedToBigNumber: any = castToBigNumber({ deposit, deposits, fees, rewards }, [
-            'deposit',
-            'deposits',
-            'fees',
-            'rewards',
-          ]);
-          return {
-            ...rest,
-            deposit: castedToBigNumber.deposit,
-            deposits: castedToBigNumber.deposits,
-            fees: castedToBigNumber.fees,
-            rewards: castedToBigNumber.rewards,
-          };
-        }
-      ),
-      staking_balance: new BigNumber(response.staking_balance),
-      delegated_contracts: response.delegated_contracts,
-      delegated_balance: new BigNumber(response.delegated_balance),
-      grace_period: response.grace_period,
-      voting_power: response.voting_power,
+      ...response,
+      ...castedResponse,
+      frozen_balance_by_cycle: response.frozen_balance_by_cycle
+        ? response.frozen_balance_by_cycle.map(({ deposit, deposits, fees, rewards, ...rest }) => {
+            const castedToBigNumber: any = castToBigNumber({ deposit, deposits, fees, rewards }, [
+              'deposit',
+              'deposits',
+              'fees',
+              'rewards',
+            ]);
+            return {
+              ...rest,
+              deposit: castedToBigNumber.deposit,
+              deposits: castedToBigNumber.deposits,
+              fees: castedToBigNumber.fees,
+              rewards: castedToBigNumber.rewards,
+            };
+          })
+        : undefined,
     };
   }
 
@@ -491,7 +494,7 @@ export class RpcClient implements RpcClientInterface {
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-header
    */
   async getBlockHeader({ block }: RPCOptions = defaultRPCOptions): Promise<BlockHeaderResponse> {
-    const response = await this.httpBackend.createRequest<RawBlockHeaderResponse>({
+    const response = await this.httpBackend.createRequest<BlockHeaderResponse>({
       url: this.createURL(`/chains/${this.chain}/blocks/${block}/header`),
       method: 'GET',
     });
@@ -587,27 +590,6 @@ export class RpcClient implements RpcClientInterface {
   async getBallots({ block }: RPCOptions = defaultRPCOptions): Promise<BallotsResponse> {
     const response = await this.httpBackend.createRequest<BallotsResponse>({
       url: this.createURL(`/chains/${this.chain}/blocks/${block}/votes/ballots`),
-      method: 'GET',
-    });
-
-    return response;
-  }
-
-  /**
-   *
-   * @param options contains generic configuration for rpc calls
-   *
-   * @description Current period kind.
-   *
-   * @deprecated Deprecated in favor of getCurrentPeriod
-   *
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-votes-current-period-kind
-   */
-  async getCurrentPeriodKind({
-    block,
-  }: RPCOptions = defaultRPCOptions): Promise<PeriodKindResponse> {
-    const response = await this.httpBackend.createRequest<PeriodKindResponse>({
-      url: this.createURL(`/chains/${this.chain}/blocks/${block}/votes/current_period_kind`),
       method: 'GET',
     });
 
@@ -832,7 +814,10 @@ export class RpcClient implements RpcClientInterface {
    * @description Simulate a call to a view following the TZIP-4 standard. See https://gitlab.com/tzip/tzip/-/blob/master/proposals/tzip-4/tzip-4.md#view-entrypoints.
    *
    */
-  async runView({ unparsing_mode = 'Readable', ...rest}: RPCRunViewParam , { block }: RPCOptions = defaultRPCOptions): Promise<RunViewResult> {
+  async runView(
+    { unparsing_mode = 'Readable', ...rest }: RPCRunViewParam,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<RunViewResult> {
     return this.httpBackend.createRequest<any>(
       {
         url: this.createURL(`/chains/${this.chain}/blocks/${block}/helpers/scripts/run_view`),
@@ -840,7 +825,7 @@ export class RpcClient implements RpcClientInterface {
       },
       {
         unparsing_mode,
-        ...rest
+        ...rest,
       }
     );
   }

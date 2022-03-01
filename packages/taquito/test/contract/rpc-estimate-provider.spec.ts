@@ -37,6 +37,7 @@ describe('RPCEstimateProvider test', () => {
     preapplyOperations: jest.Mock<any, any>;
     getChainId: jest.Mock<any, any>;
     getConstants: jest.Mock<any, any>;
+    getProtocols: jest.Mock<any, any>;
   };
 
   let mockForger: {
@@ -64,6 +65,7 @@ describe('RPCEstimateProvider test', () => {
       preapplyOperations: jest.fn(),
       getChainId: jest.fn(),
       getConstants: jest.fn(),
+      getProtocols: jest.fn(),
     };
 
     mockForger = {
@@ -89,6 +91,7 @@ describe('RPCEstimateProvider test', () => {
     mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
     mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
     mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
+    mockRpcClient.getProtocols.mockResolvedValue({ next_protocol: 'test_proto' });
     mockForger.forge.mockResolvedValue('1234');
     mockRpcClient.preapplyOperations.mockResolvedValue([]);
     mockRpcClient.getChainId.mockResolvedValue('chain-id');

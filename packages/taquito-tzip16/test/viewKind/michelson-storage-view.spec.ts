@@ -1,9 +1,11 @@
+import { Context, RpcReadAdapter } from '@taquito/taquito';
 import { ForbiddenInstructionInViewCode, NoParameterExpectedError } from '../../src/tzip16-errors';
 import { MichelsonStorageView } from '../../src/viewKind/michelson-storage-view';
 
 describe('MichelsonStorageView test', () => {
   const mockContractAbstraction: any = {};
   let mockRpcClient: any;
+  let mockReadProvider: any;
 
   beforeEach(() => {
     mockRpcClient = {
@@ -11,6 +13,8 @@ describe('MichelsonStorageView test', () => {
       getBalance: jest.fn(),
       getChainId: jest.fn(),
       runCode: jest.fn(),
+      getStorage: jest.fn(),
+      getBlockHeader: jest.fn(),
     };
 
     mockContractAbstraction.address = 'KT1test';
@@ -47,6 +51,14 @@ describe('MichelsonStorageView test', () => {
     });
     mockRpcClient.getBalance.mockResolvedValue('0');
     mockRpcClient.getChainId.mockResolvedValue('NetTest');
+    mockRpcClient.getBlockHeader.mockResolvedValue({ timestamp: '2021-01-06T05:14:43Z' });
+    mockRpcClient.getStorage.mockResolvedValue({
+      prim: 'Pair',
+      args: [{ int: '7' }, { int: '38671' }],
+    });
+
+    const context = new Context(mockRpcClient as any);
+    mockReadProvider = new RpcReadAdapter(context);
   });
 
   it('Should succesfully execute a view that get the balance of the contrat', async (done) => {
@@ -59,6 +71,7 @@ describe('MichelsonStorageView test', () => {
       'test',
       mockContractAbstraction,
       mockRpcClient,
+      mockReadProvider,
       { prim: 'mutez', args: [], annots: [] },
       [
         { prim: 'DROP', args: [], annots: [] },
@@ -77,6 +90,7 @@ describe('MichelsonStorageView test', () => {
       'test',
       mockContractAbstraction,
       mockRpcClient,
+      mockReadProvider,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       viewCode
     );
@@ -103,6 +117,7 @@ describe('MichelsonStorageView test', () => {
       'test',
       mockContractAbstraction,
       mockRpcClient,
+      mockReadProvider,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       viewCode
     );
@@ -128,6 +143,7 @@ describe('MichelsonStorageView test', () => {
       'test',
       mockContractAbstraction,
       mockRpcClient,
+      mockReadProvider,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       viewCode
     );
@@ -149,6 +165,7 @@ describe('MichelsonStorageView test', () => {
       'test',
       mockContractAbstraction,
       mockRpcClient,
+      mockReadProvider,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       viewCode
     );
@@ -170,6 +187,7 @@ describe('MichelsonStorageView test', () => {
       'test',
       mockContractAbstraction,
       mockRpcClient,
+      mockReadProvider,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       viewCode
     );
@@ -191,6 +209,7 @@ describe('MichelsonStorageView test', () => {
       'test',
       mockContractAbstraction,
       mockRpcClient,
+      mockReadProvider,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       viewCode
     );
@@ -214,6 +233,7 @@ describe('MichelsonStorageView test', () => {
       'test',
       mockContractAbstraction,
       mockRpcClient,
+      mockReadProvider,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       viewCode
     );
@@ -239,6 +259,7 @@ describe('MichelsonStorageView test', () => {
       'test',
       mockContractAbstraction,
       mockRpcClient,
+      mockReadProvider,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       viewCode
     );
@@ -261,6 +282,7 @@ describe('MichelsonStorageView test', () => {
       'test',
       mockContractAbstraction,
       mockRpcClient,
+      mockReadProvider,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       viewCode
     );
@@ -292,6 +314,7 @@ describe('MichelsonStorageView test', () => {
       'test',
       mockContractAbstraction,
       mockRpcClient,
+      mockReadProvider,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       viewCode
     );
@@ -318,6 +341,7 @@ describe('MichelsonStorageView test', () => {
       'test',
       mockContractAbstraction,
       mockRpcClient,
+      mockReadProvider,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       viewCode
     );
@@ -359,6 +383,7 @@ describe('MichelsonStorageView test', () => {
       'test',
       mockContractAbstraction,
       mockRpcClient,
+      mockReadProvider,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       viewCode
     );
@@ -405,6 +430,7 @@ describe('MichelsonStorageView test', () => {
       'test',
       mockContractAbstraction,
       mockRpcClient,
+      mockReadProvider,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       viewCode
     );
@@ -444,6 +470,7 @@ describe('MichelsonStorageView test', () => {
       'test',
       mockContractAbstraction,
       mockRpcClient,
+      mockReadProvider,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       [{ prim: 'CAR', args: [], annots: [] }] // code
     );
@@ -459,6 +486,7 @@ describe('MichelsonStorageView test', () => {
       'test',
       mockContractAbstraction,
       mockRpcClient,
+      mockReadProvider,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       [{ prim: 'CAR', args: [], annots: [] }] // code
     );
@@ -474,6 +502,7 @@ describe('MichelsonStorageView test', () => {
       'test',
       mockContractAbstraction,
       mockRpcClient,
+      mockReadProvider,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       [{ prim: 'CAR', args: [], annots: [] }], // code
       { args: [], prim: 'unit', annots: [] }
@@ -490,6 +519,7 @@ describe('MichelsonStorageView test', () => {
       'test',
       mockContractAbstraction,
       mockRpcClient,
+      mockReadProvider,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       [{ prim: 'CAR', args: [], annots: [] }], // code
       { args: [], prim: 'unit', annots: [] }
@@ -506,6 +536,7 @@ describe('MichelsonStorageView test', () => {
       'test',
       mockContractAbstraction,
       mockRpcClient,
+      mockReadProvider,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       [{ prim: 'CAR', args: [], annots: [] }], // code
       { args: [], prim: 'unit', annots: [] }
@@ -524,6 +555,7 @@ describe('MichelsonStorageView test', () => {
       'test',
       mockContractAbstraction,
       mockRpcClient,
+      mockReadProvider,
       { prim: 'mutez', args: [], annots: [] }, // returnType
       [{ prim: 'CAR', args: [], annots: [] }] // code
     );
