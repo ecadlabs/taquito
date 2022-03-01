@@ -1,5 +1,6 @@
 import { Token, TokenFactory, ComparableToken, TokenValidationError } from '../token';
 import BigNumber from 'bignumber.js';
+import { BaseTokenSchema } from '../../schema/types';
 
 export class MutezValidationError extends TokenValidationError {
   name = 'MutezValidationError';
@@ -9,7 +10,7 @@ export class MutezValidationError extends TokenValidationError {
 }
 
 export class MutezToken extends ComparableToken {
-  static prim = 'mutez';
+  static prim: 'mutez' = 'mutez';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -23,8 +24,19 @@ export class MutezToken extends ComparableToken {
     return new BigNumber(val[Object.keys(val)[0]]);
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return MutezToken.prim;
+  }
+
+  generateSchema(): BaseTokenSchema {
+    return {
+      __michelsonType: MutezToken.prim,
+      schema: MutezToken.prim,
+    };
   }
 
   private isValid(val: any): MutezValidationError | null {

@@ -16,10 +16,14 @@ import { validateOperation, ValidationResult, InvalidOperationHashError } from '
 
 export type OperationStatus = 'pending' | 'unknown' | OperationResultStatusEnum;
 
-export class MissedBlockDuringConfirmationError implements Error {
+export class MissedBlockDuringConfirmationError extends Error {
   name = 'MissedBlockDuringConfirmationError';
-  message =
-    'Taquito missed a block while waiting for operation confirmation and was not able to find the operation';
+
+  constructor() {
+    super(
+      'Taquito missed a block while waiting for operation confirmation and was not able to find the operation'
+    );
+  }
 }
 
 const MAX_BRANCH_ANCESTORS = 60;

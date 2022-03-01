@@ -13,9 +13,9 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
     })
     it('Simple transfers with origination', async (done) => {
       const batch = await Tezos.batch()
-        .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
-        .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
-        .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
+        .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
+        .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
+        .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
         .withOrigination({
           balance: "1",
           code: ligoSample,
@@ -33,7 +33,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
         {
           kind: OpKind.TRANSACTION,
           to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
-          amount: 2
+          amount: 0.02
         },
         {
           kind: OpKind.ORIGINATION,
@@ -42,8 +42,8 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
           storage: 0,
         }
       ])
-        .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
-        .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
+        .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
+        .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
         .send();
       await op.confirmation();
       expect(op.status).toEqual('applied')
@@ -54,9 +54,9 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
       expect.assertions(1);
       try {
         await Tezos.batch()
-          .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
-          .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
-          .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
+          .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
+          .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
+          .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
           .withOrigination({
             balance: "1",
             code: ligoSample,
@@ -107,7 +107,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
 
       const batch = Tezos.batch()
         .withTransfer({ to: contract.address, amount: 1 })
-        .withContractCall(contract.methods.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 50)))
+        .withContractCall(contract.methods.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)))
         .withContractCall(contract.methods.do(MANAGER_LAMBDA.setDelegate(knownBaker)))
         .withContractCall(contract.methods.do(MANAGER_LAMBDA.removeDelegate()))
 
@@ -131,7 +131,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
 
       const batch = Tezos.batch()
         .withTransfer({ to: contract.address, amount: 1 })
-        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 50)))
+        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)))
         .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.setDelegate(knownBaker)))
         .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.removeDelegate()))
 
@@ -145,9 +145,9 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
 
     it('Simple transfers with origination and code in Michelson format', async (done) => {
       const batch = Tezos.batch()
-        .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
-        .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
-        .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 })
+        .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
+        .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
+        .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
         .withOrigination({
           balance: "1",
           code: ligoSampleMichelson,

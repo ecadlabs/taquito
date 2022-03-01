@@ -40,4 +40,13 @@ describe('KeyHash token', () => {
       }
     });
   });
+
+  describe('generateSchema', () => {
+    it('Should generate the schema properly', () => {
+      expect(token.generateSchema()).toEqual({
+        __michelsonType: 'key_hash',
+        schema: 'key_hash'
+      });
+    });
+  });
 });

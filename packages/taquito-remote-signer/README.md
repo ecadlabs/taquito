@@ -1,21 +1,40 @@
 # Taquito Remote Signer package
+*TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_remote_signer.html)*
 
-`@taquito/remote-signer` is an npm package that provides developers with remote signing functionality for Taquito. It can be injected as follows:
+`@taquito/remote-signer` is an npm package that provides developers with remote signing functionality for Taquito. 
+
+## General Information
+
+If you require the server-side signing of operations on the mainnet, we recommend exploring the use of the Remote Signer package in conjunction with an HSM remote signer such as [Signatory](https://signatory.io/) or [TacoInfra's Remote Signer](https://github.com/tacoinfra/remote-signer).
+
+## Install 
+
+```
+npm i --save @taquito/taquito
+npm i --save @taquito/remote-signer
+```
+
+## Usage
+
+When the `RemoteSigner` is configured on the `TezosToolkit`, Taquito features that require signing support can be used. The Contract API operations will be signed using the signer. Validation of the signature will be conducted before the operation is injected. The `RemoteSigner` can be injected into the `TezosToolkit` as follows:
 
 ```ts
 import { TezosToolkit } from '@taquito/taquito';
 import { RemoteSigner } from '@taquito/remote-signer';
 
 const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
-const signer = new RemoteSigner(pkh, rootUrl, { headers: requestHeaders });
+const signer = new RemoteSigner(pkh, rootUrl);
 Tezos.setSignerProvider(signer);
+
+// Taquito will send a request to the configured Remote Signer to sign the transfer operation:
+await Tezos.contract.transfer({ to: publicKeyHash, amount: 2 });
 ```
 
-See the top-level [https://github.com/ecadlabs/taquito](https://github.com/ecadlabs/taquito) file for details on reporting issues, contributing and versioning.
+The constructor of the `RemoteSigner` class requires the public key hash and the URL of the remote signer as parameters. It also takes optional headers (i.e., Authorization) and an optional `HttpBackend` to override the default one if needed.
 
-## API Documentation
+## Additional info
 
-TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_remote_signer.html)
+See the top-level [https://github.com/ecadlabs/taquito](https://github.com/ecadlabs/taquito) file for details on reporting issues, contributing, and versioning.
 
 ## Disclaimer
 

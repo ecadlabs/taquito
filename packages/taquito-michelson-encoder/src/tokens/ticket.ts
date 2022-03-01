@@ -1,17 +1,21 @@
+import { TicketTokenSchema } from '../schema/types';
 import { IntToken } from './comparable/int';
 import { ContractToken } from './contract';
 import { Token, TokenFactory, Semantic } from './token';
 
-export class EncodeTicketError implements Error {
+export class EncodeTicketError extends Error {
   name = 'TicketEncodeError';
-  message = 'Tickets cannot be sent to the blockchain; they are created on-chain';
+
+  constructor() {
+    super('Tickets cannot be sent to the blockchain; they are created on-chain');
+  }
 }
 
 const ticketerType = { prim: 'contract' };
 const amountType = { prim: 'int' };
 
 export class TicketToken extends Token {
-  static prim = 'ticket';
+  static prim: 'ticket' = 'ticket';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -56,11 +60,32 @@ export class TicketToken extends Token {
     };
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return {
       ticketer: ContractToken.prim,
       value: this.valueToken.ExtractSchema(),
       amount: IntToken.prim,
+    };
+  }
+
+  generateSchema(): TicketTokenSchema {
+    return {
+      __michelsonType: TicketToken.prim,
+      schema: {
+        value: this.valueToken.generateSchema(),
+        ticketer: {
+          __michelsonType: ContractToken.prim,
+          schema: ContractToken.prim,
+        },
+        amount: {
+          __michelsonType: IntToken.prim,
+          schema: IntToken.prim,
+        },
+      },
     };
   }
 

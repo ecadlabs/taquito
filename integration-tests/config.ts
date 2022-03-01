@@ -22,6 +22,7 @@ interface Config {
   knownContract: string;
   knownBigMapContract: string;
   knownTzip1216Contract: string; // Use contract Tzip12BigMapOffChain from ~/example/deploy-docs-live-code-contracts.ts
+  knownSaplingContract: string; //Originate with ~/taquito/integration-tests/contract-originate-contract-with-single-sapling-state.spec.ts
   protocol: Protocols;
   signerConfig: EphemeralConfig | FaucetConfig;
 }
@@ -59,10 +60,11 @@ interface FaucetConfig {
 const ithacanetEphemeral = {
   rpc: process.env['TEZOS_RPC_ITHACANET'] || 'https://ithacanet.ecadinfra.com/',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD', 
-  knownContract: 'KT1J3BCZt5o8CA1xgqbV9Z1iEgoxuS1RamTa',
-  knownBigMapContract: 'KT1VC9dVmYYHyUXEw1KU8Ms6BmtvsGJNarZy', 
-  knownTzip1216Contract: 'KT1DWbrEN9BzoutK5LYfSe9DWrt7D2aoaoTJ', 
-  protocol: Protocols.PsiThaCa,
+  knownContract: 'KT19oXBkAz1njVaTEypSzxGorWAFy6wnLLe1',
+  knownBigMapContract: 'KT1JmL7j8CY371kRF2oZoJmzi7EUWbLPjEqZ', 
+  knownTzip1216Contract: 'KT1GxL96iix8MCTsCA1DBVfnZ4Gdk7EZW4Eq',
+  knownSaplingContract: 'KT1CDenBWcgWjNZULc9GbJRTnQZQXYWrVT7k',
+  protocol: Protocols.Psithaca2,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'https://api.tez.ie/keys/ithacanet',
@@ -76,6 +78,7 @@ const hangzhounetEphemeral = {
   knownContract: 'KT1XfoRSZ88ioYHbuEKqHxJPawm9Rqc54uoy',
   knownBigMapContract: 'KT1CnRSbp71FU8nz4xNEkcaASgMQDjNN85jd',
   knownTzip1216Contract: 'KT1KquwVmLtq9StwCK46vpwRCxowqhcoV4g1',
+  knownSaplingContract: 'KT1MfdF2jdYF4Ug4DmcDJ3GaLNW7RBMA9hkB',
   protocol: Protocols.PtHangz2,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
@@ -87,45 +90,47 @@ const hangzhounetEphemeral = {
 const ithacanetFaucet = {
   rpc: process.env['TEZOS_RPC_ITHACANET'] || 'https://ithacanet.ecadinfra.com/',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1J3BCZt5o8CA1xgqbV9Z1iEgoxuS1RamTa',
-  knownBigMapContract: 'KT1VC9dVmYYHyUXEw1KU8Ms6BmtvsGJNarZy',
-  knownTzip1216Contract: 'KT1DWbrEN9BzoutK5LYfSe9DWrt7D2aoaoTJ',
-  protocol: Protocols.PsiThaCa,
+  knownContract: 'KT19oXBkAz1njVaTEypSzxGorWAFy6wnLLe1',
+  knownBigMapContract: 'KT1JmL7j8CY371kRF2oZoJmzi7EUWbLPjEqZ',
+  knownTzip1216Contract: 'KT1GxL96iix8MCTsCA1DBVfnZ4Gdk7EZW4Eq',
+  knownSaplingContract: 'KT1CDenBWcgWjNZULc9GbJRTnQZQXYWrVT7k',
+  protocol: Protocols.Psithaca2,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
       faucetKey: {  
-      "pkh": "tz1LyuwEK3cPX8eHankqJW6hKJNpXAEPZaQz",
-      "mnemonic": [
-        "source",
-        "fantasy",
-        "diary",
-        "situate",
-        "spring",
-        "prize",
-        "solution",
-        "dawn",
-        "exotic",
-        "butter",
-        "barrel",
-        "garden",
-        "transfer",
-        "alcohol",
-        "edit"
-      ],
-      "email": "lcmxowve.lmlksvxa@teztnets.xyz",
-      "password": "rudDJKxp44",
-      "amount": "116492897916",
-      "secret": "0dfbf62414e7f10dbb47fc3b16cfd6b95d99c22c"
+        "pkh": "tz1LJLhMszojav8EfN9hMZAPBSH21ocamx7n",
+        "mnemonic": [
+          "escape",
+          "camera",
+          "credit",
+          "endorse",
+          "auto",
+          "lamp",
+          "advance",
+          "orange",
+          "fluid",
+          "virus",
+          "argue",
+          "knee",
+          "pluck",
+          "remove",
+          "scheme"
+        ],
+        "email": "noriqgjl.gtsyulgy@teztnets.xyz",
+        "password": "st3sZBRLWF",
+        "amount": "118887604096",
+        "secret": "7d414378d9071328313cca699d6922f1b59d076a"
     }
   },
 };
 
 const hangzhounetFaucet = {
-  rpc: process.env['TEZOS_RPC_HANGZHOUNET'] || 'https://hangzhounet.api.tez.ie',
+  rpc: process.env['TEZOS_RPC_HANGZHOUNET'] || 'https://hangzhounet.api.tez.ie/',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1XfoRSZ88ioYHbuEKqHxJPawm9Rqc54uoy',
   knownBigMapContract: 'KT1CnRSbp71FU8nz4xNEkcaASgMQDjNN85jd',
   knownTzip1216Contract: 'KT1KquwVmLtq9StwCK46vpwRCxowqhcoV4g1',
+  knownSaplingContract: 'KT1MfdF2jdYF4Ug4DmcDJ3GaLNW7RBMA9hkB',
   protocol: Protocols.PtHangz2,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
@@ -246,6 +251,7 @@ export const CONFIGS = () => {
         protocol,
         knownBigMapContract,
         knownTzip1216Contract,
+        knownSaplingContract,
         signerConfig,
       }) => {
         const Tezos = new TezosToolkit(new RpcClientCache(new RpcClient(rpc)));
@@ -261,6 +267,7 @@ export const CONFIGS = () => {
           lib: Tezos,
           knownBigMapContract,
           knownTzip1216Contract,
+          knownSaplingContract,
           signerConfig,
           setup: async (preferFreshKey: boolean = false) => {
             if (signerConfig.type === SignerType.FAUCET) {

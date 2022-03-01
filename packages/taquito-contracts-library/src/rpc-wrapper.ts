@@ -27,11 +27,14 @@ import {
   PreapplyParams,
   PreapplyResponse,
   ProposalsResponse,
+  ProtocolsResponse,
   RpcClientInterface,
   RPCOptions,
   RPCRunCodeParam,
   RPCRunOperationParam,
+  RPCRunViewParam,
   RunCodeResult,
+  RunViewResult,
   SaplingDiffResponse,
   ScriptResponse,
   UnparsingMode,
@@ -160,11 +163,6 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   async getBallots({ block }: RPCOptions = defaultRPCOptions): Promise<BallotsResponse> {
     return this.rpc.getBallots({ block });
   }
-  async getCurrentPeriodKind({
-    block,
-  }: RPCOptions = defaultRPCOptions): Promise<PeriodKindResponse> {
-    return this.rpc.getCurrentPeriodKind({ block });
-  }
   async getCurrentProposal({
     block,
   }: RPCOptions = defaultRPCOptions): Promise<CurrentProposalResponse> {
@@ -214,6 +212,18 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   ): Promise<RunCodeResult> {
     return this.rpc.runCode(code, { block });
   }
+  async runView(
+    { unparsing_mode = 'Readable', ...rest }: RPCRunViewParam,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<RunViewResult> {
+    return this.rpc.runView(
+      {
+        unparsing_mode,
+        ...rest,
+      },
+      { block }
+    );
+  }
   async getChainId(): Promise<string> {
     return this.rpc.getChainId();
   }
@@ -241,5 +251,8 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<SaplingDiffResponse> {
     return this.rpc.getSaplingDiffByContract(contract, { block });
+  }
+  async getProtocols({ block }: RPCOptions = defaultRPCOptions): Promise<ProtocolsResponse> {
+    return this.rpc.getProtocols({ block });
   }
 }

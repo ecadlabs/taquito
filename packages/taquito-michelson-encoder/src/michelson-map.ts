@@ -14,12 +14,11 @@ const isMapType = (
   return 'args' in value && Array.isArray(value.args) && value.args.length === 2;
 };
 
-export class MapTypecheckError implements Error {
+export class MapTypecheckError extends Error {
   name = 'MapTypecheckError';
-  message: string;
 
   constructor(public readonly value: any, public readonly type: any, errorType: 'key' | 'value') {
-    this.message = `${errorType} not compliant with underlying michelson type`;
+    super(`${errorType} not compliant with underlying michelson type`);
   }
 }
 

@@ -33,4 +33,13 @@ describe('Signature token', () => {
             expect(token.compare(UnitValue, UnitValue)).toEqual(0);
         });
     });
+
+    describe('generateSchema', () => {
+        it('Should generate the schema properly', () => {
+          expect(token.generateSchema()).toEqual({
+            __michelsonType: 'unit',
+            schema: 'unit'
+          });
+        });
+      });
 });

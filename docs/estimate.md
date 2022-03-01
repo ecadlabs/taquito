@@ -2,6 +2,8 @@
 title: Estimate Operations
 author: Edmond Lee & Roxane Letourneau
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 Taquito's estimate method can be used to estimate fees, gas, and storage associated with an operation.
 
@@ -59,7 +61,6 @@ Tezos.contract
   .at('KT1NcdpzokZQY4sLmCBUwLnMHQCCQ6rRXYwS')
   .then((contract) => {
     const i = 7;
-
     return contract.methods.increment(i).toTransferParams({});
   })
   .then((op) => {
@@ -77,7 +78,6 @@ Tezos.contract
   })
   .catch((error) => console.table(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
-
 ### Estimate a contract origination
 
 In this example, we will use the estimate method of Taquito on a contract origination. The `genericMultisigJSONfile` variable contains a Michelson Smart Contract.
@@ -97,12 +97,12 @@ Tezos.estimate
     },
   })
   .then((originationOp) => {
-    println(`burnFeeMutez : ${originationOp.burnFeeMutez}, 
-    gasLimit : ${originationOp.gasLimit}, 
-    minimalFeeMutez : ${originationOp.minimalFeeMutez}, 
-    storageLimit : ${originationOp.storageLimit}, 
-    suggestedFeeMutez : ${originationOp.suggestedFeeMutez}, 
-    totalCost : ${originationOp.totalCost}, 
+    println(`burnFeeMutez : ${originationOp.burnFeeMutez},
+    gasLimit : ${originationOp.gasLimit},
+    minimalFeeMutez : ${originationOp.minimalFeeMutez},
+    storageLimit : ${originationOp.storageLimit},
+    suggestedFeeMutez : ${originationOp.suggestedFeeMutez},
+    totalCost : ${originationOp.totalCost},
     usingBaseFeeMutez : ${originationOp.usingBaseFeeMutez}`);
   })
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));

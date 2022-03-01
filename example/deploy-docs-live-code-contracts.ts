@@ -49,6 +49,10 @@ const users: Array<string> = [
   'tz1NhNv9g7rtcjyNsH8Zqu79giY5aTqDDrzB',
   'tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE',
   'tz1XTyqBn4xi9tkRDutpRyQwHxfF8ar4i4Wq',
+  //integration tests
+  'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+  'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
+  'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn'
 ];
 
 const user_addresses = new Map();
@@ -485,7 +489,7 @@ async function originateContractCallFib() {
              UNPAIR ;
              VIEW "fib" nat ;
              { IF_NONE { { UNIT ; FAILWITH } } { NIL operation ; PAIR } } }`,
-      storage: 1        
+      storage: 1,
     });
     await op.confirmation();
     const contract = await op.contract();
@@ -501,7 +505,7 @@ async function originateContractTopLevelViews() {
   try {
     const op = await tezos.contract.originate({
       code: contractOnChainViews,
-      storage: 1        
+      storage: 1,
     });
     await op.confirmation();
     const contract = await op.contract();

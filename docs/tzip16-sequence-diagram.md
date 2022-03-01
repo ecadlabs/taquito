@@ -4,7 +4,7 @@ author: Roxane Letourneau
 ---
 
 ### Get the metadata
-![Diagram getMetadata](/img/diagramTzip16Metadata.png)
+![Diagram getMetadata](images/diagramTzip16Metadata.png)
 
 ### Execute a view
-![Diagram executeView](/img/Tzip16ExecuteView.png)
+![Diagram executeView](images/Tzip16ExecuteView.png)

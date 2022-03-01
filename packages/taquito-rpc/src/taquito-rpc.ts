@@ -37,14 +37,15 @@ import {
   OperationHash,
   PackDataParams,
   PackDataResponse,
-  PeriodKindResponse,
   PreapplyParams,
   PreapplyResponse,
   ProposalsResponse,
-  RawBlockHeaderResponse,
+  ProtocolsResponse,
   RPCRunCodeParam,
   RPCRunOperationParam,
+  RPCRunViewParam,
   RunCodeResult,
+  RunViewResult,
   SaplingDiffResponse,
   ScriptResponse,
   StorageResponse,
@@ -53,6 +54,12 @@ import {
   VotingPeriodBlockResult,
 } from './types';
 import { castToBigNumber } from './utils/utils';
+import {
+  InvalidAddressError,
+  validateAddress,
+  validateContractAddress,
+  ValidationResult,
+} from '@taquito/utils';
 
 export { castToBigNumber } from './utils/utils';
 
@@ -93,6 +100,18 @@ export class RpcClient implements RpcClientInterface {
   protected createURL(path: string) {
     // Trim trailing slashes because it is assumed to be included in path
     return `${this.url.replace(/\/+$/g, '')}${path}`;
+  }
+
+  private validateAddress(address: string) {
+    if (validateAddress(address) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(`Invalid address: ${address}`);
+    }
+  }
+
+  private validateContract(address: string) {
+    if (validateContractAddress(address) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(`Invalid address: ${address}`);
+    }
   }
 
   /**
@@ -140,6 +159,7 @@ export class RpcClient implements RpcClientInterface {
     address: string,
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<BalanceResponse> {
+    this.validateAddress(address);
     const balance = await this.httpBackend.createRequest<BalanceResponse>({
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/balance`
@@ -162,6 +182,7 @@ export class RpcClient implements RpcClientInterface {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<StorageResponse> {
+    this.validateContract(address);
     return this.httpBackend.createRequest<StorageResponse>({
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/storage`
@@ -183,6 +204,7 @@ export class RpcClient implements RpcClientInterface {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<ScriptResponse> {
+    this.validateContract(address);
     return this.httpBackend.createRequest<ScriptResponse>({
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/script`
@@ -205,6 +227,7 @@ export class RpcClient implements RpcClientInterface {
     unparsingMode: UnparsingMode = { unparsing_mode: 'Readable' },
     { block }: { block: string } = defaultRPCOptions
   ): Promise<ScriptResponse> {
+    this.validateContract(address);
     return this.httpBackend.createRequest<ScriptResponse>(
       {
         url: this.createURL(
@@ -229,6 +252,7 @@ export class RpcClient implements RpcClientInterface {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<ContractResponse> {
+    this.validateAddress(address);
     const contractResponse = await this.httpBackend.createRequest<ContractResponse>({
       url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/contracts/${address}`),
       method: 'GET',
@@ -252,6 +276,7 @@ export class RpcClient implements RpcClientInterface {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<ManagerKeyResponse> {
+    this.validateAddress(address);
     return this.httpBackend.createRequest<ManagerKeyResponse>({
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/manager_key`
@@ -273,6 +298,7 @@ export class RpcClient implements RpcClientInterface {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<DelegateResponse> {
+    this.validateAddress(address);
     let delegate: DelegateResponse;
     try {
       delegate = await this.httpBackend.createRequest<DelegateResponse>({
@@ -307,6 +333,7 @@ export class RpcClient implements RpcClientInterface {
     key: BigMapKey,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<BigMapGetResponse> {
+    this.validateAddress(address);
     return this.httpBackend.createRequest<BigMapGetResponse>(
       {
         url: this.createURL(
@@ -352,37 +379,43 @@ export class RpcClient implements RpcClientInterface {
     address: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<DelegatesResponse> {
+    this.validateAddress(address);
     const response = await this.httpBackend.createRequest<DelegatesResponse>({
       url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/delegates/${address}`),
       method: 'GET',
     });
 
+    const castedResponse: any = castToBigNumber(response, [
+      'balance',
+      'full_balance',
+      'current_frozen_deposits',
+      'frozen_deposits',
+      'frozen_balance',
+      'frozen_deposits_limit',
+      'staking_balance',
+      'delegated_balance',
+    ]);
+
     return {
-      deactivated: response.deactivated,
-      balance: new BigNumber(response.balance),
-      frozen_balance: new BigNumber(response.frozen_balance),
-      frozen_balance_by_cycle: response.frozen_balance_by_cycle.map(
-        ({ deposit, deposits, fees, rewards, ...rest }) => {
-          const castedToBigNumber: any = castToBigNumber({ deposit, deposits, fees, rewards }, [
-            'deposit',
-            'deposits',
-            'fees',
-            'rewards',
-          ]);
-          return {
-            ...rest,
-            deposit: castedToBigNumber.deposit,
-            deposits: castedToBigNumber.deposits,
-            fees: castedToBigNumber.fees,
-            rewards: castedToBigNumber.rewards,
-          };
-        }
-      ),
-      staking_balance: new BigNumber(response.staking_balance),
-      delegated_contracts: response.delegated_contracts,
-      delegated_balance: new BigNumber(response.delegated_balance),
-      grace_period: response.grace_period,
-      voting_power: response.voting_power,
+      ...response,
+      ...castedResponse,
+      frozen_balance_by_cycle: response.frozen_balance_by_cycle
+        ? response.frozen_balance_by_cycle.map(({ deposit, deposits, fees, rewards, ...rest }) => {
+            const castedToBigNumber: any = castToBigNumber({ deposit, deposits, fees, rewards }, [
+              'deposit',
+              'deposits',
+              'fees',
+              'rewards',
+            ]);
+            return {
+              ...rest,
+              deposit: castedToBigNumber.deposit,
+              deposits: castedToBigNumber.deposits,
+              fees: castedToBigNumber.fees,
+              rewards: castedToBigNumber.rewards,
+            };
+          })
+        : undefined,
     };
   }
 
@@ -461,7 +494,7 @@ export class RpcClient implements RpcClientInterface {
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-header
    */
   async getBlockHeader({ block }: RPCOptions = defaultRPCOptions): Promise<BlockHeaderResponse> {
-    const response = await this.httpBackend.createRequest<RawBlockHeaderResponse>({
+    const response = await this.httpBackend.createRequest<BlockHeaderResponse>({
       url: this.createURL(`/chains/${this.chain}/blocks/${block}/header`),
       method: 'GET',
     });
@@ -557,27 +590,6 @@ export class RpcClient implements RpcClientInterface {
   async getBallots({ block }: RPCOptions = defaultRPCOptions): Promise<BallotsResponse> {
     const response = await this.httpBackend.createRequest<BallotsResponse>({
       url: this.createURL(`/chains/${this.chain}/blocks/${block}/votes/ballots`),
-      method: 'GET',
-    });
-
-    return response;
-  }
-
-  /**
-   *
-   * @param options contains generic configuration for rpc calls
-   *
-   * @description Current period kind.
-   *
-   * @deprecated Deprecated in favor of getCurrentPeriod
-   *
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-votes-current-period-kind
-   */
-  async getCurrentPeriodKind({
-    block,
-  }: RPCOptions = defaultRPCOptions): Promise<PeriodKindResponse> {
-    const response = await this.httpBackend.createRequest<PeriodKindResponse>({
-      url: this.createURL(`/chains/${this.chain}/blocks/${block}/votes/current_period_kind`),
       method: 'GET',
     });
 
@@ -736,6 +748,7 @@ export class RpcClient implements RpcClientInterface {
     contract: string,
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<EntrypointsResponse> {
+    this.validateContract(contract);
     const contractResponse = await this.httpBackend.createRequest<{
       entrypoints: { [key: string]: MichelsonV1ExpressionExtended };
     }>({
@@ -792,6 +805,29 @@ export class RpcClient implements RpcClientInterface {
     );
 
     return response;
+  }
+
+  /**
+   * @param viewParams Parameters of the view to run
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Simulate a call to a view following the TZIP-4 standard. See https://gitlab.com/tzip/tzip/-/blob/master/proposals/tzip-4/tzip-4.md#view-entrypoints.
+   *
+   */
+  async runView(
+    { unparsing_mode = 'Readable', ...rest }: RPCRunViewParam,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<RunViewResult> {
+    return this.httpBackend.createRequest<any>(
+      {
+        url: this.createURL(`/chains/${this.chain}/blocks/${block}/helpers/scripts/run_view`),
+        method: 'POST',
+      },
+      {
+        unparsing_mode,
+        ...rest,
+      }
+    );
   }
 
   async getChainId() {
@@ -922,6 +958,13 @@ export class RpcClient implements RpcClientInterface {
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/single_sapling_get_diff`
       ),
+      method: 'GET',
+    });
+  }
+
+  async getProtocols({ block }: { block: string } = defaultRPCOptions): Promise<ProtocolsResponse> {
+    return this.httpBackend.createRequest<ProtocolsResponse>({
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/protocols`),
       method: 'GET',
     });
   }

@@ -2,9 +2,11 @@ import { tokens } from './tokens';
 import { Token } from './token';
 import { PairToken } from './pair';
 
-export class InvalidTokenError implements Error {
+export class InvalidTokenError extends Error {
   name = 'Invalid token error';
-  constructor(public message: string, public data: any) {}
+  constructor(public message: string, public data: any) {
+    super(message);
+  }
 }
 
 export function createToken(val: any, idx: number): Token {

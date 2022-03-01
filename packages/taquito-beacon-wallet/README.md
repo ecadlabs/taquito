@@ -1,7 +1,19 @@
 # Taquito Beacon Wallet package
+*Documentation can be found [here](https://tezostaquito.io/docs/wallet_API)*  
+*TypeDoc style documentation is available [here](https://tezostaquito.io/typedoc/modules/_taquito_beacon_wallet.html)*
 
-`@taquito/taquito-beacon-wallet` is an npm package implementing the TZIP-10 standard that describes the communication between decentralized applications and wallets. The package provides developers a way to connect a dapp built with Taquito to a wallet giving the freedom to the users of the dapp to choose the wallet they want. It can be injected as follows:
+## General Information
+`@taquito/taquito-beacon-wallet` is an npm package implementing the TZIP-10 standard that describes the communication between decentralized applications and wallets. The package provides developers a way to connect a dapp built with Taquito to a wallet giving the freedom to the users of the dapp to choose the wallet they want.
 
+## Install
+Install the package as follows
+```
+npm install @taquito/beacon-wallet 
+```
+
+
+## Usage
+Create a wallet instance with defined option parameters and set the wallet provider using `setWalletProvider` to the `TezosToolkit` instance
 ```ts
 import { TezosToolkit } from '@taquito/taquito';
 import { BeaconWallet } from '@taquito/beacon-wallet';
@@ -32,11 +44,10 @@ Tezos.setWalletProvider(wallet);
 
 ```
 
+## Additional Info
+
 See the top-level [https://github.com/ecadlabs/taquito](https://github.com/ecadlabs/taquito) file for details on reporting issues, contributing and versioning.
 
-## API Documentation
-
-TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_beacon_wallet.html)
 
 ## Disclaimer
 

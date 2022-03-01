@@ -1,5 +1,6 @@
 import { Token, TokenFactory, ComparableToken, TokenValidationError } from '../token';
 import BigNumber from 'bignumber.js';
+import { BaseTokenSchema } from '../../schema/types';
 
 export class NatValidationError extends TokenValidationError {
   name = 'NatValidationError';
@@ -9,7 +10,7 @@ export class NatValidationError extends TokenValidationError {
 }
 
 export class NatToken extends ComparableToken {
-  static prim = 'nat';
+  static prim: 'nat' = 'nat';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -54,8 +55,19 @@ export class NatToken extends ComparableToken {
     return { int: new BigNumber(val).toFixed() };
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return NatToken.prim;
+  }
+
+  generateSchema(): BaseTokenSchema {
+    return {
+      __michelsonType: NatToken.prim,
+      schema: NatToken.prim,
+    };
   }
 
   public ToBigMapKey(val: string | number) {

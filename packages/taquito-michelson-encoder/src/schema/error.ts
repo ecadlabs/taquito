@@ -1,12 +1,14 @@
-export class ViewEncodingError implements Error {
+export class ViewEncodingError extends Error {
   name = 'ViewEncodingError';
-  message: string;
+
   constructor(public smartContractViewName: string, public originalError: any) {
-    this.message = `Unable to encode the parameter of the view: ${smartContractViewName}.`;
+    super(`Unable to encode the parameter of the view: ${smartContractViewName}.`);
   }
 }
 
-export class InvalidScriptError implements Error {
+export class InvalidScriptError extends Error {
   name = 'InvalidScriptError';
-  constructor(public message: string) {}
+  constructor(public message: string) {
+    super(message);
+  }
 }

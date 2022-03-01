@@ -7,7 +7,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
     const Tezos = lib;
 
     const hangzhounet = (protocol === Protocols.PtHangz2) ? test : test.skip;
-    const ithacanet = (protocol === Protocols.PsiThaCa) ? test : test.skip;
+    const ithacanet = (protocol === Protocols.Psithaca2) ? test : test.skip;
 
     describe('Fetch constants for all protocols on Mainnet', () => {
 
@@ -531,7 +531,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                 quorum_max: 7000,
                 min_proposal_quorum: 500,
                 liquidity_baking_subsidy: new BigNumber(2500000),
-                liquidity_baking_sunset_level: 525600,
+                liquidity_baking_sunset_level: 10000000,
                 liquidity_baking_escape_ema_threshold: 666667,
                 max_allowed_global_constants_depth: 10000,
                 max_micheline_bytes_limit: 50000,

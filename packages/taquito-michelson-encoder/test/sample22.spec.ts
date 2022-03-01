@@ -23,5 +23,22 @@ describe('List token type structure', () => {
       }
     });
 
+    expect(schema.generateSchema()).toEqual({
+      __michelsonType: 'list',
+      schema: {
+        __michelsonType: 'pair',
+        schema: {
+          "from": {
+            __michelsonType: "address",
+            schema: "address"
+          },
+          "to": {
+            __michelsonType: "address",
+            schema: "address"
+          }
+        }
+      }
+    });
+
   });
 });

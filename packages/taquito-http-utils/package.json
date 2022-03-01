@@ -1,6 +1,6 @@
 {
   "name": "@taquito/http-utils",
-  "version": "11.1.0-stablelib.0",
+  "version": "11.2.0",
   "description": "",
   "keywords": [
     "tezos"
@@ -59,7 +59,7 @@
     ]
   },
   "dependencies": {
-    "xhr2-cookies": "^1.1.0"
+    "axios": "^0.25.0"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.36",

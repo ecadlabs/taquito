@@ -13,6 +13,7 @@
         "estimate",
         "fa2_parameters",
         "lambda_view",
+        "liquidity_baking",
         "maps_bigmaps",
         "michelsonmap",
         "originate",
@@ -33,7 +34,6 @@
         "wallet_API",
         "wallets",
         "web3js_taquito",
-        "taquito_utils",
         "contracts_collection"
       ]
     },
@@ -55,7 +55,7 @@
     {
       "type": "category",
       "label": "Modules customization",
-      "items": ["rpc-cache", "cancel_http_requests"]
+      "items": ["forger", "rpc-cache", "cancel_http_requests"]
     },
     {
       "type": "category",

@@ -36,4 +36,13 @@ describe('Timestamp token', () => {
       expect(token.Encode(['2021-12-03T21:21:10.000Z'])).toEqual({ string: '2021-12-03T21:21:10.000Z' });
     });
   });
+
+  describe('generateSchema', () => {
+    it('Should generate the schema properly', () => {
+      expect(token.generateSchema()).toEqual({
+        __michelsonType: 'timestamp',
+        schema: 'timestamp'
+      });
+    });
+  });
 });

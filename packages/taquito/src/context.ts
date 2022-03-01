@@ -1,6 +1,6 @@
 import { RpcClient, RpcClientInterface } from '@taquito/rpc';
 import { Protocols } from './constants';
-import { Forger } from './forger/interface';
+import { Forger } from '@taquito/local-forging';
 import { RpcForger } from './forger/rpc-forger';
 import { Injector } from './injector/interface';
 import { RpcInjector } from './injector/rpc-injector';
@@ -247,7 +247,10 @@ export class Context {
       this._config,
       this.forger,
       this._injector,
-      this.packer
+      this.packer,
+      this._walletProvider,
+      this._parser,
+      this._globalConstantsProvider
     );
   }
 
