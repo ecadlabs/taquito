@@ -112,7 +112,6 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       await op.confirmation();
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-      const contract = await op.contract();
 
       const saplingDiffById = await rpcClient.getSaplingDiffById('168');
       expect(saplingDiffById).toBeDefined();
