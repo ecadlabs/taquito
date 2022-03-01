@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { RpcClient } from '../src/taquito-rpc';
+import { OpKind, RpcClient } from '../src/taquito-rpc';
 import BigNumber from 'bignumber.js';
 import {
   LazyStorageDiffBigMap,
@@ -11,7 +11,10 @@ import {
   LazyStorageDiffSaplingState,
   OperationContentsAndResultRegisterGlobalConstant,
   RPCRunViewParam,
+  OperationContentsAndResultSetDepositsLimit,
+  METADATA_BALANCE_UPDATES_CATEGORY,
 } from '../src/types';
+import { blockIthacanetSample, delegatesIthacanetSample } from './data/rpc-responses';
 
 /**
  * RpcClient test
@@ -292,6 +295,25 @@ describe('RpcClient test', () => {
 
       done();
     });
+
+    it('parse the response properly, proto12', async (done) => {
+      httpBackend.createRequest.mockResolvedValue(delegatesIthacanetSample);
+      const response = await client.getDelegates(contractAddress);
+
+      expect(response).toEqual({
+        full_balance: new BigNumber('1198951292321'),
+        current_frozen_deposits: new BigNumber('120167343864'),
+        frozen_deposits: new BigNumber('120167343864'),
+        staking_balance: new BigNumber('1203308804406'),
+        delegated_contracts: ['tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD'],
+        delegated_balance: new BigNumber('4357512085'),
+        deactivated: false,
+        grace_period: 37,
+        voting_power: 199,
+      });
+
+      done();
+    });
   });
 
   describe('getBigMapKey', () => {
@@ -540,30 +562,30 @@ describe('RpcClient test', () => {
           cache_layout: ['100000000', '240000', '2560'],
           michelson_maximum_type_size: 2001,
           preserved_cycles: 3,
-          blocks_per_cycle: 2048,
-          blocks_per_commitment: 64,
-          blocks_per_stake_snapshot: 512,
-          blocks_per_voting_period: 40960,
+          blocks_per_cycle: 4096,
+          blocks_per_commitment: 32,
+          blocks_per_stake_snapshot: 256,
+          blocks_per_voting_period: 20480,
           hard_gas_limit_per_operation: '1040000',
           hard_gas_limit_per_block: '5200000',
-          proof_of_work_threshold: '-1',
-          tokens_per_roll: '8000000000',
+          proof_of_work_threshold: '70368744177663',
+          tokens_per_roll: '6000000000',
           seed_nonce_revelation_tip: '125000',
           origination_size: 257,
-          baking_reward_fixed_portion: '10000000',
-          baking_reward_bonus_per_slot: '4286',
-          endorsing_reward_per_slot: '2857',
+          baking_reward_fixed_portion: '5000000',
+          baking_reward_bonus_per_slot: '2143',
+          endorsing_reward_per_slot: '1428',
           cost_per_byte: '250',
           hard_storage_limit_per_operation: '60000',
           quorum_min: 2000,
           quorum_max: 7000,
           min_proposal_quorum: 500,
           liquidity_baking_subsidy: '2500000',
-          liquidity_baking_sunset_level: 525600,
-          liquidity_baking_escape_ema_threshold: 100000,
+          liquidity_baking_sunset_level: 10000000,
+          liquidity_baking_escape_ema_threshold: 666667,
           max_operations_time_to_live: 120,
-          minimal_block_delay: '30',
-          delay_increment_per_round: '15',
+          minimal_block_delay: '15',
+          delay_increment_per_round: '5',
           consensus_committee_size: 7000,
           consensus_threshold: 4667,
           minimal_participation_ratio: { numerator: 2, denominator: 3 },
@@ -586,13 +608,13 @@ describe('RpcClient test', () => {
         max_operation_data_length: 32768,
         max_proposals_per_delegate: 20,
         preserved_cycles: 3,
-        blocks_per_cycle: 2048,
-        blocks_per_commitment: 64,
-        blocks_per_voting_period: 40960,
+        blocks_per_cycle: 4096,
+        blocks_per_commitment: 32,
+        blocks_per_voting_period: 20480,
         hard_gas_limit_per_operation: new BigNumber(1040000),
         hard_gas_limit_per_block: new BigNumber(5200000),
-        proof_of_work_threshold: new BigNumber(-1),
-        tokens_per_roll: new BigNumber(8000000000),
+        proof_of_work_threshold: new BigNumber(70368744177663),
+        tokens_per_roll: new BigNumber(6000000000),
         seed_nonce_revelation_tip: new BigNumber(125000),
         origination_size: 257,
         cost_per_byte: new BigNumber(250),
@@ -601,20 +623,20 @@ describe('RpcClient test', () => {
         quorum_max: 7000,
         min_proposal_quorum: 500,
         liquidity_baking_subsidy: new BigNumber(2500000),
-        liquidity_baking_sunset_level: 525600,
-        liquidity_baking_escape_ema_threshold: 100000,
+        liquidity_baking_sunset_level: 10000000,
+        liquidity_baking_escape_ema_threshold: 666667,
         max_allowed_global_constants_depth: 10000,
         max_micheline_bytes_limit: 50000,
         max_micheline_node_count: 50000,
         michelson_maximum_type_size: 2001,
         cache_layout: [new BigNumber(100000000), new BigNumber(240000), new BigNumber(2560)],
-        blocks_per_stake_snapshot: 512,
-        baking_reward_fixed_portion: new BigNumber(10000000),
-        baking_reward_bonus_per_slot: new BigNumber(4286),
-        endorsing_reward_per_slot: new BigNumber(2857),
+        blocks_per_stake_snapshot: 256,
+        baking_reward_fixed_portion: new BigNumber(5000000),
+        baking_reward_bonus_per_slot: new BigNumber(2143),
+        endorsing_reward_per_slot: new BigNumber(1428),
         max_operations_time_to_live: 120,
-        minimal_block_delay: new BigNumber(30),
-        delay_increment_per_round: new BigNumber(15),
+        minimal_block_delay: new BigNumber(15),
+        delay_increment_per_round: new BigNumber(5),
         consensus_committee_size: 7000,
         consensus_threshold: 4667,
         minimal_participation_ratio: {
@@ -2269,6 +2291,118 @@ describe('RpcClient test', () => {
 
       done();
     });
+
+    it('should use enum to represent property category in balance_updates, proto 12', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockIthacanetSample));
+
+      const response = await client.getBlock();
+
+      // To avoid dealing with the space in the property name returned by the RPC
+      expect(response.metadata.balance_updates[0].category).toBeDefined();
+      expect(response.metadata.balance_updates[0].category).toEqual(
+        METADATA_BALANCE_UPDATES_CATEGORY.BLOCK_FEES
+      );
+      expect(response.metadata.balance_updates[1].category).toBeDefined();
+      expect(response.metadata.balance_updates[1].category).toEqual(
+        METADATA_BALANCE_UPDATES_CATEGORY.BAKING_REWARDS
+      );
+      expect(response.metadata.balance_updates[3].category).toBeDefined();
+      expect(response.metadata.balance_updates[3].category).toEqual(
+        METADATA_BALANCE_UPDATES_CATEGORY.BAKING_BONUSES
+      );
+
+      done();
+    });
+
+    it('should fetch a block and access new properties in header, proto 12', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockIthacanetSample));
+
+      const response = await client.getBlock();
+
+      expect(response.header.payload_hash).toBeDefined();
+      expect(response.header.payload_hash).toEqual(
+        'vh28CE8X2KKMvt5S4aGzPdMq5FpcfVRSoeyU3D3TUdVyk9zucR31'
+      );
+      expect(response.header.payload_round).toBeDefined();
+      expect(response.header.payload_round).toEqual(0);
+      expect(response.header.liquidity_baking_escape_vote).toBeDefined();
+      expect(response.header.liquidity_baking_escape_vote).toBeFalsy();
+
+      done();
+    });
+
+    it('should fetch a block and access new properties in metadata, proto 12', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockIthacanetSample));
+
+      const response = await client.getBlock();
+
+      expect(response.metadata.proposer).toBeDefined();
+      expect(response.metadata.proposer).toEqual('tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9');
+      expect(response.metadata.balance_updates[0].category).toBeDefined();
+
+      done();
+    });
+
+    it('should access new properties of the operation type endorsement, proto 12', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockIthacanetSample));
+
+      const response = await client.getBlock();
+
+      expect(response.operations[0][0].contents[0].kind).toEqual(OpKind.ENDORSEMENT);
+      const contentEndorsement = response.operations[0][0]
+        .contents[0] as OperationContentsAndResultEndorsement;
+      expect(contentEndorsement.slot).toBeDefined();
+      expect(contentEndorsement.slot).toEqual(0);
+      expect(contentEndorsement.round).toBeDefined();
+      expect(contentEndorsement.round).toEqual(0);
+      expect(contentEndorsement.block_payload_hash).toBeDefined();
+      expect(contentEndorsement.block_payload_hash).toEqual(
+        'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6'
+      );
+
+      expect(contentEndorsement.metadata.balance_updates).toEqual([]);
+      expect(contentEndorsement.metadata.endorsement_power).toBeDefined();
+      expect(contentEndorsement.metadata.endorsement_power).toEqual(206);
+
+      done();
+    });
+
+    it('should access new properties of the operation type set_deposits_limit, proto 12', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockIthacanetSample));
+
+      const response = await client.getBlock();
+
+      expect(response.operations[3][0].contents[0].kind).toEqual(OpKind.SET_DEPOSITS_LIMIT);
+      const content = response.operations[3][0]
+        .contents[0] as OperationContentsAndResultSetDepositsLimit;
+      expect(content.source).toEqual('tz2FViF6XzJ4PqD5TTuaAtZScmiwpJBGBpSh');
+      expect(content.fee).toEqual('1500');
+      expect(content.counter).toEqual('146662');
+      expect(content.gas_limit).toEqual('1000');
+      expect(content.storage_limit).toEqual('10000');
+      expect(content.limit).toBeDefined();
+      expect(content.limit).toEqual('3');
+      expect(content.metadata.balance_updates[0].kind).toEqual('contract');
+      expect(content.metadata.balance_updates[0].contract).toBeDefined();
+      expect(content.metadata.balance_updates[0].contract).toEqual(
+        'tz2FViF6XzJ4PqD5TTuaAtZScmiwpJBGBpSh'
+      );
+      expect(content.metadata.balance_updates[0].change).toBeDefined();
+      expect(content.metadata.balance_updates[0].change).toEqual('-1500');
+      expect(content.metadata.balance_updates[0].origin).toBeDefined();
+      expect(content.metadata.balance_updates[0].origin).toEqual('block');
+      expect(content.metadata.balance_updates[0].category).toBeUndefined();
+      expect(content.metadata.balance_updates[0].delegate).toBeUndefined();
+      expect(content.metadata.balance_updates[0].cycle).toBeUndefined();
+
+      expect(content.metadata.operation_result.status).toEqual('applied');
+      expect(content.metadata.operation_result.consumed_gas).toBeDefined();
+      expect(content.metadata.operation_result.consumed_gas).toEqual('1000');
+      expect(content.metadata.operation_result.consumed_milligas).toBeDefined();
+      expect(content.metadata.operation_result.consumed_milligas).toEqual('1000000');
+
+      done();
+    });
   });
 
   describe('getBakingRights', () => {
@@ -2346,7 +2480,7 @@ describe('RpcClient test', () => {
 
       expect(result[1].delegate).toEqual('tz3VEZ4k6a4Wx42iyev6i2aVAptTRLEAivNN');
       expect(result[1].estimated_time).toEqual('2019-08-02T09:42:56Z');
-      expect(result[1].slots.length).toEqual(3);
+      expect(result[1].slots!.length).toEqual(3);
       done();
     });
   });
@@ -2403,21 +2537,6 @@ describe('RpcClient test', () => {
         url: 'root/chains/test/blocks/head/votes/ballots',
       });
       expect(response.yay).toEqual(5943);
-
-      done();
-    });
-  });
-
-  describe('getCurrentPeriodKind', () => {
-    it('query the right url and data', async (done) => {
-      httpBackend.createRequest.mockReturnValue(Promise.resolve('testing_vote'));
-      const response = await client.getCurrentPeriodKind();
-
-      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
-        method: 'GET',
-        url: 'root/chains/test/blocks/head/votes/current_period_kind',
-      });
-      expect(response).toEqual('testing_vote');
 
       done();
     });
@@ -2551,6 +2670,7 @@ describe('RpcClient test', () => {
     it('query the right url and data', async (done) => {
       const testData = {};
 
+      httpBackend.createRequest.mockResolvedValue({ content: {} });
       await client.runOperation(testData as any);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
@@ -2559,6 +2679,48 @@ describe('RpcClient test', () => {
       });
 
       expect(httpBackend.createRequest.mock.calls[0][1]).toEqual(testData);
+
+      done();
+    });
+
+    it('should use enum for property category to avoid space in name', async (done) => {
+      const testData = {};
+
+      httpBackend.createRequest.mockResolvedValue({
+        contents: [
+          {
+            metadata: {
+              balance_updates: [
+                {
+                  category: 'storage fees',
+                  kind: 'burned',
+                  origin: 'block',
+                },
+                {
+                  category: 'block fees',
+                  change: '374',
+                  kind: 'accumulator',
+                  origin: 'block',
+                },
+                {
+                  category: 'legacy_rewards',
+                },
+              ],
+            },
+          },
+        ],
+      });
+      const response = await client.runOperation(testData as any);
+
+      const balanceUpdate =
+        'metadata' in response.contents[0]
+          ? response.contents[0]['metadata']['balance_updates']
+          : [];
+      expect(balanceUpdate[0]['category']).toEqual(METADATA_BALANCE_UPDATES_CATEGORY.STORAGE_FEES);
+      expect(balanceUpdate[1]['category']).toEqual(METADATA_BALANCE_UPDATES_CATEGORY.BLOCK_FEES);
+      expect(balanceUpdate[2]['category']).toEqual(
+        METADATA_BALANCE_UPDATES_CATEGORY.LEGACY_REWARDS
+      );
 
       done();
     });
@@ -2571,24 +2733,24 @@ describe('RpcClient test', () => {
         entrypoint: 'test',
         chain_id: 'test',
         input: {
-          string: 'test'
-        }
+          string: 'test',
+        },
       };
 
       await client.runView(testData);
-      
+
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'POST',
-        url: 'root/chains/test/blocks/head/helpers/scripts/run_view'
+        url: 'root/chains/test/blocks/head/helpers/scripts/run_view',
       });
       expect(httpBackend.createRequest.mock.calls[0][1]).toEqual({
         contract: 'test',
         entrypoint: 'test',
         chain_id: 'test',
         input: {
-          string: 'test'
+          string: 'test',
         },
-        unparsing_mode: 'Readable'
+        unparsing_mode: 'Readable',
       });
       done();
     });
@@ -2599,21 +2761,21 @@ describe('RpcClient test', () => {
         entrypoint: 'test',
         chain_id: 'test',
         input: {
-          string: 'test'
+          string: 'test',
         },
-        unparsing_mode: 'Optimized'
-      }
+        unparsing_mode: 'Optimized',
+      };
 
       await client.runView(testData);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'POST',
-        url: 'root/chains/test/blocks/head/helpers/scripts/run_view'
+        url: 'root/chains/test/blocks/head/helpers/scripts/run_view',
       });
       expect(httpBackend.createRequest.mock.calls[0][1]).toEqual(testData);
       done();
-    })
-  })
+    });
+  });
 
   describe('packData', () => {
     it('query the right url and data', async (done) => {

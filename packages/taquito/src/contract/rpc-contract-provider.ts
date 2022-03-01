@@ -452,14 +452,12 @@ export class RpcContractProvider
     const readProvider = this.context.withExtensions().readProvider;
     const script = await readProvider.getScript(address, 'head');
     const entrypoints = await readProvider.getEntrypoints(address);
-    const chainId = await this.context.readProvider.getChainId();
     const abs = new ContractAbstraction(
       address,
       script,
       this,
       this,
       entrypoints,
-      chainId,
       rpc,
       readProvider
     );

@@ -37,7 +37,6 @@ describe('ContractAbstraction test', () => {
         rpcContractProvider,
         rpcContractProvider,
         entrypointsGenericMultisig,
-        'chain_test',
         mockRpcClient as any,
         mockReadProvider as any
       );
@@ -168,7 +167,6 @@ describe('ContractAbstraction test', () => {
         rpcContractProvider,
         rpcContractProvider,
         entrypointsGenericMultisig,
-        'chain_test',
         mockRpcClient as any,
         mockReadProvider as any
       );
@@ -301,7 +299,6 @@ describe('ContractAbstraction test', () => {
         rpcContractProvider,
         rpcContractProvider,
         { entrypoints: {} },
-        'chain_test',
         mockRpcClient as any,
         mockReadProvider as any
       );
@@ -378,7 +375,6 @@ describe('ContractAbstraction test', () => {
         rpcContractProvider,
         rpcContractProvider,
         { entrypoints: {} },
-        'chain_test',
         mockRpcClient as any,
         mockReadProvider as any
       );
@@ -471,7 +467,6 @@ describe('ContractAbstraction test', () => {
         rpcContractProvider,
         rpcContractProvider,
         { entrypoints: {} },
-        'chain_test',
         mockRpcClient as any,
         mockReadProvider as any
       );
