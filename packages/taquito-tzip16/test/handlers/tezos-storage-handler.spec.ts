@@ -54,11 +54,11 @@ describe('Parse Tezos storage URI test', () => {
 
 describe('Tzip16 tezos storage handler test', () => {
   const mockContractAbstraction: any = {};
-  let mockRpcClient: {
-    getNormalizedScript: jest.Mock<any, any>;
+  let mockReadProvider: {
+    getScript: jest.Mock<any, any>;
   };
   let mockContext: {
-    rpc: any;
+    readProvider: any;
     contract: any;
   };
   let mockContractProvider: {
@@ -68,20 +68,17 @@ describe('Tzip16 tezos storage handler test', () => {
   const tezosStorageHandler = new TezosStorageHandler();
 
   beforeEach(() => {
-    mockRpcClient = {
-      getNormalizedScript: jest.fn(),
+    mockReadProvider = {
+      getScript: jest.fn(),
     };
     mockContractProvider = {
       getBigMapKeyByID: jest.fn(),
     };
     mockContext = {
-      rpc: mockRpcClient,
+      readProvider: mockReadProvider,
       contract: mockContractProvider,
     };
-  });
-
-  it('Should succesfully find the metadata', async (done) => {
-    mockRpcClient.getNormalizedScript.mockResolvedValue({
+    mockReadProvider.getScript.mockResolvedValue({
       code: [
         {
           prim: 'storage',
@@ -103,6 +100,9 @@ describe('Tzip16 tezos storage handler test', () => {
       ],
       storage: { prim: 'Pair', args: [{ int: '32527' }, []] },
     });
+  });
+
+  it('Should succesfully find the metadata', async (done) => {
     mockContractProvider.getBigMapKeyByID.mockResolvedValue(
       '7b226e616d65223a2274657374222c226465736372697074696f6e223a2241206d657461646174612074657374222c2276657273696f6e223a22302e31222c226c6963656e7365223a224d4954222c22617574686f7273223a5b225461717569746f203c68747470733a2f2f74657a6f737461717569746f2e696f2f3e225d2c22686f6d6570616765223a2268747470733a2f2f74657a6f737461717569746f2e696f2f227d'
     );
@@ -125,29 +125,6 @@ describe('Tzip16 tezos storage handler test', () => {
   });
 
   it('Should fail with InvalidUri when the URI is invalid', async (done) => {
-    mockRpcClient.getNormalizedScript.mockResolvedValue({
-      code: [
-        {
-          prim: 'storage',
-          args: [
-            {
-              prim: 'pair',
-              args: [
-                {
-                  prim: 'big_map',
-                  args: [{ prim: 'string' }, { prim: 'bytes' }],
-                  annots: ['%metadata'],
-                },
-                {},
-              ],
-            },
-          ],
-        },
-        { prim: 'code', args: [] },
-      ],
-      storage: { prim: 'Pair', args: [{ int: '32527' }, []] },
-    });
-
     const tzip16Uri = {
       sha256hash: undefined,
       protocol: 'tezos-storage',
@@ -166,7 +143,7 @@ describe('Tzip16 tezos storage handler test', () => {
   });
 
   it('Should fail with BigMapMetadataNotFound when there is no big map %metadata in the storage', async (done) => {
-    mockRpcClient.getNormalizedScript.mockResolvedValue({
+    mockReadProvider.getScript.mockResolvedValue({
       code: [{ prim: 'storage', args: [{ prim: 'pair', args: [{}, {}] }] }],
       storage: { prim: 'Pair', args: [] },
     });
@@ -185,28 +162,6 @@ describe('Tzip16 tezos storage handler test', () => {
   });
 
   it('Should fail with MetadataNotFound when the path extracted from the URI is not a key of the big map %metadata', async (done) => {
-    mockRpcClient.getNormalizedScript.mockResolvedValue({
-      code: [
-        {
-          prim: 'storage',
-          args: [
-            {
-              prim: 'pair',
-              args: [
-                {
-                  prim: 'big_map',
-                  args: [{ prim: 'string' }, { prim: 'bytes' }],
-                  annots: ['%metadata'],
-                },
-                {},
-              ],
-            },
-          ],
-        },
-        { prim: 'code', args: [] },
-      ],
-      storage: { prim: 'Pair', args: [{ int: '32527' }, []] },
-    });
     mockContractProvider.getBigMapKeyByID.mockResolvedValue(undefined);
 
     const tzip16Uri = {
@@ -227,28 +182,6 @@ describe('Tzip16 tezos storage handler test', () => {
   });
 
   it('Should fail with InvalidMetadataType when metadata type is not bytes', async (done) => {
-    mockRpcClient.getNormalizedScript.mockResolvedValue({
-      code: [
-        {
-          prim: 'storage',
-          args: [
-            {
-              prim: 'pair',
-              args: [
-                {
-                  prim: 'big_map',
-                  args: [{ prim: 'string' }, { prim: 'bytes' }],
-                  annots: ['%metadata'],
-                },
-                {},
-              ],
-            },
-          ],
-        },
-        { prim: 'code', args: [] },
-      ],
-      storage: { prim: 'Pair', args: [{ int: '32527' }, []] },
-    });
     mockContractProvider.getBigMapKeyByID.mockResolvedValue('NOT-BYTES');
 
     const tzip16Uri = {

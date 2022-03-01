@@ -29,11 +29,12 @@ export class TezosStorageHandler implements Handler {
     if (!parsedTezosStorageUri) {
       throw new InvalidUri(`tezos-storage:${location}`);
     }
-    const storage: any = await context.rpc.getNormalizedScript(
-      parsedTezosStorageUri.contractAddress || contractAbstraction.address
+    const script = await context.readProvider.getScript(
+      parsedTezosStorageUri.contractAddress || contractAbstraction.address,
+      'head'
     );
-    const bigMapId = Schema.fromRPCResponse({ script: storage }).FindFirstInTopLevelPair<BigMapId>(
-      storage.storage,
+    const bigMapId = Schema.fromRPCResponse({ script }).FindFirstInTopLevelPair<BigMapId>(
+      script.storage,
       typeOfValueToFind
     );
 

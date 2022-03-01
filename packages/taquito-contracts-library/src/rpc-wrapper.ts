@@ -43,6 +43,10 @@ import {
 } from '@taquito/rpc';
 import { ContractsLibrary } from './taquito-contracts-library';
 
+/**
+ * @deprecated RpcWrapperContractsLibrary has been deprecated in favor of ReadWrapperContractsLibrary
+ *
+ */
 export class RpcWrapperContractsLibrary implements RpcClientInterface {
   constructor(private rpc: RpcClientInterface, private contractslibrary: ContractsLibrary) {}
 

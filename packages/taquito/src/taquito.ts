@@ -7,7 +7,7 @@ import { RpcClient, RpcClientInterface } from '@taquito/rpc';
 import { LocalForger, Forger } from '@taquito/local-forging';
 import { RPCBatchProvider } from './batch/rpc-batch-provider';
 import { Protocols } from './constants';
-import { ConfigConfirmation, ConfigStreamer, Context, TaquitoProvider } from './context';
+import { ConfigConfirmation, Context, TaquitoProvider } from './context';
 import { ContractProvider, EstimationProvider } from './contract/interface';
 import { Extension } from './extension/extension';
 import { format } from './format';
@@ -15,10 +15,12 @@ import { GlobalConstantsProvider } from './global-constants/interface-global-con
 import { NoopGlobalConstantsProvider } from './global-constants/noop-global-constants-provider';
 import { Packer } from './packer/interface';
 import { RpcPacker } from './packer/rpc-packer';
+import { TzReadProvider } from './read-provider/interface';
+import { RpcReadAdapter } from './read-provider/rpc-read-adapter';
 import { Signer } from './signer/interface';
 import { NoopSigner } from './signer/noop';
 import { SubscribeProvider } from './subscribe/interface';
-import { PollingSubscribeProvider } from './subscribe/polling-provider';
+import { PollingSubscribeProvider } from './subscribe/polling-subcribe-provider';
 import { TzProvider } from './tz/interface';
 import { VERSION } from './version';
 import { LegacyWalletProvider, Wallet, WalletProvider } from './wallet';
@@ -38,7 +40,7 @@ export { OperationBatch } from './batch/rpc-batch-provider';
 export * from './signer/interface';
 export * from './subscribe/interface';
 export { SubscribeProvider } from './subscribe/interface';
-export { PollingSubscribeProvider } from './subscribe/polling-provider';
+export { PollingSubscribeProvider } from './subscribe/polling-subcribe-provider';
 export { ObservableSubscription } from './subscribe/observable-subscription';
 export * from './tz/interface';
 export * from './wallet';
@@ -52,15 +54,18 @@ export * from './packer/rpc-packer';
 export * from './global-constants/default-global-constants-provider';
 export * from './global-constants/error';
 export * from './global-constants/interface-global-constants-provider';
+export * from './read-provider/interface';
+export * from './read-provider/rpc-read-adapter';
 
 export interface SetProviderOptions {
   forger?: Forger;
   wallet?: WalletProvider;
   rpc?: string | RpcClientInterface;
+  readProvider?: TzReadProvider;
   stream?: string | SubscribeProvider;
   signer?: Signer;
   protocol?: Protocols;
-  config?: Partial<ConfigConfirmation> & Partial<ConfigStreamer>;
+  config?: Partial<ConfigConfirmation>;
   packer?: Packer;
   globalConstantsProvider?: GlobalConstantsProvider;
 }
@@ -76,7 +81,6 @@ export interface VersionInfo {
  * @param _rpc The RPC server to use
  */
 export class TezosToolkit {
-  private _stream!: SubscribeProvider;
   private _options: SetProviderOptions = {};
   private _rpcClient: RpcClientInterface;
   private _wallet: Wallet;
@@ -121,6 +125,7 @@ export class TezosToolkit {
     wallet,
     packer,
     globalConstantsProvider,
+    readProvider,
   }: SetProviderOptions) {
     this.setRpcProvider(rpc);
     this.setStreamProvider(stream);
@@ -129,6 +134,7 @@ export class TezosToolkit {
     this.setWalletProvider(wallet);
     this.setPackerProvider(packer);
     this.setGlobalConstantsProvider(globalConstantsProvider);
+    this.setReadProvider(readProvider);
 
     this._context.proto = protocol;
     if (config) {
@@ -203,13 +209,17 @@ export class TezosToolkit {
    */
   setStreamProvider(stream?: SetProviderOptions['stream']) {
     if (typeof stream === 'string') {
-      this._stream = new PollingSubscribeProvider(new Context(new RpcClient(stream)));
+      const s = new PollingSubscribeProvider(new Context(new RpcClient(stream)));
+      this._options.stream = s;
+      this._context.stream = s;
     } else if (typeof stream !== 'undefined') {
-      this._stream = stream;
+      this._options.stream = stream;
+      this._context.stream = stream;
     } else if (this._options.stream === undefined) {
-      this._stream = this.getFactory(PollingSubscribeProvider)();
+      const s = this.getFactory(PollingSubscribeProvider)();
+      this._options.stream = s;
+      this._context.stream = s;
     }
-    this._options.stream = stream;
   }
 
   /**
@@ -273,6 +283,20 @@ export class TezosToolkit {
   }
 
   /**
+   * @description Sets read provider on the Tezos Taquito instance
+   * By default reads are done from the RPC usign the RpcReadAdapter class, this can be overridden to read from an indexer that implements the TzReadProvider interface
+   *
+   * @param options TzReadProvider to use to interact with the Tezos network
+   *
+   */
+  setReadProvider(readProvider?: SetProviderOptions['readProvider']) {
+    const readP =
+      typeof readProvider === 'undefined' ? this.getFactory(RpcReadAdapter)() : readProvider;
+    this._options.readProvider = readP;
+    this._context.readProvider = readP;
+  }
+
+  /**
    * @description Provide access to tezos account management
    */
   get tz(): TzProvider {
@@ -305,7 +329,7 @@ export class TezosToolkit {
    * @description Provide access to streaming utilities backed by an streamer implementation
    */
   get stream(): SubscribeProvider {
-    return this._stream;
+    return this._context.stream;
   }
 
   /**

@@ -17,18 +17,19 @@ import { ParserProvider } from './parser/interface';
 import { MichelCodecParser } from './parser/michel-codec-parser';
 import { Packer } from './packer/interface';
 import { RpcPacker } from './packer/rpc-packer';
-import BigNumber from 'bignumber.js';
-import { retry } from 'rxjs/operators';
-import { BehaviorSubject, OperatorFunction } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { GlobalConstantsProvider } from './global-constants/interface-global-constants-provider';
 import { NoopGlobalConstantsProvider } from './global-constants/noop-global-constants-provider';
+import { TzReadProvider } from './read-provider/interface';
+import { RpcReadAdapter } from './read-provider/rpc-read-adapter';
+import { SubscribeProvider } from './subscribe/interface';
+import { PollingSubscribeProvider } from './subscribe/polling-subcribe-provider';
 
 export interface TaquitoProvider<T, K extends Array<any>> {
   new (context: Context, ...rest: K): T;
 }
 
 export interface ConfigConfirmation {
-  confirmationPollingIntervalSecond?: number;
   confirmationPollingTimeoutSecond: number;
   defaultConfirmationCount: number;
 }
@@ -36,21 +37,6 @@ export interface ConfigConfirmation {
 export const defaultConfigConfirmation: ConfigConfirmation = {
   defaultConfirmationCount: 1,
   confirmationPollingTimeoutSecond: 180,
-};
-
-// The shouldObservableSubscriptionRetry parameter is related to the observable in ObservableSubsription class.
-// When set to true, the observable won't die when getBlock rpc call fails; the error will be reported via the error callback,
-// and it will continue to poll for new blocks.
-export interface ConfigStreamer {
-  streamerPollingIntervalMilliseconds: number;
-  shouldObservableSubscriptionRetry: boolean;
-  observableSubscriptionRetryFunction: OperatorFunction<any, any>;
-}
-
-export const defaultConfigStreamer: ConfigStreamer = {
-  streamerPollingIntervalMilliseconds: 20000,
-  shouldObservableSubscriptionRetry: false,
-  observableSubscriptionRetryFunction: retry(),
 };
 
 /**
@@ -66,6 +52,8 @@ export class Context {
   private _packer: Packer;
   private providerDecorator: Array<(context: Context) => Context> = [];
   private _globalConstantsProvider: GlobalConstantsProvider;
+  private _readProvider: TzReadProvider;
+  private _stream: SubscribeProvider;
   public readonly tz = new RpcTzProvider(this);
   public readonly estimate = new RPCEstimateProvider(this);
   public readonly contract = new RpcContractProvider(this, this.estimate);
@@ -77,7 +65,6 @@ export class Context {
     private _signer: Signer = new NoopSigner(),
     private _proto?: Protocols,
     public readonly _config = new BehaviorSubject({
-      ...defaultConfigStreamer,
       ...defaultConfigConfirmation,
     }),
     forger?: Forger,
@@ -85,7 +72,9 @@ export class Context {
     packer?: Packer,
     wallet?: WalletProvider,
     parser?: ParserProvider,
-    globalConstantsProvider?: GlobalConstantsProvider
+    globalConstantsProvider?: GlobalConstantsProvider,
+    readProvider?: TzReadProvider,
+    stream?: SubscribeProvider
   ) {
     if (typeof this._rpc === 'string') {
       this._rpcClient = new RpcClient(this._rpc);
@@ -101,19 +90,21 @@ export class Context {
     this._globalConstantsProvider = globalConstantsProvider
       ? globalConstantsProvider
       : new NoopGlobalConstantsProvider();
+    this._readProvider = readProvider ? readProvider : new RpcReadAdapter(this);
+    this._stream = stream ? stream : new PollingSubscribeProvider(this);
   }
 
-  get config(): ConfigConfirmation & ConfigStreamer {
+  get config(): ConfigConfirmation {
     return this._config.getValue();
   }
 
-  set config(value: ConfigConfirmation & ConfigStreamer) {
+  set config(value: ConfigConfirmation) {
     this._config.next({
       ...value,
     });
   }
 
-  setPartialConfig(value: Partial<ConfigConfirmation> & Partial<ConfigStreamer>) {
+  setPartialConfig(value: Partial<ConfigConfirmation>) {
     this._config.next({
       ...this._config.getValue(),
       ...value,
@@ -192,47 +183,28 @@ export class Context {
     this._globalConstantsProvider = value;
   }
 
+  get readProvider() {
+    return this._readProvider;
+  }
+
+  set readProvider(value: TzReadProvider) {
+    this._readProvider = value;
+  }
+
+  get stream() {
+    return this._stream;
+  }
+
+  set stream(value: SubscribeProvider) {
+    this._stream = value;
+  }
+
   async isAnyProtocolActive(protocol: string[] = []) {
     if (this._proto) {
       return protocol.includes(this._proto);
     } else {
-      const { next_protocol } = await this.rpc.getBlockMetadata();
+      const next_protocol = await this.readProvider.getNextProtocol('head');
       return protocol.includes(next_protocol);
-    }
-  }
-
-  async getConfirmationPollingInterval() {
-    // Granada will generally halve the time between blocks, from 60 seconds to 30 seconds (mainnet).
-    // We reduce the default value in the same proportion, from 10 to 5.
-    const defaultInterval = 5;
-    try {
-      const constants = await this.rpc.getConstants();
-      let blockTime = constants.time_between_blocks[0];
-      if (constants.minimal_block_delay !== undefined) {
-        blockTime = constants.minimal_block_delay;
-      }
-      let confirmationPollingInterval = BigNumber.sum(
-        blockTime,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        new BigNumber(constants.delay_per_missing_endorsement!).multipliedBy(
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          Math.max(0, constants.initial_endorsers! - constants.endorsers_per_block)
-        )
-      );
-
-      // Divide the polling interval by a constant 3
-      // to improvise for polling time to work in prod,
-      // testnet and sandbox enviornment.
-      confirmationPollingInterval = confirmationPollingInterval.dividedBy(3);
-
-      this.config.confirmationPollingIntervalSecond =
-        confirmationPollingInterval.toNumber() === 0 ? 0.1 : confirmationPollingInterval.toNumber();
-      return this.config.confirmationPollingIntervalSecond;
-    } catch (exception) {
-      // Return default value if there is
-      // an issue returning from constants
-      // file.
-      return defaultInterval;
     }
   }
 
@@ -250,12 +222,14 @@ export class Context {
       this.packer,
       this._walletProvider,
       this._parser,
-      this._globalConstantsProvider
+      this._globalConstantsProvider,
+      this._readProvider,
+      this._stream
     );
   }
 
   /**
-   * @description Allows extensions set on the TezosToolkit to inject logic into the context
+   * @description Allows extensions set on the TezosToolkit to inject logic into the context 
    */
   registerProviderDecorator(fx: (context: Context) => Context) {
     this.providerDecorator.push(fx);

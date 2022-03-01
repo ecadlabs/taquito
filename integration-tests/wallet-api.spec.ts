@@ -1,3 +1,4 @@
+import { PollingSubscribeProvider } from "@taquito/taquito";
 import { CONFIGS } from "./config";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
@@ -6,11 +7,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   beforeEach(async (done) => {
     await setup();
-    Tezos.setProvider({
-      config: {
-        confirmationPollingIntervalSecond: 10
-      }
-    })
+    Tezos.setStreamProvider(Tezos.getFactory(PollingSubscribeProvider)({ pollingIntervalMilliseconds: 6000 }));
     done();
   })
 

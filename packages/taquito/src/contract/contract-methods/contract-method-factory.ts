@@ -5,6 +5,7 @@ import { ContractMethod } from './contract-method-flat-param';
 import { ParameterSchema, ViewSchema } from '@taquito/michelson-encoder';
 import { RpcClientInterface, MichelsonV1Expression } from '@taquito/rpc';
 import { OnChainView } from './contract-on-chain-view';
+import { TzReadProvider } from '../../read-provider/interface';
 
 export class ContractMethodFactory<T extends ContractProvider | Wallet> {
   constructor(private provider: T, private contractAddress: string) {}
@@ -47,17 +48,17 @@ export class ContractMethodFactory<T extends ContractProvider | Wallet> {
 
   createContractViewObjectParam(
     rpc: RpcClientInterface,
+    readProvider: TzReadProvider,
     smartContractViewSchema: ViewSchema,
     contractStorageType: MichelsonV1Expression,
-    contractStorageValue: MichelsonV1Expression,
     viewArgs: any
   ) {
     return new OnChainView(
       rpc,
+      readProvider,
       this.contractAddress,
       smartContractViewSchema,
       contractStorageType,
-      contractStorageValue,
       viewArgs
     );
   }

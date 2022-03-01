@@ -7,6 +7,8 @@ import {
   ViewSimulationError,
 } from '../../src/contract';
 import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
+import { Context } from '../../src/context';
+import { RpcReadAdapter } from '../../src/read-provider/rpc-read-adapter';
 
 describe('OnChainView test', () => {
   let view: OnChainView;
@@ -14,12 +16,15 @@ describe('OnChainView test', () => {
     getChainId: jest.Mock<any, any>;
     getBalance: jest.Mock<any, any>;
     runCode: jest.Mock<any, any>;
+    getStorage: jest.Mock<any, any>;
   };
+  let mockReadProvider: any;
   beforeEach(() => {
     mockRpcClient = {
       getChainId: jest.fn(),
       getBalance: jest.fn(),
       runCode: jest.fn(),
+      getStorage: jest.fn(),
     };
     mockRpcClient.getChainId.mockResolvedValue('test_chain_id');
     mockRpcClient.getBalance.mockResolvedValue(new BigNumber(5000000));
@@ -27,9 +32,14 @@ describe('OnChainView test', () => {
       storage: { prim: 'Some', args: [{ int: '23' }] },
       operations: [],
     });
+    mockRpcClient.getStorage.mockResolvedValue({ int: '3' });
+
+    const context = new Context(mockRpcClient as any);
+    mockReadProvider = new RpcReadAdapter(context);
 
     view = new OnChainView(
       mockRpcClient as any,
+      mockReadProvider,
       'contractAddress',
       new ViewSchema([
         { string: 'add' },
@@ -38,7 +48,6 @@ describe('OnChainView test', () => {
         [{ prim: 'UNPAIR' }, { prim: 'ADD' }],
       ]),
       { prim: 'nat' },
-      { int: '3' },
       20
     );
   });
@@ -61,7 +70,7 @@ describe('OnChainView test', () => {
       })
     ).toEqual(new BigNumber(23));
 
-    expect(mockRpcClient.getBalance).toHaveBeenCalledWith('contractAddress');
+    expect(mockRpcClient.getBalance).toHaveBeenCalledWith('contractAddress', { block: 'head' });
     expect(mockRpcClient.runCode).toHaveBeenCalledWith({
       script: [
         { prim: 'parameter', args: [{ prim: 'pair', args: [{ prim: 'nat' }, { prim: 'nat' }] }] },
@@ -92,6 +101,7 @@ describe('OnChainView test', () => {
   it('should adapt the instructions SENDER, SELF_ADDRESS, BALANCE and AMOUNT to the context before executing the view', async (done) => {
     const view = new OnChainView(
       mockRpcClient as any,
+      mockReadProvider,
       'contractAddress',
       new ViewSchema([
         { string: 'viewName' },
@@ -100,14 +110,13 @@ describe('OnChainView test', () => {
         [{ prim: 'SENDER' }, { prim: 'SELF_ADDRESS' }, { prim: 'BALANCE' }, { prim: 'AMOUNT' }],
       ]),
       { prim: 'nat' },
-      { int: '3' },
       20
     );
     await view.executeView({
       viewCaller: 'KT1TRHzT3HdLe3whe35q6rNxavGx8WVFHSpH',
     });
 
-    expect(mockRpcClient.getBalance).toHaveBeenCalledWith('contractAddress');
+    expect(mockRpcClient.getBalance).toHaveBeenCalledWith('contractAddress', { block: 'head' });
     expect(mockRpcClient.runCode).toHaveBeenCalledWith({
       script: [
         { prim: 'parameter', args: [{ prim: 'pair', args: [{ prim: 'nat' }, { prim: 'nat' }] }] },
@@ -149,6 +158,7 @@ describe('OnChainView test', () => {
     // All occurences of `{ prim: 'SELF_ADDRESS' }` in the view instructions need to be replace with `[{ prim: 'PUSH', args: [{ prim: 'address' }, { string: 'contractAddress' }] }]`
     const view = new OnChainView(
       mockRpcClient as any,
+      mockReadProvider,
       'contractAddress',
       new ViewSchema([
         { string: 'viewName' },
@@ -218,14 +228,13 @@ describe('OnChainView test', () => {
         ],
       ]),
       { prim: 'nat' },
-      { int: '3' },
       20
     );
     await view.executeView({
       viewCaller: 'KT1TRHzT3HdLe3whe35q6rNxavGx8WVFHSpH',
     });
 
-    expect(mockRpcClient.getBalance).toHaveBeenCalledWith('contractAddress');
+    expect(mockRpcClient.getBalance).toHaveBeenCalledWith('contractAddress', { block: 'head' });
     expect(mockRpcClient.runCode).toHaveBeenCalledWith({
       script: [
         { prim: 'parameter', args: [{ prim: 'pair', args: [{ prim: 'nat' }, { prim: 'nat' }] }] },
@@ -410,6 +419,7 @@ describe('OnChainView test', () => {
   it('should throw a InvalidViewParameterError error if the parameter of the view is invalid', async (done) => {
     view = new OnChainView(
       mockRpcClient as any,
+      mockReadProvider,
       'contractAddress',
       new ViewSchema([
         { string: 'add' },
@@ -418,7 +428,6 @@ describe('OnChainView test', () => {
         [{ prim: 'UNPAIR' }, { prim: 'ADD' }],
       ]),
       { prim: 'nat' },
-      { int: '3' },
       'test'
     );
     try {

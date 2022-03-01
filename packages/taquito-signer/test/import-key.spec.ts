@@ -31,10 +31,10 @@ describe('ImportKey', () => {
       getManagerKey: jest.fn(),
       getStorage: jest.fn(),
       getBlockHeader: jest.fn(),
-      getBlockMetadata: jest.fn(),
       getContract: jest.fn(),
       injectOperation: jest.fn(),
       preapplyOperations: jest.fn(),
+      getProtocols: jest.fn(),
     };
 
     mockLocalForger = {
@@ -44,7 +44,10 @@ describe('ImportKey', () => {
     mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
     mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
     mockRpcClient.preapplyOperations.mockResolvedValue([]);
-    mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
+    mockRpcClient.getProtocols.mockResolvedValue({
+      protocol: 'test_proto',
+      next_protocol: 'test_proto',
+    });
 
     // Required for operations confirmation polling
     mockRpcClient.getBlock.mockResolvedValue({

@@ -3,13 +3,13 @@ import { Context, MichelCodecParser, Protocols, InvalidCodeParameter } from '../
 
 describe('MichelCodec parser', () => {
   const mockRpcClient = {
-    getBlockMetadata: jest.fn(),
+    getProtocols: jest.fn(),
   };
   const mockGlobalConstantsProvider = {
     getGlobalConstantByHash: jest.fn(),
   };
 
-  mockRpcClient.getBlockMetadata.mockResolvedValue({
+  mockRpcClient.getProtocols.mockResolvedValue({
     next_protocol: 'PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA',
   });
 
@@ -18,7 +18,7 @@ describe('MichelCodec parser', () => {
   });
 
   describe('getNextProto', () => {
-    it('calls getBlockMetadata from the rpc client', async (done) => {
+    it('calls getProtocols from the rpc client', async (done) => {
       const parser = new MichelCodecParser(new Context(mockRpcClient as any));
       const result = await parser['getNextProto']();
       expect(result).toStrictEqual(Protocols.PtEdo2Zk);

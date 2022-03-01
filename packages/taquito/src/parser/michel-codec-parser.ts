@@ -10,7 +10,7 @@ export class MichelCodecParser implements ParserProvider {
   constructor(private context: Context) {}
 
   private async getNextProto(): Promise<ProtocolID> {
-    const { next_protocol } = await this.context.rpc.getBlockMetadata();
+    const next_protocol = await this.context.readProvider.getNextProtocol('head');
     return next_protocol as ProtocolID;
   }
 

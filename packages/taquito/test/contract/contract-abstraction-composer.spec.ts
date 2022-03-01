@@ -27,7 +27,7 @@ describe('Contract abstraction composer test', () => {
     mockRpcClient = {
       getNormalizedScript: jest.fn(),
       getEntrypoints: jest.fn(),
-      getBlockHeader: jest.fn(),
+      getChainId: jest.fn(),
     };
 
     mockRpcClient.getNormalizedScript.mockResolvedValue(script);
@@ -36,14 +36,17 @@ describe('Contract abstraction composer test', () => {
         mint: { prim: 'pair', args: [{ prim: 'key' }, { prim: 'nat' }] },
       },
     });
-    mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
+    mockRpcClient.getChainId.mockResolvedValue('test');
 
     toolkit = new TezosToolkit('url');
     toolkit['_context'].rpc = mockRpcClient;
   });
 
   it('Should add a helloWorld method on the contract abstraction', async (done) => {
-    const result = await toolkit.contract.at('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D', composeContractAbstractionTest);
+    const result = await toolkit.contract.at(
+      'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
+      composeContractAbstractionTest
+    );
     expect(result.constractAbstractionTest().helloWorld()).toEqual('Hello World!');
     done();
   });
