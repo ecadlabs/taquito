@@ -116,6 +116,26 @@ export const int32Decoder = (val: Uint8ArrayConsumer) => {
   return finalNum;
 };
 
+export const int16Encoder = (val: number | string): string => {
+  const num = parseInt(String(val), 10);
+  const byte = [];
+  for (let i = 0; i < 2; i++) {
+    const shiftBy = (2 - (i + 1)) * 8;
+    byte.push((num & (0xff << shiftBy)) >> shiftBy);
+  }
+  return Buffer.from(byte).toString('hex');
+};
+
+export const int16Decoder = (val: Uint8ArrayConsumer) => {
+  const num = val.consume(2);
+  let finalNum = 0;
+  for (let i = 0; i < num.length; i++) {
+    finalNum = finalNum | (num[i] << ((num.length - (i + 1)) * 8));
+  }
+
+  return finalNum;
+};
+
 export const boolDecoder = (val: Uint8ArrayConsumer): boolean => {
   const bool = val.consume(1);
   return bool[0] === 0xff;

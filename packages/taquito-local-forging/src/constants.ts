@@ -22,6 +22,7 @@ export enum CODEC {
   PROPOSAL = 'proposal',
   PROPOSAL_ARR = 'proposalArr',
   INT32 = 'int32',
+  INT16 = 'int16',
   PARAMETERS = 'parameters',
   ADDRESS = 'address',
   OPERATION = 'operation',

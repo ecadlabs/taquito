@@ -100,18 +100,6 @@ export const commonCases: TestCase[] = [
     },
   },
   {
-    name: 'Endorsement',
-    operation: {
-      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
-      contents: [
-        {
-          kind: 'endorsement',
-          level: 300,
-        },
-      ],
-    },
-  },
-  {
     name: 'Seed nonce revelation',
     operation: {
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
@@ -943,6 +931,21 @@ export const hangzhouCases: TestCase[] = [
   },
 ];
 
+export const priorIthacaCases: TestCase[] = [
+  {
+    name: 'Endorsement',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: 'endorsement',
+          level: 300,
+        },
+      ],
+    },
+  },
+];
+
 export const ithacaCases: TestCase[] = [
   // In `opMapping` from the file `constants.ts`, the operations and types starting at `sub_mutez` were added in the ithaca protocol
   ...extractOp(147, 147).map((op) => {
@@ -968,6 +971,21 @@ export const ithacaCases: TestCase[] = [
       },
     };
   }),
+  {
+    name: 'Endorsement',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: 'endorsement',
+          slot: 0,
+          level: 66299,
+          round: 5,
+          block_payload_hash: 'vh3FEkypvxUYLwjGYd2Sme7aWyfX8npDsqxcL6imVpBWnAZeNn2n',
+        },
+      ],
+    },
+  },
   {
     name: `Origination of a contract that contains the instructions SUB_MUTEZ`,
     operation: {
