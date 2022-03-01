@@ -8,8 +8,8 @@ import { CODEC, ProtocolsHash } from './constants';
 import { decoders } from './decoder';
 import { encoders } from './encoder';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
-import { decodersProto12 } from './Proto12-Ithaca/decoder';
-import { encodersProto12 } from './Proto12-Ithaca/encoder';
+import { decodersProto12 } from './proto12-ithaca/decoder';
+import { encodersProto12 } from './proto12-ithaca/encoder';
 
 export { CODEC, ProtocolsHash } from './constants';
 export * from './decoder';
