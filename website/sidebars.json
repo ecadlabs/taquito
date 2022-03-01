@@ -13,6 +13,7 @@
         "estimate",
         "fa2_parameters",
         "lambda_view",
+        "liquidity_baking",
         "maps_bigmaps",
         "michelsonmap",
         "originate",

@@ -3894,6 +3894,11 @@ fork-ts-checker-webpack-plugin@^6.0.5:
   dependencies:
     "@babel/code-frame" "^7.8.3"
     "@types/json-schema" "^7.0.5"
+
+"got@^9.6.0":
+  "integrity" "sha512-R7eWptXuGYxwijs0eV+v3o6+XH1IqVK8dJOEecQfTmkncw9AV4dcw/Dhxi8MdlqPthxxpZyizMzyg8RTmEsG+Q=="
+  "resolved" "https://registry.npmjs.org/got/-/got-9.6.0.tgz"
+  "version" "9.6.0"
     chalk "^4.1.0"
     chokidar "^3.4.2"
     cosmiconfig "^6.0.0"
