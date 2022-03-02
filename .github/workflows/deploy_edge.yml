@@ -28,7 +28,6 @@ jobs:
     - run: echo "PACKAGE_VERSION=`node -p "require('./packages/taquito/package.json').version"`" >> $GITHUB_ENV
     - run: echo "BRANCH_NAME=`echo $GITHUB_REF | cut -d'/' -f 3`" >> $GITHUB_ENV
     - run: echo "TARGET_VERSION=${PACKAGE_VERSION}-${SHORT_SHA}--${BRANCH_NAME}" >> $GITHUB_ENV
-    - run: npm --version
     - run: npm ci
     - run: npm run lerna -- bootstrap
     - run: find packages/ -mindepth 1 -maxdepth 2 -name README.md | xargs sed -i '1s/^/# WARNING This build is produced from a feature branch and could contain unreviewed changes from the public. Use with caution, do not use in production\n\n/'
