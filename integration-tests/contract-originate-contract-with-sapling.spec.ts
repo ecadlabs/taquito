@@ -14,10 +14,8 @@ import {
   saplingContractUseExistingState,
 } from './data/sapling_test_contracts';
 
-CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
+CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  const ithacanet = protocol === Protocols.Psithaca2 ? test : test.skip;
-  const hangzhounet = protocol === Protocols.PtHangz2 ? test : test.skip;
 
   const rpcClient = new RpcClientCache(new RpcClient(rpc));
 
@@ -71,9 +69,6 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       const contract = await op.contract();
-
-      const saplingDiffById = await rpcClient.getSaplingDiffById('168');
-      expect(saplingDiffById).toBeDefined();
 
       Tezos.contract.at(contract.address).then((contract) => {
         const objects = Object.keys(contract.methodsObject);
@@ -137,7 +132,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done();
     });
 
-    hangzhounet('Should fail to originate a Push Sapling State contract', async (done) => {
+    test('Should fail to originate a Push Sapling State contract', async (done) => {
       try {
         const op = await Tezos.contract.originate({
           code: saplingContractPushSaplingState,
@@ -145,21 +140,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         });
       } catch (ex: any) {
         expect(ex.message).toMatch(
-          '(permanent) proto.011-PtHangz2.michelson_v1.unexpected_lazy_storage'
-        );
-      }
-      done();
-    });
-
-    ithacanet('Should fail to originate a Push Sapling State contract', async (done) => {
-      try {
-        const op = await Tezos.contract.originate({
-          code: saplingContractPushSaplingState,
-          init: { prim: 'Unit' },
-        });
-      } catch (ex: any) {
-        expect(ex.message).toMatch(
-          '(permanent) proto.012-Psithaca.michelson_v1.unexpected_lazy_storage'
+          'michelson_v1.unexpected_lazy_storage'
         );
       }
       done();
