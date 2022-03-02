@@ -5,13 +5,17 @@ import { OriginateParams } from '../operations/types';
 import { InvalidInitParameter, InvalidCodeParameter } from '../contract/errors';
 import { Schema } from '@taquito/michelson-encoder';
 import { MichelsonV1Expression } from '@taquito/rpc';
+import { Protocols } from '../constants';
 
 export class MichelCodecParser implements ParserProvider {
   constructor(private context: Context) {}
 
   private async getNextProto(): Promise<ProtocolID> {
-    const next_protocol = await this.context.readProvider.getNextProtocol('head');
-    return next_protocol as ProtocolID;
+    if (!this.context.proto) {
+      const nextProto = await this.context.readProvider.getNextProtocol('head');
+      this.context.proto = nextProto as Protocols;
+    }
+    return this.context.proto as ProtocolID;
   }
 
   async parseScript(src: string): Promise<Expr[] | null> {

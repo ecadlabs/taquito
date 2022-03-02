@@ -4,7 +4,7 @@
  */
 
 import { RpcClient, RpcClientInterface } from '@taquito/rpc';
-import { LocalForger, Forger } from '@taquito/local-forging';
+import { Forger } from '@taquito/local-forging';
 import { RPCBatchProvider } from './batch/rpc-batch-provider';
 import { Protocols } from './constants';
 import { ConfigConfirmation, Context, TaquitoProvider } from './context';
@@ -25,6 +25,7 @@ import { TzProvider } from './tz/interface';
 import { VERSION } from './version';
 import { LegacyWalletProvider, Wallet, WalletProvider } from './wallet';
 import { OperationFactory } from './wallet/operation-factory';
+import { TaquitoLocalForger } from './forger/taquito-local-forger';
 
 export { MichelsonMap, UnitValue } from '@taquito/michelson-encoder';
 export { Forger, ForgeParams, ForgeResponse } from '@taquito/local-forging';
@@ -182,10 +183,11 @@ export class TezosToolkit {
 
   /**
    * @description Sets forger provider on the Tezos Taquito instance
+   * The `LocalForger` from `@taquito/local-forging` is set by default.
    *
    * @param options forger to use to interact with the Tezos network
    *
-   * @example Tezos.setForgerProvider(localForger)
+   * @example Tezos.setForgerProvider(this.getFactory(RpcForger)())
    *
    */
   setForgerProvider(forger?: SetProviderOptions['forger']) {
@@ -193,7 +195,7 @@ export class TezosToolkit {
       this._options.forger = forger;
       this._context.forger = forger;
     } else if (this._options.forger === undefined) {
-      const f = new LocalForger();
+      const f = this.getFactory(TaquitoLocalForger)();
       this._options.forger = f;
       this._context.forger = f;
     }
@@ -250,9 +252,14 @@ export class TezosToolkit {
    *
    */
   setPackerProvider(packer?: SetProviderOptions['packer']) {
-    const p = typeof packer === 'undefined' ? this.getFactory(RpcPacker)() : packer;
-    this._options.packer = p;
-    this._context.packer = p;
+    if (!this._options.packer && typeof packer === 'undefined') {
+      const p = this.getFactory(RpcPacker)();
+      this._context.packer = p;
+      this._options.packer = p;
+    } else if (typeof packer !== 'undefined') {
+      this._context.packer = packer;
+      this._options.packer = packer;
+    }
   }
 
   /**
@@ -274,12 +281,14 @@ export class TezosToolkit {
   setGlobalConstantsProvider(
     globalConstantsProvider?: SetProviderOptions['globalConstantsProvider']
   ) {
-    const g =
-      typeof globalConstantsProvider === 'undefined'
-        ? new NoopGlobalConstantsProvider()
-        : globalConstantsProvider;
-    this._options.globalConstantsProvider = g;
-    this._context.globalConstantsProvider = g;
+    if (!this._options.globalConstantsProvider && typeof globalConstantsProvider === 'undefined') {
+      const g = new NoopGlobalConstantsProvider();
+      this._context.globalConstantsProvider = g;
+      this._options.globalConstantsProvider = g;
+    } else if (typeof globalConstantsProvider !== 'undefined') {
+      this._context.globalConstantsProvider = globalConstantsProvider;
+      this._options.globalConstantsProvider = globalConstantsProvider;
+    }
   }
 
   /**

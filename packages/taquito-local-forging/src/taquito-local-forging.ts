@@ -4,31 +4,44 @@
  */
 
 import { ForgeParams, Forger } from './interface';
-import { CODEC } from './constants';
+import { CODEC, ProtocolsHash } from './constants';
 import { decoders } from './decoder';
 import { encoders } from './encoder';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
+import { decodersProto12 } from './proto12-ithaca/decoder';
+import { encodersProto12 } from './proto12-ithaca/encoder';
 
-export { CODEC } from './constants';
+export { CODEC, ProtocolsHash } from './constants';
 export * from './decoder';
 export * from './encoder';
 export * from './uint8array-consumer';
 export * from './interface';
-
-export function getCodec(codec: CODEC) {
-  return {
-    encoder: encoders[codec],
-    decoder: (hex: string) => {
-      const consumer = Uint8ArrayConsumer.fromHexString(hex);
-      return decoders[codec](consumer) as any;
-    },
-  };
-}
-
 export { VERSION } from './version';
 
+export function getCodec(codec: CODEC, proto: ProtocolsHash) {
+  if (proto === ProtocolsHash.Psithaca2) {
+    return {
+      encoder: encodersProto12[codec],
+      decoder: (hex: string) => {
+        const consumer = Uint8ArrayConsumer.fromHexString(hex);
+        return decodersProto12[codec](consumer) as any;
+      },
+    };
+  } else {
+    return {
+      encoder: encoders[codec],
+      decoder: (hex: string) => {
+        const consumer = Uint8ArrayConsumer.fromHexString(hex);
+        return decoders[codec](consumer) as any;
+      },
+    };
+  }
+}
+
 export class LocalForger implements Forger {
-  private codec = getCodec(CODEC.MANAGER);
+  constructor(public readonly protocolHash = ProtocolsHash.Psithaca2) {}
+
+  private codec = getCodec(CODEC.MANAGER, this.protocolHash);
 
   forge(params: ForgeParams): Promise<string> {
     return Promise.resolve(this.codec.encoder(params));

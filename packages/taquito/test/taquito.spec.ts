@@ -1,4 +1,4 @@
-import { TezosToolkit, SetProviderOptions, Wallet } from '../src/taquito';
+import { TezosToolkit, SetProviderOptions, Wallet, RpcPacker } from '../src/taquito';
 import { RpcTzProvider } from '../src/tz/rpc-tz-provider';
 import { RpcContractProvider } from '../src/contract/rpc-contract-provider';
 import { PollingSubscribeProvider } from '../src/subscribe/polling-subcribe-provider';
@@ -7,6 +7,7 @@ import { RpcClient } from '@taquito/rpc';
 import { RPCEstimateProvider } from '../src/contract/rpc-estimate-provider';
 import { OperationFactory } from '../src/wallet/operation-factory';
 import { NoopGlobalConstantsProvider } from '../src/global-constants/noop-global-constants-provider';
+import { TaquitoLocalForger } from '../src/forger/taquito-local-forger';
 
 describe('TezosToolkit test', () => {
   let mockRpcClient: any;
@@ -111,6 +112,43 @@ describe('TezosToolkit test', () => {
         expect(toolkit.stream).toEqual(instance);
       });
     });
+
+  providerKey
+    .filter((x) => x !== 'packer')
+    .forEach((key) => {
+      it(`setting ${key} provider should not override the packer provider`, () => {
+        expect(toolkit['_context'].packer).toBeInstanceOf(RpcPacker);
+        toolkit.setProvider({ packer: 'test' as any });
+        const instance = toolkit['_context'].packer;
+        expect(instance).toEqual('test');
+        toolkit.setProvider({ [key]: 'test' as any });
+        expect(toolkit['_context'].packer).toEqual(instance);
+      });
+    });
+
+  providerKey
+    .filter((x) => x !== 'globalConstantsProvider')
+    .forEach((key) => {
+      it(`setting ${key} provider should not override the globalConstantsProvider`, () => {
+        expect(toolkit.globalConstants).toBeInstanceOf(NoopGlobalConstantsProvider);
+        toolkit.setProvider({ globalConstantsProvider: 'test' as any });
+        const instance = toolkit.globalConstants;
+        expect(instance).toEqual('test');
+        toolkit.setProvider({ [key]: 'test' as any });
+        expect(toolkit.globalConstants).toEqual(instance);
+      });
+    });
+
+  providerKey.forEach((key) => {
+    it(`setting ${key} provider should not override the forger provider`, () => {
+      expect(toolkit['_context'].forger).toBeInstanceOf(TaquitoLocalForger);
+      toolkit.setProvider({ forger: 'test' as any });
+      const instance = toolkit['_context'].forger;
+      expect(instance).toEqual('test');
+      toolkit.setProvider({ [key]: 'test' as any });
+      expect(toolkit['_context'].forger).toEqual(instance);
+    });
+  });
 
   it('getVersionInfo returns well formed response', () => {
     const versionInfo = toolkit.getVersionInfo();

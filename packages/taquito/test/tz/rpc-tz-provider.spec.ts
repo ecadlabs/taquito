@@ -59,9 +59,11 @@ describe('RpcTzProvider test', () => {
         getBlockHeader: jest.fn(),
         getProtocols: jest.fn(),
         getContract: jest.fn(),
-        forgeOperations: jest.fn(),
         injectOperation: jest.fn(),
         preapplyOperations: jest.fn(),
+      };
+      const mockForger = {
+        forge: jest.fn(),
       };
       // Required for operations confirmation polling
       mockRpcClient.getBlock.mockResolvedValue({
@@ -84,12 +86,14 @@ describe('RpcTzProvider test', () => {
       });
       mockRpcClient.preapplyOperations.mockResolvedValue([]);
       mockRpcClient.getProtocols.mockResolvedValue({ next_protocol: 'test_proto' });
-      mockRpcClient.forgeOperations.mockResolvedValue('test');
+      mockForger.forge.mockResolvedValue('test');
       mockRpcClient.injectOperation.mockResolvedValue(
         'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj'
       );
 
-      const provider = new RpcTzProvider(new Context(mockRpcClient as any, mockSigner as any));
+      const context = new Context(mockRpcClient as any, mockSigner as any);
+      context.forger = mockForger;
+      const provider = new RpcTzProvider(context);
       const result = await provider.activate('tz2TSvNTh2epDMhZHrw73nV9piBX7kLZ9K9m', '123');
       expect(result.raw).toEqual({
         counter: 0,

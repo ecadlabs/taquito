@@ -1,7 +1,6 @@
 import { RpcClient, RpcClientInterface } from '@taquito/rpc';
 import { Protocols } from './constants';
 import { Forger } from '@taquito/local-forging';
-import { RpcForger } from './forger/rpc-forger';
 import { Injector } from './injector/interface';
 import { RpcInjector } from './injector/rpc-injector';
 import { Signer } from './signer/interface';
@@ -24,6 +23,7 @@ import { TzReadProvider } from './read-provider/interface';
 import { RpcReadAdapter } from './read-provider/rpc-read-adapter';
 import { SubscribeProvider } from './subscribe/interface';
 import { PollingSubscribeProvider } from './subscribe/polling-subcribe-provider';
+import { TaquitoLocalForger } from './forger/taquito-local-forger';
 
 export interface TaquitoProvider<T, K extends Array<any>> {
   new (context: Context, ...rest: K): T;
@@ -81,7 +81,7 @@ export class Context {
     } else {
       this._rpcClient = this._rpc;
     }
-    this._forger = forger ? forger : new RpcForger(this);
+    this._forger = forger ? forger : new TaquitoLocalForger(this);
     this._injector = injector ? injector : new RpcInjector(this);
     this.operationFactory = new OperationFactory(this);
     this._walletProvider = wallet ? wallet : new LegacyWalletProvider(this);

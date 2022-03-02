@@ -167,7 +167,7 @@ export const schemaDecoder =
 
         const result = decoder(value);
 
-        if (result) {
+        if (typeof result !== 'undefined') {
           return {
             ...prev,
             [key]: result,

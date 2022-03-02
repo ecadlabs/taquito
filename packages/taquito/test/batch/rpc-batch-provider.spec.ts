@@ -7,6 +7,8 @@ import { OpKind, ParamsWithKind } from '../../src/operations/types';
  * OperationBatch test
  */
 describe('OperationBatch test', () => {
+  let context: Context;
+  let operationBatch: OperationBatch;
   let mockRpcClient: {
     getScript: jest.Mock<any, any>;
     getStorage: jest.Mock<any, any>;
@@ -18,7 +20,6 @@ describe('OperationBatch test', () => {
     getBlock: jest.Mock<any, any>;
     getContract: jest.Mock<any, any>;
     getBlockMetadata: jest.Mock<any, any>;
-    forgeOperations: jest.Mock<any, any>;
     injectOperation: jest.Mock<any, any>;
     packData: jest.Mock<any, any>;
     preapplyOperations: jest.Mock<any, any>;
@@ -43,6 +44,10 @@ describe('OperationBatch test', () => {
     registerGlobalConstant: jest.Mock<any, any>;
   };
 
+  let mockForger: {
+    forge: jest.Mock<any, any>;
+  };
+
   beforeEach(() => {
     mockRpcClient = {
       getBigMapExpr: jest.fn(),
@@ -55,7 +60,6 @@ describe('OperationBatch test', () => {
       getBlockHeader: jest.fn(),
       getBlockMetadata: jest.fn(),
       getContract: jest.fn(),
-      forgeOperations: jest.fn(),
       injectOperation: jest.fn(),
       packData: jest.fn(),
       preapplyOperations: jest.fn(),
@@ -80,6 +84,10 @@ describe('OperationBatch test', () => {
       registerGlobalConstant: jest.fn(),
     };
 
+    mockForger = {
+      forge: jest.fn(),
+    };
+
     // Required for operations confirmation polling
     mockRpcClient.getBlock.mockResolvedValue({
       operations: [[], [], [], []],
@@ -101,17 +109,16 @@ describe('OperationBatch test', () => {
     mockRpcClient.injectOperation.mockResolvedValue(
       'onwtjK2Q32ndjF9zbEPPtmifdBq5qB59wjMP2oCH22mARjyKnGP'
     );
+
+    context = new Context(mockRpcClient as any, mockSigner as any);
+    context.forger = mockForger;
+    operationBatch = new OperationBatch(context, mockEstimate as any);
   });
 
   describe('withRegisterGlobalConstant', () => {
     it('should produce a batch operation which contains a registerGlobalConstant operation', async (done) => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.batch.mockResolvedValue([estimate]);
-
-      const operationBatch = new OperationBatch(
-        new Context(mockRpcClient as any, mockSigner as any),
-        mockEstimate as any
-      );
 
       const batchOp = await operationBatch
         .withRegisterGlobalConstant({ value: { int: '2' } })
@@ -142,11 +149,6 @@ describe('OperationBatch test', () => {
     it('should produce a batch operation which contains a registerGlobalConstant operation where fee, gas limit and storage limit are specified by the user', async (done) => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.batch.mockResolvedValue([estimate]);
-
-      const operationBatch = new OperationBatch(
-        new Context(mockRpcClient as any, mockSigner as any),
-        mockEstimate as any
-      );
 
       const batchOp = await operationBatch
         .withRegisterGlobalConstant({
@@ -185,11 +187,6 @@ describe('OperationBatch test', () => {
       const estimateReveal = new Estimate(1000000, 0, 64, 250);
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.batch.mockResolvedValue([estimateReveal, estimate]);
-
-      const operationBatch = new OperationBatch(
-        new Context(mockRpcClient as any, mockSigner as any),
-        mockEstimate as any
-      );
 
       const batchOp = await operationBatch
         .withRegisterGlobalConstant({ value: { int: '2' } })
@@ -232,11 +229,6 @@ describe('OperationBatch test', () => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.batch.mockResolvedValue([estimate]);
 
-      const operationBatch = new OperationBatch(
-        new Context(mockRpcClient as any, mockSigner as any),
-        mockEstimate as any
-      );
-
       const opToBatch: ParamsWithKind[] = [
         {
           kind: OpKind.REGISTER_GLOBAL_CONSTANT,
@@ -269,11 +261,6 @@ describe('OperationBatch test', () => {
     });
 
     it('should produce a batch operation which contains a registerGlobalConstant operation where fee, gas limit and storage limit are specified by the user', async (done) => {
-      const operationBatch = new OperationBatch(
-        new Context(mockRpcClient as any, mockSigner as any),
-        mockEstimate as any
-      );
-
       const opToBatch: ParamsWithKind[] = [
         {
           kind: OpKind.REGISTER_GLOBAL_CONSTANT,
@@ -313,11 +300,6 @@ describe('OperationBatch test', () => {
       const estimateReveal = new Estimate(1000000, 0, 64, 250);
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.batch.mockResolvedValue([estimateReveal, estimate]);
-
-      const operationBatch = new OperationBatch(
-        new Context(mockRpcClient as any, mockSigner as any),
-        mockEstimate as any
-      );
 
       const opToBatch: ParamsWithKind[] = [
         {
