@@ -15,7 +15,7 @@ This is how this can be accomplished with 3 of the main JavaScript frameworks, [
 
 ## With React
 ### - Using "prop drilling"
-It is possible to create a single instance of the `BeaconWallet` in one of the parent components and pass it down to its children component. This method can be preferred when there aren't many components down the tree. It becomes difficult to track when the instance is passed to many components and their props become redundant.  
+It is possible to create a single instance of the `BeaconWallet` in one of the parent components and pass it down to its child components. This method can be preferred when there aren't many components down the tree. It becomes difficult to track when the instance is passed to many components and their props become redundant.  
    
 Example:
 ```ts
@@ -88,7 +88,7 @@ const OtherComponent = () => {
 
 ## With Vue
 ### - Passing the instance through props
-It is possible to do "prop drilling" in Vue and pass an instance of the `BeaconWallet` down the children of a component. This method requires updating the value returned by the `data` method and catching the prop in the `props` array of the child component:
+It is possible to do "prop drilling" in Vue and pass an instance of the `BeaconWallet` down to the children of a component. This method requires updating the value returned by the `data` method and catching the prop in the `props` array of the child component:
 ```ts
 // In ParentComponent.vue
 <script>
