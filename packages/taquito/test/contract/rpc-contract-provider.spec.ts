@@ -16,7 +16,7 @@ import {
 import BigNumber from 'bignumber.js';
 import { Context } from '../../src/context';
 import { ContractMethod } from '../../src/contract/contract-methods/contract-method-flat-param';
-import { Estimate } from '../../src/contract/estimate';
+import { Estimate } from '../../src/estimate/estimate';
 import {
   Protocols,
   DEFAULT_STORAGE_LIMIT,

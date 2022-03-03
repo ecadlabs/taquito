@@ -1,6 +1,6 @@
 import { OperationBatch } from '../../src/batch/rpc-batch-provider';
 import { Context } from '../../src/context';
-import { Estimate } from '../../src/contract/estimate';
+import { Estimate } from '../../src/estimate/estimate';
 import { OpKind, ParamsWithKind } from '../../src/operations/types';
 
 /**

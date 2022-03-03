@@ -8,7 +8,7 @@ import { Forger } from '@taquito/local-forging';
 import { RPCBatchProvider } from './batch/rpc-batch-provider';
 import { Protocols } from './constants';
 import { ConfigConfirmation, Context, TaquitoProvider } from './context';
-import { ContractProvider, EstimationProvider } from './contract/interface';
+import { ContractProvider } from './contract/interface';
 import { Extension } from './extension/extension';
 import { format } from './format';
 import { GlobalConstantsProvider } from './global-constants/interface-global-constants-provider';
@@ -26,6 +26,7 @@ import { VERSION } from './version';
 import { LegacyWalletProvider, Wallet, WalletProvider } from './wallet';
 import { OperationFactory } from './wallet/operation-factory';
 import { TaquitoLocalForger } from './forger/taquito-local-forger';
+import { EstimationProvider } from './estimate/estimate-provider-interface';
 
 export { MichelsonMap, UnitValue } from '@taquito/michelson-encoder';
 export { Forger, ForgeParams, ForgeResponse } from '@taquito/local-forging';
@@ -57,6 +58,7 @@ export * from './global-constants/error';
 export * from './global-constants/interface-global-constants-provider';
 export * from './read-provider/interface';
 export * from './read-provider/rpc-read-adapter';
+export * from './estimate';
 
 export interface SetProviderOptions {
   forger?: Forger;
