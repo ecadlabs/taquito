@@ -8,10 +8,8 @@
   ],
   "sitemap_alternate_links": true,
   "stop_urls": [
-    "https://tezostaquito.io/docs/11.1.0",  
-    "https://tezostaquito.io/docs/11.0.2",
-    "https://tezostaquito.io/docs/11.0.1", 
-    "https://tezostaquito.io/docs/next"
+    "https://tezostaquito.io/docs/next",
+    "https://tezostaquito.io/docs/([0-9][0-9].([0-9]{1}[0-9]?).([0-9]{1}[0-9]?))"
   ],
   "selectors": {
     "lvl0": {
