@@ -1,13 +1,18 @@
 {
   "index_name": "taquito",
   "start_urls": [
-    "https://tezostaquito.io"
+    "https://tezostaquito.io/docs"
   ],
   "sitemap_urls": [
     "https://tezostaquito.io/sitemap.xml"
   ],
   "sitemap_alternate_links": true,
-  "stop_urls": [],
+  "stop_urls": [
+    "https://tezostaquito.io/docs/11.1.0",  
+    "https://tezostaquito.io/docs/11.0.2",
+    "https://tezostaquito.io/docs/11.0.1", 
+    "https://tezostaquito.io/docs/next"
+  ],
   "selectors": {
     "lvl0": {
       "selector": "(//ul[contains(@class,'menu__list')]//a[contains(@class, 'menu__link menu__link--sublist menu__link--active')]/text() | //nav[contains(@class, 'navbar')]//a[contains(@class, 'navbar__link--active')]/text())[last()]",
