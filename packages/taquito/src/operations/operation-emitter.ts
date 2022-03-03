@@ -7,7 +7,7 @@ import {
 } from '@taquito/rpc';
 import { Protocols } from '../constants';
 import { Context } from '../context';
-import { Estimate } from '../contract/estimate';
+import { Estimate } from '../estimate/estimate';
 import { flattenErrors, TezosOperationError, TezosPreapplyFailureError } from './operation-errors';
 import {
   ForgedBytes,

@@ -1,7 +1,7 @@
 import { Context } from '../context';
 import { ContractStorageType, DefaultContractType } from '../contract/contract';
 import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
-import { EstimationProvider, ContractProvider } from '../contract/interface';
+import { ContractProvider } from '../contract/interface';
 import {
   createOriginationOperation,
   createRegisterGlobalConstantOperation,
@@ -25,13 +25,14 @@ import {
 } from '../operations/types';
 import { OpKind } from '@taquito/rpc';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
-import { 
-  validateAddress, 
-  validateKeyHash, 
-  InvalidAddressError, 
-  InvalidKeyHashError, 
-  ValidationResult 
-} from '@taquito/utils'
+import {
+  validateAddress,
+  validateKeyHash,
+  InvalidAddressError,
+  InvalidKeyHashError,
+  ValidationResult,
+} from '@taquito/utils';
+import { EstimationProvider } from '../estimate/estimate-provider-interface';
 
 export const BATCH_KINDS = [
   OpKind.ACTIVATION,
@@ -60,7 +61,7 @@ export class OperationBatch extends OperationEmitter {
    */
   withTransfer(params: TransferParams) {
     if (validateAddress(params.to) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid 'to' address: ${params.to}`)
+      throw new InvalidAddressError(`Invalid 'to' address: ${params.to}`);
     }
     this.operations.push({ kind: OpKind.TRANSACTION, ...params });
     return this;
@@ -72,7 +73,9 @@ export class OperationBatch extends OperationEmitter {
    *
    * @param params Transfer operation parameter
    */
-  withContractCall(params: ContractMethod<ContractProvider> | ContractMethodObject<ContractProvider>) {
+  withContractCall(
+    params: ContractMethod<ContractProvider> | ContractMethodObject<ContractProvider>
+  ) {
     return this.withTransfer(params.toTransferParams());
   }
 
@@ -113,7 +116,9 @@ export class OperationBatch extends OperationEmitter {
    *
    * @param params Origination operation parameter
    */
-  withOrigination<TContract extends DefaultContractType = DefaultContractType>(params: OriginateParams<ContractStorageType<TContract>>) {
+  withOrigination<TContract extends DefaultContractType = DefaultContractType>(
+    params: OriginateParams<ContractStorageType<TContract>>
+  ) {
     this.operations.push({ kind: OpKind.ORIGINATION, ...params });
     return this;
   }
@@ -124,7 +129,7 @@ export class OperationBatch extends OperationEmitter {
    *
    * @param params RegisterGlobalConstant operation parameter
    */
-   withRegisterGlobalConstant(params: RegisterGlobalConstantParams) {
+  withRegisterGlobalConstant(params: RegisterGlobalConstantParams) {
     this.operations.push({ kind: OpKind.REGISTER_GLOBAL_CONSTANT, ...params });
     return this;
   }
@@ -138,8 +143,9 @@ export class OperationBatch extends OperationEmitter {
       case OpKind.ORIGINATION:
         return createOriginationOperation(
           await this.context.parser.prepareCodeOrigination({
-          ...param,
-        }));
+            ...param,
+          })
+        );
       case OpKind.DELEGATION:
         return createSetDelegateOperation({
           ...param,
@@ -214,9 +220,9 @@ export class OperationBatch extends OperationEmitter {
       i++;
     }
     if (revealNeeded) {
-      const reveal: withKind<RevealParams, OpKind.REVEAL> = { kind: OpKind.REVEAL }
+      const reveal: withKind<RevealParams, OpKind.REVEAL> = { kind: OpKind.REVEAL };
       const estimatedReveal = await this.estimate(reveal, async () => estimates[0]);
-      ops.unshift(await createRevealOperation({ ...estimatedReveal }, publicKeyHash, publicKey))
+      ops.unshift(await createRevealOperation({ ...estimatedReveal }, publicKeyHash, publicKey));
     }
 
     const source = (params && params.source) || publicKeyHash;
@@ -231,7 +237,7 @@ export class OperationBatch extends OperationEmitter {
 }
 
 export class RPCBatchProvider {
-  constructor(private context: Context, private estimator: EstimationProvider) { }
+  constructor(private context: Context, private estimator: EstimationProvider) {}
 
   /***
    *

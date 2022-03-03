@@ -5,11 +5,11 @@ const MINIMAL_FEE_PER_GAS_MUTEZ = 0.1;
 const GAS_BUFFER = 100;
 
 export interface EstimateProperties {
-  milligasLimit: number,
-  storageLimit: number,
-  opSize: number,
-  minimalFeePerStorageByteMutez: number,
-  baseFeeMutez?: number
+  milligasLimit: number;
+  storageLimit: number;
+  opSize: number;
+  minimalFeePerStorageByteMutez: number;
+  baseFeeMutez?: number;
 }
 
 /**
@@ -79,13 +79,14 @@ export class Estimate {
    * @description The limit on the amount of [gas](https://tezos.gitlab.io/user/glossary.html#gas) a given operation can consume.
    */
   get gasLimit() {
-    return this.roundUp(Number(this._milligasLimit)/1000 + GAS_BUFFER);
+    return this.roundUp(Number(this._milligasLimit) / 1000 + GAS_BUFFER);
   }
 
   private get operationFeeMutez() {
     return (
-      (Number(this._milligasLimit)/1000 + GAS_BUFFER) * MINIMAL_FEE_PER_GAS_MUTEZ + Number(this.opSize) * MINIMAL_FEE_PER_BYTE_MUTEZ
-      );
+      (Number(this._milligasLimit) / 1000 + GAS_BUFFER) * MINIMAL_FEE_PER_GAS_MUTEZ +
+      Number(this.opSize) * MINIMAL_FEE_PER_BYTE_MUTEZ
+    );
   }
 
   private roundUp(nanotez: number) {
@@ -123,8 +124,8 @@ export class Estimate {
   }
 
   /**
-   * @description Since Delphinet, consumed gas is provided in milligas for more precision. 
-   * This function returns an estimation of the gas that operation will consume in milligas. 
+   * @description Since Delphinet, consumed gas is provided in milligas for more precision.
+   * This function returns an estimation of the gas that operation will consume in milligas.
    */
   get consumedMilligas() {
     return Number(this._milligasLimit);
@@ -137,19 +138,37 @@ export class Estimate {
     let minimalFeePerStorageByteMutez = 0;
     let baseFeeMutez: number | undefined;
 
-    estimateProperties.forEach(estimate => {
+    estimateProperties.forEach((estimate) => {
       milligasLimit += estimate.milligasLimit;
       storageLimit += estimate.storageLimit;
       opSize += estimate.opSize;
-      minimalFeePerStorageByteMutez = Math.max(estimate.minimalFeePerStorageByteMutez, minimalFeePerStorageByteMutez);
+      minimalFeePerStorageByteMutez = Math.max(
+        estimate.minimalFeePerStorageByteMutez,
+        minimalFeePerStorageByteMutez
+      );
       if (estimate.baseFeeMutez) {
         baseFeeMutez = baseFeeMutez ? baseFeeMutez + estimate.baseFeeMutez : estimate.baseFeeMutez;
       }
-    })
-    return new Estimate(milligasLimit, storageLimit, opSize, minimalFeePerStorageByteMutez, baseFeeMutez);
+    });
+    return new Estimate(
+      milligasLimit,
+      storageLimit,
+      opSize,
+      minimalFeePerStorageByteMutez,
+      baseFeeMutez
+    );
   }
 
   static createArrayEstimateInstancesFromProperties(estimateProperties: EstimateProperties[]) {
-    return estimateProperties.map(x => new Estimate(x.milligasLimit, x.storageLimit, x.opSize, x.minimalFeePerStorageByteMutez, x.baseFeeMutez))
+    return estimateProperties.map(
+      (x) =>
+        new Estimate(
+          x.milligasLimit,
+          x.storageLimit,
+          x.opSize,
+          x.minimalFeePerStorageByteMutez,
+          x.baseFeeMutez
+        )
+    );
   }
 }

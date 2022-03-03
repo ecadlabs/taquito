@@ -1,19 +1,22 @@
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT, Protocols } from '../constants';
-import { OriginateParams, TransferParams, ParamsWithKind, RegisterGlobalConstantParams } from '../operations/types';
+import {
+  OriginateParams,
+  TransferParams,
+  ParamsWithKind,
+  RegisterGlobalConstantParams,
+} from '../operations/types';
 import { Estimate } from './estimate';
-import { EstimationProvider } from './interface';
+import { EstimationProvider } from '../estimate/estimate-provider-interface';
 
 /**
  * @description Naïve implementation of an estimate provider. Will work for basic transaction but your operation risk to fail if they are more complex (smart contract interaction)
- * 
+ *
  * @deprecated Deprecated in favor of RPCEstimateProvider
  */
 export class NaiveEstimateProvider implements EstimationProvider {
   private _costPerByte: number;
-  constructor(
-    private readonly protocol: Protocols,
-  ) {
-      this._costPerByte = 250;
+  constructor(private readonly protocol: Protocols) {
+    this._costPerByte = 250;
   }
   registerGlobalConstant(params: RegisterGlobalConstantParams): Promise<Estimate> {
     throw new Error(`Unsupported operation kind: ${(params as any).kind}`);
@@ -89,7 +92,13 @@ export class NaiveEstimateProvider implements EstimationProvider {
    * @param Estimate
    */
   async reveal() {
-    return new Estimate(DEFAULT_GAS_LIMIT.REVEAL * 1000, DEFAULT_STORAGE_LIMIT.REVEAL, 64, this._costPerByte, DEFAULT_FEE.REVEAL);
+    return new Estimate(
+      DEFAULT_GAS_LIMIT.REVEAL * 1000,
+      DEFAULT_STORAGE_LIMIT.REVEAL,
+      64,
+      this._costPerByte,
+      DEFAULT_FEE.REVEAL
+    );
   }
 
   async batch(params: ParamsWithKind[]) {

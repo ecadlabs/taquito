@@ -1,6 +1,6 @@
 import { Context } from '../../src/context';
-import { RPCEstimateProvider } from '../../src/contract/rpc-estimate-provider';
-import { miStr, ligoSample } from './data';
+import { RPCEstimateProvider } from '../../src/estimate/rpc-estimate-provider';
+import { miStr, ligoSample } from '../contract/data';
 import BigNumber from 'bignumber.js';
 import {
   preapplyResultFrom,
@@ -15,7 +15,7 @@ import {
   registerGlobalConstantNoReveal,
   registerGlobalConstantWithReveal,
   registerGlobalConstantWithError,
-} from './helper';
+} from '../contract/helper';
 import { OpKind } from '@taquito/rpc';
 
 /**

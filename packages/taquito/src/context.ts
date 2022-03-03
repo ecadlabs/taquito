@@ -7,7 +7,7 @@ import { Signer } from './signer/interface';
 import { NoopSigner } from './signer/noop';
 import { OperationFactory } from './wallet/operation-factory';
 import { RpcTzProvider } from './tz/rpc-tz-provider';
-import { RPCEstimateProvider } from './contract/rpc-estimate-provider';
+import { RPCEstimateProvider } from './estimate/rpc-estimate-provider';
 import { RpcContractProvider } from './contract/rpc-contract-provider';
 import { RPCBatchProvider } from './batch/rpc-batch-provider';
 
@@ -229,7 +229,7 @@ export class Context {
   }
 
   /**
-   * @description Allows extensions set on the TezosToolkit to inject logic into the context 
+   * @description Allows extensions set on the TezosToolkit to inject logic into the context
    */
   registerProviderDecorator(fx: (context: Context) => Context) {
     this.providerDecorator.push(fx);

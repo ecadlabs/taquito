@@ -20,7 +20,7 @@ import {
   RegisterGlobalConstantParams,
 } from '../operations/types';
 import { Estimate, EstimateProperties } from './estimate';
-import { EstimationProvider } from './interface';
+import { EstimationProvider } from '../estimate/estimate-provider-interface';
 import {
   createOriginationOperation,
   createRegisterDelegateOperation,
@@ -28,7 +28,7 @@ import {
   createSetDelegateOperation,
   createTransferOperation,
   createRegisterGlobalConstantOperation,
-} from './prepare';
+} from '../contract/prepare';
 import { validateAddress, InvalidAddressError, ValidationResult } from '@taquito/utils';
 
 interface Limits {

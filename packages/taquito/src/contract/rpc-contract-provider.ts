@@ -1,6 +1,6 @@
 import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import { BigMapKeyType, MichelsonMap, MichelsonMapKey, Schema } from '@taquito/michelson-encoder';
-import { MichelsonV1Expression, OpKind, ScriptResponse } from '@taquito/rpc';
+import { OpKind, ScriptResponse } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { OperationBatch } from '../batch/rpc-batch-provider';
 import { Context } from '../context';
@@ -24,7 +24,7 @@ import {
 } from '../operations/types';
 import { DefaultContractType, ContractStorageType, ContractAbstraction } from './contract';
 import { InvalidDelegationSource } from './errors';
-import { ContractProvider, ContractSchema, EstimationProvider, StorageProvider } from './interface';
+import { ContractProvider, ContractSchema, StorageProvider } from './interface';
 import {
   createOriginationOperation,
   createRegisterDelegateOperation,
@@ -41,6 +41,7 @@ import {
   InvalidAddressError,
   ValidationResult,
 } from '@taquito/utils';
+import { EstimationProvider } from '../estimate/estimate-provider-interface';
 export class RpcContractProvider
   extends OperationEmitter
   implements ContractProvider, StorageProvider
