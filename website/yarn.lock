@@ -2,6 +2,19 @@
 # yarn lockfile v1
 
 
+"@airgap/beacon-sdk@^2.3.9":
+  "integrity" "sha512-vj7NxrwhGBkRQN+yxozisE2m/h1WduFJsMACBzm3g1ctvn9lik4unNjojPjbmkFLv9R2JD/OYyFkz2rYi81lVA=="
+  "resolved" "https://registry.npmjs.org/@airgap/beacon-sdk/-/beacon-sdk-2.3.9.tgz"
+  "version" "2.3.9"
+  dependencies:
+    "@types/chrome" "0.0.115"
+    "@types/libsodium-wrappers" "0.7.7"
+    "axios" "0.21.1"
+    "bignumber.js" "9.0.0"
+    "bs58check" "2.1.2"
+    "libsodium-wrappers" "0.7.8"
+    "qrcode-generator" "1.4.4"
+
 "@algolia/autocomplete-core@1.5.0":
   "integrity" "sha512-E7+VJwcvwMM8vPeaVn7fNUgix8WHV8A1WUeHDi2KHemCaaGc8lvUnP3QnvhMxiDhTe7OpMEv4o2TBUMyDgThaw=="
   "resolved" "https://registry.npmjs.org/@algolia/autocomplete-core/-/autocomplete-core-1.5.0.tgz"
@@ -21,109 +34,109 @@
   "resolved" "https://registry.npmjs.org/@algolia/autocomplete-shared/-/autocomplete-shared-1.5.0.tgz"
   "version" "1.5.0"
 
-"@algolia/cache-browser-local-storage@4.12.0":
-  "integrity" "sha512-l+G560B6N1k0rIcOjTO1yCzFUbg2Zy2HCii9s03e13jGgqduVQmk79UUCYszjsJ5GPJpUEKcVEtAIpP7tjsXVA=="
-  "resolved" "https://registry.npmjs.org/@algolia/cache-browser-local-storage/-/cache-browser-local-storage-4.12.0.tgz"
-  "version" "4.12.0"
+"@algolia/cache-browser-local-storage@4.12.1":
+  "integrity" "sha512-ERFFOnC9740xAkuO0iZTQqm2AzU7Dpz/s+g7o48GlZgx5p9GgNcsuK5eS0GoW/tAK+fnKlizCtlFHNuIWuvfsg=="
+  "resolved" "https://registry.npmjs.org/@algolia/cache-browser-local-storage/-/cache-browser-local-storage-4.12.1.tgz"
+  "version" "4.12.1"
   dependencies:
-    "@algolia/cache-common" "4.12.0"
+    "@algolia/cache-common" "4.12.1"
 
-"@algolia/cache-common@4.12.0":
-  "integrity" "sha512-2Z8BV+NX7oN7RmmQbLqmW8lfN9aAjOexX1FJjzB0YfKC9ifpi9Jl4nSxlnbU+iLR6QhHo0IfuyQ7wcnucCGCGQ=="
-  "resolved" "https://registry.npmjs.org/@algolia/cache-common/-/cache-common-4.12.0.tgz"
-  "version" "4.12.0"
+"@algolia/cache-common@4.12.1":
+  "integrity" "sha512-UugTER3V40jT+e19Dmph5PKMeliYKxycNPwrPNADin0RcWNfT2QksK9Ff2N2W7UKraqMOzoeDb4LAJtxcK1a8Q=="
+  "resolved" "https://registry.npmjs.org/@algolia/cache-common/-/cache-common-4.12.1.tgz"
+  "version" "4.12.1"
 
-"@algolia/cache-in-memory@4.12.0":
-  "integrity" "sha512-b6ANkZF6vGAo+sYv6g25W5a0u3o6F549gEAgtTDTVA1aHcdWwe/HG/dTJ7NsnHbuR+A831tIwnNYQjRp3/V/Jw=="
-  "resolved" "https://registry.npmjs.org/@algolia/cache-in-memory/-/cache-in-memory-4.12.0.tgz"
-  "version" "4.12.0"
+"@algolia/cache-in-memory@4.12.1":
+  "integrity" "sha512-U6iaunaxK1lHsAf02UWF58foKFEcrVLsHwN56UkCtwn32nlP9rz52WOcHsgk6TJrL8NDcO5swMjtOQ5XHESFLw=="
+  "resolved" "https://registry.npmjs.org/@algolia/cache-in-memory/-/cache-in-memory-4.12.1.tgz"
+  "version" "4.12.1"
   dependencies:
-    "@algolia/cache-common" "4.12.0"
+    "@algolia/cache-common" "4.12.1"
 
-"@algolia/client-account@4.12.0":
-  "integrity" "sha512-gzXN75ZydNheNXUN3epS+aLsKnB/PHFVlGUUjXL8WHs4lJP3B5FtHvaA/NCN5DsM3aamhuY5p0ff1XIA+Lbcrw=="
-  "resolved" "https://registry.npmjs.org/@algolia/client-account/-/client-account-4.12.0.tgz"
-  "version" "4.12.0"
+"@algolia/client-account@4.12.1":
+  "integrity" "sha512-jGo4ConJNoMdTCR2zouO0jO/JcJmzOK6crFxMMLvdnB1JhmMbuIKluOTJVlBWeivnmcsqb7r0v7qTCPW5PAyxQ=="
+  "resolved" "https://registry.npmjs.org/@algolia/client-account/-/client-account-4.12.1.tgz"
+  "version" "4.12.1"
   dependencies:
-    "@algolia/client-common" "4.12.0"
-    "@algolia/client-search" "4.12.0"
-    "@algolia/transporter" "4.12.0"
+    "@algolia/client-common" "4.12.1"
+    "@algolia/client-search" "4.12.1"
+    "@algolia/transporter" "4.12.1"
 
-"@algolia/client-analytics@4.12.0":
-  "integrity" "sha512-rO2cZCt00Opk66QBZb7IBGfCq4ZE3EiuGkXssf2Monb5urujy0r8CknK2i7bzaKtPbd2vlvhmLP4CEHQqF6SLQ=="
-  "resolved" "https://registry.npmjs.org/@algolia/client-analytics/-/client-analytics-4.12.0.tgz"
-  "version" "4.12.0"
+"@algolia/client-analytics@4.12.1":
+  "integrity" "sha512-h1It7KXzIthlhuhfBk7LteYq72tym9maQDUsyRW0Gft8b6ZQahnRak9gcCvKwhcJ1vJoP7T7JrNYGiYSicTD9g=="
+  "resolved" "https://registry.npmjs.org/@algolia/client-analytics/-/client-analytics-4.12.1.tgz"
+  "version" "4.12.1"
   dependencies:
-    "@algolia/client-common" "4.12.0"
-    "@algolia/client-search" "4.12.0"
-    "@algolia/requester-common" "4.12.0"
-    "@algolia/transporter" "4.12.0"
+    "@algolia/client-common" "4.12.1"
+    "@algolia/client-search" "4.12.1"
+    "@algolia/requester-common" "4.12.1"
+    "@algolia/transporter" "4.12.1"
 
-"@algolia/client-common@4.12.0":
-  "integrity" "sha512-fcrFN7FBmxiSyjeu3sF4OnPkC1l7/8oyQ8RMM8CHpVY8cad6/ay35MrfRfgfqdzdFA8LzcBYO7fykuJv0eOqxw=="
-  "resolved" "https://registry.npmjs.org/@algolia/client-common/-/client-common-4.12.0.tgz"
-  "version" "4.12.0"
+"@algolia/client-common@4.12.1":
+  "integrity" "sha512-obnJ8eSbv+h94Grk83DTGQ3bqhViSWureV6oK1s21/KMGWbb3DkduHm+lcwFrMFkjSUSzosLBHV9EQUIBvueTw=="
+  "resolved" "https://registry.npmjs.org/@algolia/client-common/-/client-common-4.12.1.tgz"
+  "version" "4.12.1"
   dependencies:
-    "@algolia/requester-common" "4.12.0"
-    "@algolia/transporter" "4.12.0"
+    "@algolia/requester-common" "4.12.1"
+    "@algolia/transporter" "4.12.1"
 
-"@algolia/client-personalization@4.12.0":
-  "integrity" "sha512-wCJfSQEmX6ZOuJBJGjy+sbXiW0iy7tMNAhsVMV9RRaJE4727e5WAqwFWZssD877WQ74+/nF/VyTaB1+wejo33Q=="
-  "resolved" "https://registry.npmjs.org/@algolia/client-personalization/-/client-personalization-4.12.0.tgz"
-  "version" "4.12.0"
+"@algolia/client-personalization@4.12.1":
+  "integrity" "sha512-sMSnjjPjRgByGHYygV+5L/E8a6RgU7l2GbpJukSzJ9GRY37tHmBHuvahv8JjdCGJ2p7QDYLnQy5bN5Z02qjc7Q=="
+  "resolved" "https://registry.npmjs.org/@algolia/client-personalization/-/client-personalization-4.12.1.tgz"
+  "version" "4.12.1"
   dependencies:
-    "@algolia/client-common" "4.12.0"
-    "@algolia/requester-common" "4.12.0"
-    "@algolia/transporter" "4.12.0"
+    "@algolia/client-common" "4.12.1"
+    "@algolia/requester-common" "4.12.1"
+    "@algolia/transporter" "4.12.1"
 
-"@algolia/client-search@^4.9.1", "@algolia/client-search@4.12.0":
-  "integrity" "sha512-ik6dswcTQtOdZN+8aKntI9X2E6Qpqjtyda/+VANiHThY9GD2PBXuNuuC2HvlF26AbBYp5xaSE/EKxn1DIiIJ4Q=="
-  "resolved" "https://registry.npmjs.org/@algolia/client-search/-/client-search-4.12.0.tgz"
-  "version" "4.12.0"
+"@algolia/client-search@^4.9.1", "@algolia/client-search@4.12.1":
+  "integrity" "sha512-MwwKKprfY6X2nJ5Ki/ccXM2GDEePvVjZnnoOB2io3dLKW4fTqeSRlC5DRXeFD7UM0vOPPHr4ItV2aj19APKNVQ=="
+  "resolved" "https://registry.npmjs.org/@algolia/client-search/-/client-search-4.12.1.tgz"
+  "version" "4.12.1"
   dependencies:
-    "@algolia/client-common" "4.12.0"
-    "@algolia/requester-common" "4.12.0"
-    "@algolia/transporter" "4.12.0"
+    "@algolia/client-common" "4.12.1"
+    "@algolia/requester-common" "4.12.1"
+    "@algolia/transporter" "4.12.1"
 
-"@algolia/logger-common@4.12.0":
-  "integrity" "sha512-V//9rzLdJujA3iZ/tPhmKR/m2kjSZrymxOfUiF3024u2/7UyOpH92OOCrHUf023uMGYHRzyhBz5ESfL1oCdh7g=="
-  "resolved" "https://registry.npmjs.org/@algolia/logger-common/-/logger-common-4.12.0.tgz"
-  "version" "4.12.0"
+"@algolia/logger-common@4.12.1":
+  "integrity" "sha512-fCgrzlXGATNqdFTxwx0GsyPXK+Uqrx1SZ3iuY2VGPPqdt1a20clAG2n2OcLHJpvaa6vMFPlJyWvbqAgzxdxBlQ=="
+  "resolved" "https://registry.npmjs.org/@algolia/logger-common/-/logger-common-4.12.1.tgz"
+  "version" "4.12.1"
 
-"@algolia/logger-console@4.12.0":
-  "integrity" "sha512-pHvoGv53KXRIJHLk9uxBwKirwEo12G9+uo0sJLWESThAN3v5M+ycliU1AkUXQN8+9rds2KxfULAb+vfyfBKf8A=="
-  "resolved" "https://registry.npmjs.org/@algolia/logger-console/-/logger-console-4.12.0.tgz"
-  "version" "4.12.0"
+"@algolia/logger-console@4.12.1":
+  "integrity" "sha512-0owaEnq/davngQMYqxLA4KrhWHiXujQ1CU3FFnyUcMyBR7rGHI48zSOUpqnsAXrMBdSH6rH5BDkSUUFwsh8RkQ=="
+  "resolved" "https://registry.npmjs.org/@algolia/logger-console/-/logger-console-4.12.1.tgz"
+  "version" "4.12.1"
   dependencies:
-    "@algolia/logger-common" "4.12.0"
+    "@algolia/logger-common" "4.12.1"
 
-"@algolia/requester-browser-xhr@4.12.0":
-  "integrity" "sha512-rGlHNMM3jIZBwSpz33CVkeXHilzuzHuFXEEW1icP/k3KW7kwBrKFJwBy42RzAJa5BYlLsTCFTS3xkPhYwTQKLg=="
-  "resolved" "https://registry.npmjs.org/@algolia/requester-browser-xhr/-/requester-browser-xhr-4.12.0.tgz"
-  "version" "4.12.0"
+"@algolia/requester-browser-xhr@4.12.1":
+  "integrity" "sha512-OaMxDyG0TZG0oqz1lQh9e3woantAG1bLnuwq3fmypsrQxra4IQZiyn1x+kEb69D2TcXApI5gOgrD4oWhtEVMtw=="
+  "resolved" "https://registry.npmjs.org/@algolia/requester-browser-xhr/-/requester-browser-xhr-4.12.1.tgz"
+  "version" "4.12.1"
   dependencies:
-    "@algolia/requester-common" "4.12.0"
+    "@algolia/requester-common" "4.12.1"
 
-"@algolia/requester-common@4.12.0":
-  "integrity" "sha512-qgfdc73nXqpVyOMr6CMTx3nXvud9dP6GcMGDqPct+fnxogGcJsp24cY2nMqUrAfgmTJe9Nmy7Lddv0FyHjONMg=="
-  "resolved" "https://registry.npmjs.org/@algolia/requester-common/-/requester-common-4.12.0.tgz"
-  "version" "4.12.0"
+"@algolia/requester-common@4.12.1":
+  "integrity" "sha512-XWIrWQNJ1vIrSuL/bUk3ZwNMNxl+aWz6dNboRW6+lGTcMIwc3NBFE90ogbZKhNrFRff8zI4qCF15tjW+Fyhpow=="
+  "resolved" "https://registry.npmjs.org/@algolia/requester-common/-/requester-common-4.12.1.tgz"
+  "version" "4.12.1"
 
-"@algolia/requester-node-http@4.12.0":
-  "integrity" "sha512-mOTRGf/v/dXshBoZKNhMG00ZGxoUH9QdSpuMKYnuWwIgstN24uj3DQx+Ho3c+uq0TYfq7n2v71uoJWuiW32NMQ=="
-  "resolved" "https://registry.npmjs.org/@algolia/requester-node-http/-/requester-node-http-4.12.0.tgz"
-  "version" "4.12.0"
+"@algolia/requester-node-http@4.12.1":
+  "integrity" "sha512-awBtwaD+s0hxkA1aehYn8F0t9wqGoBVWgY4JPHBmp1ChO3pK7RKnnvnv7QQa9vTlllX29oPt/BBVgMo1Z3n1Qg=="
+  "resolved" "https://registry.npmjs.org/@algolia/requester-node-http/-/requester-node-http-4.12.1.tgz"
+  "version" "4.12.1"
   dependencies:
-    "@algolia/requester-common" "4.12.0"
+    "@algolia/requester-common" "4.12.1"
 
-"@algolia/transporter@4.12.0":
-  "integrity" "sha512-MOQVHZ4BcBpf3LtOY/3fqXHAcvI8MahrXDHk9QrBE/iGensQhDiZby5Dn3o2JN/zd9FMnVbdPQ8gnkiMwZiakQ=="
-  "resolved" "https://registry.npmjs.org/@algolia/transporter/-/transporter-4.12.0.tgz"
-  "version" "4.12.0"
+"@algolia/transporter@4.12.1":
+  "integrity" "sha512-BGeNgdEHc6dXIk2g8kdlOoQ6fQ6OIaKQcplEj7HPoi+XZUeAvRi3Pff3QWd7YmybWkjzd9AnTzieTASDWhL+sQ=="
+  "resolved" "https://registry.npmjs.org/@algolia/transporter/-/transporter-4.12.1.tgz"
+  "version" "4.12.1"
   dependencies:
-    "@algolia/cache-common" "4.12.0"
-    "@algolia/logger-common" "4.12.0"
-    "@algolia/requester-common" "4.12.0"
+    "@algolia/cache-common" "4.12.1"
+    "@algolia/logger-common" "4.12.1"
+    "@algolia/requester-common" "4.12.1"
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4", "@babel/code-frame@^7.16.0", "@babel/code-frame@^7.8.3":
   "integrity" "sha512-IF4EOMEV+bfYwOmNxGzSnjR2EmQod7f1UXOpZM3l4i4o4QNwzjtJAu/HxdjHq0aYBvdqMuQEY1eg0nqW9ZPORA=="
@@ -1581,10 +1594,10 @@
   dependencies:
     "@hapi/hoek" "^9.0.0"
 
-"@ledgerhq/devices@^6.20.0":
-  "integrity" "sha512-WehM7HGdb+nSUzyUlz1t2qJ8Tg4I+rQkOJJsx0/Dpjkx6/+1hHcX6My/apPuwh39qahqwYhjszq0H1YzGDS0Yg=="
-  "resolved" "https://registry.npmjs.org/@ledgerhq/devices/-/devices-6.20.0.tgz"
-  "version" "6.20.0"
+"@ledgerhq/devices@^6.24.1":
+  "integrity" "sha512-6SNXWXxojUF6WKXMVIbRs15Mveg+9k0RKJK/PKlwZh929Lnr/NcbONWdwPjWKZAp1g82eEPT4jIkG6qc4QXlcA=="
+  "resolved" "https://registry.npmjs.org/@ledgerhq/devices/-/devices-6.24.1.tgz"
+  "version" "6.24.1"
   dependencies:
     "@ledgerhq/errors" "^6.10.0"
     "@ledgerhq/logs" "^6.10.0"
@@ -1596,22 +1609,22 @@
   "resolved" "https://registry.npmjs.org/@ledgerhq/errors/-/errors-6.10.0.tgz"
   "version" "6.10.0"
 
-"@ledgerhq/hw-transport-webhid@^6.20.0":
-  "integrity" "sha512-vpbeKmvlQQHQIT7MOAt8TJV7706YkvfEsW2it/vQKAKGjmAYWgrLDXLLgmA1rEDschq0w63crOSp0El4doy+JQ=="
-  "resolved" "https://registry.npmjs.org/@ledgerhq/hw-transport-webhid/-/hw-transport-webhid-6.20.0.tgz"
-  "version" "6.20.0"
+"@ledgerhq/hw-transport-webhid@^6.24.1":
+  "integrity" "sha512-jeOB4oSQyytJD99FU+xNUkEflgSB6hWUbzhEqnz7fExnGJhMrRT39035dEmSdwshsOFBhzR/IwTUzlwNZzhNxQ=="
+  "resolved" "https://registry.npmjs.org/@ledgerhq/hw-transport-webhid/-/hw-transport-webhid-6.24.1.tgz"
+  "version" "6.24.1"
   dependencies:
-    "@ledgerhq/devices" "^6.20.0"
+    "@ledgerhq/devices" "^6.24.1"
     "@ledgerhq/errors" "^6.10.0"
-    "@ledgerhq/hw-transport" "^6.20.0"
+    "@ledgerhq/hw-transport" "^6.24.1"
     "@ledgerhq/logs" "^6.10.0"
 
-"@ledgerhq/hw-transport@^6.20.0":
-  "integrity" "sha512-5KS0Y6CbWRDOv3FgNIfk53ViQOIZqMxAw0RuOexreW5GMwuYfK7ddGi4142qcu7YrxkGo7cNe42wBbx1hdXl0Q=="
-  "resolved" "https://registry.npmjs.org/@ledgerhq/hw-transport/-/hw-transport-6.20.0.tgz"
-  "version" "6.20.0"
+"@ledgerhq/hw-transport@^6.20.0", "@ledgerhq/hw-transport@^6.24.1":
+  "integrity" "sha512-cOhxkQJrN7DvPFLLXAS2nqAZ7NIDaFqnbgu9ugTccgbJm2/z7ClRZX/uQoI4FscswZ47MuJQdXqz4nK48phteQ=="
+  "resolved" "https://registry.npmjs.org/@ledgerhq/hw-transport/-/hw-transport-6.24.1.tgz"
+  "version" "6.24.1"
   dependencies:
-    "@ledgerhq/devices" "^6.20.0"
+    "@ledgerhq/devices" "^6.24.1"
     "@ledgerhq/errors" "^6.10.0"
     "events" "^3.3.0"
 
@@ -1912,12 +1925,12 @@
     "camelcase" "^6.2.0"
     "cosmiconfig" "^7.0.0"
 
-"@svgr/core@^6.0.0", "@svgr/core@^6.2.0":
-  "integrity" "sha512-n5PrYAPoTpWGykqa8U05/TVTHOrVR/TxrUJ5EWHP9Db6vR3qnqzwAVLiFT1+slA7zQoJTXafQb+akwThf9SxGw=="
-  "resolved" "https://registry.npmjs.org/@svgr/core/-/core-6.2.0.tgz"
-  "version" "6.2.0"
+"@svgr/core@^6.0.0", "@svgr/core@^6.2.1":
+  "integrity" "sha512-NWufjGI2WUyrg46mKuySfviEJ6IxHUOm/8a3Ph38VCWSp+83HBraCQrpEM3F3dB6LBs5x8OElS8h3C0oOJaJAA=="
+  "resolved" "https://registry.npmjs.org/@svgr/core/-/core-6.2.1.tgz"
+  "version" "6.2.1"
   dependencies:
-    "@svgr/plugin-jsx" "^6.2.0"
+    "@svgr/plugin-jsx" "^6.2.1"
     "camelcase" "^6.2.0"
     "cosmiconfig" "^7.0.1"
 
@@ -1928,10 +1941,10 @@
   dependencies:
     "@babel/types" "^7.12.6"
 
-"@svgr/hast-util-to-babel-ast@^6.0.0":
-  "integrity" "sha512-S+TxtCdDyRGafH1VG1t/uPZ87aOYOHzWL8kqz4FoSZcIbzWA6rnOmjNViNiDzqmEpzp2PW5o5mZfvC9DiVZhTQ=="
-  "resolved" "https://registry.npmjs.org/@svgr/hast-util-to-babel-ast/-/hast-util-to-babel-ast-6.0.0.tgz"
-  "version" "6.0.0"
+"@svgr/hast-util-to-babel-ast@^6.2.1":
+  "integrity" "sha512-pt7MMkQFDlWJVy9ULJ1h+hZBDGFfSCwlBNW1HkLnVi7jUhyEXUaGYWi1x6bM2IXuAR9l265khBT4Av4lPmaNLQ=="
+  "resolved" "https://registry.npmjs.org/@svgr/hast-util-to-babel-ast/-/hast-util-to-babel-ast-6.2.1.tgz"
+  "version" "6.2.1"
   dependencies:
     "@babel/types" "^7.15.6"
     "entities" "^3.0.1"
@@ -1946,14 +1959,14 @@
     "@svgr/hast-util-to-babel-ast" "^5.5.0"
     "svg-parser" "^2.0.2"
 
-"@svgr/plugin-jsx@^6.2.0":
-  "integrity" "sha512-QJDEe7K5Hkd4Eewu4pcjiOKTCtjB47Ol6lDLXVhf+jEewi+EKJAaAmM+bNixfW6LSNEg8RwOYQN3GZcprqKfHw=="
-  "resolved" "https://registry.npmjs.org/@svgr/plugin-jsx/-/plugin-jsx-6.2.0.tgz"
-  "version" "6.2.0"
+"@svgr/plugin-jsx@^6.2.1":
+  "integrity" "sha512-u+MpjTsLaKo6r3pHeeSVsh9hmGRag2L7VzApWIaS8imNguqoUwDq/u6U/NDmYs/KAsrmtBjOEaAAPbwNGXXp1g=="
+  "resolved" "https://registry.npmjs.org/@svgr/plugin-jsx/-/plugin-jsx-6.2.1.tgz"
+  "version" "6.2.1"
   dependencies:
     "@babel/core" "^7.15.5"
     "@svgr/babel-preset" "^6.2.0"
-    "@svgr/hast-util-to-babel-ast" "^6.0.0"
+    "@svgr/hast-util-to-babel-ast" "^6.2.1"
     "svg-parser" "^2.0.2"
 
 "@svgr/plugin-svgo@^5.5.0":
@@ -1988,18 +2001,18 @@
     "@svgr/plugin-svgo" "^5.5.0"
     "loader-utils" "^2.0.0"
 
-"@svgr/webpack@^6.1.2":
-  "integrity" "sha512-KlLdGe93A8GDs19g8kjEmHwArgMAP6cUfegr2Nx+yDAYY32IPtjzm3SoqNP+I+cnOF1CToJu1clWTPEmdd8dXg=="
-  "resolved" "https://registry.npmjs.org/@svgr/webpack/-/webpack-6.2.0.tgz"
-  "version" "6.2.0"
+"@svgr/webpack@^6.2.1":
+  "integrity" "sha512-h09ngMNd13hnePwgXa+Y5CgOjzlCvfWLHg+MBnydEedAnuLRzUHUJmGS3o2OsrhxTOOqEsPOFt5v/f6C5Qulcw=="
+  "resolved" "https://registry.npmjs.org/@svgr/webpack/-/webpack-6.2.1.tgz"
+  "version" "6.2.1"
   dependencies:
     "@babel/core" "^7.15.5"
     "@babel/plugin-transform-react-constant-elements" "^7.14.5"
     "@babel/preset-env" "^7.15.6"
     "@babel/preset-react" "^7.14.5"
     "@babel/preset-typescript" "^7.15.0"
-    "@svgr/core" "^6.2.0"
-    "@svgr/plugin-jsx" "^6.2.0"
+    "@svgr/core" "^6.2.1"
+    "@svgr/plugin-jsx" "^6.2.1"
     "@svgr/plugin-svgo" "^6.2.0"
 
 "@szmarczak/http-timer@^1.1.2":
@@ -2009,19 +2022,38 @@
   dependencies:
     "defer-to-connect" "^1.0.1"
 
-"@taquito/http-utils@^11.2.0":
+"@taquito/beacon-wallet@11.2.0":
+  "integrity" "sha512-/3TlNLacyzvseZxpagFDLfkM3BkOrEivFYKTAFspPIpRZhg4t+rQblkW9tNn9cEiAWPm1uhzA+J2qUDvShdE7w=="
+  "resolved" "https://registry.npmjs.org/@taquito/beacon-wallet/-/beacon-wallet-11.2.0.tgz"
+  "version" "11.2.0"
+  dependencies:
+    "@airgap/beacon-sdk" "^2.3.9"
+    "@taquito/taquito" "^11.2.0"
+
+"@taquito/http-utils@^11.2.0", "@taquito/http-utils@11.2.0":
   "integrity" "sha512-9s9l4z70ah8/pjmc5ARxdwy6GCnsqwYxMITqCqKBT4DKVgI8m8kXkdxaVg+Ob5ZGvRQoVDSgTeSeNg8TUMtc+w=="
   "resolved" "https://registry.npmjs.org/@taquito/http-utils/-/http-utils-11.2.0.tgz"
   "version" "11.2.0"
   dependencies:
     "xhr2-cookies" "^1.1.0"
 
-"@taquito/michel-codec@^11.2.0":
+"@taquito/ledger-signer@11.2.0":
+  "integrity" "sha512-NMtfXgEHxxoGOC1xVbj195jYd2WGUMjxBR2wy41hJJM14tWHQZo1ICf1BmDEKLlV4nxEMKRUF9q+J3N7I04xyA=="
+  "resolved" "https://registry.npmjs.org/@taquito/ledger-signer/-/ledger-signer-11.2.0.tgz"
+  "version" "11.2.0"
+  dependencies:
+    "@ledgerhq/hw-transport" "^6.20.0"
+    "@taquito/taquito" "^11.2.0"
+    "@taquito/utils" "^11.2.0"
+    "buffer" "^6.0.3"
+    "libsodium-wrappers" "0.7.8"
+
+"@taquito/michel-codec@^11.2.0", "@taquito/michel-codec@11.2.0":
   "integrity" "sha512-ZWu1eyRl9RqOpyHP5h3JKfSPylUMN/91GTWjlJ26GhaMP9YA6mVjJ7pWDrZHFn1QXiS8JgQ7xwsmU+dBqZznSw=="
   "resolved" "https://registry.npmjs.org/@taquito/michel-codec/-/michel-codec-11.2.0.tgz"
   "version" "11.2.0"
 
-"@taquito/michelson-encoder@^11.2.0":
+"@taquito/michelson-encoder@^11.2.0", "@taquito/michelson-encoder@11.2.0":
   "integrity" "sha512-ifU3PSrJiQDovY7MT3RjrBTVToW82vGBwXeTIKIMnnoAjCnZdL/XjxFfzTrxT90jaz++ou3xcrgIabSvJrfJjg=="
   "resolved" "https://registry.npmjs.org/@taquito/michelson-encoder/-/michelson-encoder-11.2.0.tgz"
   "version" "11.2.0"
@@ -2031,7 +2063,18 @@
     "bignumber.js" "^9.0.2"
     "fast-json-stable-stringify" "^2.1.0"
 
-"@taquito/rpc@^11.2.0":
+"@taquito/remote-signer@11.2.0":
+  "integrity" "sha512-rkoiK/PShwzpGZaRYcXY8pyeU2BUumDjZBaB0wFxVa2467mVjGrhs2sMzx4cdrbXQZAsl9Jacj2vtxrmCIh5lQ=="
+  "resolved" "https://registry.npmjs.org/@taquito/remote-signer/-/remote-signer-11.2.0.tgz"
+  "version" "11.2.0"
+  dependencies:
+    "@taquito/http-utils" "^11.2.0"
+    "@taquito/taquito" "^11.2.0"
+    "@taquito/utils" "^11.2.0"
+    "libsodium-wrappers" "0.7.8"
+    "typedarray-to-buffer" "^4.0.0"
+
+"@taquito/rpc@^11.2.0", "@taquito/rpc@11.2.0":
   "integrity" "sha512-Hb5KIi1swUIGHg6h6cPJ+6G+6Nfi6Npat4RogOFvULpbn+WQIo+CTUecEW7aWEBuXahs7W0JBcL4a6GbqE3YGg=="
   "resolved" "https://registry.npmjs.org/@taquito/rpc/-/rpc-11.2.0.tgz"
   "version" "11.2.0"
@@ -2040,7 +2083,19 @@
     "@taquito/utils" "^11.2.0"
     "bignumber.js" "^9.0.2"
 
-"@taquito/taquito@^7.0.0 || ^7.0.0-beta || ^8.0.0-beta":
+"@taquito/signer@11.2.0":
+  "integrity" "sha512-OthNW7gN2hJNph8VMy9LRbZcn7bIBaKdrfC+hAy5N6yzG8EW/t6IEMAgESmNcthMhPUhuOWS37khuwMsuL1GUg=="
+  "resolved" "https://registry.npmjs.org/@taquito/signer/-/signer-11.2.0.tgz"
+  "version" "11.2.0"
+  dependencies:
+    "@taquito/taquito" "^11.2.0"
+    "@taquito/utils" "^11.2.0"
+    "elliptic" "^6.5.4"
+    "libsodium-wrappers" "0.7.8"
+    "pbkdf2" "^3.1.2"
+    "typedarray-to-buffer" "^4.0.0"
+
+"@taquito/taquito@^11.2.0", "@taquito/taquito@^7.0.0 || ^7.0.0-beta || ^8.0.0-beta", "@taquito/taquito@11.2.0":
   "integrity" "sha512-OJJYPqQiF7IoxWsBavdKDuxi2oeWHHvRph2nqeCyqVx6H+7uQLpZCf0OP5iQ4F6AxoYPyD7DzEsSFH5tOdgqNQ=="
   "resolved" "https://registry.npmjs.org/@taquito/taquito/-/taquito-11.2.0.tgz"
   "version" "11.2.0"
@@ -2053,7 +2108,36 @@
     "bignumber.js" "^9.0.2"
     "rxjs" "^6.6.3"
 
-"@taquito/utils@^11.2.0":
+"@taquito/tezbridge-wallet@11.2.0":
+  "integrity" "sha512-qdDy91hM3avQhzgTI6kwGJMJH5eWRgnBw/vW/W7BH9jroKrGOkwYvyHymFceznzKSa2aLLBRjk4YZ4XweYFFDA=="
+  "resolved" "https://registry.npmjs.org/@taquito/tezbridge-wallet/-/tezbridge-wallet-11.2.0.tgz"
+  "version" "11.2.0"
+  dependencies:
+    "@taquito/taquito" "^11.2.0"
+
+"@taquito/tzip12@11.2.0":
+  "integrity" "sha512-nTBPlyZFFk1xgWaMYv1b3qf8Z+vSpmZROmYtrWznCgPHjG+9zvzjyPON7Sm3HNKnn5jOOEJ5ErvbPSEyU3IzRg=="
+  "resolved" "https://registry.npmjs.org/@taquito/tzip12/-/tzip12-11.2.0.tgz"
+  "version" "11.2.0"
+  dependencies:
+    "@taquito/michelson-encoder" "^11.2.0"
+    "@taquito/taquito" "^11.2.0"
+    "@taquito/tzip16" "^11.2.0"
+
+"@taquito/tzip16@^11.2.0", "@taquito/tzip16@11.2.0":
+  "integrity" "sha512-j2KoY+XTOyzTclTmC1hxi61XbzfsankpuTGiMRFC+QjL5vEyoc2CJG41I/0a2hoq30wuEH4TQ1+E6U5wfL/jUw=="
+  "resolved" "https://registry.npmjs.org/@taquito/tzip16/-/tzip16-11.2.0.tgz"
+  "version" "11.2.0"
+  dependencies:
+    "@taquito/http-utils" "^11.2.0"
+    "@taquito/michelson-encoder" "^11.2.0"
+    "@taquito/rpc" "^11.2.0"
+    "@taquito/taquito" "^11.2.0"
+    "@taquito/utils" "^11.2.0"
+    "bignumber.js" "^9.0.2"
+    "crypto-js" "^4.1.1"
+
+"@taquito/utils@^11.2.0", "@taquito/utils@11.2.0":
   "integrity" "sha512-I5LoD5fG9S2Yo4CNpW4u3vF9lUJG1PxkGLi6ntvvH49SBXwo9HJ/n/v04aoE9V7ncA0a7LUm6ucnROagIc2QQQ=="
   "resolved" "https://registry.npmjs.org/@taquito/utils/-/utils-11.2.0.tgz"
   "version" "11.2.0"
@@ -2091,6 +2175,14 @@
   dependencies:
     "@types/node" "*"
 
+"@types/chrome@0.0.115":
+  "integrity" "sha512-pNoYoYgGuI1/kiz53kjrXrKIjn2H8YWOI+vxVTOubX6arCHk/m/jInoyflKiP2qZHZf8+P+hh6d2y9tjaG4BPQ=="
+  "resolved" "https://registry.npmjs.org/@types/chrome/-/chrome-0.0.115.tgz"
+  "version" "0.0.115"
+  dependencies:
+    "@types/filesystem" "*"
+    "@types/har-format" "*"
+
 "@types/cssnano@^4.0.1":
   "integrity" "sha512-hGOroxRTBkYl5gSBRJOffhV4+io+Y2bFX1VP7LgKEVHJt/LPPJaWUIuDAz74Vlp7l7hCDZfaDi7iPxwNwuVA4Q=="
   "resolved" "https://registry.npmjs.org/@types/cssnano/-/cssnano-4.0.1.tgz"
@@ -2119,10 +2211,27 @@
   "resolved" "https://registry.npmjs.org/@types/estree/-/estree-0.0.50.tgz"
   "version" "0.0.50"
 
+"@types/filesystem@*":
+  "integrity" "sha512-Yuf4jR5YYMR2DVgwuCiP11s0xuVRyPKmz8vo6HBY3CGdeMj8af93CFZX+T82+VD1+UqHOxTq31lO7MI7lepBtQ=="
+  "resolved" "https://registry.npmjs.org/@types/filesystem/-/filesystem-0.0.32.tgz"
+  "version" "0.0.32"
+  dependencies:
+    "@types/filewriter" "*"
+
+"@types/filewriter@*":
+  "integrity" "sha512-BsPXH/irW0ht0Ji6iw/jJaK8Lj3FJemon2gvEqHKpCdDCeemHa+rI3WBGq5z7cDMZgoLjY40oninGxqk+8NzNQ=="
+  "resolved" "https://registry.npmjs.org/@types/filewriter/-/filewriter-0.0.29.tgz"
+  "version" "0.0.29"
+
 "@types/github-slugger@^1.3.0":
   "integrity" "sha512-J/rMZa7RqiH/rT29TEVZO4nBoDP9XJOjnbbIofg7GQKs4JIduEO3WLpte+6WeUz/TcrXKlY+bM7FYrp8yFB+3g=="
   "resolved" "https://registry.npmjs.org/@types/github-slugger/-/github-slugger-1.3.0.tgz"
   "version" "1.3.0"
+
+"@types/har-format@*":
+  "integrity" "sha512-OP6L9VuZNdskgNN3zFQQ54ceYD8OLq5IbqO4VK91ORLfOm7WdT/CiT/pHEBSQEqCInJ2y3O6iCm/zGtPElpgJQ=="
+  "resolved" "https://registry.npmjs.org/@types/har-format/-/har-format-1.2.8.tgz"
+  "version" "1.2.8"
 
 "@types/hast@^2.0.0":
   "integrity" "sha512-wLEm0QvaoawEDoTRwzTXp4b4jpwiJDvR5KMnFnVodm3scufTlBOWRD6N1OBf9TZMhjlNsSfcO5V+7AF4+Vy+9g=="
@@ -2152,6 +2261,11 @@
   "integrity" "sha512-qcUXuemtEu+E5wZSJHNxUXeCZhAfXKQ41D+duX+VYPde7xyEVZci+/oXKJL13tnRs9lR2pr4fod59GT6/X1/yQ=="
   "resolved" "https://registry.npmjs.org/@types/json-schema/-/json-schema-7.0.9.tgz"
   "version" "7.0.9"
+
+"@types/libsodium-wrappers@0.7.7":
+  "integrity" "sha512-Li91pVKcLvQJK3ZolwCPo85oxf2gKBCApgnesRxYg4OVYchLXcJB2eivX8S87vfQVv6ZRnyCO1lLDosZGJfpRg=="
+  "resolved" "https://registry.npmjs.org/@types/libsodium-wrappers/-/libsodium-wrappers-0.7.7.tgz"
+  "version" "0.7.7"
 
 "@types/mdast@^3.0.0":
   "integrity" "sha512-W864tg/Osz1+9f4lrGTZpCSO5/z4608eUp19tbozkq2HJK6i3z1kT0H9tlADXuYIb1YYOBByU4Jsqkk75q48qA=="
@@ -2504,25 +2618,25 @@
   dependencies:
     "events" "^1.1.1"
 
-"algoliasearch@^4.0.0", "algoliasearch@^4.10.5", "algoliasearch@^4.12.0", "algoliasearch@^4.9.1", "algoliasearch@>= 3.1 < 5":
-  "integrity" "sha512-fZOMMm+F3Bi5M/MoFIz7hiuyCitJza0Hu+r8Wzz4LIQClC6YGMRq7kT6NNU1fSSoFDSeJIwMfedbbi5G9dJoVQ=="
-  "resolved" "https://registry.npmjs.org/algoliasearch/-/algoliasearch-4.12.0.tgz"
-  "version" "4.12.0"
+"algoliasearch@^4.0.0", "algoliasearch@^4.10.5", "algoliasearch@^4.12.1", "algoliasearch@^4.9.1", "algoliasearch@>= 3.1 < 5":
+  "integrity" "sha512-c0dM1g3zZBJrkzE5GA/Nu1y3fFxx3LCzxKzcmp2dgGS8P4CjszB/l3lsSh2MSrrK1Hn/KV4BlbBMXtYgG1Bfrw=="
+  "resolved" "https://registry.npmjs.org/algoliasearch/-/algoliasearch-4.12.1.tgz"
+  "version" "4.12.1"
   dependencies:
-    "@algolia/cache-browser-local-storage" "4.12.0"
-    "@algolia/cache-common" "4.12.0"
-    "@algolia/cache-in-memory" "4.12.0"
-    "@algolia/client-account" "4.12.0"
-    "@algolia/client-analytics" "4.12.0"
-    "@algolia/client-common" "4.12.0"
-    "@algolia/client-personalization" "4.12.0"
-    "@algolia/client-search" "4.12.0"
-    "@algolia/logger-common" "4.12.0"
-    "@algolia/logger-console" "4.12.0"
-    "@algolia/requester-browser-xhr" "4.12.0"
-    "@algolia/requester-common" "4.12.0"
-    "@algolia/requester-node-http" "4.12.0"
-    "@algolia/transporter" "4.12.0"
+    "@algolia/cache-browser-local-storage" "4.12.1"
+    "@algolia/cache-common" "4.12.1"
+    "@algolia/cache-in-memory" "4.12.1"
+    "@algolia/client-account" "4.12.1"
+    "@algolia/client-analytics" "4.12.1"
+    "@algolia/client-common" "4.12.1"
+    "@algolia/client-personalization" "4.12.1"
+    "@algolia/client-search" "4.12.1"
+    "@algolia/logger-common" "4.12.1"
+    "@algolia/logger-console" "4.12.1"
+    "@algolia/requester-browser-xhr" "4.12.1"
+    "@algolia/requester-common" "4.12.1"
+    "@algolia/requester-node-http" "4.12.1"
+    "@algolia/transporter" "4.12.1"
 
 "alphanum-sort@^1.0.2":
   "integrity" "sha1-l6ERlkmyEa0zaR2fn0hqjsn74KM="
@@ -2655,6 +2769,13 @@
   dependencies:
     "follow-redirects" "^1.14.7"
 
+"axios@0.21.1":
+  "integrity" "sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA=="
+  "resolved" "https://registry.npmjs.org/axios/-/axios-0.21.1.tgz"
+  "version" "0.21.1"
+  dependencies:
+    "follow-redirects" "^1.10.0"
+
 "babel-loader@^8.2.2":
   "integrity" "sha512-n4Zeta8NC3QAsuyiizu0GkmRcQ6clkV9WFUnUf1iXP//IeSKbWjofW3UHyZVwlOB4y039YQKefawyTn64Zwbuw=="
   "resolved" "https://registry.npmjs.org/babel-loader/-/babel-loader-8.2.3.tgz"
@@ -2759,6 +2880,11 @@
   "integrity" "sha512-GAcQvbpsM0pUb0zw1EI0KhQEZ+lRwR5fYaAp3vPOYuP7aDvGy6cVN6XHLauvF8SOga2y0dcLcjt3iQDTSEliyw=="
   "resolved" "https://registry.npmjs.org/bignumber.js/-/bignumber.js-9.0.2.tgz"
   "version" "9.0.2"
+
+"bignumber.js@9.0.0":
+  "integrity" "sha512-t/OYhhJ2SD+YGBQcjY8GzzDHEk9f3nerxjtfa6tlMXfe7frs/WozhvCNoGvpM0P3bNf3Gq5ZRMlGr5f3r4/N8A=="
+  "resolved" "https://registry.npmjs.org/bignumber.js/-/bignumber.js-9.0.0.tgz"
+  "version" "9.0.0"
 
 "binary-extensions@^2.0.0":
   "integrity" "sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA=="
@@ -2865,7 +2991,7 @@
   dependencies:
     "base-x" "^3.0.2"
 
-"bs58check@^2.1.2":
+"bs58check@^2.1.2", "bs58check@2.1.2":
   "integrity" "sha512-0TS1jicxdU09dwJMNZtVAfzPi6Q6QeN0pM1Fkzrjn+XYHvzMKPU3pHVpva+769iNVSfIYWf7LJ6WR+BuuMf8cA=="
   "resolved" "https://registry.npmjs.org/bs58check/-/bs58check-2.1.2.tgz"
   "version" "2.1.2"
@@ -3093,7 +3219,7 @@
   "resolved" "https://registry.npmjs.org/ci-info/-/ci-info-3.3.0.tgz"
   "version" "3.3.0"
 
-"cipher-base@^1.0.1":
+"cipher-base@^1.0.1", "cipher-base@^1.0.3":
   "integrity" "sha512-Kkht5ye6ZGmwv40uUDZztayT2ThLQGfnj/T71N/XzeZeo3nf8foyW7zGTsPYkEya3m5f3cAypH+qe7YOrM1U2Q=="
   "resolved" "https://registry.npmjs.org/cipher-base/-/cipher-base-1.0.4.tgz"
   "version" "1.0.4"
@@ -3123,10 +3249,10 @@
   "resolved" "https://registry.npmjs.org/cli-boxes/-/cli-boxes-2.2.1.tgz"
   "version" "2.2.1"
 
-"clipboard@^2.0.8":
-  "integrity" "sha512-Y6WO0unAIQp5bLmk1zdThRhgJt/x3ks6f30s3oE3H1mgIEU33XyQjEf8gsf6DxC7NPX8Y1SsNWjUjL/ywLnnbQ=="
-  "resolved" "https://registry.npmjs.org/clipboard/-/clipboard-2.0.8.tgz"
-  "version" "2.0.8"
+"clipboard@^2.0.10":
+  "integrity" "sha512-cz3m2YVwFz95qSEbCDi2fzLN/epEN9zXBvfgAoGkvGOJZATMl9gtTDVOtBYkx2ODUJl2kvmud7n32sV2BpYR4g=="
+  "resolved" "https://registry.npmjs.org/clipboard/-/clipboard-2.0.10.tgz"
+  "version" "2.0.10"
   dependencies:
     "good-listener" "^1.2.2"
     "select" "^1.1.2"
@@ -3399,7 +3525,7 @@
     "path-type" "^4.0.0"
     "yaml" "^1.10.0"
 
-"create-hash@^1.1.0":
+"create-hash@^1.1.0", "create-hash@^1.1.2":
   "integrity" "sha512-z00bCGNHDG8mHAkP7CtT1qVu+bFQUPjYq/4Iv3C3kWjTFV10zIjfSoeqXo9Asws8gwSHDGj/hl2u4OGIjapeCg=="
   "resolved" "https://registry.npmjs.org/create-hash/-/create-hash-1.2.0.tgz"
   "version" "1.2.0"
@@ -3409,6 +3535,18 @@
     "md5.js" "^1.3.4"
     "ripemd160" "^2.0.1"
     "sha.js" "^2.4.0"
+
+"create-hmac@^1.1.4":
+  "integrity" "sha512-MJG9liiZ+ogc4TzUwuvbER1JRdgvUFSB5+VR/g5h82fGaIRWMWddtKBHi7/sVhfjQZ6SehlyhvQYrcYkaUIpLg=="
+  "resolved" "https://registry.npmjs.org/create-hmac/-/create-hmac-1.1.7.tgz"
+  "version" "1.1.7"
+  dependencies:
+    "cipher-base" "^1.0.3"
+    "create-hash" "^1.1.0"
+    "inherits" "^2.0.1"
+    "ripemd160" "^2.0.0"
+    "safe-buffer" "^5.0.1"
+    "sha.js" "^2.4.8"
 
 "cross-fetch@^3.0.4":
   "integrity" "sha512-1eAtFWdIubi6T4XPy6ei9iUFoKpUkIF971QLN8lIvvvwueI65+Nw5haMNKUwfJxabqlIIDODJKGrQ66gxC0PbQ=="
@@ -3425,6 +3563,11 @@
     "path-key" "^3.1.0"
     "shebang-command" "^2.0.0"
     "which" "^2.0.1"
+
+"crypto-js@^4.1.1":
+  "integrity" "sha512-o2JlM7ydqd3Qk9CA0L4NL6mTzU2sdx96a+oOfPu8Mkl/PK51vSyoi8/rQ8NknZtk44vq15lmhAj9CIAGwgeWKw=="
+  "resolved" "https://registry.npmjs.org/crypto-js/-/crypto-js-4.1.1.tgz"
+  "version" "4.1.1"
 
 "crypto-random-string@^2.0.0":
   "integrity" "sha512-v1plID3y9r/lPhviJ1wrXpLeyUIGAZ2SHNYTEapm7/8A9nLPoyvVp3RK/EPFqn5kEznyWgYZNsRtYYIWbuG8KA=="
@@ -4337,7 +4480,7 @@
     "fbemitter" "^3.0.0"
     "fbjs" "^3.0.0"
 
-"follow-redirects@^1.0.0", "follow-redirects@^1.14.0", "follow-redirects@^1.14.7":
+"follow-redirects@^1.0.0", "follow-redirects@^1.10.0", "follow-redirects@^1.14.0", "follow-redirects@^1.14.7":
   "integrity" "sha512-1x0S9UVJHsQprFcEC/qnNzBLcIxsjAV905f/UkQxbclCsoTWlacCNOpQa/anodLl2uaEKFhfWOvM2Qg77+15zA=="
   "resolved" "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.14.8.tgz"
   "version" "1.14.8"
@@ -4404,11 +4547,6 @@
   "integrity" "sha1-FQStJSMVjKpA20onh8sBQRmU6k8="
   "resolved" "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz"
   "version" "1.0.0"
-
-"fsevents@~2.3.2":
-  "integrity" "sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA=="
-  "resolved" "https://registry.npmjs.org/fsevents/-/fsevents-2.3.2.tgz"
-  "version" "2.3.2"
 
 "function-bind@^1.1.1":
   "integrity" "sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A=="
@@ -5444,6 +5582,18 @@
   "resolved" "https://registry.npmjs.org/leven/-/leven-3.1.0.tgz"
   "version" "3.1.0"
 
+"libsodium-wrappers@0.7.8":
+  "integrity" "sha512-PDhPWXBqd/SaqAFUBgH2Ux7b3VEEJgyD6BQB+VdNFJb9PbExGr/T/myc/MBoSvl8qLzfm0W0IVByOQS5L1MrCg=="
+  "resolved" "https://registry.npmjs.org/libsodium-wrappers/-/libsodium-wrappers-0.7.8.tgz"
+  "version" "0.7.8"
+  dependencies:
+    "libsodium" "0.7.8"
+
+"libsodium@0.7.8":
+  "integrity" "sha512-/Qc+APf0jbeWSaeEruH0L1/tbbT+sbf884ZL0/zV/0JXaDPBzYkKbyb/wmxMHgAHzm3t6gqe7bOOXAVwfqVikQ=="
+  "resolved" "https://registry.npmjs.org/libsodium/-/libsodium-0.7.8.tgz"
+  "version" "0.7.8"
+
 "lilconfig@^2.0.3":
   "integrity" "sha512-bfTIN7lEsiooCocSISTWXkiWJkRqtL9wYtYy+8EK3Y41qh3mpwPU0ycTOgjdY9ErwXCc8QyrQp82bdL0Xkm9yA=="
   "resolved" "https://registry.npmjs.org/lilconfig/-/lilconfig-2.0.4.tgz"
@@ -6248,6 +6398,17 @@
   "resolved" "https://registry.npmjs.org/path-type/-/path-type-4.0.0.tgz"
   "version" "4.0.0"
 
+"pbkdf2@^3.1.2":
+  "integrity" "sha512-iuh7L6jA7JEGu2WxDwtQP1ddOpaJNC4KlDEFfdQajSGgGPNi4OyDc2R7QnbY2bR9QjBVGwgvTdNJZoE7RaxUMA=="
+  "resolved" "https://registry.npmjs.org/pbkdf2/-/pbkdf2-3.1.2.tgz"
+  "version" "3.1.2"
+  dependencies:
+    "create-hash" "^1.1.2"
+    "create-hmac" "^1.1.4"
+    "ripemd160" "^2.0.1"
+    "safe-buffer" "^5.0.1"
+    "sha.js" "^2.4.8"
+
 "picocolors@^0.2.1":
   "integrity" "sha512-cMlDqaLEqfSaW8Z7N5Jw+lyIW869EzT73/F5lhtY9cLGoVxSXznfgfXMO0Z5K0o0Q2TkTXq+0KFsdnSe3jDViA=="
   "resolved" "https://registry.npmjs.org/picocolors/-/picocolors-0.2.1.tgz"
@@ -6614,10 +6775,10 @@
   "resolved" "https://registry.npmjs.org/pretty-time/-/pretty-time-1.1.0.tgz"
   "version" "1.1.0"
 
-"prism-react-renderer@^1.0.1", "prism-react-renderer@^1.2.1":
-  "integrity" "sha512-w23ch4f75V1Tnz8DajsYKvY5lF7H1+WvzvLUcF0paFxkTHSp42RS0H5CttdN2Q8RR3DRGZ9v5xD/h3n8C8kGmg=="
-  "resolved" "https://registry.npmjs.org/prism-react-renderer/-/prism-react-renderer-1.2.1.tgz"
-  "version" "1.2.1"
+"prism-react-renderer@^1.0.1", "prism-react-renderer@^1.2.1", "prism-react-renderer@^1.3.1":
+  "integrity" "sha512-xUeDMEz074d0zc5y6rxiMp/dlC7C+5IDDlaEUlcBOFE2wddz7hz5PNupb087mPwTt7T9BrFmewObfCBuf/LKwQ=="
+  "resolved" "https://registry.npmjs.org/prism-react-renderer/-/prism-react-renderer-1.3.1.tgz"
+  "version" "1.3.1"
 
 "prismjs@^1.23.0":
   "integrity" "sha512-t13BGPUlFDR7wRB5kQDG4jjl7XeuH6jbJGt11JHPL96qwsEHNX2+68tFXqc1/k+/jALsbSWJKUOT/hcYAZ5LkA=="
@@ -6707,6 +6868,11 @@
   "integrity" "sha1-fjL3W0E4EpHQRhHxvxQQmsAGUdc="
   "resolved" "https://registry.npmjs.org/q/-/q-1.5.1.tgz"
   "version" "1.5.1"
+
+"qrcode-generator@1.4.4":
+  "integrity" "sha512-HM7yY8O2ilqhmULxGMpcHSF1EhJJ9yBj8gvDEuZ6M+KGJ0YY2hKpnXvRD+hZPLrDVck3ExIGhmPtSdcjC+guuw=="
+  "resolved" "https://registry.npmjs.org/qrcode-generator/-/qrcode-generator-1.4.4.tgz"
+  "version" "1.4.4"
 
 "qs@6.7.0":
   "integrity" "sha512-VCdBRNFTX1fyE7Nb6FYoURo/SPe62QCaAyzJvUjwRaIsc+NePBEniHlvxFmmX56+HZphIGtV0XeCirBtpDrTyQ=="
@@ -7235,7 +7401,7 @@
   dependencies:
     "glob" "^7.1.3"
 
-"ripemd160@^2.0.1":
+"ripemd160@^2.0.0", "ripemd160@^2.0.1":
   "integrity" "sha512-ii4iagi25WusVoiC4B4lq7pbXfAp3D9v5CwfkY33vffw2+pkDjY1D8GaN7spsxvCSx8dkPqOZCEZyfxcmJG2IA=="
   "resolved" "https://registry.npmjs.org/ripemd160/-/ripemd160-2.0.2.tgz"
   "version" "2.0.2"
@@ -7508,7 +7674,7 @@
   "resolved" "https://registry.npmjs.org/setprototypeof/-/setprototypeof-1.1.1.tgz"
   "version" "1.1.1"
 
-"sha.js@^2.4.0":
+"sha.js@^2.4.0", "sha.js@^2.4.8":
   "integrity" "sha512-QMEp5B7cftE7APOjk5Y6xgrbWu+WkLVQwk8JNjZ8nKRciZaByEW6MubieAiToS7+dwvrjGhH8jRXz3MVd0AYqQ=="
   "resolved" "https://registry.npmjs.org/sha.js/-/sha.js-2.4.11.tgz"
   "version" "2.4.11"
