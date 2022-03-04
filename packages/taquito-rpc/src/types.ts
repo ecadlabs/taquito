@@ -12,9 +12,13 @@ export type DelegateResponse = string | null;
 export type OperationHash = string;
 
 export interface DelegatesResponse {
-  balance: BigNumber;
-  frozen_balance: BigNumber;
-  frozen_balance_by_cycle: Frozenbalancebycycle[];
+  balance?: BigNumber;
+  full_balance?: BigNumber;
+  current_frozen_deposits?: BigNumber;
+  frozen_deposits?: BigNumber;
+  frozen_balance?: BigNumber;
+  frozen_balance_by_cycle?: Frozenbalancebycycle[];
+  frozen_deposits_limit?: BigNumber;
   staking_balance: BigNumber;
   delegated_contracts: string[];
   delegated_balance: BigNumber;
@@ -45,9 +49,12 @@ export interface BlockFullHeader {
   operations_hash: string;
   fitness: string[];
   context: string;
+  payload_hash?: string;
+  payload_round?: number;
   priority: number;
   proof_of_work_nonce: string;
   seed_nonce_hash?: string;
+  liquidity_baking_escape_vote?: boolean;
   signature: string;
 }
 
@@ -55,7 +62,18 @@ export type InlinedEndorsementKindEnum = OpKind.ENDORSEMENT;
 
 export interface InlinedEndorsementContents {
   kind: InlinedEndorsementKindEnum;
+  slot?: number;
+  round?: number;
+  block_payload_hash?: string;
   level: number;
+}
+
+export interface InlinedPreEndorsementContents {
+  kind: OpKind.PREENDORSEMENT;
+  slot: number;
+  level: number;
+  round: number;
+  block_payload_hash: string;
 }
 
 export interface InlinedEndorsement {
@@ -64,11 +82,44 @@ export interface InlinedEndorsement {
   signature?: string;
 }
 
+export interface InlinedPreEndorsement {
+  branch: string;
+  operations: InlinedPreEndorsementContents;
+  signature?: string;
+}
+
 export type OperationContentsBallotEnum = 'nay' | 'yay' | 'pass';
 
 export interface OperationContentsEndorsement {
   kind: OpKind.ENDORSEMENT;
   level: number;
+  slot?: number;
+  round?: number;
+  block_payload_hash?: string;
+}
+
+export interface OperationContentsPreEndorsement {
+  kind: OpKind.PREENDORSEMENT;
+  slot: number;
+  level: number;
+  round: number;
+  block_payload_hash: string;
+}
+
+export interface OperationContentsDoublePreEndorsement {
+  kind: OpKind.DOUBLE_PREENDORSEMENT_EVIDENCE;
+  op1: InlinedPreEndorsement;
+  op2: InlinedPreEndorsement;
+}
+
+export interface OperationContentsSetDepositsLimit {
+  kind: OpKind.SET_DEPOSITS_LIMIT;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  limit?: string;
 }
 
 export interface OperationContentsEndorsementWithSlot {
@@ -178,6 +229,8 @@ export interface OperationContentsRegisterGlobalConstant {
 
 export type OperationContents =
   | OperationContentsEndorsement
+  | OperationContentsPreEndorsement
+  | OperationContentsDoublePreEndorsement
   | OperationContentsRevelation
   | OperationContentsDoubleEndorsement
   | OperationContentsDoubleBaking
@@ -190,12 +243,20 @@ export type OperationContents =
   | OperationContentsDelegation
   | OperationContentsEndorsementWithSlot
   | OperationContentsFailingNoop
-  | OperationContentsRegisterGlobalConstant;
+  | OperationContentsRegisterGlobalConstant
+  | OperationContentsSetDepositsLimit;
 
 export interface OperationContentsAndResultMetadataExtended {
   balance_updates: OperationMetadataBalanceUpdates[];
   delegate: string;
-  slots: number[];
+  slots?: number[];
+  endorsement_power?: number;
+}
+
+export interface OperationContentsAndResultMetadataPreEndorsement {
+  balance_updates: OperationMetadataBalanceUpdates[];
+  delegate: string;
+  preendorsement_power: number;
 }
 
 export interface OperationContentsAndResultMetadataReveal {
@@ -222,16 +283,40 @@ export interface OperationContentsAndResultMetadataRegisterGlobalConstant {
   internal_operation_results?: InternalOperationResult[];
 }
 
+export interface OperationContentsAndResultMetadataSetDepositsLimit {
+  balance_updates: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultSetDepositsLimit;
+  internal_operation_results?: InternalOperationResult[];
+}
+
 export interface OperationContentsAndResultMetadata {
   balance_updates: OperationMetadataBalanceUpdates[];
 }
 
 export interface OperationContentsAndResultEndorsement {
   kind: OpKind.ENDORSEMENT;
+  block_payload_hash?: string;
   level: number;
+  round?: number;
+  slot?: number;
   metadata: OperationContentsAndResultMetadataExtended;
 }
 
+export interface OperationContentsAndResultPreEndorsement {
+  kind: OpKind.PREENDORSEMENT;
+  slot: number;
+  level: number;
+  round: number;
+  block_payload_hash: string;
+  metadata: OperationContentsAndResultMetadataPreEndorsement;
+}
+
+export interface OperationContentsAndResultDoublePreEndorsement {
+  kind: OpKind.DOUBLE_PREENDORSEMENT_EVIDENCE;
+  op1: InlinedPreEndorsement;
+  op2: InlinedPreEndorsement;
+  metadata: OperationContentsAndResultMetadata;
+}
 export interface OperationContentsAndResultEndorsementWithSlot {
   kind: OpKind.ENDORSEMENT_WITH_SLOT;
   endorsement: InlinedEndorsement;
@@ -329,8 +414,21 @@ export interface OperationContentsAndResultRegisterGlobalConstant {
   metadata: OperationContentsAndResultMetadataRegisterGlobalConstant;
 }
 
+export interface OperationContentsAndResultSetDepositsLimit {
+  kind: OpKind.SET_DEPOSITS_LIMIT;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  limit?: string;
+  metadata: OperationContentsAndResultMetadataSetDepositsLimit;
+}
+
 export type OperationContentsAndResult =
   | OperationContentsAndResultEndorsement
+  | OperationContentsAndResultPreEndorsement
+  | OperationContentsAndResultDoublePreEndorsement
   | OperationContentsAndResultRevelation
   | OperationContentsAndResultDoubleEndorsement
   | OperationContentsAndResultDoubleBaking
@@ -342,7 +440,8 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultOrigination
   | OperationContentsAndResultDelegation
   | OperationContentsAndResultEndorsementWithSlot
-  | OperationContentsAndResultRegisterGlobalConstant;
+  | OperationContentsAndResultRegisterGlobalConstant
+  | OperationContentsAndResultSetDepositsLimit;
 
 export interface OperationEntry {
   protocol: string;
@@ -366,7 +465,15 @@ export type BakingRightsArgumentsDelegate = string | string[];
 export type BakingRightsArgumentsCycle = number | number[];
 export type BakingRightsArgumentsLevel = number | number[];
 
-export interface BakingRightsQueryArguments {
+export type BakingRightsQueryArguments =
+  | BakingRightsQueryArgumentsProto12
+  | BakingRightsQueryArgumentsBase;
+
+export interface BakingRightsQueryArgumentsProto12
+  extends Omit<BakingRightsQueryArgumentsBase, 'max_priority'> {
+  max_round?: string;
+}
+export interface BakingRightsQueryArgumentsBase {
   level?: BakingRightsArgumentsLevel;
   cycle?: BakingRightsArgumentsCycle;
   delegate?: BakingRightsArgumentsDelegate;
@@ -377,7 +484,8 @@ export interface BakingRightsQueryArguments {
 export interface BakingRightsResponseItem {
   level: number;
   delegate: string;
-  priority: number;
+  priority?: number;
+  round?: number;
   estimated_time?: Date;
 }
 
@@ -393,10 +501,16 @@ export interface EndorsingRightsQueryArguments {
   delegate?: EndorsingRightsArgumentsDelegate;
 }
 
+export interface EndorsingRightsResponseItemDelegates {
+  delegate: string;
+  first_slot: number;
+  endorsing_power: number;
+}
 export interface EndorsingRightsResponseItem {
   level: number;
-  delegate: string;
-  slots: number[];
+  delegate?: string;
+  delegates?: EndorsingRightsResponseItemDelegates[];
+  slots?: number[];
   estimated_time?: Date;
 }
 
@@ -442,23 +556,6 @@ export type ProposalsResponseItem = [string, number];
 
 export type ProposalsResponse = ProposalsResponseItem[];
 
-export interface RawBlockHeaderResponse {
-  protocol: string;
-  chain_id: string;
-  hash: string;
-  level: number;
-  proto: number;
-  predecessor: string;
-  timestamp: string;
-  validation_pass: number;
-  operations_hash: string;
-  fitness: string[];
-  context: string;
-  priority: number;
-  proof_of_work_nonce: string;
-  signature: string;
-}
-
 export interface BlockHeaderResponse {
   protocol: string;
   chain_id: string;
@@ -471,8 +568,11 @@ export interface BlockHeaderResponse {
   operations_hash: string;
   fitness: string[];
   context: string;
-  priority: number;
+  payload_hash?: string;
+  payload_round?: number;
+  priority?: number;
   proof_of_work_nonce: string;
+  liquidity_baking_escape_vote?: boolean;
   signature: string;
 }
 
@@ -508,8 +608,8 @@ export type ForgeOperationsParams = Pick<OperationObject, 'branch' | 'contents'>
 
 export type TimeStampMixed = Date | string;
 
-export type BalanceUpdateKindEnum = 'contract' | 'freezer';
-export type BalanceUpdateCategoryEnum = 'rewards' | 'fees' | 'deposits';
+export type BalanceUpdateKindEnum = MetadataBalanceUpdatesKindEnum;
+export type BalanceUpdateCategoryEnum = MetadataBalanceUpdatesCategoryEnum;
 
 export interface MichelsonV1ExpressionBase {
   int?: string;
@@ -557,7 +657,8 @@ export type InternalOperationResultKindEnum =
   | OpKind.TRANSACTION
   | OpKind.ORIGINATION
   | OpKind.DELEGATION
-  | OpKind.REGISTER_GLOBAL_CONSTANT;
+  | OpKind.REGISTER_GLOBAL_CONSTANT
+  | OpKind.SET_DEPOSITS_LIMIT;
 
 export type SuccessfulManagerOperationResultKindEnum =
   | OpKind.REVEAL
@@ -570,9 +671,17 @@ export type InternalOperationResultEnum =
   | OperationResultTransaction
   | OperationResultDelegation
   | OperationResultOrigination
-  | OperationResultRegisterGlobalConstant;
+  | OperationResultRegisterGlobalConstant
+  | OperationResultSetDepositsLimit;
 
 export interface OperationResultDelegation {
+  status: OperationResultStatusEnum;
+  consumed_gas?: string;
+  errors?: TezosGenericOperationError[];
+  consumed_milligas?: string;
+}
+
+export interface OperationResultSetDepositsLimit {
   status: OperationResultStatusEnum;
   consumed_gas?: string;
   errors?: TezosGenericOperationError[];
@@ -646,6 +755,7 @@ export interface InternalOperationResult {
   delegate?: string;
   script?: ScriptedContracts;
   value?: MichelsonV1Expression;
+  limit?: string;
   result: InternalOperationResultEnum;
 }
 
@@ -662,15 +772,49 @@ export interface SuccessfulManagerOperationResult {
   lazy_storage_diff?: LazyStorageDiff[];
 }
 
-export type MetadataBalanceUpdatesKindEnum = 'contract' | 'freezer';
-export type MetadataBalanceUpdatesCategoryEnum = 'rewards' | 'fees' | 'deposits';
-export type MetadataBalanceUpdatesOriginEnum = 'block' | 'migration' | 'subsidy';
+export type MetadataBalanceUpdatesKindEnum =
+  | 'contract'
+  | 'freezer'
+  | 'accumulator'
+  | 'burned'
+  | 'commitment'
+  | 'minted';
+
+export enum METADATA_BALANCE_UPDATES_CATEGORY {
+  BAKING_REWARDS = 'baking rewards',
+  REWARDS = 'rewards',
+  FEES = 'fees',
+  DEPOSITS = 'deposits',
+  LEGACY_REWARDS = 'legacy_rewards',
+  LEGACY_FEES = 'legacy_fees',
+  LEGACY_DEPOSITS = 'legacy_deposits',
+  BLOCK_FEES = 'block fees',
+  NONCE_REVELATION_REWARDS = 'nonce revelation rewards',
+  DOUBLE_SIGNING_EVIDENCE_REWARDS = 'double signing evidence rewards',
+  ENDORSING_REWARDS = 'endorsing rewards',
+  BAKING_BONUSES = 'baking bonuses',
+  STORAGE_FEES = 'storage fees',
+  PUNISHMENTS = 'punishments',
+  LOST_ENDORSING_REWARDS = 'lost endorsing rewards',
+  SUBSIDY = 'subsidy',
+  BURNED = 'burned',
+  COMMITMENT = 'commitment',
+  BOOTSTRAP = 'bootstrap',
+  INVOICE = 'invoice',
+  MINTED = 'minted',
+}
+export type MetadataBalanceUpdatesCategoryEnum = METADATA_BALANCE_UPDATES_CATEGORY;
+
+export type MetadataBalanceUpdatesOriginEnum = 'block' | 'migration' | 'subsidy' | 'simulation';
 
 export interface OperationMetadataBalanceUpdates {
   kind: MetadataBalanceUpdatesKindEnum;
   category?: MetadataBalanceUpdatesCategoryEnum;
   contract?: string;
   delegate?: string;
+  participation?: boolean;
+  revelation?: boolean;
+  committer?: string;
   cycle?: number;
   change: string;
   origin?: MetadataBalanceUpdatesOriginEnum;
@@ -917,6 +1061,7 @@ export interface BlockMetadata {
   max_operation_data_length: number;
   max_block_header_length: number;
   max_operation_list_length: MaxOperationListLength[];
+  proposer?: string;
   baker: string;
   level?: Level;
   level_info?: LevelInfo;
@@ -952,6 +1097,22 @@ export type RunCodeResult = {
   storage: MichelsonV1Expression;
   operations: InternalOperationResult[];
   big_map_diff?: ContractBigMapDiff;
+  lazy_storage_diff?: LazyStorageDiff;
+};
+
+export type RPCRunViewParam = {
+  contract: string;
+  entrypoint: string;
+  input: MichelsonV1Expression;
+  chain_id: string;
+  source?: string;
+  payer?: string;
+  gas?: BigNumber;
+  unparsing_mode?: UnparsingModeEnum;
+};
+
+export type RunViewResult = {
+  data: MichelsonV1Expression;
 };
 
 export type EntrypointsResponse = {
@@ -974,7 +1135,7 @@ export interface OperationContentsAndResultOrigination {
 
 export interface VotingPeriodResult {
   index: number;
-  kind: string;
+  kind: PeriodKindResponse;
   start_position: number;
 }
 

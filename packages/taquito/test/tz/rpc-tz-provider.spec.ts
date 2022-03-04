@@ -8,7 +8,7 @@ describe('RpcTzProvider test', () => {
   });
 
   describe('getBalance', () => {
-    it('calls get balance from the rpc client', async done => {
+    it('calls get balance from the rpc client', async (done) => {
       const mockRpcClient = {
         getBalance: jest.fn(),
       };
@@ -19,13 +19,15 @@ describe('RpcTzProvider test', () => {
       const result = await provider.getBalance('tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn');
       expect(result).toBeInstanceOf(BigNumber);
       expect(result.toString()).toStrictEqual('10000');
-      expect(mockRpcClient.getBalance.mock.calls[0][0]).toEqual('tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn');
+      expect(mockRpcClient.getBalance.mock.calls[0][0]).toEqual(
+        'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn'
+      );
       done();
     });
   });
 
   describe('getDelegate', () => {
-    it('calls get delegate from the rpc client', async done => {
+    it('calls get delegate from the rpc client', async (done) => {
       const mockRpcClient = {
         getDelegate: jest.fn(),
       };
@@ -35,7 +37,9 @@ describe('RpcTzProvider test', () => {
       const provider = new RpcTzProvider(new Context(mockRpcClient as any));
       const result = await provider.getDelegate('tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn');
       expect(result).toStrictEqual('KT1G393LjojNshvMdf68XQD24Hwjn7xarzNe');
-      expect(mockRpcClient.getDelegate.mock.calls[0][0]).toEqual('tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn');
+      expect(mockRpcClient.getDelegate.mock.calls[0][0]).toEqual(
+        'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn'
+      );
       done();
     });
   });
@@ -46,18 +50,20 @@ describe('RpcTzProvider test', () => {
       publicKey: jest.Mock<any, any>;
       sign: jest.Mock<any, any>;
     };
-    it('should produce a activate_account operation', async done => {
+    it('should produce a activate_account operation', async (done) => {
       const mockRpcClient = {
         getBlock: jest.fn(),
         getScript: jest.fn(),
         getManagerKey: jest.fn(),
         getStorage: jest.fn(),
         getBlockHeader: jest.fn(),
-        getBlockMetadata: jest.fn(),
+        getProtocols: jest.fn(),
         getContract: jest.fn(),
-        forgeOperations: jest.fn(),
         injectOperation: jest.fn(),
         preapplyOperations: jest.fn(),
+      };
+      const mockForger = {
+        forge: jest.fn(),
       };
       // Required for operations confirmation polling
       mockRpcClient.getBlock.mockResolvedValue({
@@ -75,13 +81,19 @@ describe('RpcTzProvider test', () => {
 
       mockRpcClient.getManagerKey.mockResolvedValue('test');
       mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
-      mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'BLJjnzaPtSsxykZ9pLTFLSfsKuiN3z7SjSPDPWwbE4Q68u5EpBw' });
+      mockRpcClient.getBlockHeader.mockResolvedValue({
+        hash: 'BLJjnzaPtSsxykZ9pLTFLSfsKuiN3z7SjSPDPWwbE4Q68u5EpBw',
+      });
       mockRpcClient.preapplyOperations.mockResolvedValue([]);
-      mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
-      mockRpcClient.forgeOperations.mockResolvedValue('test');
-      mockRpcClient.injectOperation.mockResolvedValue('ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj');
+      mockRpcClient.getProtocols.mockResolvedValue({ next_protocol: 'test_proto' });
+      mockForger.forge.mockResolvedValue('test');
+      mockRpcClient.injectOperation.mockResolvedValue(
+        'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj'
+      );
 
-      const provider = new RpcTzProvider(new Context(mockRpcClient as any, mockSigner as any));
+      const context = new Context(mockRpcClient as any, mockSigner as any);
+      context.forger = mockForger;
+      const provider = new RpcTzProvider(context);
       const result = await provider.activate('tz2TSvNTh2epDMhZHrw73nV9piBX7kLZ9K9m', '123');
       expect(result.raw).toEqual({
         counter: 0,

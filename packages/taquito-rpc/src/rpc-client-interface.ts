@@ -31,7 +31,9 @@ import {
   ProtocolsResponse,
   RPCRunCodeParam,
   RPCRunOperationParam,
+  RPCRunViewParam,
   RunCodeResult,
+  RunViewResult,
   SaplingDiffResponse,
   ScriptResponse,
   StorageResponse,
@@ -78,7 +80,6 @@ export interface RpcClientInterface {
   ): Promise<EndorsingRightsResponse>;
   getBallotList(options?: RPCOptions): Promise<BallotListResponse>;
   getBallots(options?: RPCOptions): Promise<BallotsResponse>;
-  getCurrentPeriodKind(options?: RPCOptions): Promise<PeriodKindResponse>;
   getCurrentProposal(options?: RPCOptions): Promise<CurrentProposalResponse>;
   getCurrentQuorum(options?: RPCOptions): Promise<CurrentQuorumResponse>;
   getVotesListings(options?: RPCOptions): Promise<VotesListingsResponse>;
@@ -89,6 +90,7 @@ export interface RpcClientInterface {
   getEntrypoints(contract: string, options?: RPCOptions): Promise<EntrypointsResponse>;
   runOperation(op: RPCRunOperationParam, options?: RPCOptions): Promise<PreapplyResponse>;
   runCode(code: RPCRunCodeParam, options?: RPCOptions): Promise<RunCodeResult>;
+  runView(viewParams: RPCRunViewParam, options?: RPCOptions): Promise<RunViewResult>;
   getChainId(): Promise<string>;
   packData(
     data: PackDataParams,

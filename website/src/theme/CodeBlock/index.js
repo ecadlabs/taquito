@@ -38,7 +38,6 @@ import rangeParser from 'parse-numeric-range';
 import Highlight, { defaultProps } from 'prism-react-renderer';
 import defaultTheme from 'prism-react-renderer/themes/palenight';
 import React, { useEffect, useRef, useState } from 'react';
-import { CancellableRpcClient } from './customHttpBackendAndRpcClient';
 
 import styles from './styles.module.css';
 
@@ -90,8 +89,8 @@ export default ({
   }, [button.current, target.current]);
 
   if (live) {
-    const customRpcClient = new CancellableRpcClient('https://hangzhounet.api.tez.ie') 
-    const Tezos = new TezosToolkit(customRpcClient);
+    // const customRpcClient = new CancellableRpcClient('https://hangzhounet.api.tez.ie') 
+    const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
 
     return (
       <Playground

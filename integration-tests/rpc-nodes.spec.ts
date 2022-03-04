@@ -1,6 +1,6 @@
 import { CONFIGS } from './config';
-import { Protocols } from '@taquito/taquito';
-import { RpcClientCache, RpcClient } from '@taquito/rpc';
+import { Protocols, ChainIds } from '@taquito/taquito';
+import { RpcClientCache, RpcClient, RPCRunViewParam } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_bigmap';
@@ -17,9 +17,10 @@ CONFIGS().forEach(
     rpc,
   }) => {
     const Tezos = lib;
-    const skipIthacanet = protocol === Protocols.Psithaca2 ? test.skip : test;
+    const ithacanet = protocol === Protocols.Psithaca2 ? test : test.skip;
+    const hangzhounet = protocol === Protocols.PtHangz2 ? test : test.skip;
 
-    beforeEach(async (done) => {
+    beforeAll(async (done) => {
       await setup();
       done();
     });
@@ -86,6 +87,30 @@ CONFIGS().forEach(
           done();
         });
 
+        it('Executes tzip4 views by calling runView ', async (done) => {
+          let chainId: string;
+
+          if (protocol === Protocols.Psithaca2) {
+            chainId = ChainIds.ITHACANET2
+          } else {
+            chainId = ChainIds.HANGZHOUNET
+          }
+
+          const params: RPCRunViewParam = {
+            contract: knownBigMapContract,
+            entrypoint: 'getBalance',
+            chain_id: chainId,
+            input: {
+              string: 'tz1btkXVkVFWLgXa66sbRJa8eeUSwvQFX4kP'
+            }
+          }
+
+          const views = await Tezos.rpc.runView(params)
+          expect(views).toBeDefined();
+          expect(views).toEqual({"data": {"int": "100"}});
+          done();
+        });
+
         it(`Access the value associated with a key in a big map`, async (done) => {
           const schema = new Schema({
             prim: 'big_map',
@@ -116,8 +141,7 @@ CONFIGS().forEach(
           done();
         });
 
-        //pending https://github.com/ecadlabs/taquito/issues/1255
-        skipIthacanet(`Fetches information about a delegate from RPC`, async (done) => {
+        it(`Fetches information about a delegate from RPC`, async (done) => {
           const delegates = await rpcClient.getDelegates(knownBaker);
           expect(delegates).toBeDefined();
           done();
@@ -147,15 +171,46 @@ CONFIGS().forEach(
           done();
         });
 
-        it('Retrieves the list of delegates allowed to bake a block', async (done) => {
-          const bakingRights = await rpcClient.getBakingRights();
+        hangzhounet('Retrieves the list of delegates allowed to bake a block', async (done) => {
+          const bakingRights = await rpcClient.getBakingRights({
+            max_priority: 2
+          });
           expect(bakingRights).toBeDefined();
+          expect(bakingRights[0].priority).toBeDefined();
+          expect(bakingRights[0].round).toBeUndefined();
           done();
         });
 
-        it('Retrieves the list of delegates allowed to endorse a block', async (done) => {
+        ithacanet('Retrieves the list of delegates allowed to bake a block', async (done) => {
+          const bakingRights = await rpcClient.getBakingRights({
+            max_round: '2'
+          });
+          expect(bakingRights).toBeDefined();
+          expect(bakingRights[0].round).toBeDefined();
+          expect(bakingRights[0].priority).toBeUndefined();
+          done();
+        });
+
+        hangzhounet('Retrieves the list of delegates allowed to endorse a block', async (done) => {
           const endorsingRights = await rpcClient.getEndorsingRights();
           expect(endorsingRights).toBeDefined();
+          expect(endorsingRights[0].delegate).toBeDefined();
+          expect(typeof endorsingRights[0].delegate).toEqual('string');
+          expect(endorsingRights[0].delegates).toBeUndefined();
+          done();
+        });
+
+        ithacanet('Retrieves the list of delegates allowed to endorse a block', async (done) => {
+          const endorsingRights = await rpcClient.getEndorsingRights();
+          expect(endorsingRights).toBeDefined();
+          expect(endorsingRights[0].delegates).toBeDefined();
+          expect(endorsingRights[0].delegates![0].delegate).toBeDefined();
+          expect(typeof endorsingRights[0].delegates![0].delegate).toEqual('string');
+          expect(endorsingRights[0].delegates![0].endorsing_power).toBeDefined();
+          expect(typeof endorsingRights[0].delegates![0].endorsing_power).toEqual('number');
+          expect(endorsingRights[0].delegates![0].first_slot).toBeDefined();
+          expect(typeof endorsingRights[0].delegates![0].first_slot).toEqual('number');
+          expect(endorsingRights[0].delegate).toBeUndefined();
           done();
         });
 

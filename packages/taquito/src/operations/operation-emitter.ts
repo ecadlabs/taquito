@@ -1,5 +1,4 @@
 import {
-  BlockHeaderResponse,
   OperationContents,
   OperationContentsAndResult,
   OpKind,
@@ -8,7 +7,7 @@ import {
 } from '@taquito/rpc';
 import { Protocols } from '../constants';
 import { Context } from '../context';
-import { Estimate } from '../contract/estimate';
+import { Estimate } from '../estimate/estimate';
 import { flattenErrors, TezosOperationError, TezosPreapplyFailureError } from './operation-errors';
 import {
   ForgedBytes,
@@ -47,9 +46,7 @@ export abstract class OperationEmitter {
   }
 
   protected async isAccountRevealRequired(publicKeyHash: string) {
-    const manager = await this.rpc.getManagerKey(publicKeyHash);
-    const haveManager = manager && typeof manager === 'object' ? !!manager.key : !!manager;
-    return !haveManager;
+    return !(await this.context.readProvider.isAccountRevealed(publicKeyHash, 'head'));
   }
 
   protected isRevealRequiredForOpType(op: RPCOperation[] | ParamsWithKind[]) {
@@ -70,8 +67,8 @@ export abstract class OperationEmitter {
     const counters: { [key: string]: number } = {};
     let ops: RPCOperation[] = [];
 
-    const blockHeaderPromise = this.rpc.getBlockHeader({ block: 'head~2' });
-    const blockMetaPromise = this.rpc.getBlockMetadata();
+    const blockHashPromise = this.context.readProvider.getBlockHash('head~2');
+    const blockProtoPromise = this.context.readProvider.getNextProtocol('head');
 
     if (Array.isArray(operation)) {
       ops = [...operation];
@@ -85,27 +82,16 @@ export abstract class OperationEmitter {
 
     for (let i = 0; i < ops.length; i++) {
       if (isOpRequireReveal(ops[i]) || ops[i].kind === 'reveal') {
-        const { counter } = await this.rpc.getContract(publicKeyHash);
-        counterPromise = Promise.resolve(counter);
+        counterPromise = this.context.readProvider.getCounter(publicKeyHash, 'head');
         break;
       }
     }
 
-    const [header, metadata, headCounter] = await Promise.all([
-      blockHeaderPromise,
-      blockMetaPromise,
+    const [hash, protocol, headCounter] = await Promise.all([
+      blockHashPromise,
+      blockProtoPromise,
       counterPromise,
     ]);
-
-    if (!header) {
-      throw new Error('Unable to fetch latest block header');
-    }
-
-    if (!metadata) {
-      throw new Error('Unable to fetch latest metadata');
-    }
-
-    const head = header;
 
     const counter = parseInt(headCounter || '0', 10);
     if (!counters[publicKeyHash] || counters[publicKeyHash] < counter) {
@@ -179,13 +165,11 @@ export abstract class OperationEmitter {
         }
       });
 
-    const branch = head.hash;
     const contents = constructOps(ops);
-    const protocol = metadata.next_protocol;
 
     return {
       opOb: {
-        branch,
+        branch: hash,
         contents,
         protocol,
       },

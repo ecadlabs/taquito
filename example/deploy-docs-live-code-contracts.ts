@@ -49,6 +49,10 @@ const users: Array<string> = [
   'tz1NhNv9g7rtcjyNsH8Zqu79giY5aTqDDrzB',
   'tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE',
   'tz1XTyqBn4xi9tkRDutpRyQwHxfF8ar4i4Wq',
+  //integration tests
+  'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+  'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
+  'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn'
 ];
 
 const user_addresses = new Map();

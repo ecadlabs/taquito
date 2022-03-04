@@ -35,7 +35,6 @@
         "wallet_API",
         "wallets",
         "web3js_taquito",
-        "taquito_utils",
         "contracts_collection"
       ]
     },
@@ -57,7 +56,7 @@
     {
       "type": "category",
       "label": "Modules customization",
-      "items": ["rpc-cache", "cancel_http_requests"]
+      "items": ["forger", "rpc-cache", "cancel_http_requests"]
     },
     {
       "type": "category",

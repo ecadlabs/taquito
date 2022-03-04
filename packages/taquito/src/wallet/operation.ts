@@ -13,6 +13,7 @@ import {
 import { Context } from '../context';
 import { Receipt, receiptFromOperation } from './receipt';
 import { validateOperation, ValidationResult, InvalidOperationHashError } from '@taquito/utils';
+import { BlockIdentifier } from '../read-provider/interface';
 
 export type OperationStatus = 'pending' | 'unknown' | OperationResultStatusEnum;
 
@@ -114,7 +115,7 @@ export class WalletOperation {
       return 0;
     }
 
-    return combineLatest([this._includedInBlock, from(this.context.rpc.getBlock())])
+    return combineLatest([this._includedInBlock, from(this.context.readProvider.getBlock('head'))])
       .pipe(
         map(([foundAtBlock, head]) => {
           return head.header.level - foundAtBlock.header.level + 1;
@@ -124,16 +125,16 @@ export class WalletOperation {
       .toPromise();
   }
 
-  async isInCurrentBranch(tipBlockIdentifier = 'head') {
+  async isInCurrentBranch(tipBlockIdentifier: BlockIdentifier = 'head') {
     // By default it is assumed that the operation is in the current branch
     if (!this._included) {
       return true;
     }
 
-    const tipBlockHeader = await this.context.rpc.getBlockHeader({ block: tipBlockIdentifier });
+    const tipBlockHeaderLevel = await this.context.readProvider.getBlockLevel(tipBlockIdentifier);
     const inclusionBlock = await this._includedInBlock.pipe(first()).toPromise();
 
-    const levelDiff = tipBlockHeader.level - inclusionBlock.header.level;
+    const levelDiff = tipBlockHeaderLevel - inclusionBlock.header.level;
 
     // Block produced before the operation is included are assumed to be part of the current branch
     if (levelDiff <= 0) {
@@ -145,7 +146,7 @@ export class WalletOperation {
       inclusionBlock.header.level + MAX_BRANCH_ANCESTORS
     );
 
-    const blocks = new Set(await this.context.rpc.getLiveBlocks({ block: String(tipBlockLevel) }));
+    const blocks = new Set(await this.context.readProvider.getLiveBlocks(tipBlockLevel));
     return blocks.has(inclusionBlock.hash);
   }
 
@@ -172,7 +173,7 @@ export class WalletOperation {
           expectedConfirmation: conf,
           currentConfirmation: head.header.level - foundAtBlock.header.level + 1,
           completed: head.header.level - foundAtBlock.header.level >= conf - 1,
-          isInCurrentBranch: () => this.isInCurrentBranch(head.hash),
+          isInCurrentBranch: () => this.isInCurrentBranch(head.hash as BlockIdentifier),
         };
       }),
       takeWhile(({ completed }) => !completed, true)

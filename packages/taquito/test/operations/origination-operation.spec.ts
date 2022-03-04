@@ -3,6 +3,7 @@ import { OriginationOperation } from '../../src/operations/origination-operation
 import { ForgedBytes } from '../../src/operations/types';
 import { OperationContentsAndResult } from '@taquito/rpc';
 import { OriginationOperationBuilder, RevealOperationBuilder } from '../helpers';
+import { PollingSubscribeProvider } from '../../src/subscribe/polling-subcribe-provider';
 
 describe('Origination operation', () => {
   let fakeContext: any;
@@ -68,6 +69,7 @@ describe('Origination operation', () => {
 
   beforeEach(() => {
     fakeContext = {
+      stream: new PollingSubscribeProvider(fakeContext),
       rpc: {
         getBlock: jest.fn(),
       },

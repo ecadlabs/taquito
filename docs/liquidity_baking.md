@@ -215,7 +215,7 @@ const minLqtMinted = Math.floor((AMOUNT_IN_XTZ * lqtTotal) / xtzPool);
 // the deadline value is arbitrary and can be changed
 const deadline = new Date(Date.now() + 60000).toISOString();
 
-const batchOp = await $store.Tezos.wallet
+const batchOp = await Tezos.wallet
 .batch([
     {
         kind: OpKind.TRANSACTION,

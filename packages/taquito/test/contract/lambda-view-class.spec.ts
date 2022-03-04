@@ -1,6 +1,6 @@
 import LambdaView from '../../src/contract/lambda-view';
 import { TezosToolkit } from '../../src/taquito';
-import { entrypoints, header, script } from './data-lambda-view-class';
+import { entrypoints, script } from './data-lambda-view-class';
 
 describe('LambdaView test', () => {
   let mockRpcClientView: any;
@@ -11,19 +11,19 @@ describe('LambdaView test', () => {
   beforeEach(() => {
     mockRpcClientView = {
       getNormalizedScript: jest.fn(),
-      getBlockHeader: jest.fn(),
+      getChainId: jest.fn(),
       getEntrypoints: jest.fn(),
     };
 
     mockRpcClientView.getNormalizedScript.mockResolvedValue(script);
-    mockRpcClientView.getBlockHeader.mockResolvedValue(header);
+    mockRpcClientView.getChainId.mockResolvedValue('NetXjD3HPJJjmcd');
 
     toolkitView = new TezosToolkit('url');
     toolkitView['_context'].rpc = mockRpcClientView;
 
     mockRpcClientLambda = {
       getNormalizedScript: jest.fn(),
-      getBlockHeader: jest.fn(),
+      getChainId: jest.fn(),
       getEntrypoints: jest.fn(),
     };
 
@@ -52,7 +52,7 @@ describe('LambdaView test', () => {
       ],
       storage: { prim: 'Unit' },
     });
-    mockRpcClientLambda.getBlockHeader.mockResolvedValue(header);
+    mockRpcClientLambda.getChainId.mockResolvedValue('NetXjD3HPJJjmcd');
     mockRpcClientLambda.getEntrypoints.mockResolvedValue({ entrypoints: {} });
 
     toolkitLambda = new TezosToolkit('url');

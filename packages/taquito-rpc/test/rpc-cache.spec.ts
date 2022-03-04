@@ -64,7 +64,6 @@ describe('RpcClientCache test', () => {
       getEndorsingRights: jest.fn(),
       getBallotList: jest.fn(),
       getBallots: jest.fn(),
-      getCurrentPeriodKind: jest.fn(),
       getCurrentProposal: jest.fn(),
       getCurrentQuorum: jest.fn(),
       getVotesListings: jest.fn(),
@@ -98,7 +97,6 @@ describe('RpcClientCache test', () => {
     mockRpcClient.getEndorsingRights.mockReturnValue(endorsingRights);
     mockRpcClient.getBallotList.mockReturnValue(ballotList);
     mockRpcClient.getBallots.mockReturnValue(ballots);
-    mockRpcClient.getCurrentPeriodKind.mockReturnValue(currentPeriodKind);
     mockRpcClient.getCurrentProposal.mockReturnValue(currentProposal);
     mockRpcClient.getCurrentQuorum.mockReturnValue(currentQuorum);
     mockRpcClient.getVotesListings.mockReturnValue(votesListing);
@@ -138,7 +136,6 @@ describe('RpcClientCache test', () => {
     await rpcCache.getEndorsingRights();
     await rpcCache.getBallotList();
     await rpcCache.getBallots();
-    await rpcCache.getCurrentPeriodKind();
     await rpcCache.getCurrentProposal();
     await rpcCache.getCurrentQuorum();
     await rpcCache.getVotesListings();
@@ -199,9 +196,6 @@ describe('RpcClientCache test', () => {
     );
     expect(rpcCache.getAllCachedData()['rpcTest/getBallotList/head/'].response).toEqual(ballotList);
     expect(rpcCache.getAllCachedData()['rpcTest/getBallots/head/'].response).toEqual(ballots);
-    expect(rpcCache.getAllCachedData()['rpcTest/getCurrentPeriodKind/head/'].response).toEqual(
-      currentPeriodKind
-    );
     expect(rpcCache.getAllCachedData()['rpcTest/getCurrentProposal/head/'].response).toEqual(
       currentProposal
     );
@@ -257,7 +251,6 @@ describe('RpcClientCache test', () => {
     await rpcCache.getEndorsingRights({ level: 1111 }, block);
     await rpcCache.getBallotList(block);
     await rpcCache.getBallots(block);
-    await rpcCache.getCurrentPeriodKind(block);
     await rpcCache.getCurrentProposal(block);
     await rpcCache.getCurrentQuorum(block);
     await rpcCache.getVotesListings(block);
@@ -333,9 +326,6 @@ describe('RpcClientCache test', () => {
       ballots
     );
     expect(
-      rpcCache.getAllCachedData()[`rpcTest/getCurrentPeriodKind/${block.block}/`].response
-    ).toEqual(currentPeriodKind);
-    expect(
       rpcCache.getAllCachedData()[`rpcTest/getCurrentProposal/${block.block}/`].response
     ).toEqual(currentProposal);
     expect(
@@ -388,7 +378,6 @@ describe('RpcClientCache test', () => {
     await rpcCache.getEndorsingRights();
     await rpcCache.getBallotList();
     await rpcCache.getBallots();
-    await rpcCache.getCurrentPeriodKind();
     await rpcCache.getCurrentProposal();
     await rpcCache.getCurrentQuorum();
     await rpcCache.getVotesListings();

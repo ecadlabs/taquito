@@ -32,7 +32,9 @@ import {
   RPCOptions,
   RPCRunCodeParam,
   RPCRunOperationParam,
+  RPCRunViewParam,
   RunCodeResult,
+  RunViewResult,
   SaplingDiffResponse,
   ScriptResponse,
   UnparsingMode,
@@ -41,6 +43,10 @@ import {
 } from '@taquito/rpc';
 import { ContractsLibrary } from './taquito-contracts-library';
 
+/**
+ * @deprecated RpcWrapperContractsLibrary has been deprecated in favor of ReadWrapperContractsLibrary
+ *
+ */
 export class RpcWrapperContractsLibrary implements RpcClientInterface {
   constructor(private rpc: RpcClientInterface, private contractslibrary: ContractsLibrary) {}
 
@@ -161,11 +167,6 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   async getBallots({ block }: RPCOptions = defaultRPCOptions): Promise<BallotsResponse> {
     return this.rpc.getBallots({ block });
   }
-  async getCurrentPeriodKind({
-    block,
-  }: RPCOptions = defaultRPCOptions): Promise<PeriodKindResponse> {
-    return this.rpc.getCurrentPeriodKind({ block });
-  }
   async getCurrentProposal({
     block,
   }: RPCOptions = defaultRPCOptions): Promise<CurrentProposalResponse> {
@@ -214,6 +215,18 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<RunCodeResult> {
     return this.rpc.runCode(code, { block });
+  }
+  async runView(
+    { unparsing_mode = 'Readable', ...rest }: RPCRunViewParam,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<RunViewResult> {
+    return this.rpc.runView(
+      {
+        unparsing_mode,
+        ...rest,
+      },
+      { block }
+    );
   }
   async getChainId(): Promise<string> {
     return this.rpc.getChainId();

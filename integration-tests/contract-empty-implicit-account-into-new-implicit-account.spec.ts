@@ -15,46 +15,45 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
             // create and fund the account we want to empty
             const sender = await createAddress();
             const sender_pkh = await sender.signer.publicKeyHash();
-            const op = await Tezos.contract.transfer({ to: sender_pkh, amount: 10 });
+            const op = await Tezos.contract.transfer({ to: sender_pkh, amount: 1 });
             await op.confirmation();
             
             // Sending 1 token from the account we want to empty
             // This will do the reveal operation automatically
-            const op2 = await sender.contract.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 1 });
+            const op2 = await sender.contract.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 0.1 });
             await op2.confirmation();
 
             const balance = await Tezos.tz.getBalance(sender_pkh);
 
             const estimate = await sender.estimate.transfer({
                 to: receiver_pkh,
-                amount: (Math.ceil(balance.toNumber()/1000000) - 2),
+                amount: (Math.ceil(balance.toNumber()/1000000) - 0.2),
             });
 
-            // Emptying the account
+            // // Emptying the account
             const totalFees = estimate.suggestedFeeMutez + estimate.burnFeeMutez;
             const maxAmount = balance.minus(totalFees).toNumber();
-            
-            // Temporary fix, see https://gitlab.com/tezos/tezos/-/issues/1754
-            // we need to increase the gasLimit and fee returned by the estimation
+            // // Temporary fix, see https://gitlab.com/tezos/tezos/-/issues/1754
+            // // we need to increase the gasLimit and fee returned by the estimation
             const gasBuffer = 500;
             const MINIMAL_FEE_PER_GAS_MUTEZ = 0.1;
             const increasedFee = (gasBuffer: number, opSize: number) => {
-                return (gasBuffer) * MINIMAL_FEE_PER_GAS_MUTEZ + opSize
-            }
+                 return (gasBuffer) * MINIMAL_FEE_PER_GAS_MUTEZ + opSize
+             }
 
             const opTransfer = await sender.contract.transfer({
-                to: receiver_pkh,
-                mutez: true,
-                amount: maxAmount - increasedFee(gasBuffer, Number(estimate.opSize)),
-                fee: estimate.suggestedFeeMutez + increasedFee(gasBuffer, Number(estimate.opSize)), // baker fees
-                gasLimit: estimate.gasLimit + gasBuffer,
-                storageLimit: estimate.storageLimit 
-            });
+                 to: receiver_pkh,
+                 mutez: true,
+                 amount: maxAmount - increasedFee(gasBuffer, Number(estimate.opSize)),
+                 fee: estimate.suggestedFeeMutez + increasedFee(gasBuffer, Number(estimate.opSize)), // baker fees
+                 gasLimit: estimate.gasLimit + gasBuffer,
+                 storageLimit: estimate.storageLimit 
+             });
 
-            await opTransfer.confirmation();
-            const finalBalance = await Tezos.tz.getBalance(sender_pkh);
+             await opTransfer.confirmation();
+             const finalBalance = await Tezos.tz.getBalance(sender_pkh);
 
-            expect(finalBalance.toString()).toEqual("0")
+             expect(finalBalance.toString()).toEqual("0")
 
             done();
         });

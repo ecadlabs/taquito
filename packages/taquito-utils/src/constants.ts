@@ -35,6 +35,8 @@ export enum Prefix {
 
   EXPR = 'expr',
   TZ = 'TZ',
+
+  VH = 'vh', // block_payload_hash
 }
 
 export const prefix = {
@@ -75,6 +77,8 @@ export const prefix = {
   [Prefix.EXPR]: new Uint8Array([13, 44, 64, 27]),
   // Legacy prefix
   [Prefix.TZ]: new Uint8Array([2, 90, 121]),
+
+  [Prefix.VH]: new Uint8Array([1, 106, 242]),
 };
 
 export const prefixLength: { [key: string]: number } = {
@@ -93,5 +97,6 @@ export const prefixLength: { [key: string]: number } = {
   [Prefix.NET]: 4,
   [Prefix.B]: 32,
   [Prefix.P]: 32,
-  [Prefix.O]: 32
+  [Prefix.O]: 32,
+  [Prefix.VH]: 32,
 };

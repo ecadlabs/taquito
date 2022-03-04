@@ -263,7 +263,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         const bootstrap1_address = await LocalTez1.signer.publicKeyHash();
         const funding_op1 = await Tezos.contract.transfer({
           to: bootstrap1_address,
-          amount: 0.5,
+          amount: 0.05,
         });
         await funding_op1.confirmation();
 
@@ -271,7 +271,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         const bootstrap2_address = await LocalTez2.signer.publicKeyHash();
         const funding_op2 = await Tezos.contract.transfer({
           to: bootstrap2_address,
-          amount: 0.5,
+          amount: 0.05,
         });
         await funding_op2.confirmation();
 
@@ -279,7 +279,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         const bootstrap3_address = await LocalTez3.signer.publicKeyHash();
         const funding_op3 = await Tezos.contract.transfer({
           to: bootstrap3_address,
-          amount: 0.5,
+          amount: 0.05,
         });
         await funding_op3.confirmation();
 
@@ -287,7 +287,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         const bootstrap4_address = await LocalTez4.signer.publicKeyHash();
         const funding_op4 = await Tezos.contract.transfer({
           to: bootstrap4_address,
-          amount: 0.5,
+          amount: 0.05,
         });
         await funding_op4.confirmation();
 

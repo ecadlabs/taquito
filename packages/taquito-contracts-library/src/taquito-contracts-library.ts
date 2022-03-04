@@ -7,7 +7,7 @@ import { EntrypointsResponse, ScriptedContracts } from '@taquito/rpc';
 import { Extension, Context } from '@taquito/taquito';
 import { validateAddress, ValidationResult } from '@taquito/utils';
 import { InvalidAddressError, InvalidScriptFormatError } from './errors';
-import { RpcWrapperContractsLibrary } from './rpc-wrapper';
+import { ReadWrapperContractsLibrary } from './read-provider-wrapper';
 
 interface ContractsData {
   [contractAddress: string]: { script: ScriptedContracts; entrypoints: EntrypointsResponse };
@@ -63,7 +63,7 @@ export class ContractsLibrary implements Extension {
 
   configureContext(context: Context) {
     context.registerProviderDecorator((context: Context) => {
-      context.rpc = new RpcWrapperContractsLibrary(context.rpc, this);
+      context.readProvider = new ReadWrapperContractsLibrary(context.readProvider, this);
       return context;
     });
   }

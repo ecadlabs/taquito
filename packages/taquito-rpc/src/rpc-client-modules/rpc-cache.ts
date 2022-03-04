@@ -32,7 +32,9 @@ import {
   ProtocolsResponse,
   RPCRunCodeParam,
   RPCRunOperationParam,
+  RPCRunViewParam,
   RunCodeResult,
+  RunViewResult,
   SaplingDiffResponse,
   ScriptResponse,
   StorageResponse,
@@ -595,29 +597,6 @@ export class RpcClientCache implements RpcClientInterface {
    *
    * @param options contains generic configuration for rpc calls
    *
-   * @description Current period kind.
-   *
-   * @deprecated Deprecated in favor of getCurrentPeriod
-   *
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-votes-current-period-kind
-   */
-  async getCurrentPeriodKind({
-    block,
-  }: RPCOptions = defaultRPCOptions): Promise<PeriodKindResponse> {
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getCurrentPeriodKind', [block]);
-    if (this.has(key)) {
-      return this.get(key);
-    } else {
-      const response = this.rpcClient.getCurrentPeriodKind({ block });
-      this.put(key, response);
-      return response;
-    }
-  }
-
-  /**
-   *
-   * @param options contains generic configuration for rpc calls
-   *
    * @description Current proposal under evaluation.
    *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-votes-current-proposal
@@ -796,6 +775,26 @@ export class RpcClientCache implements RpcClientInterface {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<RunCodeResult> {
     return this.rpcClient.runCode(code, { block });
+  }
+
+  /**
+   * @param viewParams Parameters of the view to run
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Simulate a call to a view following the TZIP-4 standard. See https://gitlab.com/tzip/tzip/-/blob/master/proposals/tzip-4/tzip-4.md#view-entrypoints.
+   *
+   */
+  async runView(
+    { unparsing_mode = 'Readable', ...rest }: RPCRunViewParam,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<RunViewResult> {
+    return this.rpcClient.runView(
+      {
+        unparsing_mode,
+        ...rest,
+      },
+      { block }
+    );
   }
 
   async getChainId() {
