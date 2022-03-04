@@ -5,6 +5,7 @@ import { HttpBackend } from '@taquito/http-utils';
 import { b58cencode, Prefix, prefix } from '@taquito/utils';
 import { importKey, InMemorySigner } from '@taquito/signer';
 import { RpcClient, RpcClientCache } from '@taquito/rpc';
+import { deployContract, deployBigMapContract } from './deploy-known-contracts'
 
 const nodeCrypto = require('crypto');
 
@@ -261,7 +262,7 @@ const setupWithFaucetKey = async (Tezos: TezosToolkit, signerConfig: FaucetConfi
 export const CONFIGS = () => {
   return forgers.reduce((prev, forger: ForgerType) => {
     const configs = providers.map(
-      ({
+      async ({
         rpc,
         knownBaker,
         knownContract,
@@ -276,15 +277,31 @@ export const CONFIGS = () => {
 
         setupForger(Tezos, forger);
 
+        let contract;
+        let bigMapContract;
+        let tzip1216Contract;
+        let saplingContract;
+
+        if (process.env['MONDAYNET']) {
+          console.log('deploy mondaynet contracts')
+          contract = await deployContract();
+          bigMapContract = await deployBigMapContract();
+        } else {
+          contract = knownContract;
+          bigMapContract = knownBigMapContract;
+          tzip1216Contract = knownTzip1216Contract;
+          saplingContract = knownSaplingContract;
+        }
+
         return {
           rpc,
           knownBaker,
-          knownContract,
+          contract,
           protocol,
           lib: Tezos,
-          knownBigMapContract,
-          knownTzip1216Contract,
-          knownSaplingContract,
+          bigMapContract,
+          tzip1216Contract,
+          saplingContract,
           signerConfig,
           setup: async (preferFreshKey: boolean = false) => {
             if (signerConfig.type === SignerType.FAUCET) {
