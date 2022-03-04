@@ -41,7 +41,7 @@
     "@taquito/utils": "11.2.0",
     "@thanos-wallet/dapp": "^2.2.2",
     "abort-controller": "^3.0.0",
-    "algoliasearch": "^4.12.0",
+    "algoliasearch": "^4.12.1",
     "axios": "^0.25.0",
     "buffer": "^6.0.3",
     "classnames": "^2.3.1",
