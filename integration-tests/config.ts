@@ -5,7 +5,6 @@ import { HttpBackend } from '@taquito/http-utils';
 import { b58cencode, Prefix, prefix } from '@taquito/utils';
 import { importKey, InMemorySigner } from '@taquito/signer';
 import { RpcClient, RpcClientCache } from '@taquito/rpc';
-import { deployContract, deployBigMapContract } from './deploy-known-contracts'
 
 const nodeCrypto = require('crypto');
 
@@ -60,9 +59,9 @@ interface FaucetConfig {
 
 const ithacanetEphemeral = {
   rpc: process.env['TEZOS_RPC_ITHACANET'] || 'https://ithacanet.ecadinfra.com/',
-  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD', 
+  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT19oXBkAz1njVaTEypSzxGorWAFy6wnLLe1',
-  knownBigMapContract: 'KT1JmL7j8CY371kRF2oZoJmzi7EUWbLPjEqZ', 
+  knownBigMapContract: 'KT1JmL7j8CY371kRF2oZoJmzi7EUWbLPjEqZ',
   knownTzip1216Contract: 'KT1GxL96iix8MCTsCA1DBVfnZ4Gdk7EZW4Eq',
   knownSaplingContract: 'KT1CDenBWcgWjNZULc9GbJRTnQZQXYWrVT7k',
   protocol: Protocols.Psithaca2,
@@ -90,11 +89,11 @@ const hangzhounetEphemeral = {
 
 const mondaynetEphemeral = {
   rpc: process.env['TEZOS_RPC_MONDAYNET'] || 'http://mondaynet.ecadinfra.com:8732',
-  knownBaker: 'tz1ck3EJwzFpbLVmXVuEn5Ptwzc6Aj14mHSH', 
-  knownContract: 'KT1Avz2xXFRdg9bDGVn1UNqhVWb475JXZvJY',
-  knownBigMapContract: 'KT1HeGq5CgZZC9smw4zrU8dnS7nufJF1ycYD', 
-  knownTzip1216Contract: 'KT1WMvHmJWZLMUwwrnncqQDkUSZAz8o51Gdw',
-  knownSaplingContract: '',
+  knownBaker: 'tz1ck3EJwzFpbLVmXVuEn5Ptwzc6Aj14mHSH',
+  knownContract: process.env['TEZOS_MONDAYNET_CONTRACT_ADDRESS'] || '',
+  knownBigMapContract:process.env['TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS'] || '',
+  knownTzip1216Contract: process.env['TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS'] || '',
+  knownSaplingContract: process.env['TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS'] || '',
   protocol: Protocols.ProtoALpha,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
@@ -113,7 +112,7 @@ const ithacanetFaucet = {
   protocol: Protocols.Psithaca2,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
-      faucetKey: {  
+      faucetKey: {
         "pkh": "tz1LJLhMszojav8EfN9hMZAPBSH21ocamx7n",
         "mnemonic": [
           "escape",
@@ -262,7 +261,7 @@ const setupWithFaucetKey = async (Tezos: TezosToolkit, signerConfig: FaucetConfi
 export const CONFIGS = () => {
   return forgers.reduce((prev, forger: ForgerType) => {
     const configs = providers.map(
-      async ({
+      ({
         rpc,
         knownBaker,
         knownContract,
@@ -277,31 +276,15 @@ export const CONFIGS = () => {
 
         setupForger(Tezos, forger);
 
-        let contract;
-        let bigMapContract;
-        let tzip1216Contract;
-        let saplingContract;
-
-        if (process.env['MONDAYNET']) {
-          console.log('deploy mondaynet contracts')
-          contract = await deployContract();
-          bigMapContract = await deployBigMapContract();
-        } else {
-          contract = knownContract;
-          bigMapContract = knownBigMapContract;
-          tzip1216Contract = knownTzip1216Contract;
-          saplingContract = knownSaplingContract;
-        }
-
         return {
           rpc,
           knownBaker,
-          contract,
+          knownContract,
           protocol,
           lib: Tezos,
-          bigMapContract,
-          tzip1216Contract,
-          saplingContract,
+          knownBigMapContract,
+          knownTzip1216Contract,
+          knownSaplingContract,
           signerConfig,
           setup: async (preferFreshKey: boolean = false) => {
             if (signerConfig.type === SignerType.FAUCET) {
