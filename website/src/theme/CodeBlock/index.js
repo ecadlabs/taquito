@@ -90,7 +90,7 @@ export default ({
 
   if (live) {
     // const customRpcClient = new CancellableRpcClient('https://hangzhounet.api.tez.ie') 
-    const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
+    const Tezos = new TezosToolkit('https://ithacanet.ecadinfra.com');
 
     return (
       <Playground

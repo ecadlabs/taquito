@@ -1,27 +1,101 @@
 ---
-title: Transfers
-author: Simon Boissonneault-Robert
+title: Ledger Signer
+author: Roxane Letourneau
 ---
+
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Examples demonstrating transfers between various address types
+The Ledger Signer implements the Signer interface of Taquito, allowing you to sign operation from a Ledger Nano device.
 
-In Tezos, a transfer operation transfers tokens between two addresses.
+:::note
+You need to have the [Tezos Wallet app](https://support.ledger.com/hc/en-us/articles/360016057774-Tezos-XTZ-) installed and opened on your Ledger device when using the Ledger Signer.
+:::
 
-When the `Babylon/proto005` protocol amendment came into effect, it changed how token transfer involving KT1 addresses work. The transfer of tokens _from_ a KT1 account is completed by calling the KT1's smart contract `do` method. The `do` method takes a lambda function, and it is the logic of this function that causes the desired transfer of tokens to happen.
+You first need to import the desired transport from the [LedgerJs library](https://github.com/LedgerHQ/ledgerjs). The Ledger Signer has currently been tested with `@ledgerhq/hw-transport-node-hid` for Node-based applications and with ~~`@ledgerhq/hw-transport-u2f`~~ and `@ledgerhq/hw-transport-webhid` for web applications.
 
-The Taquito [integration tests](https://github.com/ecadlabs/taquito/blob/master/integration-tests/manager-contract-scenario.spec.ts) can be useful to see how this works.
+:::note
+`@ledgerhq/hw-transport-u2f` has been deprecated and expires on February 22.
 
-## Transfer from an implicit tz1 address to a tz1 address
 
-This is the simplest token transfer scenario
+`@ledgerhq/hw-transport-webhid` is only supported on Chromium based browsers and has to be enabled by a specific configuration flag (chrome://flags/#enable-experimental-web-platform-features)
+
+See the following link for a reference and migration guide: https://github.com/LedgerHQ/ledgerjs/blob/master/docs/migrate_webusb.md.
+:::
+
+You can pass an instance of the transport of your choice to your Ledger Signer as follows:
+
+<Tabs
+defaultValue="webApp"
+values={[
+{label: 'Web application', value: 'webApp'},
+{label: 'Node application', value: 'nodeApp'}
+]}>
+<TabItem value="webApp">
 
 ```js
-await Tezos.contract.transfer({ to: contract.address, amount: 1 });
+import TransportWebHID from "@ledgerhq/hw-transport-webhid";
+import { LedgerSigner } from '@taquito/ledger-signer';
+
+const transport = await TransportWebHID.create();
+const ledgerSigner = new LedgerSigner(transport);
 ```
 
-In the following example, we transfer 0.5ꜩ from a `tz1aaYoabvj2DQtpHz74Z83fSNjY29asdBfZ` address that signs the operation to `tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY`.
+</TabItem>
+  <TabItem value="nodeApp">
+
+```js
+import TransportNodeHid from '@ledgerhq/hw-transport-node-hid';
+import { LedgerSigner } from '@taquito/ledger-signer';
+
+const transport = await TransportNodeHid.create();
+const ledgerSigner = new LedgerSigner(transport);
+```
+
+  </TabItem>
+</Tabs>
+
+The constructor of the `LedgerSigner` class can take three other parameters. If none are specified, the default values are used.
+
+- path: **default value is "44'/1729'/0'/0'"**  
+  You can use as a parameter the `HDPathTemplate` which refers to `44'/1729'/${account}'/0'`. You have to specify what is the index of the account you want to use. Or you can also use a complete path as a parameter.  
+  _More details about paths below_
+- prompt: **default is true**  
+  If true, you will be asked on your Ledger device to send your public key for validation.
+- derivationType: **default is DerivationType.ED25519**  
+  It can be DerivationType.ED25519 (tz1), DerivationType.SECP256K1 (tz2) or DerivationType.P256 (tz3).
+
+```js
+import { LedgerSigner, DerivationType, HDPathTemplate } from '@taquito/ledger-signer';
+
+const ledgerSigner = new LedgerSigner(
+  transport, //required
+  HDPathTemplate(1), // path optional (equivalent to "44'/1729'/1'/0'")
+  true, // prompt optional
+  DerivationType.ED25519 // derivationType optional
+);
+```
+
+## Usage
+
+```js
+import { LedgerSigner } from '@taquito/ledger-signer';
+import TransportNodeHid from '@ledgerhq/hw-transport-node-hid';
+import { TezosToolkit } from '@taquito/taquito';
+
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+
+const transport = await TransportNodeHid.create();
+const ledgerSigner = new LedgerSigner(transport);
+
+Tezos.setProvider({ signer: ledgerSigner });
+
+//Get the public key and the public key hash from the Ledger
+const publicKey = await Tezos.signer.publicKey();
+const publicKeyHash = await Tezos.signer.publicKeyHash();
+```
+
+You are all set to sign operation with your Ledger device. You can use your configured ledger signer with both the Contract API or the Wallet API as usual. If you try the following example, you will be asked on your Ledger device to confirm the transaction before sending it.
 
 <Tabs
 defaultValue="contractAPI"
@@ -31,141 +105,139 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js live noInline
-// import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
+```js
+const amount = 0.5;
+const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
 
-render(`Fetching a private key...`);
-fetch('https://api.tez.ie/keys/hangzhounet/', {
-  method: 'POST',
-  headers: { Authorization: 'Bearer taquito-example' },
-})
-  .then((response) => response.text())
-  .then((privateKey) => {
-    render(`Importing the private key...`);
-    return importKey(Tezos, privateKey);
-  })
-  .then(() => {
-    const amount = 0.5;
-    const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
-
-    render(`Transfering ${amount} ꜩ to ${address}...`);
-    return Tezos.contract.transfer({ to: address, amount: amount });
-  })
+console.log(`Transfering ${amount} ꜩ to ${address}...`);
+Tezos.contract
+  .transfer({ to: address, amount: amount })
   .then((op) => {
-    render(`Waiting for ${op.hash} to be confirmed...`);
+    console.log(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
   })
-  .then((hash) => render(`Operation injected: https://hangzhou.tzstats.com/${hash}`))
-  .catch((error) => render(`Error: ${JSON.stringify(error, null, 2)}`));
+  .then((hash) => console.log(`Operation injected: https://ithaca.tzstats.com/${hash}`))
+  .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline wallet
-// import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
+```js
+const amount = 0.5;
+const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
 
-    const amount = 0.5;
-    const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
-
-    render(`Transfering ${amount} ꜩ to ${address}...`);
-    return Tezos.wallet.transfer({ to: address, amount: amount }).send()
-.then((op) => {
-    render(`Waiting for ${op.opHash} to be confirmed...`);
+console.log(`Transfering ${amount} ꜩ to ${address}...`);
+Tezos.wallet
+  .transfer({ to: address, amount: amount })
+  .send()
+  .then((op) => {
+    console.log(`Waiting for ${op.opHash} to be confirmed...`);
     return op.confirmation(1).then(() => op.opHash);
   })
-  .then((hash) => render(`Operation injected: https://hangzhou.tzstats.com/${hash}`))
-  .catch((error) => render(`Error: ${JSON.stringify(error, null, 2)}`));
-``` 
+  .then((hash) => console.log(`Operation injected: https://ithaca.tzstats.com/${hash}`))
+  .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+```
+
   </TabItem>
 </Tabs>
 
-## Transfers involving "originated" KT1 addresses
+## Derivation paths, HD wallet & BIP Standards
 
-Pre-`Babylon/proto005` "script-less" KT1 addresses were common. This situation changed when the Tezos blockchain migrated to the new `Babylon/proto005` protocol.
+Derivation paths are related to [Hierarchical Deterministic Wallet (HD wallet)](https://en.bitcoinwiki.org/wiki/Deterministic_wallet). `HD wallet` is a system allowing to derive addresses from a mnemonic phrase combined with a derivation path. Changing one index of the path will allow accessing a different `account`. We can access a nearly unlimited number of addresses with `HD wallet`.
 
-During the migration from `proto004` to `proto005`, all KT1 addresses migrated so that they got a contract called [manager.tz](https://gitlab.com/nomadic-labs/mi-cho-coq/blob/master/src/contracts/manager.tz). This change meant that there are no longer any "script-less" KT1 addresses in Tezos.
+Here is the technical specification for the most commonly used HD wallets :
 
-A call to the KT1's smart contracts' `do` method is required to transfer tokens from KT1 addresses with the new `manager.tz` contract. The `do` method takes a lambda function, and it is this lambda function that causes changes to occur in the KT1 address.
+- [BIP-32](https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki): HD wallet
+- [BIP-39](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki): Mnemonic phrase
+- [BIP-44](https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki): Derivation path
+- [SLIP-10](https://github.com/satoshilabs/slips/blob/master/slip-0010.md): Derivation Scheme
 
-> The examples following apply only to KT1 addresses migrated as part of the `Babylon/proto005` upgrade. Transfers involving _other_ types of smart-contracts depend on those contracts specifically.
+According to BIP44, path is described as follow:
+`purpose' / coin_type' / account' / change / address_index`.
+Where `purpose` is a constant set to `44'` and `coin_type` is set to `1729'` for Tezos.
 
-## Transfer 0.00005 (50 mutez) tokens from a KT1 address to a tz1 address
+#### Different Tezos HD Paths
 
-Sending 50 mutez from `kt1...` to `tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh`.
+The path always begins with `44'/1729'` and we see some difference for the three other indexes across the Tezos ecosystem. We can notice that changing any number for the three last indexes of the path (`account' / change / address_index`) will lead to different accounts. **But, to ensure consistency, it is important trying to follow the same convention regarding the structure of the path and which index to increase to access the next address.**
 
-### Example transfer from a KT1 to a tz1 address on Carthage/Proto006
+In Tezos, we generally see a slight difference in the path compared to the BIP44 specification. It is common to see path made of 4 indexes instead of 5 (default path being `44'/1729'/0'/0'` instead of `44'/1729'/0'/0'/0'`). For example, the default path used by tezos-client is `44'/1729'/0'/0'`.
+Based on what is done by the Tezos-client, the default path used by Taquito in the `LedgerSigner` is also `44'/1729'/0'/0'`. Taquito offers a template for the path called `HDPathTemplate`. This template uses four indexes and suggests doing the iteration on the `account` index.  
+For example, you can use HDPathTemplate(0) (equivalent to `44'/1729'/0'/0'`) to access the first address, HDPathTemplate(1) equivalent to `44'/1729'/1'/0'`) to access the second address, HDPathTemplate(2) (equivalent to `44'/1729'/2'/0'`) to access the third address... _In order to meet the needs of each user, this template is not imposed by Taquito_.
 
-```js
-const contract = await Tezos.contract.at('kt1...');
-await contract.methods
-  .do(transferImplicit('tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh', 50))
-  .send({ amount: 0 });
+We can see other implementations that use `44'/1729'/0'/0'/0'`, where the next address is accessed by incrementing `account` or `address_index`.
+
+**Quick summary of [different default paths used](https://github.com/LedgerHQ/ledger-live-common/blob/master/src/derivation.js):**
+
+| Wallet  | Path                                                         |
+| ------- | ------------------------------------------------------------ |
+| Tezbox  | "44'/1729'/{account}'/0'" or "44'/1729'/0'/{account}'"       |
+| Galleon | "44'/1729'/{account}'/0'/0'" or "44'/1729'/0'/0'/{account}'" |
+
+#### Some considerations about paths
+
+According to BIP44, "Software should prevent a creation of an account if a previous account does not have a transaction history (meaning none of its addresses have been used before)." When building an app using the `LedgerSigner`, you must be careful not to allow users to access an account with a path structure that does not follow any convention. Otherwise, users could have difficulties using their accounts with other wallets that are not compatible with their paths. As stated before, HD wallets allow you to get a nearly unlimited number of addresses. According to BIP44, wallets should follow an `Account discovery` algorithm meaning that it is possible that the wallet won't found an account created with an unconventional path. We can think about how hard it would be for a user who had created an account with a no common path and forgot it to find it back.
+
+#### More about derivation path here
+
+https://ethereum.stackexchange.com/questions/70017/can-someone-explain-the-meaning-of-derivation-path-in-wallet-in-plain-english-s
+
+https://github.com/LedgerHQ/ledger-live-desktop/issues/2559
+
+https://github.com/obsidiansystems/ledger-app-tezos/#importing-the-key-from-the-ledger-device
+
+https://github.com/MyCryptoHQ/MyCrypto/issues/2070
+
+https://medium.com/mycrypto/wtf-is-a-derivation-path-c3493ca2eb52
+
+## Live example that iterate from path `44'/1729'/0'/0'` to `44'/1729'/9'/0'`
+
+Having your Ledger device connected to your computer and the `Tezos Wallet App` opened, you can run the following code example. It will scan your Ledger from path `44'/1729'/0'/0'` to `44'/1729'/9'/0'` to get public key hashes and the balance for revealed accounts. Confirmations will be asked on your Ledger to send the public keys.  
+_Note that this example is not intended to be a complete example of paths scanning but only a rough outline of what is possible to do._
+
+```js live noInline
+//import { LedgerSigner, DerivationType, HDPathTemplate } from '@taquito/ledger-signer';
+//import { TezosToolkit } from '@taquito/taquito';
+// import TransportWebHID from "@ledgerhq/hw-transport-webhid";
+//const Tezos = new TezosToolkit('https://ithacanet.ecadinfra.com');
+
+TransportWebHID.create().then((transport) => {
+  for (let index = 0, p = Promise.resolve(); index < 10; index++) {
+    p = p.then(
+      (_) =>
+        new Promise((resolve) =>
+          setTimeout(function () {
+            getAddressInfo(transport, index);
+            resolve();
+          }, 2000)
+        )
+    );
+  }
+});
+
+function getAddressInfo(transport, index) {
+  const ledgerSigner = new LedgerSigner(
+    transport,
+    `44'/1729'/${index}'/0'`,
+    true,
+    DerivationType.ED25519
+  );
+  Tezos.setProvider({ signer: ledgerSigner });
+  return Tezos.signer.publicKeyHash().then((pkh) => {
+    Tezos.tz.getBalance(pkh).then((balance) => {
+      Tezos.rpc.getManagerKey(pkh).then((getPublicKey) => {
+        println(
+          `The public key hash related to the derivation path having the index ${index} is ${pkh}.`
+        );
+        if (getPublicKey) {
+          println(`The balance is ${balance.toNumber() / 1000000} ꜩ.\n`);
+        } else {
+          println('This account is not revealed.\n');
+        }
+      });
+    });
+  });
+}
 ```
 
-Where `transferImplicit` is a function that returns the necessary Michelson lambda. It looks like this:
-
-```js
-export const transferImplicit = (key: string, mutez: number) => {
-  return [
-    { prim: 'DROP' },
-    { prim: 'NIL', args: [{ prim: 'operation' }] },
-    {
-      prim: 'PUSH',
-      args: [{ prim: 'key_hash' }, { string: key }],
-    },
-    { prim: 'IMPLICIT_ACCOUNT' },
-    {
-      prim: 'PUSH',
-      args: [{ prim: 'mutez' }, { int: `${mutez}` }],
-    },
-    { prim: 'UNIT' },
-    { prim: 'TRANSFER_TOKENS' },
-    { prim: 'CONS' },
-  ];
-};
-```
-
-## Transfer 0.000001 (1 mutez) tokens from a KT1 address to a KT1 address
-
-Sending 1 mutez to `KT1KLbEeEgW5h1QLkPuPvqdgurHx6v4hGyic` from `KT1...`
-
-### Example for Babylon/Proto005 or higher
-
-```js
-const contract = await Tezos.contract.at('KT1...');
-await contract.methods
-  .do(transferToContract('KT1KLbEeEgW5h1QLkPuPvqdgurHx6v4hGyic', 1))
-  .send({ amount: 0 });
-```
-
-Where `transferToContract` is a function that looks like this:
-
-```js
-export const transferToContract = (key: string, amount: number) => {
-  return [
-    { prim: 'DROP' },
-    { prim: 'NIL', args: [{ prim: 'operation' }] },
-    {
-      prim: 'PUSH',
-      args: [{ prim: 'address' }, { string: key }],
-    },
-    { prim: 'CONTRACT', args: [{ prim: 'unit' }] },
-    [
-      {
-        prim: 'IF_NONE',
-        args: [[[{ prim: 'UNIT' }, { prim: 'FAILWITH' }]], []],
-      },
-    ],
-    {
-      prim: 'PUSH',
-      args: [{ prim: 'mutez' }, { int: `${amount}` }],
-    },
-    { prim: 'UNIT' },
-    { prim: 'TRANSFER_TOKENS' },
-    { prim: 'CONS' },
-  ];
-};
-```
+A similar example using `@ledgerhq/hw-transport-node-hid` can be found [here](https://github.com/ecadlabs/taquito/tree/master/example/scan-path-ledger.ts). This example directly retrieves the public keys from the Ledger without asking for confirmation on the device.
