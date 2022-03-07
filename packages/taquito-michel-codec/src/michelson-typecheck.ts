@@ -19,6 +19,7 @@ import {
   MichelsonTypeAddress,
   MichelsonContractView,
   ProtoInferiorTo,
+  ProtoGreaterOfEqual,
 } from './michelson-types';
 import {
   unpackAnnotations,
@@ -482,9 +483,10 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
     case 'list':
     case 'set':
       if (assertDataListIfAny(d)) {
-        let prev: MichelsonData | undefined;
+        //let prev: MichelsonData | undefined;
         for (const v of d) {
           assertDataValidInternal(v, t.args[0], ctx);
+          /*
           if (t.prim === 'set') {
             if (prev === undefined) {
               prev = v;
@@ -496,6 +498,7 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
               );
             }
           }
+          */
         }
         return;
       }
@@ -530,13 +533,14 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
     case 'map':
     case 'big_map':
       if (Array.isArray(d)) {
-        let prev: MichelsonMapElt | undefined;
+        //let prev: MichelsonMapElt | undefined;
         for (const v of d) {
           if (!('prim' in v) || v.prim !== 'Elt') {
             throw new MichelsonTypeError(t, d, `map elements expected: ${JSON.stringify(d)}`);
           }
           assertDataValidInternal(v.args[0], t.args[0], ctx);
           assertDataValidInternal(v.args[1], t.args[1], ctx);
+          /*
           if (prev === undefined) {
             prev = v;
           } else if (compareMichelsonData(t.args[0], prev.args[0], v.args[0]) > 0) {
@@ -546,6 +550,7 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
               `map elements must be ordered: ${JSON.stringify(d)}`
             );
           }
+          */
         }
         return;
       }
@@ -613,7 +618,12 @@ function instructionListType(
     i++;
   }
 
-  if ('failed' in ret && i !== inst.length - 1) {
+  if (
+    'failed' in ret &&
+    ret.level == 0 &&
+    (!('prim' in ret.failed) || ret.failed.prim !== 'never') &&
+    i !== inst.length - 1
+  ) {
     throw new MichelsonInstructionError(inst, ret, 'FAIL must appear in a tail position');
   }
 
@@ -625,7 +635,7 @@ function instructionListType(
     };
     ctx.traceCallback(trace);
   }
-  return ret;
+  return 'failed' in ret ? { failed: ret.failed, level: ret.level + 1 } : ret;
 }
 
 function functionTypeInternal(
@@ -893,17 +903,7 @@ function functionTypeInternal(
 
   function branchType(br0: MichelsonReturnType, br1: MichelsonReturnType): MichelsonReturnType {
     if ('failed' in br0 || 'failed' in br1) {
-      // Might be useful for debugging
-      if ('failed' in br0 && 'failed' in br1) {
-        try {
-          assertScalarTypesEqual(br0.failed, br1.failed);
-          return br0;
-        } catch {
-          return { failed: { prim: 'or', args: [br0.failed, br1.failed] } };
-        }
-      } else {
-        return 'failed' in br0 ? br1 : br0;
-      }
+      return 'failed' in br0 ? br1 : br0;
     } else {
       ensureStacksEqual(br0, br1);
       return br0;
@@ -1137,12 +1137,12 @@ function functionTypeInternal(
         if (!ProtoInferiorTo(proto, Protocol.PtEdo2Zk)) {
           ensurePackableType(s);
         }
-        return { failed: s };
+        return { failed: s, level: 0 };
       }
 
       case 'NEVER':
         args(0, ['never']);
-        return { failed: { prim: 'never' } };
+        return { failed: { prim: 'never' }, level: 0 };
 
       case 'RENAME':
         return [annotateVar(args(0, null)[0]), ...stack.slice(1)];
@@ -1220,11 +1220,10 @@ function functionTypeInternal(
       }
 
       case 'SUB': {
-        const s = args(
-          0,
-          ['nat', 'int', 'timestamp', 'mutez'],
-          ['nat', 'int', 'timestamp', 'mutez']
-        );
+        const s = ProtoGreaterOfEqual(proto, Protocol.PsiThaCa)
+          ? args(0, ['nat', 'int', 'timestamp'], ['nat', 'int', 'timestamp'])
+          : args(0, ['nat', 'int', 'timestamp', 'mutez'], ['nat', 'int', 'timestamp', 'mutez']);
+
         if (
           ((s[0].prim === 'nat' || s[0].prim === 'int') &&
             (s[1].prim === 'nat' || s[1].prim === 'int')) ||
@@ -1241,6 +1240,11 @@ function functionTypeInternal(
           stack,
           `${instruction.prim}: can't subtract ${s[0].prim} from ${s[1].prim}`
         );
+      }
+
+      case 'SUB_MUTEZ': {
+        const s = args(0, ['mutez'], ['mutez']);
+        return [annotateVar({ prim: 'option', args: [{ prim: 'mutez' }] }), ...stack.slice(2)];
       }
 
       case 'MUL': {
@@ -1668,7 +1672,7 @@ function functionTypeInternal(
       }
 
       case 'MAP': {
-        const s = args(0, ['list', 'map'])[0];
+        const s = args(0, ['list', 'map', 'option'])[0];
         const tail = stack.slice(1);
         const elt = s.prim === 'map' ? { prim: 'pair' as const, args: s.args } : s.args[0];
         const body = functionTypeInternal(
@@ -1677,7 +1681,14 @@ function functionTypeInternal(
           ctx
         );
         if ('failed' in body) {
-          return body;
+          if (!('prim' in body.failed) || body.failed.prim !== 'never') {
+            throw new MichelsonInstructionError(
+              instruction,
+              stack,
+              `${instruction.prim}: FAIL is not allowed in MAP`
+            );
+          }
+          return { failed: body.failed, level: body.level + 1 };
         }
         if (body.length < 1) {
           throw new MichelsonInstructionError(
@@ -1687,10 +1698,11 @@ function functionTypeInternal(
           );
         }
         ensureStacksEqual(body.slice(1), tail);
-        if (s.prim === 'list') {
-          return [annotateVar({ prim: 'list', args: [body[0]] }), ...tail];
-        }
-        return [annotateVar({ prim: 'map', args: [s.args[0], body[0]] }), ...tail];
+        return s.prim === 'list'
+          ? [annotateVar({ prim: 'list', args: [body[0]] }), ...tail]
+          : s.prim === 'map'
+          ? [annotateVar({ prim: 'map', args: [s.args[0], body[0]] }), ...tail]
+          : [annotateVar({ prim: 'option', args: [body[0]] }), ...tail];
       }
 
       case 'ITER': {
@@ -1704,7 +1716,7 @@ function functionTypeInternal(
           ctx
         );
         if ('failed' in body) {
-          return body;
+          return { failed: body.failed, level: body.level + 1 };
         }
         ensureStacksEqual(body, tail);
         return tail;
@@ -1716,7 +1728,7 @@ function functionTypeInternal(
         const tail = stack.slice(1);
         const body = functionTypeInternal(instruction.args[0], tail, ctx);
         if ('failed' in body) {
-          return body;
+          return { failed: body.failed, level: body.level + 1 };
         }
         ensureStacksEqual(body, [{ prim: 'bool' }, ...tail]);
         return tail;
@@ -1732,7 +1744,7 @@ function functionTypeInternal(
           ctx
         );
         if ('failed' in body) {
-          return body;
+          return { failed: body.failed, level: body.level + 1 };
         }
         ensureStacksEqual(body, [s, ...tail]);
         return [annotate(s.args[1], { t: null, v: instructionAnn({ v: 1 }).v }), ...tail];
@@ -1750,7 +1762,7 @@ function functionTypeInternal(
             ? functionTypeInternal(instruction.args[1], tail, ctx)
             : functionTypeInternal(instruction.args[0], tail, ctx);
         if ('failed' in body) {
-          return body;
+          return { failed: body.failed, level: body.level + 1 };
         }
         return [...head, ...body];
       }
@@ -1830,7 +1842,7 @@ function functionTypeInternal(
           contract: undefined,
         });
         if ('failed' in body) {
-          return body;
+          return { failed: body.failed, level: body.level + 1 };
         }
         if (body.length !== 1) {
           throw new MichelsonInstructionError(

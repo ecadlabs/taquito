@@ -1,0 +1,8 @@
+parameter (or int nat);
+storage int;
+code {
+       CAR;
+       IF_LEFT {NEG} {NEG};
+       NIL operation;
+       PAIR
+     }

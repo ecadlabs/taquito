@@ -68,6 +68,7 @@ type MichelsonNoArgInstructionID =
   | 'SOURCE'
   | 'SPLIT_TICKET'
   | 'SUB'
+  | 'SUB_MUTEZ'
   | 'SWAP'
   | 'TICKET'
   | 'TOTAL_VOTING_POWER'
@@ -356,6 +357,7 @@ export type MichelsonContractSection<T extends MichelsonSectionID = MichelsonSec
 // Code analysis types
 export interface MichelsonTypeFailed {
   failed: MichelsonType;
+  level: number;
 }
 
 export type MichelsonReturnType = MichelsonType[] | MichelsonTypeFailed;

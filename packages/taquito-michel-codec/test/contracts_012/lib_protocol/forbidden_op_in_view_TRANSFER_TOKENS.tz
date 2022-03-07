@@ -1,0 +1,12 @@
+# This contract uses TRANSFER_TOKENS in a view, which is forbidden.
+{
+  storage unit ;
+  parameter unit ;
+  code {
+         CAR ;
+         NIL operation ;
+         PAIR
+  } ;
+  view "v" (pair unit mutez (contract unit)) unit
+    { CAR ; UNPAPAIR ; TRANSFER_TOKENS ; DROP ; UNIT }
+}

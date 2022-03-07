@@ -384,7 +384,7 @@ export function parseDate(a: StringLiteral | IntLiteral): Date | null {
         return x;
       }
     }
-  } else if (isNatural(a.int)) {
+  } else if (isDecimal(a.int)) {
     return new Date(parseInt(a.int, 10));
   }
   return null;
