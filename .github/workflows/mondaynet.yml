@@ -3,6 +3,7 @@ name: Mondaynet Integration Tests
 on:
   schedule:
     - cron: '0 0 * * 2'
+  pull_request:
 
 jobs:
   integration-tests-mondaynet:
