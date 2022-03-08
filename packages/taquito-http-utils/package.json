@@ -59,7 +59,7 @@
     ]
   },
   "dependencies": {
-    "axios": "^0.25.0"
+    "axios": "^0.26.0"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.36",
