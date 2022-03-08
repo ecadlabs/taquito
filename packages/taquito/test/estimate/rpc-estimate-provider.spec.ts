@@ -21,7 +21,7 @@ import { OpKind } from '@taquito/rpc';
 /**
  * RPCEstimateProvider test
  */
-describe('RPCEstimateProvider test', () => {
+describe('RPCEstimateProvider test signer', () => {
   let estimateProvider: RPCEstimateProvider;
   let mockRpcClient: {
     getScript: jest.Mock<any, any>;
@@ -885,6 +885,375 @@ describe('RPCEstimateProvider test', () => {
         kind: 'permanent',
         message: '(permanent) proto.011-PtHangzH.context.storage_error',
       });
+      done();
+    });
+  });
+});
+
+describe('RPCEstimateProvider test wallet', () => {
+  let estimateProvider: RPCEstimateProvider;
+  let mockRpcClient: {
+    getScript: jest.Mock<any, any>;
+    getBalance: jest.Mock<any, any>;
+    getStorage: jest.Mock<any, any>;
+    getBlockHeader: jest.Mock<any, any>;
+    getManagerKey: jest.Mock<any, any>;
+    getBlock: jest.Mock<any, any>;
+    getContract: jest.Mock<any, any>;
+    getBlockMetadata: jest.Mock<any, any>;
+    runOperation: jest.Mock<any, any>;
+    injectOperation: jest.Mock<any, any>;
+    preapplyOperations: jest.Mock<any, any>;
+    getChainId: jest.Mock<any, any>;
+    getConstants: jest.Mock<any, any>;
+    getProtocols: jest.Mock<any, any>;
+  };
+
+  let mockForger: {
+    forge: jest.Mock<any, any>;
+  };
+
+  let mockWalletProvider: {
+    getPKH: jest.Mock<any, any>;
+  };
+
+  beforeEach(() => {
+    mockRpcClient = {
+      runOperation: jest.fn(),
+      getBalance: jest.fn(),
+      getBlock: jest.fn(),
+      getScript: jest.fn(),
+      getManagerKey: jest.fn(),
+      getStorage: jest.fn(),
+      getBlockHeader: jest.fn(),
+      getBlockMetadata: jest.fn(),
+      getContract: jest.fn(),
+      injectOperation: jest.fn(),
+      preapplyOperations: jest.fn(),
+      getChainId: jest.fn(),
+      getConstants: jest.fn(),
+      getProtocols: jest.fn(),
+    };
+
+    mockForger = {
+      forge: jest.fn(),
+    };
+
+    mockWalletProvider = {
+      getPKH: jest.fn(),
+    };
+
+    // Required for operations confirmation polling
+    mockRpcClient.getBlock.mockResolvedValue({
+      operations: [[], [], [], []],
+      header: {
+        level: 0,
+      },
+    });
+
+    mockRpcClient.getBalance.mockResolvedValue(new BigNumber(20000000));
+    mockRpcClient.getManagerKey.mockResolvedValue('test');
+    mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
+    mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
+    mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
+    mockRpcClient.getProtocols.mockResolvedValue({ next_protocol: 'test_proto' });
+    mockForger.forge.mockResolvedValue('1234');
+    mockRpcClient.preapplyOperations.mockResolvedValue([]);
+    mockRpcClient.getChainId.mockResolvedValue('chain-id');
+    mockRpcClient.getConstants.mockResolvedValue({
+      hard_gas_limit_per_operation: new BigNumber(1040000),
+      hard_storage_limit_per_operation: new BigNumber(60000),
+      hard_gas_limit_per_block: new BigNumber(5200000),
+      cost_per_byte: new BigNumber(1000),
+    });
+
+    mockWalletProvider.getPKH.mockResolvedValue('test_wallet_pub_key_hash');
+    const context = new Context(mockRpcClient as any);
+    context.forger = mockForger;
+    context.walletProvider = mockWalletProvider as any;
+    estimateProvider = new RPCEstimateProvider(context);
+  });
+
+  describe('originate', () => {
+    it('should produce an estimate for origination operation', async (done) => {
+      mockRpcClient.runOperation.mockResolvedValue({
+        contents: [
+          {
+            kind: 'origination',
+            metadata: {
+              operation_result: {
+                consumed_gas: 1000,
+              },
+            },
+          },
+        ],
+      });
+      const estimate = await estimateProvider.originate({
+        delegate: 'test_delegate',
+        balance: '200',
+        code: miStr,
+        init: '{}',
+        fee: 10000,
+        gasLimit: 10600,
+        storageLimit: 257,
+      });
+      expect(estimate.gasLimit).toEqual(1100);
+      done();
+    });
+
+    it('should throw an error if the account is unrevealed', async (done) => {
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
+      try {
+        await estimateProvider.originate({
+          code: ligoSample,
+          storage: 0,
+        });
+      } catch (e) {
+        expect(e.message).toEqual(
+          'Unable to estimate the reveal operation, the public key is unknown'
+        );
+      }
+      done();
+    });
+  });
+
+  describe('transfer', () => {
+    it('return the correct estimate for multiple internal origination, no reveal', async (done) => {
+      mockRpcClient.runOperation.mockResolvedValue(multipleInternalOriginationNoReveal());
+      // Simulate real op size
+      mockForger.forge.mockResolvedValue(new Array(297).fill('aa').join(''));
+      const estimate = await estimateProvider.transfer({
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+        amount: 2,
+      });
+      expect(estimate).toMatchObject({
+        gasLimit: 40928,
+        storageLimit: 634,
+        suggestedFeeMutez: 4590,
+      });
+      done();
+    });
+
+    it('should throw an error if the account is unrevealed', async (done) => {
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
+      try {
+        await estimateProvider.transfer({
+          to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          amount: 2,
+        });
+      } catch (e) {
+        expect(e.message).toEqual(
+          'Unable to estimate the reveal operation, the public key is unknown'
+        );
+      }
+      done();
+    });
+  });
+
+  describe('setDelegate', () => {
+    it('return the correct estimate for delegation', async (done) => {
+      mockRpcClient.runOperation.mockResolvedValue({
+        contents: [
+          {
+            kind: 'delegation',
+            metadata: {
+              operation_result: { status: 'applied', consumed_gas: '10000' },
+            },
+          },
+        ],
+      });
+      // Simulate real op size
+      mockForger.forge.mockResolvedValue(new Array(149).fill('aa').join(''));
+      const estimate = await estimateProvider.setDelegate({
+        source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+        delegate: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
+      });
+      expect(estimate).toMatchObject({
+        gasLimit: 10100,
+        storageLimit: 0,
+        suggestedFeeMutez: 1359,
+      });
+      done();
+    });
+
+    it('should throw an error if the account is unrevealed', async (done) => {
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
+      try {
+        await estimateProvider.setDelegate({
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          delegate: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
+        });
+      } catch (e) {
+        expect(e.message).toEqual(
+          'Unable to estimate the reveal operation, the public key is unknown'
+        );
+      }
+      done();
+    });
+  });
+
+  describe('registerDelegate', () => {
+    it('return the correct estimate for delegation', async (done) => {
+      mockRpcClient.runOperation.mockResolvedValue({
+        contents: [
+          {
+            kind: 'delegation',
+            metadata: {
+              operation_result: { status: 'applied', consumed_gas: '10000' },
+            },
+          },
+        ],
+      });
+      // Simulate real op size
+      mockForger.forge.mockResolvedValue(new Array(149).fill('aa').join(''));
+      const estimate = await estimateProvider.registerDelegate({});
+      expect(estimate).toMatchObject({
+        gasLimit: 10100,
+        storageLimit: 0,
+        suggestedFeeMutez: 1359,
+      });
+      done();
+    });
+
+    it('should throw an error if the account is unrevealed', async (done) => {
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
+      try {
+        await estimateProvider.registerDelegate({});
+      } catch (e) {
+        expect(e.message).toEqual(
+          'Unable to estimate the reveal operation, the public key is unknown'
+        );
+      }
+      done();
+    });
+  });
+
+  describe('batch', () => {
+    it('should produce a batch operation', async (done) => {
+      mockRpcClient.runOperation.mockResolvedValue({
+        contents: [
+          {
+            kind: 'transaction',
+            source: 'tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD',
+            fee: '0',
+            counter: '294313',
+            gas_limit: '800000',
+            storage_limit: '2000',
+            amount: '1700000',
+            destination: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+            metadata: {
+              operation_result: {
+                consumed_gas: 1000,
+              },
+            },
+          },
+          {
+            kind: 'transaction',
+            source: 'tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD',
+            fee: '0',
+            counter: '294313',
+            gas_limit: '800000',
+            storage_limit: '2000',
+            amount: '1700000',
+            destination: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp',
+            metadata: {
+              operation_result: {
+                consumed_gas: 1000,
+              },
+            },
+          },
+          registerGlobalConstantNoReveal.contents[0],
+        ],
+      });
+      const estimate = await estimateProvider.batch([
+        { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp', amount: 2 },
+        {
+          kind: OpKind.REGISTER_GLOBAL_CONSTANT,
+          value: {
+            prim: 'Pair',
+            args: [{ int: '998' }, { int: '999' }],
+          },
+        },
+      ]);
+      expect(estimate.length).toEqual(3);
+      expect(estimate[0].gasLimit).toEqual(1100);
+      expect(estimate[1].gasLimit).toEqual(1100);
+      expect(estimate[2].gasLimit).toEqual(1330);
+      done();
+    });
+
+    it('should throw an error if the account is unrevealed', async (done) => {
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
+
+      try {
+        await estimateProvider.batch([
+          {
+            kind: OpKind.REGISTER_GLOBAL_CONSTANT,
+            value: {
+              prim: 'Pair',
+              args: [{ int: '998' }, { int: '999' }],
+            },
+          },
+          { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 },
+          { kind: OpKind.TRANSACTION, to: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp', amount: 2 },
+        ]);
+      } catch (e) {
+        expect(e.message).toEqual(
+          'Unable to estimate the reveal operation, the public key is unknown'
+        );
+      }
+
+      done();
+    });
+  });
+
+  describe('registerGlobalConstant', () => {
+    it('should return the correct estimate for registerGlobalConstant operation', async (done) => {
+      mockRpcClient.runOperation.mockResolvedValue(registerGlobalConstantNoReveal);
+      const estimate = await estimateProvider.registerGlobalConstant({
+        value: {
+          prim: 'Pair',
+          args: [{ int: '998' }, { int: '999' }],
+        },
+      });
+      expect(estimate).toMatchObject({
+        gasLimit: 1330,
+        storageLimit: 73,
+        suggestedFeeMutez: 335,
+      });
+      done();
+    });
+
+    it('should throw an error if account is unrevealed', async (done) => {
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
+      mockRpcClient.runOperation.mockResolvedValue(registerGlobalConstantWithReveal);
+      try {
+        await estimateProvider.registerGlobalConstant({
+          value: {
+            prim: 'Pair',
+            args: [{ int: '998' }, { int: '999' }],
+          },
+        });
+      } catch (e) {
+        expect(e.message).toEqual(
+          'Unable to estimate the reveal operation, the public key is unknown'
+        );
+      }
+      done();
+    });
+  });
+
+  describe('reveal', () => {
+    it('should throw an error', async (done) => {
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
+      try {
+        await estimateProvider.reveal({});
+      } catch (e) {
+        expect(e.message).toEqual(
+          'Unable to estimate the reveal operation, the public key is unknown'
+        );
+      }
       done();
     });
   });

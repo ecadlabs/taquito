@@ -208,6 +208,10 @@ export class Context {
     }
   }
 
+  isAnySignerConfigured() {
+    return !(this.signer instanceof NoopSigner);
+  }
+
   /**
    * @description Create a copy of the current context. Useful when you have long running operation and you do not want a context change to affect the operation
    */
