@@ -78,28 +78,3 @@ jobs:
       env:
         CI: true
         TEZOS_RPC_ITHACANET: ${{ secrets.TEZOS_RPC_ITHACANET }}
-
-  integration-tests-mondaynet:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node: [12.x]
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node }}
-    - run: npm ci
-    - run: npm run lerna -- bootstrap
-    - run: npm run build
-    - name: Tailscale
-      uses: tailscale/github-action@v1
-      with:
-        authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
-    - run: cd integration-tests && npm run test:mondaynet -- --maxWorkers=8
-      env:
-        MONDAYNET_ORIGINATE_CONTRACTS_PK: $ {{ secrets.MONDAYNET_ORIGINATE_CONTRACTS_PK }}
-        TEZOS_MONDAYNET_CONTRACT_ADDRESS: ${{ secrets.TEZOS_MONDAYNET_CONTRACT_ADDRESS }}
-        TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS: ${{ secrets.TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS }}
-        TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS: ${{ secrets.TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS }}
-        TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS: ${{ secrets.TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS }}

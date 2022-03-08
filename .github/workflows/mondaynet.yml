@@ -1,0 +1,27 @@
+name: Mondaynet Integration Tests
+
+on:
+  schedule:
+    - cron: '0 0 * * 2'
+
+jobs:
+  integration-tests-mondaynet:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '12'
+    - run: npm ci
+    - run: npm run lerna -- bootstrap
+    - run: npm run build
+    - name: Tailscale
+      uses: tailscale/github-action@v1
+      with:
+        authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+    - run: cd integration-tests && npm run test:mondaynet -- --maxWorkers=8
+      env:
+        TEZOS_MONDAYNET_CONTRACT_ADDRESS: ${{ secrets.TEZOS_MONDAYNET_CONTRACT_ADDRESS }}
+        TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS: ${{ secrets.TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS }}
+        TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS: ${{ secrets.TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS }}
+        TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS: ${{ secrets.TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS }}
