@@ -10,6 +10,9 @@ import { encoders } from './encoder';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
 import { decodersProto12 } from './proto12-ithaca/decoder';
 import { encodersProto12 } from './proto12-ithaca/encoder';
+import { validateBlock, ValidationResult } from '@taquito/utils';
+import { InvalidBlockHashError, InvalidOperationSchemaError } from './error';
+import { validateMissingProperty } from './validator';
 
 export { CODEC, ProtocolsHash } from './constants';
 export * from './decoder';
@@ -44,6 +47,17 @@ export class LocalForger implements Forger {
   private codec = getCodec(CODEC.MANAGER, this.protocolHash);
 
   forge(params: ForgeParams): Promise<string> {
+    if (validateBlock(params.branch) !== ValidationResult.VALID) {
+      throw new InvalidBlockHashError(`The block hash ${params.branch} is invalid`);
+    }
+
+    params.contents.forEach((e) => {
+      const diff = validateMissingProperty(e);
+      if (diff.length > 0 && diff[0] !== 'delegate' && diff[0] !== 'parameters') {
+        throw new InvalidOperationSchemaError(`Missing properties: ${diff.join(', ').toString()}`);
+      }
+    });
+
     return Promise.resolve(this.codec.encoder(params));
   }
 
