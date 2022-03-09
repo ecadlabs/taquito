@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import { TezosToolkit, MichelsonMap, compose, DEFAULT_FEE } from '@taquito/taquito';
+import { TezosToolkit, MichelsonMap, compose, DEFAULT_FEE, RpcReadAdapter } from '@taquito/taquito';
 import { verifySignature } from '@taquito/utils';
 import { 
   validateAddress, 
@@ -89,7 +89,6 @@ export default ({
   }, [button.current, target.current]);
 
   if (live) {
-    // const customRpcClient = new CancellableRpcClient('https://hangzhounet.api.tez.ie') 
     const Tezos = new TezosToolkit('https://ithacanet.ecadinfra.com');
 
     return (
@@ -130,6 +129,7 @@ export default ({
           verifySignature,
           Parser, 
           packDataBytes, 
+          RpcReadAdapter
          }}
         code={children.trim()}
         theme={prism.theme || defaultTheme}

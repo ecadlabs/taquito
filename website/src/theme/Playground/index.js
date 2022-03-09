@@ -47,7 +47,7 @@ function println(value) {
 }
 
 ${this.props.wallet ? 
-  `const network = {type:"ithacanet"};
+  `const network = {type:"custom",rpcUrl:"https://ithacanet.ecadinfra.com"};
   wallet.requestPermissions({network})
   .then(permission => {
     return Tezos.setWalletProvider(wallet);

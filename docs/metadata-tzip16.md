@@ -512,6 +512,7 @@ Tezos.contract
       'test', // view name
       contract, // contract abstraction
       Tezos.rpc, // rpc
+      Tezos.getFactory(RpcReadAdapter)(), // readProvider
       { prim: 'nat' }, // returnType
       [
         { prim: 'DUP' },
@@ -547,7 +548,8 @@ Tezos.wallet
     const view = new MichelsonStorageView(
       'test', // view name
       wallet, // contract abstraction
-      Tezos.rpc, // rpc
+      Tezos.rpc, // rpc,
+      Tezos.getFactory(RpcReadAdapter)(), // readProvider
       { prim: 'nat' }, // returnType
       [
         { prim: 'DUP' },
