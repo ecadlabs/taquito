@@ -8,7 +8,7 @@ This section shows how Taquito can be used to :
 - Call a contract function with a complex object as a parameter
 - Pass null value to some optional arguments
 
-The source code of the contract used in the following examples is available [here](https://better-call.dev/carthagenet/KT1TRHzT3HdLe3whe35q6rNxavGx8WVFHSpH/code).
+The source code of the contract used in the following examples is available [here](https://better-call.dev/hangzhou2net/KT1CfFBaLoUrgv93k8668KCCcu2hNDNYPz4L/code).
 
 ## Origination of a contract with complex storage
 
@@ -171,7 +171,7 @@ importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
     println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
 }).then(hash => {
-    println(`Operation injected: https://better-call.dev/ithacanet/KT1CfFBaLoUrgv93k8668KCCcu2hNDNYPz4L/operations`);
+    println(`Operation injected: https://better-call.dev/hangzhou2net/KT1CfFBaLoUrgv93k8668KCCcu2hNDNYPz4L/operations`);
 }).catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 #### Call the set_child_record function when optional arguments are null
@@ -202,6 +202,6 @@ importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
     println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
 }).then(hash => {
-    println(`Operation injected: https://better-call.dev/hangzhounet/KT1CfFBaLoUrgv93k8668KCCcu2hNDNYPz4L/operations`);
+    println(`Operation injected: https://better-call.dev/hangzhou2net/KT1CfFBaLoUrgv93k8668KCCcu2hNDNYPz4L/operations`);
 }).catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```

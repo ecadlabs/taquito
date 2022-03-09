@@ -47,7 +47,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       await op.confirmation()
       const contract = await op.contract();
-      console.log("lambda 1 contract : "+contract.address)
 
       const getTotalSupply = await contract.views.getTotalSupply([['Unit']]).read();
       expect(getTotalSupply.toString()).toEqual('100');
