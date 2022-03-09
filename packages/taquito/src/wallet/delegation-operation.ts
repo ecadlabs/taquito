@@ -1,4 +1,9 @@
-import { BlockResponse, OperationContentsAndResultReveal, OpKind } from '@taquito/rpc';
+import {
+  BlockResponse,
+  OperationContentsAndResultDelegation,
+  OperationContentsAndResultReveal,
+  OpKind,
+} from '@taquito/rpc';
 import { Observable } from 'rxjs';
 import { Context } from '../context';
 import { WalletOperation, OperationStatus } from './operation';
@@ -14,15 +19,15 @@ export class DelegationWalletOperation extends WalletOperation {
 
   public async revealOperation() {
     const operationResult = await this.operationResults();
-    return operationResult.find(x => x.kind === OpKind.REVEAL) as
+    return operationResult.find((x) => x.kind === OpKind.REVEAL) as
       | OperationContentsAndResultReveal
       | undefined;
   }
 
   public async delegationOperation() {
     const operationResult = await this.operationResults();
-    return operationResult.find(x => x.kind === OpKind.DELEGATION) as
-      | OperationContentsAndResultReveal
+    return operationResult.find((x) => x.kind === OpKind.DELEGATION) as
+      | OperationContentsAndResultDelegation
       | undefined;
   }
 
