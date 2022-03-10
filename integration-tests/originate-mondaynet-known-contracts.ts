@@ -13,7 +13,6 @@ const tezos = new TezosToolkit(provider);
 tezos.setSignerProvider(signer);
 
 async function originateContract() {
-    console.log('Deploying the knownContract...');
     const opknownContract = await tezos.contract.originate({
       balance: '0',
       code: knownContract,
@@ -31,14 +30,12 @@ async function originateContract() {
         ],
       },
     });
-    console.log('Awaiting confirmation...');
     const contractknownContract = await opknownContract.contract();
     console.log('The address of the knownContract is: ', contractknownContract.address);
 }
 
 async function originateBigMapContract() {
   try {
-    console.log('Deploying the knownBigMapContract...');
     const allowances = new MichelsonMap();
     const ledger = new MichelsonMap();
     ledger.set('tz1btkXVkVFWLgXa66sbRJa8eeUSwvQFX4kP', { allowances, balance: '1' });
@@ -52,7 +49,6 @@ async function originateBigMapContract() {
         totalSupply: '1',
       },
     });
-    console.log('Awaiting confirmation...');
     const contractknownBigMapContract = await opknownBigMapContract.contract();
     console.log('The address of the knownBigMapContract is: ', contractknownBigMapContract.address);
   } catch (ex) {
