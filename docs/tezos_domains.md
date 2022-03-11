@@ -18,11 +18,11 @@ If you have an address and you want to find the domain tied to it, the storage o
 import { TezosToolkit } from "@taquito/taquito";
 import { bytes2Char } from "@taquito/utils";
 
-const domainContractAddress = "KT1PfBfkfUuvQRN8zuCAyp5MHjNrQqgevS9p";
+const domainContractAddress = "KT1GBZmSxmnKJXGMdMLbugPfLyUPmuLSMwKS";
 
 // the function returns the domain name if found or the provided address
 const fetchTezosDomainFromAddress = async (address: string): Promise<string> => {
-    const Tezos = new TezosToolkit("https://testnet-tezos.giganode.io");
+    const Tezos = new TezosToolkit("https://mainnet.api.tez.ie");
     const contract = await Tezos.wallet.at(domainContractAddress);
     const storage: any = await contract.storage();
     const domain = await storage.store.reverse_records.get(address);
@@ -39,7 +39,7 @@ const fetchTezosDomainFromAddress = async (address: string): Promise<string> => 
 - the `reverse_records` bigmap is nested inside the `store` property
 - the domain name is stored as bytes, so you can use the `bytes2Char` function from `@taquito/utils` to decode it as a string.
 
-If we call the `fetchTezosDomainFromAddress` function with `tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb`, it will return `alice-tezos.flo`.
+If we call the `fetchTezosDomainFromAddress` function with `tz1aauXT4uM8ZB3ouu5JrAenEMQdqfvDUSNH`, it will return `taquito.tez`.
 
 ## Looking up a Tezos domain
 
@@ -49,11 +49,11 @@ It is also possible to look up a domain name to find the address it references. 
 import { TezosToolkit } from "@taquito/taquito";
 import { char2Bytes } from "@taquito/utils";
 
-const contractAddress = "KT1PfBfkfUuvQRN8zuCAyp5MHjNrQqgevS9p";
+const contractAddress = "KT1GBZmSxmnKJXGMdMLbugPfLyUPmuLSMwKS";
 
 // the function returns the address if found or the provided domain name
 const fetchAddressFromTezosDomain = async (domainName: string): Promise<string> => {
-    const Tezos = new TezosToolkit("https://testnet-tezos.giganode.io");
+    const Tezos = new TezosToolkit("https://mainnet.api.tez.ie");
     const contract = await Tezos.wallet.at(contractAddress);
     const storage: any = await contract.storage();
     const domain = await storage.store.records.get(char2Bytes(domainName));
@@ -77,11 +77,11 @@ To find the expiry date, you can check the `expiry_map` bigmap under the `store`
 import { TezosToolkit } from "@taquito/taquito";
 import { char2Bytes } from "@taquito/utils";
 
-const contractAddress = "KT1PfBfkfUuvQRN8zuCAyp5MHjNrQqgevS9p";
+const contractAddress = "KT1GBZmSxmnKJXGMdMLbugPfLyUPmuLSMwKS";
 
 // this function return the expiry date of a domain name
 const fetchExpiryDate = async (domainName: string): Promise<string> => {
-    const Tezos = new TezosToolkit("https://testnet-tezos.giganode.io");
+    const Tezos = new TezosToolkit("https://mainnet.api.tez.ie");
     const contract = await Tezos.wallet.at(contractAddress);
     const storage: any = await contract.storage();
     const expiryDate = await storage.store.expiry_map.get(char2Bytes(domainName));
@@ -93,4 +93,4 @@ const fetchExpiryDate = async (domainName: string): Promise<string> => {
 }
 ```
 
-If you provide `alice-tezos.flo` as a parameter, the function will return `2022-06-09T09:06:20Z`, meaning that the domain name expires in June 9th, 2022.
+If you provide `taquito.tez` as a parameter, the function will return `2022-04-30T00:00:00Z`, meaning that the domain name expires in June 9th, 2022.

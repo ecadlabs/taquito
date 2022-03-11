@@ -1,0 +1,3 @@
+parameter unit;
+storage timestamp;
+code {DROP; NOW; NIL operation; PAIR};

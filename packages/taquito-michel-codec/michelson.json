@@ -40,9 +40,7 @@
           "conclusion": "ctx :- {} :: A => A"
         }
       ],
-      "semantics": [
-        { "name": "bs_NOOP", "premises": [], "conclusion": "{} / S => S" }
-      ]
+      "semantics": [{ "name": "bs_NOOP", "premises": [], "conclusion": "{} / S => S" }]
     },
     "SEQ": {
       "op": "SEQ",
@@ -50,16 +48,14 @@
       "ty": [
         {
           "name": "t_instr_SEQ",
-          "premises": [
-            "ctx :- instr1 :: A => B", "ctx :- instr2 :: B => C"
-          ],
+          "premises": ["ctx :- instr1 :: A => B", "ctx :- instr2 :: B => C"],
           "conclusion": "ctx :- instr1 ; instr2 :: A => C"
         }
       ],
       "semantics": [
         {
           "name": "bs_SEQ",
-          "premises": [ "i1 / S => SE'", "i2 / SE' => SE" ],
+          "premises": ["i1 / S => SE'", "i2 / SE' => SE"],
           "conclusion": "i1 ; i2 / S => SE"
         }
       ]
@@ -70,21 +66,19 @@
       "ty": [
         {
           "name": "t_instr_IF",
-          "premises": [
-            "ctx :- instr1 :: A => B", "ctx :- instr2 :: A => B"
-          ],
+          "premises": ["ctx :- instr1 :: A => B", "ctx :- instr2 :: A => B"],
           "conclusion": "ctx :- IF instr1 instr2 :: bool : A => B"
         }
       ],
       "semantics": [
         {
           "name": "bs_IF__tt",
-          "premises": [ "i1 / S => S'" ],
+          "premises": ["i1 / S => S'"],
           "conclusion": "IF i1 i2 / True : S => S'"
         },
         {
           "name": "bs_IF__ff",
-          "premises": [ "i2 / S => S'" ],
+          "premises": ["i2 / S => S'"],
           "conclusion": "IF i1 i2 / False : S => S'"
         }
       ]
@@ -95,14 +89,14 @@
       "ty": [
         {
           "name": "t_instr_LOOP",
-          "premises": [ "ctx :- instr :: A => bool : A" ],
+          "premises": ["ctx :- instr :: A => bool : A"],
           "conclusion": "ctx :- LOOP instr :: bool : A => A"
         }
       ],
       "semantics": [
         {
           "name": "bs_LOOP__tt",
-          "premises": [ "instr ; LOOP instr / S => S'" ],
+          "premises": ["instr ; LOOP instr / S => S'"],
           "conclusion": "LOOP instr / True : S => S'"
         },
         {
@@ -118,14 +112,14 @@
       "ty": [
         {
           "name": "t_instr_LOOP_LEFT",
-          "premises": [ "ctx :- instr :: ty1 : A => or ty1 ty2 : A" ],
+          "premises": ["ctx :- instr :: ty1 : A => or ty1 ty2 : A"],
           "conclusion": "ctx :- LOOP_LEFT instr :: or ty1 ty2 : A => ty2 : A"
         }
       ],
       "semantics": [
         {
           "name": "bs_LOOP_LEFT__tt",
-          "premises": [ "i1 ; LOOP_LEFT i1 / d : S => S'" ],
+          "premises": ["i1 ; LOOP_LEFT i1 / d : S => S'"],
           "conclusion": "LOOP_LEFT i1 / Left d : S => S'"
         },
         {
@@ -141,14 +135,14 @@
       "ty": [
         {
           "name": "t_instr_DIP",
-          "premises": [ "ctx :- instr :: B => C" ],
+          "premises": ["ctx :- instr :: B => C"],
           "conclusion": "ctx :- DIP instr :: ty : B => ty : C"
         }
       ],
       "semantics": [
         {
           "name": "bs_DIP",
-          "premises": [ "instr / S => S'" ],
+          "premises": ["instr / S => S'"],
           "conclusion": "DIP instr / d : S => d : S'"
         }
       ]
@@ -159,14 +153,14 @@
       "ty": [
         {
           "name": "t_instr_DIPN",
-          "premises": [ "length A = n", "ctx :- instr :: B => C" ],
+          "premises": ["length A = n", "ctx :- instr :: B => C"],
           "conclusion": "ctx :- DIP n instr :: A @ B => A @ C"
         }
       ],
       "semantics": [
         {
           "name": "bs_DIPN",
-          "premises": [ "length S1 = n", "instr / S2 => S3" ],
+          "premises": ["length S1 = n", "instr / S2 => S3"],
           "conclusion": "DIP n instr / S1 ++ S2 => S1 ++ S3"
         }
       ]
@@ -177,14 +171,14 @@
       "ty": [
         {
           "name": "t_instr_DIG",
-          "premises": [ "length A = n" ],
+          "premises": ["length A = n"],
           "conclusion": "ctx :- DIG n :: A @ ( ty1 : B ) => ty1 : ( A @ B )"
         }
       ],
       "semantics": [
         {
           "name": "bs_DIG",
-          "premises": [ "length S1 = n" ],
+          "premises": ["length S1 = n"],
           "conclusion": "DIG n / S1 ++ ( d : S2 ) => d : ( S1 ++ S2 )"
         }
       ]
@@ -195,14 +189,14 @@
       "ty": [
         {
           "name": "t_instr_DUG",
-          "premises": [ "length A = n" ],
+          "premises": ["length A = n"],
           "conclusion": "ctx :- DUG n :: ty1 : ( A @ B ) => A @ ( ty1 : B )"
         }
       ],
       "semantics": [
         {
           "name": "bs_DUG",
-          "premises": [ "length S1 = n" ],
+          "premises": ["length S1 = n"],
           "conclusion": "DUG n / d : ( S1 ++ S2 ) => S1 ++ ( d : S2 )"
         }
       ]
@@ -213,7 +207,7 @@
       "ty": [
         {
           "name": "t_instr_DROP",
-          "premises": [ "length A = n" ],
+          "premises": ["length A = n"],
           "conclusion": "ctx :- DROP n :: A @ B => B"
         }
       ],
@@ -231,17 +225,17 @@
       "ty": [
         {
           "name": "t_instr_ITER__list",
-          "premises": [ "ctx :- instr :: ty : A => A" ],
+          "premises": ["ctx :- instr :: ty : A => A"],
           "conclusion": "ctx :- ITER instr :: list ty : A => A"
         },
         {
           "name": "t_instr_ITER__set",
-          "premises": [ "ctx :- instr :: cty : A => A" ],
+          "premises": ["ctx :- instr :: cty : A => A"],
           "conclusion": "ctx :- ITER instr :: set cty : A => A"
         },
         {
           "name": "t_instr_ITER__map",
-          "premises": [ "ctx :- instr :: ( pair kty vty ) : A => A" ],
+          "premises": ["ctx :- instr :: ( pair kty vty ) : A => A"],
           "conclusion": "ctx :- ITER instr :: map kty vty : A => A"
         }
       ],
@@ -253,7 +247,7 @@
         },
         {
           "name": "bs_ITER__set_cons",
-          "premises": [ "instr ; ITER instr / x : tl : S => S'" ],
+          "premises": ["instr ; ITER instr / x : tl : S => S'"],
           "conclusion": "ITER instr / { x ; < tl > } : S => S'"
         },
         {
@@ -263,12 +257,12 @@
         },
         {
           "name": "bs_ITER__map_cons",
-          "premises": [ "instr ; ITER instr / ( Pair k v ) : m : S => S'" ],
+          "premises": ["instr ; ITER instr / ( Pair k v ) : m : S => S'"],
           "conclusion": "ITER instr / { Elt k v ; < m > } : S => S'"
         },
         {
           "name": "bs_ITER__list_cons",
-          "premises": [ "instr ; ITER instr / d : tl : S => S'" ],
+          "premises": ["instr ; ITER instr / d : tl : S => S'"],
           "conclusion": "ITER instr / { d ; < tl > } : S => S'"
         },
         {
@@ -284,14 +278,13 @@
       "ty": [
         {
           "name": "t_instr_MAP__list",
-          "premises": [ "ctx :- instr :: ty : A => ty2 : A" ],
+          "premises": ["ctx :- instr :: ty : A => ty2 : A"],
           "conclusion": "ctx :- MAP instr :: list ty : A => list ty2 : A"
         },
         {
           "name": "t_instr_MAP__map",
-          "premises": [ "ctx :- instr :: ( pair kty ty1 ) : A => ty2 : A" ],
-          "conclusion":
-            "ctx :- MAP instr :: map kty ty1 : A => map kty ty2 : A"
+          "premises": ["ctx :- instr :: ( pair kty ty1 ) : A => ty2 : A"],
+          "conclusion": "ctx :- MAP instr :: map kty ty1 : A => map kty ty2 : A"
         }
       ],
       "semantics": [
@@ -302,11 +295,8 @@
         },
         {
           "name": "bs_MAP__list_cons",
-          "premises": [
-            "instr / d : S => d' : S", "MAP instr / tl : S => tl' : S"
-          ],
-          "conclusion":
-            "MAP instr / { d ; < tl > } : S => { d' ; < tl' > } : S"
+          "premises": ["instr / d : S => d' : S", "MAP instr / tl : S => tl' : S"],
+          "conclusion": "MAP instr / { d ; < tl > } : S => { d' ; < tl' > } : S"
         },
         {
           "name": "bs_MAP__map_nil",
@@ -315,11 +305,8 @@
         },
         {
           "name": "bs_MAP__map_cons",
-          "premises": [
-            "body / ( Pair k v ) : S => v' : S", "MAP body / m : S => m' : S"
-          ],
-          "conclusion":
-            "MAP body / { Elt k v ; < m > } : S => { Elt k v' ; < m' > } : S"
+          "premises": ["body / ( Pair k v ) : S => v' : S", "MAP body / m : S => m' : S"],
+          "conclusion": "MAP body / { Elt k v ; < m > } : S => { Elt k v' ; < m' > } : S"
         }
       ]
     },
@@ -329,21 +316,19 @@
       "ty": [
         {
           "name": "t_instr_IF_NONE",
-          "premises": [
-            "ctx :- instr1 :: A => B", "ctx :- instr2 :: ty1 : A => B"
-          ],
+          "premises": ["ctx :- instr1 :: A => B", "ctx :- instr2 :: ty1 : A => B"],
           "conclusion": "ctx :- IF_NONE instr1 instr2 :: option ty1 : A => B"
         }
       ],
       "semantics": [
         {
           "name": "bs_IF_NONE__none",
-          "premises": [ "instr1 / S => S'" ],
+          "premises": ["instr1 / S => S'"],
           "conclusion": "IF_NONE instr1 instr2 / None : S => S'"
         },
         {
           "name": "bs_IF_NONE__some",
-          "premises": [ "instr2 / d : S => S'" ],
+          "premises": ["instr2 / d : S => S'"],
           "conclusion": "IF_NONE instr1 instr2 / ( Some d ) : S => S'"
         }
       ]
@@ -354,21 +339,19 @@
       "ty": [
         {
           "name": "t_instr_IF_LEFT",
-          "premises": [
-            "ctx :- instr1 :: ty1 : A => B", "ctx :- instr2 :: ty2 : A => B"
-          ],
+          "premises": ["ctx :- instr1 :: ty1 : A => B", "ctx :- instr2 :: ty2 : A => B"],
           "conclusion": "ctx :- IF_LEFT instr1 instr2 :: or ty1 ty2 : A => B"
         }
       ],
       "semantics": [
         {
           "name": "bs_IF_LEFT__left",
-          "premises": [ "instr1 / d1 : S => S'" ],
+          "premises": ["instr1 / d1 : S => S'"],
           "conclusion": "IF_LEFT instr1 instr2 / ( Left d1 ) : S => S'"
         },
         {
           "name": "bs_IF_LEFT__right",
-          "premises": [ "instr2 / d2 : S => S'" ],
+          "premises": ["instr2 / d2 : S => S'"],
           "conclusion": "IF_LEFT instr1 instr2 / ( Right d2 ) : S => S'"
         }
       ]
@@ -379,48 +362,40 @@
       "ty": [
         {
           "name": "t_instr_IF_CONS",
-          "premises": [
-            "ctx :- instr1 :: ty : list ty : A => B",
-            "ctx :- instr2 :: A => B"
-          ],
+          "premises": ["ctx :- instr1 :: ty : list ty : A => B", "ctx :- instr2 :: A => B"],
           "conclusion": "ctx :- IF_CONS instr1 instr2 :: list ty : A => B"
         }
       ],
       "semantics": [
         {
           "name": "bs_IF_CONS__nil",
-          "premises": [ "body2 / S => S'" ],
+          "premises": ["body2 / S => S'"],
           "conclusion": "IF_CONS instr1 instr2 / {} : S => S'"
         },
         {
           "name": "bs_IF_CONS__cons",
-          "premises": [ "instr1 / d : tl : S => S'" ],
+          "premises": ["instr1 / d : tl : S => S'"],
           "conclusion": "IF_CONS instr1 instr2 / { d ; < tl > } : S => S'"
         }
       ]
     },
     "CREATE_CONTRACT": {
       "op": "CREATE_CONTRACT",
-      "op_args":
-        "CREATE_CONTRACT { parameter ty1 ; storage ty2 ; code instr1 }",
+      "op_args": "CREATE_CONTRACT { parameter ty1 ; storage ty2 ; code instr1 }",
       "ty": [
         {
           "name": "t_instr_CREATE_CONTRACT",
           "premises": [
             "Some ty2 :- instr :: pair ty2 ty1 : [] => pair ( list operation ) ty1 : []"
           ],
-          "conclusion":
-            "ctx :- CREATE_CONTRACT { parameter ty1 ; storage ty2 ; code instr1 } :: option key_hash : mutez : ty2 : A => operation : address : A"
+          "conclusion": "ctx :- CREATE_CONTRACT { parameter ty1 ; storage ty2 ; code instr1 } :: option key_hash : mutez : ty2 : A => operation : address : A"
         }
       ],
       "semantics": [
         {
           "name": "bs_CREATE_CONTRACT",
-          "premises": [
-            "create_contract ty1 ty2 instr1 kh z x = ( op , addr )"
-          ],
-          "conclusion":
-            "CREATE_CONTRACT { parameter ty1 ; storage ty2 ; code instr1 } / kh : z : x : S => op : addr : S"
+          "premises": ["create_contract ty1 ty2 instr1 kh z x = ( op , addr )"],
+          "conclusion": "CREATE_CONTRACT { parameter ty1 ; storage ty2 ; code instr1 } / kh : z : x : S => op : addr : S"
         }
       ]
     },
@@ -430,7 +405,7 @@
       "ty": [
         {
           "name": "t_instr_PUSH",
-          "premises": [ "ctx :- x :: ty1" ],
+          "premises": ["ctx :- x :: ty1"],
           "conclusion": "ctx :- PUSH ty x :: A => ty1 : A"
         }
       ],
@@ -466,17 +441,15 @@
       "ty": [
         {
           "name": "t_instr_LAMBDA",
-          "premises": [ "None :- instr :: ty1 : [] => ty2 : []" ],
-          "conclusion":
-            "ctx :- LAMBDA ty1 ty2 instr :: A => lambda ty1 ty2 : A"
+          "premises": ["None :- instr :: ty1 : [] => ty2 : []"],
+          "conclusion": "ctx :- LAMBDA ty1 ty2 instr :: A => lambda ty1 ty2 : A"
         }
       ],
       "semantics": [
         {
           "name": "bs_LAMBDA",
           "premises": [],
-          "conclusion":
-            "LAMBDA ty1 ty2 instr / S => { instr : ty1 -> ty2 } : S"
+          "conclusion": "LAMBDA ty1 ty2 instr / S => { instr : ty1 -> ty2 } : S"
         }
       ]
     },
@@ -487,16 +460,14 @@
         {
           "name": "t_instr_APPLY",
           "premises": [],
-          "conclusion":
-            "ctx :- APPLY :: ty1 : lambda ( pair ty1 ty2 ) ty3 : A => lambda ty2 ty3 : A"
+          "conclusion": "ctx :- APPLY :: ty1 : lambda ( pair ty1 ty2 ) ty3 : A => lambda ty2 ty3 : A"
         }
       ],
       "semantics": [
         {
           "name": "bs_APPLY",
           "premises": [],
-          "conclusion":
-            "APPLY / d : { i : ( pair ty1 ty2 ) -> ty3 } : S => { PUSH ty1 d ; PAIR ; i : ty2 -> ty3 } : S"
+          "conclusion": "APPLY / d : { i : ( pair ty1 ty2 ) -> ty3 } : S => { PUSH ty1 d ; PAIR ; i : ty2 -> ty3 } : S"
         }
       ]
     },
@@ -543,8 +514,7 @@
         {
           "name": "t_instr_EMPTY_BIG_MAP",
           "premises": [],
-          "conclusion":
-            "ctx :- EMPTY_BIG_MAP kty vty :: A => big_map kty vty : A"
+          "conclusion": "ctx :- EMPTY_BIG_MAP kty vty :: A => big_map kty vty : A"
         }
       ],
       "semantics": [
@@ -651,7 +621,7 @@
       "ty": [
         {
           "name": "t_instr_SELF",
-          "premises": [ "ctx = Some ty" ],
+          "premises": ["ctx = Some ty"],
           "conclusion": "ctx :- SELF :: A => contract ty : A"
         }
       ],
@@ -767,8 +737,7 @@
         {
           "name": "bs_TOTAL_VOTING_POWER",
           "premises": [],
-          "conclusion":
-            "TOTAL_VOTING_POWER / s : S => total_voting_power : S"
+          "conclusion": "TOTAL_VOTING_POWER / s : S => total_voting_power : S"
         }
       ]
     },
@@ -920,12 +889,12 @@
       "semantics": [
         {
           "name": "bs_ISNAT__ok",
-          "premises": [ "z >= 0" ],
+          "premises": ["z >= 0"],
           "conclusion": "ISNAT / z : S => Some ( tonat z ) : S"
         },
         {
           "name": "bs_ISNAT__fail",
-          "premises": [ "z < 0" ],
+          "premises": ["z < 0"],
           "conclusion": "ISNAT / z : S => None : S"
         }
       ]
@@ -978,7 +947,7 @@
         },
         {
           "name": "bs_SIZE__set_cons",
-          "premises": [ "SIZE / tl : S => z : S" ],
+          "premises": ["SIZE / tl : S => z : S"],
           "conclusion": "SIZE / { d ; < tl > } : S => 1 + z : S"
         },
         {
@@ -988,7 +957,7 @@
         },
         {
           "name": "bs_SIZE__map_cons",
-          "premises": [ "SIZE / m : S => z : S" ],
+          "premises": ["SIZE / m : S => z : S"],
           "conclusion": "SIZE / { Elt d1 d2 ; < m > } : S => 1 + z : S"
         },
         {
@@ -998,7 +967,7 @@
         },
         {
           "name": "bs_SIZE__list_cons",
-          "premises": [ "SIZE / tl : S => z : S" ],
+          "premises": ["SIZE / tl : S => z : S"],
           "conclusion": "SIZE / { d ; < tl > } : S => 1 + z : S"
         }
       ]
@@ -1118,20 +1087,18 @@
         {
           "name": "t_instr_CONTRACT",
           "premises": [],
-          "conclusion":
-            "ctx :- CONTRACT ty :: address : A => option ( contract ty ) : A"
+          "conclusion": "ctx :- CONTRACT ty :: address : A => option ( contract ty ) : A"
         }
       ],
       "semantics": [
         {
           "name": "bs_CONTRACT__ok",
-          "premises": [ "get_contract_type addr ty" ],
-          "conclusion":
-            "CONTRACT ty / addr : S => Some ( contract ty addr ) : S"
+          "premises": ["get_contract_type addr ty"],
+          "conclusion": "CONTRACT ty / addr : S => Some ( contract ty addr ) : S"
         },
         {
           "name": "bs_CONTRACT__fail",
-          "premises": [ "get_contract_type addr ty'", "ty' <> ty" ],
+          "premises": ["get_contract_type addr ty'", "ty' <> ty"],
           "conclusion": "CONTRACT ty / addr : S => None : S"
         }
       ]
@@ -1143,8 +1110,7 @@
         {
           "name": "t_instr_SET_DELEGATE",
           "premises": [],
-          "conclusion":
-            "ctx :- SET_DELEGATE :: option key_hash : A => operation : A"
+          "conclusion": "ctx :- SET_DELEGATE :: option key_hash : A => operation : A"
         }
       ],
       "semantics": [
@@ -1167,8 +1133,7 @@
         {
           "name": "t_instr_IMPLICIT_ACCOUNT",
           "premises": [],
-          "conclusion":
-            "ctx :- IMPLICIT_ACCOUNT :: key_hash : A => contract unit : A"
+          "conclusion": "ctx :- IMPLICIT_ACCOUNT :: key_hash : A => contract unit : A"
         }
       ],
       "semantics": [
@@ -1246,7 +1211,7 @@
       "semantics": [
         {
           "name": "bs_EXEC",
-          "premises": [ "i / d2 : [] => d3 : []" ],
+          "premises": ["i / d2 : [] => d3 : []"],
           "conclusion": "EXEC / { i : ty1 -> ty2 } : d2 : S => d3 : S"
         }
       ]
@@ -1264,12 +1229,12 @@
       "semantics": [
         {
           "name": "bs_LSL",
-          "premises": [ "z2 <= 256" ],
+          "premises": ["z2 <= 256"],
           "conclusion": "LSL / z1 : z2 : S => ( z1 << z2 ) : S"
         },
         {
           "name": "bs_LSL__fail",
-          "premises": [ "z2 > 256" ],
+          "premises": ["z2 > 256"],
           "conclusion": "LSL / z1 : z2 : S => [FAILED]"
         }
       ]
@@ -1305,54 +1270,48 @@
       "semantics": [
         {
           "name": "bs_COMPARE__num_lt",
-          "premises": [ "z1 < z2" ],
+          "premises": ["z1 < z2"],
           "conclusion": "COMPARE / z1 : z2 : S => - 1 : S"
         },
         {
           "name": "bs_COMPARE__num_eq",
-          "premises": [ "z1 = z2" ],
+          "premises": ["z1 = z2"],
           "conclusion": "COMPARE / z1 : z2 : S => 0 : S"
         },
         {
           "name": "bs_COMPARE__num_gt",
-          "premises": [ "z1 > z2" ],
+          "premises": ["z1 > z2"],
           "conclusion": "COMPARE / z1 : z2 : S => 1 : S"
         },
         {
           "name": "bs_COMPARE__string_lt",
-          "premises": [ "s < t" ],
+          "premises": ["s < t"],
           "conclusion": "COMPARE / s : t : S => - 1 : S"
         },
         {
           "name": "bs_COMPARE__string_eq",
-          "premises": [ "s = t" ],
+          "premises": ["s = t"],
           "conclusion": "COMPARE / s : t : S => 0 : S"
         },
         {
           "name": "bs_COMPARE__string_gt",
-          "premises": [ "s > t" ],
+          "premises": ["s > t"],
           "conclusion": "COMPARE / s : t : S => 1 : S"
         },
         {
           "name": "bs_COMPARE__pair_left_lt",
-          "premises": [ "COMPARE / d1 : d3 : S => - 1 : S" ],
-          "conclusion":
-            "COMPARE / ( Pair d1 d2 ) : ( Pair d3 d4 ) : S => - 1 : S"
+          "premises": ["COMPARE / d1 : d3 : S => - 1 : S"],
+          "conclusion": "COMPARE / ( Pair d1 d2 ) : ( Pair d3 d4 ) : S => - 1 : S"
         },
         {
           "name": "bs_COMPARE__pair_left_gt",
-          "premises": [ "COMPARE / d1 : d3 : S => 1 : S" ],
-          "conclusion":
-            "COMPARE / ( Pair d1 d2 ) : ( Pair d3 d4 ) : S => 1 : S"
+          "premises": ["COMPARE / d1 : d3 : S => 1 : S"],
+          "conclusion": "COMPARE / ( Pair d1 d2 ) : ( Pair d3 d4 ) : S => 1 : S"
         },
         {
           "name": "bs_COMPARE__pair_right",
-          "premises": [
-            "COMPARE / d1 : d3 : S => 0 : S",
-            "COMPARE / d2 : d4 : S => z : S"
-          ],
-          "conclusion":
-            "COMPARE / ( Pair d1 d2 ) : ( Pair d3 d4 ) : S => z : S"
+          "premises": ["COMPARE / d1 : d3 : S => 0 : S", "COMPARE / d2 : d4 : S => z : S"],
+          "conclusion": "COMPARE / ( Pair d1 d2 ) : ( Pair d3 d4 ) : S => z : S"
         },
         {
           "name": "bs_COMPARE__false_false",
@@ -1386,7 +1345,7 @@
         },
         {
           "name": "bs_COMPARE__some_some",
-          "premises": [ "COMPARE / d1 : d2 : S => z : S" ],
+          "premises": ["COMPARE / d1 : d2 : S => z : S"],
           "conclusion": "COMPARE / Some d1 : Some d2 : S => z : S"
         },
         {
@@ -1396,7 +1355,7 @@
         },
         {
           "name": "bs_COMPARE__left_left",
-          "premises": [ "COMPARE / d1 : d2 : S => z : S" ],
+          "premises": ["COMPARE / d1 : d2 : S => z : S"],
           "conclusion": "COMPARE / Left d1 : Left d2 : S => z : S"
         },
         {
@@ -1406,7 +1365,7 @@
         },
         {
           "name": "bs_COMPARE__right_right",
-          "premises": [ "COMPARE / d1 : d2 : S => z : S" ],
+          "premises": ["COMPARE / d1 : d2 : S => z : S"],
           "conclusion": "COMPARE / Right d1 : Right d2 : S => z : S"
         },
         {
@@ -1459,7 +1418,7 @@
         },
         {
           "name": "bs_CONCAT__string_list_cons",
-          "premises": [ "CONCAT / tl : S => t : S" ],
+          "premises": ["CONCAT / tl : S => t : S"],
           "conclusion": "CONCAT / { s ; < tl > } : S => ( s ^ t ) : S"
         },
         {
@@ -1474,9 +1433,8 @@
         },
         {
           "name": "bs_CONCAT__bytes_list_cons",
-          "premises": [ "CONCAT / tl : byt1 : S => byt2 : S" ],
-          "conclusion":
-            "CONCAT / { byt1 ; < tl > } : S => ( byt1 ^ byt2 ) : S"
+          "premises": ["CONCAT / tl : byt1 : S => byt2 : S"],
+          "conclusion": "CONCAT / { byt1 ; < tl > } : S => ( byt1 ^ byt2 ) : S"
         }
       ]
     },
@@ -1505,16 +1463,14 @@
         {
           "name": "t_instr_PAIRN",
           "premises": [],
-          "conclusion":
-            "ctx :- PAIR n :: ty1 : .... : tyN : A => pair ty1 .... tyN : A"
+          "conclusion": "ctx :- PAIR n :: ty1 : .... : tyN : A => pair ty1 .... tyN : A"
         }
       ],
       "semantics": [
         {
           "name": "bs_PAIRN",
           "premises": [],
-          "conclusion":
-            "PAIR n / d1 : .... : dN : S => ( Pair d1 .... dN ) : S"
+          "conclusion": "PAIR n / d1 : .... : dN : S => ( Pair d1 .... dN ) : S"
         }
       ]
     },
@@ -1543,16 +1499,14 @@
         {
           "name": "t_instr_UNPAIRN",
           "premises": [],
-          "conclusion":
-            "ctx :- UNPAIR n :: pair ty1 .... tyN : A => ty1 : .... : tyN : A"
+          "conclusion": "ctx :- UNPAIR n :: pair ty1 .... tyN : A => ty1 : .... : tyN : A"
         }
       ],
       "semantics": [
         {
           "name": "bs_UNPAIRN",
           "premises": [],
-          "conclusion":
-            "UNPAIR n / ( Pair d1 .... dN ) : S => d1 : .... : dN : S"
+          "conclusion": "UNPAIR n / ( Pair d1 .... dN ) : S => d1 : .... : dN : S"
         }
       ]
     },
@@ -1568,14 +1522,12 @@
         {
           "name": "t_instr_GETN__even",
           "premises": [],
-          "conclusion":
-            "ctx :- GET ( 2 * n ) :: pair ty0 .. tyN ty' : A => ty' : A"
+          "conclusion": "ctx :- GET ( 2 * n ) :: pair ty0 .. tyN ty' : A => ty' : A"
         },
         {
           "name": "t_instr_GETN__odd",
           "premises": [],
-          "conclusion":
-            "ctx :- GET ( 2 * n + 1 ) :: pair ty0 .. tyN ty' ty'' : A => ty' : A"
+          "conclusion": "ctx :- GET ( 2 * n + 1 ) :: pair ty0 .. tyN ty' ty'' : A => ty' : A"
         }
       ],
       "semantics": [
@@ -1592,8 +1544,7 @@
         {
           "name": "bs_GETN__odd",
           "premises": [],
-          "conclusion":
-            "GET ( 2 * n + 1 ) / Pair d0 .. dN d' d'' : S => d' : S"
+          "conclusion": "GET ( 2 * n + 1 ) / Pair d0 .. dN d' d'' : S => d' : S"
         }
       ]
     },
@@ -1609,14 +1560,12 @@
         {
           "name": "t_instr_UPDATEN__even",
           "premises": [],
-          "conclusion":
-            "ctx :- UPDATE ( 2 * n ) :: ty' : pair ty0 .. tyN ty'' : A => pair ty0 .. tyN ty' : A"
+          "conclusion": "ctx :- UPDATE ( 2 * n ) :: ty' : pair ty0 .. tyN ty'' : A => pair ty0 .. tyN ty' : A"
         },
         {
           "name": "t_instr_UPDATEN__odd",
           "premises": [],
-          "conclusion":
-            "ctx :- UPDATE ( 2 * n + 1 ) :: ty' : pair ty0 .. tyN ty'' ty''' : A => pair ty0 .. tyN ty' ty''' : A"
+          "conclusion": "ctx :- UPDATE ( 2 * n + 1 ) :: ty' : pair ty0 .. tyN ty'' ty''' : A => pair ty0 .. tyN ty' ty''' : A"
         }
       ],
       "semantics": [
@@ -1628,14 +1577,12 @@
         {
           "name": "bs_UPDATEN__even",
           "premises": [],
-          "conclusion":
-            "UPDATE ( 2 * n ) / d' : Pair d0 .. dN d'' : S => Pair d0 .. dN d' : S"
+          "conclusion": "UPDATE ( 2 * n ) / d' : Pair d0 .. dN d'' : S => Pair d0 .. dN d' : S"
         },
         {
           "name": "bs_UPDATEN__odd",
           "premises": [],
-          "conclusion":
-            "UPDATE ( 2 * n + 1 ) / d' : Pair d0 .. dN d'' d''' : S => Pair d0 .. dN d' d''' : S"
+          "conclusion": "UPDATE ( 2 * n + 1 ) / d' : Pair d0 .. dN d'' d''' : S => Pair d0 .. dN d' d''' : S"
         }
       ]
     },
@@ -1667,19 +1614,17 @@
         },
         {
           "name": "bs_MEM__set_later",
-          "premises": [
-            "COMPARE / x : y : [] => 1 : []", "MEM / x : tl : S => b : S"
-          ],
+          "premises": ["COMPARE / x : y : [] => 1 : []", "MEM / x : tl : S => b : S"],
           "conclusion": "MEM / x : { y ; < tl > } : S => b : S"
         },
         {
           "name": "bs_MEM__set_found",
-          "premises": [ "COMPARE / x : y : [] => 0 : []" ],
+          "premises": ["COMPARE / x : y : [] => 0 : []"],
           "conclusion": "MEM / x : { y ; < tl > } : S => True : S"
         },
         {
           "name": "bs_MEM__set_nexists",
-          "premises": [ "COMPARE / x : y : [] => - 1 : []" ],
+          "premises": ["COMPARE / x : y : [] => - 1 : []"],
           "conclusion": "MEM / x : { y ; < tl > } : S => False : S"
         },
         {
@@ -1689,19 +1634,17 @@
         },
         {
           "name": "bs_MEM__map_later",
-          "premises": [
-            "COMPARE / x : k : [] => 1 : []", "MEM / x : m : S => b : S"
-          ],
+          "premises": ["COMPARE / x : k : [] => 1 : []", "MEM / x : m : S => b : S"],
           "conclusion": "MEM / x : { Elt k v ; < m > } : S => b : S"
         },
         {
           "name": "bs_MEM__map_now",
-          "premises": [ "COMPARE / x : k : [] => 0 : []" ],
+          "premises": ["COMPARE / x : k : [] => 0 : []"],
           "conclusion": "MEM / x : { Elt k v ; < m > } : S => True : S"
         },
         {
           "name": "bs_MEM__map_nexists",
-          "premises": [ "COMPARE / x : k : [] => - 1 : []" ],
+          "premises": ["COMPARE / x : k : [] => - 1 : []"],
           "conclusion": "MEM / x : { Elt k v ; < m > } : S => False : S"
         }
       ]
@@ -1713,14 +1656,12 @@
         {
           "name": "t_instr_GET__map",
           "premises": [],
-          "conclusion":
-            "ctx :- GET :: kty : map kty vty : A => option vty : A"
+          "conclusion": "ctx :- GET :: kty : map kty vty : A => option vty : A"
         },
         {
           "name": "t_instr_GET__big_map",
           "premises": [],
-          "conclusion":
-            "ctx :- GET :: kty : big_map kty vty : A => option vty : A"
+          "conclusion": "ctx :- GET :: kty : big_map kty vty : A => option vty : A"
         }
       ],
       "semantics": [
@@ -1731,19 +1672,17 @@
         },
         {
           "name": "bs_GET__later",
-          "premises": [
-            "COMPARE / x : k : [] => 1 : []", "GET / x : m : S => opt_y : S"
-          ],
+          "premises": ["COMPARE / x : k : [] => 1 : []", "GET / x : m : S => opt_y : S"],
           "conclusion": "GET / x : { Elt k v ; < m > } : S => opt_y : S"
         },
         {
           "name": "bs_GET__now",
-          "premises": [ "COMPARE / x : k : [] => 0 : []" ],
+          "premises": ["COMPARE / x : k : [] => 0 : []"],
           "conclusion": "GET / x : { Elt k v ; < m > } : S => Some v : S"
         },
         {
           "name": "bs_GET__nexists",
-          "premises": [ "COMPARE / x : k : [] => - 1 : []" ],
+          "premises": ["COMPARE / x : k : [] => - 1 : []"],
           "conclusion": "GET / x : { Elt k v ; < m > } : S => None : S"
         }
       ]
@@ -1755,14 +1694,12 @@
         {
           "name": "t_instr_GET_AND_UPDATE__map",
           "premises": [],
-          "conclusion":
-            "ctx :- GET_AND_UPDATE :: kty : option vty : map kty vty : A => option vty : map kty vty : A"
+          "conclusion": "ctx :- GET_AND_UPDATE :: kty : option vty : map kty vty : A => option vty : map kty vty : A"
         },
         {
           "name": "t_instr_GET_AND_UPDATE___big_map",
           "premises": [],
-          "conclusion":
-            "ctx :- GET_AND_UPDATE :: kty : option vty : big_map kty vty : A => option vty : big_map kty vty : A"
+          "conclusion": "ctx :- GET_AND_UPDATE :: kty : option vty : big_map kty vty : A => option vty : big_map kty vty : A"
         }
       ],
       "semantics": [
@@ -1774,8 +1711,7 @@
         {
           "name": "bs_GET_AND_UPDATE__empty_some",
           "premises": [],
-          "conclusion":
-            "GET_AND_UPDATE / x : Some y : {} : S => None : { Elt x y } : S"
+          "conclusion": "GET_AND_UPDATE / x : Some y : {} : S => None : { Elt x y } : S"
         },
         {
           "name": "bs_GET_AND_UPDATE__later",
@@ -1783,32 +1719,27 @@
             "COMPARE / x : k : [] => 1 : []",
             "GET_AND_UPDATE / x : opt_y : m : S => opt_y' : m' : S"
           ],
-          "conclusion":
-            "GET_AND_UPDATE / x : opt_y : { Elt k v ; < m > } : S => opt_y' : { Elt k v ; < m' > } : S"
+          "conclusion": "GET_AND_UPDATE / x : opt_y : { Elt k v ; < m > } : S => opt_y' : { Elt k v ; < m' > } : S"
         },
         {
           "name": "bs_GET_AND_UPDATE__now_none",
-          "premises": [ "COMPARE / x : k : [] => 0 : []" ],
-          "conclusion":
-            "GET_AND_UPDATE / x : None : { Elt k v ; < m > } : S => Some v : m : S"
+          "premises": ["COMPARE / x : k : [] => 0 : []"],
+          "conclusion": "GET_AND_UPDATE / x : None : { Elt k v ; < m > } : S => Some v : m : S"
         },
         {
           "name": "bs_GET_AND_UPDATE__now_some",
-          "premises": [ "COMPARE / x : k : [] => 0 : []" ],
-          "conclusion":
-            "GET_AND_UPDATE / x : Some y : { Elt k v ; < m > } : S => Some v : { Elt k y ; < m > } : S"
+          "premises": ["COMPARE / x : k : [] => 0 : []"],
+          "conclusion": "GET_AND_UPDATE / x : Some y : { Elt k v ; < m > } : S => Some v : { Elt k y ; < m > } : S"
         },
         {
           "name": "bs_GET_AND_UPDATE__nexists_none",
-          "premises": [ "COMPARE / x : k : [] => - 1 : []" ],
-          "conclusion":
-            "GET_AND_UPDATE / x : None : { Elt k v ; < m > } : S => None : { Elt k v ; < m > } : S"
+          "premises": ["COMPARE / x : k : [] => - 1 : []"],
+          "conclusion": "GET_AND_UPDATE / x : None : { Elt k v ; < m > } : S => None : { Elt k v ; < m > } : S"
         },
         {
           "name": "bs_GET_AND_UPDATE__nexists_some",
-          "premises": [ "COMPARE / x : k : [] => - 1 : []" ],
-          "conclusion":
-            "GET_AND_UPDATE / x : Some y : { Elt k v ; < m > } : S => None : { Elt x y ; < { Elt k v ; < m > } > } : S"
+          "premises": ["COMPARE / x : k : [] => - 1 : []"],
+          "conclusion": "GET_AND_UPDATE / x : Some y : { Elt k v ; < m > } : S => None : { Elt x y ; < { Elt k v ; < m > } > } : S"
         }
       ]
     },
@@ -1854,14 +1785,14 @@
       "ty": [
         {
           "name": "t_instr_DUPN",
-          "premises": [ "1 + length A = n" ],
+          "premises": ["1 + length A = n"],
           "conclusion": "ctx :- DUP n :: A @ ty1 : B => ty1 : A @ ty1 : B"
         }
       ],
       "semantics": [
         {
           "name": "bs_DUPN",
-          "premises": [ "1 + length S1 = n" ],
+          "premises": ["1 + length S1 = n"],
           "conclusion": "DUP n / S1 ++ d : S2 => d : S1 ++ d : S2"
         }
       ]
@@ -1891,37 +1822,33 @@
         {
           "name": "t_instr_SLICE__string",
           "premises": [],
-          "conclusion":
-            "ctx :- SLICE :: nat : nat : string : A => option string : A"
+          "conclusion": "ctx :- SLICE :: nat : nat : string : A => option string : A"
         },
         {
           "name": "t_instr_SLICE__bytes",
           "premises": [],
-          "conclusion":
-            "ctx :- SLICE :: nat : nat : bytes : A => option bytes : A"
+          "conclusion": "ctx :- SLICE :: nat : nat : bytes : A => option bytes : A"
         }
       ],
       "semantics": [
         {
           "name": "bs_SLICE__string_ok",
-          "premises": [ "offset + len < length s" ],
-          "conclusion":
-            "SLICE / offset : len : s : S => Some ( slice s offset len ) : S"
+          "premises": ["offset + len < length s"],
+          "conclusion": "SLICE / offset : len : s : S => Some ( slice s offset len ) : S"
         },
         {
           "name": "bs_SLICE__string_fail",
-          "premises": [ "offset + len >= length s" ],
+          "premises": ["offset + len >= length s"],
           "conclusion": "SLICE / offset : len : s : S => None : S"
         },
         {
           "name": "bs_SLICE__bytes_ok",
-          "premises": [ "offset + len < length byt" ],
-          "conclusion":
-            "SLICE / offset : len : byt : S => Some ( slice byt offset len ) : S"
+          "premises": ["offset + len < length byt"],
+          "conclusion": "SLICE / offset : len : byt : S => Some ( slice byt offset len ) : S"
         },
         {
           "name": "bs_SLICE__bytes_fail",
-          "premises": [ "offset + len >= length byt" ],
+          "premises": ["offset + len >= length byt"],
           "conclusion": "SLICE / offset : len : byt : S => None : S"
         }
       ]
@@ -1933,20 +1860,17 @@
         {
           "name": "t_instr_UPDATE__set",
           "premises": [],
-          "conclusion":
-            "ctx :- UPDATE :: cty : bool : set cty : A => set cty : A"
+          "conclusion": "ctx :- UPDATE :: cty : bool : set cty : A => set cty : A"
         },
         {
           "name": "t_instr_UPDATE__map",
           "premises": [],
-          "conclusion":
-            "ctx :- UPDATE :: kty : option vty : map kty vty : A => map kty vty : A"
+          "conclusion": "ctx :- UPDATE :: kty : option vty : map kty vty : A => map kty vty : A"
         },
         {
           "name": "t_instr_UPDATE__big_map",
           "premises": [],
-          "conclusion":
-            "ctx :- UPDATE :: kty : option vty : big_map kty vty : A => big_map kty vty : A"
+          "conclusion": "ctx :- UPDATE :: kty : option vty : big_map kty vty : A => big_map kty vty : A"
         }
       ],
       "semantics": [
@@ -1962,35 +1886,28 @@
         },
         {
           "name": "bs_UPDATE__set_cont",
-          "premises": [
-            "COMPARE / x : y : [] => 1 : []",
-            "UPDATE / x : b : tl : S => tl' : S"
-          ],
-          "conclusion":
-            "UPDATE / x : b : { y ; < tl > } : S => { y ; < tl' > } : S"
+          "premises": ["COMPARE / x : y : [] => 1 : []", "UPDATE / x : b : tl : S => tl' : S"],
+          "conclusion": "UPDATE / x : b : { y ; < tl > } : S => { y ; < tl' > } : S"
         },
         {
           "name": "bs_UPDATE__set_remove",
-          "premises": [ "COMPARE / x : y : [] => 0 : []" ],
+          "premises": ["COMPARE / x : y : [] => 0 : []"],
           "conclusion": "UPDATE / x : False : { y ; < tl > } : S => tl : S"
         },
         {
           "name": "bs_UPDATE__set_exists",
-          "premises": [ "COMPARE / x : y : [] => 0 : []" ],
-          "conclusion":
-            "UPDATE / x : True : { y ; < tl > } : S => { y ; < tl > } : S"
+          "premises": ["COMPARE / x : y : [] => 0 : []"],
+          "conclusion": "UPDATE / x : True : { y ; < tl > } : S => { y ; < tl > } : S"
         },
         {
           "name": "bs_UPDATE__set_remove_nexists",
-          "premises": [ "COMPARE / x : y : [] => - 1 : []" ],
-          "conclusion":
-            "UPDATE / x : False : { y ; < tl > } : S => { y ; < tl > } : S"
+          "premises": ["COMPARE / x : y : [] => - 1 : []"],
+          "conclusion": "UPDATE / x : False : { y ; < tl > } : S => { y ; < tl > } : S"
         },
         {
           "name": "bs_UPDATE__set_add",
-          "premises": [ "COMPARE / x : y : [] => - 1 : []" ],
-          "conclusion":
-            "UPDATE / x : True : { y ; < tl > } : S => { x ; < { y ; < tl > } > } : S"
+          "premises": ["COMPARE / x : y : [] => - 1 : []"],
+          "conclusion": "UPDATE / x : True : { y ; < tl > } : S => { x ; < { y ; < tl > } > } : S"
         },
         {
           "name": "bs_UPDATE__map_false",
@@ -2004,36 +1921,28 @@
         },
         {
           "name": "bs_UPDATE__map_cont",
-          "premises": [
-            "COMPARE / x : k : [] => 1 : []",
-            "UPDATE / x : opt_y : m : S => m' : S"
-          ],
-          "conclusion":
-            "UPDATE / x : opt_y : { Elt k v ; < m > } : S => { Elt k v ; < m' > } : S"
+          "premises": ["COMPARE / x : k : [] => 1 : []", "UPDATE / x : opt_y : m : S => m' : S"],
+          "conclusion": "UPDATE / x : opt_y : { Elt k v ; < m > } : S => { Elt k v ; < m' > } : S"
         },
         {
           "name": "bs_UPDATE__map_remove",
-          "premises": [ "COMPARE / x : k : [] => 0 : []" ],
-          "conclusion":
-            "UPDATE / x : None : { Elt k v ; < m > } : S => m : S"
+          "premises": ["COMPARE / x : k : [] => 0 : []"],
+          "conclusion": "UPDATE / x : None : { Elt k v ; < m > } : S => m : S"
         },
         {
           "name": "bs_UPDATE__map_exists",
-          "premises": [ "COMPARE / x : k : [] => 0 : []" ],
-          "conclusion":
-            "UPDATE / x : Some y : { Elt k v ; < m > } : S => { Elt k y ; < m > } : S"
+          "premises": ["COMPARE / x : k : [] => 0 : []"],
+          "conclusion": "UPDATE / x : Some y : { Elt k v ; < m > } : S => { Elt k y ; < m > } : S"
         },
         {
           "name": "bs_UPDATE__map_remove_nexists",
-          "premises": [ "COMPARE / x : k : [] => - 1 : []" ],
-          "conclusion":
-            "UPDATE / x : None : { Elt k v ; < m > } : S => { Elt k v ; < m > } : S"
+          "premises": ["COMPARE / x : k : [] => - 1 : []"],
+          "conclusion": "UPDATE / x : None : { Elt k v ; < m > } : S => { Elt k v ; < m > } : S"
         },
         {
           "name": "bs_UPDATE__map_add",
-          "premises": [ "COMPARE / x : k : [] => - 1 : []" ],
-          "conclusion":
-            "UPDATE / x : Some y : { Elt k v ; < m > } : S => { Elt x y ; < { Elt k v ; < m > } > } : S"
+          "premises": ["COMPARE / x : k : [] => - 1 : []"],
+          "conclusion": "UPDATE / x : Some y : { Elt k v ; < m > } : S => { Elt x y ; < { Elt k v ; < m > } > } : S"
         }
       ]
     },
@@ -2044,16 +1953,14 @@
         {
           "name": "t_instr_TRANSFER_TOKENS",
           "premises": [],
-          "conclusion":
-            "ctx :- TRANSFER_TOKENS :: ty : mutez : contract ty : A => operation : A"
+          "conclusion": "ctx :- TRANSFER_TOKENS :: ty : mutez : contract ty : A => operation : A"
         }
       ],
       "semantics": [
         {
           "name": "bs_TRANSFER_TOKENS",
           "premises": [],
-          "conclusion":
-            "TRANSFER_TOKENS / d : z : c : S => transfer_tokens d z c : S"
+          "conclusion": "TRANSFER_TOKENS / d : z : c : S => transfer_tokens d z c : S"
         }
       ]
     },
@@ -2064,16 +1971,14 @@
         {
           "name": "t_instr_CHECK_SIGNATURE",
           "premises": [],
-          "conclusion":
-            "ctx :- CHECK_SIGNATURE :: key : signature : bytes : A => bool : A"
+          "conclusion": "ctx :- CHECK_SIGNATURE :: key : signature : bytes : A => bool : A"
         }
       ],
       "semantics": [
         {
           "name": "bs_CHECK_SIGNATURE",
           "premises": [],
-          "conclusion":
-            "CHECK_SIGNATURE / s : sig : byt : S => check_signature s sig byt : S"
+          "conclusion": "CHECK_SIGNATURE / s : sig : byt : S => check_signature s sig byt : S"
         }
       ]
     },
@@ -2119,20 +2024,17 @@
         {
           "name": "t_instr_ADD__g1",
           "premises": [],
-          "conclusion":
-            "ctx :- ADD :: bls12_381_g1 : bls12_381_g1 : A => bls12_381_g1 : A"
+          "conclusion": "ctx :- ADD :: bls12_381_g1 : bls12_381_g1 : A => bls12_381_g1 : A"
         },
         {
           "name": "t_instr_ADD__g2",
           "premises": [],
-          "conclusion":
-            "ctx :- ADD :: bls12_381_g2 : bls12_381_g2 : A => bls12_381_g2 : A"
+          "conclusion": "ctx :- ADD :: bls12_381_g2 : bls12_381_g2 : A => bls12_381_g2 : A"
         },
         {
           "name": "t_instr_ADD__fr",
           "premises": [],
-          "conclusion":
-            "ctx :- ADD :: bls12_381_fr : bls12_381_fr : A => bls12_381_fr : A"
+          "conclusion": "ctx :- ADD :: bls12_381_fr : bls12_381_fr : A => bls12_381_fr : A"
         }
       ],
       "semantics": [
@@ -2228,44 +2130,37 @@
         {
           "name": "t_instr_MUL__g1_fr",
           "premises": [],
-          "conclusion":
-            "ctx :- MUL :: bls12_381_g1 : bls12_381_fr : A => bls12_381_g1 : A"
+          "conclusion": "ctx :- MUL :: bls12_381_g1 : bls12_381_fr : A => bls12_381_g1 : A"
         },
         {
           "name": "t_instr_MUL__g2_fr",
           "premises": [],
-          "conclusion":
-            "ctx :- MUL :: bls12_381_g2 : bls12_381_fr : A => bls12_381_g2 : A"
+          "conclusion": "ctx :- MUL :: bls12_381_g2 : bls12_381_fr : A => bls12_381_g2 : A"
         },
         {
           "name": "t_instr_MUL__fr_fr",
           "premises": [],
-          "conclusion":
-            "ctx :- MUL :: bls12_381_fr : bls12_381_fr : A => bls12_381_fr : A"
+          "conclusion": "ctx :- MUL :: bls12_381_fr : bls12_381_fr : A => bls12_381_fr : A"
         },
         {
           "name": "t_instr_MUL__nat_fr",
           "premises": [],
-          "conclusion":
-            "ctx :- MUL :: nat : bls12_381_fr : A => bls12_381_fr : A"
+          "conclusion": "ctx :- MUL :: nat : bls12_381_fr : A => bls12_381_fr : A"
         },
         {
           "name": "t_instr_MUL__int_fr",
           "premises": [],
-          "conclusion":
-            "ctx :- MUL :: int : bls12_381_fr : A => bls12_381_fr : A"
+          "conclusion": "ctx :- MUL :: int : bls12_381_fr : A => bls12_381_fr : A"
         },
         {
           "name": "t_instr_MUL__fr_nat",
           "premises": [],
-          "conclusion":
-            "ctx :- MUL :: bls12_381_fr : nat : A => bls12_381_fr : A"
+          "conclusion": "ctx :- MUL :: bls12_381_fr : nat : A => bls12_381_fr : A"
         },
         {
           "name": "t_instr_MUL__fr_int",
           "premises": [],
-          "conclusion":
-            "ctx :- MUL :: bls12_381_fr : int : A => bls12_381_fr : A"
+          "conclusion": "ctx :- MUL :: bls12_381_fr : int : A => bls12_381_fr : A"
         }
       ],
       "semantics": [
@@ -2283,38 +2178,32 @@
         {
           "name": "t_instr_EDIV__nat_nat",
           "premises": [],
-          "conclusion":
-            "ctx :- EDIV :: nat : nat : A => option ( pair nat nat ) : A"
+          "conclusion": "ctx :- EDIV :: nat : nat : A => option ( pair nat nat ) : A"
         },
         {
           "name": "t_instr_EDIV__nat_int",
           "premises": [],
-          "conclusion":
-            "ctx :- EDIV :: nat : int : A => option ( pair int nat ) : A"
+          "conclusion": "ctx :- EDIV :: nat : int : A => option ( pair int nat ) : A"
         },
         {
           "name": "t_instr_EDIV__int_nat",
           "premises": [],
-          "conclusion":
-            "ctx :- EDIV :: int : nat : A => option ( pair int nat ) : A"
+          "conclusion": "ctx :- EDIV :: int : nat : A => option ( pair int nat ) : A"
         },
         {
           "name": "t_instr_EDIV__int_int",
           "premises": [],
-          "conclusion":
-            "ctx :- EDIV :: int : int : A => option ( pair int nat ) : A"
+          "conclusion": "ctx :- EDIV :: int : int : A => option ( pair int nat ) : A"
         },
         {
           "name": "t_instr_EDIV__mutez_nat",
           "premises": [],
-          "conclusion":
-            "ctx :- EDIV :: mutez : nat : A => option ( pair mutez mutez ) : A"
+          "conclusion": "ctx :- EDIV :: mutez : nat : A => option ( pair mutez mutez ) : A"
         },
         {
           "name": "t_instr_EDIV__mutez_mutez",
           "premises": [],
-          "conclusion":
-            "ctx :- EDIV :: mutez : mutez : A => option ( pair nat mutez ) : A"
+          "conclusion": "ctx :- EDIV :: mutez : mutez : A => option ( pair nat mutez ) : A"
         }
       ],
       "semantics": [
@@ -2325,9 +2214,8 @@
         },
         {
           "name": "bs_EDIV",
-          "premises": [ "z2 <> 0" ],
-          "conclusion":
-            "EDIV / z1 : z2 : S => Some ( Pair ( z1 / z2 ) ( z1 % z2 ) ) : S"
+          "premises": ["z2 <> 0"],
+          "conclusion": "EDIV / z1 : z2 : S => Some ( Pair ( z1 / z2 ) ( z1 % z2 ) ) : S"
         }
       ]
     },
@@ -2349,7 +2237,7 @@
         },
         {
           "name": "bs_EQ__ff",
-          "premises": [ "z <> 0" ],
+          "premises": ["z <> 0"],
           "conclusion": "EQ / z : S => False : S"
         }
       ]
@@ -2372,7 +2260,7 @@
         },
         {
           "name": "bs_NEQ__tt",
-          "premises": [ "z <> 0" ],
+          "premises": ["z <> 0"],
           "conclusion": "NEQ / z : S => True : S"
         }
       ]
@@ -2390,12 +2278,12 @@
       "semantics": [
         {
           "name": "bs_LT__tt",
-          "premises": [ "z < 0" ],
+          "premises": ["z < 0"],
           "conclusion": "LT / z : S => True : S"
         },
         {
           "name": "bs_LT__ff",
-          "premises": [ "z >= 0" ],
+          "premises": ["z >= 0"],
           "conclusion": "LT / z : S => False : S"
         }
       ]
@@ -2413,12 +2301,12 @@
       "semantics": [
         {
           "name": "bs_GT__tt",
-          "premises": [ "z > 0" ],
+          "premises": ["z > 0"],
           "conclusion": "GT / z : S => True : S"
         },
         {
           "name": "bs_GT__ff",
-          "premises": [ "z <= 0" ],
+          "premises": ["z <= 0"],
           "conclusion": "GT / z : S => False : S"
         }
       ]
@@ -2436,12 +2324,12 @@
       "semantics": [
         {
           "name": "bs_LE__tt",
-          "premises": [ "z <= 0" ],
+          "premises": ["z <= 0"],
           "conclusion": "LE / z : S => True : S"
         },
         {
           "name": "bs_LE__ff",
-          "premises": [ "z > 0" ],
+          "premises": ["z > 0"],
           "conclusion": "LE / z : S => False : S"
         }
       ]
@@ -2459,12 +2347,12 @@
       "semantics": [
         {
           "name": "bs_GE__tt",
-          "premises": [ "z >= 0" ],
+          "premises": ["z >= 0"],
           "conclusion": "GE / z : S => True : S"
         },
         {
           "name": "bs_GE__ff",
-          "premises": [ "z < 0" ],
+          "premises": ["z < 0"],
           "conclusion": "GE / z : S => False : S"
         }
       ]
@@ -2690,20 +2578,18 @@
         {
           "name": "t_instr_SAPLING_VERIFY_UPDATE",
           "premises": [],
-          "conclusion":
-            "ctx :- SAPLING_VERIFY_UPDATE :: sapling_transaction ms : sapling_state ms : A => option ( pair int ( sapling_state ms ) ) : A"
+          "conclusion": "ctx :- SAPLING_VERIFY_UPDATE :: sapling_transaction ms : sapling_state ms : A => option ( pair int ( sapling_state ms ) ) : A"
         }
       ],
       "semantics": [
         {
           "name": "bs_SAPLING_VERIFY_UPDATE__some",
-          "premises": [ "sapling_verify_update ( t , s , b , s' ) = True" ],
-          "conclusion":
-            "SAPLING_VERIFY_UPDATE / t : s : S => Some ( Pair b s' ) : S"
+          "premises": ["sapling_verify_update ( t , s , b , s' ) = True"],
+          "conclusion": "SAPLING_VERIFY_UPDATE / t : s : S => Some ( Pair b s' ) : S"
         },
         {
           "name": "bs_SAPLING_VERIFY_UPDATE__none",
-          "premises": [ "sapling_verify_update ( t , s , b , s' ) = False" ],
+          "premises": ["sapling_verify_update ( t , s , b , s' ) = False"],
           "conclusion": "SAPLING_VERIFY_UPDATE / t : s : S => None : S"
         }
       ]
@@ -2715,8 +2601,7 @@
         {
           "name": "t_instr_SAPLING_EMPTY_STATE",
           "premises": [],
-          "conclusion":
-            "ctx :- SAPLING_EMPTY_STATE ms :: A => sapling_state ms : A"
+          "conclusion": "ctx :- SAPLING_EMPTY_STATE ms :: A => sapling_state ms : A"
         }
       ],
       "semantics": [
@@ -2752,16 +2637,14 @@
         {
           "name": "t_instr_READ_TICKET",
           "premises": [],
-          "conclusion":
-            "ctx :- READ_TICKET :: ticket cty : A => pair address cty nat : ticket cty : A"
+          "conclusion": "ctx :- READ_TICKET :: ticket cty : A => pair address cty nat : ticket cty : A"
         }
       ],
       "semantics": [
         {
           "name": "bs_READ_TICKET",
           "premises": [],
-          "conclusion":
-            "READ_TICKET / Pair s x n : S => Pair s x n : Pair s x n : S"
+          "conclusion": "READ_TICKET / Pair s x n : S => Pair s x n : Pair s x n : S"
         }
       ]
     },
@@ -2772,22 +2655,19 @@
         {
           "name": "t_instr_SPLIT_TICKET",
           "premises": [],
-          "conclusion":
-            "ctx :- SPLIT_TICKET :: ticket cty : pair nat nat : A => option ( pair ( ticket cty ) ( ticket cty ) ) : A"
+          "conclusion": "ctx :- SPLIT_TICKET :: ticket cty : pair nat nat : A => option ( pair ( ticket cty ) ( ticket cty ) ) : A"
         }
       ],
       "semantics": [
         {
           "name": "bs_SPLIT_TICKET__some",
-          "premises": [ "n1 + n2 = n3" ],
-          "conclusion":
-            "SPLIT_TICKET / Pair s x n3 : Pair n1 n2 : S => Some ( Pair ( Pair s x n1 ) ( Pair s x n2 ) ) : S"
+          "premises": ["n1 + n2 = n3"],
+          "conclusion": "SPLIT_TICKET / Pair s x n3 : Pair n1 n2 : S => Some ( Pair ( Pair s x n1 ) ( Pair s x n2 ) ) : S"
         },
         {
           "name": "bs_SPLIT_TICKET__none",
-          "premises": [ "n1 + n2 <> n3" ],
-          "conclusion":
-            "SPLIT_TICKET / Pair s x n3 : Pair n1 n2 : S => None : S"
+          "premises": ["n1 + n2 <> n3"],
+          "conclusion": "SPLIT_TICKET / Pair s x n3 : Pair n1 n2 : S => None : S"
         }
       ]
     },
@@ -2798,28 +2678,24 @@
         {
           "name": "t_instr_JOIN_TICKETS",
           "premises": [],
-          "conclusion":
-            "ctx :- JOIN_TICKETS :: pair ( ticket cty ) ( ticket cty ) : A => option ( ticket cty ) : A"
+          "conclusion": "ctx :- JOIN_TICKETS :: pair ( ticket cty ) ( ticket cty ) : A => option ( ticket cty ) : A"
         }
       ],
       "semantics": [
         {
           "name": "bs_JOIN_TICKETS__some",
           "premises": [],
-          "conclusion":
-            "JOIN_TICKETS / Pair ( Pair s x n1 ) ( Pair s x n2 ) : S => Some ( Pair s x ( n1 + n2 ) ) : S"
+          "conclusion": "JOIN_TICKETS / Pair ( Pair s x n1 ) ( Pair s x n2 ) : S => Some ( Pair s x ( n1 + n2 ) ) : S"
         },
         {
           "name": "bs_JOIN_TICKETS__none_ticketer",
-          "premises": [ "s1 <> s2" ],
-          "conclusion":
-            "JOIN_TICKETS / Pair ( Pair s1 x1 n1 ) ( Pair s2 x2 n2 ) : S => None : S"
+          "premises": ["s1 <> s2"],
+          "conclusion": "JOIN_TICKETS / Pair ( Pair s1 x1 n1 ) ( Pair s2 x2 n2 ) : S => None : S"
         },
         {
           "name": "bs_JOIN_TICKETS__none_content",
-          "premises": [ "x1 <> x2" ],
-          "conclusion":
-            "JOIN_TICKETS / Pair ( Pair s1 x1 n1 ) ( Pair s2 x2 n2 ) : S => None : S"
+          "premises": ["x1 <> x2"],
+          "conclusion": "JOIN_TICKETS / Pair ( Pair s1 x1 n1 ) ( Pair s2 x2 n2 ) : S => None : S"
         }
       ]
     },
@@ -2830,8 +2706,7 @@
         {
           "name": "t_instr_PAIRING_CHECK",
           "premises": [],
-          "conclusion":
-            "ctx :- PAIRING_CHECK :: list ( pair bls12_381_g1 bls12_381_g2 ) : A => bool : A"
+          "conclusion": "ctx :- PAIRING_CHECK :: list ( pair bls12_381_g1 bls12_381_g2 ) : A => bool : A"
         }
       ],
       "semantics": [
@@ -2842,7 +2717,7 @@
         },
         {
           "name": "bs_PAIRING_CHECK__l",
-          "premises": [ "bls12_381_pairing_check ( l ) = b" ],
+          "premises": ["bls12_381_pairing_check ( l ) = b"],
           "conclusion": "PAIRING_CHECK / l : S => b : S"
         }
       ]
@@ -2853,139 +2728,202 @@
       "ty": "option",
       "ty_args": "option ty",
       "related_ops": [
-        "CONTRACT", "CREATE_CONTRACT", "EDIV", "GET", "GET_AND_UPDATE",
-        "IF_NONE", "ISNAT", "JOIN_TICKETS", "NONE", "SAPLING_VERIFY_UPDATE",
-        "SET_DELEGATE", "SLICE", "SOME", "SPLIT_TICKET", "UNPACK", "UPDATE"
+        "CONTRACT",
+        "CREATE_CONTRACT",
+        "EDIV",
+        "GET",
+        "GET_AND_UPDATE",
+        "IF_NONE",
+        "ISNAT",
+        "JOIN_TICKETS",
+        "NONE",
+        "SAPLING_VERIFY_UPDATE",
+        "SET_DELEGATE",
+        "SLICE",
+        "SOME",
+        "SPLIT_TICKET",
+        "UNPACK",
+        "UPDATE"
       ]
     },
     "list": {
       "ty": "list",
       "ty_args": "list type",
-      "related_ops": [
-        "CONCAT", "CONS", "IF_CONS", "ITER", "MAP", "NIL", "PAIRING_CHECK",
-        "SIZE"
-      ]
+      "related_ops": ["CONCAT", "CONS", "IF_CONS", "ITER", "MAP", "NIL", "PAIRING_CHECK", "SIZE"]
     },
     "set": {
       "ty": "set",
       "ty_args": "set cty",
-      "related_ops": [ "EMPTY_SET", "ITER", "MEM", "SIZE", "UPDATE" ]
+      "related_ops": ["EMPTY_SET", "ITER", "MEM", "SIZE", "UPDATE"]
     },
     "contract": {
       "ty": "contract",
       "ty_args": "contract type",
-      "related_ops": [
-        "ADDRESS", "CONTRACT", "IMPLICIT_ACCOUNT", "SELF", "TRANSFER_TOKENS"
-      ]
+      "related_ops": ["ADDRESS", "CONTRACT", "IMPLICIT_ACCOUNT", "SELF", "TRANSFER_TOKENS"]
     },
     "operation": {
       "ty": "operation",
       "ty_args": "operation",
-      "related_ops": [ "CREATE_CONTRACT", "SET_DELEGATE", "TRANSFER_TOKENS" ]
+      "related_ops": ["CREATE_CONTRACT", "SET_DELEGATE", "TRANSFER_TOKENS"]
     },
     "pair": { "ty": "pair", "ty_args": "pair ty1 ty2", "related_ops": [] },
     "or": {
       "ty": "or",
       "ty_args": "or ty1 ty2",
-      "related_ops": [ "IF_LEFT", "LEFT", "LOOP_LEFT", "RIGHT" ]
+      "related_ops": ["IF_LEFT", "LEFT", "LOOP_LEFT", "RIGHT"]
     },
     "lambda": {
       "ty": "lambda",
       "ty_args": "lambda ty1 ty2",
-      "related_ops": [ "APPLY", "EXEC", "LAMBDA" ]
+      "related_ops": ["APPLY", "EXEC", "LAMBDA"]
     },
     "map": {
       "ty": "map",
       "ty_args": "map kty vty",
-      "related_ops": [
-        "EMPTY_MAP", "GET", "GET_AND_UPDATE", "ITER", "MAP", "MEM", "SIZE",
-        "UPDATE"
-      ]
+      "related_ops": ["EMPTY_MAP", "GET", "GET_AND_UPDATE", "ITER", "MAP", "MEM", "SIZE", "UPDATE"]
     },
     "big_map": {
       "ty": "big_map",
       "ty_args": "big_map kty vty",
-      "related_ops": [
-        "EMPTY_BIG_MAP", "GET", "GET_AND_UPDATE", "MEM", "UPDATE"
-      ]
+      "related_ops": ["EMPTY_BIG_MAP", "GET", "GET_AND_UPDATE", "MEM", "UPDATE"]
     },
     "sapling_transaction": {
       "ty": "sapling_transaction",
       "ty_args": "sapling_transaction n",
-      "related_ops": [ "SAPLING_VERIFY_UPDATE" ]
+      "related_ops": ["SAPLING_VERIFY_UPDATE"]
     },
     "sapling_state": {
       "ty": "sapling_state",
       "ty_args": "sapling_state n",
-      "related_ops": [ "SAPLING_EMPTY_STATE", "SAPLING_VERIFY_UPDATE" ]
+      "related_ops": ["SAPLING_EMPTY_STATE", "SAPLING_VERIFY_UPDATE"]
     },
     "ticket": {
       "ty": "ticket",
       "ty_args": "ticket cty",
-      "related_ops": [
-        "JOIN_TICKETS", "READ_TICKET", "SPLIT_TICKET", "TICKET"
-      ]
+      "related_ops": ["JOIN_TICKETS", "READ_TICKET", "SPLIT_TICKET", "TICKET"]
     },
     "bls12_381_g1": {
       "ty": "bls12_381_g1",
       "ty_args": "bls12_381_g1",
-      "related_ops": [ "ADD", "MUL", "NEG", "PAIRING_CHECK" ]
+      "related_ops": ["ADD", "MUL", "NEG", "PAIRING_CHECK"]
     },
     "bls12_381_g2": {
       "ty": "bls12_381_g2",
       "ty_args": "bls12_381_g2",
-      "related_ops": [ "ADD", "MUL", "NEG", "PAIRING_CHECK" ]
+      "related_ops": ["ADD", "MUL", "NEG", "PAIRING_CHECK"]
     },
     "bls12_381_fr": {
       "ty": "bls12_381_fr",
       "ty_args": "bls12_381_fr",
-      "related_ops": [ "ADD", "INT", "MUL", "NEG" ]
+      "related_ops": ["ADD", "INT", "MUL", "NEG"]
     },
     "string": {
       "ty": "string",
       "ty_args": "string",
-      "related_ops": [ "CONCAT", "SIZE", "SLICE" ]
+      "related_ops": ["CONCAT", "SIZE", "SLICE"]
     },
     "nat": {
       "ty": "nat",
       "ty_args": "nat",
       "related_ops": [
-        "ABS", "ADD", "AND", "EDIV", "INT", "ISNAT", "LEVEL", "LSL", "LSR",
-        "MUL", "NEG", "NOT", "OR", "READ_TICKET", "SIZE", "SLICE",
-        "SPLIT_TICKET", "SUB", "TICKET", "TOTAL_VOTING_POWER",
-        "VOTING_POWER", "XOR"
+        "ABS",
+        "ADD",
+        "AND",
+        "EDIV",
+        "INT",
+        "ISNAT",
+        "LEVEL",
+        "LSL",
+        "LSR",
+        "MUL",
+        "NEG",
+        "NOT",
+        "OR",
+        "READ_TICKET",
+        "SIZE",
+        "SLICE",
+        "SPLIT_TICKET",
+        "SUB",
+        "TICKET",
+        "TOTAL_VOTING_POWER",
+        "VOTING_POWER",
+        "XOR"
       ]
     },
     "int": {
       "ty": "int",
       "ty_args": "int",
       "related_ops": [
-        "ABS", "ADD", "AND", "COMPARE", "EDIV", "EQ", "GE", "GT", "INT",
-        "ISNAT", "LE", "LT", "MUL", "NEG", "NEQ", "NOT",
-        "SAPLING_VERIFY_UPDATE", "SUB"
+        "ABS",
+        "ADD",
+        "AND",
+        "COMPARE",
+        "EDIV",
+        "EQ",
+        "GE",
+        "GT",
+        "INT",
+        "ISNAT",
+        "LE",
+        "LT",
+        "MUL",
+        "NEG",
+        "NEQ",
+        "NOT",
+        "SAPLING_VERIFY_UPDATE",
+        "SUB"
       ]
     },
     "bytes": {
       "ty": "bytes",
       "ty_args": "bytes",
       "related_ops": [
-        "BLAKE2B", "CHECK_SIGNATURE", "CONCAT", "KECCAK", "PACK", "SHA256",
-        "SHA3", "SHA512", "SIZE", "SLICE", "UNPACK"
+        "BLAKE2B",
+        "CHECK_SIGNATURE",
+        "CONCAT",
+        "KECCAK",
+        "PACK",
+        "SHA256",
+        "SHA3",
+        "SHA512",
+        "SIZE",
+        "SLICE",
+        "UNPACK"
       ]
     },
     "bool": {
       "ty": "bool",
       "ty_args": "bool",
       "related_ops": [
-        "AND", "CHECK_SIGNATURE", "EQ", "GE", "GT", "IF", "LE", "LOOP", "LT",
-        "MEM", "NEQ", "NOT", "OR", "PAIRING_CHECK", "UPDATE", "XOR"
+        "AND",
+        "CHECK_SIGNATURE",
+        "EQ",
+        "GE",
+        "GT",
+        "IF",
+        "LE",
+        "LOOP",
+        "LT",
+        "MEM",
+        "NEQ",
+        "NOT",
+        "OR",
+        "PAIRING_CHECK",
+        "UPDATE",
+        "XOR"
       ]
     },
     "mutez": {
       "ty": "mutez",
       "ty_args": "mutez",
       "related_ops": [
-        "ADD", "AMOUNT", "BALANCE", "CREATE_CONTRACT", "EDIV", "MUL", "SUB",
+        "ADD",
+        "AMOUNT",
+        "BALANCE",
+        "CREATE_CONTRACT",
+        "EDIV",
+        "MUL",
+        "SUB",
         "TRANSFER_TOKENS"
       ]
     },
@@ -2993,7 +2931,10 @@
       "ty": "key_hash",
       "ty_args": "key_hash",
       "related_ops": [
-        "CREATE_CONTRACT", "HASH_KEY", "IMPLICIT_ACCOUNT", "SET_DELEGATE",
+        "CREATE_CONTRACT",
+        "HASH_KEY",
+        "IMPLICIT_ACCOUNT",
+        "SET_DELEGATE",
         "VOTING_POWER"
       ]
     },
@@ -3001,39 +2942,44 @@
       "ty": "address",
       "ty_args": "address",
       "related_ops": [
-        "ADDRESS", "CONTRACT", "CREATE_CONTRACT", "READ_TICKET",
-        "SELF_ADDRESS", "SENDER", "SOURCE"
+        "ADDRESS",
+        "CONTRACT",
+        "CREATE_CONTRACT",
+        "READ_TICKET",
+        "SELF_ADDRESS",
+        "SENDER",
+        "SOURCE"
       ]
     },
     "timestamp": {
       "ty": "timestamp",
       "ty_args": "timestamp",
-      "related_ops": [ "ADD", "NOW", "SUB" ]
+      "related_ops": ["ADD", "NOW", "SUB"]
     },
     "never": {
       "ty": "never",
       "ty_args": "never",
-      "related_ops": [ "NEVER" ]
+      "related_ops": ["NEVER"]
     },
     "key": {
       "ty": "key",
       "ty_args": "key",
-      "related_ops": [ "CHECK_SIGNATURE", "HASH_KEY" ]
+      "related_ops": ["CHECK_SIGNATURE", "HASH_KEY"]
     },
     "unit": {
       "ty": "unit",
       "ty_args": "unit",
-      "related_ops": [ "IMPLICIT_ACCOUNT", "UNIT" ]
+      "related_ops": ["IMPLICIT_ACCOUNT", "UNIT"]
     },
     "signature": {
       "ty": "signature",
       "ty_args": "signature",
-      "related_ops": [ "CHECK_SIGNATURE" ]
+      "related_ops": ["CHECK_SIGNATURE"]
     },
     "chain_id": {
       "ty": "chain_id",
       "ty_args": "chain_id",
-      "related_ops": [ "CHAIN_ID" ]
+      "related_ops": ["CHAIN_ID"]
     }
   }
 }

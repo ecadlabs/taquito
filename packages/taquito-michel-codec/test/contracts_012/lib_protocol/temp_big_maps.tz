@@ -1,0 +1,81 @@
+# Testing passing/originating with big maps from different sources
+# This contract is used by test_temp_big_maps.ml
+
+# The left member of the parameter is either:
+#   - (Left True) to use a fresh big map
+#   - (Left False) to use the stored big map
+#   - (Right bigmap) to use the passed big map
+
+# The right member of the parameter is used to decide between:
+#   - passing the argument (positive value)
+#   - doing nothing (zero)
+#   - originating (negative value)
+
+parameter (pair (or bool (big_map int int)) int);
+storage (big_map int int);
+code
+  { # parameter * storage :: []
+    UNPAIR; # parameter :: storage :: []
+    UNPAIR; # parameter.fst :: parameter.snd :: storage :: []
+    DIP { SWAP }; # parameter.fst :: storage :: parameter.snd :: []
+    IF_LEFT
+      { # parameter.fst.Left :: storage :: parameter.snd :: []
+        IF
+          { # storage :: parameter.snd :: []
+            DROP; # parameter.snd :: []
+            EMPTY_BIG_MAP int int; # empty_big_map :: parameter.snd :: []
+            PUSH (option int) (Some 2); # Some 2 :: empty_big_map :: parameter.snd :: []
+            PUSH int 1; # 1 :: Some 2 :: empty_big_map :: parameter.snd :: []
+            UPDATE; # big_map { 1 -> 2 } :: parameter.snd :: []
+          }
+          { # stored_big_map :: parameter.snd :: []
+          }
+      }
+      { # parameter.fst.Right :: storage :: parameter.snd :: []
+        DIP { DROP } # passed_big_map :: parameter.snd :: []
+      };
+    DUP; # big_map :: big_map :: parameter.snd :: []
+    DIG 2; # parameter.snd :: big_map :: big_map :: []
+    DUP; # parameter.snd :: parameter.snd :: big_map :: big_map :: []
+    IFGT
+      { # parameter.snd :: big_map :: big_map :: []
+        PUSH int -1;
+        ADD; # parameter.snd - 1 :: big_map :: big_map :: []
+        SWAP; # big_map :: parameter.snd - 1 :: big_map :: []
+        RIGHT bool ; # Right big_map :: parameter.snd - 1 :: big_map :: []
+        PAIR; # Right big_map * (parameter.snd - 1) :: big_map :: []
+        DIP { SELF; PUSH mutez 0; }; # Right big_map * (parameter.snd - 1) :: 0 mutez :: self :: big_map :: []
+        TRANSFER_TOKENS; # transfer_tokens :: big_map :: []
+        NIL operation; # nil_operation :: transfer_tokens :: big_map :: []
+        SWAP; # transfer_tokens :: nil_operation :: big_map :: []
+        CONS # list operation :: big_map :: []
+      }
+      { # parameter.snd :: big_map :: big_map :: []
+        IFEQ
+          { # big_map :: big_map :: []
+            DROP; # big_map :: []
+            NIL operation; # list operation :: big_map :: []
+          }
+          { # big_map :: big_map :: []
+            PUSH mutez 0; # 0 mutez :: big_map :: big_map :: []
+            NONE key_hash; # None key_hash :: 0 mutez :: big_map :: big_map :: []
+            CREATE_CONTRACT
+              {
+                parameter unit;
+                storage (big_map int int);
+                code
+                  {
+                    UNPAIR;
+                    DROP;
+                    NIL operation;
+                    PAIR
+                  }
+              }; # create_contract :: address :: big_map :: []
+            DIP { DROP }; # create_contract :: big_map :: []
+            NIL operation; # nil_operation :: create_contract :: big_map :: []
+            SWAP; # create_contract :: nil_operation :: big_map :: []
+            CONS # list operation :: big_map :: []
+          };
+      };
+    PAIR # (list operation * big_map) :: []
+  }

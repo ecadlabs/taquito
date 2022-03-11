@@ -10,7 +10,7 @@ async function example() {
     try {
         console.log("signer pkh:");
         console.log(await signer.publicKeyHash());
-        const contract = await tezos.contract.at('KT1SyjphGj51CadmmbL8dmKwMA4VyMQdtkjB');
+        const contract = await tezos.contract.at('KT1ERpZEpgtXni64q87VQd6MxgSMrt6Ek65o');
         console.log("Printing contract methods...");
         console.log(contract.methods);
         console.log("Showing initial storage...");

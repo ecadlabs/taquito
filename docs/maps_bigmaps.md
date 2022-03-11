@@ -174,7 +174,7 @@ values={[
 
 ```js live noInline
 Tezos.contract
-  .at('KT1Xjhpt7EB4kZvoSaeYE4zi47wYcdMAuDjD')
+  .at('KT1ALm5dUKi47p8WRfX1AYzFG7A8YwE4LhRv')
   .then((myContract) => {
     return myContract
       .storage()
@@ -217,7 +217,7 @@ Tezos.contract
 
 ```js live noInline wallet
 Tezos.wallet
-  .at('KT1Xjhpt7EB4kZvoSaeYE4zi47wYcdMAuDjD')
+  .at('KT1ALm5dUKi47p8WRfX1AYzFG7A8YwE4LhRv')
   .then((myContract) => {
     return myContract
       .storage()
@@ -413,7 +413,7 @@ values={[
 
 ```js live noInline
 Tezos.contract
-  .at('KT1BhFn1n1h4HJCxaRvoWEHPcp5UpAYbH3XN')
+  .at('KT1NoACbTF2wh2Zrz3aZLC5rr2nAqsBFa9gc')
   .then((myContract) => {
     return myContract.storage();
   })
@@ -433,7 +433,7 @@ Tezos.contract
 
 ```js live noInline wallet
 Tezos.wallet
-  .at('KT1BhFn1n1h4HJCxaRvoWEHPcp5UpAYbH3XN')
+  .at('KT1NoACbTF2wh2Zrz3aZLC5rr2nAqsBFa9gc')
   .then((myContract) => {
     return myContract.storage();
   })
@@ -597,7 +597,7 @@ values={[
 
 ```js live noInline
 Tezos.contract
-  .at('KT1Jykv4V9tWbdJVff1jLx9tEs54hE442EX2')
+  .at('KT1HpDxVK67YxzAUs7Ubp7R7KzV3i1X1nZtD')
   .then((myContract) => {
     return myContract.storage();
   })
@@ -623,7 +623,7 @@ Tezos.contract
 
 ```js live noInline wallet
 Tezos.wallet
-  .at('KT1Jykv4V9tWbdJVff1jLx9tEs54hE442EX2')
+  .at('KT1HpDxVK67YxzAUs7Ubp7R7KzV3i1X1nZtD')
   .then((myContract) => {
     return myContract.storage();
   })
@@ -796,7 +796,7 @@ values={[
 
 ```js live noInline
 Tezos.contract
-  .at('KT1JdWjaxKb9Qr8beactUzW9dEH5iDpUcXuF')
+  .at('KT1DXCqq3suQKEUoC4UtzNi1c6jNcunGynas')
   .then((myContract) => {
     return myContract
       .storage()
@@ -829,7 +829,7 @@ Tezos.contract
 
 ```js live noInline wallet
 Tezos.wallet
-  .at('KT1JdWjaxKb9Qr8beactUzW9dEH5iDpUcXuF')
+  .at('KT1DXCqq3suQKEUoC4UtzNi1c6jNcunGynas')
   .then((myContract) => {
     return myContract
       .storage()
@@ -899,10 +899,10 @@ values={[
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
+// const Tezos = new TezosToolkit('https://ithacanet.ecadinfra.com');
 
 Tezos.contract
-  .at('KT1UuzwkGJEoFJGY2XV21NdJeJ4tgXWmfbGE')
+  .at('KT1MMfuLrpBufDyxrLFkxBNE73Lp3AWkHivG')
   .then((contract) => {
     println('Fetching the storage of the contract...');
     return contract.storage();
@@ -928,10 +928,10 @@ Tezos.contract
 
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
+// const Tezos = new TezosToolkit('https://ithacanet.ecadinfra.com');
 
 Tezos.wallet
-  .at('KT1UuzwkGJEoFJGY2XV21NdJeJ4tgXWmfbGE')
+  .at('KT1MMfuLrpBufDyxrLFkxBNE73Lp3AWkHivG')
   .then((contract) => {
     println('Fetching the storage of the contract...');
     return contract.storage();
