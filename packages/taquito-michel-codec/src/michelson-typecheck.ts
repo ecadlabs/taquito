@@ -485,19 +485,6 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
         //let prev: MichelsonData | undefined;
         for (const v of d) {
           assertDataValidInternal(v, t.args[0], ctx);
-          /*
-          if (t.prim === 'set') {
-            if (prev === undefined) {
-              prev = v;
-            } else if (compareMichelsonData(t.args[0], prev, v) > 0) {
-              throw new MichelsonTypeError(
-                t,
-                d,
-                `set elements must be ordered: ${JSON.stringify(d)}`
-              );
-            }
-          }
-          */
         }
         return;
       }
@@ -539,17 +526,6 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
           }
           assertDataValidInternal(v.args[0], t.args[0], ctx);
           assertDataValidInternal(v.args[1], t.args[1], ctx);
-          /*
-          if (prev === undefined) {
-            prev = v;
-          } else if (compareMichelsonData(t.args[0], prev.args[0], v.args[0]) > 0) {
-            throw new MichelsonTypeError(
-              t,
-              d,
-              `map elements must be ordered: ${JSON.stringify(d)}`
-            );
-          }
-          */
         }
         return;
       }
