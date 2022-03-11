@@ -1,6 +1,11 @@
 import { LocalForger, ProtocolsHash } from '../src/taquito-local-forging';
+import { ticketCode3, ticketStorage3 } from './data/code_with_ticket';
 import { commonCases, hangzhouCases, ithacaCases, priorIthacaCases } from './allTestsCases';
-import { InvalidOperationSchemaError, InvalidBlockHashError } from '../src/error';
+import {
+  InvalidOperationSchemaError,
+  InvalidBlockHashError,
+  InvalidOperationKindError,
+} from '../src/error';
 
 describe('Forge and parse operations hangzhou', () => {
   const localForger = new LocalForger(ProtocolsHash.PtHangz2);
@@ -50,13 +55,13 @@ describe('Forge and parse operations ithaca', () => {
 
 describe('Forge should validate parameters against the schema', () => {
   const localForger = new LocalForger(ProtocolsHash.Psithaca2);
-
-  test('Should throw error when parameters are missing', async () => {
+  test('Should throw error when operation kind is invalid', async () => {
     const operation: any = {
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'reveal',
+          kind: 'invalid',
+          counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           public_key: 'edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g',
           fee: '10000',
@@ -65,7 +70,25 @@ describe('Forge should validate parameters against the schema', () => {
         },
       ],
     };
+    expect(() => {
+      localForger.forge(operation);
+    }).toThrow(InvalidOperationKindError);
+  });
 
+  test('Should throw error when parameters are missing', async () => {
+    const operation: any = {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: 'reveal',
+          counter: '1',
+          public_key: 'edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+        },
+      ],
+    };
     expect(() => {
       localForger.forge(operation);
     }).toThrow(InvalidOperationSchemaError);
@@ -86,9 +109,57 @@ describe('Forge should validate parameters against the schema', () => {
         },
       ],
     };
-
     expect(() => {
       localForger.forge(operation);
     }).toThrow(InvalidBlockHashError);
+  });
+
+  test('Should not throw error when origination and delegation does not have a "delegate" property', async () => {
+    const operation: any = {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: 'delegation',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+        },
+        {
+          kind: 'origination',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          balance: '0',
+          script: {
+            code: ticketCode3,
+            storage: ticketStorage3,
+          },
+        },
+      ],
+    };
+    expect(localForger.forge(operation)).toBeDefined();
+  });
+
+  test('Should not throw error when transaction operation does not have a "parameters" property', async () => {
+    const operation: any = {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: 'transaction',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          amount: '1000',
+        },
+      ],
+    };
+    expect(localForger.forge(operation)).toBeDefined();
   });
 });

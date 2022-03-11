@@ -46,10 +46,18 @@ const deleteArrayElementByValue = (array: string[], item: string) => {
 };
 
 /**
+ * @returns A boolean value to indicate whether the operation kind is valid or not
+ */
+export const validateOperationKind = (opKind: string) => {
+  const opKindList = Object.keys(OperationKindMapping);
+  return opKindList.includes(opKind);
+};
+
+/**
  *  returns 0 when the two array of properties are identical or the passed property
  *  does not have any missing parameters from the corresponding schema
  *
- *  returns the array element differences if there are missing required property keys
+ *  @returns array element differences if there are missing required property keys
  */
 export const validateMissingProperty = (operationContent: any) => {
   const kind: OperationKind = operationContent.kind;

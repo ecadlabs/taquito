@@ -11,3 +11,10 @@ export class InvalidOperationSchemaError extends Error {
     super(message);
   }
 }
+
+export class InvalidOperationKindError extends Error {
+  public name = 'InvalidOperationKindError';
+  constructor(public message: string) {
+    super(message);
+  }
+}
