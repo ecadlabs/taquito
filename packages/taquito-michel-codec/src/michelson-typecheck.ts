@@ -19,7 +19,6 @@ import {
   MichelsonTypeAddress,
   MichelsonContractView,
   ProtoInferiorTo,
-  ProtoGreaterOfEqual,
 } from './michelson-types';
 import {
   unpackAnnotations,
@@ -1220,9 +1219,9 @@ function functionTypeInternal(
       }
 
       case 'SUB': {
-        const s = ProtoGreaterOfEqual(proto, Protocol.PsiThaCa)
-          ? args(0, ['nat', 'int', 'timestamp'], ['nat', 'int', 'timestamp'])
-          : args(0, ['nat', 'int', 'timestamp', 'mutez'], ['nat', 'int', 'timestamp', 'mutez']);
+        const s = ProtoInferiorTo(proto, Protocol.PsiThaCa)
+          ? args(0, ['nat', 'int', 'timestamp', 'mutez'], ['nat', 'int', 'timestamp', 'mutez'])
+          : args(0, ['nat', 'int', 'timestamp'], ['nat', 'int', 'timestamp']);
 
         if (
           ((s[0].prim === 'nat' || s[0].prim === 'int') &&
