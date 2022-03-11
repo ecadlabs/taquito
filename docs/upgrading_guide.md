@@ -5,6 +5,10 @@ author: Roxane Letourneau
 
 # Upgrading to version 12
 
+:::note Breaking changes
+With this major number update to support the `ithaca` Tezos protocol, we have also implemented some breaking changes to the Taquito API. The following sections explain how to update your projects.
+:::
+
 ## The operation confirmations are now done using the `SubscribeProvider` set on the `TezosToolkit`
 
 The change to the `confirmation` methods includes a breaking change. The polling interval for the confirmation (`confirmationPollingIntervalSecond`) and the streamer configuration (`ConfigStreamer`) have been moved from the `TezosToolkit` to the `PollingSubscribeProvider` class, where they belong logically.
@@ -60,10 +64,6 @@ Please take note of the two following breaking changes:
 
 
 # Upgrading to version 8
-
-:::note Breaking changes
-With this major number update to support the `ithaca` Tezos protocol, we have also implemented some breaking changes to the Taquito API. The following sections explains how to update your projects.
-:::
 
 ## Breaking change - Typescript upgrade
 
