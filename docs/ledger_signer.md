@@ -116,7 +116,7 @@ Tezos.contract
     console.log(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
   })
-  .then((hash) => console.log(`Operation injected: https://hangzhou.tzstats.com/${hash}`))
+  .then((hash) => console.log(`Operation injected: https://ithaca.tzstats.com/${hash}`))
   .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
@@ -135,7 +135,7 @@ Tezos.wallet
     console.log(`Waiting for ${op.opHash} to be confirmed...`);
     return op.confirmation(1).then(() => op.opHash);
   })
-  .then((hash) => console.log(`Operation injected: https://hangzhou.tzstats.com/${hash}`))
+  .then((hash) => console.log(`Operation injected: https://ithaca.tzstats.com/${hash}`))
   .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
@@ -199,7 +199,7 @@ _Note that this example is not intended to be a complete example of paths scanni
 //import { LedgerSigner, DerivationType, HDPathTemplate } from '@taquito/ledger-signer';
 //import { TezosToolkit } from '@taquito/taquito';
 // import TransportWebHID from "@ledgerhq/hw-transport-webhid";
-//const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
+//const Tezos = new TezosToolkit('https://ithacanet.ecadinfra.com');
 
 TransportWebHID.create().then((transport) => {
   for (let index = 0, p = Promise.resolve(); index < 10; index++) {

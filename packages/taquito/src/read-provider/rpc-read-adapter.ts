@@ -2,7 +2,6 @@ import {
   BlockResponse,
   EntrypointsResponse,
   MichelsonV1Expression,
-  MichelsonV1ExpressionExtended,
   SaplingDiffResponse,
   ScriptedContracts,
 } from '@taquito/rpc';
@@ -49,9 +48,7 @@ export class RpcReadAdapter implements TzReadProvider {
    * @description Access protocol constants used in Taquito
    * @param block from which we want to retrieve the constants
    */
-  async getProtocolConstants(
-    block: BlockIdentifier
-  ): Promise<{
+  async getProtocolConstants(block: BlockIdentifier): Promise<{
     time_between_blocks?: BigNumber[];
     minimal_block_delay?: BigNumber | undefined;
     hard_gas_limit_per_operation: BigNumber;

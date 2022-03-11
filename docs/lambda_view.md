@@ -57,7 +57,7 @@ Parameters must not include the callback parameter
 Then we call the `read()` method. (Note that we have no longer need a lambda contract)
 ```js live noInline
 Tezos.contract
-  .at('KT1LNMrk8orMQ85zbwK25996dPhDxfSicvKh')
+  .at('KT1D2eQBuuaH4rv8HuoRdv2tgDdS3DoqPepN')
   .then((contract) => {
     return contract.views.getTotalSupply([['Unit']]).read();
   })
@@ -69,7 +69,7 @@ Tezos.contract
 
 ```js live noInline
 Tezos.contract
-  .at('KT1LNMrk8orMQ85zbwK25996dPhDxfSicvKh')
+  .at('KT1NcTiD4PTSxQVN48frUeUujMmzfpU3NMXv')
   .then((contract) => {
     return contract.views.getBalance('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1').read();
   })
@@ -83,7 +83,7 @@ Tezos.contract
 
 ```js live noInline
 Tezos.contract
-  .at('KT1Tf2JXZP8wXjdgndsgMKM1uW9M4CC5rbWL')
+  .at('KT1RueqfMN7aWHLzgHPphdmipNgopkk8okqX')
   .then((contract) => {
     return contract.views
       .balance_of([{ owner: 'tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1', token_id: '0' }])
@@ -97,7 +97,7 @@ Tezos.contract
 
 ```js live noInline
 Tezos.contract
-  .at('KT1LNMrk8orMQ85zbwK25996dPhDxfSicvKh')
+  .at('KT1D2eQBuuaH4rv8HuoRdv2tgDdS3DoqPepN')
   .then((contract) => {
     return contract.views.getBalance('tz1XTyqBn4xi9tkRDutpRyQwHxfF8ar4i4Wq').read();
   })
