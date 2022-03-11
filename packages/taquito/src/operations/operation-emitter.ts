@@ -60,10 +60,10 @@ export abstract class OperationEmitter {
   }
 
   // Originally from sotez (Copyright (c) 2018 Andrew Kishino)
-  protected async prepareOperation({
-    operation,
-    source,
-  }: PrepareOperationParams): Promise<PreparedOperation> {
+  protected async prepareOperation(
+    { operation, source }: PrepareOperationParams,
+    pkh?: string
+  ): Promise<PreparedOperation> {
     const counters: { [key: string]: number } = {};
     let ops: RPCOperation[] = [];
 
@@ -77,7 +77,7 @@ export abstract class OperationEmitter {
     }
 
     // Implicit account who emit the operation
-    const publicKeyHash = await this.signer.publicKeyHash();
+    const publicKeyHash = pkh ? pkh : await this.signer.publicKeyHash();
     let counterPromise: Promise<string | undefined> = Promise.resolve(undefined);
 
     for (let i = 0; i < ops.length; i++) {
