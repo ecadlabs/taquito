@@ -33,7 +33,8 @@ type PrimID =
   | MichelsonDataID
   | MichelsonSectionID
   | MichelsonInstructionID
-  | 'Elt';
+  | 'Elt'
+  | 'constant';
 
 const primitives: PrimID[] = [
   'parameter',
@@ -177,6 +178,13 @@ const primitives: PrimID[] = [
   'SPLIT_TICKET',
   'JOIN_TICKETS',
   'GET_AND_UPDATE',
+  'chest',
+  'chest_key',
+  'OPEN_CHEST',
+  'VIEW',
+  'view',
+  'constant',
+  'SUB_MUTEZ',
 ];
 
 const primTags: { [key in PrimID]?: number } & { [key: string]: number | undefined } =
