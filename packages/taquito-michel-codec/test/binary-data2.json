@@ -998,9 +998,7 @@
     "data": [
       {
         "prim": "UNIT",
-        "annots": [
-          ":u"
-        ]
+        "annots": [":u"]
       },
       {
         "prim": "DROP"
@@ -1152,9 +1150,7 @@
       },
       {
         "prim": "SOME",
-        "annots": [
-          ":s"
-        ]
+        "annots": [":s"]
       },
       [
         {
@@ -1203,9 +1199,7 @@
           }
         ],
         "prim": "NONE",
-        "annots": [
-          ":n"
-        ]
+        "annots": [":n"]
       },
       {
         "prim": "DROP"
@@ -1228,10 +1222,7 @@
       },
       {
         "prim": "PAIR",
-        "annots": [
-          "%",
-          "%o"
-        ]
+        "annots": ["%", "%o"]
       },
       {
         "prim": "CAR"
@@ -1254,9 +1245,7 @@
       },
       {
         "prim": "PAIR",
-        "annots": [
-          "%o"
-        ]
+        "annots": ["%o"]
       },
       {
         "prim": "CAR"
@@ -1279,9 +1268,7 @@
       },
       {
         "prim": "PAIR",
-        "annots": [
-          "%o"
-        ]
+        "annots": ["%o"]
       },
       {
         "prim": "CAR"
@@ -1304,11 +1291,7 @@
       },
       {
         "prim": "PAIR",
-        "annots": [
-          ":p",
-          "%l",
-          "%r"
-        ]
+        "annots": [":p", "%l", "%r"]
       },
       {
         "prim": "CAR"
@@ -1331,9 +1314,7 @@
       },
       {
         "prim": "PAIR",
-        "annots": [
-          ":p"
-        ]
+        "annots": [":p"]
       },
       {
         "prim": "CAR"
@@ -1356,10 +1337,7 @@
       },
       {
         "prim": "PAIR",
-        "annots": [
-          "%",
-          "%@"
-        ]
+        "annots": ["%", "%@"]
       },
       {
         "prim": "CAR"
@@ -1409,16 +1387,11 @@
       },
       {
         "prim": "PAIR",
-        "annots": [
-          "%l",
-          "%r"
-        ]
+        "annots": ["%l", "%r"]
       },
       {
         "prim": "CDR",
-        "annots": [
-          "%r"
-        ]
+        "annots": ["%r"]
       }
     ],
     "packed": "0502000000190743035b0001044200000005256c2025720417000000022572"
@@ -1481,11 +1454,7 @@
           }
         ],
         "prim": "LEFT",
-        "annots": [
-          ":lu",
-          "%l",
-          "%r"
-        ]
+        "annots": [":lu", "%l", "%r"]
       },
       {
         "args": [
@@ -1558,10 +1527,7 @@
           }
         ],
         "prim": "LEFT",
-        "annots": [
-          ":lu",
-          "%l"
-        ]
+        "annots": [":lu", "%l"]
       },
       {
         "args": [
@@ -1670,10 +1636,7 @@
           }
         ],
         "prim": "RIGHT",
-        "annots": [
-          ":lu",
-          "%l"
-        ]
+        "annots": [":lu", "%l"]
       },
       [
         {
@@ -1738,9 +1701,7 @@
           }
         ],
         "prim": "NIL",
-        "annots": [
-          ":ni"
-        ]
+        "annots": [":ni"]
       },
       {
         "args": [
@@ -1791,9 +1752,7 @@
           }
         ],
         "prim": "EMPTY_SET",
-        "annots": [
-          ":si"
-        ]
+        "annots": [":si"]
       },
       {
         "args": [
@@ -1855,9 +1814,7 @@
         "prim": "EMPTY_MAP"
       },
       {
-        "args": [
-          []
-        ],
+        "args": [[]],
         "prim": "MAP"
       },
       {
@@ -1878,14 +1835,10 @@
           }
         ],
         "prim": "EMPTY_MAP",
-        "annots": [
-          ":miu"
-        ]
+        "annots": [":miu"]
       },
       {
-        "args": [
-          []
-        ],
+        "args": [[]],
         "prim": "MAP"
       },
       {
@@ -2094,9 +2047,7 @@
           }
         ],
         "prim": "EMPTY_BIG_MAP",
-        "annots": [
-          ":bmiu"
-        ]
+        "annots": [":bmiu"]
       },
       {
         "args": [
@@ -2160,16 +2111,11 @@
       },
       {
         "prim": "PAIR",
-        "annots": [
-          "%l",
-          "%r"
-        ]
+        "annots": ["%l", "%r"]
       },
       {
         "prim": "CAR",
-        "annots": [
-          "%l"
-        ]
+        "annots": ["%l"]
       }
     ],
     "packed": "0502000000190743035b0001044200000005256c202572041600000002256c"
@@ -2238,10 +2184,7 @@
         "prim": "PUSH"
       },
       {
-        "args": [
-          [],
-          []
-        ],
+        "args": [[], []],
         "prim": "IF"
       }
     ],
@@ -2288,9 +2231,7 @@
   {
     "data": [
       {
-        "args": [
-          []
-        ],
+        "args": [[]],
         "prim": "DIP"
       }
     ],
@@ -2591,9 +2532,7 @@
           }
         ],
         "prim": "UNPACK",
-        "annots": [
-          ":uu"
-        ]
+        "annots": [":uu"]
       },
       {
         "prim": "DROP"
@@ -3210,9 +3149,7 @@
       },
       {
         "prim": "NEG",
-        "annots": [
-          "@kek"
-        ]
+        "annots": ["@kek"]
       },
       {
         "prim": "DROP"
@@ -3509,9 +3446,7 @@
           }
         ],
         "prim": "CONTRACT",
-        "annots": [
-          "%entrypnt"
-        ]
+        "annots": ["%entrypnt"]
       },
       {
         "prim": "DROP"
@@ -3676,10 +3611,7 @@
               "args": [
                 {
                   "prim": "int",
-                  "annots": [
-                    ":p",
-                    "%root"
-                  ]
+                  "annots": [":p", "%root"]
                 }
               ],
               "prim": "parameter"
@@ -3688,9 +3620,7 @@
               "args": [
                 {
                   "prim": "int",
-                  "annots": [
-                    ":s"
-                  ]
+                  "annots": [":s"]
                 }
               ],
               "prim": "storage"
@@ -3893,9 +3823,7 @@
               "args": [
                 {
                   "prim": "int",
-                  "annots": [
-                    ":p"
-                  ]
+                  "annots": [":p"]
                 }
               ],
               "prim": "parameter"
@@ -3904,9 +3832,7 @@
               "args": [
                 {
                   "prim": "int",
-                  "annots": [
-                    ":s"
-                  ]
+                  "annots": [":s"]
                 }
               ],
               "prim": "storage"
@@ -4073,15 +3999,11 @@
         "args": [
           {
             "prim": "int",
-            "annots": [
-              ":i"
-            ]
+            "annots": [":i"]
           },
           {
             "prim": "int",
-            "annots": [
-              ":i"
-            ]
+            "annots": [":i"]
           },
           []
         ],
@@ -4414,9 +4336,7 @@
               }
             ],
             "prim": "set",
-            "annots": [
-              ":s"
-            ]
+            "annots": [":s"]
           },
           {
             "args": [
@@ -4425,9 +4345,7 @@
               }
             ],
             "prim": "set",
-            "annots": [
-              ":s"
-            ]
+            "annots": [":s"]
           },
           []
         ],
@@ -4603,41 +4521,29 @@
             "args": [
               {
                 "prim": "int",
-                "annots": [
-                  "%x"
-                ]
+                "annots": ["%x"]
               },
               {
                 "prim": "int",
-                "annots": [
-                  "%y"
-                ]
+                "annots": ["%y"]
               }
             ],
             "prim": "pair",
-            "annots": [
-              ":point"
-            ]
+            "annots": [":point"]
           },
           {
             "args": [
               {
                 "prim": "int",
-                "annots": [
-                  "%x"
-                ]
+                "annots": ["%x"]
               },
               {
                 "prim": "int",
-                "annots": [
-                  "%y"
-                ]
+                "annots": ["%y"]
               }
             ],
             "prim": "pair",
-            "annots": [
-              ":point"
-            ]
+            "annots": [":point"]
           },
           []
         ],
@@ -4693,29 +4599,21 @@
             "args": [
               {
                 "prim": "int",
-                "annots": [
-                  ":i"
-                ]
+                "annots": [":i"]
               }
             ],
             "prim": "set",
-            "annots": [
-              ":s"
-            ]
+            "annots": [":s"]
           },
           {
             "args": [
               {
                 "prim": "int",
-                "annots": [
-                  ":i"
-                ]
+                "annots": [":i"]
               }
             ],
             "prim": "set",
-            "annots": [
-              ":s"
-            ]
+            "annots": [":s"]
           },
           []
         ],
@@ -4737,33 +4635,23 @@
                 "args": [
                   {
                     "prim": "int",
-                    "annots": [
-                      "%x"
-                    ]
+                    "annots": ["%x"]
                   },
                   {
                     "prim": "int",
-                    "annots": [
-                      "%y"
-                    ]
+                    "annots": ["%y"]
                   }
                 ],
                 "prim": "pair",
-                "annots": [
-                  ":point"
-                ]
+                "annots": [":point"]
               },
               {
                 "prim": "int",
-                "annots": [
-                  "%z"
-                ]
+                "annots": ["%z"]
               }
             ],
             "prim": "pair",
-            "annots": [
-              ":point3d"
-            ]
+            "annots": [":point3d"]
           },
           {
             "args": [
@@ -4771,33 +4659,23 @@
                 "args": [
                   {
                     "prim": "int",
-                    "annots": [
-                      "%x"
-                    ]
+                    "annots": ["%x"]
                   },
                   {
                     "prim": "int",
-                    "annots": [
-                      "%y"
-                    ]
+                    "annots": ["%y"]
                   }
                 ],
                 "prim": "pair",
-                "annots": [
-                  ":point"
-                ]
+                "annots": [":point"]
               },
               {
                 "prim": "int",
-                "annots": [
-                  "%z"
-                ]
+                "annots": ["%z"]
               }
             ],
             "prim": "pair",
-            "annots": [
-              ":point3d"
-            ]
+            "annots": [":point3d"]
           },
           []
         ],
@@ -4853,17 +4731,11 @@
             "args": [
               {
                 "prim": "unit",
-                "annots": [
-                  ":u",
-                  "%l"
-                ]
+                "annots": [":u", "%l"]
               },
               {
                 "prim": "int",
-                "annots": [
-                  ":i",
-                  "%r"
-                ]
+                "annots": [":i", "%r"]
               }
             ],
             "prim": "or"
@@ -4872,17 +4744,11 @@
             "args": [
               {
                 "prim": "unit",
-                "annots": [
-                  ":u",
-                  "%l"
-                ]
+                "annots": [":u", "%l"]
               },
               {
                 "prim": "int",
-                "annots": [
-                  ":i",
-                  "%r"
-                ]
+                "annots": [":i", "%r"]
               }
             ],
             "prim": "or"
@@ -4905,41 +4771,29 @@
             "args": [
               {
                 "prim": "unit",
-                "annots": [
-                  ":n"
-                ]
+                "annots": [":n"]
               },
               {
                 "prim": "int",
-                "annots": [
-                  ":t"
-                ]
+                "annots": [":t"]
               }
             ],
             "prim": "lambda",
-            "annots": [
-              ":l"
-            ]
+            "annots": [":l"]
           },
           {
             "args": [
               {
                 "prim": "unit",
-                "annots": [
-                  ":n"
-                ]
+                "annots": [":n"]
               },
               {
                 "prim": "int",
-                "annots": [
-                  ":t"
-                ]
+                "annots": [":t"]
               }
             ],
             "prim": "lambda",
-            "annots": [
-              ":l"
-            ]
+            "annots": [":l"]
           },
           []
         ],

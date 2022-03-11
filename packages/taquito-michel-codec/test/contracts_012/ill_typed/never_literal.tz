@@ -1,0 +1,6 @@
+parameter unit;
+storage unit;
+code {
+       PUSH never {};
+       FAILWITH
+     }

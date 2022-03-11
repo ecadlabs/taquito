@@ -1,0 +1,3 @@
+parameter (chain_id nat);
+storage unit;
+code { CDR; NIL operation; PAIR }
