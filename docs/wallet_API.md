@@ -137,7 +137,7 @@ The Beacon wallet requires an extra step to set up the network to connect to and
 
 await wallet.requestPermissions({
   network: {
-    type: 'mainnet' | 'granadanet' | 'ithacanet' | 'custom',
+    type: 'mainnet' | 'hangzhounet' | 'ithacanet' | 'custom',
   },
 });
 
@@ -145,7 +145,7 @@ await wallet.requestPermissions({
 
 
 
-You can choose among `mainnet`, `ithacanet` `granadanet` and `custom` to set up the network. Once the permissions have been configured, you can get the user's address by calling the `getPKH` method on the wallet:
+You can choose among `mainnet`, `ithacanet` `hangzhounet` and `custom` to set up the network. Once the permissions have been configured, you can get the user's address by calling the `getPKH` method on the wallet:
 
 
 
@@ -271,7 +271,7 @@ The class constructor takes one parameter, the name of your dapp (this will be u
 
 ```js
 
-await wallet.connect('mainnet' | 'ithacanet' | 'granadanet' | 'labnet' | 'sandbox');
+await wallet.connect('mainnet' | 'ithacanet' | 'hangzhounet' | 'labnet' | 'sandbox');
 
 ```
 

@@ -22,10 +22,7 @@ describe('Expand global constants', () => {
   it('Should expand global constants in script using parseJSON', () => {
     expect(
       p.parseJSON(
-        scriptJSON(
-          globalConstantJSON('constantHashInt'),
-          globalConstantJSON('constantHashDrop')
-        )
+        scriptJSON(globalConstantJSON('constantHashInt'), globalConstantJSON('constantHashDrop'))
       )
     ).toEqual(scriptJSON(registeredIntExprJSON, registeredDropExprJSON));
   });
@@ -34,15 +31,10 @@ describe('Expand global constants', () => {
     expect(
       JSON.stringify(
         p.parseSequence(
-          script(
-            globalConstant('constantHashInt'),
-            globalConstant('constantHashDrop')
-          )
+          script(globalConstant('constantHashInt'), globalConstant('constantHashDrop'))
         )
       )
-    ).toEqual(
-      JSON.stringify(scriptJSON(registeredIntExprJSON, registeredDropExprJSON))
-    );
+    ).toEqual(JSON.stringify(scriptJSON(registeredIntExprJSON, registeredDropExprJSON)));
   });
 
   it('Should expand global constants in script using parseList', () => {
@@ -80,9 +72,7 @@ describe('Expand global constants', () => {
     expect(
       JSON.stringify(
         p.parseMichelineExpression(
-          `(or (${globalConstant('constantHashInt')}) (${globalConstant(
-            'constantHashInt'
-          )}))`
+          `(or (${globalConstant('constantHashInt')}) (${globalConstant('constantHashInt')}))`
         )
       )
     ).toEqual(
@@ -96,15 +86,8 @@ describe('Expand global constants', () => {
   it('Should expand global constants in script using parseScript', () => {
     expect(
       JSON.stringify(
-        p.parseScript(
-          script(
-            globalConstant('constantHashInt'),
-            globalConstant('constantHashDrop')
-          )
-        )
+        p.parseScript(script(globalConstant('constantHashInt'), globalConstant('constantHashDrop')))
       )
-    ).toEqual(
-      JSON.stringify(scriptJSON(registeredIntExprJSON, registeredDropExprJSON))
-    );
+    ).toEqual(JSON.stringify(scriptJSON(registeredIntExprJSON, registeredDropExprJSON)));
   });
 });

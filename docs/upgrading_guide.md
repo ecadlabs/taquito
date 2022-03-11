@@ -3,6 +3,58 @@ title: Upgrading Guide
 author: Roxane Letourneau
 ---
 
+# Upgrading to version 12
+
+:::note Breaking changes
+With this major number update to support the `ithaca` Tezos protocol, we have also implemented some breaking changes to the Taquito API. The following sections explain how to update your projects.
+:::
+
+## The operation confirmations are now done using the `SubscribeProvider` set on the `TezosToolkit`
+
+The change to the `confirmation` methods includes a breaking change. The polling interval for the confirmation (`confirmationPollingIntervalSecond`) and the streamer configuration (`ConfigStreamer`) have been moved from the `TezosToolkit` to the `PollingSubscribeProvider` class, where they belong logically.
+
+We previously had two polling interval configurations on the TezosToolkit, one for the confirmation methods and one for the `PollingSubscribeProvider`. These two have been removed from the TezosToolkit.
+
+**Before version 12:**
+```ts
+// config to change the polling interval for the confirmations
+Tezos.setProvider({ config: { confirmationPollingIntervalSecond: 5 }});
+// config to change the polling interval for the streamer
+Tezos.setProvider({ config: { streamerPollingIntervalMilliseconds: 5000 }});
+```
+
+**Since version 12:**
+```ts
+// The polling interval is calculated by default based on the block time
+// A different polling interval can be passed in the constructor of the PollingSubscribeProvider if needed
+Tezos.setStreamProvider(Tezos.getFactory(PollingSubscribeProvider)({ pollingIntervalMilliseconds:5000 }));
+```
+
+The configuration regarding the retry strategy for the `PollingSubscribeProvider` has also been moved to its constructor.
+
+**Before version 12:**
+```ts
+Tezos.setProvider({ config: { 
+  shouldObservableSubscriptionRetry: true,
+  observableSubscriptionRetryFunction: retry()
+ }});
+```
+
+**Since version 12:**
+```ts
+Tezos.setStreamProvider(Tezos.getFactory(PollingSubscribeProvider)({ 
+  shouldObservableSubscriptionRetry: true,
+  observableSubscriptionRetryFunction: retry()
+ }));
+```
+
+## Lambda views (tzip-4 views)
+
+Since the Hangzhou protocol, the RPC exposes an endpoint (`helpers/scripts/run_view`), allowing us to run the lambda views. In version 12, we changed the implementation to use this endpoint and are not relying on a lambda contract anymore.  
+
+**Breaking change** (primarily for sandbox users): There is no need to deploy a lambda contract anymore. The `read` method of the `ContractView` class no longer takes an optional lambda contract address as a parameter. 
+
+
 # Upgrading to version 9
 
 Please take note of the two following breaking changes: 
