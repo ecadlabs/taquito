@@ -20,7 +20,7 @@
     "example:bigmap-keys-deep-pair": "node -r ts-node/register --preserve-symlinks example-bigmap-keys-as-deep-pair.ts"
   },
   "dependencies": {
-    "@ledgerhq/hw-transport-node-hid": "^6.20.0",
+    "@ledgerhq/hw-transport-node-hid": "^6.24.1",
     "@taquito/ledger-signer": "^12.0.0-beta-RC.0",
     "@taquito/michel-codec": "^12.0.0-beta-RC.0",
     "@taquito/michelson-encoder": "^12.0.0-beta-RC.0",
