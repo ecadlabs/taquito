@@ -28,6 +28,7 @@ import {
 } from '../integration-tests/data/metadataViews';
 import { contractMap8pairs } from './data/contractMap8pairs';
 import { char2Bytes } from '@taquito/utils';
+import { fa2Contract } from '../integration-tests/data/fa2_contract';
 
 const provider = 'https://ithacanet.ecadinfra.com/';
 export const signer: any = new InMemorySigner(
@@ -49,6 +50,7 @@ const users: Array<string> = [
   'tz1NhNv9g7rtcjyNsH8Zqu79giY5aTqDDrzB',
   'tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE',
   'tz1XTyqBn4xi9tkRDutpRyQwHxfF8ar4i4Wq',
+  'tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1',
   //integration tests
   'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
   'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
@@ -210,33 +212,41 @@ async function originateLambda1() {
 async function originateLambda2() {
   tezos.setSignerProvider(signer);
   try {
-    const mapAccount1 = new MichelsonMap();
-    mapAccount1.set(user_addresses.get('Deborah'), '25');
-    mapAccount1.set(user_addresses.get('Allowances'), '25');
-
-    const mapAccount2 = new MichelsonMap();
-    mapAccount2.set(user_addresses.get('Eddy'), '25');
-    mapAccount2.set(user_addresses.get('Freda'), '25');
-
     const bigMapLedger = new MichelsonMap();
-    bigMapLedger.set(user_addresses.get('Glen'), {
-      balance: '50',
-      allowances: mapAccount1,
-    });
-    bigMapLedger.set(user_addresses.get('BigMapLedger'), {
-      balance: '50',
-      allowances: mapAccount2,
-    });
+      bigMapLedger.set('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1', {
+        allowances: ['tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY'],
+        balance: '50'
+      });
+      bigMapLedger.set('tz1XTyqBn4xi9tkRDutpRyQwHxfF8ar4i4Wq', {
+        allowances: ['tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE'],
+        balance: '50',
+      });
 
-    const op = await tezos.contract.originate({
-      balance: '1',
-      code: tzip7Contract,
-      storage: {
-        owner: await tezos.signer.publicKeyHash(),
-        totalSupply: '100',
-        ledger: bigMapLedger,
-      },
-    });
+      const tokenMetadataBigMap = new MichelsonMap();
+      tokenMetadataBigMap.set('0', {
+        token_id: '0',
+        symbol: 'hello',
+        name: 'test',
+        decimals: '0',
+        extras: new MichelsonMap()
+      });
+      tokenMetadataBigMap.set('1', {
+        token_id: '1',
+        symbol: 'world',
+        name: 'test2',
+        decimals: '0',
+        extras: new MichelsonMap()
+      });
+
+      const op = await tezos.contract.originate({
+        balance: "1",
+        code: fa2Contract,
+        storage: {
+          ledger: bigMapLedger,
+          token_metadata: tokenMetadataBigMap,
+          total_supply: '100'
+        },
+      })
 
     await op.confirmation();
     const lambda2_contract = await op.contract();

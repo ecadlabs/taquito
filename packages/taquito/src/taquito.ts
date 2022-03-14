@@ -56,8 +56,13 @@ export * from './packer/rpc-packer';
 export * from './global-constants/default-global-constants-provider';
 export * from './global-constants/error';
 export * from './global-constants/interface-global-constants-provider';
-export * from './read-provider/interface';
-export * from './read-provider/rpc-read-adapter';
+export {
+  BigMapQuery,
+  SaplingStateQuery,
+  BlockIdentifier,
+  TzReadProvider,
+} from './read-provider/interface';
+export { RpcReadAdapter } from './read-provider/rpc-read-adapter';
 export * from './estimate';
 
 export interface SetProviderOptions {

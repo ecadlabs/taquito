@@ -47,7 +47,7 @@ function println(value) {
 }
 
 ${this.props.wallet ? 
-  `const network = {type:"hangzhounet"};
+  `const network = {type:"custom",rpcUrl:"https://ithacanet.ecadinfra.com"};
   wallet.requestPermissions({network})
   .then(permission => {
     return Tezos.setWalletProvider(wallet);
@@ -55,7 +55,7 @@ ${this.props.wallet ?
   .then(() => {
     ${this.code}
   });`:
-  `fetch('https://api.tez.ie/keys/hangzhounet/', {
+  `fetch('https://api.tez.ie/keys/ithacanet', {
     method: 'POST',
     headers: { Authorization: 'Bearer taquito-example' },
   })
