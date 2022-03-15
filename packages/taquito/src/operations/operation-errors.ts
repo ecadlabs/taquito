@@ -37,8 +37,14 @@ export class TezosOperationError extends Error {
 
     this.message = `(${this.kind}) ${this.id}`;
 
-    if (isErrorWithMessage(lastError) && lastError.with.string) {
-      this.message = lastError.with.string;
+    if (isErrorWithMessage(lastError)) {
+      if (lastError.with.string) {
+        this.message = lastError.with.string;
+      } else if (lastError.with.int) {
+        this.message = lastError.with.int;
+      } else {
+        this.message = JSON.stringify(lastError.with);
+      }
     }
   }
 }
