@@ -1059,7 +1059,7 @@ describe('RpcContractProvider test', () => {
       done();
     });
 
-    it('should return parsed "with" error with string type from RPC result', async (done) => {
+    it('should return parsed "with" error with string type', async (done) => {
       const params = {
         to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
