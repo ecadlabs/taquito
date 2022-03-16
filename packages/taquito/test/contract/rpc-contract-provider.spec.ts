@@ -1075,10 +1075,68 @@ describe('RpcContractProvider test', () => {
       mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
       mockSigner.publicKey.mockResolvedValue('test_pub_key');
       mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
-      await expect(rpcContractProvider.transfer(params)).rejects.toMatchObject({
-        id: 'proto.006-PsCARTHA.michelson_v1.script_rejected',
-        message: 'test',
-      });
+
+      try {
+        await rpcContractProvider.transfer(params);
+      } catch (e: any) {
+        expect(e.message).toEqual('test');
+      }
+      done();
+    });
+
+    it('should return parsed "with" error with int type', async (done) => {
+      const params = {
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+        amount: 2,
+        fee: 10000,
+        gasLimit: 10600,
+        storageLimit: 300,
+      };
+      mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
+      mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
+      mockRpcClient.preapplyOperations.mockResolvedValue(preapplyResultFrom(params).withIntError());
+      mockRpcClient.getManagerKey.mockResolvedValue('test');
+      mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
+      mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
+      mockSigner.publicKey.mockResolvedValue('test_pub_key');
+      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+
+      try {
+        await rpcContractProvider.transfer(params);
+      } catch (e: any) {
+        expect(e.message).toEqual(5);
+      }
+
+      done();
+    });
+
+    it('should return parsed "with" error with pair type', async (done) => {
+      const params = {
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+        amount: 2,
+        fee: 10000,
+        gasLimit: 10600,
+        storageLimit: 300,
+      };
+      mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
+      mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
+      mockRpcClient.preapplyOperations.mockResolvedValue(
+        preapplyResultFrom(params).withPairError()
+      );
+      mockRpcClient.getManagerKey.mockResolvedValue('test');
+      mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
+      mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
+      mockSigner.publicKey.mockResolvedValue('test_pub_key');
+      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+
+      try {
+        await rpcContractProvider.transfer(params);
+      } catch (e: any) {
+        expect(JSON.parse(e.message)).toEqual({
+          args: [{ int: 6 }, { string: 'taquito' }],
+          prim: 'Pair',
+        });
+      }
       done();
     });
 

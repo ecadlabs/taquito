@@ -34,6 +34,49 @@ const errorBuilder = (result: any) => {
       };
       return result;
     },
+    withIntError: () => {
+      result[0].contents[0].metadata.operation_result = {
+        status: 'failed',
+        errors: [
+          {
+            kind: 'temporary',
+            id: 'proto.011-PtHangz2.michelson_v1.runtime_error',
+            contract_handle: 'KT1BjNCteztvGsjvbHTtQ5ynWqhjSVdR285M',
+            contract_code: [
+              { prim: 'parameter', args: [{ prim: 'unit' }] },
+              { prim: 'storage', args: [{ prim: 'unit' }] },
+              {
+                prim: 'code',
+                args: [
+                  [{ prim: 'PUSH', args: [{ prim: 'int' }, { string: 5 }] }, { prim: 'FAILWITH' }],
+                ],
+              },
+            ],
+          },
+          {
+            kind: 'temporary',
+            id: 'proto.011-PtHangz2.michelson_v1.script_rejected',
+            location: 10,
+            with: { int: 5 },
+          },
+        ],
+      };
+      return result;
+    },
+    withPairError: () => {
+      result[0].contents[0].metadata.operation_result = {
+        status: 'failed',
+        errors: [
+          {
+            kind: 'temporary',
+            id: 'proto.011-PtHangz2.michelson_v1.script_rejected',
+            location: 10,
+            with: { args: [{ int: 6 }, { string: 'taquito' }], prim: 'Pair' },
+          },
+        ],
+      };
+      return result;
+    },
     withInternalError: () => {
       result[0].contents[0].metadata.operation_result = {
         status: 'backtracked',
@@ -1151,7 +1194,7 @@ export const registerGlobalConstantNoReveal = {
       storage_limit: '32768',
       value: {
         prim: 'Pair',
-        args: [{ int: '998' }, { int: '999' }]
+        args: [{ int: '998' }, { int: '999' }],
       },
       metadata: {
         balance_updates: [],
@@ -1162,17 +1205,18 @@ export const registerGlobalConstantNoReveal = {
               kind: 'contract',
               contract: 'tz2EAB6atB3w7tJPwYF43vymDShZtGLh8TRb',
               change: '-18250',
-              origin: 'block'
-            }
+              origin: 'block',
+            },
           ],
           consumed_gas: '1230',
           storage_size: '73',
-          global_address: 'exprui2KzJsukZATaHBgRCM3vZEZtwYMW3rdJwHm5pCX3KeXVC1Koc'
-        }
-      }
-    }
+          global_address: 'exprui2KzJsukZATaHBgRCM3vZEZtwYMW3rdJwHm5pCX3KeXVC1Koc',
+        },
+      },
+    },
   ],
-  signature: 'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg'
+  signature:
+    'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg',
 };
 
 export const registerGlobalConstantWithReveal = {
@@ -1193,15 +1237,16 @@ export const registerGlobalConstantWithReveal = {
             category: 'fees',
             delegate: 'tz1Ke2h7sDdakHJQh8WX4Z372du1KChsksyU',
             cycle: 104,
-            change: '1420'
-          }
+            change: '1420',
+          },
         ],
-        operation_result: { status: 'applied', consumed_gas: '10000' }
-      }
+        operation_result: { status: 'applied', consumed_gas: '10000' },
+      },
     },
-    registerGlobalConstantNoReveal.contents[0]
+    registerGlobalConstantNoReveal.contents[0],
   ],
-  signature: 'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg'
+  signature:
+    'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg',
 };
 
 export const registerGlobalConstantWithError = {
@@ -1215,7 +1260,7 @@ export const registerGlobalConstantWithError = {
           errors: [
             {
               kind: 'branch',
-              id: 'proto.011-PtHangzH.Expression_already_registered'
+              id: 'proto.011-PtHangzH.Expression_already_registered',
             },
             {
               kind: 'permanent',
@@ -1223,13 +1268,14 @@ export const registerGlobalConstantWithError = {
               existing_key: [
                 'global_constant',
                 'f4b54fa94f3255df3ab6a95d0112964d825642706d42de848b3c507ff4602c4a',
-                'len'
-              ]
-            }
-          ]
-        }
-      }
-    }
+                'len',
+              ],
+            },
+          ],
+        },
+      },
+    },
   ],
-  signature: 'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg'
+  signature:
+    'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg',
 };
