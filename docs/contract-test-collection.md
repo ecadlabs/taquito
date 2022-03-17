@@ -1508,7 +1508,7 @@ A sapling_state is represented by an integer value in the contract storage.
 <Tabs
 defaultValue="michelson"
 values={[
-{label: 'Michelson Storage', value: 'michelson'},git ad do
+{label: 'Michelson Storage', value: 'michelson'},
 {label: 'Taquito Storage', value: 'taquito'},
 ]}>
 <TabItem value="michelson">
