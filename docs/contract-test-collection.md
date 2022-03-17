@@ -1514,7 +1514,8 @@ values={[
 <TabItem value="michelson">
 
 ```js
-storage (sapling_state 8);
+import { SaplingStateValue } from @taquito/michelson-encoder
+storage: SaplingStateValue
 ```
 
 </TabItem>
