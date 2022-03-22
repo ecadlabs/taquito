@@ -17,7 +17,7 @@ jobs:
       ALGOLIA_APPLICATION_ID: ${{secrets.ALGOLIA_APPLICATION_ID}}
     runs-on: ubuntu-latest
     steps:
-    - run: exit 1
+    - run: exit 0
     - name: Checkout repository
       uses: actions/checkout@v2
     - uses: actions/setup-node@v2
@@ -26,7 +26,7 @@ jobs:
     - run: cd website && npm ci
     - name: Run delete script
       run: cd website && npm run delete-index
-    - name: Update Algolia Index
+    - name: Algolia Indexing
       run: |
         docker run --rm -e "CONFIG=$(cat ./website/config.json | jq -r tostring)" \
           -e API_KEY=${{secrets.ALGOLIA_UPDATE_API_KEY}} \
@@ -39,6 +39,7 @@ jobs:
       with:
         status: ${{ job.status }}
         token: ${{ secrets.GITHUB_TOKEN }}
+        notification_title: "Taquito Algolia Indexing ${{ job.status }}"
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.ALGOLIA_SLACK_WEBHOOK }}
       
