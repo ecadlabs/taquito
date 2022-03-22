@@ -17,7 +17,7 @@ jobs:
       ALGOLIA_APPLICATION_ID: ${{secrets.ALGOLIA_APPLICATION_ID}}
     runs-on: ubuntu-latest
     steps:
-    - run: exit 0
+    - run: exit 1
     - name: Checkout repository
       uses: actions/checkout@v2
     - uses: actions/setup-node@v2
@@ -39,7 +39,8 @@ jobs:
       with:
         status: ${{ job.status }}
         token: ${{ secrets.GITHUB_TOKEN }}
-        notification_title: "Taquito Algolia Indexing ${{ job.status }}"
+        notification_title: "Taquito Algolia Indexing ${{job.status}}"
+        message_format: "{emoji} *{workflow}* {status_message} on <{commit_url}|{commit_sha}> | <{run_url}|View Run>"
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.ALGOLIA_SLACK_WEBHOOK }}
       
