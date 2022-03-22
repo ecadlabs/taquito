@@ -1,7 +1,6 @@
 name: Algolia indexing
 
 on:
-  push:
   schedule:
     - cron: '0 0 * * *'
 
@@ -17,7 +16,6 @@ jobs:
       ALGOLIA_APPLICATION_ID: ${{secrets.ALGOLIA_APPLICATION_ID}}
     runs-on: ubuntu-latest
     steps:
-    - run: exit 1
     - name: Checkout repository
       uses: actions/checkout@v2
     - uses: actions/setup-node@v2
