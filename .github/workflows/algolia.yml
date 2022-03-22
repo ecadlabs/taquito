@@ -1,8 +1,6 @@
 name: Algolia indexing
 
 on:
-  # TODO: only used for testing. Remove before merging
-  push:
   schedule:
     - cron: '0 0 * * *'
 
@@ -26,7 +24,7 @@ jobs:
     - run: cd website && npm ci
     - name: Run delete script
       run: cd website && npm run delete-index
-    - name: Registry login
+    - name: Update Algolia Index
       run: |
         docker run --rm -e "CONFIG=$(cat ./website/config.json | jq -r tostring)" \
           -e API_KEY=${{secrets.ALGOLIA_UPDATE_API_KEY}} \
@@ -38,7 +36,6 @@ jobs:
       uses: ravsamhq/notify-slack-action@v1
       with:
         status: ${{ job.status }}
-        # notify_when: 'failure'
         token: ${{ secrets.GITHUB_TOKEN }}
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.ALGOLIA_SLACK_WEBHOOK }}
