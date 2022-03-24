@@ -1493,6 +1493,41 @@ storage (pair (pair (bool %areyouthere) (int %integer))
 </TabItem>
 </Tabs>
 
+## SaplingContract
+
+[KT1CDenBWcgWjNZULc9GbJRTnQZQXYWrVT7k](https://better-call.dev/ithacanet/KT1CDenBWcgWjNZULc9GbJRTnQZQXYWrVT7k/code)
+
+Sapling is a protocol enabling privacy-preserving transactions of fungible tokens in a decentralised environment. The example contract used
+in Taquito Integration Tests is a single-state sapling contract. It features the Michelson instruction "SAPLING_VERIFY_UPDATE".
+A sapling_state is represented by an integer value in the contract storage. 
+
+#### Entrypoints:
+
+- default
+
+<Tabs
+defaultValue="michelson"
+values={[
+{label: 'Michelson Storage', value: 'michelson'},
+{label: 'Taquito Storage', value: 'taquito'},
+]}>
+<TabItem value="michelson">
+
+```js
+storage (sapling_state 8)
+```
+
+</TabItem>
+  <TabItem value="taquito">
+
+```js
+import { SaplingStateValue } from @taquito/michelson-encoder
+storage: SaplingStateValue
+```
+
+</TabItem>
+</Tabs>
+
 ## Chart of Smart Contract Properties
 
 |                                | Type    | Interface? | Metadata | Default Endpoint |
@@ -1518,3 +1553,4 @@ storage (pair (pair (bool %areyouthere) (int %integer))
 | WalletContract                 | Wallet  |            |          | default          |
 | WalletAreYouThereContract      | Wallet  |            |          |                  |
 | TokenContract                  | Token   | FA2        |          |                  |
+| KnownSaplingContract           | Sapling |            |          | default          |
