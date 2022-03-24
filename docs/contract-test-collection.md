@@ -1514,18 +1514,15 @@ values={[
 <TabItem value="michelson">
 
 ```js
-import { SaplingStateValue } from @taquito/michelson-encoder
-storage: SaplingStateValue
+storage (sapling_state 8)
 ```
 
 </TabItem>
   <TabItem value="taquito">
 
 ```js
-        init: `(Pair (Pair True 0)
-      (Pair ""
-            { Elt 0x00006b82198cb179e8306c1bedd08f12dc863f328886 "Alice" ;
-              Elt 0x0000b2e19a9e74440d86c59f13dab8a18ff873e889ea "HEllo!" }))`,
+import { SaplingStateValue } from @taquito/michelson-encoder
+storage: SaplingStateValue
 ```
 
 </TabItem>
