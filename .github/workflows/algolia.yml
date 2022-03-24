@@ -24,12 +24,24 @@ jobs:
     - run: cd website && npm ci
     - name: Run delete script
       run: cd website && npm run delete-index
-    - name: Registry login
+    - name: Algolia Indexing
       run: |
         docker run --rm -e "CONFIG=$(cat ./website/config.json | jq -r tostring)" \
           -e API_KEY=${{secrets.ALGOLIA_UPDATE_API_KEY}} \
           -e APPLICATION_ID=${{secrets.ALGOLIA_APPLICATION_ID}} \
           algolia/docsearch-scraper
+
+    - name: Slack Notification
+      if: always()
+      uses: ravsamhq/notify-slack-action@v1
+      with:
+        status: ${{ job.status }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+        notification_title: "Taquito Algolia Indexing ${{job.status}}"
+        message_format: "{emoji} *{workflow}* {status_message} on <{commit_url}|{commit_sha}> | <{run_url}|View Run>"
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.ALGOLIA_SLACK_WEBHOOK }}
+      
       
 
 

@@ -55,3 +55,7 @@
     --ifm-alert-background-color:  #f3b44e;
     --ifm-alert-border-color:  #ffba00;
 }
+
+[data-theme='dark'] .admonition-note {
+  --ifm-alert-background-color:  #333437;
+}

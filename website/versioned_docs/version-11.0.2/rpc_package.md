@@ -9,19 +9,27 @@ Taquito RPC Package Documentation
 
 You can use the RPC client package to query the RPC API of your chosen node. The higher-level [`@taquito/taquito`](https://tezostaquito.io/typedoc/modules/_taquito_rpc.html) package builds on this RPC package, in general, you won't need to use this package directly, but it is available for use should you want some specific data and bypass the higher-level abstractions in Taquito.
 
-Methods in the RPC package map one-to-one to the corresponding Tezos RPC API endpoints. All responses from the RPC are returns with TypeScript types. It doesn't do any other parsing or compositions at this level.
+Methods in the RPC package map one-to-one to the corresponding Tezos RPC API endpoints. All responses from the RPC are returned with TypeScript types. It doesn't do any other parsing or compositions at this level.
 
 ## Examples
 
 ```js
-// Initializing the RPC client
-
 import { RpcClient } from '@taquito/rpc';
+import { HttpBackend } from '@taquito/http-utils';
 
-const client = new RpcClient('https://hangzhounet-tezos.giganode.io', 'NetXjD3HPJJjmcd');
+const url = 'https://hangzhounet-tezos.giganode.io';
+const chain = 'NetXjD3HPJJjmcd';
+const http = new HttpBackend(20000);
+
+const client = new RpcClient(rpcUrl, chain, http);
 ```
 
-The `RpcClient` constructor takes the URL of the node you want to use and the chain ID.
+The `RpcClient` constructor takes in:
+- URL of the  RPC node you want to use
+- The Chain ID
+- And an optional`HttpBackend` object
+
+The `HttpBackend` takes the timeout value in ms, when left empty it will default  to `30000ms`
 
 ```js
 /* Fetching the balance of an account
