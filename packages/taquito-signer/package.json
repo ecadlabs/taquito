@@ -69,7 +69,7 @@
   "dependencies": {
     "@stablelib/blake2b": "^1.0.1",
     "@stablelib/ed25519": "^1.0.2",
-    "@stablelib/nacl": "^1.0.2",
+    "@stablelib/nacl": "^1.0.3",
     "@taquito/taquito": "^12.0.0",
     "@taquito/utils": "^12.0.0",
     "elliptic": "^6.5.4",
