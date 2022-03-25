@@ -7,10 +7,17 @@ export class ForgingMismatchError extends Error {
   }
 }
 
+export class UnspecifiedForgerError extends Error {
+  name = 'UnspecifiedForgerError';
+  constructor(public message: string) {
+    super(message);
+  }
+}
+
 export class CompositeForger implements Forger {
   constructor(private forgers: Forger[]) {
     if (forgers.length === 0) {
-      throw new Error('At least one forger must be specified');
+      throw new UnspecifiedForgerError('At least one forger must be specified');
     }
   }
 
@@ -22,7 +29,7 @@ export class CompositeForger implements Forger {
     );
 
     if (results.length === 0) {
-      throw new Error('At least one forger must be specified');
+      throw new UnspecifiedForgerError('At least one forger must be specified');
     }
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

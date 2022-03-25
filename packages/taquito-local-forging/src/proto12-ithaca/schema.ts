@@ -1,6 +1,7 @@
 import { Decoder } from '../decoder';
 import { Uint8ArrayConsumer } from '../uint8array-consumer';
 import { kindMappingProto12, kindMappingReverseProto12 } from './constants';
+import { InvalidOperationKindError } from '@taquito/utils';
 
 export const EndorsementSchemaProto12 = {
   slot: 'int16',
@@ -12,7 +13,7 @@ export const EndorsementSchemaProto12 = {
 export const operationEncoderProto12 =
   (encoders: { [key: string]: (val: object) => string }) => (operation: { kind: string }) => {
     if (!(operation.kind in encoders) || !(operation.kind in kindMappingReverseProto12)) {
-      throw new Error(`Unsupported operation kind: ${operation.kind}`);
+      throw new InvalidOperationKindError(`Unsupported operation kind: ${operation.kind}`);
     }
 
     return kindMappingReverseProto12[operation.kind] + encoders[operation.kind](operation);

@@ -14,6 +14,7 @@ import { Context } from '../context';
 import { Receipt, receiptFromOperation } from './receipt';
 import { validateOperation, ValidationResult, InvalidOperationHashError } from '@taquito/utils';
 import { BlockIdentifier } from '../read-provider/interface';
+import { ConfirmationNotFoundError, ConfirmationUndefinedError } from '../error';
 
 export type OperationStatus = 'pending' | 'unknown' | OperationResultStatusEnum;
 
@@ -152,7 +153,7 @@ export class WalletOperation {
 
   confirmationObservable(confirmations?: number) {
     if (typeof confirmations !== 'undefined' && confirmations < 1) {
-      throw new Error('Confirmation count must be at least 1');
+      throw new ConfirmationNotFoundError('Confirmation count must be at least 1');
     }
 
     const { defaultConfirmationCount } = this.context.config;
@@ -160,7 +161,7 @@ export class WalletOperation {
     const conf = confirmations !== undefined ? confirmations : defaultConfirmationCount;
 
     if (conf === undefined) {
-      throw new Error('Default confirmation count can not be undefined!');
+      throw new ConfirmationUndefinedError('Default confirmation count can not be undefined!');
     }
 
     return combineLatest([this._includedInBlock, this.newHead$]).pipe(

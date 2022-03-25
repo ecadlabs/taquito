@@ -14,11 +14,16 @@ import {
   verifySignature,
   validateKeyHash,
   ValidationResult,
-  InvalidKeyHashError
+  InvalidKeyHashError,
 } from '@taquito/utils';
 import { hash } from '@stablelib/blake2b';
 import toBuffer from 'typedarray-to-buffer';
-import { BadSigningDataError, KeyNotFoundError, OperationNotAuthorizedError } from './errors';
+import {
+  BadSigningDataError,
+  KeyNotFoundError,
+  OperationNotAuthorizedError,
+  PublicKeyMismatch,
+} from './errors';
 import { Signer } from '@taquito/taquito';
 
 interface PublicKeyResponse {
@@ -66,7 +71,7 @@ export class RemoteSigner implements Signer {
     private http = new HttpBackend()
   ) {
     if (validateKeyHash(this.pkh) !== ValidationResult.VALID) {
-      throw  new InvalidKeyHashError(`Invalid Public Key Hash: ${this.pkh}`);
+      throw new InvalidKeyHashError(`Invalid Public Key Hash: ${this.pkh}`);
     }
   }
 
@@ -168,12 +173,7 @@ export class RemoteSigner implements Signer {
 
     const publicKeyHash = b58cencode(hash(_publicKey, 20), pref[curve].pkh);
     if (publicKeyHash !== this.pkh) {
-      throw new Error(
-        `Requested public key does not match the initialized public key hash: {
-          publicKey: ${publicKey},
-          publicKeyHash: ${this.pkh}
-        }`
-      );
+      throw new PublicKeyMismatch(publicKey, this.pkh);
     }
   }
 }

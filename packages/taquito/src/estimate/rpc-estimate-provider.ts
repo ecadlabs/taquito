@@ -29,7 +29,12 @@ import {
   createTransferOperation,
   createRegisterGlobalConstantOperation,
 } from '../contract/prepare';
-import { validateAddress, InvalidAddressError, ValidationResult } from '@taquito/utils';
+import {
+  validateAddress,
+  InvalidAddressError,
+  ValidationResult,
+  InvalidOperationKindError,
+} from '@taquito/utils';
 import { RevealEstimateError } from './error';
 
 interface Limits {
@@ -194,7 +199,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
 
     // Fail early in case of errors
     if (errors.length) {
-      throw new TezosOperationError(errors);
+      throw new TezosOperationError(errors, 'Error occurred during estimation');
     }
 
     let numberOfOps = 1;
@@ -375,7 +380,9 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
           );
           break;
         default:
-          throw new Error(`Unsupported operation kind: ${(param as any).kind}`);
+          throw new InvalidOperationKindError(
+            `The operation kind '${(params as any).kind}' is unsupported`
+          );
       }
     }
     const isRevealNeeded = await this.isRevealOpNeeded(operations, publicKeyHash);

@@ -23,7 +23,7 @@ import {
   withKind,
 } from '../operations/types';
 import { DefaultContractType, ContractStorageType, ContractAbstraction } from './contract';
-import { InvalidDelegationSource } from './errors';
+import { InvalidDelegationSource, RevealOperationError } from './errors';
 import { ContractProvider, ContractSchema, StorageProvider } from './interface';
 import {
   createOriginationOperation,
@@ -406,7 +406,7 @@ export class RpcContractProvider
       const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
       return new RevealOperation(hash, operation, publicKeyHash, forgedBytes, opResponse, context);
     } else {
-      throw new Error('The current address is already revealed.');
+      throw new RevealOperationError('The current address has already been revealed.');
     }
   }
 

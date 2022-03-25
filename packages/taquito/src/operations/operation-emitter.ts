@@ -9,6 +9,7 @@ import { Protocols } from '../constants';
 import { Context } from '../context';
 import { Estimate } from '../estimate/estimate';
 import { flattenErrors, TezosOperationError, TezosPreapplyFailureError } from './operation-errors';
+import { InvalidOperationKindError } from '@taquito/utils';
 import {
   ForgedBytes,
   isOpRequireReveal,
@@ -161,7 +162,9 @@ export abstract class OperationEmitter {
               ...getFee(op),
             };
           default:
-            throw new Error('Unsupported operation');
+            throw new InvalidOperationKindError(
+              `The operation kind '${(op as any).kind}' is unsupported`
+            );
         }
       });
 
@@ -251,7 +254,7 @@ export abstract class OperationEmitter {
     const errors = flattenErrors(results);
 
     if (errors.length) {
-      throw new TezosOperationError(errors);
+      throw new TezosOperationError(errors, 'Error occurred during operation preparation');
     }
 
     return {

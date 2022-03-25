@@ -26,16 +26,20 @@ export class TezosOperationError extends Error {
   name = 'TezosOperationError';
   id: string;
   kind: string;
+  details?: string;
 
-  constructor(public errors: TezosGenericOperationError[]) {
+  constructor(public errors: TezosGenericOperationError[], public errorDetails?: string) {
     super();
     // Last error is 'often' the one with more detail
     const lastError = errors[errors.length - 1];
-
     this.id = lastError.id;
     this.kind = lastError.kind;
 
     this.message = `(${this.kind}) ${this.id}`;
+
+    if (errorDetails) {
+      this.details = errorDetails;
+    }
 
     if (isErrorWithMessage(lastError)) {
       if (lastError.with.string) {

@@ -18,3 +18,10 @@ export class InvalidOperationKindError extends Error {
     super(message);
   }
 }
+
+export class OversizedEntryPointError extends Error {
+  public name = 'OversizedEntryPointError';
+  constructor(public message: string) {
+    super(message);
+  }
+}

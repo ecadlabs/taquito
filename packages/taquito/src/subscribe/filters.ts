@@ -1,19 +1,29 @@
-import { OpFilter, FilterExpression, Filter, OpHashFilter, SourceFilter, KindFilter, DestinationFilter, OperationContent } from './interface';
+import {
+  OpFilter,
+  FilterExpression,
+  Filter,
+  OpHashFilter,
+  SourceFilter,
+  KindFilter,
+  DestinationFilter,
+  OperationContent,
+} from './interface';
 
 const opHashFilter = (op: OperationContent, filter: OpHashFilter) => op.hash === filter.opHash;
 
 const sourceFilter = (x: OperationContent, filter: SourceFilter) => {
   switch (x.kind) {
     case 'endorsement':
-      return 'metadata' in x && x.metadata.delegate === filter.source
+      return 'metadata' in x && x.metadata.delegate === filter.source;
     case 'activate_account':
-      return 'metadata' in x && x.pkh === filter.source
+      return 'metadata' in x && x.pkh === filter.source;
     default:
-      return 'source' in x && x.source === filter.source
+      return 'source' in x && x.source === filter.source;
   }
-}
+};
 
-const kindFilter = (x: OperationContent, filter: KindFilter) => 'kind' in x && x.kind === filter.kind;
+const kindFilter = (x: OperationContent, filter: KindFilter) =>
+  'kind' in x && x.kind === filter.kind;
 
 const destinationFilter = (x: OperationContent, filter: DestinationFilter) => {
   switch (x.kind) {
@@ -27,7 +37,7 @@ const destinationFilter = (x: OperationContent, filter: DestinationFilter) => {
         Array.isArray(x.metadata.operation_result.originated_contracts)
       ) {
         return x.metadata.operation_result.originated_contracts.some(
-          contract => contract === filter.destination
+          (contract) => contract === filter.destination
         );
       }
       break;
@@ -42,11 +52,11 @@ export const evaluateOpFilter = (op: OperationContent, filter: OpFilter) => {
   if ('opHash' in filter) {
     return opHashFilter(op, filter);
   } else if ('source' in filter) {
-    return sourceFilter(op, filter)
+    return sourceFilter(op, filter);
   } else if ('kind' in filter) {
     return kindFilter(op, filter);
   } else if ('destination' in filter) {
-    return destinationFilter(op, filter)
+    return destinationFilter(op, filter);
   }
 
   return false;
@@ -58,7 +68,7 @@ export const evaluateExpression = (op: OperationContent, exp: FilterExpression):
   } else if (Array.isArray(exp.or)) {
     return exp.or.some((x: OpFilter | FilterExpression) => evaluateFilter(op, x));
   } else {
-    throw new Error('Filter expression must contains either and/or property');
+    throw new Error('Filter expression must contain either and/or property');
   }
 };
 

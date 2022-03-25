@@ -18,3 +18,15 @@ export class BadSigningDataError extends Error {
     super(message);
   }
 }
+
+export class PublicKeyMismatch extends Error {
+  public name = 'PublicKeyMismatch';
+  constructor(public publicKey: string, pkh: string) {
+    super(
+      `Requested public key does not match the initialized public key hash: {
+        publicKey: ${publicKey},
+        publicKeyHash: ${pkh}
+      }`
+    );
+  }
+}

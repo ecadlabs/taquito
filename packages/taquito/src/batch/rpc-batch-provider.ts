@@ -31,6 +31,7 @@ import {
   InvalidAddressError,
   InvalidKeyHashError,
   ValidationResult,
+  InvalidOperationKindError,
 } from '@taquito/utils';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
 
@@ -159,7 +160,9 @@ export class OperationBatch extends OperationEmitter {
           ...param,
         });
       default:
-        throw new Error(`Unsupported operation kind: ${(param as any).kind}`);
+        throw new InvalidOperationKindError(
+          `The operation kind '${(param as any).kind}' is unsupported`
+        );
     }
   }
 
@@ -188,7 +191,9 @@ export class OperationBatch extends OperationEmitter {
           this.withRegisterGlobalConstant(param);
           break;
         default:
-          throw new Error(`Unsupported operation kind: ${(param as any).kind}`);
+          throw new InvalidOperationKindError(
+            `The operation kind '${(param as any).kind}' is unsupported`
+          );
       }
     }
 

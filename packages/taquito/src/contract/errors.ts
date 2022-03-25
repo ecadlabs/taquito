@@ -100,3 +100,10 @@ export class InvalidViewSimulationContext extends Error {
     super(`${info} Please configure the context of the view execution in the executeView method.`);
   }
 }
+
+export class RevealOperationError extends Error {
+  public name = 'RevealOperationError';
+  constructor(public message: string) {
+    super(message);
+  }
+}
