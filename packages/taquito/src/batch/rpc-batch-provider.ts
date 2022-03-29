@@ -105,7 +105,7 @@ export class OperationBatch extends OperationEmitter {
    */
   withActivation({ pkh, secret }: ActivationParams) {
     if (validateKeyHash(pkh) !== ValidationResult.VALID) {
-      throw new InvalidKeyHashError(`Invalid Key Hash: ${pkh}`);
+      throw new InvalidKeyHashError(pkh);
     }
     this.operations.push({ kind: OpKind.ACTIVATION, pkh, secret });
     return this;

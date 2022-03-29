@@ -254,7 +254,10 @@ export abstract class OperationEmitter {
     const errors = flattenErrors(results);
 
     if (errors.length) {
-      throw new TezosOperationError(errors, 'Error occurred during operation preparation');
+      throw new TezosOperationError(
+        errors,
+        'Error occurred during validation simulation of operation'
+      );
     }
 
     return {

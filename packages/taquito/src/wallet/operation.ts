@@ -14,10 +14,14 @@ import { Context } from '../context';
 import { Receipt, receiptFromOperation } from './receipt';
 import { validateOperation, ValidationResult, InvalidOperationHashError } from '@taquito/utils';
 import { BlockIdentifier } from '../read-provider/interface';
-import { ConfirmationNotFoundError, ConfirmationUndefinedError } from '../error';
+import { InvalidConfirmationCountError, ConfirmationUndefinedError } from '../error';
 
 export type OperationStatus = 'pending' | 'unknown' | OperationResultStatusEnum;
 
+/**
+ *  @category Error
+ *  @description Error that indicates a missed block when waiting for confirmation from the blockchain
+ */
 export class MissedBlockDuringConfirmationError extends Error {
   name = 'MissedBlockDuringConfirmationError';
 
@@ -153,7 +157,7 @@ export class WalletOperation {
 
   confirmationObservable(confirmations?: number) {
     if (typeof confirmations !== 'undefined' && confirmations < 1) {
-      throw new ConfirmationNotFoundError('Confirmation count must be at least 1');
+      throw new InvalidConfirmationCountError('Confirmation count must be at least 1');
     }
 
     const { defaultConfirmationCount } = this.context.config;

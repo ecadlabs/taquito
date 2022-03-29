@@ -2,6 +2,10 @@ import { Prim, Expr, IntLiteral } from './micheline';
 import { DefaultProtocol, Protocol, ProtocolOptions, ProtoInferiorTo } from './michelson-types';
 import { Tuple, NoArgs, ReqArgs, NoAnnots } from './utils';
 
+/**
+ *  @category Error
+ *  @description Indicates a macro error occuring in the Michel Codec
+ */
 export class MacroError extends Error {
   constructor(public prim: Prim, message?: string) {
     super(message);

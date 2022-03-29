@@ -1,3 +1,7 @@
+/**
+ *  @category Error
+ *  @description Error that indicates that a global constant does not exist
+ */
 export class GlobalConstantNotFound extends Error {
   name = 'GlobalConstantNotFound';
 
@@ -8,6 +12,10 @@ export class GlobalConstantNotFound extends Error {
   }
 }
 
+/**
+ *  @category Error
+ *  @description Error that indicates the global constant provider not being configured under TezosToolkit
+ */
 export class UnconfiguredGlobalConstantsProviderError extends Error {
   name = 'UnconfiguredGlobalConstantsProviderError';
 

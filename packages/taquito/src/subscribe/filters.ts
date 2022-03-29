@@ -9,6 +9,8 @@ import {
   OperationContent,
 } from './interface';
 
+import { InvalidFilterExpressionError } from '../error';
+
 const opHashFilter = (op: OperationContent, filter: OpHashFilter) => op.hash === filter.opHash;
 
 const sourceFilter = (x: OperationContent, filter: SourceFilter) => {
@@ -68,7 +70,7 @@ export const evaluateExpression = (op: OperationContent, exp: FilterExpression):
   } else if (Array.isArray(exp.or)) {
     return exp.or.some((x: OpFilter | FilterExpression) => evaluateFilter(op, x));
   } else {
-    throw new Error('Filter expression must contain either and/or property');
+    throw new InvalidFilterExpressionError('Filter expression must contain either and/or property');
   }
 };
 

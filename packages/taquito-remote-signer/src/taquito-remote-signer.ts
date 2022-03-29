@@ -71,7 +71,7 @@ export class RemoteSigner implements Signer {
     private http = new HttpBackend()
   ) {
     if (validateKeyHash(this.pkh) !== ValidationResult.VALID) {
-      throw new InvalidKeyHashError(`Invalid Public Key Hash: ${this.pkh}`);
+      throw new InvalidKeyHashError(this.pkh);
     }
   }
 
@@ -173,7 +173,7 @@ export class RemoteSigner implements Signer {
 
     const publicKeyHash = b58cencode(hash(_publicKey, 20), pref[curve].pkh);
     if (publicKeyHash !== this.pkh) {
-      throw new PublicKeyMismatch(publicKey, this.pkh);
+      throw new PublicKeyMismatch(publicKeyHash, this.pkh);
     }
   }
 }

@@ -1,3 +1,7 @@
+/**
+ *  @category Error
+ *  @description Error that indicates a failure when performing a scan in Michel codec
+ */
 export class ScanError extends Error {
   constructor(public src: string, public idx: number, message?: string) {
     super(message);

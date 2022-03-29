@@ -3,6 +3,10 @@ import { Observable, Subject, NEVER, OperatorFunction } from 'rxjs';
 import { Subscription } from './interface';
 import { takeUntil, tap, catchError, retry } from 'rxjs/operators';
 
+/**
+ *  @category Error
+ *  @description Error that indicates an unsupported event being passed or used
+ */
 export class UnsupportedEventError extends Error {
   public name = 'UnsupportedEventError';
   constructor(public message: string) {

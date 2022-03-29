@@ -1,3 +1,7 @@
+/**
+ *  @category Error
+ *  @description Error that indicagtes a failure when encoding the parameter of the view
+ */
 export class ViewEncodingError extends Error {
   name = 'ViewEncodingError';
 
@@ -6,6 +10,10 @@ export class ViewEncodingError extends Error {
   }
 }
 
+/**
+ *  @category Error
+ *  @description Error that indicates an invalid on-chain view found on the script
+ */
 export class InvalidScriptError extends Error {
   name = 'InvalidScriptError';
   constructor(public message: string) {

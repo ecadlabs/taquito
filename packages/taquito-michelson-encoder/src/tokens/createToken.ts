@@ -2,6 +2,10 @@ import { tokens } from './tokens';
 import { Token } from './token';
 import { PairToken } from './pair';
 
+/**
+ *  @category Error
+ *  @description Error that indicates a token having malformed data
+ */
 export class InvalidTokenError extends Error {
   name = 'Invalid token error';
   constructor(public message: string, public data: any) {

@@ -76,6 +76,10 @@ const K = [
   0xc67178f2 | 0,
 ];
 
+/**
+ *  @category Error
+ *  @description Error that indicates a failure when decoding a base58 encoding
+ */
 export class Base58DecodingError extends Error {
   public name = 'Base58DecodingError';
   constructor(public message: string) {

@@ -14,6 +14,10 @@ const isMapType = (
   return 'args' in value && Array.isArray(value.args) && value.args.length === 2;
 };
 
+/**
+ *  @category Error
+ *  @description Error that indicates a Michelson type mismatch
+ */
 export class MapTypecheckError extends Error {
   name = 'MapTypecheckError';
 

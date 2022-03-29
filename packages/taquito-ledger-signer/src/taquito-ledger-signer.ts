@@ -24,6 +24,10 @@ export enum DerivationType {
   P256 = 0x02, // tz3
 }
 
+/**
+ *  @category Error
+ *  @description Error that indicates an invalid derivation type being passed or used
+ */
 export class InvalidDerivationTypeError extends Error {
   public name = 'InvalidDerivationTypeError';
   constructor(public message: string) {
@@ -31,6 +35,10 @@ export class InvalidDerivationTypeError extends Error {
   }
 }
 
+/**
+ *  @category Error
+ *  @description Error that indicates an invalid derivation path being passed or used
+ */
 export class InvalidDerivationPathError extends Error {
   public name = 'InvalidDerivationPathError';
   constructor(public message: string) {
@@ -38,6 +46,10 @@ export class InvalidDerivationPathError extends Error {
   }
 }
 
+/**
+ *  @category Error
+ *  @description Error that indicates an invalid or unparseable ledger response
+ */
 export class InvalidLedgerResponseError extends Error {
   public name = 'InvalidLedgerResponseError';
   constructor(public message: string) {

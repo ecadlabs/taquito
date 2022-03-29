@@ -22,11 +22,14 @@ const isErrorWithMessage = (error: any): error is TezosOperationErrorWithMessage
   return 'with' in error;
 };
 
+/**
+ *  @category Error
+ *  @description Generic tezos error that will be thrown when a mistake occurs when doing an operation
+ */
 export class TezosOperationError extends Error {
   name = 'TezosOperationError';
   id: string;
   kind: string;
-  details?: string;
 
   constructor(public errors: TezosGenericOperationError[], public errorDetails?: string) {
     super();
@@ -36,10 +39,6 @@ export class TezosOperationError extends Error {
     this.kind = lastError.kind;
 
     this.message = `(${this.kind}) ${this.id}`;
-
-    if (errorDetails) {
-      this.details = errorDetails;
-    }
 
     if (isErrorWithMessage(lastError)) {
       if (lastError.with.string) {
@@ -53,6 +52,10 @@ export class TezosOperationError extends Error {
   }
 }
 
+/**
+ *  @category Error
+ *  @description Tezos error that will be thrown when a mistake happens during the preapply stage
+ */
 export class TezosPreapplyFailureError extends Error {
   name = 'TezosPreapplyFailureError';
 

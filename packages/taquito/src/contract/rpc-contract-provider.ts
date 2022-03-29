@@ -406,7 +406,9 @@ export class RpcContractProvider
       const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
       return new RevealOperation(hash, operation, publicKeyHash, forgedBytes, opResponse, context);
     } else {
-      throw new RevealOperationError('The current address has already been revealed.');
+      throw new RevealOperationError(
+        `The publicKeyHash '${publicKeyHash}' has already been revealed.`
+      );
     }
   }
 

@@ -162,7 +162,7 @@ export const pkhEncoder = (val: string) => {
     case Prefix.TZ3:
       return '02' + prefixEncoder(Prefix.TZ3)(val);
     default:
-      throw new InvalidKeyHashError(`The public key hash '${val}' is invalid`);
+      throw new InvalidKeyHashError(val);
   }
 };
 

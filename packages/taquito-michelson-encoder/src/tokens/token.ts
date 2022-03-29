@@ -1,6 +1,10 @@
 import { MichelsonV1Expression } from '@taquito/rpc';
 import { TokenSchema } from '../schema/types';
 
+/**
+ *  @category Error
+ *  @description Error that indicates an invalid token being passed or used
+ */
 export abstract class TokenValidationError extends Error {
   name = 'ValidationError';
 

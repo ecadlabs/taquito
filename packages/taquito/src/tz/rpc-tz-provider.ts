@@ -34,7 +34,7 @@ export class RpcTzProvider extends OperationEmitter implements TzProvider {
 
   async activate(pkh: string, secret: string) {
     if (validateKeyHash(pkh) !== ValidationResult.VALID) {
-      throw new InvalidKeyHashError(`Invalid Public Key Hash: ${pkh}`);
+      throw new InvalidKeyHashError(pkh);
     }
     const operation: RPCActivateOperation = {
       kind: OpKind.ACTIVATION,
