@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - master
+    # TODO: remove before merging
+      - '*'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.ref != 'refs/heads/master' || github.run_number }}
@@ -56,6 +58,28 @@ jobs:
       env:
         CI: true
         TEZOS_RPC_HANGZHOUNET: ${{ secrets.TEZOS_RPC_HANGZHOUNET }}
+    
+  integration-tests-hangzhounet-tezedge:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [12.x]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node }}
+    - run: npm ci
+    - run: npm run lerna -- bootstrap
+    - run: npm run build
+    - name: Tailscale
+      uses: tailscale/github-action@v1
+      with:
+        authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+    - run: cd integration-tests && npm run test:hangzhounet -- --maxWorkers=8
+      env:
+        CI: true
+        TEZOS_RPC_HANGZHOUNET: "http://34.152.3.120:8732"
 
   integration-tests-ithacanet:
     runs-on: ubuntu-latest
