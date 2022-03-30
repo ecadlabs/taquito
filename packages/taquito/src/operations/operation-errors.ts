@@ -24,7 +24,7 @@ const isErrorWithMessage = (error: any): error is TezosOperationErrorWithMessage
 
 /**
  *  @category Error
- *  @description Generic tezos error that will be thrown when a mistake occurs when doing an operation
+ *  @description Generic tezos error that will be thrown when a mistake occurs when doing an operation; more details here https://tezos.gitlab.io/api/errors.html
  */
 export class TezosOperationError extends Error {
   name = 'TezosOperationError';

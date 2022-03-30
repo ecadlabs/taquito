@@ -176,7 +176,7 @@ export const publicKeyEncoder = (val: string) => {
     case Prefix.P2PK:
       return '02' + prefixEncoder(Prefix.P2PK)(val);
     default:
-      throw new InvalidPublicKeyError(`The public key '${val}' is invalid`);
+      throw new InvalidPublicKeyError(val);
   }
 };
 
@@ -190,7 +190,7 @@ export const addressEncoder = (val: string): string => {
     case Prefix.KT1:
       return '01' + prefixEncoder(Prefix.KT1)(val) + '00';
     default:
-      throw new InvalidAddressError(`The address '${val}' is invalid`);
+      throw new InvalidAddressError(val);
   }
 };
 
@@ -204,7 +204,7 @@ export const publicKeyDecoder = (val: Uint8ArrayConsumer) => {
     case 0x02:
       return prefixDecoder(Prefix.P2PK)(val);
     default:
-      throw new InvalidPublicKeyError(`The public key '${val}' is invalid`);
+      throw new InvalidPublicKeyError(val.toString());
   }
 };
 
@@ -219,7 +219,7 @@ export const addressDecoder = (val: Uint8ArrayConsumer) => {
       return address;
     }
     default:
-      throw new InvalidAddressError(`The address '${val}' is invalid`);
+      throw new InvalidAddressError(val.toString());
   }
 };
 
@@ -274,9 +274,7 @@ export const entrypointDecoder = (value: Uint8ArrayConsumer) => {
     const entrypoint = Buffer.from(entry).toString('utf8');
 
     if (entrypoint.length > ENTRYPOINT_MAX_LENGTH) {
-      throw new OversizedEntryPointError(
-        `Oversized entrypoint: ${entrypoint}. The maximum length of entrypoint is ${ENTRYPOINT_MAX_LENGTH}`
-      );
+      throw new OversizedEntryPointError(entrypoint);
     }
     return entrypoint;
   }
@@ -301,9 +299,7 @@ export const entrypointEncoder = (entrypoint: string) => {
     return `${entrypointMappingReverse[entrypoint]}`;
   } else {
     if (entrypoint.length > ENTRYPOINT_MAX_LENGTH) {
-      throw new OversizedEntryPointError(
-        `Oversized entrypoint: ${entrypoint}. The maximum length of entrypoint is ${ENTRYPOINT_MAX_LENGTH}`
-      );
+      throw new OversizedEntryPointError(entrypoint);
     }
 
     const value = { string: entrypoint };

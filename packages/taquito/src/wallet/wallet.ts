@@ -43,7 +43,7 @@ export class WalletOperationBatch {
    */
   withTransfer(params: WalletTransferParams) {
     if (validateAddress(params.to) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid 'to' address: ${params.to}`);
+      throw new InvalidAddressError(params.to);
     }
     this.operations.push({ kind: OpKind.TRANSACTION, ...params });
     return this;
@@ -67,7 +67,7 @@ export class WalletOperationBatch {
    */
   withDelegation(params: WalletDelegateParams) {
     if (params.delegate && validateAddress(params.delegate) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid delegate address: ${params.delegate}`);
+      throw new InvalidAddressError(params.delegate);
     }
     this.operations.push({ kind: OpKind.DELEGATION, ...params });
     return this;
@@ -214,7 +214,7 @@ export class Wallet {
    */
   setDelegate(params: WalletDelegateParams) {
     if (params.delegate && validateAddress(params.delegate) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid address error: ${params.delegate}`);
+      throw new InvalidAddressError(params.delegate);
     }
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapDelegateParamsToWalletParams(
@@ -253,7 +253,7 @@ export class Wallet {
    */
   transfer(params: WalletTransferParams) {
     if (validateAddress(params.to) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid 'to' address: ${params.to}`);
+      throw new InvalidAddressError(params.to);
     }
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapTransferParamsToWalletParams(
@@ -295,7 +295,7 @@ export class Wallet {
       x as any
   ): Promise<T> {
     if (validateContractAddress(address) !== ValidationResult.VALID) {
-      throw new InvalidContractAddressError(`Invalid contract address: ${address}`);
+      throw new InvalidContractAddressError(address);
     }
     const rpc = this.context.withExtensions().rpc;
     const readProvider = this.context.withExtensions().readProvider;

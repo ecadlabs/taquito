@@ -16,7 +16,7 @@ const isMapType = (
 
 /**
  *  @category Error
- *  @description Error that indicates a Michelson type mismatch
+ *  @description Error that indicates a map type mismatch, where an attempt to set a key or value in a Map doesn't match the defined type of the Map
  */
 export class MapTypecheckError extends Error {
   name = 'MapTypecheckError';

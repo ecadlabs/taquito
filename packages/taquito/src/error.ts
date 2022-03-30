@@ -1,6 +1,6 @@
 /**
  *  @category Error
- *  @description Error that indicates invalid confirmation count has been returned
+ *  @description Error that indicates invalid confirmation count has been passed or configured
  */
 export class InvalidConfirmationCountError extends Error {
   public name = 'InvalidConfirmationCountError';
@@ -11,7 +11,7 @@ export class InvalidConfirmationCountError extends Error {
 
 /**
  *  @category Error
- *  @description Error that indicates undefined confirmation has been returned
+ *  @description Error that indicates undefined confirmation has not been specified or configured
  */
 export class ConfirmationUndefinedError extends Error {
   public name = 'ConfirmationUndefinedError';

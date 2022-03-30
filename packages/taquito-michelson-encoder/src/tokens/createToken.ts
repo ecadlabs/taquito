@@ -4,7 +4,7 @@ import { PairToken } from './pair';
 
 /**
  *  @category Error
- *  @description Error that indicates a token having malformed data
+ *  @description Error that indicates a script having an invalid type or it being unsupported by the Michelson Encoder. Note some protocol changes might affect this, we encourage users to open an issue so we can look into implementing support for said types.
  */
 export class InvalidTokenError extends Error {
   name = 'Invalid token error';

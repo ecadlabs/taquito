@@ -18,19 +18,6 @@ export class InvalidParameterError extends Error {
 
 /**
  *  @category Error
- *  @description Error that indicates an an undefined lambda contract
- */
-export class UndefinedLambdaContractError extends Error {
-  name = 'Undefined LambdaContract error';
-  constructor() {
-    super(
-      'This might happen if you are using a sandbox. Please provide the address of a lambda contract as a parameter of the read method.'
-    );
-  }
-}
-
-/**
- *  @category Error
  *  @description Error that indicates an invalid delegation source contract address being passed or used
  */
 export class InvalidDelegationSource extends Error {

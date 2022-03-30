@@ -27,7 +27,7 @@ export interface HttpRequestOptions {
 
 /**
  *  @category Error
- *  @description This error will be thrown when the RPC returns an HTTP error to the client
+ *  @description This error will be thrown when the endpoint returns an HTTP error to the client
  */
 export class HttpResponseError extends Error {
   public name = 'HttpResponse';

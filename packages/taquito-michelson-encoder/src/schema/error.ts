@@ -1,6 +1,6 @@
 /**
  *  @category Error
- *  @description Error that indicagtes a failure when encoding the parameter of the view
+ *  @description Error that indicates a failure when encoding (transforming JS parameter into JSON Michelson)the parameter of the view
  */
 export class ViewEncodingError extends Error {
   name = 'ViewEncodingError';

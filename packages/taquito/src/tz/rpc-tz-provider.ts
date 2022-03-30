@@ -20,14 +20,14 @@ export class RpcTzProvider extends OperationEmitter implements TzProvider {
 
   async getBalance(address: string): Promise<BigNumber> {
     if (validateAddress(address) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid address: ${address}`);
+      throw new InvalidAddressError(address);
     }
     return this.context.readProvider.getBalance(address, 'head');
   }
 
   async getDelegate(address: string): Promise<string | null> {
     if (validateAddress(address) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid address: ${address}`);
+      throw new InvalidAddressError(address);
     }
     return this.context.readProvider.getDelegate(address, 'head');
   }

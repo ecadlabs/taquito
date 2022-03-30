@@ -62,7 +62,7 @@ export class RpcContractProvider
    */
   async getStorage<T>(contract: string, schema?: ContractSchema): Promise<T> {
     if (validateContractAddress(contract) !== ValidationResult.VALID) {
-      throw new InvalidContractAddressError(`Invalid contract address: ${contract}`);
+      throw new InvalidContractAddressError(contract);
     }
     const script = await this.context.readProvider.getScript(contract, 'head');
     if (!schema) {
@@ -93,7 +93,7 @@ export class RpcContractProvider
    */
   async getBigMapKey<T>(contract: string, key: string, schema?: ContractSchema): Promise<T> {
     if (validateContractAddress(contract) !== ValidationResult.VALID) {
-      throw new InvalidContractAddressError(`Invalid contract address: ${contract}`);
+      throw new InvalidContractAddressError(contract);
     }
     if (!schema) {
       schema = await this.rpc.getNormalizedScript(contract);
@@ -295,10 +295,10 @@ export class RpcContractProvider
    */
   async setDelegate(params: DelegateParams) {
     if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid source Address: ${params.source}`);
+      throw new InvalidAddressError(params.source);
     }
     if (params.delegate && validateAddress(params.delegate) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid delegate Address: ${params.delegate}`);
+      throw new InvalidAddressError(params.delegate);
     }
 
     // Since babylon delegation source cannot smart contract
@@ -359,12 +359,10 @@ export class RpcContractProvider
    */
   async transfer(params: TransferParams) {
     if (validateAddress(params.to) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid address passed in 'to' parameter: ${params.to}`);
+      throw new InvalidAddressError(params.to);
     }
     if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(
-        `Invalid address passed in 'source' parameter: ${params.source}`
-      );
+      throw new InvalidAddressError(params.source);
     }
 
     const publickKeyHash = await this.signer.publicKeyHash();
@@ -449,7 +447,7 @@ export class RpcContractProvider
     contractAbstractionComposer: ContractAbstractionComposer<T> = (x) => x as any
   ): Promise<T> {
     if (validateContractAddress(address) !== ValidationResult.VALID) {
-      throw new InvalidContractAddressError(`Invalid contract address: ${address}`);
+      throw new InvalidContractAddressError(address);
     }
     const rpc = this.context.withExtensions().rpc;
     const readProvider = this.context.withExtensions().readProvider;

@@ -4,8 +4,8 @@
  */
 export class InvalidPublicKeyError extends Error {
   public name = 'InvalidPublicKeyError';
-  constructor(public message: string) {
-    super(message);
+  constructor(public publicKey: string, errorDetail?: string) {
+    super(`The public key '${publicKey}' is invalid. ${errorDetail}`);
   }
 }
 
@@ -37,8 +37,8 @@ export class InvalidMessageError extends Error {
  */
 export class InvalidContractAddressError extends Error {
   public name = 'InvalidContractAddressError';
-  constructor(public message: string) {
-    super(message);
+  constructor(public contractAddress: string) {
+    super(`The contract address '${contractAddress}' is invalid`);
   }
 }
 
@@ -48,8 +48,8 @@ export class InvalidContractAddressError extends Error {
  */
 export class InvalidAddressError extends Error {
   public name = 'InvalidAddressError';
-  constructor(public message: string) {
-    super(message);
+  constructor(public address: string) {
+    super(`The address '${address}' is invalid`);
   }
 }
 

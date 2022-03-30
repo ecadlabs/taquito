@@ -20,7 +20,7 @@ export type OperationStatus = 'pending' | 'unknown' | OperationResultStatusEnum;
 
 /**
  *  @category Error
- *  @description Error that indicates a missed block when waiting for confirmation from the blockchain
+ *  @description Error that indicates a missed block when polling to retrieve new head block. This may happen when the polling interval is greater than the time between blocks.
  */
 export class MissedBlockDuringConfirmationError extends Error {
   name = 'MissedBlockDuringConfirmationError';

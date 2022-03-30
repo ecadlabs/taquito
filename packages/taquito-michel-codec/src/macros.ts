@@ -4,7 +4,7 @@ import { Tuple, NoArgs, ReqArgs, NoAnnots } from './utils';
 
 /**
  *  @category Error
- *  @description Indicates a macro error occuring in the Michel Codec
+ *  @description Indicates that an error has occurred preventing macros from being expanded in a plain Michelson input
  */
 export class MacroError extends Error {
   constructor(public prim: Prim, message?: string) {

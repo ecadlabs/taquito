@@ -1,3 +1,5 @@
+import { ENTRYPOINT_MAX_LENGTH } from './constants';
+
 /**
  *  @category Error
  *  @description Error that indicates an invalid block hash being passed or used
@@ -25,7 +27,9 @@ export class InvalidBlockHashError extends Error {
  */
 export class OversizedEntryPointError extends Error {
   public name = 'OversizedEntryPointError';
-  constructor(public message: string) {
-    super(message);
+  constructor(public entrypoint: string) {
+    super(
+      `Oversized entrypoint: ${entrypoint}. The maximum length of entrypoint is ${ENTRYPOINT_MAX_LENGTH}`
+    );
   }
 }

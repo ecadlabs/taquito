@@ -30,8 +30,10 @@ export enum DerivationType {
  */
 export class InvalidDerivationTypeError extends Error {
   public name = 'InvalidDerivationTypeError';
-  constructor(public message: string) {
-    super(message);
+  constructor(public derivationType: string) {
+    super(
+      `The derivation type ${derivationType} is invalid. The derivation type must be DerivationType.ED25519, DerivationType.SECP256K1 or DerivationType.P256`
+    );
   }
 }
 
@@ -41,8 +43,10 @@ export class InvalidDerivationTypeError extends Error {
  */
 export class InvalidDerivationPathError extends Error {
   public name = 'InvalidDerivationPathError';
-  constructor(public message: string) {
-    super(message);
+  constructor(public derivationPath: string) {
+    super(
+      `The derivation path ${derivationPath} is invalid. The derivation path must start with 44'/1729`
+    );
   }
 }
 
@@ -106,12 +110,10 @@ export class LedgerSigner implements Signer {
   ) {
     this.transport.setScrambleKey('XTZ');
     if (!path.startsWith("44'/1729'")) {
-      throw new InvalidDerivationPathError("The derivation path must start with 44'/1729'");
+      throw new InvalidDerivationPathError(path);
     }
     if (!Object.values(DerivationType).includes(derivationType)) {
-      throw new InvalidDerivationTypeError(
-        'The derivation type must be DerivationType.ED25519, DerivationType.SECP256K1 or DerivationType.P256'
-      );
+      throw new InvalidDerivationTypeError(derivationType.toString());
     }
   }
 
