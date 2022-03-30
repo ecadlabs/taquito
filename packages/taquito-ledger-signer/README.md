@@ -15,11 +15,11 @@ npm install @taquito/ledger-signer
 ### Prerequisites
 To use the Ledger Signer we must first import the desired transport from the [LedgerJs library](https://github.com/LedgerHQ/ledgerjs).
 
-The Ledger Signer has currently been tested with `@ledgerhq/hw-transport-node-hid` for Node-based applications and with `@ledgerhq/hw-transport-webhi` for web applications.
+The Ledger Signer has currently been tested with `@ledgerhq/hw-transport-node-hid` for Node-based applications and with `@ledgerhq/hw-transport-webhid` for web applications.
 
 Pass an instance of the transport of your choice to the Ledger Signer as follows:
 ```ts
-import transportWeb from '@ledgerhq/hw-transport-webhi';
+import transportWeb from '@ledgerhq/hw-transport-webhid';
 import { LedgerSigner } from '@taquito/ledger-signer';
 
 const transport = await transportWeb.create();
@@ -31,7 +31,7 @@ The constructor of the `LedgerSigner` class takes three other optional parameter
 - `path`: **default value is "44'/1729'/0'/0'"**  
   You can use as a parameter the `HDPathTemplate` which refers to `44'/1729'/${account}'/0'`. You have to specify the index of the account you want to use. Or you can also use a complete path as a parameter. More details about paths [here](https://tezostaquito.io/docs/ledger_signer#derivation-paths-hd-wallet--bip-standards)
 - `prompt`: **default is true**  
-  If true, you will be asked on your Ledger device to send your public key for validation. **_Note that confirmation is required when using `@ledgerhq/hw-transport-webhi`, so you should not set this parameter to false if you are using this transport._**
+  If true, you will be asked on your Ledger device to send your public key for validation. **_Note that confirmation is required when using `@ledgerhq/hw-transport-webhid`, so you should not set this parameter to false if you are using this transport._**
 - `derivationType`: **default is DerivationType.ED25519**  
   It can be DerivationType.ED25519 (tz1), DerivationType.SECP256K1 (tz2) or DerivationType.P256 (tz3).
 
@@ -50,7 +50,7 @@ const ledgerSigner = new LedgerSigner(
 
 ```ts
 import { LedgerSigner } from '@taquito/ledger-signer';
-import TransportWeb from '@ledgerhq/hw-transport-webhi';
+import TransportWeb from '@ledgerhq/hw-transport-webhid';
 import { TezosToolkit } from '@taquito/taquito';
 
 const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
