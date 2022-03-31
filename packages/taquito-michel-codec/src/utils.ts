@@ -34,6 +34,10 @@ export type NoAnnots<T extends Prim> = OmitProp<T, 'annots'>;
 
 export type Nullable<T> = { [P in keyof T]: T[P] | null };
 
+/**
+ *  @category Error
+ *  @description Error that indicates a Michelson failure occurring
+ */
 export class MichelsonError<T extends Expr = Expr> extends Error {
   /**
    * @param val Value of a AST node caused the error

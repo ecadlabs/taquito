@@ -25,6 +25,10 @@ export interface HttpRequestOptions {
   mimeType?: string;
 }
 
+/**
+ *  @category Error
+ *  @description This error will be thrown when the endpoint returns an HTTP error to the client
+ */
 export class HttpResponseError extends Error {
   public name = 'HttpResponse';
 
@@ -39,6 +43,10 @@ export class HttpResponseError extends Error {
   }
 }
 
+/**
+ *  @category Error
+ *  @description Error that indicates a general failure in making the HTTP request
+ */
 export class HttpRequestFailed extends Error {
   public name = 'HttpRequestFailed';
 

@@ -1,3 +1,7 @@
+/**
+ *  @category Error
+ *  @description Error that indicates the metadata not being found on the contract
+ */
 export class TokenMetadataNotFound extends Error {
   name = 'TokenMetadataNotFound';
 
@@ -6,6 +10,10 @@ export class TokenMetadataNotFound extends Error {
   }
 }
 
+/**
+ *  @category Error
+ *  @description Error that indicates the token ID not being found
+ */
 export class TokenIdNotFound extends Error {
   name = 'TokenIdNotFound';
 
@@ -14,6 +22,10 @@ export class TokenIdNotFound extends Error {
   }
 }
 
+/**
+ *  @category Error
+ *  @description Error that indicates that the token metadata is invalid (not compliant with the TZIP-12 standard)
+ */
 export class InvalidTokenMetadata extends Error {
   name = 'InvalidTokenMetadata';
 

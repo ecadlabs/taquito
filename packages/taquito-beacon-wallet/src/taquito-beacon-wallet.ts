@@ -22,6 +22,10 @@ import {
 
 export { VERSION } from './version';
 
+/**
+ *  @category Error
+ *  @description Error that indicates the Beacon wallet not being initialized
+ */
 export class BeaconWalletNotInitialized extends Error {
   name = 'BeaconWalletNotInitialized';
 
@@ -30,6 +34,10 @@ export class BeaconWalletNotInitialized extends Error {
   }
 }
 
+/**
+ *  @category Error
+ *  @description Error that indicates missing required persmission scopes
+ */
 export class MissingRequiredScopes extends Error {
   name = 'MissingRequiredScopes';
 
