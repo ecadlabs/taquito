@@ -13,7 +13,7 @@ export const EndorsementSchemaProto12 = {
 export const operationEncoderProto12 =
   (encoders: { [key: string]: (val: object) => string }) => (operation: { kind: string }) => {
     if (!(operation.kind in encoders) || !(operation.kind in kindMappingReverseProto12)) {
-      throw new InvalidOperationKindError(`Unsupported operation kind: ${operation.kind}`);
+      throw new InvalidOperationKindError(operation.kind);
     }
 
     return kindMappingReverseProto12[operation.kind] + encoders[operation.kind](operation);

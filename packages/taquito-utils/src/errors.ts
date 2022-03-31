@@ -15,8 +15,8 @@ export class InvalidPublicKeyError extends Error {
  */
 export class InvalidSignatureError extends Error {
   public name = 'InvalidSignatureError';
-  constructor(public message: string) {
-    super(message);
+  constructor(public signature: string, errorDetail?: string) {
+    super(`The signature '${signature}' is invalid (${errorDetail})`);
   }
 }
 
@@ -26,8 +26,8 @@ export class InvalidSignatureError extends Error {
  */
 export class InvalidMessageError extends Error {
   public name = 'InvalidMessageError';
-  constructor(public message: string) {
-    super(message);
+  constructor(public msg: string, public errorDetail?: string) {
+    super(`The message '${msg}' is invalid. ${errorDetail}`);
   }
 }
 
@@ -59,8 +59,8 @@ export class InvalidAddressError extends Error {
  */
 export class InvalidChainIdError extends Error {
   public name = 'InvalidChainIdError';
-  constructor(public message: string) {
-    super(message);
+  constructor(public chainId: string) {
+    super(`The chain id '${chainId}' is invalid`);
   }
 }
 
@@ -80,8 +80,8 @@ export class InvalidKeyHashError extends Error {
  *  @description Error that indicates an invalid block hash being passed or used
  */ export class InvalidBlockHashError extends Error {
   public name = 'InvalidBlockHashError';
-  constructor(public message: string) {
-    super(message);
+  constructor(public blockHash: string) {
+    super(`The block hash '${blockHash}' is invalid`);
   }
 }
 
@@ -91,8 +91,8 @@ export class InvalidKeyHashError extends Error {
  */
 export class InvalidProtocolHashError extends Error {
   public name = 'InvalidProtocolHashError';
-  constructor(public message: string) {
-    super(message);
+  constructor(public protocolHash: string) {
+    super(`The protocol hash '${protocolHash}' is invalid`);
   }
 }
 
@@ -101,8 +101,8 @@ export class InvalidProtocolHashError extends Error {
  *  @description Error that indicates an invalid operation hash being passed or used
  */ export class InvalidOperationHashError extends Error {
   public name = 'InvalidOperationHashError';
-  constructor(public message: string) {
-    super(message);
+  constructor(public operationHash: string) {
+    super(`The operation hash '${operationHash}' is invalid`);
   }
 }
 
@@ -112,7 +112,7 @@ export class InvalidProtocolHashError extends Error {
  */
 export class InvalidOperationKindError extends Error {
   public name = 'InvalidOperationKindError';
-  constructor(public message: string) {
-    super(message);
+  constructor(public operationKind: string) {
+    super(`The operation kind '${operationKind}' is unsupported`);
   }
 }

@@ -162,9 +162,7 @@ export abstract class OperationEmitter {
               ...getFee(op),
             };
           default:
-            throw new InvalidOperationKindError(
-              `The operation kind '${(op as any).kind}' is unsupported`
-            );
+            throw new InvalidOperationKindError((op as any).kind);
         }
       });
 

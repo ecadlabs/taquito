@@ -53,7 +53,7 @@ export class LocalForger implements Forger {
 
     for (const content of params.contents) {
       if (!validateOperationKind(content.kind)) {
-        throw new InvalidOperationKindError(`The operation kind '${content.kind}' does not exist`);
+        throw new InvalidOperationKindError(content.kind);
       }
 
       const diff = validateMissingProperty(content);

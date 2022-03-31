@@ -380,9 +380,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
           );
           break;
         default:
-          throw new InvalidOperationKindError(
-            `The operation kind '${(params as any).kind}' is unsupported`
-          );
+          throw new InvalidOperationKindError((params as any).kind);
       }
     }
     const isRevealNeeded = await this.isRevealOpNeeded(operations, publicKeyHash);

@@ -160,9 +160,7 @@ export class OperationBatch extends OperationEmitter {
           ...param,
         });
       default:
-        throw new InvalidOperationKindError(
-          `The operation kind '${(param as any).kind}' is unsupported`
-        );
+        throw new InvalidOperationKindError((param as any).kind);
     }
   }
 
@@ -191,9 +189,7 @@ export class OperationBatch extends OperationEmitter {
           this.withRegisterGlobalConstant(param);
           break;
         default:
-          throw new InvalidOperationKindError(
-            `The operation kind '${(param as any).kind}' is unsupported`
-          );
+          throw new InvalidOperationKindError((param as any).kind);
       }
     }
 

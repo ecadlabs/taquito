@@ -43,7 +43,7 @@ export class ContractView {
         `Since version 12, the lambda view no longer depends on a lambda contract. The read method no longer accepts a contract address as a parameter.`
       );
     } else if (chainId && validateChain(chainId) !== ValidationResult.VALID) {
-      throw new InvalidChainIdError(`The ChainId '${chainId}' is invalid`);
+      throw new InvalidChainIdError(chainId);
     }
     const arg = this.parameterSchema.Encode(...this.args);
     const result = await this.rpc.runView({

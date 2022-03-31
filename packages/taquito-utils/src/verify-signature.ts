@@ -61,7 +61,10 @@ export function verifySignature(
 
 function validateMessageNotEmpty(message: string) {
   if (message === '') {
-    throw new InvalidMessageError(`The message provided for verifying signature cannot be empty.`);
+    throw new InvalidMessageError(
+      message,
+      'The message provided for verifying signature cannot be empty.'
+    );
   }
   return message;
 }
@@ -94,15 +97,11 @@ function validateSigAndExtractPrefix(signature: string): SigPrefix {
   const validation = validateSignature(signature);
   if (validation !== ValidationResult.VALID) {
     if (validation === ValidationResult.INVALID_CHECKSUM) {
-      throw new InvalidSignatureError(
-        `The signature provided has an invalid checksum: ${signature}`
-      );
+      throw new InvalidSignatureError(signature, `invalid checksum`);
     } else if (validation === ValidationResult.INVALID_LENGTH) {
-      throw new InvalidSignatureError(`The signature provided has an invalid length: ${signature}`);
+      throw new InvalidSignatureError(signature, 'invalid length');
     } else if (validation === ValidationResult.NO_PREFIX_MATCHED) {
-      throw new InvalidSignatureError(
-        `The signature provided has an unsupported prefix: ${signaturePrefix}`
-      );
+      throw new InvalidSignatureError(signaturePrefix, 'unsupported prefix');
     }
   }
   return signaturePrefix as SigPrefix;

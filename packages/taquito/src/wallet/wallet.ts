@@ -99,9 +99,7 @@ export class WalletOperationBatch {
       case OpKind.DELEGATION:
         return this.walletProvider.mapDelegateParamsToWalletParams(async () => param);
       default:
-        throw new InvalidOperationKindError(
-          `The operation kind '${(param as any).kind}' is unsupported`
-        );
+        throw new InvalidOperationKindError((param as any).kind);
     }
   }
 
@@ -124,9 +122,7 @@ export class WalletOperationBatch {
           this.withDelegation(param);
           break;
         default:
-          throw new InvalidOperationKindError(
-            `The operation kind '${(param as any).kind}' is unsupported`
-          );
+          throw new InvalidOperationKindError((param as any).kind);
       }
     }
 

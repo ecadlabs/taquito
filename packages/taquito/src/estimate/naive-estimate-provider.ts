@@ -20,9 +20,7 @@ export class NaiveEstimateProvider implements EstimationProvider {
     this._costPerByte = 250;
   }
   registerGlobalConstant(params: RegisterGlobalConstantParams): Promise<Estimate> {
-    throw new InvalidOperationKindError(
-      `The operation kind '${(params as any).kind}' is unsupported`
-    );
+    throw new InvalidOperationKindError((params as any).kind);
   }
   /**
    *
@@ -121,9 +119,7 @@ export class NaiveEstimateProvider implements EstimationProvider {
           estimates.push(new Estimate(0, 0, 0, this._costPerByte, 0));
           break;
         default:
-          throw new InvalidOperationKindError(
-            `The operation kind '${(params as any).kind}' is unsupported`
-          );
+          throw new InvalidOperationKindError((params as any).kind);
       }
     }
     return estimates;

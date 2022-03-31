@@ -160,7 +160,7 @@ describe('ContractView test', () => {
         .read('invalid' as any);
     } catch (e) {
       expect(e).toBeInstanceOf(Error);
-      expect(e.message).toEqual(`The ChainId 'invalid' is invalid`);
+      expect(e.message).toEqual(`The chain id 'invalid' is invalid`);
     }
     done();
   });
