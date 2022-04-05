@@ -1,3 +1,7 @@
+
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,900;1,200;1,300;1,400;1,600;1,700&display=swap");
+/* You can override the default Infima variables here. */
+
 :root {
   --blue-primary: #218da5;
   --blue-secondary: #35636e;
@@ -5,11 +9,15 @@
   --brown: #a56921;
   --green: #71a417;
   --beige: #f9e3c2;
+  --yellow:rgb(255, 181, 0, 0.6);
+  --brown-primary: #D3832B;
 
-  --ifm-color-primary-lightest: #f2faff;
+
+  --ifm-font-family-base: "Source Sans Pro";
+  --ifm-color-primary-lightest: #FFFFFF;
   --ifm-color-primary-lighter: #a9d1e4;
   --ifm-color-primary-light: #6bb2c9;
-  --ifm-color-primary: var(--blue-primary);
+  --ifm-color-primary: var(--brown-primary);
   --ifm-color-primary-dark: #007fa7;
   --ifm-color-primary-darker: #006d9b;
   --ifm-color-primary-darkest: #005887;
@@ -27,13 +35,55 @@
  * Overrides
  */
 .navbar .navbar__brand {
-  font-family: Baloo Tammudu;
+  font-family: Source Sans Pro;
   font-size: 1em;
   text-transform: uppercase;
 }
 
 .navbar {
-  height: 70%;
+  background-color: var(--yellow);
+  height: 100px;
+	padding-left: 7%;
+	padding-right: 7%;
+}
+
+.navbar__logo {
+	height: 70px;
+	width: 160px;
+  margin-left:10%;
+}
+
+.header-link{
+  margin: 0 5px;
+}
+.get-started{
+    background-color: var(--ifm-color-primary);
+    border-radius: 20px;
+    color: var( --ifm-color-primary-lightest) !important;
+}
+
+
+.header-discord-link:before {
+	background: url("../../static/img/discordSVG.svg") no-repeat;
+	content: "";
+	display: flex;
+	height: 24px;
+	width: 24px;
+}
+
+.header-twitter-link:before {
+	background: url("../../static/img/twitterSVG.svg") no-repeat;
+	content: "";
+	display: flex;
+	height: 24px;
+	width: 24px;
+}
+.header-github-link:before {
+	background: url("../../static/img/githubSVG.svg") no-repeat;
+	content: "";
+	display: flex;
+	height: 24px;
+	width: 24px;
 }
 
 .docusaurus-highlight-code-line {
@@ -58,4 +108,8 @@
 
 [data-theme='dark'] .admonition-note {
   --ifm-alert-background-color:  #333437;
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #4e89e8;
 }
