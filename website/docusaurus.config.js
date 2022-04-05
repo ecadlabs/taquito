@@ -159,7 +159,7 @@ module.exports = {
         },
         docs: {
           path: '../docs',
-          sidebarPath: require.resolve('./sidebars.json'),
+        	sidebarPath: require.resolve('./sidebars.js'),
           includeCurrentVersion: true
         }
       }
