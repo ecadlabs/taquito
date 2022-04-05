@@ -11,6 +11,10 @@
   --beige: #f9e3c2;
   --yellow:rgb(255, 181, 0, 0.6);
   --brown-primary: #D3832B;
+  --yellow-second:#FFB500;
+  --black: #333333;
+
+
 
 
   --ifm-font-family-base: "Source Sans Pro";
@@ -56,15 +60,22 @@
 .header-link{
   margin: 0 5px;
 }
+.navbar__link{
+  font-weight: 600;
+}
+
 .get-started{
     background-color: var(--ifm-color-primary);
     border-radius: 20px;
     color: var( --ifm-color-primary-lightest) !important;
 }
 
+.get-started:hover{
+   color: var( --black) !important;
+}
 
 .header-discord-link:before {
-	background: url("../../static/img/discordSVG.svg") no-repeat;
+	background: url("../../static/img/telegramSVG.svg") no-repeat;
 	content: "";
 	display: flex;
 	height: 24px;
