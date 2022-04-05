@@ -145,9 +145,9 @@ module.exports = {
       trackingID: 'UA-148358030-1',
     },
     algolia: {
-      apiKey: 'process.env.ALGOLIA_SEARCH_API_KEY',
+      apiKey: process.env.ALGOLIA_SEARCH_API_KEY,
       indexName: 'taquito',
-      appId: 'process.env.ALGOLIA_APPLICATION_ID',
+      appId: process.env.ALGOLIA_APPLICATION_ID,
     }
   },
   presets: [
