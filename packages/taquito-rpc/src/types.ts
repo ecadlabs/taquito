@@ -641,6 +641,9 @@ export interface OperationBalanceUpdatesItem {
   contract?: string;
   change: string;
   origin?: MetadataBalanceUpdatesOriginEnum;
+  participation?: boolean;
+  revelation?: boolean;
+  committer?: string;
 }
 
 export type OperationBalanceUpdates = OperationBalanceUpdatesItem[];
