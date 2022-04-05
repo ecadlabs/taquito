@@ -109,6 +109,7 @@ module.exports = {
       appId: process.env.ALGOLIA_APPLICATION_ID,
     }
   },
+  
   presets: [
     [
       '@docusaurus/preset-classic',
