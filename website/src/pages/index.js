@@ -7,6 +7,7 @@ import Layout from '@theme/Layout';
 import classnames from 'classnames';
 import React from 'react';
 import Hero from "../components/Hero/Hero";
+import LogoGrid from '../components/Logos/LogoGrid';
 
 import styles from './styles.module.css';
 
@@ -157,6 +158,7 @@ export default () => {
     <Layout 	title={`Hello from ${siteConfig.title}`}  permalink="/" description={customFields.description}>
     <main>
       <Hero/>
+      <LogoGrid/>
     </main>
       <div className={classnames(styles.banner, styles.centered, 'margin-bottom--xl')}>
         <img className={styles.brandLogo} src={useBaseUrl('img/Taquito.png')} />
