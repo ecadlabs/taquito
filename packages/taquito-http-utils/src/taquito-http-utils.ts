@@ -9,8 +9,6 @@ import axios from 'axios';
 export * from './status_code';
 export { VERSION } from './version';
 
-const defaultTimeout = 30000;
-
 enum ResponseType {
   TEXT = 'text',
   JSON = 'json',
@@ -50,8 +48,8 @@ export class HttpResponseError extends Error {
 export class HttpRequestFailed extends Error {
   public name = 'HttpRequestFailed';
 
-  constructor(public url: string, public innerEvent: any) {
-    super(`Request to ${url} failed`);
+  constructor(public errorDetail: string) {
+    super(errorDetail);
   }
 }
 
@@ -144,7 +142,7 @@ export class HttpBackend {
           url + this.serialize(query)
         );
       } else {
-        throw new Error(err);
+        throw new HttpRequestFailed(err);
       }
     }
 
