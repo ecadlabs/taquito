@@ -46,15 +46,19 @@
 
 .navbar {
   background-color: var(--yellow);
-  height: 100px;
+  height: 88px;
 	padding-left: 7%;
 	padding-right: 7%;
+  .navbar__inner{
+    align-items: flex-end;
+  }
 }
 
 .navbar__logo {
 	height: 70px;
 	width: 160px;
   margin-left:10%;
+ margin-bottom: -10px;
 }
 
 .header-link{
