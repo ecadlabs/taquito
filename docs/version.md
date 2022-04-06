@@ -2,6 +2,11 @@
 title: Versions
 author: Jev Bjorsell
 ---
+
+# Taquito v12.0.1-beta
+
+`@taquito-rpc` - Added support for missing properties related to Ithaca protocol in `OperationBalanceUpdatesItem` interface: `participation`, `revelation`, `committer`.
+
 # Taquito v12.0.0-beta
 
 **Please note the presence of two breaking changes in this release. Refer to the following link for a guide to upgrade from version 11 to 12:** https://tezostaquito.io/docs/upgrading_guide
