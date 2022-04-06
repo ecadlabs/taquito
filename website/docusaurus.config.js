@@ -63,7 +63,7 @@ module.exports = {
 						docId: 'quick_start',
 						label: ' Get Started',
 						position: 'right',
-						className: 'header-link get-started',
+						className: 'header-link button_link',
 					},
           {
 						href: 'https://discord.gg/bujt7syVVT',

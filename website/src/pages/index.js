@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Layout from '@theme/Layout';
 import classnames from 'classnames';
 import React from 'react';
+import Hero from "../components/Hero/Hero";
 
 import styles from './styles.module.css';
 
@@ -153,7 +154,10 @@ export default () => {
   const { customFields } = siteConfig;
 
   return (
-    <Layout permalink="/" description={customFields.description}>
+    <Layout 	title={`Hello from ${siteConfig.title}`}  permalink="/" description={customFields.description}>
+    <main>
+      <Hero/>
+    </main>
       <div className={classnames(styles.banner, styles.centered, 'margin-bottom--xl')}>
         <img className={styles.brandLogo} src={useBaseUrl('img/Taquito.png')} />
         <h1 className={styles.tagline}>{siteConfig.tagline}</h1>
