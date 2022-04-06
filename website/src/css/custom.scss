@@ -68,11 +68,11 @@
     background-color: var(--ifm-color-primary);
     border-radius: 20px;
     color: var( --ifm-color-primary-lightest) !important;
+   &:hover{
+       color: var( --black) !important;
+    }
 }
 
-.get-started:hover{
-   color: var( --black) !important;
-}
 
 .header-discord-link:before {
 	background: url("../../static/img/telegramSVG.svg") no-repeat;
