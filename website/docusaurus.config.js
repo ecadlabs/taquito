@@ -28,20 +28,61 @@ module.exports = {
   },
   themes: [require.resolve('@docusaurus/theme-live-codeblock')],
   themeConfig: {
+    	colorMode: {
+				defaultMode: 'light',
+				disableSwitch: false,
+				respectPrefersColorScheme: false,
+// The following value has been deprecated and will need to be re-implemented when dark mode is implemented
+				// switchConfig: {
+				// 	darkIcon: '🌙',
+				// 	darkIconStyle: {
+				// 		marginLeft: '2px',
+				// 	},
+				// 	// Unicode icons such as '\u2600' will work
+				// 	// Unicode with 5 chars require brackets: '\u{1F602}'
+				// 	lightIcon: '\u{1F602}',
+				// 	lightIconStyle: {
+				// 		marginLeft: '1px',
+				// 	},
+				// },
+			},
     navbar: {
-      title: 'Taquito',
       logo: {
         alt: 'Taquito Logo',
-        src: 'img/a_taquito.png'
+        src: 'img/taquito_header.svg',
       },
       items: [
         {
           type: 'docsVersionDropdown',
           position: 'right',
-        },
-        { to: 'docs/version', label: 'Release Notes', position: 'right' },
-        { href: "https://twitter.com/TezosTaquito", label: 'Twitter', position: 'right' },
-        { href: "https://github.com/ecadlabs/taquito", label: 'GitHub', position: 'right' }
+          className: 'header-link',
+        },    
+        { to: 'docs/version', label: 'Release Notes', position: 'right',	className: 'header-link',},
+        {
+						type: 'doc',
+						docId: 'quick_start',
+						label: ' Get Started',
+						position: 'right',
+						className: 'header-link get-started',
+					},
+          {
+						href: 'https://discord.gg/bujt7syVVT',
+						position: 'right',
+						className: 'header-link header-discord-link',
+						'aria-label': 'Discord',
+					},
+					{
+						href: 'https://twitter.com/tezostaqueria',
+						position: 'right',
+						className: 'header-link header-twitter-link',
+						'aria-label': 'Twitter',
+					},
+					{
+						href: 'https://github.com/ecadlabs/taqueria',
+						position: 'right',
+						className: 'header-link header-github-link',
+						'aria-label': 'GitHub repository',
+					},
       ]
     },
     footer: {
@@ -103,27 +144,29 @@ module.exports = {
     gtag: {
       trackingID: 'UA-148358030-1',
     },
-    algolia: {
-      apiKey: process.env.ALGOLIA_SEARCH_API_KEY,
-      indexName: 'taquito',
-      appId: process.env.ALGOLIA_APPLICATION_ID,
-    }
+    // algolia: {
+    //   apiKey: 'process.env.ALGOLIA_SEARCH_API_KEY',
+    //   indexName: 'taquito',
+    //   appId: 'process.env.ALGOLIA_APPLICATION_ID',
+    // }
   },
-  
   presets: [
     [
       '@docusaurus/preset-classic',
       {
-        theme: {
-          customCss: require.resolve('./src/css/custom.css'),
-        },
+      	theme: {
+					customCss: [
+						require.resolve('./src/css/custom.scss'),
+					],
+				},
         docs: {
           path: '../docs',
-          sidebarPath: require.resolve('./sidebars.json'),
+        	sidebarPath: require.resolve('./sidebars.js'),
           includeCurrentVersion: true
         }
       }
     ],
   ],
-  plugins: [require.resolve('./plugins/webpack5plugin/index.js')],
+  plugins: [require.resolve('./plugins/webpack5plugin/index.js'),'docusaurus-plugin-sass',
+],
 };
