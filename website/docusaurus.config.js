@@ -144,19 +144,21 @@ module.exports = {
     gtag: {
       trackingID: 'UA-148358030-1',
     },
-    algolia: {
-      apiKey: process.env.ALGOLIA_SEARCH_API_KEY,
-      indexName: 'taquito',
-      appId: process.env.ALGOLIA_APPLICATION_ID,
-    }
+    // algolia: {
+    //   apiKey: 'process.env.ALGOLIA_SEARCH_API_KEY',
+    //   indexName: 'taquito',
+    //   appId: 'process.env.ALGOLIA_APPLICATION_ID',
+    // }
   },
   presets: [
     [
       '@docusaurus/preset-classic',
       {
-        theme: {
-          customCss: require.resolve('./src/css/custom.css'),
-        },
+      	theme: {
+					customCss: [
+						require.resolve('./src/css/custom.scss'),
+					],
+				},
         docs: {
           path: '../docs',
         	sidebarPath: require.resolve('./sidebars.js'),
@@ -165,5 +167,6 @@ module.exports = {
       }
     ],
   ],
-  plugins: [require.resolve('./plugins/webpack5plugin/index.js')],
+  plugins: [require.resolve('./plugins/webpack5plugin/index.js'),'docusaurus-plugin-sass',
+],
 };
