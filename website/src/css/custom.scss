@@ -19,6 +19,7 @@
 
 
 
+
   --ifm-font-family-base: "Source Sans Pro";
   --ifm-color-primary-lightest: #FFFFFF;
   --ifm-color-primary-lighter: #a9d1e4;
@@ -95,6 +96,47 @@
 
 .navbar__link {
   font-weight: 600;
+
+  &:hover {
+    color: var(--ifm-color-text-primary) !important;
+  }
+}
+
+
+.navbar__items {
+  flex-direction: unset;
+  justify-content: unset;
+
+  @media (max-width:960px) {
+    flex-direction: row-reverse;
+    justify-content: space-between;
+  }
+}
+
+.navbar-sidebar {
+  .navbar-sidebar__brand {
+    padding-top: 50px;
+    padding-bottom: 50px;
+  }
+
+  .navbar-sidebar__items {
+    padding-top: 30px;
+  }
+
+  max-width:300px;
+
+  .menu__list-item {
+    max-width: 280px;
+    padding-bottom: 5px;;
+  }
+
+  .menu__list-item:nth-of-type(3) {
+    width: fit-content;
+    order: 0 !important;
+  }
+  .menu__link--active{
+      color: var(--ifm-color-text-primary) !important;
+  }
 }
 
 .button_link {
