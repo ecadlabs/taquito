@@ -21,7 +21,7 @@
 	justify-content: center;
 	flex-wrap: wrap;
 	width: 90%;
-	padding-top: 150px;
+	padding-top: 50px;
 	margin-left: 5%;
 	margin-right: 5%;
 	height: 100%;
@@ -358,7 +358,7 @@ video {
 	}
 	.content {
 		padding-bottom: 100px;
-		padding-top: 100px;
+		padding-top: 50px;
 	}
 	.logos{
 	position: relative;
