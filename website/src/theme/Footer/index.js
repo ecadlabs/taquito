@@ -13,7 +13,7 @@ import isInternalUrl from "@docusaurus/isInternalUrl";
 import styles from "./styles.module.css";
 import ThemedImage from "@theme/ThemedImage";
 import IconExternalLink from "@theme/IconExternalLink";
-// import FooterForm from "../../components/FooterForm/FooterForm";
+import FooterForm from "../../components/FooterForm/FooterForm";
 
 function FooterLink({
 	to,
@@ -103,7 +103,7 @@ function Footer() {
 														className="footer__item" // Developer provided the HTML, so assume it's safe.
 													// eslint-disable-next-line react/no-danger
 													>
-														{/* <FooterForm /> */}
+														<FooterForm />
 													</li>
 												) : (
 													<li

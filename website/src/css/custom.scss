@@ -224,7 +224,7 @@
   width: 100%;
   margin-left: 0px !important;
   margin-right: 0px !important;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 
 }
 
@@ -235,7 +235,7 @@
   flex-wrap: wrap;
   width: 100%;
   flex: 0 0 0 0;
-  color: #000000 !important;
+    color: var(--ifm-color-text-primary) !important;
   padding-bottom: 20px;
 }
 
@@ -263,6 +263,14 @@
 
     &:hover {
       color: var(--ifm-color-hover-link) !important;
+      text-decoration: none !important;
+    }
+  }
+  .footerButton{
+        color: var(--ifm-color-text-secondary) !important;
+
+      &:hover {
+        color: var(--ifm-color-text-primary) !important;
       text-decoration: none !important;
     }
   }
@@ -354,7 +362,6 @@
 .footerForm {
   width: 100%;
   margin-top: 50px;
-  background: #fff9ed;
 }
 
 .footerInputContainer {
