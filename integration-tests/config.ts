@@ -90,10 +90,10 @@ const hangzhounetEphemeral = {
 const mondaynetEphemeral = {
   rpc: process.env['TEZOS_RPC_MONDAYNET'] || 'http://mondaynet.ecadinfra.com:8732',
   knownBaker: 'tz1ck3EJwzFpbLVmXVuEn5Ptwzc6Aj14mHSH',
-  knownContract: process.env['TEZOS_MONDAYNET_CONTRACT_ADDRESS'] || 'KT1QxEqifpBbakZep3KLTLyGdDXQSjahSeQs',
-  knownBigMapContract: process.env['TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS'] || 'KT1QzKYMa1hkx4h6n3cgmMh1PrBC1hcRFoWr',
-  knownTzip1216Contract: process.env['TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS'] || 'KT1ModhC7YmbbbSFfUFSnQ4Lhrrjv288VXwF',
-  knownSaplingContract: process.env['TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS'] || 'KT1PAPtYxkEQFjue8shpGdEJRKRSsnx2txGH',
+  knownContract: process.env['TEZOS_MONDAYNET_CONTRACT_ADDRESS'] || '',
+  knownBigMapContract: process.env['TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS'] || '',
+  knownTzip1216Contract: process.env['TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS'] || '',
+  knownSaplingContract: process.env['TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS'] || '',
   protocol: Protocols.ProtoALpha,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,

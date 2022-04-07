@@ -3,16 +3,17 @@ name: Mondaynet Integration Tests
 on:
   schedule:
     - cron: '0 0 * * 2'
-  pull_request:
+  # Allows to run this workflow manually from the Actions tab
+  workflow_dispatch:
 
 jobs:
   integration-tests-mondaynet:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
       with:
-        node-version: '12'
+        node-version: '16'
     - run: npm ci
     - run: npm run lerna -- bootstrap
     - run: npm run build
@@ -20,9 +21,14 @@ jobs:
       uses: tailscale/github-action@v1
       with:
         authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
-    - run: cd integration-tests && npm run test:mondaynet -- --maxWorkers=8
+    - id: originate-contracts-mondaynet
+      working-directory: ./integration-tests
+      run: npm run test:mondaynet-originate-known-contracts
+    - id: integration-tests-mondaynet
+      working-directory: ./integration-tests
       env:
-        TEZOS_MONDAYNET_CONTRACT_ADDRESS: ${{ secrets.TEZOS_MONDAYNET_CONTRACT_ADDRESS }}
-        TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS: ${{ secrets.TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS }}
-        TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS: ${{ secrets.TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS }}
-        TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS: ${{ secrets.TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS }}
+        TEZOS_MONDAYNET_CONTRACT_ADDRESS: ""
+        TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS: ""
+        TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS: ""
+        TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS: ""
+      run: npm run test:mondaynet -- --maxWorkers=4

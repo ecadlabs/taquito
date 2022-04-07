@@ -1,19 +1,25 @@
-import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
+import { CONFIGS } from './config';
+import { MichelsonMap, OriginateParams, TezosToolkit } from '@taquito/taquito';
 import { knownContract } from '../example/data/knownContract';
 import { knownBigMapContract } from '../example/data/knownBigMapContract';
 import { singleSaplingStateContract } from './data/single_sapling_state_contract';
 import { fa2ForTokenMetadataView } from './data/fa2-for-token-metadata-view';
-import { InMemorySigner } from '@taquito/signer';
 import { char2Bytes } from '@taquito/utils';
 
+async function originateKnownContract(contractName: string, tezos: TezosToolkit, contractOriginateParams: OriginateParams): Promise<void> {
+  let operation = await tezos.contract.originate(contractOriginateParams);
+  let contract = await operation.contract();
+  console.log(`known${contractName} address:  ${contract.address}`);
+  console.log(`::set-output name=known${contractName}Address::${contract.address}`);
+}
 
-const provider = 'http://mondaynet.ecadinfra.com:8732';
-const signer: any = new InMemorySigner(process.env['MONDAYNET_ORIGINATE_CONTRACTS_PK'] || '');
-const tezos = new TezosToolkit(provider);
-tezos.setSignerProvider(signer);
+Promise.resolve(async () => {
+  const tezos = CONFIGS()[0].lib;
+  await CONFIGS()[0].setup();
 
-async function originateContract() {
-    const opknownContract = await tezos.contract.originate({
+  try {
+    // KnownContract
+    await originateKnownContract('Contract', tezos, {
       balance: '0',
       code: knownContract,
       init: {
@@ -28,36 +34,24 @@ async function originateContract() {
             ],
           },
         ],
-      },
+      }
     });
-    const contractknownContract = await opknownContract.contract();
-    console.log('The address of the knownContract is: ', contractknownContract.address);
-}
 
-async function originateBigMapContract() {
-  try {
-    const allowances = new MichelsonMap();
-    const ledger = new MichelsonMap();
-    ledger.set('tz1btkXVkVFWLgXa66sbRJa8eeUSwvQFX4kP', { allowances, balance: '1' });
-
-    const opknownBigMapContract = await tezos.contract.originate({
+    // KnownBigMapContract
+    const allowancesBigMap = new MichelsonMap();
+    const ledgerBigMap = new MichelsonMap();
+    ledgerBigMap.set('tz1btkXVkVFWLgXa66sbRJa8eeUSwvQFX4kP', { allowances: allowancesBigMap, balance: '1' });
+    await originateKnownContract('BigMapContract', tezos, {
       code: knownBigMapContract,
       storage: {
-        ledger,
+        ledger: ledgerBigMap,
         owner: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
         paused: true,
         totalSupply: '1',
-      },
+      }
     });
-    const contractknownBigMapContract = await opknownBigMapContract.contract();
-    console.log('The address of the knownBigMapContract is: ', contractknownBigMapContract.address);
-  } catch (ex) {
-    console.error(ex);
-  }
-}
 
-async function originateTZip12BigMapOffChain() {
-  try {
+    // KnownTzip12BigMapOffChainContract
     const ledger = new MichelsonMap();
     ledger.set(
       {
@@ -105,40 +99,28 @@ async function originateTZip12BigMapOffChain() {
       total_supply: '20000',
     });
 
-    const op = await tezos.contract.originate({
+    await originateKnownContract('Tzip12BigMapOffChainContract', tezos, {
       code: fa2ForTokenMetadataView,
       storage: {
         administrator: 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
         all_tokens: '2',
-        ledger,
+        ledger: ledgerBigMap,
         metadata,
         operators,
         paused: false,
         tokens,
-      },
+      }
     });
-    await op.confirmation();
-    const contract = await op.contract();
-    console.log('The address of the Tzip12BigMapOffChainContract is: ' + contract.address);
-  } catch (ex) {
-    console.error(ex);
-  }
-}
 
-async function originateSaplingContract() {
-  const op = await tezos.contract.originate({
-    code: singleSaplingStateContract,
+    // KnownSaplingContract
+    await originateKnownContract('SaplingContract', tezos, {
+      code: singleSaplingStateContract,
       init: '{}'
-  });
-  await op.confirmation();
-  const contract = await op.contract();
-  console.log('The address of the SaplingContract is: ' + contract.address);
-}
+    });
 
-(async () => {
-  await originateContract();
-  await originateBigMapContract();
-  await originateTZip12BigMapOffChain();
-  await originateSaplingContract();
-})()
+  } catch (e) {
+    console.error(`Failed to deploy known contract | Error: ${e}`);
+  }
+});
+
 
