@@ -20,7 +20,7 @@
 
 
 
-  --ifm-font-family-base: "Source Sans Pro";
+  --ifm-font-family-base: Source Sans Pro;
   --ifm-color-primary-lightest: #FFFFFF;
   --ifm-color-primary-lighter: #a9d1e4;
   --ifm-color-primary-light: #6bb2c9;
@@ -38,6 +38,7 @@
   --ifm-color-secondary-dark: #185b82;
   --ifm-color-secondary-darker: #0d3d89;
   --ifm-color-secondary-darkest: #001487;
+  --ifm-color-hover-link: var(--brown-primary);
 }
 
 
@@ -59,6 +60,8 @@
   --ifm-color-secondary: var(--yellow-primary);
   --ifm-color-text-primary: var(--white);
   --ifm-color-text-secondary: var(--black);
+  --ifm-color-hover-link: var(--black);
+
   ;
 
 }
@@ -98,10 +101,14 @@
   font-weight: 600;
 
   &:hover {
-    color: var(--ifm-color-text-primary) !important;
+    color: var(--ifm-color-hover-link) !important;
   }
 }
 
+.navbar__link--active {
+  color: var(--ifm-color-hover-link) !important;
+
+}
 
 .navbar__items {
   flex-direction: unset;
@@ -127,15 +134,17 @@
 
   .menu__list-item {
     max-width: 280px;
-    padding-bottom: 5px;;
+    padding-bottom: 5px;
+    ;
   }
 
   .menu__list-item:nth-of-type(3) {
     width: fit-content;
     order: 0 !important;
   }
-  .menu__link--active{
-      color: var(--ifm-color-text-primary) !important;
+
+  .menu__link--active {
+    color: var(--ifm-color-text-primary) !important;
   }
 }
 
@@ -186,4 +195,286 @@
 
 .main-wrapper {
   overflow-x: hidden;
+}
+
+
+/* Footer styles */
+
+.footer {
+  background-color: var(--ifm-color-primary);
+  padding-top: 80px;
+  padding-bottom: 15px;
+  position: relative;
+  border-top: 2px solid var(--yellow-second);
+  display: flex;
+  justify-content: center;
+  width: 100%;
+
+}
+
+.footer__title {
+  white-space: nowrap;
+  margin-bottom: 7px;
+}
+
+.footer .container {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  width: 100%;
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+  margin-bottom: 40px;
+
+}
+
+.footer__links {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  width: 100%;
+  flex: 0 0 0 0;
+    color: var(--ifm-color-text-primary) !important;
+  padding-bottom: 20px;
+}
+
+.footer__links .footer__col {
+  flex: unset;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+
+.footer__links>div:nth-of-type(1) {
+  width: 10%;
+}
+
+.footer__item {
+  font-family: Source Sans Pro;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: 0.3px;
+
+  a {
+    width: fit-content;
+    color: var(--ifm-color-text-primary) !important;
+
+    &:hover {
+      color: var(--ifm-color-hover-link) !important;
+      text-decoration: none !important;
+    }
+  }
+  .footerButton{
+        color: var(--ifm-color-text-secondary) !important;
+
+      &:hover {
+        color: var(--ifm-color-text-primary) !important;
+      text-decoration: none !important;
+    }
+  }
+}
+
+.footer__links>div:nth-of-type(2) {
+  width: 10%;
+}
+
+.footer__links>div:nth-of-type(3) {
+  width: 10%;
+
+  @media (max-width:996px) {
+    margin-right: auto;
+  }
+}
+
+.footer__links>div:nth-of-type(4) {
+  width: 60%;
+}
+
+.footer__bottom {
+  display: none;
+}
+
+.footerButtonContainer {
+  margin-bottom: 20px;
+}
+
+.footerDescription {
+  font-family: Source Sans Pro;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  color: var(--ifm-color-text-primary);
+  /* or 129% */
+  max-width: 250px;
+  letter-spacing: 0.3px;
+  margin-bottom: 30px;
+}
+
+.footer__copyright {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  font-family: Source Sans Pro;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  border-top: 2px solid var(--yellow-second);
+  padding: 20px 40px;
+  color: var(--ifm-color-text-primary) !important;
+  padding-left: 5%;
+  padding-right: 5%;
+}
+
+.footerButton {
+  height: fit-content;
+  white-space: nowrap;
+  background-color: var(--ifm-color-secondary);
+  padding: 12px 18px;
+  border-radius: 30px;
+  margin-right: 15px;
+  color: var(--ifm-color-text-secondary) !important;
+
+  &:hover {
+    color: var(--ifm-color-text-primary) !important;
+    text-decoration: none !important;
+  }
+
+  margin-bottom: 50px !important;
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 12px;
+
+  .footerGihubLogoButton {
+    width: 24px;
+    height: 23px;
+    transform: translateY(5px);
+    padding-right: 5px;
+  }
+}
+
+.footerForm {
+  width: 100%;
+  margin-top: 50px;
+}
+
+.footerInputContainer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.footerEmail {
+  border: none;
+  background: transparent;
+  border-bottom: 1px solid #565656;
+  padding-right: 100px;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+}
+
+.footerLogo {
+  width: 137px;
+  height: 60px;
+}
+
+// .row .col.col.col {
+//   padding-left: 5%;
+//   padding-right: 5%;
+// }
+
+// .row .col--3 {
+//   position: fixed;
+//   right: -7%;
+//   margin-right: 20px;
+//   width: calc(3 / 4 * 100%);
+//   height: auto;
+// }
+
+@media only screen and (max-width: 1240px) {
+  .table-of-contents {
+    padding-right: 20px;
+  }
+}
+
+@media only screen and (max-width: 996px) {
+  // .row .col--3 {
+  //   position: relative;
+  // }
+
+  .copyright {
+    white-space: unset;
+  }
+
+  .row .col.col.col {
+    --ifm-col-width: 50%;
+    flex-basis: unset;
+    margin-left: 0;
+  }
+
+  .footer__links .footer__col {
+    flex: unset;
+    padding-left: 40px !important;
+    padding-right: 40px !important;
+  }
+
+  .footer .container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .footer__links>div:nth-of-type(4) {
+    width: 100%;
+  }
+
+  .footer__links>div:nth-of-type(3) {
+    width: 50%;
+  }
+
+  .footer__links>div:nth-of-type(2) {
+    width: 50%;
+  }
+
+  .footer__links>div:nth-of-type(1) {
+    width: 50%;
+  }
+
+  .signupButton {
+    margin-top: 20px;
+    margin-left: 0px;
+  }
+}
+
+div.col h1 {
+  color: var(--ifm-color-text-primary);
+}
+
+div.col h2 {
+  color: var(--ifm-color-text-primary);
+}
+
+div.col p {
+  color: var(--ifm-color-text-primary);
+}
+
+.pagination-nav__sublabel {
+  display: none;
+}
+
+a.pagination-nav__link {
+  border: none;
+}
+
+.pagination-nav__label {
+  color: var(--ifm-color-text-primary);
 }
