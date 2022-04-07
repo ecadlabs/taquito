@@ -85,62 +85,92 @@ module.exports = {
 					},
       ]
     },
-    footer: {
-      links: [
-        {
-          title: 'Docs',
-          items: [
-            {
-              label: 'Quick Start',
-              to: 'docs/quick_start',
-            },
-            {
-              label: 'TypeDoc Reference',
-              href: 'https://tezostaquito.io/typedoc',
-            },
-          ],
-        },
-        {
-          title: 'Community',
-          items: [
-            {
-              label: 'Stack Exchange',
-              href: 'https://tezos.stackexchange.com/questions/tagged/taquito',
-            },
-            {
-              label: 'Telegram',
-              href: 'https://t.me/tezostaquito',
-            },
-            {
-              label: 'Twitter',
-              href: 'https://twitter.com/TezosTaquito',
-            },
-            {
-              label: 'Code of Conduct',
-              href: 'https://github.com/ecadlabs/taquito/blob/master/code-of-conduct.md',
-            },
-            {
-              label: 'GitHub',
-              href: 'https://github.com/ecadlabs/taquito',
-            },
-          ],
-        },
-        {
-          title: 'Contact',
-          items: [
-            {
-              label: 'Report issues',
-              href: 'https://github.com/ecadlabs/taquito/issues',
-            },
-            {
-              label: 'Contribute',
-              href: 'https://github.com/ecadlabs/taquito/blob/master/CONTRIBUTING.md',
-            },
-          ],
-        },
-      ],
-      copyright: `Copyright © ${new Date().getFullYear()} ECAD Labs - Open Source MIT License`
-    },
+  footer: {
+				links: [
+					{
+						title: 'Contact',
+						items: [
+							{
+								label: 'Report Issues',
+								to: 'https://github.com/ecadlabs/taqueria/issues/new/choose',
+							},
+							{
+								label: 'Contribute',
+								to: 'https://github.com/ecadlabs/taquito/blob/master/CONTRIBUTING.md',
+							},
+						],
+					},
+
+					{
+						title: 'Community',
+						items: [
+							{
+								label: 'Stack Exchange',
+								to: 'https://tezos.stackexchange.com/questions/tagged/taqueria',
+							},
+							{
+								label: 'Discord',
+								to: 'https://discord.gg/bujt7syVVT',
+							},
+							{
+								label: 'Twitter',
+								to: 'https://twitter.com/tezostaqueria',
+							},
+							{
+								label: 'Code of Conduct',
+								to: 'https://github.com/ecadlabs/taquito/blob/master/code-of-conduct.md',
+							},
+							{
+								label: 'GitHub',
+								to: 'https://github.com/ecadlabs/taqueria',
+							},
+						],
+					},
+					{
+						title: 'Docs',
+						items: [
+							{
+								label: 'Quick Start',
+								to: '/docs/intro',
+							},
+							{
+								label: "TypeDoc Reference",
+								to: "/docs/roadmap",
+							},
+						],
+					},
+					{
+						items: [
+							{
+								html: `
+									<a href="/" target="_blank" rel="noreferrer noopener" aria-label="">
+									  <img class='footerLogo' src="/img/footer-logo.svg" alt="" />
+									</a>
+								  `,
+							},
+							{
+								html: `
+									<p class='footerDescription'>
+										Faplaren krorar whataboutism. Krorat kroligen. 
+									</p>
+								  `,
+							},
+							{
+								html: `
+									<a class='footerButton' href='https://github.com/ecadlabs/taqueria'>
+										<img class='footerGihubLogoButton' src="/img/githubSVG-white.svg" alt="" />
+										GITHUB
+									</a>
+								  `,
+							},
+							{
+								html: `form`,
+							},
+						
+						],
+					},
+				],
+			},
     gtag: {
       trackingID: 'UA-148358030-1',
     },
