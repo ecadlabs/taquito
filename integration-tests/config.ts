@@ -8,7 +8,7 @@ import { RpcClient, RpcClientCache } from '@taquito/rpc';
 
 const nodeCrypto = require('crypto');
 
-if (jest) {
+if (typeof jest !== 'undefined') {
   jest.setTimeout(60000 * 10);
 }
 
