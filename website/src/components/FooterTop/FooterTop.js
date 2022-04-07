@@ -5,6 +5,7 @@ import SVG from '../../../static/img/ECAD_logo.svg';
 const FeatureList = [
   {
     title: 'Powered by',
+    Svg: require('../../../static/img/ECAD_logo.svg').default,
     url: 'https://ecadlabs.com/',
   },
 ];
