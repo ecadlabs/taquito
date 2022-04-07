@@ -1,27 +1,26 @@
-@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,900;1,200;1,300;1,400;1,600;1,700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800;900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,900;1,200;1,300;1,400;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800;900&display=swap');
 /* You can override the default Infima variables here. */
 
 :root {
   --blue-primary: #218da5;
   --blue-secondary: #35636e;
   --red: #c73d18;
-  --brown: #D3832B;
+  --brown: #d3832b;
   --green: #71a417;
   --beige: #f9e3c2;
-  --yellow-primary: #FFE5A6;
-  --brown-primary: #D3832B;
-  --yellow-second: #FFB500;
+  --yellow-primary: #ffe5a6;
+  --brown-primary: #d3832b;
+  --yellow-second: #ffb500;
   --yellow-third: rgb(255, 181, 0, 0.35);
   --black: #333333;
-  --white: #FFFFFF;
-
-
-
-
+  --white: #ffffff;
+  --twitter-svg: url('../../static/img/twitterSVG.svg') no-repeat;
+  --github-svg: url('../../static/img/githubSVG.svg') no-repeat;
+  --telegram-svg: url('../../static/img/telegramSVG.svg') no-repeat;
 
   --ifm-font-family-base: Source Sans Pro;
-  --ifm-color-primary-lightest: #FFFFFF;
+  --ifm-color-primary-lightest: #ffffff;
   --ifm-color-primary-lighter: #a9d1e4;
   --ifm-color-primary-light: #6bb2c9;
   --ifm-color-primary: var(--yellow-primary);
@@ -40,7 +39,6 @@
   --ifm-color-secondary-darkest: #001487;
   --ifm-color-hover-link: var(--brown-primary);
 }
-
 
 .alert--secondary {
   --ifm-alert-background-color: #f1f1f1;
@@ -61,9 +59,9 @@
   --ifm-color-text-primary: var(--white);
   --ifm-color-text-secondary: var(--black);
   --ifm-color-hover-link: var(--black);
-
-  ;
-
+  --twitter-svg: url('../../static/img/twitter-svg-white.svg') no-repeat;
+  --github-svg: url('../../static/img/github-svg-white.svg') no-repeat;
+  --telegram-svg: url('../../static/img/telegram-svg-white.svg') no-repeat;
 }
 
 /*
@@ -107,14 +105,13 @@
 
 .navbar__link--active {
   color: var(--ifm-color-hover-link) !important;
-
 }
 
 .navbar__items {
   flex-direction: unset;
   justify-content: unset;
 
-  @media (max-width:960px) {
+  @media (max-width: 960px) {
     flex-direction: row-reverse;
     justify-content: space-between;
   }
@@ -130,12 +127,11 @@
     padding-top: 30px;
   }
 
-  max-width:300px;
+  max-width: 300px;
 
   .menu__list-item {
     max-width: 280px;
     padding-bottom: 5px;
-    ;
   }
 
   .menu__list-item:nth-of-type(3) {
@@ -160,26 +156,25 @@
   }
 }
 
-
 .header-discord-link:before {
-  background: url("../../static/img/telegramSVG.svg") no-repeat;
-  content: "";
+  background: var(--telegram-svg);
+  content: '';
   display: flex;
   height: 24px;
   width: 24px;
 }
 
 .header-twitter-link:before {
-  background: url("../../static/img/twitterSVG.svg") no-repeat;
-  content: "";
+  background: var(--twitter-svg);
+  content: '';
   display: flex;
   height: 24px;
   width: 24px;
 }
 
 .header-github-link:before {
-  background: url("../../static/img/githubSVG.svg") no-repeat;
-  content: "";
+  background: var(--github-svg);
+  content: '';
   display: flex;
   height: 24px;
   width: 24px;
@@ -197,7 +192,6 @@
   overflow-x: hidden;
 }
 
-
 /* Footer styles */
 
 .footer {
@@ -209,7 +203,6 @@
   display: flex;
   justify-content: center;
   width: 100%;
-
 }
 
 .footer__title {
@@ -225,7 +218,6 @@
   margin-left: 0px !important;
   margin-right: 0px !important;
   margin-bottom: 40px;
-
 }
 
 .footer__links {
@@ -235,7 +227,7 @@
   flex-wrap: wrap;
   width: 100%;
   flex: 0 0 0 0;
-    color: var(--ifm-color-text-primary) !important;
+  color: var(--ifm-color-text-primary) !important;
   padding-bottom: 20px;
 }
 
@@ -266,11 +258,12 @@
       text-decoration: none !important;
     }
   }
-  .footerButton{
-        color: var(--ifm-color-text-secondary) !important;
 
-      &:hover {
-        color: var(--ifm-color-text-primary) !important;
+  .footerButton {
+    color: var(--ifm-color-text-secondary) !important;
+
+    &:hover {
+      color: var(--ifm-color-text-primary) !important;
       text-decoration: none !important;
     }
   }
@@ -283,7 +276,7 @@
 .footer__links>div:nth-of-type(3) {
   width: 10%;
 
-  @media (max-width:996px) {
+  @media (max-width: 996px) {
     margin-right: auto;
   }
 }
