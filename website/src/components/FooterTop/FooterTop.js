@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import styles from './FooterTop.module.css';
-import SVG from '../../../static/img/ECAD_logo.svg';
+// import SVG from '../../../static/img/ECAD_logo.svg';
 
 const FeatureList = [
   {
@@ -14,9 +14,7 @@ function Feature({ title, url, image }) {
   return (
     <div className={styles.Contentcontainer}>
       <h5 className={styles.headline}>{title}</h5>
-      <a href={url}>
-        <SVG className={styles.footerFeatureSvg} alt={title} />
-      </a>
+      <a href={url}>{/* <SVG className={styles.footerFeatureSvg} alt={title} /> */}</a>
     </div>
   );
 }
