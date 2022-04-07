@@ -15,7 +15,7 @@ function Feature({ title, url, image }) {
     <div className={styles.Contentcontainer}>
       <h5 className={styles.headline}>{title}</h5>
       <a href={url}>
-        <ECADSvg className={'footerFeatureSvg'} />
+        <ECADSvg className={styles.footerFeatureSvg} />
       </a>
     </div>
   );
