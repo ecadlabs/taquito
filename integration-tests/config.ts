@@ -8,6 +8,10 @@ import { RpcClient, RpcClientCache } from '@taquito/rpc';
 
 const nodeCrypto = require('crypto');
 
+if (jest) {
+  jest.setTimeout(60000 * 10);
+}
+
 enum ForgerType {
   LOCAL = 'local',
   RPC = 'rpc',
@@ -193,8 +197,6 @@ if (process.env['RUN_WITH_FAUCET']) {
 }
 
 const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE'];
-
-jest.setTimeout(60000 * 10);
 
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
   if (forger === ForgerType.LOCAL) {
