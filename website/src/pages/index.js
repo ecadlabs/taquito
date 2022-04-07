@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Layout from '@theme/Layout';
 import classnames from 'classnames';
 import React from 'react';
-import FooterTop from '../components/FooterTop/FooterTop';
 import Hero from "../components/Hero/Hero";
 import LogoGrid from '../components/Logos/LogoGrid';
 
@@ -242,8 +241,6 @@ export default () => {
           </div>
         </div>
       </div>
-      				<FooterTop />
-
     </Layout>
   );
 }

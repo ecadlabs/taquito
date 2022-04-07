@@ -167,7 +167,7 @@
 }
 .heroButton:hover {
 	text-decoration:none;
-	 color: var(--ifm-color-text-primary) !important;
+	color: var(--ifm-color-text-primary) !important;
 }
 .carouselContainer{
 	display: flex;
