@@ -133,11 +133,11 @@ module.exports = {
           items: [
             {
               label: 'Quick Start',
-              to: '/docs/intro',
+              to: '/docs/quick_start',
             },
             {
               label: 'TypeDoc Reference',
-              to: '/docs/roadmap',
+              to: 'https://tezostaquito.io/typedoc',
             },
           ],
         },
