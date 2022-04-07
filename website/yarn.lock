@@ -2173,7 +2173,7 @@
     "pbkdf2" "^3.1.2"
     "typedarray-to-buffer" "^4.0.0"
 
-"@taquito/taquito@^12.0.1", "@taquito/taquito@^7.0.0 || ^7.0.0-beta || ^8.0.0-beta", "@taquito/taquito@12.0.1":
+"@taquito/taquito@^12.0.1", "@taquito/taquito@^7.0.0 || ^7.0.0-beta || ^8.0.0-beta":
   "integrity" "sha512-Z4swU38ZqaHENwNmE/WAcb2n0Mpi08ZgujuwM7uNYDc9a5NQa/ghYOaVIK9Axi9VZ0wQpoZY6x0spjSg32LsaA=="
   "resolved" "https://registry.npmjs.org/@taquito/taquito/-/taquito-12.0.1.tgz"
   "version" "12.0.1"
