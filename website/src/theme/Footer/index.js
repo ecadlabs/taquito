@@ -150,7 +150,7 @@ function Footer() {
 				)}
 			</div>
 			<div className="footer__copyright">
-				Copyright © 2022 ECAD Labs - Open Source MIT License
+				{`Copyright © ${new Date().getFullYear()} ECAD Labs - Open Source MIT License`}
 			</div>
 		</footer>
 	);
