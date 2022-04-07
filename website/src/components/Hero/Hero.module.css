@@ -76,10 +76,11 @@
 	/* background-image: url("../../../static/img/purpleBG.png"); */
 	background-repeat: no-repeat;
 	background-size: contain;
-	
 	padding-bottom: 30px;
 	margin-bottom: 30px;
 	position: relative;
+		width: 558px;
+
 }
 
 .featureSvgTraiangle1 {
