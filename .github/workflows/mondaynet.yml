@@ -14,7 +14,7 @@ jobs:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
       with:
-        node-version: '16'
+        node-version: '16.13.2'
     - run: npm ci
     - run: npm run lerna -- bootstrap
     - run: npm run build
@@ -28,8 +28,8 @@ jobs:
     - id: integration-tests-mondaynet
       working-directory: ./integration-tests
       env:
-        TEZOS_MONDAYNET_CONTRACT_ADDRESS: ""
-        TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS: ""
-        TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS: ""
-        TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS: ""
+        TEZOS_MONDAYNET_CONTRACT_ADDRESS: ${{ steps.originate-contracts-mondaynet.outputs.knownContractAddress }}
+        TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS: ${{ steps.originate-contracts-mondaynet.outputs.knownBigMapContractAddress }}
+        TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS: ${{ steps.originate-contracts-mondaynet.outputs.knownTzip12BigMapOffChainContractAddress }}
+        TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS: ${{ steps.originate-contracts-mondaynet.outputs.knownSaplingContractAddress }}
       run: npm run test:mondaynet -- --maxWorkers=4
