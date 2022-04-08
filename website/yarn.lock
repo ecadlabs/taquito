@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@airgap/beacon-sdk@^2.3.10":
-  "integrity" "sha512-SfO+9nMZuETELzb6QWedp5Q0Egg1Id4ZM8+suVmnBUuySHGuJJ8TeWZWbSffJAJtavqpTPA6vM1i//Bj/nvW2Q=="
-  "resolved" "https://registry.npmjs.org/@airgap/beacon-sdk/-/beacon-sdk-2.3.10.tgz"
-  "version" "2.3.10"
+"@airgap/beacon-sdk@^2.3.12":
+  "integrity" "sha512-SZIaPiJjYHq5FIbpldHcPuMJxntjNfi+Iyni1apODh6hdgsJK8wRkveBd/b9LvmRSFnAENP3Zrbtayegfch8Ow=="
+  "resolved" "https://registry.npmjs.org/@airgap/beacon-sdk/-/beacon-sdk-2.3.12.tgz"
+  "version" "2.3.12"
   dependencies:
     "@types/chrome" "0.0.115"
     "@types/libsodium-wrappers" "0.7.7"
@@ -2085,137 +2085,137 @@
   dependencies:
     "defer-to-connect" "^1.0.1"
 
-"@taquito/beacon-wallet@12.0.1":
-  "integrity" "sha512-DKWy+i/59WjBsXRySJY1fAV+fsptjQzj7VF+qEExqj63ewA5zhelnVn2J2m8JzEQektjs6p9UU+FwnniOkv4Zw=="
-  "resolved" "https://registry.npmjs.org/@taquito/beacon-wallet/-/beacon-wallet-12.0.1.tgz"
-  "version" "12.0.1"
+"@taquito/beacon-wallet@12.0.3":
+  "integrity" "sha512-cu3CWPW5h1pBY71opsroU+Nwq9rApMNZH3VfGlz1xPkOFtF4uuo7baVmc7y1NamEKdNfc8hM/XH9EYDRHCIlcg=="
+  "resolved" "https://registry.npmjs.org/@taquito/beacon-wallet/-/beacon-wallet-12.0.3.tgz"
+  "version" "12.0.3"
   dependencies:
-    "@airgap/beacon-sdk" "^2.3.10"
-    "@taquito/taquito" "^12.0.1"
+    "@airgap/beacon-sdk" "^2.3.12"
+    "@taquito/taquito" "^12.0.3"
 
-"@taquito/http-utils@^12.0.1", "@taquito/http-utils@12.0.1":
-  "integrity" "sha512-nSE/MkjpiBI9G0uvn5tg+Ts2GFFdlIQO4K2q1Cz5vzutCybhQbPhkFnHr0/mYcCQ2TBzTI/FD2ARIR8/LYo5Cg=="
-  "resolved" "https://registry.npmjs.org/@taquito/http-utils/-/http-utils-12.0.1.tgz"
-  "version" "12.0.1"
+"@taquito/http-utils@^12.0.3", "@taquito/http-utils@12.0.3":
+  "integrity" "sha512-h09czF9j1xTEKtF+kRzvUgW5kJxnG6LtaBmFXY57rJFo4Q9Y+sE2tWIschkH0bNWXeMBXCqwaDDyGaXC2E3agg=="
+  "resolved" "https://registry.npmjs.org/@taquito/http-utils/-/http-utils-12.0.3.tgz"
+  "version" "12.0.3"
   dependencies:
     "axios" "^0.26.0"
 
-"@taquito/ledger-signer@12.0.1":
-  "integrity" "sha512-tqOtf2R+l4Yapn03QEHrg2V+PDEdUTSGEvtuJrogJww9emlbUdlneHp15SPpJQGPR6eYHUGT3ZLlLyiWDjSNIA=="
-  "resolved" "https://registry.npmjs.org/@taquito/ledger-signer/-/ledger-signer-12.0.1.tgz"
-  "version" "12.0.1"
+"@taquito/ledger-signer@12.0.3":
+  "integrity" "sha512-0E7rD+z2H2SXEYJ9yvDTypdBvwjcbMBzTQUV5fqeyNZTkiE4JAOWEYE9jrbtDInSAzJoecfWhxwQF3qv+lQwVw=="
+  "resolved" "https://registry.npmjs.org/@taquito/ledger-signer/-/ledger-signer-12.0.3.tgz"
+  "version" "12.0.3"
   dependencies:
     "@ledgerhq/hw-transport" "^6.20.0"
     "@stablelib/blake2b" "^1.0.1"
-    "@taquito/taquito" "^12.0.1"
-    "@taquito/utils" "^12.0.1"
+    "@taquito/taquito" "^12.0.3"
+    "@taquito/utils" "^12.0.3"
     "buffer" "^6.0.3"
 
-"@taquito/local-forging@^12.0.1":
-  "integrity" "sha512-pQfrfZnjA3pH17QOELxzkKQkPZvHvreepl9H+4/5hzrcrA8XCTfKiSG61kB9OGPlMunFwk0Uod20pwovw70E4Q=="
-  "resolved" "https://registry.npmjs.org/@taquito/local-forging/-/local-forging-12.0.1.tgz"
-  "version" "12.0.1"
+"@taquito/local-forging@^12.0.3":
+  "integrity" "sha512-VFn9qm3fXjjNxLOwlwVmNKPEDS/u9HTxNAwQIB3bRn4ZSn51o10V5EM6ouQZNV0rvH85xCHQj7WbIXugBmfwRg=="
+  "resolved" "https://registry.npmjs.org/@taquito/local-forging/-/local-forging-12.0.3.tgz"
+  "version" "12.0.3"
   dependencies:
-    "@taquito/utils" "^12.0.1"
+    "@taquito/utils" "^12.0.3"
     "bignumber.js" "^9.0.2"
 
-"@taquito/michel-codec@^12.0.1", "@taquito/michel-codec@12.0.1":
-  "integrity" "sha512-BGlLI0fWwuufVAMdYwMhwNkG7sWzy6fkUDv2LaF/ji02su50xeE/4gSzZIv251cM/667drB9icoyq9l9jPfhIw=="
-  "resolved" "https://registry.npmjs.org/@taquito/michel-codec/-/michel-codec-12.0.1.tgz"
-  "version" "12.0.1"
+"@taquito/michel-codec@^12.0.3", "@taquito/michel-codec@12.0.3":
+  "integrity" "sha512-eAiV+/Lir6cJVbOA3xCVtGnkko243ctSY5strxUFeHcl8ZrI9pHjyZADPQexfPkLbteW8Nb3Imxu+5FrHLj0IA=="
+  "resolved" "https://registry.npmjs.org/@taquito/michel-codec/-/michel-codec-12.0.3.tgz"
+  "version" "12.0.3"
 
-"@taquito/michelson-encoder@^12.0.1", "@taquito/michelson-encoder@12.0.1":
-  "integrity" "sha512-mPtwU7zLS2ds0LPx4bMr1dfDxGeD/byZDbcmvqtnU84NiKrLTV6e8+xEcHYilsZFHTKNoxOCgR9b9xfBs+8lYQ=="
-  "resolved" "https://registry.npmjs.org/@taquito/michelson-encoder/-/michelson-encoder-12.0.1.tgz"
-  "version" "12.0.1"
+"@taquito/michelson-encoder@^12.0.3", "@taquito/michelson-encoder@12.0.3":
+  "integrity" "sha512-uK7QR0ZbLeYrYmJOtsqBWKR6obGJ0woN8P1ZwsJTnMkMyVkLBmY1b1dHpZzpPzZVDQjKxzoV3Oi6tWkLuho7PQ=="
+  "resolved" "https://registry.npmjs.org/@taquito/michelson-encoder/-/michelson-encoder-12.0.3.tgz"
+  "version" "12.0.3"
   dependencies:
-    "@taquito/rpc" "^12.0.1"
-    "@taquito/utils" "^12.0.1"
+    "@taquito/rpc" "^12.0.3"
+    "@taquito/utils" "^12.0.3"
     "bignumber.js" "^9.0.2"
     "fast-json-stable-stringify" "^2.1.0"
 
-"@taquito/remote-signer@12.0.1":
-  "integrity" "sha512-OmQEYjLFihz3PzU3OwjyMDLYWM2twYn7Ce6gJEc/8bfixGcO2SSCZuq6GVmdhpmY9thefvuIxoqgDbHd0s6apg=="
-  "resolved" "https://registry.npmjs.org/@taquito/remote-signer/-/remote-signer-12.0.1.tgz"
-  "version" "12.0.1"
+"@taquito/remote-signer@12.0.3":
+  "integrity" "sha512-JZPoYqrOOv6BH8JQwEQ4/3b5dwrSPxtLtdWV9xZzibEjpLQSeaU9YQoHXc+m12l1cSDRKbx9nRZHhaiQ18ld1Q=="
+  "resolved" "https://registry.npmjs.org/@taquito/remote-signer/-/remote-signer-12.0.3.tgz"
+  "version" "12.0.3"
   dependencies:
     "@stablelib/blake2b" "^1.0.1"
     "@stablelib/ed25519" "^1.0.2"
-    "@taquito/http-utils" "^12.0.1"
-    "@taquito/taquito" "^12.0.1"
-    "@taquito/utils" "^12.0.1"
+    "@taquito/http-utils" "^12.0.3"
+    "@taquito/taquito" "^12.0.3"
+    "@taquito/utils" "^12.0.3"
     "typedarray-to-buffer" "^4.0.0"
 
-"@taquito/rpc@^12.0.1", "@taquito/rpc@12.0.1":
-  "integrity" "sha512-H1p7Q94EhQUyuevm0iAiSE4rZ0TwMSf9iLaMb7mIar6PIUzYVoGIU2Irc23kN4ZB8J3+8SXAwo2z3PTQJzFf4Q=="
-  "resolved" "https://registry.npmjs.org/@taquito/rpc/-/rpc-12.0.1.tgz"
-  "version" "12.0.1"
+"@taquito/rpc@^12.0.3", "@taquito/rpc@12.0.3":
+  "integrity" "sha512-HPgnKYzFmt/Ys+E6KT8emior4dGmOqgdbCwJFMmKcReVFn21K7zaifdBGx5XcPIu12XEMShIEs6xGyHLOr0tGw=="
+  "resolved" "https://registry.npmjs.org/@taquito/rpc/-/rpc-12.0.3.tgz"
+  "version" "12.0.3"
   dependencies:
-    "@taquito/http-utils" "^12.0.1"
-    "@taquito/utils" "^12.0.1"
+    "@taquito/http-utils" "^12.0.3"
+    "@taquito/utils" "^12.0.3"
     "bignumber.js" "^9.0.2"
 
-"@taquito/signer@12.0.1":
-  "integrity" "sha512-2hncXT7mo5FLyFFJIAV/kpEewWXWYjmjEWVsGTK7j60Cwi+LDw/IMeOpVMkBjSrt5rzdLVEg7dol+hbPRM6/hg=="
-  "resolved" "https://registry.npmjs.org/@taquito/signer/-/signer-12.0.1.tgz"
-  "version" "12.0.1"
+"@taquito/signer@12.0.3":
+  "integrity" "sha512-3ITLHZSefHYUJwRIwEdQPKGMKCdi992Ao1o9fL2xLJjaW7LB01mioJ71gOKjhKXrVSZ965y0PJedwpx2u0dOVg=="
+  "resolved" "https://registry.npmjs.org/@taquito/signer/-/signer-12.0.3.tgz"
+  "version" "12.0.3"
   dependencies:
     "@stablelib/blake2b" "^1.0.1"
     "@stablelib/ed25519" "^1.0.2"
     "@stablelib/nacl" "^1.0.3"
-    "@taquito/taquito" "^12.0.1"
-    "@taquito/utils" "^12.0.1"
+    "@taquito/taquito" "^12.0.3"
+    "@taquito/utils" "^12.0.3"
     "elliptic" "^6.5.4"
     "pbkdf2" "^3.1.2"
     "typedarray-to-buffer" "^4.0.0"
 
-"@taquito/taquito@^12.0.1", "@taquito/taquito@^7.0.0 || ^7.0.0-beta || ^8.0.0-beta", "@taquito/taquito@12.0.1":
-  "integrity" "sha512-Z4swU38ZqaHENwNmE/WAcb2n0Mpi08ZgujuwM7uNYDc9a5NQa/ghYOaVIK9Axi9VZ0wQpoZY6x0spjSg32LsaA=="
-  "resolved" "https://registry.npmjs.org/@taquito/taquito/-/taquito-12.0.1.tgz"
-  "version" "12.0.1"
+"@taquito/taquito@^12.0.3", "@taquito/taquito@^7.0.0 || ^7.0.0-beta || ^8.0.0-beta", "@taquito/taquito@12.0.3":
+  "integrity" "sha512-D/Us8ln1xAHu1WQy5KK0kjjQY3EHAP165EZfHSABibl1G1WgcQKLFsTFUec7XLx2EPGpIFclrGYO19Zl+SYVhA=="
+  "resolved" "https://registry.npmjs.org/@taquito/taquito/-/taquito-12.0.3.tgz"
+  "version" "12.0.3"
   dependencies:
-    "@taquito/http-utils" "^12.0.1"
-    "@taquito/local-forging" "^12.0.1"
-    "@taquito/michel-codec" "^12.0.1"
-    "@taquito/michelson-encoder" "^12.0.1"
-    "@taquito/rpc" "^12.0.1"
-    "@taquito/utils" "^12.0.1"
+    "@taquito/http-utils" "^12.0.3"
+    "@taquito/local-forging" "^12.0.3"
+    "@taquito/michel-codec" "^12.0.3"
+    "@taquito/michelson-encoder" "^12.0.3"
+    "@taquito/rpc" "^12.0.3"
+    "@taquito/utils" "^12.0.3"
     "bignumber.js" "^9.0.2"
     "rxjs" "^6.6.3"
 
-"@taquito/tezbridge-wallet@12.0.1":
-  "integrity" "sha512-Sl08HqTjwwWBV9yB6VclmSjlDC9WojW2hRFCFdwe/QRGqcCVvrC6JZWVjwHLbvkUqU+bdd14xugNg+HGoz+aqw=="
-  "resolved" "https://registry.npmjs.org/@taquito/tezbridge-wallet/-/tezbridge-wallet-12.0.1.tgz"
-  "version" "12.0.1"
+"@taquito/tezbridge-wallet@12.0.3":
+  "integrity" "sha512-FvwPRPwKJUAzgDUtaK77AavHr6DS5KaPSwCNeWwwcLtbzRND4lgTIX4LhHp6HEWDap/41Te9HEeKM95Aapv1mQ=="
+  "resolved" "https://registry.npmjs.org/@taquito/tezbridge-wallet/-/tezbridge-wallet-12.0.3.tgz"
+  "version" "12.0.3"
   dependencies:
-    "@taquito/taquito" "^12.0.1"
+    "@taquito/taquito" "^12.0.3"
 
-"@taquito/tzip12@12.0.1":
-  "integrity" "sha512-2n6lmQHVFMTYH3jsyeuDTRrWYU/pqIbHuaCu80gpLKpc7dDGaXCY/bC2wlorzFJ4SDPCPcgbB+zUF+4IiK8PQw=="
-  "resolved" "https://registry.npmjs.org/@taquito/tzip12/-/tzip12-12.0.1.tgz"
-  "version" "12.0.1"
+"@taquito/tzip12@12.0.3":
+  "integrity" "sha512-nU594iJc6bDXajTG33gpFEUK4yAldQnVKrQeesK13wG2B5zlGn3tFPWhLkkvrWpjR2LjayLCqlyPnFXJ02IyWg=="
+  "resolved" "https://registry.npmjs.org/@taquito/tzip12/-/tzip12-12.0.3.tgz"
+  "version" "12.0.3"
   dependencies:
-    "@taquito/michelson-encoder" "^12.0.1"
-    "@taquito/taquito" "^12.0.1"
-    "@taquito/tzip16" "^12.0.1"
+    "@taquito/michelson-encoder" "^12.0.3"
+    "@taquito/taquito" "^12.0.3"
+    "@taquito/tzip16" "^12.0.3"
 
-"@taquito/tzip16@^12.0.1", "@taquito/tzip16@12.0.1":
-  "integrity" "sha512-RJRTvLbH7JDKFGFsC0IdHCSFUwfH6C8k7BIucPKDPtptXz9Fg7qzK+gUVQNypjiPVuRE0k7Co+h0Vq3w78S3aw=="
-  "resolved" "https://registry.npmjs.org/@taquito/tzip16/-/tzip16-12.0.1.tgz"
-  "version" "12.0.1"
+"@taquito/tzip16@^12.0.3", "@taquito/tzip16@12.0.3":
+  "integrity" "sha512-EojUa0zCma8hXudKxWE+O4kuvHIjQQPZPmzxey5/13QVDb1auIW66GdZWNpkMlqrbQUnnmWXEkSjY1oiGiPdBg=="
+  "resolved" "https://registry.npmjs.org/@taquito/tzip16/-/tzip16-12.0.3.tgz"
+  "version" "12.0.3"
   dependencies:
-    "@taquito/http-utils" "^12.0.1"
-    "@taquito/michelson-encoder" "^12.0.1"
-    "@taquito/rpc" "^12.0.1"
-    "@taquito/taquito" "^12.0.1"
-    "@taquito/utils" "^12.0.1"
+    "@taquito/http-utils" "^12.0.3"
+    "@taquito/michelson-encoder" "^12.0.3"
+    "@taquito/rpc" "^12.0.3"
+    "@taquito/taquito" "^12.0.3"
+    "@taquito/utils" "^12.0.3"
     "bignumber.js" "^9.0.2"
     "crypto-js" "^4.1.1"
 
-"@taquito/utils@^12.0.1", "@taquito/utils@12.0.1":
-  "integrity" "sha512-ENV7N+HS56xw8FUzUoOpZR0kP0MqTKWQa4oelScgIoXfyKEA9uuIXTUASvocW4k0j+oqr+1Yxphfcvc109Z+0A=="
-  "resolved" "https://registry.npmjs.org/@taquito/utils/-/utils-12.0.1.tgz"
-  "version" "12.0.1"
+"@taquito/utils@^12.0.3", "@taquito/utils@12.0.3":
+  "integrity" "sha512-9ds6Ke1r71u6ShHsNGkT0RJhgs0sOLkEGzTkuZ6O7/2w+o22vedXxBFcUAyVOrrAY8uPTHLPjSqK16LPC92Nog=="
+  "resolved" "https://registry.npmjs.org/@taquito/utils/-/utils-12.0.3.tgz"
+  "version" "12.0.3"
   dependencies:
     "@stablelib/blake2b" "^1.0.1"
     "@stablelib/ed25519" "^1.0.2"
