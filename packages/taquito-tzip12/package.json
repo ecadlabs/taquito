@@ -1,6 +1,6 @@
 {
   "name": "@taquito/tzip12",
-  "version": "12.0.2",
+  "version": "12.0.3",
   "description": "Tzip12",
   "keywords": [
     "tezos",
@@ -63,9 +63,9 @@
     ]
   },
   "dependencies": {
-    "@taquito/michelson-encoder": "^12.0.2",
-    "@taquito/taquito": "^12.0.2",
-    "@taquito/tzip16": "^12.0.2"
+    "@taquito/michelson-encoder": "^12.0.3",
+    "@taquito/taquito": "^12.0.3",
+    "@taquito/tzip16": "^12.0.3"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.36",
