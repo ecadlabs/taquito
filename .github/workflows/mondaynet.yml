@@ -27,7 +27,8 @@ jobs:
       id: originate-contracts-mondaynet
       working-directory: ./integration-tests
       env:
-        MONDAYNET: "true"
+        MONDAYNET: true
+        ENABLE_LOCAL_FORGER: true
       run: npm run test:originate-known-contracts
       continue-on-error: true
     - 

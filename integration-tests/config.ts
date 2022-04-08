@@ -20,6 +20,10 @@ enum ForgerType {
 
 const forgers: ForgerType[] = [ForgerType.COMPOSITE];
 
+if (process.env["ENABLE_LOCAL_FORGER"] === "true") {
+  forgers.push(ForgerType.LOCAL)
+}
+
 interface Config {
   rpc: string;
   knownBaker: string;
@@ -191,7 +195,6 @@ if (process.env['RUN_WITH_FAUCET']) {
 } else if (process.env['ITHACANET']) {
   providers.push(ithacanetEphemeral);
 } else if (process.env['MONDAYNET']) {
-  forgers.push(ForgerType.LOCAL)
   providers.push(mondaynetEphemeral);
 } else {
   providers.push(hangzhounetEphemeral, ithacanetEphemeral);
