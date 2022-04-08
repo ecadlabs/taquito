@@ -1,3 +1,7 @@
+/**
+ *  @category Error
+ *  @description Error that indicates a failure when performing the scan step when parsing Michelson
+ */
 export class ScanError extends Error {
   constructor(public src: string, public idx: number, message?: string) {
     super(message);

@@ -3,6 +3,10 @@ import { IntToken } from './comparable/int';
 import { ContractToken } from './contract';
 import { Token, TokenFactory, Semantic } from './token';
 
+/**
+ *  @category Error
+ *  @description Error that indicates a failure when encoding and sending a ticket to the blockchain
+ */
 export class EncodeTicketError extends Error {
   name = 'TicketEncodeError';
 

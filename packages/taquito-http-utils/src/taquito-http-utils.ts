@@ -9,8 +9,6 @@ import axios from 'axios';
 export * from './status_code';
 export { VERSION } from './version';
 
-const defaultTimeout = 30000;
-
 enum ResponseType {
   TEXT = 'text',
   JSON = 'json',
@@ -25,6 +23,10 @@ export interface HttpRequestOptions {
   mimeType?: string;
 }
 
+/**
+ *  @category Error
+ *  @description This error will be thrown when the endpoint returns an HTTP error to the client
+ */
 export class HttpResponseError extends Error {
   public name = 'HttpResponse';
 
@@ -39,11 +41,15 @@ export class HttpResponseError extends Error {
   }
 }
 
+/**
+ *  @category Error
+ *  @description Error that indicates a general failure in making the HTTP request
+ */
 export class HttpRequestFailed extends Error {
   public name = 'HttpRequestFailed';
 
-  constructor(public url: string, public innerEvent: any) {
-    super(`Request to ${url} failed`);
+  constructor(public errorDetail: string) {
+    super(errorDetail);
   }
 }
 
@@ -136,7 +142,7 @@ export class HttpBackend {
           url + this.serialize(query)
         );
       } else {
-        throw new Error(err);
+        throw new HttpRequestFailed(err);
       }
     }
 

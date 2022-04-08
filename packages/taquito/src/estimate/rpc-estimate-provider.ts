@@ -29,7 +29,12 @@ import {
   createTransferOperation,
   createRegisterGlobalConstantOperation,
 } from '../contract/prepare';
-import { validateAddress, InvalidAddressError, ValidationResult } from '@taquito/utils';
+import {
+  validateAddress,
+  InvalidAddressError,
+  ValidationResult,
+  InvalidOperationKindError,
+} from '@taquito/utils';
 import { RevealEstimateError } from './error';
 
 interface Limits {
@@ -194,7 +199,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
 
     // Fail early in case of errors
     if (errors.length) {
-      throw new TezosOperationError(errors);
+      throw new TezosOperationError(errors, 'Error occurred during estimation');
     }
 
     let numberOfOps = 1;
@@ -255,10 +260,10 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    */
   async transfer({ fee, storageLimit, gasLimit, ...rest }: TransferParams) {
     if (validateAddress(rest.to) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid 'to' address: ${rest.to}`);
+      throw new InvalidAddressError(rest.to);
     }
     if (rest.source && validateAddress(rest.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid 'source' address: ${rest.source}`);
+      throw new InvalidAddressError(rest.source);
     }
     const pkh = (await this.getKeys()).publicKeyHash;
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
@@ -290,10 +295,10 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    */
   async setDelegate({ fee, gasLimit, storageLimit, ...rest }: DelegateParams) {
     if (rest.source && validateAddress(rest.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid source address: ${rest.source}`);
+      throw new InvalidAddressError(rest.source);
     }
     if (rest.delegate && validateAddress(rest.delegate) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid delegate address: ${rest.delegate}`);
+      throw new InvalidAddressError(rest.delegate);
     }
 
     const pkh = (await this.getKeys()).publicKeyHash;
@@ -375,7 +380,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
           );
           break;
         default:
-          throw new Error(`Unsupported operation kind: ${(param as any).kind}`);
+          throw new InvalidOperationKindError((params as any).kind);
       }
     }
     const isRevealNeeded = await this.isRevealOpNeeded(operations, publicKeyHash);

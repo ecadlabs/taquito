@@ -1,6 +1,10 @@
 import { HttpResponseError } from '@taquito/http-utils';
 import { MichelsonV1Expression } from '@taquito/rpc';
 
+/**
+ *  @category Error
+ *  @description Error that indicates invalid smart contract parameters being passed or used
+ */
 export class InvalidParameterError extends Error {
   name = 'Invalid parameters error';
   constructor(public smartContractMethodName: string, public sigs: any[], public args: any[]) {
@@ -12,14 +16,10 @@ export class InvalidParameterError extends Error {
   }
 }
 
-export class UndefinedLambdaContractError extends Error {
-  name = 'Undefined LambdaContract error';
-  constructor() {
-    super(
-      'This might happen if you are using a sandbox. Please provide the address of a lambda contract as a parameter of the read method.'
-    );
-  }
-}
+/**
+ *  @category Error
+ *  @description Error that indicates an invalid delegation source contract address being passed or used
+ */
 export class InvalidDelegationSource extends Error {
   name = 'Invalid delegation source error';
 
@@ -30,6 +30,10 @@ export class InvalidDelegationSource extends Error {
   }
 }
 
+/**
+ *  @category Error
+ *  @description Error that indicates an invalid smart contract code parameter being passed or used
+ */
 export class InvalidCodeParameter extends Error {
   public name = 'InvalidCodeParameter';
   constructor(public message: string, public readonly data: any) {
@@ -37,6 +41,10 @@ export class InvalidCodeParameter extends Error {
   }
 }
 
+/**
+ *  @category Error
+ *  @description Error that indicates invalid smart contract init parameter being passed or used
+ */
 export class InvalidInitParameter extends Error {
   public name = 'InvalidInitParameter';
   constructor(public message: string, public readonly data: any) {
@@ -44,6 +52,10 @@ export class InvalidInitParameter extends Error {
   }
 }
 
+/**
+ *  @category Error
+ *  @description Error that indicates invalid view parameter of a smart contract
+ */
 export class InvalidViewParameterError extends Error {
   name = 'Invalid view parameters error';
   cause: any;
@@ -62,6 +74,10 @@ export class InvalidViewParameterError extends Error {
   }
 }
 
+/**
+ *  @category Error
+ *  @description Error that indicates a failure when conducting a view simulation
+ */
 export class ViewSimulationError extends Error {
   name = 'ViewSimulationError';
   constructor(
@@ -94,9 +110,24 @@ const isJsonString = (str: string) => {
   return true;
 };
 
+/**
+ *  @category Error
+ *  @description Error that indicates invalid or unconfigured context when executing a view
+ */
 export class InvalidViewSimulationContext extends Error {
   public name = 'InvalidViewSimulationContext';
   constructor(public info: string) {
     super(`${info} Please configure the context of the view execution in the executeView method.`);
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error that indicates a mistake happening during the reveal operation
+ */
+export class RevealOperationError extends Error {
+  public name = 'RevealOperationError';
+  constructor(public message: string) {
+    super(message);
   }
 }

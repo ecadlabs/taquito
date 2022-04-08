@@ -7,6 +7,7 @@ import {
 } from '../operations/types';
 import { Estimate } from './estimate';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
+import { InvalidOperationKindError } from '@taquito/utils';
 
 /**
  * @description Naïve implementation of an estimate provider. Will work for basic transaction but your operation risk to fail if they are more complex (smart contract interaction)
@@ -19,7 +20,7 @@ export class NaiveEstimateProvider implements EstimationProvider {
     this._costPerByte = 250;
   }
   registerGlobalConstant(params: RegisterGlobalConstantParams): Promise<Estimate> {
-    throw new Error(`Unsupported operation kind: ${(params as any).kind}`);
+    throw new InvalidOperationKindError((params as any).kind);
   }
   /**
    *
@@ -118,7 +119,7 @@ export class NaiveEstimateProvider implements EstimationProvider {
           estimates.push(new Estimate(0, 0, 0, this._costPerByte, 0));
           break;
         default:
-          throw new Error(`Unsupported operation kind: ${(param as any).kind}`);
+          throw new InvalidOperationKindError((params as any).kind);
       }
     }
     return estimates;

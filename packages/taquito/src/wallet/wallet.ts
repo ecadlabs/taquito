@@ -12,13 +12,14 @@ import {
   WalletTransferParams,
 } from './interface';
 
-import { 
+import {
   validateAddress,
   validateContractAddress,
   InvalidContractAddressError,
-  InvalidAddressError, 
-  ValidationResult 
-} from '@taquito/utils'
+  InvalidAddressError,
+  ValidationResult,
+  InvalidOperationKindError,
+} from '@taquito/utils';
 
 export interface PKHOption {
   forceRefetch?: boolean;
@@ -42,7 +43,7 @@ export class WalletOperationBatch {
    */
   withTransfer(params: WalletTransferParams) {
     if (validateAddress(params.to) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid 'to' address: ${params.to}`)
+      throw new InvalidAddressError(params.to);
     }
     this.operations.push({ kind: OpKind.TRANSACTION, ...params });
     return this;
@@ -66,7 +67,7 @@ export class WalletOperationBatch {
    */
   withDelegation(params: WalletDelegateParams) {
     if (params.delegate && validateAddress(params.delegate) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid delegate address: ${params.delegate}`);
+      throw new InvalidAddressError(params.delegate);
     }
     this.operations.push({ kind: OpKind.DELEGATION, ...params });
     return this;
@@ -78,7 +79,9 @@ export class WalletOperationBatch {
    *
    * @param params Origination operation parameter
    */
-  withOrigination<TWallet extends DefaultWalletType = DefaultWalletType>(params: WalletOriginateParams<ContractStorageType<TWallet>>) {
+  withOrigination<TWallet extends DefaultWalletType = DefaultWalletType>(
+    params: WalletOriginateParams<ContractStorageType<TWallet>>
+  ) {
     this.operations.push({ kind: OpKind.ORIGINATION, ...params });
     return this;
   }
@@ -96,7 +99,7 @@ export class WalletOperationBatch {
       case OpKind.DELEGATION:
         return this.walletProvider.mapDelegateParamsToWalletParams(async () => param);
       default:
-        throw new Error(`Unsupported operation kind: ${(param as any).kind}`);
+        throw new InvalidOperationKindError((param as any).kind);
     }
   }
 
@@ -119,7 +122,7 @@ export class WalletOperationBatch {
           this.withDelegation(param);
           break;
         default:
-          throw new Error(`Unsupported operation kind: ${(param as any).kind}`);
+          throw new InvalidOperationKindError((param as any).kind);
       }
     }
 
@@ -187,11 +190,13 @@ export class Wallet {
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapOriginateParamsToWalletParams(() =>
         this.context.parser.prepareCodeOrigination({
-          ...params as WalletOriginateParams,
+          ...(params as WalletOriginateParams),
         })
       );
       const opHash = await this.walletProvider.sendOperations([mappedParams]);
-      return this.context.operationFactory.createOriginationOperation(opHash) as Promise<OriginationWalletOperation<TWallet>>;
+      return this.context.operationFactory.createOriginationOperation(opHash) as Promise<
+        OriginationWalletOperation<TWallet>
+      >;
     });
   }
 
@@ -205,7 +210,7 @@ export class Wallet {
    */
   setDelegate(params: WalletDelegateParams) {
     if (params.delegate && validateAddress(params.delegate) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid address error: ${params.delegate}`);
+      throw new InvalidAddressError(params.delegate);
     }
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapDelegateParamsToWalletParams(
@@ -244,7 +249,7 @@ export class Wallet {
    */
   transfer(params: WalletTransferParams) {
     if (validateAddress(params.to) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid 'to' address: ${params.to}`);
+      throw new InvalidAddressError(params.to);
     }
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapTransferParamsToWalletParams(
@@ -286,7 +291,7 @@ export class Wallet {
       x as any
   ): Promise<T> {
     if (validateContractAddress(address) !== ValidationResult.VALID) {
-      throw new InvalidContractAddressError(`Invalid contract address: ${address}`);
+      throw new InvalidContractAddressError(address);
     }
     const rpc = this.context.withExtensions().rpc;
     const readProvider = this.context.withExtensions().readProvider;

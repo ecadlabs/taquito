@@ -1,5 +1,9 @@
 import { Signer } from './interface';
 
+/**
+ *  @category Error
+ *  @description Error that indicates the signer has been unconfigured in the TezosToolkit instance
+ */
 export class UnconfiguredSignerError extends Error {
   name = 'UnconfiguredSignerError';
 

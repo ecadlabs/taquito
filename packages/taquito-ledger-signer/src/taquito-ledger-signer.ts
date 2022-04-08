@@ -24,6 +24,43 @@ export enum DerivationType {
   P256 = 0x02, // tz3
 }
 
+/**
+ *  @category Error
+ *  @description Error that indicates an invalid derivation type being passed or used
+ */
+export class InvalidDerivationTypeError extends Error {
+  public name = 'InvalidDerivationTypeError';
+  constructor(public derivationType: string) {
+    super(
+      `The derivation type ${derivationType} is invalid. The derivation type must be DerivationType.ED25519, DerivationType.SECP256K1 or DerivationType.P256`
+    );
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error that indicates an invalid derivation path being passed or used
+ */
+export class InvalidDerivationPathError extends Error {
+  public name = 'InvalidDerivationPathError';
+  constructor(public derivationPath: string) {
+    super(
+      `The derivation path ${derivationPath} is invalid. The derivation path must start with 44'/1729`
+    );
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error that indicates an invalid or unparseable ledger response
+ */
+export class InvalidLedgerResponseError extends Error {
+  public name = 'InvalidLedgerResponseError';
+  constructor(public message: string) {
+    super(message);
+  }
+}
+
 export const HDPathTemplate = (account: number) => {
   return `44'/1729'/${account}'/0'`;
 };
@@ -73,12 +110,10 @@ export class LedgerSigner implements Signer {
   ) {
     this.transport.setScrambleKey('XTZ');
     if (!path.startsWith("44'/1729'")) {
-      throw new Error("The derivation path must start with 44'/1729'");
+      throw new InvalidDerivationPathError(path);
     }
     if (!Object.values(DerivationType).includes(derivationType)) {
-      throw new Error(
-        'The derivation type must be DerivationType.ED25519, DerivationType.SECP256K1 or DerivationType.P256'
-      );
+      throw new InvalidDerivationTypeError(derivationType.toString());
     }
   }
 
@@ -96,7 +131,7 @@ export class LedgerSigner implements Signer {
     if (this._publicKey) {
       return this._publicKey;
     }
-    const responseLedger = await this.getLedgerpublicKey();
+    const responseLedger = await this.getLedgerPublicKey();
     const publicKeyLength = responseLedger[0];
     const rawPublicKey = responseLedger.slice(1, 1 + publicKeyLength);
     const compressedPublicKey = compressPublicKey(rawPublicKey, this.derivationType);
@@ -110,7 +145,7 @@ export class LedgerSigner implements Signer {
     return publicKey;
   }
 
-  private async getLedgerpublicKey(): Promise<Buffer> {
+  private async getLedgerPublicKey(): Promise<Buffer> {
     try {
       let ins = this.INS_PROMPT_PUBLIC_KEY;
       if (this.prompt === false) {
@@ -145,7 +180,7 @@ export class LedgerSigner implements Signer {
       signature = ledgerResponse.slice(0, ledgerResponse.length - 2).toString('hex');
     } else {
       if (!validateResponse(ledgerResponse)) {
-        throw new Error('Cannot parse ledger response.');
+        throw new InvalidLedgerResponseError('Cannot parse ledger response');
       }
       const idxLengthRVal = 3; // Third element of response is length of r value
       const rValue = extractValue(idxLengthRVal, ledgerResponse);

@@ -3,6 +3,16 @@ import { Observable, Subject, NEVER, OperatorFunction } from 'rxjs';
 import { Subscription } from './interface';
 import { takeUntil, tap, catchError, retry } from 'rxjs/operators';
 
+/**
+ *  @category Error
+ *  @description Error that indicates an unsupported event being passed or used
+ */
+export class UnsupportedEventError extends Error {
+  public name = 'UnsupportedEventError';
+  constructor(public message: string) {
+    super(message);
+  }
+}
 export class ObservableSubscription<T> implements Subscription<T> {
   private errorListeners: Array<(error: Error) => void> = [];
   private messageListeners: Array<(data: T) => void> = [];
@@ -68,7 +78,7 @@ export class ObservableSubscription<T> implements Subscription<T> {
         this.closeListeners.push(cb);
         break;
       default:
-        throw new Error(`Trying to register on an unsupported event: ${type}`);
+        throw new UnsupportedEventError(`Trying to register on an unsupported event: ${type}`);
     }
   }
 
@@ -88,7 +98,7 @@ export class ObservableSubscription<T> implements Subscription<T> {
         this.remove(this.closeListeners, cb);
         break;
       default:
-        throw new Error(`Trying to unregister on an unsupported event: ${type}`);
+        throw new UnsupportedEventError(`Trying to unregister on an unsupported event: ${type}`);
     }
   }
 

@@ -76,6 +76,17 @@ const K = [
   0xc67178f2 | 0,
 ];
 
+/**
+ *  @category Error
+ *  @description Error that indicates a failure when decoding a base58 encoding
+ */
+export class Base58DecodingError extends Error {
+  public name = 'Base58DecodingError';
+  constructor(public message: string) {
+    super(message);
+  }
+}
+
 // https://tools.ietf.org/html/rfc6234
 function sha256(msg: number[] | Uint8Array): number[] {
   // pad the message
@@ -175,7 +186,7 @@ const base58alphabetBwd: number[] = [
 function byteAt(src: string, i: number): number {
   const c = src.charCodeAt(i) - 49;
   if (c >= base58alphabetFwd.length || base58alphabetFwd[c] === -1) {
-    throw new Error(`Base58 decoding error: unexpected character at position ${i}: ${src[i]}`);
+    throw new Base58DecodingError(`Unexpected character at position ${i}: ${src[i]}`);
   }
   return base58alphabetFwd[c];
 }
@@ -235,7 +246,7 @@ export function encodeBase58(src: number[] | Uint8Array): string {
 export function decodeBase58Check(src: string): number[] {
   const buffer = decodeBase58(src);
   if (buffer.length < 4) {
-    throw new Error(`Base58Check decoding error: data is too short ${buffer.length}`);
+    throw new Base58DecodingError(`Data is too short ${buffer.length}`);
   }
 
   const data = buffer.slice(0, buffer.length - 4);
@@ -247,7 +258,7 @@ export function decodeBase58Check(src: string): number[] {
     sum[2] !== computed[2] ||
     sum[3] !== computed[3]
   ) {
-    throw new Error('Base58Check decoding error: invalid checksum');
+    throw new Base58DecodingError('Invalid checksum');
   }
 
   return data;
