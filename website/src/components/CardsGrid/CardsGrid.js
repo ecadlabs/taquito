@@ -16,7 +16,7 @@ const FeatureList = [
         icon: require('../../../static/img/briefcase.svg').default,
         title: 'Easy to use',
         description:
-          "Our simple abstractions around the Tezos blockchain are simple to understand and easy to use. Taquito's abstractions make working with contracts feel like working with plain old JavaScript objects.",
+          "Abstractions around the Tezos blockchain are simple to understand and easy to use. Taquito's abstractions make working with contracts feel like working with plain old JavaScript objects.",
       },
       {
         icon: require('../../../static/img/key.svg').default,
@@ -34,7 +34,7 @@ const FeatureList = [
         icon: require('../../../static/img/credit_card.svg').default,
         title: 'Well Supported',
         description:
-          'Taquito has a well-documented API, runs continuous integration tests against the Tezos Nodeand a set of beacon wallets. Join out vibrant developer community in Telegram and Slack.',
+          'Taquito has a well-documented API, runs continuous integration tests against the Tezos Node and a set of Beacon wallets. Join out vibrant developer community in Telegram and Slack.',
       },
     ],
   },
