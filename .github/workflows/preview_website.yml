@@ -2,7 +2,8 @@ name: Netlify Preview Deploy
 
 on:
   pull_request:
-    branches: [master]
+    branches: 
+      - master
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.ref != 'refs/heads/master' || github.run_number }}
