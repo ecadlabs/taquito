@@ -10,12 +10,8 @@ import { encoders } from './encoder';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
 import { decodersProto12 } from './proto12-ithaca/decoder';
 import { encodersProto12 } from './proto12-ithaca/encoder';
-import { validateBlock, ValidationResult } from '@taquito/utils';
-import {
-  InvalidBlockHashError,
-  InvalidOperationSchemaError,
-  InvalidOperationKindError,
-} from './error';
+import { validateBlock, ValidationResult, InvalidOperationKindError } from '@taquito/utils';
+import { InvalidBlockHashError, InvalidOperationSchemaError } from './error';
 import { validateMissingProperty, validateOperationKind } from './validator';
 
 export { CODEC, ProtocolsHash } from './constants';
@@ -57,7 +53,7 @@ export class LocalForger implements Forger {
 
     for (const content of params.contents) {
       if (!validateOperationKind(content.kind)) {
-        throw new InvalidOperationKindError(`The operation kind '${content.kind}' does not exist`);
+        throw new InvalidOperationKindError(content.kind);
       }
 
       const diff = validateMissingProperty(content);

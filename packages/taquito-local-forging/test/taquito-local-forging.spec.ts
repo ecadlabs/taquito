@@ -1,11 +1,9 @@
 import { LocalForger, ProtocolsHash } from '../src/taquito-local-forging';
 import { ticketCode3, ticketStorage3 } from './data/code_with_ticket';
 import { commonCases, hangzhouCases, ithacaCases, priorIthacaCases } from './allTestsCases';
-import {
-  InvalidOperationSchemaError,
-  InvalidBlockHashError,
-  InvalidOperationKindError,
-} from '../src/error';
+import { InvalidOperationSchemaError, InvalidBlockHashError } from '../src/error';
+
+import { InvalidOperationKindError } from '@taquito/utils';
 
 describe('Forge and parse operations hangzhou', () => {
   const localForger = new LocalForger(ProtocolsHash.PtHangz2);

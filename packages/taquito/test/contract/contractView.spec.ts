@@ -152,14 +152,15 @@ describe('ContractView test', () => {
     done();
   });
 
-  it('Should throw of the chainId is invalid', async (done) => {
+  it('Should throw InvalidChainIdError', async (done) => {
     const contractView = await rpcContractProvider.at('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D');
     try {
       await contractView.views
         .getBalance('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1')
         .read('invalid' as any);
     } catch (e) {
-      expect(e.message).toEqual(`ChainId is invalid`);
+      expect(e).toBeInstanceOf(Error);
+      expect(e.message).toEqual(`The chain id 'invalid' is invalid`);
     }
     done();
   });

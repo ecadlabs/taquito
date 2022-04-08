@@ -31,6 +31,7 @@ import {
   InvalidAddressError,
   InvalidKeyHashError,
   ValidationResult,
+  InvalidOperationKindError,
 } from '@taquito/utils';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
 
@@ -61,7 +62,7 @@ export class OperationBatch extends OperationEmitter {
    */
   withTransfer(params: TransferParams) {
     if (validateAddress(params.to) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid 'to' address: ${params.to}`);
+      throw new InvalidAddressError(params.to);
     }
     this.operations.push({ kind: OpKind.TRANSACTION, ...params });
     return this;
@@ -87,10 +88,10 @@ export class OperationBatch extends OperationEmitter {
    */
   withDelegation(params: DelegateParams) {
     if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid source address: ${params.source}`);
+      throw new InvalidAddressError(params.source);
     }
     if (params.delegate && validateAddress(params.delegate) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Invalid delegate address: ${params.delegate}`);
+      throw new InvalidAddressError(params.delegate);
     }
     this.operations.push({ kind: OpKind.DELEGATION, ...params });
     return this;
@@ -104,7 +105,7 @@ export class OperationBatch extends OperationEmitter {
    */
   withActivation({ pkh, secret }: ActivationParams) {
     if (validateKeyHash(pkh) !== ValidationResult.VALID) {
-      throw new InvalidKeyHashError(`Invalid Key Hash: ${pkh}`);
+      throw new InvalidKeyHashError(pkh);
     }
     this.operations.push({ kind: OpKind.ACTIVATION, pkh, secret });
     return this;
@@ -159,7 +160,7 @@ export class OperationBatch extends OperationEmitter {
           ...param,
         });
       default:
-        throw new Error(`Unsupported operation kind: ${(param as any).kind}`);
+        throw new InvalidOperationKindError((param as any).kind);
     }
   }
 
@@ -188,7 +189,7 @@ export class OperationBatch extends OperationEmitter {
           this.withRegisterGlobalConstant(param);
           break;
         default:
-          throw new Error(`Unsupported operation kind: ${(param as any).kind}`);
+          throw new InvalidOperationKindError((param as any).kind);
       }
     }
 

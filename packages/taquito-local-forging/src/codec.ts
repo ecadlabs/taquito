@@ -5,7 +5,11 @@ import {
   Prefix,
   prefix as prefixMap,
   prefixLength,
+  InvalidKeyHashError,
+  InvalidPublicKeyError,
+  InvalidAddressError,
 } from '@taquito/utils';
+import { OversizedEntryPointError } from './error';
 import BigNumber from 'bignumber.js';
 import { entrypointMapping, entrypointMappingReverse, ENTRYPOINT_MAX_LENGTH } from './constants';
 import { extractRequiredLen, valueDecoder, valueEncoder, MichelsonValue } from './michelson/codec';
@@ -158,7 +162,7 @@ export const pkhEncoder = (val: string) => {
     case Prefix.TZ3:
       return '02' + prefixEncoder(Prefix.TZ3)(val);
     default:
-      throw new Error('Invalid public key hash');
+      throw new InvalidKeyHashError(val);
   }
 };
 
@@ -172,7 +176,7 @@ export const publicKeyEncoder = (val: string) => {
     case Prefix.P2PK:
       return '02' + prefixEncoder(Prefix.P2PK)(val);
     default:
-      throw new Error('Invalid PK');
+      throw new InvalidPublicKeyError(val);
   }
 };
 
@@ -186,7 +190,7 @@ export const addressEncoder = (val: string): string => {
     case Prefix.KT1:
       return '01' + prefixEncoder(Prefix.KT1)(val) + '00';
     default:
-      throw new Error('Invalid address');
+      throw new InvalidAddressError(val);
   }
 };
 
@@ -200,7 +204,7 @@ export const publicKeyDecoder = (val: Uint8ArrayConsumer) => {
     case 0x02:
       return prefixDecoder(Prefix.P2PK)(val);
     default:
-      throw new Error('Invalid PK');
+      throw new InvalidPublicKeyError(val.toString());
   }
 };
 
@@ -215,7 +219,7 @@ export const addressDecoder = (val: Uint8ArrayConsumer) => {
       return address;
     }
     default:
-      throw new Error('Invalid Address');
+      throw new InvalidAddressError(val.toString());
   }
 };
 
@@ -270,9 +274,7 @@ export const entrypointDecoder = (value: Uint8ArrayConsumer) => {
     const entrypoint = Buffer.from(entry).toString('utf8');
 
     if (entrypoint.length > ENTRYPOINT_MAX_LENGTH) {
-      throw new Error(
-        `Oversized entrypoint: ${entrypoint}. The maximum length of entrypoint is ${ENTRYPOINT_MAX_LENGTH}`
-      );
+      throw new OversizedEntryPointError(entrypoint);
     }
     return entrypoint;
   }
@@ -297,9 +299,7 @@ export const entrypointEncoder = (entrypoint: string) => {
     return `${entrypointMappingReverse[entrypoint]}`;
   } else {
     if (entrypoint.length > ENTRYPOINT_MAX_LENGTH) {
-      throw new Error(
-        `Oversized entrypoint: ${entrypoint}. The maximum length of entrypoint is ${ENTRYPOINT_MAX_LENGTH}`
-      );
+      throw new OversizedEntryPointError(entrypoint);
     }
 
     const value = { string: entrypoint };

@@ -15,6 +15,10 @@ import {
 // eslint-disable-next-line no-var
 declare var tezbridge: any;
 
+/**
+ *  @category Error
+ *  @description Error that indicates the tezbridge plugin not being detected on the browser
+ */
 export class TezBridgeNotDetectedError extends Error {
   name = 'TezBridgeNotDetectedError';
   constructor() {

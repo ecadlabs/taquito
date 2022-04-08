@@ -1,6 +1,7 @@
 import { Decoder } from '../decoder';
 import { Uint8ArrayConsumer } from '../uint8array-consumer';
 import { kindMapping, kindMappingReverse } from '../constants';
+import { InvalidOperationKindError } from '@taquito/utils';
 
 export const ManagerOperationSchema = {
   branch: 'branch',
@@ -86,7 +87,7 @@ export const RegisterGlobalConstantSchema = {
 export const operationEncoder =
   (encoders: { [key: string]: (val: object) => string }) => (operation: { kind: string }) => {
     if (!(operation.kind in encoders) || !(operation.kind in kindMappingReverse)) {
-      throw new Error(`Unsupported operation kind: ${operation.kind}`);
+      throw new InvalidOperationKindError(operation.kind);
     }
 
     return kindMappingReverse[operation.kind] + encoders[operation.kind](operation);
