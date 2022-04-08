@@ -13,11 +13,11 @@ async function originateKnownContract(contractName: string, tezos: TezosToolkit,
   console.log(`::set-output name=known${contractName}Address::${contract.address}`);
 }
 
-Promise.resolve(async () => {
-  const tezos = CONFIGS()[0].lib;
-  await CONFIGS()[0].setup();
-
+(async () => {
   try {
+    const tezos = CONFIGS()[0].lib;
+    await CONFIGS()[0].setup();
+
     // KnownContract
     await originateKnownContract('Contract', tezos, {
       balance: '0',
@@ -121,6 +121,6 @@ Promise.resolve(async () => {
   } catch (e) {
     console.error(`Failed to deploy known contract | Error: ${e}`);
   }
-});
+})();
 
 
