@@ -51,6 +51,9 @@
       ],
       "@taquito/tzip16": [
         "taquito-tzip16/src/taquito-tzip16.ts"
+      ],
+      "@taquito/sapling": [
+        "taquito-sapling/src/taquito-sapling.ts"
       ]
     }
   }

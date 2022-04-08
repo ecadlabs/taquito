@@ -1,0 +1,98 @@
+{
+  "name": "@taquito/sapling",
+  "version": "12.0.3",
+  "description": "Allows reading and preparing sapling transactions",
+  "keywords": [
+    "tezos",
+    "sapling"
+  ],
+  "main": "dist/taquito-sapling.umd.js",
+  "module": "dist/taquito-sapling.es6.js",
+  "typings": "dist/types/taquito-sapling.d.ts",
+  "files": [
+    "signature.json",
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Roxane Letourneau <roxane@ecadlabs.com>",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "scripts": {
+    "test": "jest --coverage",
+    "test:watch": "jest --coverage --watch",
+    "test:prod": "npm run lint && npm run test -- --no-cache",
+    "lint": "eslint --ext .js,.ts .",
+    "precommit": "lint-staged",
+    "prebuild": "rimraf dist",
+    "version-stamp": "node ../taquito/version-stamping.js",
+    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts ",
+    "start": "rollup -c rollup.config.ts -w"
+  },
+  "lint-staged": {
+    "{src,test}/**/*.ts": [
+      "prettier --write",
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "ts-jest"
+    },
+    "testEnvironment": "node",
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "moduleNameMapper": {},
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/test/"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,ts}"
+    ]
+  },
+  "dependencies": {
+    "@airgap/sapling-wasm": "^0.0.7",
+    "bignumber.js": "^9.0.2"
+  },
+  "devDependencies": {
+    "@rollup/plugin-json": "^4.1.0",
+    "@types/bluebird": "^3.5.36",
+    "@types/jest": "^27.4.1",
+    "@types/node": "^17.0.23",
+    "@typescript-eslint/eslint-plugin": "^5.18.0",
+    "@typescript-eslint/parser": "^5.18.0",
+    "colors": "^1.4.0",
+    "coveralls": "^3.1.1",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.12.0",
+    "jest": "^27.5.1",
+    "jest-config": "^27.5.1",
+    "lint-staged": "^12.3.7",
+    "lodash.camelcase": "^4.3.0",
+    "prettier": "^2.6.2",
+    "prompt": "^1.2.2",
+    "replace-in-file": "^6.3.2",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.70.1",
+    "rollup-plugin-sourcemaps": "^0.6.3",
+    "rollup-plugin-typescript2": "^0.31.2",
+    "shelljs": "^0.8.5",
+    "ts-jest": "^26.4.4",
+    "ts-node": "^10.7.0",
+    "ts-toolbelt": "^9.6.0",
+    "typescript": "~4.1.5"
+  }
+}

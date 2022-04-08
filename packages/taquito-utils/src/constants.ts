@@ -37,6 +37,9 @@ export enum Prefix {
   TZ = 'TZ',
 
   VH = 'vh', // block_payload_hash
+
+  SASK = 'sask', // sapling_spending_key
+  ZET1 = 'zet1' // sapling_address
 }
 
 export const prefix = {
@@ -79,6 +82,8 @@ export const prefix = {
   [Prefix.TZ]: new Uint8Array([2, 90, 121]),
 
   [Prefix.VH]: new Uint8Array([1, 106, 242]),
+  [Prefix.SASK]: new Uint8Array([11, 237, 20, 92]),
+  [Prefix.ZET1]: new Uint8Array([18, 71, 40, 223]),
 };
 
 export const prefixLength: { [key: string]: number } = {
@@ -99,4 +104,6 @@ export const prefixLength: { [key: string]: number } = {
   [Prefix.P]: 32,
   [Prefix.O]: 32,
   [Prefix.VH]: 32,
+  [Prefix.SASK]: 169,
+  [Prefix.ZET1]: 43
 };
