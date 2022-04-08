@@ -10,6 +10,7 @@ import FooterTop from '../components/FooterTop/FooterTop';
 import Hero from '../components/Hero/Hero';
 import LogoGrid from '../components/Logos/LogoGrid';
 import SimpleWay from '../components/SimpleWay/SimpleWay';
+import TitleBlock from '../components/TitleBlock/TitleBlock';
 
 import styles from './styles.module.css';
 
@@ -172,6 +173,7 @@ export default () => {
         <Hero />
         <LogoGrid />
         <SimpleWay />
+        <TitleBlock />
         <FooterTop />
       </main>
       {/* <div className={classnames(styles.banner, styles.centered, 'margin-bottom--xl')}>
