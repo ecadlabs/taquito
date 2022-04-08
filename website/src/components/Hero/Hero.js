@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 // import clsx from "clsx";
-import styles from "./Hero.module.css";
+import styles from './Hero.module.scss';
 // import Slider from "react-slick";
 
 // import SVGExample from './example-logo.svg'
 
 const FeatureList = [
   {
-    title: "Enjoy Developing Your apps on Tezos Blockchain?",
+    title: 'Enjoy Developing Your apps on Tezos Blockchain?',
     // Svg: require("./example-logo.svg").default,
     // SvgTraiangle1: require("../../../static/img/triangle1.svg").default,
     // SvgTraiangle2: require("../../../static/img/triangle2.svg").default,
@@ -15,52 +15,48 @@ const FeatureList = [
     // SvgTraiangle4: require("../../../static/img/triangle4.svg").default,
     // SvgTraiangle5: require("./example-logo.svg").default,
     description: (
-      <>
-        Use our TypeScript library to develop your Tezos blockchain apps faster and easier
-      </>
+      <>Use our TypeScript library to develop your Tezos blockchain apps faster and easier</>
     ),
     link: {
-      title: "Get Started",
-      url: "/docs/quick_start",
+      title: 'Get Started',
+      url: '/docs/quick_start',
     },
 
     logoImages: [
       {
-        logo: require("../../../static/img/example.png").default,
+        logo: require('../../../static/img/example.png').default,
         link: {
-          title: "Get Started",
-          url: "/docs/quick_start",
+          title: 'Get Started',
+          url: '/docs/quick_start',
         },
       },
       {
-        logo: require("../../../static/img/example.png").default,
+        logo: require('../../../static/img/example.png').default,
         link: {
-          title: "Get Started",
-          url: "/docs/quick_start",
+          title: 'Get Started',
+          url: '/docs/quick_start',
         },
       },
       {
-        logo: require("../../../static/img/example.png").default,
+        logo: require('../../../static/img/example.png').default,
         link: {
-          title: "Get Started",
-          url: "/docs/quick_start",
+          title: 'Get Started',
+          url: '/docs/quick_start',
         },
       },
     ],
     features: [
       {
-        title: "Installing the Taqueri CLI",
+        title: 'Installing the Taqueri CLI',
         // icon: 'require("../../../static/img/briefcase.png").default',
-        description:
-          "Installing the Taqueria is easy",
-        gif: require("../../../static/gif/taq_hero.mp4").default,
+        description: 'Installing the Taqueria is easy',
+        gif: require('../../../static/gif/taq_hero.mp4').default,
       },
       {
-        title: "Installing the Taqueria VS Code Extension",
+        title: 'Installing the Taqueria VS Code Extension',
         // icon: require("../../../static/img/briefcase.png").default,
-        description:
-          "Taqueria has a VS Code extension available in the marketplace",
-        gif: require("../../../static/gif/taq_hero.mp4").default,
+        description: 'Taqueria has a VS Code extension available in the marketplace',
+        gif: require('../../../static/gif/taq_hero.mp4').default,
       },
     ],
   },
@@ -98,8 +94,7 @@ function Feature({
         return features.length - 1 === index ? index * 0 : index + 1;
       };
 
-      !userAction &&
-        toggleIsVisible(`${features[checkEnd(featuresIndex)].title}`);
+      !userAction && toggleIsVisible(`${features[checkEnd(featuresIndex)].title}`);
     }, 10000);
     return () => clearInterval(interval);
   }, [isVisible, userAction]);
@@ -149,11 +144,7 @@ function Feature({
             return (
               <div
                 key={index}
-                className={
-                  isVisible === feature.title
-                    ? styles.dots
-                    : styles.inactivedots
-                }
+                className={isVisible === feature.title ? styles.dots : styles.inactivedots}
                 id={feature.title}
                 onClick={(e) => checkTitle(e)}
               ></div>
@@ -166,7 +157,7 @@ function Feature({
 }
 
 export default function Hero() {
-  const Logo = require("../../../static/img/example.png").default;
+  const Logo = require('../../../static/img/example.png').default;
 
   return (
     <section className={styles.features}>
