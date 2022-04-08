@@ -14,6 +14,10 @@ const isMapType = (
   return 'args' in value && Array.isArray(value.args) && value.args.length === 2;
 };
 
+/**
+ *  @category Error
+ *  @description Error that indicates a map type mismatch, where an attempt to set a key or value in a Map doesn't match the defined type of the Map
+ */
 export class MapTypecheckError extends Error {
   name = 'MapTypecheckError';
 

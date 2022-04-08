@@ -13,6 +13,10 @@ import { expandMacros } from './macros';
 import { ProtocolOptions } from './michelson-types';
 import { expandGlobalConstants } from './global-constants';
 
+/**
+ *  @category Error
+ *  @description Error indicating a failure when parsing Micheline expressions
+ */
 export class MichelineParseError extends Error {
   /**
    * @param token A token caused the error
@@ -24,6 +28,10 @@ export class MichelineParseError extends Error {
   }
 }
 
+/**
+ *  @category Error
+ *  @description Error that inidicates a failure when parsing Micheline JSON
+ */
 export class JSONParseError extends Error {
   /**
    * @param node A node caused the error

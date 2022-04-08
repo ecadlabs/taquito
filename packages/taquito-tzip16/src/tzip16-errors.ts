@@ -1,3 +1,7 @@
+/**
+ *  @category Error
+ *  @description Error that indicates missing big map metadata (not compliant)
+ */
 export class BigMapMetadataNotFound extends Error {
   name = 'BigMapMetadataNotFound';
 
@@ -8,6 +12,10 @@ export class BigMapMetadataNotFound extends Error {
   }
 }
 
+/**
+ *  @category Error
+ *  @description Error that indicates missing metadata
+ */
 export class MetadataNotFound extends Error {
   name = 'MetadataNotFound';
 
@@ -16,6 +24,10 @@ export class MetadataNotFound extends Error {
   }
 }
 
+/**
+ *  @category Error
+ *  @description Error that indicates missing URI (non compliance to the TZIP-16 standard)
+ */
 export class UriNotFound extends Error {
   name = 'UriNotFound';
   constructor() {
@@ -23,6 +35,10 @@ export class UriNotFound extends Error {
   }
 }
 
+/**
+ *  @category Error
+ *  @description Error that indicates an invalid URI (non compliance to the TZIP-16 standard)
+ */
 export class InvalidUri extends Error {
   name = 'InvalidUri';
 
@@ -31,6 +47,10 @@ export class InvalidUri extends Error {
   }
 }
 
+/**
+ *  @category Error
+ *  @description Error that indicates invalid metadata (non compliance to the TZIP-16 standard)
+ */
 export class InvalidMetadata extends Error {
   name = 'InvalidMetadata';
 
@@ -41,6 +61,10 @@ export class InvalidMetadata extends Error {
   }
 }
 
+/**
+ *  @category Error
+ *  @description Error that indicates the protocol being passed or used is not supported
+ */
 export class ProtocolNotSupported extends Error {
   name = 'ProtocolNotSupported';
 
@@ -49,6 +73,10 @@ export class ProtocolNotSupported extends Error {
   }
 }
 
+/**
+ *  @category Error
+ *  @description Error that indicates the metadata type is invalid (non compliance to the TZIP-16 standard)
+ */
 export class InvalidMetadataType extends Error {
   name = 'InvalidMetadataType';
 
@@ -59,6 +87,10 @@ export class InvalidMetadataType extends Error {
   }
 }
 
+/**
+ *  @category Error
+ *  @description Error that indicates metadata provider being unconfigured in the TezosToolkit instance
+ */
 export class UnconfiguredMetadataProviderError extends Error {
   name = 'UnconfiguredMetadataProviderError';
 
@@ -69,6 +101,10 @@ export class UnconfiguredMetadataProviderError extends Error {
   }
 }
 
+/**
+ *  @category Error
+ *  @description Error that indicates a forbidden instruction being found inside the View code
+ */
 export class ForbiddenInstructionInViewCode extends Error {
   name = 'ForbiddenInstructionInViewCode';
 
@@ -79,6 +115,10 @@ export class ForbiddenInstructionInViewCode extends Error {
   }
 }
 
+/**
+ *  @category Error
+ *  @description Error that indicates parameters are being passed when it is not required
+ */
 export class NoParameterExpectedError extends Error {
   name = 'NoParameterExpectedError';
 
@@ -87,6 +127,10 @@ export class NoParameterExpectedError extends Error {
   }
 }
 
+/**
+ *  @category Error
+ *  @description Error that indicates invalid view parameter being passed or used
+ */
 export class InvalidViewParameterError extends Error {
   name = 'InvalidViewParameterError';
 
