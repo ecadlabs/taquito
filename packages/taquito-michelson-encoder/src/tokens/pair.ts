@@ -2,6 +2,28 @@ import { Token, TokenFactory, Semantic, ComparableToken } from './token';
 import { OrToken } from './or';
 import { PairTokenSchema } from '../schema/types';
 
+/**
+ *  @category Error
+ *  @description Error that indicates in invalid token argument being passed
+ */
+export class TokenArgumentValidationError extends Error {
+  public name = 'TokenArgumentValidationError';
+  constructor(public message: string) {
+    super(message);
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error that indicates a failure occurring when doing a comparison of tokens
+ */
+export class TokenComparisonError extends Error {
+  public name = 'TokenComparisonError';
+  constructor(public message: string) {
+    super(message);
+  }
+}
+
 // collapse comb pair
 function collapse(val: Token['val'] | any[], prim: string = PairToken.prim): [any, any] {
   if (Array.isArray(val)) {
@@ -14,7 +36,7 @@ function collapse(val: Token['val'] | any[], prim: string = PairToken.prim): [an
     );
   }
   if (val.args === undefined) {
-    throw new Error('Token has no arguments');
+    throw new TokenArgumentValidationError('Token has no arguments');
   }
   if (val.args.length > 2) {
     return [
@@ -223,7 +245,7 @@ export class PairToken extends ComparableToken {
       return result;
     }
 
-    throw new Error('Not a comparable pair');
+    throw new TokenComparisonError('Not a comparable pair');
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {

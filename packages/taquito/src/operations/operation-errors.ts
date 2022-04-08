@@ -136,3 +136,14 @@ export const flattenErrors = (
 
   return errors;
 };
+
+/**
+ *  @category Error
+ *  @description Error that indicates a general failure happening during an origination operation
+ */
+export class OriginationOperationError extends Error {
+  public name = 'OriginationOperationError';
+  constructor(public message: string) {
+    super(message);
+  }
+}

@@ -2,6 +2,7 @@ import { Decoder } from '../decoder';
 import { Uint8ArrayConsumer } from '../uint8array-consumer';
 import { kindMapping, kindMappingReverse } from '../constants';
 import { InvalidOperationKindError } from '@taquito/utils';
+import { OperationDecodingError, UnsupportedOperationError } from '../error';
 
 export const ManagerOperationSchema = {
   branch: 'branch',
@@ -101,7 +102,7 @@ export const operationDecoder =
     const decodedObj = decoders[operationName](value);
 
     if (typeof decodedObj !== 'object') {
-      throw new Error('Decoded invalid operation');
+      throw new OperationDecodingError('Decoded invalid operation');
     }
 
     if (operationName) {
@@ -110,7 +111,7 @@ export const operationDecoder =
         ...decodedObj,
       };
     } else {
-      throw new Error(`Unsupported operation ${op[0]}`);
+      throw new UnsupportedOperationError(`Unsupported operation ${op[0]}`);
     }
   };
 
@@ -127,7 +128,7 @@ export const schemaEncoder =
         const values = value[key];
 
         if (!Array.isArray(values)) {
-          throw new Error(`Exepected value to be Array ${JSON.stringify(values)}`);
+          throw new OperationDecodingError(`Exepected value to be Array ${JSON.stringify(values)}`);
         }
 
         return prev + values.reduce((prevBytes, current) => prevBytes + encoder(current), '');
@@ -155,7 +156,7 @@ export const schemaDecoder =
           decoded.push(decoder(value));
 
           if (lastLength === value.length()) {
-            throw new Error('Unable to decode value');
+            throw new OperationDecodingError('Unable to decode value');
           }
         }
 

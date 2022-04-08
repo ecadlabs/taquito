@@ -4,6 +4,13 @@ import { createToken } from '../tokens/createToken';
 import { OrToken } from '../tokens/or';
 import { PairToken } from '../tokens/pair';
 import { BigMapKeyType, Semantic, Token, TokenValidationError } from '../tokens/token';
+import {
+  InvalidRpcResponseError,
+  InvalidBigMapSchema,
+  InvalidBigMapDiff,
+  BigMapEncodingError,
+  MissingArgumentError,
+} from './error';
 import { RpcTransaction } from './model';
 import { Falsy, TokenSchema } from './types';
 
@@ -76,7 +83,7 @@ export class Schema {
       (val.script.code.find((x: any) => x.prim === 'storage') as MichelsonV1ExpressionExtended);
 
     if (!storage || !Array.isArray(storage.args)) {
-      throw new Error('Invalid rpc response passed as arguments');
+      throw new InvalidRpcResponseError();
     }
 
     return new Schema(storage.args[0]);
@@ -132,11 +139,11 @@ export class Schema {
 
   ExecuteOnBigMapDiff(diff: any[], semantics?: Semantic) {
     if (!this.bigMap) {
-      throw new Error('No big map schema');
+      throw new InvalidBigMapSchema('Big map schema is undefined');
     }
 
     if (!Array.isArray(diff)) {
-      throw new Error('Invalid big map diff. It must be an array');
+      throw new InvalidBigMapDiff('Big map diff must be an array');
     }
 
     const eltFormat = diff.map(({ key, value }) => ({ args: [key, value] }));
@@ -146,7 +153,7 @@ export class Schema {
 
   ExecuteOnBigMapValue(key: any, semantics?: Semantic) {
     if (!this.bigMap) {
-      throw new Error('No big map schema');
+      throw new InvalidBigMapSchema('No big map schema');
     }
 
     return this.bigMap.ValueSchema.Execute(key, semantics);
@@ -154,13 +161,13 @@ export class Schema {
 
   EncodeBigMapKey(key: BigMapKeyType) {
     if (!this.bigMap) {
-      throw new Error('No big map schema');
+      throw new InvalidBigMapSchema('Big map schema is undefined');
     }
 
     try {
       return this.bigMap.KeySchema.ToBigMapKey(key);
     } catch (ex) {
-      throw new Error('Unable to encode big map key: ' + ex);
+      throw new BigMapEncodingError('big map key', ex);
     }
   }
 
@@ -172,7 +179,7 @@ export class Schema {
         throw ex;
       }
 
-      throw new Error(`Unable to encode storage object. ${ex}`);
+      throw new BigMapEncodingError('storage object', ex);
     }
   }
 
@@ -185,7 +192,7 @@ export class Schema {
   }
 
   /**
-   * @description Produce a representation of the storage schema. 
+   * @description Produce a representation of the storage schema.
    * Note: Provide guidance on how to write the storage object for the origination operation with Taquito.
    */
   generateSchema(): TokenSchema {
@@ -197,7 +204,7 @@ export class Schema {
    */
   ComputeState(tx: RpcTransaction[], state: any) {
     if (!this.bigMap) {
-      throw new Error('No big map schema');
+      throw new InvalidBigMapSchema('Big map schema is undefined');
     }
 
     const bigMap = tx.reduce((prev, current) => {
@@ -234,7 +241,7 @@ export class Schema {
       const sch = collapse(schema);
       const str = collapse(storage, 'Pair');
       if (sch.args === undefined || str.args === undefined) {
-        throw new Error('Tokens have no arguments'); // unlikely
+        throw new MissingArgumentError('Tokens have no arguments'); // unlikely
       }
       return (
         this.findValue(sch.args[0], str.args[0], valueToFind) ||

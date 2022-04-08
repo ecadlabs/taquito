@@ -2,6 +2,7 @@ import { Decoder } from '../decoder';
 import { Uint8ArrayConsumer } from '../uint8array-consumer';
 import { kindMappingProto12, kindMappingReverseProto12 } from './constants';
 import { InvalidOperationKindError } from '@taquito/utils';
+import { OperationDecodingError, UnsupportedOperationError } from '../error';
 
 export const EndorsementSchemaProto12 = {
   slot: 'int16',
@@ -27,7 +28,7 @@ export const operationDecoderProto12 =
     const decodedObj = decoders[operationName](value);
 
     if (typeof decodedObj !== 'object') {
-      throw new Error('Decoded invalid operation');
+      throw new OperationDecodingError('Decoded invalid operation');
     }
 
     if (operationName) {
@@ -36,6 +37,6 @@ export const operationDecoderProto12 =
         ...decodedObj,
       };
     } else {
-      throw new Error(`Unsupported operation ${op[0]}`);
+      throw new UnsupportedOperationError(op[0].toString());
     }
   };

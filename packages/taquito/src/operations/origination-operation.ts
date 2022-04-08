@@ -2,6 +2,7 @@ import { OperationContentsAndResult, OperationContentsAndResultOrigination } fro
 import { Context } from '../context';
 import { DefaultContractType } from '../contract/contract';
 import { RpcContractProvider } from '../contract/rpc-contract-provider';
+import { OriginationOperationError } from './operation-errors';
 import { Operation } from './operations';
 import {
   FeeConsumingOperation,
@@ -101,7 +102,7 @@ export class OriginationOperation<TContract extends DefaultContractType = Defaul
    */
   async contract(confirmations?: number, timeout?: number) {
     if (!this.contractAddress) {
-      throw new Error('No contract was originated in this operation');
+      throw new OriginationOperationError('No contract was originated in this operation');
     }
 
     await this.confirmation(confirmations, timeout);
