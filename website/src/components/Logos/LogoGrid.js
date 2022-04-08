@@ -10,17 +10,17 @@ const FeatureList = [
 			{
 				Image: require("../../../static/img/example.png").default,
 				title: 'Boosts Productivity',
-				 url: "/docs/quick_start",
+				url: "/docs/quick_start",
 			},
 			{
 				Image: require("../../../static/img/example.png").default,
 				title: 'Improves Quality',
-				 url: "/docs/quick_start",
+				url: "/docs/quick_start",
 			},
 			{
 				Image: require("../../../static/img/example.png").default,
 				title: 'Easy Integration',
-				 url: "/docs/quick_start",
+				url: "/docs/quick_start",
 			},
 
 		],
@@ -29,23 +29,23 @@ const FeatureList = [
 
 function Feature({ images }) {
 	return (
-			<div className={styles.logos}>
-					{images.map((image, idx) => (
-						<span key={idx} className={styles.image}>
-							<img src={image.Image} alt="" />
-							<a className={styles.link} href={image.url}>
-							{image.title}
-							</a>
-						</span>
-					))}
-			</div>
+		<div className={styles.logos}>
+			{images.map((image, idx) => (
+				<span key={idx} className={styles.image}>
+					<img src={image.Image} alt="" />
+					<a className={styles.link} href={image.url}>
+						{image.title}
+					</a>
+				</span>
+			))}
+		</div>
 	);
 }
 
 export default function LogoGrid() {
 	return (
 		<section className={styles.features}>
-					<Feature {...FeatureList[0]} />			
+			<Feature {...FeatureList[0]} />
 		</section>
 	);
 }
