@@ -40,3 +40,11 @@ jobs:
         TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS: ${{ steps.originate-contracts-mondaynet.outputs.knownTzip12BigMapOffChainContractAddress }} 
         TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS: ${{ steps.originate-contracts-mondaynet.outputs.knownSaplingContractAddress }}
       run: npm run test:mondaynet -- --maxWorkers=4
+    -
+      working-directory: ./integration-tests
+      run: ls -la
+    - 
+      uses: ArtiomTr/jest-coverage-report-action@v2
+      with:
+        coverage-file: ./integration-tests/jest-stare/jest-results.json
+        base-coverage-file: ./integration-tests/jest-stare/jest-results.json
