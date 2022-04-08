@@ -19,7 +19,7 @@
   --github-svg: url('../../static/img/githubSVG.svg') no-repeat;
   --telegram-svg: url('../../static/img/telegramSVG.svg') no-repeat;
   --brown-secondary: #975b19;
-
+  --background-black: #2e2e2e;
   --ifm-font-family-base: Source Sans Pro;
   --ifm-color-primary-lightest: #ffffff;
   --ifm-color-primary-lighter: #a9d1e4;
@@ -38,6 +38,7 @@
   --ifm-color-secondary-darker: #0d3d89;
   --ifm-color-secondary-darkest: #001487;
   --ifm-color-hover-link: var(--brown-primary);
+  --ifm-background-color-secondary: var(--ifm-color-primary);
 }
 
 .alert--secondary {
@@ -62,6 +63,7 @@
   --twitter-svg: url('../../static/img/twitter-svg-white.svg') no-repeat;
   --github-svg: url('../../static/img/github-svg-white.svg') no-repeat;
   --telegram-svg: url('../../static/img/telegram-svg-white.svg') no-repeat;
+  --ifm-background-color-secondary: var(--background-black);
 }
 
 h1 {
@@ -70,6 +72,10 @@ h1 {
   font-weight: 900;
   font-size: 40px;
   line-height: 56px;
+  @media (max-width: 380px) {
+    font-size: 32px;
+    line-height: 48px;
+  }
 }
 
 h2 {
@@ -79,7 +85,12 @@ h2 {
   font-size: 38px;
   line-height: 56px;
   text-align: center;
+  @media (max-width: 380px) {
+    font-size: 30px;
+    line-height: 48px;
+  }
 }
+
 /*
  * Overrides
  */
