@@ -191,6 +191,7 @@ if (process.env['RUN_WITH_FAUCET']) {
 } else if (process.env['ITHACANET']) {
   providers.push(ithacanetEphemeral);
 } else if (process.env['MONDAYNET']) {
+  forgers.push(ForgerType.LOCAL)
   providers.push(mondaynetEphemeral);
 } else {
   providers.push(hangzhounetEphemeral, ithacanetEphemeral);

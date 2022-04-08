@@ -5,18 +5,22 @@ import { knownBigMapContract } from '../example/data/knownBigMapContract';
 import { singleSaplingStateContract } from './data/single_sapling_state_contract';
 import { fa2ForTokenMetadataView } from './data/fa2-for-token-metadata-view';
 import { char2Bytes } from '@taquito/utils';
+import BigNumber from 'bignumber.js';
 
-async function originateKnownContract(contractName: string, tezos: TezosToolkit, contractOriginateParams: OriginateParams): Promise<void> {
-  let operation = await tezos.contract.originate(contractOriginateParams);
-  let contract = await operation.contract();
-  console.log(`known${contractName} address:  ${contract.address}`);
-  console.log(`::set-output name=known${contractName}Address::${contract.address}`);
-}
+const MUTEZ_UNIT = new BigNumber(1000000);
+
+let config = CONFIGS();
+let tezosConfig = config[0]; // Composite Forger
+let tezos = tezosConfig.lib;
+
+let keyPkh: string = "";
+let keyInitialBalance: BigNumber = new BigNumber(0);
 
 (async () => {
-  try {
-    const tezos = CONFIGS()[0].lib;
-    await CONFIGS()[0].setup();
+    await tezosConfig.setup(true);
+    
+    keyPkh = await tezos.signer.publicKeyHash();
+    keyInitialBalance = await tezos.tz.getBalance(keyPkh);
 
     // KnownContract
     await originateKnownContract('Contract', tezos, {
@@ -104,7 +108,7 @@ async function originateKnownContract(contractName: string, tezos: TezosToolkit,
       storage: {
         administrator: 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
         all_tokens: '2',
-        ledger: ledgerBigMap,
+        ledger: ledger,
         metadata,
         operators,
         paused: false,
@@ -118,9 +122,39 @@ async function originateKnownContract(contractName: string, tezos: TezosToolkit,
       init: '{}'
     });
 
-  } catch (e) {
-    console.error(`Failed to deploy known contract | Error: ${e}`);
-  }
+    console.log(`
+################################################################################
+Public Key Hash : ${keyPkh}
+Initial Balance : ${keyInitialBalance.dividedBy(MUTEZ_UNIT)} XTZ
+Final Balance   : ${await (await tezos.tz.getBalance(keyPkh)).dividedBy(MUTEZ_UNIT)} XTZ
+
+Total XTZ Spent : ${keyInitialBalance.minus(await tezos.tz.getBalance(keyPkh)).dividedBy(MUTEZ_UNIT)} XTZ
+`)
 })();
 
 
+async function originateKnownContract(contractName: string, tezos: TezosToolkit, contractOriginateParams: OriginateParams): Promise<void> {
+  try {
+    let operation = await tezos.contract.originate(contractOriginateParams);
+    let contract = await operation.contract();
+    console.log(`known${contractName} address:  ${contract.address}`);
+    console.log(`::set-output name=known${contractName}Address::${contract.address}`);
+  } catch (e: any) {
+    console.error(`Failed to deploy ${contractName} known contract | Error: ${e}`);
+
+    if (e.name === "ForgingMismatchError" ) {
+      console.log (`Composite forger failed to originate ${contractName}. Trying to originate the contract by using Local forger...`);
+
+      let tezosConfig = config[1]; // Local forger
+      let tezos = tezosConfig.lib;
+      await tezosConfig.setup(true);
+
+      await originateKnownContract(contractName, tezos, contractOriginateParams);
+    }
+  }
+}
+
+async function printBalance(pkh: string, tezos: TezosToolkit): Promise<void> {
+  let balance = await tezos.tz.getBalance(pkh);
+  console.log(`${pkh} balance: ${balance}`);
+}
