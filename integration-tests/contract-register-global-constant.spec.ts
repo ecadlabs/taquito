@@ -2,7 +2,7 @@ import { Protocols } from '@taquito/taquito';
 import { CONFIGS } from './config';
 const crypto = require('crypto');
 
-CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
+CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   
   describe(`Register global constants using: ${rpc}`, () => {
