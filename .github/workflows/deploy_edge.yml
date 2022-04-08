@@ -53,4 +53,4 @@ jobs:
       uses: marocchino/sticky-pull-request-comment@v2
       with:
         header: deploy-packages
-        message: ${{ process.env.COMMENT_BODY }}
+        message: ${{ env.COMMENT_BODY }}
