@@ -110,13 +110,18 @@
   color: var(--yellow-second);
 }
 .waysButton {
+  font-family: Rounded Mplus 1c;
+  font-weight: 600;
+  font-size: 20px;
+  text-transform: capitalize;
   background: var(--brown-secondary);
   display: flex;
+  min-width: 135px !important;
   justify-content: center;
   align-items: center;
   border-radius: 30px;
   text-align: center;
-  padding: 5px 15px;
+  padding: 2px 15px 6px 15px;
   color: var(--ifm-color-text-secondary) !important;
   &:hover {
     color: var(--ifm-color-text-primary) !important;

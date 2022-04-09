@@ -10,6 +10,7 @@ import CardsGrid from '../components/CardsGrid/CardsGrid';
 import FooterTop from '../components/FooterTop/FooterTop';
 import Hero from '../components/Hero/Hero';
 import LogoGrid from '../components/Logos/LogoGrid';
+import SimpleStep from '../components/SimpleStep/SimpleStep';
 import SimpleWay from '../components/SimpleWay/SimpleWay';
 import TitleBlock from '../components/TitleBlock/TitleBlock';
 
@@ -176,6 +177,7 @@ export default () => {
         <SimpleWay />
         <TitleBlock />
         <CardsGrid />
+        <SimpleStep />
         <FooterTop />
       </main>
       {/* <div className={classnames(styles.banner, styles.centered, 'margin-bottom--xl')}>
