@@ -4,6 +4,7 @@ export enum Prefix {
   TZ3 = 'tz3',
   KT = 'KT',
   KT1 = 'KT1',
+  TXR1 = 'txr1',
 
   EDSK2 = 'edsk2',
   SPSK = 'spsk',
