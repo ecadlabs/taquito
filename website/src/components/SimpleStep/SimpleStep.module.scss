@@ -174,8 +174,11 @@
   line-height: 25px;
   text-align: right;
   letter-spacing: 0.3px;
+  margin-left: auto;
   @media (max-width: 640px) {
     text-align: center;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 
