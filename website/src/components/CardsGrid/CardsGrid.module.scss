@@ -2,7 +2,6 @@
   width: 100%;
   height: auto;
   position: relative;
-  margin-bottom: 20px;
 }
 
 .container {
@@ -51,6 +50,10 @@
     padding-right: 30px;
   }
   .cardsButton {
+    font-family: Rounded Mplus 1c;
+    font-weight: 600;
+    font-size: 20px;
+    text-transform: capitalize;
     width: fit-content;
     background: var(--brown);
     display: flex;
@@ -58,7 +61,8 @@
     align-items: center;
     border-radius: 30px;
     text-align: center;
-    padding: 5px 15px;
+    min-width: 135px !important;
+    padding: 3px 15px 6px 15px;
     color: var(--ifm-color-text-secondary) !important;
     &:hover {
       color: var(--ifm-color-text-primary) !important;
