@@ -24,20 +24,27 @@
   margin-left: auto;
   margin-right: auto;
   height: 100%;
-  padding-bottom: 20px;
-}
-.content:after {
-  content: ' ';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  height: 150px;
-  width: 100%;
+  padding-bottom: 30px;
   z-index: 2;
-  clip-path: polygon(0 78%, 100% 0%, 100% 26%, 0% 100%);
-  background: #ffffff;
-  border: none;
+  position: relative;
 }
+// .features:after {
+//   content: ' ';
+//   position: absolute;
+//   bottom: 0;
+//   left: 0;
+//   height: 150px;
+//   width: 100%;
+//   z-index: 2;
+//   clip-path: polygon(0 78%, 100% 0%, 100% 26%, 0% 100%);
+//   background: #ffffff;
+//   border: none;
+//   display: block;
+//   z-index: 1;
+//   @media (max-width: 640px) {
+//     display: none;
+//   }
+// }
 .simpleStepsTitleContainer {
   text-align: center;
   display: flex;
@@ -90,6 +97,9 @@
   min-width: 90vw;
   position: relative;
   z-index: 3;
+  @media (max-width: 640px) {
+    padding-bottom: 200px;
+  }
 }
 .stepContainerRight {
   width: 100%;
