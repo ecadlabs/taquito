@@ -46,6 +46,7 @@ export const prefix = {
   [Prefix.TZ3]: new Uint8Array([6, 161, 164]),
   [Prefix.KT]: new Uint8Array([2, 90, 121]),
   [Prefix.KT1]: new Uint8Array([2, 90, 121]),
+  [Prefix.TXR1]: new Uint8Array([2, 90, 121]),
 
   [Prefix.EDSK]: new Uint8Array([43, 246, 78, 7]),
   [Prefix.EDSK2]: new Uint8Array([13, 15, 58, 7]),
