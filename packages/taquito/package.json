@@ -82,7 +82,7 @@
     "@taquito/michel-codec": "^12.0.3",
     "@taquito/michelson-encoder": "^12.0.3",
     "@taquito/rpc": "^12.0.3",
-    "@taquito/utils": "^12.0.3",
+    "@taquito/utils": "https://github.com/zamrokk/taquito.git#txr1-rollup-address-validation",
     "bignumber.js": "^9.0.2",
     "rxjs": "^6.6.3"
   },
