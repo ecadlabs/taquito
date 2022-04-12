@@ -12,6 +12,11 @@
   mix-blend-mode: normal;
   clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
   z-index: 0;
+  @media (max-width: 380px) {
+    -webkit-clip-path: none;
+    clip-path: none;
+    padding: 50px 10px;
+  }
 }
 
 .content {
@@ -99,6 +104,9 @@
   z-index: 3;
   @media (max-width: 640px) {
     padding-bottom: 200px;
+  }
+  @media (max-width: 380px) {
+    padding-bottom: 0px;
   }
 }
 .stepContainerRight {

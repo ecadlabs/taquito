@@ -13,6 +13,7 @@ import LogoGrid from '../components/Logos/LogoGrid';
 import SimpleStep from '../components/SimpleStep/SimpleStep';
 import SimpleWay from '../components/SimpleWay/SimpleWay';
 import TitleBlock from '../components/TitleBlock/TitleBlock';
+import TeamsCarousel from '../components/TeamsCarousel/TeamsCarousel';
 
 import styles from './styles.module.css';
 
@@ -178,6 +179,7 @@ export default () => {
         <TitleBlock />
         <CardsGrid />
         <SimpleStep />
+        <TeamsCarousel />
         <FooterTop />
       </main>
       {/* <div className={classnames(styles.banner, styles.centered, 'margin-bottom--xl')}>
