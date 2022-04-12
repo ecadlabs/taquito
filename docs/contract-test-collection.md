@@ -1499,7 +1499,7 @@ storage (pair (pair (bool %areyouthere) (int %integer))
 
 Sapling is a protocol enabling privacy-preserving transactions of fungible tokens in a decentralised environment. The example contract used
 in Taquito Integration Tests is a single-state sapling contract. It features the Michelson instruction "SAPLING_VERIFY_UPDATE".
-A sapling_state is represented by an integer value in the contract storage. 
+A sapling_state is represented by an integer value in the contract storage.
 
 #### Entrypoints:
 

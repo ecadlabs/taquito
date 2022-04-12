@@ -186,7 +186,10 @@ module.exports = {
       '@docusaurus/preset-classic',
       {
         theme: {
-          customCss: [require.resolve('./src/css/custom.scss')],
+          customCss: [
+            require.resolve('./src/css/custom.scss'),
+            require.resolve('./src/css/tables.scss'),
+          ],
         },
         docs: {
           path: '../docs',
