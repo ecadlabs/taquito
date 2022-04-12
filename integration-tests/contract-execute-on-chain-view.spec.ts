@@ -4,16 +4,16 @@ import BigNumber from 'bignumber.js';
 import { Protocols } from "@taquito/taquito";
 import { HttpResponseError } from "@taquito/http-utils";
 
-CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
+CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  const hangzhounetOrHigher = (protocol === Protocols.PtHangz2 || protocol === Protocols.Psithaca2) ? test : test.skip;
+ 
   describe(`On chain views using the contract API: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup(true)
       done()
     })
-    hangzhounetOrHigher(`As a user I want to originate a smart contract having top level views and simulate the views execution`, async (done) => {
+    test(`As a user I want to originate a smart contract having top level views and simulate the views execution`, async (done) => {
       // Contract origination
       const op = await Tezos.contract.originate({
         code: codeViewsTopLevel,
