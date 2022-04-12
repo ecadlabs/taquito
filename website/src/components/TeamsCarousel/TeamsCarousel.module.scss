@@ -22,7 +22,9 @@
     line-height: 48px;
   }
 }
-
+[data-theme='dark'] .teamsTitle {
+  color: var(--ifm-color-primary);
+}
 .teams {
   width: 80%;
 }
