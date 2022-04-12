@@ -41,11 +41,3 @@ jobs:
         TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS: ${{ steps.originate-contracts-mondaynet.outputs.knownSaplingContractAddress }}
       run: npm run test:mondaynet -- --maxWorkers=2
       continue-on-error: true
-    -
-      working-directory: ./integration-tests
-      run: ls -la
-    - 
-      uses: ArtiomTr/jest-coverage-report-action@v2
-      with:
-        coverage-file: ./integration-tests/jest-stare/jest-results.json
-        base-coverage-file: ./integration-tests/jest-stare/jest-results.json
