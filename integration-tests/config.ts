@@ -95,13 +95,6 @@ const hangzhounetEphemeral = {
   },
 };
 
-console.log(`
-knownContract: ${process.env['TEZOS_MONDAYNET_CONTRACT_ADDRESS']}
-knownBigMapContract: ${process.env['TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS']}
-knownTzip1216Contract: ${process.env['TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS']}
-knownSaplingContract: ${process.env['TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS']}
-`)
-
 const mondaynetEphemeral = {
   rpc: process.env['TEZOS_RPC_MONDAYNET'] || 'http://mondaynet.ecadinfra.com:8732',
   knownBaker: 'tz1ck3EJwzFpbLVmXVuEn5Ptwzc6Aj14mHSH',
