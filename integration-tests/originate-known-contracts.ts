@@ -2,7 +2,7 @@ import { CONFIGS } from './config';
 import { MichelsonMap, OriginateParams, TezosToolkit } from '@taquito/taquito';
 import { knownContract } from '../example/data/knownContract';
 import { knownBigMapContract } from '../example/data/knownBigMapContract';
-import { singleSaplingStateContract } from './data/single_sapling_state_contract';
+import { singleSaplingStateContract } from './data/single_sapling_state_contract_mondaynet_michelson';
 import { fa2ForTokenMetadataView } from './data/fa2-for-token-metadata-view';
 import { char2Bytes } from '@taquito/utils';
 import BigNumber from 'bignumber.js';
@@ -138,11 +138,11 @@ async function originateKnownContract(contractName: string, tezos: TezosToolkit,
     let operation = await tezos.contract.originate(contractOriginateParams);
     let contract = await operation.contract();
     console.log(`known${contractName} address:  ${contract.address}`);
-    console.log(`::set-output name=known${contractName}Address::${contract.address}`);
+    console.log(`::set-output name=known${contractName}Address::${contract.address}\n`);
   } catch (e: any) {
-    console.error(`Failed to deploy ${contractName} known contract | Error: ${e}`);
+    console.error(`Failed to deploy ${contractName} known contract | Error: ${e.stack}`);
 
-    if (e.name === "ForgingMismatchError" ) {
+    if (e.name === "ForgingMismatchError" && process.env["ENABLE_LOCAL_FORGER"] === "true" ) {
       console.log (`Composite forger failed to originate ${contractName}. Trying to originate the contract by using Local forger...`);
 
       let tezosConfig = config[1]; // Local forger
