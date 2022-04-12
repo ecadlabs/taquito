@@ -541,21 +541,14 @@ aside {
   top: calc(var(--ifm-navbar-height)) !important;
 }
 
-@media (min-width: 997px) {
-  .menu_node_modules-\@docusaurus-theme-classic-lib-next-theme-DocSidebar-styles-module {
-    flex-grow: 1;
-    padding: 5rem !important;
-    // padding-top: 5rem;
-    // padding-right: 5rem;
-    // padding-bottom: 5rem;
-    // padding-left: 5rem;
-  }
-}
-
 .menu__list .menu__list {
   margin-left: 0px !important;
 }
 
 [data-theme='dark'] .menu__link--active:not(.menu__link--sublist) {
   background: var(--brown-secondary) !important;
+}
+
+.menu_node_modules-\@docusaurus-theme-classic-lib-next-theme-DocSidebar-styles-module {
+  padding: 5rem !important;
 }
