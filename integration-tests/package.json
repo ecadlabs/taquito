@@ -6,6 +6,8 @@
     "test:hangzhounet-faucet": "RUN_HANGZHOUNET_WITH_FAUCET=true jest --runInBand",
     "test:ithacanet": "ITHACANET=true jest",
     "test:ithacanet-faucet": "RUN_ITHACANET_WITH_FAUCET=true jest --runInBand",
+    "test:originate-known-contracts": "node -r ts-node/register originate-known-contracts.ts",
+    "test:mondaynet": "MONDAYNET=true jest",
     "test": "jest"
   },
   "version": "12.0.3",
