@@ -137,6 +137,8 @@
       "collapsed": false
     },
     {
+      "collapsed": false,
+      "collapsible": false,
       "type": "category",
       "label": "Signer",
       "items": [
@@ -152,9 +154,7 @@
           "type": "doc",
           "id": "version-12.0.0/ledger_signer"
         }
-      ],
-      "collapsible": false,
-      "collapsed": false
+      ]
     },
     {
       "type": "category",

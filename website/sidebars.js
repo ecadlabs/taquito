@@ -19,6 +19,7 @@ const sidebars = {
     {
       type: 'category',
       label: 'Getting Started',
+      className: 'sidebarHeader',
       collapsed: false,
       collapsible: false,
       items: [
@@ -59,6 +60,7 @@ const sidebars = {
     {
       type: 'category',
       label: 'Signer',
+      className: 'sidebarHeader',
       collapsed: false,
       collapsible: false,
       items: ['inmemory_signer', 'tezbridge_signer', 'ledger_signer'],
@@ -66,6 +68,7 @@ const sidebars = {
     {
       type: 'category',
       label: 'Packages',
+      className: 'sidebarHeader',
       collapsed: false,
       collapsible: false,
       items: ['michelson_encoder', 'contracts-library', 'taquito_utils'],
@@ -73,6 +76,7 @@ const sidebars = {
     {
       type: 'category',
       label: 'Advanced Examples',
+      className: 'sidebarHeader',
       collapsed: false,
       collapsible: false,
       items: ['complex_parameters', 'storage_annotations', 'drain_account'],
@@ -80,6 +84,7 @@ const sidebars = {
     {
       type: 'category',
       label: 'Modules customization',
+      className: 'sidebarHeader',
       collapsed: false,
       collapsible: false,
       items: ['forger', 'rpc-cache', 'cancel_http_requests'],
@@ -87,6 +92,7 @@ const sidebars = {
     {
       type: 'category',
       label: 'Running integration tests',
+      className: 'sidebarHeader',
       collapsed: false,
       collapsible: false,
       items: ['ledger_integration_test', 'rpc_nodes_integration_test'],

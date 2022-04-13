@@ -172,9 +172,7 @@ module.exports = {
         },
       ],
     },
-    gtag: {
-      trackingID: 'UA-148358030-1',
-    },
+
     // algolia: {
     //   apiKey: 'process.env.ALGOLIA_SEARCH_API_KEY',
     //   indexName: 'taquito',
@@ -198,6 +196,9 @@ module.exports = {
           path: '../docs',
           sidebarPath: require.resolve('./sidebars.js'),
           // includeCurrentVersion: true,
+        },
+        gtag: {
+          trackingID: 'UA-148358030-1',
         },
       },
     ],

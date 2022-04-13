@@ -511,7 +511,6 @@ a.pagination-nav__link {
 aside {
   background-color: var(--ifm-color-primary);
   color: var(--ifm-color-text-primary);
-  height: 100%;
 
   .menu__link--active {
     color: var(--ifm-color-hover-link);
@@ -543,6 +542,7 @@ aside {
   .menu {
     padding: 5rem 2.5rem 5rem 5rem !important;
     height: 100% !important;
+
     // overflow-x: none !important;
     @media (max-width:1200px) {
       padding: 3rem 1.5rem 3rem 1.5rem !important;
@@ -608,19 +608,55 @@ aside {
   line-height: 12px;
   letter-spacing: 0.2px;
 }
-.toc-highlight{
-font-family: Source Sans Pro;
-font-style: normal;
-font-weight: 400;
-font-size: 16px;
-line-height: 25px;
-letter-spacing: 0.3px;
-code{
-  color:var(--brown-secondary) ;
-}
+
+.toc-highlight {
+  font-family: Source Sans Pro;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 25px;
+  letter-spacing: 0.3px;
+
+  code {
+    color: var(--brown-secondary);
+  }
 }
 
 .padding-top--md {
-    padding-top: 3rem !important;
-    padding-left: 2rem !important;
+  padding-top: 3rem !important;
+  padding-left: 2rem !important;
+  a{
+    color: var(--brown-primary) !important;
+  }
+}
+
+.menu__list-item-collapsible .menu__link {
+  color: rgb(10, 2, 3);
+  font-family: Source Sans Pro;
+  margin-left: 14px;
+  // margin-top: 30px;
+  text-transform: uppercase;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  line-height: 22px !important;
+  background: none;
+  display: block;
+}
+.menu__list-item-collapsible:hover {
+	background-color: transparent !important;
+  color: rgb(10, 2, 3) !important;
+  a{
+    	background-color: transparent !important;
+  color: rgb(10, 2, 3) !important;
+  }
+}
+
+.menu__link .menu__link--sublist-caret .menu__link--active:hover{
+  	background-color: transparent !important;
+  color: rgb(10, 2, 3) !important;
+
+}
+
+ .breadcrumbs__item--active .breadcrumbs__link{
+  color: var(--brown-primary) !important;
 }
