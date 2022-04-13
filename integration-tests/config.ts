@@ -201,7 +201,7 @@ const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE'];
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
   if (forger === ForgerType.LOCAL) {
     Tezos.setProvider({ forger: localForger });
-  } if (forger === ForgerType.COMPOSITE) {
+  } else if (forger === ForgerType.COMPOSITE) {
     const rpcForger = Tezos.getFactory(RpcForger)();
     const composite = new CompositeForger([rpcForger, localForger]);
     Tezos.setProvider({ forger: composite });
