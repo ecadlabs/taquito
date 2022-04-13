@@ -544,6 +544,9 @@ aside {
     padding: 5rem 2.5rem 5rem 5rem !important;
     height: 100% !important;
     // overflow-x: none !important;
+    @media (max-width:1200px) {
+      padding: 3rem 1.5rem 3rem 1.5rem !important;
+    }
   }
 
   .theme-doc-sidebar-item-category-level-1>a {
@@ -615,4 +618,9 @@ letter-spacing: 0.3px;
 code{
   color:var(--brown-secondary) ;
 }
+}
+
+.padding-top--md {
+    padding-top: 3rem !important;
+    padding-left: 2rem !important;
 }
