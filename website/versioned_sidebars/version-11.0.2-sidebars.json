@@ -117,8 +117,8 @@
           "id": "version-11.0.2/web3js_taquito"
         }
       ],
-      "collapsible": true,
-      "collapsed": true
+      "collapsible": false,
+      "collapsed": false
     },
     {
       "type": "category",
@@ -137,8 +137,8 @@
           "id": "version-11.0.2/ledger_signer"
         }
       ],
-      "collapsible": true,
-      "collapsed": true
+      "collapsible": false,
+      "collapsed": false
     },
     {
       "type": "category",
@@ -157,8 +157,8 @@
           "id": "version-11.0.2/taquito_utils"
         }
       ],
-      "collapsible": true,
-      "collapsed": true
+      "collapsible": false,
+      "collapsed": false
     },
     {
       "type": "category",
@@ -177,8 +177,8 @@
           "id": "version-11.0.2/drain_account"
         }
       ],
-      "collapsible": true,
-      "collapsed": true
+      "collapsible": false,
+      "collapsed": false
     },
     {
       "type": "category",
@@ -193,8 +193,8 @@
           "id": "version-11.0.2/cancel_http_requests"
         }
       ],
-      "collapsible": true,
-      "collapsed": true
+      "collapsible": false,
+      "collapsed": false
     },
     {
       "type": "category",
@@ -209,13 +209,13 @@
           "id": "version-11.0.2/rpc_nodes_integration_test"
         }
       ],
-      "collapsible": true,
-      "collapsed": true
+      "collapsible": false,
+      "collapsed": false
     },
     {
       "type": "category",
-      "collapsed": true,
-      "collapsible": true,
+      "collapsed": false,
+      "collapsible": false,
       "label": "Upgrading Guide",
       "items": [
         {
