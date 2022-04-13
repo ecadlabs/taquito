@@ -29,7 +29,7 @@ jobs:
       env:
         MONDAYNET: true
         ENABLE_LOCAL_FORGER: true
-      run: npm run test:originate-known-contracts
+      run: npm run originate-known-contracts
       continue-on-error: true
     - 
       id: integration-tests-mondaynet

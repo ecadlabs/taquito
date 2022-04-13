@@ -56,4 +56,5 @@ export enum ChainIds {
   HANGZHOUNET = 'NetXZSsxBpMQeAT',
   ITHACANET = 'NetXbhmtAbMukLc',
   ITHACANET2 = 'NetXnHfVqm9iesp',
+  MONDAYNET = 'NetXxkAx4woPLyu',
 }

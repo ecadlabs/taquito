@@ -44,14 +44,14 @@ let keyInitialBalance: BigNumber = new BigNumber(0);
     // KnownBigMapContract
     const allowancesBigMap = new MichelsonMap();
     const ledgerBigMap = new MichelsonMap();
-    ledgerBigMap.set('tz1btkXVkVFWLgXa66sbRJa8eeUSwvQFX4kP', { allowances: allowancesBigMap, balance: '1' });
+    ledgerBigMap.set('tz1btkXVkVFWLgXa66sbRJa8eeUSwvQFX4kP', { allowances: allowancesBigMap, balance: '100' });
     await originateKnownContract('BigMapContract', tezos, {
       code: knownBigMapContract,
       storage: {
         ledger: ledgerBigMap,
         owner: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
         paused: true,
-        totalSupply: '1',
+        totalSupply: '100',
       }
     });
 

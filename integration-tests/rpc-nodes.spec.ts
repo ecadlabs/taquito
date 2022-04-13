@@ -92,6 +92,8 @@ CONFIGS().forEach(
 
           if (protocol === Protocols.Psithaca2) {
             chainId = ChainIds.ITHACANET2
+          } else if(protocol === Protocols.ProtoALpha) {
+            chainId =  ChainIds.MONDAYNET
           } else {
             chainId = ChainIds.HANGZHOUNET
           }
