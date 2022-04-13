@@ -12,6 +12,10 @@
   position: relative;
   mix-blend-mode: normal;
   clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+
+  @media (max-width: 640px) {
+    clip-path: polygon(0 0, 100% 0, 100% 95%, 0 100%);
+  }
 }
 
 .content {
@@ -33,6 +37,7 @@
   flex-direction: row;
   margin-top: 10px;
 }
+
 .dots {
   height: 8px;
   width: 8px;
@@ -44,6 +49,7 @@
   margin-right: 5px;
   margin-bottom: 15px;
 }
+
 .videoBlock {
   background-color: #111013;
   max-height: 379px;
@@ -86,36 +92,43 @@
   top: 80px;
   left: -50px;
 }
+
 .featureSvgTraiangle2 {
   position: absolute;
   top: 20px;
   left: -30px;
 }
+
 .featureSvgTraiangle3 {
   position: absolute;
   top: -40px;
   left: 0px;
 }
+
 .featureSvgTraiangle4 {
   position: absolute;
   top: -60px;
   right: 60px;
 }
+
 .featureSvgTraiangle5 {
   position: absolute;
   top: -40px;
   right: 10px;
 }
+
 .heroTitle {
   max-width: 624px;
   text-transform: capitalize;
   /* black */
   color: var(--ifm-color-text-primary);
+
   @media (max-width: 380px) {
     font-size: 32px;
     line-height: 48px;
   }
 }
+
 .heroCard {
   padding-top: 60px;
   padding-right: 20px;
@@ -141,10 +154,12 @@
   color: var(--ifm-color-text-primary);
   max-width: 477px;
 }
+
 .heroButtonContainer {
   width: 40%;
   padding: 15px 0px;
 }
+
 .heroButton {
   font-family: Rounded Mplus 1c;
   font-weight: 600;
@@ -167,12 +182,14 @@
   text-decoration: none;
   color: var(--ifm-color-text-primary) !important;
 }
+
 .carouselContainer {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
+
 .carousel {
   width: 558px;
   /* display: flex;
@@ -209,6 +226,7 @@ video {
   left: 0;
   width: 100%;
 }
+
 .videoHeader span {
   background: #252937;
   border-radius: 50%;
@@ -217,9 +235,11 @@ video {
   margin-right: 7px;
   width: 9px;
 }
+
 .slick-slider {
   width: 100%;
 }
+
 .leftPurpleLine {
   position: absolute;
   top: 93.5%;
@@ -230,6 +250,7 @@ video {
   transform: matrix(1, -0.1, 0, 0.99, 0, 0);
   z-index: 2;
 }
+
 .rightPurpleLine {
   position: absolute;
   top: 91.5%;
@@ -240,6 +261,7 @@ video {
   transform: matrix(1, -0.1, 0, 0.99, 0, 0);
   z-index: 2;
 }
+
 .logoRedSvg {
   position: absolute;
   bottom: 0;
@@ -252,6 +274,7 @@ video {
   height: 54px;
   width: 150px;
 }
+
 @media screen and (max-width: 1300px) {
   .featureSvg {
     height: 50px;
@@ -267,16 +290,20 @@ video {
     flex-wrap: wrap;
     justify-content: center;
   }
+
   .heroCardDescription {
     width: 100%;
   }
+
   .heroCardContainer {
     width: 100%;
     padding-bottom: 30px;
   }
+
   .carouselContainer {
     width: 100%;
   }
+
   .carousel {
     width: 100%;
   }
@@ -288,6 +315,7 @@ video {
   .featureSvgTraiangle5 {
     display: none;
   }
+
   .heroCardContainer {
     width: 100%;
     display: flex;
@@ -295,6 +323,7 @@ video {
     background-color: var(--ifm-color-bg-purple);
     border-radius: 13px;
   }
+
   .carousel {
     width: 100%;
     display: flex;
@@ -302,6 +331,7 @@ video {
     width: 558px;
     max-width: fit-content;
   }
+
   .heroCardContainer {
     /* background-color: var(--ifm-color-bg-purple); */
     /* -webkit-clip-path: polygon(0 15%, 100% 0%, 100% 85%, 15% 100%);
@@ -311,21 +341,25 @@ video {
     background-color: var(--ifm-color-bg-purple);
     width: 70%;
   }
+
   .heroCard {
     padding-top: 20px;
     padding-left: 20px;
     padding-right: 20px;
     color: var(--ifm-color-bg-white);
   }
+
   .heroCardContent {
     justify-content: center;
     align-items: flex-start;
     flex-direction: column;
     width: 100%;
   }
+
   .heroCardDescription {
     width: 100%;
   }
+
   .heroButtonContainer {
     width: 100%;
     padding: 15px 0px;
@@ -333,11 +367,12 @@ video {
 }
 
 @media screen and (max-width: 640px) {
+
   .heroCardContainer,
-  .container {
-    -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-  }
+  // .container {
+  //   -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  //   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  // }
   .features:before,
   .features:after,
   .leftPurpleLine,
@@ -345,6 +380,7 @@ video {
   .logoRedSvg {
     display: none;
   }
+
   .heroCardContainer {
     /* background-color: var(--ifm-color-bg-purple); */
     /* -webkit-clip-path: polygon(0 15%, 100% 0%, 100% 85%, 15% 100%);
@@ -354,10 +390,12 @@ video {
     background-color: var(--ifm-color-bg-purple);
     width: 100%;
   }
+
   .content {
     padding-bottom: 100px;
     padding-top: 50px;
   }
+
   .logos {
     position: relative;
     flex-direction: column;

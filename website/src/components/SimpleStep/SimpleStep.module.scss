@@ -20,7 +20,11 @@
     clip-path: none;
     padding: 50px 10px;
     background-color: var(--brown--fourth);
-    clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+    clip-path: polygon(0 0, 100% 0, 100% 95%, 0 100%);
+  }
+
+  @media (max-width: 380px) {
+    clip-path: polygon(0 0, 100% 0, 100% 97%, 0 100%);
   }
 }
 
@@ -113,10 +117,6 @@
   min-width: 90vw;
   position: relative;
   z-index: 3;
-
-  @media (max-width: 640px) {
-    padding-bottom: 200px;
-  }
 
   @media (max-width: 380px) {
     padding-bottom: 0px;
