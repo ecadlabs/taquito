@@ -1,29 +1,27 @@
 import { CONFIGS } from './config';
-import { MichelsonMap, OriginateParams, TezosToolkit } from '@taquito/taquito';
+import { MichelsonMap, OriginateParams, RpcForger, TezosToolkit } from '@taquito/taquito';
 import { knownContract } from '../example/data/knownContract';
 import { knownBigMapContract } from '../example/data/knownBigMapContract';
-import { singleSaplingStateContract } from './data/single_sapling_state_contract_mondaynet_michelson';
+import { singleSaplingStateContractJProtocol } from './data/single_sapling_state_contract_mondaynet_michelson';
 import { fa2ForTokenMetadataView } from './data/fa2-for-token-metadata-view';
 import { char2Bytes } from '@taquito/utils';
 import BigNumber from 'bignumber.js';
 
 const MUTEZ_UNIT = new BigNumber(1000000);
 
-let config = CONFIGS();
-let tezosConfig = config[0]; // Composite Forger
-let tezos = tezosConfig.lib;
-
+CONFIGS().forEach(({ lib, setup }) => {
+let tezos = lib;
 let keyPkh: string = "";
 let keyInitialBalance: BigNumber = new BigNumber(0);
 
 (async () => {
-    await tezosConfig.setup(true);
+    await setup(true);
     
     keyPkh = await tezos.signer.publicKeyHash();
     keyInitialBalance = await tezos.tz.getBalance(keyPkh);
 
     // KnownContract
-    await originateKnownContract('Contract', tezos, {
+     await originateKnownContract('Contract', tezos, {
       balance: '0',
       code: knownContract,
       init: {
@@ -44,14 +42,14 @@ let keyInitialBalance: BigNumber = new BigNumber(0);
     // KnownBigMapContract
     const allowancesBigMap = new MichelsonMap();
     const ledgerBigMap = new MichelsonMap();
-    ledgerBigMap.set('tz1btkXVkVFWLgXa66sbRJa8eeUSwvQFX4kP', { allowances: allowancesBigMap, balance: '1' });
+    ledgerBigMap.set('tz1btkXVkVFWLgXa66sbRJa8eeUSwvQFX4kP', { allowances: allowancesBigMap, balance: '100' });
     await originateKnownContract('BigMapContract', tezos, {
       code: knownBigMapContract,
       storage: {
         ledger: ledgerBigMap,
         owner: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
         paused: true,
-        totalSupply: '1',
+        totalSupply: '100',
       }
     });
 
@@ -114,11 +112,11 @@ let keyInitialBalance: BigNumber = new BigNumber(0);
         paused: false,
         tokens,
       }
-    });
+    }); 
 
     // KnownSaplingContract
     await originateKnownContract('SaplingContract', tezos, {
-      code: singleSaplingStateContract,
+      code: singleSaplingStateContractJProtocol,
       init: '{}'
     });
 
@@ -126,7 +124,7 @@ let keyInitialBalance: BigNumber = new BigNumber(0);
 ################################################################################
 Public Key Hash : ${keyPkh}
 Initial Balance : ${keyInitialBalance.dividedBy(MUTEZ_UNIT)} XTZ
-Final Balance   : ${await (await tezos.tz.getBalance(keyPkh)).dividedBy(MUTEZ_UNIT)} XTZ
+Final Balance   : ${(await tezos.tz.getBalance(keyPkh)).dividedBy(MUTEZ_UNIT)} XTZ
 
 Total XTZ Spent : ${keyInitialBalance.minus(await tezos.tz.getBalance(keyPkh)).dividedBy(MUTEZ_UNIT)} XTZ
 `)
@@ -142,12 +140,10 @@ async function originateKnownContract(contractName: string, tezos: TezosToolkit,
   } catch (e: any) {
     console.error(`Failed to deploy ${contractName} known contract | Error: ${e.stack}`);
 
-    if (e.name === "ForgingMismatchError" && process.env["ENABLE_LOCAL_FORGER"] === "true" ) {
-      console.log (`Composite forger failed to originate ${contractName}. Trying to originate the contract by using Local forger...`);
+    if (e.name === "ForgingMismatchError" ) {
+      console.log(`Composite forger failed to originate ${contractName}. Trying to originate the contract by using RPC forger...`);
 
-      let tezosConfig = config[1]; // Local forger
-      let tezos = tezosConfig.lib;
-      await tezosConfig.setup(true);
+      tezos.setForgerProvider(tezos.getFactory(RpcForger)());
 
       await originateKnownContract(contractName, tezos, contractOriginateParams);
     }
@@ -158,3 +154,4 @@ async function printBalance(pkh: string, tezos: TezosToolkit): Promise<void> {
   let balance = await tezos.tz.getBalance(pkh);
   console.log(`${pkh} balance: ${balance}`);
 }
+})
