@@ -189,6 +189,7 @@ module.exports = {
           customCss: [
             require.resolve('./src/css/custom.scss'),
             require.resolve('./src/css/tables.scss'),
+            require.resolve('./src/css/admonitions.scss'),
           ],
         },
         docs: {

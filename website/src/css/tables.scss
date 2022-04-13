@@ -48,6 +48,9 @@ table {
         text-align: start;
         border-color: rgba(211, 131, 43, 0.7);
         width: 50vw !important;
+        a {
+          color: var(--brown-primary) !important;
+        }
       }
       td:first-child {
         border-left: none;
