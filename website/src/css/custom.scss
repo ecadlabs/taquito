@@ -658,11 +658,14 @@ aside {
   color: var(--brown-primary) !important;
 }
 
-
 .padding-top--md a {
-color: var(--ifm-color-text-primary) !important;
+color: var(--brown-primary) !important;
+}
+
+.padding-top--md .table-of-contents__link {
+  color: var(--ifm-color-text-primary) !important;
 }
 
 .padding-top--md .table-of-contents__link--active {
-  color: var(--ifm-color-primary) !important;
+  color: var(--brown-primary) !important;
 }
