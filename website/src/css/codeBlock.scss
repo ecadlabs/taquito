@@ -1,0 +1,31 @@
+pre {
+  background-color: #f9f9f9 !important;
+  border-radius: 4px !important;
+
+  .token-line {
+    color: var(--ifm-color-text-primary) !important;
+    .keyword {
+      color: var(--yellow-second) !important;
+    }
+    .punctuation {
+      color: var(--ifm-color-text-primary) !important;
+    }
+    .function {
+      color: var(--brown-primary) !important;
+    }
+    .string {
+      color: var(--brown-primary) !important;
+    }
+    .boolean {
+      color: var(--brown-primary) !important;
+    }
+  }
+}
+
+.playgroundEditorWrapper {
+  border-radius: 4px !important;
+}
+
+[data-theme='dark'] pre {
+  background-color: #2e2e2e !important;
+}

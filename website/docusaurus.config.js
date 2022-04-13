@@ -190,6 +190,8 @@ module.exports = {
             require.resolve('./src/css/custom.scss'),
             require.resolve('./src/css/tables.scss'),
             require.resolve('./src/css/admonitions.scss'),
+            require.resolve('./src/css/codeBlock.scss'),
+            require.resolve('./src/css/tabs.scss'),
           ],
         },
         docs: {
