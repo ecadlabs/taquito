@@ -659,11 +659,15 @@ aside {
 }
 
 .padding-top--md a {
-color: var(--brown-primary) !important;
+  color: var(--brown-primary) !important;
 }
 
 .padding-top--md .table-of-contents__link {
   color: var(--ifm-color-text-primary) !important;
+
+  &:hover {
+    color: var(--brown-primary) !important;
+  }
 }
 
 .padding-top--md .table-of-contents__link--active {
