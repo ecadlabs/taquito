@@ -49,9 +49,19 @@ table {
         border-color: rgba(211, 131, 43, 0.7);
         width: 50vw !important;
       }
+      td:first-child {
+        border-left: none;
+      }
+      td:last-child {
+        border-right: none;
+      }
     }
   }
 }
 table tr:nth-child(2n) {
   background-color: #edcdaa;
+}
+
+[data-theme='dark'] table tr:nth-child(2n) {
+  background-color: rgba(46, 46, 46, 0.9);
 }
