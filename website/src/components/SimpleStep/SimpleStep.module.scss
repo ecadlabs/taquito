@@ -7,15 +7,20 @@
 .container {
   width: 100%;
   height: 100%;
-  background-color: var(--brown--fourth);
   position: relative;
   mix-blend-mode: normal;
-  clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
   z-index: 0;
-  @media (max-width: 380px) {
-    -webkit-clip-path: none;
+  background: url('../../../static/img/simpleStep-bg.png') no-repeat;
+  background-size: 100% 95%;
+  background-repeat: no-repeat;
+  background-position: center 0px;
+
+  @media (max-width: 640px) {
+    background: none;
     clip-path: none;
     padding: 50px 10px;
+    background-color: var(--brown--fourth);
+    clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
   }
 }
 
@@ -33,6 +38,7 @@
   z-index: 2;
   position: relative;
 }
+
 // .features:after {
 //   content: ' ';
 //   position: absolute;
@@ -57,6 +63,7 @@
   flex-direction: column;
   margin-bottom: 30px;
 }
+
 .simpleStepsTitle {
   margin-left: auto;
   margin-right: auto;
@@ -67,12 +74,14 @@
   text-align: center;
   text-transform: capitalize;
 }
+
 .simpleStepsDescription {
   margin-left: auto;
   margin-right: auto;
   max-width: 428px;
   padding: 0px 40px;
 }
+
 .simpleStepsButton {
   font-family: Rounded Mplus 1c;
   font-weight: 600;
@@ -90,11 +99,13 @@
   text-align: center;
   padding: 2px 15px 6px 15px;
   color: var(--ifm-color-text-secondary) !important;
+
   &:hover {
     color: var(--ifm-color-text-primary) !important;
     text-decoration: none;
   }
 }
+
 .steps {
   display: flex;
   flex-direction: column;
@@ -102,18 +113,22 @@
   min-width: 90vw;
   position: relative;
   z-index: 3;
+
   @media (max-width: 640px) {
     padding-bottom: 200px;
   }
+
   @media (max-width: 380px) {
     padding-bottom: 0px;
   }
 }
+
 .stepContainerRight {
   width: 100%;
   display: flex;
   justify-content: flex-end;
   text-align: right;
+
   @media (max-width: 640px) {
     justify-content: center;
     text-align: center;
@@ -124,18 +139,22 @@
   display: flex;
   flex-direction: row-reverse;
   align-items: flex-start;
+
   @media (max-width: 640px) {
     flex-direction: column;
     align-items: center;
   }
+
   .textContainer {
     padding-right: 40px;
     text-align: right;
     padding-top: 40px;
+
     @media (max-width: 640px) {
       padding-right: 0px;
       text-align: center;
     }
+
     .stepTitle {
       font-family: Source Sans Pro;
       font-style: normal;
@@ -145,8 +164,10 @@
       letter-spacing: 0.2px;
     }
   }
+
   .svgContainer {
     position: relative;
+
     .stepNumber {
       position: absolute;
       left: 0px;
@@ -159,6 +180,7 @@
       z-index: 2;
       color: var(--black);
     }
+
     .stepNumber:after {
       content: ' ';
       width: 49px;
@@ -183,6 +205,7 @@
   text-align: right;
   letter-spacing: 0.3px;
   margin-left: auto;
+
   @media (max-width: 640px) {
     text-align: center;
     margin-left: auto;
@@ -195,12 +218,15 @@
   display: flex;
   justify-content: flex-start;
   text-align: right;
+
   @media (max-width: 640px) {
     justify-content: center;
     text-align: center;
   }
+
   .svgContainer {
     position: relative;
+
     .stepNumberFirst {
       position: absolute;
       left: 10px;
@@ -213,6 +239,7 @@
       z-index: 2;
       color: var(--black);
     }
+
     .stepNumberFirst:after {
       content: ' ';
       width: 49px;
@@ -224,6 +251,7 @@
       bottom: -10px;
       z-index: -1;
     }
+
     .stepNumber {
       position: absolute;
       right: 0px;
@@ -236,6 +264,7 @@
       z-index: 2;
       color: var(--black);
     }
+
     .stepNumber:after {
       content: ' ';
       width: 49px;
@@ -253,10 +282,12 @@
 .stepContainerLeft .stepBox {
   display: flex;
   align-items: flex-start;
+
   @media (max-width: 640px) {
     flex-direction: column;
     align-items: center;
   }
+
   .stepTitle {
     font-family: Source Sans Pro;
     font-style: normal;
@@ -271,6 +302,7 @@
   padding-left: 40px;
   text-align: left;
   padding-top: 40px;
+
   @media (max-width: 640px) {
     flex-direction: column;
     text-align: center;
@@ -287,6 +319,7 @@
   line-height: 25px;
   text-align: left;
   letter-spacing: 0.3px;
+
   @media (max-width: 640px) {
     text-align: center;
   }
