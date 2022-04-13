@@ -11,8 +11,9 @@ import {
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const ithacanet = protocol === Protocols.Psithaca2 ? test: test.skip;
+  const ithacanet = protocol === Protocols.Psithaca2  ? test: test.skip;
   const hangzhounet = protocol === Protocols.PtHangz2 ? test: test.skip;
+  const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
 
   describe(`Test contract call with amount using: ${rpc}`, () => {
     beforeEach(async (done) => {
@@ -97,6 +98,46 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       } catch (error: any) {
         expect(error.message).toContain(
           '(permanent) proto.012-Psithaca.michelson_v1.deprecated_instruction'
+        );
+      }
+    });
+    mondaynet(
+      'originates a contract on Ithaca with SUB MUTEZ and sends base layer tokens when calling contract methods',
+      async (done) => {
+        const op = await Tezos.contract.originate({
+          balance: '0',
+          code: depositContractCodeIthaca,
+          init: depositContractStorageIthaca,
+        });
+        const contract = await op.contract();
+
+        const operation = await contract.methods.deposit(null).send({ amount: 1 });
+        await operation.confirmation();
+        expect(operation.status).toEqual('applied');
+        let balance = await Tezos.tz.getBalance(contract.address);
+        expect(balance.toString()).toEqual('1000000');
+
+        const operationMutez = await contract.methods
+          .deposit(null)
+          .send({ amount: 1, mutez: true } as any);
+        await operationMutez.confirmation();
+        expect(operationMutez.status).toEqual('applied');
+        balance = await Tezos.tz.getBalance(contract.address);
+        expect(balance.toString()).toEqual('1000001');
+        done();
+      }
+    );
+
+    mondaynet('fail to originate a contract on Ithaca with SUB', async () => {
+      try {
+        await Tezos.contract.originate({
+          balance: '0',
+          code: depositContractCodeHangzhou,
+          init: depositContractStorageHangzhou,
+        });
+      } catch (error: any) {
+        expect(error.message).toContain(
+          '(permanent) proto.alpha.michelson_v1.deprecated_instruction'
         );
       }
     });
