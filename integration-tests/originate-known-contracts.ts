@@ -10,18 +10,18 @@ import BigNumber from 'bignumber.js';
 const MUTEZ_UNIT = new BigNumber(1000000);
 
 CONFIGS().forEach(({ lib, setup }) => {
-let tezos = lib;
-let keyPkh: string = "";
-let keyInitialBalance: BigNumber = new BigNumber(0);
+  const tezos = lib;
+  let keyPkh: string = "";
+  let keyInitialBalance: BigNumber = new BigNumber(0);
 
-(async () => {
+  (async () => {
     await setup(true);
-    
+
     keyPkh = await tezos.signer.publicKeyHash();
     keyInitialBalance = await tezos.tz.getBalance(keyPkh);
 
     // KnownContract
-     await originateKnownContract('Contract', tezos, {
+    await originateKnownContract('Contract', tezos, {
       balance: '0',
       code: knownContract,
       init: {
@@ -112,7 +112,7 @@ let keyInitialBalance: BigNumber = new BigNumber(0);
         paused: false,
         tokens,
       }
-    }); 
+    });
 
     // KnownSaplingContract
     await originateKnownContract('SaplingContract', tezos, {
@@ -128,30 +128,30 @@ Final Balance   : ${(await tezos.tz.getBalance(keyPkh)).dividedBy(MUTEZ_UNIT)} X
 
 Total XTZ Spent : ${keyInitialBalance.minus(await tezos.tz.getBalance(keyPkh)).dividedBy(MUTEZ_UNIT)} XTZ
 `)
-})();
+  })();
 
 
-async function originateKnownContract(contractName: string, tezos: TezosToolkit, contractOriginateParams: OriginateParams): Promise<void> {
-  try {
-    let operation = await tezos.contract.originate(contractOriginateParams);
-    let contract = await operation.contract();
-    console.log(`known${contractName} address:  ${contract.address}`);
-    console.log(`::set-output name=known${contractName}Address::${contract.address}\n`);
-  } catch (e: any) {
-    console.error(`Failed to deploy ${contractName} known contract | Error: ${e.stack}`);
+  async function originateKnownContract(contractName: string, tezos: TezosToolkit, contractOriginateParams: OriginateParams): Promise<void> {
+    try {
+      const operation = await tezos.contract.originate(contractOriginateParams);
+      const contract = await operation.contract();
+      console.log(`known${contractName} address:  ${contract.address}`);
+      console.log(`::set-output name=known${contractName}Address::${contract.address}\n`);
+    } catch (e: any) {
+      console.error(`Failed to deploy ${contractName} known contract | Error: ${e.stack}`);
 
-    if (e.name === "ForgingMismatchError" ) {
-      console.log(`Composite forger failed to originate ${contractName}. Trying to originate the contract by using RPC forger...`);
+      if (e.name === "ForgingMismatchError") {
+        console.log(`Composite forger failed to originate ${contractName}. Trying to originate the contract by using RPC forger...`);
 
-      tezos.setForgerProvider(tezos.getFactory(RpcForger)());
+        tezos.setForgerProvider(tezos.getFactory(RpcForger)());
 
-      await originateKnownContract(contractName, tezos, contractOriginateParams);
+        await originateKnownContract(contractName, tezos, contractOriginateParams);
+      }
     }
   }
-}
 
-async function printBalance(pkh: string, tezos: TezosToolkit): Promise<void> {
-  let balance = await tezos.tz.getBalance(pkh);
-  console.log(`${pkh} balance: ${balance}`);
-}
+  async function printBalance(pkh: string, tezos: TezosToolkit): Promise<void> {
+    let balance = await tezos.tz.getBalance(pkh);
+    console.log(`${pkh} balance: ${balance}`);
+  }
 })
