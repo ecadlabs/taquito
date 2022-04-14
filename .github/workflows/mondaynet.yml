@@ -28,7 +28,6 @@ jobs:
       working-directory: ./integration-tests
       env:
         MONDAYNET: true
-        ENABLE_LOCAL_FORGER: true
       run: npm run test:originate-known-contracts
     - 
       if: always()
