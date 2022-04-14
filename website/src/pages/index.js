@@ -58,9 +58,9 @@ export default () => {
         <SimpleStep />
         <TeamsCarousel />
         <FooterTop />
-        <div className={styles.mainButtonSticky}>
+        {/* <div className={styles.mainButtonSticky}>
           <Feature {...FeatureList[0]} />
-        </div>
+        </div> */}
       </main>
         </Layout>
   );
