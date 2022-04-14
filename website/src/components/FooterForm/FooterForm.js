@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import parse from 'html-react-parser';
 import { useMailChimp } from 'react-use-mailchimp-signup';
-import styles from './FooterForm.module.css';
+import styles from './FooterForm.module.scss';
 
 function Feature() {
   const { error, loading, status, subscribe, message } = useMailChimp({

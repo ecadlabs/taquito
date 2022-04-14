@@ -87,3 +87,9 @@
   cursor: pointer !important;
   color: var(--ifm-color-text-primary) !important;
 }
+input:focus {
+  background-color: var(--ifm-color-primary) !important;
+}
+input:checked {
+  background-color: var(--ifm-color-primary) !important;
+}
