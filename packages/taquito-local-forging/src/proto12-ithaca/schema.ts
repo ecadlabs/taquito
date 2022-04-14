@@ -25,7 +25,6 @@ export const operationDecoderProto12 =
     const op = value.consume(1);
 
     const operationName = kindMappingProto12[op[0]];
-    console.log('OPERATION NAME: ', operationName);
     if (operationName === undefined) {
       throw new UnsupportedOperationError(op[0].toString());
     }
