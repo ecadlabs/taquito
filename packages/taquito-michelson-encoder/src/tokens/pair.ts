@@ -19,8 +19,8 @@ export class TokenArgumentValidationError extends Error {
  */
 export class TokenComparisonError extends Error {
   public name = 'TokenComparisonError';
-  constructor(public message: string) {
-    super(message);
+  constructor(public val1: string, public val2: string) {
+    super(`Tokens ${val1} and ${val2} are not comparable`);
   }
 }
 
@@ -36,7 +36,9 @@ function collapse(val: Token['val'] | any[], prim: string = PairToken.prim): [an
     );
   }
   if (val.args === undefined) {
-    throw new TokenArgumentValidationError('Token has no arguments');
+    throw new TokenArgumentValidationError(
+      'Encountered an invalid PairToken with no arguments, a pair must have two or more arguments'
+    );
   }
   if (val.args.length > 2) {
     return [
@@ -245,7 +247,7 @@ export class PairToken extends ComparableToken {
       return result;
     }
 
-    throw new TokenComparisonError('Not a comparable pair');
+    throw new TokenComparisonError(val1, val2);
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {

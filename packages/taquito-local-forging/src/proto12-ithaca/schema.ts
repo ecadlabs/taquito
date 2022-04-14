@@ -25,18 +25,18 @@ export const operationDecoderProto12 =
     const op = value.consume(1);
 
     const operationName = kindMappingProto12[op[0]];
+    console.log('OPERATION NAME: ', operationName);
+    if (operationName === undefined) {
+      throw new UnsupportedOperationError(op[0].toString());
+    }
     const decodedObj = decoders[operationName](value);
 
     if (typeof decodedObj !== 'object') {
       throw new OperationDecodingError('Decoded invalid operation');
     }
 
-    if (operationName) {
-      return {
-        kind: operationName,
-        ...decodedObj,
-      };
-    } else {
-      throw new UnsupportedOperationError(op[0].toString());
-    }
+    return {
+      kind: operationName,
+      ...decodedObj,
+    };
   };

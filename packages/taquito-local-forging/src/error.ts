@@ -91,7 +91,18 @@ export class OperationDecodingError extends Error {
 
 /**
  *  @category Error
- *  @description Error that indicates a failure when trying to decode an operation
+ *  @description Error that indicates a failure when trying to encode an operation
+ */
+export class OperationEncodingError extends Error {
+  public name = 'OperationEncodingError';
+  constructor(public message: string) {
+    super(message);
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error that indicates an unsupported operation being passed or used
  */
 export class UnsupportedOperationError extends Error {
   public name = 'UnsupportedOperationError';

@@ -9,6 +9,7 @@ import {
   InvalidBigMapSchema,
   InvalidBigMapDiff,
   BigMapEncodingError,
+  StorageEncodingError,
   MissingArgumentError,
 } from './error';
 import { RpcTransaction } from './model';
@@ -83,7 +84,7 @@ export class Schema {
       (val.script.code.find((x: any) => x.prim === 'storage') as MichelsonV1ExpressionExtended);
 
     if (!storage || !Array.isArray(storage.args)) {
-      throw new InvalidRpcResponseError();
+      throw new InvalidRpcResponseError(val.script);
     }
 
     return new Schema(storage.args[0]);
@@ -179,7 +180,7 @@ export class Schema {
         throw ex;
       }
 
-      throw new BigMapEncodingError('storage object', ex);
+      throw new StorageEncodingError('storage object', ex);
     }
   }
 

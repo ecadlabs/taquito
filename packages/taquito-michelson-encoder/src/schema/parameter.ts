@@ -19,7 +19,7 @@ export class ParameterSchema {
       Array.isArray(val.script.code) &&
       (val.script.code.find((x: any) => x.prim === 'parameter') as MichelsonV1ExpressionExtended);
     if (!parameter || !Array.isArray(parameter.args)) {
-      throw new InvalidRpcResponseError();
+      throw new InvalidRpcResponseError(val.script);
     }
 
     return new ParameterSchema(parameter.args[0]);
@@ -56,7 +56,7 @@ export class ParameterSchema {
         throw ex;
       }
 
-      throw new ParameterEncodingError(`Unable to encode parameter. ${ex}`);
+      throw new ParameterEncodingError('Unable to encode parameter', args.toString(), ex);
     }
   }
 
@@ -68,7 +68,7 @@ export class ParameterSchema {
         throw ex;
       }
 
-      throw new ParameterEncodingError(`Unable to encode parameter object. ${ex}`);
+      throw new ParameterEncodingError('Unable to encode parameter object', _value, ex);
     }
   }
 

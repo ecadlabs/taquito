@@ -3,10 +3,10 @@ import { Token, TokenFactory, Semantic, ComparableToken } from './token';
 
 /**
  *  @category Error
- *  @description Error that indicates a failure when doing OR Token methods
+ *  @description Error that indicates a failure when decoding OR Token methods
  */
-export class OrValidationError extends Error {
-  public name = 'OrValidationError';
+export class OrTokenDecodingError extends Error {
+  public name = 'OrTokenDecodingError';
   constructor(public message: string) {
     super(message);
   }
@@ -145,7 +145,7 @@ export class OrToken extends ComparableToken {
         [leftToken.annot()]: leftToken.Execute(val.args[0], semantics),
       };
     } else {
-      throw new OrValidationError(`Was expecting Left or Right prim but got: ${val.prim}`);
+      throw new OrTokenDecodingError(`Was expecting Left or Right prim but got: ${val.prim}`);
     }
   }
 

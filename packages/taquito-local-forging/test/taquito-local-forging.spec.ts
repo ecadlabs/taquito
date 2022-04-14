@@ -1,7 +1,11 @@
 import { LocalForger, ProtocolsHash } from '../src/taquito-local-forging';
 import { ticketCode3, ticketStorage3 } from './data/code_with_ticket';
 import { commonCases, hangzhouCases, ithacaCases, priorIthacaCases } from './allTestsCases';
-import { InvalidOperationSchemaError, InvalidBlockHashError } from '../src/error';
+import {
+  InvalidOperationSchemaError,
+  InvalidBlockHashError,
+  UnsupportedOperationError,
+} from '../src/error';
 
 import { InvalidOperationKindError } from '@taquito/utils';
 
@@ -159,5 +163,17 @@ describe('Forge should validate parameters against the schema', () => {
       ],
     };
     expect(localForger.forge(operation)).toBeDefined();
+  });
+
+  test('Should throw an error when parsing a forged byte with an invalid operation kind', async () => {
+    const invalidForged =
+      'a99b946c97ada0f42c1bdeae0383db7893351232a832d00d0cd716eb6f66e5614c0035e993d8c7aaa42b5e3ccd86a33390ececc73abd904e010a0ae807000035e993d8c7aaa42b5e3ccd86a33390ececc73abd00';
+
+    try {
+      localForger.parse(invalidForged);
+    } catch (e: any) {
+      expect(e).toBeInstanceOf(UnsupportedOperationError);
+      expect(e.message).toEqual(`The operation '76' is unsupported`);
+    }
   });
 });

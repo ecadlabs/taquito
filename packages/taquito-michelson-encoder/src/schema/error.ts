@@ -27,8 +27,11 @@ export class InvalidScriptError extends Error {
  */
 export class InvalidRpcResponseError extends Error {
   public name = 'InvalidRpcResponseError';
-  constructor() {
-    super(`Invalid RPC response passed as arguments`);
+  constructor(public script: any) {
+    super(`
+      Invalid RPC response passed as argument(s): \n
+      ${JSON.stringify(script)}
+    `);
   }
 }
 
@@ -38,8 +41,11 @@ export class InvalidRpcResponseError extends Error {
  */
 export class ParameterEncodingError extends Error {
   public name = 'ParameterEncodingError';
-  constructor(public message: string) {
-    super(message);
+  constructor(public message: string, public args: any, public originalError: any) {
+    super(`
+      ${message}. Error encountered when trying to encode arguments: \n
+      [${args}]
+    `);
   }
 }
 
@@ -71,7 +77,18 @@ export class InvalidBigMapDiff extends Error {
  */
 export class BigMapEncodingError extends Error {
   public name = 'BigMapEncodingError';
-  constructor(public obj: string, public details: any) {
+  constructor(private obj: string, public details: any) {
+    super(`Unable to encode ${obj}. ${details}`);
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error that indicates a failure when trying to encode storage
+ */
+export class StorageEncodingError extends Error {
+  public name = 'StorageEncodingError';
+  constructor(private obj: string, public details: any) {
     super(`Unable to encode ${obj}. ${details}`);
   }
 }
