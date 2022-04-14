@@ -20,7 +20,7 @@ const FeatureList = [
         text: 'Want a library that is always up-to-date with the upcoming',
       },
       {
-        text: 'Wish there werehigher-level abstractions?',
+        text: 'Wish there were higher-level abstractions?',
       },
       {
         text: 'Looking for an extensible framework with minimanl',

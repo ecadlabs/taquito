@@ -34,7 +34,7 @@ const FeatureList = [
         icon: require('../../../static/img/credit_card.svg').default,
         title: 'Well Supported',
         description:
-          'Taquito has a well-documented API, runs continuous integration tests against the Tezos Node and a set of Beacon wallets. Join out vibrant developer community in Telegram and Slack.',
+          'Taquito has a well-documented API, runs continuous integration tests against the Tezos Node and a set of Beacon wallets.',
       },
     ],
   },
