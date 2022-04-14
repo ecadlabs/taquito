@@ -6,11 +6,6 @@ import SimpleWaySvg from '../../../static/img/simple-way-svg.svg';
 const FeatureList = [
   {
     title: 'Looking for a simple way to work with Tezos?',
-    link: {
-      title: 'Get Started',
-      url: '/docs/quick_start',
-      text: 'Ready to start?',
-    },
     ways: [
       {
         text: 'Tired of figuring out what is needed to make that RPC work?',
@@ -34,7 +29,7 @@ const FeatureList = [
   },
 ];
 
-function Feature({ ways, title, link }) {
+function Feature({ ways, title }) {
   return (
     <div className={styles.waysContainer}>
       <h2 className={styles.waysTitle}>{title}</h2>
@@ -44,12 +39,6 @@ function Feature({ ways, title, link }) {
             <p className={styles.wayText}>{way.text}</p>
           </div>
         ))}
-      </div>
-      <div className={styles.waysButtonContainer}>
-        <h6 className={styles.waysButtonText}>{link.text}</h6>
-        <a className={styles.waysButton} href={link.url}>
-          {link.title}
-        </a>
       </div>
     </div>
   );
