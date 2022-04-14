@@ -37,7 +37,6 @@ function Feature({ link }) {
   );
 }
 
-
 export default () => {
   const context = useDocusaurusContext();
   const { siteConfig } = context;
@@ -50,18 +49,20 @@ export default () => {
       description={customFields.description}
     >
       <main>
-        <Hero />
-        <LogoGrid />
-        <SimpleWay />
-        <TitleBlock />
-        <CardsGrid />
-        <SimpleStep />
-        <TeamsCarousel />
-        <FooterTop />
-        {/* <div className={styles.mainButtonSticky}>
+        <div className={styles.mainButtonSticky}>
           <Feature {...FeatureList[0]} />
-        </div> */}
+        </div>
+        <div className={styles.mainContainer}>
+          <Hero />
+          <LogoGrid />
+          <SimpleWay />
+          <TitleBlock />
+          <CardsGrid />
+          <SimpleStep />
+          <TeamsCarousel />
+          <FooterTop />
+        </div>
       </main>
-        </Layout>
+    </Layout>
   );
 };
