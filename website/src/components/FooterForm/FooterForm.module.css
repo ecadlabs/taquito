@@ -32,60 +32,58 @@
 	margin-right: 5px;
 } */
 .footerForm {
-    width: 100%;
-    margin-top: 50px;
+  width: 100%;
+  margin-top: 50px;
 }
 
 .footerFormTitle {
-    color: var(--ifm-color-secondary);
-    font-family: Source Sans Pro;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 18px;
-    line-height: 12px;
-    letter-spacing: 0.2px;
+  color: var(--ifm-color-secondary);
+  font-family: Source Sans Pro;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 12px;
+  letter-spacing: 0.2px;
 }
 
-
 .footerInputContainer {
-    width: 100%;
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .footerEmail {
-    border: none;
-    background: transparent;
-    border-bottom: 1px solid var(--ifm-color-secondary);
-    padding-right: 100px;
-    margin-bottom: 10px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 10px;
+  border: none;
+  background: transparent;
+  border-bottom: 1px solid var(--ifm-color-secondary);
+  padding-right: 100px;
+  margin-bottom: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
 }
 
 .signupButton {
-    height: fit-content;
-    white-space: nowrap;
-    background-color: var(--ifm-color-secondary);
-    border-radius: 30px;
-    margin-left: 15px;
-    margin-right: 15px;
-    color: var(--ifm-color-text-secondary) !important;
-    border: none;
-    height: 33px;
-    width: 96px;
+  height: fit-content;
+  white-space: nowrap;
+  background-color: var(--ifm-color-secondary);
+  border-radius: 30px;
+  margin-left: 15px;
+  margin-right: 15px;
+  color: var(--ifm-color-text-secondary) !important;
+  border: none;
+  height: 33px;
+  width: 96px;
 
-    /* &:hover {
+  /* &:hover {
     color: var(--ifm-color-text-primary) !important;
   } */
 }
 
 .signupButton:hover {
-    cursor: pointer !important;
-        color: var(--ifm-color-text-primary) !important;
-
+  cursor: pointer !important;
+  color: var(--ifm-color-text-primary) !important;
 }
