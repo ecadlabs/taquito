@@ -1,10 +1,12 @@
 import { CONFIGS } from "./config";
-import { saplingContract } from "./data/sapling_contracts";
 import { SaplingStateValue } from '../packages/taquito-michelson-encoder/src/taquito-michelson-encoder';
+import { saplingContractDouble, saplingContractDoubleWithJProtoFix } from "./data/sapling_test_contracts";
+import { Protocols } from "@taquito/taquito";
 
-
-CONFIGS().forEach(({ lib, rpc, setup,  }) => {
+CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
+  const mondaynet = (protocol === Protocols.ProtoALpha) ? test : test.skip;
+  const ithacanetAndPrior = (protocol === Protocols.Psithaca2) || (protocol === Protocols.PtHangz2) ? test : test.skip;
 
   describe(`Test origination of contracts made with wallet api with sapling using: ${rpc}`, () => {
 
@@ -13,19 +15,30 @@ CONFIGS().forEach(({ lib, rpc, setup,  }) => {
       done()
     })
 
-    it('Originates a contract made with wallet api with sapling states in its storage', async (done) => {
+    ithacanetAndPrior('Originates a contract made with wallet api with sapling states in its storage', async (done) => {
       const op = await Tezos.wallet.originate({
-        code: saplingContract,
+        code: saplingContractDouble,
         storage: {
-          balance: 1,
-          ledger1: SaplingStateValue,
-          ledger2: SaplingStateValue
+          left: SaplingStateValue,
+          right: SaplingStateValue
         }
       }).send();
       await op.confirmation();
       expect(op.opHash).toBeDefined();
       done();
-    }); 
+    });
 
+    mondaynet('Originates a contract made with wallet api with sapling states in its storage', async (done) => {
+      const op = await Tezos.wallet.originate({
+        code: saplingContractDoubleWithJProtoFix,
+        storage: {
+          left: SaplingStateValue,
+          right: SaplingStateValue
+        }
+      }).send();
+      await op.confirmation();
+      expect(op.opHash).toBeDefined();
+      done();
+    });
   });
 })

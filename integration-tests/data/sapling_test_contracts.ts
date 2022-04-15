@@ -32,6 +32,35 @@ code { UNPAIR ;
        PAIR;
      }`;
 
+export const saplingContractDoubleWithJProtoFix = `storage (pair (sapling_state :left 8) (sapling_state :right 8) );
+parameter (pair bool (pair (sapling_transaction :left 8) (sapling_transaction :right 8)) );
+code { UNPAIR ;
+       UNPAIR ;
+       DIP {UNPAIR} ;
+       DIIIP {UNPAIR} ;
+       DIIP {SWAP} ;
+       IF { SAPLING_VERIFY_UPDATE ;
+            ASSERT_SOME ;
+            CDR ; CDR ;
+            DIP {DIP {DUP};
+                 SAPLING_VERIFY_UPDATE;
+                 ASSERT_SOME ;
+                 DROP;};
+          }
+          { DIP { DUP};
+            SAPLING_VERIFY_UPDATE;
+            ASSERT_SOME;
+            DROP ;
+            DIP { SAPLING_VERIFY_UPDATE ;
+                  ASSERT_SOME ;
+                  CDR ; CDR;
+                  }};
+       PAIR;
+       NIL operation;
+       PAIR;
+     }
+`;
+
 export const saplingContractDrop = `storage (unit);
 parameter (list (sapling_transaction 8));
 code { UNPAIR ;
@@ -47,6 +76,20 @@ code { UNPAIR ;
        PAIR;
      }`;
 
+export const saplingContractDropWithJProtoFix = `storage (unit);
+     parameter (list (sapling_transaction 8));
+     code { UNPAIR ;
+            SAPLING_EMPTY_STATE 8;
+            SWAP ;
+            ITER { SAPLING_VERIFY_UPDATE ;
+                   ASSERT_SOME ;
+                   CDR ; CDR ;
+                 } ;
+            DROP ;
+            NIL operation;
+            PAIR;
+          }
+     `
 export const saplingContractSend = `storage (unit);
      parameter (pair (contract (or (sapling_transaction 8) (sapling_state 8))) (sapling_transaction 8));
      code { UNPAIR ;
@@ -67,6 +110,27 @@ export const saplingContractSend = `storage (unit);
             CONS;
             PAIR;
           }`;
+
+export const saplingContractSendWithJProtoFix = `storage (unit);
+          parameter (pair (contract (or (sapling_transaction 8) (sapling_state 8))) (sapling_transaction 8));
+          code { UNPAIR ;
+                 UNPAIR;
+                 SWAP ;
+                 SAPLING_EMPTY_STATE 8;
+                 SWAP ;
+                 SAPLING_VERIFY_UPDATE ;
+                 ASSERT_SOME ;
+                 CDR ;
+                 CDR ;
+                 PUSH mutez 0;
+                 SWAP ;
+                 RIGHT (sapling_transaction 8);
+                 TRANSFER_TOKENS;
+                 NIL operation;
+                 SWAP;
+                 CONS;
+                 PAIR;
+               }`;
 
 export const saplingContractStateAsArg = `storage (option (sapling_transaction 8));
 parameter (or (sapling_transaction 8) (sapling_state 8));
@@ -112,3 +176,17 @@ code { UNPAIR;
        NIL operation;
        PAIR;
      }`;
+
+export const saplingContractUseExistingStateWithJProtoFix = `parameter (pair (sapling_transaction 8) (sapling_state 8));
+storage (sapling_state 8);
+code { UNPAIR;
+       UNPAIR;
+       DIIP { DROP };
+       SAPLING_VERIFY_UPDATE;
+       ASSERT_SOME;
+       CDR;
+       CDR;
+       NIL operation;
+       PAIR;
+     }
+`
