@@ -5,10 +5,10 @@ import { Encoder } from '../taquito-local-forging';
 import { opMappingReverse, opMapping } from '../constants';
 import { pad } from '../utils';
 
-type PrimValue = { prim: string; args?: MichelsonValue[]; annots?: string[] };
-type BytesValue = { bytes: string };
-type StringValue = { string: string };
-type IntValue = { int: string };
+export type PrimValue = { prim: string; args?: MichelsonValue[]; annots?: string[] };
+export type BytesValue = { bytes: string };
+export type StringValue = { string: string };
+export type IntValue = { int: string };
 export type MichelsonValue =
   | PrimValue
   | BytesValue
@@ -266,7 +266,7 @@ export const primDecoder = (value: Uint8ArrayConsumer, preamble: Uint8Array) => 
   return result;
 };
 
-const primViewDecoder = (value: Uint8ArrayConsumer, result: Partial<PrimValue>) => {
+export const primViewDecoder = (value: Uint8ArrayConsumer, result: Partial<PrimValue>) => {
   value.consume(4);
   result['args'] = new Array(4).fill(0).map(() => valueDecoder(value)) as any;
   value.consume(4);

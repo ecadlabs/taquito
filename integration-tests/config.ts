@@ -1,5 +1,4 @@
-import { localForger } from '@taquito/local-forging';
-import { CompositeForger, RpcForger, TezosToolkit, Protocols, ChainIds } from '@taquito/taquito';
+import { CompositeForger, RpcForger, TezosToolkit, Protocols, TaquitoLocalForger } from '@taquito/taquito';
 import { RemoteSigner } from '@taquito/remote-signer';
 import { HttpBackend } from '@taquito/http-utils';
 import { b58cencode, Prefix, prefix } from '@taquito/utils';
@@ -200,9 +199,10 @@ const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE'];
 
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
   if (forger === ForgerType.LOCAL) {
-    Tezos.setProvider({ forger: localForger });
+    Tezos.setProvider({ forger: Tezos.getFactory(TaquitoLocalForger)() });
   } else if (forger === ForgerType.COMPOSITE) {
     const rpcForger = Tezos.getFactory(RpcForger)();
+    const localForger = Tezos.getFactory(TaquitoLocalForger)()
     const composite = new CompositeForger([rpcForger, localForger]);
     Tezos.setProvider({ forger: composite });
   } else if (forger === ForgerType.RPC) {
