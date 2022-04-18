@@ -1,6 +1,6 @@
 import { CONFIGS } from "./config";
 import { SaplingStateValue } from '../packages/taquito-michelson-encoder/src/taquito-michelson-encoder';
-import { saplingContractDouble, saplingContractDoubleWithJProtoFix } from "./data/sapling_test_contracts";
+import { saplingContractDouble, saplingContractDoubleJProto } from "./data/sapling_test_contracts";
 import { Protocols } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
@@ -30,7 +30,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
 
     mondaynet('Originates a contract made with wallet api with sapling states in its storage', async (done) => {
       const op = await Tezos.wallet.originate({
-        code: saplingContractDoubleWithJProtoFix,
+        code: saplingContractDoubleJProto,
         storage: {
           left: SaplingStateValue,
           right: SaplingStateValue

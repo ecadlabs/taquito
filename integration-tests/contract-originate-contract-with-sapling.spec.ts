@@ -8,10 +8,10 @@ import {
   saplingContractStateAsArg,
   saplingContractPushSaplingState,
   saplingContractUseExistingState,
-  saplingContractDoubleWithJProtoFix,
-  saplingContractDropWithJProtoFix,
-  saplingContractSendWithJProtoFix,
-  saplingContractUseExistingStateWithJProtoFix,
+  saplingContractDoubleJProto,
+  saplingContractDropJProto,
+  saplingContractSendJProto,
+  saplingContractUseExistingStateJProto,
 } from './data/sapling_test_contracts';
 
 CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
@@ -57,7 +57,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
 
     mondaynet('Originates a Sapling Double contract on Mondaynet', async (done) => {
       const op = await Tezos.contract.originate({
-        code: saplingContractDoubleWithJProtoFix,
+        code: saplingContractDoubleJProto,
         init: `(Pair {} {})`,
       });
       await op.confirmation();
@@ -99,7 +99,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
 
     mondaynet('Originates a Sapling Drop contract on Mondaynet', async (done) => {
       const op = await Tezos.contract.originate({
-        code: saplingContractDropWithJProtoFix,
+        code: saplingContractDropJProto,
         init: { prim: 'Unit' },
       });
       await op.confirmation();
@@ -133,7 +133,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
 
     mondaynet('Originates a Sapling Send contract on Mondaynet', async (done) => {
       const op = await Tezos.contract.originate({
-        code: saplingContractSendWithJProtoFix,
+        code: saplingContractSendJProto,
         init: { prim: 'Unit' },
       });
       await op.confirmation();
@@ -201,7 +201,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
 
     mondaynet('Originates a Use Existing State Sapling contract on Mondaynet', async (done) => {
       const op = await Tezos.contract.originate({
-        code: saplingContractUseExistingStateWithJProtoFix,
+        code: saplingContractUseExistingStateJProto,
         init: `{}`,
       });
       await op.confirmation();

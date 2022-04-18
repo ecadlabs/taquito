@@ -32,7 +32,7 @@ code { UNPAIR ;
        PAIR;
      }`;
 
-export const saplingContractDoubleWithJProtoFix = `storage (pair (sapling_state :left 8) (sapling_state :right 8) );
+export const saplingContractDoubleJProto = `storage (pair (sapling_state :left 8) (sapling_state :right 8) );
 parameter (pair bool (pair (sapling_transaction :left 8) (sapling_transaction :right 8)) );
 code { UNPAIR ;
        UNPAIR ;
@@ -76,7 +76,7 @@ code { UNPAIR ;
        PAIR;
      }`;
 
-export const saplingContractDropWithJProtoFix = `storage (unit);
+export const saplingContractDropJProto = `storage (unit);
      parameter (list (sapling_transaction 8));
      code { UNPAIR ;
             SAPLING_EMPTY_STATE 8;
@@ -111,7 +111,7 @@ export const saplingContractSend = `storage (unit);
             PAIR;
           }`;
 
-export const saplingContractSendWithJProtoFix = `storage (unit);
+export const saplingContractSendJProto = `storage (unit);
           parameter (pair (contract (or (sapling_transaction 8) (sapling_state 8))) (sapling_transaction 8));
           code { UNPAIR ;
                  UNPAIR;
@@ -177,7 +177,7 @@ code { UNPAIR;
        PAIR;
      }`;
 
-export const saplingContractUseExistingStateWithJProtoFix = `parameter (pair (sapling_transaction 8) (sapling_state 8));
+export const saplingContractUseExistingStateJProto = `parameter (pair (sapling_transaction 8) (sapling_state 8));
 storage (sapling_state 8);
 code { UNPAIR;
        UNPAIR;
