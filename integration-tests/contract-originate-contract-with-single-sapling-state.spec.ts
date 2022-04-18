@@ -2,6 +2,7 @@ import { Protocols } from '@taquito/taquito';
 import { CONFIGS } from './config';
 import { singleSaplingStateContract } from './data/single_sapling_state_contract';
 import { singleSaplingStateContractHangzhou } from './data/single_sapling_state_contract_hangzhou';
+import { singleSaplingStateContractJProtocol } from './data/single_sapling_state_contract_mondaynet_michelson';
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
@@ -37,9 +38,9 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done();
     });
 
-    mondaynet('Originates a contract with a single sapling state in its storage for Ithaca', async (done) => {
+    mondaynet('Originates a contract with a single sapling state in its storage for JProtocol', async (done) => {
       const op = await Tezos.contract.originate({
-       code: singleSaplingStateContract,
+       code: singleSaplingStateContractJProtocol,
         init: '{}'
       });
       await op.confirmation();
