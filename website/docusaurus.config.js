@@ -144,11 +144,7 @@ module.exports = {
         {
           items: [
             {
-              html: `
-									<a href="/" target="_blank" rel="noreferrer noopener" aria-label="">
-									  <img class='footerLogo' src="/img/footer-logo.svg" alt="" />
-									</a>
-								  `,
+              html: `image`,
             },
             {
               html: `

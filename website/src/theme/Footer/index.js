@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import { useThemeConfig } from '@docusaurus/theme-common';
@@ -14,6 +14,7 @@ import styles from './styles.module.css';
 import ThemedImage from '@theme/ThemedImage';
 import IconExternalLink from '@theme/IconExternalLink';
 import FooterForm from '../../components/FooterForm/FooterForm';
+import lottie from 'lottie-web';
 
 function FooterLink({ to, href, label, prependBaseUrlToHref, reactComponent, ...props }) {
   const toUrl = useBaseUrl(to);
@@ -49,6 +50,7 @@ const FooterLogo = ({ sources, alt, width, height }) => (
 );
 
 function Footer() {
+  const container = useRef(null);
   const { footer } = useThemeConfig();
   const { copyright, links = [], logo = {} } = footer || {};
   const sources = {
@@ -63,6 +65,20 @@ function Footer() {
   if (!footer) {
     return null;
   }
+
+  useEffect(() => {
+    lottie.loadAnimation({
+      container: container.current,
+      renderer: 'svg',
+      loop: true,
+      autoplay: false,
+      animationData: require('../../../static/gif/Taquito Loop_01.json'),
+    });
+
+    return () => {
+      lottie.destroy();
+    };
+  }, []);
 
   return (
     <footer
@@ -92,6 +108,15 @@ function Footer() {
                           >
                             <FooterForm />
                           </li>
+                        ) : item.html === 'image' ? (
+                          <a href="/" target="_blank" rel="noreferrer noopener" aria-label="">
+                            <div
+                              ref={container}
+                              onMouseEnter={() => lottie.play()}
+                              onMouseLeave={() => lottie.stop()}
+                              class="footerLogo"
+                            />
+                          </a>
                         ) : (
                           <li
                             key={key}

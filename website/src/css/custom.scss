@@ -425,8 +425,13 @@ h2 {
 }
 
 .footerLogo {
-  width: 137px;
-  height: 60px;
+  width: fit-content;
+  height: fit-content;
+  max-width: 140px;
+  svg {
+    width: fit-content;
+    height: fit-content;
+  }
 }
 
 // .row .col.col.col {
