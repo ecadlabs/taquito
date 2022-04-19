@@ -72,11 +72,15 @@
   margin-left: auto;
   margin-right: auto;
   max-width: 811px;
-  padding: 0px 60px;
   color: var(--ifm-color-text-primary);
-  padding-top: 155px;
+  padding-top: 100px;
+  padding-left: 60px;
+  padding-right: 60px;
   text-align: center;
   text-transform: capitalize;
+  @media (max-width: 640px) {
+    padding-top: 0px;
+  }
 }
 
 .simpleStepsDescription {
