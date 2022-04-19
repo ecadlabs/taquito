@@ -20,6 +20,7 @@
   --telegram-svg: url('../../static/img/telegramSVG.svg') no-repeat;
   --brown-secondary: #975b19;
   --background-black: #2e2e2e;
+  --brown-third: #885924;
   --ifm-font-family-base: Source Sans Pro;
   --ifm-color-primary-lightest: #ffffff;
   --ifm-color-primary-lighter: #a9d1e4;
@@ -64,7 +65,7 @@
 }
 
 [data-theme='dark'] {
-  --ifm-color-primary: var(--brown-primary);
+  --ifm-color-primary: var(--brown-third);
   --ifm-color-secondary: var(--yellow-primary);
   --ifm-color-text-primary: var(--white);
   --ifm-color-text-secondary: var(--black);
@@ -143,6 +144,7 @@ h2 {
     color: var(--ifm-color-hover-link) !important;
   }
 }
+
 .dropdown__link--active,
 .dropdown__link--active:hover {
   --ifm-dropdown-link-color: var(--brown) !important;
@@ -282,7 +284,7 @@ h2 {
   padding-right: 0px !important;
 }
 
-.footer__links > div:nth-of-type(1) {
+.footer__links>div:nth-of-type(1) {
   width: 10%;
 }
 
@@ -314,11 +316,11 @@ h2 {
   }
 }
 
-.footer__links > div:nth-of-type(2) {
+.footer__links>div:nth-of-type(2) {
   width: 10%;
 }
 
-.footer__links > div:nth-of-type(3) {
+.footer__links>div:nth-of-type(3) {
   width: 10%;
 
   @media (max-width: 996px) {
@@ -326,7 +328,7 @@ h2 {
   }
 }
 
-.footer__links > div:nth-of-type(4) {
+.footer__links>div:nth-of-type(4) {
   width: 60%;
 }
 
@@ -471,19 +473,19 @@ h2 {
     width: 100%;
   }
 
-  .footer__links > div:nth-of-type(4) {
+  .footer__links>div:nth-of-type(4) {
     width: 100%;
   }
 
-  .footer__links > div:nth-of-type(3) {
+  .footer__links>div:nth-of-type(3) {
     width: 50%;
   }
 
-  .footer__links > div:nth-of-type(2) {
+  .footer__links>div:nth-of-type(2) {
     width: 50%;
   }
 
-  .footer__links > div:nth-of-type(1) {
+  .footer__links>div:nth-of-type(1) {
     width: 50%;
   }
 
@@ -560,7 +562,7 @@ aside {
     }
   }
 
-  .theme-doc-sidebar-item-category-level-1 > a {
+  .theme-doc-sidebar-item-category-level-1>a {
     font-family: Source Sans Pro;
     font-style: normal;
     font-weight: 600;
@@ -683,7 +685,7 @@ aside {
   color: var(--brown-primary) !important;
 }
 
-.col--3 > * {
+.col--3>* {
   position: sticky !important;
   top: 110px !important;
 }
