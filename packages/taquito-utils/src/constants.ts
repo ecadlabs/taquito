@@ -96,7 +96,7 @@ export const prefix = {
   [Prefix.TXI]: new Uint8Array([79, 148, 196]),
   [Prefix.TXM]: new Uint8Array([79, 149, 30]),
   [Prefix.TXC]: new Uint8Array([79, 148, 17]),
-  [Prefix.TXMR]: new Uint8Array([18, 7, 206, 087]),
+  [Prefix.TXMR]: new Uint8Array([18, 7, 206, 87]),
   [Prefix.TXRL]: new Uint8Array([79, 146, 82]),
   [Prefix.TXW]: new Uint8Array([79, 150, 72]),
    
