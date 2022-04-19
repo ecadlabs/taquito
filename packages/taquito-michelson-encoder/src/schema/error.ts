@@ -28,10 +28,7 @@ export class InvalidScriptError extends Error {
 export class InvalidRpcResponseError extends Error {
   public name = 'InvalidRpcResponseError';
   constructor(public script: any) {
-    super(`
-      Invalid RPC response passed as argument(s): \n
-      ${JSON.stringify(script)}
-    `);
+    super(`Invalid RPC response passed as argument(s)`);
   }
 }
 

@@ -132,7 +132,7 @@ export const schemaEncoder =
         const values = value[key];
 
         if (!Array.isArray(values)) {
-          throw new OperationEncodingError(`Exepected value to be Array ${JSON.stringify(values)}`);
+          throw new OperationEncodingError(`Expected value to be Array ${JSON.stringify(values)}`);
         }
 
         return prev + values.reduce((prevBytes, current) => prevBytes + encoder(current), '');
