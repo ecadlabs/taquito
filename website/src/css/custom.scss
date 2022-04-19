@@ -17,6 +17,7 @@
   --white: #ffffff;
   --twitter-svg: url('../../static/img/twitterSVG.svg') no-repeat;
   --github-svg: url('../../static/img/githubSVG.svg') no-repeat;
+  --github-svg-reverse: url('../../static/img/github-svg-white.svg') no-repeat;
   --telegram-svg: url('../../static/img/telegramSVG.svg') no-repeat;
   --brown-secondary: #975b19;
   --background-black: #2e2e2e;
@@ -73,6 +74,7 @@
   --ifm-color-hover-link: var(--black);
   --twitter-svg: url('../../static/img/twitter-svg-white.svg') no-repeat;
   --github-svg: url('../../static/img/github-svg-white.svg') no-repeat;
+  --github-svg-reverse: url('../../static/img/githubSVG.svg') no-repeat;
   --telegram-svg: url('../../static/img/telegram-svg-white.svg') no-repeat;
   --ifm-background-color-secondary: var(--background-black);
   --brown--fourth: rgb(211, 131, 43, 0.6);
@@ -381,6 +383,8 @@ h2 {
 .footerButton {
   height: fit-content;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
   background-color: var(--ifm-color-secondary);
   padding: 12px 18px;
   border-radius: 30px;
@@ -398,13 +402,14 @@ h2 {
   font-weight: 600;
   font-size: 18px;
   line-height: 12px;
-
-  .footerGihubLogoButton {
-    width: 24px;
-    height: 23px;
-    transform: translateY(5px);
-    padding-right: 5px;
-  }
+}
+.footerButton:before {
+  background: var(--github-svg-reverse);
+  content: '';
+  display: flex;
+  width: 24px;
+  height: 23px;
+  padding-right: 9px;
 }
 
 .footerForm {

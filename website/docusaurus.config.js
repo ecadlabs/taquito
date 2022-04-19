@@ -156,7 +156,6 @@ module.exports = {
             {
               html: `
 									<a class='footerButton' href='https://github.com/ecadlabs/taqueria'>
-										<img class='footerGihubLogoButton' src="/img/githubSVG-white.svg" alt="" />
 										GITHUB
 									</a>
 								  `,
