@@ -326,7 +326,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol,rpc }) => {
       // fee, gasLimit and storage limit are not taken into account
       const params = { fee: 2000, to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) }
 
-      if (protocol === Protocols.Psithaca2) {
+      if (protocol === Protocols.Psithaca2 || Protocols.ProtoALpha) {
         await expect(LowAmountTez.estimate.transfer(params)).rejects.toEqual(
           expect.objectContaining({
             message: expect.stringContaining('balance_too_low'),
