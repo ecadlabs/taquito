@@ -50,7 +50,7 @@ const FooterLogo = ({ sources, alt, width, height }) => (
 );
 
 function Footer() {
-  const container = useRef(null);
+  const footerContainer = useRef(null);
   const { footer } = useThemeConfig();
   const { copyright, links = [], logo = {} } = footer || {};
   const sources = {
@@ -68,11 +68,12 @@ function Footer() {
 
   useEffect(() => {
     lottie.loadAnimation({
-      container: container.current,
+      container: footerContainer.current,
       renderer: 'svg',
       loop: true,
       autoplay: false,
-      animationData: require('../../../static/gif/Taquito Loop_01.json'),
+      animationData: require('../../../static/gif/Taquito_Loop_01.json'),
+      name: 'footerLogo',
     });
 
     return () => {
@@ -111,9 +112,9 @@ function Footer() {
                         ) : item.html === 'image' ? (
                           <a href="/" target="_blank" rel="noreferrer noopener" aria-label="">
                             <div
-                              ref={container}
-                              onMouseEnter={() => lottie.play()}
-                              onMouseLeave={() => lottie.stop()}
+                              ref={footerContainer}
+                              onMouseEnter={() => lottie.play('footerLogo')}
+                              onMouseLeave={() => lottie.stop('footerLogo')}
                               class="footerLogo"
                             />
                           </a>

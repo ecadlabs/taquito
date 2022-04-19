@@ -129,10 +129,15 @@ h2 {
   // }
 }
 
-.navbar__logo {
-  height: 61px;
-  width: 141px;
-  margin-left: 10%;
+.navbar__brand__container,
+.navbar__brand {
+  width: fit-content;
+  height: fit-content;
+  width: 160px;
+  svg {
+    width: fit-content;
+    height: fit-content;
+  }
   margin-bottom: -10px;
 }
 
