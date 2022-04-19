@@ -77,6 +77,9 @@
   border: none;
   height: 33px;
   width: 96px;
+  font-family: Source Sans Pro;
+  font-size: 16px;
+  font-weight: 600;
 
   /* &:hover {
     color: var(--ifm-color-text-primary) !important;
@@ -87,9 +90,11 @@
   cursor: pointer !important;
   color: var(--ifm-color-text-primary) !important;
 }
+
 input:focus {
   background-color: var(--ifm-color-primary) !important;
 }
+
 input:checked {
   background-color: var(--ifm-color-primary) !important;
 }
@@ -97,15 +102,34 @@ input:checked {
 ::placeholder {
   /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: var(--ifm-color-text-primary) !important;
-  opacity: 1; /* Firefox */
+  opacity: 1;
+  /* Firefox */
+  font-family: Source Sans Pro;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: 0.3px;
 }
 
 :-ms-input-placeholder {
   /* Internet Explorer 10-11 */
   color: var(--ifm-color-text-primary) !important;
+  font-family: Source Sans Pro;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: 0.3px;
 }
 
 ::-ms-input-placeholder {
   /* Microsoft Edge */
   color: var(--ifm-color-text-primary) !important;
+  font-family: Source Sans Pro;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: 0.3px;
 }
