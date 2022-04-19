@@ -70,7 +70,7 @@ function Footer() {
     lottie.loadAnimation({
       container: footerContainer.current,
       renderer: 'svg',
-      loop: true,
+      loop: false,
       autoplay: false,
       animationData: require('../../../static/gif/Taquito_Loop_01.json'),
       name: 'footerLogo',

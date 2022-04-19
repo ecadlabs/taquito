@@ -14,7 +14,7 @@ export default function NavbarLogo() {
     lottie.loadAnimation({
       container: container.current,
       renderer: 'svg',
-      loop: true,
+      loop: false,
       autoplay: false,
       animationData: require('../../../../static/gif/Taquito_Loop_01.json'),
       name: 'navbarLogo',
