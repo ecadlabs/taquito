@@ -367,26 +367,7 @@ video {
 }
 
 @media screen and (max-width: 640px) {
-
-  .heroCardContainer,
-  // .container {
-  //   -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-  //   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-  // }
-  .features:before,
-  .features:after,
-  .leftPurpleLine,
-  .rightPurpleLine,
-  .logoRedSvg {
-    display: none;
-  }
-
   .heroCardContainer {
-    /* background-color: var(--ifm-color-bg-purple); */
-    /* -webkit-clip-path: polygon(0 15%, 100% 0%, 100% 85%, 15% 100%);
-		clip-path: polygon(0 15%, 100% 0%, 100% 85%, 15% 100%);
-		border-radius: 10px;
-		box-sizing: border-box; */
     background-color: var(--ifm-color-bg-purple);
     width: 100%;
   }
