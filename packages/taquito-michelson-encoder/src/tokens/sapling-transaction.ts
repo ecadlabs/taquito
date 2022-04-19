@@ -20,7 +20,11 @@ export class SaplingTransactionToken extends Token {
   }
 
   Execute(_val: any) {
-    throw new Error('There is no literal value for the sapling_transaction type.');
+    throw new SaplingTransactionValidationError(
+      _val,
+      this,
+      'There is no literal value for the sapling_transaction type.'
+    );
   }
 
   private validateBytes(val: any) {

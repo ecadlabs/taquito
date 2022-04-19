@@ -9,7 +9,7 @@ import { Protocols } from '../constants';
 import { Context } from '../context';
 import { Estimate } from '../estimate/estimate';
 import { flattenErrors, TezosOperationError, TezosPreapplyFailureError } from './operation-errors';
-import { InvalidOperationKindError } from '@taquito/utils';
+import { InvalidOperationKindError, DeprecationError } from '@taquito/utils';
 import {
   ForgedBytes,
   isOpRequireReveal,
@@ -143,7 +143,7 @@ export abstract class OperationEmitter {
               ...getFee(op),
             };
             if (cops.source.toLowerCase().startsWith('kt1')) {
-              throw new Error(
+              throw new DeprecationError(
                 `KT1 addresses are not supported as source since ${Protocols.PsBabyM1}`
               );
             }

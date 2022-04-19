@@ -4,7 +4,7 @@
  */
 import { openSecretBox } from '@stablelib/nacl';
 import { hash } from '@stablelib/blake2b';
-import { hex2buf, mergebuf, b58cencode, prefix } from '@taquito/utils';
+import { hex2buf, mergebuf, b58cencode, prefix, InvalidKeyError } from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
 import { Tz1 } from './ed-key';
 import { Tz2, ECKey, Tz3 } from './ec-key';
@@ -13,6 +13,17 @@ import { mnemonicToSeedSync } from './mnemonicToSeedSync';
 
 export * from './import-key';
 export { VERSION } from './version';
+
+/**
+ *  @category Error
+ *  @description Error that indicates an invalid passphrase being passed or used
+ */
+export class InvalidPassphraseError extends Error {
+  public name = 'InvalidPassphraseError';
+  constructor(public message: string) {
+    super(message);
+  }
+}
 
 /**
  * @description A local implementation of the signer. Will represent a Tezos account and be able to produce signature in its behalf
@@ -46,7 +57,7 @@ export class InMemorySigner {
 
     if (encrypted) {
       if (!passphrase) {
-        throw new Error('Encrypted key provided without a passphrase.');
+        throw new InvalidPassphraseError('Encrypted key provided without a passphrase.');
       }
 
       decrypt = (constructedKey: Uint8Array) => {
@@ -55,8 +66,8 @@ export class InMemorySigner {
         const encryptionKey = pbkdf2.pbkdf2Sync(passphrase, salt, 32768, 32, 'sha512');
 
         return openSecretBox(
-          new Uint8Array(encryptionKey), 
-          new Uint8Array(24), 
+          new Uint8Array(encryptionKey),
+          new Uint8Array(24),
           new Uint8Array(encryptedSk)
         );
       };
@@ -76,7 +87,7 @@ export class InMemorySigner {
         this._key = new Tz3(key, encrypted, decrypt);
         break;
       default:
-        throw new Error('Unsupported key type');
+        throw new InvalidKeyError(key, 'Unsupported key type');
     }
   }
 

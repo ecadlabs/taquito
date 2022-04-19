@@ -1,6 +1,17 @@
 import { OrTokenSchema } from '../schema/types';
 import { Token, TokenFactory, Semantic, ComparableToken } from './token';
 
+/**
+ *  @category Error
+ *  @description Error that indicates a failure when decoding OR Token methods
+ */
+export class OrTokenDecodingError extends Error {
+  public name = 'OrTokenDecodingError';
+  constructor(public message: string) {
+    super(message);
+  }
+}
+
 export class OrToken extends ComparableToken {
   static prim: 'or' = 'or';
 
@@ -134,7 +145,7 @@ export class OrToken extends ComparableToken {
         [leftToken.annot()]: leftToken.Execute(val.args[0], semantics),
       };
     } else {
-      throw new Error(`Was expecting Left or Right prim but got: ${val.prim}`);
+      throw new OrTokenDecodingError(`Was expecting Left or Right prim but got: ${val.prim}`);
     }
   }
 
