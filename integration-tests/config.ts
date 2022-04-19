@@ -20,10 +20,6 @@ enum ForgerType {
 
 const forgers: ForgerType[] = [ForgerType.COMPOSITE];
 
-if (process.env["ENABLE_LOCAL_FORGER"] === "true") {
-  forgers.push(ForgerType.LOCAL)
-}
-
 interface Config {
   rpc: string;
   knownBaker: string;
@@ -120,29 +116,29 @@ const ithacanetFaucet = {
   protocol: Protocols.Psithaca2,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
-      faucetKey: {
-        "pkh": "tz1LJLhMszojav8EfN9hMZAPBSH21ocamx7n",
-        "mnemonic": [
-          "escape",
-          "camera",
-          "credit",
-          "endorse",
-          "auto",
-          "lamp",
-          "advance",
-          "orange",
-          "fluid",
-          "virus",
-          "argue",
-          "knee",
-          "pluck",
-          "remove",
-          "scheme"
-        ],
-        "email": "noriqgjl.gtsyulgy@teztnets.xyz",
-        "password": "st3sZBRLWF",
-        "amount": "118887604096",
-        "secret": "7d414378d9071328313cca699d6922f1b59d076a"
+    faucetKey: {
+      "pkh": "tz1LJLhMszojav8EfN9hMZAPBSH21ocamx7n",
+      "mnemonic": [
+        "escape",
+        "camera",
+        "credit",
+        "endorse",
+        "auto",
+        "lamp",
+        "advance",
+        "orange",
+        "fluid",
+        "virus",
+        "argue",
+        "knee",
+        "pluck",
+        "remove",
+        "scheme"
+      ],
+      "email": "noriqgjl.gtsyulgy@teztnets.xyz",
+      "password": "st3sZBRLWF",
+      "amount": "118887604096",
+      "secret": "7d414378d9071328313cca699d6922f1b59d076a"
     }
   },
 };
@@ -209,6 +205,8 @@ const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
     const rpcForger = Tezos.getFactory(RpcForger)();
     const composite = new CompositeForger([rpcForger, localForger]);
     Tezos.setProvider({ forger: composite });
+  } else if (forger === ForgerType.RPC) {
+    Tezos.setProvider({ forger: Tezos.getFactory(RpcForger)() });
   }
 };
 
