@@ -5,7 +5,7 @@
 :root {
   --blue-primary: #218da5;
   --blue-secondary: #35636e;
-  --red: #c73d18;
+  --red: #ac0000;
   --brown: #d3832b;
   --green: #71a417;
   --beige: #f9e3c2;
@@ -278,7 +278,7 @@ h2 {
   padding-right: 0px !important;
 }
 
-.footer__links > div:nth-of-type(1) {
+.footer__links>div:nth-of-type(1) {
   width: 10%;
 }
 
@@ -310,11 +310,11 @@ h2 {
   }
 }
 
-.footer__links > div:nth-of-type(2) {
+.footer__links>div:nth-of-type(2) {
   width: 10%;
 }
 
-.footer__links > div:nth-of-type(3) {
+.footer__links>div:nth-of-type(3) {
   width: 10%;
 
   @media (max-width: 996px) {
@@ -322,7 +322,7 @@ h2 {
   }
 }
 
-.footer__links > div:nth-of-type(4) {
+.footer__links>div:nth-of-type(4) {
   width: 60%;
 }
 
@@ -467,19 +467,19 @@ h2 {
     width: 100%;
   }
 
-  .footer__links > div:nth-of-type(4) {
+  .footer__links>div:nth-of-type(4) {
     width: 100%;
   }
 
-  .footer__links > div:nth-of-type(3) {
+  .footer__links>div:nth-of-type(3) {
     width: 50%;
   }
 
-  .footer__links > div:nth-of-type(2) {
+  .footer__links>div:nth-of-type(2) {
     width: 50%;
   }
 
-  .footer__links > div:nth-of-type(1) {
+  .footer__links>div:nth-of-type(1) {
     width: 50%;
   }
 
@@ -556,7 +556,7 @@ aside {
     }
   }
 
-  .theme-doc-sidebar-item-category-level-1 > a {
+  .theme-doc-sidebar-item-category-level-1>a {
     font-family: Source Sans Pro;
     font-style: normal;
     font-weight: 600;
@@ -679,7 +679,7 @@ aside {
   color: var(--brown-primary) !important;
 }
 
-.col--3 > * {
+.col--3>* {
   position: sticky !important;
   top: 110px !important;
 }
