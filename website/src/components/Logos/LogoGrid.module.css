@@ -55,6 +55,7 @@
 @media screen and (max-width: 720px) {
   .logos {
     flex-direction: column;
+    padding-top: 100px;
   }
   .image {
     margin-bottom: 40px;
