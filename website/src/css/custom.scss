@@ -49,6 +49,7 @@
   --sidebar-text-color: var(--black-secondary);
   --sidebar-link-bg: rgba(211, 131, 43, 0.2);
   --ifm-toc-padding-vertical: 1rem;
+  --ifm-color-hover-link: var(--black);
 }
 
 .alert--secondary {
@@ -77,6 +78,8 @@
   --brown--fourth: rgb(211, 131, 43, 0.6);
   --sidebar-text-color: (var(--white));
   --sidebar-link-bg: var(--yellow-second);
+  --ifm-color-hover-link: var(--brown);
+  --black-third: var(--white);
 }
 
 h1 {
@@ -199,7 +202,7 @@ h2 {
   color: var(--ifm-color-text-secondary) !important;
 
   &:hover {
-    color: var(--ifm-color-text-primary) !important;
+    color: var(--ifm-color-hover-link) !important;
   }
 }
 
@@ -284,7 +287,7 @@ h2 {
   padding-right: 0px !important;
 }
 
-.footer__links>div:nth-of-type(1) {
+.footer__links > div:nth-of-type(1) {
   width: 10%;
 }
 
@@ -310,17 +313,17 @@ h2 {
     color: var(--ifm-color-text-secondary) !important;
 
     &:hover {
-      color: var(--ifm-color-text-primary) !important;
+      color: var(--ifm-color-hover-link) !important;
       text-decoration: none !important;
     }
   }
 }
 
-.footer__links>div:nth-of-type(2) {
+.footer__links > div:nth-of-type(2) {
   width: 10%;
 }
 
-.footer__links>div:nth-of-type(3) {
+.footer__links > div:nth-of-type(3) {
   width: 10%;
 
   @media (max-width: 996px) {
@@ -328,7 +331,7 @@ h2 {
   }
 }
 
-.footer__links>div:nth-of-type(4) {
+.footer__links > div:nth-of-type(4) {
   width: 60%;
 }
 
@@ -473,19 +476,19 @@ h2 {
     width: 100%;
   }
 
-  .footer__links>div:nth-of-type(4) {
+  .footer__links > div:nth-of-type(4) {
     width: 100%;
   }
 
-  .footer__links>div:nth-of-type(3) {
+  .footer__links > div:nth-of-type(3) {
     width: 50%;
   }
 
-  .footer__links>div:nth-of-type(2) {
+  .footer__links > div:nth-of-type(2) {
     width: 50%;
   }
 
-  .footer__links>div:nth-of-type(1) {
+  .footer__links > div:nth-of-type(1) {
     width: 50%;
   }
 
@@ -562,7 +565,7 @@ aside {
     }
   }
 
-  .theme-doc-sidebar-item-category-level-1>a {
+  .theme-doc-sidebar-item-category-level-1 > a {
     font-family: Source Sans Pro;
     font-style: normal;
     font-weight: 600;
@@ -685,7 +688,7 @@ aside {
   color: var(--brown-primary) !important;
 }
 
-.col--3>* {
+.col--3 > * {
   position: sticky !important;
   top: 110px !important;
 }
