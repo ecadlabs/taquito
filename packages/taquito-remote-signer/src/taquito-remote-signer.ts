@@ -15,6 +15,8 @@ import {
   validateKeyHash,
   ValidationResult,
   InvalidKeyHashError,
+  ProhibitedActionError,
+  InvalidSignatureError,
 } from '@taquito/utils';
 import { hash } from '@stablelib/blake2b';
 import toBuffer from 'typedarray-to-buffer';
@@ -25,6 +27,25 @@ import {
   PublicKeyMismatch,
 } from './errors';
 import { Signer } from '@taquito/taquito';
+
+/**
+ *  @category Error
+ *  @description Error
+ */
+export class SignatureVerificationFailedError extends Error {
+  public name = 'SignatureVerificationFailedError';
+  constructor(public bytes: string, public signature: string) {
+    super(
+      `
+        Signature failed verification against public key: 
+        {
+          bytes: ${bytes},
+          signature: ${signature}
+        }
+      `
+    );
+  }
+}
 
 interface PublicKeyResponse {
   public_key: string;
@@ -103,7 +124,7 @@ export class RemoteSigner implements Signer {
   }
 
   async secretKey(): Promise<string> {
-    throw new Error('Secret key cannot be exposed');
+    throw new ProhibitedActionError('Secret key cannot be exposed');
   }
 
   async sign(bytes: string, watermark?: Uint8Array) {
@@ -126,7 +147,7 @@ export class RemoteSigner implements Signer {
         : signature.substring(0, 5);
 
       if (!isValidPrefix(pref)) {
-        throw new Error(`Unsupported signature given by remote signer: ${signature}`);
+        throw new InvalidSignatureError(signature, 'Unsupported signature given by remote signer');
       }
 
       const decoded = b58cdecode(signature, prefix[pref]);
@@ -135,13 +156,7 @@ export class RemoteSigner implements Signer {
       await this.verifyPublicKey(pk);
       const signatureVerified = verifySignature(watermarkedBytes, pk, signature);
       if (!signatureVerified) {
-        throw new Error(
-          `Signature failed verification against public key:
-          {
-            bytes: ${watermarkedBytes},
-            signature: ${signature}
-          }`
-        );
+        throw new SignatureVerificationFailedError(watermarkedBytes, signature);
       }
 
       return {

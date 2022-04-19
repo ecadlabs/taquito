@@ -16,7 +16,7 @@ import {
 } from '../operations/types';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
 import { format } from '../format';
-import { InvalidCodeParameter, InvalidInitParameter } from './errors';
+import { InvalidCodeParameter, InvalidInitParameter, OriginationParameterError } from './errors';
 
 export const createOriginationOperation = async ({
   code,
@@ -30,7 +30,7 @@ export const createOriginationOperation = async ({
   mutez = false,
 }: OriginateParams) => {
   if (storage !== undefined && init !== undefined) {
-    throw new Error(
+    throw new OriginationParameterError(
       'Storage and Init cannot be set a the same time. Please either use storage or init but not both.'
     );
   }

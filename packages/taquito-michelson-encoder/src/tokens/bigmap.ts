@@ -2,6 +2,10 @@ import { MichelsonMap } from '../michelson-map';
 import { BigMapTokenSchema } from '../schema/types';
 import { ComparableToken, Semantic, Token, TokenFactory, TokenValidationError } from './token';
 
+/**
+ *  @category Error
+ *  @description Error that indicates a failure happening when parsing encoding/executing Big Map types
+ */
 export class BigMapValidationError extends TokenValidationError {
   name = 'BigMapValidationError';
   constructor(public value: any, public token: BigMapToken, message: string) {
@@ -111,8 +115,9 @@ export class BigMapToken extends Token {
       // Babylon is returning an int with the big map id in contract storage
       return val.int;
     } else {
-      // Unknown case
-      throw new Error(
+      throw new BigMapValidationError(
+        val,
+        this,
         `Big map is expecting either an array (Athens) or an object with an int property (Babylon). Got ${JSON.stringify(
           val
         )}`

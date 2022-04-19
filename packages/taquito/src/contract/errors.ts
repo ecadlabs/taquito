@@ -131,3 +131,14 @@ export class RevealOperationError extends Error {
     super(message);
   }
 }
+
+/**
+ *  @category Error
+ *  @description Error that indicates a mistake in the parameters in the preparation of an Origination operation
+ */
+export class OriginationParameterError extends Error {
+  public name = 'OriginationParameterError';
+  constructor(public message: string) {
+    super(message);
+  }
+}

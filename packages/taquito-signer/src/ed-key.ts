@@ -1,6 +1,13 @@
 import { hash } from '@stablelib/blake2b';
 import { generateKeyPairFromSeed, sign } from '@stablelib/ed25519';
-import { b58cencode, b58cdecode, prefix, buf2hex, isValidPrefix } from '@taquito/utils';
+import {
+  b58cencode,
+  b58cdecode,
+  prefix,
+  buf2hex,
+  isValidPrefix,
+  InvalidKeyError,
+} from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
 
 /**
@@ -20,14 +27,14 @@ export class Tz1 {
   constructor(private key: string, encrypted: boolean, decrypt: (k: any) => any) {
     const keyPrefix = key.substr(0, encrypted ? 5 : 4);
     if (!isValidPrefix(keyPrefix)) {
-      throw new Error('key contains invalid prefix');
+      throw new InvalidKeyError(key, 'Key contains invalid prefix');
     }
 
     this._key = decrypt(b58cdecode(this.key, prefix[keyPrefix]));
     this._publicKey = this._key.slice(32);
 
     if (!this._key) {
-      throw new Error('Unable to decode key');
+      throw new InvalidKeyError(key, 'Unable to decode');
     }
 
     this.isInit = this.init();
@@ -49,10 +56,7 @@ export class Tz1 {
    */
   async sign(bytes: string, bytesHash: Uint8Array) {
     await this.isInit;
-    const signature = sign(
-      new Uint8Array(this._key), 
-      new Uint8Array(bytesHash)
-    );
+    const signature = sign(new Uint8Array(this._key), new Uint8Array(bytesHash));
     const signatureBuffer = toBuffer(signature);
     const sbytes = bytes + buf2hex(signatureBuffer);
 
@@ -86,9 +90,7 @@ export class Tz1 {
   async secretKey(): Promise<string> {
     await this.isInit;
     let key = this._key;
-    const { secretKey } = generateKeyPairFromSeed(
-      new Uint8Array(key).slice(0, 32)
-    );
+    const { secretKey } = generateKeyPairFromSeed(new Uint8Array(key).slice(0, 32));
     key = toBuffer(secretKey);
 
     return b58cencode(key, prefix[`edsk`]);

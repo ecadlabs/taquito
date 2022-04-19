@@ -5,7 +5,7 @@
 
 import { Signer } from '@taquito/taquito';
 import Transport from '@ledgerhq/hw-transport';
-import { b58cencode, prefix, Prefix } from '@taquito/utils';
+import { b58cencode, prefix, Prefix, ProhibitedActionError } from '@taquito/utils';
 import {
   appendWatermark,
   transformPathToBuffer,
@@ -15,6 +15,11 @@ import {
   extractValue,
 } from './utils';
 import { hash } from '@stablelib/blake2b';
+import {
+  PublicKeyHashRetrievalError,
+  PublicKeyRetrievalError,
+  InvalidLedgerResponseError,
+} from './error';
 
 export type LedgerTransport = Pick<Transport, 'send' | 'decorateAppAPIMethods' | 'setScrambleKey'>;
 
@@ -47,17 +52,6 @@ export class InvalidDerivationPathError extends Error {
     super(
       `The derivation path ${derivationPath} is invalid. The derivation path must start with 44'/1729`
     );
-  }
-}
-
-/**
- *  @category Error
- *  @description Error that indicates an invalid or unparseable ledger response
- */
-export class InvalidLedgerResponseError extends Error {
-  public name = 'InvalidLedgerResponseError';
-  constructor(public message: string) {
-    super(message);
   }
 }
 
@@ -124,7 +118,7 @@ export class LedgerSigner implements Signer {
     if (this._publicKeyHash) {
       return this._publicKeyHash;
     }
-    throw new Error(`Unable to get the public key hash.`);
+    throw new PublicKeyHashRetrievalError();
   }
 
   async publicKey(): Promise<string> {
@@ -160,12 +154,12 @@ export class LedgerSigner implements Signer {
       );
       return responseLedger;
     } catch (error) {
-      throw new Error('Unable to retrieve public key');
+      throw new PublicKeyRetrievalError();
     }
   }
 
   async secretKey(): Promise<string> {
-    throw new Error('Secret key cannot be exposed');
+    throw new ProhibitedActionError('Secret key cannot be exposed');
   }
 
   async sign(bytes: string, watermark?: Uint8Array) {

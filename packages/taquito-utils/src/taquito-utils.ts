@@ -15,6 +15,7 @@ import { validatePkAndExtractPrefix } from './verify-signature';
 import { hash } from '@stablelib/blake2b';
 import blake from 'blakejs';
 import bs58check from 'bs58check';
+import { ValueConversionError } from './errors';
 
 export * from './validators';
 export { VERSION } from './version';
@@ -40,7 +41,7 @@ export function encodeExpr(value: string) {
  * @description Return the operation hash of a signed operation
  * @param value Value in hex of a signed operation
  */
- export function encodeOpHash(value: string) {
+export function encodeOpHash(value: string) {
   const blakeHash = blake.blake2b(hex2buf(value), undefined, 32);
   return b58cencode(blakeHash, prefix.o);
 }
@@ -165,7 +166,7 @@ export const hex2buf = (hex: string): Uint8Array => {
   if (match) {
     return new Uint8Array(match.map((h) => parseInt(h, 16)));
   } else {
-    throw new Error(`Unable to convert ${hex} to a Uint8Array`);
+    throw new ValueConversionError(hex, 'Uint8Array');
   }
 };
 
