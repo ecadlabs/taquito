@@ -2938,7 +2938,7 @@
     "@taquito/utils" "^12.0.3"
     "typedarray-to-buffer" "^4.0.0"
 
-"@taquito/rpc@^12.0.3", "@taquito/rpc@12.0.3":
+"@taquito/rpc@^12.0.3":
   "integrity" "sha512-HPgnKYzFmt/Ys+E6KT8emior4dGmOqgdbCwJFMmKcReVFn21K7zaifdBGx5XcPIu12XEMShIEs6xGyHLOr0tGw=="
   "resolved" "https://registry.npmjs.org/@taquito/rpc/-/rpc-12.0.3.tgz"
   "version" "12.0.3"
