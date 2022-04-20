@@ -112,11 +112,7 @@ function Footer() {
                     {linkItem.items.map((item, key) =>
                       item.html ? (
                         item.html === 'form' ? (
-                          <li
-                            key={key}
-                            className="footer__item" // Developer provided the HTML, so assume it's safe.
-                            // eslint-disable-next-line react/no-danger
-                          >
+                          <li key={key} className="footer__item">
                             <FooterForm />
                           </li>
                         ) : item.html === 'image' ? (
@@ -125,7 +121,9 @@ function Footer() {
                               ref={footerContainer}
                               onMouseEnter={() => lottie.play('footerLogo')}
                               onMouseLeave={setInterval(() => {
-                                return lottie.stop('footerLogo');
+                                if (isActive) {
+                                  return lottie.stop('footerLogo');
+                                }
                               }, 5000)}
                               class="footerLogo"
                             />
@@ -133,8 +131,7 @@ function Footer() {
                         ) : (
                           <li
                             key={key}
-                            className="footer__item" // Developer provided the HTML, so assume it's safe.
-                            // eslint-disable-next-line react/no-danger
+                            className="footer__item"
                             dangerouslySetInnerHTML={{
                               __html: item.html,
                             }}
