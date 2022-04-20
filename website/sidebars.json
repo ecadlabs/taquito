@@ -8,6 +8,7 @@
         "boilerplate",        
         "batch_API",
         "beaconwallet-singleton",
+        "failwith_errors",
         "confirmation_event_stream",
         "set_delegate",
         "dapp_prelaunch",

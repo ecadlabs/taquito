@@ -54,7 +54,7 @@ After formatting the string properly, you can convert it into bytes, for example
 import { char2Bytes } from '@taquito/utils';
 
 const bytes = char2Bytes(formattedInput);
-const payloadBytes = '05' + '01' + char2Bytes(bytes.length) + bytes;
+const payloadBytes = '05' + '0100' + char2Bytes(bytes.length) + bytes;
 ```
 
 The bytes representation of the string must be prefixed with 3 pieces of information:
@@ -104,7 +104,7 @@ const formattedInput: string = [
 
 // The bytes to sign
 const bytes = char2Bytes(formattedInput);
-const payloadBytes = '05' + '01' + char2Bytes(bytes.length) + bytes;
+const payloadBytes = '05' + '0100' + char2Bytes(bytes.length) + bytes;
 
 // The payload to send to the wallet
 const payload: RequestSignPayloadInput = {
@@ -178,4 +178,4 @@ A fraudulent dapp could convince less tech-savvy users to sign arbitrary data an
 
 A signature can also be used in a replay attack when a dapp uses the same signature multiple times to gain access to a contract functionality. A signature should be used one single time and destroyed and a smart contract should implement a verification process to ensure the signature hasn't been used already.
 
-_October 2021 - Taquito version 10.2.0_
+_March 2022 - Taquito version 12.0.0_
