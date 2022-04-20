@@ -11,6 +11,7 @@ import lottie from 'lottie-web';
 export default function NavbarLogo() {
   const container = useRef(null);
   const [isActive, setIsActive] = useState(false);
+
   useEffect(() => {
     lottie.loadAnimation({
       container: container.current,
@@ -49,7 +50,9 @@ export default function NavbarLogo() {
           return lottie.play('navbarLogo');
         }}
         onMouseLeave={setInterval(() => {
-          return lottie.stop('navbarLogo');
+          if (isActive) {
+            return lottie.stop('navbarLogo');
+          }
         }, 5000)}
         className="navbar__brand"
         imageClassName="navbar__logo"
