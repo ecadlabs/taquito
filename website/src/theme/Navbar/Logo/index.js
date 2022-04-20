@@ -35,7 +35,7 @@ export default function NavbarLogo() {
       <div
         ref={container}
         onMouseEnter={() => lottie.play('navbarLogo')}
-        onMouseLeave={() => lottie.stop('navbarLogo')}
+        // onMouseLeave={() => lottie.stop('navbarLogo')}
         className="navbar__brand"
         imageClassName="navbar__logo"
         titleClassName="navbar__title"

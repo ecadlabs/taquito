@@ -114,7 +114,7 @@ function Footer() {
                             <div
                               ref={footerContainer}
                               onMouseEnter={() => lottie.play('footerLogo')}
-                              onMouseLeave={() => lottie.stop('footerLogo')}
+                              // onMouseLeave={() => lottie.stop('footerLogo')}
                               class="footerLogo"
                             />
                           </a>
