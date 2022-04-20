@@ -43,7 +43,6 @@ describe('RpcContractProvider test', () => {
   let rpcContractProvider: RpcContractProvider;
   let mockRpcClient: {
     getScript: jest.Mock<any, any>;
-    getNormalizedScript: jest.Mock<any, any>;
     getStorage: jest.Mock<any, any>;
     getBigMapExpr: jest.Mock<any, any>;
     getBigMapKey: jest.Mock<any, any>;
@@ -97,7 +96,6 @@ describe('RpcContractProvider test', () => {
       getEntrypoints: jest.fn(),
       getBlock: jest.fn(),
       getScript: jest.fn(),
-      getNormalizedScript: jest.fn(),
       getManagerKey: jest.fn(),
       getStorage: jest.fn(),
       getBigMapKey: jest.fn(),
@@ -152,7 +150,13 @@ describe('RpcContractProvider test', () => {
       prim: 'Pair',
       args: [{ int: '100' }, []],
     });
-    mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
+    mockRpcClient.getContract.mockResolvedValue({
+      counter: 0,
+      script: {
+        code: [sample],
+        storage: sampleStorage,
+      },
+    });
     mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
     mockRpcClient.getProtocols.mockResolvedValue({ next_protocol: 'test_proto' });
     mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
@@ -172,10 +176,6 @@ describe('RpcContractProvider test', () => {
 
   describe('getStorage', () => {
     it('should call getStorage', async (done) => {
-      mockRpcClient.getNormalizedScript.mockResolvedValue({
-        code: [sample],
-        storage: sampleStorage,
-      });
       const result = await rpcContractProvider.getStorage('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D');
       expect(result).toEqual({
         '0': {},
@@ -189,7 +189,6 @@ describe('RpcContractProvider test', () => {
 
   describe('getBigMapKey', () => {
     it('should call getBigMapKey', async (done) => {
-      mockRpcClient.getNormalizedScript.mockResolvedValue({ code: [sample] });
       mockRpcClient.getBigMapKey.mockResolvedValue(sampleBigMapValue);
       const result = await rpcContractProvider.getBigMapKey(
         'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
@@ -1377,7 +1376,6 @@ describe('RpcContractProvider test', () => {
 
   describe('at', () => {
     it('should return contract method', async (done) => {
-      mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
       mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
       mockRpcClient.getEntrypoints.mockResolvedValue({
         entrypoints: {
@@ -1385,9 +1383,12 @@ describe('RpcContractProvider test', () => {
         },
       });
       mockRpcClient.preapplyOperations.mockResolvedValue([]);
-      mockRpcClient.getNormalizedScript.mockResolvedValue({
-        code: tokenCode,
-        storage: tokenInit,
+      mockRpcClient.getContract.mockResolvedValue({
+        counter: 0,
+        script: {
+          code: tokenCode,
+          storage: tokenInit,
+        },
       });
       mockRpcClient.getBlockMetadata.mockResolvedValue({
         next_protocol: 'PsBABY5HQTSkA4297zNHfsZNKtxULfL18y95qb3m53QJiXGmrbU',
