@@ -104,5 +104,10 @@
     "extends": [
       "@commitlint/config-conventional"
     ]
+  },
+  "dependencies": {
+    "@taquito/rpc": "file:packages/taquito-rpc",
+    "@taquito/taquito": "file:packages/taquito",
+    "@taquito/utils": "file:packages/taquito-utils"
   }
 }

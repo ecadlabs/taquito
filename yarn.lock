@@ -1782,11 +1782,15 @@
   "version" "12.0.3"
   dependencies:
     "@airgap/beacon-sdk" "^2.3.12"
+    "@taquito/taquito" "^12.0.3"
 
 "@taquito/contracts-library@file:C:\\Users\\17788\\Documents\\GitHub\\taquito\\packages\\taquito-contracts-library":
   "resolved" "file:packages/taquito-contracts-library"
   "version" "12.0.3"
   dependencies:
+    "@taquito/rpc" "^12.0.3"
+    "@taquito/taquito" "^12.0.3"
+    "@taquito/utils" "^12.0.3"
     "bignumber.js" "^9.0.2"
 
 "@taquito/http-utils@file:C:\\Users\\17788\\Documents\\GitHub\\taquito\\packages\\taquito-http-utils":
@@ -1801,19 +1805,22 @@
   dependencies:
     "@ledgerhq/hw-transport" "^6.20.0"
     "@stablelib/blake2b" "^1.0.1"
+    "@taquito/taquito" "^12.0.3"
+    "@taquito/utils" "^12.0.3"
     "buffer" "^6.0.3"
 
 "@taquito/local-forging@file:C:\\Users\\17788\\Documents\\GitHub\\taquito\\packages\\taquito-local-forging":
   "resolved" "file:packages/taquito-local-forging"
   "version" "12.0.3"
   dependencies:
+    "@taquito/utils" "^12.0.3"
     "bignumber.js" "^9.0.2"
 
 "@taquito/michel-codec@file:C:\\Users\\17788\\Documents\\GitHub\\taquito\\packages\\taquito-michel-codec":
   "resolved" "file:packages/taquito-michel-codec"
   "version" "12.0.3"
 
-"@taquito/michelson-encoder@file:C:\\Users\\17788\\Documents\\GitHub\\taquito\\packages\\taquito-michelson-encoder":
+"@taquito/michelson-encoder@^12.0.3", "@taquito/michelson-encoder@file:C:\\Users\\17788\\Documents\\GitHub\\taquito\\packages\\taquito-michelson-encoder":
   "resolved" "file:packages/taquito-michelson-encoder"
   "version" "12.0.3"
   dependencies:
@@ -1828,7 +1835,7 @@
     "@stablelib/ed25519" "^1.0.2"
     "typedarray-to-buffer" "^4.0.0"
 
-"@taquito/rpc@file:C:\\Users\\17788\\Documents\\GitHub\\taquito\\packages\\taquito-rpc":
+"@taquito/rpc@^12.0.3", "@taquito/rpc@file:C:\\Users\\17788\\Documents\\GitHub\\taquito\\packages\\taquito-rpc":
   "resolved" "file:packages/taquito-rpc"
   "version" "12.0.3"
   dependencies:
@@ -1845,7 +1852,7 @@
     "pbkdf2" "^3.1.2"
     "typedarray-to-buffer" "^4.0.0"
 
-"@taquito/taquito@file:C:\\Users\\17788\\Documents\\GitHub\\taquito\\packages\\taquito":
+"@taquito/taquito@^12.0.3", "@taquito/taquito@file:C:\\Users\\17788\\Documents\\GitHub\\taquito\\packages\\taquito":
   "resolved" "file:packages/taquito"
   "version" "12.0.3"
   dependencies:
@@ -1856,24 +1863,31 @@
   "resolved" "file:packages/taquito-tezbridge-signer"
   "version" "12.0.3"
   dependencies:
+    "@taquito/utils" "^12.0.3"
     "typedarray-to-buffer" "^4.0.0"
 
 "@taquito/tezbridge-wallet@file:C:\\Users\\17788\\Documents\\GitHub\\taquito\\packages\\taquito-tezbridge-wallet":
   "resolved" "file:packages/taquito-tezbridge-wallet"
   "version" "12.0.3"
+  dependencies:
+    "@taquito/taquito" "^12.0.3"
 
 "@taquito/tzip12@file:C:\\Users\\17788\\Documents\\GitHub\\taquito\\packages\\taquito-tzip12":
   "resolved" "file:packages/taquito-tzip12"
   "version" "12.0.3"
+  dependencies:
+    "@taquito/michelson-encoder" "^12.0.3"
+    "@taquito/taquito" "^12.0.3"
+    "@taquito/tzip16" "^12.0.3"
 
-"@taquito/tzip16@file:C:\\Users\\17788\\Documents\\GitHub\\taquito\\packages\\taquito-tzip16":
+"@taquito/tzip16@^12.0.3", "@taquito/tzip16@file:C:\\Users\\17788\\Documents\\GitHub\\taquito\\packages\\taquito-tzip16":
   "resolved" "file:packages/taquito-tzip16"
   "version" "12.0.3"
   dependencies:
     "bignumber.js" "^9.0.2"
     "crypto-js" "^4.1.1"
 
-"@taquito/utils@file:C:\\Users\\17788\\Documents\\GitHub\\taquito\\packages\\taquito-utils":
+"@taquito/utils@^12.0.3", "@taquito/utils@file:C:\\Users\\17788\\Documents\\GitHub\\taquito\\packages\\taquito-utils":
   "resolved" "file:packages/taquito-utils"
   "version" "12.0.3"
   dependencies:
