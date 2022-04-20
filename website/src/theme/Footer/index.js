@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import { useThemeConfig } from '@docusaurus/theme-common';
@@ -51,6 +51,7 @@ const FooterLogo = ({ sources, alt, width, height }) => (
 
 function Footer() {
   const footerContainer = useRef(null);
+  const [isActive, setIsActive] = useState(false);
   const { footer } = useThemeConfig();
   const { copyright, links = [], logo = {} } = footer || {};
   const sources = {
@@ -80,6 +81,15 @@ function Footer() {
       lottie.destroy();
     };
   }, []);
+
+  useEffect(() => {
+    if (!isActive) {
+      setTimeout(() => {
+        setIsActive(true);
+        return lottie.play('footerLogo');
+      }, 2000);
+    }
+  }, [isActive]);
 
   return (
     <footer
@@ -114,7 +124,9 @@ function Footer() {
                             <div
                               ref={footerContainer}
                               onMouseEnter={() => lottie.play('footerLogo')}
-                              // onMouseLeave={() => lottie.stop('footerLogo')}
+                              onMouseLeave={setInterval(() => {
+                                return lottie.stop('footerLogo');
+                              }, 5000)}
                               class="footerLogo"
                             />
                           </a>
