@@ -1813,7 +1813,7 @@
   "resolved" "file:packages/taquito-michel-codec"
   "version" "12.0.3"
 
-"@taquito/michelson-encoder@^12.0.3", "@taquito/michelson-encoder@file:C:\\Users\\17788\\Documents\\GitHub\\taquito\\packages\\taquito-michelson-encoder":
+"@taquito/michelson-encoder@file:C:\\Users\\17788\\Documents\\GitHub\\taquito\\packages\\taquito-michelson-encoder":
   "resolved" "file:packages/taquito-michelson-encoder"
   "version" "12.0.3"
   dependencies:
@@ -1828,7 +1828,7 @@
     "@stablelib/ed25519" "^1.0.2"
     "typedarray-to-buffer" "^4.0.0"
 
-"@taquito/rpc@^12.0.3", "@taquito/rpc@file:C:\\Users\\17788\\Documents\\GitHub\\taquito\\packages\\taquito-rpc":
+"@taquito/rpc@file:C:\\Users\\17788\\Documents\\GitHub\\taquito\\packages\\taquito-rpc":
   "resolved" "file:packages/taquito-rpc"
   "version" "12.0.3"
   dependencies:
@@ -1845,7 +1845,7 @@
     "pbkdf2" "^3.1.2"
     "typedarray-to-buffer" "^4.0.0"
 
-"@taquito/taquito@^12.0.3", "@taquito/taquito@file:C:\\Users\\17788\\Documents\\GitHub\\taquito\\packages\\taquito":
+"@taquito/taquito@file:C:\\Users\\17788\\Documents\\GitHub\\taquito\\packages\\taquito":
   "resolved" "file:packages/taquito"
   "version" "12.0.3"
   dependencies:
@@ -1866,14 +1866,14 @@
   "resolved" "file:packages/taquito-tzip12"
   "version" "12.0.3"
 
-"@taquito/tzip16@^12.0.3", "@taquito/tzip16@file:C:\\Users\\17788\\Documents\\GitHub\\taquito\\packages\\taquito-tzip16":
+"@taquito/tzip16@file:C:\\Users\\17788\\Documents\\GitHub\\taquito\\packages\\taquito-tzip16":
   "resolved" "file:packages/taquito-tzip16"
   "version" "12.0.3"
   dependencies:
     "bignumber.js" "^9.0.2"
     "crypto-js" "^4.1.1"
 
-"@taquito/utils@^12.0.3", "@taquito/utils@file:C:\\Users\\17788\\Documents\\GitHub\\taquito\\packages\\taquito-utils":
+"@taquito/utils@file:C:\\Users\\17788\\Documents\\GitHub\\taquito\\packages\\taquito-utils":
   "resolved" "file:packages/taquito-utils"
   "version" "12.0.3"
   dependencies:
