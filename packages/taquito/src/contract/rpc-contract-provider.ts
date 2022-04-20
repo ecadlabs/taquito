@@ -96,7 +96,7 @@ export class RpcContractProvider
       throw new InvalidContractAddressError(contract);
     }
     if (!schema) {
-      schema = (await this.rpc.getContract(contract)).script;
+      schema = await this.rpc.getNormalizedScript(contract);
     }
 
     let contractSchema: Schema;

@@ -81,8 +81,11 @@ export class RpcReadAdapter implements TzReadProvider {
    * @returns Note: The code must be in the JSON format and not contain global constant
    */
   async getScript(contract: string, block: BlockIdentifier): Promise<ScriptedContracts> {
-    const { script } = await this.context.rpc.getContract(contract, { block: String(block) });
-    return script;
+    return this.context.rpc.getNormalizedScript(
+      contract,
+      { unparsing_mode: 'Readable' },
+      { block: String(block) }
+    );
   }
 
   /**

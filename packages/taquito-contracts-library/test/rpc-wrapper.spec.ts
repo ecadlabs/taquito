@@ -49,7 +49,7 @@ describe('RpcWrapperContractsLibrary tests', () => {
     });
 
     const rpcWrapper = new RpcWrapperContractsLibrary(mockRpcClient as any, contractLib);
-    expect((await rpcWrapper.getContract(contractAddress)).script).toEqual(script);
+    expect(await rpcWrapper.getNormalizedScript(contractAddress)).toEqual(script);
     expect(await rpcWrapper.getEntrypoints(contractAddress)).toEqual(entrypoints);
     done();
   });

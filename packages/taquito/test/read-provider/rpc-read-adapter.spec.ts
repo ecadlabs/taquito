@@ -250,11 +250,9 @@ describe('RpcReadAdapter test', () => {
     });
 
     it(`should get the code of a smart contract given its address: ${block}`, async (done) => {
-      mockRpcClient.getContract.mockResolvedValue({
-        script: {
-          code: contractCodeSample,
-          storage: contractStorage,
-        },
+      mockRpcClient.getNormalizedScript.mockResolvedValue({
+        code: contractCodeSample,
+        storage: contractStorage,
       });
 
       const result = await readProvider.getScript('KT1NcdpzokZQY4sLmCBUwLnMHQCCQ6rRXYwS', block);
@@ -263,7 +261,7 @@ describe('RpcReadAdapter test', () => {
         storage: contractStorage,
       });
 
-      expect(mockRpcClient.getContract.mock.calls[0][0]).toEqual(
+      expect(mockRpcClient.getNormalizedScript.mock.calls[0][0]).toEqual(
         'KT1NcdpzokZQY4sLmCBUwLnMHQCCQ6rRXYwS'
       );
       done();

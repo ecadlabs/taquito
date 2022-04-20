@@ -50,15 +50,16 @@ import { ContractsLibrary } from './taquito-contracts-library';
 export class RpcWrapperContractsLibrary implements RpcClientInterface {
   constructor(private rpc: RpcClientInterface, private contractslibrary: ContractsLibrary) {}
 
-  async getContract(
+  async getNormalizedScript(
     address: string,
+    unparsingMode: UnparsingMode = { unparsing_mode: 'Readable' },
     { block }: RPCOptions = defaultRPCOptions
-  ): Promise<ContractResponse> {
+  ): Promise<ScriptResponse> {
     const contractData = this.contractslibrary.getContract(address);
     if (contractData) {
-      return { script: contractData.script, balance: new BigNumber(NaN) };
+      return contractData.script;
     } else {
-      return this.rpc.getContract(address, { block });
+      return this.rpc.getNormalizedScript(address, unparsingMode, { block });
     }
   }
 
@@ -98,12 +99,11 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   ): Promise<ScriptResponse> {
     return this.rpc.getScript(address, { block });
   }
-  async getNormalizedScript(
+  async getContract(
     address: string,
-    unparsingMode: UnparsingMode = { unparsing_mode: 'Readable' },
     { block }: RPCOptions = defaultRPCOptions
-  ): Promise<ScriptResponse> {
-    return this.rpc.getNormalizedScript(address, unparsingMode, { block });
+  ): Promise<ContractResponse> {
+    return this.rpc.getContract(address, { block });
   }
   async getManagerKey(
     address: string,
