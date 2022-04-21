@@ -4,7 +4,7 @@ import styles from './SimpleStep.module.scss';
 
 const FeatureList = [
   {
-    title: 'Simple Steps to Build Tezos apps faster and easier.',
+    title: 'Start Simple With Taquito',
     description: 'Just a few simple steps and you are set to start building your own app.',
     link: {
       title: 'Start Now',

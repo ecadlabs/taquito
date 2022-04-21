@@ -4,7 +4,7 @@ import styles from './CardsGrid.module.scss';
 
 const FeatureList = [
   {
-    title: 'This is what makes Taquito so amazing.',
+    title: 'What makes Taquito so amazing?',
     link: {
       title: 'Get Started',
       url: '/docs/quick_start',
