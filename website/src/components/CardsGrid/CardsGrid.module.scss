@@ -44,13 +44,13 @@
 }
 
 .cardsGridTitleContainer {
-  width: 30%;
+  width: 35%;
   display: flex;
   flex-direction: column;
   height: 100%;
 
   .cardsGridTitle {
-    max-width: 333px;
+    // max-width: 400px;
     font-family: Rounded Mplus 1c;
     text-transform: capitalize;
     padding-right: 30px;
@@ -71,21 +71,18 @@
     min-width: 135px !important;
     padding: 3px 15px 6px 15px;
     color: var(--ifm-color-text-secondary) !important;
-
     &:hover {
       color: var(--ifm-color-text-primary) !important;
       text-decoration: none;
     }
   }
 
-  @media (max-width: 1140px) {
+  @media (max-width: 1200px) {
     width: 100%;
-
     .cardsGridTitle {
       max-width: fit-content;
       padding: 10px;
     }
-
     justify-content: center;
     align-items: center;
     margin-bottom: 50px;
@@ -94,9 +91,9 @@
 }
 
 .cardsGridCards {
-  width: 70%;
+  width: 65%;
 
-  @media (max-width: 1140px) {
+  @media (max-width: 1200px) {
     width: 100%;
   }
 
