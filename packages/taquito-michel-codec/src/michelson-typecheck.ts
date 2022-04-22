@@ -1958,18 +1958,37 @@ function functionTypeInternal(
             `${instruction.prim}: sapling memo size mismatch: ${s[0].args[0].int} != ${s[1].args[0].int}`
           );
         }
-        return [
-          annotateVar({
-            prim: 'option',
-            args: [
-              {
-                prim: 'pair',
-                args: [{ prim: 'int' }, annotate(s[1], { t: null })],
-              },
-            ],
-          }),
-          ...stack.slice(2),
-        ];
+        return ProtoInferiorTo(proto, Protocol.PtJakarta)
+          ? [
+              annotateVar({
+                prim: 'option',
+                args: [
+                  {
+                    prim: 'pair',
+                    args: [{ prim: 'int' }, annotate(s[1], { t: null })],
+                  },
+                ],
+              }),
+              ...stack.slice(2),
+            ]
+          : [
+              annotateVar({
+                prim: 'option',
+                args: [
+                  {
+                    prim: 'pair',
+                    args: [
+                      { prim: 'bytes' },
+                      {
+                        prim: 'pair',
+                        args: [{ prim: 'int' }, annotate(s[1], { t: null })],
+                      },
+                    ],
+                  },
+                ],
+              }),
+              ...stack.slice(2),
+            ];
       }
 
       case 'OPEN_CHEST':
