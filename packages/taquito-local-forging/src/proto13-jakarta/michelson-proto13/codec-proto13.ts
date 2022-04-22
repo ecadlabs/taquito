@@ -20,7 +20,7 @@ import {
 } from '../../michelson/codec';
 import { Uint8ArrayConsumer } from '../../uint8array-consumer';
 import { opMappingProto13, opMappingReverseProto13 } from '../constants-proto13';
-import { UnexpectedMichelsonValueError } from 'taquito-local-forging/src/error';
+import { UnexpectedMichelsonValueError } from '../../error';
 
 export const scriptEncoderProto13: Encoder<{ code: MichelsonValue; storage: MichelsonValue }> = (
   script
