@@ -18,24 +18,25 @@ jobs:
     - run: npm ci
     - run: npm run lerna -- bootstrap
     - run: npm run build
-    - 
+    -
       name: Tailscale
       uses: tailscale/github-action@v1
       with:
         authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
-    - 
+        version: 1.22.2
+    -
       id: originate-contracts-mondaynet
       working-directory: ./integration-tests
       env:
         MONDAYNET: true
       run: npm run test:originate-known-contracts
-    - 
+    -
       if: always()
       id: integration-tests-mondaynet
       working-directory: ./integration-tests
       env:
         TEZOS_MONDAYNET_CONTRACT_ADDRESS: ${{ steps.originate-contracts-mondaynet.outputs.knownContractAddress }}
-        TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS: ${{ steps.originate-contracts-mondaynet.outputs.knownBigMapContractAddress }} 
-        TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS: ${{ steps.originate-contracts-mondaynet.outputs.knownTzip12BigMapOffChainContractAddress }} 
+        TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS: ${{ steps.originate-contracts-mondaynet.outputs.knownBigMapContractAddress }}
+        TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS: ${{ steps.originate-contracts-mondaynet.outputs.knownTzip12BigMapOffChainContractAddress }}
         TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS: ${{ steps.originate-contracts-mondaynet.outputs.knownSaplingContractAddress }}
       run: npm run test:mondaynet -- --maxWorkers=2
