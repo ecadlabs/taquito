@@ -4,6 +4,7 @@ import { Uint8ArrayConsumer } from '../uint8array-consumer';
 import { Encoder } from '../taquito-local-forging';
 import { opMappingReverse, opMapping } from '../constants';
 import { pad } from '../utils';
+import { InvalidHexStringError, UnexpectedMichelsonValueError } from '../error';
 
 type PrimValue = { prim: string; args?: MichelsonValue[]; annots?: string[] };
 type BytesValue = { bytes: string };
@@ -65,7 +66,7 @@ export const valueEncoder: Encoder<MichelsonValue> = (value: MichelsonValue) => 
     return intEncoder(value);
   }
 
-  throw new Error('Unexpected value');
+  throw new UnexpectedMichelsonValueError(value);
 };
 
 export const valueDecoder: Decoder = (value: Uint8ArrayConsumer) => {
@@ -98,7 +99,7 @@ export const extractRequiredLen = (value: Uint8ArrayConsumer, bytesLength = 4) =
 
 export const bytesEncoder: Encoder<BytesValue> = (value) => {
   if (!/^([A-Fa-f0-9]{2})*$/.test(value.bytes)) {
-    throw new Error(`Invalid hex string: ${value.bytes}`);
+    throw new InvalidHexStringError(value.bytes);
   }
 
   const len = value.bytes.length / 2;

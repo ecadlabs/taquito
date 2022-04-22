@@ -6,6 +6,7 @@ import {
   MichelsonType,
   MichelsonTypePair,
 } from './michelson-types';
+import { HexParseError, LongIntegerError, TezosIdEncodeError } from './error';
 
 export type Tuple<N extends number, T> = N extends 1
   ? [T]
@@ -96,7 +97,7 @@ export class LongInteger {
           this.neg = true;
         } else {
           if (c < 0x30 || c > 0x39) {
-            throw new Error(`unexpected character in integer constant: ${arg[i]}`);
+            throw new LongIntegerError(`unexpected character in integer constant: ${arg[i]}`);
           }
           this.append(c - 0x30);
         }
@@ -325,7 +326,7 @@ export function checkDecodeTezosID<T extends TezosIDType[]>(
 export function encodeTezosID(id: TezosIDType, data: number[] | Uint8Array): string {
   const [plen, p] = tezosPrefix[id];
   if (data.length !== plen) {
-    throw new Error(`incorrect data length for ${id}: ${data.length}`);
+    throw new TezosIdEncodeError(`Incorrect data length for ${id}: ${data.length}`);
   }
   return encodeBase58Check([...p, ...data]);
 }
@@ -400,7 +401,7 @@ export function parseHex(s: string): number[] {
     const ss = s.slice(i, i + 2);
     const x = parseInt(ss, 16);
     if (Number.isNaN(x)) {
-      throw new Error(`can't parse hex byte: ${ss}`);
+      throw new HexParseError(ss);
     }
     res.push(x);
   }

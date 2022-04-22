@@ -8,6 +8,10 @@ import { RpcClient, RpcClientCache } from '@taquito/rpc';
 
 const nodeCrypto = require('crypto');
 
+if (typeof jest !== 'undefined') {
+  jest.setTimeout(60000 * 10);
+}
+
 enum ForgerType {
   LOCAL = 'local',
   RPC = 'rpc',
@@ -59,9 +63,9 @@ interface FaucetConfig {
 
 const ithacanetEphemeral = {
   rpc: process.env['TEZOS_RPC_ITHACANET'] || 'https://ithacanet.ecadinfra.com/',
-  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD', 
+  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT19oXBkAz1njVaTEypSzxGorWAFy6wnLLe1',
-  knownBigMapContract: 'KT1JmL7j8CY371kRF2oZoJmzi7EUWbLPjEqZ', 
+  knownBigMapContract: 'KT1JmL7j8CY371kRF2oZoJmzi7EUWbLPjEqZ',
   knownTzip1216Contract: 'KT1GxL96iix8MCTsCA1DBVfnZ4Gdk7EZW4Eq',
   knownSaplingContract: 'KT1CDenBWcgWjNZULc9GbJRTnQZQXYWrVT7k',
   protocol: Protocols.Psithaca2,
@@ -87,6 +91,21 @@ const hangzhounetEphemeral = {
   },
 };
 
+const mondaynetEphemeral = {
+  rpc: process.env['TEZOS_RPC_MONDAYNET'] || 'http://mondaynet.ecadinfra.com:8732',
+  knownBaker: 'tz1ck3EJwzFpbLVmXVuEn5Ptwzc6Aj14mHSH',
+  knownContract: process.env['TEZOS_MONDAYNET_CONTRACT_ADDRESS'] || '',
+  knownBigMapContract: process.env['TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS'] || '',
+  knownTzip1216Contract: process.env['TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS'] || '',
+  knownSaplingContract: process.env['TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS'] || '',
+  protocol: Protocols.ProtoALpha,
+  signerConfig: {
+    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
+    keyUrl: 'http://key-gen-1.i.tez.ie:3010/mondaynet',
+    requestHeaders: { Authorization: 'Bearer taquito' },
+  },
+};
+
 const ithacanetFaucet = {
   rpc: process.env['TEZOS_RPC_ITHACANET'] || 'https://ithacanet.ecadinfra.com/',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
@@ -97,29 +116,29 @@ const ithacanetFaucet = {
   protocol: Protocols.Psithaca2,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
-      faucetKey: {  
-        "pkh": "tz1LJLhMszojav8EfN9hMZAPBSH21ocamx7n",
-        "mnemonic": [
-          "escape",
-          "camera",
-          "credit",
-          "endorse",
-          "auto",
-          "lamp",
-          "advance",
-          "orange",
-          "fluid",
-          "virus",
-          "argue",
-          "knee",
-          "pluck",
-          "remove",
-          "scheme"
-        ],
-        "email": "noriqgjl.gtsyulgy@teztnets.xyz",
-        "password": "st3sZBRLWF",
-        "amount": "118887604096",
-        "secret": "7d414378d9071328313cca699d6922f1b59d076a"
+    faucetKey: {
+      "pkh": "tz1LJLhMszojav8EfN9hMZAPBSH21ocamx7n",
+      "mnemonic": [
+        "escape",
+        "camera",
+        "credit",
+        "endorse",
+        "auto",
+        "lamp",
+        "advance",
+        "orange",
+        "fluid",
+        "virus",
+        "argue",
+        "knee",
+        "pluck",
+        "remove",
+        "scheme"
+      ],
+      "email": "noriqgjl.gtsyulgy@teztnets.xyz",
+      "password": "st3sZBRLWF",
+      "amount": "118887604096",
+      "secret": "7d414378d9071328313cca699d6922f1b59d076a"
     }
   },
 };
@@ -171,13 +190,13 @@ if (process.env['RUN_WITH_FAUCET']) {
   providers.push(hangzhounetEphemeral);
 } else if (process.env['ITHACANET']) {
   providers.push(ithacanetEphemeral);
+} else if (process.env['MONDAYNET']) {
+  providers.push(mondaynetEphemeral);
 } else {
   providers.push(hangzhounetEphemeral, ithacanetEphemeral);
 }
 
 const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE'];
-
-jest.setTimeout(60000 * 10);
 
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
   if (forger === ForgerType.LOCAL) {
@@ -186,6 +205,8 @@ const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
     const rpcForger = Tezos.getFactory(RpcForger)();
     const composite = new CompositeForger([rpcForger, localForger]);
     Tezos.setProvider({ forger: composite });
+  } else if (forger === ForgerType.RPC) {
+    Tezos.setProvider({ forger: Tezos.getFactory(RpcForger)() });
   }
 };
 

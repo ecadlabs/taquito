@@ -30,8 +30,9 @@ export class SaplingStateToken extends Token {
     if ('int' in val) {
       return val.int;
     } else {
-      // Unknown case
-      throw new Error(
+      throw new SaplingStateValidationError(
+        val,
+        this,
         `Sapling state is expecting an object with an int property. Got ${JSON.stringify(val)}`
       );
     }

@@ -2,7 +2,8 @@ export { ListValidationError } from './tokens/list';
 export { MapValidationError } from './tokens/map';
 export { SetValidationError } from './tokens/set';
 export { BigMapValidationError } from './tokens/bigmap';
-
+export { TokenArgumentValidationError, TokenComparisonError } from './tokens/pair';
+export { OrTokenDecodingError } from './tokens/or';
 export { ChainIDValidationError } from './tokens/chain-id';
 export { KeyValidationError } from './tokens/key';
 export { ContractValidationError } from './tokens/contract';

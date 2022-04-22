@@ -2,10 +2,9 @@ import { Protocols } from '@taquito/taquito';
 import { CONFIGS } from './config';
 const crypto = require('crypto');
 
-CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
+CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  const hangzhounetOrHigher = (protocol === Protocols.PtHangz2 || protocol === Protocols.Psithaca2) ? test : test.skip;
-
+  
   describe(`Register global constants using: ${rpc}`, () => {
     const randomAnnots = () => crypto.randomBytes(3).toString('hex');
     let annots = randomAnnots();
@@ -15,7 +14,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done();
     });
 
-    hangzhounetOrHigher('Register a Micheline expression to the global table of constants', async (done) => {
+    test('Register a Micheline expression to the global table of constants', async (done) => {
       // We use a randomized annots in the Micheline expression because an expression can only be registered once.
       const op = await Tezos.contract.registerGlobalConstant({
         value: {
@@ -38,7 +37,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done();
     });
 
-    hangzhounetOrHigher(
+    test(
       'Register a Micheline expression to the global table of constants with auto-estimation of the fee, storage limit and gas limit',
       async (done) => {
         const op = await Tezos.contract.registerGlobalConstant({

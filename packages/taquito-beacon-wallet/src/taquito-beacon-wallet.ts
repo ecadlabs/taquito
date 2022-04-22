@@ -2,7 +2,7 @@
  * @packageDocumentation
  * @module @taquito/beacon-wallet
  */
- 
+
 import {
   DAppClient,
   DAppClientOptions,

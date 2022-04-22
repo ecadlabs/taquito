@@ -10,6 +10,7 @@ import {
   validateContractAddress,
   ValidationResult,
   InvalidChainIdError,
+  DeprecationError,
 } from '@taquito/utils';
 import { ChainIds } from '../constants';
 import { TzReadProvider } from '../read-provider/interface';
@@ -39,7 +40,7 @@ export class ContractView {
 
   async read(chainId?: ChainIds) {
     if (validateContractAddress(chainId) == ValidationResult.VALID) {
-      throw new Error(
+      throw new DeprecationError(
         `Since version 12, the lambda view no longer depends on a lambda contract. The read method no longer accepts a contract address as a parameter.`
       );
     } else if (chainId && validateChain(chainId) !== ValidationResult.VALID) {
