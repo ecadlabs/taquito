@@ -25,12 +25,12 @@ describe('Contract abstraction composer test', () => {
 
   beforeEach(() => {
     mockRpcClient = {
-      getNormalizedScript: jest.fn(),
+      getContract: jest.fn(),
       getEntrypoints: jest.fn(),
       getChainId: jest.fn(),
     };
 
-    mockRpcClient.getNormalizedScript.mockResolvedValue(script);
+    mockRpcClient.getContract.mockResolvedValue({ script });
     mockRpcClient.getEntrypoints.mockResolvedValue({
       entrypoints: {
         mint: { prim: 'pair', args: [{ prim: 'key' }, { prim: 'nat' }] },

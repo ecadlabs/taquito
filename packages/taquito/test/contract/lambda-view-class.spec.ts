@@ -10,47 +10,49 @@ describe('LambdaView test', () => {
 
   beforeEach(() => {
     mockRpcClientView = {
-      getNormalizedScript: jest.fn(),
+      getContract: jest.fn(),
       getChainId: jest.fn(),
       getEntrypoints: jest.fn(),
     };
 
-    mockRpcClientView.getNormalizedScript.mockResolvedValue(script);
+    mockRpcClientView.getContract.mockResolvedValue({ script });
     mockRpcClientView.getChainId.mockResolvedValue('NetXjD3HPJJjmcd');
 
     toolkitView = new TezosToolkit('url');
     toolkitView['_context'].rpc = mockRpcClientView;
 
     mockRpcClientLambda = {
-      getNormalizedScript: jest.fn(),
+      getContract: jest.fn(),
       getChainId: jest.fn(),
       getEntrypoints: jest.fn(),
     };
 
-    mockRpcClientLambda.getNormalizedScript.mockResolvedValue({
-      code: [
-        {
-          prim: 'parameter',
-          args: [
-            {
-              prim: 'lambda',
-              args: [
-                { prim: 'unit' },
-                {
-                  prim: 'pair',
-                  args: [{ prim: 'list', args: [{ prim: 'operation' }] }, { prim: 'unit' }],
-                },
-              ],
-            },
-          ],
-        },
-        { prim: 'storage', args: [{ prim: 'unit' }] },
-        {
-          prim: 'code',
-          args: [[{ prim: 'CAR' }, { prim: 'UNIT' }, { prim: 'EXEC' }]],
-        },
-      ],
-      storage: { prim: 'Unit' },
+    mockRpcClientLambda.getContract.mockResolvedValue({
+      script: {
+        code: [
+          {
+            prim: 'parameter',
+            args: [
+              {
+                prim: 'lambda',
+                args: [
+                  { prim: 'unit' },
+                  {
+                    prim: 'pair',
+                    args: [{ prim: 'list', args: [{ prim: 'operation' }] }, { prim: 'unit' }],
+                  },
+                ],
+              },
+            ],
+          },
+          { prim: 'storage', args: [{ prim: 'unit' }] },
+          {
+            prim: 'code',
+            args: [[{ prim: 'CAR' }, { prim: 'UNIT' }, { prim: 'EXEC' }]],
+          },
+        ],
+        storage: { prim: 'Unit' },
+      },
     });
     mockRpcClientLambda.getChainId.mockResolvedValue('NetXjD3HPJJjmcd');
     mockRpcClientLambda.getEntrypoints.mockResolvedValue({ entrypoints: {} });

@@ -2,6 +2,17 @@ import { MichelsonV1Expression } from '@taquito/rpc';
 import { Schema } from './schema/storage';
 import stringify from 'fast-json-stable-stringify';
 
+/**
+ *  @category Error
+ *  @description Error that indicates an invalid map type being passed or used
+ */
+export class InvalidMapTypeError extends Error {
+  public name = 'InvalidMapTypeError';
+  constructor(public mapType: string) {
+    super(`The map type '${mapType}' is invalid`);
+  }
+}
+
 // Retrieve a unique symbol associated with the key from the environment
 // Used in order to identify all object that are of type MichelsonMap even if they come from different module
 const michelsonMapTypeSymbol = Symbol.for('taquito-michelson-map-type-symbol');
@@ -58,7 +69,7 @@ export class MichelsonMap<K extends MichelsonMapKey, T> {
 
   setType(mapType: MichelsonV1Expression) {
     if (!isMapType(mapType)) {
-      throw new Error('mapType is not a valid michelson map type');
+      throw new InvalidMapTypeError(mapType.toString());
     }
 
     this.keySchema = new Schema(mapType.args[0]);

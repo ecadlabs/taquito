@@ -2,17 +2,37 @@
  * @packageDocumentation
  * @module @taquito/tezbridge-signer
  */
-import { b58cdecode, b58cencode, buf2hex, prefix, isValidPrefix } from '@taquito/utils';
+import {
+  b58cdecode,
+  b58cencode,
+  buf2hex,
+  prefix,
+  isValidPrefix,
+  ProhibitedActionError,
+  InvalidSignatureError,
+} from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
 
 // eslint-disable-next-line no-var
 declare var tezbridge: any;
 
 export { VERSION } from './version';
+
+/**
+ *  @category Error
+ *  @description Error that indicates a general TezBridge plugin error
+ */
+export class TezBridgePluginError extends Error {
+  public name = 'TezBridgePluginError';
+  constructor(public message: string) {
+    super(message);
+  }
+}
+
 export class TezBridgeSigner {
   constructor() {
     if (typeof tezbridge === 'undefined') {
-      throw new Error('tezbridge plugin could not be detected in your browser');
+      throw new TezBridgePluginError('TezBridge plugin could not be detected in your browser');
     }
   }
 
@@ -21,11 +41,11 @@ export class TezBridgeSigner {
   }
 
   async publicKey(): Promise<string> {
-    throw new Error('Public key cannot be exposed');
+    throw new ProhibitedActionError('Public key cannot be exposed');
   }
 
   async secretKey(): Promise<string> {
-    throw new Error('Secret key cannot be exposed');
+    throw new ProhibitedActionError('Secret key cannot be exposed');
   }
 
   async sign(bytes: string, _watermark?: Uint8Array) {
@@ -37,7 +57,7 @@ export class TezBridgeSigner {
     const pref = prefixSig.substr(0, 5);
 
     if (!isValidPrefix(pref)) {
-      throw new Error('Unsupported signature given by tezbridge: ' + prefixSig);
+      throw new InvalidSignatureError(prefixSig, 'Unsupported signature given by TezBridge');
     }
 
     const decoded = b58cdecode(prefixSig, prefix[pref]);

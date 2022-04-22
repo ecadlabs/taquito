@@ -20,6 +20,7 @@ import {
 } from '../../michelson/codec';
 import { Uint8ArrayConsumer } from '../../uint8array-consumer';
 import { opMappingProto13, opMappingReverseProto13 } from '../constants-proto13';
+import { UnexpectedMichelsonValueError } from 'taquito-local-forging/src/error';
 
 export const scriptEncoderProto13: Encoder<{ code: MichelsonValue; storage: MichelsonValue }> = (
   script
@@ -54,7 +55,7 @@ export const valueEncoderProto13: Encoder<MichelsonValue> = (value: MichelsonVal
     return intEncoder(value);
   }
 
-  throw new Error('Unexpected value');
+  throw new UnexpectedMichelsonValueError('Unexpected value');
 };
 
 export const valueDecoderProto13: Decoder = (value: Uint8ArrayConsumer) => {

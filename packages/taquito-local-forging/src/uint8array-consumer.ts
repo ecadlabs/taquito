@@ -1,13 +1,14 @@
+import { InvalidHexStringError } from './error';
 export class Uint8ArrayConsumer {
   static fromHexString(hex: string) {
     const lowHex = hex.toLowerCase();
     if (/^(([a-f]|\d){2})*$/.test(lowHex)) {
       const arr = new Uint8Array(
-        (lowHex.match(/([a-z]|\d){2}/g) || []).map(byte => parseInt(byte, 16))
+        (lowHex.match(/([a-z]|\d){2}/g) || []).map((byte) => parseInt(byte, 16))
       );
       return new Uint8ArrayConsumer(arr);
     } else {
-      throw new Error('Invalid hex string');
+      throw new InvalidHexStringError(lowHex);
     }
   }
 

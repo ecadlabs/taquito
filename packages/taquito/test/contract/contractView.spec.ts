@@ -8,7 +8,7 @@ import { ChainIds } from '../../src/constants';
 describe('ContractView test', () => {
   let rpcContractProvider: RpcContractProvider;
   let mockRpcClient: {
-    getNormalizedScript: jest.Mock<any, any>;
+    getContract: jest.Mock<any, any>;
     getStorage: jest.Mock<any, any>;
     getEntrypoints: jest.Mock<any, any>;
     getBlockHeader: jest.Mock<any, any>;
@@ -32,7 +32,7 @@ describe('ContractView test', () => {
   beforeEach(() => {
     mockRpcClient = {
       getEntrypoints: jest.fn(),
-      getNormalizedScript: jest.fn(),
+      getContract: jest.fn(),
       getStorage: jest.fn(),
       getBlockHeader: jest.fn(),
       runView: jest.fn(),
@@ -58,9 +58,11 @@ describe('ContractView test', () => {
     );
 
     mockRpcClient.getChainId.mockResolvedValue('NetXjD3HPJJjmcd');
-    mockRpcClient.getNormalizedScript.mockResolvedValue({
-      code: tokenCode,
-      storage: tokenInit,
+    mockRpcClient.getContract.mockResolvedValue({
+      script: {
+        code: tokenCode,
+        storage: tokenInit,
+      },
     });
     mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
     mockSigner.publicKey.mockResolvedValue('test_pub_key');

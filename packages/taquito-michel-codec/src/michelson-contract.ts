@@ -24,6 +24,12 @@ import {
   assertMichelsonType,
   assertMichelsonData,
 } from './michelson-validator';
+import {
+  InvalidDataExpressionError,
+  InvalidEntrypointError,
+  InvalidContractError,
+  InvalidTypeExpressionError,
+} from './error';
 
 export interface ContractOptions extends ParserOptions {
   traceCallback?: (t: InstructionTrace) => void;
@@ -42,7 +48,7 @@ export class Contract {
     const p = new Parser(opt);
     const expr = typeof src === 'string' ? p.parseScript(src) : p.parseJSON(src);
     if (expr === null) {
-      throw new Error('empty contract');
+      throw new InvalidContractError('empty contract');
     }
     if (assertMichelsonContract(expr)) {
       return new Contract(expr, opt);
@@ -54,7 +60,7 @@ export class Contract {
     const p = new Parser(opt);
     const expr = typeof src === 'string' ? p.parseScript(src) : p.parseJSON(src);
     if (expr === null) {
-      throw new Error('empty type expression');
+      throw new InvalidTypeExpressionError('empty type expression');
     }
     if (assertMichelsonType(expr) && assertTypeAnnotationsValid(expr)) {
       return expr;
@@ -66,7 +72,7 @@ export class Contract {
     const p = new Parser(opt);
     const expr = typeof src === 'string' ? p.parseScript(src) : p.parseJSON(src);
     if (expr === null) {
-      throw new Error('empty data expression');
+      throw new InvalidDataExpressionError('empty data expression');
     }
     if (assertMichelsonData(expr)) {
       return expr;
@@ -97,7 +103,7 @@ export class Contract {
   assertParameterValid(ep: string | null, d: MichelsonData): void {
     const t = this.entryPoint(ep || undefined);
     if (t === null) {
-      throw new Error(`contract has no entrypoint named ${ep}`);
+      throw new InvalidEntrypointError(ep?.toString());
     }
     this.assertDataValid(d, t);
   }

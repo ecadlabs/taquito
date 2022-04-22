@@ -9,7 +9,7 @@ import {
   InvalidPublicKeyError,
   InvalidAddressError,
 } from '@taquito/utils';
-import { OversizedEntryPointError } from './error';
+import { OversizedEntryPointError, InvalidBallotValueError, DecodeBallotValueError } from './error';
 import BigNumber from 'bignumber.js';
 import { entrypointMapping, entrypointMappingReverse, ENTRYPOINT_MAX_LENGTH } from './constants';
 import { extractRequiredLen, valueDecoder, valueEncoder, MichelsonValue } from './michelson/codec';
@@ -74,7 +74,7 @@ export const ballotEncoder = (ballot: string): string => {
     case 'pass':
       return '02';
     default:
-      throw new Error(`Invalid ballot value: ${ballot}`);
+      throw new InvalidBallotValueError(ballot);
   }
 };
 
@@ -88,7 +88,7 @@ export const ballotDecoder = (ballot: Uint8ArrayConsumer): string => {
     case 0x02:
       return 'pass';
     default:
-      throw new Error(`Unable to decode ballot value ${value[0]}`);
+      throw new DecodeBallotValueError(value[0].toString());
   }
 };
 

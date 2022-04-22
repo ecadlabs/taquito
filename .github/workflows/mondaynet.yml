@@ -29,8 +29,8 @@ jobs:
       env:
         MONDAYNET: true
       run: npm run test:originate-known-contracts
-      continue-on-error: true
     - 
+      if: always()
       id: integration-tests-mondaynet
       working-directory: ./integration-tests
       env:
@@ -39,4 +39,3 @@ jobs:
         TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS: ${{ steps.originate-contracts-mondaynet.outputs.knownTzip12BigMapOffChainContractAddress }} 
         TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS: ${{ steps.originate-contracts-mondaynet.outputs.knownSaplingContractAddress }}
       run: npm run test:mondaynet -- --maxWorkers=2
-      continue-on-error: true
