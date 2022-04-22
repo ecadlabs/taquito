@@ -1,10 +1,6 @@
 import { kindMapping } from '../constants';
 import { pad } from '../utils';
 
-export const enum CODEC_PROT0_12 {
-  BLOCK_PAYLOAD_HASH = 'blockPayloadHash',
-}
-
 const { [0x00]: ommited, ...kindMappingNoEndorsement } = kindMapping;
 
 export const kindMappingProto12: { [key: number]: string } = {

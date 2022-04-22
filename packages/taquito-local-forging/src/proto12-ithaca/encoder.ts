@@ -15,13 +15,12 @@ import {
   ManagerOperationSchema,
 } from '../schema/operation';
 import { blockPayloadHashEncoder } from './codec';
-import { CODEC_PROT0_12 } from './constants';
 import { EndorsementSchemaProto12, operationEncoderProto12 } from './schema';
 
 export const encodersProto12: { [key: string]: Encoder<any> } = {
   ...encoders,
   [CODEC.INT16]: int16Encoder,
-  [CODEC_PROT0_12.BLOCK_PAYLOAD_HASH]: blockPayloadHashEncoder,
+  [CODEC.BLOCK_PAYLOAD_HASH]: blockPayloadHashEncoder,
 };
 
 encodersProto12[CODEC.OPERATION] = operationEncoderProto12(encodersProto12);
