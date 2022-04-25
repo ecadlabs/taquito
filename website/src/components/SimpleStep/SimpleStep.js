@@ -13,18 +13,18 @@ const FeatureList = [
 
     steps: [
       {
-        icon: require('../../../static/img/simple-way-svg.svg').default,
+        icon: require('../../../static/img/download.svg').default,
         title: 'Install Taquito',
         description: 'Follow our QuickStart guide to start using Taquito and check code examples.',
       },
       {
-        icon: require('../../../static/img/simple-way-svg.svg').default,
+        icon: require('../../../static/img/systems.svg').default,
         title: 'Create and run your first app locally',
         description:
           'Use our original React Taquito Boilerplate app template for your future application',
       },
       {
-        icon: require('../../../static/img/simple-way-svg.svg').default,
+        icon: require('../../../static/img/app.svg').default,
         title: 'Build your own App',
         description:
           'Enjoy building with Taquito, and let us know how we can help to make your life easier.',
@@ -52,7 +52,9 @@ function Feature({ title, steps, link, description }) {
             >
               <div className={styles.stepBox}>
                 <div className={styles.svgContainer}>
-                  <step.icon className={styles.stepSvg} alt={step.title} />
+                  <div className={styles.stepSvg}>
+                    <step.icon alt={step.title} />
+                  </div>
                   <span className={idx === 0 ? styles.stepNumberFirst : styles.stepNumber}>{`${
                     idx + 1
                   }.`}</span>

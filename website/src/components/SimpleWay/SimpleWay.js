@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import styles from './SimpleWay.module.scss';
-import SimpleWaySvg from '../../../static/img/simple-way-svg.svg';
+import SimpleWaySvg from '../../../static/img/logo-taquito-color.svg';
 
 const FeatureList = [
   {
@@ -49,7 +49,9 @@ export default function SimpleWay() {
     <section className={styles.features}>
       <div className={styles.container}>
         <Feature {...FeatureList[0]} />
-        <SimpleWaySvg className={styles.simpleWaySvg} />
+        <div className={styles.simpleWaySvg}>
+          <SimpleWaySvg />
+        </div>
       </div>
     </section>
   );

@@ -1,7 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
 import styles from './LogoGrid.module.css';
-import SpaceShip from '../../../static/img/spaceship-svg.svg';
 
 const FeatureList = [
   {
@@ -14,7 +13,7 @@ const FeatureList = [
         url: '/docs/quick_start',
       },
       {
-        icon: require('../../../static/img/check-svg.svg').default,
+        icon: require('../../../static/img/logo-t.svg').default,
         title: 'Improves Quality',
         url: '/docs/quick_start',
       },

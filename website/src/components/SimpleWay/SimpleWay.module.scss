@@ -93,4 +93,11 @@
   right: 50%;
   transform: translateX(50%);
   z-index: 2;
+  width: 254px;
+  height: 254px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--brown);
+  border-radius: 50%;
 }

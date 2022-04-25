@@ -328,3 +328,13 @@
     text-align: center;
   }
 }
+
+.stepSvg {
+  width: 254px;
+  height: 254px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--brown);
+  border-radius: 50%;
+}
