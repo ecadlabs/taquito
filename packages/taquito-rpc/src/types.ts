@@ -24,7 +24,7 @@ export interface DelegatesResponse {
   delegated_balance: BigNumber;
   deactivated: boolean;
   grace_period: number;
-  voting_power?: number;
+  voting_power?: BigNumber;
 }
 
 interface Frozenbalancebycycle {
@@ -40,6 +40,8 @@ export type BigMapKey = {
   type: { prim: string; args?: object[] };
 };
 
+export type LiquidityBakingToggleVotes = 'on' | 'off' | 'pass';
+
 export interface BlockFullHeader {
   level: number;
   proto: number;
@@ -54,7 +56,7 @@ export interface BlockFullHeader {
   priority: number;
   proof_of_work_nonce: string;
   seed_nonce_hash?: string;
-  liquidity_baking_escape_vote?: boolean;
+  liquidity_baking_escape_vote?: boolean | LiquidityBakingToggleVotes;
   signature: string;
 }
 
@@ -526,9 +528,9 @@ export interface BallotListResponseItem {
 export type BallotListResponse = BallotListResponseItem[];
 
 export interface BallotsResponse {
-  yay: number;
-  nay: number;
-  pass: number;
+  yay: BigNumber;
+  nay: BigNumber;
+  pass: BigNumber;
 }
 
 export type PeriodKindResponse =
@@ -547,12 +549,13 @@ export type CurrentQuorumResponse = number;
 
 export interface VotesListingsResponseItem {
   pkh: string;
-  rolls: number;
+  rolls?: number;
+  voting_power?: BigNumber;
 }
 
 export type VotesListingsResponse = VotesListingsResponseItem[];
 
-export type ProposalsResponseItem = [string, number];
+export type ProposalsResponseItem = [string, BigNumber];
 
 export type ProposalsResponse = ProposalsResponseItem[];
 
@@ -572,7 +575,7 @@ export interface BlockHeaderResponse {
   payload_round?: number;
   priority?: number;
   proof_of_work_nonce: string;
-  liquidity_baking_escape_vote?: boolean;
+  liquidity_baking_escape_vote?: boolean | LiquidityBakingToggleVotes;
   signature: string;
 }
 
@@ -698,6 +701,7 @@ export interface OperationResultRegisterGlobalConstant {
   storage_size?: string;
   global_address?: string;
   errors?: TezosGenericOperationError[];
+  consumed_milligas?: string;
 }
 
 export interface ContractBigMapDiffItem {

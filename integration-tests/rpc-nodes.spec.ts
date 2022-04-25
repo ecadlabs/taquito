@@ -377,7 +377,8 @@ CONFIGS().forEach(
         });
 
         it('getSaplingDiffById', async (done) => {
-          const saplingDiffById = await rpcClient.getSaplingDiffById('168');
+          const saplingStateId = (await rpcClient.getStorage(knownSaplingContract)as any)['int']
+          const saplingDiffById = await rpcClient.getSaplingDiffById(saplingStateId);
           expect(saplingDiffById).toBeDefined();
           done();
         });

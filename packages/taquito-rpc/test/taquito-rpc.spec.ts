@@ -290,7 +290,7 @@ describe('RpcClient test', () => {
         delegated_balance: new BigNumber('0'),
         deactivated: false,
         grace_period: 59,
-        voting_power: 729,
+        voting_power: new BigNumber(729),
       });
 
       done();
@@ -309,7 +309,7 @@ describe('RpcClient test', () => {
         delegated_balance: new BigNumber('4357512085'),
         deactivated: false,
         grace_period: 37,
-        voting_power: 199,
+        voting_power: new BigNumber(199),
       });
 
       done();
@@ -2536,7 +2536,7 @@ describe('RpcClient test', () => {
         method: 'GET',
         url: 'root/chains/test/blocks/head/votes/ballots',
       });
-      expect(response.yay).toEqual(5943);
+      expect(response.yay).toEqual(new BigNumber(5943));
 
       done();
     });
@@ -2580,7 +2580,7 @@ describe('RpcClient test', () => {
         Promise.resolve([
           {
             pkh: 'tz2TSvNTh2epDMhZHrw73nV9piBX7kLZ9K9m',
-            rolls: 3726,
+            voting_power: 3726,
           },
           {
             pkh: 'tz2Q7Km98GPzV1JLNpkrQrSo5YUhPfDp6LmA',
@@ -2626,7 +2626,10 @@ describe('RpcClient test', () => {
         method: 'GET',
         url: 'root/chains/test/blocks/head/votes/listings',
       });
+      expect(response[0].voting_power).toEqual(new BigNumber(3726));
+      expect(response[0].rolls).toBeUndefined();
       expect(response[4].pkh).toEqual('tz2JMPu9yVKuX2Au8UUbp7YrKBZJSdYhgwwu');
+      expect(response[4].voting_power).toBeUndefined();
 
       done();
     });
@@ -2646,7 +2649,7 @@ describe('RpcClient test', () => {
         method: 'GET',
         url: 'root/chains/test/blocks/head/votes/proposals',
       });
-      expect(response[0][1]).toEqual(2832);
+      expect(response[0][1]).toEqual(new BigNumber(2832));
 
       done();
     });
