@@ -97,26 +97,26 @@ main {
 .waysButtonText {
   font-family: Source Sans Pro;
   font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 18px;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 22px;
   letter-spacing: 0.3px;
-  color: var(--yellow-second);
+  color: var(--ifm-color-text-primary);
 }
 .waysButton {
   font-family: Rounded Mplus 1c;
   font-weight: 600;
   font-size: 20px;
   text-transform: capitalize;
-  background: var(--brown-secondary);
+  background: var(--yellow-second);
   display: flex;
   min-width: 135px !important;
   justify-content: center;
   align-items: center;
   border-radius: 30px;
   text-align: center;
-  padding: 2px 15px 6px 15px;
-  color: var(--ifm-color-text-secondary) !important;
+  padding: 6px 15px 6px 15px;
+  color: var(--black) !important;
   &:hover {
     color: var(--ifm-color-text-primary) !important;
     text-decoration: none;

@@ -19,7 +19,7 @@ import styles from './styles.module.scss';
 const FeatureList = [
   {
     link: {
-      title: 'Get Started',
+      title: 'Start Now',
       url: '/docs/quick_start',
       text: 'Ready to start?',
     },
