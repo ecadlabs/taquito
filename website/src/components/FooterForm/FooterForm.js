@@ -10,6 +10,7 @@ function Feature() {
 
   const [inputs, setInputs] = useState({
     'group[218840]': '2',
+    value: 2,
   });
 
   const handleInputChange = (event) => {
