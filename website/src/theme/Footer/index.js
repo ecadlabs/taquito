@@ -116,7 +116,7 @@ function Footer() {
                             <FooterForm />
                           </li>
                         ) : item.html === 'image' ? (
-                          <a href="/" target="_blank" rel="noreferrer noopener" aria-label="">
+                          <a href="/" rel="noreferrer noopener" aria-label="">
                             <div
                               ref={footerContainer}
                               onMouseEnter={() => lottie.play('footerLogo')}

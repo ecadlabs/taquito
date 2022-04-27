@@ -37,13 +37,7 @@ export default function NavbarLogo() {
   }, [isActive]);
 
   return (
-    <a
-      href="/"
-      target="_blank"
-      rel="noreferrer noopener"
-      aria-label=""
-      className="navbar__brand__container"
-    >
+    <a href="/" rel="noreferrer noopener" aria-label="" className="navbar__brand__container">
       <div
         ref={container}
         onMouseEnter={() => {
