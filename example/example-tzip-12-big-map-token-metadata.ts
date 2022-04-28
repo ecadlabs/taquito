@@ -2,6 +2,9 @@ import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
 import { b58cencode, char2Bytes, Prefix, prefix } from '@taquito/utils';
 import { fa2TokenFactory } from '../integration-tests/data/fa2-token-factory';
+import Faucet from './faucet-interface';
+
+const {email, password, mnemonic, activation_code} = require("./faucet-default-values.json") as Faucet
 
 const provider = 'https://ithacanet.ecadinfra.com/'
 
@@ -22,28 +25,12 @@ async function createAddress() {
 async function example() {
   const tezos = new TezosToolkit(provider)
   await importKey(
-    tezos,
-    'peqjckge.qkrrajzs@tezos.example.org',
-    'y4BX7qS1UE',
-    [
-      'skate',
-      'damp',
-      'faculty',
-      'morning',
-      'bring',
-      'ridge',
-      'traffic',
-      'initial',
-      'piece',
-      'annual',
-      'give',
-      'say',
-      'wrestle',
-      'rare',
-      'ability',
-    ].join(' '),
-    '7d4c8c3796fdbf4869edb5703758f0e5831f5081'
-  );
+     tezos,
+     email,
+     password,
+     mnemonic.join(' '),
+     activation_code
+   );
   
   try {
     console.log('Deploying Tzip12BigMapsTokenMetadata contract...');

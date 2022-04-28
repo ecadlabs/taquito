@@ -77,7 +77,7 @@ const min_balance = 100000000;
 async function checkBalances(users: string | any[]) {
   console.log('checking funds...');
   try {
-    for (var i = 0; i < users.length; i++) {
+    for (let i = 0; i < users.length; i++) {
       const user_balance: any = await tezos.tz.getBalance(users[i]);
       if (user_balance < min_balance) {
         low_balance.push(users[i]);
@@ -91,7 +91,7 @@ async function checkBalances(users: string | any[]) {
   console.log(`Low balance addresses : ` + low_balance);
   tezos.setSignerProvider(signer);
   try {
-    for (var i = 0; i < low_balance.length; i++) {
+    for (let i = 0; i < low_balance.length; i++) {
       console.log('Funding low balance address :' + low_balance[i]);
       const fundAccountFirst = await tezos.contract.transfer({
         to: low_balance[i],
@@ -146,7 +146,7 @@ async function originateTheContracts() {
   function json_contract_catalogue() {
     console.log(' ');
     console.log('The Contract Catalogue :');
-    let jsonObject: any = {};
+    const jsonObject: any = {};
     contract_catalogue.forEach((value, key) => {
       jsonObject[key] = value;
     });
