@@ -31,7 +31,6 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         init: '{}'
       });
       await op.confirmation();
-      console.log(op.contractAddress)
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       done();

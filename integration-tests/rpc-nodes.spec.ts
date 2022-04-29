@@ -105,7 +105,7 @@ CONFIGS().forEach(
 
           const views = await Tezos.rpc.runView(params)
           expect(views).toBeDefined();
-          expect(views).toEqual({"data": {"int": "100"}});
+          expect(views).toEqual({ "data": { "int": "100" } });
           done();
         });
 
@@ -272,6 +272,16 @@ CONFIGS().forEach(
 
         it('Simulate the validation of an operation', async (done) => {
           try {
+            // the account needs to be revealed first
+            const reveal = await Tezos.contract.reveal({});
+            await reveal.confirmation();
+          } catch (ex) {
+            expect(ex).toEqual(expect.objectContaining({
+              message: expect.stringContaining('has already been revealed')
+            }))
+          }
+
+          try {
             const operation: any = {
               branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
               contents: [
@@ -356,7 +366,7 @@ CONFIGS().forEach(
         });
 
         it('getSaplingDiffById', async (done) => {
-          const saplingStateId = (await rpcClient.getStorage(knownSaplingContract)as any)['int']
+          const saplingStateId = (await rpcClient.getStorage(knownSaplingContract) as any)['int']
           const saplingDiffById = await rpcClient.getSaplingDiffById(saplingStateId);
           expect(saplingDiffById).toBeDefined();
           done();
