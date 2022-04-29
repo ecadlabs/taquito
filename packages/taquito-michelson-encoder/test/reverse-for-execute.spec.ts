@@ -84,6 +84,32 @@ describe('Exact reverse for Schema.Execute', () => {
           prim: 'Pair',
         },
       },
+      {
+        name: 'KeyHash',
+        data_type: { prim: 'key_hash' },
+        data: { bytes: '0022c45a24cb37da97be334c0f70865f946cb6902d' },
+      },
+      {
+        name: 'Address: 000014be10910b0fa385f88aea0603dd93b64c4b6589',
+        data_type: {
+          args: [
+            { prim: 'address', annots: ['%owner'] },
+            { prim: 'address', annots: ['%owner'] },
+            { prim: 'nat', annots: ['%token_id'] },
+          ],
+          prim: 'pair',
+        },
+        data: {
+          args: [
+            { bytes: '000014be10910b0fa385f88aea0603dd93b64c4b6589' },
+            {
+              args: [{ bytes: '0133e65012a368dadf1d3d8fff4570b8a4e3c0458c00' }, { int: '381' }],
+              prim: 'Pair',
+            },
+          ],
+          prim: 'Pair',
+        },
+      },
     ];
 
     samples.forEach((sample) =>
