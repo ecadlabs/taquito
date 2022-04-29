@@ -10,7 +10,7 @@
 ///     node -r ts-node/register deploy-docs-live-code-contracts.ts
 
 import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
-import { InMemorySigner } from '@taquito/signer';
+import { InMemorySigner, importKey } from '@taquito/signer';
 import { tzip7Contract } from '../integration-tests/data/tzip_7_contract';
 import { contractMapPairKey } from './data/contractMapPairKey';
 import { contractIncrementing } from './data/contractIncrementing';
@@ -29,12 +29,17 @@ import {
 import { contractMap8pairs } from './data/contractMap8pairs';
 import { char2Bytes } from '@taquito/utils';
 import { fa2Contract } from '../integration-tests/data/fa2_contract';
+import Faucet from './faucet-interface';
+
+
+const {email, password, mnemonic, activation_code, pkh} = require("./faucet-default-values.json") as Faucet
 
 const provider = 'https://ithacanet.ecadinfra.com/';
 export const signer: any = new InMemorySigner(
   'edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca'
 );
 export const tezos = new TezosToolkit(provider);
+
 
 const contract_catalogue = new Map();
 
@@ -75,7 +80,27 @@ const low_balance: Array<string> = [];
 const min_balance = 100000000;
 
 async function checkBalances(users: string | any[]) {
-  console.log('checking funds...');
+
+  // used to top up other account so it wouldnt fail
+  // const tezosLender = new TezosToolkit(provider)
+  // await importKey(
+  //   tezosLender,
+  //   email,
+  //   password,
+  //   mnemonic.join(' '),
+  //   activation_code
+  // );
+
+  // console.log("checking fund of tezos instance")
+  // const tezBalance = await tezos.tz.getBalance(pkh)
+  // console.log("original balance", tezBalance, await signer.publicKeyHash())
+  // const sendFunds = await tezosLender.contract.transfer({to: await signer.publicKeyHash(), amount: 100})
+  // await sendFunds.confirmation()
+  // const tezBalance2 = await tezos.tz.getBalance(pkh)
+  // console.log("next balance", tezBalance2)
+
+  // console.log("balance of tezos instance", tezBalance)
+  console.log('checking funds of users...');
   try {
     for (let i = 0; i < users.length; i++) {
       const user_balance: any = await tezos.tz.getBalance(users[i]);
@@ -97,7 +122,10 @@ async function checkBalances(users: string | any[]) {
         to: low_balance[i],
         amount: min_balance / 1000000,
       });
+      console.log("await confirmation")
       await fundAccountFirst.confirmation();
+      console.log("confirmed")
+
     }
   } catch (ex) {
     console.error(ex);
