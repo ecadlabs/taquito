@@ -3,7 +3,7 @@ require('dotenv').config();
 module.exports = {
   title: 'Taquito',
   tagline: 'A TypeScript library suite for development on the Tezos blockchain.',
-  favicon: 'img/favicon.png',
+  favicon: 'img/favicon.svg',
   url: 'https://tezostaquito.io',
   baseUrl: '/',
   projectName: 'taquito',
