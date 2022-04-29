@@ -1,4 +1,4 @@
-import { Token, TokenFactory, Semantic, ComparableToken } from './token';
+import { Token, TokenFactory, Semantic, ComparableToken, SemanticEncoding } from './token';
 import { OrToken } from './or';
 import { PairTokenSchema } from '../schema/types';
 
@@ -128,7 +128,7 @@ export class PairToken extends ComparableToken {
     return this.Execute(val);
   }
 
-  public EncodeObject(args: any): any {
+  public EncodeObject(args: any, semantic?: SemanticEncoding): any {
     const [leftToken, rightToken] = this.tokens();
 
     let leftValue;
@@ -147,7 +147,10 @@ export class PairToken extends ComparableToken {
 
     return {
       prim: 'Pair',
-      args: [leftToken.EncodeObject(leftValue), rightToken.EncodeObject(rightValue)],
+      args: [
+        leftToken.EncodeObject(leftValue, semantic),
+        rightToken.EncodeObject(rightValue, semantic),
+      ],
     };
   }
 

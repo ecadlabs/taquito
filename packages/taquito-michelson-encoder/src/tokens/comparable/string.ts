@@ -1,5 +1,5 @@
 import { BaseTokenSchema } from '../../schema/types';
-import { Token, TokenFactory, ComparableToken } from '../token';
+import { Token, TokenFactory, ComparableToken, SemanticEncoding } from '../token';
 
 export class StringToken extends ComparableToken {
   static prim: 'string' = 'string';
@@ -36,7 +36,10 @@ export class StringToken extends ComparableToken {
     return { string: val };
   }
 
-  public EncodeObject(val: any): any {
+  public EncodeObject(val: any, semantic?: SemanticEncoding): any {
+    if (semantic && semantic[StringToken.prim]) {
+      return semantic[StringToken.prim](val);
+    }
     return { string: val };
   }
 

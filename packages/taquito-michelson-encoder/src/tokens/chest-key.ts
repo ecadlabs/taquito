@@ -1,5 +1,5 @@
 import { BaseTokenSchema } from '../schema/types';
-import { Token, TokenFactory, TokenValidationError } from './token';
+import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 
 export class ChestKeyValidationError extends TokenValidationError {
   name = 'ChestKeyValidationError';
@@ -40,12 +40,17 @@ export class ChestKeyToken extends Token {
     return { bytes: val };
   }
 
-  EncodeObject(val: string | Uint8Array) {
+  EncodeObject(val: string | Uint8Array, semantic?: SemanticEncoding) {
     val = this.convertUint8ArrayToHexString(val);
     const err = this.isValid(val);
     if (err) {
       throw err;
     }
+
+    if (semantic && semantic[ChestKeyToken.prim]) {
+      return semantic[ChestKeyToken.prim](val);
+    }
+
     return { bytes: val };
   }
 

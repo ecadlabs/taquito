@@ -3,7 +3,13 @@ import { BigMapToken } from '../tokens/bigmap';
 import { createToken } from '../tokens/createToken';
 import { OrToken } from '../tokens/or';
 import { PairToken } from '../tokens/pair';
-import { BigMapKeyType, Semantic, Token, TokenValidationError } from '../tokens/token';
+import {
+  BigMapKeyType,
+  Semantic,
+  SemanticEncoding,
+  Token,
+  TokenValidationError,
+} from '../tokens/token';
 import {
   InvalidRpcResponseError,
   InvalidBigMapSchema,
@@ -172,9 +178,9 @@ export class Schema {
     }
   }
 
-  Encode(_value?: any) {
+  Encode(value?: any, semantics?: SemanticEncoding) {
     try {
-      return this.root.EncodeObject(_value);
+      return this.root.EncodeObject(value, semantics);
     } catch (ex) {
       if (ex instanceof TokenValidationError) {
         throw ex;

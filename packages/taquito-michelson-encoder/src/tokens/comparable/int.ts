@@ -1,4 +1,10 @@
-import { Token, TokenFactory, ComparableToken, TokenValidationError } from '../token';
+import {
+  Token,
+  TokenFactory,
+  ComparableToken,
+  TokenValidationError,
+  SemanticEncoding,
+} from '../token';
 import BigNumber from 'bignumber.js';
 import { BaseTokenSchema } from '../../schema/types';
 
@@ -59,10 +65,14 @@ export class IntToken extends ComparableToken {
     return { int: new BigNumber(val).toFixed() };
   }
 
-  public EncodeObject(val: any): any {
+  public EncodeObject(val: any, semantic?: SemanticEncoding): any {
     const err = this.isValid(val);
     if (err) {
       throw err;
+    }
+
+    if (semantic && semantic[IntToken.prim]) {
+      return semantic[IntToken.prim](val);
     }
 
     return { int: new BigNumber(val).toFixed() };

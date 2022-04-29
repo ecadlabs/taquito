@@ -1,5 +1,5 @@
 import { ListTokenSchema } from '../schema/types';
-import { Token, TokenFactory, Semantic, TokenValidationError } from './token';
+import { Token, TokenFactory, Semantic, TokenValidationError, SemanticEncoding } from './token';
 
 export class ListValidationError extends TokenValidationError {
   name = 'ListValidationError';
@@ -58,12 +58,16 @@ export class ListToken extends Token {
     }, []);
   }
 
-  public EncodeObject(args: any): any {
+  public EncodeObject(args: any, semantic?: SemanticEncoding): any {
     const schema = this.createToken(this.val.args[0], 0);
 
     const err = this.isValid(args);
     if (err) {
       throw err;
+    }
+
+    if (semantic && semantic[ListToken.prim]) {
+      return semantic[ListToken.prim](args);
     }
 
     return args.reduce((prev: any, current: any) => {

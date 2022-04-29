@@ -1,5 +1,5 @@
 import { SaplingStateTokenSchema } from '../schema/types';
-import { Semantic, Token, TokenFactory, TokenValidationError } from './token';
+import { Semantic, SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 
 export class SaplingStateValidationError extends TokenValidationError {
   name = 'SaplingStateValidationError';
@@ -51,7 +51,10 @@ export class SaplingStateToken extends Token {
     }
   }
 
-  EncodeObject(val: any): any {
+  EncodeObject(val: any, semantic?: SemanticEncoding): any {
+    if (semantic && semantic[SaplingStateToken.prim]) {
+      return semantic[SaplingStateToken.prim](val);
+    }
     if (this.isValid(val)) {
       return [];
     } else {

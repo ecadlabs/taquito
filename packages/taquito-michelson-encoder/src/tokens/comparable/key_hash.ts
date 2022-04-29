@@ -1,4 +1,10 @@
-import { Token, TokenFactory, ComparableToken, TokenValidationError } from '../token';
+import {
+  Token,
+  TokenFactory,
+  ComparableToken,
+  TokenValidationError,
+  SemanticEncoding,
+} from '../token';
 import { encodeKeyHash, validateKeyHash, ValidationResult } from '@taquito/utils';
 import { BaseTokenSchema } from '../../schema/types';
 
@@ -47,10 +53,14 @@ export class KeyHashToken extends ComparableToken {
     return { string: val };
   }
 
-  public EncodeObject(val: any): any {
+  public EncodeObject(val: any, semantic?: SemanticEncoding): any {
     const err = this.isValid(val);
     if (err) {
       throw err;
+    }
+
+    if (semantic && semantic[KeyHashToken.prim]) {
+      return semantic[KeyHashToken.prim](val);
     }
 
     return { string: val };
