@@ -13,6 +13,9 @@ export const optimizedEncoding: SemanticEncoding = {
   contract: (val: string) => {
     return { bytes: b58decode(val) };
   },
+  key_hash: (val: string) => {
+    return { bytes: b58decode(val).slice(2) };
+  },
   // encode timestamp to number of seconds since epoch
   timestamp: (val: string) => {
     const date = new Date(val);
