@@ -35,7 +35,7 @@ jobs:
         CI: true
         RUN_INTEGRATION: true
 
-  integration-tests-hangzhounet:
+  integration-tests-jakartanet:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -53,10 +53,10 @@ jobs:
       with:
         authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
         version: 1.22.2
-    - run: cd integration-tests && npm run test:hangzhounet -- --maxWorkers=8
+    - run: cd integration-tests && npm run test:jakartanet -- --maxWorkers=8
       env:
         CI: true
-        TEZOS_RPC_HANGZHOUNET: ${{ secrets.TEZOS_RPC_HANGZHOUNET }}
+        TEZOS_RPC_JAKARTANET: ${{ secrets.TEZOS_RPC_JAKARTANET }}
 
   integration-tests-ithacanet:
     runs-on: ubuntu-latest
