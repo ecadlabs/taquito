@@ -23,13 +23,19 @@
 .waysContainer {
   /* background: rgb(51, 51, 51, 0.8); */
   padding-top: 185px;
-  padding-bottom: 300px;
+  padding-bottom: 500px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   @media (max-width: 1440px) {
     padding-bottom: 200px;
+  }
+  @media (max-width: 1800px) {
+    padding-bottom: 300px;
+  }
+  @media (max-width: 2000px) {
+    padding-bottom: 400px;
   }
 }
 

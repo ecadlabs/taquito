@@ -30,6 +30,11 @@
   align-items: center;
   background: var(--yellow-second);
   border-radius: 50%;
+  svg {
+    path {
+      fill: #333333;
+    }
+  }
 }
 
 .link {

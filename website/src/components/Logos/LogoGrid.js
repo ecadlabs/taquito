@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import styles from './LogoGrid.module.css';
+import styles from './LogoGrid.module.scss';
 
 const FeatureList = [
   {
