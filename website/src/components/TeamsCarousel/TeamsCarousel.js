@@ -13,49 +13,94 @@ const FeatureList = [
     // Svg: require("../../../static/img/taq_orange.svg").default,
     images: [
       {
-        Image: require('../../../static/img/example.png').default,
-        title: 'Boosts Productivity',
-        url: '/docs/quick_start',
+        Image: require('../../../static/img/kolibri-logo.png').default,
+        title: 'Kolibri',
+        url: 'https://kolibri.finance/',
       },
       {
-        Image: require('../../../static/img/example.png').default,
-        title: 'Improves Quality',
-        url: '/docs/quick_start',
+        Image: require('../../../static/img/cryptoverse_wars.png').default,
+        title: 'Cryptoverse Wars',
+        url: 'https://cryptocodeschool.in/tezos/',
       },
       {
-        Image: require('../../../static/img/example.png').default,
-        title: 'Easy Integration',
-        url: '/docs/quick_start',
+        Image: require('../../../static/img/plenty.png').default,
+        title: 'Plenty',
+        url: 'https://www.plentydefi.com/',
       },
       {
-        Image: require('../../../static/img/example.png').default,
-        title: 'Boosts Productivity',
-        url: '/docs/quick_start',
+        Image: require('../../../static/img/interpop_logo.png').default,
+        title: 'Interpop',
+        url: 'https://www.interpop.io/',
       },
       {
-        Image: require('../../../static/img/example.png').default,
-        title: 'Improves Quality',
-        url: '/docs/quick_start',
+        Image: require('../../../static/img/spruce_logo.png').default,
+        title: 'Spruce',
+        url: 'https://www.spruceid.com/',
       },
       {
-        Image: require('../../../static/img/example.png').default,
-        title: 'Easy Integration',
-        url: '/docs/quick_start',
+        Image: require('../../../static/img/sweet.png').default,
+        title: 'Sweet',
+        url: 'https://sweet.io/',
       },
       {
-        Image: require('../../../static/img/example.png').default,
-        title: 'Boosts Productivity',
-        url: '/docs/quick_start',
+        Image: require('../../../static/img/Kukai_logo.png').default,
+        title: 'Kukai',
+        url: 'https://wallet.kukai.app/',
       },
       {
-        Image: require('../../../static/img/example.png').default,
-        title: 'Improves Quality',
-        url: '/docs/quick_start',
+        Image: require('../../../static/img/quipuswap-logo.png').default,
+        title: 'QuipuSwap',
+        url: 'https://quipuswap.com/',
       },
       {
-        Image: require('../../../static/img/example.png').default,
-        title: 'Easy Integration',
-        url: '/docs/quick_start',
+        Image: require('../../../static/img/tezos_mandala.png').default,
+        title: 'Tezos Mandala',
+        url: 'https://tezos-mandala.art/',
+      },
+      {
+        Image: require('../../../static/img/temple-logo.png').default,
+        title: 'Temple - Tezos Wallet',
+        url: 'https://templewallet.com/',
+      },
+      {
+        Image: require('../../../static/img/tz-colors.png').default,
+        title: 'tzcolors',
+        url: 'https://www.tzcolors.io/',
+      },
+      {
+        Image: require('../../../static/img/nomadic_logo.png').default,
+        title: 'Nomadic Labs',
+        url: 'https://www.nomadic-labs.com/',
+      },
+      {
+        Image: require('../../../static/img/blockwatch_logo.png').default,
+        title: 'Blockwatch',
+        url: 'https://blockwatch.cc/blog/tag/tezos/',
+      },
+      {
+        Image: require('../../../static/img/Group.png').default,
+        title: 'Tocqueville Group',
+        url: 'https://tqtezos.com',
+      },
+      {
+        Image: require('../../../static/img/Ligoland_logo.png').default,
+        title: 'Ligo',
+        url: 'https://ligolang.org/',
+      },
+      {
+        Image: require('../../../static/img/Vector_1.png').default,
+        title: 'Homebase',
+        url: 'https://tezos-homebase.herokuapp.com/explorer/daos',
+      },
+      {
+        Image: require('../../../static/img/radion_logo.png').default,
+        title: 'Radion',
+        url: 'https://www.radion.fm/',
+      },
+      {
+        Image: require('../../../static/img/stakerdao_logo.png').default,
+        title: 'Staker DAO',
+        url: 'https://www.stakerdao.com/',
       },
     ],
   },
@@ -108,8 +153,13 @@ function Feature({ images, title }) {
       <Slider className={styles.slider} {...sliderSettings} ref={sliderRef}>
         {images.map((image, idx) => (
           <div key={idx}>
-            <a href={image.url} className={styles.imageContainer}>
-              <img src={image.Image} className={styles.image} alt="" />
+            <a href={image.url} className={styles.imageContainer} target="_blank">
+              <img
+                src={image.Image}
+                className={styles.image}
+                alt={image.caption}
+                title={image.title}
+              />
             </a>
           </div>
         ))}
