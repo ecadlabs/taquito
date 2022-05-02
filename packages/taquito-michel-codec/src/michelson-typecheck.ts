@@ -2,7 +2,6 @@ import { Prim, Expr } from './micheline';
 import {
   MichelsonType,
   MichelsonData,
-  MichelsonMapElt,
   MichelsonCode,
   MichelsonTypeOption,
   MichelsonContract,
@@ -211,7 +210,7 @@ export function assertTypeAnnotationsValid(t: MichelsonType, field = false): voi
 
 // Data integrity check
 
-function compareMichelsonData(t: MichelsonType, a: MichelsonData, b: MichelsonData): number {
+function _compareMichelsonData(t: MichelsonType, a: MichelsonData, b: MichelsonData): number {
   if (isPairType(t)) {
     if (isPairData(a) && isPairData(b)) {
       assertDataListIfAny(a);
@@ -219,11 +218,11 @@ function compareMichelsonData(t: MichelsonType, a: MichelsonData, b: MichelsonDa
       const tComb = unpackComb('pair', t);
       const aComb = unpackComb('Pair', a);
       const bComb = unpackComb('Pair', b);
-      const x = compareMichelsonData(tComb.args[0], aComb.args[0], bComb.args[0]);
+      const x = _compareMichelsonData(tComb.args[0], aComb.args[0], bComb.args[0]);
       if (x !== 0) {
         return x;
       }
-      return compareMichelsonData(tComb.args[0], aComb.args[1], bComb.args[1]);
+      return _compareMichelsonData(tComb.args[0], aComb.args[1], bComb.args[1]);
     }
   } else {
     switch (t.prim) {
@@ -733,7 +732,7 @@ function functionTypeInternal(
           ]
         : undefined;
 
-    const { annots, ...rest } = t;
+    const { annots: _annots, ...rest } = t;
     return { ...(rest as T), ...(ann && ann.length !== 0 && { annots: ann }) };
   }
 
@@ -1218,7 +1217,7 @@ function functionTypeInternal(
       }
 
       case 'SUB_MUTEZ': {
-        const s = args(0, ['mutez'], ['mutez']);
+        const _s = args(0, ['mutez'], ['mutez']);
         return [annotateVar({ prim: 'option', args: [{ prim: 'mutez' }] }), ...stack.slice(2)];
       }
 

@@ -77,7 +77,7 @@ export class TezBridgeWallet implements WalletProvider {
   }
 
   private removeFeeAndLimit<T extends { gas_limit: any; storage_limit: any; fee: any }>(op: T) {
-    const { fee, gas_limit, storage_limit, ...rest } = op;
+    const { fee: _fee, gas_limit: _gas_limit, storage_limit: _storage_limit, ...rest } = op;
     return rest;
   }
 }

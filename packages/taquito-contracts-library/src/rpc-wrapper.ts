@@ -23,7 +23,6 @@ import {
   ManagerKeyResponse,
   MichelsonV1Expression,
   PackDataParams,
-  PeriodKindResponse,
   PreapplyParams,
   PreapplyResponse,
   ProposalsResponse,

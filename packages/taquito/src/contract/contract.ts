@@ -80,7 +80,7 @@ const isView = (entrypoint: MichelsonV1Expression): boolean => {
 export type Contract = ContractAbstraction<ContractProvider>;
 export type WalletContract = ContractAbstraction<Wallet>;
 
-const isContractProvider = (variableToCheck: any): variableToCheck is ContractProvider =>
+const _isContractProvider = (variableToCheck: any): variableToCheck is ContractProvider =>
   variableToCheck.contractProviderTypeSymbol !== undefined;
 
 type DefaultMethods<T extends ContractProvider | Wallet> = Record<
