@@ -4,6 +4,7 @@
   "version": "12.1.0",
   "scripts": {
     "example": "node -r ts-node/register --preserve-symlinks example-node.ts",
+    "example:activation": "node -r ts-node/register --preserve-symlinks example-activate.ts",
     "example:at": "node -r ts-node/register --preserve-symlinks contract-schema.ts",
     "example:smart-contract": "node -r ts-node/register --preserve-symlinks example-smart-contract-origination.ts",
     "example:map-values": "node -r ts-node/register --preserve-symlinks example-MapValuesMultipleBigMaps.ts",
@@ -19,6 +20,7 @@
     "example:rpc-vs-local-pack-sequential": "node -r ts-node/register --preserve-symlinks example-sequential-bigmap-local-vs-rpc-pack.ts",
     "example:bigmap-keys-pair": "node -r ts-node/register --preserve-symlinks example-bigmap-keys-as-pair.ts",
     "example:bigmap-keys-deep-pair": "node -r ts-node/register --preserve-symlinks example-bigmap-keys-as-deep-pair.ts",
+    "example:deploy-docs": "node -r ts-node/register --preserve-symlinks deploy-docs-live-code-contracts.ts",
     "example:deploy-integration": "node -r ts-node/register --preserve-symlinks deploy-integration-tests-contracts.ts",
     "example:wallet-are-you-there": "node -r ts-node/register --preserve-symlinks wallet-originate-areyouthere.ts",
     "example:wallet-contract-transfer": "node -r ts-node/register --preserve-symlinks wallet-originate-contract-transfer.ts",
@@ -36,11 +38,7 @@
     "example:streamer": "node -r ts-node/register --preserve-symlinks example-streamer.ts",
     "example:streamer-custom": "node -r ts-node/register --preserve-symlinks example-streamer-custom-retry-logic.ts",
     "example:streamer-block-time": "node -r ts-node/register --preserve-symlinks example-streamer-log-time-between-blocks.ts",
-    "example:scan-path-ledger": "node -r ts-node/register --preserve-symlinks scan-path-ledger.ts",
-
-    "example:activation": "node -r ts-node/register --preserve-symlinks example-activate.ts",
-    "example:deploy-docs": "node -r ts-node/register --preserve-symlinks deploy-docs-live-code-contracts.ts"
-    
+    "example:scan-path-ledger": "node -r ts-node/register --preserve-symlinks scan-path-ledger.ts"
   },
   "dependencies": {
     "@ledgerhq/hw-transport-node-hid": "^6.20.0",
