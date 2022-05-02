@@ -37,7 +37,8 @@ async function example() {
             console.log("Balance before", balance)
             const sendMutez = await tezosLender.contract.transfer({ to: await signer.publicKeyHash(), amount: 100 });
             await sendMutez.confirmation();
-            console.log("Balance after")
+            const newBalance = await tezos.tz.getBalance(await signer.publicKeyHash());
+            console.log("Balance after", newBalance)
         }
         console.log("Sending")
         const op = await contract.methods.mint("tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys", 100).send()
