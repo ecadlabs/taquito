@@ -81,6 +81,8 @@ const min_balance = 100000000;
 
 async function checkBalances(users: string | any[]) {
 
+  // IF FAILS try uncommenting below and running with lending other tezos instance funds
+
   // used to top up other account so it wouldnt fail
   // const tezosLender = new TezosToolkit(provider)
   // await importKey(
