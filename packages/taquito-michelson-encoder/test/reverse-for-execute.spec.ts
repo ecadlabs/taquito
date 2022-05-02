@@ -130,10 +130,77 @@ describe('Exact reverse for Schema.Execute', () => {
           prim: 'Pair',
         },
       },
+      {
+        name: 'Double Addresses',
+        bigmapId: 19539,
+        contractAddress: 'KT1PwoZxyv4XkPEGnTqWYvjA1UYiPTgAGyqL',
+        data_type: {
+          args: [
+            {
+              args: [
+                { prim: 'address', annots: ['%fa2_address'] },
+                { args: [{ prim: 'nat' }], prim: 'option', annots: ['%token_id'] },
+              ],
+              prim: 'pair',
+            },
+            { prim: 'address', annots: ['%fa2_address'] },
+            { args: [{ prim: 'nat' }], prim: 'option', annots: ['%token_id'] },
+          ],
+          prim: 'pair',
+        },
+        data: {
+          args: [
+            {
+              args: [
+                { bytes: '01a6c0ade93013a611102651a1451bab19d522f78100' },
+                { args: [{ int: '0' }], prim: 'Some' },
+              ],
+              prim: 'Pair',
+            },
+            {
+              args: [
+                { bytes: '015362f6088eb1d7146747756b163472c9a40f98d200' },
+                { args: [{ int: '0' }], prim: 'Some' },
+              ],
+              prim: 'Pair',
+            },
+          ],
+          prim: 'Pair',
+        },
+      },
+      {
+        name: 'When input data is an array',
+        bigmapId: 136586,
+        contractAddress: 'KT1XVaU23gD6dRqNxWKRUnvha1hgDzfLXLHi',
+        data_type: {
+          args: [
+            { prim: 'int' },
+            {
+              args: [{ prim: 'address' }, { args: [{ prim: 'nat' }], prim: 'option' }],
+              prim: 'pair',
+            },
+            { prim: 'address' },
+            { args: [{ prim: 'nat' }], prim: 'option' },
+          ],
+          prim: 'pair',
+        },
+        data: [
+          { int: '7' },
+          {
+            args: [
+              { bytes: '01fa84817dd43a39c022a7fb3cd2fdbc2906e825a100' },
+              { args: [{ int: '0' }], prim: 'Some' },
+            ],
+            prim: 'Pair',
+          },
+          { bytes: '01fa84817dd43a39c022a7fb3cd2fdbc2906e825a100' },
+          { args: [{ int: '2' }], prim: 'Some' },
+        ],
+      },
     ];
 
     samples.forEach((sample) => {
-      it(`Should properly work for ${sample.name}`, () => {
+      it(`Should properly work for ${sample.name}, contract ${sample.contractAddress}`, () => {
         if (sample.ignoreMessage !== undefined) {
           console.warn(`Test case disabled with message: \n${sample.ignoreMessage}\n`);
           return;
