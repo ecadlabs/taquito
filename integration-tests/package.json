@@ -2,8 +2,8 @@
   "name": "integration-tests",
   "scripts": {
     "test:faucet": "RUN_WITH_FAUCET=true jest --runInBand",
-    "test:hangzhounet": "HANGZHOUNET=true jest",
-    "test:hangzhounet-faucet": "RUN_HANGZHOUNET_WITH_FAUCET=true jest --runInBand",
+    "test:jakartanet": "JAKARTANET=true jest",
+    "test:jakartanet-faucet": "RUN_JAKARTANET_WITH_FAUCET=true jest --runInBand",
     "test:ithacanet": "ITHACANET=true jest",
     "test:ithacanet-faucet": "RUN_ITHACANET_WITH_FAUCET=true jest --runInBand",
     "test:originate-known-contracts": "MONDAYNET=true node -r ts-node/register originate-known-contracts.ts",

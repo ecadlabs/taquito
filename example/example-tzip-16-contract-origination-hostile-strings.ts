@@ -3,33 +3,21 @@ import { importKey } from '@taquito/signer';
 import { char2Bytes } from '@taquito/utils';
 import { tacoContractTzip16 } from "../integration-tests/data/modified-taco-contract"
 import { MichelsonMap } from "@taquito/taquito";
-const provider = 'https://api.tez.ie/rpc/florencenet';
+import Faucet from './faucet-interface';
+
+const {email, password, mnemonic, activation_code} = require("./faucet-default-values.json") as Faucet
+
+const provider = 'https://ithacanet.ecadinfra.com/';
 
 async function example() {
   const tezos = new TezosToolkit(provider);
   await importKey(
-    tezos,
-    'peqjckge.qkrrajzs@tezos.example.org',
-    'y4BX7qS1UE',
-    [
-      'skate',
-      'damp',
-      'faculty',
-      'morning',
-      'bring',
-      'ridge',
-      'traffic',
-      'initial',
-      'piece',
-      'annual',
-      'give',
-      'say',
-      'wrestle',
-      'rare',
-      'ability',
-    ].join(' '),
-    '7d4c8c3796fdbf4869edb5703758f0e5831f5081'
-  );
+     tezos,
+     email,
+     password,
+     mnemonic.join(' '),
+     activation_code
+   );
 
   try {
     console.log('Deploying Tzip16 contract with hostile strings...');

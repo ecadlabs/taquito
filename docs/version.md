@@ -7,7 +7,7 @@ author: Jev Bjorsell
 
 ## Summary
 ### Jakarta initial support
-- Backwards compatibility with the Jakarta protocol
+- Compatibility with the Jakarta protocol
 
 ### Improvements
 - `@taquito/taquito` - Avoid doing POST call to fetch contract script with the RPC #1532
@@ -20,8 +20,8 @@ author: Jev Bjorsell
 
 
 
-## Backwards compatibility with the Jakarta protocol
-We addressed the Jakarta protocol's breaking changes, making this version of Taquito backward compatible with the Jakarta protocol. This early integration has been possible by using the Mondaynet testnet. 
+## Compatibility with the Jakarta protocol
+We addressed the Jakarta protocol's breaking changes, making this version of Taquito compatible with the Jakarta protocol. This early integration has been possible by using the Mondaynet testnet. 
 
 The Jakarta protocol addresses the [malleability issue](https://tezos.gitlab.io/alpha/sapling.html#preventing-malleability) discovered in Sapling. It introduces changes around the sapling related types and instructions that are now supported in Taquito:
 - The encoding of `sapling_transaction` has changed; we added support for it in the `@taquito/local-forging` package and support for `sapling_transaction_deprecated`. 
