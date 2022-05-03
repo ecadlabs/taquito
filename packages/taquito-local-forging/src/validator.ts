@@ -1,3 +1,5 @@
+import { OpKind } from './../../taquito-rpc/src/opkind';
+import { OperationContents } from '@taquito/rpc';
 import {
   ActivationSchema,
   DelegationSchema,
@@ -48,7 +50,7 @@ const deleteArrayElementByValue = (array: string[], item: string) => {
 /**
  * @returns A boolean value to indicate whether the operation kind is valid or not
  */
-export const validateOperationKind = (opKind: string) => {
+export const validateOperationKind = (opKind: OpKind) => {
   const opKindList = Object.keys(OperationKindMapping);
   return opKindList.includes(opKind);
 };
@@ -59,8 +61,8 @@ export const validateOperationKind = (opKind: string) => {
  *
  *  @returns array element differences if there are missing required property keys
  */
-export const validateMissingProperty = (operationContent: any) => {
-  const kind: OperationKind = operationContent.kind;
+export const validateMissingProperty = (operationContent: OperationContents) => {
+  const kind = operationContent.kind as OperationKind;
 
   const keys = Object.keys(operationContent);
   const cleanKeys = deleteArrayElementByValue(keys, 'kind');

@@ -56,6 +56,9 @@ interface CachedDataInterface {
     response: Promise<any>;
   };
 }
+
+type RpcMethodParam = string | UnparsingMode | BigMapKey | BakingRightsQueryArguments | PackDataParams
+
 const defaultTtl = 1000;
 
 /***
@@ -88,8 +91,8 @@ export class RpcClientCache implements RpcClientInterface {
   private formatCacheKey(
     rpcUrl: string,
     rpcMethodName: string,
-    rpcMethodParams: any[],
-    rpcMethodData?: any
+    rpcMethodParams: RpcMethodParam[],
+    rpcMethodData?: object
   ) {
     let paramsToString = '';
     rpcMethodParams.forEach((param) => {
@@ -111,7 +114,7 @@ export class RpcClientCache implements RpcClientInterface {
     return this._cache[key].response;
   }
 
-  private put(key: string, response: Promise<any>) {
+  private put<T>(key: string, response: Promise<T>) {
     const handle = setTimeout(() => {
       return this.remove(key);
     }, this.ttl);
