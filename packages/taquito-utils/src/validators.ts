@@ -27,7 +27,6 @@ export function isValidPrefix(value: unknown): value is Prefix {
  * @param prefixes prefix the value should have
  */
 function validatePrefixedValue(value: string, prefixes: Prefix[]) {
-
   const match = new RegExp(`^(${prefixes.join('|')})`).exec(value);
   if (!match || match.length === 0) {
     return ValidationResult.NO_PREFIX_MATCHED;
