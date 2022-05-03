@@ -907,6 +907,7 @@ export interface OperationContentsAndResultMetadataOrigination {
 }
 
 export type ConstantsResponse = ConstantsResponseCommon &
+  ConstantsResponseProto013 &
   ConstantsResponseProto012 &
   ConstantsResponseProto011 &
   ConstantsResponseProto010 &
@@ -944,19 +945,53 @@ export interface ConstantsResponseCommon {
 }
 
 export type Ratio = { numerator: number; denominator: number };
+
+export interface ConstantsResponseProto013 extends Omit<
+  ConstantsResponseProto012,
+  | 'blocks_per_voting_period'
+  | 'cache_layout'
+  > {
+  cache_layout_size?: number;
+  cache_sampler_state_cycles?: number;
+  cache_script_size?: number;
+  cache_stake_distribution_cycles?: number;
+  cycles_per_voting_period?: number;
+  liquidity_baking_toggle_ema_threshold?: number;
+  initial_seed?: string;
+  tx_rollup_enable?: boolean;
+  tx_rollup_origination_size?: number;
+  tx_rollup_hard_size_limit_per_inbox?: number;
+  tx_rollup_hard_size_limit_per_message?: number;
+  tx_rollup_max_withdrawals_per_batch?: number;
+  tx_rollup_commitment_bond?: BigNumber;
+  tx_rollup_finality_period?: number;
+  tx_rollup_withdraw_period?: number;
+  tx_rollup_max_inboxes_count?: number;
+  tx_rollup_max_messages_per_inbox?: number;
+  tx_rollup_max_commitments_count?: number;
+  tx_rollup_cost_per_byte_ema_factor?: number;
+  tx_rollup_max_ticket_payload_size?: number;
+  tx_rollup_rejection_max_proof_size?: number;
+  tx_rollup_sunset_level?: number;
+  sc_rollup_enable?: boolean;
+  sc_rollup_origination_size?: number;
+  sc_rollup_challenge_window_in_blocks?: number;
+  sc_rollup_max_available_messages?: number;
+}
+
 export interface ConstantsResponseProto012
   extends Omit<
-    ConstantsResponseProto011,
-    | 'baking_reward_per_endorsement'
-    | 'initial_endorsers'
-    | 'delay_per_missing_endorsement'
-    | 'test_chain_duration'
-    | 'blocks_per_roll_snapshot'
-    | 'time_between_blocks'
-    | 'endorsers_per_block'
-    | 'block_security_deposit'
-    | 'endorsement_security_deposit'
-    | 'endorsement_reward'
+  ConstantsResponseProto011,
+  | 'baking_reward_per_endorsement'
+  | 'initial_endorsers'
+  | 'delay_per_missing_endorsement'
+  | 'test_chain_duration'
+  | 'blocks_per_roll_snapshot'
+  | 'time_between_blocks'
+  | 'endorsers_per_block'
+  | 'block_security_deposit'
+  | 'endorsement_security_deposit'
+  | 'endorsement_reward'
   > {
   blocks_per_stake_snapshot?: number;
   baking_reward_fixed_portion?: BigNumber;
@@ -988,10 +1023,10 @@ export interface ConstantsResponseProto010 extends ConstantsResponseProto007 {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ConstantsResponseProto009 extends ConstantsResponseProto007 {}
+export interface ConstantsResponseProto009 extends ConstantsResponseProto007 { }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ConstantsResponseProto008 extends ConstantsResponseProto007 {}
+export interface ConstantsResponseProto008 extends ConstantsResponseProto007 { }
 
 export interface ConstantsResponseProto007
   extends Omit<ConstantsResponseProto006, 'max_revelations_per_block'> {

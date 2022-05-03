@@ -16,8 +16,8 @@ import {
 
 CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
   const Tezos = lib;
-  const mondaynet = (protocol === Protocols.ProtoALpha) ? test : test.skip;
-  const ithacanetAndPrior = (protocol === Protocols.Psithaca2) || (protocol === Protocols.PtHangz2) ? test : test.skip;
+  const jakartanetAndMondaynet = protocol === Protocols.ProtoALpha || protocol === Protocols.PtJakart2 ? test: test.skip;
+  const ithacanet = protocol === Protocols.Psithaca2 ? test : test.skip;
 
   interface StorageType {
     left: SaplingStateAbstraction;
@@ -30,7 +30,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
       done();
     });
 
-    ithacanetAndPrior('Originates a Sapling Double contract', async (done) => {
+    ithacanet('Originates a Sapling Double contract', async (done) => {
       const op = await Tezos.contract.originate({
         code: saplingContractDouble,
         init: `(Pair {} {})`,
@@ -55,7 +55,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
       done();
     });
 
-    mondaynet('Originates a Sapling Double contract on Mondaynet', async (done) => {
+    jakartanetAndMondaynet('Originates a Sapling Double contract on Mondaynet', async (done) => {
       const op = await Tezos.contract.originate({
         code: saplingContractDoubleJProto,
         init: `(Pair {} {})`,
@@ -80,7 +80,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
       done();
     });
 
-    ithacanetAndPrior('Originates a Sapling Drop contract', async (done) => {
+    ithacanet('Originates a Sapling Drop contract', async (done) => {
       const op = await Tezos.contract.originate({
         code: saplingContractDrop,
         init: { prim: 'Unit' },
@@ -97,7 +97,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
       done();
     });
 
-    mondaynet('Originates a Sapling Drop contract on Mondaynet', async (done) => {
+    jakartanetAndMondaynet('Originates a Sapling Drop contract on Mondaynet', async (done) => {
       const op = await Tezos.contract.originate({
         code: saplingContractDropJProto,
         init: { prim: 'Unit' },
@@ -114,7 +114,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
       done();
     });
 
-    ithacanetAndPrior('Originates a Sapling Send contract', async (done) => {
+    ithacanet('Originates a Sapling Send contract', async (done) => {
       const op = await Tezos.contract.originate({
         code: saplingContractSend,
         init: { prim: 'Unit' },
@@ -131,7 +131,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
       done();
     });
 
-    mondaynet('Originates a Sapling Send contract on Mondaynet', async (done) => {
+    jakartanetAndMondaynet('Originates a Sapling Send contract on Mondaynet', async (done) => {
       const op = await Tezos.contract.originate({
         code: saplingContractSendJProto,
         init: { prim: 'Unit' },
@@ -175,7 +175,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
       done();
     });
 
-    ithacanetAndPrior('Originates a Use Existing State Sapling contract', async (done) => {
+    ithacanet('Originates a Use Existing State Sapling contract', async (done) => {
       const op = await Tezos.contract.originate({
         code: saplingContractUseExistingState,
         init: `{}`,
@@ -199,7 +199,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
       done();
     });
 
-    mondaynet('Originates a Use Existing State Sapling contract on Mondaynet', async (done) => {
+    jakartanetAndMondaynet('Originates a Use Existing State Sapling contract on Mondaynet', async (done) => {
       const op = await Tezos.contract.originate({
         code: saplingContractUseExistingStateJProto,
         init: `{}`,

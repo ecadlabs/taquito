@@ -2,7 +2,7 @@ import { CONFIGS } from './config';
 import { MichelsonMap, OriginateParams, RpcForger, TezosToolkit } from '@taquito/taquito';
 import { knownContract } from '../example/data/knownContract';
 import { knownBigMapContract } from '../example/data/knownBigMapContract';
-import { singleSaplingStateContractJProtocol } from './data/single_sapling_state_contract_mondaynet_michelson';
+import { singleSaplingStateContractJProtocol } from './data/single_sapling_state_contract_jakarta_michelson';
 import { fa2ForTokenMetadataView } from './data/fa2-for-token-metadata-view';
 import { char2Bytes } from '@taquito/utils';
 import BigNumber from 'bignumber.js';
