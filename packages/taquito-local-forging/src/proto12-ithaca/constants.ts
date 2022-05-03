@@ -1,7 +1,7 @@
 import { kindMapping } from '../constants';
 import { pad } from '../utils';
 
-const { [0x00]: ommited, ...kindMappingNoEndorsement } = kindMapping;
+const { [0x00]: _ommited, ...kindMappingNoEndorsement } = kindMapping;
 
 export const kindMappingProto12: { [key: number]: string } = {
   ...kindMappingNoEndorsement,
