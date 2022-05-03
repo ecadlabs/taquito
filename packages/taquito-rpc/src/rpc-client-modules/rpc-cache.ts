@@ -91,7 +91,11 @@ export class RpcClientCache implements RpcClientInterface {
 
   private formatCacheKey(
     rpcUrl: string,
+<<<<<<< HEAD
     rpcMethodName: RPCMethodName,
+=======
+    rpcMethodName: string,
+>>>>>>> ccf73cc87... start combing through anys
     rpcMethodParams: RpcMethodParam[],
     rpcMethodData?: object
   ) {
