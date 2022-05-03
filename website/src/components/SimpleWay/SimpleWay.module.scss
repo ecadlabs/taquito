@@ -58,17 +58,18 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  max-width: 800px;
+  max-width: 950px;
 }
 .wayCard {
   width: 45%;
   display: flex;
   align-items: flex-start;
   align-self: flex-start;
-  max-width: 350px;
+  min-height: 90px;
+
   @media (max-width: 640px) {
     width: 100%;
-    min-height: 70px;
+    min-height: 80px;
   }
   .wayText {
     font-family: Source Sans Pro;

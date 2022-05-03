@@ -16,7 +16,7 @@ const FeatureList = [
         icon: require('../../../static/img/briefcase.svg').default,
         title: 'Easy to use',
         description:
-          "Abstractions around the Tezos blockchain are simple to understand and easy to use. Taquito's abstractions make working with contracts feel like working with plain old JavaScript objects.",
+          "Taquito's abstractions are simple to understand and use. Working with Tezos contracts feels like working with JavaScript objects.",
       },
       {
         icon: require('../../../static/img/key.svg').default,

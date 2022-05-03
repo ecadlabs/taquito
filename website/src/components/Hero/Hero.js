@@ -16,8 +16,8 @@ const FeatureList = [
     // SvgTraiangle5: require("./example-logo.svg").default,
     description: (
       <>
-        Use our popular Taquito TypeScript library Taquito to develop your Tezos blockchain apps
-        faster and easier
+        Use our popular Taquito TypeScript library to develop your Tezos blockchain apps faster and
+        easier
       </>
     ),
     link: {
@@ -65,18 +65,7 @@ const FeatureList = [
   },
 ];
 
-function Feature({
-  // Svg,
-  title,
-  description,
-  link,
-  features,
-  // SvgTraiangle1,
-  // SvgTraiangle2,
-  // SvgTraiangle3,
-  // SvgTraiangle4,
-  // SvgTraiangle5,
-}) {
+function Feature({ title, description, link, features }) {
   const checkTitle = (e) => {
     setUserAction(true);
     isVisible === e.target.id

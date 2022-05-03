@@ -126,8 +126,11 @@
   }
 
   .description {
-    height: 160px;
+    height: 120px;
     overflow: auto;
+    @media (max-width: 640px) {
+      height: 140px;
+    }
   }
 }
 

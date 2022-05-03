@@ -20,14 +20,12 @@ const FeatureList = [
       {
         icon: require('../../../static/img/systems.svg').default,
         title: 'Create and run your first app locally',
-        description:
-          'Use our original React Taquito Boilerplate app template for your future application',
+        description: 'Use our Taquito React Boilerplate app template.',
       },
       {
         icon: require('../../../static/img/app.svg').default,
-        title: 'Build your own App',
-        description:
-          'Enjoy building with Taquito, and let us know how we can help to make your life easier.',
+        title: 'Build your App',
+        description: 'Use Taquito to connect your app to the Tezos blockchain.',
       },
     ],
   },

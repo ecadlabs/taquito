@@ -11,19 +11,19 @@ const FeatureList = [
         text: 'Tired of figuring out what is needed to make that RPC work?',
       },
       {
-        text: 'Takes long to integrate with a wallet?',
+        text: 'Takes too long to integrate with a wallet?',
       },
       {
         text: 'Too many steps to send an operation?',
       },
       {
-        text: 'Want a library that is always up-to-date with the upcoming',
+        text: 'Want a library that is always up-to-date with the upcoming protocol changes?',
       },
       {
         text: 'Wish there were higher-level abstractions?',
       },
       {
-        text: 'Looking for an extensible framework with minimanl',
+        text: 'Looking for an extensible framework with minimal dependencies?',
       },
     ],
   },
