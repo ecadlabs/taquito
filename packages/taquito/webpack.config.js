@@ -1,7 +1,8 @@
-import TerserPlugin from 'terser-webpack-plugin';
-import pkg from './package.json';
-import SriPlugin from 'webpack-subresource-integrity';
-import WebpackAssetsManifest from 'webpack-assets-manifest';
+/* eslint-disable @typescript-eslint/no-var-requires */
+const TerserPlugin = require('terser-webpack-plugin');
+const pkg = require('./package.json');
+var SriPlugin = require('webpack-subresource-integrity');
+var WebpackAssetsManifest = require('webpack-assets-manifest');
 
 module.exports = {
   mode: 'production',
