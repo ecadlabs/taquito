@@ -4,7 +4,6 @@ import { RemoteSigner } from '../src/taquito-remote-signer';
  * RemoteSigner test
  */
 describe('RemoteSigner test', () => {
-  let _signer: RemoteSigner;
   let httpBackend: {
     createRequest: jest.Mock<any, any>;
   };
@@ -13,12 +12,6 @@ describe('RemoteSigner test', () => {
     httpBackend = {
       createRequest: jest.fn(),
     };
-    _signer = new RemoteSigner(
-      'tz1iD5nmudc4QtfNW14WWaiP7JEDuUHnbXuv',
-      'http://127.0.0.1:6732',
-      {},
-      httpBackend as any
-    );
   });
 
   it('RemoteSigner is instantiable', () => {
