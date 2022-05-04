@@ -47,13 +47,13 @@ const FeatureList = [
         title: 'Installing the Taqueri CLI',
         // icon: 'require("../../../static/img/briefcase.png").default',
         description: 'Installing the Taqueria is easy',
-        gif: require('../../../static/gif/taq_hero.mp4').default,
+        gif: require('../../../static/img/taquito_code_hero_1.png').default,
       },
       {
         title: 'Installing the Taqueria VS Code Extension',
         // icon: require("../../../static/img/briefcase.png").default,
         description: 'Taqueria has a VS Code extension available in the marketplace',
-        gif: require('../../../static/gif/taq_hero.mp4').default,
+        gif: require('../../../static/img/taquito_code_hero_2.png').default,
       },
     ],
   },
@@ -99,27 +99,16 @@ function Feature({ title, description, link, features }) {
             </div>
             {link.tilte}
           </div>
-          {/* <Svg className={styles.featureSvg} alt={title} /> */}
-          {/* <SvgTraiangle1 className={styles.featureSvgTraiangle1} alt={title} />
-          <SvgTraiangle2 className={styles.featureSvgTraiangle2} alt={title} />
-          <SvgTraiangle3 className={styles.featureSvgTraiangle3} alt={title} />
-          <SvgTraiangle4 className={styles.featureSvgTraiangle4} alt={title} />
-          <SvgTraiangle5 className={styles.featureSvgTraiangle5} alt={title} /> */}
         </div>
       </div>
       <div className={styles.carouselContainer}>
         <div className={styles.carousel}>
-          <div className={styles.videoHeader}>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
           <div className={styles.videoBlock}>
             <div className={styles.videoBlockHidden}></div>
             {features.map((feature, index) => {
               return (
                 isVisible === feature.title && (
-                  <video key={index} autoPlay={true} muted src={feature.gif} />
+                  <img key={index} autoPlay={true} muted src={feature.gif} />
                 )
               );
             })}
