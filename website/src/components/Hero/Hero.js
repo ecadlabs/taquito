@@ -8,12 +8,6 @@ import styles from './Hero.module.scss';
 const FeatureList = [
   {
     title: 'Developing on Tezos can be delicious!',
-    // Svg: require("./example-logo.svg").default,
-    // SvgTraiangle1: require("../../../static/img/triangle1.svg").default,
-    // SvgTraiangle2: require("../../../static/img/triangle2.svg").default,
-    // SvgTraiangle3: require("../../../static/img/triangle3.svg").default,
-    // SvgTraiangle4: require("../../../static/img/triangle4.svg").default,
-    // SvgTraiangle5: require("./example-logo.svg").default,
     description: (
       <>
         Use our popular Taquito TypeScript library to develop your Tezos blockchain apps faster and
