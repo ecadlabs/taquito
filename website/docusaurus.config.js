@@ -68,19 +68,19 @@ module.exports = {
           className: 'header-link button_link',
         },
         {
-          href: 'https://discord.gg/bujt7syVVT',
+          href: 'https://discord.gg/tURNUPwp',
           position: 'right',
           className: 'header-link header-discord-link',
           'aria-label': 'Discord',
         },
         {
-          href: 'https://twitter.com/tezostaqueria',
+          href: 'https://twitter.com/tezostaquito',
           position: 'right',
           className: 'header-link header-twitter-link',
           'aria-label': 'Twitter',
         },
         {
-          href: 'https://github.com/ecadlabs/taqueria',
+          href: 'https://github.com/ecadlabs/taquito',
           position: 'right',
           className: 'header-link header-github-link',
           'aria-label': 'GitHub repository',
@@ -94,7 +94,7 @@ module.exports = {
           items: [
             {
               label: 'Report Issues',
-              to: 'https://github.com/ecadlabs/taqueria/issues/new/choose',
+              to: 'https://github.com/ecadlabs/taquito/issues/new/choose',
             },
             {
               label: 'Contribute',
@@ -108,15 +108,15 @@ module.exports = {
           items: [
             {
               label: 'Stack Exchange',
-              to: 'https://tezos.stackexchange.com/questions/tagged/taqueria',
+              to: 'https://tezos.stackexchange.com/questions/tagged/taquito',
             },
             {
               label: 'Discord',
-              to: 'https://discord.gg/bujt7syVVT',
+              to: 'https://discord.gg/tURNUPwp',
             },
             {
               label: 'Twitter',
-              to: 'https://twitter.com/tezostaqueria',
+              to: 'https://twitter.com/tezostaquito',
             },
             {
               label: 'Code of Conduct',
@@ -124,7 +124,7 @@ module.exports = {
             },
             {
               label: 'GitHub',
-              to: 'https://github.com/ecadlabs/taqueria',
+              to: 'https://github.com/ecadlabs/taquito',
             },
           ],
         },
@@ -155,7 +155,7 @@ module.exports = {
             },
             {
               html: `
-									<a class='footerButton' href='https://github.com/ecadlabs/taqueria'>
+									<a class='footerButton' href='https://github.com/ecadlabs/taquito'>
 										GITHUB
 									</a>
 								  `,

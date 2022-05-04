@@ -298,6 +298,12 @@ h2 {
   width: 10%;
 }
 
+.footer__items {
+  list-style: none;
+  margin-bottom: 0;
+  padding-left: 0;
+}
+
 .footer__item {
   font-family: Source Sans Pro;
   font-style: normal;
@@ -472,11 +478,11 @@ h2 {
     white-space: unset;
   }
 
-  .row .col.col.col {
-    --ifm-col-width: 50%;
-    flex-basis: unset;
-    margin-left: 0;
-  }
+  // .row .col.col.col {
+  //   --ifm-col-width: 50%;
+  //   flex-basis: unset;
+  //   margin-left: 0;
+  // }
 
   .footer__links .footer__col {
     flex: unset;
