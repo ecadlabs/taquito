@@ -13,7 +13,7 @@ const FeatureList = [
 
     steps: [
       {
-        icon: require('../../../static/img/download-svg.svg').default,
+        icon: require('../../../static/img/download_icon.svg').default,
         title: 'Install Taquito',
         description: 'Follow our QuickStart guide to start using Taquito and check code examples.',
       },
