@@ -149,7 +149,7 @@ module.exports = {
             {
               html: `
 									<p class='footerDescription'>
-										Faplaren krorar whataboutism. Krorat kroligen. 
+									Developing On Tezos Can Be Delicious!
 									</p>
 								  `,
             },
