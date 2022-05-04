@@ -47,13 +47,13 @@ const FeatureList = [
         title: 'Installing the Taqueri CLI',
         // icon: 'require("../../../static/img/briefcase.png").default',
         description: 'Installing the Taqueria is easy',
-        gif: require('../../../static/img/taquito_code_hero_1.png').default,
+        gif: require('../../../static/img/hero-00.png').default,
       },
       {
         title: 'Installing the Taqueria VS Code Extension',
         // icon: require("../../../static/img/briefcase.png").default,
         description: 'Taqueria has a VS Code extension available in the marketplace',
-        gif: require('../../../static/img/taquito_code_hero_2.png').default,
+        gif: require('../../../static/img/hero-0.png').default,
       },
     ],
   },
@@ -104,7 +104,6 @@ function Feature({ title, description, link, features }) {
       <div className={styles.carouselContainer}>
         <div className={styles.carousel}>
           <div className={styles.videoBlock}>
-            <div className={styles.videoBlockHidden}></div>
             {features.map((feature, index) => {
               return (
                 isVisible === feature.title && (
