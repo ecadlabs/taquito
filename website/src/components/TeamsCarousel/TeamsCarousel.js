@@ -9,7 +9,7 @@ import ArrowLeft from '../../../static/img/carousel-arrow-left.svg';
 
 const FeatureList = [
   {
-    title: 'Teams building with Taqueria',
+    title: 'Teams Building With Taquito',
     // Svg: require("../../../static/img/taq_orange.svg").default,
     images: [
       {

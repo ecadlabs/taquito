@@ -3,9 +3,9 @@ import clsx from 'clsx';
 import styles from './TitleBlock.module.scss';
 
 const FeatureList = [
-    {
-        title: 'We believe you deserve great developer experience',
-    },
+  {
+    title: 'We Believe You Deserve A Great Developer Experience',
+  },
 ];
 
 function Feature({ title }) {
