@@ -59,7 +59,7 @@ export class TezosOperationError extends Error {
 export class TezosPreapplyFailureError extends Error {
   name = 'TezosPreapplyFailureError';
 
-  constructor(public result: any) {
+  constructor(public result: unknown) {
     super('Preapply returned an unexpected result');
   }
 }

@@ -55,9 +55,15 @@ interface EphemeralConfig {
 /**
  * FaucetConfig contains a JSON faucet key that can be used on Tezos test-nets or sandboxes. Faucet keys for public testnets are available from [https://faucet.tzalpha.net/](https://faucet.tzalpha.net/)
  */
-interface FaucetConfig {
+interface FaucetConfig extends Partial<Config> {
   type: SignerType.FAUCET;
-  faucetKey: {};
+  faucetKey: {
+    pkh?: string;
+    email: string;
+    password: string;
+    mnemonic: string[];
+    secret: string;
+  };
 }
 
 const ithacanetEphemeral = {
@@ -195,7 +201,7 @@ if (process.env['RUN_WITH_FAUCET']) {
   providers.push(jakartanetEphemeral, ithacanetEphemeral);
 }
 
-const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE'];
+const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE'] as unknown as FaucetConfig["faucetKey"];
 
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
   if (forger === ForgerType.LOCAL) {
@@ -252,7 +258,7 @@ const setupSignerWithEphemeralKey = async (
 };
 
 const setupWithFaucetKey = async (Tezos: TezosToolkit, signerConfig: FaucetConfig) => {
-  const faucetKey: any = faucetKeyFile || signerConfig.faucetKey;
+  const faucetKey: FaucetConfig["faucetKey"] = faucetKeyFile ?? signerConfig.faucetKey;
   await importKey(
     Tezos,
     faucetKey.email,

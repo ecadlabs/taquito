@@ -1,6 +1,8 @@
 import { TransferParams } from '../../src/operations/types';
 
-const errorBuilder = (result: any) => {
+type ErrorBuilderType = Record<"contents", Record<"metadata", Record<string, unknown>>[]>[]
+
+const errorBuilder = (result: ErrorBuilderType) => {
   return {
     withError: () => {
       result[0].contents[0].metadata.operation_result = {
