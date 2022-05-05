@@ -27,7 +27,7 @@ export class ContractMethod<T extends ContractProvider | Wallet>
     private isMultipleEntrypoint = true,
     private isAnonymous = false
   ) {}
-
+    // Z CHECK not used
   private validateArgs(args: any[], schema: ParameterSchema, name: string) {
     const sigs = schema.ExtractSignatures();
 

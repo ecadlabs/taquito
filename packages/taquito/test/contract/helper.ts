@@ -84,7 +84,7 @@ const errorBuilder = (result: any) => {
         consumed_gas: '15953',
         storage_size: '232',
       };
-      (result[0].contents[0].metadata as any).internal_operation_results = [
+      result[0].contents[0].metadata.internal_operation_results = [
         {
           kind: 'transaction',
           source: 'KT1Rod9ZzsJXLhzDNrrFSh3yaWTjEJriYXjo',

@@ -55,13 +55,14 @@ export class ObservableSubscription<T> implements Subscription<T> {
     }
   }
 
-  private remove(listeners: Array<any>, value: any) {
+  private remove(listeners: Array<unknown>, value: unknown) {
     const idx = listeners.indexOf(value);
     if (idx !== -1) {
       listeners.splice(idx, 1);
     }
   }
 
+  // Z CHECK why duplications
   public on(type: 'error', cb: (error: Error) => void): void;
   public on(type: 'data', cb: (data: T) => void): void;
   public on(type: 'close', cb: () => void): void;

@@ -10,7 +10,7 @@ const pollingIntervalMilliseconds = 100;
 let date: Date;
 let level: number;
 
-function logLevelAndTime(data: any) {
+function logLevelAndTime(data: number) {
   const newDate = new Date();
   const timeBetweenBlocks = date ? (newDate.getTime() - date.getTime()) : 0;
   if (level && data - level > 1) {

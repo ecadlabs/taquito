@@ -1,3 +1,4 @@
+import { HttpResponseError } from './../../../../taquito-http-utils/src/taquito-http-utils';
 import { ViewSchema } from '@taquito/michelson-encoder';
 import {
   MichelsonV1Expression,
@@ -178,8 +179,8 @@ export class OnChainView {
     let storage: MichelsonV1ExpressionExtended;
     try {
       storage = (await this._rpc.runCode(viewScript)).storage as MichelsonV1ExpressionExtended;
-    } catch (error: any) {
-      const failWith = validateAndExtractFailwith(error);
+    } catch (error: unknown) {
+      const failWith = validateAndExtractFailwith(error as HttpResponseError);
       throw failWith
         ? new ViewSimulationError(
             `The simulation of the on-chain view named ${

@@ -1,3 +1,4 @@
+import { Signer } from './../packages/taquito/src/signer/interface';
 /// How to use:
 ///   Ensure the Testfunder account tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys has at least 2k tokens
 ///   for the testnet in use. The script will first check if addresses used in the script are funded,
@@ -10,7 +11,7 @@
 ///     node -r ts-node/register deploy-docs-live-code-contracts.ts
 
 import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
-import { InMemorySigner, importKey } from '@taquito/signer';
+import { InMemorySigner } from '@taquito/signer';
 import { tzip7Contract } from '../integration-tests/data/tzip_7_contract';
 import { contractMapPairKey } from './data/contractMapPairKey';
 import { contractIncrementing } from './data/contractIncrementing';
@@ -29,13 +30,14 @@ import {
 import { contractMap8pairs } from './data/contractMap8pairs';
 import { char2Bytes } from '@taquito/utils';
 import { fa2Contract } from '../integration-tests/data/fa2_contract';
-import Faucet from './faucet-interface';
+// import Faucet from './faucet-interface';
+import BigNumber from 'bignumber.js';
 
 
-const {email, password, mnemonic, activation_code, pkh} = require("./faucet-default-values.json") as Faucet
+// const {email, password, mnemonic, activation_code, pkh} = require("./faucet-default-values.json") as Faucet
 
 const provider = 'https://ithacanet.ecadinfra.com/';
-export const signer: any = new InMemorySigner(
+export const signer: Signer = new InMemorySigner(
   'edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca'
 );
 export const tezos = new TezosToolkit(provider);
@@ -79,7 +81,7 @@ const low_balance: Array<string> = [];
 
 const min_balance = 100000000;
 
-async function checkBalances(users: string | any[]) {
+async function checkBalances(users: string | string[]) {
 
   // IF FAILS try uncommenting below and running with lending other tezos instance funds
 
@@ -105,8 +107,8 @@ async function checkBalances(users: string | any[]) {
   console.log('checking funds of users...');
   try {
     for (let i = 0; i < users.length; i++) {
-      const user_balance: any = await tezos.tz.getBalance(users[i]);
-      if (user_balance < min_balance) {
+      const user_balance: BigNumber = await tezos.tz.getBalance(users[i]);
+      if (user_balance.comparedTo(min_balance) < 0) {
         low_balance.push(users[i]);
       }
       console.log(users[i], user_balance);
@@ -176,7 +178,7 @@ async function originateTheContracts() {
   function json_contract_catalogue() {
     console.log(' ');
     console.log('The Contract Catalogue :');
-    const jsonObject: any = {};
+    const jsonObject: Record<string, string>  = {};
     contract_catalogue.forEach((value, key) => {
       jsonObject[key] = value;
     });

@@ -3,6 +3,7 @@ import { Contract, ContractAbstraction, WalletContract } from './contract';
 import { TezosOperationError } from '../operations/operation-errors';
 import { ContractProvider } from './interface';
 import { Wallet } from '../wallet';
+import { TezosGenericOperationError } from 'taquito-rpc/dist/types/taquito-rpc';
 
 /**
  *
@@ -20,14 +21,14 @@ export default class LambdaView {
     this.voidLambda = this.createVoidLambda();
   }
 
-  async execute(): Promise<any> {
+  async execute(): Promise<TezosGenericOperationError | unknown> {
     try {
       await this.lambdaContract.methods.default(this.voidLambda).send();
     } catch (ex) {
       if (ex instanceof TezosOperationError) {
-        const lastError: any = ex.errors[ex.errors.length - 1];
+        const lastError: TezosGenericOperationError = ex.errors[ex.errors.length - 1];
 
-        const failedWith = lastError.with;
+        const failedWith = lastError;
         return failedWith;
       } else {
         throw ex;

@@ -137,10 +137,11 @@ Total XTZ Spent : ${keyInitialBalance.minus(await tezos.tz.getBalance(keyPkh)).d
       const contract = await operation.contract();
       console.log(`known${contractName} address:  ${contract.address}`);
       console.log(`::set-output name=known${contractName}Address::${contract.address}\n`);
-    } catch (e: any) {
-      console.error(`Failed to deploy ${contractName} known contract | Error: ${e.stack}`);
+    } catch (e: unknown) {
+      const err = e as Record<string, unknown>
+      console.error(`Failed to deploy ${contractName} known contract | Error: ${err.stack}`);
 
-      if (e.name === "ForgingMismatchError") {
+      if (err.name === "ForgingMismatchError") {
         console.log(`Composite forger failed to originate ${contractName}. Trying to originate the contract by using RPC forger...`);
 
         tezos.setForgerProvider(tezos.getFactory(RpcForger)());
