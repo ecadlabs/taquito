@@ -51,6 +51,7 @@
   --sidebar-link-bg: rgba(211, 131, 43, 0.2);
   --ifm-toc-padding-vertical: 1rem;
   --ifm-color-hover-link: var(--black);
+  --ifm-container-width-xl: 100% !important;
 }
 
 .alert--secondary {
@@ -126,6 +127,8 @@ h2 {
   padding-left: 7%;
   padding-right: 7%;
   box-shadow: none !important;
+  border-bottom: 2px solid var(--yellow-second);
+
   // .navbar__inner{
   //   align-items: flex-end;
   // }
