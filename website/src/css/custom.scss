@@ -263,6 +263,7 @@ h2 {
   display: flex;
   justify-content: center;
   width: 100%;
+  padding: var(--ifm-footer-padding-vertical) 5%;
 }
 
 .footer__title {
@@ -383,10 +384,11 @@ h2 {
   font-size: 14px;
   line-height: 18px;
   border-top: 2px solid var(--yellow-second);
-  padding: 20px 40px;
+  padding-top: 20px;
   color: var(--ifm-color-text-primary) !important;
-  padding-left: 5%;
-  padding-right: 5%;
+  padding-bottom: 20px;
+  padding-left: calc(5% + 25px);
+  padding-right: calc(5% + 25px);
 }
 
 .footerButton {
