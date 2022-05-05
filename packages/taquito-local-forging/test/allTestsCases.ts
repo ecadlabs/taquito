@@ -24,6 +24,7 @@ import { noAnnotCode, noAnnotInit } from './data/token_without_annotations';
 import { voteInitSample, voteSample } from './data/vote_contract';
 import { chestCode, chestStorage } from './data/contract_with_chest';
 import { submutezCode, submutezStorage } from './data/contract_with_sub_mutez';
+import { kukai1592Code } from './data/kukai_1592';
 import {
   storageContractWithConstant,
   codeContractWithConstant,
@@ -441,6 +442,175 @@ export const commonCases: TestCase[] = [
           },
           destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           amount: '1000',
+        },
+      ],
+    },
+  },
+  {
+    name: 'Kukai reported issue #1592 - bytes in the input is upper-case',
+    operation: {
+      branch: 'BKsV8h3bdnnqxYP4xEx52QeEdB9XqhBXuy314CZ7e2zTkXACLBs',
+      contents: [
+        {
+          kind: 'transaction',
+          counter: '392495',
+          source: 'tz1UeT3VS8LuAkvB66tjQTTDP1LFf3DEC4uA',
+          fee: '7267',
+          gas_limit: '66341',
+          storage_limit: '538',
+          destination: 'KT1VgYbxiwgJPVNB7Zdht8nCMVbADeg5VpQQ',
+          amount: '0',
+          parameters: {
+            entrypoint: 'unlock',
+            value: {
+              prim: 'Pair',
+              args: [
+                {
+                  string: 'tz1UeT3VS8LuAkvB66tjQTTDP1LFf3DEC4uA'
+                },
+                {
+                  prim: 'Pair',
+                  args: [
+                    [
+                      {
+                        prim: 'Elt',
+                        args: [
+                          {
+                            int: '1494'
+                          },
+                          [
+                            {
+                              prim: 'Elt',
+                              args: [
+                                {
+                                  string: 'damage'
+                                },
+                                {
+                                  int: '700'
+                                }
+                              ]
+                            },
+                            {
+                              prim: 'Elt',
+                              args: [
+                                {
+                                  string: 'exp'
+                                },
+                                {
+                                  int: '10'
+                                }
+                              ]
+                            }
+                          ]
+                        ]
+                      },
+                      {
+                        prim: 'Elt',
+                        args: [
+                          {
+                            int: '1504'
+                          },
+                          [
+                            {
+                              prim: 'Elt',
+                              args: [
+                                {
+                                  string: 'damage'
+                                },
+                                {
+                                  int: '900'
+                                }
+                              ]
+                            },
+                            {
+                              prim: 'Elt',
+                              args: [
+                                {
+                                  string: 'exp'
+                                },
+                                {
+                                  int: '38'
+                                }
+                              ]
+                            }
+                          ]
+                        ]
+                      },
+                      {
+                        prim: 'Elt',
+                        args: [
+                          {
+                            int: '1557'
+                          },
+                          [
+                            {
+                              prim: 'Elt',
+                              args: [
+                                {
+                                  string: 'damage'
+                                },
+                                {
+                                  int: '1100'
+                                }
+                              ]
+                            },
+                            {
+                              prim: 'Elt',
+                              args: [
+                                {
+                                  string: 'exp'
+                                },
+                                {
+                                  int: '24'
+                                }
+                              ]
+                            }
+                          ]
+                        ]
+                      }
+                    ],
+                    {
+                      prim: 'Pair',
+                      args: [
+                        [],
+                        {
+                          prim: 'Pair',
+                          args: [
+                            [
+                              {
+                                bytes: '697066733A2F2F516D54666E6F35554D62384E51434475654A5A637167686E67713779566F475933467A7461744470417A5A526542'
+                              }
+                            ],
+                            {
+                              prim: 'Pair',
+                              args: [
+                                [
+                                  {
+                                    prim: 'Elt',
+                                    args: [
+                                      {
+                                        int: '2'
+                                      },
+                                      {
+                                        int: '25000000000'
+                                      }
+                                    ]
+                                  }
+                                ],
+                                {
+                                  string: 'edsigtt6Qp118ex7tMJcnWr9tjVTuCwKXS9kAbuD1LVxb5A1raQEr5Cvz4BDaC9dH1X1898DekDsqty66M45as87juCF3ge5FWM'
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+             },
+          },
         },
       ],
     },
