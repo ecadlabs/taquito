@@ -3,23 +3,25 @@ require('dotenv').config();
 module.exports = {
   title: 'Taquito',
   tagline: 'A TypeScript library suite for development on the Tezos blockchain.',
-  favicon: 'img/favicon.png',
+  favicon: 'img/favicon.svg',
   url: 'https://tezostaquito.io',
   baseUrl: '/',
   projectName: 'taquito',
   organizationName: 'ecadlabs',
-  scripts: ['https://buttons.github.io/buttons.js', {
-    src:
-      'https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js',
-    async: true,
-  }, {
-    src:
-      'https://www.tezbridge.com/plugin.js',
-    async: true,
-  }],
+  scripts: [
+    'https://buttons.github.io/buttons.js',
+    {
+      src: 'https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js',
+      async: true,
+    },
+    {
+      src: 'https://www.tezbridge.com/plugin.js',
+      async: true,
+    },
+  ],
   stylesheets: [
     'https://fonts.googleapis.com/css?family=Baloo+Tammudu|Open+Sans:400,600,800&display=swap',
-    'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css'
+    'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css',
   ],
   customFields: {
     repoUrl: 'https://github.com/ecadlabs/taquito',
@@ -28,101 +30,173 @@ module.exports = {
   },
   themes: [require.resolve('@docusaurus/theme-live-codeblock')],
   themeConfig: {
+    colorMode: {
+      defaultMode: 'light',
+      disableSwitch: false,
+      respectPrefersColorScheme: false,
+      // The following value has been deprecated and will need to be re-implemented when dark mode is implemented
+      // switchConfig: {
+      // 	darkIcon: '🌙',
+      // 	darkIconStyle: {
+      // 		marginLeft: '2px',
+      // 	},
+      // 	// Unicode icons such as '\u2600' will work
+      // 	// Unicode with 5 chars require brackets: '\u{1F602}'
+      // 	lightIcon: '\u{1F602}',
+      // 	lightIconStyle: {
+      // 		marginLeft: '1px',
+      // 	},
+      // },
+    },
     navbar: {
-      title: 'Taquito',
       logo: {
         alt: 'Taquito Logo',
-        src: 'img/a_taquito.png'
+        src: 'img/taquito_header.svg',
       },
       items: [
         {
           type: 'docsVersionDropdown',
           position: 'right',
+          className: 'header-link',
         },
-        { to: 'docs/version', label: 'Release Notes', position: 'right' },
-        { href: "https://twitter.com/TezosTaquito", label: 'Twitter', position: 'right' },
-        { href: "https://github.com/ecadlabs/taquito", label: 'GitHub', position: 'right' }
-      ]
+        { to: 'docs/version', label: 'Release Notes', position: 'right', className: 'header-link' },
+        {
+          type: 'doc',
+          docId: 'quick_start',
+          label: ' Get Started',
+          position: 'right',
+          className: 'header-link button_link',
+        },
+        {
+          href: 'https://discord.gg/tURNUPwp',
+          position: 'right',
+          className: 'header-link header-discord-link',
+          'aria-label': 'Discord',
+        },
+        {
+          href: 'https://twitter.com/tezostaquito',
+          position: 'right',
+          className: 'header-link header-twitter-link',
+          'aria-label': 'Twitter',
+        },
+        {
+          href: 'https://github.com/ecadlabs/taquito',
+          position: 'right',
+          className: 'header-link header-github-link',
+          'aria-label': 'GitHub repository',
+        },
+      ],
     },
     footer: {
       links: [
         {
-          title: 'Docs',
+          title: 'Contact',
           items: [
             {
-              label: 'Quick Start',
-              to: 'docs/quick_start',
+              label: 'Report Issues',
+              to: 'https://github.com/ecadlabs/taquito/issues/new/choose',
             },
             {
-              label: 'TypeDoc Reference',
-              href: 'https://tezostaquito.io/typedoc',
+              label: 'Contribute',
+              to: 'https://github.com/ecadlabs/taquito/blob/master/CONTRIBUTING.md',
             },
           ],
         },
+
         {
           title: 'Community',
           items: [
             {
               label: 'Stack Exchange',
-              href: 'https://tezos.stackexchange.com/questions/tagged/taquito',
+              to: 'https://tezos.stackexchange.com/questions/tagged/taquito',
             },
             {
-              label: 'Telegram',
-              href: 'https://t.me/tezostaquito',
+              label: 'Discord',
+              to: 'https://discord.gg/tURNUPwp',
             },
             {
               label: 'Twitter',
-              href: 'https://twitter.com/TezosTaquito',
+              to: 'https://twitter.com/tezostaquito',
             },
             {
               label: 'Code of Conduct',
-              href: 'https://github.com/ecadlabs/taquito/blob/master/code-of-conduct.md',
+              to: 'https://github.com/ecadlabs/taquito/blob/master/code-of-conduct.md',
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/ecadlabs/taquito',
+              to: 'https://github.com/ecadlabs/taquito',
             },
           ],
         },
         {
-          title: 'Contact',
+          title: 'Docs',
           items: [
             {
-              label: 'Report issues',
-              href: 'https://github.com/ecadlabs/taquito/issues',
+              label: 'Quick Start',
+              to: '/docs/quick_start',
             },
             {
-              label: 'Contribute',
-              href: 'https://github.com/ecadlabs/taquito/blob/master/CONTRIBUTING.md',
+              label: 'TypeDoc Reference',
+              to: 'https://tezostaquito.io/typedoc',
+            },
+          ],
+        },
+        {
+          items: [
+            {
+              html: `image`,
+            },
+            {
+              html: `
+									<p class='footerDescription'>
+									Developing On Tezos Can Be Delicious!
+									</p>
+								  `,
+            },
+            {
+              html: `
+									<a class='footerButton' href='https://github.com/ecadlabs/taquito'>
+										GITHUB
+									</a>
+								  `,
+            },
+            {
+              html: `form`,
             },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} ECAD Labs - Open Source MIT License`
     },
-    gtag: {
-      trackingID: 'UA-148358030-1',
-    },
-    algolia: {
-      apiKey: process.env.ALGOLIA_SEARCH_API_KEY,
-      indexName: 'taquito',
-      appId: process.env.ALGOLIA_APPLICATION_ID,
-    }
+
+    // algolia: {
+    //   apiKey: 'process.env.ALGOLIA_SEARCH_API_KEY',
+    //   indexName: 'taquito',
+    //   appId: 'process.env.ALGOLIA_APPLICATION_ID',
+    // }
   },
   presets: [
     [
       '@docusaurus/preset-classic',
       {
         theme: {
-          customCss: require.resolve('./src/css/custom.css'),
+          customCss: [
+            require.resolve('./src/css/custom.scss'),
+            require.resolve('./src/css/tables.scss'),
+            require.resolve('./src/css/admonitions.scss'),
+            require.resolve('./src/css/codeBlock.scss'),
+            require.resolve('./src/css/tabs.scss'),
+          ],
         },
         docs: {
           path: '../docs',
-          sidebarPath: require.resolve('./sidebars.json'),
-          includeCurrentVersion: true
-        }
-      }
+          sidebarPath: require.resolve('./sidebars.js'),
+          // includeCurrentVersion: true,
+        },
+        gtag: {
+          trackingID: 'UA-148358030-1',
+        },
+      },
     ],
   ],
-  plugins: [require.resolve('./plugins/webpack5plugin/index.js')],
+  plugins: [require.resolve('./plugins/webpack5plugin/index.js'), 'docusaurus-plugin-sass'],
 };

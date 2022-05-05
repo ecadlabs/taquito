@@ -137,8 +137,8 @@
           "id": "version-12.1.0/contracts_collection"
         }
       ],
-      "collapsible": true,
-      "collapsed": true
+      "collapsible": false,
+      "collapsed": false
     },
     {
       "type": "category",
@@ -157,8 +157,8 @@
           "id": "version-12.1.0/ledger_signer"
         }
       ],
-      "collapsible": true,
-      "collapsed": true
+      "collapsible": false,
+      "collapsed": false
     },
     {
       "type": "category",
@@ -177,8 +177,8 @@
           "id": "version-12.1.0/taquito_utils"
         }
       ],
-      "collapsible": true,
-      "collapsed": true
+      "collapsible": false,
+      "collapsed": false
     },
     {
       "type": "category",
@@ -197,8 +197,8 @@
           "id": "version-12.1.0/drain_account"
         }
       ],
-      "collapsible": true,
-      "collapsed": true
+      "collapsible": false,
+      "collapsed": false
     },
     {
       "type": "category",
@@ -217,8 +217,8 @@
           "id": "version-12.1.0/cancel_http_requests"
         }
       ],
-      "collapsible": true,
-      "collapsed": true
+      "collapsible": false,
+      "collapsed": false
     },
     {
       "type": "category",
@@ -233,13 +233,13 @@
           "id": "version-12.1.0/rpc_nodes_integration_test"
         }
       ],
-      "collapsible": true,
-      "collapsed": true
+      "collapsible": false,
+      "collapsed": false
     },
     {
       "type": "category",
-      "collapsed": true,
-      "collapsible": true,
+      "collapsed": false,
+      "collapsible": false,
       "label": "Upgrading Guide",
       "items": [
         {
