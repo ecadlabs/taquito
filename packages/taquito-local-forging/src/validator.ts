@@ -1,4 +1,4 @@
-import { OpKind } from './../../taquito-rpc/src/opkind';
+import { OpKind } from '@taquito/rpc';
 import { OperationContents } from '@taquito/rpc';
 import {
   ActivationSchema,
