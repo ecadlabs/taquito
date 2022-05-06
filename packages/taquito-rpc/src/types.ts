@@ -1111,6 +1111,7 @@ export interface BlockMetadata {
   voting_period_info?: VotingPeriodBlockResult;
   nonce_hash?: string;
   consumed_gas: string;
+  // "deactivated": [ $Signature.Public_key_hash ... ],
   deactivated: string[];
   balance_updates: OperationBalanceUpdates;
   liquidity_baking_escape_ema?: number;

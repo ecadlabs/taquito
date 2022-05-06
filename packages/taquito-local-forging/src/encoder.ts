@@ -53,15 +53,15 @@ export const encoders: { [key: string]: Encoder<any> } = {
 };
 
 encoders[CODEC.OPERATION] = operationEncoder(encoders);
-encoders[CODEC.OP_ACTIVATE_ACCOUNT] = (val: any) => schemaEncoder(encoders)(ActivationSchema)(val);
-encoders[CODEC.OP_DELEGATION] = (val: any) => schemaEncoder(encoders)(DelegationSchema)(val);
-encoders[CODEC.OP_TRANSACTION] = (val: any) => schemaEncoder(encoders)(TransactionSchema)(val);
-encoders[CODEC.OP_ORIGINATION] = (val: any) => schemaEncoder(encoders)(OriginationSchema)(val);
-encoders[CODEC.OP_BALLOT] = (val: any) => schemaEncoder(encoders)(BallotSchema)(val);
-encoders[CODEC.OP_ENDORSEMENT] = (val: any) => schemaEncoder(encoders)(EndorsementSchema)(val);
-encoders[CODEC.OP_SEED_NONCE_REVELATION] = (val: any) =>
+encoders[CODEC.OP_ACTIVATE_ACCOUNT] = (val) => schemaEncoder(encoders)(ActivationSchema)(val);
+encoders[CODEC.OP_DELEGATION] = (val) => schemaEncoder(encoders)(DelegationSchema)(val);
+encoders[CODEC.OP_TRANSACTION] = (val) => schemaEncoder(encoders)(TransactionSchema)(val);
+encoders[CODEC.OP_ORIGINATION] = (val) => schemaEncoder(encoders)(OriginationSchema)(val);
+encoders[CODEC.OP_BALLOT] = (val) => schemaEncoder(encoders)(BallotSchema)(val);
+encoders[CODEC.OP_ENDORSEMENT] = (val) => schemaEncoder(encoders)(EndorsementSchema)(val);
+encoders[CODEC.OP_SEED_NONCE_REVELATION] = (val) =>
   schemaEncoder(encoders)(SeedNonceRevelationSchema)(val);
-encoders[CODEC.OP_PROPOSALS] = (val: any) => schemaEncoder(encoders)(ProposalsSchema)(val);
-encoders[CODEC.OP_REVEAL] = (val: any) => schemaEncoder(encoders)(RevealSchema)(val);
-encoders[CODEC.OP_REGISTER_GLOBAL_CONSTANT] = (val: any) => schemaEncoder(encoders)(RegisterGlobalConstantSchema)(val);
+encoders[CODEC.OP_PROPOSALS] = (val) => schemaEncoder(encoders)(ProposalsSchema)(val);
+encoders[CODEC.OP_REVEAL] = (val) => schemaEncoder(encoders)(RevealSchema)(val);
+encoders[CODEC.OP_REGISTER_GLOBAL_CONSTANT] = (val) => schemaEncoder(encoders)(RegisterGlobalConstantSchema)(val);
 encoders[CODEC.MANAGER] = schemaEncoder(encoders)(ManagerOperationSchema);

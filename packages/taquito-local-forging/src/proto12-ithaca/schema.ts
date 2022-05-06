@@ -1,3 +1,4 @@
+import { CODEC } from './../constants';
 import { Decoder } from '../decoder';
 import { Uint8ArrayConsumer } from '../uint8array-consumer';
 import { kindMappingProto12, kindMappingReverseProto12 } from './constants';

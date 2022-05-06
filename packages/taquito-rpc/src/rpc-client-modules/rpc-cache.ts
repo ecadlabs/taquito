@@ -58,11 +58,7 @@ interface CachedDataInterface {
   };
 }
 
-<<<<<<< HEAD
 type RpcMethodParam = string | UnparsingMode | BigMapKey | BakingRightsQueryArguments | PackDataParams | EndorsingRightsQueryArguments
-=======
-type RpcMethodParam = string | UnparsingMode | BigMapKey | BakingRightsQueryArguments | PackDataParams
->>>>>>> 5d851d0bd... fix type rpc Method params
 
 const defaultTtl = 1000;
 

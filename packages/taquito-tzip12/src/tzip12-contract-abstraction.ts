@@ -127,13 +127,14 @@ export class Tzip12ContractAbstraction {
           this.context
         );
         return metadataFromUri.metadata;
-      } catch (e: any) {
-        if (e.name === 'InvalidUri') {
+      } catch (e) {
+        const err = e as Record<string, unknown>
+        if (err.name === 'InvalidUri') {
           console.warn(
             `The URI ${bytes2Char(uri)} is present in the token metadata, but is invalid.`
           );
         } else {
-          throw e;
+          throw err;
         }
       }
     }
