@@ -65,7 +65,7 @@ export function appendWatermark(bytes: string, watermark?: Uint8Array): string {
  * @param operation The operation which will be chunk if its length is over 230 bytes
  * @returns The instruction to send to the Ledger device
  */
-export function chunkOperation(messageToSend: any, operation: Buffer) {
+export function chunkOperation(messageToSend: Buffer[], operation: Buffer) {
   let offset = 0;
   while (offset !== operation.length) {
     const chunkSize =
