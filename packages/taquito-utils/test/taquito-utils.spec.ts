@@ -7,11 +7,6 @@ import {
   encodeKeyHash,
   encodeKey,
   encodePubKey,
-  b58decode,
-  b58cdecode,
-  prefix,
-  Prefix,
-  b58cencode,
   num2PaddedHex,
   hex2Bytes,
 } from '../src/taquito-utils';
