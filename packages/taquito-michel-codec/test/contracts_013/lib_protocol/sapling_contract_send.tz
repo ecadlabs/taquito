@@ -1,0 +1,20 @@
+storage (unit);
+parameter (pair (contract (or (sapling_transaction 8) (sapling_state 8))) (sapling_transaction 8));
+code { UNPAIR ;
+       UNPAIR;
+       SWAP ;
+       SAPLING_EMPTY_STATE 8;
+       SWAP ;
+       SAPLING_VERIFY_UPDATE ;
+       ASSERT_SOME ;
+       CDR ;
+       CDR ;
+       PUSH mutez 0;
+       SWAP ;
+       RIGHT (sapling_transaction 8);
+       TRANSFER_TOKENS;
+       NIL operation;
+       SWAP;
+       CONS;
+       PAIR;
+     }

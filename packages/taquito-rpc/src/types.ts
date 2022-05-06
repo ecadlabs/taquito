@@ -24,7 +24,7 @@ export interface DelegatesResponse {
   delegated_balance: BigNumber;
   deactivated: boolean;
   grace_period: number;
-  voting_power?: number;
+  voting_power?: BigNumber;
 }
 
 interface Frozenbalancebycycle {
@@ -40,6 +40,8 @@ export type BigMapKey = {
   type: { prim: string; args?: object[] };
 };
 
+export type LiquidityBakingToggleVotes = 'on' | 'off' | 'pass';
+
 export interface BlockFullHeader {
   level: number;
   proto: number;
@@ -54,7 +56,7 @@ export interface BlockFullHeader {
   priority: number;
   proof_of_work_nonce: string;
   seed_nonce_hash?: string;
-  liquidity_baking_escape_vote?: boolean;
+  liquidity_baking_escape_vote?: boolean | LiquidityBakingToggleVotes;
   signature: string;
 }
 
@@ -526,9 +528,9 @@ export interface BallotListResponseItem {
 export type BallotListResponse = BallotListResponseItem[];
 
 export interface BallotsResponse {
-  yay: number;
-  nay: number;
-  pass: number;
+  yay: BigNumber;
+  nay: BigNumber;
+  pass: BigNumber;
 }
 
 export type PeriodKindResponse =
@@ -547,12 +549,13 @@ export type CurrentQuorumResponse = number;
 
 export interface VotesListingsResponseItem {
   pkh: string;
-  rolls: number;
+  rolls?: number;
+  voting_power?: BigNumber;
 }
 
 export type VotesListingsResponse = VotesListingsResponseItem[];
 
-export type ProposalsResponseItem = [string, number];
+export type ProposalsResponseItem = [string, BigNumber];
 
 export type ProposalsResponse = ProposalsResponseItem[];
 
@@ -572,7 +575,7 @@ export interface BlockHeaderResponse {
   payload_round?: number;
   priority?: number;
   proof_of_work_nonce: string;
-  liquidity_baking_escape_vote?: boolean;
+  liquidity_baking_escape_vote?: boolean | LiquidityBakingToggleVotes;
   signature: string;
 }
 
@@ -698,6 +701,7 @@ export interface OperationResultRegisterGlobalConstant {
   storage_size?: string;
   global_address?: string;
   errors?: TezosGenericOperationError[];
+  consumed_milligas?: string;
 }
 
 export interface ContractBigMapDiffItem {
@@ -903,6 +907,7 @@ export interface OperationContentsAndResultMetadataOrigination {
 }
 
 export type ConstantsResponse = ConstantsResponseCommon &
+  ConstantsResponseProto013 &
   ConstantsResponseProto012 &
   ConstantsResponseProto011 &
   ConstantsResponseProto010 &
@@ -940,6 +945,37 @@ export interface ConstantsResponseCommon {
 }
 
 export type Ratio = { numerator: number; denominator: number };
+
+export interface ConstantsResponseProto013
+  extends Omit<ConstantsResponseProto012, 'blocks_per_voting_period' | 'cache_layout'> {
+  cache_layout_size?: number;
+  cache_sampler_state_cycles?: number;
+  cache_script_size?: number;
+  cache_stake_distribution_cycles?: number;
+  cycles_per_voting_period?: number;
+  liquidity_baking_toggle_ema_threshold?: number;
+  initial_seed?: string;
+  tx_rollup_enable?: boolean;
+  tx_rollup_origination_size?: number;
+  tx_rollup_hard_size_limit_per_inbox?: number;
+  tx_rollup_hard_size_limit_per_message?: number;
+  tx_rollup_max_withdrawals_per_batch?: number;
+  tx_rollup_commitment_bond?: BigNumber;
+  tx_rollup_finality_period?: number;
+  tx_rollup_withdraw_period?: number;
+  tx_rollup_max_inboxes_count?: number;
+  tx_rollup_max_messages_per_inbox?: number;
+  tx_rollup_max_commitments_count?: number;
+  tx_rollup_cost_per_byte_ema_factor?: number;
+  tx_rollup_max_ticket_payload_size?: number;
+  tx_rollup_rejection_max_proof_size?: number;
+  tx_rollup_sunset_level?: number;
+  sc_rollup_enable?: boolean;
+  sc_rollup_origination_size?: number;
+  sc_rollup_challenge_window_in_blocks?: number;
+  sc_rollup_max_available_messages?: number;
+}
+
 export interface ConstantsResponseProto012
   extends Omit<
     ConstantsResponseProto011,

@@ -1,5 +1,4 @@
-import { localForger } from '@taquito/local-forging';
-import { CompositeForger, RpcForger, TezosToolkit, Protocols, ChainIds } from '@taquito/taquito';
+import { CompositeForger, RpcForger, TezosToolkit, Protocols, TaquitoLocalForger } from '@taquito/taquito';
 import { RemoteSigner } from '@taquito/remote-signer';
 import { HttpBackend } from '@taquito/http-utils';
 import { b58cencode, Prefix, prefix } from '@taquito/utils';
@@ -76,17 +75,17 @@ const ithacanetEphemeral = {
   },
 };
 
-const hangzhounetEphemeral = {
-  rpc: process.env['TEZOS_RPC_HANGZHOUNET'] || 'https://hangzhounet.api.tez.ie',
+const jakartanetEphemeral = {
+  rpc: process.env['TEZOS_RPC_JAKARTANET'] || 'https://jakartanet.ecadinfra.com',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1XfoRSZ88ioYHbuEKqHxJPawm9Rqc54uoy',
-  knownBigMapContract: 'KT1CnRSbp71FU8nz4xNEkcaASgMQDjNN85jd',
-  knownTzip1216Contract: 'KT1KquwVmLtq9StwCK46vpwRCxowqhcoV4g1',
-  knownSaplingContract: 'KT1MfdF2jdYF4Ug4DmcDJ3GaLNW7RBMA9hkB',
-  protocol: Protocols.PtHangz2,
+  knownContract: 'KT1SHtH6qWcWWnQ5gZThCD5EnrErKHxyqxca',
+  knownBigMapContract: 'KT1AbzoXYgGXjCD3Msi3spuqa5r5MP3rkvM9',
+  knownTzip1216Contract: 'KT1GmRf51jFNMQBFDo2mYKnC8Pjm1d7yDwVj',
+  knownSaplingContract: 'KT1G2kvdfPoavgR6Fjdd68M2vaPk14qJ8bhC',
+  protocol: Protocols.PtJakart2,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'https://api.tez.ie/keys/hangzhounet',
+    keyUrl: 'https://api.tez.ie/keys/jakartanet',
     requestHeaders: { Authorization: 'Bearer taquito-example' },
   },
 };
@@ -143,37 +142,37 @@ const ithacanetFaucet = {
   },
 };
 
-const hangzhounetFaucet = {
-  rpc: process.env['TEZOS_RPC_HANGZHOUNET'] || 'https://hangzhounet.api.tez.ie/',
+const jakartanetFaucet = {
+  rpc: process.env['TEZOS_RPC_JAKARTANET'] || 'https://jakartanet.ecadinfra.com',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1XfoRSZ88ioYHbuEKqHxJPawm9Rqc54uoy',
-  knownBigMapContract: 'KT1CnRSbp71FU8nz4xNEkcaASgMQDjNN85jd',
-  knownTzip1216Contract: 'KT1KquwVmLtq9StwCK46vpwRCxowqhcoV4g1',
-  knownSaplingContract: 'KT1MfdF2jdYF4Ug4DmcDJ3GaLNW7RBMA9hkB',
-  protocol: Protocols.PtHangz2,
+  knownContract: 'KT1SHtH6qWcWWnQ5gZThCD5EnrErKHxyqxca',
+  knownBigMapContract: 'KT1AbzoXYgGXjCD3Msi3spuqa5r5MP3rkvM9',
+  knownTzip1216Contract: 'KT1GmRf51jFNMQBFDo2mYKnC8Pjm1d7yDwVj',
+  knownSaplingContract: 'KT1G2kvdfPoavgR6Fjdd68M2vaPk14qJ8bhC',
+  protocol: Protocols.PtJakart2,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
     faucetKey: {
       mnemonic: [
-        'hero',
-        'calm',
-        'fever',
-        'defense',
-        'sound',
-        'amount',
-        'critic',
-        'quote',
-        'finger',
-        'strong',
-        'face',
-        'magnet',
-        'promote',
-        'opinion',
-        'flash',
+        "business",
+        "rare",
+        "bridge",
+        "arrange",
+        "lab",
+        "finger",
+        "then",
+        "cube",
+        "clown",
+        "wife",
+        "arrest",
+        "lumber",
+        "wide",
+        "enroll",
+        "earn"
       ],
-      email: 'xzuhshlh.ehwpsgne@teztnets.xyz',
-      password: 'aWMyUsXNia',
-      secret: 'dea0160b4d432daf03be1f00424f04bdb9d776a9',
+      email: "bmdrmigx.ciakevmr@teztnets.xyz",
+      password: 'VeeA6X8fZT',
+      secret: '0f2e92c3d1473677317c852ab968646d4c4f57c0',
     },
   },
 };
@@ -181,28 +180,29 @@ const hangzhounetFaucet = {
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_FAUCET']) {
-  providers.push(hangzhounetFaucet, ithacanetFaucet);
-} else if (process.env['RUN_HANGZHOUNET_WITH_FAUCET']) {
-  providers.push(hangzhounetFaucet);
+  providers.push(jakartanetFaucet, ithacanetFaucet);
+} else if (process.env['RUN_JAKARTANET_WITH_FAUCET']) {
+  providers.push(jakartanetFaucet);
 } else if (process.env['RUN_ITHACANET_WITH_FAUCET']) {
   providers.push(ithacanetFaucet);
-} else if (process.env['HANGZHOUNET']) {
-  providers.push(hangzhounetEphemeral);
+} else if (process.env['JAKARTANET']) {
+  providers.push(jakartanetEphemeral);
 } else if (process.env['ITHACANET']) {
   providers.push(ithacanetEphemeral);
 } else if (process.env['MONDAYNET']) {
   providers.push(mondaynetEphemeral);
 } else {
-  providers.push(hangzhounetEphemeral, ithacanetEphemeral);
+  providers.push(jakartanetEphemeral, ithacanetEphemeral);
 }
 
 const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE'];
 
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
   if (forger === ForgerType.LOCAL) {
-    Tezos.setProvider({ forger: localForger });
+    Tezos.setProvider({ forger: Tezos.getFactory(TaquitoLocalForger)() });
   } else if (forger === ForgerType.COMPOSITE) {
     const rpcForger = Tezos.getFactory(RpcForger)();
+    const localForger = Tezos.getFactory(TaquitoLocalForger)()
     const composite = new CompositeForger([rpcForger, localForger]);
     Tezos.setProvider({ forger: composite });
   } else if (forger === ForgerType.RPC) {

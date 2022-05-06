@@ -24,7 +24,6 @@ import {
   ManagerKeyResponse,
   OperationHash,
   PackDataParams,
-  PeriodKindResponse,
   PreapplyParams,
   PreapplyResponse,
   ProposalsResponse,

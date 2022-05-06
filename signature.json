@@ -1641,7 +1641,7 @@
             "sha512": "5c5a9885c3e956b66ffeb9a7c8b3c18802f85acae956eaade98ce1a026af2ead1a737986ae0d78806ba49aa3a2de2c95111572200a73ad065405d21185fc39dd"
           },
           {
-            "path": "website/static/img/favicon.png",
+            "path": "website/static/img/favicon.svg",
             "sha512": "b51b286090aa06bb8f2b7250383e07d36b66461287f24b3818f7b80e7bc637f786e7be60e8af5a79d7e09080b1914d6871d0ac593fec2f1f920529d759d907da"
           },
           {
@@ -2552,24 +2552,15 @@
             "build-docs": "typedoc",
             "gh-pages": "gh-pages"
           },
-          "workspaces": [
-            "packages/*"
-          ],
+          "workspaces": ["packages/*"],
           "jest": {
             "transform": {
               ".(ts|tsx)": "ts-jest"
             },
-            "testPathIgnorePatterns": [
-              "/node_modules/",
-              "/integration-tests/"
-            ],
+            "testPathIgnorePatterns": ["/node_modules/", "/integration-tests/"],
             "testEnvironment": "node",
             "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-            "moduleFileExtensions": [
-              "ts",
-              "tsx",
-              "js"
-            ],
+            "moduleFileExtensions": ["ts", "tsx", "js"],
             "moduleNameMapper": {
               "^@taquito/rpc$": "<rootDir>/packages/taquito-rpc/src/taquito-rpc.ts",
               "^@taquito/taquito$": "<rootDir>/packages/taquito/src/taquito.ts",
@@ -2580,13 +2571,8 @@
               "^@taquito/signer$": "<rootDir>/packages/taquito-signer/src/taquito-signer.ts",
               "^@taquito/local-forging$": "<rootDir>/packages/taquito-local-forging/src/taquito-local-forging.ts"
             },
-            "coveragePathIgnorePatterns": [
-              "/node_modules/",
-              "/test/"
-            ],
-            "collectCoverageFrom": [
-              "packages/**/src/**/*.{js,ts}"
-            ]
+            "coveragePathIgnorePatterns": ["/node_modules/", "/test/"],
+            "collectCoverageFrom": ["packages/**/src/**/*.{js,ts}"]
           },
           "devDependencies": {
             "@commitlint/cli": "^11.0.0",
@@ -2630,9 +2616,7 @@
             }
           },
           "commitlint": {
-            "extends": [
-              "@commitlint/config-conventional"
-            ]
+            "extends": ["@commitlint/config-conventional"]
           }
         }
       }
