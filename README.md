@@ -1,4 +1,4 @@
-<span style="display:block;text-align:center">![Logo](https://gateway.pinata.cloud/ipfs/QmNdScKzKP3WUutxuEjqYZtVcQAvK3m9XMK5ZuvaxxrrgX)</span>
+![Taquito Logo](/img/Taquito.png)
 
 
 A TypeScript library suite for development on the Tezos blockchain
