@@ -15,7 +15,7 @@ import { validatePkAndExtractPrefix } from './verify-signature';
 import { hash } from '@stablelib/blake2b';
 import blake from 'blakejs';
 import bs58check from 'bs58check';
-import { ValueConversionError } from './errors';
+import { ValueConversionError, InvalidHexStringError } from './errors';
 import { BigNumber } from 'bignumber.js';
 
 export * from './validators';
@@ -310,16 +310,15 @@ export function bytes2Char(hex: string): string {
  *
  * @description Convert hex string/UintArray/Buffer to bytes
  *
- * @param hex String/Uint8Array/Buffer value to convert to bytes
+ * @param hex String value to convert to bytes
  */
-export function hex2Bytes(hex: string | Uint8Array | Buffer): Buffer {
-  if (typeof hex === 'string' && hex.match(/[\da-f]{2}/gi)) {
-    return Buffer.from(hex, 'hex');
-  } else if (!(typeof hex === 'string')) {
-    return Buffer.from(hex);
-  } else {
-    return Buffer.from([0]);
+export function hex2Bytes(hex: string): Buffer {
+  if (!hex.match(/[\da-f]{2}/gi)) {
+    throw new InvalidHexStringError(
+      `The hex string ${hex} does not have an even number of characters`
+    );
   }
+  return Buffer.from(hex, 'hex');
 }
 
 /**

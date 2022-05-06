@@ -1,4 +1,5 @@
-import { MerkleTree, SaplingCipherText, SaplingStateDiff, SaplingStateTree } from './interface';
+import { MerkleTree, SaplingStateTree } from './interface';
+import { SaplingDiffResponse, SaplingTransactionCiphertext } from '@taquito/rpc';
 import { InvalidMerkleRootError, TreeConstructionFailure } from '../error';
 import { merkleHash } from '@airgap/sapling-wasm';
 import { Lazy, pairNodes, changeEndianness } from '../utils';
@@ -6,8 +7,8 @@ import { hex2Bytes, num2PaddedHex } from '@taquito/utils';
 import BigNumber from 'bignumber.js';
 
 /**
- * The SaplingState class's main purpose is to provide a merkle path for the forger and the transaction builder,
- * so that it may verify that the Sapling transaction is valid
+ * @description The SaplingState class's main purpose is to provide a merkle path for the forger and the transaction builder, so that it may verify that the Sapling transaction is valid
+ *
  */
 export class SaplingState {
   private stateTree: SaplingStateTree | undefined;
@@ -21,7 +22,7 @@ export class SaplingState {
   constructor(public readonly height: number) {}
 
   public async getStateTree(
-    stateDiff: SaplingStateDiff,
+    stateDiff: SaplingDiffResponse,
     constructTree = true
   ): Promise<SaplingStateTree> {
     if (this.stateTree !== undefined && this.stateTree.root === stateDiff.root) {
@@ -29,7 +30,7 @@ export class SaplingState {
     }
 
     const commitments: string[] = stateDiff.commitments_and_ciphertexts.map(
-      ([commitment, _]: [string, SaplingCipherText]) => commitment
+      ([commitment, _]: [string, SaplingTransactionCiphertext]) => commitment
     );
 
     let merkleTree: MerkleTree;

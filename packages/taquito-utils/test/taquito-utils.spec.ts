@@ -11,6 +11,8 @@ import {
   hex2Bytes,
 } from '../src/taquito-utils';
 
+import { BigNumber } from 'bignumber.js';
+
 describe('Encode expr', () => {
   it('Should encode expression properly', () => {
     expect(encodeExpr('050a000000160000b2e19a9e74440d86c59f13dab8a18ff873e889ea')).toEqual(
@@ -199,6 +201,18 @@ describe('Hex conversions', () => {
     const result = num2PaddedHex(-20, 64);
 
     expect(result).toEqual('ffffffffffffffec');
+  });
+
+  it('Should be able to convert a BigNumber to a hex string', () => {
+    const result = num2PaddedHex(new BigNumber(64));
+
+    expect(result).toEqual('40');
+  });
+
+  it('Should be able to convert a negative BigNumber to a hex string', () => {
+    const result = num2PaddedHex(new BigNumber(-20));
+
+    expect(result).toEqual('ec');
   });
 
   it('Should be able to convert hex to bytes', () => {

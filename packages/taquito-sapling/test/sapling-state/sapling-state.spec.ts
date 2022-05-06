@@ -19,7 +19,6 @@ describe('Sapling State Tree tests', async () => {
   it('Should be able to instantiate SaplingState class object', async () => {
     const result = await state.getStateTree(sapling_state_diff);
 
-    console.log(JSON.stringify(result));
     expect(result).toBeDefined();
     expect(JSON.stringify(result)).toEqual(stateTree);
   });
