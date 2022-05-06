@@ -16,6 +16,7 @@ import { hash } from '@stablelib/blake2b';
 import blake from 'blakejs';
 import bs58check from 'bs58check';
 import { ValueConversionError } from './errors';
+import { BigNumber } from 'bignumber.js';
 
 export * from './validators';
 export { VERSION } from './version';
@@ -303,4 +304,57 @@ export function char2Bytes(str: string) {
  */
 export function bytes2Char(hex: string): string {
   return Buffer.from(hex2buf(hex)).toString('utf8');
+}
+
+/**
+ *
+ * @description Convert hex string/UintArray/Buffer to bytes
+ *
+ * @param hex String/Uint8Array/Buffer value to convert to bytes
+ */
+export function hex2Bytes(hex: string | Uint8Array | Buffer): Buffer {
+  if (typeof hex === 'string' && hex.match(/[\da-f]{2}/gi)) {
+    return Buffer.from(hex, 'hex');
+  } else if (!(typeof hex === 'string')) {
+    return Buffer.from(hex);
+  } else {
+    return Buffer.from([0]);
+  }
+}
+
+/**
+ *
+ * @description Converts a number or BigNumber to a padded hexadecimal string
+ * @param val The value that will be converted into a padded hexadecimal string value
+ * @param bitLength The length of bits
+ *
+ */
+export function num2PaddedHex(val: number | BigNumber, bitLength = 8): string {
+  if (new BigNumber(val).isPositive()) {
+    const nibbleLength: number = Math.ceil(bitLength / 4);
+    const hex: string = val.toString(16);
+
+    // check whether nibble (4 bits) length is higher or lowerthan the current hex string length
+    let targetLength: number = hex.length >= nibbleLength ? hex.length : nibbleLength;
+
+    // make sure the hex string target length is even
+    targetLength = targetLength % 2 == 0 ? targetLength : targetLength + 1;
+
+    return padHexWithZero(hex, targetLength);
+  } else {
+    const twosCompliment: BigNumber = new BigNumber(2)
+      .pow(bitLength)
+      .minus(new BigNumber(val).abs());
+    return twosCompliment.toString(16);
+  }
+}
+
+function padHexWithZero(hex: string, targetLength: number): string {
+  const padString = '0';
+  if (hex.length >= targetLength) {
+    return hex;
+  } else {
+    const padLength = targetLength - hex.length;
+    return padString.repeat(padLength) + hex;
+  }
 }

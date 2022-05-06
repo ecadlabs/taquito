@@ -1,4 +1,20 @@
-import { encodeExpr, char2Bytes, bytes2Char, encodeOpHash, getPkhfromPk, encodeKeyHash, encodeKey, encodePubKey, b58decode, b58cdecode, prefix, Prefix, b58cencode } from '../src/taquito-utils';
+import {
+  encodeExpr,
+  char2Bytes,
+  bytes2Char,
+  encodeOpHash,
+  getPkhfromPk,
+  encodeKeyHash,
+  encodeKey,
+  encodePubKey,
+  b58decode,
+  b58cdecode,
+  prefix,
+  Prefix,
+  b58cencode,
+  num2PaddedHex,
+  hex2Bytes,
+} from '../src/taquito-utils';
 
 describe('Encode expr', () => {
   it('Should encode expression properly', () => {
@@ -36,9 +52,9 @@ describe('encodePubKey', () => {
 
 describe('encodeKey', () => {
   it('Should encode key properly (p2pk)', () => {
-    expect(encodeKey('02033aba7da4a2e7b5dd9f074555c118829aff16213ea1b65859686bd5fcfeaf3616')).toEqual(
-      'p2pk66xmhjiN7LpfrDGFwpxPtJxkLtPjQ6HUxJbKmRbxSR7RMpamDwi'
-    );
+    expect(
+      encodeKey('02033aba7da4a2e7b5dd9f074555c118829aff16213ea1b65859686bd5fcfeaf3616')
+    ).toEqual('p2pk66xmhjiN7LpfrDGFwpxPtJxkLtPjQ6HUxJbKmRbxSR7RMpamDwi');
   });
 
   it('Should encode key properly (edpk)', () => {
@@ -48,9 +64,9 @@ describe('encodeKey', () => {
   });
 
   it('Should encode key properly (sppk)', () => {
-    expect(encodeKey('01021b93c8abcbc2f4ff1a8059b4d6527333e0b531975df2a6b72717935111c64844')).toEqual(
-      'sppk7ZWnHCVLsPE4CDFUTH424Qj2gUiJ3sp581nvexfz21w8gPjRVce'
-    );
+    expect(
+      encodeKey('01021b93c8abcbc2f4ff1a8059b4d6527333e0b531975df2a6b72717935111c64844')
+    ).toEqual('sppk7ZWnHCVLsPE4CDFUTH424Qj2gUiJ3sp581nvexfz21w8gPjRVce');
   });
 });
 
@@ -64,7 +80,8 @@ describe('encodeKeyHash', () => {
 
 describe('Encode operation hash', () => {
   it('Should encode operation hash properly', () => {
-    const opBytesSigned = '0f185d8a30061e8134c162dbb7a6c3ab8f5fdb153363ccd6149b49a33481156a6c00b2e19a9e74440d86c59f13dab8a18ff873e889eaa304ab05da13000001f1585a7384f36e45fb43dc37e8ce172bced3e05700ff0000000002002110c033f3a990c2e46a3d6054ecc2f74072aae7a34b5ac4d9ce9edc11c2410a97695682108951786f05b361da03b97245dc9897e1955e08b5b8d9e153b0bdeb0d';
+    const opBytesSigned =
+      '0f185d8a30061e8134c162dbb7a6c3ab8f5fdb153363ccd6149b49a33481156a6c00b2e19a9e74440d86c59f13dab8a18ff873e889eaa304ab05da13000001f1585a7384f36e45fb43dc37e8ce172bced3e05700ff0000000002002110c033f3a990c2e46a3d6054ecc2f74072aae7a34b5ac4d9ce9edc11c2410a97695682108951786f05b361da03b97245dc9897e1955e08b5b8d9e153b0bdeb0d';
     expect(encodeOpHash(opBytesSigned)).toEqual(
       'opapqvVXmebRTCFd2GQFydr4tJj3V5QocQuTmuhbatcHm4Seo2t'
     );
@@ -165,7 +182,34 @@ describe('Public Key conversions', () => {
     const publicKey = 'randomstring';
 
     expect(() => {
-      getPkhfromPk(publicKey)
+      getPkhfromPk(publicKey);
     }).toThrowError();
-  })
+  });
+});
+
+describe('Hex conversions', () => {
+  it('Should be able to convert a number to a hex string', () => {
+    const result = num2PaddedHex(64);
+
+    expect(result).toEqual('40');
+  });
+
+  it('Should be able to convert a number to a padded hex string when the length param is passed', () => {
+    const result = num2PaddedHex(20, 64);
+
+    expect(result).toEqual('0000000000000014');
+  });
+
+  it('Should be able to convert a negative number to a hex string', () => {
+    const result = num2PaddedHex(-20, 64);
+
+    expect(result).toEqual('ffffffffffffffec');
+  });
+
+  it('Should be able to convert hex to bytes', () => {
+    const result: Buffer = hex2Bytes('abcd');
+
+    expect(result).toBeDefined();
+    expect(result).toEqual(Buffer.from('abcd', 'hex'));
+  });
 });
