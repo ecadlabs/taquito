@@ -59,7 +59,7 @@ export class RevealOperation extends Operation
     return this.params.public_key;
   }
 
-  private sumProp(arr: any[], prop: string) {
+  private sumProp<T>(arr: T[], prop: keyof T) {
     return arr.reduce((prev, current) => {
       return prop in current ? Number(current[prop]) + prev : prev;
     }, 0);
