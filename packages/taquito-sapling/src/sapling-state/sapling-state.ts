@@ -1,5 +1,5 @@
 import { MerkleTree, SaplingCipherText, SaplingStateDiff, SaplingStateTree } from './interface';
-import { InvalidMerkleTreeError } from '../error';
+import { InvalidMerkleRootError, TreeConstructionFailure } from '../error';
 import { merkleHash } from '@airgap/sapling-wasm';
 import { Lazy, pairNodes, changeEndianness } from '../utils';
 import { hex2Bytes, num2PaddedHex } from '@taquito/utils';
@@ -75,7 +75,7 @@ export class SaplingState {
     }
 
     if (height === this.height || leaves.length > Math.pow(2, this.height - 1 - height)) {
-      throw new InvalidMerkleTreeError(
+      throw new TreeConstructionFailure(
         'Children length exceeds maximum number of nodes in a merkle tree'
       );
     }
@@ -122,7 +122,7 @@ export class SaplingState {
     const root: Buffer = await this.getMerkleHash(tree, this.height - 1);
 
     if (root.toString('hex') !== expectedRoot) {
-      throw new Error('Merkle tree root is invalid');
+      throw new InvalidMerkleRootError(root.toString('hex'));
     }
   }
 
