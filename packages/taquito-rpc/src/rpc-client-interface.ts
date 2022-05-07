@@ -111,7 +111,7 @@ export enum RPCMethodName {
   GET_BIG_MAP_EXPR = "getBigMapExpr",
   GET_BLOCK_HASH = "getBlockHash",
   GET_BLOCK = "getBlock",
-  GET_BLOCK_HEADER = "getBlockHeade",
+  GET_BLOCK_HEADER = "getBlockHeader",
   GET_BLOCK_METADATA = "getBlockMetadata",
   GET_BALANCE = "getBalance",
   GET_CHAIN_ID = "getChainId",
