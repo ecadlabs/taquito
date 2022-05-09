@@ -3,7 +3,6 @@ import {
   TokenFactory,
   ComparableToken,
   TokenValidationError,
-  Semantic,
   SemanticEncoding,
 } from '../token';
 import { b58decode, encodePubKey, validateAddress, ValidationResult } from '@taquito/utils';
