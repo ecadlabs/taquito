@@ -36,7 +36,7 @@ export class Lazy<T> {
 
 /**
  *
- * @param hex hexadecimal string we would like to swap endianness
+ * @param hex hexadecimal string we would like to swap
  * @returns a hexadecimal string with swapped endians
  */
 export const changeEndianness = (hex: string): string => {
