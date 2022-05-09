@@ -1,6 +1,13 @@
 import { MichelsonMap } from '../michelson-map';
 import { MapTokenSchema } from '../schema/types';
-import { ComparableToken, Semantic, Token, TokenFactory, TokenValidationError } from './token';
+import {
+  ComparableToken,
+  Semantic,
+  SemanticEncoding,
+  Token,
+  TokenFactory,
+  TokenValidationError,
+} from './token';
 
 export class MapValidationError extends TokenValidationError {
   name = 'MapValidationError';
@@ -66,12 +73,16 @@ export class MapToken extends Token {
       });
   }
 
-  public EncodeObject(args: any): any {
+  public EncodeObject(args: any, semantic?: SemanticEncoding): any {
     const val: MichelsonMap<any, any> = args;
 
     const err = this.isValid(val);
     if (err) {
       throw err;
+    }
+
+    if (semantic && semantic[MapToken.prim]) {
+      return semantic[MapToken.prim](val);
     }
 
     return Array.from(val.keys())

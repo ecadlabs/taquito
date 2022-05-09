@@ -1,6 +1,13 @@
 import { MichelsonMap } from '../michelson-map';
 import { BigMapTokenSchema } from '../schema/types';
-import { ComparableToken, Semantic, Token, TokenFactory, TokenValidationError } from './token';
+import {
+  ComparableToken,
+  Semantic,
+  SemanticEncoding,
+  Token,
+  TokenFactory,
+  TokenValidationError,
+} from './token';
 
 /**
  *  @category Error
@@ -80,12 +87,16 @@ export class BigMapToken extends Token {
       });
   }
 
-  public EncodeObject(args: any): any {
+  public EncodeObject(args: any, semantic?: SemanticEncoding): any {
     const val: MichelsonMap<any, any> = args;
 
     const err = this.isValid(val);
     if (err) {
       throw err;
+    }
+
+    if (semantic && semantic[BigMapToken.prim]) {
+      return semantic[BigMapToken.prim](val, this.val);
     }
 
     return Array.from(val.keys())

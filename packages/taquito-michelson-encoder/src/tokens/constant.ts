@@ -1,5 +1,5 @@
 import { ConstantTokenSchema } from '../schema/types';
-import { Semantic, Token, TokenFactory, TokenValidationError } from './token';
+import { Semantic, SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 
 export class GlobalConstantEncodingError extends TokenValidationError {
   name = 'GlobalConstantEncodingError';
@@ -46,7 +46,10 @@ export class GlobalConstantToken extends Token {
     );
   }
 
-  public EncodeObject(val: any): any {
+  public EncodeObject(val: any, semantic?: SemanticEncoding): any {
+    if (semantic && semantic[GlobalConstantToken.prim]) {
+      return semantic[GlobalConstantToken.prim](val);
+    }
     throw new GlobalConstantEncodingError(
       val,
       this,

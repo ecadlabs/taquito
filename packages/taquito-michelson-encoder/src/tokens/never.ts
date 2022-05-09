@@ -1,5 +1,5 @@
 import { BaseTokenSchema } from '../schema/types';
-import { Token, TokenFactory, TokenValidationError } from './token';
+import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 
 export class NeverTokenError extends TokenValidationError {
   name = 'NeverTokenError';
@@ -21,7 +21,10 @@ export class NeverToken extends Token {
     const val = args.pop();
     throw new NeverTokenError(val, this, 'Assigning a value to the type never is forbidden.');
   }
-  public EncodeObject(val: any): any {
+  public EncodeObject(val: any, semantic?: SemanticEncoding): any {
+    if (semantic && semantic[NeverToken.prim]) {
+      return semantic[NeverToken.prim](val);
+    }
     throw new NeverTokenError(val, this, 'Assigning a value to the type never is forbidden.');
   }
   public Execute(val: any) {

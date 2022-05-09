@@ -1,5 +1,12 @@
 import { SetTokenSchema } from '../schema/types';
-import { Token, TokenFactory, Semantic, TokenValidationError, ComparableToken } from './token';
+import {
+  Token,
+  TokenFactory,
+  Semantic,
+  TokenValidationError,
+  ComparableToken,
+  SemanticEncoding,
+} from './token';
 
 export class SetValidationError extends TokenValidationError {
   name = 'SetValidationError';
@@ -52,10 +59,14 @@ export class SetToken extends Token {
     }, []);
   }
 
-  public EncodeObject(args: any): any {
+  public EncodeObject(args: any, semantic?: SemanticEncoding): any {
     const err = this.isValid(args);
     if (err) {
       throw err;
+    }
+
+    if (semantic && semantic[SetToken.prim]) {
+      return semantic[SetToken.prim](args);
     }
 
     return args

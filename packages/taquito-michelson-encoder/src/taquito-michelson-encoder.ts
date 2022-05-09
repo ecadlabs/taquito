@@ -8,7 +8,7 @@ export * from './schema/parameter';
 export * from './schema/view-schema';
 export * from './schema/error';
 export * from './schema/types';
-export { Semantic, BigMapKeyType } from './tokens/token';
+export { Semantic, SemanticEncoding, BigMapKeyType } from './tokens/token';
 export * from './errors';
 
 export const UnitValue = Symbol();

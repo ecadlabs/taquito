@@ -1,4 +1,4 @@
-import { ComparableToken, Token, TokenFactory } from './token';
+import { ComparableToken, SemanticEncoding, Token, TokenFactory } from './token';
 import { BaseTokenSchema } from '../schema/types';
 import { UnitValue } from '../taquito-michelson-encoder';
 
@@ -18,7 +18,10 @@ export class UnitToken extends ComparableToken {
     return { prim: 'Unit' };
   }
 
-  public EncodeObject(_val: any): any {
+  public EncodeObject(val: any, semantic?: SemanticEncoding): any {
+    if (semantic && semantic[UnitToken.prim]) {
+      return semantic[UnitToken.prim](val);
+    }
     return { prim: 'Unit' };
   }
 

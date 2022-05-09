@@ -1,5 +1,5 @@
 import { BaseTokenSchema } from '../schema/types';
-import { Token, TokenFactory, TokenValidationError } from './token';
+import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 
 export class Bls12381frValidationError extends TokenValidationError {
   name = 'Bls12381frValidationError';
@@ -46,7 +46,10 @@ export class Bls12381frToken extends Token {
     }
   }
 
-  EncodeObject(val: string | Uint8Array | number) {
+  EncodeObject(val: string | Uint8Array | number, semantic?: SemanticEncoding) {
+    if (semantic && semantic[Bls12381frToken.prim]) {
+      return semantic[Bls12381frToken.prim](val);
+    }
     if (typeof val === 'number') {
       return { int: val.toString() };
     } else {

@@ -1,5 +1,5 @@
 import { BaseTokenSchema } from '../schema/types';
-import { Token, TokenFactory } from './token';
+import { SemanticEncoding, Token, TokenFactory } from './token';
 
 export class OperationToken extends Token {
   static prim: 'operation' = 'operation';
@@ -21,7 +21,10 @@ export class OperationToken extends Token {
     return { string: val };
   }
 
-  public EncodeObject(val: any): any {
+  public EncodeObject(val: any, semantic?: SemanticEncoding): any {
+    if (semantic && semantic[OperationToken.prim]) {
+      return semantic[OperationToken.prim](val);
+    }
     return { string: val };
   }
 

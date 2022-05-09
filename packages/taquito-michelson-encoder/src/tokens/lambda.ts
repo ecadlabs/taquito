@@ -1,5 +1,5 @@
 import { LambdaTokenSchema } from '../schema/types';
-import { Token, TokenFactory } from './token';
+import { SemanticEncoding, Token, TokenFactory } from './token';
 
 export class LambdaToken extends Token {
   static prim: 'lambda' = 'lambda';
@@ -33,7 +33,10 @@ export class LambdaToken extends Token {
     return val;
   }
 
-  public EncodeObject(val: any): any {
+  public EncodeObject(val: any, semantic?: SemanticEncoding): any {
+    if (semantic && semantic[LambdaToken.prim]) {
+      return semantic[LambdaToken.prim](val);
+    }
     return val;
   }
 

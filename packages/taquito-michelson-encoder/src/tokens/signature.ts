@@ -1,4 +1,4 @@
-import { ComparableToken, Token, TokenFactory, TokenValidationError } from './token';
+import { ComparableToken, SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 import { validateSignature, ValidationResult } from '@taquito/utils';
 import { BaseTokenSchema } from '../schema/types';
 
@@ -20,8 +20,12 @@ export class SignatureToken extends ComparableToken {
     super(val, idx, fac);
   }
 
-  public Execute(val: any): { [key: string]: any } {
-    return val.string;
+  public Execute(val: { [key: string]: string }): string {
+    if (val.string) {
+      return val.string;
+    }
+    // TODO decode the signature
+    return val.bytes;
   }
 
   private isValid(value: any): SignatureValidationError | null {
@@ -43,12 +47,16 @@ export class SignatureToken extends ComparableToken {
     return { string: val };
   }
 
-  public EncodeObject(val: any): any {
+  public EncodeObject(val: any, semantic?: SemanticEncoding): any {
     const err = this.isValid(val);
     if (err) {
       throw err;
     }
 
+    if (semantic && semantic[SignatureToken.prim]) {
+      return semantic[SignatureToken.prim](val);
+    }
+    
     return { string: val };
   }
 
