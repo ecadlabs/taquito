@@ -1,3 +1,8 @@
+/**
+ *
+ * @param leaves nodes in the tree that we would like to make pairs from
+ * @returns a paired/chunked array: [a, b, c, d] => [[a, b], [c, d]]
+ */
 export function pairNodes<T>(leaves: T[]): (T | undefined)[][] {
   const pairs: (T | undefined)[][] = new Array(Math.ceil(leaves.length / 2));
 
@@ -8,6 +13,9 @@ export function pairNodes<T>(leaves: T[]): (T | undefined)[][] {
   return pairs;
 }
 
+/**
+ * @description helper function to assist in Lazy initializing an object
+ */
 export class Lazy<T> {
   private isInitialized = false;
 
@@ -26,6 +34,11 @@ export class Lazy<T> {
   }
 }
 
+/**
+ *
+ * @param hex hexadecimal string we would like to swap endianness
+ * @returns a hexadecimal string with swapped endians
+ */
 export const changeEndianness = (hex: string): string => {
   if (hex.length % 2 != 0) {
     hex = '0' + hex;

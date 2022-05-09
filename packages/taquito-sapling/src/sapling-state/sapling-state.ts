@@ -1,3 +1,9 @@
+/**
+ * Some code in this file was originally written or inspired by Airgap-it
+ * https://github.com/airgap-it/airgap-coin-lib/blob/master/LICENSE.md
+ *
+ */
+
 import { MerkleTree, SaplingStateTree } from './interface';
 import { SaplingDiffResponse, SaplingTransactionCiphertext } from '@taquito/rpc';
 import { InvalidMerkleRootError, TreeConstructionFailure } from '../error';
@@ -7,7 +13,7 @@ import { hex2Bytes, num2PaddedHex } from '@taquito/utils';
 import BigNumber from 'bignumber.js';
 
 /**
- * @description The SaplingState class's main purpose is to provide a merkle path for the forger and the transaction builder, so that it may verify that the Sapling transaction is valid
+ * @description The SaplingState class's main purpose is to provide a Merkle path for the forger and the transaction builder, so that it may verify that the Sapling transaction is valid
  *
  */
 export class SaplingState {
@@ -49,6 +55,12 @@ export class SaplingState {
     return this.stateTree;
   }
 
+  /**
+   *
+   * @param stateTree stateTree parameter that holds information details on our Merkle tree
+   * @param position position of the hash in the Merkle tree
+   * @returns a promise of a string that serves as the Merkle path that can be passed on to the Sapling forger or the transaction builder
+   */
   public async getWitness(stateTree: SaplingStateTree, position: BigNumber): Promise<string> {
     const heightBuffer: Buffer = hex2Bytes(changeEndianness(num2PaddedHex(stateTree.height)));
     const posBuffer: Buffer = hex2Bytes(changeEndianness(num2PaddedHex(position, 64)));
@@ -70,6 +82,12 @@ export class SaplingState {
     return Buffer.concat([heightBuffer, witness, posBuffer]).toString('hex');
   }
 
+  /**
+   *
+   * @param leaves array of leaves or nodes that we want to construct the Merkle tree from
+   * @param height height of the desired Merkle tree
+   * @returns a promise of MerkleTree type object
+   */
   private async constructMerkleTree(leaves: MerkleTree[], height: number): Promise<MerkleTree> {
     if (height === this.height && leaves.length === 1) {
       return leaves[0];
@@ -107,6 +125,10 @@ export class SaplingState {
     }
   }
 
+  /**
+   *
+   * @returns hashes of empty or null values to fill in the Merkle tree
+   */
   private async createUncommittedMerkleHashes(): Promise<Buffer[]> {
     const res: Buffer[] = new Array(this.height);
 
@@ -119,6 +141,11 @@ export class SaplingState {
     return res;
   }
 
+  /**
+   *
+   * @param tree Merkle tree to validate
+   * @param expectedRoot the expected merkle root to validate against
+   */
   private async validateMerkleTree(tree: MerkleTree, expectedRoot: string) {
     const root: Buffer = await this.getMerkleHash(tree, this.height - 1);
 
@@ -127,6 +154,14 @@ export class SaplingState {
     }
   }
 
+  /**
+   *
+   * @param acc accumulator variable for the recursive function
+   * @param height height of the tree
+   * @param position position of the hash we would like find the neighbours of
+   * @param tree the Merkle tree that we want to traverse
+   * @returns the accumulated Buffer array of neighbouring hashes
+   */
   private async getNeighbouringHashes(
     acc: Buffer[],
     height: number,
