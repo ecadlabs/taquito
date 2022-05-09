@@ -160,3 +160,14 @@ export class ValueConversionError extends Error {
     super(`Unable to convert ${value} to a ${desiredType}`);
   }
 }
+
+/**
+ *  @category Error
+ *  @description Error that indicates an invalid hex string being passed or used
+ */
+export class InvalidHexStringError extends Error {
+  public name = 'InvalidHexStringError';
+  constructor(public message: string) {
+    super(message);
+  }
+}

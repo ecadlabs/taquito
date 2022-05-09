@@ -4,7 +4,7 @@
  */
 
 import { ForgeParams, Forger } from './interface';
-import { CODEC, ProtocolsHash } from './constants';
+import { CODEC } from './constants';
 import { decoders } from './decoder';
 import { encoders } from './encoder';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
@@ -13,13 +13,19 @@ import { encodersProto12 } from './proto12-ithaca/encoder';
 import { validateBlock, ValidationResult, InvalidOperationKindError } from '@taquito/utils';
 import { InvalidBlockHashError, InvalidOperationSchemaError } from './error';
 import { validateMissingProperty, validateOperationKind } from './validator';
+import { ProtocolsHash, ProtoInferiorTo } from './protocols';
+import { encodersProto13 } from './proto13-jakarta/encoder-proto13';
+import { decodersProto13 } from './proto13-jakarta/decoder-proto13';
 
-export { CODEC, ProtocolsHash } from './constants';
+export { CODEC } from './constants';
 export * from './decoder';
 export * from './encoder';
 export * from './uint8array-consumer';
 export * from './interface';
 export { VERSION } from './version';
+export { ProtocolsHash } from './protocols';
+
+const PROTOCOL_CURRENT = ProtocolsHash.Psithaca2;
 
 export function getCodec(codec: CODEC, proto: ProtocolsHash) {
   if (proto === ProtocolsHash.Psithaca2) {
@@ -30,7 +36,7 @@ export function getCodec(codec: CODEC, proto: ProtocolsHash) {
         return decodersProto12[codec](consumer) as any;
       },
     };
-  } else {
+  } else if (ProtoInferiorTo(proto, ProtocolsHash.Psithaca2)) {
     return {
       encoder: encoders[codec],
       decoder: (hex: string) => {
@@ -38,11 +44,19 @@ export function getCodec(codec: CODEC, proto: ProtocolsHash) {
         return decoders[codec](consumer) as any;
       },
     };
+  } else {
+    return {
+      encoder: encodersProto13[codec],
+      decoder: (hex: string) => {
+        const consumer = Uint8ArrayConsumer.fromHexString(hex);
+        return decodersProto13[codec](consumer) as any;
+      },
+    };
   }
 }
 
 export class LocalForger implements Forger {
-  constructor(public readonly protocolHash = ProtocolsHash.Psithaca2) {}
+  constructor(public readonly protocolHash = PROTOCOL_CURRENT) {}
 
   private codec = getCodec(CODEC.MANAGER, this.protocolHash);
 

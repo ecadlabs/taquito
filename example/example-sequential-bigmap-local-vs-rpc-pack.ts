@@ -10,7 +10,7 @@ async function example() {
     try {
         const tezos = new TezosToolkit(rpc);
 
-        const contractAddress = 'KT1N7K8thB2BZSpS1KhTjaQ5MpUsTs4t6Kpi';
+        const contractAddress = 'KT1N5Z6hh8SuJgQGoh7QQfUAeofNV4NzKpbn';
         const contract = await tezos.contract.at(contractAddress);
 
         interface StorageType {
@@ -23,8 +23,8 @@ async function example() {
         // Fetch values of the big map using the RPC to pack
         const startRpcPack = new Date().getTime();
         for (let i = 1; i <= repeat; i++) {
-            for (let i = 1; i <= numberOfValueToFetch; i++) {
-                await bigMapStorage.get(i.toString());
+            for (let j = 1; j <= numberOfValueToFetch; j++) {
+                await bigMapStorage.get(j.toString());
             }
         }
         const durationRpcPack = new Date().getTime() - startRpcPack;
@@ -33,8 +33,8 @@ async function example() {
         tezos.setPackerProvider(new MichelCodecPacker());
         const startLocalPack = new Date().getTime();
         for (let i = 1; i <= repeat; i++) {
-            for (let i = 1; i <= numberOfValueToFetch; i++) {
-                await bigMapStorage.get(i.toString());
+            for (let j = 1; j <= numberOfValueToFetch; j++) {
+                await bigMapStorage.get(j.toString());
             }
         }
         const durationLocalPack = new Date().getTime() - startLocalPack;

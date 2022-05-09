@@ -13,7 +13,6 @@ import {
   contractStorage,
   liveBlocks,
   saplingState,
-  storageType,
 } from './data';
 
 describe('RpcReadAdapter test', () => {

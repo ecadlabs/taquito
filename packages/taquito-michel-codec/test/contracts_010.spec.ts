@@ -1,4 +1,4 @@
-import fs from 'fs';
+import * as fs from 'fs';
 import path from 'path';
 import { inspect } from 'util';
 import { Contract, ContractOptions } from '../src/michelson-contract';

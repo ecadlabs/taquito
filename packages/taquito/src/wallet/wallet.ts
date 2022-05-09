@@ -1,4 +1,3 @@
-import { Protocols } from '../constants';
 import { Context } from '../context';
 import { ContractAbstraction, ContractStorageType, DefaultWalletType } from '../contract';
 import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';

@@ -8,7 +8,7 @@ import {
   DAppClientOptions,
   RequestPermissionInput,
   PermissionScope,
-} from '@airgap/beacon-sdk';
+} from '@airgap/beacon-dapp';
 
 import {
   createOriginationOperation,
