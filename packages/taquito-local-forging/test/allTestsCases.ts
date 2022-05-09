@@ -30,6 +30,8 @@ import {
 } from './data/contract_with_constant';
 import { codeViewsTopLevel, storageViewsTopLevel } from './data/contract_views_top_level';
 import { opMappingProto13 } from './../src/proto13-jakarta/constants-proto13';
+import {ForgeParams} from "../src/interface"
+import { MichelsonV1Expression, OpKind } from '@taquito/rpc';
 
 function extractOp(
   startIndex: number,
@@ -38,7 +40,7 @@ function extractOp(
     [key: string]: string;
   }
 ) {
-  const result = [];
+  const result: string[] = [];
   let i = startIndex;
   for (i; i <= endIndex; i++) {
     let key = i.toString(16);
@@ -52,7 +54,7 @@ function extractOp(
 
 interface TestCase {
   name: string;
-  operation: any;
+  operation: ForgeParams;
   expected?: object;
 }
 
@@ -63,7 +65,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'delegation',
+          kind: OpKind.DELEGATION,
           delegate: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
@@ -80,7 +82,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'reveal',
+          kind: OpKind.REVEAL,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           public_key: 'edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g',
@@ -97,7 +99,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'ballot',
+          kind: OpKind.BALLOT,
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           period: -300,
           ballot: 'yay',
@@ -112,7 +114,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'seed_nonce_revelation',
+          kind: OpKind.SEED_NONCE_REVELATION,
           level: 25550,
           nonce: new Array(32).fill('ff').join(''),
         },
@@ -125,7 +127,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'proposals',
+          kind: OpKind.PROPOSALS,
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           period: 25550,
           proposals: [
@@ -137,12 +139,12 @@ export const commonCases: TestCase[] = [
     },
   },
   {
-    name: 'Transaction',
+    name: OpKind.TRANSACTION,
     operation: {
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'transaction',
+          kind: OpKind.TRANSACTION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -160,7 +162,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'transaction',
+          kind: OpKind.TRANSACTION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -182,7 +184,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'transaction',
+          kind: OpKind.TRANSACTION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -204,7 +206,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'transaction',
+          kind: OpKind.TRANSACTION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -226,7 +228,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'transaction',
+          kind: OpKind.TRANSACTION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -248,7 +250,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'transaction',
+          kind: OpKind.TRANSACTION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -267,7 +269,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'transaction',
+          kind: OpKind.TRANSACTION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -285,7 +287,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'transaction',
+          kind: OpKind.TRANSACTION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -307,7 +309,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'transaction',
+          kind: OpKind.TRANSACTION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -329,7 +331,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'transaction',
+          kind: OpKind.TRANSACTION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -351,7 +353,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'transaction',
+          kind: OpKind.TRANSACTION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -373,7 +375,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'transaction',
+          kind: OpKind.TRANSACTION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -395,7 +397,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'transaction',
+          kind: OpKind.TRANSACTION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -423,7 +425,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'transaction',
+          kind: OpKind.TRANSACTION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -449,7 +451,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'origination',
+          kind: OpKind.ORIGINATION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -465,14 +467,14 @@ export const commonCases: TestCase[] = [
     },
   },
   // In `opMapping` from the file `constants.ts`, the operations and types starting at `chest` were added in the hangzhou protocol
-  ...extractOp(0, 140, opMapping).map((op) => {
+  ...extractOp(0, 140, opMapping).map((op): TestCase => {
     return {
       name: `Origination operation (${op})`,
       operation: {
         branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
         contents: [
           {
-            kind: 'origination',
+            kind: OpKind.ORIGINATION,
             counter: '1',
             source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
             fee: '10000',
@@ -480,7 +482,7 @@ export const commonCases: TestCase[] = [
             storage_limit: '10',
             balance: '0',
             script: {
-              code: genericCode(op),
+              code: genericCode(op) as MichelsonV1Expression[],
               storage: genericStorage,
             },
           },
@@ -494,7 +496,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'origination',
+          kind: OpKind.ORIGINATION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -515,7 +517,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'origination',
+          kind: OpKind.ORIGINATION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -536,7 +538,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'reveal',
+          kind: OpKind.REVEAL,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           public_key: 'edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g',
@@ -545,7 +547,7 @@ export const commonCases: TestCase[] = [
           storage_limit: '10',
         },
         {
-          kind: 'origination',
+          kind: OpKind.ORIGINATION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -558,7 +560,7 @@ export const commonCases: TestCase[] = [
           },
         },
         {
-          kind: 'transaction',
+          kind: OpKind.TRANSACTION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -576,7 +578,7 @@ export const commonCases: TestCase[] = [
           amount: '1000',
         },
         {
-          kind: 'transaction',
+          kind: OpKind.TRANSACTION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -594,7 +596,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'origination',
+          kind: OpKind.ORIGINATION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -615,7 +617,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'origination',
+          kind: OpKind.ORIGINATION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -636,7 +638,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'origination',
+          kind: OpKind.ORIGINATION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -657,7 +659,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'origination',
+          kind: OpKind.ORIGINATION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -678,7 +680,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'origination',
+          kind: OpKind.ORIGINATION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -699,7 +701,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'origination',
+          kind: OpKind.ORIGINATION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -720,7 +722,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'origination',
+          kind: OpKind.ORIGINATION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -741,7 +743,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'origination',
+          kind: OpKind.ORIGINATION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -762,7 +764,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'origination',
+          kind: OpKind.ORIGINATION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -783,7 +785,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'origination',
+          kind: OpKind.ORIGINATION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -804,7 +806,7 @@ export const commonCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'origination',
+          kind: OpKind.ORIGINATION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -823,14 +825,14 @@ export const commonCases: TestCase[] = [
 
 export const hangzhouCases: TestCase[] = [
   // In `opMapping` from the file `constants.ts`, the operations and types starting at `chest` were added in the hangzhou protocol
-  ...extractOp(141, 146, opMapping).map((op) => {
+  ...extractOp(141, 146, opMapping).map((op): TestCase => {
     return {
       name: `Origination operation (${op})`,
       operation: {
         branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
         contents: [
           {
-            kind: 'origination',
+            kind: OpKind.ORIGINATION,
             counter: '1',
             source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
             fee: '10000',
@@ -838,7 +840,7 @@ export const hangzhouCases: TestCase[] = [
             storage_limit: '10',
             balance: '0',
             script: {
-              code: genericCode(op),
+              code: genericCode(op) as MichelsonV1Expression[],
               storage: genericStorage,
             },
           },
@@ -852,7 +854,7 @@ export const hangzhouCases: TestCase[] = [
       branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
       contents: [
         {
-          kind: 'origination',
+          kind: OpKind.ORIGINATION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -873,7 +875,7 @@ export const hangzhouCases: TestCase[] = [
       branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
       contents: [
         {
-          kind: 'register_global_constant',
+          kind: OpKind.REGISTER_GLOBAL_CONSTANT,
           counter: '7423375',
           source: 'tz1TJGsZxvr6aBGUqfQVxufesTtA7QGi696D',
           fee: '372',
@@ -900,7 +902,7 @@ export const hangzhouCases: TestCase[] = [
       branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
       contents: [
         {
-          kind: 'origination',
+          kind: OpKind.ORIGINATION,
           counter: '7423380',
           source: 'tz1TJGsZxvr6aBGUqfQVxufesTtA7QGi696D',
           fee: '670',
@@ -921,7 +923,7 @@ export const hangzhouCases: TestCase[] = [
       branch: 'BKyBAx2JDtoFLjcv6tUZTBPDxjcA22JMxqCzFPGBWU4FmTX3uoD',
       contents: [
         {
-          kind: 'origination',
+          kind: OpKind.ORIGINATION,
           counter: '8642842',
           source: 'tz2J1jtUzAj4CdYKCh78ubARBiotbGKceXfb',
           fee: '1104',
@@ -945,7 +947,7 @@ export const priorIthacaCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'endorsement',
+          kind: OpKind.ENDORSEMENT,
           level: 300,
         },
       ],
@@ -955,14 +957,14 @@ export const priorIthacaCases: TestCase[] = [
 
 export const ithacaCases: TestCase[] = [
   // In `opMapping` from the file `constants.ts`, the operations and types starting at `sub_mutez` were added in the ithaca protocol
-  ...extractOp(147, 147, opMapping).map((op) => {
+  ...extractOp(147, 147, opMapping).map((op): TestCase => {
     return {
       name: `Origination operation (${op})`,
       operation: {
         branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
         contents: [
           {
-            kind: 'origination',
+            kind: OpKind.ORIGINATION,
             counter: '1',
             source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
             fee: '10000',
@@ -970,7 +972,7 @@ export const ithacaCases: TestCase[] = [
             storage_limit: '10',
             balance: '0',
             script: {
-              code: genericCode(op),
+              code: genericCode(op) as MichelsonV1Expression[],
               storage: genericStorage,
             },
           },
@@ -984,7 +986,7 @@ export const ithacaCases: TestCase[] = [
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: 'endorsement',
+          kind: OpKind.ENDORSEMENT,
           slot: 0,
           level: 66299,
           round: 5,
@@ -999,7 +1001,7 @@ export const ithacaCases: TestCase[] = [
       branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
       contents: [
         {
-          kind: 'origination',
+          kind: OpKind.ORIGINATION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
@@ -1017,14 +1019,14 @@ export const ithacaCases: TestCase[] = [
 ];
 
 export const jakartaCases: TestCase[] = [
-  ...extractOp(132, 150, opMappingProto13).map((op) => {
+  ...extractOp(132, 150, opMappingProto13).map((op): TestCase => {
     return {
       name: `Origination operation (${op})`,
       operation: {
         branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
         contents: [
           {
-            kind: 'origination',
+            kind: OpKind.ORIGINATION,
             counter: '1',
             source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
             fee: '10000',
@@ -1032,7 +1034,7 @@ export const jakartaCases: TestCase[] = [
             storage_limit: '10',
             balance: '0',
             script: {
-              code: genericCode(op),
+              code: genericCode(op) as MichelsonV1Expression[],
               storage: genericStorage,
             },
           },

@@ -232,7 +232,7 @@ export const primDecoder = (value: Uint8ArrayConsumer, preamble: Uint8Array) => 
 
   if (opMapping[op] === 'view') {
     if (argsCount != 0) {
-      return primViewDecoder(value, result) as any;
+      return primViewDecoder(value, result);
     } else {
       return result;
     }

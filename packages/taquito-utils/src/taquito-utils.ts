@@ -190,6 +190,8 @@ export const mergebuf = (b1: Uint8Array, b2: Uint8Array): Uint8Array => {
  *
  * @param s michelson json
  */
+
+// TODO Zainen check use
 export const mic2arr = function me2(s: any): any {
   let ret: any = [];
   if (Object.prototype.hasOwnProperty.call(s, 'prim')) {
@@ -242,7 +244,7 @@ export const mic2arr = function me2(s: any): any {
 export const buf2hex = (buffer: Buffer): string => {
   const byteArray = new Uint8Array(buffer);
   const hexParts: string[] = [];
-  byteArray.forEach((byte: any) => {
+  byteArray.forEach((byte) => {
     const hex = byte.toString(16);
     const paddedHex = `00${hex}`.slice(-2);
     hexParts.push(paddedHex);

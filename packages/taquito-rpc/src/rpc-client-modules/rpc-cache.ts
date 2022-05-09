@@ -1,3 +1,4 @@
+import { RPCMethodName } from './../rpc-client-interface';
 import BigNumber from 'bignumber.js';
 import { defaultRPCOptions, RpcClientInterface, RPCOptions } from '../rpc-client-interface';
 import {
@@ -56,6 +57,9 @@ interface CachedDataInterface {
     response: Promise<any>;
   };
 }
+
+type RpcMethodParam = string | UnparsingMode | BigMapKey | BakingRightsQueryArguments | PackDataParams | EndorsingRightsQueryArguments
+
 const defaultTtl = 1000;
 
 /***
@@ -87,9 +91,9 @@ export class RpcClientCache implements RpcClientInterface {
 
   private formatCacheKey(
     rpcUrl: string,
-    rpcMethodName: string,
-    rpcMethodParams: any[],
-    rpcMethodData?: any
+    rpcMethodName: RPCMethodName,
+    rpcMethodParams: RpcMethodParam[],
+    rpcMethodData?: object
   ) {
     let paramsToString = '';
     rpcMethodParams.forEach((param) => {
@@ -111,7 +115,7 @@ export class RpcClientCache implements RpcClientInterface {
     return this._cache[key].response;
   }
 
-  private put(key: string, response: Promise<any>) {
+  private put<T>(key: string, response: Promise<T>) {
     const handle = setTimeout(() => {
       return this.remove(key);
     }, this.ttl);
@@ -145,7 +149,7 @@ export class RpcClientCache implements RpcClientInterface {
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-hash
    */
   async getBlockHash({ block }: RPCOptions = defaultRPCOptions): Promise<string> {
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getBlockHash', [block]);
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_BLOCK_HASH, [block]);
     if (this.has(key)) {
       return this.get(key);
     } else {
@@ -164,7 +168,7 @@ export class RpcClientCache implements RpcClientInterface {
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-live-blocks
    */
   async getLiveBlocks({ block }: RPCOptions = defaultRPCOptions): Promise<string[]> {
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getLiveBlocks', [block]);
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_LIVE_BLOCKS, [block]);
     if (this.has(key)) {
       return this.get(key);
     } else {
@@ -188,7 +192,7 @@ export class RpcClientCache implements RpcClientInterface {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<BalanceResponse> {
     this.validateAddress(address);
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getBalance', [block, address]);
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_BALANCE, [block, address]);
     if (this.has(key)) {
       return this.get(key);
     } else {
@@ -212,7 +216,7 @@ export class RpcClientCache implements RpcClientInterface {
     { block }: { block: string } = defaultRPCOptions
   ): Promise<StorageResponse> {
     this.validateContract(address);
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getStorage', [block, address]);
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_STORAGE, [block, address]);
     if (this.has(key)) {
       return this.get(key);
     } else {
@@ -236,7 +240,7 @@ export class RpcClientCache implements RpcClientInterface {
     { block }: { block: string } = defaultRPCOptions
   ): Promise<ScriptResponse> {
     this.validateContract(address);
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getScript', [block, address]);
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_SCRIPT, [block, address]);
     if (this.has(key)) {
       return this.get(key);
     } else {
@@ -261,7 +265,7 @@ export class RpcClientCache implements RpcClientInterface {
     { block }: { block: string } = defaultRPCOptions
   ): Promise<ScriptResponse> {
     this.validateContract(address);
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getNormalizedScript', [
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_NORMALIZED_SCRIPT, [
       block,
       address,
       unparsingMode,
@@ -289,7 +293,7 @@ export class RpcClientCache implements RpcClientInterface {
     { block }: { block: string } = defaultRPCOptions
   ): Promise<ContractResponse> {
     this.validateAddress(address);
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getContract', [block, address]);
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_CONTRACT, [block, address]);
     if (this.has(key)) {
       return this.get(key);
     } else {
@@ -313,7 +317,7 @@ export class RpcClientCache implements RpcClientInterface {
     { block }: { block: string } = defaultRPCOptions
   ): Promise<ManagerKeyResponse> {
     this.validateAddress(address);
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getManagerKey', [block, address]);
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_MANAGER_KEY, [block, address]);
     if (this.has(key)) {
       return this.get(key);
     } else {
@@ -337,7 +341,7 @@ export class RpcClientCache implements RpcClientInterface {
     { block }: { block: string } = defaultRPCOptions
   ): Promise<DelegateResponse> {
     this.validateAddress(address);
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getDelegate', [block, address]);
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_DELEGATE, [block, address]);
     if (this.has(key)) {
       return this.get(key);
     } else {
@@ -364,7 +368,7 @@ export class RpcClientCache implements RpcClientInterface {
     { block }: { block: string } = defaultRPCOptions
   ): Promise<BigMapGetResponse> {
     this.validateAddress(address);
-    const keyUrl = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getBigMapKey', [
+    const keyUrl = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_BIG_MAP_KEY, [
       block,
       address,
       key,
@@ -393,7 +397,7 @@ export class RpcClientCache implements RpcClientInterface {
     expr: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<BigMapResponse> {
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getBigMapExpr', [block, id, expr]);
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_BIG_MAP_EXPR, [block, id, expr]);
     if (this.has(key)) {
       return this.get(key);
     } else {
@@ -417,7 +421,7 @@ export class RpcClientCache implements RpcClientInterface {
     { block }: { block: string } = defaultRPCOptions
   ): Promise<DelegatesResponse> {
     this.validateAddress(address);
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getDelegates', [block, address]);
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_DELEGATES, [block, address]);
     if (this.has(key)) {
       return this.get(key);
     } else {
@@ -436,7 +440,7 @@ export class RpcClientCache implements RpcClientInterface {
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-constants
    */
   async getConstants({ block }: RPCOptions = defaultRPCOptions): Promise<ConstantsResponse> {
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getConstants', [block]);
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_CONSTANTS, [block]);
     if (this.has(key)) {
       return this.get(key);
     } else {
@@ -458,7 +462,7 @@ export class RpcClientCache implements RpcClientInterface {
    * @example getBlock({ block: BL8fTiWcSxWCjiMVnDkbh6EuhqVPZzgWheJ2dqwrxYRm9AephXh~2 }) will return an offset of 2 blocks from given block hash..
    */
   async getBlock({ block }: RPCOptions = defaultRPCOptions): Promise<BlockResponse> {
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getBlock', [block]);
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_BLOCK, [block]);
     if (this.has(key)) {
       return this.get(key);
     } else {
@@ -477,7 +481,7 @@ export class RpcClientCache implements RpcClientInterface {
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-header
    */
   async getBlockHeader({ block }: RPCOptions = defaultRPCOptions): Promise<BlockHeaderResponse> {
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getBlockHeader', [block]);
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_BLOCK_HEADER, [block]);
     if (this.has(key)) {
       return this.get(key);
     } else {
@@ -496,7 +500,7 @@ export class RpcClientCache implements RpcClientInterface {
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-metadata
    */
   async getBlockMetadata({ block }: RPCOptions = defaultRPCOptions): Promise<BlockMetadata> {
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getBlockMetadata', [block]);
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_BLOCK_METADATA, [block]);
     if (this.has(key)) {
       return this.get(key);
     } else {
@@ -519,7 +523,7 @@ export class RpcClientCache implements RpcClientInterface {
     args: BakingRightsQueryArguments = {},
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<BakingRightsResponse> {
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getBakingRights', [block, args]);
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_BAKING_RIGHTS, [block, args]);
     if (this.has(key)) {
       return this.get(key);
     } else {
@@ -542,7 +546,7 @@ export class RpcClientCache implements RpcClientInterface {
     args: EndorsingRightsQueryArguments = {},
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<EndorsingRightsResponse> {
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getEndorsingRights', [
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_ENDORSING_RIGHTS, [
       block,
       args,
     ]);
@@ -563,7 +567,7 @@ export class RpcClientCache implements RpcClientInterface {
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-votes-ballot-list
    */
   async getBallotList({ block }: RPCOptions = defaultRPCOptions): Promise<BallotListResponse> {
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getBallotList', [block]);
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_BALLOT_LIST, [block]);
     if (this.has(key)) {
       return this.get(key);
     } else {
@@ -582,7 +586,7 @@ export class RpcClientCache implements RpcClientInterface {
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-votes-ballots
    */
   async getBallots({ block }: RPCOptions = defaultRPCOptions): Promise<BallotsResponse> {
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getBallots', [block]);
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_BALLOTS, [block]);
     if (this.has(key)) {
       return this.get(key);
     } else {
@@ -603,7 +607,7 @@ export class RpcClientCache implements RpcClientInterface {
   async getCurrentProposal({
     block,
   }: RPCOptions = defaultRPCOptions): Promise<CurrentProposalResponse> {
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getCurrentProposal', [block]);
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_CURRENT_PROPOSAL, [block]);
     if (this.has(key)) {
       return this.get(key);
     } else {
@@ -624,7 +628,7 @@ export class RpcClientCache implements RpcClientInterface {
   async getCurrentQuorum({
     block,
   }: RPCOptions = defaultRPCOptions): Promise<CurrentQuorumResponse> {
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getCurrentQuorum', [block]);
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_CURRENT_QUORUM, [block]);
     if (this.has(key)) {
       return this.get(key);
     } else {
@@ -645,7 +649,7 @@ export class RpcClientCache implements RpcClientInterface {
   async getVotesListings({
     block,
   }: RPCOptions = defaultRPCOptions): Promise<VotesListingsResponse> {
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getVotesListings', [block]);
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_VOTES_LISTINGS, [block]);
     if (this.has(key)) {
       return this.get(key);
     } else {
@@ -664,7 +668,7 @@ export class RpcClientCache implements RpcClientInterface {
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-votes-proposals
    */
   async getProposals({ block }: RPCOptions = defaultRPCOptions): Promise<ProposalsResponse> {
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getProposals', [block]);
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_PROPOSALS, [block]);
     if (this.has(key)) {
       return this.get(key);
     } else {
@@ -733,7 +737,7 @@ export class RpcClientCache implements RpcClientInterface {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<EntrypointsResponse> {
     this.validateContract(contract);
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getEntrypoints', [
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_ENTRYPOINTS, [
       block,
       contract,
     ]);
@@ -797,7 +801,7 @@ export class RpcClientCache implements RpcClientInterface {
   }
 
   async getChainId() {
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getChainId', []);
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_CHAIN_ID, []);
     if (this.has(key)) {
       return this.get(key);
     } else {
@@ -822,7 +826,7 @@ export class RpcClientCache implements RpcClientInterface {
     data: PackDataParams,
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<{ packed: string; gas: BigNumber | 'unaccounted' | undefined }> {
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'packData', [block, data]);
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.PACK_DATA, [block, data]);
     if (this.has(key)) {
       return this.get(key);
     } else {
@@ -853,7 +857,7 @@ export class RpcClientCache implements RpcClientInterface {
   async getCurrentPeriod({
     block,
   }: RPCOptions = defaultRPCOptions): Promise<VotingPeriodBlockResult> {
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getCurrentPeriod', [block]);
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_CURRENT_PERIOD, [block]);
     if (this.has(key)) {
       return this.get(key);
     } else {
@@ -876,7 +880,7 @@ export class RpcClientCache implements RpcClientInterface {
   async getSuccessorPeriod({
     block,
   }: RPCOptions = defaultRPCOptions): Promise<VotingPeriodBlockResult> {
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getSuccessorPeriod', [block]);
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_SUCCESSOR_PERIOD, [block]);
     if (this.has(key)) {
       return this.get(key);
     } else {
@@ -899,7 +903,7 @@ export class RpcClientCache implements RpcClientInterface {
     id: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<SaplingDiffResponse> {
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getSaplingDiffById', [block, id]);
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_SAPLING_DIFF_BY_ID, [block, id]);
     if (this.has(key)) {
       return this.get(key);
     } else {
@@ -922,7 +926,7 @@ export class RpcClientCache implements RpcClientInterface {
     contract: string,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<SaplingDiffResponse> {
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getSaplingDiffByContract', [
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_SAPLING_DIFF_BY_CONTRACT, [
       block,
       contract,
     ]);
@@ -936,7 +940,7 @@ export class RpcClientCache implements RpcClientInterface {
   }
 
   async getProtocols({ block }: { block: string } = defaultRPCOptions): Promise<ProtocolsResponse> {
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), 'getProtocols', [block]);
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_PROTOCOLS, [block]);
     if (this.has(key)) {
       return this.get(key);
     } else {

@@ -102,3 +102,38 @@ export interface RpcClientInterface {
   getSaplingDiffByContract(contract: string, options?: RPCOptions): Promise<SaplingDiffResponse>;
   getProtocols(options?: RPCOptions): Promise<ProtocolsResponse>;
 }
+
+export enum RPCMethodName {
+  GET_BAKING_RIGHTS = "getBakingRights",
+  GET_BALLOTS = "getBallots",
+  GET_BALLOT_LIST = "getBallotList",
+  GET_BIG_MAP_KEY = "getBigMapKey",
+  GET_BIG_MAP_EXPR = "getBigMapExpr",
+  GET_BLOCK_HASH = "getBlockHash",
+  GET_BLOCK = "getBlock",
+  GET_BLOCK_HEADER = "getBlockHeader",
+  GET_BLOCK_METADATA = "getBlockMetadata",
+  GET_BALANCE = "getBalance",
+  GET_CHAIN_ID = "getChainId",
+  GET_CONSTANTS = "getConstants",
+  GET_CONTRACT = "getContract",
+  GET_CURRENT_PERIOD = "getCurrentPeriod",
+  GET_CURRENT_PROPOSAL = "getCurrentProposal",
+  GET_CURRENT_QUORUM = "getCurrentQuorum",
+  GET_DELEGATE = "getDelegate",
+  GET_DELEGATES = "getDelegates",
+  GET_ENDORSING_RIGHTS = "getEndorsingRights",
+  GET_ENTRYPOINTS = "getEntrypoints",
+  GET_LIVE_BLOCKS = "getLiveBlocks",
+  GET_MANAGER_KEY = "getManagerKey",
+  GET_NORMALIZED_SCRIPT = "getNormalizedScript",
+  GET_PROPOSALS = "getProposals",
+  GET_PROTOCOLS = "getProtocols",
+  GET_SAPLING_DIFF_BY_CONTRACT = "getSaplingDiffByContract",
+  GET_SAPLING_DIFF_BY_ID = "getSaplingDiffById",
+  GET_SCRIPT = "getScript",
+  GET_STORAGE = "getStorage",
+  GET_SUCCESSOR_PERIOD = "getSuccessorPeriod",
+  GET_VOTES_LISTINGS = "getVotesListings",
+  PACK_DATA = "packData",
+}
