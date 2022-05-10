@@ -124,12 +124,12 @@ export class RpcContractProvider
    *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-big-maps-big-map-id-script-expr
    */
-  async getBigMapKeyByID<T>(
+  async getBigMapKeyByID(
     id: string,
     keyToEncode: BigMapKeyType,
     schema: Schema,
     block?: number
-  ): Promise<T> {
+  ): Promise<any> {
     const { key, type } = schema.EncodeBigMapKey(keyToEncode);
     const { packed } = await this.context.packer.packData({ data: key, type });
 
@@ -145,7 +145,7 @@ export class RpcContractProvider
           'head'
         );
 
-    return schema.ExecuteOnBigMapValue(bigMapValue, smartContractAbstractionSemantic(this)) as T;
+    return schema.ExecuteOnBigMapValue(bigMapValue, smartContractAbstractionSemantic(this));
   }
 
   /**
@@ -180,7 +180,7 @@ export class RpcContractProvider
     while (position < keys.length) {
       const keysBatch = keys.slice(position, position + batchSize);
       const batch = keysBatch.map((keyToEncode) =>
-        this.getBigMapValueOrUndefined<T>(keyToEncode, id, schema, level)
+        this.getBigMapValueOrUndefined(keyToEncode, id, schema, level)
       );
       results = [...results, ...(await Promise.all(batch))];
       position += batchSize;
@@ -199,14 +199,14 @@ export class RpcContractProvider
       : await this.context.readProvider.getBlockLevel('head');
   }
 
-  private async getBigMapValueOrUndefined<T>(
+  private async getBigMapValueOrUndefined(
     keyToEncode: BigMapKeyType,
     id: string,
     schema: Schema,
     level?: number
   ) {
     try {
-      return await this.getBigMapKeyByID<T>(id, keyToEncode, schema, level);
+      return await this.getBigMapKeyByID(id, keyToEncode, schema, level);
     } catch (ex) {
       if (ex instanceof HttpResponseError && ex.status === STATUS_CODE.NOT_FOUND) {
         return;

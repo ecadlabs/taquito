@@ -42,7 +42,7 @@ export class Tzip16ContractAbstraction {
   }
 
   private async findMetadataBigMap(): Promise<BigMapAbstraction> {
-    const metadataBigMapId = this.constractAbstraction.schema.FindFirstInTopLevelPair<BigMapId>(
+    const metadataBigMapId = this.constractAbstraction.schema.FindFirstInTopLevelPair(
       await this.context.readProvider.getStorage(this.constractAbstraction.address, 'head'),
       metadataBigMapType
     );
@@ -52,7 +52,7 @@ export class Tzip16ContractAbstraction {
     }
 
     return new BigMapAbstraction(
-      new BigNumber(metadataBigMapId['int']),
+      new BigNumber(metadataBigMapId.int),
       new Schema(metadataBigMapType),
       this.context.contract
     );

@@ -50,7 +50,7 @@ function collapse(val: Token['val'] | MichelsonV1Expression, prim: string = Pair
   return extended;
 }
 
-function deepEqual(a: MichelsonV1Expression, b: MichelsonV1Expression): boolean {
+function deepEqual(a: MichelsonV1Expression | MichelsonV1Expression[], b: MichelsonV1Expression | MichelsonV1Expression[]): boolean {
   const ac = collapse(a);
   const bc = collapse(b);
   return (
@@ -249,12 +249,12 @@ export class Schema {
    * @param valueType type of value to look for
    *
    */
-   FindFirstInTopLevelPair<T extends MichelsonV1Expression>(storage: any, valueType: any) {
-    return this.findValue(this.root['val'], storage, valueType) as T | undefined;
+   FindFirstInTopLevelPair(storage: any, valueType: any) {
+    return this.findValue(this.root['val'], storage, valueType);
   }
 
   // TODO check these type casts
-  private findValue(schema: MichelsonV1Expression, storage: any, valueToFind: any): MichelsonV1ExpressionBase | undefined {
+  private findValue(schema: Token['val'] | MichelsonV1Expression[], storage: any, valueToFind: any): MichelsonV1ExpressionBase | undefined {
     if (deepEqual(valueToFind, schema)) {
       return storage;
     }
