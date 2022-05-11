@@ -24,7 +24,6 @@ import { noAnnotCode, noAnnotInit } from './data/token_without_annotations';
 import { voteInitSample, voteSample } from './data/vote_contract';
 import { chestCode, chestStorage } from './data/contract_with_chest';
 import { submutezCode, submutezStorage } from './data/contract_with_sub_mutez';
-import { kukai1592Code } from './data/kukai_1592';
 import {
   storageContractWithConstant,
   codeContractWithConstant,
