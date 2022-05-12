@@ -79,8 +79,8 @@ const FeatureList = [
       },
       {
         Image: require('../../../static/img/Group.png').default,
-        title: 'Tocqueville Group',
-        url: 'https://tqtezos.com',
+        title: 'Tezos Domains',
+        url: 'https://tezos.domains',
       },
       {
         Image: require('../../../static/img/Ligoland_logo.png').default,
