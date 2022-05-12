@@ -85,7 +85,7 @@ const FeatureList = [
       {
         Image: require('../../../static/img/Vector_1.png').default,
         title: 'Homebase',
-        url: 'https://tezos-homebase.herokuapp.com/explorer/daos',
+        url: 'https://tezos-homebase.io/',
       },
       {
         Image: require('../../../static/img/radion_logo.png').default,
