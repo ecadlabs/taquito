@@ -18,9 +18,9 @@ const FeatureList = [
         url: 'https://kolibri.finance/',
       },
       {
-        Image: require('../../../static/img/plenty.png').default,
-        title: 'Plenty',
-        url: 'https://www.plentydefi.com/',
+        Image: require('../../../static/img/sweet.png').default,
+        title: 'Sweet',
+        url: 'https://sweet.io/',
       },
       {
         Image: require('../../../static/img/interpop_logo.png').default,
@@ -28,24 +28,24 @@ const FeatureList = [
         url: 'https://www.interpop.io/',
       },
       {
+        Image: require('../../../static/img/quipuswap-logo.png').default,
+        title: 'QuipuSwap',
+        url: 'https://quipuswap.com/',
+      },
+      {
         Image: require('../../../static/img/spruce_logo.png').default,
         title: 'Spruce',
         url: 'https://www.spruceid.com/',
       },
       {
-        Image: require('../../../static/img/sweet.png').default,
-        title: 'Sweet',
-        url: 'https://sweet.io/',
+        Image: require('../../../static/img/plenty.png').default,
+        title: 'Plenty',
+        url: 'https://www.plentydefi.com/',
       },
       {
         Image: require('../../../static/img/Kukai_logo.png').default,
         title: 'Kukai',
         url: 'https://wallet.kukai.app/',
-      },
-      {
-        Image: require('../../../static/img/quipuswap-logo.png').default,
-        title: 'QuipuSwap',
-        url: 'https://quipuswap.com/',
       },
       {
         Image: require('../../../static/img/tezos_mandala.png').default,
