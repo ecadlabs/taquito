@@ -451,7 +451,7 @@ export const commonCases: TestCase[] = [
       branch: 'BKsV8h3bdnnqxYP4xEx52QeEdB9XqhBXuy314CZ7e2zTkXACLBs',
       contents: [
         {
-          kind: 'transaction',
+          kind: OpKind.TRANSACTION,
           counter: '392495',
           source: 'tz1UeT3VS8LuAkvB66tjQTTDP1LFf3DEC4uA',
           fee: '7267',
