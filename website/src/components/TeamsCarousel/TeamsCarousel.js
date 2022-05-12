@@ -18,11 +18,6 @@ const FeatureList = [
         url: 'https://kolibri.finance/',
       },
       {
-        Image: require('../../../static/img/cryptoverse_wars.png').default,
-        title: 'Cryptoverse Wars',
-        url: 'https://cryptocodeschool.in/tezos/',
-      },
-      {
         Image: require('../../../static/img/plenty.png').default,
         title: 'Plenty',
         url: 'https://www.plentydefi.com/',
