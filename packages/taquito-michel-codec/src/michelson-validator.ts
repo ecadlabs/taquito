@@ -141,6 +141,7 @@ const simpleComparableTypeIDs: Record<MichelsonSimpleComparableTypeID, true> = {
   signature: true,
   timestamp: true,
   address: true,
+  tx_rollup_l2_address: true
 };
 
 const typeIDs: Record<MichelsonTypeID, true> = Object.assign({}, simpleComparableTypeIDs, {
@@ -162,6 +163,7 @@ const typeIDs: Record<MichelsonTypeID, true> = Object.assign({}, simpleComparabl
   ticket: true,
   chest_key: true,
   chest: true,
+  tx_rollup_l2_address: true,
 } as const);
 
 export class MichelsonValidationError extends MichelsonError {
@@ -430,7 +432,8 @@ export function assertMichelsonComparableType(ex: Expr): ex is MichelsonType {
     if (Array.isArray(ex) || ex.prim === 'pair' || ex.prim === 'or' || ex.prim === 'option') {
       traverseType(ex, (ex) => assertMichelsonComparableType(ex));
     } else if (!Object.prototype.hasOwnProperty.call(simpleComparableTypeIDs, ex.prim)) {
-      throw new MichelsonValidationError(ex, `${ex.prim}: type is not comparable`);
+      throw { cause: !Object.prototype.hasOwnProperty.call(simpleComparableTypeIDs, ex.prim), simp: simpleComparableTypeIDs, prim: ex.prim}
+      // throw new MichelsonValidationError(ex, `${ex.prim}: type is not comparable`);
     }
   }
   return true;

@@ -159,7 +159,8 @@ export type MichelsonSimpleComparableTypeID =
   | 'key'
   | 'unit'
   | 'signature'
-  | 'chain_id';
+  | 'chain_id'
+  | 'tx_rollup_l2_address';
 
 export type MichelsonTypeID =
   | MichelsonSimpleComparableTypeID
@@ -180,7 +181,8 @@ export type MichelsonTypeID =
   | 'bls12_381_g2'
   | 'bls12_381_fr'
   | 'chest_key'
-  | 'chest';
+  | 'chest'
+  | 'tx_rollup_l2_address';
 
 type Type0<PT extends MichelsonTypeID> = Prim0<PT>;
 type TypeX<PT extends MichelsonTypeID, AT extends Expr[]> = PrimX<PT, AT>;
