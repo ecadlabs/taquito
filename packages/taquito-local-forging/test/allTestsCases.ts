@@ -446,6 +446,343 @@ export const commonCases: TestCase[] = [
     },
   },
   {
+    name: 'Kukai reported issue #1592 - bytes in the input is upper-case',
+    operation: {
+      branch: 'BKsV8h3bdnnqxYP4xEx52QeEdB9XqhBXuy314CZ7e2zTkXACLBs',
+      contents: [
+        {
+          kind: OpKind.TRANSACTION,
+          counter: '392495',
+          source: 'tz1UeT3VS8LuAkvB66tjQTTDP1LFf3DEC4uA',
+          fee: '7267',
+          gas_limit: '66341',
+          storage_limit: '538',
+          destination: 'KT1VgYbxiwgJPVNB7Zdht8nCMVbADeg5VpQQ',
+          amount: '0',
+          parameters: {
+            entrypoint: 'unlock',
+            value: {
+              prim: 'Pair',
+              args: [
+                {
+                  string: 'tz1UeT3VS8LuAkvB66tjQTTDP1LFf3DEC4uA'
+                },
+                {
+                  prim: 'Pair',
+                  args: [
+                    [
+                      {
+                        prim: 'Elt',
+                        args: [
+                          {
+                            int: '1494'
+                          },
+                          [
+                            {
+                              prim: 'Elt',
+                              args: [
+                                {
+                                  string: 'damage'
+                                },
+                                {
+                                  int: '700'
+                                }
+                              ]
+                            },
+                            {
+                              prim: 'Elt',
+                              args: [
+                                {
+                                  string: 'exp'
+                                },
+                                {
+                                  int: '10'
+                                }
+                              ]
+                            }
+                          ]
+                        ]
+                      },
+                      {
+                        prim: 'Elt',
+                        args: [
+                          {
+                            int: '1504'
+                          },
+                          [
+                            {
+                              prim: 'Elt',
+                              args: [
+                                {
+                                  string: 'damage'
+                                },
+                                {
+                                  int: '900'
+                                }
+                              ]
+                            },
+                            {
+                              prim: 'Elt',
+                              args: [
+                                {
+                                  string: 'exp'
+                                },
+                                {
+                                  int: '38'
+                                }
+                              ]
+                            }
+                          ]
+                        ]
+                      },
+                      {
+                        prim: 'Elt',
+                        args: [
+                          {
+                            int: '1557'
+                          },
+                          [
+                            {
+                              prim: 'Elt',
+                              args: [
+                                {
+                                  string: 'damage'
+                                },
+                                {
+                                  int: '1100'
+                                }
+                              ]
+                            },
+                            {
+                              prim: 'Elt',
+                              args: [
+                                {
+                                  string: 'exp'
+                                },
+                                {
+                                  int: '24'
+                                }
+                              ]
+                            }
+                          ]
+                        ]
+                      }
+                    ],
+                    {
+                      prim: 'Pair',
+                      args: [
+                        [],
+                        {
+                          prim: 'Pair',
+                          args: [
+                            [
+                              {
+                                bytes: '697066733A2F2F516D54666E6F35554D62384E51434475654A5A637167686E67713779566F475933467A7461744470417A5A526542'
+                              }
+                            ],
+                            {
+                              prim: 'Pair',
+                              args: [
+                                [
+                                  {
+                                    prim: 'Elt',
+                                    args: [
+                                      {
+                                        int: '2'
+                                      },
+                                      {
+                                        int: '25000000000'
+                                      }
+                                    ]
+                                  }
+                                ],
+                                {
+                                  string: 'edsigtt6Qp118ex7tMJcnWr9tjVTuCwKXS9kAbuD1LVxb5A1raQEr5Cvz4BDaC9dH1X1898DekDsqty66M45as87juCF3ge5FWM'
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+             },
+          },
+        },
+      ],
+    },
+    expected: {
+      branch: 'BKsV8h3bdnnqxYP4xEx52QeEdB9XqhBXuy314CZ7e2zTkXACLBs',
+      contents: [
+        {
+          kind: 'transaction',
+          counter: '392495',
+          source: 'tz1UeT3VS8LuAkvB66tjQTTDP1LFf3DEC4uA',
+          fee: '7267',
+          gas_limit: '66341',
+          storage_limit: '538',
+          destination: 'KT1VgYbxiwgJPVNB7Zdht8nCMVbADeg5VpQQ',
+          amount: '0',
+          parameters: {
+            entrypoint: 'unlock',
+            value: {
+              prim: 'Pair',
+              args: [
+                {
+                  string: 'tz1UeT3VS8LuAkvB66tjQTTDP1LFf3DEC4uA'
+                },
+                {
+                  prim: 'Pair',
+                  args: [
+                    [
+                      {
+                        prim: 'Elt',
+                        args: [
+                          {
+                            int: '1494'
+                          },
+                          [
+                            {
+                              prim: 'Elt',
+                              args: [
+                                {
+                                  string: 'damage'
+                                },
+                                {
+                                  int: '700'
+                                }
+                              ]
+                            },
+                            {
+                              prim: 'Elt',
+                              args: [
+                                {
+                                  string: 'exp'
+                                },
+                                {
+                                  int: '10'
+                                }
+                              ]
+                            }
+                          ]
+                        ]
+                      },
+                      {
+                        prim: 'Elt',
+                        args: [
+                          {
+                            int: '1504'
+                          },
+                          [
+                            {
+                              prim: 'Elt',
+                              args: [
+                                {
+                                  string: 'damage'
+                                },
+                                {
+                                  int: '900'
+                                }
+                              ]
+                            },
+                            {
+                              prim: 'Elt',
+                              args: [
+                                {
+                                  string: 'exp'
+                                },
+                                {
+                                  int: '38'
+                                }
+                              ]
+                            }
+                          ]
+                        ]
+                      },
+                      {
+                        prim: 'Elt',
+                        args: [
+                          {
+                            int: '1557'
+                          },
+                          [
+                            {
+                              prim: 'Elt',
+                              args: [
+                                {
+                                  string: 'damage'
+                                },
+                                {
+                                  int: '1100'
+                                }
+                              ]
+                            },
+                            {
+                              prim: 'Elt',
+                              args: [
+                                {
+                                  string: 'exp'
+                                },
+                                {
+                                  int: '24'
+                                }
+                              ]
+                            }
+                          ]
+                        ]
+                      }
+                    ],
+                    {
+                      prim: 'Pair',
+                      args: [
+                        [],
+                        {
+                          prim: 'Pair',
+                          args: [
+                            [
+                              {
+                                
+                                // diff from given
+                                bytes: '697066733a2f2f516d54666e6f35554d62384e51434475654a5a637167686e67713779566f475933467a7461744470417a5a526542'
+                              }
+                            ],
+                            {
+                              prim: 'Pair',
+                              args: [
+                                [
+                                  {
+                                    prim: 'Elt',
+                                    args: [
+                                      {
+                                        int: '2'
+                                      },
+                                      {
+                                        int: '25000000000'
+                                      }
+                                    ]
+                                  }
+                                ],
+                                {
+                                  string: 'edsigtt6Qp118ex7tMJcnWr9tjVTuCwKXS9kAbuD1LVxb5A1raQEr5Cvz4BDaC9dH1X1898DekDsqty66M45as87juCF3ge5FWM'
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+             },
+          },
+        },
+      ],
+    },
+  },
+  {
     name: 'Origination vote example',
     operation: {
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
