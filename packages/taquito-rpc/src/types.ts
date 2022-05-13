@@ -11,6 +11,44 @@ export type DelegateResponse = string | null;
 
 export type OperationHash = string;
 
+export interface TxRollupProof {
+  version: number;
+  before: any;
+  after: any;
+  state: any;
+}
+
+export interface TxRollupCommitment {
+  level: string;
+  messages: string[];
+  predecessor: string;
+  inbox_merkle_root: string;
+}
+
+export interface TxRollupDeposit {
+  sender: string;
+  destination: string;
+  ticket_hash: string;
+  amount: BigNumber;
+}
+
+export interface TxRollupMessage {
+  batch: string;
+  deposit: TxRollupDeposit;
+}
+
+export interface TxRollupPreviousMessageResult {
+  context_hash: string;
+  withdraw_list_hash: string;
+}
+
+export interface TxRollupTicketsInfo {
+  contents: MichelsonV1Expression;
+  ty: MichelsonV1Expression;
+  ticketer: string;
+  amount: BigNumber;
+  claimer: string;
+}
 export interface DelegatesResponse {
   balance?: BigNumber;
   full_balance?: BigNumber;
@@ -229,6 +267,117 @@ export interface OperationContentsRegisterGlobalConstant {
   value: MichelsonV1Expression;
 }
 
+export interface OperationContentsTxRollupOrigination {
+  kind: OpKind.TX_ROLLUP_ORIGINATION;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  tx_rollup_origination: any;
+}
+
+export interface OperationContentsTxRollupSubmitBatch {
+  kind: OpKind.TX_ROLLUP_SUBMIT_BATCH;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  rollup: string;
+  content: string;
+  burn_limit: string;
+}
+
+export interface OperationContentsTxRollupCommit {
+  kind: OpKind.TX_ROLLUP_COMMIT;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  commitment: TxRollupCommitment;
+}
+
+export interface OperationContentsTxRollupReturnBond {
+  kind: OpKind.TX_ROLLUP_RETURN_BOND;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  rollup: string;
+}
+
+export interface OperationContentsTxRollupFinalizeCommitment {
+  kind: OpKind.TX_ROLLUP_FINALIZE_COMMITMENT;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  rollup: string;
+}
+
+export interface OperationContentsTxRollupRemoveCommitment {
+  kind: OpKind.TX_ROLLUP_REMOVE_COMMITMENT;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  rollup: string;
+}
+
+export interface OperationContentsTxRollupRejection {
+  kind: OpKind.TX_ROLLUP_REJECTION;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  rollup: string;
+  level: number;
+  message: TxRollupMessage;
+  message_position: BigNumber;
+  message_path: string[];
+  message_result_hash: string;
+  message_result_path: string[];
+  previous_message_result: TxRollupPreviousMessageResult;
+  previous_message_result_path: string[];
+  proof: TxRollupProof;
+}
+
+export interface OperationContentsTxRollupDispatchTickets {
+  kind: OpKind.TX_ROLLUP_DISPATCH_TICKETS;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  tx_rollup: string;
+  level: number;
+  context_hash: string;
+  message_index: number;
+  message_result_path: string;
+  tickets_info: TxRollupTicketsInfo;
+}
+
+export interface OperationContentsTransferTicket {
+  kind: OpKind.TRANSFER_TICKET;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  ticket_contents: MichelsonV1Expression;
+  ticket_ty: MichelsonV1Expression;
+  ticket_ticketer: string;
+  ticket_amount: string;
+  destination: string;
+  entrypoint: string;
+}
+
 export type OperationContents =
   | OperationContentsEndorsement
   | OperationContentsPreEndorsement
@@ -246,7 +395,15 @@ export type OperationContents =
   | OperationContentsEndorsementWithSlot
   | OperationContentsFailingNoop
   | OperationContentsRegisterGlobalConstant
-  | OperationContentsSetDepositsLimit;
+  | OperationContentsSetDepositsLimit
+  | OperationContentsTxRollupOrigination
+  | OperationContentsTxRollupSubmitBatch
+  | OperationContentsTxRollupCommit
+  | OperationContentsTxRollupReturnBond
+  | OperationContentsTxRollupFinalizeCommitment
+  | OperationContentsTxRollupRemoveCommitment
+  | OperationContentsTxRollupRejection
+  | OperationContentsTransferTicket;
 
 export interface OperationContentsAndResultMetadataExtended {
   balance_updates: OperationMetadataBalanceUpdates[];
@@ -293,6 +450,60 @@ export interface OperationContentsAndResultMetadataSetDepositsLimit {
 
 export interface OperationContentsAndResultMetadata {
   balance_updates: OperationMetadataBalanceUpdates[];
+}
+
+export interface OperationContentsAndResultMetadataTxRollupOrigination {
+  balance_updates: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultTxRollupOrigination;
+  internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataTxRollupSubmitBatch {
+  balance_updates: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultTxRollupSubmitBatch;
+  internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataTxRollupCommit {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultTxRollupCommit;
+  internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataTxRollupReturnBond {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultTxRollupReturnBond;
+  internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataTxRollupFinalizeCommitment {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultTxRollupFinalizeCommitment;
+  internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataTxRollupRemoveCommitment {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultTxRollupRemoveCommitment;
+  internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataTxRollupRejection {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultTxRollupRejection;
+  internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataTransferTicket {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultTransferTicket;
+  internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataTxRollupDispatchTickets {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultTxRollupDispatchTickets;
+  internal_operation_results?: InternalOperationResult[];
 }
 
 export interface OperationContentsAndResultEndorsement {
@@ -427,6 +638,126 @@ export interface OperationContentsAndResultSetDepositsLimit {
   metadata: OperationContentsAndResultMetadataSetDepositsLimit;
 }
 
+export interface OperationContentsAndResultTxRollupOrigination {
+  kind: OpKind.TX_ROLLUP_ORIGINATION;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  tx_rollup_origination: any;
+  metadata: OperationContentsAndResultMetadataTxRollupOrigination;
+}
+
+export interface OperationContentsAndResultTxRollupSubmitBatch {
+  kind: OpKind.TX_ROLLUP_SUBMIT_BATCH;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  rollup: string;
+  content: string;
+  burn_limit?: string;
+  metadata: OperationContentsAndResultMetadataTxRollupSubmitBatch;
+}
+
+export interface OperationContentsAndResultTxRollupCommit {
+  kind: OpKind.TX_ROLLUP_COMMIT;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  rollup: string;
+  commitment: TxRollupCommitment;
+  metadata: OperationContentsAndResultMetadataTxRollupCommit;
+}
+
+export interface OperationContentsAndResultTxRollupReturnBond {
+  kind: OpKind.TX_ROLLUP_RETURN_BOND;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  rollup: string;
+  metadata: OperationContentsAndResultMetadataTxRollupReturnBond;
+}
+
+export interface OperationContentsAndResultTxRollupFinalizeCommitment {
+  kind: OpKind.TX_ROLLUP_FINALIZE_COMMITMENT;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  rollup: string;
+  metadata: OperationContentsAndResultMetadataTxRollupFinalizeCommitment;
+}
+
+export interface OperationContentsAndResultTxRollupRemoveCommitment {
+  kind: OpKind.TX_ROLLUP_REMOVE_COMMITMENT;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  rollup: string;
+  metadata: OperationContentsAndResultMetadataTxRollupRemoveCommitment;
+}
+
+export interface OperationContentsAndResultTxRollupRejection {
+  kind: OpKind.TX_ROLLUP_REJECTION;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  rollup: string;
+  level: number;
+  message: TxRollupMessage;
+  message_position: string;
+  message_path: string[];
+  message_result_hash: string;
+  message_result_path: string[];
+  previous_message_result: TxRollupPreviousMessageResult;
+  previous_message_result_path: string[];
+  proof: TxRollupProof;
+  metadata: OperationContentsAndResultMetadataTxRollupRejection;
+}
+
+export interface OperationContentsAndResultTransferTicket {
+  kind: OpKind.TRANSFER_TICKET;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  ticket_contents: MichelsonV1Expression;
+  ticket_ty: MichelsonV1Expression;
+  ticket_ticketer: string;
+  ticket_amount: string;
+  destination: string;
+  entrypoint: string;
+  metadata: OperationContentsAndResultMetadataTransferTicket;
+}
+
+export interface OperationContentsAndResultTxRollupDispatchTickets {
+  kind: OpKind.TX_ROLLUP_DISPATCH_TICKETS;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  level: number;
+  context_hash: string;
+  message_index: number;
+  message_result_path: string[];
+  tickets_info: TxRollupTicketsInfo;
+  metadata: OperationContentsAndResultMetadataTxRollupDispatchTickets;
+}
+
 export type OperationContentsAndResult =
   | OperationContentsAndResultEndorsement
   | OperationContentsAndResultPreEndorsement
@@ -443,7 +774,16 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultDelegation
   | OperationContentsAndResultEndorsementWithSlot
   | OperationContentsAndResultRegisterGlobalConstant
-  | OperationContentsAndResultSetDepositsLimit;
+  | OperationContentsAndResultSetDepositsLimit
+  | OperationContentsAndResultTxRollupOrigination
+  | OperationContentsAndResultTxRollupSubmitBatch
+  | OperationContentsAndResultTxRollupCommit
+  | OperationContentsAndResultTxRollupDispatchTickets
+  | OperationContentsAndResultTxRollupReturnBond
+  | OperationContentsAndResultTxRollupFinalizeCommitment
+  | OperationContentsAndResultTxRollupRemoveCommitment
+  | OperationContentsAndResultTxRollupRejection
+  | OperationContentsAndResultTransferTicket;
 
 export interface OperationEntry {
   protocol: string;
@@ -680,6 +1020,83 @@ export type InternalOperationResultEnum =
   | OperationResultRegisterGlobalConstant
   | OperationResultSetDepositsLimit;
 
+export interface OperationResultTxRollupOrigination {
+  status: OperationResultStatusEnum;
+  balance_updates: OperationBalanceUpdates;
+  consumed_gas?: string;
+  consumed_milligas?: string;
+  originated_rollup: string;
+  errors?: TezosGenericOperationError[];
+}
+
+export interface OperationResultTxRollupSubmitBatch {
+  status: OperationResultStatusEnum;
+  balance_updates: OperationBalanceUpdates;
+  consumed_gas?: string;
+  consumed_milligas?: string;
+  paid_storage_size_diff: string;
+  errors?: TezosGenericOperationError[];
+}
+
+export interface OperationResultTxRollupDispatchTickets {
+  status: OperationResultStatusEnum;
+  balance_updates: OperationBalanceUpdates;
+  consumed_gas?: string;
+  consumed_milligas?: string;
+  paid_storage_size_diff?: string;
+  errors?: TezosGenericOperationError[];
+}
+
+export interface OperationResultTxRollupCommit {
+  status: OperationResultStatusEnum;
+  balance_updates: OperationBalanceUpdates;
+  consumed_gas?: string;
+  consumed_milligas?: string;
+  errors?: TezosGenericOperationError[];
+}
+
+export interface OperationResultTxRollupReturnBond {
+  status: OperationResultStatusEnum;
+  balance_updates: OperationBalanceUpdates;
+  consumed_gas?: string;
+  consumed_milligas?: string;
+  errors?: TezosGenericOperationError[];
+}
+
+export interface OperationResultTxRollupFinalizeCommitment {
+  status: OperationResultStatusEnum;
+  balance_updates: OperationBalanceUpdates;
+  consumed_gas?: string;
+  consumed_milligas?: string;
+  level: number;
+  errors?: TezosGenericOperationError[];
+}
+
+export interface OperationResultTxRollupRemoveCommitment {
+  status: OperationResultStatusEnum;
+  balance_updates: OperationBalanceUpdates;
+  consumed_gas?: string;
+  consumed_milligas?: string;
+  level: number;
+  errors?: TezosGenericOperationError[];
+}
+
+export interface OperationResultTxRollupRejection {
+  status: OperationResultStatusEnum;
+  balance_updates: OperationBalanceUpdates;
+  consumed_gas?: string;
+  consumed_milligas?: string;
+  errors?: TezosGenericOperationError[];
+}
+
+export interface OperationResultTransferTicket {
+  status: OperationResultStatusEnum;
+  balance_updates: OperationBalanceUpdates;
+  consumed_gas?: string;
+  consumed_milligas?: string;
+  paid_storage_size_diff?: string;
+  errors?: TezosGenericOperationError[];
+}
 export interface OperationResultDelegation {
   status: OperationResultStatusEnum;
   consumed_gas?: string;
@@ -946,11 +1363,8 @@ export interface ConstantsResponseCommon {
 
 export type Ratio = { numerator: number; denominator: number };
 
-export interface ConstantsResponseProto013 extends Omit<
-  ConstantsResponseProto012,
-  | 'blocks_per_voting_period'
-  | 'cache_layout'
-  > {
+export interface ConstantsResponseProto013
+  extends Omit<ConstantsResponseProto012, 'blocks_per_voting_period' | 'cache_layout'> {
   cache_layout_size?: number;
   cache_sampler_state_cycles?: number;
   cache_script_size?: number;
@@ -981,17 +1395,17 @@ export interface ConstantsResponseProto013 extends Omit<
 
 export interface ConstantsResponseProto012
   extends Omit<
-  ConstantsResponseProto011,
-  | 'baking_reward_per_endorsement'
-  | 'initial_endorsers'
-  | 'delay_per_missing_endorsement'
-  | 'test_chain_duration'
-  | 'blocks_per_roll_snapshot'
-  | 'time_between_blocks'
-  | 'endorsers_per_block'
-  | 'block_security_deposit'
-  | 'endorsement_security_deposit'
-  | 'endorsement_reward'
+    ConstantsResponseProto011,
+    | 'baking_reward_per_endorsement'
+    | 'initial_endorsers'
+    | 'delay_per_missing_endorsement'
+    | 'test_chain_duration'
+    | 'blocks_per_roll_snapshot'
+    | 'time_between_blocks'
+    | 'endorsers_per_block'
+    | 'block_security_deposit'
+    | 'endorsement_security_deposit'
+    | 'endorsement_reward'
   > {
   blocks_per_stake_snapshot?: number;
   baking_reward_fixed_portion?: BigNumber;
@@ -1023,10 +1437,10 @@ export interface ConstantsResponseProto010 extends ConstantsResponseProto007 {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ConstantsResponseProto009 extends ConstantsResponseProto007 { }
+export interface ConstantsResponseProto009 extends ConstantsResponseProto007 {}
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ConstantsResponseProto008 extends ConstantsResponseProto007 { }
+export interface ConstantsResponseProto008 extends ConstantsResponseProto007 {}
 
 export interface ConstantsResponseProto007
   extends Omit<ConstantsResponseProto006, 'max_revelations_per_block'> {
