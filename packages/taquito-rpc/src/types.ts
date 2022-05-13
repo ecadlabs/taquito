@@ -24,18 +24,11 @@ interface After {
 interface State {
   inode?: Inode;
   other_elts?: any;
-  inode_extender?: InodeExtender;
 }
 
 interface Inode {
-  length: number;
-  proofs?: string[];
-}
-
-interface InodeExtender {
-  length: number;
-  segment: string;
-  proof: string;
+  length: string;
+  proofs?: [string | null, string | null];
 }
 
 export interface TxRollupProof {
@@ -1097,7 +1090,7 @@ export interface OperationResultTxRollupFinalizeCommitment {
   balance_updates?: OperationBalanceUpdates;
   consumed_gas?: string;
   consumed_milligas?: string;
-  level: number;
+  level?: number;
   errors?: TezosGenericOperationError[];
 }
 
