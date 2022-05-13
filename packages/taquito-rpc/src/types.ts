@@ -48,7 +48,7 @@ export interface TxRollupProof {
 export interface TxRollupCommitment {
   level: number;
   messages: string[];
-  predecessor: string;
+  predecessor?: string;
   inbox_merkle_root: string;
 }
 
@@ -73,7 +73,7 @@ export interface TxRollupTicketsInfo {
   contents: MichelsonV1Expression;
   ty: MichelsonV1Expression;
   ticketer: string;
-  amount: BigNumber;
+  amount: string;
   claimer: string;
 }
 export interface DelegatesResponse {
@@ -1112,7 +1112,7 @@ export interface OperationResultTxRollupRemoveCommitment {
 
 export interface OperationResultTxRollupRejection {
   status: OperationResultStatusEnum;
-  balance_updates: OperationBalanceUpdates;
+  balance_updates?: OperationBalanceUpdates;
   consumed_gas?: string;
   consumed_milligas?: string;
   errors?: TezosGenericOperationError[];
