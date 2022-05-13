@@ -11,15 +11,42 @@ export type DelegateResponse = string | null;
 
 export type OperationHash = string;
 
+interface Before {
+  value?: string;
+  node?: string;
+}
+
+interface After {
+  value?: string;
+  node?: string;
+}
+
+interface State {
+  inode?: Inode;
+  other_elts?: any;
+  inode_extender?: InodeExtender;
+}
+
+interface Inode {
+  length: number;
+  proofs?: string[];
+}
+
+interface InodeExtender {
+  length: number;
+  segment: string;
+  proof: string;
+}
+
 export interface TxRollupProof {
   version: number;
-  before: any;
-  after: any;
-  state: any;
+  before: Before;
+  after: After;
+  state: State;
 }
 
 export interface TxRollupCommitment {
-  level: string;
+  level: number;
   messages: string[];
   predecessor: string;
   inbox_merkle_root: string;
@@ -29,12 +56,12 @@ export interface TxRollupDeposit {
   sender: string;
   destination: string;
   ticket_hash: string;
-  amount: BigNumber;
+  amount: string;
 }
 
 export interface TxRollupMessage {
-  batch: string;
-  deposit: TxRollupDeposit;
+  batch?: string;
+  deposit?: TxRollupDeposit;
 }
 
 export interface TxRollupPreviousMessageResult {
@@ -286,7 +313,7 @@ export interface OperationContentsTxRollupSubmitBatch {
   storage_limit: string;
   rollup: string;
   content: string;
-  burn_limit: string;
+  burn_limit?: string;
 }
 
 export interface OperationContentsTxRollupCommit {
@@ -296,6 +323,7 @@ export interface OperationContentsTxRollupCommit {
   counter: string;
   gas_limit: string;
   storage_limit: string;
+  rollup: string;
   commitment: TxRollupCommitment;
 }
 
@@ -339,7 +367,7 @@ export interface OperationContentsTxRollupRejection {
   rollup: string;
   level: number;
   message: TxRollupMessage;
-  message_position: BigNumber;
+  message_position: string;
   message_path: string[];
   message_result_hash: string;
   message_result_path: string[];
@@ -359,7 +387,7 @@ export interface OperationContentsTxRollupDispatchTickets {
   level: number;
   context_hash: string;
   message_index: number;
-  message_result_path: string;
+  message_result_path: string[];
   tickets_info: TxRollupTicketsInfo;
 }
 
@@ -453,13 +481,13 @@ export interface OperationContentsAndResultMetadata {
 }
 
 export interface OperationContentsAndResultMetadataTxRollupOrigination {
-  balance_updates: OperationMetadataBalanceUpdates[];
+  balance_updates?: OperationMetadataBalanceUpdates[];
   operation_result: OperationResultTxRollupOrigination;
   internal_operation_results?: InternalOperationResult[];
 }
 
 export interface OperationContentsAndResultMetadataTxRollupSubmitBatch {
-  balance_updates: OperationMetadataBalanceUpdates[];
+  balance_updates?: OperationMetadataBalanceUpdates[];
   operation_result: OperationResultTxRollupSubmitBatch;
   internal_operation_results?: InternalOperationResult[];
 }
@@ -750,6 +778,7 @@ export interface OperationContentsAndResultTxRollupDispatchTickets {
   counter: string;
   gas_limit: string;
   storage_limit: string;
+  tx_rollup: string;
   level: number;
   context_hash: string;
   message_index: number;
@@ -1022,25 +1051,25 @@ export type InternalOperationResultEnum =
 
 export interface OperationResultTxRollupOrigination {
   status: OperationResultStatusEnum;
-  balance_updates: OperationBalanceUpdates;
+  balance_updates?: OperationBalanceUpdates;
   consumed_gas?: string;
   consumed_milligas?: string;
-  originated_rollup: string;
+  originated_rollup?: string;
   errors?: TezosGenericOperationError[];
 }
 
 export interface OperationResultTxRollupSubmitBatch {
   status: OperationResultStatusEnum;
-  balance_updates: OperationBalanceUpdates;
+  balance_updates?: OperationBalanceUpdates;
   consumed_gas?: string;
   consumed_milligas?: string;
-  paid_storage_size_diff: string;
+  paid_storage_size_diff?: string;
   errors?: TezosGenericOperationError[];
 }
 
 export interface OperationResultTxRollupDispatchTickets {
   status: OperationResultStatusEnum;
-  balance_updates: OperationBalanceUpdates;
+  balance_updates?: OperationBalanceUpdates;
   consumed_gas?: string;
   consumed_milligas?: string;
   paid_storage_size_diff?: string;
@@ -1049,7 +1078,7 @@ export interface OperationResultTxRollupDispatchTickets {
 
 export interface OperationResultTxRollupCommit {
   status: OperationResultStatusEnum;
-  balance_updates: OperationBalanceUpdates;
+  balance_updates?: OperationBalanceUpdates;
   consumed_gas?: string;
   consumed_milligas?: string;
   errors?: TezosGenericOperationError[];
@@ -1057,7 +1086,7 @@ export interface OperationResultTxRollupCommit {
 
 export interface OperationResultTxRollupReturnBond {
   status: OperationResultStatusEnum;
-  balance_updates: OperationBalanceUpdates;
+  balance_updates?: OperationBalanceUpdates;
   consumed_gas?: string;
   consumed_milligas?: string;
   errors?: TezosGenericOperationError[];
@@ -1065,7 +1094,7 @@ export interface OperationResultTxRollupReturnBond {
 
 export interface OperationResultTxRollupFinalizeCommitment {
   status: OperationResultStatusEnum;
-  balance_updates: OperationBalanceUpdates;
+  balance_updates?: OperationBalanceUpdates;
   consumed_gas?: string;
   consumed_milligas?: string;
   level: number;
@@ -1074,10 +1103,10 @@ export interface OperationResultTxRollupFinalizeCommitment {
 
 export interface OperationResultTxRollupRemoveCommitment {
   status: OperationResultStatusEnum;
-  balance_updates: OperationBalanceUpdates;
+  balance_updates?: OperationBalanceUpdates;
   consumed_gas?: string;
   consumed_milligas?: string;
-  level: number;
+  level?: number;
   errors?: TezosGenericOperationError[];
 }
 
@@ -1091,7 +1120,7 @@ export interface OperationResultTxRollupRejection {
 
 export interface OperationResultTransferTicket {
   status: OperationResultStatusEnum;
-  balance_updates: OperationBalanceUpdates;
+  balance_updates?: OperationBalanceUpdates;
   consumed_gas?: string;
   consumed_milligas?: string;
   paid_storage_size_diff?: string;
@@ -1364,7 +1393,10 @@ export interface ConstantsResponseCommon {
 export type Ratio = { numerator: number; denominator: number };
 
 export interface ConstantsResponseProto013
-  extends Omit<ConstantsResponseProto012, 'blocks_per_voting_period' | 'cache_layout'> {
+  extends Omit<
+    ConstantsResponseProto012,
+    'blocks_per_voting_period' | 'cache_layout' | 'delegate_selection'
+  > {
   cache_layout_size?: number;
   cache_sampler_state_cycles?: number;
   cache_script_size?: number;
