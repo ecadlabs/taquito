@@ -136,13 +136,13 @@ h2 {
   // .navbar__inner{
   //   align-items: flex-end;
   // }
-  .navbar__inner {
-    .navbar__items {
-      @media (max-width: 960px) {
-        min-width: 18% !important;
-      }
-    }
-  }
+  // .navbar__inner {
+  //   .navbar__items {
+  //     @media (max-width: 960px) {
+  //       min-width: 18% !important;
+  //     }
+  //   }
+  // }
 }
 
 .DocSearch-Button {
@@ -169,7 +169,7 @@ h2 {
     width: fit-content;
     height: fit-content;
   }
-  margin-bottom: -10px;
+  // margin-bottom: -10px;
 }
 
 .navbar__item {
@@ -194,13 +194,14 @@ h2 {
 }
 
 .navbar__items {
-  flex-direction: unset;
-  justify-content: unset;
+  align-items: center !important;
+  // flex-direction: unset;
+  // justify-content: unset;
 
-  @media (max-width: 960px) {
-    flex-direction: row-reverse;
-    justify-content: space-between;
-  }
+  // @media (max-width: 960px) {
+  //   flex-direction: row-reverse;
+  //   justify-content: space-between;
+  // }
 }
 
 .navbar-sidebar {
