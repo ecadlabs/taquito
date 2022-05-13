@@ -25,6 +25,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
     "@fortawesome/react-fontawesome": "^0.1.15",
     "@ledgerhq/hw-transport-webhid": "^6.24.1",
+    "@docusaurus/theme-search-algolia": "2.0.0-beta.19",
     "@mdx-js/react": "^1.6.21",
     "@svgr/webpack": "^6.0.0",
     "@taquito/beacon-wallet": "12.1.0",
