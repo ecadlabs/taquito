@@ -1,12 +1,12 @@
 import { CONFIGS } from './config';
 import { RpcClient } from '@taquito/rpc';
 
-const client = new RpcClient(' https://jakartanet.ecadinfra.com');
+// A 0tez transaction to an implicit account should fail.
+
+const client = new RpcClient(' https://ithacanet.ecadinfra.com');
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  const amount = 0;
-  const address = 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys';
 
   describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async (done) => {
@@ -41,32 +41,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         const contract = await op.contract();
         expect(await contract.storage()).toBeTruthy();
 
-        Tezos.contract
-          .at(contract.address)
-          .then((contract) => {
-            const i = 0;
-
-            console.log(`Transferring ${i}...`);
-            return contract.methods.Transfer(i).send();
-          })
-          .then((op) => {
-            console.log(`Waiting for ${op.hash} to be confirmed...`);
-            return op.confirmation().then(() => op.hash);
-          })
-          .then((hash) => console.log(`Operation injected: https://jakarta.tzstats.com/${hash}`))
-          .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
-
-        // const sender = await createAddress();
-        // const sender_pkh = await sender.signer.publicKeyHash();
-        // // Fund the new address
-        // const opTransfer = await Tezos.contract.transfer({ to: sender_pkh, amount: 1 });
-        // await opTransfer.confirmation();
-
-        // const op2 = await contract.methods.default(3).send();
-        // await op2.confirmation();
+         const publicKeyHash = await Tezos.signer.publicKeyHash();
+         const opTransfer = await Tezos.contract.transfer({ to: publicKeyHash, amount: 0 });
+         await opTransfer.confirmation();
       } catch (error: any) {
-        console.log(error.message);
-        expect(error.message).toContain('proto.013-PtJakart.contract.empty_transaction');
+        expect(error.message).toContain('contract.empty_transaction');
       }
     });
   });
