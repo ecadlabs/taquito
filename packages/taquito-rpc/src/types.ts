@@ -1255,6 +1255,8 @@ export enum METADATA_BALANCE_UPDATES_CATEGORY {
   BOOTSTRAP = 'bootstrap',
   INVOICE = 'invoice',
   MINTED = 'minted',
+  TX_ROLLUP_REJECTION_REWARDS = 'tx_rollup_rejection_rewards',
+  TX_ROLLUP_REJECTION_PUNISHMENTS = 'tx_rollup_rejection_punishments',
 }
 export type MetadataBalanceUpdatesCategoryEnum = METADATA_BALANCE_UPDATES_CATEGORY;
 
