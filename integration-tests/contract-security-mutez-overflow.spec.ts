@@ -1,6 +1,7 @@
+import { doesNotMatch } from 'assert';
 import { CONFIGS } from './config';
 
-// TC-004: Example of mutez underflow - showing that SUB_MUTEZ;ASSERT_SOME prevents underflow
+// TC-005: Example of mutez overflow
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
@@ -11,18 +12,19 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it('Verify mutez underflow example', async (done) => {
+    it('Verify mutez overflow example', async (done) => {
       try {
         const op = await Tezos.contract.originate({
           code: `        { parameter unit ;
             storage mutez ;
-            code { DROP ;
-                   PUSH mutez 2 ;
-                   PUSH mutez 1 ;
-                   SUB_MUTEZ ;
-                   ASSERT_SOME ;
+            code {
+                   DROP;
+                   PUSH @mutez mutez 1000000000;
+                   PUSH nat 10000000000;
+                   MUL;
                    NIL operation ;
-                   PAIR } }`,
+                   PAIR
+                 } }`,
           storage: 0,
         });
 
@@ -39,15 +41,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             return op.confirmation().then(() => op.opHash);
           });
       } catch (error: any) {
-        expect(error.message).toContain(
-          // why this?
-          '{"prim":"Unit"}'
-          //'Underflowing subtraction of 0.000001 tez and 0.000002 tez'
-        );
+        expect(error.message).toContain('tez.multiplication_overflow');
       }
       done();
     });
   });
 });
-
 // This test was transcribed to Taquito from bash scripts at https://github.com/Inference/TezosSecurityBaselineCheckingFramework

@@ -1,7 +1,7 @@
 import { CONFIGS } from './config';
 import { RpcClient } from '@taquito/rpc';
 
-// A 0tez transaction to an implicit account should fail.
+// TC-007 - A 0tez transaction to an implicit account should fail.
 
 const client = new RpcClient(' https://ithacanet.ecadinfra.com');
 

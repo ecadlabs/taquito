@@ -1,13 +1,12 @@
 import { CONFIGS } from './config';
 
-// Testcase originates a contract with a "payout" entrypoint. When calling the payout entrypoint all available tez amount except of an
-//"minLockedValue" can be transferred to a provied destination address.
+//TC-002/003 This test case originates a contract with a "payout" entrypoint. When calling the payout entrypoint, an agreement can transfer 
+//all available tez amounts except a "minLockedValue," which can be shared by a contract to a provided destination address. 
 
-//The testcase tries to transfer the amount to an "attackerContract", which immediately calls again the "payout" entrypoint.
-//The hope of the attacker is that the balance has not yet been updated.
+//The test case tries to move the balance to an "attacker contract," which immediately calls the "payout" entrypoint again. 
 
-//The attacker should not be successful in doing that, since the balance is immediately updated, when the transfer transaction
-//operation has been executed. Any reentrancy (after the transfer transaction operation) to the contract finds the updated balance.
+//Not updating the balance would make the Attacker glad.   The attacker should not be successful since the credit is instantly 
+//updated when executing the transfer transaction. Any reentrancy (after the transfer transaction operation) to the contract finds the updated balance.
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;

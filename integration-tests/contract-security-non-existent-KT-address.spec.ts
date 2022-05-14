@@ -2,7 +2,7 @@ import { CONFIGS } from './config';
 import { RpcClient } from '@taquito/rpc';
 import { TezosToolkit } from '@taquito/taquito';
 
-// non-existing KT addresses can not be prefunded
+// TC001 - non-existing KT addresses can not be prefunded
 
 // KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn is the tzBTC contract on mainnet
 
