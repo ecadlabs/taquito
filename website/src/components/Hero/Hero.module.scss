@@ -75,12 +75,6 @@
 }
 
 .heroCardContainer {
-  /* background-color: var(--ifm-color-bg-purple); */
-  /* -webkit-clip-path: polygon(0 15%, 100% 0%, 100% 85%, 15% 100%);
-	clip-path: polygon(0 15%, 100% 0%, 100% 85%, 15% 100%);
-	border-radius: 10px;
-	box-sizing: border-box; */
-  /* background-image: url("../../../static/img/purpleBG.png"); */
   background-repeat: no-repeat;
   background-size: contain;
   padding-bottom: 30px;
@@ -89,35 +83,6 @@
   width: 558px;
 }
 
-.featureSvgTraiangle1 {
-  position: absolute;
-  top: 80px;
-  left: -50px;
-}
-
-.featureSvgTraiangle2 {
-  position: absolute;
-  top: 20px;
-  left: -30px;
-}
-
-.featureSvgTraiangle3 {
-  position: absolute;
-  top: -40px;
-  left: 0px;
-}
-
-.featureSvgTraiangle4 {
-  position: absolute;
-  top: -60px;
-  right: 60px;
-}
-
-.featureSvgTraiangle5 {
-  position: absolute;
-  top: -40px;
-  right: 10px;
-}
 
 .heroTitle {
   max-width: 624px;
@@ -186,14 +151,11 @@
 }
 
 .carouselContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+  max-width: 558px;
+  width: 100%;
 }
 
-.carousel {
-  width: 558px;
+.carouselBox {
   /* display: flex;
 	justify-content: flex-end; */
   border: 30px solid var(--brown-primary);
@@ -239,19 +201,8 @@ video {
   }
 
   .carouselContainer {
+    max-width: 558px;
     width: 100%;
-  }
-
-  .carousel {
-    width: 100%;
-  }
-
-  .featureSvgTraiangle1,
-  .featureSvgTraiangle2,
-  .featureSvgTraiangle3,
-  .featureSvgTraiangle4,
-  .featureSvgTraiangle5 {
-    display: none;
   }
 
   .heroCardContainer {
@@ -262,20 +213,7 @@ video {
     border-radius: 13px;
   }
 
-  .carousel {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    width: 558px;
-    max-width: fit-content;
-  }
-
   .heroCardContainer {
-    /* background-color: var(--ifm-color-bg-purple); */
-    /* -webkit-clip-path: polygon(0 15%, 100% 0%, 100% 85%, 15% 100%);
-		clip-path: polygon(0 15%, 100% 0%, 100% 85%, 15% 100%);
-		border-radius: 10px;
-		box-sizing: border-box; */
     background-color: var(--ifm-color-bg-purple);
     width: 70%;
   }
@@ -321,5 +259,11 @@ video {
     width: auto;
     justify-content: center;
     align-items: center;
+  }
+}
+
+.slick-slider {
+  .slick-dots {
+    margin-top: 100px;
   }
 }

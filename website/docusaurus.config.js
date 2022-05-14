@@ -68,7 +68,7 @@ module.exports = {
           className: 'header-link button_link',
         },
         {
-          href: 'https://discord.gg/tURNUPwp',
+          href: 'https://t.me/tezostaquito',
           position: 'right',
           className: 'header-link header-discord-link',
           'aria-label': 'Discord',
