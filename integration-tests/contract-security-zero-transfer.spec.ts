@@ -50,3 +50,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     });
   });
 });
+
+
+// This test was transcribed to Taquito from bash scripts at https://github.com/Inference/TezosSecurityBaselineCheckingFramework

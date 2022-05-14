@@ -1,23 +1,17 @@
 import { CONFIGS } from './config';
-import { RpcClient } from '@taquito/rpc';
-import { importKey } from '@taquito/signer';
-import { InMemorySigner } from '@taquito/signer';
 
-//Testcase title: Reentrancy - contract balance
-//To check whether contract balance is immediately adjusted when a transaction operation is initiated.
 // Testcase originates a contract with a "payout" entrypoint. When calling the payout entrypoint all available tez amount except of an
 //"minLockedValue" can be transferred to a provied destination address.
+
 //The testcase tries to transfer the amount to an "attackerContract", which immediately calls again the "payout" entrypoint.
 //The hope of the attacker is that the balance has not yet been updated.
+
 //The attacker should not be successful in doing that, since the balance is immediately updated, when the transfer transaction
 //operation has been executed. Any reentrancy (after the transfer transaction operation) to the contract finds the updated balance.
-
-const client = new RpcClient(' https://ithacanet.ecadinfra.com');
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   const address = 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys';
-  const signer = new InMemorySigner('spsk24EJohZHJkZnWEzj3w9wE7BFARpFmq5WAo9oTtqjdJ2t4pyoB3');
 
   describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async (done) => {
@@ -77,10 +71,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const vestingContract = await vestingContractOp.contract();
       expect(await vestingContract.storage()).toBeTruthy();
 
-      const publicKeyHash = await Tezos.signer.publicKeyHash(); 
+      const publicKeyHash = await Tezos.signer.publicKeyHash();
       const opTransfer = await Tezos.contract.transfer({ to: publicKeyHash, amount: 1 });
       await opTransfer.confirmation();
-      
+
       const attackContractOp = await Tezos.contract.originate({
         code: `{ parameter unit ;
                storage unit ;
@@ -108,26 +102,28 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const attackContract = await attackContractOp.contract();
       expect(await attackContract.storage()).toBeTruthy();
 
-       await Tezos.contract
-         .at(vestingContract.address)
-         .then((contract) => {
-           return contract.methodsObject
-             .payout({
-               amount: 3000000,
-               destination: attackContract.address,
-             })
-             .send();
-         })
-         .then((op) => {
-           return op.confirmation().then(() => op.hash);
-         })
-         .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+      await Tezos.contract
+        .at(vestingContract.address)
+        .then((contract) => {
+          return contract.methodsObject
+            .payout({
+              amount: 3000000,
+              destination: attackContract.address,
+            })
+            .send();
+        })
+        .then((op) => {
+          return op.confirmation().then(() => op.hash);
+        })
+        .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 
-       Tezos.tz.getBalance(vestingContract.address).then((vbalance) => {
-         let result = vbalance.toNumber();
-         expect((result = 5000000));
-       });
+      Tezos.tz.getBalance(vestingContract.address).then((vbalance) => {
+        let result = vbalance.toNumber();
+        expect((result = 5000000));
+      });
       done();
     });
   });
 });
+
+// This test was transcribed to Taquito from bash scripts at https://github.com/Inference/TezosSecurityBaselineCheckingFramework
