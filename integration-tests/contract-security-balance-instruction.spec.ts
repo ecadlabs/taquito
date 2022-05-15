@@ -12,7 +12,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it('Verify mutez underflow example', async (done) => {
+    it('Verify Obtained balance of a smart contract using the BALANCE instruction does not change during the execution of the entrypoint\'s own code', async (done) => {
       try {
         const opTezTransferA = await Tezos.contract.originate({
           balance: '0.000010',
