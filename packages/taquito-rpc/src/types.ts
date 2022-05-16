@@ -33,7 +33,7 @@ interface OtherEltsInner {
 }
 
 interface OtherElts {
-  node?: [[string, { value: string } | { node: string }]];
+  node?: [string, { value: string } | { node: string }][];
   other_elts?: OtherEltsInner;
 }
 
