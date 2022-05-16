@@ -1,6 +1,6 @@
 {
   "name": "@taquito/beacon-wallet",
-  "version": "12.1.0",
+  "version": "12.1.1",
   "description": "Beacon wallet provider",
   "keywords": [
     "tezos",
@@ -62,7 +62,7 @@
   },
   "dependencies": {
     "@airgap/beacon-dapp": "^3.0.0",
-    "@taquito/taquito": "^12.1.0",
+    "@taquito/taquito": "^12.1.1",
     "libsodium-wrappers": "0.7.9"
   },
   "devDependencies": {
