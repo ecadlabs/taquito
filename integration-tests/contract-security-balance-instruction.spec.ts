@@ -12,7 +12,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it('Verify Obtained balance of a smart contract using the BALANCE instruction does not change during the execution of the entrypoint\'s own code', async (done) => {
+    it("Verify Obtained balance of a smart contract using the BALANCE instruction does not change during the execution of the entrypoint's own code", async (done) => {
       try {
         const opTezTransferA = await Tezos.contract.originate({
           balance: '0.000010',
@@ -87,21 +87,22 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
         await Tezos.contract
           .at(TezTransferAContract.address)
-          .then((myContract) => {
-            return myContract.methods.default(TezTransferBContract.address).send();
+          .then((contract) => {
+            return contract.methods.default(TezTransferBContract.address).send();
           })
           .then((op) => {
-            return op.confirmation(1).then(() => op.hash);
+            return op.confirmation(3).then(() => op.hash);
           })
-          .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 
-          const storageB = await TezTransferBContract.storage();
-          expect(storageB).toContain({atEnd: "10", atStart: "10"});
-          /// Should be {"atEnd": "5", "atStart": "5"}
+           const storageA = await TezTransferAContract.storage();
+           expect(storageA).toContain({atEnd: "10", atStart: "10"});
+           /// Should be {"atEnd": "5", "atStart": "5"}
 
-
+           const storageB = await TezTransferBContract.storage();
+           expect(storageB).toContain({atEnd: "10", atStart: "10"});
+           /// Should be {"atEnd": "5", "atStart": "5"}
       } catch (error: any) {
-        console.log(error.message)
+        console.log(error.message);
       }
       done();
     });
