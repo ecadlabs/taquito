@@ -21,9 +21,30 @@ interface After {
   node?: string;
 }
 
+interface Node {
+  value?: string;
+  node?: string;
+}
+
+interface INodeExtender {
+  length: number;
+  segment: string;
+  proof: string;
+}
+
+interface OtherEltsInner {
+  value: any;
+}
+
+interface OtherElts {
+  node?: Node;
+  other_elts?: OtherEltsInner;
+  inode_extender?: INodeExtender;
+}
+
 interface State {
   inode?: Inode;
-  other_elts?: any;
+  other_elts?: OtherElts;
 }
 
 interface Inode {
