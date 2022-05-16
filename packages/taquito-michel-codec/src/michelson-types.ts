@@ -77,7 +77,8 @@ type MichelsonNoArgInstructionID =
   | 'VOTING_POWER'
   | 'XOR'
   | 'RENAME'
-  | 'OPEN_CHEST';
+  | 'OPEN_CHEST'
+  | 'MIN_BLOCK_TIME';
 
 type MichelsonRegularInstructionID =
   | 'CONTRACT'

@@ -85,6 +85,7 @@ const noArgInstructionIDs: Record<MichelsonNoArgInstruction['prim'], true> = {
   RENAME: true,
   OPEN_CHEST: true,
   SUB_MUTEZ: true,
+  MIN_BLOCK_TIME: true,
 };
 
 export const instructionIDs: Record<MichelsonInstruction['prim'], true> = Object.assign(
@@ -419,6 +420,12 @@ export function assertMichelsonInstruction(ex: Expr): ex is MichelsonCode {
         }
         break;
 
+        case "MIN_BLOCK_TIME":
+          if (assertArgs(ex, 2)) {
+            assertMichelsonInstruction(ex)
+          }
+          break;
+        
       default:
         throw new MichelsonValidationError(ex, 'instruction expected');
     }
@@ -432,8 +439,7 @@ export function assertMichelsonComparableType(ex: Expr): ex is MichelsonType {
     if (Array.isArray(ex) || ex.prim === 'pair' || ex.prim === 'or' || ex.prim === 'option') {
       traverseType(ex, (ex) => assertMichelsonComparableType(ex));
     } else if (!Object.prototype.hasOwnProperty.call(simpleComparableTypeIDs, ex.prim)) {
-      throw { cause: !Object.prototype.hasOwnProperty.call(simpleComparableTypeIDs, ex.prim), simp: simpleComparableTypeIDs, prim: ex.prim}
-      // throw new MichelsonValidationError(ex, `${ex.prim}: type is not comparable`);
+      throw new MichelsonValidationError(ex, `${ex.prim}: type is not comparable`);
     }
   }
   return true;
