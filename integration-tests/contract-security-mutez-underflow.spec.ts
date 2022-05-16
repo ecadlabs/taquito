@@ -12,7 +12,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     });
 
     it('Verify mutez underflow example', async (done) => {
-      try {
         const op = await Tezos.contract.originate({
           code: `        { parameter unit ;
             storage mutez ;
@@ -23,7 +22,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                    ASSERT_SOME ;
                    NIL operation ;
                    PAIR } }`,
-          storage: 0,
+               init:    { int: '0' },
         });
 
         await op.confirmation();
@@ -32,19 +31,22 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         const contract = await op.contract();
         expect(await contract.storage()).toBeTruthy();
 
-        await Tezos.wallet
-          .transfer({ to: contract.address, amount: 0 })
-          .send()
+        console.log("contractAddress= "+contract.address)
+
+        try{
+         await Tezos.contract
+          .at(contract.address)
+          .then((contract) => {
+            return contract.methods.default(0).send()
+          })
           .then((op) => {
-            return op.confirmation().then(() => op.opHash);
-          });
-      } catch (error: any) {
-        expect(error.message).toContain(
-          // why this?
-          '{"prim":"Unit"}'
-          //'Underflowing subtraction of 0.000001 tez and 0.000002 tez'
-        );
-      }
+            return op.confirmation().then(() => op.hash);
+          })
+        } catch (error: any) {
+          console.log(error.message)
+          //expect(error.message).toContain('michelson_v1.runtime_error');
+          expect(error.message).toContain('{\"prim\":\"Unit\"}');
+        }
       done();
     });
   });

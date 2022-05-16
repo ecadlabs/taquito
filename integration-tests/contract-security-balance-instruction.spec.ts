@@ -91,7 +91,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             return contract.methods.default(TezTransferBContract.address).send();
           })
           .then((op) => {
-            return op.confirmation(3).then(() => op.hash);
+            return op.confirmation().then(() => op.hash);
           })
 
            const storageA = await TezTransferAContract.storage();
