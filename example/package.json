@@ -1,7 +1,7 @@
 {
   "name": "@taquito/example",
   "private": true,
-  "version": "12.1.0",
+  "version": "12.1.1",
   "scripts": {
     "example": "node -r ts-node/register --preserve-symlinks example-node.ts",
     "example:activation": "node -r ts-node/register --preserve-symlinks example-activate.ts",
@@ -34,7 +34,6 @@
     "example:tzip-16-sha256": "node -r ts-node/register --preserve-symlinks example-tzip-16-SHA256.ts",
     "example:tzip-16-storage": "node -r ts-node/register --preserve-symlinks example-tzip-16-storage.ts",
     "example:tzip-16-contract": "node -r ts-node/register --preserve-symlinks example-tzip-16-contract-origination-hostile-strings.ts",
-    
     "example:streamer": "node -r ts-node/register --preserve-symlinks example-streamer.ts",
     "example:streamer-custom": "node -r ts-node/register --preserve-symlinks example-streamer-custom-retry-logic.ts",
     "example:streamer-block-time": "node -r ts-node/register --preserve-symlinks example-streamer-log-time-between-blocks.ts",
@@ -42,15 +41,15 @@
   },
   "dependencies": {
     "@ledgerhq/hw-transport-node-hid": "^6.20.0",
-    "@taquito/ledger-signer": "^12.1.0",
-    "@taquito/local-forging": "^12.1.0",
-    "@taquito/michel-codec": "^12.1.0",
-    "@taquito/michelson-encoder": "^12.1.0",
-    "@taquito/rpc": "^12.1.0",
-    "@taquito/signer": "^12.1.0",
-    "@taquito/taquito": "^12.1.0",
-    "@taquito/tzip16": "^12.1.0",
-    "@taquito/utils": "^12.1.0",
+    "@taquito/ledger-signer": "^12.1.1",
+    "@taquito/local-forging": "^12.1.1",
+    "@taquito/michel-codec": "^12.1.1",
+    "@taquito/michelson-encoder": "^12.1.1",
+    "@taquito/rpc": "^12.1.1",
+    "@taquito/signer": "^12.1.1",
+    "@taquito/taquito": "^12.1.1",
+    "@taquito/tzip16": "^12.1.1",
+    "@taquito/utils": "^12.1.1",
     "bignumber.js": "^9.0.2"
   },
   "devDependencies": {
