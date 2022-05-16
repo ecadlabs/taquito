@@ -2005,7 +2005,7 @@ function functionTypeInternal(
       }
       case 'MIN_BLOCK_TIME':
       // check if correct
-        return ProtoInferiorTo(proto, Protocol.PtJakarta) ? [[annotateVar({ prim: 'nat' }), ...stack.slice(1)]] : []
+        return !ProtoInferiorTo(proto, Protocol.PtJakarta) ? [[annotateVar({ prim: 'nat' }), ...stack.slice(1)]] : []
 
       default:
         throw new MichelsonError(
