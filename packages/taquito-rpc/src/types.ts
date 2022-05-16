@@ -27,10 +27,13 @@ interface INodeExtender {
   proof: string;
 }
 
-interface OtherEltsInner {
-  value: any;
-  inode_extender?: INodeExtender;
-}
+type OtherEltsInner =
+  | {
+      value: any;
+    }
+  | {
+      inode_extender?: INodeExtender;
+    };
 
 interface OtherElts {
   node?: [string, { value: string } | { node: string }][];
