@@ -21,11 +21,6 @@ interface After {
   node?: string;
 }
 
-interface Node {
-  value?: string;
-  node?: string;
-}
-
 interface INodeExtender {
   length: number;
   segment: string;
@@ -34,12 +29,12 @@ interface INodeExtender {
 
 interface OtherEltsInner {
   value: any;
+  inode_extender?: INodeExtender;
 }
 
 interface OtherElts {
-  node?: Node;
+  node?: [[string, { value: string } | { node: string }]];
   other_elts?: OtherEltsInner;
-  inode_extender?: INodeExtender;
 }
 
 interface State {
@@ -56,7 +51,7 @@ export interface TxRollupProof {
   version: number;
   before: Before;
   after: After;
-  state: State;
+  state: State[];
 }
 
 export interface TxRollupCommitment {
