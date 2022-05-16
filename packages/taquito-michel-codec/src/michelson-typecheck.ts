@@ -2003,6 +2003,9 @@ function functionTypeInternal(
         ensurePushableType(s[0]);
         return [annotateVar({ prim: 'option', args: [instruction.args[1]] }), ...stack.slice(2)];
       }
+      case 'MIN_BLOCK_TIME':
+      // check what goes here
+        return ProtoInferiorTo(proto, Protocol.PtJakarta) ? [] : []
 
       default:
         throw new MichelsonError(
