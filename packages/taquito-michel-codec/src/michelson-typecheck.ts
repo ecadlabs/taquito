@@ -2004,8 +2004,8 @@ function functionTypeInternal(
         return [annotateVar({ prim: 'option', args: [instruction.args[1]] }), ...stack.slice(2)];
       }
       case 'MIN_BLOCK_TIME':
-      // check what goes here
-        return ProtoInferiorTo(proto, Protocol.PtJakarta) ? [] : []
+      // check if correct
+        return ProtoInferiorTo(proto, Protocol.PtJakarta) ? [[annotateVar({ prim: 'nat' }), ...stack.slice(1)]] : []
 
       default:
         throw new MichelsonError(
