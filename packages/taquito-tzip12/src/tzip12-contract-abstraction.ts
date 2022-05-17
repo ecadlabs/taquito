@@ -179,7 +179,7 @@ export class Tzip12ContractAbstraction {
     const bigmapTokenMetadataId = await this.findTokenMetadataBigMap();
     let pairNatMap;
     try {
-      pairNatMap = await this.context.contract.getBigMapKeyByID<any>(
+      pairNatMap = await this.context.contract.getBigMapKeyByID(
         bigmapTokenMetadataId['int'].toString(),
         tokenId.toString(),
         new Schema(tokenMetadataBigMapType)
@@ -203,13 +203,13 @@ export class Tzip12ContractAbstraction {
   }
 
   private async findTokenMetadataBigMap(): Promise<BigMapId> {
-    const tokenMetadataBigMapId = this.contractAbstraction.schema.FindFirstInTopLevelPair<BigMapId>(
+    const tokenMetadataBigMapId = this.contractAbstraction.schema.FindFirstInTopLevelPair(
       await this.context.readProvider.getStorage(this.contractAbstraction.address, 'head'),
       tokenMetadataBigMapType
     );
-    if (!tokenMetadataBigMapId) {
+    if (!tokenMetadataBigMapId || !tokenMetadataBigMapId.int) {
       throw new TokenMetadataNotFound(this.contractAbstraction.address);
     }
-    return tokenMetadataBigMapId;
+    return { int: tokenMetadataBigMapId.int };
   }
 }

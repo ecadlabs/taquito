@@ -22,8 +22,6 @@ export type MetadataContext = Context & {
   metadataProvider: MetadataProviderInterface;
 };
 
-type BigMapId = { int: string };
-
 const metadataBigMapType = {
   prim: 'big_map',
   args: [{ prim: 'string' }, { prim: 'bytes' }],
@@ -43,12 +41,12 @@ export class Tzip16ContractAbstraction {
   }
 
   private async findMetadataBigMap(): Promise<BigMapAbstraction> {
-    const metadataBigMapId = this.constractAbstraction.schema.FindFirstInTopLevelPair<BigMapId>(
+    const metadataBigMapId = this.constractAbstraction.schema.FindFirstInTopLevelPair(
       await this.context.readProvider.getStorage(this.constractAbstraction.address, 'head'),
       metadataBigMapType
     );
 
-    if (!metadataBigMapId) {
+    if (!metadataBigMapId || !metadataBigMapId.int) {
       throw new BigMapMetadataNotFound();
     }
 

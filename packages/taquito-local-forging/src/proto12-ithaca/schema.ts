@@ -3,12 +3,13 @@ import { Uint8ArrayConsumer } from '../uint8array-consumer';
 import { kindMappingProto12, kindMappingReverseProto12 } from './constants';
 import { InvalidOperationKindError } from '@taquito/utils';
 import { OperationDecodingError, UnsupportedOperationError } from '../error';
+import { CODEC } from '../constants';
 
 export const EndorsementSchemaProto12 = {
-  slot: 'int16',
-  level: 'int32',
-  round: 'int32',
-  block_payload_hash: 'blockPayloadHash',
+  slot: CODEC.INT16,
+  level: CODEC.INT32,
+  round: CODEC.INT32,
+  block_payload_hash: CODEC.BLOCK_PAYLOAD_HASH,
 };
 
 export const operationEncoderProto12 =
