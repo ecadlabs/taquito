@@ -102,7 +102,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
            expect(storageB).toContain({atEnd: "10", atStart: "10"});
            /// Should be {"atEnd": "5", "atStart": "5"}
       } catch (error: any) {
-        console.log(error.message);
+        
       }
       done();
     });

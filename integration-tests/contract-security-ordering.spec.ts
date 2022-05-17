@@ -67,9 +67,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         .then((op) => {
           return op.confirmation().then(() => op.opHash);
         })
-        .then((hash) => console.log(`Operation injected: https://ithaca.tzstats.com/${hash}`))
-        .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
-
       // need a at this point a way to grab the contents of the operation ot check if the transaction order is prserved.
       done();
     });

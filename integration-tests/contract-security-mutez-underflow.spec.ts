@@ -1,6 +1,6 @@
 import { CONFIGS } from './config';
 
-// TC-004: Example of mutez underflow - showing that SUB_MUTEZ;ASSERT_SOME prevents underflow
+// TC-004: Example of mutez underflow - showing that SUB_MUTEZ; ASSERT_SOME prevents underflow by catching and going to FAILWITH
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
@@ -31,8 +31,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         const contract = await op.contract();
         expect(await contract.storage()).toBeTruthy();
 
-        console.log("contractAddress= "+contract.address)
-
         try{
          await Tezos.contract
           .at(contract.address)
@@ -43,8 +41,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             return op.confirmation().then(() => op.hash);
           })
         } catch (error: any) {
-          console.log(error.message)
-          //expect(error.message).toContain('michelson_v1.runtime_error');
           expect(error.message).toContain('{\"prim\":\"Unit\"}');
         }
       done();
