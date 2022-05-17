@@ -72,53 +72,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it('Verify type ticket string cannot be used with "dup 10n" here because it is not duplicable', async (done) => {
-      try {
-        const opTicketsDup = await Tezos.contract.originate({
-          code: `{ parameter unit;
-            storage unit;
-            code
-              {
-                DROP; # drop storage and input
-                PUSH nat 1;
-                PUSH string "test";
-                TICKET;
-                PUSH nat 2;
-                PUSH nat 3;
-                PUSH nat 4;
-                PUSH nat 5;
-                PUSH nat 6;
-                PUSH nat 7;
-                PUSH nat 8;
-                PUSH nat 9;
-                PUSH nat 10;
-                DUP 10;
-                DROP;
-                DROP;
-                DROP;
-                DROP;
-                DROP;
-                DROP;
-                DROP;
-                DROP;
-                DROP;
-                DROP;
-                DROP;
-                UNIT;
-                NIL operation;
-                PAIR;
-              };            
-        }`,
-          storage: 0,
-        });
-
-        await opTicketsDup.confirmation();
-      } catch (error: any) {
-        expect(error.message).toContain('michelson_v1.unexpected_ticket');
-      }
-      done();
-    });
-
     it('Verify type list (ticket string) cannot be used here because it is not duplicable', async (done) => {
       try {
         const opTicketsDup = await Tezos.contract.originate({

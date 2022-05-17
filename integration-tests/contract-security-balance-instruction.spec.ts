@@ -17,7 +17,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         const opTezTransferA = await Tezos.contract.originate({
           balance: '0.000010',
           code: `        { parameter (option address) ;
-            storage (pair (mutez %atEnd) (mutez %atStart)) ;
+            storage (pair (mutez %at_end) (mutez %at_start)) ;
             code { UNPAIR ;
                    SWAP ;
                    BALANCE ;
@@ -52,7 +52,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
         const opTezTransferB = await Tezos.contract.originate({
           code: `        { parameter (option address) ;
-            storage (pair (mutez %atEnd) (mutez %atStart)) ;
+            storage (pair (mutez %at_end) (mutez %at_start)) ;
             code { UNPAIR ;
                    SWAP ;
                    BALANCE ;
@@ -95,12 +95,12 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           })
 
            const storageA = await TezTransferAContract.storage();
-           expect(storageA).toContain({atEnd: "10", atStart: "10"});
-           /// Should be {"atEnd": "5", "atStart": "5"}
+           expect(storageA).toContain({at_end: "10", at_start: "10"});
+           /// Should be {"at_end": "5", "at_start": "5"}
 
            const storageB = await TezTransferBContract.storage();
-           expect(storageB).toContain({atEnd: "10", atStart: "10"});
-           /// Should be {"atEnd": "5", "atStart": "5"}
+           expect(storageB).toContain({at_end: "10", at_start: "10"});
+           /// Should be {"at_end": "5", "at_start": "5"}
       } catch (error: any) {
         
       }
