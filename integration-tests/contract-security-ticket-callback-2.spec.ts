@@ -1,7 +1,7 @@
 import { CONFIGS } from './config';
 
 // TC-T-009: assume that the ticket is just a (pair address cty nat) and can "easily" be created via a callback.
-// The case reaches a FAILWITH 
+// callback case 2 - address and option
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
@@ -37,7 +37,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         expect(opCaller.hash).toBeDefined();
         expect(opCaller.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
         const opCallerContract = await opCaller.contract();
-        expect(await opCallerContract.storage()).toBeTruthy();
 
         const opGetter = await Tezos.contract.originate({
           code: `        { parameter unit;
@@ -83,11 +82,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           }) 
       } catch (error: any) {
         expect(error.message).toContain('{\"prim\":\"Unit\"}');
-        console.log(error.message)
       }
       done();
     });
   });
 });
 
-// This test was transcribed to Taquito from bash scripts at https://github.com/Inference/TezosSecurityBaselineCheckingFramework
+// This test was transcribed to Taquito from bash scripts at https://github.com/InferenceAG/TezosSecurityBaselineChecking

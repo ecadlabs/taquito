@@ -1,0 +1,100 @@
+import { CONFIGS } from './config';
+
+// TC-T-010: assume that the ticket is just a (pair address cty nat) and can "easily" be created via a callback.
+// callback case 3 - string and option
+
+CONFIGS().forEach(({ lib, rpc, setup }) => {
+  const Tezos = lib;
+
+  describe(`Test contracts using: ${rpc}`, () => {
+    beforeEach(async (done) => {
+      await setup();
+      done();
+    });
+
+    it("Verify ticket is not easily created by a callback", async (done) => {
+      try {
+        const opCaller = await Tezos.contract.originate({
+          code: ` { parameter
+            (or (pair %init (address %adrAdr) (string %strAdr)) (option %setToken (ticket string))) ;
+          storage unit ;
+          code { UNPAIR ;
+                 IF_LEFT
+                   { DUP ;
+                     DUG 2 ;
+                     CAR ;
+                     CONTRACT string ;
+                     IF_NONE { PUSH string "none" ; FAILWITH } {} ;
+                     PUSH mutez 0 ;
+                     DIG 3 ;
+                     CDR ;
+                     TRANSFER_TOKENS ;
+                     SWAP ;
+                     NIL operation ;
+                     DIG 2 ;
+                     CONS ;
+                     PAIR }
+                   { DROP ; NIL operation ; PAIR } } }`,
+          init: 'Unit'
+        });
+
+        await opCaller.confirmation();
+        expect(opCaller.hash).toBeDefined();
+        expect(opCaller.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+        const opCallerContract = await opCaller.contract();
+
+        const opGetter = await Tezos.contract.originate({
+          code: `     { parameter string;
+          storage unit;
+          code
+            {
+              CAR; # parameter
+              PUSH nat 1;
+              PUSH string "test";
+              DIG 2;
+              PAIR 3;
+              SOME;
+              SENDER;
+              CONTRACT %setToken (option(pair string string nat));
+              IF_NONE { FAIL } {};
+              SWAP;
+              PUSH mutez 0;
+              DUG 1;
+              TRANSFER_TOKENS;
+              NIL operation;
+              SWAP;
+              CONS;
+              UNIT;
+              SWAP;
+              PAIR;
+            };}`,
+              init: 'Unit'
+        });
+
+        await opGetter.confirmation();
+        expect(opGetter.hash).toBeDefined();
+        expect(opGetter.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+        const opGetterContract = await opGetter.contract();
+        expect(await opGetterContract.storage()).toBeTruthy();
+
+        await Tezos.contract
+          .at(opCallerContract.address)
+          .then((contract) => {
+            return contract.methods.init(
+              `${opGetterContract.address}`,
+               `${opGetterContract.address}`)
+               .send();
+          })
+          .then((op) => {
+            return op.confirmation().then(() => op.hash);
+          }) 
+      } catch (error: any) {
+        expect(error.message).toContain('{\"prim\":\"Unit\"}');
+      }
+      done();
+    });
+  });
+});
+
+// This test was transcribed to Taquito from bash scripts at https://github.com/InferenceAG/TezosSecurityBaselineChecking
+
