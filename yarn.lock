@@ -1900,8 +1900,6 @@
   "resolved" "file:packages/taquito-rpc"
   "version" "12.1.1"
   dependencies:
-    "@taquito/http-utils" "^12.1.1"
-    "@taquito/utils" "^12.1.1"
     "bignumber.js" "^9.0.2"
 
 "@taquito/signer@file:/Users/zainen/code/taquito/packages/taquito-signer":
@@ -1931,6 +1929,8 @@
 "@taquito/tezbridge-wallet@file:/Users/zainen/code/taquito/packages/taquito-tezbridge-wallet":
   "resolved" "file:packages/taquito-tezbridge-wallet"
   "version" "12.1.1"
+  dependencies:
+    "@taquito/taquito" "^12.1.1"
 
 "@taquito/tzip12@file:/Users/zainen/code/taquito/packages/taquito-tzip12":
   "resolved" "file:packages/taquito-tzip12"

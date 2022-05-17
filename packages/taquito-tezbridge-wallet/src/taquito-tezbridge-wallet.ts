@@ -12,6 +12,7 @@ import {
   WalletTransferParams,
 } from '@taquito/taquito';
 
+
 // eslint-disable-next-line no-var
 declare var tezbridge: any;
 
