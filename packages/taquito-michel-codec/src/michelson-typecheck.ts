@@ -404,7 +404,7 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
             'SECP256K1PublicKeyHash',
             'P256PublicKeyHash',
             'ContractHash',
-            'tx_rollup_l2_address'
+            'TxRollupL2Address'
           ) !== null
         ) {
           return;

@@ -269,7 +269,7 @@ export type TezosIDType =
   | 'P256Signature'
   | 'GenericSignature'
   | 'ChainID'
-  | 'tx_rollup_l2_address';
+  | 'TxRollupL2Address';
 
 export type TezosIDPrefix = [number, number[]]; // payload length, prefix
 
@@ -302,7 +302,7 @@ export const tezosPrefix: Record<TezosIDType, TezosIDPrefix> = {
   P256Signature: [64, [54, 240, 44, 52]], // p2sig(98)
   GenericSignature: [64, [4, 130, 43]], // sig(96)
   ChainID: [4, [87, 82, 0]],
-  tx_rollup_l2_address: [20, [1, 128, 120, 31]]
+  TxRollupL2Address: [20, [1, 128, 120, 31]]
 };
 
 export function checkDecodeTezosID<T extends TezosIDType[]>(
