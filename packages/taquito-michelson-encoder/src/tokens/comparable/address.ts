@@ -96,7 +96,7 @@ export class AddressToken extends ComparableToken {
 
     return encodePubKey(bytes);
   }
-
+  // TODO simplify same as tx_rollup token
   compare(address1: string, address2: string) {
     const isImplicit = (address: string) => {
       return address.startsWith('tz');
