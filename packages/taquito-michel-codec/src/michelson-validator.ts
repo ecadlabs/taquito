@@ -164,7 +164,6 @@ const typeIDs: Record<MichelsonTypeID, true> = Object.assign({}, simpleComparabl
   ticket: true,
   chest_key: true,
   chest: true,
-  tx_rollup_l2_address: true,
 } as const);
 
 export class MichelsonValidationError extends MichelsonError {
@@ -420,12 +419,6 @@ export function assertMichelsonInstruction(ex: Expr): ex is MichelsonCode {
         }
         break;
 
-        case "MIN_BLOCK_TIME":
-          if (assertArgs(ex, 2)) {
-            assertMichelsonInstruction(ex)
-          }
-          break;
-        
       default:
         throw new MichelsonValidationError(ex, 'instruction expected');
     }

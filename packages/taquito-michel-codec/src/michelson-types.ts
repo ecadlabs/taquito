@@ -182,8 +182,7 @@ export type MichelsonTypeID =
   | 'bls12_381_g2'
   | 'bls12_381_fr'
   | 'chest_key'
-  | 'chest'
-  | 'tx_rollup_l2_address';
+  | 'chest';
 
 type Type0<PT extends MichelsonTypeID> = Prim0<PT>;
 type TypeX<PT extends MichelsonTypeID, AT extends Expr[]> = PrimX<PT, AT>;
