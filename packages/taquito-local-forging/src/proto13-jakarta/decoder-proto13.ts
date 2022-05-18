@@ -1,7 +1,11 @@
 import { Decoder, decoders } from '../decoder';
 import { CODEC } from '../constants';
 import { Uint8ArrayConsumer } from '../uint8array-consumer';
-import { parametersDecoderProto13, valueParameterDecoderProto13 } from './codec-proto13';
+import {
+  entrypointNameDecoderProto13,
+  parametersDecoderProto13,
+  valueParameterDecoderProto13,
+} from './codec-proto13';
 import {
   ActivationSchema,
   BallotSchema,
@@ -18,12 +22,14 @@ import {
   TransactionSchema,
 } from '../schema/operation';
 import { scriptDecoderProto13 } from './michelson-proto13/codec-proto13';
+import { TransferTicketSchema } from './schema/operation-proto13';
 
 export const decodersProto13: { [key: string]: Decoder } = {
   ...decoders,
   [CODEC.SCRIPT]: scriptDecoderProto13,
   [CODEC.PARAMETERS]: parametersDecoderProto13,
   [CODEC.VALUE]: valueParameterDecoderProto13,
+  [CODEC.ENTRYPOINT]: entrypointNameDecoderProto13,
 };
 
 decodersProto13[CODEC.OPERATION] = operationDecoder(decodersProto13);
@@ -47,4 +53,6 @@ decodersProto13[CODEC.OP_REVEAL] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decodersProto13)(RevealSchema)(val);
 decodersProto13[CODEC.OP_REGISTER_GLOBAL_CONSTANT] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decodersProto13)(RegisterGlobalConstantSchema)(val);
+decodersProto13[CODEC.OP_TRANSFER_TICKET] = (val: any) =>
+  schemaDecoder(decodersProto13)(TransferTicketSchema)(val);
 decodersProto13[CODEC.MANAGER] = schemaDecoder(decodersProto13)(ManagerOperationSchema);

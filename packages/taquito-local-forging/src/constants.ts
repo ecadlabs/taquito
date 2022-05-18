@@ -40,6 +40,7 @@ export enum CODEC {
   OP_REVEAL = 'reveal',
   OP_PROPOSALS = 'proposals',
   OP_REGISTER_GLOBAL_CONSTANT = 'register_global_constant',
+  OP_TRANSFER_TICKET = 'transfer_ticket',
 }
 
 // See https://tezos.gitlab.io/whitedoc/michelson.html#full-grammar
@@ -214,6 +215,7 @@ export const kindMapping: { [key: number]: string } = {
   0x01: 'seed_nonce_revelation',
   0x05: 'proposals',
   0x6f: 'register_global_constant',
+  0x9e: 'transfer_ticket',
 };
 
 export const kindMappingReverse = (() => {

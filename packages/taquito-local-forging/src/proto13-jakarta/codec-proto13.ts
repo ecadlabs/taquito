@@ -39,6 +39,17 @@ export const entrypointEncoderProto13 = (entrypoint: string) => {
   }
 };
 
+export const entrypointNameEncoderProto13 = (entrypoint: string) => {
+  const value = { string: entrypoint };
+  return `${valueEncoderProto13(value).slice(2)}`;
+};
+
+export const entrypointNameDecoderProto13 = (val: Uint8ArrayConsumer) => {
+  const entry = extractRequiredLen(val);
+
+  return Buffer.from(entry).toString('utf8');
+};
+
 export const parametersEncoderProto13 = (val: { entrypoint: string; value: MichelsonValue }) => {
   if (!val || (val.entrypoint === 'default' && 'prim' in val.value && val.value.prim === 'Unit')) {
     return '00';

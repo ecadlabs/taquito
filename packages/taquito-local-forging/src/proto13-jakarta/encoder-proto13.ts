@@ -15,14 +15,20 @@ import {
   SeedNonceRevelationSchema,
   TransactionSchema,
 } from '../schema/operation';
-import { parametersEncoderProto13, valueParameterEncoderProto13 } from './codec-proto13';
+import {
+  entrypointNameEncoderProto13,
+  parametersEncoderProto13,
+  valueParameterEncoderProto13,
+} from './codec-proto13';
 import { scriptEncoderProto13 } from './michelson-proto13/codec-proto13';
+import { TransferTicketSchema } from './schema/operation-proto13';
 
 export const encodersProto13: { [key: string]: Encoder<any> } = {
   ...encoders,
   [CODEC.SCRIPT]: scriptEncoderProto13,
   [CODEC.PARAMETERS]: parametersEncoderProto13,
   [CODEC.VALUE]: valueParameterEncoderProto13,
+  [CODEC.ENTRYPOINT]: entrypointNameEncoderProto13,
 };
 
 encodersProto13[CODEC.OPERATION] = operationEncoder(encodersProto13);
@@ -44,4 +50,6 @@ encodersProto13[CODEC.OP_PROPOSALS] = (val: any) =>
 encodersProto13[CODEC.OP_REVEAL] = (val: any) => schemaEncoder(encodersProto13)(RevealSchema)(val);
 encodersProto13[CODEC.OP_REGISTER_GLOBAL_CONSTANT] = (val: any) =>
   schemaEncoder(encodersProto13)(RegisterGlobalConstantSchema)(val);
+encodersProto13[CODEC.OP_TRANSFER_TICKET] = (val: any) =>
+  schemaEncoder(encodersProto13)(TransferTicketSchema)(val);
 encodersProto13[CODEC.MANAGER] = schemaEncoder(encodersProto13)(ManagerOperationSchema);

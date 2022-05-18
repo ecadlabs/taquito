@@ -972,4 +972,29 @@ export const jakartaCases: TestCase[] = [
       },
     };
   }),
+  {
+    name: `Transfer ticket`,
+    operation: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: OpKind.TRANSFER_TICKET,
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          ticket_contents: {
+            prim: 'Pair',
+            args: [{ string: 'KT1EAMUQC1yJ2sRPNPpLHVMGCzroYGe1C1ea' }, { int: '0' }, { int: '1' }],
+          },
+          ticket_ty: { prim: 'nat' },
+          ticket_ticketer: 'KT1EAMUQC1yJ2sRPNPpLHVMGCzroYGe1C1ea',
+          ticket_amount: '2',
+          destination: 'KT1JHqHQdHSgWBKo6H4UfG8dw3JnZSyjGkHA',
+          entrypoint: 'default',
+        },
+      ],
+    } as any,
+  },
 ];
