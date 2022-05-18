@@ -114,7 +114,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         .then((op) => {
           return op.confirmation().then(() => op.hash);
         })
-        .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 
       Tezos.tz.getBalance(vestingContract.address).then((vbalance) => {
         let result = vbalance.toNumber();

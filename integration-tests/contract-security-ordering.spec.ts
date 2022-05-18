@@ -12,7 +12,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     });
 
     it('Verify whether the Tezos operation ordering is still the same', async (done) => {
-      //try {
       const publicKeyHash = await Tezos.signer.publicKeyHash();
 
       const opOrderingBasic = await Tezos.contract.originate({
@@ -67,7 +66,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         .then((op) => {
           return op.confirmation().then(() => op.opHash);
         })
-      // need a at this point a way to grab the contents of the operation ot check if the transaction order is prserved.
+      // need at this point a way to grab the contents of the operation to check if the transaction order is preserved.
+      // the idea is that tranaction order should be preserved so as to avoid an attack that tries to exploit out-of-order transactions
       done();
     });
   });

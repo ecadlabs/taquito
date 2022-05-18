@@ -16,9 +16,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     });
 
     it('Verify that Transactions of 0ꜩ towards a contract without code are forbidden', async () => {
-      try {
-        const op = await Tezos.contract.originate({
-          code: `{ parameter address ;
+      const op = await Tezos.contract.originate({
+        code: `{ parameter address ;
                       storage unit ;
                       code { UNPAIR ;
                              CONTRACT unit ;
@@ -32,24 +31,24 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                              CONS ;
                              PAIR } }
                           `,
-          init: { prim: 'Unit' },
-        });
+        init: { prim: 'Unit' },
+      });
 
-        await op.confirmation();
-        expect(op.hash).toBeDefined();
-        expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-        const contract = await op.contract();
-        expect(await contract.storage()).toBeTruthy();
+      await op.confirmation();
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+      const contract = await op.contract();
+      expect(await contract.storage()).toBeTruthy();
 
-         const publicKeyHash = await Tezos.signer.publicKeyHash();
-         const opTransfer = await Tezos.contract.transfer({ to: publicKeyHash, amount: 0 });
-         await opTransfer.confirmation();
+      try {
+        const publicKeyHash = await Tezos.signer.publicKeyHash();
+        const opTransfer = await Tezos.contract.transfer({ to: publicKeyHash, amount: 0 });
+        await opTransfer.confirmation();
       } catch (error: any) {
         expect(error.message).toContain('contract.empty_transaction');
       }
     });
   });
 });
-
 
 // This test was transcribed to Taquito from bash scripts at https://github.com/InferenceAG/TezosSecurityBaselineChecking

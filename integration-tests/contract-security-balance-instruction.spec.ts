@@ -82,7 +82,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         await opTezTransferB.confirmation();
         expect(opTezTransferB.hash).toBeDefined();
         expect(opTezTransferB.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-        const TezTransferBContract = await opTezTransferA.contract();
+        const TezTransferBContract = await opTezTransferB.contract();
         expect(await TezTransferBContract.storage()).toBeTruthy();
 
         await Tezos.contract

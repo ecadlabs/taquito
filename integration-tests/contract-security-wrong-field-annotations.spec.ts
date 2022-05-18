@@ -45,19 +45,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           message: expect.stringContaining('[a] Value is not a number: undefined')
         }))
       }
-    });
-
-    it('Verify call addNoAnnot', async () => {
-      const addition = await Tezos.contract.originate({
-        code: securityWrongAnnotations,
-        init: `0`,
-      });
-      await addition.confirmation();
-      const contractAddition = await addition.contract();
 
       // Calls entrypoint: (pair %addNoAnnot nat nat))
-      // Calling Michelson code: CONTRACT %addNoAnnot (pair (nat %valueA) (nat %valueB)) ;
-      
+      // Calling Michelson code: CONTRACT %addNoAnnot (pair (nat %valueA) (nat %valueB)) ;     
       try {
       const op = await Tezos.contract
         .at(contractAddition.address)
@@ -80,19 +70,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           message: expect.stringContaining('[a] Value is not a number: undefined')
         }))
       }
-    });
-
-    it('Verify call AddWrongAnnot fails due to not matching field annotations', async () => {
-      const addition = await Tezos.contract.originate({
-        code: securityWrongAnnotations,
-        init: `0`,
-      });
-      await addition.confirmation();
-      const contractAddition = await addition.contract();
-
+  
       // Calls entrypoint: (pair %addWrongAnnot (nat %a) (nat %b))
       // Calling Michelson code: CONTRACT %addWrongAnnot (pair (nat %valueA) (nat %valueB)) ;
-      
       try{
       const op = await Tezos.contract
         .at(contractAddition.address)
@@ -115,16 +95,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         message: expect.stringContaining('[valueA] Value is not a number: undefined')
       }))
     }
-    });
-
-    it('Verify callNoAnnot Add', async () => {
-      const addition = await Tezos.contract.originate({
-        code: securityWrongAnnotations,
-        init: `0`,
-      });
-      await addition.confirmation();
-      const contractAddition = await addition.contract();
-
+  
       // Calls entrypoint: (pair %add (nat %valueA) (nat %valueB))
       // Calling Michelson code: CONTRACT %add (pair nat nat) ;
       
@@ -150,16 +121,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           message: expect.stringContaining('[a] Value is not a number: undefined')
         }))
       }
-    });
-
-    it('Verify callNoAnnot AddNoAnnot', async () => {
-      const addition = await Tezos.contract.originate({
-        code: securityWrongAnnotations,
-        init: `0`,
-      });
-      await addition.confirmation();
-      const contractAddition = await addition.contract();
-
+  
       // Calls entrypoint: CONTRACT %addNoAnnot (pair nat nat) ;
       // Calling Michelson code: CONTRACT %addNoAnnot (pair (nat %valueA) (nat %valueB)) ;
       
@@ -185,16 +147,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           message: expect.stringContaining('[a] Value is not a number: undefined')
         }))
       }
-    });
-
-    it('Verify callNoAnnot AddWrongAnnot.', async () => {
-      const addition = await Tezos.contract.originate({
-        code: securityWrongAnnotations,
-        init: `0`,
-      });
-      await addition.confirmation();
-      const contractAddition = await addition.contract();
-
+ 
       // Calls entrypoint: CONTRACT %addWrongAnnot (pair nat nat) ;
       // Calling Michelson code: CONTRACT %addWrongAnnot (pair (nat %valueA) (nat %valueB)) ;
       
@@ -220,16 +173,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           message: expect.stringContaining('[a] Value is not a number: undefined')
         }))
       }
-    });
-
-    it('Verify callWrongAnnot Add.', async () => {
-      const addition = await Tezos.contract.originate({
-        code: securityWrongAnnotations,
-        init: `0`,
-      });
-      await addition.confirmation();
-      const contractAddition = await addition.contract();
-
+ 
       // Calls entrypoint: (pair %add (nat %valueA) (nat %valueB))
       // Calling Michelson code: CONTRACT %add (pair (nat %a) (nat %b)) ;
 
@@ -255,16 +199,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           message: expect.stringContaining('[a] Value is not a number: undefined')
         }))
       }
-    });
-
-    it('Verify callWrongAnnot AddNoAnnot.', async () => {
-      const addition = await Tezos.contract.originate({
-        code: securityWrongAnnotations,
-        init: `0`,
-      });
-      await addition.confirmation();
-      const contractAddition = await addition.contract();
-
+  
       // Calls entrypoint: (pair %addNoAnnot nat nat))
       // Calling Michelson code: CONTRACT %add (pair (nat %a) (nat %b))
 
@@ -290,15 +225,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           message: expect.stringContaining('[a] Value is not a number: undefined')
         }))
       }
-    });
-
-    it('Verify callWrongAnnot AddWrongAnnot.', async () => {
-      const addition = await Tezos.contract.originate({
-        code: securityWrongAnnotations,
-        init: `0`,
-      });
-      await addition.confirmation();
-
+   
       // Calls entrypoint: (pair %addWrongAnnot (nat %a) (nat %b))
       // Calling Michelson code: CONTRACT %add (pair (nat %a) (nat %b))
       
