@@ -1,5 +1,5 @@
 import { createToken } from '../tokens/createToken';
-import { Token, Semantic, TokenValidationError } from '../tokens/token';
+import { Token, Semantic, TokenValidationError, SemanticEncoding } from '../tokens/token';
 import { OrToken } from '../tokens/or';
 import { OptionToken } from '../tokens/option';
 import { ScriptResponse, MichelsonV1ExpressionExtended, MichelsonV1Expression } from '@taquito/rpc';
@@ -60,15 +60,15 @@ export class ParameterSchema {
     }
   }
 
-  EncodeObject(_value?: any) {
+  EncodeObject(value?: any, semantics?: SemanticEncoding) {
     try {
-      return this.root.EncodeObject(_value);
+      return this.root.EncodeObject(value, semantics);
     } catch (ex) {
       if (ex instanceof TokenValidationError) {
         throw ex;
       }
 
-      throw new ParameterEncodingError('Unable to encode parameter object', _value, ex);
+      throw new ParameterEncodingError('Unable to encode parameter object', value, ex);
     }
   }
 
