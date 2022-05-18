@@ -66,7 +66,10 @@ export const BallotSchema = {
 };
 
 export const EndorsementSchema = {
+  slot: 'int16',
   level: 'int32',
+  round: 'int32',
+  block_payload_hash: 'blockPayloadHash',
 };
 
 export const SeedNonceRevelationSchema = {

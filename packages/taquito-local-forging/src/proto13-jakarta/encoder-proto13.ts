@@ -1,12 +1,12 @@
 import { CODEC } from '../constants';
-import { Encoder } from '../encoder';
-import { encodersProto12 } from '../proto12-ithaca/encoder';
-import { EndorsementSchemaProto12, operationEncoderProto12 } from '../proto12-ithaca/schema';
+import { Encoder, encoders } from '../encoder';
 import {
   ActivationSchema,
   BallotSchema,
   DelegationSchema,
+  EndorsementSchema,
   ManagerOperationSchema,
+  operationEncoder,
   OriginationSchema,
   ProposalsSchema,
   RegisterGlobalConstantSchema,
@@ -19,13 +19,13 @@ import { parametersEncoderProto13, valueParameterEncoderProto13 } from './codec-
 import { scriptEncoderProto13 } from './michelson-proto13/codec-proto13';
 
 export const encodersProto13: { [key: string]: Encoder<any> } = {
-  ...encodersProto12,
+  ...encoders,
   [CODEC.SCRIPT]: scriptEncoderProto13,
   [CODEC.PARAMETERS]: parametersEncoderProto13,
   [CODEC.VALUE]: valueParameterEncoderProto13,
 };
 
-encodersProto13[CODEC.OPERATION] = operationEncoderProto12(encodersProto13);
+encodersProto13[CODEC.OPERATION] = operationEncoder(encodersProto13);
 encodersProto13[CODEC.OP_ACTIVATE_ACCOUNT] = (val: any) =>
   schemaEncoder(encodersProto13)(ActivationSchema)(val);
 encodersProto13[CODEC.OP_DELEGATION] = (val: any) =>
@@ -36,7 +36,7 @@ encodersProto13[CODEC.OP_ORIGINATION] = (val: any) =>
   schemaEncoder(encodersProto13)(OriginationSchema)(val);
 encodersProto13[CODEC.OP_BALLOT] = (val: any) => schemaEncoder(encodersProto13)(BallotSchema)(val);
 encodersProto13[CODEC.OP_ENDORSEMENT] = (val: any) =>
-  schemaEncoder(encodersProto13)(EndorsementSchemaProto12)(val);
+  schemaEncoder(encodersProto13)(EndorsementSchema)(val);
 encodersProto13[CODEC.OP_SEED_NONCE_REVELATION] = (val: any) =>
   schemaEncoder(encodersProto13)(SeedNonceRevelationSchema)(val);
 encodersProto13[CODEC.OP_PROPOSALS] = (val: any) =>

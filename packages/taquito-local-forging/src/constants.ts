@@ -25,6 +25,10 @@ export enum CODEC {
   INT16 = 'int16',
   PARAMETERS = 'parameters',
   ADDRESS = 'address',
+  VALUE = 'value',
+  MANAGER = 'manager',
+  BLOCK_PAYLOAD_HASH = 'blockPayloadHash',
+  ENTRYPOINT = 'entrypoint',
   OPERATION = 'operation',
   OP_ACTIVATE_ACCOUNT = 'activate_account',
   OP_DELEGATION = 'delegation',
@@ -36,9 +40,6 @@ export enum CODEC {
   OP_REVEAL = 'reveal',
   OP_PROPOSALS = 'proposals',
   OP_REGISTER_GLOBAL_CONSTANT = 'register_global_constant',
-  VALUE = 'value',
-  MANAGER = 'manager',
-  BLOCK_PAYLOAD_HASH = 'blockPayloadHash',
 }
 
 // See https://tezos.gitlab.io/whitedoc/michelson.html#full-grammar
@@ -209,7 +210,7 @@ export const kindMapping: { [key: number]: string } = {
   0x6c: 'transaction',
   0x6d: 'origination',
   0x06: 'ballot',
-  0x00: 'endorsement',
+  0x15: 'endorsement',
   0x01: 'seed_nonce_revelation',
   0x05: 'proposals',
   0x6f: 'register_global_constant',

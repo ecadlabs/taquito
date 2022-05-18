@@ -30,7 +30,7 @@ import {
 } from './data/contract_with_constant';
 import { codeViewsTopLevel, storageViewsTopLevel } from './data/contract_views_top_level';
 import { opMappingProto13 } from './../src/proto13-jakarta/constants-proto13';
-import {ForgeParams} from "../src/interface"
+import { ForgeParams } from '../src/interface';
 import { MichelsonV1Expression, OpKind } from '@taquito/rpc';
 
 function extractOp(
@@ -466,8 +466,7 @@ export const commonCases: TestCase[] = [
       ],
     },
   },
-  // In `opMapping` from the file `constants.ts`, the operations and types starting at `chest` were added in the hangzhou protocol
-  ...extractOp(0, 140, opMapping).map((op): TestCase => {
+  ...extractOp(0, 147, opMapping).map((op): TestCase => {
     return {
       name: `Origination operation (${op})`,
       operation: {
@@ -821,33 +820,6 @@ export const commonCases: TestCase[] = [
       ],
     },
   },
-];
-
-export const hangzhouCases: TestCase[] = [
-  // In `opMapping` from the file `constants.ts`, the operations and types starting at `chest` were added in the hangzhou protocol
-  ...extractOp(141, 146, opMapping).map((op): TestCase => {
-    return {
-      name: `Origination operation (${op})`,
-      operation: {
-        branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
-        contents: [
-          {
-            kind: OpKind.ORIGINATION,
-            counter: '1',
-            source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-            fee: '10000',
-            gas_limit: '10',
-            storage_limit: '10',
-            balance: '0',
-            script: {
-              code: genericCode(op) as MichelsonV1Expression[],
-              storage: genericStorage,
-            },
-          },
-        ],
-      },
-    };
-  }),
   {
     name: 'Origination of a contract that contains the types chest, chest_key and the instruction OPEN_CHEST',
     operation: {
@@ -938,48 +910,6 @@ export const hangzhouCases: TestCase[] = [
       ],
     },
   },
-];
-
-export const priorIthacaCases: TestCase[] = [
-  {
-    name: 'Endorsement',
-    operation: {
-      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
-      contents: [
-        {
-          kind: OpKind.ENDORSEMENT,
-          level: 300,
-        },
-      ],
-    },
-  },
-];
-
-export const ithacaCases: TestCase[] = [
-  // In `opMapping` from the file `constants.ts`, the operations and types starting at `sub_mutez` were added in the ithaca protocol
-  ...extractOp(147, 147, opMapping).map((op): TestCase => {
-    return {
-      name: `Origination operation (${op})`,
-      operation: {
-        branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
-        contents: [
-          {
-            kind: OpKind.ORIGINATION,
-            counter: '1',
-            source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-            fee: '10000',
-            gas_limit: '10',
-            storage_limit: '10',
-            balance: '0',
-            script: {
-              code: genericCode(op) as MichelsonV1Expression[],
-              storage: genericStorage,
-            },
-          },
-        ],
-      },
-    };
-  }),
   {
     name: 'Endorsement',
     operation: {
