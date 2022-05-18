@@ -1,6 +1,6 @@
-import { BaseTokenSchema } from './../schema/types';
+import { BaseTokenSchema } from '../../schema/types';
 import { b58decode, encodePubKey, validateAddress, ValidationResult } from '@taquito/utils';
-import { ComparableToken, SemanticEncoding, Token, TokenFactory, TokenValidationError } from "./token";
+import { ComparableToken, SemanticEncoding, Token, TokenFactory, TokenValidationError } from "../token";
 
 export class TxRollupL2AddresValidationError extends TokenValidationError {
   name = 'TxRollupL2AddresssValidationError';
@@ -92,7 +92,7 @@ export class TxRollupL2Address extends ComparableToken {
   compare(address1: string, address2: string) {
     const isImplicit = (address: string) => {
       // TODO CHECK THIS tru2 or txr1 or somethign else :O
-      return address.startsWith('tr')
+      return address.startsWith('tr4')
     }
     const implicit1 = isImplicit(address1)
     const implicit2 = isImplicit(address2)
