@@ -2,14 +2,14 @@ import { BaseTokenSchema } from '../../schema/types';
 import { b58decode, encodePubKey, validateAddress, ValidationResult } from '@taquito/utils';
 import { ComparableToken, SemanticEncoding, Token, TokenFactory, TokenValidationError } from "../token";
 
-export class TxRollupL2AddresValidationError extends TokenValidationError {
-  name = 'TxRollupL2AddresssValidationError';
-  constructor(public value: unknown, public token: TxRollupL2Address, message: string) {
+export class TxRollupL2AddressValidationError extends TokenValidationError {
+  name = 'TxRollupL2AddressValidationError';
+  constructor(public value: unknown, public token: TxRollupL2AddressToken, message: string) {
     super(value, token, message)
   }
 }
 
-export class TxRollupL2Address extends ComparableToken {
+export class TxRollupL2AddressToken extends ComparableToken {
   static prim: 'tx_rollup_l2_address' = 'tx_rollup_l2_address';
 
   constructor(
@@ -28,9 +28,9 @@ export class TxRollupL2Address extends ComparableToken {
     }
   }
 
-  private isValid(value: any): TxRollupL2AddresValidationError | null {
+  private isValid(value: any): TxRollupL2AddressValidationError | null {
     if (validateAddress(value) !== ValidationResult.VALID) {
-      throw new TxRollupL2AddresValidationError(value, this, `tx_rollup_l2_address is not valid: ${value}`)
+      throw new TxRollupL2AddressValidationError(value, this, `tx_rollup_l2_address is not valid: ${value}`)
     }
     return null
   }
@@ -38,7 +38,7 @@ export class TxRollupL2Address extends ComparableToken {
   public Encode(args: string[]): any {
     const val = args.pop();
     if (!val) {
-      throw new TxRollupL2AddresValidationError(val, this, `arg missing to encode: this -> "${val}"`)
+      throw new TxRollupL2AddressValidationError(val, this, `arg missing to encode: this -> "${val}"`)
     }
     const err = this.isValid(val)
     if (err) {
@@ -53,8 +53,8 @@ export class TxRollupL2Address extends ComparableToken {
       throw err;
     }
 
-    if (semantic && semantic[TxRollupL2Address.prim]) {
-      return semantic[TxRollupL2Address.prim](val)
+    if (semantic && semantic[TxRollupL2AddressToken.prim]) {
+      return semantic[TxRollupL2AddressToken.prim](val)
     }
     return { string: val }
   }
@@ -64,18 +64,18 @@ export class TxRollupL2Address extends ComparableToken {
       return val.string
     }
     if (!val.bytes) {
-      throw new TxRollupL2AddresValidationError(val, this, `value cannot be missing string and byte value. must have one ${JSON.stringify(val)}`)
+      throw new TxRollupL2AddressValidationError(val, this, `value cannot be missing string and byte value. must have one ${JSON.stringify(val)}`)
     }
     return encodePubKey(val.bytes)
   }
   public ExtractSchema() {
-    return TxRollupL2Address.prim;
+    return TxRollupL2AddressToken.prim;
   }
 
   generateSchema(): BaseTokenSchema {
     return {
-      __michelsonType: TxRollupL2Address.prim,
-      schema: TxRollupL2Address.prim
+      __michelsonType: TxRollupL2AddressToken.prim,
+      schema: TxRollupL2AddressToken.prim
     }
   }
 
@@ -84,7 +84,7 @@ export class TxRollupL2Address extends ComparableToken {
       return string
     }
     if (!bytes) {
-      throw new TxRollupL2AddresValidationError(bytes, this, `value cannot be missing string and byte value. must have one: bytes = ${bytes}`)
+      throw new TxRollupL2AddressValidationError(bytes, this, `value cannot be missing string and byte value. must have one: bytes = ${bytes}`)
     }
     return encodePubKey(bytes)
   }
@@ -92,7 +92,7 @@ export class TxRollupL2Address extends ComparableToken {
   compare(address1: string, address2: string) {
     const isImplicit = (address: string) => {
       // TODO CHECK THIS tru2 or txr1 or somethign else :O
-      return address.startsWith('tr4')
+      return address.startsWith('tz4')
     }
     const implicit1 = isImplicit(address1)
     const implicit2 = isImplicit(address2)
@@ -106,7 +106,7 @@ export class TxRollupL2Address extends ComparableToken {
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]): Token[] {
-    if(TxRollupL2Address.prim === tokenToFind) {
+    if(TxRollupL2AddressToken.prim === tokenToFind) {
       tokens.push(this);
     }
     return tokens
