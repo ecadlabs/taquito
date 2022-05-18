@@ -5,6 +5,10 @@ import {
   entrypointNameDecoderProto13,
   parametersDecoderProto13,
   valueParameterDecoderProto13,
+  txRollupBatchContentDecoderProto13,
+  txRollupIdDecoderProto13,
+  txRollupOriginationParamDecoderProto13,
+  burnLimitDecoder,
 } from './codec-proto13';
 import {
   ActivationSchema,
@@ -22,7 +26,11 @@ import {
   TransactionSchema,
 } from '../schema/operation';
 import { scriptDecoderProto13 } from './michelson-proto13/codec-proto13';
-import { TransferTicketSchema } from './schema/operation-proto13';
+import {
+  TransferTicketSchema,
+  TxRollupOriginationSchema,
+  TxRollupSubmitBatchSchema,
+} from './schema/operation-proto13';
 
 export const decodersProto13: { [key: string]: Decoder } = {
   ...decoders,
@@ -30,6 +38,10 @@ export const decodersProto13: { [key: string]: Decoder } = {
   [CODEC.PARAMETERS]: parametersDecoderProto13,
   [CODEC.VALUE]: valueParameterDecoderProto13,
   [CODEC.ENTRYPOINT]: entrypointNameDecoderProto13,
+  [CODEC.TX_ROLLUP_ORIGINATION_PARAM]: txRollupOriginationParamDecoderProto13,
+  [CODEC.TX_ROLLUP_ID]: txRollupIdDecoderProto13,
+  [CODEC.TX_ROLLUP_BATCH_CONTENT]: txRollupBatchContentDecoderProto13,
+  [CODEC.BURN_LIMIT]: burnLimitDecoder,
 };
 
 decodersProto13[CODEC.OPERATION] = operationDecoder(decodersProto13);
@@ -55,4 +67,8 @@ decodersProto13[CODEC.OP_REGISTER_GLOBAL_CONSTANT] = (val: Uint8ArrayConsumer) =
   schemaDecoder(decodersProto13)(RegisterGlobalConstantSchema)(val);
 decodersProto13[CODEC.OP_TRANSFER_TICKET] = (val: any) =>
   schemaDecoder(decodersProto13)(TransferTicketSchema)(val);
+decodersProto13[CODEC.OP_TX_ROLLUP_ORIGINATION] = (val: Uint8ArrayConsumer) =>
+  schemaDecoder(decodersProto13)(TxRollupOriginationSchema)(val);
+decodersProto13[CODEC.OP_TX_ROLLUP_SUBMIT_BATCH] = (val: Uint8ArrayConsumer) =>
+  schemaDecoder(decodersProto13)(TxRollupSubmitBatchSchema)(val);
 decodersProto13[CODEC.MANAGER] = schemaDecoder(decodersProto13)(ManagerOperationSchema);

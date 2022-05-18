@@ -41,6 +41,12 @@ export enum CODEC {
   OP_PROPOSALS = 'proposals',
   OP_REGISTER_GLOBAL_CONSTANT = 'register_global_constant',
   OP_TRANSFER_TICKET = 'transfer_ticket',
+  OP_TX_ROLLUP_ORIGINATION = 'tx_rollup_origination',
+  OP_TX_ROLLUP_SUBMIT_BATCH = 'tx_rollup_submit_batch',
+  BURN_LIMIT = 'burn_limit',
+  TX_ROLLUP_ORIGINATION_PARAM = 'tx_rollup_origination_param',
+  TX_ROLLUP_ID = 'tx_rollup_id',
+  TX_ROLLUP_BATCH_CONTENT = 'tx_rollup_batch_content',
 }
 
 // See https://tezos.gitlab.io/whitedoc/michelson.html#full-grammar
@@ -215,6 +221,8 @@ export const kindMapping: { [key: number]: string } = {
   0x01: 'seed_nonce_revelation',
   0x05: 'proposals',
   0x6f: 'register_global_constant',
+  0x96: 'tx_rollup_origination',
+  0x97: 'tx_rollup_submit_batch',
   0x9e: 'transfer_ticket',
 };
 

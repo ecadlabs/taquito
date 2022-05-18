@@ -11,3 +11,23 @@ export const TransferTicketSchema = {
   destination: 'address',
   entrypoint: 'entrypoint',
 };
+
+export const TxRollupOriginationSchema = {
+  source: 'pkh',
+  fee: 'zarith',
+  counter: 'zarith',
+  gas_limit: 'zarith',
+  storage_limit: 'zarith',
+  tx_rollup_origination: 'tx_rollup_origination_param',
+};
+
+export const TxRollupSubmitBatchSchema = {
+  source: 'pkh',
+  fee: 'zarith',
+  counter: 'zarith',
+  gas_limit: 'zarith',
+  storage_limit: 'zarith',
+  rollup: 'tx_rollup_id',
+  content: 'tx_rollup_batch_content',
+  burn_limit: 'burn_limit',
+};

@@ -997,4 +997,58 @@ export const jakartaCases: TestCase[] = [
       ],
     } as any,
   },
+  {
+    name: `Tx rollup origination`,
+    operation: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: OpKind.TX_ROLLUP_ORIGINATION,
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          tx_rollup_origination: {},
+        },
+      ] as any,
+    },
+  },
+  {
+    name: `Tx rollup submit batch`,
+    operation: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: OpKind.TX_ROLLUP_SUBMIT_BATCH,
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          rollup: 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w',
+          content: 'abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd',
+          burn_limit: '1000000',
+        },
+      ] as any,
+    },
+  },
+  {
+    name: `Tx rollup submit batch no burn limit`,
+    operation: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: OpKind.TX_ROLLUP_SUBMIT_BATCH,
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          rollup: 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w',
+          content: '1234',
+        },
+      ] as any,
+    },
+  },
 ];

@@ -1,6 +1,10 @@
 import { OpKind } from '@taquito/rpc';
 import { OperationContents } from '@taquito/rpc';
-import { TransferTicketSchema } from './proto13-jakarta/schema/operation-proto13';
+import {
+  TransferTicketSchema,
+  TxRollupOriginationSchema,
+  TxRollupSubmitBatchSchema,
+} from './proto13-jakarta/schema/operation-proto13';
 import {
   ActivationSchema,
   DelegationSchema,
@@ -25,7 +29,9 @@ type OperationKind =
   | 'seed_nonce_revelation'
   | 'proposals'
   | 'register_global_constant'
-  | 'transfer_ticket';
+  | 'transfer_ticket'
+  | 'tx_rollup_origination'
+  | 'tx_rollup_submit_batch';
 
 const OperationKindMapping = {
   activate_account: ActivationSchema,
@@ -39,6 +45,8 @@ const OperationKindMapping = {
   proposals: ProposalsSchema,
   register_global_constant: RegisterGlobalConstantSchema,
   transfer_ticket: TransferTicketSchema,
+  tx_rollup_origination: TxRollupOriginationSchema,
+  tx_rollup_submit_batch: TxRollupSubmitBatchSchema,
 };
 
 // Asymmetric difference: only account for things in arr2 that are not present in arr1, not vice versa

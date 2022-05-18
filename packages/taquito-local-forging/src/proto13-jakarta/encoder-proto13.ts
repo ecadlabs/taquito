@@ -19,9 +19,17 @@ import {
   entrypointNameEncoderProto13,
   parametersEncoderProto13,
   valueParameterEncoderProto13,
+  txRollupOriginationParamEncoderProto13,
+  txRollupIdEncoderProto13,
+  txRollupBatchContentEncoderProto13,
+  burnLimitEncoder,
 } from './codec-proto13';
 import { scriptEncoderProto13 } from './michelson-proto13/codec-proto13';
-import { TransferTicketSchema } from './schema/operation-proto13';
+import {
+  TransferTicketSchema,
+  TxRollupOriginationSchema,
+  TxRollupSubmitBatchSchema,
+} from './schema/operation-proto13';
 
 export const encodersProto13: { [key: string]: Encoder<any> } = {
   ...encoders,
@@ -29,6 +37,10 @@ export const encodersProto13: { [key: string]: Encoder<any> } = {
   [CODEC.PARAMETERS]: parametersEncoderProto13,
   [CODEC.VALUE]: valueParameterEncoderProto13,
   [CODEC.ENTRYPOINT]: entrypointNameEncoderProto13,
+  [CODEC.TX_ROLLUP_ORIGINATION_PARAM]: txRollupOriginationParamEncoderProto13,
+  [CODEC.TX_ROLLUP_ID]: txRollupIdEncoderProto13,
+  [CODEC.TX_ROLLUP_BATCH_CONTENT]: txRollupBatchContentEncoderProto13,
+  [CODEC.BURN_LIMIT]: burnLimitEncoder,
 };
 
 encodersProto13[CODEC.OPERATION] = operationEncoder(encodersProto13);
@@ -52,4 +64,8 @@ encodersProto13[CODEC.OP_REGISTER_GLOBAL_CONSTANT] = (val: any) =>
   schemaEncoder(encodersProto13)(RegisterGlobalConstantSchema)(val);
 encodersProto13[CODEC.OP_TRANSFER_TICKET] = (val: any) =>
   schemaEncoder(encodersProto13)(TransferTicketSchema)(val);
+encodersProto13[CODEC.OP_TX_ROLLUP_ORIGINATION] = (val: any) =>
+  schemaEncoder(encodersProto13)(TxRollupOriginationSchema)(val);
+encodersProto13[CODEC.OP_TX_ROLLUP_SUBMIT_BATCH] = (val: any) =>
+  schemaEncoder(encodersProto13)(TxRollupSubmitBatchSchema)(val);
 encodersProto13[CODEC.MANAGER] = schemaEncoder(encodersProto13)(ManagerOperationSchema);
