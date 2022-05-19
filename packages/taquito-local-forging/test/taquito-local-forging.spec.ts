@@ -1,63 +1,18 @@
 import { LocalForger, ProtocolsHash } from '../src/taquito-local-forging';
 import { ticketCode3, ticketStorage3 } from './data/code_with_ticket';
+import { commonCases, jakartaCases } from './allTestsCases';
 import {
-  commonCases,
-  hangzhouCases,
-  ithacaCases,
-  jakartaCases,
-  priorIthacaCases,
-} from './allTestsCases';
-import { InvalidOperationSchemaError, InvalidBlockHashError, UnsupportedOperationError } from '../src/error';
+  InvalidOperationSchemaError,
+  InvalidBlockHashError,
+  UnsupportedOperationError,
+} from '../src/error';
 
 import { InvalidOperationKindError } from '@taquito/utils';
 
-describe('Forge and parse operations hangzhou', () => {
-  const localForger = new LocalForger(ProtocolsHash.PtHangz2);
+describe('Forge and parse operations default protocol', () => {
+  const localForger = new LocalForger();
   commonCases.forEach(({ name, operation, expected }) => {
     test(`Common test: ${name}`, async (done) => {
-      const result = await localForger.forge(operation);
-      expect(await localForger.parse(result)).toEqual(expected || operation);
-      done();
-    });
-  });
-
-  priorIthacaCases.forEach(({ name, operation, expected }) => {
-    test(`Hangzhou test: ${name}`, async (done) => {
-      const result = await localForger.forge(operation);
-      expect(await localForger.parse(result)).toEqual(expected || operation);
-      done();
-    });
-  });
-
-  hangzhouCases.forEach(({ name, operation, expected }) => {
-    test(`Hangzhou test: ${name}`, async (done) => {
-      const result = await localForger.forge(operation);
-      expect(await localForger.parse(result)).toEqual(expected || operation);
-      done();
-    });
-  });
-});
-
-describe('Forge and parse operations ithaca', () => {
-  const localForger = new LocalForger(ProtocolsHash.Psithaca2);
-  commonCases.forEach(({ name, operation, expected }) => {
-    test(`Common test: ${name}`, async (done) => {
-      const result = await localForger.forge(operation);
-      expect(await localForger.parse(result)).toEqual(expected || operation);
-      done();
-    });
-  });
-
-  hangzhouCases.forEach(({ name, operation, expected }) => {
-    test(`Hangzhou test: ${name}`, async (done) => {
-      const result = await localForger.forge(operation);
-      expect(await localForger.parse(result)).toEqual(expected || operation);
-      done();
-    });
-  });
-
-  ithacaCases.forEach(({ name, operation, expected }) => {
-    test(`Ithaca test: ${name}`, async (done) => {
       const result = await localForger.forge(operation);
       expect(await localForger.parse(result)).toEqual(expected || operation);
       done();
@@ -75,22 +30,6 @@ describe('Forge and parse operations jakarta', () => {
     });
   });
 
-  hangzhouCases.forEach(({ name, operation, expected }) => {
-    test(`Hangzhou test: ${name}`, async (done) => {
-      const result = await localForger.forge(operation);
-      expect(await localForger.parse(result)).toEqual(expected || operation);
-      done();
-    });
-  });
-
-  ithacaCases.forEach(({ name, operation, expected }) => {
-    test(`Ithaca test: ${name}`, async (done) => {
-      const result = await localForger.forge(operation);
-      expect(await localForger.parse(result)).toEqual(expected || operation);
-      done();
-    });
-  });
-
   jakartaCases.forEach(({ name, operation, expected }) => {
     test(`Jakarta test: ${name}`, async (done) => {
       const result = await localForger.forge(operation);
@@ -101,7 +40,7 @@ describe('Forge and parse operations jakarta', () => {
 });
 
 describe('Forge should validate parameters against the schema', () => {
-  const localForger = new LocalForger(ProtocolsHash.Psithaca2);
+  const localForger = new LocalForger();
   test('Should throw error when operation kind is invalid', async () => {
     const operation: any = {
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',

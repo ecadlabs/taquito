@@ -1,8 +1,10 @@
 import {
   addressDecoder,
   ballotDecoder,
+  blockPayloadHashDecoder,
   branchDecoder,
   delegateDecoder,
+  int16Decoder,
   int32Decoder,
   parametersDecoder,
   pkhDecoder,
@@ -52,6 +54,8 @@ export const decoders: { [key: string]: Decoder } = {
   [CODEC.PARAMETERS]: parametersDecoder,
   [CODEC.ADDRESS]: addressDecoder,
   [CODEC.VALUE]: valueParameterDecoder,
+  [CODEC.INT16]: int16Decoder,
+  [CODEC.BLOCK_PAYLOAD_HASH]: blockPayloadHashDecoder,
 };
 
 decoders[CODEC.OPERATION] = operationDecoder(decoders);

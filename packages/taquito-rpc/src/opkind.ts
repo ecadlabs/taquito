@@ -16,4 +16,7 @@ export enum OpKind {
   BALLOT = 'ballot',
   FAILING_NOOP = 'failing_noop',
   REGISTER_GLOBAL_CONSTANT = 'register_global_constant',
+  TRANSFER_TICKET = 'transfer_ticket',
+  TX_ROLLUP_ORIGINATION = 'tx_rollup_origination',
+  TX_ROLLUP_SUBMIT_BATCH = 'tx_rollup_submit_batch',
 }
