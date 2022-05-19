@@ -56,7 +56,7 @@ export class PairToken extends ComparableToken {
   static prim: 'pair' = 'pair';
 
   constructor(
-    val: MichelsonV1ExpressionExtended | MichelsonV1Expression[],
+    val: MichelsonV1Expression,
     idx: number,
     fac: TokenFactory
   ) {
@@ -66,7 +66,10 @@ export class PairToken extends ComparableToken {
             prim: PairToken.prim,
             args: val,
           }
-        : val,
+        : (val as MichelsonV1ExpressionExtended).prim ? val as MichelsonV1ExpressionExtended : {
+          prim: PairToken.prim,
+          args: val,
+        } as MichelsonV1ExpressionExtended,
       idx,
       fac
     );
