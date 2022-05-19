@@ -14,10 +14,10 @@ describe("TxRollupL2Address Token", () => {
     });
 
     it("Should throw a new validation error when address is not valid", () => {
-      expect(() => token.EncodeObject("tz4").toThrowError(TxRollupL2AddressValidationError))
-      expect(() => token.EncodeObject("tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn").toThrowError(TxRollupL2AddressValidationError))
-      expect(() => token.EncodeObject(1).toThrowError(TxRollupL2AddressValidationError))
-      expect(() => token.EncodeObject([]).toThrowError(TxRollupL2AddressValidationError))
+      expect(() => token.EncodeObject("tz4").toThrowError(TxRollupL2AddressValidationError));
+      expect(() => token.EncodeObject("tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn").toThrowError(TxRollupL2AddressValidationError));
+      expect(() => token.EncodeObject(1).toThrowError(TxRollupL2AddressValidationError));
+      expect(() => token.EncodeObject([]).toThrowError(TxRollupL2AddressValidationError));
     })
   })
 
@@ -30,6 +30,9 @@ describe("TxRollupL2Address Token", () => {
 
     it('Should throw a validation error when address is not valid', () => {
       expect(() => token.Encode(['test'])).toThrowError(TxRollupL2AddressValidationError);
+      expect(() => token.Encode([]).toThrowError(TxRollupL2AddressValidationError));
+      expect(() => token.EncodeObject("tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn").toThrowError(TxRollupL2AddressValidationError));
+      expect(() => token.EncodeObject(1).toThrowError(TxRollupL2AddressValidationError));
 
       try {
         token.Encode(['test']);
