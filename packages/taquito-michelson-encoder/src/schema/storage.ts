@@ -254,11 +254,11 @@ export class Schema {
   }
 
   // TODO check these type casts
-  private findValue(schema: Token['val'] | MichelsonV1Expression[], storage: any, valueToFind: any): MichelsonV1ExpressionBase | undefined {
+  private findValue(schema: MichelsonV1Expression, storage: any, valueToFind: any): MichelsonV1ExpressionBase | undefined {
     if (deepEqual(valueToFind, schema)) {
       return storage;
     }
-    if (Array.isArray(schema) || schema['prim'] === 'pair') {
+    if (Array.isArray(schema) || (schema as MichelsonV1ExpressionExtended).prim === 'pair') {
       const sch = collapse(schema);
       const strg = collapse(storage, 'Pair');
       if (sch.args === undefined || strg.args === undefined) {
