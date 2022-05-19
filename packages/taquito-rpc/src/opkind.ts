@@ -25,8 +25,4 @@ export enum OpKind {
   TX_ROLLUP_REJECTION = 'tx_rollup_rejection',
   TX_ROLLUP_DISPATCH_TICKETS = 'tx_rollup_dispatch_tickets',
   TRANSFER_TICKET = 'transfer_ticket',
-  SC_ROLLUP_ORIGINATE = 'sc_rollup_originate',
-  SC_ROLLUP_ADD_MESSAGES = 'sc_rollup_add_messages',
-  SC_ROLLUP_CEMENT = 'sc_rollup_cement',
-  SC_ROLLUP_PUBLISH = 'sc_rollup_publish',
 }
