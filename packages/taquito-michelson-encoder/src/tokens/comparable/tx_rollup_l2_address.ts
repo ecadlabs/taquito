@@ -10,6 +10,7 @@ export class TxRollupL2AddressValidationError extends TokenValidationError {
 }
 
 export class TxRollupL2AddressToken extends ComparableToken {
+  // should be just l2_address?
   static prim: 'tx_rollup_l2_address' = 'tx_rollup_l2_address';
 
   constructor(
