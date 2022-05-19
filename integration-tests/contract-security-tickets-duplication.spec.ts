@@ -1,16 +1,8 @@
 import { CONFIGS } from './config';
 
-// Naively* trying to create an own ticket from scratch.
-// We assume that the ticket is just a (pair address cty nat) and can "easily" be created using a lambda.
-// * Naively - meaning: We just try it without thinking whether this test makes sense with regard to the underlying architecture. 
-// We think of the underlying architecture (type system, stack separation, etc.) as a black box.
-
-// TC-T-018: Create ticket - call input string/address
-// TC-T-019: Create ticket -  string/address
-// TC-T-020: Join ticket - two different ticketers
-// TC-T-021: Join ticket - two different, but similar cty
 // TC-T-022: Duplicate ticket - duplicate transaction operation
-
+// TC-T-023: Duplicate ticket - Duplicate ticket - duplicate map containing tickets
+// TC-T-024: Duplicate ticket - duplicate big_map containing tickets
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
@@ -21,245 +13,144 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it("Verify contract for ticket is not created with a lambda - address", async (done) => {
+    it('Verify creating ticket is not possible with duplicate transaction operation', async (done) => {
+      try {
+        const opJoin = await Tezos.contract.originate({
+          code: `   {  parameter (ticket string);
+      storage (option (ticket string));
+      code
+        {
+          UNPAIR; 
+          SWAP;
+          IF_NONE {
+                    SOME;
+                  }
+                  {
+                    PAIR;
+                    JOIN_TICKETS;
+                  };
+          NIL operation;
+          PAIR;
+        };      
+      }`,
+          init: 'None',
+        });
+
+        await opJoin.confirmation();
+        expect(opJoin.hash).toBeDefined();
+        expect(opJoin.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+        const opJoinContract = await opJoin.contract();
+        //expect(await opJoinContract.storage()).toBeTruthy();
+
+        const opDupOp = await Tezos.contract.originate({
+          code: `   {  parameter (ticket string);
+      storage (option (ticket string));
+      code
+        {
+          UNPAIR; 
+          SWAP;
+          IF_NONE {
+                    SOME;
+                  }
+                  {
+                    PAIR;
+                    JOIN_TICKETS;
+                  };
+          NIL operation;
+          PAIR;
+        };      
+      }`,
+          init: 'Unit',
+        });
+
+        await opDupOp.confirmation();
+        expect(opDupOp.hash).toBeDefined();
+        expect(opDupOp.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+        const opDupOpContract = await opDupOp.contract();
+        expect(await opDupOpContract.storage()).toBeTruthy();
+
+        await Tezos.contract
+          .at(opDupOpContract.address)
+          .then((contract) => {
+            return contract.methods.default(`${opJoinContract.address}`).send();
+          })
+          .then((op) => {
+            return op.confirmation().then(() => op.hash);
+          });
+      } catch (error: any) {
+        expect(error.message).toContain('michelson_v1.invalid_primitive');
+      }
+      done();
+    });
+
+    it('Verify contract for ticket is not created with duplicate map containing tickets', async (done) => {
       try {
         const opGetter = await Tezos.contract.originate({
           code: ` { parameter unit;
-          storage unit;
-          code
-            {
-              # Trying to use a lambda in order to create a "ticket"
-              LAMBDA
-                unit
-                (ticket string)
-                {
-                  DROP;
-                  PUSH nat 1;
-                  PUSH string "test";
-                  SELF_ADDRESS;
-                  PAIR 3;
-                } ;
-              DROP; # DROP storage and input
-              DROP; # DROP lambda
-              UNIT;
-              NIL operation;
-              PAIR;
-            };}`,
-          init: 'Unit'
-        });
-
-        await opGetter.confirmation();
-        expect(opGetter.hash).toBeDefined();
-        expect(opGetter.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-
-      } catch (error: any) {
-        expect(error.message).toContain('michelson_v1.inconsistent_types');
-      }
-      done();
-    });
-
-    it("Verify contract for ticket is not created with a lambda - address and option", async (done) => {
-      try {
-        const opGetter = await Tezos.contract.originate({
-          code: ` { parameter unit;
             storage unit;
             code
               {
-                # Trying to use a lambda in order to create a "ticket"
-                LAMBDA
-                  unit
-                  (option (ticket string))
-                  {
-                    DROP;
-                    PUSH nat 1;
-                    PUSH string "test";
-                    SELF_ADDRESS;
-                    PAIR 3;
-                    SOME;
-                  } ;
-                DROP; # DROP storage and input
-                DROP; # DROP lambda
-                UNIT;
-                NIL operation;
-                PAIR;
-              };}`,
-          init: 'Unit'
-        });
-
-        await opGetter.confirmation();
-        expect(opGetter.hash).toBeDefined();
-        expect(opGetter.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-
-      } catch (error: any) {
-        expect(error.message).toContain('michelson_v1.inconsistent_type_sizes');
-      }
-      done();
-    });
-
-    it("Verify contract for ticket is not created with a lambda - string and option", async (done) => {
-      try {
-        const opGetter = await Tezos.contract.originate({
-          code: ` { parameter string;
-            storage unit;
-            code
-              {
-                # Trying to use a lambda in order to create a "ticket"
-                LAMBDA
-                  string
-                  (ticket string)
-                  {
-                    PUSH nat 1;
-                    PUSH string "test";
-                    DIG 2;
-                    PAIR 3;
-                  } ;
-                DROP; # DROP storage and input
-                DROP; # DROP lambda
-                UNIT;
-                NIL operation;
-                PAIR;
-              };}`,
-          init: 'Unit'
-        });
-
-        await opGetter.confirmation();
-        expect(opGetter.hash).toBeDefined();
-        expect(opGetter.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-
-      } catch (error: any) {
-        expect(error.message).toContain('michelson_v1.inconsistent_types');
-      }
-      done();
-    });
-
-    it("Verify contract for ticket is not created with a lambda - string", async (done) => {
-      try {
-        const opGetter = await Tezos.contract.originate({
-          code: ` { parameter string;
-            storage unit;
-            code
-              {
-                # Trying to use a lambda in order to create a "ticket"
-                LAMBDA
-                  string
-                  (option (ticket string))
-                  {
-                    PUSH nat 1;
-                    PUSH string "test";
-                    DIG 2;
-                    PAIR 3;
-                    SOME;
-                  } ;
-                DROP; # DROP storage and input
-                DROP; # DROP lambda
-                UNIT;
-                NIL operation;
-                PAIR;
-              };}`,
-          init: 'Unit'
-        });
-
-        await opGetter.confirmation();
-        expect(opGetter.hash).toBeDefined();
-        expect(opGetter.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-
-      } catch (error: any) {
-        expect(error.message).toContain('michelson_v1.inconsistent_type_sizes');
-      }
-      done();
-    });
-
-    it("Verify contract for ticket is not created - fail with no mutez", async (done) => {
-      try {
-        const opRogue = await Tezos.contract.originate({
-          code: ` { parameter address;
-            storage (option (ticket string));
-            code
-              {
-                UNPAIR; 
-                CONTRACT (ticket string);
-                IF_NONE
-                  {
-                     PUSH string "error 1";
-                     FAILWITH;
-                  }
-                  {};
-                PUSH mutez 0;
-                DIG 2;
-                IF_NONE
-                  {
-                     PUSH string "error 2";
-                     FAILWITH;
-                  }
-                  {};
-                TRANSFER_TOKENS; 
-                NIL operation;
-                SWAP;
-                CONS;
-                PUSH nat 1;
-                PUSH string "test";
-                TICKET; 
-                SOME;
-                SWAP;
-                PAIR;
-              };}`,
-          init: '"Some (Pair \"KT1Pmz71yHTCmDHiJ9quFpb9cKANeeb2evV2\" \"test\" 2)"'
-        });
-
-        await opRogue.confirmation();
-        expect(opRogue.hash).toBeDefined();
-        expect(opRogue.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-
-      } catch (error: any) {
-        expect(error.message).toContain('michelson_v1.invalid_expression_kind');
-      }
-      done();
-    });
-
-    it("Verify contract for ticket is not created - fail with no ticket string", async (done) => {
-      try {
-        const opRogue = await Tezos.contract.originate({
-          code: ` { parameter address;
-            storage (ticket string);
-            code
-              {
-                UNPAIR; 
-                CONTRACT (ticket string);
-                IF_NONE
-                  {
-                     PUSH string "error 1";
-                     FAILWITH;
-                  }
-                  {};
-                PUSH mutez 0;
-                DIG 2;
-                TRANSFER_TOKENS; 
-                NIL operation;
-                SWAP;
-                CONS;
+                DROP ; # drop storage and input
+                EMPTY_MAP nat (ticket string); 
                 PUSH nat 1;
                 PUSH string "test";
                 TICKET;
-                SWAP;
+                SOME;
+                PUSH nat 0;
+                UPDATE;
+                DUP;
+                DROP;
+                DROP;
+                UNIT;
+                NIL operation;
                 PAIR;
-              };
-            }`,
-          init: '"Some (Pair \"KT1Pmz71yHTCmDHiJ9quFpb9cKANeeb2evV2\" \"test\" 2)"'
+              };}`,
+          init: 'Unit',
         });
 
-        await opRogue.confirmation();
-        expect(opRogue.hash).toBeDefined();
-        expect(opRogue.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-
+        await opGetter.confirmation();
+        expect(opGetter.hash).toBeDefined();
+        expect(opGetter.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       } catch (error: any) {
-        expect(error.message).toContain('michelson_v1.unexpected_forged_value');
+        expect(error.message).toContain('michelson_v1.unexpected_ticket');
       }
       done();
     });
-    
 
+    it('Verify contract for ticket is not created with a duplicate big_map containing tickets', async (done) => {
+      try {
+        const opGetter = await Tezos.contract.originate({
+          code: ` { parameter unit;
+            storage unit;
+            code
+              {
+                DROP ; # drop storage and input
+                EMPTY_BIG_MAP nat (ticket string); 
+                PUSH nat 1;
+                PUSH string "test";
+                TICKET;
+                SOME;
+                PUSH nat 0;
+                UPDATE;
+                DUP;
+                DROP;
+                DROP;
+                UNIT;
+                NIL operation;
+                PAIR;
+              };}`,
+          init: 'Unit',
+        });
+
+        await opGetter.confirmation();
+        expect(opGetter.hash).toBeDefined();
+        expect(opGetter.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+      } catch (error: any) {
+        expect(error.message).toContain('michelson_v1.unexpected_ticket');
+      }
+      done();
+    });   
   });
 });
 
 // This test was transcribed to Taquito from bash scripts at https://github.com/InferenceAG/TezosSecurityBaselineChecking
-
