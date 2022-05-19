@@ -11,18 +11,8 @@ export type DelegateResponse = string | null;
 
 export type OperationHash = string;
 
-interface Before {
-  value?: string;
-  node?: string;
-}
-
-interface After {
-  value?: string;
-  node?: string;
-}
-
 interface INodeExtender {
-  length: number;
+  length: string;
   segment: string;
   proof: string;
 }
@@ -32,28 +22,42 @@ type OtherEltsInner =
       value: any;
     }
   | {
-      inode_extender?: INodeExtender;
+      inode_extender: INodeExtender;
     };
 
-interface OtherElts {
-  node?: [string, { value: string } | { node: string }][];
-  other_elts?: OtherEltsInner;
-}
+type OtherElts =
+  | {
+      node: [string, { value: string } | { node: string }][];
+    }
+  | {
+      other_elts: OtherEltsInner;
+    };
 
-interface State {
-  inode?: Inode;
-  other_elts?: OtherElts;
-}
+type State =
+  | {
+      inode: Inode;
+    }
+  | {
+      other_elts: OtherElts;
+    };
 
 interface Inode {
   length: string;
   proofs?: [string | null, string | null];
 }
 
+type TxRollupProofContextHash =
+  | {
+      value: string;
+    }
+  | {
+      node: string;
+    };
+
 export interface TxRollupProof {
   version: number;
-  before: Before;
-  after: After;
+  before: TxRollupProofContextHash;
+  after: TxRollupProofContextHash;
   state: State[];
 }
 
@@ -400,7 +404,7 @@ export interface OperationContentsTxRollupDispatchTickets {
   context_hash: string;
   message_index: number;
   message_result_path: string[];
-  tickets_info: TxRollupTicketsInfo;
+  tickets_info: TxRollupTicketsInfo[];
 }
 
 export interface OperationContentsTransferTicket {
@@ -795,7 +799,7 @@ export interface OperationContentsAndResultTxRollupDispatchTickets {
   context_hash: string;
   message_index: number;
   message_result_path: string[];
-  tickets_info: TxRollupTicketsInfo;
+  tickets_info: TxRollupTicketsInfo[];
   metadata: OperationContentsAndResultMetadataTxRollupDispatchTickets;
 }
 
