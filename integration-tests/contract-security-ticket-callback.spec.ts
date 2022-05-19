@@ -1,7 +1,7 @@
 import { CONFIGS } from './config';
 
 // TC-T-008: assume that the ticket is just a (pair address cty nat) and can "easily" be created via a callback.
-// The case reaches a FAILWITH 
+// To see why the test fails with error message {\"prim\":\"Unit\"}, look at the Micheline form of the contract.
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;

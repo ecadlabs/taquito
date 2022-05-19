@@ -1,7 +1,10 @@
 import { doesNotMatch } from 'assert';
 import { CONFIGS } from './config';
 
-// TC-005: Example of mutez overflow
+/** 
+ * TC-005: Example of mutez overflow. If overflows are not prevented the contract is unusable. 
+ * Any tokens locked in the contract will be irretrievable, etc.
+*/
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;

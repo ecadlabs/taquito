@@ -1,6 +1,8 @@
 import { CONFIGS } from './config';
 
-// TC-010: Batch operation failing
+/**
+ *  TC-010: Batch operation failing: a sequence of add and sub calls are made and we verify the contract finds the FAILWITH when the subs exceed the adds
+*/
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;

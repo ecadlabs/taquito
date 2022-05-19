@@ -1,6 +1,8 @@
 import { CONFIGS } from './config';
 
-// TC-006: Type "operation" is not duplicable and error will arise "internal_operation_replay"
+/** 
+ * TC-006: Check that the type "operation" is not duplicable and that the error will be "internal_operation_replay"
+*/
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
@@ -60,4 +62,5 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     });
   });
 });
+
 // This test was transcribed to Taquito from bash scripts at https://github.com/InferenceAG/TezosSecurityBaselineChecking
