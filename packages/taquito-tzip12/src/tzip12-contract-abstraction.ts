@@ -1,4 +1,3 @@
-import { MichelsonV1Expression, MichelsonV1ExpressionBase } from '@taquito/rpc';
 import { MichelsonMap, Schema } from '@taquito/michelson-encoder';
 import { ContractAbstraction, ContractProvider, Wallet } from '@taquito/taquito';
 import { Tzip16ContractAbstraction, MetadataContext, View, bytes2Char } from '@taquito/tzip16';
@@ -180,7 +179,7 @@ export class Tzip12ContractAbstraction {
     const bigmapTokenMetadataId = await this.findTokenMetadataBigMap();
     let pairNatMap;
     try {
-      pairNatMap = await this.context.contract.getBigMapKeyByID<{token_info: MichelsonV1Expression}>(
+      pairNatMap = await this.context.contract.getBigMapKeyByID<{token_info: BigMapId}>(
         bigmapTokenMetadataId['int'].toString(),
         tokenId.toString(),
         new Schema(tokenMetadataBigMapType)
@@ -204,7 +203,7 @@ export class Tzip12ContractAbstraction {
   }
 
   private async findTokenMetadataBigMap(): Promise<BigMapId> {
-    const tokenMetadataBigMapId = this.contractAbstraction.schema.FindFirstInTopLevelPair<MichelsonV1ExpressionBase>(
+    const tokenMetadataBigMapId = this.contractAbstraction.schema.FindFirstInTopLevelPair<BigMapId>(
       await this.context.readProvider.getStorage(this.contractAbstraction.address, 'head'),
       tokenMetadataBigMapType
     );
