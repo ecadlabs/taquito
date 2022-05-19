@@ -3,7 +3,9 @@ import { securityWrongAnnotations } from './data/security-wrong-annotations-cont
 
 // TC-009: Check whether wrong field annotations are leading to failed transactions.
 /** 
- * The contract used has six entrypoints
+ * An example of the test contract is here: https://better-call.dev/ithacanet/KT1C4NcV4ebR6gS7SzbavkkSx3HYhWTBPVJ9/operations
+ * 
+ * The contract used has six entrypoints:
  * 
  * entrypoint:          parameter:
  * 
