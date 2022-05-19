@@ -1,3 +1,4 @@
+import { MichelsonV1ExpressionBase } from '@taquito/rpc';
 import {
   BigMapAbstraction,
   Context,
@@ -41,7 +42,7 @@ export class Tzip16ContractAbstraction {
   }
 
   private async findMetadataBigMap(): Promise<BigMapAbstraction> {
-    const metadataBigMapId = this.constractAbstraction.schema.FindFirstInTopLevelPair(
+    const metadataBigMapId = this.constractAbstraction.schema.FindFirstInTopLevelPair<MichelsonV1ExpressionBase>(
       await this.context.readProvider.getStorage(this.constractAbstraction.address, 'head'),
       metadataBigMapType
     );
