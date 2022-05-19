@@ -82,7 +82,7 @@ export class LocalForger implements Forger {
         throw new InvalidOperationSchemaError(`Missing properties: ${diff.join(', ').toString()}`);
       }
     }
-    const forged = this.codec.encoder(params).toLowerCase()
+    const forged = this.codec.encoder(params).toLowerCase();
     return Promise.resolve(forged);
   }
 

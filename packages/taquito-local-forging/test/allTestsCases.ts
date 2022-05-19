@@ -465,7 +465,7 @@ export const commonCases: TestCase[] = [
               prim: 'Pair',
               args: [
                 {
-                  string: 'tz1UeT3VS8LuAkvB66tjQTTDP1LFf3DEC4uA'
+                  string: 'tz1UeT3VS8LuAkvB66tjQTTDP1LFf3DEC4uA',
                 },
                 {
                   prim: 'Pair',
@@ -475,98 +475,98 @@ export const commonCases: TestCase[] = [
                         prim: 'Elt',
                         args: [
                           {
-                            int: '1494'
+                            int: '1494',
                           },
                           [
                             {
                               prim: 'Elt',
                               args: [
                                 {
-                                  string: 'damage'
+                                  string: 'damage',
                                 },
                                 {
-                                  int: '700'
-                                }
-                              ]
+                                  int: '700',
+                                },
+                              ],
                             },
                             {
                               prim: 'Elt',
                               args: [
                                 {
-                                  string: 'exp'
+                                  string: 'exp',
                                 },
                                 {
-                                  int: '10'
-                                }
-                              ]
-                            }
-                          ]
-                        ]
+                                  int: '10',
+                                },
+                              ],
+                            },
+                          ],
+                        ],
                       },
                       {
                         prim: 'Elt',
                         args: [
                           {
-                            int: '1504'
+                            int: '1504',
                           },
                           [
                             {
                               prim: 'Elt',
                               args: [
                                 {
-                                  string: 'damage'
+                                  string: 'damage',
                                 },
                                 {
-                                  int: '900'
-                                }
-                              ]
+                                  int: '900',
+                                },
+                              ],
                             },
                             {
                               prim: 'Elt',
                               args: [
                                 {
-                                  string: 'exp'
+                                  string: 'exp',
                                 },
                                 {
-                                  int: '38'
-                                }
-                              ]
-                            }
-                          ]
-                        ]
+                                  int: '38',
+                                },
+                              ],
+                            },
+                          ],
+                        ],
                       },
                       {
                         prim: 'Elt',
                         args: [
                           {
-                            int: '1557'
+                            int: '1557',
                           },
                           [
                             {
                               prim: 'Elt',
                               args: [
                                 {
-                                  string: 'damage'
+                                  string: 'damage',
                                 },
                                 {
-                                  int: '1100'
-                                }
-                              ]
+                                  int: '1100',
+                                },
+                              ],
                             },
                             {
                               prim: 'Elt',
                               args: [
                                 {
-                                  string: 'exp'
+                                  string: 'exp',
                                 },
                                 {
-                                  int: '24'
-                                }
-                              ]
-                            }
-                          ]
-                        ]
-                      }
+                                  int: '24',
+                                },
+                              ],
+                            },
+                          ],
+                        ],
+                      },
                     ],
                     {
                       prim: 'Pair',
@@ -577,8 +577,9 @@ export const commonCases: TestCase[] = [
                           args: [
                             [
                               {
-                                bytes: '697066733A2F2F516D54666E6F35554D62384E51434475654A5A637167686E67713779566F475933467A7461744470417A5A526542'
-                              }
+                                bytes:
+                                  '697066733A2F2F516D54666E6F35554D62384E51434475654A5A637167686E67713779566F475933467A7461744470417A5A526542',
+                              },
                             ],
                             {
                               prim: 'Pair',
@@ -588,27 +589,28 @@ export const commonCases: TestCase[] = [
                                     prim: 'Elt',
                                     args: [
                                       {
-                                        int: '2'
+                                        int: '2',
                                       },
                                       {
-                                        int: '25000000000'
-                                      }
-                                    ]
-                                  }
+                                        int: '25000000000',
+                                      },
+                                    ],
+                                  },
                                 ],
                                 {
-                                  string: 'edsigtt6Qp118ex7tMJcnWr9tjVTuCwKXS9kAbuD1LVxb5A1raQEr5Cvz4BDaC9dH1X1898DekDsqty66M45as87juCF3ge5FWM'
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-             },
+                                  string:
+                                    'edsigtt6Qp118ex7tMJcnWr9tjVTuCwKXS9kAbuD1LVxb5A1raQEr5Cvz4BDaC9dH1X1898DekDsqty66M45as87juCF3ge5FWM',
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
           },
         },
       ],
@@ -631,7 +633,7 @@ export const commonCases: TestCase[] = [
               prim: 'Pair',
               args: [
                 {
-                  string: 'tz1UeT3VS8LuAkvB66tjQTTDP1LFf3DEC4uA'
+                  string: 'tz1UeT3VS8LuAkvB66tjQTTDP1LFf3DEC4uA',
                 },
                 {
                   prim: 'Pair',
@@ -641,98 +643,98 @@ export const commonCases: TestCase[] = [
                         prim: 'Elt',
                         args: [
                           {
-                            int: '1494'
+                            int: '1494',
                           },
                           [
                             {
                               prim: 'Elt',
                               args: [
                                 {
-                                  string: 'damage'
+                                  string: 'damage',
                                 },
                                 {
-                                  int: '700'
-                                }
-                              ]
+                                  int: '700',
+                                },
+                              ],
                             },
                             {
                               prim: 'Elt',
                               args: [
                                 {
-                                  string: 'exp'
+                                  string: 'exp',
                                 },
                                 {
-                                  int: '10'
-                                }
-                              ]
-                            }
-                          ]
-                        ]
+                                  int: '10',
+                                },
+                              ],
+                            },
+                          ],
+                        ],
                       },
                       {
                         prim: 'Elt',
                         args: [
                           {
-                            int: '1504'
+                            int: '1504',
                           },
                           [
                             {
                               prim: 'Elt',
                               args: [
                                 {
-                                  string: 'damage'
+                                  string: 'damage',
                                 },
                                 {
-                                  int: '900'
-                                }
-                              ]
+                                  int: '900',
+                                },
+                              ],
                             },
                             {
                               prim: 'Elt',
                               args: [
                                 {
-                                  string: 'exp'
+                                  string: 'exp',
                                 },
                                 {
-                                  int: '38'
-                                }
-                              ]
-                            }
-                          ]
-                        ]
+                                  int: '38',
+                                },
+                              ],
+                            },
+                          ],
+                        ],
                       },
                       {
                         prim: 'Elt',
                         args: [
                           {
-                            int: '1557'
+                            int: '1557',
                           },
                           [
                             {
                               prim: 'Elt',
                               args: [
                                 {
-                                  string: 'damage'
+                                  string: 'damage',
                                 },
                                 {
-                                  int: '1100'
-                                }
-                              ]
+                                  int: '1100',
+                                },
+                              ],
                             },
                             {
                               prim: 'Elt',
                               args: [
                                 {
-                                  string: 'exp'
+                                  string: 'exp',
                                 },
                                 {
-                                  int: '24'
-                                }
-                              ]
-                            }
-                          ]
-                        ]
-                      }
+                                  int: '24',
+                                },
+                              ],
+                            },
+                          ],
+                        ],
+                      },
                     ],
                     {
                       prim: 'Pair',
@@ -743,10 +745,10 @@ export const commonCases: TestCase[] = [
                           args: [
                             [
                               {
-                                
                                 // diff from given
-                                bytes: '697066733a2f2f516d54666e6f35554d62384e51434475654a5a637167686e67713779566f475933467a7461744470417a5a526542'
-                              }
+                                bytes:
+                                  '697066733a2f2f516d54666e6f35554d62384e51434475654a5a637167686e67713779566f475933467a7461744470417a5a526542',
+                              },
                             ],
                             {
                               prim: 'Pair',
@@ -756,27 +758,28 @@ export const commonCases: TestCase[] = [
                                     prim: 'Elt',
                                     args: [
                                       {
-                                        int: '2'
+                                        int: '2',
                                       },
                                       {
-                                        int: '25000000000'
-                                      }
-                                    ]
-                                  }
+                                        int: '25000000000',
+                                      },
+                                    ],
+                                  },
                                 ],
                                 {
-                                  string: 'edsigtt6Qp118ex7tMJcnWr9tjVTuCwKXS9kAbuD1LVxb5A1raQEr5Cvz4BDaC9dH1X1898DekDsqty66M45as87juCF3ge5FWM'
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-             },
+                                  string:
+                                    'edsigtt6Qp118ex7tMJcnWr9tjVTuCwKXS9kAbuD1LVxb5A1raQEr5Cvz4BDaC9dH1X1898DekDsqty66M45as87juCF3ge5FWM',
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
           },
         },
       ],
