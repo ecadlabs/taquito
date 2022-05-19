@@ -1,4 +1,3 @@
-import { MichelsonV1ExpressionBase } from '@taquito/rpc';
 import { Schema } from '@taquito/michelson-encoder';
 import { Context, ContractAbstraction, ContractProvider, Wallet } from '@taquito/taquito';
 import { Handler, Tzip16Uri } from '../metadata-provider';
@@ -16,6 +15,8 @@ const typeOfValueToFind = {
   annots: ['%metadata'],
 };
 
+export type BigMapId = { int: string };
+
 export class TezosStorageHandler implements Handler {
   private readonly TEZOS_STORAGE_REGEX = /^(?:\/\/(KT1\w{33})(?:\.(.+))?\/)?([\w|%]+)$/;
 
@@ -32,7 +33,7 @@ export class TezosStorageHandler implements Handler {
       parsedTezosStorageUri.contractAddress || contractAbstraction.address,
       'head'
     );
-    const bigMapId = Schema.fromRPCResponse({ script }).FindFirstInTopLevelPair<MichelsonV1ExpressionBase>(
+    const bigMapId = Schema.fromRPCResponse({ script }).FindFirstInTopLevelPair<BigMapId>(
       script.storage,
       typeOfValueToFind
     );
@@ -40,7 +41,6 @@ export class TezosStorageHandler implements Handler {
     if (!bigMapId || !bigMapId.int) {
       throw new BigMapMetadataNotFound();
     }
-    // TODO check this
     const bytes = await context.contract.getBigMapKeyByID<string>(
       bigMapId.int.toString(),
       parsedTezosStorageUri.path,

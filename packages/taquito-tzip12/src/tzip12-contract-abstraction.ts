@@ -1,6 +1,6 @@
 import { MichelsonMap, Schema } from '@taquito/michelson-encoder';
 import { ContractAbstraction, ContractProvider, Wallet } from '@taquito/taquito';
-import { Tzip16ContractAbstraction, MetadataContext, View, bytes2Char } from '@taquito/tzip16';
+import { Tzip16ContractAbstraction, MetadataContext, View, bytes2Char, BigMapId } from '@taquito/tzip16';
 import { InvalidTokenMetadata, TokenIdNotFound, TokenMetadataNotFound } from './tzip12-errors';
 
 const tokenMetadataBigMapType = {
@@ -17,8 +17,6 @@ const tokenMetadataBigMapType = {
   ],
   annots: ['%token_metadata'],
 };
-
-type BigMapId = { int: string };
 
 export interface TokenMetadata {
   token_id: number;
@@ -179,7 +177,7 @@ export class Tzip12ContractAbstraction {
     const bigmapTokenMetadataId = await this.findTokenMetadataBigMap();
     let pairNatMap;
     try {
-      pairNatMap = await this.context.contract.getBigMapKeyByID<{token_info: BigMapId}>(
+      pairNatMap = await this.context.contract.getBigMapKeyByID<{token_info: MichelsonMap<string, string>}>(
         bigmapTokenMetadataId['int'].toString(),
         tokenId.toString(),
         new Schema(tokenMetadataBigMapType)
