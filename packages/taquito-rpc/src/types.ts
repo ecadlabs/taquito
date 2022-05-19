@@ -43,7 +43,7 @@ type State =
 
 interface Inode {
   length: string;
-  proofs?: [string | null, string | null];
+  proofs: [string | null, string | null];
 }
 
 type TxRollupProofContextHash =
