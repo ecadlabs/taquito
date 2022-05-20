@@ -40,18 +40,15 @@ export class TxRollupL2AddressToken extends ComparableToken {
     if (!val) {
       throw new TxRollupL2AddressValidationError(val, this, `arg missing to encode: this -> "${val}"`)
     }
-    const err = this.isValid(val)
-    if (err) {
-      throw err;
-    }
+    // no need to test since method throws
+    this.isValid(val)
+
     return { string: val }
   }
 
   public EncodeObject(val: any, semantic?: SemanticEncoding): any {
-    const err = this.isValid(val);
-    if (err) {
-      throw err;
-    }
+    // no need to test since method throws
+    this.isValid(val)
 
     if (semantic && semantic[TxRollupL2AddressToken.prim]) {
       return semantic[TxRollupL2AddressToken.prim](val)
