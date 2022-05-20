@@ -96,8 +96,8 @@ export abstract class ComparableToken extends Token {
     key: { [key: string]: string | object[] };
     type: { prim: string; args?: object[] };
   };
-
-  abstract ToKey(val: string): any;
+// check if OK altering type inconsistency between this type and other functions made ok with 'any'
+  abstract ToKey(val: string | {bytes?: string; string?: string}): any;
 
   compare(o1: string, o2: string): number {
     if (o1 === o2) {

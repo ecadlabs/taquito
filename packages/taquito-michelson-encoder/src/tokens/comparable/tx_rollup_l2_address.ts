@@ -10,7 +10,6 @@ export class TxRollupL2AddressValidationError extends TokenValidationError {
 }
 
 export class TxRollupL2AddressToken extends ComparableToken {
-  // should be just l2_address?
   static prim: 'tx_rollup_l2_address' = 'tx_rollup_l2_address';
 
   constructor(
@@ -60,7 +59,7 @@ export class TxRollupL2AddressToken extends ComparableToken {
     return { string: val }
   }
 
-  public Execute(val: {bytes: string; string: string}): string {
+  public Execute(val: {bytes?: string; string?: string}): string {
     if (val.string) {
       return val.string
     }
@@ -80,7 +79,7 @@ export class TxRollupL2AddressToken extends ComparableToken {
     }
   }
 
-  public ToKey({bytes, string}: any) {
+  public ToKey({bytes, string}: {bytes?: string, string?: string}) {
     if (string) {
       return string
     }
@@ -89,22 +88,22 @@ export class TxRollupL2AddressToken extends ComparableToken {
     }
     return encodePubKey(bytes)
   }
+  // keep for suggested change in address compare change this way has 3 returns rather than 4 and only need to run the function 2 times instead of 6
+  // compare(address1: string, address2: string) {
+  //   const isImplicit = (address: string) => {
+  //     // TODO CHECK THIS tru2 or txr1 or somethign else :O
+  //     return address.startsWith('tz4')
+  //   }
+  //   const implicit1 = isImplicit(address1)
+  //   const implicit2 = isImplicit(address2)
 
-  compare(address1: string, address2: string) {
-    const isImplicit = (address: string) => {
-      // TODO CHECK THIS tru2 or txr1 or somethign else :O
-      return address.startsWith('tz4')
-    }
-    const implicit1 = isImplicit(address1)
-    const implicit2 = isImplicit(address2)
-
-    if (implicit1 && !implicit2) {
-      return -1;
-    } else if (implicit2 && !implicit1) {
-      return 1;
-    }
-    return super.compare(address1, address2)
-  }
+  //   if (implicit1 && !implicit2) {
+  //     return -1;
+  //   } else if (implicit2 && !implicit1) {
+  //     return 1;
+  //   }
+  //   return super.compare(address1, address2)
+  // }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]): Token[] {
     if(TxRollupL2AddressToken.prim === tokenToFind) {

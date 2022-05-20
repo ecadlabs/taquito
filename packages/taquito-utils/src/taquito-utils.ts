@@ -86,6 +86,7 @@ export function b58decode(payload: string) {
     [prefix.tz1.toString()]: '0000',
     [prefix.tz2.toString()]: '0001',
     [prefix.tz3.toString()]: '0002',
+    [prefix.tz4.toString()]: '0003',
   };
 
   const pref = prefixMap[new Uint8Array(buf.slice(0, 3)).toString()];
@@ -111,6 +112,7 @@ export function encodePubKey(value: string) {
       '0000': prefix.tz1,
       '0001': prefix.tz2,
       '0002': prefix.tz3,
+      '0003': prefix.tz4,
     };
 
     return b58cencode(value.substring(4), pref[value.substring(0, 4)]);
