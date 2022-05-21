@@ -51,10 +51,9 @@
   --sidebar-link-bg: rgba(211, 131, 43, 0.2);
   --ifm-toc-padding-vertical: 1rem;
   --ifm-color-hover-link: var(--black);
-  --ifm-container-width-xl: 100% !important;
-  --docsearch-searchbox-background: var(--brown-primary) !important;
+  --docsearch-searchbox-background: var(--ifm-color-primary) !important;
   --docsearch-muted-color: var(--ifm-color-text-primary) !important;
-  --docsearch-searchbox-focus-background: var(--ifm-color-text-secondary) !important;
+  --docsearch-searchbox-focus-background: #ffefa6 !important;
   --docsearch-searchbox-shadow: var(--ifm-color-text-primary) !important;
 }
 
@@ -87,6 +86,9 @@
   --sidebar-link-bg: var(--yellow-second);
   --ifm-color-hover-link: var(--brown);
   --black-third: var(--white);
+  --docsearch-text-color: var(--black);
+  --docsearch-searchbox-background: var(--brown-third) !important;
+  --docsearch-searchbox-focus-background: #91612a !important;
 }
 
 h1 {
@@ -108,7 +110,7 @@ h2 {
   font-weight: 800;
   font-size: 38px;
   line-height: 56px;
-  text-align: center;
+  text-align: left;
 
   @media (max-width: 380px) {
     font-size: 30px;
@@ -148,7 +150,7 @@ h2 {
 .DocSearch-Button {
   font-family: Source Sans Pro !important;
   font-weight: 600 !important;
-  border: none !important;
+  border: var(--black)!important;
 }
 
 // .DocSearch-Button:active,
