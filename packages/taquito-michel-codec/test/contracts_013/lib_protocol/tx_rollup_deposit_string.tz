@@ -1,0 +1,33 @@
+parameter (pair address tx_rollup_l2_address string);
+storage (unit);
+code {
+       # cast the address to contract type
+       CAR;
+       UNPAIR;
+       CONTRACT %deposit (pair (ticket string) tx_rollup_l2_address);
+
+       IF_SOME {
+                 SWAP;
+                 UNPAIR; SWAP;
+
+                 # create a ticket
+                 PUSH nat 10;
+                 SWAP;
+                 TICKET;
+                 PAIR;
+
+                 # amount for transfering
+                 PUSH mutez 0;
+                 SWAP;
+
+                 # deposit
+                 TRANSFER_TOKENS;
+
+                 DIP { NIL operation };
+                 CONS;
+
+                 DIP { PUSH unit Unit };
+                 PAIR;
+               }
+               { FAIL ; }
+     }

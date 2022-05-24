@@ -403,7 +403,9 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
             'ED25519PublicKeyHash',
             'SECP256K1PublicKeyHash',
             'P256PublicKeyHash',
-            'ContractHash'
+            'ContractHash',
+            'TxRollupL2Address',
+            'RollupAddress'
           ) !== null
         ) {
           return;
@@ -2002,6 +2004,8 @@ function functionTypeInternal(
         ensurePushableType(s[0]);
         return [annotateVar({ prim: 'option', args: [instruction.args[1]] }), ...stack.slice(2)];
       }
+      case 'MIN_BLOCK_TIME':
+        return [annotateVar({ prim: 'nat' }), ...stack]
 
       default:
         throw new MichelsonError(

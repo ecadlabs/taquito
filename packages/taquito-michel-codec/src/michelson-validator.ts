@@ -85,6 +85,7 @@ const noArgInstructionIDs: Record<MichelsonNoArgInstruction['prim'], true> = {
   RENAME: true,
   OPEN_CHEST: true,
   SUB_MUTEZ: true,
+  MIN_BLOCK_TIME: true,
 };
 
 export const instructionIDs: Record<MichelsonInstruction['prim'], true> = Object.assign(
@@ -141,6 +142,7 @@ const simpleComparableTypeIDs: Record<MichelsonSimpleComparableTypeID, true> = {
   signature: true,
   timestamp: true,
   address: true,
+  tx_rollup_l2_address: true
 };
 
 const typeIDs: Record<MichelsonTypeID, true> = Object.assign({}, simpleComparableTypeIDs, {

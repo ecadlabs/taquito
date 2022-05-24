@@ -1,0 +1,3 @@
+parameter (list string);
+storage (list string);
+code {CAR; MAP {}; NIL operation; PAIR}

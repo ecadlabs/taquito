@@ -1,0 +1,4 @@
+parameter (list bytes);
+storage (list bytes);
+code{ CAR;
+      MAP { PUSH bytes 0xFF; CONCAT }; NIL operation; PAIR};
