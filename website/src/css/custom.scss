@@ -22,6 +22,7 @@
   --brown-secondary: #975b19;
   --background-black: #2e2e2e;
   --brown-third: #885924;
+  --brown-lightest: #9c6629;
   --ifm-font-family-base: Source Sans Pro;
   --ifm-color-primary-lightest: #ffffff;
   --ifm-color-primary-lighter: #a9d1e4;
@@ -86,7 +87,8 @@
   --ifm-color-hover-link: var(--brown);
   --black-third: var(--white);
   --docsearch-text-color: var(--black);
-  --docsearch-searchbox-background: #91612a !important;
+  --docsearch-searchbox-background: var(--brown-lightest) !important;
+  --docsearch-searchbox-focus-background: var(--brown-lightest) !important;
 }
 
 h1 {
