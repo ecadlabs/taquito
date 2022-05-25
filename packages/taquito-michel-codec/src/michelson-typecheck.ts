@@ -2005,7 +2005,7 @@ function functionTypeInternal(
         return [annotateVar({ prim: 'option', args: [instruction.args[1]] }), ...stack.slice(2)];
       }
       case 'MIN_BLOCK_TIME':
-        return [annotateVar({ prim: 'nat' }), ...stack]
+        return [annotateVar({ prim: 'nat' }), ...stack];
 
       default:
         throw new MichelsonError(

@@ -304,7 +304,7 @@ export const tezosPrefix: Record<TezosIDType, TezosIDPrefix> = {
   GenericSignature: [64, [4, 130, 43]], // sig(96)
   ChainID: [4, [87, 82, 0]],
   RollupAddress: [20, [1, 128, 120, 31]],
-  TxRollupL2Address: [20, [6, 161, 166]]
+  TxRollupL2Address: [20, [6, 161, 166]],
 };
 
 export function checkDecodeTezosID<T extends TezosIDType[]>(

@@ -115,7 +115,7 @@ const contracts: {
     'tx_rollup_parse_type.tz',
     'tx_rollup_withdraw.tz',
     'tx_rollup_withdraw_unit_tickets.tz',
-    'min_block_time.tz'
+    'min_block_time.tz',
   ],
   macros: [
     'assert.tz',

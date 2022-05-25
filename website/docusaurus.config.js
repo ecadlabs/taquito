@@ -55,6 +55,10 @@ module.exports = {
       },
       items: [
         {
+          type: 'search',
+          position: 'right'
+        },
+        {
           type: 'docsVersionDropdown',
           position: 'right',
           className: 'header-link',
@@ -168,11 +172,11 @@ module.exports = {
       ],
     },
 
-    // algolia: {
-    //   apiKey: 'process.env.ALGOLIA_SEARCH_API_KEY',
-    //   indexName: 'taquito',
-    //   appId: 'process.env.ALGOLIA_APPLICATION_ID',
-    // }
+    algolia: {
+      apiKey: process.env.ALGOLIA_SEARCH_API_KEY,
+      indexName: 'taquito',
+      appId: process.env.ALGOLIA_APPLICATION_ID,
+    },
   },
   presets: [
     [
