@@ -1,8 +1,10 @@
 import {
   addressEncoder,
   ballotEncoder,
+  blockPayloadHashEncoder,
   branchEncoder,
   delegateEncoder,
+  int16Encoder,
   int32Encoder,
   parametersEncoder,
   pkhEncoder,
@@ -49,7 +51,9 @@ export const encoders: { [key: string]: Encoder<any> } = {
   [CODEC.INT32]: int32Encoder,
   [CODEC.PARAMETERS]: parametersEncoder,
   [CODEC.ADDRESS]: addressEncoder,
-  [CODEC.VALUE]: valueParameterEncoder
+  [CODEC.VALUE]: valueParameterEncoder,
+  [CODEC.INT16]: int16Encoder,
+  [CODEC.BLOCK_PAYLOAD_HASH]: blockPayloadHashEncoder,
 };
 
 encoders[CODEC.OPERATION] = operationEncoder(encoders);
@@ -63,5 +67,6 @@ encoders[CODEC.OP_SEED_NONCE_REVELATION] = (val: any) =>
   schemaEncoder(encoders)(SeedNonceRevelationSchema)(val);
 encoders[CODEC.OP_PROPOSALS] = (val: any) => schemaEncoder(encoders)(ProposalsSchema)(val);
 encoders[CODEC.OP_REVEAL] = (val: any) => schemaEncoder(encoders)(RevealSchema)(val);
-encoders[CODEC.OP_REGISTER_GLOBAL_CONSTANT] = (val: any) => schemaEncoder(encoders)(RegisterGlobalConstantSchema)(val);
+encoders[CODEC.OP_REGISTER_GLOBAL_CONSTANT] = (val: any) =>
+  schemaEncoder(encoders)(RegisterGlobalConstantSchema)(val);
 encoders[CODEC.MANAGER] = schemaEncoder(encoders)(ManagerOperationSchema);

@@ -1,0 +1,3 @@
+parameter int;
+storage (list int);
+code { UNPAIR; CONS; NIL operation; PAIR; };

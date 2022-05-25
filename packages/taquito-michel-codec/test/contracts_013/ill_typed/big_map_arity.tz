@@ -1,0 +1,5 @@
+# This contract tests the error message in case the EMPTY_BIG_MAP instruction has bad arity (1 argument instead of 2).
+# The expected type-checking error is "primitive EMPTY_BIG_MAP expects 2 arguments but is given 1."
+parameter unit;
+storage unit;
+code { DROP;  EMPTY_BIG_MAP nat;  DROP; UNIT;  NIL operation; PAIR; }
