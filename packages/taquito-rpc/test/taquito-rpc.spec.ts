@@ -3107,4 +3107,73 @@ describe('RpcClient test', () => {
       done();
     });
   });
+
+  describe('getTxRollupState', () => {
+    it('should query the correct url and return a rollup state response', async (done) => {
+      const mockResponse = {
+        last_removed_commitment_hashes: {
+          last_message_hash: 'test',
+          commitment_hash: 'test',
+        },
+        finalized_commitments: {
+          next: 123,
+        },
+        unfinalized_commitments: {
+          next: 123,
+        },
+        uncommitted_inboxes: {
+          next: 123,
+        },
+        commitment_newest_hash: 'test',
+        tezos_head_level: 1234,
+        burn_per_byte: 'test',
+        allocated_storage: 'test',
+        occupied_storage: 'test',
+        inbox_ema: 123,
+        commitments_watermark: 123,
+      };
+
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(mockResponse));
+
+      const txRollupState = await client.getTxRollupState('test_txr_id');
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/tx_rollup/test_txr_id/state`,
+      });
+
+      expect(txRollupState).toBeDefined();
+      expect(txRollupState).toEqual(mockResponse);
+
+      done();
+    });
+  });
+
+  describe('getTxRollupInbox', () => {
+    it('should query the correct url and return a rollup inbox response', async (done) => {
+      httpBackend.createRequest.mockReturnValue(
+        Promise.resolve({
+          inbox_length: 1,
+          cumulated_size: 4,
+          merkle_root: 'txi3Ef5CSsBWRaqQhWj2zg51J3tUqHFD47na6ex7zcboTG5oXEFrm',
+        })
+      );
+
+      const txRollupInbox = await client.getTxRollupInbox('test_txr_id', 0);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/tx_rollup/test_txr_id/inbox/0`,
+      });
+
+      expect(txRollupInbox).toBeDefined();
+      expect(txRollupInbox.inbox_length).toEqual(1);
+      expect(txRollupInbox.cumulated_size).toEqual(4);
+      expect(txRollupInbox.merkle_root).toEqual(
+        'txi3Ef5CSsBWRaqQhWj2zg51J3tUqHFD47na6ex7zcboTG5oXEFrm'
+      );
+
+      done();
+    });
+  });
 });
