@@ -36,8 +36,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                   DROP;
                   PUSH nat 1;
                   PUSH string "test";
-                  SELF_ADDRESS;
-                  PAIR 3;
+                  TICKET;
                 } ;
               DROP; # DROP storage and input
               DROP; # DROP lambda
@@ -73,8 +72,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                     DROP;
                     PUSH nat 1;
                     PUSH string "test";
-                    SELF_ADDRESS;
-                    PAIR 3;
+                    TICKET;
                     SOME;
                   } ;
                 DROP; # DROP storage and input
