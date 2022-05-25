@@ -12,10 +12,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it("Verify Obtained balance of a smart contract using the BALANCE instruction does not change during the execution of the entrypoint's own code", async (done) => {
+    it("Verify Obtained balance of a smart contract using the BALANCE instruction does not change during the execution of the entrypoint's own code", async () => {
       try {
         const opTezTransferA = await Tezos.contract.originate({
-          balance: '0.000010',
+          balance: '10',
           code: `        { parameter (option address) ;
             storage (pair (mutez %at_end) (mutez %at_start)) ;
             code { UNPAIR ;
@@ -49,6 +49,12 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         expect(opTezTransferA.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
         const TezTransferAContract = await opTezTransferA.contract();
         expect(await TezTransferAContract.storage()).toBeTruthy();
+        Tezos.contract.at(TezTransferAContract.address).then((contract) => {
+          const objects = Object.keys(contract.methodsObject);
+          expect(objects).toContain('default');
+        });
+
+        console.log("contract A address : "+TezTransferAContract.address)
 
         const opTezTransferB = await Tezos.contract.originate({
           code: `        { parameter (option address) ;
@@ -85,14 +91,21 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         const TezTransferBContract = await opTezTransferB.contract();
         expect(await TezTransferBContract.storage()).toBeTruthy();
 
-        await Tezos.contract
-          .at(TezTransferAContract.address)
-          .then((contract) => {
-            return contract.methods.default(TezTransferBContract.address).send();
-          })
-          .then((op) => {
-            return op.confirmation().then(() => op.hash);
-          })
+        Tezos.contract.at(TezTransferBContract.address).then((contract) => {
+          const objects = Object.keys(contract.methodsObject);
+          expect(objects).toContain('default');
+        });
+
+        console.log("contract B address : "+TezTransferBContract.address)
+
+         await Tezos.contract
+           .at(TezTransferAContract.address)
+           .then((contract) => {
+             return contract.methods.default(TezTransferBContract.address).send();
+           })
+           .then((op) => {
+             return op.confirmation().then(() => op.hash);
+           })
 
            const storageA = await TezTransferAContract.storage();
            expect(storageA).toContain({at_end: "10", at_start: "10"});
@@ -101,10 +114,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
            const storageB = await TezTransferBContract.storage();
            expect(storageB).toContain({at_end: "10", at_start: "10"});
            /// Should be {"at_end": "5", "at_start": "5"}
-      } catch (error: any) {
-        
+       } catch (error: any) {
+          console.log(error.message)
       }
-      done();
+     // done();
     });
   });
 });
