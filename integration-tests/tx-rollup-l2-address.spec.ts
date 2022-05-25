@@ -18,7 +18,7 @@ CONFIGS().forEach(({lib, setup, protocol}) => {
         storage (option (tx_rollup_l2_address));
         code {CAR; UNPAIR; ADD; SOME; NIL operation; PAIR}
         `,
-        init: "None"
+        storage: "tz4VHgLiRx5ZZjwU2QaybHc11EMJk3NcyvVc"
       })
       await op.confirmation();
       expect(op.hash).toBeDefined();
