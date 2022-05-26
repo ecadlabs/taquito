@@ -3,8 +3,6 @@ import { RpcClient } from '@taquito/rpc';
 
 // TC-007 - A 0tez transaction to an implicit account should fail.
 
-const client = new RpcClient(' https://ithacanet.ecadinfra.com');
-
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
@@ -40,13 +38,19 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const contract = await op.contract();
       expect(await contract.storage()).toBeTruthy();
 
-      try {
-        const publicKeyHash = await Tezos.signer.publicKeyHash();
-        const opTransfer = await Tezos.contract.transfer({ to: publicKeyHash, amount: 0 });
-        await opTransfer.confirmation();
-      } catch (error: any) {
-        expect(error.message).toContain('contract.empty_transaction');
-      }
+      try{
+      const publicKeyHash = await Tezos.signer.publicKeyHash();
+      await Tezos.contract
+      .at(contract.address)
+      .then((contract) => {
+        return contract.methods.default(publicKeyHash).send();
+      })
+      .then((op) => {
+        return op.confirmation().then(() => op.hash);
+      }) 
+    } catch (error: any) {
+      expect(error.message).toContain('contract.empty_transaction');
+    }
     });
   });
 });
