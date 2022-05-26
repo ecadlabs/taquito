@@ -20,10 +20,13 @@ describe("TxRollupL2Address Token", () => {
         string: 'tz49XoaXbDZcWi2R1iKxQUxtBWXt4g4S1qtf',
       });
     });
-    // check how to test
-    // it('test semantic', () => {
-    //   expect(token.EncodeObject("tz49XoaXbDZcWi2R1iKxQUxtBWXt4g4S1qtf", {tx_rollup_l2_address: ()}))
-    // })
+
+    it('test semantic', () => {
+      const val = token.EncodeObject('tz49XoaXbDZcWi2R1iKxQUxtBWXt4g4S1qtf', {tx_rollup_l2_address: () => ({string: 'tester'})})
+      const val2 = token.EncodeObject('tz49XoaXbDZcWi2R1iKxQUxtBWXt4g4S1qtf', {tx_rollup_l2_address: (arg) => ({string: arg})})
+      expect(val).toEqual({string:'tester'})
+      expect(val2).toEqual({string: 'tz49XoaXbDZcWi2R1iKxQUxtBWXt4g4S1qtf'})
+    })
 
     it("Should throw a new validation error when address is not valid", () => {
       expect(() => token.EncodeObject("tz4").toThrowError(TxRollupL2AddressValidationError));
@@ -98,6 +101,7 @@ describe("TxRollupL2Address Token", () => {
   describe('find return tokens', () => {
     it("should return array with prim of this token", () => {
       expect(token.findAndReturnTokens('tx_rollup_l2_address', [])).toEqual([token])
+      expect(token.findAndReturnTokens('else', [])).toEqual([])
     })
   })
 })
