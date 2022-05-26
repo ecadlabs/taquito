@@ -13,26 +13,26 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it('Verify creating ticket is not possible with duplicate transaction operation', async (done) => {
+    it('Verify creating ticket is not possible with duplicate transaction operation - fail with internal_operation_replay', async (done) => {
       try {
         const opJoin = await Tezos.contract.originate({
-          code: `   {  parameter (ticket string);
-      storage (option (ticket string));
-      code
-        {
-          UNPAIR; 
-          SWAP;
-          IF_NONE {
-                    SOME;
-                  }
-                  {
-                    PAIR;
-                    JOIN_TICKETS;
-                  };
-          NIL operation;
-          PAIR;
-        };      
-      }`,
+          code: `   {   parameter (ticket string);
+                        storage (option (ticket string));
+                        code
+                          {
+                            UNPAIR; 
+                            SWAP;
+                            IF_NONE {
+                                      SOME;
+                                    }
+                                    {
+                                      PAIR;
+                                      JOIN_TICKETS;
+                                    };
+                            NIL operation;
+                            PAIR;
+                          }     
+                        }`,
           init: 'None',
         });
 
@@ -40,26 +40,33 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         expect(opJoin.hash).toBeDefined();
         expect(opJoin.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
         const opJoinContract = await opJoin.contract();
-        //expect(await opJoinContract.storage()).toBeTruthy();
 
         const opDupOp = await Tezos.contract.originate({
-          code: `   {  parameter (ticket string);
-      storage (option (ticket string));
-      code
-        {
-          UNPAIR; 
-          SWAP;
-          IF_NONE {
-                    SOME;
-                  }
-                  {
-                    PAIR;
-                    JOIN_TICKETS;
-                  };
-          NIL operation;
-          PAIR;
-        };      
-      }`,
+          code: `   { parameter address;
+            storage unit;
+            code
+              {
+                CAR ; # drop storage, but keep input
+                PUSH nat 1;
+                PUSH string "test";
+                TICKET;
+                SWAP;
+                CONTRACT (ticket string);
+                IF_NONE { FAIL } {};
+                PUSH mutez 0;
+                DIG 2;
+                TRANSFER_TOKENS;
+                DUP;
+                NIL operation;
+                SWAP;
+                CONS;
+                SWAP;
+                CONS;
+                UNIT;
+                SWAP;
+                PAIR;
+              };    
+                    }`,
           init: 'Unit',
         });
 
@@ -69,23 +76,26 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         const opDupOpContract = await opDupOp.contract();
         expect(await opDupOpContract.storage()).toBeTruthy();
 
-        await Tezos.contract
-          .at(opDupOpContract.address)
-          .then((contract) => {
-            return contract.methods.default(`${opJoinContract.address}`).send();
-          })
-          .then((op) => {
-            return op.confirmation().then(() => op.hash);
-          });
+        // await Tezos.contract
+        //   .at(opDupOpContract.address)
+        //   .then((contract) => {
+        //     return contract.methods.default(`${opJoinContract.address}`).send();
+        //   })
+        //   .then((op) => {
+        //     return op.confirmation().then(() => op.hash);
+        //   });
+
+        const opSend = await opDupOpContract.methods.init(`${opJoinContract.address}`).send();
+        await opSend.confirmation();
       } catch (error: any) {
-        expect(error.message).toContain('michelson_v1.invalid_primitive');
+        expect(error.message).toContain('internal_operation_replay');
       }
       done();
     });
 
-    it('Verify contract for ticket is not created with duplicate map containing tickets', async (done) => {
+    it('Verify contract for ticket is not created with duplicate map containing tickets - fail with unexpected ticket', async (done) => {
       try {
-        const opGetter = await Tezos.contract.originate({
+        const opMapDup = await Tezos.contract.originate({
           code: ` { parameter unit;
             storage unit;
             code
@@ -104,20 +114,21 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 UNIT;
                 NIL operation;
                 PAIR;
-              };}`,
+              }}`,
           init: 'Unit',
         });
 
-        await opGetter.confirmation();
-        expect(opGetter.hash).toBeDefined();
-        expect(opGetter.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+        await opMapDup.confirmation();
+        expect(opMapDup.hash).toBeDefined();
+        expect(opMapDup.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       } catch (error: any) {
+        console.log(error.message);
         expect(error.message).toContain('michelson_v1.unexpected_ticket');
       }
       done();
     });
 
-    it('Verify contract for ticket is not created with a duplicate big_map containing tickets', async (done) => {
+    it('Verify contract for ticket is not created with a duplicate big_map containing tickets - fail with unexpected_ticket', async (done) => {
       try {
         const opGetter = await Tezos.contract.originate({
           code: ` { parameter unit;
@@ -149,7 +160,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         expect(error.message).toContain('michelson_v1.unexpected_ticket');
       }
       done();
-    });   
+    });
   });
 });
 

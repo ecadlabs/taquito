@@ -19,84 +19,65 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it('Verify creating ticket is not possible with call input string/address', async (done) => {
+    it('Verify creating ticket is not possible with call input string/address - parameter passed is invalid for type ticket string', async (done) => {
       try {
-        const opContract = await Tezos.contract.originate({
-          code: `   {  parameter (ticket string);
-        storage (option (ticket string));
-        code
-          {
-            CAR; # drop storage, but leave input on stack
-            PUSH nat 4;
-            PUSH string "test";
-            TICKET;
-            PAIR;
-            JOIN_TICKETS;
-            NIL operation;
-            PAIR;
-          };}`,
-          init: 'Unit',
+        const op = await Tezos.contract.originate({
+          code: `   {   parameter (ticket string);
+                        storage (option (ticket string));
+                        code
+                          {
+                            CAR; # drop storage, but leave input on stack
+                            PUSH nat 4;
+                            PUSH string "test";
+                            TICKET;
+                            PAIR;
+                            JOIN_TICKETS;
+                            NIL operation;
+                            PAIR;
+                          }
+                    }`,
+          init: 'None',
         });
 
-        await opContract.confirmation();
-        expect(opContract.hash).toBeDefined();
-        expect(opContract.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-        const opContractContract = await opContract.contract();
-        // expect(await opContractContract.storage()).toBeTruthy();
-
-        await Tezos.contract
-          .at(opContractContract.address)
-          .then((contract) => {
-            return contract.methods
-              .default(`(Pair ${opContractContract.address} \"test\" 1)`)
-              .send();
-          })
-          .then((op) => {
-            return op.confirmation().then(() => op.hash);
-          });
+        await op.confirmation();
+        expect(op.hash).toBeDefined();
+        expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+        const opContract = await op.contract();
+        const opSend = await opContract.methods.default(`(Pair ${opContract.address} \"test\" 1)`).send();
+        await opSend.confirmation()
       } catch (error: any) {
-        expect(error.message).toContain('michelson_v1.invalid_primitive');
+        expect(error.message).toContain('Unable to encode parameter');
       }
       done();
     });
 
     it('Verify creating ticket is not possible with string/address', async (done) => {
       try {
-        const opContract = await Tezos.contract.originate({
-          code: `   {  parameter (option (ticket string));
-        storage (option (ticket string));
-        code
-          {
-            CAR; # drop storage, but leave input on stack
-            IF_NONE { FAIL} {};
-            PUSH nat 4;
-            PUSH string "test";
-            TICKET;
-            PAIR;
-            JOIN_TICKETS;
-            NIL operation;
-            PAIR;
-          };
-        }`,
+        const op = await Tezos.contract.originate({
+          code: `   {   parameter (option (ticket string));
+                        storage (option (ticket string));
+                        code
+                          {
+                            CAR; # drop storage, but leave input on stack
+                            IF_NONE { FAIL} {};
+                            PUSH nat 4;
+                            PUSH string "test";
+                            TICKET;
+                            PAIR;
+                            JOIN_TICKETS;
+                            NIL operation;
+                            PAIR;
+                          };
+                        }`,
           init: 'None',
         });
 
-        await opContract.confirmation();
-        expect(opContract.hash).toBeDefined();
-        expect(opContract.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-        const opContractContract = await opContract.contract();
-        // expect(await opContractContract.storage()).toBeTruthy();
-
-        await Tezos.contract
-          .at(opContractContract.address)
-          .then((contract) => {
-            return contract.methods
-              .default(`Some (Pair ${opContractContract.address} \"test\" 1)`)
-              .send();
-          })
-          .then((op) => {
-            return op.confirmation().then(() => op.hash);
-          });
+        await op.confirmation();
+        expect(op.hash).toBeDefined();
+        expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+        const opContract = await op.contract();
+        const opSend = await opContract.methods.default(`(Pair ${opContract.address} \"test\" 1)`).send();
+        await opSend.confirmation()
       } catch (error: any) {
         expect(error.message).toContain('Unable to encode parameter');
       }
@@ -106,24 +87,24 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     it('Verify creating ticket is not possible Join ticket - two different ticketers', async (done) => {
       try {
         const opJoin = await Tezos.contract.originate({
-          code: `   {  parameter (option (ticket string));
-      storage unit;
-      code
-        {
-          CAR; # drop storage, but leave input on stack
-          IF_NONE { FAIL} {};
-          PUSH nat 4;
-          PUSH string "test";
-          TICKET;
-          PAIR;
-          JOIN_TICKETS;
-          IF_NONE { FAIL } {};
-          DROP;
-          UNIT;
-          NIL operation;
-          PAIR;
-        };
-      }`,
+          code: `   {   parameter (option (ticket string));
+                        storage unit;
+                        code
+                          {
+                            CAR; # drop storage, but leave input on stack
+                            IF_NONE { FAIL} {};
+                            PUSH nat 4;
+                            PUSH string "test";
+                            TICKET;
+                            PAIR;
+                            JOIN_TICKETS;
+                            IF_NONE { FAIL } {};
+                            DROP;
+                            UNIT;
+                            NIL operation;
+                            PAIR;
+                          };
+                        }`,
           init: 'None',
         });
 
@@ -134,27 +115,27 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         expect(await opJoinContract.storage()).toBeTruthy();
 
         const opCaller = await Tezos.contract.originate({
-          code: `   {  parameter address;
-    storage unit;
-    code
-      {
-        CAR; # drop storage, but leave input on stack
-        CONTRACT (option (ticket string));
-        IF_NONE { FAIL } {};
-        PUSH mutez 0;
-        PUSH nat 1;
-        PUSH string "test";
-        TICKET;
-        SOME;
-        TRANSFER_TOKENS;
-        NIL operation;
-        SWAP;
-        CONS;
-        UNIT;
-        SWAP;
-        PAIR;
-      };
-    }`,
+          code: `   {   parameter address;
+                        storage unit;
+                        code
+                          {
+                            CAR; # drop storage, but leave input on stack
+                            CONTRACT (option (ticket string));
+                            IF_NONE { FAIL } {};
+                            PUSH mutez 0;
+                            PUSH nat 1;
+                            PUSH string "test";
+                            TICKET;
+                            SOME;
+                            TRANSFER_TOKENS;
+                            NIL operation;
+                            SWAP;
+                            CONS;
+                            UNIT;
+                            SWAP;
+                            PAIR;
+                          };
+                        }`,
           init: 'Unit',
         });
 
@@ -163,15 +144,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         expect(opCaller.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
         const opCallerContract = await opCaller.contract();
         expect(await opCallerContract.storage()).toBeTruthy();
-
-        await Tezos.contract
-          .at(opCallerContract.address)
-          .then((contract) => {
-            return contract.methods.default(`${opJoinContract.address}`).send();
-          })
-          .then((op) => {
-            return op.confirmation().then(() => op.hash);
-          });
+        const opSend = await opCallerContract.methods.default(`(Pair ${opCallerContract.address} \"test\" 1)`).send();
+        await opSend.confirmation()
       } catch (error: any) {
         expect(error.message).toContain('michelson_v1.invalid_primitive');
       }
@@ -180,44 +154,37 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     it('Verify creating ticket is not possible with two different, but similar cty', async (done) => {
       try {
-        const opContract = await Tezos.contract.originate({
+        const op = await Tezos.contract.originate({
           code: `   { parameter unit;
-      storage unit;
-      code
-        {
-          DROP; # drop input and storage
-          PUSH nat 4;
-          PUSH string "test";
-          TICKET;
-          PUSH nat 1;
-          PUSH string "tes";
-          TICKET;
-          PAIR;
-          JOIN_TICKETS;
-          IF_NONE { FAIL } {};
-          DROP;
-          UNIT;
-          NIL operation;
-          PAIR;
-        };
-      }`,
+                      storage unit;
+                      code
+                        {
+                          DROP; # drop input and storage
+                          PUSH nat 4;
+                          PUSH string "test";
+                          TICKET;
+                          PUSH nat 1;
+                          PUSH string "tes";
+                          TICKET;
+                          PAIR;
+                          JOIN_TICKETS;
+                          IF_NONE { FAIL } {};
+                          DROP;
+                          UNIT;
+                          NIL operation;
+                          PAIR;
+                        };
+                      }`,
           init: 'Unit',
         });
 
-        await opContract.confirmation();
-        expect(opContract.hash).toBeDefined();
-        expect(opContract.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-        const opContractContract = await opContract.contract();
-        expect(await opContractContract.storage()).toBeTruthy();
-
-        await Tezos.contract
-          .at(opContractContract.address)
-          .then((contract) => {
-            return contract.methods.default(`Unit`).send();
-          })
-          .then((op) => {
-            return op.confirmation().then(() => op.hash);
-          });
+        await op.confirmation();
+        expect(op.hash).toBeDefined();
+        expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+        const opContract = await op.contract();
+        expect(await opContract.storage()).toBeTruthy();
+        const opSend = await opContract.methods.default(`(Pair ${opContract.address} \"test\" 1)`).send();
+        await opSend.confirmation()
       } catch (error: any) {
         expect(error.message).toContain('{"prim":"Unit"}');
       }

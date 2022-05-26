@@ -35,7 +35,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 NIL operation;
                 PAIR;
               };}`,
-          init: 'Unit'
+          init: `0`
         });
 
         await opGetter.confirmation();
