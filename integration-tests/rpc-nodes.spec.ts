@@ -20,7 +20,7 @@ CONFIGS().forEach(
 
     const jakartanetAndIthacanet = protocol === Protocols.Psithaca2 || protocol === Protocols.PtJakart2 ? test: test.skip;
     const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
-    const jakartanetIt = protocol === Protocols.PtJakart2 || protocol === Protocols.ProtoALpha ? it: it.skip;
+    const jakartanetIt = protocol === Protocols.PtJakart2 ? it: it.skip;
 
     beforeAll(async (done) => {
       await setup();
