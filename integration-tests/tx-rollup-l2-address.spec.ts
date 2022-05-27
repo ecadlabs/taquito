@@ -61,13 +61,12 @@ CONFIGS().forEach(({lib, setup, protocol}) => {
       const contract = await op.contract();
       const TOCHANGE_why_is_this_symbol = await contract.storage()
       expect(JSON.stringify(TOCHANGE_why_is_this_symbol)).toEqual(JSON.stringify(UnitValue))
-      // remaining fails TezosOperationError: {"prim":"Unit"}
-      // const methodCall = await contract.methods.default('tz1NGwyYjneFKrVA3u9kR3uj22p6nRP8tDEq', 'tz4VHgLiRx5ZZjwU2QaybHc11EMJk3NcyvVc', '1', 'txr1di1E5BgY6QSPx61eE62P7KW93ckGwH2e7').send();
-      // await methodCall.confirmation();
+      const methodCall = await contract.methods.default('txr1di1E5BgY6QSPx61eE62P7KW93ckGwH2e7', 'tz4VHgLiRx5ZZjwU2QaybHc11EMJk3NcyvVc', '1').send();
+      await methodCall.confirmation();
 
-      // expect(methodCall.hash).toBeDefined();
-      // expect(methodCall.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-      // expect(await contract.storage()).toEqual('0200000000000000000000000000000000000000000000000000000000000000')
+      expect(methodCall.hash).toBeDefined();
+      expect(methodCall.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+      expect(JSON.stringify(await contract.storage())).toEqual(JSON.stringify(UnitValue))
       done();
     })
 
