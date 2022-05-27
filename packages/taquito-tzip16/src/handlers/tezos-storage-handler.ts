@@ -15,7 +15,7 @@ const typeOfValueToFind = {
   annots: ['%metadata'],
 };
 
-type BigMapId = { int: string };
+export type BigMapId = { int: string };
 
 export class TezosStorageHandler implements Handler {
   private readonly TEZOS_STORAGE_REGEX = /^(?:\/\/(KT1\w{33})(?:\.(.+))?\/)?([\w|%]+)$/;
@@ -38,12 +38,11 @@ export class TezosStorageHandler implements Handler {
       typeOfValueToFind
     );
 
-    if (!bigMapId) {
+    if (!bigMapId || !bigMapId.int) {
       throw new BigMapMetadataNotFound();
     }
-
     const bytes = await context.contract.getBigMapKeyByID<string>(
-      bigMapId['int'].toString(),
+      bigMapId.int.toString(),
       parsedTezosStorageUri.path,
       new Schema(typeOfValueToFind)
     );

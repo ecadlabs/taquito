@@ -15,7 +15,7 @@ const MAX_CHUNK_SIZE = 230;
  * @returns A buffer where the first element is the length of the path (default is 4), then 3 bytes for each number of the path to which is added 0x8000000
  */
 export function transformPathToBuffer(path: string): Buffer {
-  const result: any[] = [];
+  const result: number[] = [];
   const components = path.split('/');
   components.forEach((element) => {
     let toNumber = parseInt(element, 10);

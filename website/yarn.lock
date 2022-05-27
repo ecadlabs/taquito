@@ -2,69 +2,69 @@
 # yarn lockfile v1
 
 
-"@airgap/beacon-core@^3.0.0":
-  "integrity" "sha512-zC79n3yzXWlGPkPq1DKPWLV/gZnLB6oeE+NToftgIB+4Grn5+ojliOfIL4WnYus8uQrYuhp7wOyri9HCnwco0A=="
-  "resolved" "https://registry.npmjs.org/@airgap/beacon-core/-/beacon-core-3.0.0.tgz"
-  "version" "3.0.0"
+"@airgap/beacon-core@^3.1.0":
+  "integrity" "sha512-K9sKYAhUTXhgzjQfezOK5Q/WA4+vvQ4hI80mItchzfqwCp8/sYW6Ua4/M+c+r4tdrH4LKVueGjxYMZQk8GFJzA=="
+  "resolved" "https://registry.npmjs.org/@airgap/beacon-core/-/beacon-core-3.1.0.tgz"
+  "version" "3.1.0"
   dependencies:
-    "@airgap/beacon-types" "^3.0.0"
-    "@airgap/beacon-utils" "^3.0.0"
+    "@airgap/beacon-types" "^3.1.0"
+    "@airgap/beacon-utils" "^3.1.0"
     "@types/libsodium-wrappers" "0.7.9"
     "bs58check" "2.1.2"
     "libsodium-wrappers" "0.7.9"
 
 "@airgap/beacon-dapp@^3.0.0":
-  "integrity" "sha512-WVZIfOWwZPhFu9/0G2u3dHEemt5flTIW8HFiVU3lMFN4KTMNFnJCbPikpVpUdDvS8nAjH5XF8fo7ddNOmvTk5w=="
-  "resolved" "https://registry.npmjs.org/@airgap/beacon-dapp/-/beacon-dapp-3.0.0.tgz"
-  "version" "3.0.0"
+  "integrity" "sha512-/EIP0QlEu34BwkO8fTv9uPLIDsK0cqCx9A9Koc4Ez7EzHsvuolw3x8E6aIsF3/GLDTQWxc9E7iQ1CkWhX9kHRg=="
+  "resolved" "https://registry.npmjs.org/@airgap/beacon-dapp/-/beacon-dapp-3.1.0.tgz"
+  "version" "3.1.0"
   dependencies:
-    "@airgap/beacon-core" "^3.0.0"
-    "@airgap/beacon-transport-matrix" "^3.0.0"
-    "@airgap/beacon-transport-postmessage" "^3.0.0"
-    "@airgap/beacon-ui" "^3.0.0"
+    "@airgap/beacon-core" "^3.1.0"
+    "@airgap/beacon-transport-matrix" "^3.1.0"
+    "@airgap/beacon-transport-postmessage" "^3.1.0"
+    "@airgap/beacon-ui" "^3.1.0"
     "qrcode-generator" "1.4.4"
 
-"@airgap/beacon-transport-matrix@^3.0.0":
-  "integrity" "sha512-oGOmD7SPlA/u3jYGOpon7oyVugTH9wt/N4BNsZJNMEIPwMYqAIG08iAEeIe9rNcDzjueoSAUQZBGnX3ee9uwgw=="
-  "resolved" "https://registry.npmjs.org/@airgap/beacon-transport-matrix/-/beacon-transport-matrix-3.0.0.tgz"
-  "version" "3.0.0"
+"@airgap/beacon-transport-matrix@^3.1.0":
+  "integrity" "sha512-c3gOaD1kX4vhnF0PLNCZp964RIfluPZVhVFqWCGzZAqURA40/UkhFRkwlaJ8e/KIRiATb+3A0dA7Bbzld6SK9g=="
+  "resolved" "https://registry.npmjs.org/@airgap/beacon-transport-matrix/-/beacon-transport-matrix-3.1.0.tgz"
+  "version" "3.1.0"
   dependencies:
-    "@airgap/beacon-core" "^3.0.0"
-    "@airgap/beacon-utils" "^3.0.0"
+    "@airgap/beacon-core" "^3.1.0"
+    "@airgap/beacon-utils" "^3.1.0"
     "axios" "0.24.0"
 
-"@airgap/beacon-transport-postmessage@^3.0.0":
-  "integrity" "sha512-sF698z1fUL15Qks4k0Z/LLJH/gqueOfQeQ8cWxNhvdqMcX7FlhVI1iYJroI2w6TtDH7XGBcWQwDwCUw58OZQbQ=="
-  "resolved" "https://registry.npmjs.org/@airgap/beacon-transport-postmessage/-/beacon-transport-postmessage-3.0.0.tgz"
-  "version" "3.0.0"
+"@airgap/beacon-transport-postmessage@^3.1.0":
+  "integrity" "sha512-g5GZKpWQGv1eNQc7YSfnfZIN5tE2Z7z7TBHggC7TzZK/MQAccusXZCXfro4ByHgbQ8r06pXFH+WhWoHfGdLecA=="
+  "resolved" "https://registry.npmjs.org/@airgap/beacon-transport-postmessage/-/beacon-transport-postmessage-3.1.0.tgz"
+  "version" "3.1.0"
   dependencies:
-    "@airgap/beacon-core" "^3.0.0"
-    "@airgap/beacon-types" "^3.0.0"
-    "@airgap/beacon-utils" "^3.0.0"
+    "@airgap/beacon-core" "^3.1.0"
+    "@airgap/beacon-types" "^3.1.0"
+    "@airgap/beacon-utils" "^3.1.0"
     "@types/libsodium-wrappers" "0.7.9"
     "libsodium-wrappers" "0.7.9"
 
-"@airgap/beacon-types@^3.0.0":
-  "integrity" "sha512-P81xglSWbotIZbftLFMNTOTtaOrzWKz9PCr45UC2lFTMGq5MsEVQho0ssIjytSp6M/hAHW/01hUNfKDdgooHhw=="
-  "resolved" "https://registry.npmjs.org/@airgap/beacon-types/-/beacon-types-3.0.0.tgz"
-  "version" "3.0.0"
+"@airgap/beacon-types@^3.1.0":
+  "integrity" "sha512-/Vl6CyUXVvsZURn4Ajvmi1mM9i6W7JNzo0lkKw2U1yhaVd6RwVtyIv7PQqCOuOIBdaMHBGWLZ+DMtYTMdY//6A=="
+  "resolved" "https://registry.npmjs.org/@airgap/beacon-types/-/beacon-types-3.1.0.tgz"
+  "version" "3.1.0"
   dependencies:
     "@types/chrome" "0.0.163"
 
-"@airgap/beacon-ui@^3.0.0":
-  "integrity" "sha512-+uGJp5wWYteZtjLzo9vsIG6GNzZkyBnaU5o7ybtr0A3YbSlFBNbm2IpNIxJ5vtxwN6g3fK/yef1iPvXa1Ezwdg=="
-  "resolved" "https://registry.npmjs.org/@airgap/beacon-ui/-/beacon-ui-3.0.0.tgz"
-  "version" "3.0.0"
+"@airgap/beacon-ui@^3.1.0":
+  "integrity" "sha512-d0ATZK5RTD1Ecvm2byXkyOEuNNQkXcZzV1IgnJhWg2r+36vraIm1lHQqvuUj4+tDtKejCXcfEL5xYEZ6h8Ivsw=="
+  "resolved" "https://registry.npmjs.org/@airgap/beacon-ui/-/beacon-ui-3.1.0.tgz"
+  "version" "3.1.0"
   dependencies:
-    "@airgap/beacon-core" "^3.0.0"
-    "@airgap/beacon-transport-postmessage" "^3.0.0"
-    "@airgap/beacon-types" "^3.0.0"
-    "@airgap/beacon-utils" "^3.0.0"
+    "@airgap/beacon-core" "^3.1.0"
+    "@airgap/beacon-transport-postmessage" "^3.1.0"
+    "@airgap/beacon-types" "^3.1.0"
+    "@airgap/beacon-utils" "^3.1.0"
 
-"@airgap/beacon-utils@^3.0.0":
-  "integrity" "sha512-hjynz2qufs6yTQXj870bRnhc3v2V0osnzjy4AfkbTXC2D96E34PQt9ao1eGK75vWThJv3uw1Yham2vpBiXyzzg=="
-  "resolved" "https://registry.npmjs.org/@airgap/beacon-utils/-/beacon-utils-3.0.0.tgz"
-  "version" "3.0.0"
+"@airgap/beacon-utils@^3.1.0":
+  "integrity" "sha512-VrCA8XK5DIzn7RKmuWDY9Ree+6kLoU5DkNGDk6NJWmziRoy8mZ2P3HkVQNVP2TFmPEpGksWjS7xHxC73A0qh6w=="
+  "resolved" "https://registry.npmjs.org/@airgap/beacon-utils/-/beacon-utils-3.1.0.tgz"
+  "version" "3.1.0"
   dependencies:
     "@types/libsodium-wrappers" "0.7.9"
     "bs58check" "2.1.2"
@@ -3017,7 +3017,7 @@
     "@babel/types" "^7.15.6"
     "entities" "^3.0.1"
 
-"@svgr/plugin-jsx@^6.0.0", "@svgr/plugin-jsx@^6.2.1":
+"@svgr/plugin-jsx@^6.2.1":
   "integrity" "sha512-u+MpjTsLaKo6r3pHeeSVsh9hmGRag2L7VzApWIaS8imNguqoUwDq/u6U/NDmYs/KAsrmtBjOEaAAPbwNGXXp1g=="
   "resolved" "https://registry.npmjs.org/@svgr/plugin-jsx/-/plugin-jsx-6.2.1.tgz"
   "version" "6.2.1"
@@ -3027,7 +3027,7 @@
     "@svgr/hast-util-to-babel-ast" "^6.2.1"
     "svg-parser" "^2.0.2"
 
-"@svgr/plugin-svgo@^6.0.0", "@svgr/plugin-svgo@^6.2.0":
+"@svgr/plugin-svgo@^6.2.0":
   "integrity" "sha512-oDdMQONKOJEbuKwuy4Np6VdV6qoaLLvoY86hjvQEgU82Vx1MSWRyYms6Sl0f+NtqxLI/rDVufATbP/ev996k3Q=="
   "resolved" "https://registry.npmjs.org/@svgr/plugin-svgo/-/plugin-svgo-6.2.0.tgz"
   "version" "6.2.0"
@@ -3035,21 +3035,6 @@
     "cosmiconfig" "^7.0.1"
     "deepmerge" "^4.2.2"
     "svgo" "^2.5.0"
-
-"@svgr/webpack@^6.0.0":
-  "integrity" "sha512-F5OgF2WiaACDG0JNr09Z7ar6VNeA5HtbFUzZwh/CFYKNese3sQOky0/2taQIniMtPytJ+Jc4NL1en3crBtRz8g=="
-  "resolved" "https://registry.npmjs.org/@svgr/webpack/-/webpack-6.0.0.tgz"
-  "version" "6.0.0"
-  dependencies:
-    "@babel/core" "^7.15.5"
-    "@babel/plugin-transform-react-constant-elements" "^7.14.5"
-    "@babel/preset-env" "^7.15.6"
-    "@babel/preset-react" "^7.14.5"
-    "@babel/preset-typescript" "^7.15.0"
-    "@svgr/core" "^6.0.0"
-    "@svgr/plugin-jsx" "^6.0.0"
-    "@svgr/plugin-svgo" "^6.0.0"
-    "loader-utils" "^2.0.0"
 
 "@svgr/webpack@^6.2.1":
   "integrity" "sha512-h09ngMNd13hnePwgXa+Y5CgOjzlCvfWLHg+MBnydEedAnuLRzUHUJmGS3o2OsrhxTOOqEsPOFt5v/f6C5Qulcw=="
@@ -4633,10 +4618,10 @@
   "resolved" "https://registry.npmjs.org/cli-width/-/cli-width-3.0.0.tgz"
   "version" "3.0.0"
 
-"clipboard@^2.0.10":
-  "integrity" "sha512-cz3m2YVwFz95qSEbCDi2fzLN/epEN9zXBvfgAoGkvGOJZATMl9gtTDVOtBYkx2ODUJl2kvmud7n32sV2BpYR4g=="
-  "resolved" "https://registry.npmjs.org/clipboard/-/clipboard-2.0.10.tgz"
-  "version" "2.0.10"
+"clipboard@^2.0.11":
+  "integrity" "sha512-C+0bbOqkezLIsmWSvlsXS0Q0bmkugu7jcfMIACB+RDEntIzQIkdr148we28AfSloQLRdZlYL/QYyrq05j/3Faw=="
+  "resolved" "https://registry.npmjs.org/clipboard/-/clipboard-2.0.11.tgz"
+  "version" "2.0.11"
   dependencies:
     "good-listener" "^1.2.2"
     "select" "^1.1.2"
