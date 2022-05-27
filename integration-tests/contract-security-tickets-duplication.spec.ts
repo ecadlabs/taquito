@@ -32,7 +32,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                             NIL operation;
                             PAIR;
                           }     
-                        }`,
+                    }`,
           init: 'None',
         });
 
@@ -43,29 +43,29 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
         const opDupOp = await Tezos.contract.originate({
           code: `   { parameter address;
-            storage unit;
-            code
-              {
-                CAR ; # drop storage, but keep input
-                PUSH nat 1;
-                PUSH string "test";
-                TICKET;
-                SWAP;
-                CONTRACT (ticket string);
-                IF_NONE { FAIL } {};
-                PUSH mutez 0;
-                DIG 2;
-                TRANSFER_TOKENS;
-                DUP;
-                NIL operation;
-                SWAP;
-                CONS;
-                SWAP;
-                CONS;
-                UNIT;
-                SWAP;
-                PAIR;
-              };    
+                      storage unit;
+                      code
+                        {
+                          CAR ; # drop storage, but keep input
+                          PUSH nat 1;
+                          PUSH string "test";
+                          TICKET;
+                          SWAP;
+                          CONTRACT (ticket string);
+                          IF_NONE { FAIL } {};
+                          PUSH mutez 0;
+                          DIG 2;
+                          TRANSFER_TOKENS;
+                          DUP;
+                          NIL operation;
+                          SWAP;
+                          CONS;
+                          SWAP;
+                          CONS;
+                          UNIT;
+                          SWAP;
+                          PAIR;
+                        }    
                     }`,
           init: 'Unit',
         });
@@ -75,17 +75,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         expect(opDupOp.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
         const opDupOpContract = await opDupOp.contract();
         expect(await opDupOpContract.storage()).toBeTruthy();
-
-        // await Tezos.contract
-        //   .at(opDupOpContract.address)
-        //   .then((contract) => {
-        //     return contract.methods.default(`${opJoinContract.address}`).send();
-        //   })
-        //   .then((op) => {
-        //     return op.confirmation().then(() => op.hash);
-        //   });
-
-        const opSend = await opDupOpContract.methods.init(`${opJoinContract.address}`).send();
+        const opSend = await opDupOpContract.methods.default(`${opJoinContract.address}`).send();
         await opSend.confirmation();
       } catch (error: any) {
         expect(error.message).toContain('internal_operation_replay');
@@ -97,24 +87,25 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       try {
         const opMapDup = await Tezos.contract.originate({
           code: ` { parameter unit;
-            storage unit;
-            code
-              {
-                DROP ; # drop storage and input
-                EMPTY_MAP nat (ticket string); 
-                PUSH nat 1;
-                PUSH string "test";
-                TICKET;
-                SOME;
-                PUSH nat 0;
-                UPDATE;
-                DUP;
-                DROP;
-                DROP;
-                UNIT;
-                NIL operation;
-                PAIR;
-              }}`,
+                    storage unit;
+                    code
+                      {
+                        DROP ; # drop storage and input
+                        EMPTY_MAP nat (ticket string); 
+                        PUSH nat 1;
+                        PUSH string "test";
+                        TICKET;
+                        SOME;
+                        PUSH nat 0;
+                        UPDATE;
+                        DUP;
+                        DROP;
+                        DROP;
+                        UNIT;
+                        NIL operation;
+                        PAIR;
+                      }
+                  }`,
           init: 'Unit',
         });
 
@@ -122,7 +113,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         expect(opMapDup.hash).toBeDefined();
         expect(opMapDup.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       } catch (error: any) {
-        console.log(error.message);
         expect(error.message).toContain('michelson_v1.unexpected_ticket');
       }
       done();
@@ -132,24 +122,25 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       try {
         const opGetter = await Tezos.contract.originate({
           code: ` { parameter unit;
-            storage unit;
-            code
-              {
-                DROP ; # drop storage and input
-                EMPTY_BIG_MAP nat (ticket string); 
-                PUSH nat 1;
-                PUSH string "test";
-                TICKET;
-                SOME;
-                PUSH nat 0;
-                UPDATE;
-                DUP;
-                DROP;
-                DROP;
-                UNIT;
-                NIL operation;
-                PAIR;
-              };}`,
+                    storage unit;
+                    code
+                      {
+                        DROP ; # drop storage and input
+                        EMPTY_BIG_MAP nat (ticket string); 
+                        PUSH nat 1;
+                        PUSH string "test";
+                        TICKET;
+                        SOME;
+                        PUSH nat 0;
+                        UPDATE;
+                        DUP;
+                        DROP;
+                        DROP;
+                        UNIT;
+                        NIL operation;
+                        PAIR;
+                      }
+                  }`,
           init: 'Unit',
         });
 

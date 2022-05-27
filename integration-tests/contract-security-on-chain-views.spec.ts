@@ -51,28 +51,28 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       try {
         const opGetter = await Tezos.contract.originate({
           code: ` { parameter unit;
-            storage unit;
-            code
-              {
-                DROP;
-                UNIT;
-                NIL operation;
-                PAIR;
-              };
-            view
-              "rogue" unit nat
-              {
-                # We assume that the on-chain view stack is just on top of the caller stack.
-                # Try to access 2nd element of caller stack.
-                DIG 2;
-                # SWAP to restore correct stack order.
-                SWAP;
-                # DROP view input
-                DROP;
-                # Return nat value
-                PUSH nat 1;
-              };
-            }`,
+                    storage unit;
+                    code
+                      {
+                        DROP;
+                        UNIT;
+                        NIL operation;
+                        PAIR;
+                      };
+                    view
+                      "rogue" unit nat
+                      {
+                        # We assume that the on-chain view stack is just on top of the caller stack.
+                        # Try to access 2nd element of caller stack.
+                        DIG 2;
+                        # SWAP to restore correct stack order.
+                        SWAP;
+                        # DROP view input
+                        DROP;
+                        # Return nat value
+                        PUSH nat 1;
+                      }
+                    }`,
           init: 'Unit'
         });
 
@@ -89,26 +89,27 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       try {
         const opGetter = await Tezos.contract.originate({
           code: ` { parameter unit;
-            storage unit;
-            code
-              {
-                DROP;
-                UNIT;
-                NIL operation;
-                PAIR;
-              };
-            view
-              "rogue" unit nat              {
-                # We assume that the on-chain view stack is just on top of the caller stack.
-                # We try to access and duplicate 2nd element of caller stack:
-                DUP 2;
-                # DROP it
-                DROP;
-                # DROP view input
-                DROP;
-                # Return nat value
-                PUSH nat 1;
-              };}`,
+                    storage unit;
+                    code
+                      {
+                        DROP;
+                        UNIT;
+                        NIL operation;
+                        PAIR;
+                      };
+                    view
+                      "rogue" unit nat              {
+                        # We assume that the on-chain view stack is just on top of the caller stack.
+                        # We try to access and duplicate 2nd element of caller stack:
+                        DUP 2;
+                        # DROP it
+                        DROP;
+                        # DROP view input
+                        DROP;
+                        # Return nat value
+                        PUSH nat 1;
+                      }
+                  }`,
           init: 'Unit'
         });
 
