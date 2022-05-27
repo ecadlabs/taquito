@@ -194,6 +194,7 @@ export const mergebuf = (b1: Uint8Array, b2: Uint8Array): Uint8Array => {
  */
 
 // TODO Zainen check use
+// is this used at all?
 export const mic2arr = function me2(s: any): any {
   let ret: any = [];
   if (Object.prototype.hasOwnProperty.call(s, 'prim')) {

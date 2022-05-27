@@ -1,4 +1,3 @@
-import { TxRollupL2AddressToken } from './../packages/taquito-michelson-encoder/src/tokens/comparable/tx_rollup_l2_address';
 import { Protocols } from "@taquito/taquito";
 import { CONFIGS } from "./config";
 import { UnitValue } from '../packages/taquito-michelson-encoder/src/taquito-michelson-encoder';
@@ -6,7 +5,6 @@ import { UnitValue } from '../packages/taquito-michelson-encoder/src/taquito-mic
 CONFIGS().forEach(({lib, setup, protocol}) => {
   const tezos = lib;
   const jakartanet = (protocol === Protocols.PtJakart2) ? test : test.skip;
-  // const txRollupToken = new TxRollupL2AddressToken({prim: "l2_address", args: [], annots: []}, 0, null as any)
 
   describe(`contract originations and method calls to test the type of tx_rollup_l2_address`, () => {
     beforeEach(async (done) => {

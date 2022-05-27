@@ -85,22 +85,6 @@ export class TxRollupL2AddressToken extends ComparableToken {
     }
     return encodePubKey(bytes)
   }
-  // keep for suggested change in address compare change this way has 3 returns rather than 4 and only need to run the function 2 times instead of 6
-  // compare(address1: string, address2: string) {
-  //   const isImplicit = (address: string) => {
-  //     // TODO CHECK THIS tru2 or txr1 or somethign else :O
-  //     return address.startsWith('tz4')
-  //   }
-  //   const implicit1 = isImplicit(address1)
-  //   const implicit2 = isImplicit(address2)
-
-  //   if (implicit1 && !implicit2) {
-  //     return -1;
-  //   } else if (implicit2 && !implicit1) {
-  //     return 1;
-  //   }
-  //   return super.compare(address1, address2)
-  // }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]): Token[] {
     if(TxRollupL2AddressToken.prim === tokenToFind) {
