@@ -4106,3 +4106,30 @@ export const blockJakartanetSample = {
     ],
   ],
 };
+
+export const txRollupState = {
+  last_removed_commitment_hashes: null,
+  finalized_commitments: {
+    next: 0,
+  },
+  unfinalized_commitments: {
+    next: 0,
+  },
+  uncommitted_inboxes: {
+    newest: 0,
+    oldest: 0,
+  },
+  commitment_newest_hash: null,
+  tezos_head_level: 63691,
+  burn_per_byte: '0',
+  allocated_storage: '4000',
+  occupied_storage: '40',
+  inbox_ema: 0,
+  commitments_watermark: null,
+};
+
+export const txRollupInbox = {
+  inbox_length: 1,
+  cumulated_size: 4,
+  merkle_root: 'txi3Ef5CSsBWRaqQhWj2zg51J3tUqHFD47na6ex7zcboTG5oXEFrm',
+};

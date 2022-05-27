@@ -1020,9 +1020,9 @@ export class RpcClient implements RpcClientInterface {
 
   async getTxRollupInbox(
     txRollupId: string,
-    blockLevel: number,
+    blockLevel: string,
     { block }: { block: string } = defaultRPCOptions
-  ): Promise<TxRollupInboxResponse> {
+  ): Promise<TxRollupInboxResponse | null> {
     return this.httpBackend.createRequest<TxRollupInboxResponse>({
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/tx_rollup/${txRollupId}/inbox/${blockLevel}`

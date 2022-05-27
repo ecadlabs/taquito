@@ -1661,26 +1661,31 @@ export type ProtocolsResponse = {
   next_protocol: string;
 };
 
-export type Next = {
-  next: number;
-};
+export type Next =
+  | {
+      next: number;
+    }
+  | {
+      newest: number;
+      oldest: number;
+    };
 
 export type LastRemovedCommitmentHashes = {
   last_message_hash: string;
   commitment_hash: string;
 };
 export interface TxRollupStateResponse {
-  last_removed_commitment_hashes: LastRemovedCommitmentHashes;
+  last_removed_commitment_hashes?: LastRemovedCommitmentHashes;
   finalized_commitments: Next;
   unfinalized_commitments: Next;
   uncommitted_inboxes: Next;
-  commitment_newest_hash: string;
-  tezos_head_level: number;
+  commitment_newest_hash?: string;
+  tezos_head_level?: number;
   burn_per_byte: string;
   allocated_storage: string;
   occupied_storage: string;
   inbox_ema: number;
-  commitments_watermark: number;
+  commitments_watermark?: number;
 }
 
 export interface TxRollupInboxResponse {

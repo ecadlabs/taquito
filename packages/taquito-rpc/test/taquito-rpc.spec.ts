@@ -3111,35 +3111,33 @@ describe('RpcClient test', () => {
   describe('getTxRollupState', () => {
     it('should query the correct url and return a rollup state response', async (done) => {
       const mockResponse = {
-        last_removed_commitment_hashes: {
-          last_message_hash: 'test',
-          commitment_hash: 'test',
-        },
+        last_removed_commitment_hashes: null,
         finalized_commitments: {
-          next: 123,
+          next: 0,
         },
         unfinalized_commitments: {
-          next: 123,
+          next: 0,
         },
         uncommitted_inboxes: {
-          next: 123,
+          newest: 0,
+          oldest: 0,
         },
-        commitment_newest_hash: 'test',
-        tezos_head_level: 1234,
-        burn_per_byte: 'test',
-        allocated_storage: 'test',
-        occupied_storage: 'test',
-        inbox_ema: 123,
-        commitments_watermark: 123,
+        commitment_newest_hash: null,
+        tezos_head_level: 63691,
+        burn_per_byte: '0',
+        allocated_storage: '4000',
+        occupied_storage: '40',
+        inbox_ema: 0,
+        commitments_watermark: null,
       };
 
       httpBackend.createRequest.mockReturnValue(Promise.resolve(mockResponse));
 
-      const txRollupState = await client.getTxRollupState('test_txr_id');
+      const txRollupState = await client.getTxRollupState('txrID');
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: `root/chains/test/blocks/head/context/tx_rollup/test_txr_id/state`,
+        url: `root/chains/test/blocks/head/context/tx_rollup/txrID/state`,
       });
 
       expect(txRollupState).toBeDefined();
@@ -3159,17 +3157,17 @@ describe('RpcClient test', () => {
         })
       );
 
-      const txRollupInbox = await client.getTxRollupInbox('test_txr_id', 0);
+      const txRollupInbox = await client.getTxRollupInbox('txrID', '0');
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: `root/chains/test/blocks/head/context/tx_rollup/test_txr_id/inbox/0`,
+        url: `root/chains/test/blocks/head/context/tx_rollup/txrID/inbox/0`,
       });
 
       expect(txRollupInbox).toBeDefined();
-      expect(txRollupInbox.inbox_length).toEqual(1);
-      expect(txRollupInbox.cumulated_size).toEqual(4);
-      expect(txRollupInbox.merkle_root).toEqual(
+      expect(txRollupInbox!.inbox_length).toEqual(1);
+      expect(txRollupInbox!.cumulated_size).toEqual(4);
+      expect(txRollupInbox!.merkle_root).toEqual(
         'txi3Ef5CSsBWRaqQhWj2zg51J3tUqHFD47na6ex7zcboTG5oXEFrm'
       );
 

@@ -397,6 +397,18 @@ CONFIGS().forEach(
           expect(protocols).toEqual({ protocol, next_protocol: protocol });
           done();
         });
+
+        it('getTxRollupInbox', async (done) => {
+          const inbox = await rpcClient.getTxRollupInbox('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w', '0');
+          expect(inbox).toBeDefined();
+          done();
+        });
+
+        it('getTxRollupState', async (done) => {
+          const state = await rpcClient.getTxRollupState('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w');
+          expect(state).toBeDefined();
+          done();
+        });
       });
     });
   }
