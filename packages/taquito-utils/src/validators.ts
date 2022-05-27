@@ -27,7 +27,6 @@ export function isValidPrefix(value: unknown): value is Prefix {
  * @param prefixes prefix the value should have
  */
 function validatePrefixedValue(value: string, prefixes: Prefix[]) {
-
   const match = new RegExp(`^(${prefixes.join('|')})`).exec(value);
   if (!match || match.length === 0) {
     return ValidationResult.NO_PREFIX_MATCHED;
@@ -59,13 +58,24 @@ function validatePrefixedValue(value: string, prefixes: Prefix[]) {
   return ValidationResult.VALID;
 }
 
-const implicitPrefix = [Prefix.TZ1, Prefix.TZ2, Prefix.TZ3,Prefix.TZ4];
-const contractPrefix = [Prefix.KT1,Prefix.TXR1];
+const implicitPrefix = [Prefix.TZ1, Prefix.TZ2, Prefix.TZ3, Prefix.TZ4];
+const contractPrefix = [Prefix.KT1, Prefix.TXR1];
 const signaturePrefix = [Prefix.EDSIG, Prefix.P2SIG, Prefix.SPSIG, Prefix.SIG];
 const pkPrefix = [Prefix.EDPK, Prefix.SPPK, Prefix.P2PK];
+const skPrefix = [
+  Prefix.BLSK,
+  Prefix.BLESK,
+  Prefix.SPSK,
+  Prefix.SPESK,
+  Prefix.EDSK,
+  Prefix.EDSK2,
+  Prefix.EDESK,
+  Prefix.P2SK,
+  Prefix.P2ESK,
+];
 const operationPrefix = [Prefix.O];
 const protocolPrefix = [Prefix.P];
-const blockPrefix = [Prefix.B]
+const blockPrefix = [Prefix.B];
 
 /**
  * @description Used to check if an address or a contract address is valid.
@@ -179,6 +189,16 @@ export function validateSignature(value: string): ValidationResult {
  */
 export function validatePublicKey(value: string): ValidationResult {
   return validatePrefixedValue(value, pkPrefix);
+}
+
+/**
+ * @description Used to check if a private key is valid.
+ *
+ * @returns
+ * 0 (NO_PREFIX_MATCHED), 1 (INVALID_CHECKSUM), 2 (INVALID_LENGTH) or 3 (VALID).
+ */
+export function validatePrivateKey(value: string): ValidationResult {
+  return validatePrefixedValue(value, skPrefix);
 }
 
 /**

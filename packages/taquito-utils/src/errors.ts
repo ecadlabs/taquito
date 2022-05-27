@@ -5,7 +5,7 @@
 export class InvalidKeyError extends Error {
   public name = 'InvalidKeyError';
   constructor(public key: string, public errorDetail?: string) {
-    super(`The key ${key} is invalid. ${errorDetail}`);
+    super(errorDetail ? `The key ${key} is invalid. ${errorDetail}` : `The key ${key} is invalid`);
   }
 }
 
@@ -15,8 +15,12 @@ export class InvalidKeyError extends Error {
  */
 export class InvalidPublicKeyError extends Error {
   public name = 'InvalidPublicKeyError';
-  constructor(public publicKey: string, errorDetail?: string) {
-    super(`The public key '${publicKey}' is invalid. ${errorDetail}`);
+  constructor(public publicKey: string, public errorDetail?: string) {
+    super(
+      errorDetail
+        ? `The public key '${publicKey}' is invalid. ${errorDetail}`
+        : `The public key '${publicKey}' is invalid`
+    );
   }
 }
 
@@ -26,8 +30,12 @@ export class InvalidPublicKeyError extends Error {
  */
 export class InvalidSignatureError extends Error {
   public name = 'InvalidSignatureError';
-  constructor(public signature: string, errorDetail?: string) {
-    super(`The signature '${signature}' is invalid (${errorDetail})`);
+  constructor(public signature: string, public errorDetail?: string) {
+    super(
+      errorDetail
+        ? `The signature '${signature}' is invalid (${errorDetail})`
+        : `The signature '${signature}' is invalid`
+    );
   }
 }
 
@@ -38,7 +46,11 @@ export class InvalidSignatureError extends Error {
 export class InvalidMessageError extends Error {
   public name = 'InvalidMessageError';
   constructor(public msg: string, public errorDetail?: string) {
-    super(`The message '${msg}' is invalid. ${errorDetail}`);
+    super(
+      errorDetail
+        ? `The message '${msg}' is invalid. ${errorDetail}`
+        : `The message '${msg}' is invalid.`
+    );
   }
 }
 

@@ -1,27 +1,37 @@
 export enum Prefix {
+  // public key hash
   TZ1 = 'tz1',
   TZ2 = 'tz2',
   TZ3 = 'tz3',
   TZ4 = 'tz4',
+
   KT = 'KT',
   KT1 = 'KT1',
 
   EDSK2 = 'edsk2',
+  // secret key
+  EDSK = 'edsk',
   SPSK = 'spsk',
   P2SK = 'p2sk',
+  BLSK = 'BLsk',
 
+  // public key
   EDPK = 'edpk',
   SPPK = 'sppk',
   P2PK = 'p2pk',
+  BLPK = 'BLpk',
 
+  // encrypted_secret_key
   EDESK = 'edesk',
   SPESK = 'spesk',
   P2ESK = 'p2esk',
+  BLESK = 'BLesk',
 
-  EDSK = 'edsk',
+  // signature
   EDSIG = 'edsig',
   SPSIG = 'spsig',
   P2SIG = 'p2sig',
+  BLSIG = 'BLsig',
   SIG = 'sig',
 
   NET = 'Net',
@@ -37,9 +47,10 @@ export enum Prefix {
   EXPR = 'expr',
   TZ = 'TZ',
 
-  VH = 'vh', // block_payload_hash
+  // block_payload_hash
+  VH = 'vh',
 
-  //rollups
+  // rollups
   TXR1 = 'txr1',
   TXI = 'txi',
   TXM = 'txm',
@@ -47,7 +58,6 @@ export enum Prefix {
   TXMR = 'txmr',
   TXRL = 'txM',
   TXW = 'txw',
-
 }
 
 export const prefix = {
@@ -62,18 +72,22 @@ export const prefix = {
   [Prefix.EDSK2]: new Uint8Array([13, 15, 58, 7]),
   [Prefix.SPSK]: new Uint8Array([17, 162, 224, 201]),
   [Prefix.P2SK]: new Uint8Array([16, 81, 238, 189]),
+  [Prefix.BLSK]: new Uint8Array([3, 150, 192, 40]),
 
   [Prefix.EDPK]: new Uint8Array([13, 15, 37, 217]),
   [Prefix.SPPK]: new Uint8Array([3, 254, 226, 86]),
   [Prefix.P2PK]: new Uint8Array([3, 178, 139, 127]),
+  [Prefix.BLPK]: new Uint8Array([6, 149, 135, 204]),
 
   [Prefix.EDESK]: new Uint8Array([7, 90, 60, 179, 41]),
   [Prefix.SPESK]: new Uint8Array([0x09, 0xed, 0xf1, 0xae, 0x96]),
   [Prefix.P2ESK]: new Uint8Array([0x09, 0x30, 0x39, 0x73, 0xab]),
+  [Prefix.BLESK]: new Uint8Array([2, 5, 30, 53, 25]),
 
   [Prefix.EDSIG]: new Uint8Array([9, 245, 205, 134, 18]),
   [Prefix.SPSIG]: new Uint8Array([13, 115, 101, 19, 63]),
   [Prefix.P2SIG]: new Uint8Array([54, 240, 44, 52]),
+  [Prefix.BLSIG]: new Uint8Array([40, 171, 64, 207]),
   [Prefix.SIG]: new Uint8Array([4, 130, 43]),
 
   [Prefix.NET]: new Uint8Array([87, 82, 0]),
@@ -99,7 +113,6 @@ export const prefix = {
   [Prefix.TXMR]: new Uint8Array([18, 7, 206, 87]),
   [Prefix.TXRL]: new Uint8Array([79, 146, 82]),
   [Prefix.TXW]: new Uint8Array([79, 150, 72]),
-   
 };
 
 export const prefixLength: { [key: string]: number } = {
@@ -110,12 +123,16 @@ export const prefixLength: { [key: string]: number } = {
   [Prefix.KT]: 20,
   [Prefix.KT1]: 20,
 
+  [Prefix.BLSK]: 32,
+  [Prefix.BLESK]: 88,
   [Prefix.EDPK]: 32,
   [Prefix.SPPK]: 33,
   [Prefix.P2PK]: 33,
+  [Prefix.BLPK]: 76,
   [Prefix.EDSIG]: 64,
   [Prefix.SPSIG]: 64,
   [Prefix.P2SIG]: 64,
+  [Prefix.BLSIG]: 142,
   [Prefix.SIG]: 64,
   [Prefix.NET]: 4,
   [Prefix.B]: 32,
@@ -129,5 +146,4 @@ export const prefixLength: { [key: string]: number } = {
   [Prefix.TXMR]: 32,
   [Prefix.TXRL]: 32,
   [Prefix.TXW]: 32,
-
 };
