@@ -67,8 +67,6 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       await addition.confirmation();
       const contractAddition = await addition.contract();
 
-      //console.log(contractAddition.address);
-
       //Testcase #1
       //Calls entrypoint: (pair %add (nat %valueA) (nat %valueB))
       //Calling Michelson code: CONTRACT %add (pair (nat %valueA) (nat %valueB)) ;
