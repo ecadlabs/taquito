@@ -1,6 +1,7 @@
 import { Token, TokenFactory, Semantic, ComparableToken, SemanticEncoding } from './token';
 import { OrToken } from './or';
 import { PairTokenSchema } from '../schema/types';
+import { MichelsonV1Expression, MichelsonV1ExpressionExtended } from '@taquito/rpc';
 
 /**
  *  @category Error
@@ -55,7 +56,7 @@ export class PairToken extends ComparableToken {
   static prim: 'pair' = 'pair';
 
   constructor(
-    val: { prim: string; args: any[]; annots: any[] } | any[],
+    val: MichelsonV1Expression,
     idx: number,
     fac: TokenFactory
   ) {
@@ -65,7 +66,10 @@ export class PairToken extends ComparableToken {
             prim: PairToken.prim,
             args: val,
           }
-        : val,
+        : (val as MichelsonV1ExpressionExtended).prim ? val as MichelsonV1ExpressionExtended : {
+          prim: PairToken.prim,
+          args: val,
+        } as MichelsonV1ExpressionExtended,
       idx,
       fac
     );
