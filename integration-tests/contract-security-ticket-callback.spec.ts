@@ -1,10 +1,12 @@
+import { Protocols } from '@taquito/taquito';
 import { CONFIGS } from './config';
 
 // TC-T-008: assume that the ticket is just a (pair address cty nat) and can "easily" be created via a callback.
 // To see why the test fails with error message {\"prim\":\"Unit\"}, look at the Micheline form of the contract.
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
+  const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async (done) => {
@@ -12,7 +14,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it("Verify ticket is not easily created by a callback", async (done) => {
+    mondaynet("Verify ticket is not easily created by a callback", async (done) => {
       try {
         const opCaller = await Tezos.contract.originate({
           code: ` { parameter (or (address %init) (ticket %setToken string)) ;

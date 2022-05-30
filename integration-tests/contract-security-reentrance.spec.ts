@@ -1,3 +1,4 @@
+import { Protocols } from '@taquito/taquito';
 import { CONFIGS } from './config';
 
 /**
@@ -8,8 +9,9 @@ import { CONFIGS } from './config';
  * updated when executing the transfer transaction. Any reentrancy (after the transfer transaction operation) to the contract finds the updated balance.
 */
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
+  const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
   const address = 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys';
 
   describe(`Test contracts using: ${rpc}`, () => {
@@ -18,7 +20,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it('Reentrance attack test', async (done) => {
+    mondaynet('Reentrance attack test', async (done) => {
       const vestingContractOp = await Tezos.contract.originate({
         balance: '8',
         code: `{ parameter

@@ -1,11 +1,13 @@
+import { Protocols } from '@taquito/taquito';
 import { CONFIGS } from './config';
 
 /** 
  * TC-006: Check that the type "operation" is not duplicable and that the error will be "internal_operation_replay"
 */
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
+  const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async (done) => {
@@ -13,7 +15,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it('Verify Type "operation" is not duplicable with error internal_operation_replay.', async (done) => {
+    mondaynet('Verify Type "operation" is not duplicable with error internal_operation_replay.', async (done) => {
       try {
         const publicKeyHash = await Tezos.signer.publicKeyHash();
         const op = await Tezos.contract.originate({

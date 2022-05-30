@@ -1,3 +1,4 @@
+import { Protocols } from '@taquito/taquito';
 import { CONFIGS } from './config';
 
 /**
@@ -6,8 +7,9 @@ import { CONFIGS } from './config';
  *  If underflows are not prevented the contract is unusable. Any tokens locked in the contract will be irretrievable, etc.
 */
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
+  const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async (done) => {
@@ -15,7 +17,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it('Verify mutez underflow example', async (done) => {
+    mondaynet('Verify mutez underflow example', async (done) => {
         const op = await Tezos.contract.originate({
           code: `        { parameter unit ;
             storage mutez ;

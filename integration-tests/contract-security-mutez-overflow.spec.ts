@@ -1,3 +1,4 @@
+import { Protocols } from '@taquito/taquito';
 import { doesNotMatch } from 'assert';
 import { CONFIGS } from './config';
 
@@ -6,8 +7,9 @@ import { CONFIGS } from './config';
  * Any tokens locked in the contract will be irretrievable, etc.
 */
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
+  const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async (done) => {
@@ -15,7 +17,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it('Verify mutez overflow example', async (done) => {
+    mondaynet('Verify mutez overflow example', async (done) => {
       try {
         const op = await Tezos.contract.originate({
           code: `        { parameter unit ;

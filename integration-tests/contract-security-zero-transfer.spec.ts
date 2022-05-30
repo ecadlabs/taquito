@@ -1,10 +1,12 @@
 import { CONFIGS } from './config';
 import { RpcClient } from '@taquito/rpc';
+import { Protocols } from '@taquito/taquito';
 
 // TC-007 - A 0tez transaction to an implicit account should fail.
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
+  const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async (done) => {
@@ -13,7 +15,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it('Verify that Transactions of 0ꜩ towards a contract without code are forbidden', async () => {
+    mondaynet('Verify that Transactions of 0ꜩ towards a contract without code are forbidden', async () => {
       const op = await Tezos.contract.originate({
         code: `{ parameter address ;
                       storage unit ;

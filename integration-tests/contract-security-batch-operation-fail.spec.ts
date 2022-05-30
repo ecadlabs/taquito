@@ -1,11 +1,13 @@
+import { Protocols } from '@taquito/taquito';
 import { CONFIGS } from './config';
 
 /**
  *  TC-010: Batch operation failing: a sequence of add and sub calls are made and we verify the contract finds the FAILWITH when the subs exceed the adds
 */
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
+  const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async (done) => {
@@ -13,7 +15,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it('Verify failed batch', async (done) => {
+    mondaynet('Verify failed batch', async (done) => {
       const op = await Tezos.contract.originate({
         code: `        { parameter (or (nat %add) (nat %sub)) ;
               storage nat ;

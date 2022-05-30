@@ -1,6 +1,6 @@
 import { CONFIGS } from './config';
 import { RpcClient } from '@taquito/rpc';
-import { TezosToolkit } from '@taquito/taquito';
+import { Protocols, TezosToolkit } from '@taquito/taquito';
 
 // TC001 - non-existing KT addresses can not be prefunded
 
@@ -9,7 +9,8 @@ import { TezosToolkit } from '@taquito/taquito';
 const Tezos = new TezosToolkit(new RpcClient(' https://ithacanet.ecadinfra.com'));
 const testContractAddress = 'KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn';
 
-CONFIGS().forEach(({ rpc, setup }) => {
+CONFIGS().forEach(({ rpc, setup, protocol }) => {
+  const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async (done) => {
@@ -18,7 +19,7 @@ CONFIGS().forEach(({ rpc, setup }) => {
       done();
     });
 
-    it('Verify that you cannot prefund a non existent smart contract', async () => {
+    mondaynet('Verify that you cannot prefund a non existent smart contract', async () => {
       try {
         await Tezos.contract.at(testContractAddress);
       } catch (error: any) {
