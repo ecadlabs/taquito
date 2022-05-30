@@ -3107,4 +3107,71 @@ describe('RpcClient test', () => {
       done();
     });
   });
+
+  describe('getTxRollupState', () => {
+    it('should query the correct url and return a rollup state response', async (done) => {
+      const mockResponse = {
+        last_removed_commitment_hashes: null,
+        finalized_commitments: {
+          next: 0,
+        },
+        unfinalized_commitments: {
+          next: 0,
+        },
+        uncommitted_inboxes: {
+          newest: 0,
+          oldest: 0,
+        },
+        commitment_newest_hash: null,
+        tezos_head_level: 63691,
+        burn_per_byte: '0',
+        allocated_storage: '4000',
+        occupied_storage: '40',
+        inbox_ema: 0,
+        commitments_watermark: null,
+      };
+
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(mockResponse));
+
+      const txRollupState = await client.getTxRollupState('txrID');
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/tx_rollup/txrID/state`,
+      });
+
+      expect(txRollupState).toBeDefined();
+      expect(txRollupState).toEqual(mockResponse);
+
+      done();
+    });
+  });
+
+  describe('getTxRollupInbox', () => {
+    it('should query the correct url and return a rollup inbox response', async (done) => {
+      httpBackend.createRequest.mockReturnValue(
+        Promise.resolve({
+          inbox_length: 1,
+          cumulated_size: 4,
+          merkle_root: 'txi3Ef5CSsBWRaqQhWj2zg51J3tUqHFD47na6ex7zcboTG5oXEFrm',
+        })
+      );
+
+      const txRollupInbox = await client.getTxRollupInbox('txrID', '0');
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/tx_rollup/txrID/inbox/0`,
+      });
+
+      expect(txRollupInbox).toBeDefined();
+      expect(txRollupInbox!.inbox_length).toEqual(1);
+      expect(txRollupInbox!.cumulated_size).toEqual(4);
+      expect(txRollupInbox!.merkle_root).toEqual(
+        'txi3Ef5CSsBWRaqQhWj2zg51J3tUqHFD47na6ex7zcboTG5oXEFrm'
+      );
+
+      done();
+    });
+  });
 });

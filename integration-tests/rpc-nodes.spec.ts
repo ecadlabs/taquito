@@ -20,6 +20,7 @@ CONFIGS().forEach(
 
     const jakartanetAndIthacanet = protocol === Protocols.Psithaca2 || protocol === Protocols.PtJakart2 ? test: test.skip;
     const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
+    const jakartanetIt = protocol === Protocols.PtJakart2 ? it: it.skip;
 
     beforeAll(async (done) => {
       await setup();
@@ -395,6 +396,18 @@ CONFIGS().forEach(
         it('getProtocols', async (done) => {
           const protocols = await rpcClient.getProtocols();
           expect(protocols).toEqual({ protocol, next_protocol: protocol });
+          done();
+        });
+
+        jakartanetIt('getTxRollupInbox', async (done) => {
+          const inbox = await rpcClient.getTxRollupInbox('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w', '0');
+          expect(inbox).toBeDefined();
+          done();
+        });
+
+        jakartanetIt('getTxRollupState', async (done) => {
+          const state = await rpcClient.getTxRollupState('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w');
+          expect(state).toBeDefined();
           done();
         });
       });
