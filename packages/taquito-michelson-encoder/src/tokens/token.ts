@@ -1,4 +1,4 @@
-import { MichelsonV1Expression } from '@taquito/rpc';
+import { MichelsonV1Expression, MichelsonV1ExpressionBase } from '@taquito/rpc';
 import { TokenSchema } from '../schema/types';
 
 /**
@@ -96,8 +96,8 @@ export abstract class ComparableToken extends Token {
     key: { [key: string]: string | object[] };
     type: { prim: string; args?: object[] };
   };
-// check if OK altering type inconsistency between this type and other functions made ok with 'any'
-  abstract ToKey(val: string | {bytes?: string; string?: string}): any;
+// Base ok? since either we have to set up a traversal or type casting within each of the toKey or limit it to contain the values needed
+  abstract ToKey(val: string | MichelsonV1ExpressionBase): any;
 
   compare(o1: string, o2: string): number {
     if (o1 === o2) {

@@ -28,7 +28,7 @@ export class TxRollupL2AddressToken extends ComparableToken {
     }
   }
 
-  private isValid(value: any): TxRollupL2AddressValidationError | null {
+  private isValid(value: any): null {
     if (validateAddress(value) !== ValidationResult.VALID) {
       throw new TxRollupL2AddressValidationError(value, this, `tx_rollup_l2_address is not valid: ${value}`)
     }

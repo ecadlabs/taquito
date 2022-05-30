@@ -96,36 +96,19 @@ export class AddressToken extends ComparableToken {
 
     return encodePubKey(bytes);
   }
-    // Suggested change this way the functino is only ran once for each address as well as only has 2 if blocks instead of 3. super minor but :D
-  // compare(address1: string, address2: string) {
-  //   const isImplicit = (address: string) => {
-  //     // TODO CHECK THIS tru2 or txr1 or somethign else :O
-  //     return address.startsWith('tz')
-  //   }
-  //   const implicit1 = isImplicit(address1)
-  //   const implicit2 = isImplicit(address2)
-
-  //   if (implicit1 && !implicit2) {
-  //     return -1;
-  //   } else if (implicit2 && !implicit1) {
-  //     return 1;
-  //   }
-  //   return super.compare(address1, address2)
-  // }
   compare(address1: string, address2: string) {
     const isImplicit = (address: string) => {
-      return address.startsWith('tz');
-    };
-
-    if (isImplicit(address1) && isImplicit(address2)) {
-      return super.compare(address1, address2);
-    } else if (isImplicit(address1)) {
-      return -1;
-    } else if (isImplicit(address2)) {
-      return 1;
-    } else {
-      return super.compare(address1, address2);
+      return address.startsWith('tz')
     }
+    const implicit1 = isImplicit(address1)
+    const implicit2 = isImplicit(address2)
+
+    if (implicit1 && !implicit2) {
+      return -1;
+    } else if (implicit2 && !implicit1) {
+      return 1;
+    }
+    return super.compare(address1, address2)
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {

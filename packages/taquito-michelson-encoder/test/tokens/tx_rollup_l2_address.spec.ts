@@ -5,7 +5,7 @@ describe("TxRollupL2Address Token", () => {
   let token: TxRollupL2AddressToken;
   const bytes = b58decode("tz49XoaXbDZcWi2R1iKxQUxtBWXt4g4S1qtf")
   beforeEach(() => {
-    token = new TxRollupL2AddressToken({prim: "l2_address", args: [], annots: []}, 0, null as any);
+    token = new TxRollupL2AddressToken({prim: "tx_rollup_l2_address", args: [], annots: []}, 0, null as any);
   });
 
   describe("test ToBigMapKey", () => {
