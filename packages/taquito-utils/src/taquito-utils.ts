@@ -63,6 +63,14 @@ export function b58cencode(value: string | Uint8Array, prefix: Uint8Array) {
   return bs58check.encode(Buffer.from(n.buffer));
 }
 
+export function b58cencodeRollupAddress(value: string | Uint8Array) {
+  const payloadAr = typeof value === 'string' ? Uint8Array.from(Buffer.from(value, 'hex')) : value
+
+  const n = new Uint8Array(payloadAr.length)
+  n.set(payloadAr)
+  return bs58check.encode(Buffer.from(n.buffer));
+}
+
 /**
  *
  * @description Base58 decode a string and remove the prefix from it
@@ -93,6 +101,10 @@ export function b58decode(payload: string) {
     // tz addresses
     const hex = buf2hex(buf.slice(3));
     return pref + hex;
+  } else if (payload.startsWith("txr")) {
+    // txr addresses
+    const hex = buf2hex(buf)
+    return hex;
   } else {
     // other (kt addresses)
     return '01' + buf2hex(buf.slice(3, 42)) + '00';
@@ -128,7 +140,10 @@ export function encodePubKey(value: string) {
 
     return b58cencode(value.substring(4), pref[value.substring(0, 4)]);
   }
-
+  if (b58cencodeRollupAddress(value).startsWith('txr1')) {
+    return b58cencodeRollupAddress(value)
+  }
+  return b58cencode(value.substring(3), prefix.txr1)
   return b58cencode(value.substring(2, 42), prefix.KT);
 }
 /**

@@ -70,6 +70,9 @@ export class AddressToken extends ComparableToken {
     if (val.string) {
       return val.string;
     }
+    if (!val.bytes) {
+      throw new AddressValidationError(val, this, `cannot be missing both string and bytes: ${val}`)
+    }
 
     return encodePubKey(val.bytes);
   }
@@ -93,12 +96,17 @@ export class AddressToken extends ComparableToken {
     if (string) {
       return string;
     }
+    if (!bytes) {
+      throw new AddressValidationError({bytes, string}, this, `cannot be missing both string and bytes ${{string, bytes}}`)
+    }
 
     return encodePubKey(bytes);
   }
   compare(address1: string, address2: string) {
     const isImplicit = (address: string) => {
-      return address.startsWith('tz')
+      // handle two different addresses one with tz the other with txr
+      // redundant... should be removed? or kept for clarity? same happens with KT1 addresses, goes to super
+      return address.startsWith('tz') && !address.startsWith('txr')
     }
     const implicit1 = isImplicit(address1)
     const implicit2 = isImplicit(address2)
