@@ -1,3 +1,4 @@
+import { Protocols } from '@taquito/taquito';
 import { CONFIGS } from './config';
 
 /**   
@@ -11,8 +12,9 @@ import { CONFIGS } from './config';
  * TC-V-003: On-chain view - dup instruction
 **/
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
+  const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async (done) => {
@@ -20,7 +22,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it("Verify we can access the stack of the caller by using the instruction add.", async (done) => {
+    mondaynet("Verify we can access the stack of the caller by using the instruction add.", async (done) => {
       try {
         const opGetter = await Tezos.contract.originate({
           code: ` { parameter unit;
@@ -59,7 +61,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it("Verify we can access the stack of the caller by using the instruction dig n", async (done) => {
+    mondaynet("Verify we can access the stack of the caller by using the instruction dig n", async (done) => {
       try {
         const opGetter = await Tezos.contract.originate({
           code: ` { parameter unit;
@@ -97,7 +99,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it("Verify we can access the stack of the caller by using the instruction dup.", async (done) => {
+    mondaynet("Verify we can access the stack of the caller by using the instruction dup.", async (done) => {
       try {
         const opGetter = await Tezos.contract.originate({
           code: ` { parameter unit;

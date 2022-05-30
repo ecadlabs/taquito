@@ -50,8 +50,7 @@ import { securityWrongAnnotations } from './data/security-wrong-annotations-cont
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const jakartanet = protocol === Protocols.PtJakart2 ? test : test.skip;
-  const ithacanet = protocol === Protocols.Psithaca2 ? test : test.skip;
+  const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
 
   describe(`Test contracts to verify wrong field annotations are leading to failed transactions using: ${rpc}`, () => {
     beforeEach(async (done) => {
@@ -59,7 +58,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done();
     });
 
-    ithacanet('Verify annotation combinations on ithacanet', async () => {
+    mondaynet('Verify annotation combinations on ithacanet', async () => {
       const addition = await Tezos.contract.originate({
         code: securityWrongAnnotations,
         init: `0`,
@@ -207,22 +206,22 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       // Calls entrypoint: (pair %add (nat %valueA) (nat %valueB))
       // Calling Michelson code: CONTRACT %add (pair (nat %a) (nat %b)) ;
 
-      // const op7 = await Tezos.contract
-      //   .at(contractAddition.address)
-      //   .then((contract) => {
-      //     return contract.methodsObject
-      //       .callWrongAnnot({
-      //         entrypoint: 'Add',
-      //         param: {
-      //           a: `1`,
-      //           b: `2`,
-      //         },
-      //       })
-      //       .send();
-      //   })
-      //   .then((op7) => {
-      //     return op7.confirmation().then(() => op7.hash);
-      //   });
+       const op7 = await Tezos.contract
+         .at(contractAddition.address)
+         .then((contract) => {
+           return contract.methodsObject
+             .callWrongAnnot({
+               entrypoint: 'Add',
+               param: {
+                 a: `1`,
+                 b: `2`,
+               },
+             })
+             .send();
+         })
+         .then((op7) => {
+           return op7.confirmation().then(() => op7.hash);
+         });
 
       //Testcase #8
       // Calls entrypoint: (pair %addNoAnnot nat nat))
@@ -269,66 +268,6 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         .then((op9) => {
           return op9.confirmation().then(() => op9.hash);
         });
-    });
-
-    jakartanet('Verify annotation combinations on jakartanet', async () => {
-      const addition = await Tezos.contract.originate({
-        code: securityWrongAnnotations,
-        init: `0`,
-      });
-      await addition.confirmation();
-      const contractAddition = await addition.contract();
-
-      //Testcase #3
-      // Calls entrypoint: (pair %addWrongAnnot (nat %a) (nat %b))
-      // Calling Michelson code: CONTRACT %addWrongAnnot (pair (nat %valueA) (nat %valueB)) ;
-
-      const op10 = await Tezos.contract
-        .at(contractAddition.address)
-        .then((contract) => {
-          return contract.methodsObject
-            .call({
-              entrypoint: 'AddWrongAnnot',
-              param: {
-                valueA: `1`,
-                valueB: `2`,
-              },
-            })
-            .send();
-        })
-        .then((op10) => {
-          return op10.confirmation().then(() => op10.hash);
-        });
-
-      //Testcase #7
-      // Calls entrypoint: (pair %add (nat %valueA) (nat %valueB))
-      // Calling Michelson code: CONTRACT %add (pair (nat %a) (nat %b)) ;
-
-      try {
-        const op11 = await Tezos.contract
-          .at(contractAddition.address)
-          .then((contract) => {
-            return contract.methodsObject
-              .callWrongAnnot({
-                entrypoint: 'Add',
-                param: {
-                  valueA: `1`,
-                  valueB: `2`,
-                },
-              })
-              .send();
-          })
-          .then((op11) => {
-            console.log(`Awaiting for ${op11.hash} to be confirmed...`);
-            return op11.confirmation().then(() => op11.hash);
-          });
-      } catch (ex) {
-        expect(ex).toEqual(
-          expect.objectContaining({
-            message: expect.stringContaining('[a] Value is not a number: undefined'),
-          })
-        );
-      }
     });
   });
 });

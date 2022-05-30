@@ -1,11 +1,12 @@
-import { BigMapAbstraction } from '@taquito/taquito';
+import { BigMapAbstraction, Protocols } from '@taquito/taquito';
 import { CONFIGS } from './config';
 
 // TC-008: Obtained balance of a smart contract using the BALANCE instruction does not change during the execution of the entrypoint's own code.
 // Testcase just checks whether this is still the case.
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
+  const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async (done) => {
@@ -13,7 +14,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it("Verify Obtained balance of a smart contract using the BALANCE instruction does not change during the execution of the entrypoint's own code", async (done) => {
+    mondaynet("Verify Obtained balance of a smart contract using the BALANCE instruction does not change during the execution of the entrypoint's own code", async (done) => {
       const opTezTransferA = await Tezos.contract.originate({
         balance: '0.00001',
         code: `        { parameter (option address) ;
