@@ -9,7 +9,7 @@ In Tezos, a transfer operation transfers tokens between two addresses.
 
 When the `Babylon/proto005` protocol amendment came into effect, it changed how token transfer involving KT1 addresses work. The transfer of tokens _from_ a KT1 account is completed by calling the KT1's smart contract `do` method. The `do` method takes a lambda function, and it is the logic of this function that causes the desired transfer of tokens to happen.
 
-The Taquito [integration tests](https://github.com/ecadlabs/taquito/blob/master/integration-tests/manager-contract-scenario.spec.ts) can be useful to see how this works.
+The Taquito [integration tests](https://github.com/ecadlabs/taquito/blob/master/integration-tests/contract-manager-scenario.spec.ts) can be useful to see how this works.
 
 ## Transfer from an implicit tz1 address to a tz1 address
 
