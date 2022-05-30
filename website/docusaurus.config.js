@@ -55,6 +55,10 @@ module.exports = {
       },
       items: [
         {
+          type: 'search',
+          position: 'right'
+        },
+        {
           type: 'docsVersionDropdown',
           position: 'right',
           className: 'header-link',

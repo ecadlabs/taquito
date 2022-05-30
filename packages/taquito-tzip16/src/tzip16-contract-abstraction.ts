@@ -1,3 +1,4 @@
+import { BigMapId } from './handlers/tezos-storage-handler';
 import {
   BigMapAbstraction,
   Context,
@@ -21,8 +22,6 @@ import { ViewDefinition } from './metadata-interface';
 export type MetadataContext = Context & {
   metadataProvider: MetadataProviderInterface;
 };
-
-type BigMapId = { int: string };
 
 const metadataBigMapType = {
   prim: 'big_map',
@@ -48,7 +47,7 @@ export class Tzip16ContractAbstraction {
       metadataBigMapType
     );
 
-    if (!metadataBigMapId) {
+    if (!metadataBigMapId || !metadataBigMapId.int) {
       throw new BigMapMetadataNotFound();
     }
 

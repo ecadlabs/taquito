@@ -14,16 +14,16 @@ import {
 } from './schema/operation';
 
 type OperationKind =
-  | 'activate_account'
-  | 'reveal'
-  | 'delegation'
-  | 'transaction'
-  | 'origination'
-  | 'ballot'
-  | 'endorsement'
-  | 'seed_nonce_revelation'
-  | 'proposals'
-  | 'register_global_constant';
+  | OpKind.ACTIVATION
+  | OpKind.REVEAL
+  | OpKind.DELEGATION
+  | OpKind.TRANSACTION
+  | OpKind.ORIGINATION
+  | OpKind.BALLOT
+  | OpKind.ENDORSEMENT
+  | OpKind.SEED_NONCE_REVELATION
+  | OpKind.PROPOSALS
+  | OpKind.REGISTER_GLOBAL_CONSTANT;
 
 const OperationKindMapping = {
   activate_account: ActivationSchema,
