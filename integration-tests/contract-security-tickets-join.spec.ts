@@ -1,3 +1,4 @@
+import { Protocols } from '@taquito/taquito';
 import { CONFIGS } from './config';
 
 // Naively* trying to create an own ticket from scratch.
@@ -10,8 +11,9 @@ import { CONFIGS } from './config';
 // TC-T-020: Join ticket - two different ticketers
 // TC-T-021: Join ticket - two different, but similar cty
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
+  const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async (done) => {
@@ -19,7 +21,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it('Verify creating ticket is not possible with call input string/address - parameter passed is invalid for type ticket string', async (done) => {
+    mondaynet('Verify creating ticket is not possible with call input string/address - parameter passed is invalid for type ticket string', async (done) => {
       try {
         const op = await Tezos.contract.originate({
           code: `   {   parameter (ticket string);
@@ -51,7 +53,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it('Verify creating ticket is not possible with string/address', async (done) => {
+    mondaynet('Verify creating ticket is not possible with string/address', async (done) => {
       try {
         const op = await Tezos.contract.originate({
           code: `   {   parameter (option (ticket string));
@@ -84,7 +86,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it('Verify creating ticket is not possible Join ticket - two different ticketers', async (done) => {
+    mondaynet('Verify creating ticket is not possible Join ticket - two different ticketers', async (done) => {
       try {
         const opJoin = await Tezos.contract.originate({
           code: `   {   parameter (option (ticket string));
@@ -152,7 +154,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it('Verify creating ticket is not possible with two different, but similar cty', async (done) => {
+    mondaynet('Verify creating ticket is not possible with two different, but similar cty', async (done) => {
       try {
         const op = await Tezos.contract.originate({
           code: `   { parameter unit;

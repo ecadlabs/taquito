@@ -1,3 +1,4 @@
+import { Protocols } from '@taquito/taquito';
 import { CONFIGS } from './config';
 
 // TC-T-009 - Create Ticket - callback case 2 - address and option
@@ -9,8 +10,9 @@ import { CONFIGS } from './config';
 // *Naively - meaning: WE just try it without thinking whether this test makes sense in regards with the used underlying architecture. 
 // We think of the underlying architecture (type system, stack separation, etc.) as a black box.
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
+  const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async (done) => {
@@ -18,7 +20,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it("Verify ticket is not easily created by a callback - address and option", async (done) => {
+    mondaynet("Verify ticket is not easily created by a callback - address and option", async (done) => {
       try {
         const opCaller = await Tezos.contract.originate({
           code: ` { parameter (or (address %init) (option %setToken (ticket string))) ;
@@ -86,7 +88,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it("Verify ticket is not easily created by a callback - string and option ", async (done) => {
+    mondaynet("Verify ticket is not easily created by a callback - string and option ", async (done) => {
       try {
         const opCaller = await Tezos.contract.originate({
           code: ` { parameter
@@ -158,7 +160,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it("Verify ticket is not easily created by a callback - string", async (done) => {
+    mondaynet("Verify ticket is not easily created by a callback - string", async (done) => {
       try {
         const opCaller = await Tezos.contract.originate({
           code: ` { parameter
