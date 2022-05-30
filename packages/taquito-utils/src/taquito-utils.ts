@@ -133,6 +133,7 @@ export function encodeKey(value: string) {
       '00': new Uint8Array([13, 15, 37, 217]),
       '01': new Uint8Array([3, 254, 226, 86]),
       '02': new Uint8Array([3, 178, 139, 127]),
+      '03': new Uint8Array([6, 149, 135, 204])
     };
 
     return b58cencode(value.substring(2), pref[value.substring(0, 2)]);
@@ -151,6 +152,7 @@ export function encodeKeyHash(value: string) {
       '00': new Uint8Array([6, 161, 159]),
       '01': new Uint8Array([6, 161, 161]),
       '02': new Uint8Array([6, 161, 164]),
+      '03': new Uint8Array([6, 161, 166])
     };
 
     return b58cencode(value.substring(2), pref[value.substring(0, 2)]);
@@ -280,6 +282,9 @@ export const getPkhfromPk = (publicKey: string): string => {
       encodingPrefix = prefix[Prefix.TZ3];
       prefixLen = prefixLength[Prefix.TZ3];
       break;
+    case Prefix.BLPK:
+      encodingPrefix = prefix[Prefix.TZ4];
+      prefixLen = prefixLength[Prefix.TZ4]
   }
 
   const hashed = hash(decoded, prefixLen);
