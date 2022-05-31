@@ -1279,3 +1279,137 @@ export const registerGlobalConstantWithError = {
   signature:
     'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg',
 };
+
+export const originateRollupNoReveal = {
+  contents: [
+    {
+      kind: 'tx_rollup_origination',
+      source: 'tz2Np59GwL7s4NapRiPmU48Nhz65q1kxVmks',
+      fee: '417',
+      counter: '236200',
+      gas_limit: '1521',
+      storage_limit: '4000',
+      tx_rollup_origination: {},
+      metadata: {
+        balance_updates: [
+          {
+            kind: 'contract',
+            contract: 'tz2Np59GwL7s4NapRiPmU48Nhz65q1kxVmks',
+            change: '-417',
+            origin: 'block',
+          },
+          {
+            kind: 'accumulator',
+            category: 'block fees',
+            change: '417',
+            origin: 'block',
+          },
+        ],
+        operation_result: {
+          status: 'applied',
+          balance_updates: [
+            {
+              kind: 'contract',
+              contract: 'tz2Np59GwL7s4NapRiPmU48Nhz65q1kxVmks',
+              change: '-1000000',
+              origin: 'block',
+            },
+            {
+              kind: 'burned',
+              category: 'storage fees',
+              change: '1000000',
+              origin: 'block',
+            },
+          ],
+          consumed_gas: '1421',
+          consumed_milligas: '1420108',
+          originated_rollup: 'txr1WAEQXaXsM1n4R77G5BDfr8pwiFS5SEbBE',
+        },
+      },
+    },
+  ],
+  signature:
+    'sigSX6zMYe1S9SjbJmRvqtvsETEYa9pSH9Y1ShpcUr1PwKr1hBxw2pKFUFZ1yuDDcTMB6GkuxuoPvp4pHrMYuC14Q8xyt4Tz',
+};
+
+export const originateRollupWithReveal = {
+  contents: [
+    {
+      kind: 'reveal',
+      source: 'tz2SKhBYT6nADXviDrU2HK3nw2jDMfhRNv7P',
+      fee: '374',
+      counter: '236199',
+      gas_limit: '1100',
+      storage_limit: '0',
+      public_key: 'sppk7cjFJ3JSeJEjimFTdDQq4HgJBjr5PCPj4U94CDGVfQeh3gEY19b',
+      metadata: {
+        balance_updates: [
+          {
+            kind: 'contract',
+            contract: 'tz2SKhBYT6nADXviDrU2HK3nw2jDMfhRNv7P',
+            change: '-374',
+            origin: 'block',
+          },
+          {
+            kind: 'accumulator',
+            category: 'block fees',
+            change: '374',
+            origin: 'block',
+          },
+        ],
+        operation_result: {
+          status: 'applied',
+          consumed_gas: '1000',
+          consumed_milligas: '1000000',
+        },
+      },
+    },
+    {
+      kind: 'tx_rollup_origination',
+      source: 'tz2SKhBYT6nADXviDrU2HK3nw2jDMfhRNv7P',
+      fee: '481',
+      counter: '236200',
+      gas_limit: '1521',
+      storage_limit: '4000',
+      tx_rollup_origination: {},
+      metadata: {
+        balance_updates: [
+          {
+            kind: 'contract',
+            contract: 'tz2SKhBYT6nADXviDrU2HK3nw2jDMfhRNv7P',
+            change: '-481',
+            origin: 'block',
+          },
+          {
+            kind: 'accumulator',
+            category: 'block fees',
+            change: '481',
+            origin: 'block',
+          },
+        ],
+        operation_result: {
+          status: 'applied',
+          balance_updates: [
+            {
+              kind: 'contract',
+              contract: 'tz2SKhBYT6nADXviDrU2HK3nw2jDMfhRNv7P',
+              change: '-1000000',
+              origin: 'block',
+            },
+            {
+              kind: 'burned',
+              category: 'storage fees',
+              change: '1000000',
+              origin: 'block',
+            },
+          ],
+          consumed_gas: '1421',
+          consumed_milligas: '1420108',
+          originated_rollup: 'txr1gJDqppanLyZJ5Yw9VCNqnHswtv9fQ9brL',
+        },
+      },
+    },
+  ],
+  signature:
+    'sigSqrxEBiHXwuXgXUB8S67dtSycbFvduxpi2Fn7LeVdefgr7FicV5KajbW1z44hykdZA6Mznef3fpPXAcbfaYBUYdWPPbXG',
+};
