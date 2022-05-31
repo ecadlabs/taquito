@@ -1,9 +1,9 @@
-import { b58decode } from '@taquito/utils';
+import { b58decodeRollup } from '@taquito/utils';
 import { TxRollupL2AddressToken, TxRollupL2AddressValidationError } from './../../src/tokens/comparable/tx_rollup_l2_address';
 
 describe("TxRollupL2Address Token", () => {
   let token: TxRollupL2AddressToken;
-  const bytes = b58decode("tz49XoaXbDZcWi2R1iKxQUxtBWXt4g4S1qtf")
+  const bytes = b58decodeRollup("tz49XoaXbDZcWi2R1iKxQUxtBWXt4g4S1qtf")
   beforeEach(() => {
     token = new TxRollupL2AddressToken({prim: "tx_rollup_l2_address", args: [], annots: []}, 0, null as any);
   });

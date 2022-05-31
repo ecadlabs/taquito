@@ -86,7 +86,6 @@ export function b58decode(payload: string) {
     [prefix.tz1.toString()]: '0000',
     [prefix.tz2.toString()]: '0001',
     [prefix.tz3.toString()]: '0002',
-    [prefix.tz4.toString()]: '0003',
   };
 
   const pref = prefixMap[new Uint8Array(buf.slice(0, 3)).toString()];
@@ -102,6 +101,20 @@ export function b58decode(payload: string) {
 
 /**
  *
+ * @description b58 decode a string without predfined prefix
+ * @param value
+ * @returns string of bytes
+ */
+// b58decodeRollup or b58decodePrefixless
+export function b58decodeRollup (payload: string) {
+  const buf: Buffer = bs58check.decode(payload);
+
+  // tz4 address currently
+  return buf2hex(buf.slice(3, 42))
+}
+
+/**
+ *
  * @description Base58 encode an address using predefined prefix
  *
  * @param value Address to base58 encode (tz1, tz2, tz3 or KT1)
@@ -112,7 +125,6 @@ export function encodePubKey(value: string) {
       '0000': prefix.tz1,
       '0001': prefix.tz2,
       '0002': prefix.tz3,
-      '0003': prefix.tz4,
     };
 
     return b58cencode(value.substring(4), pref[value.substring(0, 4)]);
@@ -120,7 +132,15 @@ export function encodePubKey(value: string) {
 
   return b58cencode(value.substring(2, 42), prefix.KT);
 }
-
+/**
+ *
+ * @description Base58 encode an address without predefined prefix
+ * @param value Address to base58 encode (tz4) hex dec
+ * @returns return address
+ */
+export function encodePubKeyRollup(value: string) {
+  return b58cencode(value, prefix.tz4)
+}
 /**
  *
  * @description Base58 encode a key according to its prefix

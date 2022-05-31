@@ -1,5 +1,5 @@
 import { BaseTokenSchema } from '../../schema/types';
-import { b58decode, encodePubKey, validateAddress, ValidationResult } from '@taquito/utils';
+import { b58decodeRollup, encodePubKeyRollup, validateAddress, ValidationResult } from '@taquito/utils';
 import { ComparableToken, SemanticEncoding, Token, TokenFactory, TokenValidationError } from "../token";
 
 export class TxRollupL2AddressValidationError extends TokenValidationError {
@@ -21,7 +21,7 @@ export class TxRollupL2AddressToken extends ComparableToken {
   }
 
   public ToBigMapKey(val: any) {
-    const decoded = b58decode(val)
+    const decoded = b58decodeRollup(val)
     return {
       key: { bytes: decoded },
       type: { prim: 'bytes' }
@@ -63,7 +63,7 @@ export class TxRollupL2AddressToken extends ComparableToken {
     if (!val.bytes) {
       throw new TxRollupL2AddressValidationError(val, this, `value cannot be missing string and byte value. must have one ${JSON.stringify(val)}`)
     }
-    return encodePubKey(val.bytes)
+    return encodePubKeyRollup(val.bytes)
   }
   public ExtractSchema() {
     return TxRollupL2AddressToken.prim;
@@ -83,7 +83,7 @@ export class TxRollupL2AddressToken extends ComparableToken {
     if (!bytes) {
       throw new TxRollupL2AddressValidationError(bytes, this, `value cannot be missing string and byte value. must have one: bytes = ${bytes}`)
     }
-    return encodePubKey(bytes)
+    return encodePubKeyRollup(bytes)
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]): Token[] {

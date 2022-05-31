@@ -72,7 +72,7 @@ CONFIGS().forEach(({lib, setup, protocol}) => {
     jakartanet(`jakarta contract with params and storage as tx_rollup_l2_address`, async (done) => {
       const op = await tezos.contract.originate({
         code: [{"prim":"parameter","args":[{"prim":"tx_rollup_l2_address"}]},{"prim":"storage","args":[{"prim":"tx_rollup_l2_address"}]},{"prim":"code","args":[[{"prim":"CAR"},{"prim":"NIL","args":[{"prim":"operation"}]},{"prim":"PAIR"}]]}],
-        storage: "tz4VHgLiRx5ZZjwU2QaybHc11EMJk3NcyvVc"
+        storage: "tz4QyWfEiv56CVDATV3DT3CDVhPaMKif2Ce8"
       })
       await op.confirmation();
 
@@ -81,7 +81,7 @@ CONFIGS().forEach(({lib, setup, protocol}) => {
 
       const contract = await op.contract();
       const pkh = await contract.storage()
-      expect(pkh).toEqual("tz4VHgLiRx5ZZjwU2QaybHc11EMJk3NcyvVc");
+      expect(pkh).toEqual("tz4QyWfEiv56CVDATV3DT3CDVhPaMKif2Ce8");
 
       const methodCall = await contract.methods.default(pkh).send();
       await methodCall.confirmation();
