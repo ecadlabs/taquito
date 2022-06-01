@@ -3,9 +3,8 @@ name: Tezedge Integration Tests
 on:
   pull_request:
   push:
-    # TODO: target only master before merging
     branches:
-      - '*'
+      - 'master'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.ref != 'refs/heads/master' || github.run_number }}
